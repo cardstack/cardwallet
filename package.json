@@ -400,15 +400,15 @@
       "scrypt": false,
       "secp256k1": false,
       "@sentry/cli": false
-    },
-    "config": {
-      "react-native-storybook-loader": {
-        "searchDir": [
-          "./src2/components"
-        ],
-        "pattern": "**/*.story.tsx",
-        "outputFile": "./storybook/storyLoader.js"
-      }
+    }
+  },
+  "config": {
+    "react-native-storybook-loader": {
+      "searchDir": [
+        "./src2/components"
+      ],
+      "pattern": "**/*.story.tsx",
+      "outputFile": "./storybook/storyLoader.js"
     }
   }
 }
