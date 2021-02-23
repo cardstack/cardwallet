@@ -19,5 +19,3 @@ jobs:
     - name: Lint and test
       run: |
         yarn setup
-        yarn lint
-        yarn test
