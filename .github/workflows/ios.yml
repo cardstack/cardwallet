@@ -1,8 +1,5 @@
 name: iOS e2e
 
-on: 
-  push:
-
 jobs:
   build:
     runs-on: macos-latest
