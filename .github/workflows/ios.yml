@@ -1,5 +1,10 @@
 name: iOS e2e
 
+on:
+  push:
+    branches:
+      - develop
+
 jobs:
   build:
     runs-on: macos-latest
