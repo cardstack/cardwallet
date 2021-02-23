@@ -1,0 +1,24 @@
+name: PR Verify
+
+on:
+  push:
+    branches-ignore:
+      - 'develop'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v@
+    - name: PR Verify
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.15.5
+    - name: Lint and test
+      run: |
+        yarn
+        yarn lint
+        yarn test

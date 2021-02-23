@@ -34,3 +34,8 @@ jest.mock('react-native-keychain', () => ({
   resetGenericPassword: jest.fn(),
   setGenericPassword: jest.fn(),
 }));
+jest.mock('@uniswap/sdk', () => ({
+  ChainId: jest.requireActual('@uniswap/sdk').ChainId,
+  Token: jest.fn(),
+  WETH: jest.requireActual('@uniswap/sdk').WETH,
+}));
