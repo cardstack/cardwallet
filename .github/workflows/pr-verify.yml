@@ -16,6 +16,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.15.5
-    - name: Lint and test
-      run: |
-        yarn setup
+    - run: |
+        yarn install
+    - run: |
+        yarn allow-scripts
+    - run: |
+        yarn postinstall
+    - run: |
+        yarn lint
