@@ -1,7 +1,7 @@
 import { createTheme } from '@shopify/restyle';
-import { buttonVariants } from '../components/Button/buttonVariants';
-import { textVariants } from './../components/Text/textVariants';
+import { buttonVariants } from './buttonVariants';
 import { colors } from './colors';
+import { textVariants } from './textVariants';
 
 const theme = createTheme({
   breakpoints: {

@@ -7,7 +7,7 @@ import {
   SpacingProps,
   VariantProps,
 } from '@shopify/restyle';
-import React, { FC } from 'react';
+import React, { ReactNode } from 'react';
 
 import ButtonPressAnimation from '../../../src/components/animations/ButtonPressAnimation';
 import { Theme } from '../../theme';
@@ -16,18 +16,23 @@ import { Text } from '../Text';
 type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
   LayoutProps<Theme> &
   SpacingProps<Theme>;
-interface IButtonProps extends RestyleProps {}
+interface ButtonProps extends RestyleProps {
+  children: ReactNode;
+}
 
 const VariantRestyleComponent = createVariant({
   themeKey: 'buttonVariants',
 });
 
-const AnimatedButton = createRestyleComponent<IButtonProps, Theme>(
+const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
   [layout, spacing, VariantRestyleComponent],
   ButtonPressAnimation
 );
 
-export const Button: FC<IButtonProps> = ({ children, ...props }) => (
+/**
+ * A button with a simple press animation
+ */
+export const Button = ({ children, ...props }: ButtonProps) => (
   <AnimatedButton {...props}>
     <Text fontWeight="bold" variant="body">
       {children}

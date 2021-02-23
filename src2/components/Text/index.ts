@@ -1,2 +1,2 @@
 export * from './Text';
-export * from './textVariants';
+export * from '../../theme/textVariants';
