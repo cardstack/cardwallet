@@ -13,8 +13,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Node
-      uses: actions/setup-node@master
-    - uses: c-hive/gha-yarn-cache@v1
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.15.5
     - name: Lint and test
       run: |
         yarn setup
