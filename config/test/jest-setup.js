@@ -1,3 +1,5 @@
+import mockAsyncStorage from '@react-native-community/async-storage/jest/async-storage-mock';
+
 /* eslint-disable no-undef */
 jest.mock('react-native-background-timer', () => ({
   identify: () => null,
@@ -20,6 +22,8 @@ jest.mock('@segment/analytics-react-native', () => ({
 jest.mock('@sentry/react-native', () => ({
   captureException: () => null,
 }));
+
+jest.mock('@react-native-community/async-storage', () => mockAsyncStorage);
 
 jest.autoMockOff();
 jest.mock('react-native-keychain', () => ({
