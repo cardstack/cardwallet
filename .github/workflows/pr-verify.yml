@@ -19,8 +19,4 @@ jobs:
     - run: |
         yarn install
     - run: |
-        yarn allow-scripts
-    - run: |
-        yarn postinstall
-    - run: |
         yarn lint
