@@ -32,10 +32,7 @@ const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
 /**
  * A button with a simple press animation
  */
-export const Button = ({
-  children,
-  ...props
-}: ButtonProps): React.ReactElement => (
+export const Button = ({ children, ...props }: ButtonProps) => (
   <AnimatedButton {...props}>
     <Text fontWeight="bold" variant="body">
       {children}
