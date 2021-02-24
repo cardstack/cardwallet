@@ -17,6 +17,6 @@ jobs:
       with:
         node-version: 14.15.5
     - run: |
-        yarn install
+        yarn install --network-timeout 300000 --network-concurrency 1
     - run: |
         yarn lint
