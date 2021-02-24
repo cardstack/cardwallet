@@ -17,7 +17,6 @@ import {
 import branch from 'react-native-branch';
 // eslint-disable-next-line import/default
 import CodePush from 'react-native-code-push';
-
 import {
   REACT_APP_SEGMENT_API_WRITE_KEY,
   SENTRY_ENDPOINT,
@@ -29,6 +28,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
+
 import PortalConsumer from './components/PortalConsumer';
 import { FlexItem } from './components/layout';
 import { OfflineToast } from './components/toasts';

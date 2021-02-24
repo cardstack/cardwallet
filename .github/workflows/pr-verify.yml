@@ -25,6 +25,9 @@ jobs:
     - name: Run lint
       run: |
         yarn lint
+    - name: Check TS
+      run: |
+        yarn ts-check
     - name: Run tests
       run: |
         yarn test
