@@ -2,7 +2,7 @@ name: PR Verify
 
 on:
   push:
-    branches:
+    branches-ignore:
       - develop
 
 jobs:
@@ -25,3 +25,6 @@ jobs:
     - name: Run lint
       run: |
         yarn lint
+    - name: Run tests
+      run: |
+        yarn test
