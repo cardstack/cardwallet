@@ -2,6 +2,12 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
+// eslint-disable-next-line import/default
+// eslint-disable-next-line import/default
+import { enableScreens } from 'react-native-screens';
+import VersionNumber from 'react-native-version-number';
+import { connect, Provider } from 'react-redux';
+import {ThemeProvider} from '@shopify/restyle';
 import { get } from 'lodash';
 import nanoid from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
@@ -15,19 +21,15 @@ import {
   StatusBar,
 } from 'react-native';
 import branch from 'react-native-branch';
-// eslint-disable-next-line import/default
 import CodePush from 'react-native-code-push';
 import {
   REACT_APP_SEGMENT_API_WRITE_KEY,
   SENTRY_ENDPOINT,
   SENTRY_ENVIRONMENT,
 } from 'react-native-dotenv';
-// eslint-disable-next-line import/default
 import RNIOS11DeviceCheck from 'react-native-ios11-devicecheck';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { enableScreens } from 'react-native-screens';
-import VersionNumber from 'react-native-version-number';
-import { connect, Provider } from 'react-redux';
+import theme from '@cardstack/theme';
 
 import PortalConsumer from './components/PortalConsumer';
 import { FlexItem } from './components/layout';
@@ -287,23 +289,27 @@ class App extends Component {
 
   render = () => (
     <MainThemeProvider>
-      <RainbowContextWrapper>
-        <Portal>
-          <SafeAreaProvider>
-            <Provider store={store}>
-              <FlexItem>
-                {this.state.initialRoute && (
-                  <InitialRouteContext.Provider value={this.state.initialRoute}>
-                    <RoutesComponent ref={this.handleNavigatorRef} />
-                    <PortalConsumer />
-                  </InitialRouteContext.Provider>
-                )}
-                <OfflineToast />
-              </FlexItem>
-            </Provider>
-          </SafeAreaProvider>
-        </Portal>
-      </RainbowContextWrapper>
+      <ThemeProvider theme={theme}>
+        <RainbowContextWrapper>
+          <Portal>
+            <SafeAreaProvider>
+              <Provider store={store}>
+                <FlexItem>
+                  {this.state.initialRoute && (
+                    <InitialRouteContext.Provider
+                      value={this.state.initialRoute}
+                    >
+                      <RoutesComponent ref={this.handleNavigatorRef} />
+                      <PortalConsumer />
+                    </InitialRouteContext.Provider>
+                  )}
+                  <OfflineToast />
+                </FlexItem>
+              </Provider>
+            </SafeAreaProvider>
+          </Portal>
+        </RainbowContextWrapper>
+      </ThemeProvider>
     </MainThemeProvider>
   );
 }

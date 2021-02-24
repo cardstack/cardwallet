@@ -1,6 +1,6 @@
 import MaskedView from '@react-native-community/masked-view';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet } from 'react-native';
+import { Animated, Easing, Image, StyleSheet } from 'react-native';
 import { IS_TESTING } from 'react-native-dotenv';
 import Reanimated, {
   Clock,
@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import { useMemoOne } from 'use-memo-one';
 import RainbowGreyNeon from '../assets/rainbows/greyneon.png';
 import RainbowLight from '../assets/rainbows/light.png';
+import logo from '../assets/rainbows/light.png';
 import RainbowLiquid from '../assets/rainbows/liquid.png';
 import RainbowNeon from '../assets/rainbows/neon.png';
 import RainbowPixel from '../assets/rainbows/pixel.png';
@@ -26,6 +27,7 @@ import {
   isCloudBackupAvailable,
 } from '../handlers/cloudBackup';
 import { cloudPlatform } from '../utils/platform';
+import { Button, Container } from '@cardstack/components';
 
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 import { ImgixImage } from '@rainbow-me/images';
@@ -128,11 +130,12 @@ const RainbowButton = ({
   );
 };
 
-const Container = styled.View`
+const Wrapper = styled.View`
   ${StyleSheet.absoluteFillObject};
   align-items: center;
   background-color: ${({ theme: { colors } }) => colors.white};
   justify-content: center;
+  background-color: #413e4e;
 `;
 
 const ContentWrapper = styled(Animated.View)`
@@ -499,40 +502,30 @@ export default function WelcomeScreen() {
   }, [rValue]);
 
   return (
-    <Container testID="welcome-screen">
-      {traversedRainbows.map(({ source, style, id }) => (
-        <RainbowImage
-          Component={Animated.Image}
-          key={`rainbow${id}`}
-          source={source}
-          style={style}
+    <Wrapper testID="welcome-screen">
+      <Container>
+        <Image
+          source={logo}
+          style={{
+            height: 250,
+            width: 250,
+          }}
         />
-      ))}
-
-      <ContentWrapper style={contentStyle}>
-        {android && IS_TESTING === 'true' ? (
-          <RainbowText colors={colors} />
-        ) : (
-          <MaskedView maskElement={<RainbowText colors={colors} />}>
-            <RainbowTextMask style={textStyle} />
-          </MaskedView>
-        )}
-
-        <ButtonWrapper style={buttonStyle}>
-          <RainbowButton
-            onPress={onCreateWallet}
-            testID="new-wallet-button"
-            {...createWalletButtonProps}
-          />
-        </ButtonWrapper>
-        <ButtonWrapper>
-          <RainbowButton
-            onPress={showRestoreSheet}
-            {...existingWalletButtonProps}
-            testID="already-have-wallet-button"
-          />
-        </ButtonWrapper>
-      </ContentWrapper>
-    </Container>
+      </Container>
+      <Button
+        onPress={onCreateWallet}
+        testID="new-wallet-button"
+        {...createWalletButtonProps}
+      >
+        Create a new account
+      </Button>
+      <Button
+        onPress={showRestoreSheet}
+        {...existingWalletButtonProps}
+        testID="already-have-wallet-button"
+      >
+        Add an existing account
+      </Button>
+    </Wrapper>
   );
 }
