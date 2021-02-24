@@ -19,6 +19,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
+    '<rootDir>/cardstack/**/*.test.jsx',
     '<rootDir>/cardstack/**/*.test.tsx',
-  ]
+  ],
 };
