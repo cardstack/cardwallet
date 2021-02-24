@@ -2,7 +2,7 @@ name: PR Verify
 
 on:
   push:
-    branches-ignore:
+    branches:
       - develop
 
 jobs:

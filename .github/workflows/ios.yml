@@ -2,7 +2,7 @@ name: iOS e2e
 
 on:
   push:
-    branches:
+    branches-ignore:
       - develop
 
 jobs:
@@ -35,9 +35,13 @@ jobs:
       if: steps.cache.outputs.cache-hit == 'true'
       run: yarn detox clean-framework-cache && yarn detox build-framework-cache
 
-    - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: yarn setup
+    - name: Install dependencies
+      run: |
+        yarn install --network-timeout 300000 --network-concurrency 1
+    
+    - name: Apply patches
+      run: |
+        yarn patch-package
 
     - name: Cache Pods
       uses: actions/cache@v1
