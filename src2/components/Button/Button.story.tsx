@@ -1,8 +1,8 @@
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 import { View } from 'react-native';
-import { Button } from './Button';
 import { buttonVariants } from '../../theme/buttonVariants';
+import { Button } from './Button';
 
 const variants = Object.keys(buttonVariants) as (keyof typeof buttonVariants)[];
 
