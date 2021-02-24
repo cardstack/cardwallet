@@ -26,15 +26,13 @@
     "install-pods-fast": "cd ios && bundle exec pod install && cd ..",
     "install-pods-no-flipper": "cd ios && bundle exec env SKIP_FLIPPER=true pod install --repo-update && cd ..",
     "ios": "react-native run-ios --simulator='iPhone 11'",
-    "lint": "yarn lint:ts && yarn lint:js && yarn lint:css",
-    "lint:css": "stylelint './src/**/*.js'",
-    "lint:js": "eslint --ext '.ts,.tsx,.js,.jsx' .",
-    "lint:ts": "yarn tsc --skipLibCheck --noEmit",
+    "lint": "eslint --ext '.ts,.tsx,.js,.jsx' cardstack",
     "prestorybook": "rnstl",
     "postinstall": "./scripts/postinstall.sh",
     "start": "yarn prestorybook && react-native start",
     "start:clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-map-* && react-native start -- --reset-cache",
-    "test": "jest test.js",
+    "test": "jest --coverage",
+    "ci": "yarn lint && yarn coverage",
     "update-env": "curl -H 'Authorization: token '$GITHUB_TOKEN -H 'Accept: application/vnd.github.v3.raw' -O  -L https://api.github.com/repos/rainbow-me/rainbow-env/contents/dotenv && rm -f .env && mv dotenv .env",
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
     "update-token-list": "./scripts/update-token-list.sh"
@@ -43,12 +41,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --ext '.js,.jsx,.ts,.tsx' -c .eslintrc.js",
-      "stylelint"
-    ]
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.34",
@@ -245,6 +237,8 @@
     "@babel/preset-env": "^7.10.4",
     "@babel/runtime": "^7.7.2",
     "@lavamoat/allow-scripts": "^1.0.3",
+    "@testing-library/react-native": "6.0.0",
+    "@types/chance": "^1.1.1",
     "@types/jest": "^26.0.9",
     "@types/react": "^16.9.44",
     "@types/react-native": "^0.63.4",
@@ -262,6 +256,7 @@
     "babel-plugin-rewire": "^1.2.0",
     "babel-plugin-styled-components": "^1.10.7",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "chance": "^1.1.7",
     "detox": "^17.11.0",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
@@ -281,6 +276,7 @@
     "stylelint-config-react-native-styled-components": "^0.3.0",
     "stylelint-processor-styled-components": "^1.10.0",
     "stylelint-react-native": "^2.2.0",
+    "ts-jest": "^26.5.2",
     "typescript": "^3.9.7"
   },
   "resolutions": {
@@ -297,14 +293,7 @@
     "**/yargs-parser": "20.2.5",
     "**/@hapi/hoek": "8.5.1"
   },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "jsx",
       "json",
-      "node"
     ],
     "setupFiles": [
       "./config/test/jest-setup.js"
@@ -411,10 +400,10 @@
   "config": {
     "react-native-storybook-loader": {
       "searchDir": [
-        "./src2/components"
+        "./cardstack/src/components"
       ],
       "pattern": "**/*.story.tsx",
-      "outputFile": "./storybook/storyLoader.js"
+      "outputFile": "./cardstack/storybook/storyLoader.js"
     }
   }
 }

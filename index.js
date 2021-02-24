@@ -24,7 +24,7 @@ const initializeApp = () => {
   if (!USE_STORYBOOK) {
     require('./src/App');
   } else {
-    require('./storybook');
+    require('./cardstack/storybook');
   }
 };
 

@@ -9,9 +9,9 @@ import {
 } from '@shopify/restyle';
 import React, { ReactNode } from 'react';
 
-import ButtonPressAnimation from '../../../src/components/animations/ButtonPressAnimation';
-import { Theme } from '../../theme';
+import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { Text } from '../Text';
+import { Theme } from '@cardstack/theme';
 
 type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
   LayoutProps<Theme> &
@@ -32,7 +32,10 @@ const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
 /**
  * A button with a simple press animation
  */
-export const Button = ({ children, ...props }: ButtonProps) => (
+export const Button = ({
+  children,
+  ...props
+}: ButtonProps): React.ReactElement => (
   <AnimatedButton {...props}>
     <Text fontWeight="bold" variant="body">
       {children}

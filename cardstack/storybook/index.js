@@ -13,9 +13,9 @@ import {
 import React, { useEffect } from 'react';
 import { AppRegistry } from 'react-native';
 
-import { name as appName } from '../app.json';
-import { CenteredContainer } from '../src2/components/Container';
-import theme from '../src2/theme';
+import theme from '@cardstack/theme';
+import { name as appName } from '../../app.json';
+import { CenteredContainer } from '../src/components/Container';
 import { loadStories } from './storyLoader';
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 
