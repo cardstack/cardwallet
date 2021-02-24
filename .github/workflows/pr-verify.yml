@@ -19,16 +19,9 @@ jobs:
     - name: Install dependencies
       run: |
         yarn install --network-timeout 300000 --network-concurrency 1
-    - name: Allow scripts
+    - name: Apply patches
       run: |
-        yarn allow-scripts
-    - name: Create .env file
-      uses: "finnp/create-file-action@master"
-      env:
-        FILE_NAME: ".env"
-        FILE_DATA: ""
-    - name: Post install
+        yarn patch-package
+    - name: Run lint
       run: |
-        yarn postinstall
-    - run: |
         yarn lint
