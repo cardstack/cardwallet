@@ -18,5 +18,8 @@ jobs:
         node-version: 14.15.5
     - run: |
         yarn install --network-timeout 300000 --network-concurrency 1
+        yarn allow-scripts
+        touch .env
+        yarn postinstall
     - run: |
         yarn lint
