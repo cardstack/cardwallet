@@ -9,10 +9,12 @@ import { withBackgrounds } from '@storybook/addon-ondevice-backgrounds';
 import React from 'react';
 import { name as appName } from '../app.json';
 import {loadStories} from './storyLoader';
-import {useHideSplashScreen} from '@rainbow-me/hooks';
 import {useEffect} from 'react';
 import {ThemeProvider} from '@shopify/restyle';
+import {AppRegistry} from 'react-native';
 import { CenteredContainer } from '../src2/components/Container';
+import theme from '../src2/theme';
+import SplashScreen from 'react-native-splash-screen';
 
 // addons!
 import './rn-addons';
@@ -45,10 +47,8 @@ configure(() => {
 const StorybookUIRoot = getStorybookUI({});
 
 const Storybook = () => {
-    const hideSplashScreen = useHideSplashScreen();
-
     useEffect(() => {
-        hideSplashScreen();
+      SplashScreen.hide();
     });
 
     return (
@@ -58,4 +58,4 @@ const Storybook = () => {
     )
 }
 
-export default StorybookUIRoot;
+AppRegistry.registerComponent(appName, () => Storybook);
