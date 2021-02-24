@@ -84,3 +84,4 @@ ios/Extras.json
 rainbow-scripts
 
 .coverage
+.jest

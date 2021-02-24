@@ -27,6 +27,7 @@
     "install-pods-no-flipper": "cd ios && bundle exec env SKIP_FLIPPER=true pod install --repo-update && cd ..",
     "ios": "react-native run-ios --simulator='iPhone 11'",
     "lint": "eslint --ext '.ts,.tsx,.js,.jsx' cardstack",
+    "ts-build": "yarn tsc --skipLibCheck --noEmit",
     "prestorybook": "rnstl",
     "postinstall": "./scripts/postinstall.sh",
     "start": "yarn prestorybook && react-native start",
@@ -262,6 +263,7 @@
     "eslint": "^6.8.0",
     "eslint-config-satya164": "^3.1.6",
     "eslint-import-resolver-babel-module": "^5.1.2",
+    "eslint-plugin-echobind": "^0.2.0",
     "ganache-cli": "6.12.2",
     "graphql": "^15.3.0",
     "jest": "^26.1.0",
@@ -276,7 +278,6 @@
     "stylelint-config-react-native-styled-components": "^0.3.0",
     "stylelint-processor-styled-components": "^1.10.0",
     "stylelint-react-native": "^2.2.0",
-    "ts-jest": "^26.5.2",
     "typescript": "^3.9.7"
   },
   "resolutions": {
@@ -292,12 +293,6 @@
     "**/semver": "7.3.2",
     "**/yargs-parser": "20.2.5",
     "**/@hapi/hoek": "8.5.1"
-  },
-      "json",
-    ],
-    "setupFiles": [
-      "./config/test/jest-setup.js"
-    ]
   },
   "detox": {
     "configurations": {
@@ -394,7 +389,8 @@
       "react-query": false,
       "scrypt": false,
       "secp256k1": false,
-      "@sentry/cli": false
+      "@sentry/cli": false,
+      "core-js-pure": false
     }
   },
   "config": {
