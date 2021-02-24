@@ -16,10 +16,19 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.15.5
-    - run: |
+    - name: Install dependencies
+      run: |
         yarn install --network-timeout 300000 --network-concurrency 1
+    - name: Allow scripts
+      run: |
         yarn allow-scripts
-        touch .env
+    - name: Create .env file
+      uses: "finnp/create-file-action@master"
+      env:
+        FILE_NAME: ".env"
+        FILE_DATA: ""
+    - name: Post install
+      run: |
         yarn postinstall
     - run: |
         yarn lint
