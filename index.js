@@ -3,9 +3,10 @@ import './shim';
 
 import lang from 'i18n-js';
 import { language } from 'react-native-languages';
-// eslint-disable-next-line no-unused-vars,import/default
-import App from './src/App';
+
 import { resources } from './src/languages';
+
+const USE_STORYBOOK = true;
 
 // Languages (i18n)
 lang.defaultLocale = 'en';
@@ -18,3 +19,13 @@ lang.translations = Object.assign(
     [key]: resources[key].translation,
   }))
 );
+
+const initializeApp = () => {
+  if (!USE_STORYBOOK) {
+    require('./src/App');
+  } else {
+    require('./storybook');
+  }
+};
+
+initializeApp();

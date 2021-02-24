@@ -2,7 +2,6 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
-import { ThemeProvider } from '@shopify/restyle';
 import { get } from 'lodash';
 import nanoid from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
@@ -18,7 +17,6 @@ import {
 import branch from 'react-native-branch';
 // eslint-disable-next-line import/default
 import CodePush from 'react-native-code-push';
-
 import {
   REACT_APP_SEGMENT_API_WRITE_KEY,
   SENTRY_ENDPOINT,
@@ -30,8 +28,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
-import theme from '../src2/theme';
-import Storybook from '../storybook';
+
 import PortalConsumer from './components/PortalConsumer';
 import { FlexItem } from './components/layout';
 import { OfflineToast } from './components/toasts';
@@ -58,13 +55,11 @@ import RoutesComponent from './navigation/Routes';
 import { requestsForTopic } from './redux/requests';
 import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
-import { useHideSplashScreen } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
-const USE_STORYBOOK = true;
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'dark-content' });
 
@@ -325,18 +320,4 @@ const AppWithCodePush = CodePush({
   installMode: CodePush.InstallMode.ON_NEXT_RESUME,
 })(() => <AppWithRedux store={store} />);
 
-const StoryBookApp = () => {
-  const hideSplashScreen = useHideSplashScreen();
-
-  hideSplashScreen();
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Storybook />
-    </ThemeProvider>
-  );
-};
-
-AppRegistry.registerComponent('Rainbow', () =>
-  USE_STORYBOOK ? StoryBookApp : AppWithCodePush
-);
+AppRegistry.registerComponent('Rainbow', () => AppWithCodePush);

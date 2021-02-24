@@ -86,7 +86,7 @@
     "@shopify/restyle": "^1.4.0",
     "@storybook/addon-ondevice-backgrounds": "^5.3.23",
     "@storybook/addons": "^6.1.18",
-    "@storybook/react-native": "^5.3.25",
+    "@storybook/react-native": "^5.3.0-rc.1",
     "@tradle/react-native-http": "^2.0.1",
     "@types/i18n-js": "^3.0.3",
     "@types/lodash": "^4.14.159",
