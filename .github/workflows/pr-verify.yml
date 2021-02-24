@@ -1,0 +1,30 @@
+name: PR Verify
+
+on:
+  push:
+    branches-ignore:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.15.5
+    - name: Install dependencies
+      run: |
+        yarn install --network-timeout 300000 --network-concurrency 1
+    - name: Apply patches
+      run: |
+        yarn patch-package
+    - name: Run lint
+      run: |
+        yarn lint
+    - name: Run tests
+      run: |
+        yarn test

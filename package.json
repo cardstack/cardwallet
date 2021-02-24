@@ -11,6 +11,12 @@
     "detox:android:release": "detox build -c android.emu.release && detox test -R 1 -c android.emu.release",
     "detox:ios": "detox build -c ios.sim.debug && detox test -R 1 -c ios.sim.debug",
     "detox:ios:release": "detox build -c ios.sim.release && detox test -R 1 -c ios.sim.release",
+    "detox:build:android": "detox build -c android.emu.debug",
+    "detox:build:ios": "detox build -c ios.sim.debug",
+    "detox:smoke:android": "detox test -R 1 -c android.emu.debug -f e2e/smoke.spec.js",
+    "detox:smoke:ios": "detox test -R 1 -c ios.sim.debug -f e2e/smoke.spec.js",
+    "e2e:smoke:ios": "yarn detox:build:ios && yarn detox:smoke:ios",
+    "e2e:smoke:android": "yarn detox:build:android && yarn detox:smoke:android",
     "fast": "yarn setup && yarn install-pods-fast",
     "ganache": "source .env && ganache-cli --f https://mainnet.infura.io/v3/${INFURA_PROJECT_ID_DEV} -p 7545 -i 1 -b 10",
     "install-all": "yarn setup && yarn install-pods",
@@ -326,7 +332,7 @@
         "binaryPath": "./android/app/build/outputs/apk/debug/app-debug.apk",
         "build": "cd ./android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
         "type": "android.emulator",
-        "name": "Pixel_3_API_29"
+        "name": "Pixel_4_API_30"
       }
     },
     "runner-config": "e2e/config.json",
