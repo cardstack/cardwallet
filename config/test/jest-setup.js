@@ -39,3 +39,4 @@ jest.mock('@uniswap/sdk', () => ({
   Token: jest.fn(),
   WETH: jest.requireActual('@uniswap/sdk').WETH,
 }));
+/* eslint-enable no-undef */
