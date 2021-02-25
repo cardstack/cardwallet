@@ -1,13 +1,21 @@
 import * as shopifyRestyle from '@shopify/restyle';
 import Chance from 'chance';
+import { Dimensions } from 'react-native';
 import { useVariantValue } from '@cardstack/utils';
+import { breakpoints } from '@cardstack/theme';
 
 const chance = new Chance();
 
 jest.mock('@shopify/restyle');
+jest.mock('react-native/Libraries/Utilities/Dimensions', () => ({
+  get: jest.fn(() => ({
+    width: 1,
+  })),
+}));
 
 describe('theme utils', () => {
   const { useTheme } = shopifyRestyle as jest.Mocked<typeof shopifyRestyle>;
+  const mockDimensions = Dimensions as any;
 
   const theme = {
     buttonVariants: {
@@ -17,6 +25,11 @@ describe('theme utils', () => {
         },
       },
       secondary: {
+        textStyle: {
+          [chance.string()]: chance.string(),
+        },
+      },
+      blue: {
         textStyle: {
           [chance.string()]: chance.string(),
         },
@@ -74,6 +87,22 @@ describe('theme utils', () => {
 
       expect(textStyle).toEqual({
         ...theme.buttonVariants.defaults.textStyle,
+      });
+    });
+
+    it('should pull the correct textStyle off of the theme if responsive values are passed and width is set for tablet', () => {
+      mockDimensions.get.mockReturnValue({
+        width: breakpoints.tablet + 1,
+      });
+
+      const textStyle = useVariantValue('buttonVariants', 'textStyle', {
+        phone: 'secondary',
+        tablet: 'blue',
+      });
+
+      expect(textStyle).toEqual({
+        ...theme.buttonVariants.defaults.textStyle,
+        ...theme.buttonVariants.blue.textStyle,
       });
     });
   });

@@ -64,8 +64,8 @@ export default function WelcomeScreen() {
           <Image
             source={logo}
             style={{
-              resizeMode: 'contain',
               height: '100%',
+              resizeMode: 'contain',
               width: '100%',
             }}
           />
