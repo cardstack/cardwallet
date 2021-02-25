@@ -76,7 +76,7 @@ export default function WelcomeScreen() {
           Create a new account
         </Button>
         <Button
-          marginTop={3}
+          marginTop={5}
           onPress={showRestoreSheet}
           testID="already-have-wallet-button"
           variant="blue"
