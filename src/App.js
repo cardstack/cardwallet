@@ -2,8 +2,6 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
-// eslint-disable-next-line import/default
-// eslint-disable-next-line import/default
 import { ThemeProvider } from '@shopify/restyle';
 import { get } from 'lodash';
 import nanoid from 'nanoid/non-secure';
