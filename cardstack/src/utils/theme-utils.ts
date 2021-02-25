@@ -34,16 +34,11 @@ export const useVariantValue = <T extends keyof SafeVariants<Theme>>(
   const theme = useTheme();
   const variant = getVariantValue(responsiveVariantValue);
   const variantObject = theme[themeKey];
-  const defaultStyles = variantObject.defaults || {};
+  const defaultStyles = variantObject.defaults;
+  const variantStyles = variantObject[variant];
 
-  if (variantObject) {
-    const variantStyles = variantObject[variant];
-
-    return {
-      ...(defaultStyles[key] || {}),
-      ...variantStyles[key],
-    };
-  }
-
-  return defaultStyles[key] || {};
+  return {
+    ...defaultStyles[key],
+    ...variantStyles[key],
+  };
 };

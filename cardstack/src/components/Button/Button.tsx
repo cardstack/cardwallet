@@ -9,9 +9,9 @@ import {
 } from '@shopify/restyle';
 import React, { ReactNode } from 'react';
 
-import { useVariantValue } from '@cardstack/utils';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { Text } from '../Text';
+import { useVariantValue } from '@cardstack/utils';
 import { Theme } from '@cardstack/theme';
 
 type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
