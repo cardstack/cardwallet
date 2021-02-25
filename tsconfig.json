@@ -34,6 +34,7 @@
       "@rainbow-me/styles": ["src/styles"],
       "@rainbow-me/utilities": ["./src/helpers/utilities"],
       "@rainbow-me/utils": ["src/utils"],
+      "@cardstack/utils": ["cardstack/src/utils"],
       "@cardstack/components": ["cardstack/src/components"],
       "@cardstack/theme": ["cardstack/src/theme"],
       "logger": ["src/utils/logger"],

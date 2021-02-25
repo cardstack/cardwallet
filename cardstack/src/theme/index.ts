@@ -19,7 +19,6 @@ export * from './buttonVariants';
 export * from './colors';
 export * from './textVariants';
 export * from './spacing';
-export * from './helpers';
 
 export type Theme = typeof theme;
 export default theme;

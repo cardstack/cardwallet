@@ -1,6 +1,6 @@
 import { ResponsiveValue, SafeVariants, useTheme } from '@shopify/restyle';
 
-import { Theme } from './';
+import { Theme } from '../theme';
 
 /**
  * Gets the variant value while taking into account responsive values
