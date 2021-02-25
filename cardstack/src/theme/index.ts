@@ -2,24 +2,22 @@ import { createTheme } from '@shopify/restyle';
 import { buttonVariants } from './buttonVariants';
 import { colors } from './colors';
 import { textVariants } from './textVariants';
+import { spacing } from './spacing';
+import { breakpoints } from './breakpoints';
 
 const theme = createTheme({
-  breakpoints: {
-    phone: 0,
-    tablet: 768,
-  },
+  breakpoints,
   buttonVariants,
   colors,
-  spacing: {
-    '1': 4,
-    '2': 8,
-    '3': 12,
-    '4': 16,
-    '5': 20,
-    '6': 24,
-  },
+  spacing,
   textVariants,
 });
+
+export * from './buttonVariants';
+export * from './colors';
+export * from './textVariants';
+export * from './spacing';
+export * from './breakpoints';
 
 export type Theme = typeof theme;
 export default theme;

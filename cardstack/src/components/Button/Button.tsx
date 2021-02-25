@@ -11,6 +11,7 @@ import React, { ReactNode } from 'react';
 
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { Text } from '../Text';
+import { useVariantValue } from '@cardstack/utils';
 import { Theme } from '@cardstack/theme';
 
 type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
@@ -32,10 +33,16 @@ const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
 /**
  * A button with a simple press animation
  */
-export const Button = ({ children, ...props }: ButtonProps) => (
-  <AnimatedButton {...props}>
-    <Text fontWeight="bold" variant="body">
-      {children}
-    </Text>
-  </AnimatedButton>
-);
+export const Button = ({ children, ...props }: ButtonProps) => {
+  const textStyle = useVariantValue(
+    'buttonVariants',
+    'textStyle',
+    props.variant
+  );
+
+  return (
+    <AnimatedButton {...props}>
+      <Text {...textStyle}>{children}</Text>
+    </AnimatedButton>
+  );
+};
