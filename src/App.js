@@ -4,10 +4,7 @@ import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
 // eslint-disable-next-line import/default
 // eslint-disable-next-line import/default
-import { enableScreens } from 'react-native-screens';
-import VersionNumber from 'react-native-version-number';
-import { connect, Provider } from 'react-redux';
-import {ThemeProvider} from '@shopify/restyle';
+import { ThemeProvider } from '@shopify/restyle';
 import { get } from 'lodash';
 import nanoid from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
@@ -29,7 +26,9 @@ import {
 } from 'react-native-dotenv';
 import RNIOS11DeviceCheck from 'react-native-ios11-devicecheck';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import theme from '@cardstack/theme';
+import { enableScreens } from 'react-native-screens';
+import VersionNumber from 'react-native-version-number';
+import { connect, Provider } from 'react-redux';
 
 import PortalConsumer from './components/PortalConsumer';
 import { FlexItem } from './components/layout';
@@ -57,6 +56,7 @@ import RoutesComponent from './navigation/Routes';
 import { requestsForTopic } from './redux/requests';
 import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
+import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
@@ -288,8 +288,8 @@ class App extends Component {
     Navigation.setTopLevelNavigator(navigatorRef);
 
   render = () => (
-    <MainThemeProvider>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <MainThemeProvider>
         <RainbowContextWrapper>
           <Portal>
             <SafeAreaProvider>
@@ -309,8 +309,8 @@ class App extends Component {
             </SafeAreaProvider>
           </Portal>
         </RainbowContextWrapper>
-      </ThemeProvider>
-    </MainThemeProvider>
+      </MainThemeProvider>
+    </ThemeProvider>
   );
 }
 
