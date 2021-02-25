@@ -1,12 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
-import { get, toLower, uniqBy } from 'lodash';
+import { toLower, uniqBy } from 'lodash';
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
-import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
-import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import coingeckoIdsFallback from '../references/coingecko/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
@@ -100,10 +98,10 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
     {
       asset: {
         asset_code: 'eth',
-        coingecko_id: 'ethereum',
+        coingecko_id: 'dai',
         decimals: 18,
-        name: 'Ethereum',
-        symbol: 'ETH',
+        name: 'xDai',
+        symbol: 'DAI',
       },
     },
   ];
@@ -217,13 +215,45 @@ const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
 };
 
 const fetchAssetBalances = async (tokens, address, network) => {
-  const balanceCheckerContract = new Contract(
-    get(networkInfo[network], 'balance_checker_contract_address'),
-    balanceCheckerContractAbi,
-    web3Provider
-  );
   try {
-    const values = await balanceCheckerContract.balances([address], tokens);
+    let values = [];
+    const contractAbiFragment = [
+      {
+        constant: true,
+        inputs: [
+          {
+            name: '_owner',
+            type: 'address',
+          },
+        ],
+        name: 'balanceOf',
+        outputs: [
+          {
+            name: 'balance',
+            type: 'uint256',
+          },
+        ],
+        payable: false,
+        type: 'function',
+      },
+    ];
+
+    for (let i = 0; i < tokens.length; ++i) {
+      if (tokens[i] === '0x0000000000000000000000000000000000000000') {
+        values[i] = await web3Provider.getBalance(address);
+      } else {
+        try {
+          const contract = new Contract(
+            tokens[i],
+            contractAbiFragment,
+            web3Provider
+          );
+          values[i] = await await contract.balanceOf(address);
+        } catch (err) {
+          values[i] = '0x';
+        }
+      }
+    }
 
     const balances = {};
     [address].forEach((addr, addrIdx) => {
@@ -338,7 +368,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       addressAssetsReceived({
         meta: {
           address: accountAddress,
-          currency: 'usd',
+          currency: nativeCurrency, //'usd' ola value
           status: 'ok',
         },
         payload: { assets },

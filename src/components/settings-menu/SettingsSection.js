@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import { Image, Linking, NativeModules, ScrollView, Share } from 'react-native';
 import styled from 'styled-components';
-import { REVIEW_ANDROID } from '../../config/experimental';
-import useExperimentalFlag from '../../config/experimentalHooks';
+// import { REVIEW_ANDROID } from '../../config/experimental';
+// import useExperimentalFlag from '../../config/experimentalHooks';
 //import { supportedLanguages } from '../../languages';
 import { THEMES, useTheme } from '../../context/ThemeContext';
 import AppVersionStamp from '../AppVersionStamp';
@@ -24,6 +24,7 @@ import DarkModeIcon from '@rainbow-me/assets/settingsDarkMode.png';
 import DarkModeIconDark from '@rainbow-me/assets/settingsDarkModeDark.png';
 import NetworkIcon from '@rainbow-me/assets/settingsNetwork.png';
 import NetworkIconDark from '@rainbow-me/assets/settingsNetworkDark.png';
+import shareCardstackIcon from '@rainbow-me/assets/share.png';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -40,12 +41,13 @@ import {
 
 const { RainbowRequestReview, RNReview } = NativeModules;
 
+
 export const SettingsExternalURLs = {
-  rainbowHomepage: 'https://rainbow.me',
+  rainbowHomepage: 'https://cardstack.com/',
   review:
     'itms-apps://itunes.apple.com/us/app/appName/id1457119021?mt=8&action=write-review',
-  twitterDeepLink: 'twitter://user?screen_name=rainbowdotme',
-  twitterWebUrl: 'https://twitter.com/rainbowdotme',
+  twitterDeepLink: 'twitter://user?screen_name=cardstack',
+  twitterWebUrl: 'https://twitter.com/cardstack',
 };
 
 const CheckmarkIcon = styled(Icon).attrs({
@@ -129,7 +131,7 @@ export default function SettingsSection({
   onPressNetwork,
   onPressShowSecret,
 }) {
-  const isReviewAvailable = useExperimentalFlag(REVIEW_ANDROID) || ios;
+  const isReviewAvailable = true; // useExperimentalFlag(REVIEW_ANDROID) || ios;
   const { wallets } = useWallets();
   const { /*language,*/ nativeCurrency, network } = useAccountSettings();
   const { isTinyPhone } = useDimensions();
@@ -154,7 +156,7 @@ export default function SettingsSection({
 
   const onPressShare = useCallback(() => {
     Share.share({
-      message: `👋️ Hey friend! You should download Rainbow, it's my favorite Ethereum wallet 🌈️🌈️🌈️🌈️🌈️🌈️🌈️🌈️🌈️🌈️ ${SettingsExternalURLs.rainbowHomepage}`,
+      message: `👋️ Hey friend! You should download Cardstack, it's my favorite wallet ${SettingsExternalURLs.rainbowHomepage}`,
     });
   }, []);
 
@@ -270,8 +272,13 @@ export default function SettingsSection({
       <ListFooter />
       <ColumnWithDividers dividerRenderer={ListItemDivider}>
         <ListItem
-          icon={<Emoji name="rainbow" />}
-          label="Share Rainbow"
+          icon={
+            <SettingIcon
+              source={shareCardstackIcon}
+              style={{ height: 26, marginLeft: 0, marginRight: 0, width: 26 }}
+            />
+          }
+          label="Share Cardstack"
           onPress={onPressShare}
           testID="share-section"
           value={SettingsExternalURLs.rainbowHomepage}
@@ -292,7 +299,7 @@ export default function SettingsSection({
         {isReviewAvailable && (
           <ListItem
             icon={<Emoji name="red_heart" />}
-            label="Review Rainbow"
+            label="Review Cardstack"
             onPress={onPressReview}
             testID="review-section"
           />

@@ -30,6 +30,7 @@ import {
   ethereumUtils,
   showActionSheetWithOptions,
 } from '@rainbow-me/utils';
+import logger from 'logger';
 
 const containerStyles = css`
   padding-left: 19;
@@ -130,7 +131,7 @@ export default function TransactionCoinRow({ item, ...props }) {
       let buttons = [
         ...(canBeResubmitted ? [TransactionActions.speedUp] : []),
         ...(canBeCancelled ? [TransactionActions.cancel] : []),
-        TransactionActions.viewOnEtherscan,
+        TransactionActions.viewOnBlockscout,
         ...(ios ? [TransactionActions.close] : []),
       ];
       if (showContactInfo) {
@@ -141,19 +142,23 @@ export default function TransactionCoinRow({ item, ...props }) {
         );
       }
 
+      let title = '';
+      if (pending) {
+        let contact = showContactInfo
+          ? ' ' + headerInfo.divider + ' ' + headerInfo.address
+          : '';
+        title = `${headerInfo.type}${contact}`;
+      } else {
+        title = showContactInfo
+          ? `${headerInfo.type} ${date} ${headerInfo.divider} ${headerInfo.address}`
+          : `${headerInfo.type} ${date}`;
+      }
+
       showActionSheetWithOptions(
         {
           cancelButtonIndex: buttons.length - 1,
           options: buttons,
-          title: pending
-            ? `${headerInfo.type}${
-                showContactInfo
-                  ? ' ' + headerInfo.divider + ' ' + headerInfo.address
-                  : ''
-              }`
-            : showContactInfo
-            ? `${headerInfo.type} ${date} ${headerInfo.divider} ${headerInfo.address}`
-            : `${headerInfo.type} ${date}`,
+          title,
         },
         buttonIndex => {
           const action = buttons[buttonIndex];
@@ -180,8 +185,11 @@ export default function TransactionCoinRow({ item, ...props }) {
                 type: 'cancel',
               });
               break;
-            case TransactionActions.viewOnEtherscan: {
-              ethereumUtils.openTransactionEtherscanURL(hash);
+            case TransactionActions.viewOnBlockscout: {
+              // ethereumUtils.openTransactionEtherscanURL(hash); //TODO: Can we do something similar with blockscout?
+              logger.warn(
+                'Feature not yet implemented. Can we easily link to blockscout?'
+              );
               break;
             }
             default:

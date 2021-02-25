@@ -20,7 +20,7 @@ import CodePush from 'react-native-code-push';
 import {
   REACT_APP_SEGMENT_API_WRITE_KEY,
   SENTRY_ENDPOINT,
-  SENTRY_ENVIRONMENT,
+  // SENTRY_ENVIRONMENT,
 } from 'react-native-dotenv';
 import RNIOS11DeviceCheck from 'react-native-ios11-devicecheck';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -71,7 +71,7 @@ if (__DEV__) {
   let sentryOptions = {
     dsn: SENTRY_ENDPOINT,
     enableAutoSessionTracking: true,
-    environment: SENTRY_ENVIRONMENT,
+    // environment: SENTRY_ENVIRONMENT,
     release: `me.rainbow-${VersionNumber.appVersion}`,
   };
 

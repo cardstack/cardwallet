@@ -3,7 +3,7 @@ export enum Network {
   kovan = 'kovan',
   mainnet = 'mainnet',
   rinkeby = 'rinkeby',
-  ropsten = 'ropsten',
+  sokol = 'sokol',
 }
 
 // We need to keep this one until
@@ -13,5 +13,5 @@ export default {
   kovan: 'kovan' as Network,
   mainnet: 'mainnet' as Network,
   rinkeby: 'rinkeby' as Network,
-  ropsten: 'ropsten' as Network,
+  sokol: 'sokol' as Network,
 };

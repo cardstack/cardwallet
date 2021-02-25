@@ -23,6 +23,7 @@
 		<string>CloudDocuments</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
+	<array/>
 	<key>com.apple.developer.ubiquity-container-identifiers</key>
 	<array>
 		<string>iCloud.org.cardstack.com.rainbow</string>

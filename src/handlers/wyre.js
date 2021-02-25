@@ -319,7 +319,7 @@ const getWyrePaymentDetails = (
   id: 'rainbow-wyre',
   total: {
     amount: { currency: SOURCE_CURRENCY_USD, value: totalAmount },
-    label: 'Rainbow',
+    label: 'Cardstack',
   },
 });
 

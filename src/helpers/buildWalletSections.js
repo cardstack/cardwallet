@@ -91,7 +91,7 @@ const addEth = section => {
       address: 'eth',
       balance: {
         amount: '0',
-        display: '0 ETH',
+        display: '0 xDai',
       },
       color: '#29292E',
       decimals: 18,

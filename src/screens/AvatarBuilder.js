@@ -89,8 +89,19 @@ const AvatarBuilder = ({ route: { params } }) => {
         ),
       },
     };
-
-    await dispatch(walletsSetSelected(newWallets[walletId]));
+    let found = newWallets[walletId].addresses.find(
+      account => account.address === params.initialAccountAddress
+    );
+    if (found) {
+      found.image = undefined;
+      if (name) {
+        found.label = name;
+      }
+      if (color !== undefined) {
+        found.color = color;
+      }
+      dispatch(walletsSetSelected(newWallets[walletId]));
+    }
     await dispatch(walletsUpdate(newWallets));
   };
 

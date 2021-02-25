@@ -22,7 +22,7 @@ export default function ContractInteractionCoinRow({
     showActionSheetWithOptions(
       {
         cancelButtonIndex: 1,
-        options: ['View on Etherscan', 'Cancel'],
+        options: ['View on Blockscout', 'Cancel'],
       },
       buttonIndex => {
         if (buttonIndex === 0) {

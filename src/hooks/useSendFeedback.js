@@ -5,7 +5,7 @@ import Mailer from 'react-native-mail';
 import { Alert } from '../components/alerts';
 import useAppVersion from './useAppVersion';
 
-const FeedbackEmailAddress = 'support@rainbow.me';
+const FeedbackEmailAddress = 'support@cardstack.com';
 
 const setClipboardToFeedbackEmail = () =>
   Clipboard.setString(FeedbackEmailAddress);
@@ -35,7 +35,7 @@ const handleMailError = debounce(
 function feedbackEmailOptions(appVersion) {
   return {
     recipients: [FeedbackEmailAddress],
-    subject: `🌈️ Rainbow Feedback - ${ios ? 'iOS' : 'Android'} ${appVersion}`,
+    subject: `Cardstack Feedback - ${ios ? 'iOS' : 'Android'} ${appVersion}`,
   };
 }
 

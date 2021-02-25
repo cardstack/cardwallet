@@ -1,5 +1,5 @@
 ![](https://pbs.twimg.com/profile_banners/1103191459409420288/1573207178/1500x500)
-### 🌈️ Rainbow
+### Cardstack
 > the Ethereum wallet that lives in your pocket!
 
 📲️ [Available on the iOS App Store.](https://apps.apple.com/us/app/rainbow-ethereum-wallet/id1457119021)

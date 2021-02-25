@@ -18,7 +18,7 @@ const SendButton = ({
 
   if (!isZeroAssetAmount && !isSufficientGas) {
     disabled = true;
-    label = 'Insufficient ETH';
+    label = 'Insufficient xDai';
   } else if (!isZeroAssetAmount && !isSufficientBalance) {
     disabled = true;
     label = 'Insufficient Funds';

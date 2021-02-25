@@ -1,8 +1,8 @@
 import QRCodeUtil from 'qrcode';
 import React, { useMemo } from 'react';
 import Svg, { Circle, ClipPath, Defs, G, Image, Rect } from 'react-native-svg';
-import RainbowLogo from '../../assets/rainbow-og.png';
-import useSafeImageUri from '../../hooks/useSafeImageUri';
+// import RainbowLogo from '../../assets/rainbow-og.png';
+// import useSafeImageUri from '../../hooks/useSafeImageUri';
 import { magicMemo } from '../../utils';
 
 const generateMatrix = (value, errorCorrectionLevel) => {
@@ -22,16 +22,16 @@ const generateMatrix = (value, errorCorrectionLevel) => {
 
 const QRCode = ({
   ecl = 'M',
-  logo = RainbowLogo,
-  logoBackgroundColor: givenLogoBackgroundColor,
+  // logo = RainbowLogo,
+  // logoBackgroundColor: givenLogoBackgroundColor,
   logoMargin = -5,
   logoSize = 84,
   size = 150,
   value = 'QR Code',
 }) => {
-  const { colors } = useTheme();
-  const logoBackgroundColor = givenLogoBackgroundColor || colors.transparent;
-  const href = useSafeImageUri(logo);
+  // const { colors } = useTheme();
+  // const logoBackgroundColor = colors.transparent;
+  // const href = useSafeImageUri(logo);
   const dots = useMemo(() => {
     const dots = [];
     const matrix = generateMatrix(value, ecl);
@@ -60,7 +60,7 @@ const QRCode = ({
       }
     });
 
-    const clearArenaSize = Math.floor((logoSize + 3) / cellSize);
+    const clearArenaSize = 0; // Math.floor((logoSize + 3) / cellSize);
     const matrixMiddleStart = matrix.length / 2 - clearArenaSize / 2;
     const matrixMiddleEnd = matrix.length / 2 + clearArenaSize / 2 - 1;
 
@@ -101,7 +101,7 @@ const QRCode = ({
     return dots;
   }, [ecl, logoSize, size, value]);
 
-  const logoPosition = size / 2 - logoSize / 2 - logoMargin;
+  // const logoPosition = size / 2 - logoSize / 2 - logoMargin;
   const logoWrapperSize = logoSize + logoMargin * 2;
 
   return (
@@ -116,25 +116,25 @@ const QRCode = ({
       </Defs>
       <Rect fill="white" height={size} width={size} />
       {dots}
-      {logo && (
-        <G x={logoPosition} y={logoPosition}>
-          <Rect
-            clipPath="url(#clip-wrapper)"
-            fill={logoBackgroundColor}
-            height={logoWrapperSize}
-            width={logoWrapperSize}
-          />
-          <G x={logoMargin} y={logoMargin}>
-            <Image
-              clipPath="url(#clip-logo)"
-              height={logoSize}
-              href={href}
-              preserveAspectRatio="xMidYMid slice"
-              width={logoSize}
-            />
-          </G>
-        </G>
-      )}
+      {/*{logo && (*/}
+      {/*  <G x={logoPosition} y={logoPosition}>*/}
+      {/*    <Rect*/}
+      {/*      clipPath="url(#clip-wrapper)"*/}
+      {/*      fill={logoBackgroundColor}*/}
+      {/*      height={logoWrapperSize}*/}
+      {/*      width={logoWrapperSize}*/}
+      {/*    />*/}
+      {/*    <G x={logoMargin} y={logoMargin}>*/}
+      {/*      <Image*/}
+      {/*        clipPath="url(#clip-logo)"*/}
+      {/*        height={logoSize}*/}
+      {/*        // href={href}*/}
+      {/*        preserveAspectRatio="xMidYMid slice"*/}
+      {/*        width={logoSize}*/}
+      {/*      />*/}
+      {/*    </G>*/}
+      {/*  </G>*/}
+      {/*)}*/}
     </Svg>
   );
 };

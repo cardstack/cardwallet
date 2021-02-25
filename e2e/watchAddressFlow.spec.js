@@ -14,7 +14,7 @@ describe('Watch address flow', () => {
     await Helpers.checkIfExists('restore-sheet');
   });
 
-  it('show the "Import Sheet" when tapping on "Watch an Ethereum address"', async () => {
+  it('show the "Import Sheet" when tapping on "Watch an xDai address"', async () => {
     await Helpers.tap('watch-address-button');
     await Helpers.delay(2000);
     await Helpers.checkIfExists('import-sheet');

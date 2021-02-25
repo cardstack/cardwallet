@@ -29,11 +29,11 @@ export const ethGasStationGetGasPrices = () =>
   );
 
 /**
- * Configuration for Etherscan API
+ * Configuration for Blockscout API
  * @type axios instance
  */
-const etherscanAPI = axios.create({
-  baseURL: 'https://api.etherscan.io',
+const blockscoutAPI = axios.create({
+  baseURL: 'https://blockscout.com/poa/xdai',
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const etherscanAPI = axios.create({
  * @return {Promise}
  */
 export const etherscanGetGasPrices = () =>
-  etherscanAPI.get(
+  blockscoutAPI.get(
     `/api?module=gastracker&action=gasoracle&apikey=${ETHERSCAN_API_KEY}`
   );
 
@@ -84,8 +84,8 @@ export const etherscanGetGasEstimates = async data => {
  */
 export const getEstimatedTimeForGasPrice = async gwei => {
   const priceInWei = multiply(gwei, ethUnits.gwei);
-  const { data: response } = await etherscanAPI.get(
-    `/api?module=gastracker&action=gasestimate&gasprice=${priceInWei}&apikey=${ETHERSCAN_API_KEY}`
+  const { data: response } = await blockscoutAPI.get(
+    `/api?module=gastracker&action=gasestimate&gasprice=${priceInWei}&apikey=${ETHERSCAN_API_KEY}` // TODO: Can this even work with blockscout???
   );
   if (response.status === '0') {
     throw new Error('Etherscan gas estimation request failed');

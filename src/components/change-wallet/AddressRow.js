@@ -173,7 +173,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                 color={colors.alpha(colors.blueGreyDark, 0.5)}
                 style={sx.bottomRowText}
               >
-                {cleanedUpBalance || 0} ETH
+                {cleanedUpBalance || 0} DAI
               </BottomRowText>
             </ColumnWithMargins>
           </Row>

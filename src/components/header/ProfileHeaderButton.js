@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { useAccountProfile, useRequests } from '../../hooks';
 import { useNavigation } from '../../navigation/Navigation';
 import { NumberBadge } from '../badge';
@@ -8,10 +10,27 @@ import { Centered } from '../layout';
 import HeaderButton from './HeaderButton';
 import Routes from '@rainbow-me/routes';
 
+const walletSelector = createSelector(
+  ({ wallets: { selected = {} }, settings: { accountAddress } }) => ({
+    accountAddress,
+    selectedWallet: selected,
+  }),
+  ({ accountAddress, selectedWallet }) => {
+    const selectedAccount = selectedWallet?.addresses?.find(
+      account => account.address === accountAddress
+    );
+    return {
+      image: selectedAccount ? selectedAccount.image : '',
+    };
+  }
+);
+
 export default function ProfileHeaderButton() {
   const { navigate } = useNavigation();
   const { pendingRequestCount } = useRequests();
-  const { accountSymbol, accountColor, accountImage } = useAccountProfile();
+  const { accountSymbol, accountColor } = useAccountProfile();
+
+  const { image } = useSelector(walletSelector);
 
   const onPress = useCallback(() => navigate(Routes.PROFILE_SCREEN), [
     navigate,
@@ -31,8 +50,8 @@ export default function ProfileHeaderButton() {
       transformOrigin="left"
     >
       <Centered>
-        {accountImage ? (
-          <ImageAvatar image={accountImage} size="small" />
+        {image ? (
+          <ImageAvatar image={image} size="small" />
         ) : (
           <ContactAvatar
             color={isNaN(accountColor) ? colors.skeleton : accountColor}
