@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import React, { useEffect, useRef } from 'react';
 import Animated from 'react-native-reanimated';
 import {
@@ -82,6 +83,7 @@ export default function SwapInfo({ asset, amount }) {
       <Container>
         <CoinIcon
           address={asset?.address}
+          icon_url={get(asset, 'icon_url')}
           size={20}
           symbol={asset?.symbol}
           testID="swap-info-container"

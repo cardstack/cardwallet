@@ -25,9 +25,11 @@ import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
 import { cleanUpWalletKeys, createWallet } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
+// import { dataGetTransactions } from '../redux/data';
 import {
   addressSetSelected,
   createAccountForWallet,
+  resetWallets,
   walletsLoadState,
   walletsSetSelected,
   walletsUpdate,
@@ -159,7 +161,8 @@ export default function ChangeWalletSheet() {
         const p2 = dispatch(addressSetSelected(address));
         await Promise.all([p1, p2]);
 
-        initializeWallet();
+        await initializeWallet();
+        // dispatch(dataGetTransactions());
         !fromDeletion && goBack();
       } catch (e) {
         logger.log('error while switching account', e);
@@ -295,6 +298,7 @@ export default function ChangeWalletSheet() {
                     await cleanUpWalletKeys();
                     goBack();
                     replace(Routes.WELCOME_SCREEN);
+                    dispatch(resetWallets());
                   } else {
                     // If we're deleting the selected wallet
                     // we need to switch to another one
@@ -329,6 +333,7 @@ export default function ChangeWalletSheet() {
       renameWallet,
       replace,
       wallets,
+      dispatch,
     ]
   );
 

@@ -32,16 +32,11 @@ export const ThemeContext = createContext({
 export const MainThemeProvider = props => {
   const [colorScheme, setColorScheme] = useState();
   // looks like one works on Android and another one on iOS. good.
-  const isSystemDarkModeIOS = useDarkMode();
-  const isSystemDarkModeAndroid = useColorScheme() === 'dark';
-  const isSystemDarkMode = ios ? isSystemDarkModeIOS : isSystemDarkModeAndroid;
+  // const isSystemDarkModeIOS = useDarkMode();
+  // const isSystemDarkModeAndroid = useColorScheme() === 'dark';
+  // const isSystemDarkMode = ios ? isSystemDarkModeIOS : isSystemDarkModeAndroid;
 
-  const colorSchemeSystemAdjusted =
-    colorScheme === THEMES.SYSTEM
-      ? isSystemDarkMode
-        ? 'dark'
-        : 'light'
-      : colorScheme;
+  const colorSchemeSystemAdjusted = 'light';
   useEffect(() => {
     setTimeout(
       () => NativeModules.RNThemeModule?.setMode(colorSchemeSystemAdjusted),
@@ -53,12 +48,7 @@ export const MainThemeProvider = props => {
   useEffect(() => {
     const loadUserPref = async () => {
       const userPref = (await getTheme()) || THEMES.LIGHT;
-      const userPrefSystemAdjusted =
-        userPref === THEMES.SYSTEM
-          ? isSystemDarkMode
-            ? 'dark'
-            : 'light'
-          : userPref;
+      const userPrefSystemAdjusted = 'light';
       StatusBar.setBarStyle(
         userPrefSystemAdjusted === THEMES.DARK
           ? 'light-content'
@@ -73,7 +63,7 @@ export const MainThemeProvider = props => {
       setColorScheme(userPref);
     };
     loadUserPref();
-  }, [isSystemDarkMode]);
+  }, []);
 
   // Listening to changes of device appearance while in run-time
   useEffect(() => {
@@ -95,12 +85,7 @@ export const MainThemeProvider = props => {
       lightScheme: lightModeThemeColors,
       // Overrides the isDarkMode value will cause re-render inside the context.
       setTheme: scheme => {
-        const schemeSystemAdjusted =
-          scheme === THEMES.SYSTEM
-            ? isSystemDarkMode
-              ? 'dark'
-              : 'light'
-            : scheme;
+        const schemeSystemAdjusted = 'light';
         currentColors.theme = schemeSystemAdjusted;
         StatusBar.setBarStyle(
           schemeSystemAdjusted === THEMES.DARK
@@ -118,7 +103,7 @@ export const MainThemeProvider = props => {
         );
       },
     }),
-    [colorScheme, colorSchemeSystemAdjusted, isSystemDarkMode]
+    [colorScheme, colorSchemeSystemAdjusted]
   );
 
   return (

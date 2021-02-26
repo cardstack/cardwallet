@@ -2,39 +2,35 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
-	<string>ca-app-pub-3940256099942544/2934735716</string>
-	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
-	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>498863290995-9p1q0khft2ducvla1hmjgc7j083s662i.apps.googleusercontent.com</string>
+	<string>838420907972-ja4sa6eeligg65lebhph5uut2p628s5h.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.498863290995-9p1q0khft2ducvla1hmjgc7j083s662i</string>
+	<string>com.googleusercontent.apps.838420907972-ja4sa6eeligg65lebhph5uut2p628s5h</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCNbH_4aWuTugRUiv5bL1GkRSlf8swbQt4</string>
+	<string>AIzaSyBPKMc1sdsO5hYjVcTyHeriujZCIEYlI20</string>
 	<key>GCM_SENDER_ID</key>
-	<string>498863290995</string>
+	<string>838420907972</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>me.rainbow</string>
+	<string>org.cardstack.com.rainbow</string>
 	<key>PROJECT_ID</key>
-	<string>rainbow-me</string>
+	<string>card-pay-3e9be</string>
 	<key>STORAGE_BUCKET</key>
-	<string>rainbow-me.appspot.com</string>
+	<string>card-pay-3e9be.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
 	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:498863290995:ios:9549e5b497700eb0</string>
+	<string>1:838420907972:ios:8a130f626d5f0d17f64691</string>
 	<key>DATABASE_URL</key>
-	<string>https://rainbow-me.firebaseio.com</string>
+	<string>https://card-pay-3e9be.firebaseio.com</string>
 </dict>
 </plist>

@@ -607,10 +607,9 @@ const TransactionConfirmationScreen = () => {
       isSufficientGas !== undefined ? (
       <Column marginBottom={24} marginTop={19}>
         <SheetActionButton
-          color={colors.transparent}
-          disabled
+          color={colors.white}
           fullWidth
-          label="ETH balance too low"
+          label="xDai balance too low"
           onPress={onCancel}
           size="big"
           textColor={colors.avatarColor[7]}
@@ -648,7 +647,7 @@ const TransactionConfirmationScreen = () => {
   const renderTransactionSection = useCallback(() => {
     if (isMessageRequest) {
       return (
-        <RowWithMargins css={padding(24, 0)}>
+        <RowWithMargins css={padding(24, 0)} style={{ maxHeight: 100 }}>
           <MessageSigningSection message={request} method={method} />
         </RowWithMargins>
       );
@@ -770,7 +769,13 @@ const TransactionConfirmationScreen = () => {
       <SlackSheet
         backgroundColor={colors.transparent}
         borderRadius={0}
-        height={sheetHeight}
+        height={
+          !isMessageRequest &&
+          isBalanceEnough === false &&
+          isSufficientGas !== undefined
+            ? TallSheetHeight
+            : sheetHeight
+        }
         hideHandle
         scrollEnabled={false}
       >
@@ -851,7 +856,11 @@ const TransactionConfirmationScreen = () => {
                       value={accountSymbol}
                     />
                   </Column>
-                  <WalletText>{accountName}</WalletText>
+                  <WalletText>
+                    {accountName && accountName.length > 13
+                        ? accountName.substr(0, 10) + '...'
+                        : accountName}
+                  </WalletText>
                 </RowWithMargins>
               </Column>
               <Column align="flex-end" flex={1} justify="end">
@@ -864,7 +873,7 @@ const TransactionConfirmationScreen = () => {
                   {isBalanceEnough === false &&
                     isSufficientGas !== undefined &&
                     '􀇿 '}
-                  {balances[accountAddress]} ETH
+                  {balances[accountAddress]} xDai
                 </WalletText>
               </Column>
             </RowWithMargins>

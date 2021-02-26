@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <CodePush/CodePush.h>
 #import "Firebase.h"
 #import "AppDelegate.h"
 #import "Rainbow-Swift.h"
@@ -132,7 +133,7 @@ RCT_EXPORT_METHOD(hideAnimated) {
   #if DEBUG
     return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
-    return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+    return [CodePush bundleURL];
   #endif
 }
 

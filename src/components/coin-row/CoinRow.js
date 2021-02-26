@@ -33,6 +33,7 @@ export default function CoinRow({
   coinIconRender = CoinIcon,
   containerStyles,
   contentStyles,
+  icon_url,
   isHidden,
   isPinned,
   isPool,
@@ -52,6 +53,7 @@ export default function CoinRow({
       ) : (
         createElement(coinIconRender, {
           address,
+          icon_url,
           isHidden,
           isPinned,
           symbol,

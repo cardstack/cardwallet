@@ -11,7 +11,10 @@ import {
 import ProtocolTypes from '@rainbow-me/helpers/protocolTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
 import TransactionTypes from '@rainbow-me/helpers/transactionTypes';
-import { dataAddNewTransaction } from '@rainbow-me/redux/data';
+import {
+  dataAddNewTransaction,
+  dataWatchPendingTransactions,
+} from '../../redux/data';
 import { rapsAddOrUpdate } from '@rainbow-me/redux/raps';
 import store from '@rainbow-me/redux/store';
 import {
@@ -105,6 +108,7 @@ const swap = async (
       chainId,
       inputCurrency,
       outputCurrency,
+      // @ts-ignore
       tradeDetails,
     });
     gasLimit = newGasLimit;
@@ -134,6 +138,7 @@ const swap = async (
       inputCurrency,
       methodName,
       outputCurrency,
+      // @ts-ignore
       tradeDetails,
       wallet,
     });
@@ -182,6 +187,7 @@ const swap = async (
         outputCurrency.decimals
       );
       logger.log('[swap] updated raps', convertedOutput);
+      await dispatch(dataWatchPendingTransactions());
       return convertedOutput;
     } else {
       logger.log('[swap] status not success');

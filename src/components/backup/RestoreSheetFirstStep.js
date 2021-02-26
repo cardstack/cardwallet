@@ -161,10 +161,10 @@ export default function RestoreSheetFirstStep({
         <Column>
           <TextIcon color={colors.mintDark}>􀒒</TextIcon>
           <TitleRow justify="space-between" width="100%">
-            <Title>Watch an Ethereum address </Title>
+            <Title>Watch an xDai address </Title>
             <CaretIcon />
           </TitleRow>
-          <DescriptionText>Watch a public address or ENS name</DescriptionText>
+          <DescriptionText>Watch a public address</DescriptionText>
         </Column>
       </SheetRow>
     </Container>

@@ -10,6 +10,7 @@ import {
   useLoadAccountData,
   useResetAccountState,
 } from '../../hooks';
+import { dataGetTransactions } from '../../redux/data';
 import { settingsUpdateNetwork } from '../../redux/settings';
 import { RadioList, RadioListItem } from '../radio-list';
 
@@ -28,7 +29,9 @@ const NetworkSection = () => {
       await dispatch(settingsUpdateNetwork(network));
       InteractionManager.runAfterInteractions(async () => {
         await loadAccountData(network);
-        initializeAccountData();
+        // initializeAccountData();
+        await initializeAccountData();
+        dispatch(dataGetTransactions());
         analytics.track('Changed network', { network });
       });
     },
@@ -38,13 +41,15 @@ const NetworkSection = () => {
   return (
     <RadioList
       extraData={network}
-      items={networks.map(({ disabled, name, value }) => ({
-        disabled,
-        key: value,
-        label: name,
-        selected: toLower(network) === toLower(value),
-        value,
-      }))}
+      items={networks
+        .filter(({ disabled }) => !disabled)
+        .map(({ disabled, name, value }) => ({
+          disabled,
+          key: value,
+          label: name,
+          selected: toLower(network) === toLower(value),
+          value,
+        }))}
       marginTop={7}
       onChange={onNetworkChange}
       renderItem={RadioListItem}

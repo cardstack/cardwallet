@@ -14,7 +14,7 @@ export default function magicMemo(Component, deps, customComparisonFunc) {
       );
     }
 
-    if (magicDeps.length === 1) {
+    if (magicDeps && magicDeps.length === 1) {
       return magicPrev === magicNext;
     }
 

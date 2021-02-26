@@ -37,6 +37,16 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "186A437D254AA474000B332D"
+               BuildableName = "RainbowUITests.xctest"
+               BlueprintName = "RainbowUITests"
+               ReferencedContainer = "container:Rainbow.xcodeproj">
+            </BuildableReference>
+          </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

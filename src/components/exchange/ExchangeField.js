@@ -55,6 +55,7 @@ const ExchangeField = (
     symbol,
     testID,
     autoFocus,
+    icon_url,
     useCustomAndroidMask = false,
     ...props
   },
@@ -71,7 +72,7 @@ const ExchangeField = (
       <TouchableWithoutFeedback onPress={handleFocusField}>
         <FieldRow disableCurrencySelection={disableCurrencySelection}>
           {symbol ? (
-            <CoinIcon address={address} symbol={symbol} />
+            <CoinIcon address={address} icon_url={icon_url} symbol={symbol} />
           ) : (
             <CoinIconSkeleton />
           )}

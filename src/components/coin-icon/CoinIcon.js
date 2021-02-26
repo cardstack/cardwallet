@@ -1,6 +1,7 @@
 import { isNil } from 'lodash';
 import React, { Fragment } from 'react';
 import ReactCoinIcon from 'react-coin-icon';
+import { Image } from 'react-native';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import CoinIconFallback from './CoinIconFallback';
@@ -31,18 +32,25 @@ const CoinIcon = ({
   return (
     <Fragment>
       {(isPinned || isHidden) && <CoinIconIndicator isPinned={isPinned} />}
-      <StyledCoinIcon
-        {...props}
-        address={address}
-        color={color}
-        fallbackRenderer={CoinIconFallback}
-        forceFallback={forceFallback}
-        shadowColor={
-          isDarkMode ? colors.shadow : tokenMetadata?.shadowColor || color
-        }
-        size={size}
-        symbol={symbol}
-      />
+      {props.icon_url ? (
+        <Image
+          source={{
+            uri: props.icon_url,
+          }}
+          style={{ height: size, width: size }}
+        />
+      ) : (
+        <StyledCoinIcon
+          {...props}
+          address={address}
+          color={color}
+          fallbackRenderer={CoinIconFallback}
+          forceFallback={forceFallback}
+          shadowColor={tokenMetadata?.shadowColor || color}
+          size={size}
+          symbol={symbol}
+        />
+      )}
     </Fragment>
   );
 };

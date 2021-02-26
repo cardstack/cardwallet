@@ -34,6 +34,7 @@ export default function ExchangeInputField({
   setInputAmount,
   setNativeAmount,
   testID,
+  inputCurrencyIconUrl,
 }) {
   return (
     <Container>
@@ -42,6 +43,7 @@ export default function ExchangeInputField({
         amount={inputAmount}
         autoFocus={android}
         disableCurrencySelection={disableInputCurrencySelection}
+        icon_url={inputCurrencyIconUrl}
         onFocus={onFocus}
         onPressSelectCurrency={onPressSelectInputCurrency}
         ref={inputFieldRef}

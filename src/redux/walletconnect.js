@@ -61,11 +61,13 @@ const getNativeOptions = async () => {
 
   const nativeOptions = {
     clientMeta: {
-      description: 'Rainbow makes exploring Ethereum fun and accessible 🌈',
-      icons: ['https://avatars2.githubusercontent.com/u/48327834?s=200&v=4'],
-      name: '🌈 Rainbow',
+      description: 'Cardstack makes exploring xDai fun and accessible',
+      icons: [
+        'https://assets.coingecko.com/coins/images/3247/small/cardstack.png?1547037769',
+      ],
+      name: 'Cardstack',
       ssl: true,
-      url: 'https://rainbow.me',
+      url: 'https://cardstack.com/',
     },
     push: token
       ? {
@@ -73,7 +75,7 @@ const getNativeOptions = async () => {
           peerMeta: true,
           token,
           type: 'fcm',
-          url: 'https://wcpush.rainbow.me',
+          url: 'https://us-central1-card-pay-3e9be.cloudfunctions.net/push',
         }
       : undefined,
   };

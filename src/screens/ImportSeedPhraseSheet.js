@@ -116,7 +116,7 @@ const SecretTextArea = styled(Input).attrs({
   lineHeight: 'looser',
   multiline: true,
   numberOfLines: 3,
-  placeholder: 'Seed phrase, private key, Ethereum address, or ENS name',
+  placeholder: 'Seed phrase, private key, xDai address',
   returnKeyType: 'done',
   size: 'large',
   spellCheck: false,
@@ -259,10 +259,10 @@ export default function ImportSeedPhraseSheet() {
         return;
       }
     } else if (isValidAddress(input)) {
-      const ens = await web3Provider.lookupAddress(input);
-      if (ens && ens !== input) {
-        name = ens;
-      }
+      // const ens = await web3Provider.lookupAddress(input);
+      // if (ens && ens !== input) {
+      //   name = ens;
+      // }
       showWalletProfileModal(name);
     } else {
       try {
@@ -272,10 +272,10 @@ export default function ImportSeedPhraseSheet() {
             input
           );
           setCheckedWallet(walletResult);
-          const ens = await web3Provider.lookupAddress(walletResult.address);
-          if (ens && ens !== input) {
-            name = ens;
-          }
+          // const ens = await web3Provider.lookupAddress(walletResult.address);
+          // if (ens && ens !== input) {
+          //   name = ens;
+          // }
           setBusy(false);
           showWalletProfileModal(name);
         }, 100);
@@ -410,7 +410,7 @@ export default function ImportSeedPhraseSheet() {
             onChangeText={handleSetSeedPhrase}
             onFocus={handleFocus}
             onSubmitEditing={handlePressImportButton}
-            placeholder="Seed phrase, private key, Ethereum address or ENS name"
+            placeholder="Seed phrase, private key, xDai address"
             placeholderTextColor={colors.alpha(colors.blueGreyDark, 0.3)}
             ref={inputRef}
             returnKeyType="done"

@@ -29,7 +29,7 @@ export const getLanguage = () => getGlobal(LANGUAGE, 'en');
 
 export const saveLanguage = language => saveGlobal(LANGUAGE, language);
 
-export const getNetwork = () => getGlobal(NETWORK, networkTypes.mainnet);
+export const getNetwork = () => getGlobal(NETWORK, networkTypes.mainnet); // set default when the first open app - old value mainnet
 
 export const saveNetwork = network => saveGlobal(NETWORK, network);
 

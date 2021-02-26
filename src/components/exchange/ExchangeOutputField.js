@@ -21,12 +21,14 @@ export default function ExchangeOutputField({
   outputFieldRef,
   setOutputAmount,
   testID,
+  outputCurrencyIconUrl
 }) {
   return (
     <Container>
       <ExchangeField
         address={outputCurrencyAddress}
         amount={outputAmount}
+        icon_url={outputCurrencyIconUrl}
         onFocus={onFocus}
         onPressSelectCurrency={onPressSelectOutputCurrency}
         ref={outputFieldRef}
