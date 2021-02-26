@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { screenWidth } from '../utils/dimension-utils';
 
 export const buttonVariants = {
   defaults: {
@@ -12,9 +12,9 @@ export const buttonVariants = {
     paddingVertical: 3,
     textStyle: {
       variant: 'body',
-      fontWeight: '600',
+      // fontWeight: '600',
     },
-    width: Dimensions.get('window').width - 32,
+    width: screenWidth - 32,
   },
   secondary: {
     backgroundColor: 'buttonSecondaryBackground',

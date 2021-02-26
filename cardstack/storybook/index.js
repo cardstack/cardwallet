@@ -21,7 +21,7 @@ import { useHideSplashScreen } from '@rainbow-me/hooks';
 
 // adding a centered-view layout!
 const CenterView = ({ children }) => (
-  <CenteredContainer flex={1} width="100%">
+  <CenteredContainer flex={1} width="100%" padding={4}>
     {children}
   </CenteredContainer>
 );
