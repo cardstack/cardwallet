@@ -1,5 +1,5 @@
 module.exports = {
-  assets: ['./src/assets/fonts'],
+  assets: ['./cardstack/src/assets/fonts'],
   project: {
     android: {},
     ios: {},
