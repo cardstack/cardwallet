@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
-import { ChainId } from '@uniswap/sdk';
 import { chunk, forEach, get, keys, map } from 'lodash';
+import { ChainId } from 'uniswap-xdai-sdk';
 import { web3Provider } from '../handlers/web3';
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../references/uniswap';
 import { AppDispatch, AppGetState } from './store';
@@ -19,6 +19,7 @@ const CALL_CHUNK_SIZE = 500;
 export interface MulticallState {
   listeners: {
     // on a per-chain basis
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [chainId in ChainId]?: {
       // stores how many listeners there are for each call key
       [callKey: string]: number;
@@ -26,6 +27,7 @@ export interface MulticallState {
   };
 
   results: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [chainId in ChainId]?: {
       [callKey: string]: {
         data?: string | null;

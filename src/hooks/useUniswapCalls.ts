@@ -1,6 +1,6 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk';
 import { filter, flatMap, map, toLower, uniqBy } from 'lodash';
 import { useMemo } from 'react';
+import { ChainId, Pair, Token } from 'uniswap-xdai-sdk';
 import { getTokenForCurrency } from '../handlers/uniswap';
 import useAccountSettings from './useAccountSettings';
 import useSwapInputOutputTokens from './useSwapInputOutputTokens';

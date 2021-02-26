@@ -128,6 +128,11 @@ export const dataLoadState = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({ type: DATA_LOAD_TRANSACTIONS_FAILURE });
   }
+  try {
+    dispatch(dataWatchPendingTransactions());
+  } catch (err) {
+    logger.error(err);
+  }
 };
 
 export const dataGetTransactions = () => async (dispatch, getState) => {

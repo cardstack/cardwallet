@@ -1,6 +1,6 @@
-import { Pair, TokenAmount } from '@uniswap/sdk';
 import { compact } from 'lodash';
 import { useMemo } from 'react';
+import { Pair, TokenAmount } from 'uniswap-xdai-sdk';
 import useMulticall from './useMulticall';
 import useUniswapCalls from './useUniswapCalls';
 import {

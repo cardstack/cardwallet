@@ -1,8 +1,8 @@
 import { FunctionFragment, Interface } from '@ethersproject/abi';
-import { ChainId } from '@uniswap/sdk';
 import { map } from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { ChainId } from 'uniswap-xdai-sdk';
 import { Call, toCallKey } from '../redux/multicall';
 import { AppState } from '../redux/store';
 
@@ -44,6 +44,7 @@ export default function useMulticall(
     () =>
       map(calls, call => {
         if (!call) return INVALID_RESULT;
+        // @ts-ignore
         const result = results[chainId as ChainId]?.[toCallKey(call)];
         let data;
         if (result?.data && result?.data !== '0x') {

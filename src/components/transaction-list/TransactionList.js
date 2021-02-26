@@ -254,7 +254,7 @@ export default function TransactionList({
         type: status.charAt(0).toUpperCase() + status.slice(1),
       };
 
-      const contactAddress = isSent ? to : from;
+      const contactAddress = (isSent ? to : from).toLowerCase();
       const contact = contacts[contactAddress];
       let contactColor = 0;
 
@@ -364,13 +364,19 @@ export default function TransactionList({
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const data = useMemo(
-    () => ({
+  const data = useMemo(() => {
+    let newTransactions = transactions.map(item => ({
+      ...item,
+      description:
+        item.description && item.description.length >= 20
+          ? item.description.substring(0, 17) + '...'
+          : item.description,
+    }));
+    return {
       requests,
-      transactions,
-    }),
-    [requests, transactions]
-  );
+      transactions: newTransactions,
+    };
+  }, [requests, transactions]);
 
   const loading = useMemo(() => (!initialized && !isFocused()) || isLoading, [
     initialized,

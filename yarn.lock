@@ -8436,6 +8436,11 @@ hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.3.0, hoist-non-react-
   dependencies:
     react-is "^16.7.0"
 
+honeyswap-default-token-list@^2.1.6:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/honeyswap-default-token-list/-/honeyswap-default-token-list-2.9.1.tgz#76d1214c666b742cc4d4d764257d3a4c9326896d"
+  integrity sha512-rUZNDiA6mshbOFSgazucKUUgybXA8jMiMl7el/Ycbm8soEcrAmmiMM8hkDb5yrwd6expb30oN4+HkftF38kK8A==
+
 hosted-git-info@^2.1.4:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.8.tgz#7539bd4bc1e0e0a895815a2e0262420b12858488"
@@ -12745,6 +12750,11 @@ react-native-actionsheet@^2.4.2:
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.4.2.tgz#6a00dd51a75ef2c8974312130e405af73191500f"
   integrity sha512-DBoWIvVwuWXuptF4t46pBqkFxaUxS+rsIdHiA05t0n4BdTIDV2R4s9bLEUVOGzb94D7VxIamsXZPA/3mmw+SXg==
 
+react-native-aes-cipher@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-aes-cipher/-/react-native-aes-cipher-1.0.9.tgz#71ffec3fe5f741c9e2c75aca2a066c08809ddf2a"
+  integrity sha512-S4jacE3S5WzMuLUTFaoQjCK4mHEds8/SXftzsisnSZZr2XRTIxrOcZjFLZwUm7eZ5UsleKP9/ng9KUCxKIIvKg==
+
 react-native-aes-crypto@brunobar79/react-native-aes#65c49f7e70266615b2999eaa7db654d3fe4f2e3b:
   version "2.0.2"
   resolved "https://codeload.github.com/brunobar79/react-native-aes/tar.gz/65c49f7e70266615b2999eaa7db654d3fe4f2e3b"
@@ -15601,6 +15611,19 @@ unist-util-visit@^1.1.0:
   integrity sha512-AvGNk7Bb//EmJZyhtRUnNMEpId/AZ5Ph/KUpTI09WHQuDZHKovQ1oEv3mfmKpWKtoMzyMC4GLBm1Zy5k12fjIw==
   dependencies:
     unist-util-visit-parents "^2.0.0"
+
+uniswap-xdai-sdk@^3.0.2-a3:
+  version "3.0.2-a3"
+  resolved "https://registry.yarnpkg.com/uniswap-xdai-sdk/-/uniswap-xdai-sdk-3.0.2-a3.tgz#8c27224ca4fd0cda30c09e816fb7c29e866e27ce"
+  integrity sha512-QV436m/u5yJztqvcadmn2P9AfPtmhFgQ4N6bHqaYbbN2ktyrDtsdXIvVzOnTH9s1gIjjTEmFYOFrwJCN1bR2zA==
+  dependencies:
+    "@uniswap/v2-core" "^1.0.0"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
 
 universalify@^0.1.0:
   version "0.1.2"

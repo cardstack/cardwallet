@@ -112,7 +112,7 @@ export default function TransactionCoinRow({ item, ...props }) {
       type: status.charAt(0).toUpperCase() + status.slice(1),
     };
 
-    const contactAddress = isSent ? to : from;
+    const contactAddress = (isSent ? to : from).toLowerCase();
     let contactColor = 0;
 
     if (contact) {

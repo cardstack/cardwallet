@@ -549,6 +549,7 @@ export default function ExchangeModal({
               disableInputCurrencySelection={isWithdrawal}
               inputAmount={inputAmountDisplay}
               inputCurrencyAddress={inputCurrency?.address}
+              inputCurrencyIconUrl={get(inputCurrency, 'icon_url', null)}
               inputCurrencySymbol={inputCurrency?.symbol}
               inputFieldRef={inputFieldRef}
               nativeAmount={nativeAmount}
@@ -567,6 +568,7 @@ export default function ExchangeModal({
                 onPressSelectOutputCurrency={navigateToSelectOutputCurrency}
                 outputAmount={outputAmountDisplay}
                 outputCurrencyAddress={outputCurrency?.address}
+                outputCurrencyIconUrl={get(inputCurrency, 'icon_url', null)}
                 outputCurrencySymbol={outputCurrency?.symbol}
                 outputFieldRef={outputFieldRef}
                 setOutputAmount={updateOutputAmount}

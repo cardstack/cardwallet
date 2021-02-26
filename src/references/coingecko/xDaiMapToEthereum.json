@@ -1,0 +1,162 @@
+{
+  "0xdf613af6b44a31299e48131e9347f034347e2f00": {
+    "address": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9/logo.png"
+  },
+  "0x4ecaba5870353805a9f068101a40e0f32ed605c6": {
+    "address": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+  },
+  "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83": {
+    "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+  },
+  "0x44fa8e6f47987339850636f88629646662444217": {
+    "address": "0x6b175474e89094c44da98b954eedeac495271d0f"
+  },
+  "0x6eeceab954efdbd7a8a8d9387bc719959b04b9ca": {
+    "address": "0xa117000000f279D81A1D3cc75430fAA017FA5A2e"
+  },
+  "0x743a991365ba94bfc90ad0002cad433c7a33cb4a": {
+    "address": "0x27054b13b1b798b345b591a4d22e6562d47ea75a"
+  },
+  "0x2977893f4c04bfbd6efc68d0e46598d27810d3db": {
+    "address": "0x25e1474170c4c0aa64fa98123bdc8db49d7802fa",
+    "icon_url": "https://assets.coingecko.com/coins/images/12596/small/bidao.png"
+  },
+  "0x14411aeca652f5131834bf0c8ff581b5ddf3bc03": {
+    "address": "0x87b008e57f640d94ee44fd893f0323af933f9195",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x87b008E57F640D94Ee44Fd893F0323AF933F9195/logo.png"
+  },
+  "0xdf6ff92bfdc1e8be45177dc1f4845d391d3ad8fd": {
+    "address": "0xc00e94cb662c3520282e6f5717214004a7f26888"
+  },
+  "0x712b3d230f3c1c19db860d80619288b1f0bdd0bd": {
+    "address": "0xd533a949740bb3306d119cc777fa900ba034cd52",
+    "icon_url": "https://assets.coingecko.com/coins/images/12124/small/Curve.png"
+  },
+  "0x7da0bfe9d26c5b64c7580c04bb1425364273e4b0": {
+    "address": "0x38e4adb44ef08f22f5b5b76a8f0c2d0dcbe7dca1",
+    "icon_url": "https://assets.coingecko.com/coins/images/12266/small/Powerpool.jpg"
+  },
+  "0x524b969793a64a602342d89bc2789d43a016b13a": {
+    "address": "0xc0f9bd5fa5698b6505f643900ffa515ea5df54a9",
+    "icon_url": "https://assets.coingecko.com/coins/images/7538/small/Donut.png"
+  },
+  "0x7a7d81657a1a66b38a6ca2565433a9873c6913b2": {
+    "address": "0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4"
+  },
+  "0xde1e70ed71936e4c249a7d43e550f0b99fccddfc": {
+    "address": "0xfffffffff15abf397da76f1dcc1a1604f45126db",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xfffffffFf15AbF397dA76f1dcc1A1604F45126DB/logo.png"
+  },
+  "0x6f09cf96558d44584db07f8477dd3490599aa63e": {
+    "address": "0x1b980e05943de3db3a459c72325338d327b6f5a9",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1b980e05943dE3dB3a459C72325338d327B6F5a9/logo.png"
+  },
+  "0x9c58bacc331c9aa871afd802db6379a98e80cedb": {
+    "address": "0x6810e776880c02933d47db1b9fc05908e5386b96"
+  },
+  "0xd9fa47e33d4ff7a1aca489de1865ac36c042b07a": {
+    "address": "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39"
+  },
+  "0x5fe9885226677f3eb5c9ad8ab6c421b4ea38535d": {
+    "address": "0x174897edd3ce414084a009d22db31c7b7826400d",
+    "icon_url": "https://assets.coingecko.com/coins/images/12595/small/logo.png"
+  },
+  "0x1534fb3e82849314360c267fe20df3901a2ed3f9": {
+    "address": "0xdd974d5c2e2928dea5f71b9825b8b646686bd200"
+  },
+  "0xc1b42bdb485deb24c74f58399288d7915a726c1d": {
+    "address": "0x80fb784b7ed66730e8b1dbd9820afd29931aab03"
+  },
+  "0xe2e73a1c69ecf83f464efce6a5be353a37ca09b2": {
+    "address": "0x514910771af9ca656af840dff83e8264ecf986ca"
+  },
+  "0xf99efeb34aff6d3099c41605e9ee778caec39317": {
+    "address": "0x95172ccbe8344fecd73d0a30f54123652981bd6f",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x95172ccBe8344fecD73D0a30F54123652981BD6F/logo.png"
+  },
+  "0x7838796b6802b18d7ef58fc8b757705d6c9d12b3": {
+    "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942"
+  },
+  "0x5fd896d248fbfa54d26855c267859eb1b4daee72": {
+    "address": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2"
+  },
+  "0x309bc6dbcbfb9c84d26fdf65e8924367efccbdb9": {
+    "address": "0x2baecdf43734f22fd5c152db08e3c27233f0c7d2",
+    "icon_url": "https://assets.coingecko.com/coins/images/12151/small/OM_3D_whtbg.png"
+  },
+  "0x8395f7123ba3ffad52e7414433d825931c81c879": {
+    "address": "0xd26114cd6ee289accf82350c8d8487fedb8a0c07"
+  },
+  "0x0905ab807f8fd040255f0cf8fa14756c1d824931": {
+    "address": "0x1a5f9352af8af974bfc03399e3767df6370d82e4",
+    "icon_url": "https://assets.coingecko.com/coins/images/11149/small/gnosis-owl_32.png"
+  },
+  "0x317eab07380d670ea814025cba40f5624354a32f": {
+    "address": "0x607c794cda77efb21f8848b7910ecf27451ae842",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x607C794cDa77efB21F8848B7910ecf27451Ae842/logo.png"
+  },
+  "0x985e144eb355273c4b4d51e448b68b657f482e26": {
+    "address": "0x6758b7d441a9739b98552b373703d8d3d14f9e62"
+  },
+  "0x0da1a02cdf84c44021671d183d616925164e08aa": {
+    "address": "0x408e41876cccdc0f92210600ef50372656052a38"
+  },
+  "0x5f2852afd20c39849f6f56f4102b8c29ee141add": {
+    "address": "0x1c5db575e2ff833e46a2e9864c22f4b22e0b37c2"
+  },
+  "0x3a00e08544d589e19a8e7d97d0294331341cdbf6": {
+    "address": "0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f"
+  },
+  "0xb7d311e2eb55f2f68a9440da38e7989210b9a05e": {
+    "address": "0x0ae055097c6d159879521c384f1d2123d1f195e6",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0Ae055097C6d159879521C384F1D2123D1f195e6/logo.png"
+  },
+  "0xb1950fb2c9c0cbc8553578c67db52aa110a93393": {
+    "address": "0x57ab1ec28d129707052df4df418d58a2d46d5f51"
+  },
+  "0x860182180e146300df38aab8d328c6e80bec9547": {
+    "address": "0x6f87d756daf0503d08eb8993686c7fc01dc44fb1",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6F87D756DAf0503d08Eb8993686c7Fc01Dc44fB1/logo.png"
+  },
+  "0xd3b93ff74e43ba9568e5019b38addb804fef719b": {
+    "address": "0x8400d94a5cb0fa0d041a3788e395285d61c9ee5e",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8400D94A5cb0fa0D041a3788e395285d61c9ee5e/logo.png"
+  },
+  "0x4537e328bf7e4efa29d05caea260d7fe26af9d74": {
+    "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+    "icon_url": "https://cloudflare-ipfs.com/ipfs/QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
+  },
+  "0x8e5bbbb09ed1ebde8674cda39a0c169401db4252": {
+    "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+  },
+  "0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1": {
+    "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+  },
+  "0xfd4e5f45ea24ec50c4db4367380b014875caf219": {
+    "address": "0x55296f69f40ea6d20e478533c15a6b08b654e758",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x55296f69f40Ea6d20E478533C15A6B08B654E758/logo.png"
+  },
+  "0xbf65bfcb5da067446cee6a706ba3fe2fb1a9fdfd": {
+    "address": "0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e",
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo.png"
+  },
+  "0x71850b7e9ee3f13ab46d67167341e4bdc905eef9": {
+    "icon_url": "https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0x71850b7E9Ee3f13Ab46d67167341E4bDc905Eef9/logo.png"
+  },
+  "0x1e16aa4df73d29c029d94ceda3e3114ec191e25a": {
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/xdai/assets/0x1e16aa4Df73d29C029d94CeDa3e3114EC191E25A/logo.png"
+  },
+  "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d": {
+    "icon_url": "https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png"
+  },
+  "0x2f9cebf5de3bc25e0643d0e66134e5bf5c48e191": {
+    "icon_url": "https://assets.coingecko.com/coins/images/11223/small/Brick.png"
+  },
+  "0x22bd2a732b39dace37ae7e8f50a186f3d9702e87": {
+    "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e/logo.png"
+  },
+  "0x437a044fb4693890e61d2c1c88e3718e928b8e90": {
+    "address": "0xa117000000f279d81a1d3cc75430faa017fa5a2e"
+  }
+}

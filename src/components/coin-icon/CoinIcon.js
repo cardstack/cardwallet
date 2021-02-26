@@ -32,12 +32,10 @@ const CoinIcon = ({
   return (
     <Fragment>
       {(isPinned || isHidden) && <CoinIconIndicator isPinned={isPinned} />}
-      {symbol === 'DAI CPXD' ? (
+      {props.icon_url ? (
         <Image
           source={{
-            uri:
-              props.icon_url ||
-              'https://assets.coingecko.com/coins/images/3247/small/cardstack.png?1547037769',
+            uri: props.icon_url,
           }}
           style={{ height: size, width: size }}
         />

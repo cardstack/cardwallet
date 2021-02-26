@@ -6,6 +6,7 @@ import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
 import coingeckoIdsFallback from '../references/coingecko/ids.json';
+import xDaiMapToEthereum from '../references/coingecko/xDaiMapToEthereum.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
@@ -23,7 +24,7 @@ const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
 
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
-  'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
+  'https://api.coingecko.com/api/v3/coins/list?include_platform=true';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
 
@@ -71,7 +72,8 @@ const fetchCoingeckoIds = async () => {
   }
 
   const idsMap = {};
-  ids.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
+  ids.forEach(({ id, platforms }) => {
+    let tokenAddress = platforms.xdai || platforms.ethereum;
     const address = tokenAddress && toLower(tokenAddress);
     if (address && address.substr(0, 2) === '0x') {
       idsMap[address] = id;
@@ -100,8 +102,10 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
         asset_code: 'eth',
         coingecko_id: 'dai',
         decimals: 18,
+        icon_url:
+          'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
         name: 'xDai',
-        symbol: 'DAI',
+        symbol: 'xDAI',
       },
     },
   ];
@@ -163,15 +167,27 @@ const discoverTokens = async (
 
     return uniqBy(
       allTxs.map(tx => {
-        const type = getTokenType(tx);
         return {
           asset: {
             asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
-            coingecko_id: coingeckoIds[tx.contractAddress.toLowerCase()],
+            coingecko_id:
+              coingeckoIds[tx.contractAddress.toLowerCase()] !== undefined &&
+              coingeckoIds[tx.contractAddress.toLowerCase()] !== 'undefined'
+                ? coingeckoIds[tx.contractAddress.toLowerCase()]
+                : xDaiMapToEthereum[tx.contractAddress.toLowerCase()] &&
+                  xDaiMapToEthereum[tx.contractAddress.toLowerCase()].address
+                ? coingeckoIds[
+                    xDaiMapToEthereum[tx.contractAddress.toLowerCase()].address
+                  ]
+                : '',
             decimals: Number(tx.tokenDecimal),
+            icon_url:
+              xDaiMapToEthereum[tx.contractAddress.toLowerCase()] &&
+              xDaiMapToEthereum[tx.contractAddress.toLowerCase()].icon_url
+                ? xDaiMapToEthereum[tx.contractAddress.toLowerCase()].icon_url
+                : '',
             name: tx.tokenName,
             symbol: tx.tokenSymbol,
-            type,
           },
         };
       }),
@@ -187,7 +203,7 @@ const getTokenTxDataFromEtherscan = async (
   offset,
   latestTxBlockNumber
 ) => {
-  let url = `https://api.etherscan.io/api?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
+  let url = `https://blockscout.com/poa/xdai/api?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
   if (latestTxBlockNumber) {
     url += `&startBlock=${latestTxBlockNumber}`;
   }
@@ -332,7 +348,9 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
                 prices[key][`${formattedNativeCurrency}_24h_change`],
               value: prices[key][`${formattedNativeCurrency}`],
             };
-            break;
+            if (toLower(key) !== 'dai') {
+              break;
+            }
           }
         }
       });
