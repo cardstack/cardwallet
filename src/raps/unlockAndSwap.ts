@@ -60,6 +60,7 @@ export const estimateUnlockAndSwap = async ({
       chainId,
       inputCurrency,
       outputCurrency,
+      // @ts-ignore
       tradeDetails,
     });
     gasLimits = concat(gasLimits, swapGasLimit);

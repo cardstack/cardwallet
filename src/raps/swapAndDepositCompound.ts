@@ -67,6 +67,7 @@ export const estimateSwapAndDepositCompound = async ({
       chainId,
       inputCurrency,
       outputCurrency,
+      // @ts-ignore
       tradeDetails,
     });
     gasLimits = concat(gasLimits, swapGasLimit);

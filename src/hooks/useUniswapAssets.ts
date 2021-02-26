@@ -131,6 +131,7 @@ const withUniswapAssetsSelector = createSelector(
     uniswapAllTokensSelector,
     uniswapFavoritesSelector,
   ],
+  // @ts-ignore
   withUniswapAssets
 );
 

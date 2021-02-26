@@ -12750,11 +12750,6 @@ react-native-actionsheet@^2.4.2:
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.4.2.tgz#6a00dd51a75ef2c8974312130e405af73191500f"
   integrity sha512-DBoWIvVwuWXuptF4t46pBqkFxaUxS+rsIdHiA05t0n4BdTIDV2R4s9bLEUVOGzb94D7VxIamsXZPA/3mmw+SXg==
 
-react-native-aes-cipher@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/react-native-aes-cipher/-/react-native-aes-cipher-1.0.9.tgz#71ffec3fe5f741c9e2c75aca2a066c08809ddf2a"
-  integrity sha512-S4jacE3S5WzMuLUTFaoQjCK4mHEds8/SXftzsisnSZZr2XRTIxrOcZjFLZwUm7eZ5UsleKP9/ng9KUCxKIIvKg==
-
 react-native-aes-crypto@brunobar79/react-native-aes#65c49f7e70266615b2999eaa7db654d3fe4f2e3b:
   version "2.0.2"
   resolved "https://codeload.github.com/brunobar79/react-native-aes/tar.gz/65c49f7e70266615b2999eaa7db654d3fe4f2e3b"
