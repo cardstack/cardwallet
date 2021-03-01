@@ -43,7 +43,7 @@ const GradientBackground = () => (
     width={'100%'}
     height={110}
     viewBox="0 0 400 100"
-    style={{ position: 'absolute', top: -10 }}
+    style={{ position: 'absolute', top: -12 }}
   >
     <Defs>
       <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
