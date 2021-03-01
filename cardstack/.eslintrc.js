@@ -5,7 +5,7 @@ module.exports = {
       "react": { "version": "16" },
       "import/resolver": {
         "node": {
-          "extensions": [".js", ".ios.js", ".android.js", ".native.js", ".ts", ".tsx"]
+          "extensions": [".js", ".ios.js", ".android.js", ".native.js", ".ts", ".tsx", ".png"]
         },
         "babel-module": {
           "alias": {}

@@ -3,7 +3,6 @@ import './rn-addons';
 
 // index.js
 import { ThemeProvider } from '@shopify/restyle';
-import { withBackgrounds } from '@storybook/addon-ondevice-backgrounds';
 import {
   addDecorator,
   addParameters,
@@ -18,6 +17,7 @@ import { name as appName } from '../../app.json';
 import { CenteredContainer } from '../src/components/Container';
 import { loadStories } from './storyLoader';
 import { useHideSplashScreen } from '@rainbow-me/hooks';
+import { withKnobs } from '@storybook/addon-knobs';
 
 // adding a centered-view layout!
 const CenterView = ({ children }) => (
@@ -28,6 +28,7 @@ const CenterView = ({ children }) => (
 
 // global decorators!
 addDecorator(getStory => <CenterView>{getStory()}</CenterView>);
+addDecorator(withKnobs);
 
 configure(() => {
   loadStories();

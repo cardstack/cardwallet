@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@shopify/restyle';
 import {
   render,
   RenderOptions,
@@ -5,10 +6,13 @@ import {
 } from '@testing-library/react-native';
 import React from 'react';
 
+import theme from '../../src/theme';
+
 const customerRender = (
   component: React.ReactElement,
   options?: Omit<RenderOptions, 'queries'>
-): RenderResult => render(component, options);
+): RenderResult =>
+  render(<ThemeProvider theme={theme}>{component}</ThemeProvider>, options);
 
 export * from '@testing-library/react-native';
 
