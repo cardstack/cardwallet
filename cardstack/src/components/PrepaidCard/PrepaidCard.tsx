@@ -16,10 +16,17 @@ import { numberWithCommas } from '@cardstack/utils';
 
 interface PrepaidCardProps {
   issuer: string;
-  id: string; // unique identifier, displayed in top right corner of card
-  spendableBalance: number; // balance in xDai
+  id: string;
+  spendableBalance: number;
 }
 
+/**
+ * A prepaid card component
+ *
+ * @param {string} props.issuer
+ * @param {string} props.id - unique identifier, displayed in top right corner of card
+ * @param {string} props.spendableBalance - balance in xDai
+ */
 export const PrepaidCard = (props: PrepaidCardProps) => {
   const { issuer, id, spendableBalance } = props;
 
