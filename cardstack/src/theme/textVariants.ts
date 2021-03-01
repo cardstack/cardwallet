@@ -19,4 +19,8 @@ export const textVariants = {
     color: 'grayText',
     fontSize: 10,
   },
+  subHeader: {
+    color: 'blueText',
+    fontSize: 16,
+  },
 };
