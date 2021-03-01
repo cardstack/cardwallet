@@ -17,6 +17,7 @@ export const colors = {
   buttonPrimaryBorder: palette.grayLight,
   buttonSecondaryBackground: palette.white,
   buttonSecondaryBorder: palette.grayDark,
+  grayText: palette.grayDark,
   green: palette.green,
   transparent: palette.transparent,
   white: palette.white,

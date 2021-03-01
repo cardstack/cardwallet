@@ -1,5 +1,7 @@
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import { Image } from 'react-native';
+import logo from '../../assets/cardstackLogoTransparent.png';
 
 import { colors } from '../../theme';
 import { Container } from '../Container';
@@ -23,7 +25,12 @@ export const PrepaidCard = () => (
         borderRadius: 10,
       }}
     >
-      <Container width="100%" padding={4} paddingBottom={0}>
+      <Container
+        width="100%"
+        paddingHorizontal={6}
+        paddingVertical={4}
+        paddingBottom={0}
+      >
         <Container width="100%">
           <Text fontSize={11}>{'Issued by'}</Text>
         </Container>
@@ -54,7 +61,7 @@ export const PrepaidCard = () => (
         height={39}
       >
         <Container width="40%" backgroundColor="white" />
-        <Container width="10%" overflow={'hidden'}>
+        <Container width="10%">
           <Container
             width={0}
             height={0}
@@ -64,8 +71,49 @@ export const PrepaidCard = () => (
             borderRightColor={'transparent'}
           />
         </Container>
-        <Container width="50%" />
+        <Container width="60%" />
       </Container>
     </LinearGradient>
+    <Container
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems={'center'}
+      paddingHorizontal={6}
+      paddingVertical={4}
+    >
+      <Container>
+        <Text fontSize={13}>{'Spendable Balance'}</Text>
+        <Text fontSize={40} variant={'bold'}>
+          {'§2,500'}
+        </Text>
+      </Container>
+      <Container height={46} width={42}>
+        <Image
+          source={logo}
+          style={{
+            height: '100%',
+            resizeMode: 'contain',
+            width: '100%',
+          }}
+        />
+      </Container>
+    </Container>
+    <Container
+      flexDirection="row"
+      alignItems="flex-end"
+      justifyContent={'space-between'}
+      paddingHorizontal={6}
+      paddingBottom={4}
+    >
+      <Text variant={'bold'}>{'$25.00 USD'}</Text>
+      <Container alignItems="flex-end">
+        <Text color="grayText" fontSize={10}>
+          {'RELOADABLE'}
+        </Text>
+        <Text color="grayText" fontSize={10}>
+          {'NON-TRANSFRERRABLE'}
+        </Text>
+      </Container>
+    </Container>
   </Container>
 );

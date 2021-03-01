@@ -1,6 +1,7 @@
 const baseText = {
   fontFamily: 'OpenSans-Regular',
   fontSize: 16,
+  letterSpacing: 0.75,
 };
 
 export const textVariants = {
