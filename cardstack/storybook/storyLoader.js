@@ -5,9 +5,13 @@
 
 function loadStories() {
   require('../src/components/Button/Button.story');
+  require('../src/components/PrepaidCard/PrepaidCard.story');
 }
 
-const stories = ['../src/components/Button/Button.story'];
+const stories = [
+  '../src/components/Button/Button.story',
+  '../src/components/PrepaidCard/PrepaidCard.story',
+];
 
 module.exports = {
   loadStories,

@@ -27,6 +27,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
+import { name as appName } from '../app.json';
 
 import PortalConsumer from './components/PortalConsumer';
 import { FlexItem } from './components/layout';
@@ -324,4 +325,4 @@ const AppWithCodePush = CodePush({
   installMode: CodePush.InstallMode.ON_NEXT_RESUME,
 })(() => <AppWithRedux store={store} />);
 
-AppRegistry.registerComponent('Rainbow', () => AppWithCodePush);
+AppRegistry.registerComponent(appName, () => AppWithCodePush);
