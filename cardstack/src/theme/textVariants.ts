@@ -7,9 +7,6 @@ const baseText = {
 export const textVariants = {
   defaults: baseText,
   body: baseText,
-  bold: {
-    fontFamily: 'OpenSans-Bold',
-  },
   shadowRoboto: {
     letterSpacing: 0.5,
     fontFamily: 'Roboto-Regular',
@@ -17,5 +14,9 @@ export const textVariants = {
     textShadowColor: 'white',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 0,
+  },
+  smallGrey: {
+    color: 'grayText',
+    fontSize: 10,
   },
 };

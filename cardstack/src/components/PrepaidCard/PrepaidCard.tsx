@@ -77,7 +77,7 @@ const Top = ({ issuer, id }: { issuer: string; id: string }) => (
       justifyContent="space-between"
       alignItems="center"
     >
-      <Text fontSize={13} variant="bold">
+      <Text fontSize={13} fontWeight={'700'}>
         {issuer}
       </Text>
       <Container flexDirection="row">
@@ -103,7 +103,7 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => (
     >
       <Container>
         <Text fontSize={13}>{'Spendable Balance'}</Text>
-        <Text fontSize={40} variant={'bold'}>
+        <Text fontSize={40} fontWeight={'700'}>
           {`§${numberWithCommas(spendableBalance.toString())}`}
         </Text>
       </Container>
@@ -125,17 +125,13 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => (
       marginTop={2}
     >
       {/* not sure if we should start with xDai and convert to USD or go the other way around. Also unsure how we will do that calculation either way */}
-      <Text variant={'bold'}>{`$${numberWithCommas(
+      <Text fontWeight={'700'}>{`$${numberWithCommas(
         (spendableBalance / 100).toFixed(2)
       )} USD`}</Text>
       {/* not sure if these will be different based on card or universal */}
       <Container alignItems="flex-end">
-        <Text color="grayText" fontSize={10}>
-          {'RELOADABLE'}
-        </Text>
-        <Text color="grayText" fontSize={10}>
-          {'NON-TRANSFRERRABLE'}
-        </Text>
+        <Text variant="smallGrey">{'RELOADABLE'}</Text>
+        <Text variant="smallGrey">{'NON-TRANSFRERRABLE'}</Text>
       </Container>
     </Container>
   </Container>
