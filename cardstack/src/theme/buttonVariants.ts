@@ -12,7 +12,7 @@ export const buttonVariants = {
     paddingVertical: 3,
     textStyle: {
       variant: 'body',
-      // fontWeight: '600',
+      fontWeight: '600',
     },
     width: screenWidth - 32,
   },
