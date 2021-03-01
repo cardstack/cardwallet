@@ -105,6 +105,7 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
   const formattedSpendableBalance = numberWithCommas(
     (spendableBalance / 100).toFixed(2)
   );
+
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
       <Container
@@ -145,4 +146,4 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
       </Container>
     </Container>
   );
-}
+};
