@@ -1,79 +1,76 @@
 import React from 'react';
-import LinearGradient from 'react-native-linear-gradient';
 import { Image } from 'react-native';
-import logo from '../../assets/cardstackLogoTransparent.png';
+import SVG, {
+  Defs,
+  G,
+  LinearGradient,
+  Path,
+  Rect,
+  Stop,
+} from 'react-native-svg';
 
-import { colors } from '../../theme';
+import logo from '../../assets/cardstackLogoTransparent.png';
 import { Container } from '../Container';
 import { Text } from '../Text';
 
 export const PrepaidCard = () => (
   <Container
+    backgroundColor={'white'}
     borderRadius={10}
-    borderWidth={1}
+    overflow={'hidden'}
     borderColor="buttonPrimaryBorder"
-    minHeight={250}
     width={'100%'}
   >
-    <LinearGradient
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      colors={[colors.blue, colors.green]}
-      locations={[0.2, 1]}
-      style={{
-        width: '100%',
-        borderRadius: 10,
-      }}
+    <SVG
+      width={'100%'}
+      height={100}
+      viewBox="0 0 400 100"
+      style={{ position: 'absolute', top: -2 }}
     >
-      <Container
-        width="100%"
-        paddingHorizontal={6}
-        paddingVertical={4}
-        paddingBottom={0}
+      <Defs>
+        <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+          <Stop offset="0" stopColor="#00ebe5" stopOpacity="1" />
+          <Stop offset="1" stopColor="#c3fc33" stopOpacity="1" />
+        </LinearGradient>
+      </Defs>
+      <Rect id="Gradient" width="100%" height="100" fill="url(#grad)" />
+      <G
+        id="Bottom_platter"
+        data-name="Bottom platter"
+        transform="translate(0 64.325)"
       >
-        <Container width="100%">
-          <Text fontSize={11}>{'Issued by'}</Text>
-        </Container>
-        <Container
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Text fontSize={13} variant="bold">
-            {'Cardstack'}
-          </Text>
-          <Container flexDirection="row">
-            <Text variant="shadowRoboto">{'0xbeA3'}</Text>
-            <Text variant="shadowRoboto" letterSpacing={1.35}>
-              {'...'}
-            </Text>
-            <Text variant="shadowRoboto">{'7eF8'}</Text>
-          </Container>
-        </Container>
-        <Container width="100%" alignItems="flex-end">
-          <Text fontSize={11}>{'on xDai chain'}</Text>
-        </Container>
+        <Path
+          id="Union_18"
+          data-name="Union 18"
+          d="M0,164.992v-.127H0V0H139.563s13.162.132,24.094,12.362,15.768,15.605,15.768,15.605,7.3,8.09,22.43,8.452H335l-.064,128.572Z"
+          fill="#fff"
+        />
+      </G>
+    </SVG>
+    <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
+      <Container width="100%">
+        <Text fontSize={11}>{'Issued by'}</Text>
       </Container>
       <Container
-        width="100%"
-        justifyContent="space-between"
         flexDirection="row"
-        height={39}
+        justifyContent="space-between"
+        alignItems="center"
       >
-        <Container width="40%" backgroundColor="white" />
-        <Container width="10%">
-          <Container
-            width={0}
-            height={0}
-            borderBottomWidth={50}
-            borderBottomColor={'white'}
-            borderRightWidth={50}
-            borderRightColor={'transparent'}
-          />
+        <Text fontSize={13} variant="bold">
+          {'Cardstack'}
+        </Text>
+        <Container flexDirection="row">
+          <Text variant="shadowRoboto">{'0xbeA3'}</Text>
+          <Text variant="shadowRoboto" letterSpacing={1.35}>
+            {'...'}
+          </Text>
+          <Text variant="shadowRoboto">{'7eF8'}</Text>
         </Container>
-        <Container width="60%" />
       </Container>
-    </LinearGradient>
+      <Container width="100%" alignItems="flex-end">
+        <Text fontSize={11}>{'on xDai chain'}</Text>
+      </Container>
+    </Container>
     <Container
       flexDirection="row"
       justifyContent="space-between"

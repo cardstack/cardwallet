@@ -21,21 +21,13 @@ import { useHideSplashScreen } from '@rainbow-me/hooks';
 
 // adding a centered-view layout!
 const CenterView = ({ children }) => (
-  <CenteredContainer flex={1} width="100%" padding={4}>
+  <CenteredContainer flex={1} width="100%" padding={4} backgroundColor="backgroundBlue">
     {children}
   </CenteredContainer>
 );
 
 // global decorators!
 addDecorator(getStory => <CenterView>{getStory()}</CenterView>);
-addDecorator(withBackgrounds);
-addParameters({
-  backgrounds: [
-    { default: true, name: 'light', value: '#fff' },
-    { name: 'gray', value: '#808080' },
-    { name: 'dark', value: '#000' },
-  ],
-});
 
 configure(() => {
   loadStories();
