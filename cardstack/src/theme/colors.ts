@@ -7,6 +7,8 @@ export const palette = {
   green: '#C3FC33',
   transparent: 'transparent',
   white: '#FFFFFF',
+  blueText: '#6B6A80',
+  borderGray: '#E8E8E8',
 };
 
 export const colors = {
@@ -18,7 +20,9 @@ export const colors = {
   buttonSecondaryBackground: palette.white,
   buttonSecondaryBorder: palette.grayDark,
   grayText: palette.grayDark,
+  blueText: palette.blueText,
   green: palette.green,
   transparent: palette.transparent,
   white: palette.white,
+  borderGray: palette.borderGray,
 };
