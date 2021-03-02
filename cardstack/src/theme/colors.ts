@@ -2,6 +2,7 @@ export const palette = {
   black: '#000000',
   blueDark: '#413E4E',
   blueLight: '#00EBE5',
+  grayBackground: '#E8E8E8',
   grayDark: '#AFAFB7',
   grayLight: '#00EBE5',
   green: '#C3FC33',
@@ -10,6 +11,7 @@ export const palette = {
 };
 
 export const colors = {
+  backgroundGray: palette.grayBackground,
   backgroundBlue: palette.blueDark,
   black: palette.black,
   blue: palette.blueLight,
