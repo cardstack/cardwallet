@@ -1,13 +1,27 @@
 import React from 'react';
-import { ImageSourcePropType } from 'react-native';
+import { ImageSourcePropType, SectionList } from 'react-native';
 
 import chevronRight from '../../assets/icons/chevron-right.png';
 import payIcon from '../../assets/icons/pay.png';
 import reloadIcon from '../../assets/icons/reload.png';
 import rewardIcon from '../../assets/icons/gift.png';
-import { Container, Button, Text, Icon } from '@cardstack/components';
+import {
+  Container,
+  Button,
+  Text,
+  Icon,
+  TransactionCoinRowProps,
+  TransactionCoinRow,
+} from '@cardstack/components';
 
-export const ExpandedCard = () => (
+export interface ExpandedCardProps {
+  recentActivity: {
+    title: string;
+    data: TransactionCoinRowProps[];
+  }[];
+}
+
+export const ExpandedCard = (props: ExpandedCardProps) => (
   <Container
     width="100%"
     backgroundColor="white"
@@ -16,7 +30,16 @@ export const ExpandedCard = () => (
     padding={4}
     borderRadius={10}
   >
-    <Button>Reload</Button>
+    <Container width="100%" alignItems="center">
+      <Button>Reload</Button>
+    </Container>
+    <Features />
+    <RecentActivity {...props} />
+  </Container>
+);
+
+const Features = () => (
+  <>
     <Text fontSize={20} marginVertical={6}>
       Features
     </Text>
@@ -40,7 +63,7 @@ export const ExpandedCard = () => (
         bodyText=" with this card"
       />
     </Container>
-  </Container>
+  </>
 );
 
 interface OptionItemProps {
@@ -65,4 +88,24 @@ const OptionItem = ({ source, boldText, bodyText }: OptionItemProps) => (
     </Container>
     <Icon source={chevronRight} size={15} />
   </Container>
+);
+
+const RecentActivity = (props: ExpandedCardProps) => (
+  <>
+    <Text fontSize={20} marginVertical={6}>
+      Recent Activity
+    </Text>
+    <SectionList
+      keyExtractor={(item, index) =>
+        (item.transactionAmount + index).toString()
+      }
+      sections={props.recentActivity}
+      renderItem={({ item }) => <TransactionCoinRow {...item} />}
+      renderSectionHeader={({ section: { title } }) => (
+        <Text variant="subHeader" marginTop={4}>
+          {title}
+        </Text>
+      )}
+    />
+  </>
 );

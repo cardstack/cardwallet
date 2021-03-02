@@ -10,11 +10,11 @@ import SVG, {
 } from 'react-native-svg';
 
 import logo from '../../assets/cardstackLogoTransparent.png';
-import { ExpandedCard } from './ExpandedCard';
+import { ExpandedCard, ExpandedCardProps } from './ExpandedCard';
 import { numberWithCommas, getDollarsFromDai } from '@cardstack/utils';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
 
-interface PrepaidCardProps {
+interface PrepaidCardProps extends ExpandedCardProps {
   issuer: string;
   /** unique identifier, displayed in top right corner of card */
   id: string;
@@ -45,7 +45,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           <Bottom spendableBalance={spendableBalance} />
         </Container>
       </Touchable>
-      {isScrollable && <ExpandedCard />}
+      {isScrollable && <ExpandedCard recentActivity={props.recentActivity} />}
     </Wrapper>
   );
 };

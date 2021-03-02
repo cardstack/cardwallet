@@ -16,6 +16,7 @@ module.exports = {
         'jest/expect-expect': 0,
         'import/namespace': 0,
         '@typescript-eslint/explicit-function-return-type': 0,
-        "react/jsx-curly-brace-presence": ['error', 'never']
+        "react/jsx-curly-brace-presence": ['error', 'never'],
+        'react/jsx-fragments': 0
     }
 };
