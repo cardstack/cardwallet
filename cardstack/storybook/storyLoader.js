@@ -7,12 +7,14 @@ function loadStories() {
   require('../src/components/Button/Button.story');
   require('../src/components/PrepaidCard/PrepaidCard.story');
   require('../src/components/Touchable/Touchable.story');
+  require('../src/components/TransactionCoinRow/TransactionCoinRow.story');
 }
 
 const stories = [
   '../src/components/Button/Button.story',
   '../src/components/PrepaidCard/PrepaidCard.story',
   '../src/components/Touchable/Touchable.story',
+  '../src/components/TransactionCoinRow/TransactionCoinRow.story',
 ];
 
 module.exports = {

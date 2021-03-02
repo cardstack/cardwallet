@@ -4,9 +4,11 @@ export const palette = {
   blueText: '#6B6A80',
   blueLight: '#00EBE5',
   grayBackground: '#F7F7F7',
+  borderGray: '#E8E8E8',
   grayDark: '#AFAFB7',
   grayLight: '#00EBE5',
-  green: '#C3FC33',
+  green: '#00AC3D',
+  red: '#FF0000',
   transparent: 'transparent',
   white: '#FFFFFF',
 };
@@ -16,6 +18,7 @@ export const colors = {
   black: palette.black,
   blue: palette.blueLight,
   blueText: palette.blueText,
+  borderGray: palette.borderGray,
   buttonPrimaryBackground: palette.grayLight,
   buttonPrimaryBorder: palette.grayLight,
   buttonSecondaryBackground: palette.white,
@@ -23,6 +26,7 @@ export const colors = {
   grayBackground: palette.grayBackground,
   grayText: palette.grayDark,
   green: palette.green,
+  red: palette.red,
   transparent: palette.transparent,
   white: palette.white,
 };
