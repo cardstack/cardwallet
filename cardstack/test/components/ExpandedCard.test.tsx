@@ -6,7 +6,7 @@ import { render } from '../test-utils';
 import {
   ExpandedCard,
   ExpandedCardProps,
-} from '@cardstack/components/PrepaidCard/ExpandedCard';
+} from '../../src/components/PrepaidCard/ExpandedCard';
 import { TransactionType } from '@cardstack/components';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
