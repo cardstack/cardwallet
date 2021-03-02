@@ -12,20 +12,18 @@ import SVG, {
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { Container } from '../Container';
 import { Text } from '../Text';
-import { numberWithCommas } from '@cardstack/utils';
+import { numberWithCommas, getDollarsFromDai } from '@cardstack/utils';
 
 interface PrepaidCardProps {
   issuer: string;
+  /** unique identifier, displayed in top right corner of card */
   id: string;
+  /** balance in xDai */
   spendableBalance: number;
 }
 
 /**
  * A prepaid card component
- *
- * @param {string} props.issuer
- * @param {string} props.id - unique identifier, displayed in top right corner of card
- * @param {string} props.spendableBalance - balance in xDai
  */
 export const PrepaidCard = (props: PrepaidCardProps) => {
   const { issuer, id, spendableBalance } = props;
@@ -103,7 +101,7 @@ const Top = ({ issuer, id }: { issuer: string; id: string }) => (
 
 const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
   const formattedSpendableBalance = numberWithCommas(
-    (spendableBalance / 100).toFixed(2)
+    getDollarsFromDai(spendableBalance).toFixed(2)
   );
 
   return (
