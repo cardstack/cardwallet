@@ -29,6 +29,7 @@ export const ExpandedCard = (props: ExpandedCardProps) => (
     marginVertical={2}
     padding={4}
     borderRadius={10}
+    testID="expanded-card"
   >
     <Container width="100%" alignItems="center">
       <Button>Reload</Button>

@@ -10,6 +10,10 @@ interface IconProps {
 
 export const Icon = ({ size = 30, source }: IconProps) => (
   <Container width={size} height={size} marginRight={2}>
-    <Image source={source} resizeMode="contain" height="100%" width="100%" />
+    <Image
+      source={source}
+      resizeMode="contain"
+      style={{ height: '100%', width: '100%' }}
+    />
   </Container>
 );

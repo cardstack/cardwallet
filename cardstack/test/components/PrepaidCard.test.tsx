@@ -1,8 +1,13 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { render } from '../test-utils';
-import { PrepaidCard } from '@cardstack/components';
+import { act } from 'react-test-renderer';
+import { fireEvent, render } from '../test-utils';
+import {
+  PrepaidCard,
+  TransactionCoinRowProps,
+  TransactionType,
+} from '@cardstack/components';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
@@ -11,12 +16,30 @@ jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
 const chance = new Chance();
 
 describe('PrepaidCard', () => {
-  let issuer: string, id: string, spendableBalance: number;
+  let issuer: string,
+    id: string,
+    spendableBalance: number,
+    recentActivity: {
+      title: string;
+      data: TransactionCoinRowProps[];
+    }[];
+
+  const createRandomTransactionDataItem = () => ({
+    type: chance.pickone(Object.values(TransactionType)),
+    recipient: chance.name(),
+    transactionAmount: chance.natural(),
+  });
+
+  const createRandomActivityItem = () => ({
+    title: chance.word(),
+    data: chance.n(createRandomTransactionDataItem, chance.d6()),
+  });
 
   beforeEach(() => {
     issuer = chance.string();
     id = chance.guid();
     spendableBalance = chance.natural();
+    recentActivity = chance.n(createRandomActivityItem, chance.d6());
   });
 
   it('should render the issuer name', () => {
@@ -25,6 +48,7 @@ describe('PrepaidCard', () => {
         issuer={issuer}
         id={id}
         spendableBalance={spendableBalance}
+        recentActivity={recentActivity}
       />
     );
 
@@ -37,6 +61,7 @@ describe('PrepaidCard', () => {
         issuer={issuer}
         id={id}
         spendableBalance={spendableBalance}
+        recentActivity={recentActivity}
       />
     );
 
@@ -53,10 +78,32 @@ describe('PrepaidCard', () => {
         issuer={issuer}
         id={id}
         spendableBalance={spendableBalance}
+        recentActivity={recentActivity}
       />
     );
 
     getByText('§1,000');
     getByText('$10.00 USD');
+  });
+
+  it('should show an expanded card when the prepaid card is pressed', () => {
+    const { getByTestId, queryByTestId } = render(
+      <PrepaidCard
+        issuer={issuer}
+        id={id}
+        spendableBalance={spendableBalance}
+        recentActivity={recentActivity}
+      />
+    );
+
+    const prepaidCard = getByTestId('prepaid-card');
+
+    expect(queryByTestId('expanded-card')).toBeNull();
+
+    act(() => {
+      fireEvent.press(prepaidCard);
+    });
+
+    getByTestId('expanded-card');
   });
 });

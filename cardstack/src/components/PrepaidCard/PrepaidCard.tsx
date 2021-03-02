@@ -32,7 +32,11 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
 
   return (
     <Wrapper width="100%">
-      <Touchable onPress={() => setIsScrollable(!isScrollable)} width="100%">
+      <Touchable
+        onPress={() => setIsScrollable(!isScrollable)}
+        width="100%"
+        testID="prepaid-card"
+      >
         <Container
           backgroundColor="white"
           borderRadius={10}

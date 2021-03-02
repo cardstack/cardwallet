@@ -17,6 +17,7 @@ module.exports = {
         'import/namespace': 0,
         '@typescript-eslint/explicit-function-return-type': 0,
         "react/jsx-curly-brace-presence": ['error', 'never'],
-        'react/jsx-fragments': 0
+        'react/jsx-fragments': 0,
+        '@typescript-eslint/no-unused-vars': 'error'
     }
 };

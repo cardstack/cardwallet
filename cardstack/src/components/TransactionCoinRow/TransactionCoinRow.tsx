@@ -75,7 +75,7 @@ export const TransactionCoinRow = ({
   const data = typeToData[type];
 
   return (
-    <Container width="100%" alignItems="center">
+    <Container width="100%" alignItems="center" testID="transaction-coin-row">
       <Container
         alignItems="center"
         justifyContent="space-between"
