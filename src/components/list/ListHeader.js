@@ -6,7 +6,7 @@ import Divider from '../Divider';
 import { ContextMenu } from '../context-menu';
 import { Row } from '../layout';
 import SavingsListHeader from '../savings/SavingsListHeader';
-import { H1 } from '../text';
+import { Text } from '@cardstack/components';
 import { padding, position } from '@rainbow-me/styles';
 
 export const ListHeaderHeight = 44;
@@ -31,14 +31,12 @@ const Content = styled(Row).attrs({
   justify: 'space-between',
 })`
   ${padding(0, 19, 2)};
-  background-color: ${({ isSticky, theme: { colors } }) =>
-    isSticky ? colors.white : colors.transparent};
+  background-color: transparent;
   height: ${ListHeaderHeight};
   width: 100%;
 `;
 
 const StickyBackgroundBlocker = styled.View`
-  background-color: ${({ theme: { colors } }) => colors.white};
   height: ${({ isEditMode }) => (isEditMode ? ListHeaderHeight : 0)};
   top: ${({ isEditMode }) => (isEditMode ? -40 : 0)};
   width: ${({ deviceDimensions }) => deviceDimensions.width};
@@ -51,7 +49,7 @@ export default function ListHeader({
   isSticky,
   showDivider = true,
   title,
-  titleRenderer = H1,
+  titleRenderer = Text,
   totalValue,
 }) {
   const deviceDimensions = useDimensions();
@@ -70,13 +68,17 @@ export default function ListHeader({
   } else {
     return (
       <Fragment>
-        <BackgroundGradient />
+        {/* <BackgroundGradient /> */}
         <Content isSticky={isSticky}>
+          {createElement(titleRenderer, {
+            children: title,
+            color: 'white',
+            fontSize: 20,
+          })}
           <Row align="center">
-            {createElement(titleRenderer, { children: title })}
+            {children}
             <ContextMenu marginTop={3} {...contextMenuOptions} />
           </Row>
-          {children}
         </Content>
         {showDivider && <Divider />}
         {!isSticky && title !== 'Balances' && (

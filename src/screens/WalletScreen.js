@@ -99,7 +99,7 @@ export default function WalletScreen() {
 
   return (
     <WalletPage testID="wallet-screen">
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
 
       {/* Line below appears to be needed for having scrollViewTracker persistent while
       reattaching of react subviews */}

@@ -2,7 +2,7 @@ import React from 'react';
 import { magicMemo } from '../../utils';
 import { DividerSize } from '../Divider';
 import { ListHeader, ListHeaderHeight } from '../list';
-import { H1 } from '../text';
+import { Text } from '@cardstack/components';
 
 export const AssetListHeaderHeight = ListHeaderHeight + DividerSize;
 
@@ -23,9 +23,9 @@ const AssetListHeader = ({
     {...props}
   >
     {totalValue ? (
-      <H1 align="right" letterSpacing="roundedTight" weight="semibold">
-        {totalValue}
-      </H1>
+      <Text color="white" fontSize={16} fontWeight="700">
+        {`${totalValue} USD`}
+      </Text>
     ) : null}
   </ListHeader>
 );

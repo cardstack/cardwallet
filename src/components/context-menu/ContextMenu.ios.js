@@ -1,9 +1,10 @@
 import { omit, pick } from 'lodash';
 import React, { Fragment, useCallback, useRef, useState } from 'react';
 import ActionSheet from 'react-native-actionsheet';
+import moreIcon from '../../../cardstack/src/assets/more.png';
 import { ButtonPressAnimation } from '../animations';
-import { Icon } from '../icons';
 import { Centered } from '../layout';
+import { Icon } from '@cardstack/components';
 import { padding } from '@rainbow-me/styles';
 
 const ActionSheetProps = [
@@ -60,7 +61,7 @@ export default function ContextMenu({
           activeOpacity={activeOpacity}
           onPress={handleShowActionSheet}
         >
-          {children || <ContextButton {...omit(props, ActionSheetProps)} />}
+          {children || <Icon margin={2} source={moreIcon} />}
         </ButtonPressAnimation>
       )}
       <ActionSheet
