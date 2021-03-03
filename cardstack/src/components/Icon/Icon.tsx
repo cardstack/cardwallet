@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ImageSourcePropType } from 'react-native';
-import { Container, Image } from '@cardstack/components';
+import { Container, ContainerProps, Image } from '@cardstack/components';
 
 type IconSize = 'small' | 'medium' | 'large';
 
@@ -11,7 +11,7 @@ const iconSizeToValue = {
   large: 30,
 };
 
-interface IconProps {
+interface IconProps extends ContainerProps {
   /** specify the size using T-Shirt sizes */
   iconSize?: IconSize;
   /** if none of the default sizes work for what you need, you can use this to override */
@@ -19,11 +19,21 @@ interface IconProps {
   source: ImageSourcePropType;
 }
 
-export const Icon = ({ iconSize = 'large', size, source }: IconProps) => {
+export const Icon = ({
+  iconSize = 'large',
+  size,
+  source,
+  ...props
+}: IconProps) => {
   const widthAndHeight = size || iconSizeToValue[iconSize];
 
   return (
-    <Container width={widthAndHeight} height={widthAndHeight} marginRight={2}>
+    <Container
+      width={widthAndHeight}
+      height={widthAndHeight}
+      marginRight={2}
+      {...props}
+    >
       <Image
         source={source}
         resizeMode="contain"

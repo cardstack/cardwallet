@@ -5,14 +5,9 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  LayoutAnimation,
-  NativeModules,
-  StatusBar,
-  useColorScheme,
-} from 'react-native';
-import { useDarkMode } from 'react-native-dark-mode';
+import { LayoutAnimation, NativeModules, StatusBar } from 'react-native';
 import { ThemeProvider } from 'styled-components';
+
 import { getTheme, saveTheme } from '../handlers/localstorage/theme';
 import { darkModeThemeColors, lightModeThemeColors } from '../styles/colors';
 import currentColors from './currentColors';

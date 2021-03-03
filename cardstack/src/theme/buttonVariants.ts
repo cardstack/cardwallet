@@ -22,7 +22,7 @@ export const buttonVariants = {
   },
   blue: {
     backgroundColor: 'backgroundBlue',
-    borderColor: 'white',
+    borderColor: 'borderBlue',
     textStyle: {
       color: 'white',
     },

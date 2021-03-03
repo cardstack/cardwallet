@@ -31,6 +31,7 @@ import {
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { updateRefetchSavings } from '../redux/data';
+import { colors } from '@cardstack/theme';
 import { position } from '@rainbow-me/styles';
 
 const HeaderOpacityToggler = styled(OpacityToggler).attrs(({ isVisible }) => ({
@@ -43,6 +44,7 @@ const HeaderOpacityToggler = styled(OpacityToggler).attrs(({ isVisible }) => ({
 
 const WalletPage = styled(Page)`
   ${position.size('100%')};
+  background-color: ${colors.backgroundBlue};
   flex: 1;
 `;
 
