@@ -6,6 +6,7 @@
 function loadStories() {
   require('../src/components/Button/Button.story');
   require('../src/components/PrepaidCard/PrepaidCard.story');
+  require('../src/components/SystemNotification/SystemNotification.story');
   require('../src/components/Touchable/Touchable.story');
   require('../src/components/TransactionCoinRow/TransactionCoinRow.story');
 }
@@ -13,6 +14,7 @@ function loadStories() {
 const stories = [
   '../src/components/Button/Button.story',
   '../src/components/PrepaidCard/PrepaidCard.story',
+  '../src/components/SystemNotification/SystemNotification.story',
   '../src/components/Touchable/Touchable.story',
   '../src/components/TransactionCoinRow/TransactionCoinRow.story',
 ];

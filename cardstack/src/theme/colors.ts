@@ -14,6 +14,7 @@ export const palette = {
 };
 
 export const colors = {
+  backgroundGray: palette.grayBackground,
   backgroundBlue: palette.blueDark,
   black: palette.black,
   blue: palette.blueLight,
