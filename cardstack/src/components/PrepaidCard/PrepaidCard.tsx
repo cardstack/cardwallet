@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image } from 'react-native';
 import SVG, {
   Defs,
@@ -10,38 +10,47 @@ import SVG, {
 } from 'react-native-svg';
 
 import logo from '../../assets/cardstackLogoTransparent.png';
-import { Container } from '../Container';
-import { Text } from '../Text';
-import { numberWithCommas } from '@cardstack/utils';
+import { ExpandedCard, ExpandedCardProps } from './ExpandedCard';
+import { numberWithCommas, getDollarsFromDai } from '@cardstack/utils';
+import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
 
-interface PrepaidCardProps {
+interface PrepaidCardProps extends ExpandedCardProps {
   issuer: string;
+  /** unique identifier, displayed in top right corner of card */
   id: string;
+  /** balance in xDai */
   spendableBalance: number;
 }
 
 /**
  * A prepaid card component
- *
- * @param {string} props.issuer
- * @param {string} props.id - unique identifier, displayed in top right corner of card
- * @param {string} props.spendableBalance - balance in xDai
  */
 export const PrepaidCard = (props: PrepaidCardProps) => {
+  const [isScrollable, setIsScrollable] = useState(false);
   const { issuer, id, spendableBalance } = props;
+  const Wrapper = isScrollable ? ScrollView : Container;
 
   return (
-    <Container
-      backgroundColor="white"
-      borderRadius={10}
-      overflow="hidden"
-      borderColor="buttonPrimaryBorder"
-      width="100%"
-    >
-      <GradientBackground />
-      <Top issuer={issuer} id={id} />
-      <Bottom spendableBalance={spendableBalance} />
-    </Container>
+    <Wrapper width="100%">
+      <Touchable
+        onPress={() => setIsScrollable(!isScrollable)}
+        width="100%"
+        testID="prepaid-card"
+      >
+        <Container
+          backgroundColor="white"
+          borderRadius={10}
+          overflow="hidden"
+          borderColor="buttonPrimaryBorder"
+          width="100%"
+        >
+          <GradientBackground />
+          <Top issuer={issuer} id={id} />
+          <Bottom spendableBalance={spendableBalance} />
+        </Container>
+      </Touchable>
+      {isScrollable && <ExpandedCard recentActivity={props.recentActivity} />}
+    </Wrapper>
   );
 };
 
@@ -103,7 +112,7 @@ const Top = ({ issuer, id }: { issuer: string; id: string }) => (
 
 const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
   const formattedSpendableBalance = numberWithCommas(
-    (spendableBalance / 100).toFixed(2)
+    getDollarsFromDai(spendableBalance).toFixed(2)
   );
 
   return (
