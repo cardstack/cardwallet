@@ -1,8 +1,9 @@
 export const palette = {
   black: '#000000',
   blueDark: '#413E4E',
-  blueLight: '#00EBE5',
   blueText: '#6B6A80',
+  blueLight: '#00EBE5',
+  grayBackground: '#F7F7F7',
   borderGray: '#E8E8E8',
   grayDark: '#AFAFB7',
   grayLight: '#00EBE5',
@@ -22,6 +23,7 @@ export const colors = {
   buttonPrimaryBorder: palette.grayLight,
   buttonSecondaryBackground: palette.white,
   buttonSecondaryBorder: palette.grayDark,
+  grayBackground: palette.grayBackground,
   grayText: palette.grayDark,
   green: palette.green,
   red: palette.red,

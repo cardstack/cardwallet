@@ -58,7 +58,7 @@ const typeToData: {
   },
 };
 
-interface TransactionCoinRowProps {
+export interface TransactionCoinRowProps {
   recipient: string;
   transactionAmount: number;
   type: TransactionType;
@@ -75,23 +75,26 @@ export const TransactionCoinRow = ({
   const data = typeToData[type];
 
   return (
-    <Container
-      alignItems="center"
-      justifyContent="space-between"
-      flexDirection="row"
-      width="100%"
-      padding={4}
-      backgroundColor="white"
-      borderRadius={10}
-      borderColor="borderGray"
-      margin={2}
-    >
-      <Left data={data} />
-      <Right
-        data={data}
-        transactionAmount={transactionAmount}
-        recipient={recipient}
-      />
+    <Container width="100%" alignItems="center" testID="transaction-coin-row">
+      <Container
+        alignItems="center"
+        justifyContent="space-between"
+        flexDirection="row"
+        width="100%"
+        padding={4}
+        backgroundColor="white"
+        borderRadius={10}
+        borderColor="borderGray"
+        borderWidth={1}
+        margin={2}
+      >
+        <Left data={data} />
+        <Right
+          data={data}
+          transactionAmount={transactionAmount}
+          recipient={recipient}
+        />
+      </Container>
     </Container>
   );
 };
