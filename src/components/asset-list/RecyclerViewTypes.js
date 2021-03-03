@@ -137,9 +137,7 @@ export const ViewTypes = {
     index: 4,
     renderComponent: ({ data }) => {
       const { item = {} } = data;
-      return (
-        <SavingsListWrapper assets={item.assets} totalValue={item.totalValue} />
-      );
+      return null;
     },
   },
 

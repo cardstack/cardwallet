@@ -87,13 +87,7 @@ export default function WalletScreen() {
 
   // Show the exchange fab only for supported networks
   // (mainnet & rinkeby)
-  const fabs = useMemo(
-    () =>
-      get(networkInfo[network], 'exchange_enabled')
-        ? [ExchangeFab, SendFab]
-        : [SendFab],
-    [network]
-  );
+  const fabs = [];
 
   const isCoinListEditedValue = useCoinListEditedValue();
 
