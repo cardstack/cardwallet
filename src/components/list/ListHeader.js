@@ -7,6 +7,7 @@ import { ContextMenu } from '../context-menu';
 import { Row } from '../layout';
 import SavingsListHeader from '../savings/SavingsListHeader';
 import { Text } from '@cardstack/components';
+import { colors as cardstackColors } from '@cardstack/theme';
 import { padding, position } from '@rainbow-me/styles';
 
 export const ListHeaderHeight = 44;
@@ -31,7 +32,7 @@ const Content = styled(Row).attrs({
   justify: 'space-between',
 })`
   ${padding(0, 19, 2)};
-  background-color: transparent;
+  background-color: ${cardstackColors.backgroundBlue};
   height: ${ListHeaderHeight};
   width: 100%;
 `;

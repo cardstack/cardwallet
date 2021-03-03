@@ -32,25 +32,16 @@ const CoinIcon = ({
   return (
     <Fragment>
       {(isPinned || isHidden) && <CoinIconIndicator isPinned={isPinned} />}
-      {props.icon_url ? (
-        <Image
-          source={{
-            uri: props.icon_url,
-          }}
-          style={{ height: size, width: size }}
-        />
-      ) : (
-        <StyledCoinIcon
-          {...props}
-          address={address}
-          color={color}
-          fallbackRenderer={CoinIconFallback}
-          forceFallback={forceFallback}
-          shadowColor={tokenMetadata?.shadowColor || color}
-          size={size}
-          symbol={symbol}
-        />
-      )}
+      <StyledCoinIcon
+        {...props}
+        address={address}
+        color={color}
+        fallbackRenderer={CoinIconFallback}
+        forceFallback={forceFallback}
+        shadowColor={tokenMetadata?.shadowColor || color}
+        size={size}
+        symbol={symbol}
+      />
     </Fragment>
   );
 };
