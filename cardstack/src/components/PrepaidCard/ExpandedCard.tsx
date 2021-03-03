@@ -87,7 +87,7 @@ const OptionItem = ({ source, boldText, bodyText }: OptionItemProps) => (
       </Text>
       <Text fontSize={14}>{bodyText}</Text>
     </Container>
-    <Icon source={chevronRight} size={15} />
+    <Icon source={chevronRight} iconSize="small" />
   </Container>
 );
 
