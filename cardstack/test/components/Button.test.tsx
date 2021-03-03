@@ -2,8 +2,9 @@ import Chance from 'chance';
 import React from 'react';
 
 import { render } from '../test-utils';
+import { Button } from '../../src/components/Button';
+import { Text } from '../../src/components/Text';
 import * as utils from '@cardstack/utils';
-import { Button, Text } from '@cardstack/components';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)

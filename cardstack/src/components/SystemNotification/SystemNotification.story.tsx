@@ -1,8 +1,9 @@
+import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
-import { text } from '@storybook/addon-knobs';
+
 import { SystemNotification } from './SystemNotification';
-import { Container, Text } from '@cardstack/components';
+import { Container } from '@cardstack/components';
 
 storiesOf('System Notification', module).add('Default', () => {
   const closedText = text(
@@ -17,16 +18,17 @@ storiesOf('System Notification', module).add('Default', () => {
     'The Spendable Balance may fluctuate slightly based on the exchange rate of the underlying token (USD_DAI)'
   );
 
+  const props = {
+    closedText,
+    openedHeaderText,
+    openedBodyText,
+  };
+
   return (
-    <SystemNotification
-      openedComponent={
-        <Container>
-          <Text fontWeight="700">{openedHeaderText}</Text>
-          <Text fontSize={13}>{openedBodyText}</Text>
-        </Container>
-      }
-    >
-      <Text fontSize={13}>{closedText}</Text>
-    </SystemNotification>
+    <Container position="absolute" top={200} width="100%" alignItems="center">
+      <SystemNotification {...props} />
+      <SystemNotification type="alert" {...props} />
+      <SystemNotification type="error" {...props} />
+    </Container>
   );
 });
