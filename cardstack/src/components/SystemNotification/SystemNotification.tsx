@@ -10,12 +10,8 @@ import downIcon from '../../assets/chevron-down.png';
 import infoIcon from '../../assets/info-blue.png';
 import alertIcon from '../../assets/warning.png';
 import errorIcon from '../../assets/error.png';
-import {
-  AnimatedContainer,
-  AnimatedText,
-  Container,
-  Text,
-} from '@cardstack/components';
+import { AnimatedContainer, AnimatedText } from '../Animated';
+import { Container, Text } from '@cardstack/components';
 
 const ANIMATION_DURATION = 150;
 const CLOSED_HEIGHT = 40;
@@ -98,11 +94,7 @@ export const SystemNotification = ({
   const toggle = isOpen ? closeNotification : openNotification;
 
   return (
-    <TouchableOpacity
-      onPress={toggle}
-      testID="system-notification"
-      activeOpacity={1}
-    >
+    <TouchableOpacity onPress={toggle} activeOpacity={1}>
       <AnimatedContainer
         backgroundColor="backgroundGray"
         padding={4}
@@ -116,6 +108,7 @@ export const SystemNotification = ({
           alignItems="center"
           justifyContent="space-between"
           marginBottom={isOpen ? 4 : 0}
+          testID="system-notification"
         >
           <Container height={22} width={22} marginRight={2}>
             <Image

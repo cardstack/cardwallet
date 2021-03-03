@@ -14,12 +14,8 @@ jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
 
 const mockStart = jest.fn();
 
-jest.mock('../../src/components/Animated', () => ({
-  AnimatedContainer: jest.fn(() => null),
-  AnimatedText: jest.fn(() => null),
-}));
-
 jest.mock('react-native/Libraries/Animated/src/Animated', () => ({
+  createAnimatedComponent: jest.fn(() => jest.fn(({ children }) => children)),
   timing: jest.fn(),
   parallel: jest.fn(() => ({
     start: mockStart,
@@ -30,9 +26,9 @@ jest.mock('react-native/Libraries/Animated/src/Animated', () => ({
   Image: jest.fn(() => null),
 }));
 
-// jest.mock('react-native/Libraries/Components/Touchable/TouchableOpacity', () =>
-//   jest.fn(({ children }) => children)
-// );
+jest.mock('react-native/Libraries/Components/Touchable/TouchableOpacity', () =>
+  jest.fn(({ children }) => children)
+);
 
 const chance = new Chance();
 
@@ -68,7 +64,7 @@ describe('SystemNotification', () => {
   });
 
   it('should render only the opened text if it is open', async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <SystemNotification {...props} />
     );
 
@@ -81,5 +77,12 @@ describe('SystemNotification', () => {
 
     await waitFor(() => getByText(openedHeaderText));
     await waitFor(() => getByText(openedBodyText));
+
+    await act(async () => {
+      await fireEvent.press(systemNotification);
+    });
+
+    expect(queryByText(openedHeaderText)).toBeNull();
+    expect(queryByText(openedBodyText)).toBeNull();
   });
 });

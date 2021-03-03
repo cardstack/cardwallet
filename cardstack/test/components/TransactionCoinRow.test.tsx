@@ -46,6 +46,6 @@ describe('TransactionCoinRow', () => {
       />
     );
 
-    getByText(recipient);
+    getByText(` ${recipient}`);
   });
 });
