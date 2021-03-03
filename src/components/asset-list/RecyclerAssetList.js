@@ -1,27 +1,43 @@
-import { findIndex, get, has, isNil } from 'lodash';
-import PropTypes from 'prop-types';
-import React, { Component, Fragment } from 'react';
-import { LayoutAnimation, RefreshControl, View } from 'react-native';
-import { connect } from 'react-redux';
-import {
-  BaseItemAnimator,
-  DataProvider,
-  LayoutProvider,
-  RecyclerListView,
-} from 'recyclerlistview';
-import StickyContainer from 'recyclerlistview/dist/reactnative/core/StickyContainer';
-import { withThemeContext } from '../../context/ThemeContext';
-import { CoinDivider } from '../coin-divider';
-import { CoinRowHeight } from '../coin-row';
-import AssetListHeader, { AssetListHeaderHeight } from './AssetListHeader';
-import { firstCoinRowMarginTop, ViewTypes } from './RecyclerViewTypes';
 import { Container } from '@cardstack/components';
 import { colors as cardstackColors } from '@cardstack/theme';
 import {
   deviceUtils,
   isNewValueForPath,
-  safeAreaInsetValues,
+  safeAreaInsetValues
 } from '@rainbow-me/utils';
+import {
+  findIndex,
+  get,
+  has,
+  isNil
+} from 'lodash';
+import PropTypes from 'prop-types';
+import React, {
+  Component,
+  Fragment
+} from 'react';
+import {
+  LayoutAnimation,
+  RefreshControl
+} from 'react-native';
+import { connect } from 'react-redux';
+import {
+  BaseItemAnimator,
+  DataProvider,
+  LayoutProvider,
+  RecyclerListView
+} from 'recyclerlistview';
+import StickyContainer
+  from 'recyclerlistview/dist/reactnative/core/StickyContainer';
+
+import { withThemeContext } from '../../context/ThemeContext';
+import { CoinDivider } from '../coin-divider';
+import { CoinRowHeight } from '../coin-row';
+import AssetListHeader, { AssetListHeaderHeight } from './AssetListHeader';
+import {
+  firstCoinRowMarginTop,
+  ViewTypes
+} from './RecyclerViewTypes';
 
 const NOOP = () => undefined;
 let globalDeviceDimensions = 0;

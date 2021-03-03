@@ -81,7 +81,6 @@ export default function ListHeader({
             <ContextMenu marginTop={3} {...contextMenuOptions} />
           </Row>
         </Content>
-        {showDivider && <Divider />}
         {!isSticky && title !== 'Balances' && (
           <StickyBackgroundBlocker
             deviceDimensions={deviceDimensions}
