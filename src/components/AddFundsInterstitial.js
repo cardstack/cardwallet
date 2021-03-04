@@ -1,23 +1,21 @@
-import { captureMessage } from '@sentry/react-native';
 import { get } from 'lodash';
 import React, { Fragment, useCallback } from 'react';
-import { Linking } from 'react-native';
 import styled from 'styled-components';
+
+import copyIcon from '../../cardstack/src/assets/copy.png';
 import { useTheme } from '../context/ThemeContext';
 import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import showWalletErrorAlert from '../helpers/support';
-import { useAccountSettings, useDimensions, useWallets } from '../hooks';
+import { useDimensions, useWallets } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { magicMemo } from '../utils';
 import Divider from './Divider';
-import { ButtonPressAnimation, ScaleButtonZoomableAndroid } from './animations';
-import { Icon } from './icons';
-import { Centered, Row, RowWithMargins } from './layout';
-import { Text } from './text';
+import { ButtonPressAnimation } from './animations';
+import { Centered, Row } from './layout';
+import { Button, Icon, Text } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
-import { padding, position } from '@rainbow-me/styles';
-import ShadowStack from 'react-native-shadow-stack';
+import { padding } from '@rainbow-me/styles';
 
 const ButtonContainerHeight = 400;
 const ButtonContainerWidth = 261;
@@ -265,14 +263,13 @@ const AddFundsInterstitial = ({ network, offsetY = 0 }) => {
             {/*    </Text>*/}
             {/*  </InterstitialButton>*/}
             {/*</InterstitialButtonRow>*/}
-            {!isSmallPhone && <InterstitialDivider />}
-            <Subtitle isSmallPhone={isSmallPhone}>
+            {/* {!isSmallPhone && <InterstitialDivider />} */}
+            <Text color="white" fontSize={24} fontWeight="700">
               send xDai to your wallet
-            </Subtitle>
-
-            <Paragraph>
+            </Text>
+            <Text color="white" marginVertical={4}>
               Send from Coinbase or another exchange—or ask a friend!
-            </Paragraph>
+            </Text>
           </Fragment>
         ) : (
           <Fragment>
@@ -304,29 +301,13 @@ const AddFundsInterstitial = ({ network, offsetY = 0 }) => {
             </Paragraph>
           </Fragment>
         )}
-        <CopyAddressButton
+        <Button
+          icon={<Icon iconSize="medium" marginRight={3} source={copyIcon} />}
           onPress={handlePressCopyAddress}
-          radiusAndroid={23}
-          testID="copy-address-button"
+          variant="blue"
         >
-          <RowWithMargins margin={6}>
-            <Icon
-              color={colors.appleBlue}
-              marginTop={0.5}
-              name="copy"
-              size={19}
-            />
-            <Text
-              align="center"
-              color={colors.appleBlue}
-              lineHeight="loose"
-              size="large"
-              weight="bold"
-            >
-              Copy address
-            </Text>
-          </RowWithMargins>
-        </CopyAddressButton>
+          Copy Address
+        </Button>
       </ButtonContainer>
     </Container>
   );

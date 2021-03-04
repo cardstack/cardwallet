@@ -1,25 +1,43 @@
-import { findIndex, get, has, isNil } from 'lodash';
+import { Container } from '@cardstack/components';
+import { colors as cardstackColors } from '@cardstack/theme';
+import {
+  deviceUtils,
+  isNewValueForPath,
+  safeAreaInsetValues
+} from '@rainbow-me/utils';
+import {
+  findIndex,
+  get,
+  has,
+  isNil
+} from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component, Fragment } from 'react';
-import { LayoutAnimation, RefreshControl, View } from 'react-native';
+import React, {
+  Component,
+  Fragment
+} from 'react';
+import {
+  LayoutAnimation,
+  RefreshControl
+} from 'react-native';
 import { connect } from 'react-redux';
 import {
   BaseItemAnimator,
   DataProvider,
   LayoutProvider,
-  RecyclerListView,
+  RecyclerListView
 } from 'recyclerlistview';
-import StickyContainer from 'recyclerlistview/dist/reactnative/core/StickyContainer';
+import StickyContainer
+  from 'recyclerlistview/dist/reactnative/core/StickyContainer';
+
 import { withThemeContext } from '../../context/ThemeContext';
 import { CoinDivider } from '../coin-divider';
 import { CoinRowHeight } from '../coin-row';
 import AssetListHeader, { AssetListHeaderHeight } from './AssetListHeader';
-import { firstCoinRowMarginTop, ViewTypes } from './RecyclerViewTypes';
 import {
-  deviceUtils,
-  isNewValueForPath,
-  safeAreaInsetValues,
-} from '@rainbow-me/utils';
+  firstCoinRowMarginTop,
+  ViewTypes
+} from './RecyclerViewTypes';
 
 const NOOP = () => undefined;
 let globalDeviceDimensions = 0;
@@ -693,13 +711,12 @@ class RecyclerAssetList extends Component {
   };
 
   renderRefreshControl() {
-    const { colors } = this.props;
     return (
       <RefreshControl
         onRefresh={this.handleRefresh}
         refreshing={this.state.isRefreshing}
         style={ios ? {} : { top: 20 }}
-        tintColor={colors.alpha(colors.blueGreyDark, 0.4)}
+        tintColor={cardstackColors.white}
       />
     );
   }
@@ -784,11 +801,9 @@ class RecyclerAssetList extends Component {
       stickyComponentsIndices,
     } = this.state;
 
-    const { colors } = this.props;
-
     return (
-      <View
-        backgroundColor={colors.white}
+      <Container
+        backgroundColor="backgroundBlue"
         flex={1}
         onLayout={this.handleOnLayout}
         overflow="hidden"
@@ -815,13 +830,13 @@ class RecyclerAssetList extends Component {
               refreshControl: fetchData && this.renderRefreshControl(),
             }}
             style={{
-              backgroundColor: colors.white,
+              backgroundColor: cardstackColors.backgroundBlue,
               flex: 1,
               minHeight: 1,
             }}
           />
         </StickyContainer>
-      </View>
+      </Container>
     );
   }
 }

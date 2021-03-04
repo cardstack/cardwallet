@@ -23,4 +23,8 @@ export const textVariants = {
     color: 'blueText',
     fontSize: 16,
   },
+  subText: {
+    color: 'blueText',
+    fontSize: 13,
+  },
 };

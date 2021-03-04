@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
+import { Image } from 'react-native';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { Centered } from '../layout';
-import { useBooleanState, useColorForAsset } from '@rainbow-me/hooks';
-import { ImageWithCachedMetadata } from '@rainbow-me/images';
+import { colors } from '@cardstack/theme';
+import { useBooleanState } from '@rainbow-me/hooks';
 import { borders, fonts, position, shadow } from '@rainbow-me/styles';
 import { getUrlForTrustIconFallback, magicMemo } from '@rainbow-me/utils';
 
@@ -16,7 +17,7 @@ const fallbackTextStyles = {
   textAlign: 'center',
 };
 
-const FallbackImage = styled(ImageWithCachedMetadata)`
+const FallbackImage = styled(Image)`
   ${position.cover};
   ${({
     shadowColor: color,
@@ -25,7 +26,7 @@ const FallbackImage = styled(ImageWithCachedMetadata)`
     shadowRadius: radius,
     showImage,
   }) => shadow.build(x, y, radius * 2, color, showImage ? opacity : 0)};
-  background-color: ${({ showImage, theme: { colors } }) =>
+  background-color: ${({ showImage }) =>
     showImage ? colors.white : colors.transparent};
   border-radius: ${({ size }) => size / 2};
   overflow: visible;
@@ -69,7 +70,7 @@ const CoinIconFallback = fallbackProps => {
     false
   );
 
-  const fallbackIconColor = useColorForAsset({ address });
+  const fallbackIconColor = colors.white;
   const imageUrl = useMemo(() => getUrlForTrustIconFallback(address), [
     address,
   ]);

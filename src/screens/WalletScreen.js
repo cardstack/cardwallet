@@ -31,6 +31,7 @@ import {
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { updateRefetchSavings } from '../redux/data';
+import { colors } from '@cardstack/theme';
 import { position } from '@rainbow-me/styles';
 
 const HeaderOpacityToggler = styled(OpacityToggler).attrs(({ isVisible }) => ({
@@ -43,6 +44,7 @@ const HeaderOpacityToggler = styled(OpacityToggler).attrs(({ isVisible }) => ({
 
 const WalletPage = styled(Page)`
   ${position.size('100%')};
+  background-color: ${colors.backgroundBlue};
   flex: 1;
 `;
 
@@ -85,19 +87,13 @@ export default function WalletScreen() {
 
   // Show the exchange fab only for supported networks
   // (mainnet & rinkeby)
-  const fabs = useMemo(
-    () =>
-      get(networkInfo[network], 'exchange_enabled')
-        ? [ExchangeFab, SendFab]
-        : [SendFab],
-    [network]
-  );
+  const fabs = [];
 
   const isCoinListEditedValue = useCoinListEditedValue();
 
   return (
     <WalletPage testID="wallet-screen">
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
 
       {/* Line below appears to be needed for having scrollViewTracker persistent while
       reattaching of react subviews */}

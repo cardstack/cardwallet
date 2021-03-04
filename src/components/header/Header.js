@@ -13,6 +13,7 @@ const Container = styled(Row).attrs(({ align = 'end' }) => ({
 }))`
   height: ${HeaderHeightWithStatusBar};
   padding-top: ${StatusBarHeight};
+  margin-bottom: 16px;
   width: ${({ width }) => width};
   z-index: 1;
 `;

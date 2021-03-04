@@ -19,6 +19,7 @@ type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
   SpacingProps<Theme>;
 interface ButtonProps extends RestyleProps {
   children: ReactNode;
+  icon?: ReactNode;
 }
 
 const VariantRestyleComponent = createVariant({
@@ -33,7 +34,7 @@ const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
 /**
  * A button with a simple press animation
  */
-export const Button = ({ children, ...props }: ButtonProps) => {
+export const Button = ({ children, icon, ...props }: ButtonProps) => {
   const textStyle = useVariantValue(
     'buttonVariants',
     'textStyle',
@@ -41,7 +42,8 @@ export const Button = ({ children, ...props }: ButtonProps) => {
   );
 
   return (
-    <AnimatedButton {...props}>
+    <AnimatedButton alignItems="center" {...props}>
+      {icon}
       <Text {...textStyle}>{children}</Text>
     </AnimatedButton>
   );
