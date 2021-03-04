@@ -2,7 +2,6 @@ import { get } from 'lodash';
 import React, { Fragment, useCallback } from 'react';
 import styled from 'styled-components';
 
-import copyIcon from '../../cardstack/src/assets/copy.png';
 import { useTheme } from '../context/ThemeContext';
 import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
@@ -302,7 +301,9 @@ const AddFundsInterstitial = ({ network, offsetY = 0 }) => {
           </Fragment>
         )}
         <Button
-          icon={<Icon iconSize="medium" marginRight={3} source={copyIcon} />}
+          icon={
+            <Icon iconSize="medium" name="copy" style={{ marginRight: 12 }} />
+          }
           onPress={handlePressCopyAddress}
           variant="blue"
         >

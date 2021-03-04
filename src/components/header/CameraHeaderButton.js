@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 
-import qrCodeIcon from '../../../cardstack/src/assets/qr-code.png';
 import { useNavigation } from '../../navigation/Navigation';
 import HeaderButton from './HeaderButton';
 import { Icon } from '@cardstack/components';
@@ -15,7 +14,7 @@ export default function CameraHeaderButton() {
 
   return (
     <HeaderButton onPress={onPress} testID="goToCamera" transformOrigin="right">
-      <Icon iconSize="medium" marginRight={3} source={qrCodeIcon} />
+      <Icon iconSize="medium" marginRight={3} name="qr-code" />
     </HeaderButton>
   );
 }
