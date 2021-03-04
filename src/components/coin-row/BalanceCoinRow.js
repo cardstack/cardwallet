@@ -114,7 +114,6 @@ const BalanceCoinRow = ({
   removeSelectedCoin,
   ...props
 }) => {
-  console.log('item', item);
   const [toggle, setToggle] = useState(false);
   const [previousPinned, setPreviousPinned] = useState(0);
   const { isCoinListEdited } = useCoinListEdited();

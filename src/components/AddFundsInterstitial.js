@@ -308,29 +308,6 @@ const AddFundsInterstitial = ({ network, offsetY = 0 }) => {
         >
           Copy Address
         </Button>
-        {/* <CopyAddressButton
-          onPress={handlePressCopyAddress}
-          radiusAndroid={23}
-          testID="copy-address-button"
-        >
-          <RowWithMargins margin={6}>
-            <Icon
-              color={colors.appleBlue}
-              marginTop={0.5}
-              name="copy"
-              size={19}
-            />
-            <Text
-              align="center"
-              color={colors.appleBlue}
-              lineHeight="loose"
-              size="large"
-              weight="bold"
-            >
-              Copy address
-            </Text>
-          </RowWithMargins>
-        </CopyAddressButton> */}
       </ButtonContainer>
     </Container>
   );

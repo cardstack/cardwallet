@@ -2,10 +2,10 @@ import { isNil } from 'lodash';
 import React, { Fragment } from 'react';
 import ReactCoinIcon from 'react-coin-icon';
 import styled from 'styled-components';
-
+import { useTheme } from '../../context/ThemeContext';
 import CoinIconFallback from './CoinIconFallback';
 import CoinIconIndicator from './CoinIconIndicator';
-import { colors } from '@cardstack/theme';
+import { useColorForAsset } from '@rainbow-me/hooks';
 import { getTokenMetadata, isETH, magicMemo } from '@rainbow-me/utils';
 
 export const CoinIconSize = 40;
@@ -23,6 +23,8 @@ const CoinIcon = ({
   ...props
 }) => {
   const tokenMetadata = getTokenMetadata(address);
+  const color = useColorForAsset({ address });
+  const { colors, isDarkMode } = useTheme();
 
   const forceFallback = !isETH(address) && isNil(tokenMetadata);
 
@@ -32,9 +34,12 @@ const CoinIcon = ({
       <StyledCoinIcon
         {...props}
         address={address}
+        color={color}
         fallbackRenderer={CoinIconFallback}
         forceFallback={forceFallback}
-        shadowColor={tokenMetadata?.shadowColor || colors.white}
+        shadowColor={
+          isDarkMode ? colors.shadow : tokenMetadata?.shadowColor || color
+        }
         size={size}
         symbol={symbol}
       />
