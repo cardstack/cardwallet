@@ -1,7 +1,9 @@
 import React from 'react';
-
+import Feather from 'react-native-vector-icons/Feather';
+import { useTheme } from '@shopify/restyle';
 import { ImageSourcePropType } from 'react-native';
 import { Container, ContainerProps, Image } from '@cardstack/components';
+import { Theme, ColorTypes } from '@cardstack/theme';
 
 type IconSize = 'small' | 'medium' | 'large';
 
@@ -16,29 +18,53 @@ interface IconProps extends ContainerProps {
   iconSize?: IconSize;
   /** if none of the default sizes work for what you need, you can use this to override */
   size?: number;
-  source: ImageSourcePropType;
+  name: string;
+  color?: ColorTypes;
 }
+
+const customIcons: {
+  [key: string]: ImageSourcePropType;
+} = {
+  'info-blue': require('../../assets/icons/info-blue.png'),
+  'info-white': require('../../assets/icons/info-white.png'),
+  'qr-code': require('../../assets/icons/qr-code.png'),
+  error: require('../../assets/icons/error.png'),
+  failed: require('../../assets/icons/failed.png'),
+  more: require('../../assets/icons/more.png'),
+  pay: require('../../assets/icons/pay.png'),
+  sent: require('../../assets/icons/sent.png'),
+  warning: require('../../assets/icons/warning.png'),
+  reload: require('../../assets/icons/reload.png'),
+  gift: require('../../assets/icons/gift.png'),
+};
 
 export const Icon = ({
   iconSize = 'large',
   size,
-  source,
+  name,
+  color,
   ...props
 }: IconProps) => {
-  const widthAndHeight = size || iconSizeToValue[iconSize];
+  const theme = useTheme<Theme>();
+  const isCustomIcon = Object.keys(customIcons).includes(name);
+  const colorWithDefault = color ? theme.colors[color] : theme.colors.white;
+  const sizeWithDefault = size || iconSizeToValue[iconSize];
+
+  if (isCustomIcon) {
+    return (
+      <Container {...props} height={sizeWithDefault} width={sizeWithDefault}>
+        <Image
+          source={customIcons[name]}
+          style={{ height: '100%', width: '100%' }}
+          resizeMode="contain"
+        />
+      </Container>
+    );
+  }
 
   return (
-    <Container
-      width={widthAndHeight}
-      height={widthAndHeight}
-      marginRight={2}
-      {...props}
-    >
-      <Image
-        source={source}
-        resizeMode="contain"
-        style={{ height: '100%', width: '100%' }}
-      />
+    <Container {...props}>
+      <Feather color={colorWithDefault} name={name} size={sizeWithDefault} />
     </Container>
   );
 };

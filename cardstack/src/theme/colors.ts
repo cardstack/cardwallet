@@ -33,3 +33,5 @@ export const colors = {
   transparent: palette.transparent,
   white: palette.white,
 };
+
+export type ColorTypes = keyof typeof colors;

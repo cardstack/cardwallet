@@ -90,6 +90,8 @@ target 'Rainbow' do
   # you should disable these next few lines.
   if ENV['SKIP_FLIPPER'] != "true"
     use_flipper!
+    pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
     post_install do |installer|
       flipper_post_install(installer)
       installer.pods_project.build_configurations.each do |config|

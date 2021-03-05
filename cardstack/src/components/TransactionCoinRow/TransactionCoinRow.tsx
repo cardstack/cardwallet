@@ -1,13 +1,10 @@
 import React from 'react';
-import { Image, ImageSourcePropType } from 'react-native';
+import { Image } from 'react-native';
 
 import daiIcon from '../../assets/dai.png';
-import sentIcon from '../../assets/sent.png';
-import reloadedIcon from '../../assets/reloaded.png';
-import failedIcon from '../../assets/failed.png';
-import { Container, Text } from '@cardstack/components';
+import { getDollarsFromDai, numberWithCommas } from '@cardstack/utils';
 import { Theme } from '@cardstack/theme';
-import { numberWithCommas, getDollarsFromDai } from '@cardstack/utils';
+import { Container, Icon, Text } from '@cardstack/components';
 
 export enum TransactionType {
   PAID = 'paid',
@@ -18,7 +15,7 @@ export enum TransactionType {
 interface TransactionCoinRowData {
   actionText: string;
   actionTextColor: keyof Theme['colors'];
-  icon: ImageSourcePropType;
+  iconName: string;
   iconSize?: number;
   /** top on icon to center it if needed */
   iconTop?: number;
@@ -33,7 +30,7 @@ const typeToData: {
   [TransactionType.PAID]: {
     actionText: 'Paid',
     actionTextColor: 'blueText',
-    icon: sentIcon,
+    iconName: 'sent',
     iconTop: 1,
     recipientText: 'To',
     transactionSymbol: '-',
@@ -42,7 +39,8 @@ const typeToData: {
   [TransactionType.RELOADED]: {
     actionText: 'Reloaded',
     actionTextColor: 'blueText',
-    icon: reloadedIcon,
+    iconName: 'refresh-cw',
+    iconSize: 15,
     recipientText: 'Via',
     transactionSymbol: '+',
     transactionTextColor: 'green',
@@ -50,7 +48,7 @@ const typeToData: {
   [TransactionType.FAILED]: {
     actionText: 'Failed',
     actionTextColor: 'red',
-    icon: failedIcon,
+    iconName: 'failed',
     iconSize: 10,
     recipientText: 'To',
     transactionSymbol: '-',
@@ -113,23 +111,12 @@ const Left = ({ data }: { data: TransactionCoinRowData }) => (
     </Container>
     <Container>
       <Container flexDirection="row" alignItems="center">
-        <Container
-          height={data.iconSize || 18}
-          width={data.iconSize || 18}
-          justifyContent="center"
-          alignItems="center"
+        <Icon
+          name={data.iconName}
+          size={data.iconSize || 18}
           marginRight={1}
-        >
-          <Image
-            source={data.icon}
-            resizeMode="contain"
-            style={{
-              height: '100%',
-              width: '100%',
-              top: data.iconTop,
-            }}
-          />
-        </Container>
+          color="backgroundBlue"
+        />
         <Text fontSize={13} color={data.actionTextColor}>
           {data.actionText}
         </Text>

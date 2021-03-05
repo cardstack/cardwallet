@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
-import {
-  Animated,
-  Image,
-  ImageSourcePropType,
-  TouchableOpacity,
-} from 'react-native';
+import { Animated, TouchableOpacity } from 'react-native';
 
-import downIcon from '../../assets/chevron-down.png';
-import infoIcon from '../../assets/info-blue.png';
-import alertIcon from '../../assets/warning.png';
-import errorIcon from '../../assets/error.png';
+import downIcon from '../../assets/icons/chevron-down.png';
 import { AnimatedContainer, AnimatedText } from '../Animated';
-import { Container, Text } from '@cardstack/components';
+import { Container, Icon, Text } from '@cardstack/components';
 
 const ANIMATION_DURATION = 150;
 const CLOSED_HEIGHT = 40;
@@ -22,11 +14,11 @@ const HIDDEN_OPACITY = 0;
 type SystemNotificationType = 'info' | 'alert' | 'error';
 
 const typeToIcon: {
-  [key in SystemNotificationType]: ImageSourcePropType;
+  [key in SystemNotificationType]: string;
 } = {
-  alert: alertIcon,
-  error: errorIcon,
-  info: infoIcon,
+  alert: 'warning',
+  error: 'error',
+  info: 'info-blue',
 };
 
 export interface SystemNotificationProps {
@@ -110,16 +102,7 @@ export const SystemNotification = ({
           marginBottom={isOpen ? 4 : 0}
           testID="system-notification"
         >
-          <Container height={22} width={22} marginRight={2}>
-            <Image
-              source={typeToIcon[type]}
-              resizeMode="contain"
-              style={{
-                height: '100%',
-                width: '100%',
-              }}
-            />
-          </Container>
+          <Icon iconSize="medium" marginRight={2} name={typeToIcon[type]} />
           <AnimatedText fontSize={13} opacity={closedTextOpacity}>
             {closedText}
           </AnimatedText>

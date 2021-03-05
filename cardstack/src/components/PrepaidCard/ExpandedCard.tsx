@@ -1,17 +1,12 @@
 import React from 'react';
-import { ImageSourcePropType, SectionList } from 'react-native';
-
-import chevronRight from '../../assets/icons/chevron-right.png';
-import payIcon from '../../assets/icons/pay.png';
-import reloadIcon from '../../assets/icons/reload.png';
-import rewardIcon from '../../assets/icons/gift.png';
+import { SectionList } from 'react-native';
 import {
-  Container,
   Button,
-  Text,
+  Container,
   Icon,
-  TransactionCoinRowProps,
+  Text,
   TransactionCoinRow,
+  TransactionCoinRowProps,
 } from '@cardstack/components';
 
 export interface ExpandedCardProps {
@@ -53,13 +48,13 @@ const Features = () => (
       padding={4}
     >
       <OptionItem
-        source={payIcon}
+        iconName="pay"
         boldText="Pay merchants"
         bodyText=" with this card"
       />
-      <OptionItem source={reloadIcon} boldText="Reload" bodyText=" this card" />
+      <OptionItem iconName="reload" boldText="Reload" bodyText=" this card" />
       <OptionItem
-        source={rewardIcon}
+        iconName="gift"
         boldText="Earn rewards"
         bodyText=" with this card"
       />
@@ -68,12 +63,12 @@ const Features = () => (
 );
 
 interface OptionItemProps {
-  source: ImageSourcePropType;
+  iconName: string;
   boldText: string;
   bodyText: string;
 }
 
-const OptionItem = ({ source, boldText, bodyText }: OptionItemProps) => (
+const OptionItem = ({ iconName, boldText, bodyText }: OptionItemProps) => (
   <Container
     flexDirection="row"
     justifyContent="space-between"
@@ -81,13 +76,13 @@ const OptionItem = ({ source, boldText, bodyText }: OptionItemProps) => (
     marginVertical={3}
   >
     <Container flexDirection="row" marginRight={3} alignItems="center">
-      <Icon source={source} />
+      <Icon name={iconName} color="black" marginRight={2} />
       <Text fontSize={14} fontWeight="700">
         {boldText}
       </Text>
       <Text fontSize={14}>{bodyText}</Text>
     </Container>
-    <Icon source={chevronRight} iconSize="small" />
+    <Icon name="chevron-right" iconSize="medium" color="black" />
   </Container>
 );
 
