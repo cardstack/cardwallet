@@ -10,3 +10,4 @@ export * from './Icon';
 export * from './Image';
 export * from './TransactionCoinRow';
 export * from './BalanceCoinRow';
+export * from './AssetFooter';

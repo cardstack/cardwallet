@@ -48,7 +48,6 @@ export default function ListHeader({
   contextMenuOptions,
   isCoinListEdited,
   isSticky,
-  showDivider = true,
   title,
   titleRenderer = Text,
   totalValue,
@@ -69,7 +68,6 @@ export default function ListHeader({
   } else {
     return (
       <Fragment>
-        {/* <BackgroundGradient /> */}
         <Content isSticky={isSticky}>
           {createElement(titleRenderer, {
             children: title,
