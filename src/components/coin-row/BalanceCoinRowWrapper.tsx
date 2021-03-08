@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { CoinItem } from '../../../cardstack/src/types';
+import Routes from '../../navigation/routesNames';
 import { BalanceCoinRow } from '@cardstack/components';
 import { useCoinListEdited, useCoinListEditOptions } from '@rainbow-me/hooks';
+import { useNavigation } from '@rainbow-me/navigation';
 
 interface BalanceCoinRowWrapperProps {
   item: CoinItem;
 }
 
 const BalanceCoinWrapper = ({ item }: BalanceCoinRowWrapperProps) => {
+  const { navigate } = useNavigation();
   const recentlyPinnedCount = useSelector(
     // @ts-ignore
     state => state.editOptions.recentlyPinnedCount
@@ -32,13 +35,20 @@ const BalanceCoinWrapper = ({ item }: BalanceCoinRowWrapperProps) => {
   }, [isCoinListEdited, recentlyPinnedCount]);
 
   const onPress = () => {
-    if (selected) {
-      removeSelectedCoin(item.uniqueId);
-    } else {
-      pushSelectedCoin(item.uniqueId);
-    }
+    if (isCoinListEdited) {
+      if (selected) {
+        removeSelectedCoin(item.uniqueId);
+      } else {
+        pushSelectedCoin(item.uniqueId);
+      }
 
-    setSelected(!selected);
+      setSelected(!selected);
+    } else {
+      navigate(Routes.EXPANDED_ASSET_SHEET, {
+        asset: item,
+        type: 'token',
+      });
+    }
   };
 
   return (
