@@ -13,9 +13,10 @@ import StickyContainer from 'recyclerlistview/dist/reactnative/core/StickyContai
 
 import { withThemeContext } from '../../context/ThemeContext';
 import { CoinRowHeight } from '../coin-row';
+import AssetFooter from './AssetFooter';
 import AssetListHeader, { AssetListHeaderHeight } from './AssetListHeader';
 import { firstCoinRowMarginTop, ViewTypes } from './RecyclerViewTypes';
-import { AssetFooter, Container } from '@cardstack/components';
+import { Container } from '@cardstack/components';
 import { colors as cardstackColors } from '@cardstack/theme';
 import {
   deviceUtils,

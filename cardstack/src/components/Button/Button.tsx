@@ -48,17 +48,17 @@ export const Button = ({ children, icon, disabled, ...props }: ButtonProps) => {
     props.variant
   );
 
-  const disabledTextProps = disabled
-    ? {
-        color: 'blueText',
-      }
-    : {};
+  const disabledTextStyle = useVariantValue(
+    'buttonVariants',
+    'disabledTextStyle',
+    props.variant
+  );
 
   return (
     <Container backgroundColor="transparent">
       <AnimatedButton alignItems="center" disabled={disabled} {...props}>
         {icon}
-        <Text {...textStyle} {...disabledTextProps}>
+        <Text {...textStyle} {...disabledTextStyle}>
           {children}
         </Text>
       </AnimatedButton>
@@ -74,6 +74,7 @@ export const Button = ({ children, icon, disabled, ...props }: ButtonProps) => {
           zIndex={1}
           width={width}
           maxWidth={maxWidth}
+          testID="disabledOverlay"
         />
       )}
     </Container>

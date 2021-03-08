@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 
 import { LayoutAnimation } from 'react-native';
-import { Container, Button } from '@cardstack/components';
-import { useCoinListEdited, useCoinListEditOptions } from '@rainbow-me/hooks';
+import { Button, Container } from '@cardstack/components';
 import EditOptions from '@rainbow-me/helpers/editOptionTypes';
+import { useCoinListEdited, useCoinListEditOptions } from '@rainbow-me/hooks';
 
-export const AssetFooter = () => {
+const AssetFooter = () => {
   const { isCoinListEdited } = useCoinListEdited();
 
   const {
@@ -34,8 +34,6 @@ export const AssetFooter = () => {
     return null;
   }
 
-  console.log('currentAction', currentAction);
-
   return (
     <Container
       bottom={80}
@@ -47,18 +45,20 @@ export const AssetFooter = () => {
     >
       <Button
         disabled={currentAction === EditOptions.none}
-        variant="small"
         onPress={handlePinnedPress}
+        variant="small"
       >
         {currentAction === EditOptions.unpin ? 'Unpin' : 'Pin'}
       </Button>
       <Button
         disabled={currentAction === EditOptions.none}
-        variant="small"
         onPress={handleHiddenPress}
+        variant="small"
       >
         {currentAction === EditOptions.unhide ? 'Unhide' : 'Hide'}
       </Button>
     </Container>
   );
 };
+
+export default AssetFooter;

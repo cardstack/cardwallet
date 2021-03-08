@@ -7,6 +7,9 @@ export const buttonVariants = {
     borderColor: 'buttonPrimaryBorder',
     borderRadius: 100,
     borderWidth: 1,
+    disabledTextStyle: {
+      color: 'blueText',
+    },
     flexDirection: 'row',
     justifyContent: 'center',
     maxWidth: 335,
