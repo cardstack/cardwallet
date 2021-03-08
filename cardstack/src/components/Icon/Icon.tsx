@@ -13,7 +13,7 @@ const iconSizeToValue = {
 };
 
 type IconSize = keyof typeof iconSizeToValue;
-interface IconProps extends ContainerProps {
+export interface IconProps extends ContainerProps {
   /** specify the size using T-Shirt sizes */
   iconSize?: IconSize;
   /** if none of the default sizes work for what you need, you can use this to override */
@@ -39,6 +39,8 @@ const customIcons: {
   circle: require('../../assets/icons/circle.png'),
   'check-circle': require('../../assets/icons/check-circle.png'),
   pinned: require('../../assets/icons/pinned.png'),
+  pin: require('../../assets/icons/pin.png'),
+  'pin-blue': require('../../assets/icons/pin-blue.png'),
   hidden: require('../../assets/icons/hidden.png'),
 };
 

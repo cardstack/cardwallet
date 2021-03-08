@@ -12,6 +12,7 @@ import React, { ReactNode } from 'react';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { Text } from '../Text';
 import { Container } from '../Container';
+import { Icon, IconProps } from '../Icon';
 import { useVariantValue } from '@cardstack/utils';
 import { Theme } from '@cardstack/theme';
 
@@ -21,7 +22,7 @@ type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
 interface ButtonProps extends RestyleProps {
   children: ReactNode;
   disabled?: boolean;
-  icon?: ReactNode;
+  iconProps?: IconProps;
   small?: boolean;
   onPress?: () => void;
 }
@@ -38,7 +39,12 @@ const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
 /**
  * A button with a simple press animation
  */
-export const Button = ({ children, icon, disabled, ...props }: ButtonProps) => {
+export const Button = ({
+  children,
+  disabled,
+  iconProps,
+  ...props
+}: ButtonProps) => {
   const width = useVariantValue('buttonVariants', 'width', props.variant);
   const maxWidth = useVariantValue('buttonVariants', 'maxWidth', props.variant);
 
@@ -54,11 +60,15 @@ export const Button = ({ children, icon, disabled, ...props }: ButtonProps) => {
     props.variant
   );
 
+  const disabledTextProps = disabled ? disabledTextStyle : {};
+
   return (
     <Container backgroundColor="transparent">
       <AnimatedButton alignItems="center" disabled={disabled} {...props}>
-        {icon}
-        <Text {...textStyle} {...disabledTextStyle}>
+        {iconProps && (
+          <Icon color={disabled ? 'blueText' : 'black'} {...iconProps} />
+        )}
+        <Text {...textStyle} {...disabledTextProps}>
           {children}
         </Text>
       </AnimatedButton>

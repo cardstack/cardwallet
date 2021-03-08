@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-
 import { LayoutAnimation } from 'react-native';
 import { Button, Container } from '@cardstack/components';
 import EditOptions from '@rainbow-me/helpers/editOptionTypes';
@@ -13,6 +12,7 @@ const AssetFooter = () => {
     setHiddenCoins,
     setPinnedCoins,
   } = useCoinListEditOptions();
+  const buttonsDisabled = currentAction === EditOptions.none;
 
   const handleHiddenPress = useCallback(() => {
     setHiddenCoins();
@@ -44,14 +44,32 @@ const AssetFooter = () => {
       width="100%"
     >
       <Button
-        disabled={currentAction === EditOptions.none}
+        disabled={buttonsDisabled}
+        iconProps={
+          currentAction !== EditOptions.unpin
+            ? {
+                iconSize: 'medium',
+                marginRight: 2,
+                name: buttonsDisabled ? 'pin-blue' : 'pin',
+              }
+            : undefined
+        }
         onPress={handlePinnedPress}
         variant="small"
       >
         {currentAction === EditOptions.unpin ? 'Unpin' : 'Pin'}
       </Button>
       <Button
-        disabled={currentAction === EditOptions.none}
+        disabled={buttonsDisabled}
+        iconProps={
+          currentAction !== EditOptions.unhide
+            ? {
+                iconSize: 'medium',
+                marginRight: 2,
+                name: 'eye-off',
+              }
+            : undefined
+        }
         onPress={handleHiddenPress}
         variant="small"
       >

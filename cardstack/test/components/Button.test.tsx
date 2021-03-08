@@ -4,11 +4,16 @@ import React from 'react';
 import { render } from '../test-utils';
 import { Button } from '../../src/components/Button';
 import { Text } from '../../src/components/Text';
+import { Icon } from '../../src/components/Icon';
 import * as utils from '@cardstack/utils';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
 );
+
+jest.mock('@cardstack/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
 
 jest.mock('@cardstack/components/Text', () => ({
   Text: jest.fn(({ children }) => children),
@@ -112,5 +117,39 @@ describe('Button', () => {
     );
 
     getByTestId('disabledOverlay');
+  });
+
+  it('should render the icon if iconProps are passed', () => {
+    const buttonText = chance.string();
+
+    const iconProps = {
+      [chance.string()]: chance.string(),
+      name: chance.string(),
+    };
+
+    render(<Button iconProps={iconProps}>{buttonText}</Button>);
+
+    expect(Icon).toHaveBeenCalledTimes(1);
+    expect(Icon).toHaveBeenCalledWith(expect.objectContaining(iconProps), {});
+  });
+
+  it('should render the icon with the correct color if iconProps and disabled', () => {
+    const buttonText = chance.string();
+
+    const iconProps = {
+      [chance.string()]: chance.string(),
+      name: chance.string(),
+    };
+
+    render(
+      <Button iconProps={iconProps} disabled>
+        {buttonText}
+      </Button>
+    );
+
+    expect(Icon).toHaveBeenCalledWith(
+      expect.objectContaining({ color: 'blueText' }),
+      {}
+    );
   });
 });

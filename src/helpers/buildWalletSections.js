@@ -12,6 +12,7 @@ import React from 'react';
 import { LayoutAnimation } from 'react-native';
 import { createSelector } from 'reselect';
 import { AssetListItemSkeleton } from '../components/asset-list';
+import { BalanceCoinRowWrapper } from '../components/coin-row';
 import { UniswapInvestmentRow } from '../components/investment-cards';
 import { CollectibleTokenFamily } from '../components/token-family';
 import { withNavigation } from '../navigation/Navigation';
@@ -19,7 +20,6 @@ import { compose, withHandlers } from '../utils/recompactAdapters';
 import { buildCoinsList, buildUniqueTokenList } from './assets';
 import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
-import { BalanceCoinRow } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -62,7 +62,7 @@ const enhanceRenderItem = compose(
   })
 );
 
-const TokenItem = enhanceRenderItem(BalanceCoinRow);
+const TokenItem = enhanceRenderItem(BalanceCoinRowWrapper);
 
 const balancesSkeletonRenderItem = item => (
   <AssetListItemSkeleton animated descendingOpacity={false} {...item} />

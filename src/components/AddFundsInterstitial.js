@@ -301,9 +301,12 @@ const AddFundsInterstitial = ({ network, offsetY = 0 }) => {
           </Fragment>
         )}
         <Button
-          icon={
-            <Icon iconSize="medium" name="copy" style={{ marginRight: 12 }} />
-          }
+          iconName="copy"
+          iconProps={{
+            color: 'white',
+            iconSize: 'medium',
+            marginRight: 3,
+          }}
           onPress={handlePressCopyAddress}
           variant="blue"
         >
