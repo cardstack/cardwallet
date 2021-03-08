@@ -60,7 +60,7 @@ export default function ContextMenu({
           activeOpacity={activeOpacity}
           onPress={handleShowActionSheet}
         >
-          {children || <Icon iconName="more" margin={2} />}
+          {children || <Icon margin={2} name="more" />}
         </ButtonPressAnimation>
       )}
       <ActionSheet

@@ -1,43 +1,28 @@
-import { Container } from '@cardstack/components';
-import { colors as cardstackColors } from '@cardstack/theme';
-import {
-  deviceUtils,
-  isNewValueForPath,
-  safeAreaInsetValues
-} from '@rainbow-me/utils';
-import {
-  findIndex,
-  get,
-  has,
-  isNil
-} from 'lodash';
+import { findIndex, get, has, isNil } from 'lodash';
 import PropTypes from 'prop-types';
-import React, {
-  Component,
-  Fragment
-} from 'react';
-import {
-  LayoutAnimation,
-  RefreshControl
-} from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { LayoutAnimation, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import {
   BaseItemAnimator,
   DataProvider,
   LayoutProvider,
-  RecyclerListView
+  RecyclerListView,
 } from 'recyclerlistview';
-import StickyContainer
-  from 'recyclerlistview/dist/reactnative/core/StickyContainer';
+import StickyContainer from 'recyclerlistview/dist/reactnative/core/StickyContainer';
 
 import { withThemeContext } from '../../context/ThemeContext';
-import { CoinDivider } from '../coin-divider';
 import { CoinRowHeight } from '../coin-row';
+import AssetFooter from './AssetFooter';
 import AssetListHeader, { AssetListHeaderHeight } from './AssetListHeader';
+import { firstCoinRowMarginTop, ViewTypes } from './RecyclerViewTypes';
+import { Container } from '@cardstack/components';
+import { colors as cardstackColors } from '@cardstack/theme';
 import {
-  firstCoinRowMarginTop,
-  ViewTypes
-} from './RecyclerViewTypes';
+  deviceUtils,
+  isNewValueForPath,
+  safeAreaInsetValues,
+} from '@rainbow-me/utils';
 
 const NOOP = () => undefined;
 let globalDeviceDimensions = 0;
@@ -743,11 +728,7 @@ class RecyclerAssetList extends Component {
         type,
       });
     } else if (type.index === ViewTypes.COIN_DIVIDER.index) {
-      return ViewTypes.COIN_DIVIDER.renderComponent({
-        data,
-        isCoinListEdited,
-        nativeCurrency,
-      });
+      return null;
     } else if (type.index === ViewTypes.COIN_SMALL_BALANCES.index) {
       return ViewTypes.COIN_SMALL_BALANCES.renderComponent({
         data,
@@ -774,16 +755,6 @@ class RecyclerAssetList extends Component {
   stickyRowRenderer = (_, data) => (
     <Fragment>
       <AssetListHeader {...data} isSticky />
-      {this.state.showCoinListEditor ? (
-        <CoinDivider
-          balancesSum={0}
-          isSticky
-          nativeCurrency={this.props.nativeCurrency}
-          onEndEdit={() => {
-            this.setState({ showCoinListEditor: false });
-          }}
-        />
-      ) : null}
     </Fragment>
   );
 
@@ -836,6 +807,7 @@ class RecyclerAssetList extends Component {
             }}
           />
         </StickyContainer>
+        <AssetFooter />
       </Container>
     );
   }

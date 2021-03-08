@@ -12,6 +12,7 @@ export interface CoinItem {
   decimals: number;
   icon_url: string;
   isCoin: boolean;
+  isHidden: boolean;
   isPinned: boolean;
   isRainbowCurated: boolean;
   isSmall: boolean;

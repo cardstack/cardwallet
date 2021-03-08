@@ -1,7 +1,7 @@
+import { boolean } from '@storybook/addon-knobs';
+import { storiesOf } from '@storybook/react-native';
 /* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
-import { storiesOf } from '@storybook/react-native';
-
 import { BalanceCoinRow, Container } from '@cardstack/components';
 
 const exampleCoinItem = {
@@ -12,6 +12,7 @@ const exampleCoinItem = {
   icon_url:
     'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
   isCoin: true,
+  isHidden: false,
   isPinned: true,
   isRainbowCurated: true,
   isSmall: false,
@@ -41,6 +42,7 @@ const exampleCoinItem2 = {
   icon_url:
     'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
   isCoin: true,
+  isHidden: false,
   isPinned: false,
   isRainbowCurated: true,
   isSmall: false,
@@ -62,9 +64,35 @@ const exampleCoinItem2 = {
   uniqueId: 'dai',
 };
 
-storiesOf('Balance Coin Row', module).add('Default', () => (
-  <Container width="100%" alignItems="center">
-    <BalanceCoinRow item={exampleCoinItem} />
-    <BalanceCoinRow item={exampleCoinItem2} />
-  </Container>
-));
+storiesOf('Balance Coin Row', module).add('Default', () => {
+  const isEditing = boolean('Editing', false);
+  const onPress = () => console.log('Pin pressed!');
+  const selected = boolean('Selected', false);
+  const isPinned = boolean('Pinned', false);
+  const isHidden = boolean('Hidden', false);
+
+  return (
+    <Container width="100%" alignItems="center">
+      <BalanceCoinRow
+        selected={selected}
+        isEditing={isEditing}
+        onPress={onPress}
+        item={{
+          ...exampleCoinItem,
+          isHidden,
+          isPinned,
+        }}
+      />
+      <BalanceCoinRow
+        selected={selected}
+        isEditing={isEditing}
+        onPress={onPress}
+        item={{
+          ...exampleCoinItem2,
+          isHidden,
+          isPinned,
+        }}
+      />
+    </Container>
+  );
+});

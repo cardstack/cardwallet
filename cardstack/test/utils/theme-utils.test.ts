@@ -23,11 +23,13 @@ describe('theme utils', () => {
         textStyle: {
           [chance.string()]: chance.string(),
         },
+        width: chance.natural(),
       },
       secondary: {
         textStyle: {
           [chance.string()]: chance.string(),
         },
+        width: chance.natural(),
       },
       blue: {
         textStyle: {
@@ -54,6 +56,12 @@ describe('theme utils', () => {
       });
     });
 
+    it('should pull the correct width off of the theme if no variant is passed and value is not an object', () => {
+      const width = useVariantValue('buttonVariants', 'width', undefined);
+
+      expect(width).toEqual(theme.buttonVariants.defaults.width);
+    });
+
     it('should pull the correct textStyle off of the theme if secondary is passed', () => {
       const textStyle = useVariantValue(
         'buttonVariants',
@@ -67,6 +75,12 @@ describe('theme utils', () => {
       });
     });
 
+    it('should pull the correct width off of the theme if secondary is passed and value is not an object', () => {
+      const width = useVariantValue('buttonVariants', 'width', 'secondary');
+
+      expect(width).toEqual(theme.buttonVariants.secondary.width);
+    });
+
     it('should pull the correct textStyle off of the theme if a responsive value is passed', () => {
       const textStyle = useVariantValue('buttonVariants', 'textStyle', {
         phone: 'secondary',
@@ -77,6 +91,12 @@ describe('theme utils', () => {
         ...theme.buttonVariants.defaults.textStyle,
         ...theme.buttonVariants.secondary.textStyle,
       });
+    });
+
+    it('should pull the correct width off of the theme if the variant passed does not have the value', () => {
+      const width = useVariantValue('buttonVariants', 'width', 'blue');
+
+      expect(width).toEqual(theme.buttonVariants.defaults.width);
     });
 
     it('should pull the correct textStyle off of the theme if an undefined responsive variable is passed', () => {

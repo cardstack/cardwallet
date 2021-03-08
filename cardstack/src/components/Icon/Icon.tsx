@@ -5,15 +5,15 @@ import { ImageSourcePropType } from 'react-native';
 import { Container, ContainerProps, Image } from '@cardstack/components';
 import { Theme, ColorTypes } from '@cardstack/theme';
 
-type IconSize = 'small' | 'medium' | 'large';
-
 const iconSizeToValue = {
   small: 15,
   medium: 22,
   large: 30,
+  xl: 36,
 };
 
-interface IconProps extends ContainerProps {
+type IconSize = keyof typeof iconSizeToValue;
+export interface IconProps extends ContainerProps {
   /** specify the size using T-Shirt sizes */
   iconSize?: IconSize;
   /** if none of the default sizes work for what you need, you can use this to override */
@@ -36,6 +36,12 @@ const customIcons: {
   warning: require('../../assets/icons/warning.png'),
   reload: require('../../assets/icons/reload.png'),
   gift: require('../../assets/icons/gift.png'),
+  circle: require('../../assets/icons/circle.png'),
+  'check-circle': require('../../assets/icons/check-circle.png'),
+  pinned: require('../../assets/icons/pinned.png'),
+  pin: require('../../assets/icons/pin.png'),
+  'pin-blue': require('../../assets/icons/pin-blue.png'),
+  hidden: require('../../assets/icons/hidden.png'),
 };
 
 export const Icon = ({
