@@ -48,9 +48,14 @@ export const useVariantValue = <T extends keyof SafeVariants<Theme>>(
   const variantObject = theme[themeKey];
   const defaultStyles = variantObject.defaults;
   const variantStyles = variantObject[variant];
+  const value = variantStyles[key];
 
-  return {
-    ...defaultStyles[key],
-    ...variantStyles[key],
-  };
+  if (typeof value === 'object') {
+    return {
+      ...defaultStyles[key],
+      ...value,
+    };
+  }
+
+  return value || defaultStyles[key];
 };

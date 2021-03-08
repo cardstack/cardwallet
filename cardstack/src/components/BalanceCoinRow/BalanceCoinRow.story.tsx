@@ -12,6 +12,7 @@ const exampleCoinItem = {
   icon_url:
     'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
   isCoin: true,
+  isHidden: false,
   isPinned: true,
   isRainbowCurated: true,
   isSmall: false,
@@ -41,6 +42,7 @@ const exampleCoinItem2 = {
   icon_url:
     'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
   isCoin: true,
+  isHidden: false,
   isPinned: false,
   isRainbowCurated: true,
   isSmall: false,

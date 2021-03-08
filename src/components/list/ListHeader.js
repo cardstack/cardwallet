@@ -1,31 +1,16 @@
-import React, { createElement, Fragment } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
+import React, { createElement, Fragment, useCallback } from 'react';
+import { LayoutAnimation } from 'react-native';
 import styled from 'styled-components';
-import { useDimensions } from '../../hooks';
-import Divider from '../Divider';
+
+import { useCoinListEditOptions, useDimensions } from '../../hooks';
 import { ContextMenu } from '../context-menu';
 import { Row } from '../layout';
 import SavingsListHeader from '../savings/SavingsListHeader';
-import { Text } from '@cardstack/components';
+import { Button, Text } from '@cardstack/components';
 import { colors as cardstackColors } from '@cardstack/theme';
-import { padding, position } from '@rainbow-me/styles';
+import { padding } from '@rainbow-me/styles';
 
 export const ListHeaderHeight = 44;
-
-const BackgroundGradient = styled(LinearGradient).attrs(
-  ({ theme: { colors } }) => ({
-    colors: [
-      colors.listHeaders.firstGradient,
-      colors.listHeaders.secondGradient,
-      colors.listHeaders.thirdGradient,
-    ],
-    end: { x: 0, y: 0 },
-    pointerEvents: 'none',
-    start: { x: 0, y: 0.5 },
-  })
-)`
-  ${position.cover};
-`;
 
 const Content = styled(Row).attrs({
   align: 'center',
@@ -53,6 +38,13 @@ export default function ListHeader({
   totalValue,
 }) {
   const deviceDimensions = useDimensions();
+  const { setIsCoinListEdited } = useCoinListEditOptions();
+  const handlePress = useCallback(() => {
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+    );
+    setIsCoinListEdited(false);
+  }, [setIsCoinListEdited]);
 
   if (title === 'Pools') {
     return (
@@ -75,8 +67,16 @@ export default function ListHeader({
             fontSize: 20,
           })}
           <Row align="center">
-            {children}
-            <ContextMenu marginTop={3} {...contextMenuOptions} />
+            {isCoinListEdited ? (
+              <Button onPress={handlePress} variant="extraSmall">
+                Done
+              </Button>
+            ) : (
+              <>
+                {children}
+                <ContextMenu marginTop={3} {...contextMenuOptions} />
+              </>
+            )}
           </Row>
         </Content>
         {!isSticky && title !== 'Balances' && (

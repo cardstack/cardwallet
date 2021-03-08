@@ -19,6 +19,9 @@ export const textVariants = {
     color: 'grayText',
     fontSize: 10,
   },
+  smallButton: {
+    fontSize: 12,
+  },
   subHeader: {
     color: 'blueText',
     fontSize: 16,

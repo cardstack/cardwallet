@@ -15,6 +15,8 @@ const EDITING_COIN_ROW_WIDTH = '87%';
 
 export const BalanceCoinRow = ({ item }: BalanceCoinRowProps) => {
   const recentlyPinnedCount = useSelector(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     state => state.editOptions.recentlyPinnedCount
   );
 
