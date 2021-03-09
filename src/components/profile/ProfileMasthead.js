@@ -10,11 +10,11 @@ import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';
 import { RainbowButton } from '../buttons';
 import { FloatingEmojis } from '../floating-emojis';
-import { Icon } from '../icons';
 import { Centered, Column, Row, RowWithMargins } from '../layout';
 import { TruncatedText } from '../text';
 import AvatarCircle from './AvatarCircle';
 import ProfileAction from './ProfileAction';
+import { Button, Container, Icon, Text } from '@cardstack/components';
 import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
@@ -109,6 +109,7 @@ export default function ProfileMasthead({
     if (imageUrl !== accountImage) {
       setImage(accountImage);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setImage]);
   const isAvatarPickerAvailable = useExperimentalFlag(AVATAR_PICKER);
   const isAvatarEmojiPickerEnabled = true;
@@ -266,14 +267,14 @@ export default function ProfileMasthead({
     }
     Clipboard.setString(accountAddress);
   }, [accountAddress, isDamaged]);
-
   const { colors } = useTheme();
+
   return (
-    <Column
-      align="center"
+    <Container
+      alignItems="center"
+      backgroundColor="backgroundBlue"
       height={addCashAvailable ? 260 : 185}
-      marginBottom={24}
-      marginTop={0}
+      paddingBottom={6}
     >
       {/* [AvatarCircle -> ImageAvatar -> ImgixImage], so no need to sign accountImage here. */}
       <AvatarCircle
@@ -284,48 +285,49 @@ export default function ProfileMasthead({
         onPress={handlePressAvatar}
       />
       <ButtonPressAnimation onPress={handlePressChangeWallet}>
-        <Row>
-          <AccountName deviceWidth={deviceWidth}>{accountName}</AccountName>
-          <DropdownArrow>
-            <Icon color={colors.dark} direction="down" name="caret" />
-          </DropdownArrow>
-        </Row>
+        <Container alignItems="center" flexDirection="row">
+          <Text color="white" fontSize={24} fontWeight="600" marginRight={1}>
+            {accountName}
+          </Text>
+          <Icon color="white" name="chevron-down" />
+        </Container>
       </ButtonPressAnimation>
-      <RowWithMargins align="center" margin={19}>
-        <ProfileAction
-          icon="copy"
+      {addCashAvailable && (
+        <Button marginTop={4} onPress={handlePressAddCash}>
+          Add Funds
+        </Button>
+      )}
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        padding={4}
+        width="100%"
+      >
+        <Button
+          iconProps={{
+            color: 'white',
+            marginRight: 2,
+            name: 'copy',
+            size: 18,
+          }}
           onPress={handlePressCopyAddress}
-          radiusWrapperStyle={{ marginRight: 10, width: 150 }}
-          scaleTo={0.88}
-          text="Copy Address"
-          width={127}
-          wrapperProps={{
-            containerStyle: {
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
-              paddingLeft: 10,
-            },
+          variant="smallBlue"
+        >
+          Copy Address
+        </Button>
+        <Button
+          iconProps={{
+            color: 'white',
+            marginRight: 2,
+            name: 'qr-code',
+            size: 18,
           }}
-        />
-        <FloatingEmojisRegion setOnNewEmoji={setOnNewEmoji} />
-        <ProfileAction
-          icon="qrCode"
           onPress={handlePressReceive}
-          radiusWrapperStyle={{ marginRight: 10, width: 104 }}
-          scaleTo={0.88}
-          text="Receive"
-          width={81}
-          wrapperProps={{
-            containerStyle: {
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
-              paddingLeft: 10,
-            },
-          }}
-        />
-      </RowWithMargins>
-      {addCashAvailable && <AddCashButton onPress={handlePressAddCash} />}
-      {showBottomDivider && <ProfileMastheadDivider />}
-    </Column>
+          variant="smallBlue"
+        >
+          Receive
+        </Button>
+      </Container>
+    </Container>
   );
 }

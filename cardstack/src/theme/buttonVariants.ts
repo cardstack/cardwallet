@@ -1,5 +1,20 @@
 import { screenWidth } from '../utils/dimension-utils';
 
+const blue = {
+  backgroundColor: 'backgroundBlue',
+  borderColor: 'borderBlue',
+  textStyle: {
+    color: 'white',
+  },
+};
+
+const small = {
+  textStyle: {
+    fontSize: 14,
+  },
+  width: (screenWidth - 56) / 2,
+};
+
 export const buttonVariants = {
   defaults: {
     alignItems: 'center',
@@ -12,27 +27,22 @@ export const buttonVariants = {
     },
     flexDirection: 'row',
     justifyContent: 'center',
-    maxWidth: 335,
     paddingVertical: 3,
     textStyle: {
       variant: 'body',
       fontWeight: '600',
     },
-    width: screenWidth - 32,
+    width: screenWidth - 40,
   },
   secondary: {
     backgroundColor: 'buttonSecondaryBackground',
     borderColor: 'buttonSecondaryBorder',
   },
-  blue: {
-    backgroundColor: 'backgroundBlue',
-    borderColor: 'borderBlue',
-    textStyle: {
-      color: 'white',
-    },
-  },
-  small: {
-    width: (screenWidth - 48) / 2,
+  blue,
+  small,
+  smallBlue: {
+    ...small,
+    ...blue,
   },
   extraSmall: {
     height: 27,
