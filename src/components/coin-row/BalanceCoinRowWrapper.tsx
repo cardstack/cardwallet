@@ -7,7 +7,7 @@ import { BalanceCoinRow } from '@cardstack/components';
 import { useCoinListEdited, useCoinListEditOptions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 
-const baseHeight = 309 + (android && 20 - getSoftMenuBarHeight());
+const baseHeight = 309;
 const heightWithChart = baseHeight + 310;
 
 export const initialChartExpandedStateSheetHeight = heightWithChart;
