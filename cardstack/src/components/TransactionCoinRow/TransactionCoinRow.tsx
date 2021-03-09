@@ -18,17 +18,11 @@ const statusToData: {
 } = {
   sent: {
     actionTextColor: 'blueText',
-<<<<<<< Updated upstream
-    iconName: 'sent',
-    iconTop: 1,
-    recipientText: 'To',
-=======
     iconProps: {
-      name: 'sent-blue',
+      name: 'sent',
       top: 1,
       size: 17,
     },
->>>>>>> Stashed changes
     transactionSymbol: '-',
     transactionTextColor: 'black',
   },
