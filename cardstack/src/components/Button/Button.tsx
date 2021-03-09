@@ -64,7 +64,7 @@ export const Button = ({
 
   return (
     <Container backgroundColor="transparent">
-      <AnimatedButton alignItems="flex-start" disabled={disabled} {...props}>
+      <AnimatedButton alignItems="center" disabled={disabled} {...props}>
         {iconProps && (
           <Icon color={disabled ? 'blueText' : 'black'} {...iconProps} />
         )}

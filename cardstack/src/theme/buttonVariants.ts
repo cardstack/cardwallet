@@ -34,9 +34,6 @@ export const buttonVariants = {
   small: {
     width: (screenWidth - 48) / 2,
   },
-  smallSecondary: {
-    width: (screenWidth - 48) / 2,
-  },
   extraSmall: {
     height: 27,
     paddingVertical: 0,

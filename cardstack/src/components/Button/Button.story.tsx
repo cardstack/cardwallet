@@ -28,14 +28,6 @@ storiesOf('Button', module).add('Default', () => (
         <Button variant="small">Small 1</Button>
         <Button variant="small">Small 2</Button>
       </Container>
-      <Container
-        flexDirection="row"
-        justifyContent="space-between"
-        width="100%"
-      >
-        <Button variant="smallSecondary">Small 1</Button>
-        <Button variant="smallSecondary">Small 2</Button>
-      </Container>
       <Button variant="extraSmall">XSmall</Button>
     </Container>
   </Container>
