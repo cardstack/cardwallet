@@ -1,15 +1,9 @@
 import React, { useCallback } from 'react';
 import { useExpandedStateNavigation } from '../../../hooks';
-import SheetActionButton from './SheetActionButton';
+import { Button } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
 
-export default function SwapActionButton({
-  color: givenColor,
-  inputType,
-  ...props
-}) {
-  const { colors } = useTheme();
-  const color = givenColor || colors.swapPurple;
+export default function SwapActionButton({ inputType }) {
   const navigate = useExpandedStateNavigation(inputType);
   const handlePress = useCallback(
     () =>
@@ -24,13 +18,16 @@ export default function SwapActionButton({
   );
 
   return (
-    <SheetActionButton
-      {...props}
-      color={color}
-      label="􀖅 Swap"
+    <Button
+      iconProps={{
+        iconSize: 'medium',
+        marginRight: 2,
+        name: 'swap',
+      }}
       onPress={handlePress}
-      testID="swap"
-      weight="bold"
-    />
+      variant="small"
+    >
+      Swap
+    </Button>
   );
 }

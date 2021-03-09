@@ -11,6 +11,7 @@ import {
   ChartPercentChangeLabel,
   ChartPriceLabel,
 } from './chart-data-labels';
+import { Text } from '@cardstack/components';
 import { convertAmountToNativeDisplay } from '@rainbow-me/helpers/utilities';
 import { useAccountSettings, useBooleanState } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
@@ -96,7 +97,6 @@ export default function ChartExpandedStateHeader({
         testID="expanded-state-header"
       >
         <CoinIconGroup tokens={tokens} />
-        <ChartContextButton asset={asset} color={color} />
       </Row>
       <Column>
         <RowWithMargins
@@ -133,14 +133,7 @@ export default function ChartExpandedStateHeader({
           marginHorizontal={android ? (isNoPriceData ? -7 : 0) : 1}
           marginVertical={android ? 4 : 1}
         >
-          <ChartHeaderSubtitle
-            color={
-              isNoPriceData ? colors.alpha(colors.blueGreyDark, 0.8) : color
-            }
-            weight={isNoPriceData ? 'semibold' : 'bold'}
-          >
-            {titleOrNoPriceData}
-          </ChartHeaderSubtitle>
+          <Text>{titleOrNoPriceData}</Text>
           {showPriceChange && (
             <ChartDateLabel
               chartTimeSharedValue={chartTimeSharedValue}

@@ -18,6 +18,7 @@ import {
   TokenInfoSection,
 } from '../token-info';
 import { Chart } from '../value-chart';
+import { Container } from '@cardstack/components';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
@@ -44,10 +45,7 @@ export default function ChartExpandedState({ asset }) {
   });
 
   const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
-  const showSwapButton = find(uniswapAssetsInWallet, [
-    'uniqueId',
-    asset.uniqueId,
-  ]);
+  const showSwapButton = true;
 
   const needsEth = asset.address === 'eth' && asset.balance.amount === '0';
 
@@ -97,12 +95,18 @@ export default function ChartExpandedState({ asset }) {
           <BuyActionButton color={color} fullWidth />
         </SheetActionButtonRow>
       ) : (
-        <SheetActionButtonRow>
+        <Container
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-around"
+          paddingTop={2}
+          width="100%"
+        >
           {showSwapButton && (
             <SwapActionButton color={color} inputType={AssetInputTypes.in} />
           )}
-          <SendActionButton color={color} fullWidth={!showSwapButton} />
-        </SheetActionButtonRow>
+          <SendActionButton color={color} small={showSwapButton} />
+        </Container>
       )}
     </SlackSheet>
   );

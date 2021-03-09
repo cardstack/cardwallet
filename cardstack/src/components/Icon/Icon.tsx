@@ -33,6 +33,8 @@ const customIcons: {
   more: require('../../assets/icons/more.png'),
   pay: require('../../assets/icons/pay.png'),
   sent: require('../../assets/icons/sent.png'),
+  swap: require('../../assets/icons/swap.png'),
+  'sent-blue': require('../../assets/icons/sent-blue.png'),
   warning: require('../../assets/icons/warning.png'),
   reload: require('../../assets/icons/reload.png'),
   gift: require('../../assets/icons/gift.png'),

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import TokenInfoBalanceValue from './TokenInfoBalanceValue';
-import TokenInfoValue from './TokenInfoValue';
 import { Container, Text } from '@cardstack/components';
 
 export default function TokenInfoItem({
@@ -9,7 +8,6 @@ export default function TokenInfoItem({
   asset,
   children,
   title,
-  weight,
 }) {
   return (
     <Container alignItems={align === 'left' ? 'flex-start' : 'flex-end'}>
