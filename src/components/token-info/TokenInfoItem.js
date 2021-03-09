@@ -1,8 +1,8 @@
 import React from 'react';
-import { ColumnWithMargins } from '../layout';
+
 import TokenInfoBalanceValue from './TokenInfoBalanceValue';
-import TokenInfoHeading from './TokenInfoHeading';
 import TokenInfoValue from './TokenInfoValue';
+import { Container, Text } from '@cardstack/components';
 
 export default function TokenInfoItem({
   align = 'left',
@@ -10,23 +10,19 @@ export default function TokenInfoItem({
   children,
   title,
   weight,
-  ...props
 }) {
   return (
-    <ColumnWithMargins
-      flex={asset ? 1 : 0}
-      justify={align === 'left' ? 'start' : 'end'}
-      margin={android ? -6 : 3}
-      {...props}
-    >
-      <TokenInfoHeading align={align}>{title}</TokenInfoHeading>
+    <Container alignItems={align === 'left' ? 'flex-start' : 'flex-end'}>
+      <Text align={align} color="grayText" fontSize={13} marginBottom={1}>
+        {title}
+      </Text>
       {asset ? (
         <TokenInfoBalanceValue align={align} asset={asset} />
       ) : (
-        <TokenInfoValue align={align} weight={weight}>
+        <Text fontSize={20} fontWeight="700">
           {children}
-        </TokenInfoValue>
+        </Text>
       )}
-    </ColumnWithMargins>
+    </Container>
   );
 }

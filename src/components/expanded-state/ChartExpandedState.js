@@ -1,6 +1,7 @@
 import { find } from 'lodash';
 import React, { useRef } from 'react';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
+
 import { useChartThrottledPoints, useUniswapAssetsInWallet } from '../../hooks';
 import {
   BuyActionButton,
@@ -85,8 +86,8 @@ export default function ChartExpandedState({ asset }) {
             <TokenInfoBalanceValue />
           </TokenInfoItem>
           {asset?.native?.price.display && (
-            <TokenInfoItem title="Value" weight="bold">
-              {asset?.native?.balance.display}
+            <TokenInfoItem align="right" title="Value" weight="bold">
+              {`${asset?.native?.balance.display} USD`}
             </TokenInfoItem>
           )}
         </TokenInfoRow>
