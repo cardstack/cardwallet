@@ -45,7 +45,10 @@ export default function ChartExpandedState({ asset }) {
   });
 
   const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
-  const showSwapButton = true;
+  const showSwapButton = find(uniswapAssetsInWallet, [
+    'uniqueId',
+    asset.uniqueId,
+  ]);
 
   const needsEth = asset.address === 'eth' && asset.balance.amount === '0';
 
