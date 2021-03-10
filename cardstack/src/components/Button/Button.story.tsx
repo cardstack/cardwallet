@@ -25,7 +25,7 @@ storiesOf('Button', module).add('Default', () => (
           name: 'pin',
         }}
       >
-        With Icom
+        With Icon
       </Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="blue">Blue</Button>

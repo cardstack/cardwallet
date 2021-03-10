@@ -3,6 +3,7 @@ import CoinIcon from 'react-coin-icon';
 
 import { CoinItem } from '../../types';
 import { Container, Icon, Text, Touchable } from '@cardstack/components';
+import {CenteredContainer} from '../Container';
 
 interface BalanceCoinRowProps {
   item: CoinItem;
@@ -21,7 +22,7 @@ export const BalanceCoinRow = ({
   selected,
 }: BalanceCoinRowProps) => {
   const showIcon = item.isPinned || item.isHidden;
-  const iconName = item.isPinned ? 'pin-filled' : 'hidden';
+  const iconName = item.isPinned ? 'pin' : 'eye-off';
   const editingIconName = selected ? 'check-circle' : 'circle';
 
   return (
@@ -45,14 +46,21 @@ export const BalanceCoinRow = ({
           <Container
             height="100%"
             justifyContent="center"
-            left={SELECT_ICON_WIDTH}
+            left="14%"
             position="absolute"
-            top="15%"
+            top="12%"
             width={50}
             zIndex={5}
             testID={`coin-row-icon-${iconName}`}
           >
-            <Icon iconSize="xl" name={iconName} />
+            <CenteredContainer
+              width={28}
+              height={28}
+              borderRadius={100}
+              backgroundColor="black"
+            >
+              <Icon size={20} name={iconName} />
+            </CenteredContainer>
           </Container>
         )}
         <Container

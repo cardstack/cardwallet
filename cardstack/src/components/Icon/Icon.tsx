@@ -39,14 +39,14 @@ export const Icon = ({
 
   if (isCustomIcon) {
     return (
-      // <Container {...props} height={sizeWithDefault} width={sizeWithDefault}>
+      <Container {...props} height={sizeWithDefault} width={sizeWithDefault}>
         <SvgXml
-          color={colorWithDefault}
+          fill={colorWithDefault}
           width={sizeWithDefault}
           height={sizeWithDefault}
           xml={customIcons[name as CustomIconNames]}
         />
-      // </Container>
+      </Container>
     );
   }
 
