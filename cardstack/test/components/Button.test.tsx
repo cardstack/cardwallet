@@ -122,9 +122,12 @@ describe('Button', () => {
   it('should render the icon if iconProps are passed', () => {
     const buttonText = chance.string();
 
-    const iconProps = {
+    const iconProps: {
+      [key: string]: any;
+      name: 'pin';
+    } = {
       [chance.string()]: chance.string(),
-      name: chance.string(),
+      name: 'pin',
     };
 
     render(<Button iconProps={iconProps}>{buttonText}</Button>);
@@ -136,9 +139,12 @@ describe('Button', () => {
   it('should render the icon with the correct color if iconProps and disabled', () => {
     const buttonText = chance.string();
 
-    const iconProps = {
+    const iconProps: {
+      [key: string]: any;
+      name: 'pin';
+    } = {
       [chance.string()]: chance.string(),
-      name: chance.string(),
+      name: 'pin',
     };
 
     render(

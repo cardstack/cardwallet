@@ -17,6 +17,10 @@ jest.mock('react-native/Libraries/Lists/SectionList', () => {
   return jest.fn(() => null);
 });
 
+jest.mock('../../src/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
+
 const chance = new Chance();
 
 describe('ExpandedCard', () => {

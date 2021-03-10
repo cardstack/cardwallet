@@ -20,7 +20,7 @@ const statusToData: {
   sent: {
     actionTextColor: 'blueText',
     iconProps: {
-      name: 'sent-blue',
+      name: 'send',
       top: 1,
       size: 17,
     },
@@ -30,7 +30,7 @@ const statusToData: {
   sending: {
     actionTextColor: 'blueText',
     iconProps: {
-      name: 'sent',
+      name: 'send',
       top: 1,
       size: 17,
     },

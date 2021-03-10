@@ -11,6 +11,10 @@ jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
 );
 
+jest.mock('../../src/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
+
 const chance = new Chance();
 
 describe('PrepaidCard', () => {

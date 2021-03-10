@@ -1,5 +1,6 @@
 import React from 'react';
 import { SectionList } from 'react-native';
+import { IconName } from '../Icon';
 import { TransactionItem } from '../../types';
 import {
   Button,
@@ -63,7 +64,7 @@ const Features = () => (
 );
 
 interface OptionItemProps {
-  iconName: string;
+  iconName: IconName;
   boldText: string;
   bodyText: string;
 }
