@@ -1,15 +1,16 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigation } from '../../navigation/Navigation';
-import Icon from '../icons/Icon';
 import { Row } from '../layout';
 import Text from '../text/Text';
 import HeaderButton from './HeaderButton';
+import { Icon } from '@cardstack/components';
+import { colors } from '@cardstack/theme';
 import { fonts, fontWithWidth } from '@rainbow-me/styles';
 
 const Container = styled(Row).attrs({ align: 'center' })`
   height: 44;
-  width: ${({ textChevron }) => (textChevron ? 20 : 10)};
+  width: 20;
 `;
 
 const IconText = styled(Text).attrs(({ theme: { colors } }) => ({
@@ -20,7 +21,6 @@ const IconText = styled(Text).attrs(({ theme: { colors } }) => ({
 `;
 
 export default function BackButton({
-  color,
   direction = 'left',
   onPress,
   throttle,
@@ -60,9 +60,9 @@ export default function BackButton({
     >
       <Container {...props} textChevron={textChevron}>
         {textChevron ? (
-          <IconText color={color}>←</IconText>
+          <IconText color={colors.white}>←</IconText>
         ) : (
-          <Icon color={color} direction={direction} name="caret" {...props} />
+          <Icon color="white" iconSize="large" name="chevron-right" />
         )}
       </Container>
     </HeaderButton>

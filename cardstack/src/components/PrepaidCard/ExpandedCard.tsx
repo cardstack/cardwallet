@@ -1,19 +1,19 @@
 import React from 'react';
 import { SectionList } from 'react-native';
 import { IconName } from '../Icon';
+import { TransactionItem } from '../../types';
 import {
   Button,
   Container,
   Icon,
   Text,
   TransactionCoinRow,
-  TransactionCoinRowProps,
 } from '@cardstack/components';
 
 export interface ExpandedCardProps {
   recentActivity: {
     title: string;
-    data: TransactionCoinRowProps[];
+    data: TransactionItem[];
   }[];
 }
 
@@ -93,11 +93,11 @@ const RecentActivity = (props: ExpandedCardProps) => (
       Recent Activity
     </Text>
     <SectionList
-      keyExtractor={(item, index) =>
-        (item.transactionAmount + index).toString()
-      }
+      keyExtractor={item => item.hash}
       sections={props.recentActivity}
-      renderItem={({ item }) => <TransactionCoinRow {...item} />}
+      renderItem={({ item }) => (
+        <TransactionCoinRow item={item} paddingHorizontal={0} />
+      )}
       renderSectionHeader={({ section: { title } }) => (
         <Text variant="subHeader" marginTop={4}>
           {title}

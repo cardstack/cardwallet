@@ -16,7 +16,7 @@ const Content = styled(Row).attrs({
   align: 'center',
   justify: 'space-between',
 })`
-  ${padding(0, 19, 2)};
+  ${padding(0, 20, 2)};
   background-color: ${cardstackColors.backgroundBlue};
   height: ${ListHeaderHeight};
   width: 100%;
