@@ -27,6 +27,16 @@ const statusToData: {
     transactionSymbol: '-',
     transactionTextColor: 'black',
   },
+  sending: {
+    actionTextColor: 'blueText',
+    iconProps: {
+      name: 'sent',
+      top: 1,
+      size: 17,
+    },
+    transactionSymbol: '-',
+    transactionTextColor: 'black',
+  },
 };
 
 export interface TransactionCoinRowProps extends ContainerProps {
