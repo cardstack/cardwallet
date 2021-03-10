@@ -31,4 +31,22 @@ describe('TransactionCoinRow', () => {
     getByText(item.balance.display);
     getByText(`- ${item.native.display} USD`);
   });
+
+  it('should not blow up if item is null', () => {
+    item = null;
+
+    renderComponent();
+  });
+
+  it('should not blow up if item.balance is null', () => {
+    item.balance = null;
+
+    renderComponent();
+  });
+
+  it('should not blow up if item.native is null', () => {
+    item.native = null;
+
+    renderComponent();
+  });
 });

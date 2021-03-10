@@ -50,6 +50,10 @@ export const TransactionCoinRow = ({
   item,
   ...props
 }: TransactionCoinRowProps) => {
+  if (!item) {
+    return null;
+  }
+
   return (
     <Container
       width="100%"
@@ -98,6 +102,10 @@ const Left = ({ item }: TransactionCoinRowProps) => {
 
 const Right = ({ item }: TransactionCoinRowProps) => {
   const data = statusToData[item.status];
+
+  if (!item.balance || !item.native) {
+    return null;
+  }
 
   return (
     <Container>
