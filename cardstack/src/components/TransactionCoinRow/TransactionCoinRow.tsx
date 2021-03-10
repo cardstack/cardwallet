@@ -2,6 +2,7 @@ import React from 'react';
 import CoinIcon from 'react-coin-icon';
 
 import { TransactionItem } from '../../types/TransactionItem';
+import { ContainerProps } from '../Container';
 import { Theme } from '@cardstack/theme';
 import { Container, Icon, IconProps, Text } from '@cardstack/components';
 
@@ -28,20 +29,24 @@ const statusToData: {
   },
 };
 
-export interface TransactionCoinRowProps {
+export interface TransactionCoinRowProps extends ContainerProps {
   item: TransactionItem;
 }
 
 /**
  * A component for displaying a transaction item
  */
-export const TransactionCoinRow = (props: TransactionCoinRowProps) => {
+export const TransactionCoinRow = ({
+  item,
+  ...props
+}: TransactionCoinRowProps) => {
   return (
     <Container
       width="100%"
       alignItems="center"
       testID="transaction-coin-row"
       paddingHorizontal={5}
+      {...props}
     >
       <Container
         alignItems="center"
@@ -55,8 +60,8 @@ export const TransactionCoinRow = (props: TransactionCoinRowProps) => {
         borderWidth={1}
         margin={2}
       >
-        <Left {...props} />
-        <Right {...props} />
+        <Left item={item} />
+        <Right item={item} />
       </Container>
     </Container>
   );
