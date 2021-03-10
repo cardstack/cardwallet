@@ -4,7 +4,7 @@ const blue = {
   backgroundColor: 'backgroundBlue',
   borderColor: 'borderBlue',
   textStyle: {
-    color: 'white',
+    color: 'buttonPrimaryBackground',
   },
 };
 
