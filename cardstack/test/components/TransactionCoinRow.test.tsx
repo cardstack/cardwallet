@@ -33,18 +33,24 @@ describe('TransactionCoinRow', () => {
   });
 
   it('should not blow up if item is null', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     item = null;
 
     renderComponent();
   });
 
   it('should not blow up if item.balance is null', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     item.balance = null;
 
     renderComponent();
   });
 
   it('should not blow up if item.native is null', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     item.native = null;
 
     renderComponent();
