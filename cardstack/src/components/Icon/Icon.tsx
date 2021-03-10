@@ -1,11 +1,11 @@
-import { useTheme } from '@shopify/restyle';
 import React from 'react';
+import { useTheme } from '@shopify/restyle';
 import { SvgXml } from 'react-native-svg';
 import Feather from 'react-native-vector-icons/Feather';
 import { FeatherIconNames } from './feather-icon-names';
 import { customIcons, CustomIconNames } from './custom-icons';
-import { ColorTypes, Theme } from '@cardstack/theme';
 import { Container, ContainerProps } from '@cardstack/components';
+import { ColorTypes, Theme } from '@cardstack/theme';
 
 const iconSizeToValue = {
   small: 15,
