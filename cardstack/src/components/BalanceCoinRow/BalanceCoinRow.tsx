@@ -2,8 +2,8 @@ import React from 'react';
 import CoinIcon from 'react-coin-icon';
 
 import { CoinItem } from '../../types';
+import { CenteredContainer } from '../Container';
 import { Container, Icon, Text, Touchable } from '@cardstack/components';
-import {CenteredContainer} from '../Container';
 
 interface BalanceCoinRowProps {
   item: CoinItem;
