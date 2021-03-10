@@ -21,6 +21,9 @@ function ChartLabelFactory(style) {
     const textProps = useAnimatedStyle(
       () => {
         return {
+          fontFamily: 'OpenSans-Regular',
+          fontSize: 20,
+          fontWeight: '700',
           text: formattedValue.value,
         };
       },

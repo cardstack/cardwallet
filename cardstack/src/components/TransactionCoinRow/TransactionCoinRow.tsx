@@ -20,7 +20,7 @@ const statusToData: {
   sent: {
     actionTextColor: 'blueText',
     iconProps: {
-      name: 'sent',
+      name: 'sent-blue',
       top: 1,
       size: 17,
     },

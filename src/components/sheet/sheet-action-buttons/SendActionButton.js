@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
+
 import isNativeStackAvailable from '../../../helpers/isNativeStackAvailable';
 import { useExpandedStateNavigation } from '../../../hooks';
-import SheetActionButton from './SheetActionButton';
+import { Button } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
 
-export default function SendActionButton({ color: givenColor, ...props }) {
-  const { colors } = useTheme();
-  const color = givenColor || colors.paleBlue;
+export default function SendActionButton({ small }) {
   const navigate = useExpandedStateNavigation();
   const handlePress = useCallback(
     () =>
@@ -21,14 +20,20 @@ export default function SendActionButton({ color: givenColor, ...props }) {
     [navigate]
   );
 
+  const variantProp = small ? { variant: 'small' } : {};
+
   return (
-    <SheetActionButton
-      {...props}
-      color={color}
-      label="􀈠 Send"
+    <Button
+      iconProps={{
+        iconSize: 'medium',
+        marginRight: 2,
+        name: 'sent',
+        top: 2,
+      }}
       onPress={handlePress}
-      testID="send"
-      weight="bold"
-    />
+      {...variantProp}
+    >
+      Send
+    </Button>
   );
 }
