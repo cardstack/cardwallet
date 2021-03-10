@@ -1,79 +1,67 @@
 import React from 'react';
-import { Image } from 'react-native';
+import CoinIcon from 'react-coin-icon';
 
-import daiIcon from '../../assets/dai.png';
-import { getDollarsFromDai, numberWithCommas } from '@cardstack/utils';
+import { TransactionItem } from '../../types/TransactionItem';
+import { ContainerProps } from '../Container';
 import { Theme } from '@cardstack/theme';
-import { Container, Icon, Text } from '@cardstack/components';
-
-export enum TransactionType {
-  PAID = 'paid',
-  RELOADED = 'reloaded',
-  FAILED = 'failed',
-}
+import { Container, Icon, IconProps, Text } from '@cardstack/components';
 
 interface TransactionCoinRowData {
-  actionText: string;
   actionTextColor: keyof Theme['colors'];
-  iconName: string;
-  iconSize?: number;
-  /** top on icon to center it if needed */
-  iconTop?: number;
-  recipientText: string;
+  iconProps: IconProps;
   transactionTextColor: keyof Theme['colors'];
   transactionSymbol: string;
 }
 
-const typeToData: {
-  [key in TransactionType]: TransactionCoinRowData;
+// I have no idea what the possible statuses are for this component
+const statusToData: {
+  [key: string]: TransactionCoinRowData;
 } = {
-  [TransactionType.PAID]: {
-    actionText: 'Paid',
+  sent: {
     actionTextColor: 'blueText',
-    iconName: 'sent-blue',
-    iconTop: 1,
-    recipientText: 'To',
+    iconProps: {
+      name: 'sent-blue',
+      top: 1,
+      size: 17,
+    },
     transactionSymbol: '-',
     transactionTextColor: 'black',
   },
-  [TransactionType.RELOADED]: {
-    actionText: 'Reloaded',
+  sending: {
     actionTextColor: 'blueText',
-    iconName: 'refresh-cw',
-    iconSize: 15,
-    recipientText: 'Via',
-    transactionSymbol: '+',
-    transactionTextColor: 'green',
-  },
-  [TransactionType.FAILED]: {
-    actionText: 'Failed',
-    actionTextColor: 'red',
-    iconName: 'failed',
-    iconSize: 10,
-    recipientText: 'To',
+    iconProps: {
+      name: 'sent',
+      top: 1,
+      size: 17,
+    },
     transactionSymbol: '-',
-    transactionTextColor: 'red',
+    transactionTextColor: 'black',
   },
 };
 
-export interface TransactionCoinRowProps {
-  recipient: string;
-  transactionAmount: number;
-  type: TransactionType;
+export interface TransactionCoinRowProps extends ContainerProps {
+  item: TransactionItem;
 }
 
 /**
  * A component for displaying a transaction item
  */
 export const TransactionCoinRow = ({
-  type,
-  transactionAmount,
-  recipient,
+  item,
+  ...props
 }: TransactionCoinRowProps) => {
-  const data = typeToData[type];
+  if (!item) {
+    return null;
+  }
 
   return (
-    <Container width="100%" alignItems="center" testID="transaction-coin-row">
+    <Container
+      width="100%"
+      alignItems="center"
+      testID="transaction-coin-row"
+      paddingHorizontal={5}
+      {...props}
+    >
       <Container
         alignItems="center"
         justifyContent="space-between"
@@ -86,73 +74,47 @@ export const TransactionCoinRow = ({
         borderWidth={1}
         margin={2}
       >
-        <Left data={data} />
-        <Right
-          data={data}
-          transactionAmount={transactionAmount}
-          recipient={recipient}
-        />
+        <Left item={item} />
+        <Right item={item} />
       </Container>
     </Container>
   );
 };
 
-const Left = ({ data }: { data: TransactionCoinRowData }) => (
-  <Container flexDirection="row">
-    <Container height={40} width={40} marginRight={3}>
-      <Image
-        source={daiIcon}
-        resizeMode="contain"
-        style={{
-          height: '100%',
-          width: '100%',
-        }}
-      />
-    </Container>
-    <Container>
-      <Container flexDirection="row" alignItems="center">
-        <Icon
-          name={data.iconName}
-          size={data.iconSize || 18}
-          marginRight={1}
-          color="backgroundBlue"
-        />
-        <Text fontSize={13} color={data.actionTextColor}>
-          {data.actionText}
-        </Text>
+const Left = ({ item }: TransactionCoinRowProps) => {
+  const data = statusToData[item.status];
+
+  return (
+    <Container flexDirection="row">
+      <CoinIcon size={40} {...item} />
+      <Container marginLeft={2}>
+        <Container flexDirection="row" alignItems="center">
+          <Icon {...data.iconProps} marginRight={1} color="backgroundBlue" />
+          <Text fontSize={13} color={data.actionTextColor}>
+            {item.title}
+          </Text>
+        </Container>
+        <Text fontWeight="700">{item.name}</Text>
       </Container>
-      <Text fontWeight="700">Spend</Text>
     </Container>
-  </Container>
-);
-
-interface RightProps {
-  data: TransactionCoinRowData;
-  transactionAmount: number;
-  recipient: string;
-}
-
-const Right = ({ data, transactionAmount, recipient }: RightProps) => {
-  const formattedDollars = numberWithCommas(
-    getDollarsFromDai(transactionAmount).toFixed(2)
   );
+};
+
+const Right = ({ item }: TransactionCoinRowProps) => {
+  const data = statusToData[item.status];
+
+  if (!item.balance || !item.native) {
+    return null;
+  }
 
   return (
     <Container>
-      <Container flexDirection="row">
+      <Container alignItems="flex-end">
         <Text color="blueText" fontSize={13} marginRight={1}>
-          {data.recipientText}
-        </Text>
-        <Text color="blueText" fontSize={13} fontWeight="700">
-          {` ${recipient}`}
-        </Text>
-      </Container>
-      <Container marginTop={4} alignItems="flex-end">
-        <Text color="blueText" fontSize={13} marginRight={1}>
-          {`§${numberWithCommas(transactionAmount.toString())} SPEND`}
+          {item.balance.display}
         </Text>
         <Text fontWeight="700" color={data.transactionTextColor}>
-          {`${data.transactionSymbol} $${formattedDollars} USD`}
+          {`${data.transactionSymbol} ${item.native.display} USD`}
         </Text>
       </Container>
     </Container>

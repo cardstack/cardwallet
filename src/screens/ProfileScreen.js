@@ -2,15 +2,13 @@ import { useIsFocused } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { IS_TESTING } from 'react-native-dotenv';
 import styled from 'styled-components';
+
 import { ActivityList } from '../components/activity-list';
 import { BackButton, Header, HeaderButton } from '../components/header';
-import { Icon } from '../components/icons';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
-import TransactionList from '../components/transaction-list/TransactionList';
 import { useTheme } from '../context/ThemeContext';
 import useNativeTransactionListAvailable from '../helpers/isNativeTransactionListAvailable';
-import NetworkTypes from '../helpers/networkTypes';
 import {
   useAccountSettings,
   useAccountTransactions,
@@ -18,6 +16,7 @@ import {
   useRequests,
 } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
+import { Icon } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 
@@ -89,42 +88,26 @@ export default function ProfileScreen({ navigation }) {
           }}
           testID="settings-button"
         >
-          <Icon color={colors.black} name="gear" />
+          <Icon color="white" iconSize="medium" name="settings" />
         </HeaderButton>
-        <BackButton
-          color={colors.black}
-          direction="right"
-          onPress={onPressBackButton}
-        />
+        <BackButton direction="right" onPress={onPressBackButton} />
       </Header>
-      {network === NetworkTypes.mainnet && nativeTransactionListAvailable ? (
-        <TransactionList
-          addCashAvailable={addCashAvailable}
-          contacts={contacts}
-          initialized={activityListInitialized}
-          isLoading={isLoading}
-          network={network}
-          requests={requests}
-          transactions={transactions}
-        />
-      ) : (
-        <ActivityList
-          addCashAvailable={addCashAvailable}
-          header={
-            <ProfileMasthead
-              addCashAvailable={addCashAvailable}
-              onChangeWallet={onChangeWallet}
-            />
-          }
-          isEmpty={isEmpty}
-          isLoading={isLoading}
-          navigation={navigation}
-          network={network}
-          recyclerListView={ios}
-          sections={sections}
-          {...accountTransactions}
-        />
-      )}
+      <ActivityList
+        addCashAvailable={addCashAvailable}
+        header={
+          <ProfileMasthead
+            addCashAvailable={addCashAvailable}
+            onChangeWallet={onChangeWallet}
+          />
+        }
+        isEmpty={isEmpty}
+        isLoading={isLoading}
+        navigation={navigation}
+        network={network}
+        recyclerListView={ios}
+        sections={sections}
+        {...accountTransactions}
+      />
     </ProfileScreenPage>
   );
 }

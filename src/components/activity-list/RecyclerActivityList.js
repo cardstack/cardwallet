@@ -14,16 +14,17 @@ import {
   isNewValueForPath,
   safeAreaInsetValues,
 } from '../../utils';
-import {
-  ContractInteractionCoinRow,
-  RequestCoinRow,
-  TransactionCoinRow,
-} from '../coin-row';
+import { ContractInteractionCoinRow, RequestCoinRow } from '../coin-row';
 import ListFooter from '../list/ListFooter';
 import { ProfileMasthead } from '../profile';
 import ActivityListEmptyState from './ActivityListEmptyState';
 import ActivityListHeader from './ActivityListHeader';
 import LoadingState from './LoadingState';
+import {
+  Container,
+  TransactionCoinRow,
+  TransactionType,
+} from '@cardstack/components';
 
 const ViewTypes = {
   COMPONENT_HEADER: 0,
@@ -181,11 +182,17 @@ export default class RecyclerActivityList extends PureComponent {
     if (!data.hash) return <RequestCoinRow item={data} />;
     if (!data.symbol && data.dappName)
       return <ContractInteractionCoinRow item={data} />;
+
     return <TransactionCoinRow item={data} />;
   };
 
   render = () => (
-    <Wrapper>
+    <Container
+      backgroundColor="backgroundBlue"
+      flex={1}
+      overflow="hidden"
+      width="100%"
+    >
       <StickyContainer stickyHeaderIndices={this.state.headersIndices}>
         <RecyclerListView
           dataProvider={this.state.dataProvider}
@@ -200,6 +207,6 @@ export default class RecyclerActivityList extends PureComponent {
           style={{ minHeight: 1 }}
         />
       </StickyContainer>
-    </Wrapper>
+    </Container>
   );
 }
