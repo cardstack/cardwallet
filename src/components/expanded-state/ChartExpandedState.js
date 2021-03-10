@@ -1,6 +1,7 @@
 import { find } from 'lodash';
 import React, { useRef } from 'react';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
+
 import { useChartThrottledPoints, useUniswapAssetsInWallet } from '../../hooks';
 import {
   BuyActionButton,
@@ -17,6 +18,7 @@ import {
   TokenInfoSection,
 } from '../token-info';
 import { Chart } from '../value-chart';
+import { Container } from '@cardstack/components';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
@@ -85,8 +87,8 @@ export default function ChartExpandedState({ asset }) {
             <TokenInfoBalanceValue />
           </TokenInfoItem>
           {asset?.native?.price.display && (
-            <TokenInfoItem title="Value" weight="bold">
-              {asset?.native?.balance.display}
+            <TokenInfoItem align="right" title="Value" weight="bold">
+              {`${asset?.native?.balance.display} USD`}
             </TokenInfoItem>
           )}
         </TokenInfoRow>
@@ -96,12 +98,18 @@ export default function ChartExpandedState({ asset }) {
           <BuyActionButton color={color} fullWidth />
         </SheetActionButtonRow>
       ) : (
-        <SheetActionButtonRow>
+        <Container
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-around"
+          paddingTop={2}
+          width="100%"
+        >
           {showSwapButton && (
             <SwapActionButton color={color} inputType={AssetInputTypes.in} />
           )}
-          <SendActionButton color={color} fullWidth={!showSwapButton} />
-        </SheetActionButtonRow>
+          <SendActionButton color={color} small={showSwapButton} />
+        </Container>
       )}
     </SlackSheet>
   );

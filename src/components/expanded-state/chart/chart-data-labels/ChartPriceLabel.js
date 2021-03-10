@@ -98,7 +98,7 @@ export default function ChartPriceLabel({
           if (android) {
             return formatted.replace(/[^\d.,-]/g, '');
           }
-          return formatted;
+          return `${formatted} USD`;
         }}
       />
     </ChartPriceRow>

@@ -20,13 +20,12 @@ export const BalanceCoinRow = ({
   isEditing,
   selected,
 }: BalanceCoinRowProps) => {
-  const Wrapper = isEditing ? Touchable : Container;
   const showIcon = item.isPinned || item.isHidden;
   const iconName = item.isPinned ? 'pinned' : 'hidden';
   const editingIconName = selected ? 'check-circle' : 'circle';
 
   return (
-    <Wrapper onPress={onPress}>
+    <Touchable onPress={onPress}>
       <Container
         alignItems="center"
         width="100%"
@@ -105,6 +104,6 @@ export const BalanceCoinRow = ({
           />
         )}
       </Container>
-    </Wrapper>
+    </Touchable>
   );
 };
