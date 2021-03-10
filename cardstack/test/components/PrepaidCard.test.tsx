@@ -1,17 +1,19 @@
 import Chance from 'chance';
 import React from 'react';
-
 import { act } from 'react-test-renderer';
+
+import { TransactionItem } from '../../src/types';
 import { fireEvent, render } from '../test-utils';
-import {
-  PrepaidCard,
-  TransactionCoinRowProps,
-  TransactionType,
-} from '@cardstack/components';
+import { createRandomTransactionItem } from '../test-utils/model-factory';
+import { PrepaidCard } from '@cardstack/components';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
 );
+
+jest.mock('../../src/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
 
 const chance = new Chance();
 
@@ -21,18 +23,12 @@ describe('PrepaidCard', () => {
     spendableBalance: number,
     recentActivity: {
       title: string;
-      data: TransactionCoinRowProps[];
+      data: TransactionItem[];
     }[];
-
-  const createRandomTransactionDataItem = () => ({
-    type: chance.pickone(Object.values(TransactionType)),
-    recipient: chance.name(),
-    transactionAmount: chance.natural(),
-  });
 
   const createRandomActivityItem = () => ({
     title: chance.word(),
-    data: chance.n(createRandomTransactionDataItem, chance.d6()),
+    data: chance.n(createRandomTransactionItem, chance.d6()),
   });
 
   beforeEach(() => {

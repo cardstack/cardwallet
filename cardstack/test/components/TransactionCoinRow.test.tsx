@@ -1,51 +1,62 @@
-import Chance from 'chance';
 import React from 'react';
 
+import { TransactionItem } from '../../src/types';
 import { render } from '../test-utils';
-import { TransactionCoinRow, TransactionType } from '@cardstack/components';
-import { getDollarsFromDai, numberWithCommas } from '@cardstack/utils';
+import { createRandomTransactionItem } from '../test-utils/model-factory';
+import { TransactionCoinRow } from '@cardstack/components';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
 );
 
-const chance = new Chance();
+jest.mock('../../src/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
 
 describe('TransactionCoinRow', () => {
-  let transactionAmount: number, recipient: string, type: TransactionType;
+  let item: TransactionItem;
+
+  const renderComponent = () => render(<TransactionCoinRow item={item} />);
 
   beforeEach(() => {
-    transactionAmount = chance.natural();
-    recipient = chance.guid();
-    type = TransactionType.PAID;
+    item = createRandomTransactionItem();
+  });
+
+  it('should render the item title and name', () => {
+    const { getByText } = renderComponent();
+
+    getByText(item.title);
+    getByText(item.name);
   });
 
   it('should render the transaction amount correctly', () => {
-    const { getByText } = render(
-      <TransactionCoinRow
-        transactionAmount={transactionAmount}
-        recipient={recipient}
-        type={type}
-      />
-    );
+    const { getByText } = renderComponent();
 
-    getByText(`§${numberWithCommas(transactionAmount.toString())} SPEND`);
-    getByText(
-      `- $${numberWithCommas(
-        getDollarsFromDai(transactionAmount).toFixed(2)
-      )} USD`
-    );
+    getByText(item.balance.display);
+    getByText(`- ${item.native.display} USD`);
   });
 
-  it('should render the recipient correctly', () => {
-    const { getByText } = render(
-      <TransactionCoinRow
-        transactionAmount={transactionAmount}
-        recipient={recipient}
-        type={type}
-      />
-    );
+  it('should not blow up if item is null', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    item = null;
 
-    getByText(` ${recipient}`);
+    renderComponent();
+  });
+
+  it('should not blow up if item.balance is null', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    item.balance = null;
+
+    renderComponent();
+  });
+
+  it('should not blow up if item.native is null', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    item.native = null;
+
+    renderComponent();
   });
 });

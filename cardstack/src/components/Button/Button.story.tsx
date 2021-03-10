@@ -18,6 +18,15 @@ storiesOf('Button', module).add('Default', () => (
       width="100%"
     >
       <Button>Default</Button>
+      <Button
+        iconProps={{
+          iconSize: 'medium',
+          marginRight: 2,
+          name: 'pin',
+        }}
+      >
+        With Icon
+      </Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="blue">Blue</Button>
       <Container

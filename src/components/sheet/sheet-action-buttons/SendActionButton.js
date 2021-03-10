@@ -27,7 +27,7 @@ export default function SendActionButton({ small }) {
       iconProps={{
         iconSize: 'medium',
         marginRight: 2,
-        name: 'sent',
+        name: 'send',
         top: 2,
       }}
       onPress={handlePress}

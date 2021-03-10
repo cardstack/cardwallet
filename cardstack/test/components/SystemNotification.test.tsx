@@ -12,6 +12,10 @@ jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
 );
 
+jest.mock('../../src/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
+
 const mockStart = jest.fn();
 
 jest.mock('react-native/Libraries/Animated/src/Animated', () => ({

@@ -50,7 +50,7 @@ const AssetFooter = () => {
             ? {
                 iconSize: 'medium',
                 marginRight: 2,
-                name: buttonsDisabled ? 'pin-blue' : 'pin',
+                name: 'pin',
               }
             : undefined
         }

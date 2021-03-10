@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { magicMemo } from '../../utils';
 import { ListHeader } from '../list';
-import { Text } from '../text';
+import { Text } from '@cardstack/components';
 
 const ActivityListHeaderTitle = styled(Text).attrs({
   size: 'larger',

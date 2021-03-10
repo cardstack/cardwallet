@@ -2,12 +2,12 @@ import Chance from 'chance';
 import React from 'react';
 import { SectionList } from 'react-native';
 
-import { render } from '../test-utils';
 import {
   ExpandedCard,
   ExpandedCardProps,
 } from '../../src/components/PrepaidCard/ExpandedCard';
-import { TransactionType } from '@cardstack/components';
+import { render } from '../test-utils';
+import { createRandomTransactionItem } from '../test-utils/model-factory';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
@@ -17,20 +17,18 @@ jest.mock('react-native/Libraries/Lists/SectionList', () => {
   return jest.fn(() => null);
 });
 
+jest.mock('../../src/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
+
 const chance = new Chance();
 
 describe('ExpandedCard', () => {
   let props: ExpandedCardProps;
 
-  const createRandomTransactionDataItem = () => ({
-    type: chance.pickone(Object.values(TransactionType)),
-    recipient: chance.name(),
-    transactionAmount: chance.natural(),
-  });
-
   const createRandomActivityItem = () => ({
     title: chance.word(),
-    data: chance.n(createRandomTransactionDataItem, chance.d6()),
+    data: chance.n(createRandomTransactionItem, chance.d6()),
   });
 
   beforeEach(() => {
