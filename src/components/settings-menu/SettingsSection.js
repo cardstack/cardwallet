@@ -7,7 +7,6 @@ import styled from 'styled-components';
 //import { supportedLanguages } from '../../languages';
 import { THEMES, useTheme } from '../../context/ThemeContext';
 import AppVersionStamp from '../AppVersionStamp';
-import { Icon } from '../icons';
 import { Column, ColumnWithDividers } from '../layout';
 import {
   ListFooter,
@@ -16,6 +15,7 @@ import {
   ListItemDivider,
 } from '../list';
 import { Emoji, Text } from '../text';
+import { Icon } from '@cardstack/components';
 import BackupIcon from '@rainbow-me/assets/settingsBackup.png';
 import BackupIconDark from '@rainbow-me/assets/settingsBackupDark.png';
 import CurrencyIcon from '@rainbow-me/assets/settingsCurrency.png';
@@ -40,7 +40,6 @@ import {
 } from '@rainbow-me/utils/reviewAlert';
 
 const { RainbowRequestReview, RNReview } = NativeModules;
-
 
 export const SettingsExternalURLs = {
   rainbowHomepage: 'https://cardstack.com/',
@@ -202,14 +201,10 @@ export default function SettingsSection({
             testID="backup-section"
           >
             <ListItemArrowGroup>
-              {areBackedUp ? (
-                <CheckmarkIcon
-                  color={backupStatusColor}
-                  isDarkMode={isDarkMode}
-                />
-              ) : (
-                <WarningIcon />
-              )}
+              <Icon
+                iconSize="medium"
+                name={areBackedUp ? 'success' : 'warning'}
+              />
             </ListItemArrowGroup>
           </ListItem>
         )}
