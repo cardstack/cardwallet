@@ -2,6 +2,7 @@
 import Chance from 'chance';
 import React from 'react';
 
+import { Icon } from '../../src/components/Icon';
 import { BalanceCoinRow } from '../../src/components/BalanceCoinRow';
 import { render } from '../test-utils';
 import { colors } from '@cardstack/theme';
@@ -11,6 +12,10 @@ const chance = new Chance();
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
 );
+
+jest.mock('../../src/components/Icon', () => ({
+  Icon: jest.fn(() => null),
+}));
 
 describe('BalanceCoinRow', () => {
   let item: any, props: any;
@@ -94,24 +99,33 @@ describe('BalanceCoinRow', () => {
   it('should render the icon with the correct name if item is hidden and isEditing', () => {
     props.isEditing = true;
     props.item.isHidden = true;
-    const { getByTestId } = render(<BalanceCoinRow {...props} />);
+    render(<BalanceCoinRow {...props} />);
 
-    getByTestId('coin-row-icon-hidden');
+    expect(Icon).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'eye-off' }),
+      {}
+    );
   });
 
   it('should render the icon with the correct name if item is pinned and isEditing', () => {
     props.isEditing = true;
     props.item.isPinned = true;
-    const { getByTestId } = render(<BalanceCoinRow {...props} />);
+    render(<BalanceCoinRow {...props} />);
 
-    getByTestId('coin-row-icon-pinned');
+    expect(Icon).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'pin' }),
+      {}
+    );
   });
 
   it('should render the coin row overlay if isEditing and the item is hidden', () => {
     props.isEditing = true;
     props.item.isHidden = true;
-    const { getByTestId } = render(<BalanceCoinRow {...props} />);
+    render(<BalanceCoinRow {...props} />);
 
-    getByTestId(`coin-row-hidden-overlay`);
+    expect(Icon).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'eye-off' }),
+      {}
+    );
   });
 });

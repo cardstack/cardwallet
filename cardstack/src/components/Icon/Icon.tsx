@@ -39,7 +39,12 @@ export const Icon = ({
 
   if (isCustomIcon) {
     return (
-      <Container {...props} height={sizeWithDefault} width={sizeWithDefault}>
+      <Container
+        testID="custom-icon"
+        {...props}
+        height={sizeWithDefault}
+        width={sizeWithDefault}
+      >
         <SvgXml
           fill={colorWithDefault}
           width={sizeWithDefault}

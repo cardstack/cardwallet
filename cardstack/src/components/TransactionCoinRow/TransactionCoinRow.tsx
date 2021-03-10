@@ -2,6 +2,7 @@ import React from 'react';
 import { Image } from 'react-native';
 
 import daiIcon from '../../assets/dai.png';
+import { IconName } from '../Icon';
 import { getDollarsFromDai, numberWithCommas } from '@cardstack/utils';
 import { Theme } from '@cardstack/theme';
 import { Container, Icon, Text } from '@cardstack/components';
@@ -15,7 +16,7 @@ export enum TransactionType {
 interface TransactionCoinRowData {
   actionText: string;
   actionTextColor: keyof Theme['colors'];
-  iconName: string;
+  iconName: IconName;
   iconSize?: number;
   /** top on icon to center it if needed */
   iconTop?: number;
@@ -48,7 +49,7 @@ const typeToData: {
   [TransactionType.FAILED]: {
     actionText: 'Failed',
     actionTextColor: 'red',
-    iconName: 'failed',
+    iconName: 'error',
     iconSize: 10,
     recipientText: 'To',
     transactionSymbol: '-',
