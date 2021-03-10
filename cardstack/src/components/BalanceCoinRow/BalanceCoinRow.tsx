@@ -21,7 +21,7 @@ export const BalanceCoinRow = ({
   selected,
 }: BalanceCoinRowProps) => {
   const showIcon = item.isPinned || item.isHidden;
-  const iconName = item.isPinned ? 'pinned' : 'hidden';
+  const iconName = item.isPinned ? 'pin-filled' : 'hidden';
   const editingIconName = selected ? 'check-circle' : 'circle';
 
   return (

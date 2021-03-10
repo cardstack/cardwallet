@@ -48,6 +48,12 @@ module.exports = function (api) {
             'transform-remove-console',
             { exclude: ['disableYellowBox', 'error', 'info', 'log'] },
           ],
+          [
+            'babel-plugin-inline-import',
+            {
+              extensions: ['.svg'],
+            },
+          ],
         ],
         presets: presets,
       },

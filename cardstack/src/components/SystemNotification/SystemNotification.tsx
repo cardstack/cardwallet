@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
-import downIcon from '../../assets/icons/chevron-down.png';
+import downIcon from '../../assets/chevron-down.png';
 import { AnimatedContainer, AnimatedText } from '../Animated';
-import { Container, Icon, Text } from '@cardstack/components';
+import { Container, Icon, Text, IconName } from '@cardstack/components';
 
 const ANIMATION_DURATION = 150;
 const CLOSED_HEIGHT = 40;
@@ -14,7 +14,7 @@ const HIDDEN_OPACITY = 0;
 type SystemNotificationType = 'info' | 'alert' | 'error';
 
 const typeToIcon: {
-  [key in SystemNotificationType]: string;
+  [key in SystemNotificationType]: IconName;
 } = {
   alert: 'warning',
   error: 'error',

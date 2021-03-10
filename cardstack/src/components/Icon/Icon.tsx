@@ -1,9 +1,11 @@
-import React from 'react';
-import Feather from 'react-native-vector-icons/Feather';
 import { useTheme } from '@shopify/restyle';
-import { ImageSourcePropType } from 'react-native';
-import { Container, ContainerProps, Image } from '@cardstack/components';
-import { Theme, ColorTypes } from '@cardstack/theme';
+import React from 'react';
+import { SvgXml } from 'react-native-svg';
+import Feather from 'react-native-vector-icons/Feather';
+import { FeatherIconNames } from './feather-icon-names';
+import { customIcons, CustomIconNames } from './custom-icons';
+import { ColorTypes, Theme } from '@cardstack/theme';
+import { Container, ContainerProps } from '@cardstack/components';
 
 const iconSizeToValue = {
   small: 15,
@@ -13,38 +15,15 @@ const iconSizeToValue = {
 };
 
 type IconSize = keyof typeof iconSizeToValue;
+export type IconName = CustomIconNames | FeatherIconNames;
 export interface IconProps extends ContainerProps {
   /** specify the size using T-Shirt sizes */
   iconSize?: IconSize;
   /** if none of the default sizes work for what you need, you can use this to override */
   size?: number;
-  name: string;
+  name: IconName;
   color?: ColorTypes;
 }
-
-const customIcons: {
-  [key: string]: ImageSourcePropType;
-} = {
-  'info-blue': require('../../assets/icons/info-blue.png'),
-  'info-white': require('../../assets/icons/info-white.png'),
-  'qr-code': require('../../assets/icons/qr-code.png'),
-  error: require('../../assets/icons/error.png'),
-  failed: require('../../assets/icons/failed.png'),
-  more: require('../../assets/icons/more.png'),
-  pay: require('../../assets/icons/pay.png'),
-  sent: require('../../assets/icons/sent.png'),
-  swap: require('../../assets/icons/swap.png'),
-  'sent-blue': require('../../assets/icons/sent-blue.png'),
-  warning: require('../../assets/icons/warning.png'),
-  reload: require('../../assets/icons/reload.png'),
-  gift: require('../../assets/icons/gift.png'),
-  circle: require('../../assets/icons/circle.png'),
-  'check-circle': require('../../assets/icons/check-circle.png'),
-  pinned: require('../../assets/icons/pinned.png'),
-  pin: require('../../assets/icons/pin.png'),
-  'pin-blue': require('../../assets/icons/pin-blue.png'),
-  hidden: require('../../assets/icons/hidden.png'),
-};
 
 export const Icon = ({
   iconSize = 'large',
@@ -60,13 +39,14 @@ export const Icon = ({
 
   if (isCustomIcon) {
     return (
-      <Container {...props} height={sizeWithDefault} width={sizeWithDefault}>
-        <Image
-          source={customIcons[name]}
-          style={{ height: '100%', width: '100%' }}
-          resizeMode="contain"
+      // <Container {...props} height={sizeWithDefault} width={sizeWithDefault}>
+        <SvgXml
+          color={colorWithDefault}
+          width={sizeWithDefault}
+          height={sizeWithDefault}
+          xml={customIcons[name as CustomIconNames]}
         />
-      </Container>
+      // </Container>
     );
   }
 

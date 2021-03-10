@@ -30,7 +30,7 @@ const typeToData: {
   [TransactionType.PAID]: {
     actionText: 'Paid',
     actionTextColor: 'blueText',
-    iconName: 'sent-blue',
+    iconName: 'send',
     iconTop: 1,
     recipientText: 'To',
     transactionSymbol: '-',
