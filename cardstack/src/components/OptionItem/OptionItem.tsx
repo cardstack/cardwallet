@@ -1,15 +1,11 @@
 import React from 'react';
-import {
-  CenteredContainer,
-  Icon,
-  Text,
-  Touchable,
-  TouchableProps,
-  IconProps,
-  TextProps,
-} from '@cardstack/components';
 
-interface OptionItemProps extends TouchableProps {
+import { CenteredContainer, ContainerProps } from '../Container';
+import { Icon, IconProps } from '../Icon';
+import { Text, TextProps } from '../Text';
+import { Touchable } from '../Touchable';
+
+interface OptionItemProps extends ContainerProps {
   onPress: () => void;
   iconProps: IconProps;
   title: string;
@@ -28,6 +24,7 @@ export const OptionItem = ({
     flexDirection="row"
     left={20}
     onPress={onPress}
+    testID="option-item"
     {...props}
   >
     <CenteredContainer

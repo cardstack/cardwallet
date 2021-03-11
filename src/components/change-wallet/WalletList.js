@@ -9,6 +9,7 @@ import React, {
 import { FlatList } from 'react-native-gesture-handler';
 import { Transition, Transitioning } from 'react-native-reanimated';
 import styled from 'styled-components';
+
 import networkTypes from '../../helpers/networkTypes';
 import WalletTypes from '../../helpers/walletTypes';
 import { useAccountSettings } from '../../hooks';
@@ -17,7 +18,6 @@ import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
 import { Column } from '../layout';
 import AddressRow from './AddressRow';
-import WalletOption from './WalletOption';
 import { OptionItem } from '@cardstack/components';
 import { position } from '@rainbow-me/styles';
 
