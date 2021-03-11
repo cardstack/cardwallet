@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import { ButtonPressAnimation } from '../animations';
 import { Icon } from '../icons';
 import { Centered, Row, RowWithMargins } from '../layout';
-import { TruncatedText } from '../text';
 import { Text } from '@cardstack/components';
 import { padding, position } from '@rainbow-me/styles';
 
@@ -34,7 +33,6 @@ const ListItem = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.onPress, props.value]);
-  const { colors } = useTheme();
   return (
     <ButtonPressAnimation
       activeOpacity={activeOpacity}

@@ -12,7 +12,13 @@ import { cloudPlatform } from '../../../utils/platform';
 import { DelayedAlert } from '../../alerts';
 import { ButtonPressAnimation } from '../../animations';
 import { Centered } from '../../layout';
-import { Button, Container, Icon, Text } from '@cardstack/components';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  Icon,
+  Text,
+} from '@cardstack/components';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -195,7 +201,7 @@ export default function AlreadyBackedUpView() {
               `Your account was imported`) ||
               `Your account is backed up`}
           </Text>
-          <Text color="blueText" marginBottom={8} textAlign="center">
+          <Text color="blueText" textAlign="center">
             {(walletStatus === WalletBackupStatus.CLOUD_BACKUP &&
               `If you lose this device, you can recover your encrypted wallet backup from ${cloudPlatform}.`) ||
               (walletStatus === WalletBackupStatus.MANUAL_BACKUP &&
@@ -204,7 +210,7 @@ export default function AlreadyBackedUpView() {
                 `If you lose this device, you can restore your wallet with the key you originally imported.`)}
           </Text>
         </Centered>
-        <Container>
+        <Container marginTop={8} width="100%">
           <Button onPress={handleViewRecoveryPhrase} width="100%">
             View Recovery Phrase
           </Button>
@@ -213,13 +219,25 @@ export default function AlreadyBackedUpView() {
       {walletStatus !== WalletBackupStatus.CLOUD_BACKUP ? (
         <Footer>
           <ButtonPressAnimation onPress={handleIcloudBackup}>
-            <Text>Back up to {cloudPlatform}</Text>
+            <CenteredContainer flexDirection="row">
+              <Icon
+                color="settingsGray"
+                iconSize="medium"
+                marginRight={2}
+                name="download-cloud"
+              />
+              <Text color="settingsGray" fontWeight="600">
+                Back up to {cloudPlatform}
+              </Text>
+            </CenteredContainer>
           </ButtonPressAnimation>
         </Footer>
       ) : !hasMultipleWallets ? (
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
-            <Text>Manage {cloudPlatform} Backups</Text>
+            <Text color="settingsGray" fontWeight="600">
+              Manage {cloudPlatform} Backups
+            </Text>
           </ButtonPressAnimation>
         </Footer>
       ) : null}
