@@ -26,6 +26,7 @@ export default function BackButton({
   throttle,
   testID,
   textChevron,
+  color,
   ...props
 }) {
   const navigation = useNavigation();
@@ -62,7 +63,11 @@ export default function BackButton({
         {textChevron ? (
           <IconText color={colors.white}>←</IconText>
         ) : (
-          <Icon color="white" iconSize="large" name="chevron-right" />
+          <Icon
+            color={color || 'white'}
+            iconSize="large"
+            name={`chevron-${direction}`}
+          />
         )}
       </Container>
     </HeaderButton>

@@ -19,6 +19,7 @@ import { useTheme } from '../context/ThemeContext';
 import WalletTypes from '../helpers/walletTypes';
 import { useDimensions, useWallets } from '../hooks';
 import { settingsOptions } from '../navigation/config';
+import { Text, Touchable } from '@cardstack/components';
 import { useNavigation } from '@rainbow-me/navigation';
 
 function cardStyleInterpolator({
@@ -139,7 +140,11 @@ export default function SettingsModal() {
   const renderHeaderRight = useCallback(
     () =>
       ios ? (
-        <ModalHeaderButton label="Done" onPress={goBack} side="right" />
+        <Touchable marginRight={5} onPress={goBack}>
+          <Text color="settingsGray" fontWeight="600">
+            Done
+          </Text>
+        </Touchable>
       ) : null,
     [goBack]
   );
@@ -173,7 +178,11 @@ export default function SettingsModal() {
           <Stack.Screen
             name="SettingsSection"
             options={{
-              title: 'Settings',
+              headerTitle: () => (
+                <Text fontSize={18} fontWeight="700">
+                  Settings
+                </Text>
+              ),
             }}
           >
             {() => (
@@ -209,7 +218,11 @@ export default function SettingsModal() {
             options={{
               cardStyle: { backgroundColor: colors.white, marginTop: 6 },
               cardStyleInterpolator,
-              title: 'Backup',
+              headerTitle: () => (
+                <Text fontSize={18} fontWeight="700">
+                  Backup
+                </Text>
+              ),
             }}
           />
           <Stack.Screen
