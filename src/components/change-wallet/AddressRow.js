@@ -80,9 +80,9 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
               ) : (
                 <TruncatedAddress
                   address={address}
-                  firstSectionLength={6}
+                  firstSectionLength={4}
                   fontWeight="600"
-                  truncationLength={4}
+                  truncationLength={6}
                 />
               )}
               <Text variant="subText">{cleanedUpBalance || 0} ETH</Text>
