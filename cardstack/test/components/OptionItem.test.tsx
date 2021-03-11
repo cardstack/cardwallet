@@ -43,4 +43,22 @@ describe('OptionItem', () => {
 
     expect(props.onPress).toHaveBeenCalledTimes(1);
   });
+
+  it('should render the subtext if it is passed', () => {
+    props.subText = chance.string();
+
+    const { getByText } = renderComponent();
+
+    getByText(props.subText);
+  });
+
+  it('should render the icon border if borderIcon is true', () => {
+    props.borderIcon = true;
+
+    const { getByTestId } = renderComponent();
+
+    const iconWrapper = getByTestId('option-item-icon-wrapper');
+
+    expect(iconWrapper).toHaveStyle({ borderWidth: 1 });
+  });
 });

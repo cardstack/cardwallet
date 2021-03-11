@@ -92,7 +92,6 @@ export const restoreSheetConfig = {
   options: ({ navigation, route }) => {
     const {
       params: {
-        enableCloudRestore,
         longFormHeight,
         step = WalletBackupStepTypes.first,
         ...params
@@ -100,9 +99,7 @@ export const restoreSheetConfig = {
     } = route;
 
     let heightForStep = restoreSheetSizes.short;
-    if (enableCloudRestore && step === WalletBackupStepTypes.first) {
-      heightForStep = restoreSheetSizes.medium;
-    } else if (step === WalletBackupStepTypes.cloud) {
+    if (step === WalletBackupStepTypes.cloud) {
       heightForStep = restoreSheetSizes.long;
     }
 

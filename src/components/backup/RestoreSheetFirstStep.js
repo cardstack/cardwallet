@@ -1,83 +1,14 @@
 import { forEach } from 'lodash';
 import React, { useEffect, useMemo } from 'react';
-import { IS_TESTING } from 'react-native-dotenv';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
-import { cloudPlatform } from '../../utils/platform';
-import Divider from '../Divider';
-import { ButtonPressAnimation } from '../animations';
-import { Icon } from '../icons';
-import { Column, Row, RowWithMargins } from '../layout';
-import { GradientText, Text } from '../text';
+
+import { Column } from '../layout';
+import { OptionItem, Text } from '@cardstack/components';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useNavigation } from '@rainbow-me/navigation';
-import { deviceUtils } from '@rainbow-me/utils';
 
-const deviceWidth = deviceUtils.dimensions.width;
-
-const Container = styled(Column)`
+const Wrapper = styled(Column)`
   margin-top: -8;
-`;
-
-const CaretIcon = styled(Icon).attrs({
-  name: 'caret',
-})`
-  margin-bottom: 5.25;
-`;
-
-const SheetRow = styled(Row).attrs({
-  scaleTo: 0.975,
-})`
-  padding-horizontal: 30;
-  padding-top: 11;
-  width: 100%;
-`;
-
-const TitleRow = styled(RowWithMargins)`
-  align-items: center;
-  justify-content: space-between;
-  width: ${deviceWidth - 60};
-`;
-
-const RainbowText =
-  android && IS_TESTING === 'true'
-    ? Text
-    : styled(GradientText).attrs(({ theme: { colors } }) => ({
-        angle: false,
-        colors: colors.gradients.rainbow,
-        end: { x: 0, y: 0.5 },
-        start: { x: 1, y: 0.5 },
-        steps: [0, 0.774321, 1],
-      }))``;
-
-const TextIcon = styled(Text).attrs({
-  size: 29,
-  weight: 'medium',
-})`
-  height: ${android ? 45 : 35};
-  margin-bottom: 7;
-  margin-top: 8;
-`;
-
-const Title = styled(Text).attrs({
-  letterSpacing: 'roundedMedium',
-  lineHeight: 27,
-  size: 'larger',
-  weight: 'bold',
-})`
-  margin-bottom: 6;
-  max-width: 276;
-`;
-
-const DescriptionText = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'left',
-  color: colors.alpha(colors.blueGreyDark, 0.4),
-  lineHeight: 22,
-  size: 'smedium',
-  weight: 'medium',
-}))`
-  max-width: 276;
-  padding-bottom: 24;
 `;
 
 export default function RestoreSheetFirstStep({
@@ -87,7 +18,6 @@ export default function RestoreSheetFirstStep({
   userData,
 }) {
   const { setParams } = useNavigation();
-  const { colors } = useTheme();
 
   const walletsBackedUp = useMemo(() => {
     let count = 0;
@@ -105,68 +35,53 @@ export default function RestoreSheetFirstStep({
   }, [enableCloudRestore, setParams]);
 
   return (
-    <Container>
+    <Wrapper>
+      <Text
+        fontSize={18}
+        fontWeight="700"
+        marginBottom={10}
+        marginTop={2}
+        textAlign="center"
+      >
+        Add account
+      </Text>
       {enableCloudRestore && (
-        <React.Fragment>
-          <SheetRow as={ButtonPressAnimation} onPress={onCloudRestore}>
-            <Column>
-              <Row>
-                <RainbowText colors={colors}>
-                  <TextIcon>􀌍</TextIcon>
-                </RainbowText>
-              </Row>
-              <TitleRow>
-                <RainbowText colors={colors}>
-                  <Title>Restore from {cloudPlatform}</Title>
-                </RainbowText>
-                <CaretIcon />
-              </TitleRow>
-              <DescriptionText>
-                {ios
-                  ? `You have ${walletsBackedUp} ${
-                      walletsBackedUp > 1 ? 'wallets' : 'wallet'
-                    } backed up`
-                  : `If you previously backed up your wallet on ${cloudPlatform} tap here to restore it.`}
-              </DescriptionText>
-            </Column>
-          </SheetRow>
-          <Divider color={colors.rowDividerExtraLight} inset={[0, 30]} />
-        </React.Fragment>
+        <OptionItem
+          horizontalSpacing={4}
+          iconProps={{
+            name: 'download-cloud',
+            size: 25,
+          }}
+          marginVertical={4}
+          onPress={onCloudRestore}
+          subText={`${walletsBackedUp} ${
+            walletsBackedUp > 1 ? 'accounts are' : 'account is'
+          } backed up in your iCloud`}
+          title="Restore from backup"
+        />
       )}
-      <SheetRow
-        as={ButtonPressAnimation}
+      <OptionItem
+        horizontalSpacing={4}
+        iconProps={{
+          name: 'lock',
+          size: 25,
+        }}
+        marginVertical={4}
         onPress={onManualRestore}
-        scaleTo={0.9}
-        testID="restore-with-key-button"
-      >
-        <Column>
-          <TextIcon color={colors.purple}>􀑚</TextIcon>
-          <TitleRow justify="space-between" width="100%">
-            <Title>Restore with a recovery phrase or private key</Title>
-            <CaretIcon />
-          </TitleRow>
-          <DescriptionText>
-            Use your recovery phrase from Rainbow or another crypto wallet
-          </DescriptionText>
-        </Column>
-      </SheetRow>
-      <Divider color={colors.rowDividerExtraLight} inset={[0, 30]} />
-
-      <SheetRow
-        as={ButtonPressAnimation}
+        subText="Use the private key for your crypto wallet"
+        title="Import via recovery phrase"
+      />
+      <OptionItem
+        horizontalSpacing={4}
+        iconProps={{
+          name: 'search',
+          size: 25,
+        }}
+        marginVertical={4}
         onPress={onWatchAddress}
-        scaleTo={0.9}
-        testID="watch-address-button"
-      >
-        <Column>
-          <TextIcon color={colors.mintDark}>􀒒</TextIcon>
-          <TitleRow justify="space-between" width="100%">
-            <Title>Watch an xDai address </Title>
-            <CaretIcon />
-          </TitleRow>
-          <DescriptionText>Watch a public address</DescriptionText>
-        </Column>
-      </SheetRow>
-    </Container>
+        subText="Track an ENS name or public address"
+        title="Monitor an Ethereum address"
+      />
+    </Wrapper>
   );
 }

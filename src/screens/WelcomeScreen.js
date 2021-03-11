@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image } from 'react-native';
+import { Image, StatusBar } from 'react-native';
 import logo from '../../cardstack/src/assets/cardstackLogo.png';
 import {
   fetchUserDataFromCloud,
@@ -55,6 +55,7 @@ export default function WelcomeScreen() {
       height="100%"
       justifyContent="flex-end"
     >
+      <StatusBar barStyle="light-content" />
       <CenteredContainer
         height="100%"
         position="absolute"
