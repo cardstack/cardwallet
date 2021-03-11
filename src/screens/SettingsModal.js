@@ -183,6 +183,7 @@ export default function SettingsModal() {
                   Settings
                 </Text>
               ),
+              headerLeft: null,
             }}
           >
             {() => (

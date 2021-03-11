@@ -71,18 +71,18 @@ export default function NeedsBackupView() {
             color="settingsGray"
             iconSize="xl"
             marginBottom={2}
-            name="refresh"
+            name="upload-cloud"
           />
-          <Text fontSize={20} fontWeight="600" marginBottom={1}>
+          <Text fontSize={20} fontWeight="600" marginBottom={2}>
             Back up your wallet{' '}
           </Text>
-          <Text color="blueText" marginBottom={8} textAlign="center">
+          <Text color="blueText" marginBottom={15} textAlign="center">
             Don&apos;t risk your money! Back up your wallet so you can recover
             it if you lose this device.
           </Text>
         </Column>
-        <Container>
-          <Button marginBottom={2} onPress={onIcloudBackup} width="100%">
+        <Container width="100%">
+          <Button marginBottom={5} onPress={onIcloudBackup} width="100%">
             {`Back up to ${cloudPlatform}`}
           </Button>
           <Button onPress={onManualBackup} variant="secondary" width="100%">

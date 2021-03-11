@@ -13,7 +13,11 @@ const ListItemArrowGroup = ({ children }) => {
       ) : (
         children
       )}
-      <Icon color="settingsGrayChevron" name="chevron-right" size={32} />
+      <Icon
+        color="settingsGrayChevron"
+        iconSize="medium"
+        name="chevron-right"
+      />
     </RowWithMargins>
   );
 };
