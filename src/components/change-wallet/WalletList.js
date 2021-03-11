@@ -247,6 +247,7 @@ export default function WalletList({
           {showDividers && <WalletListDivider />}
           <WalletListFooter>
             <OptionItem
+              borderIcon
               iconProps={{ name: 'plus', size: 22 }}
               onPress={onPressAddAccount}
               textProps={{
@@ -256,6 +257,7 @@ export default function WalletList({
               title="Create a new account"
             />
             <OptionItem
+              borderIcon
               iconProps={{ name: 'download', size: 22 }}
               marginTop={2}
               onPress={onPressImportSeedPhrase}
