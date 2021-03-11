@@ -212,7 +212,7 @@ const WalletSelectionView = () => {
 
                     <Icon
                       alignSelf="center"
-                      color="settingsGray"
+                      color="settingsGrayChevron"
                       iconSize="medium"
                       name="chevron-right"
                     />
