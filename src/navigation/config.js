@@ -277,7 +277,6 @@ export const settingsOptions = colors => ({
   gestureEnabled: true,
   gestureResponseDistance: { horizontal: deviceUtils.dimensions.width },
   ...(ios && { headerBackImage: BackImage }),
-  headerBackTitle: 'Back',
   headerStatusBarHeight: 0,
   headerStyle: {
     backgroundColor: 'transparent',
@@ -289,6 +288,8 @@ export const settingsOptions = colors => ({
     ...headerConfigOptions.headerTitleStyle,
     color: colors.dark,
   },
+  // eslint-disable-next-line react/display-name
+  headerLeft: props => <BackButton color="settingsGray" {...props} />,
   transitionSpec: {
     close: {
       animation: 'spring',

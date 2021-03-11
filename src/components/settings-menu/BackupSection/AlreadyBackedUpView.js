@@ -1,25 +1,25 @@
 import { useRoute } from '@react-navigation/native';
 import analytics from '@segment/analytics-react-native';
 import React, { Fragment, useCallback, useEffect, useMemo } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+
 import { useTheme } from '../../../context/ThemeContext';
 import { deleteAllBackups } from '../../../handlers/cloudBackup';
 import { walletsUpdate } from '../../../redux/wallets';
 import { cloudPlatform } from '../../../utils/platform';
 import { DelayedAlert } from '../../alerts';
 import { ButtonPressAnimation } from '../../animations';
-import { Centered, Column } from '../../layout';
-import { SheetActionButton } from '../../sheet';
-import { Text } from '../../text';
+import { Centered } from '../../layout';
+import { Button, Container, Icon, Text } from '@cardstack/components';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useWalletCloudBackup, useWallets } from '@rainbow-me/hooks';
 import { Navigation, useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { fonts, padding, position, shadow } from '@rainbow-me/styles';
+import { padding } from '@rainbow-me/styles';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const WalletBackupStatus = {
@@ -28,29 +28,6 @@ const WalletBackupStatus = {
   MANUAL_BACKUP: 2,
 };
 
-const CheckmarkIconContainer = styled(View)`
-  ${({ color, isDarkMode, theme: { colors } }) =>
-    shadow.build(0, 4, 6, isDarkMode ? colors.shadow : color, 0.4)};
-  ${position.size(50)};
-  background-color: ${({ color }) => color};
-  border-radius: 25;
-  margin-bottom: 19;
-  padding-top: ${ios ? 13 : 7};
-`;
-
-const CheckmarkIconText = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.whiteLabel,
-  size: 'larger',
-  weight: 'bold',
-}))``;
-
-const CheckmarkIcon = ({ color, isDarkMode }) => (
-  <CheckmarkIconContainer color={color} isDarkMode={isDarkMode}>
-    <CheckmarkIconText>􀆅</CheckmarkIconText>
-  </CheckmarkIconContainer>
-);
-
 const Content = styled(Centered).attrs({
   direction: 'column',
 })`
@@ -58,36 +35,8 @@ const Content = styled(Centered).attrs({
   flex: 1;
 `;
 
-const DescriptionText = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.alpha(colors.blueGreyDark, 0.5),
-  lineHeight: 'loosest',
-  size: 'large',
-}))`
-  margin-bottom: 42;
-  padding-horizontal: 23;
-`;
-
 const Footer = styled(Centered)`
   ${padding(0, 15, 42)};
-`;
-
-const Subtitle = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.alpha(colors.blueGreyDark, 0.5),
-  size: fonts.size.smedium,
-  weight: fonts.weight.medium,
-}))`
-  margin-top: -10;
-`;
-
-const Title = styled(Text).attrs({
-  align: 'center',
-  size: 'larger',
-  weight: 'bold',
-})`
-  margin-bottom: 8;
-  padding-horizontal: 11;
 `;
 
 const onError = error => DelayedAlert({ title: error }, 500);
@@ -223,81 +172,54 @@ export default function AlreadyBackedUpView() {
     });
   }, [navigate, walletId, wallets]);
 
-  const { colors } = useTheme();
-
-  const checkmarkColor =
-    walletStatus === WalletBackupStatus.CLOUD_BACKUP
-      ? colors.green
-      : colors.alpha(colors.blueGreyDark, 0.5);
-
   const hasMultipleWallets =
     Object.keys(wallets).filter(
       key => wallets[key].type !== WalletTypes.readOnly
     ).length > 1;
 
-  const { isDarkMode } = useTheme();
-
   return (
     <Fragment>
-      <Subtitle>
-        {(walletStatus === WalletBackupStatus.CLOUD_BACKUP && `Backed up`) ||
-          (walletStatus === WalletBackupStatus.MANUAL_BACKUP &&
-            `Backed up manually`) ||
-          (walletStatus === WalletBackupStatus.IMPORTED && `Imported`)}
-      </Subtitle>
+      <Container alignItems="center" width="100%">
+        <Text style={{ marginTop: -10 }} variant="subText">
+          {(walletStatus === WalletBackupStatus.CLOUD_BACKUP && `Backed up`) ||
+            (walletStatus === WalletBackupStatus.MANUAL_BACKUP &&
+              `Backed up manually`) ||
+            (walletStatus === WalletBackupStatus.IMPORTED && `Imported`)}
+        </Text>
+      </Container>
       <Content>
         <Centered direction="column">
-          <CheckmarkIcon color={checkmarkColor} isDarkMode={isDarkMode} />
-          <Title>
+          <Icon iconSize="xl" marginBottom={4} name="success" />
+          <Text fontSize={20} fontWeight="600" marginBottom={1}>
             {(walletStatus === WalletBackupStatus.IMPORTED &&
-              `Your wallet was imported`) ||
-              `Your wallet is backed up`}
-          </Title>
-          <DescriptionText>
+              `Your account was imported`) ||
+              `Your account is backed up`}
+          </Text>
+          <Text color="blueText" marginBottom={8} textAlign="center">
             {(walletStatus === WalletBackupStatus.CLOUD_BACKUP &&
               `If you lose this device, you can recover your encrypted wallet backup from ${cloudPlatform}.`) ||
               (walletStatus === WalletBackupStatus.MANUAL_BACKUP &&
                 `If you lose this device, you can restore your wallet with the recovery phrase you saved.`) ||
               (walletStatus === WalletBackupStatus.IMPORTED &&
                 `If you lose this device, you can restore your wallet with the key you originally imported.`)}
-          </DescriptionText>
+          </Text>
         </Centered>
-        <Column>
-          <SheetActionButton
-            androidWidth={225}
-            color={colors.white}
-            label="🗝 View recovery key"
-            onPress={handleViewRecoveryPhrase}
-            textColor={colors.alpha(colors.blueGreyDark, 0.8)}
-          />
-        </Column>
+        <Container>
+          <Button onPress={handleViewRecoveryPhrase} width="100%">
+            View Recovery Phrase
+          </Button>
+        </Container>
       </Content>
       {walletStatus !== WalletBackupStatus.CLOUD_BACKUP ? (
         <Footer>
           <ButtonPressAnimation onPress={handleIcloudBackup}>
-            <Text
-              align="center"
-              color={colors.appleBlue}
-              letterSpacing="roundedMedium"
-              size="large"
-              weight="semibold"
-            >
-              􀙶 Back up to {cloudPlatform}
-            </Text>
+            <Text>Back up to {cloudPlatform}</Text>
           </ButtonPressAnimation>
         </Footer>
       ) : !hasMultipleWallets ? (
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
-            <Text
-              align="center"
-              color={colors.alpha(colors.blueGreyDark, 0.6)}
-              letterSpacing="roundedMedium"
-              size="lmedium"
-              weight="semibold"
-            >
-              􀍢 Manage {cloudPlatform} Backups
-            </Text>
+            <Text>Manage {cloudPlatform} Backups</Text>
           </ButtonPressAnimation>
         </Footer>
       ) : null}

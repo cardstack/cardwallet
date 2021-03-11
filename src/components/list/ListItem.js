@@ -4,6 +4,7 @@ import { ButtonPressAnimation } from '../animations';
 import { Icon } from '../icons';
 import { Centered, Row, RowWithMargins } from '../layout';
 import { TruncatedText } from '../text';
+import { Text } from '@cardstack/components';
 import { padding, position } from '@rainbow-me/styles';
 
 const ListItemHeight = 56;
@@ -45,7 +46,7 @@ const ListItem = ({
     >
       <Row
         align="center"
-        css={padding(0, 18, 2, 19)}
+        css={padding(0, 20, 2, 19)}
         height={ListItemHeight}
         justify="space-between"
         {...props}
@@ -57,14 +58,9 @@ const ListItem = ({
           margin={iconMargin}
         >
           {icon && <Centered>{renderIcon(icon)}</Centered>}
-          <TruncatedText
-            color={colors.dark}
-            flex={1}
-            paddingRight={15}
-            size="large"
-          >
+          <Text fontWeight="600" paddingHorizontal={4}>
             {label}
-          </TruncatedText>
+          </Text>
         </RowWithMargins>
         {children && <Centered flex={1}>{children}</Centered>}
       </Row>
