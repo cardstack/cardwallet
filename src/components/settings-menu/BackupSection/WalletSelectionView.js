@@ -2,17 +2,17 @@ import React, { useCallback } from 'react';
 import { Alert, ScrollView } from 'react-native';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+
 import { useTheme } from '../../../context/ThemeContext';
 import { deleteAllBackups } from '../../../handlers/cloudBackup';
 import { walletsUpdate } from '../../../redux/wallets';
 import { cloudPlatform } from '../../../utils/platform';
 import Divider from '../../Divider';
 import { ButtonPressAnimation } from '../../animations';
-import { BottomRowText } from '../../coin-row';
 import { ContactAvatar } from '../../contacts';
-import { Icon } from '../../icons';
 import { Centered, Column, ColumnWithMargins, Row } from '../../layout';
-import { Text, TruncatedAddress } from '../../text';
+import { TruncatedAddress } from '../../text';
+import { Icon, Text } from '@cardstack/components';
 import Caret from '@rainbow-me/assets/family-dropdown-arrow.png';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -198,51 +198,66 @@ const WalletSelectionView = () => {
                     <ColumnWithMargins margin={3} marginBottom={0.5}>
                       <Row>
                         {labelOrName ? (
-                          <AccountLabel>{labelOrName}</AccountLabel>
+                          <Text fontWeight="600">{labelOrName}</Text>
                         ) : (
-                          <Address address={address} />
+                          <TruncatedAddress
+                            address={address}
+                            firstSectionLength={6}
+                            truncationLength={4}
+                          />
                         )}
                       </Row>
                       {totalAccounts > 1 ? (
-                        <BottomRowText weight={fonts.weight.medium}>
+                        <Text fontSize={14} fontWeight="600">
                           And {totalAccounts - 1} more{' '}
                           {totalAccounts > 2 ? `wallets` : `wallet`}
-                        </BottomRowText>
+                        </Text>
                       ) : wallet.backedUp ? (
                         wallet.backupType === WalletBackupTypes.cloud ? (
-                          <BottomRowText weight={fonts.weight.medium}>
-                            Backed up
-                          </BottomRowText>
+                          <Text variant="subText">Backed up</Text>
                         ) : (
-                          <BottomRowText weight={fonts.weight.medium}>
-                            Backed up manually
-                          </BottomRowText>
+                          <Text variant="subText">Backed up manually</Text>
                         )
                       ) : wallet.imported ? (
-                        <BottomRowText weight={fonts.weight.medium}>
-                          Imported
-                        </BottomRowText>
+                        <Text variant="subText">Imported</Text>
                       ) : (
-                        <BottomRowText
-                          color={colors.orangeLight}
-                          weight={fonts.weight.medium}
-                        >
+                        <Text color="red" variant="subText">
                           Not backed up
-                        </BottomRowText>
+                        </Text>
                       )}
                     </ColumnWithMargins>
                   </Row>
                   <Row alignSelf="center" height={47} marginRight={18}>
                     {wallet.backedUp ? (
                       wallet.backupType === WalletBackupTypes.cloud ? (
-                        <GreenCheck isDarkMode={isDarkMode} />
+                        <Icon
+                          alignSelf="center"
+                          iconSize="medium"
+                          marginRight={2}
+                          name="success"
+                        />
                       ) : (
-                        <GreyCheck isDarkMode={isDarkMode} />
+                        <Icon
+                          alignSelf="center"
+                          iconSize="medium"
+                          marginRight={2}
+                          name="success"
+                        />
                       )
                     ) : wallet.imported ? (
-                      <GreyCheck />
+                      <Icon
+                        alignSelf="center"
+                        iconSize="medium"
+                        marginRight={2}
+                        name="success"
+                      />
                     ) : (
-                      <WarningIcon />
+                      <Icon
+                        alignSelf="center"
+                        iconSize="medium"
+                        marginRight={2}
+                        name="warning"
+                      />
                     )}
 
                     <CaretIcon />
