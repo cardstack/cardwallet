@@ -11,12 +11,11 @@ import { InteractionManager } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+
 import Divider from '../components/Divider';
-import { ButtonPressAnimation } from '../components/animations';
 import WalletList from '../components/change-wallet/WalletList';
 import { Column } from '../components/layout';
-import { Sheet, SheetTitle } from '../components/sheet';
-import { Text } from '../components/text';
+import { Sheet } from '../components/sheet';
 import { backupUserDataIntoCloud } from '../handlers/cloudBackup';
 import { removeWalletData } from '../handlers/localstorage/removeWallet';
 import showWalletErrorAlert from '../helpers/support';
@@ -35,6 +34,7 @@ import {
   walletsUpdate,
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
+import { Container, Text, Touchable } from '@cardstack/components';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
@@ -47,7 +47,6 @@ import {
   deviceUtils,
   showActionSheetWithOptions,
 } from '@rainbow-me/utils';
-
 import logger from 'logger';
 
 const deviceHeight = deviceUtils.dimensions.height;
@@ -56,40 +55,6 @@ const listPaddingBottom = 6;
 const walletRowHeight = 59;
 const maxListHeight = deviceHeight - 220;
 
-const EditButton = styled(ButtonPressAnimation).attrs(({ editMode }) => ({
-  radiusAndroid: 24,
-  scaleTo: 0.96,
-  wrapperStyle: {
-    alignSelf: 'flex-end',
-    height: 40,
-    marginRight: 7,
-    width: editMode ? 70 : 58,
-  },
-}))`
-  padding: 12px;
-  ${ios
-    ? `
-  position: absolute;
-  right: 7px;
-  top: 6px;
-  `
-    : `
-    position: relative;
-    right: 0px;
-    top: -10px;
-    z-index: 99999;
-  `}
-`;
-
-const EditButtonLabel = styled(Text).attrs(
-  ({ theme: { colors }, editMode }) => ({
-    align: 'right',
-    color: colors.appleBlue,
-    letterSpacing: 'roundedMedium',
-    size: 'large',
-    weight: editMode ? 'semibold' : 'medium',
-  })
-)``;
 const Whitespace = styled.View`
   background-color: ${({ theme: { colors } }) => colors.white};
   bottom: -400px;
@@ -467,16 +432,23 @@ export default function ChangeWalletSheet() {
     <Sheet borderRadius={30}>
       {android && <Whitespace />}
       <Column height={headerHeight} justify="space-between">
-        <SheetTitle>Wallets</SheetTitle>
+        <Text fontSize={18} fontWeight="700" textAlign="center">
+          Accounts
+        </Text>
+        <Touchable
+          onPress={() => setEditMode(e => !e)}
+          position="absolute"
+          right={20}
+          top={4}
+        >
+          <Text color="settingsGray" fontWeight="600">
+            {editMode ? 'Done' : 'Edit'}
+          </Text>
+        </Touchable>
         {showDividers && (
           <Divider color={colors.rowDividerExtraLight} inset={[0, 15]} />
         )}
       </Column>
-      <EditButton editMode={editMode} onPress={() => setEditMode(e => !e)}>
-        <EditButtonLabel editMode={editMode}>
-          {editMode ? 'Done' : 'Edit'}
-        </EditButtonLabel>
-      </EditButton>
       <WalletList
         accountAddress={currentAddress}
         allWallets={walletsWithBalancesAndNames}

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from '../../context/ThemeContext';
 import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
@@ -9,9 +9,9 @@ import { BottomRowText } from '../coin-row';
 import CoinCheckButton from '../coin-row/CoinCheckButton';
 import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
-import { Icon } from '../icons';
 import { Centered, Column, ColumnWithMargins, Row } from '../layout';
 import { TruncatedAddress, TruncatedText } from '../text';
+import { Container, Icon, Text } from '@cardstack/components';
 import { fonts, getFontSize } from '@rainbow-me/styles';
 
 const maxAccountLabelWidth = deviceUtils.dimensions.width - 88;
@@ -69,21 +69,6 @@ const sx = StyleSheet.create({
 const gradientProps = {
   pointerEvents: 'none',
   style: sx.gradient,
-};
-
-const OptionsIcon = ({ onPress }) => {
-  const { colors } = useTheme();
-  return (
-    <ButtonPressAnimation onPress={onPress} scaleTo={0.9}>
-      <Centered height={40} width={60}>
-        {android ? (
-          <Icon circle color={colors.appleBlue} name="threeDots" tightDots />
-        ) : (
-          <Text style={sx.editIcon}>􀍡</Text>
-        )}
-      </Centered>
-    </ButtonPressAnimation>
-  );
 };
 
 export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
@@ -153,50 +138,32 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                 value={label || ens || `${index + 1}`}
               />
             )}
-            <ColumnWithMargins margin={3}>
+            <ColumnWithMargins margin={1}>
               {cleanedUpLabel || ens ? (
-                <TruncatedText color={colors.dark} style={sx.accountLabel}>
-                  {cleanedUpLabel || ens}
-                </TruncatedText>
+                <Text fontWeight="600">{cleanedUpLabel || ens}</Text>
               ) : (
                 <TruncatedAddress
                   address={address}
-                  color={colors.dark}
                   firstSectionLength={6}
-                  size="smaller"
-                  style={sx.accountLabel}
+                  fontWeight="600"
                   truncationLength={4}
-                  weight="medium"
                 />
               )}
-              <BottomRowText
-                color={colors.alpha(colors.blueGreyDark, 0.5)}
-                style={sx.bottomRowText}
-              >
-                {cleanedUpBalance || 0} XDAI
-              </BottomRowText>
+              <Text variant="subText">{cleanedUpBalance || 0} ETH</Text>
             </ColumnWithMargins>
           </Row>
           <Column style={sx.rightContent}>
             {isReadOnly && (
-              <LinearGradient
-                {...linearGradientProps}
-                marginRight={editMode || isSelected ? -9 : 19}
-              >
-                <Text
-                  style={[
-                    sx.readOnlyText,
-                    { color: colors.alpha(colors.blueGreyDark, 0.5) },
-                  ]}
-                >
-                  Watching
-                </Text>
-              </LinearGradient>
+              <Text color="backgroundBlue" fontWeight="700">
+                Watching
+              </Text>
             )}
             {!editMode && isSelected && (
-              <CoinCheckButton style={sx.coinCheckIcon} toggle={isSelected} />
+              <Icon iconSize="medium" name="success" right={20} />
             )}
-            {editMode && <OptionsIcon onPress={NOOP} />}
+            {editMode && (
+              <Icon color="black" name="more-horizontal" right={20} />
+            )}
           </Column>
         </Row>
       </ButtonPressAnimation>
