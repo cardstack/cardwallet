@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
+
 import { useTheme } from '../../context/ThemeContext';
 import { getRandomColor } from '../../styles/colors';
 import Divider from '../Divider';
@@ -8,32 +9,17 @@ import { BiometricButtonContent } from '../buttons';
 import ImageAvatar from '../contacts/ImageAvatar';
 import CopyTooltip from '../copy-tooltip';
 import { Centered, ColumnWithDividers } from '../layout';
-import { Text, TruncatedAddress } from '../text';
+import { TruncatedAddress } from '../text';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
+import { Text } from '@cardstack/components';
 import {
   removeFirstEmojiFromString,
   returnStringFirstEmoji,
 } from '@rainbow-me/helpers/emojiHandler';
-
 import { useAccountProfile } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { margin, padding, position } from '@rainbow-me/styles';
-import { abbreviations } from '@rainbow-me/utils';
-
-const WalletProfileAddressText = styled(TruncatedAddress).attrs(
-  ({ theme: { colors } }) => ({
-    align: 'center',
-    color: colors.alpha(colors.blueGreyDark, 0.6),
-    firstSectionLength: abbreviations.defaultNumCharsPerSection,
-    size: 'lmedium',
-    truncationLength: 4,
-    weight: 'medium',
-  })
-)`
-  ${margin(9, 0, 5)};
-  width: 100%;
-`;
+import { padding, position } from '@rainbow-me/styles';
 
 const Spacer = styled.View`
   height: 19;
@@ -46,11 +32,6 @@ const WalletProfileButton = styled(ButtonPressAnimation)`
   height: 58;
   width: 100%;
 `;
-
-const WalletProfileButtonText = styled(Text).attrs({
-  align: 'center',
-  size: 'larger',
-})``;
 
 const ProfileImage = styled(ImageAvatar)`
   margin-bottom: 15;
@@ -88,6 +69,8 @@ export default function WalletProfileState({
     profile?.name ? removeFirstEmojiFromString(profile.name).join('') : ''
   );
   const inputRef = useRef(null);
+
+  console.log('inputRef', inputRef);
 
   const handleCancel = useCallback(() => {
     goBack();
@@ -142,7 +125,7 @@ export default function WalletProfileState({
         <ProfileNameInput
           onChange={setValue}
           onSubmitEditing={handleSubmit}
-          placeholder="Name your wallet"
+          placeholder="Name your account"
           ref={inputRef}
           selectionColor={colors.avatarColor[color]}
           testID="wallet-info-input"
@@ -154,7 +137,14 @@ export default function WalletProfileState({
             textToCopy={address}
             tooltipText="Copy Address"
           >
-            <WalletProfileAddressText address={address} />
+            <TruncatedAddress
+              address={address}
+              firstSectionLength={6}
+              fontSize={14}
+              marginTop={1}
+              truncationLength={4}
+              variant="subText"
+            />
           </CopyTooltip>
         )}
       </Centered>
@@ -167,13 +157,9 @@ export default function WalletProfileState({
           />
         </WalletProfileButton>
         <WalletProfileButton onPress={handleCancel}>
-          <WalletProfileButtonText
-            color={colors.alpha(colors.blueGreyDark, 0.6)}
-            letterSpacing="roundedMedium"
-            weight="medium"
-          >
+          <Text color="grayText" fontWeight="600">
             Cancel
-          </WalletProfileButtonText>
+          </Text>
         </WalletProfileButton>
       </ColumnWithDividers>
     </WalletProfileModal>

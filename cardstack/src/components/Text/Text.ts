@@ -1,4 +1,5 @@
 import { createText, TextProps as ShopifyTextProps } from '@shopify/restyle';
+
 import { Theme } from '../../theme';
 
 /**

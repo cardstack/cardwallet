@@ -1,14 +1,14 @@
 import React, { useImperativeHandle, useState } from 'react';
 import styled from 'styled-components';
-import Text from './Text';
+import { Text } from '@cardstack/components';
 
-const Placeholder = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.alpha(colors.blueGreyDark, 0.3),
-  size: 'big',
-  weight: 'semibold',
-}))`
-  margin-bottom: ${android ? -48 : -27};
+const Placeholder = styled(Text).attrs({
+  color: 'grayText',
+  fontSize: 20,
+  fontWeight: '600',
+  textAlign: 'center',
+})`
+  margin-bottom: -27;
   width: 100%;
 `;
 
