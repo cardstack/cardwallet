@@ -46,7 +46,7 @@
                BlueprintName = "RainbowUITests"
                ReferencedContainer = "container:Rainbow.xcodeproj">
             </BuildableReference>
-          </TestableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
