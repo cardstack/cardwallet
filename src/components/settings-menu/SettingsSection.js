@@ -1,11 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import React, { Fragment, useCallback, useMemo } from 'react';
-import { Image, Linking, NativeModules, ScrollView, Share } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { Linking, NativeModules, ScrollView, Share } from 'react-native';
 import styled from 'styled-components';
-// import { REVIEW_ANDROID } from '../../config/experimental';
-// import useExperimentalFlag from '../../config/experimentalHooks';
-//import { supportedLanguages } from '../../languages';
-import { THEMES, useTheme } from '../../context/ThemeContext';
+
+import { useTheme } from '../../context/ThemeContext';
 import AppVersionStamp from '../AppVersionStamp';
 import { Column, ColumnWithDividers } from '../layout';
 import {
@@ -14,17 +12,7 @@ import {
   ListItemArrowGroup,
   ListItemDivider,
 } from '../list';
-import { Emoji, Text } from '../text';
 import { Icon } from '@cardstack/components';
-import BackupIcon from '@rainbow-me/assets/settingsBackup.png';
-import BackupIconDark from '@rainbow-me/assets/settingsBackupDark.png';
-import CurrencyIcon from '@rainbow-me/assets/settingsCurrency.png';
-import CurrencyIconDark from '@rainbow-me/assets/settingsCurrencyDark.png';
-import DarkModeIcon from '@rainbow-me/assets/settingsDarkMode.png';
-import DarkModeIconDark from '@rainbow-me/assets/settingsDarkModeDark.png';
-import NetworkIcon from '@rainbow-me/assets/settingsNetwork.png';
-import NetworkIconDark from '@rainbow-me/assets/settingsNetworkDark.png';
-import shareCardstackIcon from '@rainbow-me/assets/share.png';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -58,14 +46,6 @@ const Container = styled(ScrollView).attrs({
   background-color: ${({ backgroundColor }) => backgroundColor};
 `;
 
-// ⚠️ Beware: magic numbers lol
-const SettingIcon = styled(Image)`
-  ${position.size(60)};
-  margin-left: -16;
-  margin-right: -11;
-  margin-top: 8;
-`;
-
 const VersionStampContainer = styled(Column).attrs({
   align: 'center',
   justify: 'end',
@@ -73,10 +53,6 @@ const VersionStampContainer = styled(Column).attrs({
   flex: 1;
   padding-bottom: 19;
 `;
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
 
 const checkAllWallets = wallets => {
   if (!wallets) return false;
@@ -104,11 +80,10 @@ const checkAllWallets = wallets => {
 
 export default function SettingsSection({
   onCloseModal,
+  onPressDev,
   onPressBackup,
   onPressCurrency,
-  onPressDev,
   onPressIcloudBackup,
-  /*onPressLanguage,*/
   onPressNetwork,
   onPressShowSecret,
 }) {
@@ -117,7 +92,7 @@ export default function SettingsSection({
   const { /*language,*/ nativeCurrency, network } = useAccountSettings();
   const { isTinyPhone } = useDimensions();
 
-  const { colors, isDarkMode, setTheme, colorScheme } = useTheme();
+  const { colors } = useTheme();
 
   const onSendFeedback = useSendFeedback();
 
@@ -149,24 +124,10 @@ export default function SettingsSection({
     );
   }, []);
 
-  const { allBackedUp, areBackedUp, canBeBackedUp } = useMemo(
+  const { areBackedUp, canBeBackedUp } = useMemo(
     () => checkAllWallets(wallets),
     [wallets]
   );
-
-  const backupStatusColor = allBackedUp
-    ? colors.green
-    : colors.alpha(colors.blueGreyDark, 0.5);
-
-  const toggleTheme = useCallback(() => {
-    if (colorScheme === THEMES.SYSTEM) {
-      setTheme(THEMES.LIGHT);
-    } else if (colorScheme === THEMES.LIGHT) {
-      setTheme(THEMES.DARK);
-    } else {
-      setTheme(THEMES.SYSTEM);
-    }
-  }, [setTheme, colorScheme]);
 
   return (
     <Container backgroundColor={colors.white} scrollEnabled={isTinyPhone}>
@@ -238,17 +199,17 @@ export default function SettingsSection({
           />
         )}
       </ColumnWithDividers>
-      {/* {IS_DEV && (
-        <Fragment>
+      {IS_DEV && (
+        <>
           <ListFooter height={10} />
           <ListItem
-            icon={<Emoji name="construction" />}
+            icon={<Icon color="red" name="smartphone" />}
             label="Developer Settings"
             onPress={onPressDev}
             testID="developer-section"
           />
-        </Fragment>
-      )} */}
+        </>
+      )}
       <VersionStampContainer>
         <AppVersionStamp />
       </VersionStampContainer>
