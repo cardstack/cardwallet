@@ -20,5 +20,9 @@ export default function TruncatedAddress({
     [address, firstSectionLength, truncationLength]
   );
 
-  return <Text {...props}>{text}</Text>;
+  return (
+    <Text fontFamily="Roboto-Regular" {...props}>
+      {text}
+    </Text>
+  );
 }
