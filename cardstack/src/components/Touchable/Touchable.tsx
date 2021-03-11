@@ -4,6 +4,8 @@ import {
   LayoutProps,
   spacing,
   SpacingProps,
+  position,
+  PositionProps,
 } from '@shopify/restyle';
 import { ReactNode } from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
@@ -12,7 +14,8 @@ import { Theme } from '../../theme';
 
 type RestyleProps = TouchableOpacityProps &
   LayoutProps<Theme> &
-  SpacingProps<Theme>;
+  SpacingProps<Theme> &
+  PositionProps<Theme>;
 
 export interface TouchableProps extends RestyleProps {
   children: ReactNode;
@@ -22,6 +25,8 @@ export interface TouchableProps extends RestyleProps {
  * This is our primitive TouchableOpacity component with restyle props applied
  */
 export const Touchable = createRestyleComponent<TouchableProps, Theme>(
-  [layout, spacing],
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  [layout, spacing, position],
   TouchableOpacity
 );

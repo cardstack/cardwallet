@@ -9,6 +9,7 @@ import React, {
 import { FlatList } from 'react-native-gesture-handler';
 import { Transition, Transitioning } from 'react-native-reanimated';
 import styled from 'styled-components';
+
 import networkTypes from '../../helpers/networkTypes';
 import WalletTypes from '../../helpers/walletTypes';
 import { useAccountSettings } from '../../hooks';
@@ -17,7 +18,7 @@ import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
 import { Column } from '../layout';
 import AddressRow from './AddressRow';
-import WalletOption from './WalletOption';
+import { OptionItem } from '@cardstack/components';
 import { position } from '@rainbow-me/styles';
 
 const listTopPadding = 7.5;
@@ -47,7 +48,7 @@ const skeletonTransition = (
   </Transition.Sequence>
 );
 
-const Container = styled(Transitioning.View)`
+const Wrapper = styled(Transitioning.View)`
   height: ${({ height }) => height};
   margin-top: -2;
 `;
@@ -228,7 +229,7 @@ export default function WalletList({
   );
 
   return (
-    <Container
+    <Wrapper
       height={height}
       ref={skeletonTransitionRef}
       transition={skeletonTransition}
@@ -245,23 +246,30 @@ export default function WalletList({
           />
           {showDividers && <WalletListDivider />}
           <WalletListFooter>
-            <WalletOption
-              editMode={editMode}
-              icon="arrowBack"
-              label="􀁍 Create a new wallet"
+            <OptionItem
+              iconProps={{ name: 'plus', size: 22 }}
               onPress={onPressAddAccount}
+              textProps={{
+                color: editMode ? 'grayText' : 'black',
+                fontSize: 14,
+              }}
+              title="Create a new account"
             />
-            <WalletOption
-              editMode={editMode}
-              icon="arrowBack"
-              label="􀂍 Add an existing wallet"
+            <OptionItem
+              iconProps={{ name: 'download', size: 22 }}
+              marginTop={2}
               onPress={onPressImportSeedPhrase}
+              textProps={{
+                color: editMode ? 'grayText' : 'black',
+                fontSize: 14,
+              }}
+              title="Add an existing account"
             />
           </WalletListFooter>
         </Fragment>
       ) : (
         <EmptyWalletList />
       )}
-    </Container>
+    </Wrapper>
   );
 }
