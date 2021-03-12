@@ -549,6 +549,8 @@ PODS:
     - pop (~> 1.0)
     - React
     - SexyTooltip
+  - RNVectorIcons (8.1.0):
+    - React-Core
   - SDWebImage (5.9.3):
     - SDWebImage/Core (= 5.9.3)
   - SDWebImage/Core (5.9.3)
@@ -680,6 +682,7 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNTextSize (from `../node_modules/react-native-text-size`)
   - RNTooltips (from `../node_modules/react-native-tooltips/ios`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Shimmer
   - SRSRadialGradient (from `../node_modules/react-native-radial-gradient/ios`)
   - TcpSockets (from `../node_modules/react-native-tcp`)
@@ -893,6 +896,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-text-size"
   RNTooltips:
     :path: "../node_modules/react-native-tooltips/ios"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   SRSRadialGradient:
     :path: "../node_modules/react-native-radial-gradient/ios"
   TcpSockets:
@@ -1020,6 +1025,7 @@ SPEC CHECKSUMS:
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNTextSize: 21c94a67819fbf2c358a219bf6d251e3be9e5f29
   RNTooltips: e13180e4339e2a85daabd09507f62a5a32d3dc8a
+  RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   SDWebImage: a31ee8e90a97303529e03fb0c333eae0eacb88e9
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   Sentry: 388c9dc093b2fd3a264466a5c5b21e25959610a9
@@ -1033,6 +1039,6 @@ SPEC CHECKSUMS:
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 05e9306ad3122d59e620bfaa48069a823cc90577
+PODFILE CHECKSUM: 888ba22051801541c4ba2dbecd4a0736f9bead9d
 
 COCOAPODS: 1.9.1
