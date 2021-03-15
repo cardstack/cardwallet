@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
+
 import { Icon } from '../icons';
 import { RowWithMargins } from '../layout';
-import { Text } from '../text';
+import { Text } from '@cardstack/components';
 import BiometryTypes from '@rainbow-me/helpers/biometryTypes';
 import { useBiometryType } from '@rainbow-me/hooks';
 
@@ -16,14 +16,6 @@ const BiometryIcon = styled(Icon).attrs(({ biometryType, color }) => ({
     biometryType === BiometryTypes.passcode ? 1.5 : 0};
 `;
 
-const ButtonLabel = styled(Text).attrs(({ color }) => ({
-  align: 'center',
-  color,
-  letterSpacing: 'rounded',
-  size: 'larger',
-  weight: 'semibold',
-}))``;
-
 export default function BiometricButtonContent({
   color,
   showIcon,
@@ -31,7 +23,6 @@ export default function BiometricButtonContent({
   testID,
   ...props
 }) {
-  const { colors } = useTheme();
   const biometryType = useBiometryType();
   const showBiometryIcon =
     showIcon &&
@@ -48,10 +39,10 @@ export default function BiometricButtonContent({
       {!android && showBiometryIcon && (
         <BiometryIcon biometryType={biometryType} color={color} />
       )}
-      <ButtonLabel color={color || colors.appleBlue} testID={testID}>
+      <Text color="settingsGray" fontWeight="600" testID={testID}>
         {showFaceIDCharacter && '􀎽 '}
         {text}
-      </ButtonLabel>
+      </Text>
     </RowWithMargins>
   );
 }

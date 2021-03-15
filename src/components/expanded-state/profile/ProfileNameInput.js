@@ -1,21 +1,19 @@
 import React, { Fragment, useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Input } from '../../inputs';
+
 import { PlaceholderText } from '../../text';
+import { Input } from '@cardstack/components';
 import { useMagicAutofocus } from '@rainbow-me/hooks';
-import { fonts, fontWithWidth } from '@rainbow-me/styles';
 
 const NameInput = styled(Input).attrs({
-  align: 'center',
   autoCapitalize: 'words',
   autoFocus: true,
-  color: 'dark',
-  letterSpacing: 'roundedTight',
+  fontSize: 20,
+  fontWeight: '600',
   returnKeyType: 'done',
-  size: 'big',
   spellCheck: false,
+  textAlign: 'center',
 })`
-  ${fontWithWidth(fonts.weight.bold)};
   ${android ? 'height: 70; margin-vertical: -8;' : ''}
   width: 100%;
 `;
@@ -49,12 +47,19 @@ function ProfileNameInput(
   return (
     <Fragment>
       <PlaceholderText ref={placeholderRef} />
-      <NameInput
+      <Input
         {...props}
+        autoCapitalize="words"
+        autoFocus
+        fontSize={20}
+        fontWeight="600"
         onChange={handleChange}
         onFocus={handleFocus}
         ref={ref}
+        returnKeyType="done"
+        spellCheck={false}
         testID={testID}
+        textAlign="center"
         value={value}
       />
     </Fragment>

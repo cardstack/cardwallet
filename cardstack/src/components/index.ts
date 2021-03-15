@@ -11,3 +11,4 @@ export * from './Image';
 export * from './TransactionCoinRow';
 export * from './BalanceCoinRow';
 export * from './OptionItem';
+export * from './Input';
