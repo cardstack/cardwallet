@@ -4,16 +4,14 @@ import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard } from 'react-native';
-import styled from 'styled-components';
 import zxcvbn from 'zxcvbn';
-import { isSamsungGalaxy } from '../../helpers/samsung';
+
 import { saveBackupPassword } from '../../model/backup';
 import { cloudPlatform } from '../../utils/platform';
 import { DelayedAlert } from '../alerts';
 import { PasswordField } from '../fields';
-import { Centered, ColumnWithMargins } from '../layout';
-import { GradientText, Text } from '../text';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
+import { Container, Icon, Input, Text } from '@cardstack/components';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
@@ -28,85 +26,25 @@ import {
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { padding } from '@rainbow-me/styles';
 import logger from 'logger';
 
-const DescriptionText = styled(Text).attrs(
-  ({ isTinyPhone, theme: { colors } }) => ({
-    align: 'center',
-    color: colors.blueGreyDark50,
-    lineHeight: 'looser',
-    size: isTinyPhone ? 'lmedium' : 'large',
-  })
-)``;
-
-const ImportantText = styled(DescriptionText).attrs(
-  ({ theme: { colors } }) => ({
-    color: colors.blueGreyDark60,
-    weight: 'medium',
-  })
-)``;
-
-const Masthead = styled(Centered).attrs({
-  direction: 'column',
-})`
-  ${({ isTallPhone, isTinyPhone }) =>
-    padding(isTinyPhone ? 0 : 9, isTinyPhone ? 10 : 50, isTallPhone ? 39 : 19)};
-  flex-shrink: 0;
-`;
-
-const MastheadIcon = styled(GradientText).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  angle: false,
-  colors: colors.gradients.rainbow,
-  end: { x: 0, y: 0.5 },
-  size: 43,
-  start: { x: 1, y: 0.5 },
-  steps: [0, 0.774321, 1],
-  weight: 'medium',
-}))``;
-
-const Title = styled(Text).attrs(({ isTinyPhone }) => ({
-  size: isTinyPhone ? 'large' : 'big',
-  weight: 'bold',
-}))`
-  ${({ isTinyPhone }) => (isTinyPhone ? padding(0) : padding(15, 0, 12))};
-`;
-
-const samsungGalaxy = (android && isSamsungGalaxy()) || false;
-
 export default function BackupCloudStep() {
-  const { isTallPhone, isTinyPhone } = useDimensions();
   const currentlyFocusedInput = useRef();
   const { goBack } = useNavigation();
   const { params } = useRoute();
   const walletCloudBackup = useWalletCloudBackup();
   const { selectedWallet, setIsWalletLoading, isDamaged } = useWallets();
   const [validPassword, setValidPassword] = useState(false);
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(true);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
-    const keyboardDidShow = () => {
-      setIsKeyboardOpen(true);
-    };
-
-    const keyboardDidHide = () => {
-      setIsKeyboardOpen(false);
-    };
-    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-    Keyboard.addListener('keyboardDidHide', keyboardDidHide);
     if (isDamaged) {
       showWalletErrorAlert();
       captureMessage('Damaged wallet preventing cloud backup');
       goBack();
     }
-    return () => {
-      Keyboard.removeListener('keyboardDidShow', keyboardDidShow);
-      Keyboard.removeListener('keyboardDidHide', keyboardDidHide);
-    };
   }, [goBack, isDamaged]);
 
   const isSettingsRoute = useRouteExistsInNavigationState(
@@ -114,10 +52,6 @@ export default function BackupCloudStep() {
   );
 
   const walletId = params?.walletId || selectedWallet.id;
-
-  const [label, setLabel] = useState(
-    !validPassword ? `􀙶 Add to ${cloudPlatform} Backup` : '􀎽 Confirm Backup'
-  );
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
@@ -164,54 +98,7 @@ export default function BackupCloudStep() {
       passwordIsValid = true;
     }
 
-    let newLabel = '';
-    if (passwordIsValid) {
-      newLabel = '􀎽 Confirm Backup';
-    } else if (password.length < cloudBackupPasswordMinLength) {
-      newLabel = `Minimum ${cloudBackupPasswordMinLength} characters`;
-    } else if (
-      password !== '' &&
-      password.length < cloudBackupPasswordMinLength &&
-      !passwordRef.current?.isFocused()
-    ) {
-      newLabel = 'Use a longer password';
-    } else if (
-      isCloudBackupPasswordValid(password) &&
-      isCloudBackupPasswordValid(confirmPassword) &&
-      confirmPassword.length >= password.length &&
-      password !== confirmPassword
-    ) {
-      newLabel = `Passwords don't match`;
-    } else if (
-      password.length >= cloudBackupPasswordMinLength &&
-      !passwordFocused
-    ) {
-      newLabel = 'Confirm password';
-    } else if (
-      password.length >= cloudBackupPasswordMinLength &&
-      passwordFocused
-    ) {
-      const passInfo = zxcvbn(password);
-      switch (passInfo.score) {
-        case 0:
-        case 1:
-          newLabel = '💩 Weak password';
-          break;
-        case 2:
-          newLabel = '👌 Good password';
-          break;
-        case 3:
-          newLabel = '💪 Great password';
-          break;
-        case 4:
-          newLabel = '🏰️ Strong password';
-          break;
-        default:
-      }
-    }
-
     setValidPassword(passwordIsValid);
-    setLabel(newLabel);
   }, [confirmPassword, password, passwordFocused]);
 
   const onPasswordChange = useCallback(
@@ -265,58 +152,69 @@ export default function BackupCloudStep() {
     validPassword && onConfirmBackup();
   }, [onConfirmBackup, validPassword]);
 
+  const sharedPasswordProps = {
+    autoCompleteType: 'password',
+    blurOnSubmit: false,
+    border: true,
+    marginVertical: 2,
+    passwordRules: `minlength: ${cloudBackupPasswordMinLength};`,
+    secureTextEntry: true,
+    selectTextOnFocus: true,
+    type: 'password',
+  };
+
   return (
     <BackupSheetKeyboardLayout
-      footerButtonDisabled={!validPassword}
-      footerButtonLabel={label}
       onSubmit={onConfirmBackup}
+      showButton={validPassword}
     >
-      <Masthead isTallPhone={isTallPhone} isTinyPhone={isTinyPhone}>
-        {(isTinyPhone || samsungGalaxy) && isKeyboardOpen ? null : (
-          <MastheadIcon>􀌍</MastheadIcon>
-        )}
-        <Title isTinyPhone={isTinyPhone}>Choose a password</Title>
-        <DescriptionText isTinyPhone={isTinyPhone}>
-          Please use a password you&apos;ll remember.&nbsp;
-          <ImportantText isTinyPhone={isTinyPhone}>
-            It can&apos;t be recovered!
-          </ImportantText>
-        </DescriptionText>
-      </Masthead>
-      <ColumnWithMargins align="center" flex={1} margin={android ? 0 : 19}>
-        <PasswordField
-          isInvalid={
-            password !== '' &&
-            password.length < cloudBackupPasswordMinLength &&
-            !passwordRef.current.isFocused()
+      <Container alignItems="center" marginVertical={10} padding={9}>
+        <Icon color="settingsGray" iconSize="xl" name="lock" />
+        <Text fontSize={20} margin={3}>
+          Choose a password
+        </Text>
+        <Text color="blueText" textAlign="center">
+          Be careful with your password. If you lose it, it cannot be recovered.
+        </Text>
+      </Container>
+      <Container flex={1} margin={5} textAlign="center">
+        <Input
+          {...sharedPasswordProps}
+          iconProps={
+            isCloudBackupPasswordValid(password)
+              ? {
+                  name: 'success',
+                }
+              : null
           }
-          isValid={isCloudBackupPasswordValid(password)}
           onBlur={onPasswordBlur}
           onChange={onPasswordChange}
           onFocus={onPasswordFocus}
           onSubmitEditing={onPasswordSubmit}
-          password={password}
-          placeholder="Backup Password"
+          placeholder="Enter password"
           ref={passwordRef}
           returnKeyType="next"
           textContentType="newPassword"
+          value={password}
         />
-        <PasswordField
-          editable={isCloudBackupPasswordValid(password)}
-          isInvalid={
-            isCloudBackupPasswordValid(confirmPassword) &&
-            confirmPassword.length >= password.length &&
-            confirmPassword !== password
+        <Input
+          {...sharedPasswordProps}
+          iconProps={
+            validPassword
+              ? {
+                  name: 'success',
+                }
+              : null
           }
-          isValid={validPassword}
           onChange={onConfirmPasswordChange}
           onFocus={onConfirmPasswordFocus}
           onSubmitEditing={onConfirmPasswordSubmit}
-          password={confirmPassword}
-          placeholder="Confirm Password"
+          placeholder="Confirm password"
           ref={confirmPasswordRef}
+          type="password"
+          value={confirmPassword}
         />
-      </ColumnWithMargins>
+      </Container>
     </BackupSheetKeyboardLayout>
   );
 }
