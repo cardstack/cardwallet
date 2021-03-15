@@ -14,10 +14,11 @@ storiesOf('Button', module).add('Default', () => (
     <Container
       alignItems="center"
       justifyContent="space-evenly"
-      height="60%"
+      height="80%"
       width="100%"
     >
       <Button>Default</Button>
+      <Button loading>Default</Button>
       <Button
         iconProps={{
           iconSize: 'medium',
@@ -29,6 +30,7 @@ storiesOf('Button', module).add('Default', () => (
       </Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="blue">Blue</Button>
+      <Button variant="dark">Dark</Button>
       <Container
         flexDirection="row"
         justifyContent="space-between"
@@ -38,6 +40,7 @@ storiesOf('Button', module).add('Default', () => (
         <Button variant="small">Small 2</Button>
       </Container>
       <Button variant="extraSmall">XSmall</Button>
+      <Button variant="extraSmallDark">XSmallDark</Button>
     </Container>
   </Container>
 ));

@@ -15,6 +15,23 @@ const small = {
   width: (screenWidth - 56) / 2,
 };
 
+const extraSmall = {
+  height: 27,
+  paddingVertical: 0,
+  width: 72,
+  textStyle: {
+    variant: 'smallButton',
+  },
+};
+
+const dark = {
+  backgroundColor: 'buttonDarkBackground',
+  borderColor: 'transparent',
+  textStyle: {
+    color: 'blueText',
+  },
+};
+
 export const buttonVariants = {
   defaults: {
     alignItems: 'center',
@@ -38,20 +55,22 @@ export const buttonVariants = {
     backgroundColor: 'buttonSecondaryBackground',
     borderColor: 'buttonSecondaryBorder',
   },
+  dark,
   blue,
   small,
   smallBlue: {
     ...small,
     ...blue,
   },
-  extraSmall: {
-    height: 27,
-    paddingVertical: 0,
-    width: 72,
+  extraSmallDark: {
+    ...extraSmall,
+    ...dark,
     textStyle: {
-      variant: 'smallButton',
+      ...extraSmall.textStyle,
+      ...dark.textStyle,
     },
   },
+  extraSmall,
 };
 
 export type ButtonVariants = keyof typeof buttonVariants;

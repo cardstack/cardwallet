@@ -12,18 +12,14 @@ import { Alert, InteractionManager, StatusBar } from 'react-native';
 import { IS_TESTING } from 'react-native-dotenv';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import styled from 'styled-components';
-import ActivityIndicator from '../components/ActivityIndicator';
-import Spinner from '../components/Spinner';
-import { MiniButton } from '../components/buttons';
-import { Input } from '../components/inputs';
 import { Centered, Column, Row } from '../components/layout';
 import { SheetHandle } from '../components/sheet';
-import { Text } from '../components/text';
 import {
   InvalidPasteToast,
   ToastPositionContainer,
 } from '../components/toasts';
 import { useTheme } from '../context/ThemeContext';
+import { Button, Input, Text } from '@cardstack/components';
 import {
   resolveUnstoppableDomain,
   web3Provider,
@@ -90,41 +86,8 @@ const Footer = styled(Row).attrs({
   ${android ? 'margin-right: 18;' : ''}
 `;
 
-const LoadingSpinner = styled(android ? Spinner : ActivityIndicator).attrs({
-  color: 'white',
-  size: 15,
-})`
-  margin-right: 5;
-  margin-top: ${android ? 0 : 2};
-`;
-
-const FooterButton = styled(MiniButton).attrs({
-  testID: 'import-sheet-button',
-})``;
-
 const KeyboardSizeView = styled(KeyboardArea)`
   background-color: ${({ theme: { colors } }) => colors.white};
-`;
-
-const SecretTextArea = styled(Input).attrs({
-  align: 'center',
-  autoCapitalize: 'none',
-  autoCorrect: false,
-  autoFocus: true,
-  enablesReturnKeyAutomatically: true,
-  keyboardType: android ? 'visible-password' : 'default',
-  lineHeight: 'looser',
-  multiline: true,
-  numberOfLines: 3,
-  placeholder: 'Seed phrase, private key, xDai address',
-  returnKeyType: 'done',
-  size: 'large',
-  spellCheck: false,
-  weight: 'semibold',
-})`
-  margin-bottom: ${android ? 55 : 0};
-  min-height: ${android ? 100 : 50};
-  width: 100%;
 `;
 
 const SecretTextAreaContainer = styled(Centered)`
@@ -401,66 +364,55 @@ export default function ImportSeedPhraseSheet() {
       <StatusBar barStyle="light-content" />
       <Sheet>
         <SheetHandle marginBottom={7} marginTop={6} />
-        <Text size="large" weight="bold">
-          Add Wallet
+        <Text fontSize={18} fontWeight="700">
+          Add account
         </Text>
         <SecretTextAreaContainer>
-          <SecretTextArea
-            color={isSecretValid ? colors.appleBlue : colors.dark}
+          <Input
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoFocus
+            enablesReturnKeyAutomatically
+            fontSize={18}
+            fontWeight="600"
+            keyboardType={android ? 'visible-password' : 'default'}
+            marginBottom={android ? 14 : 0}
+            minHeight={android ? 100 : 50}
+            multiline
+            numberOfLines={3}
             onChangeText={handleSetSeedPhrase}
             onFocus={handleFocus}
             onSubmitEditing={handlePressImportButton}
-            placeholder="Seed phrase, private key, xDai address"
+            placeholder="Enter seed phrase, private key, Ethereum address, or ENS name"
             placeholderTextColor={colors.alpha(colors.blueGreyDark, 0.3)}
             ref={inputRef}
             returnKeyType="done"
             size="large"
             spellCheck={false}
             testID="import-sheet-input"
+            textAlign="center"
             value={seedPhrase}
+            width="100%"
           />
         </SecretTextAreaContainer>
         <Footer isSmallPhone={isSmallPhone}>
           {seedPhrase ? (
-            <FooterButton
+            <Button
               disabled={!isSecretValid}
-              hasLeadingIcon
-              {...(android && { height: 30, overflowMargin: 15, width: 89 })}
+              loading={busy}
               onPress={handlePressImportButton}
+              variant="extraSmall"
             >
-              <Row>
-                {busy ? (
-                  <LoadingSpinner />
-                ) : (
-                  <Text align="center" color="whiteLabel" weight="bold">
-                    􀂍{' '}
-                  </Text>
-                )}
-                <Text
-                  align="center"
-                  color="whiteLabel"
-                  testID="import-sheet-button-label"
-                  weight="bold"
-                >
-                  Import
-                </Text>
-              </Row>
-            </FooterButton>
+              Import
+            </Button>
           ) : (
-            <FooterButton
-              {...(android && { height: 30, overflowMargin: 15, width: 63 })}
+            <Button
               disabled={!isClipboardValidSecret}
               onPress={handlePressPasteButton}
+              variant="extraSmallDark"
             >
-              <Text
-                align="center"
-                color="whiteLabel"
-                testID="import-sheet-button-label"
-                weight="bold"
-              >
-                Paste
-              </Text>
-            </FooterButton>
+              Paste
+            </Button>
           )}
         </Footer>
       </Sheet>

@@ -158,4 +158,12 @@ describe('Button', () => {
       {}
     );
   });
+
+  it('should render an activity indicator when button is loading', () => {
+    const buttonText = chance.string();
+
+    const { getByTestId } = render(<Button loading>{buttonText}</Button>);
+
+    getByTestId('button-loading');
+  });
 });
