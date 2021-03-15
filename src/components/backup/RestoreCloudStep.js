@@ -7,7 +7,7 @@ import {
 } from '../../model/backup';
 import { cloudPlatform } from '../../utils/platform';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
-import { Container, Icon, Input, Text } from '@cardstack/components';
+import { Button, Container, Icon, Input, Text } from '@cardstack/components';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
@@ -38,6 +38,24 @@ export default function RestoreCloudStep({ userData }) {
     fetchPasswordIfPossible();
   }, []);
 
+  useEffect(() => {
+    let newLabel = '';
+    let passwordIsValid = false;
+
+    if (incorrectPassword) {
+      newLabel = 'Incorrect Password';
+    } else {
+      if (isCloudBackupPasswordValid(password)) {
+        passwordIsValid = true;
+      }
+
+      newLabel = `Restore from ${cloudPlatform}`;
+    }
+
+    setValidPassword(passwordIsValid);
+    setLabel(newLabel);
+  }, [incorrectPassword, password]);
+
   const onPasswordChange = useCallback(
     ({ nativeEvent: { text: inputText } }) => {
       setPassword(inputText);
@@ -50,6 +68,7 @@ export default function RestoreCloudStep({ userData }) {
     try {
       setIsWalletLoading(WalletLoadingStates.RESTORING_WALLET);
       const success = await restoreCloudBackup(password, userData);
+
       if (success) {
         // Store it in the keychain in case it was missing
         await saveBackupPassword(password);
@@ -76,18 +95,32 @@ export default function RestoreCloudStep({ userData }) {
 
   return (
     <BackupSheetKeyboardLayout
-      footerButtonDisabled={!validPassword}
-      footerButtonLabel={label}
-      onSubmit={onSubmit}
+      footer={
+        <Button
+          disabled={!validPassword}
+          iconProps={
+            !incorrectPassword
+              ? {
+                  iconSize: 'medium',
+                  marginRight: 3,
+                  name: 'refresh',
+                }
+              : null
+          }
+          onSubmit={onPasswordSubmit}
+        >
+          {label}
+        </Button>
+      }
       type="restore"
     >
       <Container alignItems="center" marginVertical={10} padding={9}>
         <Icon color="settingsGray" iconSize="xl" name="lock" />
         <Text fontSize={20} margin={3}>
-          Choose a password
+          Enter password
         </Text>
         <Text color="blueText" textAlign="center">
-          Be careful with your password. If you lose it, it cannot be recovered.
+          Restore your account with the password you created for your backup.
         </Text>
       </Container>
       <Container flex={1} margin={5} textAlign="center">

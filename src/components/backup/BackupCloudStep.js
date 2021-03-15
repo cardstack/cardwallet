@@ -3,22 +3,19 @@ import analytics from '@segment/analytics-react-native';
 import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Keyboard } from 'react-native';
-import zxcvbn from 'zxcvbn';
 
 import { saveBackupPassword } from '../../model/backup';
 import { cloudPlatform } from '../../utils/platform';
 import { DelayedAlert } from '../alerts';
-import { PasswordField } from '../fields';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
-import { Container, Icon, Input, Text } from '@cardstack/components';
+import { Button, Container, Icon, Input, Text } from '@cardstack/components';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
 } from '@rainbow-me/handlers/cloudBackup';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
-  useDimensions,
+  useBiometryIconName,
   useMagicAutofocus,
   useRouteExistsInNavigationState,
   useWalletCloudBackup,
@@ -38,6 +35,7 @@ export default function BackupCloudStep() {
   const [passwordFocused, setPasswordFocused] = useState(true);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const biometryIconName = useBiometryIconName();
 
   useEffect(() => {
     if (isDamaged) {
@@ -165,8 +163,26 @@ export default function BackupCloudStep() {
 
   return (
     <BackupSheetKeyboardLayout
-      onSubmit={onConfirmBackup}
-      showButton={validPassword}
+      footer={
+        validPassword ? (
+          <Button
+            iconProps={
+              biometryIconName
+                ? {
+                    iconSize: 'medium',
+                    marginRight: 3,
+                    name: biometryIconName,
+                  }
+                : null
+            }
+            onSubmit={onConfirmBackup}
+          >
+            Confirm
+          </Button>
+        ) : (
+          <Text variant="subText">Minimum 8 characters</Text>
+        )
+      }
     >
       <Container alignItems="center" marginVertical={10} padding={9}>
         <Icon color="settingsGray" iconSize="xl" name="lock" />
