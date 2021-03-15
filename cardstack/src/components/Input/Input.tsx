@@ -9,34 +9,65 @@ import {
   PositionProps,
   typography,
   TypographyProps,
+  border,
+  BorderProps,
 } from '@shopify/restyle';
 
 import { TextInput, TextInputProps } from 'react-native';
 
 import { Theme } from '../../theme';
+import { Icon, IconProps } from '../Icon';
+import { Container } from '../Container';
 
-type InputProps = TextInputProps &
+type BaseInputProps = TextInputProps &
   LayoutProps<Theme> &
   SpacingProps<Theme> &
   TypographyProps<Theme> &
+  BorderProps<Theme> &
   PositionProps<Theme>;
 
-const BasicInput = createRestyleComponent<InputProps, Theme>(
+const BasicInput = createRestyleComponent<BaseInputProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  [layout, spacing, position, typography],
+  [layout, spacing, position, typography, border],
   TextInput
 );
+
+interface InputProps {
+  border?: boolean;
+  iconProps?: IconProps | null;
+}
 
 /**
  * This is our primitive Input component with restyle props applied
  */
 export const Input = React.forwardRef((props: InputProps, ref) => (
-  <BasicInput
-    fontFamily="OpenSans-Regular"
-    fontSize={16}
-    textContentType="none"
-    ref={ref}
-    {...props}
-  />
+  <Container>
+    <BasicInput
+      {...(props.border
+        ? {
+            borderType: 'solid',
+            borderWidth: 1,
+            borderColor: 'buttonSecondaryBorder',
+            borderRadius: 100,
+            paddingHorizontal: 5,
+            paddingVertical: 3,
+          }
+        : {})}
+      fontFamily="OpenSans-Regular"
+      fontSize={16}
+      textContentType="none"
+      ref={ref}
+      {...props}
+    />
+    {props.iconProps && (
+      <Icon
+        position="absolute"
+        iconSize="medium"
+        right={20}
+        top={20}
+        {...props.iconProps}
+      />
+    )}
+  </Container>
 ));

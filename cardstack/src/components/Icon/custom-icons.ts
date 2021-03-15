@@ -16,9 +16,12 @@ import send from '../../assets/icons/send.svg';
 import success from '../../assets/icons/success.svg';
 import swap from '../../assets/icons/swap.svg';
 import warning from '../../assets/icons/warning.svg';
+import faceId from '../../assets/icons/face-id.svg';
+import thumbprint from '../../assets/icons/thumbprint.svg';
 
 export const customIcons = {
   'check-circle': checkCircle,
+  'face-id': faceId,
   'info-blue': infoBlue,
   'info-white': infoWhite,
   'more-circle': moreCircle,
@@ -35,6 +38,7 @@ export const customIcons = {
   send: send,
   success: success,
   swap: swap,
+  thumbprint: thumbprint,
   warning: warning,
 };
 
