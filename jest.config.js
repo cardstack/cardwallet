@@ -8,6 +8,7 @@ module.exports = {
 
     // ran into a weeeeird issue testing this so ignoring for now, will try to fix later
     '!<rootDir>/cardstack/src/components/Icon/Icon.tsx',
+    '!<rootDir>/cardstack/src/components/Input/Input.tsx',
   ],
   coverageDirectory: '.coverage',
   coverageThreshold: {
