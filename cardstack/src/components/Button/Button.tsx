@@ -7,6 +7,7 @@ import {
   SpacingProps,
   VariantProps,
 } from '@shopify/restyle';
+import { ActivityIndicator } from 'react-native';
 import React, { ReactNode } from 'react';
 
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
@@ -25,6 +26,7 @@ interface ButtonProps extends RestyleProps {
   iconProps?: IconProps;
   small?: boolean;
   onPress?: () => void;
+  loading?: boolean;
 }
 
 const VariantRestyleComponent = createVariant({
@@ -43,6 +45,7 @@ export const Button = ({
   children,
   disabled,
   iconProps,
+  loading,
   ...props
 }: ButtonProps) => {
   const width = useVariantValue('buttonVariants', 'width', props.variant);
@@ -65,12 +68,18 @@ export const Button = ({
   return (
     <Container backgroundColor="transparent">
       <AnimatedButton alignItems="center" disabled={disabled} {...props}>
-        {iconProps && (
-          <Icon color={disabled ? 'blueText' : 'black'} {...iconProps} />
+        {loading ? (
+          <ActivityIndicator testID="button-loading" />
+        ) : (
+          <>
+            {iconProps && (
+              <Icon color={disabled ? 'blueText' : 'black'} {...iconProps} />
+            )}
+            <Text {...textStyle} {...disabledTextProps}>
+              {children}
+            </Text>
+          </>
         )}
-        <Text {...textStyle} {...disabledTextProps}>
-          {children}
-        </Text>
       </AnimatedButton>
       {disabled && (
         <Container
