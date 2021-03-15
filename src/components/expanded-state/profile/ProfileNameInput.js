@@ -47,12 +47,19 @@ function ProfileNameInput(
   return (
     <Fragment>
       <PlaceholderText ref={placeholderRef} />
-      <NameInput
+      <Input
         {...props}
+        autoCapitalize="words"
+        autoFocus
+        fontSize={20}
+        fontWeight="600"
         onChange={handleChange}
         onFocus={handleFocus}
         ref={ref}
+        returnKeyType="done"
+        spellCheck={false}
         testID={testID}
+        textAlign="center"
         value={value}
       />
     </Fragment>
