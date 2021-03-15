@@ -3,19 +3,17 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import styled from 'styled-components';
-import { RainbowButton } from '../buttons';
+
 import { Column } from '../layout';
 import { SheetHandleFixedToTopHeight } from '../sheet';
+import { Button, Container, Text } from '@cardstack/components';
 import KeyboardTypes from '@rainbow-me/helpers/keyboardTypes';
-import { useDimensions, useKeyboardHeight } from '@rainbow-me/hooks';
+import {
+  useBiometryIconName,
+  useDimensions,
+  useKeyboardHeight,
+} from '@rainbow-me/hooks';
 import { sharedCoolModalTopOffset } from '@rainbow-me/navigation/config';
-import { padding } from '@rainbow-me/styles';
-
-const Footer = styled(Column)`
-  ${({ isTallPhone }) => padding(0, 15, isTallPhone ? 30 : 15)};
-  flex-shrink: 0;
-  width: 100%;
-`;
 
 const KeyboardSizeView = styled(KeyboardArea)`
   background-color: ${({ theme: { colors } }) => colors.transparent};
@@ -23,16 +21,16 @@ const KeyboardSizeView = styled(KeyboardArea)`
 
 export default function BackupSheetKeyboardLayout({
   children,
-  footerButtonDisabled,
-  footerButtonLabel,
   onSubmit,
   type,
+  showButton,
 }) {
   const { params: { nativeScreen } = {} } = useRoute();
-  const { height: deviceHeight, isTallPhone } = useDimensions();
+  const { height: deviceHeight } = useDimensions();
   const keyboardHeight = useKeyboardHeight({
     keyboardType: KeyboardTypes.password,
   });
+  const biometryIconName = useBiometryIconName();
 
   const platformKeyboardHeight = android
     ? type === 'restore'
@@ -50,13 +48,26 @@ export default function BackupSheetKeyboardLayout({
     <Column height={nativeScreen ? undefined : sheetRegionAboveKeyboardHeight}>
       <StatusBar barStyle="light-content" />
       {children}
-      <Footer isTallPhone={isTallPhone}>
-        <RainbowButton
-          disabled={footerButtonDisabled}
-          label={footerButtonLabel}
-          onPress={onSubmit}
-        />
-      </Footer>
+      <Container alignItems="center" width="100%">
+        {showButton ? (
+          <Button
+            iconProps={
+              biometryIconName
+                ? {
+                    iconSize: 'medium',
+                    marginRight: 3,
+                    name: biometryIconName,
+                  }
+                : null
+            }
+            onSubmit={onSubmit}
+          >
+            Confirm
+          </Button>
+        ) : (
+          <Text variant="subText">Minimum 8 characters</Text>
+        )}
+      </Container>
       {android ? <KeyboardSizeView /> : null}
     </Column>
   );

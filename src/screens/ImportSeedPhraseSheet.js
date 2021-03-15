@@ -392,7 +392,6 @@ export default function ImportSeedPhraseSheet() {
             testID="import-sheet-input"
             textAlign="center"
             value={seedPhrase}
-            width="100%"
           />
         </SecretTextAreaContainer>
         <Footer isSmallPhone={isSmallPhone}>
