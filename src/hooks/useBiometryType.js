@@ -51,6 +51,5 @@ const mapBiometryTypeToIconName = {
 export const useBiometryIconName = () => {
   const biometryType = useBiometryType();
 
-  // return mapBiometryTypeToIconName[biometryType];
-  return 'thumbprint';
+  return mapBiometryTypeToIconName[biometryType];
 };
