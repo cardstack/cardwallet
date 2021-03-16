@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text } from '../text';
 import MiniButton from './MiniButton';
+import { Button } from '@cardstack/components';
 import { checkIsValidAddressOrDomain } from '@rainbow-me/helpers/validators';
 import { useClipboard, useInvalidPaste } from '@rainbow-me/hooks';
 import { deviceUtils } from '@rainbow-me/utils';
@@ -41,15 +42,14 @@ export default function PasteAddressButton({ onPress }) {
   }, [enablePaste, getClipboard, onInvalidPaste, onPress]);
 
   return (
-    <MiniButton
+    <Button
       disabled={deviceUtils.isIOS14 ? !hasClipboardData : clipboard && !isValid}
       onPress={handlePress}
       testID="paste-address-button"
+      variant="extraSmall"
       {...(android && { height: 30, overflowMargin: 15, width: 60 })}
     >
-      <Text color="whiteLabel" weight="bold">
-        Paste
-      </Text>
-    </MiniButton>
+      Paste
+    </Button>
   );
 }

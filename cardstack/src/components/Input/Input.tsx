@@ -11,6 +11,8 @@ import {
   TypographyProps,
   border,
   BorderProps,
+  color,
+  ColorProps,
 } from '@shopify/restyle';
 
 import { TextInput, TextInputProps } from 'react-native';
@@ -24,12 +26,13 @@ type BaseInputProps = TextInputProps &
   SpacingProps<Theme> &
   TypographyProps<Theme> &
   BorderProps<Theme> &
+  ColorProps<Theme> &
   PositionProps<Theme>;
 
 const BasicInput = createRestyleComponent<BaseInputProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  [layout, spacing, position, typography, border],
+  [layout, spacing, position, typography, border, color],
   TextInput
 );
 
