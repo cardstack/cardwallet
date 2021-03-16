@@ -12,6 +12,7 @@ import pin from '../../assets/icons/pin.svg';
 import qrCode from '../../assets/icons/qr-code.svg';
 import reload from '../../assets/icons/reload.svg';
 import refresh from '../../assets/icons/refresh.svg';
+import refresh2 from '../../assets/icons/refresh-2.svg';
 import send from '../../assets/icons/send.svg';
 import success from '../../assets/icons/success.svg';
 import swap from '../../assets/icons/swap.svg';
@@ -35,6 +36,7 @@ export const customIcons = {
   pin: pin,
   reload: reload,
   refresh: refresh,
+  'refresh-2': refresh2,
   send: send,
   success: success,
   swap: swap,

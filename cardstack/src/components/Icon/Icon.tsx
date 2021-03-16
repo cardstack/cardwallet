@@ -46,7 +46,9 @@ export const Icon = ({
         width={sizeWithDefault}
       >
         <SvgXml
+          color={colorWithDefault}
           fill={colorWithDefault}
+          stroke={colorWithDefault}
           width={sizeWithDefault}
           height={sizeWithDefault}
           xml={customIcons[name as CustomIconNames]}

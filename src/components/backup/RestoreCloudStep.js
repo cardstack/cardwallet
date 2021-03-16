@@ -103,7 +103,7 @@ export default function RestoreCloudStep({ userData }) {
               ? {
                   iconSize: 'medium',
                   marginRight: 3,
-                  name: 'refresh',
+                  name: 'refresh-2',
                 }
               : null
           }
