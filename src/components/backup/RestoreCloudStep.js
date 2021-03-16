@@ -107,14 +107,20 @@ export default function RestoreCloudStep({ userData }) {
                 }
               : null
           }
-          onSubmit={onPasswordSubmit}
+          onPress={onPasswordSubmit}
         >
           {label}
         </Button>
       }
-      type="restore"
     >
-      <Container alignItems="center" marginVertical={10} padding={9}>
+      <Container
+        alignItems="center"
+        marginVertical={{
+          phone: 10,
+          tinyPhone: 2,
+        }}
+        padding={9}
+      >
         <Icon color="settingsGray" iconSize="xl" name="lock" />
         <Text fontSize={20} margin={3}>
           Enter password
