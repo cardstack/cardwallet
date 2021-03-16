@@ -9,25 +9,15 @@ import { Centered, Column, ColumnWithMargins } from '../components/layout';
 import QRCode from '../components/qr-code/QRCode';
 import ShareButton from '../components/qr-code/ShareButton';
 import { SheetHandle } from '../components/sheet';
-import { Text, TruncatedAddress } from '../components/text';
+import { TruncatedAddress } from '../components/text';
 import { CopyToast, ToastPositionContainer } from '../components/toasts';
 import { useAccountProfile } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { abbreviations, deviceUtils } from '../utils';
+import { Text } from '@cardstack/components';
 import { padding, shadow } from '@rainbow-me/styles';
 
 const QRCodeSize = ios ? 250 : Math.min(230, deviceUtils.dimensions.width - 20);
-
-const AddressText = styled(TruncatedAddress).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.whiteLabel,
-  lineHeight: 'loosest',
-  opacity: 0.6,
-  size: 'large',
-  weight: 'semibold',
-}))`
-  width: 100%;
-`;
 
 const Container = styled(Centered).attrs({
   direction: 'column',
@@ -49,14 +39,6 @@ const QRWrapper = styled(Column).attrs({ align: 'center' })`
   background-color: ${({ theme: { colors } }) => colors.whiteLabel};
   border-radius: 39;
 `;
-
-const NameText = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.whiteLabel,
-  letterSpacing: 'roundedMedium',
-  size: 'bigger',
-  weight: 'bold',
-}))``;
 
 const accountAddressSelector = state => state.settings.accountAddress;
 const lowercaseAccountAddressSelector = createSelector(
@@ -89,8 +71,20 @@ export default function ReceiveModal() {
           textToCopy={accountAddress}
         >
           <ColumnWithMargins margin={2}>
-            <NameText>{accountName}</NameText>
-            <AddressText address={accountAddress} />
+            <Text
+              color="white"
+              fontSize={26}
+              fontWeight="600"
+              textAlign="center"
+            >
+              {accountName}
+            </Text>
+            <TruncatedAddress
+              address={accountAddress}
+              color="grayText"
+              firstSectionLength={6}
+              truncationLength={4}
+            />
           </ColumnWithMargins>
         </CopyFloatingEmojis>
         <ShareButton accountAddress={accountAddress} />

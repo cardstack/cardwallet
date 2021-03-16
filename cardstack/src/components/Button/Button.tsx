@@ -73,7 +73,11 @@ export const Button = ({
         ) : (
           <>
             {iconProps && (
-              <Icon color={disabled ? 'blueText' : 'black'} {...iconProps} />
+              <Icon
+                color={disabled ? 'blueText' : 'black'}
+                marginRight={3}
+                {...iconProps}
+              />
             )}
             <Text {...textStyle} {...disabledTextProps}>
               {children}

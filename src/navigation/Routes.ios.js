@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { StatusBar } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+
 import { InitialRouteContext } from '../context/initialRoute';
 import AddCashSheet from '../screens/AddCashSheet';
 import AvatarBuilder from '../screens/AvatarBuilder';
@@ -213,8 +213,6 @@ const MainStack = isNativeStackAvailable
   : NativeStackFallbackNavigator;
 
 function NativeStackNavigator() {
-  const { colors, isDarkMode } = useTheme();
-
   return (
     <NativeStack.Navigator {...nativeStackConfig}>
       <NativeStack.Screen component={MainStack} name={Routes.STACK} />
@@ -222,7 +220,7 @@ function NativeStackNavigator() {
         component={ReceiveModal}
         name={Routes.RECEIVE_MODAL}
         options={{
-          backgroundColor: isDarkMode ? colors.offWhite : '#3B3E43',
+          backgroundColor: '#423E4F',
           backgroundOpacity: 1,
           customStack: true,
         }}
