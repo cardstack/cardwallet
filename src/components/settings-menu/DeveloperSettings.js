@@ -18,7 +18,7 @@ import { walletsUpdate } from '@rainbow-me/redux/wallets';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 
-const DevSection = () => {
+const DeveloperSettings = () => {
   const { navigate } = useNavigation();
   const { config, setConfig } = useContext(RainbowContext);
   const { wallets } = useWallets();
@@ -102,4 +102,4 @@ const DevSection = () => {
   );
 };
 
-export default DevSection;
+export default DeveloperSettings;
