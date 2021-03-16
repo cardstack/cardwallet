@@ -14,7 +14,7 @@ import {
 import SettingsBackupView from '../components/settings-menu/BackupSection/SettingsBackupView';
 import ShowSecretView from '../components/settings-menu/BackupSection/ShowSecretView';
 import WalletSelectionView from '../components/settings-menu/BackupSection/WalletSelectionView';
-import DevSection from '../components/settings-menu/DevSection';
+import DeveloperSettings from '../components/settings-menu/DeveloperSettings';
 import { useTheme } from '../context/ThemeContext';
 import WalletTypes from '../helpers/walletTypes';
 import { useDimensions, useWallets } from '../hooks';
@@ -73,7 +73,7 @@ const SettingsPages = {
     title: 'Settings',
   },
   dev: {
-    component: IS_DEV ? DevSection : null,
+    component: IS_DEV ? DeveloperSettings : null,
     key: 'DevSection',
     title: 'Dev',
   },
