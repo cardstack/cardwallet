@@ -18,6 +18,7 @@ import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
 import logger from 'logger';
+import { web3Provider } from '@rainbow-me/handlers/web3';
 
 export default function useInitializeWallet() {
   const dispatch = useDispatch();
@@ -28,6 +29,8 @@ export default function useInitializeWallet() {
 
   const { network } = useAccountSettings();
   const hideSplashScreen = useHideSplashScreen();
+
+  const providerUrl = web3Provider?.connection?.url;
 
   const initializeWallet = useCallback(
     async (
@@ -56,7 +59,14 @@ export default function useInitializeWallet() {
         }
 
         // Load the network first
-        await dispatch(settingsLoadNetwork());
+        console.log('useInitializeWallet.js, providerUrl: ' + providerUrl);
+
+        const shouldLoadNetwork = !providerUrl?.startsWith('http://');
+
+        if (shouldLoadNetwork) {
+          await dispatch(settingsLoadNetwork());
+        }
+
         logger.sentry('done loading network');
 
         const { isNew, walletAddress } = await walletInit(
