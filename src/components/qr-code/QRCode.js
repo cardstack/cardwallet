@@ -1,9 +1,9 @@
 import QRCodeUtil from 'qrcode';
 import React, { useMemo } from 'react';
 import Svg, { Circle, ClipPath, Defs, G, Image, Rect } from 'react-native-svg';
-// import RainbowLogo from '../../assets/rainbow-og.png';
-// import useSafeImageUri from '../../hooks/useSafeImageUri';
+import CardstackLogo from '../../../cardstack/src/assets/cardstackLogo.png';
 import { magicMemo } from '../../utils';
+import useSafeImageUri from '@rainbow-me/hooks/useSafeImageUri';
 
 const generateMatrix = (value, errorCorrectionLevel) => {
   const arr = Array.prototype.slice.call(
@@ -20,18 +20,20 @@ const generateMatrix = (value, errorCorrectionLevel) => {
   );
 };
 
+const logoSize = 40;
+const rectangleSize = 84;
+
 const QRCode = ({
   ecl = 'M',
-  // logo = RainbowLogo,
-  // logoBackgroundColor: givenLogoBackgroundColor,
+  logo = CardstackLogo,
+  logoBackgroundColor: givenLogoBackgroundColor,
   logoMargin = -5,
-  logoSize = 84,
   size = 150,
   value = 'QR Code',
 }) => {
-  // const { colors } = useTheme();
-  // const logoBackgroundColor = colors.transparent;
-  // const href = useSafeImageUri(logo);
+  const { colors } = useTheme();
+  const logoBackgroundColor = givenLogoBackgroundColor || colors.transparent;
+  const href = useSafeImageUri(logo);
   const dots = useMemo(() => {
     const dots = [];
     const matrix = generateMatrix(value, ecl);
@@ -60,7 +62,7 @@ const QRCode = ({
       }
     });
 
-    const clearArenaSize = 0; // Math.floor((logoSize + 3) / cellSize);
+    const clearArenaSize = Math.floor((rectangleSize + 3) / cellSize);
     const matrixMiddleStart = matrix.length / 2 - clearArenaSize / 2;
     const matrixMiddleEnd = matrix.length / 2 + clearArenaSize / 2 - 1;
 
@@ -99,10 +101,10 @@ const QRCode = ({
     });
 
     return dots;
-  }, [ecl, logoSize, size, value]);
+  }, [ecl, rectangleSize, size, value]);
 
-  // const logoPosition = size / 2 - logoSize / 2 - logoMargin;
-  const logoWrapperSize = logoSize + logoMargin * 2;
+  const logoPosition = size / 2 - logoSize / 2 - logoMargin;
+  const logoWrapperSize = rectangleSize + logoMargin * 2;
 
   return (
     <Svg height={size} width={size}>
@@ -111,30 +113,29 @@ const QRCode = ({
           <Rect height={logoWrapperSize} width={logoWrapperSize} />
         </ClipPath>
         <ClipPath id="clip-logo">
-          <Rect height={logoSize} width={logoSize} />
+          <Rect height={rectangleSize} width={rectangleSize} />
         </ClipPath>
       </Defs>
       <Rect fill="white" height={size} width={size} />
       {dots}
-      {/*{logo && (*/}
-      {/*  <G x={logoPosition} y={logoPosition}>*/}
-      {/*    <Rect*/}
-      {/*      clipPath="url(#clip-wrapper)"*/}
-      {/*      fill={logoBackgroundColor}*/}
-      {/*      height={logoWrapperSize}*/}
-      {/*      width={logoWrapperSize}*/}
-      {/*    />*/}
-      {/*    <G x={logoMargin} y={logoMargin}>*/}
-      {/*      <Image*/}
-      {/*        clipPath="url(#clip-logo)"*/}
-      {/*        height={logoSize}*/}
-      {/*        // href={href}*/}
-      {/*        preserveAspectRatio="xMidYMid slice"*/}
-      {/*        width={logoSize}*/}
-      {/*      />*/}
-      {/*    </G>*/}
-      {/*  </G>*/}
-      {/*)}*/}
+      {logo && (
+        <G x={logoPosition} y={logoPosition}>
+          <Rect
+            clipPath="url(#clip-wrapper)"
+            fill={logoBackgroundColor}
+            height={logoWrapperSize}
+            width={logoWrapperSize}
+          />
+          <G x={logoMargin} y={logoMargin}>
+            <Image
+              clipPath="url(#clip-logo)"
+              height={logoSize}
+              href={href}
+              width={logoSize}
+            />
+          </G>
+        </G>
+      )}
     </Svg>
   );
 };
