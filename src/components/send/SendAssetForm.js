@@ -1,6 +1,7 @@
 import React, { Fragment, useMemo } from 'react';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import styled from 'styled-components';
+
 import AssetTypes from '../../helpers/assetTypes';
 import { useAsset, useDimensions } from '../../hooks';
 import { SendCoinRow } from '../coin-row';
@@ -10,7 +11,8 @@ import { Icon } from '../icons';
 import { Column } from '../layout';
 import SendAssetFormCollectible from './SendAssetFormCollectible';
 import SendAssetFormToken from './SendAssetFormToken';
-import { padding, position } from '@rainbow-me/styles';
+import { Container } from '@cardstack/components';
+import { padding } from '@rainbow-me/styles';
 import ShadowStack from 'react-native-shadow-stack';
 
 const AssetRowShadow = colors => [
@@ -18,13 +20,6 @@ const AssetRowShadow = colors => [
   [0, 4, 12, colors.shadow, 0.04],
   [0, 8, 23, colors.shadow, 0.05],
 ];
-
-const Container = styled(Column)`
-  ${position.size('100%')};
-  background-color: ${({ theme: { colors } }) => colors.white};
-  flex: 1;
-  overflow: hidden;
-`;
 
 const FormContainer = styled(Column).attrs({
   align: 'end',
@@ -43,7 +38,7 @@ const FormContainer = styled(Column).attrs({
 `;
 
 const KeyboardSizeView = styled(KeyboardArea)`
-  background-color: ${({ theme: { colors } }) => colors.lighterGrey};
+  background-color: ${({ theme: { colors } }) => colors.white};
 `;
 
 export default function SendAssetForm({
@@ -60,8 +55,6 @@ export default function SendAssetForm({
   txSpeedRenderer,
   ...props
 }) {
-  const { isTinyPhone, width: deviceWidth } = useDimensions();
-
   const selectedAsset = useAsset(selected);
 
   const isNft = selectedAsset.type === AssetTypes.nft;
@@ -73,28 +66,17 @@ export default function SendAssetForm({
     ? SendSavingsCoinRow
     : SendCoinRow;
 
-  const { colors } = useTheme();
-  const shadows = useMemo(() => AssetRowShadow(colors), [colors]);
-
   return (
-    <Container>
-      <ShadowStack
-        backgroundColor={colors.white}
-        borderRadius={0}
-        height={SendCoinRow.selectedHeight}
-        shadows={shadows}
-        width={deviceWidth}
+    <Container flex={1} height="100%" overflow="hidden" width="100%">
+      <AssetRowElement
+        item={selectedAsset}
+        onPress={onResetAssetSelection}
+        selected
+        testID="send-asset-form"
       >
-        <AssetRowElement
-          item={selectedAsset}
-          onPress={onResetAssetSelection}
-          selected
-          testID="send-asset-form"
-        >
-          <Icon name="doubleCaret" />
-        </AssetRowElement>
-      </ShadowStack>
-      <FormContainer isNft={isNft} isTinyPhone={isTinyPhone}>
+        <Icon name="doubleCaret" />
+      </AssetRowElement>
+      <Container flex={1} padding={4} width="100%">
         {isNft ? (
           <SendAssetFormCollectible
             asset={selectedAsset}
@@ -119,7 +101,7 @@ export default function SendAssetForm({
             {ios ? <KeyboardSizeView isOpen /> : null}
           </Fragment>
         )}
-      </FormContainer>
+      </Container>
     </Container>
   );
 }

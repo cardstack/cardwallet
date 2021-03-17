@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { UnderlineField } from '../fields';
 import { RowWithMargins } from '../layout';
-import { Text } from '../text';
+import { Text } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
 
 export default function SendAssetFormField({
@@ -35,7 +35,7 @@ export default function SendAssetFormField({
       align="center"
       flex={1}
       justify="space-between"
-      margin={23}
+      // margin={23}
       {...props}
     >
       <UnderlineField
@@ -51,11 +51,7 @@ export default function SendAssetFormField({
         testID={testID}
         value={value}
       />
-      <Text
-        align="right"
-        color={colors.dark}
-        size={isTinyPhone || android ? 'bigger' : 'h3'}
-      >
+      <Text position="absolute" right={0}>
         {label.length > labelMaxLength
           ? label.substring(0, labelMaxLength)
           : label}

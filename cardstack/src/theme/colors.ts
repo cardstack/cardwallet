@@ -10,6 +10,7 @@ export const palette = {
   grayDark: '#AFAFB7',
   grayLessDark: '#B3B1B8',
   grayMedium: '#03C4BF',
+  grayMediumLight: '#D1D1D1',
   grayLight: '#00EBE5',
   green: '#00AC3D',
   red: '#FF0000',
@@ -41,6 +42,7 @@ export const colors = {
   invalid: palette.redDark,
   transparent: palette.transparent,
   white: palette.white,
+  underlineGray: palette.grayMediumLight,
 };
 
 export type ColorTypes = keyof typeof colors;

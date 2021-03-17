@@ -2,8 +2,8 @@ import React, { Fragment, useCallback, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import TextInputMask from 'react-native-text-input-mask';
 import styled from 'styled-components';
+
 import { Text } from '../text';
-import { buildTextStyles } from '@rainbow-me/styles';
 import { magicMemo } from '@rainbow-me/utils';
 
 const AndroidMaskWrapper = styled.View`
@@ -19,7 +19,7 @@ const Input = styled(TextInputMask).attrs({
   allowFontScaling: false,
   keyboardType: 'decimal-pad',
 })`
-  ${buildTextStyles};
+  // ${buildTextStyles};
   ${android ? 'font-weight: normal' : ''};
   flex: 1;
 `;
@@ -109,11 +109,16 @@ const ExchangeInput = (
 
   return (
     <Fragment>
-      <Input
+      <TextInputMask
         {...props}
-        color={color}
+        allowFontScaling={false}
         editable={editable}
+        flex={1}
+        fontFamily="OpenSans-Regular"
+        fontSize={35}
+        fontWeight="700"
         keyboardAppearance={keyboardAppearance}
+        keyboardType="decimal-pad"
         letterSpacing={letterSpacing}
         mask={mask}
         onBlur={handleBlur}
@@ -123,11 +128,8 @@ const ExchangeInput = (
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         ref={ref}
-        selectionColor={selectionColor}
-        size={size}
         testID={testID}
         value={value}
-        weight={weight}
       />
       {useCustomAndroidMask && !ref.current?.isFocused() && (
         <AndroidMaskWrapper>
