@@ -1,4 +1,4 @@
-import { AddExistingWalletRequest, AddExistingWalletResponse } from './types';
+import { AddExistingAccountRequest, AddExistingAccountResponse } from './types';
 
 /**
  * A generic interface to communicate with the CardPay backend services.
@@ -7,13 +7,13 @@ export default class CardPay {
   private TAG = 'CardPay';
 
   /**
-   * Adds an existing wallet.
+   * Adds an existing account.
    */
-  addExistingWallet = (
-    req: AddExistingWalletRequest
-  ): AddExistingWalletResponse => {
-    console.log(this.TAG, 'addExistingWallet, req: ' + JSON.stringify(req));
+  addExistingAccount = (
+    req: AddExistingAccountRequest
+  ): AddExistingAccountResponse => {
+    console.log(this.TAG, 'addExistingAccount, req: ' + JSON.stringify(req));
 
-    return {} as AddExistingWalletResponse;
+    return {} as AddExistingAccountResponse;
   };
 }
