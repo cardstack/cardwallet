@@ -38,3 +38,18 @@ export default function useBiometryType() {
 
   return biometryType;
 }
+
+const mapBiometryTypeToIconName = {
+  [BiometryTypes.Face]: 'face-id',
+  [BiometryTypes.FaceID]: 'face-id',
+  [BiometryTypes.Fingerprint]: 'thumbprint',
+  [BiometryTypes.passcode]: 'lock',
+  [BiometryTypes.TouchID]: 'thumbprint',
+  [BiometryTypes.none]: null,
+};
+
+export const useBiometryIconName = () => {
+  const biometryType = useBiometryType();
+
+  return mapBiometryTypeToIconName[biometryType];
+};

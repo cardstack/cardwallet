@@ -9,7 +9,7 @@ const chance = new Chance();
 jest.mock('@shopify/restyle');
 jest.mock('react-native/Libraries/Utilities/Dimensions', () => ({
   get: jest.fn(() => ({
-    width: 1,
+    width: 401,
   })),
 }));
 

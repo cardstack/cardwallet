@@ -21,7 +21,7 @@ export default function TruncatedAddress({
   );
 
   return (
-    <Text fontFamily="Roboto-Regular" {...props}>
+    <Text fontFamily="RobotoMono-Regular" {...props}>
       {text}
     </Text>
   );

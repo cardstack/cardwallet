@@ -14,7 +14,7 @@ export { default as useAnimatedListener } from './useAnimatedListener';
 export { default as useAppState } from './useAppState';
 export { default as useAppVersion } from './useAppVersion';
 export { default as useAsset } from './useAsset';
-export { default as useBiometryType } from './useBiometryType';
+export { default as useBiometryType, useBiometryIconName } from './useBiometryType';
 export { default as useBlockPolling } from './useBlockPolling';
 export { default as useBooleanState } from './useBooleanState';
 export { default as useClipboard } from './useClipboard';

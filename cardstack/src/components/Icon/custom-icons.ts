@@ -12,13 +12,17 @@ import pin from '../../assets/icons/pin.svg';
 import qrCode from '../../assets/icons/qr-code.svg';
 import reload from '../../assets/icons/reload.svg';
 import refresh from '../../assets/icons/refresh.svg';
+import refresh2 from '../../assets/icons/refresh-2.svg';
 import send from '../../assets/icons/send.svg';
 import success from '../../assets/icons/success.svg';
 import swap from '../../assets/icons/swap.svg';
 import warning from '../../assets/icons/warning.svg';
+import faceId from '../../assets/icons/face-id.svg';
+import thumbprint from '../../assets/icons/thumbprint.svg';
 
 export const customIcons = {
   'check-circle': checkCircle,
+  'face-id': faceId,
   'info-blue': infoBlue,
   'info-white': infoWhite,
   'more-circle': moreCircle,
@@ -32,9 +36,11 @@ export const customIcons = {
   pin: pin,
   reload: reload,
   refresh: refresh,
+  'refresh-2': refresh2,
   send: send,
   success: success,
   swap: swap,
+  thumbprint: thumbprint,
   warning: warning,
 };
 
