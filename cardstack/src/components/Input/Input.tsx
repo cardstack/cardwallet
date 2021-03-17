@@ -16,6 +16,7 @@ import {
 } from '@shopify/restyle';
 
 import { TextInput, TextInputProps } from 'react-native';
+import TextInputMask from 'react-native-text-input-mask';
 
 import { Theme } from '../../theme';
 import { Icon, IconProps } from '../Icon';
@@ -74,3 +75,10 @@ export const Input = React.forwardRef((props: InputProps, ref) => (
     )}
   </Container>
 ));
+
+export const InputMask = createRestyleComponent<BaseInputProps, Theme>(
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  [layout, spacing, position, typography, border, color],
+  TextInputMask
+);

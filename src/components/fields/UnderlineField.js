@@ -31,22 +31,6 @@ import { position } from '@rainbow-me/styles';
 //   left: -100%;
 // `;
 
-const UnderlineInput = styled(ExchangeInput).attrs(
-  ({ isTinyPhone, theme: { isDarkMode, colors } }) => ({
-    color: colors.dark,
-    disableTabularNums: true,
-    keyboardAppearance: isDarkMode ? 'dark' : 'light',
-    letterSpacing: 'roundedTightest',
-    size: isTinyPhone || android ? 'bigger' : 'h3',
-    weight: 'medium',
-  })
-)`
-  padding-right: 8;
-  ${android ? 'height: 40;' : ''}
-  ${android ? 'padding-bottom: 0;' : ''}
-  ${android ? 'padding-top: 0;' : ''}
-`;
-
 const defaultFormatter = string => string;
 
 const UnderlineField = (
@@ -132,10 +116,11 @@ const UnderlineField = (
   const { isDarkMode } = useTheme();
 
   return (
-    <ColumnWithMargins flex={1} {...props}>
+    <Container flex={1} {...props}>
       <Row align="center" justify="space-between">
-        <UnderlineInput
+        <ExchangeInput
           autoFocus={autoFocus}
+          color={isFocused ? 'black' : 'settingsGray'}
           isDarkMode={isDarkMode}
           isTinyPhone={isTinyPhone}
           keyboardType={keyboardType}
@@ -173,7 +158,7 @@ const UnderlineField = (
           top={0}
         />
       </Container>
-    </ColumnWithMargins>
+    </Container>
   );
 };
 

@@ -23,6 +23,7 @@ export interface IconProps extends ContainerProps {
   size?: number;
   name: IconName;
   color?: ColorTypes;
+  strokeWidth?: number;
 }
 
 export const Icon = ({

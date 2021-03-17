@@ -1,9 +1,9 @@
 import React, { Fragment, useCallback, useState } from 'react';
 import { InteractionManager } from 'react-native';
-import TextInputMask from 'react-native-text-input-mask';
 import styled from 'styled-components';
 
 import { Text } from '../text';
+import { InputMask } from '@cardstack/components';
 import { magicMemo } from '@rainbow-me/utils';
 
 const AndroidMaskWrapper = styled.View`
@@ -13,15 +13,6 @@ const AndroidMaskWrapper = styled.View`
   position: absolute;
   right: 0;
   top: 11.5;
-`;
-
-const Input = styled(TextInputMask).attrs({
-  allowFontScaling: false,
-  keyboardType: 'decimal-pad',
-})`
-  // ${buildTextStyles};
-  ${android ? 'font-weight: normal' : ''};
-  flex: 1;
 `;
 
 const ExchangeInput = (
@@ -38,7 +29,6 @@ const ExchangeInput = (
     onFocus,
     placeholder = '0',
     placeholderTextColor: givenPlaceholderTextColor,
-    selectionColor: givenSelectionColor,
     size = 'h2',
     testID,
     useCustomAndroidMask = false,
@@ -48,11 +38,8 @@ const ExchangeInput = (
   },
   ref
 ) => {
-  const { colors } = useTheme();
-  const color = givenColor || colors.dark;
-  const placeholderTextColor =
-    givenPlaceholderTextColor || colors.alpha(colors.blueGreyDark, 0.3);
-  const selectionColor = givenSelectionColor || color;
+  const color = givenColor || 'black';
+  const placeholderTextColor = givenPlaceholderTextColor || 'settingsGray';
   const [isFocused, setIsFocused] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
 
@@ -109,9 +96,10 @@ const ExchangeInput = (
 
   return (
     <Fragment>
-      <TextInputMask
+      <InputMask
         {...props}
         allowFontScaling={false}
+        color={color}
         editable={editable}
         flex={1}
         fontFamily="OpenSans-Regular"
