@@ -29,8 +29,7 @@ export default function RestoreSheetFirstStep({
     return count;
   }, [userData]);
 
-  const enableCloudRestore = true;
-  // const enableCloudRestore = android || walletsBackedUp > 0;
+  const enableCloudRestore = android || walletsBackedUp > 0;
   useEffect(() => {
     setParams({ enableCloudRestore });
   }, [enableCloudRestore, setParams]);

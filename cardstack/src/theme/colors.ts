@@ -13,6 +13,7 @@ export const palette = {
   grayLight: '#00EBE5',
   green: '#00AC3D',
   red: '#FF0000',
+  redDark: '#FF5050',
   transparent: 'transparent',
   white: '#FFFFFF',
 };
@@ -37,6 +38,7 @@ export const colors = {
   settingsGrayChevron: palette.grayLessDark,
   green: palette.green,
   red: palette.red,
+  invalid: palette.redDark,
   transparent: palette.transparent,
   white: palette.white,
 };

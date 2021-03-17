@@ -47,6 +47,8 @@ const AddressField = (
     }
   }, [address, inputValue, name]);
 
+  console.log('isValid', isValid);
+
   return (
     <Row flex={1}>
       <Input
@@ -54,7 +56,7 @@ const AddressField = (
         autoCapitalize="none"
         autoCorrect={false}
         autoFocus={autoFocus}
-        color="settingsGray"
+        color={isValid ? 'settingsGray' : 'invalid'}
         flexGrow={1}
         fontSize={15}
         fontWeight="600"
