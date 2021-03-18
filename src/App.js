@@ -59,6 +59,7 @@ import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
+import GanacheUtils from "../cardstack/src/utils/ganache-utils";
 
 const WALLETCONNECT_SYNC_DELAY = 500;
 
@@ -111,6 +112,10 @@ class App extends Component {
     if (!__DEV__ && NativeModules.RNTestFlight) {
       const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
       logger.sentry(`Test flight usage - ${isTestFlight}`);
+    }
+    if (__DEV__) {
+      // Automatically connect to Ganache when the app is launched is dev mode
+      await GanacheUtils.connect();
     }
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);

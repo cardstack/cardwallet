@@ -1,14 +1,12 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useCallback, useContext } from 'react';
 import { Alert, ScrollView } from 'react-native';
-import { GANACHE_URL_ANDROID, GANACHE_URL_IOS } from 'react-native-dotenv';
 import { Restart } from 'react-native-restart';
+import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
 import { RadioListItem } from '../radio-list';
 import { deleteAllBackups } from '@rainbow-me/handlers/cloudBackup';
-import { web3SetHttpProvider } from '@rainbow-me/handlers/web3';
 import { RainbowContext } from '@rainbow-me/helpers/RainbowContext';
-import networkTypes from '@rainbow-me/helpers/networkTypes';
 import { useWallets } from '@rainbow-me/hooks';
 import { wipeKeychain } from '@rainbow-me/model/keychain';
 import { useNavigation } from '@rainbow-me/navigation/Navigation';
@@ -16,7 +14,6 @@ import { clearImageMetadataCache } from '@rainbow-me/redux/imageMetadata';
 import store from '@rainbow-me/redux/store';
 import { walletsUpdate } from '@rainbow-me/redux/wallets';
 import Routes from '@rainbow-me/routes';
-import logger from 'logger';
 
 const DeveloperSettings = () => {
   const { navigate } = useNavigation();
@@ -31,18 +28,9 @@ const DeveloperSettings = () => {
   );
 
   const connectToGanache = useCallback(async () => {
-    try {
-      const ready = await web3SetHttpProvider(
-        (ios && GANACHE_URL_IOS) ||
-          (android && GANACHE_URL_ANDROID) ||
-          'http://127.0.0.1:7545'
-      );
-      logger.log('connected to ganache', ready);
-    } catch (e) {
-      await web3SetHttpProvider(networkTypes.mainnet);
-      logger.log('error connecting to ganache');
-    }
-    navigate(Routes.PROFILE_SCREEN);
+    GanacheUtils.connect(() => {
+      navigate(Routes.PROFILE_SCREEN);
+    });
   }, [navigate]);
 
   const removeBackups = async () => {
