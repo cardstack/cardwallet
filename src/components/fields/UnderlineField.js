@@ -6,18 +6,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import styled from 'styled-components';
+
 import { useTheme } from '../../context/ThemeContext';
 import { ExchangeInput } from '../exchange';
-import { ColumnWithMargins, Row } from '../layout';
-import { AnimatedContainer, Button, Container } from '@cardstack/components';
+import { Row } from '../layout';
+import { Button, Container } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
-import { position } from '@rainbow-me/styles';
 
 const defaultFormatter = string => string;
 
