@@ -71,6 +71,17 @@ export const buttonVariants = {
     },
   },
   extraSmall,
+  square: {
+    ...blue,
+    height: 92,
+    width: 92,
+    borderRadius: 20,
+    textStyle: {
+      ...blue.textStyle,
+      fontWeight: '700',
+      fontSize: 26,
+    },
+  },
 };
 
 export type ButtonVariants = keyof typeof buttonVariants;

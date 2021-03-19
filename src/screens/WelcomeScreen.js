@@ -13,7 +13,7 @@ import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 
 export default function WelcomeScreen() {
-  const { replace, navigate } = useNavigation();
+  const { navigate } = useNavigation();
   const hideSplashScreen = useHideSplashScreen();
   const [userData, setUserData] = useState(null);
 
@@ -37,11 +37,8 @@ export default function WelcomeScreen() {
   }, [hideSplashScreen]);
 
   const onCreateWallet = useCallback(async () => {
-    replace(Routes.SWIPE_LAYOUT, {
-      params: { emptyWallet: true },
-      screen: Routes.WALLET_SCREEN,
-    });
-  }, [replace]);
+    navigate(Routes.BUY_PREPAID_CARD);
+  }, [navigate]);
 
   const showRestoreSheet = useCallback(() => {
     navigate(Routes.RESTORE_SHEET, {
