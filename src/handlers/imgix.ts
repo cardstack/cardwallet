@@ -3,7 +3,6 @@ import LRUCache from 'mnemonist/lru-cache';
 import {
   IMGIX_DOMAIN as domain,
   IMGIX_TOKEN as secureURLToken,
-  // @ts-ignore
 } from 'react-native-dotenv';
 import { Source } from 'react-native-fast-image';
 import parse from 'url-parse';

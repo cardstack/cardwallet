@@ -43,7 +43,6 @@
       "@rainbow-me/animated-charts": ["src/react-native-animated-charts/src"],
       "react-native-shadow-stack": ["src/react-native-shadow-stack"]
     },
-    "typeRoots": ["./cardstack/src/types"],
     "resolveJsonModule": true
   },
   "exclude": [
