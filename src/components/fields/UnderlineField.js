@@ -19,18 +19,6 @@ import { AnimatedContainer, Button, Container } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
 import { position } from '@rainbow-me/styles';
 
-// const Underline = styled.View`
-//   ${position.cover};
-//   background-color: ${({ theme: { colors } }) => colors.blueGreyDark};
-//   opacity: 0.2;
-// `;
-
-// const UnderlineAnimated = styled(Animated.View)`
-//   ${position.cover};
-//   background-color: ${({ theme: { colors } }) => colors.sendScreen.brightBlue};
-//   left: -100%;
-// `;
-
 const defaultFormatter = string => string;
 
 const UnderlineField = (
