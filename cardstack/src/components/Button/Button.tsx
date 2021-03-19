@@ -76,6 +76,7 @@ export const Button = ({
               <Icon
                 color={disabled ? 'blueText' : 'black'}
                 marginRight={3}
+                iconSize="medium"
                 {...iconProps}
               />
             )}

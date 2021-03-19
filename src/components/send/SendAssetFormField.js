@@ -1,10 +1,9 @@
 import analytics from '@segment/analytics-react-native';
 import React, { useCallback } from 'react';
-import { useTheme } from '../../context/ThemeContext';
+
 import { UnderlineField } from '../fields';
 import { RowWithMargins } from '../layout';
-import { Text } from '../text';
-import { useDimensions } from '@rainbow-me/hooks';
+import { Text } from '@cardstack/components';
 
 export default function SendAssetFormField({
   autoFocus,
@@ -20,8 +19,6 @@ export default function SendAssetFormField({
   testID,
   ...props
 }) {
-  const { isTinyPhone } = useDimensions();
-  const { colors } = useTheme();
   const handlePressButton = useCallback(
     event => {
       analytics.track('Clicked "Max" in Send flow input');
@@ -52,9 +49,10 @@ export default function SendAssetFormField({
         value={value}
       />
       <Text
-        align="right"
-        color={colors.dark}
-        size={isTinyPhone || android ? 'bigger' : 'h3'}
+        fontSize={20}
+        fontWeight="700"
+        position="absolute"
+        textAlign="right"
       >
         {label.length > labelMaxLength
           ? label.substring(0, labelMaxLength)
