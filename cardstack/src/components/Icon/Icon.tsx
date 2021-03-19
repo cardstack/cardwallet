@@ -39,6 +39,8 @@ export const Icon = ({
   const sizeWithDefault = size || iconSizeToValue[iconSize];
 
   if (isCustomIcon) {
+    const CustomIcon = customIcons[name as CustomIconNames];
+
     return (
       <Container
         testID="custom-icon"
@@ -46,13 +48,20 @@ export const Icon = ({
         height={sizeWithDefault}
         width={sizeWithDefault}
       >
-        <SvgXml
+        {/* <SvgXml
           color={colorWithDefault}
           fill={colorWithDefault}
           stroke={colorWithDefault}
           width={sizeWithDefault}
           height={sizeWithDefault}
           xml={customIcons[name as CustomIconNames]}
+        /> */}
+        <CustomIcon
+          color={colorWithDefault}
+          fill={colorWithDefault}
+          stroke={colorWithDefault}
+          width={sizeWithDefault}
+          height={sizeWithDefault}
         />
       </Container>
     );
