@@ -152,12 +152,7 @@ const AddCashForm = ({
           width="100%"
         >
           <NumpadValue scale={scaleAnim} translateX={shakeAnim} value={value} />
-          <AddCashSelector
-            currencies={currencies}
-            initialCurrencyIndex={initialCurrencyIndex}
-            isWalletEthZero={isWalletEthZero}
-            onSelect={onCurrencyChange}
-          />
+          {/* prepaid card small view */}
         </ColumnWithMargins>
       </Centered>
       <ColumnWithMargins align="center" margin={isTallPhone ? 27 : 12}>

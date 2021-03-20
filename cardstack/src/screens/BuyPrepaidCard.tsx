@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { StatusBar } from 'react-native';
 import {
+  Button,
   CenteredContainer,
   Container,
   Text,
-  Button,
 } from '@cardstack/components';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
@@ -12,14 +12,14 @@ import Routes from '@rainbow-me/routes';
 const BuyPrepaidCard = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  const { replace } = useNavigation();
+  const { navigate } = useNavigation();
 
-  const onPress = useCallback(async () => {
-    replace(Routes.SWIPE_LAYOUT, {
-      params: { emptyWallet: true },
-      screen: Routes.WALLET_SCREEN,
+  const onPress = async (amount?: number) => {
+    navigate(Routes.ADD_CASH_FLOW, {
+      params: !isNaN(amount || 0) ? { amount } : null,
+      screen: Routes.ADD_CASH_SCREEN_NAVIGATOR,
     });
-  }, [replace]);
+  };
 
   return (
     <CenteredContainer
@@ -45,27 +45,15 @@ const BuyPrepaidCard = () => {
             justifyContent="space-between"
             width="100%"
           >
-            <Button
-              onPress={onPress}
-              variant="square"
-              borderColor="buttonSecondaryBorder"
-            >
-              $25
-            </Button>
-            <Button
-              onPress={onPress}
-              variant="square"
-              borderColor="buttonSecondaryBorder"
-            >
-              $50
-            </Button>
-            <Button
-              onPress={onPress}
-              variant="square"
-              borderColor="buttonSecondaryBorder"
-            >
-              $70
-            </Button>
+            {[25, 50, 75].map(amount => (
+              <Button
+                borderColor="buttonSecondaryBorder"
+                onPress={() => onPress(amount)}
+                variant="square"
+              >
+                ${amount}
+              </Button>
+            ))}
           </Container>
           <Button
             variant="blue"

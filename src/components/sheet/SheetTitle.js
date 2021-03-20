@@ -1,18 +1,8 @@
 import React from 'react';
-import { Text } from '../text';
+import { Text } from '@cardstack/components';
 
 const SheetTitle = props => {
-  const { colors } = useTheme();
-  return (
-    <Text
-      align="center"
-      color={colors.dark}
-      letterSpacing="roundedMedium"
-      size="large"
-      weight="bold"
-      {...props}
-    />
-  );
+  return <Text fontSize={18} fontWeight="700" textAlign="center" {...props} />;
 };
 
 export default SheetTitle;
