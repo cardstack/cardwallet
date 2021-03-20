@@ -6,7 +6,7 @@ import {
   TapGestureHandler,
 } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import { useMemoOne } from 'use-memo-one';
 import { useDimensions } from '@rainbow-me/hooks';
 

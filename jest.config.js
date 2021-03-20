@@ -20,13 +20,19 @@ module.exports = {
       statements: 100,
     },
   },
+  globals: {
+    ios: true,
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   preset: 'react-native',
-  setupFilesAfterEnv: ['<rootDir>/cardstack/test/jest-setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/cardstack/test/jest.setup.js'],
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
     '<rootDir>/cardstack/**/*.test.jsx',
     '<rootDir>/cardstack/**/*.test.tsx',
+  ],
+  transformIgnorePatterns: [
+    'node_modules/(?!(jest-)?react-native|react-redux|@sentry/.*|react-navigation-redux-helpers|@react-navigation/.*|@rainbow-me/react-native-payments)',
   ],
 };
