@@ -28,6 +28,3 @@ jobs:
     - name: Check TS
       run: |
         yarn ts-check
-    - name: Run tests
-      run: |
-        yarn test
