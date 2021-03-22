@@ -2,8 +2,6 @@ import { GANACHE_URL } from 'react-native-dotenv';
 import { web3SetHttpProvider } from '@rainbow-me/handlers/web3';
 import networkTypes from '@rainbow-me/networkTypes';
 
-const TAG = 'GanacheUtils';
-
 export const GanacheUtils = {
   connect: async (callback?: () => void): Promise<void> => {
     try {
