@@ -37,7 +37,9 @@
     "ci": "yarn lint && yarn ts-check && yarn test",
     "update-env": "curl -H 'Authorization: token '$GITHUB_TOKEN -H 'Accept: application/vnd.github.v3.raw' -O  -L https://api.github.com/repos/rainbow-me/rainbow-env/contents/dotenv && rm -f .env && mv dotenv .env",
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
-    "update-token-list": "./scripts/update-token-list.sh"
+    "update-token-list": "./scripts/update-token-list.sh",
+    "reset:cache": "yarn start --reset-cache",
+    "rebuild": "nvm use 14 && yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start"
   },
   "husky": {
     "hooks": {
@@ -255,6 +257,7 @@
     "@types/react-native-vector-icons": "^6.4.6",
     "@types/react-test-renderer": "^16.9.3",
     "@types/url-parse": "^1.4.3",
+    "@types/react-native-dotenv": "^0.2.0",
     "ast-parser": "^0.0.5",
     "audit-ci": "^3.1.1",
     "babel-core": "7.0.0-bridge.0",
