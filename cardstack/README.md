@@ -28,3 +28,6 @@ To run all of the checks run in CI:
 
 `yarn ci`
 
+## Problems?
+
+Please contact the authors of this repo for more help, or just take a look at our [Troubleshooting Guide.](./docs/troubleshooting.md')

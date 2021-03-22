@@ -39,7 +39,7 @@
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
     "update-token-list": "./scripts/update-token-list.sh",
     "reset:cache": "yarn start --reset-cache",
-    "rebuild": "nvm use 14 && yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start"
+    "rebuild": "source $HOME/.nvm/nvm.sh; yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start"
   },
   "husky": {
     "hooks": {
