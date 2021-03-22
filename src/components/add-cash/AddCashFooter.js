@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
+
 import { useTheme } from '../../context/ThemeContext';
 import { useDimensions } from '../../hooks';
 import { useNavigation } from '../../navigation/Navigation';
@@ -8,7 +9,6 @@ import { Centered, ColumnWithMargins, Row, RowWithMargins } from '../layout';
 import ApplePayButton from './ApplePayButton';
 import { Icon, Text } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
-import { position } from '@rainbow-me/styles';
 
 const AddCashFooter = ({ disabled, onDisabledPress, onSubmit, ...props }) => {
   const { isTallPhone, isTinyPhone } = useDimensions();
@@ -45,7 +45,7 @@ const AddCashFooter = ({ disabled, onDisabledPress, onSubmit, ...props }) => {
           <RowWithMargins align="center" margin={3}>
             <Text color="blueText">Works with most debit cards</Text>
             <Centered marginLeft={2} marginTop={0.5}>
-              <Icon color="blueText" name="help-circle" />
+              <Icon color="blueText" name="question-square" />
             </Centered>
           </RowWithMargins>
         </ButtonPressAnimation>
