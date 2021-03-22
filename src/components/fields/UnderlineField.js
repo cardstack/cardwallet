@@ -6,53 +6,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import styled from 'styled-components';
+
 import { useTheme } from '../../context/ThemeContext';
-import { Button } from '../buttons';
 import { ExchangeInput } from '../exchange';
-import { ColumnWithMargins, Row } from '../layout';
+import { Row } from '../layout';
+import { Button, Container } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
-import { position } from '@rainbow-me/styles';
-
-const Underline = styled.View`
-  ${position.cover};
-  background-color: ${({ theme: { colors } }) => colors.blueGreyDark};
-  opacity: 0.2;
-`;
-
-const UnderlineAnimated = styled(Animated.View)`
-  ${position.cover};
-  background-color: ${({ theme: { colors } }) => colors.sendScreen.brightBlue};
-  left: -100%;
-`;
-
-const UnderlineInput = styled(ExchangeInput).attrs(
-  ({ isTinyPhone, theme: { isDarkMode, colors } }) => ({
-    color: colors.dark,
-    disableTabularNums: true,
-    keyboardAppearance: isDarkMode ? 'dark' : 'light',
-    letterSpacing: 'roundedTightest',
-    size: isTinyPhone || android ? 'bigger' : 'h3',
-    weight: 'medium',
-  })
-)`
-  padding-right: 8;
-  ${android ? 'height: 40;' : ''}
-  ${android ? 'padding-bottom: 0;' : ''}
-  ${android ? 'padding-top: 0;' : ''}
-`;
-
-const UnderlineContainer = styled(Row)`
-  border-radius: 1px;
-  height: 2px;
-  overflow: hidden;
-  width: 100%;
-`;
 
 const defaultFormatter = string => string;
 
@@ -80,21 +39,9 @@ const UnderlineField = (
   const [isFocused, setIsFocused] = useState(autoFocus);
   const [value, setValue] = useState(valueProp);
   const [wasButtonPressed, setWasButtonPressed] = useState(false);
-  const underlineSize = useSharedValue(autoFocus ? 1 : 0);
 
   const ref = useRef();
   useImperativeHandle(forwardedRef, () => ref.current);
-
-  useEffect(() => {
-    if (isFocused) {
-      underlineSize.value = withTiming(1, {
-        duration: 150,
-      });
-    } else {
-      underlineSize.value = 0;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFocused]);
 
   const formattedValue = useMemo(() => format(String(value || '')), [
     format,
@@ -148,19 +95,14 @@ const UnderlineField = (
     }
   }, [forwardedRef, value, valueProp, wasButtonPressed]);
 
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: underlineSize.value }],
-    };
-  });
-
-  const { colors, isDarkMode } = useTheme();
+  const { isDarkMode } = useTheme();
 
   return (
-    <ColumnWithMargins flex={1} margin={8} {...props}>
+    <Container flex={1} {...props}>
       <Row align="center" justify="space-between">
-        <UnderlineInput
+        <ExchangeInput
           autoFocus={autoFocus}
+          color={isFocused ? 'black' : 'settingsGray'}
           isDarkMode={isDarkMode}
           isTinyPhone={isTinyPhone}
           keyboardType={keyboardType}
@@ -175,21 +117,30 @@ const UnderlineField = (
           value={formattedValue}
         />
         {buttonText && isFocused && (
-          <Button
-            backgroundColor={colors.sendScreen.brightBlue}
-            onPress={handleButtonPress}
-            size="small"
-            type="pill"
-          >
+          <Button onPress={handleButtonPress} variant="extraSmall">
             {buttonText}
           </Button>
         )}
       </Row>
-      <UnderlineContainer>
-        <Underline />
-        <UnderlineAnimated style={animatedStyles} />
-      </UnderlineContainer>
-    </ColumnWithMargins>
+      <Container
+        border-radius={1}
+        flexDirection="row"
+        height={isFocused ? 2 : 1}
+        overflow="hidden"
+        width="100%"
+      >
+        <Container
+          backgroundColor={
+            isFocused ? 'buttonPrimaryBackground' : 'underlineGray'
+          }
+          bottom={0}
+          left={0}
+          position="absolute"
+          right={0}
+          top={0}
+        />
+      </Container>
+    </Container>
   );
 };
 

@@ -1,30 +1,8 @@
 import { get } from 'lodash';
 import React from 'react';
-import styled from 'styled-components';
-import { Button } from '../buttons';
+
 import { Row } from '../layout';
-import { Text } from '../text';
-
-const FeeButton = styled(Button).attrs(({ theme: { colors } }) => ({
-  backgroundColor: colors.white,
-  borderColor: colors.dark,
-  borderWidth: 1,
-  opacity: 1,
-  showShadow: false,
-  size: 'small',
-  textProps: {
-    color: colors.alpha(colors.blueGreyDark, 0.6),
-  },
-  type: 'pill',
-}))``;
-
-const TimeButton = styled(Button).attrs(({ theme: { colors } }) => ({
-  backgroundColor: colors.blueGreyDark,
-  borderWidth: 1,
-  scaleTo: 0.96,
-  size: 'small',
-  type: 'pill',
-}))``;
+import { Container, Icon, Text, Touchable } from '@cardstack/components';
 
 export default function SendTransactionSpeed({
   gasPrice,
@@ -38,16 +16,24 @@ export default function SendTransactionSpeed({
   );
   const time = get(gasPrice, 'estimatedTime.display', '');
 
-  const { colors } = useTheme();
-
   return (
-    <Row justify="space-between">
-      <FeeButton onPress={onPressTransactionSpeed}>Fee: {fee}</FeeButton>
-      <TimeButton onPress={onPressTransactionSpeed}>
-        <Text color={colors.white} size="medium" weight="semibold">
-          􀐫 Arrives in ~ {time}
-        </Text>
-      </TimeButton>
+    <Row justify="center">
+      <Touchable marginRight={5} onPress={onPressTransactionSpeed}>
+        <Text variant="subText">Fee: {fee}</Text>
+      </Touchable>
+      <Touchable onPress={onPressTransactionSpeed}>
+        <Container alignItems="center" flexDirection="row">
+          <Text
+            color="black"
+            fontWeight="600"
+            marginRight={1}
+            variant="subText"
+          >
+            Arrives in ~ {time}
+          </Text>
+          <Icon color="settingsGray" iconSize="small" name="chevron-right" />
+        </Container>
+      </Touchable>
     </Row>
   );
 }

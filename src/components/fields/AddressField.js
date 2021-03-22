@@ -1,41 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import styled from 'styled-components';
+
 import { isHexString } from '../../handlers/web3';
 import { checkIsValidAddressOrDomain } from '../../helpers/validators';
-import { Input } from '../inputs';
 import { Row } from '../layout';
-import { Label } from '../text';
+import { Container, Input, Text, Touchable } from '@cardstack/components';
 import { useClipboard } from '@rainbow-me/hooks';
 import { abbreviations, addressUtils } from '@rainbow-me/utils';
-
-const AddressInput = styled(Input).attrs({
-  autoCapitalize: 'none',
-  autoCorrect: false,
-  keyboardType: android ? 'visible-password' : 'default',
-  maxLength: addressUtils.maxLength,
-  selectTextOnFocus: true,
-  size: 'bmedium',
-  spellCheck: false,
-  weight: 'semibold',
-})`
-  flex-grow: 1;
-  margin-top: ${android ? 6 : 1};
-  z-index: 1;
-`;
-
-const Placeholder = styled(Row)`
-  margin-left: ${android ? 3 : 0};
-  margin-top: ${android ? 12 : 0};
-  position: absolute;
-  top: 0;
-  z-index: 1;
-`;
-
-const PlaceholderText = styled(Label)`
-  color: ${({ theme: { colors } }) => colors.dark};
-  opacity: 0.45;
-`;
 
 const formatValue = value =>
   isHexString(value) && value.length === addressUtils.maxLength
@@ -46,7 +16,6 @@ const AddressField = (
   { address, autoFocus, name, onChange, onFocus, testID, ...props },
   ref
 ) => {
-  const { colors } = useTheme();
   const { clipboard, setClipboard } = useClipboard();
   const [inputValue, setInputValue] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -78,26 +47,40 @@ const AddressField = (
     }
   }, [address, inputValue, name]);
 
+  console.log('isValid', isValid);
+
   return (
     <Row flex={1}>
-      <AddressInput
+      <Input
         {...props}
+        autoCapitalize="none"
+        autoCorrect={false}
         autoFocus={autoFocus}
-        color={isValid ? colors.appleBlue : colors.blueGreyDark}
+        color={isValid ? 'settingsGray' : 'invalid'}
+        flexGrow={1}
+        fontSize={15}
+        fontWeight="600"
+        keyboardType={android ? 'visible-password' : 'default'}
+        maxLength={addressUtils.maxLength}
         onBlur={expandAbbreviatedClipboard}
         onChange={handleChange}
         onChangeText={setInputValue}
         onFocus={onFocus}
         ref={ref}
+        selectTextOnFocus
+        spellCheck={false}
         testID={testID}
         value={formatValue(inputValue)}
+        zIndex={1}
       />
       {!inputValue && (
-        <Placeholder>
-          <TouchableWithoutFeedback onPress={ref?.current?.focus}>
-            <PlaceholderText>ENS or Address (0x...)</PlaceholderText>
-          </TouchableWithoutFeedback>
-        </Placeholder>
+        <Container position="absolute" top={0} zIndex={1}>
+          <Touchable onPress={ref?.current?.focus}>
+            <Text color="grayText" fontSize={15} fontWeight="600">
+              Enter Address (0x...) or ENS
+            </Text>
+          </Touchable>
+        </Container>
       )}
     </Row>
   );

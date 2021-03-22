@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { Button, Container } from '@cardstack/components';
 import EditOptions from '@rainbow-me/helpers/editOptionTypes';
@@ -11,6 +11,7 @@ const AssetFooter = () => {
     currentAction,
     setHiddenCoins,
     setPinnedCoins,
+    clearSelectedCoins,
   } = useCoinListEditOptions();
   const buttonsDisabled = currentAction === EditOptions.none;
 
@@ -29,6 +30,12 @@ const AssetFooter = () => {
       LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
     );
   }, [setPinnedCoins]);
+
+  useEffect(() => {
+    return () => {
+      clearSelectedCoins();
+    };
+  }, [clearSelectedCoins]);
 
   if (!isCoinListEdited) {
     return null;

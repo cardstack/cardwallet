@@ -10,6 +10,7 @@ import { Icon } from '../icons';
 import { Row } from '../layout';
 import { SheetHandle as SheetHandleAndroid } from '../sheet';
 import { Label } from '../text';
+import { Text } from '@cardstack/components';
 import { useClipboard, useDimensions } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
@@ -138,7 +139,9 @@ export default function SendHeader({
     <Fragment>
       <SheetHandle />
       <AddressInputContainer isSmallPhone={isSmallPhone}>
-        <AddressFieldLabel>To:</AddressFieldLabel>
+        <Text fontSize={15} fontWeight="600" marginRight={2}>
+          To:
+        </Text>
         <AddressField
           address={recipient}
           autoFocus={!showAssetList}

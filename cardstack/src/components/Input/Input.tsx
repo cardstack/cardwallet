@@ -11,9 +11,12 @@ import {
   TypographyProps,
   border,
   BorderProps,
+  color,
+  ColorProps,
 } from '@shopify/restyle';
 
 import { TextInput, TextInputProps } from 'react-native';
+import TextInputMask from 'react-native-text-input-mask';
 
 import { Theme } from '../../theme';
 import { Icon, IconProps } from '../Icon';
@@ -24,12 +27,13 @@ type BaseInputProps = TextInputProps &
   SpacingProps<Theme> &
   TypographyProps<Theme> &
   BorderProps<Theme> &
+  ColorProps<Theme> &
   PositionProps<Theme>;
 
 const BasicInput = createRestyleComponent<BaseInputProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  [layout, spacing, position, typography, border],
+  [layout, spacing, position, typography, border, color],
   TextInput
 );
 
@@ -71,3 +75,10 @@ export const Input = React.forwardRef((props: InputProps, ref) => (
     )}
   </Container>
 ));
+
+export const InputMask = createRestyleComponent<BaseInputProps, Theme>(
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  [layout, spacing, position, typography, border, color],
+  TextInputMask
+);

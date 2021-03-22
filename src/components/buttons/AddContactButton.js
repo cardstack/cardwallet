@@ -1,13 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Transition, Transitioning } from 'react-native-reanimated';
 import { View } from 'react-primitives';
-import AddContactIcon from '../../assets/addContactIcon.png';
-import { useTheme } from '../../context/ThemeContext';
-import { ButtonPressAnimation } from '../animations';
-import { Icon } from '../icons';
-import Button from './Button';
-import { ImgixImage } from '@rainbow-me/images';
-import { neverRerender } from '@rainbow-me/utils';
+import { Button, Icon, Touchable } from '@cardstack/components';
 
 const duration = 200;
 const transition = (
@@ -40,43 +34,6 @@ const transition = (
   </Transition.Sequence>
 );
 
-const AddButton = neverRerender(({ onPress }) => {
-  const { colors } = useTheme();
-  return (
-    <Button
-      backgroundColor={colors.appleBlue}
-      onPress={onPress}
-      size="small"
-      testID="add-contact-button"
-      type="pill"
-    >
-      <ImgixImage
-        source={AddContactIcon}
-        style={{
-          height: 14.7,
-          margin: 1.525,
-          width: 19,
-        }}
-      />
-    </Button>
-  );
-});
-
-const EditButton = neverRerender(({ onPress }) => (
-  <ButtonPressAnimation
-    activeOpacity={0.2}
-    onPress={onPress}
-    style={{
-      height: 30,
-      justifyContent: 'center',
-      paddingRight: 4,
-    }}
-    testID="edit-contact-button"
-  >
-    <Icon name="threeDots" />
-  </ButtonPressAnimation>
-));
-
 const AddContactButton = ({ edit, onPress }) => {
   const addButtonRef = useRef();
   const editButtonRef = useRef();
@@ -90,11 +47,15 @@ const AddContactButton = ({ edit, onPress }) => {
     <View>
       {edit ? (
         <Transitioning.View ref={editButtonRef} transition={transition}>
-          <EditButton onPress={onPress} />
+          <Touchable onPress={onPress}>
+            <Icon color="black" name="more-horizontal" />
+          </Touchable>
         </Transitioning.View>
       ) : (
         <Transitioning.View ref={addButtonRef} transition={transition}>
-          <AddButton onPress={onPress} />
+          <Button onPress={onPress} variant="extraSmallDark">
+            Add
+          </Button>
         </Transitioning.View>
       )}
     </View>

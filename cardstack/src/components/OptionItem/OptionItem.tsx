@@ -13,6 +13,7 @@ interface OptionItemProps extends ContainerProps {
   textProps: TextProps;
   borderIcon?: boolean;
   horizontalSpacing?: number;
+  disabled?: boolean;
 }
 
 export const OptionItem = ({
@@ -23,11 +24,13 @@ export const OptionItem = ({
   textProps,
   borderIcon,
   horizontalSpacing = 2,
+  disabled,
   ...props
 }: OptionItemProps) => {
   return (
     <Touchable
       alignItems="center"
+      disabled={disabled}
       flexDirection="row"
       left={20}
       onPress={onPress}

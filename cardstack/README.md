@@ -7,3 +7,24 @@ Anything that goes in this folder will automatically be added to the next phase 
 [This phase of the project is slated to begin in Q2 or Q3 of 2021]
 
 _Please check back later._
+
+## CI
+
+GitHub actions are kicked off on every push to a branch (besides for `develop`) to verify that tests, coverage, and lint is passing. This check must pass before a PR can be merged.
+
+To run tests and coverage:
+
+`yarn test`
+
+To run lint:
+
+`yarn lint`
+
+To run TypeScript:
+
+`yarn ts-check`
+
+To run all of the checks run in CI:
+
+`yarn ci`
+
