@@ -119,7 +119,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
           textToCopy={address}
           tooltipText="Copy Address"
         >
-          <AddressAbbreviation address={address} />
+          <TruncatedAddress address={address} />
         </CopyTooltip>
         <Centered paddingVertical={19} width={93}>
           <Divider inset={false} />

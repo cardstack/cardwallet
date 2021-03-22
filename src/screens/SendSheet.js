@@ -29,6 +29,7 @@ import {
 import { checkIsValidAddressOrDomain } from '../helpers/validators';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
+import { colors } from '@cardstack/theme';
 import {
   useAccountAssets,
   useAccountSettings,
