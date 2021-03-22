@@ -1,5 +1,6 @@
 export const palette = {
   black: '#000000',
+  blueDarkest: '#393642',
   blueDark: '#413E4E',
   blueText: '#6B6A80',
   blueLight: '#00EBE5',
@@ -43,6 +44,7 @@ export const colors = {
   transparent: palette.transparent,
   white: palette.white,
   underlineGray: palette.grayMediumLight,
+  spendableBalance: palette.blueDarkest,
 };
 
 export type ColorTypes = keyof typeof colors;

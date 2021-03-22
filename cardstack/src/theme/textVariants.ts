@@ -7,8 +7,7 @@ export const textVariants = {
   defaults: baseText,
   body: baseText,
   shadowRoboto: {
-    letterSpacing: 0.5,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'RobotoMono-Regular',
     fontSize: 18,
     textShadowColor: 'white',
     textShadowOffset: { width: 0, height: 1 },

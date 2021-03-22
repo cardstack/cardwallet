@@ -3,6 +3,7 @@ import React from 'react';
 import { text, number } from '@storybook/addon-knobs';
 
 import { PrepaidCard } from './PrepaidCard';
+import { SmallPrepaidCard } from './SmallPrepaidCard';
 
 const exampleTransaction1 = {
   from: '0xAa262652e7459693fdA194b33d288b487908E520',
@@ -52,30 +53,39 @@ const exampleTransaction2 = {
   title: 'Sent',
 };
 
-storiesOf('Prepaid Card', module).add('Default', () => {
-  const recentActivityData = [exampleTransaction1, exampleTransaction2];
+storiesOf('Prepaid Card', module)
+  .add('Default', () => {
+    const recentActivityData = [exampleTransaction1, exampleTransaction2];
 
-  const recentActivity = [
-    {
-      title: 'Yesterday',
-      data: recentActivityData,
-    },
-    {
-      title: 'This Month',
-      data: recentActivityData,
-    },
-    {
-      title: 'February 2021',
-      data: recentActivityData,
-    },
-  ];
+    const recentActivity = [
+      {
+        title: 'Yesterday',
+        data: recentActivityData,
+      },
+      {
+        title: 'This Month',
+        data: recentActivityData,
+      },
+      {
+        title: 'February 2021',
+        data: recentActivityData,
+      },
+    ];
 
-  return (
-    <PrepaidCard
-      id={text('Identifier', '0xbeA3123457eF8')}
-      issuer={text('Issuer', 'Cardstack')}
-      spendableBalance={number('Spendable Balance (xDai)', 2500)}
-      recentActivity={recentActivity}
-    />
-  );
-});
+    return (
+      <PrepaidCard
+        id={text('Identifier', '0xbeA3123457eF8')}
+        issuer={text('Issuer', 'Cardstack')}
+        spendableBalance={number('Spendable Balance (xDai)', 2500)}
+        recentActivity={recentActivity}
+      />
+    );
+  })
+  .add('Small', () => {
+    return (
+      <SmallPrepaidCard
+        id={text('Identifier', '0xbeA3123457eF8')}
+        spendableBalance={number('Spendable Balance (xDai)', 2500)}
+      />
+    );
+  });

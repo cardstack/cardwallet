@@ -3,13 +3,14 @@ import analytics from '@segment/analytics-react-native';
 import { isEmpty } from 'lodash';
 import React, { Fragment, useCallback, useState } from 'react';
 import { Clock } from 'react-native-reanimated';
+
 import { useDimensions, useIsWalletEthZero } from '../../hooks';
 import { Alert } from '../alerts';
 import { runSpring } from '../animations';
 import { Centered, ColumnWithMargins } from '../layout';
 import { Numpad, NumpadValue } from '../numpad';
 import AddCashFooter from './AddCashFooter';
-import AddCashSelector from './AddCashSelector';
+import { Container, SmallPrepaidCard } from '@cardstack/components';
 import { DAI_ADDRESS, ETH_ADDRESS } from '@rainbow-me/references';
 import { padding } from '@rainbow-me/styles';
 
@@ -152,7 +153,12 @@ const AddCashForm = ({
           width="100%"
         >
           <NumpadValue scale={scaleAnim} translateX={shakeAnim} value={value} />
-          {/* prepaid card small view */}
+          <Container marginTop={8} width="100%">
+            <SmallPrepaidCard
+              id="0xbeA3123457eF8"
+              spendableBalance={Number(value) * 100}
+            />
+          </Container>
         </ColumnWithMargins>
       </Centered>
       <ColumnWithMargins align="center" margin={isTallPhone ? 27 : 12}>
