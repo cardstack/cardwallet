@@ -1,17 +1,7 @@
 import React from 'react';
-import { Image } from 'react-native';
-import SVG, {
-  Defs,
-  G,
-  LinearGradient,
-  Path,
-  Rect,
-  Stop,
-} from 'react-native-svg';
-
-import logo from '../../assets/cardstackLogoTransparent.png';
-import { getDollarsFromDai, numberWithCommas } from '@cardstack/utils';
+import SVG, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Container, Text } from '@cardstack/components';
+import { getDollarsFromDai, numberWithCommas } from '@cardstack/utils';
 
 interface SmallPrepaidCardProps {
   /** unique identifier, displayed in top right corner of card */
