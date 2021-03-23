@@ -5,6 +5,7 @@ export const customIcons = {
   'info-white': require('./info-white').default,
   'more-circle': require('./more-circle').default,
   'qr-code': require('./qr-code').default,
+  'question-square': require('./question-square').default,
   'refresh-2': require('./refresh-2').default,
   cardstack: require('./cardstack').default,
   circle: require('./circle').default,

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useCallback, useMemo, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
@@ -100,7 +101,7 @@ export default function AddCashSheet() {
             margin={4}
             paddingTop={isNativeStackAvailable ? 7 : 5}
           >
-            <SheetTitle>Add Cash</SheetTitle>
+            <SheetTitle>Add Funds</SheetTitle>
             {!isPaymentComplete && (
               <SheetSubtitleCycler
                 animatedValue={errorAnimation}

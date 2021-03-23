@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
-import { mixColor, useTimingTransition } from 'react-native-redash';
+import { useTimingTransition } from 'react-native-redash';
+
 import { useInterval, useTimeout, useTransformOrigin } from '../../hooks';
 import { magicMemo } from '../../utils';
-
 import { interpolate } from '../animations';
 import { Centered } from '../layout';
-import { Text } from '../text';
+import { Text } from '@cardstack/components';
 import { position } from '@rainbow-me/styles';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -22,26 +22,14 @@ const SheetSubtitleCyclerItem = ({ error, selected, subtitle }) => {
     ease,
   });
 
-  const textColorAnimation = useTimingTransition(error, {
-    duration: error ? 50 : 200,
-    ease,
-  });
-
-  const { colors } = useTheme();
-
   return (
     <Animated.View {...position.coverAsObject} style={{ opacity }}>
       <AnimatedText
-        align="center"
-        color={mixColor(
-          textColorAnimation,
-          colors.blueGreyDark50,
-          colors.brightRed
-        )}
-        letterSpacing="uppercase"
-        size="smedium"
-        uppercase
-        weight="semibold"
+        color="grayText"
+        fontSize={13}
+        fontWeight="600"
+        textAlign="center"
+        textTransform="uppercase"
       >
         {subtitle}
       </AnimatedText>

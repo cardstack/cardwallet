@@ -1,3 +1,4 @@
+import { BuyPrepaidCard } from '@cardstack/screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { omit } from 'lodash';
@@ -123,6 +124,7 @@ function MainNavigator() {
     >
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
       <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
+      <Stack.Screen component={BuyPrepaidCard} name={Routes.BUY_PREPAID_CARD} />
       <Stack.Screen
         component={AvatarBuilder}
         name={Routes.AVATAR_BUILDER}

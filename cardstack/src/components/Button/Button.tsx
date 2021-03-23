@@ -6,6 +6,8 @@ import {
   spacing,
   SpacingProps,
   VariantProps,
+  border,
+  BorderProps,
 } from '@shopify/restyle';
 import { ActivityIndicator } from 'react-native';
 import React, { ReactNode } from 'react';
@@ -19,6 +21,7 @@ import { Theme } from '@cardstack/theme';
 
 type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
   LayoutProps<Theme> &
+  BorderProps<Theme> &
   SpacingProps<Theme>;
 interface ButtonProps extends RestyleProps {
   children: ReactNode;
@@ -34,7 +37,9 @@ const VariantRestyleComponent = createVariant({
 });
 
 const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
-  [layout, spacing, VariantRestyleComponent],
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  [layout, spacing, border, VariantRestyleComponent],
   ButtonPressAnimation
 );
 

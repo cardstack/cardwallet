@@ -6,6 +6,7 @@ const Routes = {
   AVATAR_BUILDER: 'AvatarBuilder',
   BACKUP_SCREEN: 'BackupScreen',
   BACKUP_SHEET: 'BackupSheet',
+  BUY_PREPAID_CARD: 'BuyPrepaidCard',
   CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
   CHANGE_WALLET_SHEET_NAVIGATOR: 'ChangeWalletSheetNavigator',
   CONFIRM_REQUEST: 'ConfirmRequest',

@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { useDimensions } from '../../hooks';
 import { ButtonPressAnimation } from '../animations';
-import { Icon } from '../icons';
 import { Centered, Column, Row } from '../layout';
-import { Text } from '../text';
+import { Icon, Text } from '@cardstack/components';
 
 const KeyboardButtonContent = styled(Centered)`
   height: ${({ height }) => height};
@@ -51,12 +50,12 @@ const Numpad = ({ decimal = true, onPress, width }) => {
         onPress={() => onPress(symbol.toString())}
         testID={`numpad-button-${symbol}`}
       >
-        <Text align="center" color={keyColor} size={44} weight="bold">
+        <Text fontSize={44} fontWeight="600" textAlign="center">
           {symbol}
         </Text>
       </KeyboardButton>
     ),
-    [keyColor, onPress]
+    [onPress]
   );
 
   const renderRow = useCallback(
@@ -73,7 +72,7 @@ const Numpad = ({ decimal = true, onPress, width }) => {
         {decimal ? renderCell('.') : <Column width={80} />}
         {renderCell(0)}
         <KeyboardButton onPress={() => onPress('back')}>
-          <Icon align="center" color={keyColor} name="backspace" width={40} />
+          <Icon color="black" name="delete" size={55} textAlign="center" />
         </KeyboardButton>
       </KeyboardRow>
     </Centered>
