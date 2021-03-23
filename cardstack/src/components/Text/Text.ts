@@ -1,10 +1,24 @@
-import { createText, TextProps as ShopifyTextProps } from '@shopify/restyle';
-
-import { Theme } from '../../theme';
+import {
+  createRestyleComponent,
+  createText,
+  TextProps as ShopifyTextProps,
+} from '@shopify/restyle';
+import { ReactNode } from 'react';
+import { Theme, CustomTextProps, customText } from '../../theme';
 
 /**
  * Renders a Text component with @shopify/restyle functionality.
  */
-export type TextProps = ShopifyTextProps<Theme>;
+export type TextProps = ShopifyTextProps<Theme> &
+  CustomTextProps<Theme> & {
+    children?: ReactNode;
+  };
 
-export const Text = createText<Theme>();
+const BaseText = createText<Theme>();
+
+export const Text = createRestyleComponent<TextProps, Theme>(
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  [customText],
+  BaseText
+);
