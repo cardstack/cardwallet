@@ -86,14 +86,14 @@ const GradientBackground = () => (
 const Top = ({ issuer, id }: { issuer: string; id: string }) => (
   <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
     <Container width="100%">
-      <Text fontSize={11}>Issued by</Text>
+      <Text size="xxs">Issued by</Text>
     </Container>
     <Container
       flexDirection="row"
       justifyContent="space-between"
       alignItems="center"
     >
-      <Text fontSize={13} fontWeight="700">
+      <Text size="xs" weight="extraBold">
         {issuer}
       </Text>
       <Container flexDirection="row">
