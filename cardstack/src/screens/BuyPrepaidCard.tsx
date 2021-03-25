@@ -14,10 +14,16 @@ const BuyPrepaidCard = () => {
   // @ts-ignore
   const { navigate } = useNavigation();
 
-  const onPress = async (amount?: number) => {
+  const onPress = (amount?: number) => {
     navigate(Routes.ADD_CASH_FLOW, {
       params: !isNaN(amount || 0) ? { amount } : null,
       screen: Routes.ADD_CASH_SCREEN_NAVIGATOR,
+    });
+  };
+
+  const onSkip = () => {
+    navigate(Routes.SWIPE_LAYOUT, {
+      screen: Routes.WALLET_SCREEN,
     });
   };
 
@@ -64,6 +70,7 @@ const BuyPrepaidCard = () => {
             Custom Amount
           </Button>
         </Container>
+        <Button onPress={onSkip}>Skip</Button>
       </Container>
     </CenteredContainer>
   );
