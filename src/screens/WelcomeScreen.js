@@ -7,7 +7,7 @@ import {
 } from '../handlers/cloudBackup';
 import { cloudPlatform } from '../utils/platform';
 import { Button, CenteredContainer, Container } from '@cardstack/components';
-import { useHideSplashScreen } from '@rainbow-me/hooks';
+import { useHideSplashScreen, useInitializeWallet } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
@@ -16,6 +16,8 @@ export default function WelcomeScreen() {
   const { navigate } = useNavigation();
   const hideSplashScreen = useHideSplashScreen();
   const [userData, setUserData] = useState(null);
+  const initializeWallet = useInitializeWallet();
+  const [creatingWallet, setCreatingWallet] = useState(false);
 
   useEffect(() => {
     const initialize = async () => {
@@ -37,8 +39,14 @@ export default function WelcomeScreen() {
   }, [hideSplashScreen]);
 
   const onCreateWallet = useCallback(async () => {
+    setCreatingWallet(true);
+
+    await initializeWallet();
+
     navigate(Routes.BUY_PREPAID_CARD);
-  }, [navigate]);
+
+    setCreatingWallet(false);
+  }, [navigate, initializeWallet]);
 
   const showRestoreSheet = useCallback(() => {
     navigate(Routes.RESTORE_SHEET, {
@@ -69,12 +77,16 @@ export default function WelcomeScreen() {
           />
         </Container>
       </CenteredContainer>
-      <Container paddingBottom="24">
-        <Button onPress={onCreateWallet} testID="new-wallet-button">
+      <Container height={118} justifyContent="space-between" marginBottom="24">
+        <Button
+          disabled={creatingWallet}
+          onPress={onCreateWallet}
+          testID="new-wallet-button"
+        >
           Create a new account
         </Button>
         <Button
-          marginTop={5}
+          disabled={creatingWallet}
           onPress={showRestoreSheet}
           testID="already-have-wallet-button"
           variant="blue"
