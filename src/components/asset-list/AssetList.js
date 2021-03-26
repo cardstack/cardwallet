@@ -1,11 +1,14 @@
+import { fetchOwnersByAddress, usePrepaidCards } from '@cardstack/services';
 import lang from 'i18n-js';
 import React from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
+import { useQuery } from 'react-query';
 import { magicMemo } from '../../utils';
 import { FabWrapperBottomPosition, FloatingActionButtonSize } from '../fab';
 import { ListFooter } from '../list';
 import EmptyAssetList from './EmptyAssetList';
 import RecyclerAssetList from './RecyclerAssetList';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 const FabSizeWithPadding =
   FloatingActionButtonSize + FabWrapperBottomPosition * 2;
@@ -21,6 +24,10 @@ const AssetList = ({
   ...props
 }) => {
   const insets = useSafeArea();
+  const { accountAddress } = useAccountSettings();
+  const prepaidCards = usePrepaidCards(accountAddress);
+
+  console.log('prepaidCards', prepaidCards);
 
   return isEmpty ? (
     <EmptyAssetList
