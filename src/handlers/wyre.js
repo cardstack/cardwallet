@@ -160,7 +160,8 @@ export const getWalletOrderQuotation = async (
   };
   const baseUrl = getBaseUrl(network);
   try {
-    const url = `${baseUrl}/v3/orders/quote/partner`;
+    const timestamp = Date.now();
+    const url = `${baseUrl}/v3/orders/quote/partner?timestamp=${timestamp}`;
     const config = {
       headers: getAuthHeaders(network, url, JSON.stringify(data)),
     };
