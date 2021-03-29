@@ -1,96 +1,128 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
 default_platform(:ios)
 
 platform :ios do
-  desc "Refresh dSYMs"
-  lane :refresh_dsyms do
-    upload_symbols_to_crashlytics(
-      dsym_path: './Rainbow.app.dSYM.zip'
-    )
-    sentry_upload_dsym(
-      dsym_path: './Rainbow.app.dSYM.zip'
-    )
-
-    version_from_plist = get_version_number(target: "Rainbow")
-
-    release_version = "me.rainbow-#{version_from_plist}"
-
-    dist = (latest_testflight_build_number(version: get_version_number(target: "Rainbow")) + 1).to_s
-
-    sentry_create_release(
-      finalize: true, # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
-      version: release_version
-    )
-    sentry_upload_sourcemap(
-      sourcemap: './main.jsbundle', # file to upload
-      rewrite: true,
-      version: release_version,
-      dist: dist
-    )
-    sentry_upload_sourcemap(
-      sourcemap: './main.jsbundle.map', # sourcemap to upload
-      rewrite: true,
-      version: release_version,
-      dist: dist
-    )
-    clean_build_artifacts
+  before_all do
+    setup_circle_ci
+    read_fastlane_session
   end
 
-  desc "Submit a new Beta build to Apple TestFlight"
-  lane :beta do
-    increment_build_number({
-      build_number: latest_testflight_build_number(version: get_version_number(target: "Rainbow")) + 1
-    })
+  ########################################################################
+  # Adhoc Lane
+  ########################################################################
+  desc "Ad-hoc build"
+  lane :adhoc do |options|
+    ########################
+    # Set Xcode Version
+    ########################
+    xcversion(version: "10.1")
+    
+    ########################
+    # Pull certs & profiles
+    ########################
+    sync_code_signing(type: "appstore")
+    sync_code_signing(type: "adhoc", force_for_new_devices: true)
 
-    update_info_plist(
-      plist_path: "Rainbow/Info.plist",
-      display_name: "Rainbow"
+    ########################
+    # Build the app
+    ########################
+    increment_build_number(build_number: options[:build_number])
+
+    # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
+    build_ios_app(
+      export_method: "ad-hoc",
+      include_bitcode: true
     )
-    update_app_identifier(
-      app_identifier: "me.rainbow",
-      xcodeproj: "Rainbow.xcodeproj",
-      plist_path: "Rainbow/Info.plist",
-    )
-    match(
-      force: true,
-      type: "appstore",
-      app_identifier: "me.rainbow",
-      git_url: "git@github.com:rainbow-me/rainbow-code-signing.git"
-    )
-    automatic_code_signing(
-      use_automatic_signing: false
-    )
-    gym(
-      workspace: "Rainbow.xcworkspace",
-      scheme: "Rainbow",
-      include_symbols: true,
-      configuration: "Release",
+
+    ########################
+    # Upload to App Center
+    ########################
+    distribute = options[:distribute].to_s != 'false'
+
+
+    if distribute
+      appcenter_upload(
+        ipa: "./#{ENV['GYM_OUTPUT_NAME']}.ipa",
+        dsym: "./#{ENV['GYM_OUTPUT_NAME']}.app.dSYM.zip"
+      )
+
+      if ENV['SLACK_URL']
+        group = ENV['APPCENTER_DISTRIBUTE_GROUP'] || 'Collaborators'
+        # slack(message: "Successfully distributed *iOS* build *#{options[:build_number]}* to the *#{group}* group on App Center")
+      end
+    end
+  end
+
+  ########################################################################
+  # Beta Lane
+  ########################################################################
+  desc "Beta build"
+  lane :beta do |options|
+    ########################
+    # Set Xcode Version
+    ########################
+    xcversion(version: "10.1")
+
+    ########################
+    # Pull certs & profiles
+    ########################
+    sync_code_signing(type: "appstore")
+
+    ########################
+    # Build the app
+    ########################
+    increment_build_number(build_number: options[:build_number])
+
+    # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
+    build_ios_app(
       export_method: "app-store",
+      include_bitcode: true
     )
 
-    # api_key = app_store_connect_api_key(
-    #   key_id: "B6RRSJG6H6",
-    #   issuer_id: "95830311-9e99-47b0-95ac-d628a3e4215e",
-    #   key_filepath: "fastlane/AuthKey_B6RRSJG6H6.p8",
-    #   duration: 1200, # optional
-    #   in_house: false, # optional but may be required if using match/sigh
-    # )
+    ########################
+    # Upload to TestFlight
+    ########################
+    upload_to_testflight
+  end
 
-    pilot(
-      app_identifier: "me.rainbow",
-      skip_waiting_for_build_processing: true,
-      # api_key: api_key
+  desc "Production build"
+  lane :production do |options|
+    ########################
+    # Set Xcode Version
+    ########################
+    xcversion(version: "10.1")
+    
+    ########################
+    # Pull certs & profiles
+    ########################
+    sync_code_signing(type: "appstore")
+
+    ########################
+    # Build the app
+    ########################
+    increment_build_number(build_number: options[:build_number])
+
+    # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
+    build_ios_app(
+      export_method: "app-store",
+      include_bitcode: true
     )
+
+    ########################
+    # Upload to AppStore Connect
+    ########################
+    upload_to_app_store(
+      force: true,
+      submit_for_review: false,
+      automatic_release: false
+    )
+  end
+
+  error do |lane, exception|
+    if ENV['SLACK_URL']
+      # slack(
+      #   message: exception.message,
+      #   success: false
+      # )
+    end
   end
 end

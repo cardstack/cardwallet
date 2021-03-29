@@ -1,0 +1,171 @@
+desc "Download encrypted vars"
+lane :sync_vars do |options|
+  key = ENV[options[:key]] || options[:key]
+  path = ENV[options[:path]] || options[:path]
+  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
+
+  if (UI.confirm("This will overwrite your local <root>/#{path} file with the remote vars stored in #{contexts_repo_url} under the key #{key}. Proceed?"))
+    vars = cryptex(
+      type: "export_env",
+      key: key
+    )
+
+    open("../#{path}", 'w') do |f|
+      vars.each {|var_key, var_value| f.puts "#{var_key}=#{var_value}" }
+    end
+  end
+end
+
+desc "Upload encrypted vars"
+lane :publish_vars do |options|
+  key = ENV[options[:key]] || options[:key]
+  path = ENV[options[:path]] || options[:path]
+  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
+
+  if (UI.confirm("This will overwrite your remote vars stored in #{contexts_repo_url} under the key #{key} with your local <root>/#{path} file. Proceed?"))
+    vars = Dotenv.parse("../#{path}");
+
+    cryptex(
+      type: "import_env",
+      key: key,
+      hash: vars
+    )
+  end
+end
+
+desc "Upload encrypted file"
+lane :publish_file do |options|
+  key = ENV[options[:key]] || options[:key]
+  path = ENV[options[:path]] || options[:path]
+  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
+
+  if (UI.confirm("This will overwrite your remote file stored in #{contexts_repo_url} under the key #{key} with your local <root>/#{path} file. Proceed?"))
+    cryptex(
+      type: "import",
+      in: path,
+      key: key
+    )
+  end
+end
+
+
+desc "Download encrypted file"
+lane :sync_file do |options|
+  key = ENV[options[:key]] || options[:key]
+  path = ENV[options[:path]] || options[:path]
+  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
+
+  if (UI.confirm("This will overwrite your local <root>/#{path} file with the remote file stored in #{contexts_repo_url} under the key #{key}. Proceed?"))
+    cryptex(
+      type: "export",
+      out: path,
+      key: key
+    )
+  end
+end
+
+
+desc "Sync google services configuration files"
+lane :sync_google_services_files do
+    sync_file(
+      key: 'android_google_services',
+      path: './google-services.json'
+    )
+
+    sync_file(
+      key: 'ios_google_services',
+      path: './GoogleService-Info.plist'
+    )
+end
+
+desc "Publish google services configuration files"
+lane :publish_google_services_files do
+    publish_file(
+      key: 'android_google_services',
+      path: './google-services.json'
+    )
+
+    publish_file(
+      key: 'ios_google_services',
+      path: './GoogleService-Info.plist'
+    )
+end
+
+desc "Sync google play credentials file"
+lane :sync_google_play_credentials do
+    sync_file(
+      key: 'google_play_credentials',
+      path: './fastlane/android/signing/google-play-credentials.json'
+    )
+end
+
+desc "Publish google play credentials file"
+lane :publish_google_play_credentials do
+    publish_file(
+      key: 'google_play_credentials',
+      path: './fastlane/android/signing/google-play-credentials.json'
+    )
+end
+
+desc "Create a standalone Android build"
+lane :build_android_standalone do |options|
+  ENV['EXPO_ANDROID_KEY_PASSWORD'] = ENV['ANDROID_KEYSTORE_PASSWORD']
+  ENV['EXPO_ANDROID_KEYSTORE_PASSWORD'] = ENV['ANDROID_KEYSTORE_PASSWORD']
+  
+  sh(
+    "turtle build:android \
+    --type apk \
+    --keystore-path ../#{ENV['ANDROID_KEYSTORE_PATH']} \
+    --keystore-alias #{ENV['ANDROID_KEYSTORE_ALIAS']} \
+    --output ./fastlane/android/builds/purzona.apk"
+  )
+end
+
+desc "Create a standalone IOS build"
+lane :build_ios_standalone do |options|
+  build_type = options[:build_type] || 'archive'
+  build_type_ext = options[:build_type] === 'simulator' ? 'tar.gz' : 'ipa'
+
+  sh(
+    "turtle build:ios \
+    --type #{build_type} \
+    --team-id #{ENV['FASTLANE_TEAM_ID']} \
+    --dist-p12-path ./ios/signing/W8WR48RYD4.p12 \
+    --provisioning-profile-path ./ios/signing/AppStore_com.purzona.client.mobileprovision \
+    --output ./fastlane/ios/builds/purzona.#{build_type_ext}"
+  )
+end
+
+desc "Download IOS distribution certificates and profiles"
+lane :sync_ios_signing do
+  sh(
+    'fastlane match appstore \
+    --readonly \
+    --output_path ./ios/signing'
+  )
+end
+
+desc "Upload Android build"
+lane :upload_android_build do
+  Dir.chdir("..") do
+    sh(
+      "expo upload:android \
+      --path ./fastlane/android/builds/purzona.apk \
+      --key ./fastlane/android/signing/google-play-credentials.json \
+      --release-status draft"
+    )
+  end
+end
+
+desc "Upload IOS build"
+lane :upload_ios_build do
+  Dir.chdir("..") do
+    sh(
+      "yes | expo upload:ios \
+      --config ./app.json \
+      --path ./fastlane/ios/builds/purzona.ipa \
+      --app-name Purzona \
+      --sku 0001"
+    )
+  end
+end
