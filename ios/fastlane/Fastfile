@@ -13,39 +13,6 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Refresh dSYMs"
-  lane :refresh_dsyms do
-    upload_symbols_to_crashlytics(
-      dsym_path: './Rainbow.app.dSYM.zip'
-    )
-    sentry_upload_dsym(
-      dsym_path: './Rainbow.app.dSYM.zip'
-    )
-
-    version_from_plist = get_version_number(target: "Rainbow")
-
-    release_version = "me.rainbow-#{version_from_plist}"
-
-    dist = (latest_testflight_build_number(version: get_version_number(target: "Rainbow")) + 1).to_s
-
-    sentry_create_release(
-      finalize: true, # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
-      version: release_version
-    )
-    sentry_upload_sourcemap(
-      sourcemap: './main.jsbundle', # file to upload
-      rewrite: true,
-      version: release_version,
-      dist: dist
-    )
-    sentry_upload_sourcemap(
-      sourcemap: './main.jsbundle.map', # sourcemap to upload
-      rewrite: true,
-      version: release_version,
-      dist: dist
-    )
-    clean_build_artifacts
-  end
 
   desc "Submit a new Beta build to Apple TestFlight"
   lane :beta do
@@ -58,14 +25,14 @@ platform :ios do
       display_name: "Rainbow"
     )
     update_app_identifier(
-      app_identifier: "me.rainbow",
+      app_identifier: "com.cardstack.cardpayapp",
       xcodeproj: "Rainbow.xcodeproj",
       plist_path: "Rainbow/Info.plist",
     )
     match(
       force: true,
       type: "appstore",
-      app_identifier: "me.rainbow",
+      app_identifier: "com.cardstack.cardpayapp",
       git_url: "git@github.com:rainbow-me/rainbow-code-signing.git"
     )
     automatic_code_signing(
@@ -88,7 +55,7 @@ platform :ios do
     # )
 
     pilot(
-      app_identifier: "me.rainbow",
+      app_identifier: "com.cardstack.cardpayapp",
       skip_waiting_for_build_processing: true,
       # api_key: api_key
     )

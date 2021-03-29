@@ -1,4 +1,4 @@
-app_identifier("me.rainbow") # The bundle identifier of your app
+app_identifier("com.cardstack.cardpayapp") # The bundle identifier of your app
 
 itc_team_id("119997837") # App Store Connect Team ID
 
