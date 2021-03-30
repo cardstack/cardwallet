@@ -15,71 +15,71 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
-### sync_vars
+### publish_android_keystore
 ```
-fastlane sync_vars
+fastlane publish_android_keystore
 ```
-Download encrypted vars
-### publish_vars
+Upload encrypted android release keystore
+### sync_foo
 ```
-fastlane publish_vars
+fastlane sync_foo
 ```
-Upload encrypted vars
-### publish_file
+Download foo
+### sync_android_keystore
 ```
-fastlane publish_file
+fastlane sync_android_keystore
 ```
-Upload encrypted file
-### sync_file
+Download encrypted android release keystore
+### sync_app_vars
 ```
-fastlane sync_file
+fastlane sync_app_vars
 ```
-Download encrypted file
-### sync_google_services_files
+Download encrypted base app vars
+### publish_app_vars
 ```
-fastlane sync_google_services_files
+fastlane publish_app_vars
 ```
-Sync google services configuration files
-### publish_google_services_files
+Upload encrypted base app vars
+### sync_alpha_app_vars
 ```
-fastlane publish_google_services_files
+fastlane sync_alpha_app_vars
 ```
-Publish google services configuration files
-### sync_google_play_credentials
+Download encrypted alpha app vars
+### publish_alpha_app_vars
 ```
-fastlane sync_google_play_credentials
+fastlane publish_alpha_app_vars
 ```
-Sync google play credentials file
+Upload encrypted alpha app vars
+### sync_beta_app_vars
+```
+fastlane sync_beta_app_vars
+```
+Download encrypted beta app vars
+### publish_beta_app_vars
+```
+fastlane publish_beta_app_vars
+```
+Upload encrypted beta app vars
+### sync_release_app_vars
+```
+fastlane sync_release_app_vars
+```
+Download encrypted production app vars
+### publish_release_app_vars
+```
+fastlane publish_release_app_vars
+```
+Upload encrypted production app vars
 ### publish_google_play_credentials
 ```
 fastlane publish_google_play_credentials
 ```
-Publish google play credentials file
-### build_android_standalone
+Upload encrypted google play credentials
+### sync_google_play_credentials
 ```
-fastlane build_android_standalone
+fastlane sync_google_play_credentials
 ```
-Create a standalone Android build
-### build_ios_standalone
-```
-fastlane build_ios_standalone
-```
-Create a standalone IOS build
-### sync_ios_signing
-```
-fastlane sync_ios_signing
-```
-Download IOS distribution certificates and profiles
-### upload_android_build
-```
-fastlane upload_android_build
-```
-Upload Android build
-### upload_ios_build
-```
-fastlane upload_ios_build
-```
-Upload IOS build
+Download encrypted google play credentials
 
 ----
 

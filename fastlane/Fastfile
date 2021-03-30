@@ -1,171 +1,160 @@
-desc "Download encrypted vars"
-lane :sync_vars do |options|
-  key = ENV[options[:key]] || options[:key]
-  path = ENV[options[:path]] || options[:path]
-  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
 
-  if (UI.confirm("This will overwrite your local <root>/#{path} file with the remote vars stored in #{contexts_repo_url} under the key #{key}. Proceed?"))
-    vars = cryptex(
+desc "Upload encrypted android release keystore"
+lane :publish_android_keystore do
+  if (UI.confirm("This will overwrite your local release.keystore version stored in #{ENV['CRYPTEX_GIT_URL']} with the file at #{ENV['ANDROID_KEYSTORE_PATH']}. Proceed?"))
+    cryptex(
+      type: "import",
+      in: ENV['ANDROID_KEYSTORE_PATH'],
+      key: ENV['ANDROID_KEYSTORE_CRYPTEX_KEY']
+    )
+  end
+end
+
+desc "Download foo"
+lane :sync_foo do
+  cryptex(
+    type: "export",
+    out: "./foo.txt",
+    key: "foo"
+  )
+end
+
+
+desc "Download encrypted android release keystore"
+lane :sync_android_keystore do
+  if (UI.confirm("This will overwrite your remote release.keystore version at #{ENV['ANDROID_KEYSTORE_PATH']} with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    cryptex(
+      type: "export",
+      out: ENV['ANDROID_KEYSTORE_PATH'],
+      key: ENV['ANDROID_KEYSTORE_CRYPTEX_KEY']
+    )
+  end
+end
+
+
+desc "Download encrypted base app vars"
+lane :sync_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    app_vars = cryptex(
       type: "export_env",
-      key: key
+      key: "app_vars"
     )
 
-    open("../#{path}", 'w') do |f|
-      vars.each {|var_key, var_value| f.puts "#{var_key}=#{var_value}" }
+    open('../.env', 'w') do |f|
+      app_vars.each {|key, value| f.puts "#{key}=#{value}" }
     end
   end
 end
 
-desc "Upload encrypted vars"
-lane :publish_vars do |options|
-  key = ENV[options[:key]] || options[:key]
-  path = ENV[options[:path]] || options[:path]
-  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
-
-  if (UI.confirm("This will overwrite your remote vars stored in #{contexts_repo_url} under the key #{key} with your local <root>/#{path} file. Proceed?"))
-    vars = Dotenv.parse("../#{path}");
+desc "Upload encrypted base app vars"
+lane :publish_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env. Proceed?"))
+    app_vars = Dotenv.parse("../.env");
 
     cryptex(
       type: "import_env",
-      key: key,
-      hash: vars
+      key: "app_vars",
+      hash: app_vars
     )
   end
 end
 
-desc "Upload encrypted file"
-lane :publish_file do |options|
-  key = ENV[options[:key]] || options[:key]
-  path = ENV[options[:path]] || options[:path]
-  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
+desc "Download encrypted alpha app vars"
+lane :sync_alpha_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env.alpha with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    alpha_app_vars = cryptex(
+      type: "export_env",
+      key: "alpha_app_vars"
+    )
 
-  if (UI.confirm("This will overwrite your remote file stored in #{contexts_repo_url} under the key #{key} with your local <root>/#{path} file. Proceed?"))
+    open('../.env.alpha', 'w') do |f|
+      alpha_app_vars.each {|key, value| f.puts "#{key}=#{value}" }
+    end
+  end
+end
+
+desc "Upload encrypted alpha app vars"
+lane :publish_alpha_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env.alpha. Proceed?"))
+    alpha_app_vars = Dotenv.parse("../.env.alpha")
+
     cryptex(
-      type: "import",
-      in: path,
-      key: key
+      type: "import_env",
+      key: "alpha_app_vars",
+      hash: alpha_app_vars
     )
   end
 end
 
+desc "Download encrypted beta app vars"
+lane :sync_beta_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env.beta with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    beta_app_vars = cryptex(
+      type: "export_env",
+      key: "beta_app_vars"
+    )
 
-desc "Download encrypted file"
-lane :sync_file do |options|
-  key = ENV[options[:key]] || options[:key]
-  path = ENV[options[:path]] || options[:path]
-  contexts_repo_url = ENV['CRYPTEX_GIT_URL']
+    open('../.env.beta', 'w') do |f|
+      beta_app_vars.each {|key, value| f.puts "#{key}=#{value}" }
+    end
+  end
+end
 
-  if (UI.confirm("This will overwrite your local <root>/#{path} file with the remote file stored in #{contexts_repo_url} under the key #{key}. Proceed?"))
+desc "Upload encrypted beta app vars"
+lane :publish_beta_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env.beta. Proceed?"))
+    beta_app_vars = Dotenv.parse("../.env.beta")
+
     cryptex(
-      type: "export",
-      out: path,
-      key: key
+      type: "import_env",
+      key: "beta_app_vars",
+      hash: beta_app_vars
     )
   end
 end
 
 
-desc "Sync google services configuration files"
-lane :sync_google_services_files do
-    sync_file(
-      key: 'android_google_services',
-      path: './google-services.json'
+desc "Download encrypted production app vars"
+lane :sync_release_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env.release with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    release_app_vars = cryptex(
+      type: "export_env",
+      key: "release_app_vars"
     )
 
-    sync_file(
-      key: 'ios_google_services',
-      path: './GoogleService-Info.plist'
-    )
+    open('../.env.release', 'w') do |f|
+      release_app_vars.each {|key, value| f.puts "#{key}=#{value}" }
+    end
+  end
 end
 
-desc "Publish google services configuration files"
-lane :publish_google_services_files do
-    publish_file(
-      key: 'android_google_services',
-      path: './google-services.json'
-    )
+desc "Upload encrypted production app vars"
+lane :publish_release_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env.release. Proceed?"))
+    release_app_vars = Dotenv.parse("../.env.release")
 
-    publish_file(
-      key: 'ios_google_services',
-      path: './GoogleService-Info.plist'
+    cryptex(
+      type: "import_env",
+      key: "release_app_vars",
+      hash: release_app_vars
     )
+  end
 end
 
-desc "Sync google play credentials file"
-lane :sync_google_play_credentials do
-    sync_file(
-      key: 'google_play_credentials',
-      path: './fastlane/android/signing/google-play-credentials.json'
-    )
-end
-
-desc "Publish google play credentials file"
+desc "Upload encrypted google play credentials"
 lane :publish_google_play_credentials do
-    publish_file(
-      key: 'google_play_credentials',
-      path: './fastlane/android/signing/google-play-credentials.json'
+  cryptex(
+      type: "import",
+      key: ENV['GOOGLE_PLAY_CREDENTIALS_CRYPTEX_KEY'],
+      in: './android/app/google-play-credentials.json'
     )
 end
 
-desc "Create a standalone Android build"
-lane :build_android_standalone do |options|
-  ENV['EXPO_ANDROID_KEY_PASSWORD'] = ENV['ANDROID_KEYSTORE_PASSWORD']
-  ENV['EXPO_ANDROID_KEYSTORE_PASSWORD'] = ENV['ANDROID_KEYSTORE_PASSWORD']
-  
-  sh(
-    "turtle build:android \
-    --type apk \
-    --keystore-path ../#{ENV['ANDROID_KEYSTORE_PATH']} \
-    --keystore-alias #{ENV['ANDROID_KEYSTORE_ALIAS']} \
-    --output ./fastlane/android/builds/purzona.apk"
-  )
-end
-
-desc "Create a standalone IOS build"
-lane :build_ios_standalone do |options|
-  build_type = options[:build_type] || 'archive'
-  build_type_ext = options[:build_type] === 'simulator' ? 'tar.gz' : 'ipa'
-
-  sh(
-    "turtle build:ios \
-    --type #{build_type} \
-    --team-id #{ENV['FASTLANE_TEAM_ID']} \
-    --dist-p12-path ./ios/signing/W8WR48RYD4.p12 \
-    --provisioning-profile-path ./ios/signing/AppStore_com.purzona.client.mobileprovision \
-    --output ./fastlane/ios/builds/purzona.#{build_type_ext}"
-  )
-end
-
-desc "Download IOS distribution certificates and profiles"
-lane :sync_ios_signing do
-  sh(
-    'fastlane match appstore \
-    --readonly \
-    --output_path ./ios/signing'
-  )
-end
-
-desc "Upload Android build"
-lane :upload_android_build do
-  Dir.chdir("..") do
-    sh(
-      "expo upload:android \
-      --path ./fastlane/android/builds/purzona.apk \
-      --key ./fastlane/android/signing/google-play-credentials.json \
-      --release-status draft"
+desc "Download encrypted google play credentials"
+lane :sync_google_play_credentials do
+  cryptex(
+      type: "export",
+      key: ENV['GOOGLE_PLAY_CREDENTIALS_CRYPTEX_KEY'],
+      out: './android/app/google-play-credentials.json'
     )
-  end
-end
-
-desc "Upload IOS build"
-lane :upload_ios_build do
-  Dir.chdir("..") do
-    sh(
-      "yes | expo upload:ios \
-      --config ./app.json \
-      --path ./fastlane/ios/builds/purzona.ipa \
-      --app-name Purzona \
-      --sku 0001"
-    )
-  end
 end

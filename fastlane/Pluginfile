@@ -2,4 +2,5 @@
 #
 # Ensure this file is checked in to source control!
 
+gem 'fastlane-plugin-react_native_release', git: "https://github.com/echobind/fastlane-plugin-react_native_release.git", branch: "feat/write-fastlane-vars-to-paths"
 gem 'fastlane-plugin-cryptex'
