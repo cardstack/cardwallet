@@ -10,8 +10,6 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
 const BuyPrepaidCard = () => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
   const { navigate } = useNavigation();
 
   const onPress = (amount?: number) => {
