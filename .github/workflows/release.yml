@@ -23,6 +23,27 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: v1.0.2-ckmxvf 
+      - name: Node
+        uses: actions/setup-node@v1
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install
+      - name: Cache Pods
+        uses: actions/cache@v1
+        id: podcache
+        with:
+          path: ios/Pods
+          key: pods-${{ hashFiles('**/Podfile.lock') }}
+      - name: Update Pods
+        run: |
+          gem update cocoapods xcodeproj
+          cd ios && pod install && cd ..
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.6'
