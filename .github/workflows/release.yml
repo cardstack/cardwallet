@@ -27,9 +27,9 @@ jobs:
         with:
           ruby-version: '2.6'
       - name: Decrypt vars
-        run: bundle exec fastlane run decrypt_fastlane_vars
+        run: fastlane run decrypt_fastlane_vars
         env:
           CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
       - name: Run lane
-        run: bundle exec fastlane alpha
+        run: fastlane alpha
