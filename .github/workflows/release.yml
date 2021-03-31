@@ -26,10 +26,12 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: '2.6'
+      - name: Bundle install
+        run: bundle install
       - name: Decrypt vars
-        run: fastlane run decrypt_fastlane_vars
+        run: bundle exec fastlane run decrypt_fastlane_vars
         env:
           CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
       - name: Run lane
-        run: fastlane alpha
+        run: bundle exec fastlane alpha
