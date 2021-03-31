@@ -1,4 +1,4 @@
-name: CI
+name: Release
 
 on:
   # workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.inputs.tag }}
+          ref: 0.0.1-test 
       - name: Test
         uses: actions/setup-node@v1
         with:
