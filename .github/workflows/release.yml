@@ -25,15 +25,21 @@ jobs:
           ref: v1.0.2-ckmxvf 
       - name: Node
         uses: actions/setup-node@v1
+        with:
+          node-version: 14.15.5
       - name: Cache node modules
         uses: actions/cache@v1
         id: cache
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Install Dependencies
+      - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install
+        run: |
+          yarn install --network-timeout 300000 --network-concurrency 1
+    - name: Apply patches
+      run: |
+        yarn patch-package
       - name: Cache Pods
         uses: actions/cache@v1
         id: podcache
