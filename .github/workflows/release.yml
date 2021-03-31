@@ -35,6 +35,8 @@ jobs:
       #   run: |
       #     gem update cocoapods xcodeproj
       #     cd ios && pod install && cd ..
+      - name: Bundle install
+        run: bundle install
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
