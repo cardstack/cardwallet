@@ -41,7 +41,8 @@ jobs:
         with:
           ruby-version: '2.6'
       - name: ls
-        run: ls
+        run: |
+          ls
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
