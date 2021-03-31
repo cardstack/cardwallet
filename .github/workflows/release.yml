@@ -23,27 +23,30 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: v1.0.2-ckmxvf 
-      - name: Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.15.5
-      - name: Install dependencies
-        run: |
-          yarn install --network-timeout 300000 --network-concurrency 1
-      - name: Apply patches
-        run: |
-          yarn patch-package
-      - name: Update Pods
-        run: |
-          gem update cocoapods xcodeproj
-          cd ios && pod install && cd ..
+      # - name: Node
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 14.15.5
+      # - name: Install dependencies
+      #   run: |
+      #     yarn install --network-timeout 300000 --network-concurrency 1
+      # - name: Apply patches
+      #   run: |
+      #     yarn patch-package
+      # - name: Update Pods
+      #   run: |
+      #     gem update cocoapods xcodeproj
+      #     cd ios && pod install && cd ..
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.6'
+      - name: ls
+        run: ls
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
           CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
       - name: Run lane
+        uses: maierj/fastlane-action@v2.0.1
         run: bundle exec fastlane alpha

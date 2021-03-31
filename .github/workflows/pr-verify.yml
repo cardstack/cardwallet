@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - develop
+      - ci-setup
 
 jobs:
   build:
