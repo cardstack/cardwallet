@@ -42,4 +42,6 @@ jobs:
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
       - name: Run lane
         uses: maierj/fastlane-action@v2.0.1
-        run: bundle exec fastlane alpha
+        with:
+          lane: "alpha"
+          subdirectory: "ios"
