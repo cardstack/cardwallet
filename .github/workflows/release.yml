@@ -37,7 +37,8 @@ jobs:
       #   run: |
       #     gem update cocoapods xcodeproj
       #     cd ios && pod install && cd ..
-      - uses: ruby/setup-ruby@v1
+      - name: Checkout Ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.6'
       - name: ls
