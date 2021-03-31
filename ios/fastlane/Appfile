@@ -1,5 +1,2 @@
-app_identifier("com.cardstack.cardpayapp")
-apple_id("dominic.sherman@cardstack.com")
-
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
