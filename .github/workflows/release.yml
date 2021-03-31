@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  workflow_dispatch:
+      inputs:
+        stage:
+          description: 'Beta or Production release'
+          required: true
+          default: 'beta'
+        tag:
+          description: 'Release tag to build'  
+          required: true
+
+jobs:
+  release-ios:
+    name: Release iOS
+    runs-on: macos
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.tag }}
+      - name: Decrypt vars
+        run: bundle exec fastlane run decrypt_fastlane_vars
+        env:
+          CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
+          CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
+      - name: Run lane
+        run: bundle exec fastlane ${{ github.events.inputs.stage }}
