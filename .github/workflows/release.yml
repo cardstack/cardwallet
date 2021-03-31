@@ -37,12 +37,14 @@ jobs:
       #     cd ios && pod install && cd ..
       - name: Bundle install
         run: bundle install
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}'
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
           CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
-          GH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: Run lane
         uses: maierj/fastlane-action@v2.0.1
         with:
