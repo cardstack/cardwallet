@@ -22,19 +22,11 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: 0.0.1-test 
-      - name: Test
-        uses: actions/setup-node@v1
-        with:
-          node-version: 10.16.3
-      - name: test
-        run:
-          |
-          node ./test.js
-      # - name: Decrypt vars
-      #   run: bundle exec fastlane run decrypt_fastlane_vars
-      #   env:
-      #     CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
-      #     CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
-      # - name: Run lane
-      #   run: bundle exec fastlane ${{ github.events.inputs.stage }}
+          ref: v1.0.2-ckmxvf 
+      - name: Decrypt vars
+        run: bundle exec fastlane run decrypt_fastlane_vars
+        env:
+          CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
+          CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
+      - name: Run lane
+        run: bundle exec fastlane alpha
