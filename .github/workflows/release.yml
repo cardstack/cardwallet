@@ -19,6 +19,12 @@ jobs:
     name: Release iOS
     runs-on: macos-latest
     steps:
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          global: true
+          name: 'CI User'
+          email: 'dominic.sherman@cardstack.com'
+          token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: Checkout tag
         uses: actions/checkout@v2
       # - name: Node
@@ -37,12 +43,6 @@ jobs:
       #     cd ios && pod install && cd ..
       - name: Bundle install
         run: bundle install
-      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          global: true
-          name: 'CI User'
-          email: 'dominic.sherman@cardstack.com'
-          token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
