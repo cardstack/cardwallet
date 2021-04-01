@@ -166,6 +166,13 @@ platform :ios do
     # )
   end
 
+  desc "Version bump"
+  lane :version_bump do |options|
+    increment_version_number(
+      bump_type: options[:bump_type],
+    )
+  end
+
   error do |lane, exception|
     if ENV['SLACK_URL']
       # slack(

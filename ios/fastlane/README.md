@@ -31,6 +31,11 @@ Beta build
 fastlane ios production
 ```
 Production build
+### ios version_bump
+```
+fastlane ios version_bump
+```
+Version bump
 
 ----
 
