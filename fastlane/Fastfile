@@ -10,16 +10,6 @@ lane :publish_android_keystore do
   end
 end
 
-desc "Download foo"
-lane :sync_foo do
-  cryptex(
-    type: "export",
-    out: "./foo.txt",
-    key: "foo"
-  )
-end
-
-
 desc "Download encrypted android release keystore"
 lane :sync_android_keystore do
   if (UI.confirm("This will overwrite your remote release.keystore version at #{ENV['ANDROID_KEYSTORE_PATH']} with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))

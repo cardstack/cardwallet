@@ -1,6 +1,5 @@
 {
   "name": "Rainbow",
-  "version": "v1.0.2-asdf",
   "private": true,
   "type": "module",
   "scripts": {
