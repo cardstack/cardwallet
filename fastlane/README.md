@@ -20,11 +20,6 @@ or alternatively using `brew install fastlane`
 fastlane publish_android_keystore
 ```
 Upload encrypted android release keystore
-### sync_foo
-```
-fastlane sync_foo
-```
-Download foo
 ### sync_android_keystore
 ```
 fastlane sync_android_keystore
