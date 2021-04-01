@@ -14,7 +14,7 @@ on:
 jobs:
   create-tag:
     name: Create tag
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Create tag
@@ -27,3 +27,5 @@ jobs:
         env:
           BUMP_TYPE: "patch"
       - uses: EndBug/add-and-commit@v7
+        with:
+          branch: "ci-setup-2"
