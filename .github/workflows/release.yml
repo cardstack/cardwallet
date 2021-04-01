@@ -19,12 +19,6 @@ jobs:
     name: Release iOS
     runs-on: macos-latest
     steps:
-      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          global: true
-          name: 'CI User'
-          email: 'dominic.sherman@cardstack.com'
-          token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: Checkout tag
         uses: actions/checkout@v2
       # - name: Node
@@ -48,5 +42,6 @@ jobs:
         env:
           CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
+          GITHUB_API_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: Run lane
         run: cd ios && bundle exec fastlane alpha
