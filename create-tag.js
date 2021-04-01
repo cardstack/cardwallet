@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import release from 'release-it';
 import { v4 } from 'uuid';
 
 const getNewTag = tag => {
@@ -31,7 +32,9 @@ const createTag = async () => {
   const newTag = getNewTag(cleanTag);
   const tagName = `v${newTag}-${v4().substring(0, 6)}`;
 
-  console.log('tagName', tagName);
+  await release({
+    version: tagName,
+  }).then((output) => console.log('output', output));
 };
 
 createTag();
