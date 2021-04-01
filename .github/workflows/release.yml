@@ -35,12 +35,8 @@ jobs:
       #   run: |
       #     gem update cocoapods xcodeproj
       #     cd ios && pod install && cd ..
-      # - name: Bundle install
-      #   run: bundle install
-      - name: Access token
-        run: echo "$FOO"
-        env:
-          FOO: ${{ secrets.CI_ACCESS_TOKEN }}
+      - name: Bundle install
+        run: bundle install
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
