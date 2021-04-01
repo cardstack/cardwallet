@@ -80,7 +80,7 @@ platform :ios do
     ########################
     # Pull certs & profiles
     ########################
-    # sync_code_signing(type: "adhoc")
+    sync_code_signing(type: "adhoc")
 
     ########################
     # Build the app
@@ -88,10 +88,10 @@ platform :ios do
     # increment_build_number(build_number: options[:build_number])
 
     # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
-    # build_ios_app(
-    #   export_method: "app-store",
-    #   include_bitcode: true
-    # )
+    build_ios_app(
+      export_method: "app-store",
+      include_bitcode: true
+    )
   end
 
   ########################################################################
