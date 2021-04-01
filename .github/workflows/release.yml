@@ -45,9 +45,10 @@ jobs:
           actor: 'DominicSherman'
           token: '${{ secrets.CI_ACCESS_TOKEN }}'
       - name: Checkout tag
-        uses: actions/checkout@v2
-        with:
-          repository: cardstack/cardwallet-context
+        run: git clone '$CRYPTEX_GIT_URL' 'context'
+        env:
+          CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
+          CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
