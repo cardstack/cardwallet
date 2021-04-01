@@ -34,7 +34,7 @@ jobs:
       # - name: Update Pods
       #   run: |
       #     gem update cocoapods xcodeproj
-      #     cd ios && pod install && cd ..
+      #     cd ios && pod install && cd .. 
       - name: Bundle install
         run: bundle install
       # - name: Decrypt vars
