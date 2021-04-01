@@ -45,7 +45,7 @@ jobs:
           actor: 'DominicSherman'
           token: '${{ secrets.CI_ACCESS_TOKEN }}'
       - name: Checkout tag
-        run: git clone "$CRYPTEX_GIT_URL" cardwallet-context
+        run: git clone "$CRYPTEX_GIT_URL" context
         env:
           CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
