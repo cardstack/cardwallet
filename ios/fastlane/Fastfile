@@ -34,7 +34,7 @@ platform :ios do
   # Beta Lane
   ########################################################################
   desc "Beta build"
-  lane :beta do |options|
+  lane :beta do |options| 
 
     decrypt_app_vars(
       namespace: 'beta'
