@@ -20,10 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: oprypin/find-latest-tag@v1
+      - name: Get tag version
         id: tag_version
-        with:
-          repository: ${{ env.GITHUB_REPOSITORY }}
-          token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+        run: curl \
+            -H "Accept: application/vnd.github.v3+json" \
+            - H
+            https://api.github.com/repos/$GITHUB_REPOSITORY/tags
       - name: tag output
-        run: echo "${{ steps.tag_version.outputs.tag }}"
+        run: echo "${{ steps.tag_version.outputs.new_tag }}"
