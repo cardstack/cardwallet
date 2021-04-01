@@ -23,7 +23,7 @@ jobs:
       - uses: oprypin/find-latest-tag@v1
         id: tag_version
         with:
-          repository: $GITHUB_REPOSITORY
+          repository: ${{ env.GITHUB_REPOSITORY }}
           token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: tag output
         run: echo "${{ steps.tag_version.outputs.tag }}"
