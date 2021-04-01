@@ -20,12 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Get tag version
+      - uses: oprypin/find-latest-tag@v1
         id: tag_version
-        uses: wei/curl@master
         with:
-          args: -H "Accept: application/vnd.github.v3+json" -H "Authorization: token $AUTH_TOKEN" $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/tags
-        env:
-          AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+          repository: $GITHUB_REPOSITORY
+          token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: tag output
-        run: echo "${{ steps.tag_version.outputs.new_tag }}"
+        run: echo "${{ steps.tag_version.outputs.tag }}"
