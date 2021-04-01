@@ -1,6 +1,4 @@
 import fetch from 'node-fetch';
-import release from 'release-it';
-import { v4 } from 'uuid';
 
 const getNewTag = tag => {
   const [major, minor, patch] = tag.split('.');
@@ -27,14 +25,30 @@ const createTag = async () => {
   );
   const data = await response.json();
   const mostRecentTag = data[0].name;
-  const [tagVersionOnly] = mostRecentTag.split('-');
-  const cleanTag = tagVersionOnly.replace('v', '');
+  const [tagVersion, tagVersionNumber] = mostRecentTag.split('-');
+  const cleanTag = tagVersion.replace('v', '');
   const newTag = getNewTag(cleanTag);
-  const tagName = `v${newTag}-${v4().substring(0, 6)}`;
+  const updatedTagVersionNumber =
+    cleanTag === newTag ? Number(tagVersionNumber) + 1 : 1;
+  const tagName = `v${newTag}-${updatedTagVersionNumber}`;
 
-  await release({
-    version: tagName,
-  }).then((output) => console.log('output', output));
+  await fetch(
+    `${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/releases`,
+    {
+      body: JSON.stringify({
+        owner: 'cardstack',
+        repo: 'cardwallet',
+        tag_name: tagName,
+        name: `Release ${tagName}`,
+        body: `Released at ${new Date(Date.now()).toISOString()}`,
+      }),
+      method: 'POST',
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        Authorization: `Bearer ${process.env.GITHUB_AUTH_TOKEN}`,
+      },
+    }
+  );
 };
 
 createTag();

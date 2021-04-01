@@ -20,11 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Get tag version
-        id: tag_version
-        run: curl \
-            -H "Accept: application/vnd.github.v3+json" \
-            - H
-            https://api.github.com/repos/$GITHUB_REPOSITORY/tags
-      - name: tag output
-        run: echo "${{ steps.tag_version.outputs.new_tag }}"
+      - name: Install dependencies
+        run: cd ci-scripts && yarn
+      - name: Create tag
+        run: yarn createTag
+        env:
+          BUMP_TYPE: "minor"
+          GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
