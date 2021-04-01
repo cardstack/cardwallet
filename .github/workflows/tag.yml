@@ -20,10 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Bump version and push tag
+      - name: Get tag version
         id: tag_version
-        uses: mathieudutour/github-tag-action@v5.4
+        uses: wei/curl@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          args: -H "Accept: application/vnd.github.v3+json" -H "Authorization: token $AUTH_TOKEN" $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/tags
+        env:
+          AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
       - name: tag output
         run: echo "${{ steps.tag_version.outputs.new_tag }}"
