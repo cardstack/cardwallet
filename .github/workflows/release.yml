@@ -37,12 +37,16 @@ jobs:
       #     cd ios && pod install && cd ..
       # - name: Bundle install
       #   run: bundle install
-      # - name: Decrypt vars
-      #   run: bundle exec fastlane run decrypt_fastlane_vars
-      #   env:
-      #     CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
-      #     CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
-      #     GITHUB_API_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+      - name: Access token
+        run: echo "$FOO"
+        env:
+          FOO: ${{ secrets.CI_ACCESS_TOKEN }}
+      - name: Decrypt vars
+        run: bundle exec fastlane run decrypt_fastlane_vars
+        env:
+          CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
+          CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
+          GITHUB_API_TOKEN: ${{ secrets.CI_ACCESS_TOKEN }}
       - name: Run lane
         run: cd ios && bundle install && bundle exec fastlane alpha
         env:
