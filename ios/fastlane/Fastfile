@@ -168,9 +168,11 @@ platform :ios do
 
   desc "Version bump"
   lane :version_bump do |options|
-    increment_version_number_in_xcodeproj(
-      bump_type: options[:bump_type],
-    )
+    if ['major', 'minor', 'patch'].include?(ENV['BUMP_TYPE'])
+      increment_version_number_in_xcodeproj(
+        bump_type: options['BUMP_TYPE'],
+      )
+    end
   end
 
   error do |lane, exception|

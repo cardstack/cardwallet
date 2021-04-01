@@ -1,15 +1,15 @@
 name: Tag
 
 on:
-  workflow_dispatch:
-      inputs:
-        bumpType:
-          description: 'Type of version bump (major, minor, patch, none)'
-          required: true
-          default: 'none'
-  # push: 
-  #   branches:
-  #     - "ci-setup"
+  # workflow_dispatch:
+  #     inputs:
+  #       bumpType:
+  #         description: 'Type of version bump (major, minor, patch, none)'
+  #         required: true
+  #         default: 'none'
+  push: 
+    branches:
+      - "ci-setup"
   
 jobs:
   create-tag:
@@ -20,5 +20,10 @@ jobs:
       - name: Create tag
         run: cd ci-scripts && yarn && yarn createTag
         env:
-          BUMP_TYPE: ${{ github.event.inputs.bumpType }}
+          BUMP_TYPE: "patch"
           GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+      - name: Bump iOS version
+        run: cd ios && bundle install && bundle exec fastlane version_bump
+        env:
+          BUMP_TYPE: "patch"
+      - uses: EndBug/add-and-commit@v7
