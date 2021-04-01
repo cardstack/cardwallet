@@ -47,4 +47,4 @@ jobs:
         env:
           CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
-          BUILD_NUMBER: ${{ env.GITHUB_RUN_NUMBER }}
+          BUILD_NUMBER: ${{ github.run_number }}
