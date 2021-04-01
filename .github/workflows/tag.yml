@@ -1,15 +1,12 @@
 name: Tag
 
 on:
-  # workflow_dispatch:
-  #     inputs:
-  #       bumpType:
-  #         description: 'Type of version bump (major, minor, patch, none)'
-  #         required: true
-  #         default: 'none'
-  push: 
-    branches:
-      - "ci-setup"
+  workflow_dispatch:
+      inputs:
+        bumpType:
+          description: 'Type of version bump (major, minor, patch, none)'
+          required: true
+          default: 'none'
   
 jobs:
   create-tag:

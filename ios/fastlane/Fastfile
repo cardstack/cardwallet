@@ -85,7 +85,7 @@ platform :ios do
     ########################
     # Build the app
     ########################
-    # increment_build_number(build_number: options[:build_number])
+    increment_build_number(build_number: options[ENV["BUILD_NUMBER"]])
 
     # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
     build_ios_app(
