@@ -35,27 +35,15 @@ jobs:
       #   run: |
       #     gem update cocoapods xcodeproj
       #     cd ios && pod install && cd ..
-      # - name: Bundle install
-      #   run: bundle install
-      - uses: oleksiyrudenko/gha-git-credentials@v2.1
-        with:
-          global: true
-          name: 'Dominic Sherman'
-          email: 'dominic.sherman@cardstack.com'
-          actor: 'DominicSherman'
-          token: '${{ secrets.CI_ACCESS_TOKEN }}'
-      - name: Checkout tag
-        run: git clone "$CRYPTEX_GIT_URL" context
-        env:
-          CRYPTEX_GIT_URL: https://${{ secrets.CI_ACCESS_TOKEN }}@github.com/cardstack/cardwallet-context.git
-          CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
+      - name: Bundle install
+        run: bundle install
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
-          CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
+          CRYPTEX_GIT_URL: https://${{ secrets.CI_ACCESS_TOKEN }}@github.com/cardstack/cardwallet-context.git
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
       - name: Run lane
         run: cd ios && bundle install && bundle exec fastlane alpha
         env:
-          CRYPTEX_GIT_URL: ${{ secrets.CRYPTEX_GIT_URL }}
+          CRYPTEX_GIT_URL: https://${{ secrets.CI_ACCESS_TOKEN }}@github.com/cardstack/cardwallet-context.git
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
