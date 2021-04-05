@@ -2,7 +2,7 @@ storage_mode("git")
 
 type("development") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier("com.cardstack.cardpayapp")
+app_identifier("com.cardstack.cardpay")
 username("dominic.sherman@cardstack.com") # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`
