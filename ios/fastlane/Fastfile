@@ -14,7 +14,7 @@ platform :ios do
     ########################
     # Pull certs & profiles
     ########################
-    # sync_code_signing(type: "adhoc")
+    sync_code_signing(type: "adhoc")
 
     ########################
     # Build the app
