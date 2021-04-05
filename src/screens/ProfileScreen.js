@@ -8,7 +8,6 @@ import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
 import { useTheme } from '../context/ThemeContext';
-import useNativeTransactionListAvailable from '../helpers/isNativeTransactionListAvailable';
 import {
   useAccountSettings,
   useAccountTransactions,
@@ -32,7 +31,6 @@ export default function ProfileScreen({ navigation }) {
   const [activityListInitialized, setActivityListInitialized] = useState(false);
   const isFocused = useIsFocused();
   const { navigate } = useNavigation();
-  const nativeTransactionListAvailable = useNativeTransactionListAvailable();
 
   const accountTransactions = useAccountTransactions(
     activityListInitialized,
@@ -41,11 +39,9 @@ export default function ProfileScreen({ navigation }) {
   const {
     isLoadingTransactions: isLoading,
     sections,
-    transactions,
     transactionsCount,
   } = accountTransactions;
-  const { contacts } = useContacts();
-  const { pendingRequestCount, requests } = useRequests();
+  const { pendingRequestCount } = useRequests();
   const { network } = useAccountSettings();
 
   const isEmpty = !transactionsCount && !pendingRequestCount;
