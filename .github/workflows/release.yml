@@ -48,5 +48,6 @@ jobs:
           CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
           MATCH_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_USERNAME: cardstack-mobile-ci
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
           BUILD_NUMBER: ${{ github.run_number }}
