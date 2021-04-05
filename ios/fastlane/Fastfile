@@ -11,12 +11,10 @@ platform :ios do
       namespace: 'alpha'
     )
 
-    echo(message: "#{ENV["STAGE"]}")
-
     ########################
     # Pull certs & profiles
     ########################
-    sync_code_signing(type: "adhoc")
+    # sync_code_signing(type: "adhoc")
 
     ########################
     # Build the app
