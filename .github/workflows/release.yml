@@ -49,4 +49,3 @@ jobs:
           FASTLANE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
-          MATCH_USERNAME: cardstack-mobile-ci
