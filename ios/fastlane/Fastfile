@@ -43,25 +43,25 @@ platform :ios do
     ########################
     # Pull certs & profiles
     ########################
-    # sync_code_signing(type: "appstore")
+    sync_code_signing(type: "appstore")
 
     ########################
     # Build the app
     ########################
-    # increment_build_number(build_number: options[:build_number])
+    increment_build_number(build_number: options[:build_number])
 
     # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
-    # build_ios_app(
-    #   export_method: "app-store",
-    #   include_bitcode: true
-    # )
+    build_ios_app(
+      export_method: "app-store",
+      include_bitcode: true
+    )
 
     ########################
     # Upload to TestFlight
     ########################
-    # upload_to_testflight(
-    #   changelog: "Beta Release: ${tag}"
-    # )
+    upload_to_testflight(
+      changelog: "Beta Release: ${tag}"
+    )
   end
 
   desc "Production build"
@@ -76,28 +76,28 @@ platform :ios do
     ########################
     # Pull certs & profiles
     ########################
-    # sync_code_signing(type: "appstore")
+    sync_code_signing(type: "appstore")
 
     ########################
     # Build the app
     ########################
-    # increment_build_number(build_number: options[:build_number])
+    increment_build_number(build_number: options[:build_number])
 
     # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
-    # build_ios_app(
-    #   export_method: "app-store",
-    #   include_bitcode: true
-    # )
+    build_ios_app(
+      export_method: "app-store",
+      include_bitcode: true
+    )
 
     ########################
     # Upload to AppStore Connect
     ########################
-    # upload_to_app_store(
-    #   force: true,
-    #   submit_for_review: false,
-    #   automatic_release: false,
-    #   changelon: "Production release: ${tag}"
-    # )
+    upload_to_app_store(
+      force: true,
+      submit_for_review: false,
+      automatic_release: false,
+      changelog: "Production release: ${tag}"
+    )
   end
 
   desc "Version bump"
