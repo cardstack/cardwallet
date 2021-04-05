@@ -28,18 +28,18 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.5
-      # - name: Install dependencies
-      #   run: |
-      #     yarn install --network-timeout 300000 --network-concurrency 1
-      # - name: Apply patches
-      #   run: |
-      #     yarn patch-package
+      - name: Install dependencies
+        run: |
+          yarn install --network-timeout 300000 --network-concurrency 1
+      - name: Apply patches
+        run: |
+          yarn patch-package
       - name: Bundle install
         run: bundle install
-      # - name: Update Pods
-      #   run: |
-      #     gem update cocoapods xcodeproj
-      #     cd ios && pod install && cd ..
+      - name: Update Pods
+        run: |
+          gem update cocoapods xcodeproj
+          cd ios && pod install && cd ..
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
       - name: Run lane
