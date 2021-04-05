@@ -42,14 +42,14 @@ jobs:
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
         env:
-          CRYPTEX_GIT_URL: env.GIT_URL
+          CRYPTEX_GIT_URL: ${{ env.GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
       - name: Run lane
         run: cd ios && bundle install && bundle exec fastlane alpha
         env:
-          CRYPTEX_GIT_URL: env.GIT_URL
+          CRYPTEX_GIT_URL: ${{ env.GIT_URL }}
           CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
-          MATCH_GIT_URL: env.GIT_URL
+          MATCH_GIT_URL: ${{ env.GIT_URL }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_USERNAME: cardstack-mobile-ci
           FASTLANE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
