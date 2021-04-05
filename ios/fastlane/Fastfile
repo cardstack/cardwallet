@@ -23,7 +23,7 @@ platform :ios do
 
     # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
     build_ios_app(
-      export_method: "app-store",
+      export_method: "ad-hoc",
       include_bitcode: true
     )
   end
