@@ -51,3 +51,4 @@ jobs:
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: true
+          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
