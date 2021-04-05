@@ -42,8 +42,6 @@ jobs:
       #     cd ios && pod install && cd ..
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
-      - name: Session auth
-        run: bundle exec fastlane spaceauth -u dominic.sherman@cardstack.com
       - name: Run lane
         run: cd ios && bundle install && bundle exec fastlane alpha
         env:
