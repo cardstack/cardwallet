@@ -46,6 +46,7 @@ jobs:
         run: cd ios && bundle install && bundle exec fastlane alpha
         env:
           BUILD_NUMBER: ${{ github.run_number }}
+          FASTLANE_PASSWORD: ${{ secrets.PERSONAL_FASTLANE_PASSWORD }}
           FASTLANE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
