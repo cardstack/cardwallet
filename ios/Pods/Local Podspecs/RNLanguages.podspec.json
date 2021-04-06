@@ -1,0 +1,22 @@
+{
+  "name": "RNLanguages",
+  "summary": "React Native properties and methods related to the language of the device",
+  "version": "3.0.2",
+  "authors": {
+    "Mathieu Acthernoene": "zoontek@gmail.com"
+  },
+  "homepage": "https://github.com/react-community/react-native-languages",
+  "license": "MIT",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/react-community/react-native-languages.git"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

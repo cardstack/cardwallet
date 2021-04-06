@@ -1,0 +1,6 @@
+module Pods_Rainbow {
+  umbrella header "Pods-Rainbow-umbrella.h"
+
+  export *
+  module * { export * }
+}

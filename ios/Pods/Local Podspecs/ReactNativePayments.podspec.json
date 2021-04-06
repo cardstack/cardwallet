@@ -1,0 +1,23 @@
+{
+  "name": "ReactNativePayments",
+  "version": "1.1.5",
+  "summary": "react-native-payments",
+  "description": "Native Payments (Google and Apple Pay) from React-Native",
+  "homepage": "https://github.com/jinchung/react-native-payments",
+  "license": "MIT",
+  "authors": "Naoufal Kadhom",
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/jinchung/react-native-payments.git",
+    "tag": "1.1.5"
+  },
+  "source_files": "*.{h,m}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

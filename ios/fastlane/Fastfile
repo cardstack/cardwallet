@@ -25,7 +25,10 @@ platform :ios do
     build_ios_app(
       export_method: "ad-hoc",
       include_bitcode: true,
-      skip_profile_detection: true
+      skip_profile_detection: true,
+      scheme: "Rainbow",
+      configuration: "Release",
+      silent: true
     )
   end
 

@@ -1,0 +1,6 @@
+module RNInputMask {
+  umbrella header "RNInputMask-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+module Rainbow_Internals {
+  umbrella header "Rainbow-Internals-umbrella.h"
+
+  export *
+  module * { export * }
+}

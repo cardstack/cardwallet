@@ -1,0 +1,1 @@
+../../../../../node_modules/@rainbow-me/react-native-payments/lib/ios/ReactNativePayments.h

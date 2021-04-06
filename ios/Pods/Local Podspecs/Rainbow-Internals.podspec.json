@@ -1,0 +1,21 @@
+{
+  "name": "Rainbow-Internals",
+  "version": "0.1.0",
+  "summary": "🌈 Rainbow's internal application support framework.",
+  "homepage": "https://github.com/rainbow-me/rainbow#readme",
+  "license": "MIT",
+  "authors": "Alex Thomas (@cawfree) <hello@cawfree.com> (https://github.com/rainbow-me)",
+  "platforms": {
+    "ios": "10.0"
+  },
+  "source": {
+    "git": "https://github.com/rainbow-me/rainbow.git",
+    "tag": "0.1.0"
+  },
+  "source_files": "ios/**/*.{h,m,mm,swift}",
+  "dependencies": {
+    "React-Core": [
+
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "ToolTipMenu",
+  "version": "5.2.1",
+  "summary": "A react-native wrapper for showing tooltips",
+  "license": "MIT",
+  "authors": {
+    "name": "Chirag Jain",
+    "email": "jain_chirag04@yahoo.com",
+    "url": "http://chiragjain.tumblr.com"
+  },
+  "homepage": "git@github.com:chirag04/react-native-tooltip.git",
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "git": "https://github.com/marcosrdz/react-native-tooltip.git",
+    "tag": "5.2.1"
+  },
+  "preserve_paths": "*",
+  "source_files": "ToolTipMenu/*.{h,m}",
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

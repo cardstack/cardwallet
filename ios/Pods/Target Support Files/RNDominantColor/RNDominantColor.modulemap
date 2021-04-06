@@ -1,0 +1,6 @@
+module RNDominantColor {
+  umbrella header "RNDominantColor-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+module PanModal {
+  umbrella header "PanModal-umbrella.h"
+
+  export *
+  module * { export * }
+}

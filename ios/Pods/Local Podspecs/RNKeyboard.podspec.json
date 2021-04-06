@@ -1,0 +1,22 @@
+{
+  "name": "RNKeyboard",
+  "version": "1.0.5",
+  "summary": "React Native component that provides a View that always match the height of the keyboard",
+  "description": "React Native component that provides a View that always match the height of the keyboard",
+  "authors": "Thomas Gazzoni",
+  "homepage": "https://github.com/thomasgazzoni/react-native-keyboard-area",
+  "license": "MIT",
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source": {
+    "git": "https://github.com/thomasgazzoni/react-native-keyboard-area.git",
+    "tag": "v1.0.5"
+  },
+  "source_files": "ios/*.{h,m,swift}",
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

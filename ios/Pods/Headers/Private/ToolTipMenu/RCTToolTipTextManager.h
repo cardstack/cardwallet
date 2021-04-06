@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-tooltip/ToolTipMenu/RCTToolTipTextManager.h

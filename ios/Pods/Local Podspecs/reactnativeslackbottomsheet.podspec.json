@@ -1,0 +1,24 @@
+{
+  "name": "reactnativeslackbottomsheet",
+  "version": "0.5.0",
+  "summary": "React Native Bottom Sheet",
+  "homepage": "https://github.com/osdnk/react-native-slack-bottom-sheet#readme",
+  "license": "MIT",
+  "authors": "osdnk <micosa97@gmail.com> (https://github.com/osdnk)",
+  "platforms": {
+    "ios": "10.0"
+  },
+  "source": {
+    "git": "https://github.com/osdnk/react-native-slack-bottom-sheet",
+    "tag": "0.5.0"
+  },
+  "source_files": "ios/**/*.{h,m,swift}",
+  "dependencies": {
+    "React": [
+
+    ],
+    "PanModal": [
+
+    ]
+  }
+}

@@ -6,7 +6,6 @@ ios/GoogleService-Info.plist
 #
 ios/ReaHeader.h
 .DS_Store
-ios/Pods/
 ios/*dSYM.zip
 
 # Xcode

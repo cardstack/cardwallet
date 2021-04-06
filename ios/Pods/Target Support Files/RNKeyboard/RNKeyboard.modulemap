@@ -1,0 +1,6 @@
+module RNKeyboard {
+  umbrella header "RNKeyboard-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+module reactnativeslackbottomsheet {
+  umbrella header "reactnativeslackbottomsheet-umbrella.h"
+
+  export *
+  module * { export * }
+}

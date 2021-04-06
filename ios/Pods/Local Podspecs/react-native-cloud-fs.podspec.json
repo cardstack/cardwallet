@@ -1,0 +1,22 @@
+{
+  "name": "react-native-cloud-fs",
+  "version": "2.3.0",
+  "summary": "iCloud integration",
+  "license": "MIT",
+  "homepage": "https://github.com/npomfret/react-native-cloud-fs",
+  "authors": "npomfret",
+  "platforms": {
+    "ios": "9.0",
+    "tvos": "9.2"
+  },
+  "source": {
+    "git": "https://github.com/npomfret/react-native-cloud-fs.git"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "requires_arc": true,
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}

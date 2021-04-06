@@ -1,0 +1,22 @@
+{
+  "name": "react-native-aes-crypto",
+  "version": "2.0.2",
+  "summary": "AES crypto native module for react-native",
+  "license": "GPL-3.0",
+  "authors": "tectiv3",
+  "homepage": "https://github.com/tectiv3/react-native-aes",
+  "platforms": {
+    "ios": "9.0",
+    "osx": "10.14"
+  },
+  "source": {
+    "git": "https://github.com/brunobar79/react-native-aes.git",
+    "tag": "v2.0.2"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "dependencies": {
+    "React-Core": [
+
+    ]
+  }
+}
