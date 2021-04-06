@@ -19,7 +19,7 @@ platform :ios do
     ########################
     # Build the app
     ########################
-    increment_build_number(build_number: options[ENV["BUILD_NUMBER"]])
+    increment_build_number(build_number: options[:build_number])
 
     # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
     build_ios_app(
@@ -37,8 +37,6 @@ platform :ios do
     decrypt_app_vars(
       namespace: 'beta'
     )
-
-    echo(message: "#{ENV["STAGE"]}")
 
     ########################
     # Pull certs & profiles
@@ -71,8 +69,6 @@ platform :ios do
       namespace: 'release'
     )
 
-    echo(message: "#{ENV["STAGE"]}")
-    
     ########################
     # Pull certs & profiles
     ########################
