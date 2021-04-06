@@ -24,7 +24,8 @@ platform :ios do
     # Make sure and set either GYM_WORKSPACE or GYM_PROJECT and GYM_SCHEME
     build_ios_app(
       export_method: "ad-hoc",
-      include_bitcode: true
+      include_bitcode: true,
+      skip_profile_detection: true
     )
   end
 
@@ -62,6 +63,9 @@ platform :ios do
     )
   end
 
+  ########################################################################
+  # Production Lane
+  ########################################################################
   desc "Production build"
   lane :production do |options|
     
