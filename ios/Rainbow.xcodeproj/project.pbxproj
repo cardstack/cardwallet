@@ -45,7 +45,6 @@
 		66FEC91623EDA14000A0F367 /* RoundedCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FEC91523EDA13F00A0F367 /* RoundedCornerView.swift */; };
 		6BFF0B0C84E94C548FBD6C7C /* RobotoMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEB96DEC8E3B406C81F3D687 /* RobotoMono-Italic.ttf */; };
 		7287CE1EC33B4913AEE1F4B6 /* SFMono-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 668A9E253DAF444A90ECB997 /* SFMono-Medium.otf */; };
-		7D0976B925FADAAE00F4FCA7 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		7F0C286B498D4510BFC5595F /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD7A7D2583F9495698AD88C5 /* Roboto-ThinItalic.ttf */; };
 		9785D7539F40457A9F03007D /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EBF5570607AA46F782096602 /* Roboto-Light.ttf */; };
 		9EE7A81B54D644FE90F32B5D /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D66612AA98046D893194DDE /* OpenSans-Regular.ttf */; };
@@ -95,6 +94,7 @@
 		ECB27D15201C4C2E8081D7F6 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF1E79467D474B3E8E8AD0DF /* Roboto-Italic.ttf */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		F808F9C60013433CA7EACD8D /* RobotoMono-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33608FF0889740AD84C648DC /* RobotoMono-Thin.ttf */; };
+		F9AACE9C261CE93500C9BA9B /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		FB7BFB556B6143988520C342 /* RobotoMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AF0E1269B254B038CB51E53 /* RobotoMono-BoldItalic.ttf */; };
 		FD5F8784C7A54C8892A5DDB3 /* RobotoMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E822716DEEC4A55BD74BD9E /* RobotoMono-Medium.ttf */; };
 		FE3CA493A270426C88C9DE2D /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3D1B6FE09774107AB3B067E /* Roboto-Bold.ttf */; };
@@ -663,6 +663,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9AACE9C261CE93500C9BA9B /* main.jsbundle in Resources */,
 				153D1AAE24777214007E4723 /* TransactionListLoadingViewCell.xib in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -687,7 +688,6 @@
 				A39A1DD0C9844C7E83998733 /* OpenSans-Light.ttf in Resources */,
 				019BFA419A1C493998D767A0 /* OpenSans-LightItalic.ttf in Resources */,
 				9EE7A81B54D644FE90F32B5D /* OpenSans-Regular.ttf in Resources */,
-				7D0976B925FADAAE00F4FCA7 /* main.jsbundle in Resources */,
 				E08425439FAA46D1804E1DEA /* OpenSans-SemiBold.ttf in Resources */,
 				C185E9DB63A649B09B0C005E /* OpenSans-SemiBoldItalic.ttf in Resources */,
 				4B1A7201EE54411485B5C796 /* Roboto-Black.ttf in Resources */,
@@ -734,7 +734,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n# Set up the nfm node version manager if present\nif [[ -s \"$HOME/.fnm/fnm\" ]]; then\n  eval \"`$HOME/.fnm/fnm env --multi`\"\nfi\n\n# Trying notion\nif [ -z \"$NODE_BINARY\" ]; then\nif [[ -s \"$HOME/.notion/bin/node\" ]]; then\nexport NODE_BINARY=\"$HOME/.notion/bin/node\"\nfi\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n  ../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export NODE_BINARY=node\n  ../node_modules/react-native/scripts/react-native-xcode.sh\n";
 			showEnvVarsInLog = 0;
 		};
 		8B01BDB9D832166C4998F43A /* [CP-User] [RNFB] Crashlytics Configuration */ = {
