@@ -18,7 +18,7 @@ import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
 import { Column } from '../layout';
 import AddressRow from './AddressRow';
-import { OptionItem } from '@cardstack/components';
+import { Box, OptionItem } from '@cardstack/components';
 import { position } from '@rainbow-me/styles';
 
 const listTopPadding = 7.5;
@@ -212,14 +212,14 @@ export default function WalletList({
       switch (item.rowType) {
         case RowTypes.ADDRESS:
           return (
-            <Column height={item.height}>
+            <Box height={item.height}>
               <AddressRow
                 data={item}
                 editMode={editMode}
                 onEditWallet={onEditWallet}
                 onPress={item.onPress}
               />
-            </Column>
+            </Box>
           );
         default:
           return null;
@@ -235,8 +235,8 @@ export default function WalletList({
       transition={skeletonTransition}
     >
       {ready ? (
-        <Fragment>
-          <WalletFlatList
+        <>
+          <FlatList
             data={rows}
             initialNumToRender={rows.length}
             ref={scrollView}
@@ -245,7 +245,7 @@ export default function WalletList({
             showDividers={showDividers}
           />
           {showDividers && <WalletListDivider />}
-          <WalletListFooter>
+          <Box marginTop={15}>
             <OptionItem
               borderIcon
               disabled={editMode}
@@ -269,8 +269,8 @@ export default function WalletList({
               }}
               title="Add an existing account"
             />
-          </WalletListFooter>
-        </Fragment>
+          </Box>
+        </>
       ) : (
         <EmptyWalletList />
       )}

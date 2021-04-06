@@ -9,7 +9,6 @@ import React, {
 } from 'react';
 import { InteractionManager } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import { useSafeArea } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
@@ -101,7 +100,7 @@ export default function ChangeWalletSheet() {
 
   let headerHeight = android ? 0 : 30;
   let listHeight =
-    walletRowHeight * walletRowCount + footerHeight + listPaddingBottom;
+    walletRowHeight * walletRowCount + footerHeight + listPaddingBottom + 30;
   let scrollEnabled = false;
   let showDividers = false;
   if (listHeight > maxListHeight) {
@@ -110,8 +109,6 @@ export default function ChangeWalletSheet() {
     scrollEnabled = true;
     showDividers = true;
   }
-
-  const insets = useSafeArea();
   useEffect(() => {
     setCurrentAddress(accountAddress);
   }, [accountAddress]);
@@ -432,41 +429,39 @@ export default function ChangeWalletSheet() {
 
   return (
     <Sheet borderRadius={30} hideHandle={false}>
-      <Container borderWidth={1}>
-        {android && <Whitespace />}
-        <Container borderColor="green" borderWidth={3} justify="space-between">
-          <Text fontSize={18} fontWeight="700" textAlign="center">
-            Accounts
+      {android && <Whitespace />}
+      <Container height={headerHeight}>
+        <Text fontSize={18} fontWeight="700" textAlign="center">
+          Accounts
+        </Text>
+        <Touchable
+          onPress={() => setEditMode(e => !e)}
+          position="absolute"
+          right={20}
+          top={4}
+        >
+          <Text color="settingsGray" fontWeight="600">
+            {editMode ? 'Done' : 'Edit'}
           </Text>
-          <Touchable
-            onPress={() => setEditMode(e => !e)}
-            position="absolute"
-            right={20}
-            top={4}
-          >
-            <Text color="settingsGray" fontWeight="600">
-              {editMode ? 'Done' : 'Edit'}
-            </Text>
-          </Touchable>
-          {showDividers && (
-            <Divider color={colors.rowDividerExtraLight} inset={[0, 15]} />
-          )}
-        </Container>
-
-        <WalletList
-          accountAddress={currentAddress}
-          allWallets={walletsWithBalancesAndNames}
-          currentWallet={currentSelectedWallet}
-          editMode={editMode}
-          height={listHeight}
-          onChangeAccount={onChangeAccount}
-          onEditWallet={onEditWallet}
-          onPressAddAccount={onPressAddAccount}
-          onPressImportSeedPhrase={onPressImportSeedPhrase}
-          scrollEnabled={scrollEnabled}
-          showDividers={showDividers}
-        />
+        </Touchable>
+        {showDividers && (
+          <Divider color={colors.rowDividerExtraLight} inset={[0, 15]} />
+        )}
       </Container>
+
+      <WalletList
+        accountAddress={currentAddress}
+        allWallets={walletsWithBalancesAndNames}
+        currentWallet={currentSelectedWallet}
+        editMode={editMode}
+        height={listHeight}
+        onChangeAccount={onChangeAccount}
+        onEditWallet={onEditWallet}
+        onPressAddAccount={onPressAddAccount}
+        onPressImportSeedPhrase={onPressImportSeedPhrase}
+        scrollEnabled={scrollEnabled}
+        showDividers={showDividers}
+      />
     </Sheet>
   );
 }
