@@ -8,10 +8,6 @@ ios/ReaHeader.h
 .DS_Store
 ios/Pods/
 ios/*dSYM.zip
-ios/debug.xcconfig
-ios/release.xcconfig
-ios/localrelease.xcconfig
-ios/staging.xcconfig
 
 # Xcode
 #
