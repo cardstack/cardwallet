@@ -145,28 +145,28 @@ export default function WalletProfileState({
       </Container>
       <Container marginVertical={5}>
         <ButtonPressAnimation onPress={handleSubmit}>
-          <OptionItem
-            iconProps={{
-              color: 'settingsGray',
-              visible: actionType === 'Create',
-              name: biometryType,
-            }}
-            marginLeft={12}
-            testID="wallet-info-submit-button"
-            textProps={{ color: 'settingsGray' }}
-            title={isNewProfile ? `${actionType} Account` : 'Done'}
-            visible={actionType === 'Create'}
-          />
+          {isNewProfile ? (
+            <OptionItem
+              iconProps={{
+                color: 'settingsGray',
+                visible: actionType === 'Create',
+                name: biometryType,
+              }}
+              marginLeft={12}
+              testID="wallet-info-submit-button"
+              textProps={{ color: 'settingsGray' }}
+              title={`${actionType} Account`}
+            />
+          ) : (
+            <Text color="settingsGray" fontWeight="600" textAlign="center">
+              Done
+            </Text>
+          )}
         </ButtonPressAnimation>
       </Container>
       <Container marginBottom={6} marginTop={5}>
-        <ButtonPressAnimation
-          onPress={handleCancel}
-          style={{
-            alignItems: 'center',
-          }}
-        >
-          <Text color="grayText" fontWeight="600">
+        <ButtonPressAnimation onPress={handleCancel}>
+          <Text color="grayText" fontWeight="600" textAlign="center">
             Cancel
           </Text>
         </ButtonPressAnimation>

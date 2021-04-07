@@ -238,11 +238,13 @@ export default function WalletList({
         <>
           <FlatList
             data={rows}
+            getItemLayout={getItemLayout}
             initialNumToRender={rows.length}
+            keyExtractor={keyExtractor}
             ref={scrollView}
+            removeClippedSubviews
             renderItem={renderItem}
             scrollEnabled={scrollEnabled}
-            showDividers={showDividers}
           />
           {showDividers && <WalletListDivider />}
           <Box marginTop={15}>
@@ -250,6 +252,7 @@ export default function WalletList({
               borderIcon
               disabled={editMode}
               iconProps={{ name: 'plus', size: 22 }}
+              marginBottom={3}
               onPress={onPressAddAccount}
               textProps={{
                 color: editMode ? 'grayText' : 'black',
@@ -261,7 +264,7 @@ export default function WalletList({
               borderIcon
               disabled={editMode}
               iconProps={{ name: 'download', size: 22 }}
-              marginTop={2}
+              marginTop={3}
               onPress={onPressImportSeedPhrase}
               textProps={{
                 color: editMode ? 'grayText' : 'black',

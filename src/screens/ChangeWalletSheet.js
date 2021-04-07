@@ -34,7 +34,6 @@ import {
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
-import { spacing } from '@cardstack/theme';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
@@ -48,12 +47,6 @@ import {
   showActionSheetWithOptions,
 } from '@rainbow-me/utils';
 import logger from 'logger';
-
-const deviceHeight = deviceUtils.dimensions.height;
-const footerHeight = 111;
-const listPaddingBottom = 6;
-const walletRowHeight = 59;
-const maxListHeight = deviceHeight - 220;
 
 const Whitespace = styled.View`
   background-color: ${({ theme: { colors } }) => colors.white};
@@ -98,9 +91,14 @@ export default function ChangeWalletSheet() {
 
   const walletRowCount = useMemo(() => getWalletRowCount(wallets), [wallets]);
 
+  const deviceHeight = deviceUtils.dimensions.height;
+  const footerHeight = 160;
+  const listPaddingBottom = 6;
+  const walletRowHeight = 60;
+  const maxListHeight = deviceHeight - 220;
   let headerHeight = android ? 0 : 30;
   let listHeight =
-    walletRowHeight * walletRowCount + footerHeight + listPaddingBottom + 30;
+    walletRowHeight * walletRowCount + footerHeight + listPaddingBottom;
   let scrollEnabled = false;
   let showDividers = false;
   if (listHeight > maxListHeight) {
