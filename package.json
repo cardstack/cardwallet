@@ -2,8 +2,8 @@
   "name": "Rainbow",
   "private": true,
   "scripts": {
-    "setup": "yarn install && yarn allow-scripts && yarn postinstall",
-    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
+    "setup": "yarn install && yarn postinstall",
+    "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "android": "adb uninstall me.rainbow || true && react-native run-android",
     "android:apk": "cd android && ./gradlew assembleRelease && (adb uninstall me.rainbow || true) && adb install app/build/outputs/apk/release/app-release.apk",
     "android:bundle": "./scripts/check-env.sh && cd android && ./gradlew bundleRelease && open app/build/outputs/bundle/release/",
@@ -42,6 +42,7 @@
     "install-pods-no-flipper": "cd ios && bundle exec env SKIP_FLIPPER=true pod install --repo-update && cd ..",
     "ios": "react-native run-ios --simulator='iPhone 11'",
     "lint": "eslint --ext '.ts,.tsx,.js,.jsx' cardstack",
+    "nodeify": "rn-nodeify --install --hack 'crypto,buffer,react-native-randombytes,vm,stream,http,https,os,url,net,fs,process'",
     "ts-check": "yarn tsc --skipLibCheck --noEmit",
     "prestorybook": "rnstl",
     "postinstall": "./scripts/postinstall.sh",

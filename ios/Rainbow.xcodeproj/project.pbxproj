@@ -33,6 +33,8 @@
 		3C109692EB3643688A68E778 /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C771B5C4107C418D981341FE /* OpenSans-Italic.ttf */; };
 		3CBE29CD2381E43900BE05AC /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBE29CC2381E43900BE05AC /* Dummy.swift */; };
 		4B1A7201EE54411485B5C796 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1636A2E4BB014C94A7BF355F /* Roboto-Black.ttf */; };
+		4E12730A261D25670070EFB7 /* main.jsbundle in Sources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
+		4E843F46261E090500CCD1C6 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		4F3992B997474CDBA55CC4B4 /* RobotoMono-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 69B1922CA1E74860ACB64E9F /* RobotoMono-Light.ttf */; };
 		6630540924A38A1900E5B030 /* RainbowText.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630540824A38A1900E5B030 /* RainbowText.m */; };
 		6635730624939991006ACFA6 /* SafeStoreReview.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635730524939991006ACFA6 /* SafeStoreReview.m */; };
@@ -94,7 +96,6 @@
 		ECB27D15201C4C2E8081D7F6 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF1E79467D474B3E8E8AD0DF /* Roboto-Italic.ttf */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		F808F9C60013433CA7EACD8D /* RobotoMono-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33608FF0889740AD84C648DC /* RobotoMono-Thin.ttf */; };
-		F9AACE9C261CE93500C9BA9B /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		FB7BFB556B6143988520C342 /* RobotoMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AF0E1269B254B038CB51E53 /* RobotoMono-BoldItalic.ttf */; };
 		FD5F8784C7A54C8892A5DDB3 /* RobotoMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E822716DEEC4A55BD74BD9E /* RobotoMono-Medium.ttf */; };
 		FE3CA493A270426C88C9DE2D /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3D1B6FE09774107AB3B067E /* Roboto-Bold.ttf */; };
@@ -601,7 +602,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				9FF961FEA7AF435FA18ED988 /* Upload Debug Symbols to Sentry */,
 				668ADB3225A4E3A40050859D /* Embed App Extensions */,
 				C137CFED75DB034B5620E331 /* [CP] Copy Pods Resources */,
 				8B01BDB9D832166C4998F43A /* [CP-User] [RNFB] Crashlytics Configuration */,
@@ -663,7 +663,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F9AACE9C261CE93500C9BA9B /* main.jsbundle in Resources */,
+				4E843F46261E090500CCD1C6 /* main.jsbundle in Resources */,
 				153D1AAE24777214007E4723 /* TransactionListLoadingViewCell.xib in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -734,8 +734,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n  ../node_modules/react-native/scripts/react-native-xcode.sh\n";
-			showEnvVarsInLog = 0;
+			shellScript = "cd $PROJECT_DIR/..\nexport NODE_BINARY=node\n./node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		8B01BDB9D832166C4998F43A /* [CP-User] [RNFB] Crashlytics Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -746,20 +745,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\nif [[ ${PODS_ROOT} ]]; then\n  echo \"info: Exec FirebaseCrashlytics Run from Pods\"\n  \"${PODS_ROOT}/FirebaseCrashlytics/run\"\nelse\n  echo \"info: Exec FirebaseCrashlytics Run from framework\"\n  \"${PROJECT_DIR}/FirebaseCrashlytics.framework/run\"\nfi\n";
-		};
-		9FF961FEA7AF435FA18ED988 /* Upload Debug Symbols to Sentry */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Upload Debug Symbols to Sentry";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n# Set up the nfm node version manager if present\nif [[ -s \"$HOME/.fnm/fnm\" ]]; then\n  eval \"`$HOME/.fnm/fnm env --multi`\"\nfi\n\n# Trying notion\nif [ -z \"$NODE_BINARY\" ]; then\nif [[ -s \"$HOME/.notion/bin/node\" ]]; then\nexport NODE_BINARY=\"$HOME/.notion/bin/node\"\nfi\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n# Run sentry cli script to upload debug symbols\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli upload-dif \"$DWARF_DSYM_FOLDER_PATH\"\n";
 		};
 		B9CAA2ED3508EB0C922D62F0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -844,6 +829,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E12730A261D25670070EFB7 /* main.jsbundle in Sources */,
 				66A28EB024CAF1B500410A88 /* TestFlight.m in Sources */,
 				6630540924A38A1900E5B030 /* RainbowText.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
