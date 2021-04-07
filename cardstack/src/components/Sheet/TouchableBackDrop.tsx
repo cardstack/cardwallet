@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Touchable } from '../index';
+import { Touchable, Container } from '..';
 
-export const BackDrop = ({
+export const TouchableBackDrop = ({
   zIndex = 0,
   onPress = undefined,
-}: BackDropProps) => {
+}: TouchableBackDropProps) => {
   return (
     <Touchable
       activeOpacity={1}
@@ -16,7 +16,7 @@ export const BackDrop = ({
       top={0}
       bottom={0}
     >
-      <Box
+      <Container
         alignItems="center"
         justifyContent="center"
         backgroundColor="transparent"
@@ -25,7 +25,7 @@ export const BackDrop = ({
   );
 };
 
-interface BackDropProps {
+interface TouchableBackDropProps {
   /** hideHandle */
   onPress?: () => void;
   /** zIndex */

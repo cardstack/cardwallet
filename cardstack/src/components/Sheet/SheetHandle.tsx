@@ -1,12 +1,12 @@
 import React from 'react';
 import { ViewProps } from 'react-native';
-import { Box } from '../Box';
+import { Container } from '../Container';
 
 export const HandleHeight = 5;
 
 export const SheetHandle = ({ color = 'black' }: SheetProps) => {
   return (
-    <Box
+    <Container
       backgroundColor={color}
       height={5}
       width={36}

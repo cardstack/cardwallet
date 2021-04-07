@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Container } from '../Container';
-import { Box } from '../Box';
-import { BackDrop } from './BackDrop';
+
+import { TouchableBackDrop } from './TouchableBackDrop';
 
 export const Sheet = ({
   borderRadius = 39,
@@ -15,15 +15,15 @@ export const Sheet = ({
 
   return (
     <Container flex={1} justifyContent="flex-end">
-      <BackDrop onPress={goBack} />
-      <Box
+      <TouchableBackDrop onPress={goBack} />
+      <Container
         backgroundColor="white"
         borderTopStartRadius={borderRadius}
         borderTopEndRadius={borderRadius}
         paddingBottom={insets.bottom}
         width="100%"
       >
-        <Box
+        <Container
           paddingTop={3}
           paddingBottom={4}
           height={5}
@@ -32,7 +32,7 @@ export const Sheet = ({
           flex={-1}
         >
           {!hideHandle && (
-            <Box
+            <Container
               backgroundColor="black"
               height={5}
               width={36}
@@ -40,9 +40,9 @@ export const Sheet = ({
               opacity={0.25}
             />
           )}
-        </Box>
+        </Container>
         {children}
-      </Box>
+      </Container>
     </Container>
   );
 };
