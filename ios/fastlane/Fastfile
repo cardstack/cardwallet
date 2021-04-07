@@ -27,8 +27,7 @@ platform :ios do
       include_bitcode: true,
       skip_profile_detection: true,
       scheme: "Rainbow",
-      configuration: "Release",
-      silent: true
+      configuration: "Release"
     )
   end
 
