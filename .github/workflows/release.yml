@@ -12,7 +12,7 @@ on:
   #         required: true
   push:
     branches:
-      - 'ig/ci-setup'
+      - 'ci-setup'
 
 jobs:
   release-ios:
@@ -24,13 +24,15 @@ jobs:
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2
+        with:
+          ref: v1.0.5-1
       - name: Node
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.5
       - name: Bundle install
         run: bundle install
-      - name: Decrypt vars
+      - name: Decrypt fastlane vars
         run: bundle exec fastlane run decrypt_fastlane_vars
       - name: Yarn Install
         run: yarn install --network-timeout 300000 --network-concurrency 1
@@ -44,8 +46,8 @@ jobs:
         run: cd ios && bundle install
       - name: Pod Install (ios)
         run: cd ios && pod install
-      - name: Run fastlane alpha (ios)
-        run: cd ios && bundle exec fastlane alpha build_number:"${{ env.BUILD_NUMBER }}"
+      - name: Run fastlane beta (ios)
+        run: cd ios && bundle exec fastlane beta build_number:"${{ env.BUILD_NUMBER }}"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           FASTLANE_PASSWORD: ${{ secrets.PERSONAL_FASTLANE_PASSWORD }}
