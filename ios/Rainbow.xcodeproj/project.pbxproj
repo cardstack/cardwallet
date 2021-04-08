@@ -101,19 +101,6 @@
 		FE3CA493A270426C88C9DE2D /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3D1B6FE09774107AB3B067E /* Roboto-Bold.ttf */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		668ADB3225A4E3A40050859D /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		009215AA8FF64348B2A73F5E /* RobotoMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Regular.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Regular.ttf"; sourceTree = "<group>"; };
@@ -602,8 +589,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				668ADB3225A4E3A40050859D /* Embed App Extensions */,
-				C137CFED75DB034B5620E331 /* [CP] Copy Pods Resources */,
+				F0E0F8C4F5D1F4A6D6CBCA0F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -757,7 +743,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C137CFED75DB034B5620E331 /* [CP] Copy Pods Resources */ = {
+		F0E0F8C4F5D1F4A6D6CBCA0F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
