@@ -1,6 +1,5 @@
 import React from 'react';
 
-// import { RowWithMargins } from '../layout';
 import { Container, Icon, Text } from '@cardstack/components';
 import BiometryTypes from '@rainbow-me/helpers/biometryTypes';
 import { useBiometryType } from '@rainbow-me/hooks';
@@ -12,7 +11,7 @@ export default function BiometricButtonContent({
   testID,
 }) {
   const biometryType = useBiometryType();
-  console.log({ biometryType });
+
   const showBiometryIcon =
     showIcon &&
     (biometryType === BiometryTypes.passcode ||

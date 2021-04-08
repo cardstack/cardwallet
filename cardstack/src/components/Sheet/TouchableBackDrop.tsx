@@ -1,5 +1,5 @@
 import React from 'react';
-import { Touchable, Container } from '..';
+import { Touchable, Container } from '../.';
 
 export const TouchableBackDrop = ({
   zIndex = 0,
