@@ -55,6 +55,7 @@ platform :ios do
     build_ios_app(
       export_method: "app-store",
       include_bitcode: true,
+      skip_profile_detection: true,
       scheme: "Rainbow",
       configuration: "Release"
     )
