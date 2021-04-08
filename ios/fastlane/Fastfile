@@ -1,6 +1,10 @@
 default_platform(:ios)
 
 platform :ios do
+  before_all do |options|
+    setup_ci
+  end
+
   ########################################################################
   # Alpha Lane
   ########################################################################
@@ -27,8 +31,7 @@ platform :ios do
       include_bitcode: true,
       skip_profile_detection: true,
       scheme: "Rainbow",
-      configuration: "Release",
-      silent: true
+      configuration: "Release"
     )
   end
 

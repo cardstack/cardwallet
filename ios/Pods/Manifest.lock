@@ -23,9 +23,6 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.63.3)
   - Firebase/CoreOnly (6.30.0):
     - FirebaseCore (= 6.10.0)
-  - Firebase/Crashlytics (6.30.0):
-    - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 4.4.0)
   - Firebase/Messaging (6.30.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.6.1)
@@ -38,12 +35,6 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
     - nanopb (~> 1.30905.0)
-  - FirebaseCrashlytics (4.4.0):
-    - FirebaseCore (~> 6.10)
-    - FirebaseInstallations (~> 1.6)
-    - GoogleDataTransport (~> 7.2)
-    - nanopb (~> 1.30905.0)
-    - PromisesObjC (~> 1.2)
   - FirebaseInstallations (1.7.0):
     - FirebaseCore (~> 6.10)
     - GoogleUtilities/Environment (~> 6.7)
@@ -167,7 +158,7 @@ PODS:
   - Permission-FaceID (2.2.2):
     - RNPermissions
   - pop (1.0.12)
-  - PromisesObjC (1.2.11)
+  - PromisesObjC (1.2.12)
   - Protobuf (3.13.0)
   - Rainbow-Internals (0.1.0):
     - React-Core
@@ -471,10 +462,6 @@ PODS:
   - RNFBApp (8.4.5):
     - Firebase/CoreOnly (~> 6.30.0)
     - React-Core
-  - RNFBCrashlytics (8.4.9):
-    - Firebase/Crashlytics (~> 6.30.0)
-    - React-Core
-    - RNFBApp
   - RNFBMessaging (7.9.0):
     - Firebase/Messaging (~> 6.30.0)
     - React-Core
@@ -663,7 +650,6 @@ DEPENDENCIES:
   - RNDominantColor (from `../node_modules/rn-dominant-color`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
-  - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -700,7 +686,6 @@ SPEC REPOS:
     - Firebase
     - FirebaseCore
     - FirebaseCoreDiagnostics
-    - FirebaseCrashlytics
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
@@ -858,8 +843,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fast-image"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
-  RNFBCrashlytics:
-    :path: "../node_modules/@react-native-firebase/crashlytics"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFS:
@@ -927,7 +910,6 @@ SPEC CHECKSUMS:
   Firebase: 210f41ca352067d83b1ba4fd2e7fb49a0c017397
   FirebaseCore: 9a41e2de78fef10f63cee30ab10e2945266bc1fc
   FirebaseCoreDiagnostics: 7535fe695737f8c5b350584292a70b7f8ff0357b
-  FirebaseCrashlytics: 859918905322e8816d2b5ab7fe54bf5a0c84d21c
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 82d75b3770a78bbce470769a6980429608b4c407
@@ -953,7 +935,7 @@ SPEC CHECKSUMS:
   Permission-Camera: 5d2aaf95592660b6dcb5e8d1d90ed5d0156cad02
   Permission-FaceID: 8f034a57c60ed8c602d184f485a9bd524c0f98b7
   pop: d582054913807fd11fd50bfe6a539d91c7e1a55a
-  PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Rainbow-Internals: 6e69837f173f2017e4fff07e64d77d429e5a958c
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
@@ -1006,7 +988,6 @@ SPEC CHECKSUMS:
   RNDominantColor: 72126cb96ffedf4bcd564ed00e2e578f5b93e0d6
   RNFastImage: e19ba191922e7dab9d932a4d59d62d76660aa222
   RNFBApp: 570b136767f588b7eef0ab918284e9fe364d0c3e
-  RNFBCrashlytics: 7b60463c742f830255fa76f13a837f95c6581700
   RNFBMessaging: dc3849747c2c61bfcd3c1ce6b5390f27ff4f7756
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: b6b359bb800ae399a9c8b27032bdbf7c18f08a08
@@ -1041,4 +1022,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 888ba22051801541c4ba2dbecd4a0736f9bead9d
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.0

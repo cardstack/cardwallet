@@ -8,11 +8,11 @@ on:
   #         required: true
   #         default: 'beta'
   #       tag:
-  #         description: 'Release tag to build'  
+  #         description: 'Release tag to build'
   #         required: true
   push:
     branches:
-      - "ci-setup"
+      - 'ig/ci-setup'
 
 jobs:
   release-ios:
@@ -32,8 +32,20 @@ jobs:
         run: bundle install
       - name: Decrypt vars
         run: bundle exec fastlane run decrypt_fastlane_vars
-      - name: Run lane
-        run: yarn install --network-timeout 300000 --network-concurrency 1 && yarn patch-package && cd ios && pod install && bundle install && yarn build:ios && bundle exec fastlane alpha build_number:"${{ env.BUILD_NUMBER }}"
+      - name: Yarn Install
+        run: yarn install --network-timeout 300000 --network-concurrency 1
+      - name: Patch Packages
+        run: yarn patch-package
+      - name: RN Nodeify
+        run: yarn nodeify
+      - name: Build iOS
+        run: yarn build:ios
+      - name: Bundle Install (ios)
+        run: cd ios && bundle install
+      - name: Pod Install (ios)
+        run: cd ios && pod install
+      - name: Run fastlane alpha (ios)
+        run: cd ios && bundle exec fastlane alpha build_number:"${{ env.BUILD_NUMBER }}"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           FASTLANE_PASSWORD: ${{ secrets.PERSONAL_FASTLANE_PASSWORD }}
