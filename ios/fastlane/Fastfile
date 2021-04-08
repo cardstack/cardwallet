@@ -64,7 +64,8 @@ platform :ios do
     # Upload to TestFlight
     ########################
     upload_to_testflight(
-      changelog: "Beta Release: ${tag}"
+      skip_waiting_for_build_processing: true,
+      apple_id: 1549183378
     )
   end
 
