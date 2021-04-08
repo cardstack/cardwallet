@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2
-        with:
-          ref: v1.0.5-1
       - name: Node
         uses: actions/setup-node@v1
         with:
