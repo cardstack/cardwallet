@@ -14,7 +14,6 @@ import styled from 'styled-components';
 
 import Divider from '../components/Divider';
 import WalletList from '../components/change-wallet/WalletList';
-// import { Sheet } from '../components/sheet';
 import { backupUserDataIntoCloud } from '../handlers/cloudBackup';
 import { removeWalletData } from '../handlers/localstorage/removeWallet';
 import showWalletErrorAlert from '../helpers/support';
@@ -23,7 +22,6 @@ import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
 import { cleanUpWalletKeys, createWallet } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
-// import { dataGetTransactions } from '../redux/data';
 import {
   addressSetSelected,
   createAccountForWallet,
