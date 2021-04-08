@@ -17,8 +17,6 @@ export const SheetHandle = ({ color = 'black' }: SheetProps) => {
 };
 
 export interface SheetProps extends ViewProps {
-  /** borderRadius for initials */
+  /** color*/
   color?: any;
-  /** hideHandle */
-  showBlur?: boolean;
 }

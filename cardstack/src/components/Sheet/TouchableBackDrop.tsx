@@ -26,7 +26,7 @@ export const TouchableBackDrop = ({
 };
 
 interface TouchableBackDropProps {
-  /** hideHandle */
+  /** onPress */
   onPress?: () => void;
   /** zIndex */
   zIndex?: number;
