@@ -1,3 +1,4 @@
+import { border } from '@shopify/restyle';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
@@ -5,6 +6,7 @@ import { initials } from '../../utils';
 import { Centered } from '../layout';
 import { Text } from '../text';
 import { CoinIconSize } from './CoinIcon';
+import { Container } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
 import ShadowStack from 'react-native-shadow-stack';
@@ -54,13 +56,7 @@ export default function RequestVendorLogoIcon({
   );
 
   return (
-    <ShadowStack
-      {...props}
-      {...position.sizeAsObject(size)}
-      backgroundColor={colors.white}
-      borderRadius={borderRadius}
-      shadows={RVLIShadows(colors)[showLargeShadow ? 'large' : 'default']}
-    >
+    <Container backgroundColor="white" borderRadius={borderRadius} {...props}>
       <Content color={bgColor} size={size}>
         {imageUrl && !error ? (
           <ImgixImage
@@ -79,6 +75,6 @@ export default function RequestVendorLogoIcon({
           </Text>
         )}
       </Content>
-    </ShadowStack>
+    </Container>
   );
 }

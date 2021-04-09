@@ -14,16 +14,16 @@ import { AppRegistry } from 'react-native';
 
 import theme from '@cardstack/theme';
 import { name as appName } from '../../app.json';
-import { CenteredContainer } from '../src/components/Container';
+import { CenteredContainer, Container } from '../src/components/Container';
 import { loadStories } from './storyLoader';
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 import { withKnobs } from '@storybook/addon-knobs';
 
 // adding a centered-view layout!
 const CenterView = ({ children }) => (
-  <CenteredContainer flex={1} width="100%" padding={4} backgroundColor="backgroundBlue">
+  <Container flex={1} backgroundColor="backgroundBlue">
     {children}
-  </CenteredContainer>
+  </Container>
 );
 
 // global decorators!

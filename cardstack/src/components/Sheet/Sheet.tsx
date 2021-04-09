@@ -20,7 +20,7 @@ export const Sheet = ({
         backgroundColor="white"
         borderTopStartRadius={borderRadius}
         borderTopEndRadius={borderRadius}
-        paddingBottom={insets.bottom}
+        paddingBottom={insets.bottom - 10}
         width="100%"
       >
         <Container

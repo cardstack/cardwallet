@@ -8,6 +8,11 @@ const blue = {
   },
 };
 
+const secondary = {
+  backgroundColor: 'buttonSecondaryBackground',
+  borderColor: 'buttonSecondaryBorder',
+};
+
 const small = {
   textStyle: {
     fontSize: 14,
@@ -51,16 +56,17 @@ export const buttonVariants = {
     },
     width: screenWidth - 40,
   },
-  secondary: {
-    backgroundColor: 'buttonSecondaryBackground',
-    borderColor: 'buttonSecondaryBorder',
-  },
+  secondary: { ...secondary },
   dark,
   blue,
   small,
   smallBlue: {
     ...small,
     ...blue,
+  },
+  smallSecondary: {
+    ...small,
+    ...secondary,
   },
   extraSmallDark: {
     ...extraSmall,

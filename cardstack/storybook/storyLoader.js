@@ -12,6 +12,7 @@ function loadStories() {
   require('../src/components/SystemNotification/SystemNotification.story');
   require('../src/components/Touchable/Touchable.story');
   require('../src/components/TransactionCoinRow/TransactionCoinRow.story');
+  require('../src/components/Sheet/Sheet.story')
 }
 
 const stories = [
@@ -23,6 +24,7 @@ const stories = [
   '../src/components/SystemNotification/SystemNotification.story',
   '../src/components/Touchable/Touchable.story',
   '../src/components/TransactionCoinRow/TransactionCoinRow.story',
+  '../src/components/Sheet/Sheet.story'
 ];
 
 module.exports = {

@@ -2,9 +2,9 @@ import 'react-native-gesture-handler';
 import './shim';
 
 import lang from 'i18n-js';
-import {language} from 'react-native-languages';
+import { language } from 'react-native-languages';
 
-import {resources} from './src/languages';
+import { resources } from './src/languages';
 
 const USE_STORYBOOK = false;
 
