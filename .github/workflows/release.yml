@@ -12,7 +12,7 @@ on:
   #         required: true
   push:
     branches:
-      - 'ci-setup'
+      - 'ig/ci-setup'
 
 jobs:
   release-ios:
