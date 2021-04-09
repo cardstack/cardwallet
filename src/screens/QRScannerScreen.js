@@ -43,13 +43,6 @@ const ScannerContainer = styled(Centered).attrs({
   overflow: hidden;
 `;
 
-const ScannerHeader = styled(Header).attrs({
-  justify: 'space-between',
-})`
-  position: absolute;
-  top: 0;
-`;
-
 function useFocusFromSwipe() {
   const [isFocused, setIsFocused] = useState(false);
   useCode(
@@ -86,10 +79,17 @@ export default function QRScannerScreen() {
     isFocusedAndroid && !initializeCamera && setInitializeCamera(true);
   }, [initializeCamera, isFocusedAndroid]);
 
-  const { colors } = useTheme();
-
   return (
     <View>
+      <Header backgroundColor="transparent" position="absolute" zIndex={1}>
+        <BackButton
+          color="blue"
+          direction="left"
+          onPress={handlePressBackButton}
+          testID="goToBalancesFromScanner"
+        />
+        <EmulatorPasteUriButton />
+      </Header>
       {discoverSheetAvailable && ios ? <DiscoverSheet /> : null}
       <ScannerContainer>
         <Background />
@@ -115,15 +115,6 @@ export default function QRScannerScreen() {
             )}
           </BubbleSheet>
         )}
-        <ScannerHeader>
-          <BackButton
-            color={colors.whiteLabel}
-            direction="left"
-            onPress={handlePressBackButton}
-            testID="goToBalancesFromScanner"
-          />
-          <EmulatorPasteUriButton />
-        </ScannerHeader>
       </ScannerContainer>
     </View>
   );
