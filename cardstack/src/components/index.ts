@@ -12,3 +12,4 @@ export * from './TransactionCoinRow';
 export * from './BalanceCoinRow';
 export * from './OptionItem';
 export * from './Input';
+export * from './Sheet';
