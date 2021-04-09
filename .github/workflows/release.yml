@@ -32,6 +32,16 @@ jobs:
         run: bundle install
       - name: Decrypt fastlane vars
         run: bundle exec fastlane run decrypt_fastlane_vars
+      - name: Find yarn cache location
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: JS package cache
+        uses: actions/cache@v2.1.0
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Yarn Install
         run: yarn install --network-timeout 300000 --network-concurrency 1
       - name: Patch Packages
@@ -48,9 +58,6 @@ jobs:
         run: cd ios && bundle exec fastlane beta build_number:"${{ env.BUILD_NUMBER }}"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          FASTLANE_PASSWORD: ${{ secrets.PERSONAL_FASTLANE_PASSWORD }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
-          SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: true
-          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
