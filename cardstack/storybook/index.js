@@ -21,7 +21,7 @@ import { withKnobs } from '@storybook/addon-knobs';
 
 // adding a centered-view layout!
 const CenterView = ({ children }) => (
-  <Container flex={1} backgroundColor="backgroundBlue">
+  <Container flex={1} width="100%" backgroundColor="backgroundBlue">
     {children}
   </Container>
 );

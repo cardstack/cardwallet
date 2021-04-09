@@ -6,7 +6,7 @@ import { Sheet } from '../.';
 
 const Stack = createStackNavigator();
 
-const reactNavigationDecorator = story => {
+const reactNavigationDecorator = (story: any) => {
   const Screen = () => story();
   return (
     <NavigationContainer independent={true}>

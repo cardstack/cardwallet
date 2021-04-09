@@ -16,6 +16,7 @@ import {
   WalletConnectExplainer,
   WalletConnectList,
 } from '../components/walletconnect-list';
+import { CenteredContainer, Container, Sheet } from '@cardstack/components';
 import useExperimentalFlag, {
   DISCOVER_SHEET,
 } from '@rainbow-me/config/experimentalHooks';
@@ -80,7 +81,7 @@ export default function QRScannerScreen() {
   }, [initializeCamera, isFocusedAndroid]);
 
   return (
-    <View>
+    <Container>
       <Header backgroundColor="transparent" position="absolute" zIndex={1}>
         <BackButton
           color="blue"
@@ -91,7 +92,14 @@ export default function QRScannerScreen() {
         <EmulatorPasteUriButton />
       </Header>
       {discoverSheetAvailable && ios ? <DiscoverSheet /> : null}
-      <ScannerContainer>
+      <CenteredContainer
+        backgroundColor="backgroundBlue"
+        borderWidth={5}
+        flexDirection="column"
+        height="100%"
+        overflow="hidden"
+        // width="100%"
+      >
         <Background />
         <CameraDimmer>
           {initializeCamera && (
@@ -102,20 +110,22 @@ export default function QRScannerScreen() {
             />
           )}
         </CameraDimmer>
-        {discoverSheetAvailable ? (
-          android ? (
-            <DiscoverSheet />
-          ) : null
-        ) : (
-          <BubbleSheet onLayout={onSheetLayout}>
-            {walletConnectorsCount ? (
-              <WalletConnectList items={walletConnectorsByDappName} />
-            ) : (
-              <WalletConnectExplainer />
-            )}
-          </BubbleSheet>
-        )}
-      </ScannerContainer>
-    </View>
+        <Container bottom={0} position="absolute" width="100%">
+          {discoverSheetAvailable ? (
+            android ? (
+              <DiscoverSheet />
+            ) : null
+          ) : (
+            <Sheet hideHandle>
+              {walletConnectorsCount ? (
+                <WalletConnectList items={walletConnectorsByDappName} />
+              ) : (
+                <WalletConnectExplainer />
+              )}
+            </Sheet>
+          )}
+        </Container>
+      </CenteredContainer>
+    </Container>
   );
 }
