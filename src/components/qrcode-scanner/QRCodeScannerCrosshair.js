@@ -1,37 +1,34 @@
 import React from 'react';
 import { useIsEmulator } from 'react-native-device-info';
-import styled from 'styled-components';
-import { Icon } from '../icons';
-import { Centered } from '../layout';
-import { Text } from '../text';
+import {
+  CenteredContainer,
+  Icon,
+  Text,
+} from '../../../cardstack/src/components/.';
 import { useDimensions } from '@rainbow-me/hooks';
-import { position } from '@rainbow-me/styles';
 
 const CrossHairAspectRatio = 259 / 375;
-
-const Container = styled(Centered)`
-  ${({ size }) => position.size(size)};
-  margin-bottom: 1;
-  z-index: 1;
-`;
-
-const Crosshair = styled(Icon).attrs({
-  name: 'crosshair',
-})`
-  ${position.cover};
-`;
 
 export default function QRCodeScannerCrosshair() {
   const { width: deviceWidth } = useDimensions();
   const { result: isEmulator } = useIsEmulator();
 
-  const { colors } = useTheme();
   return (
-    <Container size={deviceWidth * CrossHairAspectRatio}>
-      <Crosshair color={colors.whiteLabel} />
-      <Text color="whiteLabel" lineHeight="none" size="large" weight="bold">
-        {isEmulator ? 'Simulator Mode' : 'Find a code to scan'}
+    <CenteredContainer
+      height={deviceWidth * CrossHairAspectRatio}
+      marginBottom={1}
+      width={deviceWidth * CrossHairAspectRatio}
+      zIndex={1}
+    >
+      <Icon
+        color="white"
+        name="crosshair"
+        position="absolute"
+        size={deviceWidth * CrossHairAspectRatio * 1.1}
+      />
+      <Text color="white" size="small" textAlign="center" weight="bold">
+        {isEmulator ? `Simulator Mode\n (Paste in URI Code)` : 'Scan QR Code'}
       </Text>
-    </Container>
+    </CenteredContainer>
   );
 }

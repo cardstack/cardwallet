@@ -23,6 +23,7 @@ export const customIcons = {
   swap: require('./swap').default,
   thumbprint: require('./thumbprint').default,
   warning: require('./warning').default,
+  crosshair: require('./crosshair').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;
