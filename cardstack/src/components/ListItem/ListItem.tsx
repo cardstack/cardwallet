@@ -1,10 +1,8 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import { ContextMenu } from '../../../../src/components/context-menu';
 import { Avatar, AvatarProps } from '../Avatar/Avatar';
 import { Container, CenteredContainer, ContainerProps } from '../Container';
-import { Icon } from '../Icon';
 import { Text, TextProps } from '../Text';
-import { Touchable } from '../Touchable';
 
 interface ListItemProps extends ContainerProps {
   actionSheetProps: {
