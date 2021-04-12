@@ -34,7 +34,8 @@ export const ListItem = ({
       flexDirection="row"
       alignItems="center"
       testID="option-item"
-      padding={5}
+      paddingVertical={5}
+      paddingHorizontal={6}
       {...props}
     >
       <Container flex={2} flexDirection="row">
@@ -49,14 +50,10 @@ export const ListItem = ({
           <Avatar {...avatarProps} />
         </CenteredContainer>
         <Container marginLeft={4}>
-          <Text fontWeight="600" {...textProps}>
+          <Text variant="body" fontWeight="600" {...textProps}>
             {title}
           </Text>
-          {subText && (
-            <Text variant="subText" marginTop={1}>
-              {subText}
-            </Text>
-          )}
+          {subText && <Text variant="subText">{subText}</Text>}
         </Container>
       </Container>
       <CenteredContainer alignItems="flex-end">
