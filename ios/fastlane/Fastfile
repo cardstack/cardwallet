@@ -20,10 +20,13 @@ platform :ios do
     sync_code_signing(type: "adhoc")
 
     ########################
-    # Build the app
+    # Increment the build number
     ########################
     increment_build_number(build_number: options[:build_number])
 
+    ########################
+    # Build the app
+    ########################
     build_ios_app(
       export_method: "ad-hoc",
       include_bitcode: true,
@@ -48,10 +51,13 @@ platform :ios do
     sync_code_signing(type: "appstore")
 
     ########################
-    # Build the app
+    # Increment the build number
     ########################
     increment_build_number(build_number: options[:build_number])
 
+    ########################
+    # Build the app
+    ########################
     build_ios_app(
       export_method: "app-store",
       include_bitcode: true,
@@ -65,9 +71,10 @@ platform :ios do
     ########################
     upload_to_testflight(
       skip_waiting_for_build_processing: true,
-      apple_id: "1549183378",
-      username: "hassan@cardstack.com",
-      team_id: "QS5AFH4668"
+      apple_id: "#{ENV["APP_APPLE_ID"]}",
+      username: ENV["APP_APPLE_USERNAME"],
+      team_id: ENV["APP_APPLE_TEAM_ID]",
+      changelog: "Beta: REF<#{options[:git_tag]}>"
     )
   end
 
@@ -97,13 +104,14 @@ platform :ios do
     )
 
     ########################
-    # Upload to AppStore Connect
+    # Upload to TestFlight
     ########################
-    upload_to_app_store(
-      force: true,
-      submit_for_review: false,
-      automatic_release: false,
-      changelog: "Production release: ${tag}"
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      apple_id: "#{ENV["APP_APPLE_ID"]}",
+      username: ENV["APP_APPLE_USERNAME"],
+      team_id: ENV["APP_APPLE_TEAM_ID]",
+      changelog: "Production: REF<#{options[:git_tag]}>"
     )
   end
 
