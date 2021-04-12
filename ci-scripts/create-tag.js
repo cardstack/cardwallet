@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 
 const getNewTag = tag => {
   const [major, minor, patch] = tag.split('.');
-  if (process.env.BUMP_TYPE === 'major') {
+  if (process.env.VERSION_CHANGE_TYPE === 'major') {
     return `${Number(major) + 1}.${minor}.${patch}`;
-  } else if (process.env.BUMP_TYPE === 'minor') {
+  } else if (process.env.VERSION_CHANGE_TYPE === 'minor') {
     return `${major}.${Number(minor) + 1}.${patch}`;
-  } else if (process.env.BUMP_TYPE === 'patch') {
+  } else if (process.env.VERSION_CHANGE_TYPE === 'patch') {
     return `${major}.${minor}.${Number(patch) + 1}`;
   }
 
@@ -39,6 +39,7 @@ const createTag = async () => {
         owner: 'cardstack',
         repo: 'cardwallet',
         tag_name: tagName,
+        target_commitish: process.env.GITHUB_REF,
         name: `Release ${tagName}`,
         body: `Released at ${new Date(Date.now()).toISOString()}`,
       }),

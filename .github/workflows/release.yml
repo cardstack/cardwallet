@@ -6,12 +6,12 @@ on:
         description: 'Beta or Production release'
         required: true
         default: 'beta'
-      ref:
-        description: 'Release ref to build'
+      githubRef:
+        description: 'Github ref to build and release'
         required: true
   push:
-    branches:
-      - 'ig/ci-setup'
+    release:
+      types: [published]
 jobs:
   release-ios:
     name: Release iOS
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.inputs.ref }}
+          ref: ${{ github.event.inputs.githubRef }}
       - name: Node
         uses: actions/setup-node@v1
         with:
@@ -38,16 +38,16 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Yarn Install
         run: yarn install --network-timeout 300000 --network-concurrency 1
-      # - name: Patch Packages
-      #   run: yarn patch-package
-      # - name: RN Nodeify
-      #   run: yarn nodeify
-      # - name: Build iOS
-      #   run: yarn build:ios
-      # - name: Bundle Install (ios)
-      #   run: cd ios && bundle install
-      # - name: Pod Install (ios)
-      #   run: cd ios && pod install
+      - name: Patch Packages
+        run: yarn patch-package
+      - name: RN Nodeify
+        run: yarn nodeify
+      - name: Build iOS
+        run: yarn build:ios
+      - name: Bundle Install (ios)
+        run: cd ios && bundle install
+      - name: Pod Install (ios)
+        run: cd ios && pod install
       # - name: Run fastlane (ios)
       #   run: cd ios && bundle exec fastlane ${{ github.event.inputs.stage }} build_number:"${{ env.BUILD_NUMBER }}" git_tag:"${{ github.event.inputs.ref }}"
       #   env:
