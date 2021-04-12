@@ -4,27 +4,41 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { Container } from '../Container';
 import { ListItem } from './ListItem';
-import { padding } from '@rainbow-me/styles';
+
+const actionOptions = ['1', '2'];
 
 storiesOf('List Item', module).add('Default', () => (
   <Container backgroundColor="white" width="100%">
     <ListItem
-      iconProps={{ name: 'download', size: 22 }}
-      onPress={() => Alert.alert('Pressed!')}
-      textProps={{
-        color: 'black',
-        fontSize: 14,
+      title="Add an existing account"
+      actionSheetProps={{
+        options: actionOptions,
+        title: 'hello',
+        onPress: () => Alert.alert('hello'),
+      }}
+      avatarProps={{
+        source:
+          'https://freaklab.org/wp-content/uploads/2017/08/portrait-placeholder-grey.gif',
+      }}
+      subText="Connected"
+    />
+    <ListItem
+      actionSheetProps={{
+        options: actionOptions,
+        title: 'hello again',
+        onPress: () => Alert.alert('hello'),
       }}
       title="Add an existing account"
       subText="Connected"
-      avatarSrcImage="https://freaklab.org/wp-content/uploads/2017/08/portrait-placeholder-grey.gif"
     />
     <ListItem
-      iconProps={{ name: 'download', size: 22 }}
-      onPress={() => Alert.alert('Pressed!')}
-      textProps={{
-        color: 'black',
-        fontSize: 14,
+      actionSheetProps={{
+        options: actionOptions,
+        title: 'hello again',
+        onPress: () => Alert.alert('hello'),
+      }}
+      avatarProps={{
+        textValue: 'VT',
       }}
       title="Add an existing account"
       subText="Connected"

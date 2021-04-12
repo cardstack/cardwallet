@@ -24,7 +24,7 @@ export const Sheet = ({
         width="100%"
       >
         <Container
-          paddingTop={3}
+          paddingTop={hideHandle ? 0 : 3}
           paddingBottom={4}
           height={5}
           justifyContent="center"

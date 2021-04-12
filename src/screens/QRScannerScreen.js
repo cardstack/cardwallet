@@ -1,22 +1,25 @@
 import { useIsFocused } from '@react-navigation/native';
+import analytics from '@segment/analytics-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, FlatList } from 'react-native';
 import Animated, { useCode } from 'react-native-reanimated';
 import styled from 'styled-components';
-import { BubbleSheet } from '../components/bubble-sheet';
 import { DiscoverSheet } from '../components/discover-sheet';
 import { BackButton, Header, HeaderHeight } from '../components/header';
 import { Centered } from '../components/layout';
+
 import {
   CameraDimmer,
   EmulatorPasteUriButton,
   QRCodeScanner,
 } from '../components/qrcode-scanner';
+import { WalletConnectExplainer } from '../components/walletconnect-list';
 import {
-  WalletConnectExplainer,
-  WalletConnectList,
-} from '../components/walletconnect-list';
-import { CenteredContainer, Container, Sheet } from '@cardstack/components';
+  CenteredContainer,
+  Container,
+  ListItem,
+  Sheet,
+} from '@cardstack/components';
 import useExperimentalFlag, {
   DISCOVER_SHEET,
 } from '@rainbow-me/config/experimentalHooks';
@@ -24,7 +27,6 @@ import { useHeight, useWalletConnectConnections } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { scrollPosition } from '@rainbow-me/navigation/ScrollPagerWrapper';
 import Routes from '@rainbow-me/routes';
-import { position } from '@rainbow-me/styles';
 
 const { call, greaterThan, onChange } = Animated;
 
@@ -35,13 +37,6 @@ const Background = styled.View`
   height: 100%;
   position: absolute;
   width: 100%;
-`;
-
-const ScannerContainer = styled(Centered).attrs({
-  direction: 'column',
-})`
-  ${position.size('100%')};
-  overflow: hidden;
 `;
 
 function useFocusFromSwipe() {
@@ -59,16 +54,17 @@ function useFocusFromSwipe() {
   return isFocused;
 }
 
-export default function QRScannerScreen() {
+const QRScannerScreen = () => {
   const discoverSheetAvailable = useExperimentalFlag(DISCOVER_SHEET);
   const isFocusedIOS = useFocusFromSwipe();
   const isFocusedAndroid = useIsFocused();
-  const [sheetHeight, onSheetLayout] = useHeight(240);
+  const [sheetHeight] = useHeight(240);
   const [initializeCamera, setInitializeCamera] = useState(ios ? true : false);
   const { navigate } = useNavigation();
   const {
     walletConnectorsByDappName,
     walletConnectorsCount,
+    walletConnectDisconnectAllByDappName,
   } = useWalletConnectConnections();
 
   const handlePressBackButton = useCallback(
@@ -79,6 +75,19 @@ export default function QRScannerScreen() {
   useEffect(() => {
     isFocusedAndroid && !initializeCamera && setInitializeCamera(true);
   }, [initializeCamera, isFocusedAndroid]);
+
+  const handlePressActionSheet = useCallback(
+    ({ dappName, dappUrl, index }) => {
+      if (index === 0) {
+        walletConnectDisconnectAllByDappName(dappName);
+        analytics.track('Manually disconnected from WalletConnect connection', {
+          dappName,
+          dappUrl,
+        });
+      }
+    },
+    [walletConnectDisconnectAllByDappName]
+  );
 
   return (
     <Container>
@@ -98,7 +107,6 @@ export default function QRScannerScreen() {
         flexDirection="column"
         height="100%"
         overflow="hidden"
-        // width="100%"
       >
         <Background />
         <CameraDimmer>
@@ -118,7 +126,31 @@ export default function QRScannerScreen() {
           ) : (
             <Sheet hideHandle>
               {walletConnectorsCount ? (
-                <WalletConnectList items={walletConnectorsByDappName} />
+                <>
+                  <FlatList
+                    alwaysBounceVertical={false}
+                    data={walletConnectorsByDappName}
+                    keyExtractor={item => item.dappUrl}
+                    removeClippedSubviews
+                    renderItem={({ item }) => (
+                      <>
+                        <ListItem
+                          actionSheetProps={{
+                            onPress: index => {
+                              handlePressActionSheet({ ...item, index });
+                            },
+                            options: ['Disconnect', 'Cancel'],
+                            title: `Would you like to disconnect from ${item.dappName}?`,
+                          }}
+                          avatarProps={{ source: item.dappIcon }}
+                          subText="Connected"
+                          title={item.dappName}
+                        />
+                      </>
+                    )}
+                    scrollEventThrottle={32}
+                  />
+                </>
               ) : (
                 <WalletConnectExplainer />
               )}
@@ -128,4 +160,6 @@ export default function QRScannerScreen() {
       </CenteredContainer>
     </Container>
   );
-}
+};
+
+export default QRScannerScreen;

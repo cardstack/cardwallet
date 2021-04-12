@@ -14,9 +14,9 @@ function SvgComponent(props: SvgProps) {
       {...props}
     >
       <G fill={props.color || theme.colors.black} fillRule="evenodd">
-        <Circle cx="2.5" cy="2.5" r="2.5" />
-        <Circle cx="10.5" cy="2.5" r="2.5" />
-        <Circle cx="18.5" cy="2.5" r="2.5" />
+        <Circle cx="2" cy="2.0" r="2.0" />
+        <Circle cx="11" cy="2.0" r="2.0" />
+        <Circle cx="20" cy="2.0" r="2.0" />
       </G>
     </Svg>
   );

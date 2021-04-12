@@ -1,32 +1,31 @@
-import React from 'react';
-import { Avatar } from '../Avatar/Avatar';
+import React, { useCallback, useRef, useState } from 'react';
+import { ContextMenu } from '../../../../src/components/context-menu';
+import { Avatar, AvatarProps } from '../Avatar/Avatar';
 import { Container, CenteredContainer, ContainerProps } from '../Container';
-import { Icon, IconProps } from '../Icon';
+import { Icon } from '../Icon';
 import { Text, TextProps } from '../Text';
 import { Touchable } from '../Touchable';
 
 interface ListItemProps extends ContainerProps {
-  onPress: () => void;
-  iconProps: IconProps;
+  actionSheetProps: {
+    options: Array<string>;
+    title: string;
+    onPress: () => void;
+  };
   title: string;
   subText?: string;
-  textProps: TextProps;
-  borderIcon?: boolean;
+  textProps?: TextProps;
   horizontalSpacing?: number;
   disabled?: boolean;
-  avatarSrcImage?: string | null;
-  avatarValue?: string | null;
+  avatarProps?: AvatarProps;
 }
 
 export const ListItem = ({
-  onPress,
-  iconProps,
-  title,
-  subText,
+  actionSheetProps,
+  title = 'title',
+  subText = 'subtext',
   textProps,
-  borderIcon,
-  avatarSrcImage,
-  avatarValue = 'Avatar',
+  avatarProps,
   horizontalSpacing = 2,
   ...props
 }: ListItemProps) => {
@@ -36,28 +35,18 @@ export const ListItem = ({
       alignItems="center"
       testID="option-item"
       padding={5}
-      borderWidth={1}
       {...props}
     >
       <Container flex={2} flexDirection="row">
         <CenteredContainer
           borderColor="borderGray"
           borderRadius={100}
-          borderWidth={borderIcon ? 1 : 0}
           height={40}
           marginRight={horizontalSpacing}
           width={40}
           testID="option-item-icon-wrapper"
         >
-          {true ? (
-            <Avatar
-              value={avatarValue}
-              source={avatarSrcImage}
-              backgroundColor="black"
-            />
-          ) : (
-            <Icon color="settingsGray" {...iconProps} />
-          )}
+          <Avatar {...avatarProps} />
         </CenteredContainer>
         <Container marginLeft={4}>
           <Text fontWeight="600" {...textProps}>
@@ -70,10 +59,13 @@ export const ListItem = ({
           )}
         </Container>
       </Container>
-      <CenteredContainer flex={-1} alignItems="flex-end">
-        <Touchable onPress={onPress}>
-          <Icon name="more" color="black" />
-        </Touchable>
+      <CenteredContainer alignItems="flex-end">
+        <ContextMenu
+          destructiveButtonIndex={0}
+          onPressActionSheet={actionSheetProps.onPress}
+          options={actionSheetProps.options}
+          title={actionSheetProps.title}
+        />
       </CenteredContainer>
     </Container>
   );

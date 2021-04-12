@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import { useIsEmulator } from 'react-native-device-info';
 import { Prompt } from '../alerts';
-import { Icon, Touchable } from '@cardstack/components';
+import { ButtonPressAnimation } from '../animations';
+import { Icon } from '@cardstack/components';
 import { useWalletConnectConnections } from '@rainbow-me/hooks';
 
 export default function EmulatorPasteUriButton() {
@@ -23,15 +24,14 @@ export default function EmulatorPasteUriButton() {
   }, [handlePastedUri]);
 
   return isEmulator ? (
-    <Touchable onPress={handlePressPasteSessionUri}>
+    <ButtonPressAnimation onPress={handlePressPasteSessionUri}>
       <Icon
         color="blue"
         iconSize="large"
         marginBottom={2}
         marginRight={8}
         name="link"
-        onPress={handlePressPasteSessionUri}
       />
-    </Touchable>
+    </ButtonPressAnimation>
   ) : null;
 }
