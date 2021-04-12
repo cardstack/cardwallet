@@ -12,8 +12,8 @@ on:
         required: true,
         default: 'ig/ci-setup'
   push:
-    branch:
-      - 'ig/ci-setup'
+    branches:
+      - ig/ci-setup
 jobs:
   create-tag:
     name: Create tag
