@@ -5,7 +5,7 @@ on:
       versionChangeType:
         description: 'Type of version bump (major, minor, patch, none)'
         required: true
-        default: 'none'
+        default: 'minor'
       ref:
         description: 'Branch or commit SHA to create a release from'
         required: true
