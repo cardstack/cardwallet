@@ -119,7 +119,8 @@ platform :ios do
   lane :version_bump do |options|
     if ['major', 'minor', 'patch'].include?(ENV['VERSION_CHANGE_TYPE'])
       increment_version_number_in_xcodeproj(
-        bump_type: options['VERSION_CHANGE_TYPE'],
+        bump_type: ENV['VERSION_CHANGE_TYPE'],
+        target: 'Rainbow'
       )
     end
   end
