@@ -8,11 +8,11 @@ on:
         default: 'none'
       ref:
         description: 'Branch or commit SHA to create a release from'
-        required: true,
+        required: true
         default: 'ig/ci-setup'
-  # push:
-  #   branches:
-  #     - ig/ci-setup
+  push:
+    branches:
+      - ig/ci-setup
 jobs:
   create-tag:
     name: Create tag
