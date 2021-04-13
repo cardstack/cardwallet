@@ -1,6 +1,7 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import { Container, Text } from '../.';
+import { ColorTypes } from '@cardstack/theme';
 
 /**
  * A Avatar component, used for something.
@@ -46,7 +47,7 @@ export interface AvatarProps {
   /** uri */
   source?: string | null;
   /** textColor */
-  textColor?: string;
+  textColor?: ColorTypes;
   /** backgroundColor */
   backgroundColor?: string;
 }
