@@ -1,12 +1,11 @@
 import { useIsFocused } from '@react-navigation/native';
 import analytics from '@segment/analytics-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import Animated, { useCode } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { DiscoverSheet } from '../components/discover-sheet';
 import { BackButton, Header, HeaderHeight } from '../components/header';
-import { Centered } from '../components/layout';
 
 import {
   CameraDimmer,
@@ -101,23 +100,18 @@ const QRScannerScreen = () => {
         <EmulatorPasteUriButton />
       </Header>
       {discoverSheetAvailable && ios ? <DiscoverSheet /> : null}
-      <CenteredContainer
-        backgroundColor="backgroundBlue"
-        borderWidth={5}
-        flexDirection="column"
-        height="100%"
-        overflow="hidden"
-      >
+      <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
         <Background />
         <CameraDimmer>
           {initializeCamera && (
             <QRCodeScanner
               contentPositionBottom={sheetHeight}
-              contentPositionTop={HeaderHeight}
+              contentPositionTop={-HeaderHeight * 2}
               enableCamera={ios ? isFocusedIOS : isFocusedAndroid}
             />
           )}
         </CameraDimmer>
+
         <Container bottom={0} position="absolute" width="100%">
           {discoverSheetAvailable ? (
             android ? (
