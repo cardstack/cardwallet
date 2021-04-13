@@ -22,7 +22,8 @@ jobs:
       - name: Bump iOS version
         run: cd ios && bundle install && bundle exec fastlane version_bump
         env:
-          VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
+          VERSION_CHANGE_TYPE: 'minor'
+          # VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
       # - uses: EndBug/add-and-commit@v7
       #   with:
       #     branch: 'ci-setup-2'

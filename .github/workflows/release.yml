@@ -9,7 +9,7 @@ on:
       githubRef:
         description: 'Github ref to build and release'
         required: true
-        default: 'v1.0.5-3'
+        default: 'v1.0.6-1'
   release:
     types: [published]
 jobs:
