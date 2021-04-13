@@ -9,9 +9,8 @@ on:
       githubRef:
         description: 'Github ref to build and release'
         required: true
-  push:
-    release:
-      types: [published]
+  release:
+    types: [published]
 jobs:
   release-ios:
     name: Release iOS
