@@ -31,6 +31,6 @@ jobs:
       - name: Create tag
         run: cd ci-scripts && yarn && yarn createTag
         env:
-          VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
+          VERSION_CHANGE_TYPE: 'minor'
           GITHUB_REF: ${{ github.event.inputs.ref }}
           GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
