@@ -5,7 +5,7 @@ const getNewTag = tag => {
   if (process.env.VERSION_CHANGE_TYPE === 'major') {
     return `${Number(major) + 1}.0.0`;
   } else if (process.env.VERSION_CHANGE_TYPE === 'minor') {
-    return `${major}.${Number(minor) + 1}.0}`;
+    return `${major}.${Number(minor) + 1}.0`;
   } else if (process.env.VERSION_CHANGE_TYPE === 'patch') {
     return `${major}.${minor}.${Number(patch) + 1}`;
   }
