@@ -24,7 +24,7 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-        ref: ${{ env.GIT_REF }}
+          ref: ${{ env.GIT_REF }}
       - name: Node
         uses: actions/setup-node@v1
         with:
