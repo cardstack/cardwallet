@@ -1,10 +1,8 @@
-import { omit, pick } from 'lodash';
+import { pick } from 'lodash';
 import React, { Fragment, useCallback, useRef, useState } from 'react';
 import ActionSheet from 'react-native-actionsheet';
 import { ButtonPressAnimation } from '../animations';
-import { Centered } from '../layout';
 import { Icon } from '@cardstack/components';
-import { padding } from '@rainbow-me/styles';
 
 const ActionSheetProps = [
   'cancelButtonIndex',
@@ -16,18 +14,13 @@ const ActionSheetProps = [
   'title',
 ];
 
-const ContextButton = props => (
-  <Centered css={padding(12, 8)} {...props}>
-    <Icon name="threeDots" />
-  </Centered>
-);
-
 export default function ContextMenu({
   activeOpacity = 0.2,
   cancelButtonIndex,
   children,
   dynamicOptions,
   onPressActionSheet,
+  iconProps,
   options = [],
   ...props
 }) {
@@ -54,13 +47,13 @@ export default function ContextMenu({
   }, [isOpen]);
 
   return (
-    <Fragment>
+    <>
       {onPressActionSheet && (
         <ButtonPressAnimation
           activeOpacity={activeOpacity}
           onPress={handleShowActionSheet}
         >
-          {children || <Icon margin={2} name="more-circle" />}
+          {children || <Icon margin={2} name="more-circle" {...iconProps} />}
         </ButtonPressAnimation>
       )}
       <ActionSheet
@@ -74,6 +67,6 @@ export default function ContextMenu({
         options={dynamicOptions ? dynamicOptions() : options}
         ref={actionsheetRef}
       />
-    </Fragment>
+    </>
   );
 }

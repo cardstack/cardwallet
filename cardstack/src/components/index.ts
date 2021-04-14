@@ -1,3 +1,4 @@
+export * from './Avatar';
 export * from './Button';
 export * from './Container';
 export * from './Text';
@@ -13,3 +14,4 @@ export * from './BalanceCoinRow';
 export * from './OptionItem';
 export * from './Input';
 export * from './Sheet';
+export * from './ListItem';

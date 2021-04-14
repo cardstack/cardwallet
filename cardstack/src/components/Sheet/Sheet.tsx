@@ -20,11 +20,11 @@ export const Sheet = ({
         backgroundColor="white"
         borderTopStartRadius={borderRadius}
         borderTopEndRadius={borderRadius}
-        paddingBottom={insets.bottom}
+        paddingBottom={insets.bottom - 10}
         width="100%"
       >
         <Container
-          paddingTop={3}
+          paddingTop={hideHandle ? 0 : 3}
           paddingBottom={4}
           height={5}
           justifyContent="center"
