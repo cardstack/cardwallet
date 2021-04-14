@@ -1,7 +1,6 @@
 import React from 'react';
 import { useIsEmulator } from 'react-native-device-info';
-import qrcodebg from '../../../cardstack/src/assets/QRCodeBackground.png';
-import { CenteredContainer, Image, Text } from '@cardstack/components';
+import { CenteredContainer, Icon, Text } from '@cardstack/components';
 
 import { useDimensions } from '@rainbow-me/hooks';
 
@@ -18,7 +17,12 @@ export default function QRCodeScannerCrosshair() {
       width={deviceWidth * CrossHairAspectRatio}
       zIndex={1}
     >
-      <Image source={qrcodebg} style={{ position: 'absolute' }} />
+      <Icon
+        color="white"
+        name="crosshair"
+        position="absolute"
+        size={deviceWidth * CrossHairAspectRatio * 1.1}
+      />
       <Text color="white" size="small" textAlign="center" weight="bold">
         {isEmulator ? `Simulator Mode\n (Paste in URI Code)` : 'Scan QR Code'}
       </Text>
