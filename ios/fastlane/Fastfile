@@ -74,7 +74,7 @@ platform :ios do
       apple_id: "#{ENV["APP_APPLE_ID"]}",
       username: ENV["APP_APPLE_USERNAME"],
       team_id: ENV["APP_APPLE_TEAM_ID"],
-      changelog: "Beta: REF<#{options[:git_tag]}>"
+      changelog: "Beta: REF<#{options[:git_ref]}>"
     )
   end
 
@@ -111,7 +111,7 @@ platform :ios do
       apple_id: "#{ENV["APP_APPLE_ID"]}",
       username: ENV["APP_APPLE_USERNAME"],
       team_id: ENV["APP_APPLE_TEAM_ID"],
-      changelog: "Production: REF<#{options[:git_tag]}>"
+      changelog: "Production: REF<#{options[:git_ref]}>"
     )
   end
 

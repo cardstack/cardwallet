@@ -39,7 +39,7 @@ const createTag = async () => {
         owner: 'cardstack',
         repo: 'cardwallet',
         tag_name: tagName,
-        target_commitish: process.env.GITHUB_REF,
+        target_commitish: 'develop',
         name: `Release ${tagName}`,
         body: `Released at ${new Date(Date.now()).toISOString()}`,
       }),
