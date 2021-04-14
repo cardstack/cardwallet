@@ -40,7 +40,7 @@ const createTag = async () => {
         repo: 'cardwallet',
         tag_name: tagName,
         target_commitish: 'ig/ci-setup',
-        name: `Release ${tagName}`,
+        name: `${tagName}`,
         body: `Released at ${new Date(Date.now()).toISOString()}`,
       }),
       method: 'POST',
