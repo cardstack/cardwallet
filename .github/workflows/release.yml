@@ -9,6 +9,8 @@ on:
       githubRef:
         description: 'Github ref to build and release'
         required: true
+  release:
+    types: [published]
 jobs:
   release-ios:
     name: Release iOS
@@ -16,11 +18,13 @@ jobs:
     env:
       CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
       CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
+      GIT_REF: ${{ github.ref }}
+      FASTLANE_STAGE: 'beta'
     steps:
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.inputs.githubRef }}
+        ref: ${{ env.GIT_REF }}
       - name: Node
         uses: actions/setup-node@v1
         with:
@@ -46,7 +50,7 @@ jobs:
       - name: Pod Install (ios)
         run: cd ios && pod install
       - name: Run fastlane (ios)
-        run: cd ios && bundle exec fastlane ${{ github.event.inputs.stage }} build_number:"${{ env.BUILD_NUMBER }}" git_ref:"${{ github.event.inputs.githubRef }}"
+        run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }}" git_ref:"${{ env.GIT_REF }}"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
