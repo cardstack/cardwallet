@@ -9,8 +9,9 @@ on:
       githubRef:
         description: 'Github ref to build and release'
         required: true
-  release:
-    types: [published]
+  push:
+    branches:
+      - ig/ci-setup
 jobs:
   release-ios:
     name: Release iOS
@@ -18,7 +19,7 @@ jobs:
     env:
       CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
       CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
-      GIT_REF: ${{ github.ref }}
+      GIT_REF: 'v1.2.0-1'
       FASTLANE_STAGE: 'beta'
     steps:
       - name: Checkout tag
@@ -36,7 +37,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Yarn Install
         run: yarn install --network-timeout 300000 --network-concurrency 1
       - name: Patch Packages
