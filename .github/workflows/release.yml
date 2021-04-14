@@ -38,7 +38,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: '**/node_modules'
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Yarn Install
         run: yarn install --network-timeout 300000 --network-concurrency 1
       - name: Patch Packages
