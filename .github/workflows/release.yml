@@ -9,6 +9,7 @@ on:
       githubRef:
         description: 'Github ref to build and release'
         required: true
+        default: 'develop'
   push:
     branches:
       - ig/ci-setup
