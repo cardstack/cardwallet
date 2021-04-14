@@ -14,7 +14,7 @@ jobs:
     name: Create tag
     runs-on: macos-latest
     env:
-      VERSION_CHANGE_TYPE: 'minor'
+      VERSION_CHANGE_TYPE: 'none'
       # VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
       GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
     steps:
