@@ -71,9 +71,3 @@ The deployment can either be `Staging` or `Production` depending on the mode of 
 In order to build the application in "release" mode but not use the code push distribution you must build the application using the scheme `LocalRelease`.
 
 Building the application with the `Staging` scheme or `Release` scheme will result in your bundle being replaced by the live code push deployment on resume of the application.
-
-## Testing
-
-### Wallet Creation
-
-Go to https://web3modal.com/ for a test QR code. If you are the simulator/emulator, you can also copy the URI. Click "Connect" and then choose "WalletConnect". Then copy to clipboard.

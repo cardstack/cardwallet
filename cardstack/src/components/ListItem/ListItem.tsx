@@ -60,6 +60,11 @@ export const ListItem = ({
           onPressActionSheet={actionSheetProps.onPress}
           options={actionSheetProps.options}
           title={actionSheetProps.title}
+          iconProps={{
+            margin: 0,
+            name: 'more',
+            color: 'black',
+          }}
         />
       </CenteredContainer>
     </Container>
