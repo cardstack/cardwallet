@@ -73,8 +73,7 @@ platform :ios do
       skip_waiting_for_build_processing: true,
       apple_id: "#{ENV["APP_APPLE_ID"]}",
       username: ENV["APP_APPLE_USERNAME"],
-      team_id: ENV["APP_APPLE_TEAM_ID"],
-      changelog: "Beta: REF<#{options[:git_ref]}>"
+      team_id: ENV["APP_APPLE_TEAM_ID"]
     )
   end
 
@@ -110,8 +109,7 @@ platform :ios do
       skip_waiting_for_build_processing: true,
       apple_id: "#{ENV["APP_APPLE_ID"]}",
       username: ENV["APP_APPLE_USERNAME"],
-      team_id: ENV["APP_APPLE_TEAM_ID"],
-      changelog: "Production: REF<#{options[:git_ref]}>"
+      team_id: ENV["APP_APPLE_TEAM_ID"]
     )
   end
 
