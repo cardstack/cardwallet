@@ -20,7 +20,7 @@ jobs:
     env:
       CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
       CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
-      GIT_REF: 'v1.0.1-2'
+      GIT_REF: 'ig/ci-setup'
       FASTLANE_STAGE: 'beta'
     steps:
       - name: Checkout tag
