@@ -9,6 +9,7 @@ const networkInfo = {
     exchange_enabled: true,
     faucet_url: null,
     name: 'xDai',
+    layer: 2,
     value: networkTypes.mainnet,
   },
   [`${networkTypes.sokol}`]: {
@@ -19,6 +20,7 @@ const networkInfo = {
     exchange_enabled: false,
     faucet_url: `http://faucet.metamask.io/`,
     name: 'Sokol',
+    layer: 2,
     value: networkTypes.sokol,
   },
 };
