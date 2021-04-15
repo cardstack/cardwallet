@@ -12,7 +12,7 @@ function SvgComponent(props: SvgProps) {
       viewBox="0 0 20.3 20.299"
       {...props}
     >
-      <G data-name="icon_Face ID" stroke="#000" strokeWidth={0.3}>
+      <G data-name="icon_Face ID" strokeWidth={0.3}>
         <Path
           data-name="Path 8650"
           d="M.93 7.737a.792.792 0 00.78-.78V3.311a1.6 1.6 0 011.6-1.6h3.626a.78.78 0 100-1.559H3.311A3.157 3.157 0 00.15 3.311v3.625a.8.8 0 00.78.801z"

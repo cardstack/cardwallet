@@ -14,8 +14,6 @@ import styled from 'styled-components';
 
 import Divider from '../components/Divider';
 import WalletList from '../components/change-wallet/WalletList';
-import { Column } from '../components/layout';
-import { Sheet } from '../components/sheet';
 import { backupUserDataIntoCloud } from '../handlers/cloudBackup';
 import { removeWalletData } from '../handlers/localstorage/removeWallet';
 import showWalletErrorAlert from '../helpers/support';
@@ -24,7 +22,6 @@ import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
 import { cleanUpWalletKeys, createWallet } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
-// import { dataGetTransactions } from '../redux/data';
 import {
   addressSetSelected,
   createAccountForWallet,
@@ -34,7 +31,7 @@ import {
   walletsUpdate,
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
-import { Container, Text, Touchable } from '@cardstack/components';
+import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
@@ -48,12 +45,6 @@ import {
   showActionSheetWithOptions,
 } from '@rainbow-me/utils';
 import logger from 'logger';
-
-const deviceHeight = deviceUtils.dimensions.height;
-const footerHeight = 111;
-const listPaddingBottom = 6;
-const walletRowHeight = 59;
-const maxListHeight = deviceHeight - 220;
 
 const Whitespace = styled.View`
   background-color: ${({ theme: { colors } }) => colors.white};
@@ -98,6 +89,11 @@ export default function ChangeWalletSheet() {
 
   const walletRowCount = useMemo(() => getWalletRowCount(wallets), [wallets]);
 
+  const deviceHeight = deviceUtils.dimensions.height;
+  const footerHeight = 160;
+  const listPaddingBottom = 6;
+  const walletRowHeight = 60;
+  const maxListHeight = deviceHeight - 220;
   let headerHeight = android ? 0 : 30;
   let listHeight =
     walletRowHeight * walletRowCount + footerHeight + listPaddingBottom;
@@ -109,7 +105,6 @@ export default function ChangeWalletSheet() {
     scrollEnabled = true;
     showDividers = true;
   }
-
   useEffect(() => {
     setCurrentAddress(accountAddress);
   }, [accountAddress]);
@@ -429,9 +424,9 @@ export default function ChangeWalletSheet() {
   }, [navigate]);
 
   return (
-    <Sheet borderRadius={30}>
+    <Sheet borderRadius={30} hideHandle={false}>
       {android && <Whitespace />}
-      <Column height={headerHeight} justify="space-between">
+      <Container height={headerHeight}>
         <Text fontSize={18} fontWeight="700" textAlign="center">
           Accounts
         </Text>
@@ -448,7 +443,8 @@ export default function ChangeWalletSheet() {
         {showDividers && (
           <Divider color={colors.rowDividerExtraLight} inset={[0, 15]} />
         )}
-      </Column>
+      </Container>
+
       <WalletList
         accountAddress={currentAddress}
         allWallets={walletsWithBalancesAndNames}

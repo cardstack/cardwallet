@@ -3523,6 +3523,13 @@
     "@types/react" "*"
     "@types/reactcss" "*"
 
+"@types/react-native-actionsheet@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@types/react-native-actionsheet/-/react-native-actionsheet-2.4.2.tgz#d2ff226f96d9c38e04f9583a0b52d741759ad2a0"
+  integrity sha512-Cv1IkulNN5OTSpHilMF89HBk+fvnZMNJ5YE8um+Il+LaYvoHfgbCbTtVlCQOFimwVbGnQ4UIDbvR8GR8mzwaBw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native-dotenv@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@types/react-native-dotenv/-/react-native-dotenv-0.2.0.tgz#32c58422a422c1adf68acce363ed791314d5a8e7"

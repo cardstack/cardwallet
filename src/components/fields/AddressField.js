@@ -47,8 +47,6 @@ const AddressField = (
     }
   }, [address, inputValue, name]);
 
-  console.log('isValid', isValid);
-
   return (
     <Row flex={1}>
       <Input
