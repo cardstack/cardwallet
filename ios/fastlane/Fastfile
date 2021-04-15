@@ -73,7 +73,8 @@ platform :ios do
       skip_waiting_for_build_processing: true,
       apple_id: "1549183378",
       username: "hassan@cardstack.com",
-      team_id: "QS5AFH4668"
+      team_id: "QS5AFH4668",
+      changelog: "Production #{options[:git_ref]}"
     )
   end
 
@@ -109,7 +110,8 @@ platform :ios do
       skip_waiting_for_build_processing: true,
       apple_id: "1549183378",
       username: "hassan@cardstack.com",
-      team_id: "QS5AFH4668"
+      team_id: "QS5AFH4668",
+      changelog: "Production #{options[:git_ref]}"
     )
   end
 
