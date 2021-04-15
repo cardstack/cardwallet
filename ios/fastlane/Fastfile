@@ -74,7 +74,7 @@ platform :ios do
       apple_id: "1549183378",
       username: "hassan@cardstack.com",
       team_id: "QS5AFH4668",
-      changelog: "Production #{options[:git_ref]}"
+      changelog: "Beta #{options[:git_ref]}"
     )
   end
 
