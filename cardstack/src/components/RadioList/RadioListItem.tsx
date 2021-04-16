@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { Touchable, Icon, Text } from '../.';
+import { Touchable, Icon, Text, Container } from '../.';
 import { IconProps } from '../Icon';
 
 export const RadioListItem = ({
@@ -12,16 +12,7 @@ export const RadioListItem = ({
   iconProps,
   ...props
 }: RadioListItemProps) => {
-  console.log(
-    '----------render item props---------------',
-    index,
-    label,
-    selected
-  );
-
   const onPress = useCallback(() => {
-    console.log('value', index);
-
     if (props.onPress && !disabled) {
       props.onPress({ value, index });
     }
@@ -30,14 +21,24 @@ export const RadioListItem = ({
 
   return (
     <Touchable
-      flexDirection="row-reverse"
       onPress={onPress}
       disabled={disabled}
+      width="100%"
+      justifyContent="flex-start"
     >
-      <Text>{label}</Text>
-      {selected ? (
-        <Icon name="check" color="backgroundBlue" {...iconProps} />
-      ) : null}
+      <Container flexDirection="row" paddingHorizontal={5} paddingVertical={4}>
+        <Text weight="bold">{label}</Text>
+        {selected ? (
+          <Container flex={1} alignItems="flex-end">
+            <Icon
+              name="check"
+              color="backgroundBlue"
+              iconSize="medium"
+              {...iconProps}
+            />
+          </Container>
+        ) : null}
+      </Container>
     </Touchable>
   );
 };

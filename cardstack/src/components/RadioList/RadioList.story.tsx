@@ -30,7 +30,7 @@ const networks = [
 
 const DATA = networks
   .filter(({ disabled }) => !disabled)
-  .map(({ disabled, name, value, layer }, index) => ({
+  .map(({ disabled, name, layer }, index) => ({
     title: layer,
     data: [
       {
@@ -42,7 +42,7 @@ const DATA = networks
     ],
   }));
 
-console.log(DATA[1].data);
+console.log({ DATA });
 storiesOf('Radio List', module).add('Default', () => (
   <Container backgroundColor="white" width="100%" padding={4}>
     <RadioList
