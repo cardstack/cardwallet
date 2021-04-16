@@ -44,17 +44,41 @@ import { SectionList } from 'react-native';
 import { Text } from '../.';
 import { RadioListItem, RadioListItemProps } from './RadioListItem';
 
-const RadioList = ({ items, onPress }: RadioListProps) => {
-  // const [selected, setSelected] = useState(value);
+export const RadioList = ({
+  items,
+  onChange,
+  defaultValue,
+}: RadioListProps) => {
+  const [selected, setSelected] = useState<number>(defaultValue || 0);
 
-  const renderItem = ({ item }) => {
-    return <RadioListItem {...item} onPress={onPress} />;
+  const handleChange = ({ value, index }: { value: string; index: number }) => {
+    console.log('------------handle change-------------', index, selected);
+
+    if (index !== selected) {
+      console.log('Value has changed');
+      setSelected(index);
+    }
+
+    if (onChange) {
+      onChange(value);
+    }
+  };
+
+  const renderItem = ({ item }: { item: RadioListItemProps }) => {
+    return (
+      <RadioListItem
+        {...item}
+        onPress={handleChange}
+        selected={item.key === selected}
+        index={item.key}
+      />
+    );
   };
 
   return (
     <SectionList
-      extraData={items}
-      keyExtractor={(network, index) => network + index}
+      // extraData={items}
+      // keyExtractor={(network, index) => network + index}
       renderItem={renderItem}
       renderSectionHeader={({ section: { title } }) => (
         <Text>Layer {title}</Text>
@@ -65,14 +89,12 @@ const RadioList = ({ items, onPress }: RadioListProps) => {
 };
 
 export interface RadioListProps {
-  /** textValue */
-  items: Array<RadioItemProps>;
-  onPress: () => void;
+  items: Array<any>;
+  onChange: (value: any) => void;
+  defaultValue?: number;
 }
 
 export interface RadioItemProps {
   title: string;
   data: RadioListItemProps;
 }
-
-export default RadioList;
