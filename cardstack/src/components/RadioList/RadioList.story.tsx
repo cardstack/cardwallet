@@ -14,9 +14,11 @@ const networks = [
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
-    layer: 1,
-    name: 'xDai',
+    layer: 2,
+    name: 'xDai Chain',
     value: 'mainnet',
+    default: true,
+    selected: false,
   },
 
   {
@@ -24,27 +26,33 @@ const networks = [
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
-    layer: 2,
+    layer: 1,
     name: 'Sokol',
     value: 'sokol',
+    default: false,
+    selected: true,
   },
   {
     color: '#3cc29e',
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
-    layer: 2,
+    layer: 1,
     name: 'Sokol',
     value: 'sokol',
+    default: false,
+    selected: false,
   },
   {
     color: '#3cc29e',
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
-    layer: 2,
+    layer: 1,
     name: 'Sokol',
     value: 'sokol',
+    default: false,
+    selected: false,
   },
 ];
 
@@ -60,20 +68,22 @@ const groupByLayer = networks
             key: currentIndex,
             label: curr.name,
             value: curr.name,
+            default: curr.default,
+            selected: curr.selected,
           },
         ],
       } || {};
 
     return result;
   }, [])
-  .flat();
+  .flat()
+  .sort((a, b) => a.layer < b.layer);
 
 storiesOf('Radio List', module).add('Default', () => (
   <Container backgroundColor="white" width="100%" padding={4}>
     <RadioList
       items={groupByLayer}
       onChange={(value: string) => Alert.alert('pressed', value)}
-      defaultValue={0}
     />
   </Container>
 ));

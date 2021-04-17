@@ -11,6 +11,7 @@ const networkInfo = {
     name: 'xDai',
     layer: 2,
     value: networkTypes.mainnet,
+    default: true,
   },
   [`${networkTypes.sokol}`]: {
     // balance_checker_contract_address:
@@ -22,6 +23,7 @@ const networkInfo = {
     name: 'Sokol',
     layer: 2,
     value: networkTypes.sokol,
+    default: false,
   },
 };
 

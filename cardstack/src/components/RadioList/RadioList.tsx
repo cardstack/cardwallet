@@ -1,55 +1,18 @@
-// import { PropTypes } from 'prop-types';
-// import React, { createElement, PureComponent } from 'react';
-// import { List } from '../list';
-
-// export default class RadioList extends PureComponent {
-//   static propTypes = {
-//     items: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-//           .isRequired,
-//       })
-//     ),
-//     onChange: PropTypes.func,
-//     renderItem: PropTypes.func,
-//     value: PropTypes.string,
-//   };
-
-//   static defaultProps = {
-//     renderItem: RadioListItem,
-//   };
-
-//   state = { selected: this.props.value };
-
-//   handleChange = selected => {
-//     this.setState({ selected }, () => {
-//       if (this.props.onChange) {
-//         this.props.onChange(selected);
-//       }
-//     });
-//   };
-
-//   renderItem = ({ item }) =>
-//     createElement(this.props.renderItem, {
-//       ...item,
-//       onPress: this.handleChange,
-//       selected: item.forceSelected || item.value === this.state.selected,
-//     });
-
-//   render = () => <List {...this.props} renderItem={this.renderItem} />;
-// }
-
 import React, { useState } from 'react';
 import { SectionList } from 'react-native';
 import { IconProps, Text, Container } from '../.';
-import { RadioListItem, RadioListItemProps } from './RadioListItem';
+import { RadioListItem } from './RadioListItem';
 
-export const RadioList = ({
-  items,
-  onChange,
-  defaultValue,
-}: RadioListProps) => {
-  const [selected, setSelected] = useState<number>(defaultValue || 0);
+export const RadioList = ({ items, onChange }: RadioListProps) => {
+  const [selected, setSelected] = useState<number>(() => {
+    const value = items.filter((item: any) => {
+      return item.data.find(i => i.selected === true);
+    });
+
+    return value[0].data.find(i => i.selected)?.key || 0;
+  });
+
+  console.log({ selected });
 
   const handleChange = ({ value, index }: { value: string; index: number }) => {
     if (index !== selected) {
@@ -62,7 +25,7 @@ export const RadioList = ({
     }
   };
 
-  const renderItem = ({ item }: { item: RadioListItemProps }) => {
+  const renderItem = ({ item }: { item: RadioItemData }) => {
     return (
       <RadioListItem
         {...item}
@@ -101,11 +64,15 @@ export interface RadioListProps {
 
 export interface RadioItemProps {
   title: string | number;
-  data: Array<{
-    iconProps?: IconProps;
-    label: string;
-    key: number;
-    value: string;
-    disabled: boolean;
-  }>;
+  data: Array<RadioItemData>;
+}
+
+interface RadioItemData {
+  iconProps?: IconProps;
+  label: string;
+  key: number;
+  value: string;
+  disabled: boolean;
+  default: boolean;
+  selected: boolean;
 }
