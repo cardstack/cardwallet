@@ -10,15 +10,14 @@ _Please check back later._
 
 ## Releases and Tagging
 
-* Workflows:
-  * Create tag
-    * Automated on Fridays or manual
-    * Use current version in branch with unique identifier (first 6 characters of a CUID)
-    * Version must be bumped (patch, minor, major) through PR
-  * Beta release off of a tag
-    * Automated on Fridays off of most recent tag or manual off of given tag
-  * Production release off of a tag
-    * Manual off of given tag
+- Workflows:
+  - Create tag
+    - Use current version in branch with incremting number for mutliple tags based on the same version
+    - Version must be bumped (patch, minor, major) through PR
+  - Beta release off of a tag
+    - Manual off of given tag
+  - Production release off of a tag
+    - Manual off of given tag
 
 ## CI
 
