@@ -1,63 +1,134 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
 default_platform(:ios)
 
 platform :ios do
+  before_all do |options|
+    setup_ci
+  end
 
-  desc "Submit a new Beta build to Apple TestFlight"
-  lane :beta do
-    increment_build_number({
-      build_number: latest_testflight_build_number(version: get_version_number(target: "Rainbow")) + 1
-    })
+  ########################################################################
+  # Alpha Lane
+  ########################################################################
+  desc "Alpha build"
+  lane :alpha do |options|
+    decrypt_app_vars(
+      namespace: 'alpha'
+    )
 
-    update_info_plist(
-      plist_path: "Rainbow/Info.plist",
-      display_name: "Rainbow"
-    )
-    update_app_identifier(
-      app_identifier: "com.cardstack.cardpayapp",
-      xcodeproj: "Rainbow.xcodeproj",
-      plist_path: "Rainbow/Info.plist",
-    )
-    match(
-      force: true,
-      type: "appstore",
-      app_identifier: "com.cardstack.cardpayapp",
-      git_url: "git@github.com:rainbow-me/rainbow-code-signing.git"
-    )
-    automatic_code_signing(
-      use_automatic_signing: false
-    )
-    gym(
-      workspace: "Rainbow.xcworkspace",
+    ########################
+    # Pull certs & profiles
+    ########################
+    sync_code_signing(type: "adhoc")
+
+    ########################
+    # Increment the build number
+    ########################
+    increment_build_number(build_number: options[:build_number])
+
+    ########################
+    # Build the app
+    ########################
+    build_ios_app(
+      export_method: "ad-hoc",
+      include_bitcode: true,
+      skip_profile_detection: true,
       scheme: "Rainbow",
-      include_symbols: true,
-      configuration: "Release",
+      configuration: "Release"
+    )
+  end
+
+  ########################################################################
+  # Beta Lane
+  ########################################################################
+  desc "Beta build"
+  lane :beta do |options| 
+    decrypt_app_vars(
+      namespace: 'beta'
+    )
+
+    ########################
+    # Pull certs & profiles
+    ########################
+    sync_code_signing(type: "appstore")
+
+    ########################
+    # Increment the build number
+    ########################
+    increment_build_number(build_number: options[:build_number])
+
+    ########################
+    # Build the app
+    ########################
+    build_ios_app(
       export_method: "app-store",
+      include_bitcode: true,
+      skip_profile_detection: true,
+      scheme: "Rainbow",
+      configuration: "Release"
     )
 
-    # api_key = app_store_connect_api_key(
-    #   key_id: "B6RRSJG6H6",
-    #   issuer_id: "95830311-9e99-47b0-95ac-d628a3e4215e",
-    #   key_filepath: "fastlane/AuthKey_B6RRSJG6H6.p8",
-    #   duration: 1200, # optional
-    #   in_house: false, # optional but may be required if using match/sigh
-    # )
-
-    pilot(
-      app_identifier: "com.cardstack.cardpayapp",
+    ########################
+    # Upload to TestFlight
+    ########################
+    upload_to_testflight(
       skip_waiting_for_build_processing: true,
-      # api_key: api_key
+      apple_id: "1549183378",
+      username: "hassan@cardstack.com",
+      team_id: "QS5AFH4668"
     )
+  end
+
+  ########################################################################
+  # Production Lane
+  ########################################################################
+  desc "Production build"
+  lane :production do |options|
+    
+    decrypt_app_vars(
+      namespace: 'release'
+    )
+
+    ########################
+    # Pull certs & profiles
+    ########################
+    sync_code_signing(type: "appstore")
+
+    ########################
+    # Build the app
+    ########################
+    increment_build_number(build_number: options[:build_number])
+
+    build_ios_app(
+      export_method: "app-store",
+      include_bitcode: true
+    )
+
+    ########################
+    # Upload to TestFlight
+    ########################
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      apple_id: "1549183378",
+      username: "hassan@cardstack.com",
+      team_id: "QS5AFH4668"
+    )
+  end
+
+  desc "Version bump"
+  lane :version_bump do |options|
+    if ['major', 'minor', 'patch'].include?(ENV['VERSION_CHANGE_TYPE'])
+      increment_version_number_in_xcodeproj(
+        bump_type: ENV['VERSION_CHANGE_TYPE'],
+        target: 'Rainbow'
+      )
+    end
+  end
+
+  error do |lane, exception|
+    if ENV['SLACK_URL']
+      # slack(
+      #   message: exception.message,
+      #   success: false
+      # )
+    end
   end
 end

@@ -1,0 +1,28 @@
+name: Tag
+on:
+  workflow_dispatch:
+    inputs:
+      versionChangeType:
+        description: 'Type of version bump (major, minor, patch, none)'
+        required: true
+        default: 'none'
+jobs:
+  create-tag:
+    name: Create tag
+    runs-on: macos-latest
+    env:
+      VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
+      GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+      BRANCH_TO_TAG: 'develop'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.BRANCH_TO_TAG }}
+      - name: Bump iOS version
+        run: cd ios && bundle install && bundle exec fastlane version_bump
+      - uses: EndBug/add-and-commit@v7
+        with:
+          branch: ${{ env.BRANCH_TO_TAG }}
+          message: 'release: bump version and create ${{ env.VERSION_CHANGE_TYPE }} release'
+      - name: Create tag
+        run: cd ci-scripts && yarn && yarn createTag

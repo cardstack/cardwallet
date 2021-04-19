@@ -1,0 +1,150 @@
+
+desc "Upload encrypted android release keystore"
+lane :publish_android_keystore do
+  if (UI.confirm("This will overwrite your local release.keystore version stored in #{ENV['CRYPTEX_GIT_URL']} with the file at #{ENV['ANDROID_KEYSTORE_PATH']}. Proceed?"))
+    cryptex(
+      type: "import",
+      in: ENV['ANDROID_KEYSTORE_PATH'],
+      key: ENV['ANDROID_KEYSTORE_CRYPTEX_KEY']
+    )
+  end
+end
+
+desc "Download encrypted android release keystore"
+lane :sync_android_keystore do
+  if (UI.confirm("This will overwrite your remote release.keystore version at #{ENV['ANDROID_KEYSTORE_PATH']} with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    cryptex(
+      type: "export",
+      out: ENV['ANDROID_KEYSTORE_PATH'],
+      key: ENV['ANDROID_KEYSTORE_CRYPTEX_KEY']
+    )
+  end
+end
+
+
+desc "Download encrypted base app vars"
+lane :sync_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    app_vars = cryptex(
+      type: "export_env",
+      key: "app_vars"
+    )
+
+    open('../.env', 'w') do |f|
+      app_vars.each {|key, value| f.puts "#{key}=#{value}" }
+    end
+  end
+end
+
+desc "Upload encrypted base app vars"
+lane :publish_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env. Proceed?"))
+    app_vars = Dotenv.parse("../.env");
+
+    cryptex(
+      type: "import_env",
+      key: "app_vars",
+      hash: app_vars
+    )
+  end
+end
+
+desc "Download encrypted alpha app vars"
+lane :sync_alpha_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env.alpha with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    alpha_app_vars = cryptex(
+      type: "export_env",
+      key: "alpha_app_vars"
+    )
+
+    open('../.env.alpha', 'w') do |f|
+      alpha_app_vars.each {|key, value| f.puts "#{key}=#{value}" }
+    end
+  end
+end
+
+desc "Upload encrypted alpha app vars"
+lane :publish_alpha_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env.alpha. Proceed?"))
+    alpha_app_vars = Dotenv.parse("../.env.alpha")
+
+    cryptex(
+      type: "import_env",
+      key: "alpha_app_vars",
+      hash: alpha_app_vars
+    )
+  end
+end
+
+desc "Download encrypted beta app vars"
+lane :sync_beta_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env.beta with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    beta_app_vars = cryptex(
+      type: "export_env",
+      key: "beta_app_vars"
+    )
+
+    open('../.env.beta', 'w') do |f|
+      beta_app_vars.each {|key, value| f.puts "#{key}=#{value}" }
+    end
+  end
+end
+
+desc "Upload encrypted beta app vars"
+lane :publish_beta_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env.beta. Proceed?"))
+    beta_app_vars = Dotenv.parse("../.env.beta")
+
+    cryptex(
+      type: "import_env",
+      key: "beta_app_vars",
+      hash: beta_app_vars
+    )
+  end
+end
+
+
+desc "Download encrypted production app vars"
+lane :sync_release_app_vars do
+  if (UI.confirm("This will overwrite your local <root>/.env.release with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+    release_app_vars = cryptex(
+      type: "export_env",
+      key: "release_app_vars"
+    )
+
+    open('../.env.release', 'w') do |f|
+      release_app_vars.each {|key, value| f.puts "#{key}=#{value}" }
+    end
+  end
+end
+
+desc "Upload encrypted production app vars"
+lane :publish_release_app_vars do
+  if (UI.confirm("This will overwrite your remote .env stored in #{ENV['CRYPTEX_GIT_URL']} with your local <root>/.env.release. Proceed?"))
+    release_app_vars = Dotenv.parse("../.env.release")
+
+    cryptex(
+      type: "import_env",
+      key: "release_app_vars",
+      hash: release_app_vars
+    )
+  end
+end
+
+desc "Upload encrypted google play credentials"
+lane :publish_google_play_credentials do
+  cryptex(
+      type: "import",
+      key: ENV['GOOGLE_PLAY_CREDENTIALS_CRYPTEX_KEY'],
+      in: './android/app/google-play-credentials.json'
+    )
+end
+
+desc "Download encrypted google play credentials"
+lane :sync_google_play_credentials do
+  cryptex(
+      type: "export",
+      key: ENV['GOOGLE_PLAY_CREDENTIALS_CRYPTEX_KEY'],
+      out: './android/app/google-play-credentials.json'
+    )
+end
