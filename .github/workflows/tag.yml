@@ -24,11 +24,11 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-          branch: '${{ env.GITHUB_ACTOR }}/${{ env.VERSION_CHANGE_TYPE }}-version-${{ env.GITHUB_SHA }}'
+          branch: 'release/${{ env.VERSION_CHANGE_TYPE }}-version-${{ env.GITHUB_RUN_NUMBER }}'
           title: 'release: ${{ env.VERSION_CHANGE_TYPE }} version release'
-          commit-message: 'release: ${{ env.VERSION_CHANGE_TYPE }} version release from ${{ env.GITHUB_SHA }}'
+          commit-message: 'release: ${{ env.VERSION_CHANGE_TYPE }} version release from ${{ env.GITHUB_RUN_NUMBER }}'
           delete-branch: true
       - name: Create tag
         run: cd ci-scripts && yarn && yarn createTag
         env:
-          BRANCH_TO_TAG: '${{ env.GITHUB_ACTOR }}/${{ env.VERSION_CHANGE_TYPE }}-version-${{ env.GITHUB_SHA }}'
+          BRANCH_TO_TAG: 'release/${{ env.VERSION_CHANGE_TYPE }}-version-${{ env.GITHUB_RUN_NUMBER }}'
