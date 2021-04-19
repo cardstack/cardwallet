@@ -39,7 +39,7 @@ const createTag = async () => {
         owner: 'cardstack',
         repo: 'cardwallet',
         tag_name: tagName,
-        target_commitish: 'develop',
+        target_commitish: process.env.BRANCH_TO_TAG,
         name: `${tagName}`,
         body: `Released at ${new Date(Date.now()).toISOString()}`,
       }),
