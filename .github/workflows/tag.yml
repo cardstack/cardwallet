@@ -13,16 +13,22 @@ jobs:
     env:
       VERSION_CHANGE_TYPE: ${{ github.event.inputs.versionChangeType }}
       GITHUB_AUTH_TOKEN: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
-      BRANCH_TO_TAG: 'develop'
+      BASE_BRANCH: 'develop'
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ env.BRANCH_TO_TAG }}
+          ref: ${{ env.BASE_BRANCH }}
       - name: Bump iOS version
         run: cd ios && bundle install && bundle exec fastlane version_bump
-      - uses: EndBug/add-and-commit@v7
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
         with:
-          branch: ${{ env.BRANCH_TO_TAG }}
-          message: 'release: bump version and create ${{ env.VERSION_CHANGE_TYPE }} release'
+          token: ${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}
+          branch: '${{ env.GITHUB_ACTOR }}/${{ env.VERSION_CHANGE_TYPE }}-version-${{ env.GITHUB_SHA }}'
+          title: 'release: ${{ env.VERSION_CHANGE_TYPE }} version release'
+          commit-message: 'release: ${{ env.VERSION_CHANGE_TYPE }} version release from ${{ env.GITHUB_SHA }}'
+          delete-branch: true
       - name: Create tag
         run: cd ci-scripts && yarn && yarn createTag
+        env:
+          BRANCH_TO_TAG: '${{ env.GITHUB_ACTOR }}/${{ env.VERSION_CHANGE_TYPE }}-version-${{ env.GITHUB_SHA }}'
