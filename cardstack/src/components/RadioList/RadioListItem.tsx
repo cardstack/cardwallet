@@ -42,7 +42,7 @@ export const RadioListItem = ({
           <Container flex={1} alignItems="flex-end">
             <Icon
               name="check-circle"
-              color="backgroundBlue"
+              color="lightGreen"
               iconSize="medium"
               {...iconProps}
             />

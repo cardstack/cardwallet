@@ -16,3 +16,4 @@ export * from './Input';
 export * from './Sheet';
 export * from './ListItem';
 export * from './RadioList';
+export * from './Checkbox';

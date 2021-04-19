@@ -13,7 +13,7 @@ import {
 import { dataGetTransactions } from '../../redux/data';
 import { settingsUpdateNetwork } from '../../redux/settings';
 
-import { Container, RadioList } from '@cardstack/components';
+import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
 
 const networks = values(networkInfo);
 
@@ -24,6 +24,7 @@ const NetworkSection = () => {
   const initializeAccountData = useInitializeAccountData();
   const dispatch = useDispatch();
 
+  //transform data for sectionList
   const DATA = networks
     .reduce((result, curr, currentIndex) => {
       console.log(
@@ -54,7 +55,6 @@ const NetworkSection = () => {
 
   const onNetworkChange = useCallback(
     async network => {
-      console.log(network);
       await resetAccountState();
       await dispatch(settingsUpdateNetwork(network));
       InteractionManager.runAfterInteractions(async () => {
@@ -69,7 +69,13 @@ const NetworkSection = () => {
   );
 
   return (
-    <Container backgroundColor="white" padding={4} width="100%">
+    <Container backgroundColor="white" paddingVertical={4} width="100%">
+      <Container flexDirection="row" padding={4}>
+        <Container alignItems="center" flex={1} flexDirection="row">
+          <Text>ADVANCED USERS</Text>
+        </Container>
+        <Checkbox label="Show testnets" />
+      </Container>
       <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
     </Container>
   );

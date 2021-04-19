@@ -6,17 +6,14 @@ import { RadioListItem } from './RadioListItem';
 export const RadioList = ({ items, onChange }: RadioListProps) => {
   const [selected, setSelected] = useState<number>(() => {
     const value = items.filter((item: any) => {
-      return item.data.find(i => i.selected === true);
+      return item.data.find((i: any) => i.selected === true);
     });
 
     return value[0].data.find(i => i.selected)?.key || 0;
   });
 
-  console.log({ selected });
-
   const handleChange = ({ value, index }: { value: string; index: number }) => {
     if (index !== selected) {
-      console.log('Value has changed');
       setSelected(index);
     }
 
@@ -42,6 +39,7 @@ export const RadioList = ({ items, onChange }: RadioListProps) => {
         return item.value + '-' + index + '-' + item.key;
       }}
       renderItem={renderItem}
+      stickySectionHeadersEnabled={false}
       renderSectionHeader={({ section: { title } }) => (
         <Container
           backgroundColor="backgroundGray"
