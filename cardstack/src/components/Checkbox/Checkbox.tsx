@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { Touchable, Container, Text, Icon } from '../.';
-import { ContainerProps } from '../Container';
 import { IconProps } from '../Icon';
 
-interface CheckboxProps extends ContainerProps {
+interface CheckboxProps {
   onPress?: () => void;
   label: string;
   isDisabled?: boolean;
