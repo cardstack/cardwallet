@@ -2,9 +2,9 @@ import { useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Animated, InteractionManager, View } from 'react-native';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import styled from 'styled-components';
 import { Modal } from '../components/modal';
-import ModalHeaderButton from '../components/modal/ModalHeaderButton';
 import {
   CurrencySection,
   LanguageSection,
@@ -100,8 +100,9 @@ export default function SettingsModal() {
   const { goBack, navigate } = useNavigation();
   const { wallets, selectedWallet } = useWallets();
   const { params } = useRoute();
-  const { isTinyPhone } = useDimensions();
+  const { isTinyPhone, height } = useDimensions();
   const { colors } = useTheme();
+  const modalHeight = height - getStatusBarHeight(true) * 2;
 
   const getRealRoute = useCallback(
     key => {
@@ -161,7 +162,7 @@ export default function SettingsModal() {
   const memoSettingsOptions = useMemo(() => settingsOptions(colors), [colors]);
   return (
     <Modal
-      minHeight={isTinyPhone ? 500 : 600}
+      minHeight={isTinyPhone ? 500 : modalHeight}
       onCloseModal={goBack}
       radius={18}
       showDoneButton={ios}

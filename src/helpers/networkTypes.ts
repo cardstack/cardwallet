@@ -5,6 +5,7 @@ export enum Network {
   rinkeby = 'rinkeby',
   sokol = 'sokol',
   ropsten = 'ropsten',
+  xdai = 'xdai',
 }
 
 // We need to keep this one until
@@ -16,4 +17,5 @@ export default {
   rinkeby: 'rinkeby' as Network,
   sokol: 'sokol' as Network,
   ropsten: 'ropsten' as Network,
+  xdai: 'xdai' as Network,
 };
