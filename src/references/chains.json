@@ -1,19 +1,19 @@
 [
   {
-    "name": "xDai chain",
+    "name": "Ethereum Mainnet",
     "short_name": "eth",
     "chain": "ETH",
     "network": "mainnet",
-    "chain_id": 100,
-    "network_id": 100
+    "chain_id": 1,
+    "network_id": 1
   },
   {
-    "name": "xDai Sokol",
-    "short_name": "sokol",
+    "name": "Ethereum Ropsten",
+    "short_name": "rop",
     "chain": "ETH",
-    "network": "sokol",
-    "chain_id": 77,
-    "network_id": 77
+    "network": "ropsten",
+    "chain_id": 3,
+    "network_id": 3
   },
   {
     "name": "Ethereum Rinkeby",

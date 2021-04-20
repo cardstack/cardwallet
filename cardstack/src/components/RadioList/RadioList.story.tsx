@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { storiesOf } from '@storybook/react-native';
-import { current } from 'immer';
-import lodash from 'lodash';
 import React from 'react';
 import { Alert } from 'react-native';
 
 import { Container } from '../Container';
-import { RadioItemProps, RadioList } from './RadioList';
+import { RadioList } from './RadioList';
 
 const networks = [
   {
