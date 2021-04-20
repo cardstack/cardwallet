@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import prepaidCardManagerContract from '../../../src/references/prepaid-card-manager-contract';
 import logger from 'logger';
 
-const baseUrl = 'https://safe-transaction.xdai.gnosis.io/api/v1';
+const baseUrl = 'https://transactions-staging.stack.cards/api/v1';
 
 const gnosisApi = axios.create({
   headers: {
@@ -35,9 +35,13 @@ export const usePrepaidCards = (address: string) => {
 
   const { data } = useQuery('owners', () => fetchOwnersByAddress(address));
 
+  console.log('data', data);
+
   return (
     data?.safes.filter(async (safeAddress: string) => {
       const cardDetail = await contract.methods.cardDetails(safeAddress).call();
+
+      console.log('cardDetail', cardDetail);
 
       return cardDetail;
     }) || []
