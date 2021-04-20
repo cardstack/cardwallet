@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Animated, InteractionManager, View } from 'react-native';
 import styled from 'styled-components';
 import { Modal } from '../components/modal';
+import ModalHeaderButton from '../components/modal/ModalHeaderButton';
 import {
   CurrencySection,
   LanguageSection,
