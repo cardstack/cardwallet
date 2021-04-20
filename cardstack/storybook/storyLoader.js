@@ -6,6 +6,7 @@
 function loadStories() {
   require('../src/components/BalanceCoinRow/BalanceCoinRow.story');
   require('../src/components/Button/Button.story');
+  require('../src/components/Checkbox/Checkbox.story');
   require('../src/components/Icon/Icon.story');
   require('../src/components/ListItem/ListItem.story');
   require('../src/components/OptionItem/OptionItem.story');
@@ -20,6 +21,7 @@ function loadStories() {
 const stories = [
   '../src/components/BalanceCoinRow/BalanceCoinRow.story',
   '../src/components/Button/Button.story',
+  '../src/components/Checkbox/Checkbox.story',
   '../src/components/Icon/Icon.story',
   '../src/components/ListItem/ListItem.story',
   '../src/components/OptionItem/OptionItem.story',

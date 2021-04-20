@@ -4,14 +4,20 @@ import { ContainerProps } from '../Container';
 import { IconProps } from '../Icon';
 
 interface CheckboxProps extends ContainerProps {
-  onPress: () => void;
+  onPress?: () => void;
   label: string;
   isDisabled?: boolean;
-  iconProps: IconProps;
+  iconProps?: IconProps;
+  isSelected?: boolean;
 }
 
-export const Checkbox = ({ label, onPress, isDisabled }: CheckboxProps) => {
-  const [selected, setSelected] = useState(false);
+export const Checkbox = ({
+  label,
+  onPress,
+  isDisabled,
+  isSelected = false,
+}: CheckboxProps) => {
+  const [selected, setSelected] = useState(isSelected);
   const [disabled] = useState(isDisabled);
 
   const handleCall = useCallback(() => {
@@ -29,14 +35,23 @@ export const Checkbox = ({ label, onPress, isDisabled }: CheckboxProps) => {
         <Touchable marginLeft={5} onPress={handleCall} disabled={disabled}>
           <Container
             alignItems="center"
-            backgroundColor="buttonPrimaryBackground"
+            backgroundColor={
+              disabled ? 'underlineGray' : 'buttonPrimaryBackground'
+            }
+            borderColor={disabled ? 'transparent' : 'black'}
             borderRadius={5}
             borderWidth={1}
             height={22}
             justifyContent="center"
             width={22}
           >
-            {selected && <Icon color="black" iconSize="small" name="check" />}
+            {selected && (
+              <Icon
+                color={disabled ? 'settingsGrayDark' : 'black'}
+                iconSize="small"
+                name="check"
+              />
+            )}
           </Container>
         </Touchable>
       </Container>
