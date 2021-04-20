@@ -5,47 +5,41 @@ import { useTheme } from '../../context/ThemeContext';
 import { getRandomColor } from '../../styles/colors';
 import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';
-import { BiometricButtonContent } from '../buttons';
 import ImageAvatar from '../contacts/ImageAvatar';
 import CopyTooltip from '../copy-tooltip';
 import { Centered, ColumnWithDividers } from '../layout';
 import { TruncatedAddress } from '../text';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
-import { Text } from '@cardstack/components';
+import { Container, OptionItem, Text } from '@cardstack/components';
+import theme from '@cardstack/theme';
 import {
   removeFirstEmojiFromString,
   returnStringFirstEmoji,
 } from '@rainbow-me/helpers/emojiHandler';
-import { useAccountProfile } from '@rainbow-me/hooks';
+import { useAccountProfile, useBiometryIconName } from '@rainbow-me/hooks';
+
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { padding, position } from '@rainbow-me/styles';
+import { padding } from '@rainbow-me/styles';
 
 const Spacer = styled.View`
   height: 19;
-`;
-
-const WalletProfileButton = styled(ButtonPressAnimation)`
-  ${padding(15, 0, 19)};
-  ${position.centered};
-  flex-direction: row;
-  height: 58;
-  width: 100%;
 `;
 
 const ProfileImage = styled(ImageAvatar)`
   margin-bottom: 15;
 `;
 
-const WalletProfileDivider = styled(Divider).attrs(({ theme: { colors } }) => ({
+const WalletProfileDivider = styled(Divider).attrs(() => ({
   borderRadius: 1,
-  color: colors.rowDividerLight,
+  color: theme.colors['borderGray'],
   inset: false,
 }))``;
+
 const WalletProfileModal = styled(ProfileModal).attrs({
   dividerRenderer: WalletProfileDivider,
 })`
-  ${padding(24, 19, 0)};
+  ${padding(24, 0, 0)};
   width: 100%;
 `;
 
@@ -69,8 +63,6 @@ export default function WalletProfileState({
     profile?.name ? removeFirstEmojiFromString(profile.name).join('') : ''
   );
   const inputRef = useRef(null);
-
-  console.log('inputRef', inputRef);
 
   const handleCancel = useCallback(() => {
     goBack();
@@ -100,11 +92,14 @@ export default function WalletProfileState({
     inputRef,
   ]);
 
+  const biometryType = useBiometryIconName();
+
   return (
     <WalletProfileModal>
-      <Centered
+      <Container
+        alignItems="center"
         direction="column"
-        paddingBottom={30}
+        paddingBottom={14}
         testID="wallet-info-modal"
         width="100%"
       >
@@ -147,21 +142,35 @@ export default function WalletProfileState({
             />
           </CopyTooltip>
         )}
-      </Centered>
-      <ColumnWithDividers dividerRenderer={WalletProfileDivider} width="100%">
-        <WalletProfileButton onPress={handleSubmit}>
-          <BiometricButtonContent
-            showIcon={actionType === 'Create'}
-            testID="wallet-info-submit-button"
-            text={isNewProfile ? `${actionType} Wallet` : 'Done'}
-          />
-        </WalletProfileButton>
-        <WalletProfileButton onPress={handleCancel}>
-          <Text color="grayText" fontWeight="600">
+      </Container>
+      <Container marginVertical={5}>
+        <ButtonPressAnimation onPress={handleSubmit}>
+          {isNewProfile ? (
+            <OptionItem
+              iconProps={{
+                color: 'settingsGray',
+                visible: actionType === 'Create',
+                name: biometryType,
+              }}
+              marginLeft={12}
+              testID="wallet-info-submit-button"
+              textProps={{ color: 'settingsGray' }}
+              title={`${actionType} Account`}
+            />
+          ) : (
+            <Text color="settingsGray" fontWeight="600" textAlign="center">
+              Done
+            </Text>
+          )}
+        </ButtonPressAnimation>
+      </Container>
+      <Container marginBottom={6} marginTop={5}>
+        <ButtonPressAnimation onPress={handleCancel}>
+          <Text color="grayText" fontWeight="600" textAlign="center">
             Cancel
           </Text>
-        </WalletProfileButton>
-      </ColumnWithDividers>
+        </ButtonPressAnimation>
+      </Container>
     </WalletProfileModal>
   );
 }

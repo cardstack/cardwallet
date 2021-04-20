@@ -133,7 +133,8 @@ RCT_EXPORT_METHOD(hideAnimated) {
   #if DEBUG
     return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   #else
-    return [CodePush bundleURL];
+    return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+    // return [CodePush bundleURL];
   #endif
 }
 

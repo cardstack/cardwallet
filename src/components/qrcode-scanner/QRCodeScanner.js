@@ -2,37 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
 import styled from 'styled-components';
-import { Centered } from '../layout';
 import { ErrorText } from '../text';
 import QRCodeScannerCrosshair from './QRCodeScannerCrosshair';
 import QRCodeScannerNeedsAuthorization from './QRCodeScannerNeedsAuthorization';
+import { CenteredContainer, Container } from '@cardstack/components';
 import SimulatorFakeCameraImageSource from '@rainbow-me/assets/simulator-fake-camera-image.jpg';
 import { useBooleanState, useScanner } from '@rainbow-me/hooks';
 import { ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
-
-const Camera = styled(RNCamera)`
-  ${position.cover};
-  ${position.size('100%')};
-`;
-
-const CameraWrapper = styled(Centered)`
-  ${position.size('100%')};
-  background-color: ${({ theme: { colors } }) => colors.white};
-`;
-
-const Container = styled(Centered).attrs({
-  direction: 'column',
-})`
-  ${position.cover};
-  background-color: ${({ theme: { colors } }) => colors.black};
-`;
-
-const ContentOverlay = styled(Centered)`
-  ${position.cover};
-  bottom: ${({ contentPositionBottom }) => contentPositionBottom || 0};
-  top: ${({ contentPositionTop }) => contentPositionTop || 0};
-`;
 
 const EmulatorCameraFallback = styled(ImgixImage).attrs({
   source: SimulatorFakeCameraImageSource,
@@ -66,11 +43,11 @@ export default function QRCodeScanner({
   }, [enableCamera, isInitialized]);
 
   return (
-    <Container>
-      <CameraWrapper>
+    <Container backgroundColor="black">
+      <CenteredContainer backgroundColor="white" height="100%">
         {enableCamera && isEmulator && <EmulatorCameraFallback />}
         {(enableCamera || android) && !isEmulator && (
-          <Camera
+          <RNCamera
             captureAudio={false}
             notAuthorizedView={QRCodeScannerNeedsAuthorization}
             onBarCodeRead={onScan}
@@ -78,17 +55,27 @@ export default function QRCodeScanner({
             onMountError={showError}
             pendingAuthorizationView={null}
             ref={cameraRef}
+            style={{
+              height: '100%',
+              bottom: 0,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            }}
           />
         )}
-      </CameraWrapper>
+      </CenteredContainer>
       {isCameraAuthorized ? (
-        <ContentOverlay
-          contentPositionBottom={contentPositionBottom}
-          contentPositionTop={contentPositionTop}
+        <CenteredContainer
+          bottom={contentPositionBottom}
+          position="absolute"
+          top={contentPositionTop}
+          width="100%"
         >
           {showErrorMessage && <ErrorText error="Error mounting camera" />}
           {showCrosshair && <QRCodeScannerCrosshair />}
-        </ContentOverlay>
+        </CenteredContainer>
       ) : (
         <QRCodeScannerNeedsAuthorization />
       )}

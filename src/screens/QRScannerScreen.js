@@ -1,21 +1,24 @@
 import { useIsFocused } from '@react-navigation/native';
+import analytics from '@segment/analytics-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { FlatList } from 'react-native';
 import Animated, { useCode } from 'react-native-reanimated';
 import styled from 'styled-components';
-import { BubbleSheet } from '../components/bubble-sheet';
 import { DiscoverSheet } from '../components/discover-sheet';
 import { BackButton, Header, HeaderHeight } from '../components/header';
-import { Centered } from '../components/layout';
+
 import {
   CameraDimmer,
   EmulatorPasteUriButton,
   QRCodeScanner,
 } from '../components/qrcode-scanner';
+import { WalletConnectExplainer } from '../components/walletconnect-list';
 import {
-  WalletConnectExplainer,
-  WalletConnectList,
-} from '../components/walletconnect-list';
+  CenteredContainer,
+  Container,
+  ListItem,
+  Sheet,
+} from '@cardstack/components';
 import useExperimentalFlag, {
   DISCOVER_SHEET,
 } from '@rainbow-me/config/experimentalHooks';
@@ -23,7 +26,6 @@ import { useHeight, useWalletConnectConnections } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { scrollPosition } from '@rainbow-me/navigation/ScrollPagerWrapper';
 import Routes from '@rainbow-me/routes';
-import { position } from '@rainbow-me/styles';
 
 const { call, greaterThan, onChange } = Animated;
 
@@ -34,20 +36,6 @@ const Background = styled.View`
   height: 100%;
   position: absolute;
   width: 100%;
-`;
-
-const ScannerContainer = styled(Centered).attrs({
-  direction: 'column',
-})`
-  ${position.size('100%')};
-  overflow: hidden;
-`;
-
-const ScannerHeader = styled(Header).attrs({
-  justify: 'space-between',
-})`
-  position: absolute;
-  top: 0;
 `;
 
 function useFocusFromSwipe() {
@@ -65,16 +53,17 @@ function useFocusFromSwipe() {
   return isFocused;
 }
 
-export default function QRScannerScreen() {
+const QRScannerScreen = () => {
   const discoverSheetAvailable = useExperimentalFlag(DISCOVER_SHEET);
   const isFocusedIOS = useFocusFromSwipe();
   const isFocusedAndroid = useIsFocused();
-  const [sheetHeight, onSheetLayout] = useHeight(240);
+  const [sheetHeight] = useHeight(240);
   const [initializeCamera, setInitializeCamera] = useState(ios ? true : false);
   const { navigate } = useNavigation();
   const {
     walletConnectorsByDappName,
     walletConnectorsCount,
+    walletConnectDisconnectAllByDappName,
   } = useWalletConnectConnections();
 
   const handlePressBackButton = useCallback(
@@ -86,45 +75,85 @@ export default function QRScannerScreen() {
     isFocusedAndroid && !initializeCamera && setInitializeCamera(true);
   }, [initializeCamera, isFocusedAndroid]);
 
-  const { colors } = useTheme();
+  const handlePressActionSheet = useCallback(
+    ({ dappName, dappUrl, index }) => {
+      if (index === 0) {
+        walletConnectDisconnectAllByDappName(dappName);
+        analytics.track('Manually disconnected from WalletConnect connection', {
+          dappName,
+          dappUrl,
+        });
+      }
+    },
+    [walletConnectDisconnectAllByDappName]
+  );
 
   return (
-    <View>
+    <Container>
+      <Header backgroundColor="transparent" position="absolute" zIndex={1}>
+        <BackButton
+          color="blue"
+          direction="left"
+          onPress={handlePressBackButton}
+          testID="goToBalancesFromScanner"
+        />
+        <EmulatorPasteUriButton />
+      </Header>
       {discoverSheetAvailable && ios ? <DiscoverSheet /> : null}
-      <ScannerContainer>
+      <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
         <Background />
         <CameraDimmer>
           {initializeCamera && (
             <QRCodeScanner
               contentPositionBottom={sheetHeight}
-              contentPositionTop={HeaderHeight}
+              contentPositionTop={-HeaderHeight * 2}
               enableCamera={ios ? isFocusedIOS : isFocusedAndroid}
             />
           )}
         </CameraDimmer>
-        {discoverSheetAvailable ? (
-          android ? (
-            <DiscoverSheet />
-          ) : null
-        ) : (
-          <BubbleSheet onLayout={onSheetLayout}>
-            {walletConnectorsCount ? (
-              <WalletConnectList items={walletConnectorsByDappName} />
-            ) : (
-              <WalletConnectExplainer />
-            )}
-          </BubbleSheet>
-        )}
-        <ScannerHeader>
-          <BackButton
-            color={colors.whiteLabel}
-            direction="left"
-            onPress={handlePressBackButton}
-            testID="goToBalancesFromScanner"
-          />
-          <EmulatorPasteUriButton />
-        </ScannerHeader>
-      </ScannerContainer>
-    </View>
+
+        <Container bottom={0} position="absolute" width="100%">
+          {discoverSheetAvailable ? (
+            android ? (
+              <DiscoverSheet />
+            ) : null
+          ) : (
+            <Sheet hideHandle>
+              {walletConnectorsCount ? (
+                <>
+                  <FlatList
+                    alwaysBounceVertical={false}
+                    data={walletConnectorsByDappName}
+                    keyExtractor={item => item.dappUrl}
+                    removeClippedSubviews
+                    renderItem={({ item }) => (
+                      <>
+                        <ListItem
+                          actionSheetProps={{
+                            onPress: index => {
+                              handlePressActionSheet({ ...item, index });
+                            },
+                            options: ['Disconnect', 'Cancel'],
+                            title: `Would you like to disconnect from ${item.dappName}?`,
+                          }}
+                          avatarProps={{ source: item.dappIcon }}
+                          subText="Connected"
+                          title={item.dappName}
+                        />
+                      </>
+                    )}
+                    scrollEventThrottle={32}
+                  />
+                </>
+              ) : (
+                <WalletConnectExplainer />
+              )}
+            </Sheet>
+          )}
+        </Container>
+      </CenteredContainer>
+    </Container>
   );
-}
+};
+
+export default QRScannerScreen;

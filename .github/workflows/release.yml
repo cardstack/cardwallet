@@ -1,0 +1,56 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      releaseStage:
+        description: 'Beta or Production release'
+        required: true
+        default: 'beta'
+      githubRef:
+        description: 'Github ref to build and release'
+        required: true
+        default: 'develop'
+jobs:
+  release-ios:
+    name: Release iOS
+    runs-on: macos-latest
+    env:
+      CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
+      CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.githubRef }}
+      - name: Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.15.5
+      - name: Bundle install
+        run: bundle install
+      - name: Decrypt fastlane vars
+        run: bundle exec fastlane run decrypt_fastlane_vars
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Yarn Install
+        run: yarn install --network-timeout 300000 --network-concurrency 1
+      - name: Patch Packages
+        run: yarn patch-package
+      - name: RN Nodeify
+        run: yarn nodeify
+      - name: Build iOS
+        run: yarn build:ios
+      - name: Bundle Install (ios)
+        run: cd ios && bundle install
+      - name: Pod Install (ios)
+        run: cd ios && pod install
+      - name: Run fastlane (ios)
+        run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }}"
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          FASTLANE_STAGE: ${{ github.event.inputs.releaseStage }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
+          MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}

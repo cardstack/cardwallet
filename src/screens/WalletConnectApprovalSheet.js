@@ -14,11 +14,12 @@ import { Alert } from '../components/alerts';
 import { RequestVendorLogoIcon } from '../components/coin-icon';
 import { Centered, Row } from '../components/layout';
 import {
+  Button,
+  CenteredContainer,
+  Container,
   Sheet,
-  SheetActionButton,
-  SheetActionButtonRow,
-} from '../components/sheet';
-import { Text } from '../components/text';
+  Text,
+} from '@cardstack/components';
 import {
   getDappHostname,
   isDappAuthenticated,
@@ -30,7 +31,7 @@ const DappLogo = styled(RequestVendorLogoIcon).attrs(
   ({ theme: { colors } }) => ({
     backgroundColor: colors.transparent,
     borderRadius: 18,
-    showLargeShadow: true,
+    showLargeShadow: false,
     size: 60,
   })
 )`
@@ -122,52 +123,35 @@ export default function WalletConnectApprovalSheet() {
 
   return (
     <Sheet hideHandle>
-      <Centered
-        direction="column"
-        paddingBottom={5}
+      <CenteredContainer
+        paddingBottom={20}
         paddingHorizontal={19}
-        paddingTop={17}
+        paddingTop={5}
       >
         <DappLogo dappName={dappName || ''} imageUrl={imageUrl} />
-        <Centered paddingHorizontal={24}>
-          <Row>
-            <Text
-              align="center"
-              color={colors.alpha(colors.blueGreyDark, 0.6)}
-              lineHeight={29}
-              size="big"
-            >
-              <Text color="dark" size="big" weight="bold">
-                {dappName}
-              </Text>{' '}
-              wants to connect to your wallet
-            </Text>
-          </Row>
-        </Centered>
-        <Row marginBottom={30} marginTop={15}>
-          <Text color="appleBlue" lineHeight={29} size="large" weight="bold">
+        <Container justifyContent="center" marginBottom={5}>
+          <Text size="medium" textAlign="center" weight="bold">
+            {dappName}
+          </Text>
+          <Text color="grayText" textAlign="center">
+            wants to connect to your wallet
+          </Text>
+        </Container>
+        <Container flexDirection="row">
+          <Text color="settingsGray" lineHeight={29} weight="bold">
             {isAuthenticated ? `􀇻 ${formattedDappUrl}` : formattedDappUrl}
           </Text>
-        </Row>
+        </Container>
         <Divider color={colors.rowDividerLight} inset={[0, 84]} />
-      </Centered>
-      <SheetActionButtonRow>
-        <SheetActionButton
-          color={colors.white}
-          label="Cancel"
-          onPress={handleCancel}
-          size="big"
-          textColor={colors.alpha(colors.blueGreyDark, 0.8)}
-          weight="bold"
-        />
-        <SheetActionButton
-          color={colors.appleBlue}
-          label="Connect"
-          onPress={handleConnect}
-          size="big"
-          weight="bold"
-        />
-      </SheetActionButtonRow>
+      </CenteredContainer>
+      <Container flexDirection="row" justifyContent="space-evenly">
+        <Button onPress={handleCancel} variant="smallSecondary">
+          Cancel
+        </Button>
+        <Button onPress={handleConnect} variant="small">
+          Connect
+        </Button>
+      </Container>
     </Sheet>
   );
 }

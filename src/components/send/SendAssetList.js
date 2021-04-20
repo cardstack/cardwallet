@@ -400,7 +400,6 @@ export default class SendAssetList extends React.Component {
   };
 
   renderRow = (type, data) => {
-    console.log('type, data', type, data);
     if (type === 'COIN_ROW') {
       return this.balancesRenderItem(data);
     } else if (type === 'COIN_ROW_LAST') {
