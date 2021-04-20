@@ -34,7 +34,7 @@ const NetworkSection = () => {
       );
       result[curr.layer] =
         {
-          title: curr.layer,
+          title: `Layer ${curr.layer}`,
           data: [
             ...(result[curr.layer]?.data || []),
             {

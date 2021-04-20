@@ -6,81 +6,47 @@ import { Alert } from 'react-native';
 import { Container } from '../Container';
 import { RadioList } from './RadioList';
 
-const networks = [
+const DATA = [
   {
-    color: '#3cc29e',
-    disabled: false,
-    exchange_enabled: true,
-    faucet_url: null,
-    layer: 2,
-    name: 'xDai Chain',
-    value: 'mainnet',
-    default: true,
-    selected: false,
-  },
-
-  {
-    color: '#3cc29e',
-    disabled: false,
-    exchange_enabled: true,
-    faucet_url: null,
-    layer: 1,
-    name: 'Sokol',
-    value: 'sokol',
-    default: false,
-    selected: true,
+    title: 'Section 1',
+    data: [
+      {
+        disabled: false,
+        key: 0,
+        label: 'item 1',
+        value: '1',
+        default: true,
+        selected: true,
+      },
+      {
+        disabled: false,
+        key: 1,
+        label: 'item 2',
+        value: '2',
+        default: false,
+        selected: false,
+      },
+    ],
   },
   {
-    color: '#3cc29e',
-    disabled: false,
-    exchange_enabled: true,
-    faucet_url: null,
-    layer: 1,
-    name: 'Sokol',
-    value: 'sokol',
-    default: false,
-    selected: false,
-  },
-  {
-    color: '#3cc29e',
-    disabled: false,
-    exchange_enabled: true,
-    faucet_url: null,
-    layer: 1,
-    name: 'Sokol',
-    value: 'sokol',
-    default: false,
-    selected: false,
+    title: 'Section 2',
+    data: [
+      {
+        disabled: false,
+        key: 2,
+        label: 'item 3',
+        value: '3',
+        default: false,
+        selected: false,
+      },
+    ],
   },
 ];
-
-const groupByLayer = networks
-  .reduce((result: any, curr: any, currentIndex: number) => {
-    result[curr.layer] =
-      {
-        title: curr.layer,
-        data: [
-          ...(result[curr.layer]?.data || []),
-          {
-            disabled: curr.disabled,
-            key: currentIndex,
-            label: curr.name,
-            value: curr.name,
-            default: curr.default,
-            selected: curr.selected,
-          },
-        ],
-      } || {};
-
-    return result;
-  }, [])
-  .flat()
-  .sort((a, b) => a.layer < b.layer);
 
 storiesOf('Radio List', module).add('Default', () => (
   <Container backgroundColor="white" width="100%" padding={4}>
     <RadioList
-      items={groupByLayer}
+      items={DATA}
       onChange={(value: string) => Alert.alert('pressed', value)}
     />
   </Container>

@@ -46,7 +46,7 @@ export const RadioList = ({ items, onChange }: RadioListProps) => {
           paddingVertical={2}
           paddingHorizontal={5}
         >
-          <Text color="blueText">{`Layer ${title}`.toUpperCase()}</Text>
+          <Text color="blueText">{`${title}`.toUpperCase()}</Text>
         </Container>
       )}
       sections={items}
@@ -65,7 +65,7 @@ export interface RadioItemProps {
   data: Array<RadioItemData>;
 }
 
-interface RadioItemData {
+export interface RadioItemData {
   iconProps?: IconProps;
   label: string;
   key: number;
