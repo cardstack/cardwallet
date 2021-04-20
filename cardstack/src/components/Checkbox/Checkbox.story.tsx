@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 import { Alert } from 'react-native';
