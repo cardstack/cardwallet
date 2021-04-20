@@ -3,7 +3,6 @@ import { useQuery } from 'react-query';
 import Web3 from 'web3';
 import prepaidCardManagerContract from '../../../src/references/prepaid-card-manager-contract';
 import logger from 'logger';
-import { web3Provider } from '@rainbow-me/handlers/web3';
 
 const baseUrl = 'https://safe-transaction.xdai.gnosis.io/api/v1';
 
