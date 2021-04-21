@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 
-import { ZERO } from 'uniswap-xdai-sdk/dist/constants';
 import prepaidCardManagerContract from '../../../src/references/prepaid-card-manager-contract';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
