@@ -5,20 +5,14 @@ import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
 import { ButtonPressAnimation } from '../animations';
 import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
-import { Column, ColumnWithMargins, Row } from '../layout';
 import { TruncatedAddress } from '../text';
-import { Icon, Text } from '@cardstack/components';
+import { Container, Icon, Text } from '@cardstack/components';
 
 const sx = StyleSheet.create({
   accountRow: {
     flex: 1,
     justifyContent: 'center',
     marginLeft: 19,
-  },
-  rightContent: {
-    flex: 0,
-    flexDirection: 'row',
-    marginLeft: 48,
   },
 });
 
@@ -58,8 +52,8 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
         onPress={editMode ? onOptionsPress : onPress}
         scaleTo={editMode ? 1 : 0.98}
       >
-        <Row align="center">
-          <Row align="center" flex={1} height={59}>
+        <Container alignItems="center" flexDirection="row">
+          <Container alignItems="center" flexDirection="row" height={59}>
             {accountImage ? (
               <ImageAvatar
                 image={accountImage}
@@ -74,7 +68,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                 value={label || ens || `${index + 1}`}
               />
             )}
-            <ColumnWithMargins margin={1}>
+            <Container margin={1}>
               {cleanedUpLabel || ens ? (
                 <Text fontWeight="600">{cleanedUpLabel || ens}</Text>
               ) : (
@@ -86,22 +80,27 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                 />
               )}
               <Text variant="subText">{cleanedUpBalance || 0} ETH</Text>
-            </ColumnWithMargins>
-          </Row>
-          <Column style={sx.rightContent}>
+            </Container>
+          </Container>
+          <Container
+            alignItems="center"
+            flex={1}
+            flexDirection="row"
+            justifyContent="flex-end"
+          >
             {isReadOnly && (
-              <Text color="backgroundBlue" fontWeight="700">
+              <Text color="backgroundBlue" fontWeight="700" marginRight={2}>
                 Watching
               </Text>
             )}
-            {!editMode && isSelected && (
-              <Icon iconSize="medium" name="success" right={20} />
-            )}
-            {editMode && (
-              <Icon color="black" name="more-horizontal" right={20} />
-            )}
-          </Column>
-        </Row>
+            <Container marginRight={5} width={30}>
+              {!editMode && isSelected && (
+                <Icon iconSize="medium" name="success" />
+              )}
+              {editMode && <Icon color="black" name="more-horizontal" />}
+            </Container>
+          </Container>
+        </Container>
       </ButtonPressAnimation>
     </View>
   );
