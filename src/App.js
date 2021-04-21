@@ -113,10 +113,6 @@ class App extends Component {
       const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
       logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
-    if (__DEV__) {
-      // Automatically connect to Ganache when the app is launched is dev mode
-      await GanacheUtils.connect();
-    }
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
     await this.handleInitializeAnalytics();
