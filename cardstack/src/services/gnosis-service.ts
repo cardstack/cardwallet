@@ -1,10 +1,13 @@
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
 import Web3 from 'web3';
-import prepaidCardManagerContract from '../../../src/references/prepaid-card-manager-contract';
-import logger from 'logger';
 
-const baseUrl = 'https://transactions-staging.stack.cards/api/v1';
+import { ZERO } from 'uniswap-xdai-sdk/dist/constants';
+import prepaidCardManagerContract from '../../../src/references/prepaid-card-manager-contract';
+import { useAccountSettings } from '@rainbow-me/hooks';
+
+const baseUrl = 'https://transactions-staging.stack.cards/api';
+const sokolNode = 'http://sokol.stack.cards:8545/';
 
 const gnosisApi = axios.create({
   headers: {
@@ -14,36 +17,82 @@ const gnosisApi = axios.create({
   timeout: 30000, // 30 secs
 });
 
-const fetchOwnersByAddress = async (address: string) => {
-  try {
-    const response = await gnosisApi.get(`${baseUrl}/owners/${address}`);
-    const data = response?.data;
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-    return data;
-  } catch (error) {
-    logger.log('gnosis-service', error);
-  }
-};
+export const useSafeData = () => {
+  const { accountAddress: address } = useAccountSettings();
+  const [prepaidCards, setPrepaidCards] = useState<any[]>([]);
+  const [depots, setDepots] = useState<any[]>([]);
 
-export const usePrepaidCards = (address: string) => {
-  const web3 = new Web3();
+  useEffect(() => {
+    const loadPrepaidCards = async () => {
+      const response = await gnosisApi.get(`${baseUrl}/v1/owners/${address}`);
+      const data = response?.data;
+      const { safes } = data as { safes: string[] };
 
-  const contract = new web3.eth.Contract(
-    prepaidCardManagerContract as any,
-    '0xeBDb1731dA9a5FC972DeD53E34AB2daC3B2565F7'
-  );
+      const provider = new Web3.providers.HttpProvider(sokolNode);
+      const web3 = new Web3(provider);
 
-  const { data } = useQuery('owners', () => fetchOwnersByAddress(address));
+      const prepaidCardContract = new web3.eth.Contract(
+        prepaidCardManagerContract as any,
+        '0xeBDb1731dA9a5FC972DeD53E34AB2daC3B2565F7'
+      );
 
-  console.log('data', data);
+      const safeData = await Promise.all<{
+        isPrepaidCard: boolean;
+        balances: any[];
+      }>(
+        safes.map(async (safeAddress: string) => {
+          // const cardDetail = await prepaidCardContract.methods.cardDetails(safeAddress).call();
+          const cardDetail = { issuer: ZERO_ADDRESS };
 
-  return (
-    data?.safes.filter(async (safeAddress: string) => {
-      const cardDetail = await contract.methods.cardDetails(safeAddress).call();
+          const isPrepaidCard = cardDetail?.issuer !== ZERO_ADDRESS;
 
-      console.log('cardDetail', cardDetail);
+          const balanceResponse = await fetch(
+            `${baseUrl}/v1/safes/${safeAddress}/balances`
+          );
 
-      return cardDetail;
-    }) || []
-  );
+          const balances = await balanceResponse.json();
+
+          return {
+            address: safeAddress,
+            isPrepaidCard,
+            balances: balances.filter(
+              (balanceItem: any) => balanceItem.tokenAddress
+            ),
+          };
+        })
+      );
+
+      const sortedData = safeData.reduce(
+        (accum, safe) => {
+          if (safe.isPrepaidCard) {
+            return {
+              ...accum,
+              prepaidCards: [...accum.prepaidCards, safe],
+            };
+          }
+
+          return {
+            ...accum,
+            depots: [...accum.depots, safe],
+          };
+        },
+        {
+          depots: [] as any[],
+          prepaidCards: [] as any[],
+        }
+      );
+
+      setPrepaidCards(sortedData.prepaidCards);
+      setDepots(sortedData.depots);
+    };
+
+    loadPrepaidCards();
+  }, [address]);
+
+  return {
+    depots,
+    prepaidCards,
+  };
 };

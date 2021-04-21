@@ -24,10 +24,6 @@ const AssetList = ({
   ...props
 }) => {
   const insets = useSafeArea();
-  const { accountAddress } = useAccountSettings();
-  const prepaidCards = usePrepaidCards(accountAddress);
-
-  console.log('prepaidCards', prepaidCards);
 
   return isEmpty ? (
     <EmptyAssetList
