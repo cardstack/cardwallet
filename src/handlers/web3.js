@@ -25,8 +25,7 @@ import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 const infuraProjectId = __DEV__ ? INFURA_PROJECT_ID_DEV : INFURA_PROJECT_ID;
-// const infuraUrl = `https://network_.poa.network/`;
-const infuraUrl = `https://mainnet.infura.io/v3/${infuraProjectId}`;
+const infuraUrl = `https://network.infura.io/v3/${infuraProjectId}`;
 
 /**
  * @desc web3 http instance
@@ -41,12 +40,14 @@ export let web3Provider = new JsonRpcProvider(
  * @param {String} network
  */
 export const web3SetHttpProvider = async network => {
+  console.log('network', network);
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
     web3Provider = new JsonRpcProvider(
       replace(infuraUrl, 'network', network),
-      network
+      network,
+      network === NetworkTypes.mainnet ? 'dai' : network
     );
   }
   return web3Provider.ready;
