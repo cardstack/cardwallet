@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       releaseStage:
-        description: 'Beta or Production release'
+        description: 'alpha, beta or production release (alpha does not upload to TestFlight)'
         required: true
         default: 'beta'
       githubRef:
@@ -54,3 +54,13 @@ jobs:
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
+      - name: Archive iOS IPA
+        uses: actions/upload-artifact@v2
+        with:
+          name: Rainbow IPA
+          path: ios/Rainbow.ipa
+      - name: Archive iOS DYSM
+        uses: actions/upload-artifact@v2
+        with:
+          name: Rainbow DYSM
+          path: ios/Rainbow.app.dSYM.zip
