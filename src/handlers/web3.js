@@ -25,8 +25,7 @@ import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 const infuraProjectId = __DEV__ ? INFURA_PROJECT_ID_DEV : INFURA_PROJECT_ID;
-// const infuraUrl = `https://network_.poa.network/`;
-const infuraUrl = `https://mainnet.infura.io/v3/${infuraProjectId}`;
+const infuraUrl = `https://network.infura.io/v3/${infuraProjectId}`;
 
 /**
  * @desc web3 http instance
