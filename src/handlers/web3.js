@@ -40,14 +40,12 @@ export let web3Provider = new JsonRpcProvider(
  * @param {String} network
  */
 export const web3SetHttpProvider = async network => {
-  console.log('network', network);
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
     web3Provider = new JsonRpcProvider(
       replace(infuraUrl, 'network', network),
-      network,
-      network === NetworkTypes.mainnet ? 'dai' : network
+      network
     );
   }
   return web3Provider.ready;
