@@ -43,8 +43,9 @@ export const useSafeData = () => {
         balances: any[];
       }>(
         safes.map(async (safeAddress: string) => {
-          // const cardDetail = await prepaidCardContract.methods.cardDetails(safeAddress).call();
-          const cardDetail = { issuer: ZERO_ADDRESS };
+          const cardDetail = await prepaidCardContract.methods
+            .cardDetails(safeAddress)
+            .call();
 
           const isPrepaidCard = cardDetail?.issuer !== ZERO_ADDRESS;
 
