@@ -125,10 +125,10 @@ const AddCashForm = ({
         Alert({
           buttons: [{ text: 'Okay' }],
           message:
-            'Before you can purchase DAI you must have some xDai in your wallet!',
-          title: `You don't have any xDai!`,
+            'Before you can purchase DAI you must have some ETH in your wallet!',
+          title: `You don't have any ETH!`,
         });
-        analytics.track('Tried to purchase DAI but doesnt own any xDai', {
+        analytics.track('Tried to purchase DAI but doesnt own any ETH', {
           category: 'add cash',
           label: val,
         });

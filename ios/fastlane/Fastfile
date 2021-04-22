@@ -17,7 +17,7 @@ platform :ios do
     ########################
     # Pull certs & profiles
     ########################
-    sync_code_signing(type: "adhoc")
+    sync_code_signing(type: "appstore")
 
     ########################
     # Increment the build number
@@ -28,7 +28,7 @@ platform :ios do
     # Build the app
     ########################
     build_ios_app(
-      export_method: "ad-hoc",
+      export_method: "app-store",
       include_bitcode: true,
       skip_profile_detection: true,
       scheme: "Rainbow",

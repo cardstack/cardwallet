@@ -53,7 +53,7 @@ export const measureTopMoverCoinRow = async ({
   );
 };
 
-const TopMoverCoinRow = ({ address, change, name, onPress, price, symbol, icon_url }) => {
+const TopMoverCoinRow = ({ address, change, name, onPress, price, symbol }) => {
   const { colors } = useTheme();
   return (
     <ButtonPressAnimation onPress={onPress} scaleTo={1.02}>
@@ -61,7 +61,6 @@ const TopMoverCoinRow = ({ address, change, name, onPress, price, symbol, icon_u
         <Centered>
           <CoinIcon
             address={address}
-            icon_url={icon_url}
             size={TopMoverCoinIconSize}
             symbol={symbol}
           />

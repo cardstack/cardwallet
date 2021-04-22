@@ -128,25 +128,6 @@ export const dataLoadState = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({ type: DATA_LOAD_TRANSACTIONS_FAILURE });
   }
-  try {
-    dispatch(dataWatchPendingTransactions());
-  } catch (err) {
-    logger.error(err);
-  }
-};
-
-export const dataGetTransactions = () => async (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
-  try {
-    dispatch({ type: DATA_LOAD_TRANSACTIONS_REQUEST });
-    const transactions = await getLocalTransactions(accountAddress, network);
-    dispatch({
-      payload: transactions,
-      type: DATA_LOAD_TRANSACTIONS_SUCCESS,
-    });
-  } catch (error) {
-    dispatch({ type: DATA_LOAD_TRANSACTIONS_FAILURE });
-  }
 };
 
 export const dataResetState = () => (dispatch, getState) => {

@@ -2,6 +2,7 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
 import { find, get, toLower } from 'lodash';
+import { dataAddNewTransaction } from '../../redux/data';
 import { Rap, RapActionParameters, SwapActionParameters } from '../common';
 import { Asset } from '@rainbow-me/entities';
 import {
@@ -11,10 +12,6 @@ import {
 import ProtocolTypes from '@rainbow-me/helpers/protocolTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
 import TransactionTypes from '@rainbow-me/helpers/transactionTypes';
-import {
-  dataAddNewTransaction,
-  dataWatchPendingTransactions,
-} from '../../redux/data';
 import { rapsAddOrUpdate } from '@rainbow-me/redux/raps';
 import store from '@rainbow-me/redux/store';
 import {
@@ -187,7 +184,6 @@ const swap = async (
         outputCurrency.decimals
       );
       logger.log('[swap] updated raps', convertedOutput);
-      await dispatch(dataWatchPendingTransactions());
       return convertedOutput;
     } else {
       logger.log('[swap] status not success');

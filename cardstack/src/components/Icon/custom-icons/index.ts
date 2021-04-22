@@ -11,6 +11,7 @@ export const customIcons = {
   cardstack: require('./cardstack').default,
   circle: require('./circle').default,
   cloud: require('./cloud').default,
+  inventory: require('./inventory').default,
   error: require('./error').default,
   gift: require('./gift').default,
   more: require('./more').default,

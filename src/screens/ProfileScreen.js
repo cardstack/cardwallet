@@ -7,6 +7,7 @@ import { ActivityList } from '../components/activity-list';
 import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
+import NetworkTypes from '../helpers/networkTypes';
 
 import {
   useAccountSettings,
@@ -63,7 +64,8 @@ export default function ProfileScreen({ navigation }) {
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const addCashSupportedNetworks = false; // network === NetworkTypes.kovan || network === NetworkTypes.mainnet;
+  const addCashSupportedNetworks =
+    network === NetworkTypes.kovan || network === NetworkTypes.mainnet;
   const addCashAvailable =
     IS_TESTING === 'true' ? false : addCashSupportedNetworks;
 

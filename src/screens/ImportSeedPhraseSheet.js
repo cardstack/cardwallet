@@ -222,10 +222,10 @@ export default function ImportSeedPhraseSheet() {
         return;
       }
     } else if (isValidAddress(input)) {
-      // const ens = await web3Provider.lookupAddress(input);
-      // if (ens && ens !== input) {
-      //   name = ens;
-      // }
+      const ens = await web3Provider.lookupAddress(input);
+      if (ens && ens !== input) {
+        name = ens;
+      }
       showWalletProfileModal(name);
     } else {
       try {
@@ -235,10 +235,10 @@ export default function ImportSeedPhraseSheet() {
             input
           );
           setCheckedWallet(walletResult);
-          // const ens = await web3Provider.lookupAddress(walletResult.address);
-          // if (ens && ens !== input) {
-          //   name = ens;
-          // }
+          const ens = await web3Provider.lookupAddress(walletResult.address);
+          if (ens && ens !== input) {
+            name = ens;
+          }
           setBusy(false);
           showWalletProfileModal(name);
         }, 100);

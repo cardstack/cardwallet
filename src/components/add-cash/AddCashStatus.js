@@ -201,7 +201,7 @@ const AddCashStatus = ({
     }
   }, [previousStatus, status]);
 
-  const currency = toLower(orderCurrency || 'xDai');
+  const currency = toLower(orderCurrency || 'ETH');
 
   const updatedError = useMemo(() => {
     return getErrorOverride(error);

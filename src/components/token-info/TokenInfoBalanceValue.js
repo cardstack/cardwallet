@@ -6,7 +6,7 @@ import { Text } from '@cardstack/components';
 import { magicMemo } from '@rainbow-me/utils';
 
 const TokenInfoBalanceValue = ({ align, asset, ...props }) => {
-  const { address, balance, symbol, value, icon_url } = asset;
+  const { address, balance, symbol, value } = asset;
 
   return (
     <RowWithMargins
@@ -16,12 +16,7 @@ const TokenInfoBalanceValue = ({ align, asset, ...props }) => {
       margin={5}
       marginKey={align === 'left' ? 'marginRight' : 'marginLeft'}
     >
-      <CoinIcon
-        address={address}
-        icon_url={icon_url}
-        size={20}
-        symbol={symbol}
-      />
+      <CoinIcon address={address} size={20} symbol={symbol} />
       <Text fontSize={20} fontWeight="700">
         {balance?.display || value}
       </Text>

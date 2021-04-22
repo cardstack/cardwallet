@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       releaseStage:
-        description: 'Beta or Production release'
+        description: 'alpha, beta or production release (alpha does not upload to TestFlight)'
         required: true
         default: 'beta'
       githubRef:
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.events.inputs.githubRef }}
+          ref: ${{ github.event.inputs.githubRef }}
       - name: Node
         uses: actions/setup-node@v1
         with:
@@ -50,7 +50,15 @@ jobs:
         run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }}"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          FASTLANE_STAGE: ${{ github.events.inputs.releaseStage }}
+          FASTLANE_STAGE: ${{ github.event.inputs.releaseStage }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Rainbow IPA
+          path: ios/Rainbow.ipa
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Rainbow DYSM
+          path: ios/Rainbow.app.dSYM.zip
