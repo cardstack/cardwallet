@@ -9,7 +9,6 @@ import useSendableUniqueTokens from './useSendableUniqueTokens';
 import useShowcaseTokens from './useShowcaseTokens';
 import { buildWalletSectionsSelector } from '@rainbow-me/helpers/buildWalletSections';
 import { readableUniswapSelector } from '@rainbow-me/helpers/uniswapLiquidityTokenInfoSelector';
-import {useSafeData} from '@cardstack/services';
 
 export default function useWalletSectionsData() {
   const accountData = useAccountAssets();
@@ -19,9 +18,6 @@ export default function useWalletSectionsData() {
   const uniqueTokens = useSendableUniqueTokens();
   const uniswap = useSelector(readableUniswapSelector);
   const { showcaseTokens } = useShowcaseTokens();
-  const {depots, prepaidCards} = useSafeData();
-
-  console.log('depots, prepaidCards', depots, prepaidCards);
 
   const {
     currentAction,

@@ -46,6 +46,7 @@ export const web3SetHttpProvider = async network => {
     if (info.layer === 1) {
       web3Provider = new JsonRpcProvider(info.networkUrl, network);
     } else {
+      console.log('info.networkUrl', info.networkUrl);
       web3Provider = new Web3.providers.HttpProvider(info.networkUrl);
     }
   }
@@ -225,7 +226,7 @@ export const resolveUnstoppableDomain = async domain => {
     blockchain: {
       cns: {
         network: 'mainnet',
-        url: replace(infuraUrl, 'network', NetworkTypes.mainnet),
+        url: replace(getInfuraUrl(), 'network', NetworkTypes.mainnet),
       },
     },
   });
