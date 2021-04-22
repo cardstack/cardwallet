@@ -7,8 +7,9 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, replace, startsWith } from 'lodash';
-import { INFURA_PROJECT_ID, INFURA_PROJECT_ID_DEV } from 'react-native-dotenv';
+import Web3 from 'web3';
 import AssetTypes from '../helpers/assetTypes';
+import networkInfo, { getInfuraUrl } from '../helpers/networkInfo';
 import NetworkTypes from '../helpers/networkTypes';
 import {
   addBuffer,
@@ -24,14 +25,11 @@ import { ethereumUtils } from '../utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
-const infuraProjectId = __DEV__ ? INFURA_PROJECT_ID_DEV : INFURA_PROJECT_ID;
-const infuraUrl = `https://network.infura.io/v3/${infuraProjectId}`;
-
 /**
  * @desc web3 http instance
  */
 export let web3Provider = new JsonRpcProvider(
-  replace(infuraUrl, 'network', NetworkTypes.mainnet),
+  getInfuraUrl(),
   NetworkTypes.mainnet
 );
 
@@ -43,11 +41,15 @@ export const web3SetHttpProvider = async network => {
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
-    web3Provider = new JsonRpcProvider(
-      replace(infuraUrl, 'network', network),
-      network
-    );
+    const info = networkInfo[network];
+
+    if (info.layer === 1) {
+      web3Provider = new JsonRpcProvider(info.networkUrl, network);
+    } else {
+      web3Provider = new Web3.providers.HttpProvider(info.networkUrl);
+    }
   }
+
   return web3Provider.ready;
 };
 
