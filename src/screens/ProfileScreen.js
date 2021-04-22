@@ -7,6 +7,7 @@ import { ActivityList } from '../components/activity-list';
 import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
+import NetworkTypes from '../helpers/networkTypes';
 
 import {
   useAccountSettings,

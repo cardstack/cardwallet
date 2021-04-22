@@ -3,7 +3,7 @@ import { Contract } from '@ethersproject/contracts';
 import { get, toLower, uniqBy } from 'lodash';
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
-mport networkInfo from '../helpers/networkInfo';
+import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
