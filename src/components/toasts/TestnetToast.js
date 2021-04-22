@@ -11,23 +11,14 @@ const TestnetToast = () => {
   const isConnected = useInternetStatus();
   const { network } = useAccountSettings();
   const providerUrl = web3Provider?.connection?.url;
-  const { name, color } = networkInfo[network];
-  const [visible, setVisible] = useState(!network === networkTypes.mainnet);
+  const { name, color, isTestnet } = networkInfo[network];
+  const [visible, setVisible] = useState(isTestnet);
   const [networkName, setNetworkName] = useState(name);
 
   useEffect(() => {
-    if (network === networkTypes.mainnet) {
-      if (providerUrl?.startsWith('http://')) {
-        setVisible(true);
-        setNetworkName('Ganache');
-      } else {
-        setVisible(false);
-      }
-    } else {
-      setVisible(true);
-      setNetworkName(name + (isConnected ? '' : ' (offline)'));
-    }
-  }, [name, network, providerUrl, isConnected]);
+    setVisible(true);
+    setNetworkName(name + (isConnected ? '' : ' (offline)'));
+  }, [name, network, providerUrl, isConnected, isTestnet]);
 
   const { colors } = useTheme();
 

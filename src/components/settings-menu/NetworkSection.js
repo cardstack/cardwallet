@@ -10,7 +10,6 @@ import {
   useLoadAccountData,
   useResetAccountState,
 } from '../../hooks';
-import { dataGetTransactions } from '../../redux/data';
 import { settingsUpdateNetwork } from '../../redux/settings';
 
 import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
@@ -23,15 +22,12 @@ const NetworkSection = () => {
   const loadAccountData = useLoadAccountData();
   const initializeAccountData = useInitializeAccountData();
   const dispatch = useDispatch();
+  const [showTestnets, setShowTestnets] = useState(true);
 
   //transform data for sectionList
   const DATA = networks
+    .filter((item) => showTestnets ? true : !item.isTestnet)
     .reduce((result, curr, currentIndex) => {
-      console.log(
-        toLower(network) === toLower(curr.value),
-        network,
-        curr.value
-      );
       result[curr.layer] =
         {
           title: `Layer ${curr.layer}`,
@@ -59,9 +55,7 @@ const NetworkSection = () => {
       await dispatch(settingsUpdateNetwork(network));
       InteractionManager.runAfterInteractions(async () => {
         await loadAccountData(network);
-        // initializeAccountData();
-        await initializeAccountData();
-        dispatch(dataGetTransactions());
+        initializeAccountData();
         analytics.track('Changed network', { network });
       });
     },
@@ -74,7 +68,7 @@ const NetworkSection = () => {
         <Container alignItems="center" flex={1} flexDirection="row">
           <Text>ADVANCED USERS</Text>
         </Container>
-        <Checkbox label="Show testnets" />
+        <Checkbox label="Show testnets" isSelected={showTestnets} onPress={() => setShowTestnets(!showTestnets)} />
       </Container>
       <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
     </Container>

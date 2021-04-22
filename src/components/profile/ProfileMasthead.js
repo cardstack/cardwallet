@@ -104,13 +104,6 @@ export default function ProfileMasthead({
     accountName,
     accountImage,
   } = useAccountProfile();
-  const [imageUrl, setImage] = useState(accountImage);
-  useEffect(() => {
-    if (imageUrl !== accountImage) {
-      setImage(accountImage);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setImage]);
   const isAvatarPickerAvailable = useExperimentalFlag(AVATAR_PICKER);
   const isAvatarEmojiPickerEnabled = true;
   const isAvatarImagePickerEnabled = true;
@@ -130,7 +123,6 @@ export default function ProfileMasthead({
 
     dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
     await dispatch(walletsUpdate(newWallets));
-    setImage(null);
   }, [dispatch, selectedWallet, accountAddress, wallets]);
 
   const handlePressAvatar = useCallback(() => {
@@ -154,14 +146,7 @@ export default function ProfileMasthead({
                 ),
               },
             };
-            let found = newWallets[selectedWallet.id].addresses.find(
-              account => account.address === accountAddress
-            );
-            if (found) {
-              found.image = `~${image?.path.slice(stringIndex)}`;
-              setImage(found.image);
-              dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
-            }
+            dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
             dispatch(walletsUpdate(newWallets));
           };
 
@@ -188,7 +173,6 @@ export default function ProfileMasthead({
                 }).then(processPhoto);
               } else if (buttonIndex === 1 && isAvatarEmojiPickerEnabled) {
                 navigate(Routes.AVATAR_BUILDER, {
-                  initialAccountAddress: accountAddress,
                   initialAccountColor: accountColor,
                   initialAccountName: accountName,
                 });
@@ -199,7 +183,6 @@ export default function ProfileMasthead({
           );
         } else if (isAvatarEmojiPickerEnabled) {
           navigate(Routes.AVATAR_BUILDER, {
-            initialAccountAddress: accountAddress,
             initialAccountColor: accountColor,
             initialAccountName: accountName,
           });
@@ -221,7 +204,6 @@ export default function ProfileMasthead({
     recyclerListRef,
     selectedWallet.id,
     wallets,
-    setImage,
   ]);
 
   const handlePressReceive = useCallback(() => {

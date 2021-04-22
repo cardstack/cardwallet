@@ -112,7 +112,7 @@ export default function TransactionCoinRow({ item, ...props }) {
       type: status.charAt(0).toUpperCase() + status.slice(1),
     };
 
-    const contactAddress = (isSent ? to : from).toLowerCase();
+    const contactAddress = isSent ? to : from;
     let contactColor = 0;
 
     if (contact) {
@@ -131,7 +131,7 @@ export default function TransactionCoinRow({ item, ...props }) {
       let buttons = [
         ...(canBeResubmitted ? [TransactionActions.speedUp] : []),
         ...(canBeCancelled ? [TransactionActions.cancel] : []),
-        TransactionActions.viewOnBlockscout,
+        TransactionActions.viewOnEtherscan,
         ...(ios ? [TransactionActions.close] : []),
       ];
       if (showContactInfo) {
@@ -142,23 +142,19 @@ export default function TransactionCoinRow({ item, ...props }) {
         );
       }
 
-      let title = '';
-      if (pending) {
-        let contact = showContactInfo
-          ? ' ' + headerInfo.divider + ' ' + headerInfo.address
-          : '';
-        title = `${headerInfo.type}${contact}`;
-      } else {
-        title = showContactInfo
-          ? `${headerInfo.type} ${date} ${headerInfo.divider} ${headerInfo.address}`
-          : `${headerInfo.type} ${date}`;
-      }
-
       showActionSheetWithOptions(
         {
           cancelButtonIndex: buttons.length - 1,
           options: buttons,
-          title,
+          title: pending
+            ? `${headerInfo.type}${
+                showContactInfo
+                  ? ' ' + headerInfo.divider + ' ' + headerInfo.address
+                  : ''
+              }`
+            : showContactInfo
+            ? `${headerInfo.type} ${date} ${headerInfo.divider} ${headerInfo.address}`
+            : `${headerInfo.type} ${date}`,
         },
         buttonIndex => {
           const action = buttons[buttonIndex];
@@ -185,11 +181,8 @@ export default function TransactionCoinRow({ item, ...props }) {
                 type: 'cancel',
               });
               break;
-            case TransactionActions.viewOnBlockscout: {
-              // ethereumUtils.openTransactionEtherscanURL(hash); //TODO: Can we do something similar with blockscout?
-              logger.warn(
-                'Feature not yet implemented. Can we easily link to blockscout?'
-              );
+            case TransactionActions.viewOnEtherscan: {
+              ethereumUtils.openTransactionEtherscanURL(hash);
               break;
             }
             default:

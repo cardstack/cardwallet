@@ -1,4 +1,5 @@
-import { forEach, isEmpty, keys, values } from 'lodash';
+import { Contract } from '@ethersproject/contracts';
+import { forEach, get, isEmpty, keys, values } from 'lodash';
 import { useCallback } from 'react';
 import { queryCache, useQuery } from 'react-query';
 import {
@@ -6,9 +7,13 @@ import {
   WALLET_BALANCES_FROM_STORAGE,
 } from '../handlers/localstorage/walletBalances';
 import { web3Provider } from '../handlers/web3';
+import networkInfo from '../helpers/networkInfo';
 import { fromWei, handleSignificantDecimals } from '../helpers/utilities';
+import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import useAccountSettings from './useAccountSettings';
 import logger from 'logger';
+
+const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 const useWalletBalances = wallets => {
   const { network } = useAccountSettings();
@@ -24,17 +29,17 @@ const useWalletBalances = wallets => {
     });
 
     try {
-      // // Check all the ETH balances at once
-      // const balanceCheckerContract = new Contract(
-      //   get(networkInfo[network], 'balance_checker_contract_address'),
-      //   balanceCheckerContractAbi,
-      //   web3Provider
-      // );
-      const balances = [];
-      let addresses = keys(walletBalances);
-      for (let i = 0; i < addresses.length; i++) {
-        balances[i] = await web3Provider.getBalance(addresses[i]);
-      }
+      // Check all the ETH balances at once
+      const balanceCheckerContract = new Contract(
+        get(networkInfo[network], 'balance_checker_contract_address'),
+        balanceCheckerContractAbi,
+        web3Provider
+      );
+
+      const balances = await balanceCheckerContract.balances(
+        keys(walletBalances),
+        [ETH_ADDRESS]
+      );
       forEach(keys(walletBalances), (address, index) => {
         const amountInETH = fromWei(balances[index].toString());
         const formattedBalance = handleSignificantDecimals(amountInETH, 4);
@@ -42,7 +47,7 @@ const useWalletBalances = wallets => {
       });
       saveWalletBalances(walletBalances);
     } catch (e) {
-      logger.log('Error fetching xDai balances in batch', e);
+      logger.log('Error fetching ETH balances in batch', e);
     }
 
     return walletBalances;
