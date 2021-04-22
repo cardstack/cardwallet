@@ -40,9 +40,6 @@ const KeyboardButton = ({ children, ...props }) => {
 };
 
 const Numpad = ({ decimal = true, onPress, width }) => {
-  const { colors } = useTheme();
-  const keyColor = colors.alpha(colors.blueGreyDark, 0.8);
-
   const renderCell = useCallback(
     symbol => (
       <KeyboardButton

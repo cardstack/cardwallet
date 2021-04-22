@@ -68,10 +68,10 @@
     },
     {
       "asset": {
-        "asset_code": "0xc4375b7de8af5a38a93548eb8453a498222c4ff2",
+        "asset_code": "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa",
         "coingecko_id": "dai",
         "decimals": 18,
-        "icon_url": "https://s3.amazonaws.com/icons.assets/DAI_mcd.png",
+        "icon_url": "https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png",
         "name": "Dai",
         "price": {
           "changed_at": 1582562452,
@@ -105,7 +105,7 @@
         "asset_code": "0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea",
         "coingecko_id": "dai",
         "decimals": 18,
-        "icon_url": "https://s3.amazonaws.com/icons.assets/DAI_mcd.png",
+        "icon_url": "https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png",
         "name": "Dai",
         "price": {
           "changed_at": 1582562452,

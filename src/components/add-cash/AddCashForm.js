@@ -10,6 +10,7 @@ import { runSpring } from '../animations';
 import { Centered, ColumnWithMargins } from '../layout';
 import { Numpad, NumpadValue } from '../numpad';
 import AddCashFooter from './AddCashFooter';
+import AddCashSelector from './AddCashSelector';
 import { Container, SmallPrepaidCard } from '@cardstack/components';
 import { DAI_ADDRESS, ETH_ADDRESS } from '@rainbow-me/references';
 import { padding } from '@rainbow-me/styles';
@@ -142,6 +143,7 @@ const AddCashForm = ({
     [isWalletEthZero]
   );
 
+  console.log({ currencies });
   return (
     <Fragment>
       <Centered flex={1}>
@@ -154,10 +156,16 @@ const AddCashForm = ({
         >
           <NumpadValue scale={scaleAnim} translateX={shakeAnim} value={value} />
           <Container marginTop={8} width="100%">
-            <SmallPrepaidCard
+            <AddCashSelector
+              currencies={currencies}
+              initialCurrencyIndex={initialCurrencyIndex}
+              isWalletEthZero={isWalletEthZero}
+              onSelect={onCurrencyChange}
+            />
+            {/* <SmallPrepaidCard
               id="0xbeA3123457eF8"
               spendableBalance={Number(value) * 100}
-            />
+            /> */}
           </Container>
         </ColumnWithMargins>
       </Centered>

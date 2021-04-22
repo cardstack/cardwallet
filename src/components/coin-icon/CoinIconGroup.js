@@ -33,20 +33,22 @@ export default function CoinIconGroup({ tokens }) {
     <Column align={breakIndex ? 'center' : 'start'} width={70}>
       {tokenRows.map((setOfTokens, lineIndex) => (
         <Row key={`coinLine_${lineIndex}`}>
-          {setOfTokens.map((token, index) => (
-            <View
-              key={`coin_${index}_${lineIndex}`}
-              width={width}
-              zIndex={-index}
-            >
-              <CoinIcon
-                address={token?.address}
-                icon_url={token?.icon_url}
-                size={iconSize}
-                symbol={token?.symbol}
-              />
-            </View>
-          ))}
+          {setOfTokens.map((token, index) => {
+            return (
+              <View
+                key={`coin_${index}_${lineIndex}`}
+                width={width}
+                zIndex={-index}
+              >
+                <CoinIcon
+                  address={token?.address}
+                  icon_url={token?.icon_url}
+                  size={iconSize}
+                  symbol={token?.symbol}
+                />
+              </View>
+            );
+          })}
         </Row>
       ))}
     </Column>

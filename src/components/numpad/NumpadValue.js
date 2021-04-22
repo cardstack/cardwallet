@@ -7,7 +7,7 @@ const NumpadValue = ({ value }) => {
   const { width } = useDimensions();
 
   return (
-    <Text color="grayText" fontSize={60} fontWeight="700" width={width}>
+    <Text color="settingsGray" fontSize={72} fontWeight="700" width={width}>
       {'$' + (value ? value : '0')}
     </Text>
   );

@@ -16,6 +16,9 @@ import { RainbowToken } from '@rainbow-me/entities';
 
 let tokenList = map(filter(UNISWAP_DEFAULT_LIST['tokens']), token => {
   const address = toLower(token.address);
+  const dai = token.name.concat();
+
+  console.log({ dai });
   return {
     ...token,
     // @ts-ignore
