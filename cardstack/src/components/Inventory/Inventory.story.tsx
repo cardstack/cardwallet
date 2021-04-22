@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { Inventory } from './Inventory';
 
 storiesOf('Inventory Card', module).add('Default', () => {
-  const recentActivity = [
+  const data = [
     {
       title: 'Prepaid Cards',
       length: 5,
@@ -27,7 +27,7 @@ storiesOf('Inventory Card', module).add('Default', () => {
     <Inventory
       title="Inventory 1"
       onPress={() => Alert.alert('pressed')}
-      items={recentActivity}
+      items={data}
     />
   );
 });
