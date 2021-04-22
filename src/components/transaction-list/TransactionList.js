@@ -93,13 +93,6 @@ export default function TransactionList({
     accountImage,
   } = useAccountProfile();
 
-  const [imageUrl, setImage] = useState(accountImage);
-  useEffect(() => {
-    if (imageUrl !== accountImage) {
-      setImage(accountImage);
-    }
-  }, [setImage]);
-
   const onAddCashPress = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
@@ -127,7 +120,6 @@ export default function TransactionList({
 
     dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
     await dispatch(walletsUpdate(newWallets));
-    setImage(null);
   }, [dispatch, selectedWallet, accountAddress, wallets]);
 
   const onAvatarPress = useCallback(() => {
@@ -145,14 +137,7 @@ export default function TransactionList({
             ),
           },
         };
-        let found = newWallets[selectedWallet.id].addresses.find(
-          account => account.address === accountAddress
-        );
-        if (found) {
-          found.image = `~${image?.path.slice(stringIndex)}`;
-          setImage(found.image);
-          dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
-        }
+        dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
         dispatch(walletsUpdate(newWallets));
       };
 
@@ -179,7 +164,6 @@ export default function TransactionList({
             }).then(processPhoto);
           } else if (buttonIndex === 1 && isAvatarEmojiPickerEnabled) {
             navigate(Routes.AVATAR_BUILDER, {
-              initialAccountAddress: accountAddress,
               initialAccountColor: accountColor,
               initialAccountName: accountName,
             });
@@ -190,7 +174,6 @@ export default function TransactionList({
       );
     } else if (isAvatarEmojiPickerEnabled) {
       navigate(Routes.AVATAR_BUILDER, {
-        initialAccountAddress: accountAddress,
         initialAccountColor: accountColor,
         initialAccountName: accountName,
       });
@@ -205,7 +188,6 @@ export default function TransactionList({
     onRemovePhoto,
     selectedWallet.id,
     wallets,
-    setImage,
   ]);
 
   const onReceivePress = useCallback(() => {
@@ -254,7 +236,7 @@ export default function TransactionList({
         type: status.charAt(0).toUpperCase() + status.slice(1),
       };
 
-      const contactAddress = (isSent ? to : from).toLowerCase();
+      const contactAddress = isSent ? to : from;
       const contact = contacts[contactAddress];
       let contactColor = 0;
 
@@ -279,7 +261,7 @@ export default function TransactionList({
         let buttons = [
           ...(canBeResubmitted ? [TransactionActions.speedUp] : []),
           ...(canBeCancelled ? [TransactionActions.cancel] : []),
-          TransactionActions.viewOnBlockscout,
+          TransactionActions.viewOnEtherscan,
           ...(ios ? [TransactionActions.close] : []),
         ];
         if (showContactInfo) {
@@ -289,22 +271,19 @@ export default function TransactionList({
               : TransactionActions.addToContacts
           );
         }
-        let title = '';
-        if (pending) {
-          let contact = showContactInfo
-            ? ' ' + headerInfo.divider + ' ' + headerInfo.address
-            : '';
-          title = `${headerInfo.type}${contact}`;
-        } else {
-          title = showContactInfo
-            ? `${headerInfo.type} ${date} ${headerInfo.divider} ${headerInfo.address}`
-            : `${headerInfo.type} ${date}`;
-        }
         showActionSheetWithOptions(
           {
             cancelButtonIndex: buttons.length - 1,
             options: buttons,
-            title
+            title: pending
+              ? `${headerInfo.type}${
+                  showContactInfo
+                    ? ' ' + headerInfo.divider + ' ' + headerInfo.address
+                    : ''
+                }`
+              : showContactInfo
+              ? `${headerInfo.type} ${date} ${headerInfo.divider} ${headerInfo.address}`
+              : `${headerInfo.type} ${date}`,
           },
           buttonIndex => {
             const action = buttons[buttonIndex];
@@ -331,7 +310,7 @@ export default function TransactionList({
                   type: 'cancel',
                 });
                 break;
-              case TransactionActions.viewOnBlockscout: {
+              case TransactionActions.viewOnEtherscan: {
                 ethereumUtils.openTransactionEtherscanURL(hash);
                 break;
               }
@@ -364,19 +343,13 @@ export default function TransactionList({
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const data = useMemo(() => {
-    let newTransactions = transactions.map(item => ({
-      ...item,
-      description:
-        item.description && item.description.length >= 20
-          ? item.description.substring(0, 17) + '...'
-          : item.description,
-    }));
-    return {
+  const data = useMemo(
+    () => ({
       requests,
-      transactions: newTransactions,
-    };
-  }, [requests, transactions]);
+      transactions,
+    }),
+    [requests, transactions]
+  );
 
   const loading = useMemo(() => (!initialized && !isFocused()) || isLoading, [
     initialized,

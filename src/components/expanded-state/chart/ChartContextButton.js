@@ -43,7 +43,7 @@ export default function ChartContextButton({ asset, color }) {
     () => [
       `📌️ ${currentAction === EditOptions.unpin ? 'Unpin' : 'Pin'}`,
       `🙈️ ${currentAction === EditOptions.unhide ? 'Unhide' : 'Hide'}`,
-      ...(asset?.address === 'eth' ? [] : ['🔍 View on Blockscout']),
+      ...(asset?.address === 'eth' ? [] : ['🔍 View on Etherscan']),
       ...(ios ? [lang.t('wallet.action.cancel')] : []),
     ],
     [asset?.address, currentAction]

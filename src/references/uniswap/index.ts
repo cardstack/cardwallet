@@ -1,12 +1,9 @@
 import { Interface } from '@ethersproject/abi';
+import { ChainId, Token, WETH } from '@uniswap/sdk';
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json';
-import UNISWAP_DEFAULT_LIST from 'honeyswap-default-token-list';
 import { filter, flatMap, keyBy, map, toLower } from 'lodash';
-import { ChainId, Token, WETH } from 'uniswap-xdai-sdk';
 import { DAI_ADDRESS, USDC_ADDRESS } from '../';
-// import RAINBOW_TOKEN_LIST_DATA from './rainbow-token-list.json';
-import tokenListDoNotUseUrl from './token-list-do-not-use-url.json';
-import tokenListHide from './token-list-hide.json';
+import RAINBOW_TOKEN_LIST_DATA from './rainbow-token-list.json';
 import MULTICALL_ABI from './uniswap-multicall-abi.json';
 
 import { default as UNISWAP_TESTNET_TOKEN_LIST } from './uniswap-pairs-testnet.json';
@@ -14,28 +11,18 @@ import { abi as UNISWAP_V2_ROUTER_ABI } from './uniswap-v2-router.json';
 import UNISWAP_V1_EXCHANGE_ABI from './v1-exchange-abi';
 import { RainbowToken } from '@rainbow-me/entities';
 
-let tokenList = map(filter(UNISWAP_DEFAULT_LIST['tokens']), token => {
-  const address = toLower(token.address);
+const tokenList: RainbowToken[] = map(RAINBOW_TOKEN_LIST_DATA.tokens, token => {
+  const { address: rawAddress, decimals, name, symbol, extensions } = token;
+  const address = toLower(rawAddress);
   return {
-    ...token,
-    // @ts-ignore
-    ...token[address],
     address,
-    icon_url: tokenListDoNotUseUrl.includes(toLower(token.address))
-      ? ''
-      : token.logoURI,
+    decimals,
+    name,
+    symbol,
+    uniqueId: address,
+    ...extensions,
   };
 });
-
-tokenList = tokenList.filter(item => !tokenListHide.includes(item.address));
-const XDAI_WITH_ADDRESS = {
-  address: 'eth',
-  decimals: 18,
-  icon_url:
-    'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
-  name: 'xDai',
-  symbol: 'xDai',
-};
 
 const ethWithAddress: RainbowToken = {
   address: 'eth',
@@ -64,38 +51,12 @@ const TOKEN_SAFE_LIST: Record<string, string> = keyBy(
   id => toLower(id)
 );
 
-const CURATED_UNISWAP_TOKENS = [XDAI_WITH_ADDRESS, ...tokenList];
-
-const UNISWAP_V2_ROUTER_ADDRESS = '0x1C232F01118CB8B424793ae03F870aa7D0ac7f77';
-export const USDC = new Token(
-  ChainId.XDAI,
-  '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
-  6,
-  'USDC',
-  'USDC on xDai'
+const CURATED_UNISWAP_TOKENS: Record<string, RainbowToken> = keyBy(
+  curatedRainbowTokenList,
+  'address'
 );
 
-export const HONEY = new Token(
-  ChainId.XDAI,
-  '0x71850b7e9ee3f13ab46d67167341e4bdc905eef9',
-  18,
-  'HNY',
-  'Honey'
-);
-export const XDAI_WETH = new Token(
-  ChainId.XDAI,
-  '0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1',
-  18,
-  'WETH',
-  'Wrapped Ether on xDai'
-);
-export const STAKE = new Token(
-  ChainId.XDAI,
-  '0xb7D311E2Eb55F2f68a9440da38e7989210b9A05e',
-  18,
-  'STAKE',
-  'Stake Token on xDai'
-);
+const UNISWAP_V2_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
 const UNISWAP_V2_BASES = {
   [ChainId.MAINNET]: [
@@ -107,7 +68,6 @@ const UNISWAP_V2_BASES = {
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.XDAI]: [WETH[ChainId.XDAI], XDAI_WETH, HONEY, STAKE],
 };
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI);
@@ -116,8 +76,6 @@ const PAIR_GET_RESERVES_CALL_DATA: string = PAIR_INTERFACE.encodeFunctionData(
   PAIR_GET_RESERVES_FRAGMENT
 );
 
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441',
   [ChainId.ROPSTEN]: '0x53C43764255c17BD724F74c4eF150724AC50a3ed',
