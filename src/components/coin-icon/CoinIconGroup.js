@@ -41,7 +41,6 @@ export default function CoinIconGroup({ tokens }) {
             >
               <CoinIcon
                 address={token?.address}
-                icon_url={token?.icon_url}
                 size={iconSize}
                 symbol={token?.symbol}
               />

@@ -609,7 +609,7 @@ const TransactionConfirmationScreen = () => {
         <SheetActionButton
           color={colors.white}
           fullWidth
-          label="xDai balance too low"
+          label="ETH balance too low"
           onPress={onCancel}
           size="big"
           textColor={colors.avatarColor[7]}
@@ -647,7 +647,7 @@ const TransactionConfirmationScreen = () => {
   const renderTransactionSection = useCallback(() => {
     if (isMessageRequest) {
       return (
-        <RowWithMargins css={padding(24, 0)} style={{ maxHeight: 100 }}>
+        <RowWithMargins css={padding(24, 0)}>
           <MessageSigningSection message={request} method={method} />
         </RowWithMargins>
       );
@@ -769,13 +769,7 @@ const TransactionConfirmationScreen = () => {
       <SlackSheet
         backgroundColor={colors.transparent}
         borderRadius={0}
-        height={
-          !isMessageRequest &&
-          isBalanceEnough === false &&
-          isSufficientGas !== undefined
-            ? TallSheetHeight
-            : sheetHeight
-        }
+        height={sheetHeight}
         hideHandle
         scrollEnabled={false}
       >
@@ -856,11 +850,7 @@ const TransactionConfirmationScreen = () => {
                       value={accountSymbol}
                     />
                   </Column>
-                  <WalletText>
-                    {accountName && accountName.length > 13
-                        ? accountName.substr(0, 10) + '...'
-                        : accountName}
-                  </WalletText>
+                  <WalletText>{accountName}</WalletText>
                 </RowWithMargins>
               </Column>
               <Column align="flex-end" flex={1} justify="end">
@@ -873,7 +863,7 @@ const TransactionConfirmationScreen = () => {
                   {isBalanceEnough === false &&
                     isSufficientGas !== undefined &&
                     '􀇿 '}
-                  {balances[accountAddress]} xDai
+                  {balances[accountAddress]} ETH
                 </WalletText>
               </Column>
             </RowWithMargins>

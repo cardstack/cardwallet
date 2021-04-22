@@ -34,7 +34,7 @@ const ConfirmExchangeButton = ({
   } else if (!isSufficientLiquidity) {
     label = 'Insufficient Liquidity';
   } else if (!isSufficientGas) {
-    label = 'Insufficient xDai';
+    label = 'Insufficient ETH';
   } else if (slippage > SlippageWarningThresholdInBips) {
     label = 'Swap Anyway';
   } else if (disabled) {

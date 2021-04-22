@@ -16,16 +16,12 @@ export default function DefaultTransactionConfirmationSection({
           address={address}
           color={colors.blueGreyDark60}
           size="lmedium"
-          style={{ marginTop: -15 }}
           truncationLength={15}
         />
       </TransactionRow>
-      <TransactionRow
-        style={{ marginTop: 15 }}
-        title={lang.t('wallet.action.value')}
-      >
+      <TransactionRow title={lang.t('wallet.action.value')}>
         <Text color={colors.blueGreyDark60} size="lmedium" uppercase>
-          {value} xDai
+          {value} ETH
         </Text>
       </TransactionRow>
     </TransactionSheet>

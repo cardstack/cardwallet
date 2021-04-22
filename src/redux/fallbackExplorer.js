@@ -1,12 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
-import { toLower, uniqBy } from 'lodash';
+import { get, toLower, uniqBy } from 'lodash';
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
+mport networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
+import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import coingeckoIdsFallback from '../references/coingecko/ids.json';
-import xDaiMapToEthereum from '../references/coingecko/xDaiMapToEthereum.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
@@ -24,7 +25,7 @@ const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
 
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
-  'https://api.coingecko.com/api/v3/coins/list?include_platform=true';
+  'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
 
@@ -72,8 +73,7 @@ const fetchCoingeckoIds = async () => {
   }
 
   const idsMap = {};
-  ids.forEach(({ id, platforms }) => {
-    let tokenAddress = platforms.xdai || platforms.ethereum;
+  ids.forEach(({ id, platforms: {ethereum: tokenAddress} }) => {
     const address = tokenAddress && toLower(tokenAddress);
     if (address && address.substr(0, 2) === '0x') {
       idsMap[address] = id;
@@ -100,12 +100,10 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
     {
       asset: {
         asset_code: 'eth',
-        coingecko_id: 'dai',
+        coingecko_id: 'ethereum',
         decimals: 18,
-        icon_url:
-          'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
-        name: 'xDai',
-        symbol: 'xDAI',
+        name: 'Ethereum',
+        symbol: 'ETH',
       },
     },
   ];
@@ -167,27 +165,15 @@ const discoverTokens = async (
 
     return uniqBy(
       allTxs.map(tx => {
+        const type = getTokenType(tx);
         return {
           asset: {
             asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
-            coingecko_id:
-              coingeckoIds[tx.contractAddress.toLowerCase()] !== undefined &&
-              coingeckoIds[tx.contractAddress.toLowerCase()] !== 'undefined'
-                ? coingeckoIds[tx.contractAddress.toLowerCase()]
-                : xDaiMapToEthereum[tx.contractAddress.toLowerCase()] &&
-                  xDaiMapToEthereum[tx.contractAddress.toLowerCase()].address
-                ? coingeckoIds[
-                    xDaiMapToEthereum[tx.contractAddress.toLowerCase()].address
-                  ]
-                : '',
+            coingecko_id: coingeckoIds[tx.contractAddress.toLowerCase()],
             decimals: Number(tx.tokenDecimal),
-            icon_url:
-              xDaiMapToEthereum[tx.contractAddress.toLowerCase()] &&
-              xDaiMapToEthereum[tx.contractAddress.toLowerCase()].icon_url
-                ? xDaiMapToEthereum[tx.contractAddress.toLowerCase()].icon_url
-                : '',
             name: tx.tokenName,
             symbol: tx.tokenSymbol,
+            type
           },
         };
       }),
@@ -203,7 +189,7 @@ const getTokenTxDataFromEtherscan = async (
   offset,
   latestTxBlockNumber
 ) => {
-  let url = `https://blockscout.com/poa/xdai/api?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
+  let url = `https://api.etherscan.io/api?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
   if (latestTxBlockNumber) {
     url += `&startBlock=${latestTxBlockNumber}`;
   }
@@ -231,45 +217,13 @@ const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
 };
 
 const fetchAssetBalances = async (tokens, address, network) => {
+  const balanceCheckerContract = new Contract(
+    get(networkInfo[network], 'balance_checker_contract_address'),
+    balanceCheckerContractAbi,
+    web3Provider
+  );
   try {
-    let values = [];
-    const contractAbiFragment = [
-      {
-        constant: true,
-        inputs: [
-          {
-            name: '_owner',
-            type: 'address',
-          },
-        ],
-        name: 'balanceOf',
-        outputs: [
-          {
-            name: 'balance',
-            type: 'uint256',
-          },
-        ],
-        payable: false,
-        type: 'function',
-      },
-    ];
-
-    for (let i = 0; i < tokens.length; ++i) {
-      if (tokens[i] === '0x0000000000000000000000000000000000000000') {
-        values[i] = await web3Provider.getBalance(address);
-      } else {
-        try {
-          const contract = new Contract(
-            tokens[i],
-            contractAbiFragment,
-            web3Provider
-          );
-          values[i] = await await contract.balanceOf(address);
-        } catch (err) {
-          values[i] = '0x';
-        }
-      }
-    }
+    const values = await balanceCheckerContract.balances([address], tokens);
 
     const balances = {};
     [address].forEach((addr, addrIdx) => {
@@ -348,9 +302,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
                 prices[key][`${formattedNativeCurrency}_24h_change`],
               value: prices[key][`${formattedNativeCurrency}`],
             };
-            if (toLower(key) !== 'dai') {
-              break;
-            }
+            break;
           }
         }
       });
@@ -386,7 +338,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       addressAssetsReceived({
         meta: {
           address: accountAddress,
-          currency: nativeCurrency, //'usd' ola value
+          currency: 'usd',
           status: 'ok',
         },
         payload: { assets },

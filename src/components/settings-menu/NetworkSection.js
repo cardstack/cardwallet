@@ -10,7 +10,6 @@ import {
   useLoadAccountData,
   useResetAccountState,
 } from '../../hooks';
-import { dataGetTransactions } from '../../redux/data';
 import { settingsUpdateNetwork } from '../../redux/settings';
 
 import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
@@ -59,9 +58,7 @@ const NetworkSection = () => {
       await dispatch(settingsUpdateNetwork(network));
       InteractionManager.runAfterInteractions(async () => {
         await loadAccountData(network);
-        // initializeAccountData();
-        await initializeAccountData();
-        dispatch(dataGetTransactions());
+        initializeAccountData();
         analytics.track('Changed network', { network });
       });
     },

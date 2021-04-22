@@ -5,15 +5,6 @@ import { Contract } from '@ethersproject/contracts';
 import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
 import {
-  filter,
-  get,
-  isEmpty,
-  keys,
-  mapKeys,
-  mapValues,
-  toLower,
-} from 'lodash';
-import {
   ChainId,
   CurrencyAmount,
   Pair,
@@ -23,7 +14,16 @@ import {
   Trade,
   TradeType,
   WETH,
-} from 'uniswap-xdai-sdk';
+} from '@uniswap/sdk';
+import {
+  filter,
+  get,
+  isEmpty,
+  keys,
+  mapKeys,
+  mapValues,
+  toLower,
+} from 'lodash';
 import { uniswapClient } from '../apollo/client';
 import { UNISWAP_ALL_TOKENS } from '../apollo/queries';
 import { loadWallet } from '../model/wallet';
