@@ -5,6 +5,7 @@ import { CoinIcon } from '../coin-icon';
 import { JellySelector, JellySelectorShadowIndicator } from '../jelly-selector';
 import { RowWithMargins } from '../layout';
 import { Text } from '../text';
+import { Container } from '@cardstack/components';
 import { ETH_ADDRESS } from '@rainbow-me/references';
 import { getTokenMetadata } from '@rainbow-me/utils';
 
@@ -26,19 +27,26 @@ const CurrencyItem = isWalletEthZero => ({ item: address, isSelected }) => {
   const metadata = getTokenMetadata(address);
 
   return (
-    <RowWithMargins
-      align="center"
+    <Container
+      alignItems="center"
+      borderColor="buttonSecondaryBorder"
+      borderRadius={50}
+      borderWidth={isSelected ? 1 : 0}
+      flexDirection="row"
       height={CurrencyItemHeight}
-      margin={6}
       opacity={isWalletEthZero && address !== ETH_ADDRESS ? 0.5 : 1}
-      paddingLeft={7}
-      paddingRight={11}
+      paddingHorizontal={5}
     >
-      <CoinIcon address={address} size={26} symbol={metadata?.symbol} />
+      <CoinIcon
+        address={address}
+        marginRight={5}
+        size={26}
+        symbol={metadata?.symbol}
+      />
       <CurrencyItemLabel isSelected={isSelected}>
         {metadata?.name}
       </CurrencyItemLabel>
-    </RowWithMargins>
+    </Container>
   );
 };
 
@@ -61,7 +69,7 @@ const AddCashSelector = ({
       height={CurrencyItemHeight}
       items={currencies}
       onSelect={onSelect}
-      renderIndicator={JellySelectorShadowIndicator}
+      // renderIndicator={JellySelectorShadowIndicator}
       renderItem={CurrencyItem(isWalletEthZero)}
       renderRow={CurrencyItemRow}
     />

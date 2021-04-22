@@ -14,10 +14,6 @@ import { RainbowToken } from '@rainbow-me/entities';
 const tokenList: RainbowToken[] = map(RAINBOW_TOKEN_LIST_DATA.tokens, token => {
   const { address: rawAddress, decimals, name, symbol, extensions } = token;
   const address = toLower(rawAddress);
-
-  const dai = token.name.concat();
-
-  console.log({ dai });
   return {
     address,
     decimals,

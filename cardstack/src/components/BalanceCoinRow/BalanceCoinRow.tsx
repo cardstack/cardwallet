@@ -93,10 +93,10 @@ export const BalanceCoinRow = ({
               <Text
                 variant="subText"
                 color={
-                  item.price.relative_change_24h > 0 ? 'green' : 'blueText'
+                  item?.price?.relative_change_24h > 0 ? 'green' : 'blueText'
                 }
               >
-                {item.native.change}
+                {item?.native?.change}
               </Text>
             </Container>
           </Container>
