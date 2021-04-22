@@ -6,7 +6,7 @@ import prepaidCardManagerContract from '../../../src/references/prepaid-card-man
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const baseUrl = 'https://transactions-staging.stack.cards/api';
-const sokolNode = 'http://sokol.stack.cards:8545/';
+const sokolNode = 'https://sokol.stack.cards/';
 
 const gnosisApi = axios.create({
   headers: {
