@@ -1,6 +1,39 @@
-import networkTypes from './networkTypes';
+import { INFURA_PROJECT_ID, INFURA_PROJECT_ID_DEV } from 'react-native-dotenv';
+import { networkTypes } from './networkTypes';
 
-const networkInfo = {
+const infuraProjectId = __DEV__ ? INFURA_PROJECT_ID_DEV : INFURA_PROJECT_ID;
+export const getInfuraUrl = (network = 'mainnet'): string =>
+  `https://${network}.infura.io/v3/${infuraProjectId}`;
+
+export const networkInfo = {
+  [networkTypes.xdai]: {
+    balance_checker_contract_address:
+      '0x4dcf4562268dd384fe814c00fad239f06c2a0c2b',
+    color: '#3cc29e',
+    disabled: false,
+    exchange_enabled: true,
+    faucet_url: null,
+    name: 'xDai Chain',
+    layer: 2,
+    value: networkTypes.xdai,
+    default: true,
+    networkUrl: 'https://blockscout.com/xdai/mainnet/api',
+    isTestnet: false,
+  },
+  [networkTypes.sokol]: {
+    balance_checker_contract_address:
+      '0x4dcf4562268dd384fe814c00fad239f06c2a0c2b',
+    color: '#3cc29e',
+    disabled: false,
+    exchange_enabled: true,
+    faucet_url: 'https://faucet.poa.network',
+    name: 'Sokol',
+    layer: 2,
+    value: networkTypes.sokol,
+    default: false,
+    networkUrl: 'https://sokol.stack.cards/',
+    isTestnet: true,
+  },
   [`${networkTypes.mainnet}`]: {
     balance_checker_contract_address:
       '0x4dcf4562268dd384fe814c00fad239f06c2a0c2b',
@@ -11,7 +44,9 @@ const networkInfo = {
     name: 'Ethereum Mainnet',
     layer: 1,
     value: networkTypes.mainnet,
-    default: true,
+    default: false,
+    networkUrl: getInfuraUrl(networkTypes.mainnet),
+    isTestnet: false,
   },
   [`${networkTypes.ropsten}`]: {
     balance_checker_contract_address:
@@ -24,6 +59,8 @@ const networkInfo = {
     layer: 1,
     value: networkTypes.ropsten,
     default: false,
+    networkUrl: getInfuraUrl(networkTypes.ropsten),
+    isTestnet: true,
   },
   [`${networkTypes.kovan}`]: {
     balance_checker_contract_address:
@@ -36,6 +73,8 @@ const networkInfo = {
     layer: 1,
     value: networkTypes.kovan,
     default: false,
+    networkUrl: getInfuraUrl(networkTypes.kovan),
+    isTestnet: true,
   },
   [`${networkTypes.rinkeby}`]: {
     balance_checker_contract_address:
@@ -48,6 +87,8 @@ const networkInfo = {
     layer: 1,
     value: networkTypes.rinkeby,
     default: false,
+    networkUrl: getInfuraUrl(networkTypes.rinkeby),
+    isTestnet: true,
   },
   [`${networkTypes.goerli}`]: {
     balance_checker_contract_address:
@@ -60,6 +101,8 @@ const networkInfo = {
     layer: 1,
     value: networkTypes.goerli,
     default: false,
+    networkUrl: getInfuraUrl(networkTypes.goerli),
+    isTestnet: true,
   },
 };
 

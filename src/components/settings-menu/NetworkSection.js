@@ -22,15 +22,12 @@ const NetworkSection = () => {
   const loadAccountData = useLoadAccountData();
   const initializeAccountData = useInitializeAccountData();
   const dispatch = useDispatch();
+  const [showTestnets, setShowTestnets] = useState(true);
 
   //transform data for sectionList
   const DATA = networks
+    .filter((item) => showTestnets ? true : !item.isTestnet)
     .reduce((result, curr, currentIndex) => {
-      console.log(
-        toLower(network) === toLower(curr.value),
-        network,
-        curr.value
-      );
       result[curr.layer] =
         {
           title: `Layer ${curr.layer}`,
@@ -71,7 +68,7 @@ const NetworkSection = () => {
         <Container alignItems="center" flex={1} flexDirection="row">
           <Text>ADVANCED USERS</Text>
         </Container>
-        <Checkbox label="Show testnets" />
+        <Checkbox label="Show testnets" isSelected={showTestnets} onPress={() => setShowTestnets(!showTestnets)} />
       </Container>
       <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
     </Container>
