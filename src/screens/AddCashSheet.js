@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { useSafeArea } from 'react-native-safe-area-context';
 
 import { AddCashForm, AddCashStatus } from '../components/add-cash';
-import { BackButton, Header } from '../components/header';
+import { BackButton } from '../components/header';
 import {
   SheetHandle,
   SheetSubtitleCycler,
@@ -14,13 +13,13 @@ import { useTheme } from '../context/ThemeContext';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import {
   useAddCashLimits,
-  useDimensions,
   useShakeAnimation,
   useTimeout,
   useWyreApplePay,
 } from '../hooks';
 import { deviceUtils } from '../utils';
-import { Container, Icon, Touchable } from '@cardstack/components';
+import { CenteredContainer, Container } from '@cardstack/components';
+import { useNavigation } from '@rainbow-me/navigation';
 
 const deviceHeight = deviceUtils.dimensions.height;
 const statusBarHeight = getStatusBarHeight(true);
@@ -33,8 +32,7 @@ const SubtitleInterval = 3000;
 
 export default function AddCashSheet() {
   const { colors } = useTheme();
-  const { isNarrowPhone } = useDimensions();
-  const insets = useSafeArea();
+  const { goBack } = useNavigation();
 
   const [errorAnimation, onShake] = useShakeAnimation();
   const [startErrorTimeout, stopErrorTimeout] = useTimeout();
@@ -76,6 +74,8 @@ export default function AddCashSheet() {
     },
     [stopErrorTimeout, cashLimits, startErrorTimeout, onClearError]
   );
+
+  console.log(isPaymentComplete);
   return (
     <Container
       backgroundColor="white"
@@ -97,33 +97,30 @@ export default function AddCashSheet() {
             <SheetHandle />
           </Container>
           <Container paddingTop={isNativeStackAvailable ? 4 : 1}>
-            <Container
-              alignItems="center"
-              flexDirection="row"
-              justifyContent="center"
-            >
+            <CenteredContainer flexDirection="row">
               <Container left={0} position="absolute">
                 <BackButton
                   color="blue"
                   direction="left"
-                  onPress={() => console.log('back')}
+                  onPress={() => goBack()}
                   testID="goToBalancesFromScanner"
                 />
               </Container>
               <SheetTitle>Add Funds</SheetTitle>
-            </Container>
+            </CenteredContainer>
             {!isPaymentComplete && (
               <SheetSubtitleCycler
                 animatedValue={errorAnimation}
                 errorIndex={errorIndex}
                 interval={SubtitleInterval}
                 items={Object.values(cashLimits)}
-                paddingVertical={14}
+                paddingVertical={2}
               />
             )}
           </Container>
         </Container>
-        <Container flex={1} width="100%">
+
+        <CenteredContainer flex={1} width="100%">
           {isPaymentComplete ? (
             <AddCashStatus
               error={error}
@@ -142,7 +139,7 @@ export default function AddCashSheet() {
               shakeAnim={errorAnimation}
             />
           )}
-        </Container>
+        </CenteredContainer>
       </Container>
     </Container>
   );

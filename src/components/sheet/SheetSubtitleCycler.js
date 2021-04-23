@@ -8,8 +8,7 @@ import { useTimingTransition } from 'react-native-redash';
 import { useInterval, useTimeout, useTransformOrigin } from '../../hooks';
 import { magicMemo } from '../../utils';
 import { interpolate } from '../animations';
-import { Centered } from '../layout';
-import { Text } from '@cardstack/components';
+import { CenteredContainer, Text } from '@cardstack/components';
 import { position } from '@rainbow-me/styles';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -94,7 +93,7 @@ const SheetSubtitleCycler = ({
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
-      <Centered width="100%" {...props}>
+      <CenteredContainer flex={-1} width="100%" {...props}>
         <Animated.View
           {...position.coverAsObject}
           onLayout={onLayout}
@@ -109,7 +108,7 @@ const SheetSubtitleCycler = ({
             />
           ))}
         </Animated.View>
-      </Centered>
+      </CenteredContainer>
     </TouchableWithoutFeedback>
   );
 };
