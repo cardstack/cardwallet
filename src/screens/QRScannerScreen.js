@@ -105,8 +105,8 @@ const QRScannerScreen = () => {
         <CameraDimmer>
           {initializeCamera && (
             <QRCodeScanner
-              contentPositionBottom={sheetHeight}
-              contentPositionTop={-HeaderHeight * 2}
+              contentPositionBottom={sheetHeight + HeaderHeight}
+              contentPositionTop={HeaderHeight}
               enableCamera={ios ? isFocusedIOS : isFocusedAndroid}
             />
           )}
