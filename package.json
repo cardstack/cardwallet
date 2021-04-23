@@ -40,7 +40,7 @@
     "install-pods": "cd ios && bundle exec pod install --repo-update && cd ..",
     "install-pods-fast": "cd ios && bundle exec pod install && cd ..",
     "install-pods-no-flipper": "cd ios && bundle exec env SKIP_FLIPPER=true pod install --repo-update && cd ..",
-    "ios": "react-native run-ios --simulator='iPhone 11'",
+    "ios": "react-native run-ios --simulator='iPhone SE'",
     "lint": "eslint --ext '.ts,.tsx,.js,.jsx' cardstack",
     "nodeify": "rn-nodeify --install --hack 'crypto,buffer,react-native-randombytes,vm,stream,http,https,os,url,net,fs,process'",
     "ts-check": "yarn tsc --skipLibCheck --noEmit",

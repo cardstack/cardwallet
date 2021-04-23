@@ -35,7 +35,7 @@ const CurrencyItem = isWalletEthZero => ({ item: address, isSelected }) => {
       flexDirection="row"
       height={CurrencyItemHeight}
       opacity={isWalletEthZero && address !== ETH_ADDRESS ? 0.5 : 1}
-      paddingHorizontal={5}
+      paddingHorizontal={4}
     >
       <CoinIcon
         address={address}
