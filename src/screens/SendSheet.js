@@ -46,7 +46,7 @@ import {
   useTransactionConfirmation,
   useUpdateAssetOnchainBalance,
 } from '@rainbow-me/hooks';
-import { ETH_ADDRESS } from '@rainbow-me/references';
+import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
 import Routes from '@rainbow-me/routes';
 import { borders } from '@rainbow-me/styles';
 import { deviceUtils, gasUtils } from '@rainbow-me/utils';

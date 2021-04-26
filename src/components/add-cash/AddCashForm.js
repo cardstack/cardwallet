@@ -11,7 +11,7 @@ import { Centered, ColumnWithMargins } from '../layout';
 import { Numpad, NumpadValue } from '../numpad';
 import AddCashFooter from './AddCashFooter';
 import { Container, SmallPrepaidCard } from '@cardstack/components';
-import { DAI_ADDRESS, ETH_ADDRESS } from '@rainbow-me/references';
+import { DAI_ADDRESS, ETH_ADDRESS } from '@rainbow-me/references/addresses';
 import { padding } from '@rainbow-me/styles';
 
 const currencies = [DAI_ADDRESS, ETH_ADDRESS];

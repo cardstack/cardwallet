@@ -421,10 +421,14 @@
       "keccak": false,
       "react-native-storage": false,
       "react-query": false,
-      "scrypt": false,
       "secp256k1": false,
       "@sentry/cli": false,
-      "core-js-pure": false
+      "core-js-pure": false,
+      "web3": false,
+      "web3-bzz": false,
+      "bufferutil": false,
+      "utf-8-validate": false,
+      "web3-shh": false
     }
   },
   "config": {

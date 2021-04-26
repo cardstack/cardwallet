@@ -1,16 +1,20 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { get, toLower, uniqBy } from 'lodash';
+import Web3 from 'web3';
+import { transactionServiceFetch } from '../handlers/gnosis';
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
+import { PREPAID_CARD_CONTRACT_ADDRESS } from '../references/addresses';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import coingeckoIdsFallback from '../references/coingecko/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
+import prepaidCardManagerContract from '../references/prepaid-card-manager-contract';
 import testnetAssets from '../references/testnet-assets.json';
-import { addressAssetsReceived } from './data';
+import { addressAssetsReceived, gnosisSafesReceieved } from './data';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -24,6 +28,7 @@ const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
   'explorer/FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER';
 
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
   'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
@@ -73,7 +78,7 @@ const fetchCoingeckoIds = async () => {
   }
 
   const idsMap = {};
-  ids.forEach(({ id, platforms: {ethereum: tokenAddress} }) => {
+  ids.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
     const address = tokenAddress && toLower(tokenAddress);
     if (address && address.substr(0, 2) === '0x') {
       idsMap[address] = id;
@@ -173,7 +178,7 @@ const discoverTokens = async (
             decimals: Number(tx.tokenDecimal),
             name: tx.tokenName,
             symbol: tx.tokenSymbol,
-            type
+            type,
           },
         };
       }),
@@ -244,6 +249,65 @@ const fetchAssetBalances = async (tokens, address, network) => {
   }
 };
 
+const fetchGnosisSafes = async address => {
+  const response = await transactionServiceFetch(`/v1/owners/${address}`);
+  const data = response?.data;
+  const { safes } = data;
+
+  const web3 = new Web3(web3Provider);
+  const prepaidCardContract = new web3.eth.Contract(
+    prepaidCardManagerContract,
+    PREPAID_CARD_CONTRACT_ADDRESS
+  );
+
+  const safeData = await Promise.all(
+    safes.map(async safeAddress => {
+      const cardDetail = await prepaidCardContract.methods
+        .cardDetails(safeAddress)
+        .call();
+
+      const isPrepaidCard = cardDetail?.issuer !== ZERO_ADDRESS;
+
+      const balanceResponse = await transactionServiceFetch(
+        `/v1/safes/${safeAddress}/balances`
+      );
+      const balances = balanceResponse.data;
+
+      return {
+        address: safeAddress,
+        cardDetail,
+        isPrepaidCard,
+        balances: balances.filter(balanceItem => balanceItem.tokenAddress),
+      };
+    })
+  );
+
+  const sortedData = safeData.reduce(
+    (accum, safe) => {
+      if (safe.isPrepaidCard) {
+        return {
+          ...accum,
+          prepaidCards: [...accum.prepaidCards, safe],
+        };
+      }
+
+      return {
+        ...accum,
+        depots: [...accum.depots, safe],
+      };
+    },
+    {
+      depots: [],
+      prepaidCards: [],
+    }
+  );
+
+  return {
+    depots: sortedData.depots,
+    prepaidCards: sortedData.prepaidCards,
+  };
+};
+
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const { accountAddress, nativeCurrency, network } = getState().settings;
   const { latestTxBlockNumber, mainnetAssets } = getState().fallbackExplorer;
@@ -273,6 +337,11 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     const { mainnetAssets } = getState().fallbackExplorer;
     const assets =
       network === networkTypes.mainnet ? mainnetAssets : testnetAssets[network];
+
+    const { depots, prepaidCards } = await fetchGnosisSafes(accountAddress);
+
+    dispatch(gnosisSafesReceieved(depots, prepaidCards));
+
     if (!assets || !assets.length) {
       const fallbackExplorerBalancesHandle = setTimeout(
         fetchAssetsBalancesAndPrices,

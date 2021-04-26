@@ -225,7 +225,7 @@ export const resolveUnstoppableDomain = async domain => {
     blockchain: {
       cns: {
         network: 'mainnet',
-        url: replace(infuraUrl, 'network', NetworkTypes.mainnet),
+        url: replace(getInfuraUrl(), 'network', NetworkTypes.mainnet),
       },
     },
   });

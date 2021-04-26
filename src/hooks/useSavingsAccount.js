@@ -21,7 +21,7 @@ import {
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import { multiply } from '@rainbow-me/helpers/utilities';
 import { parseAssetName, parseAssetSymbol } from '@rainbow-me/parsers';
-import { CDAI_CONTRACT, DAI_ADDRESS } from '@rainbow-me/references';
+import { CDAI_CONTRACT, DAI_ADDRESS } from '@rainbow-me/references/addresses';
 import { getTokenMetadata } from '@rainbow-me/utils';
 
 const COMPOUND_QUERY_INTERVAL = 120000; // 120 seconds
