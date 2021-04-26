@@ -26,7 +26,7 @@ const NetworkSection = () => {
 
   //transform data for sectionList
   const DATA = networks
-    .filter((item) => showTestnets ? true : !item.isTestnet)
+    .filter(item => (showTestnets ? true : !item.isTestnet))
     .reduce((result, curr, currentIndex) => {
       result[curr.layer] =
         {
@@ -68,7 +68,11 @@ const NetworkSection = () => {
         <Container alignItems="center" flex={1} flexDirection="row">
           <Text>ADVANCED USERS</Text>
         </Container>
-        <Checkbox label="Show testnets" isSelected={showTestnets} onPress={() => setShowTestnets(!showTestnets)} />
+        <Checkbox
+          isSelected={showTestnets}
+          label="Show testnets"
+          onPress={() => setShowTestnets(!showTestnets)}
+        />
       </Container>
       <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
     </Container>
