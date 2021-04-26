@@ -46,7 +46,6 @@ export const web3SetHttpProvider = async network => {
     if (info.layer === 1) {
       web3Provider = new JsonRpcProvider(info.networkUrl, network);
     } else {
-      console.log('info.networkUrl', info.networkUrl);
       web3Provider = new Web3.providers.HttpProvider(info.networkUrl);
     }
   }
