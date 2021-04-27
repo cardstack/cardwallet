@@ -12,8 +12,8 @@ import networkTypes from '@rainbow-me/networkTypes';
 import {
   CURATED_UNISWAP_TOKENS,
   DefaultUniswapFavorites,
-  SOCKS_ADDRESS,
 } from '@rainbow-me/references';
+import { SOCKS_ADDRESS } from '@rainbow-me/references/addresses';
 
 // -- Constants ------------------------------------------------------------- //
 const UNISWAP_LOAD_REQUEST = 'uniswap/UNISWAP_LOAD_REQUEST';

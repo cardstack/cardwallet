@@ -2,11 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { CoinIcon } from '../coin-icon';
-import { JellySelector, JellySelectorShadowIndicator } from '../jelly-selector';
+import { JellySelector } from '../jelly-selector';
 import { RowWithMargins } from '../layout';
 import { Text } from '../text';
+
 import { Container } from '@cardstack/components';
-import { ETH_ADDRESS } from '@rainbow-me/references';
+
+import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
+
 import { getTokenMetadata } from '@rainbow-me/utils';
 
 const CurrencyItemHeight = 40;

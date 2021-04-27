@@ -74,6 +74,7 @@ const DATA_UPDATE_GENERIC_ASSETS = 'data/DATA_UPDATE_GENERIC_ASSETS';
 const DATA_UPDATE_TRANSACTIONS = 'data/DATA_UPDATE_TRANSACTIONS';
 const DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION =
   'data/DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION';
+const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
 const DATA_LOAD_ASSETS_REQUEST = 'data/DATA_LOAD_ASSETS_REQUEST';
 const DATA_LOAD_ASSETS_SUCCESS = 'data/DATA_LOAD_ASSETS_SUCCESS';
@@ -324,6 +325,15 @@ export const addressAssetsReceived = (
     dispatch(subscribeToMissingPrices(missingPriceAssetAddresses));
   }
 };
+
+export const gnosisSafesReceieved = (depots, prepaidCards) => dispatch =>
+  dispatch({
+    payload: {
+      depots,
+      prepaidCards,
+    },
+    type: DATA_UPDATE_GNOSIS_DATA,
+  });
 
 const subscribeToMissingPrices = addresses => (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
@@ -651,6 +661,8 @@ export const updateRefetchSavings = fetch => dispatch =>
 const INITIAL_STATE = {
   assetPricesFromUniswap: {},
   assets: [], // for account-specific assets
+  depots: [],
+  prepaidCards: [],
   genericAssets: {},
   isLoadingAssets: true,
   isLoadingTransactions: true,
@@ -679,7 +691,19 @@ export default (state = INITIAL_STATE, action) => {
     case DATA_UPDATE_GENERIC_ASSETS:
       return { ...state, genericAssets: action.payload };
     case DATA_UPDATE_ASSETS:
-      return { ...state, assets: action.payload, isLoadingAssets: false };
+      return {
+        ...state,
+        assets: action.payload,
+        depots: action.depots,
+        prepaidCards: action.prepaidCards,
+        isLoadingAssets: false,
+      };
+    case DATA_UPDATE_GNOSIS_DATA:
+      return {
+        ...state,
+        depots: action.payload.depots,
+        prepaidCards: action.payload.prepaidCards,
+      };
     case DATA_UPDATE_TRANSACTIONS:
       return {
         ...state,

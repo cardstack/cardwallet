@@ -1,18 +1,41 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SectionList } from 'react-native';
 import { IconProps, Text, Container } from '../.';
 import { RadioListItem } from './RadioListItem';
 
-export const RadioList = ({ items, onChange }: RadioListProps) => {
-  const [selected, setSelected] = useState<number>(() => {
-    const value = items.filter((item: any) => {
-      return item.data.find((i: any) => i.selected === true);
-    });
+export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
+  const selectedItem = useCallback(() => {
+    const findItemByType = (arr: Array<RadioItemProps>, type: string) => {
+      return arr
+        .map((section: RadioItemProps) => {
+          const radioItem = section.data.filter(
+            (item: RadioItemData) => item[type as keyof RadioItemData] === true
+          );
 
-    return value[0].data.find(i => i.selected)?.key || 0;
-  });
+          return radioItem;
+        })
+        .reduce((acc, val) => acc.concat(val), []);
+    };
 
-  const handleChange = ({ value, index }: { value: string; index: number }) => {
+    const selectedItems = findItemByType(sections, 'selected')[0];
+
+    const defaultItem = findItemByType(sections, 'default')[0];
+
+    return {
+      index: selectedItems?.key || defaultItem?.key,
+      value: selectedItems?.value || defaultItem?.value,
+    };
+  }, [sections]);
+
+  const [selected, setSelected] = useState<number>(selectedItem()?.index);
+
+  const handleChange = ({
+    value,
+    index,
+  }: {
+    value?: string;
+    index: number;
+  }) => {
     if (index !== selected) {
       setSelected(index);
     }
@@ -21,6 +44,12 @@ export const RadioList = ({ items, onChange }: RadioListProps) => {
       onChange(value);
     }
   };
+
+  useEffect(() => {
+    const { value, index } = selectedItem();
+    handleChange({ value, index });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sections]);
 
   const renderItem = ({ item }: { item: RadioItemData }) => {
     return (
@@ -49,7 +78,7 @@ export const RadioList = ({ items, onChange }: RadioListProps) => {
           <Text color="blueText">{`${title}`.toUpperCase()}</Text>
         </Container>
       )}
-      sections={items}
+      sections={sections}
     />
   );
 };
