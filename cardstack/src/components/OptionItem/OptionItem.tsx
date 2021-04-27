@@ -29,8 +29,6 @@ export const OptionItem = ({
 }: OptionItemProps) => {
   const [iconVisible] = useState(iconProps.visible ?? true);
 
-  console.log('iconVisiv', iconProps.visible, iconVisible);
-
   return (
     <Touchable
       alignItems="center"
