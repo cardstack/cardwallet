@@ -5,7 +5,8 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: cryptex" time="1.001384">
+
+      <testcase classname="fastlane.lanes" name="0: cryptex" time="0.88591">
         
       </testcase>
     

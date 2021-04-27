@@ -85,6 +85,16 @@ Upload encrypted google play credentials
 fastlane sync_google_play_credentials
 ```
 Download encrypted google play credentials
+### publish_apns_key
+```
+fastlane publish_apns_key
+```
+Upload encrypted app push notification service key
+### sync_apns_key
+```
+fastlane sync_apns_key
+```
+Download encrypted app push notification service key
 
 ----
 

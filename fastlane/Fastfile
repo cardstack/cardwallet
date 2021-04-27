@@ -167,3 +167,21 @@ lane :sync_google_play_credentials do
       out: './android/app/google-play-credentials.json'
     )
 end
+
+desc "Upload encrypted app push notification service key"
+lane :publish_apns_key do
+  cryptex(
+      type: "import",
+      key: 'apns_key',
+      in: './ios/fastlane/AuthKey_PTG24WSU2F.p8'
+    )
+end
+
+desc "Download encrypted app push notification service key"
+lane :sync_apns_key do
+  cryptex(
+      type: "export",
+      key: 'apns_key',
+      out: './ios/fastlane/AuthKey_PTG24WSU2F.p8'
+    )
+end

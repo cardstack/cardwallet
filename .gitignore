@@ -84,3 +84,5 @@ rainbow-scripts
 
 .coverage
 .jest
+
+*.p8
