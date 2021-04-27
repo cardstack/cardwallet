@@ -59,7 +59,6 @@ import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
-import GanacheUtils from "../cardstack/src/utils/ganache-utils";
 
 const WALLETCONNECT_SYNC_DELAY = 500;
 
@@ -132,6 +131,12 @@ class App extends Component {
       }
     );
 
+    this.backgroundNotificationHandler = messaging().setBackgroundMessageHandler(
+      async remoteMessage => {
+        console.log('Message handled in the background!', remoteMessage);
+      }
+    );
+
     this.branchListener = branch.subscribe(({ error, params, uri }) => {
       if (error) {
         logger.error('Error from Branch: ' + error);
@@ -180,6 +185,7 @@ class App extends Component {
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
+    this.backgroundNotificationHandler?.();
     this.branchListener?.();
   }
 

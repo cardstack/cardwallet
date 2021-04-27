@@ -131,6 +131,25 @@ lane :publish_release_app_vars do
   end
 end
 
+desc "Upload encrypted google service info"
+lane :publish_google_service_info do
+  cryptex(
+      type: "import",
+      key: 'google_service_info',
+      in: './ios/Frameworks/GoogleService-Info.plist'
+    )
+end
+
+desc "Download encrypted google service info"
+lane :sync_google_service_info do
+  cryptex(
+      type: "export",
+      key: 'google_service_info',
+      out: './ios/Frameworks/GoogleService-Info.plist'
+    )
+end
+
+
 desc "Upload encrypted google play credentials"
 lane :publish_google_play_credentials do
   cryptex(

@@ -65,6 +65,16 @@ Download encrypted production app vars
 fastlane publish_release_app_vars
 ```
 Upload encrypted production app vars
+### publish_google_service_info
+```
+fastlane publish_google_service_info
+```
+Upload encrypted google service info
+### sync_google_service_info
+```
+fastlane sync_google_service_info
+```
+Download encrypted google service info
 ### publish_google_play_credentials
 ```
 fastlane publish_google_play_credentials
