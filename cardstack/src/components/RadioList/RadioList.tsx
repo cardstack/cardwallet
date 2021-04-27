@@ -4,27 +4,30 @@ import { IconProps, Text, Container } from '../.';
 import { RadioListItem } from './RadioListItem';
 
 export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
-  const selectedNetwork = useCallback(() => {
-    const selectedItem = sections
-      .find((section: any) => {
-        return section.data.some((network: any) => network.selected);
-      })
-      ?.data.find(network => network.selected);
+  const selectedItem = useCallback(() => {
+    const findItemByType = (arr: Array<RadioItemProps>, type: string) => {
+      return arr
+        .map((section: RadioItemProps) => {
+          const radioItem = section.data.filter(
+            (item: RadioItemData) => item[type as keyof RadioItemData] === true
+          );
 
-    const defaultItem = sections
-      .find((section: any) => {
-        return section.data.some((network: any) => network.default);
-      })
-      ?.data.find(network => network.default);
+          return radioItem;
+        })
+        .reduce((acc, val) => acc.concat(val), []);
+    };
+
+    const selectedItems = findItemByType(sections, 'selected')[0];
+
+    const defaultItem = findItemByType(sections, 'default')[0];
 
     return {
-      index: selectedItem?.key || defaultItem?.key || sections[0].data[0].key,
-      value:
-        selectedItem?.value || defaultItem?.value || sections[0].data[0].value,
+      index: selectedItems?.key || defaultItem?.key,
+      value: selectedItems?.value || defaultItem?.value,
     };
   }, [sections]);
 
-  const [selected, setSelected] = useState<number>(selectedNetwork()?.index);
+  const [selected, setSelected] = useState<number>(selectedItem()?.index);
 
   const handleChange = ({
     value,
@@ -45,7 +48,7 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
   };
 
   useEffect(() => {
-    const { value, index } = selectedNetwork();
+    const { value, index } = selectedItem();
     handleChange({ value, index });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sections]);
