@@ -152,7 +152,7 @@ export default function WalletProfileState({
                 visible: actionType === 'Create',
                 name: biometryType,
               }}
-              marginLeft={12}
+              justifyContent="center"
               testID="wallet-info-submit-button"
               textProps={{ color: 'settingsGray' }}
               title={`${actionType} Account`}

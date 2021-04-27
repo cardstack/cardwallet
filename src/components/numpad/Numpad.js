@@ -1,28 +1,19 @@
 import React, { useCallback } from 'react';
 
-import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { useDimensions } from '../../hooks';
 import { ButtonPressAnimation } from '../animations';
-import { Centered, Column, Row } from '../layout';
-import { Icon, Text } from '@cardstack/components';
 
-const KeyboardButtonContent = styled(Centered)`
-  height: ${({ height }) => height};
-  transform: scale(0.5);
-  width: 80;
-`;
-
-const KeyboardRow = styled(Row).attrs({
-  align: 'center',
-  justify: 'space-between',
-})`
-  width: 100%;
-`;
+import {
+  CenteredContainer,
+  Container,
+  Icon,
+  Text,
+} from '@cardstack/components';
 
 const KeyboardButton = ({ children, ...props }) => {
-  const { isTinyPhone } = useDimensions();
-  const keyHeight = isTinyPhone ? 60 : 64;
+  const { isTallPhone } = useDimensions();
+  const keyHeight = isTallPhone ? 80 : 55;
+  const keyWidth = isTallPhone ? 100 : 80;
 
   return (
     <ButtonPressAnimation
@@ -32,17 +23,18 @@ const KeyboardButton = ({ children, ...props }) => {
       scaleTo={1.6}
       transformOrigin={[0.5, 0.5 + 8 / keyHeight]}
     >
-      <KeyboardButtonContent height={keyHeight}>
+      <CenteredContainer
+        height={keyHeight}
+        style={{ transform: [{ scale: 0.5 }] }}
+        width={keyWidth}
+      >
         {children}
-      </KeyboardButtonContent>
+      </CenteredContainer>
     </ButtonPressAnimation>
   );
 };
 
 const Numpad = ({ decimal = true, onPress, width }) => {
-  const { colors } = useTheme();
-  const keyColor = colors.alpha(colors.blueGreyDark, 0.8);
-
   const renderCell = useCallback(
     symbol => (
       <KeyboardButton
@@ -59,23 +51,27 @@ const Numpad = ({ decimal = true, onPress, width }) => {
   );
 
   const renderRow = useCallback(
-    cells => <KeyboardRow>{cells.map(renderCell)}</KeyboardRow>,
+    cells => (
+      <Container alignItems="center" flexDirection="row">
+        {cells.map(renderCell)}
+      </Container>
+    ),
     [renderCell]
   );
 
   return (
-    <Centered direction="column" width={width}>
+    <CenteredContainer width={width}>
       {renderRow([1, 2, 3])}
       {renderRow([4, 5, 6])}
       {renderRow([7, 8, 9])}
-      <KeyboardRow>
-        {decimal ? renderCell('.') : <Column width={80} />}
+      <Container flexDirection="row">
+        {decimal ? renderCell('.') : <Container width={80} />}
         {renderCell(0)}
         <KeyboardButton onPress={() => onPress('back')}>
           <Icon color="black" name="delete" size={55} textAlign="center" />
         </KeyboardButton>
-      </KeyboardRow>
-    </Centered>
+      </Container>
+    </CenteredContainer>
   );
 };
 

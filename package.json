@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "setup": "yarn install && yarn postinstall",
-    "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
+    "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
     "android": "adb uninstall me.rainbow || true && react-native run-android",
     "android:apk": "cd android && ./gradlew assembleRelease && (adb uninstall me.rainbow || true) && adb install app/build/outputs/apk/release/app-release.apk",
     "android:bundle": "./scripts/check-env.sh && cd android && ./gradlew bundleRelease && open app/build/outputs/bundle/release/",

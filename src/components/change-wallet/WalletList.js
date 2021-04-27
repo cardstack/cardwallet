@@ -228,7 +228,7 @@ export default function WalletList({
             scrollEnabled={scrollEnabled}
           />
           {showDividers && <WalletListDivider />}
-          <Container marginTop={15}>
+          <Container marginLeft={5} marginTop={15}>
             <OptionItem
               borderIcon
               disabled={editMode}

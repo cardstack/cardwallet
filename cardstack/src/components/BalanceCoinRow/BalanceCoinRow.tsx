@@ -85,18 +85,18 @@ export const BalanceCoinRow = ({
               <CoinIcon size={40} {...item} />
               <Container marginLeft={4}>
                 <Text fontWeight="700">{item.name}</Text>
-                <Text variant="subText">{item.balance.display}</Text>
+                <Text variant="subText">{item?.balance?.display}</Text>
               </Container>
             </Container>
             <Container alignItems="flex-end">
-              <Text fontWeight="700">{`${item.native.balance.display} USD`}</Text>
+              <Text fontWeight="700">{`${item?.native?.balance?.display} USD`}</Text>
               <Text
                 variant="subText"
                 color={
-                  item.price.relative_change_24h > 0 ? 'green' : 'blueText'
+                  item?.price?.relative_change_24h > 0 ? 'green' : 'blueText'
                 }
               >
-                {item.native.change}
+                {item?.native?.change}
               </Text>
             </Container>
           </Container>
