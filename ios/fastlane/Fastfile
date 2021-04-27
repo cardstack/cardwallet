@@ -3,6 +3,8 @@ default_platform(:ios)
 platform :ios do
   before_all do |options|
     setup_ci
+
+    sync_google_service_info
   end
 
   ########################################################################

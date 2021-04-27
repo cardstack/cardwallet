@@ -17,6 +17,17 @@ interface TransactionCoinRowData {
 const statusToData: {
   [key: string]: TransactionCoinRowData;
 } = {
+  // self => from https://web3modal.com/
+  self: {
+    actionTextColor: 'blueText',
+    iconProps: {
+      name: 'send',
+      top: 1,
+      size: 17,
+    },
+    transactionSymbol: '-',
+    transactionTextColor: 'black',
+  },
   sent: {
     actionTextColor: 'blueText',
     iconProps: {
