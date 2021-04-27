@@ -1,433 +1,990 @@
 export default [
   {
-    type: 'event',
-    name: 'CreatePrepaidCard',
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        type: 'address',
-        name: 'issuer',
-        internalType: 'address',
-        indexed: false,
+        "indexed": true,
+        "internalType": "address",
+        "name": "bridgeUtils",
+        "type": "address"
+      }
+    ],
+    "name": "BridgeUtilsSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "issuer",
+        "type": "address"
       },
       {
-        type: 'address',
-        name: 'card',
-        internalType: 'address',
-        indexed: false,
+        "indexed": false,
+        "internalType": "address",
+        "name": "card",
+        "type": "address"
       },
       {
-        type: 'address',
-        name: 'token',
-        internalType: 'address',
-        indexed: false,
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       },
       {
-        type: 'uint256',
-        name: 'amount',
-        internalType: 'uint256',
-        indexed: false,
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    anonymous: false,
+    "name": "CreatePrepaidCard",
+    "type": "event"
   },
   {
-    type: 'event',
-    name: 'OwnershipTransferred',
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        type: 'address',
-        name: 'previousOwner',
-        internalType: 'address',
-        indexed: true,
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
       },
       {
-        type: 'address',
-        name: 'newOwner',
-        internalType: 'address',
-        indexed: true,
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "PayableTokenAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "PayableTokenRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "Setup",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "tally",
+        "type": "address"
+      }
+    ],
+    "name": "TallyAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "tally",
+        "type": "address"
+      }
+    ],
+    "name": "TallyRemoved",
+    "type": "event"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "MAXIMUM_NUMBER_OF_CARD",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "SWAP_OWNER",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "TRANSER_AND_CALL",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "addPayableToken",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tally",
+        "type": "address"
+      }
+    ],
+    "name": "addTally",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "bridgeUtils",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "cardDetails",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "issuer",
+        "type": "address"
       },
+      {
+        "internalType": "address",
+        "name": "issueToken",
+        "type": "address"
+      }
     ],
-    anonymous: false,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'uint8', name: '', internalType: 'uint8' }],
-    name: 'MAXIMUM_NUMBER_OF_CARD',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes4', name: '', internalType: 'bytes4' }],
-    name: 'SWAP_OWNER',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes4', name: '', internalType: 'bytes4' }],
-    name: 'TRANSER_AND_CALL',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'addPayableToken',
-    inputs: [{ type: 'address', name: '_token', internalType: 'address' }],
-    constant: false,
-  },
-  {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'addTally',
-    inputs: [{ type: 'address', name: '_tally', internalType: 'address' }],
-    constant: false,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes', name: 'signatures', internalType: 'bytes' }],
-    name: 'appendPrepaidCardAdminSignature',
-    inputs: [
-      { type: 'address', name: 'owner', internalType: 'address' },
-      { type: 'bytes', name: 'signature', internalType: 'bytes' },
+    "constant": true,
+    "inputs": [],
+    "name": "getTallys",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
     ],
-    constant: true,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [
-      { type: 'address', name: 'issuer', internalType: 'address' },
-      { type: 'address', name: 'issueToken', internalType: 'address' },
+    "constant": true,
+    "inputs": [],
+    "name": "getTokens",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
     ],
-    name: 'cardDetails',
-    inputs: [{ type: 'address', name: '', internalType: 'address' }],
-    constant: true,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [
-      { type: 'bytes', name: 'contractSignature', internalType: 'bytes' },
+    "constant": true,
+    "inputs": [],
+    "name": "gnosisProxyFactory",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: 'getContractSignature',
-    inputs: [],
-    constant: true,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'uint256', name: '', internalType: 'uint256' }],
-    name: 'getMaximumAmount',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'uint256', name: '', internalType: 'uint256' }],
-    name: 'getMinimumAmount',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes', name: '', internalType: 'bytes' }],
-    name: 'getPayData',
-    inputs: [
-      { type: 'address', name: 'token', internalType: 'address' },
-      { type: 'address', name: 'merchant', internalType: 'address' },
-      { type: 'uint256', name: 'amount', internalType: 'uint256' },
+    "constant": true,
+    "inputs": [],
+    "name": "gnosisSafe",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    constant: true,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes', name: '', internalType: 'bytes' }],
-    name: 'getSellCardData',
-    inputs: [
-      { type: 'address', name: 'from', internalType: 'address' },
-      { type: 'address', name: 'to', internalType: 'address' },
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
     ],
-    constant: true,
+    "name": "initialize",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes32', name: '', internalType: 'bytes32' }],
-    name: 'getSellCardHash',
-    inputs: [
-      { type: 'address', name: 'prepaidCard', internalType: 'address payable' },
-      { type: 'address', name: 'depot', internalType: 'address' },
-      { type: 'address', name: 'customer', internalType: 'address' },
-      { type: 'uint256', name: 'nonce', internalType: 'uint256' },
+    "constant": true,
+    "inputs": [],
+    "name": "isBridgeUtils",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    constant: true,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes', name: '', internalType: 'bytes' }],
-    name: 'getSplitCardData',
-    inputs: [
-      { type: 'address', name: 'cardOwner', internalType: 'address' },
-      { type: 'uint256[]', name: 'subCardAmount', internalType: 'uint256[]' },
+    "constant": true,
+    "inputs": [],
+    "name": "isOwner",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    constant: true,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes32', name: '', internalType: 'bytes32' }],
-    name: 'getSplitCardHash',
-    inputs: [
-      { type: 'address', name: 'card', internalType: 'address payable' },
-      { type: 'address', name: 'depot', internalType: 'address' },
-      { type: 'address', name: 'token', internalType: 'address' },
-      { type: 'uint256[]', name: 'cardAmounts', internalType: 'uint256[]' },
-      { type: 'uint256', name: '_nonce', internalType: 'uint256' },
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    constant: true,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'address[]', name: '', internalType: 'address[]' }],
-    name: 'getTallys',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'address[]', name: '', internalType: 'address[]' }],
-    name: 'getTokens',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bytes32', name: '', internalType: 'bytes32' }],
-    name: 'getTransactionHash',
-    inputs: [
-      { type: 'address', name: 'card', internalType: 'address payable' },
-      { type: 'address', name: 'to', internalType: 'address' },
-      { type: 'bytes', name: 'data', internalType: 'bytes' },
-      { type: 'uint256', name: 'nonce', internalType: 'uint256' },
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
     ],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'address', name: '', internalType: 'address' }],
-    name: 'gnosisProxyFactory',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'address', name: '', internalType: 'address' }],
-    name: 'gnosisSafe',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'isOwner',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'isValidAmount',
-    inputs: [
-      { type: 'address', name: 'token', internalType: 'address' },
-      { type: 'uint256', name: 'amount', internalType: 'uint256' },
+    "name": "removePayableToken",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    constant: true,
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'onTokenTransfer',
-    inputs: [
-      { type: 'address', name: 'from', internalType: 'address' },
-      { type: 'uint256', name: 'amount', internalType: 'uint256' },
-      { type: 'bytes', name: 'data', internalType: 'bytes' },
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tally",
+        "type": "address"
+      }
     ],
-    constant: false,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'address', name: '', internalType: 'address' }],
-    name: 'owner',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'payForMerchant',
-    inputs: [
-      { type: 'address', name: 'prepaidCard', internalType: 'address payable' },
-      { type: 'address', name: 'payableTokenAddr', internalType: 'address' },
-      { type: 'address', name: 'merchant', internalType: 'address' },
-      { type: 'uint256', name: 'amount', internalType: 'uint256' },
-      { type: 'bytes', name: 'signatures', internalType: 'bytes' },
+    "name": "removeTally",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    constant: false,
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'removePayableToken',
-    inputs: [{ type: 'address', name: '_token', internalType: 'address' }],
-    constant: false,
+    "constant": false,
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'removeTally',
-    inputs: [{ type: 'address', name: '_tally', internalType: 'address' }],
-    constant: false,
-  },
-  {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [],
-    name: 'renounceOwnership',
-    inputs: [],
-    constant: false,
-  },
-  {
-    type: 'function',
-    stateMutability: 'view',
-    payable: false,
-    outputs: [{ type: 'address', name: '', internalType: 'address' }],
-    name: 'revenuePool',
-    inputs: [],
-    constant: true,
-  },
-  {
-    type: 'function',
-    stateMutability: 'payable',
-    payable: true,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'sellCard',
-    inputs: [
-      { type: 'address', name: 'prepaidCard', internalType: 'address payable' },
-      { type: 'address', name: 'depot', internalType: 'address' },
-      { type: 'address', name: 'customer', internalType: 'address' },
-      { type: 'bytes', name: 'issuerSignatures', internalType: 'bytes' },
+    "constant": true,
+    "inputs": [],
+    "name": "revenuePool",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    constant: false,
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [],
-    name: 'setup',
-    inputs: [
-      { type: 'address', name: '_tally', internalType: 'address' },
-      { type: 'address', name: '_gsMasterCopy', internalType: 'address' },
-      { type: 'address', name: '_gsProxyFactory', internalType: 'address' },
-      { type: 'address', name: '_revenuePool', internalType: 'address' },
-      { type: 'address[]', name: '_payableTokens', internalType: 'address[]' },
-      { type: 'uint256', name: '_minAmount', internalType: 'uint256' },
-      { type: 'uint256', name: '_maxAmount', internalType: 'uint256' },
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "bridgeUtils",
+        "type": "address"
+      }
     ],
-    constant: false,
-  },
-  {
-    type: 'function',
-    stateMutability: 'payable',
-    payable: true,
-    outputs: [{ type: 'bool', name: '', internalType: 'bool' }],
-    name: 'splitCard',
-    inputs: [
-      { type: 'address', name: 'prepaidCard', internalType: 'address payable' },
-      { type: 'address', name: 'depot', internalType: 'address' },
-      { type: 'address', name: 'issueToken', internalType: 'address' },
-      { type: 'uint256[]', name: 'cardAmounts', internalType: 'uint256[]' },
-      { type: 'bytes', name: 'signatures', internalType: 'bytes' },
+    "name": "setBridgeUtils",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    constant: false,
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [],
-    name: 'transferOwnership',
-    inputs: [{ type: 'address', name: 'newOwner', internalType: 'address' }],
-    constant: false,
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [],
-    name: 'updateMaxinumAmount',
-    inputs: [{ type: 'uint256', name: '_maxValue', internalType: 'uint256' }],
-    constant: false,
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tally",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gsMasterCopy",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gsProxyFactory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_revenuePool",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_payableTokens",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "setup",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    type: 'function',
-    stateMutability: 'nonpayable',
-    payable: false,
-    outputs: [],
-    name: 'updateMininumAmount',
-    inputs: [{ type: 'uint256', name: '_minValue', internalType: 'uint256' }],
-    constant: false,
+    "constant": true,
+    "inputs": [],
+    "name": "getMinimumAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getMaximumAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_minValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateMinimumAmount",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateMaximumAmount",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "isValidAmount",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "card",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTransactionHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "prepaidCard",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "depot",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "customer",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "issuerSignatures",
+        "type": "bytes"
+      }
+    ],
+    "name": "sellCard",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "getSellCardData",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "prepaidCard",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "depot",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "customer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSellCardHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getContractSignature",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "contractSignature",
+        "type": "bytes"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "appendPrepaidCardAdminSignature",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "signatures",
+        "type": "bytes"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "prepaidCard",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "payableTokenAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "merchant",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signatures",
+        "type": "bytes"
+      }
+    ],
+    "name": "payForMerchant",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "merchant",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPayData",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "onTokenTransfer",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "card",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "depot",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "cardAmounts",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_nonce",
+        "type": "uint256"
+      }
+    ],
+    "name": "getSplitCardHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "cardOwner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "subCardAmount",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getSplitCardData",
+    "outputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "prepaidCard",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "depot",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "issueToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "cardAmounts",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signatures",
+        "type": "bytes"
+      }
+    ],
+    "name": "splitCard",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  }
 ];
