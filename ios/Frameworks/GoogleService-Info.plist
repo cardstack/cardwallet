@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>838420907972-ja4sa6eeligg65lebhph5uut2p628s5h.apps.googleusercontent.com</string>
+	<string>838420907972-rdk2mo9i1h6uifnbvesfs340hs9lq1o6.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.838420907972-ja4sa6eeligg65lebhph5uut2p628s5h</string>
+	<string>com.googleusercontent.apps.838420907972-rdk2mo9i1h6uifnbvesfs340hs9lq1o6</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBPKMc1sdsO5hYjVcTyHeriujZCIEYlI20</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.cardstack.com.rainbow</string>
+	<string>com.cardstack.cardpay</string>
 	<key>PROJECT_ID</key>
 	<string>card-pay-3e9be</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:838420907972:ios:8a130f626d5f0d17f64691</string>
+	<string>1:838420907972:ios:b9f1879995fa1545f64691</string>
 	<key>DATABASE_URL</key>
 	<string>https://card-pay-3e9be.firebaseio.com</string>
 </dict>

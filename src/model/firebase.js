@@ -21,6 +21,7 @@ export const saveFCMToken = async () => {
     await messaging().registerDeviceForRemoteMessages();
 
     const fcmToken = await messaging().getToken();
+
     if (fcmToken) {
       saveLocal('rainbowFcmToken', { data: fcmToken });
     }
