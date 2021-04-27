@@ -36,8 +36,6 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
     value?: string;
     index: number;
   }) => {
-    console.log({ index, selected, value });
-
     if (index !== selected) {
       setSelected(index);
     }
