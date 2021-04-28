@@ -105,7 +105,7 @@ export default function ProfileMasthead({
     accountImage,
   } = useAccountProfile();
   const isAvatarPickerAvailable = useExperimentalFlag(AVATAR_PICKER);
-  const isAvatarEmojiPickerEnabled = true;
+  const isAvatarEmojiPickerEnabled = false;
   const isAvatarImagePickerEnabled = true;
 
   const onRemovePhoto = useCallback(async () => {
@@ -152,7 +152,7 @@ export default function ProfileMasthead({
 
           const avatarActionSheetOptions = [
             'Choose from Library',
-            ...(isAvatarPickerAvailable ? ['Pick an Emoji'] : []),
+            ...(isAvatarEmojiPickerEnabled ? ['Pick an Emoji'] : []),
             ...(accountImage ? ['Remove Photo'] : []),
             ...(ios ? ['Cancel'] : []),
           ];
