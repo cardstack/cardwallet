@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container } from '@cardstack/components';
 
+export const HandleHeight = 5;
+
 export default function SheetHandle({ ...props }) {
   return (
     <Container

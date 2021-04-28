@@ -8,19 +8,18 @@ export default function DefaultTransactionConfirmationSection({
   address,
   value = '0',
 }) {
-  const { colors } = useTheme();
   return (
     <TransactionSheet>
       <TransactionRow title={lang.t('wallet.action.to')}>
         <TruncatedAddress
           address={address}
-          color={colors.blueGreyDark60}
+          color="blueGreyDark50"
           size="lmedium"
           truncationLength={15}
         />
       </TransactionRow>
       <TransactionRow title={lang.t('wallet.action.value')}>
-        <Text color={colors.blueGreyDark60} size="lmedium" uppercase>
+        <Text color="blueGreyDark50" size="lmedium" uppercase>
           {value} ETH
         </Text>
       </TransactionRow>

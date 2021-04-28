@@ -72,11 +72,14 @@ const ExchangeNativeField = (
   return (
     <TouchableWithoutFeedback onPress={handleFocusNativeField}>
       <Row align="center" flex={1} height={height}>
-        <CurrencySymbol color={nativeAmountColor} height={height}>
+        <CurrencySymbol
+          // color={nativeAmountColor}
+          height={height}
+        >
           {symbol}
         </CurrencySymbol>
         <NativeInput
-          color={nativeAmountColor}
+          // color={nativeAmountColor}
           editable={editable}
           height={android ? height : 58}
           mask={mask}
