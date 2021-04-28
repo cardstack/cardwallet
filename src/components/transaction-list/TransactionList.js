@@ -45,7 +45,7 @@ import {
 
 const NativeTransactionListView = requireNativeComponent('TransactionListView');
 
-const isAvatarEmojiPickerEnabled = true;
+const isAvatarEmojiPickerEnabled = false;
 const isAvatarImagePickerEnabled = true;
 
 const Container = styled.View`
