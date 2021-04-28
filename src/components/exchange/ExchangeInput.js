@@ -99,7 +99,7 @@ const ExchangeInput = (
       <InputMask
         {...props}
         allowFontScaling={false}
-        color={color}
+        // color={color}
         editable={editable}
         flex={1}
         fontFamily="OpenSans-Regular"
@@ -122,7 +122,7 @@ const ExchangeInput = (
       {useCustomAndroidMask && !ref.current?.isFocused() && (
         <AndroidMaskWrapper>
           <Text
-            color={color}
+            // color={color}
             letterSpacing={letterSpacing}
             size={size}
             testID={testID}

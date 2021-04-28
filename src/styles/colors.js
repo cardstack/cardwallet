@@ -10,6 +10,7 @@ const darkModeColors = {
   blueGreyDark: '#E0E8FF',
   blueGreyDark20: '#3A3D45',
   blueGreyDark50: '#797D8B',
+  blueGreyDark60: '#898D97', // this color is blueGreyDark at 60% over white
   blueGreyDarker: '#000000',
   blueGreyDarkLight: '#1E2027',
   dark: '#E0E8FF',
