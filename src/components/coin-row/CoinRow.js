@@ -5,10 +5,14 @@ import { Column, Row } from '../layout';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
 
+const CoinRowVerticalMargin = 12;
 const CoinRowPaddingTop = 9;
 const CoinRowPaddingBottom = 10;
 export const CoinRowHeight =
-  CoinIconSize + CoinRowPaddingTop + CoinRowPaddingBottom;
+  CoinIconSize +
+  CoinRowPaddingTop +
+  CoinRowPaddingBottom +
+  CoinRowVerticalMargin * 2;
 
 const Container = styled(Row).attrs({
   align: 'center',
