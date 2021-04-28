@@ -885,7 +885,7 @@
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Rainbow/RainbowDebug.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
@@ -942,7 +942,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.cardstack.cardpay";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -959,7 +959,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = "CHq9hB40PBZqHTxL-f-Wd_rK4anl1e7a8912-936f-4ce7-8505-32a075039f51";
 				CODE_SIGN_ENTITLEMENTS = Rainbow/RainbowRelease.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1002,7 +1002,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.cardstack.cardpay";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1056,7 +1056,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = "Xf8eimmB0-W22TRNCwL9tZNO9xev1e7a8912-936f-4ce7-8505-32a075039f51";
 				CODE_SIGN_ENTITLEMENTS = Rainbow/Rainbow.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1098,7 +1098,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.cardstack.cardpay";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1153,7 +1153,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = "";
 				CODE_SIGN_ENTITLEMENTS = Rainbow/Rainbow.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1195,7 +1195,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.cardstack.cardpay";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
