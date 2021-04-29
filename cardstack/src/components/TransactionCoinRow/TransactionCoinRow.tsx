@@ -48,6 +48,28 @@ const statusToData: {
     transactionSymbol: '-',
     transactionTextColor: 'black',
   },
+  swapping: {
+    actionTextColor: 'blueOcean',
+    iconProps: {
+      name: 'swap',
+      top: 1,
+      size: 14,
+      color: 'blueOcean',
+    },
+    transactionSymbol: '-',
+    transactionTextColor: 'black',
+  },
+  swapped: {
+    actionTextColor: 'blueOcean',
+    iconProps: {
+      name: 'swap',
+      top: 1,
+      size: 14,
+      color: 'blueOcean',
+    },
+    transactionSymbol: '-',
+    transactionTextColor: 'black',
+  },
 };
 
 export interface TransactionCoinRowProps extends ContainerProps {
@@ -95,12 +117,16 @@ export const TransactionCoinRow = ({
 const Left = ({ item }: TransactionCoinRowProps) => {
   const data = statusToData[item.status];
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <Container flexDirection="row">
       <CoinIcon size={40} {...item} />
       <Container marginLeft={2}>
         <Container flexDirection="row" alignItems="center">
-          <Icon {...data.iconProps} marginRight={1} color="backgroundBlue" />
+          <Icon color="backgroundBlue" {...data.iconProps} marginRight={1} />
           <Text fontSize={13} color={data.actionTextColor}>
             {item.title}
           </Text>
@@ -114,7 +140,7 @@ const Left = ({ item }: TransactionCoinRowProps) => {
 const Right = ({ item }: TransactionCoinRowProps) => {
   const data = statusToData[item.status];
 
-  if (!item.balance || !item.native) {
+  if (!item.balance || !item.native || !data) {
     return null;
   }
 
