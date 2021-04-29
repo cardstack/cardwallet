@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { web3Provider } from '../../handlers/web3';
 import networkInfo from '../../helpers/networkInfo';
-import networkTypes from '../../helpers/networkTypes';
 import { useAccountSettings, useInternetStatus } from '../../hooks';
 import { Icon } from '../icons';
 import { Nbsp, Text } from '../text';
@@ -24,7 +23,7 @@ const TestnetToast = () => {
 
   return (
     <Toast isVisible={visible} testID={`testnet-toast-${networkName}`}>
-      <Icon color={color} marginHorizontal={5} marginTop={5} name="dot" />
+      <Icon color={color} marginHorizontal={5} name="dot" />
       <Text color={colors.white} size="smedium" weight="semibold">
         <Nbsp /> {networkName} <Nbsp />
       </Text>
