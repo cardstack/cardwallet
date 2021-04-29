@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View } from 'react-native';
 import styled from 'styled-components';
 
 import { deviceUtils } from '../../utils';
 import { Centered, Column } from '../layout';
-import { Text } from '@cardstack/components';
+import { Container, Text } from '@cardstack/components';
 
 const verticalOffset = (deviceUtils.dimensions.height - 420) / 3;
 
-const Container = styled(Column)`
+const Content = styled(Column)`
   align-self: center;
   margin-top: ${verticalOffset};
   width: 200;
@@ -17,14 +16,16 @@ const Container = styled(Column)`
 
 const ActivityListEmptyState = ({ children, label }) => {
   return (
-    <View>
+    <Container backgroundColor="backgroundBlue" flex={1}>
       {children}
-      <Container>
+      <Content>
         <Centered>
-          <Text color="grayText">{label}</Text>
+          <Text color="grayText" textAlign="center">
+            {label}
+          </Text>
         </Centered>
-      </Container>
-    </View>
+      </Content>
+    </Container>
   );
 };
 

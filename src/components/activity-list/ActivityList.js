@@ -132,10 +132,7 @@ const ActivityList = ({
       />
     )
   ) : (
-    <ActivityListEmptyState
-      emoji="👻"
-      label="Your testnet transaction history starts now!"
-    >
+    <ActivityListEmptyState label="Your testnet transaction history starts now!">
       {header}
     </ActivityListEmptyState>
   );
