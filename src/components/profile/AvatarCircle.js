@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { useAccountProfile } from '../../hooks';
@@ -7,15 +7,26 @@ import ImageAvatar from '../contacts/ImageAvatar';
 import { Flex, InnerBorder } from '../layout';
 import { Text } from '../text';
 import { position } from '@rainbow-me/styles';
-import ShadowStack from 'react-native-shadow-stack';
 
 const AvatarCircleSize = 65;
 
-const AvatarCircleView = styled(Flex)`
+const AvatarCircleContainer = styled(Flex)`
+  ${position.sizeAsObject(AvatarCircleSize)};
+  background-color: ${({ backgroundColor = '#FFFFFF' }) => backgroundColor};
+  border-color: rgba(255, 255, 255, 0.4);
+  border-radius: 100px;
+  border-width: 1px;
+  margin-bottom: 12px;
+  overflow: hidden;
+`;
+
+const AvatarCircleView = styled.View`
   ${position.size(AvatarCircleSize)};
   margin-bottom: 16px;
   justify-content: ${ios ? 'flex-start' : 'center'};
   align-items: ${ios ? 'flex-start' : 'center'};
+  justify-content: center;
+  align-items: center;
 `;
 
 const FirstLetter = styled(Text).attrs(({ theme: { colors } }) => ({
@@ -25,9 +36,7 @@ const FirstLetter = styled(Text).attrs(({ theme: { colors } }) => ({
   lineHeight: android ? 68 : 66,
   size: ios ? 38 : 30,
   weight: 'semibold',
-}))`
-  width: ${android ? 66 : 67};
-`;
+}))``;
 
 export default function AvatarCircle({
   isAvatarPickerAvailable,
@@ -35,28 +44,8 @@ export default function AvatarCircle({
   overlayStyles,
   image,
 }) {
-  const { colors, isDarkMode } = useTheme();
+  const { colors } = useTheme();
   const { accountColor, accountSymbol } = useAccountProfile();
-  const shadows = useMemo(
-    () => ({
-      default: [
-        [0, 2, 5, isDarkMode ? colors.trueBlack : colors.dark, 0.2],
-        [
-          0,
-          6,
-          10,
-          isDarkMode
-            ? colors.trueBlack
-            : colors.alpha(colors.avatarColor[accountColor || 0], 0.6),
-        ],
-      ],
-      overlay: [
-        [0, 6, 10, isDarkMode ? colors.trueBlack : colors.shadowBlack, 0.08],
-        [0, 2, 5, isDarkMode ? colors.trueBlack : colors.shadowBlack, 0.12],
-      ],
-    }),
-    [accountColor, colors, isDarkMode]
-  );
 
   return (
     <ButtonPressAnimation
@@ -67,26 +56,20 @@ export default function AvatarCircle({
       pressOutDuration={200}
       scaleTo={isAvatarPickerAvailable ? 0.9 : 1}
     >
-      <ShadowStack
-        {...position.sizeAsObject(AvatarCircleSize)}
-        backgroundColor={overlayStyles ? 'rgb(51, 54, 59)' : colors.white}
-        borderRadius={AvatarCircleSize}
-        marginBottom={12}
-        shadows={shadows[overlayStyles ? 'overlay' : 'default']}
-        {...(android && {
-          height: 64,
-          width: 64,
-        })}
+      <AvatarCircleContainer
+        backgroundColor={colors.avatarColor[accountColor]}
+        overlayStyles={overlayStyles}
+        size={AvatarCircleSize}
       >
         {image ? (
           <ImageAvatar image={image} size="large" />
         ) : (
-          <AvatarCircleView backgroundColor={colors.avatarColor[accountColor]}>
+          <AvatarCircleView>
             <FirstLetter>{accountSymbol}</FirstLetter>
             {!overlayStyles && <InnerBorder opacity={0.02} radius={65} />}
           </AvatarCircleView>
         )}
-      </ShadowStack>
+      </AvatarCircleContainer>
     </ButtonPressAnimation>
   );
 }
