@@ -244,7 +244,11 @@ export default function ImportSeedPhraseSheet() {
             input
           );
           setCheckedWallet(walletResult);
-          const ens = await web3Provider.lookupAddress(walletResult.address);
+
+          const ens = web3Provider.lookupAddress
+            ? await web3Provider.lookupAddress(walletResult.address)
+            : null;
+
           if (ens && ens !== input) {
             name = ens;
           }
