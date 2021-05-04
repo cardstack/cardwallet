@@ -1,45 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
 import { ButtonPressAnimation } from '../animations';
-import { Row } from '../layout';
-import { Text } from '../text';
-import { useColorForAsset } from '@rainbow-me/hooks';
-import { padding } from '@rainbow-me/styles';
+import { Container, Icon, Text } from '@cardstack/components';
 
-const Container = styled(ButtonPressAnimation)`
-  margin-right: 4;
-`;
-
-const MaxButtonContent = styled(Row).attrs({
-  align: 'center',
-})`
-  ${padding(0, 19)};
-  height: 32;
-`;
-
-const MaxButtonLabel = styled(Text).attrs({
-  align: 'center',
-  size: 'lmedium',
-  weight: 'bold',
-})`
-  margin-top: 3;
-`;
-
-export default function ExchangeMaxButton({
-  address,
-  disabled,
-  onPress,
-  testID,
-}) {
-  const colorForAsset = useColorForAsset({ address });
-  const { colors } = useTheme();
+export default function ExchangeMaxButton({ disabled, onPress, testID }) {
   return (
-    <Container disabled={disabled} onPress={onPress} testID={testID}>
-      <MaxButtonContent>
-        <MaxButtonLabel color={colorForAsset || colors.appleBlue}>
-          􀜍 Max
-        </MaxButtonLabel>
-      </MaxButtonContent>
-    </Container>
+    <ButtonPressAnimation disabled={disabled} onPress={onPress} testID={testID}>
+      <Container marginRight={1}>
+        <Container
+          alignItems="center"
+          alignSelf="center"
+          flexDirection="row"
+          height={32}
+          paddingHorizontal={4}
+          paddingVertical={0}
+        >
+          <Icon color="black" iconSize="small" name="arrow-up" />
+          <Text weight="bold">Max</Text>
+        </Container>
+      </Container>
+    </ButtonPressAnimation>
   );
 }

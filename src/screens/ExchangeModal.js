@@ -27,6 +27,7 @@ import SwapInfo from '../components/exchange/SwapInfo';
 import { FloatingPanel, FloatingPanels } from '../components/floating-panels';
 import { GasSpeedButton } from '../components/gas';
 import { Centered, KeyboardFixedOpenLayout } from '../components/layout';
+import { Container } from '@cardstack/components';
 import ExchangeModalTypes from '@rainbow-me/helpers/exchangeModalTypes';
 import isKeyboardOpen from '@rainbow-me/helpers/isKeyboardOpen';
 import {
@@ -544,7 +545,7 @@ export default function ExchangeModal({
               testID={testID + '-header'}
               title={inputHeaderTitle}
             />
-            {showOutputField && <ExchangeNotch />}
+
             <ExchangeInputField
               disableInputCurrencySelection={isWithdrawal}
               inputAmount={inputAmountDisplay}
@@ -561,18 +562,24 @@ export default function ExchangeModal({
               setNativeAmount={updateNativeAmount}
               testID={testID + '-input'}
             />
-            {showOutputField && (
-              <ExchangeOutputField
-                onFocus={handleFocus}
-                onPressSelectOutputCurrency={navigateToSelectOutputCurrency}
-                outputAmount={outputAmountDisplay}
-                outputCurrencyAddress={outputCurrency?.address}
-                outputCurrencySymbol={outputCurrency?.symbol}
-                outputFieldRef={outputFieldRef}
-                setOutputAmount={updateOutputAmount}
-                testID={testID + '-output'}
-              />
-            )}
+            <Container
+              backgroundColor="backgroundGray"
+              borderBottomEndRadius={39}
+              borderBottomStartRadius={39}
+            >
+              {showOutputField && (
+                <ExchangeOutputField
+                  onFocus={handleFocus}
+                  onPressSelectOutputCurrency={navigateToSelectOutputCurrency}
+                  outputAmount={outputAmountDisplay}
+                  outputCurrencyAddress={outputCurrency?.address}
+                  outputCurrencySymbol={outputCurrency?.symbol}
+                  outputFieldRef={outputFieldRef}
+                  setOutputAmount={updateOutputAmount}
+                  testID={testID + '-output'}
+                />
+              )}
+            </Container>
           </FloatingPanel>
           {isDeposit && (
             <SwapInfo

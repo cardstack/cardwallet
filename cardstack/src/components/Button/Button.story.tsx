@@ -29,6 +29,7 @@ storiesOf('Button', module).add('Default', () => (
         With Icon
       </Button>
       <Button variant="secondary">Secondary</Button>
+      <Button variant="tertiary">Tertiary</Button>
       <Button variant="blue">Blue</Button>
       <Button variant="dark">Dark</Button>
       <Container

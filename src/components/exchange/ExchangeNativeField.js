@@ -2,8 +2,8 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import styled from 'styled-components';
 import { Row } from '../layout';
-import { Text } from '../text';
 import ExchangeInput from './ExchangeInput';
+import { Text } from '@cardstack/components';
 import { useColorForAsset } from '@rainbow-me/hooks';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { fonts } from '@rainbow-me/styles';
@@ -57,28 +57,18 @@ const ExchangeNativeField = (
     },
     [onFocus]
   );
-  const { colors } = useTheme();
 
-  const nativeAmountColor = useMemo(() => {
-    const nativeAmountExists =
-      typeof nativeAmount === 'string' && nativeAmount.length > 0;
-
-    const color = isFocused ? colors.dark : colors.blueGreyDark;
-    const opacity = isFocused ? 1 : nativeAmountExists ? 0.5 : 0.3;
-
-    return colors.alpha(color, opacity);
-  }, [colors, isFocused, nativeAmount]);
+  const color = useMemo(() => {
+    return isFocused ? 'black' : 'settingsGrayDark';
+  }, [isFocused]);
 
   return (
     <TouchableWithoutFeedback onPress={handleFocusNativeField}>
       <Row align="center" flex={1} height={height}>
-        <CurrencySymbol
-          // color={nativeAmountColor}
-          height={height}
-        >
+        <Text color={color} fontWeight="100" height={height}>
           {symbol}
-        </CurrencySymbol>
-        <NativeInput
+        </Text>
+        <ExchangeInput
           // color={nativeAmountColor}
           editable={editable}
           height={android ? height : 58}
@@ -89,8 +79,10 @@ const ExchangeNativeField = (
           placeholder={placeholder}
           ref={ref}
           selectionColor={colorForAsset}
+          size={18}
           testID={nativeAmount ? `${testID}-${nativeAmount}` : testID}
           value={nativeAmount}
+          weight="100"
         />
       </Row>
     </TouchableWithoutFeedback>

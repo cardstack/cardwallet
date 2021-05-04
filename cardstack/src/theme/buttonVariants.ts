@@ -13,6 +13,14 @@ const secondary = {
   borderColor: 'buttonSecondaryBorder',
 };
 
+const tertiary = {
+  backgroundColor: 'black',
+  borderColor: 'black',
+  textStyle: {
+    color: 'white',
+  },
+};
+
 const small = {
   textStyle: {
     fontSize: 14,
@@ -21,6 +29,13 @@ const small = {
 };
 
 const extraSmall = {
+  maxWidth: 72,
+  textStyle: {
+    variant: 'smallButton',
+  },
+};
+
+const tiny = {
   height: 27,
   paddingVertical: 0,
   width: 72,
@@ -57,6 +72,7 @@ export const buttonVariants = {
     width: screenWidth - 40,
   },
   secondary: { ...secondary },
+  tertiary: { ...tertiary },
   dark,
   blue,
   small,
@@ -68,6 +84,11 @@ export const buttonVariants = {
     ...small,
     ...secondary,
   },
+  smallTertiary: {
+    ...small,
+    ...tertiary,
+  },
+
   extraSmallDark: {
     ...extraSmall,
     ...dark,
@@ -76,7 +97,12 @@ export const buttonVariants = {
       ...dark.textStyle,
     },
   },
+  extraSmallTertiary: {
+    ...extraSmall,
+    ...tertiary,
+  },
   extraSmall,
+  tiny,
   square: {
     ...blue,
     height: 92,

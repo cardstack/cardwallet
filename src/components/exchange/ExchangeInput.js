@@ -18,7 +18,7 @@ const AndroidMaskWrapper = styled.View`
 const ExchangeInput = (
   {
     androidMaskMaxLength = 8,
-    color: givenColor,
+    color = 'black',
     editable,
     keyboardAppearance = 'dark',
     letterSpacing = 'roundedTightest',
@@ -28,18 +28,16 @@ const ExchangeInput = (
     onChangeText,
     onFocus,
     placeholder = '0',
-    placeholderTextColor: givenPlaceholderTextColor,
-    size = 'h2',
+    placeholderTextColor = 'settingsGrayDark',
+    size = 35,
     testID,
     useCustomAndroidMask = false,
     value = '',
-    weight = 'semibold',
+    weight = '700',
     ...props
   },
   ref
 ) => {
-  const color = givenColor || 'black';
-  const placeholderTextColor = givenPlaceholderTextColor || 'settingsGray';
   const [isFocused, setIsFocused] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
 
@@ -103,8 +101,8 @@ const ExchangeInput = (
         editable={editable}
         flex={1}
         fontFamily="OpenSans-Regular"
-        fontSize={35}
-        fontWeight="700"
+        fontSize={size}
+        fontWeight={weight}
         keyboardAppearance={keyboardAppearance}
         keyboardType="decimal-pad"
         letterSpacing={letterSpacing}

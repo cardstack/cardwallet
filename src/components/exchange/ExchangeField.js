@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import styled from 'styled-components';
-import { TokenSelectionButton } from '../buttons';
 import { CoinIcon, CoinIconSize } from '../coin-icon';
 import { Row, RowWithMargins } from '../layout';
 import { EnDash } from '../text';
 import ExchangeInput from './ExchangeInput';
+import { Button } from '@cardstack/components';
 import { useColorForAsset } from '@rainbow-me/hooks';
 import { borders } from '@rainbow-me/styles';
 
@@ -93,12 +93,20 @@ const ExchangeField = (
         </FieldRow>
       </TouchableWithoutFeedback>
       {!disableCurrencySelection && (
-        <TokenSelectionButton
-          address={address}
-          onPress={onPressSelectCurrency}
-          symbol={symbol}
-          testID={testID + '-selection-button'}
-        />
+        <>
+          <Button
+            iconPosition="right"
+            iconProps={{
+              name: 'chevron-right',
+              color: address ? 'white' : 'small',
+            }}
+            onPress={onPressSelectCurrency}
+            testID={testID + '-selection-button'}
+            variant={address ? 'extraSmallTertiary' : 'small'}
+          >
+            {symbol || 'Choose Token'}
+          </Button>
+        </>
       )}
     </Container>
   );
