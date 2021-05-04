@@ -5,7 +5,7 @@ export default function useAccountAssets() {
   const assets = useSelector(sortAssetsByNativeAmountSelector);
   const { depots, prepaidCards } = useSelector(state => ({
     depots: state.data.depots,
-    prepaidCards: state.data.depots,
+    prepaidCards: state.data.prepaidCards,
   }));
 
   const collectibles = useSelector(

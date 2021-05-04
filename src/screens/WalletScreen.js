@@ -66,6 +66,10 @@ export default function WalletScreen() {
   } = useWalletSectionsData();
   const dispatch = useDispatch();
 
+  const notReallyEmpty = Boolean(
+    sections.find(section => section.data?.length > 0)
+  );
+
   useEffect(() => {
     const fetchAndResetFetchSavings = async () => {
       await refetchSavings();
@@ -99,7 +103,7 @@ export default function WalletScreen() {
       <Animated.View style={{ opacity: isCoinListEditedValue }} />
       <Animated.Code exec={scrollViewTracker} />
       <FabWrapper
-        disabled={isEmpty || !!params?.emptyWallet}
+        disabled={!notReallyEmpty ? isEmpty || !!params?.emptyWallet : false}
         fabs={fabs}
         isCoinListEdited={isCoinListEdited}
         isReadOnlyWallet={isReadOnlyWallet}
@@ -116,7 +120,7 @@ export default function WalletScreen() {
         </HeaderOpacityToggler>
         <AssetList
           fetchData={refreshAccountData}
-          isEmpty={isEmpty || !!params?.emptyWallet}
+          isEmpty={!notReallyEmpty ? isEmpty || !!params?.emptyWallet : false}
           isWalletEthZero={isWalletEthZero}
           network={network}
           scrollViewTracker={scrollViewTracker}

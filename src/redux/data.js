@@ -326,7 +326,7 @@ export const addressAssetsReceived = (
   }
 };
 
-export const gnosisSafesReceieved = (depots, prepaidCards) => dispatch =>
+export const gnosisSafesReceieved = ({ depots, prepaidCards }) => dispatch =>
   dispatch({
     payload: {
       depots,
