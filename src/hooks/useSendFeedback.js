@@ -35,7 +35,7 @@ const handleMailError = debounce(
 function feedbackEmailOptions(appVersion) {
   return {
     recipients: [FeedbackEmailAddress],
-    subject: `Cardstack Feedback - ${ios ? 'iOS' : 'Android'} ${appVersion}`,
+    subject: `Card Wallet Feedback - ${ios ? 'iOS' : 'Android'} ${appVersion}`,
   };
 }
 

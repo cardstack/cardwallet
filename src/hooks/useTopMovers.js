@@ -29,7 +29,7 @@ const updatePrice = (movers, genericAssets) => {
   if (!isEmpty(moversWithoutPrice)) {
     logger.sentry('Top Movers with price not found', moversWithoutPrice);
     captureMessage(
-      'Top Movers - possible discrepancy between CMC and Cardstack token list'
+      'Top Movers - possible discrepancy between CMC and Card Wallet token list'
     );
   }
 

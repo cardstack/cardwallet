@@ -34,7 +34,7 @@ const messageSupport = () => Mailer.mail(supportEmailOptions, handleMailError);
 
 const supportEmailOptions = {
   recipients: [SupportEmailAddress],
-  subject: 'Cardstack Support',
+  subject: 'Card Wallet Support',
 };
 
 export default function showWalletErrorAlert() {

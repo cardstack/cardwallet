@@ -112,7 +112,7 @@ export default function SettingsSection({
 
   const onPressShare = useCallback(() => {
     Share.share({
-      message: `👋️ Hey friend! You should download Cardstack, it's my favorite wallet ${SettingsExternalURLs.rainbowHomepage}`,
+      message: `👋️ Hey friend! You should download Card Wallet, it's my favorite wallet ${SettingsExternalURLs.rainbowHomepage}`,
     });
   }, []);
 
