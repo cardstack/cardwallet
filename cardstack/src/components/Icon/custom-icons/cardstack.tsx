@@ -4,7 +4,7 @@ import Svg, { SvgProps, Path } from 'react-native-svg';
 function SvgComponent(props: SvgProps) {
   return (
     <Svg
-      data-name="Card Wallet Logo"
+      data-name="Cardstack Logo"
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       xmlns="http://www.w3.org/2000/svg"
