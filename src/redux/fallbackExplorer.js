@@ -1,18 +1,16 @@
+import { Safes } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { get, toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
-import { transactionServiceFetch } from '../handlers/gnosis';
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
-import { PREPAID_CARD_CONTRACT_ADDRESS } from '../references/addresses';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import coingeckoIdsFallback from '../references/coingecko/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
-import prepaidCardManagerContract from '../references/prepaid-card-manager-contract';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
 import logger from 'logger';
@@ -250,62 +248,44 @@ const fetchAssetBalances = async (tokens, address, network) => {
 };
 
 const fetchGnosisSafes = async address => {
-  const response = await transactionServiceFetch(`/v1/owners/${address}`);
-  const data = response?.data;
-  const { safes } = data;
+  try {
+    let web3 = new Web3(web3Provider);
+    let safesInstance = new Safes(web3);
+    let safes = await safesInstance.view(address);
 
-  const web3 = new Web3(web3Provider);
-  const prepaidCardContract = new web3.eth.Contract(
-    prepaidCardManagerContract,
-    PREPAID_CARD_CONTRACT_ADDRESS
-  );
+    safes?.forEach(safe => {
+      safe?.tokens.forEach(({ balance, token }) => {
+        token.value = Web3.utils.fromWei(balance);
+      });
+    });
 
-  const safeData = await Promise.all(
-    safes.map(async safeAddress => {
-      const cardDetail = await prepaidCardContract.methods
-        .cardDetails(safeAddress)
-        .call();
+    const { depots, prepaidCards } = safes.reduce(
+      (accum, safe) => {
+        if (safe.isPrepaidCard) {
+          return {
+            ...accum,
+            prepaidCards: [...accum.prepaidCards, safe],
+          };
+        }
 
-      const isPrepaidCard = cardDetail?.issuer !== ZERO_ADDRESS;
-
-      const balanceResponse = await transactionServiceFetch(
-        `/v1/safes/${safeAddress}/balances`
-      );
-      const balances = balanceResponse.data;
-
-      return {
-        address: safeAddress,
-        cardDetail,
-        isPrepaidCard,
-        balances: balances.filter(balanceItem => balanceItem.tokenAddress),
-      };
-    })
-  );
-
-  const sortedData = safeData.reduce(
-    (accum, safe) => {
-      if (safe.isPrepaidCard) {
         return {
           ...accum,
-          prepaidCards: [...accum.prepaidCards, safe],
+          depots: [...accum.depots, safe],
         };
+      },
+      {
+        depots: [],
+        prepaidCards: [],
       }
+    );
 
-      return {
-        ...accum,
-        depots: [...accum.depots, safe],
-      };
-    },
-    {
-      depots: [],
-      prepaidCards: [],
-    }
-  );
-
-  return {
-    depots: sortedData.depots,
-    prepaidCards: sortedData.prepaidCards,
-  };
+    return {
+      depots,
+      prepaidCards,
+    };
+  } catch (error) {
+    console.log({ error });
+  }
 };
 
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
@@ -338,9 +318,13 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     const assets =
       network === networkTypes.mainnet ? mainnetAssets : testnetAssets[network];
 
-    const { depots, prepaidCards } = await fetchGnosisSafes(accountAddress);
+    if (networkInfo[network].layer === 2) {
+      const { depots = [], prepaidCards = [] } = await fetchGnosisSafes(
+        accountAddress
+      );
 
-    dispatch(gnosisSafesReceieved(depots, prepaidCards));
+      dispatch(gnosisSafesReceieved({ depots, prepaidCards }));
+    }
 
     if (!assets || !assets.length) {
       const fallbackExplorerBalancesHandle = setTimeout(

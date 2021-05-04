@@ -9,10 +9,12 @@ import {
   property,
 } from 'lodash';
 import React from 'react';
-import { LayoutAnimation } from 'react-native';
+import ReactCoinIcon from 'react-coin-icon';
+import { LayoutAnimation, Text, View } from 'react-native';
 import { createSelector } from 'reselect';
 import { AssetListItemSkeleton } from '../components/asset-list';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
+import CopyTooltip from '../components/copy-tooltip';
 import { UniswapInvestmentRow } from '../components/investment-cards';
 import { CollectibleTokenFamily } from '../components/token-family';
 import { withNavigation } from '../navigation/Navigation';
@@ -20,6 +22,7 @@ import { compose, withHandlers } from '../utils/recompactAdapters';
 import { buildCoinsList, buildUniqueTokenList } from './assets';
 import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
+import { Icon } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -28,6 +31,9 @@ import { ETH_ICON_URL } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
 import { ethereumUtils } from '@rainbow-me/utils';
 
+const allSelector = state => state;
+const allDepotsSelector = state => state.depots;
+const allPrepaidCardsSelector = state => state.prepaidCards;
 const allAssetsSelector = state => state.allAssets;
 const allAssetsCountSelector = state => state.allAssetsCount;
 const assetsTotalSelector = state => state.assetsTotal;
@@ -129,9 +135,16 @@ const addEth = section => {
 const buildWalletSections = (
   balanceSection,
   uniqueTokenFamiliesSection,
-  uniswapSection
+  uniswapSection,
+  depotSection,
+  prepaidCardSection
 ) => {
-  const sections = [uniswapSection, uniqueTokenFamiliesSection];
+  const sections = [
+    uniswapSection,
+    uniqueTokenFamiliesSection,
+    depotSection,
+    prepaidCardSection,
+  ];
 
   const filteredSections =
     filterWalletSections(sections).length > 0
@@ -402,6 +415,160 @@ const uniswapSectionSelector = createSelector(
   withUniswapSection
 );
 
+const prepaidCardsSectionSelector = createSelector(
+  [allPrepaidCardsSelector],
+  (prepaidCards = []) => {
+    const total = prepaidCards.reduce(
+      (acc, prepaidCard) =>
+        acc +
+        prepaidCard.tokens.reduce(
+          (_acc, { token }) => _acc + parseFloat(token.value),
+          0
+        ),
+      0
+    );
+
+    return {
+      header: {
+        title: 'Prepaid Cards',
+        totalItems: prepaidCards.length,
+        totalValue: `$${total.toFixed(2)}`,
+      },
+      name: 'prepaidCard',
+      data: prepaidCards,
+      // eslint-disable-next-line react/display-name
+      renderItem: ({ item }) => {
+        const balances = item.tokens.map(({ tokenAddress, token }) => (
+          <View
+            key={tokenAddress}
+            style={{
+              paddingVertical: 5,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ paddingRight: 12 }}>
+                <ReactCoinIcon size={40} symbol={token.symbol} />
+              </View>
+              <View>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  {token.name}
+                </Text>
+                <Text style={{ color: 'gray' }}>
+                  {token.value} {token.symbol}
+                </Text>
+              </View>
+            </View>
+            <View>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                {' '}
+                ${parseFloat(token.value).toFixed(2)} USD
+              </Text>
+            </View>
+          </View>
+        ));
+        return (
+          <CopyTooltip
+            textToCopy={item.address}
+            tooltipText="Copy safe address to clipboard"
+          >
+            <View
+              style={{
+                padding: 10,
+                paddingHorizontal: 18,
+                marginBottom: 6,
+                marginHorizontal: 22,
+                backgroundColor: '#ffffff',
+                borderRadius: 5,
+              }}
+            >
+              <View style={{ justifyContent: 'center' }}>{balances}</View>
+            </View>
+          </CopyTooltip>
+        );
+      },
+    };
+  }
+);
+
+const safesSectionSelector = createSelector(
+  [allDepotsSelector],
+  (depots = []) => {
+    const total = depots.reduce(
+      (acc, prepaidCard) =>
+        acc +
+        prepaidCard.tokens.reduce(
+          (_acc, { token }) => _acc + parseFloat(token.value),
+          0
+        ),
+      0
+    );
+
+    return {
+      header: {
+        title: 'Safes',
+        totalItems: depots.length,
+        totalValue: `$${total.toFixed(2)}`,
+      },
+      name: 'safes',
+      data: depots,
+      // eslint-disable-next-line react/display-name
+      renderItem: ({ item }) => {
+        const balances = item.tokens.map(({ tokenAddress, token }) => (
+          <View
+            key={tokenAddress}
+            style={{
+              paddingVertical: 5,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ paddingRight: 12 }}>
+                <ReactCoinIcon size={40} symbol={token.symbol} />
+              </View>
+              <View>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  {token.name}
+                </Text>
+                <Text style={{ color: 'gray' }}>
+                  {token.value} {token.symbol}
+                </Text>
+              </View>
+            </View>
+            <View>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                {' '}
+                ${parseFloat(token.value).toFixed(2)} USD
+              </Text>
+            </View>
+          </View>
+        ));
+        return (
+          <CopyTooltip
+            textToCopy={item.address}
+            tooltipText="Copy depot address to clipboard"
+          >
+            <View
+              style={{
+                padding: 12,
+                paddingHorizontal: 18,
+                marginBottom: 6,
+                marginHorizontal: 22,
+                backgroundColor: '#ffffff',
+                borderRadius: 5,
+              }}
+            >
+              <View style={{ justifyContent: 'center' }}>{balances}</View>
+            </View>
+          </CopyTooltip>
+        );
+      },
+    };
+  }
+);
+
 const balanceSectionSelector = createSelector(
   [
     allAssetsSelector,
@@ -428,6 +595,12 @@ const uniqueTokenFamiliesSelector = createSelector(
 );
 
 export const buildWalletSectionsSelector = createSelector(
-  [balanceSectionSelector, uniqueTokenFamiliesSelector, uniswapSectionSelector],
+  [
+    balanceSectionSelector,
+    uniqueTokenFamiliesSelector,
+    uniswapSectionSelector,
+    safesSectionSelector,
+    prepaidCardsSectionSelector,
+  ],
   buildWalletSections
 );
