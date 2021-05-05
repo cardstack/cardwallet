@@ -1,30 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
-import styled from 'styled-components';
+import { Alert, TouchableWithoutFeedback } from 'react-native';
 import { Row } from '../layout';
 import ExchangeInput from './ExchangeInput';
 import { Text } from '@cardstack/components';
 import { useColorForAsset } from '@rainbow-me/hooks';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
-import { fonts } from '@rainbow-me/styles';
-
-const CurrencySymbol = styled(Text).attrs(({ height, color }) => ({
-  color: color,
-  letterSpacing: 'roundedTight',
-  lineHeight: height,
-  size: 'larger',
-  weight: 'regular',
-}))`
-  ${android ? 'margin-bottom: 1.5;' : ''};
-`;
-
-const NativeInput = styled(ExchangeInput).attrs({
-  letterSpacing: fonts.letterSpacing.roundedTight,
-  size: fonts.size.larger,
-  weight: fonts.weight.regular,
-})`
-  height: ${({ height }) => height};
-`;
 
 const ExchangeNativeField = (
   {
@@ -58,14 +38,21 @@ const ExchangeNativeField = (
     [onFocus]
   );
 
-  const color = useMemo(() => {
-    return isFocused ? 'black' : 'settingsGrayDark';
-  }, [isFocused]);
+  const setTextStyle = useMemo(() => {
+    const nativeAmountExists =
+      typeof nativeAmount === 'string' && nativeAmount.length > 0;
+
+    const isActive = isFocused || nativeAmountExists;
+    return {
+      color: isActive ? 'black' : 'settingsGrayDark',
+      opacity: isActive ? 1 : 0.5,
+    };
+  }, [isFocused, nativeAmount]);
 
   return (
     <TouchableWithoutFeedback onPress={handleFocusNativeField}>
       <Row align="center" flex={1} height={height}>
-        <Text color={color} fontWeight="100" height={height}>
+        <Text fontWeight="100" height={height} {...setTextStyle}>
           {symbol}
         </Text>
         <ExchangeInput

@@ -19,11 +19,9 @@ import {
   ConfirmExchangeButton,
   ExchangeInputField,
   ExchangeModalHeader,
-  ExchangeNotch,
   ExchangeOutputField,
   SlippageWarning,
 } from '../components/exchange';
-import SwapInfo from '../components/exchange/SwapInfo';
 import { FloatingPanel, FloatingPanels } from '../components/floating-panels';
 import { GasSpeedButton } from '../components/gas';
 import { Centered, KeyboardFixedOpenLayout } from '../components/layout';
@@ -581,13 +579,6 @@ export default function ExchangeModal({
               )}
             </Container>
           </FloatingPanel>
-          {isDeposit && (
-            <SwapInfo
-              amount={(inputAmount > 0 && outputAmountDisplay) || null}
-              asset={outputCurrency}
-              testID="swap-info-button"
-            />
-          )}
           {isSlippageWarningVisible && <SlippageWarning slippage={slippage} />}
           {showConfirmButton && (
             <Fragment>
