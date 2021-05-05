@@ -26,8 +26,7 @@ const CoinIcon = ({
   const color = useColorForAsset({ address });
   const { colors, isDarkMode } = useTheme();
 
-  const forceFallback = !isETH(address) && isNil(tokenMetadata);
-
+  const forceFallback = !symbol && !isETH(address) && isNil(tokenMetadata);
   return (
     <Fragment>
       {(isPinned || isHidden) && <CoinIconIndicator isPinned={isPinned} />}
