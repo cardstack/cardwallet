@@ -34,6 +34,7 @@ const HeaderTitle = styled(Text).attrs(({ color, theme: { colors } }) => ({
   letterSpacing: 'roundedMedium',
   size: 'smedium',
   weight: 'heavy',
+  width: '100%',
 }))``;
 
 const HeaderTitleGradient = styled(GradientText).attrs({
@@ -42,10 +43,11 @@ const HeaderTitleGradient = styled(GradientText).attrs({
   size: 'smedium',
   steps: [0, 0.2867132868, 1],
   weight: 'heavy',
+  width: '100%',
 })``;
 
 const HeaderTitleWrapper = styled.View`
-  width: ${android ? '150' : '143'}px;
+  width: 100%;
 `;
 
 const ExchangeAssetSectionListHeader = ({ section }) => {
