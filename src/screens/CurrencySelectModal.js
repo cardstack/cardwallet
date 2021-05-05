@@ -23,6 +23,7 @@ import {
 } from '../components/exchange';
 import { Column, KeyboardFixedOpenLayout } from '../components/layout';
 import { Modal } from '../components/modal';
+import { Container } from '@cardstack/components';
 import { addHexPrefix } from '@rainbow-me/handlers/web3';
 import CurrencySelectionTypes from '@rainbow-me/helpers/currencySelectionTypes';
 import tokenSectionTypes from '@rainbow-me/helpers/tokenSectionTypes';
@@ -339,15 +340,17 @@ export default function CurrencySelectModal() {
               testID="currency-select-search"
             />
             {type === null || type === undefined ? null : (
-              <CurrencySelectionList
-                itemProps={itemProps}
-                listItems={currencyList}
-                loading={loadingAllTokens}
-                query={searchQueryForSearch}
-                showList={isFocused}
-                testID="currency-select-list"
-                type={type}
-              />
+              <Container flex={1} marginTop={4}>
+                <CurrencySelectionList
+                  itemProps={itemProps}
+                  listItems={currencyList}
+                  loading={loadingAllTokens}
+                  query={searchQueryForSearch}
+                  showList={isFocused}
+                  testID="currency-select-list"
+                  type={type}
+                />
+              </Container>
             )}
           </Column>
           <GestureBlocker type="bottom" />
