@@ -29,30 +29,29 @@ const ExchangeNativeField = (
     ref,
   ]);
 
-  const handleBlur = useCallback(() => setIsFocused(false), []);
+  const handleBlur = useCallback(() => setIsFocused(false), [setIsFocused]);
   const handleFocus = useCallback(
     event => {
       setIsFocused(true);
       if (onFocus) onFocus(event);
     },
-    [onFocus]
+    [onFocus, setIsFocused]
   );
 
   const setTextStyle = useMemo(() => {
     const nativeAmountExists =
       typeof nativeAmount === 'string' && nativeAmount.length > 0;
 
-    const isActive = isFocused || nativeAmountExists;
     return {
-      color: isActive ? 'black' : 'settingsGrayDark',
-      opacity: isActive ? 1 : 0.5,
+      color: nativeAmountExists ? 'black' : 'settingsGrayDark',
+      opacity: nativeAmountExists ? 1 : 0.5,
     };
-  }, [isFocused, nativeAmount]);
+  }, [nativeAmount]);
 
   return (
     <TouchableWithoutFeedback onPress={handleFocusNativeField}>
       <Row align="center" flex={1} height={height}>
-        <Text fontWeight="100" height={height} {...setTextStyle}>
+        <Text fontSize={22} fontWeight="100" height={height} {...setTextStyle}>
           {symbol}
         </Text>
         <ExchangeInput
@@ -66,7 +65,7 @@ const ExchangeNativeField = (
           placeholder={placeholder}
           ref={ref}
           selectionColor={colorForAsset}
-          size={18}
+          size={22}
           testID={nativeAmount ? `${testID}-${nativeAmount}` : testID}
           value={nativeAmount}
           weight="100"

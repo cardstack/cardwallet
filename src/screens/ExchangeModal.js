@@ -25,7 +25,7 @@ import {
 import { FloatingPanel, FloatingPanels } from '../components/floating-panels';
 import { GasSpeedButton } from '../components/gas';
 import { Centered, KeyboardFixedOpenLayout } from '../components/layout';
-import { Container } from '@cardstack/components';
+import { CenteredContainer, Container } from '@cardstack/components';
 import ExchangeModalTypes from '@rainbow-me/helpers/exchangeModalTypes';
 import isKeyboardOpen from '@rainbow-me/helpers/isKeyboardOpen';
 import {
@@ -491,12 +491,11 @@ export default function ExchangeModal({
 
   return (
     <Wrapper>
-      <Centered
+      <CenteredContainer
         {...(ios
           ? position.sizeAsObject('100%')
           : { style: { height: 500, top: 0 } })}
         backgroundColor={colors.transparent}
-        direction="column"
       >
         <AnimatedFloatingPanels
           margin={0}
@@ -532,38 +531,40 @@ export default function ExchangeModal({
           }}
         >
           <FloatingPanel
-            overflow="visible"
+            overflow="hidden"
             paddingBottom={showOutputField ? 0 : 26}
             radius={39}
             testID={testID}
           >
-            <ExchangeModalHeader
-              onPressDetails={navigateToSwapDetailsModal}
-              showDetailsButton={showDetailsButton}
-              testID={testID + '-header'}
-              title={inputHeaderTitle}
-            />
+            <Container paddingHorizontal={4}>
+              <ExchangeModalHeader
+                onPressDetails={navigateToSwapDetailsModal}
+                showDetailsButton={showDetailsButton}
+                testID={testID + '-header'}
+                title={inputHeaderTitle}
+              />
 
-            <ExchangeInputField
-              disableInputCurrencySelection={isWithdrawal}
-              inputAmount={inputAmountDisplay}
-              inputCurrencyAddress={inputCurrency?.address}
-              inputCurrencySymbol={inputCurrency?.symbol}
-              inputFieldRef={inputFieldRef}
-              nativeAmount={nativeAmount}
-              nativeCurrency={nativeCurrency}
-              nativeFieldRef={nativeFieldRef}
-              onFocus={handleFocus}
-              onPressMaxBalance={handlePressMaxBalance}
-              onPressSelectInputCurrency={navigateToSelectInputCurrency}
-              setInputAmount={updateInputAmount}
-              setNativeAmount={updateNativeAmount}
-              testID={testID + '-input'}
-            />
+              <ExchangeInputField
+                disableInputCurrencySelection={isWithdrawal}
+                inputAmount={inputAmountDisplay}
+                inputCurrencyAddress={inputCurrency?.address}
+                inputCurrencySymbol={inputCurrency?.symbol}
+                inputFieldRef={inputFieldRef}
+                nativeAmount={nativeAmount}
+                nativeCurrency={nativeCurrency}
+                nativeFieldRef={nativeFieldRef}
+                onFocus={handleFocus}
+                onPressMaxBalance={handlePressMaxBalance}
+                onPressSelectInputCurrency={navigateToSelectInputCurrency}
+                setInputAmount={updateInputAmount}
+                setNativeAmount={updateNativeAmount}
+                testID={testID + '-input'}
+              />
+            </Container>
             <Container
               backgroundColor="backgroundGray"
-              borderBottomEndRadius={39}
-              borderBottomStartRadius={39}
+              paddingHorizontal={4}
+              position="relative"
             >
               {showOutputField && (
                 <ExchangeOutputField
@@ -582,7 +583,7 @@ export default function ExchangeModal({
           {isSlippageWarningVisible && <SlippageWarning slippage={slippage} />}
           {showConfirmButton && (
             <Fragment>
-              <Centered
+              <CenteredContainer
                 flexShrink={0}
                 paddingHorizontal={15}
                 paddingTop={24}
@@ -600,7 +601,7 @@ export default function ExchangeModal({
                   testID={testID + '-confirm'}
                   type={type}
                 />
-              </Centered>
+              </CenteredContainer>
             </Fragment>
           )}
           <GasSpeedButton
@@ -610,7 +611,7 @@ export default function ExchangeModal({
             type={type}
           />
         </AnimatedFloatingPanels>
-      </Centered>
+      </CenteredContainer>
     </Wrapper>
   );
 }

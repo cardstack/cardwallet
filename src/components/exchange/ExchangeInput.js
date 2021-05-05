@@ -2,8 +2,7 @@ import React, { Fragment, useCallback, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import styled from 'styled-components';
 
-import { Text } from '../text';
-import { InputMask } from '@cardstack/components';
+import { InputMask, Text } from '@cardstack/components';
 import { magicMemo } from '@rainbow-me/utils';
 
 const AndroidMaskWrapper = styled.View`

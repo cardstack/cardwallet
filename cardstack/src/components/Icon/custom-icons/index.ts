@@ -1,4 +1,5 @@
 export const customIcons = {
+  'arrow-max': require('./arrow-max').default,
   'check-circle': require('./check-circle').default,
   'face-id': require('./face-id').default,
   'info-blue': require('./info-blue').default,
