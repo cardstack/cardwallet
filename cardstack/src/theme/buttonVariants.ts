@@ -29,7 +29,8 @@ const small = {
 };
 
 const extraSmall = {
-  maxWidth: 72,
+  width: (screenWidth - 56) / 4,
+  paddingHorizontal: 0,
   textStyle: {
     variant: 'smallButton',
   },
@@ -38,10 +39,7 @@ const extraSmall = {
 const tiny = {
   height: 27,
   paddingVertical: 0,
-  width: 72,
-  textStyle: {
-    variant: 'smallButton',
-  },
+  ...extraSmall,
 };
 
 const dark = {
@@ -89,8 +87,8 @@ export const buttonVariants = {
     ...tertiary,
   },
 
-  extraSmallDark: {
-    ...extraSmall,
+  tinyDark: {
+    ...tiny,
     ...dark,
     textStyle: {
       ...extraSmall.textStyle,
@@ -101,7 +99,9 @@ export const buttonVariants = {
     ...extraSmall,
     ...tertiary,
   },
-  extraSmall,
+  extraSmall: {
+    ...extraSmall,
+  },
   tiny,
   square: {
     ...blue,

@@ -53,7 +53,7 @@ const AddContactButton = ({ edit, onPress }) => {
         </Transitioning.View>
       ) : (
         <Transitioning.View ref={addButtonRef} transition={transition}>
-          <Button onPress={onPress} variant="extraSmallDark">
+          <Button onPress={onPress} variant="tinyDark">
             Add
           </Button>
         </Transitioning.View>

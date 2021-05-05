@@ -40,8 +40,8 @@ storiesOf('Button', module).add('Default', () => (
         <Button variant="small">Small 1</Button>
         <Button variant="small">Small 2</Button>
       </Container>
-      <Button variant="extraSmall">XSmall</Button>
-      <Button variant="extraSmallDark">XSmallDark</Button>
+      <Button variant="extraSmallTertiary">XSmall</Button>
+      <Button variant="tinyDark">tinyDark</Button>
     </Container>
   </Container>
 ));

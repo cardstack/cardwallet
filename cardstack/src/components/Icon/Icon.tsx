@@ -2,6 +2,7 @@ import { useTheme } from '@shopify/restyle';
 import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { CustomIconNames, customIcons } from './custom-icons';
 import { FeatherIconNames } from './feather-icon-names';
 import { ColorTypes, Theme } from '@cardstack/theme';
@@ -24,6 +25,7 @@ export interface IconProps extends ContainerProps {
   name: IconName;
   color?: ColorTypes;
   strokeWidth?: number;
+  onPress?: Function;
 }
 
 export const Icon = ({
@@ -31,6 +33,7 @@ export const Icon = ({
   size,
   name,
   color,
+  onPress,
   ...props
 }: IconProps) => {
   const theme = useTheme<Theme>();

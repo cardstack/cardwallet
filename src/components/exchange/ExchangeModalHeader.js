@@ -3,13 +3,11 @@ import { Transition, Transitioning } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { usePrevious } from '../../hooks';
 import { ButtonPressAnimation } from '../animations';
-import { Icon } from '../icons';
-import { Column } from '../layout';
 import { SheetHandle } from '../sheet';
-import { Text } from '../text';
+import { Container, Icon, Text } from '@cardstack/components';
 import { padding, position } from '@rainbow-me/styles';
 
-const SheetHandleMargin = 6;
+const SheetHandleMargin = 3;
 
 const transition = (
   <Transition.Sequence>
@@ -21,22 +19,6 @@ const transition = (
     </Transition.Together>
   </Transition.Sequence>
 );
-
-const InfoButton = styled(ButtonPressAnimation).attrs({
-  opacityTouchable: true,
-  scaleTo: 1.3,
-})`
-  ${padding(0, 19)};
-  ${position.centered};
-  margin-top: ${SheetHandleMargin + 4};
-`;
-
-const InfoButtonIcon = styled(Icon).attrs(({ theme: { colors } }) => ({
-  color: colors.alpha(colors.blueGreyDark, 0.3),
-  name: 'info',
-}))`
-  ${position.size(18)};
-`;
 
 const InfoButtonTransition = styled(Transitioning.View)`
   ${position.centered};
@@ -54,7 +36,7 @@ const ExchangeModalHeader = ({
 }) => {
   const transitionRef = useRef();
   const prevShowDetailsButton = usePrevious(showDetailsButton);
-  const { colors } = useTheme();
+
   useEffect(() => {
     if (showDetailsButton !== prevShowDetailsButton) {
       transitionRef.current?.animateNextTransition();
@@ -62,25 +44,27 @@ const ExchangeModalHeader = ({
   }, [prevShowDetailsButton, showDetailsButton]);
 
   return (
-    <Column align="center" css={padding(6, 0)} testID={testID}>
+    <Container alignItems="center" css={padding(6, 0)} testID={testID}>
       <SheetHandle marginBottom={SheetHandleMargin} />
-      <Text
-        align="center"
-        color={colors.dark}
-        lineHeight="loose"
-        size="large"
-        weight="heavy"
-      >
+      <Text alignItems="center" color="black" fontWeight="bold" size="medium">
         {title}
       </Text>
       <InfoButtonTransition ref={transitionRef} transition={transition}>
         {showDetailsButton && (
-          <InfoButton onPress={onPressDetails} testID="swap-info-button">
-            <InfoButtonIcon />
-          </InfoButton>
+          <ButtonPressAnimation onPress={onPressDetails}>
+            <Icon
+              alignItems="center"
+              justifyContent="center"
+              marginHorizontal={4}
+              marginTop={SheetHandleMargin}
+              name="info-blue"
+              size={18}
+              testID="swap-info-button"
+            />
+          </ButtonPressAnimation>
         )}
       </InfoButtonTransition>
-    </Column>
+    </Container>
   );
 };
 
