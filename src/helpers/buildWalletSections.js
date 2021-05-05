@@ -10,7 +10,7 @@ import {
 } from 'lodash';
 import React from 'react';
 import ReactCoinIcon from 'react-coin-icon';
-import { LayoutAnimation, Text, View } from 'react-native';
+import { LayoutAnimation, View } from 'react-native';
 import { createSelector } from 'reselect';
 import { AssetListItemSkeleton } from '../components/asset-list';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
@@ -22,7 +22,7 @@ import { compose, withHandlers } from '../utils/recompactAdapters';
 import { buildCoinsList, buildUniqueTokenList } from './assets';
 import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
-import { Icon } from '@cardstack/components';
+import { Text } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -449,20 +449,18 @@ const prepaidCardsSectionSelector = createSelector(
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ paddingRight: 12 }}>
+              <View style={{ paddingRight: 14 }}>
                 <ReactCoinIcon size={40} symbol={token.symbol} />
               </View>
               <View>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                  {token.name}
-                </Text>
-                <Text style={{ color: 'gray' }}>
+                <Text fontWeight="700">{token.name}</Text>
+                <Text variant="subText">
                   {token.value} {token.symbol}
                 </Text>
               </View>
             </View>
             <View>
-              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+              <Text fontWeight="700">
                 {' '}
                 ${parseFloat(token.value).toFixed(2)} USD
               </Text>
@@ -530,7 +528,7 @@ const safesSectionSelector = createSelector(
               address: tokenAddress,
               balance: {
                 amount: token.value,
-                display: token.value,
+                display: `${token.value} ${token.symbol}`,
               },
               native: {
                 balance: {
