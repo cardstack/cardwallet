@@ -21,7 +21,7 @@ export default function ExchangeInputField({
   testID,
 }) {
   return (
-    <Container flex={-1} width="100%" zIndex={1}>
+    <Container flex={-1} marginTop={2} width="100%" zIndex={1}>
       <ExchangeField
         address={inputCurrencyAddress}
         amount={inputAmount}

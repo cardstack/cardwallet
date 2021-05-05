@@ -7,7 +7,12 @@ export default function ExchangeMaxButton({ disabled, onPress, testID }) {
     <ButtonPressAnimation disabled={disabled} onPress={onPress} testID={testID}>
       <Container>
         <Container alignItems="center" flexDirection="row" height={32}>
-          <Icon color="black" iconSize="small" name="arrow-max" />
+          <Icon
+            color="black"
+            iconSize="small"
+            marginRight={2}
+            name="arrow-max"
+          />
           <Text weight="bold">Max</Text>
         </Container>
       </Container>
