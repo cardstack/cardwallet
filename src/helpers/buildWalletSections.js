@@ -518,7 +518,7 @@ const safesSectionSelector = createSelector(
       renderItem: ({ item }) => {
         const { token, tokenAddress } = item;
         const [int, dec] = token.value.split('.');
-        const value = `$${int}.${dec.slice(0, 2)}`;
+        const value = `$${int}.${dec ? dec.slice(0, 2) : '00'}`;
 
         return (
           <TokenItem
