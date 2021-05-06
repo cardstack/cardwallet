@@ -224,7 +224,8 @@ class RecyclerAssetList extends Component {
 
         const balancesIndex = findIndex(
           sections,
-          ({ name }) => name === 'balances'
+          ({ name }) =>
+            name === 'balances' || name === 'safes' || name === 'prepaidCards'
         );
         const collectiblesIndex = findIndex(
           sections,
