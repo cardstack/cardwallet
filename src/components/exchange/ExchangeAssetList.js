@@ -94,7 +94,7 @@ const ExchangeAssetList = ({ itemProps, items, onLayout, query }) => {
     item => {
       Alert.alert(
         `Unverified Token`,
-        'This token has not been verified! Rainbow surfaces all tokens that exist on Uniswap. Anyone can create a token, including fake versions of existing tokens and tokens that claim to represent projects that do not have a token. Please do your own research and be careful when interacting with unverified tokens!',
+        'This token has not been verified! Card Wallet surfaces all tokens that exist on Uniswap. Anyone can create a token, including fake versions of existing tokens and tokens that claim to represent projects that do not have a token. Please do your own research and be careful when interacting with unverified tokens!',
         [
           {
             onPress: () => itemProps.onPress(item),

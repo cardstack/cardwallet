@@ -50,6 +50,17 @@ const dark = {
   },
 };
 
+const invalid = {
+  backgroundColor: 'invalid',
+  borderColor: 'transparent',
+  textStyle: {
+    color: 'white',
+  },
+  disabledTextStyle: {
+    color: 'white',
+  },
+};
+
 export const buttonVariants = {
   defaults: {
     alignItems: 'center',
@@ -103,6 +114,7 @@ export const buttonVariants = {
     ...extraSmall,
   },
   tiny,
+  invalid: { ...invalid },
   square: {
     ...blue,
     height: 92,

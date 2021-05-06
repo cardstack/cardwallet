@@ -54,10 +54,11 @@ const ExchangeModalHeader = ({
           <ButtonPressAnimation onPress={onPressDetails}>
             <Icon
               alignItems="center"
+              color="blueText"
               justifyContent="center"
               marginHorizontal={4}
               marginTop={SheetHandleMargin}
-              name="info-blue"
+              name="info"
               size={18}
               testID="swap-info-button"
             />

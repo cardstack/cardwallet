@@ -19,7 +19,7 @@ const { divide, multiply, proc } = Animated;
 const { ACTIVE, BEGAN, END, FAILED } = State;
 
 const buttonScaleDurationMs = 150;
-const longPressProgressDurationMs = 500; // @christian approves
+const longPressProgressDurationMs = 500;
 
 const animate = (value, { duration = buttonScaleDurationMs, toValue }) =>
   timing(value, {
@@ -163,10 +163,14 @@ class HoldToAuthorizeButton extends PureComponent {
               disabled={disabled}
               iconProps={
                 !android && !disabled && !hideBiometricIcon
-                  ? { name: biometryIconName }
-                  : {}
+                  ? { name: biometryIconName, color: 'black' }
+                  : {
+                      name: 'error',
+                      color: 'white',
+                    }
               }
               loading={android && (isAuthorizing || this.props.isAuthorizing)}
+              variant={disabled ? 'invalid' : null}
             >
               {isAuthorizing || this.props.isAuthorizing
                 ? 'Authorizing'

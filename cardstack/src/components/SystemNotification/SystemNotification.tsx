@@ -18,7 +18,7 @@ const typeToIcon: {
 } = {
   alert: 'warning',
   error: 'error',
-  info: 'info-blue',
+  info: 'info',
 };
 
 export interface SystemNotificationProps {

@@ -586,7 +586,7 @@ export default function ExchangeModal({
               <CenteredContainer
                 flexShrink={0}
                 paddingHorizontal={15}
-                paddingTop={24}
+                paddingTop={12}
                 width="100%"
               >
                 <ConfirmExchangeButton

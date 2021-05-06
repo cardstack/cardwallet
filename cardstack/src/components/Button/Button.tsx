@@ -87,6 +87,7 @@ export const Button = ({
               <Icon
                 color={disabled ? 'blueText' : 'black'}
                 iconSize="medium"
+                marginRight={iconPosition === 'left' ? 3 : 0}
                 {...iconProps}
               />
             )}

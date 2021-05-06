@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
 import { css } from 'styled-components';
 import { ButtonPressAnimation } from '../animations';
 import { CoinIconSize } from '../coin-icon';
@@ -10,33 +9,11 @@ import CoinName from './CoinName';
 import CoinRow from './CoinRow';
 
 import { Container, Icon } from '@cardstack/components';
-import { useDimensions } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
-import { neverRerender } from '@rainbow-me/utils';
+import { haptics, neverRerender } from '@rainbow-me/utils';
 
 const CoinRowPaddingTop = 9.5;
 const CoinRowPaddingBottom = 9.5;
-
-// const FloatingFavoriteEmojis = styled(FloatingEmojis).attrs({
-//   centerVertically: true,
-//   disableHorizontalMovement: true,
-//   disableVerticalMovement: true,
-//   distance: 70,
-//   duration: 400,
-//   emojis: ['glowing_star'],
-//   fadeOut: false,
-//   marginTop: 10.25,
-//   range: [0, 0],
-//   scaleTo: 0,
-//   size: 32,
-//   wiggleFactor: 0,
-// })`
-//   left: ${({ deviceWidth }) => deviceWidth - 52.25};
-//   position: absolute;
-//   right: 0;
-//   top: 0;
-//   z-index: 100;
-// `;
 
 const BottomRow = ({ showBalance, symbol }) =>
   showBalance ? null : <BottomRowText>{symbol}</BottomRowText>;
@@ -56,7 +33,6 @@ const ExchangeCoinRow = ({
   showBalance,
   showFavoriteButton,
 }) => {
-  const { width: deviceWidth } = useDimensions();
   const [localFavorite, setLocalFavorite] = useState(!!item.favorite);
 
   const handlePress = useCallback(() => {
@@ -106,18 +82,16 @@ const ExchangeCoinRow = ({
         <ButtonPressAnimation
           height={CoinIconSize + CoinRowPaddingTop + CoinRowPaddingBottom}
           onPress={() => {
-            // setLocalFavorite(prevLocalFavorite => {
-            //   const newLocalFavorite = !prevLocalFavorite;
-            //   if (newLocalFavorite) {
-            //     haptics.notificationSuccess();
-            //     // onNewEmoji();
-            //   } else {
-            //     haptics.selection();
-            //   }
-            //   onFavoriteAsset(item, newLocalFavorite);
-            //   return newLocalFavorite;
-            // });
-            Alert.alert('hello');
+            setLocalFavorite(prevLocalFavorite => {
+              const newLocalFavorite = !prevLocalFavorite;
+              if (newLocalFavorite) {
+                haptics.notificationSuccess();
+              } else {
+                haptics.selection();
+              }
+              onFavoriteAsset(item, newLocalFavorite);
+              return newLocalFavorite;
+            });
           }}
         >
           <Container flex={-1}>
@@ -131,27 +105,6 @@ const ExchangeCoinRow = ({
             />
           </Container>
         </ButtonPressAnimation>
-
-        // <FloatingFavoriteEmojis deviceWidth={deviceWidth}>
-        //   {({ onNewEmoji }) => (
-        //     <CoinRowFavoriteButton
-        //       isFavorited={localFavorite}
-        //       onPress={() => {
-        //         setLocalFavorite(prevLocalFavorite => {
-        //           const newLocalFavorite = !prevLocalFavorite;
-        //           if (newLocalFavorite) {
-        //             haptics.notificationSuccess();
-        //             onNewEmoji();
-        //           } else {
-        //             haptics.selection();
-        //           }
-        //           onFavoriteAsset(item, newLocalFavorite);
-        //           return newLocalFavorite;
-        //         });
-        //       }}
-        //     />
-        //   )}
-        // </FloatingFavoriteEmojis>
       )}
     </Container>
   );

@@ -1,24 +1,17 @@
 import * as React from 'react';
-import Svg, { SvgProps, Circle, Path } from 'react-native-svg';
+import Svg, { SvgProps, Path } from 'react-native-svg';
 
 function SvgComponent(props: SvgProps) {
   return (
     <Svg
       data-name="Icon_System Error"
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
+      viewBox="0 0 500 500"
       xmlns="http://www.w3.org/2000/svg"
       width={props.width || 24.108}
       height={props.height || 26.11}
-      viewBox="0 0 20 20"
+      fill={props.color || '#fff'}
     >
-      <Circle data-name="Ellipse 24" cx={10} cy={10} r={10} fill="red" />
-      <Path
-        data-name="Path 382"
-        d="M11.254 10.864H8.911l-.49-6.924h3.322zm-2.871 3.285a1.61 1.61 0 01.432-1.218 1.752 1.752 0 011.258-.415 1.7 1.7 0 011.234.423 1.606 1.606 0 01.436 1.21 1.606 1.606 0 01-.442 1.2 1.672 1.672 0 01-1.228.432 1.722 1.722 0 01-1.248-.427 1.6 1.6 0 01-.442-1.205z"
-        fill="#fff"
-        stroke="rgba(0,0,0,0)"
-      />
+      <Path d="M249.511 0A250 250 0 000 250a250 250 0 00250 250 250 250 0 00250-250A250 250 0 00250 0a250 250 0 00-.487 0zm-39.014 98.484h83.057l-12.207 173.098h-58.594zm37.94 214.308a43.8 43.8 0 013.369 0 42.5 42.5 0 0130.86 10.595 40.15 40.15 0 0110.888 30.225 40.15 40.15 0 01-11.035 30.03 41.8 41.8 0 01-30.713 10.79 43.05 43.05 0 01-31.201-10.693 40 40 0 01-11.035-30.127 40.25 40.25 0 0110.79-30.42 43.8 43.8 0 0128.077-10.498z" />
     </Svg>
   );
 }
