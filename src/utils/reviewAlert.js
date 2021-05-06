@@ -29,7 +29,7 @@ export default async function maybeReviewAlert() {
   AsyncStorage.setItem(REVIEW_ASKED_KEY, Date.now().toString());
 
   Alert.alert(
-    `Are you enjoying Cardstack? 🥰`,
+    `Are you enjoying Card Wallet? 🥰`,
     'Leave a review on the App Store!',
     [
       {
