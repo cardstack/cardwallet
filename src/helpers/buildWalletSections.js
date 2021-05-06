@@ -1,3 +1,4 @@
+import { ExchangeRate } from '@cardstack/cardpay-sdk';
 import lang from 'i18n-js';
 import {
   compact,
@@ -12,6 +13,7 @@ import React from 'react';
 import ReactCoinIcon from 'react-coin-icon';
 import { LayoutAnimation, View } from 'react-native';
 import { createSelector } from 'reselect';
+import Web3 from 'web3';
 import { AssetListItemSkeleton } from '../components/asset-list';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import CopyTooltip from '../components/copy-tooltip';
@@ -23,6 +25,7 @@ import { buildCoinsList, buildUniqueTokenList } from './assets';
 import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
 import { Text } from '@cardstack/components';
+import { web3Provider } from '@rainbow-me/handlers/web3';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -537,8 +540,8 @@ const safesSectionSelector = createSelector(
                 },
                 change: '',
                 price: {
-                  amount: 1,
-                  display: '1.00',
+                  amount: item.price,
+                  display: `$${item.price.toFixed(2)}`,
                 },
               },
               symbol: token.symbol,
