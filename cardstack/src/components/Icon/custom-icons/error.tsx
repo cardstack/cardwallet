@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
 function SvgComponent(props: SvgProps) {
   return (
     <Svg
+      //@ts-ignore
+      xmlns="http://www.w3.org/2000/svg"
       data-name="Icon_System Error"
       viewBox="0 0 500 500"
-      xmlns="http://www.w3.org/2000/svg"
       width={props.width || 24.108}
       height={props.height || 26.11}
       fill={props.color || '#fff'}
