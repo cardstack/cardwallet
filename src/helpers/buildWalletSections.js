@@ -10,7 +10,7 @@ import {
 } from 'lodash';
 import React from 'react';
 import ReactCoinIcon from 'react-coin-icon';
-import { LayoutAnimation, Text, View } from 'react-native';
+import { LayoutAnimation, View } from 'react-native';
 import { createSelector } from 'reselect';
 import { AssetListItemSkeleton } from '../components/asset-list';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
@@ -22,7 +22,7 @@ import { compose, withHandlers } from '../utils/recompactAdapters';
 import { buildCoinsList, buildUniqueTokenList } from './assets';
 import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
-import { Icon } from '@cardstack/components';
+import { Text } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -140,6 +140,7 @@ const buildWalletSections = (
   prepaidCardSection
 ) => {
   const sections = [
+    addEth(balanceSection),
     uniswapSection,
     uniqueTokenFamiliesSection,
     depotSection,
@@ -148,7 +149,7 @@ const buildWalletSections = (
 
   const filteredSections =
     filterWalletSections(sections).length > 0
-      ? [addEth(balanceSection), ...filterWalletSections(sections)]
+      ? filterWalletSections(sections)
       : filterWalletSections([balanceSection]);
   const isEmpty = !filteredSections.length;
 
@@ -434,7 +435,7 @@ const prepaidCardsSectionSelector = createSelector(
         totalItems: prepaidCards.length,
         totalValue: `$${total.toFixed(2)}`,
       },
-      name: 'prepaidCard',
+      name: 'prepaidCards',
       data: prepaidCards,
       // eslint-disable-next-line react/display-name
       renderItem: ({ item }) => {
@@ -448,20 +449,18 @@ const prepaidCardsSectionSelector = createSelector(
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ paddingRight: 12 }}>
+              <View style={{ paddingRight: 14 }}>
                 <ReactCoinIcon size={40} symbol={token.symbol} />
               </View>
               <View>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                  {token.name}
-                </Text>
-                <Text style={{ color: 'gray' }}>
+                <Text fontWeight="700">{token.name}</Text>
+                <Text variant="subText">
                   {token.value} {token.symbol}
                 </Text>
               </View>
             </View>
             <View>
-              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+              <Text fontWeight="700">
                 {' '}
                 ${parseFloat(token.value).toFixed(2)} USD
               </Text>
@@ -476,11 +475,11 @@ const prepaidCardsSectionSelector = createSelector(
             <View
               style={{
                 padding: 10,
-                paddingHorizontal: 18,
+                paddingHorizontal: 16,
                 marginBottom: 6,
                 marginHorizontal: 22,
                 backgroundColor: '#ffffff',
-                borderRadius: 5,
+                borderRadius: 10,
               }}
             >
               <View style={{ justifyContent: 'center' }}>{balances}</View>
@@ -505,64 +504,54 @@ const safesSectionSelector = createSelector(
       0
     );
 
+    const tokens = depots.reduce((acc, depot) => acc.concat(depot.tokens), []);
+
     return {
       header: {
-        title: 'Safes',
+        title: 'Balances',
         totalItems: depots.length,
         totalValue: `$${total.toFixed(2)}`,
       },
       name: 'safes',
-      data: depots,
+      data: tokens,
       // eslint-disable-next-line react/display-name
       renderItem: ({ item }) => {
-        const balances = item.tokens.map(({ tokenAddress, token }) => (
-          <View
-            key={tokenAddress}
-            style={{
-              paddingVertical: 5,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ paddingRight: 12 }}>
-                <ReactCoinIcon size={40} symbol={token.symbol} />
-              </View>
-              <View>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                  {token.name}
-                </Text>
-                <Text style={{ color: 'gray' }}>
-                  {token.value} {token.symbol}
-                </Text>
-              </View>
-            </View>
-            <View>
-              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                {' '}
-                ${parseFloat(token.value).toFixed(2)} USD
-              </Text>
-            </View>
-          </View>
-        ));
+        const { token, tokenAddress } = item;
+        const [int, dec] = token.value.split('.');
+        const value = `$${int}.${dec ? dec.slice(0, 2) : '00'}`;
+
         return (
-          <CopyTooltip
-            textToCopy={item.address}
-            tooltipText="Copy depot address to clipboard"
-          >
-            <View
-              style={{
-                padding: 12,
-                paddingHorizontal: 18,
-                marginBottom: 6,
-                marginHorizontal: 22,
-                backgroundColor: '#ffffff',
-                borderRadius: 5,
-              }}
-            >
-              <View style={{ justifyContent: 'center' }}>{balances}</View>
-            </View>
-          </CopyTooltip>
+          <TokenItem
+            item={{
+              isPinned: false,
+              name: token.name,
+              address: tokenAddress,
+              balance: {
+                amount: token.value,
+                display: `${token.value} ${token.symbol}`,
+              },
+              native: {
+                balance: {
+                  amount: token.value,
+                  display: value,
+                },
+                change: '',
+                price: {
+                  amount: 1,
+                  display: '1.00',
+                },
+              },
+              symbol: token.symbol,
+              price: {
+                changed_at: 0,
+                relative_change_24h: 0,
+                value: 0,
+              },
+            }}
+            key={tokenAddress}
+            {...item}
+            assetType="token"
+          />
         );
       },
     };

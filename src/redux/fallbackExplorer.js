@@ -323,6 +323,16 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         accountAddress
       );
 
+      dispatch(
+        addressAssetsReceived({
+          meta: {
+            address: accountAddress,
+            currency: 'usd',
+            status: 'ok',
+          },
+          payload: { assets: [] },
+        })
+      );
       dispatch(gnosisSafesReceieved({ depots, prepaidCards }));
     }
 

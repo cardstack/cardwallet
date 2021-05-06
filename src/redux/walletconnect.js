@@ -61,7 +61,7 @@ const getNativeOptions = async () => {
 
   const nativeOptions = {
     clientMeta: {
-      description: 'Cardstack makes exploring xDai fun and accessible',
+      description: 'Card Wallet makes exploring xDai fun and accessible',
       icons: [
         'https://assets.coingecko.com/coins/images/3247/small/cardstack.png?1547037769',
       ],
