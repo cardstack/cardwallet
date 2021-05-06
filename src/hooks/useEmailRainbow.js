@@ -13,7 +13,7 @@ export default function useEmailRainbow({
   const emailOptions = useMemo(
     () => ({
       recipients: [emailAddress],
-      subject: `Card Wallet ${upperFirst(subject)}`,
+      subject: `Cardstack ${upperFirst(subject)}`,
     }),
     [emailAddress, subject]
   );
