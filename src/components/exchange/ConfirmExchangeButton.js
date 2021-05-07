@@ -28,7 +28,7 @@ const ConfirmExchangeButton = ({
       ? 'Hold to Deposit'
       : type === ExchangeModalTypes.withdrawal
       ? 'Hold to Withdraw '
-      : 'Tap to Swap';
+      : 'Hold to Swap';
   if (!isSufficientBalance) {
     label = 'Insufficient Funds';
   } else if (!isSufficientLiquidity) {

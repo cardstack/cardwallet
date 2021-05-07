@@ -4,7 +4,6 @@ import { CoinIcon, CoinIconGroup, CoinIconSize } from '../coin-icon';
 import { Column, Row } from '../layout';
 import { Container } from '@cardstack/components';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { padding } from '@rainbow-me/styles';
 
 const CoinRowVerticalMargin = 12;
 const CoinRowPaddingTop = 9;
@@ -14,15 +13,6 @@ export const CoinRowHeight =
   CoinRowPaddingTop +
   CoinRowPaddingBottom +
   CoinRowVerticalMargin * 2;
-
-// const Container = styled(Row).attrs({
-//   align: 'center',
-//   grow: 0,
-//   shrink: 1,
-// })`
-//   ${padding(CoinRowPaddingTop, 19, CoinRowPaddingBottom)};
-//   width: 100%;
-// `;
 
 const Content = styled(Column).attrs({ justify: 'space-between' })`
   flex: 1;
