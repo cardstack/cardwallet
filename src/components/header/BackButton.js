@@ -53,11 +53,12 @@ export default function BackButton({
       throttle={throttle}
       transformOrigin={direction}
     >
-      <Container {...props} textChevron={textChevron}>
+      <Container {...props} justifyContent="center" textChevron={textChevron}>
         {textChevron ? (
           <IconText color={colors.white}>←</IconText>
         ) : (
           <Icon
+            alignSelf="center"
             color={color || 'white'}
             iconSize="xl"
             name={`chevron-${direction}`}

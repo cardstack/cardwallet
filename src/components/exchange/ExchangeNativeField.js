@@ -1,30 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
-import styled from 'styled-components';
+import { Alert, TouchableWithoutFeedback } from 'react-native';
 import { Row } from '../layout';
-import { Text } from '../text';
 import ExchangeInput from './ExchangeInput';
+import { Text } from '@cardstack/components';
 import { useColorForAsset } from '@rainbow-me/hooks';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
-import { fonts } from '@rainbow-me/styles';
-
-const CurrencySymbol = styled(Text).attrs(({ height, color }) => ({
-  color: color,
-  letterSpacing: 'roundedTight',
-  lineHeight: height,
-  size: 'larger',
-  weight: 'regular',
-}))`
-  ${android ? 'margin-bottom: 1.5;' : ''};
-`;
-
-const NativeInput = styled(ExchangeInput).attrs({
-  letterSpacing: fonts.letterSpacing.roundedTight,
-  size: fonts.size.larger,
-  weight: fonts.weight.regular,
-})`
-  height: ${({ height }) => height};
-`;
 
 const ExchangeNativeField = (
   {
@@ -49,36 +29,32 @@ const ExchangeNativeField = (
     ref,
   ]);
 
-  const handleBlur = useCallback(() => setIsFocused(false), []);
+  const handleBlur = useCallback(() => setIsFocused(false), [setIsFocused]);
   const handleFocus = useCallback(
     event => {
       setIsFocused(true);
       if (onFocus) onFocus(event);
     },
-    [onFocus]
+    [onFocus, setIsFocused]
   );
-  const { colors } = useTheme();
 
-  const nativeAmountColor = useMemo(() => {
+  const setTextStyle = useMemo(() => {
     const nativeAmountExists =
       typeof nativeAmount === 'string' && nativeAmount.length > 0;
 
-    const color = isFocused ? colors.dark : colors.blueGreyDark;
-    const opacity = isFocused ? 1 : nativeAmountExists ? 0.5 : 0.3;
-
-    return colors.alpha(color, opacity);
-  }, [colors, isFocused, nativeAmount]);
+    return {
+      color: nativeAmountExists ? 'black' : 'settingsGrayDark',
+      opacity: nativeAmountExists ? 1 : 0.5,
+    };
+  }, [nativeAmount]);
 
   return (
     <TouchableWithoutFeedback onPress={handleFocusNativeField}>
       <Row align="center" flex={1} height={height}>
-        <CurrencySymbol
-          // color={nativeAmountColor}
-          height={height}
-        >
+        <Text fontSize={22} fontWeight="100" height={height} {...setTextStyle}>
           {symbol}
-        </CurrencySymbol>
-        <NativeInput
+        </Text>
+        <ExchangeInput
           // color={nativeAmountColor}
           editable={editable}
           height={android ? height : 58}
@@ -89,8 +65,10 @@ const ExchangeNativeField = (
           placeholder={placeholder}
           ref={ref}
           selectionColor={colorForAsset}
+          size={22}
           testID={nativeAmount ? `${testID}-${nativeAmount}` : testID}
           value={nativeAmount}
+          weight="100"
         />
       </Row>
     </TouchableWithoutFeedback>

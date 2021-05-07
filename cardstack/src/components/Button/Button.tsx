@@ -27,10 +27,13 @@ interface ButtonProps extends RestyleProps {
   children: ReactNode;
   disabled?: boolean;
   iconProps?: IconProps;
+  iconPosition?: IconPosition;
   small?: boolean;
   onPress?: () => void;
   loading?: boolean;
 }
+
+type IconPosition = 'left' | 'right';
 
 const VariantRestyleComponent = createVariant({
   themeKey: 'buttonVariants',
@@ -50,6 +53,7 @@ export const Button = ({
   children,
   disabled,
   iconProps,
+  iconPosition = 'left',
   loading,
   ...props
 }: ButtonProps) => {
@@ -71,24 +75,26 @@ export const Button = ({
   const disabledTextProps = disabled ? disabledTextStyle : {};
 
   return (
-    <Container backgroundColor="transparent">
+    <Container backgroundColor="transparent" {...props} flex={-1}>
       <AnimatedButton alignItems="center" disabled={disabled} {...props}>
         {loading ? (
           <ActivityIndicator testID="button-loading" />
         ) : (
-          <>
+          <Container
+            flexDirection={iconPosition === 'left' ? 'row' : 'row-reverse'}
+          >
             {iconProps && (
               <Icon
                 color={disabled ? 'blueText' : 'black'}
-                marginRight={3}
                 iconSize="medium"
+                marginRight={iconPosition === 'left' ? 3 : 0}
                 {...iconProps}
               />
             )}
             <Text {...textStyle} {...disabledTextProps}>
               {children}
             </Text>
-          </>
+          </Container>
         )}
       </AnimatedButton>
       {disabled && (

@@ -13,6 +13,14 @@ const secondary = {
   borderColor: 'buttonSecondaryBorder',
 };
 
+const tertiary = {
+  backgroundColor: 'black',
+  borderColor: 'black',
+  textStyle: {
+    color: 'white',
+  },
+};
+
 const small = {
   textStyle: {
     fontSize: 14,
@@ -21,12 +29,17 @@ const small = {
 };
 
 const extraSmall = {
-  height: 27,
-  paddingVertical: 0,
-  width: 72,
+  width: (screenWidth - 56) / 4,
+  paddingHorizontal: 0,
   textStyle: {
     variant: 'smallButton',
   },
+};
+
+const tiny = {
+  height: 27,
+  paddingVertical: 0,
+  ...extraSmall,
 };
 
 const dark = {
@@ -34,6 +47,17 @@ const dark = {
   borderColor: 'transparent',
   textStyle: {
     color: 'blueText',
+  },
+};
+
+const invalid = {
+  backgroundColor: 'invalid',
+  borderColor: 'transparent',
+  textStyle: {
+    color: 'white',
+  },
+  disabledTextStyle: {
+    color: 'white',
   },
 };
 
@@ -57,6 +81,7 @@ export const buttonVariants = {
     width: screenWidth - 40,
   },
   secondary: { ...secondary },
+  tertiary: { ...tertiary },
   dark,
   blue,
   small,
@@ -68,15 +93,28 @@ export const buttonVariants = {
     ...small,
     ...secondary,
   },
-  extraSmallDark: {
-    ...extraSmall,
+  smallTertiary: {
+    ...small,
+    ...tertiary,
+  },
+
+  tinyDark: {
+    ...tiny,
     ...dark,
     textStyle: {
       ...extraSmall.textStyle,
       ...dark.textStyle,
     },
   },
-  extraSmall,
+  extraSmallTertiary: {
+    ...extraSmall,
+    ...tertiary,
+  },
+  extraSmall: {
+    ...extraSmall,
+  },
+  tiny,
+  invalid: { ...invalid },
   square: {
     ...blue,
     height: 92,

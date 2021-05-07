@@ -421,7 +421,7 @@ export default function ImportSeedPhraseSheet() {
             <Button
               disabled={!isClipboardValidSecret}
               onPress={handlePressPasteButton}
-              variant="extraSmallDark"
+              variant="tinyDark"
             >
               Paste
             </Button>

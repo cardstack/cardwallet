@@ -31,7 +31,7 @@ function SvgComponent(props: SvgProps) {
           cy={11}
           r={11}
           transform="translate(-2 -2)"
-          fill="#0069f9"
+          fill={props.fill || '#0069f9'}
         />
         <Path data-name="Path 8472" d="M7.696 15.3V9h2.547v6.3z" fill="#fff" />
         <Circle

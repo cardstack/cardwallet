@@ -24,6 +24,7 @@ export interface IconProps extends ContainerProps {
   name: IconName;
   color?: ColorTypes;
   strokeWidth?: number;
+  onPress?: Function;
 }
 
 export const Icon = ({

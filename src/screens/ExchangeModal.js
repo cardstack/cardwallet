@@ -19,14 +19,13 @@ import {
   ConfirmExchangeButton,
   ExchangeInputField,
   ExchangeModalHeader,
-  ExchangeNotch,
   ExchangeOutputField,
   SlippageWarning,
 } from '../components/exchange';
-import SwapInfo from '../components/exchange/SwapInfo';
 import { FloatingPanel, FloatingPanels } from '../components/floating-panels';
 import { GasSpeedButton } from '../components/gas';
 import { Centered, KeyboardFixedOpenLayout } from '../components/layout';
+import { CenteredContainer, Container } from '@cardstack/components';
 import ExchangeModalTypes from '@rainbow-me/helpers/exchangeModalTypes';
 import isKeyboardOpen from '@rainbow-me/helpers/isKeyboardOpen';
 import {
@@ -492,12 +491,11 @@ export default function ExchangeModal({
 
   return (
     <Wrapper>
-      <Centered
+      <CenteredContainer
         {...(ios
           ? position.sizeAsObject('100%')
           : { style: { height: 500, top: 0 } })}
         backgroundColor={colors.transparent}
-        direction="column"
       >
         <AnimatedFloatingPanels
           margin={0}
@@ -533,61 +531,62 @@ export default function ExchangeModal({
           }}
         >
           <FloatingPanel
-            overflow="visible"
+            overflow="hidden"
             paddingBottom={showOutputField ? 0 : 26}
             radius={39}
             testID={testID}
           >
-            <ExchangeModalHeader
-              onPressDetails={navigateToSwapDetailsModal}
-              showDetailsButton={showDetailsButton}
-              testID={testID + '-header'}
-              title={inputHeaderTitle}
-            />
-            {showOutputField && <ExchangeNotch />}
-            <ExchangeInputField
-              disableInputCurrencySelection={isWithdrawal}
-              inputAmount={inputAmountDisplay}
-              inputCurrencyAddress={inputCurrency?.address}
-              inputCurrencySymbol={inputCurrency?.symbol}
-              inputFieldRef={inputFieldRef}
-              nativeAmount={nativeAmount}
-              nativeCurrency={nativeCurrency}
-              nativeFieldRef={nativeFieldRef}
-              onFocus={handleFocus}
-              onPressMaxBalance={handlePressMaxBalance}
-              onPressSelectInputCurrency={navigateToSelectInputCurrency}
-              setInputAmount={updateInputAmount}
-              setNativeAmount={updateNativeAmount}
-              testID={testID + '-input'}
-            />
-            {showOutputField && (
-              <ExchangeOutputField
-                onFocus={handleFocus}
-                onPressSelectOutputCurrency={navigateToSelectOutputCurrency}
-                outputAmount={outputAmountDisplay}
-                outputCurrencyAddress={outputCurrency?.address}
-                outputCurrencySymbol={outputCurrency?.symbol}
-                outputFieldRef={outputFieldRef}
-                setOutputAmount={updateOutputAmount}
-                testID={testID + '-output'}
+            <Container paddingHorizontal={4}>
+              <ExchangeModalHeader
+                onPressDetails={navigateToSwapDetailsModal}
+                showDetailsButton={showDetailsButton}
+                testID={testID + '-header'}
+                title={inputHeaderTitle}
               />
-            )}
+
+              <ExchangeInputField
+                disableInputCurrencySelection={isWithdrawal}
+                inputAmount={inputAmountDisplay}
+                inputCurrencyAddress={inputCurrency?.address}
+                inputCurrencySymbol={inputCurrency?.symbol}
+                inputFieldRef={inputFieldRef}
+                nativeAmount={nativeAmount}
+                nativeCurrency={nativeCurrency}
+                nativeFieldRef={nativeFieldRef}
+                onFocus={handleFocus}
+                onPressMaxBalance={handlePressMaxBalance}
+                onPressSelectInputCurrency={navigateToSelectInputCurrency}
+                setInputAmount={updateInputAmount}
+                setNativeAmount={updateNativeAmount}
+                testID={testID + '-input'}
+              />
+            </Container>
+            <Container
+              backgroundColor="backgroundGray"
+              paddingHorizontal={4}
+              position="relative"
+            >
+              {showOutputField && (
+                <ExchangeOutputField
+                  onFocus={handleFocus}
+                  onPressSelectOutputCurrency={navigateToSelectOutputCurrency}
+                  outputAmount={outputAmountDisplay}
+                  outputCurrencyAddress={outputCurrency?.address}
+                  outputCurrencySymbol={outputCurrency?.symbol}
+                  outputFieldRef={outputFieldRef}
+                  setOutputAmount={updateOutputAmount}
+                  testID={testID + '-output'}
+                />
+              )}
+            </Container>
           </FloatingPanel>
-          {isDeposit && (
-            <SwapInfo
-              amount={(inputAmount > 0 && outputAmountDisplay) || null}
-              asset={outputCurrency}
-              testID="swap-info-button"
-            />
-          )}
           {isSlippageWarningVisible && <SlippageWarning slippage={slippage} />}
           {showConfirmButton && (
             <Fragment>
-              <Centered
+              <CenteredContainer
                 flexShrink={0}
                 paddingHorizontal={15}
-                paddingTop={24}
+                paddingTop={12}
                 width="100%"
               >
                 <ConfirmExchangeButton
@@ -602,7 +601,7 @@ export default function ExchangeModal({
                   testID={testID + '-confirm'}
                   type={type}
                 />
-              </Centered>
+              </CenteredContainer>
             </Fragment>
           )}
           <GasSpeedButton
@@ -612,7 +611,7 @@ export default function ExchangeModal({
             type={type}
           />
         </AnimatedFloatingPanels>
-      </Centered>
+      </CenteredContainer>
     </Wrapper>
   );
 }
