@@ -10,6 +10,9 @@ on:
         description: 'Github ref to build and release'
         required: true
         default: 'develop'
+  release:
+    types: [created]
+
 jobs:
   release-ios:
     name: Release iOS
@@ -18,10 +21,17 @@ jobs:
       CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
       CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
     steps:
+      - name: Set environment variables
+        env: 
+          DEFAULT_STAGE: beta
+          DEFAULT_REF: ${{ github.event.release.tag_name }}
+        run: |
+          echo "GITHUB_REF=${{ github.event.inputs.githubRef || env.DEFAULT_REF}" >> $GITHUB_REF
+          echo "RELEASE_STAGE=${{ github.event.inputs.releaseStage || env.DEFAULT_STAGE}}" >> $RELEASE_STAGE
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.inputs.githubRef }}
+          ref: ${{ env.GITHUB_REF }}
       - name: Node
         uses: actions/setup-node@v1
         with:
@@ -50,7 +60,7 @@ jobs:
         run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }}"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          FASTLANE_STAGE: ${{ github.event.inputs.releaseStage }}
+          FASTLANE_STAGE: ${{ env.RELEASE_STAGE }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_GIT_URL: ${{ env.CRYPTEX_GIT_URL }}
           MATCH_PASSWORD: ${{ env.CRYPTEX_PASSWORD }}
