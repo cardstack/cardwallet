@@ -26,8 +26,8 @@ jobs:
           DEFAULT_STAGE: beta
           DEFAULT_REF: ${{ github.event.release.tag_name }}
         run: |
-          echo "CHECKOUT_REF=${{ github.event.inputs.githubRef || env.DEFAULT_REF }}" >> $CHECKOUT_REF
-          echo "RELEASE_STAGE=${{ github.event.inputs.releaseStage || env.DEFAULT_STAGE}}" >> $RELEASE_STAGE
+          echo "CHECKOUT_REF=${{ github.event.inputs.githubRef || env.DEFAULT_REF }}" >> $GITHUB_ENV
+          echo "RELEASE_STAGE=${{ github.event.inputs.releaseStage || env.DEFAULT_STAGE}}" >> $GITHUB_ENV
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
