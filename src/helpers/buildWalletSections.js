@@ -537,8 +537,8 @@ const safesSectionSelector = createSelector(
                 },
                 change: '',
                 price: {
-                  amount: 1,
-                  display: '1.00',
+                  amount: item.price,
+                  display: `$${item.price.toFixed(2)}`,
                 },
               },
               symbol: token.symbol,
