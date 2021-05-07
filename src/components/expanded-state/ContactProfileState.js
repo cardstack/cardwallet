@@ -4,52 +4,32 @@ import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { useAccountSettings, useContacts } from '../../hooks';
 import { useNavigation } from '../../navigation/Navigation';
-import { abbreviations, magicMemo } from '../../utils';
+import { magicMemo } from '../../utils';
 import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';
-import { Button } from '../buttons';
 import { showDeleteContactActionSheet } from '../contacts';
 import CopyTooltip from '../copy-tooltip';
-import { Centered } from '../layout';
-import { Text, TruncatedAddress } from '../text';
+import { TruncatedAddress } from '../text';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
-import { margin, padding } from '@rainbow-me/styles';
+import { CenteredContainer, OptionItem, Text } from '@cardstack/components';
+import theme from '@cardstack/theme';
+import { padding } from '@rainbow-me/styles';
 
-const AddressAbbreviation = styled(TruncatedAddress).attrs(
-  ({ theme: { colors } }) => ({
-    align: 'center',
-    color: colors.blueGreyDark,
-    firstSectionLength: abbreviations.defaultNumCharsPerSection,
-    size: 'lmedium',
-    truncationLength: 4,
-    weight: 'regular',
-  })
-)`
-  ${margin(9, 0, 5)};
-  opacity: 0.6;
-  width: 100%;
-`;
+const WalletProfileDivider = styled(Divider).attrs(() => ({
+  borderRadius: 1,
+  color: theme.colors['borderGray'],
+  inset: false,
+}))``;
 
 const Spacer = styled.View`
   height: 19;
 `;
 
-const SubmitButton = styled(Button).attrs(({ theme: { colors }, value }) => ({
-  backgroundColor: value.length > 0 ? colors.appleBlue : undefined,
-  disabled: !value.length > 0,
-  showShadow: true,
-  size: 'small',
-}))`
-  height: 43;
-  width: 215;
-`;
-
-const SubmitButtonLabel = styled(Text).attrs(({ value }) => ({
-  color: value.length > 0 ? 'whiteLabel' : 'white',
-  size: 'lmedium',
-  weight: 'bold',
-}))`
-  margin-bottom: 1.5;
+const ContactProfileModal = styled(ProfileModal).attrs({
+  dividerRenderer: WalletProfileDivider,
+})`
+  ${padding(24, 0, 0)};
+  width: 100%;
 `;
 
 const ContactProfileState = ({ address, color: colorProp, contact }) => {
@@ -91,17 +71,16 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
     inputRef,
   ]);
 
-  const { isDarkMode, colors } = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <ProfileModal onPressBackdrop={handleAddContact}>
-      <Centered css={padding(24, 25)} direction="column">
+    <ContactProfileModal onPressBackdrop={handleAddContact}>
+      <CenteredContainer paddingBottom={8}>
         <ProfileAvatarButton
           color={color}
           marginBottom={0}
           radiusAndroid={32}
           setColor={setColor}
-          testID="contact-profile-avatar-button"
           value={value}
         />
         <Spacer />
@@ -121,21 +100,22 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
         >
           <TruncatedAddress address={address} />
         </CopyTooltip>
-        <Centered paddingVertical={19} width={93}>
-          <Divider inset={false} />
-        </Centered>
-        <SubmitButton
-          isDarkMode={isDarkMode}
-          onPress={handleAddContact}
-          testID="contact-profile-add-button"
-          value={value}
-        >
-          <SubmitButtonLabel value={value}>
-            {contact ? 'Done' : 'Add Contact'}
-          </SubmitButtonLabel>
-        </SubmitButton>
+      </CenteredContainer>
+      <CenteredContainer marginVertical={5}>
+        <ButtonPressAnimation onPress={handleAddContact}>
+          <OptionItem
+            iconProps={{
+              visible: false,
+            }}
+            justifyContent="center"
+            testID="wallet-info-submit-button"
+            textProps={{ color: 'settingsGray' }}
+            title={contact ? 'Done' : 'Add Contact'}
+          />
+        </ButtonPressAnimation>
+      </CenteredContainer>
+      <CenteredContainer marginBottom={6} marginTop={5}>
         <ButtonPressAnimation
-          marginTop={11}
           onPress={
             contact
               ? handleDeleteContact
@@ -145,22 +125,12 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
                 }
           }
         >
-          <Centered
-            backgroundColor={colors.white}
-            css={padding(8, 9)}
-            testID="contact-profile-cancel-button"
-          >
-            <Text
-              color={colors.alpha(colors.blueGreyDark, 0.4)}
-              size="lmedium"
-              weight="regular"
-            >
-              {contact ? 'Delete Contact' : 'Cancel'}
-            </Text>
-          </Centered>
+          <Text color="grayText" fontWeight="600" textAlign="center">
+            {contact ? 'Delete Contact' : 'Cancel'}
+          </Text>
         </ButtonPressAnimation>
-      </Centered>
-    </ProfileModal>
+      </CenteredContainer>
+    </ContactProfileModal>
   );
 };
 
