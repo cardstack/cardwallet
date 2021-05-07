@@ -26,12 +26,12 @@ jobs:
           DEFAULT_STAGE: beta
           DEFAULT_REF: ${{ github.event.release.tag_name }}
         run: |
-          echo "GITHUB_REF=${{ github.event.inputs.githubRef || env.DEFAULT_REF }}" >> $GITHUB_REF
+          echo "CHECKOUT_REF=${{ github.event.inputs.githubRef || env.DEFAULT_REF }}" >> $CHECKOUT_REF
           echo "RELEASE_STAGE=${{ github.event.inputs.releaseStage || env.DEFAULT_STAGE}}" >> $RELEASE_STAGE
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
-          ref: ${{ env.GITHUB_REF }}
+          ref: ${{ env.CHECKOUT_REF }}
       - name: Node
         uses: actions/setup-node@v1
         with:
