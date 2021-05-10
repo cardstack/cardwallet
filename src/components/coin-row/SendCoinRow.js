@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { css } from 'styled-components';
+
 import { useTheme } from '../../context/ThemeContext';
 import { buildAssetUniqueIdentifier } from '../../helpers/assets';
 import { deviceUtils, magicMemo } from '../../utils';
@@ -9,20 +9,10 @@ import { ButtonPressAnimation } from '../animations';
 import { Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
-import { padding } from '@rainbow-me/styles';
+import { CenteredContainer } from '@cardstack/components';
 
 const isTinyPhone = deviceUtils.dimensions.height <= 568;
 const selectedHeight = isTinyPhone ? 62 : 78;
-
-const containerStyles = `
-  padding-left: 15;
-  padding-top: 17;
-`;
-
-const containerSelectedStyles = css`
-  ${padding(15, 15, 19)};
-  height: ${selectedHeight};
-`;
 
 const BottomRow = ({ balance, native, nativeCurrencySymbol }) => {
   const { colors } = useTheme();
@@ -43,16 +33,17 @@ const TopRow = ({ name, selected }) => (
 const SendCoinRow = magicMemo(
   ({ item, onPress, rowHeight, selected, testID, ...props }) => (
     <ButtonPressAnimation height={rowHeight} onPress={onPress} scaleTo={0.96}>
-      <CoinRow
-        {...item}
-        {...props}
-        bottomRowRender={BottomRow}
-        containerStyles={selected ? containerSelectedStyles : containerStyles}
-        isHidden={false}
-        selected={selected}
-        testID={testID}
-        topRowRender={TopRow}
-      />
+      <CenteredContainer height={selectedHeight} padding={4}>
+        <CoinRow
+          {...item}
+          {...props}
+          bottomRowRender={BottomRow}
+          isHidden={false}
+          selected={selected}
+          testID={testID}
+          topRowRender={TopRow}
+        />
+      </CenteredContainer>
     </ButtonPressAnimation>
   ),
   ['item', 'selected'],

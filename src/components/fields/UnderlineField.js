@@ -117,7 +117,7 @@ const UnderlineField = (
           value={formattedValue}
         />
         {buttonText && isFocused && (
-          <Button onPress={handleButtonPress} variant="extraSmall">
+          <Button onPress={handleButtonPress} variant="tiny">
             {buttonText}
           </Button>
         )}

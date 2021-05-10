@@ -10,7 +10,7 @@ import SendSavingsCoinRow from '../coin-row/SendSavingsCoinRow';
 import { Icon } from '../icons';
 import SendAssetFormCollectible from './SendAssetFormCollectible';
 import SendAssetFormToken from './SendAssetFormToken';
-import { Container } from '@cardstack/components';
+import { CenteredContainer, Container } from '@cardstack/components';
 
 const KeyboardSizeView = styled(KeyboardArea)`
   background-color: ${({ theme: { colors } }) => colors.white};
@@ -57,7 +57,9 @@ export default function SendAssetForm({
         selected
         testID="send-asset-form"
       >
-        <Icon name="doubleCaret" />
+        <CenteredContainer>
+          <Icon name="doubleCaret" />
+        </CenteredContainer>
       </AssetRowElement>
       <Container
         borderStyle="solid"
