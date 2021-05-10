@@ -1,19 +1,25 @@
-import { Contract } from '@ethersproject/contracts';
+import { Assets } from '@cardstack/cardpay-sdk';
+import Web3 from 'web3';
+
 import {
   convertAmountToBalanceDisplay,
   convertRawAmountToDecimalFormat,
 } from '../helpers/utilities';
-import { erc20ABI } from '../references';
 import { web3Provider } from './web3';
 
 export async function getOnchainAssetBalance(
   { address, decimals, symbol },
   userAddress
 ) {
-  if (address !== 'eth') {
-    return getOnchainTokenBalance({ address, decimals, symbol }, userAddress);
+  // we should export a way for us to check if an address is a native token address from the SDK
+  if (address === 'eth' || address === 'spoa') {
+    return getOnchainNativeTokenBalance(
+      { address, decimals, symbol },
+      userAddress
+    );
   }
-  return getOnchainEtherBalance({ address, decimals, symbol }, userAddress);
+
+  return getOnchainTokenBalance({ address, decimals, symbol }, userAddress);
 }
 
 async function getOnchainTokenBalance(
@@ -21,8 +27,9 @@ async function getOnchainTokenBalance(
   userAddress
 ) {
   try {
-    const tokenContract = new Contract(address, erc20ABI, web3Provider);
-    const balance = await tokenContract.balanceOf(userAddress);
+    const web3 = new Web3(web3Provider);
+    const assets = new Assets(web3);
+    const balance = await assets.getBalanceForToken(address, userAddress);
     const tokenBalance = convertRawAmountToDecimalFormat(
       balance.toString(),
       decimals
@@ -42,12 +49,15 @@ async function getOnchainTokenBalance(
   }
 }
 
-async function getOnchainEtherBalance(
+async function getOnchainNativeTokenBalance(
   { address, decimals, symbol },
   userAddress
 ) {
   try {
-    const balance = await web3Provider.getBalance(userAddress);
+    const web3 = new Web3(web3Provider);
+    const assets = new Assets(web3);
+    const balance = await assets.getNativeTokenBalance(userAddress);
+
     const tokenBalance = convertRawAmountToDecimalFormat(
       balance.toString(),
       decimals
