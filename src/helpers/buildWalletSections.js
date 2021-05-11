@@ -508,7 +508,7 @@ const safesSectionSelector = createSelector(
 
     return {
       header: {
-        title: 'Balances',
+        title: 'Depots',
         totalItems: depots.length,
         totalValue: `$${total.toFixed(2)}`,
       },

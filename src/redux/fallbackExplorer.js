@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { get, toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
-import { web3Provider } from '../handlers/web3';
+import { web3Provider, web3ProviderSdk } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
@@ -26,11 +26,15 @@ const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
   'explorer/FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER';
 
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
   'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
+
+const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa'];
+
+/* I want to extract this logic to the SDK, as well as some additional helpers */
+const isNativeToken = assetCode => NATIVE_TOKEN_SYMBOLS.includes(assetCode);
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
 // some of those tokens have been migrated to a new address
@@ -220,12 +224,17 @@ const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
 };
 
 const fetchAssetBalances = async (tokens, address, network) => {
-  const balanceCheckerContract = new Contract(
-    get(networkInfo[network], 'balance_checker_contract_address'),
-    balanceCheckerContractAbi,
-    web3Provider
-  );
   try {
+    const balanceCheckerAddress = get(
+      networkInfo[network],
+      'balance_checker_contract_address'
+    );
+    const balanceCheckerContract = new Contract(
+      balanceCheckerAddress,
+      balanceCheckerContractAbi,
+      web3Provider
+    );
+
     const values = await balanceCheckerContract.balances([address], tokens);
 
     const balances = {};
@@ -249,7 +258,7 @@ const fetchAssetBalances = async (tokens, address, network) => {
 
 const fetchGnosisSafes = async address => {
   try {
-    let web3 = new Web3(web3Provider);
+    let web3 = new Web3(web3ProviderSdk);
     let safesInstance = new Safes(web3);
     let safes = await safesInstance.view(address);
 
@@ -289,7 +298,7 @@ const fetchGnosisSafes = async address => {
 };
 
 const getTokensWithPrice = async tokens => {
-  const web3 = new Web3(web3Provider);
+  const web3 = new Web3(web3ProviderSdk);
   const exchangeRate = new ExchangeRate(web3);
 
   return Promise.all(
@@ -365,17 +374,6 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
           })
         ),
       ]);
-
-      dispatch(
-        addressAssetsReceived({
-          meta: {
-            address: accountAddress,
-            currency: 'usd',
-            status: 'ok',
-          },
-          payload: { assets: [] },
-        })
-      );
       dispatch(
         gnosisSafesReceieved({
           depots: depotsWithPrice,
@@ -418,9 +416,10 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         }
       });
     }
+
     const balances = await fetchAssetBalances(
       assets.map(({ asset: { asset_code } }) =>
-        asset_code === 'eth' ? ETH_ADDRESS : asset_code
+        isNativeToken(asset_code) ? ETH_ADDRESS : asset_code
       ),
       accountAddress,
       network
@@ -433,7 +432,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         for (let i = 0; i < assets.length; i++) {
           if (
             assets[i].asset.asset_code.toLowerCase() === key.toLowerCase() ||
-            (assets[i].asset.asset_code === 'eth' && key === ETH_ADDRESS)
+            (isNativeToken(assets[i].asset.asset_code) && key === ETH_ADDRESS)
           ) {
             assets[i].quantity = balances[key];
             break;
