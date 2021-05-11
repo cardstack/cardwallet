@@ -8,7 +8,7 @@ export const getInfuraUrl = (network = 'mainnet'): string =>
 export const networkInfo = {
   [networkTypes.xdai]: {
     balance_checker_contract_address:
-      '0x4dcf4562268dd384fe814c00fad239f06c2a0c2b',
+      '0x6B78C121bBd10D8ef0dd3623CC1abB077b186F65',
     color: '#3cc29e',
     disabled: false,
     exchange_enabled: true,
@@ -22,7 +22,7 @@ export const networkInfo = {
   },
   [networkTypes.sokol]: {
     balance_checker_contract_address:
-      '0x4dcf4562268dd384fe814c00fad239f06c2a0c2b',
+      '0xaeDFe60b0732924249866E3FeC71835EFb1fc9fF',
     color: '#3cc29e',
     disabled: false,
     exchange_enabled: true,

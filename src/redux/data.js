@@ -694,8 +694,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         assets: action.payload,
-        depots: action.depots,
-        prepaidCards: action.prepaidCards,
         isLoadingAssets: false,
       };
     case DATA_UPDATE_GNOSIS_DATA:

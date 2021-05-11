@@ -1,16 +1,16 @@
+import { HttpProvider } from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isHexString as isEthersHexString } from '@ethersproject/bytes';
 import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
 
-import { JsonRpcProvider } from '@ethersproject/providers';
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, replace, startsWith } from 'lodash';
-import Web3 from 'web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkInfo, { getInfuraUrl } from '../helpers/networkInfo';
-import NetworkTypes from '../helpers/networkTypes';
+import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
 import {
   addBuffer,
   convertAmountToRawAmount,
@@ -32,6 +32,9 @@ export let web3Provider = new JsonRpcProvider(
   getInfuraUrl(),
   NetworkTypes.mainnet
 );
+export let web3ProviderSdk = new HttpProvider(
+  networkInfo[networkTypes.xdai].networkUrl
+);
 
 /**
  * @desc set a different web3 provider
@@ -46,7 +49,13 @@ export const web3SetHttpProvider = async network => {
     if (info.layer === 1) {
       web3Provider = new JsonRpcProvider(info.networkUrl, network);
     } else {
-      web3Provider = new Web3.providers.HttpProvider(info.networkUrl);
+      try {
+        web3ProviderSdk = new HttpProvider(info.networkUrl);
+
+        web3Provider = new Web3Provider(web3ProviderSdk);
+      } catch (error) {
+        logger.log('provider error', error);
+      }
     }
   }
 
