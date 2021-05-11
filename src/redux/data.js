@@ -326,7 +326,12 @@ export const addressAssetsReceived = (
   }
 };
 
-export const gnosisSafesReceieved = ({ depots, prepaidCards }) => dispatch =>
+export const gnosisSafesReceieved = message => dispatch => {
+  const isValidMeta = dispatch(checkMeta(message));
+  if (!isValidMeta) return;
+
+  const { depots, prepaidCards } = get(message, 'payload', {});
+
   dispatch({
     payload: {
       depots,
@@ -334,6 +339,7 @@ export const gnosisSafesReceieved = ({ depots, prepaidCards }) => dispatch =>
     },
     type: DATA_UPDATE_GNOSIS_DATA,
   });
+};
 
 const subscribeToMissingPrices = addresses => (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
