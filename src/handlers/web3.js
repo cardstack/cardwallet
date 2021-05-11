@@ -26,12 +26,15 @@ import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 /**
- * @desc web3 http instance
+ * @desc web3 http instance - to be used with ethersproject contracts
  */
 export let web3Provider = new JsonRpcProvider(
   getInfuraUrl(),
   NetworkTypes.mainnet
 );
+/**
+ * @desc web3 http instance - to be used with web3 contracts
+ */
 export let web3ProviderSdk = new HttpProvider(
   networkInfo[networkTypes.xdai].networkUrl
 );
