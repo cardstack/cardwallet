@@ -235,8 +235,6 @@ const fetchAssetBalances = async (tokens, address, network) => {
       web3Provider
     );
 
-    console.log('tokens', tokens);
-
     const values = await balanceCheckerContract.balances([address], tokens);
 
     const balances = {};
