@@ -25,14 +25,14 @@ function SvgComponent(props: SvgProps) {
             cx={8}
             cy={8}
             r={8}
-            stroke="#37EB77"
+            stroke={props.stroke || '#37EB77'}
             fill={props.fill || '#37EB77'}
           />
           <Path
             data-name="Path 7342"
             d="M11.152 6.182l-4.637 4.636-2.107-2.107"
             fill="none"
-            stroke={props.stroke || '#000'}
+            stroke="#000"
           />
         </G>
       </G>
