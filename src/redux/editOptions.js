@@ -8,6 +8,7 @@ import {
   savePinnedCoins,
 } from '../handlers/localstorage/accountLocal';
 import EditOptions from '../helpers/editOptionTypes';
+import { NATIVE_TOKEN_SYMBOLS } from '@cardstack/utils';
 
 // -- Constants --------------------------------------- //
 const COIN_LIST_OPTIONS_LOAD_SUCCESS =
@@ -179,7 +180,7 @@ const INITIAL_STATE = {
   hiddenCoins: [],
   isCoinListEdited: false,
   isCoinListEditedValue: new Value(0),
-  pinnedCoins: ['eth'],
+  pinnedCoins: NATIVE_TOKEN_SYMBOLS,
   recentlyPinnedCount: 0,
   selectedCoins: [],
 };
