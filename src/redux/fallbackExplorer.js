@@ -379,7 +379,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     const assets = isMainnet(network) ? mainnetAssets : testnetAssets[network];
 
     // not functional on xdai chain yet
-    if (networkInfo[network].name === 'sokol') {
+    if (network === networkTypes.sokol) {
       const { depots = [], prepaidCards = [] } = await fetchGnosisSafes(
         accountAddress
       );
