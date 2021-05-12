@@ -1,5 +1,4 @@
 import { Assets } from '@cardstack/cardpay-sdk';
-import {isNativeToken} from '@cardstack/utils';
 import Web3 from 'web3';
 
 import {
@@ -7,12 +6,14 @@ import {
   convertRawAmountToDecimalFormat,
 } from '../helpers/utilities';
 import { web3Provider } from './web3';
+import { isNativeToken } from '@cardstack/utils';
 
 export async function getOnchainAssetBalance(
   { address, decimals, symbol },
-  userAddress
+  userAddress,
+  network
 ) {
-  if (isNativeToken(address)) {
+  if (isNativeToken(symbol, network)) {
     return getOnchainNativeTokenBalance(
       { address, decimals, symbol },
       userAddress
