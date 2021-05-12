@@ -43,7 +43,7 @@ export let web3ProviderSdk = new HttpProvider(
  * @desc set a different web3 provider
  * @param {String} network
  */
-export const web3SetHttpProvider = async (network, chainId) => {
+export const web3SetHttpProvider = async (network) => {
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
@@ -55,7 +55,7 @@ export const web3SetHttpProvider = async (network, chainId) => {
       try {
         web3ProviderSdk = new HttpProvider(info.networkUrl);
 
-        web3Provider = new Web3Provider(web3ProviderSdk, chainId);
+        web3Provider = new Web3Provider(web3ProviderSdk);
       } catch (error) {
         logger.log('provider error', error);
       }

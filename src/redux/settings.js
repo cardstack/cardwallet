@@ -43,7 +43,7 @@ export const settingsLoadNetwork = () => async dispatch => {
   try {
     const network = await getNetwork();
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
-    await web3SetHttpProvider(network, chainId);
+    await web3SetHttpProvider(network);
     dispatch({
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
@@ -64,7 +64,7 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 export const settingsUpdateNetwork = network => async dispatch => {
   try {
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
-    await web3SetHttpProvider(network, chainId);
+    await web3SetHttpProvider(network);
     dispatch({
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
