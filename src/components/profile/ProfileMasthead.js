@@ -287,7 +287,7 @@ export default function ProfileMasthead({
       >
         <Button
           iconProps={{
-            color: 'white',
+            color: 'blue',
             marginRight: 2,
             name: 'copy',
             size: 18,
@@ -299,8 +299,8 @@ export default function ProfileMasthead({
         </Button>
         <Button
           iconProps={{
-            color: 'white',
             marginRight: 2,
+            color: 'blue',
             name: 'qr-code',
             size: 18,
           }}

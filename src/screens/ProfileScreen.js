@@ -85,9 +85,13 @@ export default function ProfileScreen({ navigation }) {
           }}
           testID="settings-button"
         >
-          <Icon color="white" iconSize="large" name="settings" />
+          <Icon color="blue" iconSize="large" name="settings" />
         </HeaderButton>
-        <BackButton direction="right" onPress={onPressBackButton} />
+        <BackButton
+          color="blue"
+          direction="right"
+          onPress={onPressBackButton}
+        />
       </Header>
       <ActivityList
         addCashAvailable={addCashAvailable}
