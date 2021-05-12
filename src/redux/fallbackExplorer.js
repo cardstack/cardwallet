@@ -376,8 +376,15 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       ]);
       dispatch(
         gnosisSafesReceieved({
-          depots: depotsWithPrice,
-          prepaidCards: prepaidCardsWithPrice,
+          meta: {
+            address: accountAddress,
+            currency: 'usd',
+            status: 'ok',
+          },
+          payload: {
+            depots: depotsWithPrice,
+            prepaidCards: prepaidCardsWithPrice,
+          },
         })
       );
     }
