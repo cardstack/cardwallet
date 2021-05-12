@@ -82,6 +82,8 @@ export const Button = ({
         ) : (
           <Container
             flexDirection={iconPosition === 'left' ? 'row' : 'row-reverse'}
+            justifyContent="center"
+            alignItems="center"
           >
             {iconProps && (
               <Icon
@@ -91,7 +93,11 @@ export const Button = ({
                 {...iconProps}
               />
             )}
-            <Text {...textStyle} {...disabledTextProps}>
+            <Text
+              {...textStyle}
+              {...disabledTextProps}
+              allowFontScaling={false}
+            >
               {children}
             </Text>
           </Container>
