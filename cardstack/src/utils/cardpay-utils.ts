@@ -7,29 +7,35 @@ const MAINNETS = ['mainnet', 'xdai'];
 export const isNativeToken = (assetCode: string) =>
   NATIVE_TOKEN_SYMBOLS.includes(assetCode);
 
+const tokenInfo = {
+  ETH: {
+    address: 'eth',
+    symbol: 'ETH',
+    name: 'Ethereum',
+  },
+  SPOA: {
+    address: 'spoa',
+    symbol: 'SPOA',
+    name: 'SPOA',
+  },
+  DAI: {
+    address: 'dai',
+    symbol: 'DAI',
+    name: 'xDai',
+  },
+};
+
 export const getNativeTokenInfoByNetwork = (network: string) => {
   if (network === 'mainnet' || network === 'kovan') {
-    return {
-      address: 'eth',
-      symbol: 'ETH',
-      name: 'Ethereum',
-    };
+    return tokenInfo.ETH;
   }
 
   if (network === 'sokol') {
-    return {
-      address: 'spoa',
-      symbol: 'SPOA',
-      name: 'SPOA',
-    };
+    return tokenInfo.SPOA;
   }
 
   if (network === 'xdai') {
-    return {
-      address: 'dai',
-      symbol: 'DAI',
-      name: 'xDai',
-    };
+    return tokenInfo.DAI;
   }
 };
 

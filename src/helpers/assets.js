@@ -148,7 +148,6 @@ export const buildCoinsList = (
     }
   });
 
-  console.log('pinnedAssets', pinnedAssets);
   // decide which assets to show above or below the coin divider
   const nonHidden = concat(pinnedAssets, standardAssets);
   const dividerIndex = Math.max(pinnedAssets.length, COINS_TO_SHOW);
