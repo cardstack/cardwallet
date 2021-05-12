@@ -13,6 +13,7 @@ import coingeckoIdsFallback from '../references/coingecko/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
+import { isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -30,11 +31,6 @@ const COINGECKO_IDS_ENDPOINT =
   'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
-
-const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa'];
-
-/* I want to extract this logic to the SDK, as well as some additional helpers */
-const isNativeToken = assetCode => NATIVE_TOKEN_SYMBOLS.includes(assetCode);
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
 // some of those tokens have been migrated to a new address

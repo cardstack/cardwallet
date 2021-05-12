@@ -1,4 +1,5 @@
 import { Assets } from '@cardstack/cardpay-sdk';
+import {isNativeToken} from '@cardstack/utils';
 import Web3 from 'web3';
 
 import {
@@ -11,8 +12,7 @@ export async function getOnchainAssetBalance(
   { address, decimals, symbol },
   userAddress
 ) {
-  // we should export a way for us to check if an address is a native token address from the SDK
-  if (address === 'eth' || address === 'spoa') {
+  if (isNativeToken(address)) {
     return getOnchainNativeTokenBalance(
       { address, decimals, symbol },
       userAddress

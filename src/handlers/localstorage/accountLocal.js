@@ -1,4 +1,5 @@
 import { getAccountLocal, saveAccountLocal } from './common';
+import { NATIVE_TOKEN_SYMBOLS } from '@cardstack/utils';
 
 const assetPricesFromUniswapVersion = '0.1.0';
 const assetsVersion = '0.2.0';
@@ -370,7 +371,7 @@ export const saveAccountInfo = (profileInfo, accountAddress, network) =>
  * @return {Array}
  */
 export const getPinnedCoins = (accountAddress, network) =>
-  getAccountLocal(PINNED_COINS, accountAddress, network, ['eth']);
+  getAccountLocal(PINNED_COINS, accountAddress, network, NATIVE_TOKEN_SYMBOLS);
 
 /**
  * @desc save pinned coins
