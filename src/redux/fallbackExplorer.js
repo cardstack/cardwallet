@@ -10,7 +10,6 @@ import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import coingeckoIdsFallback from '../references/coingecko/ids.json';
-import honeyswapIds from '../references/honeyswap/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
@@ -95,18 +94,10 @@ const fetchCoingeckoIds = async () => {
 const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
   // 1 - Discover the list of tokens for the address
   const network = store.getState().settings.network;
-  let tokenIds = [];
-
-  if (network === networkTypes.mainnet) {
-    const coingeckoIds = await fetchCoingeckoIds();
-
-    tokenIds = coingeckoIds;
-  } else if (network === networkTypes.xdai) {
-    tokenIds = honeyswapIds;
-  }
+  const coingeckoIds = await fetchCoingeckoIds();
 
   const tokensInWallet = await discoverTokens(
-    tokenIds,
+    coingeckoIds,
     address,
     latestTxBlockNumber,
     network,
@@ -144,7 +135,7 @@ const getTokenType = tx => {
 };
 
 const discoverTokens = async (
-  tokenIds,
+  coingeckoIds,
   address,
   latestTxBlockNumber,
   network,
@@ -195,7 +186,7 @@ const discoverTokens = async (
           return {
             asset: {
               asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
-              coingecko_id: tokenIds[tx.contractAddress.toLowerCase()],
+              coingecko_id: coingeckoIds[tx.contractAddress.toLowerCase()],
               decimals: Number(tx.tokenDecimal),
               name: tx.tokenName,
               symbol: tx.tokenSymbol,
