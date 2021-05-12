@@ -96,7 +96,6 @@ const ExchangeInput = (
       <InputMask
         {...props}
         allowFontScaling={false}
-        // color={color}
         editable={editable}
         flex={1}
         fontFamily="OpenSans-Regular"
@@ -104,7 +103,6 @@ const ExchangeInput = (
         fontWeight={weight}
         keyboardAppearance={keyboardAppearance}
         keyboardType="decimal-pad"
-        // letterSpacing={letterSpacing}
         mask={mask}
         onBlur={handleBlur}
         onChange={handleChange}
@@ -118,14 +116,7 @@ const ExchangeInput = (
       />
       {useCustomAndroidMask && !ref.current?.isFocused() && (
         <AndroidMaskWrapper>
-          <Text
-            // color={color}
-            // letterSpacing={letterSpacing}
-            size={size}
-            testID={testID}
-            weight={weight}
-            {...props}
-          >
+          <Text size={size} testID={testID} weight={weight} {...props}>
             {valueToRender}
           </Text>
         </AndroidMaskWrapper>
