@@ -11,7 +11,6 @@ import SVG, {
 
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { ExpandedCard, ExpandedCardProps } from './ExpandedCard';
-import { numberWithCommas, getDollarsFromDai } from '@cardstack/utils';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
 
 interface PrepaidCardProps extends ExpandedCardProps {
