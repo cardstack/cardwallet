@@ -82,7 +82,7 @@ const ExchangeField = (
             iconPosition="right"
             iconProps={{
               name: 'chevron-right',
-              color: address ? 'white' : 'small',
+              color: address ? 'white' : 'black',
             }}
             onPress={onPressSelectCurrency}
             testID={testID + '-selection-button'}

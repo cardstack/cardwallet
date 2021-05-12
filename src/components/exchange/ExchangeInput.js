@@ -104,7 +104,7 @@ const ExchangeInput = (
         fontWeight={weight}
         keyboardAppearance={keyboardAppearance}
         keyboardType="decimal-pad"
-        letterSpacing={letterSpacing}
+        // letterSpacing={letterSpacing}
         mask={mask}
         onBlur={handleBlur}
         onChange={handleChange}
@@ -120,7 +120,7 @@ const ExchangeInput = (
         <AndroidMaskWrapper>
           <Text
             // color={color}
-            letterSpacing={letterSpacing}
+            // letterSpacing={letterSpacing}
             size={size}
             testID={testID}
             weight={weight}
