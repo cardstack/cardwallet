@@ -18,8 +18,10 @@ interface PrepaidCardProps extends ExpandedCardProps {
   issuer: string;
   /** unique identifier, displayed in top right corner of card */
   id: string;
-  /** balance in xDai */
-  spendableBalance: number;
+  /** balance in DAI.CPXD */
+  cpxdBalance: string;
+  /** balance in USD */
+  usdBalance: string;
 }
 
 /**
@@ -27,7 +29,7 @@ interface PrepaidCardProps extends ExpandedCardProps {
  */
 export const PrepaidCard = (props: PrepaidCardProps) => {
   const [isScrollable, setIsScrollable] = useState(false);
-  const { issuer, id, spendableBalance } = props;
+  const { issuer, id, cpxdBalance, usdBalance } = props;
   const Wrapper = isScrollable ? ScrollView : Container;
 
   return (
@@ -46,7 +48,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         >
           <GradientBackground />
           <Top issuer={issuer} id={id} />
-          <Bottom spendableBalance={spendableBalance} />
+          <Bottom cpxdBalance={cpxdBalance} usdBalance={usdBalance} />
         </Container>
       </Touchable>
       {isScrollable && <ExpandedCard recentActivity={props.recentActivity} />}
@@ -110,11 +112,13 @@ const Top = ({ issuer, id }: { issuer: string; id: string }) => (
   </Container>
 );
 
-const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
-  const formattedSpendableBalance = numberWithCommas(
-    getDollarsFromDai(spendableBalance).toFixed(2)
-  );
-
+const Bottom = ({
+  cpxdBalance,
+  usdBalance,
+}: {
+  cpxdBalance: string;
+  usdBalance: string;
+}) => {
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
       <Container
@@ -125,7 +129,7 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
         <Container>
           <Text fontSize={13}>Spendable Balance</Text>
           <Text fontSize={40} fontWeight="700">
-            {`§${numberWithCommas(spendableBalance.toString())}`}
+            {`§${cpxdBalance}`}
           </Text>
         </Container>
         <Container height={46} width={42}>
@@ -146,7 +150,7 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
         marginTop={2}
       >
         {/* not sure if we should start with xDai and convert to USD or go the other way around. Also unsure how we will do that calculation either way */}
-        <Text fontWeight="700">{`$${formattedSpendableBalance} USD`}</Text>
+        <Text fontWeight="700">{`$${usdBalance} USD`}</Text>
         {/* not sure if these will be different based on card or universal */}
         <Container alignItems="flex-end">
           <Text variant="smallGrey">RELOADABLE</Text>

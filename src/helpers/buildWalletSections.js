@@ -12,6 +12,7 @@ import React from 'react';
 import ReactCoinIcon from 'react-coin-icon';
 import { LayoutAnimation, View } from 'react-native';
 import { createSelector } from 'reselect';
+import Web3 from 'web3';
 import { AssetListItemSkeleton } from '../components/asset-list';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import CopyTooltip from '../components/copy-tooltip';
@@ -22,7 +23,7 @@ import { compose, withHandlers } from '../utils/recompactAdapters';
 import { buildCoinsList, buildUniqueTokenList } from './assets';
 import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
-import { Text } from '@cardstack/components';
+import { Container, PrepaidCard, Text } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -439,52 +440,17 @@ const prepaidCardsSectionSelector = createSelector(
       data: prepaidCards,
       // eslint-disable-next-line react/display-name
       renderItem: ({ item }) => {
-        const balances = item.tokens.map(({ tokenAddress, token }) => (
-          <View
-            key={tokenAddress}
-            style={{
-              paddingVertical: 5,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ paddingRight: 14 }}>
-                <ReactCoinIcon size={40} symbol={token.symbol} />
-              </View>
-              <View>
-                <Text fontWeight="700">{token.name}</Text>
-                <Text variant="subText">
-                  {token.value} {token.symbol}
-                </Text>
-              </View>
-            </View>
-            <View>
-              <Text fontWeight="700">
-                {' '}
-                ${parseFloat(token.value).toFixed(2)} USD
-              </Text>
-            </View>
-          </View>
-        ));
+        const token = item.tokens[0];
+
         return (
-          <CopyTooltip
-            textToCopy={item.address}
-            tooltipText="Copy safe address to clipboard"
-          >
-            <View
-              style={{
-                padding: 10,
-                paddingHorizontal: 16,
-                marginBottom: 6,
-                marginHorizontal: 22,
-                backgroundColor: '#ffffff',
-                borderRadius: 10,
-              }}
-            >
-              <View style={{ justifyContent: 'center' }}>{balances}</View>
-            </View>
-          </CopyTooltip>
+          <Container paddingHorizontal={4}>
+            <PrepaidCard
+              cpxdBalance={token.balance.display}
+              id={item.address}
+              issuer="Cardstack"
+              usdBalance={token.native.display}
+            />
+          </Container>
         );
       },
     };
@@ -516,9 +482,7 @@ const safesSectionSelector = createSelector(
       data: tokens,
       // eslint-disable-next-line react/display-name
       renderItem: ({ item }) => {
-        const { token, tokenAddress } = item;
-        const [int, dec] = token.value.split('.');
-        const value = `$${int}.${dec ? dec.slice(0, 2) : '00'}`;
+        const { token, tokenAddress, native, balance } = item;
 
         return (
           <TokenItem
@@ -527,18 +491,18 @@ const safesSectionSelector = createSelector(
               name: token.name,
               address: tokenAddress,
               balance: {
-                amount: token.value,
-                display: `${token.value} ${token.symbol}`,
+                amount: balance.amount,
+                display: `${balance.amount} ${token.symbol}`,
               },
               native: {
                 balance: {
-                  amount: token.value,
-                  display: value,
+                  amount: native.amount,
+                  display: `$${native.display}`,
                 },
                 change: '',
                 price: {
-                  amount: item.price,
-                  display: `$${item.price.toFixed(2)}`,
+                  amount: native.amount,
+                  display: `$${native.display}`,
                 },
               },
               symbol: token.symbol,

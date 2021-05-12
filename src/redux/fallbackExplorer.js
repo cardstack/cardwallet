@@ -1,4 +1,4 @@
-import { ExchangeRate, Safes } from '@cardstack/cardpay-sdk';
+import { Safes } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { get, toLower, uniqBy } from 'lodash';
@@ -293,25 +293,6 @@ const fetchGnosisSafes = async address => {
   }
 };
 
-const getTokensWithPrice = async tokens => {
-  const web3 = new Web3(web3ProviderSdk);
-  const exchangeRate = new ExchangeRate(web3);
-
-  return Promise.all(
-    tokens.map(async tokenItem => {
-      const price = await exchangeRate.getUSDPrice(
-        tokenItem.token.symbol,
-        tokenItem.balance
-      );
-
-      return {
-        ...tokenItem,
-        price,
-      };
-    })
-  );
-};
-
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const { accountAddress, nativeCurrency, network } = getState().settings;
   const { latestTxBlockNumber, mainnetAssets } = getState().fallbackExplorer;
@@ -346,30 +327,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       const { depots = [], prepaidCards = [] } = await fetchGnosisSafes(
         accountAddress
       );
-      const [depotsWithPrice, prepaidCardsWithPrice] = await Promise.all([
-        await Promise.all(
-          depots.map(async depot => {
-            const tokensWithPrice = await getTokensWithPrice(depot.tokens);
 
-            return {
-              ...depot,
-              tokens: tokensWithPrice,
-            };
-          })
-        ),
-        await Promise.all(
-          prepaidCards.map(async prepaidCard => {
-            const tokensWithPrice = await getTokensWithPrice(
-              prepaidCard.tokens
-            );
-
-            return {
-              ...prepaidCard,
-              tokens: tokensWithPrice,
-            };
-          })
-        ),
-      ]);
       dispatch(
         gnosisSafesReceieved({
           meta: {
@@ -378,8 +336,8 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
             status: 'ok',
           },
           payload: {
-            depots: depotsWithPrice,
-            prepaidCards: prepaidCardsWithPrice,
+            depots,
+            prepaidCards,
           },
         })
       );
