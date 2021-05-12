@@ -55,7 +55,6 @@ const ExchangeNativeField = (
           {symbol}
         </Text>
         <ExchangeInput
-          // color={nativeAmountColor}
           editable={editable}
           height={android ? height : 58}
           mask={mask}

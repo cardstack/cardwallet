@@ -17,10 +17,9 @@ const AndroidMaskWrapper = styled.View`
 const ExchangeInput = (
   {
     androidMaskMaxLength = 8,
-    color = 'black',
+
     editable,
     keyboardAppearance = 'dark',
-    letterSpacing = 'roundedTightest',
     mask = '[099999999999999999].[999999999999999999]',
     onBlur,
     onChange,
