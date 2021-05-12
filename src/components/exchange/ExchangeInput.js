@@ -17,7 +17,6 @@ const AndroidMaskWrapper = styled.View`
 const ExchangeInput = (
   {
     androidMaskMaxLength = 8,
-
     editable,
     keyboardAppearance = 'dark',
     mask = '[099999999999999999].[999999999999999999]',
@@ -95,6 +94,7 @@ const ExchangeInput = (
       <InputMask
         {...props}
         allowFontScaling={false}
+        color="black"
         editable={editable}
         flex={1}
         fontFamily="OpenSans-Regular"
@@ -115,7 +115,13 @@ const ExchangeInput = (
       />
       {useCustomAndroidMask && !ref.current?.isFocused() && (
         <AndroidMaskWrapper>
-          <Text size={size} testID={testID} weight={weight} {...props}>
+          <Text
+            color="black"
+            size={size}
+            testID={testID}
+            weight={weight}
+            {...props}
+          >
             {valueToRender}
           </Text>
         </AndroidMaskWrapper>
