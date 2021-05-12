@@ -44,7 +44,11 @@ export const BalanceCoinRow = ({
             testID={`coin-row-editing-icon-${editingIconName}`}
             width={SELECT_ICON_WIDTH}
           >
-            <Icon name={editingIconName} iconSize="medium" />
+            <Icon
+              name={editingIconName}
+              iconSize="medium"
+              color={selected ? 'blue' : null}
+            />
           </Container>
         )}
         {isEditing && showIcon && (
