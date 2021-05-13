@@ -14,39 +14,4 @@ export const isNativeToken = (symbol: string, network: string) => {
 
 export const isLayer1 = (network: string) => LAYER_1_NETWORKS.includes(network);
 
-const tokenInfo = {
-  ETH: {
-    address: 'eth',
-    coingeckoId: 'ethereum',
-    symbol: 'ETH',
-    name: 'Ethereum',
-  },
-  SPOA: {
-    address: 'spoa',
-    coingeckoId: 'ethereum',
-    symbol: 'SPOA',
-    name: 'SPOA',
-  },
-  DAI: {
-    address: 'dai',
-    coingeckoId: 'dai',
-    symbol: 'DAI',
-    name: 'xDai',
-  },
-};
-
-export const getNativeTokenInfoByNetwork = (network: string) => {
-  if (network === 'mainnet' || network === 'kovan') {
-    return tokenInfo.ETH;
-  }
-
-  if (network === 'sokol') {
-    return tokenInfo.SPOA;
-  }
-
-  if (network === 'xdai') {
-    return tokenInfo.DAI;
-  }
-};
-
 export const isMainnet = (network: string) => MAINNETS.includes(network);

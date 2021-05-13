@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
+
 import { web3Provider, web3ProviderSdk } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
@@ -13,12 +14,7 @@ import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
 import store from './store';
-import {
-  getNativeTokenInfoByNetwork,
-  isMainnet,
-  isNativeToken,
-} from '@cardstack/utils';
-
+import { isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -106,17 +102,26 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
     return [];
   }
 
-  const nativeTokenInfo = getNativeTokenInfoByNetwork(network);
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const nativeTokenName = getConstantByNetwork('nativeTokenName', network);
+  const nativeTokenCoingeckoId = getConstantByNetwork(
+    'nativeTokenCoingeckoId',
+    network
+  );
 
   return [
     ...tokensInWallet,
     {
       asset: {
-        asset_code: nativeTokenInfo.address,
-        coingecko_id: nativeTokenInfo.coingeckoId,
+        asset_code: nativeTokenAddress,
+        coingecko_id: nativeTokenCoingeckoId,
         decimals: 18,
-        name: nativeTokenInfo.name,
-        symbol: nativeTokenInfo.symbol,
+        name: nativeTokenName,
+        symbol: nativeTokenSymbol,
       },
     },
   ];
