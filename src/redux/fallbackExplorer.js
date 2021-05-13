@@ -1,11 +1,10 @@
-import { Safes } from '@cardstack/cardpay-sdk';
+import { Safes, getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
-import { get, toLower, uniqBy } from 'lodash';
+import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
 import { web3Provider, web3ProviderSdk } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
-import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
@@ -258,12 +257,12 @@ const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
 
 const fetchAssetBalances = async (tokens, address, network) => {
   try {
-    const balanceCheckerAddress = get(
-      networkInfo[network],
-      'balance_checker_contract_address'
+    const balanceCheckerContractAddress = getConstantByNetwork(
+      'balanceCheckerContractAddress',
+      network
     );
     const balanceCheckerContract = new Contract(
-      balanceCheckerAddress,
+      balanceCheckerContractAddress,
       balanceCheckerContractAbi,
       web3Provider
     );
