@@ -384,12 +384,6 @@ export const gnosisSafesReceieved = message => async dispatch => {
     ),
   ]);
 
-  console.log(
-    'depotsWithPrice, prepaidCardsWithPrice',
-    depotsWithPrice,
-    prepaidCardsWithPrice
-  );
-
   dispatch({
     payload: {
       depots: depotsWithPrice,
