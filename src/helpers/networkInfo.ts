@@ -2,7 +2,6 @@ import { networkTypes } from './networkTypes';
 
 export const networkInfo = {
   [networkTypes.xdai]: {
-    color: '#3cc29e',
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
@@ -13,7 +12,6 @@ export const networkInfo = {
     isTestnet: false,
   },
   [networkTypes.sokol]: {
-    color: '#3cc29e',
     disabled: false,
     exchange_enabled: true,
     faucet_url: 'https://faucet.poa.network',
@@ -24,7 +22,6 @@ export const networkInfo = {
     isTestnet: true,
   },
   [`${networkTypes.mainnet}`]: {
-    color: '#3cc29e',
     disabled: false,
     exchange_enabled: true,
     faucet_url: null,
@@ -35,7 +32,6 @@ export const networkInfo = {
     isTestnet: false,
   },
   [`${networkTypes.kovan}`]: {
-    color: '#7057ff',
     disabled: false,
     exchange_enabled: false,
     faucet_url: `https://faucet.kovan.network/`,
