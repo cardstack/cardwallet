@@ -20,7 +20,8 @@ const chance = new Chance();
 describe('PrepaidCard', () => {
   let issuer: string,
     id: string,
-    spendableBalance: number,
+    cpxdBalance: string,
+    usdBalance: string,
     recentActivity: {
       title: string;
       data: TransactionItem[];
@@ -34,7 +35,8 @@ describe('PrepaidCard', () => {
   beforeEach(() => {
     issuer = chance.string();
     id = chance.guid();
-    spendableBalance = chance.natural();
+    cpxdBalance = chance.natural().toString();
+    usdBalance = chance.natural().toString();
     recentActivity = chance.n(createRandomActivityItem, chance.d6());
   });
 
@@ -43,7 +45,8 @@ describe('PrepaidCard', () => {
       <PrepaidCard
         issuer={issuer}
         id={id}
-        spendableBalance={spendableBalance}
+        cpxdBalance={cpxdBalance}
+        usdBalance={usdBalance}
         recentActivity={recentActivity}
       />
     );
@@ -56,7 +59,8 @@ describe('PrepaidCard', () => {
       <PrepaidCard
         issuer={issuer}
         id={id}
-        spendableBalance={spendableBalance}
+        cpxdBalance={cpxdBalance}
+        usdBalance={usdBalance}
         recentActivity={recentActivity}
       />
     );
@@ -67,13 +71,14 @@ describe('PrepaidCard', () => {
   });
 
   it('should correctly render the spendable balance in dai and USD', () => {
-    spendableBalance = 1000;
+    cpxdBalance = '1000';
 
     const { getByText } = render(
       <PrepaidCard
         issuer={issuer}
         id={id}
-        spendableBalance={spendableBalance}
+        cpxdBalance={cpxdBalance}
+        usdBalance={usdBalance}
         recentActivity={recentActivity}
       />
     );
@@ -87,7 +92,8 @@ describe('PrepaidCard', () => {
       <PrepaidCard
         issuer={issuer}
         id={id}
-        spendableBalance={spendableBalance}
+        cpxdBalance={cpxdBalance}
+        usdBalance={usdBalance}
         recentActivity={recentActivity}
       />
     );

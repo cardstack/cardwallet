@@ -1,3 +1,4 @@
+import { ExchangeRate } from '@cardstack/cardpay-sdk';
 import { getUnixTime, subDays } from 'date-fns';
 import {
   concat,
@@ -17,11 +18,13 @@ import {
   uniqBy,
   values,
 } from 'lodash';
+import Web3 from 'web3';
 import { uniswapClient } from '../apollo/client';
 import {
   UNISWAP_24HOUR_PRICE_QUERY,
   UNISWAP_PRICES_QUERY,
 } from '../apollo/queries';
+import { getTransactionReceipt, web3ProviderSdk } from '../handlers/web3';
 /* eslint-disable-next-line import/no-cycle */
 import { addCashUpdatePurchases } from './addCash';
 /* eslint-disable-next-line import/no-cycle */
@@ -36,7 +39,7 @@ import {
   saveAssets,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { getTransactionReceipt } from '@rainbow-me/handlers/web3';
+
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
@@ -326,16 +329,65 @@ export const addressAssetsReceived = (
   }
 };
 
-export const gnosisSafesReceieved = message => dispatch => {
+const getTokensWithPrice = async tokens => {
+  const web3 = new Web3(web3ProviderSdk);
+  const exchangeRate = new ExchangeRate(web3);
+
+  return Promise.all(
+    tokens.map(async tokenItem => {
+      const usdBalance = await exchangeRate.getUSDPrice(
+        tokenItem.token.symbol,
+        tokenItem.balance
+      );
+
+      return {
+        ...tokenItem,
+        balance: {
+          amount: tokenItem.token.value,
+          display: Number(tokenItem.token.value).toFixed(2),
+        },
+        native: {
+          amount: usdBalance,
+          display: Number(usdBalance).toFixed(2),
+        },
+      };
+    })
+  );
+};
+
+export const gnosisSafesReceieved = message => async dispatch => {
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
   const { depots, prepaidCards } = get(message, 'payload', {});
 
+  const [depotsWithPrice, prepaidCardsWithPrice] = await Promise.all([
+    await Promise.all(
+      depots.map(async depot => {
+        const tokensWithPrice = await getTokensWithPrice(depot.tokens);
+
+        return {
+          ...depot,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
+    await Promise.all(
+      prepaidCards.map(async prepaidCard => {
+        const tokensWithPrice = await getTokensWithPrice(prepaidCard.tokens);
+
+        return {
+          ...prepaidCard,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
+  ]);
+
   dispatch({
     payload: {
-      depots,
-      prepaidCards,
+      depots: depotsWithPrice,
+      prepaidCards: prepaidCardsWithPrice,
     },
     type: DATA_UPDATE_GNOSIS_DATA,
   });

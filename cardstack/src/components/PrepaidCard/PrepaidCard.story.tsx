@@ -75,9 +75,10 @@ storiesOf('Prepaid Card', module)
     return (
       <PrepaidCard
         id={text('Identifier', '0xbeA3123457eF8')}
+        cpxdBalance={text('Spendable Balance (xDai)', '2500')}
         issuer={text('Issuer', 'Cardstack')}
-        spendableBalance={number('Spendable Balance (xDai)', 2500)}
         recentActivity={recentActivity}
+        usdBalance={text('Spendable Balance (usd)', '2500')}
       />
     );
   })
