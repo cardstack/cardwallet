@@ -43,7 +43,7 @@ export let web3ProviderSdk = new HttpProvider(
  * @desc set a different web3 provider
  * @param {String} network
  */
-export const web3SetHttpProvider = async (network) => {
+export const web3SetHttpProvider = async network => {
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {

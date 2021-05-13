@@ -354,6 +354,10 @@ const getTokensWithPrice = async tokens => {
 
       return {
         ...tokenItem,
+        balance: {
+          amount: tokenItem.token.value,
+          display: Number(tokenItem.token.value).toFixed(2),
+        },
         native: {
           amount: usdBalance,
           display: Number(usdBalance).toFixed(2),
