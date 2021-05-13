@@ -47,7 +47,7 @@ const AddFundsInterstitial = () => {
       <Button
         borderColor="buttonSecondaryBorder"
         iconProps={{
-          color: 'white',
+          color: 'blue',
           iconSize: 'medium',
           marginRight: 3,
           name: 'copy',
