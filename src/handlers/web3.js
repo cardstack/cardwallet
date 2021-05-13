@@ -1,15 +1,14 @@
-import { HttpProvider } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork, HttpProvider } from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isHexString as isEthersHexString } from '@ethersproject/bytes';
 import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
-
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
-import { get, replace, startsWith } from 'lodash';
+import { get, startsWith } from 'lodash';
+
 import AssetTypes from '../helpers/assetTypes';
-import networkInfo, { getInfuraUrl } from '../helpers/networkInfo';
 import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
 import {
   addBuffer,
@@ -22,6 +21,7 @@ import {
 } from '../helpers/utilities';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
+import { isLayer1 } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
@@ -29,31 +29,31 @@ import logger from 'logger';
  * @desc web3 http instance - to be used with ethersproject contracts
  */
 export let web3Provider = new JsonRpcProvider(
-  getInfuraUrl(),
+  getConstantByNetwork('rpcNode', networkTypes.mainnet),
   NetworkTypes.mainnet
 );
 /**
  * @desc web3 http instance - to be used with web3 contracts
  */
 export let web3ProviderSdk = new HttpProvider(
-  networkInfo[networkTypes.xdai].networkUrl
+  getConstantByNetwork('rpcNode', networkTypes.mainnet)
 );
 
 /**
  * @desc set a different web3 provider
  * @param {String} network
  */
-export const web3SetHttpProvider = async (network) => {
+export const web3SetHttpProvider = async network => {
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
-    const info = networkInfo[network];
+    const networkUrl = getConstantByNetwork('rpcNode', network);
 
-    if (info.layer === 1) {
-      web3Provider = new JsonRpcProvider(info.networkUrl, network);
+    if (isLayer1(network)) {
+      web3Provider = new JsonRpcProvider(networkUrl, network);
     } else {
       try {
-        web3ProviderSdk = new HttpProvider(info.networkUrl);
+        web3ProviderSdk = new HttpProvider(networkUrl);
 
         web3Provider = new Web3Provider(web3ProviderSdk);
       } catch (error) {
@@ -237,7 +237,7 @@ export const resolveUnstoppableDomain = async domain => {
     blockchain: {
       cns: {
         network: 'mainnet',
-        url: replace(getInfuraUrl(), 'network', NetworkTypes.mainnet),
+        url: getConstantByNetwork('rpcNode', NetworkTypes.mainnet),
       },
     },
   });

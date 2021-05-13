@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
   chunk,
   compact,
@@ -13,7 +14,6 @@ import {
   sortBy,
 } from 'lodash';
 import { add, convertAmountToNativeDisplay, greaterThan } from './utilities';
-import { getNativeTokenInfoByNetwork } from '@cardstack/utils';
 import store from '@rainbow-me/redux/store';
 import {
   ETH_ICON_URL,
@@ -37,11 +37,12 @@ const addNativeTokenPlaceholder = (
   nativeCurrency
 ) => {
   const network = store.getState().settings.network;
-  const {
-    address: nativeTokenAddress,
-    symbol: nativeTokenSymbol,
-    name: nativeTokenName,
-  } = getNativeTokenInfoByNetwork(network);
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const nativeTokenName = getConstantByNetwork('nativeTokenName', network);
   const hasNativeCurrency = !!find(
     assets,
     asset => asset.address === nativeTokenAddress

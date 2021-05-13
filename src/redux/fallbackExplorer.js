@@ -1,11 +1,11 @@
-import { Safes } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork, Safes } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
-import { get, toLower, uniqBy } from 'lodash';
+import { toLower, uniqBy } from 'lodash';
 import Web3 from 'web3';
+
 import { web3Provider, web3ProviderSdk } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
-import networkInfo from '../helpers/networkInfo';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
@@ -14,12 +14,7 @@ import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
 import store from './store';
-import {
-  getNativeTokenInfoByNetwork,
-  isMainnet,
-  isNativeToken,
-} from '@cardstack/utils';
-
+import { isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -107,17 +102,26 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
     return [];
   }
 
-  const nativeTokenInfo = getNativeTokenInfoByNetwork(network);
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const nativeTokenName = getConstantByNetwork('nativeTokenName', network);
+  const nativeTokenCoingeckoId = getConstantByNetwork(
+    'nativeTokenCoingeckoId',
+    network
+  );
 
   return [
     ...tokensInWallet,
     {
       asset: {
-        asset_code: nativeTokenInfo.address,
-        coingecko_id: nativeTokenInfo.coingeckoId,
+        asset_code: nativeTokenAddress,
+        coingecko_id: nativeTokenCoingeckoId,
         decimals: 18,
-        name: nativeTokenInfo.name,
-        symbol: nativeTokenInfo.symbol,
+        name: nativeTokenName,
+        symbol: nativeTokenSymbol,
       },
     },
   ];
@@ -225,10 +229,7 @@ const getTokenTxData = async (
   latestTxBlockNumber,
   network
 ) => {
-  const etherscanBaseUrl = 'https://api.etherscan.io/api';
-  const blockScoutBaseUrl = 'https://blockscout.com/xdai/mainnet/api';
-  const baseUrl =
-    network === networkTypes.mainnet ? etherscanBaseUrl : blockScoutBaseUrl;
+  const baseUrl = getConstantByNetwork('apiBaseUrl', network);
   let url = `${baseUrl}?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
   if (latestTxBlockNumber) {
     url += `&startBlock=${latestTxBlockNumber}`;
@@ -258,12 +259,12 @@ const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
 
 const fetchAssetBalances = async (tokens, address, network) => {
   try {
-    const balanceCheckerAddress = get(
-      networkInfo[network],
-      'balance_checker_contract_address'
+    const balanceCheckerContractAddress = getConstantByNetwork(
+      'balanceCheckerContractAddress',
+      network
     );
     const balanceCheckerContract = new Contract(
-      balanceCheckerAddress,
+      balanceCheckerContractAddress,
       balanceCheckerContractAbi,
       web3Provider
     );

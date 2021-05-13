@@ -1,5 +1,6 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { Contract } from '@ethersproject/contracts';
-import { forEach, get, isEmpty, keys, values } from 'lodash';
+import { forEach, isEmpty, keys, values } from 'lodash';
 import { useCallback } from 'react';
 import { queryCache, useQuery } from 'react-query';
 import {
@@ -7,7 +8,6 @@ import {
   WALLET_BALANCES_FROM_STORAGE,
 } from '../handlers/localstorage/walletBalances';
 import { web3Provider } from '../handlers/web3';
-import networkInfo from '../helpers/networkInfo';
 import { fromWei, handleSignificantDecimals } from '../helpers/utilities';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import useAccountSettings from './useAccountSettings';
@@ -30,8 +30,12 @@ const useWalletBalances = wallets => {
 
     try {
       // Check all the ETH balances at once
+      const balanceCheckerContractAddress = getConstantByNetwork(
+        'balanceCheckerContractAddress',
+        network
+      );
       const balanceCheckerContract = new Contract(
-        get(networkInfo[network], 'balance_checker_contract_address'),
+        balanceCheckerContractAddress,
         balanceCheckerContractAbi,
         web3Provider
       );
