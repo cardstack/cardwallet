@@ -13,7 +13,13 @@ import coingeckoIdsFallback from '../references/coingecko/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
-import { isNativeToken } from '@cardstack/utils';
+import store from './store';
+import {
+  getNativeTokenInfoByNetwork,
+  isMainnet,
+  isNativeToken,
+} from '@cardstack/utils';
+
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -87,26 +93,31 @@ const fetchCoingeckoIds = async () => {
 
 const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
   // 1 - Discover the list of tokens for the address
+  const network = store.getState().settings.network;
   const coingeckoIds = await fetchCoingeckoIds();
+
   const tokensInWallet = await discoverTokens(
     coingeckoIds,
     address,
     latestTxBlockNumber,
+    network,
     dispatch
   );
   if (latestTxBlockNumber && tokensInWallet.length === 0) {
     return [];
   }
 
+  const nativeTokenInfo = getNativeTokenInfoByNetwork(network);
+
   return [
     ...tokensInWallet,
     {
       asset: {
-        asset_code: 'eth',
-        coingecko_id: 'ethereum',
+        asset_code: nativeTokenInfo.address,
+        coingecko_id: nativeTokenInfo.coingeckoId,
         decimals: 18,
-        name: 'Ethereum',
-        symbol: 'ETH',
+        name: nativeTokenInfo.name,
+        symbol: nativeTokenInfo.symbol,
       },
     },
   ];
@@ -127,6 +138,7 @@ const discoverTokens = async (
   coingeckoIds,
   address,
   latestTxBlockNumber,
+  network,
   dispatch
 ) => {
   let page = 1;
@@ -134,11 +146,12 @@ const discoverTokens = async (
   let allTxs = [];
   let poll = true;
   while (poll) {
-    const txs = await getTokenTxDataFromEtherscan(
+    const txs = await getTokenTxData(
       address,
       page,
       offset,
-      latestTxBlockNumber
+      latestTxBlockNumber,
+      network
     );
     if (txs && txs.length > 0) {
       allTxs = allTxs.concat(txs);
@@ -166,33 +179,57 @@ const discoverTokens = async (
       type: FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER,
     });
 
-    return uniqBy(
-      allTxs.map(tx => {
-        const type = getTokenType(tx);
-        return {
-          asset: {
-            asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
-            coingecko_id: coingeckoIds[tx.contractAddress.toLowerCase()],
-            decimals: Number(tx.tokenDecimal),
-            name: tx.tokenName,
-            symbol: tx.tokenSymbol,
-            type,
-          },
-        };
-      }),
-      token => token.asset.asset_code
-    );
+    if (network === networkTypes.mainnet) {
+      return uniqBy(
+        allTxs.map(tx => {
+          const type = getTokenType(tx);
+          return {
+            asset: {
+              asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
+              coingecko_id: coingeckoIds[tx.contractAddress.toLowerCase()],
+              decimals: Number(tx.tokenDecimal),
+              name: tx.tokenName,
+              symbol: tx.tokenSymbol,
+              type,
+            },
+          };
+        }),
+        token => token.asset.asset_code
+      );
+    } else if (network === networkTypes.xdai) {
+      return uniqBy(
+        allTxs.map(tx => {
+          const type = getTokenType(tx);
+          return {
+            asset: {
+              asset_code: tx.contractAddress.toLowerCase(),
+              coingecko_id: 'dai', // need to figure out how to handle this for layer 2
+              decimals: Number(tx.tokenDecimal),
+              name: tx.tokenName,
+              symbol: tx.tokenSymbol,
+              type,
+            },
+          };
+        }),
+        token => token.asset.asset_code
+      );
+    }
   }
   return [];
 };
 
-const getTokenTxDataFromEtherscan = async (
+const getTokenTxData = async (
   address,
   page,
   offset,
-  latestTxBlockNumber
+  latestTxBlockNumber,
+  network
 ) => {
-  let url = `https://api.etherscan.io/api?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
+  const etherscanBaseUrl = 'https://api.etherscan.io/api';
+  const blockScoutBaseUrl = 'https://blockscout.com/xdai/mainnet/api';
+  const baseUrl =
+    network === networkTypes.mainnet ? etherscanBaseUrl : blockScoutBaseUrl;
+  let url = `${baseUrl}?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
   if (latestTxBlockNumber) {
     url += `&startBlock=${latestTxBlockNumber}`;
   }
@@ -320,7 +357,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
   // 1 - Coingecko ids
   // 2 - All tokens list
   // 3 - Etherscan token transfer transactions
-  if (networkTypes.mainnet === network) {
+  if (isMainnet(network)) {
     const newMainnetAssets = await findAssetsToWatch(
       accountAddress,
       latestTxBlockNumber,
@@ -339,10 +376,10 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
     const { network } = getState().settings;
     const { mainnetAssets } = getState().fallbackExplorer;
-    const assets =
-      network === networkTypes.mainnet ? mainnetAssets : testnetAssets[network];
+    const assets = isMainnet(network) ? mainnetAssets : testnetAssets[network];
 
-    if (networkInfo[network].layer === 2) {
+    // not functional on xdai chain yet
+    if (network === networkTypes.sokol) {
       const { depots = [], prepaidCards = [] } = await fetchGnosisSafes(
         accountAddress
       );
@@ -414,15 +451,17 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
                 prices[key][`${formattedNativeCurrency}_24h_change`],
               value: prices[key][`${formattedNativeCurrency}`],
             };
-            break;
+            // this break prevents two tokens using the same coingecko_id
+            // commenting out for now until we get layer 2 prices figured out since right now they are all using 'dai' as their coingecko_id
+            // break;
           }
         }
       });
     }
 
     const balances = await fetchAssetBalances(
-      assets.map(({ asset: { asset_code } }) =>
-        isNativeToken(asset_code) ? ETH_ADDRESS : asset_code
+      assets.map(({ asset: { asset_code, symbol } }) =>
+        isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
       ),
       accountAddress,
       network
@@ -435,7 +474,8 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         for (let i = 0; i < assets.length; i++) {
           if (
             assets[i].asset.asset_code.toLowerCase() === key.toLowerCase() ||
-            (isNativeToken(assets[i].asset.asset_code) && key === ETH_ADDRESS)
+            (isNativeToken(assets[i].asset.symbol, network) &&
+              key === ETH_ADDRESS)
           ) {
             assets[i].quantity = balances[key];
             break;

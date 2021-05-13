@@ -62,9 +62,9 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 };
 
 export const settingsUpdateNetwork = network => async dispatch => {
-  const chainId = ethereumUtils.getChainIdFromNetwork(network);
-  await web3SetHttpProvider(network);
   try {
+    const chainId = ethereumUtils.getChainIdFromNetwork(network);
+    await web3SetHttpProvider(network);
     dispatch({
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,

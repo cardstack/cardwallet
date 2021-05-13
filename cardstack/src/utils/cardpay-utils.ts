@@ -1,25 +1,33 @@
 /* THIS WILL BE MOVED TO THE SDK */
 
-export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa'];
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+
+export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai'];
 const MAINNETS = ['mainnet', 'xdai'];
 
 /* I want to extract this logic to the SDK, as well as some additional helpers */
-export const isNativeToken = (assetCode: string) =>
-  NATIVE_TOKEN_SYMBOLS.includes(assetCode);
+export const isNativeToken = (symbol: string, network: string) => {
+  const nativeTokenSymbol = getConstantByNetwork('nativeCoin', network);
+
+  return symbol === nativeTokenSymbol;
+};
 
 const tokenInfo = {
   ETH: {
     address: 'eth',
+    coingeckoId: 'ethereum',
     symbol: 'ETH',
     name: 'Ethereum',
   },
   SPOA: {
     address: 'spoa',
+    coingeckoId: 'ethereum',
     symbol: 'SPOA',
     name: 'SPOA',
   },
   DAI: {
     address: 'dai',
+    coingeckoId: 'dai',
     symbol: 'DAI',
     name: 'xDai',
   },

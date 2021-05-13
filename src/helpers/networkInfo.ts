@@ -17,7 +17,7 @@ export const networkInfo = {
     layer: 2,
     value: networkTypes.xdai,
     default: true,
-    networkUrl: 'https://blockscout.com/xdai/mainnet/api',
+    networkUrl: 'https://rpc.xdaichain.com',
     isTestnet: false,
   },
   [networkTypes.sokol]: {
