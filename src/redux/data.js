@@ -33,11 +33,15 @@ import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import {
   getAssetPricesFromUniswap,
   getAssets,
+  getDepots,
   getLocalTransactions,
+  getPrepaidCards,
   saveAccountEmptyState,
   saveAssetPricesFromUniswap,
   saveAssets,
+  saveDepots,
   saveLocalTransactions,
+  savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
@@ -114,9 +118,17 @@ export const dataLoadState = () => async (dispatch, getState) => {
   } catch (error) {}
   try {
     dispatch({ type: DATA_LOAD_ASSETS_REQUEST });
-    const assets = await getAssets(accountAddress, network);
+    const [assets, prepaidCards, depots] = await Promise.all([
+      getAssets(accountAddress, network),
+      getPrepaidCards(accountAddress, network),
+      getDepots(accountAddress, network),
+    ]);
     dispatch({
-      payload: assets,
+      payload: {
+        assets,
+        depots,
+        prepaidCards,
+      },
       type: DATA_LOAD_ASSETS_SUCCESS,
     });
   } catch (error) {
@@ -351,7 +363,8 @@ const getTokensWithPrice = async tokens => {
   );
 };
 
-export const gnosisSafesReceieved = message => async dispatch => {
+export const gnosisSafesReceieved = message => async (dispatch, getState) => {
+  const { accountAddress, network } = getState().settings;
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
@@ -379,6 +392,9 @@ export const gnosisSafesReceieved = message => async dispatch => {
       })
     ),
   ]);
+
+  savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
+  saveDepots(depotsWithPrice, accountAddress, network);
 
   dispatch({
     payload: {
@@ -791,7 +807,9 @@ export default (state = INITIAL_STATE, action) => {
     case DATA_LOAD_ASSETS_SUCCESS:
       return {
         ...state,
-        assets: action.payload,
+        assets: action.payload.assets,
+        depots: action.payload.depots,
+        prepaidCards: action.payload.prepaidCards,
         isLoadingAssets: false,
       };
     case DATA_LOAD_ASSETS_FAILURE:

@@ -3,6 +3,8 @@ import { NATIVE_TOKEN_SYMBOLS } from '@cardstack/utils';
 
 const assetPricesFromUniswapVersion = '0.1.0';
 const assetsVersion = '0.2.0';
+const prepaidCardsVersion = '0.1.0';
+const depotVersion = '0.1.0';
 const purchaseTransactionsVersion = '0.1.0';
 const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.5';
@@ -13,6 +15,8 @@ const ACCOUNT_INFO = 'accountInfo';
 const ACCOUNT_EMPTY = 'accountEmpty';
 const ASSET_PRICES_FROM_UNISWAP = 'assetPricesFromUniswap';
 const ASSETS = 'assets';
+const PREPAID_CARDS = 'prepaidCards';
+const DEPOTS = 'depots';
 const ACCOUNT_CHARTS = 'accountCharts';
 const OPEN_FAMILIES = 'openFamilies';
 const OPEN_INVESTMENT_CARDS = 'openInvestmentCards';
@@ -109,6 +113,54 @@ export const getAssets = (accountAddress, network) =>
  */
 export const saveAssets = (assets, accountAddress, network) =>
   saveAccountLocal(ASSETS, assets, accountAddress, network, assetsVersion);
+
+/**
+ * @desc get prepaid cards
+ * @param  {String}   [address]
+ * @param  {String}   [network]
+ * @return {Object}
+ */
+export const getPrepaidCards = (accountAddress, network) =>
+  getAccountLocal(
+    PREPAID_CARDS,
+    accountAddress,
+    network,
+    [],
+    prepaidCardsVersion
+  );
+
+/**
+ * @desc save prepaid cards
+ * @param  {Array}    [prepaidCards]
+ * @param  {String}   [address]
+ * @param  {String}   [network]
+ */
+export const savePrepaidCards = (prepaidCards, accountAddress, network) =>
+  saveAccountLocal(
+    PREPAID_CARDS,
+    prepaidCards,
+    accountAddress,
+    network,
+    prepaidCardsVersion
+  );
+
+/**
+ * @desc get depots
+ * @param  {String}   [address]
+ * @param  {String}   [network]
+ * @return {Object}
+ */
+export const getDepots = (accountAddress, network) =>
+  getAccountLocal(DEPOTS, accountAddress, network, [], depotVersion);
+
+/**
+ * @desc save depots
+ * @param  {Array}    [depots]
+ * @param  {String}   [address]
+ * @param  {String}   [network]
+ */
+export const saveDepots = (depots, accountAddress, network) =>
+  saveAccountLocal(DEPOTS, depots, accountAddress, network, depotVersion);
 
 /**
  * @desc get asset prices from Uniswap
