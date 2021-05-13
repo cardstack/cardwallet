@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
-import { text, number, string } from '@storybook/addon-knobs';
+import { text, number } from '@storybook/addon-knobs';
 
 import { PrepaidCard } from './PrepaidCard';
 import { SmallPrepaidCard } from './SmallPrepaidCard';
@@ -75,10 +75,10 @@ storiesOf('Prepaid Card', module)
     return (
       <PrepaidCard
         id={text('Identifier', '0xbeA3123457eF8')}
-        cpxdBalance={string('Spendable Balance (xDai)', 2500)}
+        cpxdBalance={text('Spendable Balance (xDai)', '2500')}
         issuer={text('Issuer', 'Cardstack')}
         recentActivity={recentActivity}
-        usdBalance={string('Spendable Balance (usd)', 2500)}
+        usdBalance={text('Spendable Balance (usd)', '2500')}
       />
     );
   })
