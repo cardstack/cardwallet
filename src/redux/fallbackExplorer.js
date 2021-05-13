@@ -1,4 +1,4 @@
-import { Safes, getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork, Safes } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
@@ -224,10 +224,7 @@ const getTokenTxData = async (
   latestTxBlockNumber,
   network
 ) => {
-  const etherscanBaseUrl = 'https://api.etherscan.io/api';
-  const blockScoutBaseUrl = 'https://blockscout.com/xdai/mainnet/api';
-  const baseUrl =
-    network === networkTypes.mainnet ? etherscanBaseUrl : blockScoutBaseUrl;
+  const baseUrl = getConstantByNetwork('apiBaseUrl', network);
   let url = `${baseUrl}?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
   if (latestTxBlockNumber) {
     url += `&startBlock=${latestTxBlockNumber}`;

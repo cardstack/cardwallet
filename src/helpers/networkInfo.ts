@@ -1,9 +1,4 @@
-import { INFURA_PROJECT_ID, INFURA_PROJECT_ID_DEV } from 'react-native-dotenv';
 import { networkTypes } from './networkTypes';
-
-const infuraProjectId = __DEV__ ? INFURA_PROJECT_ID_DEV : INFURA_PROJECT_ID;
-export const getInfuraUrl = (network = 'mainnet'): string =>
-  `https://${network}.infura.io/v3/${infuraProjectId}`;
 
 export const networkInfo = {
   [networkTypes.xdai]: {
@@ -15,7 +10,6 @@ export const networkInfo = {
     layer: 2,
     value: networkTypes.xdai,
     default: true,
-    networkUrl: 'https://rpc.xdaichain.com',
     isTestnet: false,
   },
   [networkTypes.sokol]: {
@@ -27,7 +21,6 @@ export const networkInfo = {
     layer: 2,
     value: networkTypes.sokol,
     default: false,
-    networkUrl: 'https://sokol.stack.cards/',
     isTestnet: true,
   },
   [`${networkTypes.mainnet}`]: {
@@ -39,7 +32,6 @@ export const networkInfo = {
     layer: 1,
     value: networkTypes.mainnet,
     default: false,
-    networkUrl: getInfuraUrl(networkTypes.mainnet),
     isTestnet: false,
   },
   [`${networkTypes.kovan}`]: {
@@ -51,7 +43,6 @@ export const networkInfo = {
     layer: 1,
     value: networkTypes.kovan,
     default: false,
-    networkUrl: getInfuraUrl(networkTypes.kovan),
     isTestnet: true,
   },
 };
