@@ -4,9 +4,41 @@ on:
   push:
     branches-ignore:
       - develop
+
 jobs:
-  build:
+  check:
+    outputs:
+      run_verify: ${{ steps.check_files.outputs.run_verify }}
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+      - name: Check if modified files are in cardstack directory
+        id: check_files
+        run: |
+          echo "======== list modified files ========"
+          git diff --name-only HEAD origin/develop
+
+          echo "======== check paths of modified files ========"
+          git diff --name-only HEAD origin/develop > files.txt
+          while IFS= read -r file
+          do
+            echo $file
+            if [[ $file = cardstack/* ]]; then
+              echo "This modified file is under the 'cardstack' folder."
+              echo "::set-output name=run_verify::true"
+              break
+            else
+              echo "::set-output name=run_verify::false"
+            fi
+          done < files.txt
+
+  verify:
+    runs-on: ubuntu-latest
+    if: needs.check.outputs.run_verify == 'true'
+    needs: check
 
     steps:
       - name: Checkout
