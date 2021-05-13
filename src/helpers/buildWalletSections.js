@@ -421,12 +421,7 @@ const prepaidCardsSectionSelector = createSelector(
   [allPrepaidCardsSelector],
   (prepaidCards = []) => {
     const total = prepaidCards.reduce(
-      (acc, prepaidCard) =>
-        acc +
-        prepaidCard.tokens.reduce(
-          (_acc, { token }) => _acc + parseFloat(token.value),
-          0
-        ),
+      (acc, prepaidCard) => acc + Number(prepaidCard.tokens[0].native.display),
       0
     );
 
@@ -445,7 +440,7 @@ const prepaidCardsSectionSelector = createSelector(
         return (
           <Container paddingHorizontal={4}>
             <PrepaidCard
-              cpxdBalance={token.balance.display}
+              cpxdBalance={item.spendFaceValue}
               id={item.address}
               issuer="Cardstack"
               usdBalance={token.native.display}
