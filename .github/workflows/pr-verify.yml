@@ -28,10 +28,10 @@ jobs:
             echo $file
             if [[ $file = cardstack/* ]]; then
               echo "This modified file is under the 'cardstack' folder."
-              echo "::set-output name=run_job::true"
+              echo "::set-output name=run_verify::true"
               break
             else
-              echo "::set-output name=run_job::false"
+              echo "::set-output name=run_verify::false"
             fi
           done < files.txt
 

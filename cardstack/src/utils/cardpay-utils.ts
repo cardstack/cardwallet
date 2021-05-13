@@ -5,7 +5,7 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai'];
 const MAINNETS = ['mainnet', 'xdai'];
 
-/* I want to extract this logic to the SDK, as well as some additional */
+/* I want to extract this logic to the SDK, as well as some additional helpers */
 export const isNativeToken = (symbol: string, network: string) => {
   const nativeTokenSymbol = getConstantByNetwork('nativeCoin', network);
 
