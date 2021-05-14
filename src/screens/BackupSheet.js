@@ -4,7 +4,6 @@ import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
 import React, { useCallback } from 'react';
 import { InteractionManager, StatusBar } from 'react-native';
-import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
 import { DelayedAlert } from '../components/alerts';
 import {
   BackupCloudStep,
@@ -12,9 +11,9 @@ import {
   BackupManualStep,
   BackupSheetSection,
 } from '../components/backup';
-import { Column } from '../components/layout';
 import { SlackSheet } from '../components/sheet';
 import { cloudPlatform } from '../utils/platform';
+import { Container } from '@cardstack/components';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import {
@@ -28,20 +27,15 @@ import Routes from '@rainbow-me/routes';
 
 const onError = error => DelayedAlert({ title: error }, 500);
 
-const AndroidHeight = 400;
-
 export default function BackupSheet() {
   const { selectedWallet, isDamaged } = useWallets();
-  const { height: deviceHeight } = useDimensions();
   const { goBack, navigate, setParams } = useNavigation();
   const walletCloudBackup = useWalletCloudBackup();
   const {
     params: {
-      longFormHeight = 0,
       missingPassword = null,
       step = WalletBackupStepTypes.first,
       walletId = selectedWallet.id,
-      nativeScreen = false,
     } = {},
   } = useRoute();
 
@@ -142,12 +136,12 @@ export default function BackupSheet() {
       case WalletBackupStepTypes.existing_user:
         return (
           <BackupSheetSection
-            descriptionText="You have wallets that have not been backed up yet. Back them up in case you lose this device."
+            descriptionText="Save an encrypted copy of your account, so you can restore it from iCloud at any time."
             onPrimaryAction={onBackupNow}
             onSecondaryAction={goBack}
-            primaryLabel="Back up now"
-            secondaryLabel="Maybe later"
-            titleText="Would you like to back up?"
+            primaryLabel="Back up"
+            secondaryLabel="Not now"
+            titleText="Ready to back it up?"
             type="Existing User"
           />
         );
@@ -157,7 +151,7 @@ export default function BackupSheet() {
             descriptionText={`Don't lose your wallet! Save an encrypted copy to ${cloudPlatform}.`}
             onPrimaryAction={onIcloudBackup}
             onSecondaryAction={goBack}
-            primaryLabel={`􀙶 Back up to ${cloudPlatform}`}
+            primaryLabel={`Back up to ${cloudPlatform}`}
             secondaryButtonTestId="backup-sheet-imported-cancel-button"
             secondaryLabel="No thanks"
             titleText="Would you like to back up?"
@@ -178,8 +172,8 @@ export default function BackupSheet() {
             descriptionText={`Don't lose your wallet! Save an encrypted copy to ${cloudPlatform}.`}
             onPrimaryAction={onIcloudBackup}
             onSecondaryAction={onManualBackup}
-            primaryLabel={`􀙶 Back up to ${cloudPlatform}`}
-            secondaryLabel="🤓 Back up manually"
+            primaryLabel={`Back up to ${cloudPlatform}`}
+            secondaryLabel="Back up manually"
             titleText="Back up your wallet"
             type="Default"
           />
@@ -194,30 +188,10 @@ export default function BackupSheet() {
     step,
   ]);
 
-  let sheetHeight =
-    android && !nativeScreen
-      ? AndroidHeight
-      : longFormHeight + getSoftMenuBarHeight();
-  let wrapperHeight =
-    deviceHeight +
-    (android && !nativeScreen ? AndroidHeight : longFormHeight) +
-    getSoftMenuBarHeight();
-
-  // This sheet is a bit taller due to an extra line of text
-  if (android && step === WalletBackupStepTypes.existing_user) {
-    sheetHeight += 40;
-    wrapperHeight += 40;
-  }
-
   return (
-    <Column height={wrapperHeight} testID="backup-sheet">
+    <Container flex={1} testID="backup-sheet">
       <StatusBar barStyle="light-content" />
-      <SlackSheet
-        additionalTopPadding={android && !nativeScreen}
-        contentHeight={sheetHeight}
-      >
-        {renderStep()}
-      </SlackSheet>
-    </Column>
+      <SlackSheet flex={1}>{renderStep()}</SlackSheet>
+    </Container>
   );
 }
