@@ -141,11 +141,11 @@ const buildWalletSections = (
   prepaidCardSection
 ) => {
   const sections = [
+    prepaidCardSection,
+    depotSection,
     addEth(balanceSection),
     uniswapSection,
     uniqueTokenFamiliesSection,
-    depotSection,
-    prepaidCardSection,
   ];
 
   const filteredSections =
