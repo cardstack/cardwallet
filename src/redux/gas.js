@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import analytics from '@segment/analytics-react-native';
 import { captureException } from '@sentry/react-native';
 import { get, isEmpty } from 'lodash';
@@ -170,11 +171,14 @@ export const gasUpdateGasPriceOption = newGasPriceOption => (
   const { gasPrices, txFees } = getState().gas;
   if (isEmpty(gasPrices)) return;
   const { assets } = getState().data;
+  const { network } = getState().settings;
+
   const results = getSelectedGasPrice(
     assets,
     gasPrices,
     txFees,
-    newGasPriceOption
+    newGasPriceOption,
+    network
   );
 
   dispatch({
@@ -236,12 +240,14 @@ export const gasUpdateTxFee = (gasLimit, overrideGasOption) => (
     _gasLimit,
     nativeCurrency
   );
+  const { network } = getState().settings;
 
   const results = getSelectedGasPrice(
     assets,
     gasPrices,
     txFees,
-    _selectedGasPriceOption
+    _selectedGasPriceOption,
+    network
   );
   dispatch({
     payload: {
@@ -257,7 +263,8 @@ const getSelectedGasPrice = (
   assets,
   gasPrices,
   txFees,
-  selectedGasPriceOption
+  selectedGasPriceOption,
+  network
 ) => {
   let txFee = txFees[selectedGasPriceOption];
   // If no custom price is set we default to FAST
@@ -267,7 +274,11 @@ const getSelectedGasPrice = (
   ) {
     txFee = txFees[gasUtils.FAST];
   }
-  const ethAsset = ethereumUtils.getAsset(assets);
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const ethAsset = ethereumUtils.getAsset(assets, nativeTokenAddress);
   const balanceAmount = get(ethAsset, 'balance.amount', 0);
   const txFeeAmount = fromWei(get(txFee, 'txFee.value.amount', 0));
   const isSufficientGas = greaterThanOrEqualTo(balanceAmount, txFeeAmount);
