@@ -68,6 +68,8 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
   }
 };
 
+const isValidAddress = (address) => address && address.substr(0, 2) === '0x';
+
 const fetchCoingeckoIds = async network => {
   let coingeckoTokens;
 
@@ -82,7 +84,7 @@ const fetchCoingeckoIds = async network => {
   if (isLayer1(network)) {
     coingeckoTokens.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
       const address = tokenAddress && toLower(tokenAddress);
-      if (address && address.substr(0, 2) === '0x') {
+      if (address && isValidAddress(address)) {
         idsMap[address] = id;
       }
     });
@@ -97,7 +99,7 @@ const fetchCoingeckoIds = async network => {
       );
       const address = tokenAddress && toLower(tokenAddress);
 
-      if (coingeckoToken && address && address.substr(0, 2) === '0x') {
+      if (coingeckoToken && isValidAddress(address)) {
         idsMap[address] = coingeckoToken.id;
       }
     });

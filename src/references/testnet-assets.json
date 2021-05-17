@@ -53,7 +53,7 @@
     {
       "asset": {
         "asset_code": "0x6B78C121bBd10D8ef0dd3623CC1abB077b186F65",
-        "coingecko_id": "dai",
+        "coingecko_id": null,
         "decimals": 18,
         "icon_url": "https://s3.amazonaws.com/icons.assets/ETH.png",
         "name": "Dominic",
