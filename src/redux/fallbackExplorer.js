@@ -14,7 +14,7 @@ import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
 import store from './store';
-import { isMainnet, isNativeToken } from '@cardstack/utils';
+import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -30,6 +30,7 @@ const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
   'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
+const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
 
@@ -67,29 +68,47 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
   }
 };
 
-const fetchCoingeckoIds = async () => {
-  let ids;
+const fetchCoingeckoIds = async network => {
+  let coingeckoTokens;
+
   try {
     const request = await fetch(COINGECKO_IDS_ENDPOINT);
-    ids = await request.json();
+    coingeckoTokens = await request.json();
   } catch (e) {
-    ids = coingeckoIdsFallback;
+    coingeckoTokens = coingeckoIdsFallback;
   }
 
   const idsMap = {};
-  ids.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
-    const address = tokenAddress && toLower(tokenAddress);
-    if (address && address.substr(0, 2) === '0x') {
-      idsMap[address] = id;
-    }
-  });
+  if (isLayer1(network)) {
+    coingeckoTokens.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
+      const address = tokenAddress && toLower(tokenAddress);
+      if (address && address.substr(0, 2) === '0x') {
+        idsMap[address] = id;
+      }
+    });
+  } else {
+    const honeyswapRequest = await fetch(HONEYSWAP_ENDPOINT);
+    const data = await honeyswapRequest.json();
+    const honeyswapTokens = data.tokens;
+
+    honeyswapTokens.forEach(({ address: tokenAddress, symbol }) => {
+      const coingeckoToken = coingeckoTokens.find(
+        token => toLower(token.symbol) === toLower(symbol)
+      );
+      const address = tokenAddress && toLower(tokenAddress);
+
+      if (coingeckoToken && address && address.substr(0, 2) === '0x') {
+        idsMap[address] = coingeckoToken.id;
+      }
+    });
+  }
   return idsMap;
 };
 
 const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
   // 1 - Discover the list of tokens for the address
   const network = store.getState().settings.network;
-  const coingeckoIds = await fetchCoingeckoIds();
+  const coingeckoIds = await fetchCoingeckoIds(network);
 
   const tokensInWallet = await discoverTokens(
     coingeckoIds,
@@ -183,41 +202,24 @@ const discoverTokens = async (
       type: FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER,
     });
 
-    if (network === networkTypes.mainnet) {
-      return uniqBy(
-        allTxs.map(tx => {
-          const type = getTokenType(tx);
-          return {
-            asset: {
-              asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
-              coingecko_id: coingeckoIds[tx.contractAddress.toLowerCase()],
-              decimals: Number(tx.tokenDecimal),
-              name: tx.tokenName,
-              symbol: tx.tokenSymbol,
-              type,
-            },
-          };
-        }),
-        token => token.asset.asset_code
-      );
-    } else if (network === networkTypes.xdai) {
-      return uniqBy(
-        allTxs.map(tx => {
-          const type = getTokenType(tx);
-          return {
-            asset: {
-              asset_code: tx.contractAddress.toLowerCase(),
-              coingecko_id: 'dai', // need to figure out how to handle this for layer 2
-              decimals: Number(tx.tokenDecimal),
-              name: tx.tokenName,
-              symbol: tx.tokenSymbol,
-              type,
-            },
-          };
-        }),
-        token => token.asset.asset_code
-      );
-    }
+    return uniqBy(
+      allTxs.map(tx => {
+        const type = getTokenType(tx);
+        const coingeckoId = coingeckoIds[tx.contractAddress.toLowerCase()];
+
+        return {
+          asset: {
+            asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
+            coingecko_id: coingeckoId || null,
+            decimals: Number(tx.tokenDecimal),
+            name: tx.tokenName,
+            symbol: tx.tokenSymbol,
+            type,
+          },
+        };
+      }),
+      token => token.asset.asset_code
+    );
   }
   return [];
 };
@@ -410,9 +412,13 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
                 prices[key][`${formattedNativeCurrency}_24h_change`],
               value: prices[key][`${formattedNativeCurrency}`],
             };
-            // this break prevents two tokens using the same coingecko_id
-            // commenting out for now until we get layer 2 prices figured out since right now they are all using 'dai' as their coingecko_id
-            // break;
+            break;
+          } else if (assets[i].asset.coingecko_id === null) {
+            assets[i].asset.price = {
+              changed_at: null,
+              relative_change_24h: 0,
+              value: 0,
+            };
           }
         }
       });
