@@ -1,13 +1,18 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import lang from 'i18n-js';
 import React from 'react';
 import { Text, TruncatedAddress } from '../../text';
 import TransactionRow from '../TransactionRow';
 import TransactionSheet from '../TransactionSheet';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 export default function DefaultTransactionConfirmationSection({
   address,
   value = '0',
 }) {
+  const { network } = useAccountSettings();
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+
   return (
     <TransactionSheet>
       <TransactionRow title={lang.t('wallet.action.to')}>
@@ -20,7 +25,7 @@ export default function DefaultTransactionConfirmationSection({
       </TransactionRow>
       <TransactionRow title={lang.t('wallet.action.value')}>
         <Text color="blueGreyDark50" size="lmedium" uppercase>
-          {value} ETH
+          {value} {nativeTokenSymbol}
         </Text>
       </TransactionRow>
     </TransactionSheet>

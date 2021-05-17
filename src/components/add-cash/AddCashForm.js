@@ -1,10 +1,15 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/core';
 import analytics from '@segment/analytics-react-native';
 import { isEmpty } from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { Clock } from 'react-native-reanimated';
 
-import { useDimensions, useIsWalletEthZero } from '../../hooks';
+import {
+  useAccountSettings,
+  useDimensions,
+  useIsWalletEthZero,
+} from '../../hooks';
 import { Alert } from '../alerts';
 import { runSpring } from '../animations';
 
@@ -28,6 +33,7 @@ const AddCashForm = ({
   const isWalletEthZero = useIsWalletEthZero();
   const { params } = useRoute();
   const [paymentSheetVisible, setPaymentSheetVisible] = useState(false);
+  const { network } = useAccountSettings();
 
   const { isTallPhone } = useDimensions();
   const [scaleAnim, setScaleAnim] = useState(1);
@@ -118,19 +124,23 @@ const AddCashForm = ({
     [limitWeekly, onClearError, onLimitExceeded, onShake]
   );
 
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+
   const onCurrencyChange = useCallback(
     val => {
       if (isWalletEthZero) {
         Alert({
           buttons: [{ text: 'Okay' }],
-          message:
-            'Before you can purchase DAI you must have some ETH in your wallet!',
-          title: `You don't have any ETH!`,
+          message: `Before you can purchase DAI you must have some ${nativeTokenSymbol} in your wallet!`,
+          title: `You don't have any ${nativeTokenSymbol}!`,
         });
-        analytics.track('Tried to purchase DAI but doesnt own any ETH', {
-          category: 'add cash',
-          label: val,
-        });
+        analytics.track(
+          `Tried to purchase DAI but doesnt own any ${nativeTokenSymbol}`,
+          {
+            category: 'add cash',
+            label: val,
+          }
+        );
       } else {
         setCurrency(val);
         analytics.track('Switched currency to purchase', {
@@ -139,7 +149,7 @@ const AddCashForm = ({
         });
       }
     },
-    [isWalletEthZero]
+    [isWalletEthZero, nativeTokenSymbol]
   );
 
   return (
