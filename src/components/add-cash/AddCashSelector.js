@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
@@ -8,8 +9,7 @@ import { Text } from '../text';
 
 import { Container } from '@cardstack/components';
 
-import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
-
+import { useAccountSettings } from '@rainbow-me/hooks';
 import { getTokenMetadata } from '@rainbow-me/utils';
 
 const CurrencyItemHeight = 40;
@@ -26,7 +26,10 @@ const CurrencyItemLabel = styled(Text).attrs(({ theme: { colors } }) => ({
 `;
 
 // eslint-disable-next-line react/display-name
-const CurrencyItem = isWalletEthZero => ({ item: address, isSelected }) => {
+const CurrencyItem = (isWalletEthZero, nativeTokenAddress) => ({
+  item: address,
+  isSelected,
+}) => {
   const metadata = getTokenMetadata(address);
 
   return (
@@ -37,7 +40,7 @@ const CurrencyItem = isWalletEthZero => ({ item: address, isSelected }) => {
       borderWidth={isSelected ? 1 : 0}
       flexDirection="row"
       height={CurrencyItemHeight}
-      opacity={isWalletEthZero && address !== ETH_ADDRESS ? 0.5 : 1}
+      opacity={isWalletEthZero && address !== nativeTokenAddress ? 0.5 : 1}
       paddingHorizontal={4}
     >
       <CoinIcon
@@ -64,6 +67,11 @@ const AddCashSelector = ({
   onSelect,
 }) => {
   const { isDarkMode, colors } = useTheme();
+  const { network } = useAccountSettings();
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
   return (
     <JellySelector
       backgroundColor={isDarkMode ? colors.darkModeDark : colors.white}
@@ -73,7 +81,7 @@ const AddCashSelector = ({
       items={currencies}
       onSelect={onSelect}
       // renderIndicator={JellySelectorShadowIndicator}
-      renderItem={CurrencyItem(isWalletEthZero)}
+      renderItem={CurrencyItem(isWalletEthZero, nativeTokenAddress)}
       renderRow={CurrencyItemRow}
     />
   );

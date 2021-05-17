@@ -1,8 +1,13 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { find } from 'lodash';
 import React, { useRef } from 'react';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
 
-import { useChartThrottledPoints, useUniswapAssetsInWallet } from '../../hooks';
+import {
+  useAccountSettings,
+  useChartThrottledPoints,
+  useUniswapAssetsInWallet,
+} from '../../hooks';
 import {
   BuyActionButton,
   SendActionButton,
@@ -43,14 +48,19 @@ export default function ChartExpandedState({ asset }) {
     heightWithChart,
     heightWithoutChart,
   });
-
+  const { network } = useAccountSettings();
   const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
   const showSwapButton = find(uniswapAssetsInWallet, [
     'uniqueId',
     asset.uniqueId,
   ]);
 
-  const needsEth = asset.address === 'eth' && asset.balance.amount === '0';
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const needsEth =
+    asset.address === nativeTokenAddress && asset.balance.amount === '0';
 
   const duration = useRef(0);
 

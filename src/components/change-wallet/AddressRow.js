@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -7,6 +8,7 @@ import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { TruncatedAddress } from '../text';
 import { Container, Icon, Text } from '@cardstack/components';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 const sx = StyleSheet.create({
   accountRow: {
@@ -29,6 +31,8 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
     label,
     walletId,
   } = data;
+  const { network } = useAccountSettings();
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
   let cleanedUpBalance = balance;
   if (balance === '0.00') {
@@ -79,7 +83,9 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                   truncationLength={6}
                 />
               )}
-              <Text variant="subText">{cleanedUpBalance || 0} ETH</Text>
+              <Text variant="subText">
+                {cleanedUpBalance || 0} {nativeTokenSymbol}
+              </Text>
             </Container>
           </Container>
           <Container
