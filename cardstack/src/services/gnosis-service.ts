@@ -29,7 +29,7 @@ export const fetchGnosisSafes = async (address: string) => {
             ...accum,
             prepaidCards: [...accum.prepaidCards, safe],
           };
-        } else if (safe.type === 'merchant') {
+        } else if (safe.type === 'depot') {
           return {
             ...accum,
             depots: [...accum.depots, safe],
