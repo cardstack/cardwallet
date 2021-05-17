@@ -137,15 +137,8 @@ export const buildCoinsList = (
         isSmall: false,
         ...asset,
       });
-    } else if (
-      greaterThan(
-        asset.native?.balance?.amount,
-        supportedNativeCurrencies[nativeCurrency].smallThreshold
-      )
-    ) {
-      standardAssets.push({ isCoin: true, isSmall: false, ...asset });
     } else {
-      smallAssets.push({ isCoin: true, isSmall: true, ...asset });
+      standardAssets.push({ isCoin: true, isSmall: false, ...asset });
     }
   });
 
