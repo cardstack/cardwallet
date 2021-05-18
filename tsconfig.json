@@ -92,6 +92,9 @@
       "@cardstack/screen": [
         "cardstack/src/screens"
       ],
+      "@cardstack/services": [
+        "cardstack/src/services"
+      ],
       "logger": [
         "src/utils/logger"
       ],

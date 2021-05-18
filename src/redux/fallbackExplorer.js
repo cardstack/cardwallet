@@ -1,10 +1,10 @@
-import { getConstantByNetwork, Safes } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { fetchGnosisSafes } from '@cardstack/services';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
-import Web3 from 'web3';
 
-import { web3Provider, web3ProviderSdk } from '../handlers/web3';
+import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
@@ -291,47 +291,6 @@ const fetchAssetBalances = async (tokens, address, network) => {
       e
     );
     return null;
-  }
-};
-
-const fetchGnosisSafes = async address => {
-  try {
-    let web3 = new Web3(web3ProviderSdk);
-    let safesInstance = new Safes(web3);
-    let safes = await safesInstance.view(address);
-
-    safes?.forEach(safe => {
-      safe?.tokens.forEach(({ balance, token }) => {
-        token.value = Web3.utils.fromWei(balance);
-      });
-    });
-
-    const { depots, prepaidCards } = safes.reduce(
-      (accum, safe) => {
-        if (safe.isPrepaidCard) {
-          return {
-            ...accum,
-            prepaidCards: [...accum.prepaidCards, safe],
-          };
-        }
-
-        return {
-          ...accum,
-          depots: [...accum.depots, safe],
-        };
-      },
-      {
-        depots: [],
-        prepaidCards: [],
-      }
-    );
-
-    return {
-      depots,
-      prepaidCards,
-    };
-  } catch (error) {
-    console.log({ error });
   }
 };
 
