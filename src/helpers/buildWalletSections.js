@@ -9,13 +9,11 @@ import {
   property,
 } from 'lodash';
 import React from 'react';
-import ReactCoinIcon from 'react-coin-icon';
-import { LayoutAnimation, View } from 'react-native';
+import { LayoutAnimation } from 'react-native';
 import { createSelector } from 'reselect';
-import Web3 from 'web3';
+
 import { AssetListItemSkeleton } from '../components/asset-list';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
-import CopyTooltip from '../components/copy-tooltip';
 import { UniswapInvestmentRow } from '../components/investment-cards';
 import { CollectibleTokenFamily } from '../components/token-family';
 import { withNavigation } from '../navigation/Navigation';
@@ -23,7 +21,7 @@ import { compose, withHandlers } from '../utils/recompactAdapters';
 import { buildCoinsList, buildUniqueTokenList } from './assets';
 import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
-import { Container, PrepaidCard, Text } from '@cardstack/components';
+import { Container, Inventory, PrepaidCard } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -465,8 +463,6 @@ const safesSectionSelector = createSelector(
       0
     );
 
-    const tokens = depots.reduce((acc, depot) => acc.concat(depot.tokens), []);
-
     return {
       header: {
         title: 'Depots',
@@ -474,44 +470,12 @@ const safesSectionSelector = createSelector(
         totalValue: `$${total.toFixed(2)}`,
       },
       name: 'safes',
-      data: tokens,
+      data: depots,
       // eslint-disable-next-line react/display-name
       renderItem: ({ item }) => {
-        const { token, tokenAddress, native, balance } = item;
+        const { tokens, address } = item;
 
-        return (
-          <TokenItem
-            item={{
-              isPinned: false,
-              name: token.name,
-              address: tokenAddress,
-              balance: {
-                amount: balance.amount,
-                display: `${balance.amount} ${token.symbol}`,
-              },
-              native: {
-                balance: {
-                  amount: native.amount,
-                  display: `$${native.display}`,
-                },
-                change: '',
-                price: {
-                  amount: native.amount,
-                  display: `$${native.display}`,
-                },
-              },
-              symbol: token.symbol,
-              price: {
-                changed_at: 0,
-                relative_change_24h: 0,
-                value: 0,
-              },
-            }}
-            key={tokenAddress}
-            {...item}
-            assetType="token"
-          />
-        );
+        return <Inventory address={address} tokens={tokens} />;
       },
     };
   }

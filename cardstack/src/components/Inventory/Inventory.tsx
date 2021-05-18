@@ -1,30 +1,25 @@
 import React from 'react';
 import { FlatList } from 'react-native';
+import CoinIcon from 'react-coin-icon';
 
-import { numberWithCommas } from '@cardstack/utils';
+import { CoinItem } from '../../types';
+import { TruncatedAddress } from '../../../../src/components/text';
 import { Container, Icon, Text, Touchable } from '@cardstack/components';
 
-interface ItemData {
-  title: string;
-  length: number | string;
-  totalValue?: string | number;
-  totalValueText?: string;
-}
-
 interface InventoryProps {
-  title: string;
+  address: string;
   /** unique identifier, displayed in top right corner of card */
   onPress: () => void;
   /** balance in xDai */
-  items: Array<ItemData>;
+  tokens: Array<CoinItem>;
 }
 
 /**
  * A invetory card component
  */
-export const Inventory = ({ title, items, onPress }: InventoryProps) => {
+export const Inventory = ({ address, tokens, onPress }: InventoryProps) => {
   return (
-    <Container width="100%">
+    <Container width="100%" paddingHorizontal={4}>
       <Touchable width="100%" testID="inventory-card">
         <Container
           backgroundColor="white"
@@ -33,15 +28,21 @@ export const Inventory = ({ title, items, onPress }: InventoryProps) => {
           borderColor="buttonPrimaryBorder"
           width="100%"
         >
-          <Top title={title} onPress={onPress} />
-          <Bottom items={items} />
+          <Top address={address} onPress={onPress} />
+          <Bottom tokens={tokens} />
         </Container>
       </Touchable>
     </Container>
   );
 };
 
-const Top = ({ title, onPress }: { title: string; onPress: () => void }) => (
+const Top = ({
+  address,
+  onPress,
+}: {
+  address: string;
+  onPress: () => void;
+}) => (
   <Container width="100%">
     <Container
       flexDirection="row"
@@ -52,10 +53,14 @@ const Top = ({ title, onPress }: { title: string; onPress: () => void }) => (
       paddingHorizontal={5}
     >
       <Container flexDirection="row" alignItems="center">
-        <Icon name="inventory" color="white" marginRight={3} />
-        <Text size="small" weight="extraBold" color="white">
-          {title.toUpperCase()}
-        </Text>
+        <TruncatedAddress
+          address={address}
+          color="white"
+          firstSectionLength={6}
+          fontSize={14}
+          marginTop={1}
+          truncationLength={4}
+        />
       </Container>
       <Touchable flexDirection="row" alignItems="center" onPress={onPress}>
         <Text color="white" weight="extraBold" size="small" marginRight={3}>
@@ -67,7 +72,7 @@ const Top = ({ title, onPress }: { title: string; onPress: () => void }) => (
   </Container>
 );
 
-const renderItem = ({ item }: { item: ItemData }) => {
+const renderItem = ({ item }: { item: CoinItem }) => {
   return (
     <Container
       flexDirection="row"
@@ -77,30 +82,24 @@ const renderItem = ({ item }: { item: ItemData }) => {
       borderBottomWidth={2}
       minHeight={75}
     >
-      <Text size="medium">
-        {item.title}{' '}
-        <Text size="medium" color="settingsGray" weight="bold">
-          {item.length}
+      <CoinIcon size={30} {...item} />
+      <Text size="medium">{item.symbol} </Text>
+      <Container alignItems="flex-end">
+        <Text size="small" color="backgroundBlue">
+          {item.native.display}
         </Text>
-      </Text>
-      {item.totalValue && (
-        <Container alignItems="flex-end">
-          <Text size="small" color="backgroundBlue">
-            {item.totalValueText}
-          </Text>
-          <Text size="medium" weight="extraBold">
-            {`§${numberWithCommas(item.totalValue.toString())}`}
-          </Text>
-        </Container>
-      )}
+        <Text size="medium" weight="extraBold">
+          {`§${item.balance.display}`}
+        </Text>
+      </Container>
     </Container>
   );
 };
 
-const Bottom = ({ items }: { items: Array<ItemData> }) => {
+const Bottom = ({ tokens }: { tokens: Array<CoinItem> }) => {
   return (
     <Container paddingHorizontal={6}>
-      <FlatList data={items} renderItem={renderItem} />
+      <FlatList data={tokens} renderItem={renderItem} />
     </Container>
   );
 };
