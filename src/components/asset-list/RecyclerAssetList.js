@@ -224,8 +224,15 @@ class RecyclerAssetList extends Component {
 
         const balancesIndex = findIndex(
           sections,
-          ({ name }) =>
-            name === 'balances' || name === 'safes' || name === 'prepaidCards'
+          ({ name }) => name === 'balances'
+        );
+        const depotsIndex = findIndex(
+          sections,
+          ({ name }) => name === 'depots'
+        );
+        const prepaidCardsIndex = findIndex(
+          sections,
+          ({ name }) => name === 'prepaidCards'
         );
         const collectiblesIndex = findIndex(
           sections,
@@ -267,6 +274,42 @@ class RecyclerAssetList extends Component {
         }
 
         if (
+          prepaidCardsIndex > -1 &&
+          (index <= sectionsIndices[depotsIndex] || depotsIndex < 0) &&
+          (index <= sectionsIndices[balancesIndex] || balancesIndex < 0) &&
+          (index <= sectionsIndices[collectiblesIndex] ||
+            collectiblesIndex < 0) &&
+          (index <= sectionsIndices[poolsIndex] || poolsIndex < 0)
+        ) {
+          const amountOfRows = sections[prepaidCardsIndex].data.length;
+          console.log('amountOfRows p', amountOfRows);
+          return {
+            height: ViewTypes.PREPAID_CARDS.calculateHeight({
+              amountOfRows: amountOfRows,
+            }),
+            index: ViewTypes.PREPAID_CARDS.index,
+          };
+        }
+
+        if (
+          depotsIndex > -1 &&
+          index > sectionsIndices[depotsIndex] &&
+          (index <= sectionsIndices[balancesIndex] || balancesIndex < 0) &&
+          (index <= sectionsIndices[collectiblesIndex] ||
+            collectiblesIndex < 0) &&
+          (index <= sectionsIndices[poolsIndex] || poolsIndex < 0)
+        ) {
+          const amountOfRows = sections[depotsIndex].data.length;
+          console.log('amountOfRows d', amountOfRows);
+          return {
+            height: ViewTypes.DEPOTS.calculateHeight({
+              amountOfRows,
+            }),
+            index: ViewTypes.DEPOTS.index,
+          };
+        }
+
+        if (
           balancesIndex > -1 &&
           (index <= sectionsIndices[collectiblesIndex] ||
             collectiblesIndex < 0) &&
@@ -277,8 +320,21 @@ class RecyclerAssetList extends Component {
             `[${balancesIndex}].data.length`,
             0
           );
+
+          const prepaidCardsOffset =
+            prepaidCardsIndex > -1
+              ? sections[prepaidCardsIndex].data.length
+              : 0;
+          const depotOffset =
+            depotsIndex > -1 ? sections[depotsIndex].data.length : 0;
+          const offsetTotal = prepaidCardsOffset + depotOffset;
+
+          // if there are depots or prepaid cards, add one more to account for the header
+          const offset = offsetTotal > 0 ? offsetTotal + 1 : 0;
+
           const lastBalanceIndex =
             sectionsIndices[balancesIndex] + balanceItemsCount;
+
           if (index === lastBalanceIndex - 2) {
             if (this.coinDividerIndex !== index) {
               this.coinDividerIndex = index;
@@ -288,7 +344,7 @@ class RecyclerAssetList extends Component {
               }
             }
             if (
-              sections[balancesIndex].data[lastBalanceIndex - 2]
+              sections[balancesIndex].data[lastBalanceIndex - offset - 2]
                 .smallBalancesContainer
             ) {
               return {
@@ -301,8 +357,8 @@ class RecyclerAssetList extends Component {
           }
           if (index === lastBalanceIndex - 1) {
             if (
-              sections[balancesIndex].data[lastBalanceIndex - 2] &&
-              sections[balancesIndex].data[lastBalanceIndex - 2]
+              sections[balancesIndex].data[lastBalanceIndex - offset - 3] &&
+              sections[balancesIndex].data[lastBalanceIndex - offset - 3]
                 .smallBalancesContainer
             ) {
               smallBalancesIndex = index - 1;
@@ -320,27 +376,10 @@ class RecyclerAssetList extends Component {
               };
             }
           }
-          if (index === lastBalanceIndex) {
-            if (
-              sections[balancesIndex].data[lastBalanceIndex - 1]
-                .savingsContainer
-            ) {
-              return {
-                height: ViewTypes.COIN_SAVINGS.calculateHeight({
-                  amountOfRows:
-                    sections[balancesIndex].data[index - 1].assets?.length || 0,
-                  isLast: poolsIndex < 0,
-                  isOpen: this.props.openSavings,
-                }),
-                index: ViewTypes.COIN_SAVINGS.index,
-              };
-            }
-            this.lastAssetIndex = index;
-          }
           const firstBalanceIndex = sectionsIndices[balancesIndex] + 1;
           const isFirst =
             index === firstBalanceIndex &&
-            !sections[balancesIndex].data[firstBalanceIndex - 1]
+            !sections[balancesIndex].data[firstBalanceIndex - offset - 1]
               .smallBalancesContainer;
 
           return {
@@ -723,21 +762,29 @@ class RecyclerAssetList extends Component {
         data,
         isCoinListEdited,
       });
+    } else if (type.index === ViewTypes.PREPAID_CARDS.index) {
+      return ViewTypes.PREPAID_CARDS.renderComponent({
+        data,
+      });
+    } else if (type.index === ViewTypes.DEPOTS.index) {
+      return ViewTypes.DEPOTS.renderComponent({
+        data,
+      });
     } else if (type.index === ViewTypes.COIN_ROW.index) {
       return ViewTypes.COIN_ROW.renderComponent({
         data,
         type,
       });
     } else if (type.index === ViewTypes.COIN_DIVIDER.index) {
-      return null;
+      return ViewTypes.COIN_DIVIDER.renderComponent({
+        data,
+        isCoinListEdited,
+        nativeCurrency,
+      });
     } else if (type.index === ViewTypes.COIN_SMALL_BALANCES.index) {
       return ViewTypes.COIN_SMALL_BALANCES.renderComponent({
         data,
         smallBalancedChanged,
-      });
-    } else if (type.index === ViewTypes.COIN_SAVINGS.index) {
-      return ViewTypes.COIN_SAVINGS.renderComponent({
-        data,
       });
     } else if (type.index === ViewTypes.POOLS.index) {
       return ViewTypes.POOLS.renderComponent({

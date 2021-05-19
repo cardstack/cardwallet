@@ -2,16 +2,29 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import CoinIcon from 'react-coin-icon';
 
-import { CoinItem } from '../../types';
-import { TruncatedAddress } from '../../../../src/components/text';
 import { Container, Icon, Text, Touchable } from '@cardstack/components';
 
+export const DEPOT_HEIGHT = 175;
+
+interface Token {
+  balance: {
+    amount: string;
+    display: string;
+  };
+  native: {
+    amount: string;
+    display: string;
+  };
+  token: {
+    symbol: string;
+  };
+}
 interface InventoryProps {
   address: string;
   /** unique identifier, displayed in top right corner of card */
   onPress: () => void;
   /** balance in xDai */
-  tokens: Array<CoinItem>;
+  tokens: Array<Token>;
 }
 
 /**
@@ -53,14 +66,19 @@ const Top = ({
       paddingHorizontal={5}
     >
       <Container flexDirection="row" alignItems="center">
-        <TruncatedAddress
-          address={address}
+        <Text fontFamily="RobotoMono-Regular" color="white">
+          {address.slice(0, 6)}
+        </Text>
+        <Text
+          fontFamily="RobotoMono-Regular"
           color="white"
-          firstSectionLength={6}
-          fontSize={14}
-          marginTop={1}
-          truncationLength={4}
-        />
+          letterSpacing={1.35}
+        >
+          ...
+        </Text>
+        <Text fontFamily="RobotoMono-Regular" color="white">
+          {address.slice(-4)}
+        </Text>
       </Container>
       <Touchable flexDirection="row" alignItems="center" onPress={onPress}>
         <Text color="white" weight="extraBold" size="small" marginRight={3}>
@@ -72,18 +90,20 @@ const Top = ({
   </Container>
 );
 
-const renderItem = ({ item }: { item: CoinItem }) => {
+const renderItem = ({ item }: { item: Token }) => {
   return (
     <Container
       flexDirection="row"
       justifyContent="space-between"
       alignItems="center"
-      borderBottomColor="underlineGray"
-      borderBottomWidth={2}
       minHeight={75}
     >
-      <CoinIcon size={30} {...item} />
-      <Text size="medium">{item.symbol} </Text>
+      <Container flexDirection="row" alignItems="center">
+        <CoinIcon size={30} {...item.token} />
+        <Text size="medium" marginLeft={2}>
+          {item.token.symbol}
+        </Text>
+      </Container>
       <Container alignItems="flex-end">
         <Text size="small" color="backgroundBlue">
           {item.native.display}
@@ -96,7 +116,7 @@ const renderItem = ({ item }: { item: CoinItem }) => {
   );
 };
 
-const Bottom = ({ tokens }: { tokens: Array<CoinItem> }) => {
+const Bottom = ({ tokens }: { tokens: Array<Token> }) => {
   return (
     <Container paddingHorizontal={6}>
       <FlatList data={tokens} renderItem={renderItem} />

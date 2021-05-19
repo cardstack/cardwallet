@@ -13,6 +13,8 @@ import logo from '../../assets/cardstackLogoTransparent.png';
 import { ExpandedCard, ExpandedCardProps } from './ExpandedCard';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
 
+export const PREPAID_CARD_HEIGHT = 250;
+
 interface PrepaidCardProps extends ExpandedCardProps {
   issuer: string;
   /** unique identifier, displayed in top right corner of card */

@@ -132,18 +132,18 @@ const addEth = section => {
 };
 
 const buildWalletSections = (
+  prepaidCardSection,
+  depotSection,
   balanceSection,
   uniqueTokenFamiliesSection,
-  uniswapSection,
-  depotSection,
-  prepaidCardSection
+  uniswapSection
 ) => {
   const sections = [
+    prepaidCardSection,
+    depotSection,
     addEth(balanceSection),
     uniswapSection,
     uniqueTokenFamiliesSection,
-    depotSection,
-    prepaidCardSection,
   ];
 
   const filteredSections =
@@ -296,10 +296,6 @@ const withBalanceSection = (
     nativeCurrency
   );
 
-  if (networkTypes.mainnet === network) {
-    balanceSectionData.push(savingsSection);
-  }
-
   if (isLoadingAssets) {
     balanceSectionData = [{ item: { uniqueId: 'skeleton0' } }];
   }
@@ -450,7 +446,7 @@ const prepaidCardsSectionSelector = createSelector(
   }
 );
 
-const safesSectionSelector = createSelector(
+const depotSectionSelector = createSelector(
   [allDepotsSelector],
   (depots = []) => {
     const total = depots.reduce(
@@ -469,7 +465,7 @@ const safesSectionSelector = createSelector(
         totalItems: depots.length,
         totalValue: `$${total.toFixed(2)}`,
       },
-      name: 'safes',
+      name: 'depots',
       data: depots,
       // eslint-disable-next-line react/display-name
       renderItem: ({ item }) => {
@@ -508,11 +504,11 @@ const uniqueTokenFamiliesSelector = createSelector(
 
 export const buildWalletSectionsSelector = createSelector(
   [
+    prepaidCardsSectionSelector,
+    depotSectionSelector,
     balanceSectionSelector,
     uniqueTokenFamiliesSelector,
     uniswapSectionSelector,
-    safesSectionSelector,
-    prepaidCardsSectionSelector,
   ],
   buildWalletSections
 );

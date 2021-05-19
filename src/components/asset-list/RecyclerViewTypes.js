@@ -12,21 +12,16 @@ import { SavingsCoinRowHeight } from '../coin-row/SavingsCoinRow';
 import { FloatingActionButtonSize } from '../fab';
 import { ListFooter } from '../list';
 import PoolsListWrapper from '../pools/PoolsListWrapper';
-import SavingsListWrapper from '../savings/SavingsListWrapper';
 import { TokenFamilyHeaderHeight } from '../token-family';
 import { UniqueTokenRow } from '../unique-token';
 import AssetListHeader, { AssetListHeaderHeight } from './AssetListHeader';
+import { DEPOT_HEIGHT, PREPAID_CARD_HEIGHT } from '@cardstack/components';
 
 export const firstCoinRowMarginTop = 6;
 const lastCoinRowAdditionalHeight = 1;
 
 const openSmallBalancesAdditionalHeight = 15;
 const closedSmallBalancesAdditionalHeight = 18;
-
-const savingsOpenAdditionalHeight = -7.5;
-const savingsClosedAdditionalHeight = -5;
-const savingsLastOpenAdditionalHeight = -13;
-const savingsLastClosedAdditionalHeight = -10;
 
 const poolsOpenAdditionalHeight = -12;
 const poolsClosedAdditionalHeight = -15;
@@ -59,7 +54,7 @@ export const ViewTypes = {
       (!isFirst && isLast && !areSmallCollectibles
         ? ListFooter.height + lastCoinRowAdditionalHeight
         : 0),
-    index: 1,
+    index: 3,
     renderComponent: ({ type, data }) => {
       const { item = {}, renderItem } = data;
       return renderItem({
@@ -73,7 +68,7 @@ export const ViewTypes = {
 
   COIN_DIVIDER: {
     calculateHeight: () => CoinDividerHeight,
-    index: 2,
+    index: 4,
     renderComponent: ({ data, isCoinListEdited, nativeCurrency }) => {
       const { item = {} } = data;
       return (
@@ -94,7 +89,7 @@ export const ViewTypes = {
           openSmallBalancesAdditionalHeight +
           (isCoinListEdited ? editModeAdditionalHeight : 0)
         : closedSmallBalancesAdditionalHeight,
-    index: 3,
+    index: 5,
     renderComponent: ({ data, smallBalancedChanged }) => {
       const { item = {}, renderItem } = data;
 
@@ -122,25 +117,6 @@ export const ViewTypes = {
     visibleDuringCoinEdit: true,
   },
 
-  COIN_SAVINGS: {
-    calculateHeight: ({ isOpen, isLast, amountOfRows }) =>
-      isOpen
-        ? TokenFamilyHeaderHeight +
-          (isLast
-            ? ListFooter.height + savingsLastOpenAdditionalHeight
-            : savingsOpenAdditionalHeight) +
-          SavingsCoinRowHeight * amountOfRows
-        : TokenFamilyHeaderHeight +
-          (isLast
-            ? ListFooter.height + savingsLastClosedAdditionalHeight
-            : savingsClosedAdditionalHeight),
-    index: 4,
-    renderComponent: ({ data }) => {
-      const { item = {} } = data;
-      return null;
-    },
-  },
-
   POOLS: {
     calculateHeight: ({ isOpen, isLast, amountOfRows }) =>
       isOpen
@@ -153,7 +129,7 @@ export const ViewTypes = {
           (isLast
             ? ListFooter.height + poolsLastClosedAdditionalHeight
             : poolsClosedAdditionalHeight),
-    index: 5,
+    index: 7,
     renderComponent: ({ data, isCoinListEdited }) => {
       return <PoolsListWrapper {...data} isCoinListEdited={isCoinListEdited} />;
     },
@@ -174,7 +150,7 @@ export const ViewTypes = {
           : 0);
       return height;
     },
-    index: 6,
+    index: 8,
     renderComponent: ({ type, data, index, sections }) => {
       const { item = {}, renderItem } = data;
       return renderItem({
@@ -194,11 +170,32 @@ export const ViewTypes = {
     },
   },
 
+  PREPAID_CARDS: {
+    calculateHeight: ({ amountOfRows }) => amountOfRows * PREPAID_CARD_HEIGHT,
+    index: 1,
+    renderComponent: ({ data }) => {
+      const { item = {}, renderItem } = data;
+
+      return renderItem({ item });
+    },
+  },
+
+  DEPOTS: {
+    calculateHeight: ({ amountOfRows }) => amountOfRows * DEPOT_HEIGHT,
+    index: 2,
+    renderComponent: ({ data }) => {
+      const { item = {}, renderItem } = data;
+
+      return renderItem({ item });
+    },
+  },
+
   FOOTER: {
     calculateHeight: ({ paddingBottom }) =>
       paddingBottom - FloatingActionButtonSize / 2,
-    index: 7,
+    index: 9,
   },
+
   UNKNOWN: {
     calculateHeight: () => 0,
     index: 99,
