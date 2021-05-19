@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 import { Alert } from 'react-native';
-import { Inventory } from './Inventory';
+import { Depot } from './Depot';
 
 storiesOf('Inventory Card', module).add('Default', () => {
   const data = [
@@ -24,7 +24,7 @@ storiesOf('Inventory Card', module).add('Default', () => {
   ];
 
   return (
-    <Inventory
+    <Depot
       title="Inventory 1"
       onPress={() => Alert.alert('pressed')}
       items={data}

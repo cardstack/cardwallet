@@ -19,9 +19,8 @@ import { CollectibleTokenFamily } from '../components/token-family';
 import { withNavigation } from '../navigation/Navigation';
 import { compose, withHandlers } from '../utils/recompactAdapters';
 import { buildCoinsList, buildUniqueTokenList } from './assets';
-import networkTypes from './networkTypes';
 import { add, convertAmountToNativeDisplay, multiply } from './utilities';
-import { Container, Inventory, PrepaidCard } from '@cardstack/components';
+import { Container, Depot, PrepaidCard } from '@cardstack/components';
 import { ImgixImage } from '@rainbow-me/images';
 import { setIsCoinListEdited } from '@rainbow-me/redux/editOptions';
 import { setOpenSmallBalances } from '@rainbow-me/redux/openStateSettings';
@@ -30,7 +29,6 @@ import { ETH_ICON_URL } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
 import { ethereumUtils } from '@rainbow-me/utils';
 
-const allSelector = state => state;
 const allDepotsSelector = state => state.depots;
 const allPrepaidCardsSelector = state => state.prepaidCards;
 const allAssetsSelector = state => state.allAssets;
@@ -420,17 +418,10 @@ const uniswapSectionSelector = createSelector(
 const prepaidCardsSectionSelector = createSelector(
   [allPrepaidCardsSelector],
   (prepaidCards = []) => {
-    const total = prepaidCards.reduce(
-      (acc, prepaidCard) =>
-        acc + Number(prepaidCard.tokens[0].native.balance.amount),
-      0
-    );
-
     return {
       header: {
         title: 'Prepaid Cards',
         totalItems: prepaidCards.length,
-        totalValue: `$${total.toFixed(2)}`,
       },
       name: 'prepaidCards',
       data: prepaidCards,
@@ -456,21 +447,11 @@ const prepaidCardsSectionSelector = createSelector(
 const depotSectionSelector = createSelector(
   [allDepotsSelector],
   (depots = []) => {
-    const total = depots.reduce(
-      (acc, prepaidCard) =>
-        acc +
-        prepaidCard.tokens.reduce(
-          (_acc, { token }) => _acc + parseFloat(token.value),
-          0
-        ),
-      0
-    );
-
     return {
       header: {
-        title: 'Depots',
+        hideCount: true,
+        title: 'Depot',
         totalItems: depots.length,
-        totalValue: `$${total.toFixed(2)}`,
       },
       name: 'depots',
       data: depots,
@@ -478,7 +459,7 @@ const depotSectionSelector = createSelector(
       renderItem: ({ item }) => {
         const { tokens, address } = item;
 
-        return <Inventory address={address} tokens={tokens} />;
+        return <Depot address={address} tokens={tokens} />;
       },
     };
   }

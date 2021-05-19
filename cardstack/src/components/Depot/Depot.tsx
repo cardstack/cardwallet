@@ -19,7 +19,7 @@ interface Token {
     symbol: string;
   };
 }
-interface InventoryProps {
+interface DepotProps {
   address: string;
   /** unique identifier, displayed in top right corner of card */
   onPress: () => void;
@@ -30,7 +30,7 @@ interface InventoryProps {
 /**
  * A invetory card component
  */
-export const Inventory = ({ address, tokens, onPress }: InventoryProps) => {
+export const Depot = ({ address, tokens, onPress }: DepotProps) => {
   return (
     <Container width="100%" paddingHorizontal={4}>
       <Touchable width="100%" testID="inventory-card">
@@ -116,10 +116,7 @@ const renderItem = ({ item }: { item: Token }) => {
 const Bottom = ({ tokens }: { tokens: Array<Token> }) => {
   return (
     <Container paddingHorizontal={6}>
-      <FlatList
-        data={[...tokens, ...tokens, ...tokens]}
-        renderItem={renderItem}
-      />
+      <FlatList data={tokens} renderItem={renderItem} />
     </Container>
   );
 };
