@@ -4,7 +4,7 @@ import CoinIcon from 'react-coin-icon';
 
 import { Container, Icon, Text, Touchable } from '@cardstack/components';
 
-export const DEPOT_HEIGHT = 175;
+export const DEPOT_HEIGHT = 150;
 
 interface Token {
   balance: {
@@ -105,11 +105,8 @@ const renderItem = ({ item }: { item: Token }) => {
         </Text>
       </Container>
       <Container alignItems="flex-end">
-        <Text size="small" color="backgroundBlue">
-          {item.native.display}
-        </Text>
         <Text size="medium" weight="extraBold">
-          {`§${item.balance.display}`}
+          {`${item.balance.display}`}
         </Text>
       </Container>
     </Container>
@@ -119,7 +116,10 @@ const renderItem = ({ item }: { item: Token }) => {
 const Bottom = ({ tokens }: { tokens: Array<Token> }) => {
   return (
     <Container paddingHorizontal={6}>
-      <FlatList data={tokens} renderItem={renderItem} />
+      <FlatList
+        data={[...tokens, ...tokens, ...tokens]}
+        renderItem={renderItem}
+      />
     </Container>
   );
 };

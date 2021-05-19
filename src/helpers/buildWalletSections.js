@@ -303,15 +303,21 @@ const withBalanceSection = (
   return {
     balances: true,
     data: balanceSectionData,
-    header: coinEditContextMenu(
-      allAssets,
-      balanceSectionData,
-      isCoinListEdited,
-      currentAction,
-      isLoadingAssets,
-      allAssetsCount,
-      totalValue
-    ),
+    header: {
+      title: lang.t('account.tab_balances'),
+      totalItems: isLoadingAssets ? 1 : allAssetsCount,
+      totalValue: totalValue,
+    },
+    /* remove context menu for now */
+    // header: coinEditContextMenu(
+    //   allAssets,
+    //   balanceSectionData,
+    //   isCoinListEdited,
+    //   currentAction,
+    //   isLoadingAssets,
+    //   allAssetsCount,
+    //   totalValue
+    // ),
     name: 'balances',
     renderItem: isLoadingAssets
       ? balancesSkeletonRenderItem
@@ -415,7 +421,8 @@ const prepaidCardsSectionSelector = createSelector(
   [allPrepaidCardsSelector],
   (prepaidCards = []) => {
     const total = prepaidCards.reduce(
-      (acc, prepaidCard) => acc + Number(prepaidCard.tokens[0].native.display),
+      (acc, prepaidCard) =>
+        acc + Number(prepaidCard.tokens[0].native.balance.amount),
       0
     );
 
@@ -437,7 +444,7 @@ const prepaidCardsSectionSelector = createSelector(
               cpxdBalance={item.spendFaceValue}
               id={item.address}
               issuer="Cardstack"
-              usdBalance={token.native.display}
+              usdBalance={token.native.balance.display}
             />
           </Container>
         );

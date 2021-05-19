@@ -150,9 +150,7 @@ const Bottom = ({
         justifyContent="space-between"
         marginTop={2}
       >
-        {/* not sure if we should start with xDai and convert to USD or go the other way around. Also unsure how we will do that calculation either way */}
-        <Text fontWeight="700">{`$${usdBalance} USD`}</Text>
-        {/* not sure if these will be different based on card or universal */}
+        <Text fontWeight="700">{usdBalance}</Text>
         <Container alignItems="flex-end">
           <Text variant="smallGrey">RELOADABLE</Text>
           <Text variant="smallGrey">NON-TRANSFRERRABLE</Text>
