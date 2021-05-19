@@ -147,7 +147,7 @@ const buildWalletSections = (
   const filteredSections =
     filterWalletSections(sections).length > 0
       ? filterWalletSections(sections)
-      : filterWalletSections([balanceSection]);
+      : filterWalletSections([prepaidCardSection]);
   const isEmpty = !filteredSections.length;
 
   return {
@@ -295,13 +295,16 @@ const withBalanceSection = (
   );
 
   if (isLoadingAssets) {
-    balanceSectionData = [{ item: { uniqueId: 'skeleton0' } }];
+    balanceSectionData = [0, 1, 2].map(idx => ({
+      item: { uniqueId: `skeleton${idx}` },
+    }));
   }
 
   return {
     balances: true,
     data: balanceSectionData,
     header: {
+      hideCount: isLoadingAssets ? true : false,
       title: lang.t('account.tab_balances'),
       totalItems: isLoadingAssets ? 1 : allAssetsCount,
       totalValue: totalValue,

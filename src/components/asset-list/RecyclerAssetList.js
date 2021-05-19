@@ -439,6 +439,7 @@ class RecyclerAssetList extends Component {
   }
 
   static getDerivedStateFromProps({ sections, openFamilyTabs }, state) {
+    console.log({sections});
     const sectionsIndices = [];
     const stickyComponentsIndices = [];
     const items = sections.reduce((ctx, section) => {
