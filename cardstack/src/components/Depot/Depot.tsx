@@ -11,10 +11,6 @@ interface Token {
     amount: string;
     display: string;
   };
-  native: {
-    amount: string;
-    display: string;
-  };
   token: {
     symbol: string;
     name: string;

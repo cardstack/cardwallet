@@ -6,28 +6,22 @@ import { Depot } from './Depot';
 storiesOf('Inventory Card', module).add('Default', () => {
   const data = [
     {
-      title: 'Prepaid Cards',
-      length: 5,
-      totalValueText: 'Total Face Value',
-      totalValue: '1000',
-    },
-    {
-      title: 'Balances',
-      length: 3,
-      totalValueText: 'Total Value',
-      totalValue: '1000',
-    },
-    {
-      title: 'Collectables',
-      length: 2,
+      balance: {
+        amount: '1',
+        display: '1.00',
+      },
+      token: {
+        symbol: 'DAI',
+        name: 'DAI.CPXD',
+      },
     },
   ];
 
   return (
     <Depot
-      title="Inventory 1"
+      address="0x00000000"
       onPress={() => Alert.alert('pressed')}
-      items={data}
+      tokens={data}
     />
   );
 });
