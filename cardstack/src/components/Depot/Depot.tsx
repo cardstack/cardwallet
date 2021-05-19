@@ -17,6 +17,7 @@ interface Token {
   };
   token: {
     symbol: string;
+    name: string;
   };
 }
 interface DepotProps {
@@ -100,8 +101,8 @@ const renderItem = ({ item }: { item: Token }) => {
     >
       <Container flexDirection="row" alignItems="center">
         <CoinIcon size={30} {...item.token} />
-        <Text size="medium" marginLeft={2}>
-          {item.token.symbol}
+        <Text size="body" marginLeft={2}>
+          {item.token.name}
         </Text>
       </Container>
       <Container alignItems="flex-end">
