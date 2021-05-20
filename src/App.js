@@ -116,12 +116,6 @@ class App extends Component {
       logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
 
-    const maintenanceActive = await this.checkMaintenanceStatus();
-
-    if (maintenanceActive) {
-      return;
-    }
-
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
     await this.handleInitializeAnalytics();
@@ -198,27 +192,6 @@ class App extends Component {
     this.backgroundNotificationHandler?.();
     this.branchListener?.();
   }
-
-  checkMaintenanceStatus = async () => {
-    try {
-      const response = await fetch(
-        'https://us-central1-card-pay-3e9be.cloudfunctions.net/maintenance-status'
-      );
-
-      const { maintenanceActive, maintenanceMessage } = await response.json();
-
-      if (maintenanceActive) {
-        Navigation.handleAction(Routes.MAINTENANCE_MODAL, {});
-
-        this.setState({ initialRoute: Routes.MAINTENANCE_MODAL });
-      }
-
-      return maintenanceActive;
-    } catch (e) {
-      console.log({ e });
-      return false;
-    }
-  };
 
   identifyFlow = async () => {
     const address = await loadAddress();
