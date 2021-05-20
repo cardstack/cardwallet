@@ -282,7 +282,6 @@ class RecyclerAssetList extends Component {
           (index <= sectionsIndices[poolsIndex] || poolsIndex < 0)
         ) {
           const amountOfRows = sections[prepaidCardsIndex].data.length;
-          console.log('amountOfRows p', amountOfRows);
           return {
             height: ViewTypes.PREPAID_CARDS.calculateHeight({
               amountOfRows: amountOfRows,
@@ -300,7 +299,6 @@ class RecyclerAssetList extends Component {
           (index <= sectionsIndices[poolsIndex] || poolsIndex < 0)
         ) {
           const amountOfRows = sections[depotsIndex].data.length;
-          console.log('amountOfRows d', amountOfRows);
           return {
             height: ViewTypes.DEPOTS.calculateHeight({
               amountOfRows,
@@ -439,7 +437,6 @@ class RecyclerAssetList extends Component {
   }
 
   static getDerivedStateFromProps({ sections, openFamilyTabs }, state) {
-    console.log({sections});
     const sectionsIndices = [];
     const stickyComponentsIndices = [];
     const items = sections.reduce((ctx, section) => {

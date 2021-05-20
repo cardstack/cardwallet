@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import { OpacityToggler } from '../components/animations';
-import { AssetList } from '../components/asset-list';
+import { AssetListWrapper } from '../components/asset-list';
 import { FabWrapper } from '../components/fab';
 import {
   CameraHeaderButton,
@@ -118,14 +118,7 @@ export default function WalletScreen() {
             )}
           </Header>
         </HeaderOpacityToggler>
-        <AssetList
-          fetchData={refreshAccountData}
-          isEmpty={!notReallyEmpty ? isEmpty || !!params?.emptyWallet : false}
-          isWalletEthZero={isWalletEthZero}
-          network={network}
-          scrollViewTracker={scrollViewTracker}
-          sections={sections}
-        />
+        <AssetListWrapper />
       </FabWrapper>
     </WalletPage>
   );

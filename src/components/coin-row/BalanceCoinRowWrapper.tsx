@@ -12,11 +12,7 @@ const heightWithChart = baseHeight + 310;
 
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 
-interface BalanceCoinRowWrapperProps {
-  item: CoinItem;
-}
-
-const BalanceCoinWrapper = ({ item }: BalanceCoinRowWrapperProps) => {
+const BalanceCoinWrapper = (item: CoinItem) => {
   const { navigate } = useNavigation();
   const recentlyPinnedCount = useSelector(
     // @ts-ignore

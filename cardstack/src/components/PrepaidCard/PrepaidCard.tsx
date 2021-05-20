@@ -16,13 +16,15 @@ import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
 export const PREPAID_CARD_HEIGHT = 250;
 
 interface PrepaidCardProps extends ExpandedCardProps {
-  issuer: string;
-  /** unique identifier, displayed in top right corner of card */
-  id: string;
-  /** balance in DAI.CPXD */
-  cpxdBalance: string;
-  /** balance in USD */
-  usdBalance: string;
+  address: string;
+  tokens: {
+    native: {
+      balance: {
+        display: string;
+      };
+    };
+  }[];
+  spendFaceValue: string;
 }
 
 /**
@@ -30,11 +32,12 @@ interface PrepaidCardProps extends ExpandedCardProps {
  */
 export const PrepaidCard = (props: PrepaidCardProps) => {
   const [isScrollable, setIsScrollable] = useState(false);
-  const { issuer, id, cpxdBalance, usdBalance } = props;
+  const { address, tokens, spendFaceValue } = props;
+  const usdBalance = tokens[0].native.balance.display;
   const Wrapper = isScrollable ? ScrollView : Container;
 
   return (
-    <Wrapper width="100%">
+    <Wrapper width="100%" paddingHorizontal={4}>
       <Touchable
         onPress={() => setIsScrollable(!isScrollable)}
         width="100%"
@@ -48,8 +51,9 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           width="100%"
         >
           <GradientBackground />
-          <Top issuer={issuer} id={id} />
-          <Bottom cpxdBalance={cpxdBalance} usdBalance={usdBalance} />
+          {/* need to figure out what to use for issuer */}
+          <Top issuer="Cardstack" address={address} />
+          <Bottom cpxdBalance={spendFaceValue} usdBalance={usdBalance} />
         </Container>
       </Touchable>
       {isScrollable && <ExpandedCard recentActivity={props.recentActivity} />}
@@ -86,7 +90,7 @@ const GradientBackground = () => (
   </SVG>
 );
 
-const Top = ({ issuer, id }: { issuer: string; id: string }) => (
+const Top = ({ issuer, address }: { issuer: string; address: string }) => (
   <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
     <Container width="100%">
       <Text size="xxs">Issued by</Text>
@@ -100,11 +104,11 @@ const Top = ({ issuer, id }: { issuer: string; id: string }) => (
         {issuer}
       </Text>
       <Container flexDirection="row">
-        <Text variant="shadowRoboto">{id.slice(0, 6)}</Text>
+        <Text variant="shadowRoboto">{address.slice(0, 6)}</Text>
         <Text variant="shadowRoboto" letterSpacing={1.35}>
           ...
         </Text>
-        <Text variant="shadowRoboto">{id.slice(-4)}</Text>
+        <Text variant="shadowRoboto">{address.slice(-4)}</Text>
       </Container>
     </Container>
     <Container width="100%" alignItems="flex-end">

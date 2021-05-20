@@ -93,7 +93,7 @@ export const BalanceCoinRow = ({
               </Container>
             </Container>
             <Container alignItems="flex-end">
-              <Text fontWeight="700">{`${item?.native?.balance?.display} USD`}</Text>
+              <Text fontWeight="700">{`${item?.native?.balance?.display}`}</Text>
               <Text
                 variant="subText"
                 color={
