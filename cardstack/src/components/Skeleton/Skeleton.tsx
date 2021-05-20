@@ -1,26 +1,32 @@
-import React, { useEffect } from 'react';
-import { Animated } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing } from 'react-native';
 
 import { ContainerProps } from '../Container';
 import { AnimatedContainer } from '../Animated';
 
 export const Skeleton = (props: ContainerProps) => {
-  const opacity = new Animated.Value(1);
+  const opacity = useRef(new Animated.Value(1));
 
-  Animated.loop(
-    Animated.sequence([
-      Animated.timing(opacity, {
-        toValue: 0.7,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }),
-    ])
-  ).start();
+  useEffect(() => {
+    const config = {
+      duration: 1000,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: true,
+    };
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity.current, {
+          ...config,
+          toValue: 0.5,
+        }),
+        Animated.timing(opacity.current, {
+          ...config,
+          toValue: 1,
+        }),
+      ])
+    ).start();
+  }, []);
 
   return (
     <AnimatedContainer
@@ -28,7 +34,7 @@ export const Skeleton = (props: ContainerProps) => {
       height={25}
       borderRadius={10}
       width="100%"
-      opacity={opacity}
+      opacity={opacity.current}
       {...props}
     />
   );

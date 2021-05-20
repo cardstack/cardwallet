@@ -72,7 +72,7 @@ const AssetListWrapper = (props: NavigationScreenProps) => {
   return (
     <AssetList
       isEmpty={!sections.length}
-      loading
+      loading={isLoadingAssets}
       network={network}
       sections={sections}
     />
