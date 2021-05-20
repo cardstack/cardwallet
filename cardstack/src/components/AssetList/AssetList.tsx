@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React from 'react';
-
 import { SectionList } from 'react-native';
+
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
-import { AssetListItemSkeleton } from '../../../../src/components/asset-list';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
-import { Container, Text, Icon } from '@cardstack/components';
+import { AssetListLoading } from './AssetListLoading';
+import { Container, Icon, Text } from '@cardstack/components';
 
 interface HeaderItem {
   title: string;
@@ -30,13 +30,7 @@ export const AssetList = (props: AssetListProps) => {
   const { isEmpty, loading, sections, network } = props;
 
   if (loading) {
-    return (
-      <Container>
-        <AssetListItemSkeleton />
-        <AssetListItemSkeleton />
-        <AssetListItemSkeleton />
-      </Container>
-    );
+    return <AssetListLoading />;
   }
 
   if (isEmpty) {
