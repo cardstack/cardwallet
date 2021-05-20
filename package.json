@@ -121,6 +121,7 @@
     "browserify-zlib": "^0.1.4",
     "buffer": "^4.9.1",
     "chroma-js": "^2.1.0",
+    "compare-versions": "^3.6.0",
     "console-browserify": "^1.2.0",
     "constants-browserify": "^1.0.0",
     "date-fns": "^2.13.0",
