@@ -358,8 +358,13 @@ const CheckSystemReqs = ({ children }) => {
   const [maintenanceStatus, setMaintenanceStatus] = useState(null);
 
   async function getReqs() {
-    setMaintenanceStatus(await getMaintenanceStatus());
-    setMinimumVersion((await getMinimumVersion()).minVersion);
+    const [maintenanceStatusResponse, minVersionResponse] = await Promise.all([
+      getMaintenanceStatus(),
+      getMinimumVersion(),
+    ]);
+
+    setMaintenanceStatus(maintenanceStatusResponse);
+    setMinimumVersion(minVersionResponse.minVersion);
   }
 
   useEffect(() => {
