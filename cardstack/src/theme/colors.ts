@@ -20,7 +20,6 @@ export const palette = {
   redDark: '#FF5050',
   transparent: 'transparent',
   white: '#FFFFFF',
-  skeletonGray: '#707070',
 };
 
 export const colors = {
@@ -50,7 +49,6 @@ export const colors = {
   white: palette.white,
   underlineGray: palette.grayMediumLight,
   spendableBalance: palette.blueDarkest,
-  skeletonGray: palette.grayLight,
 };
 
 export type ColorTypes = keyof typeof colors;
