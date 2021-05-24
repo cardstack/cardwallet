@@ -1,14 +1,22 @@
+import {
+  AssetType,
+  AssetWithNativeType,
+  DepotType,
+  PrepaidCardType,
+} from '@cardstack/types';
 import React from 'react';
-import { useSelector } from 'react-redux';
-
 import { BalanceCoinRowWrapper } from '../coin-row';
-import { AssetList, Depot, PrepaidCard } from '@cardstack/components';
+import {
+  AssetList,
+  AssetListSectionItem,
+  Depot,
+  PrepaidCard,
+} from '@cardstack/components';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
-interface AssetListWrapperProps {}
-
-const usePrepaidCardSection = () => {
-  const prepaidCards = useSelector(state => state.data.prepaidCards);
+const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
+  const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
 
   return {
     header: {
@@ -21,8 +29,8 @@ const usePrepaidCardSection = () => {
   };
 };
 
-const useDepotSection = () => {
-  const depots = useSelector(state => state.data.depots);
+const useDepotSection = (): AssetListSectionItem<DepotType> => {
+  const depots = useRainbowSelector(state => state.data.depots);
 
   return {
     header: {
@@ -33,16 +41,16 @@ const useDepotSection = () => {
   };
 };
 
-const useBalancesSection = () => {
-  const [stateAssets, nativeCurrency] = useSelector(state => [
-    state.data.assets,
-    state.settings.nativeCurrency,
-  ]);
+const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
+  const [stateAssets, nativeCurrency] = useRainbowSelector<
+    [AssetType[], string]
+  >(state => [state.data.assets, state.settings.nativeCurrency]);
+  console.log({ stateAssets });
   const assetsWithNative = parseAssetsNativeWithTotals(
     stateAssets,
     nativeCurrency
   );
-  const assets = assetsWithNative.assetsNativePrices;
+  const assets = assetsWithNative.assetsNativePrices as AssetWithNativeType[];
 
   return {
     header: {
@@ -56,11 +64,10 @@ const useBalancesSection = () => {
   };
 };
 
-const AssetListWrapper = (props: NavigationScreenProps) => {
-  const [isLoadingAssets, network] = useSelector(state => [
-    state.data.isLoadingAssets,
-    state.settings.network,
-  ]);
+const AssetListWrapper = () => {
+  const [isLoadingAssets, network] = useRainbowSelector<[boolean, string]>(
+    state => [state.data.isLoadingAssets, state.settings.network]
+  );
   const prepaidCardSection = usePrepaidCardSection();
   const depotSection = useDepotSection();
   const balancesSection = useBalancesSection();

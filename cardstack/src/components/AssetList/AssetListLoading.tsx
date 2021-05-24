@@ -1,41 +1,34 @@
 import React from 'react';
-import { Container, Skeleton } from '@cardstack/components';
+import { ContainerProps } from '../Container';
+import { Container, Skeleton, ScrollView } from '@cardstack/components';
 
-const Header = () => (
-  <Container flexDirection="row" justifyContent="space-between">
-    <Skeleton width="65%" />
-    <Skeleton width="15%" />
+const PrepaidCardSection = (props: ContainerProps) => (
+  <Container {...props}>
+    <Skeleton width="50%" />
+    <Skeleton height={200} width="100%" marginTop={3} />
   </Container>
 );
 
-const AssetItem = () => (
-  <Container flexDirection="row" marginTop={6} justifyContent="space-between">
-    <Container width="70%" flexDirection="row" alignItems="center">
-      <Skeleton borderRadius={100} height={45} width={45} marginRight={2} />
-      <Container flexDirection="column" width="70%">
-        <Skeleton marginBottom={2} />
-        <Skeleton width="75%" />
-      </Container>
-    </Container>
-    <Container flexDirection="column" width="30%" alignItems="flex-end">
-      <Skeleton marginBottom={2} />
-      <Skeleton width="75%" />
-    </Container>
+const BalancesSection = (props: ContainerProps) => (
+  <Container {...props}>
+    <Skeleton width="50%" />
+    <Skeleton height={75} width="100%" marginTop={3} />
+    <Skeleton height={75} width="100%" marginTop={3} />
   </Container>
 );
 
-const AssetSection = () => (
-  <Container padding={4} width="100%" marginTop={4}>
-    <Header />
-    <AssetItem />
-    <AssetItem />
-    <AssetItem />
+const CollectiblesSection = (props: ContainerProps) => (
+  <Container {...props}>
+    <Skeleton width="50%" />
+    <Skeleton height={125} width="100%" marginTop={3} />
   </Container>
 );
 
 export const AssetListLoading = () => (
-  <Container>
-    <AssetSection />
-    <AssetSection />
-  </Container>
+  <ScrollView padding={4} flex={1}>
+    <PrepaidCardSection />
+    <PrepaidCardSection marginTop={7} />
+    <BalancesSection marginTop={7} />
+    <CollectiblesSection marginTop={7} />
+  </ScrollView>
 );

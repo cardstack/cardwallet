@@ -10,30 +10,16 @@ import SVG, {
 } from 'react-native-svg';
 
 import logo from '../../assets/cardstackLogoTransparent.png';
-import { ExpandedCard, ExpandedCardProps } from './ExpandedCard';
+import { PrepaidCardType } from '../../types';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
-
-export const PREPAID_CARD_HEIGHT = 250;
-
-interface PrepaidCardProps extends ExpandedCardProps {
-  address: string;
-  tokens: {
-    native: {
-      balance: {
-        display: string;
-      };
-    };
-  }[];
-  spendFaceValue: string;
-}
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {getConstantByNetwork} from '@cardstack/cardpay-sdk';
 
 /**
  * A prepaid card component
  */
-export const PrepaidCard = (props: PrepaidCardProps) => {
+export const PrepaidCard = (prepaidCard: PrepaidCardType) => {
   const [isScrollable, setIsScrollable] = useState(false);
-  const { address, tokens, spendFaceValue } = props;
-  const usdBalance = tokens[0].native.balance.display;
   const Wrapper = isScrollable ? ScrollView : Container;
 
   return (
@@ -51,12 +37,11 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           width="100%"
         >
           <GradientBackground />
-          {/* need to figure out what to use for issuer */}
-          <Top issuer="Cardstack" address={address} />
-          <Bottom cpxdBalance={spendFaceValue} usdBalance={usdBalance} />
+          {/* hard code issuer for now */}
+          <Top {...prepaidCard} issuer="Cardstack" />
+          <Bottom {...prepaidCard} />
         </Container>
       </Touchable>
-      {isScrollable && <ExpandedCard recentActivity={props.recentActivity} />}
     </Wrapper>
   );
 };
@@ -90,40 +75,41 @@ const GradientBackground = () => (
   </SVG>
 );
 
-const Top = ({ issuer, address }: { issuer: string; address: string }) => (
-  <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
-    <Container width="100%">
-      <Text size="xxs">Issued by</Text>
-    </Container>
-    <Container
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-    >
-      <Text size="xs" weight="extraBold">
-        {issuer}
-      </Text>
-      <Container flexDirection="row">
-        <Text variant="shadowRoboto">{address.slice(0, 6)}</Text>
-        <Text variant="shadowRoboto" letterSpacing={1.35}>
-          ...
+const Top = ({ issuer, address }: PrepaidCardType) => {
+  const network = useRainbowSelector(state => state.settings.network);
+  const networkName = getConstantByNetwork('name', network);
+
+  return (
+    <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
+      <Container width="100%">
+        <Text size="xxs">Issued by</Text>
+      </Container>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Text size="xs" weight="extraBold">
+          {issuer}
         </Text>
-        <Text variant="shadowRoboto">{address.slice(-4)}</Text>
+        <Container flexDirection="row">
+          <Text variant="shadowRoboto">{address.slice(0, 6)}</Text>
+          <Text variant="shadowRoboto" letterSpacing={1.35}>
+            ...
+          </Text>
+          <Text variant="shadowRoboto">{address.slice(-4)}</Text>
+        </Container>
+      </Container>
+      <Container width="100%" alignItems="flex-end">
+        <Text fontSize={11}>on {networkName}</Text>
       </Container>
     </Container>
-    <Container width="100%" alignItems="flex-end">
-      <Text fontSize={11}>on xDai chain</Text>
-    </Container>
-  </Container>
-);
+  );
+};
 
-const Bottom = ({
-  cpxdBalance,
-  usdBalance,
-}: {
-  cpxdBalance: string;
-  usdBalance: string;
-}) => {
+const Bottom = ({ spendFaceValue, tokens }: PrepaidCardType) => {
+  const usdBalance = tokens[0].native.balance.display;
+
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
       <Container
@@ -134,7 +120,7 @@ const Bottom = ({
         <Container>
           <Text fontSize={13}>Spendable Balance</Text>
           <Text fontSize={40} fontWeight="700">
-            {`§${cpxdBalance}`}
+            {`§${spendFaceValue}`}
           </Text>
         </Container>
         <Container height={46} width={42}>

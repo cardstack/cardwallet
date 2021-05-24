@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { Depot } from './Depot';
 
 storiesOf('Inventory Card', module).add('Default', () => {
-  const data = [
+  const data: any = [
     {
       balance: {
         amount: '1',

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import React from 'react';
 import { SectionList } from 'react-native';
 
@@ -14,16 +13,17 @@ interface HeaderItem {
   total?: string;
 }
 
-interface AssetListSectionItem {
+export type AssetListSectionItem<ComponentProps> = {
+  Component: (props: ComponentProps) => JSX.Element;
   header: HeaderItem;
-  data: any[];
-}
+  data: ComponentProps[];
+};
 
 interface AssetListProps {
   isEmpty: boolean;
   loading: boolean;
   network: string;
-  sections: any[];
+  sections: AssetListSectionItem<any>[];
 }
 
 export const AssetList = (props: AssetListProps) => {
@@ -40,60 +40,50 @@ export const AssetList = (props: AssetListProps) => {
   return (
     <SectionList
       sections={sections}
-      renderItem={renderItem}
-      renderSectionHeader={renderSectionHeader}
-    />
-  );
-};
+      renderItem={({ item, section: { Component } }) => <Component {...item} />}
+      renderSectionHeader={({ section }) => {
+        const {
+          header: { title, count, showContextMenu, total },
+        } = section;
 
-const renderItem = ({ item, section: { Component } }) => (
-  <Component {...item} />
-);
-
-interface SectionHeaderProps {
-  section: AssetListSectionItem;
-}
-
-const renderSectionHeader = ({ section }: SectionHeaderProps) => {
-  const {
-    header: { title, count, showContextMenu, total },
-  } = section;
-
-  return (
-    <Container
-      alignItems="center"
-      flexDirection="row"
-      justifyContent="space-between"
-      padding={4}
-      backgroundColor="backgroundBlue"
-    >
-      <Container flexDirection="row">
-        <Text color="white" size="medium">
-          {title}
-        </Text>
-        {count ? (
-          <Text color="buttonPrimaryBorder" size="medium" marginLeft={2}>
-            {count}
-          </Text>
-        ) : null}
-      </Container>
-      <Container marginRight={3} alignItems="center" flexDirection="row">
-        {total ? (
-          <Text
-            color="buttonPrimaryBorder"
-            size="body"
-            weight="extraBold"
-            marginRight={showContextMenu ? 3 : 0}
+        return (
+          <Container
+            alignItems="center"
+            flexDirection="row"
+            justifyContent="space-between"
+            padding={4}
+            backgroundColor="backgroundBlue"
           >
-            {total}
-          </Text>
-        ) : null}
-        {showContextMenu ? (
-          <ButtonPressAnimation>
-            <Icon name="more-circle" />
-          </ButtonPressAnimation>
-        ) : null}
-      </Container>
-    </Container>
+            <Container flexDirection="row">
+              <Text color="white" size="medium">
+                {title}
+              </Text>
+              {count ? (
+                <Text color="buttonPrimaryBorder" size="medium" marginLeft={2}>
+                  {count}
+                </Text>
+              ) : null}
+            </Container>
+            <Container marginRight={3} alignItems="center" flexDirection="row">
+              {total ? (
+                <Text
+                  color="buttonPrimaryBorder"
+                  size="body"
+                  weight="extraBold"
+                  marginRight={showContextMenu ? 3 : 0}
+                >
+                  {total}
+                </Text>
+              ) : null}
+              {showContextMenu ? (
+                <ButtonPressAnimation>
+                  <Icon name="more-circle" />
+                </ButtonPressAnimation>
+              ) : null}
+            </Container>
+          </Container>
+        );
+      }}
+    />
   );
 };
