@@ -1,15 +1,15 @@
-import {
-  AssetType,
-  AssetWithNativeType,
-  DepotType,
-  PrepaidCardType,
-} from '@cardstack/types';
 import { BalanceCoinRowWrapper } from '../../src/components/coin-row';
 import {
   AssetListSectionItem,
   Depot,
   PrepaidCard,
 } from '@cardstack/components';
+import {
+  AssetType,
+  AssetWithNativeType,
+  DepotType,
+  PrepaidCardType,
+} from '@cardstack/types';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 

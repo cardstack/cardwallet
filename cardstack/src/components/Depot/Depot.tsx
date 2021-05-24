@@ -4,6 +4,7 @@ import CoinIcon from 'react-coin-icon';
 
 import { DepotType } from '@cardstack/types';
 import { Container, Icon, Text, Touchable } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 
 /**
  * A invetory card component
@@ -39,17 +40,7 @@ const Top = ({ address, onPress }: DepotType) => (
     >
       <Container flexDirection="row" alignItems="center">
         <Text fontFamily="RobotoMono-Regular" color="white">
-          {address.slice(0, 6)}
-        </Text>
-        <Text
-          fontFamily="RobotoMono-Regular"
-          color="white"
-          letterSpacing={1.35}
-        >
-          ...
-        </Text>
-        <Text fontFamily="RobotoMono-Regular" color="white">
-          {address.slice(-4)}
+          {getAddressPreview(address)}
         </Text>
       </Container>
       <Touchable flexDirection="row" alignItems="center" onPress={onPress}>

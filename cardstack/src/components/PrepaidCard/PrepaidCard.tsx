@@ -12,6 +12,7 @@ import SVG, {
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardType } from '../../types';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
@@ -95,11 +96,7 @@ const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
           {issuer}
         </Text>
         <Container flexDirection="row">
-          <Text variant="shadowRoboto">{address.slice(0, 6)}</Text>
-          <Text variant="shadowRoboto" letterSpacing={1.35}>
-            ...
-          </Text>
-          <Text variant="shadowRoboto">{address.slice(-4)}</Text>
+          <Text variant="shadowRoboto">{getAddressPreview(address)}</Text>
         </Container>
       </Container>
       <Container width="100%" alignItems="flex-end">
