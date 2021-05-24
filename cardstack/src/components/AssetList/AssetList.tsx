@@ -1,6 +1,7 @@
 import React from 'react';
 import { SectionList } from 'react-native';
 
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { AssetListLoading } from './AssetListLoading';
@@ -14,7 +15,7 @@ interface HeaderItem {
 }
 
 export type AssetListSectionItem<ComponentProps> = {
-  Component: (props: ComponentProps) => JSX.Element;
+  Component: (props: ComponentProps & { networkName: string }) => JSX.Element;
   header: HeaderItem;
   data: ComponentProps[];
 };
@@ -28,6 +29,7 @@ interface AssetListProps {
 
 export const AssetList = (props: AssetListProps) => {
   const { isEmpty, loading, sections, network } = props;
+  const networkName = getConstantByNetwork('name', network);
 
   if (loading) {
     return <AssetListLoading />;
@@ -40,7 +42,9 @@ export const AssetList = (props: AssetListProps) => {
   return (
     <SectionList
       sections={sections}
-      renderItem={({ item, section: { Component } }) => <Component {...item} />}
+      renderItem={({ item, section: { Component } }) => (
+        <Component {...item} networkName={networkName} />
+      )}
       renderSectionHeader={({ section }) => {
         const {
           header: { title, count, showContextMenu, total },

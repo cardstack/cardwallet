@@ -25,6 +25,7 @@ storiesOf('Prepaid Card', module)
           ] as any
         }
         type="prepaid-card"
+        networkName="xDai Chain"
       />
     );
   })

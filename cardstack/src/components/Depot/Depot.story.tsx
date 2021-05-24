@@ -3,7 +3,7 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { Depot } from './Depot';
 
-storiesOf('Inventory Card', module).add('Default', () => {
+storiesOf('Default', module).add('Default', () => {
   const data: any = [
     {
       balance: {

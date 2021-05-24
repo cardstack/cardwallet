@@ -12,13 +12,18 @@ import SVG, {
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardType } from '../../types';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import {getConstantByNetwork} from '@cardstack/cardpay-sdk';
+
+interface PrepaidCardProps extends PrepaidCardType {
+  networkName: string;
+}
 
 /**
  * A prepaid card component
  */
-export const PrepaidCard = (prepaidCard: PrepaidCardType) => {
+export const PrepaidCard = ({
+  networkName,
+  ...prepaidCard
+}: PrepaidCardProps) => {
   const [isScrollable, setIsScrollable] = useState(false);
   const Wrapper = isScrollable ? ScrollView : Container;
 
@@ -38,7 +43,7 @@ export const PrepaidCard = (prepaidCard: PrepaidCardType) => {
         >
           <GradientBackground />
           {/* hard code issuer for now */}
-          <Top {...prepaidCard} issuer="Cardstack" />
+          <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
           <Bottom {...prepaidCard} />
         </Container>
       </Touchable>
@@ -75,10 +80,7 @@ const GradientBackground = () => (
   </SVG>
 );
 
-const Top = ({ issuer, address }: PrepaidCardType) => {
-  const network = useRainbowSelector(state => state.settings.network);
-  const networkName = getConstantByNetwork('name', network);
-
+const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
       <Container width="100%">

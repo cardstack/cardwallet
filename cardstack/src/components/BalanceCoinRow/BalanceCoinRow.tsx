@@ -1,7 +1,7 @@
 import React from 'react';
 import CoinIcon from 'react-coin-icon';
 
-import { CoinItem } from '../../types';
+import { AssetWithNativeType } from '../../types';
 import {
   CenteredContainer,
   Container,
@@ -11,7 +11,7 @@ import {
 } from '@cardstack/components';
 
 interface BalanceCoinRowProps {
-  item: CoinItem;
+  item: AssetWithNativeType;
   onPress: () => void;
   isEditing?: boolean;
   selected: boolean;
@@ -26,8 +26,10 @@ export const BalanceCoinRow = ({
   isEditing,
   selected,
 }: BalanceCoinRowProps) => {
-  const showIcon = item.isPinned || item.isHidden;
-  const iconName = item.isPinned ? 'pin' : 'eye-off';
+  const pinned = false;
+  const hidden = false;
+  const showIcon = pinned || hidden;
+  const iconName = pinned ? 'pin' : 'eye-off';
   const editingIconName = selected ? 'check-circle' : 'circle';
 
   return (
@@ -105,7 +107,7 @@ export const BalanceCoinRow = ({
             </Container>
           </Container>
         </Container>
-        {isEditing && item.isHidden && (
+        {isEditing && hidden && (
           <Container
             backgroundColor="black"
             top={8}
