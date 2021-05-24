@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useValue } from 'react-native-redash';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import { OpacityToggler } from '../components/animations';
-import { AssetList } from '../components/asset-list';
+import { AssetListWrapper } from '../components/asset-list';
 import { FabWrapper } from '../components/fab';
 import {
   CameraHeaderButton,
@@ -20,16 +19,12 @@ import useExperimentalFlag, {
   DISCOVER_SHEET,
 } from '../config/experimentalHooks';
 import {
-  useAccountEmptyState,
-  useAccountSettings,
+  useAssetListData,
   useCoinListEdited,
   useInitializeWallet,
-  useRefreshAccountData,
   useWallets,
-  useWalletSectionsData,
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
-import { updateRefetchSavings } from '../redux/data';
 import { colors } from '@cardstack/theme';
 import { position } from '@rainbow-me/styles';
 
@@ -52,33 +47,10 @@ export default function WalletScreen() {
   const discoverSheetAvailable = useExperimentalFlag(DISCOVER_SHEET);
   const [initialized, setInitialized] = useState(!!params?.initialized);
   const initializeWallet = useInitializeWallet();
-  const refreshAccountData = useRefreshAccountData();
   const { isCoinListEdited } = useCoinListEdited();
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();
-  const { isEmpty } = useAccountEmptyState();
-  const { network } = useAccountSettings();
-  const {
-    isWalletEthZero,
-    refetchSavings,
-    sections,
-    shouldRefetchSavings,
-  } = useWalletSectionsData();
-  const dispatch = useDispatch();
-
-  const notReallyEmpty = Boolean(
-    sections.find(section => section.data?.length > 0)
-  );
-
-  useEffect(() => {
-    const fetchAndResetFetchSavings = async () => {
-      await refetchSavings();
-      dispatch(updateRefetchSavings(false));
-    };
-    if (shouldRefetchSavings) {
-      fetchAndResetFetchSavings();
-    }
-  }, [dispatch, refetchSavings, shouldRefetchSavings]);
+  const { isEmpty } = useAssetListData();
 
   useEffect(() => {
     if (!initialized) {
@@ -103,7 +75,7 @@ export default function WalletScreen() {
       <Animated.View style={{ opacity: isCoinListEditedValue }} />
       <Animated.Code exec={scrollViewTracker} />
       <FabWrapper
-        disabled={!notReallyEmpty ? isEmpty || !!params?.emptyWallet : false}
+        disabled={isEmpty || !!params?.emptyWallet}
         fabs={fabs}
         isCoinListEdited={isCoinListEdited}
         isReadOnlyWallet={isReadOnlyWallet}
@@ -118,14 +90,7 @@ export default function WalletScreen() {
             )}
           </Header>
         </HeaderOpacityToggler>
-        <AssetList
-          fetchData={refreshAccountData}
-          isEmpty={!notReallyEmpty ? isEmpty || !!params?.emptyWallet : false}
-          isWalletEthZero={isWalletEthZero}
-          network={network}
-          scrollViewTracker={scrollViewTracker}
-          sections={sections}
-        />
+        <AssetListWrapper />
       </FabWrapper>
     </WalletPage>
   );

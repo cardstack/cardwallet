@@ -10,29 +10,26 @@ import SVG, {
 } from 'react-native-svg';
 
 import logo from '../../assets/cardstackLogoTransparent.png';
-import { ExpandedCard, ExpandedCardProps } from './ExpandedCard';
+import { PrepaidCardType } from '../../types';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 
-interface PrepaidCardProps extends ExpandedCardProps {
-  issuer: string;
-  /** unique identifier, displayed in top right corner of card */
-  id: string;
-  /** balance in DAI.CPXD */
-  cpxdBalance: string;
-  /** balance in USD */
-  usdBalance: string;
+interface PrepaidCardProps extends PrepaidCardType {
+  networkName: string;
 }
 
 /**
  * A prepaid card component
  */
-export const PrepaidCard = (props: PrepaidCardProps) => {
+export const PrepaidCard = ({
+  networkName,
+  ...prepaidCard
+}: PrepaidCardProps) => {
   const [isScrollable, setIsScrollable] = useState(false);
-  const { issuer, id, cpxdBalance, usdBalance } = props;
   const Wrapper = isScrollable ? ScrollView : Container;
 
   return (
-    <Wrapper width="100%">
+    <Wrapper width="100%" paddingHorizontal={4}>
       <Touchable
         onPress={() => setIsScrollable(!isScrollable)}
         width="100%"
@@ -46,11 +43,11 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           width="100%"
         >
           <GradientBackground />
-          <Top issuer={issuer} id={id} />
-          <Bottom cpxdBalance={cpxdBalance} usdBalance={usdBalance} />
+          {/* hard code issuer for now */}
+          <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
+          <Bottom {...prepaidCard} />
         </Container>
       </Touchable>
-      {isScrollable && <ExpandedCard recentActivity={props.recentActivity} />}
     </Wrapper>
   );
 };
@@ -84,40 +81,34 @@ const GradientBackground = () => (
   </SVG>
 );
 
-const Top = ({ issuer, id }: { issuer: string; id: string }) => (
-  <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
-    <Container width="100%">
-      <Text size="xxs">Issued by</Text>
-    </Container>
-    <Container
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-    >
-      <Text size="xs" weight="extraBold">
-        {issuer}
-      </Text>
-      <Container flexDirection="row">
-        <Text variant="shadowRoboto">{id.slice(0, 6)}</Text>
-        <Text variant="shadowRoboto" letterSpacing={1.35}>
-          ...
+const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
+  return (
+    <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
+      <Container width="100%">
+        <Text size="xxs">Issued by</Text>
+      </Container>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Text size="xs" weight="extraBold">
+          {issuer}
         </Text>
-        <Text variant="shadowRoboto">{id.slice(-4)}</Text>
+        <Container flexDirection="row">
+          <Text variant="shadowRoboto">{getAddressPreview(address)}</Text>
+        </Container>
+      </Container>
+      <Container width="100%" alignItems="flex-end">
+        <Text fontSize={11}>on {networkName}</Text>
       </Container>
     </Container>
-    <Container width="100%" alignItems="flex-end">
-      <Text fontSize={11}>on xDai chain</Text>
-    </Container>
-  </Container>
-);
+  );
+};
 
-const Bottom = ({
-  cpxdBalance,
-  usdBalance,
-}: {
-  cpxdBalance: string;
-  usdBalance: string;
-}) => {
+const Bottom = ({ spendFaceValue, tokens }: PrepaidCardType) => {
+  const usdBalance = tokens[0].native.balance.display;
+
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
       <Container
@@ -128,7 +119,7 @@ const Bottom = ({
         <Container>
           <Text fontSize={13}>Spendable Balance</Text>
           <Text fontSize={40} fontWeight="700">
-            {`§${cpxdBalance}`}
+            {`§${spendFaceValue}`}
           </Text>
         </Container>
         <Container height={46} width={42}>
@@ -148,9 +139,7 @@ const Bottom = ({
         justifyContent="space-between"
         marginTop={2}
       >
-        {/* not sure if we should start with xDai and convert to USD or go the other way around. Also unsure how we will do that calculation either way */}
-        <Text fontWeight="700">{`$${usdBalance} USD`}</Text>
-        {/* not sure if these will be different based on card or universal */}
+        <Text fontWeight="700">{usdBalance}</Text>
         <Container alignItems="flex-end">
           <Text variant="smallGrey">RELOADABLE</Text>
           <Text variant="smallGrey">NON-TRANSFRERRABLE</Text>

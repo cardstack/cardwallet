@@ -68,8 +68,6 @@ storiesOf('Balance Coin Row', module).add('Default', () => {
   const isEditing = boolean('Editing', false);
   const onPress = () => console.log('Pin pressed!');
   const selected = boolean('Selected', false);
-  const isPinned = boolean('Pinned', false);
-  const isHidden = boolean('Hidden', false);
 
   return (
     <Container width="100%" alignItems="center">
@@ -79,8 +77,6 @@ storiesOf('Balance Coin Row', module).add('Default', () => {
         onPress={onPress}
         item={{
           ...exampleCoinItem,
-          isHidden,
-          isPinned,
         }}
       />
       <BalanceCoinRow
@@ -89,8 +85,6 @@ storiesOf('Balance Coin Row', module).add('Default', () => {
         onPress={onPress}
         item={{
           ...exampleCoinItem2,
-          isHidden,
-          isPinned,
         }}
       />
     </Container>

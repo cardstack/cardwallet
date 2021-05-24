@@ -24,7 +24,7 @@ const AssetListHeader = ({
   >
     {totalValue ? (
       <Text color="white" fontSize={16} fontWeight="700">
-        {totalValue} USD
+        {totalValue}
       </Text>
     ) : null}
   </ListHeader>

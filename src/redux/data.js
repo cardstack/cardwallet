@@ -62,7 +62,13 @@ import {
 } from '@rainbow-me/parsers';
 import { shitcoins } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
-import { divide, isZero } from '@rainbow-me/utilities';
+import {
+  convertAmountToBalanceDisplay,
+  convertAmountToNativeDisplay,
+  convertRawAmountToBalance,
+  divide,
+  isZero,
+} from '@rainbow-me/utilities';
 import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
 import logger from 'logger';
 
@@ -328,6 +334,7 @@ export const addressAssetsReceived = (
     // Change the state since the account isn't empty anymore
     saveAccountEmptyState(false, accountAddress, network);
   }
+
   dispatch({
     payload: parsedAssets,
     type: DATA_UPDATE_ASSETS,
@@ -341,7 +348,7 @@ export const addressAssetsReceived = (
   }
 };
 
-const getTokensWithPrice = async tokens => {
+const getTokensWithPrice = async (tokens, nativeCurrency) => {
   const web3 = new Web3(web3ProviderSdk);
   const exchangeRate = new ExchangeRate(web3);
 
@@ -354,13 +361,12 @@ const getTokensWithPrice = async tokens => {
 
       return {
         ...tokenItem,
-        balance: {
-          amount: tokenItem.token.value,
-          display: Number(tokenItem.token.value).toFixed(2),
-        },
+        balance: convertRawAmountToBalance(tokenItem.balance),
         native: {
-          amount: usdBalance,
-          display: Number(usdBalance).toFixed(2),
+          balance: {
+            amount: usdBalance,
+            display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
+          },
         },
       };
     })
@@ -368,7 +374,7 @@ const getTokensWithPrice = async tokens => {
 };
 
 export const gnosisSafesReceieved = message => async (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
+  const { accountAddress, network, nativeCurrency } = getState().settings;
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
@@ -377,7 +383,10 @@ export const gnosisSafesReceieved = message => async (dispatch, getState) => {
   const [depotsWithPrice, prepaidCardsWithPrice] = await Promise.all([
     await Promise.all(
       depots.map(async depot => {
-        const tokensWithPrice = await getTokensWithPrice(depot.tokens);
+        const tokensWithPrice = await getTokensWithPrice(
+          depot.tokens,
+          nativeCurrency
+        );
 
         return {
           ...depot,
@@ -387,7 +396,10 @@ export const gnosisSafesReceieved = message => async (dispatch, getState) => {
     ),
     await Promise.all(
       prepaidCards.map(async prepaidCard => {
-        const tokensWithPrice = await getTokensWithPrice(prepaidCard.tokens);
+        const tokensWithPrice = await getTokensWithPrice(
+          prepaidCard.tokens,
+          nativeCurrency
+        );
 
         return {
           ...prepaidCard,

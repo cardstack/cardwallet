@@ -95,6 +95,9 @@
       "@cardstack/services": [
         "cardstack/src/services"
       ],
+      "@cardstack/types": [
+        "cardstack/src/types"
+      ],
       "logger": [
         "src/utils/logger"
       ],
