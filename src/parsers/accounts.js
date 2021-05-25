@@ -80,11 +80,11 @@ export const parseAssetsNativeWithTotals = (assets, nativeCurrency) => {
 
 export const parseAssetsNative = (assets, nativeCurrency) =>
   map(assets, asset => {
-    const assetNativePrice = get(asset, 'price') || {
+    const assetNativePrice = get(asset, 'price', {
       changed_at: null,
       relative_change_24h: 0,
       value: 0,
-    };
+    });
 
     const priceUnit = get(assetNativePrice, 'value', 0);
     const nativeDisplay = convertAmountAndPriceToNativeDisplay(
