@@ -43,7 +43,6 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
   const [stateAssets, nativeCurrency] = useRainbowSelector<
     [AssetType[], string]
   >(state => [state.data.assets, state.settings.nativeCurrency]);
-  console.log({ stateAssets });
   const assetsWithNative = parseAssetsNativeWithTotals(
     stateAssets,
     nativeCurrency
