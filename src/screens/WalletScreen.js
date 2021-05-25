@@ -19,7 +19,7 @@ import useExperimentalFlag, {
   DISCOVER_SHEET,
 } from '../config/experimentalHooks';
 import {
-  useAssetListData,
+  useAccountEmptyState,
   useCoinListEdited,
   useInitializeWallet,
   useWallets,
@@ -50,7 +50,7 @@ export default function WalletScreen() {
   const { isCoinListEdited } = useCoinListEdited();
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();
-  const { isEmpty } = useAssetListData();
+  const { isEmpty } = useAccountEmptyState();
 
   useEffect(() => {
     if (!initialized) {
