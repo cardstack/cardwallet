@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { BalanceCoinRowWrapper } from '../../src/components/coin-row';
 import {
   AssetListSectionItem,
@@ -40,14 +41,22 @@ const useDepotSection = (): AssetListSectionItem<DepotType> => {
 };
 
 const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
-  const [stateAssets, nativeCurrency] = useRainbowSelector<
-    [AssetType[], string]
-  >(state => [state.data.assets, state.settings.nativeCurrency]);
+  const [stateAssets, nativeCurrency, network] = useRainbowSelector<
+    [AssetType[], string, string]
+  >(state => [
+    state.data.assets,
+    state.settings.nativeCurrency,
+    state.settings.network,
+  ]);
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
   const assetsWithNative = parseAssetsNativeWithTotals(
     stateAssets,
     nativeCurrency
   );
-  const assets = assetsWithNative.assetsNativePrices as AssetWithNativeType[];
+  const sortedAssets = assetsWithNative.assetsNativePrices.sort(a =>
+    a.symbol === nativeTokenSymbol ? -1 : 1
+  );
+  const assets = sortedAssets as AssetWithNativeType[];
 
   return {
     header: {
