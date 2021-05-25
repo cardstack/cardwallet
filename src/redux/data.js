@@ -175,12 +175,15 @@ export const dataUpdateAssets = assets => (dispatch, getState) => {
 };
 
 const checkMeta = message => (dispatch, getState) => {
-  const { accountAddress, nativeCurrency } = getState().settings;
+  const { accountAddress, nativeCurrency, network } = getState().settings;
   const address = get(message, 'meta.address');
   const currency = get(message, 'meta.currency');
+  const metaNetwork = get(message, 'meta.network');
+
   return (
     isLowerCaseMatch(address, accountAddress) &&
-    isLowerCaseMatch(currency, nativeCurrency)
+    isLowerCaseMatch(currency, nativeCurrency) &&
+    isLowerCaseMatch(metaNetwork, network)
   );
 };
 
@@ -271,16 +274,104 @@ export const transactionsRemoved = message => (dispatch, getState) => {
   saveLocalTransactions(updatedTransactions, accountAddress, network);
 };
 
+const getTokensWithPrice = async (tokens, nativeCurrency) => {
+  const web3 = new Web3(web3ProviderSdk);
+  const exchangeRate = new ExchangeRate(web3);
+
+  return Promise.all(
+    tokens.map(async tokenItem => {
+      const usdBalance = await exchangeRate.getUSDPrice(
+        tokenItem.token.symbol,
+        tokenItem.balance
+      );
+
+      return {
+        ...tokenItem,
+        balance: convertRawAmountToBalance(tokenItem.balance),
+        native: {
+          balance: {
+            amount: usdBalance,
+            display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
+          },
+        },
+      };
+    })
+  );
+};
+
+const addGnosisTokenPrices = async (
+  message,
+  network,
+  accountAddress,
+  nativeCurrency
+) => {
+  const depots = get(message, 'payload.depots', []);
+  const prepaidCards = get(message, 'payload.prepaidCards', []);
+
+  const [depotsWithPrice, prepaidCardsWithPrice] = await Promise.all([
+    await Promise.all(
+      depots.map(async depot => {
+        const tokensWithPrice = await getTokensWithPrice(
+          depot.tokens,
+          nativeCurrency
+        );
+
+        return {
+          ...depot,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
+    await Promise.all(
+      prepaidCards.map(async prepaidCard => {
+        const tokensWithPrice = await getTokensWithPrice(
+          prepaidCard.tokens,
+          nativeCurrency
+        );
+
+        return {
+          ...prepaidCard,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
+  ]);
+
+  savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
+  saveDepots(depotsWithPrice, accountAddress, network);
+
+  return {
+    depots: depotsWithPrice,
+    prepaidCards: prepaidCardsWithPrice,
+  };
+};
+
 export const addressAssetsReceived = (
   message,
   append = false,
   change = false,
   removed = false
-) => (dispatch, getState) => {
+) => async (dispatch, getState) => {
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
-  const { accountAddress, network } = getState().settings;
+  const { accountAddress, network, nativeCurrency } = getState().settings;
+
+  const { depots, prepaidCards } = await addGnosisTokenPrices(
+    message,
+    network,
+    accountAddress,
+    nativeCurrency
+  );
+
+  dispatch({
+    payload: {
+      depots,
+      prepaidCards,
+    },
+    type: DATA_UPDATE_GNOSIS_DATA,
+  });
+
   const { uniqueTokens } = getState().uniqueTokens;
   const payload = values(get(message, 'payload.assets', {}));
   let assets = filter(
@@ -346,79 +437,6 @@ export const addressAssetsReceived = (
     );
     dispatch(subscribeToMissingPrices(missingPriceAssetAddresses));
   }
-};
-
-const getTokensWithPrice = async (tokens, nativeCurrency) => {
-  const web3 = new Web3(web3ProviderSdk);
-  const exchangeRate = new ExchangeRate(web3);
-
-  return Promise.all(
-    tokens.map(async tokenItem => {
-      const usdBalance = await exchangeRate.getUSDPrice(
-        tokenItem.token.symbol,
-        tokenItem.balance
-      );
-
-      return {
-        ...tokenItem,
-        balance: convertRawAmountToBalance(tokenItem.balance),
-        native: {
-          balance: {
-            amount: usdBalance,
-            display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
-          },
-        },
-      };
-    })
-  );
-};
-
-export const gnosisSafesReceieved = message => async (dispatch, getState) => {
-  const { accountAddress, network, nativeCurrency } = getState().settings;
-  const isValidMeta = dispatch(checkMeta(message));
-  if (!isValidMeta) return;
-
-  const { depots, prepaidCards } = get(message, 'payload', {});
-
-  const [depotsWithPrice, prepaidCardsWithPrice] = await Promise.all([
-    await Promise.all(
-      depots.map(async depot => {
-        const tokensWithPrice = await getTokensWithPrice(
-          depot.tokens,
-          nativeCurrency
-        );
-
-        return {
-          ...depot,
-          tokens: tokensWithPrice,
-        };
-      })
-    ),
-    await Promise.all(
-      prepaidCards.map(async prepaidCard => {
-        const tokensWithPrice = await getTokensWithPrice(
-          prepaidCard.tokens,
-          nativeCurrency
-        );
-
-        return {
-          ...prepaidCard,
-          tokens: tokensWithPrice,
-        };
-      })
-    ),
-  ]);
-
-  savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
-  saveDepots(depotsWithPrice, accountAddress, network);
-
-  dispatch({
-    payload: {
-      depots: depotsWithPrice,
-      prepaidCards: prepaidCardsWithPrice,
-    },
-    type: DATA_UPDATE_GNOSIS_DATA,
-  });
 };
 
 const subscribeToMissingPrices = addresses => (dispatch, getState) => {

@@ -1,5 +1,4 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { fetchGnosisSafes } from '@cardstack/services';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
@@ -14,6 +13,7 @@ import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived, gnosisSafesReceieved } from './data';
 import store from './store';
+import { fetchGnosisSafes } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
@@ -68,7 +68,7 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
   }
 };
 
-const isValidAddress = (address) => address && address.substr(0, 2) === '0x';
+const isValidAddress = address => address && address.substr(0, 2) === '0x';
 
 const fetchCoingeckoIds = async network => {
   let coingeckoTokens;
@@ -322,26 +322,15 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     const { network } = getState().settings;
     const { mainnetAssets } = getState().fallbackExplorer;
     const assets = isMainnet(network) ? mainnetAssets : testnetAssets[network];
+    let depots = [],
+      prepaidCards = [];
 
     // not functional on xdai chain yet
     if (network === networkTypes.sokol) {
-      const { depots = [], prepaidCards = [] } = await fetchGnosisSafes(
-        accountAddress
-      );
+      const gnosisSafeData = await fetchGnosisSafes(accountAddress);
 
-      dispatch(
-        gnosisSafesReceieved({
-          meta: {
-            address: accountAddress,
-            currency: 'usd',
-            status: 'ok',
-          },
-          payload: {
-            depots,
-            prepaidCards,
-          },
-        })
-      );
+      depots = gnosisSafeData.depots;
+      prepaidCards = gnosisSafeData.prepaidCards;
     }
 
     if (!assets || !assets.length) {
@@ -419,8 +408,13 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
           address: accountAddress,
           currency: 'usd',
           status: 'ok',
+          network,
         },
-        payload: { assets },
+        payload: {
+          assets,
+          depots,
+          prepaidCards,
+        },
       })
     );
     const fallbackExplorerBalancesHandle = setTimeout(
