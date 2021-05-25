@@ -14,13 +14,11 @@ import Routes from '@rainbow-me/routes';
 export const Depot = (depot: DepotType) => {
   const { navigate } = useNavigation();
 
+  const onPress = () => navigate(Routes.DEPOT_SCREEN, { depot });
+
   return (
     <Container width="100%" paddingHorizontal={4}>
-      <Touchable
-        width="100%"
-        testID="inventory-card"
-        onPress={() => navigate(Routes.DEPOT_SHEET)}
-      >
+      <Touchable width="100%" testID="inventory-card" onPress={onPress}>
         <Container
           backgroundColor="white"
           borderRadius={10}

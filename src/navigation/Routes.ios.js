@@ -47,7 +47,7 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import { BuyPrepaidCard, DepotSheet } from '@cardstack/screen';
+import { BuyPrepaidCard, DepotScreen } from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
@@ -125,6 +125,7 @@ function MainNavigator() {
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
       <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
       <Stack.Screen component={BuyPrepaidCard} name={Routes.BUY_PREPAID_CARD} />
+      <Stack.Screen component={DepotScreen} name={Routes.DEPOT_SCREEN} />
       <Stack.Screen
         component={AvatarBuilder}
         name={Routes.AVATAR_BUILDER}
@@ -180,11 +181,6 @@ function NativeStackFallbackNavigator() {
       <Stack.Screen
         component={AddCashSheet}
         name={Routes.ADD_CASH_SHEET}
-        options={sheetPreset}
-      />
-      <Stack.Screen
-        component={DepotSheet}
-        name={Routes.DEPOT_SHEET}
         options={sheetPreset}
       />
       <Stack.Screen
