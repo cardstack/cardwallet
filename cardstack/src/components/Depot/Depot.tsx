@@ -5,14 +5,22 @@ import CoinIcon from 'react-coin-icon';
 import { DepotType } from '@cardstack/types';
 import { Container, Icon, Text, Touchable } from '@cardstack/components';
 import { getAddressPreview } from '@cardstack/utils';
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 
 /**
- * A invetory card component
+ * A inventory card component
  */
 export const Depot = (depot: DepotType) => {
+  const { navigate } = useNavigation();
+
   return (
     <Container width="100%" paddingHorizontal={4}>
-      <Touchable width="100%" testID="inventory-card">
+      <Touchable
+        width="100%"
+        testID="inventory-card"
+        onPress={() => navigate(Routes.DEPOT_SHEET)}
+      >
         <Container
           backgroundColor="white"
           borderRadius={10}
