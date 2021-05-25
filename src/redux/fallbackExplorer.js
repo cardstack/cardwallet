@@ -329,8 +329,8 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     if (network === networkTypes.sokol) {
       const gnosisSafeData = await fetchGnosisSafes(accountAddress);
 
-      depots = [...gnosisSafeData.depots];
-      prepaidCards = [...gnosisSafeData.prepaidCards];
+      depots = gnosisSafeData.depots;
+      prepaidCards = gnosisSafeData.prepaidCards;
     }
 
     if (!assets || !assets.length) {
