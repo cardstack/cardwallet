@@ -60,10 +60,11 @@ const formatGasSpeedItems = (gasPrices, txFees, hideCustom = false) => {
     const cost = get(txFees, `[${speed}].txFee.native.value.display`);
     const gwei = get(gasPrices, `[${speed}].value.display`);
     const time = get(gasPrices, `[${speed}].estimatedTime.display`);
+    const timeLabel = time > 0 ? `   ~${time}` : '';
 
     return {
       gweiValue: gwei,
-      label: `${upperFirst(speed)}: ${cost}   ~${time}`,
+      label: `${upperFirst(speed)}: ${cost}${timeLabel}`,
       speed,
     };
   });

@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { Wallet } from '@ethersproject/wallet';
 import AsyncStorage from '@react-native-community/async-storage';
 import { captureException } from '@sentry/react-native';
@@ -41,8 +42,15 @@ const { RNBip39 } = NativeModules;
 
 const getEthPriceUnit = () => {
   const { assets, genericAssets } = store.getState().data;
+  const { network } = store.getState().settings;
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
   const genericEthPrice = genericAssets?.eth?.price?.value;
-  return genericEthPrice || getAsset(assets)?.price?.value || 0;
+  return (
+    genericEthPrice || getAsset(assets, nativeTokenAddress)?.price?.value || 0
+  );
 };
 
 const getBalanceAmount = async (selectedGasPrice, selected) => {

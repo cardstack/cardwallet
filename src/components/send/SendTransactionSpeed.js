@@ -14,26 +14,34 @@ export default function SendTransactionSpeed({
     'txFee.native.value.display',
     `${nativeCurrencySymbol}0.00`
   );
+  const timeAmount = get(gasPrice, 'estimatedTime.amount', 0);
   const time = get(gasPrice, 'estimatedTime.display', '');
 
   return (
     <Row justify="center">
       <Touchable marginRight={5} onPress={onPressTransactionSpeed}>
-        <Text variant="subText">Fee: {fee}</Text>
-      </Touchable>
-      <Touchable onPress={onPressTransactionSpeed}>
         <Container alignItems="center" flexDirection="row">
-          <Text
-            color="black"
-            fontWeight="600"
-            marginRight={1}
-            variant="subText"
-          >
-            Arrives in ~ {time}
-          </Text>
-          <Icon color="settingsGray" iconSize="small" name="chevron-right" />
+          <Text variant="subText">Fee: {fee}</Text>
+          {!timeAmount && (
+            <Icon color="settingsGray" iconSize="small" name="chevron-right" />
+          )}
         </Container>
       </Touchable>
+      {timeAmount && (
+        <Touchable onPress={onPressTransactionSpeed}>
+          <Container alignItems="center" flexDirection="row">
+            <Text
+              color="black"
+              fontWeight="600"
+              marginRight={1}
+              variant="subText"
+            >
+              Arrives in ~ {time}
+            </Text>
+            <Icon color="settingsGray" iconSize="small" name="chevron-right" />
+          </Container>
+        </Touchable>
+      )}
     </Row>
   );
 }

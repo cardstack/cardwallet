@@ -65,8 +65,19 @@ export const parseGasPrices = (data, source = 'etherscan') =>
     ? parseGasPricesEtherscan(data)
     : parseGasPricesEthGasStation(data);
 
+export const parseLayer2GasPrices = data => ({
+  [CUSTOM]: null,
+  [FAST]: defaultGasPriceFormat(FAST, null, data.fast ? data.fast / 10 : 0),
+  [NORMAL]: defaultGasPriceFormat(
+    NORMAL,
+    null,
+    data.average ? data.average / 10 : 0
+  ),
+  [SLOW]: defaultGasPriceFormat(SLOW, null, data.slow ? data.slow / 10 : 0),
+});
+
 export const defaultGasPriceFormat = (option, timeWait, value) => {
-  const timeAmount = multiply(timeWait, timeUnits.ms.minute);
+  const timeAmount = timeWait ? multiply(timeWait, timeUnits.ms.minute) : null;
   const weiAmount = multiply(value, ethUnits.gwei);
   return {
     estimatedTime: {
