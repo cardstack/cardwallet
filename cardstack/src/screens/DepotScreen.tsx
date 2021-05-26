@@ -56,7 +56,7 @@ export default function DepotScreen() {
           <Container paddingTop={isNativeStackAvailable ? 4 : 1}>
             <CenteredContainer flexDirection="row">
               <Container left={0} position="absolute">
-                {/* @ts-ignore */}
+                {/* @ts-ignore it thinks the JS file requires other props */}
                 <BackButton
                   color="white"
                   direction="left"
