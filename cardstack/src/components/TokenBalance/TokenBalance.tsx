@@ -1,14 +1,7 @@
 import React from 'react';
 import CoinIcon from 'react-coin-icon';
+import { Container, Text, Touchable } from '@cardstack/components';
 import { TokenType } from '@cardstack/types';
-
-import {
-  CenteredContainer,
-  Container,
-  Icon,
-  Text,
-  Touchable,
-} from '@cardstack/components';
 
 interface TokenBalanceProps {
   item: TokenType;

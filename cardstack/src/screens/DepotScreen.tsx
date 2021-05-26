@@ -4,14 +4,13 @@ import React, { useState } from 'react';
 import { Linking, StatusBar } from 'react-native';
 import { BackButton } from '../../../src/components/header';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
-import Routes from '@rainbow-me/routes';
 import {
   CenteredContainer,
   Container,
   Icon,
   Text,
-  Touchable,
   TokenBalance,
+  Touchable,
 } from '@cardstack/components';
 import { DepotType, TokenType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
