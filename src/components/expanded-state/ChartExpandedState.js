@@ -24,6 +24,7 @@ import {
 } from '../token-info';
 import { Chart } from '../value-chart';
 import { Container } from '@cardstack/components';
+import { isLayer1 } from '@cardstack/utils';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
@@ -50,10 +51,9 @@ export default function ChartExpandedState({ asset }) {
   });
   const { network } = useAccountSettings();
   const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
-  const showSwapButton = find(uniswapAssetsInWallet, [
-    'uniqueId',
-    asset.uniqueId,
-  ]);
+  const showSwapButton = isLayer1(network)
+    ? find(uniswapAssetsInWallet, ['uniqueId', asset.uniqueId])
+    : false;
 
   const nativeTokenAddress = getConstantByNetwork(
     'nativeTokenAddress',
