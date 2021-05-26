@@ -47,12 +47,13 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import { BuyPrepaidCard } from '@cardstack/screen';
+import { BuyPrepaidCard, DepotScreen } from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
 
 const Stack = createStackNavigator();
+const NonModalStack = createStackNavigator();
 const NativeStack = createNativeStackNavigator();
 
 function SendFlowNavigator() {
@@ -349,9 +350,35 @@ function NativeStackNavigator() {
   );
 }
 
+function NonModalNavigator() {
+  return (
+    <NonModalStack.Navigator headerMode="none" mode="card">
+      <NonModalStack.Screen
+        component={DepotScreen}
+        name={Routes.DEPOT_SCREEN}
+      />
+    </NonModalStack.Navigator>
+  );
+}
+
+function RootNavigator() {
+  return (
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen
+        component={NativeStackNavigator}
+        name={Routes.NATIVE_STACK}
+      />
+      <Stack.Screen
+        component={NonModalNavigator}
+        name={Routes.NON_MODAL_SCREENS}
+      />
+    </Stack.Navigator>
+  );
+}
+
 const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
   <NavigationContainer onStateChange={onNavigationStateChange} ref={ref}>
-    <NativeStackNavigator />
+    <RootNavigator />
   </NavigationContainer>
 ));
 
