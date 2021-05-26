@@ -310,7 +310,6 @@ export const convertAmountToBalanceDisplay = (
   const decimals = get(asset, 'decimals', 18);
   const display = handleSignificantDecimals(value, decimals, buffer);
   const symbol = get(asset, 'symbol');
-  console.log({ symbol });
   return `${display}${symbol ? ` ${symbol}` : ''}`;
 };
 
