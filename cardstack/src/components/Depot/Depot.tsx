@@ -30,7 +30,7 @@ export const Depot = (depot: DepotType) => {
           borderColor="buttonPrimaryBorder"
           width="100%"
         >
-          <Top {...depot} />
+          <Top {...depot} onPress={onPress} />
           <Bottom {...depot} />
         </Container>
       </Touchable>
