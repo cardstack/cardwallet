@@ -34,8 +34,6 @@ export default function DepotScreen() {
 
   const { address } = depot;
 
-  console.log({ address });
-
   const onPressInformation = () => {
     showActionSheetWithOptions(
       {
