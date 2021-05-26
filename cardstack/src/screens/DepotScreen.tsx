@@ -165,8 +165,18 @@ interface BalancesProps {
 const Balances = ({ tokens }: BalancesProps) => {
   return (
     <Container>
-      <Container paddingHorizontal={5} paddingBottom={3} marginTop={7}>
-        <Text size="medium">Balances</Text>
+      <Container
+        paddingHorizontal={5}
+        paddingBottom={3}
+        marginTop={7}
+        flexDirection="row"
+      >
+        <Text size="medium" marginRight={2}>
+          Balances
+        </Text>
+        <Text size="medium" color="settingsGray">
+          {tokens.length}
+        </Text>
       </Container>
       {tokens.map(token => (
         <TokenBalance onPress={() => ({})} item={token} />
