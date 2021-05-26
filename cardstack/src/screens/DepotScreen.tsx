@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Linking, StatusBar, LayoutAnimation } from 'react-native';
-import { useRoute } from '@react-navigation/native';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { useRoute } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Linking, StatusBar } from 'react-native';
 import { BackButton } from '../../../src/components/header';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
 import {
@@ -14,8 +14,8 @@ import {
 import { DepotType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 interface RouteType {
   params: { depot: DepotType };
