@@ -9,9 +9,10 @@ import {
   Container,
   Icon,
   Text,
+  TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import { DepotType } from '@cardstack/types';
+import { DepotType, TokenType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -38,7 +39,7 @@ export default function DepotScreen() {
     params: { depot },
   } = useRoute<RouteType>();
 
-  const { address } = depot;
+  const { address, tokens } = depot;
 
   const onPressInformation = () => {
     showActionSheetWithOptions(
@@ -55,7 +56,7 @@ export default function DepotScreen() {
   };
 
   return (
-    <Container top={0} width="100%">
+    <Container top={0} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <Container paddingTop={14} backgroundColor="black">
@@ -113,9 +114,13 @@ export default function DepotScreen() {
           </Container>
         </Container>
 
-        <CenteredContainer flex={1} width="100%">
-          {selectedTab === Tabs.BALANCES ? <Balances /> : <Activities />}
-        </CenteredContainer>
+        <Container flex={1} width="100%">
+          {selectedTab === Tabs.BALANCES ? (
+            <Balances tokens={tokens} />
+          ) : (
+            <Activities />
+          )}
+        </Container>
       </Container>
     </Container>
   );
@@ -153,8 +158,31 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
   );
 };
 
-const Balances = () => {
-  return <Text>Balances</Text>;
+interface BalancesProps {
+  tokens: TokenType[];
+}
+
+const Balances = ({ tokens }: BalancesProps) => {
+  return (
+    <Container>
+      <Container
+        paddingHorizontal={5}
+        paddingBottom={3}
+        marginTop={7}
+        flexDirection="row"
+      >
+        <Text size="medium" marginRight={2}>
+          Balances
+        </Text>
+        <Text size="medium" color="settingsGray">
+          {tokens.length}
+        </Text>
+      </Container>
+      {tokens.map(token => (
+        <TokenBalance onPress={() => ({})} item={token} />
+      ))}
+    </Container>
+  );
 };
 
 const Activities = () => {
