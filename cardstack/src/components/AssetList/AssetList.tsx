@@ -1,12 +1,12 @@
-import React from 'react';
-import { SectionList } from 'react-native';
+import React, { useState } from 'react';
+import { RefreshControl, SectionList } from 'react-native';
 
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
+import { useRefreshAccountData } from '../../../../src/hooks';
 import { AssetListLoading } from './AssetListLoading';
 import { Container, Icon, Text } from '@cardstack/components';
-
 interface HeaderItem {
   title: string;
   count?: number;
@@ -28,8 +28,17 @@ interface AssetListProps {
 }
 
 export const AssetList = (props: AssetListProps) => {
+  const refresh = useRefreshAccountData();
+  const [refreshing, setRefreshing] = useState(false);
+
   const { isEmpty, loading, sections, network } = props;
   const networkName = getConstantByNetwork('name', network);
+
+  async function onRefresh() {
+    setRefreshing(true);
+    await refresh();
+    setRefreshing(false);
+  }
 
   if (loading) {
     return <AssetListLoading />;
@@ -41,6 +50,13 @@ export const AssetList = (props: AssetListProps) => {
 
   return (
     <SectionList
+      refreshControl={
+        <RefreshControl
+          tintColor="white"
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
       sections={sections}
       renderItem={({ item, section: { Component } }) => (
         <Component {...item} networkName={networkName} />

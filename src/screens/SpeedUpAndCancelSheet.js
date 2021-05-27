@@ -37,7 +37,7 @@ import { getTitle, gweiToWei, weiToGwei } from '@rainbow-me/parsers';
 import { executeRap } from '@rainbow-me/raps';
 
 import { dataUpdateTransaction } from '@rainbow-me/redux/data';
-import { explorerInit } from '@rainbow-me/redux/explorer';
+import { fallbackExplorerInit } from '@rainbow-me/redux/fallbackExplorer';
 import { updateGasPriceForSpeed } from '@rainbow-me/redux/gas';
 import { rapsAddOrUpdate } from '@rainbow-me/redux/raps';
 import store from '@rainbow-me/redux/store';
@@ -159,7 +159,7 @@ export default function SpeedUpAndCancelSheet() {
         logger.log('Reloading zerion in 5!');
         setTimeout(() => {
           logger.log('Reloading tx from zerion NOW!');
-          dispatch(explorerInit());
+          dispatch(fallbackExplorerInit());
         }, 5000);
         return;
       }

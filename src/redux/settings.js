@@ -11,7 +11,8 @@ import { updateLanguage } from '../languages';
 
 import { ethereumUtils } from '../utils';
 import { dataResetState } from './data';
-import { explorerClearState, explorerInit } from './explorer';
+import { explorerClearState } from './explorer';
+import { fallbackExplorerInit } from './fallbackExplorer';
 import { walletConnectUpdateSessions } from './walletconnect';
 import logger from 'logger';
 
@@ -97,7 +98,7 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
       payload: nativeCurrency,
       type: SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS,
     });
-    dispatch(explorerInit());
+    dispatch(fallbackExplorerInit());
     saveNativeCurrency(nativeCurrency);
   } catch (error) {
     logger.log('Error changing native currency', error);
