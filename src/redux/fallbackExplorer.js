@@ -8,10 +8,9 @@ import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
-import coingeckoIdsFallback from '../references/coingecko/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
-import { addressAssetsReceived, gnosisSafesReceieved } from './data';
+import { addressAssetsReceived } from './data';
 import store from './store';
 import { fetchGnosisSafes } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
@@ -326,9 +325,22 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     // not functional on xdai chain yet
     if (network === networkTypes.sokol) {
       const gnosisSafeData = await fetchGnosisSafes(accountAddress);
+      const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
 
-      depots = gnosisSafeData.depots;
-      prepaidCards = gnosisSafeData.prepaidCards;
+      depots = gnosisSafeData.depots.map(depot => ({
+        ...depot,
+        tokens: depot.tokens.map(token => ({
+          ...token,
+          coingecko_id: coingeckoIds[token.tokenAddress] || null,
+        })),
+      }));
+      prepaidCards = gnosisSafeData.prepaidCards.map(prepaidCard => ({
+        ...prepaidCard,
+        tokens: prepaidCard.tokens.map(token => ({
+          ...token,
+          coingecko_id: coingeckoIds[token.tokenAddress] || null,
+        })),
+      }));
     }
 
     if (!assets || !assets.length) {
