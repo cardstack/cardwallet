@@ -1,12 +1,12 @@
 import React from 'react';
+import CoinIcon from 'react-coin-icon';
 
-import { CoinIcon } from '../coin-icon';
 import { RowWithMargins } from '../layout';
 import { Text } from '@cardstack/components';
 import { magicMemo } from '@rainbow-me/utils';
 
 const TokenInfoBalanceValue = ({ align, asset, ...props }) => {
-  const { address, balance, symbol, value } = asset;
+  const { balance, value } = asset;
 
   return (
     <RowWithMargins
@@ -16,7 +16,7 @@ const TokenInfoBalanceValue = ({ align, asset, ...props }) => {
       margin={5}
       marginKey={align === 'left' ? 'marginRight' : 'marginLeft'}
     >
-      <CoinIcon address={address} size={20} symbol={symbol} />
+      <CoinIcon {...asset} size={20} />
       <Text fontSize={20} fontWeight="700">
         {balance?.display || value}
       </Text>

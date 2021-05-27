@@ -361,7 +361,7 @@ function NonModalNavigator() {
   );
 }
 
-function RootNavigator() {
+function NonModalRootNavigator() {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen
@@ -376,9 +376,25 @@ function RootNavigator() {
   );
 }
 
+function ModalRootNavigator() {
+  return (
+    <NativeStack.Navigator {...nativeStackConfig}>
+      <NativeStack.Screen
+        component={NonModalRootNavigator}
+        name={Routes.NATIVE_STACK}
+      />
+      <NativeStack.Screen
+        component={ExpandedAssetSheet}
+        name={Routes.EXPANDED_ASSET_SHEET}
+        {...expandedAssetSheetConfig}
+      />
+    </NativeStack.Navigator>
+  );
+}
+
 const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
   <NavigationContainer onStateChange={onNavigationStateChange} ref={ref}>
-    <RootNavigator />
+    <ModalRootNavigator />
   </NavigationContainer>
 ));
 
