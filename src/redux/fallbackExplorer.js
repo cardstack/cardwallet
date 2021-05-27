@@ -381,6 +381,42 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
             };
           }
         }
+
+        for (let i = 0; i < depots.length; i++) {
+          if (toLower(depots[i].coingecko_id) === toLower(key)) {
+            depots[i].price = {
+              changed_at: prices[key].last_updated_at,
+              relative_change_24h:
+                prices[key][`${formattedNativeCurrency}_24h_change`],
+              value: prices[key][`${formattedNativeCurrency}`],
+            };
+            break;
+          } else if (depots[i].coingecko_id === null) {
+            depots[i].price = {
+              changed_at: null,
+              relative_change_24h: 0,
+              value: 0,
+            };
+          }
+        }
+
+        for (let i = 0; i < prepaidCards.length; i++) {
+          if (toLower(prepaidCards[i].coingecko_id) === toLower(key)) {
+            prepaidCards[i].price = {
+              changed_at: prices[key].last_updated_at,
+              relative_change_24h:
+                prices[key][`${formattedNativeCurrency}_24h_change`],
+              value: prices[key][`${formattedNativeCurrency}`],
+            };
+            break;
+          } else if (prepaidCards[i].coingecko_id === null) {
+            prepaidCards[i].price = {
+              changed_at: null,
+              relative_change_24h: 0,
+              value: 0,
+            };
+          }
+        }
       });
     }
 
