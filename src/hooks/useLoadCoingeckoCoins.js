@@ -13,8 +13,6 @@ export default function useLoadCoingeckoCoins() {
       );
       const coingeckoCoins = await request.json();
 
-      console.log({ coingeckoCoins });
-
       dispatch(setCoingeckoCoins(coingeckoCoins));
     } catch (error) {
       dispatch(setCoingeckoCoins(coingeckoIdsFallback));
