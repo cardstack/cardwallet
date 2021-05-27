@@ -33,11 +33,7 @@ export default function ExpandedAssetSheet(props) {
   const { height: deviceHeight } = useDimensions();
   const insets = useSafeArea();
   const { goBack } = useNavigation();
-  const routeData = useRoute();
-
-  console.log({ routeData });
-
-  const { params } = routeData;
+  const { params } = useRoute();
 
   const selectedAsset = useAsset(params.asset);
 
