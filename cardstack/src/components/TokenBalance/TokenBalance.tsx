@@ -43,7 +43,6 @@ export const TokenBalance = (props: TokenBalanceProps) => {
             </Container>
             <Container alignItems="flex-end">
               <Text fontWeight="700">{`${item.balance.display}`}</Text>
-              <Text variant="subText">{`${item.native.balance.display}`}</Text>
             </Container>
           </Container>
         </Container>
