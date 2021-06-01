@@ -133,6 +133,7 @@ function MainNavigator() {
         name={Routes.DEPOT_SCREEN}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
         }}
       />
       <Stack.Screen
