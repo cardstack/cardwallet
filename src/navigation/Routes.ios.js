@@ -2,7 +2,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import {
   CardStyleInterpolators,
   createStackNavigator,
-  TransitionSpecs,
 } from '@react-navigation/stack';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
@@ -57,7 +56,6 @@ import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
 
 const Stack = createStackNavigator();
-const NonModalStack = createStackNavigator();
 const NativeStack = createNativeStackNavigator();
 
 function SendFlowNavigator() {
@@ -130,7 +128,13 @@ function MainNavigator() {
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
       <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
       <Stack.Screen component={BuyPrepaidCard} name={Routes.BUY_PREPAID_CARD} />
-      <Stack.Screen component={DepotScreen} name={Routes.DEPOT_SCREEN} />
+      <Stack.Screen
+        component={DepotScreen}
+        name={Routes.DEPOT_SCREEN}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      />
       <Stack.Screen
         component={AvatarBuilder}
         name={Routes.AVATAR_BUILDER}
