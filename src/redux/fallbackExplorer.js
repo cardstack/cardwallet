@@ -320,7 +320,8 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     const { mainnetAssets } = getState().fallbackExplorer;
     const assets = isMainnet(network) ? mainnetAssets : testnetAssets[network];
     let depots = [],
-      prepaidCards = [];
+      prepaidCards = [],
+      merchantSafes = [];
 
     // not functional on xdai chain yet
     if (network === networkTypes.sokol) {
@@ -337,6 +338,13 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       prepaidCards = gnosisSafeData.prepaidCards.map(prepaidCard => ({
         ...prepaidCard,
         tokens: prepaidCard.tokens.map(token => ({
+          ...token,
+          coingecko_id: coingeckoIds[token.tokenAddress] || null,
+        })),
+      }));
+      merchantSafes = gnosisSafeData.merchantSafes.map(merchantSafe => ({
+        ...merchantSafe,
+        tokens: merchantSafe.tokens.map(token => ({
           ...token,
           coingecko_id: coingeckoIds[token.tokenAddress] || null,
         })),
@@ -468,6 +476,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         payload: {
           assets,
           depots,
+          merchantSafes,
           prepaidCards,
         },
       })

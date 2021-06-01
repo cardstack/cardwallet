@@ -5,6 +5,7 @@ const assetPricesFromUniswapVersion = '0.1.0';
 const assetsVersion = '0.2.0';
 const prepaidCardsVersion = '0.1.0';
 const depotVersion = '0.1.0';
+const merchantSafeVersion = '0.1.0';
 const purchaseTransactionsVersion = '0.1.0';
 const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.5';
@@ -17,6 +18,7 @@ const ASSET_PRICES_FROM_UNISWAP = 'assetPricesFromUniswap';
 const ASSETS = 'assets';
 const PREPAID_CARDS = 'prepaidCards';
 const DEPOTS = 'depots';
+const MERCHANT_SAFES = 'merchantSafes';
 const ACCOUNT_CHARTS = 'accountCharts';
 const OPEN_FAMILIES = 'openFamilies';
 const OPEN_INVESTMENT_CARDS = 'openInvestmentCards';
@@ -161,6 +163,36 @@ export const getDepots = (accountAddress, network) =>
  */
 export const saveDepots = (depots, accountAddress, network) =>
   saveAccountLocal(DEPOTS, depots, accountAddress, network, depotVersion);
+
+/**
+ * @desc get merchant safes
+ * @param  {String}   [address]
+ * @param  {String}   [network]
+ * @return {Object}
+ */
+export const getMerchantSafes = (accountAddress, network) =>
+  getAccountLocal(
+    MERCHANT_SAFES,
+    accountAddress,
+    network,
+    [],
+    merchantSafeVersion
+  );
+
+/**
+ * @desc save merchant safes
+ * @param  {Array}    [depots]
+ * @param  {String}   [address]
+ * @param  {String}   [network]
+ */
+export const saveMerchantSafes = (merchantSafes, accountAddress, network) =>
+  saveAccountLocal(
+    MERCHANT_SAFES,
+    merchantSafes,
+    accountAddress,
+    network,
+    merchantSafeVersion
+  );
 
 /**
  * @desc get asset prices from Uniswap

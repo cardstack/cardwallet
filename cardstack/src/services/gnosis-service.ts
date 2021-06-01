@@ -16,10 +16,11 @@ export const fetchGnosisSafes = async (address: string) => {
       });
     });
 
-    const { depots, prepaidCards } = safes.reduce(
+    const { depots, prepaidCards, merchantSafes } = safes.reduce(
       (
         accum: {
           depots: Safe[];
+          merchantSafes: Safe[];
           prepaidCards: Safe[];
         },
         safe
@@ -34,18 +35,25 @@ export const fetchGnosisSafes = async (address: string) => {
             ...accum,
             depots: [...accum.depots, safe],
           };
+        } else if (safe.type === 'merchant') {
+          return {
+            ...accum,
+            merchantSafes: [...accum.merchantSafes, safe],
+          };
         }
 
         return accum;
       },
       {
         depots: [],
+        merchantSafes: [],
         prepaidCards: [],
       }
     );
 
     return {
       depots,
+      merchantSafes,
       prepaidCards,
     };
   } catch (error) {
