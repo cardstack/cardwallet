@@ -14,11 +14,7 @@ import Routes from '@rainbow-me/routes';
 export const Depot = (depot: DepotType) => {
   const { navigate } = useNavigation();
 
-  const onPress = () =>
-    navigate(Routes.NON_MODAL_SCREENS, {
-      screen: Routes.DEPOT_SCREEN,
-      params: { depot },
-    });
+  const onPress = () => navigate(Routes.DEPOT_SCREEN, { depot });
 
   return (
     <Container width="100%" paddingHorizontal={4}>

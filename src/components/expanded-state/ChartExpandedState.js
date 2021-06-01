@@ -34,7 +34,8 @@ const heightWithChart = baseHeight + 310;
 
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 
-export default function ChartExpandedState({ asset }) {
+export default function ChartExpandedState(props) {
+  const asset = props.asset?.token ? props.asset.token : props.asset;
   const {
     chart,
     chartData,

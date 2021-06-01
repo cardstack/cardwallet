@@ -284,14 +284,19 @@ const getTokensWithPrice = async (tokens, nativeCurrency) => {
         tokenItem.token.symbol,
         tokenItem.balance
       );
+      const priceUnit = tokenItem.price?.value || 0;
 
       return {
         ...tokenItem,
-        balance: convertRawAmountToBalance(tokenItem.balance),
+        balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
         native: {
           balance: {
             amount: usdBalance,
             display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
+          },
+          price: {
+            amount: priceUnit,
+            display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
           },
         },
       };

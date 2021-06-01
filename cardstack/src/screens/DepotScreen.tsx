@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Linking, StatusBar } from 'react-native';
 import { BackButton } from '../../../src/components/header';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
+import Routes from '@rainbow-me/routes';
 import {
   CenteredContainer,
   Container,
@@ -162,7 +163,22 @@ interface BalancesProps {
   tokens: TokenType[];
 }
 
+const baseHeight = 309;
+const heightWithChart = baseHeight + 310;
+
+export const initialChartExpandedStateSheetHeight = heightWithChart;
+
 const Balances = ({ tokens }: BalancesProps) => {
+  const { navigate } = useNavigation();
+
+  const onPress = (token: any) => {
+    navigate(Routes.EXPANDED_ASSET_SHEET, {
+      asset: token,
+      longFormHeight: initialChartExpandedStateSheetHeight,
+      type: 'token',
+    });
+  };
+
   return (
     <Container>
       <Container
@@ -179,7 +195,7 @@ const Balances = ({ tokens }: BalancesProps) => {
         </Text>
       </Container>
       {tokens.map(token => (
-        <TokenBalance onPress={() => ({})} item={token} />
+        <TokenBalance onPress={() => onPress(token)} item={token} />
       ))}
     </Container>
   );

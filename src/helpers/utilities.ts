@@ -344,6 +344,7 @@ export const convertAmountToNativeDisplay = (
   const nativeSelected = get(supportedNativeCurrencies, `${nativeCurrency}`);
   const { decimals } = nativeSelected;
   const display = handleSignificantDecimals(value, decimals, buffer);
+
   if (nativeSelected.alignment === 'left') {
     return `${nativeSelected.symbol}${display}`;
   }

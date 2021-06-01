@@ -37,7 +37,7 @@
     {
       "asset": {
         "asset_code": "spoa",
-        "coingecko_id": "ethereum",
+        "coingecko_id": "dai",
         "decimals": 18,
         "icon_url": "https://s3.amazonaws.com/icons.assets/ETH.png",
         "name": "Spoa",
