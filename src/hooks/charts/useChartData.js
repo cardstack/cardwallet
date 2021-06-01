@@ -1,9 +1,7 @@
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import isEqual from 'react-fast-compare';
-import { useDispatch, useSelector } from 'react-redux';
-import { createSelector } from 'reselect';
-import { useCallbackOne } from 'use-memo-one';
+import { useDispatch } from 'react-redux';
+
 import { disableCharts } from '../../config/debug';
 import { chartsUpdateChartType, DEFAULT_CHART_TYPE } from '../../redux/charts';
 import { emitChartsRequest } from '../../redux/explorer';
@@ -15,28 +13,6 @@ const formatChartData = chart => {
   return chart.map(([x, y]) => ({ x, y }));
 };
 
-const chartSelector = createSelector(
-  ({ charts: { charts, chartType, fetchingCharts } }) => ({
-    charts,
-    chartType,
-    fetchingCharts,
-  }),
-  (_, address) => address,
-  (state, address) => {
-    const { charts, chartType, fetchingCharts } = state;
-    const chartsForAsset = {
-      ...charts?.[address],
-    };
-
-    return {
-      chart: formatChartData(chartsForAsset?.[chartType]),
-      chartsForAsset,
-      chartType,
-      fetchingCharts,
-    };
-  }
-);
-
 export default function useChartData(asset) {
   const [daysFromFirstTx, setDaysFromFirstTx] = useState(1000);
   const dispatch = useDispatch();
@@ -44,10 +20,9 @@ export default function useChartData(asset) {
 
   const { value: price } = priceObject || {};
 
-  const { chart, chartsForAsset, chartType, fetchingCharts } = useSelector(
-    useCallbackOne(state => chartSelector(state, address), [address]),
-    isEqual
-  );
+  const chart = formatChartData(asset.chartPrices);
+  const chartType = 'd';
+  const fetchingCharts = false;
 
   useEffect(() => {
     async function fetchDays() {
@@ -75,7 +50,7 @@ export default function useChartData(asset) {
 
   // add current price at the very end
   const filteredData = useMemo(() => {
-    const now = Math.floor(Date.now() / 1000);
+    const now = Date.now();
     return chart
       ?.filter(({ x }) => x <= now)
       .slice(0, chart.length - 1)
@@ -84,7 +59,6 @@ export default function useChartData(asset) {
 
   return {
     chart: filteredData,
-    charts: chartsForAsset,
     chartType,
     fetchingCharts,
     showMonth: daysFromFirstTx > 7,

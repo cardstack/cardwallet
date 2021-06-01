@@ -49,6 +49,7 @@ export default function ChartExpandedState({ asset }) {
     heightWithChart,
     heightWithoutChart,
   });
+
   const { network } = useAccountSettings();
   const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
   const showSwapButton = isLayer1(network)

@@ -11,7 +11,7 @@ import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import coingeckoIdsFallback from '../references/coingecko/ids.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
-import { addressAssetsReceived, gnosisSafesReceieved } from './data';
+import { addressAssetsReceived } from './data';
 import store from './store';
 import { fetchGnosisSafes } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
@@ -261,6 +261,32 @@ const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
   }
 };
 
+const fetchAssetCharts = async (coingeckoIds, nativeCurrency) => {
+  try {
+    const chartData = await Promise.all(
+      coingeckoIds.map(async coingeckoId => {
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=${nativeCurrency}&days=1`
+        );
+        const data = await response.json();
+        return data;
+      })
+    );
+
+    const payload = coingeckoIds.reduce(
+      (accum, id, index) => ({
+        ...accum,
+        [id]: chartData[index].prices,
+      }),
+      {}
+    );
+
+    return payload;
+  } catch (e) {
+    logger.log(`Error trying to fetch ${coingeckoIds} charts`, e);
+  }
+};
+
 const fetchAssetBalances = async (tokens, address, network) => {
   try {
     const balanceCheckerContractAddress = getConstantByNetwork(
@@ -347,8 +373,20 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       return;
     }
 
+    const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
+      if (coingecko_id) {
+        return [...ids, coingecko_id];
+      }
+
+      return ids;
+    }, []);
+
     const prices = await fetchAssetPrices(
-      assets.map(({ asset: { coingecko_id } }) => coingecko_id),
+      coingeckoIds,
+      formattedNativeCurrency
+    );
+    const chartData = await fetchAssetCharts(
+      coingeckoIds,
       formattedNativeCurrency
     );
 
@@ -369,6 +407,19 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
               relative_change_24h: 0,
               value: 0,
             };
+          }
+        }
+      });
+    }
+
+    if (chartData) {
+      Object.keys(chartData).forEach(coingeckoId => {
+        for (let i = 0; i < assets.length; i++) {
+          if (toLower(assets[i].asset.coingecko_id) === toLower(coingeckoId)) {
+            assets[i].asset.chartPrices = chartData[coingeckoId];
+            break;
+          } else if (assets[i].asset.coingecko_id === null) {
+            assets[i].asset.chartPrices = null;
           }
         }
       });
