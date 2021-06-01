@@ -1,5 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+  TransitionSpecs,
+} from '@react-navigation/stack';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { StatusBar } from 'react-native';
@@ -126,6 +130,7 @@ function MainNavigator() {
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
       <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
       <Stack.Screen component={BuyPrepaidCard} name={Routes.BUY_PREPAID_CARD} />
+      <Stack.Screen component={DepotScreen} name={Routes.DEPOT_SCREEN} />
       <Stack.Screen
         component={AvatarBuilder}
         name={Routes.AVATAR_BUILDER}
@@ -350,51 +355,9 @@ function NativeStackNavigator() {
   );
 }
 
-function NonModalNavigator() {
-  return (
-    <NonModalStack.Navigator headerMode="none" mode="card">
-      <NonModalStack.Screen
-        component={DepotScreen}
-        name={Routes.DEPOT_SCREEN}
-      />
-    </NonModalStack.Navigator>
-  );
-}
-
-function NonModalRootNavigator() {
-  return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        component={NativeStackNavigator}
-        name={Routes.NATIVE_STACK}
-      />
-      <Stack.Screen
-        component={NonModalNavigator}
-        name={Routes.NON_MODAL_SCREENS}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ModalRootNavigator() {
-  return (
-    <NativeStack.Navigator {...nativeStackConfig}>
-      <NativeStack.Screen
-        component={NonModalRootNavigator}
-        name={Routes.NATIVE_STACK}
-      />
-      <NativeStack.Screen
-        component={ExpandedAssetSheet}
-        name={Routes.EXPANDED_ASSET_SHEET}
-        {...expandedAssetSheetConfig}
-      />
-    </NativeStack.Navigator>
-  );
-}
-
 const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
   <NavigationContainer onStateChange={onNavigationStateChange} ref={ref}>
-    <ModalRootNavigator />
+    <NativeStackNavigator />
   </NavigationContainer>
 ));
 
