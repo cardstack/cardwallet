@@ -17,5 +17,5 @@ storiesOf('Default', module).add('Default', () => {
     },
   ];
 
-  return <Depot address="0x00000000" tokens={data} />;
+  return <Depot address="0x00000000" tokens={data} networkName="xDai Chain" />;
 });

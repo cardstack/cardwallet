@@ -3,13 +3,7 @@ import CoinIcon from 'react-coin-icon';
 
 import { CenteredContainer } from '../Container';
 import { TokenType } from '@cardstack/types';
-import {
-  Container,
-  Icon,
-  SafeHeader,
-  Text,
-  Touchable,
-} from '@cardstack/components';
+import { Container, SafeHeader, Text, Touchable } from '@cardstack/components';
 
 interface MerchantSafeType {
   address: string;
@@ -71,16 +65,16 @@ const MerchantInfo = () => (
 const Bottom = (props: MerchantSafeProps) => {
   return (
     <Container paddingHorizontal={6} paddingBottom={6}>
-      <CustomerSpendSection {...props} />
+      <CustomerSpendSection />
       <HorizontalDivider />
-      <RevenuePoolSection {...props} />
+      <RevenuePoolSection />
       <HorizontalDivider />
       <MerchantSafeSection {...props} />
     </Container>
   );
 };
 
-const CustomerSpendSection = (props: MerchantSafeProps) => {
+const CustomerSpendSection = () => {
   return (
     <Container flexDirection="column">
       <Text marginBottom={2}>Customer Spend</Text>
@@ -114,7 +108,7 @@ const CustomerSpendSection = (props: MerchantSafeProps) => {
   );
 };
 
-const RevenuePoolSection = (props: MerchantSafeProps) => {
+const RevenuePoolSection = () => {
   const revenuePoolToken = {
     token: {
       symbol: 'DAI',
