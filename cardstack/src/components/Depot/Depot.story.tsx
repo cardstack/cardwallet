@@ -17,11 +17,5 @@ storiesOf('Default', module).add('Default', () => {
     },
   ];
 
-  return (
-    <Depot
-      address="0x00000000"
-      onPress={() => Alert.alert('pressed')}
-      tokens={data}
-    />
-  );
+  return <Depot address="0x00000000" tokens={data} />;
 });
