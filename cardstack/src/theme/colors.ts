@@ -8,10 +8,12 @@ export const palette = {
   blueLight: '#00EBE5',
   blueBorder: '#6B6A80',
   grayBackground: '#F7F7F7',
+  grayBackgroundLight: '#E0E0E0',
   borderGray: '#E8E8E8',
   grayMostDark: '#666666',
   grayDark: '#AFAFB7',
   grayLessDark: '#B3B1B8',
+  grayMediumDark: '#9A9A9A',
   grayMedium: '#03C4BF',
   grayMediumLight: '#D1D1D1',
   grayLight: '#00EBE5',
@@ -25,6 +27,7 @@ export const palette = {
 
 export const colors = {
   backgroundGray: palette.grayBackground,
+  backgroundLightGray: palette.grayBackgroundLight,
   backgroundBlue: palette.blueDark,
   brightBlue: palette.blueBright,
   black: palette.black,
@@ -51,6 +54,7 @@ export const colors = {
   white: palette.white,
   underlineGray: palette.grayMediumLight,
   spendableBalance: palette.blueDarkest,
+  darkGrayText: palette.grayMediumDark,
 };
 
 export type ColorTypes = keyof typeof colors;

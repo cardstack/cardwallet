@@ -23,13 +23,13 @@ export const SafeHeader = (props: SafeHeaderProps) => {
       >
         <Container flexDirection="row" alignItems="center">
           <Container
-            backgroundColor="white"
+            backgroundColor="backgroundLightGray"
             paddingHorizontal={2}
             style={{ paddingVertical: 1 }}
             borderRadius={4}
             marginRight={2}
           >
-            <Text variant="smallGrey" weight="bold">
+            <Text color="darkGrayText" fontSize={9} weight="bold">
               {networkName.toUpperCase()}
             </Text>
           </Container>
