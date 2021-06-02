@@ -1,17 +1,26 @@
 import React from 'react';
 import CoinIcon from 'react-coin-icon';
-import { FlatList } from 'react-native';
+
 import { CenteredContainer } from '../Container';
-import { getAddressPreview } from '@cardstack/utils';
-import { Container, Icon, Text, Touchable } from '@cardstack/components';
 import { TokenType } from '@cardstack/types';
+import {
+  Container,
+  Icon,
+  SafeHeader,
+  Text,
+  Touchable,
+} from '@cardstack/components';
 
 interface MerchantSafeType {
   address: string;
   tokens: TokenType[];
 }
 
-export const MerchantSafe = (merchantSafe: MerchantSafeType) => {
+interface MerchantSafeProps extends MerchantSafeType {
+  networkName: string;
+}
+
+export const MerchantSafe = (props: MerchantSafeProps) => {
   const onPress = () => ({});
 
   return (
@@ -24,42 +33,14 @@ export const MerchantSafe = (merchantSafe: MerchantSafeType) => {
           borderColor="buttonPrimaryBorder"
           width="100%"
         >
-          <Top {...merchantSafe} onPress={onPress} />
+          <SafeHeader {...props} onPress={onPress} />
           <MerchantInfo />
-          <Bottom {...merchantSafe} />
+          <Bottom {...props} />
         </Container>
       </Touchable>
     </Container>
   );
 };
-
-const Top = ({
-  address,
-  onPress,
-}: MerchantSafeType & { onPress: () => void }) => (
-  <Container width="100%">
-    <Container
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-      backgroundColor="black"
-      paddingVertical={4}
-      paddingHorizontal={5}
-    >
-      <Container flexDirection="row" alignItems="center">
-        <Text fontFamily="RobotoMono-Regular" color="white">
-          {getAddressPreview(address)}
-        </Text>
-      </Container>
-      <Touchable flexDirection="row" alignItems="center" onPress={onPress}>
-        <Text color="white" weight="extraBold" size="small" marginRight={3}>
-          View
-        </Text>
-        <Icon name="chevron-right" color="white" iconSize="medium" />
-      </Touchable>
-    </Container>
-  </Container>
-);
 
 const MerchantInfo = () => (
   <Container width="100%" justifyContent="center" alignItems="center">
@@ -87,34 +68,125 @@ const MerchantInfo = () => (
   </Container>
 );
 
-const Bottom = ({ tokens }: MerchantSafeType) => {
+const Bottom = (props: MerchantSafeProps) => {
   return (
-    <Container paddingHorizontal={6}>
-      <FlatList
-        data={tokens}
-        renderItem={({ item }) => {
-          return (
-            <Container
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="center"
-              minHeight={75}
-            >
-              <Container flexDirection="row" alignItems="center">
-                <CoinIcon size={30} {...item.token} />
-                <Text size="body" marginLeft={2}>
-                  {item.token.name}
-                </Text>
-              </Container>
-              <Container alignItems="flex-end">
-                <Text size="medium" weight="extraBold">
-                  {`${item.balance.display}`}
-                </Text>
-              </Container>
-            </Container>
-          );
-        }}
-      />
+    <Container paddingHorizontal={6} paddingBottom={6}>
+      <CustomerSpendSection {...props} />
+      <HorizontalDivider />
+      <RevenuePoolSection {...props} />
+      <HorizontalDivider />
+      <MerchantSafeSection {...props} />
     </Container>
   );
 };
+
+const CustomerSpendSection = (props: MerchantSafeProps) => {
+  return (
+    <Container flexDirection="column">
+      <Text marginBottom={2}>Customer Spend</Text>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Container>
+          <Container flexDirection="row">
+            <CenteredContainer
+              backgroundColor="brightBlue"
+              height={30}
+              width={30}
+              borderRadius={100}
+            >
+              <Text color="white" weight="extraBold" size="medium">
+                §
+              </Text>
+            </CenteredContainer>
+            <Container flexDirection="column" marginLeft={2}>
+              <Text size="medium" weight="extraBold">
+                21,000,000 SPEND
+              </Text>
+              <Text variant="subText">$20,000</Text>
+            </Container>
+          </Container>
+        </Container>
+      </Container>
+    </Container>
+  );
+};
+
+const RevenuePoolSection = (props: MerchantSafeProps) => {
+  const revenuePoolToken = {
+    token: {
+      symbol: 'DAI',
+    },
+    balance: {
+      display: '74.5991 DAI',
+    },
+    native: {
+      balance: {
+        display: '$75.00',
+      },
+    },
+  };
+
+  return (
+    <Container flexDirection="column">
+      <Text marginBottom={2}>Revenue Pool</Text>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Container>
+          <Container flexDirection="row">
+            <CoinIcon size={30} {...revenuePoolToken.token} />
+            <Container flexDirection="column" marginLeft={2}>
+              <Text size="medium" weight="extraBold">
+                {`${revenuePoolToken.balance.display}`}
+              </Text>
+              <Text variant="subText">
+                {revenuePoolToken.native.balance.display}
+              </Text>
+            </Container>
+          </Container>
+        </Container>
+      </Container>
+    </Container>
+  );
+};
+
+const MerchantSafeSection = ({ tokens }: MerchantSafeProps) => {
+  const firstToken = tokens[0];
+
+  return (
+    <Container flexDirection="column">
+      <Text marginBottom={2}>Merchant Safe</Text>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Container>
+          <Container flexDirection="row">
+            <CoinIcon size={30} {...firstToken.token} />
+            <Container flexDirection="column" marginLeft={2}>
+              <Text size="medium" weight="extraBold">
+                {`${firstToken.balance.display}`}
+              </Text>
+              <Text variant="subText">{firstToken.native.balance.display}</Text>
+            </Container>
+          </Container>
+        </Container>
+      </Container>
+    </Container>
+  );
+};
+
+const HorizontalDivider = () => (
+  <Container
+    marginVertical={4}
+    height={1}
+    backgroundColor="borderGray"
+    width="100%"
+  />
+);

@@ -22,3 +22,4 @@ export * from './AssetList';
 export * from './Skeleton';
 export * from './TokenBalance';
 export * from './MerchantSafe';
+export * from './SafeHeader';
