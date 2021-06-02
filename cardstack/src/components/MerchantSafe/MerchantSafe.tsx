@@ -12,7 +12,7 @@ interface MerchantSafeType {
 }
 
 export const MerchantSafe = (merchantSafe: MerchantSafeType) => {
-  const onPress = () => {};
+  const onPress = () => ({});
 
   return (
     <Container width="100%" paddingHorizontal={4}>
