@@ -21,3 +21,4 @@ export * from './Checkbox';
 export * from './AssetList';
 export * from './Skeleton';
 export * from './TokenBalance';
+export * from './MerchantSafe';

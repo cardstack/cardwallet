@@ -3,6 +3,7 @@ import { BalanceCoinRowWrapper } from '../../src/components/coin-row';
 import {
   AssetListSectionItem,
   Depot,
+  MerchantSafe,
   PrepaidCard,
 } from '@cardstack/components';
 import {
@@ -46,13 +47,10 @@ const useMerchantSafeSection = (): AssetListSectionItem<DepotType> => {
   return {
     header: {
       title: 'Merchants',
+      count: merchantSafes?.length,
     },
     data: merchantSafes,
-    Component: item => {
-      console.log({ item: JSON.stringify(item, null, 2) });
-
-      return null;
-    },
+    Component: MerchantSafe,
   };
 };
 
