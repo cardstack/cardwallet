@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
-import { Alert } from 'react-native';
+
 import { Depot } from './Depot';
 
 storiesOf('Default', module).add('Default', () => {
