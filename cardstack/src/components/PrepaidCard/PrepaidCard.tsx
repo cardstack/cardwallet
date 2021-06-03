@@ -106,8 +106,9 @@ const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
   );
 };
 
-const Bottom = ({ spendFaceValue, tokens }: PrepaidCardType) => {
-  const usdBalance = tokens[0].native.balance.display;
+const Bottom = ({ spendFaceValue, tokens, issuingToken }: PrepaidCardType) => {
+  const token = tokens.find(t => t.tokenAddress === issuingToken);
+  const usdBalance = token?.native.balance.display || 0;
 
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
