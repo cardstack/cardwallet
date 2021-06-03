@@ -49,9 +49,10 @@ const MerchantInfo = () => (
     <Container
       alignItems="center"
       flexDirection="row"
-      paddingVertical={4}
+      paddingTop={4}
       width="100%"
       paddingHorizontal={5}
+      paddingBottom={10}
     >
       <Icon name="mandello" />
       <Container flexDirection="column" marginLeft={4} justifyContent="center">
@@ -67,7 +68,7 @@ const Bottom = (props: MerchantSafeProps) => {
     <Container paddingHorizontal={6} paddingBottom={6}>
       <LifetimeEarningsSection {...props} />
       <HorizontalDivider />
-      <RecentRevenuSection />
+      <RecentRevenueSection {...props} />
       <HorizontalDivider />
       <AvailableBalancesSection {...props} />
     </Container>
@@ -107,33 +108,22 @@ const LifetimeEarningsSection = ({
   );
 };
 
-const RecentRevenuSection = () => {
-  const revenuePoolToken = {
-    token: {
-      symbol: 'DAI',
-    },
-    balance: {
-      display: '74.5991 DAI',
-    },
-    native: {
-      balance: {
-        display: '$75.00',
-      },
-    },
-  };
+const RecentRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
+  const firstToken = revenueBalances.length ? revenueBalances[0] : null;
 
   return (
     <Container flexDirection="column">
-      <SectionHeader>Recent revenue</SectionHeader>
-      {revenuePoolToken ? (
+      <SectionHeader>Unclaimed revenue</SectionHeader>
+      {firstToken ? (
         <TokenBalance
-          tokenSymbol={revenuePoolToken.token.symbol}
-          tokenBalance={revenuePoolToken.balance.display}
-          nativeBalance={revenuePoolToken.native.balance.display}
+          tokenSymbol={firstToken.token.symbol}
+          tokenBalance={firstToken.balance.display}
+          nativeBalance={firstToken.native.balance.display}
         />
       ) : (
         <EmptySection>No revenue to be claimed</EmptySection>
       )}
+      <MoreItems tokens={revenueBalances} />
     </Container>
   );
 };
@@ -159,6 +149,7 @@ const AvailableBalancesSection = ({ tokens }: MerchantSafeProps) => {
           <EmptySection>No available assets</EmptySection>
         )}
       </Container>
+      <MoreItems tokens={tokens} />
     </Container>
   );
 };
@@ -172,3 +163,26 @@ const EmptySection = ({ children }: { children: string }) => (
     <Text variant="subText">{children}</Text>
   </Container>
 );
+
+const MoreItems = ({ tokens }: { tokens: any[] }) => {
+  if (tokens.length <= 1) {
+    return null;
+  }
+
+  const additionalCount = tokens.length - 1;
+  const itemsText = additionalCount > 1 ? 'items' : 'item';
+
+  return (
+    <Container
+      width="100%"
+      flexDirection="row"
+      justifyContent="flex-end"
+      paddingHorizontal={5}
+    >
+      <Text
+        variant="subText"
+        weight="bold"
+      >{`+ ${additionalCount} more ${itemsText}`}</Text>
+    </Container>
+  );
+};
