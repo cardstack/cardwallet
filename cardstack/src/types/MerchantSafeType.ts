@@ -1,10 +1,7 @@
 import { TokenType } from '.';
 
-export interface PrepaidCardType {
+export interface MerchantSafeType {
   address: string;
-  issuer: string;
-  issuingToken: string;
-  spendFaceValue: number;
   tokens: TokenType[];
   type: string;
   reloadable: boolean;

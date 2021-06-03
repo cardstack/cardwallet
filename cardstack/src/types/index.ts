@@ -4,3 +4,4 @@ export * from './PrepaidCardType';
 export * from './TokenType';
 export * from './AssetType';
 export * from './DepotType';
+export * from './MerchantSafeType';

@@ -1238,10 +1238,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cardstack/cardpay-sdk@^0.19.12":
-  version "0.19.12"
-  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.19.12.tgz#b5f6418ca9fd9d9bbda73603c49749e6169ff28f"
-  integrity sha512-HjcPhC4Y8j3TjgBxNA+NAdM6ZryaM6P0X6oZ9k3qg2iPLZ0Ou184oRWMK0E8K8MagkJsIe+GRN6yRrrl+JH0IA==
+"@cardstack/cardpay-sdk@^0.19.13":
+  version "0.19.13"
+  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.19.13.tgz#f79d42d1cc0b55fc7a64219986cb8145bfe39fa8"
+  integrity sha512-Y9OEXURTp4BOSnLgwOltPTsGmmsFLoC7UEhYnWKa6e6300TZsOPQZnfztC/OVXxCAY9CDMgX9vjnECpZhXv1/Q==
   dependencies:
     "@truffle/hdwallet-provider" "^1.2.6"
     "@trufflesuite/web3-provider-engine" "^15.0.13-1"
@@ -1257,6 +1257,7 @@
     ethereum-cryptography "^0.1.3"
     ethereumjs-wallet "^1.0.1"
     lodash "^4.17.21"
+    semver "^7.3.5"
     web3 "^1.3.5"
     web3-core "^1.3.5"
     web3-eth "^1.3.6"
@@ -3971,6 +3972,11 @@
   integrity sha512-+ZjSA8ELlOp8SlKi0YLB2tz9d5iPNEmOBd+8Rz21wTMdaXQIa9b6TEnD6l5qKOCypE7FSyPyck12qZJxSDNoog==
   dependencies:
     "@types/node" "*"
+
+"@types/semver@^7.3.6":
+  version "7.3.6"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.6.tgz#e9831776f4512a7ba6da53e71c26e5fb67882d63"
+  integrity sha512-0caWDWmpCp0uifxFh+FaqK3CuZ2SkRR/ZRxAV5+zNdC3QVUi6wyOJnefhPvtNt8NQWXB5OA93BUvZsXpWat2Xw==
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -16189,7 +16195,7 @@ semver-compare@^1.0.0:
   resolved "https://registry.yarnpkg.com/semver-compare/-/semver-compare-1.0.0.tgz#0dee216a1c941ab37e9efb1788f6afc5ff5537fc"
   integrity sha1-De4hahyUGrN+nvsXiPavxf9VN/w=
 
-"semver@2 || 3 || 4 || 5", semver@5.5.0, semver@7.0.0, semver@7.3.2, semver@^5.0.1, semver@^5.1.0, semver@^5.4.1, semver@^5.5, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0, semver@^6.0.0, semver@^6.1.1, semver@^6.1.2, semver@^6.3.0, semver@^7.0.0, semver@^7.3.2, semver@^7.3.4, semver@~2.3.1, semver@~5.4.1:
+"semver@2 || 3 || 4 || 5", semver@5.5.0, semver@7.0.0, semver@7.3.2, semver@^5.0.1, semver@^5.1.0, semver@^5.4.1, semver@^5.5, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0, semver@^6.0.0, semver@^6.1.1, semver@^6.1.2, semver@^6.3.0, semver@^7.0.0, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@~2.3.1, semver@~5.4.1:
   version "7.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.2.tgz#604962b052b81ed0786aae84389ffba70ffd3938"
   integrity sha512-OrOb32TeeambH6UrhtShmF7CRDqhL6/5XpPNp2DuRH6+9QLw/orhp72j87v8Qa1ScDkvrrBNpZcDejAirJmfXQ==

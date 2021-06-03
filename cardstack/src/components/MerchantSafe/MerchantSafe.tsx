@@ -2,13 +2,8 @@ import React from 'react';
 import CoinIcon from 'react-coin-icon';
 
 import { CenteredContainer } from '../Container';
-import { TokenType } from '@cardstack/types';
 import { Container, SafeHeader, Text, Touchable } from '@cardstack/components';
-
-interface MerchantSafeType {
-  address: string;
-  tokens: TokenType[];
-}
+import { MerchantSafeType } from '@cardstack/types';
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;

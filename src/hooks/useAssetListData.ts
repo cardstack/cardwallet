@@ -10,6 +10,7 @@ import {
   AssetType,
   AssetWithNativeType,
   DepotType,
+  MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
@@ -41,7 +42,7 @@ const useDepotSection = (): AssetListSectionItem<DepotType> => {
   };
 };
 
-const useMerchantSafeSection = (): AssetListSectionItem<DepotType> => {
+const useMerchantSafeSection = (): AssetListSectionItem<MerchantSafeType> => {
   const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
 
   return {

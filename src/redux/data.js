@@ -1,4 +1,4 @@
-import { ExchangeRate } from '@cardstack/cardpay-sdk';
+import { getSDK } from '@cardstack/cardpay-sdk';
 import { getUnixTime, subDays } from 'date-fns';
 import {
   concat,
@@ -280,7 +280,7 @@ export const transactionsRemoved = message => (dispatch, getState) => {
 
 const getTokensWithPrice = async (tokens, nativeCurrency) => {
   const web3 = new Web3(web3ProviderSdk);
-  const exchangeRate = new ExchangeRate(web3);
+  const exchangeRate = await getSDK('ExchangeRate', web3);
 
   return Promise.all(
     tokens.map(async tokenItem => {
