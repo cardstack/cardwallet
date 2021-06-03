@@ -1,8 +1,13 @@
 import React from 'react';
 import CoinIcon from 'react-coin-icon';
-import { Container, Text, Touchable } from '@cardstack/components';
+import {
+  Container,
+  ContainerProps,
+  Text,
+  Touchable,
+} from '@cardstack/components';
 
-interface TokenBalanceProps {
+interface TokenBalanceProps extends ContainerProps {
   onPress?: () => void;
   Icon?: JSX.Element;
   tokenSymbol: string;
@@ -11,12 +16,19 @@ interface TokenBalanceProps {
 }
 
 export const TokenBalance = (props: TokenBalanceProps) => {
-  const { tokenSymbol, tokenBalance, nativeBalance, onPress, Icon } = props;
+  const {
+    tokenSymbol,
+    tokenBalance,
+    nativeBalance,
+    onPress,
+    Icon,
+    ...containerProps
+  } = props;
 
   const Wrapper = onPress ? Touchable : Container;
 
   return (
-    <Wrapper onPress={onPress}>
+    <Wrapper onPress={onPress} {...containerProps}>
       <Container
         flexDirection="row"
         justifyContent="space-between"
@@ -25,7 +37,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
         <Container>
           <Container flexDirection="row">
             {Icon ? Icon : <CoinIcon symbol={tokenSymbol} />}
-            <Container flexDirection="column" marginLeft={2}>
+            <Container flexDirection="column" marginLeft={3}>
               <Text weight="extraBold">{tokenBalance}</Text>
               <Text variant="subText">{nativeBalance}</Text>
             </Container>
