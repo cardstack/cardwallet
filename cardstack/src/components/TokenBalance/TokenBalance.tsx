@@ -1,18 +1,27 @@
 import React from 'react';
 import CoinIcon from 'react-coin-icon';
-import { Container, Text, Touchable } from '@cardstack/components';
+import {
+  CenteredContainer,
+  Container,
+  Text,
+  Touchable,
+} from '@cardstack/components';
 import { TokenType } from '@cardstack/types';
 
 interface TokenBalanceProps {
   item: TokenType;
-  onPress: () => void;
+  onPress?: () => void;
+  isTouchable?: boolean;
+  Icon?: JSX.Element;
 }
 
 export const TokenBalance = (props: TokenBalanceProps) => {
-  const { item, onPress } = props;
+  const { item, onPress, isTouchable } = props;
+
+  const Wrapper = isTouchable ? Touchable : Container;
 
   return (
-    <Touchable onPress={onPress}>
+    <Wrapper onPress={onPress}>
       <Container
         alignItems="center"
         width="100%"
@@ -20,7 +29,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
         paddingVertical={2}
         flexDirection="row"
       >
-        <Container
+        {/* <Container
           backgroundColor="white"
           borderRadius={10}
           borderWidth={1}
@@ -46,7 +55,8 @@ export const TokenBalance = (props: TokenBalanceProps) => {
             </Container>
           </Container>
         </Container>
+      </Container> */}
       </Container>
-    </Touchable>
+    </Wrapper>
   );
 };
