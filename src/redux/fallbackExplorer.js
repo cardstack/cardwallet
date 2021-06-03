@@ -119,6 +119,7 @@ const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
     network,
     dispatch
   );
+
   if (latestTxBlockNumber && tokensInWallet.length === 0) {
     return [];
   }

@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
-import { RefreshControl, SectionList } from 'react-native';
+import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
 
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
-import { useRefreshAccountData } from '../../../../src/hooks';
+import { AssetFooter } from '../../../../src/components/asset-list';
 import { AssetListLoading } from './AssetListLoading';
-import { Container, Icon, Text } from '@cardstack/components';
+import { Button, Container, Icon, Text } from '@cardstack/components';
+import {
+  PinnedHiddenSectionOption,
+  usePinnedAndHiddenItemOptions,
+  useRefreshAccountData,
+} from '@rainbow-me/hooks';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
+
 interface HeaderItem {
   title: string;
   count?: number;
   showContextMenu?: boolean;
   total?: string;
+  type?: PinnedHiddenSectionOption;
 }
 
 export type AssetListSectionItem<ComponentProps> = {
@@ -32,7 +40,18 @@ export const AssetList = (props: AssetListProps) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const { isEmpty, loading, sections, network } = props;
+
   const networkName = getConstantByNetwork('name', network);
+
+  const { editing, toggle } = usePinnedAndHiddenItemOptions();
+
+  function toggleEditingPinnedHidden(type: PinnedHiddenSectionOption) {
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+    );
+
+    toggle(type);
+  }
 
   async function onRefresh() {
     setRefreshing(true);
@@ -49,61 +68,98 @@ export const AssetList = (props: AssetListProps) => {
   }
 
   return (
-    <SectionList
-      refreshControl={
-        <RefreshControl
-          tintColor="white"
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-      sections={sections}
-      renderItem={({ item, section: { Component } }) => (
-        <Component {...item} networkName={networkName} />
-      )}
-      renderSectionHeader={({ section }) => {
-        const {
-          header: { title, count, showContextMenu, total },
-        } = section;
+    <>
+      <SectionList
+        contentContainerStyle={{ paddingBottom: 180 }}
+        refreshControl={
+          <RefreshControl
+            tintColor="white"
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        sections={sections}
+        renderItem={({ item, section: { Component } }) => (
+          <Component {...item} networkName={networkName} />
+        )}
+        renderSectionHeader={({ section }) => {
+          const {
+            header: { type, title, count, showContextMenu, total },
+          } = section;
 
-        return (
-          <Container
-            alignItems="center"
-            flexDirection="row"
-            justifyContent="space-between"
-            padding={4}
-            backgroundColor="backgroundBlue"
-          >
-            <Container flexDirection="row">
-              <Text color="white" size="medium">
-                {title}
-              </Text>
-              {count ? (
-                <Text color="buttonPrimaryBorder" size="medium" marginLeft={2}>
-                  {count}
+          const isEditing = type === editing;
+
+          return (
+            <Container
+              alignItems="center"
+              flexDirection="row"
+              justifyContent="space-between"
+              padding={4}
+              backgroundColor="backgroundBlue"
+            >
+              <Container flexDirection="row">
+                <Text color="white" size="medium">
+                  {title}
                 </Text>
-              ) : null}
+                {count ? (
+                  <Text
+                    color="buttonPrimaryBorder"
+                    size="medium"
+                    marginLeft={2}
+                  >
+                    {count}
+                  </Text>
+                ) : null}
+              </Container>
+              <Container
+                marginRight={3}
+                alignItems="center"
+                flexDirection="row"
+              >
+                {total ? (
+                  <Text
+                    color="buttonPrimaryBorder"
+                    size="body"
+                    weight="extraBold"
+                    marginRight={showContextMenu ? 3 : 0}
+                  >
+                    {total}
+                  </Text>
+                ) : null}
+                {showContextMenu ? (
+                  isEditing ? (
+                    <Button
+                      variant="tiny"
+                      onPress={() => toggleEditingPinnedHidden(type)}
+                    >
+                      DONE
+                    </Button>
+                  ) : (
+                    <ButtonPressAnimation
+                      onPress={() => {
+                        showActionSheetWithOptions(
+                          {
+                            options: ['Edit', 'Cancel'],
+                            cancelButtonIndex: 1,
+                          },
+                          (buttonIndex: number) => {
+                            if (buttonIndex === 0) {
+                              toggleEditingPinnedHidden(type);
+                            }
+                          }
+                        );
+                      }}
+                    >
+                      <Icon name="more-circle" />
+                    </ButtonPressAnimation>
+                  )
+                ) : null}
+              </Container>
             </Container>
-            <Container marginRight={3} alignItems="center" flexDirection="row">
-              {total ? (
-                <Text
-                  color="buttonPrimaryBorder"
-                  size="body"
-                  weight="extraBold"
-                  marginRight={showContextMenu ? 3 : 0}
-                >
-                  {total}
-                </Text>
-              ) : null}
-              {showContextMenu ? (
-                <ButtonPressAnimation>
-                  <Icon name="more-circle" />
-                </ButtonPressAnimation>
-              ) : null}
-            </Container>
-          </Container>
-        );
-      }}
-    />
+          );
+        }}
+      />
+      <AssetFooter />
+    </>
   );
 };

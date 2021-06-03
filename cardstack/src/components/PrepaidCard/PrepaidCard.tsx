@@ -11,12 +11,26 @@ import SVG, {
 
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardType } from '../../types';
-import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
+import { CenteredContainer } from '../Container';
+import {
+  Container,
+  ScrollView,
+  Text,
+  Icon,
+  Touchable,
+} from '@cardstack/components';
 import { getAddressPreview } from '@cardstack/utils';
+import {
+  PinnedHiddenSectionOption,
+  usePinnedAndHiddenItemOptions,
+} from '@rainbow-me/hooks';
 
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
 }
+
+const SELECT_ICON_WIDTH = '13%';
+const EDITING_COIN_ROW_WIDTH = '87%';
 
 /**
  * A prepaid card component
@@ -28,25 +42,112 @@ export const PrepaidCard = ({
   const [isScrollable, setIsScrollable] = useState(false);
   const Wrapper = isScrollable ? ScrollView : Container;
 
+  const {
+    editing,
+    selected,
+    pinned,
+    hidden,
+    select,
+    deselect,
+  } = usePinnedAndHiddenItemOptions();
+
+  const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
+  const isSelected = selected.includes(prepaidCard.address);
+  const isPinned = pinned.includes(prepaidCard.address);
+  const isHidden = hidden.includes(prepaidCard.address);
+
+  const showIcon = isPinned || isHidden;
+  const iconName = isHidden ? 'eye-off' : 'pin';
+  const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
+  const editingIconName = isSelected ? 'check-circle' : 'circle';
+
+  const onPress = () => {
+    if (isEditing) {
+      if (isSelected) {
+        deselect(prepaidCard.address);
+      } else {
+        select(prepaidCard.address);
+      }
+    } else {
+      setIsScrollable(!isScrollable);
+    }
+  };
+
   return (
     <Wrapper width="100%" paddingHorizontal={4}>
       <Touchable
-        onPress={() => setIsScrollable(!isScrollable)}
+        onPress={onPress}
         width="100%"
         testID="prepaid-card"
+        alignItems="center"
+        paddingVertical={2}
+        flexDirection="row"
       >
+        {isEditing && (
+          <Container
+            testID={`coin-row-editing-icon-${editingIconName}`}
+            width={SELECT_ICON_WIDTH}
+          >
+            <Icon
+              name={editingIconName}
+              iconSize="medium"
+              iconFamily={iconFamily}
+              color={isSelected ? 'blue' : null}
+            />
+          </Container>
+        )}
+        {isEditing && showIcon && (
+          <Container
+            height="100%"
+            justifyContent="center"
+            left="9%"
+            position="absolute"
+            width={50}
+            zIndex={5}
+            testID={`coin-row-icon-${iconName}`}
+          >
+            <CenteredContainer
+              width={28}
+              height={28}
+              borderRadius={100}
+              backgroundColor="black"
+            >
+              <Icon
+                size={16}
+                color="blue"
+                name={iconName}
+                iconFamily={iconFamily}
+              />
+            </CenteredContainer>
+          </Container>
+        )}
         <Container
           backgroundColor="white"
           borderRadius={10}
           overflow="hidden"
           borderColor="buttonPrimaryBorder"
-          width="100%"
+          width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
         >
           <GradientBackground />
           {/* hard code issuer for now */}
           <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
           <Bottom {...prepaidCard} />
         </Container>
+        {isEditing && isHidden && (
+          <Container
+            backgroundColor="black"
+            top={8}
+            bottom={0}
+            right={0}
+            borderRadius={10}
+            opacity={0.5}
+            position="absolute"
+            height="100%"
+            width={EDITING_COIN_ROW_WIDTH}
+            zIndex={1}
+            testID="coin-row-hidden-overlay"
+          />
+        )}
       </Touchable>
     </Wrapper>
   );
@@ -57,7 +158,7 @@ const GradientBackground = () => (
     width="100%"
     height={110}
     viewBox="0 0 400 100"
-    style={{ position: 'absolute', top: -12 }}
+    style={{ position: 'absolute', top: -14 }}
   >
     <Defs>
       <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
@@ -74,7 +175,7 @@ const GradientBackground = () => (
       <Path
         id="Union_18"
         data-name="Union 18"
-        d="M0,164.992v-.127H0V0H139.563s13.162.132,24.094,12.362,15.768,15.605,15.768,15.605,7.3,8.09,22.43,8.452H335l-.064,128.572Z"
+        d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
         fill="#fff"
       />
     </G>

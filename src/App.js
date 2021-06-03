@@ -28,6 +28,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
+import SyncStorage from 'sync-storage';
 import { name as appName } from '../app.json';
 
 import PortalConsumer from './components/PortalConsumer';
@@ -63,6 +64,7 @@ import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
+import { PinnedHiddenItemOptionProvider } from './hooks';
 const WALLETCONNECT_SYNC_DELAY = 500;
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'dark-content' });
@@ -115,6 +117,8 @@ class App extends Component {
       const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
       logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
+
+    await SyncStorage.init();
 
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
@@ -303,21 +307,23 @@ class App extends Component {
         <RainbowContextWrapper>
           <Portal>
             <SafeAreaProvider>
-              <Provider store={store}>
-                <FlexItem>
-                  <CheckSystemReqs>
-                    {this.state.initialRoute && (
-                      <InitialRouteContext.Provider
-                        value={this.state.initialRoute}
-                      >
-                        <RoutesComponent ref={this.handleNavigatorRef} />
-                        <PortalConsumer />
-                      </InitialRouteContext.Provider>
-                    )}
-                  </CheckSystemReqs>
-                  <OfflineToast />
-                </FlexItem>
-              </Provider>
+              <PinnedHiddenItemOptionProvider>
+                <Provider store={store}>
+                  <FlexItem>
+                    <CheckSystemReqs>
+                      {this.state.initialRoute && (
+                        <InitialRouteContext.Provider
+                          value={this.state.initialRoute}
+                        >
+                          <RoutesComponent ref={this.handleNavigatorRef} />
+                          <PortalConsumer />
+                        </InitialRouteContext.Provider>
+                      )}
+                    </CheckSystemReqs>
+                    <OfflineToast />
+                  </FlexItem>
+                </Provider>
+              </PinnedHiddenItemOptionProvider>
             </SafeAreaProvider>
           </Portal>
         </RainbowContextWrapper>

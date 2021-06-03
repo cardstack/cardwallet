@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
 
 import { AssetWithNativeType } from '../../../cardstack/src/types';
 import Routes from '../../navigation/routesNames';
 import { BalanceCoinRow } from '@cardstack/components';
-import { useCoinListEdited, useCoinListEditOptions } from '@rainbow-me/hooks';
+import {
+  PinnedHiddenSectionOption,
+  usePinnedAndHiddenItemOptions,
+} from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 
 const baseHeight = 309;
@@ -14,36 +16,28 @@ export const initialChartExpandedStateSheetHeight = heightWithChart;
 
 const BalanceCoinWrapper = (item: AssetWithNativeType) => {
   const { navigate } = useNavigation();
-  const recentlyPinnedCount = useSelector(
-    // @ts-ignore
-    state => state.editOptions.recentlyPinnedCount
-  );
 
-  const [selected, setSelected] = useState(false);
-  const [previousPinned, setPreviousPinned] = useState(0);
-  const { isCoinListEdited } = useCoinListEdited();
-  const { removeSelectedCoin, pushSelectedCoin } = useCoinListEditOptions();
+  const {
+    editing,
+    selected,
+    pinned,
+    hidden,
+    select,
+    deselect,
+  } = usePinnedAndHiddenItemOptions();
 
-  useEffect(() => {
-    if (
-      selected &&
-      (recentlyPinnedCount > previousPinned || !isCoinListEdited)
-    ) {
-      setPreviousPinned(recentlyPinnedCount);
-      setSelected(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCoinListEdited, recentlyPinnedCount]);
+  const isEditing = editing === PinnedHiddenSectionOption.BALANCES;
+  const isSelected = selected.includes(item.address);
+  const isPinned = pinned.includes(item.address);
+  const isHidden = hidden.includes(item.address);
 
   const onPress = () => {
-    if (isCoinListEdited) {
-      if (selected) {
-        removeSelectedCoin(item.uniqueId);
+    if (isEditing) {
+      if (isSelected) {
+        deselect(item.address);
       } else {
-        pushSelectedCoin(item.uniqueId);
+        select(item.address);
       }
-
-      setSelected(!selected);
     } else {
       navigate(Routes.EXPANDED_ASSET_SHEET, {
         asset: item,
@@ -55,10 +49,12 @@ const BalanceCoinWrapper = (item: AssetWithNativeType) => {
 
   return (
     <BalanceCoinRow
-      isEditing={isCoinListEdited}
+      hidden={isHidden}
+      isEditing={isEditing}
       item={item}
       onPress={onPress}
-      selected={selected}
+      pinned={isPinned}
+      selected={isSelected}
     />
   );
 };
