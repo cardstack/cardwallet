@@ -150,7 +150,7 @@ const RevenuePoolSection = () => {
 };
 
 const MerchantSafeSection = ({ tokens }: MerchantSafeProps) => {
-  const firstToken = tokens[0];
+  const firstToken = tokens.length ? tokens[0] : null;
 
   return (
     <Container flexDirection="column">
@@ -160,17 +160,27 @@ const MerchantSafeSection = ({ tokens }: MerchantSafeProps) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Container>
-          <Container flexDirection="row">
-            <CoinIcon size={30} {...firstToken.token} />
-            <Container flexDirection="column" marginLeft={2}>
-              <Text size="medium" weight="extraBold">
-                {`${firstToken.balance.display}`}
-              </Text>
-              <Text variant="subText">{firstToken.native.balance.display}</Text>
+        {firstToken ? (
+          <Container>
+            <Container flexDirection="row">
+              <CoinIcon size={30} {...firstToken.token} />
+              <Container flexDirection="column" marginLeft={2}>
+                <Text size="medium" weight="extraBold">
+                  {`${firstToken.balance.display}`}
+                </Text>
+                <Text variant="subText">
+                  {firstToken.native.balance.display}
+                </Text>
+              </Container>
             </Container>
           </Container>
-        </Container>
+        ) : (
+          <Container>
+            <Text color="settingsGray" weight="extraBold">
+              No data
+            </Text>
+          </Container>
+        )}
       </Container>
     </Container>
   );
