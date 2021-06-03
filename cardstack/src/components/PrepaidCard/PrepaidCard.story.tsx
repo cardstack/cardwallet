@@ -24,6 +24,7 @@ storiesOf('Prepaid Card', module)
             },
           ] as any
         }
+        reloadable
         type="prepaid-card"
         networkName="xDai Chain"
       />

@@ -4,7 +4,6 @@ export const customIcons = {
   'face-id': require('./face-id').default,
   'info-white': require('./info-white').default,
   'more-circle': require('./more-circle').default,
-
   'qr-code': require('./qr-code').default,
   'question-square': require('./question-square').default,
   'refresh-2': require('./refresh-2').default,
@@ -25,6 +24,8 @@ export const customIcons = {
   thumbprint: require('./thumbprint').default,
   warning: require('./warning').default,
   crosshair: require('./crosshair').default,
+  mandello: require('./mandello').default,
+  spend: require('./spend').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;

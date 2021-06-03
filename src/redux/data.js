@@ -1,4 +1,4 @@
-import { ExchangeRate } from '@cardstack/cardpay-sdk';
+import { getSDK } from '@cardstack/cardpay-sdk';
 import { getUnixTime, subDays } from 'date-fns';
 import {
   concat,
@@ -35,12 +35,14 @@ import {
   getAssets,
   getDepots,
   getLocalTransactions,
+  getMerchantSafes,
   getPrepaidCards,
   saveAccountEmptyState,
   saveAssetPricesFromUniswap,
   saveAssets,
   saveDepots,
   saveLocalTransactions,
+  saveMerchantSafes,
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 
@@ -124,16 +126,18 @@ export const dataLoadState = () => async (dispatch, getState) => {
   } catch (error) {}
   try {
     dispatch({ type: DATA_LOAD_ASSETS_REQUEST });
-    const [assets, prepaidCards, depots] = await Promise.all([
+    const [assets, prepaidCards, depots, merchantSafes] = await Promise.all([
       getAssets(accountAddress, network),
       getPrepaidCards(accountAddress, network),
       getDepots(accountAddress, network),
+      getMerchantSafes(accountAddress, network),
     ]);
     dispatch({
       payload: {
         assets,
         depots,
         prepaidCards,
+        merchantSafes,
       },
       type: DATA_LOAD_ASSETS_SUCCESS,
     });
@@ -276,7 +280,7 @@ export const transactionsRemoved = message => (dispatch, getState) => {
 
 const getTokensWithPrice = async (tokens, nativeCurrency) => {
   const web3 = new Web3(web3ProviderSdk);
-  const exchangeRate = new ExchangeRate(web3);
+  const exchangeRate = await getSDK('ExchangeRate', web3);
 
   return Promise.all(
     tokens.map(async tokenItem => {
@@ -284,14 +288,19 @@ const getTokensWithPrice = async (tokens, nativeCurrency) => {
         tokenItem.token.symbol,
         tokenItem.balance
       );
+      const priceUnit = tokenItem.price?.value || 0;
 
       return {
         ...tokenItem,
-        balance: convertRawAmountToBalance(tokenItem.balance),
+        balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
         native: {
           balance: {
             amount: usdBalance,
             display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
+          },
+          price: {
+            amount: priceUnit,
+            display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
           },
         },
       };
@@ -306,9 +315,16 @@ const addGnosisTokenPrices = async (
   nativeCurrency
 ) => {
   const depots = get(message, 'payload.depots', []);
+  const merchantSafes = get(message, 'payload.merchantSafes', []);
   const prepaidCards = get(message, 'payload.prepaidCards', []);
+  const web3 = new Web3(web3ProviderSdk);
+  const revenuePool = await getSDK('RevenuePool', web3);
 
-  const [depotsWithPrice, prepaidCardsWithPrice] = await Promise.all([
+  const [
+    depotsWithPrice,
+    prepaidCardsWithPrice,
+    merchantSafesWithPrice,
+  ] = await Promise.all([
     await Promise.all(
       depots.map(async depot => {
         const tokensWithPrice = await getTokensWithPrice(
@@ -335,14 +351,41 @@ const addGnosisTokenPrices = async (
         };
       })
     ),
+    await Promise.all(
+      merchantSafes.map(async merchantSafe => {
+        const revenueBalances = await revenuePool.balances(
+          merchantSafe.address
+        );
+        const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all([
+          getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
+          getTokensWithPrice(
+            revenueBalances.map(revenueToken => ({
+              ...revenueToken,
+              token: {
+                symbol: revenueToken.tokenSymbol,
+              },
+            })),
+            nativeCurrency
+          ),
+        ]);
+
+        return {
+          ...merchantSafe,
+          revenueBalances: revenueBalancesWithPrice,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
   ]);
 
   savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
   saveDepots(depotsWithPrice, accountAddress, network);
+  saveMerchantSafes(merchantSafesWithPrice, accountAddress, network);
 
   return {
     depots: depotsWithPrice,
     prepaidCards: prepaidCardsWithPrice,
+    merchantSafes: merchantSafesWithPrice,
   };
 };
 
@@ -357,7 +400,7 @@ export const addressAssetsReceived = (
 
   const { accountAddress, network, nativeCurrency } = getState().settings;
 
-  const { depots, prepaidCards } = await addGnosisTokenPrices(
+  const { depots, prepaidCards, merchantSafes } = await addGnosisTokenPrices(
     message,
     network,
     accountAddress,
@@ -368,6 +411,7 @@ export const addressAssetsReceived = (
     payload: {
       depots,
       prepaidCards,
+      merchantSafes,
     },
     type: DATA_UPDATE_GNOSIS_DATA,
   });
@@ -804,6 +848,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         depots: action.payload.depots,
+        merchantSafes: action.payload.merchantSafes,
         prepaidCards: action.payload.prepaidCards,
       };
     case DATA_UPDATE_TRANSACTIONS:
@@ -844,6 +889,7 @@ export default (state = INITIAL_STATE, action) => {
         assets: action.payload.assets,
         depots: action.payload.depots,
         prepaidCards: action.payload.prepaidCards,
+        merchantSafes: action.payload.merchantSafes,
         isLoadingAssets: false,
       };
     case DATA_LOAD_ASSETS_FAILURE:

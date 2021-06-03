@@ -1,5 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { StatusBar } from 'react-native';
@@ -53,7 +56,6 @@ import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
 
 const Stack = createStackNavigator();
-const NonModalStack = createStackNavigator();
 const NativeStack = createNativeStackNavigator();
 
 function SendFlowNavigator() {
@@ -126,6 +128,14 @@ function MainNavigator() {
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
       <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
       <Stack.Screen component={BuyPrepaidCard} name={Routes.BUY_PREPAID_CARD} />
+      <Stack.Screen
+        component={DepotScreen}
+        name={Routes.DEPOT_SCREEN}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
       <Stack.Screen
         component={AvatarBuilder}
         name={Routes.AVATAR_BUILDER}
@@ -350,35 +360,9 @@ function NativeStackNavigator() {
   );
 }
 
-function NonModalNavigator() {
-  return (
-    <NonModalStack.Navigator headerMode="none" mode="card">
-      <NonModalStack.Screen
-        component={DepotScreen}
-        name={Routes.DEPOT_SCREEN}
-      />
-    </NonModalStack.Navigator>
-  );
-}
-
-function RootNavigator() {
-  return (
-    <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        component={NativeStackNavigator}
-        name={Routes.NATIVE_STACK}
-      />
-      <Stack.Screen
-        component={NonModalNavigator}
-        name={Routes.NON_MODAL_SCREENS}
-      />
-    </Stack.Navigator>
-  );
-}
-
 const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
   <NavigationContainer onStateChange={onNavigationStateChange} ref={ref}>
-    <RootNavigator />
+    <NativeStackNavigator />
   </NavigationContainer>
 ));
 

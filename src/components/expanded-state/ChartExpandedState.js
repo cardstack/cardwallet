@@ -34,7 +34,8 @@ const heightWithChart = baseHeight + 310;
 
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 
-export default function ChartExpandedState({ asset }) {
+export default function ChartExpandedState(props) {
+  const asset = props.asset?.token ? props.asset.token : props.asset;
   const {
     chart,
     chartData,
@@ -49,6 +50,7 @@ export default function ChartExpandedState({ asset }) {
     heightWithChart,
     heightWithoutChart,
   });
+
   const { network } = useAccountSettings();
   const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
   const showSwapButton = isLayer1(network)

@@ -23,7 +23,9 @@ interface HeaderItem {
 }
 
 export type AssetListSectionItem<ComponentProps> = {
-  Component: (props: ComponentProps & { networkName: string }) => JSX.Element;
+  Component: (
+    props: ComponentProps & { networkName: string; nativeCurrency: string }
+  ) => JSX.Element;
   header: HeaderItem;
   data: ComponentProps[];
 };
@@ -32,6 +34,7 @@ interface AssetListProps {
   isEmpty: boolean;
   loading: boolean;
   network: string;
+  nativeCurrency: string;
   sections: AssetListSectionItem<any>[];
 }
 
@@ -39,8 +42,7 @@ export const AssetList = (props: AssetListProps) => {
   const refresh = useRefreshAccountData();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { isEmpty, loading, sections, network } = props;
-
+  const { isEmpty, loading, sections, network, nativeCurrency } = props;
   const networkName = getConstantByNetwork('name', network);
 
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
@@ -70,7 +72,6 @@ export const AssetList = (props: AssetListProps) => {
   return (
     <>
       <SectionList
-        contentContainerStyle={{ paddingBottom: 180 }}
         refreshControl={
           <RefreshControl
             tintColor="white"
@@ -80,7 +81,11 @@ export const AssetList = (props: AssetListProps) => {
         }
         sections={sections}
         renderItem={({ item, section: { Component } }) => (
-          <Component {...item} networkName={networkName} />
+          <Component
+            {...item}
+            networkName={networkName}
+            nativeCurrency={nativeCurrency}
+          />
         )}
         renderSectionHeader={({ section }) => {
           const {
@@ -158,6 +163,7 @@ export const AssetList = (props: AssetListProps) => {
             </Container>
           );
         }}
+        contentContainerStyle={{ paddingBottom: 180 }}
       />
       <AssetFooter />
     </>

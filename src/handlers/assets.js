@@ -1,4 +1,4 @@
-import { Assets } from '@cardstack/cardpay-sdk';
+import { getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 
 import {
@@ -29,7 +29,7 @@ async function getOnchainTokenBalance(
 ) {
   try {
     const web3 = new Web3(web3Provider);
-    const assets = new Assets(web3);
+    const assets = await getSDK('Assets', web3);
     const balance = await assets.getBalanceForToken(address, userAddress);
     const tokenBalance = convertRawAmountToDecimalFormat(
       balance.toString(),

@@ -23,6 +23,7 @@ import { getAddressPreview } from '@cardstack/utils';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
+  useAccountSettings,
 } from '@rainbow-me/hooks';
 
 interface PrepaidCardProps extends PrepaidCardType {
@@ -201,14 +202,23 @@ const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
         </Container>
       </Container>
       <Container width="100%" alignItems="flex-end">
-        <Text fontSize={11}>on {networkName}</Text>
+        <Text fontSize={11}>{`ON ${networkName.toUpperCase()}`}</Text>
       </Container>
     </Container>
   );
 };
 
-const Bottom = ({ spendFaceValue, tokens }: PrepaidCardType) => {
-  const usdBalance = tokens[0].native.balance.display;
+const Bottom = ({
+  spendFaceValue,
+  tokens,
+  issuingToken,
+  reloadable,
+  issuer,
+}: PrepaidCardType) => {
+  const { accountAddress } = useAccountSettings();
+  const token = tokens.find(t => t.tokenAddress === issuingToken);
+  const usdBalance = token?.native.balance.display || 0;
+  const transferrable = accountAddress === issuer;
 
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
@@ -242,8 +252,12 @@ const Bottom = ({ spendFaceValue, tokens }: PrepaidCardType) => {
       >
         <Text fontWeight="700">{usdBalance}</Text>
         <Container alignItems="flex-end">
-          <Text variant="smallGrey">RELOADABLE</Text>
-          <Text variant="smallGrey">NON-TRANSFRERRABLE</Text>
+          <Text variant="smallGrey">
+            {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}
+          </Text>
+          <Text variant="smallGrey">
+            {transferrable ? 'TRANSFERRABLE' : 'NON-TRANSFERRABLE'}
+          </Text>
         </Container>
       </Container>
     </Container>

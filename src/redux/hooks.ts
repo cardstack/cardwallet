@@ -1,5 +1,10 @@
-import { AssetType, DepotType, PrepaidCardType } from '@cardstack/types';
 import { useSelector } from 'react-redux';
+import {
+  AssetType,
+  DepotType,
+  MerchantSafeType,
+  PrepaidCardType,
+} from '@cardstack/types';
 
 interface ReduxState {
   data: {
@@ -7,6 +12,7 @@ interface ReduxState {
     isLoadingAssets: boolean;
     prepaidCards: PrepaidCardType[];
     depots: DepotType[];
+    merchantSafes: MerchantSafeType[];
   };
   settings: {
     nativeCurrency: string;

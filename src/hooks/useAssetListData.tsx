@@ -12,12 +12,14 @@ import { BalanceCoinRowWrapper } from '../components/coin-row';
 import {
   AssetListSectionItem,
   Depot,
+  MerchantSafe,
   PrepaidCard,
 } from '@cardstack/components';
 import {
   AssetType,
   AssetWithNativeType,
   DepotType,
+  MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
@@ -222,6 +224,19 @@ const useDepotSection = (): AssetListSectionItem<DepotType> => {
   };
 };
 
+const useMerchantSafeSection = (): AssetListSectionItem<MerchantSafeType> => {
+  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
+
+  return {
+    header: {
+      title: 'Merchants',
+      count: merchantSafes?.length,
+    },
+    data: merchantSafes,
+    Component: MerchantSafe,
+  };
+};
+
 const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
   const [stateAssets, nativeCurrency, network] = useRainbowSelector<
     [AssetType[], string, string]
@@ -285,14 +300,18 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
 export const useAssetListData = () => {
   const prepaidCardSection = usePrepaidCardSection();
   const depotSection = useDepotSection();
+  const merchantSafesSection = useMerchantSafeSection();
   const balancesSection = useBalancesSection();
   const isLoadingAssets = useRainbowSelector(
     state => state.data.isLoadingAssets
   );
-
-  const sections = [prepaidCardSection, depotSection, balancesSection].filter(
-    section => section.data.length
-  );
+  const orderedSections = [
+    prepaidCardSection,
+    merchantSafesSection,
+    depotSection,
+    balancesSection,
+  ];
+  const sections = orderedSections.filter(section => section?.data?.length);
 
   const isEmpty = !sections.length;
 
