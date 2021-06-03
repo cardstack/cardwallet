@@ -1,17 +1,19 @@
 import React from 'react';
-import { FlatList } from 'react-native';
 import CoinIcon from 'react-coin-icon';
-
+import { FlatList } from 'react-native';
+import { Container, SafeHeader, Text, Touchable } from '@cardstack/components';
 import { DepotType } from '@cardstack/types';
-import { Container, Icon, Text, Touchable } from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
+
+interface DepotProps extends DepotType {
+  networkName: string;
+}
 
 /**
  * A inventory card component
  */
-export const Depot = (depot: DepotType) => {
+export const Depot = (depot: DepotProps) => {
   const { navigate } = useNavigation();
 
   const onPress = () => navigate(Routes.DEPOT_SCREEN, { depot });
@@ -26,7 +28,7 @@ export const Depot = (depot: DepotType) => {
           borderColor="buttonPrimaryBorder"
           width="100%"
         >
-          <Top {...depot} onPress={onPress} />
+          <SafeHeader {...depot} onPress={onPress} />
           <Bottom {...depot} />
         </Container>
       </Touchable>
@@ -34,32 +36,7 @@ export const Depot = (depot: DepotType) => {
   );
 };
 
-const Top = ({ address, onPress }: DepotType) => (
-  <Container width="100%">
-    <Container
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-      backgroundColor="black"
-      paddingVertical={4}
-      paddingHorizontal={5}
-    >
-      <Container flexDirection="row" alignItems="center">
-        <Text fontFamily="RobotoMono-Regular" color="white">
-          {getAddressPreview(address)}
-        </Text>
-      </Container>
-      <Touchable flexDirection="row" alignItems="center" onPress={onPress}>
-        <Text color="white" weight="extraBold" size="small" marginRight={3}>
-          View
-        </Text>
-        <Icon name="chevron-right" color="white" iconSize="medium" />
-      </Touchable>
-    </Container>
-  </Container>
-);
-
-const Bottom = ({ tokens }: DepotType) => {
+const Bottom = ({ tokens }: DepotProps) => {
   return (
     <Container paddingHorizontal={6}>
       <FlatList

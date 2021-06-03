@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
-import { Alert } from 'react-native';
+
 import { Depot } from './Depot';
 
 storiesOf('Default', module).add('Default', () => {
@@ -17,11 +17,5 @@ storiesOf('Default', module).add('Default', () => {
     },
   ];
 
-  return (
-    <Depot
-      address="0x00000000"
-      onPress={() => Alert.alert('pressed')}
-      tokens={data}
-    />
-  );
+  return <Depot address="0x00000000" tokens={data} networkName="xDai Chain" />;
 });
