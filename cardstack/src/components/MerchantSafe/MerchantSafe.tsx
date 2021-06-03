@@ -7,6 +7,7 @@ import {
   Text,
   TokenBalance,
   Touchable,
+  MoreItemsFooter,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
 import { getUSDFromSpend } from '@cardstack/utils';
@@ -121,7 +122,7 @@ const RecentRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
       ) : (
         <EmptySection>No revenue to be claimed</EmptySection>
       )}
-      <MoreItems tokens={revenueBalances} />
+      <MoreItemsFooter tokens={revenueBalances} />
     </Container>
   );
 };
@@ -147,7 +148,7 @@ const AvailableBalancesSection = ({ tokens }: MerchantSafeProps) => {
           <EmptySection>No available assets</EmptySection>
         )}
       </Container>
-      <MoreItems tokens={tokens} />
+      <MoreItemsFooter tokens={tokens} />
     </Container>
   );
 };
@@ -161,26 +162,3 @@ const EmptySection = ({ children }: { children: string }) => (
     <Text variant="subText">{children}</Text>
   </Container>
 );
-
-const MoreItems = ({ tokens }: { tokens: any[] }) => {
-  if (tokens.length <= 1) {
-    return null;
-  }
-
-  const additionalCount = tokens.length - 1;
-  const itemsText = additionalCount > 1 ? 'items' : 'item';
-
-  return (
-    <Container
-      width="100%"
-      flexDirection="row"
-      justifyContent="flex-end"
-      paddingHorizontal={5}
-    >
-      <Text
-        variant="subText"
-        weight="bold"
-      >{`+ ${additionalCount} more ${itemsText}`}</Text>
-    </Container>
-  );
-};
