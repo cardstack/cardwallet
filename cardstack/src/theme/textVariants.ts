@@ -28,4 +28,10 @@ export const textVariants = {
     color: 'blueText',
     fontSize: 13,
   },
+  welcomeScreen: {
+    color: 'white',
+    fontSize: 21,
+    fontWeight: '600',
+    fontFamily: 'Karbon',
+  },
 };
