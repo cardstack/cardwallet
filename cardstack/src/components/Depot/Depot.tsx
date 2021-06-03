@@ -1,7 +1,6 @@
 import React from 'react';
-import { FlatList } from 'react-native';
-import { MoreItemsFooter } from '../MoreItemsFooter';
 import { HorizontalDivider } from '../HorizontalDivider';
+import { MoreItemsFooter } from '../MoreItemsFooter';
 import {
   Container,
   SafeHeader,
