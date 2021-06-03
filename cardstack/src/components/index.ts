@@ -23,3 +23,5 @@ export * from './Skeleton';
 export * from './TokenBalance';
 export * from './MerchantSafe';
 export * from './SafeHeader';
+export * from './NetworkBadge';
+export * from './HorizontalDivider';

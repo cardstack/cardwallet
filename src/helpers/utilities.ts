@@ -304,7 +304,7 @@ export const convertRawAmountToBalance = (
  */
 export const convertAmountToBalanceDisplay = (
   value: BigNumberish,
-  asset: { decimals: number },
+  asset: { decimals: number; symbol: string },
   buffer?: number
 ) => {
   const decimals = get(asset, 'decimals', 18);

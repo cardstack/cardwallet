@@ -101,7 +101,7 @@ const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
         </Container>
       </Container>
       <Container width="100%" alignItems="flex-end">
-        <Text fontSize={11}>on {networkName}</Text>
+        <Text fontSize={11}>{`ON ${networkName.toUpperCase()}`}</Text>
       </Container>
     </Container>
   );

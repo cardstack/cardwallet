@@ -1,5 +1,11 @@
 import React from 'react';
-import { Container, Icon, Text, Touchable } from '@cardstack/components';
+import {
+  Container,
+  Icon,
+  NetworkBadge,
+  Text,
+  Touchable,
+} from '@cardstack/components';
 import { getAddressPreview } from '@cardstack/utils';
 
 interface SafeHeaderProps {
@@ -22,17 +28,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
         paddingHorizontal={5}
       >
         <Container flexDirection="row" alignItems="center">
-          <Container
-            backgroundColor="backgroundLightGray"
-            paddingHorizontal={2}
-            style={{ paddingVertical: 1 }}
-            borderRadius={4}
-            marginRight={2}
-          >
-            <Text color="darkGrayText" fontSize={9} weight="bold">
-              {networkName.toUpperCase()}
-            </Text>
-          </Container>
+          <NetworkBadge networkName={networkName} />
           <Text fontFamily="RobotoMono-Regular" color="white">
             {getAddressPreview(address)}
           </Text>
