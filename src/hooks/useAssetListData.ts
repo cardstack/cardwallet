@@ -1,7 +1,4 @@
-import {
-  getConstantByNetwork,
-  MerchantSafe as MerchantSafeType,
-} from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { BalanceCoinRowWrapper } from '../../src/components/coin-row';
 import {
   AssetListSectionItem,
@@ -13,6 +10,7 @@ import {
   AssetType,
   AssetWithNativeType,
   DepotType,
+  MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
