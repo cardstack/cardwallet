@@ -1,4 +1,7 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  getConstantByNetwork,
+  MerchantSafe as MerchantSafeType,
+} from '@cardstack/cardpay-sdk';
 import { BalanceCoinRowWrapper } from '../../src/components/coin-row';
 import {
   AssetListSectionItem,
@@ -41,7 +44,7 @@ const useDepotSection = (): AssetListSectionItem<DepotType> => {
   };
 };
 
-const useMerchantSafeSection = (): AssetListSectionItem<DepotType> => {
+const useMerchantSafeSection = (): AssetListSectionItem<MerchantSafeType> => {
   const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
 
   return {

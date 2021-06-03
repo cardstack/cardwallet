@@ -1,11 +1,16 @@
 import Web3 from 'web3';
-import { Safes, Safe } from '@cardstack/cardpay-sdk';
+import {
+  getSDK,
+  DepotSafe,
+  MerchantSafe,
+  PrepaidCardSafe,
+} from '@cardstack/cardpay-sdk';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
     const web3 = new Web3(web3ProviderSdk as any);
-    const safesInstance = new Safes(web3);
+    const safesInstance = await getSDK('Safes', web3);
     const safes = await safesInstance.view(address);
 
     safes?.forEach(safe => {
@@ -19,13 +24,15 @@ export const fetchGnosisSafes = async (address: string) => {
     const { depots, prepaidCards, merchantSafes } = safes.reduce(
       (
         accum: {
-          depots: Safe[];
-          merchantSafes: Safe[];
-          prepaidCards: Safe[];
+          depots: DepotSafe[];
+          merchantSafes: MerchantSafe[];
+          prepaidCards: PrepaidCardSafe[];
         },
         safe
       ) => {
         if (safe.type === 'prepaid-card') {
+          console.log({ safe });
+
           return {
             ...accum,
             prepaidCards: [...accum.prepaidCards, safe],

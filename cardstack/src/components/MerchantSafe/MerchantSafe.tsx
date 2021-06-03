@@ -1,14 +1,9 @@
+import { MerchantSafe as MerchantSafeType } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import CoinIcon from 'react-coin-icon';
 
 import { CenteredContainer } from '../Container';
-import { TokenType } from '@cardstack/types';
 import { Container, SafeHeader, Text, Touchable } from '@cardstack/components';
-
-interface MerchantSafeType {
-  address: string;
-  tokens: TokenType[];
-}
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
