@@ -1,21 +1,19 @@
 import React from 'react';
-
-import { CenteredContainer } from '../Container';
 import {
   Container,
+  HorizontalDivider,
+  Icon,
   SafeHeader,
   Text,
   TokenBalance,
   Touchable,
-  HorizontalDivider,
-  Icon,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
+import { getUSDFromSpend } from '@cardstack/utils';
 import {
   convertAmountToBalanceDisplay,
   convertAmountToNativeDisplay,
 } from '@rainbow-me/helpers/utilities';
-import { getUSDFromSpend } from '@cardstack/utils';
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
