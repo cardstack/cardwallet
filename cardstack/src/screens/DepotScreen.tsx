@@ -195,7 +195,18 @@ const Balances = ({ tokens }: BalancesProps) => {
         </Text>
       </Container>
       {tokens.map(token => (
-        <TokenBalance onPress={() => onPress(token)} item={token} />
+        <TokenBalance
+          borderColor="buttonPrimaryBorder"
+          borderRadius={10}
+          borderWidth={1}
+          marginHorizontal={5}
+          nativeBalance={token.native.balance.display}
+          onPress={() => onPress(token)}
+          padding={4}
+          tokenBalance={token.balance.display}
+          tokenSymbol={token.token.symbol}
+          zIndex={1}
+        />
       ))}
     </Container>
   );

@@ -8,7 +8,7 @@ export const palette = {
   blueLight: '#00EBE5',
   blueBorder: '#6B6A80',
   grayBackground: '#F7F7F7',
-  grayBackgroundLight: '#E0E0E0',
+  grayBackgroundLight: '#DEDEDE',
   borderGray: '#E8E8E8',
   grayMostDark: '#666666',
   grayDark: '#AFAFB7',
@@ -54,6 +54,7 @@ export const colors = {
   white: palette.white,
   underlineGray: palette.grayMediumLight,
   spendableBalance: palette.blueDarkest,
+  networkBadge: palette.blueDarkest,
   darkGrayText: palette.grayMediumDark,
 };
 

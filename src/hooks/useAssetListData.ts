@@ -95,8 +95,8 @@ export const useAssetListData = () => {
   );
   const orderedSections = [
     prepaidCardSection,
-    depotSection,
     merchantSafesSection,
+    depotSection,
     balancesSection,
   ];
   const sections = orderedSections.filter(section => section?.data?.length);

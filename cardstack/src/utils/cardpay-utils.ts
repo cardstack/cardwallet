@@ -15,3 +15,6 @@ export const isNativeToken = (symbol: string, network: string) => {
 export const isLayer1 = (network: string) => LAYER_1_NETWORKS.includes(network);
 
 export const isMainnet = (network: string) => MAINNETS.includes(network);
+
+export const getUSDFromSpend = (spendAmount: number): number =>
+  spendAmount / 100;

@@ -4,13 +4,17 @@ import { useAssetListData } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const AssetListWrapper = () => {
-  const network = useRainbowSelector(state => state.settings.network);
+  const [network, nativeCurrency] = useRainbowSelector(state => [
+    state.settings.network,
+    state.settings.nativeCurrency,
+  ]);
   const { sections, isLoadingAssets, isEmpty } = useAssetListData();
 
   return (
     <AssetList
       isEmpty={isEmpty}
       loading={isLoadingAssets}
+      nativeCurrency={nativeCurrency}
       network={network}
       sections={sections}
     />

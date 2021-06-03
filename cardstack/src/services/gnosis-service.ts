@@ -31,8 +31,6 @@ export const fetchGnosisSafes = async (address: string) => {
         safe
       ) => {
         if (safe.type === 'prepaid-card') {
-          console.log({ safe });
-
           return {
             ...accum,
             prepaidCards: [...accum.prepaidCards, safe],

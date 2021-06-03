@@ -1,7 +1,11 @@
 import React from 'react';
-import CoinIcon from 'react-coin-icon';
 import { FlatList } from 'react-native';
-import { Container, SafeHeader, Text, Touchable } from '@cardstack/components';
+import {
+  Container,
+  SafeHeader,
+  TokenBalance,
+  Touchable,
+} from '@cardstack/components';
 import { DepotType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
@@ -43,23 +47,12 @@ const Bottom = ({ tokens }: DepotProps) => {
         data={tokens}
         renderItem={({ item }) => {
           return (
-            <Container
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="center"
-              minHeight={75}
-            >
-              <Container flexDirection="row" alignItems="center">
-                <CoinIcon size={30} {...item.token} />
-                <Text size="body" marginLeft={2}>
-                  {item.token.name}
-                </Text>
-              </Container>
-              <Container alignItems="flex-end">
-                <Text size="medium" weight="extraBold">
-                  {`${item.balance.display}`}
-                </Text>
-              </Container>
+            <Container paddingVertical={5}>
+              <TokenBalance
+                tokenSymbol={item.token.symbol}
+                tokenBalance={item.balance.display}
+                nativeBalance={item.native.balance.display}
+              />
             </Container>
           );
         }}

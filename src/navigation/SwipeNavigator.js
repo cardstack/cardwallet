@@ -37,7 +37,6 @@ export function SwipeNavigator() {
           name={Routes.QR_SCANNER_SCREEN}
         />
       </Swipe.Navigator>
-      <TestnetToast network={network} />
     </FlexItem>
   );
 }

@@ -317,6 +317,8 @@ const addGnosisTokenPrices = async (
   const depots = get(message, 'payload.depots', []);
   const merchantSafes = get(message, 'payload.merchantSafes', []);
   const prepaidCards = get(message, 'payload.prepaidCards', []);
+  const web3 = new Web3(web3ProviderSdk);
+  const revenuePool = await getSDK('RevenuePool', web3);
 
   const [
     depotsWithPrice,
@@ -351,13 +353,25 @@ const addGnosisTokenPrices = async (
     ),
     await Promise.all(
       merchantSafes.map(async merchantSafe => {
-        const tokensWithPrice = await getTokensWithPrice(
-          merchantSafe.tokens,
-          nativeCurrency
+        const revenueBalances = await revenuePool.balances(
+          merchantSafe.address
         );
+        const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all([
+          getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
+          getTokensWithPrice(
+            revenueBalances.map(revenueToken => ({
+              ...revenueToken,
+              token: {
+                symbol: revenueToken.tokenSymbol,
+              },
+            })),
+            nativeCurrency
+          ),
+        ]);
 
         return {
           ...merchantSafe,
+          revenueBalances: revenueBalancesWithPrice,
           tokens: tokensWithPrice,
         };
       })
