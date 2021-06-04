@@ -1,9 +1,11 @@
 import { useTheme } from '@shopify/restyle';
 import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { CustomIconNames, customIcons } from './custom-icons';
 import { FeatherIconNames } from './feather-icon-names';
+import { MaterialCommunityIconNames } from './material-community-icon-names';
 import { ColorTypes, Theme } from '@cardstack/theme';
 import { Container, ContainerProps } from '@cardstack/components';
 
@@ -14,11 +16,22 @@ const iconSizeToValue = {
   xl: 36,
 };
 
+type IconFamily = 'Feather' | 'MaterialCommunity';
+
+const IconFamilies = {
+  Feather,
+  MaterialCommunity,
+};
+
 type IconSize = keyof typeof iconSizeToValue;
-export type IconName = CustomIconNames | FeatherIconNames;
+export type IconName =
+  | CustomIconNames
+  | FeatherIconNames
+  | MaterialCommunityIconNames;
 export interface IconProps extends ContainerProps {
   /** specify the size using T-Shirt sizes */
   iconSize?: IconSize;
+  iconFamily?: IconFamily;
   /** if none of the default sizes work for what you need, you can use this to override */
   size?: number;
   name: IconName;
@@ -30,6 +43,7 @@ export interface IconProps extends ContainerProps {
 
 export const Icon = ({
   iconSize = 'large',
+  iconFamily = 'Feather',
   size,
   name,
   color,
@@ -65,9 +79,11 @@ export const Icon = ({
     );
   }
 
+  const IconComponent = IconFamilies[iconFamily];
+
   return (
     <Container {...props}>
-      <Feather
+      <IconComponent
         color={colorWithDefault || 'transparent'}
         name={name}
         size={sizeWithDefault}

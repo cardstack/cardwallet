@@ -1,43 +1,50 @@
-import React, { useCallback, useEffect } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
+import React from 'react';
 import { LayoutAnimation } from 'react-native';
 import { Button, Container } from '@cardstack/components';
-import EditOptions from '@rainbow-me/helpers/editOptionTypes';
-import { useCoinListEdited, useCoinListEditOptions } from '@rainbow-me/hooks';
+import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
 
 const AssetFooter = () => {
-  const { isCoinListEdited } = useCoinListEdited();
-
   const {
-    currentAction,
-    setHiddenCoins,
-    setPinnedCoins,
-    clearSelectedCoins,
-  } = useCoinListEditOptions();
-  const buttonsDisabled = currentAction === EditOptions.none;
+    editing,
+    selected,
+    pinned,
+    hidden,
+    pin,
+    unpin,
+    show,
+    hide,
+  } = usePinnedAndHiddenItemOptions();
 
-  const handleHiddenPress = useCallback(() => {
-    setHiddenCoins();
+  const isInitialSelectionPinned = pinned.includes(selected[0]);
+  const isInitialSelectionHidden = hidden.includes(selected[0]);
+  const buttonsDisabled = selected?.length === 0;
+
+  const handleHiddenPress = () => {
+    if (isInitialSelectionHidden) {
+      show();
+    } else {
+      hide();
+    }
 
     LayoutAnimation.configureNext(
       LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
     );
-  }, [setHiddenCoins]);
+  };
 
-  const handlePinnedPress = useCallback(() => {
-    setPinnedCoins();
+  const handlePinnedPress = () => {
+    if (isInitialSelectionPinned) {
+      unpin();
+    } else {
+      pin();
+    }
 
     LayoutAnimation.configureNext(
       LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
     );
-  }, [setPinnedCoins]);
+  };
 
-  useEffect(() => {
-    return () => {
-      clearSelectedCoins();
-    };
-  }, [clearSelectedCoins]);
-
-  if (!isCoinListEdited) {
+  if (!editing) {
     return null;
   }
 
@@ -45,7 +52,7 @@ const AssetFooter = () => {
     <Container
       bottom={80}
       flexDirection="row"
-      justifyContent="space-between"
+      justifyContent="space-around"
       padding={4}
       position="absolute"
       width="100%"
@@ -53,34 +60,44 @@ const AssetFooter = () => {
       <Button
         disabled={buttonsDisabled}
         iconProps={
-          currentAction !== EditOptions.unpin
+          !isInitialSelectionPinned
             ? {
+                iconFamily: 'MaterialCommunity',
                 iconSize: 'medium',
                 marginRight: 2,
                 name: 'pin',
               }
-            : undefined
+            : {
+                iconFamily: 'MaterialCommunity',
+                iconSize: 'medium',
+                marginRight: 2,
+                name: 'pin-off',
+              }
         }
         onPress={handlePinnedPress}
         variant="small"
       >
-        {currentAction === EditOptions.unpin ? 'Unpin' : 'Pin'}
+        {isInitialSelectionPinned ? 'Unpin' : 'Pin'}
       </Button>
       <Button
         disabled={buttonsDisabled}
         iconProps={
-          currentAction !== EditOptions.unhide
+          !isInitialSelectionHidden
             ? {
                 iconSize: 'medium',
                 marginRight: 2,
                 name: 'eye-off',
               }
-            : undefined
+            : {
+                iconSize: 'medium',
+                marginRight: 2,
+                name: 'eye',
+              }
         }
         onPress={handleHiddenPress}
         variant="small"
       >
-        {currentAction === EditOptions.unhide ? 'Unhide' : 'Hide'}
+        {isInitialSelectionHidden ? 'Unhide' : 'Hide'}
       </Button>
     </Container>
   );
