@@ -19,7 +19,6 @@ export const CollectibleRow = (collectible: CollectibleType) => {
     });
   };
 
-
   return (
     <Touchable onPress={onPress} marginHorizontal={5} marginVertical={2}>
       <Container
