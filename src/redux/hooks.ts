@@ -18,6 +18,11 @@ interface ReduxState {
     nativeCurrency: string;
     network: string;
   };
+  uniqueTokens: {
+    fetchingUniqueTokens: boolean;
+    loadingUniqueTokens: boolean;
+    uniqueTokens: any[];
+  };
 }
 
 export const useRainbowSelector = <TSelected = unknown>(

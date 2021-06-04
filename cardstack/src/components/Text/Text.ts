@@ -1,3 +1,4 @@
+import { TextProps as ReactNativeTextProps } from 'react-native';
 import {
   createRestyleComponent,
   createText,
@@ -10,6 +11,7 @@ import { Theme, CustomTextProps, customText } from '../../theme';
  * Renders a Text component with @shopify/restyle functionality.
  */
 export type TextProps = ShopifyTextProps<Theme> &
+  ReactNativeTextProps &
   CustomTextProps<Theme> & {
     children?: ReactNode;
   };

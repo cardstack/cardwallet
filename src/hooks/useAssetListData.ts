@@ -2,6 +2,7 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { BalanceCoinRowWrapper } from '../../src/components/coin-row';
 import {
   AssetListSectionItem,
+  CollectibleRow,
   Depot,
   MerchantSafe,
   PrepaidCard,
@@ -9,6 +10,7 @@ import {
 import {
   AssetType,
   AssetWithNativeType,
+  CollectibleType,
   DepotType,
   MerchantSafeType,
   PrepaidCardType,
@@ -85,11 +87,27 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
   };
 };
 
+const useCollectiblesSection = (): AssetListSectionItem<CollectibleType> => {
+  const collectibles = useRainbowSelector(
+    state => state.uniqueTokens.uniqueTokens
+  );
+
+  return {
+    header: {
+      title: 'Collectibles',
+      count: collectibles.length,
+    },
+    data: collectibles,
+    Component: CollectibleRow,
+  };
+};
+
 export const useAssetListData = () => {
   const prepaidCardSection = usePrepaidCardSection();
   const depotSection = useDepotSection();
   const merchantSafesSection = useMerchantSafeSection();
   const balancesSection = useBalancesSection();
+  const collectiblesSection = useCollectiblesSection();
   const isLoadingAssets = useRainbowSelector(
     state => state.data.isLoadingAssets
   );
@@ -98,6 +116,7 @@ export const useAssetListData = () => {
     merchantSafesSection,
     depotSection,
     balancesSection,
+    collectiblesSection,
   ];
   const sections = orderedSections.filter(section => section?.data?.length);
 
