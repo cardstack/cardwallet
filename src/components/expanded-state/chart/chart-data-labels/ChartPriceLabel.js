@@ -54,7 +54,7 @@ export function formatNative(value, priceSharedValue, nativeSelected) {
       : 2;
 
   let res = `${Number(value).toFixed(decimals).toLocaleString('en-US', {
-    currency: 'USD',
+    currency: nativeSelected?.currency,
   })}`;
   res =
     nativeSelected?.alignment === 'left'
@@ -98,7 +98,7 @@ export default function ChartPriceLabel({
           if (android) {
             return formatted.replace(/[^\d.,-]/g, '');
           }
-          return `${formatted} USD`;
+          return `${formatted} ${nativeSelected.currency}`;
         }}
       />
     </ChartPriceRow>

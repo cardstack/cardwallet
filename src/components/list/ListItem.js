@@ -10,7 +10,7 @@ const ListItemHeight = 56;
 
 const renderIcon = icon =>
   isString(icon) ? (
-    <Icon name={icon} style={position.sizeAsObject('100%')} />
+    <Icon name={icon} style={position.sizeAsObject(40)} />
   ) : (
     icon
   );
@@ -44,7 +44,7 @@ const ListItem = ({
     >
       <Row
         align="center"
-        css={padding(0, 20, 2, 19)}
+        css={padding(0, 20, 0, 20)}
         height={ListItemHeight}
         justify="space-between"
         {...props}

@@ -520,7 +520,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       addressAssetsReceived({
         meta: {
           address: accountAddress,
-          currency: 'usd',
+          currency: nativeCurrency,
           status: 'ok',
           network,
         },

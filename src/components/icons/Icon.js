@@ -132,8 +132,8 @@ const Icon = ({ name, testID, ...props }, ref) => {
   const { colors } = useTheme();
   return (
     <IconElement
-      {...props}
       colors={colors}
+      {...props}
       name={name}
       ref={ref}
       testID={testID}
