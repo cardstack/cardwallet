@@ -48,14 +48,11 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
       paddingVertical={3}
     >
       <HeadingColumn>
-        <RowWithMargins align="center" margin={3}>
-          <Text color="blueText" size="small" weight="extraBold">
-            {asset.asset_contract.name.toUpperCase()}
-          </Text>
+        <Container>
           <Container
             backgroundColor="backgroundLightGray"
             borderRadius={50}
-            marginRight={2}
+            marginBottom={2}
             maxWidth={150}
             paddingHorizontal={2}
             style={{ paddingVertical: 1 }}
@@ -69,20 +66,29 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
               #{asset.id}
             </Text>
           </Container>
-        </RowWithMargins>
-        <FlexItem flex={1}>
-          <Text size="medium" weight="extraBold">
-            {buildUniqueTokenName(asset)}
+          <Text color="blueText" size="small" weight="extraBold">
+            {asset.asset_contract.name.toUpperCase()}
           </Text>
-        </FlexItem>
+        </Container>
+        <Container
+          flexDirection="row"
+          justifyContent="space-between"
+          width="100%"
+        >
+          <Container width="80%">
+            <Text size="medium" weight="extraBold">
+              {buildUniqueTokenName(asset)}
+            </Text>
+          </Container>
+          <ButtonPressAnimation onPress={onContextMenuPress}>
+            <Icon
+              fill="backgroundBlue"
+              name="more-circle"
+              stroke="backgroundBlue"
+            />
+          </ButtonPressAnimation>
+        </Container>
       </HeadingColumn>
-      <ButtonPressAnimation onPress={onContextMenuPress}>
-        <Icon
-          fill="backgroundBlue"
-          name="more-circle"
-          stroke="backgroundBlue"
-        />
-      </ButtonPressAnimation>
     </Container>
   );
 };
