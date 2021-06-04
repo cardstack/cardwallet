@@ -8,6 +8,11 @@ const blue = {
   },
 };
 
+const white = {
+  backgroundColor: 'white',
+  borderColor: 'buttonSecondaryBorder',
+};
+
 const secondary = {
   backgroundColor: 'buttonSecondaryBackground',
   borderColor: 'buttonSecondaryBorder',
@@ -85,6 +90,7 @@ export const buttonVariants = {
   dark,
   blue,
   small,
+  white,
   smallBlue: {
     ...small,
     ...blue,
