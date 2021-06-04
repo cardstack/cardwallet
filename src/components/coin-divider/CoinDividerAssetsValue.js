@@ -1,6 +1,6 @@
+import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import styled from 'styled-components';
-import { convertAmountToNativeDisplay } from '../../helpers/utilities';
 import { OpacityToggler } from '../animations';
 import { Text } from '../text';
 import { position } from '@rainbow-me/styles';

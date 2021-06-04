@@ -1,4 +1,6 @@
 /* eslint-disable no-use-before-define */
+import CurrencySelectionTypes from '@cardstack/cardpay-sdk';
+import { multiply } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import analytics from '@segment/analytics-react-native';
 import { find, get, isEmpty } from 'lodash';
@@ -14,7 +16,6 @@ import usePrevious from './usePrevious';
 import useSwapInputOutputTokens from './useSwapInputOutputTokens';
 import useUniswapAssetsInWallet from './useUniswapAssetsInWallet';
 import useUniswapCalls from './useUniswapCalls';
-import CurrencySelectionTypes from '@rainbow-me/helpers/currencySelectionTypes';
 import {
   multicallAddListeners,
   multicallUpdateOutdatedListeners,
@@ -24,7 +25,6 @@ import {
   updateSwapOutputCurrency,
 } from '@rainbow-me/redux/swap';
 import Routes from '@rainbow-me/routes';
-import { multiply } from '@rainbow-me/utilities';
 import { ethereumUtils, isNewValueForPath } from '@rainbow-me/utils';
 import logger from 'logger';
 

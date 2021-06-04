@@ -1,10 +1,10 @@
-import { getSDK } from '@cardstack/cardpay-sdk';
-import Web3 from 'web3';
-
 import {
   convertAmountToBalanceDisplay,
   convertRawAmountToDecimalFormat,
-} from '../helpers/utilities';
+  getSDK,
+} from '@cardstack/cardpay-sdk';
+import Web3 from 'web3';
+
 import { web3Provider } from './web3';
 import { isNativeToken } from '@cardstack/utils';
 

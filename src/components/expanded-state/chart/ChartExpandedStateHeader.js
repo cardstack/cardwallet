@@ -1,3 +1,4 @@
+import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import React, { useEffect, useMemo } from 'react';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components';
@@ -12,7 +13,6 @@ import {
   ChartPriceLabel,
 } from './chart-data-labels';
 import { Text } from '@cardstack/components';
-import { convertAmountToNativeDisplay } from '@rainbow-me/helpers/utilities';
 import { useAccountSettings, useBooleanState } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
 

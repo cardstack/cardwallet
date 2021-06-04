@@ -1,3 +1,4 @@
+import { delay } from '@cardstack/cardpay-sdk';
 import { captureException, captureMessage } from '@sentry/react-native';
 import { forEach, isNil } from 'lodash';
 import DeviceInfo from 'react-native-device-info';
@@ -17,7 +18,6 @@ import {
   setInternetCredentials,
   UserCredentials,
 } from 'react-native-keychain';
-import { delay } from '../helpers/utilities';
 import logger from 'logger';
 
 interface AnonymousKey {

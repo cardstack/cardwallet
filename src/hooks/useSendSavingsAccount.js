@@ -1,5 +1,5 @@
+import { convertAmountToNativeDisplay, multiply } from '@cardstack/cardpay-sdk';
 import { map } from 'lodash';
-import { convertAmountToNativeDisplay, multiply } from '../helpers/utilities';
 import useAccountSettings from './useAccountSettings';
 import useSavingsAccount from './useSavingsAccount';
 import { ethereumUtils } from '@rainbow-me/utils';

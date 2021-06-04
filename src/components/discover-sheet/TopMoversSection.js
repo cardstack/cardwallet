@@ -1,5 +1,5 @@
+import { handleSignificantDecimals } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo } from 'react';
-import { handleSignificantDecimals } from '../../helpers/utilities';
 import { useAccountSettings, useTopMovers } from '../../hooks';
 import { Column, ColumnWithMargins, Flex } from '../layout';
 import { MarqueeList } from '../list';

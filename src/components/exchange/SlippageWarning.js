@@ -1,7 +1,7 @@
 import AnimateNumber from '@bankify/react-native-animate-number';
+import { convertBipsToPercentage } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import styled from 'styled-components';
-import { convertBipsToPercentage } from '../../helpers/utilities';
 import { Icon } from '../icons';
 import { Row, RowWithMargins } from '../layout';
 import { AnimatedNumber as AnimatedNumberAndroid, Text } from '../text';

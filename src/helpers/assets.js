@@ -1,4 +1,8 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  add,
+  convertAmountToNativeDisplay,
+  getConstantByNetwork,
+} from '@cardstack/cardpay-sdk';
 import {
   chunk,
   compact,
@@ -13,12 +17,8 @@ import {
   slice,
   sortBy,
 } from 'lodash';
-import { add, convertAmountToNativeDisplay, greaterThan } from './utilities';
 import store from '@rainbow-me/redux/store';
-import {
-  ETH_ICON_URL,
-  supportedNativeCurrencies,
-} from '@rainbow-me/references';
+import { ETH_ICON_URL } from '@rainbow-me/references';
 
 const COINS_TO_SHOW = 5;
 

@@ -1,4 +1,8 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  fromWei,
+  getConstantByNetwork,
+  handleSignificantDecimals,
+} from '@cardstack/cardpay-sdk';
 import { Contract } from '@ethersproject/contracts';
 import { forEach, isEmpty, keys, values } from 'lodash';
 import { useCallback } from 'react';
@@ -8,7 +12,7 @@ import {
   WALLET_BALANCES_FROM_STORAGE,
 } from '../handlers/localstorage/walletBalances';
 import { web3Provider } from '../handlers/web3';
-import { fromWei, handleSignificantDecimals } from '../helpers/utilities';
+
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import useAccountSettings from './useAccountSettings';
 import logger from 'logger';

@@ -1,8 +1,3 @@
-import analytics from '@segment/analytics-react-native';
-import { get } from 'lodash';
-import { RefObject, useCallback } from 'react';
-import { TextInput } from 'react-native';
-import { useDispatch } from 'react-redux';
 import {
   convertAmountFromNativeValue,
   convertAmountToNativeAmount,
@@ -10,7 +5,12 @@ import {
   greaterThanOrEqualTo,
   isZero,
   updatePrecisionToDisplay,
-} from '../helpers/utilities';
+} from '@cardstack/cardpay-sdk';
+import analytics from '@segment/analytics-react-native';
+import { get } from 'lodash';
+import { RefObject, useCallback } from 'react';
+import { TextInput } from 'react-native';
+import { useDispatch } from 'react-redux';
 import useSwapInputOutputTokens from './useSwapInputOutputTokens';
 import {
   updateIsMax,

@@ -1,4 +1,8 @@
 import {
+  convertRawAmountToBalance,
+  convertRawAmountToNativeDisplay,
+} from '@cardstack/cardpay-sdk';
+import {
   compact,
   concat,
   filter,
@@ -26,10 +30,6 @@ import ProtocolTypes from '../helpers/protocolTypes';
 import DirectionTypes from '../helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
 import TransactionTypes from '../helpers/transactionTypes';
-import {
-  convertRawAmountToBalance,
-  convertRawAmountToNativeDisplay,
-} from '../helpers/utilities';
 import { savingsAssetsList } from '../references';
 import { ethereumUtils, getTokenMetadata } from '../utils';
 

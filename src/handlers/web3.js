@@ -1,4 +1,14 @@
-import { getConstantByNetwork, HttpProvider } from '@cardstack/cardpay-sdk';
+import {
+  addBuffer,
+  convertAmountToRawAmount,
+  convertStringToHex,
+  fraction,
+  getConstantByNetwork,
+  greaterThan,
+  handleSignificantDecimals,
+  HttpProvider,
+  multiply,
+} from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isHexString as isEthersHexString } from '@ethersproject/bytes';
@@ -10,15 +20,7 @@ import { get, startsWith } from 'lodash';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
-import {
-  addBuffer,
-  convertAmountToRawAmount,
-  convertStringToHex,
-  fraction,
-  greaterThan,
-  handleSignificantDecimals,
-  multiply,
-} from '../helpers/utilities';
+
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
 import { isLayer1 } from '@cardstack/utils';

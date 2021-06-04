@@ -1,9 +1,9 @@
+import { multiply } from '@cardstack/cardpay-sdk';
 import axios from 'axios';
 import {
   ETH_GAS_STATION_API_KEY,
   ETHERSCAN_API_KEY,
 } from 'react-native-dotenv';
-import { multiply } from '../helpers/utilities';
 import { ethUnits } from '@rainbow-me/references';
 
 /**

@@ -1,12 +1,12 @@
-import { compact, isEmpty, join, map, orderBy, sumBy, values } from 'lodash';
-import { createSelector } from 'reselect';
 import {
   convertAmountToNativeDisplay,
   divide,
   handleSignificantDecimals,
   handleSignificantDecimalsWithThreshold,
   multiply,
-} from '@rainbow-me/helpers/utilities';
+} from '@cardstack/cardpay-sdk';
+import { compact, isEmpty, join, map, orderBy, sumBy, values } from 'lodash';
+import { createSelector } from 'reselect';
 import { getTokenMetadata } from '@rainbow-me/utils';
 
 const assetsSelector = state => state.data.assets;

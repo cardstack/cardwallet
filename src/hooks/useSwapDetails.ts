@@ -1,3 +1,8 @@
+import {
+  convertAmountToNativeDisplay,
+  multiply,
+  updatePrecisionToDisplay,
+} from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useAccountAssets from './useAccountAssets';
@@ -9,11 +14,6 @@ import {
   updateSlippage as updateSwapSlippage,
   updateSwapTradeDetails,
 } from '@rainbow-me/redux/swap';
-import {
-  convertAmountToNativeDisplay,
-  multiply,
-  updatePrecisionToDisplay,
-} from '@rainbow-me/utilities';
 import { ethereumUtils } from '@rainbow-me/utils';
 
 export default function useSwapDetails() {

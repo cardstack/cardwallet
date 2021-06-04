@@ -1,3 +1,4 @@
+import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import analytics from '@segment/analytics-react-native';
 import React, { Fragment, useCallback, useEffect, useMemo } from 'react';
@@ -24,7 +25,6 @@ import {
 } from '../components/sheet';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import { isSymbolStablecoin } from '@rainbow-me/helpers/savings';
-import { convertAmountToNativeDisplay } from '@rainbow-me/helpers/utilities';
 import {
   useAccountSettings,
   useDimensions,

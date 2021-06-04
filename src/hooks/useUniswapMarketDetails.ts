@@ -1,3 +1,9 @@
+import {
+  convertAmountFromNativeValue,
+  greaterThanOrEqualTo,
+  isZero,
+  updatePrecisionToDisplay,
+} from '@cardstack/cardpay-sdk';
 import { get, isEmpty } from 'lodash';
 import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { TextInput } from 'react-native';
@@ -7,12 +13,6 @@ import useSwapInputOutputTokens from './useSwapInputOutputTokens';
 import useSwapInputValues from './useSwapInputValues';
 import useUniswapPairs from './useUniswapPairs';
 import { calculateTradeDetails } from '@rainbow-me/handlers/uniswap';
-import {
-  convertAmountFromNativeValue,
-  greaterThanOrEqualTo,
-  isZero,
-  updatePrecisionToDisplay,
-} from '@rainbow-me/utilities';
 import { logger } from '@rainbow-me/utils';
 
 const DEFAULT_NATIVE_INPUT_AMOUNT = 50;

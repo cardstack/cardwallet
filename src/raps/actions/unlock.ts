@@ -1,3 +1,8 @@
+import {
+  convertAmountToRawAmount,
+  greaterThan,
+  isZero,
+} from '@cardstack/cardpay-sdk';
 import { MaxUint256 } from '@ethersproject/constants';
 import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
@@ -10,11 +15,6 @@ import TransactionTypes from '@rainbow-me/helpers/transactionTypes';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
 import { rapsAddOrUpdate } from '@rainbow-me/redux/raps';
 import store from '@rainbow-me/redux/store';
-import {
-  convertAmountToRawAmount,
-  greaterThan,
-  isZero,
-} from '@rainbow-me/utilities';
 import { AllowancesCache, contractUtils, gasUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 

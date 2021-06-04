@@ -1,3 +1,4 @@
+import { subtract } from '@cardstack/cardpay-sdk';
 import { PaymentRequest } from '@rainbow-me/react-native-payments';
 import { captureException } from '@sentry/react-native';
 import axios from 'axios';
@@ -13,7 +14,6 @@ import {
   WYRE_TOKEN_TEST,
 } from 'react-native-dotenv';
 import NetworkTypes from '../helpers/networkTypes';
-import { subtract } from '../helpers/utilities';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '../references/wyre';
 import logger from 'logger';
 
