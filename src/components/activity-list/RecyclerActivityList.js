@@ -95,9 +95,9 @@ export default class RecyclerActivityList extends PureComponent {
         // This values has been hardcoded for omitting imports' cycle
         dim.width = deviceUtils.dimensions.width;
         if (type === ViewTypes.ROW) {
-          dim.height = 70;
+          dim.height = 86;
         } else if (type === ViewTypes.SWAPPED_ROW) {
-          dim.height = 70;
+          dim.height = 86;
         } else if (type === ViewTypes.FOOTER) {
           dim.height = 19;
         } else if (type === ViewTypes.HEADER) {

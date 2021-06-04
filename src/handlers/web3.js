@@ -1,15 +1,15 @@
+import { getConstantByNetwork, HttpProvider } from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isHexString as isEthersHexString } from '@ethersproject/bytes';
 import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
-
-import { JsonRpcProvider } from '@ethersproject/providers';
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
-import { get, replace, startsWith } from 'lodash';
-import { INFURA_PROJECT_ID, INFURA_PROJECT_ID_DEV } from 'react-native-dotenv';
+import { get, startsWith } from 'lodash';
+
 import AssetTypes from '../helpers/assetTypes';
-import NetworkTypes from '../helpers/networkTypes';
+import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
 import {
   addBuffer,
   convertAmountToRawAmount,
@@ -21,17 +21,23 @@ import {
 } from '../helpers/utilities';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
+import { isLayer1 } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
-const infuraProjectId = __DEV__ ? INFURA_PROJECT_ID_DEV : INFURA_PROJECT_ID;
-const infuraUrl = `https://network_.poa.network/`;
-const infuraUrl2 = `https://mainnet.infura.io/v3/${infuraProjectId}`;
-
 /**
- * @desc web3 http instance
+ * @desc web3 http instance - to be used with ethersproject contracts
  */
-export let web3Provider = new JsonRpcProvider(infuraUrl2);
+export let web3Provider = new JsonRpcProvider(
+  getConstantByNetwork('rpcNode', networkTypes.mainnet),
+  NetworkTypes.mainnet
+);
+/**
+ * @desc web3 http instance - to be used with web3 contracts
+ */
+export let web3ProviderSdk = new HttpProvider(
+  getConstantByNetwork('rpcNode', networkTypes.mainnet)
+);
 
 /**
  * @desc set a different web3 provider
@@ -41,14 +47,21 @@ export const web3SetHttpProvider = async network => {
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
-    web3Provider = new JsonRpcProvider(
-      replace(
-        infuraUrl,
-        'network_',
-        network === NetworkTypes.mainnet ? 'dai' : network
-      )
-    );
+    const networkUrl = getConstantByNetwork('rpcNode', network);
+
+    if (isLayer1(network)) {
+      web3Provider = new JsonRpcProvider(networkUrl, network);
+    } else {
+      try {
+        web3ProviderSdk = new HttpProvider(networkUrl);
+
+        web3Provider = new Web3Provider(web3ProviderSdk);
+      } catch (error) {
+        logger.log('provider error', error);
+      }
+    }
   }
+
   return web3Provider.ready;
 };
 
@@ -224,7 +237,7 @@ export const resolveUnstoppableDomain = async domain => {
     blockchain: {
       cns: {
         network: 'mainnet',
-        url: replace(infuraUrl, 'network', NetworkTypes.mainnet),
+        url: getConstantByNetwork('rpcNode', NetworkTypes.mainnet),
       },
     },
   });

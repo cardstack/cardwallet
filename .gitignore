@@ -1,16 +1,12 @@
 .env
+.env.*
 ios/GoogleService-Info.plist
 
 # OSX
 #
 ios/ReaHeader.h
 .DS_Store
-ios/Pods/
 ios/*dSYM.zip
-ios/debug.xcconfig
-ios/release.xcconfig
-ios/localrelease.xcconfig
-ios/staging.xcconfig
 
 # Xcode
 #
@@ -73,15 +69,20 @@ src/screens/ExamplePage.js
 #e2e output
 e2e/logs/*/*.xml
 
+GoogleService-Info.plist
+
 # android playstore credentials
 pc-api-8090318172169087080-31-b8ee34328314.json
 
 # ios internal files (any additional files will be ignored)
 ios/Internals
 ios/Extras.json
+ios/Pods
 
 # Rainbow scripts
 rainbow-scripts
 
 .coverage
 .jest
+
+*.p8

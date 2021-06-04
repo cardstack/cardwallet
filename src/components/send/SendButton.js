@@ -1,6 +1,8 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { HoldToAuthorizeButton } from '../buttons';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 const SendButton = ({
   assetAmount,
@@ -12,13 +14,15 @@ const SendButton = ({
   ...props
 }) => {
   const isZeroAssetAmount = Number(assetAmount) <= 0;
+  const { network } = useAccountSettings();
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
   let disabled = true;
   let label = 'Enter an Amount';
 
   if (!isZeroAssetAmount && !isSufficientGas) {
     disabled = true;
-    label = 'Insufficient ETH';
+    label = `Insufficient ${nativeTokenSymbol}`;
   } else if (!isZeroAssetAmount && !isSufficientBalance) {
     disabled = true;
     label = 'Insufficient Funds';

@@ -10,8 +10,9 @@ import networkTypes from '../helpers/networkTypes';
 import { updateLanguage } from '../languages';
 
 import { ethereumUtils } from '../utils';
-import { dataGetTransactions, dataResetState } from './data';
-import { explorerClearState, explorerInit } from './explorer';
+import { dataResetState } from './data';
+import { explorerClearState } from './explorer';
+import { fallbackExplorerInit } from './fallbackExplorer';
 import { walletConnectUpdateSessions } from './walletconnect';
 import logger from 'logger';
 
@@ -62,9 +63,9 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 };
 
 export const settingsUpdateNetwork = network => async dispatch => {
-  const chainId = ethereumUtils.getChainIdFromNetwork(network);
-  await web3SetHttpProvider(network);
   try {
+    const chainId = ethereumUtils.getChainIdFromNetwork(network);
+    await web3SetHttpProvider(network);
     dispatch({
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
@@ -97,9 +98,8 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
       payload: nativeCurrency,
       type: SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS,
     });
-    dispatch(explorerInit());
+    dispatch(fallbackExplorerInit());
     saveNativeCurrency(nativeCurrency);
-    dispatch(dataGetTransactions());
   } catch (error) {
     logger.log('Error changing native currency', error);
   }
@@ -108,7 +108,7 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
   accountAddress: '',
-  chainId: 100,
+  chainId: 1,
   language: 'en',
   nativeCurrency: 'USD',
   network: networkTypes.mainnet,

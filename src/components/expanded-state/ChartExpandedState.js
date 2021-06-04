@@ -1,8 +1,13 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { find } from 'lodash';
 import React, { useRef } from 'react';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
 
-import { useChartThrottledPoints, useUniswapAssetsInWallet } from '../../hooks';
+import {
+  useAccountSettings,
+  useChartThrottledPoints,
+  useUniswapAssetsInWallet,
+} from '../../hooks';
 import {
   BuyActionButton,
   SendActionButton,
@@ -19,6 +24,7 @@ import {
 } from '../token-info';
 import { Chart } from '../value-chart';
 import { Container } from '@cardstack/components';
+import { isLayer1 } from '@cardstack/utils';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
@@ -28,7 +34,8 @@ const heightWithChart = baseHeight + 310;
 
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 
-export default function ChartExpandedState({ asset }) {
+export default function ChartExpandedState(props) {
+  const asset = props.asset?.token ? props.asset.token : props.asset;
   const {
     chart,
     chartData,
@@ -44,13 +51,18 @@ export default function ChartExpandedState({ asset }) {
     heightWithoutChart,
   });
 
+  const { network } = useAccountSettings();
   const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
-  const showSwapButton = find(uniswapAssetsInWallet, [
-    'uniqueId',
-    asset.uniqueId,
-  ]);
+  const showSwapButton = isLayer1(network)
+    ? find(uniswapAssetsInWallet, ['uniqueId', asset.uniqueId])
+    : false;
 
-  const needsEth = asset.address === 'eth' && asset.balance.amount === '0';
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const needsEth =
+    asset.address === nativeTokenAddress && asset.balance.amount === '0';
 
   const duration = useRef(0);
 

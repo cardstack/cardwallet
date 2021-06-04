@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { Wallet } from '@ethersproject/wallet';
 import AsyncStorage from '@react-native-community/async-storage';
 import { captureException } from '@sentry/react-native';
@@ -41,8 +42,15 @@ const { RNBip39 } = NativeModules;
 
 const getEthPriceUnit = () => {
   const { assets, genericAssets } = store.getState().data;
+  const { network } = store.getState().settings;
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
   const genericEthPrice = genericAssets?.eth?.price?.value;
-  return genericEthPrice || getAsset(assets)?.price?.value || 0;
+  return (
+    genericEthPrice || getAsset(assets, nativeTokenAddress)?.price?.value || 0
+  );
 };
 
 const getBalanceAmount = async (selectedGasPrice, selected) => {
@@ -125,11 +133,11 @@ const getChainIdFromNetwork = network => {
  */
 function getEtherscanHostForNetwork() {
   const { network } = store.getState().settings;
-  const base_host = 'blockscout.com/poa/xdai';
+  const base_host = 'etherscan.io';
   if (network === networkTypes.mainnet) {
     return base_host;
   } else {
-    return `blockscout.com/poa/sokol`;
+    return `${network}.${base_host}`;
   }
 }
 
@@ -144,7 +152,7 @@ const isEthAddress = str => {
 };
 
 const fetchTxWithAlwaysCache = async address => {
-  const url = `https://blockscout.com/poa/xdai/api?module=account&action=txlist&address=${address}&tag=oldest&page=1&offset=1&apikey=${ETHERSCAN_API_KEY}`;
+  const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&tag=oldest&page=1&offset=1&apikey=${ETHERSCAN_API_KEY}`;
   const cachedTxTime = await AsyncStorage.getItem(`first-tx-${address}`);
   if (cachedTxTime) {
     return cachedTxTime;
@@ -179,7 +187,7 @@ export const daysFromTheFirstTx = address => {
 const hasPreviousTransactions = address => {
   return new Promise(async resolve => {
     try {
-      const url = `https://blockscout.com/poa/xdai/api?module=account&action=txlist&address=${address}&tag=latest&page=1&offset=1&apikey=${ETHERSCAN_API_KEY}`;
+      const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&tag=latest&page=1&offset=1&apikey=${ETHERSCAN_API_KEY}`;
       const response = await fetch(url);
       const parsedResponse = await response.json();
       // Timeout needed to avoid the 5 requests / second rate limit of etherscan API

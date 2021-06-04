@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Container, CenteredContainer, ContainerProps } from '../Container';
 import { Icon, IconProps } from '../Icon';
@@ -27,27 +27,31 @@ export const OptionItem = ({
   disabled,
   ...props
 }: OptionItemProps) => {
+  const [iconVisible] = useState(iconProps.visible ?? true);
+
   return (
     <Touchable
       alignItems="center"
       disabled={disabled}
       flexDirection="row"
-      left={20}
       onPress={onPress}
       testID="option-item"
+      borderWidth={1}
       {...props}
     >
-      <CenteredContainer
-        borderColor="borderGray"
-        borderRadius={100}
-        borderWidth={borderIcon ? 1 : 0}
-        height={40}
-        marginRight={horizontalSpacing}
-        width={40}
-        testID="option-item-icon-wrapper"
-      >
-        <Icon color="settingsGray" {...iconProps} />
-      </CenteredContainer>
+      {iconVisible && (
+        <CenteredContainer
+          borderColor="borderGray"
+          borderRadius={100}
+          borderWidth={borderIcon ? 1 : 0}
+          height={40}
+          marginRight={horizontalSpacing}
+          width={40}
+          testID="option-item-icon-wrapper"
+        >
+          <Icon color="settingsGray" {...iconProps} />
+        </CenteredContainer>
+      )}
       <Container>
         <Text fontWeight="600" {...textProps}>
           {title}

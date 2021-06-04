@@ -1,17 +1,11 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigation } from '../../navigation/Navigation';
-import { Row } from '../layout';
 import Text from '../text/Text';
 import HeaderButton from './HeaderButton';
-import { Icon } from '@cardstack/components';
+import { Container, Icon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { fonts, fontWithWidth } from '@rainbow-me/styles';
-
-const Container = styled(Row).attrs({ align: 'center' })`
-  height: 44;
-  width: 20;
-`;
 
 const IconText = styled(Text).attrs(({ theme: { colors } }) => ({
   color: colors.dark,
@@ -59,13 +53,14 @@ export default function BackButton({
       throttle={throttle}
       transformOrigin={direction}
     >
-      <Container {...props} textChevron={textChevron}>
+      <Container {...props} justifyContent="center" textChevron={textChevron}>
         {textChevron ? (
           <IconText color={colors.white}>←</IconText>
         ) : (
           <Icon
+            alignSelf="center"
             color={color || 'white'}
-            iconSize="large"
+            iconSize="xl"
             name={`chevron-${direction}`}
           />
         )}

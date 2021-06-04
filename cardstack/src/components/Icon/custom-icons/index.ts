@@ -1,17 +1,20 @@
 export const customIcons = {
+  'arrow-max': require('./arrow-max').default,
   'check-circle': require('./check-circle').default,
   'face-id': require('./face-id').default,
-  'info-blue': require('./info-blue').default,
   'info-white': require('./info-white').default,
   'more-circle': require('./more-circle').default,
   'qr-code': require('./qr-code').default,
   'question-square': require('./question-square').default,
   'refresh-2': require('./refresh-2').default,
+  info: require('./info').default,
   cardstack: require('./cardstack').default,
   circle: require('./circle').default,
   cloud: require('./cloud').default,
+  inventory: require('./inventory').default,
   error: require('./error').default,
   gift: require('./gift').default,
+  more: require('./more').default,
   pay: require('./pay').default,
   pin: require('./pin').default,
   refresh: require('./refresh').default,
@@ -21,6 +24,9 @@ export const customIcons = {
   swap: require('./swap').default,
   thumbprint: require('./thumbprint').default,
   warning: require('./warning').default,
+  crosshair: require('./crosshair').default,
+  mandello: require('./mandello').default,
+  spend: require('./spend').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;

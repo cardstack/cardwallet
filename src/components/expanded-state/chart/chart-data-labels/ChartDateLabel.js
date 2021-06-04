@@ -37,7 +37,7 @@ function formatDatetime(value, chartTimeSharedValue) {
     return chartTimeSharedValue.value;
   }
 
-  const date = new Date(Number(value) * 1000);
+  const date = new Date(Number(value));
   const now = new Date();
 
   let res = MONTHS[date.getMonth()] + ' ';
@@ -101,6 +101,7 @@ export default function ChartDateLabel({ chartTimeSharedValue }) {
       <Label
         format={value => {
           'worklet';
+
           return formatDatetime(value, chartTimeSharedValue);
         }}
         style={textStyle}

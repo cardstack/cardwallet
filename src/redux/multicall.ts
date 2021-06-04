@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
+import { ChainId } from '@uniswap/sdk';
 import { chunk, forEach, get, keys, map } from 'lodash';
-import { ChainId } from 'uniswap-xdai-sdk';
 import { web3Provider } from '../handlers/web3';
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../references/uniswap';
 import { AppDispatch, AppGetState } from './store';

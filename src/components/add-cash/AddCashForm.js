@@ -1,18 +1,23 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/core';
 import analytics from '@segment/analytics-react-native';
 import { isEmpty } from 'lodash';
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Clock } from 'react-native-reanimated';
 
-import { useDimensions, useIsWalletEthZero } from '../../hooks';
+import {
+  useAccountSettings,
+  useDimensions,
+  useIsWalletEthZero,
+} from '../../hooks';
 import { Alert } from '../alerts';
 import { runSpring } from '../animations';
-import { Centered, ColumnWithMargins } from '../layout';
+
 import { Numpad, NumpadValue } from '../numpad';
 import AddCashFooter from './AddCashFooter';
-import { Container, SmallPrepaidCard } from '@cardstack/components';
-import { DAI_ADDRESS, ETH_ADDRESS } from '@rainbow-me/references';
-import { padding } from '@rainbow-me/styles';
+import AddCashSelector from './AddCashSelector';
+import { CenteredContainer } from '@cardstack/components';
+import { DAI_ADDRESS, ETH_ADDRESS } from '@rainbow-me/references/addresses';
 
 const currencies = [DAI_ADDRESS, ETH_ADDRESS];
 const minimumPurchaseAmountUSD = 1;
@@ -28,8 +33,9 @@ const AddCashForm = ({
   const isWalletEthZero = useIsWalletEthZero();
   const { params } = useRoute();
   const [paymentSheetVisible, setPaymentSheetVisible] = useState(false);
+  const { network } = useAccountSettings();
 
-  const { isNarrowPhone, isSmallPhone, isTallPhone } = useDimensions();
+  const { isTallPhone } = useDimensions();
   const [scaleAnim, setScaleAnim] = useState(1);
 
   const initialCurrencyIndex = isWalletEthZero ? 1 : 0;
@@ -118,19 +124,23 @@ const AddCashForm = ({
     [limitWeekly, onClearError, onLimitExceeded, onShake]
   );
 
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+
   const onCurrencyChange = useCallback(
     val => {
       if (isWalletEthZero) {
         Alert({
           buttons: [{ text: 'Okay' }],
-          message:
-            'Before you can purchase DAI you must have some xDai in your wallet!',
-          title: `You don't have any xDai!`,
+          message: `Before you can purchase DAI you must have some ${nativeTokenSymbol} in your wallet!`,
+          title: `You don't have any ${nativeTokenSymbol}!`,
         });
-        analytics.track('Tried to purchase DAI but doesnt own any xDai', {
-          category: 'add cash',
-          label: val,
-        });
+        analytics.track(
+          `Tried to purchase DAI but doesnt own any ${nativeTokenSymbol}`,
+          {
+            category: 'add cash',
+            label: val,
+          }
+        );
       } else {
         setCurrency(val);
         analytics.track('Switched currency to purchase', {
@@ -139,35 +149,32 @@ const AddCashForm = ({
         });
       }
     },
-    [isWalletEthZero]
+    [isWalletEthZero, nativeTokenSymbol]
   );
 
   return (
-    <Fragment>
-      <Centered flex={1}>
-        <ColumnWithMargins
-          align="center"
-          css={padding(0, 24, isNarrowPhone ? 12 : 24)}
-          justify="center"
-          margin={isSmallPhone ? 0 : 8}
-          width="100%"
-        >
+    <>
+      <CenteredContainer flex={1}>
+        <CenteredContainer>
           <NumpadValue scale={scaleAnim} translateX={shakeAnim} value={value} />
-          <Container marginTop={8} width="100%">
-            <SmallPrepaidCard
+          <CenteredContainer>
+            <AddCashSelector
+              currencies={currencies}
+              initialCurrencyIndex={initialCurrencyIndex}
+              isWalletEthZero={isWalletEthZero}
+              onSelect={onCurrencyChange}
+            />
+            {/* <SmallPrepaidCard
               id="0xbeA3123457eF8"
               spendableBalance={Number(value) * 100}
-            />
-          </Container>
-        </ColumnWithMargins>
-      </Centered>
-      <ColumnWithMargins align="center" margin={isTallPhone ? 27 : 12}>
-        <Centered maxWidth={313}>
-          <Numpad
-            onPress={handleNumpadPress}
-            width={isNarrowPhone ? 275 : '100%'}
-          />
-        </Centered>
+            /> */}
+          </CenteredContainer>
+        </CenteredContainer>
+      </CenteredContainer>
+      <CenteredContainer margin={isTallPhone ? 8 : 3} marginBottom={0}>
+        <CenteredContainer>
+          <Numpad onPress={handleNumpadPress} />
+        </CenteredContainer>
         <AddCashFooter
           disabled={
             isEmpty(value) || parseFloat(value) < minimumPurchaseAmountUSD
@@ -175,8 +182,8 @@ const AddCashForm = ({
           onDisabledPress={onShake}
           onSubmit={handlePurchase}
         />
-      </ColumnWithMargins>
-    </Fragment>
+      </CenteredContainer>
+    </>
   );
 };
 

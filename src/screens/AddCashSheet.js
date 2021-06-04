@@ -1,11 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { useSafeArea } from 'react-native-safe-area-context';
-import styled from 'styled-components';
 
 import { AddCashForm, AddCashStatus } from '../components/add-cash';
-import { Column, ColumnWithMargins, FlexItem } from '../components/layout';
+import { BackButton } from '../components/header';
 import {
   SheetHandle,
   SheetSubtitleCycler,
@@ -15,13 +13,13 @@ import { useTheme } from '../context/ThemeContext';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import {
   useAddCashLimits,
-  useDimensions,
   useShakeAnimation,
   useTimeout,
   useWyreApplePay,
 } from '../hooks';
 import { deviceUtils } from '../utils';
-import { borders } from '@rainbow-me/styles';
+import { CenteredContainer, Container } from '@cardstack/components';
+import { useNavigation } from '@rainbow-me/navigation';
 
 const deviceHeight = deviceUtils.dimensions.height;
 const statusBarHeight = getStatusBarHeight(true);
@@ -30,20 +28,11 @@ const sheetHeight =
   statusBarHeight -
   (isNativeStackAvailable ? (deviceHeight >= 812 ? 10 : 20) : 0);
 
-const SheetContainer = styled(Column)`
-  ${borders.buildRadius('top', isNativeStackAvailable ? 0 : 16)};
-  background-color: ${({ colors }) => colors.white};
-  height: ${isNativeStackAvailable ? deviceHeight : sheetHeight};
-  top: ${isNativeStackAvailable ? 0 : statusBarHeight};
-  width: 100%;
-`;
-
 const SubtitleInterval = 3000;
 
 export default function AddCashSheet() {
   const { colors } = useTheme();
-  const { isNarrowPhone } = useDimensions();
-  const insets = useSafeArea();
+  const { goBack } = useNavigation();
 
   const [errorAnimation, onShake] = useShakeAnimation();
   const [startErrorTimeout, stopErrorTimeout] = useTimeout();
@@ -86,34 +75,52 @@ export default function AddCashSheet() {
     [stopErrorTimeout, cashLimits, startErrorTimeout, onClearError]
   );
 
+  console.log(isPaymentComplete);
   return (
-    <SheetContainer colors={colors}>
+    <Container
+      backgroundColor="white"
+      borderTopLeftRadius={isNativeStackAvailable ? 0 : 16}
+      borderTopRightRadius={isNativeStackAvailable ? 0 : 16}
+      colors={colors}
+      height={isNativeStackAvailable ? deviceHeight : sheetHeight}
+      top={isNativeStackAvailable ? 0 : statusBarHeight}
+      width="100%"
+    >
       <StatusBar barStyle="light-content" />
-      <Column
-        align="center"
+      <Container
         height={isNativeStackAvailable ? sheetHeight : '100%'}
-        justify="end"
-        paddingBottom={isNarrowPhone ? 15 : insets.bottom + 11}
+        justifyContent="flex-end"
+        paddingBottom={4}
       >
-        <Column align="center" paddingVertical={6}>
-          <SheetHandle />
-          <ColumnWithMargins
-            margin={4}
-            paddingTop={isNativeStackAvailable ? 7 : 5}
-          >
-            <SheetTitle>Add Funds</SheetTitle>
+        <Container paddingVertical={2}>
+          <Container alignSelf="center">
+            <SheetHandle />
+          </Container>
+          <Container paddingTop={isNativeStackAvailable ? 4 : 1}>
+            <CenteredContainer flexDirection="row">
+              <Container left={0} position="absolute">
+                <BackButton
+                  color="blue"
+                  direction="left"
+                  onPress={() => goBack()}
+                  testID="goToBalancesFromScanner"
+                />
+              </Container>
+              <SheetTitle>Add Funds</SheetTitle>
+            </CenteredContainer>
             {!isPaymentComplete && (
               <SheetSubtitleCycler
                 animatedValue={errorAnimation}
                 errorIndex={errorIndex}
                 interval={SubtitleInterval}
                 items={Object.values(cashLimits)}
-                paddingVertical={14}
+                paddingVertical={2}
               />
             )}
-          </ColumnWithMargins>
-        </Column>
-        <FlexItem width="100%">
+          </Container>
+        </Container>
+
+        <CenteredContainer flex={1} width="100%">
           {isPaymentComplete ? (
             <AddCashStatus
               error={error}
@@ -132,8 +139,8 @@ export default function AddCashSheet() {
               shakeAnim={errorAnimation}
             />
           )}
-        </FlexItem>
-      </Column>
-    </SheetContainer>
+        </CenteredContainer>
+      </Container>
+    </Container>
   );
 }

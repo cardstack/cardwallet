@@ -3,46 +3,116 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "jsx": "react-native",
-    "lib": ["es6"],
+    "lib": [
+      "es6"
+    ],
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
     "target": "esnext",
     "baseUrl": ".",
     "paths": {
-      "@rainbow-me/apollo": ["./src/apollo"],
-      "@rainbow-me/assets": ["./src/assets"],
-      "@rainbow-me/config": ["./src/config"],
-      "@rainbow-me/entities": ["src/entities"],
-      "@rainbow-me/handlers": ["./src/handlers"],
-      "@rainbow-me/handlers/*": ["./src/handlers/*"],
-      "@rainbow-me/helpers": ["./src/helpers"],
-      "@rainbow-me/helpers/*": ["./src/helpers/*"],
-      "@rainbow-me/hooks": ["src/hooks"],
-      "@rainbow-me/images": ["src/components/images"],
-      "@rainbow-me/model": ["src/model"],
-      "@rainbow-me/navigation": ["src/navigation"],
-      "@rainbow-me/networkTypes": ["./src/helpers/networkTypes"],
-      "@rainbow-me/parsers": ["src/parsers"],
-      "@rainbow-me/raps": ["src/raps"],
-      "@rainbow-me/redux": ["src/redux"],
-      "@rainbow-me/redux/*": ["src/redux/*"],
-      "@rainbow-me/references": ["src/references"],
-      "@rainbow-me/routes": ["src/navigation/routesNames"],
-      "@rainbow-me/styles": ["src/styles"],
-      "@rainbow-me/utilities": ["./src/helpers/utilities"],
-      "@rainbow-me/utils": ["src/utils"],
-      "@cardstack/utils": ["cardstack/src/utils"],
-      "@cardstack/components": ["cardstack/src/components"],
-      "@cardstack/theme": ["cardstack/src/theme"],
-      "@cardstack/screen": ["cardstack/src/screens"],
-      "logger": ["src/utils/logger"],
-      "react-native-cool-modals": ["src/react-native-cool-modals"],
-      "react-native-yet-another-bottom-sheet": ["src/react-native-yet-another-bottom-sheet"],
-      "@rainbow-me/animated-charts": ["src/react-native-animated-charts/src"],
-      "react-native-shadow-stack": ["src/react-native-shadow-stack"]
+      "@rainbow-me/apollo": [
+        "./src/apollo"
+      ],
+      "@rainbow-me/assets": [
+        "./src/assets"
+      ],
+      "@rainbow-me/config": [
+        "./src/config"
+      ],
+      "@rainbow-me/entities": [
+        "src/entities"
+      ],
+      "@rainbow-me/handlers": [
+        "./src/handlers"
+      ],
+      "@rainbow-me/handlers/*": [
+        "./src/handlers/*"
+      ],
+      "@rainbow-me/helpers": [
+        "./src/helpers"
+      ],
+      "@rainbow-me/helpers/*": [
+        "./src/helpers/*"
+      ],
+      "@rainbow-me/hooks": [
+        "src/hooks"
+      ],
+      "@rainbow-me/images": [
+        "src/components/images"
+      ],
+      "@rainbow-me/model": [
+        "src/model"
+      ],
+      "@rainbow-me/navigation": [
+        "src/navigation"
+      ],
+      "@rainbow-me/networkTypes": [
+        "./src/helpers/networkTypes"
+      ],
+      "@rainbow-me/parsers": [
+        "src/parsers"
+      ],
+      "@rainbow-me/raps": [
+        "src/raps"
+      ],
+      "@rainbow-me/redux": [
+        "src/redux"
+      ],
+      "@rainbow-me/redux/*": [
+        "src/redux/*"
+      ],
+      "@rainbow-me/references": [
+        "src/references"
+      ],
+      "@rainbow-me/routes": [
+        "src/navigation/routesNames"
+      ],
+      "@rainbow-me/styles": [
+        "src/styles"
+      ],
+      "@rainbow-me/utilities": [
+        "./src/helpers/utilities"
+      ],
+      "@rainbow-me/utils": [
+        "src/utils"
+      ],
+      "@cardstack/utils": [
+        "cardstack/src/utils"
+      ],
+      "@cardstack/components": [
+        "cardstack/src/components"
+      ],
+      "@cardstack/theme": [
+        "cardstack/src/theme"
+      ],
+      "@cardstack/screen": [
+        "cardstack/src/screens"
+      ],
+      "@cardstack/services": [
+        "cardstack/src/services"
+      ],
+      "@cardstack/types": [
+        "cardstack/src/types"
+      ],
+      "logger": [
+        "src/utils/logger"
+      ],
+      "react-native-cool-modals": [
+        "src/react-native-cool-modals"
+      ],
+      "react-native-yet-another-bottom-sheet": [
+        "src/react-native-yet-another-bottom-sheet"
+      ],
+      "@rainbow-me/animated-charts": [
+        "src/react-native-animated-charts/src"
+      ],
+      "react-native-shadow-stack": [
+        "src/react-native-shadow-stack"
+      ]
     },
     "resolveJsonModule": true
   },

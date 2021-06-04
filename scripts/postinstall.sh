@@ -60,3 +60,9 @@ else
   sentry-cli --version
   echo "sentry-cli is already installed. Skipping" 
 fi
+
+bundle exec fastlane sync_app_vars
+bundle exec fastlane sync_alpha_app_vars
+bundle exec fastlane sync_beta_app_vars
+bundle exec fastlane sync_release_app_vars
+cd ios && bundle exec fastlane sync_google_service_info && cd ..

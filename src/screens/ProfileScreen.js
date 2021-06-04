@@ -7,12 +7,11 @@ import { ActivityList } from '../components/activity-list';
 import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
-import { useTheme } from '../context/ThemeContext';
-import useNativeTransactionListAvailable from '../helpers/isNativeTransactionListAvailable';
+import NetworkTypes from '../helpers/networkTypes';
+
 import {
   useAccountSettings,
   useAccountTransactions,
-  useContacts,
   useRequests,
 } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
@@ -28,11 +27,9 @@ const ProfileScreenPage = styled(Page)`
 `;
 
 export default function ProfileScreen({ navigation }) {
-  const { colors } = useTheme();
   const [activityListInitialized, setActivityListInitialized] = useState(false);
   const isFocused = useIsFocused();
   const { navigate } = useNavigation();
-  const nativeTransactionListAvailable = useNativeTransactionListAvailable();
 
   const accountTransactions = useAccountTransactions(
     activityListInitialized,
@@ -41,11 +38,10 @@ export default function ProfileScreen({ navigation }) {
   const {
     isLoadingTransactions: isLoading,
     sections,
-    transactions,
+
     transactionsCount,
   } = accountTransactions;
-  const { contacts } = useContacts();
-  const { pendingRequestCount, requests } = useRequests();
+  const { pendingRequestCount } = useRequests();
   const { network } = useAccountSettings();
 
   const isEmpty = !transactionsCount && !pendingRequestCount;
@@ -68,13 +64,14 @@ export default function ProfileScreen({ navigation }) {
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const addCashSupportedNetworks = false; // network === NetworkTypes.kovan || network === NetworkTypes.mainnet;
+  const addCashSupportedNetworks =
+    network === NetworkTypes.kovan || network === NetworkTypes.mainnet;
   const addCashAvailable =
     IS_TESTING === 'true' ? false : addCashSupportedNetworks;
 
   return (
     <ProfileScreenPage testID="profile-screen">
-      <Header align="center" justify="space-between">
+      <Header backgroundColor="backgroundBlue">
         <HeaderButton
           onPress={onPressSettings}
           opacityTouchable={false}
@@ -88,9 +85,13 @@ export default function ProfileScreen({ navigation }) {
           }}
           testID="settings-button"
         >
-          <Icon color="white" iconSize="medium" name="settings" />
+          <Icon color="blue" iconSize="large" name="settings" />
         </HeaderButton>
-        <BackButton direction="right" onPress={onPressBackButton} />
+        <BackButton
+          color="blue"
+          direction="right"
+          onPress={onPressBackButton}
+        />
       </Header>
       <ActivityList
         addCashAvailable={addCashAvailable}

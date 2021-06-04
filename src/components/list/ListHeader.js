@@ -6,7 +6,7 @@ import { useCoinListEditOptions, useDimensions } from '../../hooks';
 import { ContextMenu } from '../context-menu';
 import { Row } from '../layout';
 import SavingsListHeader from '../savings/SavingsListHeader';
-import { Button, Text } from '@cardstack/components';
+import { Button, Container, Text } from '@cardstack/components';
 import { colors as cardstackColors } from '@cardstack/theme';
 import { padding } from '@rainbow-me/styles';
 
@@ -31,11 +31,13 @@ const StickyBackgroundBlocker = styled.View`
 export default function ListHeader({
   children,
   contextMenuOptions,
+  hideCount,
   isCoinListEdited,
   isSticky,
   title,
   titleRenderer = Text,
   totalValue,
+  totalItems,
 }) {
   const deviceDimensions = useDimensions();
   const { setIsCoinListEdited } = useCoinListEditOptions();
@@ -61,11 +63,18 @@ export default function ListHeader({
     return (
       <Fragment>
         <Content isSticky={isSticky}>
-          {createElement(titleRenderer, {
-            children: title,
-            color: 'white',
-            fontSize: 20,
-          })}
+          <Container flexDirection="row">
+            {createElement(titleRenderer, {
+              children: title,
+              color: 'white',
+              fontSize: 20,
+            })}
+            {!hideCount && (
+              <Text color="buttonPrimaryBorder" fontSize={20} marginLeft={2}>
+                {totalItems}
+              </Text>
+            )}
+          </Container>
           <Row align="center">
             {isCoinListEdited ? (
               <Button onPress={handlePress} variant="extraSmall">
@@ -79,7 +88,7 @@ export default function ListHeader({
             )}
           </Row>
         </Content>
-        {!isSticky && title !== 'Balances' && (
+        {!isSticky && title !== 'Prepaid Cards' && (
           <StickyBackgroundBlocker
             deviceDimensions={deviceDimensions}
             isEditMode={isCoinListEdited}

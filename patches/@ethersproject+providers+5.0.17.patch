@@ -1,0 +1,79 @@
+diff --git a/node_modules/@ethersproject/providers/lib/web3-provider.js b/node_modules/@ethersproject/providers/lib/web3-provider.js
+index f1c2b78..95fee4b 100644
+--- a/node_modules/@ethersproject/providers/lib/web3-provider.js
++++ b/node_modules/@ethersproject/providers/lib/web3-provider.js
+@@ -2,17 +2,17 @@
+ var __extends = (this && this.__extends) || (function () {
+     var extendStatics = function (d, b) {
+         extendStatics = Object.setPrototypeOf ||
+-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
++            ({__proto__: []} instanceof Array && function (d, b) {d.__proto__ = b;}) ||
++            function (d, b) {for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];};
+         return extendStatics(d, b);
+     };
+     return function (d, b) {
+         extendStatics(d, b);
+-        function __() { this.constructor = d; }
++        function __() {this.constructor = d;}
+         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+     };
+ })();
+-Object.defineProperty(exports, "__esModule", { value: true });
++Object.defineProperty(exports, "__esModule", {value: true});
+ var properties_1 = require("@ethersproject/properties");
+ var logger_1 = require("@ethersproject/logger");
+ var _version_1 = require("./_version");
+@@ -21,18 +21,28 @@ var json_rpc_provider_1 = require("./json-rpc-provider");
+ var _nextId = 1;
+ function buildWeb3LegacyFetcher(provider, sendFunc) {
+     return function (method, params) {
++        let request;
++
++        if (typeof method === 'object') {
++            request = method;
++        }
++
+         // Metamask complains about eth_sign (and on some versions hangs)
+-        if (method == "eth_sign" && provider.isMetaMask) {
++        if (method == "eth_sign" && (provider.isMetaMask || provider.isStatus)) {
+             // https://github.com/ethereum/go-ethereum/wiki/Management-APIs#personal_sign
+             method = "personal_sign";
+             params = [params[1], params[0]];
+         }
+-        var request = {
+-            method: method,
+-            params: params,
+-            id: (_nextId++),
+-            jsonrpc: "2.0"
+-        };
++
++        if (!request) {
++            request = {
++                method: method,
++                params: params,
++                id: (_nextId++),
++                jsonrpc: "2.0"
++            };
++        }
++
+         return new Promise(function (resolve, reject) {
+             sendFunc(request, function (error, result) {
+                 if (error) {
+@@ -60,7 +70,7 @@ function buildEip1193Fetcher(provider) {
+             method = "personal_sign";
+             params = [params[1], params[0]];
+         }
+-        return provider.request({ method: method, params: params });
++        return provider.request({method: method, params: params});
+     };
+ }
+ var Web3Provider = /** @class */ (function (_super) {
+@@ -84,6 +94,7 @@ var Web3Provider = /** @class */ (function (_super) {
+             if (!path && provider.isMetaMask) {
+                 path = "metamask";
+             }
++
+             subprovider = provider;
+             if (provider.request) {
+                 if (path === "") {

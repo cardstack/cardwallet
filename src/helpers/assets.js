@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
   chunk,
   compact,
@@ -29,32 +30,42 @@ export const buildAssetUniqueIdentifier = item => {
   return compact([balance, nativePrice, uniqueId]).join('_');
 };
 
-const addEthPlaceholder = (
+const addNativeTokenPlaceholder = (
   assets,
   includePlaceholder,
   pinnedCoins,
   nativeCurrency
 ) => {
-  const hasEth = !!find(assets, asset => asset.address === 'eth');
+  const network = store.getState().settings.network;
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const nativeTokenName = getConstantByNetwork('nativeTokenName', network);
+  const hasNativeCurrency = !!find(
+    assets,
+    asset => asset.address === nativeTokenAddress
+  );
 
   const { genericAssets } = store.getState().data;
-  if (includePlaceholder && !hasEth && assets.length > 0) {
+  if (includePlaceholder && !hasNativeCurrency && assets.length > 0) {
     const { relative_change_24h, value } = genericAssets?.eth?.price || {};
 
-    const zeroEth = {
-      address: 'eth',
+    const zeroToken = {
+      address: nativeTokenAddress,
       balance: {
         amount: '0',
-        display: '0 ETH',
+        display: `0 ${nativeTokenSymbol}`,
       },
       color: '#29292E',
       decimals: 18,
       icon_url: ETH_ICON_URL,
       isCoin: true,
-      isPinned: pinnedCoins.includes('eth'),
+      isPinned: pinnedCoins.includes(nativeTokenAddress),
       isPlaceholder: true,
       isSmall: false,
-      name: 'Ethereum',
+      name: nativeTokenName,
       native: {
         balance: {
           amount: '0.00',
@@ -70,12 +81,12 @@ const addEthPlaceholder = (
         },
       },
       price: value,
-      symbol: 'ETH',
+      symbol: nativeTokenSymbol,
       type: 'token',
-      uniqueId: 'eth',
+      uniqueId: nativeTokenAddress,
     };
 
-    return concat([zeroEth], assets);
+    return concat([zeroToken], assets);
   }
   return assets;
 };
@@ -103,7 +114,7 @@ export const buildCoinsList = (
     smallAssets = [],
     hiddenAssets = [];
 
-  const assets = addEthPlaceholder(
+  const assets = addNativeTokenPlaceholder(
     assetsOriginal,
     includePlaceholder,
     pinnedCoins,
@@ -126,15 +137,8 @@ export const buildCoinsList = (
         isSmall: false,
         ...asset,
       });
-    } else if (
-      greaterThan(
-        asset.native?.balance?.amount,
-        supportedNativeCurrencies[nativeCurrency].smallThreshold
-      )
-    ) {
-      standardAssets.push({ isCoin: true, isSmall: false, ...asset });
     } else {
-      smallAssets.push({ isCoin: true, isSmall: true, ...asset });
+      standardAssets.push({ isCoin: true, isSmall: false, ...asset });
     }
   });
 

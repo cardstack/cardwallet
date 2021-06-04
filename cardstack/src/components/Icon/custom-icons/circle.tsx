@@ -18,8 +18,8 @@ function SvgComponent(props: SvgProps) {
         cy={8}
         r={8}
         transform="translate(.75 .75)"
-        fill="none"
-        stroke="#fff"
+        fill={props.fill || 'none'}
+        stroke={props.color || '#fff'}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={1.5}

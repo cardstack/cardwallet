@@ -304,12 +304,13 @@ export const convertRawAmountToBalance = (
  */
 export const convertAmountToBalanceDisplay = (
   value: BigNumberish,
-  asset: { decimals: number },
+  asset: { decimals: number; symbol?: string },
   buffer?: number
 ) => {
   const decimals = get(asset, 'decimals', 18);
   const display = handleSignificantDecimals(value, decimals, buffer);
-  return `${display} ${get(asset, 'symbol', '')}`;
+  const symbol = get(asset, 'symbol');
+  return `${display}${symbol ? ` ${symbol}` : ''}`;
 };
 
 /**
@@ -343,6 +344,7 @@ export const convertAmountToNativeDisplay = (
   const nativeSelected = get(supportedNativeCurrencies, `${nativeCurrency}`);
   const { decimals } = nativeSelected;
   const display = handleSignificantDecimals(value, decimals, buffer);
+
   if (nativeSelected.alignment === 'left') {
     return `${nativeSelected.symbol}${display}`;
   }

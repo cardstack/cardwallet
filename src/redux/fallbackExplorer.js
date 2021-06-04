@@ -1,15 +1,19 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
+
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
 import { delay } from '../helpers/utilities';
-import coingeckoIdsFallback from '../references/coingecko/ids.json';
-import xDaiMapToEthereum from '../references/coingecko/xDaiMapToEthereum.json';
+import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
+import store from './store';
+import { fetchGnosisSafes } from '@cardstack/services';
+import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -24,7 +28,8 @@ const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
 
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
-  'https://api.coingecko.com/api/v3/coins/list?include_platform=true';
+  'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
+const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
 
@@ -62,50 +67,77 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
   }
 };
 
-const fetchCoingeckoIds = async () => {
-  let ids;
-  try {
-    const request = await fetch(COINGECKO_IDS_ENDPOINT);
-    ids = await request.json();
-  } catch (e) {
-    ids = coingeckoIdsFallback;
-  }
+const isValidAddress = address => address && address.substr(0, 2) === '0x';
 
+const fetchCoingeckoIds = async (network, coingeckoCoins) => {
   const idsMap = {};
-  ids.forEach(({ id, platforms }) => {
-    let tokenAddress = platforms.xdai || platforms.ethereum;
-    const address = tokenAddress && toLower(tokenAddress);
-    if (address && address.substr(0, 2) === '0x') {
-      idsMap[address] = id;
-    }
-  });
+  if (isLayer1(network)) {
+    coingeckoCoins.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
+      const address = tokenAddress && toLower(tokenAddress);
+      if (address && isValidAddress(address)) {
+        idsMap[address] = id;
+      }
+    });
+  } else {
+    const honeyswapRequest = await fetch(HONEYSWAP_ENDPOINT);
+    const data = await honeyswapRequest.json();
+    const honeyswapTokens = data.tokens;
+
+    honeyswapTokens.forEach(({ address: tokenAddress, symbol }) => {
+      const coingeckoToken = coingeckoCoins.find(
+        token => toLower(token.symbol) === toLower(symbol)
+      );
+      const address = tokenAddress && toLower(tokenAddress);
+
+      if (coingeckoToken && isValidAddress(address)) {
+        idsMap[address] = coingeckoToken.id;
+      }
+    });
+  }
   return idsMap;
 };
 
-const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
+const findAssetsToWatch = async (
+  address,
+  latestTxBlockNumber,
+  dispatch,
+  coingeckoCoins
+) => {
   // 1 - Discover the list of tokens for the address
-  const coingeckoIds = await fetchCoingeckoIds();
+  const network = store.getState().settings.network;
+  const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
+
   const tokensInWallet = await discoverTokens(
     coingeckoIds,
     address,
     latestTxBlockNumber,
+    network,
     dispatch
   );
   if (latestTxBlockNumber && tokensInWallet.length === 0) {
     return [];
   }
 
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const nativeTokenName = getConstantByNetwork('nativeTokenName', network);
+  const nativeTokenCoingeckoId = getConstantByNetwork(
+    'nativeTokenCoingeckoId',
+    network
+  );
+
   return [
     ...tokensInWallet,
     {
       asset: {
-        asset_code: 'eth',
-        coingecko_id: 'dai',
+        asset_code: nativeTokenAddress,
+        coingecko_id: nativeTokenCoingeckoId,
         decimals: 18,
-        icon_url:
-          'https://raw.githubusercontent.com/1Hive/default-token-list/master/src/assets/xdai/0xe91d153e0b41518a2ce8dd3d7944fa863463a97d/logo.png',
-        name: 'xDai',
-        symbol: 'xDAI',
+        name: nativeTokenName,
+        symbol: nativeTokenSymbol,
       },
     },
   ];
@@ -126,6 +158,7 @@ const discoverTokens = async (
   coingeckoIds,
   address,
   latestTxBlockNumber,
+  network,
   dispatch
 ) => {
   let page = 1;
@@ -133,11 +166,12 @@ const discoverTokens = async (
   let allTxs = [];
   let poll = true;
   while (poll) {
-    const txs = await getTokenTxDataFromEtherscan(
+    const txs = await getTokenTxData(
       address,
       page,
       offset,
-      latestTxBlockNumber
+      latestTxBlockNumber,
+      network
     );
     if (txs && txs.length > 0) {
       allTxs = allTxs.concat(txs);
@@ -167,27 +201,17 @@ const discoverTokens = async (
 
     return uniqBy(
       allTxs.map(tx => {
+        const type = getTokenType(tx);
+        const coingeckoId = coingeckoIds[tx.contractAddress.toLowerCase()];
+
         return {
           asset: {
             asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
-            coingecko_id:
-              coingeckoIds[tx.contractAddress.toLowerCase()] !== undefined &&
-              coingeckoIds[tx.contractAddress.toLowerCase()] !== 'undefined'
-                ? coingeckoIds[tx.contractAddress.toLowerCase()]
-                : xDaiMapToEthereum[tx.contractAddress.toLowerCase()] &&
-                  xDaiMapToEthereum[tx.contractAddress.toLowerCase()].address
-                ? coingeckoIds[
-                    xDaiMapToEthereum[tx.contractAddress.toLowerCase()].address
-                  ]
-                : '',
+            coingecko_id: coingeckoId || null,
             decimals: Number(tx.tokenDecimal),
-            icon_url:
-              xDaiMapToEthereum[tx.contractAddress.toLowerCase()] &&
-              xDaiMapToEthereum[tx.contractAddress.toLowerCase()].icon_url
-                ? xDaiMapToEthereum[tx.contractAddress.toLowerCase()].icon_url
-                : '',
             name: tx.tokenName,
             symbol: tx.tokenSymbol,
+            type,
           },
         };
       }),
@@ -197,13 +221,15 @@ const discoverTokens = async (
   return [];
 };
 
-const getTokenTxDataFromEtherscan = async (
+const getTokenTxData = async (
   address,
   page,
   offset,
-  latestTxBlockNumber
+  latestTxBlockNumber,
+  network
 ) => {
-  let url = `https://blockscout.com/poa/xdai/api?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
+  const baseUrl = getConstantByNetwork('apiBaseUrl', network);
+  let url = `${baseUrl}?module=account&action=tokentx&address=${address}&page=${page}&offset=${offset}&sort=desc`;
   if (latestTxBlockNumber) {
     url += `&startBlock=${latestTxBlockNumber}`;
   }
@@ -230,46 +256,45 @@ const fetchAssetPrices = async (coingeckoIds, nativeCurrency) => {
   }
 };
 
+const fetchAssetCharts = async (coingeckoIds, nativeCurrency) => {
+  try {
+    const chartData = await Promise.all(
+      coingeckoIds.map(async coingeckoId => {
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=${nativeCurrency}&days=1`
+        );
+        const data = await response.json();
+        return data;
+      })
+    );
+
+    const payload = coingeckoIds.reduce(
+      (accum, id, index) => ({
+        ...accum,
+        [id]: chartData[index].prices,
+      }),
+      {}
+    );
+
+    return payload;
+  } catch (e) {
+    logger.log(`Error trying to fetch ${coingeckoIds} charts`, e);
+  }
+};
+
 const fetchAssetBalances = async (tokens, address, network) => {
   try {
-    let values = [];
-    const contractAbiFragment = [
-      {
-        constant: true,
-        inputs: [
-          {
-            name: '_owner',
-            type: 'address',
-          },
-        ],
-        name: 'balanceOf',
-        outputs: [
-          {
-            name: 'balance',
-            type: 'uint256',
-          },
-        ],
-        payable: false,
-        type: 'function',
-      },
-    ];
+    const balanceCheckerContractAddress = getConstantByNetwork(
+      'balanceCheckerContractAddress',
+      network
+    );
+    const balanceCheckerContract = new Contract(
+      balanceCheckerContractAddress,
+      balanceCheckerContractAbi,
+      web3Provider
+    );
 
-    for (let i = 0; i < tokens.length; ++i) {
-      if (tokens[i] === '0x0000000000000000000000000000000000000000') {
-        values[i] = await web3Provider.getBalance(address);
-      } else {
-        try {
-          const contract = new Contract(
-            tokens[i],
-            contractAbiFragment,
-            web3Provider
-          );
-          values[i] = await await contract.balanceOf(address);
-        } catch (err) {
-          values[i] = '0x';
-        }
-      }
-    }
+    const values = await balanceCheckerContract.balances([address], tokens);
 
     const balances = {};
     [address].forEach((addr, addrIdx) => {
@@ -293,16 +318,18 @@ const fetchAssetBalances = async (tokens, address, network) => {
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const { accountAddress, nativeCurrency, network } = getState().settings;
   const { latestTxBlockNumber, mainnetAssets } = getState().fallbackExplorer;
+  const coingeckoCoins = getState().coingecko.coins;
   const formattedNativeCurrency = toLower(nativeCurrency);
   // If mainnet, we need to get all the info
   // 1 - Coingecko ids
   // 2 - All tokens list
   // 3 - Etherscan token transfer transactions
-  if (networkTypes.mainnet === network) {
+  if (isMainnet(network)) {
     const newMainnetAssets = await findAssetsToWatch(
       accountAddress,
       latestTxBlockNumber,
-      dispatch
+      dispatch,
+      coingeckoCoins
     );
 
     await dispatch({
@@ -317,8 +344,39 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
     const { network } = getState().settings;
     const { mainnetAssets } = getState().fallbackExplorer;
-    const assets =
-      network === networkTypes.mainnet ? mainnetAssets : testnetAssets[network];
+    const assets = isMainnet(network) ? mainnetAssets : testnetAssets[network];
+    let depots = [],
+      prepaidCards = [],
+      merchantSafes = [];
+
+    // not functional on xdai chain yet
+    if (network === networkTypes.sokol) {
+      const gnosisSafeData = await fetchGnosisSafes(accountAddress);
+      const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
+
+      depots = gnosisSafeData.depots.map(depot => ({
+        ...depot,
+        tokens: depot.tokens.map(token => ({
+          ...token,
+          coingecko_id: coingeckoIds[token.tokenAddress] || null,
+        })),
+      }));
+      prepaidCards = gnosisSafeData.prepaidCards.map(prepaidCard => ({
+        ...prepaidCard,
+        tokens: prepaidCard.tokens.map(token => ({
+          ...token,
+          coingecko_id: coingeckoIds[token.tokenAddress] || null,
+        })),
+      }));
+      merchantSafes = gnosisSafeData.merchantSafes.map(merchantSafe => ({
+        ...merchantSafe,
+        tokens: merchantSafe.tokens.map(token => ({
+          ...token,
+          coingecko_id: coingeckoIds[token.tokenAddress] || null,
+        })),
+      }));
+    }
+
     if (!assets || !assets.length) {
       const fallbackExplorerBalancesHandle = setTimeout(
         fetchAssetsBalancesAndPrices,
@@ -333,8 +391,20 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       return;
     }
 
+    const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
+      if (coingecko_id) {
+        return [...ids, coingecko_id];
+      }
+
+      return ids;
+    }, []);
+
     const prices = await fetchAssetPrices(
-      assets.map(({ asset: { coingecko_id } }) => coingecko_id),
+      coingeckoIds,
+      formattedNativeCurrency
+    );
+    const chartData = await fetchAssetCharts(
+      coingeckoIds,
       formattedNativeCurrency
     );
 
@@ -348,16 +418,79 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
                 prices[key][`${formattedNativeCurrency}_24h_change`],
               value: prices[key][`${formattedNativeCurrency}`],
             };
-            if (toLower(key) !== 'dai') {
-              break;
+          } else if (assets[i].asset.coingecko_id === null) {
+            assets[i].asset.price = {
+              changed_at: null,
+              relative_change_24h: 0,
+              value: 0,
+            };
+          }
+        }
+
+        for (let i = 0; i < depots.length; i++) {
+          const depot = depots[i];
+
+          for (let j = 0; j < depot.tokens.length; j++) {
+            const token = depot.tokens[j];
+
+            if (toLower(token.coingecko_id) === toLower(key)) {
+              depots[i].tokens[j].price = {
+                changed_at: prices[key].last_updated_at,
+                relative_change_24h:
+                  prices[key][`${formattedNativeCurrency}_24h_change`],
+                value: prices[key][`${formattedNativeCurrency}`],
+              };
+            } else if (token.coingecko_id === null) {
+              depots[i].tokens[j].price = {
+                changed_at: null,
+                relative_change_24h: 0,
+                value: 0,
+              };
+            }
+          }
+        }
+
+        for (let i = 0; i < prepaidCards.length; i++) {
+          const prepaidCard = prepaidCards[i];
+
+          for (let j = 0; j < prepaidCard.tokens.length; j++) {
+            const token = prepaidCard.tokens[j];
+
+            if (toLower(token.coingecko_id) === toLower(key)) {
+              prepaidCards[i].tokens[j].price = {
+                changed_at: prices[key].last_updated_at,
+                relative_change_24h:
+                  prices[key][`${formattedNativeCurrency}_24h_change`],
+                value: prices[key][`${formattedNativeCurrency}`],
+              };
+            } else if (token.coingecko_id === null) {
+              prepaidCards[i].tokens[j].price = {
+                changed_at: null,
+                relative_change_24h: 0,
+                value: 0,
+              };
             }
           }
         }
       });
     }
+
+    if (chartData) {
+      Object.keys(chartData).forEach(coingeckoId => {
+        for (let i = 0; i < assets.length; i++) {
+          if (toLower(assets[i].asset.coingecko_id) === toLower(coingeckoId)) {
+            assets[i].asset.chartPrices = chartData[coingeckoId];
+            break;
+          } else if (assets[i].asset.coingecko_id === null) {
+            assets[i].asset.chartPrices = null;
+          }
+        }
+      });
+    }
+
     const balances = await fetchAssetBalances(
-      assets.map(({ asset: { asset_code } }) =>
-        asset_code === 'eth' ? ETH_ADDRESS : asset_code
+      assets.map(({ asset: { asset_code, symbol } }) =>
+        isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
       ),
       accountAddress,
       network
@@ -370,7 +503,8 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         for (let i = 0; i < assets.length; i++) {
           if (
             assets[i].asset.asset_code.toLowerCase() === key.toLowerCase() ||
-            (assets[i].asset.asset_code === 'eth' && key === ETH_ADDRESS)
+            (isNativeToken(assets[i].asset.symbol, network) &&
+              key === ETH_ADDRESS)
           ) {
             assets[i].quantity = balances[key];
             break;
@@ -386,10 +520,16 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       addressAssetsReceived({
         meta: {
           address: accountAddress,
-          currency: nativeCurrency, //'usd' ola value
+          currency: 'usd',
           status: 'ok',
+          network,
         },
-        payload: { assets },
+        payload: {
+          assets,
+          depots,
+          merchantSafes,
+          prepaidCards,
+        },
       })
     );
     const fallbackExplorerBalancesHandle = setTimeout(

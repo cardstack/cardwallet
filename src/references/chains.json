@@ -1,27 +1,11 @@
 [
   {
-    "name": "xDai chain",
+    "name": "Ethereum Mainnet",
     "short_name": "eth",
     "chain": "ETH",
     "network": "mainnet",
-    "chain_id": 100,
-    "network_id": 100
-  },
-  {
-    "name": "xDai Sokol",
-    "short_name": "sokol",
-    "chain": "ETH",
-    "network": "sokol",
-    "chain_id": 77,
-    "network_id": 77
-  },
-  {
-    "name": "Ethereum Rinkeby",
-    "short_name": "rin",
-    "chain": "ETH",
-    "network": "rinkeby",
-    "chain_id": 4,
-    "network_id": 4
+    "chain_id": 1,
+    "network_id": 1
   },
   {
     "name": "Ethereum Kovan",
@@ -32,11 +16,19 @@
     "network_id": 42
   },
   {
-    "name": "Ethereum Görli",
-    "short_name": "goe",
-    "chain": "ETH",
-    "network": "goerli",
-    "chain_id": 5,
-    "network_id": 5
+    "name": "xDai Chain",
+    "short_name": "xdai",
+    "chain": "XDAI",
+    "network": "xdai",
+    "chain_id": 100,
+    "network_id": 100
+  },
+  {
+    "name": "Sokol",
+    "short_name": "sok",
+    "chain": "XDAI",
+    "network": "sokol",
+    "chain_id": 77,
+    "network_id": 77
   }
 ]

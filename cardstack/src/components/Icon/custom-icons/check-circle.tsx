@@ -25,8 +25,8 @@ function SvgComponent(props: SvgProps) {
             cx={8}
             cy={8}
             r={8}
-            fill="#00ebe5"
-            stroke="#00ebe5"
+            stroke={props.stroke || '#37EB77'}
+            fill={props.fill || '#37EB77'}
           />
           <Path
             data-name="Path 7342"

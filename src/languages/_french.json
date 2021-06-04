@@ -67,7 +67,7 @@
       "connect_walletconnect": "Utiliser WalletConnect",
       "exchange": "Échanger",
       "send": "Envoyer",
-      "donate": "Donner de l’xDai",
+      "donate": "Donner de ETH",
       "receive": "Recevoir",
       "close": "Fermer",
       "confirm": "Confirmer",
@@ -256,13 +256,13 @@
         "create_wallet": "Créez un portefeuille",
         "instructions": "Veuillez ne pas stocker dans votre portefeuille plus que vous n'êtes prêt à perdre.",
         "warning": "Ceci est une version alpha de l'application.",
-        "welcome": "Bienvenue sur Cardstack"
+        "welcome": "Bienvenue sur Card Wallet"
       },
       "feedback": {
         "cancel": "Non merci",
         "choice": "Souhaitez-vous copier manuellement l'adresse email de feedback dans votre presse papier ?",
         "copy_email_address": "Copier adresse email",
-        "email_subject": "📱 Feedback pour l'alpha du wallet Cardstack",
+        "email_subject": "📱 Feedback pour l'alpha du wallet Card Wallet",
         "error": "Erreur lors du chargement de votre client mail",
         "send": "Envoyer feedback"
       },

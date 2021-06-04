@@ -21,6 +21,7 @@
 		153D1AAE24777214007E4723 /* TransactionListLoadingViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 153D1AAD24777214007E4723 /* TransactionListLoadingViewCell.xib */; };
 		15E531D5242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E531D4242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift */; };
 		15E531DA242DAB7100797B89 /* NotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E531D9242DAB7100797B89 /* NotificationManager.m */; };
+		222F9EF5FAB00378C287F57B /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8C62475F7C54EB5D04FF460 /* libPods-Rainbow.a */; };
 		2235897B7C054EDC8FABC22D /* RobotoMono-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 377B36F88EA44BC18FC6AE3F /* RobotoMono-LightItalic.ttf */; };
 		24979E8920F84250007EB0DA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24979E7720F84004007EB0DA /* GoogleService-Info.plist */; };
 		2B8735ACF65F4B8D894ACD30 /* RobotoMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1B5CE90B1FF944D8BB8CD73E /* RobotoMono-Bold.ttf */; };
@@ -32,6 +33,8 @@
 		3C109692EB3643688A68E778 /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C771B5C4107C418D981341FE /* OpenSans-Italic.ttf */; };
 		3CBE29CD2381E43900BE05AC /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBE29CC2381E43900BE05AC /* Dummy.swift */; };
 		4B1A7201EE54411485B5C796 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1636A2E4BB014C94A7BF355F /* Roboto-Black.ttf */; };
+		4E12730A261D25670070EFB7 /* main.jsbundle in Sources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
+		4E843F46261E090500CCD1C6 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		4F3992B997474CDBA55CC4B4 /* RobotoMono-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 69B1922CA1E74860ACB64E9F /* RobotoMono-Light.ttf */; };
 		6630540924A38A1900E5B030 /* RainbowText.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630540824A38A1900E5B030 /* RainbowText.m */; };
 		6635730624939991006ACFA6 /* SafeStoreReview.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635730524939991006ACFA6 /* SafeStoreReview.m */; };
@@ -42,10 +45,8 @@
 		66A1FEBC24ACBBE600C3F539 /* RNCMPortal.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A1FEBB24ACBBE600C3F539 /* RNCMPortal.m */; };
 		66A28EB024CAF1B500410A88 /* TestFlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A28EAF24CAF1B500410A88 /* TestFlight.m */; };
 		66FEC91623EDA14000A0F367 /* RoundedCornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FEC91523EDA13F00A0F367 /* RoundedCornerView.swift */; };
-		6975D108297F808384C8BCAE /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5929A408BCB59C5D73B57325 /* libPods-Rainbow.a */; };
 		6BFF0B0C84E94C548FBD6C7C /* RobotoMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEB96DEC8E3B406C81F3D687 /* RobotoMono-Italic.ttf */; };
 		7287CE1EC33B4913AEE1F4B6 /* SFMono-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 668A9E253DAF444A90ECB997 /* SFMono-Medium.otf */; };
-		7D0976B925FADAAE00F4FCA7 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		7F0C286B498D4510BFC5595F /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD7A7D2583F9495698AD88C5 /* Roboto-ThinItalic.ttf */; };
 		9785D7539F40457A9F03007D /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EBF5570607AA46F782096602 /* Roboto-Light.ttf */; };
 		9EE7A81B54D644FE90F32B5D /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D66612AA98046D893194DDE /* OpenSans-Regular.ttf */; };
@@ -100,24 +101,12 @@
 		FE3CA493A270426C88C9DE2D /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3D1B6FE09774107AB3B067E /* Roboto-Bold.ttf */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		668ADB3225A4E3A40050859D /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		009215AA8FF64348B2A73F5E /* RobotoMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Regular.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Regular.ttf"; sourceTree = "<group>"; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* RainbowTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RainbowTests.m; sourceTree = "<group>"; };
+		07917270F7840DA516F244DA /* Pods-Rainbow.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.staging.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.staging.xcconfig"; sourceTree = "<group>"; };
 		09679E4D9CAD4F83BA18473F /* OpenSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiBoldItalic.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Rainbow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rainbow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Rainbow/AppDelegate.h; sourceTree = "<group>"; };
@@ -141,7 +130,6 @@
 		1636A2E4BB014C94A7BF355F /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../cardstack/src/assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		1B5CE90B1FF944D8BB8CD73E /* RobotoMono-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Bold.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Bold.ttf"; sourceTree = "<group>"; };
 		200724F9D2D14895AFCB9C1B /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../cardstack/src/assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
-		2214F184CD01096B14FBED60 /* Pods-Rainbow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.debug.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.debug.xcconfig"; sourceTree = "<group>"; };
 		24979E3620F84003007EB0DA /* Protobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Protobuf.framework; path = Frameworks/Protobuf.framework; sourceTree = "<group>"; };
 		24979E7420F84004007EB0DA /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = Frameworks/FirebaseAnalytics.framework; sourceTree = "<group>"; };
 		24979E7520F84004007EB0DA /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Frameworks/FirebaseCore.framework; sourceTree = "<group>"; };
@@ -157,7 +145,6 @@
 		2570FCFB652A493787CB3CBD /* RobotoMono-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-ExtraLight.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-ExtraLight.ttf"; sourceTree = "<group>"; };
 		25C02488F53047498CA6CBCF /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../cardstack/src/assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		2709FA042F05445ABC082CBD /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../cardstack/src/assets/fonts/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
-		303CB7DE41B526A418D3E9C6 /* Pods-Rainbow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.release.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.release.xcconfig"; sourceTree = "<group>"; };
 		33608FF0889740AD84C648DC /* RobotoMono-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Thin.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Thin.ttf"; sourceTree = "<group>"; };
 		33F3EA3D6B054311BBF95674 /* RobotoMono-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-ExtraLightItalic.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		361BED8238264C8586D6FE03 /* OpenSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-BoldItalic.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -167,12 +154,10 @@
 		3CBE29CC2381E43900BE05AC /* Dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
 		3D66612AA98046D893194DDE /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		3DDF0DBF8DAB4FADA0FA7430 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		427F88F1738C47D759E01379 /* Pods-Rainbow.localrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.localrelease.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.localrelease.xcconfig"; sourceTree = "<group>"; };
 		46534D8099D04335A68233C0 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../cardstack/src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		4C99FFD6D9B445BAB60B548B /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		50C01F230C7949DA8CD5DC73 /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiBold.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		50D59B99207546F98DDD1F52 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		5929A408BCB59C5D73B57325 /* libPods-Rainbow.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rainbow.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6630540824A38A1900E5B030 /* RainbowText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RainbowText.m; sourceTree = "<group>"; };
 		6635730524939991006ACFA6 /* SafeStoreReview.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SafeStoreReview.m; sourceTree = "<group>"; };
 		6655FFB325BB2B0700642961 /* ThemeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThemeModule.m; sourceTree = "<group>"; };
@@ -195,6 +180,7 @@
 		6E822716DEEC4A55BD74BD9E /* RobotoMono-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Medium.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Medium.ttf"; sourceTree = "<group>"; };
 		7728E78C9E914A4699B1CE65 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		79DA932A83F24DE8834D0D29 /* RobotoMono-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-SemiBoldItalic.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		7A03E7699E0F07FBDAB2C4FE /* Pods-Rainbow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.release.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.release.xcconfig"; sourceTree = "<group>"; };
 		7B10B916869C408DBDA026DA /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		7B5AA0CC94474E5C961A2B62 /* OpenSans-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-LightItalic.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-LightItalic.ttf"; sourceTree = "<group>"; };
 		7F6CD7D3EDCC481486A0A459 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
@@ -242,6 +228,7 @@
 		AFCCE47076574A21A665E8EC /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		B0C692B061D7430D8194DC98 /* ToolTipMenuTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ToolTipMenuTests.xctest; sourceTree = "<group>"; };
 		B33CD7B7E3AA495F8D34DE8D /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		B38929B7A1C5A8920DB5E000 /* Pods-Rainbow.localrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.localrelease.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.localrelease.xcconfig"; sourceTree = "<group>"; };
 		BAF66A33ED2E4E73A01A7EA1 /* RobotoMono-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-MediumItalic.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-MediumItalic.ttf"; sourceTree = "<group>"; };
 		BC680628EF2A4CD18F0FD471 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Light.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		C04D10EF25AFC8C1003BEF7A /* Extras.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Extras.json; sourceTree = "<group>"; };
@@ -252,12 +239,13 @@
 		D8EE3CB9036F4543998A7282 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		DF1E79467D474B3E8E8AD0DF /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../cardstack/src/assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		E4F82C5D139E4939B95ED76B /* RobotoMono-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-SemiBold.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-SemiBold.ttf"; sourceTree = "<group>"; };
-		EB8D70C0B76D3C0E5EB8714C /* Pods-Rainbow.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.staging.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.staging.xcconfig"; sourceTree = "<group>"; };
 		EBF5570607AA46F782096602 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../cardstack/src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EEB96DEC8E3B406C81F3D687 /* RobotoMono-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Italic.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Italic.ttf"; sourceTree = "<group>"; };
 		F6675BC8DA824182B0621DCE /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		F8C62475F7C54EB5D04FF460 /* libPods-Rainbow.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rainbow.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA974DDEFF957851FFA4CECC /* Pods-Rainbow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.debug.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.debug.xcconfig"; sourceTree = "<group>"; };
 		FD7A7D2583F9495698AD88C5 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../cardstack/src/assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -268,7 +256,7 @@
 			files = (
 				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				C72F456C99A646399192517D /* libz.tbd in Frameworks */,
-				6975D108297F808384C8BCAE /* libPods-Rainbow.a in Frameworks */,
+				222F9EF5FAB00378C287F57B /* libPods-Rainbow.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,7 +377,7 @@
 				24979E7E20F84005007EB0DA /* nanopb.framework */,
 				24979E3620F84003007EB0DA /* Protobuf.framework */,
 				98AED33BAB4247CEBEF8464D /* libz.tbd */,
-				5929A408BCB59C5D73B57325 /* libPods-Rainbow.a */,
+				F8C62475F7C54EB5D04FF460 /* libPods-Rainbow.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -435,7 +423,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				DCAC1D8CC45E468FBB7E1395 /* Resources */,
 				24979D1220F83E3D007EB0DA /* Recovered References */,
-				C640359C0E6575CE0A7ECD73 /* Pods */,
+				F1DE2B999CBEC82BE64A3739 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -512,17 +500,6 @@
 			name = Button;
 			sourceTree = "<group>";
 		};
-		C640359C0E6575CE0A7ECD73 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				2214F184CD01096B14FBED60 /* Pods-Rainbow.debug.xcconfig */,
-				303CB7DE41B526A418D3E9C6 /* Pods-Rainbow.release.xcconfig */,
-				427F88F1738C47D759E01379 /* Pods-Rainbow.localrelease.xcconfig */,
-				EB8D70C0B76D3C0E5EB8714C /* Pods-Rainbow.staging.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		DCAC1D8CC45E468FBB7E1395 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -589,6 +566,17 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		F1DE2B999CBEC82BE64A3739 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FA974DDEFF957851FFA4CECC /* Pods-Rainbow.debug.xcconfig */,
+				7A03E7699E0F07FBDAB2C4FE /* Pods-Rainbow.release.xcconfig */,
+				B38929B7A1C5A8920DB5E000 /* Pods-Rainbow.localrelease.xcconfig */,
+				07917270F7840DA516F244DA /* Pods-Rainbow.staging.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -596,15 +584,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Rainbow" */;
 			buildPhases = (
-				D9AE2E0067DAD96E8C5D37AB /* [CP] Check Pods Manifest.lock */,
+				B9CAA2ED3508EB0C922D62F0 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				9FF961FEA7AF435FA18ED988 /* Upload Debug Symbols to Sentry */,
-				668ADB3225A4E3A40050859D /* Embed App Extensions */,
-				33B0362A204E84E86AB1C2F6 /* [CP] Copy Pods Resources */,
-				B76A72F385485321C24F9E5C /* [CP-User] [RNFB] Crashlytics Configuration */,
+				F0E0F8C4F5D1F4A6D6CBCA0F /* [CP] Copy Pods Resources */,
+				4EBC7DDB261F733D00B1BC69 /* Test Phase */,
 			);
 			buildRules = (
 			);
@@ -625,6 +611,7 @@
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = QS5AFH4668;
 						LastSwiftMigration = 1120;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
@@ -662,6 +649,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E843F46261E090500CCD1C6 /* main.jsbundle in Resources */,
 				153D1AAE24777214007E4723 /* TransactionListLoadingViewCell.xib in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
@@ -686,7 +674,6 @@
 				A39A1DD0C9844C7E83998733 /* OpenSans-Light.ttf in Resources */,
 				019BFA419A1C493998D767A0 /* OpenSans-LightItalic.ttf in Resources */,
 				9EE7A81B54D644FE90F32B5D /* OpenSans-Regular.ttf in Resources */,
-				7D0976B925FADAAE00F4FCA7 /* main.jsbundle in Resources */,
 				E08425439FAA46D1804E1DEA /* OpenSans-SemiBold.ttf in Resources */,
 				C185E9DB63A649B09B0C005E /* OpenSans-SemiBoldItalic.ttf in Resources */,
 				4B1A7201EE54411485B5C796 /* Roboto-Black.ttf in Resources */,
@@ -733,10 +720,49 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n# Set up the nfm node version manager if present\nif [[ -s \"$HOME/.fnm/fnm\" ]]; then\n  eval \"`$HOME/.fnm/fnm env --multi`\"\nfi\n\n# Trying notion\nif [ -z \"$NODE_BINARY\" ]; then\nif [[ -s \"$HOME/.notion/bin/node\" ]]; then\nexport NODE_BINARY=\"$HOME/.notion/bin/node\"\nfi\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode \\\n  ../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "cd $PROJECT_DIR/..\nexport NODE_BINARY=node\n./node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		4EBC7DDB261F733D00B1BC69 /* Test Phase */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Test Phase";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho \"This is a test file\"\n";
+		};
+		B9CAA2ED3508EB0C922D62F0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Rainbow-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		33B0362A204E84E86AB1C2F6 /* [CP] Copy Pods Resources */ = {
+		F0E0F8C4F5D1F4A6D6CBCA0F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -790,52 +816,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Rainbow/Pods-Rainbow-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9FF961FEA7AF435FA18ED988 /* Upload Debug Symbols to Sentry */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Upload Debug Symbols to Sentry";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# First set the path to sentry.properties\nexport SENTRY_PROPERTIES=sentry.properties\n\n# Setup nvm and set node\n[ -z \"$NVM_DIR\" ] && export NVM_DIR=\"$HOME/.nvm\"\n\nif [[ -s \"$HOME/.nvm/nvm.sh\" ]]; then\n. \"$HOME/.nvm/nvm.sh\"\nelif [[ -x \"$(command -v brew)\" && -s \"$(brew --prefix nvm)/nvm.sh\" ]]; then\n. \"$(brew --prefix nvm)/nvm.sh\"\nfi\n\n# Set up the nodenv node version manager if present\nif [[ -x \"$HOME/.nodenv/bin/nodenv\" ]]; then\neval \"$(\"$HOME/.nodenv/bin/nodenv\" init -)\"\nfi\n\n# Set up the nfm node version manager if present\nif [[ -s \"$HOME/.fnm/fnm\" ]]; then\n  eval \"`$HOME/.fnm/fnm env --multi`\"\nfi\n\n# Trying notion\nif [ -z \"$NODE_BINARY\" ]; then\nif [[ -s \"$HOME/.notion/bin/node\" ]]; then\nexport NODE_BINARY=\"$HOME/.notion/bin/node\"\nfi\nfi\n\n[ -z \"$NODE_BINARY\" ] && export NODE_BINARY=\"node\"\n\n# Run sentry cli script to upload debug symbols\n$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli upload-dif \"$DWARF_DSYM_FOLDER_PATH\"\n";
-		};
-		B76A72F385485321C24F9E5C /* [CP-User] [RNFB] Crashlytics Configuration */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP-User] [RNFB] Crashlytics Configuration";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\nif [[ ${PODS_ROOT} ]]; then\n  echo \"info: Exec FirebaseCrashlytics Run from Pods\"\n  \"${PODS_ROOT}/FirebaseCrashlytics/run\"\nelse\n  echo \"info: Exec FirebaseCrashlytics Run from framework\"\n  \"${PROJECT_DIR}/FirebaseCrashlytics.framework/run\"\nfi\n";
-		};
-		D9AE2E0067DAD96E8C5D37AB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Rainbow-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -843,6 +823,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E12730A261D25670070EFB7 /* main.jsbundle in Sources */,
 				66A28EB024CAF1B500410A88 /* TestFlight.m in Sources */,
 				6630540924A38A1900E5B030 /* RainbowText.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
@@ -898,19 +879,19 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2214F184CD01096B14FBED60 /* Pods-Rainbow.debug.xcconfig */;
+			baseConfigurationReference = FA974DDEFF957851FFA4CECC /* Pods-Rainbow.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Rainbow/RainbowDebug.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QS5AFH4668;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -948,7 +929,7 @@
 					"$(PROJECT_DIR)",
 				);
 				LLVM_LTO = YES;
-				MARKETING_VERSION = 1.2.53;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DFB_SONARKIT_ENABLED=1",
@@ -958,10 +939,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpayapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -971,18 +952,18 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 303CB7DE41B526A418D3E9C6 /* Pods-Rainbow.release.xcconfig */;
+			baseConfigurationReference = 7A03E7699E0F07FBDAB2C4FE /* Pods-Rainbow.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = "CHq9hB40PBZqHTxL-f-Wd_rK4anl1e7a8912-936f-4ce7-8505-32a075039f51";
 				CODE_SIGN_ENTITLEMENTS = Rainbow/RainbowRelease.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QS5AFH4668;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1008,7 +989,7 @@
 					"$(PROJECT_DIR)",
 				);
 				LLVM_LTO = YES;
-				MARKETING_VERSION = 1.2.53;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DFB_SONARKIT_ENABLED=1",
@@ -1018,10 +999,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpayapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1068,18 +1049,18 @@
 		};
 		2C6A799821127ED9003AFB37 /* Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EB8D70C0B76D3C0E5EB8714C /* Pods-Rainbow.staging.xcconfig */;
+			baseConfigurationReference = 07917270F7840DA516F244DA /* Pods-Rainbow.staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = "Xf8eimmB0-W22TRNCwL9tZNO9xev1e7a8912-936f-4ce7-8505-32a075039f51";
 				CODE_SIGN_ENTITLEMENTS = Rainbow/Rainbow.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QS5AFH4668;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1104,7 +1085,7 @@
 					"$(PROJECT_DIR)",
 				);
 				LLVM_LTO = YES;
-				MARKETING_VERSION = 1.2.53;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DFB_SONARKIT_ENABLED=1",
@@ -1114,10 +1095,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpayapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1165,18 +1146,18 @@
 		};
 		2C87B79A2197FA1900682EC4 /* LocalRelease */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 427F88F1738C47D759E01379 /* Pods-Rainbow.localrelease.xcconfig */;
+			baseConfigurationReference = B38929B7A1C5A8920DB5E000 /* Pods-Rainbow.localrelease.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = "";
 				CODE_SIGN_ENTITLEMENTS = Rainbow/Rainbow.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = QS5AFH4668;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1201,7 +1182,7 @@
 					"$(PROJECT_DIR)",
 				);
 				LLVM_LTO = YES;
-				MARKETING_VERSION = 1.2.53;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-DFB_SONARKIT_ENABLED=1",
@@ -1211,10 +1192,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpayapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.cardstack.cardpay";
 				SWIFT_OBJC_BRIDGING_HEADER = "Rainbow-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

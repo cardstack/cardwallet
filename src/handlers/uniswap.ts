@@ -5,15 +5,6 @@ import { Contract } from '@ethersproject/contracts';
 import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
 import {
-  filter,
-  get,
-  isEmpty,
-  keys,
-  mapKeys,
-  mapValues,
-  toLower,
-} from 'lodash';
-import {
   ChainId,
   CurrencyAmount,
   Pair,
@@ -23,10 +14,20 @@ import {
   Trade,
   TradeType,
   WETH,
-} from 'uniswap-xdai-sdk';
+} from '@uniswap/sdk';
+import {
+  filter,
+  get,
+  isEmpty,
+  keys,
+  mapKeys,
+  mapValues,
+  toLower,
+} from 'lodash';
 import { uniswapClient } from '../apollo/client';
 import { UNISWAP_ALL_TOKENS } from '../apollo/queries';
 import { loadWallet } from '../model/wallet';
+import { ETH_ADDRESS } from '../references/addresses';
 import { toHex, web3Provider } from './web3';
 import {
   Asset,
@@ -36,12 +37,12 @@ import {
 import { Network } from '@rainbow-me/networkTypes';
 import {
   CURATED_UNISWAP_TOKENS,
-  ETH_ADDRESS,
   ethUnits,
   UNISWAP_TESTNET_TOKEN_LIST,
   UNISWAP_V2_ROUTER_ABI,
   UNISWAP_V2_ROUTER_ADDRESS,
 } from '@rainbow-me/references';
+
 import {
   addBuffer,
   convertAmountToRawAmount,

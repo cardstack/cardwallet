@@ -22,8 +22,10 @@ export interface IconProps extends ContainerProps {
   /** if none of the default sizes work for what you need, you can use this to override */
   size?: number;
   name: IconName;
-  color?: ColorTypes;
+  color?: ColorTypes | null;
+  stroke?: ColorTypes | null;
   strokeWidth?: number;
+  onPress?: Function;
 }
 
 export const Icon = ({
@@ -31,11 +33,15 @@ export const Icon = ({
   size,
   name,
   color,
+  stroke,
   ...props
 }: IconProps) => {
   const theme = useTheme<Theme>();
   const isCustomIcon = Object.keys(customIcons).includes(name);
-  const colorWithDefault = color ? theme.colors[color] : theme.colors.white;
+  const colorWithDefault = color ? theme.colors[color] : null;
+
+  const strokeWithDefault = stroke ? theme.colors[stroke] : null;
+
   const sizeWithDefault = size || iconSizeToValue[iconSize];
 
   if (isCustomIcon) {
@@ -51,7 +57,7 @@ export const Icon = ({
         <CustomIcon
           color={colorWithDefault}
           fill={colorWithDefault}
-          stroke={colorWithDefault}
+          stroke={strokeWithDefault}
           width={sizeWithDefault}
           height={sizeWithDefault}
         />
@@ -61,7 +67,11 @@ export const Icon = ({
 
   return (
     <Container {...props}>
-      <Feather color={colorWithDefault} name={name} size={sizeWithDefault} />
+      <Feather
+        color={colorWithDefault || 'transparent'}
+        name={name}
+        size={sizeWithDefault}
+      />
     </Container>
   );
 };

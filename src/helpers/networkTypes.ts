@@ -1,17 +1,17 @@
 export enum Network {
-  goerli = 'goerli',
   kovan = 'kovan',
   mainnet = 'mainnet',
-  rinkeby = 'rinkeby',
   sokol = 'sokol',
+  xdai = 'xdai',
 }
 
 // We need to keep this one until
 // we have typescript everywhere
-export default {
-  goerli: 'goerli' as Network,
+export const networkTypes = {
   kovan: 'kovan' as Network,
   mainnet: 'mainnet' as Network,
-  rinkeby: 'rinkeby' as Network,
   sokol: 'sokol' as Network,
+  xdai: 'xdai' as Network,
 };
+
+export default networkTypes;

@@ -24,11 +24,11 @@ const Container = styled(RowWithMargins).attrs({
   margin: 5,
   self: 'center',
 })`
-  ${padding(9, 10, 11, 10)};
+  ${padding(9, 11, 11, 12)};
   ${position.centered};
   ${({ theme: { colors } }) => shadow.build(0, 6, 10, colors.shadow, 0.14)};
   background-color: ${({ color }) => color};
-  border-radius: 20;
+  border-radius: 24px;
   bottom: ${({ insets }) => (insets.bottom || 40) + 3};
   max-width: ${({ deviceWidth }) => deviceWidth - 38};
   position: absolute;
@@ -56,7 +56,7 @@ export default function Toast({
   textColor,
   ...props
 }) {
-  const { colors, isDarkMode } = useTheme();
+  const { colors } = useTheme();
   const { width: deviceWidth } = useDimensions();
   const insets = useSafeArea();
 
@@ -72,12 +72,10 @@ export default function Toast({
     outputRange: [distance, targetTranslate],
   });
 
-  const currentColor = color || isDarkMode ? colors.darkModeDark : colors.dark;
-
   return (
     <Animated.View style={{ opacity, transform: [{ translateY }] }}>
       <Container
-        color={currentColor}
+        color="black"
         deviceWidth={deviceWidth}
         insets={insets}
         testID={testID}

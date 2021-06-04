@@ -11,7 +11,7 @@ function SvgComponent(props: SvgProps) {
       height={props.height || 26.11}
       viewBox="0 0 20 20"
     >
-      <G data-name="Group 11430" fill={props.fill || '#03c4bf'}>
+      <G data-name="Group 11430" fill={props.stroke || '#03c4bf'}>
         <Path data-name="Rectangle 2861" d="M14 14h3v3h-3z" />
         <Path data-name="Rectangle 2862" d="M17 11h3v3h-3z" />
         <Path data-name="Rectangle 2863" d="M11 11h3v3h-3z" />

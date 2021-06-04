@@ -1,3 +1,5 @@
+import {getConstantByNetwork} from '@cardstack/cardpay-sdk';
+import {useAccountSettings} from '@rainbow-me/hooks';
 import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import ExchangeModalTypes from '../../helpers/exchangeModalTypes';
@@ -17,6 +19,8 @@ const ConfirmExchangeButton = ({
   ...props
 }) => {
   const { colors } = useTheme();
+  const { network } = useAccountSettings();
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
   const ConfirmExchangeButtonShadows = [
     [0, 3, 5, colors.shadowBlack, 0.2],
     [0, 6, 10, colors.shadowBlack, 0.14],
@@ -34,7 +38,7 @@ const ConfirmExchangeButton = ({
   } else if (!isSufficientLiquidity) {
     label = 'Insufficient Liquidity';
   } else if (!isSufficientGas) {
-    label = 'Insufficient xDai';
+    label = `Insufficient ${nativeTokenSymbol}`;
   } else if (slippage > SlippageWarningThresholdInBips) {
     label = 'Swap Anyway';
   } else if (disabled) {
@@ -51,7 +55,6 @@ const ConfirmExchangeButton = ({
     <HoldToAuthorizeButton
       disabled={isDisabled}
       disabledBackgroundColor={colors.alpha(colors.blueGreyDark, 0.04)}
-      flex={1}
       hideInnerBorder
       isAuthorizing={isAuthorizing}
       label={label}

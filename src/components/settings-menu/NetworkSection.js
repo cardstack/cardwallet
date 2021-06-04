@@ -10,9 +10,9 @@ import {
   useLoadAccountData,
   useResetAccountState,
 } from '../../hooks';
-import { dataGetTransactions } from '../../redux/data';
 import { settingsUpdateNetwork } from '../../redux/settings';
-import { RadioList, RadioListItem } from '../radio-list';
+
+import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
 
 const networks = values(networkInfo);
 
@@ -22,6 +22,32 @@ const NetworkSection = () => {
   const loadAccountData = useLoadAccountData();
   const initializeAccountData = useInitializeAccountData();
   const dispatch = useDispatch();
+  const [showTestnets, setShowTestnets] = useState(true);
+
+  //transform data for sectionList
+  const DATA = networks
+    .filter(item => (showTestnets ? true : !item.isTestnet))
+    .reduce((result, curr, currentIndex) => {
+      result[curr.layer] =
+        {
+          title: `Layer ${curr.layer}`,
+          data: [
+            ...(result[curr.layer]?.data || []),
+            {
+              disabled: curr.disabled,
+              key: currentIndex,
+              label: curr.name,
+              value: curr.value,
+              selected: toLower(network) === toLower(curr.value),
+              default: curr.default,
+            },
+          ],
+        } || {};
+
+      return result;
+    }, [])
+    .flat()
+    .sort((a, b) => a.layer < b.layer);
 
   const onNetworkChange = useCallback(
     async network => {
@@ -29,9 +55,7 @@ const NetworkSection = () => {
       await dispatch(settingsUpdateNetwork(network));
       InteractionManager.runAfterInteractions(async () => {
         await loadAccountData(network);
-        // initializeAccountData();
-        await initializeAccountData();
-        dispatch(dataGetTransactions());
+        initializeAccountData();
         analytics.track('Changed network', { network });
       });
     },
@@ -39,22 +63,19 @@ const NetworkSection = () => {
   );
 
   return (
-    <RadioList
-      extraData={network}
-      items={networks
-        .filter(({ disabled }) => !disabled)
-        .map(({ disabled, name, value }) => ({
-          disabled,
-          key: value,
-          label: name,
-          selected: toLower(network) === toLower(value),
-          value,
-        }))}
-      marginTop={7}
-      onChange={onNetworkChange}
-      renderItem={RadioListItem}
-      value={network}
-    />
+    <Container backgroundColor="white" paddingVertical={4} width="100%">
+      <Container flexDirection="row" padding={4}>
+        <Container alignItems="center" flex={1} flexDirection="row">
+          <Text>ADVANCED USERS</Text>
+        </Container>
+        <Checkbox
+          isSelected={showTestnets}
+          label="Show testnets"
+          onPress={() => setShowTestnets(!showTestnets)}
+        />
+      </Container>
+      <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
+    </Container>
   );
 };
 

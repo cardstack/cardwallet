@@ -1,23 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
-import { ColumnWithMargins, Row } from '../layout';
 import ExchangeField from './ExchangeField';
 import ExchangeMaxButton from './ExchangeMaxButton';
 import ExchangeNativeField from './ExchangeNativeField';
-
-const Container = styled(ColumnWithMargins).attrs({ margin: 5 })`
-  padding-top: 6;
-  width: 100%;
-  z-index: 1;
-`;
-
-const NativeFieldRow = styled(Row).attrs({
-  align: 'center',
-  justify: 'space-between',
-})`
-  height: ${android ? 16 : 32};
-  padding-left: 19;
-`;
+import { Container } from '@cardstack/components';
 
 export default function ExchangeInputField({
   disableInputCurrencySelection,
@@ -34,16 +19,14 @@ export default function ExchangeInputField({
   setInputAmount,
   setNativeAmount,
   testID,
-  inputCurrencyIconUrl,
 }) {
   return (
-    <Container>
+    <Container flex={-1} marginTop={2} width="100%" zIndex={1}>
       <ExchangeField
         address={inputCurrencyAddress}
         amount={inputAmount}
         autoFocus={android}
         disableCurrencySelection={disableInputCurrencySelection}
-        icon_url={inputCurrencyIconUrl}
         onFocus={onFocus}
         onPressSelectCurrency={onPressSelectInputCurrency}
         ref={inputFieldRef}
@@ -52,7 +35,11 @@ export default function ExchangeInputField({
         testID={testID}
         useCustomAndroidMask={android}
       />
-      <NativeFieldRow>
+      <Container
+        alignItems="center"
+        flexDirection="row"
+        justifyContent="space-between"
+      >
         <ExchangeNativeField
           address={inputCurrencyAddress}
           editable
@@ -64,13 +51,14 @@ export default function ExchangeInputField({
           setNativeAmount={setNativeAmount}
           testID={testID + '-native'}
         />
+
         <ExchangeMaxButton
           address={inputCurrencyAddress}
           disabled={!inputCurrencySymbol}
           onPress={onPressMaxBalance}
           testID={testID + '-max'}
         />
-      </NativeFieldRow>
+      </Container>
     </Container>
   );
 }

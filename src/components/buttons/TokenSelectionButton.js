@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { ButtonPressAnimation } from '../animations';
 import { InnerBorder, RowWithMargins } from '../layout';
-import { Text } from '../text';
+import { Text } from '@cardstack/components';
 import CaretImageSource from '@rainbow-me/assets/family-dropdown-arrow.png';
 import { useColorForAsset } from '@rainbow-me/hooks';
 import { ImgixImage } from '@rainbow-me/images';
@@ -55,36 +55,38 @@ export default function TokenSelectionButton({
   );
 
   return (
-    <ButtonPressAnimation
-      borderRadius={borderRadius}
-      contentContainerStyle={{
-        backgroundColor: colorForAsset,
-        borderRadius,
-      }}
-      onPress={onPress}
-      radiusAndroid={borderRadius}
-      testID={testID}
-    >
-      <ShadowStack
-        {...position.coverAsObject}
-        backgroundColor={colorForAsset}
+    <>
+      <ButtonPressAnimation
         borderRadius={borderRadius}
-        elevation={TokenSelectionButtonElevation}
-        shadows={shadowsForAsset}
-      />
-      <Content>
-        <Text
-          align="center"
-          color={colors.whiteLabel}
-          size="large"
-          testID={testID + '-text'}
-          weight="bold"
-        >
-          {symbol || 'Choose Token'}
-        </Text>
-        <CaretIcon />
-      </Content>
-      <InnerBorder radius={borderRadius} />
-    </ButtonPressAnimation>
+        contentContainerStyle={{
+          backgroundColor: colorForAsset,
+          borderRadius,
+        }}
+        onPress={onPress}
+        radiusAndroid={borderRadius}
+        testID={testID}
+      >
+        <ShadowStack
+          {...position.coverAsObject}
+          backgroundColor={colorForAsset}
+          borderRadius={borderRadius}
+          elevation={TokenSelectionButtonElevation}
+          shadows={shadowsForAsset}
+        />
+        <Content>
+          <Text
+            align="center"
+            color="white"
+            size="large"
+            testID={testID + '-text'}
+            weight="bold"
+          >
+            {symbol || 'Choose Token'}
+          </Text>
+          <CaretIcon />
+        </Content>
+        <InnerBorder radius={borderRadius} />
+      </ButtonPressAnimation>
+    </>
   );
 }

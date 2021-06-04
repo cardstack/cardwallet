@@ -1,6 +1,6 @@
 import { invert } from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Linking } from 'react-native';
 import Animated, {
   cancelAnimation,
   NewEasing,
@@ -15,7 +15,7 @@ import { nativeStackConfig } from '../../navigation/nativeStackConfig';
 import { ChartExpandedStateHeader } from '../expanded-state/chart';
 import { Column } from '../layout';
 import Labels from './ExtremeLabels';
-import TimespanSelector from './TimespanSelector';
+import { Button, CenteredContainer } from '@cardstack/components';
 import { ChartDot, ChartPath, useChartData } from '@rainbow-me/animated-charts';
 import ChartTypes from '@rainbow-me/helpers/chartTypes';
 import { ImgixImage } from '@rainbow-me/images';
@@ -183,6 +183,10 @@ export default function ChartWrapper({
   const formattedTimespan =
     timespan.charAt(0).toUpperCase() + timespan.slice(1);
 
+  const onPressViewCoingecko = () => {
+    Linking.openURL(`https://coingecko.com/coins/${props.asset.coingecko_id}`);
+  };
+
   useEffect(() => {
     if (chartType === ChartTypes.day) {
       chartTimeSharedValue && (chartTimeSharedValue.value = 'Today');
@@ -234,18 +238,11 @@ export default function ChartWrapper({
           </>
         )}
       </ChartContainer>
-      {showChart ? (
-        <TimespanSelector
-          color={color}
-          defaultIndex={timespanIndex}
-          // fixme temporary to fix animation
-          key={`ts_${showMonth}_${showYear}`}
-          reloadChart={updateChartType}
-          showMonth={showMonth}
-          showYear={showYear}
-          timespans={ChartTimespans}
-        />
-      ) : null}
+      <CenteredContainer marginTop={6} width="100%">
+        <Button onPress={onPressViewCoingecko} variant="blue">
+          View on Coingecko
+        </Button>
+      </CenteredContainer>
     </Container>
   );
 }

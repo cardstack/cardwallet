@@ -3,10 +3,11 @@ import messaging from '@react-native-firebase/messaging';
 import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
+import compareVersions from 'compare-versions';
 import { get } from 'lodash';
 import nanoid from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import {
   AppRegistry,
   AppState,
@@ -47,6 +48,7 @@ import {
   runWalletBackupStatusChecks,
 } from './handlers/walletReadyEvents';
 import RainbowContextWrapper from './helpers/RainbowContext';
+import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { registerTokenRefreshListener, saveFCMToken } from './model/firebase';
 import * as keychain from './model/keychain';
 import { loadAddress } from './model/wallet';
@@ -55,12 +57,12 @@ import RoutesComponent from './navigation/Routes';
 import { requestsForTopic } from './redux/requests';
 import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
+import MaintenanceMode from './screens/MaintenanceMode';
+import MinimumVersion from './screens/MinimumVersion';
 import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
-import GanacheUtils from "../cardstack/src/utils/ganache-utils";
-
 const WALLETCONNECT_SYNC_DELAY = 500;
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'dark-content' });
@@ -113,10 +115,7 @@ class App extends Component {
       const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
       logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
-    if (__DEV__) {
-      // Automatically connect to Ganache when the app is launched is dev mode
-      await GanacheUtils.connect();
-    }
+
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
     await this.handleInitializeAnalytics();
@@ -133,6 +132,12 @@ class App extends Component {
           const topic = get(remoteMessage, 'data.topic');
           this.onPushNotificationOpened(topic);
         }, WALLETCONNECT_SYNC_DELAY);
+      }
+    );
+
+    this.backgroundNotificationHandler = messaging().setBackgroundMessageHandler(
+      async remoteMessage => {
+        console.log('Message handled in the background!', remoteMessage);
       }
     );
 
@@ -184,6 +189,7 @@ class App extends Component {
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
+    this.backgroundNotificationHandler?.();
     this.branchListener?.();
   }
 
@@ -299,14 +305,16 @@ class App extends Component {
             <SafeAreaProvider>
               <Provider store={store}>
                 <FlexItem>
-                  {this.state.initialRoute && (
-                    <InitialRouteContext.Provider
-                      value={this.state.initialRoute}
-                    >
-                      <RoutesComponent ref={this.handleNavigatorRef} />
-                      <PortalConsumer />
-                    </InitialRouteContext.Provider>
-                  )}
+                  <CheckSystemReqs>
+                    {this.state.initialRoute && (
+                      <InitialRouteContext.Provider
+                        value={this.state.initialRoute}
+                      >
+                        <RoutesComponent ref={this.handleNavigatorRef} />
+                        <PortalConsumer />
+                      </InitialRouteContext.Provider>
+                    )}
+                  </CheckSystemReqs>
                   <OfflineToast />
                 </FlexItem>
               </Provider>
@@ -317,6 +325,80 @@ class App extends Component {
     </ThemeProvider>
   );
 }
+
+const getMaintenanceStatus = async () => {
+  try {
+    const response = await fetch(
+      'https://us-central1-card-pay-3e9be.cloudfunctions.net/maintenance-status'
+    );
+
+    return await response.json();
+  } catch (e) {
+    return false;
+  }
+};
+
+const getMinimumVersion = async () => {
+  try {
+    const response = await fetch(
+      'https://us-central1-card-pay-3e9be.cloudfunctions.net/minimum-version'
+    );
+
+    return await response.json();
+  } catch (e) {
+    return false;
+  }
+};
+
+const CheckSystemReqs = ({ children }) => {
+  const hideSplashScreen = useHideSplashScreen();
+  const appVersion = VersionNumber.appVersion;
+  const [ready, setReady] = useState(false);
+  const [minimumVersion, setMinimumVersion] = useState(null);
+  const [maintenanceStatus, setMaintenanceStatus] = useState(null);
+
+  async function getReqs() {
+    const [maintenanceStatusResponse, minVersionResponse] = await Promise.all([
+      getMaintenanceStatus(),
+      getMinimumVersion(),
+    ]);
+
+    setMaintenanceStatus(maintenanceStatusResponse);
+    setMinimumVersion(minVersionResponse.minVersion);
+  }
+
+  useEffect(() => {
+    getReqs();
+  }, []);
+
+  const hasMaintenanceStatus = Boolean(maintenanceStatus);
+  const hasMinimumVersion = Boolean(minimumVersion);
+
+  useEffect(() => {
+    if (hasMaintenanceStatus && hasMinimumVersion) {
+      setReady(true);
+      hideSplashScreen();
+    }
+  }, [hasMaintenanceStatus, hasMinimumVersion, hideSplashScreen]);
+
+  if (ready) {
+    if (maintenanceStatus.maintenanceActive) {
+      return <MaintenanceMode message={maintenanceStatus.maintenanceMessage} />;
+    }
+
+    const forceUpdate = Boolean(
+      parseInt(compareVersions(minimumVersion, appVersion)) > 0
+    );
+
+    if (forceUpdate) {
+      return <MinimumVersion />;
+    }
+
+    return children;
+  }
+
+  return null;
+};
 
 const AppWithRedux = connect(
   ({ appState: { walletReady } }) => ({ walletReady }),

@@ -15,15 +15,17 @@ import useAccountSettings from './useAccountSettings';
 import useHideSplashScreen from './useHideSplashScreen';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
+import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
-import logger from 'logger';
 import { web3Provider } from '@rainbow-me/handlers/web3';
+import logger from 'logger';
 
 export default function useInitializeWallet() {
   const dispatch = useDispatch();
   const resetAccountState = useResetAccountState();
   const loadAccountData = useLoadAccountData();
+  const loadCoingeckoCoins = useLoadCoingeckoCoins();
   const loadGlobalData = useLoadGlobalData();
   const initializeAccountData = useInitializeAccountData();
 
@@ -49,6 +51,8 @@ export default function useInitializeWallet() {
 
         const isImporting = !!seedPhrase;
         logger.sentry('isImporting?', isImporting);
+
+        await loadCoingeckoCoins();
 
         if (shouldRunMigrations && !seedPhrase) {
           logger.sentry('shouldRunMigrations && !seedPhrase? => true');

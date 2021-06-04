@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { getAccountEmptyState } from '../handlers/localstorage/accountLocal';
 import useAccountSettings from './useAccountSettings';
-import useWalletSectionsData from './useWalletSectionsData';
+import { useAssetListData } from './useAssetListData';
 
 export default function useAccountEmptyState() {
   const { network, accountAddress } = useAccountSettings();
-  const { isEmpty } = useWalletSectionsData();
+  const { isEmpty } = useAssetListData();
   const [isReallyEmpty, setIsReallyEmpty] = useState(true);
 
   useEffect(() => {

@@ -16,9 +16,8 @@ import { useAccountSettings } from '../../hooks';
 import { address } from '../../utils/abbreviations';
 import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
-import { Column } from '../layout';
 import AddressRow from './AddressRow';
-import { OptionItem } from '@cardstack/components';
+import { Container, OptionItem } from '@cardstack/components';
 import { position } from '@rainbow-me/styles';
 
 const listTopPadding = 7.5;
@@ -62,30 +61,12 @@ const EmptyWalletList = styled(EmptyAssetList).attrs({
   padding-top: ${listTopPadding};
 `;
 
-const WalletFlatList = styled(FlatList).attrs(({ showDividers }) => ({
-  contentContainerStyle: {
-    paddingBottom: showDividers ? 9.5 : 0,
-    paddingTop: listTopPadding,
-  },
-  getItemLayout,
-  keyExtractor,
-  removeClippedSubviews: true,
-}))`
-  flex: 1;
-  min-height: 1;
-`;
-
 const WalletListDivider = styled(Divider).attrs(({ theme: { colors } }) => ({
   color: colors.rowDividerExtraLight,
   inset: [0, 15],
 }))`
   margin-bottom: 1;
   margin-top: -1;
-`;
-
-const WalletListFooter = styled(Column)`
-  padding-bottom: 6;
-  padding-top: 4;
 `;
 
 export default function WalletList({
@@ -212,14 +193,14 @@ export default function WalletList({
       switch (item.rowType) {
         case RowTypes.ADDRESS:
           return (
-            <Column height={item.height}>
+            <Container height={item.height}>
               <AddressRow
                 data={item}
                 editMode={editMode}
                 onEditWallet={onEditWallet}
                 onPress={item.onPress}
               />
-            </Column>
+            </Container>
           );
         default:
           return null;
@@ -235,21 +216,24 @@ export default function WalletList({
       transition={skeletonTransition}
     >
       {ready ? (
-        <Fragment>
-          <WalletFlatList
+        <>
+          <FlatList
             data={rows}
+            getItemLayout={getItemLayout}
             initialNumToRender={rows.length}
+            keyExtractor={keyExtractor}
             ref={scrollView}
+            removeClippedSubviews
             renderItem={renderItem}
             scrollEnabled={scrollEnabled}
-            showDividers={showDividers}
           />
           {showDividers && <WalletListDivider />}
-          <WalletListFooter>
+          <Container marginBottom={5} marginLeft={5}>
             <OptionItem
               borderIcon
               disabled={editMode}
               iconProps={{ name: 'plus', size: 22 }}
+              marginBottom={3}
               onPress={onPressAddAccount}
               textProps={{
                 color: editMode ? 'grayText' : 'black',
@@ -261,7 +245,7 @@ export default function WalletList({
               borderIcon
               disabled={editMode}
               iconProps={{ name: 'download', size: 22 }}
-              marginTop={2}
+              marginTop={3}
               onPress={onPressImportSeedPhrase}
               textProps={{
                 color: editMode ? 'grayText' : 'black',
@@ -269,8 +253,8 @@ export default function WalletList({
               }}
               title="Add an existing account"
             />
-          </WalletListFooter>
-        </Fragment>
+          </Container>
+        </>
       ) : (
         <EmptyWalletList />
       )}

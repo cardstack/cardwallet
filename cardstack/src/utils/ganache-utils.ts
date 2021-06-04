@@ -1,5 +1,6 @@
 import { GANACHE_URL } from 'react-native-dotenv';
 import { web3SetHttpProvider } from '@rainbow-me/handlers/web3';
+// eslint-disable-next-line import/no-named-as-default
 import networkTypes from '@rainbow-me/networkTypes';
 
 export const GanacheUtils = {

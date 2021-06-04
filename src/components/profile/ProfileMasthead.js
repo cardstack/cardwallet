@@ -104,15 +104,8 @@ export default function ProfileMasthead({
     accountName,
     accountImage,
   } = useAccountProfile();
-  const [imageUrl, setImage] = useState(accountImage);
-  useEffect(() => {
-    if (imageUrl !== accountImage) {
-      setImage(accountImage);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setImage]);
   const isAvatarPickerAvailable = useExperimentalFlag(AVATAR_PICKER);
-  const isAvatarEmojiPickerEnabled = true;
+  const isAvatarEmojiPickerEnabled = false;
   const isAvatarImagePickerEnabled = true;
 
   const onRemovePhoto = useCallback(async () => {
@@ -130,7 +123,6 @@ export default function ProfileMasthead({
 
     dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
     await dispatch(walletsUpdate(newWallets));
-    setImage(null);
   }, [dispatch, selectedWallet, accountAddress, wallets]);
 
   const handlePressAvatar = useCallback(() => {
@@ -154,20 +146,13 @@ export default function ProfileMasthead({
                 ),
               },
             };
-            let found = newWallets[selectedWallet.id].addresses.find(
-              account => account.address === accountAddress
-            );
-            if (found) {
-              found.image = `~${image?.path.slice(stringIndex)}`;
-              setImage(found.image);
-              dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
-            }
+            dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
             dispatch(walletsUpdate(newWallets));
           };
 
           const avatarActionSheetOptions = [
             'Choose from Library',
-            ...(isAvatarPickerAvailable ? ['Pick an Emoji'] : []),
+            ...(isAvatarEmojiPickerEnabled ? ['Pick an Emoji'] : []),
             ...(accountImage ? ['Remove Photo'] : []),
             ...(ios ? ['Cancel'] : []),
           ];
@@ -188,7 +173,6 @@ export default function ProfileMasthead({
                 }).then(processPhoto);
               } else if (buttonIndex === 1 && isAvatarEmojiPickerEnabled) {
                 navigate(Routes.AVATAR_BUILDER, {
-                  initialAccountAddress: accountAddress,
                   initialAccountColor: accountColor,
                   initialAccountName: accountName,
                 });
@@ -199,7 +183,6 @@ export default function ProfileMasthead({
           );
         } else if (isAvatarEmojiPickerEnabled) {
           navigate(Routes.AVATAR_BUILDER, {
-            initialAccountAddress: accountAddress,
             initialAccountColor: accountColor,
             initialAccountName: accountName,
           });
@@ -221,7 +204,6 @@ export default function ProfileMasthead({
     recyclerListRef,
     selectedWallet.id,
     wallets,
-    setImage,
   ]);
 
   const handlePressReceive = useCallback(() => {
@@ -305,7 +287,7 @@ export default function ProfileMasthead({
       >
         <Button
           iconProps={{
-            color: 'white',
+            color: 'blue',
             marginRight: 2,
             name: 'copy',
             size: 18,
@@ -317,8 +299,8 @@ export default function ProfileMasthead({
         </Button>
         <Button
           iconProps={{
-            color: 'white',
             marginRight: 2,
+            color: 'blue',
             name: 'qr-code',
             size: 18,
           }}

@@ -4,16 +4,19 @@ import { getOnchainAssetBalance } from '../handlers/assets';
 import { dataUpdateAssets } from '../redux/data';
 import useAccountAssets from './useAccountAssets';
 import { logger } from '@rainbow-me/utils';
+import useAccountSettings from './useAccountSettings';
 
 export default function useUpdateAssetOnchainBalance() {
   const { allAssets } = useAccountAssets();
   const dispatch = useDispatch();
+  const {network} = useAccountSettings();
 
   const useUpdateAssetOnchainBalance = useCallback(
     async (assetToUpdate, accountAddress, successCallback) => {
       const balance = await getOnchainAssetBalance(
         assetToUpdate,
-        accountAddress
+        accountAddress,
+        network
       );
       if (balance?.amount !== assetToUpdate?.balance?.amount) {
         // Now we need to update the asset

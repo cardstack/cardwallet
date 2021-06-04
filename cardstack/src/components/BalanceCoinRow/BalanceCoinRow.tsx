@@ -1,7 +1,7 @@
 import React from 'react';
 import CoinIcon from 'react-coin-icon';
 
-import { CoinItem } from '../../types';
+import { AssetWithNativeType } from '../../types';
 import {
   CenteredContainer,
   Container,
@@ -11,7 +11,7 @@ import {
 } from '@cardstack/components';
 
 interface BalanceCoinRowProps {
-  item: CoinItem;
+  item: AssetWithNativeType;
   onPress: () => void;
   isEditing?: boolean;
   selected: boolean;
@@ -26,8 +26,10 @@ export const BalanceCoinRow = ({
   isEditing,
   selected,
 }: BalanceCoinRowProps) => {
-  const showIcon = item.isPinned || item.isHidden;
-  const iconName = item.isPinned ? 'pin' : 'eye-off';
+  const pinned = false;
+  const hidden = false;
+  const showIcon = pinned || hidden;
+  const iconName = pinned ? 'pin' : 'eye-off';
   const editingIconName = selected ? 'check-circle' : 'circle';
 
   return (
@@ -44,7 +46,11 @@ export const BalanceCoinRow = ({
             testID={`coin-row-editing-icon-${editingIconName}`}
             width={SELECT_ICON_WIDTH}
           >
-            <Icon name={editingIconName} iconSize="medium" />
+            <Icon
+              name={editingIconName}
+              iconSize="medium"
+              color={selected ? 'blue' : null}
+            />
           </Container>
         )}
         {isEditing && showIcon && (
@@ -85,23 +91,23 @@ export const BalanceCoinRow = ({
               <CoinIcon size={40} {...item} />
               <Container marginLeft={4}>
                 <Text fontWeight="700">{item.name}</Text>
-                <Text variant="subText">{item.balance.display}</Text>
+                <Text variant="subText">{item?.balance?.display}</Text>
               </Container>
             </Container>
             <Container alignItems="flex-end">
-              <Text fontWeight="700">{`${item.native.balance.display} USD`}</Text>
+              <Text fontWeight="700">{`${item?.native?.balance?.display}`}</Text>
               <Text
                 variant="subText"
                 color={
-                  item.price.relative_change_24h > 0 ? 'green' : 'blueText'
+                  item?.price?.relative_change_24h > 0 ? 'green' : 'blueText'
                 }
               >
-                {item.native.change}
+                {item?.native?.change}
               </Text>
             </Container>
           </Container>
         </Container>
-        {isEditing && item.isHidden && (
+        {isEditing && hidden && (
           <Container
             backgroundColor="black"
             top={8}

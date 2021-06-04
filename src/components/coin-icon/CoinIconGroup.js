@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
+import CoinIcon from 'react-coin-icon';
 import { View } from 'react-primitives';
 import { Column, Row } from '../layout';
-import CoinIcon from './CoinIcon';
 
 // Note that `width` is always smaller than `iconSize`. We do this to force the
 // `CoinIcon`'s to overlap each other (imagine the Olympics logo).
@@ -39,12 +39,7 @@ export default function CoinIconGroup({ tokens }) {
               width={width}
               zIndex={-index}
             >
-              <CoinIcon
-                address={token?.address}
-                icon_url={token?.icon_url}
-                size={iconSize}
-                symbol={token?.symbol}
-              />
+              <CoinIcon size={iconSize} {...token} />
             </View>
           ))}
         </Row>

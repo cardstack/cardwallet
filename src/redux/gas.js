@@ -1,6 +1,8 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import analytics from '@segment/analytics-react-native';
 import { captureException } from '@sentry/react-native';
 import { get, isEmpty } from 'lodash';
+import { isLayer1 } from '@cardstack/utils';
 import {
   etherscanGetGasEstimates,
   etherscanGetGasPrices,
@@ -11,6 +13,7 @@ import {
   defaultGasPriceFormat,
   getFallbackGasPrices,
   parseGasPrices,
+  parseLayer2GasPrices,
   parseTxFees,
 } from '@rainbow-me/parsers';
 import { ethUnits } from '@rainbow-me/references';
@@ -98,45 +101,62 @@ export const gasPricesStartPolling = () => async (dispatch, getState) => {
     new Promise(async (fetchResolve, fetchReject) => {
       try {
         const { gasPrices: existingGasPrice } = getState().gas;
+        const { network } = getState().settings;
 
-        let adjustedGasPrices;
-        let source = 'etherscan';
-        try {
-          // Use etherscan as our Gas Price Oracle
-          const {
-            data: { result: etherscanGasPrices },
-          } = await etherscanGetGasPrices();
+        if (isLayer1(network)) {
+          let adjustedGasPrices;
+          let source = 'etherscan';
 
-          const priceData = {
-            average: Number(etherscanGasPrices.ProposeGasPrice),
-            fast: Number(etherscanGasPrices.FastGasPrice),
-            safeLow: Number(etherscanGasPrices.SafeGasPrice),
-          };
-          // Add gas estimates
-          adjustedGasPrices = await etherscanGetGasEstimates(priceData);
-        } catch (e) {
-          logger.log('falling back to eth gas station', e);
-          source = 'ethGasStation';
-          // Fallback to ETHGasStation if Etherscan fails
-          const {
-            data: ethGasStationPrices,
-          } = await ethGasStationGetGasPrices();
-          // Only bumping for ETHGasStation
-          adjustedGasPrices = bumpGasPrices(ethGasStationPrices);
+          try {
+            // Use etherscan as our Gas Price Oracle
+            const {
+              data: { result: etherscanGasPrices },
+            } = await etherscanGetGasPrices();
+
+            const priceData = {
+              average: Number(etherscanGasPrices.ProposeGasPrice),
+              fast: Number(etherscanGasPrices.FastGasPrice),
+              safeLow: Number(etherscanGasPrices.SafeGasPrice),
+            };
+            // Add gas estimates
+            adjustedGasPrices = await etherscanGetGasEstimates(priceData);
+          } catch (e) {
+            logger.log('falling back to eth gas station', e);
+            source = 'ethGasStation';
+            // Fallback to ETHGasStation if Etherscan fails
+            const {
+              data: ethGasStationPrices,
+            } = await ethGasStationGetGasPrices();
+            // Only bumping for ETHGasStation
+            adjustedGasPrices = bumpGasPrices(ethGasStationPrices);
+          }
+
+          let gasPrices = parseGasPrices(adjustedGasPrices, source);
+          if (existingGasPrice[CUSTOM] !== null) {
+            // Preserve custom values while updating prices
+            gasPrices[CUSTOM] = existingGasPrice[CUSTOM];
+          }
+
+          dispatch({
+            payload: {
+              gasPrices,
+            },
+            type: GAS_PRICES_SUCCESS,
+          });
+        } else {
+          const apiBaseUrl = getConstantByNetwork('apiBaseUrl', network);
+
+          const response = await fetch(`${apiBaseUrl}/v1/gas-price-oracle`);
+          const data = await response.json();
+          const parsedData = parseLayer2GasPrices(data);
+
+          dispatch({
+            payload: {
+              gasPrices: parsedData,
+            },
+            type: GAS_PRICES_SUCCESS,
+          });
         }
-
-        let gasPrices = parseGasPrices(adjustedGasPrices, source);
-        if (existingGasPrice[CUSTOM] !== null) {
-          // Preserve custom values while updating prices
-          gasPrices[CUSTOM] = existingGasPrice[CUSTOM];
-        }
-
-        dispatch({
-          payload: {
-            gasPrices,
-          },
-          type: GAS_PRICES_SUCCESS,
-        });
 
         fetchResolve(true);
       } catch (error) {
@@ -170,11 +190,14 @@ export const gasUpdateGasPriceOption = newGasPriceOption => (
   const { gasPrices, txFees } = getState().gas;
   if (isEmpty(gasPrices)) return;
   const { assets } = getState().data;
+  const { network } = getState().settings;
+
   const results = getSelectedGasPrice(
     assets,
     gasPrices,
     txFees,
-    newGasPriceOption
+    newGasPriceOption,
+    network
   );
 
   dispatch({
@@ -236,12 +259,14 @@ export const gasUpdateTxFee = (gasLimit, overrideGasOption) => (
     _gasLimit,
     nativeCurrency
   );
+  const { network } = getState().settings;
 
   const results = getSelectedGasPrice(
     assets,
     gasPrices,
     txFees,
-    _selectedGasPriceOption
+    _selectedGasPriceOption,
+    network
   );
   dispatch({
     payload: {
@@ -257,7 +282,8 @@ const getSelectedGasPrice = (
   assets,
   gasPrices,
   txFees,
-  selectedGasPriceOption
+  selectedGasPriceOption,
+  network
 ) => {
   let txFee = txFees[selectedGasPriceOption];
   // If no custom price is set we default to FAST
@@ -267,7 +293,11 @@ const getSelectedGasPrice = (
   ) {
     txFee = txFees[gasUtils.FAST];
   }
-  const ethAsset = ethereumUtils.getAsset(assets);
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  const ethAsset = ethereumUtils.getAsset(assets, nativeTokenAddress);
   const balanceAmount = get(ethAsset, 'balance.amount', 0);
   const txFeeAmount = fromWei(get(txFee, 'txFee.value.amount', 0));
   const isSufficientGas = greaterThanOrEqualTo(balanceAmount, txFeeAmount);

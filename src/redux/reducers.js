@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import addCash from './addCash';
 import appState from './appState';
 import charts from './charts';
+import coingecko from './coingecko';
 import contacts from './contacts';
 import data from './data';
 import editOptions from './editOptions';
@@ -30,6 +31,7 @@ import wallets from './wallets';
 export default combineReducers({
   addCash,
   appState,
+  coingecko,
   charts,
   contacts,
   data,

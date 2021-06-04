@@ -222,11 +222,20 @@ export default function ImportSeedPhraseSheet() {
         return;
       }
     } else if (isValidAddress(input)) {
-      // const ens = await web3Provider.lookupAddress(input);
-      // if (ens && ens !== input) {
-      //   name = ens;
-      // }
-      showWalletProfileModal(name);
+      try {
+        // Layer 1 uses JSONRPCProvider (with lookupAddress) (ethers project - handles both mnemonic and address values)
+        // Layer 2 uses httpProvider (without lookupAddress) (web3 - limited to only address), return null
+        // TODO: Find equivalent to handle both provider types in order to reverse lookup address for either address and mnemonic values
+        const ens = web3Provider.lookupAddress
+          ? await web3Provider.lookupAddress(input)
+          : null;
+        if (ens && ens !== input) {
+          name = ens;
+        }
+        showWalletProfileModal(name);
+      } catch (error) {
+        console.log({ error });
+      }
     } else {
       try {
         setBusy(true);
@@ -235,10 +244,14 @@ export default function ImportSeedPhraseSheet() {
             input
           );
           setCheckedWallet(walletResult);
-          // const ens = await web3Provider.lookupAddress(walletResult.address);
-          // if (ens && ens !== input) {
-          //   name = ens;
-          // }
+
+          const ens = web3Provider.lookupAddress
+            ? await web3Provider.lookupAddress(walletResult.address)
+            : null;
+
+          if (ens && ens !== input) {
+            name = ens;
+          }
           setBusy(false);
           showWalletProfileModal(name);
         }, 100);
@@ -408,7 +421,7 @@ export default function ImportSeedPhraseSheet() {
             <Button
               disabled={!isClipboardValidSecret}
               onPress={handlePressPasteButton}
-              variant="extraSmallDark"
+              variant="tinyDark"
             >
               Paste
             </Button>

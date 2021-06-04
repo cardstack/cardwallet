@@ -10,28 +10,27 @@ import SVG, {
 } from 'react-native-svg';
 
 import logo from '../../assets/cardstackLogoTransparent.png';
-import { ExpandedCard, ExpandedCardProps } from './ExpandedCard';
-import { numberWithCommas, getDollarsFromDai } from '@cardstack/utils';
+import { PrepaidCardType } from '../../types';
 import { Container, ScrollView, Text, Touchable } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
-interface PrepaidCardProps extends ExpandedCardProps {
-  issuer: string;
-  /** unique identifier, displayed in top right corner of card */
-  id: string;
-  /** balance in xDai */
-  spendableBalance: number;
+interface PrepaidCardProps extends PrepaidCardType {
+  networkName: string;
 }
 
 /**
  * A prepaid card component
  */
-export const PrepaidCard = (props: PrepaidCardProps) => {
+export const PrepaidCard = ({
+  networkName,
+  ...prepaidCard
+}: PrepaidCardProps) => {
   const [isScrollable, setIsScrollable] = useState(false);
-  const { issuer, id, spendableBalance } = props;
   const Wrapper = isScrollable ? ScrollView : Container;
 
   return (
-    <Wrapper width="100%">
+    <Wrapper width="100%" paddingHorizontal={4}>
       <Touchable
         onPress={() => setIsScrollable(!isScrollable)}
         width="100%"
@@ -45,11 +44,11 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           width="100%"
         >
           <GradientBackground />
-          <Top issuer={issuer} id={id} />
-          <Bottom spendableBalance={spendableBalance} />
+          {/* hard code issuer for now */}
+          <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
+          <Bottom {...prepaidCard} />
         </Container>
       </Touchable>
-      {isScrollable && <ExpandedCard recentActivity={props.recentActivity} />}
     </Wrapper>
   );
 };
@@ -83,37 +82,42 @@ const GradientBackground = () => (
   </SVG>
 );
 
-const Top = ({ issuer, id }: { issuer: string; id: string }) => (
-  <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
-    <Container width="100%">
-      <Text size="xxs">Issued by</Text>
-    </Container>
-    <Container
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-    >
-      <Text size="xs" weight="extraBold">
-        {issuer}
-      </Text>
-      <Container flexDirection="row">
-        <Text variant="shadowRoboto">{id.slice(0, 6)}</Text>
-        <Text variant="shadowRoboto" letterSpacing={1.35}>
-          ...
+const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
+  return (
+    <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
+      <Container width="100%">
+        <Text size="xxs">Issued by</Text>
+      </Container>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Text size="xs" weight="extraBold">
+          {issuer}
         </Text>
-        <Text variant="shadowRoboto">{id.slice(-4)}</Text>
+        <Container flexDirection="row">
+          <Text variant="shadowRoboto">{getAddressPreview(address)}</Text>
+        </Container>
+      </Container>
+      <Container width="100%" alignItems="flex-end">
+        <Text fontSize={11}>{`ON ${networkName.toUpperCase()}`}</Text>
       </Container>
     </Container>
-    <Container width="100%" alignItems="flex-end">
-      <Text fontSize={11}>on xDai chain</Text>
-    </Container>
-  </Container>
-);
-
-const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
-  const formattedSpendableBalance = numberWithCommas(
-    getDollarsFromDai(spendableBalance).toFixed(2)
   );
+};
+
+const Bottom = ({
+  spendFaceValue,
+  tokens,
+  issuingToken,
+  reloadable,
+  issuer,
+}: PrepaidCardType) => {
+  const { accountAddress } = useAccountSettings();
+  const token = tokens.find(t => t.tokenAddress === issuingToken);
+  const usdBalance = token?.native.balance.display || 0;
+  const transferrable = accountAddress === issuer;
 
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
@@ -125,7 +129,7 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
         <Container>
           <Text fontSize={13}>Spendable Balance</Text>
           <Text fontSize={40} fontWeight="700">
-            {`§${numberWithCommas(spendableBalance.toString())}`}
+            {`§${spendFaceValue}`}
           </Text>
         </Container>
         <Container height={46} width={42}>
@@ -145,12 +149,14 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
         justifyContent="space-between"
         marginTop={2}
       >
-        {/* not sure if we should start with xDai and convert to USD or go the other way around. Also unsure how we will do that calculation either way */}
-        <Text fontWeight="700">{`$${formattedSpendableBalance} USD`}</Text>
-        {/* not sure if these will be different based on card or universal */}
+        <Text fontWeight="700">{usdBalance}</Text>
         <Container alignItems="flex-end">
-          <Text variant="smallGrey">RELOADABLE</Text>
-          <Text variant="smallGrey">NON-TRANSFRERRABLE</Text>
+          <Text variant="smallGrey">
+            {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}
+          </Text>
+          <Text variant="smallGrey">
+            {transferrable ? 'TRANSFERRABLE' : 'NON-TRANSFERRABLE'}
+          </Text>
         </Container>
       </Container>
     </Container>

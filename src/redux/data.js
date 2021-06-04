@@ -1,3 +1,4 @@
+import { getSDK } from '@cardstack/cardpay-sdk';
 import { getUnixTime, subDays } from 'date-fns';
 import {
   concat,
@@ -17,11 +18,13 @@ import {
   uniqBy,
   values,
 } from 'lodash';
+import Web3 from 'web3';
 import { uniswapClient } from '../apollo/client';
 import {
   UNISWAP_24HOUR_PRICE_QUERY,
   UNISWAP_PRICES_QUERY,
 } from '../apollo/queries';
+import { getTransactionReceipt, web3ProviderSdk } from '../handlers/web3';
 /* eslint-disable-next-line import/no-cycle */
 import { addCashUpdatePurchases } from './addCash';
 /* eslint-disable-next-line import/no-cycle */
@@ -30,13 +33,19 @@ import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import {
   getAssetPricesFromUniswap,
   getAssets,
+  getDepots,
   getLocalTransactions,
+  getMerchantSafes,
+  getPrepaidCards,
   saveAccountEmptyState,
   saveAssetPricesFromUniswap,
   saveAssets,
+  saveDepots,
   saveLocalTransactions,
+  saveMerchantSafes,
+  savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { getTransactionReceipt } from '@rainbow-me/handlers/web3';
+
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
@@ -55,7 +64,13 @@ import {
 } from '@rainbow-me/parsers';
 import { shitcoins } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
-import { divide, isZero } from '@rainbow-me/utilities';
+import {
+  convertAmountToBalanceDisplay,
+  convertAmountToNativeDisplay,
+  convertRawAmountToBalance,
+  divide,
+  isZero,
+} from '@rainbow-me/utilities';
 import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
 import logger from 'logger';
 
@@ -74,6 +89,7 @@ const DATA_UPDATE_GENERIC_ASSETS = 'data/DATA_UPDATE_GENERIC_ASSETS';
 const DATA_UPDATE_TRANSACTIONS = 'data/DATA_UPDATE_TRANSACTIONS';
 const DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION =
   'data/DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION';
+const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
 const DATA_LOAD_ASSETS_REQUEST = 'data/DATA_LOAD_ASSETS_REQUEST';
 const DATA_LOAD_ASSETS_SUCCESS = 'data/DATA_LOAD_ASSETS_SUCCESS';
@@ -110,33 +126,24 @@ export const dataLoadState = () => async (dispatch, getState) => {
   } catch (error) {}
   try {
     dispatch({ type: DATA_LOAD_ASSETS_REQUEST });
-    const assets = await getAssets(accountAddress, network);
+    const [assets, prepaidCards, depots, merchantSafes] = await Promise.all([
+      getAssets(accountAddress, network),
+      getPrepaidCards(accountAddress, network),
+      getDepots(accountAddress, network),
+      getMerchantSafes(accountAddress, network),
+    ]);
     dispatch({
-      payload: assets,
+      payload: {
+        assets,
+        depots,
+        prepaidCards,
+        merchantSafes,
+      },
       type: DATA_LOAD_ASSETS_SUCCESS,
     });
   } catch (error) {
     dispatch({ type: DATA_LOAD_ASSETS_FAILURE });
   }
-  try {
-    dispatch({ type: DATA_LOAD_TRANSACTIONS_REQUEST });
-    const transactions = await getLocalTransactions(accountAddress, network);
-    dispatch({
-      payload: transactions,
-      type: DATA_LOAD_TRANSACTIONS_SUCCESS,
-    });
-  } catch (error) {
-    dispatch({ type: DATA_LOAD_TRANSACTIONS_FAILURE });
-  }
-  try {
-    dispatch(dataWatchPendingTransactions());
-  } catch (err) {
-    logger.error(err);
-  }
-};
-
-export const dataGetTransactions = () => async (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
   try {
     dispatch({ type: DATA_LOAD_TRANSACTIONS_REQUEST });
     const transactions = await getLocalTransactions(accountAddress, network);
@@ -172,12 +179,15 @@ export const dataUpdateAssets = assets => (dispatch, getState) => {
 };
 
 const checkMeta = message => (dispatch, getState) => {
-  const { accountAddress, nativeCurrency } = getState().settings;
+  const { accountAddress, nativeCurrency, network } = getState().settings;
   const address = get(message, 'meta.address');
   const currency = get(message, 'meta.currency');
+  const metaNetwork = get(message, 'meta.network');
+
   return (
     isLowerCaseMatch(address, accountAddress) &&
-    isLowerCaseMatch(currency, nativeCurrency)
+    isLowerCaseMatch(currency, nativeCurrency) &&
+    isLowerCaseMatch(metaNetwork, network)
   );
 };
 
@@ -268,16 +278,144 @@ export const transactionsRemoved = message => (dispatch, getState) => {
   saveLocalTransactions(updatedTransactions, accountAddress, network);
 };
 
+const getTokensWithPrice = async (tokens, nativeCurrency) => {
+  const web3 = new Web3(web3ProviderSdk);
+  const exchangeRate = await getSDK('ExchangeRate', web3);
+
+  return Promise.all(
+    tokens.map(async tokenItem => {
+      const usdBalance = await exchangeRate.getUSDPrice(
+        tokenItem.token.symbol,
+        tokenItem.balance
+      );
+      const priceUnit = tokenItem.price?.value || 0;
+
+      return {
+        ...tokenItem,
+        balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
+        native: {
+          balance: {
+            amount: usdBalance,
+            display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
+          },
+          price: {
+            amount: priceUnit,
+            display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
+          },
+        },
+      };
+    })
+  );
+};
+
+const addGnosisTokenPrices = async (
+  message,
+  network,
+  accountAddress,
+  nativeCurrency
+) => {
+  const depots = get(message, 'payload.depots', []);
+  const merchantSafes = get(message, 'payload.merchantSafes', []);
+  const prepaidCards = get(message, 'payload.prepaidCards', []);
+  const web3 = new Web3(web3ProviderSdk);
+  const revenuePool = await getSDK('RevenuePool', web3);
+
+  const [
+    depotsWithPrice,
+    prepaidCardsWithPrice,
+    merchantSafesWithPrice,
+  ] = await Promise.all([
+    await Promise.all(
+      depots.map(async depot => {
+        const tokensWithPrice = await getTokensWithPrice(
+          depot.tokens,
+          nativeCurrency
+        );
+
+        return {
+          ...depot,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
+    await Promise.all(
+      prepaidCards.map(async prepaidCard => {
+        const tokensWithPrice = await getTokensWithPrice(
+          prepaidCard.tokens,
+          nativeCurrency
+        );
+
+        return {
+          ...prepaidCard,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
+    await Promise.all(
+      merchantSafes.map(async merchantSafe => {
+        const revenueBalances = await revenuePool.balances(
+          merchantSafe.address
+        );
+        const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all([
+          getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
+          getTokensWithPrice(
+            revenueBalances.map(revenueToken => ({
+              ...revenueToken,
+              token: {
+                symbol: revenueToken.tokenSymbol,
+              },
+            })),
+            nativeCurrency
+          ),
+        ]);
+
+        return {
+          ...merchantSafe,
+          revenueBalances: revenueBalancesWithPrice,
+          tokens: tokensWithPrice,
+        };
+      })
+    ),
+  ]);
+
+  savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
+  saveDepots(depotsWithPrice, accountAddress, network);
+  saveMerchantSafes(merchantSafesWithPrice, accountAddress, network);
+
+  return {
+    depots: depotsWithPrice,
+    prepaidCards: prepaidCardsWithPrice,
+    merchantSafes: merchantSafesWithPrice,
+  };
+};
+
 export const addressAssetsReceived = (
   message,
   append = false,
   change = false,
   removed = false
-) => (dispatch, getState) => {
+) => async (dispatch, getState) => {
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
-  const { accountAddress, network } = getState().settings;
+  const { accountAddress, network, nativeCurrency } = getState().settings;
+
+  const { depots, prepaidCards, merchantSafes } = await addGnosisTokenPrices(
+    message,
+    network,
+    accountAddress,
+    nativeCurrency
+  );
+
+  dispatch({
+    payload: {
+      depots,
+      prepaidCards,
+      merchantSafes,
+    },
+    type: DATA_UPDATE_GNOSIS_DATA,
+  });
+
   const { uniqueTokens } = getState().uniqueTokens;
   const payload = values(get(message, 'payload.assets', {}));
   let assets = filter(
@@ -331,6 +469,7 @@ export const addressAssetsReceived = (
     // Change the state since the account isn't empty anymore
     saveAccountEmptyState(false, accountAddress, network);
   }
+
   dispatch({
     payload: parsedAssets,
     type: DATA_UPDATE_ASSETS,
@@ -670,6 +809,8 @@ export const updateRefetchSavings = fetch => dispatch =>
 const INITIAL_STATE = {
   assetPricesFromUniswap: {},
   assets: [], // for account-specific assets
+  depots: [],
+  prepaidCards: [],
   genericAssets: {},
   isLoadingAssets: true,
   isLoadingTransactions: true,
@@ -698,7 +839,18 @@ export default (state = INITIAL_STATE, action) => {
     case DATA_UPDATE_GENERIC_ASSETS:
       return { ...state, genericAssets: action.payload };
     case DATA_UPDATE_ASSETS:
-      return { ...state, assets: action.payload, isLoadingAssets: false };
+      return {
+        ...state,
+        assets: action.payload,
+        isLoadingAssets: false,
+      };
+    case DATA_UPDATE_GNOSIS_DATA:
+      return {
+        ...state,
+        depots: action.payload.depots,
+        merchantSafes: action.payload.merchantSafes,
+        prepaidCards: action.payload.prepaidCards,
+      };
     case DATA_UPDATE_TRANSACTIONS:
       return {
         ...state,
@@ -734,7 +886,10 @@ export default (state = INITIAL_STATE, action) => {
     case DATA_LOAD_ASSETS_SUCCESS:
       return {
         ...state,
-        assets: action.payload,
+        assets: action.payload.assets,
+        depots: action.payload.depots,
+        prepaidCards: action.payload.prepaidCards,
+        merchantSafes: action.payload.merchantSafes,
         isLoadingAssets: false,
       };
     case DATA_LOAD_ASSETS_FAILURE:

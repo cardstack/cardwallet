@@ -36,7 +36,6 @@ const WALLETS_UPDATE = 'wallets/ALL_WALLETS_UPDATE';
 const WALLETS_UPDATE_NAMES = 'wallets/WALLETS_UPDATE_NAMES';
 const WALLETS_SET_IS_LOADING = 'wallets/WALLETS_SET_IS_LOADING';
 const WALLETS_SET_SELECTED = 'wallets/SET_SELECTED';
-const WALLETS_RESET = 'wallets/WALLETS_RESET';
 
 // -- Actions ---------------------------------------- //
 export const walletsLoadState = () => async (dispatch, getState) => {
@@ -358,12 +357,6 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
   }
 };
 
-export const resetWallets = () => async dispatch => {
-  dispatch({
-    type: WALLETS_RESET,
-  });
-};
-
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
   isWalletLoading: null,
@@ -394,11 +387,6 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         selected: action.payload.selected,
         wallets: action.payload.wallets,
-      };
-    case WALLETS_RESET:
-      return {
-        ...state,
-        ...INITIAL_STATE,
       };
     default:
       return state;

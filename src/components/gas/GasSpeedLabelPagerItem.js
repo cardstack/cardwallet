@@ -10,7 +10,6 @@ import Animated, {
 import styled from 'styled-components';
 import { Row } from '../layout';
 import { Text } from '../text';
-import GasSpeedEmoji from './GasSpeedEmoji';
 import { gasUtils } from '@rainbow-me/utils';
 
 const AnimatedRow = Animated.createAnimatedComponent(Row);
@@ -83,10 +82,6 @@ const GasSpeedLabelPagerItem = ({ label, selected, shouldAnimate, theme }) => {
   return (
     <TransitionContainer transition={transition}>
       <GasSpeedRow style={animatedStyle}>
-        <GasSpeedEmoji
-          containerHeight={GasSpeedLabelPagerItemHeight}
-          label={label}
-        />
         <GasSpeedLabel
           color={
             theme !== 'light'
