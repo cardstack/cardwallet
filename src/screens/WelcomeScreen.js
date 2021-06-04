@@ -6,7 +6,12 @@ import {
   isCloudBackupAvailable,
 } from '../handlers/cloudBackup';
 import { cloudPlatform } from '../utils/platform';
-import { Button, CenteredContainer, Container } from '@cardstack/components';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  Text,
+} from '@cardstack/components';
 import { useHideSplashScreen, useInitializeWallet } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
@@ -79,6 +84,9 @@ export default function WelcomeScreen() {
             }}
           />
         </Container>
+        <Text marginTop={4} variant="welcomeScreen">
+          CARD WALLET
+        </Text>
       </CenteredContainer>
       <Container height={118} justifyContent="space-between" marginBottom="24">
         <Button

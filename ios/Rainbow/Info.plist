@@ -159,6 +159,32 @@
 		<string>RobotoMono-SemiBoldItalic.ttf</string>
 		<string>RobotoMono-Thin.ttf</string>
 		<string>RobotoMono-ThinItalic.ttf</string>
+		<string>Karbon-Bold 2.otf</string>
+		<string>Karbon-Bold 3.otf</string>
+		<string>Karbon-Bold 4.otf</string>
+		<string>Karbon-Bold.otf</string>
+		<string>Karbon-BoldItalic.otf</string>
+		<string>Karbon-Hairline.otf</string>
+		<string>Karbon-HairlineItalic.otf</string>
+		<string>Karbon-Light 2.otf</string>
+		<string>Karbon-Light.otf</string>
+		<string>Karbon-LightItalic.otf</string>
+		<string>Karbon-Medium 2.otf</string>
+		<string>Karbon-Medium.otf</string>
+		<string>Karbon-MediumItalic.otf</string>
+		<string>Karbon-Regular 2.otf</string>
+		<string>Karbon-Regular 3.otf</string>
+		<string>Karbon-Regular 4.otf</string>
+		<string>Karbon-Regular 5.otf</string>
+		<string>Karbon-Regular.otf</string>
+		<string>Karbon-RegularItalic.otf</string>
+		<string>Karbon-Semibold 2.otf</string>
+		<string>Karbon-Semibold.otf</string>
+		<string>Karbon-SemiboldItalic.otf</string>
+		<string>Karbon-Thin.otf</string>
+		<string>Karbon-ThinItalic.otf</string>
+		<string>KarbonSlabStencil-Bold.otf</string>
+		<string>KarbonSlabStencil-Regular.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
