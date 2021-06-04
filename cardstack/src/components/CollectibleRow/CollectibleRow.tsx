@@ -19,7 +19,6 @@ export const CollectibleRow = (collectible: CollectibleType) => {
     });
   };
 
-  console.log({ collectible: JSON.stringify(collectible, null, 2) });
 
   return (
     <Touchable onPress={onPress} marginHorizontal={5} marginVertical={2}>
