@@ -1,7 +1,7 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Linking, StatusBar } from 'react-native';
+import { Linking, ScrollView, StatusBar } from 'react-native';
 import { BackButton } from '../../../src/components/header';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
 import Routes from '@rainbow-me/routes';
@@ -114,13 +114,27 @@ export default function DepotScreen() {
             />
           </Container>
         </Container>
-
         <Container flex={1} width="100%">
-          {selectedTab === Tabs.BALANCES ? (
+          <Container
+            flex={1}
+            width="100%"
+            height="100%"
+            backgroundColor="white"
+            position="absolute"
+            zIndex={selectedTab === Tabs.BALANCES ? 1 : 0}
+          >
             <Balances tokens={tokens} />
-          ) : (
+          </Container>
+          <Container
+            flex={1}
+            width="100%"
+            height="100%"
+            backgroundColor="white"
+            position="absolute"
+            zIndex={selectedTab === Tabs.ACTIVITIES ? 1 : 0}
+          >
             <Activities />
-          )}
+          </Container>
         </Container>
       </Container>
     </Container>
@@ -180,7 +194,7 @@ const Balances = ({ tokens }: BalancesProps) => {
   };
 
   return (
-    <Container>
+    <ScrollView>
       <Container
         paddingHorizontal={5}
         paddingBottom={3}
@@ -199,6 +213,7 @@ const Balances = ({ tokens }: BalancesProps) => {
           borderColor="buttonPrimaryBorder"
           borderRadius={10}
           borderWidth={1}
+          marginVertical={1}
           marginHorizontal={5}
           nativeBalance={token.native.balance.display}
           onPress={() => onPress(token)}
@@ -208,10 +223,23 @@ const Balances = ({ tokens }: BalancesProps) => {
           zIndex={1}
         />
       ))}
-    </Container>
+    </ScrollView>
   );
 };
 
 const Activities = () => {
-  return <Text>Activities</Text>;
+  return (
+    <ScrollView>
+      <Container
+        paddingHorizontal={5}
+        paddingBottom={3}
+        marginTop={7}
+        flexDirection="row"
+      >
+        <Text size="medium" marginRight={2}>
+          Activities
+        </Text>
+      </Container>
+    </ScrollView>
+  );
 };
