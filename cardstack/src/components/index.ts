@@ -25,3 +25,4 @@ export * from './MerchantSafe';
 export * from './SafeHeader';
 export * from './NetworkBadge';
 export * from './HorizontalDivider';
+export * from './MoreItemsFooter';

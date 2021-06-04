@@ -25,7 +25,7 @@ const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
       count: prepaidCards.length,
       showContextMenu: true,
     },
-    data: prepaidCards,
+    data: [...prepaidCards, ...prepaidCards, ...prepaidCards],
     Component: PrepaidCard,
   };
 };

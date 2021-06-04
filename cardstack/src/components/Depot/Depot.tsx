@@ -1,5 +1,6 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { HorizontalDivider } from '../HorizontalDivider';
+import { MoreItemsFooter } from '../MoreItemsFooter';
 import {
   Container,
   SafeHeader,
@@ -41,22 +42,22 @@ export const Depot = (depot: DepotProps) => {
 };
 
 const Bottom = ({ tokens }: DepotProps) => {
+  const firstThreeTokens = tokens.slice(0, 3);
+
   return (
-    <Container paddingHorizontal={6}>
-      <FlatList
-        data={tokens}
-        renderItem={({ item }) => {
-          return (
-            <Container paddingVertical={5}>
-              <TokenBalance
-                tokenSymbol={item.token.symbol}
-                tokenBalance={item.balance.display}
-                nativeBalance={item.native.balance.display}
-              />
-            </Container>
-          );
-        }}
-      />
+    <Container paddingHorizontal={6} paddingVertical={4}>
+      {firstThreeTokens.map((item, index) => (
+        <>
+          <TokenBalance
+            tokenSymbol={item.token.symbol}
+            tokenBalance={item.balance.display}
+            nativeBalance={item.native.balance.display}
+            paddingVertical={1}
+          />
+          {index !== firstThreeTokens.length - 1 ? <HorizontalDivider /> : null}
+        </>
+      ))}
+      <MoreItemsFooter tokens={tokens} showCount={3} />
     </Container>
   );
 };

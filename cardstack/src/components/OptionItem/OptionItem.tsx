@@ -36,7 +36,6 @@ export const OptionItem = ({
       flexDirection="row"
       onPress={onPress}
       testID="option-item"
-      borderWidth={1}
       {...props}
     >
       {iconVisible && (

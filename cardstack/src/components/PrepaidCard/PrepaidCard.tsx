@@ -30,7 +30,7 @@ export const PrepaidCard = ({
   const Wrapper = isScrollable ? ScrollView : Container;
 
   return (
-    <Wrapper width="100%" paddingHorizontal={4}>
+    <Wrapper width="100%" paddingHorizontal={4} marginBottom={4}>
       <Touchable
         onPress={() => setIsScrollable(!isScrollable)}
         width="100%"
