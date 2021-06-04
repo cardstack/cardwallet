@@ -66,6 +66,7 @@ const getColorsByTheme = darkMode => {
     mediumGrey: '#A1A5B3', // '161, 165, 179'
     mintDark: '#00E0A9', // '0, 224, 169'
     neonSkyblue: '#34FFFF', // '52, 255, 255'
+    cardstackBlue: '#00EBE5',
     offWhite: '#F8F9FA', // '248, 249, 250'
     orange: '#FF9900', // '255, 153, 0'
     orangeLight: '#FEBE44', // '254, 190, 68'
