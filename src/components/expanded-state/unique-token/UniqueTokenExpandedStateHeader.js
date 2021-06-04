@@ -1,30 +1,14 @@
-import lang from 'i18n-js';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Linking, Share } from 'react-native';
 import styled from 'styled-components';
-import { buildUniqueTokenName } from '../../../helpers/assets';
-import { magicMemo } from '../../../utils';
-import Pill from '../../Pill';
-import { ContextCircleButton } from '../../context-menu';
-import { ColumnWithMargins, FlexItem, Row, RowWithMargins } from '../../layout';
-import { Text } from '../../text';
-import { padding } from '@rainbow-me/styles';
 
-const contextButtonOptions = [
-  'Share',
-  'View on OpenSea',
-  ...(ios ? [lang.t('wallet.action.cancel')] : []),
-];
+import ButtonPressAnimation from '../../../components/animations/ButtonPressAnimation';
+import { buildUniqueTokenName } from '../../../helpers/assets';
+import { magicMemo, showActionSheetWithOptions } from '../../../utils';
+import { ColumnWithMargins, FlexItem, RowWithMargins } from '../../layout';
+import { Container, Icon, Text } from '@cardstack/components';
 
 const paddingHorizontal = 19;
-
-const Container = styled(Row).attrs({
-  align: 'center',
-  justify: 'space-between',
-})`
-  ${padding(14, paddingHorizontal, paddingHorizontal)};
-`;
-
 const HeadingColumn = styled(ColumnWithMargins).attrs({
   align: 'start',
   justify: 'start',
@@ -35,54 +19,70 @@ const HeadingColumn = styled(ColumnWithMargins).attrs({
 `;
 
 const UniqueTokenExpandedStateHeader = ({ asset }) => {
-  const handleActionSheetPress = useCallback(
-    buttonIndex => {
-      if (buttonIndex === 0) {
-        Share.share({
-          title: `Share ${buildUniqueTokenName(asset)} Info`,
-          url: asset.permalink,
-        });
-      } else if (buttonIndex === 1) {
-        // View on OpenSea
-        Linking.openURL(asset.permalink);
+  const onContextMenuPress = () => {
+    showActionSheetWithOptions(
+      {
+        options: ['Share', 'View on OpenSea', 'Cancel'],
+        cancelButtonIndex: 2,
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          Share.share({
+            title: `Share ${buildUniqueTokenName(asset)} Info`,
+            url: asset.permalink,
+          });
+        } else if (buttonIndex === 1) {
+          // View on OpenSea
+          Linking.openURL(asset.permalink);
+        }
       }
-    },
-    [asset]
-  );
-
-  const { colors } = useTheme();
+    );
+  };
 
   return (
-    <Container>
+    <Container
+      alignItems="center"
+      flexDirection="row"
+      justifyContent="space-between"
+      paddingHorizontal={5}
+      paddingVertical={3}
+    >
       <HeadingColumn>
         <RowWithMargins align="center" margin={3}>
-          <Text
-            color={colors.blueGreyDark50}
-            letterSpacing="uppercase"
-            size="smedium"
-            uppercase
-            weight="semibold"
-          >
-            {asset.asset_contract.name}
+          <Text color="blueText" size="small" weight="extraBold">
+            {asset.asset_contract.name.toUpperCase()}
           </Text>
-          <Pill maxWidth={150}>#{asset.id}</Pill>
+          <Container
+            backgroundColor="backgroundLightGray"
+            borderRadius={50}
+            marginRight={2}
+            maxWidth={150}
+            paddingHorizontal={2}
+            style={{ paddingVertical: 1 }}
+          >
+            <Text
+              color="networkBadge"
+              fontSize={9}
+              numberOfLines={1}
+              weight="bold"
+            >
+              #{asset.id}
+            </Text>
+          </Container>
         </RowWithMargins>
         <FlexItem flex={1}>
-          <Text
-            color={colors.dark}
-            letterSpacing="roundedMedium"
-            size="big"
-            weight="bold"
-          >
+          <Text size="medium" weight="extraBold">
             {buildUniqueTokenName(asset)}
           </Text>
         </FlexItem>
       </HeadingColumn>
-      <ContextCircleButton
-        flex={0}
-        onPressActionSheet={handleActionSheetPress}
-        options={contextButtonOptions}
-      />
+      <ButtonPressAnimation onPress={onContextMenuPress}>
+        <Icon
+          fill="backgroundBlue"
+          name="more-circle"
+          stroke="backgroundBlue"
+        />
+      </ButtonPressAnimation>
     </Container>
   );
 };

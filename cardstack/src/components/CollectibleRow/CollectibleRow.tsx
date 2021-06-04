@@ -5,6 +5,7 @@ import { Touchable, Container, Text } from '@cardstack/components';
 import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
+import { buildUniqueTokenName } from '@rainbow-me/helpers/assets';
 
 export const CollectibleRow = (collectible: CollectibleType) => {
   const { isReadOnlyWallet } = useWallets();
@@ -44,7 +45,7 @@ export const CollectibleRow = (collectible: CollectibleType) => {
         </Container>
         <Container flex={1} flexDirection="column">
           <Text numberOfLines={3} weight="extraBold">
-            {collectible.name}
+            {buildUniqueTokenName(collectible)}
           </Text>
           <Text variant="subText">{collectible.asset_contract?.name}</Text>
         </Container>
