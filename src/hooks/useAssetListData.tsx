@@ -1,5 +1,10 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { BalanceCoinRowWrapper } from '../../src/components/coin-row';
+import { orderBy } from 'lodash';
+import { BalanceCoinRowWrapper } from '../components/coin-row';
+import {
+  PinnedHiddenSectionOption,
+  usePinnedAndHiddenItemOptions,
+} from './usePinnedAndHiddenItemOptions';
 import {
   AssetListSectionItem,
   CollectibleRow,
@@ -19,12 +24,31 @@ import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
-  const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
+  let prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
+
+  const { editing, hidden, pinned } = usePinnedAndHiddenItemOptions();
+
+  const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
+
+  if (!isEditing) {
+    prepaidCards = prepaidCards.filter(pc => !hidden.includes(pc.address));
+  }
+
+  prepaidCards = orderBy(
+    prepaidCards,
+    [
+      function (p) {
+        return pinned.includes(p.address);
+      },
+    ],
+    ['desc']
+  );
 
   return {
     header: {
       title: 'Prepaid Cards',
       count: prepaidCards.length,
+      type: PinnedHiddenSectionOption.PREPAID_CARDS,
       showContextMenu: true,
     },
     data: prepaidCards,
@@ -66,20 +90,50 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
     state.settings.network,
   ]);
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+
   const assetsWithNative = parseAssetsNativeWithTotals(
     stateAssets,
     nativeCurrency
   );
-  const sortedAssets = assetsWithNative.assetsNativePrices.sort(a =>
-    a.symbol === nativeTokenSymbol ? -1 : 1
-  );
-  const assets = sortedAssets as AssetWithNativeType[];
+
+  let assetBalances = assetsWithNative.assetsNativePrices;
+
+  const { editing, hidden, pinned } = usePinnedAndHiddenItemOptions();
+
+  const isEditing = editing === PinnedHiddenSectionOption.BALANCES;
+
+  let assets = orderBy(
+    assetBalances,
+    [
+      function (p) {
+        return pinned.includes(p.address);
+      },
+      function (p) {
+        return p.symbol;
+      },
+    ],
+    ['desc', 'asc', 'asc']
+  ) as AssetWithNativeType[];
+
+  if (!isEditing) {
+    assets = assets.filter(a => !hidden.includes(a.address));
+  }
+
+  const nativeBalance = assets.find(a => nativeTokenSymbol.includes(a.symbol));
+  const nativeBalancePinned = nativeBalance
+    ? pinned.includes(nativeBalance.address)
+    : false;
+
+  if (nativeBalancePinned) {
+    assets = assets.sort(a => (nativeTokenSymbol.includes(a.symbol) ? -1 : 1));
+  }
 
   return {
     header: {
       title: 'Balances',
       count: assets.length,
       total: assetsWithNative.total.display,
+      type: PinnedHiddenSectionOption.BALANCES,
       showContextMenu: true,
     },
     data: assets,

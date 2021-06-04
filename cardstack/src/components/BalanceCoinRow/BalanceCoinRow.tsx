@@ -15,6 +15,8 @@ interface BalanceCoinRowProps {
   onPress: () => void;
   isEditing?: boolean;
   selected: boolean;
+  pinned?: boolean;
+  hidden?: boolean;
 }
 
 const SELECT_ICON_WIDTH = '13%';
@@ -25,11 +27,12 @@ export const BalanceCoinRow = ({
   onPress,
   isEditing,
   selected,
+  pinned = false,
+  hidden = false,
 }: BalanceCoinRowProps) => {
-  const pinned = false;
-  const hidden = false;
   const showIcon = pinned || hidden;
-  const iconName = pinned ? 'pin' : 'eye-off';
+  const iconName = hidden ? 'eye-off' : 'pin';
+  const iconFamily = pinned ? 'MaterialCommunity' : 'Feather';
   const editingIconName = selected ? 'check-circle' : 'circle';
 
   return (
@@ -49,6 +52,7 @@ export const BalanceCoinRow = ({
             <Icon
               name={editingIconName}
               iconSize="medium"
+              iconFamily={iconFamily}
               color={selected ? 'blue' : null}
             />
           </Container>
@@ -70,7 +74,12 @@ export const BalanceCoinRow = ({
               borderRadius={100}
               backgroundColor="black"
             >
-              <Icon size={20} name={iconName} />
+              <Icon
+                size={16}
+                color="blue"
+                name={iconName}
+                iconFamily={iconFamily}
+              />
             </CenteredContainer>
           </Container>
         )}

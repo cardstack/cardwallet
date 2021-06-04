@@ -87,5 +87,6 @@ export { default as useWallets } from './useWallets';
 export { default as useWalletsDebug } from './useWalletsDebug';
 export { default as useWalletsWithBalancesAndNames } from './useWalletsWithBalancesAndNames';
 export { default as useWyreApplePay } from './useWyreApplePay';
-export {  default as useAccountEmptyState } from './useAccountEmptyState';
+export { default as useAccountEmptyState } from './useAccountEmptyState';
 export * from './useAssetListData';
+export * from './usePinnedAndHiddenItemOptions';

@@ -16,7 +16,6 @@ export const customIcons = {
   gift: require('./gift').default,
   more: require('./more').default,
   pay: require('./pay').default,
-  pin: require('./pin').default,
   refresh: require('./refresh').default,
   reload: require('./reload').default,
   send: require('./send').default,

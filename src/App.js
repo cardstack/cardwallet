@@ -63,6 +63,7 @@ import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
+import { PinnedHiddenItemOptionProvider } from './hooks';
 const WALLETCONNECT_SYNC_DELAY = 500;
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'dark-content' });
@@ -303,21 +304,23 @@ class App extends Component {
         <RainbowContextWrapper>
           <Portal>
             <SafeAreaProvider>
-              <Provider store={store}>
-                <FlexItem>
-                  <CheckSystemReqs>
-                    {this.state.initialRoute && (
-                      <InitialRouteContext.Provider
-                        value={this.state.initialRoute}
-                      >
-                        <RoutesComponent ref={this.handleNavigatorRef} />
-                        <PortalConsumer />
-                      </InitialRouteContext.Provider>
-                    )}
-                  </CheckSystemReqs>
-                  <OfflineToast />
-                </FlexItem>
-              </Provider>
+              <PinnedHiddenItemOptionProvider>
+                <Provider store={store}>
+                  <FlexItem>
+                    <CheckSystemReqs>
+                      {this.state.initialRoute && (
+                        <InitialRouteContext.Provider
+                          value={this.state.initialRoute}
+                        >
+                          <RoutesComponent ref={this.handleNavigatorRef} />
+                          <PortalConsumer />
+                        </InitialRouteContext.Provider>
+                      )}
+                    </CheckSystemReqs>
+                    <OfflineToast />
+                  </FlexItem>
+                </Provider>
+              </PinnedHiddenItemOptionProvider>
             </SafeAreaProvider>
           </Portal>
         </RainbowContextWrapper>
