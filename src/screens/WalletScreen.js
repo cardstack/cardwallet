@@ -22,10 +22,12 @@ import {
   useAccountEmptyState,
   useCoinListEdited,
   useInitializeWallet,
+  usePinnedAndHiddenItemOptions,
   useWallets,
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { colors } from '@cardstack/theme';
+import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
 const HeaderOpacityToggler = styled(OpacityToggler).attrs(({ isVisible }) => ({
@@ -51,6 +53,19 @@ export default function WalletScreen() {
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();
   const { isEmpty } = useAccountEmptyState();
+
+  const navigation = useNavigation();
+  const { editing, toggle } = usePinnedAndHiddenItemOptions();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      if (editing) {
+        toggle(null);
+      }
+    });
+
+    return unsubscribe;
+  });
 
   useEffect(() => {
     if (!initialized) {

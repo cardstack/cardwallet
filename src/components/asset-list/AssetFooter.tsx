@@ -22,10 +22,8 @@ const AssetFooter = () => {
 
   const handleHiddenPress = () => {
     if (isInitialSelectionHidden) {
-      console.log('show');
       show();
     } else {
-      console.log('hide');
       hide();
     }
 
