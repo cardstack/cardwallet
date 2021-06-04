@@ -1,5 +1,5 @@
 import { useTheme } from '@shopify/restyle';
-import React, { Component } from 'react';
+import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 
