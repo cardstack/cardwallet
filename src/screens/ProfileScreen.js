@@ -66,8 +66,7 @@ export default function ProfileScreen({ navigation }) {
 
   const addCashSupportedNetworks =
     network === NetworkTypes.kovan || network === NetworkTypes.mainnet;
-  const addCashAvailable =
-    IS_TESTING === 'true' ? false : addCashSupportedNetworks;
+  const addCashAvailable = addCashSupportedNetworks;
 
   return (
     <ProfileScreenPage testID="profile-screen">

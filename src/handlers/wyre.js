@@ -31,6 +31,7 @@ const getApiKey = network =>
 
 const getAuthHeaders = (network, url, data) => {
   const secret = getSecretKey(network);
+  console.log({ secret });
   const dataToBeSigned = url + data;
   const signature = cryptoJS.enc.Hex.stringify(
     cryptoJS.HmacSHA256(dataToBeSigned, secret)
@@ -48,7 +49,7 @@ export const PaymentRequestStatusTypes = {
 };
 
 const getBaseUrl = network =>
-  network === NetworkTypes.mainnet ? WYRE_ENDPOINT : WYRE_ENDPOINT_TEST;
+  network === NetworkTypes.mainnet ? 'https://api.sendwyre.com' : WYRE_ENDPOINT_TEST;
 
 const wyreApi = axios.create({
   headers: {

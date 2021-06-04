@@ -1,100 +1,26 @@
 import Clipboard from '@react-native-community/clipboard';
 import analytics from '@segment/analytics-react-native';
 import { toLower } from 'lodash';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
+
 import { walletsSetSelected, walletsUpdate } from '../../redux/wallets';
-import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';
-import { RainbowButton } from '../buttons';
-import { FloatingEmojis } from '../floating-emojis';
-import { Centered, Column, Row, RowWithMargins } from '../layout';
-import { TruncatedText } from '../text';
 import AvatarCircle from './AvatarCircle';
-import ProfileAction from './ProfileAction';
 import { Button, Container, Icon, Text } from '@cardstack/components';
 import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
-import {
-  useAccountProfile,
-  useDimensions,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountProfile, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
-const dropdownArrowWidth = 21;
-
-const FloatingEmojisRegion = styled(FloatingEmojis).attrs({
-  distance: 250,
-  duration: 500,
-  fadeOut: false,
-  scaleTo: 0,
-  size: 50,
-  wiggleFactor: 0,
-})`
-  height: 0;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 130;
-`;
-
-const AccountName = styled(TruncatedText).attrs({
-  align: 'left',
-  firstSectionLength: abbreviations.defaultNumCharsPerSection,
-  letterSpacing: 'roundedMedium',
-  size: 'bigger',
-  truncationLength: 4,
-  weight: 'bold',
-})`
-  height: ${android ? '38' : '33'};
-  margin-top: ${android ? '-10' : '-1'};
-  margin-bottom: ${android ? '10' : '1'};
-  max-width: ${({ deviceWidth }) => deviceWidth - dropdownArrowWidth - 60};
-  padding-right: 6;
-`;
-
-const AddCashButton = styled(RainbowButton).attrs({
-  overflowMargin: 30,
-  skipTopMargin: true,
-  type: 'addCash',
-})`
-  margin-top: 16;
-`;
-
-const DropdownArrow = styled(Centered)`
-  height: 9;
-  margin-top: 11;
-  width: ${dropdownArrowWidth};
-`;
-
-const ProfileMastheadDivider = styled(Divider).attrs(
-  ({ theme: { colors } }) => ({
-    color: colors.rowDividerLight,
-  })
-)`
-  bottom: 0;
-  position: absolute;
-`;
-
-export default function ProfileMasthead({
-  addCashAvailable,
-  recyclerListRef,
-  showBottomDivider = true,
-}) {
+export default function ProfileMasthead({ addCashAvailable, recyclerListRef }) {
   const { wallets, selectedWallet, isDamaged } = useWallets();
   const onNewEmoji = useRef();
-  const setOnNewEmoji = useCallback(
-    newOnNewEmoji => (onNewEmoji.current = newOnNewEmoji),
-    []
-  );
-  const { width: deviceWidth } = useDimensions();
   const dispatch = useDispatch();
   const { navigate } = useNavigation();
   const {
@@ -198,7 +124,6 @@ export default function ProfileMasthead({
     dispatch,
     isAvatarEmojiPickerEnabled,
     isAvatarImagePickerEnabled,
-    isAvatarPickerAvailable,
     navigate,
     onRemovePhoto,
     recyclerListRef,
@@ -249,7 +174,6 @@ export default function ProfileMasthead({
     }
     Clipboard.setString(accountAddress);
   }, [accountAddress, isDamaged]);
-  const { colors } = useTheme();
 
   return (
     <Container
@@ -275,9 +199,9 @@ export default function ProfileMasthead({
         </Container>
       </ButtonPressAnimation>
       {addCashAvailable && (
-        <Button marginTop={4} onPress={handlePressAddCash}>
-          Add Funds
-        </Button>
+        <Container marginTop={4}>
+          <Button onPress={handlePressAddCash}>Add Funds</Button>
+        </Container>
       )}
       <Container
         flexDirection="row"
