@@ -85,7 +85,7 @@ export default function WelcomeScreen() {
           />
         </Container>
         <Text marginTop={4} variant="welcomeScreen">
-          CARD PAY
+          CARD WALLET
         </Text>
       </CenteredContainer>
       <Container height={118} justifyContent="space-between" marginBottom="24">
