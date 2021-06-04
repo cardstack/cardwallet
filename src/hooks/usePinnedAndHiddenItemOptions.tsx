@@ -12,9 +12,14 @@ const PINNED_HIDDEN_STORAGE_KEY = 'PINNED_BALANCES_STORAGE_KEY';
 
 type PinnedAndHiddenItemOptionContextType = any;
 
+export enum PinnedHiddenSectionOption {
+  BALANCES = 'BALANCES',
+  PREPAID_CARDS = 'PREPAID_CARDS',
+}
+
 const PinnedHiddenItemOptionContext = createContext({
-  editing: false,
-  toggle: () => {},
+  editing: null,
+  toggle: (_key: PinnedHiddenSectionOption) => {},
   pinned: [],
   hidden: [],
   selected: [],
@@ -29,11 +34,6 @@ const PinnedHiddenItemOptionContext = createContext({
 export const usePinnedAndHiddenItemOptions = (): PinnedAndHiddenItemOptionContextType =>
   useContext(PinnedHiddenItemOptionContext);
 
-export enum PinnedHiddenSectionOption {
-  BALANCES = 'BALANCES',
-  PREPAID_CARDS = 'PREPAID_CARDS',
-}
-
 export const PinnedHiddenItemOptionProvider = ({
   children,
 }: {
@@ -42,7 +42,7 @@ export const PinnedHiddenItemOptionProvider = ({
   const { getItem, setItem } = useAsyncStorage(PINNED_HIDDEN_STORAGE_KEY);
 
   const [ready, setReady] = useState<boolean>(false);
-  const [editing, setEditing] = useState<PinnedHiddenSectionOption | null>();
+  const [editing, setEditing] = useState<any>();
   const [value, setValue] = useState<any>({
     pinned: [],
     hidden: [],

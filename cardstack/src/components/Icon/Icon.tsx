@@ -5,6 +5,7 @@ import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { CustomIconNames, customIcons } from './custom-icons';
 import { FeatherIconNames } from './feather-icon-names';
+import { MaterialCommunityIconNames } from './material-community-icon-names';
 import { ColorTypes, Theme } from '@cardstack/theme';
 import { Container, ContainerProps } from '@cardstack/components';
 
@@ -23,7 +24,10 @@ const IconFamilies = {
 };
 
 type IconSize = keyof typeof iconSizeToValue;
-export type IconName = CustomIconNames | FeatherIconNames;
+export type IconName =
+  | CustomIconNames
+  | FeatherIconNames
+  | MaterialCommunityIconNames;
 export interface IconProps extends ContainerProps {
   /** specify the size using T-Shirt sizes */
   iconSize?: IconSize;

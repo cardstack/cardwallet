@@ -15,8 +15,8 @@ interface BalanceCoinRowProps {
   onPress: () => void;
   isEditing?: boolean;
   selected: boolean;
-  pinned: boolean;
-  hidden: boolean;
+  pinned?: boolean;
+  hidden?: boolean;
 }
 
 const SELECT_ICON_WIDTH = '13%';
