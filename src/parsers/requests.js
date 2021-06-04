@@ -1,13 +1,13 @@
-import { convertHexToUtf8 } from '@walletconnect/utils';
-import BigNumber from 'bignumber.js';
-import { get, isNil } from 'lodash';
-import { isHexString } from '../handlers/web3';
 import {
   convertAmountAndPriceToNativeDisplay,
   convertHexToString,
   convertRawAmountToDecimalFormat,
   fromWei,
-} from '../helpers/utilities';
+} from '@cardstack/cardpay-sdk';
+import { convertHexToUtf8 } from '@walletconnect/utils';
+import BigNumber from 'bignumber.js';
+import { get, isNil } from 'lodash';
+import { isHexString } from '../handlers/web3';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
 import {

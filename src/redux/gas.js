@@ -1,4 +1,8 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  fromWei,
+  getConstantByNetwork,
+  greaterThanOrEqualTo,
+} from '@cardstack/cardpay-sdk';
 import analytics from '@segment/analytics-react-native';
 import { captureException } from '@sentry/react-native';
 import { get, isEmpty } from 'lodash';
@@ -17,7 +21,7 @@ import {
   parseTxFees,
 } from '@rainbow-me/parsers';
 import { ethUnits } from '@rainbow-me/references';
-import { fromWei, greaterThanOrEqualTo } from '@rainbow-me/utilities';
+
 import { ethereumUtils, gasUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 

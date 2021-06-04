@@ -1,3 +1,4 @@
+import { greaterThanOrEqualTo, multiply } from '@cardstack/cardpay-sdk';
 import {
   concat,
   includes,
@@ -14,7 +15,6 @@ import { createSelector } from 'reselect';
 import { AppState } from '../redux/store';
 import { uniswapUpdateFavorites } from '../redux/uniswap';
 import { RainbowToken, UniswapSubgraphAsset } from '@rainbow-me/entities';
-import { greaterThanOrEqualTo, multiply } from '@rainbow-me/utilities';
 
 const uniswapLoadingAllTokensSelector = (state: AppState) =>
   state.uniswap.loadingAllTokens;

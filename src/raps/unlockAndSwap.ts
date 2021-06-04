@@ -1,3 +1,4 @@
+import { add } from '@cardstack/cardpay-sdk';
 import { Trade } from '@uniswap/sdk';
 import { concat, reduce } from 'lodash';
 import { assetNeedsUnlocking, isValidSwapInput } from './actions';
@@ -12,7 +13,6 @@ import { estimateSwapGasLimit } from '@rainbow-me/handlers/uniswap';
 import { rapsAddOrUpdate } from '@rainbow-me/redux/raps';
 import store from '@rainbow-me/redux/store';
 import { ethUnits, UNISWAP_V2_ROUTER_ADDRESS } from '@rainbow-me/references';
-import { add } from '@rainbow-me/utilities';
 import { contractUtils } from '@rainbow-me/utils';
 
 export const estimateUnlockAndSwap = async ({

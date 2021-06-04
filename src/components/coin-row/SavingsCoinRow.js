@@ -1,7 +1,7 @@
+import { convertAmountToBalanceDisplay } from '@cardstack/cardpay-sdk';
 import React, { Fragment } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { calculateAPY } from '../../helpers/savings';
-import { convertAmountToBalanceDisplay } from '../../helpers/utilities';
 import { ButtonPressAnimation } from '../animations';
 import { Column, FlexItem, Row, RowWithMargins } from '../layout';
 import { APYPill } from '../savings';

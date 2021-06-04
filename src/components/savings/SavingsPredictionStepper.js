@@ -1,3 +1,7 @@
+import {
+  convertAmountToNativeDisplay,
+  handleSignificantDecimals,
+} from '@cardstack/cardpay-sdk';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
@@ -5,10 +9,6 @@ import {
   calculateEarningsInDays,
   isSymbolStablecoin,
 } from '../../helpers/savings';
-import {
-  convertAmountToNativeDisplay,
-  handleSignificantDecimals,
-} from '../../helpers/utilities';
 import { magicMemo } from '../../utils';
 import { ButtonPressAnimation } from '../animations';
 import { Row, RowWithMargins } from '../layout';

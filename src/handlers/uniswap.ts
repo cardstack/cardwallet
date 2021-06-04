@@ -1,3 +1,8 @@
+import {
+  addBuffer,
+  convertAmountToRawAmount,
+  convertNumberToString,
+} from '@cardstack/cardpay-sdk';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Signer } from '@ethersproject/abstract-signer';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -43,11 +48,6 @@ import {
   UNISWAP_V2_ROUTER_ADDRESS,
 } from '@rainbow-me/references';
 
-import {
-  addBuffer,
-  convertAmountToRawAmount,
-  convertNumberToString,
-} from '@rainbow-me/utilities';
 import { checkTokenIsScam, getTokenMetadata } from '@rainbow-me/utils';
 
 import logger from 'logger';

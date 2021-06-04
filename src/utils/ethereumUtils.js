@@ -1,4 +1,10 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  fromWei,
+  getConstantByNetwork,
+  greaterThan,
+  isZero,
+  subtract,
+} from '@cardstack/cardpay-sdk';
 import { Wallet } from '@ethersproject/wallet';
 import AsyncStorage from '@react-native-community/async-storage';
 import { captureException } from '@sentry/react-native';
@@ -22,12 +28,7 @@ import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
-import {
-  fromWei,
-  greaterThan,
-  isZero,
-  subtract,
-} from '@rainbow-me/helpers/utilities';
+
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   DEFAULT_HD_PATH,

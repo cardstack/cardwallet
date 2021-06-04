@@ -1,5 +1,9 @@
 import React from 'react';
 import {
+  convertAmountToBalanceDisplay,
+  convertAmountToNativeDisplay,
+} from '@cardstack/cardpay-sdk';
+import {
   Container,
   HorizontalDivider,
   Icon,
@@ -11,10 +15,6 @@ import {
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
 import { getUSDFromSpend } from '@cardstack/utils';
-import {
-  convertAmountToBalanceDisplay,
-  convertAmountToNativeDisplay,
-} from '@rainbow-me/helpers/utilities';
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;

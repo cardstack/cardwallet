@@ -1,4 +1,4 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
@@ -6,7 +6,6 @@ import { toLower, uniqBy } from 'lodash';
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
-import { delay } from '../helpers/utilities';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';

@@ -1,3 +1,4 @@
+import { delay } from '@cardstack/cardpay-sdk';
 import analytics from '@segment/analytics-react-native';
 import { captureException } from '@sentry/react-native';
 import { values } from 'lodash';
@@ -16,7 +17,6 @@ import {
   CLOUD_BACKUP_ERRORS,
   isCloudBackupAvailable,
 } from '@rainbow-me/handlers/cloudBackup';
-import { delay } from '@rainbow-me/helpers/utilities';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
