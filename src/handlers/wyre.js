@@ -2,16 +2,19 @@ import { subtract } from '@cardstack/cardpay-sdk';
 import { PaymentRequest } from '@rainbow-me/react-native-payments';
 import { captureException } from '@sentry/react-native';
 import axios from 'axios';
+import cryptoJS from 'crypto-js';
 import { get, join, split, toLower, values } from 'lodash';
 import {
-  RAINBOW_WYRE_MERCHANT_ID,
-  RAINBOW_WYRE_MERCHANT_ID_TEST,
+  MERCHANT_ID,
+  MERCHANT_ID_TEST,
   WYRE_ACCOUNT_ID,
   WYRE_ACCOUNT_ID_TEST,
+  WYRE_API_KEY,
+  WYRE_API_KEY_TEST,
   WYRE_ENDPOINT,
   WYRE_ENDPOINT_TEST,
-  WYRE_TOKEN,
-  WYRE_TOKEN_TEST,
+  WYRE_SECRET_KEY,
+  WYRE_SECRET_KEY_TEST,
 } from 'react-native-dotenv';
 import NetworkTypes from '../helpers/networkTypes';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '../references/wyre';
@@ -19,6 +22,25 @@ import logger from 'logger';
 
 const SOURCE_CURRENCY_USD = 'USD';
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
+
+const getSecretKey = network =>
+  network === NetworkTypes.mainnet ? WYRE_SECRET_KEY : WYRE_SECRET_KEY_TEST;
+
+const getApiKey = network =>
+  network === NetworkTypes.mainnet ? WYRE_API_KEY : WYRE_API_KEY_TEST;
+
+const getAuthHeaders = (network, url, data) => {
+  const secret = getSecretKey(network);
+  const dataToBeSigned = url + data;
+  const signature = cryptoJS.enc.Hex.stringify(
+    cryptoJS.HmacSHA256(dataToBeSigned, secret)
+  );
+
+  return {
+    'X-Api-Key': getApiKey(network),
+    'X-Api-Signature': signature,
+  };
+};
 
 export const PaymentRequestStatusTypes = {
   FAIL: 'fail',
@@ -67,9 +89,7 @@ export const showApplePayRequest = async (
   const networkFee = subtract(feeAmount, purchaseFee);
 
   const merchantIdentifier =
-    network === NetworkTypes.mainnet
-      ? RAINBOW_WYRE_MERCHANT_ID
-      : RAINBOW_WYRE_MERCHANT_ID_TEST;
+    network === NetworkTypes.mainnet ? MERCHANT_ID : MERCHANT_ID_TEST;
 
   const methodData = [
     {
@@ -140,18 +160,12 @@ export const getWalletOrderQuotation = async (
   };
   const baseUrl = getBaseUrl(network);
   try {
-    const wyreAuthToken =
-      network === NetworkTypes.mainnet ? WYRE_TOKEN : WYRE_TOKEN_TEST;
+    const timestamp = Date.now();
+    const url = `${baseUrl}/v3/orders/quote/partner?timestamp=${timestamp}`;
     const config = {
-      headers: {
-        Authorization: `Bearer ${wyreAuthToken}`,
-      },
+      headers: getAuthHeaders(network, url, JSON.stringify(data)),
     };
-    const response = await wyreApi.post(
-      `${baseUrl}/v3/orders/quote/partner`,
-      data,
-      config
-    );
+    const response = await wyreApi.post(url, data, config);
     const responseData = response?.data;
     const purchaseFee = responseData?.fees[SOURCE_CURRENCY_USD];
     return {
@@ -186,21 +200,19 @@ export const reserveWyreOrder = async (
   }
   const baseUrl = getBaseUrl(network);
   try {
-    const wyreAuthToken =
-      network === NetworkTypes.mainnet ? WYRE_TOKEN : WYRE_TOKEN_TEST;
+    const timestamp = Date.now();
+    const url = `${baseUrl}/v3/orders/reserve?timestamp=${timestamp}`;
     const config = {
-      headers: {
-        Authorization: `Bearer ${wyreAuthToken}`,
-      },
+      headers: getAuthHeaders(network, url, JSON.stringify(data)),
     };
-    const response = await wyreApi.post(
-      `${baseUrl}/v3/orders/reserve`,
-      data,
-      config
-    );
+    const response = await wyreApi.post(url, data, config);
     return response?.data;
   } catch (error) {
-    logger.sentry('Apple Pay - error reserving order', error);
+    logger.sentry(
+      'Apple Pay - error reserving order',
+      error,
+      error.response.data.message
+    );
     return null;
   }
 };
