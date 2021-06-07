@@ -87,7 +87,6 @@ export default function SettingsSection({
   onPressNetwork,
   onPressShowSecret,
 }) {
-  const isReviewAvailable = true; // useExperimentalFlag(REVIEW_ANDROID) || ios;
   const { wallets } = useWallets();
   const { /*language,*/ nativeCurrency, network } = useAccountSettings();
   const { isTinyPhone } = useDimensions();
@@ -95,6 +94,24 @@ export default function SettingsSection({
   const { colors } = useTheme();
 
   const onSendFeedback = useSendFeedback();
+
+  const [isReviewEnabled, setReviewEnabled] = useState(false);
+
+  const getReviewFeature = async () => {
+    try {
+      const response = await fetch(
+        'https://us-central1-card-pay-3e9be.cloudfunctions.net/review-feature'
+      );
+
+      return await response.json();
+    } catch (e) {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    setReviewFeature();
+  }, []);
 
   const onPressReview = useCallback(async () => {
     if (ios) {
@@ -128,6 +145,11 @@ export default function SettingsSection({
     () => checkAllWallets(wallets),
     [wallets]
   );
+
+  const setReviewFeature = async () => {
+    const { reviewActive } = await getReviewFeature();
+    return setReviewEnabled(reviewActive);
+  };
 
   return (
     <Container backgroundColor={colors.white} scrollEnabled={isTinyPhone}>
@@ -190,7 +212,7 @@ export default function SettingsSection({
           onPress={onSendFeedback}
           testID="feedback-section"
         />
-        {isReviewAvailable && (
+        {isReviewEnabled && (
           <ListItem
             icon={<Icon color="settingsGray" name="star" />}
             label="Review"
