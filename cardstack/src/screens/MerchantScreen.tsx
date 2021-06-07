@@ -1,32 +1,27 @@
-import {
-  convertAmountToBalanceDisplay,
-  convertAmountToNativeDisplay,
-  getConstantByNetwork,
-} from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Linking, StatusBar } from 'react-native';
-import Routes from '@rainbow-me/routes';
 import {
+  Button,
   CenteredContainer,
   Container,
+  HorizontalDivider,
   Icon,
   NetworkBadge,
-  Text,
-  Touchable,
-  Button,
-  HorizontalDivider,
-  TokenBalance,
   ScrollView,
+  Text,
+  TokenBalance,
+  Touchable,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
 import {
-  getAddressPreview,
   convertSpendForBalanceDisplay,
-  getUSDFromSpend,
+  getAddressPreview,
 } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 interface RouteType {
