@@ -1,6 +1,9 @@
 /* THIS WILL BE MOVED TO THE SDK */
 
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  convertAmountToNativeDisplay,
+  getConstantByNetwork,
+} from '@cardstack/cardpay-sdk';
 
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai', 'keth'];
 const MAINNETS = ['mainnet', 'xdai'];
@@ -18,3 +21,26 @@ export const isMainnet = (network: string) => MAINNETS.includes(network);
 
 export const getUSDFromSpend = (spendAmount: number): number =>
   spendAmount / 100;
+
+export const convertSpendForBalanceDisplay = (
+  accumulatedSpendValue: string,
+  nativeCurrency: string,
+  includeSuffix?: boolean
+) => {
+  const usdBalance = getUSDFromSpend(Number(accumulatedSpendValue));
+
+  const spendWithCommas = accumulatedSpendValue.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    ','
+  );
+
+  const nativeBalanceDisplay = convertAmountToNativeDisplay(
+    usdBalance,
+    nativeCurrency
+  );
+
+  return {
+    tokenBalanceDisplay: `§${spendWithCommas}${includeSuffix ? ' SPEND' : ''}`,
+    nativeBalanceDisplay,
+  };
+};

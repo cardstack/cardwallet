@@ -50,7 +50,7 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import { BuyPrepaidCard, DepotScreen } from '@cardstack/screen';
+import { BuyPrepaidCard, DepotScreen, MerchantScreen } from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
@@ -131,6 +131,14 @@ function MainNavigator() {
       <Stack.Screen
         component={DepotScreen}
         name={Routes.DEPOT_SCREEN}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          gestureDirection: 'horizontal',
+        }}
+      />
+      <Stack.Screen
+        component={MerchantScreen}
+        name={Routes.MERCHANT_SCREEN}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal',

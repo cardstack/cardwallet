@@ -7,7 +7,9 @@ import styled from 'styled-components';
 import TouchableBackdrop from '../components/TouchableBackdrop';
 import {
   ChartExpandedState,
+  LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
+  UnclaimedRevenueExpandedState,
   UniqueTokenExpandedState,
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
@@ -19,6 +21,8 @@ const ScreenTypes = {
   token: ChartExpandedState,
   unique_token: UniqueTokenExpandedState,
   uniswap: LiquidityPoolExpandedState,
+  lifetimeEarnings: LifetimeEarningsExpandedState,
+  unclaimedRevenue: UnclaimedRevenueExpandedState,
 };
 
 const Container = styled(Centered).attrs({

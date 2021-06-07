@@ -13,21 +13,25 @@ import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardType } from '../../types';
 import { CenteredContainer } from '../Container';
 import {
+  PinnedHiddenSectionOption,
+  useAccountSettings,
+  usePinnedAndHiddenItemOptions,
+} from '@rainbow-me/hooks';
+import {
+  convertSpendForBalanceDisplay,
+  getAddressPreview,
+} from '@cardstack/utils';
+import {
   Container,
+  Icon,
   ScrollView,
   Text,
-  Icon,
   Touchable,
 } from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
-import {
-  PinnedHiddenSectionOption,
-  usePinnedAndHiddenItemOptions,
-  useAccountSettings,
-} from '@rainbow-me/hooks';
 
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
+  nativeCurrency: string;
 }
 
 const SELECT_ICON_WIDTH = '13%';
@@ -36,12 +40,10 @@ const EDITING_COIN_ROW_WIDTH = '87%';
 /**
  * A prepaid card component
  */
-export const PrepaidCard = ({
-  networkName,
-  ...prepaidCard
-}: PrepaidCardProps) => {
+export const PrepaidCard = (props: PrepaidCardProps) => {
   const [isScrollable, setIsScrollable] = useState(false);
   const Wrapper = isScrollable ? ScrollView : Container;
+  const { networkName, ...prepaidCard } = props;
 
   const {
     editing,
@@ -132,7 +134,7 @@ export const PrepaidCard = ({
           <GradientBackground />
           {/* hard code issuer for now */}
           <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
-          <Bottom {...prepaidCard} />
+          <Bottom {...props} />
         </Container>
         {isEditing && isHidden && (
           <Container
@@ -210,15 +212,17 @@ const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
 
 const Bottom = ({
   spendFaceValue,
-  tokens,
-  issuingToken,
   reloadable,
   issuer,
-}: PrepaidCardType) => {
+  nativeCurrency,
+}: PrepaidCardProps) => {
   const { accountAddress } = useAccountSettings();
-  const token = tokens.find(t => t.tokenAddress === issuingToken);
-  const usdBalance = token?.native.balance.display || 0;
   const transferrable = accountAddress === issuer;
+
+  const {
+    tokenBalanceDisplay,
+    nativeBalanceDisplay,
+  } = convertSpendForBalanceDisplay(spendFaceValue.toString(), nativeCurrency);
 
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
@@ -230,7 +234,7 @@ const Bottom = ({
         <Container>
           <Text fontSize={13}>Spendable Balance</Text>
           <Text fontSize={40} fontWeight="700">
-            {`§${spendFaceValue}`}
+            {tokenBalanceDisplay}
           </Text>
         </Container>
         <Container height={46} width={42}>
@@ -250,7 +254,7 @@ const Bottom = ({
         justifyContent="space-between"
         marginTop={2}
       >
-        <Text fontWeight="700">{usdBalance}</Text>
+        <Text fontWeight="700">{nativeBalanceDisplay}</Text>
         <Container alignItems="flex-end">
           <Text variant="smallGrey">
             {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}

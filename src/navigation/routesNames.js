@@ -12,6 +12,7 @@ const Routes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECT_SCREEN: 'CurrencySelectScreen',
   DEPOT_SCREEN: 'DepotScreen',
+  MERCHANT_SCREEN: 'MerchantScreen',
   EXAMPLE_SCREEN: 'ExampleScreen',
   EXCHANGE_MODAL: 'ExchangeModal',
   EXPANDED_ASSET_SCREEN: 'ExpandedAssetScreen',

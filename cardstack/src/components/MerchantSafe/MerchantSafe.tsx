@@ -1,20 +1,18 @@
 import React from 'react';
 import {
-  convertAmountToBalanceDisplay,
-  convertAmountToNativeDisplay,
-} from '@cardstack/cardpay-sdk';
-import {
   Container,
   HorizontalDivider,
   Icon,
+  MoreItemsFooter,
   SafeHeader,
   Text,
   TokenBalance,
   Touchable,
-  MoreItemsFooter,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
-import { getUSDFromSpend } from '@cardstack/utils';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
@@ -22,7 +20,10 @@ interface MerchantSafeProps extends MerchantSafeType {
 }
 
 export const MerchantSafe = (props: MerchantSafeProps) => {
-  const onPress = () => ({});
+  const { navigate } = useNavigation();
+
+  const onPress = () =>
+    navigate(Routes.MERCHANT_SCREEN, { merchantSafe: props });
 
   return (
     <Container width="100%" paddingHorizontal={4}>
@@ -56,7 +57,7 @@ const MerchantInfo = () => (
       <Icon name="mandello" />
       <Container flexDirection="column" marginLeft={4} justifyContent="center">
         <Text weight="bold">Mandello</Text>
-        <Text variant="subText">Merchant Account</Text>
+        <Text variant="subText">Merchant account</Text>
       </Container>
     </Container>
   </Container>
@@ -67,7 +68,7 @@ const Bottom = (props: MerchantSafeProps) => {
     <Container paddingHorizontal={6} paddingBottom={6}>
       <LifetimeEarningsSection {...props} />
       <HorizontalDivider />
-      <RecentRevenueSection {...props} />
+      <UnclaimedRevenueSection {...props} />
       <HorizontalDivider />
       <AvailableBalancesSection {...props} />
     </Container>
@@ -78,21 +79,10 @@ const LifetimeEarningsSection = ({
   accumulatedSpendValue,
   nativeCurrency,
 }: MerchantSafeProps) => {
-  const tokenSymbol = 'SPEND';
-  const usdBalance = getUSDFromSpend(Number(accumulatedSpendValue));
-
-  const tokenBalanceDisplay = convertAmountToBalanceDisplay(
-    accumulatedSpendValue,
-    {
-      decimals: 18,
-      symbol: tokenSymbol,
-    }
-  );
-
-  const nativeBalanceDisplay = convertAmountToNativeDisplay(
-    usdBalance,
-    nativeCurrency
-  );
+  const {
+    tokenBalanceDisplay,
+    nativeBalanceDisplay,
+  } = convertSpendForBalanceDisplay(accumulatedSpendValue, nativeCurrency);
 
   return (
     <Container flexDirection="column">
@@ -107,7 +97,7 @@ const LifetimeEarningsSection = ({
   );
 };
 
-const RecentRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
+const UnclaimedRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
   const firstToken = revenueBalances.length ? revenueBalances[0] : null;
 
   return (
