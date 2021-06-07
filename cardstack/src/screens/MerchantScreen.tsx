@@ -238,10 +238,18 @@ const AvailableBalancesSection = () => {
 
   const { tokens } = merchantSafe;
 
+  const { navigate } = useNavigation();
+
+  const onPress = () =>
+    navigate(Routes.EXPANDED_ASSET_SHEET, {
+      asset: merchantSafe,
+      type: 'availableBalances',
+    });
+
   return (
     <Container flexDirection="column" width="100%">
       <SectionHeader>Available balances</SectionHeader>
-      <SectionWrapper>
+      <SectionWrapper onPress={onPress}>
         <>
           {tokens.length ? (
             tokens.map(token => (

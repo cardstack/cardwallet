@@ -204,14 +204,10 @@ const Balances = ({ tokens }: BalancesProps) => {
       </Container>
       {tokens.map(token => (
         <TokenBalance
-          borderColor="buttonPrimaryBorder"
-          borderRadius={10}
-          borderWidth={1}
-          marginVertical={1}
+          includeBorder
           marginHorizontal={5}
           nativeBalance={token.native.balance.display}
           onPress={() => onPress(token)}
-          padding={4}
           tokenBalance={token.balance.display}
           tokenSymbol={token.token.symbol}
           zIndex={1}

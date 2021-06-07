@@ -13,7 +13,16 @@ interface TokenBalanceProps extends ContainerProps {
   tokenSymbol: string;
   tokenBalance: string;
   nativeBalance: string;
+  includeBorder?: boolean;
 }
+
+const borderStyle = {
+  borderColor: 'buttonPrimaryBorder',
+  borderRadius: 10,
+  borderWidth: 1,
+  padding: 4,
+  marginVertical: 1,
+};
 
 export const TokenBalance = (props: TokenBalanceProps) => {
   const {
@@ -22,13 +31,15 @@ export const TokenBalance = (props: TokenBalanceProps) => {
     nativeBalance,
     onPress,
     Icon,
+    includeBorder,
     ...containerProps
   } = props;
 
+  const borderProps = includeBorder ? borderStyle : {};
   const Wrapper = onPress ? Touchable : Container;
 
   return (
-    <Wrapper onPress={onPress} {...containerProps}>
+    <Wrapper onPress={onPress} {...borderProps} {...containerProps}>
       <Container
         flexDirection="row"
         justifyContent="space-between"

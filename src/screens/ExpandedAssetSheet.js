@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import TouchableBackdrop from '../components/TouchableBackdrop';
 import {
+  AvailableBalancesExpandedState,
   ChartExpandedState,
   LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
@@ -23,6 +24,7 @@ const ScreenTypes = {
   uniswap: LiquidityPoolExpandedState,
   lifetimeEarnings: LifetimeEarningsExpandedState,
   unclaimedRevenue: UnclaimedRevenueExpandedState,
+  availableBalances: AvailableBalancesExpandedState,
 };
 
 const Container = styled(Centered).attrs({
