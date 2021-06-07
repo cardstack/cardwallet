@@ -16,6 +16,7 @@ import {
 } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { Icon } from '@cardstack/components';
+import { isLayer1 } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 
@@ -64,9 +65,7 @@ export default function ProfileScreen({ navigation }) {
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const addCashSupportedNetworks =
-    network === NetworkTypes.kovan || network === NetworkTypes.mainnet;
-  const addCashAvailable = addCashSupportedNetworks;
+  const addCashAvailable = isLayer1(network);
 
   return (
     <ProfileScreenPage testID="profile-screen">
