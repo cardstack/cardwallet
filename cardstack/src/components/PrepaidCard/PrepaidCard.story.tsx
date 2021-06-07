@@ -27,6 +27,7 @@ storiesOf('Prepaid Card', module)
         reloadable
         type="prepaid-card"
         networkName="xDai Chain"
+        nativeCurrency="USD"
       />
     );
   })
