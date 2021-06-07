@@ -1,22 +1,10 @@
 import React from 'react';
 import { Linking, Share } from 'react-native';
-import styled from 'styled-components';
 
 import ButtonPressAnimation from '../../../components/animations/ButtonPressAnimation';
 import { buildUniqueTokenName } from '../../../helpers/assets';
 import { magicMemo, showActionSheetWithOptions } from '../../../utils';
-import { ColumnWithMargins, FlexItem, RowWithMargins } from '../../layout';
 import { Container, Icon, Text } from '@cardstack/components';
-
-const paddingHorizontal = 19;
-const HeadingColumn = styled(ColumnWithMargins).attrs({
-  align: 'start',
-  justify: 'start',
-  margin: 3,
-  shrink: 1,
-})`
-  padding-right: ${paddingHorizontal};
-`;
 
 const UniqueTokenExpandedStateHeader = ({ asset }) => {
   const onContextMenuPress = () => {
@@ -44,10 +32,16 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
       alignItems="center"
       flexDirection="row"
       justifyContent="space-between"
+      marginBottom={4}
+      marginTop={12}
       paddingHorizontal={5}
-      paddingVertical={3}
     >
-      <HeadingColumn>
+      <Container
+        alignItems="flex-start"
+        flex={1}
+        justifyContent="flex-start"
+        shrink={1}
+      >
         <Container>
           <Container
             backgroundColor="backgroundLightGray"
@@ -88,7 +82,7 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
             />
           </ButtonPressAnimation>
         </Container>
-      </HeadingColumn>
+      </Container>
     </Container>
   );
 };

@@ -5,15 +5,10 @@ import { useDimensions, useImageMetadata } from '../../../hooks';
 import { magicMemo } from '../../../utils';
 import { Centered } from '../../layout';
 import { UniqueTokenImage } from '../../unique-token';
-import { margin, padding, position } from '@rainbow-me/styles';
+import { Container } from '@cardstack/components';
+import { margin, position } from '@rainbow-me/styles';
 
 const paddingHorizontal = 19;
-
-const Container = styled(Centered)`
-  ${padding(0, paddingHorizontal)};
-  height: ${({ height }) => height};
-  ${android ? `margin-bottom: 10;` : ``}
-`;
 
 const ImageWrapper = styled(Centered)`
   ${({ isImageHuge }) => margin(isImageHuge ? paddingHorizontal : 0, 0)};
@@ -40,7 +35,14 @@ const UniqueTokenExpandedStateImage = ({ asset }) => {
     heightForDeviceSize > maxImageHeight ? maxImageWidth : heightForDeviceSize;
 
   return (
-    <Container height={containerHeight}>
+    <Container
+      alignItems="center"
+      borderRadius={20}
+      height={containerHeight}
+      justifyContent="center"
+      marginVertical={4}
+      style={{ paddingHorizontal }}
+    >
       <ImageWrapper isImageHuge={heightForDeviceSize > maxImageHeight}>
         <UniqueTokenImage
           backgroundColor={asset.background}
