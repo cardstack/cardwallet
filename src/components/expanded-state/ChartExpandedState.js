@@ -27,6 +27,7 @@ import { Container } from '@cardstack/components';
 import { isLayer1 } from '@cardstack/utils';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
+import { useSelector } from 'react-redux';
 
 const baseHeight = 309 + (android && 20 - getSoftMenuBarHeight());
 const heightWithoutChart = baseHeight + (android && 30);
@@ -35,7 +36,10 @@ const heightWithChart = baseHeight + 310;
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 
 export default function ChartExpandedState(props) {
+  const nativeCurrency = useSelector(state => state.settings.nativeCurrency);
+
   const asset = props.asset?.token ? props.asset.token : props.asset;
+
   const {
     chart,
     chartData,
@@ -100,7 +104,7 @@ export default function ChartExpandedState(props) {
           </TokenInfoItem>
           {asset?.native?.price.display && (
             <TokenInfoItem align="right" title="Value" weight="bold">
-              {`${asset?.native?.balance.display} USD`}
+              {`${asset?.native?.balance.display} ${nativeCurrency}`}
             </TokenInfoItem>
           )}
         </TokenInfoRow>

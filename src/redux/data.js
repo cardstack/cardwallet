@@ -400,21 +400,28 @@ export const addressAssetsReceived = (
 
   const { accountAddress, network, nativeCurrency } = getState().settings;
 
-  const { depots, prepaidCards, merchantSafes } = await addGnosisTokenPrices(
-    message,
-    network,
-    accountAddress,
-    nativeCurrency
-  );
+  try {
+    const { depots, prepaidCards, merchantSafes } = await addGnosisTokenPrices(
+      message,
+      network,
+      accountAddress,
+      nativeCurrency
+    );
 
-  dispatch({
-    payload: {
-      depots,
-      prepaidCards,
-      merchantSafes,
-    },
-    type: DATA_UPDATE_GNOSIS_DATA,
-  });
+    dispatch({
+      payload: {
+        depots,
+        prepaidCards,
+        merchantSafes,
+      },
+      type: DATA_UPDATE_GNOSIS_DATA,
+    });
+  } catch (error) {
+    console.log(
+      error,
+      'Depots, Safes and Prepaid cards do not handle non-USD currencies.'
+    );
+  }
 
   const { uniqueTokens } = getState().uniqueTokens;
   const payload = values(get(message, 'payload.assets', {}));

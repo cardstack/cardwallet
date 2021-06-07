@@ -11,8 +11,10 @@ import { updateLanguage } from '../languages';
 
 import { ethereumUtils } from '../utils';
 import { dataResetState } from './data';
-import { explorerClearState } from './explorer';
-import { fallbackExplorerInit } from './fallbackExplorer';
+import {
+  fallbackExplorerClearState,
+  fallbackExplorerInit,
+} from './fallbackExplorer';
 import { walletConnectUpdateSessions } from './walletconnect';
 import logger from 'logger';
 
@@ -92,7 +94,7 @@ export const settingsChangeLanguage = language => async dispatch => {
 
 export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => {
   dispatch(dataResetState());
-  dispatch(explorerClearState());
+  dispatch(fallbackExplorerClearState());
   try {
     dispatch({
       payload: nativeCurrency,
