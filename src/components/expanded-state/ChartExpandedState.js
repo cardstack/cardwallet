@@ -38,7 +38,6 @@ export const initialChartExpandedStateSheetHeight = heightWithChart;
 export default function ChartExpandedState(props) {
   const nativeCurrency = useSelector(state => state.settings.nativeCurrency);
 
-  console.log({ nativeCurrency });
   const asset = props.asset?.token ? props.asset.token : props.asset;
 
   const {
