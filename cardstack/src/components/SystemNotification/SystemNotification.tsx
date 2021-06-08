@@ -35,7 +35,9 @@ export const SystemNotification = ({
   type = 'info',
 }: SystemNotificationProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [closedTextOpacity] = useState(new Animated.Value(VISIBLE_OPACITY));
+  const [containerOpacity] = useState(new Animated.Value(VISIBLE_OPACITY));
   const [minHeight] = useState(new Animated.Value(CLOSED_HEIGHT));
   const [iconRotation] = useState(new Animated.Value(0));
 
@@ -83,6 +85,16 @@ export const SystemNotification = ({
     setIsOpen(false);
   };
 
+  const hideNotification = () => {
+    Animated.parallel([
+      Animated.timing(containerOpacity, {
+        duration: ANIMATION_DURATION,
+        toValue: HIDDEN_OPACITY,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setIsVisible(false));
+  };
+
   const toggle = isOpen ? closeNotification : openNotification;
 
   return (
@@ -93,6 +105,8 @@ export const SystemNotification = ({
         width="95%"
         borderRadius={10}
         minHeight={minHeight}
+        opacity={containerOpacity}
+        visible={isVisible}
         margin={2}
       >
         <Container
@@ -103,9 +117,7 @@ export const SystemNotification = ({
           testID="system-notification"
         >
           <Icon iconSize="medium" marginRight={2} name={typeToIcon[type]} />
-          <AnimatedText fontSize={13} opacity={closedTextOpacity}>
-            {closedText}
-          </AnimatedText>
+          <AnimatedText opacity={closedTextOpacity}>{closedText}</AnimatedText>
           <Container height={14} width={14} marginLeft={2}>
             <Animated.Image
               source={downIcon}
@@ -127,8 +139,17 @@ export const SystemNotification = ({
         </Container>
         {isOpen && (
           <Container>
-            <Text fontWeight="700">{openedHeaderText}</Text>
-            <Text fontSize={13}>{openedBodyText}</Text>
+            <Text fontWeight="700" marginBottom={2}>
+              {openedHeaderText}
+            </Text>
+            <Text size="body">{openedBodyText}</Text>
+            <Container marginTop={12} alignItems="flex-end">
+              <TouchableOpacity onPress={() => hideNotification()}>
+                <Text weight="bold" textTransform="uppercase">
+                  Don't Show again
+                </Text>
+              </TouchableOpacity>
+            </Container>
           </Container>
         )}
       </AnimatedContainer>

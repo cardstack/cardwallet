@@ -26,6 +26,7 @@ import {
   useWallets,
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
+import { SystemNotification, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
@@ -81,6 +82,26 @@ export default function WalletScreen() {
 
   const isCoinListEditedValue = useCoinListEditedValue();
 
+  const closedText = (
+    <Text>
+      Prepaid cards are denominated {`\n`} in{' '}
+      <Text flex={1} weight="bold">
+        SPEND §
+      </Text>
+    </Text>
+  );
+
+  const openedHeaderText = '1 SPEND = $0.01 USD';
+
+  const openedBodyText =
+    'The Spendable Balance may fluctuate slightly based on the exchange rate of the underlying token (USD_DAI).';
+
+  const notificationProps = {
+    closedText,
+    openedHeaderText,
+    openedBodyText,
+  };
+
   return (
     <WalletPage testID="wallet-screen">
       <StatusBar barStyle="light-content" />
@@ -104,6 +125,7 @@ export default function WalletScreen() {
               <CameraHeaderButton />
             )}
           </Header>
+          <SystemNotification type="info" {...notificationProps} />
         </HeaderOpacityToggler>
         <AssetListWrapper />
       </FabWrapper>
