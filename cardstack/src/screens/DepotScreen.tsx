@@ -177,18 +177,12 @@ interface BalancesProps {
   tokens: TokenType[];
 }
 
-const baseHeight = 309;
-const heightWithChart = baseHeight + 310;
-
-export const initialChartExpandedStateSheetHeight = heightWithChart;
-
 const Balances = ({ tokens }: BalancesProps) => {
   const { navigate } = useNavigation();
 
   const onPress = (token: any) => {
     navigate(Routes.EXPANDED_ASSET_SHEET, {
       asset: token,
-      longFormHeight: initialChartExpandedStateSheetHeight,
       type: 'token',
     });
   };
@@ -211,14 +205,10 @@ const Balances = ({ tokens }: BalancesProps) => {
       {tokens.map(token => (
         <TokenBalance
           address={token.tokenAddress}
-          borderColor="buttonPrimaryBorder"
-          borderRadius={10}
-          borderWidth={1}
-          marginVertical={1}
+          includeBorder
           marginHorizontal={5}
           nativeBalance={token.native.balance.display}
           onPress={() => onPress(token)}
-          padding={4}
           tokenBalance={token.balance.display}
           tokenSymbol={token.token.symbol}
           zIndex={1}
