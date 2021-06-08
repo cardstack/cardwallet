@@ -27,27 +27,25 @@ export default function UnclaimedRevenueExpandedState(props: {
   const { revenueBalances } = merchantSafe;
 
   return (
-    // @ts-ignore
-    <SlackSheet
-      additionalTopPadding={android}
-      contentHeight={CHART_HEIGHT}
-      scrollEnabled
-    >
-      <Container paddingHorizontal={5} paddingVertical={3}>
-        <Text size="medium">Unclaimed revenue</Text>
-        <Container flexDirection="column" marginTop={5}>
-          {revenueBalances.map(token => (
-            <TokenItem key={token.tokenAddress} token={token} />
-          ))}
+    <>
+      {/* @ts-ignore */}
+      <SlackSheet bottomInset={42} height="100%" scrollEnabled>
+        <Container paddingHorizontal={5} paddingVertical={3}>
+          <Text size="medium">Unclaimed revenue</Text>
+          <Container flexDirection="column" marginTop={5}>
+            {revenueBalances.map(token => (
+              <TokenItem key={token.tokenAddress} token={token} />
+            ))}
+          </Container>
+          <Button marginTop={8}>Claim All</Button>
+          <HorizontalDivider />
+          <Text size="medium">Activities</Text>
+          <Container alignItems="center" marginTop={4} width="100%">
+            <Text>No activity data</Text>
+          </Container>
         </Container>
-        <Button marginTop={8}>Claim All</Button>
-        <HorizontalDivider />
-        <Text size="medium">Activities</Text>
-        <Container alignItems="center" marginTop={4} width="100%">
-          <Text>No activity data</Text>
-        </Container>
-      </Container>
-    </SlackSheet>
+      </SlackSheet>
+    </>
   );
 }
 
