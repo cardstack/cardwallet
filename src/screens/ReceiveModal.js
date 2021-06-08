@@ -1,17 +1,18 @@
 import { toLower } from 'lodash';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import styled from 'styled-components';
+
 import TouchableBackdrop from '../components/TouchableBackdrop';
-import { CopyFloatingEmojis } from '../components/floating-emojis';
+import ButtonPressAnimation from '../components/animations/ButtonPressAnimation';
 import { Centered, Column, ColumnWithMargins } from '../components/layout';
 import QRCode from '../components/qr-code/QRCode';
 import ShareButton from '../components/qr-code/ShareButton';
 import { SheetHandle } from '../components/sheet';
 import { TruncatedAddress } from '../components/text';
 import { CopyToast, ToastPositionContainer } from '../components/toasts';
-import { useAccountProfile } from '../hooks';
+import { useAccountProfile, useClipboard } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { abbreviations, deviceUtils } from '../utils';
 import { Text } from '@cardstack/components';
@@ -24,12 +25,6 @@ const Container = styled(Centered).attrs({
 })`
   bottom: 16;
   flex: 1;
-`;
-
-const Handle = styled(SheetHandle).attrs(({ theme: { colors } }) => ({
-  color: colors.whiteLabel,
-}))`
-  margin-bottom: 19;
 `;
 
 const QRWrapper = styled(Column).attrs({ align: 'center' })`
@@ -50,26 +45,24 @@ export default function ReceiveModal() {
   const { goBack } = useNavigation();
   const accountAddress = useSelector(lowercaseAccountAddressSelector);
   const { accountName } = useAccountProfile();
-
+  const { setClipboard } = useClipboard();
   const [copiedText, setCopiedText] = useState(undefined);
   const [copyCount, setCopyCount] = useState(0);
-  const handleCopiedText = useCallback(text => {
-    setCopiedText(abbreviations.formatAddressForDisplay(text));
+  const handleCopiedText = () => {
+    setClipboard(accountAddress);
+    setCopiedText(abbreviations.formatAddressForDisplay(accountAddress));
     setCopyCount(count => count + 1);
-  }, []);
+  };
 
   return (
     <Container testID="receive-modal">
       <TouchableBackdrop onPress={goBack} />
-      <Handle />
       <ColumnWithMargins align="center" margin={24}>
+        <SheetHandle backgroundColor="white" opacity={0.5} />
         <QRWrapper>
           <QRCode size={QRCodeSize} value={accountAddress} />
         </QRWrapper>
-        <CopyFloatingEmojis
-          onPress={handleCopiedText}
-          textToCopy={accountAddress}
-        >
+        <ButtonPressAnimation onPress={handleCopiedText}>
           <ColumnWithMargins margin={2}>
             <Text
               color="white"
@@ -86,7 +79,7 @@ export default function ReceiveModal() {
               truncationLength={4}
             />
           </ColumnWithMargins>
-        </CopyFloatingEmojis>
+        </ButtonPressAnimation>
         <ShareButton accountAddress={accountAddress} />
       </ColumnWithMargins>
       <ToastPositionContainer>

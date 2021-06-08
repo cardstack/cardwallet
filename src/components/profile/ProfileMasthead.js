@@ -1,4 +1,3 @@
-import Clipboard from '@react-native-community/clipboard';
 import analytics from '@segment/analytics-react-native';
 import { toLower } from 'lodash';
 import React, { useCallback, useRef } from 'react';
@@ -13,14 +12,18 @@ import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
-import { useAccountProfile, useWallets } from '@rainbow-me/hooks';
+import { useAccountProfile, useClipboard, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
 
-export default function ProfileMasthead({ addCashAvailable, recyclerListRef }) {
+export default function ProfileMasthead({
+  addCashAvailable,
+  recyclerListRef,
+  setCopiedText,
+  setCopyCount,
+}) {
   const { wallets, selectedWallet, isDamaged } = useWallets();
-  const onNewEmoji = useRef();
   const dispatch = useDispatch();
   const { navigate } = useNavigation();
   const {
@@ -165,15 +168,12 @@ export default function ProfileMasthead({ addCashAvailable, recyclerListRef }) {
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const handlePressCopyAddress = useCallback(() => {
-    if (isDamaged) {
-      showWalletErrorAlert();
-    }
-    if (onNewEmoji && onNewEmoji.current) {
-      onNewEmoji.current();
-    }
-    Clipboard.setString(accountAddress);
-  }, [accountAddress, isDamaged]);
+  const { setClipboard } = useClipboard();
+  const handlePressCopyAddress = () => {
+    setClipboard(accountAddress);
+    setCopiedText(abbreviations.formatAddressForDisplay(accountAddress));
+    setCopyCount(count => count + 1);
+  };
 
   return (
     <Container

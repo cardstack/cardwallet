@@ -7,6 +7,7 @@ import { ActivityList } from '../components/activity-list';
 import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
+import { CopyToast, ToastPositionContainer } from '../components/toasts';
 import NetworkTypes from '../helpers/networkTypes';
 
 import {
@@ -66,6 +67,8 @@ export default function ProfileScreen({ navigation }) {
   }, [navigate]);
 
   const addCashAvailable = isLayer1(network);
+  const [copiedText, setCopiedText] = useState(undefined);
+  const [copyCount, setCopyCount] = useState(0);
 
   return (
     <ProfileScreenPage testID="profile-screen">
@@ -97,6 +100,8 @@ export default function ProfileScreen({ navigation }) {
           <ProfileMasthead
             addCashAvailable={addCashAvailable}
             onChangeWallet={onChangeWallet}
+            setCopiedText={setCopiedText}
+            setCopyCount={setCopyCount}
           />
         }
         isEmpty={isEmpty}
@@ -107,6 +112,9 @@ export default function ProfileScreen({ navigation }) {
         sections={sections}
         {...accountTransactions}
       />
+      <ToastPositionContainer>
+        <CopyToast copiedText={copiedText} copyCount={copyCount} />
+      </ToastPositionContainer>
     </ProfileScreenPage>
   );
 }
