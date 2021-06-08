@@ -59,7 +59,6 @@ export default function WalletScreen() {
   const { isEmpty } = useAccountEmptyState();
   const { network } = useAccountSettings();
 
-  networkTypes[network];
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
 
