@@ -37,32 +37,30 @@ export default function LifetimeEarningsExpandedState(props: {
   } = convertSpendForBalanceDisplay(accumulatedSpendValue, nativeCurrency);
 
   return (
-    // @ts-ignore
-    <SlackSheet
-      additionalTopPadding={android}
-      contentHeight={CHART_HEIGHT}
-      scrollEnabled
-    >
-      <Container paddingHorizontal={5} paddingVertical={3}>
-        <Text size="medium">Lifetime earnings</Text>
-        <Container alignItems="flex-start" flexDirection="row" marginTop={8}>
-          <Icon name="spend" size={40} />
-          <Container flexDirection="column" marginLeft={4}>
-            <Text size="largeBalance" weight="extraBold">
-              {tokenBalanceDisplay}
-            </Text>
-            <Text weight="extraBold">
-              SPEND <Text weight="regular">to date</Text>
-            </Text>
-            <Text variant="subText">{nativeBalanceDisplay}</Text>
+    <>
+      {/* @ts-ignore */}
+      <SlackSheet bottomInset={42} height="100%" scrollEnabled>
+        <Container paddingHorizontal={5} paddingVertical={3}>
+          <Text size="medium">Lifetime earnings</Text>
+          <Container alignItems="flex-start" flexDirection="row" marginTop={8}>
+            <Icon name="spend" size={40} />
+            <Container flexDirection="column" marginLeft={4}>
+              <Text size="largeBalance" weight="extraBold">
+                {tokenBalanceDisplay}
+              </Text>
+              <Text weight="extraBold">
+                SPEND <Text weight="regular">to date</Text>
+              </Text>
+              <Text variant="subText">{nativeBalanceDisplay}</Text>
+            </Container>
+          </Container>
+          <HorizontalDivider />
+          <Text size="medium">Activities</Text>
+          <Container alignItems="center" marginTop={4} width="100%">
+            <Text>No activity data</Text>
           </Container>
         </Container>
-        <HorizontalDivider />
-        <Text size="medium">Activities</Text>
-        <Container alignItems="center" marginTop={4} width="100%">
-          <Text>No activity data</Text>
-        </Container>
-      </Container>
-    </SlackSheet>
+      </SlackSheet>
+    </>
   );
 }

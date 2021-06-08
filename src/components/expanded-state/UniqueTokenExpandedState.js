@@ -1,9 +1,6 @@
-import React, { Fragment, useMemo } from 'react';
+import React, { Fragment } from 'react';
 
-import Link from '../Link';
-import { Column } from '../layout';
 import { SendActionButton, SheetActionButtonRow, SlackSheet } from '../sheet';
-import { Text } from '../text';
 import ExpandedStateSection from './ExpandedStateSection';
 import {
   UniqueTokenExpandedStateHeader,
