@@ -6,13 +6,13 @@ import { CenteredContainer, Image } from '@cardstack/components';
 import { toChecksumAddress } from '@rainbow-me/handlers/web3';
 
 interface CoinIconFallbackProps {
-  address: string;
+  address?: string;
   symbol: string;
   height: number;
   width: number;
 }
 
-const getUrlForTrustIcon = (address: string) => {
+const getUrlForTrustIcon = (address?: string) => {
   if (!address) {
     return '';
   }

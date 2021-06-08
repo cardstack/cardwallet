@@ -85,6 +85,8 @@ const LifetimeEarningsSection = ({
     accumulatedSpendValue,
     {
       decimals: 18,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
       symbol: tokenSymbol,
     }
   );
@@ -115,6 +117,7 @@ const RecentRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
       <SectionHeader>Unclaimed revenue</SectionHeader>
       {firstToken ? (
         <TokenBalance
+          address={firstToken.tokenAddress}
           tokenSymbol={firstToken.token.symbol}
           tokenBalance={firstToken.balance.display}
           nativeBalance={firstToken.native.balance.display}
@@ -140,6 +143,7 @@ const AvailableBalancesSection = ({ tokens }: MerchantSafeProps) => {
       >
         {firstToken ? (
           <TokenBalance
+            address={firstToken.tokenAddress}
             tokenSymbol={firstToken.token.symbol}
             tokenBalance={firstToken.balance.display}
             nativeBalance={firstToken.native.balance.display}

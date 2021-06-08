@@ -5,7 +5,7 @@ import { isNativeToken } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface CoinIconProps {
-  address: string;
+  address?: string;
   symbol: string;
   size?: number;
 }

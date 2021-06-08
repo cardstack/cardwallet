@@ -10,6 +10,7 @@ import {
 interface TokenBalanceProps extends ContainerProps {
   onPress?: () => void;
   Icon?: JSX.Element;
+  address?: string;
   tokenSymbol: string;
   tokenBalance: string;
   nativeBalance: string;
@@ -17,6 +18,7 @@ interface TokenBalanceProps extends ContainerProps {
 
 export const TokenBalance = (props: TokenBalanceProps) => {
   const {
+    address,
     tokenSymbol,
     tokenBalance,
     nativeBalance,
@@ -36,7 +38,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
       >
         <Container>
           <Container flexDirection="row">
-            {Icon ? Icon : <CoinIcon symbol={tokenSymbol} />}
+            {Icon ? Icon : <CoinIcon address={address} symbol={tokenSymbol} />}
             <Container flexDirection="column" marginLeft={3}>
               <Text weight="extraBold">{tokenBalance}</Text>
               <Text variant="subText">{nativeBalance}</Text>

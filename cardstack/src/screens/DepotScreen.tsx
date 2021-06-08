@@ -210,6 +210,7 @@ const Balances = ({ tokens }: BalancesProps) => {
       </Container>
       {tokens.map(token => (
         <TokenBalance
+          address={token.tokenAddress}
           borderColor="buttonPrimaryBorder"
           borderRadius={10}
           borderWidth={1}
