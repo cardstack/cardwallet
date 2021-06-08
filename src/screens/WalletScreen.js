@@ -20,6 +20,7 @@ import useExperimentalFlag, {
 } from '../config/experimentalHooks';
 import {
   useAccountEmptyState,
+  useAccountSettings,
   useCoinListEdited,
   useInitializeWallet,
   usePinnedAndHiddenItemOptions,
@@ -28,6 +29,8 @@ import {
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { SystemNotification, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
+import networkInfo from '@rainbow-me/helpers/networkInfo';
+import networkTypes from '@rainbow-me/helpers/networkTypes';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
@@ -54,7 +57,9 @@ export default function WalletScreen() {
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();
   const { isEmpty } = useAccountEmptyState();
+  const { network } = useAccountSettings();
 
+  networkTypes[network];
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
 
@@ -125,7 +130,9 @@ export default function WalletScreen() {
               <CameraHeaderButton />
             )}
           </Header>
-          <SystemNotification type="info" {...notificationProps} />
+          {!isEmpty && networkInfo[network].layer === 2 && (
+            <SystemNotification type="info" {...notificationProps} />
+          )}
         </HeaderOpacityToggler>
         <AssetListWrapper />
       </FabWrapper>
