@@ -9,6 +9,7 @@ import {
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 
 const CHART_HEIGHT = 650;
 
@@ -100,6 +101,14 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
 
 const Balances = (props: AvailableBalancesExpandedStateProps) => {
   const { tokens } = props.asset;
+  const { navigate } = useNavigation();
+
+  const onPress = (token: any) => {
+    navigate(Routes.EXPANDED_ASSET_SHEET, {
+      asset: token,
+      type: 'token',
+    });
+  };
 
   return (
     <Container paddingBottom={3} paddingHorizontal={5}>
@@ -111,6 +120,7 @@ const Balances = (props: AvailableBalancesExpandedStateProps) => {
           includeBorder
           key={token.tokenAddress}
           nativeBalance={token.native.balance.display}
+          onPress={() => onPress(token)}
           tokenBalance={token.balance.display}
           tokenSymbol={token.token.symbol}
         />
