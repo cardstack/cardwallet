@@ -1,10 +1,10 @@
 import React from 'react';
-import CoinIcon from 'react-coin-icon';
 import {
   Container,
   ContainerProps,
   Text,
   Touchable,
+  CoinIcon,
 } from '@cardstack/components';
 
 interface TokenBalanceProps extends ContainerProps {

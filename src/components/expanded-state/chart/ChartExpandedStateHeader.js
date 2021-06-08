@@ -3,16 +3,14 @@ import React, { useEffect, useMemo } from 'react';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { useCallbackOne } from 'use-memo-one';
-import { CoinIconGroup } from '../../coin-icon';
+
 import { Column, ColumnWithMargins, Row, RowWithMargins } from '../../layout';
-import ChartContextButton from './ChartContextButton';
 import {
   ChartDateLabel,
-  ChartHeaderSubtitle,
   ChartPercentChangeLabel,
   ChartPriceLabel,
 } from './chart-data-labels';
-import { Text } from '@cardstack/components';
+import { CoinIcon, Text } from '@cardstack/components';
 import { useAccountSettings, useBooleanState } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
 
@@ -96,7 +94,7 @@ export default function ChartExpandedStateHeader({
         justify="space-between"
         testID="expanded-state-header"
       >
-        <CoinIconGroup tokens={tokens} />
+        <CoinIcon {...asset} />
       </Row>
       <Column>
         <RowWithMargins

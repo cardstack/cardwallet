@@ -1,8 +1,7 @@
 import React from 'react';
-import CoinIcon from 'react-coin-icon';
-
 import { AssetWithNativeType } from '../../types';
 import {
+  CoinIcon,
   CenteredContainer,
   Container,
   Icon,
