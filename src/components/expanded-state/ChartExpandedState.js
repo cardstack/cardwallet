@@ -3,6 +3,7 @@ import { find } from 'lodash';
 import React, { useRef } from 'react';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
 
+import { useSelector } from 'react-redux';
 import {
   useAccountSettings,
   useChartThrottledPoints,
@@ -27,11 +28,9 @@ import { Container } from '@cardstack/components';
 import { isLayer1 } from '@cardstack/utils';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
-import { useSelector } from 'react-redux';
 
-const baseHeight = 309 + (android && 20 - getSoftMenuBarHeight());
-const heightWithoutChart = baseHeight + (android && 30);
-const heightWithChart = baseHeight + 310;
+const heightWithoutChart = 309;
+const heightWithChart = heightWithoutChart + 310;
 
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 

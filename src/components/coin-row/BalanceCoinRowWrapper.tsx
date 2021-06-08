@@ -9,11 +9,6 @@ import {
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 
-const baseHeight = 309;
-const heightWithChart = baseHeight + 310;
-
-export const initialChartExpandedStateSheetHeight = heightWithChart;
-
 const BalanceCoinWrapper = (item: AssetWithNativeType) => {
   const { navigate } = useNavigation();
 
@@ -41,7 +36,6 @@ const BalanceCoinWrapper = (item: AssetWithNativeType) => {
     } else {
       navigate(Routes.EXPANDED_ASSET_SHEET, {
         asset: item,
-        longFormHeight: initialChartExpandedStateSheetHeight,
         type: 'token',
       });
     }

@@ -238,14 +238,16 @@ export default function ChartWrapper({
           </>
         )}
       </ChartContainer>
-      <CenteredContainer marginTop={6} width="100%">
-        <Text marginBottom={3} size="small" weight="bold">
-          Results for last 24h
-        </Text>
-        <Button onPress={onPressViewCoingecko} variant="white">
-          View more on Coingecko
-        </Button>
-      </CenteredContainer>
+      {showChart && (
+        <CenteredContainer marginTop={6} width="100%">
+          <Text marginBottom={3} size="small" weight="bold">
+            Results for last 24h
+          </Text>
+          <Button onPress={onPressViewCoingecko} variant="white">
+            View more on Coingecko
+          </Button>
+        </CenteredContainer>
+      )}
     </Container>
   );
 }
