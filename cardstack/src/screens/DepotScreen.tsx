@@ -204,6 +204,7 @@ const Balances = ({ tokens }: BalancesProps) => {
       </Container>
       {tokens.map(token => (
         <TokenBalance
+          address={token.tokenAddress}
           includeBorder
           marginHorizontal={5}
           nativeBalance={token.native.balance.display}

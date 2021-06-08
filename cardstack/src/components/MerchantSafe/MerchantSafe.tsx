@@ -105,6 +105,7 @@ const UnclaimedRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
       <SectionHeader>Unclaimed revenue</SectionHeader>
       {firstToken ? (
         <TokenBalance
+          address={firstToken.tokenAddress}
           tokenSymbol={firstToken.token.symbol}
           tokenBalance={firstToken.balance.display}
           nativeBalance={firstToken.native.balance.display}
@@ -130,6 +131,7 @@ const AvailableBalancesSection = ({ tokens }: MerchantSafeProps) => {
       >
         {firstToken ? (
           <TokenBalance
+            address={firstToken.tokenAddress}
             tokenSymbol={firstToken.token.symbol}
             tokenBalance={firstToken.balance.display}
             nativeBalance={firstToken.native.balance.display}

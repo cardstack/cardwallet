@@ -49,6 +49,7 @@ const Bottom = ({ tokens }: DepotProps) => {
       {firstThreeTokens.map((item, index) => (
         <>
           <TokenBalance
+            address={item.tokenAddress}
             tokenSymbol={item.token.symbol}
             tokenBalance={item.balance.display}
             nativeBalance={item.native.balance.display}

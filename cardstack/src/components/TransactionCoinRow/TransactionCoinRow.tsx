@@ -1,10 +1,15 @@
 import React from 'react';
-import CoinIcon from 'react-coin-icon';
 
 import { TransactionItem } from '../../types/TransactionItem';
-import { ContainerProps } from '../Container';
 import { Theme } from '@cardstack/theme';
-import { Container, Icon, IconProps, Text } from '@cardstack/components';
+import {
+  Container,
+  CoinIcon,
+  ContainerProps,
+  Icon,
+  IconProps,
+  Text,
+} from '@cardstack/components';
 
 interface TransactionCoinRowData {
   actionTextColor: keyof Theme['colors'];
