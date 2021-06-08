@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { abbreviations } from '../../utils';
-import { Text } from '../text';
+import { Text } from '@cardstack/components';
 
 export default function TruncatedAddress({
   address,
