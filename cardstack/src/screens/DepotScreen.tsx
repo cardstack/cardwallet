@@ -66,7 +66,7 @@ export default function DepotScreen() {
               <Container left={0} position="absolute">
                 {/* @ts-ignore it thinks the JS file requires other props */}
                 <BackButton
-                  color="blue"
+                  color="teal"
                   direction="left"
                   onPress={goBack}
                   testID="goToBalancesFromScanner"
@@ -92,7 +92,7 @@ export default function DepotScreen() {
               </Container>
               <Container right={20} position="absolute">
                 <Touchable onPress={onPressInformation}>
-                  <Icon name="more-horizontal" color="blue" />
+                  <Icon name="more-horizontal" color="teal" />
                 </Touchable>
               </Container>
             </CenteredContainer>
@@ -198,7 +198,7 @@ const Balances = ({ tokens }: BalancesProps) => {
         <Text size="medium" marginRight={2}>
           Balances
         </Text>
-        <Text size="medium" color="settingsGray">
+        <Text size="medium" color="settingsTeal">
           {tokens.length}
         </Text>
       </Container>

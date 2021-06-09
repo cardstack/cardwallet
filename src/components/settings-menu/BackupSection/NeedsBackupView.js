@@ -68,7 +68,7 @@ export default function NeedsBackupView() {
       <Content>
         <Column align="center">
           <Icon
-            color="settingsGray"
+            color="settingsTeal"
             iconSize="xl"
             marginBottom={2}
             name="upload-cloud"

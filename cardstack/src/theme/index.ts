@@ -7,7 +7,7 @@ import { textVariants } from './textVariants';
 import { spacing } from './spacing';
 import { breakpoints } from './breakpoints';
 
-const theme = createTheme({
+export const theme = createTheme({
   breakpoints,
   buttonVariants,
   colors,

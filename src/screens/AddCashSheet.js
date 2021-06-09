@@ -100,7 +100,7 @@ export default function AddCashSheet() {
             <CenteredContainer flexDirection="row">
               <Container left={0} position="absolute">
                 <BackButton
-                  color="blue"
+                  color="teal"
                   direction="left"
                   onPress={() => goBack()}
                   testID="goToBalancesFromScanner"

@@ -75,7 +75,7 @@ export const BalanceCoinRow = ({
             >
               <Icon
                 size={16}
-                color="blue"
+                color="teal"
                 name={iconName}
                 iconFamily={iconFamily}
               />

@@ -141,7 +141,7 @@ export default function SettingsModal() {
     () =>
       ios ? (
         <Touchable marginRight={5} onPress={goBack}>
-          <Text color="settingsGray" fontWeight="600">
+          <Text color="settingsTeal" fontWeight="600">
             Done
           </Text>
         </Touchable>

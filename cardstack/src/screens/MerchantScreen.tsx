@@ -86,7 +86,7 @@ const Header = () => {
       <Container>
         <CenteredContainer flexDirection="row">
           <Touchable onPress={goBack} left={12} position="absolute">
-            <Icon name="chevron-left" color="blue" size={30} />
+            <Icon name="chevron-left" color="teal" size={30} />
           </Touchable>
           <Container alignItems="center">
             <Text color="white" weight="bold">
@@ -118,7 +118,7 @@ const Header = () => {
         </Text>
         <Container>
           <Touchable onPress={onPressInformation}>
-            <Icon name="more-circle" color="blue" iconSize="medium" />
+            <Icon name="more-circle" color="teal" iconSize="medium" />
           </Touchable>
         </Container>
       </Container>

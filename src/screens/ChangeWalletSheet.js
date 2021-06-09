@@ -432,7 +432,7 @@ export default function ChangeWalletSheet() {
           right={20}
           top={4}
         >
-          <Text color="settingsGray" fontWeight="600">
+          <Text color="settingsTeal" fontWeight="600">
             {editMode ? 'Done' : 'Edit'}
           </Text>
         </Touchable>
