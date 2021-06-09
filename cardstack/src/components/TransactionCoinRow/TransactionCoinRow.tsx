@@ -131,11 +131,7 @@ const Left = ({ item }: TransactionCoinRowProps) => {
       <CoinIcon size={40} {...item} />
       <Container marginLeft={2}>
         <Container flexDirection="row" alignItems="center">
-          <Icon
-            color="backgroundBlue"
-            {...data.iconProps}
-            marginRight={1}
-          />
+          <Icon color="backgroundBlue" {...data.iconProps} marginRight={1} />
           <Text fontSize={13} color={data.actionTextColor}>
             {item.title}
           </Text>
