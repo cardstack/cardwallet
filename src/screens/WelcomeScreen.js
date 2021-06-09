@@ -100,7 +100,7 @@ export default function WelcomeScreen() {
           disabled={creatingWallet}
           onPress={showRestoreSheet}
           testID="already-have-wallet-button"
-          variant="blue"
+          variant="primary"
         >
           Add an existing account
         </Button>

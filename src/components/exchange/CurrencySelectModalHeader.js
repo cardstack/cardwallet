@@ -52,7 +52,7 @@ export default function CurrencySelectModalHeader({ testID }) {
     <HeaderContainer>
       <BackButtonWrapper>
         <BackButton
-          color="settingsGray"
+          color="settingsTeal"
           direction="left"
           height={CurrencySelectModalHeaderHeight}
           onPress={handlePressBack}

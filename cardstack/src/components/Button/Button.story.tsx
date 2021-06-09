@@ -30,7 +30,7 @@ storiesOf('Button', module).add('Default', () => (
       </Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="tertiary">Tertiary</Button>
-      <Button variant="blue">Blue</Button>
+      <Button variant="primary">Blue</Button>
       <Button variant="dark">Dark</Button>
       <Container
         flexDirection="row"

@@ -287,7 +287,7 @@ export const settingsOptions = colors => ({
   },
   // eslint-disable-next-line react/display-name
   headerLeft: props => (
-    <BackButton color="settingsGray" left={-10} {...props} />
+    <BackButton color="settingsTeal" left={-10} {...props} />
   ),
   transitionSpec: {
     close: {

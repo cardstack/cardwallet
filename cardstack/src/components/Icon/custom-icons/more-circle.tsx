@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { SvgProps, G, Rect, Circle } from 'react-native-svg';
+import { palette } from '@cardstack/theme';
 
 function SvgComponent(props: SvgProps) {
   return (
@@ -12,14 +13,14 @@ function SvgComponent(props: SvgProps) {
       height={props.height || 26.11}
       viewBox="0 0 26 26"
     >
-      <G fill="none" stroke={props.stroke || '#03c4bf'}>
+      <G fill="none" stroke={props.color || palette.tealLight}>
         <Rect width={26} height={26} rx={13} stroke="none" />
         <Rect x={0.5} y={0.5} width={25} height={25} rx={12.5} />
       </G>
       <G
         data-name="icon_3dots (stroke)"
-        fill={props.fill || '#03c4bf'}
-        stroke={props.stroke || '#03c4bf'}
+        fill={props.color || palette.tealLight}
+        stroke={props.color || palette.tealLight}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={0.5}

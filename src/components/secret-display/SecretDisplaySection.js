@@ -30,7 +30,7 @@ const AuthenticationText = styled(Text).attrs({
 `;
 
 const CopyButtonIcon = styled(Icon).attrs(({ theme: { colors } }) => ({
-  color: colors.settingsGray,
+  color: colors.settingsTeal,
   name: 'copy',
 }))`
   ${position.size(16)};
@@ -50,7 +50,7 @@ const CopyButtonRow = styled(RowWithMargins).attrs({
 `;
 
 const CopyButtonText = styled(Text).attrs(({ theme: { colors } }) => ({
-  color: colors.settingsGray,
+  color: colors.settingsTeal,
   letterSpacing: 'roundedMedium',
   lineHeight: 19,
   size: 'large',

@@ -75,11 +75,7 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
             </Text>
           </Container>
           <ButtonPressAnimation onPress={onContextMenuPress}>
-            <Icon
-              fill="backgroundBlue"
-              name="more-circle"
-              stroke="backgroundBlue"
-            />
+            <Icon color="backgroundBlue" name="more-circle" />
           </ButtonPressAnimation>
         </Container>
       </Container>

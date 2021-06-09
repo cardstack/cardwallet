@@ -232,7 +232,7 @@ export default function WalletList({
             <OptionItem
               borderIcon
               disabled={editMode}
-              iconProps={{ name: 'plus', size: 22 }}
+              iconProps={{ name: 'plus', size: 22, color: 'tealDark' }}
               marginBottom={3}
               onPress={onPressAddAccount}
               textProps={{
@@ -244,7 +244,7 @@ export default function WalletList({
             <OptionItem
               borderIcon
               disabled={editMode}
-              iconProps={{ name: 'download', size: 22 }}
+              iconProps={{ name: 'download', size: 22, color: 'tealDark' }}
               marginTop={3}
               onPress={onPressImportSeedPhrase}
               textProps={{

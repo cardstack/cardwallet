@@ -138,7 +138,7 @@ export default function WalletConnectApprovalSheet() {
           </Text>
         </Container>
         <Container flexDirection="row">
-          <Text color="settingsGray" lineHeight={29} weight="bold">
+          <Text color="settingsTeal" lineHeight={29} weight="bold">
             {isAuthenticated ? `􀇻 ${formattedDappUrl}` : formattedDappUrl}
           </Text>
         </Container>

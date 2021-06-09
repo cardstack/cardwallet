@@ -86,10 +86,10 @@ export default function ProfileScreen({ navigation }) {
           }}
           testID="settings-button"
         >
-          <Icon color="blue" iconSize="large" name="settings" />
+          <Icon color="teal" iconSize="large" name="settings" />
         </HeaderButton>
         <BackButton
-          color="blue"
+          color="teal"
           direction="right"
           onPress={onPressBackButton}
         />

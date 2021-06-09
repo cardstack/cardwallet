@@ -23,7 +23,7 @@ export default function SendTransactionSpeed({
         <Container alignItems="center" flexDirection="row">
           <Text variant="subText">Fee: {fee}</Text>
           {!timeAmount && (
-            <Icon color="settingsGray" iconSize="small" name="chevron-right" />
+            <Icon color="settingsTeal" iconSize="small" name="chevron-right" />
           )}
         </Container>
       </Touchable>
@@ -38,7 +38,7 @@ export default function SendTransactionSpeed({
             >
               Arrives in ~ {time}
             </Text>
-            <Icon color="settingsGray" iconSize="small" name="chevron-right" />
+            <Icon color="settingsTeal" iconSize="small" name="chevron-right" />
           </Container>
         </Touchable>
       )}
