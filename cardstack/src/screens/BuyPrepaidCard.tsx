@@ -60,7 +60,7 @@ const BuyPrepaidCard = () => {
             ))}
           </Container>
           <Button
-            variant="blue"
+            variant="primary"
             marginTop={5}
             borderColor="buttonSecondaryBorder"
             onPress={onPress}

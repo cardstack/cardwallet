@@ -52,7 +52,7 @@ export const BalanceCoinRow = ({
               name={editingIconName}
               iconSize="medium"
               iconFamily={iconFamily}
-              color={selected ? 'blue' : null}
+              color={selected ? 'teal' : null}
             />
           </Container>
         )}

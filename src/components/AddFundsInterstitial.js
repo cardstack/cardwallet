@@ -88,7 +88,7 @@ const BuyDai = ({ onPress }) => (
       borderColor="buttonSecondaryBorder"
       marginTop={4}
       onPress={onPress}
-      variant="blue"
+      variant="primary"
     >
       Custom Amount
     </Button>
