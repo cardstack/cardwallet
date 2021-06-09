@@ -537,7 +537,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       UPDATE_BALANCE_AND_PRICE_FREQUENCY
     );
     let fallbackExplorerAssetsHandle = null;
-    if (networkTypes.mainnet === network) {
+    if (isMainnet(network)) {
       fallbackExplorerAssetsHandle = setTimeout(
         () => dispatch(findNewAssetsToWatch(accountAddress)),
         DISCOVER_NEW_ASSETS_FREQUENCY
