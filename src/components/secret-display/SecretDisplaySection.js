@@ -1,73 +1,27 @@
 import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
-import { upperFirst } from 'lodash';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
+
 import {
   identifyWalletType,
   loadSeedPhraseAndMigrateIfNeeded,
 } from '../../model/wallet';
 import ActivityIndicator from '../ActivityIndicator';
 import Spinner from '../Spinner';
-import { BiometricButtonContent, Button } from '../buttons';
-import { CopyFloatingEmojis } from '../floating-emojis';
-import { Icon } from '../icons';
-import { ColumnWithMargins, RowWithMargins } from '../layout';
-import { Text } from '../text';
+import { ColumnWithMargins } from '../layout';
 import SecretDisplayCard from './SecretDisplayCard';
+import { Button, Text } from '@cardstack/components';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { useWallets } from '@rainbow-me/hooks';
-import { margin, padding, position, shadow } from '@rainbow-me/styles';
+import { useClipboard, useWallets } from '@rainbow-me/hooks';
 import logger from 'logger';
-
-const AuthenticationText = styled(Text).attrs({
-  align: 'center',
-  color: 'blueGreyDark',
-  size: 'large',
-  weight: 'normal',
-})`
-  ${padding(0, 60)};
-`;
-
-const CopyButtonIcon = styled(Icon).attrs(({ theme: { colors } }) => ({
-  color: colors.settingsGray,
-  name: 'copy',
-}))`
-  ${position.size(16)};
-  margin-top: 0.5;
-`;
-
-const CopyButtonRow = styled(RowWithMargins).attrs({
-  align: 'center',
-  justify: 'start',
-  margin: 6,
-})`
-  width: 100%;
-  border-radius: 32px;
-  border: 1px solid lightgray;
-  background-color: ${({ theme: { colors } }) => colors.transparent};
-  padding: 12px 32px;
-`;
-
-const CopyButtonText = styled(Text).attrs(({ theme: { colors } }) => ({
-  color: colors.settingsGray,
-  letterSpacing: 'roundedMedium',
-  lineHeight: 19,
-  size: 'large',
-  weight: 'medium',
-}))``;
-
-const ToggleSecretButton = styled(Button)`
-  ${margin(0, 20)};
-  ${({ theme: { colors } }) => shadow.build(0, 5, 15, colors.purple, 0.3)}
-  background-color: ${({ theme: { colors } }) => colors.appleBlue};
-`;
 
 const LoadingSpinner = android ? Spinner : ActivityIndicator;
 
 export default function SecretDisplaySection({
   onSecretLoaded,
   onWalletTypeIdentified,
+  setCopyCount,
+  setCopiedText,
 }) {
   const { params } = useRoute();
   const { selectedWallet, wallets } = useWallets();
@@ -110,24 +64,37 @@ export default function SecretDisplaySection({
   const typeLabel = type === WalletTypes.privateKey ? 'key' : 'phrase';
 
   const { colors } = useTheme();
+
+  const { setClipboard } = useClipboard();
+  const handlePressCopySeed = () => {
+    setClipboard(seed);
+    setCopiedText(seed);
+    setCopyCount(count => count + 1);
+  };
+
   return (
     <ColumnWithMargins
       align="center"
       justify="center"
       margin={24}
       paddingHorizontal={30}
+      width="100%"
     >
       {visible ? (
         <Fragment>
           {seed ? (
             <Fragment>
               <SecretDisplayCard seed={seed} type={type} />
-              <CopyFloatingEmojis textToCopy={seed}>
-                <CopyButtonRow>
-                  <CopyButtonIcon />
-                  <CopyButtonText>Copy to clipboard</CopyButtonText>
-                </CopyButtonRow>
-              </CopyFloatingEmojis>
+              <Button
+                iconProps={{
+                  name: 'copy',
+                }}
+                onPress={handlePressCopySeed}
+                variant="white"
+                width="100%"
+              >
+                Copy to clipboard
+              </Button>
             </Fragment>
           ) : (
             <LoadingSpinner color={colors.blueGreyDark50} />
@@ -135,16 +102,17 @@ export default function SecretDisplaySection({
         </Fragment>
       ) : (
         <Fragment>
-          <AuthenticationText>
+          <Text textAlign="center">
             {`You need to authenticate in order to access your recovery ${typeLabel}`}
-          </AuthenticationText>
-          <ToggleSecretButton onPress={loadSeed}>
-            <BiometricButtonContent
-              color={colors.white}
-              showIcon={!seed}
-              text={`Show Recovery ${upperFirst(typeLabel)}`}
-            />
-          </ToggleSecretButton>
+          </Text>
+          <Button
+            iconProps={{ name: 'face-id' }}
+            onPress={loadSeed}
+            variant="white"
+            width="100%"
+          >
+            Show Recovery Phrase
+          </Button>
         </Fragment>
       )}
     </ColumnWithMargins>

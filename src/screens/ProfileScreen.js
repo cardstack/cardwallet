@@ -1,6 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { IS_TESTING } from 'react-native-dotenv';
 import styled from 'styled-components';
 
 import { ActivityList } from '../components/activity-list';
@@ -8,8 +7,6 @@ import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
 import { CopyToast, ToastPositionContainer } from '../components/toasts';
-import NetworkTypes from '../helpers/networkTypes';
-
 import {
   useAccountSettings,
   useAccountTransactions,
@@ -108,7 +105,7 @@ export default function ProfileScreen({ navigation }) {
         isLoading={isLoading}
         navigation={navigation}
         network={network}
-        recyclerListView={ios}
+        recyclerListView={false}
         sections={sections}
         {...accountTransactions}
       />
