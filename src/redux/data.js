@@ -318,74 +318,85 @@ const addGnosisTokenPrices = async (
   const merchantSafes = get(message, 'payload.merchantSafes', []);
   const prepaidCards = get(message, 'payload.prepaidCards', []);
   const web3 = new Web3(web3ProviderSdk);
-  const revenuePool = await getSDK('RevenuePool', web3);
 
-  const [
-    depotsWithPrice,
-    prepaidCardsWithPrice,
-    merchantSafesWithPrice,
-  ] = await Promise.all([
-    await Promise.all(
-      depots.map(async depot => {
-        const tokensWithPrice = await getTokensWithPrice(
-          depot.tokens,
-          nativeCurrency
-        );
+  if (depots.length || merchantSafes.length || prepaidCards.length) {
+    const revenuePool = await getSDK('RevenuePool', web3);
 
-        return {
-          ...depot,
-          tokens: tokensWithPrice,
-        };
-      })
-    ),
-    await Promise.all(
-      prepaidCards.map(async prepaidCard => {
-        const tokensWithPrice = await getTokensWithPrice(
-          prepaidCard.tokens,
-          nativeCurrency
-        );
-
-        return {
-          ...prepaidCard,
-          tokens: tokensWithPrice,
-        };
-      })
-    ),
-    await Promise.all(
-      merchantSafes.map(async merchantSafe => {
-        const revenueBalances = await revenuePool.balances(
-          merchantSafe.address
-        );
-        const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all([
-          getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
-          getTokensWithPrice(
-            revenueBalances.map(revenueToken => ({
-              ...revenueToken,
-              token: {
-                symbol: revenueToken.tokenSymbol,
-              },
-            })),
+    const [
+      depotsWithPrice,
+      prepaidCardsWithPrice,
+      merchantSafesWithPrice,
+    ] = await Promise.all([
+      await Promise.all(
+        depots.map(async depot => {
+          const tokensWithPrice = await getTokensWithPrice(
+            depot.tokens,
             nativeCurrency
-          ),
-        ]);
+          );
 
-        return {
-          ...merchantSafe,
-          revenueBalances: revenueBalancesWithPrice,
-          tokens: tokensWithPrice,
-        };
-      })
-    ),
-  ]);
+          return {
+            ...depot,
+            tokens: tokensWithPrice,
+          };
+        })
+      ),
+      await Promise.all(
+        prepaidCards.map(async prepaidCard => {
+          const tokensWithPrice = await getTokensWithPrice(
+            prepaidCard.tokens,
+            nativeCurrency
+          );
 
-  savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
-  saveDepots(depotsWithPrice, accountAddress, network);
-  saveMerchantSafes(merchantSafesWithPrice, accountAddress, network);
+          return {
+            ...prepaidCard,
+            tokens: tokensWithPrice,
+          };
+        })
+      ),
+      await Promise.all(
+        merchantSafes.map(async merchantSafe => {
+          const revenueBalances = await revenuePool.balances(
+            merchantSafe.address
+          );
+          const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all(
+            [
+              getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
+              getTokensWithPrice(
+                revenueBalances.map(revenueToken => ({
+                  ...revenueToken,
+                  token: {
+                    symbol: revenueToken.tokenSymbol,
+                  },
+                })),
+                nativeCurrency
+              ),
+            ]
+          );
+
+          return {
+            ...merchantSafe,
+            revenueBalances: revenueBalancesWithPrice,
+            tokens: tokensWithPrice,
+          };
+        })
+      ),
+    ]);
+
+    savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
+    saveDepots(depotsWithPrice, accountAddress, network);
+    saveMerchantSafes(merchantSafesWithPrice, accountAddress, network);
+
+    return {
+      depots: depotsWithPrice,
+      prepaidCards: prepaidCardsWithPrice,
+      merchantSafes: merchantSafesWithPrice,
+    };
+  }
 
   return {
-    depots: depotsWithPrice,
-    prepaidCards: prepaidCardsWithPrice,
-    merchantSafes: merchantSafesWithPrice,
+    depots: [],
+    prepaidCards: [],
+    merchantSafes: [],
   };
 };
 
