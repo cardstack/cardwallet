@@ -11,6 +11,7 @@ import Text from '../text/Text';
 import ActivityListEmptyState from './ActivityListEmptyState';
 import ActivityListHeader from './ActivityListHeader';
 import RecyclerActivityList from './RecyclerActivityList';
+import { isMainnet } from '@cardstack/utils';
 
 const getItemLayout = (data, index) => ({
   index,
@@ -93,7 +94,7 @@ const ActivityList = ({
     }
     return currentPendingTransactionsCount;
   }, [sections, requests]);
-  return network === networkTypes.mainnet || sections.length ? (
+  return isMainnet(network) || sections.length ? (
     recyclerListView ? (
       <RecyclerActivityList
         addCashAvailable={addCashAvailable}
@@ -132,7 +133,7 @@ const ActivityList = ({
       />
     )
   ) : (
-    <ActivityListEmptyState label="Your testnet transaction history starts now!">
+    <ActivityListEmptyState label="No transactions">
       {header}
     </ActivityListEmptyState>
   );
