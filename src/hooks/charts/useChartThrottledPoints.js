@@ -1,5 +1,6 @@
 import { debounce } from 'lodash';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { palette } from '@cardstack/theme';
 import { monotoneCubicInterpolation } from '@rainbow-me/animated-charts';
 import {
   useChartData,
@@ -62,14 +63,8 @@ export default function useChartThrottledPoints({
   asset,
   heightWithChart,
   heightWithoutChart,
-  isPool,
 }) {
-  let assetForColor = asset;
-  if (isPool) {
-    assetForColor = asset?.tokens?.[0] || asset;
-  }
-
-  const color = useColorForAsset(assetForColor);
+  const color = palette.blueLight;
 
   const [isFetchingInitially, setIsFetchingInitially] = useState(true);
 
