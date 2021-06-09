@@ -30,6 +30,7 @@ import { checkIsValidAddressOrDomain } from '../helpers/validators';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
 import { colors } from '@cardstack/theme';
+import { isNativeToken } from '@cardstack/utils';
 import {
   useAccountAssets,
   useAccountSettings,
@@ -171,13 +172,19 @@ export default function SendSheet(props) {
   // Recalculate balance when gas price changes
   useEffect(() => {
     if (
-      selected?.address === ETH_ADDRESS &&
+      isNativeToken(selected?.symbol, network) &&
       get(prevSelectedGasPrice, 'txFee.value.amount', 0) !==
         get(selectedGasPrice, 'txFee.value.amount', 0)
     ) {
       updateMaxInputBalance(selected);
     }
-  }, [prevSelectedGasPrice, selected, selectedGasPrice, updateMaxInputBalance]);
+  }, [
+    prevSelectedGasPrice,
+    selected,
+    selectedGasPrice,
+    updateMaxInputBalance,
+    network,
+  ]);
 
   const sendUpdateAssetAmount = useCallback(
     newAssetAmount => {

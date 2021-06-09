@@ -11,6 +11,7 @@ import Text from '../text/Text';
 import ActivityListEmptyState from './ActivityListEmptyState';
 import ActivityListHeader from './ActivityListHeader';
 import RecyclerActivityList from './RecyclerActivityList';
+import { colors } from '@cardstack/theme';
 import { isMainnet } from '@cardstack/utils';
 
 const getItemLayout = (data, index) => ({
@@ -130,6 +131,7 @@ const ActivityList = ({
         removeClippedSubviews
         renderSectionHeader={renderSectionHeader}
         sections={sections}
+        style={{ backgroundColor: colors.backgroundBlue }}
       />
     )
   ) : (

@@ -27,6 +27,7 @@ import {
 import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
+import { isNativeToken } from '@cardstack/utils';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
 
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -55,8 +56,9 @@ const getEthPriceUnit = () => {
 };
 
 const getBalanceAmount = async (selectedGasPrice, selected) => {
+  const network = store.getState().settings.network;
   let amount = get(selected, 'balance.amount', 0);
-  if (get(selected, 'address') === 'eth') {
+  if (isNativeToken(get(selected, 'symbol'), network)) {
     if (!isEmpty(selectedGasPrice)) {
       const txFeeRaw = get(selectedGasPrice, 'txFee.value.amount');
       const txFeeAmount = fromWei(txFeeRaw);
