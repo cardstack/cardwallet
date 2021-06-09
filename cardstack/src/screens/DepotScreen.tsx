@@ -2,6 +2,7 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Linking, ScrollView, StatusBar } from 'react-native';
+import { DepotType, TokenType } from '@cardstack/types';
 import { BackButton } from '../../../src/components/header';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
 import Routes from '@rainbow-me/routes';
@@ -13,7 +14,6 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import { DepotType, TokenType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -198,7 +198,7 @@ const Balances = ({ tokens }: BalancesProps) => {
         <Text size="medium" marginRight={2}>
           Balances
         </Text>
-        <Text size="medium" color="settingsTeal">
+        <Text size="medium" color="tealDark">
           {tokens.length}
         </Text>
       </Container>

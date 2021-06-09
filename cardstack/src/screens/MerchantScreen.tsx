@@ -2,6 +2,7 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Linking, StatusBar } from 'react-native';
+import { MerchantSafeType } from '@cardstack/types';
 import {
   Button,
   CenteredContainer,
@@ -14,7 +15,6 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import { MerchantSafeType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
@@ -118,7 +118,7 @@ const Header = () => {
         </Text>
         <Container>
           <Touchable onPress={onPressInformation}>
-            <Icon name="more-circle" color="teal" iconSize="medium" />
+            <Icon name="more-circle" iconSize="large" />
           </Touchable>
         </Container>
       </Container>
@@ -278,7 +278,7 @@ const SectionWrapper = ({
 }) => (
   <Touchable
     width="100%"
-    borderColor="buttonPrimaryBorder"
+    borderColor="tealDark"
     borderRadius={10}
     borderWidth={1}
     padding={4}

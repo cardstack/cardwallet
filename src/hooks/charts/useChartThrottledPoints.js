@@ -64,7 +64,7 @@ export default function useChartThrottledPoints({
   heightWithChart,
   heightWithoutChart,
 }) {
-  const color = palette.tealLight;
+  const color = palette.tealDark;
 
   const [isFetchingInitially, setIsFetchingInitially] = useState(true);
 
