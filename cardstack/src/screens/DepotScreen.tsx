@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { DepotType, TokenType } from '@cardstack/types';
 import { useRoute } from '@react-navigation/native';
 import { Linking, ScrollView, StatusBar } from 'react-native';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
 import { BackButton } from '../../../src/components/header';
+import { DepotType, TokenType } from '@cardstack/types';
 import Routes from '@rainbow-me/routes';
 import {
   CenteredContainer,
