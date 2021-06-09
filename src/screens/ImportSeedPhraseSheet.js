@@ -198,7 +198,6 @@ export default function ImportSeedPhraseSheet() {
     if (isENSAddressFormat(input)) {
       try {
         const address = await mainnetProvider.resolveName(input);
-        console.log({ address });
         if (!address) {
           Alert.alert('This is not a valid ENS name');
           return;
@@ -216,7 +215,6 @@ export default function ImportSeedPhraseSheet() {
     } else if (isUnstoppableAddressFormat(input)) {
       try {
         const address = await resolveUnstoppableDomain(input);
-        console.log({ address2: address });
         if (!address) {
           Alert.alert('This is not a valid Unstoppable name');
           return;
