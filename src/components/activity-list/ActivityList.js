@@ -94,10 +94,7 @@ const ActivityList = ({
     }
     return currentPendingTransactionsCount;
   }, [sections, requests]);
-  const emptyStateLabel = isMainnet(network)
-    ? 'Your transaction history starts now!'
-    : 'Your testnet transaction history starts now!';
-  return network === networkTypes.mainnet || sections.length ? (
+  return isMainnet(network) || sections.length ? (
     recyclerListView ? (
       <RecyclerActivityList
         addCashAvailable={addCashAvailable}
@@ -136,7 +133,7 @@ const ActivityList = ({
       />
     )
   ) : (
-    <ActivityListEmptyState label={emptyStateLabel}>
+    <ActivityListEmptyState label="No transactions">
       {header}
     </ActivityListEmptyState>
   );
