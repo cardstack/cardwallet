@@ -77,7 +77,7 @@ export default function SecretDisplaySection({
       align="center"
       justify="center"
       margin={24}
-      paddingHorizontal={30}
+      paddingHorizontal={20}
       width="100%"
     >
       {visible ? (

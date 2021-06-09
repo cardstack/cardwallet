@@ -58,16 +58,16 @@ export default function BackupManualStep() {
 
   return (
     <Fragment>
-      <Container alignItems="center" marginTop={5} paddingHorizontal={5}>
+      <Container alignItems="center" marginTop={5} paddingHorizontal={10}>
         <Icon color="settingsGray" name="file-text" size={35} />
         <Text marginTop={2} size="medium" weight="bold">
           Manual Backup
         </Text>
-        <Text color="blueText" marginTop={2}>
+        <Text color="blueText" marginTop={2} textAlign="center">
           {subText}
         </Text>
       </Container>
-      <Content isTallPhone={isTallPhone} paddingHorizontal={30}>
+      <Content isTallPhone={isTallPhone}>
         <SecretDisplaySection
           onSecretLoaded={setSecretLoaded}
           onWalletTypeIdentified={setType}
@@ -75,12 +75,7 @@ export default function BackupManualStep() {
       </Content>
       {secretLoaded && (
         <Container paddingHorizontal={5} width="100%">
-          <Button
-            iconProps={{ name: 'check' }}
-            marginTop={3}
-            onPress={onComplete}
-            width="100%"
-          >
+          <Button marginTop={3} onPress={onComplete} width="100%">
             {/* eslint-disable-next-line react/no-unescaped-entities */}
             I've saved these words
           </Button>
