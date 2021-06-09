@@ -31,6 +31,7 @@ export const colors = {
   brightBlue: palette.blueBright,
   black: palette.black,
   teal: palette.tealLight,
+  tealDark: palette.tealDark,
   blueOcean: palette.blueOcean,
   blueText: palette.blueText,
   borderGray: palette.borderGray,

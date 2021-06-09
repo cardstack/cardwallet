@@ -47,14 +47,14 @@ const AddFundsInterstitial = () => {
       <Button
         borderColor="buttonSecondaryBorder"
         iconProps={{
-          color: 'blue',
+          color: 'teal',
           iconSize: 'medium',
           marginRight: 3,
           name: 'copy',
         }}
         marginTop={4}
         onPress={handlePressCopyAddress}
-        variant="blue"
+        variant="primary"
       >
         Copy Address
       </Button>
