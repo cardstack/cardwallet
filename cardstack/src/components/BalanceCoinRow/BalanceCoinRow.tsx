@@ -1,11 +1,12 @@
 import React from 'react';
+
 import { AssetWithNativeType } from '../../types';
 import {
-  CoinIcon,
   CenteredContainer,
   Container,
   Icon,
-  Text,
+  NetworkBadge,
+  TokenBalance,
   Touchable,
 } from '@cardstack/components';
 
@@ -29,11 +30,6 @@ export const BalanceCoinRow = ({
   pinned = false,
   hidden = false,
 }: BalanceCoinRowProps) => {
-  const showIcon = pinned || hidden;
-  const iconName = hidden ? 'eye-off' : 'pin';
-  const iconFamily = pinned ? 'MaterialCommunity' : 'Feather';
-  const editingIconName = selected ? 'check-circle' : 'circle';
-
   return (
     <Touchable onPress={onPress}>
       <Container
@@ -43,45 +39,12 @@ export const BalanceCoinRow = ({
         paddingVertical={2}
         flexDirection="row"
       >
-        {isEditing && (
-          <Container
-            testID={`coin-row-editing-icon-${editingIconName}`}
-            width={SELECT_ICON_WIDTH}
-          >
-            <Icon
-              name={editingIconName}
-              iconSize="medium"
-              iconFamily={iconFamily}
-              color={selected ? 'teal' : null}
-            />
-          </Container>
-        )}
-        {isEditing && showIcon && (
-          <Container
-            height="100%"
-            justifyContent="center"
-            left="14%"
-            position="absolute"
-            top="12%"
-            width={50}
-            zIndex={5}
-            testID={`coin-row-icon-${iconName}`}
-          >
-            <CenteredContainer
-              width={28}
-              height={28}
-              borderRadius={100}
-              backgroundColor="black"
-            >
-              <Icon
-                size={16}
-                color="teal"
-                name={iconName}
-                iconFamily={iconFamily}
-              />
-            </CenteredContainer>
-          </Container>
-        )}
+        <EditingSelectIcon isEditing={isEditing} selected={selected} />
+        <PinnedOrHiddenIcon
+          isEditing={isEditing}
+          hidden={hidden}
+          pinned={pinned}
+        />
         <Container
           backgroundColor="white"
           borderRadius={10}
@@ -89,48 +52,114 @@ export const BalanceCoinRow = ({
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
           zIndex={1}
         >
-          <Container
-            width="100%"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Container flexDirection="row">
-              <CoinIcon size={40} {...item} />
-              <Container marginLeft={4}>
-                <Text fontWeight="700">{item.name}</Text>
-                <Text variant="subText">{item?.balance?.display}</Text>
-              </Container>
-            </Container>
-            <Container alignItems="flex-end">
-              <Text fontWeight="700">{`${item?.native?.balance?.display}`}</Text>
-              <Text
-                variant="subText"
-                color={
-                  item?.price?.relative_change_24h > 0 ? 'green' : 'blueText'
-                }
-              >
-                {item?.native?.change}
-              </Text>
-            </Container>
+          <Container flexDirection="row">
+            <NetworkBadge marginBottom={4} />
           </Container>
-        </Container>
-        {isEditing && hidden && (
-          <Container
-            backgroundColor="black"
-            top={8}
-            bottom={0}
-            right={20}
-            borderRadius={10}
-            opacity={0.5}
-            position="absolute"
-            height="100%"
-            width={EDITING_COIN_ROW_WIDTH}
-            zIndex={1}
-            testID="coin-row-hidden-overlay"
+          <TokenBalance
+            address={item.address}
+            tokenSymbol={item.symbol}
+            tokenBalance={item.balance?.display}
+            nativeBalance={item.native?.balance?.display}
           />
-        )}
+        </Container>
+        <HiddenOverlay isEditing={isEditing} hidden={hidden} />
       </Container>
     </Touchable>
   );
+};
+
+const EditingSelectIcon = ({
+  isEditing,
+  selected,
+}: {
+  isEditing?: boolean;
+  selected?: boolean;
+}) => {
+  if (!isEditing) {
+    return null;
+  }
+
+  const editingIconName = selected ? 'check-circle' : 'circle';
+
+  return (
+    <Container
+      testID={`coin-row-editing-icon-${editingIconName}`}
+      width={SELECT_ICON_WIDTH}
+    >
+      <Icon
+        name={editingIconName}
+        iconSize="medium"
+        iconFamily="Feather"
+        color={selected ? 'teal' : null}
+      />
+    </Container>
+  );
+};
+
+const PinnedOrHiddenIcon = ({
+  isEditing,
+  pinned,
+  hidden,
+}: {
+  isEditing?: boolean;
+  pinned?: boolean;
+  hidden?: boolean;
+}) => {
+  const showIcon = pinned || hidden;
+  const iconName = hidden ? 'eye-off' : 'pin';
+  const iconFamily = pinned ? 'MaterialCommunity' : 'Feather';
+
+  if (!isEditing || !showIcon) {
+    return null;
+  }
+
+  return (
+    <Container
+      height="100%"
+      justifyContent="center"
+      left="14%"
+      position="absolute"
+      top="12%"
+      width={50}
+      zIndex={5}
+      testID={`coin-row-icon-${iconName}`}
+    >
+      <CenteredContainer
+        width={28}
+        height={28}
+        borderRadius={100}
+        backgroundColor="black"
+      >
+        <Icon size={16} color="teal" name={iconName} iconFamily={iconFamily} />
+      </CenteredContainer>
+    </Container>
+  );
+};
+
+const HiddenOverlay = ({
+  isEditing,
+  hidden,
+}: {
+  isEditing?: boolean;
+  hidden: boolean;
+}) => {
+  if (isEditing && hidden) {
+    return (
+      <Container
+        backgroundColor="black"
+        top={8}
+        bottom={0}
+        right={20}
+        borderRadius={10}
+        opacity={0.5}
+        position="absolute"
+        height="100%"
+        width={EDITING_COIN_ROW_WIDTH}
+        zIndex={1}
+        testID="coin-row-hidden-overlay"
+      />
+    );
+  }
+
+  return null;
 };
