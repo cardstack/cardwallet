@@ -370,6 +370,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const fetchAssetsBalancesAndPrices = async () => {
     logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
     const { network } = getState().settings;
+    const currencyConversionRates = getState().currencyConversion.rates;
     const { xdaiChainAssets, mainnetAssets } = getState().fallbackExplorer;
     const actualMainnetAssets =
       network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
@@ -419,7 +420,8 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
           },
           network,
           accountAddress,
-          nativeCurrency
+          nativeCurrency,
+          currencyConversionRates
         );
 
         depots = gnosisDataWithPrices.depots;

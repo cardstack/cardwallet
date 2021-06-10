@@ -13,6 +13,7 @@ import {
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { CurrencyConversionRates } from '@cardstack/types';
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
@@ -75,7 +76,8 @@ export const fetchGnosisSafes = async (address: string) => {
 
 export const getTokensWithPrice = async (
   tokens: any[],
-  nativeCurrency: string
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
@@ -89,6 +91,11 @@ export const getTokensWithPrice = async (
         tokenItem.balance
       );
 
+      const nativeBalance =
+        nativeCurrency === 'USD'
+          ? usdBalance
+          : currencyConversionRates[nativeCurrency] * usdBalance;
+
       const priceUnit = tokenItem.price?.value || 0;
 
       return {
@@ -96,8 +103,11 @@ export const getTokensWithPrice = async (
         balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
         native: {
           balance: {
-            amount: usdBalance,
-            display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
+            amount: nativeBalance,
+            display: convertAmountToNativeDisplay(
+              nativeBalance,
+              nativeCurrency
+            ),
           },
           price: {
             amount: priceUnit,
@@ -113,7 +123,8 @@ export const addGnosisTokenPrices = async (
   payload: any,
   network: string,
   accountAddress: string,
-  nativeCurrency: string
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
 ) => {
   const { depots, merchantSafes, prepaidCards } = payload;
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -132,7 +143,8 @@ export const addGnosisTokenPrices = async (
         depots.map(async (depot: any) => {
           const tokensWithPrice = await getTokensWithPrice(
             depot.tokens,
-            nativeCurrency
+            nativeCurrency,
+            currencyConversionRates
           );
 
           return {
@@ -145,7 +157,8 @@ export const addGnosisTokenPrices = async (
         prepaidCards.map(async (prepaidCard: any) => {
           const tokensWithPrice = await getTokensWithPrice(
             prepaidCard.tokens,
-            nativeCurrency
+            nativeCurrency,
+            currencyConversionRates
           );
 
           return {
@@ -162,7 +175,11 @@ export const addGnosisTokenPrices = async (
 
           const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all(
             [
-              getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
+              getTokensWithPrice(
+                merchantSafe.tokens,
+                nativeCurrency,
+                currencyConversionRates
+              ),
               getTokensWithPrice(
                 revenueBalances.map(revenueToken => ({
                   ...revenueToken,
@@ -170,7 +187,8 @@ export const addGnosisTokenPrices = async (
                     symbol: revenueToken.tokenSymbol,
                   },
                 })),
-                nativeCurrency
+                nativeCurrency,
+                currencyConversionRates
               ),
             ]
           );
