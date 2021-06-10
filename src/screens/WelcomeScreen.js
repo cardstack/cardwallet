@@ -75,9 +75,8 @@ export default function WelcomeScreen() {
         position="absolute"
         testID="welcome-screen"
       >
-        {/* <Container height={88} width={88}> */}
         <Icon name="cardstack" size={150} />
-        {/* </Container> */}
+
         <Text marginTop={4} variant="welcomeScreen">
           CARD WALLET
         </Text>
