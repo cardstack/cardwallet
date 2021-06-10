@@ -10,6 +10,7 @@ import {
   Button,
   CenteredContainer,
   Container,
+  Icon,
   Text,
 } from '@cardstack/components';
 import { useHideSplashScreen, useInitializeWallet } from '@rainbow-me/hooks';
@@ -64,7 +65,7 @@ export default function WelcomeScreen() {
 
   return (
     <CenteredContainer
-      backgroundColor="backgroundBlue"
+      backgroundColor="black"
       height="100%"
       justifyContent="flex-end"
     >
@@ -74,16 +75,8 @@ export default function WelcomeScreen() {
         position="absolute"
         testID="welcome-screen"
       >
-        <Container height={88} width={88}>
-          <Image
-            source={logo}
-            style={{
-              height: '100%',
-              resizeMode: 'contain',
-              width: '100%',
-            }}
-          />
-        </Container>
+        <Icon name="cardstack" size={150} />
+
         <Text marginTop={4} variant="welcomeScreen">
           CARD WALLET
         </Text>

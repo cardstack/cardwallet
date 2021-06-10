@@ -1,7 +1,7 @@
 import { screenWidth } from '../utils/dimension-utils';
 
 const primary = {
-  backgroundColor: 'backgroundBlue',
+  backgroundColor: 'transparent',
   borderColor: 'borderBlue',
   textStyle: {
     color: 'teal',
