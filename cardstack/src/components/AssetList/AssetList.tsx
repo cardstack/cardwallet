@@ -4,7 +4,7 @@ import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
-import { AssetFooter } from '../../../../src/components/asset-list';
+import { AssetFooter } from './AssetFooter';
 import { AssetListLoading } from './AssetListLoading';
 import { Button, Container, Icon, Text } from '@cardstack/components';
 import {
@@ -165,7 +165,7 @@ export const AssetList = (props: AssetListProps) => {
         }}
         contentContainerStyle={{ paddingBottom: 180 }}
       />
-      <AssetFooter />
+      <AssetFooter sections={sections} />
     </>
   );
 };
