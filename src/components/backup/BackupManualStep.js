@@ -51,10 +51,11 @@ export default function BackupManualStep() {
     });
   }, []);
 
-  const subText =
-    type === walletTypes.privateKey
-      ? 'This is the key to your wallet!. Copy it and save it in your password manager, or in another secure spot.'
-      : 'These words are the keys to your wallet! Write them down or save them in your password manager.';
+  const isPrivateKey = type === walletTypes.privateKey;
+  const subText = isPrivateKey
+    ? 'This is the key to your wallet!. Copy it and save it in your password manager, or in another secure spot.'
+    : 'These words are the keys to your wallet! Write them down or save them in your password manager.';
+  const buttonText = `I've saved ${isPrivateKey ? 'my key' : 'these words'}`;
 
   return (
     <Fragment>
@@ -76,8 +77,7 @@ export default function BackupManualStep() {
       {secretLoaded && (
         <Container paddingHorizontal={5} width="100%">
           <Button marginTop={3} onPress={onComplete} width="100%">
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
-            I've saved these words
+            {buttonText}
           </Button>
         </Container>
       )}
