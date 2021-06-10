@@ -5,6 +5,7 @@ import appState from './appState';
 import charts from './charts';
 import coingecko from './coingecko';
 import contacts from './contacts';
+import currencyConversion from './currencyConversion';
 import data from './data';
 import editOptions from './editOptions';
 import explorer from './explorer';
@@ -34,6 +35,7 @@ export default combineReducers({
   coingecko,
   charts,
   contacts,
+  currencyConversion,
   data,
   editOptions,
   explorer,

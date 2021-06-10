@@ -17,6 +17,9 @@ import Routes from '@rainbow-me/routes';
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
   nativeCurrency: string;
+  currencyConversionRates: {
+    [key: string]: number;
+  };
 }
 
 export const MerchantSafe = (props: MerchantSafeProps) => {
@@ -78,11 +81,16 @@ const Bottom = (props: MerchantSafeProps) => {
 const LifetimeEarningsSection = ({
   accumulatedSpendValue,
   nativeCurrency,
+  currencyConversionRates,
 }: MerchantSafeProps) => {
   const {
     tokenBalanceDisplay,
     nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(accumulatedSpendValue, nativeCurrency);
+  } = convertSpendForBalanceDisplay(
+    accumulatedSpendValue,
+    nativeCurrency,
+    currencyConversionRates
+  );
 
   return (
     <Container flexDirection="column">
