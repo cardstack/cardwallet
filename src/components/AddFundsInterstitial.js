@@ -1,17 +1,18 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React, { useCallback } from 'react';
-
 import showWalletErrorAlert from '../helpers/support';
 import { useNavigation } from '../navigation/Navigation';
 import { magicMemo } from '../utils';
-import { usePaymentsEnabled } from '../utils/feature-toggle-utils';
 import { Button, Container, Text } from '@cardstack/components';
-import { useWallets } from '@rainbow-me/hooks';
+import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+import networkTypes from '@rainbow-me/networkTypes';
 import Routes from '@rainbow-me/routes';
 
 const AddFundsInterstitial = () => {
-  const paymentsEnabled = usePaymentsEnabled();
   const { navigate } = useNavigation();
   const { isDamaged } = useWallets();
+  const { network } = useAccountSettings();
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
   const onPress = amount => {
     navigate(Routes.ADD_CASH_FLOW, {
@@ -28,20 +29,23 @@ const AddFundsInterstitial = () => {
     navigate(Routes.RECEIVE_MODAL);
   }, [navigate, isDamaged]);
 
+  const isMainnet = network === networkTypes.mainnet;
+
   return (
     <Container
       flex={1}
       flexDirection="column"
       justifyContent="flex-start"
       padding={5}
+      paddingTop={25}
       position="absolute"
       top="10%"
       width="100%"
     >
-      {paymentsEnabled ? <BuyDai onPress={onPress} /> : null}
+      {isMainnet ? <BuyEth onPress={onPress} /> : null}
       <Container marginTop={16}>
         <Text color="white" fontSize={26}>
-          {paymentsEnabled ? 'or ' : ''}send xDai to your wallet
+          {isMainnet ? 'or ' : ''}send {nativeTokenSymbol} to your wallet
         </Text>
       </Container>
       <Button
@@ -62,10 +66,10 @@ const AddFundsInterstitial = () => {
   );
 };
 
-const BuyDai = ({ onPress }) => (
+const BuyEth = ({ onPress }) => (
   <Container alignItems="center" justifyContent="space-between" width="100%">
     <Text color="white" fontSize={26}>
-      To get started, buy some xDai{ios ? ` with Apple Pay` : ''}
+      To get started, buy some ETH with Apple Pay
     </Text>
     <Container
       flexDirection="row"
