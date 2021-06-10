@@ -66,6 +66,8 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 };
 
 export const settingsUpdateNetwork = network => async dispatch => {
+  dispatch(dataResetState());
+  dispatch(fallbackExplorerClearState());
   try {
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
     await web3SetHttpProvider(network);
@@ -74,6 +76,7 @@ export const settingsUpdateNetwork = network => async dispatch => {
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
     });
     saveNetwork(network);
+    dispatch(fallbackExplorerInit());
     dispatch(walletConnectUpdateSessions());
   } catch (error) {
     logger.log('Error updating network settings', error);

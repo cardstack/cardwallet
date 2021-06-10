@@ -1,16 +1,9 @@
-import {
-  convertAmountToNativeDisplay,
-  convertRawAmountToBalance,
-  divide,
-  getSDK,
-  isZero,
-} from '@cardstack/cardpay-sdk';
+import { divide, isZero } from '@cardstack/cardpay-sdk';
 import { getUnixTime, subDays } from 'date-fns';
 import {
   concat,
   filter,
   get,
-  includes,
   isEmpty,
   isNil,
   keyBy,
@@ -24,16 +17,15 @@ import {
   uniqBy,
   values,
 } from 'lodash';
-import Web3 from 'web3';
 import { uniswapClient } from '../apollo/client';
 import {
   UNISWAP_24HOUR_PRICE_QUERY,
   UNISWAP_PRICES_QUERY,
 } from '../apollo/queries';
-import { getTransactionReceipt, web3ProviderSdk } from '../handlers/web3';
-/* eslint-disable-next-line import/no-cycle */
+import { getTransactionReceipt } from '../handlers/web3';
+// eslint-disable-next-line import/no-cycle
 import { addCashUpdatePurchases } from './addCash';
-/* eslint-disable-next-line import/no-cycle */
+// eslint-disable-next-line import/no-cycle
 import { uniqueTokensRefreshState } from './uniqueTokens';
 import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import {
@@ -46,12 +38,8 @@ import {
   saveAccountEmptyState,
   saveAssetPricesFromUniswap,
   saveAssets,
-  saveDepots,
   saveLocalTransactions,
-  saveMerchantSafes,
-  savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
@@ -70,7 +58,6 @@ import {
 } from '@rainbow-me/parsers';
 import { shitcoins } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
-
 import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
 import logger from 'logger';
 
@@ -256,201 +243,16 @@ export const transactionsReceived = (message, appended = false) => async (
   }
 };
 
-export const transactionsRemoved = message => (dispatch, getState) => {
-  const isValidMeta = dispatch(checkMeta(message));
-  if (!isValidMeta) return;
-
-  const transactionData = get(message, 'payload.transactions', []);
-  if (!transactionData.length) return;
-  const { accountAddress, network } = getState().settings;
-  const { transactions } = getState().data;
-  const removeHashes = map(transactionData, txn => txn.hash);
-  logger.log('[data] - remove txn hashes', removeHashes);
-  const updatedTransactions = filter(
-    transactions,
-    txn => !includes(removeHashes, ethereumUtils.getHash(txn))
-  );
-
-  dispatch({
-    payload: updatedTransactions,
-    type: DATA_UPDATE_TRANSACTIONS,
-  });
-  saveLocalTransactions(updatedTransactions, accountAddress, network);
-};
-
-const getTokensWithPrice = async (
-  tokens,
-  nativeCurrency,
-  currencyConversionRates
-) => {
-  const web3 = new Web3(web3ProviderSdk);
-  const exchangeRate = await getSDK('ExchangeRate', web3);
-
-  return Promise.all(
-    tokens.map(async tokenItem => {
-      const usdBalance = await exchangeRate.getUSDPrice(
-        tokenItem.token.symbol,
-        tokenItem.balance
-      );
-      const nativeBalance =
-        nativeCurrency === 'USD'
-          ? usdBalance
-          : currencyConversionRates[nativeCurrency] * usdBalance;
-      const priceUnit = tokenItem.price?.value || 0;
-
-      return {
-        ...tokenItem,
-        balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
-        native: {
-          balance: {
-            amount: nativeBalance,
-            display: convertAmountToNativeDisplay(
-              nativeBalance,
-              nativeCurrency
-            ),
-          },
-          price: {
-            amount: priceUnit,
-            display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
-          },
-        },
-      };
-    })
-  );
-};
-
-const addGnosisTokenPrices = async (
-  message,
-  network,
-  accountAddress,
-  nativeCurrency,
-  currencyConversionRates
-) => {
-  const depots = get(message, 'payload.depots', []);
-  const merchantSafes = get(message, 'payload.merchantSafes', []);
-  const prepaidCards = get(message, 'payload.prepaidCards', []);
-  const web3 = new Web3(web3ProviderSdk);
-
-  if (depots.length || merchantSafes.length || prepaidCards.length) {
-    const revenuePool = await getSDK('RevenuePool', web3);
-
-    const [
-      depotsWithPrice,
-      prepaidCardsWithPrice,
-      merchantSafesWithPrice,
-    ] = await Promise.all([
-      await Promise.all(
-        depots.map(async depot => {
-          const tokensWithPrice = await getTokensWithPrice(
-            depot.tokens,
-            nativeCurrency,
-            currencyConversionRates
-          );
-
-          return {
-            ...depot,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-      await Promise.all(
-        prepaidCards.map(async prepaidCard => {
-          const tokensWithPrice = await getTokensWithPrice(
-            prepaidCard.tokens,
-            nativeCurrency,
-            currencyConversionRates
-          );
-
-          return {
-            ...prepaidCard,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-      await Promise.all(
-        merchantSafes.map(async merchantSafe => {
-          const revenueBalances = await revenuePool.balances(
-            merchantSafe.address
-          );
-          const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all(
-            [
-              getTokensWithPrice(
-                merchantSafe.tokens,
-                nativeCurrency,
-                currencyConversionRates
-              ),
-              getTokensWithPrice(
-                revenueBalances.map(revenueToken => ({
-                  ...revenueToken,
-                  token: {
-                    symbol: revenueToken.tokenSymbol,
-                  },
-                })),
-                nativeCurrency,
-                currencyConversionRates
-              ),
-            ]
-          );
-
-          return {
-            ...merchantSafe,
-            revenueBalances: revenueBalancesWithPrice,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-    ]);
-
-    savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
-    saveDepots(depotsWithPrice, accountAddress, network);
-    saveMerchantSafes(merchantSafesWithPrice, accountAddress, network);
-
-    return {
-      depots: depotsWithPrice,
-      prepaidCards: prepaidCardsWithPrice,
-      merchantSafes: merchantSafesWithPrice,
-    };
-  }
-
-  return {
-    depots: [],
-    prepaidCards: [],
-    merchantSafes: [],
-  };
-};
-
 export const addressAssetsReceived = (
   message,
   append = false,
   change = false,
   removed = false
-) => async (dispatch, getState) => {
+) => (dispatch, getState) => {
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
-  const { accountAddress, network, nativeCurrency } = getState().settings;
-  const currencyConversionRates = getState().currencyConversion.rates;
-
-  try {
-    const { depots, prepaidCards, merchantSafes } = await addGnosisTokenPrices(
-      message,
-      network,
-      accountAddress,
-      nativeCurrency,
-      currencyConversionRates
-    );
-
-    dispatch({
-      payload: {
-        depots,
-        prepaidCards,
-        merchantSafes,
-      },
-      type: DATA_UPDATE_GNOSIS_DATA,
-    });
-  } catch (error) {
-    console.log('Error adding token prices to Gnosis safes', error);
-  }
+  const { accountAddress, network } = getState().settings;
 
   const { uniqueTokens } = getState().uniqueTokens;
   const payload = values(get(message, 'payload.assets', {}));
@@ -506,6 +308,18 @@ export const addressAssetsReceived = (
     saveAccountEmptyState(false, accountAddress, network);
   }
 
+  const depots = get(message, 'payload.depots', []);
+  const prepaidCards = get(message, 'payload.prepaidCards', []);
+  const merchantSafes = get(message, 'payload.merchantSafes', []);
+
+  dispatch({
+    payload: {
+      depots,
+      prepaidCards,
+      merchantSafes,
+    },
+    type: DATA_UPDATE_GNOSIS_DATA,
+  });
   dispatch({
     payload: parsedAssets,
     type: DATA_UPDATE_ASSETS,

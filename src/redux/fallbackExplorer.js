@@ -11,7 +11,7 @@ import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
 import store from './store';
-import { fetchGnosisSafes } from '@cardstack/services';
+import { addGnosisTokenPrices, fetchGnosisSafes } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
@@ -370,6 +370,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const fetchAssetsBalancesAndPrices = async () => {
     logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
     const { network } = getState().settings;
+    const currencyConversionRates = getState().currencyConversion.rates;
     const { xdaiChainAssets, mainnetAssets } = getState().fallbackExplorer;
     const actualMainnetAssets =
       network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
@@ -382,30 +383,53 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
 
     // not functional on xdai chain yet
     if (network === networkTypes.sokol) {
-      const gnosisSafeData = await fetchGnosisSafes(accountAddress);
-      const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
+      try {
+        const gnosisSafeData = await fetchGnosisSafes(accountAddress);
+        const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
+        const depotsWithIds = gnosisSafeData.depots.map(depot => ({
+          ...depot,
+          tokens: depot.tokens.map(token => ({
+            ...token,
+            coingecko_id: coingeckoIds[token.tokenAddress] || null,
+          })),
+        }));
+        const prepaidCardsWithIds = gnosisSafeData.prepaidCards.map(
+          prepaidCard => ({
+            ...prepaidCard,
+            tokens: prepaidCard.tokens.map(token => ({
+              ...token,
+              coingecko_id: coingeckoIds[token.tokenAddress] || null,
+            })),
+          })
+        );
+        const merchantSafesWithIds = gnosisSafeData.merchantSafes.map(
+          merchantSafe => ({
+            ...merchantSafe,
+            tokens: merchantSafe.tokens.map(token => ({
+              ...token,
+              coingecko_id: coingeckoIds[token.tokenAddress] || null,
+            })),
+          })
+        );
 
-      depots = gnosisSafeData.depots.map(depot => ({
-        ...depot,
-        tokens: depot.tokens.map(token => ({
-          ...token,
-          coingecko_id: coingeckoIds[token.tokenAddress] || null,
-        })),
-      }));
-      prepaidCards = gnosisSafeData.prepaidCards.map(prepaidCard => ({
-        ...prepaidCard,
-        tokens: prepaidCard.tokens.map(token => ({
-          ...token,
-          coingecko_id: coingeckoIds[token.tokenAddress] || null,
-        })),
-      }));
-      merchantSafes = gnosisSafeData.merchantSafes.map(merchantSafe => ({
-        ...merchantSafe,
-        tokens: merchantSafe.tokens.map(token => ({
-          ...token,
-          coingecko_id: coingeckoIds[token.tokenAddress] || null,
-        })),
-      }));
+        const gnosisDataWithPrices = await addGnosisTokenPrices(
+          {
+            depots: depotsWithIds,
+            prepaidCards: prepaidCardsWithIds,
+            merchantSafes: merchantSafesWithIds,
+          },
+          network,
+          accountAddress,
+          nativeCurrency,
+          currencyConversionRates
+        );
+
+        depots = gnosisDataWithPrices.depots;
+        prepaidCards = gnosisDataWithPrices.prepaidCards;
+        merchantSafes = gnosisDataWithPrices.merchantSafes;
+      } catch (error) {
+        console.log('Error getting Gnosis data', error);
+      }
     }
 
     if (!assets || !assets.length) {
