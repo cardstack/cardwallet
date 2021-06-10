@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
@@ -29,8 +30,8 @@ import {
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { SystemNotification, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
+import { NOTIFICATION_KEY } from '@cardstack/utils';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
-import networkTypes from '@rainbow-me/helpers/networkTypes';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
@@ -52,6 +53,7 @@ export default function WalletScreen() {
   const { params } = useRoute();
   const discoverSheetAvailable = useExperimentalFlag(DISCOVER_SHEET);
   const [initialized, setInitialized] = useState(!!params?.initialized);
+  const [notificationsVisible, setNotificationsVisible] = useState('false');
   const initializeWallet = useInitializeWallet();
   const { isCoinListEdited } = useCoinListEdited();
   const scrollViewTracker = useValue(0);
@@ -61,6 +63,22 @@ export default function WalletScreen() {
 
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
+
+  const setNotifications = async () => {
+    try {
+      const value = await AsyncStorage.getItem(NOTIFICATION_KEY);
+      if (value === null) {
+        // value previously stored
+        AsyncStorage.setItem(NOTIFICATION_KEY, 'true');
+        setNotificationsVisible('true');
+      } else {
+        setNotificationsVisible(value);
+      }
+    } catch (e) {
+      // error reading value
+      console.log('error', e);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -77,6 +95,7 @@ export default function WalletScreen() {
       // We run the migrations only once on app launch
       initializeWallet(null, null, null, true);
       setInitialized(true);
+      setNotifications();
     }
   }, [initializeWallet, initialized, params]);
 
@@ -105,7 +124,6 @@ export default function WalletScreen() {
     openedHeaderText,
     openedBodyText,
   };
-
   return (
     <WalletPage testID="wallet-screen">
       <StatusBar barStyle="light-content" />
@@ -129,9 +147,11 @@ export default function WalletScreen() {
               <CameraHeaderButton />
             )}
           </Header>
-          {!isEmpty && networkInfo[network].layer === 2 && (
-            <SystemNotification type="info" {...notificationProps} />
-          )}
+          {notificationsVisible === 'true' &&
+            !isEmpty &&
+            networkInfo[network].layer === 2 && (
+              <SystemNotification type="info" {...notificationProps} />
+            )}
         </HeaderOpacityToggler>
         <AssetListWrapper />
       </FabWrapper>

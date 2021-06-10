@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
+import AsyncStorage from '@react-native-community/async-storage';
 import downIcon from '../../assets/chevron-down.png';
 import { AnimatedContainer, AnimatedText } from '../Animated';
 import { Container, Icon, Text, IconName } from '@cardstack/components';
+import { NOTIFICATION_KEY } from '@cardstack/utils';
 
 const ANIMATION_DURATION = 150;
 const CLOSED_HEIGHT = 40;
@@ -86,13 +88,18 @@ export const SystemNotification = ({
   };
 
   const hideNotification = () => {
-    Animated.parallel([
-      Animated.timing(containerOpacity, {
-        duration: ANIMATION_DURATION,
-        toValue: HIDDEN_OPACITY,
-        useNativeDriver: true,
-      }),
-    ]).start(() => setIsVisible(false));
+    try {
+      AsyncStorage.setItem(NOTIFICATION_KEY, 'false');
+      Animated.parallel([
+        Animated.timing(containerOpacity, {
+          duration: ANIMATION_DURATION,
+          toValue: HIDDEN_OPACITY,
+          useNativeDriver: true,
+        }),
+      ]).start(() => setIsVisible(false));
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   const toggle = isOpen ? closeNotification : openNotification;
