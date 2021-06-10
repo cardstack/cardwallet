@@ -39,7 +39,7 @@ export default function MerchantScreen() {
         <ScrollView
           flex={1}
           width="100%"
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 180 }}
+          contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
           paddingHorizontal={5}
         >
           <MerchantInfo />
@@ -93,7 +93,7 @@ const Header = () => {
               Mandello
             </Text>
             <Container flexDirection="row" alignItems="center">
-              <NetworkBadge networkName={network} />
+              <NetworkBadge marginRight={2} />
               <Text
                 fontFamily="RobotoMono-Regular"
                 color="white"
@@ -278,7 +278,7 @@ const SectionWrapper = ({
 }) => (
   <Touchable
     width="100%"
-    borderColor="tealDark"
+    borderColor="borderGray"
     borderRadius={10}
     borderWidth={1}
     padding={4}

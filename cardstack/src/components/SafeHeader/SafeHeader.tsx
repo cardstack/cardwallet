@@ -11,11 +11,10 @@ import { getAddressPreview } from '@cardstack/utils';
 interface SafeHeaderProps {
   address: string;
   onPress: () => void;
-  networkName: string;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
-  const { networkName, address, onPress } = props;
+  const { address, onPress } = props;
 
   return (
     <Container width="100%">
@@ -28,7 +27,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
         paddingHorizontal={5}
       >
         <Container flexDirection="row" alignItems="center">
-          <NetworkBadge networkName={networkName} />
+          <NetworkBadge marginRight={2} />
           <Text fontFamily="RobotoMono-Regular" color="white">
             {getAddressPreview(address)}
           </Text>

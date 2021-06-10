@@ -40,8 +40,12 @@ const getCurrentAddress = address => {
 };
 
 const findNewAssetsToWatch = () => async (dispatch, getState) => {
-  const { accountAddress } = getState().settings;
-  const { mainnetAssets, latestTxBlockNumber } = getState().fallbackExplorer;
+  const { accountAddress, network } = getState().settings;
+  const {
+    xdaiChainAssets,
+    mainnetAssets,
+    latestTxBlockNumber,
+  } = getState().fallbackExplorer;
 
   const newAssets = await findAssetsToWatch(
     accountAddress,
@@ -51,15 +55,24 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
   if (newAssets.length > 0) {
     logger.log('😬 Found new assets!', newAssets);
 
-    // dedupe
-    const newMainnetAssets = uniqBy(
-      [...mainnetAssets, ...newAssets],
-      token => token.asset.asset_code
-    );
+    const assets =
+      network === networkTypes.xdai
+        ? {
+            xdaiChainAssets: uniqBy(
+              [...xdaiChainAssets, ...newAssets],
+              token => token.asset.asset_code
+            ),
+          }
+        : {
+            mainnetAssets: uniqBy(
+              [...mainnetAssets, ...newAssets],
+              token => token.asset.asset_code
+            ),
+          };
 
     dispatch({
       payload: {
-        mainnetAssets: newMainnetAssets,
+        ...assets,
       },
       type: FALLBACK_EXPLORER_SET_ASSETS,
     });
@@ -128,19 +141,21 @@ const findAssetsToWatch = async (
     'nativeTokenCoingeckoId',
     network
   );
-
-  return [
-    ...tokensInWallet,
-    {
-      asset: {
-        asset_code: nativeTokenAddress,
-        coingecko_id: nativeTokenCoingeckoId,
-        decimals: 18,
-        name: nativeTokenName,
-        symbol: nativeTokenSymbol,
-      },
+  const nativeToken = {
+    asset: {
+      asset_code: nativeTokenAddress,
+      coingecko_id: nativeTokenCoingeckoId,
+      decimals: 18,
+      name: nativeTokenName,
+      symbol: nativeTokenSymbol,
     },
-  ];
+  };
+  const tokensHaveNativeToken = Boolean(
+    tokensInWallet.find(token => token.asset.symbol === nativeTokenSymbol)
+  );
+  const nativeTokenArray = tokensHaveNativeToken ? [] : [nativeToken];
+
+  return [...tokensInWallet, ...nativeTokenArray];
 };
 
 const getTokenType = tx => {
@@ -317,7 +332,11 @@ const fetchAssetBalances = async (tokens, address, network) => {
 
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const { accountAddress, nativeCurrency, network } = getState().settings;
-  const { latestTxBlockNumber, mainnetAssets } = getState().fallbackExplorer;
+  const {
+    latestTxBlockNumber,
+    mainnetAssets,
+    xdaiChainAssets,
+  } = getState().fallbackExplorer;
   const coingeckoCoins = getState().coingecko.coins;
   const formattedNativeCurrency = toLower(nativeCurrency);
   // If mainnet, we need to get all the info
@@ -331,10 +350,18 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       dispatch,
       coingeckoCoins
     );
+    const assets =
+      network === networkTypes.xdai
+        ? {
+            xdaiChainAssets: xdaiChainAssets.concat(newMainnetAssets),
+          }
+        : {
+            mainnetAssets: mainnetAssets.concat(newMainnetAssets),
+          };
 
     await dispatch({
       payload: {
-        mainnetAssets: mainnetAssets.concat(newMainnetAssets),
+        ...assets,
       },
       type: FALLBACK_EXPLORER_SET_ASSETS,
     });
@@ -343,8 +370,12 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const fetchAssetsBalancesAndPrices = async () => {
     logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
     const { network } = getState().settings;
-    const { mainnetAssets } = getState().fallbackExplorer;
-    const assets = isMainnet(network) ? mainnetAssets : testnetAssets[network];
+    const { xdaiChainAssets, mainnetAssets } = getState().fallbackExplorer;
+    const actualMainnetAssets =
+      network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
+    const assets = isMainnet(network)
+      ? actualMainnetAssets
+      : testnetAssets[network];
     let depots = [],
       prepaidCards = [],
       merchantSafes = [];
@@ -572,15 +603,22 @@ const INITIAL_STATE = {
   fallbackExplorerAssetsHandle: null,
   fallbackExplorerBalancesHandle: null,
   latestTxBlockNumber: null,
+  xdaiChainAssets: [],
   mainnetAssets: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case FALLBACK_EXPLORER_SET_ASSETS:
+      // eslint-disable-next-line no-case-declarations
+      const { mainnetAssets, xdaiChainAssets } = action.payload;
+
       return {
         ...state,
-        mainnetAssets: action.payload.mainnetAssets,
+        mainnetAssets: mainnetAssets ? mainnetAssets : state.mainnetAssets,
+        xdaiChainAssets: xdaiChainAssets
+          ? xdaiChainAssets
+          : state.xdaiChainAssets,
       };
     case FALLBACK_EXPLORER_CLEAR_STATE:
       return {

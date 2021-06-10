@@ -3,13 +3,13 @@ import { useDispatch } from 'react-redux';
 import { getOnchainAssetBalance } from '../handlers/assets';
 import { dataUpdateAssets } from '../redux/data';
 import useAccountAssets from './useAccountAssets';
-import { logger } from '@rainbow-me/utils';
 import useAccountSettings from './useAccountSettings';
+import { logger } from '@rainbow-me/utils';
 
 export default function useUpdateAssetOnchainBalance() {
   const { allAssets } = useAccountAssets();
   const dispatch = useDispatch();
-  const {network} = useAccountSettings();
+  const { network } = useAccountSettings();
 
   const useUpdateAssetOnchainBalance = useCallback(
     async (assetToUpdate, accountAddress, successCallback) => {
@@ -36,7 +36,7 @@ export default function useUpdateAssetOnchainBalance() {
         );
       }
     },
-    [allAssets, dispatch]
+    [allAssets, dispatch, network]
   );
   return useUpdateAssetOnchainBalance;
 }
