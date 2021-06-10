@@ -28,6 +28,7 @@ const SETTINGS_UPDATE_LANGUAGE_SUCCESS =
   'settings/SETTINGS_UPDATE_LANGUAGE_SUCCESS';
 const SETTINGS_UPDATE_NETWORK_SUCCESS =
   'settings/SETTINGS_UPDATE_NETWORK_SUCCESS';
+const SETTINGS_UPDATE_SHOW_TESTNETS = 'settings/SETTINGS_UPDATE_SHOW_TESTNETS';
 
 // -- Actions --------------------------------------------------------------- //
 export const settingsLoadState = () => async dispatch => {
@@ -107,6 +108,15 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
   }
 };
 
+export const toggleShowTestnets = () => (dispatch, getState) => {
+  const { showTestnets } = getState().settings;
+
+  dispatch({
+    payload: !showTestnets,
+    type: SETTINGS_UPDATE_SHOW_TESTNETS,
+  });
+};
+
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
   accountAddress: '',
@@ -114,6 +124,7 @@ export const INITIAL_STATE = {
   language: 'en',
   nativeCurrency: 'USD',
   network: networkTypes.xdai,
+  showTestnets: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -138,6 +149,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         language: action.payload,
+      };
+    case SETTINGS_UPDATE_SHOW_TESTNETS:
+      return {
+        ...state,
+        showTestnets: action.payload,
       };
     default:
       return state;
