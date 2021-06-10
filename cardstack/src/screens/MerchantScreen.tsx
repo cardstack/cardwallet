@@ -39,7 +39,7 @@ export default function MerchantScreen() {
         <ScrollView
           flex={1}
           width="100%"
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 180 }}
+          contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
           paddingHorizontal={5}
         >
           <MerchantInfo />
@@ -278,7 +278,7 @@ const SectionWrapper = ({
 }) => (
   <Touchable
     width="100%"
-    borderColor="tealDark"
+    borderColor="borderGray"
     borderRadius={10}
     borderWidth={1}
     padding={4}
