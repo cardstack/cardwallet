@@ -278,7 +278,11 @@ export const transactionsRemoved = message => (dispatch, getState) => {
   saveLocalTransactions(updatedTransactions, accountAddress, network);
 };
 
-const getTokensWithPrice = async (tokens, nativeCurrency) => {
+const getTokensWithPrice = async (
+  tokens,
+  nativeCurrency,
+  currencyConversionRates
+) => {
   const web3 = new Web3(web3ProviderSdk);
   const exchangeRate = await getSDK('ExchangeRate', web3);
 
@@ -288,6 +292,10 @@ const getTokensWithPrice = async (tokens, nativeCurrency) => {
         tokenItem.token.symbol,
         tokenItem.balance
       );
+      const nativeBalance =
+        nativeCurrency === 'USD'
+          ? usdBalance
+          : currencyConversionRates[nativeCurrency] * usdBalance;
       const priceUnit = tokenItem.price?.value || 0;
 
       return {
@@ -295,8 +303,11 @@ const getTokensWithPrice = async (tokens, nativeCurrency) => {
         balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
         native: {
           balance: {
-            amount: usdBalance,
-            display: convertAmountToNativeDisplay(usdBalance, nativeCurrency),
+            amount: nativeBalance,
+            display: convertAmountToNativeDisplay(
+              nativeBalance,
+              nativeCurrency
+            ),
           },
           price: {
             amount: priceUnit,
@@ -312,7 +323,8 @@ const addGnosisTokenPrices = async (
   message,
   network,
   accountAddress,
-  nativeCurrency
+  nativeCurrency,
+  currencyConversionRates
 ) => {
   const depots = get(message, 'payload.depots', []);
   const merchantSafes = get(message, 'payload.merchantSafes', []);
@@ -331,7 +343,8 @@ const addGnosisTokenPrices = async (
         depots.map(async depot => {
           const tokensWithPrice = await getTokensWithPrice(
             depot.tokens,
-            nativeCurrency
+            nativeCurrency,
+            currencyConversionRates
           );
 
           return {
@@ -344,7 +357,8 @@ const addGnosisTokenPrices = async (
         prepaidCards.map(async prepaidCard => {
           const tokensWithPrice = await getTokensWithPrice(
             prepaidCard.tokens,
-            nativeCurrency
+            nativeCurrency,
+            currencyConversionRates
           );
 
           return {
@@ -360,7 +374,11 @@ const addGnosisTokenPrices = async (
           );
           const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all(
             [
-              getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
+              getTokensWithPrice(
+                merchantSafe.tokens,
+                nativeCurrency,
+                currencyConversionRates
+              ),
               getTokensWithPrice(
                 revenueBalances.map(revenueToken => ({
                   ...revenueToken,
@@ -368,7 +386,8 @@ const addGnosisTokenPrices = async (
                     symbol: revenueToken.tokenSymbol,
                   },
                 })),
-                nativeCurrency
+                nativeCurrency,
+                currencyConversionRates
               ),
             ]
           );
@@ -410,13 +429,15 @@ export const addressAssetsReceived = (
   if (!isValidMeta) return;
 
   const { accountAddress, network, nativeCurrency } = getState().settings;
+  const currencyConversionRates = getState().currencyConversion.rates;
 
   try {
     const { depots, prepaidCards, merchantSafes } = await addGnosisTokenPrices(
       message,
       network,
       accountAddress,
-      nativeCurrency
+      nativeCurrency,
+      currencyConversionRates
     );
 
     dispatch({
@@ -428,10 +449,7 @@ export const addressAssetsReceived = (
       type: DATA_UPDATE_GNOSIS_DATA,
     });
   } catch (error) {
-    console.log(
-      error,
-      'Depots, Safes and Prepaid cards do not handle non-USD currencies.'
-    );
+    console.log('Error adding token prices to Gnosis safes', error);
   }
 
   const { uniqueTokens } = getState().uniqueTokens;

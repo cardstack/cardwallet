@@ -159,14 +159,18 @@ const LifetimeEarningsSection = () => {
 
   const { accumulatedSpendValue } = merchantSafe;
 
-  const nativeCurrency = useRainbowSelector(
-    state => state.settings.nativeCurrency
-  );
+  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
+    [string, { [key: string]: number }]
+  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
 
   const {
     tokenBalanceDisplay,
     nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(accumulatedSpendValue, nativeCurrency);
+  } = convertSpendForBalanceDisplay(
+    accumulatedSpendValue,
+    nativeCurrency,
+    currencyConversionRates
+  );
 
   const onPress = () =>
     navigate(Routes.EXPANDED_ASSET_SHEET, {
