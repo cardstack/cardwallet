@@ -25,10 +25,11 @@ export default function useLoadAccountData() {
       await dispatch(coinListLoadState());
       await dispatch(showcaseTokensLoadState());
       const promises = [];
+      const p1 = dispatch(dataLoadState());
+      promises.push(p1);
       if (isMainnet(network)) {
-        const p1 = dispatch(dataLoadState());
         const p2 = dispatch(uniqueTokensLoadState());
-        promises.push(p1, p2);
+        promises.push(p2);
       }
       const p3 = dispatch(requestsLoadState());
       const p4 = dispatch(walletConnectLoadState());
