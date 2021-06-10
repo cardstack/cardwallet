@@ -93,7 +93,7 @@ const Header = () => {
               Mandello
             </Text>
             <Container flexDirection="row" alignItems="center">
-              <NetworkBadge networkName={network} />
+              <NetworkBadge marginRight={2} />
               <Text
                 fontFamily="RobotoMono-Regular"
                 color="white"
