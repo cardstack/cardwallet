@@ -4,7 +4,6 @@ import {
   concat,
   filter,
   get,
-  includes,
   isEmpty,
   isNil,
   keyBy,
@@ -24,7 +23,9 @@ import {
   UNISWAP_PRICES_QUERY,
 } from '../apollo/queries';
 import { getTransactionReceipt } from '../handlers/web3';
+// eslint-disable-next-line import/no-cycle
 import { addCashUpdatePurchases } from './addCash';
+// eslint-disable-next-line import/no-cycle
 import { uniqueTokensRefreshState } from './uniqueTokens';
 import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import {
@@ -59,9 +60,6 @@ import { shitcoins } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
 import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
 import logger from 'logger';
-
-/* eslint-disable-next-line import/no-cycle */
-/* eslint-disable-next-line import/no-cycle */
 
 const BACKUP_SHEET_DELAY_MS = 3000;
 
@@ -243,28 +241,6 @@ export const transactionsReceived = (message, appended = false) => async (
       }, BACKUP_SHEET_DELAY_MS);
     }
   }
-};
-
-export const transactionsRemoved = message => (dispatch, getState) => {
-  const isValidMeta = dispatch(checkMeta(message));
-  if (!isValidMeta) return;
-
-  const transactionData = get(message, 'payload.transactions', []);
-  if (!transactionData.length) return;
-  const { accountAddress, network } = getState().settings;
-  const { transactions } = getState().data;
-  const removeHashes = map(transactionData, txn => txn.hash);
-  logger.log('[data] - remove txn hashes', removeHashes);
-  const updatedTransactions = filter(
-    transactions,
-    txn => !includes(removeHashes, ethereumUtils.getHash(txn))
-  );
-
-  dispatch({
-    payload: updatedTransactions,
-    type: DATA_UPDATE_TRANSACTIONS,
-  });
-  saveLocalTransactions(updatedTransactions, accountAddress, network);
 };
 
 export const addressAssetsReceived = (

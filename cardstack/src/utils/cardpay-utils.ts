@@ -19,15 +19,38 @@ export const isLayer1 = (network: string) => LAYER_1_NETWORKS.includes(network);
 
 export const isMainnet = (network: string) => MAINNETS.includes(network);
 
-export const getUSDFromSpend = (spendAmount: number): number =>
-  spendAmount / 100;
+export const getNativeBalanceFromSpend = (
+  spendAmount: number,
+  nativeCurrency: string,
+  currencyConversionRates: { [key: string]: number }
+): number => {
+  const usdBalance = spendAmount / 100;
+
+  if (nativeCurrency === 'USD') {
+    return usdBalance;
+  } else if (
+    currencyConversionRates &&
+    currencyConversionRates[nativeCurrency]
+  ) {
+    return usdBalance * currencyConversionRates[nativeCurrency];
+  }
+
+  return 0;
+};
 
 export const convertSpendForBalanceDisplay = (
   accumulatedSpendValue: string,
   nativeCurrency: string,
+  currencyConversionRates: {
+    [key: string]: number;
+  },
   includeSuffix?: boolean
 ) => {
-  const usdBalance = getUSDFromSpend(Number(accumulatedSpendValue));
+  const nativeBalance = getNativeBalanceFromSpend(
+    Number(accumulatedSpendValue),
+    nativeCurrency,
+    currencyConversionRates
+  );
 
   const spendWithCommas = accumulatedSpendValue.replace(
     /\B(?=(\d{3})+(?!\d))/g,
@@ -35,7 +58,7 @@ export const convertSpendForBalanceDisplay = (
   );
 
   const nativeBalanceDisplay = convertAmountToNativeDisplay(
-    usdBalance,
+    nativeBalance,
     nativeCurrency
   );
 

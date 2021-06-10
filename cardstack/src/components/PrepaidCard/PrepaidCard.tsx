@@ -32,6 +32,9 @@ import {
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
   nativeCurrency: string;
+  currencyConversionRates: {
+    [key: string]: number;
+  };
 }
 
 const SELECT_ICON_WIDTH = '13%';
@@ -215,6 +218,7 @@ const Bottom = ({
   reloadable,
   issuer,
   nativeCurrency,
+  currencyConversionRates,
 }: PrepaidCardProps) => {
   const { accountAddress } = useAccountSettings();
   const transferrable = accountAddress === issuer;
@@ -222,7 +226,11 @@ const Bottom = ({
   const {
     tokenBalanceDisplay,
     nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(spendFaceValue.toString(), nativeCurrency);
+  } = convertSpendForBalanceDisplay(
+    spendFaceValue.toString(),
+    nativeCurrency,
+    currencyConversionRates
+  );
 
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>

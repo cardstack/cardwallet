@@ -28,6 +28,7 @@ storiesOf('Prepaid Card', module)
         type="prepaid-card"
         networkName="xDai Chain"
         nativeCurrency="USD"
+        currencyConversionRates={{}}
       />
     );
   })

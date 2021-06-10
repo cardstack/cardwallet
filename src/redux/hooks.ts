@@ -23,6 +23,11 @@ interface ReduxState {
     loadingUniqueTokens: boolean;
     uniqueTokens: any[];
   };
+  currencyConversion: {
+    rates: {
+      [key: string]: number;
+    };
+  };
 }
 
 export const useRainbowSelector = <TSelected = unknown>(

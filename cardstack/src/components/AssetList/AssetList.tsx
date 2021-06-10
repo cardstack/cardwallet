@@ -4,7 +4,7 @@ import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
-import { AssetFooter } from '../../../../src/components/asset-list';
+import { AssetFooter } from './AssetFooter';
 import { AssetListLoading } from './AssetListLoading';
 import { Button, Container, Icon, Text } from '@cardstack/components';
 import {
@@ -24,7 +24,13 @@ interface HeaderItem {
 
 export type AssetListSectionItem<ComponentProps> = {
   Component: (
-    props: ComponentProps & { networkName: string; nativeCurrency: string }
+    props: ComponentProps & {
+      networkName: string;
+      nativeCurrency: string;
+      currencyConversionRates: {
+        [key: string]: number;
+      };
+    }
   ) => JSX.Element;
   header: HeaderItem;
   data: ComponentProps[];
@@ -35,6 +41,9 @@ interface AssetListProps {
   loading: boolean;
   network: string;
   nativeCurrency: string;
+  currencyConversionRates: {
+    [key: string]: number;
+  };
   sections: AssetListSectionItem<any>[];
 }
 
@@ -42,7 +51,15 @@ export const AssetList = (props: AssetListProps) => {
   const refresh = useRefreshAccountData();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { isEmpty, loading, sections, network, nativeCurrency } = props;
+  const {
+    isEmpty,
+    loading,
+    sections,
+    network,
+    nativeCurrency,
+    currencyConversionRates,
+  } = props;
+
   const networkName = getConstantByNetwork('name', network);
 
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
@@ -85,6 +102,7 @@ export const AssetList = (props: AssetListProps) => {
             {...item}
             networkName={networkName}
             nativeCurrency={nativeCurrency}
+            currencyConversionRates={currencyConversionRates}
           />
         )}
         renderSectionHeader={({ section }) => {
@@ -165,7 +183,7 @@ export const AssetList = (props: AssetListProps) => {
         }}
         contentContainerStyle={{ paddingBottom: 180 }}
       />
-      <AssetFooter />
+      <AssetFooter sections={sections} />
     </>
   );
 };
