@@ -148,17 +148,17 @@ export default function WalletProfileState({
           {isNewProfile ? (
             <OptionItem
               iconProps={{
-                color: 'settingsGray',
+                color: 'settingsTeal',
                 visible: actionType === 'Create',
                 name: biometryType,
               }}
               justifyContent="center"
               testID="wallet-info-submit-button"
-              textProps={{ color: 'settingsGray' }}
+              textProps={{ color: 'settingsTeal' }}
               title={`${actionType} Account`}
             />
           ) : (
-            <Text color="settingsGray" fontWeight="600" textAlign="center">
+            <Text color="settingsTeal" fontWeight="600" textAlign="center">
               Done
             </Text>
           )}

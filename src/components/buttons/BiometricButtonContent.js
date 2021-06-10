@@ -39,7 +39,7 @@ export default function BiometricButtonContent({
       {!android && showBiometryIcon && (
         <BiometryIcon biometryType={biometryType} color={color} />
       )}
-      <Text color="settingsGray" fontWeight="600" testID={testID}>
+      <Text color="settingsTeal" fontWeight="600" testID={testID}>
         {showFaceIDCharacter && '􀎽 '}
         {text}
       </Text>

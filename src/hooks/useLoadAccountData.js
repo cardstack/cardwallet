@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import networkTypes from '../helpers/networkTypes';
+
 import { addCashLoadState } from '../redux/addCash';
 import { dataLoadState } from '../redux/data';
 import { coinListLoadState } from '../redux/editOptions';
@@ -12,6 +12,7 @@ import { uniswapLoadState } from '../redux/uniswap';
 import { uniswapLiquidityLoadState } from '../redux/uniswapLiquidity';
 import { walletConnectLoadState } from '../redux/walletconnect';
 import { promiseUtils } from '../utils';
+import { isMainnet } from '@cardstack/utils';
 import logger from 'logger';
 
 export default function useLoadAccountData() {
@@ -24,7 +25,7 @@ export default function useLoadAccountData() {
       await dispatch(coinListLoadState());
       await dispatch(showcaseTokensLoadState());
       const promises = [];
-      if (network === networkTypes.mainnet) {
+      if (isMainnet(network)) {
         const p1 = dispatch(dataLoadState());
         const p2 = dispatch(uniqueTokensLoadState());
         promises.push(p1, p2);

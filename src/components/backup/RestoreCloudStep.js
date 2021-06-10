@@ -121,7 +121,7 @@ export default function RestoreCloudStep({ userData }) {
         }}
         padding={9}
       >
-        <Icon color="settingsGray" iconSize="xl" name="lock" />
+        <Icon color="settingsTeal" iconSize="xl" name="lock" />
         <Text fontSize={20} margin={3}>
           Enter password
         </Text>

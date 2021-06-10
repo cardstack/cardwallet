@@ -63,7 +63,11 @@ describe('Button', () => {
 
   it('should call useVariantValue four times', () => {
     const buttonText = chance.string();
-    const variant = chance.pickone<'secondary' | 'blue'>(['secondary', 'blue']);
+
+    const variant = chance.pickone<'secondary' | 'primary'>([
+      'secondary',
+      'primary',
+    ]);
 
     render(<Button variant={variant}>{buttonText}</Button>);
 
@@ -96,7 +100,10 @@ describe('Button', () => {
   it('should pass the variant return value to text', () => {
     const buttonText = chance.string();
 
-    const variant = chance.pickone<'secondary' | 'blue'>(['secondary', 'blue']);
+    const variant = chance.pickone<'secondary' | 'primary'>([
+      'secondary',
+      'primary',
+    ]);
 
     render(<Button variant={variant}>{buttonText}</Button>);
 
@@ -154,7 +161,7 @@ describe('Button', () => {
     );
 
     expect(Icon).toHaveBeenCalledWith(
-      expect.objectContaining({ color: 'blueText' }),
+      expect.objectContaining({ color: 'primaryText' }),
       {}
     );
   });

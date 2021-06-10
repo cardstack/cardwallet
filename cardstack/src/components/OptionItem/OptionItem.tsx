@@ -48,7 +48,7 @@ export const OptionItem = ({
           width={40}
           testID="option-item-icon-wrapper"
         >
-          <Icon color="settingsGray" {...iconProps} />
+          <Icon color="settingsTeal" {...iconProps} />
         </CenteredContainer>
       )}
       <Container>

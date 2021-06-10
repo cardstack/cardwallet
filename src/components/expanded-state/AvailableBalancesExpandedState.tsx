@@ -9,6 +9,7 @@ import {
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 
 const CHART_HEIGHT = 650;
 
@@ -34,34 +35,32 @@ export default function AvailableBalancesExpandedState(
   }, [setOptions]);
 
   return (
-    // @ts-ignore
-    <SlackSheet
-      additionalTopPadding={android}
-      contentHeight={CHART_HEIGHT}
-      scrollEnabled
-    >
-      <Container paddingHorizontal={5} paddingTop={3}>
-        <Text size="medium">Available balances</Text>
-        <Container flexDirection="row" justifyContent="space-between">
-          <TabHeader
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-            tab={Tabs.BALANCES}
-          />
-          <TabHeader
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-            tab={Tabs.ACTIVITIES}
-          />
+    <>
+      {/* @ts-ignore */}
+      <SlackSheet bottomInset={42} height="100%" scrollEnabled>
+        <Container paddingHorizontal={5} paddingTop={3}>
+          <Text size="medium">Available balances</Text>
+          <Container flexDirection="row" justifyContent="space-between">
+            <TabHeader
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+              tab={Tabs.BALANCES}
+            />
+            <TabHeader
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+              tab={Tabs.ACTIVITIES}
+            />
+          </Container>
         </Container>
-      </Container>
-      <HorizontalDivider marginVertical={0} />
-      {selectedTab === Tabs.BALANCES ? (
-        <Balances {...props} />
-      ) : (
-        <Activities {...props} />
-      )}
-    </SlackSheet>
+        <HorizontalDivider marginVertical={0} />
+        {selectedTab === Tabs.BALANCES ? (
+          <Balances {...props} />
+        ) : (
+          <Activities {...props} />
+        )}
+      </SlackSheet>
+    </>
   );
 }
 
@@ -100,6 +99,14 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
 
 const Balances = (props: AvailableBalancesExpandedStateProps) => {
   const { tokens } = props.asset;
+  const { navigate } = useNavigation();
+
+  const onPress = (token: any) => {
+    navigate(Routes.EXPANDED_ASSET_SHEET, {
+      asset: token,
+      type: 'token',
+    });
+  };
 
   return (
     <Container paddingBottom={3} paddingHorizontal={5}>
@@ -111,6 +118,7 @@ const Balances = (props: AvailableBalancesExpandedStateProps) => {
           includeBorder
           key={token.tokenAddress}
           nativeBalance={token.native.balance.display}
+          onPress={() => onPress(token)}
           tokenBalance={token.balance.display}
           tokenSymbol={token.token.symbol}
         />

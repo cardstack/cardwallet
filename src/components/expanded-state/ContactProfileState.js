@@ -109,7 +109,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
             }}
             justifyContent="center"
             testID="wallet-info-submit-button"
-            textProps={{ color: 'settingsGray' }}
+            textProps={{ color: 'settingsTeal' }}
             title={contact ? 'Done' : 'Add Contact'}
           />
         </ButtonPressAnimation>

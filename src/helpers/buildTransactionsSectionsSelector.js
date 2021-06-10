@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { get, groupBy, isEmpty, map, toLower } from 'lodash';
 import { createElement } from 'react';
 import { createSelector } from 'reselect';
-import { RequestCoinRow, TransactionCoinRow } from '../components/coin-row';
+import { RequestCoinRow } from '../components/coin-row';
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
 import {
   thisMonthTimestamp,
@@ -10,6 +10,7 @@ import {
   todayTimestamp,
   yesterdayTimestamp,
 } from './transactions';
+import { TransactionCoinRow } from '@cardstack/components';
 
 const contactsSelector = state => state.contacts;
 const requestsSelector = state => state.requests;

@@ -31,7 +31,7 @@ describe('theme utils', () => {
         },
         width: chance.natural(),
       },
-      blue: {
+      primary: {
         textStyle: {
           [chance.string()]: chance.string(),
         },
@@ -84,7 +84,7 @@ describe('theme utils', () => {
     it('should pull the correct textStyle off of the theme if a responsive value is passed', () => {
       const textStyle = useVariantValue('buttonVariants', 'textStyle', {
         phone: 'secondary',
-        tablet: 'blue',
+        tablet: 'primary',
       });
 
       expect(textStyle).toEqual({
@@ -94,7 +94,7 @@ describe('theme utils', () => {
     });
 
     it('should pull the correct width off of the theme if the variant passed does not have the value', () => {
-      const width = useVariantValue('buttonVariants', 'width', 'blue');
+      const width = useVariantValue('buttonVariants', 'width', 'primary');
 
       expect(width).toEqual(theme.buttonVariants.defaults.width);
     });
@@ -102,7 +102,7 @@ describe('theme utils', () => {
     it('should pull the correct textStyle off of the theme if an undefined responsive variable is passed', () => {
       const textStyle = useVariantValue('buttonVariants', 'textStyle', {
         phone: undefined,
-        tablet: 'blue',
+        tablet: 'primary',
       });
 
       expect(textStyle).toEqual({
@@ -117,12 +117,12 @@ describe('theme utils', () => {
 
       const textStyle = useVariantValue('buttonVariants', 'textStyle', {
         phone: 'secondary',
-        tablet: 'blue',
+        tablet: 'primary',
       });
 
       expect(textStyle).toEqual({
         ...theme.buttonVariants.defaults.textStyle,
-        ...theme.buttonVariants.blue.textStyle,
+        ...theme.buttonVariants.primary.textStyle,
       });
     });
   });

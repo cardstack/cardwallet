@@ -26,7 +26,7 @@ export default function EmulatorPasteUriButton() {
   return isEmulator ? (
     <ButtonPressAnimation onPress={handlePressPasteSessionUri}>
       <Icon
-        color="blue"
+        color="teal"
         iconSize="large"
         marginBottom={2}
         marginRight={8}

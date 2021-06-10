@@ -45,10 +45,7 @@ function SeedWordGrid({ seed }) {
               const number = Number(index + 1 + colIndex * wordColumn.length);
               return (
                 <GridItem justify="end" key={`grid_number_${number}`}>
-                  <GridText
-                    align="right"
-                    color={colors.buttonPrimaryBackground}
-                  >
+                  <GridText align="right" color={colors.black}>
                     {number}
                   </GridText>
                 </GridItem>

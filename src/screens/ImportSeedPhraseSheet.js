@@ -1,3 +1,5 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import analytics from '@segment/analytics-react-native';
 import { isValidAddress } from 'ethereumjs-util';
 import { keys } from 'lodash';
@@ -12,6 +14,7 @@ import { Alert, InteractionManager, StatusBar } from 'react-native';
 import { IS_TESTING } from 'react-native-dotenv';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import styled from 'styled-components';
+
 import { Centered, Column, Row } from '../components/layout';
 import { SheetHandle } from '../components/sheet';
 import {
@@ -19,11 +22,9 @@ import {
   ToastPositionContainer,
 } from '../components/toasts';
 import { useTheme } from '../context/ThemeContext';
+import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
 import { Button, Input, Text } from '@cardstack/components';
-import {
-  resolveUnstoppableDomain,
-  web3Provider,
-} from '@rainbow-me/handlers/web3';
+import { resolveUnstoppableDomain } from '@rainbow-me/handlers/web3';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import {
   isENSAddressFormat,
@@ -186,11 +187,17 @@ export default function ImportSeedPhraseSheet() {
   const handlePressImportButton = useCallback(async () => {
     if (!isSecretValid || !seedPhrase) return null;
     const input = sanitizeSeedPhrase(seedPhrase);
+    // Just use mainnet provider for lookup
+    const mainnetProvider = new JsonRpcProvider(
+      getConstantByNetwork('rpcNode', networkTypes.mainnet),
+      NetworkTypes.mainnet
+    );
+
     let name = null;
     // Validate ENS
     if (isENSAddressFormat(input)) {
       try {
-        const address = await web3Provider.resolveName(input);
+        const address = await mainnetProvider.resolveName(input);
         if (!address) {
           Alert.alert('This is not a valid ENS name');
           return;
@@ -223,11 +230,8 @@ export default function ImportSeedPhraseSheet() {
       }
     } else if (isValidAddress(input)) {
       try {
-        // Layer 1 uses JSONRPCProvider (with lookupAddress) (ethers project - handles both mnemonic and address values)
-        // Layer 2 uses httpProvider (without lookupAddress) (web3 - limited to only address), return null
-        // TODO: Find equivalent to handle both provider types in order to reverse lookup address for either address and mnemonic values
-        const ens = web3Provider.lookupAddress
-          ? await web3Provider.lookupAddress(input)
+        const ens = mainnetProvider.lookupAddress
+          ? await mainnetProvider.lookupAddress(input)
           : null;
         if (ens && ens !== input) {
           name = ens;
@@ -245,8 +249,8 @@ export default function ImportSeedPhraseSheet() {
           );
           setCheckedWallet(walletResult);
 
-          const ens = web3Provider.lookupAddress
-            ? await web3Provider.lookupAddress(walletResult.address)
+          const ens = mainnetProvider.lookupAddress
+            ? await mainnetProvider.lookupAddress(walletResult.address)
             : null;
 
           if (ens && ens !== input) {

@@ -156,7 +156,7 @@ export default function SettingsSection({
       <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
         {canBeBackedUp && (
           <ListItem
-            icon={<Icon color="settingsGray" name="refresh" />}
+            icon={<Icon color="settingsTeal" name="refresh" />}
             label="Backup"
             onPress={onPressBackup}
             onPressIcloudBackup={onPressIcloudBackup}
@@ -172,7 +172,7 @@ export default function SettingsSection({
           </ListItem>
         )}
         <ListItem
-          icon={<Icon color="settingsGray" name="dollar-sign" />}
+          icon={<Icon color="settingsTeal" name="dollar-sign" />}
           label="Currency"
           onPress={onPressCurrency}
           testID="currency-section"
@@ -180,7 +180,7 @@ export default function SettingsSection({
           <ListItemArrowGroup>{nativeCurrency || ''}</ListItemArrowGroup>
         </ListItem>
         <ListItem
-          icon={<Icon color="settingsGray" name="cloud" />}
+          icon={<Icon color="settingsTeal" name="cloud" />}
           label="Network"
           onPress={onPressNetwork}
           testID="network-section"
@@ -200,21 +200,21 @@ export default function SettingsSection({
           value={SettingsExternalURLs.rainbowHomepage}
         />
         <ListItem
-          icon={<Icon color="settingsGray" name="twitter" />}
+          icon={<Icon color="settingsTeal" name="twitter" />}
           label="Follow"
           onPress={onPressTwitter}
           testID="twitter-section"
           value={SettingsExternalURLs.twitter}
         />
         <ListItem
-          icon={<Icon color="settingsGray" name="life-buoy" />}
+          icon={<Icon color="settingsTeal" name="life-buoy" />}
           label={ios ? 'Support' : 'Feedback & Bug Reports'}
           onPress={onSendFeedback}
           testID="feedback-section"
         />
         {isReviewEnabled && (
           <ListItem
-            icon={<Icon color="settingsGray" name="star" />}
+            icon={<Icon color="settingsTeal" name="star" />}
             label="Review"
             onPress={onPressReview}
             testID="review-section"
