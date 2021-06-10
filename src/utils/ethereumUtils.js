@@ -58,7 +58,7 @@ const getEthPriceUnit = () => {
 const getBalanceAmount = async (selectedGasPrice, selected) => {
   const network = store.getState().settings.network;
   let amount = get(selected, 'balance.amount', 0);
-  if (isNativeToken(get(selected, 'symbol'), network)) {
+  if (isNativeToken(selected?.symbol, network)) {
     if (!isEmpty(selectedGasPrice)) {
       const txFeeRaw = get(selectedGasPrice, 'txFee.value.amount');
       const txFeeAmount = fromWei(txFeeRaw);
