@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
 function SvgComponent(props: SvgProps) {
   return (
     <Svg
-      data-name="Card Wallet app icon FINAL"
+      //@ts-ignore
       xmlns="http://www.w3.org/2000/svg"
+      data-name="Card Wallet app icon FINAL"
       width={90}
       height={90}
       viewBox="0 0 90 90"
