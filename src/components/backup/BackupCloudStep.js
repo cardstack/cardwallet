@@ -185,7 +185,7 @@ export default function BackupCloudStep() {
       }
     >
       <Container alignItems="center" marginVertical={10} padding={9}>
-        <Icon color="settingsGray" iconSize="xl" name="lock" />
+        <Icon color="settingsTeal" iconSize="xl" name="lock" />
         <Text fontSize={20} margin={3}>
           Choose a password
         </Text>

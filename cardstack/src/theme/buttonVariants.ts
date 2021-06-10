@@ -1,10 +1,10 @@
 import { screenWidth } from '../utils/dimension-utils';
 
-const blue = {
+const primary = {
   backgroundColor: 'backgroundBlue',
   borderColor: 'borderBlue',
   textStyle: {
-    color: 'buttonPrimaryBackground',
+    color: 'teal',
   },
 };
 
@@ -88,12 +88,12 @@ export const buttonVariants = {
   secondary: { ...secondary },
   tertiary: { ...tertiary },
   dark,
-  blue,
+  primary,
   small,
   white,
   smallBlue: {
     ...small,
-    ...blue,
+    ...primary,
   },
   smallSecondary: {
     ...small,
@@ -122,12 +122,12 @@ export const buttonVariants = {
   tiny,
   invalid: { ...invalid },
   square: {
-    ...blue,
+    ...primary,
     height: 92,
     width: 92,
     borderRadius: 20,
     textStyle: {
-      ...blue.textStyle,
+      ...primary.textStyle,
       fontWeight: '700',
       fontSize: 26,
     },

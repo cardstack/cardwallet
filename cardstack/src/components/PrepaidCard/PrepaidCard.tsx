@@ -95,7 +95,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
               name={editingIconName}
               iconSize="medium"
               iconFamily={iconFamily}
-              color={isSelected ? 'blue' : null}
+              color={isSelected ? 'teal' : null}
             />
           </Container>
         )}
@@ -117,7 +117,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             >
               <Icon
                 size={16}
-                color="blue"
+                color="teal"
                 name={iconName}
                 iconFamily={iconFamily}
               />

@@ -18,7 +18,7 @@ interface TokenBalanceProps extends ContainerProps {
 }
 
 const borderStyle = {
-  borderColor: 'buttonPrimaryBorder',
+  borderColor: 'tealDark',
   borderRadius: 10,
   borderWidth: 1,
   padding: 4,

@@ -92,7 +92,7 @@ const QRScannerScreen = () => {
     <Container>
       <Header backgroundColor="transparent" position="absolute" zIndex={1}>
         <BackButton
-          color="blue"
+          color="teal"
           direction="left"
           onPress={handlePressBackButton}
           testID="goToBalancesFromScanner"

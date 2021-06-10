@@ -102,7 +102,7 @@ const UnderlineField = (
       <Row align="center" justify="space-between">
         <ExchangeInput
           autoFocus={autoFocus}
-          color={isFocused ? 'black' : 'settingsGray'}
+          color={isFocused ? 'black' : 'settingsTeal'}
           isDarkMode={isDarkMode}
           isTinyPhone={isTinyPhone}
           keyboardType={keyboardType}

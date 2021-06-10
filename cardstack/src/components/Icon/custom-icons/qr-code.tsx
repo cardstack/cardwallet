@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { SvgProps, G, Path, Rect } from 'react-native-svg';
+import { palette } from '@cardstack/theme';
 
 function SvgComponent(props: SvgProps) {
   return (
@@ -11,7 +12,7 @@ function SvgComponent(props: SvgProps) {
       height={props.height || 26.11}
       viewBox="0 0 20 20"
     >
-      <G data-name="Group 11430" fill={props.stroke || '#03c4bf'}>
+      <G data-name="Group 11430" fill={props.color || palette.tealLight}>
         <Path data-name="Rectangle 2861" d="M14 14h3v3h-3z" />
         <Path data-name="Rectangle 2862" d="M17 11h3v3h-3z" />
         <Path data-name="Rectangle 2863" d="M11 11h3v3h-3z" />
@@ -21,7 +22,7 @@ function SvgComponent(props: SvgProps) {
       <G
         data-name="Rectangle 2866"
         fill="none"
-        stroke={props.stroke || '#03c4bf'}
+        stroke={props.color || palette.tealLight}
         strokeWidth={1.5}
       >
         <Rect width={9} height={9} rx={2} stroke="none" />
@@ -31,7 +32,7 @@ function SvgComponent(props: SvgProps) {
         data-name="Rectangle 2892"
         transform="translate(0 11)"
         fill="none"
-        stroke={props.stroke || '#03c4bf'}
+        stroke={props.color || palette.tealLight}
         strokeWidth={1.5}
       >
         <Rect width={9} height={9} rx={2} stroke="none" />
@@ -41,7 +42,7 @@ function SvgComponent(props: SvgProps) {
         data-name="Rectangle 2891"
         transform="translate(11)"
         fill="none"
-        stroke={props.stroke || '#03c4bf'}
+        stroke={props.color || palette.tealLight}
         strokeWidth={1.5}
       >
         <Rect width={9} height={9} rx={2} stroke="none" />

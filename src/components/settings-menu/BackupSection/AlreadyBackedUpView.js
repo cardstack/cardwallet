@@ -221,12 +221,12 @@ export default function AlreadyBackedUpView() {
           <ButtonPressAnimation onPress={handleIcloudBackup}>
             <CenteredContainer flexDirection="row">
               <Icon
-                color="settingsGray"
+                color="settingsTeal"
                 iconSize="medium"
                 marginRight={2}
                 name="download-cloud"
               />
-              <Text color="settingsGray" fontWeight="600">
+              <Text color="settingsTeal" fontWeight="600">
                 Back up to {cloudPlatform}
               </Text>
             </CenteredContainer>
@@ -235,7 +235,7 @@ export default function AlreadyBackedUpView() {
       ) : !hasMultipleWallets ? (
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
-            <Text color="settingsGray" fontWeight="600">
+            <Text color="settingsTeal" fontWeight="600">
               Manage {cloudPlatform} Backups
             </Text>
           </ButtonPressAnimation>

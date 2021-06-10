@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import React, { useState } from 'react';
 import { Linking, ScrollView, StatusBar } from 'react-native';
-import { BackButton } from '../../../src/components/header';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
+import { BackButton } from '../../../src/components/header';
+import { DepotType, TokenType } from '@cardstack/types';
 import Routes from '@rainbow-me/routes';
 import {
   CenteredContainer,
@@ -13,7 +14,6 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import { DepotType, TokenType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -66,7 +66,7 @@ export default function DepotScreen() {
               <Container left={0} position="absolute">
                 {/* @ts-ignore it thinks the JS file requires other props */}
                 <BackButton
-                  color="blue"
+                  color="teal"
                   direction="left"
                   onPress={goBack}
                   testID="goToBalancesFromScanner"
@@ -92,7 +92,7 @@ export default function DepotScreen() {
               </Container>
               <Container right={20} position="absolute">
                 <Touchable onPress={onPressInformation}>
-                  <Icon name="more-horizontal" color="blue" />
+                  <Icon name="more-horizontal" color="teal" />
                 </Touchable>
               </Container>
             </CenteredContainer>
@@ -198,7 +198,7 @@ const Balances = ({ tokens }: BalancesProps) => {
         <Text size="medium" marginRight={2}>
           Balances
         </Text>
-        <Text size="medium" color="settingsGray">
+        <Text size="medium" color="tealDark">
           {tokens.length}
         </Text>
       </Container>
