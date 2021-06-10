@@ -7,14 +7,14 @@ import { Emoji } from '../text';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
 
-const currencyListItems = Object.values(supportedNativeCurrencies).map(
-  ({ currency, ...item }) => ({
+const currencyListItems = Object.values(supportedNativeCurrencies)
+  .map(({ currency, ...item }) => ({
     ...item,
     currency,
     key: currency,
     value: currency,
-  })
-);
+  }))
+  .filter(({ currency }) => currency !== 'ETH');
 
 const renderCurrencyIcon = (currency, emojiName) => {
   if (!currency) return null;
