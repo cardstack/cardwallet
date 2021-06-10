@@ -10,19 +10,21 @@ import {
   useLoadAccountData,
   useResetAccountState,
 } from '../../hooks';
-import { settingsUpdateNetwork } from '../../redux/settings';
+import {
+  settingsUpdateNetwork,
+  toggleShowTestnets,
+} from '../../redux/settings';
 
 import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
 
 const networks = values(networkInfo);
 
 const NetworkSection = () => {
-  const { network } = useAccountSettings();
+  const { network, showTestnets } = useAccountSettings();
   const resetAccountState = useResetAccountState();
   const loadAccountData = useLoadAccountData();
   const initializeAccountData = useInitializeAccountData();
   const dispatch = useDispatch();
-  const [showTestnets, setShowTestnets] = useState(true);
 
   //transform data for sectionList
   const DATA = networks
@@ -71,7 +73,7 @@ const NetworkSection = () => {
         <Checkbox
           isSelected={showTestnets}
           label="Show testnets"
-          onPress={() => setShowTestnets(!showTestnets)}
+          onPress={() => dispatch(toggleShowTestnets())}
         />
       </Container>
       <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
