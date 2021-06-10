@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "cardstackLogo.png",
+      "filename" : "cardstack.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "cardstackLogo@2x.png",
+      "filename" : "cardstack@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "cardstackLogo@3x.png",
+      "filename" : "cardstack@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
