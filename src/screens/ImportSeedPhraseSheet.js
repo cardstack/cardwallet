@@ -204,7 +204,6 @@ export default function ImportSeedPhraseSheet() {
         }
         setResolvedAddress(address);
         name = input;
-        console.log('=======================scen 1');
         showAccountProfileModal(name);
       } catch (e) {
         Alert.alert(
@@ -222,7 +221,6 @@ export default function ImportSeedPhraseSheet() {
         }
         setResolvedAddress(address);
         name = input;
-        console.log('=======================scen 2');
         showAccountProfileModal(name);
       } catch (e) {
         Alert.alert(
@@ -238,7 +236,6 @@ export default function ImportSeedPhraseSheet() {
         if (ens && ens !== input) {
           name = ens;
         }
-        console.log('=======================scen 3');
         showAccountProfileModal(name);
       } catch (error) {
         console.log({ error });
@@ -260,7 +257,6 @@ export default function ImportSeedPhraseSheet() {
             name = ens;
           }
           setBusy(false);
-          console.log('=======================scen 4');
           showAccountProfileModal(name);
         }, 100);
       } catch (error) {
