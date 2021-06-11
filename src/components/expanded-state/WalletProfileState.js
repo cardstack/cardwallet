@@ -7,7 +7,6 @@ import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';
 import ImageAvatar from '../contacts/ImageAvatar';
 import CopyTooltip from '../copy-tooltip';
-import { Centered, ColumnWithDividers } from '../layout';
 import { TruncatedAddress } from '../text';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
 import { Container, OptionItem, Text } from '@cardstack/components';
@@ -71,10 +70,13 @@ export default function WalletProfileState({
     }
   }, [actionType, goBack, navigate]);
 
-  const handleSubmit = useCallback(() => {
-    onCloseModal({ color, name: nameEmoji ? `${nameEmoji} ${value}` : value });
-    goBack();
+  const handleSubmit = useCallback(async () => {
+    onCloseModal({
+      color,
+      name: nameEmoji ? `${nameEmoji} ${value}` : value,
+    });
     if (actionType === 'Create' && isNewProfile) {
+      goBack();
       navigate(Routes.CHANGE_WALLET_SHEET);
     }
   }, [
@@ -98,7 +100,6 @@ export default function WalletProfileState({
     <WalletProfileModal>
       <Container
         alignItems="center"
-        direction="column"
         paddingBottom={14}
         testID="wallet-info-modal"
         width="100%"

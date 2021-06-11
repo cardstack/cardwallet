@@ -164,7 +164,7 @@ export default function ImportSeedPhraseSheet() {
     [isImporting]
   );
 
-  const showWalletProfileModal = useCallback(
+  const showAccountProfileModal = useCallback(
     name => {
       navigate(Routes.MODAL_SCREEN, {
         actionType: 'Import',
@@ -204,7 +204,8 @@ export default function ImportSeedPhraseSheet() {
         }
         setResolvedAddress(address);
         name = input;
-        showWalletProfileModal(name);
+        console.log('=======================scen 1');
+        showAccountProfileModal(name);
       } catch (e) {
         Alert.alert(
           'Sorry, we cannot add this ENS name at this time. Please try again later!'
@@ -221,7 +222,8 @@ export default function ImportSeedPhraseSheet() {
         }
         setResolvedAddress(address);
         name = input;
-        showWalletProfileModal(name);
+        console.log('=======================scen 2');
+        showAccountProfileModal(name);
       } catch (e) {
         Alert.alert(
           'Sorry, we cannot add this Unstoppable name at this time. Please try again later!'
@@ -236,7 +238,8 @@ export default function ImportSeedPhraseSheet() {
         if (ens && ens !== input) {
           name = ens;
         }
-        showWalletProfileModal(name);
+        console.log('=======================scen 3');
+        showAccountProfileModal(name);
       } catch (error) {
         console.log({ error });
       }
@@ -257,14 +260,15 @@ export default function ImportSeedPhraseSheet() {
             name = ens;
           }
           setBusy(false);
-          showWalletProfileModal(name);
+          console.log('=======================scen 4');
+          showAccountProfileModal(name);
         }, 100);
       } catch (error) {
         logger.log('Error looking up ENS for imported HD type wallet', error);
         setBusy(false);
       }
     }
-  }, [isSecretValid, seedPhrase, showWalletProfileModal]);
+  }, [isSecretValid, seedPhrase, showAccountProfileModal]);
 
   const handlePressPasteButton = useCallback(() => {
     if (deviceUtils.isIOS14 && !hasClipboardData) return;
