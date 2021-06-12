@@ -244,7 +244,7 @@ export default function ChangeWalletSheet() {
               {
                 cancelButtonIndex: 1,
                 destructiveButtonIndex: 0,
-                message: `Are you sure you want to delete this wallet?`,
+                message: `Are you sure you want to delete this account?`,
                 options: ['Delete Wallet', 'Cancel'],
               },
               async buttonIndex => {

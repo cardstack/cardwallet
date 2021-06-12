@@ -22,7 +22,7 @@ const ExchangeFab = ({ disabled, isReadOnlyWallet, ...props }) => {
     if (!isReadOnlyWallet || enableActionsOnReadOnlyWallet) {
       navigate(Routes.EXCHANGE_MODAL);
     } else {
-      Alert.alert(`You need to import the wallet in order to do this`);
+      Alert.alert(`You need to import the account in order to do this`);
     }
   }, [navigate, isReadOnlyWallet]);
 

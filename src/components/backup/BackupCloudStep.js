@@ -40,7 +40,7 @@ export default function BackupCloudStep() {
   useEffect(() => {
     if (isDamaged) {
       showWalletErrorAlert();
-      captureMessage('Damaged wallet preventing cloud backup');
+      captureMessage('Damaged account preventing cloud backup');
       goBack();
     }
   }, [goBack, isDamaged]);
@@ -129,7 +129,7 @@ export default function BackupCloudStep() {
       DelayedAlert({ title: lang.t('cloud.backup_success') }, 1000);
     }
     // This means the user set a new password
-    // and it was the first wallet backed up
+    // and it was the first account backed up
     analytics.track('Backup Complete', {
       category: 'backup',
       label: cloudPlatform,

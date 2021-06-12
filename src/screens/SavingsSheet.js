@@ -112,7 +112,7 @@ const SavingsSheet = () => {
         label: underlying.symbol,
       });
     } else {
-      Alert.alert(`You need to import the wallet in order to do this`);
+      Alert.alert(`You need to import the account in order to do this`);
     }
   }, [
     cTokenBalance,
@@ -142,7 +142,7 @@ const SavingsSheet = () => {
         label: underlying.symbol,
       });
     } else {
-      Alert.alert(`You need to import the wallet in order to do this`);
+      Alert.alert(`You need to import the account in order to do this`);
     }
   }, [isEmpty, isReadOnlyWallet, navigate, underlying, underlyingPrice]);
 

@@ -134,7 +134,7 @@ export default function WalletConnectApprovalSheet() {
             {dappName}
           </Text>
           <Text color="grayText" textAlign="center">
-            wants to connect to your wallet
+            wants to connect to your account
           </Text>
         </Container>
         <Container flexDirection="row">

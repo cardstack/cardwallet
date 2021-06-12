@@ -218,7 +218,7 @@ const listenOnNewMessages = walletConnector => (dispatch, getState) => {
       const selectedWallet = selected || {};
       const isReadOnlyWallet = selectedWallet.type === WalletTypes.readOnly;
       if (isReadOnlyWallet && !enableActionsOnReadOnlyWallet) {
-        Alert.alert(`You need to import the wallet in order to do this`);
+        Alert.alert(`You need to import the account in order to do this`);
         walletConnector.rejectRequest({
           error: { message: 'JSON RPC method not supported' },
           id: payload.id,

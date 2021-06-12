@@ -19,7 +19,7 @@ export default function WalletConnectExplainer() {
       <WalletConnectExplainerItem
         content="WalletConnect lets you connect to desktop websites by scanning a QR code."
         emoji="📲"
-        title="Scan to connect your wallet"
+        title="Scan to connect your account"
       >
         <WalletConnectLearnMoreButton />
       </WalletConnectExplainerItem>

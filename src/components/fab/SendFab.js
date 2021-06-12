@@ -22,7 +22,7 @@ const SendFab = ({ disabled, isReadOnlyWallet, ...props }) => {
     if (!isReadOnlyWallet || enableActionsOnReadOnlyWallet) {
       navigate(Routes.SEND_FLOW);
     } else {
-      Alert.alert(`You need to import the wallet in order to do this`);
+      Alert.alert(`You need to import the account in order to do this`);
     }
   }, [navigate, isReadOnlyWallet]);
 
