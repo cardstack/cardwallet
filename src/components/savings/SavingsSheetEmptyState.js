@@ -84,7 +84,7 @@ const SavingsSheetEmptyState = ({
         <SheetActionButton
           color={colors.swapPurple}
           fullWidth
-          label="􀁍 Deposit from Wallet"
+          label="􀁍 Deposit from Account"
           onPress={onDeposit}
           size="big"
           weight="bold"
