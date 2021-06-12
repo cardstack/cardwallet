@@ -164,7 +164,7 @@ export default function ImportSeedPhraseSheet() {
     [isImporting]
   );
 
-  const showAccountProfileModal = useCallback(
+  const showWalletProfileModal = useCallback(
     name => {
       navigate(Routes.MODAL_SCREEN, {
         actionType: 'Import',
@@ -204,7 +204,7 @@ export default function ImportSeedPhraseSheet() {
         }
         setResolvedAddress(address);
         name = input;
-        showAccountProfileModal(name);
+        showWalletProfileModal(name);
       } catch (e) {
         Alert.alert(
           'Sorry, we cannot add this ENS name at this time. Please try again later!'
@@ -221,7 +221,7 @@ export default function ImportSeedPhraseSheet() {
         }
         setResolvedAddress(address);
         name = input;
-        showAccountProfileModal(name);
+        showWalletProfileModal(name);
       } catch (e) {
         Alert.alert(
           'Sorry, we cannot add this Unstoppable name at this time. Please try again later!'
@@ -236,7 +236,7 @@ export default function ImportSeedPhraseSheet() {
         if (ens && ens !== input) {
           name = ens;
         }
-        showAccountProfileModal(name);
+        showWalletProfileModal(name);
       } catch (error) {
         console.log({ error });
       }
@@ -257,14 +257,14 @@ export default function ImportSeedPhraseSheet() {
             name = ens;
           }
           setBusy(false);
-          showAccountProfileModal(name);
+          showWalletProfileModal(name);
         }, 100);
       } catch (error) {
         logger.log('Error looking up ENS for imported HD type wallet', error);
         setBusy(false);
       }
     }
-  }, [isSecretValid, seedPhrase, showAccountProfileModal]);
+  }, [isSecretValid, seedPhrase, showWalletProfileModal]);
 
   const handlePressPasteButton = useCallback(() => {
     if (deviceUtils.isIOS14 && !hasClipboardData) return;
