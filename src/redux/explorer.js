@@ -13,6 +13,7 @@ import {
   fallbackExplorerClearState,
   fallbackExplorerInit,
 } from './fallbackExplorer';
+import { isLayer1 } from '@cardstack/utils';
 import { disableCharts, forceFallbackProvider } from '@rainbow-me/config/debug';
 import NetworkTypes from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
@@ -58,9 +59,9 @@ const messages = {
 // -- Actions ---------------------------------------- //
 const createSocket = endpoint =>
   io(`wss://api-v4.zerion.io/${endpoint}`, {
-    extraHeaders: { origin: DATA_ORIGIN },
+    extraHeaders: { origin: 'http://localhost:3000' },
     query: {
-      api_token: `${DATA_API_KEY}`,
+      api_token: 'Demo.ukEVQp6L5vfgxcz4sBke7XvS873GMYHy',
     },
     transports: ['websocket'],
   });
@@ -162,106 +163,38 @@ export const explorerClearState = () => dispatch => {
 
 export const explorerInit = () => async (dispatch, getState) => {
   const { network, accountAddress, nativeCurrency } = getState().settings;
-  const { pairs } = getState().uniswap;
   const { addressSocket, assetsSocket } = getState().explorer;
 
-  // if there is another socket unsubscribe first
-  if (addressSocket || assetsSocket) {
-    dispatch(explorerUnsubscribe());
-    dispatch(disableFallbackIfNeeded());
-  }
+  if (isLayer1(network)) {
+    // if there is another socket unsubscribe first
+    if (addressSocket || assetsSocket) {
+      dispatch(explorerUnsubscribe());
+      dispatch(disableFallbackIfNeeded());
+    }
 
-  // Fallback to the testnet data provider
-  // if we're not on mainnnet
-  if (network !== NetworkTypes.mainnet || forceFallbackProvider) {
-    return dispatch(fallbackExplorerInit());
-  }
-
-  const newAddressSocket = createSocket('address');
-  const newAssetsSocket = createSocket('assets');
-  dispatch({
-    payload: {
-      addressSocket: newAddressSocket,
-      addressSubscribed: accountAddress,
-      assetsSocket: newAssetsSocket,
-    },
-    type: EXPLORER_UPDATE_SOCKETS,
-  });
-
-  dispatch(listenOnAddressMessages(newAddressSocket));
-
-  newAddressSocket.on(messages.CONNECT, () => {
-    newAddressSocket.emit(
-      ...addressSubscription(accountAddress, nativeCurrency)
-    );
-  });
-
-  dispatch(listenOnAssetMessages(newAssetsSocket));
-
-  newAssetsSocket.on(messages.CONNECT, () => {
-    newAssetsSocket.emit(...assetsSubscription(pairs, nativeCurrency));
-  });
-
-  if (network === NetworkTypes.mainnet) {
-    const assetsTimeoutHandler = setTimeout(() => {
-      logger.log('😬 Zerion timeout. Falling back!');
-      dispatch(fallbackExplorerInit());
-      dispatch({
-        type: EXPLORER_ENABLE_FALLBACK,
-      });
-    }, ZERION_ASSETS_TIMEOUT);
-
+    const newAddressSocket = createSocket('address');
     dispatch({
       payload: {
-        assetsTimeoutHandler,
+        addressSocket: newAddressSocket,
+        addressSubscribed: accountAddress,
+        assetsSocket: null,
       },
-      type: EXPLORER_SET_FALLBACK_HANDLER,
+      type: EXPLORER_UPDATE_SOCKETS,
+    });
+
+    dispatch(listenOnAddressMessages(newAddressSocket));
+
+    newAddressSocket.on(messages.CONNECT, () => {
+      newAddressSocket.emit(
+        ...addressSubscription(accountAddress, nativeCurrency)
+      );
     });
   }
 };
 
-export const emitChartsRequest = (
-  assetAddress,
-  chartType = DEFAULT_CHART_TYPE
-) => (dispatch, getState) => {
-  const { nativeCurrency } = getState().settings;
-  const { assetsSocket } = getState().explorer;
-
-  let assetCodes;
-  if (assetAddress) {
-    assetCodes = [assetAddress];
-  } else {
-    const { assets } = getState().data;
-    const assetAddresses = map(assets, 'address');
-
-    const { liquidityTokens } = getState().uniswapLiquidity;
-    const lpTokenAddresses = map(liquidityTokens, token => token.address);
-
-    assetCodes = concat(assetAddresses, lpTokenAddresses);
-  }
-  assetsSocket?.emit?.(
-    ...chartsRetrieval(assetCodes, nativeCurrency, chartType)
-  );
-};
-
-const listenOnAssetMessages = socket => dispatch => {
-  socket.on(messages.ASSETS.RECEIVED, message => {
-    dispatch(assetPricesReceived(message));
-  });
-
-  socket.on(messages.ASSETS.CHANGED, message => {
-    dispatch(assetPricesChanged(message));
-  });
-
-  socket.on(messages.ASSET_CHARTS.RECEIVED, message => {
-    //logger.log('charts received', get(message, 'payload.charts', {}));
-    dispatch(assetChartsReceived(message));
-  });
-};
-
 const listenOnAddressMessages = socket => dispatch => {
   socket.on(messages.ADDRESS_TRANSACTIONS.RECEIVED, message => {
-    // logger.log('txns received', get(message, 'payload.transactions', []));
+    logger.log('txns received', get(message, 'payload.transactions', []));
     dispatch(transactionsReceived(message));
   });
 
@@ -278,34 +211,6 @@ const listenOnAddressMessages = socket => dispatch => {
   socket.on(messages.ADDRESS_TRANSACTIONS.REMOVED, message => {
     logger.log('txns removed', get(message, 'payload.transactions', []));
     dispatch(transactionsRemoved(message));
-  });
-
-  socket.on(messages.ADDRESS_ASSETS.RECEIVED, message => {
-    dispatch(addressAssetsReceived(message));
-    if (!disableCharts) {
-      dispatch(emitChartsRequest());
-    }
-    if (isValidAssetsResponseFromZerion(message)) {
-      logger.log(
-        '😬 Cancelling fallback data provider listener. Zerion is good!'
-      );
-      dispatch(disableFallbackIfNeeded());
-    }
-  });
-
-  socket.on(messages.ADDRESS_ASSETS.APPENDED, message => {
-    dispatch(addressAssetsReceived(message, true));
-    dispatch(disableFallbackIfNeeded());
-  });
-
-  socket.on(messages.ADDRESS_ASSETS.CHANGED, message => {
-    dispatch(addressAssetsReceived(message, false, true));
-    dispatch(disableFallbackIfNeeded());
-  });
-
-  socket.on(messages.ADDRESS_ASSETS.REMOVED, message => {
-    dispatch(addressAssetsReceived(message, false, false, true));
-    dispatch(disableFallbackIfNeeded());
   });
 };
 

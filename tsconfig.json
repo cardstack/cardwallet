@@ -98,6 +98,9 @@
       "@cardstack/types": [
         "cardstack/src/types"
       ],
+      "@cardstack/graphql": [
+        "cardstack/src/graphql"
+      ],
       "logger": [
         "src/utils/logger"
       ],

@@ -66,7 +66,7 @@
     "@apollo/client": "^3.0.0-beta.34",
     "@babel/parser": "^7.13.11",
     "@bankify/react-native-animate-number": "^0.2.1",
-    "@cardstack/cardpay-sdk": "^0.19.15",
+    "@cardstack/cardpay-sdk": "^0.19.16",
     "@ethersproject/abi": "^5.0.9",
     "@ethersproject/abstract-provider": "^5.0.7",
     "@ethersproject/abstract-signer": "^5.0.9",

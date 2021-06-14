@@ -75,6 +75,17 @@ const statusToData: {
     transactionSymbol: '-',
     transactionTextColor: 'black',
   },
+  received: {
+    actionTextColor: 'blueText',
+    iconProps: {
+      name: 'arrow-down',
+      top: 1,
+      size: 14,
+      color: 'blueText',
+    },
+    transactionSymbol: '+',
+    transactionTextColor: 'black',
+  },
 };
 
 export interface TransactionCoinRowProps extends ContainerProps {
@@ -88,6 +99,8 @@ export const TransactionCoinRow = ({
   item,
   ...props
 }: TransactionCoinRowProps) => {
+  console.log({ item });
+
   if (!item) {
     return null;
   }

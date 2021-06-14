@@ -45,17 +45,7 @@ const addContactInfo = contacts => txn => {
   };
 };
 
-const buildTransactionsSections = (
-  contacts,
-  requests,
-  transactions,
-  isFocused,
-  initialized
-) => {
-  if (!isFocused && !initialized) {
-    return { sections: [] };
-  }
-
+const buildTransactionsSections = (contacts, requests, transactions) => {
   let sectionedTransactions = [];
 
   const transactionsWithContacts = map(transactions, addContactInfo(contacts));
@@ -88,12 +78,6 @@ const buildTransactionsSections = (
 };
 
 export const buildTransactionsSectionsSelector = createSelector(
-  [
-    contactsSelector,
-    requestsSelector,
-    transactionsSelector,
-    focusedSelector,
-    initializedSelector,
-  ],
+  [contactsSelector, requestsSelector, transactionsSelector],
   buildTransactionsSections
 );
