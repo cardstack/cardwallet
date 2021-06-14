@@ -120,10 +120,14 @@ export default function ChartExpandedState(props) {
           paddingTop={2}
           width="100%"
         >
-          {showSwapButton && (
+          {/* reenable swap once functionality is fixed */}
+          {/* {showSwapButton && (
             <SwapActionButton color={color} inputType={AssetInputTypes.in} />
-          )}
-          <SendActionButton color={color} small={showSwapButton} />
+          )} */}
+          <SendActionButton
+            color={color}
+            // small={showSwapButton} //reenable once swap functionality is fixed
+          />
         </Container>
       )}
     </SlackSheet>
