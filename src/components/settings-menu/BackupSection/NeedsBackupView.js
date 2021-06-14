@@ -74,10 +74,10 @@ export default function NeedsBackupView() {
             name="upload-cloud"
           />
           <Text fontSize={20} fontWeight="600" marginBottom={2}>
-            Back up your wallet{' '}
+            Back up your account{' '}
           </Text>
           <Text color="blueText" marginBottom={15} textAlign="center">
-            Don&apos;t risk your money! Back up your wallet so you can recover
+            Don&apos;t risk your money! Back up your account so you can recover
             it if you lose this device.
           </Text>
         </Column>

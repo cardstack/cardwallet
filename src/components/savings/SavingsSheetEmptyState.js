@@ -61,7 +61,7 @@ const SavingsSheetEmptyState = ({
         screen: Routes.MAIN_EXCHANGE_NAVIGATOR,
       });
     } else {
-      Alert.alert(`You need to import the wallet in order to do this`);
+      Alert.alert(`You need to import the account in order to do this`);
     }
   }, [isReadOnlyWallet, navigate, underlying]);
 
@@ -84,7 +84,7 @@ const SavingsSheetEmptyState = ({
         <SheetActionButton
           color={colors.swapPurple}
           fullWidth
-          label="􀁍 Deposit from Wallet"
+          label="􀁍 Deposit from Account"
           onPress={onDeposit}
           size="big"
           weight="bold"

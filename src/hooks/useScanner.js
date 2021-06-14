@@ -80,7 +80,7 @@ export default function useScanner(enabled) {
   const handleScanAddress = useCallback(
     address => {
       if (isReadOnlyWallet && !enableActionsOnReadOnlyWallet) {
-        NativeAlert.alert(`You need to import the wallet in order to do this`);
+        NativeAlert.alert(`You need to import the account in order to do this`);
         return null;
       }
 

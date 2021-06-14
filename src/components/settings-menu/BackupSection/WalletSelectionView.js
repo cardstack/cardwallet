@@ -160,7 +160,7 @@ const WalletSelectionView = () => {
                       {totalAccounts > 1 ? (
                         <Text fontSize={14} fontWeight="600">
                           And {totalAccounts - 1} more{' '}
-                          {totalAccounts > 2 ? `wallets` : `wallet`}
+                          {totalAccounts > 2 ? `accounts` : `account`}
                         </Text>
                       ) : wallet.backedUp ? (
                         wallet.backupType === WalletBackupTypes.cloud ? (

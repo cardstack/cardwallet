@@ -110,12 +110,12 @@ export default function AlreadyBackedUpView() {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          // Delete wallet with confirmation
+          // Delete account with confirmation
           showActionSheetWithOptions(
             {
               cancelButtonIndex: 1,
               destructiveButtonIndex: 0,
-              message: `Are you sure you want to delete your ${cloudPlatform} wallet backups?`,
+              message: `Are you sure you want to delete your ${cloudPlatform} account backups?`,
               options: [`Confirm and Delete Backups`, 'Cancel'],
             },
             async buttonIndex => {
@@ -203,11 +203,11 @@ export default function AlreadyBackedUpView() {
           </Text>
           <Text color="blueText" textAlign="center">
             {(walletStatus === WalletBackupStatus.CLOUD_BACKUP &&
-              `If you lose this device, you can recover your encrypted wallet backup from ${cloudPlatform}.`) ||
+              `If you lose this device, you can recover your encrypted account backup from ${cloudPlatform}.`) ||
               (walletStatus === WalletBackupStatus.MANUAL_BACKUP &&
-                `If you lose this device, you can restore your wallet with the recovery phrase you saved.`) ||
+                `If you lose this device, you can restore your account with the recovery phrase you saved.`) ||
               (walletStatus === WalletBackupStatus.IMPORTED &&
-                `If you lose this device, you can restore your wallet with the key you originally imported.`)}
+                `If you lose this device, you can restore your account with the key you originally imported.`)}
           </Text>
         </Centered>
         <Container marginTop={8} width="100%">

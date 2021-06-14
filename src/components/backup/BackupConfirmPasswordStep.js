@@ -143,7 +143,7 @@ export default function BackupConfirmPasswordStep() {
       DelayedAlert({ title: lang.t('cloud.backup_success') }, 1000);
     }
     // This means the user didn't have the password saved
-    // and at least an other wallet already backed up
+    // and at least an other account already backed up
     analytics.track('Backup Complete via Confirm Step', {
       category: 'backup',
       label: cloudPlatform,
@@ -180,8 +180,8 @@ export default function BackupConfirmPasswordStep() {
         )}
         <Title>Enter backup password</Title>
         <DescriptionText>
-          To add this wallet to your {cloudPlatform} backup, enter your existing
-          backup password
+          To add this account to your {cloudPlatform} backup, enter your
+          existing backup password
         </DescriptionText>
       </Masthead>
       <Column align="center" flex={1}>

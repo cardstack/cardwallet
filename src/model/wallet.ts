@@ -566,7 +566,7 @@ export const createWallet = async (
           () =>
             Alert.alert(
               'Oops!',
-              'Looks like you already imported this wallet!'
+              'Looks like you already imported this account!'
             ),
           1
         );
@@ -1171,7 +1171,7 @@ export const loadSeedPhraseAndMigrateIfNeeded = async (
         seedPhrase = get(migratedSecrets, 'seedphrase', null);
       } else {
         logger.sentry('Migrated flag was set but there is no key!', id);
-        captureMessage('Missing seed for wallet');
+        captureMessage('Missing seed for account');
       }
     } else {
       logger.sentry('Getting seed directly');
@@ -1200,7 +1200,7 @@ export const loadSeedPhraseAndMigrateIfNeeded = async (
         logger.sentry('got seed succesfully');
       } else {
         captureMessage(
-          'Missing seed for wallet - (Key exists but value isnt valid)!'
+          'Missing seed for account - (Key exists but value isnt valid)!'
         );
       }
     }

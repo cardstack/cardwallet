@@ -88,7 +88,7 @@ export default function BackupSheet() {
   const onIcloudBackup = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
-      captureMessage('Damaged wallet preventing cloud backup');
+      captureMessage('Damaged account preventing cloud backup');
       goBack();
       return;
     }
@@ -148,7 +148,7 @@ export default function BackupSheet() {
       case WalletBackupStepTypes.imported:
         return (
           <BackupSheetSection
-            descriptionText={`Don't lose your wallet! Save an encrypted copy to ${cloudPlatform}.`}
+            descriptionText={`Don't lose your account! Save an encrypted copy to ${cloudPlatform}.`}
             onPrimaryAction={onIcloudBackup}
             onSecondaryAction={goBack}
             primaryLabel={`Back up to ${cloudPlatform}`}
@@ -169,12 +169,12 @@ export default function BackupSheet() {
       default:
         return (
           <BackupSheetSection
-            descriptionText={`Don't lose your wallet! Save an encrypted copy to ${cloudPlatform}.`}
+            descriptionText={`Don't lose your account! Save an encrypted copy to ${cloudPlatform}.`}
             onPrimaryAction={onIcloudBackup}
             onSecondaryAction={onManualBackup}
             primaryLabel={`Back up to ${cloudPlatform}`}
             secondaryLabel="Back up manually"
-            titleText="Back up your wallet"
+            titleText="Back up your account"
             type="Default"
           />
         );

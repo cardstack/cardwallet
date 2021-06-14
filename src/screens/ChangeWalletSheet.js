@@ -223,8 +223,8 @@ export default function ChangeWalletSheet() {
         }
       }
 
-      const buttons = ['Edit Wallet'];
-      buttons.push('Delete Wallet');
+      const buttons = ['Edit Account'];
+      buttons.push('Delete Account');
       buttons.push('Cancel');
 
       showActionSheetWithOptions(
@@ -244,8 +244,8 @@ export default function ChangeWalletSheet() {
               {
                 cancelButtonIndex: 1,
                 destructiveButtonIndex: 0,
-                message: `Are you sure you want to delete this wallet?`,
-                options: ['Delete Wallet', 'Cancel'],
+                message: `Are you sure you want to delete this account?`,
+                options: ['Delete Account', 'Cancel'],
               },
               async buttonIndex => {
                 if (buttonIndex === 0) {

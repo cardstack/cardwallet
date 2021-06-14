@@ -53,8 +53,8 @@ export default function BackupManualStep() {
 
   const isPrivateKey = type === walletTypes.privateKey;
   const subText = isPrivateKey
-    ? 'This is the key to your wallet!. Copy it and save it in your password manager, or in another secure spot.'
-    : 'These words are the keys to your wallet! Write them down or save them in your password manager.';
+    ? 'This is the key to your account!. Copy it and save it in your password manager, or in another secure spot.'
+    : 'These words are the keys to your account! Write them down or save them in your password manager.';
   const buttonText = `I've saved ${isPrivateKey ? 'my key' : 'these words'}`;
 
   return (

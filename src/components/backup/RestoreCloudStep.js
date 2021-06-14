@@ -72,7 +72,7 @@ export default function RestoreCloudStep({ userData }) {
       if (success) {
         // Store it in the keychain in case it was missing
         await saveBackupPassword(password);
-        // Get rid of the current wallet
+        // Get rid of the current account
         await removeWalletData(accountAddress);
         goBack();
         InteractionManager.runAfterInteractions(async () => {

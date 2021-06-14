@@ -29,7 +29,9 @@ export default function useExpandedStateNavigation(inputType) {
   return useCallback(
     (routeName, traverseParams) => {
       if (isReadOnlyWallet) {
-        return Alert.alert(`You need to import the wallet in order to do this`);
+        return Alert.alert(
+          `You need to import the account in order to do this`
+        );
       }
 
       InteractionManager.runAfterInteractions(goBack);

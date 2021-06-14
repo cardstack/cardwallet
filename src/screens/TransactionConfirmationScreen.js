@@ -839,7 +839,7 @@ const TransactionConfirmationScreen = () => {
             {renderTransactionButtons()}
             <RowWithMargins css={padding(0, 24, 30)} margin={15}>
               <Column>
-                <WalletLabel>Wallet</WalletLabel>
+                <WalletLabel>Account</WalletLabel>
                 <RowWithMargins margin={5}>
                   <Column marginTop={ios ? 2 : 8}>
                     <ContactAvatar

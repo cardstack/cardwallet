@@ -68,7 +68,7 @@ export default function RestoreSheetFirstStep({
         }}
         marginVertical={4}
         onPress={onManualRestore}
-        subText="Use the private key for your crypto wallet"
+        subText="Use the private key for your crypto account"
         title="Import via recovery phrase"
       />
       <OptionItem

@@ -32,7 +32,7 @@ export default function AppVersionStamp() {
     if (tapCount === DEBUG_TAP_COUNT) {
       const { status, data } = await debug();
       if (status === 'restored') {
-        Alert.alert('Wallet restored successfully!', data);
+        Alert.alert('Account restored successfully!', data);
       } else {
         Alert.alert('DEBUG INFO', data);
       }
