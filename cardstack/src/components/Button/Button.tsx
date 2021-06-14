@@ -55,6 +55,7 @@ export const Button = ({
   iconProps,
   iconPosition = 'left',
   loading,
+  onPress,
   ...props
 }: ButtonProps) => {
   const width = useVariantValue('buttonVariants', 'width', props.variant);
@@ -76,7 +77,12 @@ export const Button = ({
 
   return (
     <Container backgroundColor="transparent" {...props} flex={-1}>
-      <AnimatedButton alignItems="center" disabled={disabled} {...props}>
+      <AnimatedButton
+        {...props}
+        alignItems="center"
+        disabled={disabled}
+        onPress={onPress}
+      >
         {loading ? (
           <ActivityIndicator testID="button-loading" />
         ) : (
