@@ -48,6 +48,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const Wrapper = isScrollable ? ScrollView : Container;
   const { networkName, ...prepaidCard } = props;
 
+  const [address] = useState(getAddressPreview(prepaidCard.address));
+
   const {
     editing,
     selected,
@@ -136,7 +138,12 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         >
           <GradientBackground />
           {/* hard code issuer for now */}
-          <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
+          <Top
+            {...prepaidCard}
+            issuer="Cardstack"
+            networkName={networkName}
+            address={address}
+          />
           <Bottom {...props} />
         </Container>
         {isEditing && isHidden && (

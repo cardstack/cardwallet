@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Icon,
@@ -14,7 +14,8 @@ interface SafeHeaderProps {
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
-  const { address, onPress } = props;
+  const { onPress } = props;
+  const [address] = useState(getAddressPreview(props.address));
 
   return (
     <Container width="100%">
@@ -29,7 +30,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
         <Container flexDirection="row" alignItems="center">
           <NetworkBadge marginRight={2} />
           <Text fontFamily="RobotoMono-Regular" color="white">
-            {getAddressPreview(address)}
+            {address}
           </Text>
         </Container>
         <Touchable flexDirection="row" alignItems="center" onPress={onPress}>
