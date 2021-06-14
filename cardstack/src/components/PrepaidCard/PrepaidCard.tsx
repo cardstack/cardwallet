@@ -160,12 +160,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
 };
 
 const GradientBackground = () => (
-  <SVG
-    width="100%"
-    height={110}
-    viewBox="0 0 400 100"
-    style={{ position: 'absolute', top: -14 }}
-  >
+  <SVG width="100%" height={110} style={{ position: 'absolute' }}>
     <Defs>
       <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
         <Stop offset="0" stopColor="#00ebe5" stopOpacity="1" />
