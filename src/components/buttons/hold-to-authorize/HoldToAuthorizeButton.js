@@ -60,6 +60,7 @@ class HoldToAuthorizeButton extends PureComponent {
   };
 
   componentDidUpdate = () => {
+    console.log('updating');
     if (this.state.isAuthorizing && !this.props.isAuthorizing) {
       this.onFinishAuthorizing();
     }
@@ -79,14 +80,14 @@ class HoldToAuthorizeButton extends PureComponent {
   };
 
   handlePress = () => {
-    if (!this.state.isAuthorizing && this.props.onLongPress) {
+    if (!this.state.isAuthorizing && this.props.onPress) {
       this.props.onLongPress();
     }
   };
 
   onLongPressChange = ({ nativeEvent: { state } }) => {
     const { disabled } = this.props;
-
+    console.log('longpress', state, ACTIVE);
     if (state === ACTIVE && !disabled) {
       haptics.notificationSuccess();
       Keyboard.dismiss();
@@ -149,41 +150,39 @@ class HoldToAuthorizeButton extends PureComponent {
 
     return (
       <TapGestureHandler onHandlerStateChange={this.onTapChange}>
-        <LongPressGestureHandler
-          enableLongPress={enableLongPress}
-          minDurationMs={longPressProgressDurationMs}
-          onHandlerStateChange={this.onLongPressChange}
+        <Animated.View
+          {...props}
+          style={[style, { transform: [{ scale: this.buttonScale }] }]}
+          testID={testID}
         >
-          <Animated.View
-            {...props}
-            style={[style, { transform: [{ scale: this.buttonScale }] }]}
-            testID={testID}
+          <Button
+            disabled={disabled}
+            iconProps={
+              !android && !disabled && !hideBiometricIcon
+                ? { name: biometryIconName, color: 'black' }
+                : {
+                    name: 'error',
+                    color: 'white',
+                  }
+            }
+            loading={android && (isAuthorizing || this.props.isAuthorizing)}
+            onLongPress={enableLongPress ? this.onLongPressChange : null}
+            variant={disabled ? 'invalid' : null}
           >
-            <Button
-              disabled={disabled}
-              iconProps={
-                !android && !disabled && !hideBiometricIcon
-                  ? { name: biometryIconName, color: 'black' }
-                  : {
-                      name: 'error',
-                      color: 'white',
-                    }
-              }
-              loading={android && (isAuthorizing || this.props.isAuthorizing)}
-              variant={disabled ? 'invalid' : null}
-            >
-              {isAuthorizing || this.props.isAuthorizing
-                ? 'Authorizing'
-                : label}
-            </Button>
-          </Animated.View>
-        </LongPressGestureHandler>
+            {isAuthorizing || this.props.isAuthorizing ? 'Authorizing' : label}
+          </Button>
+        </Animated.View>
       </TapGestureHandler>
     );
   }
 }
 
-const HoldToAuthorizeButtonWithBiometrics = ({ label, testID, ...props }) => {
+const HoldToAuthorizeButtonWithBiometrics = ({
+  label,
+  testID,
+  onLongPress,
+  ...props
+}) => {
   const biometryType = useBiometryType();
   const biometryIconName = useBiometryIconName();
   const { colors } = useTheme();
@@ -199,6 +198,7 @@ const HoldToAuthorizeButtonWithBiometrics = ({ label, testID, ...props }) => {
       colors={colors}
       enableLongPress={enableLongPress}
       label={enableLongPress ? label : label.replace('Hold', 'Tap')}
+      onLongPress={onLongPress}
       testID={testID}
     />
   );
