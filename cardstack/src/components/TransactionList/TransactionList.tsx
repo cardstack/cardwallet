@@ -16,9 +16,9 @@ interface TransactionListProps {
 }
 
 export const TransactionList = ({ Header }: TransactionListProps) => {
-  const { isLoadingAssets, sections } = useAccountTransactions();
+  const { isLoadingTransactions, sections } = useAccountTransactions();
 
-  if (true) {
+  if (isLoadingTransactions) {
     return (
       <ScrollView
         backgroundColor="backgroundBlue"

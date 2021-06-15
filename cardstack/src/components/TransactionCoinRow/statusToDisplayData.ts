@@ -38,6 +38,16 @@ const swapData: TransactionCoinRowDisplayData = {
   transactionSymbol: '-',
 };
 
+const failed: TransactionCoinRowDisplayData = {
+  iconProps: {
+    ...defaultIconProps,
+    color: 'red',
+    name: 'circle',
+    size: 14,
+  },
+  transactionSymbol: '',
+};
+
 const receivedData: TransactionCoinRowDisplayData = {
   iconProps: {
     ...defaultIconProps,
@@ -52,13 +62,13 @@ const statusToDisplayData: {
 } = {
   [TransactionStatus.approved]: defaultData,
   [TransactionStatus.approving]: defaultData,
-  [TransactionStatus.cancelled]: defaultData,
-  [TransactionStatus.cancelling]: defaultData,
-  [TransactionStatus.deposited]: defaultData,
-  [TransactionStatus.depositing]: defaultData,
-  [TransactionStatus.failed]: defaultData,
-  [TransactionStatus.purchased]: defaultData,
-  [TransactionStatus.purchasing]: defaultData,
+  [TransactionStatus.cancelled]: failed,
+  [TransactionStatus.cancelling]: failed,
+  [TransactionStatus.deposited]: sendData,
+  [TransactionStatus.depositing]: sendData,
+  [TransactionStatus.failed]: failed,
+  [TransactionStatus.purchased]: sendData,
+  [TransactionStatus.purchasing]: sendData,
   [TransactionStatus.received]: receivedData,
   [TransactionStatus.receiving]: receivedData,
   [TransactionStatus.self]: defaultData,
@@ -68,8 +78,8 @@ const statusToDisplayData: {
   [TransactionStatus.swapped]: swapData,
   [TransactionStatus.swapping]: swapData,
   [TransactionStatus.unknown]: defaultData,
-  [TransactionStatus.withdrawing]: defaultData,
-  [TransactionStatus.withdrew]: defaultData,
+  [TransactionStatus.withdrawing]: sendData,
+  [TransactionStatus.withdrew]: sendData,
 };
 
 export const getDisplayDataByStatus = (status: TransactionStatus) => {

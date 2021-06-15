@@ -1,6 +1,7 @@
 import React from 'react';
+
 import { ContainerProps } from '../Container';
-import { Container, Skeleton, ScrollView } from '@cardstack/components';
+import { Container, Skeleton } from '@cardstack/components';
 
 const TransactionsSection = (props: ContainerProps) => (
   <Container {...props}>
