@@ -15,10 +15,7 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import {
-  convertSpendForBalanceDisplay,
-  getAddressPreview,
-} from '@cardstack/utils';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
@@ -63,7 +60,7 @@ const Header = () => {
     params: { merchantSafe },
   } = useRoute<RouteType>();
 
-  const { address } = merchantSafe;
+  const { address, addressPrev } = merchantSafe;
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
 
@@ -100,7 +97,7 @@ const Header = () => {
                 size="xs"
                 marginRight={2}
               >
-                {getAddressPreview(address)}
+                {addressPrev}
               </Text>
             </Container>
           </Container>

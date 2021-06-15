@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Container,
   Icon,
@@ -6,16 +6,14 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
 
 interface SafeHeaderProps {
-  address: string;
   onPress: () => void;
+  addressPrev: string;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
-  const { onPress } = props;
-  const [address] = useState(getAddressPreview(props.address));
+  const { addressPrev, onPress } = props;
 
   return (
     <Container width="100%">
@@ -30,7 +28,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
         <Container flexDirection="row" alignItems="center">
           <NetworkBadge marginRight={2} />
           <Text fontFamily="RobotoMono-Regular" color="white">
-            {address}
+            {addressPrev}
           </Text>
         </Container>
         <Touchable flexDirection="row" alignItems="center" onPress={onPress}>

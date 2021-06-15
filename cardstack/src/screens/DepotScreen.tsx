@@ -14,7 +14,6 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
@@ -40,7 +39,7 @@ export default function DepotScreen() {
     params: { depot },
   } = useRoute<RouteType>();
 
-  const { address, tokens } = depot;
+  const { address, tokens, addressPrev } = depot;
 
   const onPressInformation = () => {
     showActionSheetWithOptions(
@@ -84,7 +83,7 @@ export default function DepotScreen() {
                       size="xs"
                       marginRight={2}
                     >
-                      {getAddressPreview(address)}
+                      {addressPrev}
                     </Text>
                     <Icon name="info" size={15} />
                   </Container>

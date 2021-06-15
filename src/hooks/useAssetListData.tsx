@@ -20,6 +20,7 @@ import {
   MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
+import { getAddressPreview } from '@cardstack/utils';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
@@ -51,7 +52,10 @@ const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
       type: PinnedHiddenSectionOption.PREPAID_CARDS,
       showContextMenu: true,
     },
-    data: prepaidCards,
+    data: prepaidCards?.map(asset => {
+      const addressPrev = getAddressPreview(asset.address);
+      return { ...asset, addressPrev };
+    }),
     Component: PrepaidCard,
   };
 };
@@ -63,7 +67,10 @@ const useDepotSection = (): AssetListSectionItem<DepotType> => {
     header: {
       title: 'Depot',
     },
-    data: depots,
+    data: depots?.map(asset => {
+      const addressPrev = getAddressPreview(asset.address);
+      return { ...asset, addressPrev };
+    }),
     Component: Depot,
   };
 };
@@ -76,7 +83,10 @@ const useMerchantSafeSection = (): AssetListSectionItem<MerchantSafeType> => {
       title: 'Merchants',
       count: merchantSafes?.length,
     },
-    data: merchantSafes,
+    data: merchantSafes?.map(asset => {
+      const addressPrev = getAddressPreview(asset.address);
+      return { ...asset, addressPrev };
+    }),
     Component: MerchantSafe,
   };
 };

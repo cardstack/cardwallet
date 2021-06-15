@@ -48,8 +48,6 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const Wrapper = isScrollable ? ScrollView : Container;
   const { networkName, ...prepaidCard } = props;
 
-  const [address] = useState(getAddressPreview(prepaidCard.address));
-
   const {
     editing,
     selected,
@@ -142,7 +140,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             {...prepaidCard}
             issuer="Cardstack"
             networkName={networkName}
-            address={address}
+            address={prepaidCard.addressPrev}
           />
           <Bottom {...props} />
         </Container>
