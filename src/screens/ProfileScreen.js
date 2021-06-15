@@ -8,13 +8,15 @@ import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
 import { CopyToast, ToastPositionContainer } from '../components/toasts';
 import {
+  useAccountProfile,
   useAccountSettings,
   useAccountTransactions,
   useRequests,
 } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
-import { Icon } from '@cardstack/components';
+import { Icon, TransactionList } from '@cardstack/components';
 import { isLayer1 } from '@cardstack/utils';
+import addCash from '@rainbow-me/redux/addCash';
 import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 
@@ -42,6 +44,7 @@ export default function ProfileScreen({ navigation }) {
   } = accountTransactions;
   const { pendingRequestCount } = useRequests();
   const { network } = useAccountSettings();
+  const { accountAddress } = useAccountProfile();
 
   const isEmpty = !transactionsCount && !pendingRequestCount;
 
@@ -91,9 +94,8 @@ export default function ProfileScreen({ navigation }) {
           onPress={onPressBackButton}
         />
       </Header>
-      <ActivityList
-        addCashAvailable={addCashAvailable}
-        header={
+      <TransactionList
+        Header={
           <ProfileMasthead
             addCashAvailable={addCashAvailable}
             onChangeWallet={onChangeWallet}
@@ -101,13 +103,7 @@ export default function ProfileScreen({ navigation }) {
             setCopyCount={setCopyCount}
           />
         }
-        isEmpty={isEmpty}
-        isLoading={isLoading}
-        navigation={navigation}
-        network={network}
-        recyclerListView={false}
-        sections={sections}
-        {...accountTransactions}
+        accountAddress={accountAddress}
       />
       <ToastPositionContainer>
         <CopyToast copiedText={copiedText} copyCount={copyCount} />

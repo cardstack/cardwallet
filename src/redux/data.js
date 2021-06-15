@@ -174,7 +174,7 @@ const checkMeta = message => (dispatch, getState) => {
   return (
     isLowerCaseMatch(address, accountAddress) &&
     isLowerCaseMatch(currency, nativeCurrency) &&
-    isLowerCaseMatch(metaNetwork, network)
+    (!metaNetwork || isLowerCaseMatch(metaNetwork, network))
   );
 };
 

@@ -1,3 +1,27 @@
+export enum TransactionStatus {
+  approved = 'approved',
+  approving = 'approving',
+  cancelled = 'cancelled',
+  cancelling = 'cancelling',
+  deposited = 'deposited',
+  depositing = 'depositing',
+  failed = 'failed',
+  purchased = 'purchased',
+  purchasing = 'purchasing',
+  received = 'received',
+  receiving = 'receiving',
+  self = 'self',
+  sending = 'sending',
+  sent = 'sent',
+  // eslint-disable-next-line @typescript-eslint/camelcase
+  speeding_up = 'speeding up',
+  swapped = 'swapped',
+  swapping = 'swapping',
+  unknown = 'unknown status',
+  withdrawing = 'withdrawing',
+  withdrew = 'withdrew',
+}
+
 export interface TransactionItem {
   /** ex: '0xAa262652e7459693fdA194b33d288b487908E520' */
   from: string;
@@ -31,9 +55,10 @@ export interface TransactionItem {
   };
   pending: boolean;
   /** ex: 'sent' */
-  status: string;
+  status: TransactionStatus;
   /** ex: 'ETH' */
   symbol: string;
   /** ex: 'Sent' */
   title: string;
+  swappedFor?: any;
 }

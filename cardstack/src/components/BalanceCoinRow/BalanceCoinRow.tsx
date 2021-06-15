@@ -52,9 +52,7 @@ export const BalanceCoinRow = ({
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
           zIndex={1}
         >
-          <Container flexDirection="row">
-            <NetworkBadge marginBottom={4} />
-          </Container>
+          <NetworkBadge marginBottom={4} />
           <TokenBalance
             address={item.address}
             tokenSymbol={item.symbol}

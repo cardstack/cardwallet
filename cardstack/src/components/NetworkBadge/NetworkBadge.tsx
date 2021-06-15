@@ -7,16 +7,17 @@ export const NetworkBadge = (props: ContainerProps) => {
   const networkName = useRainbowSelector(state => state.settings.network);
 
   return (
-    <Container
-      backgroundColor="backgroundLightGray"
-      paddingHorizontal={2}
-      style={{ paddingVertical: 1 }}
-      borderRadius={50}
-      {...props}
-    >
-      <Text color="networkBadge" fontSize={9} weight="bold">
-        {`ON ${networkName.toUpperCase()}`}
-      </Text>
+    <Container flexDirection="row" {...props}>
+      <Container
+        backgroundColor="backgroundLightGray"
+        paddingHorizontal={2}
+        style={{ paddingVertical: 1 }}
+        borderRadius={50}
+      >
+        <Text color="networkBadge" fontSize={9} weight="bold">
+          {`ON ${networkName.toUpperCase()}`}
+        </Text>
+      </Container>
     </Container>
   );
 };

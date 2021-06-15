@@ -250,6 +250,7 @@ const getTokenTxData = async (
   }
   const request = await fetch(url);
   const { status, result } = await request.json();
+
   if (status === '1' && result?.length > 0) {
     return result;
   }

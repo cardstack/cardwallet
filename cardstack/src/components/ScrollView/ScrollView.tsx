@@ -4,6 +4,8 @@ import {
   LayoutProps,
   spacing,
   SpacingProps,
+  backgroundColor,
+  BackgroundColorProps,
 } from '@shopify/restyle';
 import { ReactNode } from 'react';
 import {
@@ -15,7 +17,8 @@ import { Theme } from '../../theme';
 
 type RestyleProps = ReactNativeScrollViewProps &
   LayoutProps<Theme> &
-  SpacingProps<Theme>;
+  SpacingProps<Theme> &
+  BackgroundColorProps<Theme>;
 
 export interface ScrollViewProps extends RestyleProps {
   children: ReactNode;
@@ -25,6 +28,6 @@ export interface ScrollViewProps extends RestyleProps {
  * This is our primitive ScrollView component with restyle props applied
  */
 export const ScrollView = createRestyleComponent<ScrollViewProps, Theme>(
-  [layout, spacing],
+  [layout, spacing, backgroundColor],
   ReactNativeScrollView
 );
