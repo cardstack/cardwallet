@@ -413,6 +413,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
           })
         );
 
+        console.log({ depots: JSON.stringify(depotsWithIds, null, 2) });
         const gnosisDataWithPrices = await addGnosisTokenPrices(
           {
             depots: depotsWithIds,

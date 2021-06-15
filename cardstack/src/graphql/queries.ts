@@ -10,7 +10,7 @@ export const getTransactionHistoryData = gql`
         }
         createdAt
         issuingToken
-        amount
+        spendAmount
         creationGasFeeCollected
         prepaidCard {
           customizationDID

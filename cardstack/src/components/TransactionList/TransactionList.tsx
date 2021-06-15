@@ -1,14 +1,15 @@
 import React from 'react';
 import { SectionList } from 'react-native';
+
 import { TransactionListLoading } from './TransactionListLoading';
+import { useTransactions } from '@cardstack/services';
+import { colors } from '@cardstack/theme';
 import {
   CenteredContainer,
   Container,
   ScrollView,
   Text,
 } from '@cardstack/components';
-import { colors } from '@cardstack/theme';
-import { useAccountTransactions } from '@rainbow-me/hooks';
 
 interface TransactionListProps {
   Header: JSX.Element;
@@ -16,7 +17,7 @@ interface TransactionListProps {
 }
 
 export const TransactionList = ({ Header }: TransactionListProps) => {
-  const { isLoadingTransactions, sections } = useAccountTransactions();
+  const { isLoadingTransactions, sections } = useTransactions();
 
   if (isLoadingTransactions) {
     return (

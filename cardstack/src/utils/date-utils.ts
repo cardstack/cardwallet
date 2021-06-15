@@ -36,8 +36,12 @@ const yesterdayTimestamp = calculateTimestampOfYesterday();
 const thisMonthTimestamp = calculateTimestampOfThisMonth();
 const thisYearTimestamp = calculateTimestampOfThisYear();
 
-export const groupTransactionsByDate = ({ minedAt }: { minedAt: string }) => {
-  const ts = parseInt(minedAt, 10) * 1000;
+export const groupTransactionsByDate = ({
+  timestamp,
+}: {
+  timestamp: string;
+}) => {
+  const ts = parseInt(timestamp, 10) * 1000;
 
   if (ts > todayTimestamp) return 'Today';
   if (ts > yesterdayTimestamp) return 'Yesterday';

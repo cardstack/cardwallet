@@ -15,6 +15,7 @@ interface ReduxState {
     merchantSafes: MerchantSafeType[];
   };
   settings: {
+    accountAddress: string;
     nativeCurrency: string;
     network: string;
   };
