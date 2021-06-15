@@ -34,7 +34,6 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
     <SectionList
       ListEmptyComponent={<ListEmptyComponent />}
       ListHeaderComponent={Header}
-      // renderItem={({ item }) => <TransactionCoinRow item={item} />}
       contentContainerStyle={{ paddingBottom: 40 }}
       sections={sections}
       renderSectionHeader={({ section: { title } }) => (

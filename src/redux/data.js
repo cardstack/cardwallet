@@ -206,8 +206,6 @@ export const transactionsReceived = (message, appended = false) => async (
   const { transactions } = getState().data;
   const { selected } = getState().wallets;
 
-  console.log({ transactionData: JSON.stringify(transactionData[0], null, 2) });
-
   const { parsedTransactions, potentialNftTransaction } = parseTransactions(
     transactionData,
     accountAddress,
