@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Container } from '../Container';
 import { TransactionCoinRow } from './TransactionCoinRow';
+import { TransactionStatus } from '@cardstack/types';
 
 const exampleTransaction = {
   from: '0xAa262652e7459693fdA194b33d288b487908E520',
@@ -23,7 +24,7 @@ const exampleTransaction = {
     display: '$5.00',
   },
   pending: false,
-  status: 'sent',
+  status: TransactionStatus.sent,
   symbol: 'ETH',
   title: 'Sent',
 };

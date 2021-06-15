@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import { TransactionItem } from '../../src/types';
+import { TransactionItem, TransactionStatus } from '../../src/types';
 
 const chance = new Chance();
 
@@ -25,7 +25,7 @@ export const createRandomTransactionItem = (
     display: chance.string(),
   },
   pending: chance.bool(),
-  status: 'sent',
+  status: TransactionStatus.sent,
   symbol: 'ETH',
   title: 'Sent',
   ...item,
