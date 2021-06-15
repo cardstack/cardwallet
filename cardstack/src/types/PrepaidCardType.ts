@@ -2,7 +2,7 @@ import { TokenType } from '.';
 
 export interface PrepaidCardType {
   address: string;
-  addressPrev: string;
+  addressPreview: string;
   issuer: string;
   issuingToken: string;
   spendFaceValue: number;

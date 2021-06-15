@@ -39,7 +39,7 @@ export default function DepotScreen() {
     params: { depot },
   } = useRoute<RouteType>();
 
-  const { address, tokens, addressPrev } = depot;
+  const { address, tokens, addressPreview } = depot;
 
   const onPressInformation = () => {
     showActionSheetWithOptions(
@@ -83,7 +83,7 @@ export default function DepotScreen() {
                       size="xs"
                       marginRight={2}
                     >
-                      {addressPrev}
+                      {addressPreview}
                     </Text>
                     <Icon name="info" size={15} />
                   </Container>

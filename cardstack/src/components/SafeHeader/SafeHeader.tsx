@@ -9,11 +9,11 @@ import {
 
 interface SafeHeaderProps {
   onPress: () => void;
-  addressPrev: string;
+  addressPreview: string;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
-  const { addressPrev, onPress } = props;
+  const { addressPreview, onPress } = props;
 
   return (
     <Container width="100%">
@@ -28,7 +28,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
         <Container flexDirection="row" alignItems="center">
           <NetworkBadge marginRight={2} />
           <Text fontFamily="RobotoMono-Regular" color="white">
-            {addressPrev}
+            {addressPreview}
           </Text>
         </Container>
         <Touchable flexDirection="row" alignItems="center" onPress={onPress}>

@@ -60,7 +60,7 @@ const Header = () => {
     params: { merchantSafe },
   } = useRoute<RouteType>();
 
-  const { address, addressPrev } = merchantSafe;
+  const { address, addressPreview } = merchantSafe;
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
 
@@ -97,7 +97,7 @@ const Header = () => {
                 size="xs"
                 marginRight={2}
               >
-                {addressPrev}
+                {addressPreview}
               </Text>
             </Container>
           </Container>

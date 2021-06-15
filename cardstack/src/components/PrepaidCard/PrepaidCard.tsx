@@ -183,7 +183,7 @@ const GradientBackground = () => (
   </SVG>
 );
 
-const Top = ({ issuer, networkName, addressPrev }: PrepaidCardProps) => {
+const Top = ({ issuer, networkName, addressPreview }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
       <Container width="100%">
@@ -198,7 +198,7 @@ const Top = ({ issuer, networkName, addressPrev }: PrepaidCardProps) => {
           {issuer}
         </Text>
         <Container flexDirection="row">
-          <Text variant="shadowRoboto">{addressPrev}</Text>
+          <Text variant="shadowRoboto">{addressPreview}</Text>
         </Container>
       </Container>
       <Container width="100%" alignItems="flex-end">

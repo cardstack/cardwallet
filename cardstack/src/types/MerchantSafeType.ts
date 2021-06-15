@@ -2,7 +2,7 @@ import { TokenType } from '.';
 
 export interface MerchantSafeType {
   address: string;
-  addressPrev: string;
+  addressPreview: string;
   accumulatedSpendValue: string;
   tokens: TokenType[];
   revenueBalances: TokenType[];

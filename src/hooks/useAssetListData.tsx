@@ -53,8 +53,8 @@ const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
       showContextMenu: true,
     },
     data: prepaidCards?.map(asset => {
-      const addressPrev = getAddressPreview(asset.address);
-      return { ...asset, addressPrev };
+      const addressPreview = getAddressPreview(asset.address);
+      return { ...asset, addressPreview };
     }),
     Component: PrepaidCard,
   };
@@ -68,8 +68,8 @@ const useDepotSection = (): AssetListSectionItem<DepotType> => {
       title: 'Depot',
     },
     data: depots?.map(asset => {
-      const addressPrev = getAddressPreview(asset.address);
-      return { ...asset, addressPrev };
+      const addressPreview = getAddressPreview(asset.address);
+      return { ...asset, addressPreview };
     }),
     Component: Depot,
   };
@@ -84,8 +84,8 @@ const useMerchantSafeSection = (): AssetListSectionItem<MerchantSafeType> => {
       count: merchantSafes?.length,
     },
     data: merchantSafes?.map(asset => {
-      const addressPrev = getAddressPreview(asset.address);
-      return { ...asset, addressPrev };
+      const addressPreview = getAddressPreview(asset.address);
+      return { ...asset, addressPreview };
     }),
     Component: MerchantSafe,
   };
