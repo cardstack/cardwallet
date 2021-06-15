@@ -1,37 +1,38 @@
-import { useQuery } from '@apollo/client';
-import { getTransactionHistoryData, sokolClient } from '@cardstack/graphql';
-import { isLayer1 } from '@cardstack/utils';
+import { groupBy } from 'lodash';
+import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import logger from 'logger';
 
 const useSokolTransactions = () => {
-  const [accountAddress, network] = useRainbowSelector(state => [
-    state.settings.accountAddress,
-    state.settings.network,
-  ]);
+  // const [accountAddress, network] = useRainbowSelector(state => [
+  //   state.settings.accountAddress,
+  //   state.settings.network,
+  // ]);
 
-  const { data, loading, error } = useQuery(getTransactionHistoryData, {
-    client: sokolClient,
-    skip: !accountAddress || isLayer1(network),
-    variables: {
-      address: accountAddress,
-    },
-  });
+  const transactions = useRainbowSelector(state => state.data.transactions);
 
-  if (error) {
-    logger.log('Error getting Sokol transactions', error);
-  }
+  // const { data, loading, error } = useQuery(getTransactionHistoryData, {
+  //   client: sokolClient,
+  //   skip: !accountAddress || isLayer1(network),
+  //   variables: {
+  //     address: accountAddress,
+  //   },
+  // });
 
-  console.log({ data, loading, error });
+  // if (error) {
+  //   logger.log('Error getting Sokol transactions', error);
+  // }
 
-  console.log({
-    createdPrepaidCards: JSON.stringify(data?.account, null, 2),
-  });
+  const data = groupBy(transactions, groupTransactionsByDate);
+
+  const sections = Object.keys(data).map(title => ({
+    data: data[title],
+    title,
+  }));
 
   return {
-    isLoadingTransactions: loading,
-    sections: [],
+    isLoadingTransactions: false,
+    sections: sections,
   };
 };
 
