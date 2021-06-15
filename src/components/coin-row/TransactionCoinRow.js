@@ -1,6 +1,7 @@
 import { compact, get, toLower } from 'lodash';
 import React, { useCallback } from 'react';
 import { css } from 'styled-components';
+
 import { useTheme } from '../../context/ThemeContext';
 import { getRandomColor } from '../../styles/colors';
 import { ButtonPressAnimation } from '../animations';
@@ -30,7 +31,6 @@ import {
   ethereumUtils,
   showActionSheetWithOptions,
 } from '@rainbow-me/utils';
-import logger from 'logger';
 
 const containerStyles = css`
   padding-left: 19;

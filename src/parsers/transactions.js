@@ -307,6 +307,18 @@ const parseTransaction = (
     };
   });
 
+  if (
+    internalTransactions.length > 1 &&
+    internalTransactions[0].type === TransactionTypes.trade
+  ) {
+    internalTransactions = [
+      {
+        ...internalTransactions[0],
+        swappedFor: internalTransactions[1],
+      },
+    ];
+  }
+
   return reverse(internalTransactions);
 };
 

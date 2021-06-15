@@ -1,21 +1,9 @@
-import { concat, get, isNil, keys, map, toLower } from 'lodash';
-import { DATA_API_KEY, DATA_ORIGIN } from 'react-native-dotenv';
+import { concat, get, isNil, keys, toLower } from 'lodash';
 import io from 'socket.io-client';
-import { assetChartsReceived, DEFAULT_CHART_TYPE } from './charts';
-import {
-  addressAssetsReceived,
-  assetPricesChanged,
-  assetPricesReceived,
-  transactionsReceived,
-  transactionsRemoved,
-} from './data';
-import {
-  fallbackExplorerClearState,
-  fallbackExplorerInit,
-} from './fallbackExplorer';
-import { isLayer1 } from '@cardstack/utils';
-import { disableCharts, forceFallbackProvider } from '@rainbow-me/config/debug';
-import NetworkTypes from '@rainbow-me/helpers/networkTypes';
+
+import { transactionsReceived, transactionsRemoved } from './data';
+import { fallbackExplorerClearState } from './fallbackExplorer';
+import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -92,18 +80,6 @@ const assetsSubscription = (pairs, currency, action = 'subscribe') => {
   ];
 };
 
-const chartsRetrieval = (assetCodes, currency, chartType, action = 'get') => [
-  action,
-  {
-    payload: {
-      asset_codes: assetCodes,
-      charts_type: chartType,
-      currency: toLower(currency),
-    },
-    scope: ['charts'],
-  },
-];
-
 const explorerUnsubscribe = () => (dispatch, getState) => {
   const {
     addressSocket,
@@ -140,21 +116,6 @@ const disableFallbackIfNeeded = () => (dispatch, getState) => {
   });
 };
 
-const isValidAssetsResponseFromZerion = msg => {
-  // Check that the payload meta is valid
-  if (msg?.meta?.status === 'ok') {
-    // Check that there's an assets property in the payload
-    if (msg.payload?.assets) {
-      const assets = keys(msg.payload.assets);
-      // Check that we have assets
-      if (assets.length > 0) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
 export const explorerClearState = () => dispatch => {
   dispatch(disableFallbackIfNeeded());
   dispatch(explorerUnsubscribe());
@@ -165,7 +126,7 @@ export const explorerInit = () => async (dispatch, getState) => {
   const { network, accountAddress, nativeCurrency } = getState().settings;
   const { addressSocket, assetsSocket } = getState().explorer;
 
-  if (isLayer1(network)) {
+  if (network === networkTypes.mainnet) {
     // if there is another socket unsubscribe first
     if (addressSocket || assetsSocket) {
       dispatch(explorerUnsubscribe());

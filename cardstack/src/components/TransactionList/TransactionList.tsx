@@ -1,6 +1,12 @@
 import React from 'react';
 import { SectionList } from 'react-native';
-import { CenteredContainer, Text } from '@cardstack/components';
+import { TransactionListLoading } from './TransactionListLoading';
+import {
+  CenteredContainer,
+  Container,
+  ScrollView,
+  Text,
+} from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { useAccountTransactions } from '@rainbow-me/hooks';
 
@@ -10,9 +16,19 @@ interface TransactionListProps {
 }
 
 export const TransactionList = ({ Header }: TransactionListProps) => {
-  const { sections } = useAccountTransactions();
+  const { isLoadingAssets, sections } = useAccountTransactions();
 
-  console.log({ sections });
+  if (true) {
+    return (
+      <ScrollView
+        backgroundColor="backgroundBlue"
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
+        {Header}
+        <TransactionListLoading />
+      </ScrollView>
+    );
+  }
 
   return (
     <SectionList
@@ -22,14 +38,16 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
       contentContainerStyle={{ paddingBottom: 40 }}
       sections={sections}
       renderSectionHeader={({ section: { title } }) => (
-        <Text
-          size="medium"
-          marginVertical={2}
+        <Container
+          paddingVertical={2}
           paddingHorizontal={5}
-          color="white"
+          width="100%"
+          backgroundColor="backgroundBlue"
         >
-          {title}
-        </Text>
+          <Text size="medium" color="white">
+            {title}
+          </Text>
+        </Container>
       )}
       style={{ backgroundColor: colors.backgroundBlue }}
     />

@@ -131,6 +131,16 @@ export const dataLoadState = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({ type: DATA_LOAD_ASSETS_FAILURE });
   }
+  // try {
+  //   dispatch({ type: DATA_LOAD_TRANSACTIONS_REQUEST });
+  //   const transactions = await getLocalTransactions(accountAddress, network);
+  //   dispatch({
+  //     payload: transactions,
+  //     type: DATA_LOAD_TRANSACTIONS_SUCCESS,
+  //   });
+  // } catch (error) {
+  //   dispatch({ type: DATA_LOAD_TRANSACTIONS_FAILURE });
+  // }
 };
 
 export const dataResetState = () => (dispatch, getState) => {
@@ -195,6 +205,8 @@ export const transactionsReceived = (message, appended = false) => async (
   const { purchaseTransactions } = getState().addCash;
   const { transactions } = getState().data;
   const { selected } = getState().wallets;
+
+  console.log({ transactionData: JSON.stringify(transactionData[0], null, 2) });
 
   const { parsedTransactions, potentialNftTransaction } = parseTransactions(
     transactionData,
