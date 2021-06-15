@@ -677,7 +677,6 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   return produce(state, draft => {
-    console.log({ draft });
     switch (action.type) {
       case DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION:
         draft.uniswapPricesQuery = action.payload.uniswapPricesQuery;
