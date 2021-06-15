@@ -17,10 +17,7 @@ import {
   useAccountSettings,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
-import {
-  convertSpendForBalanceDisplay,
-  getAddressPreview,
-} from '@cardstack/utils';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import {
   Container,
   Icon,

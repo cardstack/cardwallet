@@ -2,6 +2,7 @@ import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
 import { Depot } from './Depot';
+import { getAddressPreview } from '@cardstack/utils';
 
 storiesOf('Default', module).add('Default', () => {
   const data: any = [
@@ -17,5 +18,13 @@ storiesOf('Default', module).add('Default', () => {
     },
   ];
 
-  return <Depot address="0x00000000" tokens={data} networkName="xDai Chain" />;
+  const address = '0x00000000';
+  return (
+    <Depot
+      address={address}
+      addressPreview={getAddressPreview(address)}
+      tokens={data}
+      networkName="xDai Chain"
+    />
+  );
 });

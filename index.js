@@ -6,7 +6,7 @@ import { language } from 'react-native-languages';
 
 import { resources } from './src/languages';
 
-const USE_STORYBOOK = false;
+const USE_STORYBOOK = true;
 
 // Languages (i18n)
 lang.defaultLocale = 'en';

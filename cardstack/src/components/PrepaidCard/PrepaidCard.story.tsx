@@ -4,12 +4,16 @@ import { text, number } from '@storybook/addon-knobs';
 
 import { PrepaidCard } from './PrepaidCard';
 import { SmallPrepaidCard } from './SmallPrepaidCard';
+import { getAddressPreview } from '@cardstack/utils';
 
 storiesOf('Prepaid Card', module)
   .add('Default', () => {
+    const address = text('Identifier', '0xbeA3123457eF8');
+    const prevAddress = getAddressPreview(address);
     return (
       <PrepaidCard
         address={text('Identifier', '0xbeA3123457eF8')}
+        addressPreview={prevAddress}
         issuer={text('Issuer', 'Cardstack')}
         issuingToken=""
         spendFaceValue={number('Spendable Balance (xDai)', 2500)}
