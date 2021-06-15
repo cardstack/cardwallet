@@ -136,12 +136,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         >
           <GradientBackground />
           {/* hard code issuer for now */}
-          <Top
-            {...prepaidCard}
-            issuer="Cardstack"
-            networkName={networkName}
-            address={prepaidCard.addressPrev}
-          />
+          <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
           <Bottom {...props} />
         </Container>
         {isEditing && isHidden && (
@@ -188,7 +183,7 @@ const GradientBackground = () => (
   </SVG>
 );
 
-const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
+const Top = ({ issuer, networkName, addressPrev }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
       <Container width="100%">
@@ -203,7 +198,7 @@ const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
           {issuer}
         </Text>
         <Container flexDirection="row">
-          <Text variant="shadowRoboto">{getAddressPreview(address)}</Text>
+          <Text variant="shadowRoboto">{addressPrev}</Text>
         </Container>
       </Container>
       <Container width="100%" alignItems="flex-end">
