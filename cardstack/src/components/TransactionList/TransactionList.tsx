@@ -1,6 +1,7 @@
 import React from 'react';
 import { SectionList } from 'react-native';
 
+import { TransactionItem } from '../Transactions/TransactionItem';
 import { TransactionListLoading } from './TransactionListLoading';
 import { useTransactions } from '@cardstack/services';
 import { colors } from '@cardstack/theme';
@@ -36,6 +37,7 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
       ListEmptyComponent={<ListEmptyComponent />}
       ListHeaderComponent={Header}
       contentContainerStyle={{ paddingBottom: 40 }}
+      renderItem={props => <TransactionItem {...props} />}
       sections={sections}
       renderSectionHeader={({ section: { title } }) => (
         <Container

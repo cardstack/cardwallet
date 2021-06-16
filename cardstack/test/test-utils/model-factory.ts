@@ -1,12 +1,12 @@
 import Chance from 'chance';
 
-import { TransactionItem, TransactionStatus } from '../../src/types';
+import { TransactionItemType, TransactionStatus } from '../../src/types';
 
 const chance = new Chance();
 
 export const createRandomTransactionItem = (
-  item: Partial<TransactionItem> = {}
-): TransactionItem => ({
+  item: Partial<TransactionItemType> = {}
+): TransactionItemType => ({
   from: chance.guid(),
   nonce: chance.natural(),
   to: chance.guid(),

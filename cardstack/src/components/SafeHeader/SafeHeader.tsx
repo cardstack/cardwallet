@@ -10,7 +10,7 @@ import { getAddressPreview } from '@cardstack/utils';
 
 interface SafeHeaderProps {
   address: string;
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {

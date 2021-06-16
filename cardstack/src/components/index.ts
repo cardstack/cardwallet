@@ -10,7 +10,7 @@ export * from './ScrollView';
 export * from './Touchable';
 export * from './Icon';
 export * from './Image';
-export * from './TransactionCoinRow';
+export * from './Transactions';
 export * from './BalanceCoinRow';
 export * from './OptionItem';
 export * from './Input';

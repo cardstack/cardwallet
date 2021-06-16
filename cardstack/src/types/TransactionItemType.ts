@@ -22,7 +22,7 @@ export enum TransactionStatus {
   withdrew = 'withdrew',
 }
 
-export interface TransactionItem {
+export interface TransactionItemType {
   /** ex: '0xAa262652e7459693fdA194b33d288b487908E520' */
   from: string;
   /** ex: 0 */
