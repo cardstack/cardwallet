@@ -10,11 +10,12 @@ import { getAddressPreview } from '@cardstack/utils';
 
 interface SafeHeaderProps {
   address: string;
+  rightText?: string;
   onPress?: () => void;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
-  const { address, onPress } = props;
+  const { address, onPress, rightText } = props;
 
   return (
     <Container width="100%">
@@ -34,9 +35,11 @@ export const SafeHeader = (props: SafeHeaderProps) => {
         </Container>
         <Touchable flexDirection="row" alignItems="center" onPress={onPress}>
           <Text color="white" weight="extraBold" size="small" marginRight={1}>
-            View
+            {rightText || 'View'}
           </Text>
-          <Icon name="chevron-right" color="white" iconSize="medium" />
+          {!rightText && (
+            <Icon name="chevron-right" color="white" iconSize="medium" />
+          )}
         </Touchable>
       </Container>
     </Container>

@@ -1,21 +1,24 @@
 import { groupBy } from 'lodash';
 import { getTransactionHistoryData, sokolClient } from '@cardstack/graphql';
 import { useQuery } from '@apollo/client';
-import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
+import {
+  convertRawAmountToBalance,
+  convertRawAmountToNativeDisplay,
+} from '@cardstack/cardpay-sdk';
 import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 import { TransactionType } from '@cardstack/types';
 
-const sortByTime = (a, b) => {
+const sortByTime = (a: any, b: any) => {
   const timeA = a.timestamp || a.minedAt;
   const timeB = b.timestamp || b.minedAt;
 
   return timeB - timeA;
 };
 
-const getBridgedTransactions = (data: any) => {
+const getBridgedTransactions = (data: any, nativeCurrency: string) => {
   if (!data || !data.account) {
     return [];
   }
@@ -27,6 +30,12 @@ const getBridgedTransactions = (data: any) => {
     balance: convertRawAmountToBalance(token.amount, {
       decimals: 18,
     }),
+    native: convertRawAmountToNativeDisplay(
+      token.amount,
+      18,
+      1, // needs to be updated with actual price unit
+      nativeCurrency
+    ),
     to: token.depot.id,
     token: token.token,
     timestamp: token.timestamp,
@@ -35,9 +44,14 @@ const getBridgedTransactions = (data: any) => {
 };
 
 const useSokolTransactions = () => {
-  const [accountAddress, network] = useRainbowSelector(state => [
+  const [
+    accountAddress,
+    network,
+    nativeCurrency,
+  ] = useRainbowSelector(state => [
     state.settings.accountAddress,
     state.settings.network,
+    state.settings.nativeCurrency,
   ]);
 
   const transactions = useRainbowSelector(state => state.data.transactions);
@@ -54,7 +68,7 @@ const useSokolTransactions = () => {
     logger.log('Error getting Sokol transactions', error);
   }
 
-  const bridgedTransactions = getBridgedTransactions(data);
+  const bridgedTransactions = getBridgedTransactions(data, nativeCurrency);
 
   const groupedData = groupBy(
     [...transactions, ...bridgedTransactions].sort(sortByTime),

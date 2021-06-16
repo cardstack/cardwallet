@@ -3,6 +3,10 @@ export interface BridgedToken {
     amount: string;
     display: string;
   };
+  native: {
+    amount: string;
+    display: string;
+  };
   to: string;
   token: string;
   timestamp: number;
