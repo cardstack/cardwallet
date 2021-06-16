@@ -1,5 +1,5 @@
 import React from 'react';
-import { SectionList } from 'react-native';
+import { RefreshControl, SectionList } from 'react-native';
 
 import { TransactionItem } from '../Transactions/TransactionItem';
 import { TransactionListLoading } from './TransactionListLoading';
@@ -18,7 +18,12 @@ interface TransactionListProps {
 }
 
 export const TransactionList = ({ Header }: TransactionListProps) => {
-  const { isLoadingTransactions, sections } = useTransactions();
+  const {
+    isLoadingTransactions,
+    sections,
+    refetch,
+    refetchLoading,
+  } = useTransactions();
 
   if (isLoadingTransactions) {
     return (
@@ -51,6 +56,13 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
           </Text>
         </Container>
       )}
+      refreshControl={
+        <RefreshControl
+          tintColor="white"
+          refreshing={refetchLoading}
+          onRefresh={refetch}
+        />
+      }
       style={{ backgroundColor: colors.backgroundBlue }}
     />
   );

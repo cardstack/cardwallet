@@ -1,6 +1,6 @@
 import { groupBy } from 'lodash';
 import { getTransactionHistoryData, sokolClient } from '@cardstack/graphql';
-import { useQuery } from '@apollo/client';
+import { NetworkStatus, useQuery } from '@apollo/client';
 import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
@@ -57,15 +57,17 @@ const useSokolTransactions = () => {
 
   const transactions = useRainbowSelector(state => state.data.transactions);
 
-  const { data, loading, error } = useQuery(getTransactionHistoryData, {
-    client: sokolClient,
-    skip: !accountAddress || network !== networkTypes.sokol,
-    variables: {
-      address: accountAddress,
-    },
-  });
-
-  console.log({ data: JSON.stringify(data, null, 2) });
+  const { data, error, refetch, networkStatus } = useQuery(
+    getTransactionHistoryData,
+    {
+      client: sokolClient,
+      notifyOnNetworkStatusChange: true,
+      skip: !accountAddress || network !== networkTypes.sokol,
+      variables: {
+        address: accountAddress,
+      },
+    }
+  );
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);
@@ -91,7 +93,9 @@ const useSokolTransactions = () => {
     });
 
   return {
-    isLoadingTransactions: loading,
+    isLoadingTransactions: networkStatus === NetworkStatus.loading,
+    refetch,
+    refetchLoading: networkStatus === NetworkStatus.refetch,
     sections: sections,
   };
 };
@@ -102,7 +106,11 @@ export const useTransactions = () => {
   const layer2Data = useSokolTransactions();
 
   if (isLayer1(network)) {
-    return layer1Data;
+    return {
+      ...layer1Data,
+      refetch: () => ({}),
+      refetchLoading: false,
+    };
   }
 
   return layer2Data;
