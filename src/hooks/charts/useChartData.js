@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 
 import { disableCharts } from '../../config/debug';
 import { chartsUpdateChartType, DEFAULT_CHART_TYPE } from '../../redux/charts';
-import { emitChartsRequest } from '../../redux/explorer';
 import { daysFromTheFirstTx } from '../../utils/ethereumUtils';
 import useAsset from '../useAsset';
 
@@ -16,7 +15,7 @@ const formatChartData = chart => {
 export default function useChartData(asset) {
   const [daysFromFirstTx, setDaysFromFirstTx] = useState(1000);
   const dispatch = useDispatch();
-  const { address, price: priceObject } = useAsset(asset);
+  const { price: priceObject } = useAsset(asset);
 
   const { value: price } = priceObject || {};
 
@@ -33,12 +32,6 @@ export default function useChartData(asset) {
       fetchDays();
     }
   }, [asset]);
-
-  useEffect(() => {
-    if (!disableCharts) {
-      dispatch(emitChartsRequest(address, chartType));
-    }
-  }, [address, chartType, dispatch]);
 
   const updateChartType = useCallback(
     type => dispatch(chartsUpdateChartType(type)),

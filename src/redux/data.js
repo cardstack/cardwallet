@@ -1,5 +1,6 @@
 import { divide, isZero } from '@cardstack/cardpay-sdk';
 import { getUnixTime, subDays } from 'date-fns';
+import produce from 'immer';
 import {
   concat,
   filter,
@@ -675,94 +676,71 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  switch (action.type) {
-    case DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION:
-      return {
-        ...state,
-        uniswapPricesQuery: action.payload.uniswapPricesQuery,
-        uniswapPricesSubscription: action.payload.uniswapPricesSubscription,
-      };
-    case DATA_UPDATE_REFETCH_SAVINGS:
-      return { ...state, shouldRefetchSavings: action.payload };
-    case DATA_UPDATE_ASSET_PRICES_FROM_UNISWAP:
-      return { ...state, assetPricesFromUniswap: action.payload };
-    case DATA_UPDATE_GENERIC_ASSETS:
-      return { ...state, genericAssets: action.payload };
-    case DATA_UPDATE_ASSETS:
-      return {
-        ...state,
-        assets: action.payload,
-        isLoadingAssets: false,
-      };
-    case DATA_UPDATE_GNOSIS_DATA:
-      return {
-        ...state,
-        depots: action.payload.depots,
-        merchantSafes: action.payload.merchantSafes,
-        prepaidCards: action.payload.prepaidCards,
-      };
-    case DATA_UPDATE_TRANSACTIONS:
-      return {
-        ...state,
-        isLoadingTransactions: false,
-        transactions: action.payload,
-      };
-    case DATA_LOAD_TRANSACTIONS_REQUEST:
-      return {
-        ...state,
-        isLoadingTransactions: true,
-      };
-    case DATA_LOAD_TRANSACTIONS_SUCCESS:
-      return {
-        ...state,
-        isLoadingTransactions: false,
-        transactions: action.payload,
-      };
-    case DATA_LOAD_TRANSACTIONS_FAILURE:
-      return {
-        ...state,
-        isLoadingTransactions: false,
-      };
-    case DATA_LOAD_ASSETS_REQUEST:
-      return {
-        ...state,
-        isLoadingAssets: true,
-      };
-    case DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS:
-      return {
-        ...state,
-        assetPricesFromUniswap: action.payload,
-      };
-    case DATA_LOAD_ASSETS_SUCCESS:
-      return {
-        ...state,
-        assets: action.payload.assets,
-        depots: action.payload.depots,
-        prepaidCards: action.payload.prepaidCards,
-        merchantSafes: action.payload.merchantSafes,
-        isLoadingAssets: false,
-      };
-    case DATA_LOAD_ASSETS_FAILURE:
-      return {
-        ...state,
-        isLoadingAssets: false,
-      };
-    case DATA_ADD_NEW_TRANSACTION_SUCCESS:
-      return {
-        ...state,
-        transactions: action.payload,
-      };
-    case DATA_ADD_NEW_SUBSCRIBER:
-      return {
-        ...state,
-        subscribers: action.payload,
-      };
-    case DATA_CLEAR_STATE:
-      return {
-        ...state,
-        ...INITIAL_STATE,
-      };
-    default:
-      return state;
-  }
+  return produce(state, draft => {
+    switch (action.type) {
+      case DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION:
+        draft.uniswapPricesQuery = action.payload.uniswapPricesQuery;
+        draft.uniswapPricesSubscription =
+          action.payload.uniswapPricesSubscription;
+        break;
+      case DATA_UPDATE_REFETCH_SAVINGS:
+        draft.shouldRefetchSavings = action.payload;
+        break;
+      case DATA_UPDATE_ASSET_PRICES_FROM_UNISWAP:
+        draft.assetPricesFromUniswap = action.payload;
+        break;
+      case DATA_UPDATE_GENERIC_ASSETS:
+        draft.genericAssets = action.payload;
+        break;
+      case DATA_UPDATE_ASSETS:
+        draft.assets = action.payload;
+        draft.isLoadingAssets = false;
+        break;
+      case DATA_UPDATE_GNOSIS_DATA:
+        draft.depots = action.payload.depots;
+        draft.merchantSafes = action.payload.merchantSafes;
+        draft.prepaidCards = action.payload.prepaidCards;
+        break;
+      case DATA_UPDATE_TRANSACTIONS:
+        draft.isLoadingTransactions = false;
+        draft.transactions = action.payload;
+        break;
+      case DATA_LOAD_TRANSACTIONS_REQUEST:
+        draft.isLoadingTransactions = true;
+        break;
+      case DATA_LOAD_TRANSACTIONS_SUCCESS:
+        draft.isLoadingTransactions = false;
+        draft.transactions = action.payload;
+        break;
+      case DATA_LOAD_TRANSACTIONS_FAILURE:
+        draft.isLoadingTransactions = false;
+        break;
+      case DATA_LOAD_ASSETS_REQUEST:
+        draft.isLoadingAssets = true;
+        break;
+      case DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS:
+        draft.assetPricesFromUniswap = action.payload;
+        break;
+      case DATA_LOAD_ASSETS_SUCCESS:
+        draft.assets = action.payload.assets;
+        draft.depots = action.payload.depots;
+        draft.prepaidCards = action.payload.prepaidCards;
+        draft.merchantSafes = action.payload.merchantSafes;
+        draft.isLoadingAssets = false;
+        break;
+      case DATA_LOAD_ASSETS_FAILURE:
+        draft.isLoadingAssets = true;
+        break;
+      case DATA_ADD_NEW_TRANSACTION_SUCCESS:
+        draft.transactions = action.payload;
+        break;
+      case DATA_ADD_NEW_SUBSCRIBER:
+        draft.subscribers = action.payload;
+        break;
+      case DATA_CLEAR_STATE:
+        return INITIAL_STATE;
+      default:
+        break;
+    }
+  });
 };
