@@ -415,7 +415,7 @@ export default function SendSheet(props) {
     [txFees, gasPrices, updateGasPriceOption]
   );
 
-  const onLongPressSend = useCallback(() => {
+  const onPress = useCallback(() => {
     if (isIphoneX()) {
       submitTransaction();
     } else {
@@ -543,7 +543,7 @@ export default function SendSheet(props) {
                 isAuthorizing={isAuthorizing}
                 isSufficientBalance={amountDetails.isSufficientBalance}
                 isSufficientGas={isSufficientGas}
-                onLongPress={onLongPressSend}
+                onPress={onPress}
                 smallButton={isTinyPhone}
                 testID="send-sheet-confirm"
               />

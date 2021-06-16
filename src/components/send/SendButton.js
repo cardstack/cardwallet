@@ -9,7 +9,7 @@ const SendButton = ({
   isAuthorizing,
   isSufficientBalance,
   isSufficientGas,
-  onLongPress,
+  onPress,
   testID,
   ...props
 }) => {
@@ -37,7 +37,7 @@ const SendButton = ({
       disabled={disabled}
       isAuthorizing={isAuthorizing}
       label={label}
-      onLongPress={onLongPress}
+      onPress={onPress}
       testID={testID}
     />
   );
@@ -48,7 +48,7 @@ SendButton.propTypes = {
   isAuthorizing: PropTypes.bool,
   isSufficientBalance: PropTypes.bool,
   isSufficientGas: PropTypes.bool,
-  onLongPress: PropTypes.func,
+  onPress: PropTypes.func,
 };
 
 export default React.memo(SendButton);

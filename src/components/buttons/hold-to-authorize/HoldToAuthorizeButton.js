@@ -6,20 +6,19 @@ import {
   State,
   TapGestureHandler,
 } from 'react-native-gesture-handler';
-import Animated, { Easing, timing, Value } from 'react-native-reanimated';
+import { Easing, timing, Value } from 'react-native-reanimated';
 
 import { useTheme } from '../../../context/ThemeContext';
 import BiometryTypes from '../../../helpers/biometryTypes';
 import { useBiometryIconName, useBiometryType } from '../../../hooks';
 import { haptics } from '../../../utils';
-import { Button } from '@cardstack/components';
+import { Button, Container } from '@cardstack/components';
 
-const { divide, multiply, proc } = Animated;
-
-const { ACTIVE, BEGAN, END, FAILED } = State;
+const { ACTIVE, END } = State;
 
 const buttonScaleDurationMs = 150;
-const longPressProgressDurationMs = 500;
+const tapPressDurationMs = 450;
+const longPressProgressDurationMs = 450;
 
 const animate = (value, { duration = buttonScaleDurationMs, toValue }) =>
   timing(value, {
@@ -28,9 +27,6 @@ const animate = (value, { duration = buttonScaleDurationMs, toValue }) =>
     toValue,
   });
 
-const calculateReverseDuration = proc(longPressProgress =>
-  multiply(divide(longPressProgress, 100), longPressProgressDurationMs)
-);
 class HoldToAuthorizeButton extends PureComponent {
   static propTypes = {
     backgroundColor: PropTypes.string,
@@ -42,7 +38,7 @@ class HoldToAuthorizeButton extends PureComponent {
     hideInnerBorder: PropTypes.bool,
     isAuthorizing: PropTypes.bool,
     label: PropTypes.string,
-    onLongPress: PropTypes.func.isRequired,
+    onPress: PropTypes.func.isRequired,
     shadows: PropTypes.arrayOf(PropTypes.array),
     smallButton: PropTypes.bool,
     style: PropTypes.object,
@@ -71,37 +67,30 @@ class HoldToAuthorizeButton extends PureComponent {
 
   onFinishAuthorizing = () => {
     if (!this.props.disabled) {
-      animate(this.longPressProgress, {
-        duration: calculateReverseDuration(this.longPressProgress),
-        toValue: 0,
-      }).start(() => this.setState({ isAuthorizing: false }));
+      this.setState({ isAuthorizing: false });
     }
   };
 
   handlePress = () => {
-    if (!this.state.isAuthorizing && this.props.onLongPress) {
-      this.props.onLongPress();
+    if (!this.state.isAuthorizing && this.props.onPress) {
+      this.props.onPress();
     }
   };
 
   onLongPressChange = ({ nativeEvent: { state } }) => {
     const { disabled } = this.props;
-
     if (state === ACTIVE && !disabled) {
       haptics.notificationSuccess();
       Keyboard.dismiss();
 
-      animate(this.buttonScale, {
-        toValue: 1,
-      }).start(() => this.setState({ isAuthorizing: true }));
+      this.setState({ isAuthorizing: true });
 
       this.handlePress();
     }
   };
 
   onTapChange = ({ nativeEvent: { state } }) => {
-    const { disabled, enableLongPress } = this.props;
-
+    const { disabled } = this.props;
     if (disabled) {
       if (state === END) {
         haptics.notificationWarning();
@@ -111,25 +100,7 @@ class HoldToAuthorizeButton extends PureComponent {
       }
     } else {
       if (state === ACTIVE) {
-        if (!enableLongPress) {
-          this.handlePress();
-        }
-      } else if (state === BEGAN) {
-        animate(this.buttonScale, { toValue: 0.97 }).start();
-        if (enableLongPress) {
-          animate(this.longPressProgress, {
-            duration: longPressProgressDurationMs,
-            toValue: 100,
-          }).start();
-        }
-      } else if (state === END || state === FAILED) {
-        animate(this.buttonScale, { toValue: 1 }).start();
-        if (enableLongPress) {
-          animate(this.longPressProgress, {
-            duration: calculateReverseDuration(this.longPressProgress),
-            toValue: 0,
-          }).start();
-        }
+        this.handlePress();
       }
     }
   };
@@ -148,17 +119,17 @@ class HoldToAuthorizeButton extends PureComponent {
     const { isAuthorizing } = this.state;
 
     return (
-      <TapGestureHandler onHandlerStateChange={this.onTapChange}>
-        <LongPressGestureHandler
-          enableLongPress={enableLongPress}
-          minDurationMs={longPressProgressDurationMs}
-          onHandlerStateChange={this.onLongPressChange}
+      <LongPressGestureHandler
+        enabled={enableLongPress}
+        minDurationMs={longPressProgressDurationMs}
+        onHandlerStateChange={this.onLongPressChange}
+      >
+        <TapGestureHandler
+          enabled={!enableLongPress}
+          maxDurationMs={tapPressDurationMs}
+          onHandlerStateChange={this.onTapChange}
         >
-          <Animated.View
-            {...props}
-            style={[style, { transform: [{ scale: this.buttonScale }] }]}
-            testID={testID}
-          >
+          <Container {...props} style={style} testID={testID}>
             <Button
               disabled={disabled}
               iconProps={
@@ -170,15 +141,16 @@ class HoldToAuthorizeButton extends PureComponent {
                     }
               }
               loading={android && (isAuthorizing || this.props.isAuthorizing)}
+              style={{ width: '100%' }}
               variant={disabled ? 'invalid' : null}
             >
               {isAuthorizing || this.props.isAuthorizing
                 ? 'Authorizing'
                 : label}
             </Button>
-          </Animated.View>
-        </LongPressGestureHandler>
-      </TapGestureHandler>
+          </Container>
+        </TapGestureHandler>
+      </LongPressGestureHandler>
     );
   }
 }

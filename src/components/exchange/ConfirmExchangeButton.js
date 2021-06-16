@@ -58,7 +58,7 @@ const ConfirmExchangeButton = ({
       hideInnerBorder
       isAuthorizing={isAuthorizing}
       label={label}
-      onLongPress={onSubmit}
+      onPress={onSubmit}
       shadows={ConfirmExchangeButtonShadows}
       testID={testID}
       theme="dark"
