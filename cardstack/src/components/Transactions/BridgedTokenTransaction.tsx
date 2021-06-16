@@ -1,5 +1,6 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { NetworkBadge } from '../NetworkBadge';
+import { Linking } from 'react-native';
 import {
   CoinIcon,
   Container,
@@ -10,6 +11,8 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { BridgedToken } from '@cardstack/types';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 export interface BridgedTokenTransactionProps extends ContainerProps {
   item: BridgedToken;
@@ -22,13 +25,34 @@ export const BridgedTokenTransaction = ({
   item,
   ...props
 }: BridgedTokenTransactionProps) => {
+  const network = useRainbowSelector(state => state.settings.network);
+  const blockExplorer = getConstantByNetwork('blockExplorer', network);
+
   if (!item) {
     return null;
   }
 
+  const onPressTransaction = () => {
+    showActionSheetWithOptions(
+      {
+        options: ['View on Blockscout', 'Cancel'],
+        cancelButtonIndex: 1,
+      },
+      (buttonIndex: number) => {
+        if (buttonIndex === 0) {
+          Linking.openURL(`${blockExplorer}/tx/${item.transaction.id}`);
+        }
+      }
+    );
+  };
+
   return (
     <Container width="100%" paddingHorizontal={4} {...props} marginVertical={2}>
-      <Touchable width="100%" testID="inventory-card">
+      <Touchable
+        width="100%"
+        testID="inventory-card"
+        onPress={onPressTransaction}
+      >
         <Container
           backgroundColor="white"
           borderRadius={10}

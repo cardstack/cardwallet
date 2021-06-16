@@ -34,6 +34,9 @@ export const getTransactionHistoryData = gql`
         depot {
           id
         }
+        transaction {
+          id
+        }
         amount
         token
         timestamp

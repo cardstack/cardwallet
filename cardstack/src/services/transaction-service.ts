@@ -5,6 +5,7 @@ import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
+import { networkTypes } from '@rainbow-me/networkTypes';
 import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -58,11 +59,13 @@ const useSokolTransactions = () => {
 
   const { data, loading, error } = useQuery(getTransactionHistoryData, {
     client: sokolClient,
-    skip: !accountAddress || isLayer1(network),
+    skip: !accountAddress || network !== networkTypes.sokol,
     variables: {
       address: accountAddress,
     },
   });
+
+  console.log({ data: JSON.stringify(data, null, 2) });
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);

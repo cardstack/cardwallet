@@ -7,6 +7,9 @@ export interface BridgedToken {
     amount: string;
     display: string;
   };
+  transaction: {
+    id: string;
+  };
   to: string;
   token: string;
   timestamp: number;
