@@ -17,7 +17,6 @@ import { Button, Container } from '@cardstack/components';
 const { ACTIVE, END } = State;
 
 const buttonScaleDurationMs = 150;
-const tapPressDurationMs = 450;
 const longPressProgressDurationMs = 450;
 
 const animate = (value, { duration = buttonScaleDurationMs, toValue }) =>
@@ -126,7 +125,6 @@ class HoldToAuthorizeButton extends PureComponent {
       >
         <TapGestureHandler
           enabled={!enableLongPress}
-          maxDurationMs={tapPressDurationMs}
           onHandlerStateChange={this.onTapChange}
         >
           <Container {...props} style={style} testID={testID}>
