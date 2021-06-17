@@ -41,7 +41,7 @@ export default function CoinRow({
   const accountSettings = useAccountSettings();
 
   return (
-    <Container css={containerStyles} flex={1} flexDirection="row" width="100%">
+    <Container css={containerStyles} flex={-1} flexDirection="row" width="100%">
       {isPool ? (
         <CoinIconGroup tokens={tokens} />
       ) : (

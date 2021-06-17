@@ -138,9 +138,15 @@ const Right = (item: TransactionItem) => {
   const displayData = getDisplayDataByStatus(item.status);
 
   return (
-    <Container>
+    <Container flex={1}>
       <Container alignItems="flex-end">
-        <Text weight="extraBold">{`${displayData.transactionSymbol} ${item.balance.display}`}</Text>
+        <Container flexDirection="row">
+          <Text
+            weight="extraBold"
+            numberOfLines={2}
+            textAlign="right"
+          >{`${displayData.transactionSymbol} ${item.balance.display}`}</Text>
+        </Container>
         <Text variant="subText">{`${item.native.display}`}</Text>
       </Container>
     </Container>
