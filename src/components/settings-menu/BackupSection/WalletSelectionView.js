@@ -217,13 +217,7 @@ const WalletSelectionView = () => {
       {cloudBackedUpWallets > 0 && (
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
-            <Text
-              align="center"
-              color="backgroundBlue"
-              letterSpacing="roundedMedium"
-              size="lmedium"
-              weight="semibold"
-            >
+            <Text align="center" color="backgroundBlue">
               􀍢 Manage {cloudPlatform} Backups
             </Text>
           </ButtonPressAnimation>
