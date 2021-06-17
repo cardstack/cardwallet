@@ -13,22 +13,13 @@ import { ContactAvatar } from '../../contacts';
 import { Centered, Column, ColumnWithMargins, Row } from '../../layout';
 import { TruncatedAddress } from '../../text';
 import { Icon, Text } from '@cardstack/components';
-import Caret from '@rainbow-me/assets/family-dropdown-arrow.png';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useWallets } from '@rainbow-me/hooks';
-import { ImgixImage } from '@rainbow-me/images';
-import { useNavigation } from '@rainbow-me/navigation';
-import { fonts, padding } from '@rainbow-me/styles';
-import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
 
-const CheckmarkIcon = styled(Icon).attrs({
-  name: 'checkmarkCircled',
-})`
-  align-self: center;
-  margin-bottom: 1px;
-  margin-right: 7px;
-`;
+import { useNavigation } from '@rainbow-me/navigation';
+import { padding } from '@rainbow-me/styles';
+import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const Footer = styled(Centered)`
   flex: 1;
@@ -228,7 +219,7 @@ const WalletSelectionView = () => {
           <ButtonPressAnimation onPress={manageCloudBackups}>
             <Text
               align="center"
-              color={colors.alpha(colors.blueGreyDark, 0.6)}
+              color="backgroundBlue"
               letterSpacing="roundedMedium"
               size="lmedium"
               weight="semibold"
