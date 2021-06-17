@@ -1,5 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React, { useCallback } from 'react';
+import { ENABLE_PAYMENTS } from '../../cardstack/src/constants';
 import showWalletErrorAlert from '../helpers/support';
 import { useNavigation } from '../navigation/Navigation';
 import { magicMemo } from '../utils';
@@ -29,7 +30,9 @@ const AddFundsInterstitial = () => {
     navigate(Routes.RECEIVE_MODAL);
   }, [navigate, isDamaged]);
 
-  const isMainnet = network === networkTypes.mainnet;
+  const showAddFunds = network === networkTypes.mainnet && ENABLE_PAYMENTS;
+
+  console.log({ showAddFunds });
 
   return (
     <Container
@@ -42,10 +45,10 @@ const AddFundsInterstitial = () => {
       top="10%"
       width="100%"
     >
-      {isMainnet ? <BuyEth onPress={onPress} /> : null}
+      {showAddFunds ? <BuyEth onPress={onPress} /> : null}
       <Container marginTop={16}>
         <Text color="white" fontSize={26}>
-          {isMainnet ? 'or ' : ''}send {nativeTokenSymbol} to your wallet
+          {showAddFunds ? 'or ' : ''}send {nativeTokenSymbol} to your wallet
         </Text>
       </Container>
       <Button
