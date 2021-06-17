@@ -1,8 +1,8 @@
 import { useIsFocused } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { ENABLE_PAYMENTS } from '../../cardstack/src/constants';
 
-import { ActivityList } from '../components/activity-list';
 import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
@@ -15,8 +15,7 @@ import {
 } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { Icon, TransactionList } from '@cardstack/components';
-import { isLayer1 } from '@cardstack/utils';
-import addCash from '@rainbow-me/redux/addCash';
+import networkTypes from '@rainbow-me/helpers/networkTypes';
 import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 
@@ -66,7 +65,7 @@ export default function ProfileScreen({ navigation }) {
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const addCashAvailable = isLayer1(network);
+  const addCashAvailable = network === networkTypes.mainnet && ENABLE_PAYMENTS;
   const [copiedText, setCopiedText] = useState(undefined);
   const [copyCount, setCopyCount] = useState(0);
 

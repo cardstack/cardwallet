@@ -118,7 +118,7 @@ const getDataString = (func, arrVals) => {
  */
 const getNetworkFromChainId = chainId => {
   const networkData = find(chains, ['chain_id', chainId]);
-  return get(networkData, 'network', networkTypes.xdai);
+  return get(networkData, 'network', networkTypes.mainnet);
 };
 
 /**

@@ -126,7 +126,7 @@ export const INITIAL_STATE = {
   chainId: 1,
   language: 'en',
   nativeCurrency: 'USD',
-  network: networkTypes.xdai,
+  network: networkTypes.mainnet,
   showTestnets: false,
 };
 
