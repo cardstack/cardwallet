@@ -7,5 +7,6 @@ export * from './DepotType';
 export * from './MerchantSafeType';
 export * from './CollectibleType';
 export * from './CurrencyConversionRates';
-export * from './BridgedToken';
+export * from './BridgedTokenTransactionType';
 export * from './TransactionType';
+export * from './CreatedPrepaidCardTransactionType';

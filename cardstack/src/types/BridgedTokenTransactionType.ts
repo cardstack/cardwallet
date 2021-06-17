@@ -1,4 +1,6 @@
-export interface BridgedToken {
+import { TransactionType } from './TransactionType';
+
+export interface BridgedTokenTransactionType {
   balance: {
     amount: string;
     display: string;
@@ -7,11 +9,9 @@ export interface BridgedToken {
     amount: string;
     display: string;
   };
-  transaction: {
-    id: string;
-  };
+  transactionHash: string;
   to: string;
   token: string;
   timestamp: number;
-  type: string;
+  type: TransactionType.BRIDGED;
 }

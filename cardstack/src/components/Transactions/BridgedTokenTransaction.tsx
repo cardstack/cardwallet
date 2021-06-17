@@ -10,12 +10,12 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { BridgedToken } from '@cardstack/types';
+import { BridgedTokenTransactionType } from '@cardstack/types';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 export interface BridgedTokenTransactionProps extends ContainerProps {
-  item: BridgedToken;
+  item: BridgedTokenTransactionType;
 }
 
 /**
@@ -40,7 +40,7 @@ export const BridgedTokenTransaction = ({
       },
       (buttonIndex: number) => {
         if (buttonIndex === 0) {
-          Linking.openURL(`${blockExplorer}/tx/${item.transaction.id}`);
+          Linking.openURL(`${blockExplorer}/tx/${item.transactionHash}`);
         }
       }
     );
@@ -60,7 +60,7 @@ export const BridgedTokenTransaction = ({
           borderColor="buttonPrimaryBorder"
           width="100%"
         >
-          <SafeHeader address={item.to} rightText="DEPOT" />
+          <SafeHeader address={item.to} rightText="DEPOT" small />
           <Bottom {...item} />
         </Container>
       </Touchable>
@@ -68,9 +68,9 @@ export const BridgedTokenTransaction = ({
   );
 };
 
-const Bottom = (token: BridgedToken) => {
+const Bottom = (token: BridgedTokenTransactionType) => {
   return (
-    <Container paddingHorizontal={6} paddingVertical={4}>
+    <Container paddingHorizontal={5} paddingVertical={4}>
       <Container
         flexDirection="row"
         justifyContent="space-between"

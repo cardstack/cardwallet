@@ -1,25 +1,42 @@
 import { groupBy } from 'lodash';
-import { getTransactionHistoryData, sokolClient } from '@cardstack/graphql';
 import { NetworkStatus, useQuery } from '@apollo/client';
 import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
+import { CurrencyConversionRates } from './../types/CurrencyConversionRates';
+import { getTransactionHistoryData, sokolClient } from '@cardstack/graphql';
 import { networkTypes } from '@rainbow-me/networkTypes';
-import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
+import {
+  groupTransactionsByDate,
+  isLayer1,
+  convertSpendForBalanceDisplay,
+} from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
-import { TransactionType } from '@cardstack/types';
+import {
+  TransactionType,
+  BridgedTokenTransactionType,
+  CreatedPrepaidCardTransactionType,
+} from '@cardstack/types';
+
+const DEFAULT_ASSET = {
+  decimals: 18,
+  symbol: 'DAI',
+};
 
 const sortByTime = (a: any, b: any) => {
-  const timeA = a.timestamp || a.minedAt;
-  const timeB = b.timestamp || b.minedAt;
+  const timeA = a.timestamp || a.minedAt || a.createdAt;
+  const timeB = b.timestamp || b.minedAt || a.createdAt;
 
   return timeB - timeA;
 };
 
-const getBridgedTransactions = (data: any, nativeCurrency: string) => {
+const getBridgedTransactions = (
+  data: any,
+  nativeCurrency: string
+): BridgedTokenTransactionType[] => {
   if (!data || !data.account) {
     return [];
   }
@@ -27,16 +44,14 @@ const getBridgedTransactions = (data: any, nativeCurrency: string) => {
   const { receivedBridgedTokens } = data.account;
 
   return receivedBridgedTokens.map((token: any) => ({
-    ...token,
-    balance: convertRawAmountToBalance(token.amount, {
-      decimals: 18,
-    }),
+    balance: convertRawAmountToBalance(token.amount, DEFAULT_ASSET),
     native: convertRawAmountToNativeDisplay(
       token.amount,
       18,
       1, // needs to be updated with actual price unit
       nativeCurrency
     ),
+    transactionHash: token.transaction.id,
     to: token.depot.id,
     token: token.token,
     timestamp: token.timestamp,
@@ -44,16 +59,64 @@ const getBridgedTransactions = (data: any, nativeCurrency: string) => {
   }));
 };
 
+const getPrepaidCardTransactions = (
+  data: any,
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+): CreatedPrepaidCardTransactionType[] => {
+  if (!data || !data.account) {
+    return [];
+  }
+
+  const { createdPrepaidCards } = data.account;
+
+  return createdPrepaidCards.map((transaction: any) => {
+    const spendDisplay = convertSpendForBalanceDisplay(
+      transaction.spendAmount,
+      nativeCurrency,
+      currencyConversionRates,
+      true
+    );
+
+    return {
+      address: transaction.prepaidCard.id,
+      createdAt: transaction.createdAt,
+      spendAmount: transaction.spendAmount,
+      issuingToken: {
+        address: transaction.issuingToken,
+        balance: convertRawAmountToBalance(
+          transaction.issuingTokenAmount,
+          DEFAULT_ASSET
+        ),
+        native: convertRawAmountToNativeDisplay(
+          transaction.issuingTokenAmount,
+          18,
+          1, // needs to be updated with actual price unit
+          nativeCurrency
+        ),
+      },
+      type: TransactionType.CREATED_PREPAID_CARD,
+      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
+      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+      transactionHash: transaction.transaction.id,
+    };
+  });
+};
+
 const useSokolTransactions = () => {
   const [
     accountAddress,
     network,
     nativeCurrency,
-  ] = useRainbowSelector(state => [
-    state.settings.accountAddress,
-    state.settings.network,
-    state.settings.nativeCurrency,
-  ]);
+    currencyConversionRates,
+  ] = useRainbowSelector<[string, string, string, CurrencyConversionRates]>(
+    state => [
+      state.settings.accountAddress,
+      state.settings.network,
+      state.settings.nativeCurrency,
+      state.currencyConversion.rates,
+    ]
+  );
 
   const transactions = useRainbowSelector(state => state.data.transactions);
 
@@ -75,8 +138,16 @@ const useSokolTransactions = () => {
 
   const bridgedTransactions = getBridgedTransactions(data, nativeCurrency);
 
+  const prepaidCardTransactions = getPrepaidCardTransactions(
+    data,
+    nativeCurrency,
+    currencyConversionRates
+  );
+
   const groupedData = groupBy(
-    [...transactions, ...bridgedTransactions].sort(sortByTime),
+    [...transactions, ...bridgedTransactions, ...prepaidCardTransactions].sort(
+      sortByTime
+    ),
     groupTransactionsByDate
   );
 

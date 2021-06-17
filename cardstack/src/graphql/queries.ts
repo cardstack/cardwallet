@@ -8,26 +8,15 @@ export const getTransactionHistoryData = gql`
         issuer {
           id
         }
+        transaction {
+          id
+        }
         createdAt
         issuingToken
+        issuingTokenAmount
         spendAmount
-        creationGasFeeCollected
         prepaidCard {
-          customizationDID
-          reloadable
-          owner {
-            id
-          }
-        }
-        transaction {
-          safeTxns {
-            safe {
-              id
-            }
-            to
-            value
-            timestamp
-          }
+          id
         }
       }
       receivedBridgedTokens(first: 5) {
