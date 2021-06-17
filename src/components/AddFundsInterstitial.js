@@ -32,8 +32,6 @@ const AddFundsInterstitial = () => {
 
   const showAddFunds = network === networkTypes.mainnet && ENABLE_PAYMENTS;
 
-  console.log({ showAddFunds });
-
   return (
     <Container
       flex={1}
