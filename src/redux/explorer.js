@@ -155,7 +155,7 @@ export const explorerInit = () => async (dispatch, getState) => {
 
 const listenOnAddressMessages = socket => dispatch => {
   socket.on(messages.ADDRESS_TRANSACTIONS.RECEIVED, message => {
-    logger.log('txns received', get(message, 'payload.transactions', []));
+    // logger.log('txns received', get(message, 'payload.transactions', []));
     dispatch(transactionsReceived(message));
   });
 
