@@ -52,7 +52,7 @@ const receivedData: TransactionCoinRowDisplayData = {
   iconProps: {
     ...defaultIconProps,
     name: 'arrow-down',
-    size: 14,
+    size: 16,
   },
   transactionSymbol: '+',
 };

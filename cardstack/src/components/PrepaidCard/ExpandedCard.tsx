@@ -1,7 +1,7 @@
 import React from 'react';
 import { SectionList } from 'react-native';
 import { IconName } from '../Icon';
-import { TransactionItem } from '../../types';
+import { TransactionItemType } from '../../types';
 import {
   Button,
   Container,
@@ -13,7 +13,7 @@ import {
 export interface ExpandedCardProps {
   recentActivity: {
     title: string;
-    data: TransactionItem[];
+    data: TransactionItemType[];
   }[];
 }
 

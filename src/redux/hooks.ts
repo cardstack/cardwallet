@@ -4,6 +4,7 @@ import {
   DepotType,
   MerchantSafeType,
   PrepaidCardType,
+  TransactionItemType,
 } from '@cardstack/types';
 
 interface ReduxState {
@@ -13,8 +14,10 @@ interface ReduxState {
     prepaidCards: PrepaidCardType[];
     depots: DepotType[];
     merchantSafes: MerchantSafeType[];
+    transactions: TransactionItemType[];
   };
   settings: {
+    accountAddress: string;
     nativeCurrency: string;
     network: string;
   };

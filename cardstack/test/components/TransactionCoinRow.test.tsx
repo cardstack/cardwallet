@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TransactionItem } from '../../src/types';
+import { TransactionItemType } from '../../src/types';
 import { render } from '../test-utils';
 import { createRandomTransactionItem } from '../test-utils/model-factory';
 import { TransactionCoinRow } from '@cardstack/components';
@@ -14,7 +14,7 @@ jest.mock('../../src/components/Icon', () => ({
 }));
 
 describe('TransactionCoinRow', () => {
-  let item: TransactionItem;
+  let item: TransactionItemType;
 
   const renderComponent = () => render(<TransactionCoinRow item={item} />);
 
