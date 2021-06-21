@@ -175,7 +175,7 @@ export default function BackupCloudStep() {
                   }
                 : null
             }
-            onSubmit={onConfirmBackup}
+            onPress={onConfirmBackup}
           >
             Confirm
           </Button>

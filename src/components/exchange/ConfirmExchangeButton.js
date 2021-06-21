@@ -1,10 +1,10 @@
-import {getConstantByNetwork} from '@cardstack/cardpay-sdk';
-import {useAccountSettings} from '@rainbow-me/hooks';
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import ExchangeModalTypes from '../../helpers/exchangeModalTypes';
 import { HoldToAuthorizeButton } from '../buttons';
 import { SlippageWarningThresholdInBips } from './SlippageWarning';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 const ConfirmExchangeButton = ({
   disabled,
@@ -58,7 +58,7 @@ const ConfirmExchangeButton = ({
       hideInnerBorder
       isAuthorizing={isAuthorizing}
       label={label}
-      onLongPress={onSubmit}
+      onPress={onSubmit}
       shadows={ConfirmExchangeButtonShadows}
       testID={testID}
       theme="dark"
