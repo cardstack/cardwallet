@@ -66,8 +66,6 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 };
 
 export const settingsUpdateNetwork = network => async dispatch => {
-  dispatch(dataResetState());
-  dispatch(fallbackExplorerClearState());
   try {
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
     await web3SetHttpProvider(network);
