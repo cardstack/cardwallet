@@ -4,7 +4,7 @@ import { Container } from '../Container';
 
 export const HandleHeight = 5;
 
-export const SheetHandle = ({ color = 'black' }: SheetProps) => {
+export const SheetHandle = ({ color = 'black' }: SheetHandleProps) => {
   return (
     <Container
       backgroundColor={color}
@@ -16,7 +16,7 @@ export const SheetHandle = ({ color = 'black' }: SheetProps) => {
   );
 };
 
-export interface SheetProps extends ViewProps {
+export interface SheetHandleProps extends ViewProps {
   /** color*/
   color?: any;
 }

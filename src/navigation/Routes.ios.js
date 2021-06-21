@@ -50,7 +50,12 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import { BuyPrepaidCard, DepotScreen, MerchantScreen } from '@cardstack/screen';
+import {
+  BuyPrepaidCard,
+  DepotScreen,
+  MerchantScreen,
+  TransactionConfirmation,
+} from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
@@ -320,16 +325,14 @@ function NativeStackNavigator() {
         {...savingsSheetConfig}
       />
       <NativeStack.Screen
-        component={TransactionConfirmationScreen}
+        component={TransactionConfirmation}
+        // component={TransactionConfirmationScreen}
         name={Routes.CONFIRM_REQUEST}
         options={{
           allowsDragToDismiss: true,
           backgroundColor: '#0A0A0A',
           backgroundOpacity: 1,
           customStack: true,
-          headerHeight: 0,
-          isShortFormEnabled: false,
-          topOffset: 0,
         }}
       />
       <NativeStack.Screen

@@ -103,6 +103,10 @@ export const buttonVariants = {
     ...small,
     ...tertiary,
   },
+  smallWhite: {
+    ...small,
+    ...white,
+  },
 
   tinyDark: {
     ...tiny,
