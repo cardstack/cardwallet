@@ -68,7 +68,7 @@ export const parseNewTransaction = async (
     gasLimit: txDetails?.gasLimit,
     gasPrice: txDetails?.gasPrice,
     hash,
-    minedAt: null,
+    minedAt: Date.now(),
     name: txDetails?.asset?.name,
     native,
     nonce,

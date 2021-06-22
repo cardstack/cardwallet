@@ -582,27 +582,25 @@ export default function ExchangeModal({
           </FloatingPanel>
           {isSlippageWarningVisible && <SlippageWarning slippage={slippage} />}
           {showConfirmButton && (
-            <Fragment>
-              <CenteredContainer
-                flexShrink={0}
-                paddingHorizontal={15}
-                paddingTop={12}
-                width="100%"
-              >
-                <ConfirmExchangeButton
-                  disabled={!Number(inputAmountDisplay)}
-                  isAuthorizing={isAuthorizing}
-                  isDeposit={isDeposit}
-                  isSufficientBalance={isSufficientBalance}
-                  isSufficientGas={isSufficientGas}
-                  isSufficientLiquidity={isSufficientLiquidity}
-                  onSubmit={handleSubmit}
-                  slippage={slippage}
-                  testID={testID + '-confirm'}
-                  type={type}
-                />
-              </CenteredContainer>
-            </Fragment>
+            <Container
+              flexShrink={0}
+              paddingHorizontal={5}
+              paddingTop={12}
+              width="100%"
+            >
+              <ConfirmExchangeButton
+                disabled={!Number(inputAmountDisplay)}
+                isAuthorizing={isAuthorizing}
+                isDeposit={isDeposit}
+                isSufficientBalance={isSufficientBalance}
+                isSufficientGas={isSufficientGas}
+                isSufficientLiquidity={isSufficientLiquidity}
+                onSubmit={handleSubmit}
+                slippage={slippage}
+                testID={testID + '-confirm'}
+                type={type}
+              />
+            </Container>
           )}
           <GasSpeedButton
             dontBlur

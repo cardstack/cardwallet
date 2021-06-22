@@ -120,13 +120,12 @@ export default function ChartExpandedState(props) {
           paddingTop={2}
           width="100%"
         >
-          {/* reenable swap once functionality is fixed */}
-          {/* {showSwapButton && (
+          {showSwapButton && (
             <SwapActionButton color={color} inputType={AssetInputTypes.in} />
-          )} */}
+          )}
           <SendActionButton
             color={color}
-            // small={showSwapButton} //reenable once swap functionality is fixed
+            small={showSwapButton} //reenable once swap functionality is fixed
           />
         </Container>
       )}
