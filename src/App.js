@@ -1,4 +1,5 @@
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
@@ -9,6 +10,7 @@ import nanoid from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
 import React, { Component, useEffect } from 'react';
 import {
+  Alert,
   AppRegistry,
   AppState,
   Linking,
@@ -116,6 +118,21 @@ class App extends Component {
       const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
       logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
+
+    const handleDynamicLink = async link => {
+      console.log('handle dynamic link', link.url); //placeholder for now
+    };
+
+    dynamicLinks().onLink(handleDynamicLink);
+
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        if (link) {
+          console.log('-------------initial links', { link }); // placeholder for now
+        }
+      })
+      .catch(err => Alert.alert(err));
 
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
