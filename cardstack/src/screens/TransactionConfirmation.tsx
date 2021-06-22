@@ -1,40 +1,36 @@
-import { useRoute } from '@react-navigation/native';
+import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React, { useEffect, useState } from 'react';
-
-import {
-  convertRawAmountToBalance,
-  convertRawAmountToNativeDisplay,
-} from '@cardstack/cardpay-sdk';
 import { ContactAvatar } from '../../../src/components/contacts';
+import { GasSpeedButton } from '../../../src/components/gas';
 import {
   Button,
   Container,
   HorizontalDivider,
   Icon,
   NetworkBadge,
+  ScrollView,
   SheetHandle,
   Text,
-  ScrollView,
 } from '@cardstack/components';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { DecodedData, getDecodedData } from '@cardstack/services';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
+import {
+  useAccountProfile,
+  useTransactionConfirmationFunctions,
+} from '@rainbow-me/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const TransactionConfirmation = () => {
-  const { params: routeParams } = useRoute();
-
   const {
-    transactionDetails: {
-      dappUrl,
-      payload: { params },
-    },
-  } = routeParams as any;
-
-  const message = params[1].message;
+    dappUrl,
+    message,
+    onCancel,
+    onPressSend,
+    isMessageRequest,
+  } = useTransactionConfirmationFunctions();
 
   return (
     <Container flex={1} width="100%">
@@ -48,9 +44,15 @@ const TransactionConfirmation = () => {
         <SheetHandle />
         <Header dappUrl={dappUrl} />
         <DisplayInformation message={message} />
-        <SheetFooter />
+        <SheetFooter onCancel={onCancel} onConfirm={onPressSend} />
       </Container>
-      <Footer />
+      <Container height={150}>
+        {!isMessageRequest && (
+          <Container>
+            <GasSpeedButton type="transaction" />
+          </Container>
+        )}
+      </Container>
     </Container>
   );
 };
@@ -75,7 +77,7 @@ const DisplayInformation = ({ message }: { message: any }) => {
     <ScrollView
       width="100%"
       paddingHorizontal={5}
-      contentContainerStyle={{ paddingBottom: 120 }}
+      contentContainerStyle={{ paddingBottom: 100 }}
     >
       <FromSection tokenAddress={message.to} />
       <HorizontalDivider />
@@ -253,30 +255,39 @@ const ToSection = () => {
   );
 };
 
-const SheetFooter = () => {
+const SheetFooter = ({
+  onConfirm,
+  onCancel,
+}: {
+  onConfirm: () => void;
+  onCancel: () => void;
+}) => {
   return (
     <Container
       width="100%"
-      marginTop={5}
       bottom={20}
       position="absolute"
       backgroundColor="white"
     >
-      <HorizontalDivider height={2} />
+      <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
       <Container
         paddingHorizontal={5}
         flexDirection="row"
         justifyContent="space-between"
       >
-        <Button variant="smallWhite">Cancel</Button>
-        <Button variant="small">Confirm</Button>
+        <Button variant="smallWhite" onPress={onCancel}>
+          Cancel
+        </Button>
+        <Button
+          variant="small"
+          onPress={onConfirm}
+          iconProps={{ name: 'face-id' }}
+        >
+          Confirm
+        </Button>
       </Container>
     </Container>
   );
-};
-
-const Footer = () => {
-  return <Container height={150} />;
 };
 
 export default TransactionConfirmation;
