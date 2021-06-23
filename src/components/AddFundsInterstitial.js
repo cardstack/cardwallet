@@ -46,7 +46,7 @@ const AddFundsInterstitial = () => {
       {showAddFunds ? <BuyEth onPress={onPress} /> : null}
       <Container marginTop={16}>
         <Text color="white" fontSize={26}>
-          {showAddFunds ? 'or ' : ''}send {nativeTokenSymbol} to your wallet
+          {showAddFunds ? 'or ' : ''}{showAddFunds ? 's' : 'S'}end {nativeTokenSymbol} to your account
         </Text>
       </Container>
       <Button
