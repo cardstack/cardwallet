@@ -24,7 +24,7 @@ const TransactionConfirmation = () => {
         onPressSend={onPressSend}
         methodName={methodName}
         messageRequest={messageRequest}
-        type={TransactionConfirmationType.DEFAULT}
+        type={TransactionConfirmationType.ISSUE_PREPAID_CARD}
       />
       <Container height={150}>
         {!isMessageRequest && (

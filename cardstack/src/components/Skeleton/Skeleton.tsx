@@ -5,11 +5,17 @@ import { ContainerProps } from '../Container';
 import { AnimatedContainer } from '../Animated';
 
 const INITIAL_OPACITY = 0.25;
+const INITIAL_OPACITY_LIGHT = 1;
 const FINAL_OPACITY = 0.15;
+const FINAL_OPACITY_LIGHT = 0.5;
 const ANIMATION_DURATION = 1000;
 
-export const Skeleton = (props: ContainerProps) => {
-  const opacity = useRef(new Animated.Value(INITIAL_OPACITY));
+export const Skeleton = (props: ContainerProps & { light?: boolean }) => {
+  const { light } = props;
+
+  const opacity = useRef(
+    new Animated.Value(light ? INITIAL_OPACITY_LIGHT : INITIAL_OPACITY)
+  );
 
   useEffect(() => {
     const config = {
@@ -22,19 +28,19 @@ export const Skeleton = (props: ContainerProps) => {
       Animated.sequence([
         Animated.timing(opacity.current, {
           ...config,
-          toValue: FINAL_OPACITY,
+          toValue: light ? FINAL_OPACITY_LIGHT : FINAL_OPACITY,
         }),
         Animated.timing(opacity.current, {
           ...config,
-          toValue: INITIAL_OPACITY,
+          toValue: light ? INITIAL_OPACITY_LIGHT : INITIAL_OPACITY,
         }),
       ])
     ).start();
-  }, []);
+  }, [light]);
 
   return (
     <AnimatedContainer
-      backgroundColor="white"
+      backgroundColor={light ? 'teal' : 'white'}
       height={25}
       borderRadius={10}
       width="100%"
