@@ -4,6 +4,8 @@ import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { Alert, Keyboard } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { saveBackupPassword } from '../../model/backup';
 import { cloudPlatform } from '../../utils/platform';
 import { DelayedAlert } from '../alerts';
@@ -184,53 +186,56 @@ export default function BackupCloudStep() {
         )
       }
     >
-      <Container alignItems="center" marginVertical={10} padding={9}>
-        <Icon color="settingsTeal" iconSize="xl" name="lock" />
-        <Text fontSize={20} margin={3}>
-          Choose a password
-        </Text>
-        <Text color="blueText" textAlign="center">
-          Be careful with your password. If you lose it, it cannot be recovered.
-        </Text>
-      </Container>
-      <Container flex={1} margin={5} textAlign="center">
-        <Input
-          {...sharedPasswordProps}
-          iconProps={
-            isCloudBackupPasswordValid(password)
-              ? {
-                  name: 'success',
-                }
-              : null
-          }
-          onBlur={onPasswordBlur}
-          onChange={onPasswordChange}
-          onFocus={onPasswordFocus}
-          onSubmitEditing={onPasswordSubmit}
-          placeholder="Enter password"
-          ref={passwordRef}
-          returnKeyType="next"
-          textContentType="newPassword"
-          value={password}
-        />
-        <Input
-          {...sharedPasswordProps}
-          iconProps={
-            validPassword
-              ? {
-                  name: 'success',
-                }
-              : null
-          }
-          onChange={onConfirmPasswordChange}
-          onFocus={onConfirmPasswordFocus}
-          onSubmitEditing={onConfirmPasswordSubmit}
-          placeholder="Confirm password"
-          ref={confirmPasswordRef}
-          type="password"
-          value={confirmPassword}
-        />
-      </Container>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Container alignItems="center" marginVertical={10} padding={9}>
+          <Icon color="settingsTeal" iconSize="xl" name="lock" />
+          <Text fontSize={20} margin={3}>
+            Choose a password
+          </Text>
+          <Text color="blueText" textAlign="center">
+            Be careful with your password. If you lose it, it cannot be
+            recovered.
+          </Text>
+        </Container>
+        <Container flex={1} margin={5} textAlign="center">
+          <Input
+            {...sharedPasswordProps}
+            iconProps={
+              isCloudBackupPasswordValid(password)
+                ? {
+                    name: 'success',
+                  }
+                : null
+            }
+            onBlur={onPasswordBlur}
+            onChange={onPasswordChange}
+            onFocus={onPasswordFocus}
+            onSubmitEditing={onPasswordSubmit}
+            placeholder="Enter password"
+            ref={passwordRef}
+            returnKeyType="next"
+            textContentType="newPassword"
+            value={password}
+          />
+          <Input
+            {...sharedPasswordProps}
+            iconProps={
+              validPassword
+                ? {
+                    name: 'success',
+                  }
+                : null
+            }
+            onChange={onConfirmPasswordChange}
+            onFocus={onConfirmPasswordFocus}
+            onSubmitEditing={onConfirmPasswordSubmit}
+            placeholder="Confirm password"
+            ref={confirmPasswordRef}
+            type="password"
+            value={confirmPassword}
+          />
+        </Container>
+      </TouchableWithoutFeedback>
     </BackupSheetKeyboardLayout>
   );
 }
