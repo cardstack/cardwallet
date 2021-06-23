@@ -34,8 +34,6 @@ export const TransactionConfirmationSheet = (
 ) => {
   const DisplayInformation = transactionConfirmationTypeToComponent[props.type];
 
-  console.log({ DisplayInformation });
-
   return (
     <Container
       flex={1}
