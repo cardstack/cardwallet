@@ -74,6 +74,7 @@ export default function ChartPriceLabel({
 }) {
   const { nativeCurrency } = useAccountSettings();
   const nativeSelected = get(supportedNativeCurrencies, `${nativeCurrency}`);
+
   return isNoPriceData ? (
     <ChartHeaderTitle>{defaultValue}</ChartHeaderTitle>
   ) : (
@@ -95,10 +96,11 @@ export default function ChartPriceLabel({
             priceSharedValue,
             nativeSelected
           );
+
           if (android) {
             return formatted.replace(/[^\d.,-]/g, '');
           }
-          return `${formatted} ${nativeSelected.currency}`;
+          return `${formatted}`;
         }}
       />
     </ChartPriceRow>
