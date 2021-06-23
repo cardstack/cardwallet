@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import URL from 'url-parse';
+import { ContainerProps } from '../Container';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { GenericDisplay } from './GenericDisplay';
 import { TransactionConfirmationType } from '@cardstack/types';
@@ -33,6 +34,7 @@ export const TransactionConfirmationSheet = (
   props: TransactionConfirmationSheetProps
 ) => {
   const DisplayInformation = transactionConfirmationTypeToComponent[props.type];
+  const [showHeaderShadow, setShowHeaderShadow] = useState(false);
 
   return (
     <Container
@@ -43,8 +45,18 @@ export const TransactionConfirmationSheet = (
       borderRadius={20}
     >
       <SheetHandle />
-      <Header {...props} />
+      <Header {...props} showHeaderShadow={showHeaderShadow} />
       <ScrollView
+        onScroll={event => {
+          console.log({ offset: event.nativeEvent.contentOffset.y });
+
+          if (event.nativeEvent.contentOffset.y > 16) {
+            setShowHeaderShadow(true);
+          } else {
+            setShowHeaderShadow(false);
+          }
+        }}
+        scrollEventThrottle={16}
         width="100%"
         paddingHorizontal={5}
         contentContainerStyle={{ paddingBottom: 100 }}
@@ -56,18 +68,40 @@ export const TransactionConfirmationSheet = (
   );
 };
 
-const Header = ({ dappUrl, methodName }: TransactionConfirmationSheetProps) => {
+const Header = ({
+  dappUrl,
+  methodName,
+  showHeaderShadow,
+}: TransactionConfirmationSheetProps & { showHeaderShadow: boolean }) => {
   const { hostname } = new URL(dappUrl);
 
+  const shadowProps: ContainerProps = showHeaderShadow
+    ? {
+        shadowColor: 'black',
+        shadowOffset: {
+          height: 5,
+          width: 0,
+        },
+        shadowRadius: 2,
+        shadowOpacity: 0.1,
+      }
+    : {};
+
   return (
-    <>
+    <Container
+      alignItems="center"
+      backgroundColor="white"
+      width="100%"
+      paddingBottom={2}
+      {...shadowProps}
+    >
       <Text marginTop={4} weight="extraBold">
         {methodName || 'Placeholder'}
       </Text>
       <Text variant="subText" weight="bold">
         {hostname}
       </Text>
-    </>
+    </Container>
   );
 };
 
