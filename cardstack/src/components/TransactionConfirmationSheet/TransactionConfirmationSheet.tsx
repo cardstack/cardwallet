@@ -11,6 +11,9 @@ import {
   SheetHandle,
   Text,
   ScrollView,
+  Icon,
+  Touchable,
+  IconProps,
 } from '@cardstack/components';
 
 export interface TransactionConfirmationSheetProps {
@@ -35,6 +38,7 @@ export const TransactionConfirmationSheet = (
 ) => {
   const DisplayInformation = transactionConfirmationTypeToComponent[props.type];
   const [showHeaderShadow, setShowHeaderShadow] = useState(false);
+  const [showFullMessage, setShowFullMessage] = useState(false);
 
   return (
     <Container
@@ -45,11 +49,13 @@ export const TransactionConfirmationSheet = (
       borderRadius={20}
     >
       <SheetHandle />
+      <InformationIcon
+        isOpen={showFullMessage}
+        onPress={() => setShowFullMessage(!showFullMessage)}
+      />
       <Header {...props} showHeaderShadow={showHeaderShadow} />
       <ScrollView
         onScroll={event => {
-          console.log({ offset: event.nativeEvent.contentOffset.y });
-
           if (event.nativeEvent.contentOffset.y > 16) {
             setShowHeaderShadow(true);
           } else {
@@ -61,9 +67,15 @@ export const TransactionConfirmationSheet = (
         paddingHorizontal={5}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <DisplayInformation {...props} />
+        {showFullMessage ? (
+          <Container paddingHorizontal={3} marginTop={5}>
+            <Text variant="subText">{props.messageRequest}</Text>
+          </Container>
+        ) : (
+          <DisplayInformation {...props} />
+        )}
       </ScrollView>
-      <SheetFooter {...props} />
+      {!showFullMessage && <SheetFooter {...props} />}
     </Container>
   );
 };
@@ -137,5 +149,37 @@ const SheetFooter = ({
         </Button>
       </Container>
     </Container>
+  );
+};
+
+const InformationIcon = ({
+  isOpen,
+  onPress,
+}: {
+  isOpen: boolean;
+  onPress: () => void;
+}) => {
+  const iconProps: IconProps = isOpen
+    ? {
+        name: 'info',
+        iconSize: 'medium',
+        color: 'tealDark',
+      }
+    : {
+        name: 'info-border',
+        iconSize: 'medium',
+        stroke: 'tealDark',
+      };
+
+  return (
+    <Touchable
+      position="absolute"
+      top={16}
+      right={16}
+      zIndex={10}
+      onPress={onPress}
+    >
+      <Icon {...iconProps} />
+    </Touchable>
   );
 };
