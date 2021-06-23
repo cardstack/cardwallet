@@ -7,6 +7,7 @@ export const customIcons = {
   'qr-code': require('./qr-code').default,
   'question-square': require('./question-square').default,
   'refresh-2': require('./refresh-2').default,
+  'prepaid-card': require('./prepaid-card').default,
   info: require('./info').default,
   cardstack: require('./cardstack').default,
   circle: require('./circle').default,

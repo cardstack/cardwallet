@@ -16,8 +16,8 @@ import { Alert } from '../alerts';
 import { ButtonPressAnimation } from '../animations';
 import { Input } from '../inputs';
 import { Column, Row } from '../layout';
-import { Text } from '../text';
 import GasSpeedLabelPager from './GasSpeedLabelPager';
+import { Text } from '@cardstack/components';
 import ExchangeModalTypes from '@rainbow-me/helpers/exchangeModalTypes';
 import { useAccountSettings, useGas } from '@rainbow-me/hooks';
 import { gweiToWei, weiToGwei } from '@rainbow-me/parsers';
@@ -36,7 +36,7 @@ const Container = styled(Column).attrs({
 `;
 
 const Label = styled(Text).attrs({
-  size: 'smedium',
+  size: 'smsedium',
   weight: 'semibold',
 })``;
 
@@ -61,19 +61,11 @@ const LittleBorderlessButton = ({ onPress, children, testID }) => {
   );
 };
 
-const BottomRightLabel = ({ formatter, theme }) => {
-  const { colors } = useTheme();
+const BottomRightLabel = ({ formatter }) => {
   return (
-    <Label
-      align="right"
-      color={
-        theme === 'dark'
-          ? colors.alpha(darkModeThemeColors.blueGreyDark, 0.6)
-          : colors.alpha(colors.blueGreyDark, 0.6)
-      }
-    >
+    <Text color="underlineGray" size="xs">
       {formatter()}
-    </Label>
+    </Text>
   );
 };
 
@@ -192,16 +184,7 @@ const GasSpeedButton = ({
 
   const renderGasPriceText = useCallback(
     animatedNumber => (
-      <Text
-        color={
-          theme === 'dark'
-            ? colors.whiteLabel
-            : colors.alpha(colors.blueGreyDark, 0.8)
-        }
-        letterSpacing="roundedTight"
-        size="lmedium"
-        weight="bold"
-      >
+      <Text color="white" weight="extraBold">
         {isEmpty(gasPricesAvailable) ||
         isEmpty(txFees) ||
         typeof isSufficientGas === 'undefined'
@@ -209,7 +192,7 @@ const GasSpeedButton = ({
           : animatedNumber}
       </Text>
     ),
-    [colors, gasPricesAvailable, isSufficientGas, theme, txFees]
+    [gasPricesAvailable, isSufficientGas, txFees]
   );
 
   const handlePress = useCallback(() => {
@@ -427,19 +410,7 @@ const GasSpeedButton = ({
                 value={customGasPriceInput}
                 weight="bold"
               />
-              <Text
-                color={
-                  customGasPriceInput
-                    ? theme === 'dark'
-                      ? colors.whiteLabel
-                      : colors.alpha(colors.blueGreyDark, 0.8)
-                    : theme === 'dark'
-                    ? colors.alpha(darkModeThemeColors.blueGreyDark, 0.3)
-                    : colors.alpha(colors.blueGreyDark, 0.3)
-                }
-                size="lmedium"
-                weight="bold"
-              >
+              <Text color="white" weight="extraBold">
                 {' '}
                 Gwei
               </Text>
@@ -456,15 +427,9 @@ const GasSpeedButton = ({
       </Row>
       <Row justify="space-between">
         {!isCustom ? (
-          <Label
-            color={
-              theme === 'dark'
-                ? colors.alpha(darkModeThemeColors.blueGreyDark, 0.6)
-                : colors.alpha(colors.blueGreyDark, 0.6)
-            }
-          >
+          <Text color="underlineGray" size="xs">
             Network Fee
-          </Label>
+          </Text>
         ) : (
           <LittleBorderlessButton
             onPress={handleInputButtonManager}
