@@ -19,6 +19,7 @@ import {
   signTransaction,
   signTypedDataMessage,
 } from '../model/wallet';
+import { methodRegistryLookupAndParse } from '../utils/methodRegistry';
 import {
   isMessageDisplayType,
   isSignFirstParamType,
@@ -40,7 +41,7 @@ import { walletConnectRemovePendingRedirect } from '@rainbow-me/redux/walletconn
 import { ethereumUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 
-export const useTransactionConfirmationFunctions = () => {
+export const useTransactionConfirmationUtils = () => {
   const { params: routeParams } = useRoute();
 
   const {
@@ -61,6 +62,7 @@ export const useTransactionConfirmationFunctions = () => {
   const { allAssets } = useAccountAssets();
   const [isAuthorizing, setIsAuthorizing] = useState(false);
   const calculatingGasLimit = useRef(false);
+  const [methodName, setMethodName] = useState(null);
   const [isBalanceEnough, setIsBalanceEnough] = useState(true);
 
   const dispatch = useDispatch();
@@ -90,6 +92,30 @@ export const useTransactionConfirmationFunctions = () => {
 
   const openAutomatically = routeParams?.openAutomatically;
 
+  const fetchMethodName = useCallback(
+    async data => {
+      if (!data) return;
+      const methodSignaturePrefix = data.substr(0, 10);
+      let fallbackHandler;
+      try {
+        fallbackHandler = setTimeout(() => {
+          setMethodName('Transaction Request');
+        }, 5000);
+        const { name } = await methodRegistryLookupAndParse(
+          methodSignaturePrefix
+        );
+        if (name) {
+          setMethodName(name);
+          clearTimeout(fallbackHandler);
+        }
+      } catch (e) {
+        setMethodName('Transaction Request');
+        clearTimeout(fallbackHandler);
+      }
+    },
+    [setMethodName]
+  );
+
   useEffect(() => {
     if (openAutomatically && !isEmulatorSync()) {
       Vibration.vibrate();
@@ -98,10 +124,14 @@ export const useTransactionConfirmationFunctions = () => {
     InteractionManager.runAfterInteractions(() => {
       if (!isMessageRequest) {
         startPollingGasPrices();
+        fetchMethodName(params[0].data);
+      } else {
+        setMethodName('Message Signing Request');
       }
     });
   }, [
     dappUrl,
+    fetchMethodName,
     isMessageRequest,
     method,
     openAutomatically,
@@ -463,5 +493,7 @@ export const useTransactionConfirmationFunctions = () => {
     message,
     isMessageRequest,
     dappUrl,
+    methodName,
+    messageRequest: displayDetails.request,
   };
 };

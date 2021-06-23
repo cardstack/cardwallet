@@ -29,3 +29,4 @@ export * from './MoreItemsFooter';
 export * from './CollectibleRow';
 export * from './CoinIcon';
 export * from './TransactionList';
+export * from './TransactionConfirmationSheet';
