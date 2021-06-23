@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LayoutAnimation } from 'react-native';
 import URL from 'url-parse';
 import { ContainerProps } from '../Container';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
@@ -51,7 +52,13 @@ export const TransactionConfirmationSheet = (
       <SheetHandle />
       <InformationIcon
         isOpen={showFullMessage}
-        onPress={() => setShowFullMessage(!showFullMessage)}
+        onPress={() => {
+          LayoutAnimation.configureNext(
+            LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+          );
+
+          setShowFullMessage(!showFullMessage);
+        }}
       />
       <Header {...props} showHeaderShadow={showHeaderShadow} />
       <ScrollView
