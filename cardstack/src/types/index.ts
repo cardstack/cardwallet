@@ -10,3 +10,4 @@ export * from './CurrencyConversionRates';
 export * from './BridgedTokenTransactionType';
 export * from './TransactionType';
 export * from './CreatedPrepaidCardTransactionType';
+export * from './TransactionConfirmationType';
