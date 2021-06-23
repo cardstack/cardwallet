@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { ContactAvatar } from '../../../../src/components/contacts';
+import React from 'react';
 
 import { Container, HorizontalDivider, NetworkBadge, Text } from '../';
+import { ContactAvatar } from '../../../../src/components/contacts';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import { TransactionConfirmationSheetProps } from './TransactionConfirmationSheet';
-
 import {
   useAccountProfile,
   useAccountSettings,
