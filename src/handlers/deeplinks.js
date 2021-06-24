@@ -15,7 +15,6 @@ export default function handleDeepLink(url) {
   const urlObj = new URL(url);
   if (urlObj.protocol === 'https:') {
     const action = urlObj.pathname.split('/')[1];
-
     switch (action) {
       case 'wc': {
         const { uri } = qs.parse(urlObj.query.substring(1));
@@ -24,8 +23,6 @@ export default function handleDeepLink(url) {
       }
       case 'request': {
         var params = parseQueryParams(urlObj.query);
-        console.log({ urlObj });
-        console.log('---------------handle request!', params);
         Navigation.handleAction(Routes.SPEND_SHEET, { ...params });
         //display to spend sheet, pass params to be ingested
         break;
