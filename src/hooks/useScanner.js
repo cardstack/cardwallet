@@ -141,14 +141,14 @@ export default function useScanner(enabled) {
     async ({ data }) => {
       if (!data || !isScanningEnabled) return null;
       disableScanning();
+      const deeplink = decodeURIComponent(data);
 
       const address = await addressUtils.getEthereumAddressFromQRCodeData(data);
       if (address) return handleScanAddress(address);
-      if (data.startsWith('wc:')) return handleScanWalletConnect(data);
-      if (data.includes('cardpay.page.link')) {
-        const deeplink = decodeURIComponent(data.split('?link=')[1]);
+      if (deeplink.startsWith('wc:')) return handleScanWalletConnect(data);
+      if (deeplink.includes('cardpay.page.link')) {
         haptics.notificationSuccess();
-        return handleDeepLink(deeplink);
+        return handleDeepLink(deeplink.split('?link=')[1]);
       }
       return handleScanInvalid(data);
     },
