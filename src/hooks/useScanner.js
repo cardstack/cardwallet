@@ -152,7 +152,13 @@ export default function useScanner(enabled) {
       }
       return handleScanInvalid(data);
     },
-    [isScanningEnabled, disableScanning, handleScanAddress, handleScanInvalid]
+    [
+      isScanningEnabled,
+      disableScanning,
+      handleScanAddress,
+      handleScanWalletConnect,
+      handleScanInvalid,
+    ]
   );
 
   return {
