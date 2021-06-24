@@ -6,17 +6,28 @@ import {
   walletConnectRemovePendingRedirect,
   walletConnectSetPendingRedirect,
 } from '../redux/walletconnect';
+import { Navigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
+import { parseQueryParams } from '@rainbow-me/utils';
 import logger from 'logger';
 
-export default function handleDeeplink(url) {
+export default function handleDeepLink(url) {
   const urlObj = new URL(url);
-  // iOS uses universal links
   if (urlObj.protocol === 'https:') {
     const action = urlObj.pathname.split('/')[1];
+
     switch (action) {
       case 'wc': {
         const { uri } = qs.parse(urlObj.query.substring(1));
         handleWalletConnect(uri);
+        break;
+      }
+      case 'request': {
+        var params = parseQueryParams(urlObj.query);
+        console.log({ urlObj });
+        console.log('---------------handle request!', params);
+        Navigation.handleAction(Routes.SPEND_SHEET, { ...params });
+        //display to spend sheet, pass params to be ingested
         break;
       }
       default:

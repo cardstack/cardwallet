@@ -43,7 +43,7 @@ import {
 import { MainThemeProvider } from './context/ThemeContext';
 import { InitialRouteContext } from './context/initialRoute';
 import monitorNetwork from './debugging/network';
-import handleDeeplink from './handlers/deeplinks';
+import handleDeepLink from './handlers/deeplinks';
 import { staticSignatureLRU } from './handlers/imgix';
 import {
   runKeychainIntegrityChecks,
@@ -119,21 +119,6 @@ class App extends Component {
       logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
 
-    const handleDynamicLink = async link => {
-      console.log('handle dynamic link', link.url); //placeholder for now
-    };
-
-    dynamicLinks().onLink(handleDynamicLink);
-
-    dynamicLinks()
-      .getInitialLink()
-      .then(link => {
-        if (link) {
-          console.log('-------------initial links', { link }); // placeholder for now
-        }
-      })
-      .catch(err => Alert.alert(err));
-
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
     await this.handleInitializeAnalytics();
@@ -166,14 +151,14 @@ class App extends Component {
 
       if (params['+non_branch_link']) {
         const nonBranchUrl = params['+non_branch_link'];
-        handleDeeplink(nonBranchUrl);
+        handleDeepLink(nonBranchUrl);
         return;
       } else if (!params['+clicked_branch_link']) {
         // Indicates initialization success and some other conditions.
         // No link was opened.
         return;
       } else if (uri) {
-        handleDeeplink(uri);
+        handleDeepLink(uri);
       }
     });
 
@@ -182,13 +167,13 @@ class App extends Component {
       try {
         const initialUrl = await Linking.getInitialURL();
         if (initialUrl) {
-          handleDeeplink(initialUrl);
+          handleDeepLink(initialUrl);
         }
       } catch (e) {
         logger.log('Error opening deeplink', e);
       }
       Linking.addEventListener('url', ({ url }) => {
-        handleDeeplink(url);
+        handleDeepLink(url);
       });
     }
   }
@@ -199,6 +184,21 @@ class App extends Component {
       logger.sentry('✅ Wallet ready!');
       runKeychainIntegrityChecks();
       runWalletBackupStatusChecks();
+
+      const handleDynamicLink = link => {
+        if (link) {
+          handleDeepLink(link.url);
+        }
+      };
+
+      dynamicLinks().onLink(handleDynamicLink);
+
+      dynamicLinks()
+        .getInitialLink()
+        .then(link => {
+          handleDynamicLink(link);
+        })
+        .catch(err => Alert.alert(err));
     }
   }
 
@@ -228,7 +228,7 @@ class App extends Component {
   };
 
   handleOpenLinkingURL = url => {
-    handleDeeplink(url);
+    handleDeepLink(url);
   };
 
   onPushNotificationOpened = topic => {

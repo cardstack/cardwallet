@@ -38,6 +38,8 @@ const Routes = {
   SAVINGS_WITHDRAW_MODAL: 'SavingsWithdrawModal',
   SEND_SHEET: 'SendSheet',
   SEND_SHEET_NAVIGATOR: 'SendSheetNavigator',
+  SPEND_SHEET: 'SpendSheet',
+  SPEND_SHEET_NAVIGATOR: 'SpendSheetNavigator',
   SETTINGS_MODAL: 'SettingsModal',
   SPEED_UP_AND_CANCEL_SHEET: 'SpeedUpAndCancelSheet',
   STACK: 'Stack',
@@ -65,6 +67,7 @@ export const NATIVE_ROUTES = [
   ...(isNativeStackAvailable
     ? [
         Routes.SEND_SHEET_NAVIGATOR,
+        Routes.SPEND_SHEET_NAVIGATOR,
         Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR,
         Routes.ADD_CASH_SCREEN_NAVIGATOR,
       ]
@@ -83,6 +86,10 @@ const RoutesWithNativeStackAvailability = {
     isNativeStackAvailable || android
       ? Routes.SEND_SHEET_NAVIGATOR
       : Routes.SEND_SHEET,
+  SPEND_FLOW:
+    isNativeStackAvailable || android
+      ? Routes.SPEND_SHEET_NAVIGATOR
+      : Routes.SPEND_SHEET,
 };
 
 export default RoutesWithNativeStackAvailability;
