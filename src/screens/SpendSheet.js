@@ -36,7 +36,6 @@ const SheetContainer = styled(Column).attrs({
 
 export default function SpendSheet() {
   const { params } = useRoute();
-  console.log('--------------------', { params });
   return (
     <Container>
       {ios && <StatusBar barStyle="light-content" />}

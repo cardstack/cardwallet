@@ -23,8 +23,8 @@ export default function handleDeepLink(url) {
       }
       case 'request': {
         var params = parseQueryParams(urlObj.query);
+        //navigate to spend sheet, pass params to be ingested
         Navigation.handleAction(Routes.SPEND_SHEET, { ...params });
-        //display to spend sheet, pass params to be ingested
         break;
       }
       default:
