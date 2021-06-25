@@ -71,12 +71,16 @@ export default function WalletProfileState({
   }, [actionType, goBack, navigate]);
 
   const handleSubmit = useCallback(async () => {
-    onCloseModal({
-      color,
-      name: nameEmoji ? `${nameEmoji} ${value}` : value,
-    });
+    setTimeout(() => {
+      onCloseModal({
+        color,
+        name: nameEmoji ? `${nameEmoji} ${value}` : value,
+      });
+    }, 500);
+
+    goBack();
+
     if (actionType === 'Create' && isNewProfile) {
-      goBack();
       navigate(Routes.CHANGE_WALLET_SHEET);
     }
   }, [
