@@ -6,13 +6,13 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface CoinIconProps {
   address?: string;
-  symbol: string;
+  symbol?: string | null;
   size?: number;
 }
 
 export const CoinIcon = ({ address, symbol, size = 40 }: CoinIconProps) => {
   const network = useRainbowSelector(state => state.settings.network);
-  const forceFallback = !symbol && !isNativeToken(symbol, network);
+  const forceFallback = !symbol && !isNativeToken(symbol || '', network);
 
   return (
     <ReactCoinIcon

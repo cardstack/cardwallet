@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { LayoutAnimation } from 'react-native';
 import URL from 'url-parse';
+import { ContainerProps } from '../Container';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { GenericDisplay } from './GenericDisplay';
 import { TransactionConfirmationType } from '@cardstack/types';
@@ -10,6 +12,9 @@ import {
   SheetHandle,
   Text,
   ScrollView,
+  Icon,
+  Touchable,
+  IconProps,
 } from '@cardstack/components';
 
 export interface TransactionConfirmationSheetProps {
@@ -33,6 +38,8 @@ export const TransactionConfirmationSheet = (
   props: TransactionConfirmationSheetProps
 ) => {
   const DisplayInformation = transactionConfirmationTypeToComponent[props.type];
+  const [showHeaderShadow, setShowHeaderShadow] = useState(false);
+  const [showFullMessage, setShowFullMessage] = useState(false);
 
   return (
     <Container
@@ -43,31 +50,77 @@ export const TransactionConfirmationSheet = (
       borderRadius={20}
     >
       <SheetHandle />
-      <Header {...props} />
+      <InformationIcon
+        isOpen={showFullMessage}
+        onPress={() => {
+          LayoutAnimation.configureNext(
+            LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+          );
+
+          setShowFullMessage(!showFullMessage);
+        }}
+      />
+      <Header {...props} showHeaderShadow={showHeaderShadow} />
       <ScrollView
+        onScroll={event => {
+          if (event.nativeEvent.contentOffset.y > 16) {
+            setShowHeaderShadow(true);
+          } else {
+            setShowHeaderShadow(false);
+          }
+        }}
+        scrollEventThrottle={16}
         width="100%"
         paddingHorizontal={5}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
-        <DisplayInformation {...props} />
+        {showFullMessage ? (
+          <Container paddingHorizontal={3} marginTop={5}>
+            <Text variant="subText">{props.messageRequest}</Text>
+          </Container>
+        ) : (
+          <DisplayInformation {...props} />
+        )}
       </ScrollView>
-      <SheetFooter {...props} />
+      {!showFullMessage && <SheetFooter {...props} />}
     </Container>
   );
 };
 
-const Header = ({ dappUrl, methodName }: TransactionConfirmationSheetProps) => {
+const Header = ({
+  dappUrl,
+  methodName,
+  showHeaderShadow,
+}: TransactionConfirmationSheetProps & { showHeaderShadow: boolean }) => {
   const { hostname } = new URL(dappUrl);
 
+  const shadowProps: ContainerProps = showHeaderShadow
+    ? {
+        shadowColor: 'black',
+        shadowOffset: {
+          height: 5,
+          width: 0,
+        },
+        shadowRadius: 2,
+        shadowOpacity: 0.1,
+      }
+    : {};
+
   return (
-    <>
+    <Container
+      alignItems="center"
+      backgroundColor="white"
+      width="100%"
+      paddingBottom={2}
+      {...shadowProps}
+    >
       <Text marginTop={4} weight="extraBold">
         {methodName || 'Placeholder'}
       </Text>
       <Text variant="subText" weight="bold">
         {hostname}
       </Text>
-    </>
+    </Container>
   );
 };
 
@@ -103,5 +156,37 @@ const SheetFooter = ({
         </Button>
       </Container>
     </Container>
+  );
+};
+
+const InformationIcon = ({
+  isOpen,
+  onPress,
+}: {
+  isOpen: boolean;
+  onPress: () => void;
+}) => {
+  const iconProps: IconProps = isOpen
+    ? {
+        name: 'info',
+        iconSize: 'medium',
+        color: 'tealDark',
+      }
+    : {
+        name: 'info-border',
+        iconSize: 'medium',
+        stroke: 'tealDark',
+      };
+
+  return (
+    <Touchable
+      position="absolute"
+      top={16}
+      right={16}
+      zIndex={10}
+      onPress={onPress}
+    >
+      <Icon {...iconProps} />
+    </Touchable>
   );
 };

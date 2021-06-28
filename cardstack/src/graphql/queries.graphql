@@ -1,0 +1,10 @@
+query GetTransactionHistoryData($address: ID!) {
+  account(id: $address, first: 25) {
+    id
+    transactions(orderBy: timestamp, orderDirection: asc) {
+      transaction {
+        ...Transaction
+      }
+    }
+  }
+}

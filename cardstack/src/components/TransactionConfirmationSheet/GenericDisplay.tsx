@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { ContactAvatar } from '../../../../src/components/contacts';
+import React from 'react';
 
 import { Container, HorizontalDivider, NetworkBadge, Text } from '../';
+import { ContactAvatar } from '../../../../src/components/contacts';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import { TransactionConfirmationSheetProps } from './TransactionConfirmationSheet';
-
 import {
   useAccountProfile,
   useAccountSettings,
@@ -72,22 +71,6 @@ const FromSection = () => {
 const MessageSection = ({
   messageRequest,
 }: TransactionConfirmationSheetProps) => {
-  const [parsedMessage, setParsedMessage] = useState('');
-
-  useEffect(() => {
-    let msg = messageRequest;
-
-    try {
-      msg = JSON.parse(messageRequest);
-    } catch (e) {}
-
-    msg = JSON.stringify(msg, null, 4);
-
-    setParsedMessage(msg);
-  }, [messageRequest]);
-
-  console.log({ parsedMessage });
-
   return (
     <Container width="100%">
       <TransactionConfirmationSectionHeaderText>
@@ -101,7 +84,7 @@ const MessageSection = ({
         borderColor="borderGray"
         borderWidth={1}
       >
-        <Text variant="subText">{parsedMessage}</Text>
+        <Text variant="subText">{messageRequest}</Text>
       </Container>
     </Container>
   );

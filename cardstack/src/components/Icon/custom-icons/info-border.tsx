@@ -25,12 +25,14 @@ function SvgComponent(props: SvgProps) {
         />
         <Path
           data-name="Rectangle 2898"
+          fill={props.stroke || 'none'}
           stroke={props.stroke || '#000'}
           d="M10 10.286h2v6h-2z"
         />
         <Path
           data-name="Path 8437"
           d="M11.022 5.027a1.62 1.62 0 11-1.62 1.62 1.62 1.62 0 011.62-1.62z"
+          fill={props.stroke || 'none'}
           stroke={props.stroke || '#000'}
         />
       </G>

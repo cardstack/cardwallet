@@ -1,12 +1,13 @@
-import { TransactionType } from './TransactionType';
+import { TransactionTypes } from './TransactionTypes';
 
 export interface CreatedPrepaidCardTransactionType {
   address: string;
   createdAt: number;
   spendAmount: number;
-  issuingTokenAmount: number;
   issuingToken: {
     address: string;
+    symbol?: string | null;
+    name?: string | null;
     balance: {
       amount: string;
       display: string;
@@ -19,5 +20,5 @@ export interface CreatedPrepaidCardTransactionType {
   spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   transactionHash: string;
-  type: TransactionType.CREATED_PREPAID_CARD;
+  type: TransactionTypes.CREATED_PREPAID_CARD;
 }

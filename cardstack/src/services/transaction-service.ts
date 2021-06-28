@@ -1,25 +1,34 @@
-import { groupBy } from 'lodash';
-import { NetworkStatus, useQuery } from '@apollo/client';
+import { NetworkStatus } from '@apollo/client';
 import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
-import { CurrencyConversionRates } from './../types/CurrencyConversionRates';
-import { getTransactionHistoryData, sokolClient } from '@cardstack/graphql';
-import { networkTypes } from '@rainbow-me/networkTypes';
+import { groupBy } from 'lodash';
+import { useState, useEffect } from 'react';
+import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
-  groupTransactionsByDate,
-  isLayer1,
-  convertSpendForBalanceDisplay,
-} from '@cardstack/utils';
-import { useAccountTransactions } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import logger from 'logger';
+  sokolClient,
+  BridgeEventFragment,
+  PrepaidCardCreationFragment,
+  TransactionFragment,
+  useGetTransactionHistoryDataQuery,
+} from '@cardstack/graphql';
 import {
-  TransactionType,
   BridgedTokenTransactionType,
   CreatedPrepaidCardTransactionType,
+  TransactionTypes,
+  TransactionType,
 } from '@cardstack/types';
+import {
+  convertSpendForBalanceDisplay,
+  groupTransactionsByDate,
+  isLayer1,
+} from '@cardstack/utils';
+import { useAccountTransactions } from '@rainbow-me/hooks';
+import { networkTypes } from '@rainbow-me/networkTypes';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import logger from 'logger';
 
 const DEFAULT_ASSET = {
   decimals: 18,
@@ -33,77 +42,127 @@ const sortByTime = (a: any, b: any) => {
   return timeB - timeA;
 };
 
-const getBridgedTransactions = (
-  data: any,
+const mapBridgeEventTransaction = (
+  transaction: BridgeEventFragment,
+  transactionHash: string,
   nativeCurrency: string
-): BridgedTokenTransactionType[] => {
-  if (!data || !data.account) {
-    return [];
-  }
-
-  const { receivedBridgedTokens } = data.account;
-
-  return receivedBridgedTokens.map((token: any) => ({
-    balance: convertRawAmountToBalance(token.amount, DEFAULT_ASSET),
+): BridgedTokenTransactionType => {
+  return {
+    balance: convertRawAmountToBalance(transaction.amount, {
+      decimals: 18,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      symbol: transaction.token.symbol,
+    }),
     native: convertRawAmountToNativeDisplay(
-      token.amount,
+      transaction.amount,
       18,
-      1, // needs to be updated with actual price unit
+      1, // TODO: needs to be updated with actual price unit
       nativeCurrency
     ),
-    transactionHash: token.transaction.id,
-    to: token.depot.id,
-    token: token.token,
-    timestamp: token.timestamp,
-    type: TransactionType.BRIDGED,
-  }));
+    transactionHash,
+    to: transaction.depot.id,
+    token: {
+      address: transaction.token.id,
+      symbol: transaction.token.symbol,
+      name: transaction.token.name,
+    },
+    timestamp: transaction.timestamp,
+    type: TransactionTypes.BRIDGED,
+  };
 };
 
-const getPrepaidCardTransactions = (
-  data: any,
+const mapPrepaidCardTransaction = async (
+  prepaidCardTransaction: PrepaidCardCreationFragment,
+  transactionHash: string,
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
-): CreatedPrepaidCardTransactionType[] => {
-  if (!data || !data.account) {
-    return [];
+): Promise<CreatedPrepaidCardTransactionType> => {
+  const spendDisplay = convertSpendForBalanceDisplay(
+    prepaidCardTransaction.spendAmount,
+    nativeCurrency,
+    currencyConversionRates,
+    true
+  );
+
+  let price = 0;
+
+  if (prepaidCardTransaction.issuingToken.symbol) {
+    price = await fetchHistoricalPrice(
+      prepaidCardTransaction.issuingToken.symbol || '',
+      prepaidCardTransaction.createdAt,
+      nativeCurrency
+    );
   }
 
-  const { createdPrepaidCards } = data.account;
+  return {
+    address: prepaidCardTransaction.prepaidCard.id,
+    createdAt: prepaidCardTransaction.createdAt,
+    spendAmount: prepaidCardTransaction.spendAmount,
+    issuingToken: {
+      address: prepaidCardTransaction.issuingToken.id,
+      symbol: prepaidCardTransaction.issuingToken.symbol,
+      name: prepaidCardTransaction.issuingToken.name,
+      balance: convertRawAmountToBalance(
+        prepaidCardTransaction.issuingTokenAmount,
+        DEFAULT_ASSET
+      ),
+      native: convertRawAmountToNativeDisplay(
+        prepaidCardTransaction.issuingTokenAmount,
+        18,
+        price,
+        nativeCurrency
+      ),
+    },
+    type: TransactionTypes.CREATED_PREPAID_CARD,
+    spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
+    nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+    transactionHash,
+  };
+};
 
-  return createdPrepaidCards.map((transaction: any) => {
-    const spendDisplay = convertSpendForBalanceDisplay(
-      transaction.spendAmount,
-      nativeCurrency,
-      currencyConversionRates,
-      true
-    );
+const mapAndSortTransactions = async (
+  transactions: TransactionFragment[],
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+) => {
+  const mappedTransactions = await Promise.all(
+    transactions.map<Promise<TransactionType | null>>(
+      async (transaction: TransactionFragment) => {
+        const { prepaidCardCreations, bridgeEvents } = transaction;
 
-    return {
-      address: transaction.prepaidCard.id,
-      createdAt: transaction.createdAt,
-      spendAmount: transaction.spendAmount,
-      issuingToken: {
-        address: transaction.issuingToken,
-        balance: convertRawAmountToBalance(
-          transaction.issuingTokenAmount,
-          DEFAULT_ASSET
-        ),
-        native: convertRawAmountToNativeDisplay(
-          transaction.issuingTokenAmount,
-          18,
-          1, // needs to be updated with actual price unit
-          nativeCurrency
-        ),
+        if (prepaidCardCreations[0]) {
+          const mappedPrepaidCardCreation = await mapPrepaidCardTransaction(
+            prepaidCardCreations[0],
+            transaction.id,
+            nativeCurrency,
+            currencyConversionRates
+          );
+
+          return mappedPrepaidCardCreation;
+        } else if (bridgeEvents[0]) {
+          const mappedBridgeEvent = mapBridgeEventTransaction(
+            bridgeEvents[0],
+            transaction.id,
+            nativeCurrency
+          );
+
+          return mappedBridgeEvent;
+        }
+
+        return null;
       },
-      type: TransactionType.CREATED_PREPAID_CARD,
-      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
-      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
-      transactionHash: transaction.transaction.id,
-    };
-  });
+      []
+    )
+  );
+
+  return mappedTransactions.filter(t => t).sort(sortByTime);
 };
 
 const useSokolTransactions = () => {
+  const [sections, setSections] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
   const [
     accountAddress,
     network,
@@ -118,53 +177,77 @@ const useSokolTransactions = () => {
     ]
   );
 
-  const transactions = useRainbowSelector(state => state.data.transactions);
-
-  const { data, error, refetch, networkStatus } = useQuery(
-    getTransactionHistoryData,
-    {
-      client: sokolClient,
-      notifyOnNetworkStatusChange: true,
-      skip: !accountAddress || network !== networkTypes.sokol,
-      variables: {
-        address: accountAddress,
-      },
-    }
-  );
+  const {
+    data,
+    error,
+    refetch,
+    networkStatus,
+  } = useGetTransactionHistoryDataQuery({
+    client: sokolClient,
+    notifyOnNetworkStatusChange: true,
+    skip: !accountAddress || network !== networkTypes.sokol,
+    variables: {
+      address: accountAddress,
+    },
+  });
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);
   }
 
-  const bridgedTransactions = getBridgedTransactions(data, nativeCurrency);
+  useEffect(() => {
+    const setSectionsData = async () => {
+      if (data?.account?.transactions) {
+        setLoading(true);
 
-  const prepaidCardTransactions = getPrepaidCardTransactions(
-    data,
-    nativeCurrency,
-    currencyConversionRates
-  );
+        try {
+          const transactions = data.account.transactions.reduce<
+            TransactionFragment[]
+          >((accum, t) => {
+            if (t) {
+              return [...accum, t.transaction];
+            }
 
-  const groupedData = groupBy(
-    [...transactions, ...bridgedTransactions, ...prepaidCardTransactions].sort(
-      sortByTime
-    ),
-    groupTransactionsByDate
-  );
+            return accum;
+          }, []);
 
-  const sections = Object.keys(groupedData)
-    .map(title => ({
-      data: groupedData[title],
-      title,
-    }))
-    .sort((a, b) => {
-      const itemA = a.data[0];
-      const itemB = b.data[0];
+          const mappedTransactions = await mapAndSortTransactions(
+            transactions,
+            nativeCurrency,
+            currencyConversionRates
+          );
 
-      return sortByTime(itemA, itemB);
-    });
+          const groupedData = groupBy(
+            mappedTransactions,
+            groupTransactionsByDate
+          );
+
+          const groupedSections = Object.keys(groupedData)
+            .map(title => ({
+              data: groupedData[title],
+              title,
+            }))
+            .sort((a, b) => {
+              const itemA = a.data[0];
+              const itemB = b.data[0];
+
+              return sortByTime(itemA, itemB);
+            });
+
+          setSections(groupedSections);
+        } catch (e) {
+          logger.log('Error setting sections data', e);
+        }
+
+        setLoading(false);
+      }
+    };
+
+    setSectionsData();
+  }, [currencyConversionRates, data, nativeCurrency]);
 
   return {
-    isLoadingTransactions: networkStatus === NetworkStatus.loading,
+    isLoadingTransactions: networkStatus === NetworkStatus.loading || loading,
     refetch,
     refetchLoading: networkStatus === NetworkStatus.refetch,
     sections: sections,

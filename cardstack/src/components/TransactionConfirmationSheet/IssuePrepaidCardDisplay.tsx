@@ -7,6 +7,7 @@ import {
   HorizontalDivider,
   Icon,
   NetworkBadge,
+  Skeleton,
   Text,
   TransactionConfirmationSheetProps,
 } from '@cardstack/components';
@@ -106,7 +107,18 @@ const LoadSection = ({ message }: { message: any }) => {
   }, [setData, message]);
 
   if (!data) {
-    return null;
+    return (
+      <Container height={94}>
+        <TransactionConfirmationSectionHeaderText>
+          LOAD THIS AMOUNT
+        </TransactionConfirmationSectionHeaderText>
+        <Container marginLeft={12} marginTop={2}>
+          <Skeleton light height={25} width={175} marginBottom={1} />
+          <Skeleton light height={15} width={100} marginBottom={1} />
+          <Skeleton light height={15} width={100} />
+        </Container>
+      </Container>
+    );
   }
 
   const spendAmount = data.spendAmounts[0];
@@ -125,7 +137,7 @@ const LoadSection = ({ message }: { message: any }) => {
   );
 
   return (
-    <Container>
+    <Container height={94}>
       <TransactionConfirmationSectionHeaderText>
         LOAD THIS AMOUNT
       </TransactionConfirmationSectionHeaderText>

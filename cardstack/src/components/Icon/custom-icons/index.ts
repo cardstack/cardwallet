@@ -2,7 +2,7 @@ export const customIcons = {
   'arrow-max': require('./arrow-max').default,
   'check-circle': require('./check-circle').default,
   'face-id': require('./face-id').default,
-  'info-white': require('./info-white').default,
+  'info-border': require('./info-border').default,
   'more-circle': require('./more-circle').default,
   'qr-code': require('./qr-code').default,
   'question-square': require('./question-square').default,
