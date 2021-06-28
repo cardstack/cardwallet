@@ -1,0 +1,74 @@
+fragment PrepaidCardCreation on PrepaidCardCreation {
+  id
+  createdAt
+  issuingToken {
+    id
+    symbol
+    name
+  }
+  issuingTokenAmount
+  spendAmount
+  issuer {
+    id
+  }
+  prepaidCard {
+    id
+  }
+}
+
+fragment BridgeEvent on BridgeEvent {
+  amount
+  token {
+    id
+    symbol
+    name
+  }
+  timestamp
+  depot {
+    id
+  }
+}
+
+fragment Transaction on Transaction {
+  id
+  timestamp
+  bridgeEvents {
+    ...BridgeEvent
+  }
+  supplierInfoDIDUpdates {
+    id
+  }
+  prepaidCardCreations {
+    ...PrepaidCardCreation
+  }
+  prepaidCardTransfers {
+    id
+  }
+  tokenTransfers {
+    id
+  }
+  merchantCreations {
+    id
+  }
+  merchantRegistrationPayments {
+    id
+  }
+  prepaidCardPayments {
+    id
+  }
+  spendAccumulations {
+    id
+  }
+  merchantFeePayments {
+    id
+  }
+  merchantClaims {
+    id
+  }
+  merchantRevenueEvents {
+    id
+  }
+  tokenSwaps {
+    id
+  }
+}

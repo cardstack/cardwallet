@@ -6,7 +6,7 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface CoinIconProps {
   address?: string;
-  symbol: string;
+  symbol?: string;
   size?: number;
 }
 
