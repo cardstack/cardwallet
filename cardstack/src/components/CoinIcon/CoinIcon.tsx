@@ -12,7 +12,7 @@ interface CoinIconProps {
 
 export const CoinIcon = ({ address, symbol, size = 40 }: CoinIconProps) => {
   const network = useRainbowSelector(state => state.settings.network);
-  const forceFallback = !symbol && !isNativeToken(symbol, network);
+  const forceFallback = !symbol && !isNativeToken(symbol || '', network);
 
   return (
     <ReactCoinIcon
