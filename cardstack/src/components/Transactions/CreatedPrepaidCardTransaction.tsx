@@ -44,11 +44,7 @@ export const CreatedPrepaidCardTransaction = ({
 
   return (
     <Container width="100%" paddingHorizontal={4} marginVertical={2}>
-      <Touchable
-        width="100%"
-        testID="inventory-card"
-        onPress={onPressTransaction}
-      >
+      <Touchable width="100%" onPress={onPressTransaction}>
         <Container
           backgroundColor="white"
           borderRadius={10}
@@ -158,7 +154,7 @@ const FundedBy = (transaction: CreatedPrepaidCardTransactionType) => {
           Funded by Depot
         </Text>
         <Text size="xs" fontFamily="RobotoMono-Regular">
-          {getAddressPreview('0x0000000000000')}
+          {getAddressPreview(transaction.createdFromAddress)}
         </Text>
       </Container>
       <Container flexDirection="row" alignItems="center">

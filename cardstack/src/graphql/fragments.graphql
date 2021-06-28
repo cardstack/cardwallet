@@ -8,6 +8,7 @@ fragment PrepaidCardCreation on PrepaidCardCreation {
   }
   issuingTokenAmount
   spendAmount
+  createdFromAddress
   issuer {
     id
   }
@@ -29,6 +30,27 @@ fragment BridgeEvent on BridgeEvent {
   }
 }
 
+fragment MerchantCreation on MerchantCreation {
+  id
+  createdAt
+  merchantSafe {
+    infoDid
+  }
+}
+
+fragment TokenTransfer on TokenTransfer {
+  id
+  timestamp
+  amount
+  token {
+    symbol
+    name
+    id
+  }
+  from
+  to
+}
+
 fragment Transaction on Transaction {
   id
   timestamp
@@ -45,10 +67,10 @@ fragment Transaction on Transaction {
     id
   }
   tokenTransfers {
-    id
+    ...TokenTransfer
   }
   merchantCreations {
-    id
+    ...MerchantCreation
   }
   merchantRegistrationPayments {
     id

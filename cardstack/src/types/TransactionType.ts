@@ -1,3 +1,4 @@
+import { MerchantCreationTransactionType } from './MerchantCreationTransactionType';
 import {
   CreatedPrepaidCardTransactionType,
   BridgedTokenTransactionType,
@@ -5,4 +6,5 @@ import {
 
 export type TransactionType =
   | BridgedTokenTransactionType
-  | CreatedPrepaidCardTransactionType;
+  | CreatedPrepaidCardTransactionType
+  | MerchantCreationTransactionType;

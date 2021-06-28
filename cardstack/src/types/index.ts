@@ -12,3 +12,4 @@ export * from './TransactionTypes';
 export * from './CreatedPrepaidCardTransactionType';
 export * from './TransactionConfirmationType';
 export * from './TransactionType';
+export * from './MerchantCreationTransactionType';
