@@ -4,7 +4,9 @@ import {
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
 import { groupBy } from 'lodash';
+import { useState, useEffect } from 'react';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   sokolClient,
   BridgeEventFragment,
@@ -70,18 +72,28 @@ const mapBridgeEventTransaction = (
   };
 };
 
-const mapPrepaidCardTransaction = (
+const mapPrepaidCardTransaction = async (
   prepaidCardTransaction: PrepaidCardCreationFragment,
   transactionHash: string,
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
-): CreatedPrepaidCardTransactionType => {
+): Promise<CreatedPrepaidCardTransactionType> => {
   const spendDisplay = convertSpendForBalanceDisplay(
     prepaidCardTransaction.spendAmount,
     nativeCurrency,
     currencyConversionRates,
     true
   );
+
+  let price = 0;
+
+  if (prepaidCardTransaction.issuingToken.symbol) {
+    price = await fetchHistoricalPrice(
+      prepaidCardTransaction.issuingToken.symbol || '',
+      prepaidCardTransaction.createdAt,
+      nativeCurrency
+    );
+  }
 
   return {
     address: prepaidCardTransaction.prepaidCard.id,
@@ -98,7 +110,7 @@ const mapPrepaidCardTransaction = (
       native: convertRawAmountToNativeDisplay(
         prepaidCardTransaction.issuingTokenAmount,
         18,
-        1, // TODO: needs to be updated with actual price unit
+        price,
         nativeCurrency
       ),
     },
@@ -109,43 +121,48 @@ const mapPrepaidCardTransaction = (
   };
 };
 
-const mapAndSortTransactions = (
+const mapAndSortTransactions = async (
   transactions: TransactionFragment[],
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
 ) => {
-  const mappedTransactions = transactions.reduce<TransactionType[]>(
-    (accum, transaction) => {
-      const { prepaidCardCreations, bridgeEvents } = transaction;
+  const mappedTransactions = await Promise.all(
+    transactions.map<Promise<TransactionType | null>>(
+      async (transaction: TransactionFragment) => {
+        const { prepaidCardCreations, bridgeEvents } = transaction;
 
-      if (prepaidCardCreations[0]) {
-        const mappedPrepaidCardCreation = mapPrepaidCardTransaction(
-          prepaidCardCreations[0],
-          transaction.id,
-          nativeCurrency,
-          currencyConversionRates
-        );
+        if (prepaidCardCreations[0]) {
+          const mappedPrepaidCardCreation = await mapPrepaidCardTransaction(
+            prepaidCardCreations[0],
+            transaction.id,
+            nativeCurrency,
+            currencyConversionRates
+          );
 
-        return [...accum, mappedPrepaidCardCreation];
-      } else if (bridgeEvents[0]) {
-        const mappedBridgeEvent = mapBridgeEventTransaction(
-          bridgeEvents[0],
-          transaction.id,
-          nativeCurrency
-        );
+          return mappedPrepaidCardCreation;
+        } else if (bridgeEvents[0]) {
+          const mappedBridgeEvent = mapBridgeEventTransaction(
+            bridgeEvents[0],
+            transaction.id,
+            nativeCurrency
+          );
 
-        return [...accum, mappedBridgeEvent];
-      }
+          return mappedBridgeEvent;
+        }
 
-      return accum;
-    },
-    []
+        return null;
+      },
+      []
+    )
   );
 
-  return mappedTransactions.sort(sortByTime);
+  return mappedTransactions.filter(t => t).sort(sortByTime);
 };
 
 const useSokolTransactions = () => {
+  const [sections, setSections] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
   const [
     accountAddress,
     network,
@@ -174,43 +191,63 @@ const useSokolTransactions = () => {
     },
   });
 
-  console.log({ data: JSON.stringify(data, null, 2) });
-
   if (error) {
     logger.log('Error getting Sokol transactions', error);
   }
 
-  const transactions =
-    data?.account?.transactions.reduce<TransactionFragment[]>((accum, t) => {
-      if (t) {
-        return [...accum, t.transaction];
+  useEffect(() => {
+    const setSectionsData = async () => {
+      if (data?.account?.transactions) {
+        setLoading(true);
+
+        try {
+          const transactions = data.account.transactions.reduce<
+            TransactionFragment[]
+          >((accum, t) => {
+            if (t) {
+              return [...accum, t.transaction];
+            }
+
+            return accum;
+          }, []);
+
+          const mappedTransactions = await mapAndSortTransactions(
+            transactions,
+            nativeCurrency,
+            currencyConversionRates
+          );
+
+          const groupedData = groupBy(
+            mappedTransactions,
+            groupTransactionsByDate
+          );
+
+          const groupedSections = Object.keys(groupedData)
+            .map(title => ({
+              data: groupedData[title],
+              title,
+            }))
+            .sort((a, b) => {
+              const itemA = a.data[0];
+              const itemB = b.data[0];
+
+              return sortByTime(itemA, itemB);
+            });
+
+          setSections(groupedSections);
+        } catch (e) {
+          logger.log('Error setting sections data', e);
+        }
+
+        setLoading(false);
       }
+    };
 
-      return accum;
-    }, []) || [];
-
-  const mappedTransactions = mapAndSortTransactions(
-    transactions,
-    nativeCurrency,
-    currencyConversionRates
-  );
-
-  const groupedData = groupBy(mappedTransactions, groupTransactionsByDate);
-
-  const sections = Object.keys(groupedData)
-    .map(title => ({
-      data: groupedData[title],
-      title,
-    }))
-    .sort((a, b) => {
-      const itemA = a.data[0];
-      const itemB = b.data[0];
-
-      return sortByTime(itemA, itemB);
-    });
+    setSectionsData();
+  }, [currencyConversionRates, data, nativeCurrency]);
 
   return {
-    isLoadingTransactions: networkStatus === NetworkStatus.loading,
+    isLoadingTransactions: networkStatus === NetworkStatus.loading || loading,
     refetch,
     refetchLoading: networkStatus === NetworkStatus.refetch,
     sections: sections,
