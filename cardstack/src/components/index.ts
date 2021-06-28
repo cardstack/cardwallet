@@ -19,6 +19,7 @@ export * from './ListItem';
 export * from './RadioList';
 export * from './Checkbox';
 export * from './AssetList';
+export * from './QRCode';
 export * from './Skeleton';
 export * from './TokenBalance';
 export * from './MerchantSafe';
