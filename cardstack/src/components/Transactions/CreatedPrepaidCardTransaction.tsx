@@ -165,10 +165,9 @@ const FundedBy = (transaction: CreatedPrepaidCardTransactionType) => {
         <Text size="xs" weight="extraBold" marginRight={2}>
           {`- ${transaction.issuingToken.balance.display}`}
         </Text>
-        {/* NEED TO UPDATE WITH ERC-20 DATA */}
         <CoinIcon
           address={transaction.issuingToken.address}
-          symbol="DAI"
+          symbol={transaction.issuingToken.symbol}
           size={20}
         />
       </Container>

@@ -4,3 +4,4 @@ src/react-native-animated-charts/Example/*
 patches/reanimated/*
 ios/*
 storybook
+cardstack/src/graphql/graphql-codegen.ts

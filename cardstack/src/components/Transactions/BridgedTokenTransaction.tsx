@@ -83,8 +83,10 @@ const Bottom = (token: BridgedTokenTransactionType) => {
           width="100%"
         >
           <Container flexDirection="row" alignItems="center">
-            {/* NEED ERC-20 TOKEN DATA */}
-            <CoinIcon address={token.token} symbol="DAI" />
+            <CoinIcon
+              address={token.token.address}
+              symbol={token.token.symbol}
+            />
             <Container marginLeft={4} flexDirection="row">
               <Icon name="arrow-down" size={16} color="blueText" />
               <Text variant="subText" weight="bold" marginLeft={1}>

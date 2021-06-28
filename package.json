@@ -55,7 +55,8 @@
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
     "update-token-list": "./scripts/update-token-list.sh",
     "reset:cache": "yarn start --reset-cache",
-    "rebuild": "source $HOME/.nvm/nvm.sh; yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start"
+    "rebuild": "source $HOME/.nvm/nvm.sh; yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start",
+    "codegen": "graphql-codegen"
   },
   "husky": {
     "hooks": {
@@ -263,6 +264,11 @@
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.10.4",
     "@babel/runtime": "^7.7.2",
+    "@graphql-codegen/cli": "1.17.6",
+    "@graphql-codegen/typescript": "1.17.6",
+    "@graphql-codegen/typescript-operations": "^1.17.6",
+    "@graphql-codegen/typescript-react-apollo": "1.17.6",
+    "@graphql-codegen/typescript-resolvers": "1.17.4",
     "@lavamoat/allow-scripts": "^1.0.3",
     "@storybook/addon-knobs": "^6.1.20",
     "@storybook/addon-ondevice-knobs": "^5.3.25",

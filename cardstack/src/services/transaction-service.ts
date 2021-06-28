@@ -1,25 +1,32 @@
-import { groupBy } from 'lodash';
-import { NetworkStatus, useQuery } from '@apollo/client';
+import { NetworkStatus } from '@apollo/client';
 import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
-import { CurrencyConversionRates } from './../types/CurrencyConversionRates';
-import { getTransactionHistoryData, sokolClient } from '@cardstack/graphql';
-import { networkTypes } from '@rainbow-me/networkTypes';
+import { groupBy } from 'lodash';
+import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import {
-  groupTransactionsByDate,
-  isLayer1,
-  convertSpendForBalanceDisplay,
-} from '@cardstack/utils';
-import { useAccountTransactions } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import logger from 'logger';
+  sokolClient,
+  BridgeEventFragment,
+  PrepaidCardCreationFragment,
+  TransactionFragment,
+  useGetTransactionHistoryDataQuery,
+} from '@cardstack/graphql';
 import {
-  TransactionType,
   BridgedTokenTransactionType,
   CreatedPrepaidCardTransactionType,
+  TransactionTypes,
+  TransactionType,
 } from '@cardstack/types';
+import {
+  convertSpendForBalanceDisplay,
+  groupTransactionsByDate,
+  isLayer1,
+} from '@cardstack/utils';
+import { useAccountTransactions } from '@rainbow-me/hooks';
+import { networkTypes } from '@rainbow-me/networkTypes';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import logger from 'logger';
 
 const DEFAULT_ASSET = {
   decimals: 18,
@@ -33,74 +40,109 @@ const sortByTime = (a: any, b: any) => {
   return timeB - timeA;
 };
 
-const getBridgedTransactions = (
-  data: any,
+const mapBridgeEventTransaction = (
+  transaction: BridgeEventFragment,
+  transactionHash: string,
   nativeCurrency: string
-): BridgedTokenTransactionType[] => {
-  if (!data || !data.account) {
-    return [];
-  }
-
-  const { receivedBridgedTokens } = data.account;
-
-  return receivedBridgedTokens.map((token: any) => ({
-    balance: convertRawAmountToBalance(token.amount, DEFAULT_ASSET),
+): BridgedTokenTransactionType => {
+  return {
+    balance: convertRawAmountToBalance(transaction.amount, {
+      decimals: 18,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      symbol: transaction.token.symbol,
+    }),
     native: convertRawAmountToNativeDisplay(
-      token.amount,
+      transaction.amount,
       18,
-      1, // needs to be updated with actual price unit
+      1, // TODO: needs to be updated with actual price unit
       nativeCurrency
     ),
-    transactionHash: token.transaction.id,
-    to: token.depot.id,
-    token: token.token,
-    timestamp: token.timestamp,
-    type: TransactionType.BRIDGED,
-  }));
+    transactionHash,
+    to: transaction.depot.id,
+    token: {
+      address: transaction.token.id,
+      symbol: transaction.token.symbol,
+      name: transaction.token.name,
+    },
+    timestamp: transaction.timestamp,
+    type: TransactionTypes.BRIDGED,
+  };
 };
 
-const getPrepaidCardTransactions = (
-  data: any,
+const mapPrepaidCardTransaction = (
+  prepaidCardTransaction: PrepaidCardCreationFragment,
+  transactionHash: string,
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
-): CreatedPrepaidCardTransactionType[] => {
-  if (!data || !data.account) {
-    return [];
-  }
+): CreatedPrepaidCardTransactionType => {
+  const spendDisplay = convertSpendForBalanceDisplay(
+    prepaidCardTransaction.spendAmount,
+    nativeCurrency,
+    currencyConversionRates,
+    true
+  );
 
-  const { createdPrepaidCards } = data.account;
+  return {
+    address: prepaidCardTransaction.prepaidCard.id,
+    createdAt: prepaidCardTransaction.createdAt,
+    spendAmount: prepaidCardTransaction.spendAmount,
+    issuingToken: {
+      address: prepaidCardTransaction.issuingToken.id,
+      symbol: prepaidCardTransaction.issuingToken.symbol,
+      name: prepaidCardTransaction.issuingToken.name,
+      balance: convertRawAmountToBalance(
+        prepaidCardTransaction.issuingTokenAmount,
+        DEFAULT_ASSET
+      ),
+      native: convertRawAmountToNativeDisplay(
+        prepaidCardTransaction.issuingTokenAmount,
+        18,
+        1, // TODO: needs to be updated with actual price unit
+        nativeCurrency
+      ),
+    },
+    type: TransactionTypes.CREATED_PREPAID_CARD,
+    spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
+    nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+    transactionHash,
+  };
+};
 
-  return createdPrepaidCards.map((transaction: any) => {
-    const spendDisplay = convertSpendForBalanceDisplay(
-      transaction.spendAmount,
-      nativeCurrency,
-      currencyConversionRates,
-      true
-    );
+const mapAndSortTransactions = (
+  transactions: TransactionFragment[],
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+) => {
+  const mappedTransactions = transactions.reduce<TransactionType[]>(
+    (accum, transaction) => {
+      const { prepaidCardCreations, bridgeEvents } = transaction;
 
-    return {
-      address: transaction.prepaidCard.id,
-      createdAt: transaction.createdAt,
-      spendAmount: transaction.spendAmount,
-      issuingToken: {
-        address: transaction.issuingToken,
-        balance: convertRawAmountToBalance(
-          transaction.issuingTokenAmount,
-          DEFAULT_ASSET
-        ),
-        native: convertRawAmountToNativeDisplay(
-          transaction.issuingTokenAmount,
-          18,
-          1, // needs to be updated with actual price unit
+      if (prepaidCardCreations[0]) {
+        const mappedPrepaidCardCreation = mapPrepaidCardTransaction(
+          prepaidCardCreations[0],
+          transaction.id,
+          nativeCurrency,
+          currencyConversionRates
+        );
+
+        return [...accum, mappedPrepaidCardCreation];
+      } else if (bridgeEvents[0]) {
+        const mappedBridgeEvent = mapBridgeEventTransaction(
+          bridgeEvents[0],
+          transaction.id,
           nativeCurrency
-        ),
-      },
-      type: TransactionType.CREATED_PREPAID_CARD,
-      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
-      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
-      transactionHash: transaction.transaction.id,
-    };
-  });
+        );
+
+        return [...accum, mappedBridgeEvent];
+      }
+
+      return accum;
+    },
+    []
+  );
+
+  return mappedTransactions.sort(sortByTime);
 };
 
 const useSokolTransactions = () => {
@@ -118,38 +160,42 @@ const useSokolTransactions = () => {
     ]
   );
 
-  const transactions = useRainbowSelector(state => state.data.transactions);
+  const {
+    data,
+    error,
+    refetch,
+    networkStatus,
+  } = useGetTransactionHistoryDataQuery({
+    client: sokolClient,
+    notifyOnNetworkStatusChange: true,
+    skip: !accountAddress || network !== networkTypes.sokol,
+    variables: {
+      address: accountAddress,
+    },
+  });
 
-  const { data, error, refetch, networkStatus } = useQuery(
-    getTransactionHistoryData,
-    {
-      client: sokolClient,
-      notifyOnNetworkStatusChange: true,
-      skip: !accountAddress || network !== networkTypes.sokol,
-      variables: {
-        address: accountAddress,
-      },
-    }
-  );
+  console.log({ data: JSON.stringify(data, null, 2) });
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);
   }
 
-  const bridgedTransactions = getBridgedTransactions(data, nativeCurrency);
+  const transactions =
+    data?.account?.transactions.reduce<TransactionFragment[]>((accum, t) => {
+      if (t) {
+        return [...accum, t.transaction];
+      }
 
-  const prepaidCardTransactions = getPrepaidCardTransactions(
-    data,
+      return accum;
+    }, []) || [];
+
+  const mappedTransactions = mapAndSortTransactions(
+    transactions,
     nativeCurrency,
     currencyConversionRates
   );
 
-  const groupedData = groupBy(
-    [...transactions, ...bridgedTransactions, ...prepaidCardTransactions].sort(
-      sortByTime
-    ),
-    groupTransactionsByDate
-  );
+  const groupedData = groupBy(mappedTransactions, groupTransactionsByDate);
 
   const sections = Object.keys(groupedData)
     .map(title => ({

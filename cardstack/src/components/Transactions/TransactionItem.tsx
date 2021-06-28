@@ -2,7 +2,7 @@ import React from 'react';
 import { TransactionCoinRow } from './TransactionCoinRow';
 import { BridgedTokenTransaction } from './BridgedTokenTransaction';
 import { CreatedPrepaidCardTransaction } from './CreatedPrepaidCardTransaction';
-import { TransactionType } from '@cardstack/types';
+import { TransactionTypes } from '@cardstack/types';
 
 interface TransactionItemProps {
   item: any;
@@ -11,9 +11,9 @@ interface TransactionItemProps {
 export const TransactionItem = (props: TransactionItemProps) => {
   const { item } = props;
 
-  if (item.type === TransactionType.BRIDGED) {
+  if (item.type === TransactionTypes.BRIDGED) {
     return <BridgedTokenTransaction {...props} />;
-  } else if (item.type === TransactionType.CREATED_PREPAID_CARD) {
+  } else if (item.type === TransactionTypes.CREATED_PREPAID_CARD) {
     return <CreatedPrepaidCardTransaction {...props} />;
   }
 
