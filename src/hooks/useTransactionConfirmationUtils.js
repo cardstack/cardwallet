@@ -80,6 +80,21 @@ export const useTransactionConfirmationUtils = () => {
 
   const isMessageRequest = isMessageDisplayType(method);
 
+  const [parsedMessage, setParsedMessage] = useState('');
+
+  useEffect(() => {
+    let msg = displayDetails.request;
+
+    try {
+      msg = JSON.parse(msg);
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+
+    msg = JSON.stringify(msg, null, 4);
+
+    setParsedMessage(msg);
+  }, [displayDetails]);
+
   const {
     gasLimit,
     gasPrices,
@@ -494,6 +509,6 @@ export const useTransactionConfirmationUtils = () => {
     isMessageRequest,
     dappUrl,
     methodName,
-    messageRequest: displayDetails.request,
+    messageRequest: parsedMessage,
   };
 };
