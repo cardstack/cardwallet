@@ -9,6 +9,7 @@ export const QRCode = ({
   logoBackgroundColor = 'white',
   size = 150,
   logoSize = 40,
+  quietZone = 10,
   value = 'QR Code',
   ...props
 }: QRCodeProps) => {
@@ -22,6 +23,7 @@ export const QRCode = ({
         logoMargin,
         size,
         value,
+        quietZone,
         ...props,
       }}
     />
