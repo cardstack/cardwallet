@@ -38,8 +38,8 @@ const DEFAULT_ASSET = {
 };
 
 const sortByTime = (a: any, b: any) => {
-  const timeA = a.timestamp || a.minedAt || a.createdAt;
-  const timeB = b.timestamp || b.minedAt || a.createdAt;
+  const timeA = Number(a.timestamp || a.minedAt || a.createdAt);
+  const timeB = Number(b.timestamp || b.minedAt || a.createdAt);
 
   return timeB - timeA;
 };
