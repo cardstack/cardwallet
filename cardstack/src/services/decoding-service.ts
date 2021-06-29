@@ -14,7 +14,9 @@ export interface DecodedData {
   };
 }
 
-export const getDecodedData = async (message: any): Promise<DecodedData> => {
+export const decodeIssuePrepaidCardData = async (
+  message: any
+): Promise<DecodedData> => {
   const web3 = new Web3(web3ProviderSdk as any);
   const data = message.data.slice(10);
 

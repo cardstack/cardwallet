@@ -1,7 +1,6 @@
 import React from 'react';
 import { GasSpeedButton } from '../../../src/components/gas';
 import { Container, TransactionConfirmationSheet } from '@cardstack/components';
-import { TransactionConfirmationType } from '@cardstack/types';
 import { useTransactionConfirmationUtils } from '@rainbow-me/hooks';
 
 const TransactionConfirmation = () => {
@@ -13,6 +12,7 @@ const TransactionConfirmation = () => {
     onPressSend,
     methodName,
     messageRequest,
+    type,
   } = useTransactionConfirmationUtils();
 
   return (
@@ -24,7 +24,7 @@ const TransactionConfirmation = () => {
         onPressSend={onPressSend}
         methodName={methodName}
         messageRequest={messageRequest}
-        type={TransactionConfirmationType.ISSUE_PREPAID_CARD}
+        type={type}
       />
       <Container height={150}>
         {!isMessageRequest && (

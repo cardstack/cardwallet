@@ -32,6 +32,7 @@ import {
 import useAccountAssets from './useAccountAssets';
 import useGas from './useGas';
 import useTransactionConfirmation from './useTransactionConfirmation';
+import { TransactionConfirmationType } from '@cardstack/types';
 import {
   estimateGas,
   estimateGasWithPadding,
@@ -503,6 +504,7 @@ export const useTransactionConfirmationUtils = () => {
   }, [isAuthorizing, onConfirm]);
 
   return {
+    type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
     onPressSend,
     onCancel,
     message,

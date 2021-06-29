@@ -11,7 +11,7 @@ import {
   Text,
   TransactionConfirmationSheetProps,
 } from '@cardstack/components';
-import { DecodedData, getDecodedData } from '@cardstack/services';
+import { DecodedData, decodeIssuePrepaidCardData } from '@cardstack/services';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
@@ -98,7 +98,7 @@ const LoadSection = ({ message }: { message: any }) => {
 
   useEffect(() => {
     const decodeData = async () => {
-      const decodedData = await getDecodedData(message);
+      const decodedData = await decodeIssuePrepaidCardData(message);
 
       setData(decodedData);
     };
@@ -106,35 +106,18 @@ const LoadSection = ({ message }: { message: any }) => {
     decodeData();
   }, [setData, message]);
 
-  if (!data) {
-    return (
-      <Container height={94}>
-        <TransactionConfirmationSectionHeaderText>
-          LOAD THIS AMOUNT
-        </TransactionConfirmationSectionHeaderText>
-        <Container marginLeft={12} marginTop={2}>
-          <Skeleton light height={25} width={175} marginBottom={1} />
-          <Skeleton light height={15} width={100} marginBottom={1} />
-          <Skeleton light height={15} width={100} />
-        </Container>
-      </Container>
-    );
-  }
+  const tokenDisplay = data
+    ? convertRawAmountToBalance(data.issuingTokenAmounts[0], data.token)
+    : null;
 
-  const spendAmount = data.spendAmounts[0];
-  const issuingTokenAmount = data.issuingTokenAmounts[0];
-
-  const tokenDisplay = convertRawAmountToBalance(
-    issuingTokenAmount,
-    data.token
-  );
-
-  const spendDisplay = convertSpendForBalanceDisplay(
-    spendAmount,
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
+  const spendDisplay = data
+    ? convertSpendForBalanceDisplay(
+        data.spendAmounts[0],
+        nativeCurrency,
+        currencyConversionRates,
+        true
+      )
+    : null;
 
   return (
     <Container height={94}>
@@ -142,11 +125,23 @@ const LoadSection = ({ message }: { message: any }) => {
         LOAD THIS AMOUNT
       </TransactionConfirmationSectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
-        <Text size="large" weight="extraBold">
-          {spendDisplay.tokenBalanceDisplay}
-        </Text>
-        <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
-        <Text variant="subText">{tokenDisplay.display}</Text>
+        {spendDisplay ? (
+          <Text size="large" weight="extraBold">
+            {spendDisplay.tokenBalanceDisplay}
+          </Text>
+        ) : (
+          <Skeleton light height={25} width={175} marginBottom={1} />
+        )}
+        {spendDisplay ? (
+          <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
+        ) : (
+          <Skeleton light height={15} width={100} marginBottom={1} />
+        )}
+        {tokenDisplay ? (
+          <Text variant="subText">{tokenDisplay.display}</Text>
+        ) : (
+          <Skeleton light height={15} width={100} />
+        )}
       </Container>
     </Container>
   );
