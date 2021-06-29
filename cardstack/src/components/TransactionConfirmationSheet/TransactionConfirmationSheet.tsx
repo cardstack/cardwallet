@@ -93,8 +93,16 @@ const Header = ({
   dappUrl,
   methodName,
   showHeaderShadow,
+  type,
 }: TransactionConfirmationSheetProps & { showHeaderShadow: boolean }) => {
   const { hostname } = new URL(dappUrl);
+
+  const typeToHeaderText: {
+    [key in TransactionConfirmationType]: string;
+  } = {
+    [TransactionConfirmationType.DEFAULT]: methodName || '',
+    [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
+  };
 
   const shadowProps: ContainerProps = showHeaderShadow
     ? {
@@ -117,7 +125,7 @@ const Header = ({
       {...shadowProps}
     >
       <Text marginTop={4} weight="extraBold">
-        {methodName || 'Placeholder'}
+        {typeToHeaderText[type]}
       </Text>
       <Text variant="subText" weight="bold">
         {hostname}
