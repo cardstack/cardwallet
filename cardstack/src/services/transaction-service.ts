@@ -242,10 +242,6 @@ const useSokolTransactions = () => {
             currencyConversionRates
           );
 
-          console.log({
-            mappedTransactions: JSON.stringify(mappedTransactions, null, 2),
-          });
-
           const groupedData = groupBy(
             mappedTransactions,
             groupTransactionsByDate
@@ -262,8 +258,6 @@ const useSokolTransactions = () => {
 
               return sortByTime(itemA, itemB);
             });
-
-          console.log({ groupedSections });
 
           setSections(groupedSections);
         } catch (e) {
