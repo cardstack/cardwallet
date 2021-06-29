@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTransactionConfirmation } from '@cardstack/hooks';
 import { GasSpeedButton } from '../../../src/components/gas';
+import { useTransactionConfirmation } from '@cardstack/hooks';
 import { Container, TransactionConfirmationSheet } from '@cardstack/components';
 
 const TransactionConfirmation = () => {

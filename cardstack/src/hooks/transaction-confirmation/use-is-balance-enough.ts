@@ -1,6 +1,6 @@
 import { fromWei, greaterThanOrEqualTo } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
-import { get, method } from 'lodash';
+import { get } from 'lodash';
 import { useState, useEffect } from 'react';
 import { useIsMessageRequest } from './use-is-message-request';
 import { useRouteParams } from './use-route-params';
