@@ -22,6 +22,7 @@ import SavingsSheet from '../screens/SavingsSheet';
 import SendSheet from '../screens/SendSheet';
 import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
+import SpendSheet from '../screens/SpendSheet';
 import TransactionConfirmationScreen from '../screens/TransactionConfirmationScreen';
 import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
 import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
@@ -77,6 +78,26 @@ function SendFlowNavigator() {
       <Stack.Screen
         component={SendSheet}
         name={Routes.SEND_SHEET}
+        options={sheetPreset}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function SpendFlowNavigator() {
+  return (
+    <Stack.Navigator
+      {...stackNavigationConfig}
+      initialRouteName={Routes.SPEND_SHEET}
+    >
+      <Stack.Screen
+        component={ModalScreen}
+        name={Routes.MODAL_SCREEN}
+        options={overlayExpandedPreset}
+      />
+      <Stack.Screen
+        component={SpendSheet}
+        name={Routes.SPEND_SHEET}
         options={sheetPreset}
       />
     </Stack.Navigator>
@@ -222,6 +243,16 @@ function NativeStackFallbackNavigator() {
         }}
       />
       <Stack.Screen
+        component={SpendSheet}
+        name={Routes.SPEND_SHEET}
+        options={{
+          ...omit(sheetPreset, 'gestureResponseDistance'),
+          onTransitionStart: () => {
+            StatusBar.setBarStyle('light-content');
+          },
+        }}
+      />
+      <Stack.Screen
         component={ModalScreen}
         name={Routes.SUPPORTED_COUNTRIES_MODAL_SCREEN}
         options={overlayExpandedPreset}
@@ -350,6 +381,10 @@ function NativeStackNavigator() {
           <NativeStack.Screen
             component={SendFlowNavigator}
             name={Routes.SEND_SHEET_NAVIGATOR}
+          />
+          <NativeStack.Screen
+            component={SpendFlowNavigator}
+            name={Routes.SPEND_SHEET_NAVIGATOR}
           />
           <NativeStack.Screen
             component={ImportSeedPhraseFlowNavigator}

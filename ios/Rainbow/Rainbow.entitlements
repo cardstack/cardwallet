@@ -13,6 +13,7 @@
 		<string>applinks:rainbowdotme.app.link</string>
 		<string>applinks:rainbowdotme-alternate.app.link</string>
 		<string>webcredentials:rainbow.me</string>
+		<string>applinks:cardpay.page.link</string>
 	</array>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
@@ -23,7 +24,7 @@
 		<string>CloudDocuments</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
-	<array />
+	<array/>
 	<key>com.apple.developer.ubiquity-container-identifiers</key>
 	<array>
 		<string>iCloud.com.cardstack.cardpay</string>

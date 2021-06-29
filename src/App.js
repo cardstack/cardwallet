@@ -1,4 +1,5 @@
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
 import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
@@ -9,6 +10,7 @@ import nanoid from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
 import React, { Component, useEffect } from 'react';
 import {
+  Alert,
   AppRegistry,
   AppState,
   Linking,
@@ -41,7 +43,7 @@ import {
 import { MainThemeProvider } from './context/ThemeContext';
 import { InitialRouteContext } from './context/initialRoute';
 import monitorNetwork from './debugging/network';
-import handleDeeplink from './handlers/deeplinks';
+import handleDeepLink from './handlers/deeplinks';
 import { staticSignatureLRU } from './handlers/imgix';
 import {
   runKeychainIntegrityChecks,
@@ -149,14 +151,14 @@ class App extends Component {
 
       if (params['+non_branch_link']) {
         const nonBranchUrl = params['+non_branch_link'];
-        handleDeeplink(nonBranchUrl);
+        handleDeepLink(nonBranchUrl);
         return;
       } else if (!params['+clicked_branch_link']) {
         // Indicates initialization success and some other conditions.
         // No link was opened.
         return;
       } else if (uri) {
-        handleDeeplink(uri);
+        handleDeepLink(uri);
       }
     });
 
@@ -165,13 +167,13 @@ class App extends Component {
       try {
         const initialUrl = await Linking.getInitialURL();
         if (initialUrl) {
-          handleDeeplink(initialUrl);
+          handleDeepLink(initialUrl);
         }
       } catch (e) {
         logger.log('Error opening deeplink', e);
       }
       Linking.addEventListener('url', ({ url }) => {
-        handleDeeplink(url);
+        handleDeepLink(url);
       });
     }
   }
@@ -182,6 +184,21 @@ class App extends Component {
       logger.sentry('✅ Wallet ready!');
       runKeychainIntegrityChecks();
       runWalletBackupStatusChecks();
+
+      const handleDynamicLink = link => {
+        if (link) {
+          handleDeepLink(link.url);
+        }
+      };
+
+      dynamicLinks().onLink(handleDynamicLink);
+
+      dynamicLinks()
+        .getInitialLink()
+        .then(link => {
+          handleDynamicLink(link);
+        })
+        .catch(err => Alert.alert(err));
     }
   }
 
@@ -211,7 +228,7 @@ class App extends Component {
   };
 
   handleOpenLinkingURL = url => {
-    handleDeeplink(url);
+    handleDeepLink(url);
   };
 
   onPushNotificationOpened = topic => {

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { InteractionManager, Alert as NativeAlert } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { Alert } from '../components/alerts';
+import handleDeepLink from '../handlers/deeplinks';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkPushNotificationPermissions } from '../model/firebase';
 import { useNavigation } from '../navigation/Navigation';
@@ -140,17 +141,23 @@ export default function useScanner(enabled) {
     async ({ data }) => {
       if (!data || !isScanningEnabled) return null;
       disableScanning();
+      const deeplink = decodeURIComponent(data);
+
       const address = await addressUtils.getEthereumAddressFromQRCodeData(data);
       if (address) return handleScanAddress(address);
-      if (data.startsWith('wc:')) return handleScanWalletConnect(data);
+      if (deeplink.startsWith('wc:')) return handleScanWalletConnect(data);
+      if (deeplink.includes('cardpay.page.link')) {
+        haptics.notificationSuccess();
+        return handleDeepLink(deeplink.split('?link=')[1]);
+      }
       return handleScanInvalid(data);
     },
     [
-      handleScanAddress,
-      handleScanInvalid,
-      handleScanWalletConnect,
       isScanningEnabled,
       disableScanning,
+      handleScanAddress,
+      handleScanWalletConnect,
+      handleScanInvalid,
     ]
   );
 

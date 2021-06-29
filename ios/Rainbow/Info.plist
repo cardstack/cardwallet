@@ -32,6 +32,16 @@
 				<string>rainbow</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Bundle ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.cardstack.cardpay</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -210,5 +220,10 @@
 	<string>${BRANCH_APP_DOMAIN)</string>
 	<key>branch_key</key>
 	<string>$(BRANCH_KEY)</string>
+  <key>FirebaseDynamicLinksCustomDomains</key>
+    <array>
+      <string>https://pay.cardstack.com/request</string>
+      <string>https://cardpay.page.link/request</string>
+    </array>
 </dict>
 </plist>
