@@ -1,5 +1,5 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ContactAvatar } from '../../../../src/components/contacts';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import {
@@ -11,22 +11,25 @@ import {
   Text,
   TransactionConfirmationSheetProps,
 } from '@cardstack/components';
-import { DecodedData, decodeIssuePrepaidCardData } from '@cardstack/services';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
 import { useAccountProfile } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
 
-export const IssuePrepaidCardDisplay = ({
-  message,
-}: TransactionConfirmationSheetProps) => {
+export const IssuePrepaidCardDisplay = (
+  props: TransactionConfirmationSheetProps
+) => {
+  const { message } = props;
   return (
     <>
       <FromSection tokenAddress={message.to} />
       <HorizontalDivider />
-      <LoadSection message={message} />
+      <LoadSection {...props} />
       <HorizontalDivider />
       <ToSection />
     </>
@@ -89,35 +92,27 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   );
 };
 
-const LoadSection = ({ message }: { message: any }) => {
-  const [data, setData] = useState<DecodedData | null>(null);
+const LoadSection = ({ decodedData }: TransactionConfirmationSheetProps) => {
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
 
-  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, { [key: string]: number }]
-  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
+  if (!decodedData) {
+    return null;
+  }
 
-  useEffect(() => {
-    const decodeData = async () => {
-      const decodedData = await decodeIssuePrepaidCardData(message);
+  const tokenDisplay = convertRawAmountToBalance(
+    decodedData.issuingTokenAmounts[0],
+    decodedData.token
+  );
 
-      setData(decodedData);
-    };
-
-    decodeData();
-  }, [setData, message]);
-
-  const tokenDisplay = data
-    ? convertRawAmountToBalance(data.issuingTokenAmounts[0], data.token)
-    : null;
-
-  const spendDisplay = data
-    ? convertSpendForBalanceDisplay(
-        data.spendAmounts[0],
-        nativeCurrency,
-        currencyConversionRates,
-        true
-      )
-    : null;
+  const spendDisplay = convertSpendForBalanceDisplay(
+    decodedData.spendAmounts[0],
+    nativeCurrency,
+    currencyConversionRates,
+    true
+  );
 
   return (
     <Container height={94}>

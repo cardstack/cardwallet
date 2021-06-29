@@ -16,14 +16,16 @@ import {
   Touchable,
   IconProps,
 } from '@cardstack/components';
+import { IssuePrepaidCardDecodedData } from '@cardstack/services';
 
 export interface TransactionConfirmationSheetProps {
   dappUrl: string;
   message: any;
   onCancel: () => void;
-  onPressSend: () => void;
+  onConfirm: () => void;
   methodName: string | null;
   messageRequest: any;
+  decodedData: IssuePrepaidCardDecodedData | null;
   type: TransactionConfirmationType;
 }
 
@@ -125,7 +127,7 @@ const Header = ({
 };
 
 const SheetFooter = ({
-  onPressSend,
+  onConfirm,
   onCancel,
 }: TransactionConfirmationSheetProps) => {
   return (
@@ -149,7 +151,7 @@ const SheetFooter = ({
         </Button>
         <Button
           variant="small"
-          onPress={onPressSend}
+          onPress={onConfirm}
           iconProps={{ name: 'face-id' }}
         >
           Confirm

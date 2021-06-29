@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { ERC20ABI } from '@cardstack/cardpay-sdk';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 
-export interface DecodedData {
+export interface IssuePrepaidCardDecodedData {
   amount: string;
   to: string;
   issuingTokenAmounts: string[];
@@ -16,7 +16,7 @@ export interface DecodedData {
 
 export const decodeIssuePrepaidCardData = async (
   message: any
-): Promise<DecodedData> => {
+): Promise<IssuePrepaidCardDecodedData> => {
   const web3 = new Web3(web3ProviderSdk as any);
   const data = message.data.slice(10);
 
