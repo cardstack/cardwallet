@@ -3,6 +3,7 @@ import { TransactionTypes } from './TransactionTypes';
 export interface CreatedPrepaidCardTransactionType {
   address: string;
   createdAt: number;
+  createdFromAddress: string;
   spendAmount: number;
   issuingToken: {
     address: string;

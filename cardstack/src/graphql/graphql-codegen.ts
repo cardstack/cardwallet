@@ -3913,7 +3913,7 @@ export enum SubgraphErrorPolicy {
 
 export type PrepaidCardCreationFragment = (
   { __typename?: 'PrepaidCardCreation' }
-  & Pick<PrepaidCardCreation, 'id' | 'createdAt' | 'issuingTokenAmount' | 'spendAmount'>
+  & Pick<PrepaidCardCreation, 'id' | 'createdAt' | 'issuingTokenAmount' | 'spendAmount' | 'createdFromAddress'>
   & { issuingToken: (
     { __typename?: 'Token' }
     & Pick<Token, 'id' | 'symbol' | 'name'>
@@ -3938,6 +3938,24 @@ export type BridgeEventFragment = (
   ) }
 );
 
+export type MerchantCreationFragment = (
+  { __typename?: 'MerchantCreation' }
+  & Pick<MerchantCreation, 'id' | 'createdAt'>
+  & { merchantSafe: (
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'infoDid'>
+  ) }
+);
+
+export type TokenTransferFragment = (
+  { __typename?: 'TokenTransfer' }
+  & Pick<TokenTransfer, 'id' | 'timestamp' | 'amount' | 'from' | 'to'>
+  & { token: (
+    { __typename?: 'Token' }
+    & Pick<Token, 'symbol' | 'name' | 'id'>
+  ) }
+);
+
 export type TransactionFragment = (
   { __typename?: 'Transaction' }
   & Pick<Transaction, 'id' | 'timestamp'>
@@ -3955,10 +3973,10 @@ export type TransactionFragment = (
     & Pick<PrepaidCardTransfer, 'id'>
   )>>, tokenTransfers: Array<Maybe<(
     { __typename?: 'TokenTransfer' }
-    & Pick<TokenTransfer, 'id'>
+    & TokenTransferFragment
   )>>, merchantCreations: Array<Maybe<(
     { __typename?: 'MerchantCreation' }
-    & Pick<MerchantCreation, 'id'>
+    & MerchantCreationFragment
   )>>, merchantRegistrationPayments: Array<Maybe<(
     { __typename?: 'MerchantRegistrationPayment' }
     & Pick<MerchantRegistrationPayment, 'id'>
@@ -4028,11 +4046,35 @@ export const PrepaidCardCreationFragmentDoc = gql`
   }
   issuingTokenAmount
   spendAmount
+  createdFromAddress
   issuer {
     id
   }
   prepaidCard {
     id
+  }
+}
+    `;
+export const TokenTransferFragmentDoc = gql`
+    fragment TokenTransfer on TokenTransfer {
+  id
+  timestamp
+  amount
+  token {
+    symbol
+    name
+    id
+  }
+  from
+  to
+}
+    `;
+export const MerchantCreationFragmentDoc = gql`
+    fragment MerchantCreation on MerchantCreation {
+  id
+  createdAt
+  merchantSafe {
+    infoDid
   }
 }
     `;
@@ -4053,10 +4095,10 @@ export const TransactionFragmentDoc = gql`
     id
   }
   tokenTransfers {
-    id
+    ...TokenTransfer
   }
   merchantCreations {
-    id
+    ...MerchantCreation
   }
   merchantRegistrationPayments {
     id
@@ -4081,12 +4123,14 @@ export const TransactionFragmentDoc = gql`
   }
 }
     ${BridgeEventFragmentDoc}
-${PrepaidCardCreationFragmentDoc}`;
+${PrepaidCardCreationFragmentDoc}
+${TokenTransferFragmentDoc}
+${MerchantCreationFragmentDoc}`;
 export const GetTransactionHistoryDataDocument = gql`
     query GetTransactionHistoryData($address: ID!) {
   account(id: $address) {
     id
-    transactions(orderBy: timestamp, orderDirection: asc) {
+    transactions(orderBy: timestamp, orderDirection: asc, first: 25) {
       transaction {
         ...Transaction
       }

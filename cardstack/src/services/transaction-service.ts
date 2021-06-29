@@ -6,6 +6,7 @@ import {
 import { groupBy } from 'lodash';
 import { useState, useEffect } from 'react';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import { MerchantCreationFragment } from './../graphql/graphql-codegen';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   sokolClient,
@@ -19,6 +20,7 @@ import {
   CreatedPrepaidCardTransactionType,
   TransactionTypes,
   TransactionType,
+  MerchantCreationTransactionType,
 } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
@@ -36,8 +38,8 @@ const DEFAULT_ASSET = {
 };
 
 const sortByTime = (a: any, b: any) => {
-  const timeA = a.timestamp || a.minedAt || a.createdAt;
-  const timeB = b.timestamp || b.minedAt || a.createdAt;
+  const timeA = Number(a.timestamp || a.minedAt || a.createdAt);
+  const timeB = Number(b.timestamp || b.minedAt || b.createdAt);
 
   return timeB - timeA;
 };
@@ -98,6 +100,7 @@ const mapPrepaidCardTransaction = async (
   return {
     address: prepaidCardTransaction.prepaidCard.id,
     createdAt: prepaidCardTransaction.createdAt,
+    createdFromAddress: prepaidCardTransaction.createdFromAddress,
     spendAmount: prepaidCardTransaction.spendAmount,
     issuingToken: {
       address: prepaidCardTransaction.issuingToken.id,
@@ -121,6 +124,19 @@ const mapPrepaidCardTransaction = async (
   };
 };
 
+const mapMerchantCreationTransaction = (
+  merchantCreationTransaction: MerchantCreationFragment,
+  transactionHash: string
+): MerchantCreationTransactionType => {
+  return {
+    address: merchantCreationTransaction.id,
+    createdAt: merchantCreationTransaction.createdAt,
+    infoDid: merchantCreationTransaction.merchantSafe.infoDid,
+    transactionHash,
+    type: TransactionTypes.MERCHANT_CREATION,
+  };
+};
+
 const mapAndSortTransactions = async (
   transactions: TransactionFragment[],
   nativeCurrency: string,
@@ -129,7 +145,11 @@ const mapAndSortTransactions = async (
   const mappedTransactions = await Promise.all(
     transactions.map<Promise<TransactionType | null>>(
       async (transaction: TransactionFragment) => {
-        const { prepaidCardCreations, bridgeEvents } = transaction;
+        const {
+          prepaidCardCreations,
+          bridgeEvents,
+          merchantCreations,
+        } = transaction;
 
         if (prepaidCardCreations[0]) {
           const mappedPrepaidCardCreation = await mapPrepaidCardTransaction(
@@ -148,6 +168,11 @@ const mapAndSortTransactions = async (
           );
 
           return mappedBridgeEvent;
+        } else if (merchantCreations[0]) {
+          return mapMerchantCreationTransaction(
+            merchantCreations[0],
+            transaction.id
+          );
         }
 
         return null;
