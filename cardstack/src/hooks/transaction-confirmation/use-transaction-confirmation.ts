@@ -7,7 +7,6 @@ import { useMessage } from './use-message';
 import { useMethodName } from './use-method-name';
 import { useParsedMessage } from './use-parsed-message';
 import { useRouteParams } from './use-route-params';
-import { TransactionConfirmationType } from '@cardstack/types';
 
 export const useTransactionConfirmation = () => {
   useCalculateGas();
@@ -17,7 +16,7 @@ export const useTransactionConfirmation = () => {
   } = useRouteParams();
 
   const message = useMessage();
-  const { decodedData, loading } = useDecodedData();
+  const { decodedData, loading, type } = useDecodedData();
   const onCancel = useCancelTransaction();
   const onConfirm = useConfirmTransaction();
   const isMessageRequest = useIsMessageRequest();
@@ -27,7 +26,7 @@ export const useTransactionConfirmation = () => {
   return {
     decodedData,
     loading,
-    type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
+    type,
     onConfirm,
     onCancel,
     message,
