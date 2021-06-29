@@ -1,5 +1,5 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ContactAvatar } from '../../../../src/components/contacts';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import {
@@ -11,22 +11,25 @@ import {
   Text,
   TransactionConfirmationSheetProps,
 } from '@cardstack/components';
-import { DecodedData, getDecodedData } from '@cardstack/services';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
 import { useAccountProfile } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
 
-export const IssuePrepaidCardDisplay = ({
-  message,
-}: TransactionConfirmationSheetProps) => {
+export const IssuePrepaidCardDisplay = (
+  props: TransactionConfirmationSheetProps
+) => {
+  const { message } = props;
   return (
     <>
       <FromSection tokenAddress={message.to} />
       <HorizontalDivider />
-      <LoadSection message={message} />
+      <LoadSection {...props} />
       <HorizontalDivider />
       <ToSection />
     </>
@@ -89,48 +92,23 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   );
 };
 
-const LoadSection = ({ message }: { message: any }) => {
-  const [data, setData] = useState<DecodedData | null>(null);
+const LoadSection = ({ decodedData }: TransactionConfirmationSheetProps) => {
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
 
-  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, { [key: string]: number }]
-  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
-
-  useEffect(() => {
-    const decodeData = async () => {
-      const decodedData = await getDecodedData(message);
-
-      setData(decodedData);
-    };
-
-    decodeData();
-  }, [setData, message]);
-
-  if (!data) {
-    return (
-      <Container height={94}>
-        <TransactionConfirmationSectionHeaderText>
-          LOAD THIS AMOUNT
-        </TransactionConfirmationSectionHeaderText>
-        <Container marginLeft={12} marginTop={2}>
-          <Skeleton light height={25} width={175} marginBottom={1} />
-          <Skeleton light height={15} width={100} marginBottom={1} />
-          <Skeleton light height={15} width={100} />
-        </Container>
-      </Container>
-    );
+  if (!decodedData) {
+    return null;
   }
 
-  const spendAmount = data.spendAmounts[0];
-  const issuingTokenAmount = data.issuingTokenAmounts[0];
-
   const tokenDisplay = convertRawAmountToBalance(
-    issuingTokenAmount,
-    data.token
+    decodedData.issuingTokenAmounts[0],
+    decodedData.token
   );
 
   const spendDisplay = convertSpendForBalanceDisplay(
-    spendAmount,
+    decodedData.spendAmounts[0],
     nativeCurrency,
     currencyConversionRates,
     true
@@ -142,11 +120,23 @@ const LoadSection = ({ message }: { message: any }) => {
         LOAD THIS AMOUNT
       </TransactionConfirmationSectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
-        <Text size="large" weight="extraBold">
-          {spendDisplay.tokenBalanceDisplay}
-        </Text>
-        <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
-        <Text variant="subText">{tokenDisplay.display}</Text>
+        {spendDisplay ? (
+          <Text size="large" weight="extraBold">
+            {spendDisplay.tokenBalanceDisplay}
+          </Text>
+        ) : (
+          <Skeleton light height={25} width={175} marginBottom={1} />
+        )}
+        {spendDisplay ? (
+          <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
+        ) : (
+          <Skeleton light height={15} width={100} marginBottom={1} />
+        )}
+        {tokenDisplay ? (
+          <Text variant="subText">{tokenDisplay.display}</Text>
+        ) : (
+          <Skeleton light height={15} width={100} />
+        )}
       </Container>
     </Container>
   );

@@ -101,6 +101,9 @@
       "@cardstack/graphql": [
         "cardstack/src/graphql"
       ],
+      "@cardstack/hooks": [
+        "cardstack/src/hooks"
+      ],
       "logger": [
         "src/utils/logger"
       ],

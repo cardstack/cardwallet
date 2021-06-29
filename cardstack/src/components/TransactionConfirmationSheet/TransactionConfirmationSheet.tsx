@@ -16,14 +16,16 @@ import {
   Touchable,
   IconProps,
 } from '@cardstack/components';
+import { IssuePrepaidCardDecodedData } from '@cardstack/services';
 
 export interface TransactionConfirmationSheetProps {
   dappUrl: string;
   message: any;
   onCancel: () => void;
-  onPressSend: () => void;
+  onConfirm: () => void;
   methodName: string | null;
   messageRequest: any;
+  decodedData: IssuePrepaidCardDecodedData | null;
   type: TransactionConfirmationType;
 }
 
@@ -91,8 +93,16 @@ const Header = ({
   dappUrl,
   methodName,
   showHeaderShadow,
+  type,
 }: TransactionConfirmationSheetProps & { showHeaderShadow: boolean }) => {
   const { hostname } = new URL(dappUrl);
+
+  const typeToHeaderText: {
+    [key in TransactionConfirmationType]: string;
+  } = {
+    [TransactionConfirmationType.DEFAULT]: methodName || '',
+    [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
+  };
 
   const shadowProps: ContainerProps = showHeaderShadow
     ? {
@@ -115,7 +125,7 @@ const Header = ({
       {...shadowProps}
     >
       <Text marginTop={4} weight="extraBold">
-        {methodName || 'Placeholder'}
+        {typeToHeaderText[type]}
       </Text>
       <Text variant="subText" weight="bold">
         {hostname}
@@ -125,7 +135,7 @@ const Header = ({
 };
 
 const SheetFooter = ({
-  onPressSend,
+  onConfirm,
   onCancel,
 }: TransactionConfirmationSheetProps) => {
   return (
@@ -149,7 +159,7 @@ const SheetFooter = ({
         </Button>
         <Button
           variant="small"
-          onPress={onPressSend}
+          onPress={onConfirm}
           iconProps={{ name: 'face-id' }}
         >
           Confirm

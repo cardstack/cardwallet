@@ -1,31 +1,36 @@
 import React from 'react';
 import { GasSpeedButton } from '../../../src/components/gas';
+import { useTransactionConfirmation } from '@cardstack/hooks';
 import { Container, TransactionConfirmationSheet } from '@cardstack/components';
-import { TransactionConfirmationType } from '@cardstack/types';
-import { useTransactionConfirmationUtils } from '@rainbow-me/hooks';
 
 const TransactionConfirmation = () => {
   const {
+    decodedData,
+    loading,
     isMessageRequest,
     dappUrl,
     message,
     onCancel,
-    onPressSend,
+    onConfirm,
     methodName,
     messageRequest,
-  } = useTransactionConfirmationUtils();
+    type,
+  } = useTransactionConfirmation();
 
   return (
     <Container flex={1} width="100%">
-      <TransactionConfirmationSheet
-        dappUrl={dappUrl}
-        message={message}
-        onCancel={onCancel}
-        onPressSend={onPressSend}
-        methodName={methodName}
-        messageRequest={messageRequest}
-        type={TransactionConfirmationType.ISSUE_PREPAID_CARD}
-      />
+      {!loading && (
+        <TransactionConfirmationSheet
+          decodedData={decodedData}
+          dappUrl={dappUrl}
+          message={message}
+          onCancel={onCancel}
+          onConfirm={onConfirm}
+          methodName={methodName}
+          messageRequest={messageRequest}
+          type={type}
+        />
+      )}
       <Container height={150}>
         {!isMessageRequest && (
           <Container>
