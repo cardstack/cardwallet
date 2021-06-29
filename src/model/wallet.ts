@@ -348,12 +348,9 @@ export const signTypedDataMessage = async (
     try {
       const pkeyBuffer = toBuffer(addHexPrefix(wallet.privateKey));
       let parsedData = message;
-      try {
-        if (typeof message === 'string') {
-          parsedData = JSON.parse(message);
-        }
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
+      if (typeof message === 'string') {
+        parsedData = JSON.parse(message);
+      }
 
       // There are 3 types of messages
       // v1 => basic data types
