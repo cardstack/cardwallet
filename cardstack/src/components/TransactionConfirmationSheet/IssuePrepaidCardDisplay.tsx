@@ -2,6 +2,7 @@ import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { ContactAvatar } from '../../../../src/components/contacts';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
+import { GenericDisplay } from './GenericDisplay';
 import {
   Container,
   HorizontalDivider,
@@ -20,16 +21,22 @@ import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
+import { IssuePrepaidCardDecodedData } from '@cardstack/types';
 
 export const IssuePrepaidCardDisplay = (
   props: TransactionConfirmationSheetProps
 ) => {
-  const { message } = props;
+  const { message, decodedData } = props;
+
+  if (!decodedData || decodedData.type !== 'issuePrepaidCard') {
+    return <GenericDisplay {...props} />;
+  }
+
   return (
     <>
       <FromSection tokenAddress={message.to} />
       <HorizontalDivider />
-      <LoadSection {...props} />
+      <LoadSection decodedData={decodedData} />
       <HorizontalDivider />
       <ToSection />
     </>
@@ -92,7 +99,11 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   );
 };
 
-const LoadSection = ({ decodedData }: TransactionConfirmationSheetProps) => {
+const LoadSection = ({
+  decodedData,
+}: {
+  decodedData: IssuePrepaidCardDecodedData;
+}) => {
   const [
     nativeCurrency,
     currencyConversionRates,

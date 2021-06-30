@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { LayoutAnimation } from 'react-native';
 import URL from 'url-parse';
+
 import { ContainerProps } from '../Container';
-import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { GenericDisplay } from './GenericDisplay';
-import { TransactionConfirmationType } from '@cardstack/types';
+import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
+import { DecodedData, TransactionConfirmationType } from '@cardstack/types';
 import {
   Button,
   Container,
   HorizontalDivider,
+  Icon,
+  IconProps,
+  ScrollView,
   SheetHandle,
   Text,
-  ScrollView,
-  Icon,
   Touchable,
-  IconProps,
 } from '@cardstack/components';
-import { IssuePrepaidCardDecodedData } from '@cardstack/services';
 
 export interface TransactionConfirmationSheetProps {
   dappUrl: string;
@@ -25,7 +25,7 @@ export interface TransactionConfirmationSheetProps {
   onConfirm: () => void;
   methodName: string | null;
   messageRequest: any;
-  decodedData: IssuePrepaidCardDecodedData | null;
+  decodedData: DecodedData;
   type: TransactionConfirmationType;
 }
 
@@ -34,6 +34,11 @@ const transactionConfirmationTypeToComponent: {
 } = {
   [TransactionConfirmationType.ISSUE_PREPAID_CARD]: IssuePrepaidCardDisplay,
   [TransactionConfirmationType.DEFAULT]: GenericDisplay,
+  [TransactionConfirmationType.REGISTER_MERCHANT]: GenericDisplay,
+  [TransactionConfirmationType.PAY_MERCHANT]: GenericDisplay,
+  [TransactionConfirmationType.CLAIM_REVENUE]: GenericDisplay,
+  [TransactionConfirmationType.SPLIT_PREPAID_CARD]: GenericDisplay,
+  [TransactionConfirmationType.TRANSFER_PREPAID_CARD]: GenericDisplay,
 };
 
 export const TransactionConfirmationSheet = (
@@ -102,6 +107,12 @@ const Header = ({
   } = {
     [TransactionConfirmationType.DEFAULT]: methodName || '',
     [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
+    [TransactionConfirmationType.REGISTER_MERCHANT]: 'Create Merchant',
+    [TransactionConfirmationType.PAY_MERCHANT]: 'Pay with Prepaid Card',
+    [TransactionConfirmationType.CLAIM_REVENUE]: 'Claim Funds',
+    [TransactionConfirmationType.SPLIT_PREPAID_CARD]: 'Split Prepaid Card',
+    [TransactionConfirmationType.TRANSFER_PREPAID_CARD]:
+      'Transfer Prepaid Card',
   };
 
   const shadowProps: ContainerProps = showHeaderShadow

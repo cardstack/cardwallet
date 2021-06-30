@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMessage } from './use-message';
-import { TransactionConfirmationType } from '@cardstack/types';
+import { logger } from '@rainbow-me/utils';
+import { DecodedData, TransactionConfirmationType } from '@cardstack/types';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { decodeData, DecodedData } from '@cardstack/services';
+import { decodeData } from '@cardstack/services';
 
 /* 
   scenario 1: to is prepaid cardmanager -> create prepaid card 
@@ -27,15 +28,22 @@ export const useDecodedData = () => {
 
   useEffect(() => {
     const setData = async () => {
-      const result = await decodeData(message, network);
+      try {
+        const result = await decodeData(message, network);
 
-      setDecodedData(result.decodedData);
-      setType(result.type);
+        setDecodedData(result.decodedData);
+        setType(result.type);
+      } catch (error) {
+        logger.log(`Decoding data error - ${error}`);
+      }
+
       setLoading(false);
     };
 
     setData();
   }, [message, network]);
+
+  console.log({ decodedData, type });
 
   return {
     decodedData,
