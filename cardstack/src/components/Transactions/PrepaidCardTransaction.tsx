@@ -2,7 +2,7 @@ import React from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { Linking } from 'react-native';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
-import { Icon } from '../Icon';
+import { Icon, IconName } from '../Icon';
 import { CoinIcon } from '../CoinIcon';
 import {
   Container,
@@ -13,16 +13,49 @@ import {
 } from '@cardstack/components';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { CreatedPrepaidCardTransactionType } from '@cardstack/types';
+import {
+  CreatedPrepaidCardTransactionType,
+  PrepaidCardPaymentTransactionType,
+  TransactionTypes,
+} from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 
-export const CreatedPrepaidCardTransaction = ({
+type TransactionStatus = {
+  operator: '+' | '-';
+  status: 'Loaded' | 'Paid';
+  iconName: 'arrow-up' | 'arrow-down' | 'refresh';
+};
+
+export const PrepaidCardTransaction = ({
   item,
 }: {
-  item: CreatedPrepaidCardTransactionType;
+  item: CreatedPrepaidCardTransactionType | PrepaidCardPaymentTransactionType;
 }) => {
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
+
+  const getTransactionStatus = (
+    type:
+      | TransactionTypes.CREATED_PREPAID_CARD
+      | TransactionTypes.PREPAID_CARD_PAYMENT
+  ): TransactionStatus => {
+    const status = {
+      [TransactionTypes.CREATED_PREPAID_CARD]: {
+        operator: '+',
+        status: 'Loaded',
+        iconName: 'arrow-down',
+      },
+      [TransactionTypes.PREPAID_CARD_PAYMENT]: {
+        operator: '-',
+        status: 'Paid',
+        iconName: 'arrow-up',
+      },
+    };
+
+    return status[type] as TransactionStatus;
+  };
+
+  const [state] = React.useState(getTransactionStatus(item.type));
 
   if (!item) {
     return null;
@@ -53,15 +86,24 @@ export const CreatedPrepaidCardTransaction = ({
           width="100%"
         >
           <Top {...item} />
-          <Bottom {...item} />
-          <FundedBy {...item} />
+          <Bottom transaction={item} state={state} />
+          {item.type === TransactionTypes.CREATED_PREPAID_CARD && (
+            <>
+              <HorizontalDivider />
+              <FundedBy {...item} />
+            </>
+          )}
         </Container>
       </Touchable>
     </Container>
   );
 };
 
-const Top = (transaction: CreatedPrepaidCardTransactionType) => (
+const Top = (
+  transaction:
+    | CreatedPrepaidCardTransactionType
+    | PrepaidCardPaymentTransactionType
+) => (
   <Container
     height={40}
     flexDirection="row"
@@ -83,9 +125,25 @@ const Top = (transaction: CreatedPrepaidCardTransactionType) => (
   </Container>
 );
 
-const Bottom = (transaction: CreatedPrepaidCardTransactionType) => {
+const Bottom = ({
+  transaction,
+  state,
+}: {
+  transaction:
+    | CreatedPrepaidCardTransactionType
+    | PrepaidCardPaymentTransactionType;
+  state: TransactionStatus;
+}) => {
+  console.log({ state, transaction });
+
   return (
-    <Container paddingHorizontal={5} paddingTop={4}>
+    <Container
+      paddingHorizontal={5}
+      paddingTop={4}
+      paddingBottom={
+        transaction.type === TransactionTypes.CREATED_PREPAID_CARD ? 0 : 4
+      }
+    >
       <Container
         flexDirection="row"
         justifyContent="space-between"
@@ -100,9 +158,9 @@ const Bottom = (transaction: CreatedPrepaidCardTransactionType) => {
           <Container flexDirection="row" alignItems="center">
             <Icon name="spend" />
             <Container marginLeft={4} flexDirection="row">
-              <Icon name="arrow-down" size={16} color="blueText" />
+              <Icon name={state.iconName} size={16} color="blueText" />
               <Text variant="subText" weight="bold" marginLeft={1}>
-                Loaded
+                {state.status}
               </Text>
             </Container>
           </Container>
@@ -111,12 +169,11 @@ const Bottom = (transaction: CreatedPrepaidCardTransactionType) => {
             marginLeft={3}
             alignItems="flex-end"
           >
-            <Text weight="extraBold">{`+ ${transaction.spendBalanceDisplay}`}</Text>
+            <Text weight="extraBold">{`${state.operator} ${transaction.spendBalanceDisplay}`}</Text>
             <Text variant="subText">{transaction.nativeBalanceDisplay}</Text>
           </Container>
         </Container>
       </Container>
-      <HorizontalDivider />
     </Container>
   );
 };
