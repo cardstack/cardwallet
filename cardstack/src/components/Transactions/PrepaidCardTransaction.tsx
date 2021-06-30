@@ -2,7 +2,7 @@ import React from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { Linking } from 'react-native';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
-import { Icon, IconName } from '../Icon';
+import { Icon } from '../Icon';
 import { CoinIcon } from '../CoinIcon';
 import {
   Container,
@@ -134,8 +134,6 @@ const Bottom = ({
     | PrepaidCardPaymentTransactionType;
   state: TransactionStatus;
 }) => {
-  console.log({ state, transaction });
-
   return (
     <Container
       paddingHorizontal={5}
