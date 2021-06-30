@@ -17,7 +17,7 @@ import { decodeData } from '@cardstack/services';
   scenario 3: to is revenue pool -> claim revenue
 */
 export const useDecodedData = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const network = useRainbowSelector(state => state.settings.network);
 
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null);
@@ -29,6 +29,8 @@ export const useDecodedData = () => {
   useEffect(() => {
     const setData = async () => {
       try {
+        setLoading(true);
+
         const result = await decodeData(message, network);
 
         setDecodedData(result.decodedData);

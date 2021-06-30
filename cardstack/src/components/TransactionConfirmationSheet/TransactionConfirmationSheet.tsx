@@ -5,6 +5,7 @@ import URL from 'url-parse';
 import { ContainerProps } from '../Container';
 import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
+import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { DecodedData, TransactionConfirmationType } from '@cardstack/types';
 import {
   Button,
@@ -34,7 +35,7 @@ const transactionConfirmationTypeToComponent: {
 } = {
   [TransactionConfirmationType.ISSUE_PREPAID_CARD]: IssuePrepaidCardDisplay,
   [TransactionConfirmationType.DEFAULT]: GenericDisplay,
-  [TransactionConfirmationType.REGISTER_MERCHANT]: GenericDisplay,
+  [TransactionConfirmationType.REGISTER_MERCHANT]: RegisterMerchantDisplay,
   [TransactionConfirmationType.PAY_MERCHANT]: GenericDisplay,
   [TransactionConfirmationType.CLAIM_REVENUE]: GenericDisplay,
   [TransactionConfirmationType.SPLIT_PREPAID_CARD]: GenericDisplay,
@@ -42,7 +43,7 @@ const transactionConfirmationTypeToComponent: {
 };
 
 export const TransactionConfirmationSheet = (
-  props: TransactionConfirmationSheetProps
+  props: TransactionConfirmationSheetProps & { loading: boolean }
 ) => {
   const DisplayInformation = transactionConfirmationTypeToComponent[props.type];
   const [showHeaderShadow, setShowHeaderShadow] = useState(false);
@@ -85,7 +86,7 @@ export const TransactionConfirmationSheet = (
           <Container paddingHorizontal={3} marginTop={5}>
             <Text variant="subText">{props.messageRequest}</Text>
           </Container>
-        ) : (
+        ) : props.loading ? null : (
           <DisplayInformation {...props} />
         )}
       </ScrollView>

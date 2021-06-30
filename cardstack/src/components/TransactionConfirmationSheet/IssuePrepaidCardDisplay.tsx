@@ -1,17 +1,17 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { ContactAvatar } from '../../../../src/components/contacts';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import { GenericDisplay } from './GenericDisplay';
+import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import {
   Container,
   HorizontalDivider,
   Icon,
   NetworkBadge,
-  Skeleton,
   Text,
   TransactionConfirmationSheetProps,
 } from '@cardstack/components';
+import { IssuePrepaidCardDecodedData } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
@@ -21,7 +21,6 @@ import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
-import { IssuePrepaidCardDecodedData } from '@cardstack/types';
 
 export const IssuePrepaidCardDisplay = (
   props: TransactionConfirmationSheetProps
@@ -109,10 +108,6 @@ const LoadSection = ({
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
-  if (!decodedData) {
-    return null;
-  }
-
   const tokenDisplay = convertRawAmountToBalance(
     decodedData.issuingTokenAmounts[0],
     decodedData.token
@@ -126,28 +121,16 @@ const LoadSection = ({
   );
 
   return (
-    <Container height={94}>
+    <Container>
       <TransactionConfirmationSectionHeaderText>
         LOAD THIS AMOUNT
       </TransactionConfirmationSectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
-        {spendDisplay ? (
-          <Text size="large" weight="extraBold">
-            {spendDisplay.tokenBalanceDisplay}
-          </Text>
-        ) : (
-          <Skeleton light height={25} width={175} marginBottom={1} />
-        )}
-        {spendDisplay ? (
-          <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
-        ) : (
-          <Skeleton light height={15} width={100} marginBottom={1} />
-        )}
-        {tokenDisplay ? (
-          <Text variant="subText">{tokenDisplay.display}</Text>
-        ) : (
-          <Skeleton light height={15} width={100} />
-        )}
+        <Text size="large" weight="extraBold">
+          {spendDisplay.tokenBalanceDisplay}
+        </Text>
+        <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
+        <Text variant="subText">{tokenDisplay.display}</Text>
       </Container>
     </Container>
   );

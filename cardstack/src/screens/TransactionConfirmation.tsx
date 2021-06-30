@@ -19,18 +19,17 @@ const TransactionConfirmation = () => {
 
   return (
     <Container flex={1} width="100%">
-      {!loading && (
-        <TransactionConfirmationSheet
-          decodedData={decodedData}
-          dappUrl={dappUrl}
-          message={message}
-          onCancel={onCancel}
-          onConfirm={onConfirm}
-          methodName={methodName}
-          messageRequest={messageRequest}
-          type={type}
-        />
-      )}
+      <TransactionConfirmationSheet
+        decodedData={decodedData}
+        dappUrl={dappUrl}
+        message={message}
+        onCancel={onCancel}
+        onConfirm={onConfirm}
+        methodName={methodName}
+        loading={loading}
+        messageRequest={messageRequest}
+        type={type}
+      />
       <Container height={150}>
         {!isMessageRequest && (
           <Container>
