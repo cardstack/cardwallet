@@ -6,7 +6,10 @@ import { ContainerProps } from '../Container';
 import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
-import { DecodedData, TransactionConfirmationType } from '@cardstack/types';
+import {
+  TransactionConfirmationData,
+  TransactionConfirmationType,
+} from '@cardstack/types';
 import {
   Button,
   Container,
@@ -19,33 +22,20 @@ import {
   Touchable,
 } from '@cardstack/components';
 
-export interface TransactionConfirmationSheetProps {
+export interface TransactionConfirmationDisplayProps {
   dappUrl: string;
   message: any;
   onCancel: () => void;
   onConfirm: () => void;
   methodName: string | null;
   messageRequest: any;
-  decodedData: DecodedData;
-  type: TransactionConfirmationType;
+  data: TransactionConfirmationData;
+  loading: boolean;
 }
 
-const transactionConfirmationTypeToComponent: {
-  [key in TransactionConfirmationType]: React.FC<TransactionConfirmationSheetProps>;
-} = {
-  [TransactionConfirmationType.ISSUE_PREPAID_CARD]: IssuePrepaidCardDisplay,
-  [TransactionConfirmationType.DEFAULT]: GenericDisplay,
-  [TransactionConfirmationType.REGISTER_MERCHANT]: RegisterMerchantDisplay,
-  [TransactionConfirmationType.PAY_MERCHANT]: GenericDisplay,
-  [TransactionConfirmationType.CLAIM_REVENUE]: GenericDisplay,
-  [TransactionConfirmationType.SPLIT_PREPAID_CARD]: GenericDisplay,
-  [TransactionConfirmationType.TRANSFER_PREPAID_CARD]: GenericDisplay,
-};
-
 export const TransactionConfirmationSheet = (
-  props: TransactionConfirmationSheetProps & { loading: boolean }
+  props: TransactionConfirmationDisplayProps
 ) => {
-  const DisplayInformation = transactionConfirmationTypeToComponent[props.type];
   const [showHeaderShadow, setShowHeaderShadow] = useState(false);
   const [showFullMessage, setShowFullMessage] = useState(false);
 
@@ -86,7 +76,7 @@ export const TransactionConfirmationSheet = (
           <Container paddingHorizontal={3} marginTop={5}>
             <Text variant="subText">{props.messageRequest}</Text>
           </Container>
-        ) : props.loading ? null : (
+        ) : (
           <DisplayInformation {...props} />
         )}
       </ScrollView>
@@ -99,14 +89,14 @@ const Header = ({
   dappUrl,
   methodName,
   showHeaderShadow,
-  type,
-}: TransactionConfirmationSheetProps & { showHeaderShadow: boolean }) => {
+  data,
+}: TransactionConfirmationDisplayProps & { showHeaderShadow: boolean }) => {
   const { hostname } = new URL(dappUrl);
 
   const typeToHeaderText: {
     [key in TransactionConfirmationType]: string;
   } = {
-    [TransactionConfirmationType.DEFAULT]: methodName || '',
+    [TransactionConfirmationType.GENERIC]: methodName || '',
     [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
     [TransactionConfirmationType.REGISTER_MERCHANT]: 'Create Merchant',
     [TransactionConfirmationType.PAY_MERCHANT]: 'Pay with Prepaid Card',
@@ -137,7 +127,7 @@ const Header = ({
       {...shadowProps}
     >
       <Text marginTop={4} weight="extraBold">
-        {typeToHeaderText[type]}
+        {typeToHeaderText[data.type]}
       </Text>
       <Text variant="subText" weight="bold">
         {hostname}
@@ -146,10 +136,28 @@ const Header = ({
   );
 };
 
+const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
+  if (props.loading) {
+    return null;
+  }
+
+  console.log({ data: JSON.stringify(props.data, null, 2) });
+
+  if (props.data.type === TransactionConfirmationType.ISSUE_PREPAID_CARD) {
+    return <IssuePrepaidCardDisplay {...props} data={props.data} />;
+  } else if (
+    props.data.type === TransactionConfirmationType.REGISTER_MERCHANT
+  ) {
+    return <RegisterMerchantDisplay {...props} data={props.data} />;
+  }
+
+  return <GenericDisplay {...props} />;
+};
+
 const SheetFooter = ({
   onConfirm,
   onCancel,
-}: TransactionConfirmationSheetProps) => {
+}: TransactionConfirmationDisplayProps) => {
   return (
     <Container
       width="100%"

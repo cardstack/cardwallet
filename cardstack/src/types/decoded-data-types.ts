@@ -1,3 +1,5 @@
+import { TransactionConfirmationType } from './TransactionConfirmationType';
+
 export interface Level1DecodedData {
   amount: string;
   data: string;
@@ -9,6 +11,9 @@ export interface TokenData {
   decimals: number;
 }
 
+export interface GenericDisplayData {
+  type: TransactionConfirmationType.GENERIC;
+}
 export interface IssuePrepaidCardDecodedData {
   amount: string;
   to: string;
@@ -17,13 +22,19 @@ export interface IssuePrepaidCardDecodedData {
   spendAmounts: string[];
   customizationDID: string;
   token: TokenData;
-  type: 'issuePrepaidCard';
+  type: TransactionConfirmationType.ISSUE_PREPAID_CARD;
 }
 
 export interface RegisterMerchantDecodedData {
   spendAmount: number;
   infoDID: string;
-  type: 'registerMerchant';
+  type: TransactionConfirmationType.REGISTER_MERCHANT;
+}
+
+export interface PayMerchantDecodedData {
+  spendAmount: number;
+  merchantSafe: string;
+  type: TransactionConfirmationType.PAY_MERCHANT;
 }
 
 export type ActionDispatcherActionName =
@@ -39,7 +50,8 @@ export interface ActionDispatcherDecodedData {
   actionData: string;
 }
 
-export type DecodedData =
+export type TransactionConfirmationData =
+  | GenericDisplayData
   | IssuePrepaidCardDecodedData
   | RegisterMerchantDecodedData
-  | null;
+  | PayMerchantDecodedData;

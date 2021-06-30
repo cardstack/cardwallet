@@ -1,21 +1,20 @@
 import React from 'react';
 
 import { ContactAvatar } from '../../../../src/components/contacts';
-import { GenericDisplay } from './GenericDisplay';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
-import { TransactionConfirmationSheetProps } from './TransactionConfirmationSheet';
+import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import { Container, NetworkBadge, Text } from '@cardstack/components';
+import { RegisterMerchantDecodedData } from '@cardstack/types';
+
+interface RegisterMerchantDisplayProps
+  extends TransactionConfirmationDisplayProps {
+  data: RegisterMerchantDecodedData;
+}
 
 export const RegisterMerchantDisplay = (
-  props: TransactionConfirmationSheetProps
+  _props: RegisterMerchantDisplayProps
 ) => {
-  const { decodedData } = props;
-
-  if (!decodedData || decodedData.type !== 'registerMerchant') {
-    return <GenericDisplay {...props} />;
-  }
-
   return (
     <>
       <FromSection />

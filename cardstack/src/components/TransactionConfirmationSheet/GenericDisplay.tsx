@@ -4,7 +4,7 @@ import React from 'react';
 import { Container, HorizontalDivider, NetworkBadge, Text } from '../';
 import { ContactAvatar } from '../../../../src/components/contacts';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
-import { TransactionConfirmationSheetProps } from './TransactionConfirmationSheet';
+import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
 import {
   useAccountProfile,
   useAccountSettings,
@@ -12,7 +12,7 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 
-export const GenericDisplay = (props: TransactionConfirmationSheetProps) => {
+export const GenericDisplay = (props: TransactionConfirmationDisplayProps) => {
   return (
     <>
       <FromSection />
@@ -70,7 +70,7 @@ const FromSection = () => {
 
 const MessageSection = ({
   messageRequest,
-}: TransactionConfirmationSheetProps) => {
+}: TransactionConfirmationDisplayProps) => {
   return (
     <Container width="100%">
       <TransactionConfirmationSectionHeaderText>

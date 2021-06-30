@@ -1,5 +1,5 @@
 export enum TransactionConfirmationType {
-  DEFAULT = 'default',
+  GENERIC = 'generic',
   ISSUE_PREPAID_CARD = 'issuePrepaidCard',
   REGISTER_MERCHANT = 'registerMerchant',
   PAY_MERCHANT = 'payMerchant',

@@ -2,10 +2,11 @@ import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import {
   ActionDispatcherDecodedData,
+  PayMerchantDecodedData,
   RegisterMerchantDecodedData,
 } from './../types/decoded-data-types';
 import {
-  DecodedData,
+  TransactionConfirmationData,
   IssuePrepaidCardDecodedData,
   Level1DecodedData,
   TokenData,
@@ -75,7 +76,7 @@ const decodeIssuePrepaidCardData = async (
     ...level1Data,
     ...decodedPrepaidCardData,
     token: tokenData,
-    type: 'issuePrepaidCard',
+    type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
   };
 };
 
@@ -111,6 +112,26 @@ const decodeRegisterMerchantData = (
   return {
     spendAmount: actionDispatcherData.spendAmount,
     infoDID,
+    type: 'registerMerchant',
+  };
+};
+
+const decodePayMerchantData = (
+  actionDispatcherData: ActionDispatcherDecodedData
+): PayMerchantDecodedData => {
+  const { merchantSafe } = decode<{ merchantSafe: string }>(
+    [
+      {
+        type: 'string',
+        name: 'merchantSafe',
+      },
+    ],
+    actionDispatcherData.actionData
+  );
+
+  return {
+    spendAmount: actionDispatcherData.spendAmount,
+    merchantSafe,
     type: 'registerMerchant',
   };
 };
@@ -155,18 +176,13 @@ const isClaimRevenue = (level1Data: Level1DecodedData, network: string) => {
   return level1Data.to === revenuePool;
 };
 
-interface DecodeDataReturn {
-  type: TransactionConfirmationType;
-  decodedData: DecodedData;
-}
-
 export const decodeData = async (
   message: {
     to: string;
     data: string;
   },
   network: string
-): Promise<DecodeDataReturn> => {
+): Promise<TransactionConfirmationData> => {
   const level1Data = decodeLevel1Data(message.data);
 
   if (isIssuePrepaidCard(level1Data, network)) {
@@ -175,10 +191,7 @@ export const decodeData = async (
       message.to
     );
 
-    return {
-      decodedData,
-      type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
-    };
+    return decodedData;
   } else if (isActionDispatcher(level1Data, network)) {
     const actionDispatcherDecodedData = decodeActionDispatcherData(level1Data);
 
@@ -187,35 +200,27 @@ export const decodeData = async (
         actionDispatcherDecodedData
       );
 
-      return {
-        decodedData,
-        type: TransactionConfirmationType.REGISTER_MERCHANT,
-      };
+      return decodedData;
     } else if (isPayMerchant(actionDispatcherDecodedData)) {
-      return {
-        decodedData: null, // TODO
-        type: TransactionConfirmationType.REGISTER_MERCHANT,
-      };
+      const decodedData = decodePayMerchantData(actionDispatcherDecodedData);
+
+      return decodedData;
     } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
-      return {
-        decodedData: null, // TODO
-        type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
-      };
+      // return {
+      //   type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
+      // };
     } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
-      return {
-        decodedData: null, // TODO
-        type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
-      };
+      // return {
+      //   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
+      // };
     }
   } else if (isClaimRevenue(level1Data, network)) {
-    return {
-      decodedData: null,
-      type: TransactionConfirmationType.CLAIM_REVENUE,
-    };
+    // return {
+    //   type: TransactionConfirmationType.CLAIM_REVENUE,
+    // };
   }
 
   return {
-    type: TransactionConfirmationType.DEFAULT,
-    decodedData: null,
+    type: TransactionConfirmationType.GENERIC,
   };
 };

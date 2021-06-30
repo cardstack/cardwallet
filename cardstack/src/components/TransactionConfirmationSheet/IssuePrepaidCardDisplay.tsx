@@ -1,7 +1,6 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { ContactAvatar } from '../../../../src/components/contacts';
-import { GenericDisplay } from './GenericDisplay';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import {
   Container,
@@ -9,7 +8,7 @@ import {
   Icon,
   NetworkBadge,
   Text,
-  TransactionConfirmationSheetProps,
+  TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
 import { IssuePrepaidCardDecodedData } from '@cardstack/types';
 import {
@@ -22,20 +21,21 @@ import {
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 
-export const IssuePrepaidCardDisplay = (
-  props: TransactionConfirmationSheetProps
-) => {
-  const { message, decodedData } = props;
+interface IssuePrepaidCardDisplayProps
+  extends TransactionConfirmationDisplayProps {
+  data: IssuePrepaidCardDecodedData;
+}
 
-  if (!decodedData || decodedData.type !== 'issuePrepaidCard') {
-    return <GenericDisplay {...props} />;
-  }
+export const IssuePrepaidCardDisplay = (
+  props: IssuePrepaidCardDisplayProps
+) => {
+  const { message, data } = props;
 
   return (
     <>
       <FromSection tokenAddress={message.to} />
       <HorizontalDivider />
-      <LoadSection decodedData={decodedData} />
+      <LoadSection data={data} />
       <HorizontalDivider />
       <ToSection />
     </>
@@ -98,23 +98,19 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   );
 };
 
-const LoadSection = ({
-  decodedData,
-}: {
-  decodedData: IssuePrepaidCardDecodedData;
-}) => {
+const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
   const [
     nativeCurrency,
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
   const tokenDisplay = convertRawAmountToBalance(
-    decodedData.issuingTokenAmounts[0],
-    decodedData.token
+    data.issuingTokenAmounts[0],
+    data.token
   );
 
   const spendDisplay = convertSpendForBalanceDisplay(
-    decodedData.spendAmounts[0],
+    data.spendAmounts[0],
     nativeCurrency,
     currencyConversionRates,
     true

@@ -1,7 +1,7 @@
 import { useCalculateGas } from './use-calculate-gas';
 import { useCancelTransaction } from './use-cancel-transaction';
 import { useConfirmTransaction } from './use-confirm-transaction';
-import { useDecodedData } from './use-decoded-data';
+import { useTransactionConfirmationDataWithDecoding } from './use-transaction-confirmation-data-with-decoding';
 import { useIsMessageRequest } from './use-is-message-request';
 import { useMessage } from './use-message';
 import { useMethodName } from './use-method-name';
@@ -16,7 +16,7 @@ export const useTransactionConfirmation = () => {
   } = useRouteParams();
 
   const message = useMessage();
-  const { decodedData, loading, type } = useDecodedData();
+  const { data, loading } = useTransactionConfirmationDataWithDecoding();
   const onCancel = useCancelTransaction();
   const onConfirm = useConfirmTransaction();
   const isMessageRequest = useIsMessageRequest();
@@ -24,9 +24,8 @@ export const useTransactionConfirmation = () => {
   const methodName = useMethodName();
 
   return {
-    decodedData,
+    data,
     loading,
-    type,
     onConfirm,
     onCancel,
     message,

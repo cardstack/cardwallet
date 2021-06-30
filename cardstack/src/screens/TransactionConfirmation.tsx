@@ -5,7 +5,7 @@ import { Container, TransactionConfirmationSheet } from '@cardstack/components';
 
 const TransactionConfirmation = () => {
   const {
-    decodedData,
+    data,
     loading,
     isMessageRequest,
     dappUrl,
@@ -14,13 +14,12 @@ const TransactionConfirmation = () => {
     onConfirm,
     methodName,
     messageRequest,
-    type,
   } = useTransactionConfirmation();
 
   return (
     <Container flex={1} width="100%">
       <TransactionConfirmationSheet
-        decodedData={decodedData}
+        data={data}
         dappUrl={dappUrl}
         message={message}
         onCancel={onCancel}
@@ -28,7 +27,6 @@ const TransactionConfirmation = () => {
         methodName={methodName}
         loading={loading}
         messageRequest={messageRequest}
-        type={type}
       />
       <Container height={150}>
         {!isMessageRequest && (
