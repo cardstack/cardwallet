@@ -141,16 +141,6 @@ const mapPrepaidCardPaymentTransaction = async (
     true
   );
 
-  // const price = 0;
-
-  // if (prepaidCardPaymentTransaction.issuingToken.symbol) {
-  //   price = await fetchHistoricalPrice(
-  //     prepaidCardPaymentTransaction.issuingToken.symbol || '',
-  //     prepaidCardPaymentTransaction.timestamp,
-  //     nativeCurrency
-  //   );
-  // }
-
   return {
     address: prepaidCardPaymentTransaction.prepaidCard.id,
     timestamp: prepaidCardPaymentTransaction.timestamp,
@@ -158,6 +148,7 @@ const mapPrepaidCardPaymentTransaction = async (
     type: TransactionTypes.PREPAID_CARD_PAYMENT,
     spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
     nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+    transactionHash,
   };
 };
 
@@ -199,8 +190,6 @@ const mapAndSortTransactions = async (
 
           return mappedPrepaidCardCreation;
         } else if (prepaidCardPayments[0]) {
-          console.log(prepaidCardPayments[0]);
-
           const mappedPrepaidCardPayments = await mapPrepaidCardPaymentTransaction(
             prepaidCardPayments[0],
             transaction.id,

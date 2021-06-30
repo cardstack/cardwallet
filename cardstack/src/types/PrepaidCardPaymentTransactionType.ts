@@ -7,4 +7,5 @@ export interface PrepaidCardPaymentTransactionType {
   spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   type: TransactionTypes.PREPAID_CARD_PAYMENT;
+  transactionHash: string;
 }
