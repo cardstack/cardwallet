@@ -6,7 +6,10 @@ import {
 import { groupBy } from 'lodash';
 import { useState, useEffect } from 'react';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
-import { MerchantCreationFragment } from './../graphql/graphql-codegen';
+import {
+  MerchantCreationFragment,
+  PrepaidCardPaymentFragment,
+} from './../graphql/graphql-codegen';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   sokolClient,
@@ -18,6 +21,7 @@ import {
 import {
   BridgedTokenTransactionType,
   CreatedPrepaidCardTransactionType,
+  PrepaidCardPaymentTransactionType,
   TransactionTypes,
   TransactionType,
   MerchantCreationTransactionType,
@@ -124,6 +128,39 @@ const mapPrepaidCardTransaction = async (
   };
 };
 
+const mapPrepaidCardPaymentTransaction = async (
+  prepaidCardPaymentTransaction: PrepaidCardPaymentFragment,
+  transactionHash: string,
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+): Promise<PrepaidCardPaymentTransactionType> => {
+  const spendDisplay = convertSpendForBalanceDisplay(
+    prepaidCardPaymentTransaction.spendAmount,
+    nativeCurrency,
+    currencyConversionRates,
+    true
+  );
+
+  // const price = 0;
+
+  // if (prepaidCardPaymentTransaction.issuingToken.symbol) {
+  //   price = await fetchHistoricalPrice(
+  //     prepaidCardPaymentTransaction.issuingToken.symbol || '',
+  //     prepaidCardPaymentTransaction.timestamp,
+  //     nativeCurrency
+  //   );
+  // }
+
+  return {
+    address: prepaidCardPaymentTransaction.prepaidCard.id,
+    timestamp: prepaidCardPaymentTransaction.timestamp,
+    spendAmount: prepaidCardPaymentTransaction.spendAmount,
+    type: TransactionTypes.PREPAID_CARD_PAYMENT,
+    spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
+    nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+  };
+};
+
 const mapMerchantCreationTransaction = (
   merchantCreationTransaction: MerchantCreationFragment,
   transactionHash: string
@@ -149,6 +186,7 @@ const mapAndSortTransactions = async (
           prepaidCardCreations,
           bridgeEvents,
           merchantCreations,
+          prepaidCardPayments,
         } = transaction;
 
         if (prepaidCardCreations[0]) {
@@ -160,6 +198,17 @@ const mapAndSortTransactions = async (
           );
 
           return mappedPrepaidCardCreation;
+        } else if (prepaidCardPayments[0]) {
+          console.log(prepaidCardPayments[0]);
+
+          const mappedPrepaidCardPayments = await mapPrepaidCardPaymentTransaction(
+            prepaidCardPayments[0],
+            transaction.id,
+            nativeCurrency,
+            currencyConversionRates
+          );
+
+          return mappedPrepaidCardPayments;
         } else if (bridgeEvents[0]) {
           const mappedBridgeEvent = mapBridgeEventTransaction(
             bridgeEvents[0],

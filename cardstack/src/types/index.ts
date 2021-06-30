@@ -10,6 +10,7 @@ export * from './CurrencyConversionRates';
 export * from './BridgedTokenTransactionType';
 export * from './TransactionTypes';
 export * from './CreatedPrepaidCardTransactionType';
+export * from './PrepaidCardPaymentTransactionType';
 export * from './TransactionConfirmationType';
 export * from './TransactionType';
 export * from './MerchantCreationTransactionType';
