@@ -150,7 +150,7 @@ const ToSection = () => {
           <Container marginLeft={4}>
             <Text weight="extraBold">Prepaid Card</Text>
             <Text variant="subAddress" marginTop={1}>
-              {getAddressPreview('0x000000000000')}*
+              {getAddressPreview('0xXXXXXXXXXXXX')}*
             </Text>
             <Text marginTop={2} size="xs">
               Current Face Value

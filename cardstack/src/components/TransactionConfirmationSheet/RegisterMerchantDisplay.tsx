@@ -44,7 +44,7 @@ const ToSection = () => {
           <Container marginLeft={4}>
             <Text weight="extraBold">Merchant Name</Text>
             <Text variant="subAddress" marginTop={1}>
-              {getAddressPreview('0x000000000000')}*
+              {getAddressPreview('0xXXXXXXXXXXXX')}*
             </Text>
             <Container
               width="100%"
