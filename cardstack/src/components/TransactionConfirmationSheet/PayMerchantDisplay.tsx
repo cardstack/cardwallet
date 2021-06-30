@@ -34,16 +34,18 @@ const ToSection = ({ data }: PayMerchantDisplayProps) => {
       <TransactionConfirmationSectionHeaderText>
         TO
       </TransactionConfirmationSectionHeaderText>
-      <Container paddingHorizontal={3} marginTop={4} flexDirection="row">
-        <Icon name="user" />
-        <Container marginLeft={4}>
-          <Text variant="subText">Merchant</Text>
-          <Text size="small" weight="extraBold">
+      <Container paddingHorizontal={3} marginTop={4} flexDirection="column">
+        <Text variant="subText" marginLeft={9}>
+          Merchant
+        </Text>
+        <Container flexDirection="row" alignItems="center">
+          <Icon name="user" />
+          <Text size="small" weight="extraBold" style={{ marginLeft: 6 }}>
             Merchant Name
           </Text>
-          <Container maxWidth={180} marginTop={2}>
-            <Text variant="subAddress">{data.merchantSafe}</Text>
-          </Container>
+        </Container>
+        <Container maxWidth={180} marginLeft={9}>
+          <Text variant="subAddress">{data.merchantSafe}</Text>
         </Container>
       </Container>
     </Container>
