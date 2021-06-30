@@ -128,12 +128,12 @@ const mapPrepaidCardTransaction = async (
   };
 };
 
-const mapPrepaidCardPaymentTransaction = async (
+const mapPrepaidCardPaymentTransaction = (
   prepaidCardPaymentTransaction: PrepaidCardPaymentFragment,
   transactionHash: string,
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
-): Promise<PrepaidCardPaymentTransactionType> => {
+): PrepaidCardPaymentTransactionType => {
   const spendDisplay = convertSpendForBalanceDisplay(
     prepaidCardPaymentTransaction.spendAmount,
     nativeCurrency,
@@ -190,7 +190,7 @@ const mapAndSortTransactions = async (
 
           return mappedPrepaidCardCreation;
         } else if (prepaidCardPayments[0]) {
-          const mappedPrepaidCardPayments = await mapPrepaidCardPaymentTransaction(
+          const mappedPrepaidCardPayments = mapPrepaidCardPaymentTransaction(
             prepaidCardPayments[0],
             transaction.id,
             nativeCurrency,

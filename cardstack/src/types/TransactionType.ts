@@ -2,9 +2,11 @@ import { MerchantCreationTransactionType } from './MerchantCreationTransactionTy
 import {
   CreatedPrepaidCardTransactionType,
   BridgedTokenTransactionType,
+  PrepaidCardPaymentTransactionType,
 } from '@cardstack/types';
 
 export type TransactionType =
   | BridgedTokenTransactionType
   | CreatedPrepaidCardTransactionType
-  | MerchantCreationTransactionType;
+  | MerchantCreationTransactionType
+  | PrepaidCardPaymentTransactionType;
