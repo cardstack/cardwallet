@@ -1,11 +1,17 @@
 import React from 'react';
 
-import { ContactAvatar } from '../../../../src/components/contacts';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
+import { FromPrepaidCardSection } from './FromPrepaidCardSection';
 import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { Container, NetworkBadge, Text } from '@cardstack/components';
+import { PayThisAmountSection } from './PayThisAmountSection';
+import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
 import { RegisterMerchantDecodedData } from '@cardstack/types';
+import {
+  Container,
+  HorizontalDivider,
+  Icon,
+  Text,
+} from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 
 interface RegisterMerchantDisplayProps
   extends TransactionConfirmationDisplayProps {
@@ -13,41 +19,44 @@ interface RegisterMerchantDisplayProps
 }
 
 export const RegisterMerchantDisplay = (
-  _props: RegisterMerchantDisplayProps
+  props: RegisterMerchantDisplayProps
 ) => {
   return (
     <>
-      <FromSection />
+      <FromPrepaidCardSection prepaidCardAddress={props.data.prepaidCard} />
+      <HorizontalDivider />
+      <PayThisAmountSection spendAmount={props.data.spendAmount} />
+      <HorizontalDivider />
+      <ToSection />
     </>
   );
 };
 
-const FromSection = () => {
-  const {
-    accountColor,
-    accountName,
-    accountSymbol,
-    accountAddress,
-  } = useAccountProfile();
-
+const ToSection = () => {
   return (
-    <Container marginTop={8} width="100%">
+    <Container width="100%">
       <TransactionConfirmationSectionHeaderText>
-        FROM
+        CREATE THIS MERCHANT
       </TransactionConfirmationSectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
-          <ContactAvatar
-            color={accountColor}
-            size="smaller"
-            value={accountSymbol}
-          />
+          <Icon name="user" />
           <Container marginLeft={4}>
-            <Text weight="extraBold">{accountName}</Text>
-            <NetworkBadge marginTop={2} />
-            <Container maxWidth={180}>
-              <Text variant="subAddress" marginTop={1}>
-                {accountAddress}
+            <Text weight="extraBold">Merchant Name</Text>
+            <Text variant="subAddress" marginTop={1}>
+              {getAddressPreview('0x000000000000')}*
+            </Text>
+            <Container
+              width="100%"
+              paddingRight={5}
+              flexDirection="row"
+              marginTop={4}
+            >
+              <Text size="small" color="blueText" marginRight={1}>
+                *
+              </Text>
+              <Text size="small" color="blueText">
+                The address will be confirmed once the transaction is complete
               </Text>
             </Container>
           </Container>

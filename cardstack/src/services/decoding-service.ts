@@ -1,5 +1,6 @@
 import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
+import { useVerifyingContract } from './../hooks/transaction-confirmation/use-verifying-contract';
 import {
   ActionDispatcherDecodedData,
   PayMerchantDecodedData,
@@ -97,7 +98,8 @@ const decodeActionDispatcherData = (
 };
 
 const decodeRegisterMerchantData = (
-  actionDispatcherData: ActionDispatcherDecodedData
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string
 ): RegisterMerchantDecodedData => {
   const { infoDID } = decode<{ infoDID: string }>(
     [
@@ -112,6 +114,7 @@ const decodeRegisterMerchantData = (
   return {
     spendAmount: actionDispatcherData.spendAmount,
     infoDID,
+    prepaidCard: verifyingContract,
     type: TransactionConfirmationType.REGISTER_MERCHANT,
   };
 };
@@ -200,7 +203,8 @@ export const decodeData = async (
 
     if (isRegisterMerchant(actionDispatcherDecodedData)) {
       const decodedData = decodeRegisterMerchantData(
-        actionDispatcherDecodedData
+        actionDispatcherDecodedData,
+        verifyingContract
       );
 
       return decodedData;
