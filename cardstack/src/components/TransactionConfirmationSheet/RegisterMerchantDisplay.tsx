@@ -46,12 +46,7 @@ const FromSection = () => {
             <Text weight="extraBold">{accountName}</Text>
             <NetworkBadge marginTop={2} />
             <Container maxWidth={180}>
-              <Text
-                size="small"
-                color="blueText"
-                fontFamily="RobotoMono-Regular"
-                marginTop={1}
-              >
+              <Text variant="subAddress" marginTop={1}>
                 {accountAddress}
               </Text>
             </Container>

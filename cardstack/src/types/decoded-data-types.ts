@@ -34,6 +34,7 @@ export interface RegisterMerchantDecodedData {
 export interface PayMerchantDecodedData {
   spendAmount: number;
   merchantSafe: string;
+  prepaidCard: string;
   type: TransactionConfirmationType.PAY_MERCHANT;
 }
 

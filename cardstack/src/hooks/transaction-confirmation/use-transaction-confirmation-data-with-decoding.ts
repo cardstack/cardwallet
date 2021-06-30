@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useMessage } from './use-message';
+import { useVerifyingContract } from './use-verifying-contract';
 import { decodeData } from '@cardstack/services';
 import {
   TransactionConfirmationData,
@@ -17,13 +18,14 @@ export const useTransactionConfirmationDataWithDecoding = () => {
   });
 
   const message = useMessage();
+  const verifyingContract = useVerifyingContract();
 
   useEffect(() => {
     const setData = async () => {
       try {
         setLoading(true);
 
-        const result = await decodeData(message, network);
+        const result = await decodeData(message, verifyingContract, network);
 
         setStateData(result);
       } catch (error) {
@@ -34,7 +36,7 @@ export const useTransactionConfirmationDataWithDecoding = () => {
     };
 
     setData();
-  }, [message, network]);
+  }, [message, verifyingContract, network]);
 
   return {
     data,

@@ -77,13 +77,7 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
                     DEPOT
                   </Text>
                   <Container maxWidth={180} marginTop={1}>
-                    <Text
-                      size="small"
-                      color="blueText"
-                      fontFamily="RobotoMono-Regular"
-                    >
-                      {depot.address}
-                    </Text>
+                    <Text variant="subAddress">{depot.address}</Text>
                   </Container>
                   <Text fontSize={15} weight="extraBold">
                     {tokenBalance}
@@ -133,9 +127,10 @@ const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
 };
 
 const ToSection = () => {
-  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, { [key: string]: number }]
-  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
 
   const zeroSpendDisplay = convertSpendForBalanceDisplay(
     '0',
@@ -154,12 +149,7 @@ const ToSection = () => {
           <Icon name="prepaid-card" />
           <Container marginLeft={4}>
             <Text weight="extraBold">Prepaid Card</Text>
-            <Text
-              size="small"
-              color="blueText"
-              fontFamily="RobotoMono-Regular"
-              marginTop={1}
-            >
+            <Text variant="subAddress" marginTop={1}>
               {getAddressPreview('0x000000000000')}*
             </Text>
             <Text marginTop={2} size="xs">

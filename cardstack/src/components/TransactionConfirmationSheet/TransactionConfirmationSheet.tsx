@@ -6,6 +6,7 @@ import { ContainerProps } from '../Container';
 import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
+import { PayMerchantDisplay } from './PayMerchantDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -141,14 +142,14 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
     return null;
   }
 
-  console.log({ data: JSON.stringify(props.data, null, 2) });
-
   if (props.data.type === TransactionConfirmationType.ISSUE_PREPAID_CARD) {
     return <IssuePrepaidCardDisplay {...props} data={props.data} />;
   } else if (
     props.data.type === TransactionConfirmationType.REGISTER_MERCHANT
   ) {
     return <RegisterMerchantDisplay {...props} data={props.data} />;
+  } else if (props.data.type === TransactionConfirmationType.PAY_MERCHANT) {
+    return <PayMerchantDisplay {...props} data={props.data} />;
   }
 
   return <GenericDisplay {...props} />;

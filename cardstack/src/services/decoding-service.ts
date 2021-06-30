@@ -112,17 +112,18 @@ const decodeRegisterMerchantData = (
   return {
     spendAmount: actionDispatcherData.spendAmount,
     infoDID,
-    type: 'registerMerchant',
+    type: TransactionConfirmationType.REGISTER_MERCHANT,
   };
 };
 
 const decodePayMerchantData = (
-  actionDispatcherData: ActionDispatcherDecodedData
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string
 ): PayMerchantDecodedData => {
   const { merchantSafe } = decode<{ merchantSafe: string }>(
     [
       {
-        type: 'string',
+        type: 'address',
         name: 'merchantSafe',
       },
     ],
@@ -132,7 +133,8 @@ const decodePayMerchantData = (
   return {
     spendAmount: actionDispatcherData.spendAmount,
     merchantSafe,
-    type: 'registerMerchant',
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.PAY_MERCHANT,
   };
 };
 
@@ -181,6 +183,7 @@ export const decodeData = async (
     to: string;
     data: string;
   },
+  verifyingContract: string,
   network: string
 ): Promise<TransactionConfirmationData> => {
   const level1Data = decodeLevel1Data(message.data);
@@ -202,7 +205,10 @@ export const decodeData = async (
 
       return decodedData;
     } else if (isPayMerchant(actionDispatcherDecodedData)) {
-      const decodedData = decodePayMerchantData(actionDispatcherDecodedData);
+      const decodedData = decodePayMerchantData(
+        actionDispatcherDecodedData,
+        verifyingContract
+      );
 
       return decodedData;
     } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
