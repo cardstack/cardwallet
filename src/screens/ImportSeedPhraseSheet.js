@@ -304,6 +304,7 @@ export default function ImportSeedPhraseSheet() {
               goBack();
               InteractionManager.runAfterInteractions(async () => {
                 if (previousWalletCount === 0) {
+                  goBack();
                   replace(Routes.SWIPE_LAYOUT, {
                     params: { initialized: true },
                     screen: Routes.WALLET_SCREEN,
