@@ -1,16 +1,15 @@
 import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
-import { useVerifyingContract } from './../hooks/transaction-confirmation/use-verifying-contract';
 import {
   ActionDispatcherDecodedData,
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
-} from './../types/decoded-data-types';
+} from '../types/decoded-data-types';
 import {
-  TransactionConfirmationData,
   IssuePrepaidCardDecodedData,
   Level1DecodedData,
   TokenData,
+  TransactionConfirmationData,
   TransactionConfirmationType,
 } from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
