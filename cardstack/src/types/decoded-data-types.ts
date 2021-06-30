@@ -39,6 +39,14 @@ export interface PayMerchantDecodedData {
   type: TransactionConfirmationType.PAY_MERCHANT;
 }
 
+export interface ClaimRevenueDecodedData {
+  amount: string;
+  tokenAddress: string;
+  merchantSafe: string;
+  token: TokenData;
+  type: TransactionConfirmationType.CLAIM_REVENUE;
+}
+
 export type ActionDispatcherActionName =
   | 'registerMerchant'
   | 'payMerchant'
@@ -56,4 +64,5 @@ export type TransactionConfirmationData =
   | GenericDisplayData
   | IssuePrepaidCardDecodedData
   | RegisterMerchantDecodedData
+  | ClaimRevenueDecodedData
   | PayMerchantDecodedData;

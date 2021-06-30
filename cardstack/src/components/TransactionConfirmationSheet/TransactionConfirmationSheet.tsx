@@ -7,6 +7,7 @@ import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { PayMerchantDisplay } from './PayMerchantDisplay';
+import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -150,6 +151,8 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
     return <RegisterMerchantDisplay {...props} data={props.data} />;
   } else if (props.data.type === TransactionConfirmationType.PAY_MERCHANT) {
     return <PayMerchantDisplay {...props} data={props.data} />;
+  } else if (props.data.type === TransactionConfirmationType.CLAIM_REVENUE) {
+    return <ClaimRevenueDisplay {...props} data={props.data} />;
   }
 
   return <GenericDisplay {...props} />;

@@ -2,6 +2,7 @@ import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import {
   ActionDispatcherDecodedData,
+  ClaimRevenueDecodedData,
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
 } from '../types/decoded-data-types';
@@ -140,6 +141,34 @@ const decodePayMerchantData = (
   };
 };
 
+const decodeClaimRevenueData = async (
+  messageData: string,
+  verifyingContract: string
+): Promise<ClaimRevenueDecodedData> => {
+  const data = messageData.slice(10);
+
+  const { amount, tokenAddress } = decode<{
+    tokenAddress: string;
+    amount: string;
+  }>(
+    [
+      { type: 'address', name: 'tokenAddress' },
+      { type: 'uint256', name: 'amount' },
+    ],
+    data
+  );
+
+  const tokenData = await getTokenData(tokenAddress);
+
+  return {
+    amount,
+    tokenAddress,
+    merchantSafe: verifyingContract,
+    token: tokenData,
+    type: TransactionConfirmationType.CLAIM_REVENUE,
+  };
+};
+
 const isIssuePrepaidCard = (level1Data: Level1DecodedData, network: string) => {
   const prepaidCardManager = getAddressByNetwork('prepaidCardManager', network);
 
@@ -174,10 +203,10 @@ const isTransferPrepaidCard = (
   return actionDispatcherData.actionName === 'transfer';
 };
 
-const isClaimRevenue = (level1Data: Level1DecodedData, network: string) => {
+const isClaimRevenue = (toAddress: string, network: string) => {
   const revenuePool = getAddressByNetwork('revenuePool', network);
 
-  return level1Data.to === revenuePool;
+  return toAddress === revenuePool;
 };
 
 export const decodeData = async (
@@ -188,45 +217,52 @@ export const decodeData = async (
   verifyingContract: string,
   network: string
 ): Promise<TransactionConfirmationData> => {
-  const level1Data = decodeLevel1Data(message.data);
-
-  if (isIssuePrepaidCard(level1Data, network)) {
-    const decodedData = await decodeIssuePrepaidCardData(
-      level1Data,
-      message.to
+  if (isClaimRevenue(message.to, network)) {
+    const decodedData = await decodeClaimRevenueData(
+      message.data,
+      verifyingContract
     );
 
     return decodedData;
-  } else if (isActionDispatcher(level1Data, network)) {
-    const actionDispatcherDecodedData = decodeActionDispatcherData(level1Data);
+  } else {
+    const level1Data = decodeLevel1Data(message.data);
 
-    if (isRegisterMerchant(actionDispatcherDecodedData)) {
-      const decodedData = decodeRegisterMerchantData(
-        actionDispatcherDecodedData,
-        verifyingContract
+    if (isIssuePrepaidCard(level1Data, network)) {
+      const decodedData = await decodeIssuePrepaidCardData(
+        level1Data,
+        message.to
       );
 
       return decodedData;
-    } else if (isPayMerchant(actionDispatcherDecodedData)) {
-      const decodedData = decodePayMerchantData(
-        actionDispatcherDecodedData,
-        verifyingContract
+    } else if (isActionDispatcher(level1Data, network)) {
+      const actionDispatcherDecodedData = decodeActionDispatcherData(
+        level1Data
       );
 
-      return decodedData;
-    } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
-      // return {
-      //   type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
-      // };
-    } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
-      // return {
-      //   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
-      // };
+      if (isRegisterMerchant(actionDispatcherDecodedData)) {
+        const decodedData = decodeRegisterMerchantData(
+          actionDispatcherDecodedData,
+          verifyingContract
+        );
+
+        return decodedData;
+      } else if (isPayMerchant(actionDispatcherDecodedData)) {
+        const decodedData = decodePayMerchantData(
+          actionDispatcherDecodedData,
+          verifyingContract
+        );
+
+        return decodedData;
+      } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
+        // return {
+        //   type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
+        // };
+      } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
+        // return {
+        //   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
+        // };
+      }
     }
-  } else if (isClaimRevenue(level1Data, network)) {
-    // return {
-    //   type: TransactionConfirmationType.CLAIM_REVENUE,
-    // };
   }
 
   return {
