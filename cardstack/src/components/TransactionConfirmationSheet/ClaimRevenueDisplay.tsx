@@ -45,8 +45,7 @@ const FromSection = () => {
         FROM
       </TransactionConfirmationSectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4} flexDirection="row">
-        {/* TODO: Fix this icon */}
-        <Icon name="card-pay" />
+        <Icon name="cardstack" />
         <Container marginLeft={3}>
           <Text weight="extraBold">CARD Protocol Revenue Pool</Text>
           <NetworkBadge marginTop={2} />
