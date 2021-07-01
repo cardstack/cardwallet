@@ -70,18 +70,18 @@ export default function WalletProfileState({
     }
   }, [actionType, goBack, navigate]);
 
-  const handleSubmit = useCallback(async () => {
-    setTimeout(() => {
-      onCloseModal({
-        color,
-        name: nameEmoji ? `${nameEmoji} ${value}` : value,
-      });
-    }, 500);
+  const handleSubmit = useCallback(() => {
+    onCloseModal({
+      color,
+      name: nameEmoji ? `${nameEmoji} ${value}` : value,
+    });
 
-    goBack();
+    if (actionType !== 'Import') {
+      goBack();
 
-    if (actionType === 'Create' && isNewProfile) {
-      navigate(Routes.CHANGE_WALLET_SHEET);
+      if (actionType === 'Create' && isNewProfile) {
+        navigate(Routes.CHANGE_WALLET_SHEET);
+      }
     }
   }, [
     actionType,

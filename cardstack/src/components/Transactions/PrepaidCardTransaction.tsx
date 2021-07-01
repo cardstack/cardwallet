@@ -13,16 +13,48 @@ import {
 } from '@cardstack/components';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { CreatedPrepaidCardTransactionType } from '@cardstack/types';
+import {
+  CreatedPrepaidCardTransactionType,
+  PrepaidCardPaymentTransactionType,
+  TransactionTypes,
+} from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 
-export const CreatedPrepaidCardTransaction = ({
+type TransactionStatus = {
+  operator: '+' | '-';
+  status: 'Loaded' | 'Paid';
+  iconName: 'arrow-up' | 'arrow-down' | 'refresh';
+};
+
+const getTransactionStatus = (
+  type:
+    | TransactionTypes.CREATED_PREPAID_CARD
+    | TransactionTypes.PREPAID_CARD_PAYMENT
+): TransactionStatus => {
+  const status = {
+    [TransactionTypes.CREATED_PREPAID_CARD]: {
+      operator: '+',
+      status: 'Loaded',
+      iconName: 'arrow-down',
+    },
+    [TransactionTypes.PREPAID_CARD_PAYMENT]: {
+      operator: '-',
+      status: 'Paid',
+      iconName: 'arrow-up',
+    },
+  };
+
+  return status[type] as TransactionStatus;
+};
+
+export const PrepaidCardTransaction = ({
   item,
 }: {
-  item: CreatedPrepaidCardTransactionType;
+  item: CreatedPrepaidCardTransactionType | PrepaidCardPaymentTransactionType;
 }) => {
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
+  const transactionStatus = getTransactionStatus(item.type);
 
   if (!item) {
     return null;
@@ -53,15 +85,23 @@ export const CreatedPrepaidCardTransaction = ({
           width="100%"
         >
           <Top {...item} />
-          <Bottom {...item} />
-          <FundedBy {...item} />
+          {item.type === TransactionTypes.PREPAID_CARD_PAYMENT && (
+            <PaidPrepaidCard transaction={item} status={transactionStatus} />
+          )}
+          {item.type === TransactionTypes.CREATED_PREPAID_CARD && (
+            <CreatedPrepaidCard transaction={item} status={transactionStatus} />
+          )}
         </Container>
       </Touchable>
     </Container>
   );
 };
 
-const Top = (transaction: CreatedPrepaidCardTransactionType) => (
+const Top = (
+  transaction:
+    | CreatedPrepaidCardTransactionType
+    | PrepaidCardPaymentTransactionType
+) => (
   <Container
     height={40}
     flexDirection="row"
@@ -83,40 +123,39 @@ const Top = (transaction: CreatedPrepaidCardTransactionType) => (
   </Container>
 );
 
-const Bottom = (transaction: CreatedPrepaidCardTransactionType) => {
+const Bottom = (
+  transaction: (
+    | CreatedPrepaidCardTransactionType
+    | PrepaidCardPaymentTransactionType
+  ) &
+    TransactionStatus
+) => {
   return (
-    <Container paddingHorizontal={5} paddingTop={4}>
+    <Container
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems="center"
+    >
       <Container
+        alignItems="center"
         flexDirection="row"
         justifyContent="space-between"
-        alignItems="center"
+        width="100%"
       >
-        <Container
-          alignItems="center"
-          flexDirection="row"
-          justifyContent="space-between"
-          width="100%"
-        >
-          <Container flexDirection="row" alignItems="center">
-            <Icon name="spend" />
-            <Container marginLeft={4} flexDirection="row">
-              <Icon name="arrow-down" size={16} color="blueText" />
-              <Text variant="subText" weight="bold" marginLeft={1}>
-                Loaded
-              </Text>
-            </Container>
-          </Container>
-          <Container
-            flexDirection="column"
-            marginLeft={3}
-            alignItems="flex-end"
-          >
-            <Text weight="extraBold">{`+ ${transaction.spendBalanceDisplay}`}</Text>
-            <Text variant="subText">{transaction.nativeBalanceDisplay}</Text>
+        <Container flexDirection="row" alignItems="center">
+          <Icon name="spend" />
+          <Container marginLeft={4} flexDirection="row">
+            <Icon name={transaction.iconName} size={16} color="blueText" />
+            <Text variant="subText" weight="bold" marginLeft={1}>
+              {transaction.status}
+            </Text>
           </Container>
         </Container>
+        <Container flexDirection="column" marginLeft={3} alignItems="flex-end">
+          <Text weight="extraBold">{`${transaction.operator} ${transaction.spendBalanceDisplay}`}</Text>
+          <Text variant="subText">{transaction.nativeBalanceDisplay}</Text>
+        </Container>
       </Container>
-      <HorizontalDivider />
     </Container>
   );
 };
@@ -168,5 +207,37 @@ const FundedBy = (transaction: CreatedPrepaidCardTransactionType) => {
         />
       </Container>
     </Container>
+  );
+};
+
+const PaidPrepaidCard = ({
+  transaction,
+  status,
+}: {
+  transaction: PrepaidCardPaymentTransactionType;
+  status: TransactionStatus;
+}) => {
+  return (
+    <Container paddingHorizontal={5} paddingVertical={4}>
+      <Bottom {...transaction} {...status} />
+    </Container>
+  );
+};
+
+const CreatedPrepaidCard = ({
+  transaction,
+  status,
+}: {
+  transaction: CreatedPrepaidCardTransactionType;
+  status: TransactionStatus;
+}) => {
+  return (
+    <>
+      <Container paddingHorizontal={5} paddingTop={4}>
+        <Bottom {...transaction} {...status} />
+      </Container>
+      <HorizontalDivider />
+      <FundedBy {...transaction} />
+    </>
   );
 };

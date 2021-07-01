@@ -3926,6 +3926,18 @@ export type PrepaidCardCreationFragment = (
   ) }
 );
 
+export type PrepaidCardPaymentFragment = (
+  { __typename?: 'PrepaidCardPayment' }
+  & Pick<PrepaidCardPayment, 'id' | 'timestamp' | 'spendAmount' | 'issuingTokenAmount'>
+  & { issuingToken: (
+    { __typename?: 'Token' }
+    & Pick<Token, 'id' | 'symbol' | 'name'>
+  ), prepaidCard: (
+    { __typename?: 'PrepaidCard' }
+    & Pick<PrepaidCard, 'id'>
+  ) }
+);
+
 export type BridgeEventFragment = (
   { __typename?: 'BridgeEvent' }
   & Pick<BridgeEvent, 'amount' | 'timestamp'>
@@ -3982,7 +3994,7 @@ export type TransactionFragment = (
     & Pick<MerchantRegistrationPayment, 'id'>
   )>>, prepaidCardPayments: Array<Maybe<(
     { __typename?: 'PrepaidCardPayment' }
-    & Pick<PrepaidCardPayment, 'id'>
+    & PrepaidCardPaymentFragment
   )>>, spendAccumulations: Array<Maybe<(
     { __typename?: 'SpendAccumulation' }
     & Pick<SpendAccumulation, 'id'>
@@ -4078,6 +4090,22 @@ export const MerchantCreationFragmentDoc = gql`
   }
 }
     `;
+export const PrepaidCardPaymentFragmentDoc = gql`
+    fragment PrepaidCardPayment on PrepaidCardPayment {
+  id
+  timestamp
+  spendAmount
+  issuingTokenAmount
+  issuingToken {
+    id
+    symbol
+    name
+  }
+  prepaidCard {
+    id
+  }
+}
+    `;
 export const TransactionFragmentDoc = gql`
     fragment Transaction on Transaction {
   id
@@ -4104,7 +4132,7 @@ export const TransactionFragmentDoc = gql`
     id
   }
   prepaidCardPayments {
-    id
+    ...PrepaidCardPayment
   }
   spendAccumulations {
     id
@@ -4125,12 +4153,13 @@ export const TransactionFragmentDoc = gql`
     ${BridgeEventFragmentDoc}
 ${PrepaidCardCreationFragmentDoc}
 ${TokenTransferFragmentDoc}
-${MerchantCreationFragmentDoc}`;
+${MerchantCreationFragmentDoc}
+${PrepaidCardPaymentFragmentDoc}`;
 export const GetTransactionHistoryDataDocument = gql`
     query GetTransactionHistoryData($address: ID!) {
   account(id: $address) {
     id
-    transactions(orderBy: timestamp, orderDirection: asc, first: 25) {
+    transactions(first: 25) {
       transaction {
         ...Transaction
       }
