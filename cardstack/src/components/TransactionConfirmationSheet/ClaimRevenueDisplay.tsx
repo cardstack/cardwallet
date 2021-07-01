@@ -1,5 +1,6 @@
 import {
   convertRawAmountToBalance,
+  convertRawAmountToNativeDisplay,
   getAddressByNetwork,
 } from '@cardstack/cardpay-sdk';
 import React from 'react';
@@ -13,7 +14,10 @@ import {
   Text,
 } from '@cardstack/components';
 import { ClaimRevenueDecodedData } from '@cardstack/types';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
 
 interface ClaimRevenueDisplayProps extends TransactionConfirmationDisplayProps {
   data: ClaimRevenueDecodedData;
@@ -56,14 +60,16 @@ const FromSection = () => {
 };
 
 const ClaimSection = ({ data }: { data: ClaimRevenueDecodedData }) => {
-  // TODO: implement token to price conversion
-  // const [
-  //   nativeCurrency,
-  //   currencyConversionRates,
-  // ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
 
   const tokenDisplay = convertRawAmountToBalance(data.amount, data.token);
-  // const nativeDisplay = convertRawAmountToNativeDisplay(data.amount, data.token.decimals, )
+
+  const nativeDisplay = convertRawAmountToNativeDisplay(
+    data.amount,
+    data.token.decimals,
+    data.price,
+    nativeCurrency
+  );
 
   return (
     <Container>
@@ -74,8 +80,7 @@ const ClaimSection = ({ data }: { data: ClaimRevenueDecodedData }) => {
         <Text size="large" weight="extraBold">
           {tokenDisplay.display}
         </Text>
-        {/* <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
-        <Text variant="subText">{tokenDisplay.display}</Text> */}
+        <Text variant="subText">{nativeDisplay.display}</Text>
       </Container>
     </Container>
   );

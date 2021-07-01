@@ -10,7 +10,11 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { logger } from '@rainbow-me/utils';
 
 export const useTransactionConfirmationDataWithDecoding = () => {
-  const network = useRainbowSelector(state => state.settings.network);
+  const [network, nativeCurrency] = useRainbowSelector(state => [
+    state.settings.network,
+    state.settings.nativeCurrency,
+  ]);
+
   const [loading, setLoading] = useState(false);
 
   const [data, setStateData] = useState<TransactionConfirmationData>({
@@ -25,7 +29,12 @@ export const useTransactionConfirmationDataWithDecoding = () => {
       try {
         setLoading(true);
 
-        const result = await decodeData(message, verifyingContract, network);
+        const result = await decodeData(
+          message,
+          verifyingContract,
+          network,
+          nativeCurrency
+        );
 
         setStateData(result);
       } catch (error) {
@@ -36,7 +45,7 @@ export const useTransactionConfirmationDataWithDecoding = () => {
     };
 
     setData();
-  }, [message, verifyingContract, network]);
+  }, [message, verifyingContract, network, nativeCurrency]);
 
   return {
     data,

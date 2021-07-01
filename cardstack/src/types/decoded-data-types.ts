@@ -28,7 +28,7 @@ export interface IssuePrepaidCardDecodedData {
 export interface RegisterMerchantDecodedData {
   spendAmount: number;
   infoDID: string;
-  prepaidCard: string;
+  prepaidCard: number;
   type: TransactionConfirmationType.REGISTER_MERCHANT;
 }
 
@@ -43,6 +43,7 @@ export interface ClaimRevenueDecodedData {
   amount: string;
   tokenAddress: string;
   merchantSafe: string;
+  price: string;
   token: TokenData;
   type: TransactionConfirmationType.CLAIM_REVENUE;
 }

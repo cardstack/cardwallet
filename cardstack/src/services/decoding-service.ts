@@ -6,6 +6,7 @@ import {
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
 } from '../types/decoded-data-types';
+import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   IssuePrepaidCardDecodedData,
   Level1DecodedData,
@@ -143,7 +144,8 @@ const decodePayMerchantData = (
 
 const decodeClaimRevenueData = async (
   messageData: string,
-  verifyingContract: string
+  verifyingContract: string,
+  nativeCurrency: string
 ): Promise<ClaimRevenueDecodedData> => {
   const data = messageData.slice(10);
 
@@ -159,11 +161,21 @@ const decodeClaimRevenueData = async (
   );
 
   const tokenData = await getTokenData(tokenAddress);
+  const currentTimestamp = Date.now();
+
+  const price = await fetchHistoricalPrice(
+    tokenData.symbol,
+    currentTimestamp,
+    nativeCurrency
+  );
+
+  console.log({ priceType: typeof price, price });
 
   return {
     amount,
     tokenAddress,
     merchantSafe: verifyingContract,
+    price,
     token: tokenData,
     type: TransactionConfirmationType.CLAIM_REVENUE,
   };
@@ -215,12 +227,14 @@ export const decodeData = async (
     data: string;
   },
   verifyingContract: string,
-  network: string
+  network: string,
+  nativeCurrency: string
 ): Promise<TransactionConfirmationData> => {
   if (isClaimRevenue(message.to, network)) {
     const decodedData = await decodeClaimRevenueData(
       message.data,
-      verifyingContract
+      verifyingContract,
+      nativeCurrency
     );
 
     return decodedData;

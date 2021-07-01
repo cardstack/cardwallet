@@ -31,7 +31,7 @@ const getCachedPrice = async (
   return null;
 };
 
-const getRoundedTimestamp = (timestamp: string) => {
+const getRoundedTimestamp = (timestamp: string | number) => {
   const date = new Date(Number(timestamp) * 1000);
 
   date.setHours(0, 0, 0, 0);
@@ -41,7 +41,7 @@ const getRoundedTimestamp = (timestamp: string) => {
 
 export const fetchHistoricalPrice = async (
   symbol: string,
-  timestamp: string,
+  timestamp: string | number,
   nativeCurrency: string
 ) => {
   const roundedTimestamp = getRoundedTimestamp(timestamp);
