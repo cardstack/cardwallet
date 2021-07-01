@@ -13,3 +13,4 @@ export * from './CreatedPrepaidCardTransactionType';
 export * from './TransactionConfirmationType';
 export * from './TransactionType';
 export * from './MerchantCreationTransactionType';
+export * from './decoded-data-types';

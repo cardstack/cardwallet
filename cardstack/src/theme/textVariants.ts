@@ -28,6 +28,11 @@ export const textVariants = {
     color: 'blueText',
     fontSize: 13,
   },
+  subAddress: {
+    color: 'blueText',
+    fontSize: 14,
+    fontFamily: 'RobotoMono-Regular',
+  },
   welcomeScreen: {
     color: 'white',
     fontSize: 21,

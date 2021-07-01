@@ -7,10 +7,10 @@ import {
   HorizontalDivider,
   Icon,
   NetworkBadge,
-  Skeleton,
   Text,
-  TransactionConfirmationSheetProps,
+  TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
+import { IssuePrepaidCardDecodedData } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
@@ -21,15 +21,21 @@ import {
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 
+interface IssuePrepaidCardDisplayProps
+  extends TransactionConfirmationDisplayProps {
+  data: IssuePrepaidCardDecodedData;
+}
+
 export const IssuePrepaidCardDisplay = (
-  props: TransactionConfirmationSheetProps
+  props: IssuePrepaidCardDisplayProps
 ) => {
-  const { message } = props;
+  const { message, data } = props;
+
   return (
     <>
       <FromSection tokenAddress={message.to} />
       <HorizontalDivider />
-      <LoadSection {...props} />
+      <LoadSection data={data} />
       <HorizontalDivider />
       <ToSection />
     </>
@@ -71,13 +77,7 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
                     DEPOT
                   </Text>
                   <Container maxWidth={180} marginTop={1}>
-                    <Text
-                      size="small"
-                      color="blueText"
-                      fontFamily="RobotoMono-Regular"
-                    >
-                      {depot.address}
-                    </Text>
+                    <Text variant="subAddress">{depot.address}</Text>
                   </Container>
                   <Text fontSize={15} weight="extraBold">
                     {tokenBalance}
@@ -92,60 +92,45 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   );
 };
 
-const LoadSection = ({ decodedData }: TransactionConfirmationSheetProps) => {
+const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
   const [
     nativeCurrency,
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
-  if (!decodedData) {
-    return null;
-  }
-
   const tokenDisplay = convertRawAmountToBalance(
-    decodedData.issuingTokenAmounts[0],
-    decodedData.token
+    data.issuingTokenAmounts[0],
+    data.token
   );
 
   const spendDisplay = convertSpendForBalanceDisplay(
-    decodedData.spendAmounts[0],
+    data.spendAmounts[0],
     nativeCurrency,
     currencyConversionRates,
     true
   );
 
   return (
-    <Container height={94}>
+    <Container>
       <TransactionConfirmationSectionHeaderText>
         LOAD THIS AMOUNT
       </TransactionConfirmationSectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
-        {spendDisplay ? (
-          <Text size="large" weight="extraBold">
-            {spendDisplay.tokenBalanceDisplay}
-          </Text>
-        ) : (
-          <Skeleton light height={25} width={175} marginBottom={1} />
-        )}
-        {spendDisplay ? (
-          <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
-        ) : (
-          <Skeleton light height={15} width={100} marginBottom={1} />
-        )}
-        {tokenDisplay ? (
-          <Text variant="subText">{tokenDisplay.display}</Text>
-        ) : (
-          <Skeleton light height={15} width={100} />
-        )}
+        <Text size="large" weight="extraBold">
+          {spendDisplay.tokenBalanceDisplay}
+        </Text>
+        <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
+        <Text variant="subText">{tokenDisplay.display}</Text>
       </Container>
     </Container>
   );
 };
 
 const ToSection = () => {
-  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, { [key: string]: number }]
-  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
 
   const zeroSpendDisplay = convertSpendForBalanceDisplay(
     '0',
@@ -164,13 +149,8 @@ const ToSection = () => {
           <Icon name="prepaid-card" />
           <Container marginLeft={4}>
             <Text weight="extraBold">Prepaid Card</Text>
-            <Text
-              size="small"
-              color="blueText"
-              fontFamily="RobotoMono-Regular"
-              marginTop={1}
-            >
-              {getAddressPreview('0x000000000000')}*
+            <Text variant="subAddress" marginTop={1}>
+              {getAddressPreview('0xXXXXXXXXXXXX')}*
             </Text>
             <Text marginTop={2} size="xs">
               Current Face Value

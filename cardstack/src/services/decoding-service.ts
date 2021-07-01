@@ -1,28 +1,20 @@
 import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
-import { TransactionConfirmationType } from '@cardstack/types';
+import {
+  ActionDispatcherDecodedData,
+  ClaimRevenueDecodedData,
+  PayMerchantDecodedData,
+  RegisterMerchantDecodedData,
+} from '../types/decoded-data-types';
+import { fetchHistoricalPrice } from './historical-pricing-service';
+import {
+  IssuePrepaidCardDecodedData,
+  Level1DecodedData,
+  TokenData,
+  TransactionConfirmationData,
+  TransactionConfirmationType,
+} from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
-
-export interface Level1DecodedData {
-  amount: string;
-  data: string;
-  to: string;
-}
-
-interface TokenData {
-  symbol: string;
-  decimals: number;
-}
-
-export interface IssuePrepaidCardDecodedData {
-  amount: string;
-  to: string;
-  issuingTokenAmounts: string[];
-  owner: string;
-  spendAmounts: string[];
-  customizationDID: string;
-  token: TokenData;
-}
 
 const decode = <T>(params: object[], data: string): T => {
   const web3 = new Web3(web3ProviderSdk as any);
@@ -65,7 +57,12 @@ const decodeIssuePrepaidCardData = async (
   level1Data: Level1DecodedData,
   tokenAddress: string
 ): Promise<IssuePrepaidCardDecodedData> => {
-  const decodedPrepaidCardData = decode<IssuePrepaidCardDecodedData>(
+  const decodedPrepaidCardData = decode<{
+    owner: string;
+    issuingTokenAmounts: string[];
+    spendAmounts: string[];
+    customizationDID: string;
+  }>(
     [
       { type: 'address', name: 'owner' },
       { type: 'uint256[]', name: 'issuingTokenAmounts' },
@@ -78,45 +75,211 @@ const decodeIssuePrepaidCardData = async (
   const tokenData = await getTokenData(tokenAddress);
 
   return {
-    amount: level1Data.amount,
-    to: level1Data.to,
-    issuingTokenAmounts: decodedPrepaidCardData.issuingTokenAmounts,
-    owner: decodedPrepaidCardData.owner,
-    spendAmounts: decodedPrepaidCardData.spendAmounts,
-    customizationDID: decodedPrepaidCardData.customizationDID,
+    ...level1Data,
+    ...decodedPrepaidCardData,
     token: tokenData,
+    type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
   };
 };
 
-export type DecodedData = IssuePrepaidCardDecodedData | null;
+const decodeActionDispatcherData = (
+  level1Data: Level1DecodedData
+): ActionDispatcherDecodedData => {
+  const decodedActionDispatcherData = decode<ActionDispatcherDecodedData>(
+    [
+      { type: 'uint256', name: 'spendAmount' },
+      { type: 'uint256', name: 'requestedRate' },
+      { type: 'string', name: 'actionName' },
+      { type: 'bytes', name: 'actionData' },
+    ],
+    level1Data.data
+  );
+
+  return decodedActionDispatcherData;
+};
+
+const decodeRegisterMerchantData = (
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string
+): RegisterMerchantDecodedData => {
+  const { infoDID } = decode<{ infoDID: string }>(
+    [
+      {
+        type: 'string',
+        name: 'infoDID',
+      },
+    ],
+    actionDispatcherData.actionData
+  );
+
+  return {
+    spendAmount: actionDispatcherData.spendAmount,
+    infoDID,
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.REGISTER_MERCHANT,
+  };
+};
+
+const decodePayMerchantData = (
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string
+): PayMerchantDecodedData => {
+  const { merchantSafe } = decode<{ merchantSafe: string }>(
+    [
+      {
+        type: 'address',
+        name: 'merchantSafe',
+      },
+    ],
+    actionDispatcherData.actionData
+  );
+
+  return {
+    spendAmount: actionDispatcherData.spendAmount,
+    merchantSafe,
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.PAY_MERCHANT,
+  };
+};
+
+const decodeClaimRevenueData = async (
+  messageData: string,
+  verifyingContract: string,
+  nativeCurrency: string
+): Promise<ClaimRevenueDecodedData> => {
+  const data = messageData.slice(10);
+
+  const { amount, tokenAddress } = decode<{
+    tokenAddress: string;
+    amount: string;
+  }>(
+    [
+      { type: 'address', name: 'tokenAddress' },
+      { type: 'uint256', name: 'amount' },
+    ],
+    data
+  );
+
+  const tokenData = await getTokenData(tokenAddress);
+  const currentTimestamp = Date.now();
+
+  const price = await fetchHistoricalPrice(
+    tokenData.symbol,
+    currentTimestamp,
+    nativeCurrency
+  );
+
+  console.log({ priceType: typeof price, price });
+
+  return {
+    amount,
+    tokenAddress,
+    merchantSafe: verifyingContract,
+    price,
+    token: tokenData,
+    type: TransactionConfirmationType.CLAIM_REVENUE,
+  };
+};
+
+const isIssuePrepaidCard = (level1Data: Level1DecodedData, network: string) => {
+  const prepaidCardManager = getAddressByNetwork('prepaidCardManager', network);
+
+  return level1Data.to === prepaidCardManager;
+};
+
+const isActionDispatcher = (level1Data: Level1DecodedData, network: string) => {
+  const actionDispatcher = getAddressByNetwork('actionDispatcher', network);
+
+  return level1Data.to === actionDispatcher;
+};
+
+const isRegisterMerchant = (
+  actionDispatcherData: ActionDispatcherDecodedData
+) => {
+  return actionDispatcherData.actionName === 'registerMerchant';
+};
+
+const isPayMerchant = (actionDispatcherData: ActionDispatcherDecodedData) => {
+  return actionDispatcherData.actionName === 'payMerchant';
+};
+
+const isSplitPrepaidCard = (
+  actionDispatcherData: ActionDispatcherDecodedData
+) => {
+  return actionDispatcherData.actionName === 'split';
+};
+
+const isTransferPrepaidCard = (
+  actionDispatcherData: ActionDispatcherDecodedData
+) => {
+  return actionDispatcherData.actionName === 'transfer';
+};
+
+const isClaimRevenue = (toAddress: string, network: string) => {
+  const revenuePool = getAddressByNetwork('revenuePool', network);
+
+  return toAddress === revenuePool;
+};
 
 export const decodeData = async (
   message: {
     to: string;
     data: string;
   },
-  network: string
-): Promise<{
-  type: TransactionConfirmationType;
-  decodedData: DecodedData;
-}> => {
-  const level1Data = decodeLevel1Data(message.data);
-  const prepaidCardManager = getAddressByNetwork('prepaidCardManager', network);
-
-  if (level1Data.to === prepaidCardManager) {
-    const decodedData = await decodeIssuePrepaidCardData(
-      level1Data,
-      message.to
+  verifyingContract: string,
+  network: string,
+  nativeCurrency: string
+): Promise<TransactionConfirmationData> => {
+  if (isClaimRevenue(message.to, network)) {
+    const decodedData = await decodeClaimRevenueData(
+      message.data,
+      verifyingContract,
+      nativeCurrency
     );
 
-    return {
-      decodedData,
-      type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
-    };
+    return decodedData;
+  } else {
+    const level1Data = decodeLevel1Data(message.data);
+
+    if (isIssuePrepaidCard(level1Data, network)) {
+      const decodedData = await decodeIssuePrepaidCardData(
+        level1Data,
+        message.to
+      );
+
+      return decodedData;
+    } else if (isActionDispatcher(level1Data, network)) {
+      const actionDispatcherDecodedData = decodeActionDispatcherData(
+        level1Data
+      );
+
+      if (isRegisterMerchant(actionDispatcherDecodedData)) {
+        const decodedData = decodeRegisterMerchantData(
+          actionDispatcherDecodedData,
+          verifyingContract
+        );
+
+        return decodedData;
+      } else if (isPayMerchant(actionDispatcherDecodedData)) {
+        const decodedData = decodePayMerchantData(
+          actionDispatcherDecodedData,
+          verifyingContract
+        );
+
+        return decodedData;
+      } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
+        // return {
+        //   type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
+        // };
+      } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
+        // return {
+        //   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
+        // };
+      }
+    }
   }
 
   return {
-    type: TransactionConfirmationType.DEFAULT,
-    decodedData: null,
+    type: TransactionConfirmationType.GENERIC,
   };
 };
