@@ -37,5 +37,6 @@ export interface TransactionItemType {
   };
   status: TransactionStatus;
   title: string;
+  symbol: string;
   swappedFor?: any;
 }

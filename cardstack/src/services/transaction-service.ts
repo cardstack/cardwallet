@@ -37,11 +37,6 @@ import { networkTypes } from '@rainbow-me/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
-const DEFAULT_ASSET = {
-  decimals: 18,
-  symbol: 'DAI',
-};
-
 const sortByTime = (a: any, b: any) => {
   const timeA = Number(a.timestamp || a.minedAt || a.createdAt);
   const timeB = Number(b.timestamp || b.minedAt || b.createdAt);
@@ -113,7 +108,10 @@ const mapPrepaidCardTransaction = async (
       name: prepaidCardTransaction.issuingToken.name,
       balance: convertRawAmountToBalance(
         prepaidCardTransaction.issuingTokenAmount,
-        DEFAULT_ASSET
+        {
+          decimals: 18,
+          symbol: prepaidCardTransaction.issuingToken.symbol || '',
+        }
       ),
       native: convertRawAmountToNativeDisplay(
         prepaidCardTransaction.issuingTokenAmount,
@@ -181,9 +179,11 @@ const mapERC20TokenTransactions = async (
 
   let price = 0;
 
-  if (userTransaction.token.symbol) {
+  const symbol = userTransaction.token.symbol || '';
+
+  if (symbol) {
     price = await fetchHistoricalPrice(
-      userTransaction.token.symbol,
+      symbol,
       userTransaction.timestamp,
       nativeCurrency
     );
@@ -192,7 +192,10 @@ const mapERC20TokenTransactions = async (
   return {
     from: userTransaction.from || 'Unknown',
     to: userTransaction.to || 'Unknown',
-    balance: convertRawAmountToBalance(userTransaction.amount, DEFAULT_ASSET),
+    balance: convertRawAmountToBalance(userTransaction.amount, {
+      decimals: 18,
+      symbol,
+    }),
     native: convertRawAmountToNativeDisplay(
       userTransaction.amount,
       18,
@@ -201,6 +204,7 @@ const mapERC20TokenTransactions = async (
     ),
     minedAt: userTransaction.timestamp,
     hash: transactionHash,
+    symbol,
     status,
     title,
   };
