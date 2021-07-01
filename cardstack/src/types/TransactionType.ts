@@ -1,4 +1,5 @@
 import { MerchantCreationTransactionType } from './MerchantCreationTransactionType';
+import { TransactionItemType } from './TransactionItemType';
 import {
   CreatedPrepaidCardTransactionType,
   BridgedTokenTransactionType,
@@ -6,6 +7,7 @@ import {
 } from '@cardstack/types';
 
 export type TransactionType =
+  | TransactionItemType
   | BridgedTokenTransactionType
   | CreatedPrepaidCardTransactionType
   | MerchantCreationTransactionType

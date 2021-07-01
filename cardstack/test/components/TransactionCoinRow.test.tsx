@@ -26,7 +26,6 @@ describe('TransactionCoinRow', () => {
     const { getByText } = renderComponent();
 
     getByText(item.title);
-    getByText(item.name);
   });
 
   it('should render the transaction amount correctly', () => {

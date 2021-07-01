@@ -8,7 +8,6 @@ export const customIcons = {
   'question-square': require('./question-square').default,
   'refresh-2': require('./refresh-2').default,
   'prepaid-card': require('./prepaid-card').default,
-  'card-pay': require('./card-pay').default,
   info: require('./info').default,
   cardstack: require('./cardstack').default,
   circle: require('./circle').default,

@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import {
   MerchantCreationFragment,
+  TokenTransferFragment,
   PrepaidCardPaymentFragment,
 } from './../graphql/graphql-codegen';
 import { fetchHistoricalPrice } from './historical-pricing-service';
@@ -25,6 +26,8 @@ import {
   TransactionTypes,
   TransactionType,
   MerchantCreationTransactionType,
+  TransactionItemType,
+  TransactionStatus,
 } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
@@ -35,11 +38,6 @@ import { useAccountTransactions } from '@rainbow-me/hooks';
 import { networkTypes } from '@rainbow-me/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
-
-const DEFAULT_ASSET = {
-  decimals: 18,
-  symbol: 'DAI',
-};
 
 const sortByTime = (a: any, b: any) => {
   const timeA = Number(a.timestamp || a.minedAt || a.createdAt);
@@ -112,7 +110,10 @@ const mapPrepaidCardTransaction = async (
       name: prepaidCardTransaction.issuingToken.name,
       balance: convertRawAmountToBalance(
         prepaidCardTransaction.issuingTokenAmount,
-        DEFAULT_ASSET
+        {
+          decimals: 18,
+          symbol: prepaidCardTransaction.issuingToken.symbol || '',
+        }
       ),
       native: convertRawAmountToNativeDisplay(
         prepaidCardTransaction.issuingTokenAmount,
@@ -165,8 +166,79 @@ const mapMerchantCreationTransaction = (
   };
 };
 
+const getStatusAndTitle = (
+  transfer: TokenTransferFragment,
+  accountAddress: string
+): {
+  status: TransactionStatus;
+  title: string;
+} => {
+  if (transfer.to === accountAddress) {
+    return {
+      status: TransactionStatus.received,
+      title: 'Received',
+    };
+  }
+
+  return {
+    status: TransactionStatus.sent,
+    title: 'Sent',
+  };
+};
+
+const mapERC20TokenTransactions = async (
+  tokenTransfers: TokenTransferFragment[],
+  transactionHash: string,
+  accountAddress: string,
+  nativeCurrency: string
+): Promise<TransactionItemType | null> => {
+  const userTransaction = tokenTransfers.find(
+    transfer =>
+      transfer.to === accountAddress || transfer.from === accountAddress
+  );
+
+  if (!userTransaction) {
+    return null;
+  }
+
+  const { status, title } = getStatusAndTitle(userTransaction, accountAddress);
+
+  let price = 0;
+
+  const symbol = userTransaction.token.symbol || '';
+
+  if (symbol) {
+    price = await fetchHistoricalPrice(
+      symbol,
+      userTransaction.timestamp,
+      nativeCurrency
+    );
+  }
+
+  return {
+    from: userTransaction.from || 'Unknown',
+    to: userTransaction.to || 'Unknown',
+    balance: convertRawAmountToBalance(userTransaction.amount, {
+      decimals: 18,
+      symbol,
+    }),
+    native: convertRawAmountToNativeDisplay(
+      userTransaction.amount,
+      18,
+      price,
+      nativeCurrency
+    ),
+    minedAt: userTransaction.timestamp,
+    hash: transactionHash,
+    symbol,
+    status,
+    title,
+  };
+};
+
 const mapAndSortTransactions = async (
   transactions: TransactionFragment[],
+  accountAddress: string,
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
 ) => {
@@ -177,6 +249,7 @@ const mapAndSortTransactions = async (
           prepaidCardCreations,
           bridgeEvents,
           merchantCreations,
+          tokenTransfers,
           prepaidCardPayments,
         } = transaction;
 
@@ -210,6 +283,13 @@ const mapAndSortTransactions = async (
           return mapMerchantCreationTransaction(
             merchantCreations[0],
             transaction.id
+          );
+        } else if (tokenTransfers && tokenTransfers.length) {
+          return mapERC20TokenTransactions(
+            tokenTransfers as TokenTransferFragment[],
+            transaction.id,
+            accountAddress,
+            nativeCurrency
           );
         }
 
@@ -276,6 +356,7 @@ const useSokolTransactions = () => {
 
           const mappedTransactions = await mapAndSortTransactions(
             transactions,
+            accountAddress,
             nativeCurrency,
             currencyConversionRates
           );
@@ -307,7 +388,7 @@ const useSokolTransactions = () => {
     };
 
     setSectionsData();
-  }, [currencyConversionRates, data, nativeCurrency]);
+  }, [currencyConversionRates, data, nativeCurrency, accountAddress]);
 
   return {
     isLoadingTransactions: networkStatus === NetworkStatus.loading || loading,

@@ -129,6 +129,38 @@
         "symbol": "DOM"
       },
       "quantity": 0
+    },
+    {
+      "asset": {
+        "asset_code": "0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1",
+        "coingecko_id": "dai",
+        "decimals": 18,
+        "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png",
+        "name": "DAI.CPXD",
+        "price": {
+          "changed_at": 0,
+          "relative_change_24h": 0,
+          "value": 0
+        },
+        "symbol": "DAI"
+      },
+      "quantity": 0
+    },
+    {
+      "asset": {
+        "asset_code": "0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee",
+        "coingecko_id": "cardstack",
+        "decimals": 18,
+        "icon_url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x954b890704693af242613edEf1B603825afcD708/logo.png",
+        "name": "CARD.CPXD",
+        "price": {
+          "changed_at": 0,
+          "relative_change_24h": 0,
+          "value": 0
+        },
+        "symbol": "CARD"
+      },
+      "quantity": 0
     }
   ]
 }
