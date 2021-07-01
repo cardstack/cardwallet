@@ -17,6 +17,21 @@ fragment PrepaidCardCreation on PrepaidCardCreation {
   }
 }
 
+fragment PrepaidCardPayment on PrepaidCardPayment {
+  id
+  timestamp
+  spendAmount
+  issuingTokenAmount
+  issuingToken {
+    id
+    symbol
+    name
+  }
+  prepaidCard {
+    id
+  }
+}
+
 fragment BridgeEvent on BridgeEvent {
   amount
   token {
@@ -76,7 +91,7 @@ fragment Transaction on Transaction {
     id
   }
   prepaidCardPayments {
-    id
+    ...PrepaidCardPayment
   }
   spendAccumulations {
     id
