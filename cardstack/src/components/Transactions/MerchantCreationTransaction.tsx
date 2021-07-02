@@ -69,7 +69,7 @@ const Bottom = () => {
         paddingBottom={5}
       >
         <Container flexDirection="row" alignItems="center">
-          <Icon name="meh" />
+          <Icon name="user" />
           <Container marginLeft={4} flexDirection="row">
             <Icon name="plus" size={16} color="blueText" />
             <Text variant="subText" weight="bold" marginLeft={1}>
