@@ -90,7 +90,7 @@ const Header = () => {
           </Touchable>
           <Container alignItems="center">
             <Text color="white" weight="bold">
-              Mandello
+              Merchant Name
             </Text>
             <Container flexDirection="row" alignItems="center">
               <NetworkBadge marginRight={2} />
@@ -114,7 +114,7 @@ const Header = () => {
         justifyContent="space-between"
       >
         <Text color="white" size="medium">
-          Merchant account
+          Merchant Name
         </Text>
         <Container>
           <Touchable onPress={onPressInformation}>
@@ -133,11 +133,10 @@ const MerchantInfo = () => (
     alignItems="center"
     paddingVertical={5}
   >
-    <Icon name="mandello" size={80} />
+    <Icon name="user" size={80} />
     <Text weight="extraBold" size="medium">
-      Mandello
+      Merchant Name
     </Text>
-    <Text variant="subText">Merchant account</Text>
     <Container flexDirection="row" marginTop={2}>
       <Text weight="extraBold" size="xs">
         1{' '}
