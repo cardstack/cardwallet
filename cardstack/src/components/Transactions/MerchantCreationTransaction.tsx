@@ -48,7 +48,7 @@ export const MerchantCreationTransaction = ({
           borderColor="buttonPrimaryBorder"
           width="100%"
         >
-          <SafeHeader address={item.address} rightText="MANDELLO" small />
+          <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
           <Bottom />
         </Container>
       </Touchable>
@@ -69,7 +69,7 @@ const Bottom = () => {
         paddingBottom={5}
       >
         <Container flexDirection="row" alignItems="center">
-          <Icon name="mandello" />
+          <Icon name="meh" />
           <Container marginLeft={4} flexDirection="row">
             <Icon name="plus" size={16} color="blueText" />
             <Text variant="subText" weight="bold" marginLeft={1}>
@@ -78,8 +78,7 @@ const Bottom = () => {
           </Container>
         </Container>
         <Container alignItems="flex-end">
-          <Text weight="extraBold">Mandello</Text>
-          <Text variant="subText">Merchant Account</Text>
+          <Text weight="extraBold">Merchant Name</Text>
         </Container>
       </Container>
     </Container>
