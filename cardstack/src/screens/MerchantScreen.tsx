@@ -114,7 +114,7 @@ const Header = () => {
         justifyContent="space-between"
       >
         <Text color="white" size="medium">
-          Merchant Name
+          Merchant account
         </Text>
         <Container>
           <Touchable onPress={onPressInformation}>
