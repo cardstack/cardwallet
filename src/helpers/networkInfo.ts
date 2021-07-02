@@ -8,7 +8,6 @@ export const networkInfo = {
     name: 'xDai Chain',
     layer: 2,
     value: networkTypes.xdai,
-    default: true,
     isTestnet: false,
   },
   [networkTypes.sokol]: {
@@ -18,7 +17,6 @@ export const networkInfo = {
     name: 'Sokol',
     layer: 2,
     value: networkTypes.sokol,
-    default: false,
     isTestnet: true,
   },
   [`${networkTypes.mainnet}`]: {
@@ -28,7 +26,6 @@ export const networkInfo = {
     name: 'Ethereum Mainnet',
     layer: 1,
     value: networkTypes.mainnet,
-    default: false,
     isTestnet: false,
   },
   [`${networkTypes.kovan}`]: {
@@ -38,7 +35,6 @@ export const networkInfo = {
     name: 'Kovan',
     layer: 1,
     value: networkTypes.kovan,
-    default: false,
     isTestnet: true,
   },
 };

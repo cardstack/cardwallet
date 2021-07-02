@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Touchable, Container, Text, Icon } from '../.';
 import { IconProps } from '../Icon';
 
@@ -26,6 +26,10 @@ export const Checkbox = ({
       onPress();
     }
   }, [onPress, selected]);
+
+  useEffect(() => {
+    setSelected(isSelected);
+  }, [isSelected]);
 
   return (
     <Container flexDirection="row">
