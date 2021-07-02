@@ -79,6 +79,7 @@ const Bottom = () => {
         </Container>
         <Container alignItems="flex-end">
           <Text weight="extraBold">Merchant Name</Text>
+          <Text variant="subText">Merchant Account</Text>
         </Container>
       </Container>
     </Container>
