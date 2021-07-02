@@ -4,7 +4,7 @@ import { IconProps, Text, Container } from '../.';
 import { RadioListItem } from './RadioListItem';
 
 export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
-  const selectedItem = useCallback(() => {
+  const setSelectedItem = useCallback(() => {
     const findItemByType = (arr: Array<RadioItemProps>, type: string) => {
       return arr
         .map((section: RadioItemProps) => {
@@ -17,17 +17,15 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
         .reduce((acc, val) => acc.concat(val), []);
     };
 
-    const selectedItems = findItemByType(sections, 'selected')[0];
-
-    const defaultItem = findItemByType(sections, 'default')[0];
+    const selectedItem = findItemByType(sections, 'selected')[0];
 
     return {
-      index: selectedItems?.key || defaultItem?.key,
-      value: selectedItems?.value || defaultItem?.value,
+      index: selectedItem?.key,
+      value: selectedItem?.value,
     };
   }, [sections]);
 
-  const [selected, setSelected] = useState<number>(selectedItem()?.index);
+  const [selected, setSelected] = useState<number>(setSelectedItem()?.index);
 
   const handleChange = ({
     value,
@@ -46,7 +44,7 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
   };
 
   useEffect(() => {
-    const { value, index } = selectedItem();
+    const { value, index } = setSelectedItem();
     handleChange({ value, index });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sections]);

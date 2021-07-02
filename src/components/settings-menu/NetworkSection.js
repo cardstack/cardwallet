@@ -11,6 +11,7 @@ import {
   useResetAccountState,
 } from '../../hooks';
 import {
+  INITIAL_STATE,
   settingsUpdateNetwork,
   toggleShowTestnets,
 } from '../../redux/settings';
@@ -25,6 +26,8 @@ const NetworkSection = () => {
   const loadAccountData = useLoadAccountData();
   const initializeAccountData = useInitializeAccountData();
   const dispatch = useDispatch();
+  const networkSelected = networkInfo[network];
+  const defaultNetwork = INITIAL_STATE.network;
 
   //transform data for sectionList
   const DATA = networks
@@ -41,7 +44,7 @@ const NetworkSection = () => {
               label: curr.name,
               value: curr.value,
               selected: toLower(network) === toLower(curr.value),
-              default: curr.default,
+              default: curr.value === defaultNetwork,
             },
           ],
         } || {};
@@ -50,6 +53,13 @@ const NetworkSection = () => {
     }, [])
     .flat()
     .sort((a, b) => a.layer < b.layer);
+
+  useEffect(() => {
+    if (networkSelected.isTestnet !== showTestnets) {
+      dispatch(toggleShowTestnets(networkSelected.isTestnet));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onNetworkChange = useCallback(
     async network => {
@@ -73,7 +83,12 @@ const NetworkSection = () => {
         <Checkbox
           isSelected={showTestnets}
           label="Show testnets"
-          onPress={() => dispatch(toggleShowTestnets())}
+          onPress={() => {
+            if (networkSelected.isTestnet && showTestnets) {
+              onNetworkChange(defaultNetwork);
+            }
+            dispatch(toggleShowTestnets());
+          }}
         />
       </Container>
       <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
