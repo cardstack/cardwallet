@@ -57,10 +57,10 @@ const MerchantInfo = () => (
       paddingHorizontal={5}
       paddingBottom={10}
     >
-      <Icon name="mandello" />
+      <Icon name="user" />
       <Container flexDirection="column" marginLeft={4} justifyContent="center">
-        <Text weight="bold">Mandello</Text>
-        <Text variant="subText">Merchant account</Text>
+        <Text weight="bold">Merchant Name</Text>
+        <Text variant="subText">Merchant Account</Text>
       </Container>
     </Container>
   </Container>
