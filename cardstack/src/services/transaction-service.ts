@@ -1,7 +1,13 @@
-import { NetworkStatus } from '@apollo/client';
+import {
+  NetworkStatus,
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client';
 import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
+  getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import { groupBy } from 'lodash';
 import { useState, useEffect } from 'react';
@@ -12,8 +18,8 @@ import {
   PrepaidCardPaymentFragment,
 } from './../graphql/graphql-codegen';
 import { fetchHistoricalPrice } from './historical-pricing-service';
+
 import {
-  sokolClient,
   BridgeEventFragment,
   PrepaidCardCreationFragment,
   TransactionFragment,
@@ -320,6 +326,21 @@ const useSokolTransactions = () => {
     ]
   );
 
+  const isSokol = network === networkTypes.sokol;
+
+  const subgraphUrl = isSokol
+    ? getConstantByNetwork('subgraphURL', network)
+    : '';
+
+  console.log({ subgraphUrl });
+
+  const sokolClient = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new HttpLink({
+      uri: subgraphUrl,
+    }),
+  });
+
   const {
     data,
     error,
@@ -328,11 +349,13 @@ const useSokolTransactions = () => {
   } = useGetTransactionHistoryDataQuery({
     client: sokolClient,
     notifyOnNetworkStatusChange: true,
-    skip: !accountAddress || network !== networkTypes.sokol,
+    skip: !accountAddress || !isSokol,
     variables: {
       address: accountAddress,
     },
   });
+
+  console.log({ data: JSON.stringify(data, null, 2), error });
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);

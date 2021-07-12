@@ -39,7 +39,7 @@ export const getNativeBalanceFromSpend = (
 };
 
 export const convertSpendForBalanceDisplay = (
-  accumulatedSpendValue: string,
+  accumulatedSpendValue: string | number,
   nativeCurrency: string,
   currencyConversionRates: {
     [key: string]: number;
@@ -52,7 +52,7 @@ export const convertSpendForBalanceDisplay = (
     currencyConversionRates
   );
 
-  const spendWithCommas = accumulatedSpendValue.replace(
+  const spendWithCommas = String(accumulatedSpendValue).replace(
     /\B(?=(\d{3})+(?!\d))/g,
     ','
   );
