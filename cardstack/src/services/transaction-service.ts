@@ -14,7 +14,7 @@ import {
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
-  BridgeEventFragment,
+  BridgeToLayer2EventFragment,
   PrepaidCardCreationFragment,
   TransactionFragment,
   useGetTransactionHistoryDataQuery,
@@ -47,7 +47,7 @@ const sortByTime = (a: any, b: any) => {
 };
 
 const mapBridgeEventTransaction = (
-  transaction: BridgeEventFragment,
+  transaction: BridgeToLayer2EventFragment,
   transactionHash: string,
   nativeCurrency: string
 ): BridgedTokenTransactionType => {
@@ -247,7 +247,7 @@ const mapAndSortTransactions = async (
       async (transaction: TransactionFragment) => {
         const {
           prepaidCardCreations,
-          bridgeEvents,
+          bridgeToLayer2Events,
           merchantCreations,
           tokenTransfers,
           prepaidCardPayments,
@@ -271,9 +271,9 @@ const mapAndSortTransactions = async (
           );
 
           return mappedPrepaidCardPayments;
-        } else if (bridgeEvents[0]) {
+        } else if (bridgeToLayer2Events[0]) {
           const mappedBridgeEvent = mapBridgeEventTransaction(
-            bridgeEvents[0],
+            bridgeToLayer2Events[0],
             transaction.id,
             nativeCurrency
           );

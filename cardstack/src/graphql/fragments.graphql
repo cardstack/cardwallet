@@ -32,7 +32,17 @@ fragment PrepaidCardPayment on PrepaidCardPayment {
   }
 }
 
-fragment BridgeEvent on BridgeEvent {
+fragment BridgeToLayer1Event on BridgeToLayer1Event {
+  amount
+  token {
+    id
+    symbol
+    name
+  }
+  timestamp
+}
+
+fragment BridgeToLayer2Event on BridgeToLayer2Event {
   amount
   token {
     id
@@ -69,8 +79,11 @@ fragment TokenTransfer on TokenTransfer {
 fragment Transaction on Transaction {
   id
   timestamp
-  bridgeEvents {
-    ...BridgeEvent
+  bridgeToLayer1Events {
+    ...BridgeToLayer1Event
+  }
+  bridgeToLayer2Events {
+    ...BridgeToLayer2Event
   }
   supplierInfoDIDUpdates {
     id
