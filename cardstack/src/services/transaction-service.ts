@@ -4,17 +4,17 @@ import {
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
 import { groupBy } from 'lodash';
-import { useState, useEffect } from 'react';
-import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import { useEffect, useState } from 'react';
+import { getApolloClient } from '../graphql/apollo-client';
 import {
   MerchantCreationFragment,
-  TokenTransferFragment,
   PrepaidCardPaymentFragment,
-} from './../graphql/graphql-codegen';
+  TokenTransferFragment,
+} from '../graphql/graphql-codegen';
+import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
-  sokolClient,
-  BridgeEventFragment,
+  BridgeToLayer2EventFragment,
   PrepaidCardCreationFragment,
   TransactionFragment,
   useGetTransactionHistoryDataQuery,
@@ -22,12 +22,12 @@ import {
 import {
   BridgedTokenTransactionType,
   CreatedPrepaidCardTransactionType,
-  PrepaidCardPaymentTransactionType,
-  TransactionTypes,
-  TransactionType,
   MerchantCreationTransactionType,
+  PrepaidCardPaymentTransactionType,
   TransactionItemType,
   TransactionStatus,
+  TransactionType,
+  TransactionTypes,
 } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
@@ -47,7 +47,7 @@ const sortByTime = (a: any, b: any) => {
 };
 
 const mapBridgeEventTransaction = (
-  transaction: BridgeEventFragment,
+  transaction: BridgeToLayer2EventFragment,
   transactionHash: string,
   nativeCurrency: string
 ): BridgedTokenTransactionType => {
@@ -247,7 +247,7 @@ const mapAndSortTransactions = async (
       async (transaction: TransactionFragment) => {
         const {
           prepaidCardCreations,
-          bridgeEvents,
+          bridgeToLayer2Events,
           merchantCreations,
           tokenTransfers,
           prepaidCardPayments,
@@ -271,9 +271,9 @@ const mapAndSortTransactions = async (
           );
 
           return mappedPrepaidCardPayments;
-        } else if (bridgeEvents[0]) {
+        } else if (bridgeToLayer2Events[0]) {
           const mappedBridgeEvent = mapBridgeEventTransaction(
-            bridgeEvents[0],
+            bridgeToLayer2Events[0],
             transaction.id,
             nativeCurrency
           );
@@ -320,13 +320,15 @@ const useSokolTransactions = () => {
     ]
   );
 
+  const client = getApolloClient(network);
+
   const {
     data,
     error,
     refetch,
     networkStatus,
   } = useGetTransactionHistoryDataQuery({
-    client: sokolClient,
+    client,
     notifyOnNetworkStatusChange: true,
     skip: !accountAddress || network !== networkTypes.sokol,
     variables: {
