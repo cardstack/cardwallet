@@ -54,7 +54,7 @@ export default function SendAssetFormField({
         position="absolute"
         textAlign="right"
       >
-        {label.length > labelMaxLength
+        {label?.length > labelMaxLength
           ? label.substring(0, labelMaxLength)
           : label}
       </Text>
