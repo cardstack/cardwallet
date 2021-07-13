@@ -1,24 +1,18 @@
-import {
-  NetworkStatus,
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-} from '@apollo/client';
+import { NetworkStatus } from '@apollo/client';
 import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
-  getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import { groupBy } from 'lodash';
-import { useState, useEffect } from 'react';
-import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import { useEffect, useState } from 'react';
+import { getApolloClient } from '../graphql/apollo-client';
 import {
   MerchantCreationFragment,
-  TokenTransferFragment,
   PrepaidCardPaymentFragment,
-} from './../graphql/graphql-codegen';
+  TokenTransferFragment,
+} from '../graphql/graphql-codegen';
+import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import { fetchHistoricalPrice } from './historical-pricing-service';
-
 import {
   BridgeEventFragment,
   PrepaidCardCreationFragment,
@@ -28,12 +22,12 @@ import {
 import {
   BridgedTokenTransactionType,
   CreatedPrepaidCardTransactionType,
-  PrepaidCardPaymentTransactionType,
-  TransactionTypes,
-  TransactionType,
   MerchantCreationTransactionType,
+  PrepaidCardPaymentTransactionType,
   TransactionItemType,
   TransactionStatus,
+  TransactionType,
+  TransactionTypes,
 } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
@@ -326,20 +320,7 @@ const useSokolTransactions = () => {
     ]
   );
 
-  const isSokol = network === networkTypes.sokol;
-
-  const subgraphUrl = isSokol
-    ? getConstantByNetwork('subgraphURL', network)
-    : '';
-
-  console.log({ subgraphUrl });
-
-  const sokolClient = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: new HttpLink({
-      uri: subgraphUrl,
-    }),
-  });
+  const client = getApolloClient(network);
 
   const {
     data,
@@ -347,15 +328,13 @@ const useSokolTransactions = () => {
     refetch,
     networkStatus,
   } = useGetTransactionHistoryDataQuery({
-    client: sokolClient,
+    client,
     notifyOnNetworkStatusChange: true,
-    skip: !accountAddress || !isSokol,
+    skip: !accountAddress || network !== networkTypes.sokol,
     variables: {
       address: accountAddress,
     },
   });
-
-  console.log({ data: JSON.stringify(data, null, 2), error });
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);
