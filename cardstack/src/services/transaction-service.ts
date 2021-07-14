@@ -9,14 +9,12 @@ import { getApolloClient } from '../graphql/apollo-client';
 import {
   MerchantCreationFragment,
   PrepaidCardPaymentFragment,
-  TokenTransferFragment,
   PrepaidCardSplitFragment,
   PrepaidCardTransferFragment,
-  PrepaidCardTransferFragment,
+  TokenTransferFragment,
 } from '../graphql/graphql-codegen';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
-import { PrepaidCardTransferTransactionType } from './../types/transaction-types';
-
+import { PrepaidCardTransferTransactionType } from '../types/transaction-types';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   BridgeToLayer2EventFragment,
@@ -26,14 +24,14 @@ import {
 } from '@cardstack/graphql';
 import {
   BridgedTokenTransactionType,
-  PrepaidCardCreatedTransactionType,
-  MerchantCreationTransactionType,
-  PrepaidCardPaymentTransactionType,
   ERC20TransactionType,
+  MerchantCreationTransactionType,
+  PrepaidCardCreatedTransactionType,
+  PrepaidCardPaymentTransactionType,
+  PrepaidCardSplitTransactionType,
   TransactionStatus,
   TransactionType,
   TransactionTypes,
-  PrepaidCardSplitTransactionType,
 } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,

@@ -1,6 +1,10 @@
 import Chance from 'chance';
 
-import { ERC20TransactionType, TransactionStatus } from '../../src/types';
+import {
+  ERC20TransactionType,
+  TransactionStatus,
+  TransactionTypes,
+} from '../../src/types';
 
 const chance = new Chance();
 
@@ -22,5 +26,6 @@ export const createRandomTransactionItem = (
   status: TransactionStatus.sent,
   symbol: 'ETH',
   title: 'Sent',
+  type: TransactionTypes.ERC_20,
   ...item,
 });
