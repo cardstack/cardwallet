@@ -205,14 +205,14 @@ export default function AlreadyBackedUpView() {
             {(walletStatus === WalletBackupStatus.CLOUD_BACKUP &&
               `If you lose this device, you can recover your encrypted account backup from ${cloudPlatform}.`) ||
               (walletStatus === WalletBackupStatus.MANUAL_BACKUP &&
-                `If you lose this device, you can restore your account with the recovery phrase you saved.`) ||
+                `If you lose this device, you can restore your account with the secret recovery phrase you saved.`) ||
               (walletStatus === WalletBackupStatus.IMPORTED &&
                 `If you lose this device, you can restore your account with the key you originally imported.`)}
           </Text>
         </Centered>
         <Container marginTop={8} width="100%">
           <Button onPress={handleViewRecoveryPhrase} width="100%">
-            View Recovery Phrase
+            View Secret Recovery Phrase
           </Button>
         </Container>
       </Content>
