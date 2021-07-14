@@ -14,12 +14,14 @@ export const TransactionItem = (props: TransactionItemProps) => {
   if (item.type === TransactionTypes.BRIDGED) {
     return <BridgedTokenTransaction {...props} />;
   } else if (
-    item.type === TransactionTypes.CREATED_PREPAID_CARD ||
+    item.type === TransactionTypes.PREPAID_CARD_CREATED ||
     item.type === TransactionTypes.PREPAID_CARD_PAYMENT
   ) {
     return <PrepaidCardTransaction {...props} />;
   } else if (item.type === TransactionTypes.MERCHANT_CREATION) {
     return <MerchantCreationTransaction {...props} />;
+  } else if (item.type && item.type !== TransactionTypes.ERC_20) {
+    return null;
   }
 
   return <TransactionCoinRow {...props} />;

@@ -4404,6 +4404,30 @@ export type TokenTransferFragment = (
   ) }
 );
 
+export type PrepaidCardSplitFragment = (
+  { __typename?: 'PrepaidCardSplit' }
+  & Pick<PrepaidCardSplit, 'id' | 'timestamp' | 'faceValues' | 'issuingTokenAmounts'>
+  & { prepaidCard: (
+    { __typename?: 'PrepaidCard' }
+    & Pick<PrepaidCard, 'id'>
+  ) }
+);
+
+export type PrepaidCardTransferFragment = (
+  { __typename?: 'PrepaidCardTransfer' }
+  & Pick<PrepaidCardTransfer, 'id' | 'timestamp'>
+  & { prepaidCard: (
+    { __typename?: 'PrepaidCard' }
+    & Pick<PrepaidCard, 'id'>
+  ), from: (
+    { __typename?: 'Account' }
+    & Pick<Account, 'id'>
+  ), to: (
+    { __typename?: 'Account' }
+    & Pick<Account, 'id'>
+  ) }
+);
+
 export type TransactionFragment = (
   { __typename?: 'Transaction' }
   & Pick<Transaction, 'id' | 'timestamp'>
@@ -4421,7 +4445,10 @@ export type TransactionFragment = (
     & PrepaidCardCreationFragment
   )>>, prepaidCardTransfers: Array<Maybe<(
     { __typename?: 'PrepaidCardTransfer' }
-    & Pick<PrepaidCardTransfer, 'id'>
+    & PrepaidCardTransferFragment
+  )>>, prepaidCardSplits: Array<Maybe<(
+    { __typename?: 'PrepaidCardSplit' }
+    & PrepaidCardSplitFragment
   )>>, tokenTransfers: Array<Maybe<(
     { __typename?: 'TokenTransfer' }
     & TokenTransferFragment
@@ -4517,6 +4544,32 @@ export const PrepaidCardCreationFragmentDoc = gql`
   }
 }
     `;
+export const PrepaidCardTransferFragmentDoc = gql`
+    fragment PrepaidCardTransfer on PrepaidCardTransfer {
+  id
+  timestamp
+  prepaidCard {
+    id
+  }
+  from {
+    id
+  }
+  to {
+    id
+  }
+}
+    `;
+export const PrepaidCardSplitFragmentDoc = gql`
+    fragment PrepaidCardSplit on PrepaidCardSplit {
+  id
+  timestamp
+  prepaidCard {
+    id
+  }
+  faceValues
+  issuingTokenAmounts
+}
+    `;
 export const TokenTransferFragmentDoc = gql`
     fragment TokenTransfer on TokenTransfer {
   id
@@ -4573,7 +4626,10 @@ export const TransactionFragmentDoc = gql`
     ...PrepaidCardCreation
   }
   prepaidCardTransfers {
-    id
+    ...PrepaidCardTransfer
+  }
+  prepaidCardSplits {
+    ...PrepaidCardSplit
   }
   tokenTransfers {
     ...TokenTransfer
@@ -4606,6 +4662,8 @@ export const TransactionFragmentDoc = gql`
     ${BridgeToLayer1EventFragmentDoc}
 ${BridgeToLayer2EventFragmentDoc}
 ${PrepaidCardCreationFragmentDoc}
+${PrepaidCardTransferFragmentDoc}
+${PrepaidCardSplitFragmentDoc}
 ${TokenTransferFragmentDoc}
 ${MerchantCreationFragmentDoc}
 ${PrepaidCardPaymentFragmentDoc}`;

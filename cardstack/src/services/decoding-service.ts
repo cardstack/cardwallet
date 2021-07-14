@@ -5,7 +5,7 @@ import {
   ClaimRevenueDecodedData,
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
-} from '../types/decoded-data-types';
+} from '../types/transaction-confirmation-types';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   IssuePrepaidCardDecodedData,

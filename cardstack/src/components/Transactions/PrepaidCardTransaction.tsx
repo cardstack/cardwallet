@@ -14,8 +14,9 @@ import {
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import {
-  CreatedPrepaidCardTransactionType,
+  PrepaidCardCreatedTransactionType,
   PrepaidCardPaymentTransactionType,
+  PrepaidCardTransactionTypes,
   TransactionTypes,
 } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
@@ -27,17 +28,20 @@ type TransactionStatus = {
 };
 
 const getTransactionStatus = (
-  type:
-    | TransactionTypes.CREATED_PREPAID_CARD
-    | TransactionTypes.PREPAID_CARD_PAYMENT
+  type: PrepaidCardTransactionTypes
 ): TransactionStatus => {
   const status = {
-    [TransactionTypes.CREATED_PREPAID_CARD]: {
+    [TransactionTypes.PREPAID_CARD_CREATED]: {
       operator: '+',
       status: 'Loaded',
       iconName: 'arrow-down',
     },
     [TransactionTypes.PREPAID_CARD_PAYMENT]: {
+      operator: '-',
+      status: 'Paid',
+      iconName: 'arrow-up',
+    },
+    [TransactionTypes.PREPAID_CARD_SPLIT]: {
       operator: '-',
       status: 'Paid',
       iconName: 'arrow-up',
@@ -50,7 +54,7 @@ const getTransactionStatus = (
 export const PrepaidCardTransaction = ({
   item,
 }: {
-  item: CreatedPrepaidCardTransactionType | PrepaidCardPaymentTransactionType;
+  item: PrepaidCardCreatedTransactionType | PrepaidCardPaymentTransactionType;
 }) => {
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
@@ -88,7 +92,7 @@ export const PrepaidCardTransaction = ({
           {item.type === TransactionTypes.PREPAID_CARD_PAYMENT && (
             <PaidPrepaidCard transaction={item} status={transactionStatus} />
           )}
-          {item.type === TransactionTypes.CREATED_PREPAID_CARD && (
+          {item.type === TransactionTypes.PREPAID_CARD_CREATED && (
             <CreatedPrepaidCard transaction={item} status={transactionStatus} />
           )}
         </Container>
@@ -99,7 +103,7 @@ export const PrepaidCardTransaction = ({
 
 const Top = (
   transaction:
-    | CreatedPrepaidCardTransactionType
+    | PrepaidCardCreatedTransactionType
     | PrepaidCardPaymentTransactionType
 ) => (
   <Container
@@ -125,7 +129,7 @@ const Top = (
 
 const Bottom = (
   transaction: (
-    | CreatedPrepaidCardTransactionType
+    | PrepaidCardCreatedTransactionType
     | PrepaidCardPaymentTransactionType
   ) &
     TransactionStatus
@@ -180,7 +184,7 @@ const SVG = () => {
   );
 };
 
-const FundedBy = (transaction: CreatedPrepaidCardTransactionType) => {
+const FundedBy = (transaction: PrepaidCardCreatedTransactionType) => {
   return (
     <Container
       paddingHorizontal={5}
@@ -228,7 +232,7 @@ const CreatedPrepaidCard = ({
   transaction,
   status,
 }: {
-  transaction: CreatedPrepaidCardTransactionType;
+  transaction: PrepaidCardCreatedTransactionType;
   status: TransactionStatus;
 }) => {
   return (
