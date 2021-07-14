@@ -122,14 +122,6 @@ export interface ERC20TransactionType {
   type: TransactionTypes.ERC_20;
 }
 
-export const prepaidCardTransactionTypes = [
-  TransactionTypes.PREPAID_CARD_CREATED,
-  TransactionTypes.PREPAID_CARD_PAYMENT,
-  TransactionTypes.PREPAID_CARD_SPLIT,
-] as const;
-
-export type PrepaidCardTransactionTypes = typeof prepaidCardTransactionTypes[number];
-
 export type TransactionType =
   | ERC20TransactionType
   | BridgedTokenTransactionType
