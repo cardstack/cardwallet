@@ -6,6 +6,7 @@ import {
   getConstantByNetwork,
   greaterThan,
   handleSignificantDecimals,
+  HttpProvider,
   multiply,
 } from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
@@ -37,8 +38,8 @@ export let web3Provider = new JsonRpcProvider(
 /**
  * @desc web3 http instance - to be used with web3 contracts
  */
-export let web3ProviderSdk = new Web3.providers.WebsocketProvider(
-  getConstantByNetwork('rpcWssNode', networkTypes.mainnet)
+export let web3ProviderSdk = new HttpProvider(
+  getConstantByNetwork('rpcNode', networkTypes.mainnet)
 );
 
 /**
@@ -56,9 +57,9 @@ export const web3SetHttpProvider = async network => {
       );
     } else {
       try {
-        web3ProviderSdk = new Web3.providers.WebsocketProvider(
-          getConstantByNetwork('rpcWssNode', networkTypes.mainnet)
-        );
+        const wssNode = getConstantByNetwork('rpcWssNode', network);
+
+        web3ProviderSdk = new Web3.providers.WebsocketProvider(wssNode);
 
         web3Provider = new Web3Provider(web3ProviderSdk);
       } catch (error) {
