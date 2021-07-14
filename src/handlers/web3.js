@@ -17,6 +17,7 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
+import Web3 from 'web3';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
@@ -49,13 +50,18 @@ export const web3SetHttpProvider = async network => {
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
-    const networkUrl = getConstantByNetwork('rpcNode', network);
-
     if (isLayer1(network)) {
-      web3Provider = new JsonRpcProvider(networkUrl, network);
+      web3Provider = new JsonRpcProvider(
+        getConstantByNetwork('rpcNode', network),
+        network
+      );
     } else {
       try {
-        web3ProviderSdk = new HttpProvider(networkUrl);
+        // use a websocket in layer 2 rather than http provider
+        // hopefully helps resolve the PollingBlockTracker error we were seeing
+        web3ProviderSdk = new Web3.providers.WebsocketProvider(
+          getConstantByNetwork('rpcWssNode', network)
+        );
 
         web3Provider = new Web3Provider(web3ProviderSdk);
       } catch (error) {
