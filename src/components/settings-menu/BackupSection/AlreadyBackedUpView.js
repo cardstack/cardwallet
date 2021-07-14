@@ -171,7 +171,7 @@ export default function AlreadyBackedUpView() {
 
   const handleViewRecoveryPhrase = useCallback(() => {
     navigate('ShowSecretView', {
-      title: `Recovery ${
+      title: `Secret Recovery ${
         WalletTypes.mnemonic === wallets[walletId].type ? 'Phrase' : 'Key'
       }`,
       walletId,
