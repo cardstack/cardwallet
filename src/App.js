@@ -144,23 +144,25 @@ class App extends Component {
       }
     );
 
-    // this.branchListener = branch.subscribe(({ error, params, uri }) => {
-    //   if (error) {
-    //     logger.error('Error from Branch: ' + error);
-    //   }
+    /* cardstack isn't using this right now, leftover from Rainbow and causing bugs
+     this.branchListener = branch.subscribe(({ error, params, uri }) => {
+       if (error) {
+         logger.error('Error from Branch: ' + error);
+       }
 
-    //   if (params['+non_branch_link']) {
-    //     const nonBranchUrl = params['+non_branch_link'];
-    //     handleDeepLink(nonBranchUrl);
-    //     return;
-    //   } else if (!params['+clicked_branch_link']) {
-    //     // Indicates initialization success and some other conditions.
-    //     // No link was opened.
-    //     return;
-    //   } else if (uri) {
-    //     handleDeepLink(uri);
-    //   }
-    // });
+       if (params['+non_branch_link']) {
+         const nonBranchUrl = params['+non_branch_link'];
+         handleDeepLink(nonBranchUrl);
+         return;
+       } else if (!params['+clicked_branch_link']) {
+          Indicates initialization success and some other conditions.
+          No link was opened.
+         return;
+       } else if (uri) {
+         handleDeepLink(uri);
+       }
+     });
+    */
 
     // Walletconnect uses direct deeplinks
     if (android) {

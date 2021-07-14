@@ -57,6 +57,8 @@ export const web3SetHttpProvider = async network => {
       );
     } else {
       try {
+        // use a websocket in layer 2 rather than http provider
+        // hopefully helps resolve the PollingBlockTracker error we were seeing
         web3ProviderSdk = new Web3.providers.WebsocketProvider(
           getConstantByNetwork('rpcWssNode', network)
         );
