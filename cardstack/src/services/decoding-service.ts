@@ -5,7 +5,9 @@ import {
   ClaimRevenueDecodedData,
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
+  SplitPrepaidCardDecodedData,
 } from '../types/decoded-data-types';
+
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   IssuePrepaidCardDecodedData,
@@ -142,6 +144,32 @@ const decodePayMerchantData = (
   };
 };
 
+const decodeSplitPrepaidCardData = async (
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string
+): Promise<SplitPrepaidCardDecodedData> => {
+  const { issuingTokenAmounts, spendAmounts, customizationDID } = decode<{
+    issuingTokenAmounts: string[];
+    spendAmounts: string[];
+    customizationDID: string;
+  }>(
+    [
+      { type: 'uint256[]', name: 'issuingTokenAmounts' },
+      { type: 'uint256[]', name: 'spendAmounts' },
+      { type: 'string', name: 'customizationDID' },
+    ],
+    actionDispatcherData.actionData
+  );
+
+  return {
+    customizationDID,
+    issuingTokenAmounts,
+    spendAmounts,
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
+  };
+};
+
 const decodeClaimRevenueData = async (
   messageData: string,
   verifyingContract: string,
@@ -168,8 +196,6 @@ const decodeClaimRevenueData = async (
     currentTimestamp,
     nativeCurrency
   );
-
-  console.log({ priceType: typeof price, price });
 
   return {
     amount,
@@ -268,9 +294,12 @@ export const decodeData = async (
 
         return decodedData;
       } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
-        // return {
-        //   type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
-        // };
+        const decodedData = decodeSplitPrepaidCardData(
+          actionDispatcherDecodedData,
+          verifyingContract
+        );
+
+        return decodedData;
       } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
         // return {
         //   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,

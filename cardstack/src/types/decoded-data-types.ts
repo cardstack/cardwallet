@@ -48,6 +48,14 @@ export interface ClaimRevenueDecodedData {
   type: TransactionConfirmationType.CLAIM_REVENUE;
 }
 
+export interface SplitPrepaidCardDecodedData {
+  issuingTokenAmounts: string[];
+  spendAmounts: string[];
+  prepaidCard: string;
+  customizationDID: string;
+  type: TransactionConfirmationType.SPLIT_PREPAID_CARD;
+}
+
 export type ActionDispatcherActionName =
   | 'registerMerchant'
   | 'payMerchant'
@@ -65,5 +73,6 @@ export type TransactionConfirmationData =
   | GenericDisplayData
   | IssuePrepaidCardDecodedData
   | RegisterMerchantDecodedData
+  | SplitPrepaidCardDecodedData
   | ClaimRevenueDecodedData
   | PayMerchantDecodedData;
