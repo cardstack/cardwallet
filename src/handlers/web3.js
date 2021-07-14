@@ -6,6 +6,7 @@ import {
   getConstantByNetwork,
   greaterThan,
   handleSignificantDecimals,
+  HttpProvider,
   multiply,
 } from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
@@ -16,7 +17,6 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
-import Web3 from 'web3';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
@@ -37,8 +37,8 @@ export let web3Provider = new JsonRpcProvider(
 /**
  * @desc web3 http instance - to be used with web3 contracts
  */
-export let web3ProviderSdk = new Web3.providers.WebsocketProvider(
-  getConstantByNetwork('rpcWssNode', networkTypes.mainnet)
+export let web3ProviderSdk = new HttpProvider(
+  getConstantByNetwork('rpcNode', networkTypes.mainnet)
 );
 
 /**
@@ -49,16 +49,13 @@ export const web3SetHttpProvider = async network => {
   if (network.startsWith('http://')) {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
+    const networkUrl = getConstantByNetwork('rpcNode', network);
+
     if (isLayer1(network)) {
-      web3Provider = new JsonRpcProvider(
-        getConstantByNetwork('rpcNode', network),
-        network
-      );
+      web3Provider = new JsonRpcProvider(networkUrl, network);
     } else {
       try {
-        web3ProviderSdk = new Web3.providers.WebsocketProvider(
-          getConstantByNetwork('rpcWssNode', networkTypes.mainnet)
-        );
+        web3ProviderSdk = new HttpProvider(networkUrl);
 
         web3Provider = new Web3Provider(web3ProviderSdk);
       } catch (error) {
