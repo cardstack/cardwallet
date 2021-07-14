@@ -91,6 +91,7 @@ fragment PrepaidCardTransfer on PrepaidCardTransfer {
   timestamp
   prepaidCard {
     id
+    spendBalance
   }
   from {
     id

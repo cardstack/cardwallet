@@ -91,7 +91,6 @@ const Top = (props: TopProps) => (
 interface BottomProps {
   iconName: IconName;
   status: string;
-  operator: string;
   topText?: string;
   primaryText: string;
   subText?: string;
@@ -121,7 +120,7 @@ const Bottom = (props: BottomProps) => {
         </Container>
         <Container flexDirection="column" marginLeft={3} alignItems="flex-end">
           {props.topText && <Text size="small">{props.topText}</Text>}
-          <Text weight="extraBold">{`${props.operator} ${props.primaryText}`}</Text>
+          <Text weight="extraBold">{props.primaryText}</Text>
           {props.subText && <Text variant="subText">{props.subText}</Text>}
         </Container>
       </Container>

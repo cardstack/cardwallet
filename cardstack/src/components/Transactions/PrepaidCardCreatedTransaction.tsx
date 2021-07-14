@@ -14,8 +14,7 @@ export const PrepaidCardCreatedTransaction = ({
       {...item}
       iconName="arrow-down"
       status="Loaded"
-      operator="+"
-      primaryText={item.spendBalanceDisplay}
+      primaryText={`+ ${item.spendBalanceDisplay}`}
       subText={item.nativeBalanceDisplay}
       Footer={
         <Container

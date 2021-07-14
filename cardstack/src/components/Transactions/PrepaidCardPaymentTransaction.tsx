@@ -13,8 +13,7 @@ export const PrepaidCardPaymentTransaction = ({
       {...item}
       iconName="arrow-up"
       status="Paid"
-      operator="-"
-      primaryText={item.spendBalanceDisplay}
+      primaryText={`- ${item.spendBalanceDisplay}`}
       subText={item.nativeBalanceDisplay}
     />
   );
