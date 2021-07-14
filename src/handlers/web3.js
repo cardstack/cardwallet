@@ -57,9 +57,9 @@ export const web3SetHttpProvider = async network => {
       );
     } else {
       try {
-        const wssNode = getConstantByNetwork('rpcWssNode', network);
-
-        web3ProviderSdk = new Web3.providers.WebsocketProvider(wssNode);
+        web3ProviderSdk = new Web3.providers.WebsocketProvider(
+          getConstantByNetwork('rpcWssNode', network)
+        );
 
         web3Provider = new Web3Provider(web3ProviderSdk);
       } catch (error) {
