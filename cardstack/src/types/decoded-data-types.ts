@@ -1,3 +1,4 @@
+import { TransferPrepaidCardDecodedData } from './decoded-data-types';
 import { TransactionConfirmationType } from './TransactionConfirmationType';
 
 export interface Level1DecodedData {
@@ -53,7 +54,15 @@ export interface SplitPrepaidCardDecodedData {
   spendAmounts: string[];
   prepaidCard: string;
   customizationDID: string;
+  token: TokenData;
   type: TransactionConfirmationType.SPLIT_PREPAID_CARD;
+}
+
+export interface TransferPrepaidCardDecodedData {
+  newOwner: string;
+  previousOwnerSignature: string;
+  prepaidCard: string;
+  type: TransactionConfirmationType.TRANSFER_PREPAID_CARD;
 }
 
 export type ActionDispatcherActionName =
@@ -74,5 +83,6 @@ export type TransactionConfirmationData =
   | IssuePrepaidCardDecodedData
   | RegisterMerchantDecodedData
   | SplitPrepaidCardDecodedData
+  | TransferPrepaidCardDecodedData
   | ClaimRevenueDecodedData
   | PayMerchantDecodedData;

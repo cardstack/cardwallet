@@ -6,6 +6,7 @@ import {
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
   SplitPrepaidCardDecodedData,
+  TransferPrepaidCardDecodedData,
 } from '../types/decoded-data-types';
 
 import { fetchHistoricalPrice } from './historical-pricing-service';
@@ -146,7 +147,8 @@ const decodePayMerchantData = (
 
 const decodeSplitPrepaidCardData = async (
   actionDispatcherData: ActionDispatcherDecodedData,
-  verifyingContract: string
+  verifyingContract: string,
+  tokenAddress: string
 ): Promise<SplitPrepaidCardDecodedData> => {
   const { issuingTokenAmounts, spendAmounts, customizationDID } = decode<{
     issuingTokenAmounts: string[];
@@ -161,12 +163,38 @@ const decodeSplitPrepaidCardData = async (
     actionDispatcherData.actionData
   );
 
+  const tokenData = await getTokenData(tokenAddress);
+
   return {
     customizationDID,
     issuingTokenAmounts,
     spendAmounts,
     prepaidCard: verifyingContract,
+    token: tokenData,
     type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
+  };
+};
+
+const decodeTransferPrepaidCardData = (
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string
+): TransferPrepaidCardDecodedData => {
+  const { newOwner, previousOwnerSignature } = decode<{
+    newOwner: string;
+    previousOwnerSignature: string;
+  }>(
+    [
+      { type: 'address', name: 'newOwner' },
+      { type: 'bytes', name: 'previousOwnerSignature' },
+    ],
+    actionDispatcherData.actionData
+  );
+
+  return {
+    newOwner,
+    previousOwnerSignature,
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
   };
 };
 
@@ -296,14 +324,18 @@ export const decodeData = async (
       } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
         const decodedData = decodeSplitPrepaidCardData(
           actionDispatcherDecodedData,
-          verifyingContract
+          verifyingContract,
+          message.to
         );
 
         return decodedData;
       } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
-        // return {
-        //   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
-        // };
+        const decodedData = decodeTransferPrepaidCardData(
+          actionDispatcherDecodedData,
+          verifyingContract
+        );
+
+        return decodedData;
       }
     }
   }

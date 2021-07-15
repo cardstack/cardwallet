@@ -8,6 +8,8 @@ import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { PayMerchantDisplay } from './PayMerchantDisplay';
 import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
+import { SplitPrepaidCardDisplay } from './SplitPrepaidCardDisplay';
+import { TransferPrepaidCardDisplay } from './TransferPrepaidCardDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -153,6 +155,14 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
     return <PayMerchantDisplay {...props} data={props.data} />;
   } else if (props.data.type === TransactionConfirmationType.CLAIM_REVENUE) {
     return <ClaimRevenueDisplay {...props} data={props.data} />;
+  } else if (
+    props.data.type === TransactionConfirmationType.SPLIT_PREPAID_CARD
+  ) {
+    return <SplitPrepaidCardDisplay {...props} data={props.data} />;
+  } else if (
+    props.data.type === TransactionConfirmationType.TRANSFER_PREPAID_CARD
+  ) {
+    return <TransferPrepaidCardDisplay {...props} data={props.data} />;
   }
 
   return <GenericDisplay {...props} />;
