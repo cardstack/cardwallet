@@ -26,6 +26,8 @@ jobs:
       - uses: sarisia/actions-status-discord@v1
         if: ${{ failure() }}
         with:
+          nodetails: true
           webhook: ${{ secrets.DISCORD_WEBHOOK }} 
-          title: Releasing `Card Wallet`
+          title: Release iOS to TestFlight
+          description: "Click [here](https://github.com/cardstack/cardwallet/actions/runs/`${{github.run_id}}`) to review the issue"
           color: 0xff91a4
