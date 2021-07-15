@@ -17,13 +17,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout tag
+      - name: Checkout tag  
         uses: actions/checkout@v2
       # Runs a single command to fail
       - name: Force failure
         run: exit 1
       # Test discord notification
-      - name: Notify discoard
       - uses: sarisia/actions-status-discord@v1
         if: ${{ failure() }}
         with:
