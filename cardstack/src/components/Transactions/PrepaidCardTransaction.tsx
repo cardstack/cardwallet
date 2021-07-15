@@ -1,64 +1,27 @@
-import React from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import React from 'react';
 import { Linking } from 'react-native';
-import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
-import { Icon } from '../Icon';
-import { CoinIcon } from '../CoinIcon';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { Icon, IconName } from '../Icon';
 import {
   Container,
-  Touchable,
-  Text,
-  NetworkBadge,
   HorizontalDivider,
+  NetworkBadge,
+  Text,
+  Touchable,
 } from '@cardstack/components';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import {
-  CreatedPrepaidCardTransactionType,
-  PrepaidCardPaymentTransactionType,
-  TransactionTypes,
-} from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
-type TransactionStatus = {
-  operator: '+' | '-';
-  status: 'Loaded' | 'Paid';
-  iconName: 'arrow-up' | 'arrow-down' | 'refresh';
-};
-
-const getTransactionStatus = (
-  type:
-    | TransactionTypes.CREATED_PREPAID_CARD
-    | TransactionTypes.PREPAID_CARD_PAYMENT
-): TransactionStatus => {
-  const status = {
-    [TransactionTypes.CREATED_PREPAID_CARD]: {
-      operator: '+',
-      status: 'Loaded',
-      iconName: 'arrow-down',
-    },
-    [TransactionTypes.PREPAID_CARD_PAYMENT]: {
-      operator: '-',
-      status: 'Paid',
-      iconName: 'arrow-up',
-    },
-  };
-
-  return status[type] as TransactionStatus;
-};
-
-export const PrepaidCardTransaction = ({
-  item,
-}: {
-  item: CreatedPrepaidCardTransactionType | PrepaidCardPaymentTransactionType;
-}) => {
+export const PrepaidCardTransaction = (
+  props: TopProps &
+    BottomProps & { Footer?: JSX.Element; transactionHash: string }
+) => {
+  const { Footer } = props;
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
-  const transactionStatus = getTransactionStatus(item.type);
-
-  if (!item) {
-    return null;
-  }
+  const bottomPaddingProp = Footer ? {} : { paddingBottom: 4 };
 
   const onPressTransaction = () => {
     showActionSheetWithOptions(
@@ -68,7 +31,7 @@ export const PrepaidCardTransaction = ({
       },
       (buttonIndex: number) => {
         if (buttonIndex === 0) {
-          Linking.openURL(`${blockExplorer}/tx/${item.transactionHash}`);
+          Linking.openURL(`${blockExplorer}/tx/${props.transactionHash}`);
         }
       }
     );
@@ -84,12 +47,19 @@ export const PrepaidCardTransaction = ({
           borderColor="buttonPrimaryBorder"
           width="100%"
         >
-          <Top {...item} />
-          {item.type === TransactionTypes.PREPAID_CARD_PAYMENT && (
-            <PaidPrepaidCard transaction={item} status={transactionStatus} />
-          )}
-          {item.type === TransactionTypes.CREATED_PREPAID_CARD && (
-            <CreatedPrepaidCard transaction={item} status={transactionStatus} />
+          <Top {...props} />
+          <Container
+            paddingHorizontal={5}
+            paddingTop={4}
+            {...bottomPaddingProp}
+          >
+            <Bottom {...props} />
+          </Container>
+          {Footer && (
+            <>
+              <HorizontalDivider />
+              {Footer}
+            </>
           )}
         </Container>
       </Touchable>
@@ -97,11 +67,11 @@ export const PrepaidCardTransaction = ({
   );
 };
 
-const Top = (
-  transaction:
-    | CreatedPrepaidCardTransactionType
-    | PrepaidCardPaymentTransactionType
-) => (
+interface TopProps {
+  address: string;
+}
+
+const Top = (props: TopProps) => (
   <Container
     height={40}
     flexDirection="row"
@@ -114,7 +84,7 @@ const Top = (
     <Container flexDirection="row" alignItems="center">
       <NetworkBadge marginRight={2} />
       <Text variant="shadowRoboto" size="xs">
-        {getAddressPreview(transaction.address)}
+        {getAddressPreview(props.address)}
       </Text>
     </Container>
     <Text weight="extraBold" size="small">
@@ -123,13 +93,15 @@ const Top = (
   </Container>
 );
 
-const Bottom = (
-  transaction: (
-    | CreatedPrepaidCardTransactionType
-    | PrepaidCardPaymentTransactionType
-  ) &
-    TransactionStatus
-) => {
+interface BottomProps {
+  iconName: IconName;
+  status: string;
+  topText?: string;
+  primaryText: string;
+  subText?: string;
+}
+
+const Bottom = (props: BottomProps) => {
   return (
     <Container
       flexDirection="row"
@@ -145,15 +117,21 @@ const Bottom = (
         <Container flexDirection="row" alignItems="center">
           <Icon name="spend" />
           <Container marginLeft={4} flexDirection="row">
-            <Icon name={transaction.iconName} size={16} color="blueText" />
+            <Icon
+              name={props.iconName}
+              size={16}
+              color="blueText"
+              stroke="blueText"
+            />
             <Text variant="subText" weight="bold" marginLeft={1}>
-              {transaction.status}
+              {props.status}
             </Text>
           </Container>
         </Container>
         <Container flexDirection="column" marginLeft={3} alignItems="flex-end">
-          <Text weight="extraBold">{`${transaction.operator} ${transaction.spendBalanceDisplay}`}</Text>
-          <Text variant="subText">{transaction.nativeBalanceDisplay}</Text>
+          {props.topText && <Text size="small">{props.topText}</Text>}
+          <Text weight="extraBold">{props.primaryText}</Text>
+          {props.subText && <Text variant="subText">{props.subText}</Text>}
         </Container>
       </Container>
     </Container>
@@ -177,67 +155,5 @@ const SVG = () => {
       </Defs>
       <Rect id="Gradient" width="115%" height="40" fill="url(#grad)" />
     </Svg>
-  );
-};
-
-const FundedBy = (transaction: CreatedPrepaidCardTransactionType) => {
-  return (
-    <Container
-      paddingHorizontal={5}
-      paddingBottom={5}
-      flexDirection="row"
-      justifyContent="space-between"
-    >
-      <Container>
-        <Text variant="subText" marginBottom={1}>
-          Funded by Depot
-        </Text>
-        <Text size="xs" fontFamily="RobotoMono-Regular">
-          {getAddressPreview(transaction.createdFromAddress)}
-        </Text>
-      </Container>
-      <Container flexDirection="row" alignItems="center">
-        <Text size="xs" weight="extraBold" marginRight={2}>
-          {`- ${transaction.issuingToken.balance.display}`}
-        </Text>
-        <CoinIcon
-          address={transaction.issuingToken.address}
-          symbol={transaction.issuingToken.symbol}
-          size={20}
-        />
-      </Container>
-    </Container>
-  );
-};
-
-const PaidPrepaidCard = ({
-  transaction,
-  status,
-}: {
-  transaction: PrepaidCardPaymentTransactionType;
-  status: TransactionStatus;
-}) => {
-  return (
-    <Container paddingHorizontal={5} paddingVertical={4}>
-      <Bottom {...transaction} {...status} />
-    </Container>
-  );
-};
-
-const CreatedPrepaidCard = ({
-  transaction,
-  status,
-}: {
-  transaction: CreatedPrepaidCardTransactionType;
-  status: TransactionStatus;
-}) => {
-  return (
-    <>
-      <Container paddingHorizontal={5} paddingTop={4}>
-        <Bottom {...transaction} {...status} />
-      </Container>
-      <HorizontalDivider />
-      <FundedBy {...transaction} />
-    </>
   );
 };
