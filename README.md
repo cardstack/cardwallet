@@ -22,9 +22,6 @@ If you are new to React Native, this is a helpful introduction: https://facebook
 
 1. Run `nvm use 14` to use set the version of node for this project.
 
-1. Install `fastlane` and add env variables in `fastlane/.env` to use fastlane actions.
-    Here you can find how to install fastlane and use fastlane actions: https://github.com/cardstack/cardwallet/tree/develop/fastlane
-
 1. Set up your .env file, use our env.example as a guide.
 
     ___Note that some features are currently not accessible, we are working with our Data Providers in order to provide open source API Keys!___
@@ -36,7 +33,6 @@ If you are new to React Native, this is a helpful introduction: https://facebook
     * ETH Gas Station: https://docs.ethgasstation.info/
     * Imgix: https://www.imgix.com/
 
-    If you have access to https://github.com/cardstack/cardwallet-context repo, then you can run `yarn contexts:app:{{RELEASE_STAGE}}:sync` to sync env variables automatically.
 1. Run `yarn setup` to get all of the packages required.
 
 1. Run `yarn install-bundle`.
