@@ -322,7 +322,7 @@ export const decodeData = async (
 
         return decodedData;
       } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
-        const decodedData = decodeSplitPrepaidCardData(
+        const decodedData = await decodeSplitPrepaidCardData(
           actionDispatcherDecodedData,
           verifyingContract,
           message.to
