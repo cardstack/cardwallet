@@ -3511,6 +3511,7 @@ export type Token = {
   id: Scalars['ID'];
   symbol?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  decimals?: Maybe<Scalars['BigInt']>;
   transfers: Array<Maybe<TokenTransfer>>;
 };
 
@@ -4082,12 +4083,21 @@ export type TokenFilter = {
   name_not_starts_with?: Maybe<Scalars['String']>;
   name_ends_with?: Maybe<Scalars['String']>;
   name_not_ends_with?: Maybe<Scalars['String']>;
+  decimals?: Maybe<Scalars['BigInt']>;
+  decimals_not?: Maybe<Scalars['BigInt']>;
+  decimals_gt?: Maybe<Scalars['BigInt']>;
+  decimals_lt?: Maybe<Scalars['BigInt']>;
+  decimals_gte?: Maybe<Scalars['BigInt']>;
+  decimals_lte?: Maybe<Scalars['BigInt']>;
+  decimals_in?: Maybe<Array<Scalars['BigInt']>>;
+  decimals_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum TokenOrderBy {
   ID = 'id',
   SYMBOL = 'symbol',
   NAME = 'name',
+  DECIMALS = 'decimals',
   TRANSFERS = 'transfers'
 }
 
@@ -4418,7 +4428,7 @@ export type PrepaidCardTransferFragment = (
   & Pick<PrepaidCardTransfer, 'id' | 'timestamp'>
   & { prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id'>
+    & Pick<PrepaidCard, 'id' | 'spendBalance'>
   ), from: (
     { __typename?: 'Account' }
     & Pick<Account, 'id'>
@@ -4550,6 +4560,7 @@ export const PrepaidCardTransferFragmentDoc = gql`
   timestamp
   prepaidCard {
     id
+    spendBalance
   }
   from {
     id

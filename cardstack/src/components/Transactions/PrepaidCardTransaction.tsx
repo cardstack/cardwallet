@@ -21,6 +21,7 @@ export const PrepaidCardTransaction = (
   const { Footer } = props;
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
+  const bottomPaddingProp = Footer ? {} : { paddingBottom: 4 };
 
   const onPressTransaction = () => {
     showActionSheetWithOptions(
@@ -47,7 +48,11 @@ export const PrepaidCardTransaction = (
           width="100%"
         >
           <Top {...props} />
-          <Container paddingHorizontal={5} paddingTop={4}>
+          <Container
+            paddingHorizontal={5}
+            paddingTop={4}
+            {...bottomPaddingProp}
+          >
             <Bottom {...props} />
           </Container>
           {Footer && (
@@ -112,7 +117,12 @@ const Bottom = (props: BottomProps) => {
         <Container flexDirection="row" alignItems="center">
           <Icon name="spend" />
           <Container marginLeft={4} flexDirection="row">
-            <Icon name={props.iconName} size={16} color="blueText" />
+            <Icon
+              name={props.iconName}
+              size={16}
+              color="blueText"
+              stroke="blueText"
+            />
             <Text variant="subText" weight="bold" marginLeft={1}>
               {props.status}
             </Text>
