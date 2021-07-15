@@ -6,7 +6,8 @@ import {
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
   SplitPrepaidCardDecodedData,
-  TransferPrepaidCardDecodedData,
+  TransferPrepaidCard1DecodedData,
+  TransferPrepaidCard2DecodedData,
 } from '../types/decoded-data-types';
 
 import { fetchHistoricalPrice } from './historical-pricing-service';
@@ -18,6 +19,8 @@ import {
   TransactionConfirmationType,
 } from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+
+const TRANSFER_PREFIX = '0xe318b52b';
 
 const decode = <T>(params: object[], data: string): T => {
   const web3 = new Web3(web3ProviderSdk as any);
@@ -175,26 +178,52 @@ const decodeSplitPrepaidCardData = async (
   };
 };
 
-const decodeTransferPrepaidCardData = (
+const decodeTransferPrepaidCard1Data = (
+  messageData: string,
+  verifyingContract: string
+): TransferPrepaidCard1DecodedData => {
+  const data = messageData.slice(10);
+
+  const { newOwner, oldOwner } = decode<{
+    newOwner: string;
+    oldOwner: string;
+    prepaidCard: string;
+  }>(
+    [
+      { type: 'address', name: 'prepaidCard' },
+      { type: 'address', name: 'oldOwner' },
+      { type: 'address', name: 'newOwner' },
+    ],
+    data
+  );
+
+  return {
+    newOwner,
+    oldOwner,
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.TRANSFER_PREPAID_CARD_1,
+  };
+};
+
+const decodeTransferPrepaidCard2Data = (
   actionDispatcherData: ActionDispatcherDecodedData,
   verifyingContract: string
-): TransferPrepaidCardDecodedData => {
-  const { newOwner, previousOwnerSignature } = decode<{
+): TransferPrepaidCard2DecodedData => {
+  const { newOwner } = decode<{
     newOwner: string;
-    previousOwnerSignature: string;
+    signature: string;
   }>(
     [
       { type: 'address', name: 'newOwner' },
-      { type: 'bytes', name: 'previousOwnerSignature' },
+      { type: 'bytes', name: 'signature' },
     ],
     actionDispatcherData.actionData
   );
 
   return {
     newOwner,
-    previousOwnerSignature,
     prepaidCard: verifyingContract,
-    type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
+    type: TransactionConfirmationType.TRANSFER_PREPAID_CARD_2,
   };
 };
 
@@ -263,7 +292,7 @@ const isSplitPrepaidCard = (
   return actionDispatcherData.actionName === 'split';
 };
 
-const isTransferPrepaidCard = (
+const isTransferPrepaidCard2 = (
   actionDispatcherData: ActionDispatcherDecodedData
 ) => {
   return actionDispatcherData.actionName === 'transfer';
@@ -275,6 +304,9 @@ const isClaimRevenue = (toAddress: string, network: string) => {
   return toAddress === revenuePool;
 };
 
+const isTransferPrepaidCard1 = (messageData: string) =>
+  messageData.slice(0, 10) === TRANSFER_PREFIX;
+
 export const decodeData = async (
   message: {
     to: string;
@@ -285,57 +317,44 @@ export const decodeData = async (
   nativeCurrency: string
 ): Promise<TransactionConfirmationData> => {
   if (isClaimRevenue(message.to, network)) {
-    const decodedData = await decodeClaimRevenueData(
+    return decodeClaimRevenueData(
       message.data,
       verifyingContract,
       nativeCurrency
     );
-
-    return decodedData;
+  } else if (isTransferPrepaidCard1(message.data)) {
+    return decodeTransferPrepaidCard1Data(message.data, verifyingContract);
   } else {
     const level1Data = decodeLevel1Data(message.data);
 
     if (isIssuePrepaidCard(level1Data, network)) {
-      const decodedData = await decodeIssuePrepaidCardData(
-        level1Data,
-        message.to
-      );
-
-      return decodedData;
+      return decodeIssuePrepaidCardData(level1Data, message.to);
     } else if (isActionDispatcher(level1Data, network)) {
       const actionDispatcherDecodedData = decodeActionDispatcherData(
         level1Data
       );
 
       if (isRegisterMerchant(actionDispatcherDecodedData)) {
-        const decodedData = decodeRegisterMerchantData(
+        return decodeRegisterMerchantData(
           actionDispatcherDecodedData,
           verifyingContract
         );
-
-        return decodedData;
       } else if (isPayMerchant(actionDispatcherDecodedData)) {
-        const decodedData = decodePayMerchantData(
+        return decodePayMerchantData(
           actionDispatcherDecodedData,
           verifyingContract
         );
-
-        return decodedData;
       } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
-        const decodedData = await decodeSplitPrepaidCardData(
+        return decodeSplitPrepaidCardData(
           actionDispatcherDecodedData,
           verifyingContract,
           message.to
         );
-
-        return decodedData;
-      } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
-        const decodedData = decodeTransferPrepaidCardData(
+      } else if (isTransferPrepaidCard2(actionDispatcherDecodedData)) {
+        return decodeTransferPrepaidCard2Data(
           actionDispatcherDecodedData,
           verifyingContract
         );
-
-        return decodedData;
       }
     }
   }

@@ -1,4 +1,3 @@
-import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { ContactAvatar } from '../../../../src/components/contacts';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
@@ -10,20 +9,23 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
-import { TransferPrepaidCardDecodedData } from '@cardstack/types';
-import { useAccountProfile } from '@rainbow-me/hooks';
 import {
-  convertSpendForBalanceDisplay,
-  getAddressPreview,
-} from '@cardstack/utils';
+  TransferPrepaidCard1DecodedData,
+  TransferPrepaidCard2DecodedData,
+} from '@cardstack/types';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { useAccountProfile } from '@rainbow-me/hooks';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 
+type TransferDecodedDataType =
+  | TransferPrepaidCard1DecodedData
+  | TransferPrepaidCard2DecodedData;
 interface TransferPrepaidCardDisplayProps
   extends TransactionConfirmationDisplayProps {
-  data: TransferPrepaidCardDecodedData;
+  data: TransferDecodedDataType;
 }
 
 export const TransferPrepaidCardDisplay = (
@@ -83,11 +85,7 @@ const FromSection = () => {
   );
 };
 
-const TransferSection = ({
-  data,
-}: {
-  data: TransferPrepaidCardDecodedData;
-}) => {
+const TransferSection = ({ data }: { data: TransferDecodedDataType }) => {
   const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
 
   const [
@@ -107,9 +105,9 @@ const TransferSection = ({
   );
 
   return (
-    <Container marginTop={8} width="100%">
+    <Container width="100%">
       <TransactionConfirmationSectionHeaderText>
-        TRANSfER THIS CARD
+        TRANSER THIS CARD
       </TransactionConfirmationSectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
@@ -138,7 +136,7 @@ const TransferSection = ({
   );
 };
 
-const ToSection = ({ data }: { data: TransferPrepaidCardDecodedData }) => {
+const ToSection = ({ data }: { data: TransferDecodedDataType }) => {
   return (
     <Container width="100%">
       <TransactionConfirmationSectionHeaderText>
@@ -149,9 +147,7 @@ const ToSection = ({ data }: { data: TransferPrepaidCardDecodedData }) => {
           <Icon name="user" />
           <Container marginLeft={4}>
             <Container maxWidth={180}>
-              <Text variant="subAddress">
-                {getAddressPreview(data.newOwner)}*
-              </Text>
+              <Text variant="subAddress">{data.newOwner}</Text>
             </Container>
           </Container>
         </Container>
