@@ -72,3 +72,10 @@ jobs:
         with:
           name: Rainbow DYSM
           path: ios/Rainbow.app.dSYM.zip
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }} 
+          title: Releasing `Card Wallet`
+          color: 0xff91a4
+
