@@ -29,5 +29,5 @@ jobs:
           nodetail: true
           webhook: ${{ secrets.DISCORD_WEBHOOK }} 
           title: Release iOS to TestFlight
-          description: "Click [here]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID`) to review the issue"
+          description: "Click [here]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) to review the issue"
           color: 0xff91a4
