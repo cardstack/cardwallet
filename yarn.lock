@@ -16200,6 +16200,11 @@ react-native-permissions@^2.0.9:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
   integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
 
+react-native-public-ip@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-public-ip/-/react-native-public-ip-1.0.2.tgz#3ce67cbfafdd5b8799e5b669e92351db0cc06102"
+  integrity sha512-GElvYvHLo/BCRFlXARBTq9Dwx526d1zxnyqlSfp1RQwA1yAucFbabfm6nAA3c2Nnq2OdfL4dbFGSeArM2Hdr2g==
+
 react-native-qrcode-svg@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/react-native-qrcode-svg/-/react-native-qrcode-svg-6.1.1.tgz#19dd15545b1cbcfc1b2738af170e9fd0f1d4d8a0"

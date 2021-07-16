@@ -16,6 +16,7 @@ import {
   WYRE_SECRET_KEY,
   WYRE_SECRET_KEY_TEST,
 } from 'react-native-dotenv';
+import publicIP from 'react-native-public-ip';
 import NetworkTypes from '../helpers/networkTypes';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '../references/wyre';
 import logger from 'logger';
@@ -253,6 +254,7 @@ export const getOrderId = async (
   network,
   reservationId
 ) => {
+  const ip = await publicIP();
   const data = createPayload(
     referenceInfo,
     paymentResponse,
@@ -260,8 +262,10 @@ export const getOrderId = async (
     accountAddress,
     destCurrency,
     network,
-    reservationId
+    reservationId,
+    ip
   );
+  console.log({ data: JSON.stringify(data, null, 2) });
   try {
     const baseUrl = getBaseUrl(network);
     const response = await wyreApi.post(
@@ -276,6 +280,7 @@ export const getOrderId = async (
       }
     );
 
+    console.log({ response: JSON.stringify(response, null, 2) });
     if (response.status >= 200 && response.status < 300) {
       const orderId = get(response, 'data.id', null);
       return { orderId };
@@ -328,7 +333,7 @@ const getWyrePaymentDetails = (
       label: 'Network Fee',
     },
   ],
-  id: 'rainbow-wyre',
+  id: 'cardwallet-wyre',
   total: {
     amount: { currency: SOURCE_CURRENCY_USD, value: totalAmount },
     label: 'Cardstack',
@@ -342,7 +347,8 @@ const createPayload = (
   accountAddress,
   destCurrency,
   network,
-  reservationId
+  reservationId,
+  ip
 ) => {
   const dest = `ethereum:${accountAddress}`;
 
@@ -375,6 +381,7 @@ const createPayload = (
         referrerAccountId: partnerId,
         reservationId,
         sourceCurrency: SOURCE_CURRENCY_USD,
+        ipAddress: ip,
       },
       paymentObject: {
         billingContact,

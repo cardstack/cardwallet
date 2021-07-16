@@ -24,7 +24,11 @@
 		<string>CloudDocuments</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
-	<array/>
+	<array>
+		<string>merchant.com.cardstack.pay.dev</string>
+		<string>merchant.com.cardstack.pay.prod</string>
+		<string>merchant.com.cardstack.pay.staging</string>
+	</array>
 	<key>com.apple.developer.ubiquity-container-identifiers</key>
 	<array>
 		<string>iCloud.com.cardstack.cardpay</string>

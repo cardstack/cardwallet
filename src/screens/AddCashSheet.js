@@ -75,7 +75,6 @@ export default function AddCashSheet() {
     [stopErrorTimeout, cashLimits, startErrorTimeout, onClearError]
   );
 
-  console.log(isPaymentComplete);
   return (
     <Container
       backgroundColor="white"
