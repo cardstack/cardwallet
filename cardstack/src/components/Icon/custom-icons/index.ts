@@ -9,6 +9,7 @@ export const customIcons = {
   'refresh-2': require('./refresh-2').default,
   'prepaid-card': require('./prepaid-card').default,
   info: require('./info').default,
+  split: require('./split').default,
   cardstack: require('./cardstack').default,
   circle: require('./circle').default,
   cloud: require('./cloud').default,

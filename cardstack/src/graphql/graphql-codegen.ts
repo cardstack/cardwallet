@@ -3511,6 +3511,7 @@ export type Token = {
   id: Scalars['ID'];
   symbol?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  decimals?: Maybe<Scalars['BigInt']>;
   transfers: Array<Maybe<TokenTransfer>>;
 };
 
@@ -4082,12 +4083,21 @@ export type TokenFilter = {
   name_not_starts_with?: Maybe<Scalars['String']>;
   name_ends_with?: Maybe<Scalars['String']>;
   name_not_ends_with?: Maybe<Scalars['String']>;
+  decimals?: Maybe<Scalars['BigInt']>;
+  decimals_not?: Maybe<Scalars['BigInt']>;
+  decimals_gt?: Maybe<Scalars['BigInt']>;
+  decimals_lt?: Maybe<Scalars['BigInt']>;
+  decimals_gte?: Maybe<Scalars['BigInt']>;
+  decimals_lte?: Maybe<Scalars['BigInt']>;
+  decimals_in?: Maybe<Array<Scalars['BigInt']>>;
+  decimals_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum TokenOrderBy {
   ID = 'id',
   SYMBOL = 'symbol',
   NAME = 'name',
+  DECIMALS = 'decimals',
   TRANSFERS = 'transfers'
 }
 
@@ -4404,6 +4414,30 @@ export type TokenTransferFragment = (
   ) }
 );
 
+export type PrepaidCardSplitFragment = (
+  { __typename?: 'PrepaidCardSplit' }
+  & Pick<PrepaidCardSplit, 'id' | 'timestamp' | 'faceValues' | 'issuingTokenAmounts'>
+  & { prepaidCard: (
+    { __typename?: 'PrepaidCard' }
+    & Pick<PrepaidCard, 'id'>
+  ) }
+);
+
+export type PrepaidCardTransferFragment = (
+  { __typename?: 'PrepaidCardTransfer' }
+  & Pick<PrepaidCardTransfer, 'id' | 'timestamp'>
+  & { prepaidCard: (
+    { __typename?: 'PrepaidCard' }
+    & Pick<PrepaidCard, 'id' | 'spendBalance'>
+  ), from: (
+    { __typename?: 'Account' }
+    & Pick<Account, 'id'>
+  ), to: (
+    { __typename?: 'Account' }
+    & Pick<Account, 'id'>
+  ) }
+);
+
 export type TransactionFragment = (
   { __typename?: 'Transaction' }
   & Pick<Transaction, 'id' | 'timestamp'>
@@ -4421,7 +4455,10 @@ export type TransactionFragment = (
     & PrepaidCardCreationFragment
   )>>, prepaidCardTransfers: Array<Maybe<(
     { __typename?: 'PrepaidCardTransfer' }
-    & Pick<PrepaidCardTransfer, 'id'>
+    & PrepaidCardTransferFragment
+  )>>, prepaidCardSplits: Array<Maybe<(
+    { __typename?: 'PrepaidCardSplit' }
+    & PrepaidCardSplitFragment
   )>>, tokenTransfers: Array<Maybe<(
     { __typename?: 'TokenTransfer' }
     & TokenTransferFragment
@@ -4517,6 +4554,33 @@ export const PrepaidCardCreationFragmentDoc = gql`
   }
 }
     `;
+export const PrepaidCardTransferFragmentDoc = gql`
+    fragment PrepaidCardTransfer on PrepaidCardTransfer {
+  id
+  timestamp
+  prepaidCard {
+    id
+    spendBalance
+  }
+  from {
+    id
+  }
+  to {
+    id
+  }
+}
+    `;
+export const PrepaidCardSplitFragmentDoc = gql`
+    fragment PrepaidCardSplit on PrepaidCardSplit {
+  id
+  timestamp
+  prepaidCard {
+    id
+  }
+  faceValues
+  issuingTokenAmounts
+}
+    `;
 export const TokenTransferFragmentDoc = gql`
     fragment TokenTransfer on TokenTransfer {
   id
@@ -4573,7 +4637,10 @@ export const TransactionFragmentDoc = gql`
     ...PrepaidCardCreation
   }
   prepaidCardTransfers {
-    id
+    ...PrepaidCardTransfer
+  }
+  prepaidCardSplits {
+    ...PrepaidCardSplit
   }
   tokenTransfers {
     ...TokenTransfer
@@ -4606,6 +4673,8 @@ export const TransactionFragmentDoc = gql`
     ${BridgeToLayer1EventFragmentDoc}
 ${BridgeToLayer2EventFragmentDoc}
 ${PrepaidCardCreationFragmentDoc}
+${PrepaidCardTransferFragmentDoc}
+${PrepaidCardSplitFragmentDoc}
 ${TokenTransferFragmentDoc}
 ${MerchantCreationFragmentDoc}
 ${PrepaidCardPaymentFragmentDoc}`;
