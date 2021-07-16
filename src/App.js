@@ -205,6 +205,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
+    logger.sentry('Unmount');
     AppState.removeEventListener('change', this.handleAppStateChange);
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
@@ -307,6 +308,7 @@ class App extends Component {
       category: 'app state',
       label: nextAppState,
     });
+    logger.sentry(`App state change to ${nextAppState}`);
 
     // After a successful state transition, perform state-defined operations:
     if (nextAppState === 'background') {
