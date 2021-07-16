@@ -22,7 +22,11 @@ import {
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { useWalletCloudBackup, useWallets } from '@rainbow-me/hooks';
+import {
+  useDimensions,
+  useWalletCloudBackup,
+  useWallets,
+} from '@rainbow-me/hooks';
 import { Navigation, useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
@@ -52,6 +56,7 @@ export default function AlreadyBackedUpView() {
   const { params } = useRoute();
   const dispatch = useDispatch();
   const { wallets, selectedWallet } = useWallets();
+  const { isSmallPhone } = useDimensions();
   const walletCloudBackup = useWalletCloudBackup();
   const walletId = params?.walletId || selectedWallet.id;
 
@@ -171,12 +176,12 @@ export default function AlreadyBackedUpView() {
 
   const handleViewRecoveryPhrase = useCallback(() => {
     navigate('ShowSecretView', {
-      title: `Secret Recovery ${
+      title: `${isSmallPhone ? 'Recovery' : 'Secret Recovery'} ${
         WalletTypes.mnemonic === wallets[walletId].type ? 'Phrase' : 'Key'
       }`,
       walletId,
     });
-  }, [navigate, walletId, wallets]);
+  }, [navigate, walletId, wallets, isSmallPhone]);
 
   const hasMultipleWallets =
     Object.keys(wallets).filter(
