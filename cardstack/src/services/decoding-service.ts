@@ -12,6 +12,8 @@ import {
   TokenData,
   TransactionConfirmationData,
   TransactionConfirmationType,
+  TransferPrepaidCard2DecodedData,
+  TransferPrepaidCard1DecodedData,
 } from '@cardstack/types';
 
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
