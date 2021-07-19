@@ -111,7 +111,7 @@ export default function SecretDisplaySection({
             variant="white"
             width="100%"
           >
-            Show Recovery Phrase
+            Show Secret Recovery Phrase
           </Button>
         </Fragment>
       )}

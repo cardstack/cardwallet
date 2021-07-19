@@ -9,9 +9,12 @@ import { getApolloClient } from '../graphql/apollo-client';
 import {
   MerchantCreationFragment,
   PrepaidCardPaymentFragment,
+  PrepaidCardSplitFragment,
+  PrepaidCardTransferFragment,
   TokenTransferFragment,
 } from '../graphql/graphql-codegen';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import { PrepaidCardTransferTransactionType } from '../types/transaction-types';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   BridgeToLayer2EventFragment,
@@ -21,10 +24,11 @@ import {
 } from '@cardstack/graphql';
 import {
   BridgedTokenTransactionType,
-  CreatedPrepaidCardTransactionType,
+  ERC20TransactionType,
   MerchantCreationTransactionType,
+  PrepaidCardCreatedTransactionType,
   PrepaidCardPaymentTransactionType,
-  TransactionItemType,
+  PrepaidCardSplitTransactionType,
   TransactionStatus,
   TransactionType,
   TransactionTypes,
@@ -81,7 +85,7 @@ const mapPrepaidCardTransaction = async (
   transactionHash: string,
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
-): Promise<CreatedPrepaidCardTransactionType> => {
+): Promise<PrepaidCardCreatedTransactionType> => {
   const spendDisplay = convertSpendForBalanceDisplay(
     prepaidCardTransaction.spendAmount,
     nativeCurrency,
@@ -122,10 +126,62 @@ const mapPrepaidCardTransaction = async (
         nativeCurrency
       ),
     },
-    type: TransactionTypes.CREATED_PREPAID_CARD,
+    type: TransactionTypes.PREPAID_CARD_CREATED,
     spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
     nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
     transactionHash,
+  };
+};
+
+const mapPrepaidCardSplitTransaction = (
+  prepaidCardSplitTransaction: PrepaidCardSplitFragment,
+  transactionHash: string,
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+): PrepaidCardSplitTransactionType => {
+  const spendAmount = prepaidCardSplitTransaction.faceValues[0] || 0;
+
+  const spendDisplay = convertSpendForBalanceDisplay(
+    spendAmount,
+    nativeCurrency,
+    currencyConversionRates,
+    true
+  );
+
+  return {
+    address: prepaidCardSplitTransaction.prepaidCard.id,
+    timestamp: prepaidCardSplitTransaction.timestamp,
+    spendAmount,
+    spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
+    prepaidCardCount: prepaidCardSplitTransaction.faceValues.length,
+    transactionHash,
+    type: TransactionTypes.PREPAID_CARD_SPLIT,
+  };
+};
+
+const mapPrepaidCardTransferTransaction = (
+  prepaidCardTransferTransaction: PrepaidCardTransferFragment,
+  transactionHash: string,
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+): PrepaidCardTransferTransactionType => {
+  const spendAmount = prepaidCardTransferTransaction.prepaidCard.spendBalance;
+
+  const spendDisplay = convertSpendForBalanceDisplay(
+    spendAmount,
+    nativeCurrency,
+    currencyConversionRates,
+    true
+  );
+
+  return {
+    address: prepaidCardTransferTransaction.prepaidCard.id,
+    timestamp: prepaidCardTransferTransaction.timestamp,
+    spendAmount,
+    spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
+    nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+    transactionHash,
+    type: TransactionTypes.PREPAID_CARD_TRANSFER,
   };
 };
 
@@ -191,7 +247,7 @@ const mapERC20TokenTransactions = async (
   transactionHash: string,
   accountAddress: string,
   nativeCurrency: string
-): Promise<TransactionItemType | null> => {
+): Promise<ERC20TransactionType | null> => {
   const userTransaction = tokenTransfers.find(
     transfer =>
       transfer.to === accountAddress || transfer.from === accountAddress
@@ -233,6 +289,7 @@ const mapERC20TokenTransactions = async (
     symbol,
     status,
     title,
+    type: TransactionTypes.ERC_20,
   };
 };
 
@@ -251,9 +308,29 @@ const mapAndSortTransactions = async (
           merchantCreations,
           tokenTransfers,
           prepaidCardPayments,
+          prepaidCardTransfers,
+          prepaidCardSplits,
         } = transaction;
 
-        if (prepaidCardCreations[0]) {
+        if (prepaidCardSplits[0]) {
+          const mappedPrepaidCardSplit = mapPrepaidCardSplitTransaction(
+            prepaidCardSplits[0],
+            transaction.id,
+            nativeCurrency,
+            currencyConversionRates
+          );
+
+          return mappedPrepaidCardSplit;
+        } else if (prepaidCardTransfers[0]) {
+          const mappedPrepaidCardTransfer = mapPrepaidCardTransferTransaction(
+            prepaidCardTransfers[0],
+            transaction.id,
+            nativeCurrency,
+            currencyConversionRates
+          );
+
+          return mappedPrepaidCardTransfer;
+        } else if (prepaidCardCreations[0]) {
           const mappedPrepaidCardCreation = await mapPrepaidCardTransaction(
             prepaidCardCreations[0],
             transaction.id,

@@ -76,6 +76,31 @@ fragment TokenTransfer on TokenTransfer {
   to
 }
 
+fragment PrepaidCardSplit on PrepaidCardSplit {
+  id
+  timestamp
+  prepaidCard {
+    id
+  }
+  faceValues
+  issuingTokenAmounts
+}
+
+fragment PrepaidCardTransfer on PrepaidCardTransfer {
+  id
+  timestamp
+  prepaidCard {
+    id
+    spendBalance
+  }
+  from {
+    id
+  }
+  to {
+    id
+  }
+}
+
 fragment Transaction on Transaction {
   id
   timestamp
@@ -92,7 +117,10 @@ fragment Transaction on Transaction {
     ...PrepaidCardCreation
   }
   prepaidCardTransfers {
-    id
+    ...PrepaidCardTransfer
+  }
+  prepaidCardSplits {
+    ...PrepaidCardSplit
   }
   tokenTransfers {
     ...TokenTransfer

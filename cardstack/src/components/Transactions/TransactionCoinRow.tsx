@@ -2,7 +2,7 @@ import React from 'react';
 
 import { NetworkBadge } from '../NetworkBadge';
 import { getDisplayDataByStatus } from './statusToDisplayData';
-import { TransactionItemType, TransactionStatus } from '@cardstack/types';
+import { ERC20TransactionType, TransactionStatus } from '@cardstack/types';
 import {
   CoinIcon,
   Container,
@@ -18,7 +18,7 @@ import { ethereumUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import { getAddressPreview } from '@cardstack/utils';
 
 export interface TransactionCoinRowProps extends ContainerProps {
-  item: TransactionItemType;
+  item: ERC20TransactionType;
 }
 
 /**
@@ -102,7 +102,7 @@ export const TransactionCoinRow = ({
   );
 };
 
-const TransactionRow = (item: TransactionItemType) => (
+const TransactionRow = (item: ERC20TransactionType) => (
   <Container
     alignItems="center"
     justifyContent="space-between"
@@ -114,7 +114,7 @@ const TransactionRow = (item: TransactionItemType) => (
   </Container>
 );
 
-const Left = (item: TransactionItemType) => {
+const Left = (item: ERC20TransactionType) => {
   const displayData = getDisplayDataByStatus(item.status);
 
   return (
@@ -134,7 +134,7 @@ const Left = (item: TransactionItemType) => {
   );
 };
 
-const Right = (item: TransactionItemType) => {
+const Right = (item: ERC20TransactionType) => {
   const displayData = getDisplayDataByStatus(item.status);
 
   return (

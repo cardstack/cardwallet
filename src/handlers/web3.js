@@ -20,7 +20,7 @@ import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
 
 import AssetTypes from '../helpers/assetTypes';
-import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
+import NetworkTypes from '../helpers/networkTypes';
 
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
@@ -31,17 +31,12 @@ import logger from 'logger';
 /**
  * @desc web3 http instance - to be used with ethersproject contracts
  */
-export let web3Provider = new JsonRpcProvider(
-  getConstantByNetwork('rpcNode', networkTypes.mainnet),
-  NetworkTypes.mainnet
-);
+export let web3Provider = null;
+
 /**
  * @desc web3 http instance - to be used with web3 contracts
  */
-export let web3ProviderSdk = new HttpProvider(
-  getConstantByNetwork('rpcNode', networkTypes.mainnet)
-);
-
+export let web3ProviderSdk = null;
 /**
  * @desc set a different web3 provider
  * @param {String} network
