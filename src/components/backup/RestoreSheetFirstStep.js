@@ -69,7 +69,7 @@ export default function RestoreSheetFirstStep({
         marginVertical={4}
         onPress={onManualRestore}
         subText="Use the private key for your crypto account"
-        title="Import via recovery phrase"
+        title="Import via secret recovery phrase"
       />
       <OptionItem
         horizontalSpacing={4}
