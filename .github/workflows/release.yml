@@ -28,6 +28,12 @@ jobs:
         run: |
           echo "CHECKOUT_REF=${{ github.event.inputs.githubRef || env.DEFAULT_REF }}" >> $GITHUB_ENV
           echo "RELEASE_STAGE=${{ github.event.inputs.releaseStage || env.DEFAULT_STAGE}}" >> $GITHUB_ENV
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ always() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }} 
+          title: TestFlight release started
+          color: 0xFFFFFF
       - name: Checkout tag
         uses: actions/checkout@v2
         with:
@@ -57,7 +63,7 @@ jobs:
       - name: Pod Install (ios)
         run: cd ios && pod install
       - name: Run fastlane (ios)
-        run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }}"
+        run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }} && bundle exec fastlane sync_google_service_info"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           FASTLANE_STAGE: ${{ env.RELEASE_STAGE }}
@@ -72,3 +78,16 @@ jobs:
         with:
           name: Rainbow DYSM
           path: ios/Rainbow.app.dSYM.zip
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }} 
+          title: TestFlight release failed
+          color: 0xFF5054
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ success() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }} 
+          title: TestFlight release completed
+          color: 0x37EB77
+
