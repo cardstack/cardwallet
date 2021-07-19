@@ -32,7 +32,7 @@ jobs:
         if: ${{ always() }}
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }} 
-          title: Start Release iOS to TestFlight
+          title: TestFlight release started
           color: 0xFFFFFF
       - name: Checkout tag
         uses: actions/checkout@v2
@@ -82,6 +82,12 @@ jobs:
         if: ${{ failure() }}
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }} 
-          title: Release iOS to TestFlight
+          title: TestFlight release failed
           color: 0xFF5054
+      - uses: sarisia/actions-status-discord@v1
+        if: ${{ success() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }} 
+          title: TestFlight release completed
+          color: 0x37EB77
 
