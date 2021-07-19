@@ -8,6 +8,8 @@ import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
 import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { PayMerchantDisplay } from './PayMerchantDisplay';
 import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
+import { SplitPrepaidCardDisplay } from './SplitPrepaidCardDisplay';
+import { TransferPrepaidCardDisplay } from './TransferPrepaidCardDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -104,8 +106,10 @@ const Header = ({
     [TransactionConfirmationType.PAY_MERCHANT]: 'Pay with Prepaid Card',
     [TransactionConfirmationType.CLAIM_REVENUE]: 'Claim Funds',
     [TransactionConfirmationType.SPLIT_PREPAID_CARD]: 'Split Prepaid Card',
-    [TransactionConfirmationType.TRANSFER_PREPAID_CARD]:
-      'Transfer Prepaid Card',
+    [TransactionConfirmationType.TRANSFER_PREPAID_CARD_1]:
+      'Transfer Prepaid Card - Step 1/2',
+    [TransactionConfirmationType.TRANSFER_PREPAID_CARD_2]:
+      'Transfer Prepaid Card - Step 2/2',
   };
 
   const shadowProps: ContainerProps = showHeaderShadow
@@ -153,6 +157,15 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
     return <PayMerchantDisplay {...props} data={props.data} />;
   } else if (props.data.type === TransactionConfirmationType.CLAIM_REVENUE) {
     return <ClaimRevenueDisplay {...props} data={props.data} />;
+  } else if (
+    props.data.type === TransactionConfirmationType.SPLIT_PREPAID_CARD
+  ) {
+    return <SplitPrepaidCardDisplay {...props} data={props.data} />;
+  } else if (
+    props.data.type === TransactionConfirmationType.TRANSFER_PREPAID_CARD_1 ||
+    props.data.type === TransactionConfirmationType.TRANSFER_PREPAID_CARD_2
+  ) {
+    return <TransferPrepaidCardDisplay {...props} data={props.data} />;
   }
 
   return <GenericDisplay {...props} />;
