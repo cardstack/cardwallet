@@ -1,3 +1,4 @@
+import { BridgeToLayer1EventFragment } from './../graphql/graphql-codegen';
 import { NetworkStatus } from '@apollo/client';
 import {
   convertRawAmountToBalance,
@@ -23,7 +24,7 @@ import {
   useGetTransactionHistoryDataQuery,
 } from '@cardstack/graphql';
 import {
-  BridgedTokenTransactionType,
+  DEPOT_BRIDGED_LAYER_2,
   ERC20TransactionType,
   MerchantCreationTransactionType,
   PrepaidCardCreatedTransactionType,
@@ -54,7 +55,7 @@ const mapBridgeEventTransaction = (
   transaction: BridgeToLayer2EventFragment,
   transactionHash: string,
   nativeCurrency: string
-): BridgedTokenTransactionType => {
+): DEPOT_BRIDGED_LAYER_2 => {
   return {
     balance: convertRawAmountToBalance(transaction.amount, {
       decimals: 18,
@@ -304,6 +305,7 @@ const mapAndSortTransactions = async (
       async (transaction: TransactionFragment) => {
         const {
           prepaidCardCreations,
+          bridgeToLayer1Events,
           bridgeToLayer2Events,
           merchantCreations,
           tokenTransfers,
@@ -348,6 +350,8 @@ const mapAndSortTransactions = async (
           );
 
           return mappedPrepaidCardPayments;
+        } else if (bridgeToLayer1Events[0]) {
+          console.log('LAYER 1 BRIDGE', bridgeToLayer1Events[0]);
         } else if (bridgeToLayer2Events[0]) {
           const mappedBridgeEvent = mapBridgeEventTransaction(
             bridgeToLayer2Events[0],

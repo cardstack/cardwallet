@@ -17,17 +17,14 @@ import TransactionActions from '@rainbow-me/helpers/transactionActions';
 import { ethereumUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import { getAddressPreview } from '@cardstack/utils';
 
-export interface TransactionCoinRowProps extends ContainerProps {
+export interface ERC20TransactionProps extends ContainerProps {
   item: ERC20TransactionType;
 }
 
 /**
  * A component for displaying a transaction item
  */
-export const TransactionCoinRow = ({
-  item,
-  ...props
-}: TransactionCoinRowProps) => {
+export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
   const onPressTransaction = () => {
     const { hash, minedAt, status, to, from } = item;
 

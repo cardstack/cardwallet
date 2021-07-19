@@ -10,7 +10,7 @@ import {
   todayTimestamp,
   yesterdayTimestamp,
 } from './transactions';
-import { TransactionCoinRow } from '@cardstack/components';
+import { ERC20Transaction } from '@cardstack/components';
 
 const contactsSelector = state => state.contacts;
 const requestsSelector = state => state.requests;
@@ -57,7 +57,7 @@ const buildTransactionsSections = (contacts, requests, transactions) => {
     );
     sectionedTransactions = Object.keys(transactionsByDate).map(section => ({
       data: transactionsByDate[section],
-      renderItem: renderItemElement(TransactionCoinRow),
+      renderItem: renderItemElement(ERC20Transaction),
       title: section,
     }));
   }

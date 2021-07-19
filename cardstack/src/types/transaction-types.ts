@@ -8,7 +8,7 @@ export enum TransactionTypes {
   ERC_20 = 'erc20',
 }
 
-export interface BridgedTokenTransactionType {
+export interface DEPOT_BRIDGED_LAYER_2 {
   balance: {
     amount: string;
     display: string;
@@ -136,7 +136,7 @@ export interface ERC20TransactionType {
 
 export type TransactionType =
   | ERC20TransactionType
-  | BridgedTokenTransactionType
+  | DEPOT_BRIDGED_LAYER_2
   | PrepaidCardCreatedTransactionType
   | MerchantCreationTransactionType
   | PrepaidCardPaymentTransactionType

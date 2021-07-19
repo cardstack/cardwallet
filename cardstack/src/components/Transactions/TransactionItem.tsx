@@ -1,6 +1,6 @@
 import React from 'react';
-import { TransactionCoinRow } from './TransactionCoinRow';
-import { BridgedTokenTransaction } from './BridgedTokenTransaction';
+import { ERC20Transaction } from './ERC20Transaction';
+import { DepotBridgedLayer2Transaction } from './BridgedTokenTransaction';
 import { MerchantCreationTransaction } from './MerchantCreationTransaction';
 import { PrepaidCardCreatedTransaction } from './PrepaidCardCreatedTransaction';
 import { PrepaidCardPaymentTransaction } from './PrepaidCardPaymentTransaction';
@@ -19,7 +19,7 @@ export const TransactionItem = (props: TransactionItemProps) => {
   }
 
   if (item.type === TransactionTypes.BRIDGED) {
-    return <BridgedTokenTransaction {...props} />;
+    return <DepotBridgedLayer2Transaction {...props} />;
   } else if (item.type === TransactionTypes.PREPAID_CARD_CREATED) {
     return <PrepaidCardCreatedTransaction {...props} />;
   } else if (item.type === TransactionTypes.PREPAID_CARD_PAYMENT) {
@@ -34,5 +34,5 @@ export const TransactionItem = (props: TransactionItemProps) => {
     return null;
   }
 
-  return <TransactionCoinRow {...props} />;
+  return <ERC20Transaction {...props} />;
 };

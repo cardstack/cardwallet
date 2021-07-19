@@ -2,13 +2,13 @@ import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
 import { Container } from '../Container';
-import { TransactionCoinRow } from './TransactionCoinRow';
+import { ERC20Transaction } from './ERC20Transaction';
 import { TransactionStatus, TransactionTypes } from '@cardstack/types';
 
 storiesOf('Transaction Coin Row', module).add('Default', () => {
   return (
     <Container width="100%" alignItems="center">
-      <TransactionCoinRow
+      <ERC20Transaction
         item={{
           from: '0xAa262652e7459693fdA194b33d288b487908E520',
           to: '0xf7FBF7200F2D98979858127baF22FB85c94f3592',

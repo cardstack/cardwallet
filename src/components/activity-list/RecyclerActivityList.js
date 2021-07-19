@@ -22,7 +22,7 @@ import ActivityListHeader from './ActivityListHeader';
 import LoadingState from './LoadingState';
 import {
   Container,
-  TransactionCoinRow,
+  ERC20Transaction,
   TransactionType,
 } from '@cardstack/components';
 
@@ -183,7 +183,7 @@ export default class RecyclerActivityList extends PureComponent {
     if (!data.symbol && data.dappName)
       return <ContractInteractionCoinRow item={data} />;
 
-    return <TransactionCoinRow item={data} />;
+    return <ERC20Transaction item={data} />;
   };
 
   render = () => (
