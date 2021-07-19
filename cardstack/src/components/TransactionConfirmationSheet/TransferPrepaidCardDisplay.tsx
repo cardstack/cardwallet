@@ -23,6 +23,7 @@ import {
 type TransferDecodedDataType =
   | TransferPrepaidCard1DecodedData
   | TransferPrepaidCard2DecodedData;
+
 interface TransferPrepaidCardDisplayProps
   extends TransactionConfirmationDisplayProps {
   data: TransferDecodedDataType;
