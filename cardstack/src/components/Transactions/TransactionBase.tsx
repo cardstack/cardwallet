@@ -2,6 +2,7 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { Linking } from 'react-native';
 import { Icon, IconName, IconProps } from '../Icon';
+import { ContainerProps } from '../Container';
 import {
   Container,
   HorizontalDivider,
@@ -62,16 +63,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
           width="100%"
         >
           {Header}
-          <Container
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-            paddingHorizontal={5}
-            paddingTop={4}
-            {...bottomPaddingProp}
-          >
-            <TransactionRow {...props} />
-          </Container>
+          <TransactionRow {...bottomPaddingProp} {...props} />
           {Footer && (
             <>
               <HorizontalDivider />
@@ -84,7 +76,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
   );
 };
 
-export interface TransactionRowProps {
+export interface TransactionRowProps extends ContainerProps {
   CoinIcon: JSX.Element;
   primaryText: string;
   statusIconName: IconName;
@@ -102,33 +94,45 @@ export const TransactionRow = ({
   topText,
   primaryText,
   subText,
+  ...props
 }: TransactionRowProps) => {
   return (
     <Container
-      alignItems="center"
       flexDirection="row"
       justifyContent="space-between"
-      width="100%"
+      alignItems="center"
+      paddingHorizontal={5}
+      paddingTop={4}
+      {...props}
     >
-      <Container flexDirection="row" alignItems="center">
-        {CoinIcon}
-        <Container marginLeft={4} flexDirection="row">
-          <Icon
-            name={statusIconName}
-            size={16}
-            color="blueText"
-            stroke="blueText"
-            {...statusIconProps}
-          />
-          <Text variant="subText" weight="bold" marginLeft={1}>
-            {statusText}
-          </Text>
+      <Container
+        alignItems="center"
+        flexDirection="row"
+        justifyContent="space-between"
+        width="100%"
+      >
+        <Container flexDirection="row" alignItems="center">
+          {CoinIcon}
+          <Container marginLeft={4} flexDirection="row" alignItems="center">
+            <Container width={20}>
+              <Icon
+                name={statusIconName}
+                size={16}
+                color="blueText"
+                stroke="blueText"
+                {...statusIconProps}
+              />
+            </Container>
+            <Text variant="subText" weight="bold">
+              {statusText}
+            </Text>
+          </Container>
         </Container>
-      </Container>
-      <Container flexDirection="column" marginLeft={3} alignItems="flex-end">
-        {topText && <Text size="small">{topText}</Text>}
-        <Text weight="extraBold">{primaryText}</Text>
-        {subText && <Text variant="subText">{subText}</Text>}
+        <Container flexDirection="column" marginLeft={3} alignItems="flex-end">
+          {topText && <Text size="small">{topText}</Text>}
+          <Text weight="extraBold">{primaryText}</Text>
+          {subText && <Text variant="subText">{subText}</Text>}
+        </Container>
       </Container>
     </Container>
   );

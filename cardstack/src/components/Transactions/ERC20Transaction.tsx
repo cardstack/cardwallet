@@ -13,32 +13,50 @@ export interface ERC20TransactionProps extends ContainerProps {
 export const ERC20Transaction = ({ item }: ERC20TransactionProps) => {
   const displayData = getDisplayDataByStatus(item.status);
 
-  const Footer = item.swappedFor ? (
-    <TransactionRow
-      CoinIcon={<CoinIcon size={40} {...item} />}
-      statusIconName={displayData.iconProps.name}
-      statusIconProps={displayData.iconProps}
-      statusText={item.title}
-      primaryText={`${displayData.transactionSymbol} ${item.balance.display}`}
-      subText={item.native.display}
-    />
-  ) : undefined;
+  const swappedForDisplayData = item.swappedFor
+    ? getDisplayDataByStatus(item.swappedFor.status)
+    : displayData;
 
-  return (
-    <TransactionBase
-      CoinIcon={<CoinIcon size={40} {...item} />}
-      Header={
-        <Container paddingTop={4} paddingHorizontal={5}>
-          <NetworkBadge />
-        </Container>
+  const props = item.swappedFor
+    ? {
+        Footer: (
+          <TransactionRow
+            CoinIcon={<CoinIcon size={40} {...item} />}
+            statusIconName={displayData.iconProps.name}
+            statusIconProps={displayData.iconProps}
+            statusText={item.title}
+            primaryText={`${displayData.transactionSymbol} ${item.balance.display}`}
+            subText={item.native.display}
+            paddingBottom={4}
+          />
+        ),
+        Header: (
+          <Container paddingTop={4} paddingHorizontal={5}>
+            <NetworkBadge />
+          </Container>
+        ),
+        CoinIcon: <CoinIcon size={40} {...item.swappedFor} />,
+        statusIconName: swappedForDisplayData.iconProps.name,
+        statusIconProps: swappedForDisplayData.iconProps,
+        statusText: item.swappedFor.title,
+        primaryText: `${swappedForDisplayData.transactionSymbol} ${item.swappedFor.balance.display}`,
+        subText: item.swappedFor.native.display,
+        transactionHash: item.swappedFor.hash,
       }
-      Footer={Footer}
-      statusIconName={displayData.iconProps.name}
-      statusIconProps={displayData.iconProps}
-      statusText={item.title}
-      primaryText={`${displayData.transactionSymbol} ${item.balance.display}`}
-      subText={item.native.display}
-      transactionHash={item.hash}
-    />
-  );
+    : {
+        CoinIcon: <CoinIcon size={40} {...item} />,
+        Header: (
+          <Container paddingTop={4} paddingHorizontal={5}>
+            <NetworkBadge />
+          </Container>
+        ),
+        statusIconName: displayData.iconProps.name,
+        statusIconProps: displayData.iconProps,
+        statusText: item.title,
+        primaryText: `${displayData.transactionSymbol} ${item.balance.display}`,
+        subText: item.native.display,
+        transactionHash: item.hash,
+      };
+
+  return <TransactionBase {...props} />;
 };
