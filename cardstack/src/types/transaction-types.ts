@@ -1,5 +1,6 @@
 export enum TransactionTypes {
-  BRIDGED = 'bridged',
+  DEPOT_BRIDGED_LAYER_1 = 'depotBridgedLayer1',
+  DEPOT_BRIDGED_LAYER_2 = 'depotBridgedLayer2',
   PREPAID_CARD_CREATED = 'prepaidCardCreated',
   PREPAID_CARD_PAYMENT = 'prepaidCardPayment',
   PREPAID_CARD_SPLIT = 'prepaidCardSplit',
@@ -8,7 +9,7 @@ export enum TransactionTypes {
   ERC_20 = 'erc20',
 }
 
-export interface BridgedTokenTransactionType {
+export interface DepotBridgedLayer2TransactionType {
   balance: {
     amount: string;
     display: string;
@@ -25,7 +26,27 @@ export interface BridgedTokenTransactionType {
     symbol?: string | null;
   };
   timestamp: number;
-  type: TransactionTypes.BRIDGED;
+  type: TransactionTypes.DEPOT_BRIDGED_LAYER_2;
+}
+
+export interface DepotBridgedLayer1TransactionType {
+  balance: {
+    amount: string;
+    display: string;
+  };
+  native: {
+    amount: string;
+    display: string;
+  };
+  transactionHash: string;
+  to: string;
+  token: {
+    address: string;
+    name?: string | null;
+    symbol?: string | null;
+  };
+  timestamp: number;
+  type: TransactionTypes.DEPOT_BRIDGED_LAYER_1;
 }
 
 export interface PrepaidCardCreatedTransactionType {
@@ -136,7 +157,8 @@ export interface ERC20TransactionType {
 
 export type TransactionType =
   | ERC20TransactionType
-  | BridgedTokenTransactionType
+  | DepotBridgedLayer1TransactionType
+  | DepotBridgedLayer2TransactionType
   | PrepaidCardCreatedTransactionType
   | MerchantCreationTransactionType
   | PrepaidCardPaymentTransactionType

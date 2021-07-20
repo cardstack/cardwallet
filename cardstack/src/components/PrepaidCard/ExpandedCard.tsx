@@ -7,7 +7,7 @@ import {
   Container,
   Icon,
   Text,
-  TransactionCoinRow,
+  ERC20Transaction,
 } from '@cardstack/components';
 
 export interface ExpandedCardProps {
@@ -96,7 +96,7 @@ const RecentActivity = (props: ExpandedCardProps) => (
       keyExtractor={item => item.hash}
       sections={props.recentActivity}
       renderItem={({ item }) => (
-        <TransactionCoinRow item={item} paddingHorizontal={0} />
+        <ERC20Transaction item={item} paddingHorizontal={0} />
       )}
       renderSectionHeader={({ section: { title } }) => (
         <Text variant="subHeader" marginTop={4}>

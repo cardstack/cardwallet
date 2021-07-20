@@ -1,7 +1,6 @@
 import React from 'react';
 import { RefreshControl, SectionList } from 'react-native';
 
-import { TransactionItem } from '../Transactions/TransactionItem';
 import { TransactionListLoading } from './TransactionListLoading';
 import { useTransactions } from '@cardstack/services';
 import { colors } from '@cardstack/theme';
@@ -10,6 +9,7 @@ import {
   Container,
   ScrollView,
   Text,
+  TransactionItem,
 } from '@cardstack/components';
 
 interface TransactionListProps {

@@ -1,2 +1,2 @@
-export * from './TransactionCoinRow';
-export * from './BridgedTokenTransaction';
+export * from './ERC20Transaction';
+export * from './TransactionItem';
