@@ -21,6 +21,7 @@ export interface TransactionBaseProps {
   statusIconName: IconName;
   statusIconProps?: IconProps;
   statusText: string;
+  statusSubText?: string;
   subText?: string;
   topText?: string;
   transactionHash: string;
@@ -82,6 +83,7 @@ export interface TransactionRowProps extends ContainerProps {
   statusIconName: IconName;
   statusIconProps?: IconProps;
   statusText: string;
+  statusSubText?: string;
   subText?: string;
   topText?: string;
 }
@@ -91,6 +93,7 @@ export const TransactionRow = ({
   statusIconName,
   statusIconProps,
   statusText,
+  statusSubText,
   topText,
   primaryText,
   subText,
@@ -123,9 +126,16 @@ export const TransactionRow = ({
                 {...statusIconProps}
               />
             </Container>
-            <Text variant="subText" weight="bold">
-              {statusText}
-            </Text>
+            <Container flexDirection="column">
+              <Text variant="subText" weight="bold">
+                {statusText}
+              </Text>
+              {statusSubText && (
+                <Text size="smallest" weight="bold">
+                  {statusSubText}
+                </Text>
+              )}
+            </Container>
           </Container>
         </Container>
         <Container flexDirection="column" marginLeft={3} alignItems="flex-end">

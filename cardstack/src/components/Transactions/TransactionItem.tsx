@@ -1,14 +1,15 @@
 import React from 'react';
 import { ERC20Transaction } from './ERC20Transaction';
-import { DepotBridgedLayer2Transaction } from './BridgedTokenTransaction';
+import { DepotBridgedLayer2Transaction } from './DepotBridgedLayer2Transaction';
 import { MerchantCreationTransaction } from './MerchantCreationTransaction';
 import { PrepaidCardCreatedTransaction } from './PrepaidCardCreatedTransaction';
 import { PrepaidCardPaymentTransaction } from './PrepaidCardPaymentTransaction';
 import { PrepaidCardSplitTransaction } from './PrepaidCardSplitTransaction';
 import { PrepaidCardTransferTransaction } from './PrepaidCardTransferTransaction';
-import { TransactionTypes } from '@cardstack/types';
+import { DepotBridgedLayer1Transaction } from './DepotBridgedLayer1Transaction';
+import { TransactionType, TransactionTypes } from '@cardstack/types';
 interface TransactionItemProps {
-  item: any;
+  item: TransactionType;
 }
 
 export const TransactionItem = (props: TransactionItemProps) => {
@@ -18,21 +19,23 @@ export const TransactionItem = (props: TransactionItemProps) => {
     return null;
   }
 
-  if (item.type === TransactionTypes.BRIDGED) {
-    return <DepotBridgedLayer2Transaction {...props} />;
+  if (item.type === TransactionTypes.DEPOT_BRIDGED_LAYER_1) {
+    return <DepotBridgedLayer1Transaction item={item} />;
+  } else if (item.type === TransactionTypes.DEPOT_BRIDGED_LAYER_2) {
+    return <DepotBridgedLayer2Transaction item={item} />;
   } else if (item.type === TransactionTypes.PREPAID_CARD_CREATED) {
-    return <PrepaidCardCreatedTransaction {...props} />;
+    return <PrepaidCardCreatedTransaction item={item} />;
   } else if (item.type === TransactionTypes.PREPAID_CARD_PAYMENT) {
-    return <PrepaidCardPaymentTransaction {...props} />;
+    return <PrepaidCardPaymentTransaction item={item} />;
   } else if (item.type === TransactionTypes.PREPAID_CARD_SPLIT) {
-    return <PrepaidCardSplitTransaction {...props} />;
+    return <PrepaidCardSplitTransaction item={item} />;
   } else if (item.type === TransactionTypes.PREPAID_CARD_TRANSFER) {
-    return <PrepaidCardTransferTransaction {...props} />;
+    return <PrepaidCardTransferTransaction item={item} />;
   } else if (item.type === TransactionTypes.MERCHANT_CREATION) {
-    return <MerchantCreationTransaction {...props} />;
-  } else if (item.type && item.type !== TransactionTypes.ERC_20) {
-    return null;
+    return <MerchantCreationTransaction item={item} />;
+  } else if (item.type === TransactionTypes.ERC_20) {
+    return <ERC20Transaction item={item} />;
   }
 
-  return <ERC20Transaction {...props} />;
+  return null;
 };

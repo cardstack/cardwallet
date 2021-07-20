@@ -1,10 +1,10 @@
 import React from 'react';
 import { TransactionBase } from './TransactionBase';
 import { CoinIcon, SafeHeader } from '@cardstack/components';
-import { DEPOT_BRIDGED_LAYER_2 } from '@cardstack/types';
+import { DepotBridgedLayer2TransactionType } from '@cardstack/types';
 
 export interface DepotBridgedLayer2TransactionProps {
-  item: DEPOT_BRIDGED_LAYER_2;
+  item: DepotBridgedLayer2TransactionType;
 }
 
 /**
@@ -22,7 +22,7 @@ export const DepotBridgedLayer2Transaction = ({
       primaryText={`+ ${item.balance.display}`}
       statusIconName="arrow-down"
       statusText="Received"
-      subText={`+ ${item.balance.display}`}
+      subText={item.native.display}
       transactionHash={item.transactionHash}
     />
   );

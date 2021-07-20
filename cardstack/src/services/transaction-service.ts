@@ -1,4 +1,3 @@
-import { BridgeToLayer1EventFragment } from './../graphql/graphql-codegen';
 import { NetworkStatus } from '@apollo/client';
 import {
   convertRawAmountToBalance,
@@ -7,24 +6,26 @@ import {
 import { groupBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { getApolloClient } from '../graphql/apollo-client';
-import {
-  MerchantCreationFragment,
-  PrepaidCardPaymentFragment,
-  PrepaidCardSplitFragment,
-  PrepaidCardTransferFragment,
-  TokenTransferFragment,
-} from '../graphql/graphql-codegen';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
-import { PrepaidCardTransferTransactionType } from '../types/transaction-types';
+import {
+  DepotBridgedLayer1TransactionType,
+  PrepaidCardTransferTransactionType,
+} from '../types/transaction-types';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   BridgeToLayer2EventFragment,
   PrepaidCardCreationFragment,
   TransactionFragment,
+  MerchantCreationFragment,
+  PrepaidCardPaymentFragment,
+  PrepaidCardSplitFragment,
+  PrepaidCardTransferFragment,
+  TokenTransferFragment,
+  BridgeToLayer1EventFragment,
   useGetTransactionHistoryDataQuery,
 } from '@cardstack/graphql';
 import {
-  DEPOT_BRIDGED_LAYER_2,
+  DepotBridgedLayer2TransactionType,
   ERC20TransactionType,
   MerchantCreationTransactionType,
   PrepaidCardCreatedTransactionType,
@@ -51,11 +52,11 @@ const sortByTime = (a: any, b: any) => {
   return timeB - timeA;
 };
 
-const mapBridgeEventTransaction = (
+const mapBridgeToLayer2EventTransaction = (
   transaction: BridgeToLayer2EventFragment,
   transactionHash: string,
   nativeCurrency: string
-): DEPOT_BRIDGED_LAYER_2 => {
+): DepotBridgedLayer2TransactionType => {
   return {
     balance: convertRawAmountToBalance(transaction.amount, {
       decimals: 18,
@@ -77,7 +78,37 @@ const mapBridgeEventTransaction = (
       name: transaction.token.name,
     },
     timestamp: transaction.timestamp,
-    type: TransactionTypes.BRIDGED,
+    type: TransactionTypes.DEPOT_BRIDGED_LAYER_2,
+  };
+};
+
+const mapBridgeToLayer1EventTransaction = (
+  transaction: BridgeToLayer1EventFragment,
+  transactionHash: string,
+  nativeCurrency: string
+): DepotBridgedLayer1TransactionType => {
+  return {
+    balance: convertRawAmountToBalance(transaction.amount, {
+      decimals: 18,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      symbol: transaction.token.symbol,
+    }),
+    native: convertRawAmountToNativeDisplay(
+      transaction.amount,
+      18,
+      1, // TODO: needs to be updated with actual price unit
+      nativeCurrency
+    ),
+    transactionHash,
+    to: transaction.account.id,
+    token: {
+      address: transaction.token.id,
+      symbol: transaction.token.symbol,
+      name: transaction.token.name,
+    },
+    timestamp: transaction.timestamp,
+    type: TransactionTypes.DEPOT_BRIDGED_LAYER_1,
   };
 };
 
@@ -351,9 +382,15 @@ const mapAndSortTransactions = async (
 
           return mappedPrepaidCardPayments;
         } else if (bridgeToLayer1Events[0]) {
-          console.log('LAYER 1 BRIDGE', bridgeToLayer1Events[0]);
+          const mappedBridgeEvent = mapBridgeToLayer1EventTransaction(
+            bridgeToLayer1Events[0],
+            transaction.id,
+            nativeCurrency
+          );
+
+          return mappedBridgeEvent;
         } else if (bridgeToLayer2Events[0]) {
-          const mappedBridgeEvent = mapBridgeEventTransaction(
+          const mappedBridgeEvent = mapBridgeToLayer2EventTransaction(
             bridgeToLayer2Events[0],
             transaction.id,
             nativeCurrency
