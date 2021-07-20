@@ -8,7 +8,9 @@ import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { TruncatedAddress } from '../text';
 import { Container, Icon, Text } from '@cardstack/components';
+import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
+import { abbreviations } from '@rainbow-me/utils';
 
 const sx = StyleSheet.create({
   accountRow: {
@@ -34,9 +36,19 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   const { network } = useAccountSettings();
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
-  let cleanedUpBalance = balance;
-  if (balance === '0.00') {
-    cleanedUpBalance = '0';
+  let accountSubLabel;
+
+  if (networkInfo[network].layer === 2) {
+    accountSubLabel = abbreviations.address(address, 6, 4);
+  } else {
+    let balanceAmount;
+    if (balance === '0.00') {
+      balanceAmount = `0`;
+    } else {
+      balanceAmount = `${balance || 0}`;
+    }
+
+    accountSubLabel = `${balanceAmount} ${nativeTokenSymbol}`;
   }
 
   let cleanedUpLabel = null;
@@ -83,9 +95,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                   truncationLength={6}
                 />
               )}
-              <Text variant="subText">
-                {cleanedUpBalance || 0} {nativeTokenSymbol}
-              </Text>
+              <Text variant="subText">{accountSubLabel}</Text>
             </Container>
           </Container>
           <Container

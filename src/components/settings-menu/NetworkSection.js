@@ -17,6 +17,7 @@ import {
 } from '../../redux/settings';
 
 import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
+import networkTypes from '@rainbow-me/helpers/networkTypes';
 
 const networks = values(networkInfo);
 
@@ -85,7 +86,7 @@ const NetworkSection = () => {
           label="Show testnets"
           onPress={() => {
             if (networkSelected.isTestnet && showTestnets) {
-              onNetworkChange(defaultNetwork);
+              onNetworkChange(networkTypes.mainnet);
             }
             dispatch(toggleShowTestnets());
           }}
