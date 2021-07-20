@@ -32,7 +32,6 @@ export const TransactionBase = (props: TransactionBaseProps) => {
 
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
-  const bottomPaddingProp = Footer ? {} : { paddingBottom: 4 };
   const blockExplorerName = isLayer1(network) ? 'Etherscan' : 'Blockscout';
 
   const onPressTransaction = () => {
@@ -62,9 +61,10 @@ export const TransactionBase = (props: TransactionBaseProps) => {
           overflow="hidden"
           borderColor="buttonPrimaryBorder"
           width="100%"
+          paddingBottom={4}
         >
           {Header}
-          <TransactionRow {...bottomPaddingProp} {...props} />
+          <TransactionRow {...props} />
           {Footer && (
             <>
               <HorizontalDivider />
