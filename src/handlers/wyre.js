@@ -92,6 +92,7 @@ export const showApplePayRequest = async (
   const merchantIdentifier =
     network === NetworkTypes.mainnet ? MERCHANT_ID : MERCHANT_ID_TEST;
 
+  console.log('merchantIdentifier', merchantIdentifier);
   const methodData = [
     {
       data: {
