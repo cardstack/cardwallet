@@ -4,7 +4,8 @@ export enum TransactionConfirmationType {
   REGISTER_MERCHANT = 'registerMerchant',
   PAY_MERCHANT = 'payMerchant',
   SPLIT_PREPAID_CARD = 'splitPrepaidCard',
-  TRANSFER_PREPAID_CARD = 'transferPrepaidCard',
+  TRANSFER_PREPAID_CARD_1 = 'transferPrepaidCard1',
+  TRANSFER_PREPAID_CARD_2 = 'transferPrepaidCard2',
   CLAIM_REVENUE = 'claimRevenue',
 }
 
@@ -56,6 +57,28 @@ export interface ClaimRevenueDecodedData {
   type: TransactionConfirmationType.CLAIM_REVENUE;
 }
 
+export interface SplitPrepaidCardDecodedData {
+  issuingTokenAmounts: string[];
+  spendAmounts: string[];
+  prepaidCard: string;
+  customizationDID: string;
+  token: TokenData;
+  type: TransactionConfirmationType.SPLIT_PREPAID_CARD;
+}
+
+export interface TransferPrepaidCard1DecodedData {
+  newOwner: string;
+  oldOwner: string;
+  prepaidCard: string;
+  type: TransactionConfirmationType.TRANSFER_PREPAID_CARD_1;
+}
+
+export interface TransferPrepaidCard2DecodedData {
+  newOwner: string;
+  prepaidCard: string;
+  type: TransactionConfirmationType.TRANSFER_PREPAID_CARD_2;
+}
+
 export type ActionDispatcherActionName =
   | 'registerMerchant'
   | 'payMerchant'
@@ -73,5 +96,8 @@ export type TransactionConfirmationData =
   | GenericDisplayData
   | IssuePrepaidCardDecodedData
   | RegisterMerchantDecodedData
+  | SplitPrepaidCardDecodedData
+  | TransferPrepaidCard1DecodedData
+  | TransferPrepaidCard2DecodedData
   | ClaimRevenueDecodedData
   | PayMerchantDecodedData;

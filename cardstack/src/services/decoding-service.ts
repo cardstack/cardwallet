@@ -1,20 +1,24 @@
 import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
+import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   ActionDispatcherDecodedData,
   ClaimRevenueDecodedData,
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
-} from '../types/transaction-confirmation-types';
-import { fetchHistoricalPrice } from './historical-pricing-service';
-import {
+  SplitPrepaidCardDecodedData,
   IssuePrepaidCardDecodedData,
   Level1DecodedData,
   TokenData,
   TransactionConfirmationData,
   TransactionConfirmationType,
+  TransferPrepaidCard2DecodedData,
+  TransferPrepaidCard1DecodedData,
 } from '@cardstack/types';
+
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+
+const TRANSFER_PREFIX = '0xe318b52b';
 
 const decode = <T>(params: object[], data: string): T => {
   const web3 = new Web3(web3ProviderSdk as any);
@@ -142,6 +146,85 @@ const decodePayMerchantData = (
   };
 };
 
+const decodeSplitPrepaidCardData = async (
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string,
+  tokenAddress: string
+): Promise<SplitPrepaidCardDecodedData> => {
+  const { issuingTokenAmounts, spendAmounts, customizationDID } = decode<{
+    issuingTokenAmounts: string[];
+    spendAmounts: string[];
+    customizationDID: string;
+  }>(
+    [
+      { type: 'uint256[]', name: 'issuingTokenAmounts' },
+      { type: 'uint256[]', name: 'spendAmounts' },
+      { type: 'string', name: 'customizationDID' },
+    ],
+    actionDispatcherData.actionData
+  );
+
+  const tokenData = await getTokenData(tokenAddress);
+
+  return {
+    customizationDID,
+    issuingTokenAmounts,
+    spendAmounts,
+    prepaidCard: verifyingContract,
+    token: tokenData,
+    type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
+  };
+};
+
+const decodeTransferPrepaidCard1Data = (
+  messageData: string,
+  verifyingContract: string
+): TransferPrepaidCard1DecodedData => {
+  const data = messageData.slice(10);
+
+  const { newOwner, oldOwner } = decode<{
+    newOwner: string;
+    oldOwner: string;
+    prepaidCard: string;
+  }>(
+    [
+      { type: 'address', name: 'prepaidCard' },
+      { type: 'address', name: 'oldOwner' },
+      { type: 'address', name: 'newOwner' },
+    ],
+    data
+  );
+
+  return {
+    newOwner,
+    oldOwner,
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.TRANSFER_PREPAID_CARD_1,
+  };
+};
+
+const decodeTransferPrepaidCard2Data = (
+  actionDispatcherData: ActionDispatcherDecodedData,
+  verifyingContract: string
+): TransferPrepaidCard2DecodedData => {
+  const { newOwner } = decode<{
+    newOwner: string;
+    signature: string;
+  }>(
+    [
+      { type: 'address', name: 'newOwner' },
+      { type: 'bytes', name: 'signature' },
+    ],
+    actionDispatcherData.actionData
+  );
+
+  return {
+    newOwner,
+    prepaidCard: verifyingContract,
+    type: TransactionConfirmationType.TRANSFER_PREPAID_CARD_2,
+  };
+};
+
 const decodeClaimRevenueData = async (
   messageData: string,
   verifyingContract: string,
@@ -168,8 +251,6 @@ const decodeClaimRevenueData = async (
     currentTimestamp,
     nativeCurrency
   );
-
-  console.log({ priceType: typeof price, price });
 
   return {
     amount,
@@ -209,7 +290,7 @@ const isSplitPrepaidCard = (
   return actionDispatcherData.actionName === 'split';
 };
 
-const isTransferPrepaidCard = (
+const isTransferPrepaidCard2 = (
   actionDispatcherData: ActionDispatcherDecodedData
 ) => {
   return actionDispatcherData.actionName === 'transfer';
@@ -221,6 +302,9 @@ const isClaimRevenue = (toAddress: string, network: string) => {
   return toAddress === revenuePool;
 };
 
+const isTransferPrepaidCard1 = (messageData: string) =>
+  messageData.slice(0, 10) === TRANSFER_PREFIX;
+
 export const decodeData = async (
   message: {
     to: string;
@@ -231,50 +315,44 @@ export const decodeData = async (
   nativeCurrency: string
 ): Promise<TransactionConfirmationData> => {
   if (isClaimRevenue(message.to, network)) {
-    const decodedData = await decodeClaimRevenueData(
+    return decodeClaimRevenueData(
       message.data,
       verifyingContract,
       nativeCurrency
     );
-
-    return decodedData;
+  } else if (isTransferPrepaidCard1(message.data)) {
+    return decodeTransferPrepaidCard1Data(message.data, verifyingContract);
   } else {
     const level1Data = decodeLevel1Data(message.data);
 
     if (isIssuePrepaidCard(level1Data, network)) {
-      const decodedData = await decodeIssuePrepaidCardData(
-        level1Data,
-        message.to
-      );
-
-      return decodedData;
+      return decodeIssuePrepaidCardData(level1Data, message.to);
     } else if (isActionDispatcher(level1Data, network)) {
       const actionDispatcherDecodedData = decodeActionDispatcherData(
         level1Data
       );
 
       if (isRegisterMerchant(actionDispatcherDecodedData)) {
-        const decodedData = decodeRegisterMerchantData(
+        return decodeRegisterMerchantData(
           actionDispatcherDecodedData,
           verifyingContract
         );
-
-        return decodedData;
       } else if (isPayMerchant(actionDispatcherDecodedData)) {
-        const decodedData = decodePayMerchantData(
+        return decodePayMerchantData(
           actionDispatcherDecodedData,
           verifyingContract
         );
-
-        return decodedData;
       } else if (isSplitPrepaidCard(actionDispatcherDecodedData)) {
-        // return {
-        //   type: TransactionConfirmationType.SPLIT_PREPAID_CARD,
-        // };
-      } else if (isTransferPrepaidCard(actionDispatcherDecodedData)) {
-        // return {
-        //   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD,
-        // };
+        return decodeSplitPrepaidCardData(
+          actionDispatcherDecodedData,
+          verifyingContract,
+          message.to
+        );
+      } else if (isTransferPrepaidCard2(actionDispatcherDecodedData)) {
+        return decodeTransferPrepaidCard2Data(
+          actionDispatcherDecodedData,
+          verifyingContract
+        );
       }
     }
   }
