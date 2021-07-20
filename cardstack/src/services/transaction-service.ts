@@ -3,7 +3,7 @@ import { groupBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { getApolloClient } from '../graphql/apollo-client';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
-import { mapAndSortTransactions } from './transaction-mapping-service';
+import { mapLayer2Transactions } from './transaction-mapping-service';
 import {
   TransactionFragment,
   useGetTransactionHistoryDataQuery,
@@ -75,7 +75,7 @@ const useSokolTransactions = () => {
             return accum;
           }, []);
 
-          const mappedTransactions = await mapAndSortTransactions(
+          const mappedTransactions = await mapLayer2Transactions(
             transactions,
             accountAddress,
             nativeCurrency,
@@ -89,7 +89,7 @@ const useSokolTransactions = () => {
 
           const groupedSections = Object.keys(groupedData)
             .map(title => ({
-              data: groupedData[title],
+              data: groupedData[title].sort(sortByTime),
               title,
             }))
             .sort((a, b) => {

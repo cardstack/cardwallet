@@ -1,14 +1,18 @@
 import {
+  convertAmountToNativeDisplay,
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
+
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import {
   DepotBridgedLayer1TransactionType,
   PrepaidCardTransferTransactionType,
   TransactionType,
 } from '../types/transaction-types';
+import { getNativeBalance } from './exchange-rate-service';
 import { fetchHistoricalPrice } from './historical-pricing-service';
+
 import {
   BridgeToLayer1EventFragment,
   BridgeToLayer2EventFragment,
@@ -32,11 +36,19 @@ import {
 } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
-const mapBridgeToLayer2EventTransaction = (
+const mapBridgeToLayer2EventTransaction = async (
   transaction: BridgeToLayer2EventFragment,
   transactionHash: string,
-  nativeCurrency: string
-): DepotBridgedLayer2TransactionType => {
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+): Promise<DepotBridgedLayer2TransactionType> => {
+  const nativeBalance = await getNativeBalance({
+    symbol: transaction.token.symbol,
+    balance: transaction.amount,
+    nativeCurrency,
+    currencyConversionRates,
+  });
+
   return {
     balance: convertRawAmountToBalance(transaction.amount, {
       decimals: 18,
@@ -44,12 +56,10 @@ const mapBridgeToLayer2EventTransaction = (
       // @ts-ignore
       symbol: transaction.token.symbol,
     }),
-    native: convertRawAmountToNativeDisplay(
-      transaction.amount,
-      18,
-      1, // TODO: needs to be updated with actual price unit
-      nativeCurrency
-    ),
+    native: {
+      amount: nativeBalance.toString(),
+      display: convertAmountToNativeDisplay(nativeBalance, nativeCurrency),
+    },
     transactionHash,
     to: transaction.depot.id,
     token: {
@@ -62,11 +72,19 @@ const mapBridgeToLayer2EventTransaction = (
   };
 };
 
-const mapBridgeToLayer1EventTransaction = (
+const mapBridgeToLayer1EventTransaction = async (
   transaction: BridgeToLayer1EventFragment,
   transactionHash: string,
-  nativeCurrency: string
-): DepotBridgedLayer1TransactionType => {
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+): Promise<DepotBridgedLayer1TransactionType> => {
+  const nativeBalance = await getNativeBalance({
+    symbol: transaction.token.symbol,
+    balance: transaction.amount,
+    nativeCurrency,
+    currencyConversionRates,
+  });
+
   return {
     balance: convertRawAmountToBalance(transaction.amount, {
       decimals: 18,
@@ -74,12 +92,10 @@ const mapBridgeToLayer1EventTransaction = (
       // @ts-ignore
       symbol: transaction.token.symbol,
     }),
-    native: convertRawAmountToNativeDisplay(
-      transaction.amount,
-      18,
-      1, // TODO: needs to be updated with actual price unit
-      nativeCurrency
-    ),
+    native: {
+      amount: nativeBalance.toString(),
+      display: convertAmountToNativeDisplay(nativeBalance, nativeCurrency),
+    },
     transactionHash,
     to: transaction.account.id,
     token: {
@@ -305,7 +321,7 @@ const mapERC20TokenTransactions = async (
   };
 };
 
-export const mapAndSortTransactions = async (
+export const mapLayer2Transactions = async (
   transactions: TransactionFragment[],
   accountAddress: string,
   nativeCurrency: string,
@@ -362,18 +378,20 @@ export const mapAndSortTransactions = async (
 
           return mappedPrepaidCardPayments;
         } else if (bridgeToLayer1Events[0]) {
-          const mappedBridgeEvent = mapBridgeToLayer1EventTransaction(
+          const mappedBridgeEvent = await mapBridgeToLayer1EventTransaction(
             bridgeToLayer1Events[0],
             transaction.id,
-            nativeCurrency
+            nativeCurrency,
+            currencyConversionRates
           );
 
           return mappedBridgeEvent;
         } else if (bridgeToLayer2Events[0]) {
-          const mappedBridgeEvent = mapBridgeToLayer2EventTransaction(
+          const mappedBridgeEvent = await mapBridgeToLayer2EventTransaction(
             bridgeToLayer2Events[0],
             transaction.id,
-            nativeCurrency
+            nativeCurrency,
+            currencyConversionRates
           );
 
           return mappedBridgeEvent;
@@ -397,5 +415,5 @@ export const mapAndSortTransactions = async (
     )
   );
 
-  return mappedTransactions.filter(t => t).sort(sortByTime);
+  return mappedTransactions.filter(t => t);
 };
