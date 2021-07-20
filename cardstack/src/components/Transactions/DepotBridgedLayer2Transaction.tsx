@@ -7,9 +7,6 @@ export interface DepotBridgedLayer2TransactionProps {
   item: DepotBridgedLayer2TransactionType;
 }
 
-/**
- * A component for displaying a transaction item
- */
 export const DepotBridgedLayer2Transaction = ({
   item,
 }: DepotBridgedLayer2TransactionProps) => {
