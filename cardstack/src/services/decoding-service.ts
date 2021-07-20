@@ -1,5 +1,11 @@
-import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  convertRawAmountToBalance,
+  convertRawAmountToNativeDisplay,
+  ERC20ABI,
+  getAddressByNetwork,
+} from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
+import Safes from '@cardstack/cardpay-sdk/sdk/safes/base';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   ActionDispatcherDecodedData,
@@ -14,11 +20,19 @@ import {
   TransactionConfirmationType,
   TransferPrepaidCard2DecodedData,
   TransferPrepaidCard1DecodedData,
+  WithdrawalDecodedData,
 } from '@cardstack/types';
 
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 
 const TRANSFER_PREFIX = '0xe318b52b';
+
+const getSafeData = async (address: string) => {
+  const web3 = new Web3(web3ProviderSdk as any);
+  const safes = new Safes(web3);
+
+  return safes.viewSafe(address);
+};
 
 const decode = <T>(params: object[], data: string): T => {
   const web3 = new Web3(web3ProviderSdk as any);
@@ -83,6 +97,39 @@ const decodeIssuePrepaidCardData = async (
     ...decodedPrepaidCardData,
     token: tokenData,
     type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
+  };
+};
+
+const decodeWithdrawalData = async (
+  level1Data: Level1DecodedData,
+  tokenAddress: string,
+  verifyingContract: string,
+  nativeCurrency: string
+): Promise<WithdrawalDecodedData> => {
+  const safeData = await getSafeData(verifyingContract);
+  const tokenData = await getTokenData(tokenAddress);
+
+  const balance =
+    safeData?.tokens.find(token => token.tokenAddress === tokenAddress)
+      ?.balance || '0';
+
+  const currentTimestamp = Date.now();
+
+  const price = await fetchHistoricalPrice(
+    tokenData.symbol,
+    currentTimestamp,
+    nativeCurrency
+  );
+
+  return {
+    amount: level1Data.amount,
+    layer1Recipient: level1Data.data,
+    address: safeData?.address || '',
+    addressType: safeData?.type || 'depot',
+    tokenBalance: balance,
+    price,
+    token: tokenData,
+    type: TransactionConfirmationType.WITHDRAWAL,
   };
 };
 
@@ -268,6 +315,12 @@ const isIssuePrepaidCard = (level1Data: Level1DecodedData, network: string) => {
   return level1Data.to === prepaidCardManager;
 };
 
+const isWithdrawal = (level1Data: Level1DecodedData, network: string) => {
+  const homeBridgeContract = getAddressByNetwork('homeBridge', network);
+
+  return level1Data.to === homeBridgeContract;
+};
+
 const isActionDispatcher = (level1Data: Level1DecodedData, network: string) => {
   const actionDispatcher = getAddressByNetwork('actionDispatcher', network);
 
@@ -327,6 +380,13 @@ export const decodeData = async (
 
     if (isIssuePrepaidCard(level1Data, network)) {
       return decodeIssuePrepaidCardData(level1Data, message.to);
+    } else if (isWithdrawal(level1Data, network)) {
+      return decodeWithdrawalData(
+        level1Data,
+        message.to,
+        verifyingContract,
+        nativeCurrency
+      );
     } else if (isActionDispatcher(level1Data, network)) {
       const actionDispatcherDecodedData = decodeActionDispatcherData(
         level1Data

@@ -10,6 +10,7 @@ import { PayMerchantDisplay } from './PayMerchantDisplay';
 import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
 import { SplitPrepaidCardDisplay } from './SplitPrepaidCardDisplay';
 import { TransferPrepaidCardDisplay } from './TransferPrepaidCardDisplay';
+import { WithdrawalDisplay } from './WithdrawalDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -102,6 +103,7 @@ const Header = ({
   } = {
     [TransactionConfirmationType.GENERIC]: methodName || '',
     [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
+    [TransactionConfirmationType.WITHDRAWAL]: 'Withdraw Funds',
     [TransactionConfirmationType.REGISTER_MERCHANT]: 'Create Merchant',
     [TransactionConfirmationType.PAY_MERCHANT]: 'Pay with Prepaid Card',
     [TransactionConfirmationType.CLAIM_REVENUE]: 'Claim Funds',
@@ -155,6 +157,8 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
     return <RegisterMerchantDisplay {...props} data={props.data} />;
   } else if (props.data.type === TransactionConfirmationType.PAY_MERCHANT) {
     return <PayMerchantDisplay {...props} data={props.data} />;
+  } else if (props.data.type === TransactionConfirmationType.WITHDRAWAL) {
+    return <WithdrawalDisplay {...props} data={props.data} />;
   } else if (props.data.type === TransactionConfirmationType.CLAIM_REVENUE) {
     return <ClaimRevenueDisplay {...props} data={props.data} />;
   } else if (
