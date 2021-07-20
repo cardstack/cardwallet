@@ -25,7 +25,6 @@
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
-		<string>merchant.com.cardstack.pay.dev</string>
 		<string>merchant.com.cardstack.pay.prod</string>
 		<string>merchant.com.cardstack.pay.staging</string>
 	</array>
