@@ -1,7 +1,7 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { Linking } from 'react-native';
-import { Icon, IconName } from '../Icon';
+import { Icon, IconName, IconProps } from '../Icon';
 import {
   Container,
   HorizontalDivider,
@@ -18,6 +18,7 @@ export interface TransactionBaseProps {
   Header?: JSX.Element;
   primaryText: string;
   statusIconName: IconName;
+  statusIconProps?: IconProps;
   statusText: string;
   subText?: string;
   topText?: string;
@@ -25,17 +26,7 @@ export interface TransactionBaseProps {
 }
 
 export const TransactionBase = (props: TransactionBaseProps) => {
-  const {
-    CoinIcon,
-    Footer,
-    Header,
-    primaryText,
-    statusIconName,
-    statusText,
-    subText,
-    topText,
-    transactionHash,
-  } = props;
+  const { Footer, Header, transactionHash } = props;
 
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
@@ -79,36 +70,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
             paddingTop={4}
             {...bottomPaddingProp}
           >
-            <Container
-              alignItems="center"
-              flexDirection="row"
-              justifyContent="space-between"
-              width="100%"
-            >
-              <Container flexDirection="row" alignItems="center">
-                {CoinIcon}
-                <Container marginLeft={4} flexDirection="row">
-                  <Icon
-                    name={statusIconName}
-                    size={16}
-                    color="blueText"
-                    stroke="blueText"
-                  />
-                  <Text variant="subText" weight="bold" marginLeft={1}>
-                    {statusText}
-                  </Text>
-                </Container>
-              </Container>
-              <Container
-                flexDirection="column"
-                marginLeft={3}
-                alignItems="flex-end"
-              >
-                {topText && <Text size="small">{topText}</Text>}
-                <Text weight="extraBold">{primaryText}</Text>
-                {subText && <Text variant="subText">{subText}</Text>}
-              </Container>
-            </Container>
+            <TransactionRow {...props} />
           </Container>
           {Footer && (
             <>
@@ -118,6 +80,56 @@ export const TransactionBase = (props: TransactionBaseProps) => {
           )}
         </Container>
       </Touchable>
+    </Container>
+  );
+};
+
+export interface TransactionRowProps {
+  CoinIcon: JSX.Element;
+  primaryText: string;
+  statusIconName: IconName;
+  statusIconProps?: IconProps;
+  statusText: string;
+  subText?: string;
+  topText?: string;
+}
+
+export const TransactionRow = ({
+  CoinIcon,
+  statusIconName,
+  statusIconProps,
+  statusText,
+  topText,
+  primaryText,
+  subText,
+}: TransactionRowProps) => {
+  return (
+    <Container
+      alignItems="center"
+      flexDirection="row"
+      justifyContent="space-between"
+      width="100%"
+    >
+      <Container flexDirection="row" alignItems="center">
+        {CoinIcon}
+        <Container marginLeft={4} flexDirection="row">
+          <Icon
+            name={statusIconName}
+            size={16}
+            color="blueText"
+            stroke="blueText"
+            {...statusIconProps}
+          />
+          <Text variant="subText" weight="bold" marginLeft={1}>
+            {statusText}
+          </Text>
+        </Container>
+      </Container>
+      <Container flexDirection="column" marginLeft={3} alignItems="flex-end">
+        {topText && <Text size="small">{topText}</Text>}
+        <Text weight="extraBold">{primaryText}</Text>
+        {subText && <Text variant="subText">{subText}</Text>}
+      </Container>
     </Container>
   );
 };
