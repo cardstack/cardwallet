@@ -31,3 +31,4 @@ export * from './CollectibleRow';
 export * from './CoinIcon';
 export * from './TransactionList';
 export * from './TransactionConfirmationSheet';
+export * from './SafeAreaView';
