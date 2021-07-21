@@ -431,9 +431,13 @@ const AppWithRedux = connect(
   }
 )(App);
 
-const AppWithCodePush = CodePush({
-  checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
-  installMode: CodePush.InstallMode.ON_NEXT_RESUME,
-})(() => <AppWithRedux store={store} />);
+let AppWithCodePush = () => <AppWithRedux store={store} />;
+
+if (!__DEV__) {
+  AppWithCodePush = CodePush({
+    checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
+    installMode: CodePush.InstallMode.ON_NEXT_RESUME,
+  })(() => <AppWithRedux store={store} />);
+}
 
 AppRegistry.registerComponent(appName, () => AppWithCodePush);
