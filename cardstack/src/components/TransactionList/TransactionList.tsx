@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshControl, SectionList } from 'react-native';
+import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import { TransactionListLoading } from './TransactionListLoading';
 import { useTransactions } from '@cardstack/services';
@@ -19,13 +19,17 @@ interface TransactionListProps {
 
 export const TransactionList = ({ Header }: TransactionListProps) => {
   const {
+    count,
     isLoadingTransactions,
+    fetchMoreLoading,
     sections,
     refetch,
     refetchLoading,
+    fetchMore,
+    shouldFetchMore,
   } = useTransactions();
 
-  if (isLoadingTransactions) {
+  if (isLoadingTransactions && !fetchMoreLoading) {
     return (
       <ScrollView
         backgroundColor="backgroundBlue"
@@ -41,6 +45,9 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
     <SectionList
       ListEmptyComponent={<ListEmptyComponent />}
       ListHeaderComponent={Header}
+      ListFooterComponent={
+        fetchMoreLoading ? <ActivityIndicator size={40} color="white" /> : null
+      }
       contentContainerStyle={{ paddingBottom: 40 }}
       renderItem={props => <TransactionItem {...props} />}
       sections={sections}
@@ -63,6 +70,16 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
           onRefresh={refetch}
         />
       }
+      onEndReached={() => {
+        if (shouldFetchMore) {
+          fetchMore({
+            variables: {
+              skip: count,
+            },
+          });
+        }
+      }}
+      onEndReachedThreshold={1}
       style={{ backgroundColor: colors.backgroundBlue }}
     />
   );

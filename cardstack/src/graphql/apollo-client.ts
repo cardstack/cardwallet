@@ -8,7 +8,20 @@ export const initializeApolloClient = (network: string) => {
   const subgraphUrl = getConstantByNetwork('subgraphURL', network);
 
   sokolClient = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Account: {
+          fields: {
+            transactions: {
+              keyArgs: false,
+              merge(existing = [], incoming) {
+                return [...existing, ...incoming];
+              },
+            },
+          },
+        },
+      },
+    }),
     link: new HttpLink({
       uri: subgraphUrl,
     }),

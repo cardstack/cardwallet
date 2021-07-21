@@ -9,7 +9,7 @@ import {
   useGetTransactionHistoryDataQuery,
 } from '@cardstack/graphql';
 import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
-import { useAccountTransactions } from '@rainbow-me/hooks';
+import { useAccountTransactions, usePrevious } from '@rainbow-me/hooks';
 import { networkTypes } from '@rainbow-me/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
@@ -24,6 +24,8 @@ const sortByTime = (a: any, b: any) => {
 const useSokolTransactions = () => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(0);
+  const [fetchMoreLoading, setFetchMoreLoading] = useState(false);
 
   const [
     accountAddress,
@@ -46,6 +48,7 @@ const useSokolTransactions = () => {
     error,
     refetch,
     networkStatus,
+    fetchMore,
   } = useGetTransactionHistoryDataQuery({
     client,
     notifyOnNetworkStatusChange: true,
@@ -55,14 +58,29 @@ const useSokolTransactions = () => {
     },
   });
 
+  const prevFetchMore = usePrevious(networkStatus === NetworkStatus.fetchMore);
+
   if (error) {
-    logger.log('Error getting Sokol transactions', error);
+    logger.error('Error getting Sokol transactions', error);
   }
+
+  useEffect(() => {
+    const newCount = data?.account?.transactions.length || count;
+
+    if (newCount !== count) {
+      setCount(newCount);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   useEffect(() => {
     const setSectionsData = async () => {
       if (data?.account?.transactions) {
-        setLoading(true);
+        if (prevFetchMore) {
+          setFetchMoreLoading(true);
+        } else {
+          setLoading(true);
+        }
 
         try {
           const transactions = data.account.transactions.reduce<
@@ -104,15 +122,27 @@ const useSokolTransactions = () => {
           logger.log('Error setting sections data', e);
         }
 
+        setFetchMoreLoading(false);
         setLoading(false);
       }
     };
 
     setSectionsData();
-  }, [currencyConversionRates, data, nativeCurrency, accountAddress]);
+  }, [
+    currencyConversionRates,
+    data,
+    nativeCurrency,
+    accountAddress,
+    prevFetchMore,
+  ]);
 
   return {
+    count,
     isLoadingTransactions: networkStatus === NetworkStatus.loading || loading,
+    fetchMore,
+    shouldFetchMore: (data?.account?.transactions.length || 0) > count,
+    fetchMoreLoading:
+      networkStatus === NetworkStatus.fetchMore || fetchMoreLoading,
     refetch,
     refetchLoading: networkStatus === NetworkStatus.refetch,
     sections: sections,
@@ -127,6 +157,9 @@ export const useTransactions = () => {
   if (isLayer1(network)) {
     return {
       ...layer1Data,
+      count: 0,
+      fetchMore: () => ({}),
+      fetchMoreLoading: false,
       refetch: () => ({}),
       refetchLoading: false,
     };
