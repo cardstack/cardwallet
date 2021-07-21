@@ -92,7 +92,6 @@ export const showApplePayRequest = async (
   const merchantIdentifier =
     network === NetworkTypes.mainnet ? MERCHANT_ID : MERCHANT_ID_TEST;
 
-  console.log('merchantIdentifier', merchantIdentifier);
   const methodData = [
     {
       data: {
@@ -266,7 +265,7 @@ export const getOrderId = async (
     reservationId,
     ip
   );
-  console.log({ data: JSON.stringify(data, null, 2) });
+
   try {
     const baseUrl = getBaseUrl(network);
     const response = await wyreApi.post(
@@ -281,7 +280,6 @@ export const getOrderId = async (
       }
     );
 
-    console.log({ response: JSON.stringify(response, null, 2) });
     if (response.status >= 200 && response.status < 300) {
       const orderId = get(response, 'data.id', null);
       return { orderId };
