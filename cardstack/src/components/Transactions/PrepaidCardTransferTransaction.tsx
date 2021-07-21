@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { PrepaidCardTransaction } from './PrepaidCardTransaction';
+import { TransactionBase } from './TransactionBase';
+import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
+import { Icon } from '@cardstack/components';
 import { PrepaidCardTransferTransactionType } from '@cardstack/types';
 
 export const PrepaidCardTransferTransaction = ({
@@ -9,13 +11,15 @@ export const PrepaidCardTransferTransaction = ({
   item: PrepaidCardTransferTransactionType;
 }) => {
   return (
-    <PrepaidCardTransaction
-      {...item}
-      iconName="arrow-up"
-      status="Transferred"
+    <TransactionBase
+      CoinIcon={<Icon name="spend" />}
+      Header={<PrepaidCardTransactionHeader address={item.address} />}
+      statusIconName="arrow-up"
+      statusText="Transferred"
       topText="Face value"
       primaryText={item.spendBalanceDisplay}
       subText={item.nativeBalanceDisplay}
+      transactionHash={item.transactionHash}
     />
   );
 };

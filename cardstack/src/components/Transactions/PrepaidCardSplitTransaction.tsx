@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { PrepaidCardTransaction } from './PrepaidCardTransaction';
+import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
+import { TransactionBase } from './TransactionBase';
+import { Icon } from '@cardstack/components';
 import { PrepaidCardSplitTransactionType } from '@cardstack/types';
 
 export const PrepaidCardSplitTransaction = ({
@@ -9,12 +11,14 @@ export const PrepaidCardSplitTransaction = ({
   item: PrepaidCardSplitTransactionType;
 }) => {
   return (
-    <PrepaidCardTransaction
-      {...item}
-      iconName="split"
-      status="Split"
+    <TransactionBase
+      CoinIcon={<Icon name="spend" />}
+      Header={<PrepaidCardTransactionHeader address={item.address} />}
+      statusIconName="split"
+      statusText="Split"
       primaryText={item.spendBalanceDisplay}
       topText={`${item.prepaidCardCount} prepaid cards of`}
+      transactionHash={item.transactionHash}
     />
   );
 };

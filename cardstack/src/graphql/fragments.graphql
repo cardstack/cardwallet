@@ -39,6 +39,9 @@ fragment BridgeToLayer1Event on BridgeToLayer1Event {
     symbol
     name
   }
+  account {
+    id
+  }
   timestamp
 }
 

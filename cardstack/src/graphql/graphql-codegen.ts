@@ -1288,6 +1288,7 @@ export type PrepaidCard = {
   owner: Account;
   reloadable: Scalars['Boolean'];
   spendBalance: Scalars['BigInt'];
+  faceValue: Scalars['BigInt'];
   issuingTokenBalance: Scalars['BigInt'];
   creation?: Maybe<PrepaidCardCreation>;
   payments: Array<Maybe<PrepaidCardPayment>>;
@@ -1946,6 +1947,14 @@ export type PrepaidCardFilter = {
   spendBalance_lte?: Maybe<Scalars['BigInt']>;
   spendBalance_in?: Maybe<Array<Scalars['BigInt']>>;
   spendBalance_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  faceValue?: Maybe<Scalars['BigInt']>;
+  faceValue_not?: Maybe<Scalars['BigInt']>;
+  faceValue_gt?: Maybe<Scalars['BigInt']>;
+  faceValue_lt?: Maybe<Scalars['BigInt']>;
+  faceValue_gte?: Maybe<Scalars['BigInt']>;
+  faceValue_lte?: Maybe<Scalars['BigInt']>;
+  faceValue_in?: Maybe<Array<Scalars['BigInt']>>;
+  faceValue_not_in?: Maybe<Array<Scalars['BigInt']>>;
   issuingTokenBalance?: Maybe<Scalars['BigInt']>;
   issuingTokenBalance_not?: Maybe<Scalars['BigInt']>;
   issuingTokenBalance_gt?: Maybe<Scalars['BigInt']>;
@@ -1965,6 +1974,7 @@ export enum PrepaidCardOrderBy {
   OWNER = 'owner',
   RELOADABLE = 'reloadable',
   SPENDBALANCE = 'spendBalance',
+  FACEVALUE = 'faceValue',
   ISSUINGTOKENBALANCE = 'issuingTokenBalance',
   CREATION = 'creation',
   PAYMENTS = 'payments',
@@ -4381,6 +4391,9 @@ export type BridgeToLayer1EventFragment = (
   & { token: (
     { __typename?: 'Token' }
     & Pick<Token, 'id' | 'symbol' | 'name'>
+  ), account: (
+    { __typename?: 'Account' }
+    & Pick<Account, 'id'>
   ) }
 );
 
@@ -4516,6 +4529,9 @@ export const BridgeToLayer1EventFragmentDoc = gql`
     id
     symbol
     name
+  }
+  account {
+    id
   }
   timestamp
 }
@@ -4682,7 +4698,7 @@ export const GetTransactionHistoryDataDocument = gql`
     query GetTransactionHistoryData($address: ID!) {
   account(id: $address) {
     id
-    transactions(first: 25) {
+    transactions(first: 50, orderBy: timestamp, orderDirection: desc) {
       transaction {
         ...Transaction
       }
