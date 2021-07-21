@@ -1,28 +1,22 @@
-import {
-  convertRawAmountToBalance,
-  convertRawAmountToNativeDisplay,
-  ERC20ABI,
-  getAddressByNetwork,
-} from '@cardstack/cardpay-sdk';
-import Web3 from 'web3';
+import { ERC20ABI, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import Safes from '@cardstack/cardpay-sdk/sdk/safes/base';
+import Web3 from 'web3';
 import { fetchHistoricalPrice } from './historical-pricing-service';
 import {
   ActionDispatcherDecodedData,
   ClaimRevenueDecodedData,
+  IssuePrepaidCardDecodedData,
+  Level1DecodedData,
   PayMerchantDecodedData,
   RegisterMerchantDecodedData,
   SplitPrepaidCardDecodedData,
-  IssuePrepaidCardDecodedData,
-  Level1DecodedData,
   TokenData,
   TransactionConfirmationData,
   TransactionConfirmationType,
-  TransferPrepaidCard2DecodedData,
   TransferPrepaidCard1DecodedData,
+  TransferPrepaidCard2DecodedData,
   WithdrawalDecodedData,
 } from '@cardstack/types';
-
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 
 const TRANSFER_PREFIX = '0xe318b52b';
