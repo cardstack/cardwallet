@@ -47,6 +47,11 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
 	<string>$(CODEPUSH_KEY)</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://pay.cardstack.com/request</string>
+		<string>https://cardpay.page.link/request</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -220,10 +225,5 @@
 	<string>${BRANCH_APP_DOMAIN)</string>
 	<key>branch_key</key>
 	<string>$(BRANCH_KEY)</string>
-  <key>FirebaseDynamicLinksCustomDomains</key>
-    <array>
-      <string>https://pay.cardstack.com/request</string>
-      <string>https://cardpay.page.link/request</string>
-    </array>
 </dict>
 </plist>
