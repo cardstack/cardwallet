@@ -81,8 +81,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
 
   return (
     <Wrapper width="100%" paddingHorizontal={4} marginBottom={4}>
-      <Touchable
-        onPress={onPress}
+      <Container
         width="100%"
         testID="prepaid-card"
         alignItems="center"
@@ -154,7 +153,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             testID="coin-row-hidden-overlay"
           />
         )}
-      </Touchable>
+      </Container>
     </Wrapper>
   );
 };
