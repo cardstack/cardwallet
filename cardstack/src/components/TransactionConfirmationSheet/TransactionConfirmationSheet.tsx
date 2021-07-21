@@ -3,11 +3,11 @@ import { LayoutAnimation } from 'react-native';
 import URL from 'url-parse';
 
 import { ContainerProps } from '../Container';
+import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
 import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
-import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { PayMerchantDisplay } from './PayMerchantDisplay';
-import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
+import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { SplitPrepaidCardDisplay } from './SplitPrepaidCardDisplay';
 import { TransferPrepaidCardDisplay } from './TransferPrepaidCardDisplay';
 import {
@@ -21,7 +21,6 @@ import {
   Icon,
   IconProps,
   ScrollView,
-  SheetHandle,
   Text,
   Touchable,
 } from '@cardstack/components';
@@ -51,7 +50,6 @@ export const TransactionConfirmationSheet = (
       paddingTop={3}
       borderRadius={20}
     >
-      <SheetHandle />
       <InformationIcon
         isOpen={showFullMessage}
         onPress={() => {
@@ -130,6 +128,7 @@ const Header = ({
       backgroundColor="white"
       width="100%"
       paddingBottom={2}
+      borderRadius={20}
       {...shadowProps}
     >
       <Text marginTop={4} weight="extraBold">

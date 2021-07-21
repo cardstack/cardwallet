@@ -23,7 +23,6 @@ import SendSheet from '../screens/SendSheet';
 import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import SpendSheet from '../screens/SpendSheet';
-import TransactionConfirmationScreen from '../screens/TransactionConfirmationScreen';
 import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
 import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
 import WelcomeScreen from '../screens/WelcomeScreen';
@@ -168,6 +167,13 @@ function MainNavigator() {
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal',
+        }}
+      />
+      <Stack.Screen
+        component={TransactionConfirmation}
+        name={Routes.CONFIRM_REQUEST}
+        options={{
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
@@ -354,17 +360,6 @@ function NativeStackNavigator() {
         component={SavingsSheet}
         name={Routes.SAVINGS_SHEET}
         {...savingsSheetConfig}
-      />
-      <NativeStack.Screen
-        component={TransactionConfirmation}
-        // component={TransactionConfirmationScreen}
-        name={Routes.CONFIRM_REQUEST}
-        options={{
-          allowsDragToDismiss: true,
-          backgroundColor: '#0A0A0A',
-          backgroundOpacity: 1,
-          customStack: true,
-        }}
       />
       <NativeStack.Screen
         component={WithdrawModal}
