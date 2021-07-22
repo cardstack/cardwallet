@@ -45,13 +45,8 @@ const FromSection = () => {
           <Container marginLeft={4}>
             <Text weight="extraBold">{accountName}</Text>
             <NetworkBadge marginTop={2} />
-            <Container flexDirection="row" marginTop={2}>
-              <Container backgroundColor="black" width={2} height="100%" />
-              <Container marginLeft={4}>
-                <Container maxWidth={180} marginTop={1}>
-                  <Text variant="subAddress">{accountAddress}</Text>
-                </Container>
-              </Container>
+            <Container maxWidth={180} marginTop={1}>
+              <Text variant="subAddress">{accountAddress}</Text>
             </Container>
           </Container>
         </Container>
