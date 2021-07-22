@@ -90,7 +90,7 @@ const Header = () => {
           </Touchable>
           <Container alignItems="center">
             <Text color="white" weight="bold">
-              Merchant Name
+              Mandello
             </Text>
             <Container flexDirection="row" alignItems="center">
               <NetworkBadge marginRight={2} />
@@ -135,7 +135,7 @@ const MerchantInfo = () => (
   >
     <Icon name="user" size={80} />
     <Text weight="extraBold" size="medium">
-      Merchant Name
+      Mandello
     </Text>
     <Container flexDirection="row" marginTop={2}>
       <Text weight="extraBold" size="xs">
