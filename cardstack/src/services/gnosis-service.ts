@@ -23,7 +23,7 @@ export const fetchGnosisSafes = async (address: string) => {
 
     safes?.forEach(safe => {
       safe?.tokens.forEach(({ balance, token }) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line@typescript-eslint/ban-ts-comment
         // @ts-ignore
         token.value = Web3.utils.fromWei(balance);
       });
@@ -79,7 +79,7 @@ export const getTokensWithPrice = async (
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
 ) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line@typescript-eslint/ban-ts-comment
   // @ts-ignore
   const web3 = new Web3(web3ProviderSdk);
   const exchangeRate = await getSDK('ExchangeRate', web3);
@@ -127,80 +127,76 @@ export const addGnosisTokenPrices = async (
   currencyConversionRates: CurrencyConversionRates
 ) => {
   const { depots, merchantSafes, prepaidCards } = payload;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line@typescript-eslint/ban-ts-comment
   // @ts-ignore
   const web3 = new Web3(web3ProviderSdk);
 
   if (depots.length || merchantSafes.length || prepaidCards.length) {
     const revenuePool = await getSDK('RevenuePool', web3);
 
-    const [
-      depotsWithPrice,
-      prepaidCardsWithPrice,
-      merchantSafesWithPrice,
-    ] = await Promise.all([
-      await Promise.all(
-        depots.map(async (depot: any) => {
-          const tokensWithPrice = await getTokensWithPrice(
-            depot.tokens,
-            nativeCurrency,
-            currencyConversionRates
-          );
+    const [depotsWithPrice, prepaidCardsWithPrice, merchantSafesWithPrice] =
+      await Promise.all([
+        await Promise.all(
+          depots.map(async (depot: any) => {
+            const tokensWithPrice = await getTokensWithPrice(
+              depot.tokens,
+              nativeCurrency,
+              currencyConversionRates
+            );
 
-          return {
-            ...depot,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-      await Promise.all(
-        prepaidCards.map(async (prepaidCard: any) => {
-          const tokensWithPrice = await getTokensWithPrice(
-            prepaidCard.tokens,
-            nativeCurrency,
-            currencyConversionRates
-          );
+            return {
+              ...depot,
+              tokens: tokensWithPrice,
+            };
+          })
+        ),
+        await Promise.all(
+          prepaidCards.map(async (prepaidCard: any) => {
+            const tokensWithPrice = await getTokensWithPrice(
+              prepaidCard.tokens,
+              nativeCurrency,
+              currencyConversionRates
+            );
 
-          return {
-            ...prepaidCard,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-      await Promise.all(
-        merchantSafes.map(async (merchantSafe: any) => {
-          const revenueBalances = await revenuePool.balances(
-            merchantSafe.address
-          );
+            return {
+              ...prepaidCard,
+              tokens: tokensWithPrice,
+            };
+          })
+        ),
+        await Promise.all(
+          merchantSafes.map(async (merchantSafe: any) => {
+            const revenueBalances = await revenuePool.balances(
+              merchantSafe.address
+            );
 
-          const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all(
-            [
-              getTokensWithPrice(
-                merchantSafe.tokens,
-                nativeCurrency,
-                currencyConversionRates
-              ),
-              getTokensWithPrice(
-                revenueBalances.map(revenueToken => ({
-                  ...revenueToken,
-                  token: {
-                    symbol: revenueToken.tokenSymbol,
-                  },
-                })),
-                nativeCurrency,
-                currencyConversionRates
-              ),
-            ]
-          );
+            const [tokensWithPrice, revenueBalancesWithPrice] =
+              await Promise.all([
+                getTokensWithPrice(
+                  merchantSafe.tokens,
+                  nativeCurrency,
+                  currencyConversionRates
+                ),
+                getTokensWithPrice(
+                  revenueBalances.map(revenueToken => ({
+                    ...revenueToken,
+                    token: {
+                      symbol: revenueToken.tokenSymbol,
+                    },
+                  })),
+                  nativeCurrency,
+                  currencyConversionRates
+                ),
+              ]);
 
-          return {
-            ...merchantSafe,
-            revenueBalances: revenueBalancesWithPrice,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-    ]);
+            return {
+              ...merchantSafe,
+              revenueBalances: revenueBalancesWithPrice,
+              tokens: tokensWithPrice,
+            };
+          })
+        ),
+      ]);
 
     savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
     saveDepots(depotsWithPrice, accountAddress, network);

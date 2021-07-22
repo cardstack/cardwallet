@@ -83,14 +83,12 @@ const LifetimeEarningsSection = ({
   nativeCurrency,
   currencyConversionRates,
 }: MerchantSafeProps) => {
-  const {
-    tokenBalanceDisplay,
-    nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(
-    accumulatedSpendValue,
-    nativeCurrency,
-    currencyConversionRates
-  );
+  const { tokenBalanceDisplay, nativeBalanceDisplay } =
+    convertSpendForBalanceDisplay(
+      accumulatedSpendValue,
+      nativeCurrency,
+      currencyConversionRates
+    );
 
   return (
     <Container flexDirection="column">

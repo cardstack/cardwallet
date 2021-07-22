@@ -8,16 +8,8 @@ interface AssetListProps {
 }
 
 export const AssetFooter = ({ sections }: AssetListProps) => {
-  const {
-    editing,
-    selected,
-    pinned,
-    hidden,
-    pin,
-    unpin,
-    show,
-    hide,
-  } = usePinnedAndHiddenItemOptions();
+  const { editing, selected, pinned, hidden, pin, unpin, show, hide } =
+    usePinnedAndHiddenItemOptions();
 
   const isInitialSelectionPinned = pinned.includes(selected[0]);
   const isInitialSelectionHidden = hidden.includes(selected[0]);

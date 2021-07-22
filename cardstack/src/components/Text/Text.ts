@@ -19,7 +19,7 @@ export type TextProps = ShopifyTextProps<Theme> &
 const BaseText = createText<Theme>();
 
 export const Text = createRestyleComponent<TextProps, Theme>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line@typescript-eslint/ban-ts-comment
   // @ts-ignore
   [customText],
   BaseText

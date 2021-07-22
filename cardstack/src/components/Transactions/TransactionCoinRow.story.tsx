@@ -16,8 +16,7 @@ storiesOf('Transaction Coin Row', module).add('Default', () => {
             amount: '5',
             display: '5.00 ETH',
           },
-          hash:
-            '0x57d91b5b7e5259c009e21f8d8e2ea06e7ea437ff4a2e5391fdc47de573cef3fd-0',
+          hash: '0x57d91b5b7e5259c009e21f8d8e2ea06e7ea437ff4a2e5391fdc47de573cef3fd-0',
           minedAt: 1615326853,
           native: {
             amount: '5',

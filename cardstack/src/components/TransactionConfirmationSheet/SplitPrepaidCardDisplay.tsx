@@ -43,10 +43,8 @@ export const SplitPrepaidCardDisplay = (
 const FromSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
   const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
 
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const prepaidCard = prepaidCards.find(
     card => card.address === data.prepaidCard
@@ -92,10 +90,8 @@ const FromSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 };
 
 const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const issuingTokenTotal = data.issuingTokenAmounts.reduce<number>(
     (total, amount) => total + Number(amount),
@@ -133,10 +129,8 @@ const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 };
 
 const DistributeSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const zeroSpendDisplay = convertSpendForBalanceDisplay(
     '0',

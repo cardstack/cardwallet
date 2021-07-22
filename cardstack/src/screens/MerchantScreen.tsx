@@ -162,14 +162,12 @@ const LifetimeEarningsSection = () => {
     [string, { [key: string]: number }]
   >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
 
-  const {
-    tokenBalanceDisplay,
-    nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(
-    accumulatedSpendValue,
-    nativeCurrency,
-    currencyConversionRates
-  );
+  const { tokenBalanceDisplay, nativeBalanceDisplay } =
+    convertSpendForBalanceDisplay(
+      accumulatedSpendValue,
+      nativeCurrency,
+      currencyConversionRates
+    );
 
   const onPress = () =>
     navigate(Routes.EXPANDED_ASSET_SHEET, {

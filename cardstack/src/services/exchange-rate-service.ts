@@ -15,7 +15,7 @@ export const getNativeBalance = async (props: {
     return 0;
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line@typescript-eslint/ban-ts-comment
   // @ts-ignore
   const web3 = new Web3(web3ProviderSdk);
   const exchangeRate = await getSDK('ExchangeRate', web3);

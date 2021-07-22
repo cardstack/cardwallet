@@ -31,7 +31,7 @@ type BaseInputProps = TextInputProps &
   PositionProps<Theme>;
 
 const BasicInput = createRestyleComponent<BaseInputProps, Theme>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line@typescript-eslint/ban-ts-comment
   // @ts-ignore
   [layout, spacing, position, typography, border, color],
   TextInput
@@ -77,7 +77,7 @@ export const Input = React.forwardRef((props: InputProps, ref) => (
 ));
 
 export const InputMask = createRestyleComponent<BaseInputProps, Theme>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line@typescript-eslint/ban-ts-comment
   // @ts-ignore
   [layout, spacing, position, typography, border, color],
   TextInputMask

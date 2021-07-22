@@ -212,14 +212,12 @@ const Bottom = ({
   const { accountAddress } = useAccountSettings();
   const transferrable = accountAddress === issuer;
 
-  const {
-    tokenBalanceDisplay,
-    nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(
-    spendFaceValue.toString(),
-    nativeCurrency,
-    currencyConversionRates
-  );
+  const { tokenBalanceDisplay, nativeBalanceDisplay } =
+    convertSpendForBalanceDisplay(
+      spendFaceValue.toString(),
+      nativeCurrency,
+      currencyConversionRates
+    );
 
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>

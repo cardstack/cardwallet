@@ -328,9 +328,8 @@ export const decodeData = async (
     if (isIssuePrepaidCard(level1Data, network)) {
       return decodeIssuePrepaidCardData(level1Data, message.to);
     } else if (isActionDispatcher(level1Data, network)) {
-      const actionDispatcherDecodedData = decodeActionDispatcherData(
-        level1Data
-      );
+      const actionDispatcherDecodedData =
+        decodeActionDispatcherData(level1Data);
 
       if (isRegisterMerchant(actionDispatcherDecodedData)) {
         return decodeRegisterMerchantData(

@@ -23,12 +23,8 @@ export const GenericDisplay = (props: TransactionConfirmationDisplayProps) => {
 };
 
 const FromSection = () => {
-  const {
-    accountAddress,
-    accountColor,
-    accountName,
-    accountSymbol,
-  } = useAccountProfile();
+  const { accountAddress, accountColor, accountName, accountSymbol } =
+    useAccountProfile();
 
   const { network } = useAccountSettings();
   const { wallets } = useWallets();

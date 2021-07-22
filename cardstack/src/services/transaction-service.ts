@@ -25,35 +25,27 @@ const useSokolTransactions = () => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [
-    accountAddress,
-    network,
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useRainbowSelector<[string, string, string, CurrencyConversionRates]>(
-    state => [
-      state.settings.accountAddress,
-      state.settings.network,
-      state.settings.nativeCurrency,
-      state.currencyConversion.rates,
-    ]
-  );
+  const [accountAddress, network, nativeCurrency, currencyConversionRates] =
+    useRainbowSelector<[string, string, string, CurrencyConversionRates]>(
+      state => [
+        state.settings.accountAddress,
+        state.settings.network,
+        state.settings.nativeCurrency,
+        state.currencyConversion.rates,
+      ]
+    );
 
   const client = getApolloClient(network);
 
-  const {
-    data,
-    error,
-    refetch,
-    networkStatus,
-  } = useGetTransactionHistoryDataQuery({
-    client,
-    notifyOnNetworkStatusChange: true,
-    skip: !accountAddress || network !== networkTypes.sokol,
-    variables: {
-      address: accountAddress,
-    },
-  });
+  const { data, error, refetch, networkStatus } =
+    useGetTransactionHistoryDataQuery({
+      client,
+      notifyOnNetworkStatusChange: true,
+      skip: !accountAddress || network !== networkTypes.sokol,
+      variables: {
+        address: accountAddress,
+      },
+    });
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);

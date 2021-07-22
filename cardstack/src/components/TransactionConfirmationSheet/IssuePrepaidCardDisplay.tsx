@@ -93,10 +93,8 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
 };
 
 const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const tokenDisplay = convertRawAmountToBalance(
     data.issuingTokenAmounts[0],
@@ -127,10 +125,8 @@ const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
 };
 
 const ToSection = () => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const zeroSpendDisplay = convertSpendForBalanceDisplay(
     '0',

@@ -12,10 +12,8 @@ export const FromPrepaidCardSection = ({
 }: {
   prepaidCardAddress: string;
 }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
 

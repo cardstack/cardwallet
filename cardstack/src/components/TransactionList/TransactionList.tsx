@@ -18,12 +18,8 @@ interface TransactionListProps {
 }
 
 export const TransactionList = ({ Header }: TransactionListProps) => {
-  const {
-    isLoadingTransactions,
-    sections,
-    refetch,
-    refetchLoading,
-  } = useTransactions();
+  const { isLoadingTransactions, sections, refetch, refetchLoading } =
+    useTransactions();
 
   if (isLoadingTransactions) {
     return (

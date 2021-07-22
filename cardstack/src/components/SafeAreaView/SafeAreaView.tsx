@@ -34,7 +34,7 @@ export interface SafeAreaViewProps extends RestyleProps {
  * This is our primitive SafeAreaView component with restyle props applied
  */
 export const SafeAreaView = createRestyleComponent<SafeAreaViewProps, Theme>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line@typescript-eslint/ban-ts-comment
   // @ts-ignore
   [layout, spacing, position, border, backgroundColor],
   ReactNativeSafeAreaView

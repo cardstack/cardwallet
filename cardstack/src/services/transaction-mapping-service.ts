@@ -52,7 +52,7 @@ const mapBridgeToLayer2EventTransaction = async (
   return {
     balance: convertRawAmountToBalance(transaction.amount, {
       decimals: 18,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line@typescript-eslint/ban-ts-comment
       // @ts-ignore
       symbol: transaction.token.symbol,
     }),
@@ -88,7 +88,7 @@ const mapBridgeToLayer1EventTransaction = async (
   return {
     balance: convertRawAmountToBalance(transaction.amount, {
       decimals: 18,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line@typescript-eslint/ban-ts-comment
       // @ts-ignore
       symbol: transaction.token.symbol,
     }),

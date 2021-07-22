@@ -9,10 +9,8 @@ export const PayThisAmountSection = ({
 }: {
   spendAmount: string | number;
 }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const spendDisplay = convertSpendForBalanceDisplay(
     String(spendAmount),

@@ -89,10 +89,8 @@ const FromSection = () => {
 const TransferSection = ({ data }: { data: TransferDecodedDataType }) => {
   const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
 
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const [nativeCurrency, currencyConversionRates] =
+    useNativeCurrencyAndConversionRates();
 
   const prepaidCard = prepaidCards.find(
     card => card.address === data.prepaidCard
