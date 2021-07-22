@@ -11,6 +11,7 @@ import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { SplitPrepaidCardDisplay } from './SplitPrepaidCardDisplay';
 import { TransferPrepaidCardDisplay } from './TransferPrepaidCardDisplay';
 import { WithdrawalDisplay } from './WithdrawalDisplay';
+import { HubAuthenticationDisplay } from './HubAuthenticationDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -100,6 +101,7 @@ const Header = ({
     [key in TransactionConfirmationType]: string;
   } = {
     [TransactionConfirmationType.GENERIC]: methodName || '',
+    [TransactionConfirmationType.HUB_AUTH]: 'Authenticate Account',
     [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
     [TransactionConfirmationType.WITHDRAWAL]: 'Withdraw Funds',
     [TransactionConfirmationType.REGISTER_MERCHANT]: 'Create Merchant',
@@ -148,7 +150,11 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
     return null;
   }
 
-  if (props.data.type === TransactionConfirmationType.ISSUE_PREPAID_CARD) {
+  if (props.data.type === TransactionConfirmationType.HUB_AUTH) {
+    return <HubAuthenticationDisplay />;
+  } else if (
+    props.data.type === TransactionConfirmationType.ISSUE_PREPAID_CARD
+  ) {
     return <IssuePrepaidCardDisplay {...props} data={props.data} />;
   } else if (
     props.data.type === TransactionConfirmationType.REGISTER_MERCHANT

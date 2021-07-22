@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMessage } from './use-message';
 import { useVerifyingContract } from './use-verifying-contract';
+import { usePrimaryType } from './use-primary-type';
 import { decodeData } from '@cardstack/services';
 import {
   TransactionConfirmationData,
@@ -23,6 +24,7 @@ export const useTransactionConfirmationDataWithDecoding = () => {
 
   const message = useMessage();
   const verifyingContract = useVerifyingContract();
+  const primaryType = usePrimaryType();
 
   useEffect(() => {
     const setData = async () => {
@@ -32,6 +34,7 @@ export const useTransactionConfirmationDataWithDecoding = () => {
         const result = await decodeData(
           message,
           verifyingContract,
+          primaryType,
           network,
           nativeCurrency
         );
@@ -45,7 +48,7 @@ export const useTransactionConfirmationDataWithDecoding = () => {
     };
 
     setData();
-  }, [message, verifyingContract, network, nativeCurrency]);
+  }, [message, verifyingContract, network, nativeCurrency, primaryType]);
 
   return {
     data,
