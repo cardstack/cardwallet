@@ -42,7 +42,7 @@ const ToSection = () => {
         <Container flexDirection="row">
           <Icon name="user" />
           <Container marginLeft={4}>
-            <Text weight="extraBold">Merchant Name</Text>
+            <Text weight="extraBold">Mandello</Text>
             <Text variant="subAddress" marginTop={1}>
               {getAddressPreview('0xXXXXXXXXXXXX')}*
             </Text>

@@ -16,7 +16,7 @@ export const MerchantCreationTransaction = ({
       }
       statusIconName="plus"
       statusText="Created"
-      primaryText="Merchant Name"
+      primaryText="Mandello"
       subText="Merchant Account"
       transactionHash={item.transactionHash}
     />

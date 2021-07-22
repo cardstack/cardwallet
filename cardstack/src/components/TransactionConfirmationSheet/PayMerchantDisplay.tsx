@@ -41,7 +41,7 @@ const ToSection = ({ data }: PayMerchantDisplayProps) => {
         <Container flexDirection="row" alignItems="center">
           <Icon name="user" />
           <Text size="small" weight="extraBold" style={{ marginLeft: 6 }}>
-            Merchant Name
+           Mandello 
           </Text>
         </Container>
         <Container maxWidth={180} marginLeft={9}>

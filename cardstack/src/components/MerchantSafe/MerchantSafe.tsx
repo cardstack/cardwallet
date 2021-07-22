@@ -59,7 +59,7 @@ const MerchantInfo = () => (
     >
       <Icon name="user" />
       <Container flexDirection="column" marginLeft={4} justifyContent="center">
-        <Text weight="bold">Merchant Name</Text>
+        <Text weight="bold">Mandello</Text>
         <Text variant="subText">Merchant Account</Text>
       </Container>
     </Container>
