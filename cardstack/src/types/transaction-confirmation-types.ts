@@ -1,5 +1,3 @@
-import { Hub } from '@sentry/react-native';
-
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
   HUB_AUTH = 'hubAuth',
