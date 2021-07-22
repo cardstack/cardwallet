@@ -75,7 +75,7 @@ const AuthenticateSection = () => {
           Message Signing Request
         </Text>
         <Container maxWidth={300}>
-          <Text fontSize={15}>
+          <Text fontSize={15} textAlign="center">
             I am signing this message to prove to Cardstack Hub that I am the
             owner of this address, so I can store and update information using
             the Card Wallet
