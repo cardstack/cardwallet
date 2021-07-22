@@ -378,9 +378,9 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     const assets = isMainnet(network)
       ? actualMainnetAssets
       : testnetAssets[network];
-    let depots = [],
-      prepaidCards = [],
-      merchantSafes = [];
+    let depots = null,
+      prepaidCards = null,
+      merchantSafes = null;
 
     // not functional on xdai chain yet
     if (network === networkTypes.sokol) {
@@ -429,7 +429,7 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         prepaidCards = gnosisDataWithPrices.prepaidCards;
         merchantSafes = gnosisDataWithPrices.merchantSafes;
       } catch (error) {
-        console.log('Error getting Gnosis data', error);
+        logger.error('Error getting Gnosis data', error);
       }
     }
 
@@ -483,48 +483,52 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
           }
         }
 
-        for (let i = 0; i < depots.length; i++) {
-          const depot = depots[i];
+        if (depots) {
+          for (let i = 0; i < depots.length; i++) {
+            const depot = depots[i];
 
-          for (let j = 0; j < depot.tokens.length; j++) {
-            const token = depot.tokens[j];
+            for (let j = 0; j < depot.tokens.length; j++) {
+              const token = depot.tokens[j];
 
-            if (toLower(token.coingecko_id) === toLower(key)) {
-              depots[i].tokens[j].price = {
-                changed_at: prices[key].last_updated_at,
-                relative_change_24h:
-                  prices[key][`${formattedNativeCurrency}_24h_change`],
-                value: prices[key][`${formattedNativeCurrency}`],
-              };
-            } else if (token.coingecko_id === null) {
-              depots[i].tokens[j].price = {
-                changed_at: null,
-                relative_change_24h: 0,
-                value: 0,
-              };
+              if (toLower(token.coingecko_id) === toLower(key)) {
+                depots[i].tokens[j].price = {
+                  changed_at: prices[key].last_updated_at,
+                  relative_change_24h:
+                    prices[key][`${formattedNativeCurrency}_24h_change`],
+                  value: prices[key][`${formattedNativeCurrency}`],
+                };
+              } else if (token.coingecko_id === null) {
+                depots[i].tokens[j].price = {
+                  changed_at: null,
+                  relative_change_24h: 0,
+                  value: 0,
+                };
+              }
             }
           }
         }
 
-        for (let i = 0; i < prepaidCards.length; i++) {
-          const prepaidCard = prepaidCards[i];
+        if (prepaidCards) {
+          for (let i = 0; i < prepaidCards.length; i++) {
+            const prepaidCard = prepaidCards[i];
 
-          for (let j = 0; j < prepaidCard.tokens.length; j++) {
-            const token = prepaidCard.tokens[j];
+            for (let j = 0; j < prepaidCard.tokens.length; j++) {
+              const token = prepaidCard.tokens[j];
 
-            if (toLower(token.coingecko_id) === toLower(key)) {
-              prepaidCards[i].tokens[j].price = {
-                changed_at: prices[key].last_updated_at,
-                relative_change_24h:
-                  prices[key][`${formattedNativeCurrency}_24h_change`],
-                value: prices[key][`${formattedNativeCurrency}`],
-              };
-            } else if (token.coingecko_id === null) {
-              prepaidCards[i].tokens[j].price = {
-                changed_at: null,
-                relative_change_24h: 0,
-                value: 0,
-              };
+              if (toLower(token.coingecko_id) === toLower(key)) {
+                prepaidCards[i].tokens[j].price = {
+                  changed_at: prices[key].last_updated_at,
+                  relative_change_24h:
+                    prices[key][`${formattedNativeCurrency}_24h_change`],
+                  value: prices[key][`${formattedNativeCurrency}`],
+                };
+              } else if (token.coingecko_id === null) {
+                prepaidCards[i].tokens[j].price = {
+                  changed_at: null,
+                  relative_change_24h: 0,
+                  value: 0,
+                };
+              }
             }
           }
         }
