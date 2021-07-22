@@ -7,6 +7,7 @@ export enum TransactionConfirmationType {
   TRANSFER_PREPAID_CARD_1 = 'transferPrepaidCard1',
   TRANSFER_PREPAID_CARD_2 = 'transferPrepaidCard2',
   CLAIM_REVENUE = 'claimRevenue',
+  WITHDRAWAL = 'withdrawal',
 }
 
 export interface Level1DecodedData {
@@ -79,6 +80,17 @@ export interface TransferPrepaidCard2DecodedData {
   type: TransactionConfirmationType.TRANSFER_PREPAID_CARD_2;
 }
 
+export interface WithdrawalDecodedData {
+  amount: string;
+  address: string;
+  addressType: 'depot' | 'merchant' | 'prepaid-card' | 'external';
+  layer1Recipient: string;
+  tokenBalance: string;
+  price: number;
+  token: TokenData;
+  type: TransactionConfirmationType.WITHDRAWAL;
+}
+
 export type ActionDispatcherActionName =
   | 'registerMerchant'
   | 'payMerchant'
@@ -100,4 +112,5 @@ export type TransactionConfirmationData =
   | TransferPrepaidCard1DecodedData
   | TransferPrepaidCard2DecodedData
   | ClaimRevenueDecodedData
+  | WithdrawalDecodedData
   | PayMerchantDecodedData;
