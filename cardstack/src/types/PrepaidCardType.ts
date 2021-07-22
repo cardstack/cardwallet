@@ -8,4 +8,5 @@ export interface PrepaidCardType {
   tokens: TokenType[];
   type: string;
   reloadable: boolean;
+  transferrable: boolean;
 }
