@@ -1,7 +1,11 @@
 import React from 'react';
 import { GasSpeedButton } from '../../../src/components/gas';
 import { useTransactionConfirmation } from '@cardstack/hooks';
-import { Container, TransactionConfirmationSheet } from '@cardstack/components';
+import {
+  Container,
+  TransactionConfirmationSheet,
+  SafeAreaView,
+} from '@cardstack/components';
 
 const TransactionConfirmation = () => {
   const {
@@ -17,7 +21,7 @@ const TransactionConfirmation = () => {
   } = useTransactionConfirmation();
 
   return (
-    <Container flex={1} width="100%">
+    <SafeAreaView backgroundColor="black" flex={1} width="100%">
       <TransactionConfirmationSheet
         data={data}
         dappUrl={dappUrl}
@@ -35,7 +39,7 @@ const TransactionConfirmation = () => {
           </Container>
         )}
       </Container>
-    </Container>
+    </SafeAreaView>
   );
 };
 

@@ -21,13 +21,7 @@ import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
-import {
-  Container,
-  Icon,
-  ScrollView,
-  Text,
-  Touchable,
-} from '@cardstack/components';
+import { Container, Icon, ScrollView, Text } from '@cardstack/components';
 
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
@@ -44,7 +38,7 @@ const EDITING_COIN_ROW_WIDTH = '87%';
  * A prepaid card component
  */
 export const PrepaidCard = (props: PrepaidCardProps) => {
-  const [isScrollable, setIsScrollable] = useState(false);
+  const [isScrollable] = useState(false);
   const Wrapper = isScrollable ? ScrollView : Container;
   const { networkName, ...prepaidCard } = props;
 
@@ -53,8 +47,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
     selected,
     pinned,
     hidden,
-    select,
-    deselect,
+    // select,
+    // deselect,
   } = usePinnedAndHiddenItemOptions();
 
   const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
@@ -67,22 +61,22 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
   const editingIconName = isSelected ? 'check-circle' : 'circle';
 
-  const onPress = () => {
-    if (isEditing) {
-      if (isSelected) {
-        deselect(prepaidCard.address);
-      } else {
-        select(prepaidCard.address);
-      }
-    } else {
-      setIsScrollable(!isScrollable);
-    }
-  };
+  // Disabling for now until prepaid details is created
+  // const onPress = () => {
+  //   if (isEditing) {
+  //     if (isSelected) {
+  //       deselect(prepaidCard.address);
+  //     } else {
+  //       select(prepaidCard.address);
+  //     }
+  //   } else {
+  //     setIsScrollable(!isScrollable);
+  //   }
+  // };
 
   return (
     <Wrapper width="100%" paddingHorizontal={4} marginBottom={4}>
-      <Touchable
-        onPress={onPress}
+      <Container
         width="100%"
         testID="prepaid-card"
         alignItems="center"
@@ -154,7 +148,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             testID="coin-row-hidden-overlay"
           />
         )}
-      </Touchable>
+      </Container>
     </Wrapper>
   );
 };
