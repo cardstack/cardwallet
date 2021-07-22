@@ -11,7 +11,7 @@
 		01361B85D1CD438490C03DD1 /* Karbon-Semibold 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BEED7E48F54FC781D67548 /* Karbon-Semibold 2.otf */; };
 		019BFA419A1C493998D767A0 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B5AA0CC94474E5C961A2B62 /* OpenSans-LightItalic.ttf */; };
 		02DAD40A70B744479FCF8BCA /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3B5E0F4CE84A57A47D4C9F /* Roboto-BoldItalic.ttf */; };
-		0453D1DB26A8B05E0069E200 /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0453CD5E26A7149C0069E200 /* libPods-Rainbow.a */; };
+		0422477C26A9B468009577FD /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0453CD5E26A7149C0069E200 /* libPods-Rainbow.a */; };
 		0EFAF3F629434EEE9EB3D1AB /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67DA6C572CB04D0CAD69AAE8 /* OpenSans-ExtraBold.ttf */; };
 		11FF2DE427EF438DBF86BE59 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25C02488F53047498CA6CBCF /* Roboto-Thin.ttf */; };
 		1395452CAD2B4450A893408A /* Karbon-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 21725A18577446E1B4997238 /* Karbon-MediumItalic.otf */; };
@@ -110,7 +110,6 @@
 		C3D2FF6EF6A443A3ACF5695B /* Karbon-Bold 3.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6C9AB8BDCED4AA3B6F2307A /* Karbon-Bold 3.otf */; };
 		C72F456C99A646399192517D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 98AED33BAB4247CEBEF8464D /* libz.tbd */; };
 		C94F9BD322054F9D98997C2A /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 46534D8099D04335A68233C0 /* Roboto-Regular.ttf */; };
-		CC60CE2B4FB721683BC645DD /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8C62475F7C54EB5D04FF460 /* libPods-Rainbow.a */; };
 		D26A79A962AF474F9D8A6A68 /* Karbon-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 875249FC1319430FA49666EA /* Karbon-Bold.otf */; };
 		D8A36AAB86B949919EF25039 /* RobotoMono-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A29DF52467464FFBA1E9F347 /* RobotoMono-ThinItalic.ttf */; };
 		D8CC7D300E4F44CBB0849967 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F6CD7D3EDCC481486A0A459 /* OpenSans-Bold.ttf */; };
@@ -1172,10 +1171,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0453D1DB26A8B05E0069E200 /* libPods-Rainbow.a in Frameworks */,
+				0422477C26A9B468009577FD /* libPods-Rainbow.a in Frameworks */,
 				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				C72F456C99A646399192517D /* libz.tbd in Frameworks */,
-				CC60CE2B4FB721683BC645DD /* libPods-Rainbow.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

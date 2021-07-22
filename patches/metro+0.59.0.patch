@@ -1,0 +1,13 @@
+diff --git a/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js b/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js
+index 92c8a7e..ebab5d0 100644
+--- a/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js
++++ b/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js
+@@ -303,7 +303,7 @@ class UnableToResolveError extends Error {
+     try {
+       file = fs.readFileSync(this.originModulePath, "utf8");
+     } catch (error) {
+-      if (error.code === "ENOENT") {
++      if (error.code === "ENOENT" || error.code === 'EISDIR') {
+         // We're probably dealing with a virtualised file system where
+         // `this.originModulePath` doesn't actually exist on disk.
+         // We can't show a code frame, but there's no need to let this I/O
