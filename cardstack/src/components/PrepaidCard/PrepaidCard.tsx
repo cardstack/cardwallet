@@ -14,7 +14,6 @@ import { PrepaidCardType } from '../../types';
 import { CenteredContainer } from '../Container';
 import {
   PinnedHiddenSectionOption,
-  useAccountSettings,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import {
@@ -205,13 +204,10 @@ const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
 const Bottom = ({
   spendFaceValue,
   reloadable,
-  issuer,
   nativeCurrency,
   currencyConversionRates,
+  transferrable,
 }: PrepaidCardProps) => {
-  const { accountAddress } = useAccountSettings();
-  const transferrable = accountAddress === issuer;
-
   const {
     tokenBalanceDisplay,
     nativeBalanceDisplay,
