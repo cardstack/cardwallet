@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { usePayloadParams } from './use-payload-params';
 import { useVerifyingContract } from './use-verifying-contract';
-import { usePrimaryType } from './use-primary-type';
 import { decodeData } from '@cardstack/services';
 import {
   TransactionConfirmationData,
