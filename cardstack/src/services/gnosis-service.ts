@@ -14,6 +14,7 @@ import {
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { CurrencyConversionRates } from '@cardstack/types';
+import logger from 'logger';
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
@@ -70,7 +71,7 @@ export const fetchGnosisSafes = async (address: string) => {
       prepaidCards,
     };
   } catch (error) {
-    console.log({ error });
+    logger.error(error);
   }
 };
 

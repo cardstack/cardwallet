@@ -105,6 +105,8 @@ const useSokolTransactions = () => {
         }
 
         setLoading(false);
+      } else if (data?.account === null) {
+        setSections([]);
       }
     };
 
@@ -130,7 +132,14 @@ export const useTransactions = () => {
       refetch: () => ({}),
       refetchLoading: false,
     };
+  } else if (network === networkTypes.sokol) {
+    return layer2Data;
   }
 
-  return layer2Data;
+  return {
+    isLoadingTransactions: false,
+    sections: [],
+    refetch: () => ({}),
+    refetchLoading: false,
+  };
 };
