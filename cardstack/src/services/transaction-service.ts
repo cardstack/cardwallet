@@ -122,7 +122,7 @@ const useSokolTransactions = () => {
 export const useTransactions = () => {
   const network = useRainbowSelector(state => state.settings.network);
   const layer1Data = useAccountTransactions();
-  const layer2Data = useSokolTransactions();
+  const sokolData = useSokolTransactions();
 
   if (isLayer1(network)) {
     return {
@@ -130,7 +130,14 @@ export const useTransactions = () => {
       refetch: () => ({}),
       refetchLoading: false,
     };
+  } else if (network === networkTypes.sokol) {
+    return sokolData;
   }
 
-  return layer2Data;
+  return {
+    isLoadingTransactions: false,
+    sections: [],
+    refetch: () => ({}),
+    refetchLoading: false,
+  };
 };

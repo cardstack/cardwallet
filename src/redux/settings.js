@@ -53,7 +53,7 @@ export const settingsLoadNetwork = () => async dispatch => {
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
     });
   } catch (error) {
-    logger.log('Error loading network settings', error);
+    logger.error('Error loading network settings', error);
   }
 };
 
