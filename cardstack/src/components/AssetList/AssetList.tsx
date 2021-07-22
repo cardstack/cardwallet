@@ -153,7 +153,7 @@ export const AssetList = (props: AssetListProps) => {
                   isEditing ? (
                     <Button
                       variant="tiny"
-                      onPress={() => toggleEditingPinnedHidden(type)}
+                      onPress={() => type && toggleEditingPinnedHidden(type)}
                     >
                       DONE
                     </Button>
@@ -166,7 +166,7 @@ export const AssetList = (props: AssetListProps) => {
                             cancelButtonIndex: 1,
                           },
                           (buttonIndex: number) => {
-                            if (buttonIndex === 0) {
+                            if (buttonIndex === 0 && type) {
                               toggleEditingPinnedHidden(type);
                             }
                           }

@@ -390,12 +390,13 @@ export const signTypedDataMessage = async (
   }
 };
 
-export const oldLoadSeedPhrase = async (): Promise<null | EthereumWalletSeed> => {
-  const seedPhrase = await keychain.loadString(seedPhraseKey, {
-    authenticationPrompt,
-  });
-  return seedPhrase as string | null;
-};
+export const oldLoadSeedPhrase =
+  async (): Promise<null | EthereumWalletSeed> => {
+    const seedPhrase = await keychain.loadString(seedPhraseKey, {
+      authenticationPrompt,
+    });
+    return seedPhrase as string | null;
+  };
 
 export const loadAddress = (): Promise<null | EthereumAddress> =>
   keychain.loadString(addressKey) as Promise<string | null>;
@@ -513,9 +514,8 @@ export const createWallet = async (
       wallet: walletResult,
       address,
       walletType,
-    } =
-      checkedWallet ||
-      (await ethereumUtils.deriveAccountFromWalletInput(walletSeed));
+    } = checkedWallet ||
+    (await ethereumUtils.deriveAccountFromWalletInput(walletSeed));
     let pkey = walletSeed;
     if (!walletResult) return null;
     const walletAddress = address;
@@ -803,7 +803,8 @@ export const savePrivateKey = async (
   address: EthereumAddress,
   privateKey: null | EthereumPrivateKey
 ) => {
-  const privateAccessControlOptions = await keychain.getPrivateAccessControlOptions();
+  const privateAccessControlOptions =
+    await keychain.getPrivateAccessControlOptions();
 
   const key = `${address}_${privateKeyKey}`;
   const val = {
@@ -844,7 +845,8 @@ export const saveSeedPhrase = async (
   seedphrase: EthereumWalletSeed,
   keychain_id: RainbowWallet['id']
 ): Promise<void> => {
-  const privateAccessControlOptions = await keychain.getPrivateAccessControlOptions();
+  const privateAccessControlOptions =
+    await keychain.getPrivateAccessControlOptions();
   const key = `${keychain_id}_${seedPhraseKey}`;
   const val = {
     id: keychain_id,
@@ -895,19 +897,20 @@ export const setSelectedWallet = async (
   );
 };
 
-export const getSelectedWallet = async (): Promise<null | RainbowSelectedWalletData> => {
-  try {
-    const selectedWalletData = await keychain.loadObject(selectedWalletKey);
-    if (selectedWalletData) {
-      return selectedWalletData as RainbowSelectedWalletData;
+export const getSelectedWallet =
+  async (): Promise<null | RainbowSelectedWalletData> => {
+    try {
+      const selectedWalletData = await keychain.loadObject(selectedWalletKey);
+      if (selectedWalletData) {
+        return selectedWalletData as RainbowSelectedWalletData;
+      }
+      return null;
+    } catch (error) {
+      logger.sentry('Error in getSelectedWallet');
+      captureException(error);
+      return null;
     }
-    return null;
-  } catch (error) {
-    logger.sentry('Error in getSelectedWallet');
-    captureException(error);
-    return null;
-  }
-};
+  };
 
 export const saveAllWallets = async (wallets: AllRainbowWallets) => {
   const val = {
@@ -918,19 +921,20 @@ export const saveAllWallets = async (wallets: AllRainbowWallets) => {
   await keychain.saveObject(allWalletsKey, val, publicAccessControlOptions);
 };
 
-export const getAllWallets = async (): Promise<null | AllRainbowWalletsData> => {
-  try {
-    const allWallets = await keychain.loadObject(allWalletsKey);
-    if (allWallets) {
-      return allWallets as AllRainbowWalletsData;
+export const getAllWallets =
+  async (): Promise<null | AllRainbowWalletsData> => {
+    try {
+      const allWallets = await keychain.loadObject(allWalletsKey);
+      if (allWallets) {
+        return allWallets as AllRainbowWalletsData;
+      }
+      return null;
+    } catch (error) {
+      logger.sentry('Error in getAllWallets');
+      captureException(error);
+      return null;
     }
-    return null;
-  } catch (error) {
-    logger.sentry('Error in getAllWallets');
-    captureException(error);
-    return null;
-  }
-};
+  };
 
 export const generateAccount = async (
   id: RainbowWallet['id'],
@@ -981,9 +985,8 @@ export const generateAccount = async (
       throw new Error(`Can't access seed phrase to create new accounts`);
     }
 
-    const {
-      wallet: ethereumJSWallet,
-    } = await ethereumUtils.deriveAccountFromMnemonic(seedphrase, index);
+    const { wallet: ethereumJSWallet } =
+      await ethereumUtils.deriveAccountFromMnemonic(seedphrase, index);
     if (!ethereumJSWallet) return null;
     const walletAddress = addHexPrefix(
       toChecksumAddress(ethereumJSWallet.getAddress().toString('hex'))
@@ -1049,9 +1052,8 @@ const migrateSecrets = async (): Promise<MigratedSecretsResult | null> => {
         break;
       case EthereumWalletType.mnemonic:
         {
-          const {
-            wallet: ethereumJSWallet,
-          } = await ethereumUtils.deriveAccountFromMnemonic(seedphrase);
+          const { wallet: ethereumJSWallet } =
+            await ethereumUtils.deriveAccountFromMnemonic(seedphrase);
           if (!ethereumJSWallet) return null;
           const walletPkey = addHexPrefix(
             ethereumJSWallet.getPrivateKey().toString('hex')
