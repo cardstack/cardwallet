@@ -98,7 +98,7 @@ const ToSection = ({ merchantSafe }: { merchantSafe: string }) => {
         <Container flexDirection="row" alignItems="center">
           <Icon name="user" />
           <Text size="small" weight="extraBold" style={{ marginLeft: 6 }}>
-           Mandello 
+            Mandello
           </Text>
         </Container>
         <Container maxWidth={180} marginLeft={9}>
