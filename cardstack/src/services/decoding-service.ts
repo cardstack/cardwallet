@@ -352,16 +352,24 @@ const isClaimRevenue = (toAddress: string, network: string) => {
 const isTransferPrepaidCard1 = (messageData: string) =>
   messageData.slice(0, 10) === TRANSFER_PREFIX;
 
+const isHubAuthentication = (primaryType: string) =>
+  primaryType === 'HubAuthentication';
+
 export const decodeData = async (
   message: {
     to: string;
     data: string;
   },
   verifyingContract: string,
+  primaryType: string,
   network: string,
   nativeCurrency: string
 ): Promise<TransactionConfirmationData> => {
-  if (isClaimRevenue(message.to, network)) {
+  if (isHubAuthentication(primaryType)) {
+    return {
+      type: TransactionConfirmationType.HUB_AUTH,
+    };
+  } else if (isClaimRevenue(message.to, network)) {
     return decodeClaimRevenueData(
       message.data,
       verifyingContract,

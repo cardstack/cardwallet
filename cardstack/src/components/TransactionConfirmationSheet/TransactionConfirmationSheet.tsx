@@ -3,6 +3,7 @@ import { LayoutAnimation } from 'react-native';
 import URL from 'url-parse';
 
 import { ContainerProps } from '../Container';
+import { Skeleton } from '../Skeleton';
 import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
 import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
@@ -11,6 +12,7 @@ import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
 import { SplitPrepaidCardDisplay } from './SplitPrepaidCardDisplay';
 import { TransferPrepaidCardDisplay } from './TransferPrepaidCardDisplay';
 import { WithdrawalDisplay } from './WithdrawalDisplay';
+import { HubAuthenticationDisplay } from './HubAuthenticationDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -93,6 +95,7 @@ const Header = ({
   methodName,
   showHeaderShadow,
   data,
+  loading,
 }: TransactionConfirmationDisplayProps & { showHeaderShadow: boolean }) => {
   const { hostname } = new URL(dappUrl);
 
@@ -100,6 +103,7 @@ const Header = ({
     [key in TransactionConfirmationType]: string;
   } = {
     [TransactionConfirmationType.GENERIC]: methodName || '',
+    [TransactionConfirmationType.HUB_AUTH]: 'Authenticate Account',
     [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
     [TransactionConfirmationType.WITHDRAWAL]: 'Withdraw Funds',
     [TransactionConfirmationType.REGISTER_MERCHANT]: 'Create Merchant',
@@ -133,9 +137,13 @@ const Header = ({
       borderRadius={20}
       {...shadowProps}
     >
-      <Text marginTop={4} weight="extraBold">
-        {typeToHeaderText[data.type]}
-      </Text>
+      {loading ? (
+        <Skeleton marginTop={4} width={150} height={16} light />
+      ) : (
+        <Text marginTop={4} weight="extraBold">
+          {typeToHeaderText[data.type]}
+        </Text>
+      )}
       <Text variant="subText" weight="bold">
         {hostname}
       </Text>
@@ -145,10 +153,27 @@ const Header = ({
 
 const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
   if (props.loading) {
-    return null;
+    return (
+      <>
+        <Container marginTop={8} width="100%">
+          <Skeleton width={125} height={20} light />
+          <Container height={125} />
+          <HorizontalDivider />
+          <Skeleton width={125} height={20} light />
+          <Container height={125} />
+          <HorizontalDivider />
+          <Skeleton width={125} height={20} light />
+          <Container height={125} />
+        </Container>
+      </>
+    );
   }
 
-  if (props.data.type === TransactionConfirmationType.ISSUE_PREPAID_CARD) {
+  if (props.data.type === TransactionConfirmationType.HUB_AUTH) {
+    return <HubAuthenticationDisplay />;
+  } else if (
+    props.data.type === TransactionConfirmationType.ISSUE_PREPAID_CARD
+  ) {
     return <IssuePrepaidCardDisplay {...props} data={props.data} />;
   } else if (
     props.data.type === TransactionConfirmationType.REGISTER_MERCHANT

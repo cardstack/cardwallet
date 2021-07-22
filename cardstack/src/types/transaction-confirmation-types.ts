@@ -1,5 +1,6 @@
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
+  HUB_AUTH = 'hubAuth',
   ISSUE_PREPAID_CARD = 'issuePrepaidCard',
   REGISTER_MERCHANT = 'registerMerchant',
   PAY_MERCHANT = 'payMerchant',
@@ -24,6 +25,11 @@ export interface TokenData {
 export interface GenericDisplayData {
   type: TransactionConfirmationType.GENERIC;
 }
+
+export interface HubAuthData {
+  type: TransactionConfirmationType.HUB_AUTH;
+}
+
 export interface IssuePrepaidCardDecodedData {
   amount: string;
   to: string;
@@ -106,6 +112,7 @@ export interface ActionDispatcherDecodedData {
 
 export type TransactionConfirmationData =
   | GenericDisplayData
+  | HubAuthData
   | IssuePrepaidCardDecodedData
   | RegisterMerchantDecodedData
   | SplitPrepaidCardDecodedData
