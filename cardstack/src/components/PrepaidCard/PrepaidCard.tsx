@@ -12,6 +12,7 @@ import SVG, {
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardType } from '../../types';
 import { CenteredContainer } from '../Container';
+import { Touchable } from '../Touchable';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
@@ -46,8 +47,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
     selected,
     pinned,
     hidden,
-    // select,
-    // deselect,
+    select,
+    deselect,
   } = usePinnedAndHiddenItemOptions();
 
   const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
@@ -60,27 +61,26 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
   const editingIconName = isSelected ? 'check-circle' : 'circle';
 
-  // Disabling for now until prepaid details is created
-  // const onPress = () => {
-  //   if (isEditing) {
-  //     if (isSelected) {
-  //       deselect(prepaidCard.address);
-  //     } else {
-  //       select(prepaidCard.address);
-  //     }
-  //   } else {
-  //     setIsScrollable(!isScrollable);
-  //   }
-  // };
+  const onPress = () => {
+    if (isEditing) {
+      if (isSelected) {
+        deselect(prepaidCard.address);
+      } else {
+        select(prepaidCard.address);
+      }
+    }
+  };
 
   return (
     <Wrapper width="100%" paddingHorizontal={4} marginBottom={4}>
-      <Container
+      <Touchable
         width="100%"
         testID="prepaid-card"
         alignItems="center"
         paddingVertical={2}
         flexDirection="row"
+        disabled={!isEditing}
+        onPress={onPress}
       >
         {isEditing && (
           <Container
@@ -147,7 +147,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             testID="coin-row-hidden-overlay"
           />
         )}
-      </Container>
+      </Touchable>
     </Wrapper>
   );
 };
