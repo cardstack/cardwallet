@@ -6,7 +6,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 def use_flipper!(versions = {})
-  versions['Flipper'] ||= '~> 0.33.1'
+  versions['Flipper'] ||= '~> 0.54.0'
   versions['DoubleConversion'] ||= '1.1.7'
   versions['Flipper-Folly'] ||= '~> 2.1'
   versions['Flipper-Glog'] ||= '0.3.6'
@@ -105,7 +105,7 @@ target 'Rainbow' do
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
   if ENV['SKIP_FLIPPER'] != "true"
-    use_flipper!({ 'Flipper' => '0.95.0', 'Flipper-Folly' => '2.6.7', 'Flipper-RSocket' => '1.4.3' })
+    use_flipper!({ 'Flipper' => '0.95.0', 'Flipper-Folly' => '2.6.7' })
 
     pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
