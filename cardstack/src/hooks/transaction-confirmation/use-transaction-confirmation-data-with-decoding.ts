@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useMessage } from './use-message';
+import { usePayloadParams } from './use-payload-params';
 import { useVerifyingContract } from './use-verifying-contract';
 import { usePrimaryType } from './use-primary-type';
 import { decodeData } from '@cardstack/services';
@@ -22,9 +22,8 @@ export const useTransactionConfirmationDataWithDecoding = () => {
     type: TransactionConfirmationType.GENERIC,
   });
 
-  const message = useMessage();
+  const { message, primaryType } = usePayloadParams();
   const verifyingContract = useVerifyingContract();
-  const primaryType = usePrimaryType();
 
   useEffect(() => {
     const setData = async () => {

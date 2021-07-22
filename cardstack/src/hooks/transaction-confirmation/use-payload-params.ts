@@ -1,13 +1,17 @@
 import { useRouteParams } from './use-route-params';
 
-export const useMessage = () => {
+export const usePayloadParams = (): {
+  message: {
+    to: string;
+    data: string;
+  };
+  primaryType: string;
+} => {
   const {
     transactionDetails: { payload },
   } = useRouteParams();
 
   const { params } = payload;
 
-  const message = params[1].message;
-
-  return message;
+  return params[1];
 };

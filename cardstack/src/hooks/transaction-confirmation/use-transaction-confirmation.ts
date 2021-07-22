@@ -3,7 +3,7 @@ import { useCancelTransaction } from './use-cancel-transaction';
 import { useConfirmTransaction } from './use-confirm-transaction';
 import { useTransactionConfirmationDataWithDecoding } from './use-transaction-confirmation-data-with-decoding';
 import { useIsMessageRequest } from './use-is-message-request';
-import { useMessage } from './use-message';
+import { usePayloadParams } from './use-payload-params';
 import { useMethodName } from './use-method-name';
 import { useParsedMessage } from './use-parsed-message';
 import { useRouteParams } from './use-route-params';
@@ -15,7 +15,7 @@ export const useTransactionConfirmation = () => {
     transactionDetails: { dappUrl },
   } = useRouteParams();
 
-  const message = useMessage();
+  const { message } = usePayloadParams();
   const { data, loading } = useTransactionConfirmationDataWithDecoding();
   const onCancel = useCancelTransaction();
   const onConfirm = useConfirmTransaction();
