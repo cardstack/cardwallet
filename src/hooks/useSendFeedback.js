@@ -5,7 +5,7 @@ import Mailer from 'react-native-mail';
 import { Alert } from '../components/alerts';
 import useAppVersion from './useAppVersion';
 
-const FeedbackEmailAddress = 'support@cardstack.com';
+const FeedbackEmailAddress = 'appfeedback@cardstack.com';
 
 const setClipboardToFeedbackEmail = () =>
   Clipboard.setString(FeedbackEmailAddress);
