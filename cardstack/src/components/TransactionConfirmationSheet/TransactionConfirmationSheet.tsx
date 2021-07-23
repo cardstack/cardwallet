@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { LayoutAnimation } from 'react-native';
+import { LayoutAnimation, ActivityIndicator } from 'react-native';
 import URL from 'url-parse';
 
-import { ContainerProps } from '../Container';
+import { CenteredContainer, ContainerProps } from '../Container';
 import { Skeleton } from '../Skeleton';
 import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
 import { GenericDisplay } from './GenericDisplay';
@@ -128,6 +128,10 @@ const Header = ({
       }
     : {};
 
+  if (loading) {
+    return null;
+  }
+
   return (
     <Container
       alignItems="center"
@@ -137,13 +141,9 @@ const Header = ({
       borderRadius={20}
       {...shadowProps}
     >
-      {loading ? (
-        <Skeleton marginTop={4} width={150} height={16} light />
-      ) : (
-        <Text marginTop={4} weight="extraBold">
-          {typeToHeaderText[data.type]}
-        </Text>
-      )}
+      <Text marginTop={4} weight="extraBold">
+        {typeToHeaderText[data.type]}
+      </Text>
       <Text variant="subText" weight="bold">
         {hostname}
       </Text>
@@ -154,18 +154,9 @@ const Header = ({
 const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
   if (props.loading) {
     return (
-      <>
-        <Container marginTop={8} width="100%">
-          <Skeleton width={125} height={20} light />
-          <Container height={125} />
-          <HorizontalDivider />
-          <Skeleton width={125} height={20} light />
-          <Container height={125} />
-          <HorizontalDivider />
-          <Skeleton width={125} height={20} light />
-          <Container height={125} />
-        </Container>
-      </>
+      <CenteredContainer width="100%" height={475}>
+        <ActivityIndicator size="large" />
+      </CenteredContainer>
     );
   }
 
