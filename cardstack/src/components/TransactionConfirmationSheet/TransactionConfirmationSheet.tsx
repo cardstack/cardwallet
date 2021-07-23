@@ -3,7 +3,6 @@ import { LayoutAnimation, ActivityIndicator } from 'react-native';
 import URL from 'url-parse';
 
 import { CenteredContainer, ContainerProps } from '../Container';
-import { Skeleton } from '../Skeleton';
 import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
 import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
