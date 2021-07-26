@@ -5,8 +5,8 @@ import { getApolloClient } from '../graphql/apollo-client';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import { mapLayer2Transactions } from './transaction-mapping-service';
 import {
-  TransactionFragment,
-  useGetTransactionHistoryDataQuery,
+  useGetAccountTransactionHistoryDataQuery,
+  useGetSafeTransactionHistoryDataQuery,
 } from '@cardstack/graphql';
 import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
@@ -23,41 +23,78 @@ const sortByTime = (a: any, b: any) => {
   return timeB - timeA;
 };
 
-const useSokolTransactions = () => {
-  const [sections, setSections] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const [
-    accountAddress,
-    network,
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useRainbowSelector<[string, string, string, CurrencyConversionRates]>(
-    state => [
-      state.settings.accountAddress,
-      state.settings.network,
-      state.settings.nativeCurrency,
-      state.currencyConversion.rates,
-    ]
-  );
-
+const useTransactionData = (accountAddress: string, safeAddress?: string) => {
+  const network = useRainbowSelector(state => state.settings.network);
+  const isSafeQuery = Boolean(safeAddress);
   const client = getApolloClient(network);
 
-  const {
-    data,
-    error,
-    refetch,
-    fetchMore,
-    networkStatus,
-  } = useGetTransactionHistoryDataQuery({
+  console.log('client', client);
+
+  const accountQueryResponse = useGetAccountTransactionHistoryDataQuery({
     client,
     notifyOnNetworkStatusChange: true,
-    skip: !accountAddress || network !== networkTypes.sokol,
+    skip: !accountAddress || network !== networkTypes.sokol || isSafeQuery,
     variables: {
       address: accountAddress,
       pageSize: PAGE_SIZE,
     },
   });
+
+  console.log('accountQueryResponse', accountQueryResponse);
+
+  const safeQueryResponse = useGetSafeTransactionHistoryDataQuery({
+    client,
+    notifyOnNetworkStatusChange: true,
+    skip: !safeAddress || network !== networkTypes.sokol,
+    variables: {
+      address: accountAddress,
+      pageSize: PAGE_SIZE,
+    },
+  });
+
+  if (isSafeQuery) {
+    return {
+      transactions:
+        safeQueryResponse.data?.safe?.safeTxns.map(
+          safeTxn => safeTxn?.transaction
+        ) || [],
+      account: safeQueryResponse.data?.safe,
+      ...safeQueryResponse,
+    };
+  }
+
+  return {
+    transactions:
+      accountQueryResponse.data?.account?.transactions.map(
+        txn => txn?.transaction
+      ) || [],
+    account: accountQueryResponse.data?.account,
+    ...accountQueryResponse,
+  };
+};
+
+const useSokolTransactions = (safeAddress?: string) => {
+  const [sections, setSections] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const [
+    accountAddress,
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useRainbowSelector<[string, string, CurrencyConversionRates]>(state => [
+    state.settings.accountAddress,
+    state.settings.nativeCurrency,
+    state.currencyConversion.rates,
+  ]);
+
+  const {
+    account,
+    transactions,
+    networkStatus,
+    fetchMore,
+    refetch,
+    error,
+  } = useTransactionData(accountAddress, safeAddress);
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);
@@ -65,20 +102,10 @@ const useSokolTransactions = () => {
 
   useEffect(() => {
     const setSectionsData = async () => {
-      if (data?.account?.transactions) {
+      if (transactions) {
         setLoading(true);
 
         try {
-          const transactions = data.account.transactions.reduce<
-            TransactionFragment[]
-          >((accum, t) => {
-            if (t) {
-              return [...accum, t.transaction];
-            }
-
-            return accum;
-          }, []);
-
           const mappedTransactions = await mapLayer2Transactions(
             transactions,
             accountAddress,
@@ -109,15 +136,21 @@ const useSokolTransactions = () => {
         }
 
         setLoading(false);
-      } else if (data?.account === null) {
+      } else if (account === null) {
         setSections([]);
       }
     };
 
     setSectionsData();
-  }, [currencyConversionRates, data, nativeCurrency, accountAddress]);
+  }, [
+    currencyConversionRates,
+    transactions,
+    account,
+    nativeCurrency,
+    accountAddress,
+  ]);
 
-  const transactionsCount = data?.account?.transactions?.length || 0;
+  const transactionsCount = transactions?.length || 0;
   const isLoading = networkStatus === NetworkStatus.loading || loading;
   const isFetchingMore = sections.length && isLoading;
 

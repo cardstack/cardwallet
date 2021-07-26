@@ -1,7 +1,19 @@
-query GetTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
   account(id: $address) {
     id
     transactions(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+      timestamp
+      transaction {
+        ...Transaction
+      }
+    }
+  }
+}
+
+query GetSafeTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+  safe(id: $address) {
+    id
+    safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
       timestamp
       transaction {
         ...Transaction
