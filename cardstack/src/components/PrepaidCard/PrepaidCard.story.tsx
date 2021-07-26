@@ -30,6 +30,14 @@ storiesOf('Prepaid Card', module)
         nativeCurrency="USD"
         currencyConversionRates={{}}
         transferrable={false}
+        cardCustomization={{
+          issuerName: 'PrepaidCardTest1',
+          background: '#FFD800',
+          patternColor: 'white',
+          patternUrl:
+            'https://app.cardstack.com/images/prepaid-card-customizations/pattern-2.svg',
+          textColor: 'black',
+        }}
       />
     );
   })

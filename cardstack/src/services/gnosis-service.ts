@@ -14,6 +14,7 @@ import {
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { CurrencyConversionRates } from '@cardstack/types';
+import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import logger from 'logger';
 
 export const fetchGnosisSafes = async (address: string) => {
@@ -65,10 +66,24 @@ export const fetchGnosisSafes = async (address: string) => {
       }
     );
 
+    const extendedPrepaidCards = await Promise.all(
+      prepaidCards.map(async (prepaidCard: PrepaidCardSafe) => {
+        try {
+          const cardCustomization = await fetchCardCustomizationFromDID(
+            prepaidCard.customizationDID
+          );
+
+          return { ...prepaidCard, cardCustomization };
+        } catch {
+          return prepaidCard;
+        }
+      })
+    );
+
     return {
       depots,
       merchantSafes,
-      prepaidCards,
+      prepaidCards: extendedPrepaidCards,
     };
   } catch (error) {
     logger.error(error);

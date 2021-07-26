@@ -1,4 +1,4 @@
-import { TokenType } from '.';
+import { TokenType, PrepaidCardCustomization } from '.';
 
 export interface PrepaidCardType {
   address: string;
@@ -9,4 +9,5 @@ export interface PrepaidCardType {
   type: string;
   reloadable: boolean;
   transferrable: boolean;
+  cardCustomization?: PrepaidCardCustomization;
 }
