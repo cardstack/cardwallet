@@ -49,6 +49,14 @@ export interface DepotBridgedLayer1TransactionType {
   type: TransactionTypes.DEPOT_BRIDGED_LAYER_1;
 }
 
+export interface PrepaidCardCustomization {
+  background: string;
+  issuerName: string;
+  patternColor: string;
+  patternUrl: string;
+  textColor: string;
+}
+
 export interface PrepaidCardCreatedTransactionType {
   address: string;
   createdAt: number;

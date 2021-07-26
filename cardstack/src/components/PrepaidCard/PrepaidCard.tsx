@@ -60,6 +60,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const iconName = isHidden ? 'eye-off' : 'pin';
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
   const editingIconName = isSelected ? 'check-circle' : 'circle';
+  const issuerName = prepaidCard.cardCustomization?.issuerName || '...';
 
   const onPress = () => {
     if (isEditing) {
@@ -128,8 +129,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
         >
           <GradientBackground />
-          {/* hard code issuer for now */}
-          <Top {...prepaidCard} issuer="Cardstack" networkName={networkName} />
+          <Top {...prepaidCard} issuer={issuerName} networkName={networkName} />
           <Bottom {...props} />
         </Container>
         {isEditing && isHidden && (

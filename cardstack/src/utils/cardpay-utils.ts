@@ -4,7 +4,9 @@ import {
   convertAmountToNativeDisplay,
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
-
+import { getResolver } from '@cardstack/did-resolver';
+import { Resolver } from 'did-resolver';
+import { PrepaidCardCustomization } from '@cardstack/types';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai', 'keth'];
 const MAINNETS = ['mainnet', 'xdai'];
 const LAYER_1_NETWORKS = ['mainnet', 'kovan'];
@@ -65,5 +67,44 @@ export const convertSpendForBalanceDisplay = (
   return {
     tokenBalanceDisplay: `§${spendWithCommas}${includeSuffix ? ' SPEND' : ''}`,
     nativeBalanceDisplay,
+  };
+};
+
+export const fetchCardCustomizationFromDID = async (
+  customizationDID?: string
+): Promise<PrepaidCardCustomization> => {
+  if (!customizationDID) {
+    throw new Error('customizationDID must be present!');
+  }
+
+  const didResolver = new Resolver(getResolver());
+  const did = await didResolver.resolve(customizationDID);
+
+  const alsoKnownAs = did?.didDocument?.alsoKnownAs?.[0];
+
+  if (!alsoKnownAs) {
+    throw new Error('alsoKnownAs is not defined');
+  }
+
+  const jsonApiDocument = await (await fetch(alsoKnownAs)).json();
+  const included = jsonApiDocument.included;
+
+  let colorScheme = included.find(
+    (node: any) => node.type === 'prepaid-card-color-schemes'
+  );
+
+  let pattern = included.find(
+    (node: any) => node.type === 'prepaid-card-patterns'
+  );
+
+  colorScheme = colorScheme.attributes;
+  pattern = pattern.attributes;
+
+  return {
+    issuerName: jsonApiDocument.data.attributes['issuer-name'],
+    background: colorScheme.background,
+    patternColor: colorScheme['pattern-color'],
+    textColor: colorScheme['text-color'],
+    patternUrl: pattern['pattern-url'],
   };
 };
