@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshControl, SectionList } from 'react-native';
+import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import { TransactionListLoading } from './TransactionListLoading';
 import { useTransactions } from '@cardstack/services';
@@ -19,7 +19,9 @@ interface TransactionListProps {
 
 export const TransactionList = ({ Header }: TransactionListProps) => {
   const {
+    onEndReached,
     isLoadingTransactions,
+    isFetchingMore,
     sections,
     refetch,
     refetchLoading,
@@ -41,6 +43,9 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
     <SectionList
       ListEmptyComponent={<ListEmptyComponent />}
       ListHeaderComponent={Header}
+      ListFooterComponent={
+        isFetchingMore ? <ActivityIndicator color="white" /> : null
+      }
       contentContainerStyle={{ paddingBottom: 40 }}
       renderItem={props => <TransactionItem {...props} />}
       sections={sections}
@@ -63,6 +68,8 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
           onRefresh={refetch}
         />
       }
+      onEndReached={onEndReached}
+      onEndReachedThreshold={1}
       style={{ backgroundColor: colors.backgroundBlue }}
     />
   );
