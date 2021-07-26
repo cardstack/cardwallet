@@ -4504,6 +4504,8 @@ export type TransactionFragment = (
 
 export type GetTransactionHistoryDataQueryVariables = Exact<{
   address: Scalars['ID'];
+  skip?: Maybe<Scalars['Int']>;
+  pageSize?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -4514,6 +4516,7 @@ export type GetTransactionHistoryDataQuery = (
     & Pick<Account, 'id'>
     & { transactions: Array<Maybe<(
       { __typename?: 'EOATransaction' }
+      & Pick<EoaTransaction, 'timestamp'>
       & { transaction: (
         { __typename?: 'Transaction' }
         & TransactionFragment
@@ -4695,10 +4698,11 @@ ${TokenTransferFragmentDoc}
 ${MerchantCreationFragmentDoc}
 ${PrepaidCardPaymentFragmentDoc}`;
 export const GetTransactionHistoryDataDocument = gql`
-    query GetTransactionHistoryData($address: ID!) {
+    query GetTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
   account(id: $address) {
     id
-    transactions(first: 50, orderBy: timestamp, orderDirection: desc) {
+    transactions(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+      timestamp
       transaction {
         ...Transaction
       }
@@ -4720,6 +4724,8 @@ export const GetTransactionHistoryDataDocument = gql`
  * const { data, loading, error } = useGetTransactionHistoryDataQuery({
  *   variables: {
  *      address: // value for 'address'
+ *      skip: // value for 'skip'
+ *      pageSize: // value for 'pageSize'
  *   },
  * });
  */

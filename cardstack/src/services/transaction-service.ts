@@ -14,6 +14,8 @@ import { networkTypes } from '@rainbow-me/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
+const PAGE_SIZE = 100;
+
 const sortByTime = (a: any, b: any) => {
   const timeA = Number(a.timestamp || a.minedAt || a.createdAt);
   const timeB = Number(b.timestamp || b.minedAt || b.createdAt);
@@ -45,6 +47,7 @@ const useSokolTransactions = () => {
     data,
     error,
     refetch,
+    fetchMore,
     networkStatus,
   } = useGetTransactionHistoryDataQuery({
     client,
@@ -52,6 +55,7 @@ const useSokolTransactions = () => {
     skip: !accountAddress || network !== networkTypes.sokol,
     variables: {
       address: accountAddress,
+      pageSize: PAGE_SIZE,
     },
   });
 
@@ -113,8 +117,22 @@ const useSokolTransactions = () => {
     setSectionsData();
   }, [currencyConversionRates, data, nativeCurrency, accountAddress]);
 
+  const transactionsCount = data?.account?.transactions?.length || 0;
+  const isLoading = networkStatus === NetworkStatus.loading || loading;
+  const isFetchingMore = sections.length && isLoading;
+
   return {
-    isLoadingTransactions: networkStatus === NetworkStatus.loading || loading,
+    isLoadingTransactions: isLoading && !isFetchingMore,
+    isFetchingMore,
+    onEndReached: () => {
+      if (!isFetchingMore) {
+        fetchMore({
+          variables: {
+            skip: transactionsCount,
+          },
+        });
+      }
+    },
     refetch,
     refetchLoading: networkStatus === NetworkStatus.refetch,
     sections: sections,
@@ -137,7 +155,9 @@ export const useTransactions = () => {
   }
 
   return {
+    onEndReached: () => ({}),
     isLoadingTransactions: false,
+    isFetchingMore: false,
     sections: [],
     refetch: () => ({}),
     refetchLoading: false,
