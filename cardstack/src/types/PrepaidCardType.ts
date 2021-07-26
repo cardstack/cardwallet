@@ -9,5 +9,5 @@ export interface PrepaidCardType {
   type: string;
   reloadable: boolean;
   transferrable: boolean;
-  cardCustomization: PrepaidCardCustomization;
+  cardCustomization?: PrepaidCardCustomization;
 }
