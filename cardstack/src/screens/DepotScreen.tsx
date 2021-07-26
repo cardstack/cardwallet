@@ -165,7 +165,7 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
         {tab}
       </Text>
       <Container
-        backgroundColor={isSelected ? 'white' : 'black'}
+        backgroundColor={isSelected ? 'teal' : 'transparent'}
         height={4}
         width="100%"
       />
