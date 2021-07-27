@@ -3,15 +3,19 @@ import { groupBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { getApolloClient } from '../graphql/apollo-client';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from './../../../src/redux/hooks';
 import { mapLayer2Transactions } from './transaction-mapping-service';
 import {
   useGetAccountTransactionHistoryDataQuery,
   useGetSafeTransactionHistoryDataQuery,
 } from '@cardstack/graphql';
 import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
-import { useAccountTransactions } from '@rainbow-me/hooks';
+import { useAccountSettings, useAccountTransactions } from '@rainbow-me/hooks';
 import { networkTypes } from '@rainbow-me/networkTypes';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
 import logger from 'logger';
 
 const PAGE_SIZE = 100;
@@ -27,25 +31,24 @@ const useTransactionData = (accountAddress: string, safeAddress?: string) => {
   const network = useRainbowSelector(state => state.settings.network);
   const isSafeQuery = Boolean(safeAddress);
   const client = getApolloClient(network);
-
-  console.log('client', client);
+  const isNotSokol = network !== networkTypes.sokol;
+  const shouldSkipAccountQuery = !accountAddress || isSafeQuery || isNotSokol;
+  const shouldSkipSafeQuery = Boolean(safeAddress || isNotSokol);
 
   const accountQueryResponse = useGetAccountTransactionHistoryDataQuery({
     client,
     notifyOnNetworkStatusChange: true,
-    skip: !accountAddress || network !== networkTypes.sokol || isSafeQuery,
+    skip: shouldSkipAccountQuery,
     variables: {
       address: accountAddress,
       pageSize: PAGE_SIZE,
     },
   });
 
-  console.log('accountQueryResponse', accountQueryResponse);
-
   const safeQueryResponse = useGetSafeTransactionHistoryDataQuery({
     client,
     notifyOnNetworkStatusChange: true,
-    skip: !safeAddress || network !== networkTypes.sokol,
+    skip: shouldSkipSafeQuery,
     variables: {
       address: accountAddress,
       pageSize: PAGE_SIZE,
@@ -76,16 +79,12 @@ const useTransactionData = (accountAddress: string, safeAddress?: string) => {
 const useSokolTransactions = (safeAddress?: string) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const { accountAddress } = useAccountSettings();
 
   const [
-    accountAddress,
     nativeCurrency,
     currencyConversionRates,
-  ] = useRainbowSelector<[string, string, CurrencyConversionRates]>(state => [
-    state.settings.accountAddress,
-    state.settings.nativeCurrency,
-    state.currencyConversion.rates,
-  ]);
+  ] = useNativeCurrencyAndConversionRates();
 
   const {
     account,
@@ -96,13 +95,21 @@ const useSokolTransactions = (safeAddress?: string) => {
     error,
   } = useTransactionData(accountAddress, safeAddress);
 
+  console.log(
+    'account, transactions, networkStatus, error',
+    account,
+    transactions,
+    networkStatus,
+    error
+  );
+
   if (error) {
     logger.log('Error getting Sokol transactions', error);
   }
 
   useEffect(() => {
     const setSectionsData = async () => {
-      if (transactions) {
+      if (transactions.length) {
         setLoading(true);
 
         try {
