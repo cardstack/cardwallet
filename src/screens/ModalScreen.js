@@ -11,6 +11,7 @@ import {
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
 import { useNavigation } from '../navigation/Navigation';
+import { CopyAddressSheet } from '@cardstack/screen';
 import { padding, position } from '@rainbow-me/styles';
 
 const ModalTypes = {
@@ -18,6 +19,7 @@ const ModalTypes = {
   supported_countries: SupportedCountriesExpandedState,
   swap_details: SwapDetailsState,
   wallet_profile: WalletProfileState,
+  copy_address: CopyAddressSheet,
 };
 
 const Container = styled(Centered).attrs({ direction: 'column' })`

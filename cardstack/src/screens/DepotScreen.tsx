@@ -31,7 +31,7 @@ enum Tabs {
 }
 
 export default function DepotScreen() {
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
   const [selectedTab, setSelectedTab] = useState(Tabs.BALANCES);
@@ -42,7 +42,7 @@ export default function DepotScreen() {
 
   const { address, tokens } = depot;
 
-  const onPressInformation = () => {
+  const onPressMore = () => {
     showActionSheetWithOptions(
       {
         options: ['View on Blockscout', 'Cancel'],
@@ -54,6 +54,13 @@ export default function DepotScreen() {
         }
       }
     );
+  };
+
+  const onPressInformation = () => {
+    navigate(Routes.MODAL_SCREEN, {
+      address: depot.address,
+      type: 'copy_address',
+    });
   };
 
   return (
@@ -91,7 +98,7 @@ export default function DepotScreen() {
                 </Touchable>
               </Container>
               <Container right={20} position="absolute">
-                <Touchable onPress={onPressInformation}>
+                <Touchable onPress={onPressMore}>
                   <Icon name="more-horizontal" color="teal" />
                 </Touchable>
               </Container>
