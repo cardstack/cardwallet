@@ -1,7 +1,7 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React from 'react';
 import { FlexItem } from '../components/layout';
-import { TestnetToast } from '../components/toasts';
+import { NetworkToast, OfflineToast } from '../components/toasts';
 import { useAccountSettings, useCoinListEdited } from '../hooks';
 import ProfileScreen from '../screens/ProfileScreen';
 import QRScannerScreen from '../screens/QRScannerScreen';
@@ -37,6 +37,7 @@ export function SwipeNavigator() {
           name={Routes.QR_SCANNER_SCREEN}
         />
       </Swipe.Navigator>
+      <NetworkToast network={network} />
     </FlexItem>
   );
 }

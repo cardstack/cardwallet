@@ -4,8 +4,9 @@ import networkInfo from '../../helpers/networkInfo';
 import { useAccountSettings, useInternetStatus } from '../../hooks';
 import { Nbsp, Text } from '../text';
 import Toast from './Toast';
+import networkTypes from '@rainbow-me/helpers/networkTypes';
 
-const TestnetToast = () => {
+const NetworkToast = () => {
   const isConnected = useInternetStatus();
   const { network } = useAccountSettings();
   const providerUrl = web3Provider?.connection?.url;
@@ -14,14 +15,14 @@ const TestnetToast = () => {
   const [networkName, setNetworkName] = useState(name);
 
   useEffect(() => {
-    setVisible(true);
-    setNetworkName(name + (isConnected ? '' : ' (offline)'));
-  }, [name, network, providerUrl, isConnected, isTestnet]);
+    setVisible(isConnected && network !== networkTypes.xdai);
+    setNetworkName(networkInfo[network].shortName);
+  }, [name, network, providerUrl, isConnected, isTestnet, networkName]);
 
   const { colors } = useTheme();
 
   return (
-    <Toast isVisible={visible} testID={`testnet-toast-${networkName}`}>
+    <Toast isVisible={visible} testID={`network-toast-${networkName}`}>
       <Text color={colors.white} size="smedium" weight="semibold">
         <Nbsp /> {networkName} <Nbsp />
       </Text>
@@ -29,4 +30,4 @@ const TestnetToast = () => {
   );
 };
 
-export default TestnetToast;
+export default NetworkToast;
