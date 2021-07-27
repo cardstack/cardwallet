@@ -1,11 +1,15 @@
 import React from 'react';
 
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
-import { TransactionBase, TransactionBaseCustomizationProps } from './TransactionBase';
+import {
+  TransactionBase,
+  TransactionBaseCustomizationProps,
+} from './TransactionBase';
 import { Icon } from '@cardstack/components';
 import { PrepaidCardSplitTransactionType } from '@cardstack/types';
 
-interface PrepaidCardSplitTransactionProps extends TransactionBaseCustomizationProps {
+interface PrepaidCardSplitTransactionProps
+  extends TransactionBaseCustomizationProps {
   item: PrepaidCardSplitTransactionType;
 }
 

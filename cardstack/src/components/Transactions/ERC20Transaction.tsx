@@ -10,7 +10,8 @@ import {
 import { ERC20TransactionType } from '@cardstack/types';
 import { CoinIcon, Container } from '@cardstack/components';
 
-export interface ERC20TransactionProps extends TransactionBaseCustomizationProps {
+export interface ERC20TransactionProps
+  extends TransactionBaseCustomizationProps {
   item: ERC20TransactionType;
 }
 

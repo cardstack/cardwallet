@@ -1,5 +1,8 @@
 import React from 'react';
-import { TransactionBase, TransactionBaseCustomizationProps } from './TransactionBase';
+import {
+  TransactionBase,
+  TransactionBaseCustomizationProps,
+} from './TransactionBase';
 import { CoinIcon, SafeHeader } from '@cardstack/components';
 import { DepotBridgedLayer2TransactionType } from '@cardstack/types';
 
