@@ -28,7 +28,7 @@ import {
   useWallets,
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
-import { SystemNotification, Text } from '@cardstack/components';
+import { Container, SystemNotification, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { NOTIFICATION_KEY } from '@cardstack/utils';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
@@ -139,13 +139,20 @@ export default function WalletScreen() {
         isReadOnlyWallet={isReadOnlyWallet}
       >
         <HeaderOpacityToggler isVisible={isCoinListEdited}>
-          <Header justify="space-between">
-            <ProfileHeaderButton />
-            {discoverSheetAvailable ? (
-              <DiscoverHeaderButton />
-            ) : (
-              <CameraHeaderButton />
-            )}
+          <Header>
+            <Container
+              alignItems="center"
+              flex={1}
+              flexDirection="row"
+              justifyContent="space-between"
+            >
+              <ProfileHeaderButton />
+              {discoverSheetAvailable ? (
+                <DiscoverHeaderButton />
+              ) : (
+                <CameraHeaderButton />
+              )}
+            </Container>
           </Header>
           {notificationsVisible === 'true' &&
             !isEmpty &&

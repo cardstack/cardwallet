@@ -1,53 +1,42 @@
 import * as React from 'react';
-import Svg, { SvgProps, G, Path, Rect } from 'react-native-svg';
+import Svg, { SvgProps, Path, Circle } from 'react-native-svg';
 import { palette } from '@cardstack/theme';
 
 function SvgComponent(props: SvgProps) {
   return (
     <Svg
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      xmlns="http://www.w3.org/2000/svg"
-      width={props.width || 24.108}
-      height={props.height || 26.11}
-      viewBox="0 0 20 20"
+      viewBox="0 0 20.337 20.34"
+      width={props.width || 20.337}
+      height={props.height || 20.34}
     >
-      <G data-name="Group 11430" fill={props.color || palette.tealLight}>
-        <Path data-name="Rectangle 2861" d="M14 14h3v3h-3z" />
-        <Path data-name="Rectangle 2862" d="M17 11h3v3h-3z" />
-        <Path data-name="Rectangle 2863" d="M11 11h3v3h-3z" />
-        <Path data-name="Rectangle 2864" d="M17 17h3v3h-3z" />
-        <Path data-name="Rectangle 2865" d="M11 17h3v3h-3z" />
-      </G>
-      <G
-        data-name="Rectangle 2866"
-        fill="none"
-        stroke={props.color || palette.tealLight}
-        strokeWidth={1.5}
-      >
-        <Rect width={9} height={9} rx={2} stroke="none" />
-        <Rect x={0.75} y={0.75} width={7.5} height={7.5} rx={1.25} />
-      </G>
-      <G
-        data-name="Rectangle 2892"
-        transform="translate(0 11)"
-        fill="none"
-        stroke={props.color || palette.tealLight}
-        strokeWidth={1.5}
-      >
-        <Rect width={9} height={9} rx={2} stroke="none" />
-        <Rect x={0.75} y={0.75} width={7.5} height={7.5} rx={1.25} />
-      </G>
-      <G
-        data-name="Rectangle 2891"
-        transform="translate(11)"
-        fill="none"
-        stroke={props.color || palette.tealLight}
-        strokeWidth={1.5}
-      >
-        <Rect width={9} height={9} rx={2} stroke="none" />
-        <Rect x={0.75} y={0.75} width={7.5} height={7.5} rx={1.25} />
-      </G>
+      <Path
+        data-name="Path 9400"
+        d="M20.31 3.343A3.578 3.578 0 0016.993.026 3.711 3.711 0 0016.586 0H13.91a1.064 1.064 0 00-.452.1.656.656 0 00-.255.17 1.066 1.066 0 00.708 1.867h2.674a2.138 2.138 0 01.4.043 1.865 1.865 0 01.242.069c.031.011.062.021.091.033a1.435 1.435 0 01.207.107c.029.018.056.038.083.058a1.17 1.17 0 01.146.122 1.192 1.192 0 01.122.146c.02.026.04.054.059.083a1.6 1.6 0 01.107.207c.012.029.022.06.033.092a1.844 1.844 0 01.069.241 2.136 2.136 0 01.043.4v2.675a1.067 1.067 0 001.868.708.671.671 0 00.169-.256 1.06 1.06 0 00.1-.452V3.737a3.712 3.712 0 00-.014-.394z"
+        fill={props.color || palette.tealLight}
+      />
+      <Path
+        data-name="Path 9401"
+        d="M6.878.103a1.06 1.06 0 00-.451-.1H3.751a3.723 3.723 0 00-.407.026A3.578 3.578 0 00.028 3.346a3.711 3.711 0 00-.026.407v2.676a1.06 1.06 0 00.1.452.672.672 0 00.17.256 1.067 1.067 0 001.868-.708V3.755a2.2 2.2 0 01.043-.4 1.826 1.826 0 01.069-.241c.011-.031.021-.062.033-.092a1.532 1.532 0 01.107-.207 1.74 1.74 0 01.058-.083 1.371 1.371 0 01.122-.146 1.276 1.276 0 01.146-.122c.026-.02.054-.04.083-.058a1.427 1.427 0 01.207-.107c.029-.012.06-.022.091-.033a1.861 1.861 0 01.242-.069 2.137 2.137 0 01.4-.043h2.674A1.066 1.066 0 007.123.287a.661.661 0 00-.245-.184z"
+        fill={props.color || palette.tealLight}
+      />
+      <Path
+        data-name="Path 9402"
+        d="M20.064 13.206a1.067 1.067 0 00-1.868.708v2.674a2.129 2.129 0 01-.043.4 1.884 1.884 0 01-.069.242c-.011.031-.02.062-.033.091a1.572 1.572 0 01-.107.207c-.019.029-.039.056-.059.083a1.187 1.187 0 01-.122.145 1.238 1.238 0 01-.146.123c-.026.02-.054.039-.083.058a1.5 1.5 0 01-.207.107c-.028.012-.06.022-.091.033a1.971 1.971 0 01-.242.068 2.136 2.136 0 01-.4.044H13.92a1.066 1.066 0 00-.708 1.868.663.663 0 00.255.17 1.064 1.064 0 00.452.1h2.676a3.7 3.7 0 00.407-.026 3.576 3.576 0 003.317-3.317 3.689 3.689 0 00.026-.407v-2.676a1.061 1.061 0 00-.1-.452.665.665 0 00-.181-.243z"
+        fill={props.color || palette.tealLight}
+      />
+      <Path
+        data-name="Path 9403"
+        d="M6.429 18.199H3.755a2.134 2.134 0 01-.4-.044 1.967 1.967 0 01-.242-.068c-.031-.011-.062-.021-.091-.033a1.491 1.491 0 01-.207-.107c-.029-.019-.056-.039-.083-.058a1.109 1.109 0 01-.268-.268 1.347 1.347 0 01-.058-.083 1.5 1.5 0 01-.107-.207c-.012-.029-.022-.06-.033-.091a1.865 1.865 0 01-.069-.242 2.19 2.19 0 01-.043-.4v-2.674a1.067 1.067 0 00-1.868-.708.667.667 0 00-.17.256 1.06 1.06 0 00-.1.452V16.6a3.689 3.689 0 00.026.407 3.576 3.576 0 003.316 3.317 3.712 3.712 0 00.407.026h2.676a1.06 1.06 0 00.451-.1.668.668 0 00.256-.17 1.066 1.066 0 00-.708-1.868z"
+        fill={props.color || palette.tealLight}
+      />
+      <Circle
+        data-name="Ellipse 1300"
+        cx={3}
+        cy={3}
+        r={3}
+        transform="translate(7 7)"
+        fill={props.color || palette.tealLight}
+      />
     </Svg>
   );
 }

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 import { useNavigation } from '../../navigation/Navigation';
 import HeaderButton from './HeaderButton';
-import { Icon } from '@cardstack/components';
+import { Container, Icon, Text } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
 
 export default function CameraHeaderButton() {
@@ -14,7 +14,16 @@ export default function CameraHeaderButton() {
 
   return (
     <HeaderButton onPress={onPress} testID="goToCamera" transformOrigin="right">
-      <Icon iconSize="medium" marginRight={3} name="qr-code" />
+      <Container
+        alignItems="center"
+        flexDirection="row"
+        justifyContent="space-between"
+      >
+        <Text color="teal" size="small" weight="bold">
+          Scan QR
+        </Text>
+        <Icon iconSize="medium" marginHorizontal={3} name="qr-code" />
+      </Container>
     </HeaderButton>
   );
 }
