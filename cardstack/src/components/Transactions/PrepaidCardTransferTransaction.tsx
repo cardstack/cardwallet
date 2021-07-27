@@ -1,17 +1,21 @@
 import React from 'react';
 
-import { TransactionBase } from './TransactionBase';
+import { TransactionBase, TransactionBaseCustomizationProps } from './TransactionBase';
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
 import { Icon } from '@cardstack/components';
 import { PrepaidCardTransferTransactionType } from '@cardstack/types';
 
+interface PrepaidCardTransferTransactionProps extends TransactionBaseCustomizationProps {
+  item: PrepaidCardTransferTransactionType;
+}
+
 export const PrepaidCardTransferTransaction = ({
   item,
-}: {
-  item: PrepaidCardTransferTransactionType;
-}) => {
+  ...props
+}: PrepaidCardTransferTransactionProps) => {
   return (
     <TransactionBase
+      {...props}
       CoinIcon={<Icon name="spend" />}
       Header={<PrepaidCardTransactionHeader address={item.address} />}
       statusIconName="arrow-up"

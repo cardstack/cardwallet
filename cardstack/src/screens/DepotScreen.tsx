@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import { Linking, ScrollView, StatusBar } from 'react-native';
-import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
+import React, { useState } from 'react';
+import {
+  ActivityIndicator,
+  Linking,
+  RefreshControl,
+  ScrollView,
+  SectionList,
+  StatusBar,
+} from 'react-native';
 import { BackButton } from '../../../src/components/header';
-import { DepotType, TokenType } from '@cardstack/types';
-import Routes from '@rainbow-me/routes';
+import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
+import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
 import {
   CenteredContainer,
   Container,
@@ -13,10 +19,14 @@ import {
   Text,
   TokenBalance,
   Touchable,
+  TransactionItem,
 } from '@cardstack/components';
+import { useTransactions } from '@cardstack/services';
+import { DepotType, TokenType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 interface RouteType {
@@ -59,7 +69,7 @@ export default function DepotScreen() {
   return (
     <Container top={0} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
-      <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
+      <Container height="100%" justifyContent="flex-end">
         <Container paddingTop={14} backgroundColor="black">
           <Container paddingTop={isNativeStackAvailable ? 4 : 1}>
             <CenteredContainer flexDirection="row">
@@ -219,18 +229,64 @@ const Balances = ({ tokens }: BalancesProps) => {
 };
 
 const Activities = () => {
+  const {
+    params: { depot },
+  } = useRoute<RouteType>();
+
+  const { address } = depot;
+
+  const {
+    sections,
+    isFetchingMore,
+    onEndReached,
+    refetchLoading,
+    refetch,
+    isLoadingTransactions,
+  } = useTransactions(address);
+
   return (
-    <ScrollView>
-      <Container
-        paddingHorizontal={5}
-        paddingBottom={3}
-        marginTop={7}
-        flexDirection="row"
-      >
-        <Text size="medium" marginRight={2}>
-          Activities
-        </Text>
-      </Container>
-    </ScrollView>
+    <Container marginTop={7} flexDirection="column" width="100%">
+      {isLoadingTransactions ? (
+        <TransactionListLoading light />
+      ) : (
+        <SectionList
+          ListEmptyComponent={<ListEmptyComponent />}
+          ListFooterComponent={
+            isFetchingMore ? <ActivityIndicator color="white" /> : null
+          }
+          contentContainerStyle={{ paddingBottom: 40 }}
+          renderItem={props => <TransactionItem {...props} includeBorder />}
+          sections={sections}
+          renderSectionHeader={({ section: { title } }) => (
+            <Container
+              paddingVertical={2}
+              paddingHorizontal={5}
+              width="100%"
+              backgroundColor="white"
+            >
+              <Text size="medium">{title}</Text>
+            </Container>
+          )}
+          refreshControl={
+            <RefreshControl
+              tintColor="white"
+              refreshing={refetchLoading}
+              onRefresh={refetch}
+            />
+          }
+          onEndReached={onEndReached}
+          onEndReachedThreshold={1}
+          style={{ width: '100%' }}
+        />
+      )}
+    </Container>
   );
 };
+
+const ListEmptyComponent = () => (
+  <CenteredContainer width="100%" height={100} flex={1}>
+    <Text color="grayText" textAlign="center">
+      No transactions
+    </Text>
+  </CenteredContainer>
+);

@@ -1,15 +1,19 @@
 import React from 'react';
-import { TransactionBase } from './TransactionBase';
+import { TransactionBase, TransactionBaseCustomizationProps } from './TransactionBase';
 import { Icon, SafeHeader } from '@cardstack/components';
 import { MerchantCreationTransactionType } from '@cardstack/types';
 
+interface MerchantCreationTransactionProps extends TransactionBaseCustomizationProps {
+  item: MerchantCreationTransactionType;
+}
+
 export const MerchantCreationTransaction = ({
   item,
-}: {
-  item: MerchantCreationTransactionType;
-}) => {
+  ...props
+}: MerchantCreationTransactionProps) => {
   return (
     <TransactionBase
+      {...props}
       CoinIcon={<Icon name="user" />}
       Header={
         <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
