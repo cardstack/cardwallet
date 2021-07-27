@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useRainbowSelector } from '../../../src/redux/hooks';
 import { getApolloClient } from '../graphql/apollo-client';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
-import { TransactionFragment } from './../graphql/graphql-codegen';
 import { mapLayer2Transactions } from './transaction-mapping-service';
 import logger from 'logger';
 import { networkTypes } from '@rainbow-me/networkTypes';
