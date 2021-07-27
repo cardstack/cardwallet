@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRainbowSelector } from '../../../src/redux/hooks';
 import { getApolloClient } from '../graphql/apollo-client';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
+import { TransactionFragment } from './../graphql/graphql-codegen';
 import { mapLayer2Transactions } from './transaction-mapping-service';
 import logger from 'logger';
 import { networkTypes } from '@rainbow-me/networkTypes';
@@ -50,7 +51,8 @@ const useTransactionData = (
     notifyOnNetworkStatusChange: true,
     skip: shouldSkipSafeQuery,
     variables: {
-      address: safeAddress,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      address: safeAddress!,
       pageSize: PAGE_SIZE,
     },
   });
@@ -110,7 +112,9 @@ const useSokolTransactions = (safeAddress?: string) => {
 
         try {
           const mappedTransactions = await mapLayer2Transactions(
-            transactions.map(t => t?.transaction),
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore getting mad about the union type
+            transactions.map((t: any) => t?.transaction),
             accountAddress,
             nativeCurrency,
             currencyConversionRates
