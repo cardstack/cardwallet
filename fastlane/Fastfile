@@ -145,7 +145,7 @@ lane :sync_google_service_info do
   cryptex(
       type: "export",
       key: 'google_service_info',
-      out: './Frameworks/GoogleService-Info.plist'
+      out: './ios/Frameworks/GoogleService-Info.plist'
     )
 end
 
