@@ -1,20 +1,19 @@
 import React from 'react';
-import { web3Provider } from '../../handlers/web3';
-import networkTypes from '../../helpers/networkTypes';
 import { useAccountSettings, useInternetStatus } from '../../hooks';
 import Toast from './Toast';
+import networkInfo from '@rainbow-me/helpers/networkInfo';
 
 const OfflineToast = () => {
   const isConnected = useInternetStatus();
   const { network } = useAccountSettings();
-  const providerUrl = web3Provider?.connection?.url;
-  const isMainnet =
-    network === networkTypes.mainnet && !providerUrl?.startsWith('http://');
+
+  const networkName = networkInfo[network].shortName;
+
   return (
     <Toast
       icon="offline"
-      isVisible={!isConnected && isMainnet}
-      text="Offline"
+      isVisible={!isConnected}
+      text={`${networkName} (offline)`}
     />
   );
 };
