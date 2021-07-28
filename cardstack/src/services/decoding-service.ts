@@ -18,6 +18,7 @@ import {
   WithdrawalDecodedData,
 } from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import logger from 'logger';
 
 const TRANSFER_PREFIX = '0xe318b52b';
 
@@ -365,6 +366,18 @@ export const decodeData = async (
   network: string,
   nativeCurrency: string
 ): Promise<TransactionConfirmationData> => {
+  logger.log(
+    `DecodeData - ${JSON.stringify(
+      {
+        message,
+        verifyingContract,
+        primaryType,
+      },
+      null,
+      2
+    )}`
+  );
+
   if (isHubAuthentication(primaryType)) {
     return {
       type: TransactionConfirmationType.HUB_AUTH,
@@ -379,6 +392,10 @@ export const decodeData = async (
     return decodeTransferPrepaidCard1Data(message.data, verifyingContract);
   } else {
     const level1Data = decodeLevel1Data(message.data);
+
+    logger.log(
+      `DecodeData - Level1 Data - ${JSON.stringify(level1Data, null, 2)}`
+    );
 
     if (isIssuePrepaidCard(level1Data, network)) {
       return decodeIssuePrepaidCardData(level1Data, message.to);
