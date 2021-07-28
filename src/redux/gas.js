@@ -13,6 +13,7 @@ import {
   ethGasStationGetGasPrices,
   getEstimatedTimeForGasPrice,
 } from '@rainbow-me/handlers/gasPrices';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import {
   defaultGasPriceFormat,
   getFallbackGasPrices,
@@ -148,7 +149,7 @@ export const gasPricesStartPolling = () => async (dispatch, getState) => {
             type: GAS_PRICES_SUCCESS,
           });
         } else {
-          const apiBaseUrl = getConstantByNetwork('apiBaseUrl', network);
+          const apiBaseUrl = getConstantByNetwork('apiBaseUrl', Network.xdai);
 
           const response = await fetch(`${apiBaseUrl}/v1/gas-price-oracle`);
           const data = await response.json();
