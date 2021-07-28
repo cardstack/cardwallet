@@ -7,12 +7,14 @@ import SVG, {
   Path,
   Rect,
   Stop,
+  SvgUri,
 } from 'react-native-svg';
-
+import styled from 'styled-components';
 import logo from '../../assets/cardstackLogoTransparent.png';
-import { PrepaidCardType } from '../../types';
+import { PrepaidCardType, PrepaidCardCustomization } from '../../types';
 import { CenteredContainer } from '../Container';
 import { Touchable } from '../Touchable';
+import { ColorTypes } from '@cardstack/theme';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
@@ -23,12 +25,21 @@ import {
 } from '@cardstack/utils';
 import { Container, Icon, ScrollView, Text } from '@cardstack/components';
 
+const TextOverGrad = styled(Text)`
+  text-shadow: 0 1px 0 #ffffff;
+`;
+
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
   nativeCurrency: string;
   currencyConversionRates: {
     [key: string]: number;
   };
+  cardCustomization?: PrepaidCardCustomization;
+}
+
+interface CardGradientProps {
+  cardCustomization?: PrepaidCardCustomization;
 }
 
 const SELECT_ICON_WIDTH = '13%';
@@ -60,7 +71,6 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const iconName = isHidden ? 'eye-off' : 'pin';
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
   const editingIconName = isSelected ? 'check-circle' : 'circle';
-  const issuerName = prepaidCard.cardCustomization?.issuerName || '...';
 
   const onPress = () => {
     if (isEditing) {
@@ -128,8 +138,10 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           borderColor="buttonPrimaryBorder"
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
         >
-          <GradientBackground />
-          <Top {...prepaidCard} issuer={issuerName} networkName={networkName} />
+          <GradientBackground
+            cardCustomization={prepaidCard.cardCustomization}
+          />
+          <Top {...prepaidCard} networkName={networkName} />
           <Bottom {...props} />
         </Container>
         {isEditing && isHidden && (
@@ -152,50 +164,124 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   );
 };
 
-const GradientBackground = () => (
-  <SVG width="100%" height={110} style={{ position: 'absolute' }}>
-    <Defs>
-      <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
-        <Stop offset="0" stopColor="#00ebe5" stopOpacity="1" />
-        <Stop offset="1" stopColor="#c3fc33" stopOpacity="1" />
-      </LinearGradient>
-    </Defs>
-    <Rect id="Gradient" width="100%" height="110" fill="url(#grad)" />
-    <G
-      id="Bottom_platter"
-      data-name="Bottom platter"
-      transform="translate(0 71)"
-    >
-      <Path
-        id="Union_18"
-        data-name="Union 18"
-        d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
-        fill="#fff"
-      />
-    </G>
-  </SVG>
-);
+const GradientBackground = ({ cardCustomization }: CardGradientProps) => {
+  let gradientValues: Array<string> = [];
 
-const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
+  const hasGradient = cardCustomization?.background.startsWith(
+    'linear-gradient'
+  );
+
+  if (hasGradient) {
+    gradientValues =
+      cardCustomization?.background
+        .substring(16, cardCustomization?.background.length - 1)
+        .split(',')
+        .map((value: string) => value.trim()) || [];
+  }
+
+  return (
+    <SVG width="100%" height={110} style={{ position: 'absolute' }}>
+      {hasGradient && gradientValues.length > 0 && (
+        <Defs>
+          <LinearGradient
+            id="grad"
+            x1="0%"
+            y1="0"
+            x2={gradientValues[0].replace('deg', '%')}
+            y2="0"
+          >
+            <Stop
+              offset={gradientValues[1].split(' ')[1]}
+              stopColor={gradientValues[1].split(' ')[0]}
+            />
+            <Stop
+              offset={gradientValues[2].split(' ')[1]}
+              stopColor={gradientValues[2].split(' ')[0]}
+            />
+          </LinearGradient>
+        </Defs>
+      )}
+      <Rect
+        id="Gradient"
+        width="100%"
+        height="110"
+        fill={hasGradient ? 'url(#grad)' : cardCustomization?.background}
+      />
+      <G
+        id="Bottom_platter"
+        data-name="Bottom platter"
+        transform="translate(0 71)"
+      >
+        <Path
+          id="Union_18"
+          data-name="Union 18"
+          d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
+          fill="#fff"
+        />
+      </G>
+      <PatternImg
+        uri="https://app.cardstack.com/images/prepaid-card-customizations/pattern-1.svg"
+        patternColor="black"
+      />
+    </SVG>
+  );
+};
+
+const PatternImg = ({
+  uri,
+  patternColor,
+}: {
+  uri: string;
+  patternColor?: string;
+}) => {
+  return (
+    <SvgUri
+      width="100%"
+      height="110"
+      uri={uri}
+      color={patternColor}
+      style={{ position: 'absolute', top: 0, left: 0, zIndex: 99 }}
+    />
+  );
+};
+
+const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
       <Container width="100%">
-        <Text size="xxs">Issued by</Text>
+        <TextOverGrad
+          size="xxs"
+          color={cardCustomization?.textColor as ColorTypes}
+        >
+          Issued by
+        </TextOverGrad>
       </Container>
       <Container
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
       >
-        <Text size="xs" weight="extraBold">
-          {issuer}
-        </Text>
+        <TextOverGrad
+          size="xs"
+          weight="extraBold"
+          color={cardCustomization?.textColor as ColorTypes}
+        >
+          {cardCustomization?.issuerName || '...'}
+        </TextOverGrad>
         <Container flexDirection="row">
-          <Text variant="shadowRoboto">{getAddressPreview(address)}</Text>
+          <TextOverGrad
+            variant="shadowRoboto"
+            color={cardCustomization?.textColor as ColorTypes}
+          >
+            {getAddressPreview(address)}
+          </TextOverGrad>
         </Container>
       </Container>
       <Container width="100%" alignItems="flex-end">
-        <Text fontSize={11}>{`ON ${networkName.toUpperCase()}`}</Text>
+        <TextOverGrad
+          fontSize={11}
+          color={cardCustomization?.textColor as ColorTypes}
+        >{`ON ${networkName.toUpperCase()}`}</TextOverGrad>
       </Container>
     </Container>
   );
@@ -207,6 +293,7 @@ const Bottom = ({
   nativeCurrency,
   currencyConversionRates,
   transferrable,
+  cardCustomization,
 }: PrepaidCardProps) => {
   const {
     tokenBalanceDisplay,
@@ -225,8 +312,14 @@ const Bottom = ({
         alignItems="center"
       >
         <Container>
-          <Text fontSize={13}>Spendable Balance</Text>
-          <Text fontSize={40} fontWeight="700">
+          <Text fontSize={13} color="spendableBalance">
+            Spendable Balance
+          </Text>
+          <Text
+            fontSize={40}
+            fontWeight="700"
+            color={cardCustomization?.textColor as ColorTypes}
+          >
             {tokenBalanceDisplay}
           </Text>
         </Container>
@@ -247,7 +340,12 @@ const Bottom = ({
         justifyContent="space-between"
         marginTop={2}
       >
-        <Text fontWeight="700">{nativeBalanceDisplay}</Text>
+        <Text
+          fontWeight="700"
+          color={cardCustomization?.textColor as ColorTypes}
+        >
+          {nativeBalanceDisplay}
+        </Text>
         <Container alignItems="flex-end">
           <Text variant="smallGrey">
             {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}

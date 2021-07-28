@@ -291,6 +291,7 @@
     "@types/react-native-vector-icons": "^6.4.6",
     "@types/react-test-renderer": "^16.9.3",
     "@types/semver": "^7.3.6",
+    "@types/styled-components": "^5.1.11",
     "@types/url-parse": "^1.4.3",
     "ast-parser": "^0.0.5",
     "audit-ci": "^3.1.1",
