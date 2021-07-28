@@ -18,7 +18,6 @@ import {
   NativeModules,
   StatusBar,
 } from 'react-native';
-import branch from 'react-native-branch';
 import CodePush from 'react-native-code-push';
 import {
   REACT_APP_SEGMENT_API_WRITE_KEY,
@@ -50,7 +49,8 @@ import {
   runWalletBackupStatusChecks,
 } from './handlers/walletReadyEvents';
 import RainbowContextWrapper from './helpers/RainbowContext';
-import { PinnedHiddenItemOptionProvider } from './hooks';
+import { PinnedHiddenItemOptionProvider, useInternetStatus } from './hooks';
+
 import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { registerTokenRefreshListener, saveFCMToken } from './model/firebase';
 import * as keychain from './model/keychain';
@@ -380,6 +380,9 @@ const CheckSystemReqs = ({ children }) => {
   const [ready, setReady] = useState(false);
   const [minimumVersion, setMinimumVersion] = useState(null);
   const [maintenanceStatus, setMaintenanceStatus] = useState(null);
+  const isConnected = useInternetStatus();
+  const hasMaintenanceStatus = Boolean(maintenanceStatus);
+  const hasMinimumVersion = Boolean(minimumVersion);
 
   async function getReqs() {
     const [maintenanceStatusResponse, minVersionResponse] = await Promise.all([
@@ -392,16 +395,14 @@ const CheckSystemReqs = ({ children }) => {
   }
 
   useEffect(() => {
-    getReqs();
+    if (isConnected) {
+      getReqs();
+    }
   }, []);
-
-  const hasMaintenanceStatus = Boolean(maintenanceStatus);
-  const hasMinimumVersion = Boolean(minimumVersion);
 
   useEffect(() => {
     if (hasMaintenanceStatus && hasMinimumVersion) {
       setReady(true);
-      hideSplashScreen();
     }
   }, [hasMaintenanceStatus, hasMinimumVersion, hideSplashScreen]);
 
@@ -417,11 +418,11 @@ const CheckSystemReqs = ({ children }) => {
     if (forceUpdate) {
       return <MinimumVersion />;
     }
-
-    return children;
   }
 
-  return null;
+  hideSplashScreen();
+
+  return children;
 };
 
 const AppWithRedux = connect(
