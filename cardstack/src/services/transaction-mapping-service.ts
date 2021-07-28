@@ -322,14 +322,18 @@ const mapERC20TokenTransactions = async (
 };
 
 export const mapLayer2Transactions = async (
-  transactions: TransactionFragment[],
+  transactions: (TransactionFragment | undefined)[],
   accountAddress: string,
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
 ) => {
   const mappedTransactions = await Promise.all(
     transactions.map<Promise<TransactionType | null>>(
-      async (transaction: TransactionFragment) => {
+      async (transaction: TransactionFragment | undefined) => {
+        if (!transaction) {
+          return null;
+        }
+
         const {
           prepaidCardCreations,
           bridgeToLayer1Events,

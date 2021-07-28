@@ -1,17 +1,23 @@
 import React from 'react';
-import { TransactionBase } from './TransactionBase';
+import {
+  TransactionBase,
+  TransactionBaseCustomizationProps,
+} from './TransactionBase';
 import { CoinIcon, SafeHeader } from '@cardstack/components';
 import { DepotBridgedLayer1TransactionType } from '@cardstack/types';
 
-export interface DepotBridgedLayer1TransactionProps {
+export interface DepotBridgedLayer1TransactionProps
+  extends TransactionBaseCustomizationProps {
   item: DepotBridgedLayer1TransactionType;
 }
 
 export const DepotBridgedLayer1Transaction = ({
   item,
+  ...props
 }: DepotBridgedLayer1TransactionProps) => {
   return (
     <TransactionBase
+      {...props}
       CoinIcon={
         <CoinIcon address={item.token.address} symbol={item.token.symbol} />
       }

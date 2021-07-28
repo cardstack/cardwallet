@@ -4502,14 +4502,14 @@ export type TransactionFragment = (
   )>> }
 );
 
-export type GetTransactionHistoryDataQueryVariables = Exact<{
+export type GetAccountTransactionHistoryDataQueryVariables = Exact<{
   address: Scalars['ID'];
   skip?: Maybe<Scalars['Int']>;
   pageSize?: Maybe<Scalars['Int']>;
 }>;
 
 
-export type GetTransactionHistoryDataQuery = (
+export type GetAccountTransactionHistoryDataQuery = (
   { __typename?: 'Query' }
   & { account?: Maybe<(
     { __typename?: 'Account' }
@@ -4517,6 +4517,29 @@ export type GetTransactionHistoryDataQuery = (
     & { transactions: Array<Maybe<(
       { __typename?: 'EOATransaction' }
       & Pick<EoaTransaction, 'timestamp'>
+      & { transaction: (
+        { __typename?: 'Transaction' }
+        & TransactionFragment
+      ) }
+    )>> }
+  )> }
+);
+
+export type GetSafeTransactionHistoryDataQueryVariables = Exact<{
+  address: Scalars['ID'];
+  skip?: Maybe<Scalars['Int']>;
+  pageSize?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetSafeTransactionHistoryDataQuery = (
+  { __typename?: 'Query' }
+  & { safe?: Maybe<(
+    { __typename?: 'Safe' }
+    & Pick<Safe, 'id'>
+    & { safeTxns: Array<Maybe<(
+      { __typename?: 'SafeTransaction' }
+      & Pick<SafeTransaction, 'timestamp'>
       & { transaction: (
         { __typename?: 'Transaction' }
         & TransactionFragment
@@ -4697,8 +4720,8 @@ ${PrepaidCardSplitFragmentDoc}
 ${TokenTransferFragmentDoc}
 ${MerchantCreationFragmentDoc}
 ${PrepaidCardPaymentFragmentDoc}`;
-export const GetTransactionHistoryDataDocument = gql`
-    query GetTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+export const GetAccountTransactionHistoryDataDocument = gql`
+    query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
   account(id: $address) {
     id
     transactions(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
@@ -4712,16 +4735,16 @@ export const GetTransactionHistoryDataDocument = gql`
     ${TransactionFragmentDoc}`;
 
 /**
- * __useGetTransactionHistoryDataQuery__
+ * __useGetAccountTransactionHistoryDataQuery__
  *
- * To run a query within a React component, call `useGetTransactionHistoryDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTransactionHistoryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAccountTransactionHistoryDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountTransactionHistoryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetTransactionHistoryDataQuery({
+ * const { data, loading, error } = useGetAccountTransactionHistoryDataQuery({
  *   variables: {
  *      address: // value for 'address'
  *      skip: // value for 'skip'
@@ -4729,12 +4752,53 @@ export const GetTransactionHistoryDataDocument = gql`
  *   },
  * });
  */
-export function useGetTransactionHistoryDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTransactionHistoryDataQuery, GetTransactionHistoryDataQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetTransactionHistoryDataQuery, GetTransactionHistoryDataQueryVariables>(GetTransactionHistoryDataDocument, baseOptions);
+export function useGetAccountTransactionHistoryDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAccountTransactionHistoryDataQuery, GetAccountTransactionHistoryDataQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAccountTransactionHistoryDataQuery, GetAccountTransactionHistoryDataQueryVariables>(GetAccountTransactionHistoryDataDocument, baseOptions);
       }
-export function useGetTransactionHistoryDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTransactionHistoryDataQuery, GetTransactionHistoryDataQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetTransactionHistoryDataQuery, GetTransactionHistoryDataQueryVariables>(GetTransactionHistoryDataDocument, baseOptions);
+export function useGetAccountTransactionHistoryDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAccountTransactionHistoryDataQuery, GetAccountTransactionHistoryDataQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAccountTransactionHistoryDataQuery, GetAccountTransactionHistoryDataQueryVariables>(GetAccountTransactionHistoryDataDocument, baseOptions);
         }
-export type GetTransactionHistoryDataQueryHookResult = ReturnType<typeof useGetTransactionHistoryDataQuery>;
-export type GetTransactionHistoryDataLazyQueryHookResult = ReturnType<typeof useGetTransactionHistoryDataLazyQuery>;
-export type GetTransactionHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetTransactionHistoryDataQuery, GetTransactionHistoryDataQueryVariables>;
+export type GetAccountTransactionHistoryDataQueryHookResult = ReturnType<typeof useGetAccountTransactionHistoryDataQuery>;
+export type GetAccountTransactionHistoryDataLazyQueryHookResult = ReturnType<typeof useGetAccountTransactionHistoryDataLazyQuery>;
+export type GetAccountTransactionHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetAccountTransactionHistoryDataQuery, GetAccountTransactionHistoryDataQueryVariables>;
+export const GetSafeTransactionHistoryDataDocument = gql`
+    query GetSafeTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+  safe(id: $address) {
+    id
+    safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+      timestamp
+      transaction {
+        ...Transaction
+      }
+    }
+  }
+}
+    ${TransactionFragmentDoc}`;
+
+/**
+ * __useGetSafeTransactionHistoryDataQuery__
+ *
+ * To run a query within a React component, call `useGetSafeTransactionHistoryDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSafeTransactionHistoryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSafeTransactionHistoryDataQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      skip: // value for 'skip'
+ *      pageSize: // value for 'pageSize'
+ *   },
+ * });
+ */
+export function useGetSafeTransactionHistoryDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSafeTransactionHistoryDataQuery, GetSafeTransactionHistoryDataQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetSafeTransactionHistoryDataQuery, GetSafeTransactionHistoryDataQueryVariables>(GetSafeTransactionHistoryDataDocument, baseOptions);
+      }
+export function useGetSafeTransactionHistoryDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSafeTransactionHistoryDataQuery, GetSafeTransactionHistoryDataQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetSafeTransactionHistoryDataQuery, GetSafeTransactionHistoryDataQueryVariables>(GetSafeTransactionHistoryDataDocument, baseOptions);
+        }
+export type GetSafeTransactionHistoryDataQueryHookResult = ReturnType<typeof useGetSafeTransactionHistoryDataQuery>;
+export type GetSafeTransactionHistoryDataLazyQueryHookResult = ReturnType<typeof useGetSafeTransactionHistoryDataLazyQuery>;
+export type GetSafeTransactionHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetSafeTransactionHistoryDataQuery, GetSafeTransactionHistoryDataQueryVariables>;
