@@ -1,17 +1,25 @@
 import React from 'react';
 
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
-import { TransactionBase } from './TransactionBase';
+import {
+  TransactionBase,
+  TransactionBaseCustomizationProps,
+} from './TransactionBase';
 import { Icon } from '@cardstack/components';
 import { PrepaidCardSplitTransactionType } from '@cardstack/types';
 
+interface PrepaidCardSplitTransactionProps
+  extends TransactionBaseCustomizationProps {
+  item: PrepaidCardSplitTransactionType;
+}
+
 export const PrepaidCardSplitTransaction = ({
   item,
-}: {
-  item: PrepaidCardSplitTransactionType;
-}) => {
+  ...props
+}: PrepaidCardSplitTransactionProps) => {
   return (
     <TransactionBase
+      {...props}
       CoinIcon={<Icon name="spend" />}
       Header={<PrepaidCardTransactionHeader address={item.address} />}
       statusIconName="split"

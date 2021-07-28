@@ -13,7 +13,11 @@ import { isLayer1 } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
-export interface TransactionBaseProps {
+export interface TransactionBaseCustomizationProps {
+  includeBorder?: boolean;
+}
+
+interface TransactionBaseProps extends TransactionBaseCustomizationProps {
   CoinIcon: JSX.Element;
   Footer?: JSX.Element;
   Header?: JSX.Element;
@@ -28,7 +32,7 @@ export interface TransactionBaseProps {
 }
 
 export const TransactionBase = (props: TransactionBaseProps) => {
-  const { Footer, Header, transactionHash } = props;
+  const { Footer, Header, transactionHash, includeBorder } = props;
 
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
@@ -57,6 +61,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
       >
         <Container
           backgroundColor="white"
+          borderWidth={includeBorder ? 1 : 0}
           borderRadius={10}
           overflow="hidden"
           borderColor="buttonPrimaryBorder"

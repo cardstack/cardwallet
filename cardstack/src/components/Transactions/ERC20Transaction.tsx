@@ -2,22 +2,27 @@ import React from 'react';
 
 import { NetworkBadge } from '../NetworkBadge';
 import { getDisplayDataByStatus } from './statusToDisplayData';
-import { TransactionBase, TransactionRow } from './TransactionBase';
+import {
+  TransactionBase,
+  TransactionBaseCustomizationProps,
+  TransactionRow,
+} from './TransactionBase';
 import { ERC20TransactionType } from '@cardstack/types';
-import { CoinIcon, Container, ContainerProps } from '@cardstack/components';
+import { CoinIcon, Container } from '@cardstack/components';
 
-export interface ERC20TransactionProps extends ContainerProps {
+export interface ERC20TransactionProps
+  extends TransactionBaseCustomizationProps {
   item: ERC20TransactionType;
 }
 
-export const ERC20Transaction = ({ item }: ERC20TransactionProps) => {
+export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
   const displayData = getDisplayDataByStatus(item.status);
 
   const swappedForDisplayData = item.swappedFor
     ? getDisplayDataByStatus(item.swappedFor.status)
     : displayData;
 
-  const props = item.swappedFor
+  const calculatedProps = item.swappedFor
     ? {
         Footer: (
           <TransactionRow
@@ -58,5 +63,5 @@ export const ERC20Transaction = ({ item }: ERC20TransactionProps) => {
         transactionHash: item.hash,
       };
 
-  return <TransactionBase {...props} />;
+  return <TransactionBase {...props} {...calculatedProps} />;
 };

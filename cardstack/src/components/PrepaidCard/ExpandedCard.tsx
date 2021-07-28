@@ -95,9 +95,7 @@ const RecentActivity = (props: ExpandedCardProps) => (
     <SectionList
       keyExtractor={item => item.hash}
       sections={props.recentActivity}
-      renderItem={({ item }) => (
-        <ERC20Transaction item={item} paddingHorizontal={0} />
-      )}
+      renderItem={({ item }) => <ERC20Transaction item={item} />}
       renderSectionHeader={({ section: { title } }) => (
         <Text variant="subHeader" marginTop={4}>
           {title}

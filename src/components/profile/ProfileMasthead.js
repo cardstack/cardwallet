@@ -68,9 +68,9 @@ export default function ProfileMasthead({
                 addresses: wallets[selectedWallet.id].addresses.map(account =>
                   toLower(account.address) === toLower(accountAddress)
                     ? {
-                        ...account,
-                        image: `~${image?.path.slice(stringIndex)}`,
-                      }
+                      ...account,
+                      image: `~${image?.path.slice(stringIndex)}`,
+                    }
                     : account
                 ),
               },
@@ -105,7 +105,7 @@ export default function ProfileMasthead({
                   initialAccountColor: accountColor,
                   initialAccountName: accountName,
                 });
-              } else if (buttonIndex === 2 && accountImage) {
+              } else if (buttonIndex === 1 && accountImage) {
                 onRemovePhoto();
               }
             }

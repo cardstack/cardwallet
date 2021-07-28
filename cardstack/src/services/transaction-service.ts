@@ -1,18 +1,19 @@
 import { NetworkStatus } from '@apollo/client';
 import { groupBy } from 'lodash';
 import { useEffect, useState } from 'react';
+
+import { useRainbowSelector } from '../../../src/redux/hooks';
 import { getApolloClient } from '../graphql/apollo-client';
 import { CurrencyConversionRates } from '../types/CurrencyConversionRates';
 import { mapLayer2Transactions } from './transaction-mapping-service';
-import {
-  TransactionFragment,
-  useGetTransactionHistoryDataQuery,
-} from '@cardstack/graphql';
-import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
-import { useAccountTransactions } from '@rainbow-me/hooks';
-import { networkTypes } from '@rainbow-me/networkTypes';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
+import { networkTypes } from '@rainbow-me/networkTypes';
+import { useAccountTransactions } from '@rainbow-me/hooks';
+import { groupTransactionsByDate, isLayer1 } from '@cardstack/utils';
+import {
+  useGetAccountTransactionHistoryDataQuery,
+  useGetSafeTransactionHistoryDataQuery,
+} from '@cardstack/graphql';
 
 const PAGE_SIZE = 100;
 
@@ -23,7 +24,54 @@ const sortByTime = (a: any, b: any) => {
   return timeB - timeA;
 };
 
-const useSokolTransactions = () => {
+const useTransactionData = (
+  client: any,
+  accountAddress: string,
+  safeAddress?: string
+) => {
+  const network = useRainbowSelector(state => state.settings.network);
+  const isSafeQuery = Boolean(safeAddress);
+  const isNotSokol = network !== networkTypes.sokol;
+  const shouldSkipAccountQuery = !accountAddress || isSafeQuery || isNotSokol;
+  const shouldSkipSafeQuery = Boolean(!safeAddress || isNotSokol);
+
+  const accountQueryResponse = useGetAccountTransactionHistoryDataQuery({
+    client,
+    notifyOnNetworkStatusChange: true,
+    skip: shouldSkipAccountQuery,
+    variables: {
+      address: accountAddress,
+      pageSize: PAGE_SIZE,
+    },
+  });
+
+  const safeQueryResponse = useGetSafeTransactionHistoryDataQuery({
+    client,
+    notifyOnNetworkStatusChange: true,
+    skip: shouldSkipSafeQuery,
+    variables: {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      address: safeAddress!,
+      pageSize: PAGE_SIZE,
+    },
+  });
+
+  if (isSafeQuery) {
+    return {
+      account: safeQueryResponse.data?.safe,
+      transactions: safeQueryResponse.data?.safe?.safeTxns,
+      ...safeQueryResponse,
+    };
+  }
+
+  return {
+    account: accountQueryResponse.data?.account,
+    transactions: accountQueryResponse.data?.account?.transactions,
+    ...accountQueryResponse,
+  };
+};
+
+const useSokolTransactions = (safeAddress?: string) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -44,20 +92,13 @@ const useSokolTransactions = () => {
   const client = getApolloClient(network);
 
   const {
-    data,
-    error,
-    refetch,
-    fetchMore,
+    account,
+    transactions,
     networkStatus,
-  } = useGetTransactionHistoryDataQuery({
-    client,
-    notifyOnNetworkStatusChange: true,
-    skip: !accountAddress || network !== networkTypes.sokol,
-    variables: {
-      address: accountAddress,
-      pageSize: PAGE_SIZE,
-    },
-  });
+    fetchMore,
+    refetch,
+    error,
+  } = useTransactionData(client, accountAddress, safeAddress);
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);
@@ -65,22 +106,14 @@ const useSokolTransactions = () => {
 
   useEffect(() => {
     const setSectionsData = async () => {
-      if (data?.account?.transactions) {
+      if (transactions) {
         setLoading(true);
 
         try {
-          const transactions = data.account.transactions.reduce<
-            TransactionFragment[]
-          >((accum, t) => {
-            if (t) {
-              return [...accum, t.transaction];
-            }
-
-            return accum;
-          }, []);
-
           const mappedTransactions = await mapLayer2Transactions(
-            transactions,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore getting mad about the union type
+            transactions.map((t: any) => t?.transaction),
             accountAddress,
             nativeCurrency,
             currencyConversionRates
@@ -109,15 +142,21 @@ const useSokolTransactions = () => {
         }
 
         setLoading(false);
-      } else if (data?.account === null) {
+      } else if (account === null) {
         setSections([]);
       }
     };
 
     setSectionsData();
-  }, [currencyConversionRates, data, nativeCurrency, accountAddress]);
+  }, [
+    currencyConversionRates,
+    nativeCurrency,
+    accountAddress,
+    transactions,
+    account,
+  ]);
 
-  const transactionsCount = data?.account?.transactions?.length || 0;
+  const transactionsCount = transactions?.length || 0;
   const isLoading = networkStatus === NetworkStatus.loading || loading;
   const isFetchingMore = sections.length && isLoading;
 
@@ -125,7 +164,9 @@ const useSokolTransactions = () => {
     isLoadingTransactions: isLoading && !isFetchingMore,
     isFetchingMore,
     onEndReached: () => {
-      if (!isFetchingMore) {
+      if (!isFetchingMore && fetchMore) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore it gets confused because fetchMore could come from either query, but they both use this variable
         fetchMore({
           variables: {
             skip: transactionsCount,
@@ -139,10 +180,10 @@ const useSokolTransactions = () => {
   };
 };
 
-export const useTransactions = () => {
+export const useTransactions = (safeAddress?: string) => {
   const network = useRainbowSelector(state => state.settings.network);
   const layer1Data = useAccountTransactions();
-  const layer2Data = useSokolTransactions();
+  const layer2Data = useSokolTransactions(safeAddress);
 
   if (isLayer1(network)) {
     return {
