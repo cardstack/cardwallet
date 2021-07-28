@@ -303,7 +303,6 @@ export const addressAssetsReceived = (
     asset => !!Number(get(asset, 'balance.amount'))
   );
 
-  saveAssets(parsedAssets, accountAddress, network);
   if (parsedAssets.length > 0) {
     // Change the state since the account isn't empty anymore
     saveAccountEmptyState(false, accountAddress, network);
@@ -328,6 +327,7 @@ export const addressAssetsReceived = (
     payload: parsedAssets,
     type: DATA_UPDATE_ASSETS,
   });
+  saveAssets(parsedAssets, accountAddress, network);
   if (!change) {
     const missingPriceAssetAddresses = map(
       filter(parsedAssets, asset => isNil(asset.price)),
