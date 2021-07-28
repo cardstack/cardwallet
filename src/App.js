@@ -65,6 +65,7 @@ import MinimumVersion from './screens/MinimumVersion';
 import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
+import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
 const WALLETCONNECT_SYNC_DELAY = 500;
 
@@ -358,6 +359,7 @@ const getMaintenanceStatus = async () => {
 
     return await response.json();
   } catch (e) {
+    Logger.error('getMaintenanceStatus', e);
     return false;
   }
 };
@@ -370,6 +372,7 @@ const getMinimumVersion = async () => {
 
     return await response.json();
   } catch (e) {
+    Logger.error('getMinimumVersion', e);
     return false;
   }
 };
@@ -380,7 +383,6 @@ const CheckSystemReqs = ({ children }) => {
   const [ready, setReady] = useState(false);
   const [minimumVersion, setMinimumVersion] = useState(null);
   const [maintenanceStatus, setMaintenanceStatus] = useState(null);
-  const isConnected = useInternetStatus();
   const hasMaintenanceStatus = Boolean(maintenanceStatus);
   const hasMinimumVersion = Boolean(minimumVersion);
 
@@ -395,9 +397,7 @@ const CheckSystemReqs = ({ children }) => {
   }
 
   useEffect(() => {
-    if (isConnected) {
-      getReqs();
-    }
+    getReqs();
   }, []);
 
   useEffect(() => {
