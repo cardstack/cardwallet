@@ -209,7 +209,7 @@ const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
     );
   }, [hasGradient, cardCustomization]);
 
-  const patternUrl = cardCustomization?.patternUrl.startsWith('http')
+  const patternUrl = cardCustomization?.patternUrl?.startsWith('http')
     ? cardCustomization?.patternUrl
     : `https://app.cardstack.com${cardCustomization?.patternUrl}`;
 
