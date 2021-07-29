@@ -116,7 +116,7 @@ class App extends Component {
   async componentDidMount() {
     if (!__DEV__ && NativeModules.RNTestFlight) {
       const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
-      logger.sentry(`Test flight usage - ${isTestFlight}`);
+      Logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
 
     this.identifyFlow();
@@ -172,7 +172,7 @@ class App extends Component {
           handleDeepLink(initialUrl);
         }
       } catch (e) {
-        logger.log('Error opening deeplink', e);
+        Logger.log('Error opening deeplink', e);
       }
       Linking.addEventListener('url', ({ url }) => {
         handleDeepLink(url);
@@ -183,7 +183,7 @@ class App extends Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.walletReady && this.props.walletReady) {
       // Everything we need to do after the wallet is ready goes here
-      logger.sentry('✅ Wallet ready!');
+      Logger.sentry('✅ Wallet ready!');
       runKeychainIntegrityChecks();
       runWalletBackupStatusChecks();
 
@@ -205,7 +205,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    logger.sentry('Unmount');
+    Logger.sentry('Unmount');
     AppState.removeEventListener('change', this.handleAppStateChange);
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
@@ -280,13 +280,13 @@ class App extends Component {
       if (isNaN(usage)) {
         throw new Error(`Expected number usage, encountered ${usage}.`);
       }
-      logger.log(
+      Logger.log(
         `[Imgix]: Cached signature buffer is at ${size}/${capacity} (${
           usage * 100
         }%) on application background.`
       );
     } catch (e) {
-      logger.log(
+      Logger.log(
         `Failed to compute staticSignatureLRU usage on application background. (${e.message})`
       );
     }
@@ -308,7 +308,7 @@ class App extends Component {
       category: 'app state',
       label: nextAppState,
     });
-    logger.sentry(`App state change to ${nextAppState}`);
+    Logger.sentry(`App state change to ${nextAppState}`);
 
     // After a successful state transition, perform state-defined operations:
     if (nextAppState === 'background') {
