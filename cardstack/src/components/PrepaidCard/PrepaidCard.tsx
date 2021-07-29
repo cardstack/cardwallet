@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image } from 'react-native';
 import SVG, {
   Defs,
@@ -7,9 +7,8 @@ import SVG, {
   Path,
   Rect,
   Stop,
-  SvgUri,
+  SvgXml,
 } from 'react-native-svg';
-import styled from 'styled-components';
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardType, PrepaidCardCustomization } from '../../types';
 import { CenteredContainer } from '../Container';
@@ -23,11 +22,29 @@ import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
-import { Container, Icon, ScrollView, Text } from '@cardstack/components';
+import {
+  Container,
+  Icon,
+  ScrollView,
+  Text,
+  TextProps,
+} from '@cardstack/components';
 
-const TextOverGrad = styled(Text)`
-  text-shadow: 0 1px 0 #ffffff;
-`;
+const TextOverGrad = (props: TextProps) => (
+  <Text
+    {...props}
+    style={{
+      textShadowColor: '#ffffff',
+      textShadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      textShadowRadius: 0,
+    }}
+  >
+    {props.children}
+  </Text>
+);
 
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
@@ -179,10 +196,14 @@ const GradientBackground = ({ cardCustomization }: CardGradientProps) => {
         .map((value: string) => value.trim()) || [];
   }
 
+  const patternUrl = cardCustomization?.patternUrl.startsWith('http')
+    ? cardCustomization?.patternUrl
+    : `https://app.cardstack.com${cardCustomization?.patternUrl}`;
+
   return (
     <SVG width="100%" height={110} style={{ position: 'absolute' }}>
-      {hasGradient && gradientValues.length > 0 && (
-        <Defs>
+      <Defs>
+        {hasGradient && gradientValues.length > 0 && (
           <LinearGradient
             id="grad"
             x1="0%"
@@ -199,13 +220,17 @@ const GradientBackground = ({ cardCustomization }: CardGradientProps) => {
               stopColor={gradientValues[2].split(' ')[0]}
             />
           </LinearGradient>
-        </Defs>
-      )}
+        )}
+      </Defs>
       <Rect
         id="Gradient"
         width="100%"
         height="110"
         fill={hasGradient ? 'url(#grad)' : cardCustomization?.background}
+      />
+      <PatternUri
+        uri={patternUrl}
+        patternColor={cardCustomization?.patternColor}
       />
       <G
         id="Bottom_platter"
@@ -219,35 +244,60 @@ const GradientBackground = ({ cardCustomization }: CardGradientProps) => {
           fill="#fff"
         />
       </G>
-      <PatternImg
-        uri="https://app.cardstack.com/images/prepaid-card-customizations/pattern-1.svg"
-        patternColor="black"
-      />
     </SVG>
   );
 };
 
-const PatternImg = ({
+const PatternUri = ({
   uri,
   patternColor,
 }: {
-  uri: string;
+  uri?: string;
   patternColor?: string;
 }) => {
-  return (
-    <SvgUri
-      width="100%"
-      height="110"
-      uri={uri}
-      color={patternColor}
-      style={{ position: 'absolute', top: 0, left: 0, zIndex: 99 }}
+  const [pattern, setPattern] = useState<string | null>(null);
+
+  const fetchSVGPattern = async () => {
+    try {
+      if (!uri) return null;
+
+      const response = await (
+        await fetch(
+          uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
+        )
+      ).text();
+
+      setPattern(response);
+    } catch {
+      setPattern(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchSVGPattern();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const viewBox = pattern
+    ? (/viewBox="([^"]+)"/.exec(pattern) || '')[1].trim().split(' ')
+    : [];
+
+  return pattern ? (
+    <SvgXml
+      xml={pattern}
+      fill={patternColor}
+      x="0"
+      y="0"
+      width={viewBox[2]}
+      height={viewBox[3]}
     />
-  );
+  ) : null;
 };
 
 const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
+      {/* <PatternImg uri={cardCustomization?.patternUrl} /> */}
       <Container width="100%">
         <TextOverGrad
           size="xxs"
