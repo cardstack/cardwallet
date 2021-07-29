@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Image } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Image, StyleSheet } from 'react-native';
 import SVG, {
   Defs,
   G,
@@ -7,12 +7,13 @@ import SVG, {
   Path,
   Rect,
   Stop,
+  SvgXml,
 } from 'react-native-svg';
-
 import logo from '../../assets/cardstackLogoTransparent.png';
-import { PrepaidCardType } from '../../types';
+import { PrepaidCardType, PrepaidCardCustomization } from '../../types';
 import { CenteredContainer } from '../Container';
 import { Touchable } from '../Touchable';
+import { ColorTypes } from '@cardstack/theme';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
@@ -21,7 +22,36 @@ import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
-import { Container, Icon, ScrollView, Text } from '@cardstack/components';
+import {
+  Container,
+  Icon,
+  ScrollView,
+  Text,
+  TextProps,
+} from '@cardstack/components';
+
+const styles = StyleSheet.create({
+  TextOverGrad: {
+    textShadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    textShadowRadius: 0,
+  },
+});
+
+const TextOverGrad = (props: TextProps & { shadowColor?: string }) => (
+  <Text
+    {...props}
+    style={[
+      styles.TextOverGrad,
+      props.shadowColor ? { textShadowColor: props.shadowColor } : null,
+      props.style,
+    ]}
+  >
+    {props.children}
+  </Text>
+);
 
 interface PrepaidCardProps extends PrepaidCardType {
   networkName: string;
@@ -29,6 +59,11 @@ interface PrepaidCardProps extends PrepaidCardType {
   currencyConversionRates: {
     [key: string]: number;
   };
+  cardCustomization?: PrepaidCardCustomization;
+}
+
+interface CardGradientProps {
+  cardCustomization?: PrepaidCardCustomization;
 }
 
 const SELECT_ICON_WIDTH = '13%';
@@ -60,7 +95,6 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const iconName = isHidden ? 'eye-off' : 'pin';
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
   const editingIconName = isSelected ? 'check-circle' : 'circle';
-  const issuerName = prepaidCard.cardCustomization?.issuerName || '...';
 
   const onPress = () => {
     if (isEditing) {
@@ -128,8 +162,10 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           borderColor="buttonPrimaryBorder"
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
         >
-          <GradientBackground />
-          <Top {...prepaidCard} issuer={issuerName} networkName={networkName} />
+          <CustomizableBackground
+            cardCustomization={prepaidCard.cardCustomization}
+          />
+          <Top {...prepaidCard} networkName={networkName} />
           <Bottom {...props} />
         </Container>
         {isEditing && isHidden && (
@@ -152,50 +188,172 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   );
 };
 
-const GradientBackground = () => (
-  <SVG width="100%" height={110} style={{ position: 'absolute' }}>
-    <Defs>
-      <LinearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
-        <Stop offset="0" stopColor="#00ebe5" stopOpacity="1" />
-        <Stop offset="1" stopColor="#c3fc33" stopOpacity="1" />
-      </LinearGradient>
-    </Defs>
-    <Rect id="Gradient" width="100%" height="110" fill="url(#grad)" />
-    <G
-      id="Bottom_platter"
-      data-name="Bottom platter"
-      transform="translate(0 71)"
-    >
-      <Path
-        id="Union_18"
-        data-name="Union 18"
-        d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
-        fill="#fff"
-      />
-    </G>
-  </SVG>
-);
+const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
+  // ToDo: add more validation here, it supports gradients with only 2 color stops atm
+  const hasGradient = cardCustomization?.background.startsWith(
+    'linear-gradient'
+  );
 
-const Top = ({ issuer, address, networkName }: PrepaidCardProps) => {
+  const gradientValues = useMemo(() => {
+    if (!hasGradient || !cardCustomization?.background) return [];
+
+    // Extract gradient tilted and color stop values from css linear-gradient() style
+    // ToDo: add more color stops validations, currently supports 2 color stops with percentage together
+    return (
+      (/linear-gradient\(([^"]+)\)/.exec(cardCustomization?.background) || [
+        '',
+        '',
+      ])[1]
+        .split(',')
+        .map((value: string) => value.trim()) || []
+    );
+  }, [hasGradient, cardCustomization]);
+
+  const patternUrl = cardCustomization?.patternUrl.startsWith('http')
+    ? cardCustomization?.patternUrl
+    : `https://app.cardstack.com${cardCustomization?.patternUrl}`;
+
+  return (
+    <SVG width="100%" height={110} style={{ position: 'absolute' }}>
+      <Defs>
+        {hasGradient && gradientValues.length > 0 && (
+          <LinearGradient
+            id="grad"
+            x1="0%"
+            y1="0"
+            x2={gradientValues[0]?.replace('deg', '%')}
+            y2="0"
+          >
+            <Stop
+              offset={gradientValues[1]?.split(' ')[1]}
+              stopColor={gradientValues[1]?.split(' ')[0]}
+            />
+            <Stop
+              offset={gradientValues[2]?.split(' ')[1]}
+              stopColor={gradientValues[2]?.split(' ')[0]}
+            />
+          </LinearGradient>
+        )}
+      </Defs>
+      <Rect
+        id="Gradient"
+        width="100%"
+        height="110"
+        fill={hasGradient ? 'url(#grad)' : cardCustomization?.background}
+      />
+      <PatternUri
+        uri={patternUrl}
+        patternColor={cardCustomization?.patternColor}
+      />
+      <G transform="translate(0 71)">
+        <Path
+          d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
+          fill="#fff"
+        />
+      </G>
+    </SVG>
+  );
+};
+
+const PatternUri = ({
+  uri,
+  patternColor,
+}: {
+  uri?: string;
+  patternColor?: string;
+}) => {
+  const [pattern, setPattern] = useState<string | null>(null);
+
+  const fetchSVGPattern = async () => {
+    try {
+      if (!uri) return null;
+
+      const response = await (
+        await fetch(
+          uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
+        )
+      ).text();
+
+      setPattern(response);
+    } catch {
+      setPattern(null);
+    }
+  };
+
+  useEffect(() => {
+    fetchSVGPattern();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const viewBox = pattern
+    ? (/viewBox="([^"]+)"/.exec(pattern) || '')[1].trim().split(' ')
+    : [];
+
+  return pattern ? (
+    <SvgXml
+      xml={pattern}
+      fill={patternColor}
+      x="0"
+      y="0"
+      width={viewBox[2]}
+      height={viewBox[3]}
+    />
+  ) : null;
+};
+
+const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
-      <Container width="100%">
-        <Text size="xxs">Issued by</Text>
-      </Container>
       <Container
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
       >
-        <Text size="xs" weight="extraBold">
-          {issuer}
-        </Text>
-        <Container flexDirection="row">
-          <Text variant="shadowRoboto">{getAddressPreview(address)}</Text>
-        </Container>
+        <TextOverGrad
+          size="xxs"
+          color={cardCustomization?.textColor as ColorTypes}
+          shadowColor={cardCustomization?.patternColor}
+        >
+          Issued by
+        </TextOverGrad>
+        <TextOverGrad
+          fontSize={11}
+          weight="bold"
+          letterSpacing={0.55}
+          color={cardCustomization?.textColor as ColorTypes}
+          shadowColor={cardCustomization?.patternColor}
+        >
+          PREPAID CARD
+        </TextOverGrad>
       </Container>
-      <Container width="100%" alignItems="flex-end">
-        <Text fontSize={11}>{`ON ${networkName.toUpperCase()}`}</Text>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="flex-start"
+      >
+        <TextOverGrad
+          size="xs"
+          weight="extraBold"
+          color={cardCustomization?.textColor as ColorTypes}
+          shadowColor={cardCustomization?.patternColor}
+        >
+          {cardCustomization?.issuerName || 'Unknown'}
+        </TextOverGrad>
+        <Container flexDirection="column" paddingTop={3}>
+          <TextOverGrad
+            variant="shadowRoboto"
+            color={cardCustomization?.textColor as ColorTypes}
+            shadowColor={cardCustomization?.patternColor}
+          >
+            {getAddressPreview(address)}
+          </TextOverGrad>
+          <TextOverGrad
+            fontSize={11}
+            color={cardCustomization?.textColor as ColorTypes}
+            shadowColor={cardCustomization?.patternColor}
+            textAlign="right"
+          >{`ON ${networkName.toUpperCase()}`}</TextOverGrad>
+        </Container>
       </Container>
     </Container>
   );
@@ -207,6 +365,7 @@ const Bottom = ({
   nativeCurrency,
   currencyConversionRates,
   transferrable,
+  cardCustomization,
 }: PrepaidCardProps) => {
   const {
     tokenBalanceDisplay,
@@ -225,8 +384,14 @@ const Bottom = ({
         alignItems="center"
       >
         <Container>
-          <Text fontSize={13}>Spendable Balance</Text>
-          <Text fontSize={40} fontWeight="700">
+          <Text fontSize={13} color="spendableBalance">
+            Spendable Balance
+          </Text>
+          <Text
+            fontSize={40}
+            fontWeight="700"
+            color={cardCustomization?.textColor as ColorTypes}
+          >
             {tokenBalanceDisplay}
           </Text>
         </Container>
@@ -247,7 +412,12 @@ const Bottom = ({
         justifyContent="space-between"
         marginTop={2}
       >
-        <Text fontWeight="700">{nativeBalanceDisplay}</Text>
+        <Text
+          fontWeight="700"
+          color={cardCustomization?.textColor as ColorTypes}
+        >
+          {nativeBalanceDisplay}
+        </Text>
         <Container alignItems="flex-end">
           <Text variant="smallGrey">
             {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}
