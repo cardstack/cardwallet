@@ -297,7 +297,6 @@ const PatternUri = ({
 const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
-      {/* <PatternImg uri={cardCustomization?.patternUrl} /> */}
       <Container width="100%">
         <TextOverGrad
           size="xxs"
