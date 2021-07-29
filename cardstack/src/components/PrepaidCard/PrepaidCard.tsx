@@ -155,7 +155,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           borderColor="buttonPrimaryBorder"
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
         >
-          <GradientBackground
+          <CustomizableBackground
             cardCustomization={prepaidCard.cardCustomization}
           />
           <Top {...prepaidCard} networkName={networkName} />
@@ -181,9 +181,10 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   );
 };
 
-const GradientBackground = ({ cardCustomization }: CardGradientProps) => {
+const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
   let gradientValues: Array<string> = [];
 
+  // ToDo: add more validation here, it supports gradients with only 2 color stops atm
   const hasGradient = cardCustomization?.background.startsWith(
     'linear-gradient'
   );
@@ -232,14 +233,8 @@ const GradientBackground = ({ cardCustomization }: CardGradientProps) => {
         uri={patternUrl}
         patternColor={cardCustomization?.patternColor}
       />
-      <G
-        id="Bottom_platter"
-        data-name="Bottom platter"
-        transform="translate(0 71)"
-      >
+      <G transform="translate(0 71)">
         <Path
-          id="Union_18"
-          data-name="Union 18"
           d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
           fill="#fff"
         />
@@ -315,7 +310,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
           weight="extraBold"
           color={cardCustomization?.textColor as ColorTypes}
         >
-          {cardCustomization?.issuerName || '...'}
+          {cardCustomization?.issuerName || 'Unknown'}
         </TextOverGrad>
         <Container flexDirection="row">
           <TextOverGrad
