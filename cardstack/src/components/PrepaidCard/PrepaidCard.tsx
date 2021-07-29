@@ -32,7 +32,6 @@ import {
 
 const styles = StyleSheet.create({
   TextOverGrad: {
-    textShadowColor: '#ffffff',
     textShadowOffset: {
       width: 0,
       height: 1,
@@ -41,8 +40,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const TextOverGrad = (props: TextProps) => (
-  <Text {...props} style={[styles.TextOverGrad, props.style]}>
+const TextOverGrad = (props: TextProps & { shadowColor?: string }) => (
+  <Text
+    {...props}
+    style={[
+      styles.TextOverGrad,
+      props.shadowColor ? { textShadowColor: props.shadowColor } : null,
+      props.style,
+    ]}
+  >
     {props.children}
   </Text>
 );
@@ -189,11 +195,15 @@ const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
   );
 
   const gradientValues = useMemo(() => {
-    if (!hasGradient) return [];
+    if (!hasGradient || !cardCustomization?.background) return [];
 
+    // Extract gradient tilted and color stop values from css linear-gradient() style
+    // ToDo: add more color stops validations, currently supports 2 color stops with percentage together
     return (
-      cardCustomization?.background
-        .substring(16, cardCustomization?.background.length - 1)
+      (/linear-gradient\(([^"]+)\)/.exec(cardCustomization?.background) || [
+        '',
+        '',
+      ])[1]
         .split(',')
         .map((value: string) => value.trim()) || []
     );
@@ -211,16 +221,16 @@ const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
             id="grad"
             x1="0%"
             y1="0"
-            x2={gradientValues[0].replace('deg', '%')}
+            x2={gradientValues[0]?.replace('deg', '%')}
             y2="0"
           >
             <Stop
-              offset={gradientValues[1].split(' ')[1]}
-              stopColor={gradientValues[1].split(' ')[0]}
+              offset={gradientValues[1]?.split(' ')[1]}
+              stopColor={gradientValues[1]?.split(' ')[0]}
             />
             <Stop
-              offset={gradientValues[2].split(' ')[1]}
-              stopColor={gradientValues[2].split(' ')[0]}
+              offset={gradientValues[2]?.split(' ')[1]}
+              stopColor={gradientValues[2]?.split(' ')[0]}
             />
           </LinearGradient>
         )}
@@ -298,6 +308,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         <TextOverGrad
           size="xxs"
           color={cardCustomization?.textColor as ColorTypes}
+          shadowColor={cardCustomization?.patternColor}
         >
           Issued by
         </TextOverGrad>
@@ -311,6 +322,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
           size="xs"
           weight="extraBold"
           color={cardCustomization?.textColor as ColorTypes}
+          shadowColor={cardCustomization?.patternColor}
         >
           {cardCustomization?.issuerName || 'Unknown'}
         </TextOverGrad>
@@ -318,6 +330,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
           <TextOverGrad
             variant="shadowRoboto"
             color={cardCustomization?.textColor as ColorTypes}
+            shadowColor={cardCustomization?.patternColor}
           >
             {getAddressPreview(address)}
           </TextOverGrad>
@@ -327,6 +340,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         <TextOverGrad
           fontSize={11}
           color={cardCustomization?.textColor as ColorTypes}
+          shadowColor={cardCustomization?.patternColor}
         >{`ON ${networkName.toUpperCase()}`}</TextOverGrad>
       </Container>
     </Container>
