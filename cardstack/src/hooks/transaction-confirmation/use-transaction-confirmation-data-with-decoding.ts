@@ -39,7 +39,7 @@ export const useTransactionConfirmationDataWithDecoding = () => {
 
         setStateData(result);
       } catch (error) {
-        logger.log(`Decoding data error - ${error}`);
+        logger.error(`Decoding data error - ${error}`);
       }
 
       setLoading(false);

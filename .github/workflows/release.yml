@@ -63,7 +63,7 @@ jobs:
       - name: Pod Install (ios)
         run: cd ios && pod install
       - name: Run fastlane (ios)
-        run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }} && bundle exec fastlane sync_google_service_info"
+        run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:"${{ env.BUILD_NUMBER }} && cd .. && bundle exec fastlane sync_google_service_info"
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           FASTLANE_STAGE: ${{ env.RELEASE_STAGE }}
