@@ -304,7 +304,11 @@ const PatternUri = ({
 const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
-      <Container width="100%">
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <TextOverGrad
           size="xxs"
           color={cardCustomization?.textColor as ColorTypes}
@@ -312,11 +316,20 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         >
           Issued by
         </TextOverGrad>
+        <TextOverGrad
+          fontSize={11}
+          weight="bold"
+          letterSpacing={0.55}
+          color={cardCustomization?.textColor as ColorTypes}
+          shadowColor={cardCustomization?.patternColor}
+        >
+          PREPAID CARD
+        </TextOverGrad>
       </Container>
       <Container
         flexDirection="row"
         justifyContent="space-between"
-        alignItems="center"
+        alignItems="flex-start"
       >
         <TextOverGrad
           size="xs"
@@ -326,7 +339,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         >
           {cardCustomization?.issuerName || 'Unknown'}
         </TextOverGrad>
-        <Container flexDirection="row">
+        <Container flexDirection="column" paddingTop={3}>
           <TextOverGrad
             variant="shadowRoboto"
             color={cardCustomization?.textColor as ColorTypes}
@@ -334,14 +347,13 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
           >
             {getAddressPreview(address)}
           </TextOverGrad>
+          <TextOverGrad
+            fontSize={11}
+            color={cardCustomization?.textColor as ColorTypes}
+            shadowColor={cardCustomization?.patternColor}
+            textAlign="right"
+          >{`ON ${networkName.toUpperCase()}`}</TextOverGrad>
         </Container>
-      </Container>
-      <Container width="100%" alignItems="flex-end">
-        <TextOverGrad
-          fontSize={11}
-          color={cardCustomization?.textColor as ColorTypes}
-          shadowColor={cardCustomization?.patternColor}
-        >{`ON ${networkName.toUpperCase()}`}</TextOverGrad>
       </Container>
     </Container>
   );
