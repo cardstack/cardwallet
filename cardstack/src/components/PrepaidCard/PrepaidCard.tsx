@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Image } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Image, StyleSheet } from 'react-native';
 import SVG, {
   Defs,
   G,
@@ -30,18 +30,19 @@ import {
   TextProps,
 } from '@cardstack/components';
 
+const styles = StyleSheet.create({
+  TextOverGrad: {
+    textShadowColor: '#ffffff',
+    textShadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    textShadowRadius: 0,
+  },
+});
+
 const TextOverGrad = (props: TextProps) => (
-  <Text
-    {...props}
-    style={{
-      textShadowColor: '#ffffff',
-      textShadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      textShadowRadius: 0,
-    }}
-  >
+  <Text {...props} style={[styles.TextOverGrad, props.style]}>
     {props.children}
   </Text>
 );
@@ -182,20 +183,21 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
 };
 
 const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
-  let gradientValues: Array<string> = [];
-
   // ToDo: add more validation here, it supports gradients with only 2 color stops atm
   const hasGradient = cardCustomization?.background.startsWith(
     'linear-gradient'
   );
 
-  if (hasGradient) {
-    gradientValues =
+  const gradientValues = useMemo(() => {
+    if (!hasGradient) return [];
+
+    return (
       cardCustomization?.background
         .substring(16, cardCustomization?.background.length - 1)
         .split(',')
-        .map((value: string) => value.trim()) || [];
-  }
+        .map((value: string) => value.trim()) || []
+    );
+  }, [hasGradient, cardCustomization]);
 
   const patternUrl = cardCustomization?.patternUrl.startsWith('http')
     ? cardCustomization?.patternUrl
