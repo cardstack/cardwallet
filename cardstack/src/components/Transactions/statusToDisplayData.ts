@@ -57,15 +57,6 @@ const receivedData: TransactionCoinRowDisplayData = {
   transactionSymbol: '+',
 };
 
-const purchasedData: TransactionCoinRowDisplayData = {
-  iconProps: {
-    ...defaultIconProps,
-    name: 'arrow-down',
-    size: 16,
-  },
-  transactionSymbol: '+',
-};
-
 const statusToDisplayData: {
   [key in TransactionStatus]: TransactionCoinRowDisplayData;
 } = {
@@ -76,8 +67,8 @@ const statusToDisplayData: {
   [TransactionStatus.deposited]: sendData,
   [TransactionStatus.depositing]: sendData,
   [TransactionStatus.failed]: failed,
-  [TransactionStatus.purchased]: purchasedData,
-  [TransactionStatus.purchasing]: purchasedData,
+  [TransactionStatus.purchased]: receivedData,
+  [TransactionStatus.purchasing]: receivedData,
   [TransactionStatus.received]: receivedData,
   [TransactionStatus.receiving]: receivedData,
   [TransactionStatus.self]: defaultData,
