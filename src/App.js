@@ -49,7 +49,7 @@ import {
   runWalletBackupStatusChecks,
 } from './handlers/walletReadyEvents';
 import RainbowContextWrapper from './helpers/RainbowContext';
-import { PinnedHiddenItemOptionProvider, useInternetStatus } from './hooks';
+import { PinnedHiddenItemOptionProvider } from './hooks';
 
 import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { registerTokenRefreshListener, saveFCMToken } from './model/firebase';
@@ -64,7 +64,6 @@ import MaintenanceMode from './screens/MaintenanceMode';
 import MinimumVersion from './screens/MinimumVersion';
 import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
-import logger from 'logger';
 import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
 const WALLETCONNECT_SYNC_DELAY = 500;

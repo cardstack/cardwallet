@@ -13,12 +13,6 @@ const AssetListWrapper = () => {
   ]);
   const { sections, isLoadingAssets, isEmpty } = useAssetListData();
 
-  let state = useRainbowSelector(state => ({
-    assets: state.data.assets,
-    settings: state.settings,
-  }));
-
-  console.log(state);
   return (
     <AssetList
       currencyConversionRates={currencyConversionRates}
