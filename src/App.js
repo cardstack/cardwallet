@@ -18,7 +18,6 @@ import {
   NativeModules,
   StatusBar,
 } from 'react-native';
-import branch from 'react-native-branch';
 import CodePush from 'react-native-code-push';
 import {
   REACT_APP_SEGMENT_API_WRITE_KEY,
@@ -51,6 +50,7 @@ import {
 } from './handlers/walletReadyEvents';
 import RainbowContextWrapper from './helpers/RainbowContext';
 import { PinnedHiddenItemOptionProvider } from './hooks';
+
 import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { registerTokenRefreshListener, saveFCMToken } from './model/firebase';
 import * as keychain from './model/keychain';
@@ -64,7 +64,7 @@ import MaintenanceMode from './screens/MaintenanceMode';
 import MinimumVersion from './screens/MinimumVersion';
 import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
-import logger from 'logger';
+import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
 const WALLETCONNECT_SYNC_DELAY = 500;
 
@@ -358,6 +358,7 @@ const getMaintenanceStatus = async () => {
 
     return await response.json();
   } catch (e) {
+    Logger.error('getMaintenanceStatus', e);
     return false;
   }
 };
@@ -370,6 +371,7 @@ const getMinimumVersion = async () => {
 
     return await response.json();
   } catch (e) {
+    Logger.error('getMinimumVersion', e);
     return false;
   }
 };
@@ -380,6 +382,8 @@ const CheckSystemReqs = ({ children }) => {
   const [ready, setReady] = useState(false);
   const [minimumVersion, setMinimumVersion] = useState(null);
   const [maintenanceStatus, setMaintenanceStatus] = useState(null);
+  const hasMaintenanceStatus = Boolean(maintenanceStatus);
+  const hasMinimumVersion = Boolean(minimumVersion);
 
   async function getReqs() {
     const [maintenanceStatusResponse, minVersionResponse] = await Promise.all([
@@ -395,13 +399,9 @@ const CheckSystemReqs = ({ children }) => {
     getReqs();
   }, []);
 
-  const hasMaintenanceStatus = Boolean(maintenanceStatus);
-  const hasMinimumVersion = Boolean(minimumVersion);
-
   useEffect(() => {
     if (hasMaintenanceStatus && hasMinimumVersion) {
       setReady(true);
-      hideSplashScreen();
     }
   }, [hasMaintenanceStatus, hasMinimumVersion, hideSplashScreen]);
 
@@ -417,11 +417,11 @@ const CheckSystemReqs = ({ children }) => {
     if (forceUpdate) {
       return <MinimumVersion />;
     }
-
-    return children;
   }
 
-  return null;
+  hideSplashScreen();
+
+  return children;
 };
 
 const AppWithRedux = connect(
