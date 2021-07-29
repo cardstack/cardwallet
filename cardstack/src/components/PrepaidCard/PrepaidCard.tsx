@@ -241,10 +241,12 @@ const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
         height="110"
         fill={hasGradient ? 'url(#grad)' : cardCustomization?.background}
       />
-      <PatternUri
-        uri={patternUrl}
-        patternColor={cardCustomization?.patternColor}
-      />
+      {cardCustomization?.patternUrl && (
+        <PatternUri
+          uri={patternUrl}
+          patternColor={cardCustomization?.patternColor}
+        />
+      )}
       <G transform="translate(0 71)">
         <Path
           d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
