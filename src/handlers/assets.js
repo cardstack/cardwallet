@@ -7,6 +7,7 @@ import Web3 from 'web3';
 
 import { web3ProviderSdk } from './web3';
 import { isNativeToken } from '@cardstack/utils';
+import Logger from 'logger';
 
 export async function getOnchainAssetBalance(
   { address, decimals, symbol },
@@ -27,6 +28,11 @@ async function getOnchainTokenBalance(
   { address, decimals, symbol },
   userAddress
 ) {
+  Logger.log(
+    'GETTING TOKEN BALANCE',
+    { address, decimals, symbol },
+    userAddress
+  );
   try {
     const web3 = new Web3(web3ProviderSdk);
     const assets = await getSDK('Assets', web3);
@@ -46,6 +52,7 @@ async function getOnchainTokenBalance(
       display: displayBalance,
     };
   } catch (e) {
+    Logger.error('getOnchainTokenBalance', { e });
     return null;
   }
 }
@@ -54,11 +61,15 @@ async function getOnchainNativeTokenBalance(
   { address, decimals, symbol },
   userAddress
 ) {
+  Logger.log(
+    'GETTING NATIVE TOKEN BALANCE',
+    { address, decimals, symbol },
+    userAddress
+  );
   try {
     const web3 = new Web3(web3ProviderSdk);
     const assets = await getSDK('Assets', web3);
     const balance = await assets.getNativeTokenBalance(userAddress);
-
     const tokenBalance = convertRawAmountToDecimalFormat(
       balance.toString(),
       decimals
@@ -74,6 +85,7 @@ async function getOnchainNativeTokenBalance(
       display: displayBalance,
     };
   } catch (e) {
+    Logger.error('getOnchainNativeTokenBalance', { e });
     return null;
   }
 }

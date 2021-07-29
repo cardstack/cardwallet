@@ -15,8 +15,7 @@ export default function useUpdateAssetOnchainBalance() {
     async (assetToUpdate, accountAddress, successCallback) => {
       const balance = await getOnchainAssetBalance(
         assetToUpdate,
-        accountAddress,
-        network
+        accountAddress
       );
       if (balance?.amount !== assetToUpdate?.balance?.amount) {
         // Now we need to update the asset
