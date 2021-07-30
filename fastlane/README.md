@@ -95,6 +95,11 @@ Upload encrypted app push notification service key
 fastlane sync_apns_key
 ```
 Download encrypted app push notification service key
+### contexts_sync_all
+```
+fastlane contexts_sync_all
+```
+Sync all contexts vars
 
 ----
 
