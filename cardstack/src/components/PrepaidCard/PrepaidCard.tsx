@@ -87,10 +87,14 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   } = usePinnedAndHiddenItemOptions();
 
   const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
-  const isSelected = selected.includes(prepaidCard.address);
-  const isPinned = pinned.includes(prepaidCard.address);
   const isHidden = hidden.includes(prepaidCard.address);
 
+  if (!isEditing && isHidden) {
+    return null;
+  }
+
+  const isSelected = selected.includes(prepaidCard.address);
+  const isPinned = pinned.includes(prepaidCard.address);
   const showIcon = isPinned || isHidden;
   const iconName = isHidden ? 'eye-off' : 'pin';
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';

@@ -22,9 +22,14 @@ const BalanceCoinWrapper = (item: AssetWithNativeType) => {
   } = usePinnedAndHiddenItemOptions();
 
   const isEditing = editing === PinnedHiddenSectionOption.BALANCES;
+  const isHidden = hidden.includes(item.address);
+
+  if (!isEditing && isHidden) {
+    return null;
+  }
+
   const isSelected = selected.includes(item.address);
   const isPinned = pinned.includes(item.address);
-  const isHidden = hidden.includes(item.address);
 
   const onPress = () => {
     if (isEditing) {

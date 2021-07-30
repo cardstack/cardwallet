@@ -31,7 +31,7 @@ export type AssetListSectionItem<ComponentProps> = {
         [key: string]: number;
       };
     }
-  ) => JSX.Element;
+  ) => JSX.Element | null;
   header: HeaderItem;
   data: ComponentProps[];
 };

@@ -26,13 +26,7 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
   let prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
 
-  const { editing, hidden, pinned } = usePinnedAndHiddenItemOptions();
-
-  const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
-
-  if (!isEditing) {
-    prepaidCards = prepaidCards.filter(pc => !hidden.includes(pc.address));
-  }
+  const { pinned } = usePinnedAndHiddenItemOptions();
 
   prepaidCards = orderBy(
     prepaidCards,
@@ -98,9 +92,7 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
 
   let assetBalances = assetsWithNative.assetsNativePrices;
 
-  const { editing, hidden, pinned } = usePinnedAndHiddenItemOptions();
-
-  const isEditing = editing === PinnedHiddenSectionOption.BALANCES;
+  const { pinned } = usePinnedAndHiddenItemOptions();
 
   let assets = orderBy(
     assetBalances,
@@ -114,10 +106,6 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
     ],
     ['desc', 'asc', 'asc']
   ) as AssetWithNativeType[];
-
-  if (!isEditing) {
-    assets = assets.filter(a => !hidden.includes(a.address));
-  }
 
   const nativeBalance = assets.find(a => nativeTokenSymbol.includes(a.symbol));
   const nativeBalancePinned = nativeBalance
