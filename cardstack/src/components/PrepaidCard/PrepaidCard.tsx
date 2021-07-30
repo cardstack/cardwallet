@@ -64,6 +64,7 @@ interface PrepaidCardProps extends PrepaidCardType {
 
 interface CardGradientProps {
   cardCustomization?: PrepaidCardCustomization;
+  isEditing?: boolean;
 }
 
 const SELECT_ICON_WIDTH = '13%';
@@ -164,6 +165,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         >
           <CustomizableBackground
             cardCustomization={prepaidCard.cardCustomization}
+            isEditing={isEditing}
           />
           <Top {...prepaidCard} networkName={networkName} />
           <Bottom {...props} />
@@ -188,7 +190,10 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   );
 };
 
-const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
+const CustomizableBackground = ({
+  cardCustomization,
+  isEditing,
+}: CardGradientProps) => {
   // ToDo: add more validation here, it supports gradients with only 2 color stops atm
   const hasGradient = cardCustomization?.background.startsWith(
     'linear-gradient'
@@ -214,7 +219,12 @@ const CustomizableBackground = ({ cardCustomization }: CardGradientProps) => {
     : `https://app.cardstack.com${cardCustomization?.patternUrl}`;
 
   return (
-    <SVG width="100%" height={110} style={{ position: 'absolute' }}>
+    <SVG
+      width="100%"
+      height={110}
+      style={{ position: 'absolute' }}
+      key={`header_background_${isEditing}`}
+    >
       <Defs>
         {hasGradient && gradientValues.length > 0 && (
           <LinearGradient
