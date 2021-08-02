@@ -1,4 +1,3 @@
-
 desc "Upload encrypted android release keystore"
 lane :publish_android_keystore do
   if (UI.confirm("This will overwrite your local release.keystore version stored in #{ENV['CRYPTEX_GIT_URL']} with the file at #{ENV['ANDROID_KEYSTORE_PATH']}. Proceed?"))
@@ -184,4 +183,13 @@ lane :sync_apns_key do
       key: 'apns_key',
       out: './ios/fastlane/AuthKey_PTG24WSU2F.p8'
     )
+end
+
+desc "Sync all contexts vars"
+lane :contexts_sync_all do
+  sync_app_vars
+  sync_alpha_app_vars
+  sync_beta_app_vars
+  sync_release_app_vars
+  sync_google_service_info
 end
