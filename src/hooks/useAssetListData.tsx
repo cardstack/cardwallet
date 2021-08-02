@@ -26,7 +26,8 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
   let prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
 
-  const { pinned } = usePinnedAndHiddenItemOptions();
+  const { hidden, pinned } = usePinnedAndHiddenItemOptions();
+  const count = prepaidCards.filter(pc => !hidden.includes(pc.address)).length;
 
   prepaidCards = orderBy(
     prepaidCards,
@@ -41,7 +42,7 @@ const usePrepaidCardSection = (): AssetListSectionItem<PrepaidCardType> => {
   return {
     header: {
       title: 'Prepaid Cards',
-      count: prepaidCards.length,
+      count,
       type: PinnedHiddenSectionOption.PREPAID_CARDS,
       showContextMenu: true,
     },
@@ -92,7 +93,8 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
 
   let assetBalances = assetsWithNative.assetsNativePrices;
 
-  const { pinned } = usePinnedAndHiddenItemOptions();
+  const { hidden, pinned } = usePinnedAndHiddenItemOptions();
+  const count = assetBalances.filter(a => !hidden.includes(a.address)).length;
 
   let assets = orderBy(
     assetBalances,
@@ -119,7 +121,7 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
   return {
     header: {
       title: 'Balances',
-      count: assets.length,
+      count,
       total: assetsWithNative.total.display,
       type: PinnedHiddenSectionOption.BALANCES,
       showContextMenu: true,
