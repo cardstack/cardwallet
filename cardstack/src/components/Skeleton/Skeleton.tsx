@@ -40,7 +40,7 @@ export const Skeleton = (props: ContainerProps & { light?: boolean }) => {
 
   return (
     <AnimatedContainer
-      backgroundColor={light ? 'teal' : 'white'}
+      backgroundColor={light ? 'lightSkeleton' : 'white'}
       height={25}
       borderRadius={10}
       width="100%"

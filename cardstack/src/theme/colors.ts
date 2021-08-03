@@ -19,6 +19,7 @@ export const palette = {
   grayMediumLight: '#D1D1D1',
   grayBackgroundLight: '#DEDEDE',
   borderGray: '#E8E8E8',
+  skeletonGray: '#E1E1E8',
   grayBackground: '#F7F7F7',
   white: '#FFFFFF',
   transparent: 'transparent',
@@ -56,6 +57,7 @@ export const colors = {
   spendableBalance: palette.blueDarkest,
   networkBadge: palette.blueDarkest,
   darkGrayText: palette.grayMediumDark,
+  lightSkeleton: palette.skeletonGray,
 };
 
 export type ColorTypes = keyof typeof colors;
