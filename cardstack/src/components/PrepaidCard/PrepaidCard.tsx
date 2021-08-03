@@ -381,7 +381,6 @@ const Bottom = ({
   nativeCurrency,
   currencyConversionRates,
   transferrable,
-  cardCustomization,
 }: PrepaidCardProps) => {
   const {
     tokenBalanceDisplay,
@@ -403,11 +402,7 @@ const Bottom = ({
           <Text fontSize={13} color="spendableBalance">
             Spendable Balance
           </Text>
-          <Text
-            fontSize={40}
-            fontWeight="700"
-            color={cardCustomization?.textColor as ColorTypes}
-          >
+          <Text fontSize={40} fontWeight="700">
             {tokenBalanceDisplay}
           </Text>
         </Container>
@@ -428,12 +423,7 @@ const Bottom = ({
         justifyContent="space-between"
         marginTop={2}
       >
-        <Text
-          fontWeight="700"
-          color={cardCustomization?.textColor as ColorTypes}
-        >
-          {nativeBalanceDisplay}
-        </Text>
+        <Text fontWeight="700">{nativeBalanceDisplay}</Text>
         <Container alignItems="flex-end">
           <Text variant="smallGrey">
             {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}
