@@ -106,8 +106,23 @@ const Sheet = styled(Column).attrs({
   z-index: 1;
 `;
 
+const placeholderBasedOnChain = chainName => {
+  switch (chainName) {
+    case networkTypes.kovan:
+      return 'Enter seed phrase, private key, Kovan address, or Kovan ENS name';
+    case networkTypes.mainnet:
+      return 'Enter seed phrase, private key, Ethereum address, or ENS name';
+    case networkTypes.sokol:
+      return 'Enter seed phrase, private key, or Sokol address';
+    case networkTypes.xdai:
+      return 'Enter seed phrase, private key, or xDai address';
+    default:
+      return 'Enter seed phrase, private key, Ethereum address, or ENS name';
+  }
+};
+
 export default function ImportSeedPhraseSheet() {
-  const { accountAddress } = useAccountSettings();
+  const { accountAddress, network } = useAccountSettings();
   const { selectedWallet, setIsWalletLoading, wallets } = useWallets();
   const { getClipboard, hasClipboardData, clipboard } = useClipboard();
   const { onInvalidPaste } = useInvalidPaste();
@@ -401,7 +416,7 @@ export default function ImportSeedPhraseSheet() {
             onChangeText={handleSetSeedPhrase}
             onFocus={handleFocus}
             onSubmitEditing={handlePressImportButton}
-            placeholder="Enter seed phrase, private key, Ethereum address, or ENS name"
+            placeholder={placeholderBasedOnChain(network)}
             placeholderTextColor={colors.alpha(colors.blueGreyDark, 0.3)}
             ref={inputRef}
             returnKeyType="done"
