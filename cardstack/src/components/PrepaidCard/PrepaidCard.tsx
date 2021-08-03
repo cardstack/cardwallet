@@ -11,7 +11,7 @@ import SVG, {
 } from 'react-native-svg';
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardType, PrepaidCardCustomization } from '../../types';
-import { CenteredContainer } from '../Container';
+import { CenteredContainer, ContainerProps } from '../Container';
 import { Touchable } from '../Touchable';
 import { ColorTypes } from '@cardstack/theme';
 import {
@@ -29,6 +29,8 @@ import {
   Text,
   TextProps,
 } from '@cardstack/components';
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 
 const styles = StyleSheet.create({
   TextOverGrad: {
@@ -53,12 +55,13 @@ const TextOverGrad = (props: TextProps & { shadowColor?: string }) => (
   </Text>
 );
 
-interface PrepaidCardProps extends PrepaidCardType {
+export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
   networkName: string;
   nativeCurrency: string;
   currencyConversionRates: {
     [key: string]: number;
   };
+  disabled?: boolean;
   cardCustomization?: PrepaidCardCustomization;
 }
 
@@ -77,6 +80,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const [isScrollable] = useState(false);
   const Wrapper = isScrollable ? ScrollView : Container;
   const { networkName, ...prepaidCard } = props;
+  const { navigate } = useNavigation();
 
   const {
     editing,
@@ -108,18 +112,22 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
       } else {
         select(prepaidCard.address);
       }
+    } else {
+      navigate(Routes.PREPAID_CARD_MODAL, {
+        prepaidCardProps: props,
+      });
     }
   };
 
   return (
-    <Wrapper width="100%" paddingHorizontal={4} marginBottom={4}>
+    <Wrapper width="100%" paddingHorizontal={4} marginBottom={4} {...props}>
       <Touchable
         width="100%"
         testID="prepaid-card"
         alignItems="center"
         paddingVertical={2}
         flexDirection="row"
-        disabled={!isEditing}
+        disabled={props.disabled}
         onPress={onPress}
       >
         {isEditing && (

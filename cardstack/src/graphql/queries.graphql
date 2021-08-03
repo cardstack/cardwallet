@@ -21,3 +21,30 @@ query GetSafeTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: In
     }
   }
 }
+
+query GetPrepaidCardHistoryData($address: ID!) {
+  safe(id: $address) {
+    prepaidCard {
+      payments {
+        transaction {
+          ...Transaction
+        }
+      }
+      splits {
+        transaction {
+          ...Transaction
+        }
+      }
+      transfers {
+        transaction {
+          ...Transaction
+        }
+      }
+      creation {
+        transaction {
+          ...Transaction
+        }
+      }
+    }
+  }
+}

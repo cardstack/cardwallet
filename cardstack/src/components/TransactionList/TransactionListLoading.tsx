@@ -16,7 +16,7 @@ const TransactionsSection = ({
 );
 
 export const TransactionListLoading = ({ light }: { light?: boolean }) => (
-  <Container padding={4}>
+  <Container padding={5} width="100%">
     <TransactionsSection light={light} />
     <TransactionsSection light={light} marginTop={7} />
   </Container>

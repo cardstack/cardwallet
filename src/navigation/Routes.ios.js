@@ -54,6 +54,7 @@ import {
   BuyPrepaidCard,
   DepotScreen,
   MerchantScreen,
+  PrepaidCardModal,
   TransactionConfirmation,
 } from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
@@ -168,6 +169,11 @@ function MainNavigator() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           gestureDirection: 'horizontal',
         }}
+      />
+      <Stack.Screen
+        component={PrepaidCardModal}
+        name={Routes.PREPAID_CARD_MODAL}
+        options={expandedPreset}
       />
       <Stack.Screen
         component={TransactionConfirmation}
