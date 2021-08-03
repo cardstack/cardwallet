@@ -17,6 +17,7 @@ import { ColorTypes } from '@cardstack/theme';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
+  useDimensions,
 } from '@rainbow-me/hooks';
 import {
   convertSpendForBalanceDisplay,
@@ -275,44 +276,66 @@ const PatternUri = ({
   uri,
   patternColor,
 }: {
-  uri?: string;
+  uri: string;
   patternColor?: string;
 }) => {
-  const [pattern, setPattern] = useState<string | null>(null);
+  const { width: screenWidth } = useDimensions();
 
-  const fetchSVGPattern = async () => {
-    try {
-      if (!uri) return null;
-
-      const response = await (
-        await fetch(
-          uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
-        )
-      ).text();
-
-      setPattern(response);
-    } catch {
-      setPattern(null);
-    }
-  };
+  const [patternObj, setPattern] = useState<{
+    pattern: string;
+    width: number;
+    height: number;
+  } | null>(null);
 
   useEffect(() => {
-    fetchSVGPattern();
+    if (!uri || !screenWidth) return;
+
+    async function getPattern() {
+      try {
+        const response = await (
+          await fetch(
+            uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
+          )
+        ).text();
+
+        const viewBox = response
+          ? (/viewBox="([^"]+)"/.exec(response) || '')[1].trim().split(' ')
+          : [];
+
+        // mapping svg pattern width
+        const width =
+          screenWidth > Number(viewBox[2])
+            ? screenWidth
+            : Number(viewBox[2]) || screenWidth;
+
+        // mapping svg pattern height filling width but keeping ratio
+        const height =
+          screenWidth > Number(viewBox[2])
+            ? (screenWidth / Number(viewBox[2])) * Number(viewBox[3])
+            : Number(viewBox[3]) || 110;
+
+        setPattern({
+          pattern: response,
+          width,
+          height,
+        });
+      } catch {
+        return;
+      }
+    }
+
+    getPattern();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const viewBox = pattern
-    ? (/viewBox="([^"]+)"/.exec(pattern) || '')[1].trim().split(' ')
-    : [];
-
-  return pattern ? (
+  return patternObj && patternObj.pattern ? (
     <SvgXml
-      xml={pattern}
+      xml={patternObj.pattern}
       fill={patternColor}
       x="0"
       y="0"
-      width={viewBox[2]}
-      height={viewBox[3]}
+      width={patternObj.width}
+      height={patternObj.height}
     />
   ) : null;
 };
