@@ -67,13 +67,13 @@ export const parseGasPrices = (data, source = 'etherscan') =>
 
 export const parseLayer2GasPrices = data => ({
   [CUSTOM]: null,
-  [FAST]: defaultGasPriceFormat(FAST, null, data.fast ? data.fast / 10 : 0),
+  [FAST]: defaultGasPriceFormat(FAST, null, data.fast ? data.fast : 1),
   [NORMAL]: defaultGasPriceFormat(
     NORMAL,
     null,
-    data.average ? data.average / 10 : 0
+    data.average ? data.average : 1
   ),
-  [SLOW]: defaultGasPriceFormat(SLOW, null, data.slow ? data.slow / 10 : 0),
+  [SLOW]: defaultGasPriceFormat(SLOW, null, data.slow ? data.slow : 1),
 });
 
 export const defaultGasPriceFormat = (option, timeWait, value) => {
