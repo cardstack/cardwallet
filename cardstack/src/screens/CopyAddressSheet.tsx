@@ -16,8 +16,8 @@ import { abbreviations } from '@rainbow-me/utils';
 
 const CopyAddressSheet = () => {
   const {
-    params: { address },
-  } = useRoute() as { params: { address: string } };
+    params: { address, disableCopying },
+  } = useRoute() as { params: { address: string; disableCopying?: boolean } };
 
   const { setClipboard } = useClipboard();
   const [copiedText, setCopiedText] = useState(undefined);
@@ -37,10 +37,15 @@ const CopyAddressSheet = () => {
         padding={2}
         backgroundColor="white"
         borderRadius={10}
-        minHeight={250}
+        minHeight={disableCopying ? 125 : 250}
       >
         <SheetHandle />
-        <Container padding={5} marginTop={8} alignItems="center" width="100%">
+        <Container
+          padding={5}
+          marginTop={disableCopying ? 4 : 8}
+          alignItems="center"
+          width="100%"
+        >
           <Container maxWidth={230}>
             <Text
               fontFamily="RobotoMono-Regular"
@@ -59,21 +64,23 @@ const CopyAddressSheet = () => {
             </Text>
           </Container>
           <NetworkBadge marginTop={1} />
-          <Container
-            flexDirection="row"
-            justifyContent="center"
-            width="100%"
-            paddingHorizontal={5}
-          >
-            <Button
-              iconProps={{ name: 'copy' }}
-              marginTop={4}
+          {!disableCopying && (
+            <Container
+              flexDirection="row"
+              justifyContent="center"
               width="100%"
-              onPress={handleCopiedText}
+              paddingHorizontal={5}
             >
-              Copy Address
-            </Button>
-          </Container>
+              <Button
+                iconProps={{ name: 'copy' }}
+                marginTop={4}
+                width="100%"
+                onPress={handleCopiedText}
+              >
+                Copy Address
+              </Button>
+            </Container>
+          )}
         </Container>
       </Container>
       <ToastPositionContainer>

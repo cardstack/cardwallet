@@ -340,6 +340,16 @@ const PatternUri = ({
 };
 
 const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
+  const { navigate } = useNavigation();
+
+  const onPress = () => {
+    navigate(Routes.MODAL_SCREEN, {
+      address,
+      disableCopying: true,
+      type: 'copy_address',
+    });
+  };
+
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
       <Container
@@ -378,13 +388,23 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
           {cardCustomization?.issuerName || 'Unknown'}
         </TextOverGrad>
         <Container flexDirection="column" paddingTop={3}>
-          <TextOverGrad
-            variant="shadowRoboto"
-            color={cardCustomization?.textColor as ColorTypes}
-            shadowColor={cardCustomization?.patternColor}
+          <Touchable
+            hitSlop={{
+              top: 2,
+              bottom: 2,
+              left: 2,
+              right: 2,
+            }}
+            onPress={onPress}
           >
-            {getAddressPreview(address)}
-          </TextOverGrad>
+            <TextOverGrad
+              variant="shadowRoboto"
+              color={cardCustomization?.textColor as ColorTypes}
+              shadowColor={cardCustomization?.patternColor}
+            >
+              {getAddressPreview(address)}
+            </TextOverGrad>
+          </Touchable>
           <TextOverGrad
             fontSize={11}
             color={cardCustomization?.textColor as ColorTypes}
