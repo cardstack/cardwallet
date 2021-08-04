@@ -47,7 +47,7 @@ const Bottom = ({ tokens }: DepotProps) => {
   return (
     <Container paddingHorizontal={6} paddingVertical={4}>
       {firstThreeTokens.map((item, index) => (
-        <>
+        <Container key={`token-balance-${index}`}>
           <TokenBalance
             address={item.tokenAddress}
             tokenSymbol={item.token.symbol}
@@ -56,7 +56,7 @@ const Bottom = ({ tokens }: DepotProps) => {
             paddingVertical={1}
           />
           {index !== firstThreeTokens.length - 1 ? <HorizontalDivider /> : null}
-        </>
+        </Container>
       ))}
       <MoreItemsFooter tokens={tokens} showCount={3} />
     </Container>

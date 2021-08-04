@@ -17,6 +17,7 @@ import { ColorTypes } from '@cardstack/theme';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
+  useDimensions,
 } from '@rainbow-me/hooks';
 import {
   convertSpendForBalanceDisplay,
@@ -198,29 +199,32 @@ const CustomizableBackground = ({
   cardCustomization,
   isEditing,
 }: CardGradientProps) => {
-  // ToDo: add more validation here, it supports gradients with only 2 color stops atm
-  const hasGradient = cardCustomization?.background.startsWith(
+  const hasGradient = !!cardCustomization?.background?.startsWith(
     'linear-gradient'
   );
 
-  const gradientValues = useMemo(() => {
-    if (!hasGradient || !cardCustomization?.background) return [];
+  const { patternUrl, degree, stop1, stop2 } = useMemo(() => {
+    if (!hasGradient || !cardCustomization?.background) {
+      return {};
+    }
 
     // Extract gradient tilted and color stop values from css linear-gradient() style
     // ToDo: add more color stops validations, currently supports 2 color stops with percentage together
-    return (
-      (/linear-gradient\(([^"]+)\)/.exec(cardCustomization?.background) || [
-        '',
-        '',
-      ])[1]
-        .split(',')
-        .map((value: string) => value.trim()) || []
-    );
-  }, [hasGradient, cardCustomization]);
+    const backgroundValues = (/linear-gradient\(([^"]+)\)/.exec(
+      cardCustomization?.background
+    ) || [])[1]
+      .split(',')
+      .map((value: string) => value.trim());
 
-  const patternUrl = cardCustomization?.patternUrl?.startsWith('http')
-    ? cardCustomization?.patternUrl
-    : `https://app.cardstack.com${cardCustomization?.patternUrl}`;
+    return {
+      patternUrl: cardCustomization?.patternUrl?.startsWith('http')
+        ? cardCustomization?.patternUrl
+        : `https://app.cardstack.com${cardCustomization?.patternUrl}`,
+      degree: backgroundValues[0]?.replace('deg', '%') || '0%',
+      stop1: backgroundValues[1] ? backgroundValues[1].split(' ') : ['#fff', 0],
+      stop2: backgroundValues[2] ? backgroundValues[2].split(' ') : ['#fff', 0],
+    };
+  }, [hasGradient, cardCustomization]);
 
   return (
     <SVG
@@ -230,22 +234,10 @@ const CustomizableBackground = ({
       key={`header_background_${isEditing}`}
     >
       <Defs>
-        {hasGradient && gradientValues.length > 0 && (
-          <LinearGradient
-            id="grad"
-            x1="0%"
-            y1="0"
-            x2={gradientValues[0]?.replace('deg', '%')}
-            y2="0"
-          >
-            <Stop
-              offset={gradientValues[1]?.split(' ')[1]}
-              stopColor={gradientValues[1]?.split(' ')[0]}
-            />
-            <Stop
-              offset={gradientValues[2]?.split(' ')[1]}
-              stopColor={gradientValues[2]?.split(' ')[0]}
-            />
+        {hasGradient && degree && (
+          <LinearGradient id="grad" x1="0%" y1="0" x2={degree} y2="0">
+            <Stop offset={stop1?.[1] || 0} stopColor={stop1?.[0] || '#fff'} />
+            <Stop offset={stop2?.[1] || 0} stopColor={stop2?.[0] || '#fff'} />
           </LinearGradient>
         )}
       </Defs>
@@ -255,7 +247,7 @@ const CustomizableBackground = ({
         height="110"
         fill={hasGradient ? 'url(#grad)' : cardCustomization?.background}
       />
-      {cardCustomization?.patternUrl && (
+      {patternUrl && (
         <PatternUri
           uri={patternUrl}
           patternColor={cardCustomization?.patternColor}
@@ -275,44 +267,66 @@ const PatternUri = ({
   uri,
   patternColor,
 }: {
-  uri?: string;
+  uri: string;
   patternColor?: string;
 }) => {
-  const [pattern, setPattern] = useState<string | null>(null);
+  const { width: screenWidth } = useDimensions();
 
-  const fetchSVGPattern = async () => {
-    try {
-      if (!uri) return null;
-
-      const response = await (
-        await fetch(
-          uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
-        )
-      ).text();
-
-      setPattern(response);
-    } catch {
-      setPattern(null);
-    }
-  };
+  const [patternObj, setPattern] = useState<{
+    pattern: string;
+    width: number;
+    height: number;
+  } | null>(null);
 
   useEffect(() => {
-    fetchSVGPattern();
+    if (!uri || !screenWidth) return;
+
+    async function getPattern() {
+      try {
+        const response = await (
+          await fetch(
+            uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
+          )
+        ).text();
+
+        const viewBox = response
+          ? (/viewBox="([^"]+)"/.exec(response) || '')[1].trim().split(' ')
+          : [];
+
+        // mapping svg pattern width
+        const width =
+          screenWidth > Number(viewBox[2])
+            ? screenWidth
+            : Number(viewBox[2]) || screenWidth;
+
+        // mapping svg pattern height filling width but keeping ratio
+        const height =
+          screenWidth > Number(viewBox[2])
+            ? (screenWidth / Number(viewBox[2])) * Number(viewBox[3])
+            : Number(viewBox[3]) || 110;
+
+        setPattern({
+          pattern: response,
+          width,
+          height,
+        });
+      } catch {
+        return;
+      }
+    }
+
+    getPattern();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const viewBox = pattern
-    ? (/viewBox="([^"]+)"/.exec(pattern) || '')[1].trim().split(' ')
-    : [];
-
-  return pattern ? (
+  return patternObj && patternObj.pattern ? (
     <SvgXml
-      xml={pattern}
+      xml={patternObj.pattern}
       fill={patternColor}
       x="0"
       y="0"
-      width={viewBox[2]}
-      height={viewBox[3]}
+      width={patternObj.width}
+      height={patternObj.height}
     />
   ) : null;
 };

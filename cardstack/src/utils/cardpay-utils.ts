@@ -87,7 +87,7 @@ export const fetchCardCustomizationFromDID = async (
   }
 
   const jsonApiDocument = await (await fetch(alsoKnownAs)).json();
-  const included = jsonApiDocument.included;
+  const included = jsonApiDocument.included || [];
 
   let colorScheme = included.find(
     (node: any) => node.type === 'prepaid-card-color-schemes'
@@ -97,8 +97,8 @@ export const fetchCardCustomizationFromDID = async (
     (node: any) => node.type === 'prepaid-card-patterns'
   );
 
-  colorScheme = colorScheme.attributes;
-  pattern = pattern.attributes;
+  colorScheme = colorScheme ? colorScheme.attributes : {};
+  pattern = pattern ? pattern.attributes : {};
 
   return {
     issuerName: jsonApiDocument.data.attributes['issuer-name'],
