@@ -22,7 +22,7 @@ import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
-import { isLayer1 } from '@cardstack/utils';
+import { isLayer1, isNativeToken } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
@@ -311,8 +311,9 @@ export const getTransferTokenTransaction = async transaction => {
  * @param {Object} transaction { asset, from, to, amount, gasPrice }
  * @return {Promise}
  */
-export const createSignableTransaction = async transaction => {
-  if (get(transaction, 'asset.address') === 'eth') {
+export const createSignableTransaction = async (transaction, network) => {
+  const assetSymbol = get(transaction, 'asset.symbol');
+  if (isNativeToken(assetSymbol, network)) {
     return getTxDetails(transaction);
   }
   const isNft = get(transaction, 'asset.type') === AssetTypes.nft;
@@ -381,6 +382,7 @@ export const getDataForNftTransfer = (from, to, asset) => {
  */
 export const estimateGasLimit = async (
   { asset, address, recipient, amount },
+  network,
   addPadding = false
 ) => {
   const _amount =
@@ -403,7 +405,7 @@ export const estimateGasLimit = async (
       from: address,
       to: contractAddress,
     };
-  } else if (asset.symbol !== 'ETH') {
+  } else if (!isNativeToken(asset.symbol, network)) {
     const transferData = getDataForTokenTransfer(value, _recipient);
     estimateGasData = {
       data: transferData,

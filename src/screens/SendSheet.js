@@ -13,6 +13,7 @@ import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+
 import { dismissingScreenListener } from '../../shim';
 import { Column } from '../components/layout';
 import {
@@ -29,7 +30,6 @@ import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkIsValidAddressOrDomain } from '../helpers/validators';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
-import { colors } from '@cardstack/theme';
 import { isNativeToken } from '@cardstack/utils';
 import {
   useAccountAssets,
@@ -321,6 +321,7 @@ export default function SendSheet(props) {
             asset: selected,
             recipient,
           },
+          network,
           true
         );
         logger.log('gasLimit updated before sending', {
@@ -342,7 +343,10 @@ export default function SendSheet(props) {
       to: recipient,
     };
     try {
-      const signableTransaction = await createSignableTransaction(txDetails);
+      const signableTransaction = await createSignableTransaction(
+        txDetails,
+        network
+      );
       const txResult = await sendTransaction({
         transaction: signableTransaction,
       });
@@ -372,6 +376,7 @@ export default function SendSheet(props) {
     isAuthorizing,
     isSufficientGas,
     isValidAddress,
+    network,
     recipient,
     selected,
     selectedGasPrice,
@@ -475,12 +480,15 @@ export default function SendSheet(props) {
 
   useEffect(() => {
     if (isValidAddress) {
-      estimateGasLimit({
-        address: accountAddress,
-        amount: amountDetails.assetAmount,
-        asset: selected,
-        recipient,
-      })
+      estimateGasLimit(
+        {
+          address: accountAddress,
+          amount: amountDetails.assetAmount,
+          asset: selected,
+          recipient,
+        },
+        network
+      )
         .then(gasLimit => updateTxFee(gasLimit))
         .catch(() => updateTxFee(null));
     }
@@ -489,6 +497,7 @@ export default function SendSheet(props) {
     amountDetails.assetAmount,
     dispatch,
     isValidAddress,
+    network,
     recipient,
     selected,
     updateTxFee,
