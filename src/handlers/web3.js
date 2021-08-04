@@ -6,7 +6,6 @@ import {
   getConstantByNetwork,
   greaterThan,
   handleSignificantDecimals,
-  HttpProvider,
   multiply,
 } from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
@@ -21,7 +20,6 @@ import Web3 from 'web3';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
-
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
 import { isLayer1 } from '@cardstack/utils';
@@ -46,6 +44,10 @@ export const web3SetHttpProvider = async network => {
     web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
   } else {
     if (isLayer1(network)) {
+      web3ProviderSdk = new Web3.providers.HttpProvider(
+        getConstantByNetwork('rpcNode', network)
+      );
+
       web3Provider = new JsonRpcProvider(
         getConstantByNetwork('rpcNode', network),
         network
