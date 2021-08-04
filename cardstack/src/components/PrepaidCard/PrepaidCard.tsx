@@ -369,14 +369,17 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         justifyContent="space-between"
         alignItems="flex-start"
       >
-        <TextOverGrad
-          size="xs"
-          weight="extraBold"
-          color={cardCustomization?.textColor as ColorTypes}
-          shadowColor={cardCustomization?.patternColor}
-        >
-          {cardCustomization?.issuerName || 'Unknown'}
-        </TextOverGrad>
+        <Container maxWidth={175}>
+          <TextOverGrad
+            size="xs"
+            weight="extraBold"
+            color={cardCustomization?.textColor as ColorTypes}
+            shadowColor={cardCustomization?.patternColor}
+            numberOfLines={1}
+          >
+            {cardCustomization?.issuerName || 'Unknown'}
+          </TextOverGrad>
+        </Container>
         <Container flexDirection="column" paddingTop={3}>
           <TextOverGrad
             variant="shadowRoboto"
