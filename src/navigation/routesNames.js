@@ -13,6 +13,7 @@ const Routes = {
   CURRENCY_SELECT_SCREEN: 'CurrencySelectScreen',
   DEPOT_SCREEN: 'DepotScreen',
   MERCHANT_SCREEN: 'MerchantScreen',
+  PREPAID_CARD_MODAL: 'PrepaidCardModal',
   EXAMPLE_SCREEN: 'ExampleScreen',
   EXCHANGE_MODAL: 'ExchangeModal',
   EXPANDED_ASSET_SCREEN: 'ExpandedAssetScreen',

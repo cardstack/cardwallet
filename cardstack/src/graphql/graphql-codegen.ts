@@ -2569,6 +2569,7 @@ export type SafeOwner = {
   id: Scalars['ID'];
   owner: Account;
   safe: Safe;
+  createdAt: Scalars['BigInt'];
 };
 
 export type SafeOwnerFilter = {
@@ -2608,12 +2609,21 @@ export type SafeOwnerFilter = {
   safe_not_starts_with?: Maybe<Scalars['String']>;
   safe_ends_with?: Maybe<Scalars['String']>;
   safe_not_ends_with?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['BigInt']>;
+  createdAt_not?: Maybe<Scalars['BigInt']>;
+  createdAt_gt?: Maybe<Scalars['BigInt']>;
+  createdAt_lt?: Maybe<Scalars['BigInt']>;
+  createdAt_gte?: Maybe<Scalars['BigInt']>;
+  createdAt_lte?: Maybe<Scalars['BigInt']>;
+  createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
+  createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum SafeOwnerOrderBy {
   ID = 'id',
   OWNER = 'owner',
-  SAFE = 'safe'
+  SAFE = 'safe',
+  CREATEDAT = 'createdAt'
 }
 
 export type SafeTransaction = {
@@ -4548,6 +4558,46 @@ export type GetSafeTransactionHistoryDataQuery = (
   )> }
 );
 
+export type GetPrepaidCardHistoryDataQueryVariables = Exact<{
+  address: Scalars['ID'];
+}>;
+
+
+export type GetPrepaidCardHistoryDataQuery = (
+  { __typename?: 'Query' }
+  & { safe?: Maybe<(
+    { __typename?: 'Safe' }
+    & { prepaidCard?: Maybe<(
+      { __typename?: 'PrepaidCard' }
+      & { payments: Array<Maybe<(
+        { __typename?: 'PrepaidCardPayment' }
+        & { transaction: (
+          { __typename?: 'Transaction' }
+          & TransactionFragment
+        ) }
+      )>>, splits: Array<Maybe<(
+        { __typename?: 'PrepaidCardSplit' }
+        & { transaction: (
+          { __typename?: 'Transaction' }
+          & TransactionFragment
+        ) }
+      )>>, transfers: Array<Maybe<(
+        { __typename?: 'PrepaidCardTransfer' }
+        & { transaction: (
+          { __typename?: 'Transaction' }
+          & TransactionFragment
+        ) }
+      )>>, creation?: Maybe<(
+        { __typename?: 'PrepaidCardCreation' }
+        & { transaction: (
+          { __typename?: 'Transaction' }
+          & TransactionFragment
+        ) }
+      )> }
+    )> }
+  )> }
+);
+
 export const BridgeToLayer1EventFragmentDoc = gql`
     fragment BridgeToLayer1Event on BridgeToLayer1Event {
   amount
@@ -4802,3 +4852,57 @@ export function useGetSafeTransactionHistoryDataLazyQuery(baseOptions?: ApolloRe
 export type GetSafeTransactionHistoryDataQueryHookResult = ReturnType<typeof useGetSafeTransactionHistoryDataQuery>;
 export type GetSafeTransactionHistoryDataLazyQueryHookResult = ReturnType<typeof useGetSafeTransactionHistoryDataLazyQuery>;
 export type GetSafeTransactionHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetSafeTransactionHistoryDataQuery, GetSafeTransactionHistoryDataQueryVariables>;
+export const GetPrepaidCardHistoryDataDocument = gql`
+    query GetPrepaidCardHistoryData($address: ID!) {
+  safe(id: $address) {
+    prepaidCard {
+      payments {
+        transaction {
+          ...Transaction
+        }
+      }
+      splits {
+        transaction {
+          ...Transaction
+        }
+      }
+      transfers {
+        transaction {
+          ...Transaction
+        }
+      }
+      creation {
+        transaction {
+          ...Transaction
+        }
+      }
+    }
+  }
+}
+    ${TransactionFragmentDoc}`;
+
+/**
+ * __useGetPrepaidCardHistoryDataQuery__
+ *
+ * To run a query within a React component, call `useGetPrepaidCardHistoryDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPrepaidCardHistoryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPrepaidCardHistoryDataQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetPrepaidCardHistoryDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetPrepaidCardHistoryDataQuery, GetPrepaidCardHistoryDataQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetPrepaidCardHistoryDataQuery, GetPrepaidCardHistoryDataQueryVariables>(GetPrepaidCardHistoryDataDocument, baseOptions);
+      }
+export function useGetPrepaidCardHistoryDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPrepaidCardHistoryDataQuery, GetPrepaidCardHistoryDataQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetPrepaidCardHistoryDataQuery, GetPrepaidCardHistoryDataQueryVariables>(GetPrepaidCardHistoryDataDocument, baseOptions);
+        }
+export type GetPrepaidCardHistoryDataQueryHookResult = ReturnType<typeof useGetPrepaidCardHistoryDataQuery>;
+export type GetPrepaidCardHistoryDataLazyQueryHookResult = ReturnType<typeof useGetPrepaidCardHistoryDataLazyQuery>;
+export type GetPrepaidCardHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetPrepaidCardHistoryDataQuery, GetPrepaidCardHistoryDataQueryVariables>;
