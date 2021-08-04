@@ -1,5 +1,5 @@
 {
-  "name": "Rainbow",
+  "name": "Cardwallet",
   "private": true,
   "scripts": {
     "setup": "yarn install && yarn postinstall",
