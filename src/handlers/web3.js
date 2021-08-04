@@ -12,7 +12,7 @@ import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isHexString as isEthersHexString } from '@ethersproject/bytes';
 import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
@@ -22,6 +22,7 @@ import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
+import { isNativeToken } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
@@ -290,10 +291,12 @@ export const getTransferTokenTransaction = async transaction => {
 /**
  * @desc transform into signable transaction
  * @param {Object} transaction { asset, from, to, amount, gasPrice }
+ * @param {String} network
  * @return {Promise}
  */
-export const createSignableTransaction = async transaction => {
-  if (get(transaction, 'asset.address') === 'eth') {
+export const createSignableTransaction = async (transaction, network) => {
+  const assetSymbol = get(transaction, 'asset.symbol');
+  if (isNativeToken(assetSymbol, network)) {
     return getTxDetails(transaction);
   }
   const isNft = get(transaction, 'asset.type') === AssetTypes.nft;
@@ -358,10 +361,12 @@ export const getDataForNftTransfer = (from, to, asset) => {
 /**
  * @desc estimate gas limit
  * @param {Object} [{selected, address, recipient, amount, gasPrice}]
+ * @param {String} network
  * @return {String}
  */
 export const estimateGasLimit = async (
   { asset, address, recipient, amount },
+  network,
   addPadding = false
 ) => {
   const _amount =
@@ -384,7 +389,7 @@ export const estimateGasLimit = async (
       from: address,
       to: contractAddress,
     };
-  } else if (asset.symbol !== 'ETH') {
+  } else if (!isNativeToken(asset.symbol, network)) {
     const transferData = getDataForTokenTransfer(value, _recipient);
     estimateGasData = {
       data: transferData,
