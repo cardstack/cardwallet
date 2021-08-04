@@ -309,6 +309,7 @@ export const getTransferTokenTransaction = async transaction => {
 /**
  * @desc transform into signable transaction
  * @param {Object} transaction { asset, from, to, amount, gasPrice }
+ * @param {String} network
  * @return {Promise}
  */
 export const createSignableTransaction = async (transaction, network) => {
@@ -378,6 +379,7 @@ export const getDataForNftTransfer = (from, to, asset) => {
 /**
  * @desc estimate gas limit
  * @param {Object} [{selected, address, recipient, amount, gasPrice}]
+ * @param {String} network
  * @return {String}
  */
 export const estimateGasLimit = async (
