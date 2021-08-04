@@ -74,7 +74,9 @@ export const fetchGnosisSafes = async (address: string) => {
           );
 
           return { ...prepaidCard, cardCustomization };
-        } catch {
+        } catch (e) {
+          logger.log('Fetch DID failed --', e);
+
           return prepaidCard;
         }
       })

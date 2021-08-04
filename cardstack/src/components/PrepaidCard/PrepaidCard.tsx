@@ -199,29 +199,32 @@ const CustomizableBackground = ({
   cardCustomization,
   isEditing,
 }: CardGradientProps) => {
-  // ToDo: add more validation here, it supports gradients with only 2 color stops atm
-  const hasGradient = cardCustomization?.background.startsWith(
+  const hasGradient = !!cardCustomization?.background?.startsWith(
     'linear-gradient'
   );
 
-  const gradientValues = useMemo(() => {
-    if (!hasGradient || !cardCustomization?.background) return [];
+  const { patternUrl, degree, stop1, stop2 } = useMemo(() => {
+    if (!hasGradient || !cardCustomization?.background) {
+      return {};
+    }
 
     // Extract gradient tilted and color stop values from css linear-gradient() style
     // ToDo: add more color stops validations, currently supports 2 color stops with percentage together
-    return (
-      (/linear-gradient\(([^"]+)\)/.exec(cardCustomization?.background) || [
-        '',
-        '',
-      ])[1]
-        .split(',')
-        .map((value: string) => value.trim()) || []
-    );
-  }, [hasGradient, cardCustomization]);
+    const backgroundValues = (/linear-gradient\(([^"]+)\)/.exec(
+      cardCustomization?.background
+    ) || [])[1]
+      .split(',')
+      .map((value: string) => value.trim());
 
-  const patternUrl = cardCustomization?.patternUrl?.startsWith('http')
-    ? cardCustomization?.patternUrl
-    : `https://app.cardstack.com${cardCustomization?.patternUrl}`;
+    return {
+      patternUrl: cardCustomization?.patternUrl?.startsWith('http')
+        ? cardCustomization?.patternUrl
+        : `https://app.cardstack.com${cardCustomization?.patternUrl}`,
+      degree: backgroundValues[0]?.replace('deg', '%') || '0%',
+      stop1: backgroundValues[1] ? backgroundValues[1].split(' ') : ['#fff', 0],
+      stop2: backgroundValues[2] ? backgroundValues[2].split(' ') : ['#fff', 0],
+    };
+  }, [hasGradient, cardCustomization]);
 
   return (
     <SVG
@@ -231,22 +234,10 @@ const CustomizableBackground = ({
       key={`header_background_${isEditing}`}
     >
       <Defs>
-        {hasGradient && gradientValues.length > 0 && (
-          <LinearGradient
-            id="grad"
-            x1="0%"
-            y1="0"
-            x2={gradientValues[0]?.replace('deg', '%')}
-            y2="0"
-          >
-            <Stop
-              offset={gradientValues[1]?.split(' ')[1]}
-              stopColor={gradientValues[1]?.split(' ')[0]}
-            />
-            <Stop
-              offset={gradientValues[2]?.split(' ')[1]}
-              stopColor={gradientValues[2]?.split(' ')[0]}
-            />
+        {hasGradient && degree && (
+          <LinearGradient id="grad" x1="0%" y1="0" x2={degree} y2="0">
+            <Stop offset={stop1?.[1] || 0} stopColor={stop1?.[0] || '#fff'} />
+            <Stop offset={stop2?.[1] || 0} stopColor={stop2?.[0] || '#fff'} />
           </LinearGradient>
         )}
       </Defs>
@@ -256,7 +247,7 @@ const CustomizableBackground = ({
         height="110"
         fill={hasGradient ? 'url(#grad)' : cardCustomization?.background}
       />
-      {cardCustomization?.patternUrl && (
+      {patternUrl && (
         <PatternUri
           uri={patternUrl}
           patternColor={cardCustomization?.patternColor}
