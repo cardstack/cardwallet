@@ -12,7 +12,7 @@ import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isHexString as isEthersHexString } from '@ethersproject/bytes';
 import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
@@ -22,7 +22,7 @@ import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
-import { isLayer1, isNativeToken } from '@cardstack/utils';
+import { isNativeToken } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
@@ -40,31 +40,13 @@ export let web3ProviderSdk = null;
  * @param {String} network
  */
 export const web3SetHttpProvider = async network => {
-  if (network.startsWith('http://')) {
-    web3Provider = new JsonRpcProvider(network, NetworkTypes.mainnet);
-  } else {
-    if (isLayer1(network)) {
-      web3ProviderSdk = new Web3.providers.HttpProvider(
-        getConstantByNetwork('rpcNode', network)
-      );
+  try {
+    const node = getConstantByNetwork('rpcWssNode', network);
+    web3ProviderSdk = new Web3.providers.WebsocketProvider(node);
 
-      web3Provider = new JsonRpcProvider(
-        getConstantByNetwork('rpcNode', network),
-        network
-      );
-    } else {
-      try {
-        // use a websocket in layer 2 rather than http provider
-        // hopefully helps resolve the PollingBlockTracker error we were seeing
-        web3ProviderSdk = new Web3.providers.WebsocketProvider(
-          getConstantByNetwork('rpcWssNode', network)
-        );
-
-        web3Provider = new Web3Provider(web3ProviderSdk);
-      } catch (error) {
-        logger.log('provider error', error);
-      }
-    }
+    web3Provider = new Web3Provider(web3ProviderSdk);
+  } catch (error) {
+    logger.error('provider error', error);
   }
 
   return web3Provider.ready;
