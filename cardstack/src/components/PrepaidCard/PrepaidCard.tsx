@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import SVG, {
   Defs,
@@ -342,13 +342,13 @@ const PatternUri = ({
 const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
   const { navigate } = useNavigation();
 
-  const onPress = () => {
+  const onPress = useCallback(() => {
     navigate(Routes.MODAL_SCREEN, {
       address,
       disableCopying: true,
       type: 'copy_address',
     });
-  };
+  }, [address, navigate]);
 
   return (
     <Container width="100%" paddingHorizontal={6} paddingVertical={4}>
@@ -390,10 +390,10 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         <Container flexDirection="column" paddingTop={3}>
           <Touchable
             hitSlop={{
-              top: 2,
-              bottom: 2,
-              left: 2,
-              right: 2,
+              top: 5,
+              bottom: 5,
+              left: 5,
+              right: 5,
             }}
             onPress={onPress}
           >
