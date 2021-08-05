@@ -1,18 +1,13 @@
-![](https://pbs.twimg.com/profile_banners/1103191459409420288/1573207178/1500x500)
-### Cardstack
-> the Ethereum wallet that lives in your pocket!
+# Cardwallet
 
-📲️ [Available on the iOS App Store.](https://apps.apple.com/us/app/rainbow-ethereum-wallet/id1457119021)
-
-🐦️ [Follow us on Twitter](https://twitter.com/rainbowdotme)
-
+> DeFi payments made easy
 ## Requirements
 
 * A computer running macOS.
 * NVM installed or Node.js 14: https://github.com/creationix/nvm
 * Install CocoaPods by running `sudo gem install cocoapods`
 * Install Watchman `brew install watchman`
-* Install the latest version of XCode: https://developer.apple.com/xcode/
+* xCode Version 12.4 (can be found [here](https://developer.apple.com/download/all/?q=xcode))
 
 ## How to run the project
 
@@ -20,54 +15,65 @@ If you are new to React Native, this is a helpful introduction: https://facebook
 
 1. Clone the GitHub repository to your machine.
 
-1. Run `nvm use 14` to use set the version of node for this project.
+1. Run `nvm use` to use set the version of node for this project.
 
-1. Set up your .env file, use our env.example as a guide.
+2. Set up your .env file. For information how to do this, look [here](#project-secrets)
 
-    ___Note that some features are currently not accessible, we are working with our Data Providers in order to provide open source API Keys!___
+3. Run `yarn setup` to get all of the packages required.
 
-    Here are some resources to generate your own API keys:
+4. Run `yarn install-bundle`.
 
-    * Etherscan: https://etherscan.io/apis
-    * Infura: https://infura.io/
-    * ETH Gas Station: https://docs.ethgasstation.info/
-    * Imgix: https://www.imgix.com/
+5. Install required Pods by running `yarn install-pods`.
 
-1. Run `yarn setup` to get all of the packages required.
-
-1. Run `yarn install-bundle`.
-
-1. Install required Pods by running `yarn install-pods`.
-
-1. Run `yarn build:ios` to generate the main.jsbundle bundle for Xcode.
+6. Run `yarn build:ios` to generate the main.jsbundle bundle for Xcode.
    
-1. Run `yarn start` to start the React Native Bundler.
+7. Run `yarn start` to start the React Native Bundler.
 
-1. Open `rainbow-wallet/ios/RainbowWallet.xcworkspace` in XCode.
+8. Open `cardwallet/ios/Rainbow.xcworkspace` in XCode.
 
-1. Run the project by clicking the play button.
+9. Run the project by clicking the play button.
 
-## CodePush
+## Project Secrets
 
-In order to use code push you must be logged into the correct Microsoft App Center account.
+### Commands
 
-### Prerequisites
+#### Syncing
+
+* `yarn contexts:app:sync`
+  * Syncs app vars from context repo (corresponds to `.env` file)
+* `yarn contexts:app:${LANE}:sync`
+  * Syncs app vars for lane specific variables to `.env.${LANE}` file (lanes are alpha, beta, release)
+* `yarn contexts:sync`
+  * Syncs all app and lane-specific variables from the context repo
+#### Publishing
+
+* `yarn contexts:app:publish`
+  * Publishes app vars to context repo (pushes variables from `.env` file)
+* `yarn contexts:app:${LANE}:publish`
+  * Publishes lane specific variables to context repo (pushes variable from `.env.${LANE}` file)
+
+### Pulling Secrets
+
+All of our app variables are synced within a contexts repository and decoded using cryptex. In order to pull these, you need the cryptex password, which is stored in AWS secrets manager. Once you have this, you can add the following to a `.env` file within the `fastlane` directory (`fastlane/.env`):
+
 ```
-npm install -g code-push
-code-push login
+CRYPTEX_GIT_URL=https://github.com/cardstack/cardwallet-context
+CRYPTEX_GIT_REPOSITORY=cardstack/cardwallet-context
+CRYPTEX_PASSWORD=${{CRYPTEX_PASSWORD}}
+CRYPTEX_SKIP_DOCS=true
+ANDROID_KEYSTORE_ALIAS=android_release_keystore
+ANDROID_KEYSTORE_PATH=./fastlane/android/signing/release.keystore
+ANDROID_KEYSTORE_CRYPTEX_KEY=android_release_keystore
+MATCH_GIT_URL=https://github.com/cardstack/cardwallet-context
+MATCH_PASSWORD=${{CRYPTEX_PASSWORD}}
+MATCH_STORAGE_MODE=git
+MATCH_TYPE=appstore
+MATCH_APP_IDENTIFIER=com.cardstack.cardpay
 ```
+Once this is setup, and you have git access to the `cardwallet-context` repository, you can run `yarn contexts:sync` to pull all environment variables down into a root `.env` file.
 
-At this point you will be required to log into the account tied to the code push public keys in Info.plist
+### Adding Secrets
 
-### Deployment
-```
-code-push release-react RainbowWallet-iOS ios -d <DEPLOYMENT>
-```
+If you have already completed the necessary steps for pulling secrets, and have write access to the `cardwallet-context` repository, then you can now update these secrets within the context repo. 
 
-The deployment can either be `Staging` or `Production` depending on the mode of the application you wish to update was built in through XCode.
-
-### Local Builds
-
-In order to build the application in "release" mode but not use the code push distribution you must build the application using the scheme `LocalRelease`.
-
-Building the application with the `Staging` scheme or `Release` scheme will result in your bundle being replaced by the live code push deployment on resume of the application.
+First, ensure that you have the current up to date variables by running `yarn contexts:sync`. Once you have these, you can add or change any environment variables and run the [publish commands](#publishing).
