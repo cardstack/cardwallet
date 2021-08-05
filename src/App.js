@@ -62,6 +62,7 @@ import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
 import MinimumVersion from './screens/MinimumVersion';
+import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import Logger from 'logger';
@@ -350,32 +351,6 @@ class App extends Component {
   );
 }
 
-const getMaintenanceStatus = async () => {
-  try {
-    const response = await fetch(
-      'https://us-central1-card-pay-3e9be.cloudfunctions.net/maintenance-status'
-    );
-
-    return await response.json();
-  } catch (e) {
-    Logger.error('getMaintenanceStatus', e);
-    return false;
-  }
-};
-
-const getMinimumVersion = async () => {
-  try {
-    const response = await fetch(
-      'https://us-central1-card-pay-3e9be.cloudfunctions.net/minimum-version'
-    );
-
-    return await response.json();
-  } catch (e) {
-    Logger.error('getMinimumVersion', e);
-    return false;
-  }
-};
-
 const CheckSystemReqs = ({ children }) => {
   const hideSplashScreen = useHideSplashScreen();
   const appVersion = VersionNumber.appVersion;
@@ -384,7 +359,6 @@ const CheckSystemReqs = ({ children }) => {
   const [maintenanceStatus, setMaintenanceStatus] = useState(null);
   const hasMaintenanceStatus = Boolean(maintenanceStatus);
   const hasMinimumVersion = Boolean(minimumVersion);
-
   async function getReqs() {
     const [maintenanceStatusResponse, minVersionResponse] = await Promise.all([
       getMaintenanceStatus(),

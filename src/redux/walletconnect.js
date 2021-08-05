@@ -24,6 +24,7 @@ import { getFCMToken } from '../model/firebase';
 import { Navigation } from '../navigation';
 import { isSigningMethod } from '../utils/signingMethods';
 import { addRequestToApprove } from './requests';
+import { baseCloudFunctionsUrl } from '@cardstack/services';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
@@ -75,7 +76,7 @@ const getNativeOptions = async () => {
           peerMeta: true,
           token,
           type: 'fcm',
-          url: 'https://us-central1-card-pay-3e9be.cloudfunctions.net/push',
+          url: `${baseCloudFunctionsUrl}/push`,
         }
       : undefined,
   };

@@ -13,6 +13,7 @@ import {
   ListItemDivider,
 } from '../list';
 import { Icon } from '@cardstack/components';
+import { getReviewFeature } from '@cardstack/services';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -97,18 +98,6 @@ export default function SettingsSection({
 
   const [isReviewEnabled, setReviewEnabled] = useState(false);
 
-  const getReviewFeature = async () => {
-    try {
-      const response = await fetch(
-        'https://us-central1-card-pay-3e9be.cloudfunctions.net/review-feature'
-      );
-
-      return await response.json();
-    } catch (e) {
-      return false;
-    }
-  };
-
   useEffect(() => {
     setReviewFeature();
   }, []);
@@ -148,7 +137,7 @@ export default function SettingsSection({
 
   const setReviewFeature = async () => {
     const { reviewActive } = await getReviewFeature();
-    return setReviewEnabled(reviewActive);
+    setReviewEnabled(reviewActive);
   };
 
   return (
