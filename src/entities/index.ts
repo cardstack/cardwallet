@@ -9,3 +9,4 @@ export type {
   UniswapSubgraphAsset,
   RawUniswapSubgraphAsset,
 } from './tokens';
+export type EthereumAddress = string;

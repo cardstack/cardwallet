@@ -6,6 +6,7 @@ import {
   joinSignature,
 } from '@ethersproject/bytes';
 import { HDNode } from '@ethersproject/hdnode';
+import { Provider } from '@ethersproject/providers';
 import { SigningKey } from '@ethersproject/signing-key';
 import { Transaction } from '@ethersproject/transactions';
 import { Wallet } from '@ethersproject/wallet';
@@ -34,6 +35,7 @@ import {
   isValidMnemonic,
   web3Provider,
 } from '../handlers/web3';
+import { createSignature } from '../helpers/signingWallet';
 import showWalletErrorAlert from '../helpers/support';
 import WalletLoadingStates from '../helpers/walletLoadingStates';
 import { EthereumWalletType } from '../helpers/walletTypes';
@@ -72,6 +74,7 @@ interface WalletInitialized {
 interface TransactionRequestParam {
   transaction: TransactionRequest;
   existingWallet?: Wallet;
+  provider?: Provider;
 }
 
 interface MessageTypeProperty {
@@ -216,15 +219,19 @@ export const walletInit = async (
   return { isNew, walletAddress };
 };
 
-export const loadWallet = async (): Promise<null | Wallet> => {
-  const privateKey = await loadPrivateKey();
+export const loadWallet = async (
+  address?: EthereumAddress | undefined,
+  showErrorIfNotLoaded = true,
+  provider?: Provider
+): Promise<null | Wallet> => {
+  const privateKey = await loadPrivateKey(address);
   if (privateKey === -1 || privateKey === -2) {
     return null;
   }
   if (privateKey) {
-    return new Wallet(privateKey, web3Provider);
+    return new Wallet(privateKey, provider || web3Provider);
   }
-  if (ios) {
+  if (ios && showErrorIfNotLoaded) {
     showWalletErrorAlert();
   }
   return null;
@@ -233,10 +240,12 @@ export const loadWallet = async (): Promise<null | Wallet> => {
 export const sendTransaction = async ({
   transaction,
   existingWallet,
+  provider,
 }: TransactionRequestParam): Promise<null | Transaction> => {
   try {
     logger.sentry('about to send transaction', transaction);
-    const wallet = existingWallet || (await loadWallet());
+    const wallet =
+      existingWallet || (await loadWallet(undefined, true, provider));
     if (!wallet) return null;
     try {
       const result = await wallet.sendTransaction(transaction);
@@ -261,10 +270,13 @@ export const sendTransaction = async ({
 
 export const signTransaction = async ({
   transaction,
+  existingWallet,
+  provider,
 }: TransactionRequestParam): Promise<null | string> => {
   try {
     logger.sentry('about to sign transaction', transaction);
-    const wallet = await loadWallet();
+    const wallet =
+      existingWallet || (await loadWallet(undefined, true, provider));
     if (!wallet) return null;
     try {
       return wallet.signTransaction(transaction);
@@ -285,11 +297,14 @@ export const signTransaction = async ({
 };
 
 export const signMessage = async (
-  message: BytesLike | Hexable | number
+  message: BytesLike | Hexable | number,
+  existingWallet?: Wallet,
+  provider?: Provider
 ): Promise<null | string> => {
   try {
     logger.sentry('about to sign message', message);
-    const wallet = await loadWallet();
+    const wallet =
+      existingWallet || (await loadWallet(undefined, true, provider));
     try {
       if (!wallet) return null;
       const signingKey = new SigningKey(wallet.privateKey);
@@ -310,11 +325,14 @@ export const signMessage = async (
 };
 
 export const signPersonalMessage = async (
-  message: string | Uint8Array
+  message: string | Uint8Array,
+  existingWallet?: Wallet,
+  provider?: Provider
 ): Promise<null | string> => {
   try {
     logger.sentry('about to sign personal message', message);
-    const wallet = await loadWallet();
+    const wallet =
+      existingWallet || (await loadWallet(undefined, true, provider));
     try {
       if (!wallet) return null;
       return wallet.signMessage(
@@ -339,18 +357,22 @@ export const signPersonalMessage = async (
 };
 
 export const signTypedDataMessage = async (
-  message: string | TypedData
+  message: string | TypedData,
+  existingWallet?: Wallet,
+  provider?: Provider
 ): Promise<null | string> => {
   try {
     logger.sentry('about to sign typed data  message', message);
-    const wallet = await loadWallet();
+    const wallet =
+      existingWallet || (await loadWallet(undefined, true, provider));
     if (!wallet) return null;
     try {
       const pkeyBuffer = toBuffer(addHexPrefix(wallet.privateKey));
       let parsedData = message;
-      if (typeof message === 'string') {
-        parsedData = JSON.parse(message);
-      }
+      try {
+        parsedData = typeof message === 'string' && JSON.parse(message);
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
 
       // There are 3 types of messages
       // v1 => basic data types
@@ -400,9 +422,9 @@ export const oldLoadSeedPhrase = async (): Promise<null | EthereumWalletSeed> =>
 export const loadAddress = (): Promise<null | EthereumAddress> =>
   keychain.loadString(addressKey) as Promise<string | null>;
 
-const loadPrivateKey = async (): Promise<
-  null | EthereumPrivateKey | -1 | -2
-> => {
+const loadPrivateKey = async (
+  address?: EthereumAddress | undefined
+): Promise<null | EthereumPrivateKey | -1 | -2> => {
   try {
     const isSeedPhraseMigrated = await keychain.loadString(
       oldSeedPhraseMigratedKey
@@ -417,12 +439,12 @@ const loadPrivateKey = async (): Promise<
     }
 
     if (!privateKey) {
-      const address = await loadAddress();
-      if (!address) {
+      const addressToUse = address || (await loadAddress());
+      if (!addressToUse) {
         return null;
       }
 
-      const privateKeyData = await getPrivateKey(address);
+      const privateKeyData = await getPrivateKey(addressToUse);
       if (privateKeyData === -1) {
         return -1;
       }
@@ -565,7 +587,7 @@ export const createWallet = async (
           () =>
             Alert.alert(
               'Oops!',
-              'Looks like you already imported this account!'
+              'Looks like you already imported this wallet!'
             ),
           1
         );
@@ -729,6 +751,9 @@ export const createWallet = async (
             label,
             visible: true,
           });
+
+          // Creating signature for this wallet - ToDo: confirm logic
+          await createSignature(nextWallet.address, nextWallet.privateKey);
           index++;
         } else {
           lookup = false;
@@ -978,7 +1003,7 @@ export const generateAccount = async (
     }
 
     if (!seedphrase) {
-      throw new Error(`Can't access seed phrase to create new accounts`);
+      throw new Error(`Can't access secret phrase to create new accounts`);
     }
 
     const {
@@ -1009,6 +1034,8 @@ export const generateAccount = async (
     } else {
       await savePrivateKey(walletAddress, walletPkey);
     }
+    // Creating signature for this wallet
+    await createSignature(walletAddress, walletPkey);
 
     return newAccount;
   } catch (error) {
@@ -1170,7 +1197,7 @@ export const loadSeedPhraseAndMigrateIfNeeded = async (
         seedPhrase = get(migratedSecrets, 'seedphrase', null);
       } else {
         logger.sentry('Migrated flag was set but there is no key!', id);
-        captureMessage('Missing seed for account');
+        captureMessage('Missing seed for wallet');
       }
     } else {
       logger.sentry('Getting seed directly');
@@ -1199,7 +1226,7 @@ export const loadSeedPhraseAndMigrateIfNeeded = async (
         logger.sentry('got seed succesfully');
       } else {
         captureMessage(
-          'Missing seed for account - (Key exists but value isnt valid)!'
+          'Missing seed for wallet - (Key exists but value isnt valid)!'
         );
       }
     }
