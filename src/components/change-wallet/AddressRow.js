@@ -8,6 +8,7 @@ import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { TruncatedAddress } from '../text';
 import { Container, Icon, Text } from '@cardstack/components';
+import { screenWidth } from '@cardstack/utils';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { abbreviations } from '@rainbow-me/utils';
@@ -19,6 +20,9 @@ const sx = StyleSheet.create({
     marginLeft: 19,
   },
 });
+
+const WITH_WATCHING_LABEL = screenWidth * 0.44;
+const WITHOUT_WATCHING_LABEL = screenWidth * 0.65;
 
 export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   const {
@@ -84,9 +88,14 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                 value={label || ens || `${index + 1}`}
               />
             )}
-            <Container margin={1}>
+            <Container
+              margin={1}
+              width={isReadOnly ? WITH_WATCHING_LABEL : WITHOUT_WATCHING_LABEL}
+            >
               {cleanedUpLabel || ens ? (
-                <Text fontWeight="600">{cleanedUpLabel || ens}</Text>
+                <Text ellipsizeMode="tail" fontWeight="600" numberOfLines={1}>
+                  {cleanedUpLabel || ens}
+                </Text>
               ) : (
                 <TruncatedAddress
                   address={address}
