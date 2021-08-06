@@ -17,6 +17,9 @@ export type TextProps = ShopifyTextProps<Theme> &
   };
 
 const BaseText = createText<Theme>();
+BaseText.defaultProps = {
+  allowFontScaling: false,
+};
 
 export const Text = createRestyleComponent<TextProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
