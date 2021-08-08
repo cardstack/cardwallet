@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import SVG, {
   Defs,
@@ -22,6 +22,7 @@ import {
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
+  parseLinearGradient,
 } from '@cardstack/utils';
 import {
   Container,
@@ -207,32 +208,9 @@ const CustomizableBackground = ({
   cardCustomization,
   isEditing,
 }: CardGradientProps) => {
-  const hasGradient = !!cardCustomization?.background?.startsWith(
-    'linear-gradient'
+  const { patternUrl, hasGradient, degree, stop1, stop2 } = parseLinearGradient(
+    cardCustomization
   );
-
-  const { patternUrl, degree, stop1, stop2 } = useMemo(() => {
-    if (!hasGradient || !cardCustomization?.background) {
-      return {};
-    }
-
-    // Extract gradient tilted and color stop values from css linear-gradient() style
-    // ToDo: add more color stops validations, currently supports 2 color stops with percentage together
-    const backgroundValues = (/linear-gradient\(([^"]+)\)/.exec(
-      cardCustomization?.background
-    ) || [])[1]
-      .split(',')
-      .map((value: string) => value.trim());
-
-    return {
-      patternUrl: cardCustomization?.patternUrl?.startsWith('http')
-        ? cardCustomization?.patternUrl
-        : `https://app.cardstack.com${cardCustomization?.patternUrl}`,
-      degree: backgroundValues[0]?.replace('deg', '%') || '0%',
-      stop1: backgroundValues[1] ? backgroundValues[1].split(' ') : ['#fff', 0],
-      stop2: backgroundValues[2] ? backgroundValues[2].split(' ') : ['#fff', 0],
-    };
-  }, [hasGradient, cardCustomization]);
 
   return (
     <SVG
@@ -241,14 +219,14 @@ const CustomizableBackground = ({
       style={{ position: 'absolute' }}
       key={`header_background_${isEditing}`}
     >
-      <Defs>
-        {hasGradient && degree && (
+      {hasGradient && (
+        <Defs>
           <LinearGradient id="grad" x1="0%" y1="0" x2={degree} y2="0">
-            <Stop offset={stop1?.[1] || 0} stopColor={stop1?.[0] || '#fff'} />
-            <Stop offset={stop2?.[1] || 0} stopColor={stop2?.[0] || '#fff'} />
+            <Stop {...stop1} />
+            <Stop {...stop2} />
           </LinearGradient>
-        )}
-      </Defs>
+        </Defs>
+      )}
       <Rect
         id="Gradient"
         width="100%"
