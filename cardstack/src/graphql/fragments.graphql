@@ -104,25 +104,6 @@ fragment PrepaidCardTransfer on PrepaidCardTransfer {
   }
 }
 
-fragment MerchantRevenueEvent on MerchantRevenueEvent {
-  merchantClaim {
-    amount
-    merchantSafe {
-      id
-    }
-    token {
-      symbol
-    }
-  }
-  prepaidCardPayment {
-    issuingTokenAmount
-    issuingToken {
-      symbol
-    }
-    spendAmount
-  }
-}
-
 fragment Transaction on Transaction {
   id
   timestamp
@@ -166,7 +147,7 @@ fragment Transaction on Transaction {
     id
   }
   merchantRevenueEvents {
-    ...MerchantRevenueEvent
+    id
   }
   tokenSwaps {
     id
