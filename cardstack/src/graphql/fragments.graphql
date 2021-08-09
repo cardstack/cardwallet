@@ -147,7 +147,22 @@ fragment Transaction on Transaction {
     id
   }
   merchantRevenueEvents {
-    id
+    merchantClaim {
+    amount
+    merchantSafe {
+      id
+    }
+    token {
+      symbol
+    }
+  }
+  prepaidCardPayment {
+    issuingTokenAmount
+    issuingToken {
+      symbol
+    }
+    spendAmount
+  }
   }
   tokenSwaps {
     id
