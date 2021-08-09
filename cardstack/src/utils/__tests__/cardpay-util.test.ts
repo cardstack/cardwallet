@@ -13,7 +13,7 @@ it('parseLinearGradient with 2 stop linear gradient', () => {
     textColor: 'black',
   };
 
-  const parseGradientResult: PrepaidLinearGradientInfo = {
+  const parsedGradientResult: PrepaidLinearGradientInfo = {
     angle: 40.73,
     hasGradient: true,
     stop1: { offset: '16%', stopColor: '#FFFFAA' },
@@ -21,7 +21,7 @@ it('parseLinearGradient with 2 stop linear gradient', () => {
   };
 
   const result = parseLinearGradient(cardCustomization);
-  expect(result).toBe(parseGradientResult);
+  expect(result).toBe(parsedGradientResult);
 });
 
 it('parseLinearGradient with no gradient', () => {
@@ -33,7 +33,7 @@ it('parseLinearGradient with no gradient', () => {
     textColor: 'black',
   };
 
-  const parseGradientResult: PrepaidLinearGradientInfo = {
+  const parsedGradientResult: PrepaidLinearGradientInfo = {
     angle: undefined,
     hasGradient: false,
     stop1: undefined,
@@ -41,5 +41,5 @@ it('parseLinearGradient with no gradient', () => {
   };
 
   const result = parseLinearGradient(cardCustomization);
-  expect(result).toBe(parseGradientResult);
+  expect(result).toBe(parsedGradientResult);
 });
