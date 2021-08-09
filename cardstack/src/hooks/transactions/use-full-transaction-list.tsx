@@ -1,38 +1,19 @@
 import { NetworkStatus } from '@apollo/client';
-import { groupBy } from 'lodash';
-import { useEffect, useState } from 'react';
-import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { useRainbowSelector } from '../../../../src/redux/hooks';
+import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { getApolloClient } from '../../graphql/apollo-client';
-import { CurrencyConversionRates } from '../../types/CurrencyConversionRates';
+import { useTransactionSections } from './use-transaction-sections';
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
-import { mapLayer2Transactions } from '@cardstack/services';
-import {
-  groupTransactionsByDate,
-  isLayer1,
-  sortByTime,
-} from '@cardstack/utils';
+import { isLayer1 } from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
 import { networkTypes } from '@rainbow-me/networkTypes';
 import logger from 'logger';
 
 const useSokolTransactions = () => {
-  const [sections, setSections] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const [
-    accountAddress,
-    network,
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useRainbowSelector<[string, string, string, CurrencyConversionRates]>(
-    state => [
-      state.settings.accountAddress,
-      state.settings.network,
-      state.settings.nativeCurrency,
-      state.currencyConversion.rates,
-    ]
-  );
+  const [accountAddress, network] = useRainbowSelector(state => [
+    state.settings.accountAddress,
+    state.settings.network,
+  ]);
 
   const isNotSokol = network !== networkTypes.sokol;
 
@@ -61,57 +42,8 @@ const useSokolTransactions = () => {
     logger.log('Error getting Sokol transactions', error);
   }
 
-  useEffect(() => {
-    const setSectionsData = async () => {
-      if (transactions) {
-        setLoading(true);
-
-        try {
-          const mappedTransactions = await mapLayer2Transactions(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-            // @ts-ignore getting mad about the union type
-            transactions.map((t: any) => t?.transaction),
-            accountAddress,
-            nativeCurrency,
-            currencyConversionRates
-          );
-
-          const groupedData = groupBy(
-            mappedTransactions,
-            groupTransactionsByDate
-          );
-
-          const groupedSections = Object.keys(groupedData)
-            .map(title => ({
-              data: groupedData[title].sort(sortByTime),
-              title,
-            }))
-            .sort((a, b) => {
-              const itemA = a.data[0];
-              const itemB = b.data[0];
-
-              return sortByTime(itemA, itemB);
-            });
-
-          setSections(groupedSections);
-        } catch (e) {
-          logger.log('Error setting sections data', e);
-        }
-
-        setLoading(false);
-      } else if (account === null) {
-        setSections([]);
-      }
-    };
-
-    setSectionsData();
-  }, [
-    currencyConversionRates,
-    nativeCurrency,
-    accountAddress,
-    transactions,
-    account,
-  ]);
+  const isEmpty = account === null;
+  const { sections, loading } = useTransactionSections(transactions, isEmpty);
 
   const transactionsCount = transactions?.length || 0;
   const isLoading = networkStatus === NetworkStatus.loading || loading;
@@ -122,8 +54,6 @@ const useSokolTransactions = () => {
     isFetchingMore,
     onEndReached: () => {
       if (!isFetchingMore && fetchMore) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore it gets confused because fetchMore could come from either query, but they both use this variable
         fetchMore({
           variables: {
             skip: transactionsCount,
