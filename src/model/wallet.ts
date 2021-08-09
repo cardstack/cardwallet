@@ -370,7 +370,8 @@ export const signTypedDataMessage = async (
       const pkeyBuffer = toBuffer(addHexPrefix(wallet.privateKey));
       let parsedData = message;
       try {
-        parsedData = typeof message === 'string' && JSON.parse(message);
+        parsedData =
+          typeof message === 'string' ? JSON.parse(message) : message;
         // eslint-disable-next-line no-empty
       } catch (e) {}
 

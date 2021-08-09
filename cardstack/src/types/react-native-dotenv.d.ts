@@ -6,4 +6,5 @@ declare module 'react-native-dotenv' {
   export const INFURA_PROJECT_ID: string;
   export const INFURA_PROJECT_ID_DEV: string;
   export const CRYPTOCOMPARE_API_KEY: string;
+  export const RAINBOW_MASTER_KEY: string;
 }
