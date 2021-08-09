@@ -1,5 +1,10 @@
-import React, { useEffect } from 'react';
+import { getSDK } from '@cardstack/cardpay-sdk';
+import HDWalletProvider from 'parity-hdwallet-provider';
+import React, { useCallback, useEffect, useState } from 'react';
 import CoinIcon from 'react-coin-icon';
+import Web3 from 'web3';
+import { getSeedPhrase } from '../../../src/model/wallet';
+import { ethereumUtils } from '../../../src/utils';
 import { SlackSheet } from '../sheet';
 import {
   Button,
@@ -8,7 +13,11 @@ import {
   Text,
 } from '@cardstack/components';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
+import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import logger from 'logger';
 
 const CHART_HEIGHT = 600;
 
@@ -17,6 +26,9 @@ export default function UnclaimedRevenueExpandedState(props: {
 }) {
   const merchantSafe = props.asset;
   const { setOptions } = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const { selectedWallet } = useWallets();
+  const network = useRainbowSelector(state => state.settings.network);
 
   useEffect(() => {
     setOptions({
@@ -25,6 +37,38 @@ export default function UnclaimedRevenueExpandedState(props: {
   }, [setOptions]);
 
   const { revenueBalances } = merchantSafe;
+
+  const onClaimAll = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const seedPhrase = await getSeedPhrase(selectedWallet.id);
+      const chainId = ethereumUtils.getChainIdFromNetwork(network);
+      const hdProvider = new HDWalletProvider({
+        chainId,
+        mnemonic: {
+          phrase: seedPhrase?.seedphrase || '',
+        },
+        providerOrUrl: web3ProviderSdk,
+      });
+      const web3 = new Web3(hdProvider);
+      const revenuePool = await getSDK('RevenuePool', web3);
+
+      const promises = revenueBalances.map(token =>
+        revenuePool.claim(
+          merchantSafe.address,
+          token.tokenAddress,
+          Web3.utils.toWei(token.balance.amount)
+        )
+      );
+
+      await Promise.all(promises);
+    } catch (error) {
+      logger.sentry('Error claiming revenue', error);
+    }
+
+    setLoading(false);
+  }, [merchantSafe.address, network, revenueBalances, selectedWallet.id]);
 
   return (
     <>
@@ -37,7 +81,9 @@ export default function UnclaimedRevenueExpandedState(props: {
               <TokenItem key={token.tokenAddress} token={token} />
             ))}
           </Container>
-          <Button marginTop={8}>Claim All</Button>
+          <Button loading={loading} marginTop={8} onPress={onClaimAll}>
+            Claim All
+          </Button>
           <HorizontalDivider />
           <Text size="medium">Activities</Text>
           <Container alignItems="center" marginTop={4} width="100%">
