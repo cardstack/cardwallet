@@ -15,36 +15,35 @@ import { ethereumUtils, logger } from '@rainbow-me/utils';
 
 const encryptor = new AesEncryptor();
 
-export async function getPublicKeyOfTheSigningWalletAndCreateWalletIfNeeded(): Promise<EthereumAddress> {
-  let alreadyExistingWallet = await loadString(signingWalletAddress);
-
-  if (typeof alreadyExistingWallet !== 'string') {
-    const walletSeed = generateMnemonic();
-    const {
-      wallet,
-      address,
-    } = await ethereumUtils.deriveAccountFromWalletInput(walletSeed);
-
-    const privateKey = addHexPrefix(
-      (wallet as LibWallet).getPrivateKey().toString('hex')
-    );
-
-    const encryptedPrivateKey = (await encryptor.encrypt(
-      RAINBOW_MASTER_KEY,
-      privateKey
-    )) as string;
-
-    await saveString(
-      signingWalletKeychain,
-      encryptedPrivateKey,
-      publicAccessControlOptions
-    );
-
-    await saveString(signingWalletAddress, address, publicAccessControlOptions);
-    alreadyExistingWallet = address;
+export async function getPublicKeyOfTheSigningWallet(): Promise<EthereumAddress> {
+  const alreadyExistingWallet = await loadString(signingWalletAddress);
+  if (typeof alreadyExistingWallet === 'string') {
+    logger.log('Signing wallet already existing');
+    return alreadyExistingWallet;
   }
-  logger.log('Signing wallet already existing');
-  return alreadyExistingWallet;
+
+  const walletSeed = generateMnemonic();
+  const { wallet, address } = await ethereumUtils.deriveAccountFromWalletInput(
+    walletSeed
+  );
+
+  const privateKey = addHexPrefix(
+    (wallet as LibWallet).getPrivateKey().toString('hex')
+  );
+
+  const encryptedPrivateKey = (await encryptor.encrypt(
+    RAINBOW_MASTER_KEY,
+    privateKey
+  )) as string;
+
+  await saveString(
+    signingWalletKeychain,
+    encryptedPrivateKey,
+    publicAccessControlOptions
+  );
+
+  await saveString(signingWalletAddress, address, publicAccessControlOptions);
+  return address;
 }
 
 export async function createSignature(
@@ -52,7 +51,7 @@ export async function createSignature(
   privateKey: string | null = null
 ) {
   logger.log('Creating a signature');
-  const publicKeyForTheSigningWallet = await getPublicKeyOfTheSigningWalletAndCreateWalletIfNeeded();
+  const publicKeyForTheSigningWallet = await getPublicKeyOfTheSigningWallet();
 
   const mainWallet = privateKey
     ? new Wallet(privateKey)
