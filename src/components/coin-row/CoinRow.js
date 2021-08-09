@@ -1,8 +1,8 @@
 import React, { createElement } from 'react';
 import styled from 'styled-components';
-import { CoinIcon, CoinIconGroup, CoinIconSize } from '../coin-icon';
+import { CoinIconGroup, CoinIconSize } from '../coin-icon';
 import { Column, Row } from '../layout';
-import { Container } from '@cardstack/components';
+import { CoinIcon, Container } from '@cardstack/components';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const CoinRowVerticalMargin = 12;
