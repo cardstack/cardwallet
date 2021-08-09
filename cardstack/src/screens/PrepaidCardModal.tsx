@@ -12,7 +12,7 @@ import {
   Text,
   TransactionItem,
 } from '@cardstack/components';
-import { usePrepaidCardTransactions } from '@cardstack/services';
+import { usePrepaidCardTransactions } from '@cardstack/hooks';
 
 const PrepaidCardModal = () => {
   const {

@@ -21,7 +21,7 @@ import {
   Touchable,
   TransactionItem,
 } from '@cardstack/components';
-import { useTransactions } from '@cardstack/services';
+import { useDepotTransactions } from '@cardstack/hooks';
 import { DepotType, TokenType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -249,7 +249,7 @@ const Activities = () => {
     refetchLoading,
     refetch,
     isLoadingTransactions,
-  } = useTransactions(address);
+  } = useDepotTransactions(address);
 
   return (
     <Container marginTop={7} flexDirection="column" width="100%">

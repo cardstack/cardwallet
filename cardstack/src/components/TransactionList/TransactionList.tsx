@@ -2,7 +2,7 @@ import React from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import { TransactionListLoading } from './TransactionListLoading';
-import { useTransactions } from '@cardstack/services';
+import { useFullTransactionList } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
 import {
   CenteredContainer,
@@ -25,7 +25,7 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
     sections,
     refetch,
     refetchLoading,
-  } = useTransactions();
+  } = useFullTransactionList();
 
   if (isLoadingTransactions) {
     return (
