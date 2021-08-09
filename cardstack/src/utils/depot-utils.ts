@@ -1,4 +1,4 @@
-import { DepotAsset, DepotType } from '@cardstack/types';
+import { DepotAsset, DepotType, TokenType } from '@cardstack/types';
 
 export const getDepotTokenByAddress = (depot: DepotType, address?: string) =>
   address
@@ -7,25 +7,23 @@ export const getDepotTokenByAddress = (depot: DepotType, address?: string) =>
       )
     : undefined;
 
+export const reshapeSingleDepotTokenToAsset = ({
+  tokenAddress,
+  token: { decimals, name, symbol },
+  ...rest
+}: TokenType) => ({
+  ...rest,
+  address: tokenAddress,
+  uniqueId: tokenAddress,
+  type: 'token',
+  symbol,
+  name,
+  decimals,
+});
+
 export const reshapeDepotTokensToAssets = (depot: DepotType) =>
-  depot.tokens.reduce(
-    (
-      tokens: DepotAsset[],
-      { tokenAddress, token: { decimals, name, symbol }, ...rest }
-    ) => {
-      const asset = {
-        ...rest,
-        address: tokenAddress,
-        uniqueId: tokenAddress,
-        type: 'token',
-        symbol,
-        name,
-        decimals,
-      };
+  depot.tokens.reduce((tokens: DepotAsset[], token: TokenType) => {
+    tokens.push(reshapeSingleDepotTokenToAsset(token));
 
-      tokens.push(asset);
-
-      return tokens;
-    },
-    []
-  );
+    return tokens;
+  }, []);

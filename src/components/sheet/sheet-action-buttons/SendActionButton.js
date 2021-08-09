@@ -5,19 +5,19 @@ import { useExpandedStateNavigation } from '../../../hooks';
 import { Button } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
 
-export default function SendActionButton({ small }) {
+export default function SendActionButton({ small, asset }) {
   const navigate = useExpandedStateNavigation();
   const handlePress = useCallback(
     () =>
       navigate(Routes.SEND_FLOW, params =>
         isNativeStackAvailable
           ? {
-              params,
+              params: { ...params, asset },
               screen: Routes.SEND_SHEET,
             }
-          : { ...params }
+          : { ...params, asset }
       ),
-    [navigate]
+    [navigate, asset]
   );
 
   const variantProp = small ? { variant: 'small' } : {};
