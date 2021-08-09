@@ -30,7 +30,12 @@ import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkIsValidAddressOrDomain } from '../helpers/validators';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
-import { isNativeToken } from '@cardstack/utils';
+import {
+  getDepotTokenByAddress,
+  isNativeToken,
+  reshapeDepotTokensToAssets,
+  reshapeSingleDepotTokenToAsset,
+} from '@cardstack/utils';
 import {
   useAccountAssets,
   useAccountSettings,
@@ -79,13 +84,22 @@ const KeyboardSizeView = styled(KeyboardArea)`
     showAssetForm ? colors.lighterGrey : colors.white};
 `;
 
-export default function SendSheet(props) {
+const useSendSheetScreen = () => {
   const dispatch = useDispatch();
   const { isTinyPhone } = useDimensions();
   const { navigate, addListener } = useNavigation();
+  const { params } = useRoute();
   const { dataAddNewTransaction } = useTransactionConfirmation();
   const updateAssetOnchainBalanceIfNeeded = useUpdateAssetOnchainBalance();
-  const { allAssets } = useAccountAssets();
+  const {
+    allAssets,
+    depots: [depot],
+  } = useAccountAssets();
+
+  const depotAssets = useMemo(() => reshapeDepotTokensToAssets(depot), [depot]);
+
+  const isDepot = !!params?.asset?.tokenAddress;
+
   const {
     gasLimit,
     gasPrices,
@@ -451,15 +465,19 @@ export default function SendSheet(props) {
     }
   }, [isValidAddress, selected, showAssetForm, showAssetList]);
 
-  const { params } = useRoute();
-  const assetOverride = params?.asset;
+  const assetOverride = useMemo(
+    () =>
+      isDepot ? reshapeSingleDepotTokenToAsset(params?.asset) : params?.asset,
+    [isDepot, params.asset]
+  );
+
   const prevAssetOverride = usePrevious(assetOverride);
 
   useEffect(() => {
     if (assetOverride && assetOverride !== prevAssetOverride) {
-      sendUpdateSelected(assetOverride);
+      isDepot ? setSelected(assetOverride) : sendUpdateSelected(assetOverride);
     }
-  }, [assetOverride, prevAssetOverride, sendUpdateSelected]);
+  }, [assetOverride, isDepot, prevAssetOverride, sendUpdateSelected]);
 
   const recipientOverride = params?.address;
 
@@ -502,6 +520,86 @@ export default function SendSheet(props) {
     selected,
     updateTxFee,
   ]);
+
+  return {
+    contacts,
+    isValidAddress,
+    onChangeInput,
+    handleFocus,
+    setRecipient,
+    triggerFocus,
+    recipient,
+    recipientFieldRef,
+    onRemoveContact,
+    showAssetList,
+    showEmptyState,
+    filteredContacts,
+    currentInput,
+    allAssets: isDepot ? depotAssets : allAssets,
+    fetchData,
+    hiddenCoins,
+    nativeCurrency,
+    network,
+    sendUpdateSelected,
+    pinnedCoins,
+    savings,
+    sendableUniqueTokens,
+    showAssetForm,
+    amountDetails,
+    isAuthorizing,
+    isSufficientGas,
+    onPress,
+    isTinyPhone,
+    onChangeAssetAmount,
+    onChangeNativeAmount,
+    onResetAssetSelection,
+    selected,
+    sendMaxBalance,
+    selectedGasPrice,
+    nativeCurrencySymbol,
+    onPressTransactionSpeed,
+  };
+};
+
+export default function SendSheet(props) {
+  const {
+    contacts,
+    isValidAddress,
+    onChangeInput,
+    handleFocus,
+    setRecipient,
+    triggerFocus,
+    recipient,
+    recipientFieldRef,
+    onRemoveContact,
+    showAssetList,
+    showEmptyState,
+    filteredContacts,
+    currentInput,
+    allAssets,
+    fetchData,
+    hiddenCoins,
+    nativeCurrency,
+    network,
+    sendUpdateSelected,
+    pinnedCoins,
+    savings,
+    sendableUniqueTokens,
+    showAssetForm,
+    amountDetails,
+    isAuthorizing,
+    isSufficientGas,
+    onPress,
+    isTinyPhone,
+    onChangeAssetAmount,
+    onChangeNativeAmount,
+    onResetAssetSelection,
+    selected,
+    sendMaxBalance,
+    selectedGasPrice,
+    nativeCurrencySymbol,
+    onPressTransactionSpeed,
+  } = useSendSheetScreen();
 
   return (
     <Container>

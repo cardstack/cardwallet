@@ -9,16 +9,14 @@ export const getDepotTokenByAddress = (depot: DepotType, address?: string) =>
 
 export const reshapeSingleDepotTokenToAsset = ({
   tokenAddress,
-  token: { decimals, name, symbol },
+  token,
   ...rest
 }: TokenType) => ({
   ...rest,
   address: tokenAddress,
   uniqueId: tokenAddress,
   type: 'token',
-  symbol,
-  name,
-  decimals,
+  ...token,
 });
 
 export const reshapeDepotTokensToAssets = (depot: DepotType) =>

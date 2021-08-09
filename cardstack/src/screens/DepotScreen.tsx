@@ -23,10 +23,7 @@ import {
 } from '@cardstack/components';
 import { useDepotTransactions } from '@cardstack/hooks';
 import { DepotType, TokenType } from '@cardstack/types';
-import {
-  getAddressPreview,
-  reshapeSingleDepotTokenToAsset,
-} from '@cardstack/utils';
+import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
@@ -203,7 +200,7 @@ const Balances = ({ tokens }: BalancesProps) => {
   const onPress = useCallback(
     (token: TokenType) => () => {
       navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: reshapeSingleDepotTokenToAsset(token),
+        asset: token,
         type: 'token',
       });
     },

@@ -27,14 +27,14 @@ const heightWithChart = heightWithoutChart + 310;
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 
 export default function ChartExpandedState(props) {
-  // const nativeCurrency = useSelector(state => state.settings.nativeCurrency);
+  const currentAsset = props.asset;
 
-  const asset = props.asset.token
+  const asset = props.asset?.token
     ? {
         ...props.asset,
         ...props.asset.token,
       }
-    : props.asset;
+    : currentAsset;
 
   const {
     chart,
@@ -123,7 +123,7 @@ export default function ChartExpandedState(props) {
             <SwapActionButton color={color} inputType={AssetInputTypes.in} />
           )}
           <SendActionButton
-            asset={asset}
+            asset={currentAsset}
             color={color}
             small={showSwapButton} //reenable once swap functionality is fixed
           />
