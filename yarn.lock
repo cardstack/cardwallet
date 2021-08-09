@@ -1255,10 +1255,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cardstack/cardpay-sdk@0.19.47":
-  version "0.19.47"
-  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.19.47.tgz#c8f66532e5c9c18567261fcf57a3e3e9b5cfcb0a"
-  integrity sha512-XowI/V5GAvbRCeNQKtGc+uDn5UL6FcRTypQ4sBiYAYBeSYJQl0BjX5ufa8KDeeyg5uVmSsYCzY64NDwRyIelyA==
+"@cardstack/cardpay-sdk@0.19.49":
+  version "0.19.49"
+  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.19.49.tgz#1d753ae11f3081a0a51dbd1eedfa379d34dea81f"
+  integrity sha512-1FGPLd2BB3CaEMdFFrw6LoMslSx/zbqJ+VSRT3xgCOjf6eaQADKHv4FEShZdaR2tcRZvowMQ3/lOfjSBgnsj+A==
   dependencies:
     "@truffle/hdwallet-provider" "^1.2.6"
     "@trufflesuite/web3-provider-engine" "^15.0.13-1"
@@ -4198,13 +4198,6 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
-
-"@types/eth-sig-util@^2.1.0":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@types/eth-sig-util/-/eth-sig-util-2.1.1.tgz#839f784da04c8d2e12add9b37692c3f05a80603a"
-  integrity sha512-vYP1UD19i0532+eQY7vXHfAKCzAQiI6aoLvomqu+ZewzUX/jvDSr41JGl8zQ9dMbfiHPDhMFY26bScCyZ7vzlg==
-  dependencies:
-    "@types/node" "*"
 
 "@types/ethereum-protocol@*":
   version "1.0.1"
@@ -15019,22 +15012,6 @@ parent-module@^1.0.0:
   integrity sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==
   dependencies:
     callsites "^3.0.0"
-
-parity-hdwallet-provider@^1.3.0-fork.2:
-  version "1.3.0-fork.2"
-  resolved "https://registry.yarnpkg.com/parity-hdwallet-provider/-/parity-hdwallet-provider-1.3.0-fork.2.tgz#f3b5770bba27d54491db8c872b80f8b788298ffe"
-  integrity sha512-+gnDozfAD1ehE9R55QlmvoDn5VoNgRM8rXR/WFARC6c+kFMU+7UEs801WnLvUvHLEkztPkLmu8DAzTkQh+6GGA==
-  dependencies:
-    "@trufflesuite/web3-provider-engine" "15.0.13-1"
-    "@types/eth-sig-util" "^2.1.0"
-    any-promise "^1.3.0"
-    bindings "^1.5.0"
-    eth-sig-util "^3.0.1"
-    ethereum-cryptography "^0.1.3"
-    ethereum-protocol "^1.0.1"
-    ethereumjs-tx "^2.1.2"
-    ethereumjs-util "^6.1.0"
-    ethereumjs-wallet "^1.0.1"
 
 parse-asn1@^5.0.0, parse-asn1@^5.1.5:
   version "5.1.6"

@@ -54,13 +54,22 @@ export default function UnclaimedRevenueExpandedState(props: {
       const web3 = new Web3(hdProvider);
       const revenuePool = await getSDK('RevenuePool', web3);
 
-      const promises = revenueBalances.map(token =>
-        revenuePool.claim(
+      const promises = revenueBalances.map(async token => {
+        const gasEstimate = await revenuePool.claimGasEstimate(
           merchantSafe.address,
           token.tokenAddress,
-          Web3.utils.toWei(token.balance.amount)
-        )
-      );
+          // divide amount by 2 for estimate since we can't estimate the full amount and the amoutn doesn't affect the gas price
+          Web3.utils.toWei((Number(token.balance.amount) / 2).toString())
+        );
+
+        await revenuePool.claim(
+          merchantSafe.address,
+          token.tokenAddress,
+          Web3.utils.toWei(
+            (Number(token.balance.amount) - Number(gasEstimate)).toString()
+          )
+        );
+      });
 
       await Promise.all(promises);
     } catch (error) {
