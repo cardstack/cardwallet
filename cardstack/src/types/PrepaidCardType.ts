@@ -11,3 +11,22 @@ export interface PrepaidCardType {
   transferrable: boolean;
   cardCustomization?: PrepaidCardCustomization;
 }
+
+export interface PrepaidLinearGradientInfo {
+  hasGradient: boolean;
+  angle?: number;
+  angleCoords?: {
+    x1: string;
+    y1: string;
+    x2: string;
+    y2: string;
+  };
+  stop1?: {
+    stopColor: string;
+    offset: string;
+  };
+  stop2?: {
+    stopColor: string;
+    offset: string;
+  };
+}

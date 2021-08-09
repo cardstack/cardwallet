@@ -6,7 +6,10 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { getResolver } from '@cardstack/did-resolver';
 import { Resolver } from 'did-resolver';
-import { PrepaidCardCustomization, LinearGradientInfo } from '@cardstack/types';
+import {
+  PrepaidCardCustomization,
+  PrepaidLinearGradientInfo,
+} from '@cardstack/types';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai', 'keth'];
 const MAINNETS = ['mainnet', 'xdai'];
 const LAYER_1_NETWORKS = ['mainnet', 'kovan'];
@@ -111,21 +114,17 @@ export const fetchCardCustomizationFromDID = async (
 
 export const parseLinearGradient = (
   cardCustomization?: PrepaidCardCustomization
-): LinearGradientInfo => {
-  const patternUrl = cardCustomization?.patternUrl?.startsWith('http')
-    ? cardCustomization?.patternUrl
-    : `https://app.cardstack.com${cardCustomization?.patternUrl}`;
-
+): PrepaidLinearGradientInfo => {
   const hasGradient = !!cardCustomization?.background.startsWith(
     'linear-gradient'
   );
 
   if (!cardCustomization || !hasGradient) {
-    return { patternUrl, hasGradient };
+    return { hasGradient: false };
   }
 
   const backgroundValues = (/linear-gradient\(([^"]+)\)/.exec(
-    cardCustomization?.background
+    cardCustomization?.background || ''
   ) || [])[1]
     .split(',')
     .map((value: string) => value.trim());
@@ -138,17 +137,20 @@ export const parseLinearGradient = (
     ? backgroundValues[2].split(' ')
     : ['#fff', 0];
 
+  const angle = Number(
+    (180 - parseFloat(backgroundValues[0]?.replace('deg', '')) || 0).toFixed(2)
+  );
+
   return {
-    patternUrl,
-    hasGradient,
-    degree: backgroundValues[0]?.replace('deg', '%') || '0%',
+    hasGradient: true,
+    angle,
     stop1: {
       stopColor: `${stop1[0] || '#fff'}`,
-      offset: Number(stop1[1]) || 0,
+      offset: `${stop1[1] || '0%'}`,
     },
     stop2: {
       stopColor: `${stop2[0] || '#fff'}`,
-      offset: Number(stop2[1]) || 0,
+      offset: `${stop2[1] || '0%'}`,
     },
   };
 };

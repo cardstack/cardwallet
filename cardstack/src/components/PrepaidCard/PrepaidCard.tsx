@@ -208,7 +208,15 @@ const CustomizableBackground = ({
   cardCustomization,
   isEditing,
 }: CardGradientProps) => {
-  const { patternUrl, hasGradient, degree, stop1, stop2 } = parseLinearGradient(
+  const { width } = useDimensions();
+
+  const patternUrl = cardCustomization?.patternUrl
+    ? cardCustomization.patternUrl.startsWith('http')
+      ? cardCustomization.patternUrl
+      : `https://app.cardstack.com${cardCustomization.patternUrl}`
+    : null;
+
+  const { hasGradient, angle, stop1, stop2 } = parseLinearGradient(
     cardCustomization
   );
 
@@ -221,7 +229,14 @@ const CustomizableBackground = ({
     >
       {hasGradient && (
         <Defs>
-          <LinearGradient id="grad" x1="0%" y1="0" x2={degree} y2="0">
+          <LinearGradient
+            id="grad"
+            x1="0"
+            y1="0"
+            x2="100%"
+            y2="0"
+            gradientTransform={`rotate(${angle}, ${width / 2}, 55)`}
+          >
             <Stop {...stop1} />
             <Stop {...stop2} />
           </LinearGradient>

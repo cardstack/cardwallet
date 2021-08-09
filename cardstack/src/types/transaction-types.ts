@@ -53,22 +53,8 @@ export interface PrepaidCardCustomization {
   background: string;
   issuerName: string;
   patternColor: string;
-  patternUrl: string;
+  patternUrl: string | null;
   textColor: string;
-}
-
-export interface LinearGradientInfo {
-  patternUrl: string;
-  hasGradient: boolean;
-  degree?: string;
-  stop1?: {
-    stopColor: string;
-    offset: number;
-  };
-  stop2?: {
-    stopColor: string;
-    offset: number;
-  };
 }
 
 export interface PrepaidCardCreatedTransactionType {
