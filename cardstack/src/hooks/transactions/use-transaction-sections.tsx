@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
+import { NetworkStatus } from '@apollo/client';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
@@ -8,10 +9,21 @@ import logger from 'logger';
 import { mapLayer2Transactions } from '@cardstack/services';
 import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
 
-export const useTransactionSections = (
-  transactions: ({ transaction: any } | null)[] | undefined,
-  isEmpty?: boolean
-) => {
+interface UseTransactionSectionsProps {
+  transactions: ({ transaction: any } | null | undefined)[] | undefined;
+  isEmpty?: boolean;
+  transactionsCount: number;
+  networkStatus: NetworkStatus;
+  fetchMore?: (props: any) => void;
+}
+
+export const useTransactionSections = ({
+  transactions,
+  isEmpty,
+  transactionsCount,
+  networkStatus,
+  fetchMore,
+}: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -76,8 +88,23 @@ export const useTransactionSections = (
     isEmpty,
   ]);
 
+  const isLoading = networkStatus === NetworkStatus.loading || loading;
+  const isFetchingMore = sections.length && isLoading;
+
+  const onEndReached = useCallback(() => {
+    if (!isFetchingMore && fetchMore) {
+      fetchMore({
+        variables: {
+          skip: transactionsCount,
+        },
+      });
+    }
+  }, [fetchMore, isFetchingMore, transactionsCount]);
+
   return {
-    loading,
+    loading: isLoading && !isFetchingMore,
+    isFetchingMore,
+    onEndReached,
     sections,
   };
 };

@@ -1,4 +1,5 @@
 import { NetworkStatus } from '@apollo/client';
+import { useCallback } from 'react';
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { getApolloClient } from '../../graphql/apollo-client';
@@ -42,25 +43,23 @@ const useSokolTransactions = () => {
     logger.log('Error getting Sokol transactions', error);
   }
 
-  const isEmpty = account === null;
-  const { sections, loading } = useTransactionSections(transactions, isEmpty);
-
-  const transactionsCount = transactions?.length || 0;
-  const isLoading = networkStatus === NetworkStatus.loading || loading;
-  const isFetchingMore = sections.length && isLoading;
+  const {
+    sections,
+    loading,
+    isFetchingMore,
+    onEndReached,
+  } = useTransactionSections({
+    transactions,
+    isEmpty: account === null,
+    transactionsCount: transactions?.length || 0,
+    networkStatus,
+    fetchMore,
+  });
 
   return {
-    isLoadingTransactions: isLoading && !isFetchingMore,
+    isLoadingTransactions: loading,
     isFetchingMore,
-    onEndReached: () => {
-      if (!isFetchingMore && fetchMore) {
-        fetchMore({
-          variables: {
-            skip: transactionsCount,
-          },
-        });
-      }
-    },
+    onEndReached,
     refetch,
     refetchLoading: networkStatus === NetworkStatus.refetch,
     sections: sections,

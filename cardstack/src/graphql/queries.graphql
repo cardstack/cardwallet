@@ -10,7 +10,7 @@ query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize:
   }
 }
 
-query GetSafeTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+query GetDepotTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
   safe(id: $address) {
     id
     safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {

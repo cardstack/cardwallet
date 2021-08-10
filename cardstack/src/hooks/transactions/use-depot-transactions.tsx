@@ -5,7 +5,7 @@ import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import logger from 'logger';
-import { useGetSafeTransactionHistoryDataQuery } from '@cardstack/graphql';
+import { useGetDepotTransactionHistoryDataQuery } from '@cardstack/graphql';
 
 export const useDepotTransactions = (safeAddress: string) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
@@ -18,7 +18,7 @@ export const useDepotTransactions = (safeAddress: string) => {
     fetchMore,
     refetch,
     error,
-  } = useGetSafeTransactionHistoryDataQuery({
+  } = useGetDepotTransactionHistoryDataQuery({
     client,
     notifyOnNetworkStatusChange: true,
     variables: {
@@ -34,25 +34,23 @@ export const useDepotTransactions = (safeAddress: string) => {
     logger.log('Error getting Sokol transactions', error);
   }
 
-  const isEmpty = safe === null;
-  const { sections, loading } = useTransactionSections(transactions, isEmpty);
-
-  const transactionsCount = transactions?.length || 0;
-  const isLoading = networkStatus === NetworkStatus.loading || loading;
-  const isFetchingMore = sections.length && isLoading;
+  const {
+    sections,
+    loading,
+    isFetchingMore,
+    onEndReached,
+  } = useTransactionSections({
+    transactions,
+    isEmpty: safe === null,
+    transactionsCount: transactions?.length || 0,
+    networkStatus,
+    fetchMore,
+  });
 
   return {
-    isLoadingTransactions: isLoading && !isFetchingMore,
+    isLoadingTransactions: loading,
     isFetchingMore,
-    onEndReached: () => {
-      if (!isFetchingMore && fetchMore) {
-        fetchMore({
-          variables: {
-            skip: transactionsCount,
-          },
-        });
-      }
-    },
+    onEndReached,
     refetch,
     refetchLoading: networkStatus === NetworkStatus.refetch,
     sections: sections,
