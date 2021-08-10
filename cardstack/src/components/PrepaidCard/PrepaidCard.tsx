@@ -216,7 +216,7 @@ const CustomizableBackground = ({
       : `https://app.cardstack.com${cardCustomization.patternUrl}`
     : null;
 
-  const { hasGradient, angle, stop1, stop2 } = parseLinearGradient(
+  const { hasLinearGradient, angle, stop1, stop2 } = parseLinearGradient(
     cardCustomization
   );
 
@@ -227,10 +227,10 @@ const CustomizableBackground = ({
       style={{ position: 'absolute' }}
       key={`header_background_${isEditing}`}
     >
-      {hasGradient && (
+      {hasLinearGradient && (
         <Defs>
           <LinearGradient
-            id="grad"
+            id="linearGradient"
             x1="0"
             y1="0"
             x2="100%"
@@ -246,7 +246,11 @@ const CustomizableBackground = ({
         id="Gradient"
         width="100%"
         height="110"
-        fill={hasGradient ? 'url(#grad)' : cardCustomization?.background}
+        fill={
+          hasLinearGradient
+            ? 'url(#linearGradient)'
+            : cardCustomization?.background
+        }
       />
       {patternUrl && (
         <PatternUri

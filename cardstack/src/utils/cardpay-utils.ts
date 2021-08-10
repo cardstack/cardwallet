@@ -115,12 +115,12 @@ export const fetchCardCustomizationFromDID = async (
 export const parseLinearGradient = (
   cardCustomization?: PrepaidCardCustomization
 ): PrepaidLinearGradientInfo => {
-  const hasGradient = !!cardCustomization?.background.startsWith(
+  const hasLinearGradient = !!cardCustomization?.background.startsWith(
     'linear-gradient'
   );
 
-  if (!cardCustomization || !hasGradient) {
-    return { hasGradient: false };
+  if (!cardCustomization || !hasLinearGradient) {
+    return { hasLinearGradient: false };
   }
 
   const backgroundValues = (/linear-gradient\(([^"]+)\)/.exec(
@@ -142,7 +142,7 @@ export const parseLinearGradient = (
   );
 
   return {
-    hasGradient: true,
+    hasLinearGradient: true,
     angle,
     stop1: {
       stopColor: `${stop1[0] || '#fff'}`,

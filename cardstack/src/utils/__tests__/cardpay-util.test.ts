@@ -15,9 +15,46 @@ it('parseLinearGradient with 2 stop linear gradient', () => {
 
   const parsedGradientResult: PrepaidLinearGradientInfo = {
     angle: 40.73,
-    hasGradient: true,
+    hasLinearGradient: true,
     stop1: { offset: '16%', stopColor: '#FFFFAA' },
     stop2: { offset: '100%', stopColor: '#B7FFFC' },
+  };
+
+  const result = parseLinearGradient(cardCustomization);
+  expect(result).toBe(parsedGradientResult);
+});
+
+it('parseLinearGradient with 3 stop linear gradient', () => {
+  const cardCustomization: PrepaidCardCustomization = {
+    background: 'linear-gradient(139.27deg, #FFFFAA 16%, #B7FFFC 100%)',
+    issuerName: 'MyPrepaidCard1',
+    patternColor: 'white',
+    patternUrl: null,
+    textColor: 'black',
+  };
+
+  const parsedGradientResult: PrepaidLinearGradientInfo = {
+    angle: 40.73,
+    hasLinearGradient: true,
+    stop1: { offset: '16%', stopColor: '#FFFFAA' },
+    stop2: { offset: '100%', stopColor: '#B7FFFC' },
+  };
+
+  const result = parseLinearGradient(cardCustomization);
+  expect(result).toBe(parsedGradientResult);
+});
+
+it('parseLinearGradient with radial gradient', () => {
+  const cardCustomization: PrepaidCardCustomization = {
+    background: 'radial-gradient(#e66465, #9198e5)',
+    issuerName: 'MyPrepaidCard1',
+    patternColor: 'white',
+    patternUrl: null,
+    textColor: 'black',
+  };
+
+  const parsedGradientResult: PrepaidLinearGradientInfo = {
+    hasLinearGradient: false,
   };
 
   const result = parseLinearGradient(cardCustomization);
@@ -34,10 +71,7 @@ it('parseLinearGradient with no gradient', () => {
   };
 
   const parsedGradientResult: PrepaidLinearGradientInfo = {
-    angle: undefined,
-    hasGradient: false,
-    stop1: undefined,
-    stop2: undefined,
+    hasLinearGradient: false,
   };
 
   const result = parseLinearGradient(cardCustomization);

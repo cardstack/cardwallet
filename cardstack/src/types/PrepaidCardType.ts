@@ -13,7 +13,7 @@ export interface PrepaidCardType {
 }
 
 export interface PrepaidLinearGradientInfo {
-  hasGradient: boolean;
+  hasLinearGradient: boolean;
   angle?: number;
   angleCoords?: {
     x1: string;
