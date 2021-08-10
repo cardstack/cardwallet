@@ -69,7 +69,7 @@ export default function UnclaimedRevenueExpandedState(props: {
         const gasEstimate = await revenuePool.claimGasEstimate(
           merchantSafe.address,
           token.tokenAddress,
-          // divide amount by 2 for estimate since we can't estimate the full amount and the amoutn doesn't affect the gas price
+          // divide amount by 2 for estimate since we can't estimate the full amount and the amount doesn't affect the gas price
           claimEstimateAmount
         );
 
