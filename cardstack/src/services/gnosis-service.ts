@@ -114,8 +114,6 @@ export const getTokensWithPrice = async (
           ? usdBalance
           : currencyConversionRates[nativeCurrency] * usdBalance;
 
-      const priceUnit = tokenItem.price?.value || 0;
-
       return {
         ...tokenItem,
         balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
@@ -126,10 +124,6 @@ export const getTokensWithPrice = async (
               nativeBalance,
               nativeCurrency
             ),
-          },
-          price: {
-            amount: priceUnit,
-            display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
           },
         },
       };
