@@ -1,4 +1,8 @@
-import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  convertAmountToNativeDisplay,
+  delay,
+  getConstantByNetwork,
+} from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
@@ -90,6 +94,10 @@ const fetchCoingeckoIds = async (network, coingeckoCoins) => {
         idsMap[address] = id;
       }
     });
+  } else if (network === networkTypes.sokol) {
+    testnetAssets['sokol'].forEach(({ asset }) => {
+      idsMap[asset.asset_code] = asset.coingecko_id;
+    });
   } else {
     const honeyswapRequest = await fetch(HONEYSWAP_ENDPOINT);
     const data = await honeyswapRequest.json();
@@ -106,6 +114,7 @@ const fetchCoingeckoIds = async (network, coingeckoCoins) => {
       }
     });
   }
+
   return idsMap;
 };
 
@@ -491,11 +500,18 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
               const token = depot.tokens[j];
 
               if (toLower(token.coingecko_id) === toLower(key)) {
+                const price = prices[key][`${formattedNativeCurrency}`];
+
                 depots[i].tokens[j].price = {
                   changed_at: prices[key].last_updated_at,
                   relative_change_24h:
                     prices[key][`${formattedNativeCurrency}_24h_change`],
                   value: prices[key][`${formattedNativeCurrency}`],
+                };
+
+                depots[i].tokens[j].native.price = {
+                  amount: price,
+                  display: convertAmountToNativeDisplay(price, nativeCurrency),
                 };
               } else if (token.coingecko_id === null) {
                 depots[i].tokens[j].price = {
@@ -540,9 +556,24 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
         for (let i = 0; i < assets.length; i++) {
           if (toLower(assets[i].asset.coingecko_id) === toLower(coingeckoId)) {
             assets[i].asset.chartPrices = chartData[coingeckoId];
-            break;
           } else if (assets[i].asset.coingecko_id === null) {
             assets[i].asset.chartPrices = null;
+          }
+
+          if (depots) {
+            for (let i = 0; i < depots.length; i++) {
+              const depot = depots[i];
+
+              for (let j = 0; j < depot.tokens.length; j++) {
+                const token = depot.tokens[j];
+
+                if (toLower(token.coingecko_id) === toLower(coingeckoId)) {
+                  depots[i].tokens[j].chartPrices = chartData[coingeckoId];
+                } else if (token.coingecko_id === null) {
+                  depots[i].tokens[j].chartPrices = null;
+                }
+              }
+            }
           }
         }
       });
