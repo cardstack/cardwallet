@@ -1,5 +1,4 @@
 import { NetworkStatus } from '@apollo/client';
-import { useCallback } from 'react';
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { getApolloClient } from '../../graphql/apollo-client';
