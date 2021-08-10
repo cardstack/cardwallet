@@ -74,6 +74,7 @@ interface CardGradientProps {
 
 const SELECT_ICON_WIDTH = '13%';
 const EDITING_COIN_ROW_WIDTH = '87%';
+const PREPAID_GRADIENT_HEIGHT = 110;
 
 /**
  * A prepaid card component
@@ -223,7 +224,7 @@ const CustomizableBackground = ({
   return (
     <SVG
       width="100%"
-      height={110}
+      height={PREPAID_GRADIENT_HEIGHT}
       style={{ position: 'absolute' }}
       key={`header_background_${isEditing}`}
     >
@@ -235,7 +236,9 @@ const CustomizableBackground = ({
             y1="0"
             x2="100%"
             y2="0"
-            gradientTransform={`rotate(${angle}, ${width / 2}, 55)`}
+            gradientTransform={`rotate(${angle}, ${width / 2}, ${
+              PREPAID_GRADIENT_HEIGHT / 2
+            })`}
           >
             <Stop {...stop1} />
             <Stop {...stop2} />
@@ -245,7 +248,7 @@ const CustomizableBackground = ({
       <Rect
         id="Gradient"
         width="100%"
-        height="110"
+        height={PREPAID_GRADIENT_HEIGHT}
         fill={
           hasLinearGradient
             ? 'url(#linearGradient)'
@@ -308,7 +311,7 @@ const PatternUri = ({
         const height =
           screenWidth > Number(viewBox[2])
             ? (screenWidth / Number(viewBox[2])) * Number(viewBox[3])
-            : Number(viewBox[3]) || 110;
+            : Number(viewBox[3]) || PREPAID_GRADIENT_HEIGHT;
 
         setPattern({
           pattern: response,
