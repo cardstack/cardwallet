@@ -56,14 +56,26 @@ export default function MerchantScreen() {
   );
 }
 
+const useMerchantSafe = () => {
+  const {
+    params: {
+      merchantSafe: { address },
+    },
+  } = useRoute<RouteType>();
+
+  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
+
+  const merchantSafe = merchantSafes.find(
+    safe => safe.address === address
+  ) as MerchantSafeType;
+
+  return merchantSafe;
+};
+
 const Header = () => {
   const { goBack } = useNavigation();
 
-  const {
-    params: { merchantSafe },
-  } = useRoute<RouteType>();
-
-  const { address } = merchantSafe;
+  const { address } = useMerchantSafe();
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
 
@@ -150,9 +162,7 @@ const MerchantInfo = () => (
 );
 
 const LifetimeEarningsSection = () => {
-  const {
-    params: { merchantSafe },
-  } = useRoute<RouteType>();
+  const merchantSafe = useMerchantSafe();
 
   const { navigate } = useNavigation();
 
@@ -193,9 +203,7 @@ const LifetimeEarningsSection = () => {
 };
 
 const UnclaimedRevenueSection = () => {
-  const {
-    params: { merchantSafe },
-  } = useRoute<RouteType>();
+  const merchantSafe = useMerchantSafe();
 
   const { navigate } = useNavigation();
 
@@ -230,9 +238,7 @@ const UnclaimedRevenueSection = () => {
 };
 
 const AvailableBalancesSection = () => {
-  const {
-    params: { merchantSafe },
-  } = useRoute<RouteType>();
+  const merchantSafe = useMerchantSafe();
 
   const { tokens } = merchantSafe;
 

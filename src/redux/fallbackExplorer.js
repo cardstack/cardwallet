@@ -331,15 +331,258 @@ const fetchAssetBalances = async (tokens, address, network) => {
   }
 };
 
+export const fetchAssetsBalancesAndPrices = async () => {
+  logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
+  const { accountAddress, nativeCurrency, network } = store.getState().settings;
+  const coingeckoCoins = store.getState().coingecko.coins;
+  const formattedNativeCurrency = toLower(nativeCurrency);
+  const currencyConversionRates = store.getState().currencyConversion.rates;
+  const { xdaiChainAssets, mainnetAssets } = store.getState().fallbackExplorer;
+  const actualMainnetAssets =
+    network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
+  const assets = isMainnet(network)
+    ? actualMainnetAssets
+    : testnetAssets[network];
+  let depots = null,
+    prepaidCards = null,
+    merchantSafes = null;
+
+  // not functional on xdai chain yet
+  if (network === networkTypes.sokol) {
+    try {
+      const gnosisSafeData = await fetchGnosisSafes(accountAddress);
+      const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
+      const depotsWithIds = gnosisSafeData.depots.map(depot => ({
+        ...depot,
+        tokens: depot.tokens.map(token => ({
+          ...token,
+          coingecko_id: coingeckoIds[token.tokenAddress] || null,
+        })),
+      }));
+      const prepaidCardsWithIds = gnosisSafeData.prepaidCards.map(
+        prepaidCard => ({
+          ...prepaidCard,
+          tokens: prepaidCard.tokens.map(token => ({
+            ...token,
+            coingecko_id: coingeckoIds[token.tokenAddress] || null,
+          })),
+        })
+      );
+      const merchantSafesWithIds = gnosisSafeData.merchantSafes.map(
+        merchantSafe => ({
+          ...merchantSafe,
+          tokens: merchantSafe.tokens.map(token => ({
+            ...token,
+            coingecko_id: coingeckoIds[token.tokenAddress] || null,
+          })),
+        })
+      );
+
+      const gnosisDataWithPrices = await addGnosisTokenPrices(
+        {
+          depots: depotsWithIds,
+          prepaidCards: prepaidCardsWithIds,
+          merchantSafes: merchantSafesWithIds,
+        },
+        network,
+        accountAddress,
+        nativeCurrency,
+        currencyConversionRates
+      );
+
+      depots = gnosisDataWithPrices.depots;
+      prepaidCards = gnosisDataWithPrices.prepaidCards;
+      merchantSafes = gnosisDataWithPrices.merchantSafes;
+    } catch (error) {
+      logger.error('Error getting Gnosis data', error);
+    }
+  }
+
+  if (!assets || !assets.length) {
+    const fallbackExplorerBalancesHandle = setTimeout(
+      fetchAssetsBalancesAndPrices,
+      10000
+    );
+    store.dispatch({
+      payload: {
+        fallbackExplorerBalancesHandle,
+      },
+      type: FALLBACK_EXPLORER_SET_BALANCE_HANDLER,
+    });
+    return;
+  }
+
+  const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
+    if (coingecko_id) {
+      return [...ids, coingecko_id];
+    }
+
+    return ids;
+  }, []);
+
+  const prices = await fetchAssetPrices(coingeckoIds, formattedNativeCurrency);
+  const chartData = await fetchAssetCharts(
+    coingeckoIds,
+    formattedNativeCurrency
+  );
+
+  if (prices) {
+    Object.keys(prices).forEach(key => {
+      for (let i = 0; i < assets.length; i++) {
+        if (toLower(assets[i].asset.coingecko_id) === toLower(key)) {
+          assets[i].asset.price = {
+            changed_at: prices[key].last_updated_at,
+            relative_change_24h:
+              prices[key][`${formattedNativeCurrency}_24h_change`],
+            value: prices[key][`${formattedNativeCurrency}`],
+          };
+        } else if (assets[i].asset.coingecko_id === null) {
+          assets[i].asset.price = {
+            changed_at: null,
+            relative_change_24h: 0,
+            value: 0,
+          };
+        }
+      }
+
+      if (depots) {
+        for (let i = 0; i < depots.length; i++) {
+          const depot = depots[i];
+
+          for (let j = 0; j < depot.tokens.length; j++) {
+            const token = depot.tokens[j];
+
+            if (toLower(token.coingecko_id) === toLower(key)) {
+              depots[i].tokens[j].price = {
+                changed_at: prices[key].last_updated_at,
+                relative_change_24h:
+                  prices[key][`${formattedNativeCurrency}_24h_change`],
+                value: prices[key][`${formattedNativeCurrency}`],
+              };
+            } else if (token.coingecko_id === null) {
+              depots[i].tokens[j].price = {
+                changed_at: null,
+                relative_change_24h: 0,
+                value: 0,
+              };
+            }
+          }
+        }
+      }
+
+      if (prepaidCards) {
+        for (let i = 0; i < prepaidCards.length; i++) {
+          const prepaidCard = prepaidCards[i];
+
+          for (let j = 0; j < prepaidCard.tokens.length; j++) {
+            const token = prepaidCard.tokens[j];
+
+            if (toLower(token.coingecko_id) === toLower(key)) {
+              prepaidCards[i].tokens[j].price = {
+                changed_at: prices[key].last_updated_at,
+                relative_change_24h:
+                  prices[key][`${formattedNativeCurrency}_24h_change`],
+                value: prices[key][`${formattedNativeCurrency}`],
+              };
+            } else if (token.coingecko_id === null) {
+              prepaidCards[i].tokens[j].price = {
+                changed_at: null,
+                relative_change_24h: 0,
+                value: 0,
+              };
+            }
+          }
+        }
+      }
+    });
+  }
+
+  if (chartData) {
+    Object.keys(chartData).forEach(coingeckoId => {
+      for (let i = 0; i < assets.length; i++) {
+        if (toLower(assets[i].asset.coingecko_id) === toLower(coingeckoId)) {
+          assets[i].asset.chartPrices = chartData[coingeckoId];
+          break;
+        } else if (assets[i].asset.coingecko_id === null) {
+          assets[i].asset.chartPrices = null;
+        }
+      }
+    });
+  }
+
+  const balances = await fetchAssetBalances(
+    assets.map(({ asset: { asset_code, symbol } }) =>
+      isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
+    ),
+    accountAddress,
+    network
+  );
+
+  let total = BigNumber.from(0);
+
+  if (balances) {
+    Object.keys(balances).forEach(key => {
+      for (let i = 0; i < assets.length; i++) {
+        if (
+          assets[i].asset.asset_code.toLowerCase() === key.toLowerCase() ||
+          (isNativeToken(assets[i].asset.symbol, network) &&
+            key === ETH_ADDRESS)
+        ) {
+          assets[i].quantity = balances[key];
+          break;
+        }
+      }
+      total = total.add(balances[key]);
+    });
+  }
+
+  logger.log('😬 FallbackExplorer updating assets');
+
+  store.dispatch(
+    addressAssetsReceived({
+      meta: {
+        address: accountAddress,
+        currency: nativeCurrency,
+        status: 'ok',
+        network,
+      },
+      payload: {
+        assets,
+        depots,
+        merchantSafes,
+        prepaidCards,
+      },
+    })
+  );
+  const fallbackExplorerBalancesHandle = setTimeout(
+    fetchAssetsBalancesAndPrices,
+    UPDATE_BALANCE_AND_PRICE_FREQUENCY
+  );
+  let fallbackExplorerAssetsHandle = null;
+  if (isMainnet(network)) {
+    fallbackExplorerAssetsHandle = setTimeout(
+      () => store.AssetTypes.dispatch(findNewAssetsToWatch(accountAddress)),
+      DISCOVER_NEW_ASSETS_FREQUENCY
+    );
+  }
+
+  store.dispatch({
+    payload: {
+      fallbackExplorerAssetsHandle,
+      fallbackExplorerBalancesHandle,
+    },
+    type: FALLBACK_EXPLORER_SET_HANDLERS,
+  });
+};
+
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
-  const { accountAddress, nativeCurrency, network } = getState().settings;
+  const { accountAddress, network } = getState().settings;
   const {
     latestTxBlockNumber,
     mainnetAssets,
     xdaiChainAssets,
   } = getState().fallbackExplorer;
   const coingeckoCoins = getState().coingecko.coins;
-  const formattedNativeCurrency = toLower(nativeCurrency);
   // If mainnet, we need to get all the info
   // 1 - Coingecko ids
   // 2 - All tokens list
@@ -368,250 +611,6 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     });
   }
 
-  const fetchAssetsBalancesAndPrices = async () => {
-    logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
-    const { network } = getState().settings;
-    const currencyConversionRates = getState().currencyConversion.rates;
-    const { xdaiChainAssets, mainnetAssets } = getState().fallbackExplorer;
-    const actualMainnetAssets =
-      network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
-    const assets = isMainnet(network)
-      ? actualMainnetAssets
-      : testnetAssets[network];
-    let depots = null,
-      prepaidCards = null,
-      merchantSafes = null;
-
-    // not functional on xdai chain yet
-    if (network === networkTypes.sokol) {
-      try {
-        const gnosisSafeData = await fetchGnosisSafes(accountAddress);
-        const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
-        const depotsWithIds = gnosisSafeData.depots.map(depot => ({
-          ...depot,
-          tokens: depot.tokens.map(token => ({
-            ...token,
-            coingecko_id: coingeckoIds[token.tokenAddress] || null,
-          })),
-        }));
-        const prepaidCardsWithIds = gnosisSafeData.prepaidCards.map(
-          prepaidCard => ({
-            ...prepaidCard,
-            tokens: prepaidCard.tokens.map(token => ({
-              ...token,
-              coingecko_id: coingeckoIds[token.tokenAddress] || null,
-            })),
-          })
-        );
-        const merchantSafesWithIds = gnosisSafeData.merchantSafes.map(
-          merchantSafe => ({
-            ...merchantSafe,
-            tokens: merchantSafe.tokens.map(token => ({
-              ...token,
-              coingecko_id: coingeckoIds[token.tokenAddress] || null,
-            })),
-          })
-        );
-
-        const gnosisDataWithPrices = await addGnosisTokenPrices(
-          {
-            depots: depotsWithIds,
-            prepaidCards: prepaidCardsWithIds,
-            merchantSafes: merchantSafesWithIds,
-          },
-          network,
-          accountAddress,
-          nativeCurrency,
-          currencyConversionRates
-        );
-
-        depots = gnosisDataWithPrices.depots;
-        prepaidCards = gnosisDataWithPrices.prepaidCards;
-        merchantSafes = gnosisDataWithPrices.merchantSafes;
-      } catch (error) {
-        logger.error('Error getting Gnosis data', error);
-      }
-    }
-
-    if (!assets || !assets.length) {
-      const fallbackExplorerBalancesHandle = setTimeout(
-        fetchAssetsBalancesAndPrices,
-        10000
-      );
-      dispatch({
-        payload: {
-          fallbackExplorerBalancesHandle,
-        },
-        type: FALLBACK_EXPLORER_SET_BALANCE_HANDLER,
-      });
-      return;
-    }
-
-    const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
-      if (coingecko_id) {
-        return [...ids, coingecko_id];
-      }
-
-      return ids;
-    }, []);
-
-    const prices = await fetchAssetPrices(
-      coingeckoIds,
-      formattedNativeCurrency
-    );
-    const chartData = await fetchAssetCharts(
-      coingeckoIds,
-      formattedNativeCurrency
-    );
-
-    if (prices) {
-      Object.keys(prices).forEach(key => {
-        for (let i = 0; i < assets.length; i++) {
-          if (toLower(assets[i].asset.coingecko_id) === toLower(key)) {
-            assets[i].asset.price = {
-              changed_at: prices[key].last_updated_at,
-              relative_change_24h:
-                prices[key][`${formattedNativeCurrency}_24h_change`],
-              value: prices[key][`${formattedNativeCurrency}`],
-            };
-          } else if (assets[i].asset.coingecko_id === null) {
-            assets[i].asset.price = {
-              changed_at: null,
-              relative_change_24h: 0,
-              value: 0,
-            };
-          }
-        }
-
-        if (depots) {
-          for (let i = 0; i < depots.length; i++) {
-            const depot = depots[i];
-
-            for (let j = 0; j < depot.tokens.length; j++) {
-              const token = depot.tokens[j];
-
-              if (toLower(token.coingecko_id) === toLower(key)) {
-                depots[i].tokens[j].price = {
-                  changed_at: prices[key].last_updated_at,
-                  relative_change_24h:
-                    prices[key][`${formattedNativeCurrency}_24h_change`],
-                  value: prices[key][`${formattedNativeCurrency}`],
-                };
-              } else if (token.coingecko_id === null) {
-                depots[i].tokens[j].price = {
-                  changed_at: null,
-                  relative_change_24h: 0,
-                  value: 0,
-                };
-              }
-            }
-          }
-        }
-
-        if (prepaidCards) {
-          for (let i = 0; i < prepaidCards.length; i++) {
-            const prepaidCard = prepaidCards[i];
-
-            for (let j = 0; j < prepaidCard.tokens.length; j++) {
-              const token = prepaidCard.tokens[j];
-
-              if (toLower(token.coingecko_id) === toLower(key)) {
-                prepaidCards[i].tokens[j].price = {
-                  changed_at: prices[key].last_updated_at,
-                  relative_change_24h:
-                    prices[key][`${formattedNativeCurrency}_24h_change`],
-                  value: prices[key][`${formattedNativeCurrency}`],
-                };
-              } else if (token.coingecko_id === null) {
-                prepaidCards[i].tokens[j].price = {
-                  changed_at: null,
-                  relative_change_24h: 0,
-                  value: 0,
-                };
-              }
-            }
-          }
-        }
-      });
-    }
-
-    if (chartData) {
-      Object.keys(chartData).forEach(coingeckoId => {
-        for (let i = 0; i < assets.length; i++) {
-          if (toLower(assets[i].asset.coingecko_id) === toLower(coingeckoId)) {
-            assets[i].asset.chartPrices = chartData[coingeckoId];
-            break;
-          } else if (assets[i].asset.coingecko_id === null) {
-            assets[i].asset.chartPrices = null;
-          }
-        }
-      });
-    }
-
-    const balances = await fetchAssetBalances(
-      assets.map(({ asset: { asset_code, symbol } }) =>
-        isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
-      ),
-      accountAddress,
-      network
-    );
-
-    let total = BigNumber.from(0);
-
-    if (balances) {
-      Object.keys(balances).forEach(key => {
-        for (let i = 0; i < assets.length; i++) {
-          if (
-            assets[i].asset.asset_code.toLowerCase() === key.toLowerCase() ||
-            (isNativeToken(assets[i].asset.symbol, network) &&
-              key === ETH_ADDRESS)
-          ) {
-            assets[i].quantity = balances[key];
-            break;
-          }
-        }
-        total = total.add(balances[key]);
-      });
-    }
-
-    logger.log('😬 FallbackExplorer updating assets');
-
-    dispatch(
-      addressAssetsReceived({
-        meta: {
-          address: accountAddress,
-          currency: nativeCurrency,
-          status: 'ok',
-          network,
-        },
-        payload: {
-          assets,
-          depots,
-          merchantSafes,
-          prepaidCards,
-        },
-      })
-    );
-    const fallbackExplorerBalancesHandle = setTimeout(
-      fetchAssetsBalancesAndPrices,
-      UPDATE_BALANCE_AND_PRICE_FREQUENCY
-    );
-    let fallbackExplorerAssetsHandle = null;
-    if (isMainnet(network)) {
-      fallbackExplorerAssetsHandle = setTimeout(
-        () => dispatch(findNewAssetsToWatch(accountAddress)),
-        DISCOVER_NEW_ASSETS_FREQUENCY
-      );
-    }
-
-    dispatch({
-      payload: {
-        fallbackExplorerAssetsHandle,
-        fallbackExplorerBalancesHandle,
-      },
-      type: FALLBACK_EXPLORER_SET_HANDLERS,
-    });
-  };
   fetchAssetsBalancesAndPrices();
 };
 
