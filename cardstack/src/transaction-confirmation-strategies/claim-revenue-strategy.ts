@@ -15,7 +15,7 @@ export class ClaimRevenueStrategy extends BaseStrategy {
   }
 
   public async decodeRequest(): Promise<ClaimRevenueDecodedData> {
-    const data = this.message.data.slice(10);
+    const data = this.message.data?.slice(10) || '';
 
     const { amount, tokenAddress } = decodeParameters<{
       amount: string;

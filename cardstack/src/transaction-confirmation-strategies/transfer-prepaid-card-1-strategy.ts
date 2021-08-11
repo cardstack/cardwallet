@@ -7,11 +7,11 @@ const TRANSFER_PREFIX = '0xe318b52b';
 
 export class TransferPrepaidCard1Strategy extends BaseStrategy {
   isApplicable(): boolean {
-    return this.message.data.slice(0, 10) === TRANSFER_PREFIX;
+    return this.message.data?.slice(0, 10) === TRANSFER_PREFIX;
   }
 
   public async decodeRequest(): Promise<TransferPrepaidCard1DecodedData> {
-    const data = this.message.data.slice(10);
+    const data = this.message.data?.slice(10) || '';
 
     const { newOwner, oldOwner } = decodeParameters<{
       newOwner: string;
