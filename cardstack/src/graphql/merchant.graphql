@@ -1,0 +1,13 @@
+query GetMerchantSafe($address: ID!) {
+  merchantSafe(id: $address) {
+    id
+    merchantRevenue {
+      id
+      lifetimeAccumulation
+      unclaimedBalance
+      revenueEvents {
+        ...MerchantRevenueEvent
+      }
+    }
+  }
+}

@@ -17,6 +17,7 @@ import {
   BridgeToLayer1EventFragment,
   BridgeToLayer2EventFragment,
   MerchantCreationFragment,
+  MerchantRevenueEventFragment,
   PrepaidCardCreationFragment,
   PrepaidCardPaymentFragment,
   PrepaidCardSplitFragment,
@@ -28,6 +29,7 @@ import {
   DepotBridgedLayer2TransactionType,
   ERC20TransactionType,
   MerchantCreationTransactionType,
+  MerchantRevenueEventType,
   PrepaidCardCreatedTransactionType,
   PrepaidCardPaymentTransactionType,
   PrepaidCardSplitTransactionType,
@@ -250,6 +252,20 @@ const mapMerchantCreationTransaction = (
   };
 };
 
+const mapMerchantRevenueEventTransaction = (
+  merchantRevenueEventTransaction: MerchantRevenueEventFragment,
+  transactionHash: string
+): MerchantRevenueEventType => {
+  return {
+    address: merchantRevenueEventTransaction.id,
+    createdAt: merchantRevenueEventTransaction.timestamp,
+    infoDid:
+      merchantRevenueEventTransaction.merchantClaim?.merchantSafe.infoDid,
+    transactionHash,
+    type: TransactionTypes.MERCHANT_REVENUE_EVENT,
+  };
+};
+
 const getStatusAndTitle = (
   transfer: TokenTransferFragment,
   accountAddress: string
@@ -343,6 +359,7 @@ export const mapLayer2Transactions = async (
           prepaidCardPayments,
           prepaidCardTransfers,
           prepaidCardSplits,
+          merchantRevenueEvents,
         } = transaction;
 
         if (prepaidCardSplits[0]) {
@@ -402,6 +419,11 @@ export const mapLayer2Transactions = async (
         } else if (merchantCreations[0]) {
           return mapMerchantCreationTransaction(
             merchantCreations[0],
+            transaction.id
+          );
+        } else if (merchantRevenueEvents && merchantRevenueEvents[0]) {
+          return mapMerchantRevenueEventTransaction(
+            merchantRevenueEvents[0],
             transaction.id
           );
         } else if (tokenTransfers && tokenTransfers.length) {
