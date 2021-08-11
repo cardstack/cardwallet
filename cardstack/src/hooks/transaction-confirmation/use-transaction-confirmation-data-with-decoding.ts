@@ -31,13 +31,11 @@ export const useTransactionConfirmationDataWithDecoding = () => {
         setLoading(true);
 
         const transactionConfirmationContext = new TransactionConfirmationContext(
-          {
-            message,
-            verifyingContract,
-            primaryType,
-            network,
-            nativeCurrency,
-          }
+          message,
+          verifyingContract,
+          primaryType,
+          network,
+          nativeCurrency
         );
 
         const result = await transactionConfirmationContext.getDecodedData();

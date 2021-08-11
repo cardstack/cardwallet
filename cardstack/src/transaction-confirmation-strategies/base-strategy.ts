@@ -1,7 +1,6 @@
-import Web3 from 'web3';
 import { ERC20ABI } from '@cardstack/cardpay-sdk';
 import Safes from '@cardstack/cardpay-sdk/sdk/safes/base';
-import { DecodingStrategy } from './base-strategy';
+import Web3 from 'web3';
 import {
   Level1DecodedData,
   TokenData,
@@ -9,7 +8,7 @@ import {
 } from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 
-interface ConstructorType {
+interface BaseStrategyParams {
   message: {
     to: string;
     data: string;
@@ -20,23 +19,20 @@ interface ConstructorType {
   nativeCurrency: string;
 }
 
-export interface DecodingStrategy {
-  isHandler: () => boolean;
-  decodeData: () =>
+export abstract class BaseStrategy {
+  protected abstract isApplicable(): boolean;
+  abstract decodeRequest():
     | Promise<TransactionConfirmationData>
     | TransactionConfirmationData;
-}
 
-export class BaseStrategy {
-  public message: {
+  message: {
     to: string;
     data: string;
   };
-  public verifyingContract: string;
-  public primaryType: string;
-  public network: string;
-  public nativeCurrency: string;
-  public level1Data: Level1DecodedData | null;
+  verifyingContract: string;
+  primaryType: string;
+  network: string;
+  nativeCurrency: string;
 
   constructor({
     message,
@@ -44,38 +40,13 @@ export class BaseStrategy {
     primaryType,
     network,
     nativeCurrency,
-  }: ConstructorType) {
+  }: BaseStrategyParams) {
     this.message = message;
     this.verifyingContract = verifyingContract;
     this.primaryType = primaryType;
     this.network = network;
     this.nativeCurrency = nativeCurrency;
-
-    const data = message.data.slice(10);
-
-    const decodedData = this.decode<Level1DecodedData>(
-      [
-        { type: 'address', name: 'to' },
-        { type: 'uint256', name: 'amount' },
-        { type: 'bytes', name: 'data' },
-      ],
-      data
-    );
-
-    this.level1Data = decodedData;
   }
-
-  decode = <T>(params: object[], data: string): T | null => {
-    const web3 = new Web3(web3ProviderSdk as any);
-
-    try {
-      const result = web3.eth.abi.decodeParameters(params, data) as T;
-
-      return result;
-    } catch (error) {
-      return null;
-    }
-  };
 
   getTokenData = async (tokenAddress: string): Promise<TokenData> => {
     const web3 = new Web3(web3ProviderSdk as any);
@@ -98,4 +69,38 @@ export class BaseStrategy {
 
     return safes.viewSafe(address);
   };
+
+  shouldDecodeRequest() {
+    return this.isApplicable();
+  }
+}
+
+interface Level1DataConstructorType extends BaseStrategyParams {
+  level1Data: Level1DecodedData | null;
+}
+
+export abstract class BaseStrategyWithLevel1Data extends BaseStrategy {
+  private _level1Data: Level1DecodedData | null;
+
+  constructor(props: Level1DataConstructorType) {
+    super(props);
+
+    this._level1Data = props.level1Data;
+  }
+
+  get level1Data() {
+    if (!this._level1Data) {
+      throw new Error('Level 1 data should exist.');
+    }
+
+    return this._level1Data;
+  }
+
+  shouldDecodeRequest() {
+    if (!this._level1Data) {
+      return false;
+    }
+
+    return super.shouldDecodeRequest();
+  }
 }
