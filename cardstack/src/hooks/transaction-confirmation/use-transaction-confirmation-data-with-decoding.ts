@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+
+import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
 import { usePayloadParams } from './use-payload-params';
 import { useVerifyingContract } from './use-verifying-contract';
-import { decodeData } from '@cardstack/services';
+import { logger } from '@rainbow-me/utils';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
 } from '@cardstack/types';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { logger } from '@rainbow-me/utils';
 
 export const useTransactionConfirmationDataWithDecoding = () => {
   const [network, nativeCurrency] = useRainbowSelector(state => [
@@ -29,13 +30,17 @@ export const useTransactionConfirmationDataWithDecoding = () => {
       try {
         setLoading(true);
 
-        const result = await decodeData(
-          message,
-          verifyingContract,
-          primaryType,
-          network,
-          nativeCurrency
+        const transactionConfirmationContext = new TransactionConfirmationContext(
+          {
+            message,
+            verifyingContract,
+            primaryType,
+            network,
+            nativeCurrency,
+          }
         );
+
+        const result = await transactionConfirmationContext.getDecodedData();
 
         setStateData(result);
       } catch (error) {

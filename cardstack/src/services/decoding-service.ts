@@ -22,78 +22,10 @@ import logger from 'logger';
 
 const TRANSFER_PREFIX = '0xe318b52b';
 
-const getSafeData = async (address: string) => {
-  const web3 = new Web3(web3ProviderSdk as any);
-  const safes = new Safes(web3);
-
-  return safes.viewSafe(address);
-};
-
-const decode = <T>(params: object[], data: string): T => {
-  const web3 = new Web3(web3ProviderSdk as any);
-  const result = web3.eth.abi.decodeParameters(params, data) as T;
-
-  return result;
-};
-
-export const decodeLevel1Data = (messageData: string): Level1DecodedData => {
-  const data = messageData.slice(10);
-
-  const decodedData = decode<Level1DecodedData>(
-    [
-      { type: 'address', name: 'to' },
-      { type: 'uint256', name: 'amount' },
-      { type: 'bytes', name: 'data' },
-    ],
-    data
-  );
-
-  return decodedData;
-};
-
-const getTokenData = async (tokenAddress: string): Promise<TokenData> => {
-  const web3 = new Web3(web3ProviderSdk as any);
-  const tokenContract = new web3.eth.Contract(ERC20ABI as any, tokenAddress);
-
-  const [symbol, decimals] = await Promise.all([
-    tokenContract.methods.symbol().call(),
-    tokenContract.methods.decimals().call(),
-  ]);
-
-  return {
-    symbol,
-    decimals,
-  };
-};
-
 const decodeIssuePrepaidCardData = async (
   level1Data: Level1DecodedData,
   tokenAddress: string
-): Promise<IssuePrepaidCardDecodedData> => {
-  const decodedPrepaidCardData = decode<{
-    owner: string;
-    issuingTokenAmounts: string[];
-    spendAmounts: string[];
-    customizationDID: string;
-  }>(
-    [
-      { type: 'address', name: 'owner' },
-      { type: 'uint256[]', name: 'issuingTokenAmounts' },
-      { type: 'uint256[]', name: 'spendAmounts' },
-      { type: 'string', name: 'customizationDID' },
-    ],
-    level1Data.data
-  );
-
-  const tokenData = await getTokenData(tokenAddress);
-
-  return {
-    ...level1Data,
-    ...decodedPrepaidCardData,
-    token: tokenData,
-    type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
-  };
-};
+): Promise<IssuePrepaidCardDecodedData> => {};
 
 const decodeWithdrawalData = async (
   level1Data: Level1DecodedData,
