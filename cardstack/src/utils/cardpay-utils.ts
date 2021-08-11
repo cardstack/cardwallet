@@ -6,7 +6,10 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { getResolver } from '@cardstack/did-resolver';
 import { Resolver } from 'did-resolver';
-import { PrepaidCardCustomization } from '@cardstack/types';
+import {
+  PrepaidCardCustomization,
+  PrepaidLinearGradientInfo,
+} from '@cardstack/types';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai', 'keth'];
 const MAINNETS = ['mainnet', 'xdai'];
 const LAYER_1_NETWORKS = ['mainnet', 'kovan'];
@@ -106,5 +109,48 @@ export const fetchCardCustomizationFromDID = async (
     patternColor: colorScheme['pattern-color'],
     textColor: colorScheme['text-color'],
     patternUrl: pattern['pattern-url'],
+  };
+};
+
+export const parseLinearGradient = (
+  cardCustomization?: PrepaidCardCustomization
+): PrepaidLinearGradientInfo => {
+  const hasLinearGradient = !!cardCustomization?.background.startsWith(
+    'linear-gradient'
+  );
+
+  if (!cardCustomization || !hasLinearGradient) {
+    return { hasLinearGradient: false };
+  }
+
+  const backgroundValues = (/linear-gradient\(([^"]+)\)/.exec(
+    cardCustomization?.background || ''
+  ) || [])[1]
+    .split(',')
+    .map((value: string) => value.trim());
+
+  const stop1 = backgroundValues[1]
+    ? backgroundValues[1].split(' ')
+    : ['#fff', 0];
+
+  const stop2 = backgroundValues[2]
+    ? backgroundValues[2].split(' ')
+    : ['#fff', 0];
+
+  const angle = Number(
+    (180 - parseFloat(backgroundValues[0]?.replace('deg', '')) || 0).toFixed(2)
+  );
+
+  return {
+    hasLinearGradient: true,
+    angle,
+    stop1: {
+      stopColor: `${stop1[0] || '#fff'}`,
+      offset: `${stop1[1] || '0%'}`,
+    },
+    stop2: {
+      stopColor: `${stop2[0] || '#fff'}`,
+      offset: `${stop2[1] || '0%'}`,
+    },
   };
 };

@@ -53,7 +53,7 @@ export interface PrepaidCardCustomization {
   background: string;
   issuerName: string;
   patternColor: string;
-  patternUrl: string;
+  patternUrl: string | null;
   textColor: string;
 }
 
