@@ -20,7 +20,7 @@ import { Level1DecodedData } from '@cardstack/types';
 interface TransactionRequestData {
   message: {
     to: string;
-    data: string;
+    data?: string;
   };
   verifyingContract: string;
   primaryType: string;
@@ -48,25 +48,28 @@ export class TransactionConfirmationContext {
   constructor(
     message: {
       to: string;
-      data: string;
+      data?: string;
     },
     verifyingContract: string,
     primaryType: string,
     network: string,
     nativeCurrency: string
   ) {
-    const data = message.data.slice(10);
+    let level1Data: Level1DecodedData | null = null,
+      actionDispatcherData: ActionDispatcherDecodedData | null = null;
 
-    const level1Data = safeDecodeParameters<Level1DecodedData>(
-      [
-        { type: 'address', name: 'to' },
-        { type: 'uint256', name: 'amount' },
-        { type: 'bytes', name: 'data' },
-      ],
-      data
-    );
+    if (message.data) {
+      const data = message.data.slice(10);
 
-    let actionDispatcherData: ActionDispatcherDecodedData | null = null;
+      level1Data = safeDecodeParameters<Level1DecodedData>(
+        [
+          { type: 'address', name: 'to' },
+          { type: 'uint256', name: 'amount' },
+          { type: 'bytes', name: 'data' },
+        ],
+        data
+      );
+    }
 
     if (level1Data) {
       actionDispatcherData = safeDecodeParameters<ActionDispatcherDecodedData>(

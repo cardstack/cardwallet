@@ -12,7 +12,7 @@ import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 interface BaseStrategyParams {
   message: {
     to: string;
-    data: string;
+    data?: string;
   };
   verifyingContract: string;
   primaryType: string;
@@ -28,7 +28,7 @@ export abstract class BaseStrategy {
 
   message: {
     to: string;
-    data: string;
+    data?: string;
   };
   verifyingContract: string;
   primaryType: string;
