@@ -12,14 +12,16 @@ import {
   Text,
   TransactionItem,
 } from '@cardstack/components';
-import { usePrepaidCardTransactions } from '@cardstack/services';
+import { usePrepaidCardTransactions } from '@cardstack/hooks';
 
 const PrepaidCardModal = () => {
   const {
     params: { prepaidCardProps },
   } = useRoute() as { params: { prepaidCardProps: PrepaidCardProps } };
 
-  const { sections } = usePrepaidCardTransactions(prepaidCardProps.address);
+  const { sections, loading } = usePrepaidCardTransactions(
+    prepaidCardProps.address
+  );
 
   return (
     <SafeAreaView backgroundColor="black" flex={1} width="100%">
@@ -42,7 +44,7 @@ const PrepaidCardModal = () => {
         <Container width="100%" paddingVertical={4} paddingHorizontal={5}>
           <Text size="medium">Recent Activity</Text>
         </Container>
-        {!sections ? (
+        {loading ? (
           <TransactionListLoading light />
         ) : (
           <SectionList
