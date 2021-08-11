@@ -8,6 +8,7 @@ import { walletsSetSelected, walletsUpdate } from '../../redux/wallets';
 import { ButtonPressAnimation } from '../animations';
 import AvatarCircle from './AvatarCircle';
 import { Button, Container, Icon, Text } from '@cardstack/components';
+import { screenWidth } from '@cardstack/utils';
 import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
@@ -16,6 +17,8 @@ import { useAccountProfile, useClipboard, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
+
+const ACCOUNT_CONTAINER = screenWidth * 0.85;
 
 export default function ProfileMasthead({
   addCashAvailable,
@@ -191,8 +194,20 @@ export default function ProfileMasthead({
         onPress={handlePressAvatar}
       />
       <ButtonPressAnimation onPress={handlePressChangeWallet}>
-        <Container alignItems="center" flexDirection="row">
-          <Text color="white" fontSize={24} fontWeight="600" marginRight={1}>
+        <Container
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="center"
+          width={ACCOUNT_CONTAINER}
+        >
+          <Text
+            color="white"
+            ellipsizeMode="tail"
+            fontSize={24}
+            fontWeight="600"
+            marginRight={1}
+            numberOfLines={1}
+          >
             {accountName}
           </Text>
           <Icon color="white" name="chevron-down" />
