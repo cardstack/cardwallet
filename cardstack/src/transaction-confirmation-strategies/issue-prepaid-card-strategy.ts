@@ -1,6 +1,6 @@
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { BaseStrategyWithLevel1Data } from './base-strategy';
-import { safeDecodeParameters } from './utils';
+import { safeDecodeParameters } from './decoding-utils';
 import {
   IssuePrepaidCardDecodedData,
   TransactionConfirmationType,

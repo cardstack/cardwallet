@@ -1,6 +1,7 @@
 import { ERC20ABI } from '@cardstack/cardpay-sdk';
 import Safes from '@cardstack/cardpay-sdk/sdk/safes/base';
 import Web3 from 'web3';
+import { ActionDispatcherDecodedData } from './../types/transaction-confirmation-types';
 import {
   Level1DecodedData,
   TokenData,
@@ -75,14 +76,14 @@ export abstract class BaseStrategy {
   }
 }
 
-interface Level1DataConstructorType extends BaseStrategyParams {
+interface BaseStrategyWithLevel1DataParams extends BaseStrategyParams {
   level1Data: Level1DecodedData | null;
 }
 
 export abstract class BaseStrategyWithLevel1Data extends BaseStrategy {
   private _level1Data: Level1DecodedData | null;
 
-  constructor(props: Level1DataConstructorType) {
+  constructor(props: BaseStrategyWithLevel1DataParams) {
     super(props);
 
     this._level1Data = props.level1Data;
@@ -98,6 +99,37 @@ export abstract class BaseStrategyWithLevel1Data extends BaseStrategy {
 
   shouldDecodeRequest() {
     if (!this._level1Data) {
+      return false;
+    }
+
+    return super.shouldDecodeRequest();
+  }
+}
+
+interface BaseStrategyWithActionDispatcherDataParams
+  extends BaseStrategyWithLevel1DataParams {
+  actionDispatcherData: ActionDispatcherDecodedData | null;
+}
+
+export abstract class BaseStrategyWithActionDispatcherData extends BaseStrategyWithLevel1Data {
+  private _actionDispatcherData: ActionDispatcherDecodedData | null;
+
+  constructor(props: BaseStrategyWithActionDispatcherDataParams) {
+    super(props);
+
+    this._actionDispatcherData = props.actionDispatcherData;
+  }
+
+  get actionDispatcherData() {
+    if (!this._actionDispatcherData) {
+      throw new Error('Action dispatcher data should exist.');
+    }
+
+    return this._actionDispatcherData;
+  }
+
+  shouldDecodeRequest() {
+    if (!this._actionDispatcherData) {
       return false;
     }
 

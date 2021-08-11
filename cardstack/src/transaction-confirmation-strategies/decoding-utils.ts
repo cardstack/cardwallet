@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import logger from 'logger';
 
 export const safeDecodeParameters = <T>(
   params: object[],
@@ -14,4 +15,19 @@ export const safeDecodeParameters = <T>(
   } catch (error) {
     return null;
   }
+};
+
+export const decodeParameters = <T>(params: object[], data: string): T => {
+  const result = safeDecodeParameters<T>(params, data);
+
+  if (!result) {
+    logger.sentry('Could not decode data', {
+      data,
+      params,
+    });
+
+    throw new Error('Could not decode data');
+  }
+
+  return result;
 };

@@ -1,9 +1,19 @@
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
+  ActionDispatcherDecodedData,
 } from '../types/transaction-confirmation-types';
+import { PayMerchantStrategy } from './pay-merchant-strategy';
+
+import { WithdrawalStrategy } from './withdrawal-strategy';
+import { HubAuthenticationStrategy } from './hub-authentication-strategy';
 import { IssuePrepaidCardStrategy } from './issue-prepaid-card-strategy';
-import { safeDecodeParameters } from './utils';
+import { safeDecodeParameters } from './decoding-utils';
+import { ClaimRevenueStrategy } from './claim-revenue-strategy';
+import { TransferPrepaidCard1Strategy } from './transfer-prepaid-card-1-strategy';
+import { RegisterMerchantStrategy } from './register-merchant-strategy';
+import { SplitPrepaidCardStrategy } from './split-prepaid-card-strategy';
+import { TransferPrepaidCard2Strategy } from './transfer-prepaid-card-2-strategy';
 import logger from 'logger';
 import { Level1DecodedData } from '@cardstack/types';
 
@@ -17,9 +27,20 @@ interface TransactionRequestData {
   network: string;
   nativeCurrency: string;
   level1Data: Level1DecodedData | null;
+  actionDispatcherData: ActionDispatcherDecodedData | null;
 }
 
-const strategies = [IssuePrepaidCardStrategy];
+const strategies = [
+  HubAuthenticationStrategy,
+  ClaimRevenueStrategy,
+  TransferPrepaidCard1Strategy,
+  IssuePrepaidCardStrategy,
+  WithdrawalStrategy,
+  RegisterMerchantStrategy,
+  PayMerchantStrategy,
+  SplitPrepaidCardStrategy,
+  TransferPrepaidCard2Strategy,
+];
 
 export class TransactionConfirmationContext {
   transactionRequestData: TransactionRequestData;
@@ -36,7 +57,7 @@ export class TransactionConfirmationContext {
   ) {
     const data = message.data.slice(10);
 
-    const decodedData = safeDecodeParameters<Level1DecodedData>(
+    const level1Data = safeDecodeParameters<Level1DecodedData>(
       [
         { type: 'address', name: 'to' },
         { type: 'uint256', name: 'amount' },
@@ -45,13 +66,28 @@ export class TransactionConfirmationContext {
       data
     );
 
+    let actionDispatcherData: ActionDispatcherDecodedData | null = null;
+
+    if (level1Data) {
+      actionDispatcherData = safeDecodeParameters<ActionDispatcherDecodedData>(
+        [
+          { type: 'uint256', name: 'spendAmount' },
+          { type: 'uint256', name: 'requestedRate' },
+          { type: 'string', name: 'actionName' },
+          { type: 'bytes', name: 'actionData' },
+        ],
+        level1Data.data
+      );
+    }
+
     this.transactionRequestData = {
       message,
       verifyingContract,
       primaryType,
       network,
       nativeCurrency,
-      level1Data: decodedData,
+      level1Data,
+      actionDispatcherData,
     };
   }
 
