@@ -53,6 +53,6 @@ export const useDepotTransactions = (safeAddress: string) => {
     onEndReached,
     refetch,
     refetchLoading: networkStatus === NetworkStatus.refetch,
-    sections: sections,
+    sections,
   };
 };
