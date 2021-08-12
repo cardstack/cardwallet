@@ -2,6 +2,8 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Linking, StatusBar } from 'react-native';
+import { getApolloClient } from '../graphql/apollo-client';
+import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import { MerchantSafeType } from '@cardstack/types';
 import {
   Button,
@@ -20,9 +22,13 @@ import {
   getAddressPreview,
 } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { useGetLifetimeEarningsAccumulationsQuery } from '@cardstack/graphql';
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -168,9 +174,14 @@ const LifetimeEarningsSection = () => {
 
   const { accumulatedSpendValue } = merchantSafe;
 
-  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, { [key: string]: number }]
-  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
+
+  const { data, loading } = useLifetimeEarningsData(merchantSafe.address);
+
+  console.log('data', JSON.stringify({ data }, null, 2));
 
   const {
     tokenBalanceDisplay,

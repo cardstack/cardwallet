@@ -4663,6 +4663,23 @@ export type GetPrepaidCardHistoryDataQuery = (
   )> }
 );
 
+export type GetLifetimeEarningsAccumulationsQueryVariables = Exact<{
+  address: Scalars['ID'];
+}>;
+
+
+export type GetLifetimeEarningsAccumulationsQuery = (
+  { __typename?: 'Query' }
+  & { merchantSafe?: Maybe<(
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id'>
+    & { spendAccumulations: Array<Maybe<(
+      { __typename?: 'SpendAccumulation' }
+      & Pick<SpendAccumulation, 'timestamp' | 'amount' | 'historicSpendBalance'>
+    )>> }
+  )> }
+);
+
 export const BridgeToLayer1EventFragmentDoc = gql`
     fragment BridgeToLayer1Event on BridgeToLayer1Event {
   amount
@@ -5083,3 +5100,41 @@ export function useGetPrepaidCardHistoryDataLazyQuery(baseOptions?: ApolloReactH
 export type GetPrepaidCardHistoryDataQueryHookResult = ReturnType<typeof useGetPrepaidCardHistoryDataQuery>;
 export type GetPrepaidCardHistoryDataLazyQueryHookResult = ReturnType<typeof useGetPrepaidCardHistoryDataLazyQuery>;
 export type GetPrepaidCardHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetPrepaidCardHistoryDataQuery, GetPrepaidCardHistoryDataQueryVariables>;
+export const GetLifetimeEarningsAccumulationsDocument = gql`
+    query GetLifetimeEarningsAccumulations($address: ID!) {
+  merchantSafe(id: $address) {
+    id
+    spendAccumulations(orderBy: timestamp, orderDirection: asc) {
+      timestamp
+      amount
+      historicSpendBalance
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLifetimeEarningsAccumulationsQuery__
+ *
+ * To run a query within a React component, call `useGetLifetimeEarningsAccumulationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLifetimeEarningsAccumulationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLifetimeEarningsAccumulationsQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useGetLifetimeEarningsAccumulationsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetLifetimeEarningsAccumulationsQuery, GetLifetimeEarningsAccumulationsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetLifetimeEarningsAccumulationsQuery, GetLifetimeEarningsAccumulationsQueryVariables>(GetLifetimeEarningsAccumulationsDocument, baseOptions);
+      }
+export function useGetLifetimeEarningsAccumulationsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetLifetimeEarningsAccumulationsQuery, GetLifetimeEarningsAccumulationsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetLifetimeEarningsAccumulationsQuery, GetLifetimeEarningsAccumulationsQueryVariables>(GetLifetimeEarningsAccumulationsDocument, baseOptions);
+        }
+export type GetLifetimeEarningsAccumulationsQueryHookResult = ReturnType<typeof useGetLifetimeEarningsAccumulationsQuery>;
+export type GetLifetimeEarningsAccumulationsLazyQueryHookResult = ReturnType<typeof useGetLifetimeEarningsAccumulationsLazyQuery>;
+export type GetLifetimeEarningsAccumulationsQueryResult = ApolloReactCommon.QueryResult<GetLifetimeEarningsAccumulationsQuery, GetLifetimeEarningsAccumulationsQueryVariables>;

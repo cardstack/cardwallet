@@ -15,6 +15,14 @@ const calculateTimestampOfYesterday = () => {
   return d.getTime();
 };
 
+const calculateTimeStampNDaysAgo = (daysAgo = 0) => {
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  d.setHours(0, 0, 0, 0);
+
+  return d.getTime();
+};
+
 const calculateTimestampOfThisMonth = () => {
   const d = new Date();
   d.setDate(0);
@@ -51,4 +59,19 @@ export const groupTransactionsByDate = (transaction: {
   if (ts > thisMonthTimestamp) return 'This Month';
 
   return format(ts, `MMMM${ts > thisYearTimestamp ? '' : ' yyyy'}`);
+};
+
+export const groupAccumulationsByDay = (accumulation: {
+  timestamp: string;
+}) => {
+  for (let i = 0; i < 30; i++) {
+    const ts = calculateTimeStampNDaysAgo(i);
+    const accumulationTs = parseInt(accumulation.timestamp, 10) * 1000;
+
+    if (Number(accumulationTs) > ts) {
+      return ts;
+    }
+  }
+
+  return '0';
 };
