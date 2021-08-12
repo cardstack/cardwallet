@@ -12,17 +12,9 @@ import {
   merchantRevenueEventsToTransactions,
   sortByTime,
 } from '@cardstack/utils';
-import { MerchantRevenueEventFragment } from '@cardstack/graphql';
 
 interface UseTransactionSectionsProps {
-  transactions:
-    | (
-        | { transaction: any }
-        | MerchantRevenueEventFragment[]
-        | null
-        | undefined
-      )[]
-    | undefined;
+  transactions: ({ transaction: any } | null | undefined)[] | undefined;
   isEmpty?: boolean;
   transactionsCount: number;
   networkStatus: NetworkStatus;
@@ -58,9 +50,7 @@ export const useTransactionSections = ({
         try {
           const transactionContext = new TransactionContext({
             transactions: isMerchantTransactions
-              ? merchantRevenueEventsToTransactions(
-                  transactions as MerchantRevenueEventFragment[]
-                )
+              ? merchantRevenueEventsToTransactions(transactions as any[])
               : transactions.map((t: any) => t?.transaction),
             accountAddress,
             nativeCurrency,
