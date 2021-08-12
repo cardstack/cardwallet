@@ -4524,9 +4524,6 @@ export type TransactionFragment = (
   )>>, merchantClaims: Array<Maybe<(
     { __typename?: 'MerchantClaim' }
     & MerchantClaimFragment
-  )>>, merchantRevenueEvents: Array<Maybe<(
-    { __typename?: 'MerchantRevenueEvent' }
-    & MerchantRevenueEventFragment
   )>>, tokenSwaps: Array<Maybe<(
     { __typename?: 'TokenSwap' }
     & Pick<TokenSwap, 'id'>
@@ -4663,6 +4660,50 @@ export type GetPrepaidCardHistoryDataQuery = (
   )> }
 );
 
+export const PrepaidCardPaymentFragmentDoc = gql`
+    fragment PrepaidCardPayment on PrepaidCardPayment {
+  id
+  timestamp
+  spendAmount
+  issuingTokenAmount
+  issuingToken {
+    id
+    symbol
+    name
+  }
+  prepaidCard {
+    id
+  }
+}
+    `;
+export const MerchantClaimFragmentDoc = gql`
+    fragment MerchantClaim on MerchantClaim {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+}
+    `;
+export const MerchantRevenueEventFragmentDoc = gql`
+    fragment MerchantRevenueEvent on MerchantRevenueEvent {
+  id
+  timestamp
+  historicLifetimeAccumulation
+  historicUnclaimedBalance
+  prepaidCardPayment {
+    ...PrepaidCardPayment
+  }
+  merchantClaim {
+    ...MerchantClaim
+  }
+}
+    ${PrepaidCardPaymentFragmentDoc}
+${MerchantClaimFragmentDoc}`;
 export const BridgeToLayer1EventFragmentDoc = gql`
     fragment BridgeToLayer1Event on BridgeToLayer1Event {
   amount
@@ -4761,50 +4802,6 @@ export const MerchantCreationFragmentDoc = gql`
   }
 }
     `;
-export const PrepaidCardPaymentFragmentDoc = gql`
-    fragment PrepaidCardPayment on PrepaidCardPayment {
-  id
-  timestamp
-  spendAmount
-  issuingTokenAmount
-  issuingToken {
-    id
-    symbol
-    name
-  }
-  prepaidCard {
-    id
-  }
-}
-    `;
-export const MerchantClaimFragmentDoc = gql`
-    fragment MerchantClaim on MerchantClaim {
-  id
-  timestamp
-  token {
-    id
-    symbol
-    name
-    decimals
-  }
-  amount
-}
-    `;
-export const MerchantRevenueEventFragmentDoc = gql`
-    fragment MerchantRevenueEvent on MerchantRevenueEvent {
-  id
-  timestamp
-  historicLifetimeAccumulation
-  historicUnclaimedBalance
-  prepaidCardPayment {
-    ...PrepaidCardPayment
-  }
-  merchantClaim {
-    ...MerchantClaim
-  }
-}
-    ${PrepaidCardPaymentFragmentDoc}
-${MerchantClaimFragmentDoc}`;
 export const TransactionFragmentDoc = gql`
     fragment Transaction on Transaction {
   id
@@ -4848,9 +4845,6 @@ export const TransactionFragmentDoc = gql`
   merchantClaims {
     ...MerchantClaim
   }
-  merchantRevenueEvents {
-    ...MerchantRevenueEvent
-  }
   tokenSwaps {
     id
   }
@@ -4863,8 +4857,7 @@ ${PrepaidCardSplitFragmentDoc}
 ${TokenTransferFragmentDoc}
 ${MerchantCreationFragmentDoc}
 ${PrepaidCardPaymentFragmentDoc}
-${MerchantClaimFragmentDoc}
-${MerchantRevenueEventFragmentDoc}`;
+${MerchantClaimFragmentDoc}`;
 export const GetMerchantSafeDocument = gql`
     query GetMerchantSafe($address: ID!) {
   merchantSafe(id: $address) {

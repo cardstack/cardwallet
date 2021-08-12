@@ -1,16 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
-import { TransactionContext } from 'cardstack/src/transaction-strategies/context';
+import { TransactionContext } from '@cardstack/transaction-strategies/context';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
-import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
+import {
+  groupTransactionsByDate,
+  merchantRevenueEventsToTransactions,
+  sortByTime,
+} from '@cardstack/utils';
+import { MerchantRevenueEventFragment } from '@cardstack/graphql';
 
 interface UseTransactionSectionsProps {
-  transactions: ({ transaction: any } | null | undefined)[] | undefined;
+  transactions:
+    | (
+        | { transaction: any }
+        | MerchantRevenueEventFragment[]
+        | null
+        | undefined
+      )[]
+    | undefined;
   isEmpty?: boolean;
   transactionsCount: number;
   networkStatus: NetworkStatus;
@@ -44,14 +56,13 @@ export const useTransactionSections = ({
         setLoading(true);
 
         try {
-          const updatedTransactions = isMerchantTransactions
-            ? transactions.map(revenueEvent => ({
-                transaction: { merchantRevenueEvents: [revenueEvent] },
-              }))
-            : transactions;
-
           const transactionContext = new TransactionContext({
-            transactions: updatedTransactions.map((t: any) => t?.transaction),
+            transactions: isMerchantTransactions
+              ? merchantRevenueEventsToTransactions(
+                  transactions as MerchantRevenueEventFragment[]
+                )
+              : transactions.map((t: any) => t?.transaction),
+            accountAddress,
             nativeCurrency,
             currencyConversionRates,
           });

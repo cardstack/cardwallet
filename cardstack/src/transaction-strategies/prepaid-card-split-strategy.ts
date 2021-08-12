@@ -9,7 +9,7 @@ export class PrepaidCardSplitStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
     const { prepaidCardSplits } = this.transaction;
 
-    if (prepaidCardSplits[0]) {
+    if (prepaidCardSplits?.[0]) {
       return true;
     }
 
@@ -17,7 +17,7 @@ export class PrepaidCardSplitStrategy extends BaseStrategy {
   }
 
   mapTransaction(): PrepaidCardSplitTransactionType | null {
-    const prepaidCardSplitTransaction = this.transaction.prepaidCardSplits[0];
+    const prepaidCardSplitTransaction = this.transaction.prepaidCardSplits?.[0];
 
     if (!prepaidCardSplitTransaction) {
       return null;

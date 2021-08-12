@@ -1,0 +1,101 @@
+import {
+  convertRawAmountToBalance,
+  convertRawAmountToNativeDisplay,
+} from '@cardstack/cardpay-sdk';
+import { BaseStrategy } from './base-strategy';
+import {
+  ERC20TransactionType,
+  TransactionTypes,
+  TransactionStatus,
+} from '@cardstack/types';
+import { fetchHistoricalPrice } from '@cardstack/services';
+import { TokenTransferFragment } from '@cardstack/graphql';
+
+export class ERC20TokenStrategy extends BaseStrategy {
+  handlesTransaction(): boolean {
+    const { tokenTransfers } = this.transaction;
+
+    if (tokenTransfers?.length) {
+      return true;
+    }
+
+    return false;
+  }
+
+  async mapTransaction(): Promise<ERC20TransactionType | null> {
+    const tokenTransfers = this.transaction.tokenTransfers;
+
+    if (!tokenTransfers || !tokenTransfers.length) {
+      return null;
+    }
+
+    const userTransaction = tokenTransfers.find(
+      transfer =>
+        transfer &&
+        (transfer.to === this.accountAddress ||
+          transfer.from === this.accountAddress)
+    );
+
+    if (!userTransaction) {
+      return null;
+    }
+
+    const { status, title } = this.getStatusAndTitle(
+      userTransaction,
+      this.accountAddress
+    );
+
+    let price = 0;
+
+    const symbol = userTransaction.token.symbol || '';
+
+    if (symbol) {
+      price = await fetchHistoricalPrice(
+        symbol,
+        userTransaction.timestamp,
+        this.nativeCurrency
+      );
+    }
+
+    return {
+      from: userTransaction.from || 'Unknown',
+      to: userTransaction.to || 'Unknown',
+      balance: convertRawAmountToBalance(userTransaction.amount, {
+        decimals: 18,
+        symbol,
+      }),
+      native: convertRawAmountToNativeDisplay(
+        userTransaction.amount,
+        18,
+        price,
+        this.nativeCurrency
+      ),
+      minedAt: userTransaction.timestamp,
+      hash: this.transaction.id,
+      symbol,
+      status,
+      title,
+      type: TransactionTypes.ERC_20,
+    };
+  }
+
+  getStatusAndTitle(
+    transfer: TokenTransferFragment,
+    accountAddress: string
+  ): {
+    status: TransactionStatus;
+    title: string;
+  } {
+    if (transfer.to === accountAddress) {
+      return {
+        status: TransactionStatus.received,
+        title: 'Received',
+      };
+    }
+
+    return {
+      status: TransactionStatus.sent,
+      title: 'Sent',
+    };
+  }
+}

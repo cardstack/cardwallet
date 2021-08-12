@@ -171,9 +171,6 @@ fragment Transaction on Transaction {
   merchantClaims {
     ...MerchantClaim
   }
-  merchantRevenueEvents {
-    ...MerchantRevenueEvent
-  }
   tokenSwaps {
     id
   }
