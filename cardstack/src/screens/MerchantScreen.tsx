@@ -2,9 +2,7 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Linking, StatusBar } from 'react-native';
-import { getApolloClient } from '../graphql/apollo-client';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
-import { MerchantSafeType } from '@cardstack/types';
 import {
   Button,
   CenteredContainer,
@@ -17,10 +15,16 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
+import { MerchantSafeType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
+import {
+  ChartPath,
+  ChartPathProvider,
+  monotoneCubicInterpolation,
+} from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
 import {
   useNativeCurrencyAndConversionRates,
@@ -28,7 +32,7 @@ import {
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { useGetLifetimeEarningsAccumulationsQuery } from '@cardstack/graphql';
+import { palette } from '@cardstack/theme';
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -202,12 +206,28 @@ const LifetimeEarningsSection = () => {
     <Container flexDirection="column" width="100%">
       <SectionHeader>Lifetime earnings</SectionHeader>
       <SectionWrapper onPress={onPress}>
-        <TokenBalance
-          Icon={<Icon name="spend" />}
-          tokenSymbol="SPEND"
-          tokenBalance={tokenBalanceDisplay}
-          nativeBalance={nativeBalanceDisplay}
-        />
+        <>
+          <TokenBalance
+            Icon={<Icon name="spend" />}
+            tokenSymbol="SPEND"
+            tokenBalance={tokenBalanceDisplay}
+            nativeBalance={nativeBalanceDisplay}
+          />
+          <Container width="100%">
+            <ChartPathProvider
+              data={{ points: data, smoothingStrategy: 'bezier' }}
+            >
+              <ChartPath
+                height={125}
+                stroke={palette.tealDark}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3.5}
+                width={325}
+              />
+            </ChartPathProvider>
+          </Container>
+        </>
       </SectionWrapper>
     </Container>
   );

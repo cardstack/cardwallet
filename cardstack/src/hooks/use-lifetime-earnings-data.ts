@@ -38,16 +38,15 @@ export const useLifetimeEarningsData = (merchantSafeAddress: string) => {
         return total + amount;
       }, 0);
 
-      return [ts, sum];
+      return {
+        x: ts,
+        y: sum,
+      };
     }
   );
 
-  console.log({
-    mappedAccumulations: JSON.stringify(mappedAccumulations, null, 2),
-  });
-
   return {
-    data: groupedAccumulations,
+    data: mappedAccumulations.slice(1),
     loading,
   };
 };
