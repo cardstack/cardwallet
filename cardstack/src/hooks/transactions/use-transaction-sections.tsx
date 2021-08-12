@@ -78,7 +78,7 @@ export const useTransactionSections = ({
 
           setSections(groupedSections);
         } catch (e) {
-          logger.log('Error setting sections data', e);
+          logger.sentry('Error setting transaction sections data', e);
         }
 
         setLoading(false);
