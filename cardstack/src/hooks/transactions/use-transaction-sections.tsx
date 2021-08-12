@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
+import { TransactionContext } from 'cardstack/src/transaction-strategies/context';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
-import { mapLayer2Transactions } from '@cardstack/services';
 import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
 
 interface UseTransactionSectionsProps {
@@ -50,14 +50,13 @@ export const useTransactionSections = ({
               }))
             : transactions;
 
-          const mappedTransactions = await mapLayer2Transactions(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-            // @ts-ignore getting mad about the union type
-            updatedTransactions.map((t: any) => t?.transaction),
-            accountAddress,
+          const transactionContext = new TransactionContext({
+            transactions: updatedTransactions.map((t: any) => t?.transaction),
             nativeCurrency,
-            currencyConversionRates
-          );
+            currencyConversionRates,
+          });
+
+          const mappedTransactions = await transactionContext.mapTransactions();
 
           const groupedData = groupBy(
             mappedTransactions,
