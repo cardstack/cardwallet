@@ -17,6 +17,7 @@ import {
   BridgeToLayer1EventFragment,
   BridgeToLayer2EventFragment,
   MerchantCreationFragment,
+  MerchantRevenueEventFragment,
   PrepaidCardCreationFragment,
   PrepaidCardPaymentFragment,
   PrepaidCardSplitFragment,
@@ -27,6 +28,7 @@ import {
 import {
   DepotBridgedLayer2TransactionType,
   ERC20TransactionType,
+  MerchantClaimType,
   MerchantCreationTransactionType,
   PrepaidCardCreatedTransactionType,
   PrepaidCardPaymentTransactionType,
@@ -250,6 +252,60 @@ const mapMerchantCreationTransaction = (
   };
 };
 
+const mapMerchantRevenueEventTransaction = async (
+  merchantRevenueEventTransaction: MerchantRevenueEventFragment,
+  transactionHash: string,
+  nativeCurrency: string,
+  currencyConversionRates: CurrencyConversionRates
+): Promise<PrepaidCardPaymentTransactionType | MerchantClaimType | null> => {
+  if (merchantRevenueEventTransaction.prepaidCardPayment) {
+    return mapPrepaidCardPaymentTransaction(
+      merchantRevenueEventTransaction.prepaidCardPayment as PrepaidCardPaymentFragment,
+      transactionHash,
+      nativeCurrency,
+      currencyConversionRates
+    );
+  }
+
+  if (merchantRevenueEventTransaction.merchantClaim) {
+    const nativeBalance = await getNativeBalance({
+      symbol: merchantRevenueEventTransaction.merchantClaim.token.symbol,
+      balance: merchantRevenueEventTransaction.merchantClaim.amount,
+      nativeCurrency,
+      currencyConversionRates,
+    });
+
+    return {
+      address: merchantRevenueEventTransaction.merchantClaim.id,
+      balance: convertRawAmountToBalance(
+        merchantRevenueEventTransaction.merchantClaim.amount,
+        {
+          decimals: 18,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          symbol: merchantRevenueEventTransaction.merchantClaim.token.symbol,
+        }
+      ),
+      native: {
+        amount: nativeBalance.toString(),
+        display: convertAmountToNativeDisplay(nativeBalance, nativeCurrency),
+      },
+      createdAt: merchantRevenueEventTransaction.timestamp,
+      transactionHash,
+      token: {
+        address: merchantRevenueEventTransaction.merchantClaim.token.id,
+        symbol: merchantRevenueEventTransaction.merchantClaim?.token.symbol,
+        name: merchantRevenueEventTransaction.merchantClaim?.token.name,
+        amount: merchantRevenueEventTransaction.merchantClaim?.amount,
+      },
+      amount: merchantRevenueEventTransaction.merchantClaim.amount,
+      type: TransactionTypes.MERCHANT_CLAIM,
+    };
+  }
+
+  return null;
+};
+
 const getStatusAndTitle = (
   transfer: TokenTransferFragment,
   accountAddress: string
@@ -343,9 +399,10 @@ export const mapLayer2Transactions = async (
           prepaidCardPayments,
           prepaidCardTransfers,
           prepaidCardSplits,
+          merchantRevenueEvents,
         } = transaction;
 
-        if (prepaidCardSplits[0]) {
+        if (prepaidCardSplits?.[0]) {
           const mappedPrepaidCardSplit = mapPrepaidCardSplitTransaction(
             prepaidCardSplits[0],
             transaction.id,
@@ -354,7 +411,7 @@ export const mapLayer2Transactions = async (
           );
 
           return mappedPrepaidCardSplit;
-        } else if (prepaidCardTransfers[0]) {
+        } else if (prepaidCardTransfers?.[0]) {
           const mappedPrepaidCardTransfer = mapPrepaidCardTransferTransaction(
             prepaidCardTransfers[0],
             transaction.id,
@@ -363,7 +420,7 @@ export const mapLayer2Transactions = async (
           );
 
           return mappedPrepaidCardTransfer;
-        } else if (prepaidCardCreations[0]) {
+        } else if (prepaidCardCreations?.[0]) {
           const mappedPrepaidCardCreation = await mapPrepaidCardTransaction(
             prepaidCardCreations[0],
             transaction.id,
@@ -372,16 +429,16 @@ export const mapLayer2Transactions = async (
           );
 
           return mappedPrepaidCardCreation;
-        } else if (prepaidCardPayments[0]) {
+        } else if (prepaidCardPayments?.[0]) {
           const mappedPrepaidCardPayments = mapPrepaidCardPaymentTransaction(
-            prepaidCardPayments[0],
+            prepaidCardPayments?.[0],
             transaction.id,
             nativeCurrency,
             currencyConversionRates
           );
 
           return mappedPrepaidCardPayments;
-        } else if (bridgeToLayer1Events[0]) {
+        } else if (bridgeToLayer1Events?.[0]) {
           const mappedBridgeEvent = await mapBridgeToLayer1EventTransaction(
             bridgeToLayer1Events[0],
             transaction.id,
@@ -390,7 +447,7 @@ export const mapLayer2Transactions = async (
           );
 
           return mappedBridgeEvent;
-        } else if (bridgeToLayer2Events[0]) {
+        } else if (bridgeToLayer2Events?.[0]) {
           const mappedBridgeEvent = await mapBridgeToLayer2EventTransaction(
             bridgeToLayer2Events[0],
             transaction.id,
@@ -399,10 +456,17 @@ export const mapLayer2Transactions = async (
           );
 
           return mappedBridgeEvent;
-        } else if (merchantCreations[0]) {
+        } else if (merchantCreations?.[0]) {
           return mapMerchantCreationTransaction(
             merchantCreations[0],
             transaction.id
+          );
+        } else if (merchantRevenueEvents && merchantRevenueEvents[0]) {
+          return await mapMerchantRevenueEventTransaction(
+            merchantRevenueEvents[0],
+            transaction.id,
+            nativeCurrency,
+            currencyConversionRates
           );
         } else if (tokenTransfers && tokenTransfers.length) {
           return mapERC20TokenTransactions(

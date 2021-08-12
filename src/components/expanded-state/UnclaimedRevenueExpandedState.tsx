@@ -3,16 +3,21 @@ import BigNumber from 'bignumber.js';
 import HDWalletProvider from 'parity-hdwallet-provider';
 import React, { useCallback, useEffect, useState } from 'react';
 import CoinIcon from 'react-coin-icon';
+import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import Web3 from 'web3';
 import { getSeedPhrase } from '../../../src/model/wallet';
 import { ethereumUtils } from '../../../src/utils';
 import { SlackSheet } from '../sheet';
 import {
   Button,
+  CenteredContainer,
   Container,
   HorizontalDivider,
   Text,
+  TransactionItem,
+  TransactionListLoading,
 } from '@cardstack/components';
+import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { useWallets } from '@rainbow-me/hooks';
@@ -112,14 +117,60 @@ export default function UnclaimedRevenueExpandedState(props: {
           </Button>
           <HorizontalDivider />
           <Text size="medium">Activities</Text>
-          <Container alignItems="center" marginTop={4} width="100%">
-            <Text>No activity data</Text>
-          </Container>
+          <Activities address={props.asset.address} />
         </Container>
       </SlackSheet>
     </>
   );
 }
+
+const Activities = ({ address }: { address: string }) => {
+  const {
+    sections,
+    isFetchingMore,
+    onEndReached,
+    refetchLoading,
+    refetch,
+    isLoadingTransactions,
+  } = useMerchantTransactions(address);
+
+  return (
+    <Container flexDirection="column" marginTop={7} width="100%">
+      {isLoadingTransactions ? (
+        <TransactionListLoading light />
+      ) : (
+        <SectionList
+          ListEmptyComponent={<ListEmptyComponent />}
+          ListFooterComponent={
+            isFetchingMore ? <ActivityIndicator color="white" /> : null
+          }
+          contentContainerStyle={{ paddingBottom: 40 }}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={1}
+          refreshControl={
+            <RefreshControl
+              onRefresh={refetch}
+              refreshing={refetchLoading}
+              tintColor="white"
+            />
+          }
+          renderItem={props => (
+            <TransactionItem {...props} includeBorder isFullWidth />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Container backgroundColor="white" paddingVertical={2} width="100%">
+              <Text color="blueText" size="medium">
+                {title}
+              </Text>
+            </Container>
+          )}
+          sections={sections}
+          style={{ width: '100%' }}
+        />
+      )}
+    </Container>
+  );
+};
 
 const TokenItem = ({ token }: { token: TokenType }) => {
   const [balance, symbol] = token.balance.display.split(' ');
@@ -136,3 +187,11 @@ const TokenItem = ({ token }: { token: TokenType }) => {
     </Container>
   );
 };
+
+const ListEmptyComponent = () => (
+  <CenteredContainer flex={1} height={100} width="100%">
+    <Text color="grayText" textAlign="center">
+      No activity Data
+    </Text>
+  </CenteredContainer>
+);

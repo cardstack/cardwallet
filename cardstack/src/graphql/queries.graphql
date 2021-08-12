@@ -22,6 +22,30 @@ query GetDepotTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: I
   }
 }
 
+query GetDepotTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+  safe(id: $address) {
+    id
+    safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+      timestamp
+      transaction {
+        ...Transaction
+      }
+    }
+  }
+}
+
+query GetMerchantTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+  merchantSafe(id: $address) {
+    id
+    merchantRevenue {
+      id
+      revenueEvents(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+        ...MerchantRevenueEvent
+      }
+    }
+  }
+}
+
 query GetPrepaidCardHistoryData($address: ID!) {
   safe(id: $address) {
     prepaidCard {

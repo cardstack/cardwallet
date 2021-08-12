@@ -44,28 +44,34 @@ export const fetchHistoricalPrice = async (
   timestamp: string | number,
   nativeCurrency: string
 ) => {
-  const roundedTimestamp = getRoundedTimestamp(timestamp);
+  try {
+    const roundedTimestamp = getRoundedTimestamp(timestamp);
 
-  const cachedPrice = await getCachedPrice(
-    symbol,
-    roundedTimestamp,
-    nativeCurrency
-  );
+    const cachedPrice = await getCachedPrice(
+      symbol,
+      roundedTimestamp,
+      nativeCurrency
+    );
 
-  if (cachedPrice) {
-    return cachedPrice;
+    if (cachedPrice) {
+      return cachedPrice;
+    }
+
+    const response = await fetch(
+      `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${symbol}&tsyms=${nativeCurrency}&ts=${roundedTimestamp}`
+    );
+
+    const data = await response.json();
+    const price = data[symbol][nativeCurrency];
+
+    const cacheKey = getCacheKey(symbol, roundedTimestamp, nativeCurrency);
+
+    saveLocal(cacheKey, { price }, VERSION);
+
+    return price;
+  } catch (e) {
+    logger.sentry(`fetchHistoricalPrice failed ---`, e);
+
+    return 0;
   }
-
-  const response = await fetch(
-    `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${symbol}&tsyms=${nativeCurrency}&ts=${roundedTimestamp}`
-  );
-
-  const data = await response.json();
-  const price = data[symbol][nativeCurrency];
-
-  const cacheKey = getCacheKey(symbol, roundedTimestamp, nativeCurrency);
-
-  saveLocal(cacheKey, { price }, VERSION);
-
-  return price;
 };

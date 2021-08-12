@@ -361,14 +361,14 @@ export const fetchAssetsBalancesAndPrices = async () => {
     try {
       const gnosisSafeData = await fetchGnosisSafes(accountAddress);
       const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
-      const depotsWithIds = gnosisSafeData.depots.map(depot => ({
+      const depotsWithIds = (gnosisSafeData?.depots || []).map(depot => ({
         ...depot,
         tokens: depot.tokens.map(token => ({
           ...token,
           coingecko_id: coingeckoIds[token.tokenAddress] || null,
         })),
       }));
-      const prepaidCardsWithIds = gnosisSafeData.prepaidCards.map(
+      const prepaidCardsWithIds = (gnosisSafeData?.prepaidCards || []).map(
         prepaidCard => ({
           ...prepaidCard,
           tokens: prepaidCard.tokens.map(token => ({
@@ -377,7 +377,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
           })),
         })
       );
-      const merchantSafesWithIds = gnosisSafeData.merchantSafes.map(
+      const merchantSafesWithIds = (gnosisSafeData?.merchantSafes || []).map(
         merchantSafe => ({
           ...merchantSafe,
           tokens: merchantSafe.tokens.map(token => ({

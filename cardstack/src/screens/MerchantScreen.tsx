@@ -226,6 +226,7 @@ const UnclaimedRevenueSection = () => {
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}
                 nativeBalance={token.native.balance.display}
+                key={token.tokenAddress}
               />
             ))
           ) : (
@@ -261,6 +262,7 @@ const AvailableBalancesSection = () => {
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}
                 nativeBalance={token.native.balance.display}
+                key={token.tokenAddress}
               />
             ))
           ) : (
