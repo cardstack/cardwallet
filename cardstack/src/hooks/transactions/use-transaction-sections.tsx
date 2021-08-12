@@ -15,6 +15,7 @@ interface UseTransactionSectionsProps {
   transactionsCount: number;
   networkStatus: NetworkStatus;
   fetchMore?: (props: any) => void;
+  isMerchantTransactions?: boolean;
 }
 
 export const useTransactionSections = ({
@@ -23,6 +24,7 @@ export const useTransactionSections = ({
   transactionsCount,
   networkStatus,
   fetchMore,
+  isMerchantTransactions,
 }: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -42,10 +44,16 @@ export const useTransactionSections = ({
         setLoading(true);
 
         try {
+          const updatedTransactions = isMerchantTransactions
+            ? transactions.map(revenueEvent => ({
+                transaction: { merchantRevenueEvents: [revenueEvent] },
+              }))
+            : transactions;
+
           const mappedTransactions = await mapLayer2Transactions(
             // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
             // @ts-ignore getting mad about the union type
-            transactions.map((t: any) => t?.transaction),
+            updatedTransactions.map((t: any) => t?.transaction),
             accountAddress,
             nativeCurrency,
             currencyConversionRates
@@ -86,6 +94,7 @@ export const useTransactionSections = ({
     accountAddress,
     transactions,
     isEmpty,
+    isMerchantTransactions,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;

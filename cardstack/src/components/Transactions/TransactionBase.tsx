@@ -29,10 +29,11 @@ interface TransactionBaseProps extends TransactionBaseCustomizationProps {
   subText?: string;
   topText?: string;
   transactionHash: string;
+  isFullWidth?: boolean;
 }
 
 export const TransactionBase = (props: TransactionBaseProps) => {
-  const { Footer, Header, transactionHash, includeBorder } = props;
+  const { Footer, Header, transactionHash, includeBorder, isFullWidth } = props;
 
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
@@ -53,7 +54,11 @@ export const TransactionBase = (props: TransactionBaseProps) => {
   };
 
   return (
-    <Container width="100%" paddingHorizontal={4} marginVertical={2}>
+    <Container
+      width="100%"
+      paddingHorizontal={isFullWidth ? 0 : 4}
+      marginVertical={2}
+    >
       <Touchable
         width="100%"
         testID="inventory-card"
@@ -64,7 +69,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
           borderWidth={includeBorder ? 1 : 0}
           borderRadius={10}
           overflow="hidden"
-          borderColor="buttonPrimaryBorder"
+          borderColor="borderGray"
           width="100%"
           paddingBottom={4}
         >

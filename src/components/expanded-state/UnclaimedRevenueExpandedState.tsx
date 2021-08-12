@@ -13,12 +13,11 @@ import {
   CenteredContainer,
   Container,
   HorizontalDivider,
-  ScrollView,
   Text,
   TransactionItem,
   TransactionListLoading,
 } from '@cardstack/components';
-import { useTransactions } from '@cardstack/services';
+import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { useWallets } from '@rainbow-me/hooks';
@@ -118,17 +117,7 @@ export default function UnclaimedRevenueExpandedState(props: {
           </Button>
           <HorizontalDivider />
           <Text size="medium">Activities</Text>
-          <ScrollView
-            contentContainerStyle={{ paddingBottom: 100 }}
-            marginTop={4}
-            paddingHorizontal={5}
-            scrollEventThrottle={16}
-            width="100%"
-          >
-            <Container alignItems="center" width="100%">
-              <Activities address={props.asset.address} />
-            </Container>
-          </ScrollView>
+          <Activities address={props.asset.address} />
         </Container>
       </SlackSheet>
     </>
@@ -143,7 +132,7 @@ const Activities = ({ address }: { address: string }) => {
     refetchLoading,
     refetch,
     isLoadingTransactions,
-  } = useTransactions(address);
+  } = useMerchantTransactions(address);
 
   return (
     <Container flexDirection="column" marginTop={7} width="100%">
@@ -165,15 +154,14 @@ const Activities = ({ address }: { address: string }) => {
               tintColor="white"
             />
           }
-          renderItem={props => <TransactionItem {...props} includeBorder />}
+          renderItem={props => (
+            <TransactionItem {...props} includeBorder isFullWidth />
+          )}
           renderSectionHeader={({ section: { title } }) => (
-            <Container
-              backgroundColor="white"
-              paddingHorizontal={5}
-              paddingVertical={2}
-              width="100%"
-            >
-              <Text size="medium">{title}</Text>
+            <Container backgroundColor="white" paddingVertical={2} width="100%">
+              <Text color="blueText" size="medium">
+                {title}
+              </Text>
             </Container>
           )}
           sections={sections}

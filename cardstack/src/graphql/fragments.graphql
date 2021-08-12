@@ -104,24 +104,28 @@ fragment PrepaidCardTransfer on PrepaidCardTransfer {
   }
 }
 
+fragment MerchantClaim on MerchantClaim {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+}
+
 fragment MerchantRevenueEvent on MerchantRevenueEvent {
   id
   timestamp
-  transaction {
-    id
-    timestamp
-  }
   historicLifetimeAccumulation
   historicUnclaimedBalance
   prepaidCardPayment {
-    id
+    ...PrepaidCardPayment
   }
   merchantClaim {
-    id
-    amount
-    merchantSafe {
-      infoDid
-    }
+    ...MerchantClaim
   }
 }
 
@@ -165,7 +169,7 @@ fragment Transaction on Transaction {
     id
   }
   merchantClaims {
-    id
+    ...MerchantClaim
   }
   merchantRevenueEvents {
     ...MerchantRevenueEvent

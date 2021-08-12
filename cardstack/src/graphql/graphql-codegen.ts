@@ -4461,22 +4461,24 @@ export type PrepaidCardTransferFragment = (
   ) }
 );
 
+export type MerchantClaimFragment = (
+  { __typename?: 'MerchantClaim' }
+  & Pick<MerchantClaim, 'id' | 'timestamp' | 'amount'>
+  & { token: (
+    { __typename?: 'Token' }
+    & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>
+  ) }
+);
+
 export type MerchantRevenueEventFragment = (
   { __typename?: 'MerchantRevenueEvent' }
   & Pick<MerchantRevenueEvent, 'id' | 'timestamp' | 'historicLifetimeAccumulation' | 'historicUnclaimedBalance'>
-  & { transaction: (
-    { __typename?: 'Transaction' }
-    & Pick<Transaction, 'id' | 'timestamp'>
-  ), prepaidCardPayment?: Maybe<(
+  & { prepaidCardPayment?: Maybe<(
     { __typename?: 'PrepaidCardPayment' }
-    & Pick<PrepaidCardPayment, 'id'>
+    & PrepaidCardPaymentFragment
   )>, merchantClaim?: Maybe<(
     { __typename?: 'MerchantClaim' }
-    & Pick<MerchantClaim, 'id' | 'amount'>
-    & { merchantSafe: (
-      { __typename?: 'MerchantSafe' }
-      & Pick<MerchantSafe, 'infoDid'>
-    ) }
+    & MerchantClaimFragment
   )> }
 );
 
@@ -4521,7 +4523,7 @@ export type TransactionFragment = (
     & Pick<MerchantFeePayment, 'id'>
   )>>, merchantClaims: Array<Maybe<(
     { __typename?: 'MerchantClaim' }
-    & Pick<MerchantClaim, 'id'>
+    & MerchantClaimFragment
   )>>, merchantRevenueEvents: Array<Maybe<(
     { __typename?: 'MerchantRevenueEvent' }
     & MerchantRevenueEventFragment
@@ -4594,6 +4596,29 @@ export type GetDepotTransactionHistoryDataQuery = (
         { __typename?: 'Transaction' }
         & TransactionFragment
       ) }
+    )>> }
+  )> }
+);
+
+export type GetMerchantTransactionHistoryDataQueryVariables = Exact<{
+  address: Scalars['ID'];
+  skip?: Maybe<Scalars['Int']>;
+  pageSize?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetMerchantTransactionHistoryDataQuery = (
+  { __typename?: 'Query' }
+  & { merchantSafe?: Maybe<(
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id'>
+    & { merchantRevenue: Array<Maybe<(
+      { __typename?: 'MerchantRevenue' }
+      & Pick<MerchantRevenue, 'id'>
+      & { revenueEvents: Array<Maybe<(
+        { __typename?: 'MerchantRevenueEvent' }
+        & MerchantRevenueEventFragment
+      )>> }
     )>> }
   )> }
 );
@@ -4752,28 +4777,34 @@ export const PrepaidCardPaymentFragmentDoc = gql`
   }
 }
     `;
+export const MerchantClaimFragmentDoc = gql`
+    fragment MerchantClaim on MerchantClaim {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+}
+    `;
 export const MerchantRevenueEventFragmentDoc = gql`
     fragment MerchantRevenueEvent on MerchantRevenueEvent {
   id
   timestamp
-  transaction {
-    id
-    timestamp
-  }
   historicLifetimeAccumulation
   historicUnclaimedBalance
   prepaidCardPayment {
-    id
+    ...PrepaidCardPayment
   }
   merchantClaim {
-    id
-    amount
-    merchantSafe {
-      infoDid
-    }
+    ...MerchantClaim
   }
 }
-    `;
+    ${PrepaidCardPaymentFragmentDoc}
+${MerchantClaimFragmentDoc}`;
 export const TransactionFragmentDoc = gql`
     fragment Transaction on Transaction {
   id
@@ -4815,7 +4846,7 @@ export const TransactionFragmentDoc = gql`
     id
   }
   merchantClaims {
-    id
+    ...MerchantClaim
   }
   merchantRevenueEvents {
     ...MerchantRevenueEvent
@@ -4832,6 +4863,7 @@ ${PrepaidCardSplitFragmentDoc}
 ${TokenTransferFragmentDoc}
 ${MerchantCreationFragmentDoc}
 ${PrepaidCardPaymentFragmentDoc}
+${MerchantClaimFragmentDoc}
 ${MerchantRevenueEventFragmentDoc}`;
 export const GetMerchantSafeDocument = gql`
     query GetMerchantSafe($address: ID!) {
@@ -4956,6 +4988,47 @@ export function useGetDepotTransactionHistoryDataLazyQuery(baseOptions?: ApolloR
 export type GetDepotTransactionHistoryDataQueryHookResult = ReturnType<typeof useGetDepotTransactionHistoryDataQuery>;
 export type GetDepotTransactionHistoryDataLazyQueryHookResult = ReturnType<typeof useGetDepotTransactionHistoryDataLazyQuery>;
 export type GetDepotTransactionHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetDepotTransactionHistoryDataQuery, GetDepotTransactionHistoryDataQueryVariables>;
+export const GetMerchantTransactionHistoryDataDocument = gql`
+    query GetMerchantTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+  merchantSafe(id: $address) {
+    id
+    merchantRevenue {
+      id
+      revenueEvents(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+        ...MerchantRevenueEvent
+      }
+    }
+  }
+}
+    ${MerchantRevenueEventFragmentDoc}`;
+
+/**
+ * __useGetMerchantTransactionHistoryDataQuery__
+ *
+ * To run a query within a React component, call `useGetMerchantTransactionHistoryDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMerchantTransactionHistoryDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMerchantTransactionHistoryDataQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      skip: // value for 'skip'
+ *      pageSize: // value for 'pageSize'
+ *   },
+ * });
+ */
+export function useGetMerchantTransactionHistoryDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMerchantTransactionHistoryDataQuery, GetMerchantTransactionHistoryDataQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetMerchantTransactionHistoryDataQuery, GetMerchantTransactionHistoryDataQueryVariables>(GetMerchantTransactionHistoryDataDocument, baseOptions);
+      }
+export function useGetMerchantTransactionHistoryDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMerchantTransactionHistoryDataQuery, GetMerchantTransactionHistoryDataQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetMerchantTransactionHistoryDataQuery, GetMerchantTransactionHistoryDataQueryVariables>(GetMerchantTransactionHistoryDataDocument, baseOptions);
+        }
+export type GetMerchantTransactionHistoryDataQueryHookResult = ReturnType<typeof useGetMerchantTransactionHistoryDataQuery>;
+export type GetMerchantTransactionHistoryDataLazyQueryHookResult = ReturnType<typeof useGetMerchantTransactionHistoryDataLazyQuery>;
+export type GetMerchantTransactionHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetMerchantTransactionHistoryDataQuery, GetMerchantTransactionHistoryDataQueryVariables>;
 export const GetPrepaidCardHistoryDataDocument = gql`
     query GetPrepaidCardHistoryData($address: ID!) {
   safe(id: $address) {
