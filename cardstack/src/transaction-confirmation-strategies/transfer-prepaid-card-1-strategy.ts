@@ -1,13 +1,18 @@
+import Web3 from 'web3';
 import { TransferPrepaidCard1DecodedData } from '../types/transaction-confirmation-types';
 import { BaseStrategy } from './base-strategy';
 import { decodeParameters } from './decoding-utils';
 import { TransactionConfirmationType } from '@cardstack/types';
 
-const TRANSFER_PREFIX = '0xe318b52b';
-
 export class TransferPrepaidCard1Strategy extends BaseStrategy {
   isApplicable(): boolean {
-    return this.message.data?.slice(0, 10) === TRANSFER_PREFIX;
+    const web3 = new Web3();
+
+    const transferPrefix = web3.eth.abi.encodeFunctionSignature(
+      'swapOwner(address,address,address)'
+    );
+
+    return this.message.data?.slice(0, 10) === transferPrefix;
   }
 
   public async decodeRequest(): Promise<TransferPrepaidCard1DecodedData> {
