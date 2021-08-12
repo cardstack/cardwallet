@@ -5,4 +5,5 @@ declare module 'react-native-dotenv' {
   export const ENABLE_PAYMENTS: string;
   export const INFURA_PROJECT_ID: string;
   export const INFURA_PROJECT_ID_DEV: string;
+  export const CRYPTOCOMPARE_API_KEY: string;
 }
