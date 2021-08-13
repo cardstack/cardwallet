@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { abbreviations } from '../../utils';
 import { Text } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 
 export default function TruncatedAddress({
   address,
@@ -11,11 +12,13 @@ export default function TruncatedAddress({
   const text = useMemo(
     () =>
       address
-        ? abbreviations.formatAddressForDisplay(
-            address,
-            truncationLength,
-            firstSectionLength
-          )
+        ? truncationLength || firstSectionLength
+          ? abbreviations.formatAddressForDisplay(
+              address,
+              truncationLength,
+              firstSectionLength
+            )
+          : getAddressPreview(address)
         : 'Error displaying address',
     [address, firstSectionLength, truncationLength]
   );

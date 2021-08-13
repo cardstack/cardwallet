@@ -142,11 +142,7 @@ const WalletSelectionView = () => {
                         {labelOrName ? (
                           <Text fontWeight="600">{labelOrName}</Text>
                         ) : (
-                          <TruncatedAddress
-                            address={address}
-                            firstSectionLength={6}
-                            truncationLength={4}
-                          />
+                          <TruncatedAddress address={address} />
                         )}
                       </Row>
                       {totalAccounts > 1 ? (

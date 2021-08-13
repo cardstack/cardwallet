@@ -96,12 +96,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                   {cleanedUpLabel || ens}
                 </Text>
               ) : (
-                <TruncatedAddress
-                  address={address}
-                  firstSectionLength={4}
-                  fontWeight="600"
-                  truncationLength={4}
-                />
+                <TruncatedAddress address={address} fontWeight="600" />
               )}
               <Text variant="subText">{accountSubLabel}</Text>
             </Container>

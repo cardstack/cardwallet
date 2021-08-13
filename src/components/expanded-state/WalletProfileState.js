@@ -140,10 +140,8 @@ export default function WalletProfileState({
             <TruncatedAddress
               address={address}
               color="blueText"
-              firstSectionLength={6}
               fontSize={14}
               marginTop={1}
-              truncationLength={4}
             />
           </CopyTooltip>
         )}

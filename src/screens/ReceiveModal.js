@@ -71,12 +71,7 @@ export default function ReceiveModal() {
             >
               {accountName}
             </Text>
-            <TruncatedAddress
-              address={accountAddress}
-              color="grayText"
-              firstSectionLength={6}
-              truncationLength={4}
-            />
+            <TruncatedAddress address={accountAddress} color="grayText" />
           </ColumnWithMargins>
         </ButtonPressAnimation>
         <ShareButton accountAddress={accountAddress} />
