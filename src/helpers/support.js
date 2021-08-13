@@ -2,11 +2,10 @@ import Clipboard from '@react-native-community/clipboard';
 import { debounce } from 'lodash';
 import Mailer from 'react-native-mail';
 import { Alert } from '../components/alerts';
-
-const SupportEmailAddress = 'support@rainbow.me';
+import { SUPPORT_EMAIL_ADDRESS } from '@cardstack/constants';
 
 const setClipboardToSupportEmail = () =>
-  Clipboard.setString(SupportEmailAddress);
+  Clipboard.setString(SUPPORT_EMAIL_ADDRESS);
 
 const SupportErrorAlert = () =>
   Alert({
@@ -33,7 +32,7 @@ const handleMailError = debounce(
 const messageSupport = () => Mailer.mail(supportEmailOptions, handleMailError);
 
 const supportEmailOptions = {
-  recipients: [SupportEmailAddress],
+  recipients: [SUPPORT_EMAIL_ADDRESS],
   subject: 'Cardstack Support',
 };
 

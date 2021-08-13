@@ -80,6 +80,9 @@
       "@rainbow-me/utils": [
         "src/utils"
       ],
+      "@cardstack/constants": [
+        "cardstack/src/constants.ts"
+      ],
       "@cardstack/utils": [
         "cardstack/src/utils"
       ],
