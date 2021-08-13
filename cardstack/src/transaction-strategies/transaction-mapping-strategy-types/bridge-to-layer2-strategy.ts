@@ -2,7 +2,7 @@ import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from './base-strategy';
+import { BaseStrategy } from '../base-strategy';
 import {
   DepotBridgedLayer2TransactionType,
   TransactionTypes,

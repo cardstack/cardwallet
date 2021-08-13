@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
-import { TransactionContext } from '@cardstack/transaction-strategies/context';
+import { TransactionMappingContext } from '@cardstack/transaction-strategies/context';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
@@ -48,7 +48,7 @@ export const useTransactionSections = ({
         setLoading(true);
 
         try {
-          const transactionContext = new TransactionContext({
+          const transactionMappingContext = new TransactionMappingContext({
             transactions: isMerchantTransactions
               ? merchantRevenueEventsToTransactions(transactions as any[])
               : transactions.map((t: any) => t?.transaction),
@@ -57,7 +57,7 @@ export const useTransactionSections = ({
             currencyConversionRates,
           });
 
-          const mappedTransactions = await transactionContext.mapTransactions();
+          const mappedTransactions = await transactionMappingContext.mapTransactions();
 
           const groupedData = groupBy(
             mappedTransactions,

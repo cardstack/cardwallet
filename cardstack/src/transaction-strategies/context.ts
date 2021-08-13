@@ -1,12 +1,13 @@
-import { PrepaidCardSplitStrategy } from './prepaid-card-split-strategy';
-import { MerchantClaimStrategy } from './merchant-claim-strategy';
-import { PrepaidCardCreationStrategy } from './prepaid-card-creation-strategy';
-import { PrepaidCardTransferStrategy } from './prepaid-card-transfer-strategy';
-import { BridgeToLayer1EventStrategy } from './bridge-to-layer1-strategy';
-import { BridgeToLayer2EventStrategy } from './bridge-to-layer2-strategy';
-import { MerchantCreationStrategy } from './merchant-creation-strategy';
-import { ERC20TokenStrategy } from './erc20-token-strategy';
-import { PrepaidCardPaymentStrategy } from './prepaid-card-payment-strategy';
+import { PrepaidCardSplitStrategy } from './transaction-mapping-strategy-types/prepaid-card-split-strategy';
+import { MerchantClaimStrategy } from './transaction-mapping-strategy-types/merchant-claim-strategy';
+import { PrepaidCardCreationStrategy } from './transaction-mapping-strategy-types/prepaid-card-creation-strategy';
+import { PrepaidCardTransferStrategy } from './transaction-mapping-strategy-types/prepaid-card-transfer-strategy';
+import { BridgeToLayer1EventStrategy } from './transaction-mapping-strategy-types/bridge-to-layer1-strategy';
+import { BridgeToLayer2EventStrategy } from './transaction-mapping-strategy-types/bridge-to-layer2-strategy';
+import { MerchantCreationStrategy } from './transaction-mapping-strategy-types/merchant-creation-strategy';
+import { ERC20TokenStrategy } from './transaction-mapping-strategy-types/erc20-token-strategy';
+import { PrepaidCardPaymentStrategy } from './transaction-mapping-strategy-types/prepaid-card-payment-strategy';
+import logger from 'logger';
 import { TransactionFragment } from '@cardstack/graphql';
 import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
 
@@ -17,6 +18,7 @@ interface TransactionData {
   currencyConversionRates: CurrencyConversionRates;
 }
 
+// Transaction mapping strategies list
 const transactionStrategies = [
   PrepaidCardSplitStrategy,
   MerchantClaimStrategy,
@@ -29,7 +31,8 @@ const transactionStrategies = [
   ERC20TokenStrategy,
 ];
 
-export class TransactionContext {
+// Map graphql transactions list response into readable values in UI
+export class TransactionMappingContext {
   constructor(readonly transactionData: TransactionData) {}
 
   async mapTransactions() {
@@ -56,11 +59,14 @@ export class TransactionContext {
             }
           }
 
+          logger.sentry('Unable to map transaction:', transaction);
+
           return null;
         }
       )
     );
 
+    // Remove null values from transactions list
     return mappedTransactions.filter(t => t);
   }
 }

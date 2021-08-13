@@ -2,7 +2,7 @@ import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from './base-strategy';
+import { BaseStrategy } from '../base-strategy';
 import {
   ERC20TransactionType,
   TransactionTypes,

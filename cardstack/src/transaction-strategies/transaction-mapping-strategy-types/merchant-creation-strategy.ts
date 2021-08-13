@@ -1,4 +1,4 @@
-import { BaseStrategy } from './base-strategy';
+import { BaseStrategy } from '../base-strategy';
 import {
   MerchantCreationTransactionType,
   TransactionTypes,
