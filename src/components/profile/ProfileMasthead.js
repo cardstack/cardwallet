@@ -71,9 +71,9 @@ export default function ProfileMasthead({
                 addresses: wallets[selectedWallet.id].addresses.map(account =>
                   toLower(account.address) === toLower(accountAddress)
                     ? {
-                      ...account,
-                      image: `~${image?.path.slice(stringIndex)}`,
-                    }
+                        ...account,
+                        image: `~${image?.path.slice(stringIndex)}`,
+                      }
                     : account
                 ),
               },

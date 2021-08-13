@@ -6,7 +6,7 @@ export const getAddressPreview = (address: string): string => {
     return '';
   }
 
-  const addressStart = address.slice(0, 6);
+  const addressStart = address.slice(0, 4);
   const addressEnd = address.slice(-4);
 
   return `${addressStart}...${addressEnd}`;

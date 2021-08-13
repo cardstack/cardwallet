@@ -2,9 +2,9 @@ import GraphemeSplitter from 'grapheme-splitter';
 import { get, toUpper } from 'lodash';
 import { removeFirstEmojiFromString } from '../helpers/emojiHandler';
 import networkTypes from '../helpers/networkTypes';
-import { address } from '../utils/abbreviations';
 import useAccountSettings from './useAccountSettings';
 import useWallets from './useWallets';
+import { getAddressPreview } from '@cardstack/utils';
 
 export default function useAccountProfile() {
   const wallets = useWallets();
@@ -40,10 +40,10 @@ export default function useAccountProfile() {
 
   const accountName = removeFirstEmojiFromString(
     network === networkTypes.mainnet
-      ? label || accountENS || address(accountAddress, 6, 4)
+      ? label || accountENS || getAddressPreview(accountAddress)
       : label === accountENS
-      ? address(accountAddress, 6, 4)
-      : label || address(accountAddress, 6, 4)
+      ? getAddressPreview(accountAddress)
+      : label || getAddressPreview(accountAddress)
   ).join('');
 
   const labelOrAccountName =

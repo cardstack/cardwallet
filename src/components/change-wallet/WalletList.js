@@ -18,6 +18,7 @@ import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
 import AddressRow from './AddressRow';
 import { Container, OptionItem } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 import { position } from '@rainbow-me/styles';
 
 const listTopPadding = 7.5;
@@ -115,7 +116,7 @@ export default function WalletList({
             wallet.id === get(currentWallet, 'id'),
           label:
             network !== networkTypes.mainnet && account.ens === account.label
-              ? address(account.address, 6, 4)
+              ? getAddressPreview(account.address)
               : account.label,
           onPress: () => onChangeAccount(wallet.id, account.address),
           rowType: RowTypes.ADDRESS,

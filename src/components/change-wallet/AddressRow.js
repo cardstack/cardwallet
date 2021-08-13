@@ -8,10 +8,9 @@ import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { TruncatedAddress } from '../text';
 import { Container, Icon, Text } from '@cardstack/components';
-import { screenWidth } from '@cardstack/utils';
+import { getAddressPreview, screenWidth } from '@cardstack/utils';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { abbreviations } from '@rainbow-me/utils';
 
 const sx = StyleSheet.create({
   accountRow: {
@@ -43,7 +42,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   let accountSubLabel;
 
   if (networkInfo[network].layer === 2) {
-    accountSubLabel = abbreviations.address(address, 4, 4);
+    accountSubLabel = getAddressPreview(address);
   } else {
     let balanceAmount;
     if (balance === '0.00') {

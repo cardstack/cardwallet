@@ -13,13 +13,14 @@ import { ContactAvatar } from '../../contacts';
 import { Centered, Column, ColumnWithMargins, Row } from '../../layout';
 import { TruncatedAddress } from '../../text';
 import { Icon, Text } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useWallets } from '@rainbow-me/hooks';
 
 import { useNavigation } from '@rainbow-me/navigation';
 import { padding } from '@rainbow-me/styles';
-import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const Footer = styled(Centered)`
   flex: 1;
@@ -123,7 +124,7 @@ const WalletSelectionView = () => {
             <Column key={key}>
               <ButtonPressAnimation
                 onPress={() =>
-                  onPress(key, label || abbreviations.address(address, 4, 6))
+                  onPress(key, label || getAddressPreview(address))
                 }
                 scaleTo={0.98}
               >
