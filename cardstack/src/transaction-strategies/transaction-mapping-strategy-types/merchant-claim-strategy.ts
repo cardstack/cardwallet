@@ -50,9 +50,7 @@ export class MerchantClaimStrategy extends BaseStrategy {
         address: merchantClaimTransaction.token.id,
         symbol: merchantClaimTransaction?.token.symbol,
         name: merchantClaimTransaction?.token.name,
-        amount: merchantClaimTransaction?.amount,
       },
-      amount: merchantClaimTransaction.amount,
       type: TransactionTypes.MERCHANT_CLAIM,
     };
   }
