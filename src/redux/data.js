@@ -39,6 +39,7 @@ import {
   saveAccountEmptyState,
   saveAssetPricesFromUniswap,
   saveAssets,
+  saveDepots,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
@@ -249,7 +250,7 @@ export const addressAssetsReceived = (
   append = false,
   change = false,
   removed = false
-) => (dispatch, getState) => {
+) => async (dispatch, getState) => {
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
@@ -328,6 +329,8 @@ export const addressAssetsReceived = (
     type: DATA_UPDATE_ASSETS,
   });
   saveAssets(parsedAssets, accountAddress, network);
+
+  await saveDepots(depots, accountAddress, network);
   if (!change) {
     const missingPriceAssetAddresses = map(
       filter(parsedAssets, asset => isNil(asset.price)),
