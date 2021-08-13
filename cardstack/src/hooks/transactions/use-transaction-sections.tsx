@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
-import { TransactionMappingContext } from '@cardstack/transaction-strategies/context';
+import { TransactionMappingContext } from '@cardstack/transaction-mapping-strategies/context';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,

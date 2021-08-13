@@ -21,23 +21,23 @@ export class BridgeToLayer2EventStrategy extends BaseStrategy {
   }
 
   async mapTransaction(): Promise<DepotBridgedLayer2TransactionType | null> {
-    const bridgeToLayer2Events = this.transaction.bridgeToLayer2Events?.[0];
+    const bridgeToLayer2Event = this.transaction.bridgeToLayer2Events?.[0];
 
-    if (!bridgeToLayer2Events) {
+    if (!bridgeToLayer2Event) {
       return null;
     }
 
     const nativeBalance = await getNativeBalance({
-      symbol: bridgeToLayer2Events.token.symbol,
-      balance: bridgeToLayer2Events.amount,
+      symbol: bridgeToLayer2Event.token.symbol,
+      balance: bridgeToLayer2Event.amount,
       nativeCurrency: this.nativeCurrency,
       currencyConversionRates: this.currencyConversionRates,
     });
 
     return {
-      balance: convertRawAmountToBalance(bridgeToLayer2Events.amount, {
+      balance: convertRawAmountToBalance(bridgeToLayer2Event.amount, {
         decimals: 18,
-        symbol: bridgeToLayer2Events.token.symbol || undefined,
+        symbol: bridgeToLayer2Event.token.symbol || undefined,
       }),
       native: {
         amount: nativeBalance.toString(),
@@ -47,13 +47,13 @@ export class BridgeToLayer2EventStrategy extends BaseStrategy {
         ),
       },
       transactionHash: this.transaction.id,
-      to: bridgeToLayer2Events.depot.id,
+      to: bridgeToLayer2Event.depot.id,
       token: {
-        address: bridgeToLayer2Events.token.id,
-        symbol: bridgeToLayer2Events.token.symbol,
-        name: bridgeToLayer2Events.token.name,
+        address: bridgeToLayer2Event.token.id,
+        symbol: bridgeToLayer2Event.token.symbol,
+        name: bridgeToLayer2Event.token.name,
       },
-      timestamp: bridgeToLayer2Events.timestamp,
+      timestamp: bridgeToLayer2Event.timestamp,
       type: TransactionTypes.DEPOT_BRIDGED_LAYER_2,
     };
   }

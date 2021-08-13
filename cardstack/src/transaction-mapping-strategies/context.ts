@@ -28,7 +28,8 @@ const transactionStrategies = [
   BridgeToLayer1EventStrategy,
   BridgeToLayer2EventStrategy,
   MerchantCreationStrategy,
-  ERC20TokenStrategy,
+
+  // Add new transaction mapping type strategy here
 ];
 
 // Map graphql transactions list response into readable values in UI
@@ -57,6 +58,20 @@ export class TransactionMappingContext {
 
               return mappedTransaction;
             }
+          }
+
+          // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
+          const tokenTransferStrategy = new ERC20TokenStrategy({
+            transaction,
+            accountAddress: this.transactionData.accountAddress,
+            nativeCurrency: this.transactionData.nativeCurrency,
+            currencyConversionRates: this.transactionData
+              .currencyConversionRates,
+          });
+
+          if (tokenTransferStrategy.handlesTransaction()) {
+            const mappedTransaction = await tokenTransferStrategy.mapTransaction();
+            return mappedTransaction;
           }
 
           logger.sentry('Unable to map transaction:', transaction);
