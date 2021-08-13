@@ -13,8 +13,9 @@ import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-
+import { getSafesInstance } from '../../cardstack/src/models';
 import { dismissingScreenListener } from '../../shim';
+import { Alert } from '../components/alerts';
 import { Column } from '../components/layout';
 import {
   SendAssetForm,
@@ -24,14 +25,17 @@ import {
   SendHeader,
   SendTransactionSpeed,
 } from '../components/send';
-import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
+import {
+  createSignableTransaction,
+  estimateGasLimit,
+  toWei,
+} from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkIsValidAddressOrDomain } from '../helpers/validators';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
 import {
-  getDepotTokenByAddress,
   isNativeToken,
   reshapeDepotTokensToAssets,
   reshapeSingleDepotTokenToAsset,
@@ -51,6 +55,7 @@ import {
   useSendSavingsAccount,
   useTransactionConfirmation,
   useUpdateAssetOnchainBalance,
+  useWallets,
 } from '@rainbow-me/hooks';
 import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
 import Routes from '@rainbow-me/routes';
@@ -186,7 +191,7 @@ const useSendSheetScreen = () => {
   // Recalculate balance when gas price changes
   useEffect(() => {
     if (
-      isNativeToken(selected?.symbol, network) &&
+      (isNativeToken(selected?.symbol, network) || isDepot) &&
       get(prevSelectedGasPrice, 'txFee.value.amount', 0) !==
         get(selectedGasPrice, 'txFee.value.amount', 0)
     ) {
@@ -198,6 +203,7 @@ const useSendSheetScreen = () => {
     selectedGasPrice,
     updateMaxInputBalance,
     network,
+    isDepot,
   ]);
 
   const sendUpdateAssetAmount = useCallback(
@@ -310,6 +316,31 @@ const useSendSheetScreen = () => {
     [sendUpdateAssetAmount]
   );
 
+  const { selectedWallet } = useWallets();
+
+  const sendTokenFromDepot = useCallback(async () => {
+    const safes = await getSafesInstance({ selectedWallet, network });
+
+    return safes.sendTokens(
+      depot.address,
+      selected.address,
+      recipient,
+      toWei(amountDetails.assetAmount),
+      undefined,
+      undefined,
+      undefined,
+      { from: accountAddress }
+    );
+  }, [
+    accountAddress,
+    amountDetails.assetAmount,
+    depot.address,
+    network,
+    recipient,
+    selected.address,
+    selectedWallet,
+  ]);
+
   const onSubmit = useCallback(async () => {
     const validTransaction =
       isValidAddress && amountDetails.isSufficientBalance && isSufficientGas;
@@ -325,7 +356,7 @@ const useSendSheetScreen = () => {
     let submitSuccess = false;
     let updatedGasLimit = null;
     // Attempt to update gas limit before sending ERC20 / ERC721
-    if (selected?.address !== ETH_ADDRESS) {
+    if (selected?.address !== ETH_ADDRESS && !isDepot) {
       try {
         // Estimate the tx with gas limit padding before sending
         updatedGasLimit = await estimateGasLimit(
@@ -357,21 +388,45 @@ const useSendSheetScreen = () => {
       to: recipient,
     };
     try {
-      const signableTransaction = await createSignableTransaction(
-        txDetails,
-        network
-      );
-      const txResult = await sendTransaction({
-        transaction: signableTransaction,
-      });
-      const { hash, nonce } = txResult;
-      if (!isEmpty(hash)) {
-        submitSuccess = true;
-        txDetails.hash = hash;
-        txDetails.nonce = nonce;
-        await dispatch(dataAddNewTransaction(txDetails));
+      if (isDepot) {
+        const txResult = await sendTokenFromDepot();
+
+        const { transactionHash } = txResult;
+
+        if (!isEmpty(transactionHash)) {
+          submitSuccess = true;
+          txDetails.hash = transactionHash;
+          await dispatch(dataAddNewTransaction(txDetails));
+        }
+      } else {
+        const signableTransaction = await createSignableTransaction(
+          txDetails,
+          network
+        );
+
+        const txResult = await sendTransaction({
+          transaction: signableTransaction,
+        });
+
+        const { hash, nonce } = txResult;
+
+        if (!isEmpty(hash)) {
+          submitSuccess = true;
+          txDetails.hash = hash;
+          txDetails.nonce = nonce;
+          await dispatch(dataAddNewTransaction(txDetails));
+        }
       }
     } catch (error) {
+      const errorMessage = error.toString();
+
+      if (isDepot && errorMessage) {
+        Alert({
+          message: errorMessage,
+          title: 'An error ocurred',
+        });
+      }
+
       logger.sentry('TX Details', txDetails);
       logger.sentry('SendSheet onSubmit error');
       captureException(error);
@@ -388,12 +443,14 @@ const useSendSheetScreen = () => {
     dispatch,
     gasLimit,
     isAuthorizing,
+    isDepot,
     isSufficientGas,
     isValidAddress,
     network,
     recipient,
     selected,
     selectedGasPrice,
+    sendTokenFromDepot,
     updateTxFee,
   ]);
 
@@ -558,6 +615,7 @@ const useSendSheetScreen = () => {
     selectedGasPrice,
     nativeCurrencySymbol,
     onPressTransactionSpeed,
+    isDepot,
   };
 };
 
@@ -599,6 +657,7 @@ export default function SendSheet(props) {
     selectedGasPrice,
     nativeCurrencySymbol,
     onPressTransactionSpeed,
+    isDepot,
   } = useSendSheetScreen();
 
   return (
@@ -664,7 +723,8 @@ export default function SendSheet(props) {
             selected={selected}
             sendMaxBalance={sendMaxBalance}
             txSpeedRenderer={
-              isIphoneX() && (
+              isIphoneX() &&
+              !isDepot && (
                 <SendTransactionSpeed
                   gasPrice={selectedGasPrice}
                   nativeCurrencySymbol={nativeCurrencySymbol}
