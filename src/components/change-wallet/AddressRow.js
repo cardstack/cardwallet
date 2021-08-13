@@ -43,7 +43,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   let accountSubLabel;
 
   if (networkInfo[network].layer === 2) {
-    accountSubLabel = abbreviations.address(address, 6, 4);
+    accountSubLabel = abbreviations.address(address, 4, 4);
   } else {
     let balanceAmount;
     if (balance === '0.00') {
@@ -101,7 +101,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                   address={address}
                   firstSectionLength={4}
                   fontWeight="600"
-                  truncationLength={6}
+                  truncationLength={4}
                 />
               )}
               <Text variant="subText">{accountSubLabel}</Text>
