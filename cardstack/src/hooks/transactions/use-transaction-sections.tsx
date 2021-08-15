@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
+import { TransactionMappingContext } from '@cardstack/transaction-mapping-strategies/context';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
-import { mapLayer2Transactions } from '@cardstack/services';
-import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
+import {
+  groupTransactionsByDate,
+  merchantRevenueEventsToTransactions,
+  sortByTime,
+} from '@cardstack/utils';
 
 interface UseTransactionSectionsProps {
   transactions: ({ transaction: any } | null | undefined)[] | undefined;
@@ -44,20 +48,16 @@ export const useTransactionSections = ({
         setLoading(true);
 
         try {
-          const updatedTransactions = isMerchantTransactions
-            ? transactions.map(revenueEvent => ({
-                transaction: { merchantRevenueEvents: [revenueEvent] },
-              }))
-            : transactions;
-
-          const mappedTransactions = await mapLayer2Transactions(
-            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-            // @ts-ignore getting mad about the union type
-            updatedTransactions.map((t: any) => t?.transaction),
+          const transactionMappingContext = new TransactionMappingContext({
+            transactions: isMerchantTransactions
+              ? merchantRevenueEventsToTransactions(transactions as any[])
+              : transactions.map((t: any) => t?.transaction),
             accountAddress,
             nativeCurrency,
-            currencyConversionRates
-          );
+            currencyConversionRates,
+          });
+
+          const mappedTransactions = await transactionMappingContext.mapTransactions();
 
           const groupedData = groupBy(
             mappedTransactions,

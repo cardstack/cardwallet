@@ -107,6 +107,12 @@
       "@cardstack/hooks": [
         "cardstack/src/hooks"
       ],
+      "@cardstack/transaction-mapping-strategies": [
+        "cardstack/src/transaction-mapping-strategies"
+      ],
+      "@cardstack/transaction-mapping-strategies/*": [
+        "cardstack/src/transaction-mapping-strategies/*"
+      ],
       "logger": [
         "src/utils/logger"
       ],
