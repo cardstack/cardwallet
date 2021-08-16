@@ -3,9 +3,10 @@ import { useCallback, useMemo } from 'react';
 import Mailer from 'react-native-mail';
 import { Alert } from '../components/alerts';
 import useClipboard from './useClipboard';
+import { SUPPORT_EMAIL_ADDRESS } from '@cardstack/constants';
 
 export default function useEmailRainbow({
-  emailAddress = 'support@rainbow.me',
+  emailAddress = SUPPORT_EMAIL_ADDRESS,
   subject = 'feedback',
 }) {
   const { setClipboard } = useClipboard();

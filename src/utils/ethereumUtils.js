@@ -27,7 +27,7 @@ import {
 import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
-import { isNativeToken } from '@cardstack/utils';
+import { isNativeToken, normalizeTxHash } from '@cardstack/utils';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
 
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -283,7 +283,7 @@ function openTokenEtherscanURL(address) {
 function openTransactionEtherscanURL(hash) {
   if (!isString(hash)) return;
   const etherscanHost = getEtherscanHostForNetwork();
-  const normalizedHash = hash.replace(/-.*/g, '');
+  const normalizedHash = normalizeTxHash(hash);
   Linking.openURL(`https://${etherscanHost}/tx/${normalizedHash}`);
 }
 

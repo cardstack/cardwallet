@@ -115,9 +115,7 @@ export interface MerchantClaimType {
     address: string;
     name?: string | null;
     symbol?: string | null;
-    amount: number;
   };
-  amount: number;
   type: TransactionTypes.MERCHANT_CLAIM;
 }
 

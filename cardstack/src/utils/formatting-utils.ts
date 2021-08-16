@@ -11,3 +11,6 @@ export const getAddressPreview = (address: string): string => {
 
   return `${addressStart}...${addressEnd}`;
 };
+
+// Removes dash and everything after it
+export const normalizeTxHash = (hash: string) => hash.replace(/-.*/g, '');
