@@ -121,8 +121,8 @@ const QRScannerScreen = () => {
           ) : (
             <Sheet
               borderRadius={20}
+              css={shadow.buildAsObject(0, 1, 2)}
               hideHandle
-              style={shadow.buildAsObject(0, 1, 2)}
             >
               {walletConnectorsCount ? (
                 <>

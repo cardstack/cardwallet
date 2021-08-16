@@ -1,10 +1,8 @@
 import React, { ReactNode } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { StyleProp, ViewStyle } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Container } from '../Container';
-
 import { TouchableBackDrop } from './TouchableBackDrop';
+import { Container, ContainerProps } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
 
 export const Sheet = ({
@@ -56,12 +54,11 @@ export const Sheet = ({
   );
 };
 
-export interface SheetProps {
+export interface SheetProps extends ContainerProps {
   /** optional children */
   children?: ReactNode;
   /** borderRadius for initials */
   borderRadius?: number;
   /** hideHandle */
   hideHandle?: boolean;
-  style?: StyleProp<ViewStyle>;
 }
