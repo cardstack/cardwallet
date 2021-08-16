@@ -52,7 +52,7 @@ export default function SendAssetForm({
       width="100%"
     >
       <AssetRowElement
-        item={selectedAsset}
+        item={selected}
         onPress={onResetAssetSelection}
         selected
         testID="send-asset-form"

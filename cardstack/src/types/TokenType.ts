@@ -1,20 +1,12 @@
-export interface TokenType {
+import { TokenInfo } from '@cardstack/cardpay-sdk';
+import { AssetWithNativeType } from './AssetType';
+import { BalanceType } from '.';
+
+// Balance info added with redux
+export interface TokenType extends Omit<TokenInfo, 'balance'> {
   native: {
-    balance: {
-      amount: string;
-      display: string;
-    };
+    balance: BalanceType;
+    price: AssetWithNativeType['price'];
   };
-  balance: {
-    amount: string;
-    display: string;
-  };
-  token: {
-    decimals: number;
-    logoUri: string;
-    name: string;
-    symbol: string;
-    value: string;
-  };
-  tokenAddress: string;
+  balance: BalanceType;
 }

@@ -1,6 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Linking,
@@ -197,12 +197,32 @@ interface BalancesProps {
 const Balances = ({ tokens }: BalancesProps) => {
   const { navigate } = useNavigation();
 
-  const onPress = (token: any) => {
-    navigate(Routes.EXPANDED_ASSET_SHEET, {
-      asset: token,
-      type: 'token',
-    });
-  };
+  const onPress = useCallback(
+    (token: TokenType) => () => {
+      navigate(Routes.EXPANDED_ASSET_SHEET, {
+        asset: token,
+        type: 'token',
+      });
+    },
+    [navigate]
+  );
+
+  const renderTokens = useMemo(
+    () =>
+      tokens.map(token => (
+        <TokenBalance
+          address={token.tokenAddress}
+          includeBorder
+          marginHorizontal={5}
+          nativeBalance={token.native.balance.display}
+          onPress={onPress(token)}
+          tokenBalance={token.balance.display}
+          tokenSymbol={token.token.symbol}
+          zIndex={1}
+        />
+      )),
+    [onPress, tokens]
+  );
 
   return (
     <ScrollView>
@@ -219,18 +239,7 @@ const Balances = ({ tokens }: BalancesProps) => {
           {tokens.length}
         </Text>
       </Container>
-      {tokens.map(token => (
-        <TokenBalance
-          address={token.tokenAddress}
-          includeBorder
-          marginHorizontal={5}
-          nativeBalance={token.native.balance.display}
-          onPress={() => onPress(token)}
-          tokenBalance={token.balance.display}
-          tokenSymbol={token.token.symbol}
-          zIndex={1}
-        />
-      ))}
+      {renderTokens}
     </ScrollView>
   );
 };

@@ -13,8 +13,9 @@ import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-
+import { getSafesInstance } from '../../cardstack/src/models';
 import { dismissingScreenListener } from '../../shim';
+import { Alert } from '../components/alerts';
 import { Column } from '../components/layout';
 import {
   SendAssetForm,
@@ -24,13 +25,21 @@ import {
   SendHeader,
   SendTransactionSpeed,
 } from '../components/send';
-import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
+import {
+  createSignableTransaction,
+  estimateGasLimit,
+  toWei,
+} from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkIsValidAddressOrDomain } from '../helpers/validators';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
-import { isNativeToken } from '@cardstack/utils';
+import {
+  isNativeToken,
+  reshapeDepotTokensToAssets,
+  reshapeSingleDepotTokenToAsset,
+} from '@cardstack/utils';
 import {
   useAccountAssets,
   useAccountSettings,
@@ -46,6 +55,7 @@ import {
   useSendSavingsAccount,
   useTransactionConfirmation,
   useUpdateAssetOnchainBalance,
+  useWallets,
 } from '@rainbow-me/hooks';
 import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
 import Routes from '@rainbow-me/routes';
@@ -79,13 +89,22 @@ const KeyboardSizeView = styled(KeyboardArea)`
     showAssetForm ? colors.lighterGrey : colors.white};
 `;
 
-export default function SendSheet(props) {
+const useSendSheetScreen = () => {
   const dispatch = useDispatch();
   const { isTinyPhone } = useDimensions();
   const { navigate, addListener } = useNavigation();
+  const { params } = useRoute();
   const { dataAddNewTransaction } = useTransactionConfirmation();
   const updateAssetOnchainBalanceIfNeeded = useUpdateAssetOnchainBalance();
-  const { allAssets } = useAccountAssets();
+  const {
+    allAssets,
+    depots: [depot],
+  } = useAccountAssets();
+
+  const depotAssets = useMemo(() => reshapeDepotTokensToAssets(depot), [depot]);
+
+  const isDepot = !!params?.asset?.tokenAddress;
+
   const {
     gasLimit,
     gasPrices,
@@ -172,7 +191,7 @@ export default function SendSheet(props) {
   // Recalculate balance when gas price changes
   useEffect(() => {
     if (
-      isNativeToken(selected?.symbol, network) &&
+      (isNativeToken(selected?.symbol, network) || isDepot) &&
       get(prevSelectedGasPrice, 'txFee.value.amount', 0) !==
         get(selectedGasPrice, 'txFee.value.amount', 0)
     ) {
@@ -184,6 +203,7 @@ export default function SendSheet(props) {
     selectedGasPrice,
     updateMaxInputBalance,
     network,
+    isDepot,
   ]);
 
   const sendUpdateAssetAmount = useCallback(
@@ -296,6 +316,31 @@ export default function SendSheet(props) {
     [sendUpdateAssetAmount]
   );
 
+  const { selectedWallet } = useWallets();
+
+  const sendTokenFromDepot = useCallback(async () => {
+    const safes = await getSafesInstance({ selectedWallet, network });
+
+    return safes.sendTokens(
+      depot.address,
+      selected.address,
+      recipient,
+      toWei(amountDetails.assetAmount),
+      undefined,
+      undefined,
+      undefined,
+      { from: accountAddress }
+    );
+  }, [
+    accountAddress,
+    amountDetails.assetAmount,
+    depot.address,
+    network,
+    recipient,
+    selected.address,
+    selectedWallet,
+  ]);
+
   const onSubmit = useCallback(async () => {
     const validTransaction =
       isValidAddress && amountDetails.isSufficientBalance && isSufficientGas;
@@ -311,7 +356,7 @@ export default function SendSheet(props) {
     let submitSuccess = false;
     let updatedGasLimit = null;
     // Attempt to update gas limit before sending ERC20 / ERC721
-    if (selected?.address !== ETH_ADDRESS) {
+    if (selected?.address !== ETH_ADDRESS && !isDepot) {
       try {
         // Estimate the tx with gas limit padding before sending
         updatedGasLimit = await estimateGasLimit(
@@ -343,21 +388,45 @@ export default function SendSheet(props) {
       to: recipient,
     };
     try {
-      const signableTransaction = await createSignableTransaction(
-        txDetails,
-        network
-      );
-      const txResult = await sendTransaction({
-        transaction: signableTransaction,
-      });
-      const { hash, nonce } = txResult;
-      if (!isEmpty(hash)) {
-        submitSuccess = true;
-        txDetails.hash = hash;
-        txDetails.nonce = nonce;
-        await dispatch(dataAddNewTransaction(txDetails));
+      if (isDepot) {
+        const txResult = await sendTokenFromDepot();
+
+        const { transactionHash } = txResult;
+
+        if (!isEmpty(transactionHash)) {
+          submitSuccess = true;
+          txDetails.hash = transactionHash;
+          await dispatch(dataAddNewTransaction(txDetails));
+        }
+      } else {
+        const signableTransaction = await createSignableTransaction(
+          txDetails,
+          network
+        );
+
+        const txResult = await sendTransaction({
+          transaction: signableTransaction,
+        });
+
+        const { hash, nonce } = txResult;
+
+        if (!isEmpty(hash)) {
+          submitSuccess = true;
+          txDetails.hash = hash;
+          txDetails.nonce = nonce;
+          await dispatch(dataAddNewTransaction(txDetails));
+        }
       }
     } catch (error) {
+      const errorMessage = error.toString();
+
+      if (isDepot && errorMessage) {
+        Alert({
+          message: errorMessage,
+          title: 'An error ocurred',
+        });
+      }
+
       logger.sentry('TX Details', txDetails);
       logger.sentry('SendSheet onSubmit error');
       captureException(error);
@@ -374,12 +443,14 @@ export default function SendSheet(props) {
     dispatch,
     gasLimit,
     isAuthorizing,
+    isDepot,
     isSufficientGas,
     isValidAddress,
     network,
     recipient,
     selected,
     selectedGasPrice,
+    sendTokenFromDepot,
     updateTxFee,
   ]);
 
@@ -451,15 +522,19 @@ export default function SendSheet(props) {
     }
   }, [isValidAddress, selected, showAssetForm, showAssetList]);
 
-  const { params } = useRoute();
-  const assetOverride = params?.asset;
+  const assetOverride = useMemo(
+    () =>
+      isDepot ? reshapeSingleDepotTokenToAsset(params?.asset) : params?.asset,
+    [isDepot, params.asset]
+  );
+
   const prevAssetOverride = usePrevious(assetOverride);
 
   useEffect(() => {
     if (assetOverride && assetOverride !== prevAssetOverride) {
-      sendUpdateSelected(assetOverride);
+      isDepot ? setSelected(assetOverride) : sendUpdateSelected(assetOverride);
     }
-  }, [assetOverride, prevAssetOverride, sendUpdateSelected]);
+  }, [assetOverride, isDepot, prevAssetOverride, sendUpdateSelected]);
 
   const recipientOverride = params?.address;
 
@@ -502,6 +577,88 @@ export default function SendSheet(props) {
     selected,
     updateTxFee,
   ]);
+
+  return {
+    contacts,
+    isValidAddress,
+    onChangeInput,
+    handleFocus,
+    setRecipient,
+    triggerFocus,
+    recipient,
+    recipientFieldRef,
+    onRemoveContact,
+    showAssetList,
+    showEmptyState,
+    filteredContacts,
+    currentInput,
+    allAssets: isDepot ? depotAssets : allAssets,
+    fetchData,
+    hiddenCoins,
+    nativeCurrency,
+    network,
+    sendUpdateSelected,
+    pinnedCoins,
+    savings,
+    sendableUniqueTokens,
+    showAssetForm,
+    amountDetails,
+    isAuthorizing,
+    isSufficientGas,
+    onPress,
+    isTinyPhone,
+    onChangeAssetAmount,
+    onChangeNativeAmount,
+    onResetAssetSelection,
+    selected,
+    sendMaxBalance,
+    selectedGasPrice,
+    nativeCurrencySymbol,
+    onPressTransactionSpeed,
+    isDepot,
+  };
+};
+
+export default function SendSheet(props) {
+  const {
+    contacts,
+    isValidAddress,
+    onChangeInput,
+    handleFocus,
+    setRecipient,
+    triggerFocus,
+    recipient,
+    recipientFieldRef,
+    onRemoveContact,
+    showAssetList,
+    showEmptyState,
+    filteredContacts,
+    currentInput,
+    allAssets,
+    fetchData,
+    hiddenCoins,
+    nativeCurrency,
+    network,
+    sendUpdateSelected,
+    pinnedCoins,
+    savings,
+    sendableUniqueTokens,
+    showAssetForm,
+    amountDetails,
+    isAuthorizing,
+    isSufficientGas,
+    onPress,
+    isTinyPhone,
+    onChangeAssetAmount,
+    onChangeNativeAmount,
+    onResetAssetSelection,
+    selected,
+    sendMaxBalance,
+    selectedGasPrice,
+    nativeCurrencySymbol,
+    onPressTransactionSpeed,
+    isDepot,
+  } = useSendSheetScreen();
 
   return (
     <Container>
@@ -566,7 +723,8 @@ export default function SendSheet(props) {
             selected={selected}
             sendMaxBalance={sendMaxBalance}
             txSpeedRenderer={
-              isIphoneX() && (
+              isIphoneX() &&
+              !isDepot && (
                 <SendTransactionSpeed
                   gasPrice={selectedGasPrice}
                   nativeCurrencySymbol={nativeCurrencySymbol}
