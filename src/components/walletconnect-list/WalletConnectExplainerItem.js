@@ -1,35 +1,31 @@
 import React from 'react';
-import { Column, FlexItem, Row } from '../layout';
-import { Emoji, Text, TruncatedText } from '../text';
-import { padding } from '@rainbow-me/styles';
+import { Container, Text } from '@cardstack/components';
 
 export default function WalletConnectExplainerItem({
-  children,
-  content,
-  emoji,
+  renderContent,
+  renderImage,
   title,
 }) {
-  const { colors } = useTheme();
   return (
-    <Row align="start" css={padding(0, 36, 0, 0)}>
-      <Emoji size="bmedium">{emoji}</Emoji>
-      <Column flex={1} paddingLeft={8}>
-        <FlexItem>
-          <TruncatedText lineHeight="normal" size="bmedium" weight="semibold">
-            {title}
-          </TruncatedText>
-        </FlexItem>
-        <FlexItem marginTop={4}>
-          <Text
-            color={colors.alpha(colors.blueGreyDark, 0.45)}
-            lineHeight="loose"
-            size="smedium"
-          >
-            {content}
-          </Text>
-        </FlexItem>
-        {children && <FlexItem marginTop={8}>{children}</FlexItem>}
-      </Column>
-    </Row>
+    <Container
+      alignItems="center"
+      alignSelf="center"
+      justifyContent="center"
+      marginBottom={4}
+      marginTop={6}
+      width={292}
+    >
+      {renderImage ? renderImage() : null}
+      <Text
+        color="black"
+        lineHeight={22}
+        size="body"
+        textAlign="center"
+        weight="bold"
+      >
+        {title}
+      </Text>
+      {renderContent ? renderContent() : null}
+    </Container>
   );
 }

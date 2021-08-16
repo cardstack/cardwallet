@@ -26,6 +26,7 @@ import { useHeight, useWalletConnectConnections } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { scrollPosition } from '@rainbow-me/navigation/ScrollPagerWrapper';
 import Routes from '@rainbow-me/routes';
+import { shadow } from '@rainbow-me/styles';
 
 const { call, greaterThan, onChange } = Animated;
 
@@ -118,7 +119,11 @@ const QRScannerScreen = () => {
               <DiscoverSheet />
             ) : null
           ) : (
-            <Sheet hideHandle>
+            <Sheet
+              borderRadius={20}
+              css={shadow.buildAsObject(0, 1, 2)}
+              hideHandle
+            >
               {walletConnectorsCount ? (
                 <>
                   <FlatList

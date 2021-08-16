@@ -1,15 +1,15 @@
 import React, { ReactNode } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Container } from '../Container';
-
 import { TouchableBackDrop } from './TouchableBackDrop';
+import { Container, ContainerProps } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
 
 export const Sheet = ({
   borderRadius = 39,
   children,
   hideHandle = false,
+  ...props
 }: SheetProps) => {
   const { goBack } = useNavigation();
   const insets = useSafeArea();
@@ -28,6 +28,7 @@ export const Sheet = ({
             ? Math.round(insets.top / 2.5)
             : Math.round(insets.top / 1.2)
         }
+        {...props}
       >
         <Container
           paddingTop={hideHandle ? 0 : 3}
@@ -53,7 +54,7 @@ export const Sheet = ({
   );
 };
 
-export interface SheetProps {
+export interface SheetProps extends ContainerProps {
   /** optional children */
   children?: ReactNode;
   /** borderRadius for initials */
