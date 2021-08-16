@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
+import stylePropType from 'react-style-proptype';
 import { useNavigation } from '@react-navigation/native';
 import { Container } from '../Container';
 
@@ -10,6 +11,7 @@ export const Sheet = ({
   borderRadius = 39,
   children,
   hideHandle = false,
+  style,
 }: SheetProps) => {
   const { goBack } = useNavigation();
   const insets = useSafeArea();
@@ -28,6 +30,7 @@ export const Sheet = ({
             ? Math.round(insets.top / 2.5)
             : Math.round(insets.top / 1.2)
         }
+        style={style}
       >
         <Container
           paddingTop={hideHandle ? 0 : 3}
@@ -60,4 +63,5 @@ export interface SheetProps {
   borderRadius?: number;
   /** hideHandle */
   hideHandle?: boolean;
+  style?: stylePropType;
 }
