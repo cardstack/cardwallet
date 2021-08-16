@@ -9,7 +9,7 @@ export const Sheet = ({
   borderRadius = 39,
   children,
   hideHandle = false,
-  style,
+  ...props
 }: SheetProps) => {
   const { goBack } = useNavigation();
   const insets = useSafeArea();
@@ -28,7 +28,7 @@ export const Sheet = ({
             ? Math.round(insets.top / 2.5)
             : Math.round(insets.top / 1.2)
         }
-        style={style}
+        {...props}
       >
         <Container
           paddingTop={hideHandle ? 0 : 3}
