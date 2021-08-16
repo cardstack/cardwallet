@@ -9,7 +9,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { isLayer1 } from '@cardstack/utils';
+import { isLayer1, normalizeTxHash } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
@@ -38,6 +38,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
   const blockExplorerName = isLayer1(network) ? 'Etherscan' : 'Blockscout';
+  const normalizedHash = normalizeTxHash(transactionHash);
 
   const onPressTransaction = () => {
     showActionSheetWithOptions(
@@ -47,7 +48,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
       },
       (buttonIndex: number) => {
         if (buttonIndex === 0) {
-          Linking.openURL(`${blockExplorer}/tx/${transactionHash}`);
+          Linking.openURL(`${blockExplorer}/tx/${normalizedHash}`);
         }
       }
     );
