@@ -1,5 +1,5 @@
 const MAX_KEY = 48;
-const MULTIPLIER = 4;
+export const SPACING_MULTIPLIER = 4;
 
 const generateSpacingIncrements = () => {
   const spacingKeys = Array.from(Array(MAX_KEY).keys());
@@ -7,7 +7,7 @@ const generateSpacingIncrements = () => {
   return spacingKeys.reduce(
     (accum, key) => ({
       ...accum,
-      [key]: key * MULTIPLIER,
+      [key]: key * SPACING_MULTIPLIER,
     }),
     {}
   );

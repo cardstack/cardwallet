@@ -32,3 +32,4 @@ export * from './CoinIcon';
 export * from './TransactionList';
 export * from './TransactionConfirmationSheet';
 export * from './SafeAreaView';
+export * from './FilterOption';

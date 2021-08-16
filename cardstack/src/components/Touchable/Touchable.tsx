@@ -8,6 +8,8 @@ import {
   PositionProps,
   border,
   BorderProps,
+  backgroundColor,
+  BackgroundColorProps,
 } from '@shopify/restyle';
 import { ReactNode } from 'react';
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
@@ -18,7 +20,8 @@ type RestyleProps = TouchableOpacityProps &
   LayoutProps<Theme> &
   SpacingProps<Theme> &
   PositionProps<Theme> &
-  BorderProps<Theme>;
+  BorderProps<Theme> &
+  BackgroundColorProps<Theme>;
 
 export interface TouchableProps extends RestyleProps {
   children: ReactNode;
@@ -30,6 +33,6 @@ export interface TouchableProps extends RestyleProps {
 export const Touchable = createRestyleComponent<TouchableProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  [layout, spacing, position, border],
+  [layout, spacing, position, border, backgroundColor],
   TouchableOpacity
 );

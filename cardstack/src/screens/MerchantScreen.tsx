@@ -2,7 +2,7 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Linking, StatusBar } from 'react-native';
-import { MerchantSafeType } from '@cardstack/types';
+import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import {
   Button,
   CenteredContainer,
@@ -15,14 +15,25 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
+import { palette, SPACING_MULTIPLIER } from '@cardstack/theme';
+import { MerchantSafeType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
+import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { useDimensions } from '@rainbow-me/hooks';
+
+const HORIZONTAL_PADDING = 5;
+const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
+const TOTAL_HORIZONTAL_PADDING = HORIZONTAL_PADDING_PIXELS * 2;
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -40,7 +51,7 @@ export default function MerchantScreen() {
           flex={1}
           width="100%"
           contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
-          paddingHorizontal={5}
+          paddingHorizontal={HORIZONTAL_PADDING}
         >
           <MerchantInfo />
           <Button marginTop={2} marginBottom={4}>
@@ -165,12 +176,16 @@ const LifetimeEarningsSection = () => {
   const merchantSafe = useMerchantSafe();
 
   const { navigate } = useNavigation();
+  const { width: screenWidth } = useDimensions();
 
   const { accumulatedSpendValue } = merchantSafe;
 
-  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, { [key: string]: number }]
-  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
+
+  const { data } = useLifetimeEarningsData(merchantSafe.address);
 
   const {
     tokenBalanceDisplay,
@@ -191,12 +206,28 @@ const LifetimeEarningsSection = () => {
     <Container flexDirection="column" width="100%">
       <SectionHeader>Lifetime earnings</SectionHeader>
       <SectionWrapper onPress={onPress}>
-        <TokenBalance
-          Icon={<Icon name="spend" />}
-          tokenSymbol="SPEND"
-          tokenBalance={tokenBalanceDisplay}
-          nativeBalance={nativeBalanceDisplay}
-        />
+        <>
+          <TokenBalance
+            Icon={<Icon name="spend" />}
+            tokenSymbol="SPEND"
+            tokenBalance={tokenBalanceDisplay}
+            nativeBalance={nativeBalanceDisplay}
+          />
+          <Container alignItems="center" justifyContent="center" width="100%">
+            <ChartPath
+              data={{ points: data, smoothingStrategy: 'bezier' }}
+              gestureEnabled={false}
+              height={125}
+              stroke={palette.tealDark}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={3.5}
+              width={screenWidth - TOTAL_HORIZONTAL_PADDING}
+            >
+              <Container />
+            </ChartPath>
+          </Container>
+        </>
       </SectionWrapper>
     </Container>
   );

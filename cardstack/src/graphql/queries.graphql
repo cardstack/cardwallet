@@ -72,3 +72,14 @@ query GetPrepaidCardHistoryData($address: ID!) {
     }
   }
 }
+
+query GetLifetimeEarningsAccumulations($address: ID!) {
+  merchantSafe (id: $address) {
+    id
+    spendAccumulations(orderBy: timestamp, orderDirection: asc) {
+      timestamp
+      amount
+      historicSpendBalance
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import { format } from 'date-fns';
 
+export type Units = 'days' | 'hours';
+
 const calculateTimestampOfToday = () => {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -11,6 +13,25 @@ const calculateTimestampOfYesterday = () => {
   const d = new Date();
   d.setDate(d.getDate() - 1);
   d.setHours(0, 0, 0, 0);
+
+  return d.getTime();
+};
+
+/**
+ * @param timeAgo how far ago the timestamp should correspond to
+ * @param unit hours or days
+ * @returns timestamp
+ */
+const calculateTimeStampNTimeAgo = (timeAgo = 0, unit: Units = 'days') => {
+  const d = new Date();
+
+  if (unit === 'days') {
+    d.setDate(d.getDate() - timeAgo);
+    d.setHours(0, 0, 0, 0);
+  } else if (unit === 'hours') {
+    d.setDate(d.getDate());
+    d.setHours(d.getHours() - timeAgo, 0, 0, 0);
+  }
 
   return d.getTime();
 };
@@ -51,4 +72,44 @@ export const groupTransactionsByDate = (transaction: {
   if (ts > thisMonthTimestamp) return 'This Month';
 
   return format(ts, `MMMM${ts > thisYearTimestamp ? '' : ' yyyy'}`);
+};
+
+/**
+ * @param amount number of timestamp increments
+ * @param unit days or hours
+ * @returns an array of timestamps with number of items as amount and the spacing with unit
+ */
+export const getTimestamps = (amount: number, unit: Units) => {
+  let timestamps: number[] = [];
+
+  for (let i = 0; i < amount; i++) {
+    const ts = calculateTimeStampNTimeAgo(i, unit);
+
+    timestamps = [...timestamps, ts];
+  }
+
+  return timestamps;
+};
+
+/**
+ * @param amount number of points
+ * @param unit days or hours
+ * @returns timestamp if accumulation timestamp is included in range, otherwise 0
+ */
+export const groupAccumulations = (
+  amount = 30,
+  unit: Units = 'days'
+) => (accumulation: { timestamp: string }) => {
+  const timestamps = getTimestamps(amount, unit);
+
+  for (let i = 0; i < timestamps.length; i++) {
+    const ts = timestamps[i];
+    const accumulationTs = parseInt(accumulation.timestamp, 10) * 1000;
+
+    if (Number(accumulationTs) > ts) {
+      return ts;
+    }
+  }
+
+  return '0';
 };
