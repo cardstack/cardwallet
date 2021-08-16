@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
-import stylePropType from 'react-style-proptype';
+import { StyleProp, ViewStyle } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Container } from '../Container';
 
@@ -63,5 +63,5 @@ export interface SheetProps {
   borderRadius?: number;
   /** hideHandle */
   hideHandle?: boolean;
-  style?: stylePropType;
+  style?: StyleProp<ViewStyle>;
 }
