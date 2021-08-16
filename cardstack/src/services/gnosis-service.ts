@@ -105,11 +105,11 @@ export const getTokensWithPrice = async (
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const web3 = new Web3(web3ProviderSdk);
-  const exchangeRate = await getSDK('ExchangeRate', web3);
+  const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
 
   return Promise.all(
     tokens.map(async tokenItem => {
-      const usdBalance = await exchangeRate.getUSDPrice(
+      const usdBalance = await layerTwoOracle.getUSDPrice(
         tokenItem.token.symbol,
         tokenItem.balance
       );
