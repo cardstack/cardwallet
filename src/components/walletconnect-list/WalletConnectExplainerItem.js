@@ -1,31 +1,31 @@
 import React from 'react';
-import { Column } from '../layout';
-import { Text } from '../text';
+import { Container, Text } from '@cardstack/components';
 
 export default function WalletConnectExplainerItem({
   renderContent,
   renderImage,
   title,
 }) {
-  const { colors } = useTheme();
   return (
-    <Column
-      align="center"
+    <Container
+      alignItems="center"
       alignSelf="center"
-      css={{ width: 290, marginTop: 24, marginBottom: 16 }}
+      justifyContent="center"
+      marginBottom={4}
+      marginTop={6}
+      width={292}
     >
       {renderImage ? renderImage() : null}
       <Text
-        align="center"
-        color={colors.black}
-        fontFamily="OpenSans-Regular"
+        color="black"
         lineHeight={22}
-        size={16}
-        weight="semibold"
+        size="body"
+        textAlign="center"
+        weight="bold"
       >
         {title}
       </Text>
       {renderContent ? renderContent() : null}
-    </Column>
+    </Container>
   );
 }

@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
 import styled from 'styled-components';
-import { Column } from '../layout';
-import { Text } from '../text';
 import WalletConnectExplainerItem from './WalletConnectExplainerItem';
+import { Container, Text } from '@cardstack/components';
 import CardStackToCardPay from '@rainbow-me/assets/cardStackToCardPay.png';
 import IconQRScan from '@rainbow-me/assets/icon_QR_Scan.png';
 import { ImgixImage } from '@rainbow-me/images';
@@ -24,22 +23,18 @@ const IconQRScanImg = styled(ImgixImage).attrs({
   margin-bottom: 12;
 `;
 
-const CustomText = props => {
-  const { colors } = useTheme();
-
-  return (
-    <Text
-      align="center"
-      color={colors.blueText}
-      fontFamily="OpenSans-Regular"
-      size={14}
-      weight={props.bold ? 'semibold' : 'light'}
-      {...props}
-    >
-      {props.children}
-    </Text>
-  );
-};
+const CustomText = props => (
+  <Text
+    color="blueText"
+    fontWeight={props.bold ? '500' : '400'}
+    letterSpacing={0.32}
+    size="xs"
+    textAlign="center"
+    {...props}
+  >
+    {props.children}
+  </Text>
+);
 
 export default function WalletConnectExplainer() {
   const openWalletConnectWebsite = useCallback(() => {
@@ -47,7 +42,7 @@ export default function WalletConnectExplainer() {
   }, []);
 
   return (
-    <Column>
+    <Container>
       <WalletConnectExplainerItem
         renderContent={() => (
           <CustomText style={{ marginTop: 5 }}>
@@ -73,6 +68,6 @@ export default function WalletConnectExplainer() {
         renderImage={() => <IconQRScanImg />}
         title="Scan Merchant QR code"
       />
-    </Column>
+    </Container>
   );
 }
