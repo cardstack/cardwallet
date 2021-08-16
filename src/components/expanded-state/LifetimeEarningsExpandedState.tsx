@@ -54,7 +54,7 @@ export default function LifetimeEarningsExpandedState(props: {
       <Container paddingHorizontal={5}>
         <HorizontalDivider />
       </Container>
-      <ActivitiesSection address={address} />
+      <ActivitiesSection />
     </SlackSheet>
   );
 }
