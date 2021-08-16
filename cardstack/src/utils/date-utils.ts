@@ -1,5 +1,7 @@
 import { format } from 'date-fns';
 
+export type Units = 'days' | 'hours';
+
 const calculateTimestampOfToday = () => {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -15,10 +17,16 @@ const calculateTimestampOfYesterday = () => {
   return d.getTime();
 };
 
-const calculateTimeStampNDaysAgo = (daysAgo = 0) => {
+const calculateTimeStampNTimeAgo = (timeAgo = 0, unit: Units = 'days') => {
   const d = new Date();
-  d.setDate(d.getDate() - daysAgo);
-  d.setHours(0, 0, 0, 0);
+
+  if (unit === 'days') {
+    d.setDate(d.getDate() - timeAgo);
+    d.setHours(0, 0, 0, 0);
+  } else if (unit === 'hours') {
+    d.setDate(d.getDate());
+    d.setHours(d.getHours() - timeAgo, 0, 0, 0);
+  }
 
   return d.getTime();
 };
@@ -61,11 +69,26 @@ export const groupTransactionsByDate = (transaction: {
   return format(ts, `MMMM${ts > thisYearTimestamp ? '' : ' yyyy'}`);
 };
 
-export const groupAccumulationsByDay = (accumulation: {
-  timestamp: string;
-}) => {
-  for (let i = 0; i < 30; i++) {
-    const ts = calculateTimeStampNDaysAgo(i);
+export const getTimestamps = (amount: number, unit: Units) => {
+  let timestamps: number[] = [];
+
+  for (let i = 0; i < amount; i++) {
+    const ts = calculateTimeStampNTimeAgo(i, unit);
+
+    timestamps = [...timestamps, ts];
+  }
+
+  return timestamps;
+};
+
+export const groupAccumulations = (
+  amount = 30,
+  unit: Units = 'days'
+) => (accumulation: { timestamp: string }) => {
+  const timestamps = getTimestamps(amount, unit);
+
+  for (let i = 0; i < timestamps.length; i++) {
+    const ts = timestamps[i];
     const accumulationTs = parseInt(accumulation.timestamp, 10) * 1000;
 
     if (Number(accumulationTs) > ts) {

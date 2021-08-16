@@ -29,6 +29,7 @@ import {
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { useDimensions } from '@rainbow-me/hooks';
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -171,6 +172,7 @@ const LifetimeEarningsSection = () => {
   const merchantSafe = useMerchantSafe();
 
   const { navigate } = useNavigation();
+  const { width: screenWidth } = useDimensions();
 
   const { accumulatedSpendValue } = merchantSafe;
 
@@ -207,7 +209,7 @@ const LifetimeEarningsSection = () => {
             tokenBalance={tokenBalanceDisplay}
             nativeBalance={nativeBalanceDisplay}
           />
-          <Container width="100%">
+          <Container alignItems="center" justifyContent="center" width="100%">
             <ChartPath
               data={{ points: data, smoothingStrategy: 'bezier' }}
               gestureEnabled={false}
@@ -216,7 +218,7 @@ const LifetimeEarningsSection = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={3.5}
-              width={325}
+              width={screenWidth - 40}
             >
               <Container />
             </ChartPath>
