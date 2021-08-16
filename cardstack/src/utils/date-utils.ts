@@ -17,6 +17,11 @@ const calculateTimestampOfYesterday = () => {
   return d.getTime();
 };
 
+/**
+ * @param timeAgo how far ago the timestamp should correspond to
+ * @param unit hours or days
+ * @returns timestamp
+ */
 const calculateTimeStampNTimeAgo = (timeAgo = 0, unit: Units = 'days') => {
   const d = new Date();
 
@@ -69,6 +74,11 @@ export const groupTransactionsByDate = (transaction: {
   return format(ts, `MMMM${ts > thisYearTimestamp ? '' : ' yyyy'}`);
 };
 
+/**
+ * @param amount number of timestamp increments
+ * @param unit days or hours
+ * @returns an array of timestamps with number of items as amount and the spacing with unit
+ */
 export const getTimestamps = (amount: number, unit: Units) => {
   let timestamps: number[] = [];
 
@@ -81,6 +91,11 @@ export const getTimestamps = (amount: number, unit: Units) => {
   return timestamps;
 };
 
+/**
+ * @param amount number of points
+ * @param unit days or hours
+ * @returns timestamp if accumulation timestamp is included in range, otherwise 0
+ */
 export const groupAccumulations = (
   amount = 30,
   unit: Units = 'days'

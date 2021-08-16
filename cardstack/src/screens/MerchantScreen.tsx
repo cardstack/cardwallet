@@ -15,7 +15,7 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import { palette } from '@cardstack/theme';
+import { palette, SPACING_MULTIPLIER } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
@@ -30,6 +30,10 @@ import {
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { useDimensions } from '@rainbow-me/hooks';
+
+const HORIZONTAL_PADDING = 5;
+const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
+const TOTAL_HORIZONTAL_PADDING = HORIZONTAL_PADDING_PIXELS * 2;
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -47,7 +51,7 @@ export default function MerchantScreen() {
           flex={1}
           width="100%"
           contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
-          paddingHorizontal={5}
+          paddingHorizontal={HORIZONTAL_PADDING}
         >
           <MerchantInfo />
           <Button marginTop={2} marginBottom={4}>
@@ -218,7 +222,7 @@ const LifetimeEarningsSection = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={3.5}
-              width={screenWidth - 40}
+              width={screenWidth - TOTAL_HORIZONTAL_PADDING}
             >
               <Container />
             </ChartPath>

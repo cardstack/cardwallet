@@ -56,6 +56,7 @@ export const useLifetimeEarningsData = (
     };
   }
 
+  // for grouped accumulations: ey is timestamp, data is array of items that can be put in that timestamp bin
   const groupedAccumulations = groupBy(
     data.merchantSafe?.spendAccumulations,
     groupAccumulations(params.amount, params.unit)
@@ -63,6 +64,8 @@ export const useLifetimeEarningsData = (
 
   const timestamps = getTimestamps(params.amount, params.unit).reverse();
 
+  // sum all values within a bin
+  // returns array with x as timestamp of bin and y sum of values
   const mappedAccumulations = timestamps.map(ts => {
     const values = groupedAccumulations[ts] || [];
 
