@@ -29,8 +29,6 @@ export const useLifetimeEarningsData = (merchantSafeAddress: string) => {
 
   const mappedAccumulations = Object.entries(groupedAccumulations).map(
     ([ts, values]) => {
-      console.log('ts, values', ts, values);
-
       const sum = values.reduce((total: number, item) => {
         const amount =
           item && typeof item === 'object' ? Number(item.amount) : 0;

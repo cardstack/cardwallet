@@ -15,16 +15,13 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
+import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
-import {
-  ChartPath,
-  ChartPathProvider,
-  monotoneCubicInterpolation,
-} from '@rainbow-me/animated-charts';
+import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
 import {
   useNativeCurrencyAndConversionRates,
@@ -32,7 +29,6 @@ import {
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { palette } from '@cardstack/theme';
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -183,9 +179,7 @@ const LifetimeEarningsSection = () => {
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
-  const { data, loading } = useLifetimeEarningsData(merchantSafe.address);
-
-  console.log('data', JSON.stringify({ data }, null, 2));
+  const { data } = useLifetimeEarningsData(merchantSafe.address);
 
   const {
     tokenBalanceDisplay,
@@ -214,18 +208,18 @@ const LifetimeEarningsSection = () => {
             nativeBalance={nativeBalanceDisplay}
           />
           <Container width="100%">
-            <ChartPathProvider
+            <ChartPath
               data={{ points: data, smoothingStrategy: 'bezier' }}
+              gestureEnabled={false}
+              height={125}
+              stroke={palette.tealDark}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={3.5}
+              width={325}
             >
-              <ChartPath
-                height={125}
-                stroke={palette.tealDark}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={3.5}
-                width={325}
-              />
-            </ChartPathProvider>
+              <Container />
+            </ChartPath>
           </Container>
         </>
       </SectionWrapper>
