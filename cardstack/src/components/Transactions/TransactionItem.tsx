@@ -1,15 +1,18 @@
 import React from 'react';
-import { ERC20Transaction } from './ERC20Transaction';
+
+import { DepotBridgedLayer1Transaction } from './DepotBridgedLayer1Transaction';
 import { DepotBridgedLayer2Transaction } from './DepotBridgedLayer2Transaction';
-import { MerchantCreationTransaction } from './MerchantCreationTransaction';
+import { ERC20Transaction } from './ERC20Transaction';
 import { MerchantClaimTransaction } from './MerchantClaimTransaction';
+import { MerchantCreationTransaction } from './MerchantCreationTransaction';
+import { MerchantEarnedRevenueTransaction } from './MerchantEarnedRevenueTransaction';
 import { PrepaidCardCreatedTransaction } from './PrepaidCardCreatedTransaction';
 import { PrepaidCardPaymentTransaction } from './PrepaidCardPaymentTransaction';
 import { PrepaidCardSplitTransaction } from './PrepaidCardSplitTransaction';
 import { PrepaidCardTransferTransaction } from './PrepaidCardTransferTransaction';
-import { DepotBridgedLayer1Transaction } from './DepotBridgedLayer1Transaction';
 import { TransactionBaseCustomizationProps } from './TransactionBase';
 import { TransactionType, TransactionTypes } from '@cardstack/types';
+
 interface TransactionItemProps extends TransactionBaseCustomizationProps {
   item: TransactionType;
   isFullWidth?: boolean;
@@ -38,6 +41,8 @@ export const TransactionItem = (props: TransactionItemProps) => {
     return <MerchantCreationTransaction {...props} item={item} />;
   } else if (item.type === TransactionTypes.MERCHANT_CLAIM) {
     return <MerchantClaimTransaction {...props} item={item} />;
+  } else if (item.type === TransactionTypes.MERCHANT_EARNED_REVENUE) {
+    return <MerchantEarnedRevenueTransaction {...props} item={item} />;
   } else if (item.type === TransactionTypes.ERC_20) {
     return <ERC20Transaction {...props} item={item} />;
   }

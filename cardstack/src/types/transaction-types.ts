@@ -8,6 +8,7 @@ export enum TransactionTypes {
   MERCHANT_CLAIM = 'merchantClaim',
   MERCHANT_CREATION = 'merchantCreation',
   MERCHANT_REVENUE_EVENT = 'merchantRevenueEvent',
+  MERCHANT_EARNED_REVENUE = 'merchantEarnedRevenue',
   ERC_20 = 'erc20',
 }
 
@@ -129,6 +130,26 @@ export interface PrepaidCardPaymentTransactionType {
   transactionHash: string;
 }
 
+export interface MerchantEarnedRevenueTransactionType {
+  address: string;
+  balance: {
+    amount: string;
+    display: string;
+  };
+  native: {
+    amount: string;
+    display: string;
+  };
+  token: {
+    address: string;
+    name?: string | null;
+    symbol?: string | null;
+  };
+  timestamp: number;
+  type: TransactionTypes.MERCHANT_EARNED_REVENUE;
+  transactionHash: string;
+}
+
 export interface PrepaidCardSplitTransactionType {
   address: string;
   timestamp: number;
@@ -203,4 +224,5 @@ export type TransactionType =
   | PrepaidCardTransferTransactionType
   | PrepaidCardSplitTransactionType
   | MerchantRevenueEventType
-  | MerchantClaimType;
+  | MerchantClaimType
+  | MerchantEarnedRevenueTransactionType;

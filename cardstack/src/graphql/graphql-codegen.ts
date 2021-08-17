@@ -4392,7 +4392,10 @@ export type PrepaidCardPaymentFragment = (
   ), prepaidCard: (
     { __typename?: 'PrepaidCard' }
     & Pick<PrepaidCard, 'id'>
-  ) }
+  ), merchantSafe?: Maybe<(
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id'>
+  )> }
 );
 
 export type BridgeToLayer1EventFragment = (
@@ -4689,6 +4692,9 @@ export const PrepaidCardPaymentFragmentDoc = gql`
     name
   }
   prepaidCard {
+    id
+  }
+  merchantSafe {
     id
   }
 }

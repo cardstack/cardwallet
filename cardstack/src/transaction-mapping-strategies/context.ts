@@ -7,19 +7,33 @@ import { BridgeToLayer2EventStrategy } from './transaction-mapping-strategy-type
 import { MerchantCreationStrategy } from './transaction-mapping-strategy-types/merchant-creation-strategy';
 import { ERC20TokenStrategy } from './transaction-mapping-strategy-types/erc20-token-strategy';
 import { PrepaidCardPaymentStrategy } from './transaction-mapping-strategy-types/prepaid-card-payment-strategy';
+import { MerchantEarnedRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 import logger from 'logger';
 import { TransactionFragment } from '@cardstack/graphql';
 import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
+
+export type TransactionMappingStrategy =
+  | typeof PrepaidCardSplitStrategy
+  | typeof MerchantClaimStrategy
+  | typeof PrepaidCardCreationStrategy
+  | typeof PrepaidCardPaymentStrategy
+  | typeof PrepaidCardTransferStrategy
+  | typeof BridgeToLayer1EventStrategy
+  | typeof BridgeToLayer2EventStrategy
+  | typeof MerchantCreationStrategy
+  | typeof MerchantEarnedRevenueStrategy;
 
 interface TransactionData {
   transactions: (TransactionFragment | undefined)[];
   accountAddress: string;
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
+  transactionStrategies?: TransactionMappingStrategy[];
+  merchantSafeAddress?: string;
 }
 
-// Transaction mapping strategies list
-const transactionStrategies = [
+// used for the full transaction list
+const defaultTransactionStrategies = [
   PrepaidCardSplitStrategy,
   MerchantClaimStrategy,
   PrepaidCardCreationStrategy,
@@ -28,8 +42,6 @@ const transactionStrategies = [
   BridgeToLayer1EventStrategy,
   BridgeToLayer2EventStrategy,
   MerchantCreationStrategy,
-
-  // Add new transaction mapping type strategy here
 ];
 
 // Map graphql transactions list response into readable values in UI
@@ -37,6 +49,10 @@ export class TransactionMappingContext {
   constructor(readonly transactionData: TransactionData) {}
 
   async mapTransactions() {
+    const transactionStrategies =
+      this.transactionData.transactionStrategies ||
+      defaultTransactionStrategies;
+
     const mappedTransactions = await Promise.all(
       this.transactionData.transactions.map<Promise<TransactionType | null>>(
         async (transaction: TransactionFragment | undefined) => {
@@ -51,6 +67,7 @@ export class TransactionMappingContext {
               nativeCurrency: this.transactionData.nativeCurrency,
               currencyConversionRates: this.transactionData
                 .currencyConversionRates,
+              merchantSafeAddress: this.transactionData.merchantSafeAddress,
             });
 
             if (strategy.handlesTransaction()) {

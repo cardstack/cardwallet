@@ -1,6 +1,4 @@
-import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
 import {
   ChartFilterOptions,
   useLifetimeEarningsData,
@@ -13,7 +11,6 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
-import { useMerchantTransactions } from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';

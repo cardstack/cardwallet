@@ -6,6 +6,8 @@ import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import logger from 'logger';
 import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
+import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
+import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 
 export const useMerchantTransactions = (safeAddress: string) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
@@ -44,7 +46,11 @@ export const useMerchantTransactions = (safeAddress: string) => {
     transactionsCount: revenueEvents?.length || 0,
     networkStatus,
     fetchMore,
-    isMerchantTransactions: true,
+    merchantSafeAddress: safeAddress,
+    transactionStrategies: [
+      MerchantClaimStrategy,
+      MerchantEarnedRevenueStrategy,
+    ],
   });
 
   return {

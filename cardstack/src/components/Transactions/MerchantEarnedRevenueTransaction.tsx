@@ -1,22 +1,21 @@
 import React from 'react';
 
-import { SafeHeader } from '../SafeHeader';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
 } from './TransactionBase';
-import { MerchantClaimType } from '@cardstack/types';
-import { CoinIcon } from '@cardstack/components';
+import { CoinIcon, SafeHeader } from '@cardstack/components';
+import { MerchantEarnedRevenueTransactionType } from '@cardstack/types';
 
-export interface MerchantClaimTransactionProps
+export interface MerchantEarnRevenueTransactionProps
   extends TransactionBaseCustomizationProps {
-  item: MerchantClaimType;
+  item: MerchantEarnedRevenueTransactionType;
 }
 
-export const MerchantClaimTransaction = ({
+export const MerchantEarnedRevenueTransaction = ({
   item,
   ...props
-}: MerchantClaimTransactionProps) => {
+}: MerchantEarnRevenueTransactionProps) => {
   return (
     <TransactionBase
       {...props}
@@ -26,9 +25,9 @@ export const MerchantClaimTransaction = ({
       Header={
         <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
       }
-      primaryText={`- ${item.balance.display}`}
+      primaryText={`+ ${item.balance.display}`}
       statusIconName="arrow-down"
-      statusText="Claimed"
+      statusText="Earned"
       subText={item.native.display}
       transactionHash={item.transactionHash}
     />
