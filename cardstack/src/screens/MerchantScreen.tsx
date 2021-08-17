@@ -1,7 +1,6 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import React from 'react';
-import { Linking, StatusBar } from 'react-native';
+import React, { useCallback } from 'react';
+import { StatusBar } from 'react-native';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import {
   Button,
@@ -28,7 +27,6 @@ import {
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { useDimensions } from '@rainbow-me/hooks';
 
 const HORIZONTAL_PADDING = 5;
@@ -87,25 +85,19 @@ const useMerchantSafe = () => {
 };
 
 const Header = () => {
-  const { goBack } = useNavigation();
-
+  const { goBack, navigate } = useNavigation();
   const { address } = useMerchantSafe();
-  const network = useRainbowSelector(state => state.settings.network);
-  const blockExplorer = getConstantByNetwork('blockExplorer', network);
 
-  const onPressInformation = () => {
-    showActionSheetWithOptions(
-      {
-        options: ['View on Blockscout', 'Cancel'],
-        cancelButtonIndex: 1,
-      },
-      (buttonIndex: number) => {
-        if (buttonIndex === 0) {
-          Linking.openURL(`${blockExplorer}/address/${address}`);
-        }
-      }
-    );
-  };
+  const {
+    params: { merchantSafe },
+  } = useRoute<RouteType>();
+
+  const onPressInformation = useCallback(() => {
+    navigate(Routes.MODAL_SCREEN, {
+      address: merchantSafe.address,
+      type: 'copy_address',
+    });
+  }, [merchantSafe.address, navigate]);
 
   return (
     <Container paddingTop={14} backgroundColor="black">
@@ -120,14 +112,19 @@ const Header = () => {
             </Text>
             <Container flexDirection="row" alignItems="center">
               <NetworkBadge marginRight={2} />
-              <Text
-                fontFamily="RobotoMono-Regular"
-                color="white"
-                size="xs"
-                marginRight={2}
-              >
-                {getAddressPreview(address)}
-              </Text>
+              <Touchable onPress={onPressInformation}>
+                <Container flexDirection="row" alignItems="center">
+                  <Text
+                    fontFamily="RobotoMono-Regular"
+                    color="white"
+                    size="xs"
+                    marginRight={2}
+                  >
+                    {getAddressPreview(address)}
+                  </Text>
+                  <Icon name="info" size={15} />
+                </Container>
+              </Touchable>
             </Container>
           </Container>
         </CenteredContainer>
