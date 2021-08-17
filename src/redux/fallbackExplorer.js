@@ -596,7 +596,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
   let fallbackExplorerAssetsHandle = null;
   if (isMainnet(network)) {
     fallbackExplorerAssetsHandle = setTimeout(
-      () => store.AssetTypes.dispatch(findNewAssetsToWatch(accountAddress)),
+      () => store.dispatch(findNewAssetsToWatch(accountAddress)),
       DISCOVER_NEW_ASSETS_FREQUENCY
     );
   }
