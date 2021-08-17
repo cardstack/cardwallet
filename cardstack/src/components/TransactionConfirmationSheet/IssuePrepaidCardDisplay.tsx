@@ -48,7 +48,7 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   const depots = useRainbowSelector(state => state.data.depots);
   const depot = depots[0];
 
-  const token = depot.tokens.find(
+  const token = (depot?.tokens || []).find(
     t => t.tokenAddress.toLowerCase() === tokenAddress.toLowerCase()
   );
 
