@@ -12,6 +12,7 @@ import {
 } from '@cardstack/components';
 import { IssuePrepaidCardDecodedData } from '@cardstack/types';
 import {
+  getDepotTokenByAddress,
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
@@ -48,9 +49,7 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   const depots = useRainbowSelector(state => state.data.depots);
   const depot = depots[0];
 
-  const token = depot.tokens.find(
-    t => t.tokenAddress.toLowerCase() === tokenAddress.toLowerCase()
-  );
+  const token = getDepotTokenByAddress(depot, tokenAddress);
 
   const tokenBalance = token ? token.balance.display : 'Insufficient Funds';
 
