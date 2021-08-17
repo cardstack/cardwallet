@@ -18,9 +18,9 @@ export const getNativeBalance = async (props: {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const web3 = new Web3(web3ProviderSdk);
-  const exchangeRate = await getSDK('ExchangeRate', web3);
+  const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
 
-  const usdBalance = await exchangeRate.getUSDPrice(symbol, balance);
+  const usdBalance = await layerTwoOracle.getUSDPrice(symbol, balance);
 
   const nativeBalance =
     nativeCurrency === 'USD'
