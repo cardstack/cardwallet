@@ -1,14 +1,8 @@
-import {
-  convertAmountToNativeDisplay,
-  convertRawAmountToBalance,
-} from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
 import {
-  MerchantEarnedRevenueTransactionType,
   MerchantEarnedSpendTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { getNativeBalance } from '@cardstack/services';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
 export class MerchantEarnedSpendStrategy extends BaseStrategy {

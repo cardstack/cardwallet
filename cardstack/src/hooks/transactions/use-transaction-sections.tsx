@@ -52,6 +52,8 @@ export const useTransactionSections = ({
       if (transactions) {
         setLoading(true);
 
+        console.log('merchantSafeAddress', merchantSafeAddress);
+
         try {
           const transactionMappingContext = new TransactionMappingContext({
             transactions: merchantSafeAddress

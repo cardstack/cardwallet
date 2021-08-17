@@ -17,7 +17,6 @@ import {
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
-import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { ChartPath } from '@rainbow-me/animated-charts';
@@ -26,7 +25,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const CHART_HEIGHT = 200;
-const HEIGHT = CHART_HEIGHT + 310;
+const HEIGHT = CHART_HEIGHT + 400;
 
 const useMerchantSafe = (address: string) => {
   const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
@@ -52,7 +51,7 @@ export default function LifetimeEarningsExpandedState(props: {
 
   return (
     // @ts-ignore doesn't understand the JS props
-    <SlackSheet bottomInset={42} contentHeight={HEIGHT} scrollEnabled>
+    <SlackSheet bottomInset={42} height="100%" scrollEnabled>
       <ChartSection address={address} />
       <Container paddingHorizontal={5}>
         <HorizontalDivider />
@@ -146,42 +145,49 @@ const ActivitiesSection = ({ address }: { address: string }) => {
     refetchLoading,
     refetch,
     isLoadingTransactions,
-  } = useMerchantTransactions(address, [MerchantEarnedSpendStrategy]);
+  } = useMerchantTransactions(address, 'lifetimeEarnings');
 
   return (
-    <Container flexDirection="column" marginTop={7} width="100%">
-      {isLoadingTransactions ? (
-        <TransactionListLoading light />
-      ) : (
-        <SectionList
-          ListEmptyComponent={<ListEmptyComponent />}
-          ListFooterComponent={
-            isFetchingMore ? <ActivityIndicator color="white" /> : null
-          }
-          contentContainerStyle={{ paddingBottom: 40 }}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={1}
-          refreshControl={
-            <RefreshControl
-              onRefresh={refetch}
-              refreshing={refetchLoading}
-              tintColor="white"
-            />
-          }
-          renderItem={props => (
-            <TransactionItem {...props} includeBorder isFullWidth />
-          )}
-          renderSectionHeader={({ section: { title } }) => (
-            <Container backgroundColor="white" paddingVertical={2} width="100%">
-              <Text color="blueText" size="medium">
-                {title}
-              </Text>
-            </Container>
-          )}
-          sections={sections}
-          style={{ width: '100%' }}
-        />
-      )}
+    <Container paddingHorizontal={5} paddingVertical={3}>
+      <Text size="medium">Activities</Text>
+      <Container flexDirection="column" marginTop={7} width="100%">
+        {isLoadingTransactions ? (
+          <TransactionListLoading light />
+        ) : (
+          <SectionList
+            ListEmptyComponent={<ListEmptyComponent />}
+            ListFooterComponent={
+              isFetchingMore ? <ActivityIndicator color="white" /> : null
+            }
+            contentContainerStyle={{ paddingBottom: 40 }}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={1}
+            refreshControl={
+              <RefreshControl
+                onRefresh={refetch}
+                refreshing={refetchLoading}
+                tintColor="white"
+              />
+            }
+            renderItem={props => (
+              <TransactionItem {...props} includeBorder isFullWidth />
+            )}
+            renderSectionHeader={({ section: { title } }) => (
+              <Container
+                backgroundColor="white"
+                paddingVertical={2}
+                width="100%"
+              >
+                <Text color="blueText" size="medium">
+                  {title}
+                </Text>
+              </Container>
+            )}
+            sections={sections}
+            style={{ width: '100%' }}
+          />
+        )}
+      </Container>
     </Container>
   );
 };

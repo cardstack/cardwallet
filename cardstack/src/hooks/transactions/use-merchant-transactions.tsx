@@ -1,16 +1,27 @@
 import { NetworkStatus } from '@apollo/client';
-
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
+import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
+import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
+import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
+import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import logger from 'logger';
 import { TransactionMappingStrategy } from '@cardstack/transaction-mapping-strategies/context';
-import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
+
+type MerchantTransactionTypes = 'lifetimeEarnings' | 'unclaimedRevenue';
+
+const typeToStrategies: {
+  [key in MerchantTransactionTypes]: TransactionMappingStrategy[];
+} = {
+  lifetimeEarnings: [MerchantEarnedSpendStrategy],
+  unclaimedRevenue: [MerchantClaimStrategy, MerchantEarnedRevenueStrategy],
+};
 
 export const useMerchantTransactions = (
   safeAddress: string,
-  transactionStrategies?: TransactionMappingStrategy[]
+  type: MerchantTransactionTypes
 ) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
 
@@ -37,6 +48,8 @@ export const useMerchantTransactions = (
     logger.log('Error getting Merchant transactions', error);
   }
 
+  const strategies = typeToStrategies[type];
+
   const {
     sections,
     loading,
@@ -49,7 +62,7 @@ export const useMerchantTransactions = (
     networkStatus,
     fetchMore,
     merchantSafeAddress: safeAddress,
-    transactionStrategies,
+    transactionStrategies: strategies,
   });
 
   return {
