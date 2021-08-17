@@ -33,6 +33,7 @@ const useSokolTransactions = () => {
       address: accountAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
     },
+    fetchPolicy: 'network-only', // not cache transaction list result
   });
 
   const account = data?.account;

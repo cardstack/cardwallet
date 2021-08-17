@@ -25,6 +25,7 @@ export const useMerchantTransactions = (safeAddress: string) => {
       address: safeAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
     },
+    fetchPolicy: 'network-only', // not cache transaction list result
   });
 
   const revenueEvents = data?.merchantSafe?.merchantRevenue?.[0]?.revenueEvents;

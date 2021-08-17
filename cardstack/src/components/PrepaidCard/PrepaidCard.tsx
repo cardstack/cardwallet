@@ -70,6 +70,7 @@ export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
 interface CardGradientProps {
   cardCustomization?: PrepaidCardCustomization;
   isEditing?: boolean;
+  address: string;
 }
 
 const SELECT_ICON_WIDTH = '13%';
@@ -181,6 +182,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           <CustomizableBackground
             cardCustomization={prepaidCard.cardCustomization}
             isEditing={isEditing}
+            address={prepaidCard.address}
           />
           <Top {...prepaidCard} networkName={networkName} />
           <Bottom {...props} />
@@ -208,6 +210,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
 const CustomizableBackground = ({
   cardCustomization,
   isEditing,
+  address,
 }: CardGradientProps) => {
   const { width } = useDimensions();
 
@@ -226,7 +229,7 @@ const CustomizableBackground = ({
       width="100%"
       height={PREPAID_GRADIENT_HEIGHT}
       style={{ position: 'absolute' }}
-      key={`header_background_${isEditing}`}
+      key={`svg_${address}_${isEditing}`}
     >
       {hasLinearGradient && (
         <Defs>
