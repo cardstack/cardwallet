@@ -8,6 +8,7 @@ import { MerchantCreationStrategy } from './transaction-mapping-strategy-types/m
 import { ERC20TokenStrategy } from './transaction-mapping-strategy-types/erc20-token-strategy';
 import { PrepaidCardPaymentStrategy } from './transaction-mapping-strategy-types/prepaid-card-payment-strategy';
 import { MerchantEarnedRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
+import { MerchantEarnedSpendStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import logger from 'logger';
 import { TransactionFragment } from '@cardstack/graphql';
 import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
@@ -21,6 +22,7 @@ export type TransactionMappingStrategy =
   | typeof BridgeToLayer1EventStrategy
   | typeof BridgeToLayer2EventStrategy
   | typeof MerchantCreationStrategy
+  | typeof MerchantEarnedSpendStrategy
   | typeof MerchantEarnedRevenueStrategy;
 
 interface TransactionData {

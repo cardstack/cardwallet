@@ -18,6 +18,8 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
+import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
+import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { useWallets } from '@rainbow-me/hooks';
@@ -132,7 +134,10 @@ const Activities = ({ address }: { address: string }) => {
     refetchLoading,
     refetch,
     isLoadingTransactions,
-  } = useMerchantTransactions(address);
+  } = useMerchantTransactions(address, [
+    MerchantClaimStrategy,
+    MerchantEarnedRevenueStrategy,
+  ]);
 
   return (
     <Container flexDirection="column" marginTop={7} width="100%">

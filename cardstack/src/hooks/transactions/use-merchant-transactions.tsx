@@ -5,11 +5,13 @@ import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import logger from 'logger';
+import { TransactionMappingStrategy } from '@cardstack/transaction-mapping-strategies/context';
 import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
-import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
-import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 
-export const useMerchantTransactions = (safeAddress: string) => {
+export const useMerchantTransactions = (
+  safeAddress: string,
+  transactionStrategies?: TransactionMappingStrategy[]
+) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
 
   const client = getApolloClient(network);
@@ -47,10 +49,7 @@ export const useMerchantTransactions = (safeAddress: string) => {
     networkStatus,
     fetchMore,
     merchantSafeAddress: safeAddress,
-    transactionStrategies: [
-      MerchantClaimStrategy,
-      MerchantEarnedRevenueStrategy,
-    ],
+    transactionStrategies,
   });
 
   return {

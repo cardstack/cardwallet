@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import {
   ChartFilterOptions,
   useLifetimeEarningsData,
 } from '../../../cardstack/src/hooks/use-lifetime-earnings-data';
 import { SlackSheet } from '../sheet';
 import {
+  CenteredContainer,
   Container,
   FilterOption,
   HorizontalDivider,
   Icon,
   Text,
+  TransactionItem,
+  TransactionListLoading,
 } from '@cardstack/components';
+import { useMerchantTransactions } from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
+import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { ChartPath } from '@rainbow-me/animated-charts';
@@ -51,7 +57,7 @@ export default function LifetimeEarningsExpandedState(props: {
       <Container paddingHorizontal={5}>
         <HorizontalDivider />
       </Container>
-      <ActivitiesSection />
+      <ActivitiesSection address={address} />
     </SlackSheet>
   );
 }
@@ -132,13 +138,58 @@ const ChartSection = ({ address }: { address: string }) => {
   );
 };
 
-const ActivitiesSection = () => {
+const ActivitiesSection = ({ address }: { address: string }) => {
+  const {
+    sections,
+    isFetchingMore,
+    onEndReached,
+    refetchLoading,
+    refetch,
+    isLoadingTransactions,
+  } = useMerchantTransactions(address, [MerchantEarnedSpendStrategy]);
+
   return (
-    <Container paddingHorizontal={5}>
-      <Text size="medium">Activities</Text>
-      <Container alignItems="center" marginTop={4} width="100%">
-        <Text>No activity data</Text>
-      </Container>
+    <Container flexDirection="column" marginTop={7} width="100%">
+      {isLoadingTransactions ? (
+        <TransactionListLoading light />
+      ) : (
+        <SectionList
+          ListEmptyComponent={<ListEmptyComponent />}
+          ListFooterComponent={
+            isFetchingMore ? <ActivityIndicator color="white" /> : null
+          }
+          contentContainerStyle={{ paddingBottom: 40 }}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={1}
+          refreshControl={
+            <RefreshControl
+              onRefresh={refetch}
+              refreshing={refetchLoading}
+              tintColor="white"
+            />
+          }
+          renderItem={props => (
+            <TransactionItem {...props} includeBorder isFullWidth />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Container backgroundColor="white" paddingVertical={2} width="100%">
+              <Text color="blueText" size="medium">
+                {title}
+              </Text>
+            </Container>
+          )}
+          sections={sections}
+          style={{ width: '100%' }}
+        />
+      )}
     </Container>
   );
 };
+
+const ListEmptyComponent = () => (
+  <CenteredContainer flex={1} height={100} width="100%">
+    <Text color="grayText" textAlign="center">
+      No activity Data
+    </Text>
+  </CenteredContainer>
+);

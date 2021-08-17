@@ -24,7 +24,7 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
     return false;
   }
 
-  async mapTransaction(): Promise<MerchantEarnedRevenueTransactionType> | null {
+  async mapTransaction(): Promise<MerchantEarnedRevenueTransactionType | null> {
     const prepaidCardPaymentTransaction = this.transaction
       .prepaidCardPayments?.[0];
 

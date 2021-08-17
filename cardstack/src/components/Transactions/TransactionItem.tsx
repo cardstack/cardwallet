@@ -11,6 +11,7 @@ import { PrepaidCardPaymentTransaction } from './PrepaidCardPaymentTransaction';
 import { PrepaidCardSplitTransaction } from './PrepaidCardSplitTransaction';
 import { PrepaidCardTransferTransaction } from './PrepaidCardTransferTransaction';
 import { TransactionBaseCustomizationProps } from './TransactionBase';
+import { MerchantEarnedSpendTransaction } from './MerchantEarnedSpendTransaction';
 import { TransactionType, TransactionTypes } from '@cardstack/types';
 
 interface TransactionItemProps extends TransactionBaseCustomizationProps {
@@ -43,6 +44,8 @@ export const TransactionItem = (props: TransactionItemProps) => {
     return <MerchantClaimTransaction {...props} item={item} />;
   } else if (item.type === TransactionTypes.MERCHANT_EARNED_REVENUE) {
     return <MerchantEarnedRevenueTransaction {...props} item={item} />;
+  } else if (item.type === TransactionTypes.MERCHANT_EARNED_SPEND) {
+    return <MerchantEarnedSpendTransaction {...props} item={item} />;
   } else if (item.type === TransactionTypes.ERC_20) {
     return <ERC20Transaction {...props} item={item} />;
   }
