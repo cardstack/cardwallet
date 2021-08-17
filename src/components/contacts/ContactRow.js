@@ -4,9 +4,8 @@ import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
 import { magicMemo } from '../../utils';
 import { ButtonPressAnimation } from '../animations';
 import { Column, RowWithMargins } from '../layout';
-import { TruncatedAddress } from '../text';
 import ContactAvatar from './ContactAvatar';
-import { Text } from '@cardstack/components';
+import { Text, TruncatedAddress } from '@cardstack/components';
 import { margin } from '@rainbow-me/styles';
 
 const ContactRow = ({ address, color, nickname, ...props }, ref) => {
@@ -24,9 +23,7 @@ const ContactRow = ({ address, color, nickname, ...props }, ref) => {
           <Text fontWeight="600">{removeFirstEmojiFromString(nickname)}</Text>
           <TruncatedAddress
             address={address}
-            firstSectionLength={10}
             fontFamily="OpenSans-Regular"
-            truncationLength={4}
             variant="subText"
           />
         </Column>

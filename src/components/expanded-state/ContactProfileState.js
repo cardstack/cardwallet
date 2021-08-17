@@ -9,9 +9,13 @@ import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';
 import { showDeleteContactActionSheet } from '../contacts';
 import CopyTooltip from '../copy-tooltip';
-import { TruncatedAddress } from '../text';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
-import { CenteredContainer, OptionItem, Text } from '@cardstack/components';
+import {
+  CenteredContainer,
+  OptionItem,
+  Text,
+  TruncatedAddress,
+} from '@cardstack/components';
 import theme from '@cardstack/theme';
 import { padding } from '@rainbow-me/styles';
 
@@ -98,11 +102,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
           textToCopy={address}
           tooltipText="Copy Address"
         >
-          <TruncatedAddress
-            address={address}
-            firstSectionLength={10}
-            truncationLength={4}
-          />
+          <TruncatedAddress address={address} />
         </CopyTooltip>
       </CenteredContainer>
       <CenteredContainer marginVertical={5}>

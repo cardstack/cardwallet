@@ -7,9 +7,13 @@ import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';
 import ImageAvatar from '../contacts/ImageAvatar';
 import CopyTooltip from '../copy-tooltip';
-import { TruncatedAddress } from '../text';
 import { ProfileAvatarButton, ProfileModal, ProfileNameInput } from './profile';
-import { Container, OptionItem, Text } from '@cardstack/components';
+import {
+  Container,
+  OptionItem,
+  Text,
+  TruncatedAddress,
+} from '@cardstack/components';
 import theme from '@cardstack/theme';
 import {
   removeFirstEmojiFromString,

@@ -9,12 +9,11 @@ import ButtonPressAnimation from '../components/animations/ButtonPressAnimation'
 import { Centered, Column, ColumnWithMargins } from '../components/layout';
 import ShareButton from '../components/qr-code/ShareButton';
 import { SheetHandle } from '../components/sheet';
-import { TruncatedAddress } from '../components/text';
 import { CopyToast, ToastPositionContainer } from '../components/toasts';
 import { useAccountProfile, useClipboard } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { abbreviations, deviceUtils } from '../utils';
-import { QRCode, Text } from '@cardstack/components';
+import { QRCode, Text, TruncatedAddress } from '@cardstack/components';
 import { padding, shadow } from '@rainbow-me/styles';
 
 const QRCodeSize = ios ? 250 : Math.min(230, deviceUtils.dimensions.width - 20);
