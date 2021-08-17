@@ -25,7 +25,7 @@ export default function useRefreshAccountData() {
         getWalletNames,
         getUniswapLiquidity,
         getUniqueTokens,
-        refetchSavings(true),
+        refetchSavings(),
         explorer,
       ]);
     } catch (error) {
