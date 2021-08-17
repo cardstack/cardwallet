@@ -9,15 +9,11 @@ export class MerchantEarnedSpendStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
     const { prepaidCardPayments } = this.transaction;
 
-    if (
+    return Boolean(
       prepaidCardPayments?.[0] &&
-      this.merchantSafeAddress &&
-      prepaidCardPayments[0].merchantSafe?.id === this.merchantSafeAddress
-    ) {
-      return true;
-    }
-
-    return false;
+        this.merchantSafeAddress &&
+        prepaidCardPayments[0].merchantSafe?.id === this.merchantSafeAddress
+    );
   }
 
   async mapTransaction(): Promise<MerchantEarnedSpendTransactionType | null> {

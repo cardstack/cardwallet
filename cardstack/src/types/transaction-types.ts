@@ -1,3 +1,4 @@
+import { BalanceType } from './AssetType';
 export enum TransactionTypes {
   DEPOT_BRIDGED_LAYER_1 = 'depotBridgedLayer1',
   DEPOT_BRIDGED_LAYER_2 = 'depotBridgedLayer2',
@@ -14,14 +15,8 @@ export enum TransactionTypes {
 }
 
 export interface DepotBridgedLayer2TransactionType {
-  balance: {
-    amount: string;
-    display: string;
-  };
-  native: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
+  native: BalanceType;
   transactionHash: string;
   to: string;
   token: {
@@ -34,14 +29,8 @@ export interface DepotBridgedLayer2TransactionType {
 }
 
 export interface DepotBridgedLayer1TransactionType {
-  balance: {
-    amount: string;
-    display: string;
-  };
-  native: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
+  native: BalanceType;
   transactionHash: string;
   to: string;
   token: {
@@ -105,14 +94,8 @@ export interface MerchantClaimType {
   address: string;
   createdAt: string;
   transactionHash: string;
-  balance: {
-    amount: string;
-    display: string;
-  };
-  native: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
+  native: BalanceType;
   token: {
     address: string;
     name?: string | null;
@@ -133,14 +116,8 @@ export interface PrepaidCardPaymentTransactionType {
 
 export interface MerchantEarnedRevenueTransactionType {
   address: string;
-  balance: {
-    amount: string;
-    display: string;
-  };
-  native: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
+  native: BalanceType;
   token: {
     address: string;
     name?: string | null;
@@ -207,16 +184,10 @@ export enum TransactionStatus {
 export interface ERC20TransactionType {
   from: string;
   to: string;
-  balance: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
   hash: string;
   minedAt: number;
-  native: {
-    amount: string;
-    display: string;
-  };
+  native: BalanceType;
   status: TransactionStatus;
   title: string;
   symbol: string;

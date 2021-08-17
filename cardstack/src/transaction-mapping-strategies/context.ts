@@ -58,42 +58,46 @@ export class TransactionMappingContext {
     const mappedTransactions = await Promise.all(
       this.transactionData.transactions.map<Promise<TransactionType | null>>(
         async (transaction: TransactionFragment | undefined) => {
-          if (!transaction) {
-            return null;
-          }
+          try {
+            if (!transaction) {
+              return null;
+            }
 
-          for (let i = 0; i < transactionStrategies.length; i++) {
-            const strategy = new transactionStrategies[i]({
+            for (let i = 0; i < transactionStrategies.length; i++) {
+              const strategy = new transactionStrategies[i]({
+                transaction,
+                accountAddress: this.transactionData.accountAddress,
+                nativeCurrency: this.transactionData.nativeCurrency,
+                currencyConversionRates: this.transactionData
+                  .currencyConversionRates,
+                merchantSafeAddress: this.transactionData.merchantSafeAddress,
+              });
+
+              if (strategy.handlesTransaction()) {
+                const mappedTransaction = await strategy.mapTransaction();
+
+                return mappedTransaction;
+              }
+            }
+
+            // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
+            const tokenTransferStrategy = new ERC20TokenStrategy({
               transaction,
               accountAddress: this.transactionData.accountAddress,
               nativeCurrency: this.transactionData.nativeCurrency,
               currencyConversionRates: this.transactionData
                 .currencyConversionRates,
-              merchantSafeAddress: this.transactionData.merchantSafeAddress,
             });
 
-            if (strategy.handlesTransaction()) {
-              const mappedTransaction = await strategy.mapTransaction();
-
+            if (tokenTransferStrategy.handlesTransaction()) {
+              const mappedTransaction = await tokenTransferStrategy.mapTransaction();
               return mappedTransaction;
             }
+
+            logger.sentry('Unable to map transaction:', transaction);
+          } catch (error) {
+            logger.sentry('Error mapping transaction:', transaction);
           }
-
-          // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
-          const tokenTransferStrategy = new ERC20TokenStrategy({
-            transaction,
-            accountAddress: this.transactionData.accountAddress,
-            nativeCurrency: this.transactionData.nativeCurrency,
-            currencyConversionRates: this.transactionData
-              .currencyConversionRates,
-          });
-
-          if (tokenTransferStrategy.handlesTransaction()) {
-            const mappedTransaction = await tokenTransferStrategy.mapTransaction();
-            return mappedTransaction;
-          }
-
-          logger.sentry('Unable to map transaction:', transaction);
 
           return null;
         }

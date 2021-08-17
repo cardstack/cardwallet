@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import {
   ChartFilterOptions,
@@ -137,6 +137,18 @@ const ChartSection = ({ address }: { address: string }) => {
   );
 };
 
+const renderItem = (props: any) => (
+  <TransactionItem {...props} includeBorder isFullWidth />
+);
+
+const renderSectionHeader = ({ section: { title } }: any) => (
+  <Container backgroundColor="white" paddingVertical={2} width="100%">
+    <Text color="blueText" size="medium">
+      {title}
+    </Text>
+  </Container>
+);
+
 const ActivitiesSection = ({ address }: { address: string }) => {
   const {
     sections,
@@ -169,20 +181,8 @@ const ActivitiesSection = ({ address }: { address: string }) => {
                 tintColor="white"
               />
             }
-            renderItem={props => (
-              <TransactionItem {...props} includeBorder isFullWidth />
-            )}
-            renderSectionHeader={({ section: { title } }) => (
-              <Container
-                backgroundColor="white"
-                paddingVertical={2}
-                width="100%"
-              >
-                <Text color="blueText" size="medium">
-                  {title}
-                </Text>
-              </Container>
-            )}
+            renderItem={renderItem}
+            renderSectionHeader={renderSectionHeader}
             sections={sections}
             style={{ width: '100%' }}
           />
