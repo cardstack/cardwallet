@@ -16,7 +16,7 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { palette, SPACING_MULTIPLIER } from '@cardstack/theme';
-import { MerchantSafeType } from '@cardstack/types';
+import { MerchantSafeType, TokenType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
@@ -34,6 +34,9 @@ import { useDimensions } from '@rainbow-me/hooks';
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
 const TOTAL_HORIZONTAL_PADDING = HORIZONTAL_PADDING_PIXELS * 2;
+
+const isLastItem = (items: TokenType[], index: number): boolean =>
+  items.length - 1 === index;
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -252,12 +255,13 @@ const UnclaimedRevenueSection = () => {
       <SectionWrapper onPress={onPress}>
         <>
           {revenueBalances.length ? (
-            revenueBalances.map(token => (
+            revenueBalances.map((token, index) => (
               <TokenBalance
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}
                 nativeBalance={token.native.balance.display}
                 key={token.tokenAddress}
+                isLastItemIfList={isLastItem(revenueBalances, index)}
               />
             ))
           ) : (
@@ -288,12 +292,13 @@ const AvailableBalancesSection = () => {
       <SectionWrapper onPress={onPress}>
         <>
           {tokens.length ? (
-            tokens.map(token => (
+            tokens.map((token, index) => (
               <TokenBalance
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}
                 nativeBalance={token.native.balance.display}
                 key={token.tokenAddress}
+                isLastItemIfList={isLastItem(tokens, index)}
               />
             ))
           ) : (

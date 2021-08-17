@@ -15,6 +15,7 @@ interface TokenBalanceProps extends ContainerProps {
   tokenBalance: string;
   nativeBalance: string;
   includeBorder?: boolean;
+  isLastItemIfList?: boolean;
 }
 
 const borderStyle = {
@@ -34,6 +35,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
     onPress,
     Icon,
     includeBorder,
+    isLastItemIfList = true,
     ...containerProps
   } = props;
 
@@ -46,6 +48,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
+        marginBottom={isLastItemIfList ? 0 : 4}
       >
         <Container>
           <Container flexDirection="row">
