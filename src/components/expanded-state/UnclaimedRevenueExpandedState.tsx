@@ -132,7 +132,7 @@ const Activities = ({ address }: { address: string }) => {
     refetchLoading,
     refetch,
     isLoadingTransactions,
-  } = useMerchantTransactions(address);
+  } = useMerchantTransactions(address, 'unclaimedRevenue');
 
   return (
     <Container flexDirection="column" marginTop={7} width="100%">

@@ -1,13 +1,28 @@
 import { NetworkStatus } from '@apollo/client';
-
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
-import logger from 'logger';
 import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
+import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
+import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
+import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
+import logger from 'logger';
+import { TransactionMappingStrategy } from '@cardstack/transaction-mapping-strategies/context';
 
-export const useMerchantTransactions = (safeAddress: string) => {
+type MerchantTransactionTypes = 'lifetimeEarnings' | 'unclaimedRevenue';
+
+const typeToStrategies: {
+  [key in MerchantTransactionTypes]: TransactionMappingStrategy[];
+} = {
+  lifetimeEarnings: [MerchantEarnedSpendStrategy],
+  unclaimedRevenue: [MerchantClaimStrategy, MerchantEarnedRevenueStrategy],
+};
+
+export const useMerchantTransactions = (
+  safeAddress: string,
+  type: MerchantTransactionTypes
+) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
 
   const client = getApolloClient(network);
@@ -34,6 +49,8 @@ export const useMerchantTransactions = (safeAddress: string) => {
     logger.log('Error getting Merchant transactions', error);
   }
 
+  const strategies = typeToStrategies[type];
+
   const {
     sections,
     loading,
@@ -45,7 +62,8 @@ export const useMerchantTransactions = (safeAddress: string) => {
     transactionsCount: revenueEvents?.length || 0,
     networkStatus,
     fetchMore,
-    isMerchantTransactions: true,
+    merchantSafeAddress: safeAddress,
+    transactionStrategies: strategies,
   });
 
   return {

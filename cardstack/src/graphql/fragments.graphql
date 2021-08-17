@@ -30,6 +30,9 @@ fragment PrepaidCardPayment on PrepaidCardPayment {
   prepaidCard {
     id
   }
+  merchantSafe {
+    id
+  }
 }
 
 fragment BridgeToLayer1Event on BridgeToLayer1Event {

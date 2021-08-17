@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
-import { TransactionMappingContext } from '@cardstack/transaction-mapping-strategies/context';
+import {
+  TransactionMappingContext,
+  TransactionMappingStrategy,
+} from '@cardstack/transaction-mapping-strategies/context';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
@@ -19,7 +22,8 @@ interface UseTransactionSectionsProps {
   transactionsCount: number;
   networkStatus: NetworkStatus;
   fetchMore?: (props: any) => void;
-  isMerchantTransactions?: boolean;
+  merchantSafeAddress?: string;
+  transactionStrategies?: TransactionMappingStrategy[];
 }
 
 export const useTransactionSections = ({
@@ -28,7 +32,8 @@ export const useTransactionSections = ({
   transactionsCount,
   networkStatus,
   fetchMore,
-  isMerchantTransactions,
+  merchantSafeAddress,
+  transactionStrategies,
 }: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,14 +52,18 @@ export const useTransactionSections = ({
       if (transactions) {
         setLoading(true);
 
+        console.log('merchantSafeAddress', merchantSafeAddress);
+
         try {
           const transactionMappingContext = new TransactionMappingContext({
-            transactions: isMerchantTransactions
+            transactions: merchantSafeAddress
               ? merchantRevenueEventsToTransactions(transactions as any[])
               : transactions.map((t: any) => t?.transaction),
             accountAddress,
             nativeCurrency,
             currencyConversionRates,
+            transactionStrategies,
+            merchantSafeAddress,
           });
 
           const mappedTransactions = await transactionMappingContext.mapTransactions();
@@ -94,7 +103,8 @@ export const useTransactionSections = ({
     accountAddress,
     transactions,
     isEmpty,
-    isMerchantTransactions,
+    merchantSafeAddress,
+    transactionStrategies,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;

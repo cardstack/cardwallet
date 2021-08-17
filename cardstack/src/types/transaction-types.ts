@@ -1,3 +1,4 @@
+import { BalanceType } from './AssetType';
 export enum TransactionTypes {
   DEPOT_BRIDGED_LAYER_1 = 'depotBridgedLayer1',
   DEPOT_BRIDGED_LAYER_2 = 'depotBridgedLayer2',
@@ -8,18 +9,14 @@ export enum TransactionTypes {
   MERCHANT_CLAIM = 'merchantClaim',
   MERCHANT_CREATION = 'merchantCreation',
   MERCHANT_REVENUE_EVENT = 'merchantRevenueEvent',
+  MERCHANT_EARNED_REVENUE = 'merchantEarnedRevenue',
+  MERCHANT_EARNED_SPEND = 'merchantEarnedSpend',
   ERC_20 = 'erc20',
 }
 
 export interface DepotBridgedLayer2TransactionType {
-  balance: {
-    amount: string;
-    display: string;
-  };
-  native: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
+  native: BalanceType;
   transactionHash: string;
   to: string;
   token: {
@@ -32,14 +29,8 @@ export interface DepotBridgedLayer2TransactionType {
 }
 
 export interface DepotBridgedLayer1TransactionType {
-  balance: {
-    amount: string;
-    display: string;
-  };
-  native: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
+  native: BalanceType;
   transactionHash: string;
   to: string;
   token: {
@@ -103,14 +94,8 @@ export interface MerchantClaimType {
   address: string;
   createdAt: string;
   transactionHash: string;
-  balance: {
-    amount: string;
-    display: string;
-  };
-  native: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
+  native: BalanceType;
   token: {
     address: string;
     name?: string | null;
@@ -126,6 +111,29 @@ export interface PrepaidCardPaymentTransactionType {
   spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   type: TransactionTypes.PREPAID_CARD_PAYMENT;
+  transactionHash: string;
+}
+
+export interface MerchantEarnedRevenueTransactionType {
+  address: string;
+  balance: BalanceType;
+  native: BalanceType;
+  token: {
+    address: string;
+    name?: string | null;
+    symbol?: string | null;
+  };
+  timestamp: number;
+  type: TransactionTypes.MERCHANT_EARNED_REVENUE;
+  transactionHash: string;
+}
+
+export interface MerchantEarnedSpendTransactionType {
+  address: string;
+  spendBalanceDisplay: string;
+  nativeBalanceDisplay: string;
+  timestamp: number;
+  type: TransactionTypes.MERCHANT_EARNED_SPEND;
   transactionHash: string;
 }
 
@@ -176,16 +184,10 @@ export enum TransactionStatus {
 export interface ERC20TransactionType {
   from: string;
   to: string;
-  balance: {
-    amount: string;
-    display: string;
-  };
+  balance: BalanceType;
   hash: string;
   minedAt: number;
-  native: {
-    amount: string;
-    display: string;
-  };
+  native: BalanceType;
   status: TransactionStatus;
   title: string;
   symbol: string;
@@ -203,4 +205,6 @@ export type TransactionType =
   | PrepaidCardTransferTransactionType
   | PrepaidCardSplitTransactionType
   | MerchantRevenueEventType
-  | MerchantClaimType;
+  | MerchantClaimType
+  | MerchantEarnedRevenueTransactionType
+  | MerchantEarnedSpendTransactionType;
