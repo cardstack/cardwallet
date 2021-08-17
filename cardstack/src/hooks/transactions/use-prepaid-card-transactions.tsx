@@ -19,6 +19,7 @@ export const usePrepaidCardTransactions = (prepaidCardAddress: string) => {
     variables: {
       address: prepaidCardAddress,
     },
+    fetchPolicy: 'network-only', // not cache transaction list result
   });
 
   let transactions: ({ transaction: any } | null | undefined)[] | undefined;

@@ -25,6 +25,7 @@ export const useDepotTransactions = (safeAddress: string) => {
       address: safeAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
     },
+    fetchPolicy: 'network-only', // not cache transaction list result
   });
 
   const safe = data?.safe;
