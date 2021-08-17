@@ -1,9 +1,10 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import lang from 'i18n-js';
 import React from 'react';
-import { Text, TruncatedAddress } from '../../text';
+import { Text } from '../../text';
 import TransactionRow from '../TransactionRow';
 import TransactionSheet from '../TransactionSheet';
+import { TruncatedAddress } from '@cardstack/components';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 export default function DefaultTransactionConfirmationSection({
@@ -18,9 +19,8 @@ export default function DefaultTransactionConfirmationSection({
       <TransactionRow title={lang.t('wallet.action.to')}>
         <TruncatedAddress
           address={address}
-          color="blueGreyDark50"
-          size="lmedium"
-          truncationLength={15}
+          color="darkGrayText"
+          size="medium"
         />
       </TransactionRow>
       <TransactionRow title={lang.t('wallet.action.value')}>

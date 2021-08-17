@@ -6,12 +6,10 @@ import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
 import { ButtonPressAnimation } from '../animations';
 import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
-import { TruncatedAddress } from '../text';
-import { Container, Icon, Text } from '@cardstack/components';
-import { screenWidth } from '@cardstack/utils';
+import { Container, Icon, Text, TruncatedAddress } from '@cardstack/components';
+import { getAddressPreview, screenWidth } from '@cardstack/utils';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { abbreviations } from '@rainbow-me/utils';
 
 const sx = StyleSheet.create({
   accountRow: {
@@ -43,7 +41,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   let accountSubLabel;
 
   if (networkInfo[network].layer === 2) {
-    accountSubLabel = abbreviations.address(address, 6, 4);
+    accountSubLabel = getAddressPreview(address);
   } else {
     let balanceAmount;
     if (balance === '0.00') {
@@ -97,12 +95,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                   {cleanedUpLabel || ens}
                 </Text>
               ) : (
-                <TruncatedAddress
-                  address={address}
-                  firstSectionLength={4}
-                  fontWeight="600"
-                  truncationLength={6}
-                />
+                <TruncatedAddress address={address} fontWeight="600" />
               )}
               <Text variant="subText">{accountSubLabel}</Text>
             </Container>

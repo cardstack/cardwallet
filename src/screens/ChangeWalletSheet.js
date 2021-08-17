@@ -31,6 +31,7 @@ import {
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
+import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
@@ -38,11 +39,7 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
-import {
-  abbreviations,
-  deviceUtils,
-  showActionSheetWithOptions,
-} from '@rainbow-me/utils';
+import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 
 const Whitespace = styled.View`
@@ -232,7 +229,7 @@ export default function ChangeWalletSheet() {
           cancelButtonIndex: 2,
           destructiveButtonIndex: 1,
           options: buttons,
-          title: `${label || abbreviations.address(address, 4, 6)}`,
+          title: `${label || getAddressPreview(address)}`,
         },
         buttonIndex => {
           if (buttonIndex === 0) {
