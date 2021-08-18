@@ -4,6 +4,7 @@ export interface BalanceType {
 }
 
 export interface AssetType {
+  asset_code?: string;
   address: string;
   balance: BalanceType;
   coingecko_id: string;
@@ -11,7 +12,7 @@ export interface AssetType {
   icon_url: string;
   name: string;
   price: {
-    changed_at: number;
+    changed_at: number | null;
     relative_change_24h: number;
     value: number;
   };
