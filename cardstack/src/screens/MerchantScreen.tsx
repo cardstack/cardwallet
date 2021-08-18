@@ -1,7 +1,6 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import React from 'react';
-import { Linking, StatusBar } from 'react-native';
+import React, { useCallback } from 'react';
+import { StatusBar } from 'react-native';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import {
   Button,
@@ -16,7 +15,7 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { palette, SPACING_MULTIPLIER } from '@cardstack/theme';
-import { MerchantSafeType } from '@cardstack/types';
+import { MerchantSafeType, TokenType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
@@ -28,12 +27,14 @@ import {
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { useDimensions } from '@rainbow-me/hooks';
 
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
 const TOTAL_HORIZONTAL_PADDING = HORIZONTAL_PADDING_PIXELS * 2;
+
+const isLastItem = (items: TokenType[], index: number): boolean =>
+  items.length - 1 === index;
 
 interface RouteType {
   params: { merchantSafe: MerchantSafeType };
@@ -84,25 +85,19 @@ const useMerchantSafe = () => {
 };
 
 const Header = () => {
-  const { goBack } = useNavigation();
-
+  const { goBack, navigate } = useNavigation();
   const { address } = useMerchantSafe();
-  const network = useRainbowSelector(state => state.settings.network);
-  const blockExplorer = getConstantByNetwork('blockExplorer', network);
 
-  const onPressInformation = () => {
-    showActionSheetWithOptions(
-      {
-        options: ['View on Blockscout', 'Cancel'],
-        cancelButtonIndex: 1,
-      },
-      (buttonIndex: number) => {
-        if (buttonIndex === 0) {
-          Linking.openURL(`${blockExplorer}/address/${address}`);
-        }
-      }
-    );
-  };
+  const {
+    params: { merchantSafe },
+  } = useRoute<RouteType>();
+
+  const onPressInformation = useCallback(() => {
+    navigate(Routes.MODAL_SCREEN, {
+      address: merchantSafe.address,
+      type: 'copy_address',
+    });
+  }, [merchantSafe.address, navigate]);
 
   return (
     <Container paddingTop={14} backgroundColor="black">
@@ -117,14 +112,19 @@ const Header = () => {
             </Text>
             <Container flexDirection="row" alignItems="center">
               <NetworkBadge marginRight={2} />
-              <Text
-                fontFamily="RobotoMono-Regular"
-                color="white"
-                size="xs"
-                marginRight={2}
-              >
-                {getAddressPreview(address)}
-              </Text>
+              <Touchable onPress={onPressInformation}>
+                <Container flexDirection="row" alignItems="center">
+                  <Text
+                    fontFamily="RobotoMono-Regular"
+                    color="white"
+                    size="xs"
+                    marginRight={2}
+                  >
+                    {getAddressPreview(address)}
+                  </Text>
+                  <Icon name="info" size={15} />
+                </Container>
+              </Touchable>
             </Container>
           </Container>
         </CenteredContainer>
@@ -252,12 +252,13 @@ const UnclaimedRevenueSection = () => {
       <SectionWrapper onPress={onPress}>
         <>
           {revenueBalances.length ? (
-            revenueBalances.map(token => (
+            revenueBalances.map((token, index) => (
               <TokenBalance
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}
                 nativeBalance={token.native.balance.display}
                 key={token.tokenAddress}
+                isLastItemIfList={isLastItem(revenueBalances, index)}
               />
             ))
           ) : (
@@ -288,12 +289,13 @@ const AvailableBalancesSection = () => {
       <SectionWrapper onPress={onPress}>
         <>
           {tokens.length ? (
-            tokens.map(token => (
+            tokens.map((token, index) => (
               <TokenBalance
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}
                 nativeBalance={token.native.balance.display}
                 key={token.tokenAddress}
+                isLastItemIfList={isLastItem(tokens, index)}
               />
             ))
           ) : (
