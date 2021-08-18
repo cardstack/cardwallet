@@ -155,9 +155,11 @@ export const useAssetListData = () => {
   const isLoadingAssets = useRainbowSelector(
     state => state.data.isLoadingAssets
   );
+
+  // order of sections in asset list
   const orderedSections = [
-    prepaidCardSection,
     merchantSafesSection,
+    prepaidCardSection,
     depotSection,
     balancesSection,
     collectiblesSection,
