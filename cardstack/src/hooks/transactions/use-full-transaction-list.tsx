@@ -15,9 +15,6 @@ const useSokolTransactions = () => {
     state.settings.network,
   ]);
 
-  const depots = useRainbowSelector(state => state.data.depots);
-  const depot = depots[0];
-
   const isNotSokol = network !== networkTypes.sokol;
 
   const client = getApolloClient(network);
@@ -57,7 +54,6 @@ const useSokolTransactions = () => {
     transactionsCount: transactions?.length || 0,
     networkStatus,
     fetchMore,
-    depotAddress: depot?.address || '',
   });
 
   return {

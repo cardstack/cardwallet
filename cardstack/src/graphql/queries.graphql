@@ -1,16 +1,6 @@
 query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
   account(id: $address) {
     id
-    depots {
-      safe {
-        safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
-          timestamp
-          transaction {
-            ...Transaction
-          }
-        }
-      }
-    }
     transactions(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
       timestamp
       transaction {

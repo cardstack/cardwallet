@@ -4437,21 +4437,7 @@ export type TokenTransferFragment = (
   & { token: (
     { __typename?: 'Token' }
     & Pick<Token, 'symbol' | 'name' | 'id'>
-  ), fromTokenHolder?: Maybe<(
-    { __typename?: 'TokenHolder' }
-    & Pick<TokenHolder, 'id'>
-    & { safe?: Maybe<(
-      { __typename?: 'Safe' }
-      & Pick<Safe, 'id'>
-    )> }
-  )>, toTokenHolder?: Maybe<(
-    { __typename?: 'TokenHolder' }
-    & Pick<TokenHolder, 'id'>
-    & { safe?: Maybe<(
-      { __typename?: 'Safe' }
-      & Pick<Safe, 'id'>
-    )> }
-  )> }
+  ) }
 );
 
 export type PrepaidCardSplitFragment = (
@@ -4580,20 +4566,7 @@ export type GetAccountTransactionHistoryDataQuery = (
   & { account?: Maybe<(
     { __typename?: 'Account' }
     & Pick<Account, 'id'>
-    & { depots: Array<Maybe<(
-      { __typename?: 'Depot' }
-      & { safe: (
-        { __typename?: 'Safe' }
-        & { safeTxns: Array<Maybe<(
-          { __typename?: 'SafeTransaction' }
-          & Pick<SafeTransaction, 'timestamp'>
-          & { transaction: (
-            { __typename?: 'Transaction' }
-            & TransactionFragment
-          ) }
-        )>> }
-      ) }
-    )>>, transactions: Array<Maybe<(
+    & { transactions: Array<Maybe<(
       { __typename?: 'EOATransaction' }
       & Pick<EoaTransaction, 'timestamp'>
       & { transaction: (
@@ -4841,18 +4814,6 @@ export const TokenTransferFragmentDoc = gql`
   }
   from
   to
-  fromTokenHolder {
-    id
-    safe {
-      id
-    }
-  }
-  toTokenHolder {
-    id
-    safe {
-      id
-    }
-  }
 }
     `;
 export const MerchantCreationFragmentDoc = gql`
@@ -4965,16 +4926,6 @@ export const GetAccountTransactionHistoryDataDocument = gql`
     query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
   account(id: $address) {
     id
-    depots {
-      safe {
-        safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
-          timestamp
-          transaction {
-            ...Transaction
-          }
-        }
-      }
-    }
     transactions(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
       timestamp
       transaction {

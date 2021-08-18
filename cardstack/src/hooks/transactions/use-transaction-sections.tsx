@@ -22,7 +22,6 @@ interface UseTransactionSectionsProps {
   transactionsCount: number;
   networkStatus: NetworkStatus;
   fetchMore?: (props: any) => void;
-  depotAddress: string;
   merchantSafeAddress?: string;
   transactionStrategies?: TransactionMappingStrategy[];
 }
@@ -34,11 +33,13 @@ export const useTransactionSections = ({
   networkStatus,
   fetchMore,
   merchantSafeAddress,
-  depotAddress,
   transactionStrategies,
 }: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const depots = useRainbowSelector(state => state.data.depots);
+  const depot = depots[0];
 
   const [
     nativeCurrency,
@@ -63,7 +64,7 @@ export const useTransactionSections = ({
             nativeCurrency,
             currencyConversionRates,
             transactionStrategies,
-            depotAddress,
+            depotAddress: depot.address,
             merchantSafeAddress,
           });
 
@@ -105,7 +106,7 @@ export const useTransactionSections = ({
     transactions,
     isEmpty,
     merchantSafeAddress,
-    depotAddress,
+    depot,
     transactionStrategies,
   ]);
 
