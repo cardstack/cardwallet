@@ -410,7 +410,8 @@ const fetchGnosisSafesAndAddCoingeckoId = async () => {
 const addPriceByCoingeckoId = (
   coingeckoId,
   prices,
-  formattedNativeCurrency
+  formattedNativeCurrency,
+  nativeCurrency
 ) => {
   let price = {
     changed_at: null,
@@ -418,19 +419,39 @@ const addPriceByCoingeckoId = (
     value: 0,
   };
 
+  let native = {
+    price: {
+      amount: 0,
+      display: nativeCurrency
+        ? convertAmountToNativeDisplay(0, nativeCurrency)
+        : 0,
+    },
+  };
+
   if (prices) {
     Object.keys(prices).forEach(assetKey => {
       if (toLower(coingeckoId) === toLower(assetKey)) {
+        const value = prices[assetKey][`${formattedNativeCurrency}`];
         price = {
           changed_at: prices[assetKey].last_updated_at,
           relative_change_24h:
             prices[assetKey][`${formattedNativeCurrency}_24h_change`],
-          value: prices[assetKey][`${formattedNativeCurrency}`],
+          value,
         };
+
+        if (nativeCurrency) {
+          native = {
+            price: {
+              amount: value,
+              display: convertAmountToNativeDisplay(value, nativeCurrency),
+            },
+          };
+        }
       }
     });
   }
-  return price;
+
+  return { price, native };
 };
 
 const addChartPriceByCoingeckoId = (coingeckoId, chartData) => {
@@ -474,7 +495,7 @@ const reduceAssetsWithPriceChartAndBalances = (
   network
 ) =>
   assets.reduce((updatedAssets, { asset }) => {
-    const price = addPriceByCoingeckoId(
+    const { price } = addPriceByCoingeckoId(
       asset.coingecko_id,
       prices,
       formattedNativeCurrency
@@ -498,6 +519,41 @@ const reduceAssetsWithPriceChartAndBalances = (
     ];
   }, []);
 
+const reduceDepotsWithPricesAndChart = (
+  depots,
+  prices,
+  formattedNativeCurrency,
+  chartData,
+  nativeCurrency
+) =>
+  depots.reduce((updatedDepots, depot) => {
+    const tokens = depot.tokens.reduce((updatedTokens, token) => {
+      const { price, native } = addPriceByCoingeckoId(
+        token.coingecko_id,
+        prices,
+        formattedNativeCurrency,
+        nativeCurrency
+      );
+
+      const chartPrices = addChartPriceByCoingeckoId(
+        token.coingecko_id,
+        chartData
+      );
+
+      return [
+        ...updatedTokens,
+        {
+          ...token,
+          price,
+          native: { ...token.native, ...native },
+          chartPrices,
+        },
+      ];
+    }, []);
+
+    return [...updatedDepots, { ...depot, tokens }];
+  }, []);
+
 export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
@@ -511,12 +567,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
   const assets = isMainnet(network)
     ? actualMainnetAssets
     : testnetAssets[network];
-
-  const {
-    depots,
-    prepaidCards,
-    merchantSafes,
-  } = await fetchGnosisSafesAndAddCoingeckoId();
 
   const periodicalyGetBalances = () =>
     setTimeout(
@@ -533,6 +583,12 @@ export const fetchAssetsBalancesAndPrices = async () => {
     });
     return;
   }
+
+  const {
+    depots,
+    prepaidCards,
+    merchantSafes,
+  } = await fetchGnosisSafesAndAddCoingeckoId();
 
   const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
     if (coingecko_id) {
@@ -564,44 +620,18 @@ export const fetchAssetsBalancesAndPrices = async () => {
     network
   );
 
+  const updatedDepots = depots
+    ? reduceDepotsWithPricesAndChart(
+        depots,
+        prices,
+        formattedNativeCurrency,
+        chartData,
+        nativeCurrency
+      )
+    : [];
+
   if (prices) {
     Object.keys(prices).forEach(key => {
-      if (depots) {
-        for (let i = 0; i < depots.length; i++) {
-          const depot = depots[i];
-
-          for (let j = 0; j < depot.tokens.length; j++) {
-            const token = depot.tokens[j];
-
-            if (toLower(token.coingecko_id) === toLower(key)) {
-              const price = prices[key][`${formattedNativeCurrency}`];
-
-              depots[i].tokens[j].price = {
-                changed_at: prices[key].last_updated_at,
-                relative_change_24h:
-                  prices[key][`${formattedNativeCurrency}_24h_change`],
-                value: prices[key][`${formattedNativeCurrency}`],
-              };
-
-              depots[i].tokens[j].native.price = {
-                amount: price,
-                display: convertAmountToNativeDisplay(price, nativeCurrency),
-              };
-            } else if (token.coingecko_id === null) {
-              depots[i].tokens[j].price = {
-                changed_at: null,
-                relative_change_24h: 0,
-                value: 0,
-              };
-              depots[i].tokens[j].native.price = {
-                amount: 0,
-                display: convertAmountToNativeDisplay(0, nativeCurrency),
-              };
-            }
-          }
-        }
-      }
-
       if (prepaidCards) {
         for (let i = 0; i < prepaidCards.length; i++) {
           const prepaidCard = prepaidCards[i];
@@ -629,26 +659,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
     });
   }
 
-  if (chartData) {
-    Object.keys(chartData).forEach(coingeckoId => {
-      if (depots) {
-        for (let i = 0; i < depots.length; i++) {
-          const depot = depots[i];
-
-          for (let j = 0; j < depot.tokens.length; j++) {
-            const token = depot.tokens[j];
-
-            if (toLower(token.coingecko_id) === toLower(coingeckoId)) {
-              depots[i].tokens[j].chartPrices = chartData[coingeckoId];
-            } else if (token.coingecko_id === null) {
-              depots[i].tokens[j].chartPrices = null;
-            }
-          }
-        }
-      }
-    });
-  }
-
   logger.log('😬 FallbackExplorer updating assets');
 
   store.dispatch(
@@ -661,7 +671,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
       },
       payload: {
         assets: updatedAssets,
-        depots,
+        depots: updatedDepots,
         merchantSafes,
         prepaidCards,
       },
