@@ -37,6 +37,7 @@ interface TransactionData {
   currencyConversionRates: CurrencyConversionRates;
   transactionStrategies?: TransactionMappingStrategy[];
   merchantSafeAddresses: string[];
+  prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
 }
 
@@ -85,6 +86,7 @@ export class TransactionMappingContext {
             currencyConversionRates: this.transactionData
               .currencyConversionRates,
             merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
+            prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
             merchantSafeAddress: this.transactionData.merchantSafeAddress,
           };
 
@@ -133,6 +135,7 @@ export class TransactionMappingContext {
             accountAddress: this.transactionData.accountAddress,
             nativeCurrency: this.transactionData.nativeCurrency,
             merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
+            prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
             currencyConversionRates: this.transactionData
               .currencyConversionRates,
           });
