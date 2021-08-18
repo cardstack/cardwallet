@@ -37,6 +37,8 @@ export const useTransactionSections = ({
 }: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
+  const merchantSafeAddresses = merchantSafes?.map(safe => safe.address) || [];
 
   const [
     nativeCurrency,
@@ -52,8 +54,6 @@ export const useTransactionSections = ({
       if (transactions) {
         setLoading(true);
 
-        console.log('merchantSafeAddress', merchantSafeAddress);
-
         try {
           const transactionMappingContext = new TransactionMappingContext({
             transactions: merchantSafeAddress
@@ -63,6 +63,7 @@ export const useTransactionSections = ({
             nativeCurrency,
             currencyConversionRates,
             transactionStrategies,
+            merchantSafeAddresses,
             merchantSafeAddress,
           });
 

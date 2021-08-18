@@ -1,3 +1,9 @@
+import { flatten } from 'lodash';
+import { MerchantEarnedSpendAndRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-and-revenue-strategy';
+import {
+  MerchantEarnedSpendAndRevenueTransactionType,
+  TransactionTypes,
+} from './../types/transaction-types';
 import { PrepaidCardSplitStrategy } from './transaction-mapping-strategy-types/prepaid-card-split-strategy';
 import { MerchantClaimStrategy } from './transaction-mapping-strategy-types/merchant-claim-strategy';
 import { PrepaidCardCreationStrategy } from './transaction-mapping-strategy-types/prepaid-card-creation-strategy';
@@ -22,6 +28,7 @@ export type TransactionMappingStrategy =
   | typeof BridgeToLayer1EventStrategy
   | typeof BridgeToLayer2EventStrategy
   | typeof MerchantCreationStrategy
+  | typeof MerchantEarnedSpendAndRevenueStrategy
   | typeof MerchantEarnedSpendStrategy
   | typeof MerchantEarnedRevenueStrategy;
 
@@ -31,6 +38,7 @@ interface TransactionData {
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
   transactionStrategies?: TransactionMappingStrategy[];
+  merchantSafeAddresses: string[];
   merchantSafeAddress?: string;
 }
 
@@ -44,7 +52,15 @@ const defaultTransactionStrategies = [
   BridgeToLayer1EventStrategy,
   BridgeToLayer2EventStrategy,
   MerchantCreationStrategy,
+  MerchantEarnedSpendAndRevenueStrategy,
 ];
+
+// specify transaction types that have additional potential handlers
+const mapTransactionTypeToAdditionalHandlers = {
+  [TransactionTypes.PREPAID_CARD_PAYMENT]: [
+    MerchantEarnedSpendAndRevenueStrategy,
+  ],
+};
 
 // Map graphql transactions list response into readable values in UI
 export class TransactionMappingContext {
@@ -56,55 +72,90 @@ export class TransactionMappingContext {
       defaultTransactionStrategies;
 
     const mappedTransactions = await Promise.all(
-      this.transactionData.transactions.map<Promise<TransactionType | null>>(
-        async (transaction: TransactionFragment | undefined) => {
-          try {
-            if (!transaction) {
-              return null;
-            }
-
-            for (let i = 0; i < transactionStrategies.length; i++) {
-              const strategy = new transactionStrategies[i]({
-                transaction,
-                accountAddress: this.transactionData.accountAddress,
-                nativeCurrency: this.transactionData.nativeCurrency,
-                currencyConversionRates: this.transactionData
-                  .currencyConversionRates,
-                merchantSafeAddress: this.transactionData.merchantSafeAddress,
-              });
-
-              if (strategy.handlesTransaction()) {
-                const mappedTransaction = await strategy.mapTransaction();
-
-                return mappedTransaction;
-              }
-            }
-
-            // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
-            const tokenTransferStrategy = new ERC20TokenStrategy({
-              transaction,
-              accountAddress: this.transactionData.accountAddress,
-              nativeCurrency: this.transactionData.nativeCurrency,
-              currencyConversionRates: this.transactionData
-                .currencyConversionRates,
-            });
-
-            if (tokenTransferStrategy.handlesTransaction()) {
-              const mappedTransaction = await tokenTransferStrategy.mapTransaction();
-              return mappedTransaction;
-            }
-
-            logger.sentry('Unable to map transaction:', transaction);
-          } catch (error) {
-            logger.sentry('Error mapping transaction:', transaction);
+      this.transactionData.transactions.map<
+        Promise<TransactionType | null | (TransactionType | null)[]>
+      >(async (transaction: TransactionFragment | undefined) => {
+        try {
+          if (!transaction) {
+            return null;
           }
 
-          return null;
+          const strategyParam = {
+            transaction,
+            accountAddress: this.transactionData.accountAddress,
+            nativeCurrency: this.transactionData.nativeCurrency,
+            currencyConversionRates: this.transactionData
+              .currencyConversionRates,
+            merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
+            merchantSafeAddress: this.transactionData.merchantSafeAddress,
+          };
+
+          for (let i = 0; i < transactionStrategies.length; i++) {
+            const strategy = new transactionStrategies[i](strategyParam);
+
+            if (strategy.handlesTransaction()) {
+              const mappedTransaction = await strategy.mapTransaction();
+
+              const additionalHandlers =
+                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // @ts-ignore some types won't have a key on the map but that will just return undefined
+                mapTransactionTypeToAdditionalHandlers[
+                  mappedTransaction?.type || ''
+                ];
+
+              // a single transaction may be handled by multiple strategies
+              if (additionalHandlers) {
+                let allMappedTransactions = [mappedTransaction];
+
+                for (let j = 0; j < additionalHandlers.length; j++) {
+                  const additionalStrategy = new additionalHandlers[j](
+                    strategyParam
+                  );
+
+                  if (additionalStrategy.handlesTransaction()) {
+                    const additionalMappedTransaction = await additionalStrategy.mapTransaction();
+
+                    allMappedTransactions = [
+                      ...allMappedTransactions,
+                      additionalMappedTransaction,
+                    ];
+                  }
+                }
+
+                return allMappedTransactions;
+              }
+
+              return mappedTransaction;
+            }
+          }
+
+          // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
+          const tokenTransferStrategy = new ERC20TokenStrategy({
+            transaction,
+            accountAddress: this.transactionData.accountAddress,
+            nativeCurrency: this.transactionData.nativeCurrency,
+            merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
+            currencyConversionRates: this.transactionData
+              .currencyConversionRates,
+          });
+
+          if (tokenTransferStrategy.handlesTransaction()) {
+            const mappedTransaction = await tokenTransferStrategy.mapTransaction();
+            return mappedTransaction;
+          }
+
+          logger.sentry('Unable to map transaction:', transaction);
+        } catch (error) {
+          logger.sentry('Error mapping transaction:', transaction);
         }
-      )
+
+        return null;
+      })
     );
 
+    const flattenedTransactions = flatten(mappedTransactions);
+
     // Remove null values from transactions list
-    return mappedTransactions.filter(t => t);
+    return flattenedTransactions.filter(t => t);
   }
 }
