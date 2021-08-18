@@ -101,7 +101,10 @@ const useSendSheetScreen = () => {
     depots: [depot],
   } = useAccountAssets();
 
-  const depotAssets = useMemo(() => reshapeDepotTokensToAssets(depot), [depot]);
+  const depotAssets = useMemo(
+    () => (depot ? reshapeDepotTokensToAssets(depot) : []),
+    [depot]
+  );
 
   const isDepot = !!params?.asset?.tokenAddress;
 
@@ -334,7 +337,7 @@ const useSendSheetScreen = () => {
   }, [
     accountAddress,
     amountDetails.assetAmount,
-    depot.address,
+    depot,
     network,
     recipient,
     selected.address,
