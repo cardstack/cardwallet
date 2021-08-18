@@ -7,6 +7,7 @@ interface BaseStrategyParams {
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
   merchantSafeAddress?: string;
+  depotAddress: string;
 }
 
 export abstract class BaseStrategy {
@@ -19,6 +20,7 @@ export abstract class BaseStrategy {
   accountAddress: string;
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
+  depotAddress: string;
   merchantSafeAddress?: string;
 
   constructor({
@@ -27,11 +29,13 @@ export abstract class BaseStrategy {
     nativeCurrency,
     currencyConversionRates,
     merchantSafeAddress,
+    depotAddress,
   }: BaseStrategyParams) {
     this.transaction = transaction;
     this.accountAddress = accountAddress;
     this.nativeCurrency = nativeCurrency;
     this.currencyConversionRates = currencyConversionRates;
     this.merchantSafeAddress = merchantSafeAddress;
+    this.depotAddress = depotAddress;
   }
 }

@@ -10,6 +10,9 @@ import { useGetDepotTransactionHistoryDataQuery } from '@cardstack/graphql';
 export const useDepotTransactions = (safeAddress: string) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
 
+  const depots = useRainbowSelector(state => state.data.depots);
+  const depot = depots[0];
+
   const client = getApolloClient(network);
 
   const {
@@ -46,6 +49,7 @@ export const useDepotTransactions = (safeAddress: string) => {
     transactionsCount: transactions?.length || 0,
     networkStatus,
     fetchMore,
+    depotAddress: depot.address,
   });
 
   return {

@@ -31,6 +31,7 @@ interface TransactionData {
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
   transactionStrategies?: TransactionMappingStrategy[];
+  depotAddress: string;
   merchantSafeAddress?: string;
 }
 
@@ -71,6 +72,7 @@ export class TransactionMappingContext {
                 currencyConversionRates: this.transactionData
                   .currencyConversionRates,
                 merchantSafeAddress: this.transactionData.merchantSafeAddress,
+                depotAddress: this.transactionData.depotAddress,
               });
 
               if (strategy.handlesTransaction()) {
@@ -87,6 +89,7 @@ export class TransactionMappingContext {
               nativeCurrency: this.transactionData.nativeCurrency,
               currencyConversionRates: this.transactionData
                 .currencyConversionRates,
+              depotAddress: this.transactionData.depotAddress,
             });
 
             if (tokenTransferStrategy.handlesTransaction()) {

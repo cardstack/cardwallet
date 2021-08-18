@@ -22,6 +22,7 @@ interface UseTransactionSectionsProps {
   transactionsCount: number;
   networkStatus: NetworkStatus;
   fetchMore?: (props: any) => void;
+  depotAddress: string;
   merchantSafeAddress?: string;
   transactionStrategies?: TransactionMappingStrategy[];
 }
@@ -33,6 +34,7 @@ export const useTransactionSections = ({
   networkStatus,
   fetchMore,
   merchantSafeAddress,
+  depotAddress,
   transactionStrategies,
 }: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
@@ -52,8 +54,6 @@ export const useTransactionSections = ({
       if (transactions) {
         setLoading(true);
 
-        console.log('merchantSafeAddress', merchantSafeAddress);
-
         try {
           const transactionMappingContext = new TransactionMappingContext({
             transactions: merchantSafeAddress
@@ -63,6 +63,7 @@ export const useTransactionSections = ({
             nativeCurrency,
             currencyConversionRates,
             transactionStrategies,
+            depotAddress,
             merchantSafeAddress,
           });
 
@@ -104,6 +105,7 @@ export const useTransactionSections = ({
     transactions,
     isEmpty,
     merchantSafeAddress,
+    depotAddress,
     transactionStrategies,
   ]);
 
