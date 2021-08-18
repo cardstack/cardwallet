@@ -138,10 +138,7 @@ export const addQuantityBalance = ({
   let total = BigNumber.from(0);
   let quantity = '0';
 
-  console.log({ symbol, asset_code });
-
   if (balances) {
-    console.log({ balances });
     Object.keys(balances).forEach(assetKey => {
       if (
         toLower(asset_code) === toLower(assetKey) ||

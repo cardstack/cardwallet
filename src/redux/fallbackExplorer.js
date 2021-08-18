@@ -1,15 +1,15 @@
-import {
-  convertAmountToNativeDisplay,
-  delay,
-  getConstantByNetwork,
-} from '@cardstack/cardpay-sdk';
-import { BigNumber } from '@ethersproject/bignumber';
+import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
+import {
+  reduceAssetsWithPriceChartAndBalances,
+  reduceDepotsWithPricesAndChart,
+} from '../../cardstack/src/data/helpers/fallbackExplorerHelper';
 
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
+import { ETH_ADDRESS } from '../references/addresses';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
@@ -29,7 +29,6 @@ const FALLBACK_EXPLORER_SET_HANDLERS =
 const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
   'explorer/FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER';
 
-const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
   'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
 const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
@@ -407,153 +406,6 @@ const fetchGnosisSafesAndAddCoingeckoId = async () => {
   };
 };
 
-const addPriceByCoingeckoId = (
-  coingeckoId,
-  prices,
-  formattedNativeCurrency,
-  nativeCurrency
-) => {
-  let price = {
-    changed_at: null,
-    relative_change_24h: 0,
-    value: 0,
-  };
-
-  let native = {
-    price: {
-      amount: 0,
-      display: nativeCurrency
-        ? convertAmountToNativeDisplay(0, nativeCurrency)
-        : 0,
-    },
-  };
-
-  if (prices) {
-    Object.keys(prices).forEach(assetKey => {
-      if (toLower(coingeckoId) === toLower(assetKey)) {
-        const value = prices[assetKey][`${formattedNativeCurrency}`];
-        price = {
-          changed_at: prices[assetKey].last_updated_at,
-          relative_change_24h:
-            prices[assetKey][`${formattedNativeCurrency}_24h_change`],
-          value,
-        };
-
-        if (nativeCurrency) {
-          native = {
-            price: {
-              amount: value,
-              display: convertAmountToNativeDisplay(value, nativeCurrency),
-            },
-          };
-        }
-      }
-    });
-  }
-
-  return { price, native };
-};
-
-const addChartPriceByCoingeckoId = (coingeckoId, chartData) => {
-  let chartPrices = null;
-
-  if (chartData) {
-    Object.keys(chartData).forEach(assetKey => {
-      if (toLower(coingeckoId) === toLower(assetKey)) {
-        chartPrices = chartData[coingeckoId];
-      }
-    });
-  }
-  return chartPrices;
-};
-
-const addQuantityBalance = (balances, assetCode, symbol, network) => {
-  let total = BigNumber.from(0);
-  let quantity = 0;
-
-  if (balances) {
-    Object.keys(balances).forEach(assetKey => {
-      if (
-        toLower(assetCode) === toLower(assetKey) ||
-        (isNativeToken(symbol, network) && assetKey === ETH_ADDRESS)
-      ) {
-        quantity = balances[assetKey];
-      }
-
-      total = total.add(balances[assetKey]);
-    });
-  }
-  return quantity;
-};
-
-const reduceAssetsWithPriceChartAndBalances = (
-  assets,
-  prices,
-  formattedNativeCurrency,
-  chartData,
-  balances,
-  network
-) =>
-  assets.reduce((updatedAssets, { asset }) => {
-    const { price } = addPriceByCoingeckoId(
-      asset.coingecko_id,
-      prices,
-      formattedNativeCurrency
-    );
-
-    const chartPrices = addChartPriceByCoingeckoId(
-      asset.coingecko_id,
-      chartData
-    );
-
-    const quantity = addQuantityBalance(
-      balances,
-      asset.asset_code,
-      asset.symbol,
-      network
-    );
-
-    return [
-      ...updatedAssets,
-      { asset: { ...asset, price, chartPrices }, quantity },
-    ];
-  }, []);
-
-const reduceDepotsWithPricesAndChart = (
-  depots,
-  prices,
-  formattedNativeCurrency,
-  chartData,
-  nativeCurrency
-) =>
-  depots.reduce((updatedDepots, depot) => {
-    const tokens = depot.tokens.reduce((updatedTokens, token) => {
-      const { price, native } = addPriceByCoingeckoId(
-        token.coingecko_id,
-        prices,
-        formattedNativeCurrency,
-        nativeCurrency
-      );
-
-      const chartPrices = addChartPriceByCoingeckoId(
-        token.coingecko_id,
-        chartData
-      );
-
-      return [
-        ...updatedTokens,
-        {
-          ...token,
-          price,
-          native: { ...token.native, ...native },
-          chartPrices,
-        },
-      ];
-    }, []);
-
-    return [...updatedDepots, { ...depot, tokens }];
-  }, []);
-
 export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
@@ -584,99 +436,90 @@ export const fetchAssetsBalancesAndPrices = async () => {
     return;
   }
 
-  const {
-    depots,
-    prepaidCards,
-    merchantSafes,
-  } = await fetchGnosisSafesAndAddCoingeckoId();
-
-  const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
-    if (coingecko_id) {
-      return [...ids, coingecko_id];
-    }
-
-    return ids;
-  }, []);
-
-  const prices = await fetchAssetPrices(coingeckoIds, formattedNativeCurrency);
-  const chartData = await fetchAssetCharts(
-    coingeckoIds,
-    formattedNativeCurrency
-  );
-  const balances = await fetchAssetBalances(
-    assets.map(({ asset: { asset_code, symbol } }) =>
-      isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
-    ),
-    accountAddress,
-    network
-  );
-
-  const updatedAssets = reduceAssetsWithPriceChartAndBalances(
-    assets,
-    prices,
-    formattedNativeCurrency,
-    chartData,
-    balances,
-    network
-  );
-
-  const updatedDepots = depots
-    ? reduceDepotsWithPricesAndChart(
-        depots,
-        prices,
-        formattedNativeCurrency,
-        chartData,
-        nativeCurrency
-      )
-    : [];
-
-  if (prices) {
-    Object.keys(prices).forEach(key => {
-      if (prepaidCards) {
-        for (let i = 0; i < prepaidCards.length; i++) {
-          const prepaidCard = prepaidCards[i];
-
-          for (let j = 0; j < prepaidCard.tokens.length; j++) {
-            const token = prepaidCard.tokens[j];
-
-            if (toLower(token.coingecko_id) === toLower(key)) {
-              prepaidCards[i].tokens[j].price = {
-                changed_at: prices[key].last_updated_at,
-                relative_change_24h:
-                  prices[key][`${formattedNativeCurrency}_24h_change`],
-                value: prices[key][`${formattedNativeCurrency}`],
-              };
-            } else if (token.coingecko_id === null) {
-              prepaidCards[i].tokens[j].price = {
-                changed_at: null,
-                relative_change_24h: 0,
-                value: 0,
-              };
-            }
-          }
-        }
+  try {
+    const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
+      if (coingecko_id) {
+        return [...ids, coingecko_id];
       }
+
+      return ids;
+    }, []);
+
+    const prices = await fetchAssetPrices(
+      coingeckoIds,
+      formattedNativeCurrency
+    );
+
+    const chartData = await fetchAssetCharts(
+      coingeckoIds,
+      formattedNativeCurrency
+    );
+
+    const balances = await fetchAssetBalances(
+      assets.map(({ asset: { asset_code, symbol } }) =>
+        isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
+      ),
+      accountAddress,
+      network
+    );
+
+    const {
+      depots,
+      prepaidCards,
+      merchantSafes,
+    } = await fetchGnosisSafesAndAddCoingeckoId();
+
+    const updatedAssets = reduceAssetsWithPriceChartAndBalances({
+      assets,
+      prices,
+      formattedNativeCurrency,
+      chartData,
+      balances,
+      network,
     });
+
+    const updatedDepots = depots
+      ? reduceDepotsWithPricesAndChart({
+          depots,
+          prices,
+          formattedNativeCurrency,
+          chartData,
+          nativeCurrency,
+        })
+      : [];
+
+    // Depots, prepaidCards and merchants have the same token structure
+    const updatedPrePaidCards = prepaidCards
+      ? reduceDepotsWithPricesAndChart({
+          depots: prepaidCards,
+          prices,
+          formattedNativeCurrency,
+          chartData,
+          nativeCurrency,
+        })
+      : [];
+
+    logger.log('😬 FallbackExplorer updating assets');
+
+    store.dispatch(
+      addressAssetsReceived({
+        meta: {
+          address: accountAddress,
+          currency: nativeCurrency,
+          status: 'ok',
+          network,
+        },
+        payload: {
+          assets: updatedAssets,
+          depots: updatedDepots,
+          prepaidCards: updatedPrePaidCards,
+          merchantSafes,
+        },
+      })
+    );
+  } catch (e) {
+    logger.log('😬 FallbackExplorer updating assets error', e);
   }
-
-  logger.log('😬 FallbackExplorer updating assets');
-
-  store.dispatch(
-    addressAssetsReceived({
-      meta: {
-        address: accountAddress,
-        currency: nativeCurrency,
-        status: 'ok',
-        network,
-      },
-      payload: {
-        assets: updatedAssets,
-        depots: updatedDepots,
-        merchantSafes,
-        prepaidCards,
-      },
-    })
-  );
 
   let fallbackExplorerAssetsHandle = null;
   if (isMainnet(network)) {
