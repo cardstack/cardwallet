@@ -31,7 +31,7 @@ import {
 const { RainbowRequestReview, RNReview } = NativeModules;
 
 export const SettingsExternalURLs = {
-  rainbowHomepage: 'https://cardstack.com/',
+  cardstackHomepage: 'https://cardstack.com/',
   review:
     'itms-apps://itunes.apple.com/us/app/appName/id1457119021?mt=8&action=write-review',
   twitterDeepLink: 'twitter://user?screen_name=cardstack',
@@ -118,7 +118,7 @@ export default function SettingsSection({
 
   const onPressShare = useCallback(() => {
     Share.share({
-      message: `👋️ Hey friend! You should download Card Wallet, it's my favorite wallet ${SettingsExternalURLs.rainbowHomepage}`,
+      message: `Hello, I wanted to introduce you to Card Wallet. It makes crypto payments and loyalty rewards easy. Download it today at ${SettingsExternalURLs.cardstackHomepage}`,
     });
   }, []);
 
