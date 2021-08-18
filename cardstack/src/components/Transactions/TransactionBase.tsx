@@ -20,7 +20,7 @@ export interface TransactionBaseCustomizationProps {
 interface TransactionBaseProps extends TransactionBaseCustomizationProps {
   CoinIcon: JSX.Element;
   Footer?: JSX.Element;
-  Header?: JSX.Element;
+  Header?: JSX.Element | null;
   primaryText: string;
   statusIconName: IconName;
   statusIconProps?: IconProps;

@@ -46,6 +46,7 @@ export class MerchantClaimStrategy extends BaseStrategy {
       },
       createdAt: merchantClaimTransaction.timestamp,
       transactionHash: this.transaction.id,
+      hideSafeHeader: Boolean(this.merchantSafeAddress),
       token: {
         address: merchantClaimTransaction.token.id,
         symbol: merchantClaimTransaction?.token.symbol,
