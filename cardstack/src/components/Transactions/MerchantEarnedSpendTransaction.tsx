@@ -6,7 +6,6 @@ import {
   TransactionBaseCustomizationProps,
 } from './TransactionBase';
 import { MerchantEarnedSpendTransactionType } from '@cardstack/types';
-import { SafeHeader } from '@cardstack/components';
 
 export interface MerchantEarnSpendTransactionProps
   extends TransactionBaseCustomizationProps {
@@ -21,9 +20,6 @@ export const MerchantEarnedSpendTransaction = ({
     <TransactionBase
       {...props}
       CoinIcon={<Icon name="spend" />}
-      Header={
-        <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
-      }
       primaryText={`+ ${item.spendBalanceDisplay}`}
       statusIconName="arrow-down"
       statusText="Earned"

@@ -101,6 +101,7 @@ export interface MerchantClaimType {
     name?: string | null;
     symbol?: string | null;
   };
+  hideSafeHeader?: boolean;
   type: TransactionTypes.MERCHANT_CLAIM;
 }
 
