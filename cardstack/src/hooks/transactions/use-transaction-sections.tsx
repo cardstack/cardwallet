@@ -106,6 +106,7 @@ export const useTransactionSections = ({
     isEmpty,
     merchantSafeAddress,
     transactionStrategies,
+    merchantSafeAddresses,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;
