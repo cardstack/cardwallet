@@ -9,11 +9,12 @@ export class PrepaidCardPaymentStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
     const { prepaidCardPayments } = this.transaction;
 
-    if (prepaidCardPayments?.[0]) {
-      return true;
-    }
-
-    return false;
+    return Boolean(
+      prepaidCardPayments?.[0] &&
+        this.prepaidCardAddresses.includes(
+          prepaidCardPayments[0].prepaidCard.id
+        )
+    );
   }
 
   async mapTransaction(): Promise<PrepaidCardPaymentTransactionType | null> {

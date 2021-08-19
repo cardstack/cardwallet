@@ -2,25 +2,25 @@ import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
+import { MerchantEarnedSpendAndRevenueTransactionType } from '../../types/transaction-types';
 import { BaseStrategy } from '../base-strategy';
-import {
-  MerchantEarnedRevenueTransactionType,
-  TransactionTypes,
-} from '@cardstack/types';
 import { getNativeBalance } from '@cardstack/services';
+import { TransactionTypes } from '@cardstack/types';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
-export class MerchantEarnedRevenueStrategy extends BaseStrategy {
+export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
     const { prepaidCardPayments } = this.transaction;
 
     return Boolean(
       prepaidCardPayments?.[0] &&
-        this.merchantSafeAddress &&
-        prepaidCardPayments[0].merchantSafe?.id === this.merchantSafeAddress
+        this.merchantSafeAddresses.includes(
+          prepaidCardPayments[0].merchantSafe?.id || ''
+        )
     );
   }
 
-  async mapTransaction(): Promise<MerchantEarnedRevenueTransactionType | null> {
+  async mapTransaction(): Promise<MerchantEarnedSpendAndRevenueTransactionType | null> {
     const prepaidCardPaymentTransaction = this.transaction
       .prepaidCardPayments?.[0];
 
@@ -38,7 +38,15 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       currencyConversionRates: this.currencyConversionRates,
     });
 
+    const spendDisplay = convertSpendForBalanceDisplay(
+      prepaidCardPaymentTransaction.spendAmount,
+      this.nativeCurrency,
+      this.currencyConversionRates,
+      true
+    );
+
     return {
+      address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
       balance: convertRawAmountToBalance(amount, {
         decimals: 18,
         symbol,
@@ -50,14 +58,19 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
           this.nativeCurrency
         ),
       },
-      address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
       token: {
         address: prepaidCardPaymentTransaction.issuingToken.id,
         symbol: prepaidCardPaymentTransaction.issuingToken.symbol,
         name: prepaidCardPaymentTransaction.issuingToken.name,
       },
-      timestamp: prepaidCardPaymentTransaction.timestamp,
-      type: TransactionTypes.MERCHANT_EARNED_REVENUE,
+      /* 
+          we want the earned revenue transaction to show after the prepaid card payment, but since they're the same transaction they have the same timestamp
+          so add one ms to make sure it's sorted to come after the payment
+      */
+      timestamp: Number(prepaidCardPaymentTransaction.timestamp) + 1,
+      type: TransactionTypes.MERCHANT_EARNED_SPEND_AND_REVENUE,
+      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
+      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
       transactionHash: this.transaction.id,
     };
   }
