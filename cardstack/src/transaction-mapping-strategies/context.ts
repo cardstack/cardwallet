@@ -86,6 +86,7 @@ export class TransactionMappingContext {
             nativeCurrency: this.transactionData.nativeCurrency,
             currencyConversionRates: this.transactionData
               .currencyConversionRates,
+            depotAddress: this.transactionData.depotAddress,
             merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
             prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
             merchantSafeAddress: this.transactionData.merchantSafeAddress,
@@ -104,22 +105,9 @@ export class TransactionMappingContext {
                   mappedTransaction?.type || ''
                 ];
 
-<<<<<<< HEAD
-            for (let i = 0; i < transactionStrategies.length; i++) {
-              const strategy = new transactionStrategies[i]({
-                transaction,
-                accountAddress: this.transactionData.accountAddress,
-                nativeCurrency: this.transactionData.nativeCurrency,
-                currencyConversionRates: this.transactionData
-                  .currencyConversionRates,
-                merchantSafeAddress: this.transactionData.merchantSafeAddress,
-                depotAddress: this.transactionData.depotAddress,
-              });
-=======
               // a single transaction may be handled by multiple strategies
               if (additionalHandlers) {
                 let allMappedTransactions = [mappedTransaction];
->>>>>>> develop
 
                 for (let j = 0; j < additionalHandlers.length; j++) {
                   const additionalStrategy = new additionalHandlers[j](
@@ -139,39 +127,17 @@ export class TransactionMappingContext {
                 return allMappedTransactions;
               }
 
-<<<<<<< HEAD
+              return mappedTransaction;
+            }
+
             // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
-            const tokenTransferStrategy = new ERC20TokenStrategy({
-              transaction,
-              accountAddress: this.transactionData.accountAddress,
-              nativeCurrency: this.transactionData.nativeCurrency,
-              currencyConversionRates: this.transactionData
-                .currencyConversionRates,
-              depotAddress: this.transactionData.depotAddress,
-            });
+            const tokenTransferStrategy = new ERC20TokenStrategy(strategyParam);
 
             if (tokenTransferStrategy.handlesTransaction()) {
               const mappedTransaction = await tokenTransferStrategy.mapTransaction();
-=======
->>>>>>> develop
+
               return mappedTransaction;
             }
-          }
-
-          // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
-          const tokenTransferStrategy = new ERC20TokenStrategy({
-            transaction,
-            accountAddress: this.transactionData.accountAddress,
-            nativeCurrency: this.transactionData.nativeCurrency,
-            merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
-            prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
-            currencyConversionRates: this.transactionData
-              .currencyConversionRates,
-          });
-
-          if (tokenTransferStrategy.handlesTransaction()) {
-            const mappedTransaction = await tokenTransferStrategy.mapTransaction();
-            return mappedTransaction;
           }
 
           logger.sentry('Unable to map transaction:', transaction);

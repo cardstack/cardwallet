@@ -38,6 +38,8 @@ export class PrepaidCardCreationStrategy extends BaseStrategy {
 
     let price = 0;
 
+    console.log('here');
+
     if (prepaidCardCreationTransaction.issuingToken.symbol) {
       price = await fetchHistoricalPrice(
         prepaidCardCreationTransaction.issuingToken.symbol || '',
@@ -45,6 +47,8 @@ export class PrepaidCardCreationStrategy extends BaseStrategy {
         this.nativeCurrency
       );
     }
+
+    console.log('price', price);
 
     return {
       address: prepaidCardCreationTransaction.prepaidCard.id,
