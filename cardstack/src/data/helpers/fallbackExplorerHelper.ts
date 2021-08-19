@@ -5,12 +5,13 @@
 import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { toLower } from 'lodash';
-import { isNativeToken } from '../../utils';
+import { isNativeToken } from '../../utils/cardpay-utils';
 import { ETH_ADDRESS } from '../../../../src/references/addresses';
 import { Network } from '../../../../src/helpers/networkTypes';
 import {
   AssetType,
   AssetWithNativeType,
+  DepotType,
   PrepaidCardType,
   TokenType,
 } from '@cardstack/types';
@@ -57,11 +58,15 @@ interface TokenWithRBData extends TokenType {
   chartPrices: ChartData;
 }
 
-interface DepotsPrepaidToken extends Omit<PrepaidCardType, 'tokens'> {
-  tokens: TokenWithRBData[];
-}
+type DepotOrPrepaid =
+  | Omit<PrepaidCardType, 'tokens'>
+  | Omit<DepotType, 'tokens'>;
 
-interface ReduceDepotsParams extends ReduceWithPriceChartBaseParams {
+type DepotsPrepaidToken = DepotOrPrepaid & {
+  tokens: TokenWithRBData[];
+};
+
+export interface ReduceDepotsParams extends ReduceWithPriceChartBaseParams {
   depots: DepotsPrepaidToken[];
   nativeCurrency?: string;
 }
@@ -163,7 +168,7 @@ export const reduceAssetsWithPriceChartAndBalances = ({
   network,
 }: ReduceAssetsParams) =>
   assets.reduce((updatedAssets, { asset }) => {
-    const coingeckoId = asset.coingecko_id;
+    const coingeckoId = asset.coingecko_id || '';
 
     const { price } = addPriceByCoingeckoId({
       coingeckoId,

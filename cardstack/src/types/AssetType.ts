@@ -5,9 +5,9 @@ export interface BalanceType {
 
 export interface AssetType {
   asset_code?: string;
-  address: string;
-  balance: BalanceType;
-  coingecko_id: string;
+  address?: string;
+  balance?: BalanceType;
+  coingecko_id: string | null;
   decimals: number;
   icon_url: string;
   name: string;
@@ -17,8 +17,8 @@ export interface AssetType {
     value: number;
   };
   symbol: string;
-  type: string;
-  uniqueId: string;
+  type?: string;
+  uniqueId?: string;
 }
 
 export interface AssetWithNativeType extends AssetType {
