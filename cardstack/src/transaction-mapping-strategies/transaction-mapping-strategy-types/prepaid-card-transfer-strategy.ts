@@ -3,7 +3,10 @@ import {
   PrepaidCardTransferTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import {
+  convertSpendForBalanceDisplay,
+  fetchCardCustomizationFromDID,
+} from '@cardstack/utils';
 
 export class PrepaidCardTransferStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -24,6 +27,16 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       return null;
     }
 
+    let cardCustomization;
+
+    if (prepaidCardTransferTransaction.prepaidCard.customizationDID) {
+      try {
+        cardCustomization = await fetchCardCustomizationFromDID(
+          prepaidCardTransferTransaction.prepaidCard.customizationDID
+        );
+      } catch (error) {}
+    }
+
     const spendAmount = prepaidCardTransferTransaction.prepaidCard.spendBalance;
 
     const spendDisplay = convertSpendForBalanceDisplay(
@@ -35,6 +48,7 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
 
     return {
       address: prepaidCardTransferTransaction.prepaidCard.id,
+      cardCustomization,
       timestamp: prepaidCardTransferTransaction.timestamp,
       spendAmount,
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,

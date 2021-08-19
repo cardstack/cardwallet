@@ -21,7 +21,12 @@ export const PrepaidCardSplitTransaction = ({
     <TransactionBase
       {...props}
       CoinIcon={<Icon name="spend" />}
-      Header={<PrepaidCardTransactionHeader address={item.address} />}
+      Header={
+        <PrepaidCardTransactionHeader
+          address={item.address}
+          cardCustomization={item.cardCustomization}
+        />
+      }
       statusIconName="split"
       statusText="Split"
       primaryText={item.spendBalanceDisplay}

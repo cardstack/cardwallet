@@ -4379,7 +4379,7 @@ export type PrepaidCardCreationFragment = (
     & Pick<Account, 'id'>
   ), prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id'>
+    & Pick<PrepaidCard, 'id' | 'customizationDID'>
   ) }
 );
 
@@ -4391,7 +4391,7 @@ export type PrepaidCardPaymentFragment = (
     & Pick<Token, 'id' | 'symbol' | 'name'>
   ), prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id'>
+    & Pick<PrepaidCard, 'id' | 'customizationDID'>
   ), merchantSafe?: Maybe<(
     { __typename?: 'MerchantSafe' }
     & Pick<MerchantSafe, 'id'>
@@ -4445,7 +4445,7 @@ export type PrepaidCardSplitFragment = (
   & Pick<PrepaidCardSplit, 'id' | 'timestamp' | 'faceValues' | 'issuingTokenAmounts'>
   & { prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id'>
+    & Pick<PrepaidCard, 'id' | 'customizationDID'>
   ) }
 );
 
@@ -4454,7 +4454,7 @@ export type PrepaidCardTransferFragment = (
   & Pick<PrepaidCardTransfer, 'id' | 'timestamp'>
   & { prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id' | 'spendBalance'>
+    & Pick<PrepaidCard, 'id' | 'customizationDID' | 'spendBalance'>
   ), from: (
     { __typename?: 'Account' }
     & Pick<Account, 'id'>
@@ -4693,6 +4693,7 @@ export const PrepaidCardPaymentFragmentDoc = gql`
   }
   prepaidCard {
     id
+    customizationDID
   }
   merchantSafe {
     id
@@ -4772,6 +4773,7 @@ export const PrepaidCardCreationFragmentDoc = gql`
   }
   prepaidCard {
     id
+    customizationDID
   }
 }
     `;
@@ -4781,6 +4783,7 @@ export const PrepaidCardTransferFragmentDoc = gql`
   timestamp
   prepaidCard {
     id
+    customizationDID
     spendBalance
   }
   from {
@@ -4797,6 +4800,7 @@ export const PrepaidCardSplitFragmentDoc = gql`
   timestamp
   prepaidCard {
     id
+    customizationDID
   }
   faceValues
   issuingTokenAmounts
