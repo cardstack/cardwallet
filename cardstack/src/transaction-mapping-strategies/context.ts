@@ -108,17 +108,20 @@ export class TransactionMappingContext {
                 let allMappedTransactions = [mappedTransaction];
 
                 for (let j = 0; j < additionalHandlers.length; j++) {
-                  const additionalStrategy = new additionalHandlers[j](
-                    strategyParam
-                  );
+                  // only want to add the additional handler if the passed strategies includes it
+                  if (transactionStrategies.includes(additionalHandlers[j])) {
+                    const additionalStrategy = new additionalHandlers[j](
+                      strategyParam
+                    );
 
-                  if (additionalStrategy.handlesTransaction()) {
-                    const additionalMappedTransaction = await additionalStrategy.mapTransaction();
+                    if (additionalStrategy.handlesTransaction()) {
+                      const additionalMappedTransaction = await additionalStrategy.mapTransaction();
 
-                    allMappedTransactions = [
-                      ...allMappedTransactions,
-                      additionalMappedTransaction,
-                    ];
+                      allMappedTransactions = [
+                        ...allMappedTransactions,
+                        additionalMappedTransaction,
+                      ];
+                    }
                   }
                 }
 

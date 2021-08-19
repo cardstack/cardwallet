@@ -3,6 +3,10 @@ import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import logger from 'logger';
 import { useGetPrepaidCardHistoryDataQuery } from '@cardstack/graphql';
+import { PrepaidCardCreationStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-creation-strategy';
+import { PrepaidCardPaymentStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-payment-strategy';
+import { PrepaidCardSplitStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-split-strategy';
+import { PrepaidCardTransferStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-transfer-strategy';
 
 export const usePrepaidCardTransactions = (prepaidCardAddress: string) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
@@ -42,6 +46,12 @@ export const usePrepaidCardTransactions = (prepaidCardAddress: string) => {
     transactionsCount: transactions?.length || 0,
     networkStatus,
     fetchMore,
+    transactionStrategies: [
+      PrepaidCardSplitStrategy,
+      PrepaidCardCreationStrategy,
+      PrepaidCardPaymentStrategy,
+      PrepaidCardTransferStrategy,
+    ],
   });
 
   return {
