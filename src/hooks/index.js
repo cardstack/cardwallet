@@ -45,6 +45,7 @@ export { default as useLoadAccountData } from './useLoadAccountData';
 export { default as useLoadCoingeckoCoins } from './useLoadCoingeckoCoins';
 export { default as useLoadGlobalData } from './useLoadGlobalData';
 export { default as useMagicAutofocus } from './useMagicAutofocus';
+export { default as useManageCloudBackups } from './useManageCloudBackups';
 export { default as useMaxInputBalance } from './useMaxInputBalance';
 export { default as useMulticall } from './useMulticall';
 export { default as useOpenSavings } from './useOpenSavings';

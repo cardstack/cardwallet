@@ -1,11 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useMemo } from 'react';
-import { Alert } from 'react-native';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-
-import { deleteAllBackups } from '../../../handlers/cloudBackup';
-import { walletsUpdate } from '../../../redux/wallets';
 import { cloudPlatform } from '../../../utils/platform';
 import { DelayedAlert } from '../../alerts';
 import { ButtonPressAnimation } from '../../animations';
@@ -22,13 +17,13 @@ import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useDimensions,
+  useManageCloudBackups,
   useWalletCloudBackup,
   useWallets,
 } from '@rainbow-me/hooks';
 import { Navigation, useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const WalletBackupStatus = {
   CLOUD_BACKUP: 0,
@@ -52,7 +47,7 @@ const onError = error => DelayedAlert({ title: error }, 500);
 export default function AlreadyBackedUpView() {
   const { navigate } = useNavigation();
   const { params } = useRoute();
-  const dispatch = useDispatch();
+  const { manageCloudBackups } = useManageCloudBackups();
   const { wallets, selectedWallet } = useWallets();
   const { isSmallPhone } = useDimensions();
   const walletCloudBackup = useWalletCloudBackup();
@@ -94,50 +89,6 @@ export default function AlreadyBackedUpView() {
       }
     );
   }, [walletId]);
-
-  const manageCloudBackups = useCallback(() => {
-    const buttons = [`Delete All ${cloudPlatform} Backups`, 'Cancel'];
-
-    showActionSheetWithOptions(
-      {
-        cancelButtonIndex: 1,
-        destructiveButtonIndex: 0,
-        options: buttons,
-        title: `Manage ${cloudPlatform} Backups`,
-      },
-      buttonIndex => {
-        if (buttonIndex === 0) {
-          // Delete account with confirmation
-          showActionSheetWithOptions(
-            {
-              cancelButtonIndex: 1,
-              destructiveButtonIndex: 0,
-              message: `Are you sure you want to delete your ${cloudPlatform} account backups?`,
-              options: [`Confirm and Delete Backups`, 'Cancel'],
-            },
-            async buttonIndex => {
-              if (buttonIndex === 0) {
-                const newWallets = { ...wallets };
-                Object.keys(newWallets).forEach(key => {
-                  newWallets[key].backedUp = undefined;
-                  newWallets[key].backupDate = undefined;
-                  newWallets[key].backupFile = undefined;
-                  newWallets[key].backupType = undefined;
-                });
-
-                await dispatch(walletsUpdate(newWallets));
-
-                // Delete all backups (debugging)
-                await deleteAllBackups();
-
-                Alert.alert('Backups deleted succesfully');
-              }
-            }
-          );
-        }
-      }
-    );
-  }, [dispatch, wallets]);
 
   const handleIcloudBackup = useCallback(() => {
     if (

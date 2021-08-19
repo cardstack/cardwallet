@@ -15,7 +15,12 @@ import Routes from '@rainbow-me/routes';
 export default function RestoreSheet() {
   const { goBack, navigate, setParams } = useNavigation();
   const {
-    params: { step = WalletBackupStepTypes.first, userData } = {},
+    params: {
+      step = WalletBackupStepTypes.first,
+      userData,
+      backupSelected,
+      fromSettings,
+    } = {},
   } = useRoute();
 
   const onCloudRestore = useCallback(async () => {
@@ -52,7 +57,11 @@ export default function RestoreSheet() {
     <Sheet isFullScreen={isCloudStep} scrollEnabled={isCloudStep}>
       <StatusBar barStyle="light-content" />
       {isCloudStep ? (
-        <RestoreCloudStep userData={userData} />
+        <RestoreCloudStep
+          backupSelected={backupSelected}
+          fromSettings={fromSettings}
+          userData={userData}
+        />
       ) : (
         <RestoreSheetFirstStep
           enableCloudRestore={enableCloudRestore}
