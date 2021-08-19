@@ -57,7 +57,7 @@ import {
   useUpdateAssetOnchainBalance,
   useWallets,
 } from '@rainbow-me/hooks';
-import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
+import { ETH_ADDRESS_SYMBOL } from '@rainbow-me/references/addresses';
 import Routes from '@rainbow-me/routes';
 import { borders } from '@rainbow-me/styles';
 import { deviceUtils, gasUtils } from '@rainbow-me/utils';
@@ -359,7 +359,7 @@ const useSendSheetScreen = () => {
     let submitSuccess = false;
     let updatedGasLimit = null;
     // Attempt to update gas limit before sending ERC20 / ERC721
-    if (selected?.address !== ETH_ADDRESS && !isDepot) {
+    if (selected?.address !== ETH_ADDRESS_SYMBOL && !isDepot) {
       try {
         // Estimate the tx with gas limit padding before sending
         updatedGasLimit = await estimateGasLimit(

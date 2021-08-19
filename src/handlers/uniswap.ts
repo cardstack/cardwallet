@@ -32,7 +32,7 @@ import {
 import { uniswapClient } from '../apollo/client';
 import { UNISWAP_ALL_TOKENS } from '../apollo/queries';
 import { loadWallet } from '../model/wallet';
-import { ETH_ADDRESS } from '../references/addresses';
+import { ETH_ADDRESS_SYMBOL } from '../references/addresses';
 import { toHex, web3Provider } from './web3';
 import {
   Asset,
@@ -182,17 +182,17 @@ const getSwapType = (
   isExactIn: boolean
 ): SwapType => {
   if (isExactIn) {
-    if (tokens[Field.INPUT].address === ETH_ADDRESS) {
+    if (tokens[Field.INPUT].address === ETH_ADDRESS_SYMBOL) {
       return SwapType.EXACT_ETH_FOR_TOKENS;
-    } else if (tokens[Field.OUTPUT].address === ETH_ADDRESS) {
+    } else if (tokens[Field.OUTPUT].address === ETH_ADDRESS_SYMBOL) {
       return SwapType.EXACT_TOKENS_FOR_ETH;
     } else {
       return SwapType.EXACT_TOKENS_FOR_TOKENS;
     }
   } else {
-    if (tokens[Field.INPUT].address === ETH_ADDRESS) {
+    if (tokens[Field.INPUT].address === ETH_ADDRESS_SYMBOL) {
       return SwapType.ETH_FOR_EXACT_TOKENS;
-    } else if (tokens[Field.OUTPUT].address === ETH_ADDRESS) {
+    } else if (tokens[Field.OUTPUT].address === ETH_ADDRESS_SYMBOL) {
       return SwapType.TOKENS_FOR_EXACT_ETH;
     } else {
       return SwapType.TOKENS_FOR_EXACT_TOKENS;
@@ -408,7 +408,10 @@ export const executeSwap = async ({
   return exchange[methodName](...updatedMethodArgs, transactionParams);
 };
 
-const excluded = filter(keys(CURATED_UNISWAP_TOKENS), x => x !== ETH_ADDRESS);
+const excluded = filter(
+  keys(CURATED_UNISWAP_TOKENS),
+  x => x !== ETH_ADDRESS_SYMBOL
+);
 
 export const getAllTokens = async (): Promise<
   Record<string, UniswapSubgraphAsset>
