@@ -21,7 +21,12 @@ export const PrepaidCardCreatedTransaction = ({
     <TransactionBase
       {...props}
       CoinIcon={<Icon name="spend" />}
-      Header={<PrepaidCardTransactionHeader address={item.address} />}
+      Header={
+        <PrepaidCardTransactionHeader
+          address={item.address}
+          cardCustomization={item.cardCustomization}
+        />
+      }
       statusIconName="arrow-down"
       statusText="Loaded"
       primaryText={`+ ${item.spendBalanceDisplay}`}

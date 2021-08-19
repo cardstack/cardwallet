@@ -3,7 +3,10 @@ import {
   PrepaidCardSplitTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import {
+  convertSpendForBalanceDisplay,
+  fetchCardCustomizationFromDID,
+} from '@cardstack/utils';
 
 export class PrepaidCardSplitStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -16,11 +19,21 @@ export class PrepaidCardSplitStrategy extends BaseStrategy {
     return false;
   }
 
-  mapTransaction(): PrepaidCardSplitTransactionType | null {
+  async mapTransaction(): Promise<PrepaidCardSplitTransactionType | null> {
     const prepaidCardSplitTransaction = this.transaction.prepaidCardSplits?.[0];
 
     if (!prepaidCardSplitTransaction) {
       return null;
+    }
+
+    let cardCustomization;
+
+    if (prepaidCardSplitTransaction.prepaidCard.customizationDID) {
+      try {
+        cardCustomization = await fetchCardCustomizationFromDID(
+          prepaidCardSplitTransaction.prepaidCard.customizationDID
+        );
+      } catch (error) {}
     }
 
     const spendAmount = prepaidCardSplitTransaction.faceValues[0] || 0;
@@ -34,6 +47,7 @@ export class PrepaidCardSplitStrategy extends BaseStrategy {
 
     return {
       address: prepaidCardSplitTransaction.prepaidCard.id,
+      cardCustomization,
       timestamp: prepaidCardSplitTransaction.timestamp,
       spendAmount,
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,

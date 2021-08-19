@@ -53,6 +53,7 @@ export interface PrepaidCardCustomization {
 
 export interface PrepaidCardCreatedTransactionType {
   address: string;
+  cardCustomization?: PrepaidCardCustomization;
   createdAt: number;
   createdFromAddress: string;
   spendAmount: number;
@@ -158,6 +159,7 @@ export interface MerchantEarnedSpendAndRevenueTransactionType {
 
 export interface PrepaidCardSplitTransactionType {
   address: string;
+  cardCustomization?: PrepaidCardCustomization;
   timestamp: number;
   spendAmount: string;
   spendBalanceDisplay: string;
@@ -168,6 +170,7 @@ export interface PrepaidCardSplitTransactionType {
 
 export interface PrepaidCardTransferTransactionType {
   address: string;
+  cardCustomization?: PrepaidCardCustomization;
   timestamp: number;
   spendAmount: string;
   spendBalanceDisplay: string;

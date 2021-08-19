@@ -7,7 +7,10 @@ import {
   PrepaidCardCreatedTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import {
+  convertSpendForBalanceDisplay,
+  fetchCardCustomizationFromDID,
+} from '@cardstack/utils';
 import { fetchHistoricalPrice } from '@cardstack/services';
 
 export class PrepaidCardCreationStrategy extends BaseStrategy {
@@ -36,6 +39,16 @@ export class PrepaidCardCreationStrategy extends BaseStrategy {
       true
     );
 
+    let cardCustomization;
+
+    if (prepaidCardCreationTransaction.prepaidCard.customizationDID) {
+      try {
+        cardCustomization = await fetchCardCustomizationFromDID(
+          prepaidCardCreationTransaction.prepaidCard.customizationDID
+        );
+      } catch (error) {}
+    }
+
     let price = 0;
 
     if (prepaidCardCreationTransaction.issuingToken.symbol) {
@@ -48,6 +61,7 @@ export class PrepaidCardCreationStrategy extends BaseStrategy {
 
     return {
       address: prepaidCardCreationTransaction.prepaidCard.id,
+      cardCustomization,
       createdAt: prepaidCardCreationTransaction.createdAt,
       createdFromAddress: prepaidCardCreationTransaction.createdFromAddress,
       spendAmount: prepaidCardCreationTransaction.spendAmount,
