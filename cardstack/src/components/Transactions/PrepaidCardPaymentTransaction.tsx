@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { CustomizableBackground } from '../PrepaidCard/CustomizableBackground';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
@@ -21,7 +22,12 @@ export const PrepaidCardPaymentTransaction = ({
     <TransactionBase
       {...props}
       CoinIcon={<Icon name="spend" />}
-      Header={<PrepaidCardTransactionHeader address={item.address} />}
+      Header={
+        <CustomizableBackground
+          cardCustomization={item.cardCustomization}
+          address={item.address}
+        />
+      }
       statusIconName="arrow-up"
       statusText="Paid"
       primaryText={`- ${item.spendBalanceDisplay}`}

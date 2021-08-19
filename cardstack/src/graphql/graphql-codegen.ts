@@ -4391,7 +4391,7 @@ export type PrepaidCardPaymentFragment = (
     & Pick<Token, 'id' | 'symbol' | 'name'>
   ), prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id'>
+    & Pick<PrepaidCard, 'id' | 'customizationDID'>
   ), merchantSafe?: Maybe<(
     { __typename?: 'MerchantSafe' }
     & Pick<MerchantSafe, 'id'>
@@ -4693,6 +4693,7 @@ export const PrepaidCardPaymentFragmentDoc = gql`
   }
   prepaidCard {
     id
+    customizationDID
   }
   merchantSafe {
     id

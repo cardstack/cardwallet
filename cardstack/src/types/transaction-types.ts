@@ -108,6 +108,7 @@ export interface MerchantClaimType {
 
 export interface PrepaidCardPaymentTransactionType {
   address: string;
+  cardCustomization?: PrepaidCardCustomization;
   timestamp: number;
   spendAmount: string;
   spendBalanceDisplay: string;

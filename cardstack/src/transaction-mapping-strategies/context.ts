@@ -147,7 +147,7 @@ export class TransactionMappingContext {
 
           logger.sentry('Unable to map transaction:', transaction);
         } catch (error) {
-          logger.sentry('Error mapping transaction:', transaction);
+          logger.sentry('Error mapping transaction:', error, transaction);
         }
 
         return null;
