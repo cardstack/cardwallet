@@ -1,51 +1,23 @@
 import React, { useCallback, useState } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image } from 'react-native';
+
 import logo from '../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardCustomization, PrepaidCardType } from '../../types';
 import { CenteredContainer, ContainerProps } from '../Container';
 import { Touchable } from '../Touchable';
 import { CustomizableBackground } from './CustomizableBackground';
-import {
-  Container,
-  Icon,
-  ScrollView,
-  Text,
-  TextProps,
-} from '@cardstack/components';
-import { ColorTypes } from '@cardstack/theme';
-import {
-  convertSpendForBalanceDisplay,
-  getAddressPreview,
-} from '@cardstack/utils';
+import Routes from '@rainbow-me/routes';
+import { useNavigation } from '@rainbow-me/navigation';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
-
-const styles = StyleSheet.create({
-  TextOverGrad: {
-    textShadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    textShadowRadius: 0,
-  },
-});
-
-const TextOverGrad = (props: TextProps & { shadowColor?: string }) => (
-  <Text
-    {...props}
-    style={[
-      styles.TextOverGrad,
-      props.shadowColor ? { textShadowColor: props.shadowColor } : null,
-      props.style,
-    ]}
-  >
-    {props.children}
-  </Text>
-);
+import {
+  convertSpendForBalanceDisplay,
+  getAddressPreview,
+} from '@cardstack/utils';
+import { ColorTypes } from '@cardstack/theme';
+import { Container, Icon, ScrollView, Text } from '@cardstack/components';
 
 export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
   networkName: string;
@@ -208,22 +180,26 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <TextOverGrad
+        <Text
+          variant="overGradient"
           size="xxs"
           color={cardCustomization?.textColor as ColorTypes}
-          shadowColor={cardCustomization?.patternColor}
+          style={{ textShadowColor: cardCustomization?.patternColor }}
+          textShadowColor={cardCustomization?.patternColor as ColorTypes}
         >
           Issued by
-        </TextOverGrad>
-        <TextOverGrad
+        </Text>
+        <Text
+          variant="overGradient"
           fontSize={11}
           weight="bold"
           letterSpacing={0.55}
           color={cardCustomization?.textColor as ColorTypes}
-          shadowColor={cardCustomization?.patternColor}
+          style={{ textShadowColor: cardCustomization?.patternColor }}
+          textShadowColor={cardCustomization?.patternColor as ColorTypes}
         >
           PREPAID CARD
-        </TextOverGrad>
+        </Text>
       </Container>
       <Container
         flexDirection="row"
@@ -231,15 +207,16 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         alignItems="flex-start"
       >
         <Container maxWidth={175}>
-          <TextOverGrad
+          <Text
+            variant="overGradient"
             size="xs"
             weight="extraBold"
             color={cardCustomization?.textColor as ColorTypes}
-            shadowColor={cardCustomization?.patternColor}
+            textShadowColor={cardCustomization?.patternColor as ColorTypes}
             numberOfLines={1}
           >
             {cardCustomization?.issuerName || 'Unknown'}
-          </TextOverGrad>
+          </Text>
         </Container>
         <Container flexDirection="column" paddingTop={3}>
           <Touchable
@@ -251,20 +228,22 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
             }}
             onPress={onPress}
           >
-            <TextOverGrad
-              variant="shadowRoboto"
+            <Text
+              variant="overGradient"
+              fontFamily="RobotoMono-Regular"
+              fontSize={18}
               color={cardCustomization?.textColor as ColorTypes}
-              shadowColor={cardCustomization?.patternColor}
+              textShadowColor={cardCustomization?.patternColor as ColorTypes}
             >
               {getAddressPreview(address)}
-            </TextOverGrad>
+            </Text>
           </Touchable>
-          <TextOverGrad
+          <Text
             fontSize={11}
             color={cardCustomization?.textColor as ColorTypes}
-            shadowColor={cardCustomization?.patternColor}
+            textShadowColor={cardCustomization?.patternColor as ColorTypes}
             textAlign="right"
-          >{`ON ${networkName.toUpperCase()}`}</TextOverGrad>
+          >{`ON ${networkName.toUpperCase()}`}</Text>
         </Container>
       </Container>
     </Container>

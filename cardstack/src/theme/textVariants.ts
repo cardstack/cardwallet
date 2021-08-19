@@ -39,4 +39,12 @@ export const textVariants = {
     fontWeight: '600',
     fontFamily: 'Karbon',
   },
+  overGradient: {
+    textShadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    textShadowColor: 'white',
+    textShadowRadius: 0,
+  },
 };

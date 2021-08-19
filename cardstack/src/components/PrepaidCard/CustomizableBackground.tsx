@@ -12,18 +12,21 @@ import { PrepaidCardCustomization } from '@cardstack/types';
 import { parseLinearGradient } from '@cardstack/utils';
 import { useDimensions } from '@rainbow-me/hooks';
 
+const SMALL_PREPAID_CARD_GRADIENT_HEIGHT = 40;
 const PREPAID_GRADIENT_HEIGHT = 110;
 
 interface CardGradientProps {
   cardCustomization?: PrepaidCardCustomization;
   isEditing?: boolean;
   address: string;
+  small?: boolean;
 }
 
 export const CustomizableBackground = ({
   cardCustomization,
   isEditing,
   address,
+  small,
 }: CardGradientProps) => {
   const { width } = useDimensions();
 
@@ -37,10 +40,16 @@ export const CustomizableBackground = ({
     cardCustomization
   );
 
+  const WIDTH = small ? '115%' : '100%';
+
+  const HEIGHT = small
+    ? SMALL_PREPAID_CARD_GRADIENT_HEIGHT
+    : PREPAID_GRADIENT_HEIGHT;
+
   return (
     <SVG
-      width="100%"
-      height={PREPAID_GRADIENT_HEIGHT}
+      width={WIDTH}
+      height={HEIGHT}
       style={{ position: 'absolute' }}
       key={`svg_${address}_${isEditing}`}
     >
@@ -50,11 +59,9 @@ export const CustomizableBackground = ({
             id="linearGradient"
             x1="0"
             y1="0"
-            x2="100%"
+            x2={WIDTH}
             y2="0"
-            gradientTransform={`rotate(${angle}, ${width / 2}, ${
-              PREPAID_GRADIENT_HEIGHT / 2
-            })`}
+            gradientTransform={`rotate(${angle}, ${width / 2}, ${HEIGHT / 2})`}
           >
             <Stop {...stop1} />
             <Stop {...stop2} />
@@ -63,8 +70,8 @@ export const CustomizableBackground = ({
       )}
       <Rect
         id="Gradient"
-        width="100%"
-        height={PREPAID_GRADIENT_HEIGHT}
+        width={WIDTH}
+        height={HEIGHT}
         fill={
           hasLinearGradient
             ? 'url(#linearGradient)'

@@ -1,12 +1,16 @@
 import React from 'react';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { CustomizableBackground } from '../PrepaidCard/CustomizableBackground';
 import { Container, NetworkBadge, Text } from '@cardstack/components';
+import { PrepaidCardCustomization } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
+import { ColorTypes } from '@cardstack/theme';
 
 export const PrepaidCardTransactionHeader = ({
   address,
+  cardCustomization,
 }: {
   address: string;
+  cardCustomization?: PrepaidCardCustomization;
 }) => (
   <Container
     height={40}
@@ -16,35 +20,29 @@ export const PrepaidCardTransactionHeader = ({
     width="100%"
     alignItems="center"
   >
-    <SVG />
+    <CustomizableBackground
+      cardCustomization={cardCustomization}
+      address={address}
+      small
+    />
     <Container flexDirection="row" alignItems="center">
       <NetworkBadge marginRight={2} />
-      <Text variant="shadowRoboto" size="xs">
+      <Text
+        size="xs"
+        variant="overGradient"
+        fontFamily="RobotoMono-Regular"
+        color={cardCustomization?.textColor as ColorTypes}
+        textShadowColor={cardCustomization?.patternColor as ColorTypes}
+      >
         {getAddressPreview(address)}
       </Text>
     </Container>
-    <Text weight="extraBold" size="small">
+    <Text
+      weight="extraBold"
+      size="small"
+      color={cardCustomization?.textColor as ColorTypes}
+    >
       PREPAID CARD
     </Text>
   </Container>
 );
-
-const SVG = () => {
-  return (
-    <Svg height="40" width="115%" style={{ position: 'absolute' }}>
-      <Defs>
-        <LinearGradient
-          id="grad"
-          x1={0.168}
-          x2={1.072}
-          y2={1.05}
-          gradientUnits="objectBoundingBox"
-        >
-          <Stop offset={0} stopColor="#00ebe5" />
-          <Stop offset={1} stopColor="#c3fc33" />
-        </LinearGradient>
-      </Defs>
-      <Rect id="Gradient" width="115%" height="40" fill="url(#grad)" />
-    </Svg>
-  );
-};
