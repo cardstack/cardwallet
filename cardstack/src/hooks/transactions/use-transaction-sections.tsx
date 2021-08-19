@@ -64,7 +64,7 @@ export const useTransactionSections = ({
             nativeCurrency,
             currencyConversionRates,
             transactionStrategies,
-            depotAddress: depot.address,
+            depotAddress: depot?.address,
             merchantSafeAddress,
           });
 
