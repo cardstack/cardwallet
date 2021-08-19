@@ -4,7 +4,7 @@ import {
   TransactionBase,
   TransactionBaseCustomizationProps,
 } from './TransactionBase';
-import { CoinIcon, SafeHeader } from '@cardstack/components';
+import { CoinIcon } from '@cardstack/components';
 import { MerchantEarnedRevenueTransactionType } from '@cardstack/types';
 
 export interface MerchantEarnRevenueTransactionProps
@@ -21,9 +21,6 @@ export const MerchantEarnedRevenueTransaction = ({
       {...props}
       CoinIcon={
         <CoinIcon address={item.token.address} symbol={item.token.symbol} />
-      }
-      Header={
-        <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
       }
       primaryText={`+ ${item.balance.display}`}
       statusIconName="arrow-down"

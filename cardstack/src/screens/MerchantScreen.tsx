@@ -19,6 +19,7 @@ import { MerchantSafeType, TokenType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
+  sortedByTokenBalanceAmount,
 } from '@cardstack/utils';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -252,7 +253,7 @@ const UnclaimedRevenueSection = () => {
       <SectionWrapper onPress={onPress}>
         <>
           {revenueBalances.length ? (
-            revenueBalances.map((token, index) => (
+            sortedByTokenBalanceAmount(revenueBalances).map((token, index) => (
               <TokenBalance
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}
@@ -289,7 +290,7 @@ const AvailableBalancesSection = () => {
       <SectionWrapper onPress={onPress}>
         <>
           {tokens.length ? (
-            tokens.map((token, index) => (
+            sortedByTokenBalanceAmount(tokens).map((token, index) => (
               <TokenBalance
                 tokenSymbol={token.token.symbol}
                 tokenBalance={token.balance.display}

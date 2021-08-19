@@ -32,7 +32,7 @@ export class MerchantEarnedSpendStrategy extends BaseStrategy {
     );
 
     return {
-      address: prepaidCardPaymentTransaction.prepaidCard.id,
+      address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
       timestamp: prepaidCardPaymentTransaction.timestamp,
       type: TransactionTypes.MERCHANT_EARNED_SPEND,
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,

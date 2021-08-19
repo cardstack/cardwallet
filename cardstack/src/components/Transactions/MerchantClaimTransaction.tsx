@@ -24,10 +24,12 @@ export const MerchantClaimTransaction = ({
         <CoinIcon address={item.token.address} symbol={item.token.symbol} />
       }
       Header={
-        <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
+        !item.hideSafeHeader ? (
+          <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
+        ) : null
       }
       primaryText={`- ${item.balance.display}`}
-      statusIconName="arrow-down"
+      statusIconName="arrow-up"
       statusText="Claimed"
       subText={item.native.display}
       transactionHash={item.transactionHash}

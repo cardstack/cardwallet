@@ -38,7 +38,12 @@ export const useTransactionSections = ({
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const depots = useRainbowSelector(state => state.data.depots);
+  const [merchantSafes, prepaidCards, depots] = useRainbowSelector(state => [
+    state.data.merchantSafes,
+    state.data.prepaidCards,
+    state.data.depots,
+  ]);
+
   const depot = depots[0];
 
   const [
@@ -56,6 +61,9 @@ export const useTransactionSections = ({
         setLoading(true);
 
         try {
+          const merchantSafeAddresses = merchantSafes.map(safe => safe.address);
+          const prepaidCardAddresses = prepaidCards.map(safe => safe.address);
+
           const transactionMappingContext = new TransactionMappingContext({
             transactions: merchantSafeAddress
               ? merchantRevenueEventsToTransactions(transactions as any[])
@@ -65,6 +73,8 @@ export const useTransactionSections = ({
             currencyConversionRates,
             transactionStrategies,
             depotAddress: depot?.address,
+            merchantSafeAddresses,
+            prepaidCardAddresses,
             merchantSafeAddress,
           });
 
@@ -108,6 +118,8 @@ export const useTransactionSections = ({
     merchantSafeAddress,
     depot,
     transactionStrategies,
+    merchantSafes,
+    prepaidCards,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;
