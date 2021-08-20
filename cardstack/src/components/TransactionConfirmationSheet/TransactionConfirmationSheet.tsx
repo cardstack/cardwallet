@@ -96,6 +96,10 @@ const Header = ({
   data,
   loading,
 }: TransactionConfirmationDisplayProps & { showHeaderShadow: boolean }) => {
+  if (loading) {
+    return null;
+  }
+
   const { hostname } = new URL(dappUrl);
 
   const typeToHeaderText: {
@@ -126,10 +130,6 @@ const Header = ({
         shadowOpacity: 0.1,
       }
     : {};
-
-  if (loading) {
-    return null;
-  }
 
   return (
     <Container

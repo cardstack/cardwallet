@@ -40,7 +40,12 @@ const useSokolTransactions = () => {
   const transactions = account?.transactions;
 
   if (error) {
-    logger.log('Error getting Sokol transactions', error);
+    logger.log(
+      'Error getting full transactions',
+      error,
+      isNotSokol,
+      accountAddress
+    );
   }
 
   const {

@@ -1,7 +1,7 @@
 import { DepotAsset, DepotType, TokenType } from '@cardstack/types';
 
 export const getDepotTokenByAddress = (depot: DepotType, address?: string) =>
-  address
+  address && depot
     ? depot.tokens.find(
         t => t.tokenAddress?.toLowerCase() === address?.toLowerCase()
       )

@@ -7,7 +7,7 @@ import {
   TokenData,
   TransactionConfirmationData,
 } from '@cardstack/types';
-import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 
 interface BaseStrategyParams {
   message: {
@@ -50,7 +50,7 @@ export abstract class BaseStrategy {
   }
 
   getTokenData = async (tokenAddress: string): Promise<TokenData> => {
-    const web3 = new Web3(web3ProviderSdk as any);
+    const web3 = new Web3((await getWeb3ProviderSdk()) as any);
     const tokenContract = new web3.eth.Contract(ERC20ABI as any, tokenAddress);
 
     const [symbol, decimals] = await Promise.all([
@@ -65,7 +65,7 @@ export abstract class BaseStrategy {
   };
 
   getSafeData = async (address: string) => {
-    const web3 = new Web3(web3ProviderSdk as any);
+    const web3 = new Web3((await getWeb3ProviderSdk()) as any);
     const safes = new Safes(web3);
 
     return safes.viewSafe(address);
