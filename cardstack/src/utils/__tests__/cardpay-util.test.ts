@@ -1,8 +1,8 @@
-import { parseLinearGradient } from '../cardpay-utils';
 import {
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
+import { parseLinearGradient } from '@cardstack/utils/cardpay-utils';
 
 it('parseLinearGradient with 2 stop linear gradient', () => {
   const cardCustomization: PrepaidCardCustomization = {

@@ -1,4 +1,4 @@
-import { sortedByTokenBalanceAmount } from '../sorting-utils';
+import { sortedByTokenBalanceAmount } from '@cardstack/utils/sorting-utils';
 
 describe('Sorting by token balance amount', () => {
   it('should return the same when list has only one item or empty', () => {

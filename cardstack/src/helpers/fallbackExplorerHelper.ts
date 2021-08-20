@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
-// Creating helper to modify data and using relative paths be able to test it.
+// Creating helper to modify data.
 
 import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { toLower } from 'lodash';
-import { isNativeToken } from '../../utils/cardpay-utils';
-import { ETH_ADDRESS } from '../../../../src/references/addresses';
-import { Network } from '../../../../src/helpers/networkTypes';
+import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
+import { isNativeToken } from '@cardstack/utils/cardpay-utils';
+
 import {
   AssetType,
   AssetWithNativeType,
@@ -15,6 +15,7 @@ import {
   PrepaidCardType,
   TokenType,
 } from '@cardstack/types';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface Prices {
   [key: string]: {

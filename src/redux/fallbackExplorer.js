@@ -1,10 +1,10 @@
 import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { Contract } from '@ethersproject/contracts';
-import { toLower, uniqBy } from 'lodash';
 import {
   reduceAssetsWithPriceChartAndBalances,
   reduceDepotsWithPricesAndChart,
-} from '../../cardstack/src/data/helpers/fallbackExplorerHelper';
+} from '@cardstack/helpers/fallbackExplorerHelper';
+import { Contract } from '@ethersproject/contracts';
+import { toLower, uniqBy } from 'lodash';
 
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
@@ -455,6 +455,13 @@ export const fetchAssetsBalancesAndPrices = async () => {
       formattedNativeCurrency
     );
 
+    const {
+      depots,
+      prepaidCards,
+      merchantSafes,
+    } = await fetchGnosisSafesAndAddCoingeckoId();
+
+    // needs to be fetched after safes, because of contract signing
     const balances = await fetchAssetBalances(
       assets.map(({ asset: { asset_code, symbol } }) =>
         isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
@@ -462,12 +469,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
       accountAddress,
       network
     );
-
-    const {
-      depots,
-      prepaidCards,
-      merchantSafes,
-    } = await fetchGnosisSafesAndAddCoingeckoId();
 
     const updatedAssets = reduceAssetsWithPriceChartAndBalances({
       assets,

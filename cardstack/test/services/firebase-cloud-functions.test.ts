@@ -2,8 +2,7 @@ import {
   getMaintenanceStatus,
   getMinimumVersion,
   getReviewFeature,
-} from '../../src/services/firebase-cloud-functions';
-
+} from '@cardstack/services/firebase-cloud-functions';
 import logger from 'logger';
 
 describe('Firebase cloud functions services', () => {

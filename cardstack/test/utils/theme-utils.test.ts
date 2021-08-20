@@ -1,8 +1,8 @@
 import * as shopifyRestyle from '@shopify/restyle';
 import Chance from 'chance';
 import { Dimensions } from 'react-native';
-import { breakpoints } from '../../src/theme/breakpoints';
-import { useVariantValue } from '../../src/utils/theme-utils';
+import { breakpoints } from '@cardstack/theme/breakpoints';
+import { useVariantValue } from '@cardstack/utils/theme-utils';
 
 const chance = new Chance();
 

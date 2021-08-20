@@ -1,9 +1,10 @@
-import { Network } from '../../../../src/helpers/networkTypes';
+import { fetchedData, inputData, updatedData } from './mocks/dataMocks';
 import {
   reduceAssetsWithPriceChartAndBalances,
   reduceDepotsWithPricesAndChart,
-} from '../../../src/data/helpers/fallbackExplorerHelper';
-import { fetchedData, inputData, updatedData } from './dataMocks';
+} from '@cardstack/helpers/fallbackExplorerHelper';
+
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 describe('Fallback Explorer Helpers', () => {
   it(`should return updated assets with prices, chartData and balances`, () => {
