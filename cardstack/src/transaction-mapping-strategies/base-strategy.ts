@@ -9,6 +9,7 @@ interface BaseStrategyParams {
   merchantSafeAddresses: string[];
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
+  depotAddress: string;
 }
 
 export abstract class BaseStrategy {
@@ -21,6 +22,7 @@ export abstract class BaseStrategy {
   accountAddress: string;
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
+  depotAddress: string;
   merchantSafeAddresses: string[];
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
@@ -33,6 +35,7 @@ export abstract class BaseStrategy {
     merchantSafeAddresses,
     prepaidCardAddresses,
     merchantSafeAddress,
+    depotAddress,
   }: BaseStrategyParams) {
     this.transaction = transaction;
     this.accountAddress = accountAddress;
@@ -41,5 +44,6 @@ export abstract class BaseStrategy {
     this.merchantSafeAddresses = merchantSafeAddresses;
     this.prepaidCardAddresses = prepaidCardAddresses;
     this.merchantSafeAddress = merchantSafeAddress;
+    this.depotAddress = depotAddress;
   }
 }

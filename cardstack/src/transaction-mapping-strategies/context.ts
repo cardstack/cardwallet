@@ -36,6 +36,7 @@ interface TransactionData {
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
   transactionStrategies?: TransactionMappingStrategy[];
+  depotAddress: string;
   merchantSafeAddresses: string[];
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
@@ -85,6 +86,7 @@ export class TransactionMappingContext {
             nativeCurrency: this.transactionData.nativeCurrency,
             currencyConversionRates: this.transactionData
               .currencyConversionRates,
+            depotAddress: this.transactionData.depotAddress,
             merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
             prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
             merchantSafeAddress: this.transactionData.merchantSafeAddress,
@@ -133,18 +135,11 @@ export class TransactionMappingContext {
           }
 
           // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
-          const tokenTransferStrategy = new ERC20TokenStrategy({
-            transaction,
-            accountAddress: this.transactionData.accountAddress,
-            nativeCurrency: this.transactionData.nativeCurrency,
-            merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
-            prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
-            currencyConversionRates: this.transactionData
-              .currencyConversionRates,
-          });
+          const tokenTransferStrategy = new ERC20TokenStrategy(strategyParam);
 
           if (tokenTransferStrategy.handlesTransaction()) {
             const mappedTransaction = await tokenTransferStrategy.mapTransaction();
+
             return mappedTransaction;
           }
 

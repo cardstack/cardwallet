@@ -33,7 +33,9 @@ export class ERC20TokenStrategy extends BaseStrategy {
       transfer =>
         transfer &&
         (transfer.to === this.accountAddress ||
-          transfer.from === this.accountAddress)
+          transfer.from === this.accountAddress ||
+          transfer.to === this.depotAddress ||
+          transfer.from === this.depotAddress)
     );
 
     if (!userTransaction) {

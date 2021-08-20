@@ -38,10 +38,13 @@ export const useTransactionSections = ({
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [merchantSafes, prepaidCards] = useRainbowSelector(state => [
+  const [merchantSafes, prepaidCards, depots] = useRainbowSelector(state => [
     state.data.merchantSafes,
     state.data.prepaidCards,
+    state.data.depots,
   ]);
+
+  const depot = depots[0];
 
   const [
     nativeCurrency,
@@ -69,6 +72,7 @@ export const useTransactionSections = ({
             nativeCurrency,
             currencyConversionRates,
             transactionStrategies,
+            depotAddress: depot?.address,
             merchantSafeAddresses,
             prepaidCardAddresses,
             merchantSafeAddress,
@@ -112,6 +116,7 @@ export const useTransactionSections = ({
     transactions,
     isEmpty,
     merchantSafeAddress,
+    depot,
     transactionStrategies,
     merchantSafes,
     prepaidCards,
