@@ -1,8 +1,8 @@
-import { parseLinearGradient } from '../cardpay-utils';
 import {
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
+import { parseLinearGradient } from '@cardstack/utils/cardpay-utils';
 
 it('parseLinearGradient with 2 stop linear gradient', () => {
   const cardCustomization: PrepaidCardCustomization = {
@@ -21,7 +21,7 @@ it('parseLinearGradient with 2 stop linear gradient', () => {
   };
 
   const result = parseLinearGradient(cardCustomization);
-  expect(result).toBe(parsedGradientResult);
+  expect(result).toEqual(parsedGradientResult);
 });
 
 it('parseLinearGradient with 3 stop linear gradient', () => {
@@ -41,7 +41,7 @@ it('parseLinearGradient with 3 stop linear gradient', () => {
   };
 
   const result = parseLinearGradient(cardCustomization);
-  expect(result).toBe(parsedGradientResult);
+  expect(result).toEqual(parsedGradientResult);
 });
 
 it('parseLinearGradient with radial gradient', () => {
@@ -58,7 +58,7 @@ it('parseLinearGradient with radial gradient', () => {
   };
 
   const result = parseLinearGradient(cardCustomization);
-  expect(result).toBe(parsedGradientResult);
+  expect(result).toEqual(parsedGradientResult);
 });
 
 it('parseLinearGradient with no gradient', () => {
@@ -75,5 +75,5 @@ it('parseLinearGradient with no gradient', () => {
   };
 
   const result = parseLinearGradient(cardCustomization);
-  expect(result).toBe(parsedGradientResult);
+  expect(result).toEqual(parsedGradientResult);
 });

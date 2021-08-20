@@ -1,15 +1,15 @@
+import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
-  convertAmountToNativeDisplay,
-  delay,
-  getConstantByNetwork,
-} from '@cardstack/cardpay-sdk';
-import { BigNumber } from '@ethersproject/bignumber';
+  reduceAssetsWithPriceChartAndBalances,
+  reduceDepotsWithPricesAndChart,
+} from '@cardstack/helpers/fallbackExplorerHelper';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
 
 import { web3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
+import { ETH_ADDRESS } from '../references/addresses';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
@@ -29,7 +29,6 @@ const FALLBACK_EXPLORER_SET_HANDLERS =
 const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
   'explorer/FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER';
 
-const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 const COINGECKO_IDS_ENDPOINT =
   'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
 const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
@@ -318,7 +317,6 @@ const fetchAssetBalances = async (tokens, address, network) => {
       balanceCheckerContractAbi,
       web3Provider
     );
-
     const values = await balanceCheckerContract.balances([address], tokens);
 
     const balances = {};
@@ -340,21 +338,10 @@ const fetchAssetBalances = async (tokens, address, network) => {
   }
 };
 
-export const fetchAssetsBalancesAndPrices = async () => {
-  logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
+const fetchGnosisSafesAndAddCoingeckoId = async () => {
   const { accountAddress, nativeCurrency, network } = store.getState().settings;
   const coingeckoCoins = store.getState().coingecko.coins;
-  const formattedNativeCurrency = toLower(nativeCurrency);
   const currencyConversionRates = store.getState().currencyConversion.rates;
-  const { xdaiChainAssets, mainnetAssets } = store.getState().fallbackExplorer;
-  const actualMainnetAssets =
-    network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
-  const assets = isMainnet(network)
-    ? actualMainnetAssets
-    : testnetAssets[network];
-  let depots = null,
-    prepaidCards = null,
-    merchantSafes = null;
 
   // not functional on xdai chain yet
   if (network === networkTypes.sokol) {
@@ -387,7 +374,11 @@ export const fetchAssetsBalancesAndPrices = async () => {
         })
       );
 
-      const gnosisDataWithPrices = await addGnosisTokenPrices(
+      const {
+        depots,
+        prepaidCards,
+        merchantSafes,
+      } = await addGnosisTokenPrices(
         {
           depots: depotsWithIds,
           prepaidCards: prepaidCardsWithIds,
@@ -399,200 +390,138 @@ export const fetchAssetsBalancesAndPrices = async () => {
         currencyConversionRates
       );
 
-      depots = gnosisDataWithPrices.depots;
-      prepaidCards = gnosisDataWithPrices.prepaidCards;
-      merchantSafes = gnosisDataWithPrices.merchantSafes;
+      return {
+        depots,
+        prepaidCards,
+        merchantSafes,
+      };
     } catch (error) {
       logger.error('Error getting Gnosis data', error);
     }
   }
+  return {
+    depots: undefined,
+    prepaidCards: undefined,
+    merchantSafes: undefined,
+  };
+};
+
+export const fetchAssetsBalancesAndPrices = async () => {
+  logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
+
+  const { accountAddress, nativeCurrency, network } = store.getState().settings;
+  const formattedNativeCurrency = toLower(nativeCurrency);
+
+  const { xdaiChainAssets, mainnetAssets } = store.getState().fallbackExplorer;
+  const actualMainnetAssets =
+    network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
+
+  const assets = isMainnet(network)
+    ? actualMainnetAssets
+    : testnetAssets[network];
+
+  const periodicalyGetBalances = () =>
+    setTimeout(
+      fetchAssetsBalancesAndPrices,
+      UPDATE_BALANCE_AND_PRICE_FREQUENCY
+    );
 
   if (!assets || !assets.length) {
-    const fallbackExplorerBalancesHandle = setTimeout(
-      fetchAssetsBalancesAndPrices,
-      10000
-    );
     store.dispatch({
       payload: {
-        fallbackExplorerBalancesHandle,
+        fallbackExplorerBalancesHandle: periodicalyGetBalances(),
       },
       type: FALLBACK_EXPLORER_SET_BALANCE_HANDLER,
     });
     return;
   }
 
-  const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
-    if (coingecko_id) {
-      return [...ids, coingecko_id];
-    }
-
-    return ids;
-  }, []);
-
-  const prices = await fetchAssetPrices(coingeckoIds, formattedNativeCurrency);
-  const chartData = await fetchAssetCharts(
-    coingeckoIds,
-    formattedNativeCurrency
-  );
-
-  if (prices) {
-    Object.keys(prices).forEach(key => {
-      for (let i = 0; i < assets.length; i++) {
-        if (toLower(assets[i].asset.coingecko_id) === toLower(key)) {
-          assets[i].asset.price = {
-            changed_at: prices[key].last_updated_at,
-            relative_change_24h:
-              prices[key][`${formattedNativeCurrency}_24h_change`],
-            value: prices[key][`${formattedNativeCurrency}`],
-          };
-        } else if (assets[i].asset.coingecko_id === null) {
-          assets[i].asset.price = {
-            changed_at: null,
-            relative_change_24h: 0,
-            value: 0,
-          };
-        }
+  try {
+    const coingeckoIds = assets.reduce((ids, { asset: { coingecko_id } }) => {
+      if (coingecko_id) {
+        return [...ids, coingecko_id];
       }
 
-      if (depots) {
-        for (let i = 0; i < depots.length; i++) {
-          const depot = depots[i];
+      return ids;
+    }, []);
 
-          for (let j = 0; j < depot.tokens.length; j++) {
-            const token = depot.tokens[j];
+    const prices = await fetchAssetPrices(
+      coingeckoIds,
+      formattedNativeCurrency
+    );
 
-            if (toLower(token.coingecko_id) === toLower(key)) {
-              const price = prices[key][`${formattedNativeCurrency}`];
+    const chartData = await fetchAssetCharts(
+      coingeckoIds,
+      formattedNativeCurrency
+    );
 
-              depots[i].tokens[j].price = {
-                changed_at: prices[key].last_updated_at,
-                relative_change_24h:
-                  prices[key][`${formattedNativeCurrency}_24h_change`],
-                value: prices[key][`${formattedNativeCurrency}`],
-              };
+    const {
+      depots,
+      prepaidCards,
+      merchantSafes,
+    } = await fetchGnosisSafesAndAddCoingeckoId();
 
-              depots[i].tokens[j].native.price = {
-                amount: price,
-                display: convertAmountToNativeDisplay(price, nativeCurrency),
-              };
-            } else if (token.coingecko_id === null) {
-              depots[i].tokens[j].price = {
-                changed_at: null,
-                relative_change_24h: 0,
-                value: 0,
-              };
-              depots[i].tokens[j].native.price = {
-                amount: 0,
-                display: convertAmountToNativeDisplay(0, nativeCurrency),
-              };
-            }
-          }
-        }
-      }
+    // needs to be fetched after safes, because of contract signing
+    const balances = await fetchAssetBalances(
+      assets.map(({ asset: { asset_code, symbol } }) =>
+        isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
+      ),
+      accountAddress,
+      network
+    );
 
-      if (prepaidCards) {
-        for (let i = 0; i < prepaidCards.length; i++) {
-          const prepaidCard = prepaidCards[i];
-
-          for (let j = 0; j < prepaidCard.tokens.length; j++) {
-            const token = prepaidCard.tokens[j];
-
-            if (toLower(token.coingecko_id) === toLower(key)) {
-              prepaidCards[i].tokens[j].price = {
-                changed_at: prices[key].last_updated_at,
-                relative_change_24h:
-                  prices[key][`${formattedNativeCurrency}_24h_change`],
-                value: prices[key][`${formattedNativeCurrency}`],
-              };
-            } else if (token.coingecko_id === null) {
-              prepaidCards[i].tokens[j].price = {
-                changed_at: null,
-                relative_change_24h: 0,
-                value: 0,
-              };
-            }
-          }
-        }
-      }
+    const updatedAssets = reduceAssetsWithPriceChartAndBalances({
+      assets,
+      prices,
+      formattedNativeCurrency,
+      chartData,
+      balances,
+      network,
     });
+
+    const updatedDepots = depots
+      ? reduceDepotsWithPricesAndChart({
+          depots,
+          prices,
+          formattedNativeCurrency,
+          chartData,
+          nativeCurrency,
+        })
+      : [];
+
+    // Depots, prepaidCards and merchants have the same token structure
+    const updatedPrePaidCards = prepaidCards
+      ? reduceDepotsWithPricesAndChart({
+          depots: prepaidCards,
+          prices,
+          formattedNativeCurrency,
+          chartData,
+          nativeCurrency,
+        })
+      : [];
+
+    logger.log('😬 FallbackExplorer updating assets');
+
+    store.dispatch(
+      addressAssetsReceived({
+        meta: {
+          address: accountAddress,
+          currency: nativeCurrency,
+          status: 'ok',
+          network,
+        },
+        payload: {
+          assets: updatedAssets,
+          depots: updatedDepots,
+          prepaidCards: updatedPrePaidCards,
+          merchantSafes,
+        },
+      })
+    );
+  } catch (e) {
+    logger.log('😬 FallbackExplorer updating assets error', e);
   }
 
-  if (chartData) {
-    Object.keys(chartData).forEach(coingeckoId => {
-      for (let i = 0; i < assets.length; i++) {
-        if (toLower(assets[i].asset.coingecko_id) === toLower(coingeckoId)) {
-          assets[i].asset.chartPrices = chartData[coingeckoId];
-        } else if (assets[i].asset.coingecko_id === null) {
-          assets[i].asset.chartPrices = null;
-        }
-
-        if (depots) {
-          for (let i = 0; i < depots.length; i++) {
-            const depot = depots[i];
-
-            for (let j = 0; j < depot.tokens.length; j++) {
-              const token = depot.tokens[j];
-
-              if (toLower(token.coingecko_id) === toLower(coingeckoId)) {
-                depots[i].tokens[j].chartPrices = chartData[coingeckoId];
-              } else if (token.coingecko_id === null) {
-                depots[i].tokens[j].chartPrices = null;
-              }
-            }
-          }
-        }
-      }
-    });
-  }
-
-  const balances = await fetchAssetBalances(
-    assets.map(({ asset: { asset_code, symbol } }) =>
-      isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
-    ),
-    accountAddress,
-    network
-  );
-
-  let total = BigNumber.from(0);
-
-  if (balances) {
-    Object.keys(balances).forEach(key => {
-      for (let i = 0; i < assets.length; i++) {
-        if (
-          assets[i].asset.asset_code.toLowerCase() === key.toLowerCase() ||
-          (isNativeToken(assets[i].asset.symbol, network) &&
-            key === ETH_ADDRESS)
-        ) {
-          assets[i].quantity = balances[key];
-          break;
-        }
-      }
-      total = total.add(balances[key]);
-    });
-  }
-
-  logger.log('😬 FallbackExplorer updating assets');
-
-  store.dispatch(
-    addressAssetsReceived({
-      meta: {
-        address: accountAddress,
-        currency: nativeCurrency,
-        status: 'ok',
-        network,
-      },
-      payload: {
-        assets,
-        depots,
-        merchantSafes,
-        prepaidCards,
-      },
-    })
-  );
-  const fallbackExplorerBalancesHandle = setTimeout(
-    fetchAssetsBalancesAndPrices,
-    UPDATE_BALANCE_AND_PRICE_FREQUENCY
-  );
   let fallbackExplorerAssetsHandle = null;
   if (isMainnet(network)) {
     fallbackExplorerAssetsHandle = setTimeout(
@@ -604,7 +533,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
   store.dispatch({
     payload: {
       fallbackExplorerAssetsHandle,
-      fallbackExplorerBalancesHandle,
+      fallbackExplorerBalancesHandle: periodicalyGetBalances(),
     },
     type: FALLBACK_EXPLORER_SET_HANDLERS,
   });

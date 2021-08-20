@@ -12,7 +12,7 @@ interface TokenBalanceProps extends ContainerProps {
   Icon?: JSX.Element;
   address?: string;
   tokenSymbol: string;
-  tokenBalance: string;
+  tokenBalance?: string;
   nativeBalance: string;
   includeBorder?: boolean;
   isLastItemIfList?: boolean;

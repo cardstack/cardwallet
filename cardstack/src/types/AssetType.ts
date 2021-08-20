@@ -4,20 +4,21 @@ export interface BalanceType {
 }
 
 export interface AssetType {
-  address: string;
-  balance: BalanceType;
-  coingecko_id: string;
+  asset_code?: string;
+  address?: string;
+  balance?: BalanceType;
+  coingecko_id: string | null;
   decimals: number;
   icon_url: string;
   name: string;
   price: {
-    changed_at: number;
+    changed_at: number | null;
     relative_change_24h: number;
     value: number;
   };
   symbol: string;
-  type: string;
-  uniqueId: string;
+  type?: string;
+  uniqueId?: string;
 }
 
 export interface AssetWithNativeType extends AssetType {

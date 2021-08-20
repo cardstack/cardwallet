@@ -12,12 +12,11 @@ import {
   WALLET_BALANCES_FROM_STORAGE,
 } from '../handlers/localstorage/walletBalances';
 import { web3Provider } from '../handlers/web3';
+import { ETH_ADDRESS } from '../references/addresses';
 
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import useAccountSettings from './useAccountSettings';
 import logger from 'logger';
-
-const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 const useWalletBalances = wallets => {
   const { network } = useAccountSettings();

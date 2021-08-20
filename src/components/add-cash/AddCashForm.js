@@ -17,9 +17,12 @@ import { Numpad, NumpadValue } from '../numpad';
 import AddCashFooter from './AddCashFooter';
 import AddCashSelector from './AddCashSelector';
 import { CenteredContainer } from '@cardstack/components';
-import { DAI_ADDRESS, ETH_ADDRESS } from '@rainbow-me/references/addresses';
+import {
+  DAI_ADDRESS,
+  ETH_ADDRESS_SYMBOL,
+} from '@rainbow-me/references/addresses';
 
-const currencies = [DAI_ADDRESS, ETH_ADDRESS];
+const currencies = [DAI_ADDRESS, ETH_ADDRESS_SYMBOL];
 const minimumPurchaseAmountUSD = 1;
 
 const AddCashForm = ({

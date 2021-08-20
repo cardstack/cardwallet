@@ -15,7 +15,7 @@ const createCloudFuncGetRequest = async (name: CloudFuncNames) => {
 
     return await response.json();
   } catch (e) {
-    logger.error(`get${name}`, e);
+    logger.sentry(`get${name}`, e);
 
     return false;
   }

@@ -1,4 +1,4 @@
-import { normalizeTxHash } from '../../src/utils/formatting-utils';
+import { normalizeTxHash } from '@cardstack/utils/formatting-utils';
 
 describe('formatting utils', () => {
   describe('normalizeHash', () => {
