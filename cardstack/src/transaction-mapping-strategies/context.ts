@@ -129,15 +129,15 @@ export class TransactionMappingContext {
 
               return mappedTransaction;
             }
+          }
 
-            // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
-            const tokenTransferStrategy = new ERC20TokenStrategy(strategyParam);
+          // Check if it's tokenTransfer transaction at the end of mapping as other transaction types can have tokenTransfers
+          const tokenTransferStrategy = new ERC20TokenStrategy(strategyParam);
 
-            if (tokenTransferStrategy.handlesTransaction()) {
-              const mappedTransaction = await tokenTransferStrategy.mapTransaction();
+          if (tokenTransferStrategy.handlesTransaction()) {
+            const mappedTransaction = await tokenTransferStrategy.mapTransaction();
 
-              return mappedTransaction;
-            }
+            return mappedTransaction;
           }
 
           logger.sentry('Unable to map transaction:', transaction);
