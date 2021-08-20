@@ -1,3 +1,6 @@
+const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { compilerOptions } = require('./tsconfig');
+
 module.exports = {
   collectCoverageFrom: [
     '<rootDir>/cardstack/src/*/**/*.js',
@@ -23,5 +26,8 @@ module.exports = {
     '!<rootDir>/cardstack/**/*.test.jsx',
     '!<rootDir>/cardstack/**/*.test.tsx',
   ],
-  transformIgnorePatterns: ['node_modules/(?!(react-native|@cardstack)/)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(react-native|@cardstack|@sentry)/)',
+  ],
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };

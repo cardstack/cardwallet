@@ -1,3 +1,5 @@
+import logger from 'logger';
+
 enum CloudFuncNames {
   MINIMUM_VERSION = 'minimumVersion',
   MAINTENANCE_STATUS = 'maintenanceStatus',
@@ -13,7 +15,7 @@ const createCloudFuncGetRequest = async (name: CloudFuncNames) => {
 
     return await response.json();
   } catch (e) {
-    console.error(`get${name}`, e);
+    logger.sentry(`get${name}`, e);
 
     return false;
   }

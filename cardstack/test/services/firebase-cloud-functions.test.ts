@@ -4,6 +4,8 @@ import {
   getReviewFeature,
 } from '../../src/services/firebase-cloud-functions';
 
+import logger from 'logger';
+
 describe('Firebase cloud functions services', () => {
   let originalFetch: any;
   let fetchMock: jest.SpyInstance;
@@ -40,5 +42,17 @@ describe('Firebase cloud functions services', () => {
     expect(fetchMock).toHaveBeenCalledWith(
       'https://us-central1-card-pay-3e9be.cloudfunctions.net/minimumVersion'
     );
+  });
+
+  it(`should log error to sentry on failure`, async () => {
+    global.fetch = jest.fn().mockRejectedValueOnce('error');
+
+    const spyLogger = jest
+      .spyOn(logger, 'sentry')
+      .mockImplementation(jest.fn());
+
+    await getMinimumVersion();
+
+    expect(spyLogger).toHaveBeenCalledWith('getminimumVersion', 'error');
   });
 });
