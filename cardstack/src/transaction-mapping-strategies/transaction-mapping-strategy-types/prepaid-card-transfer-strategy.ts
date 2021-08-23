@@ -37,7 +37,8 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       } catch (error) {}
     }
 
-    const spendAmount = prepaidCardTransferTransaction.prepaidCard.spendBalance;
+    const spendAmount =
+      prepaidCardTransferTransaction.prepaidCard.payments[0]?.spendAmount;
 
     const spendDisplay = convertSpendForBalanceDisplay(
       spendAmount,
