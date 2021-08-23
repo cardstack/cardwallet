@@ -4573,11 +4573,7 @@ export type PrepaidCardTransferFragment = (
   & Pick<PrepaidCardTransfer, 'id' | 'timestamp'>
   & { prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id' | 'customizationDID'>
-    & { payments: Array<Maybe<(
-      { __typename?: 'PrepaidCardPayment' }
-      & Pick<PrepaidCardPayment, 'spendAmount'>
-    )>> }
+    & Pick<PrepaidCard, 'id' | 'customizationDID' | 'faceValue'>
   ), from: (
     { __typename?: 'Account' }
     & Pick<Account, 'id'>
@@ -4907,9 +4903,7 @@ export const PrepaidCardTransferFragmentDoc = gql`
   prepaidCard {
     id
     customizationDID
-    payments {
-      spendAmount
-    }
+    faceValue
   }
   from {
     id

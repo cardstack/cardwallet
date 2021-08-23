@@ -37,11 +37,10 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       } catch (error) {}
     }
 
-    const spendAmount =
-      prepaidCardTransferTransaction.prepaidCard.payments[0]?.spendAmount;
+    const faceValue = prepaidCardTransferTransaction.prepaidCard.faceValue;
 
     const spendDisplay = convertSpendForBalanceDisplay(
-      spendAmount,
+      faceValue,
       this.nativeCurrency,
       this.currencyConversionRates,
       true
@@ -51,7 +50,6 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       address: prepaidCardTransferTransaction.prepaidCard.id,
       cardCustomization,
       timestamp: prepaidCardTransferTransaction.timestamp,
-      spendAmount,
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
       nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
       transactionHash: this.transaction.id,

@@ -172,7 +172,6 @@ export interface PrepaidCardTransferTransactionType {
   address: string;
   cardCustomization?: PrepaidCardCustomization;
   timestamp: number;
-  spendAmount: string;
   spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   transactionHash: string;
