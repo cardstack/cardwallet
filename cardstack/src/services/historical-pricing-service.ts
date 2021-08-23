@@ -59,7 +59,7 @@ export const fetchHistoricalPrice = async (
     }
 
     const response = await fetch(
-      `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${symbol}&tsyms=${nativeCurrency}&ts=${roundedTimestamp}&api_key=${CRYPTOCOMPARE_API_KEY} `
+      `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${symbol}&tsyms=${nativeCurrency}&ts=${roundedTimestamp}&api_key=${CRYPTOCOMPARE_API_KEY}`
     );
 
     const data = await response.json();

@@ -19,7 +19,7 @@ import {
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
-import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
@@ -54,6 +54,7 @@ export default function UnclaimedRevenueExpandedState(props: {
     try {
       const seedPhrase = await getSeedPhrase(selectedWallet.id);
       const chainId = ethereumUtils.getChainIdFromNetwork(network);
+      const web3ProviderSdk = await getWeb3ProviderSdk();
       const hdProvider = new HDWalletProvider({
         chainId,
         mnemonic: {

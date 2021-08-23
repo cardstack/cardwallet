@@ -17,6 +17,7 @@ import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
+import { getNetwork } from '../handlers/localstorage/globalSettings';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
@@ -50,6 +51,29 @@ export const web3SetHttpProvider = async network => {
   }
 
   return web3Provider.ready;
+};
+
+export const getWeb3ProviderSdk = async () => {
+  if (web3ProviderSdk && web3ProviderSdk.connected) {
+    return web3ProviderSdk;
+  }
+
+  if (web3ProviderSdk && !web3ProviderSdk.connected) {
+    try {
+      await web3ProviderSdk.reconnect();
+      if (web3ProviderSdk.connected) {
+        logger.sentry('web3ProviderSdk reconnected!!!!!!!');
+        return web3ProviderSdk;
+      }
+      logger.sentry('web3ProviderSdk reconnect failed without error');
+    } catch (e) {
+      logger.sentry('web3ProviderSdk reconnect failed --', e);
+    }
+  }
+
+  const network = await getNetwork();
+  await web3SetHttpProvider(network);
+  return web3ProviderSdk;
 };
 
 export const sendRpcCall = async payload =>

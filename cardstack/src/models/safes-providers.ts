@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import { getSeedPhrase, RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 import { ethereumUtils } from '@rainbow-me/utils';
-import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface SignedProviderParams {
@@ -19,6 +19,7 @@ export const getHdSignedProvider = async ({
   try {
     const seedPhrase = await getSeedPhrase(selectedWallet.id);
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
+    const web3ProviderSdk = await getWeb3ProviderSdk();
 
     const hdProvider = new HDWalletProvider({
       chainId,
@@ -37,7 +38,7 @@ export const getHdSignedProvider = async ({
 export const getSafesInstance = async (
   signedProviderParams?: SignedProviderParams
 ) => {
-  let web3Provider = web3ProviderSdk;
+  let web3Provider = await getWeb3ProviderSdk();
 
   if (signedProviderParams) {
     web3Provider = await getHdSignedProvider(signedProviderParams);

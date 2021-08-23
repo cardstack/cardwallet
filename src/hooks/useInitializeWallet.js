@@ -143,12 +143,15 @@ export default function useInitializeWallet() {
     },
     [
       resetAccountState,
+      loadCoingeckoCoins,
+      loadCurrencyConversionRates,
+      providerUrl,
+      network,
       dispatch,
       hideSplashScreen,
       initializeAccountData,
       loadGlobalData,
       loadAccountData,
-      network,
     ]
   );
 

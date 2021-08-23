@@ -12,14 +12,14 @@ import {
   saveMerchantSafes,
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { web3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { CurrencyConversionRates } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import logger from 'logger';
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
-    const web3 = new Web3(web3ProviderSdk as any);
+    const web3 = new Web3((await getWeb3ProviderSdk()) as any);
     const safesInstance = await getSDK('Safes', web3);
     const safes = await safesInstance.view(address);
 
@@ -93,7 +93,7 @@ export const fetchGnosisSafes = async (address: string) => {
       prepaidCards: extendedPrepaidCards,
     };
   } catch (error) {
-    logger.error(error);
+    logger.sentry('Fetch GnosisSafes failed', error);
   }
 };
 
@@ -104,7 +104,7 @@ export const getTokensWithPrice = async (
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  const web3 = new Web3(web3ProviderSdk);
+  const web3 = new Web3(await getWeb3ProviderSdk());
   const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
 
   return Promise.all(
@@ -146,7 +146,7 @@ export const addGnosisTokenPrices = async (
   const { depots, merchantSafes, prepaidCards } = payload;
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  const web3 = new Web3(web3ProviderSdk);
+  const web3 = new Web3(await getWeb3ProviderSdk());
 
   if (depots.length || merchantSafes.length || prepaidCards.length) {
     const revenuePool = await getSDK('RevenuePool', web3);
