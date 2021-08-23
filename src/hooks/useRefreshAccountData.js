@@ -6,7 +6,10 @@ import { uniqueTokensRefreshState } from '../redux/uniqueTokens';
 import { uniswapUpdateLiquidityState } from '../redux/uniswapLiquidity';
 import { fetchWalletNames } from '../redux/wallets';
 import useSavingsAccount from './useSavingsAccount';
-import { fallbackExplorerInit } from '@rainbow-me/redux/fallbackExplorer';
+import {
+  fallbackExplorerClearState,
+  fallbackExplorerInit,
+} from '@rainbow-me/redux/fallbackExplorer';
 import logger from 'logger';
 
 export default function useRefreshAccountData() {
@@ -15,6 +18,7 @@ export default function useRefreshAccountData() {
 
   const refreshAccountData = useCallback(async () => {
     try {
+      await dispatch(fallbackExplorerClearState());
       const getWalletNames = dispatch(fetchWalletNames());
       const getUniswapLiquidity = dispatch(uniswapUpdateLiquidityState());
       const getUniqueTokens = dispatch(uniqueTokensRefreshState());

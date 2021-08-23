@@ -1,8 +1,4 @@
 import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import {
-  reduceAssetsWithPriceChartAndBalances,
-  reduceDepotsWithPricesAndChart,
-} from '@cardstack/helpers/fallbackExplorerHelper';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
 
@@ -15,6 +11,10 @@ import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
 import store from './store';
+import {
+  reduceAssetsWithPriceChartAndBalances,
+  reduceDepotsWithPricesAndChart,
+} from '@cardstack/helpers/fallbackExplorerHelper';
 import { addGnosisTokenPrices, fetchGnosisSafes } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
@@ -412,7 +412,11 @@ export const fetchAssetsBalancesAndPrices = async () => {
   const { accountAddress, nativeCurrency, network } = store.getState().settings;
   const formattedNativeCurrency = toLower(nativeCurrency);
 
-  const { xdaiChainAssets, mainnetAssets } = store.getState().fallbackExplorer;
+  const {
+    xdaiChainAssets,
+    mainnetAssets,
+    fallbackExplorerBalancesHandle: currentBalancesTimeout,
+  } = store.getState().fallbackExplorer;
   const actualMainnetAssets =
     network === networkTypes.xdai ? xdaiChainAssets : mainnetAssets;
 
@@ -420,16 +424,15 @@ export const fetchAssetsBalancesAndPrices = async () => {
     ? actualMainnetAssets
     : testnetAssets[network];
 
-  const periodicalyGetBalances = () =>
-    setTimeout(
+  if (!assets || !assets.length) {
+    const fallbackExplorerBalancesHandle = setTimeout(
       fetchAssetsBalancesAndPrices,
       UPDATE_BALANCE_AND_PRICE_FREQUENCY
     );
 
-  if (!assets || !assets.length) {
     store.dispatch({
       payload: {
-        fallbackExplorerBalancesHandle: periodicalyGetBalances(),
+        fallbackExplorerBalancesHandle,
       },
       type: FALLBACK_EXPLORER_SET_BALANCE_HANDLER,
     });
@@ -530,13 +533,20 @@ export const fetchAssetsBalancesAndPrices = async () => {
     );
   }
 
-  store.dispatch({
-    payload: {
-      fallbackExplorerAssetsHandle,
-      fallbackExplorerBalancesHandle: periodicalyGetBalances(),
-    },
-    type: FALLBACK_EXPLORER_SET_HANDLERS,
-  });
+  if (!currentBalancesTimeout) {
+    const fallbackExplorerBalancesHandle = setTimeout(
+      fetchAssetsBalancesAndPrices,
+      UPDATE_BALANCE_AND_PRICE_FREQUENCY
+    );
+
+    store.dispatch({
+      payload: {
+        fallbackExplorerAssetsHandle,
+        fallbackExplorerBalancesHandle,
+      },
+      type: FALLBACK_EXPLORER_SET_HANDLERS,
+    });
+  }
 };
 
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
