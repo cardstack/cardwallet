@@ -960,6 +960,7 @@ export type MerchantRevenue = {
   lifetimeAccumulation: Scalars['BigInt'];
   unclaimedBalance: Scalars['BigInt'];
   revenueEvents: Array<Maybe<MerchantRevenueEvent>>;
+  earningsByDay: Array<Maybe<RevenueEarningsByDay>>;
 };
 
 
@@ -969,6 +970,15 @@ export type MerchantRevenueRevenueEventsArgs = {
   orderBy?: Maybe<MerchantRevenueEventOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantRevenueEventFilter>;
+};
+
+
+export type MerchantRevenueEarningsByDayArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RevenueEarningsByDayOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RevenueEarningsByDayFilter>;
 };
 
 export type MerchantRevenueEvent = {
@@ -1146,7 +1156,8 @@ export enum MerchantRevenueOrderBy {
   MERCHANTSAFE = 'merchantSafe',
   LIFETIMEACCUMULATION = 'lifetimeAccumulation',
   UNCLAIMEDBALANCE = 'unclaimedBalance',
-  REVENUEEVENTS = 'revenueEvents'
+  REVENUEEVENTS = 'revenueEvents',
+  EARNINGSBYDAY = 'earningsByDay'
 }
 
 export type MerchantSafe = {
@@ -1287,7 +1298,6 @@ export type PrepaidCard = {
   issuer: Account;
   owner: Account;
   reloadable: Scalars['Boolean'];
-  spendBalance: Scalars['BigInt'];
   faceValue: Scalars['BigInt'];
   issuingTokenBalance: Scalars['BigInt'];
   creation?: Maybe<PrepaidCardCreation>;
@@ -1491,7 +1501,8 @@ export type PrepaidCardPayment = {
   issuingToken: Token;
   issuingTokenAmount: Scalars['BigInt'];
   spendAmount: Scalars['BigInt'];
-  historicPrepaidCardSpendBalance: Scalars['BigInt'];
+  issuingTokenUSDPrice: Scalars['BigDecimal'];
+  historicPrepaidCardFaceValue: Scalars['BigInt'];
   historicPrepaidCardIssuingTokenBalance: Scalars['BigInt'];
   merchantRegistrationPayments: Array<Maybe<MerchantRegistrationPayment>>;
 };
@@ -1622,14 +1633,22 @@ export type PrepaidCardPaymentFilter = {
   spendAmount_lte?: Maybe<Scalars['BigInt']>;
   spendAmount_in?: Maybe<Array<Scalars['BigInt']>>;
   spendAmount_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  historicPrepaidCardSpendBalance?: Maybe<Scalars['BigInt']>;
-  historicPrepaidCardSpendBalance_not?: Maybe<Scalars['BigInt']>;
-  historicPrepaidCardSpendBalance_gt?: Maybe<Scalars['BigInt']>;
-  historicPrepaidCardSpendBalance_lt?: Maybe<Scalars['BigInt']>;
-  historicPrepaidCardSpendBalance_gte?: Maybe<Scalars['BigInt']>;
-  historicPrepaidCardSpendBalance_lte?: Maybe<Scalars['BigInt']>;
-  historicPrepaidCardSpendBalance_in?: Maybe<Array<Scalars['BigInt']>>;
-  historicPrepaidCardSpendBalance_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  issuingTokenUSDPrice?: Maybe<Scalars['BigDecimal']>;
+  issuingTokenUSDPrice_not?: Maybe<Scalars['BigDecimal']>;
+  issuingTokenUSDPrice_gt?: Maybe<Scalars['BigDecimal']>;
+  issuingTokenUSDPrice_lt?: Maybe<Scalars['BigDecimal']>;
+  issuingTokenUSDPrice_gte?: Maybe<Scalars['BigDecimal']>;
+  issuingTokenUSDPrice_lte?: Maybe<Scalars['BigDecimal']>;
+  issuingTokenUSDPrice_in?: Maybe<Array<Scalars['BigDecimal']>>;
+  issuingTokenUSDPrice_not_in?: Maybe<Array<Scalars['BigDecimal']>>;
+  historicPrepaidCardFaceValue?: Maybe<Scalars['BigInt']>;
+  historicPrepaidCardFaceValue_not?: Maybe<Scalars['BigInt']>;
+  historicPrepaidCardFaceValue_gt?: Maybe<Scalars['BigInt']>;
+  historicPrepaidCardFaceValue_lt?: Maybe<Scalars['BigInt']>;
+  historicPrepaidCardFaceValue_gte?: Maybe<Scalars['BigInt']>;
+  historicPrepaidCardFaceValue_lte?: Maybe<Scalars['BigInt']>;
+  historicPrepaidCardFaceValue_in?: Maybe<Array<Scalars['BigInt']>>;
+  historicPrepaidCardFaceValue_not_in?: Maybe<Array<Scalars['BigInt']>>;
   historicPrepaidCardIssuingTokenBalance?: Maybe<Scalars['BigInt']>;
   historicPrepaidCardIssuingTokenBalance_not?: Maybe<Scalars['BigInt']>;
   historicPrepaidCardIssuingTokenBalance_gt?: Maybe<Scalars['BigInt']>;
@@ -1651,7 +1670,8 @@ export enum PrepaidCardPaymentOrderBy {
   ISSUINGTOKEN = 'issuingToken',
   ISSUINGTOKENAMOUNT = 'issuingTokenAmount',
   SPENDAMOUNT = 'spendAmount',
-  HISTORICPREPAIDCARDSPENDBALANCE = 'historicPrepaidCardSpendBalance',
+  ISSUINGTOKENUSDPRICE = 'issuingTokenUSDPrice',
+  HISTORICPREPAIDCARDFACEVALUE = 'historicPrepaidCardFaceValue',
   HISTORICPREPAIDCARDISSUINGTOKENBALANCE = 'historicPrepaidCardIssuingTokenBalance',
   MERCHANTREGISTRATIONPAYMENTS = 'merchantRegistrationPayments'
 }
@@ -1939,14 +1959,6 @@ export type PrepaidCardFilter = {
   reloadable_not?: Maybe<Scalars['Boolean']>;
   reloadable_in?: Maybe<Array<Scalars['Boolean']>>;
   reloadable_not_in?: Maybe<Array<Scalars['Boolean']>>;
-  spendBalance?: Maybe<Scalars['BigInt']>;
-  spendBalance_not?: Maybe<Scalars['BigInt']>;
-  spendBalance_gt?: Maybe<Scalars['BigInt']>;
-  spendBalance_lt?: Maybe<Scalars['BigInt']>;
-  spendBalance_gte?: Maybe<Scalars['BigInt']>;
-  spendBalance_lte?: Maybe<Scalars['BigInt']>;
-  spendBalance_in?: Maybe<Array<Scalars['BigInt']>>;
-  spendBalance_not_in?: Maybe<Array<Scalars['BigInt']>>;
   faceValue?: Maybe<Scalars['BigInt']>;
   faceValue_not?: Maybe<Scalars['BigInt']>;
   faceValue_gt?: Maybe<Scalars['BigInt']>;
@@ -1973,7 +1985,6 @@ export enum PrepaidCardOrderBy {
   ISSUER = 'issuer',
   OWNER = 'owner',
   RELOADABLE = 'reloadable',
-  SPENDBALANCE = 'spendBalance',
   FACEVALUE = 'faceValue',
   ISSUINGTOKENBALANCE = 'issuingTokenBalance',
   CREATION = 'creation',
@@ -2006,6 +2017,8 @@ export type Query = {
   prepaidCardTransfers: Array<PrepaidCardTransfer>;
   merchantRevenue?: Maybe<MerchantRevenue>;
   merchantRevenues: Array<MerchantRevenue>;
+  revenueEarningsByDay?: Maybe<RevenueEarningsByDay>;
+  revenueEarningsByDays: Array<RevenueEarningsByDay>;
   merchantClaim?: Maybe<MerchantClaim>;
   merchantClaims: Array<MerchantClaim>;
   merchantRevenueEvent?: Maybe<MerchantRevenueEvent>;
@@ -2219,6 +2232,22 @@ export type QueryMerchantRevenuesArgs = {
   orderBy?: Maybe<MerchantRevenueOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantRevenueFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRevenueEarningsByDayArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRevenueEarningsByDaysArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RevenueEarningsByDayOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RevenueEarningsByDayFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -2514,6 +2543,78 @@ export type QueryTokenPairsArgs = {
 export type QueryMetaArgs = {
   block?: Maybe<BlockHeight>;
 };
+
+export type RevenueEarningsByDay = {
+  __typename?: 'RevenueEarningsByDay';
+  id: Scalars['ID'];
+  date: Scalars['String'];
+  merchantRevenue: MerchantRevenue;
+  spendAccumulation: Scalars['BigInt'];
+  issuingTokenAccumulation: Scalars['BigInt'];
+};
+
+export type RevenueEarningsByDayFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  date?: Maybe<Scalars['String']>;
+  date_not?: Maybe<Scalars['String']>;
+  date_gt?: Maybe<Scalars['String']>;
+  date_lt?: Maybe<Scalars['String']>;
+  date_gte?: Maybe<Scalars['String']>;
+  date_lte?: Maybe<Scalars['String']>;
+  date_in?: Maybe<Array<Scalars['String']>>;
+  date_not_in?: Maybe<Array<Scalars['String']>>;
+  date_contains?: Maybe<Scalars['String']>;
+  date_not_contains?: Maybe<Scalars['String']>;
+  date_starts_with?: Maybe<Scalars['String']>;
+  date_not_starts_with?: Maybe<Scalars['String']>;
+  date_ends_with?: Maybe<Scalars['String']>;
+  date_not_ends_with?: Maybe<Scalars['String']>;
+  merchantRevenue?: Maybe<Scalars['String']>;
+  merchantRevenue_not?: Maybe<Scalars['String']>;
+  merchantRevenue_gt?: Maybe<Scalars['String']>;
+  merchantRevenue_lt?: Maybe<Scalars['String']>;
+  merchantRevenue_gte?: Maybe<Scalars['String']>;
+  merchantRevenue_lte?: Maybe<Scalars['String']>;
+  merchantRevenue_in?: Maybe<Array<Scalars['String']>>;
+  merchantRevenue_not_in?: Maybe<Array<Scalars['String']>>;
+  merchantRevenue_contains?: Maybe<Scalars['String']>;
+  merchantRevenue_not_contains?: Maybe<Scalars['String']>;
+  merchantRevenue_starts_with?: Maybe<Scalars['String']>;
+  merchantRevenue_not_starts_with?: Maybe<Scalars['String']>;
+  merchantRevenue_ends_with?: Maybe<Scalars['String']>;
+  merchantRevenue_not_ends_with?: Maybe<Scalars['String']>;
+  spendAccumulation?: Maybe<Scalars['BigInt']>;
+  spendAccumulation_not?: Maybe<Scalars['BigInt']>;
+  spendAccumulation_gt?: Maybe<Scalars['BigInt']>;
+  spendAccumulation_lt?: Maybe<Scalars['BigInt']>;
+  spendAccumulation_gte?: Maybe<Scalars['BigInt']>;
+  spendAccumulation_lte?: Maybe<Scalars['BigInt']>;
+  spendAccumulation_in?: Maybe<Array<Scalars['BigInt']>>;
+  spendAccumulation_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  issuingTokenAccumulation?: Maybe<Scalars['BigInt']>;
+  issuingTokenAccumulation_not?: Maybe<Scalars['BigInt']>;
+  issuingTokenAccumulation_gt?: Maybe<Scalars['BigInt']>;
+  issuingTokenAccumulation_lt?: Maybe<Scalars['BigInt']>;
+  issuingTokenAccumulation_gte?: Maybe<Scalars['BigInt']>;
+  issuingTokenAccumulation_lte?: Maybe<Scalars['BigInt']>;
+  issuingTokenAccumulation_in?: Maybe<Array<Scalars['BigInt']>>;
+  issuingTokenAccumulation_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum RevenueEarningsByDayOrderBy {
+  ID = 'id',
+  DATE = 'date',
+  MERCHANTREVENUE = 'merchantRevenue',
+  SPENDACCUMULATION = 'spendAccumulation',
+  ISSUINGTOKENACCUMULATION = 'issuingTokenAccumulation'
+}
 
 export type Safe = {
   __typename?: 'Safe';
@@ -2939,6 +3040,8 @@ export type Subscription = {
   prepaidCardTransfers: Array<PrepaidCardTransfer>;
   merchantRevenue?: Maybe<MerchantRevenue>;
   merchantRevenues: Array<MerchantRevenue>;
+  revenueEarningsByDay?: Maybe<RevenueEarningsByDay>;
+  revenueEarningsByDays: Array<RevenueEarningsByDay>;
   merchantClaim?: Maybe<MerchantClaim>;
   merchantClaims: Array<MerchantClaim>;
   merchantRevenueEvent?: Maybe<MerchantRevenueEvent>;
@@ -3152,6 +3255,22 @@ export type SubscriptionMerchantRevenuesArgs = {
   orderBy?: Maybe<MerchantRevenueOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantRevenueFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRevenueEarningsByDayArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRevenueEarningsByDaysArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RevenueEarningsByDayOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RevenueEarningsByDayFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -4454,7 +4573,7 @@ export type PrepaidCardTransferFragment = (
   & Pick<PrepaidCardTransfer, 'id' | 'timestamp'>
   & { prepaidCard: (
     { __typename?: 'PrepaidCard' }
-    & Pick<PrepaidCard, 'id' | 'customizationDID' | 'spendBalance'>
+    & Pick<PrepaidCard, 'id' | 'customizationDID' | 'faceValue'>
   ), from: (
     { __typename?: 'Account' }
     & Pick<Account, 'id'>
@@ -4784,7 +4903,7 @@ export const PrepaidCardTransferFragmentDoc = gql`
   prepaidCard {
     id
     customizationDID
-    spendBalance
+    faceValue
   }
   from {
     id

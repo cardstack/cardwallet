@@ -50,7 +50,7 @@ const useSokolTransactions = () => {
     onEndReached,
   } = useTransactionSections({
     transactions,
-    isEmpty: account === null,
+    isEmpty: Boolean(!account),
     transactionsCount: transactions?.length || 0,
     networkStatus,
     fetchMore,
