@@ -69,11 +69,12 @@ export const settingsUpdateNetwork = network => async dispatch => {
   try {
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
     await web3SetHttpProvider(network);
-    dispatch({
+    await dispatch({
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
     });
-    saveNetwork(network);
+    await dispatch(fallbackExplorerClearState());
+    await saveNetwork(network);
     dispatch(fallbackExplorerInit());
     dispatch(walletConnectUpdateSessions());
   } catch (error) {

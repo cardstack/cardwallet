@@ -5,7 +5,10 @@ import { useDispatch } from 'react-redux';
 import { uniqueTokensRefreshState } from '../redux/uniqueTokens';
 import { uniswapGetAllExchanges, uniswapPairsInit } from '../redux/uniswap';
 import { explorerInit } from '@rainbow-me/redux/explorer';
-import { fallbackExplorerInit } from '@rainbow-me/redux/fallbackExplorer';
+import {
+  fallbackExplorerClearState,
+  fallbackExplorerInit,
+} from '@rainbow-me/redux/fallbackExplorer';
 import logger from 'logger';
 
 export default function useInitializeAccountData() {
@@ -15,6 +18,7 @@ export default function useInitializeAccountData() {
     try {
       InteractionManager.runAfterInteractions(() => {
         logger.sentry('Initialize account data');
+        dispatch(fallbackExplorerClearState());
         dispatch(explorerInit());
         dispatch(fallbackExplorerInit());
       });

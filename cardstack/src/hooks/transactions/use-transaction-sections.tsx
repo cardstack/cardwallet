@@ -44,7 +44,7 @@ export const useTransactionSections = ({
     state.data.depots,
   ]);
 
-  const depot = depots[0];
+  const depot = depots?.[0];
 
   const [
     nativeCurrency,

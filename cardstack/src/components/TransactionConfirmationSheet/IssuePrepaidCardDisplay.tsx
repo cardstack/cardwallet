@@ -47,7 +47,7 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
   const { accountColor, accountName, accountSymbol } = useAccountProfile();
 
   const depots = useRainbowSelector(state => state.data.depots);
-  const depot = depots[0];
+  const depot = depots?.[0];
 
   const token = getDepotTokenByAddress(depot, tokenAddress);
 

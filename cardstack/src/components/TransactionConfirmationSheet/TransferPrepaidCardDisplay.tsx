@@ -49,7 +49,7 @@ const FromSection = () => {
   const { accountColor, accountName, accountSymbol } = useAccountProfile();
 
   const depots = useRainbowSelector(state => state.data.depots);
-  const depot = depots[0];
+  const depot = depots?.[0];
 
   return (
     <Container marginTop={8} width="100%">
