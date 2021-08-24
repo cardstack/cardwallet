@@ -1,5 +1,10 @@
-import React from 'react';
-import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
+import React, { memo, useCallback, useEffect } from 'react';
+import {
+  RefreshControl,
+  SectionList,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 
 import { TransactionListLoading } from './TransactionListLoading';
 import { useFullTransactionList } from '@cardstack/hooks';
@@ -15,41 +20,37 @@ import {
 interface TransactionListProps {
   Header: JSX.Element;
   accountAddress: string;
+  isFocused: boolean;
 }
 
-export const TransactionList = ({ Header }: TransactionListProps) => {
-  const {
-    onEndReached,
-    isLoadingTransactions,
-    isFetchingMore,
-    sections,
-    refetch,
-    refetchLoading,
-  } = useFullTransactionList();
+const styles = StyleSheet.create({
+  contentContainerStyle: { paddingBottom: 40 },
+  background: { backgroundColor: colors.backgroundBlue },
+});
 
-  if (isLoadingTransactions) {
-    return (
-      <ScrollView
-        backgroundColor="backgroundBlue"
-        contentContainerStyle={{ paddingBottom: 40 }}
-      >
-        {Header}
-        <TransactionListLoading />
-      </ScrollView>
-    );
-  }
+export const TransactionList = memo(
+  ({ Header, isFocused }: TransactionListProps) => {
+    const {
+      onEndReached,
+      isLoadingTransactions,
+      isFetchingMore,
+      sections,
+      refetch,
+      refetchLoading,
+    } = useFullTransactionList();
 
-  return (
-    <SectionList
-      ListEmptyComponent={<ListEmptyComponent />}
-      ListHeaderComponent={Header}
-      ListFooterComponent={
-        isFetchingMore ? <ActivityIndicator color="white" /> : null
+    const onRefresh = useCallback(() => {
+      refetch && refetch();
+    }, [refetch]);
+
+    useEffect(() => {
+      if (isFocused) {
+        onRefresh();
       }
-      contentContainerStyle={{ paddingBottom: 40 }}
-      renderItem={props => <TransactionItem {...props} />}
-      sections={sections}
-      renderSectionHeader={({ section: { title } }) => (
+    }, [onRefresh, isFocused]);
+
+    const renderSectionHeader = useCallback(
+      ({ section: { title } }) => (
         <Container
           paddingVertical={2}
           paddingHorizontal={5}
@@ -60,20 +61,56 @@ export const TransactionList = ({ Header }: TransactionListProps) => {
             {title}
           </Text>
         </Container>
-      )}
-      refreshControl={
-        <RefreshControl
-          tintColor="white"
-          refreshing={refetchLoading}
-          onRefresh={refetch}
-        />
-      }
-      onEndReached={onEndReached}
-      onEndReachedThreshold={1}
-      style={{ backgroundColor: colors.backgroundBlue }}
-    />
-  );
-};
+      ),
+      []
+    );
+
+    if (isLoadingTransactions) {
+      return (
+        <ScrollView
+          backgroundColor="backgroundBlue"
+          contentContainerStyle={styles.contentContainerStyle}
+        >
+          {Header}
+          <TransactionListLoading />
+        </ScrollView>
+      );
+    }
+
+    const isRefetchingOnFocus = refetchLoading && isFocused;
+
+    return (
+      <SectionList
+        ListEmptyComponent={<ListEmptyComponent />}
+        ListHeaderComponent={
+          <>
+            {Header}
+            {isRefetchingOnFocus && <ActivityIndicator color="white" />}
+          </>
+        }
+        ListFooterComponent={
+          isFetchingMore ? <ActivityIndicator color="white" /> : null
+        }
+        contentContainerStyle={styles.contentContainerStyle}
+        renderItem={props => <TransactionItem {...props} />}
+        sections={sections}
+        renderSectionHeader={renderSectionHeader}
+        refreshControl={
+          <RefreshControl
+            tintColor="white"
+            refreshing={refetchLoading && !isFocused}
+            onRefresh={onRefresh}
+          />
+        }
+        onEndReached={onEndReached}
+        onEndReachedThreshold={1}
+        style={styles.background}
+      />
+    );
+  }
+);
+
+TransactionList.displayName = 'TransactionList';
 
 const ListEmptyComponent = () => (
   <CenteredContainer width="100%" height={100} flex={1}>

@@ -103,6 +103,7 @@ export default function ProfileScreen({ navigation }) {
           />
         }
         accountAddress={accountAddress}
+        isFocused={isFocused}
       />
       <ToastPositionContainer>
         <CopyToast copiedText={copiedText} copyCount={copyCount} />
