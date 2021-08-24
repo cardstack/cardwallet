@@ -1,7 +1,6 @@
 import { NetworkStatus } from '@apollo/client';
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
-import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { isLayer1 } from '@cardstack/utils';
@@ -17,8 +16,6 @@ const useSokolTransactions = () => {
 
   const isNotSokol = network !== networkTypes.sokol;
 
-  const client = getApolloClient(network);
-
   const {
     data,
     networkStatus,
@@ -26,14 +23,13 @@ const useSokolTransactions = () => {
     refetch,
     error,
   } = useGetAccountTransactionHistoryDataQuery({
-    client,
     notifyOnNetworkStatusChange: true,
     skip: isNotSokol,
     variables: {
       address: accountAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
     },
-    fetchPolicy: 'network-only', // not cache transaction list result
+    context: { network },
   });
 
   const account = data?.account;
