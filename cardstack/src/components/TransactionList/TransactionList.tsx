@@ -77,17 +77,10 @@ export const TransactionList = memo(
       );
     }
 
-    const isRefetchingOnFocus = refetchLoading && isFocused;
-
     return (
       <SectionList
         ListEmptyComponent={<ListEmptyComponent />}
-        ListHeaderComponent={
-          <>
-            {Header}
-            {isRefetchingOnFocus && <ActivityIndicator color="white" />}
-          </>
-        }
+        ListHeaderComponent={Header}
         ListFooterComponent={
           isFetchingMore ? <ActivityIndicator color="white" /> : null
         }
