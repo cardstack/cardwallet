@@ -29,8 +29,6 @@ const CONTAINER_WIDTH = screenWidth * 0.7;
 export const MerchantSafe = (props: MerchantSafeProps) => {
   const { navigate } = useNavigation();
 
-  console.log(JSON.stringify(props));
-
   const onPress = () =>
     navigate(Routes.MERCHANT_SCREEN, { merchantSafe: props });
 
