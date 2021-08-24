@@ -45,7 +45,7 @@ interface InputProps {
 /**
  * This is our primitive Input component with restyle props applied
  */
-export const Input = React.forwardRef((props: InputProps, ref) => (
+export const Input = React.forwardRef((props: InputProps & BaseInputProps, ref) => (
   <Container>
     <BasicInput
       {...(props.border

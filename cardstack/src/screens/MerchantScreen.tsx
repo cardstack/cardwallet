@@ -44,31 +44,6 @@ interface RouteType {
   name: string;
 }
 
-export default function MerchantScreen() {
-  return (
-    <Container top={0} width="100%" backgroundColor="white">
-      <StatusBar barStyle="light-content" />
-      <Header />
-      <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
-        <ScrollView
-          flex={1}
-          width="100%"
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
-          paddingHorizontal={HORIZONTAL_PADDING}
-        >
-          <MerchantInfo />
-          <Button marginTop={2} marginBottom={4}>
-            Request Payment
-          </Button>
-          <HorizontalDivider />
-          <LifetimeEarningsSection />
-          <UnclaimedRevenueSection />
-          <AvailableBalancesSection />
-        </ScrollView>
-      </Container>
-    </Container>
-  );
-}
 
 const useMerchantSafe = () => {
   const {
@@ -86,13 +61,45 @@ const useMerchantSafe = () => {
   return merchantSafe;
 };
 
+export default function MerchantScreen() {
+  const { navigate } = useNavigation();
+  const merchantSafe = useMerchantSafe();
+
+  const onPressRequestPayment = useCallback(() => {
+    navigate(Routes.EXPANDED_ASSET_SHEET, {
+      asset: merchantSafe,
+      type: 'paymentRequest',
+    });
+  }, [merchantSafe, navigate]);
+
+  return (
+    <Container top={0} width="100%" backgroundColor="white">
+      <StatusBar barStyle="light-content" />
+      <Header />
+      <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
+        <ScrollView
+          flex={1}
+          width="100%"
+          contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
+          paddingHorizontal={HORIZONTAL_PADDING}
+        >
+          <MerchantInfo />
+          <Button marginTop={2} marginBottom={4} onPress={onPressRequestPayment}>
+            Request Payment
+          </Button>
+          <HorizontalDivider />
+          <LifetimeEarningsSection />
+          <UnclaimedRevenueSection />
+          <AvailableBalancesSection />
+        </ScrollView>
+      </Container>
+    </Container>
+  );
+}
+
 const Header = () => {
   const { goBack, navigate } = useNavigation();
-  const { address } = useMerchantSafe();
-
-  const {
-    params: { merchantSafe },
-  } = useRoute<RouteType>();
+  const merchantSafe = useMerchantSafe();
 
   const onPressInformation = useCallback(() => {
     navigate(Routes.MODAL_SCREEN, {
@@ -127,7 +134,7 @@ const Header = () => {
                     size="xs"
                     marginRight={2}
                   >
-                    {getAddressPreview(address)}
+                    {getAddressPreview(merchantSafe.address)}
                   </Text>
                   <Icon name="info" size={15} />
                 </Container>

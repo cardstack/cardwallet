@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import {
   ChartFilterOptions,
