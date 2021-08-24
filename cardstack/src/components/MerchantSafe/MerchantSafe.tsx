@@ -1,4 +1,5 @@
 import React from 'react';
+import { ContactAvatar } from '../../../../src/components/contacts';
 import {
   Container,
   HorizontalDivider,
@@ -9,8 +10,8 @@ import {
   TokenBalance,
   Touchable,
 } from '@cardstack/components';
-import { MerchantSafeType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
+import { convertSpendForBalanceDisplay, screenWidth } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
@@ -20,16 +21,21 @@ interface MerchantSafeProps extends MerchantSafeType {
   currencyConversionRates: {
     [key: string]: number;
   };
+  merchantInfo?: MerchantInformation;
 }
+
+const CONTAINER_WIDTH = screenWidth * 0.7;
 
 export const MerchantSafe = (props: MerchantSafeProps) => {
   const { navigate } = useNavigation();
+
+  console.log(JSON.stringify(props));
 
   const onPress = () =>
     navigate(Routes.MERCHANT_SCREEN, { merchantSafe: props });
 
   return (
-    <Container width="100%" paddingHorizontal={4}>
+    <Container width="100%" paddingHorizontal={4} marginBottom={4}>
       <Touchable width="100%" testID="inventory-card" onPress={onPress}>
         <Container
           backgroundColor="white"
@@ -39,7 +45,7 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
           width="100%"
         >
           <SafeHeader {...props} onPress={onPress} />
-          <MerchantInfo />
+          <MerchantInfo {...props} />
           <Bottom {...props} />
         </Container>
       </Touchable>
@@ -47,7 +53,7 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
   );
 };
 
-const MerchantInfo = () => (
+export const MerchantInfo = (props: MerchantSafeProps) => (
   <Container width="100%" justifyContent="center" alignItems="center">
     <Container
       alignItems="center"
@@ -57,9 +63,25 @@ const MerchantInfo = () => (
       paddingHorizontal={5}
       paddingBottom={10}
     >
-      <Icon name="user" />
-      <Container flexDirection="column" marginLeft={4} justifyContent="center">
-        <Text weight="bold">Merchant Name</Text>
+      {props.merchantInfo ? (
+        <ContactAvatar
+          color={props.merchantInfo?.color}
+          size="small"
+          value={props.merchantInfo?.name}
+        />
+      ) : (
+        <Icon name="user" />
+      )}
+
+      <Container
+        flexDirection="column"
+        marginLeft={4}
+        justifyContent="center"
+        width={CONTAINER_WIDTH}
+      >
+        <Text weight="bold" ellipsizeMode="tail" numberOfLines={1}>
+          {props.merchantInfo?.name || ''}
+        </Text>
         <Text variant="subText">Merchant Account</Text>
       </Container>
     </Container>
