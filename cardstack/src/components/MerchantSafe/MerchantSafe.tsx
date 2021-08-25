@@ -11,7 +11,7 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay, screenWidth } from '@cardstack/utils';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
@@ -24,7 +24,7 @@ interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
 }
 
-const CONTAINER_WIDTH = screenWidth * 0.7;
+const smallTokenSize = 30;
 
 export const MerchantSafe = (props: MerchantSafeProps) => {
   const { navigate } = useNavigation();
@@ -33,18 +33,19 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
     navigate(Routes.MERCHANT_SCREEN, { merchantSafe: props });
 
   return (
-    <Container width="100%" paddingHorizontal={4} marginBottom={4}>
-      <Touchable width="100%" testID="inventory-card" onPress={onPress}>
+    <Container paddingHorizontal={4} marginBottom={4}>
+      <Touchable testID="inventory-card" onPress={onPress}>
         <Container
           backgroundColor="white"
           borderRadius={10}
           overflow="hidden"
           borderColor="buttonPrimaryBorder"
-          width="100%"
         >
           <SafeHeader {...props} onPress={onPress} />
-          <MerchantInfo {...props} />
-          <Bottom {...props} />
+          <Container paddingHorizontal={6}>
+            <MerchantInfo {...props} />
+            <Bottom {...props} />
+          </Container>
         </Container>
       </Touchable>
     </Container>
@@ -52,19 +53,12 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
 };
 
 export const MerchantInfo = (props: MerchantSafeProps) => (
-  <Container width="100%" justifyContent="center" alignItems="center">
-    <Container
-      alignItems="center"
-      flexDirection="row"
-      paddingTop={4}
-      width="100%"
-      paddingHorizontal={5}
-      paddingBottom={10}
-    >
+  <>
+    <Container flexDirection="row" paddingVertical={8}>
       {props.merchantInfo ? (
         <ContactAvatar
           color={props.merchantInfo?.color}
-          size="small"
+          size="medium"
           value={props.merchantInfo?.name}
         />
       ) : (
@@ -75,7 +69,7 @@ export const MerchantInfo = (props: MerchantSafeProps) => (
         flexDirection="column"
         marginLeft={4}
         justifyContent="center"
-        width={CONTAINER_WIDTH}
+        width="85%"
       >
         <Text weight="bold" ellipsizeMode="tail" numberOfLines={1}>
           {props.merchantInfo?.name || ''}
@@ -83,12 +77,12 @@ export const MerchantInfo = (props: MerchantSafeProps) => (
         <Text variant="subText">Merchant Account</Text>
       </Container>
     </Container>
-  </Container>
+  </>
 );
 
 const Bottom = (props: MerchantSafeProps) => {
   return (
-    <Container paddingHorizontal={6} paddingBottom={6}>
+    <Container paddingBottom={6}>
       <LifetimeEarningsSection {...props} />
       <HorizontalDivider />
       <UnclaimedRevenueSection {...props} />
@@ -137,6 +131,7 @@ const UnclaimedRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
           tokenSymbol={firstToken.token.symbol}
           tokenBalance={firstToken.balance.display}
           nativeBalance={firstToken.native.balance.display}
+          size={smallTokenSize}
         />
       ) : (
         <EmptySection>No revenue to be claimed</EmptySection>
@@ -163,6 +158,7 @@ const AvailableBalancesSection = ({ tokens }: MerchantSafeProps) => {
             tokenSymbol={firstToken.token.symbol}
             tokenBalance={firstToken.balance.display}
             nativeBalance={firstToken.native.balance.display}
+            size={smallTokenSize}
           />
         ) : (
           <EmptySection>No available assets</EmptySection>
