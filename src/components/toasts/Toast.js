@@ -46,7 +46,6 @@ export function ToastsContainer({ children }) {
 
 export default function Toast({
   children,
-  color,
   distance = 60,
   targetTranslate = 0,
   icon,
@@ -75,7 +74,7 @@ export default function Toast({
   return (
     <Animated.View style={{ opacity, transform: [{ translateY }] }}>
       <Container
-        color="black"
+        color={colors.blackOpacity50}
         deviceWidth={deviceWidth}
         insets={insets}
         testID={testID}
