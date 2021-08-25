@@ -20,7 +20,6 @@ import { MerchantSafeType, TokenType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
-  screenWidth,
   sortedByTokenBalanceAmount,
 } from '@cardstack/utils';
 import { ChartPath } from '@rainbow-me/animated-charts';
@@ -35,7 +34,6 @@ import { useDimensions } from '@rainbow-me/hooks';
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
 const TOTAL_HORIZONTAL_PADDING = HORIZONTAL_PADDING_PIXELS * 2;
-const CONTAINER_WIDTH = screenWidth * 0.8;
 
 const isLastItem = (items: TokenType[], index: number): boolean =>
   items.length - 1 === index;
@@ -110,7 +108,7 @@ const Header = () => {
           <Touchable onPress={goBack} left={12} position="absolute">
             <Icon name="chevron-left" color="teal" size={30} />
           </Touchable>
-          <Container alignItems="center" width={CONTAINER_WIDTH}>
+          <Container alignItems="center" width="80%">
             <Text
               color="white"
               weight="bold"
@@ -175,6 +173,7 @@ const MerchantInfo = () => {
           color={merchantSafe.merchantInfo?.color}
           size="large"
           value={merchantSafe.merchantInfo?.name}
+          textColor={merchantSafe.merchantInfo?.['text-color']}
         />
       ) : (
         <Icon name="user" size={80} />
