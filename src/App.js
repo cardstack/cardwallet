@@ -1,3 +1,4 @@
+import { ApolloProvider } from '@apollo/client';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
@@ -63,9 +64,9 @@ import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
 import MinimumVersion from './screens/MinimumVersion';
+import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
-import { web3Provider } from '@rainbow-me/handlers/web3';
 import Routes from '@rainbow-me/routes';
 import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
@@ -331,21 +332,23 @@ class App extends Component {
           <Portal>
             <SafeAreaProvider>
               <PinnedHiddenItemOptionProvider>
-                <Provider store={store}>
-                  <FlexItem>
-                    <CheckSystemReqs>
-                      {this.state.initialRoute && (
-                        <InitialRouteContext.Provider
-                          value={this.state.initialRoute}
-                        >
-                          <RoutesComponent ref={this.handleNavigatorRef} />
-                          <PortalConsumer />
-                        </InitialRouteContext.Provider>
-                      )}
-                    </CheckSystemReqs>
-                    <OfflineToast />
-                  </FlexItem>
-                </Provider>
+                <ApolloProvider client={apolloClient}>
+                  <Provider store={store}>
+                    <FlexItem>
+                      <CheckSystemReqs>
+                        {this.state.initialRoute && (
+                          <InitialRouteContext.Provider
+                            value={this.state.initialRoute}
+                          >
+                            <RoutesComponent ref={this.handleNavigatorRef} />
+                            <PortalConsumer />
+                          </InitialRouteContext.Provider>
+                        )}
+                      </CheckSystemReqs>
+                      <OfflineToast />
+                    </FlexItem>
+                  </Provider>
+                </ApolloProvider>
               </PinnedHiddenItemOptionProvider>
             </SafeAreaProvider>
           </Portal>

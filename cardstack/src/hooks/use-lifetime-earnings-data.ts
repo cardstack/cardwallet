@@ -4,7 +4,6 @@ import {
   groupAccumulations,
   Units,
 } from './../utils/date-utils';
-import { getApolloClient } from './../graphql/apollo-client';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { useGetLifetimeEarningsAccumulationsQuery } from '@cardstack/graphql';
 
@@ -39,14 +38,13 @@ export const useLifetimeEarningsData = (
   option = ChartFilterOptions.MONTH
 ) => {
   const network = useRainbowSelector(state => state.settings.network);
-  const client = getApolloClient(network);
   const params = optionToTimeParams[option];
 
   const { data, loading } = useGetLifetimeEarningsAccumulationsQuery({
-    client,
     variables: {
       address: merchantSafeAddress,
     },
+    context: { network },
   });
 
   if (!data?.merchantSafe) {

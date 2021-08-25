@@ -1,7 +1,6 @@
 import { NetworkStatus } from '@apollo/client';
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
-import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
@@ -25,8 +24,6 @@ export const useMerchantTransactions = (
 ) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
 
-  const client = getApolloClient(network);
-
   const {
     data,
     networkStatus,
@@ -34,13 +31,12 @@ export const useMerchantTransactions = (
     refetch,
     error,
   } = useGetMerchantTransactionHistoryDataQuery({
-    client,
     notifyOnNetworkStatusChange: true,
     variables: {
       address: safeAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
     },
-    fetchPolicy: 'network-only', // not cache transaction list result
+    context: { network },
   });
 
   const revenueEvents = data?.merchantSafe?.merchantRevenue?.[0]?.revenueEvents;

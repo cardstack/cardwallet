@@ -2,15 +2,12 @@ import { NetworkStatus } from '@apollo/client';
 
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
-import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import logger from 'logger';
 import { useGetDepotTransactionHistoryDataQuery } from '@cardstack/graphql';
 
 export const useDepotTransactions = (safeAddress: string) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
-
-  const client = getApolloClient(network);
 
   const {
     data,
@@ -19,13 +16,12 @@ export const useDepotTransactions = (safeAddress: string) => {
     refetch,
     error,
   } = useGetDepotTransactionHistoryDataQuery({
-    client,
     notifyOnNetworkStatusChange: true,
     variables: {
       address: safeAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
     },
-    fetchPolicy: 'network-only', // not cache transaction list result
+    context: { network },
   });
 
   const safe = data?.safe;

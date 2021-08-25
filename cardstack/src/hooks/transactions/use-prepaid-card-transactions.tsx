@@ -1,5 +1,4 @@
 import { useRainbowSelector } from '../../../../src/redux/hooks';
-import { getApolloClient } from '../../graphql/apollo-client';
 import { useTransactionSections } from './use-transaction-sections';
 import logger from 'logger';
 import { useGetPrepaidCardHistoryDataQuery } from '@cardstack/graphql';
@@ -11,19 +10,16 @@ import { PrepaidCardTransferStrategy } from '@cardstack/transaction-mapping-stra
 export const usePrepaidCardTransactions = (prepaidCardAddress: string) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);
 
-  const client = getApolloClient(network);
-
   const {
     data,
     error,
     networkStatus,
     fetchMore,
   } = useGetPrepaidCardHistoryDataQuery({
-    client,
     variables: {
       address: prepaidCardAddress,
     },
-    fetchPolicy: 'network-only', // not cache transaction list result
+    context: { network },
   });
 
   let transactions: ({ transaction: any } | null | undefined)[] | undefined;
