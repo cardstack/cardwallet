@@ -1,8 +1,6 @@
+import { useCardstackScreens } from '@cardstack/navigation/hooks';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  CardStyleInterpolators,
-  createStackNavigator,
-} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
 import { StatusBar } from 'react-native';
@@ -50,13 +48,6 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import {
-  BuyPrepaidCard,
-  DepotScreen,
-  MerchantScreen,
-  PrepaidCardModal,
-  TransactionConfirmation,
-} from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
@@ -144,6 +135,7 @@ function AddCashFlowNavigator() {
 
 function MainNavigator() {
   const initialRoute = useContext(InitialRouteContext);
+  const cardstackScreens = useCardstackScreens(Stack);
 
   return (
     <Stack.Navigator
@@ -153,35 +145,6 @@ function MainNavigator() {
     >
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
       <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
-      <Stack.Screen component={BuyPrepaidCard} name={Routes.BUY_PREPAID_CARD} />
-      <Stack.Screen
-        component={DepotScreen}
-        name={Routes.DEPOT_SCREEN}
-        options={{
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          gestureDirection: 'horizontal',
-        }}
-      />
-      <Stack.Screen
-        component={MerchantScreen}
-        name={Routes.MERCHANT_SCREEN}
-        options={{
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          gestureDirection: 'horizontal',
-        }}
-      />
-      <Stack.Screen
-        component={PrepaidCardModal}
-        name={Routes.PREPAID_CARD_MODAL}
-        options={expandedPreset}
-      />
-      <Stack.Screen
-        component={TransactionConfirmation}
-        name={Routes.CONFIRM_REQUEST}
-        options={{
-          gestureEnabled: false,
-        }}
-      />
       <Stack.Screen
         component={AvatarBuilder}
         name={Routes.AVATAR_BUILDER}
@@ -197,6 +160,7 @@ function MainNavigator() {
         name={Routes.WALLET_CONNECT_REDIRECT_SHEET}
         options={bottomSheetPreset}
       />
+      {cardstackScreens}
     </Stack.Navigator>
   );
 }

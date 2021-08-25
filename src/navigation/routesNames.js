@@ -1,3 +1,4 @@
+import { Routes as CSRoutes } from '@cardstack/navigation/routes';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 
 const Routes = {
@@ -6,14 +7,9 @@ const Routes = {
   AVATAR_BUILDER: 'AvatarBuilder',
   BACKUP_SCREEN: 'BackupScreen',
   BACKUP_SHEET: 'BackupSheet',
-  BUY_PREPAID_CARD: 'BuyPrepaidCard',
   CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
   CHANGE_WALLET_SHEET_NAVIGATOR: 'ChangeWalletSheetNavigator',
-  CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECT_SCREEN: 'CurrencySelectScreen',
-  DEPOT_SCREEN: 'DepotScreen',
-  MERCHANT_SCREEN: 'MerchantScreen',
-  PREPAID_CARD_MODAL: 'PrepaidCardModal',
   EXAMPLE_SCREEN: 'ExampleScreen',
   EXCHANGE_MODAL: 'ExchangeModal',
   EXPANDED_ASSET_SCREEN: 'ExpandedAssetScreen',
@@ -53,6 +49,8 @@ const Routes = {
   WELCOME_SCREEN: 'WelcomeScreen',
   WYRE_WEBVIEW: 'WyreWebview',
   WYRE_WEBVIEW_NAVIGATOR: 'WyreWebviewNavigator',
+  // Cardstack Screens
+  ...CSRoutes,
 };
 
 export const NATIVE_ROUTES = [

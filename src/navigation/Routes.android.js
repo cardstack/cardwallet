@@ -1,3 +1,4 @@
+import { useCardstackScreens } from '@cardstack/navigation';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useMemo } from 'react';
@@ -17,7 +18,6 @@ import SavingsSheet from '../screens/SavingsSheet';
 import SendSheet from '../screens/SendSheet';
 import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
-import TransactionConfirmationScreen from '../screens/TransactionConfirmationScreen';
 import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
 import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
 import WelcomeScreen from '../screens/WelcomeScreen';
@@ -107,6 +107,7 @@ function AddCashFlowNavigator() {
 
 function MainNavigator() {
   const initialRoute = useContext(InitialRouteContext);
+  const cardstackScreens = useCardstackScreens(Stack);
 
   return (
     <Stack.Navigator
@@ -129,11 +130,6 @@ function MainNavigator() {
         component={ChangeWalletSheet}
         name={Routes.CHANGE_WALLET_SHEET}
         options={expandedPreset}
-      />
-      <Stack.Screen
-        component={TransactionConfirmationScreen}
-        name={Routes.CONFIRM_REQUEST}
-        options={exchangePreset}
       />
       <Stack.Screen
         component={SpeedUpAndCancelSheet}
@@ -215,6 +211,7 @@ function MainNavigator() {
         component={AddCashFlowNavigator}
         name={Routes.WYRE_WEBVIEW_NAVIGATOR}
       />
+      {cardstackScreens}
     </Stack.Navigator>
   );
 }
