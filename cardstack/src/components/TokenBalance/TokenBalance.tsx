@@ -16,6 +16,7 @@ interface TokenBalanceProps extends ContainerProps {
   nativeBalance: string;
   includeBorder?: boolean;
   isLastItemIfList?: boolean;
+  size?: number;
 }
 
 const borderStyle = {
@@ -36,6 +37,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
     Icon,
     includeBorder,
     isLastItemIfList = true,
+    size = 40,
     ...containerProps
   } = props;
 
@@ -52,7 +54,11 @@ export const TokenBalance = (props: TokenBalanceProps) => {
       >
         <Container>
           <Container flexDirection="row">
-            {Icon ? Icon : <CoinIcon address={address} symbol={tokenSymbol} />}
+            {Icon ? (
+              Icon
+            ) : (
+              <CoinIcon address={address} symbol={tokenSymbol} size={size} />
+            )}
             <Container flexDirection="column" marginLeft={3}>
               <Text weight="extraBold">{tokenBalance}</Text>
               <Text variant="subText">{nativeBalance}</Text>
