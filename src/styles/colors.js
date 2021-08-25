@@ -47,6 +47,7 @@ const getColorsByTheme = darkMode => {
   let base = {
     appleBlue: '#0E76FD', // '14, 118, 253'
     black: '#000000', // '0, 0, 0'
+    blackOpacity50: '#00000080',
     blueGreyDark: '#3C4252', // '60, 66, 82'
     blueGreyDark50: '#9DA0A8', // this color is blueGreyDark at 50% over white
     blueGreyDark60: '#898D97', // this color is blueGreyDark at 60% over white
