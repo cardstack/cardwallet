@@ -51,6 +51,15 @@ export interface PrepaidCardCustomization {
   textColor: string;
 }
 
+export interface MerchantInformation {
+  did?: string;
+  name?: string;
+  slug?: string;
+  color?: string;
+  'text-color'?: string;
+  'owner-address'?: string;
+}
+
 export interface PrepaidCardCreatedTransactionType {
   address: string;
   cardCustomization?: PrepaidCardCustomization;

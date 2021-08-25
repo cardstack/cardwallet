@@ -2,6 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StatusBar } from 'react-native';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
+import { ContactAvatar } from '../../../src/components/contacts';
 import {
   Button,
   CenteredContainer,
@@ -107,9 +108,14 @@ const Header = () => {
           <Touchable onPress={goBack} left={12} position="absolute">
             <Icon name="chevron-left" color="teal" size={30} />
           </Touchable>
-          <Container alignItems="center">
-            <Text color="white" weight="bold">
-              Merchant Name
+          <Container alignItems="center" width="80%">
+            <Text
+              color="white"
+              weight="bold"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {merchantSafe?.merchantInfo?.name || ''}
             </Text>
             <Container flexDirection="row" alignItems="center">
               <NetworkBadge marginRight={2} />
@@ -150,28 +156,49 @@ const Header = () => {
   );
 };
 
-const MerchantInfo = () => (
-  <Container
-    width="100%"
-    flexDirection="column"
-    alignItems="center"
-    paddingVertical={5}
-  >
-    <Icon name="user" size={80} />
-    <Text weight="extraBold" size="medium">
-      Merchant Name
-    </Text>
-    <Container flexDirection="row" marginTop={2}>
-      <Text weight="extraBold" size="xs">
-        1{' '}
-        <Text weight="regular" size="xs">
-          owner
-        </Text>
+const MerchantInfo = () => {
+  const {
+    params: { merchantSafe },
+  } = useRoute<RouteType>();
+
+  return (
+    <Container
+      width="100%"
+      flexDirection="column"
+      alignItems="center"
+      paddingVertical={5}
+    >
+      {merchantSafe.merchantInfo ? (
+        <ContactAvatar
+          color={merchantSafe.merchantInfo?.color}
+          size="large"
+          value={merchantSafe.merchantInfo?.name}
+          textColor={merchantSafe.merchantInfo?.['text-color']}
+        />
+      ) : (
+        <Icon name="user" size={80} />
+      )}
+
+      <Text
+        weight="extraBold"
+        size="medium"
+        ellipsizeMode="tail"
+        numberOfLines={1}
+      >
+        {merchantSafe.merchantInfo?.name || ''}
       </Text>
-      <Icon name="user" color="black" iconSize="small" marginLeft={2} />
+      <Container flexDirection="row" marginTop={2}>
+        <Text weight="extraBold" size="xs">
+          1{' '}
+          <Text weight="regular" size="xs">
+            owner
+          </Text>
+        </Text>
+        <Icon name="user" color="black" iconSize="small" marginLeft={2} />
+      </Container>
     </Container>
-  </Container>
-);
+  );
+};
 
 const LifetimeEarningsSection = () => {
   const merchantSafe = useMerchantSafe();

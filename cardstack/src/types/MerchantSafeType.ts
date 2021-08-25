@@ -1,4 +1,4 @@
-import { TokenType } from '.';
+import { MerchantInformation, TokenType } from '.';
 
 export interface MerchantSafeType {
   address: string;
@@ -6,4 +6,5 @@ export interface MerchantSafeType {
   tokens: TokenType[];
   revenueBalances: TokenType[];
   type: string;
+  merchantInfo?: MerchantInformation;
 }

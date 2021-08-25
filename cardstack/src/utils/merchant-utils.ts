@@ -1,4 +1,7 @@
+import { Resolver } from 'did-resolver';
+import { getResolver } from '@cardstack/did-resolver';
 import { MerchantRevenueEventFragment } from '@cardstack/graphql';
+import { MerchantInformation } from '@cardstack/types';
 
 export const merchantRevenueEventsToTransactions = (
   revenueEvents: MerchantRevenueEventFragment[]
@@ -15,4 +18,26 @@ export const merchantRevenueEventsToTransactions = (
 
     return updatedTransaction;
   });
+};
+
+export const fetchMerchantInfoFromDID = async (
+  merchantInfoDID?: string
+): Promise<MerchantInformation> => {
+  if (!merchantInfoDID) {
+    throw new Error('merchantInfoDID must be present!');
+  }
+
+  const didResolver = new Resolver(getResolver());
+  const did = await didResolver.resolve(merchantInfoDID);
+  const alsoKnownAs = did?.didDocument?.alsoKnownAs?.[0];
+
+  if (!alsoKnownAs) {
+    throw new Error('alsoKnownAs is not defined');
+  }
+
+  const {
+    data: { attributes },
+  } = await (await fetch(alsoKnownAs)).json();
+
+  return attributes || {};
 };

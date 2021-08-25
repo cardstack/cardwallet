@@ -38,7 +38,13 @@ const ContactAvatarContainer = styled.View`
   overflow: hidden;
 `;
 
-const ContactAvatar = ({ color, size = 'medium', value, ...props }) => {
+const ContactAvatar = ({
+  color,
+  size = 'medium',
+  value,
+  textColor = null,
+  ...props
+}) => {
   const { colors } = useTheme();
   const { dimensions, textSize } = useMemo(() => sizeConfigs(colors)[size], [
     colors,
@@ -54,7 +60,7 @@ const ContactAvatar = ({ color, size = 'medium', value, ...props }) => {
       <Centered flex={1}>
         <Text
           align="center"
-          color={colors.whiteLabel}
+          color={textColor ? textColor : colors.whiteLabel}
           letterSpacing="zero"
           size={textSize}
           weight="bold"
