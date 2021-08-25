@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import React, { useEffect, useState } from 'react';
 import { SlackSheet } from '../sheet';
 import {
@@ -10,15 +11,14 @@ import {
 import { MerchantSafeType } from '@cardstack/types';
 import {
   formatNative,
-  localCurrencyToNum,
-  // convertSpendForBalanceDisplay,
   getAddressPreview,
+  localCurrencyToAbsNum,
 } from '@cardstack/utils';
 
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 
-const TOP_POSITION = 160;
+const TOP_POSITION = 150;
 
 export default function PaymentRequestExpandedState(props: {
   asset: MerchantSafeType;
@@ -27,18 +27,28 @@ export default function PaymentRequestExpandedState(props: {
   const { setOptions } = useNavigation();
   const { height: deviceHeight } = useDimensions();
   const [inputValue, setInputValue] = useState<string>();
-  const [isValid, setIsValid] = useState(true);
 
   useEffect(() => {
     setOptions({
-      longFormHeight: deviceHeight - TOP_POSITION,
+      longFormHeight: Math.max(deviceHeight - TOP_POSITION, 667),
     });
   }, [setOptions, deviceHeight]);
 
   return (
-    <SlackSheet height="100%" scrollEnabled>
-      <MerchantInfo address={address} />
-      <Container marginTop={18} paddingHorizontal={5}>
+    <SlackSheet
+      hasKeyboard
+      height="100%"
+      renderFooter={() => (
+        <Container paddingHorizontal={5}>
+          <Button
+            disabled={!inputValue}
+            variant={!inputValue ? 'dark' : undefined}
+          >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
+        </Container>
+      )}
+      renderHeader={() => <MerchantInfo address={address} />}
+    >
+      <Container marginTop={16} paddingHorizontal={5}>
         <Text size="medium">Payment Request</Text>
       </Container>
       <Container
@@ -68,7 +78,7 @@ export default function PaymentRequestExpandedState(props: {
             // onChange={handleChange}
             fontWeight="bold"
             keyboardType="numeric"
-            maxLength={(formatNative(inputValue) || '').length + 2} // just to avoid possible flicker issue
+            maxLength={(inputValue || '').length + 2} // just to avoid possible flicker issue
             multiline
             onChangeText={text => setInputValue(formatNative(text))}
             placeholder="0.00"
@@ -87,14 +97,13 @@ export default function PaymentRequestExpandedState(props: {
         <HorizontalDivider />
         <Text color="blueText" fontSize={13}>{`§ ${
           inputValue
-            ? formatNative(`${localCurrencyToNum(inputValue) * 100}`)
+            ? formatNative(
+                `${new BigNumber(localCurrencyToAbsNum(inputValue))
+                  .times(100)
+                  .toFixed()}`
+              )
             : 0
         } SPEND`}</Text>
-        <Container marginTop={20}>
-          <Button disabled={!inputValue}>{`${
-            !inputValue ? 'Enter' : 'Confirm'
-          } Amount`}</Button>
-        </Container>
       </Container>
     </SlackSheet>
   );
@@ -104,7 +113,7 @@ const MerchantInfo = ({ address }: { address: string }) => (
   <Container
     alignItems="center"
     flexDirection="column"
-    paddingVertical={1}
+    paddingTop={5}
     width="100%"
   >
     <Text size="medium" weight="extraBold">
