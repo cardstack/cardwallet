@@ -1,11 +1,13 @@
 import BigNumber from 'bignumber.js';
 import React, { useEffect, useState } from 'react';
+import CardWalletLogo from '../../../cardstack/src/assets/cardstackLogo.png';
 import { Icon } from '../icons';
 import { SlackSheet } from '../sheet';
 import {
   Button,
   Container,
   HorizontalDivider,
+  Image,
   Input,
   Text,
 } from '@cardstack/components';
@@ -17,7 +19,7 @@ import {
 } from '@cardstack/utils';
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-
+import { shadow } from '@rainbow-me/styles';
 const TOP_POSITION = 150;
 
 export default function PaymentRequestExpandedState(props: {
@@ -35,6 +37,16 @@ export default function PaymentRequestExpandedState(props: {
     });
   }, [setOptions, deviceHeight]);
 
+  const EditFooter = () => (
+    <Container paddingHorizontal={5}>
+      <Button
+        disabled={!inputValue}
+        onPress={() => setEditMode(false)}
+        variant={!inputValue ? 'dark' : undefined}
+      >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
+    </Container>
+  );
+
   return (
     <>
       {/* @ts-ignore */}
@@ -42,17 +54,7 @@ export default function PaymentRequestExpandedState(props: {
         bottomInset={42}
         hasKeyboard
         height="100%"
-        renderFooter={() =>
-          editMode ? (
-            <Container paddingHorizontal={5}>
-              <Button
-                disabled={!inputValue}
-                onPress={() => setEditMode(false)}
-                variant={!inputValue ? 'dark' : undefined}
-              >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
-            </Container>
-          ) : undefined
-        }
+        renderFooter={() => (editMode ? <EditFooter /> : <QRCodeFooter />)}
         renderHeader={() => <MerchantInfo address={address} />}
         scrollEnabled
       >
@@ -277,3 +279,34 @@ const AmountAndQRCodeButtons = ({
     </Container>
   );
 };
+
+const QRCodeFooter = () => (
+  <Container
+    alignSelf="flex-end"
+    backgroundColor="white"
+    height={110}
+    padding={5}
+    style={shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)}
+    width="100%"
+  >
+    <Container
+      alignItems="center"
+      backgroundColor="backgroundGray"
+      borderRadius={10}
+      flexDirection="row"
+      paddingBottom={2}
+      paddingHorizontal={4}
+      paddingTop={4}
+    >
+      <Image height={30} source={CardWalletLogo} width={30} />
+      <Text paddingLeft={4} paddingRight={6} size="xs">
+        Your customer must have the
+        <Text fontWeight="bold" size="xs">
+          {' '}
+          Card Wallet mobile app
+        </Text>{' '}
+        installed.
+      </Text>
+    </Container>
+  </Container>
+);

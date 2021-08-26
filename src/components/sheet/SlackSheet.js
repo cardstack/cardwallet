@@ -155,6 +155,7 @@ export default function SlackSheet({
             ref={sheet}
             scrollEnabled={scrollEnabled}
             scrollIndicatorInsets={scrollIndicatorInsets}
+            style={{ flexGrow: 1 }}
             y={yPosition}
           >
             {children}
