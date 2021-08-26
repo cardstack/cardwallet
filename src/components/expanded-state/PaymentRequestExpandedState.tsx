@@ -1,6 +1,6 @@
-import BigNumber from 'bignumber.js';
 import React, { useEffect, useState } from 'react';
 import CardWalletLogo from '../../../cardstack/src/assets/cardstackLogo.png';
+import { useDimensions } from '../../hooks';
 import { Icon } from '../icons';
 import { SlackSheet } from '../sheet';
 import {
@@ -15,13 +15,14 @@ import { MerchantSafeType } from '@cardstack/types';
 import {
   formatNative,
   getAddressPreview,
-  localCurrencyToAbsNum,
+  nativeCurrencyToSpend,
 } from '@cardstack/utils';
-import { useDimensions } from '@rainbow-me/hooks';
+
 import { useNavigation } from '@rainbow-me/navigation';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { shadow } from '@rainbow-me/styles';
 import deviceUtils from '@rainbow-me/utils/deviceUtils';
-
 const TOP_POSITION = 150;
 
 export default function PaymentRequestExpandedState(props: {
@@ -32,6 +33,10 @@ export default function PaymentRequestExpandedState(props: {
   const { height: deviceHeight, isSmallPhone } = useDimensions();
   const [inputValue, setInputValue] = useState<string>();
   const [editMode, setEditMode] = useState<boolean>(true);
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
 
   useEffect(() => {
     setOptions({
@@ -88,15 +93,24 @@ export default function PaymentRequestExpandedState(props: {
           <>
             <InputAmount
               inputValue={inputValue}
+              nativeCurrency={nativeCurrency}
               setInputValue={setInputValue}
             />
             <Container paddingHorizontal={5}>
               <HorizontalDivider />
-              <SpendAmount usdFormat={inputValue} />
+              <SpendAmount
+                formattedAmount={inputValue}
+                nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
+              />
             </Container>
           </>
         ) : (
-          <AmountAndQRCodeButtons address={address} usdFormat={inputValue} />
+          <AmountAndQRCodeButtons
+            address={address}
+            formattedAmount={inputValue}
+            nativeCurrency={nativeCurrency}
+            nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
+          />
         )}
       </SlackSheet>
     </>
@@ -136,9 +150,14 @@ const MerchantInfo = ({
 type InputAmountProps = {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
+  nativeCurrency: string;
 };
 
-const InputAmount = ({ inputValue, setInputValue }: InputAmountProps) => {
+const InputAmount = ({
+  inputValue,
+  setInputValue,
+  nativeCurrency,
+}: InputAmountProps) => {
   return (
     <Container
       flex={1}
@@ -154,7 +173,7 @@ const InputAmount = ({ inputValue, setInputValue }: InputAmountProps) => {
         paddingTop={1}
         size="largeBalance"
       >
-        $
+        {(supportedNativeCurrencies as any)[nativeCurrency].symbol}
       </Text>
       <Container flex={1} flexGrow={1}>
         <Input
@@ -168,7 +187,9 @@ const InputAmount = ({ inputValue, setInputValue }: InputAmountProps) => {
           keyboardType="numeric"
           maxLength={(inputValue || '').length + 2} // just to avoid possible flicker issue
           multiline
-          onChangeText={text => setInputValue(formatNative(text))}
+          onChangeText={text =>
+            setInputValue(formatNative(text, nativeCurrency))
+          }
           placeholder="0.00"
           placeholderTextColor="grayMediumLight"
           spellCheck={false}
@@ -178,30 +199,35 @@ const InputAmount = ({ inputValue, setInputValue }: InputAmountProps) => {
         />
       </Container>
       <Text paddingLeft={1} paddingTop={1} size="largeBalance">
-        USD
+        {nativeCurrency}
       </Text>
     </Container>
   );
 };
 
-const SpendAmount = ({ usdFormat }: { usdFormat: string | undefined }) => (
-  <Text color="blueText" size="xs">{`§${
-    usdFormat
-      ? formatNative(
-          `${new BigNumber(localCurrencyToAbsNum(usdFormat))
-            .times(100)
-            .toFixed()}`
-        )
-      : 0
-  } SPEND`}</Text>
+const SpendAmount = ({
+  formattedAmount,
+  nativeCurrencyRate,
+}: {
+  formattedAmount: string | undefined;
+  nativeCurrencyRate: number;
+}) => (
+  <Text color="blueText" size="xs">{`§${nativeCurrencyToSpend(
+    formattedAmount,
+    nativeCurrencyRate
+  )} SPEND`}</Text>
 );
 
 const AmountAndQRCodeButtons = ({
-  usdFormat,
+  formattedAmount,
   address,
+  nativeCurrency,
+  nativeCurrencyRate,
 }: {
-  usdFormat: string | undefined;
+  formattedAmount: string | undefined;
   address: string;
+  nativeCurrency: string;
+  nativeCurrencyRate: number;
 }) => {
   return (
     <Container paddingHorizontal={5} width="100%">
@@ -211,9 +237,14 @@ const AmountAndQRCodeButtons = ({
         </Text>
         <Container paddingLeft={6}>
           <Text fontSize={15} fontWeight="bold">
-            {`$${usdFormat} USD`}
+            {`${
+              (supportedNativeCurrencies as any)[nativeCurrency].symbol
+            }${formattedAmount} ${nativeCurrency}`}
           </Text>
-          <SpendAmount usdFormat={usdFormat} />
+          <SpendAmount
+            formattedAmount={formattedAmount}
+            nativeCurrencyRate={nativeCurrencyRate}
+          />
         </Container>
       </Container>
       <Container flexDirection="row" marginTop={3}>

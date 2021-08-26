@@ -2,9 +2,9 @@ import { useSelector } from 'react-redux';
 import {
   AssetType,
   DepotType,
+  ERC20TransactionType,
   MerchantSafeType,
   PrepaidCardType,
-  ERC20TransactionType,
 } from '@cardstack/types';
 
 interface ReduxState {
