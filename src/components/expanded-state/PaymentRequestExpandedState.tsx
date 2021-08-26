@@ -27,7 +27,7 @@ const TOP_POSITION = 150;
 export default function PaymentRequestExpandedState(props: {
   asset: MerchantSafeType;
 }) {
-  const { address } = props.asset;
+  const { address, merchantInfo } = props.asset;
   const { setOptions } = useNavigation();
   const { height: deviceHeight, isSmallPhone } = useDimensions();
   const [inputValue, setInputValue] = useState<string>();
@@ -59,7 +59,9 @@ export default function PaymentRequestExpandedState(props: {
         hasKeyboard={editMode}
         height="100%"
         renderFooter={() => (editMode ? <EditFooter /> : <QRCodeFooter />)}
-        renderHeader={() => <MerchantInfo address={address} />}
+        renderHeader={() => (
+          <MerchantInfo address={address} name={merchantInfo?.name} />
+        )}
         scrollEnabled
       >
         <Container
@@ -101,7 +103,13 @@ export default function PaymentRequestExpandedState(props: {
   );
 }
 
-const MerchantInfo = ({ address }: { address: string }) => (
+const MerchantInfo = ({
+  address,
+  name,
+}: {
+  address: string;
+  name: string | undefined;
+}) => (
   <Container
     alignItems="center"
     flexDirection="column"
@@ -109,7 +117,7 @@ const MerchantInfo = ({ address }: { address: string }) => (
     width="100%"
   >
     <Text size="medium" weight="extraBold">
-      Mandello
+      {name || ''}
     </Text>
     <Text
       color="blueText"
