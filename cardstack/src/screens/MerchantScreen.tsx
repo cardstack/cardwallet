@@ -44,7 +44,6 @@ interface RouteType {
   name: string;
 }
 
-
 const useMerchantSafe = () => {
   const {
     params: {
@@ -84,7 +83,11 @@ export default function MerchantScreen() {
           paddingHorizontal={HORIZONTAL_PADDING}
         >
           <MerchantInfo />
-          <Button marginTop={2} marginBottom={4} onPress={onPressRequestPayment}>
+          <Button
+            marginTop={2}
+            marginBottom={4}
+            onPress={onPressRequestPayment}
+          >
             Request Payment
           </Button>
           <HorizontalDivider />
