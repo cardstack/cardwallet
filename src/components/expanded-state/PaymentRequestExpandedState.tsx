@@ -20,6 +20,8 @@ import {
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { shadow } from '@rainbow-me/styles';
+import deviceUtils from '@rainbow-me/utils/deviceUtils';
+
 const TOP_POSITION = 150;
 
 export default function PaymentRequestExpandedState(props: {
@@ -27,15 +29,17 @@ export default function PaymentRequestExpandedState(props: {
 }) {
   const { address } = props.asset;
   const { setOptions } = useNavigation();
-  const { height: deviceHeight } = useDimensions();
+  const { height: deviceHeight, isSmallPhone } = useDimensions();
   const [inputValue, setInputValue] = useState<string>();
   const [editMode, setEditMode] = useState<boolean>(true);
 
   useEffect(() => {
     setOptions({
-      longFormHeight: Math.max(deviceHeight - TOP_POSITION, 667),
+      longFormHeight: isSmallPhone
+        ? deviceUtils.iPhone6Height
+        : deviceHeight - TOP_POSITION,
     });
-  }, [setOptions, deviceHeight]);
+  }, [setOptions, deviceHeight, isSmallPhone]);
 
   const EditFooter = () => (
     <Container paddingHorizontal={5}>
@@ -51,8 +55,8 @@ export default function PaymentRequestExpandedState(props: {
     <>
       {/* @ts-ignore */}
       <SlackSheet
-        bottomInset={42}
-        hasKeyboard
+        bottomInset={editMode ? 50 : 110}
+        hasKeyboard={editMode}
         height="100%"
         renderFooter={() => (editMode ? <EditFooter /> : <QRCodeFooter />)}
         renderHeader={() => <MerchantInfo address={address} />}
@@ -220,7 +224,6 @@ const AmountAndQRCodeButtons = ({
           alignItems="center"
           alignSelf="center"
           flexDirection="row"
-          justifyContent="center"
           marginTop={4}
           width={200}
         >
@@ -242,7 +245,6 @@ const AmountAndQRCodeButtons = ({
           alignItems="center"
           alignSelf="center"
           flexDirection="row"
-          justifyContent="center"
           marginTop={7}
           width={200}
         >
@@ -252,7 +254,7 @@ const AmountAndQRCodeButtons = ({
             fontWeight="600"
             letterSpacing={0.15}
             lineHeight={20}
-            paddingLeft={3}
+            paddingLeft={2}
           >
             Or send your customer the link to pay
           </Text>
@@ -280,33 +282,38 @@ const AmountAndQRCodeButtons = ({
   );
 };
 
-const QRCodeFooter = () => (
-  <Container
-    alignSelf="flex-end"
-    backgroundColor="white"
-    height={110}
-    padding={5}
-    style={shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)}
-    width="100%"
-  >
+const QRCodeFooter = () => {
+  const { isSmallPhone } = useDimensions();
+
+  return (
     <Container
-      alignItems="center"
-      backgroundColor="backgroundGray"
-      borderRadius={10}
-      flexDirection="row"
-      paddingBottom={2}
-      paddingHorizontal={4}
-      paddingTop={4}
+      alignSelf="flex-end"
+      backgroundColor="white"
+      bottom={isSmallPhone ? 0 : 70}
+      paddingHorizontal={5}
+      paddingVertical={4}
+      style={shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)}
+      width="100%"
     >
-      <Image height={30} source={CardWalletLogo} width={30} />
-      <Text paddingLeft={4} paddingRight={6} size="xs">
-        Your customer must have the
-        <Text fontWeight="bold" size="xs">
-          {' '}
-          Card Wallet mobile app
-        </Text>{' '}
-        installed.
-      </Text>
+      <Container
+        alignItems="center"
+        backgroundColor="backgroundGray"
+        borderRadius={10}
+        flexDirection="row"
+        paddingBottom={2}
+        paddingHorizontal={4}
+        paddingTop={4}
+      >
+        <Image height={30} source={CardWalletLogo} width={30} />
+        <Text paddingLeft={4} paddingRight={6} size="xs">
+          Your customer must have the
+          <Text fontWeight="bold" size="xs">
+            {' '}
+            Card Wallet mobile app
+          </Text>{' '}
+          installed.
+        </Text>
+      </Container>
     </Container>
-  </Container>
-);
+  );
+};

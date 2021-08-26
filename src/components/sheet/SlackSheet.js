@@ -44,6 +44,7 @@ const Content = styled(Animated.ScrollView).attrs(({ y }) => ({
     contentHeight ? `height: ${deviceHeight + contentHeight}` : null};
   padding-top: ${SheetHandleFixedToTopHeight};
   width: 100%;
+  flex-grow: 1;
 `;
 
 const Whitespace = styled.View`
@@ -114,7 +115,12 @@ export default function SlackSheet({
         />
       )
     : props => (
-        <Container backgroundColor={bg} height="100%" width="100%" {...props} />
+        <Container
+          backgroundColor={bg}
+          style={{ flex: 1 }}
+          width="100%"
+          {...props}
+        />
       );
 
   return (
@@ -155,7 +161,6 @@ export default function SlackSheet({
             ref={sheet}
             scrollEnabled={scrollEnabled}
             scrollIndicatorInsets={scrollIndicatorInsets}
-            style={{ flexGrow: 1 }}
             y={yPosition}
           >
             {children}
