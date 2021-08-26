@@ -61,6 +61,8 @@
       "@cardstack/graphql/*": ["cardstack/src/graphql/*"],
       "@cardstack/hooks": ["cardstack/src/hooks"],
       "@cardstack/hooks/*": ["cardstack/src/hooks/*"],
+      "@cardstack/navigation": ["cardstack/src/navigation"],
+      "@cardstack/navigation/*": ["cardstack/src/navigation/*"],
       "@cardstack/transaction-mapping-strategies": [
         "cardstack/src/transaction-mapping-strategies"
       ],

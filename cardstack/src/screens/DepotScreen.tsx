@@ -211,6 +211,7 @@ const Balances = ({ tokens }: BalancesProps) => {
     () =>
       tokens.map(token => (
         <TokenBalance
+          key={token.tokenAddress}
           address={token.tokenAddress}
           includeBorder
           marginHorizontal={5}
