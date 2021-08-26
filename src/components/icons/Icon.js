@@ -38,6 +38,7 @@ import HandleIcon from './svg/HandleIcon';
 import HiddenIcon from './svg/HiddenIcon';
 import InboxIcon from './svg/InboxIcon';
 import InfoIcon from './svg/InfoIcon';
+import LinkIcon from './svg/LinkIcon';
 import LockIcon from './svg/LockIcon';
 import MinusCircledIcon from './svg/MinusCircledIcon';
 import OfflineIcon from './svg/OfflineIcon';
@@ -46,6 +47,7 @@ import PinIcon from './svg/PinIcon';
 import PlusCircledIcon from './svg/PlusCircledIcon';
 import PlusIcon from './svg/PlusIcon';
 import ProgressIcon from './svg/ProgressIcon';
+import QRCodeBigIcon from './svg/QRCodeBigIcon';
 import QRCodeIcon from './svg/QRCodeIcon';
 import ScannerIcon from './svg/ScannerIcon';
 import SearchIcon from './svg/SearchIcon';
@@ -102,6 +104,7 @@ const IconTypes = {
   inbox: InboxIcon,
   info: InfoIcon,
   lock: LockIcon,
+  link: LinkIcon,
   minusCircled: MinusCircledIcon,
   offline: OfflineIcon,
   passcode: PasscodeIcon,
@@ -110,6 +113,7 @@ const IconTypes = {
   plusCircled: PlusCircledIcon,
   progress: ProgressIcon,
   qrCode: QRCodeIcon,
+  qrCodeBig: QRCodeBigIcon,
   scanner: ScannerIcon,
   search: SearchIcon,
   send: SendIcon,
