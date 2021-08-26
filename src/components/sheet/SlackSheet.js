@@ -1,10 +1,14 @@
 // FIXME unify with iOS
 import React, { Fragment, useEffect, useMemo, useRef } from 'react';
-import { Pressable, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Pressable,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeArea } from 'react-native-safe-area-context';
 import styled from 'styled-components';
-import { useTheme } from '../../context/ThemeContext';
 import { useReanimatedValue } from '../list/MarqueeList';
 import SheetHandleFixedToTop, {
   SheetHandleFixedToTopHeight,
@@ -40,6 +44,7 @@ const Content = styled(Animated.ScrollView).attrs(({ y }) => ({
     contentHeight ? `height: ${deviceHeight + contentHeight}` : null};
   padding-top: ${SheetHandleFixedToTopHeight};
   width: 100%;
+  flex-grow: 1;
 `;
 
 const Whitespace = styled.View`
@@ -58,8 +63,10 @@ export default function SlackSheet({
   deferredHeight = false,
   hideHandle = false,
   renderHeader,
+  renderFooter,
   scrollEnabled = true,
   discoverSheet,
+  hasKeyboard = false,
   ...props
 }) {
   const yPosition = useReanimatedValue(0);
@@ -70,7 +77,6 @@ export default function SlackSheet({
     () => (insets.bottom || scrollEnabled ? 42 : 30),
     [insets.bottom, scrollEnabled]
   );
-  const { colors } = useTheme();
   const contentContainerStyle = useMemo(
     () => ({
       paddingBottom: bottomInset,
@@ -100,6 +106,22 @@ export default function SlackSheet({
   );
 
   const bg = backgroundColor || 'white';
+  const KeyboardContainer = hasKeyboard
+    ? props => (
+        <KeyboardAvoidingView
+          {...(ios ? { behavior: 'padding' } : {})}
+          keyboardVerticalOffset={30}
+          {...props}
+        />
+      )
+    : props => (
+        <Container
+          backgroundColor={bg}
+          style={{ flex: 1 }}
+          width="100%"
+          {...props}
+        />
+      );
 
   return (
     <Fragment>
@@ -128,7 +150,7 @@ export default function SlackSheet({
           </AndroidBackground>
         )}
         {!hideHandle && <SheetHandleFixedToTop showBlur={scrollEnabled} />}
-        <Container backgroundColor={bg}>
+        <KeyboardContainer>
           {renderHeader?.(yPosition)}
           <Content
             backgroundColor={bg}
@@ -146,7 +168,8 @@ export default function SlackSheet({
               <Whitespace backgroundColor={bg} deviceHeight={deviceHeight} />
             )}
           </Content>
-        </Container>
+          {renderFooter ? renderFooter() : null}
+        </KeyboardContainer>
       </Container>
     </Fragment>
   );
