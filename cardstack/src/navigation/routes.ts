@@ -4,4 +4,5 @@ export const Routes = {
   MERCHANT_SCREEN: 'MerchantScreen',
   PREPAID_CARD_MODAL: 'PrepaidCardModal',
   BUY_PREPAID_CARD: 'BuyPrepaidCard',
+  SEND_FLOW_DEPOT: 'SendFlowDepot',
 } as const;
