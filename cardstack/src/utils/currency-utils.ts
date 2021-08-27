@@ -42,17 +42,24 @@ export function formatNative(value: string | undefined, currency = 'USD') {
   })}`;
 }
 
-export const nativeCurrencyToSpend = (
+export const nativeCurrencyToAmountInSpend = (
   amount: string | undefined,
   nativeCurrencyRate: number
 ) => {
   return amount
-    ? formatFixedDecimals(
-        new BigNumber(localCurrencyToAbsNum(amount))
-          .times(USD_TO_SPEND_RATE)
-          .times(nativeCurrencyRate)
-          .toFixed(),
-        4
-      )
-    : '0';
+    ? new BigNumber(localCurrencyToAbsNum(amount))
+        .times(USD_TO_SPEND_RATE)
+        .times(nativeCurrencyRate)
+        .toNumber()
+    : 0;
+};
+
+export const nativeCurrencyToSpend = (
+  amount: string | undefined,
+  nativeCurrencyRate: number
+) => {
+  return formatFixedDecimals(
+    nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate),
+    4
+  );
 };

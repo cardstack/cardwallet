@@ -41,3 +41,11 @@ export const fetchMerchantInfoFromDID = async (
 
   return attributes || {};
 };
+
+export const generateMerchantPaymentUrl = (
+  merchantSafeID: string,
+  amountInSpend: number,
+  network = 'sokol'
+) => {
+  return `https://wallet.cardstack.com/pay/${network}/${merchantSafeID}?amount=${amountInSpend}`;
+};

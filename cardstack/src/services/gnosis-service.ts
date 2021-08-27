@@ -107,6 +107,8 @@ export const fetchGnosisSafes = async (address: string) => {
       })
     );
 
+    console.log('extendedMerchants---', extendedMerchants);
+
     return {
       depots,
       merchantSafes: extendedMerchants,
