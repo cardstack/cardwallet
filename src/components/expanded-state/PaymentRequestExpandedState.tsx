@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Share } from 'react-native';
 import CardWalletLogo from '../../../cardstack/src/assets/cardstackLogo.png';
 import {
@@ -171,6 +171,13 @@ const InputAmount = ({
   setInputValue,
   nativeCurrency,
 }: InputAmountProps) => {
+  const onChangeText = useCallback(
+    text => {
+      setInputValue(formatNative(text, nativeCurrency));
+    },
+    [setInputValue, nativeCurrency]
+  );
+
   return (
     <Container
       flex={1}
@@ -200,9 +207,7 @@ const InputAmount = ({
           keyboardType="numeric"
           maxLength={(inputValue || '').length + 2} // just to avoid possible flicker issue
           multiline
-          onChangeText={text =>
-            setInputValue(formatNative(text, nativeCurrency))
-          }
+          onChangeText={onChangeText}
           placeholder="0.00"
           placeholderTextColor="grayMediumLight"
           spellCheck={false}
@@ -246,23 +251,18 @@ const AmountAndQRCodeButtons = ({
 }) => {
   const [copyCount, setCopyCount] = useState(0);
   const { network } = useAccountSettings();
+  const paymentRequestLink = useMemo(
+    () => generateMerchantPaymentUrl(address, amountInSpend, network),
+    [address, amountInSpend, network]
+  );
 
   const { setClipboard } = useClipboard();
   const copyToClipboard = useCallback(() => {
-    const paymentRequestLink = generateMerchantPaymentUrl(
-      address,
-      amountInSpend,
-      network
-    );
     setClipboard(paymentRequestLink);
     setCopyCount(count => count + 1);
-  }, [address, amountInSpend, network, setClipboard]);
+  }, [paymentRequestLink, setClipboard]);
+
   const handleShareLink = useCallback(async () => {
-    const paymentRequestLink = generateMerchantPaymentUrl(
-      address,
-      amountInSpend,
-      network
-    );
     try {
       await Share.share({
         message: `Payment Request\nTo: ${getAddressPreview(address)}`,
@@ -272,7 +272,7 @@ const AmountAndQRCodeButtons = ({
     } catch (error) {
       logger.sentry('Payment Request Link share failed', error.message);
     }
-  }, [address, amountInSpend, network]);
+  }, [address, paymentRequestLink]);
 
   return (
     <>
