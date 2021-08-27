@@ -9,25 +9,36 @@ export default function SendTransactionSpeed({
   nativeCurrencySymbol,
   onPressTransactionSpeed,
 }) {
-  const fee = get(
-    gasPrice,
-    'txFee.native.value.display',
-    `${nativeCurrencySymbol}0.00`
-  );
-  const timeAmount = get(gasPrice, 'estimatedTime.amount', 0);
-  const time = get(gasPrice, 'estimatedTime.display', '');
+  // Checking format to proper display gas fee to EOA and depot flows
+  const isGasNumber = typeof gasPrice === 'number';
+
+  const fee = isGasNumber
+    ? `${nativeCurrencySymbol}${gasPrice}`
+    : get(
+        gasPrice,
+        'txFee.native.value.display',
+        `${nativeCurrencySymbol}0.00`
+      );
+
+  const timeAmount = isGasNumber ? 0 : get(gasPrice, 'estimatedTime.amount', 0);
+
+  const time = isGasNumber ? '' : get(gasPrice, 'estimatedTime.display', '');
 
   return (
     <Row justify="center">
-      <Touchable marginRight={5} onPress={onPressTransactionSpeed}>
+      <Touchable
+        disabled={!onPressTransactionSpeed}
+        marginRight={5}
+        onPress={onPressTransactionSpeed}
+      >
         <Container alignItems="center" flexDirection="row">
           <Text variant="subText">Fee: {fee}</Text>
-          {!timeAmount && (
+          {!timeAmount && !!onPressTransactionSpeed && (
             <Icon color="settingsTeal" iconSize="small" name="chevron-right" />
           )}
         </Container>
       </Touchable>
-      {timeAmount && (
+      {!!timeAmount && (
         <Touchable onPress={onPressTransactionSpeed}>
           <Container alignItems="center" flexDirection="row">
             <Text
