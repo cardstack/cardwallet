@@ -15,7 +15,7 @@ import PinAuthenticationScreen from '../screens/PinAuthenticationScreen';
 import ReceiveModal from '../screens/ReceiveModal';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
-import SendSheet from '../screens/SendSheet';
+import SendSheetEOA from '../screens/SendSheetEOA';
 import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
@@ -62,7 +62,7 @@ function SendFlowNavigator() {
         options={overlayExpandedPreset}
       />
       <Stack.Screen
-        component={SendSheet}
+        component={SendSheetEOA}
         name={Routes.SEND_SHEET}
         options={sheetPreset}
       />
