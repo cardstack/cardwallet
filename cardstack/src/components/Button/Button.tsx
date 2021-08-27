@@ -58,9 +58,6 @@ export const Button = ({
   onPress,
   ...props
 }: ButtonProps) => {
-  const width = useVariantValue('buttonVariants', 'width', props.variant);
-  const maxWidth = useVariantValue('buttonVariants', 'maxWidth', props.variant);
-
   const textStyle = useVariantValue(
     'buttonVariants',
     'textStyle',
@@ -119,8 +116,7 @@ export const Button = ({
           position="absolute"
           height="100%"
           zIndex={1}
-          width={width}
-          maxWidth={maxWidth}
+          width="100%"
           testID="disabledOverlay"
         />
       )}
