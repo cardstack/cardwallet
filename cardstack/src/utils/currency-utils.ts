@@ -1,3 +1,8 @@
+import BigNumber from 'bignumber.js';
+import { formatFixedDecimals } from '@cardstack/cardpay-sdk';
+
+const USD_TO_SPEND_RATE = 100;
+
 export const getDollarsFromDai = (dai: number) => dai / 100;
 
 export function localCurrencyToAbsNum(value: string): number {
@@ -10,16 +15,14 @@ export function localCurrencyToAbsNum(value: string): number {
   return result;
 }
 
-export function formatNative(
-  value: string | undefined,
-  priceSharedValue?: string
-) {
+export function formatNative(value: string | undefined, currency = 'USD') {
   if (!value) {
-    return priceSharedValue || '';
+    return '';
   }
 
   if (value.endsWith('.') && (value.match(/\./g) || []).length === 1) {
     return `${localCurrencyToAbsNum(value).toLocaleString('en-US', {
+      currency,
       maximumFractionDigits: 20,
       maximumSignificantDigits: 20,
     })}.`;
@@ -33,7 +36,30 @@ export function formatNative(
   }
 
   return `${localCurrencyToAbsNum(value).toLocaleString('en-US', {
+    currency,
     maximumFractionDigits: 20,
     maximumSignificantDigits: 20,
   })}`;
 }
+
+export const nativeCurrencyToAmountInSpend = (
+  amount: string | undefined,
+  nativeCurrencyRate: number
+) => {
+  return amount
+    ? new BigNumber(localCurrencyToAbsNum(amount))
+        .times(USD_TO_SPEND_RATE)
+        .times(nativeCurrencyRate)
+        .toNumber()
+    : 0;
+};
+
+export const nativeCurrencyToSpend = (
+  amount: string | undefined,
+  nativeCurrencyRate: number
+) => {
+  return formatFixedDecimals(
+    nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate),
+    4
+  );
+};
