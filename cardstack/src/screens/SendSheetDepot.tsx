@@ -86,38 +86,41 @@ export const useSendSheetDepotScreen = () => {
 
   const getGasPriceEstimate = useCallback(async () => {
     if (!isValidAddress) return;
-    const safes = await getSafesInstance();
 
     try {
       const amountWei = Web3.utils.toWei(amountDetails.assetAmount || '0');
 
-      const gasEstimate = await safes?.sendTokensGasEstimate(
-        depot.address,
-        selected?.address || '',
-        recipient,
-        amountWei
-      );
+      const safes = await getSafesInstance();
 
-      const gasFeeInUsd = usdConverter.current?.(gasEstimate || '0') || 0;
+      const gasEstimate =
+        (await safes?.sendTokensGasEstimate(
+          depot.address,
+          selected?.address || '',
+          recipient,
+          amountWei
+        )) || '0';
+
+      const gasFeeInUsd = usdConverter.current?.(gasEstimate) || 0;
 
       setGasEstimatedFee(gasFeeInUsd);
 
-      if (gasEstimate) {
-        // Calculate maxBalance
-        const currentBalanceWei = new BigNumber(selected?.balance?.wei || '');
-        const gasEstimateWei = new BigNumber(gasEstimate);
+      // Calculate maxBalance
+      const currentBalanceWei = new BigNumber(selected?.balance?.wei || '0');
+      const gasEstimateWei = new BigNumber(gasEstimate);
 
-        const maxBalanceWei =
-          gasEstimateWei >= currentBalanceWei
-            ? 0
-            : currentBalanceWei.minus(gasEstimateWei);
+      const isNotEnoughBalance = gasEstimateWei.isGreaterThanOrEqualTo(
+        currentBalanceWei
+      );
 
-        const maxBalanceEth = Web3.utils.fromWei(maxBalanceWei.toString());
+      const maxBalanceWei = isNotEnoughBalance
+        ? 0
+        : currentBalanceWei.minus(gasEstimateWei);
 
-        updateMaxInputBalance(maxBalanceEth);
-      }
+      const maxBalanceEth = Web3.utils.fromWei(maxBalanceWei.toString());
+
+      updateMaxInputBalance(maxBalanceEth);
     } catch (e) {
-      console.log('Error getting gasPriceEstimate', e);
+      logger.error('Error getting gasPriceEstimate or maxBalance', e);
     }
   }, [
     amountDetails.assetAmount,
@@ -186,6 +189,12 @@ export const useSendSheetDepotScreen = () => {
       if (!isString(newNativeAmount)) return;
       const nativeAmount = newNativeAmount.replace(/[^0-9.]/g, '');
 
+      if (!nativeAmount.length) {
+        setAmountDetails(amountDetailsInitialState);
+
+        return;
+      }
+
       try {
         // Getting how much on token is worth in usd in order to calculate usdToTokenValue
         const usdPriceUnit =
@@ -204,7 +213,7 @@ export const useSendSheetDepotScreen = () => {
         );
 
         handleAmountDetails({
-          assetAmount,
+          assetAmount: assetAmount || '',
           nativeAmount,
         });
       } catch (e) {
@@ -232,6 +241,7 @@ export const useSendSheetDepotScreen = () => {
     setSelected(undefined);
     setAmountDetails(amountDetailsInitialState);
     setGasEstimatedFee(0);
+    updateMaxInputBalance('');
     usdConverter.current = undefined;
   }, []);
 
