@@ -7,9 +7,11 @@ import {
 } from '@rainbow-me/redux/hooks';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
-export const FromPrepaidCardSection = ({
+export const PrepaidCardTransactionSection = ({
+  headerText = 'FROM',
   prepaidCardAddress,
 }: {
+  headerText?: string;
   prepaidCardAddress: string;
 }) => {
   const [
@@ -33,7 +35,7 @@ export const FromPrepaidCardSection = ({
   return (
     <Container marginTop={8} width="100%">
       <TransactionConfirmationSectionHeaderText>
-        FROM
+        {headerText}
       </TransactionConfirmationSectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FromPrepaidCardSection } from './FromPrepaidCardSection';
+import { PrepaidCardTransactionSection } from './PrepaidCardTransactionSection';
 import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
 import { PayThisAmountSection } from './PayThisAmountSection';
 import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
@@ -23,7 +23,9 @@ export const RegisterMerchantDisplay = (
 ) => {
   return (
     <>
-      <FromPrepaidCardSection prepaidCardAddress={props.data.prepaidCard} />
+      <PrepaidCardTransactionSection
+        prepaidCardAddress={props.data.prepaidCard}
+      />
       <HorizontalDivider />
       <PayThisAmountSection spendAmount={props.data.spendAmount} />
       <HorizontalDivider />
