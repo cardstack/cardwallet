@@ -6,9 +6,10 @@ import {
   DepotScreen,
   MerchantScreen,
   PrepaidCardModal,
+  SendSheetDepot,
   TransactionConfirmation,
 } from '@cardstack/screen';
-import { expandedPreset } from '@rainbow-me/navigation/effects';
+import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 
 interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -29,5 +30,9 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
   CONFIRM_REQUEST: {
     component: TransactionConfirmation,
     options: { gestureEnabled: false },
+  },
+  SEND_FLOW_DEPOT: {
+    component: SendSheetDepot,
+    options: sheetPreset as StackNavigationOptions,
   },
 };

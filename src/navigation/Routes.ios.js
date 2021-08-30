@@ -1,4 +1,3 @@
-import { useCardstackScreens } from '@cardstack/navigation/hooks';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { omit } from 'lodash';
@@ -17,7 +16,7 @@ import ModalScreen from '../screens/ModalScreen';
 import ReceiveModal from '../screens/ReceiveModal';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
-import SendSheet from '../screens/SendSheet';
+import SendSheetEOA from '../screens/SendSheetEOA';
 import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import SpendSheet from '../screens/SpendSheet';
@@ -48,6 +47,7 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
+import { useCardstackScreens } from '@cardstack/navigation/hooks';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
@@ -67,7 +67,7 @@ function SendFlowNavigator() {
         options={overlayExpandedPreset}
       />
       <Stack.Screen
-        component={SendSheet}
+        component={SendSheetEOA}
         name={Routes.SEND_SHEET}
         options={sheetPreset}
       />
@@ -209,7 +209,7 @@ function NativeStackFallbackNavigator() {
         options={overlayExpandedPreset}
       />
       <Stack.Screen
-        component={SendSheet}
+        component={SendSheetEOA}
         name={Routes.SEND_SHEET}
         options={{
           ...omit(sheetPreset, 'gestureResponseDistance'),

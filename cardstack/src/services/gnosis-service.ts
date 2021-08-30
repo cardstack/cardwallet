@@ -141,7 +141,10 @@ export const getTokensWithPrice = async (
 
       return {
         ...tokenItem,
-        balance: convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
+        balance: {
+          ...convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
+          wei: tokenItem.balance,
+        },
         native: {
           balance: {
             amount: nativeBalance,

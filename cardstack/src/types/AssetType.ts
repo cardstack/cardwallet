@@ -1,6 +1,7 @@
 export interface BalanceType {
   amount: string;
   display: string;
+  wei?: string;
 }
 
 export interface AssetType {

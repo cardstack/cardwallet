@@ -2,6 +2,7 @@ import Web3 from 'web3';
 import { getSDK } from '@cardstack/cardpay-sdk';
 import { CurrencyConversionRates } from '@cardstack/types';
 import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
+import logger from 'logger';
 
 export const getNativeBalance = async (props: {
   symbol: string | null | undefined;
@@ -15,8 +16,6 @@ export const getNativeBalance = async (props: {
     return 0;
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
   const web3 = new Web3(await getWeb3ProviderSdk());
   const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
 
@@ -28,4 +27,16 @@ export const getNativeBalance = async (props: {
       : currencyConversionRates[nativeCurrency] * usdBalance;
 
   return nativeBalance;
+};
+
+export const getUsdConverter = async (symbol: string) => {
+  try {
+    const web3 = new Web3(await getWeb3ProviderSdk());
+    const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
+    const converter = await layerTwoOracle.getUSDConverter(symbol);
+
+    return converter;
+  } catch (e) {
+    logger.error('Error on getUsdConverter', e);
+  }
 };
