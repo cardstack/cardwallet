@@ -48,6 +48,7 @@ import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
 import { useCardstackScreens } from '@cardstack/navigation/hooks';
+import { ShowQRCodeModal } from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
@@ -319,6 +320,23 @@ function NativeStackNavigator() {
           ignoreBottomOffset: true,
           onAppear: null,
           topOffset: 0,
+        }}
+      />
+      <NativeStack.Screen
+        component={ShowQRCodeModal}
+        name={Routes.SHOW_QRCODE_MODAL}
+        options={{
+          allowsDragToDismiss: true,
+          backgroundColor: colors.overlayGray,
+          backgroundOpacity: 0.95,
+          transparentCard: true,
+          onAppear: null,
+          topOffset: 0,
+          ignoreBottomOffset: true,
+          cornerRadius: 0,
+          customStack: true,
+          springDamping: 1,
+          transitionDuration: 0.2,
         }}
       />
       <NativeStack.Screen
