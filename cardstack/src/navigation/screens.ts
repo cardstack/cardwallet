@@ -7,8 +7,10 @@ import {
   MerchantScreen,
   PrepaidCardModal,
   SendSheetDepot,
+  ShowQRCodeModal,
   TransactionConfirmation,
 } from '@cardstack/screen';
+import { colors } from '@cardstack/theme';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 
 interface ScreenNavigation {
@@ -34,5 +36,21 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
     options: sheetPreset as StackNavigationOptions,
+  },
+  SHOW_QRCODE_MODAL: {
+    component: ShowQRCodeModal,
+    options: {
+      allowsDragToDismiss: true,
+      backgroundColor: colors.overlayGray,
+      backgroundOpacity: 0.95,
+      transparentCard: true,
+      onAppear: null,
+      topOffset: 0,
+      ignoreBottomOffset: true,
+      cornerRadius: 0,
+      customStack: true,
+      springDamping: 1,
+      transitionDuration: 0.2,
+    } as StackNavigationOptions,
   },
 };

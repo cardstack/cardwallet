@@ -45,11 +45,11 @@ export function formatNative(value: string | undefined, currency = 'USD') {
 export const nativeCurrencyToAmountInSpend = (
   amount: string | undefined,
   nativeCurrencyRate: number
-) => {
+): number => {
   return amount
     ? new BigNumber(localCurrencyToAbsNum(amount))
         .times(USD_TO_SPEND_RATE)
-        .times(nativeCurrencyRate)
+        .div(nativeCurrencyRate)
         .toNumber()
     : 0;
 };
@@ -57,9 +57,11 @@ export const nativeCurrencyToAmountInSpend = (
 export const nativeCurrencyToSpend = (
   amount: string | undefined,
   nativeCurrencyRate: number
-) => {
-  return formatFixedDecimals(
-    nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate),
-    4
+): number => {
+  return parseFloat(
+    formatFixedDecimals(
+      nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate),
+      4
+    )
   );
 };

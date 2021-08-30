@@ -58,6 +58,7 @@ const ShowQRCodeModal = () => {
           height="auto"
           alignItems="center"
           backgroundColor="transparent"
+          paddingBottom={15}
         >
           <SheetHandle color="white" opacity={1} />
           <Container

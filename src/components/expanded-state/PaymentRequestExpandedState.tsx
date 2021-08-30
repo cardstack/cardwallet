@@ -21,7 +21,6 @@ import {
   formatNative,
   generateMerchantPaymentUrl,
   getAddressPreview,
-  nativeCurrencyToAmountInSpend,
   nativeCurrencyToSpend,
 } from '@cardstack/utils';
 
@@ -117,7 +116,7 @@ export default function PaymentRequestExpandedState(props: {
         ) : (
           <AmountAndQRCodeButtons
             address={address}
-            amountInSpend={nativeCurrencyToAmountInSpend(
+            amountInSpend={nativeCurrencyToSpend(
               inputValue,
               currencyConversionRates[nativeCurrency]
             )}
