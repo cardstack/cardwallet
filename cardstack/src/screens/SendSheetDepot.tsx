@@ -85,8 +85,6 @@ export const useSendSheetDepotScreen = () => {
   const [gasEstimatedFee, setGasEstimatedFee] = useState(0);
 
   const getGasPriceEstimate = useCallback(async () => {
-    if (!isValidAddress) return;
-
     try {
       const amountWei = Web3.utils.toWei(amountDetails.assetAmount || '0');
 
@@ -96,7 +94,7 @@ export const useSendSheetDepotScreen = () => {
         (await safes?.sendTokensGasEstimate(
           depot.address,
           selected?.address || '',
-          recipient,
+          recipient || depot.address, // Fallback to a valid recipient to get gasEstimation on first render
           amountWei
         )) || '0';
 
@@ -122,13 +120,7 @@ export const useSendSheetDepotScreen = () => {
     } catch (e) {
       logger.error('Error getting gasPriceEstimate or maxBalance', e);
     }
-  }, [
-    amountDetails.assetAmount,
-    depot.address,
-    isValidAddress,
-    recipient,
-    selected,
-  ]);
+  }, [amountDetails.assetAmount, depot.address, recipient, selected]);
 
   // Update gasFee initial render and when asset changes
   useEffect(() => {
@@ -145,10 +137,10 @@ export const useSendSheetDepotScreen = () => {
 
   // Update converter on initial render and on reseting asset selection
   useEffect(() => {
-    if (!usdConverter.current && selected?.symbol && isValidAddress) {
+    if (!usdConverter.current && selected?.symbol) {
       getTokenToUsdConverter();
     }
-  }, [getTokenToUsdConverter, isValidAddress, selected]);
+  }, [getTokenToUsdConverter, selected]);
 
   const handleAmountDetails = useCallback(
     ({ assetAmount, nativeAmount }) => {
