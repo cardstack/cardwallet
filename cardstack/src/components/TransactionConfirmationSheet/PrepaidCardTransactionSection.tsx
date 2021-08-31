@@ -1,6 +1,7 @@
 import React from 'react';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
-import { Container, NetworkBadge, Icon, Text } from '@cardstack/components';
+import MiniPrepaidCard from '../PrepaidCard/MiniPrepaidCard';
+import TransactionListItem from './components/TransactionListItem';
+import { Container, Text } from '@cardstack/components';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
@@ -33,33 +34,27 @@ export const PrepaidCardTransactionSection = ({
   );
 
   return (
-    <Container marginTop={8} width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        {headerText}
-      </TransactionConfirmationSectionHeaderText>
-      <Container paddingHorizontal={3} marginTop={4}>
-        <Container flexDirection="row">
-          <Icon name="prepaid-card" />
-          <Container marginLeft={2}>
-            <Text weight="extraBold">Prepaid Card</Text>
-            <NetworkBadge marginTop={2} />
-            <Container maxWidth={180} marginTop={1}>
-              <Text variant="subAddress">{prepaidCardAddress}</Text>
-            </Container>
-            {prepaidCard && (
-              <Container marginTop={3}>
-                <Text fontSize={12}>Spendable Balance</Text>
-                <Text fontSize={15} weight="extraBold">
-                  {spendDisplay.tokenBalanceDisplay}
-                </Text>
-                <Text variant="subText">
-                  {spendDisplay.nativeBalanceDisplay}
-                </Text>
-              </Container>
-            )}
+    <TransactionListItem
+      headerText={headerText}
+      title="Prepaid Card"
+      icon={
+        prepaidCard?.cardCustomization && (
+          <MiniPrepaidCard cardCustomization={prepaidCard?.cardCustomization} />
+        )
+      }
+      showNetworkBadge
+      address={prepaidCardAddress}
+      footer={
+        prepaidCard && (
+          <Container marginTop={3}>
+            <Text fontSize={12}>Spendable Balance</Text>
+            <Text fontSize={15} weight="extraBold">
+              {spendDisplay.tokenBalanceDisplay}
+            </Text>
+            <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
           </Container>
-        </Container>
-      </Container>
-    </Container>
+        )
+      }
+    />
   );
 };
