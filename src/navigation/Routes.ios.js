@@ -31,6 +31,7 @@ import {
   expandedAssetSheetConfig,
   nativeStackDefaultConfig,
   nativeStackDefaultConfigWithoutStatusBar,
+  nativeStackModalConfig,
   restoreSheetConfig,
   savingsSheetConfig,
   stackNavigationConfig,
@@ -325,19 +326,7 @@ function NativeStackNavigator() {
       <NativeStack.Screen
         component={ShowQRCodeModal}
         name={Routes.SHOW_QRCODE_MODAL}
-        options={{
-          allowsDragToDismiss: true,
-          backgroundColor: colors.overlayGray,
-          backgroundOpacity: 0.95,
-          transparentCard: true,
-          onAppear: null,
-          topOffset: 0,
-          ignoreBottomOffset: true,
-          cornerRadius: 0,
-          customStack: true,
-          springDamping: 1,
-          transitionDuration: 0.2,
-        }}
+        options={nativeStackModalConfig}
       />
       <NativeStack.Screen
         component={RestoreSheet}

@@ -8,6 +8,7 @@ import { Text } from '../components/text';
 import { useTheme } from '../context/ThemeContext';
 import colors from '../context/currentColors';
 import { onWillPop } from './Navigation';
+import { colors as cardstackColors } from '@cardstack/theme';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import { fonts } from '@rainbow-me/styles';
 import { deviceUtils, safeAreaInsetValues } from '@rainbow-me/utils';
@@ -156,6 +157,21 @@ export const nativeStackDefaultConfig = {
   springDamping: 1,
   topOffset: 0,
   transitionDuration: 0.3,
+};
+
+// react-native-cool-modals options to display screen as a modal like QRCode Screen
+export const nativeStackModalConfig = {
+  allowsDragToDismiss: true,
+  backgroundColor: cardstackColors.overlayGray,
+  backgroundOpacity: 0.95,
+  transparentCard: true,
+  onAppear: null,
+  topOffset: 0,
+  ignoreBottomOffset: true,
+  cornerRadius: 0,
+  customStack: true,
+  springDamping: 1,
+  transitionDuration: 0.2,
 };
 
 export const nativeStackDefaultConfigWithoutStatusBar = {
