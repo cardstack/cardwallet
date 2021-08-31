@@ -12,21 +12,31 @@ import { PrepaidCardCustomization } from '@cardstack/types';
 import { parseLinearGradient } from '@cardstack/utils';
 import { useDimensions } from '@rainbow-me/hooks';
 
-const SMALL_PREPAID_CARD_GRADIENT_HEIGHT = 40;
-const PREPAID_GRADIENT_HEIGHT = 110;
+type CardVariants = 'normal' | 'small' | 'mini';
+
+const cardType: Record<CardVariants, { width: string; height: number }> = {
+  normal: { width: '100%', height: 110 },
+  small: { width: '115%', height: 40 },
+  mini: { width: '100%', height: 14 },
+};
+
+const miniValues = {
+  x2: 0.9,
+  rotate: 20,
+};
 
 interface CardGradientProps {
   cardCustomization?: PrepaidCardCustomization;
   isEditing?: boolean;
   address: string;
-  small?: boolean;
+  variant?: CardVariants;
 }
 
 export const CustomizableBackground = ({
   cardCustomization,
   isEditing,
   address,
-  small,
+  variant = 'normal',
 }: CardGradientProps) => {
   const { width } = useDimensions();
 
@@ -40,11 +50,12 @@ export const CustomizableBackground = ({
     cardCustomization
   );
 
-  const WIDTH = small ? '115%' : '100%';
+  const WIDTH = cardType[variant].width;
+  const HEIGHT = cardType[variant].height;
 
-  const HEIGHT = small
-    ? SMALL_PREPAID_CARD_GRADIENT_HEIGHT
-    : PREPAID_GRADIENT_HEIGHT;
+  const isMini = variant === 'mini';
+  const x2 = isMini ? miniValues.x2 : WIDTH;
+  const rotateWidth = isMini ? miniValues.rotate : width;
 
   return (
     <SVG
@@ -59,9 +70,11 @@ export const CustomizableBackground = ({
             id="linearGradient"
             x1="0"
             y1="0"
-            x2={WIDTH}
+            x2={x2}
             y2="0"
-            gradientTransform={`rotate(${angle}, ${width / 2}, ${HEIGHT / 2})`}
+            gradientTransform={`rotate(${angle}, ${rotateWidth / 2}, ${
+              HEIGHT / 2
+            })`}
           >
             <Stop {...stop1} />
             <Stop {...stop2} />
@@ -84,12 +97,22 @@ export const CustomizableBackground = ({
           patternColor={cardCustomization?.patternColor}
         />
       )}
-      <G transform="translate(0 71)">
-        <Path
-          d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
-          fill="#fff"
-        />
-      </G>
+      {isMini ? (
+        <G transform="translate(-12.5 -25)">
+          <Path
+            data-name="White shape"
+            d="M4.069 43.994L4 29.832h14.743a3.737 3.737 0 012.545 1.322 12.23 12.23 0 001.665 1.666 3.407 3.407 0 002.481.9h13.852l.067 10.271z"
+            fill="#fff"
+          />
+        </G>
+      ) : (
+        <G transform="translate(0 71)">
+          <Path
+            d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
+            fill="#fff"
+          />
+        </G>
+      )}
     </SVG>
   );
 };
@@ -134,7 +157,7 @@ const PatternUri = ({
         const height =
           screenWidth > Number(viewBox[2])
             ? (screenWidth / Number(viewBox[2])) * Number(viewBox[3])
-            : Number(viewBox[3]) || PREPAID_GRADIENT_HEIGHT;
+            : Number(viewBox[3]) || cardType.normal.height;
 
         setPattern({
           pattern: response,
