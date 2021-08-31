@@ -60,7 +60,7 @@ export const MerchantInfo = (props: MerchantSafeProps) => (
           color={props.merchantInfo?.color}
           size="medium"
           value={props.merchantInfo?.name}
-          textColor={props.merchantInfo?.['text-color']}
+          textColor={props.merchantInfo?.textColor}
         />
       ) : (
         <Icon name="user" />

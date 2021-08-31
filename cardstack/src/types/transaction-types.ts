@@ -52,12 +52,12 @@ export interface PrepaidCardCustomization {
 }
 
 export interface MerchantInformation {
-  did?: string;
-  name?: string;
-  slug?: string;
-  color?: string;
-  'text-color'?: string;
-  'owner-address'?: string;
+  did: string;
+  name: string;
+  slug: string;
+  color: string;
+  textColor: string;
+  ownerAddress: string;
 }
 
 export interface PrepaidCardCreatedTransactionType {
