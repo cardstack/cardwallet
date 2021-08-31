@@ -5,8 +5,10 @@ import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { Container, Text } from '@cardstack/components';
 
 export const PayThisAmountSection = ({
+  headerText = 'PAY THIS AMOUNT',
   spendAmount,
 }: {
+  headerText?: string;
   spendAmount: string | number;
 }) => {
   const [
@@ -24,7 +26,7 @@ export const PayThisAmountSection = ({
   return (
     <Container>
       <TransactionConfirmationSectionHeaderText>
-        PAY THIS AMOUNT
+        {headerText}
       </TransactionConfirmationSectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">

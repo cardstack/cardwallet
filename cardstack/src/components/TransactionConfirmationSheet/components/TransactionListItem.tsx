@@ -13,8 +13,8 @@ interface Props {
   icon?: Element;
   avatarInfo?: {
     color?: string;
-    name?: string;
-    textColor: string;
+    name: string;
+    textColor?: string;
   };
   footer?: Element;
   hideDivider?: boolean;

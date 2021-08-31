@@ -1,69 +1,81 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { PrepaidCardTransactionSection } from './PrepaidCardTransactionSection';
 import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
 import { PayThisAmountSection } from './PayThisAmountSection';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
-import { RegisterMerchantDecodedData } from '@cardstack/types';
+import TransactionListItem from './components/TransactionListItem';
 import {
-  Container,
-  HorizontalDivider,
-  Icon,
-  Text,
-} from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
+  MerchantInformation,
+  RegisterMerchantDecodedData,
+} from '@cardstack/types';
+import { fetchMerchantInfoFromDID } from '@cardstack/utils';
+import { logger } from '@rainbow-me/utils';
+import { useAccountProfile } from '@rainbow-me/hooks';
 
 interface RegisterMerchantDisplayProps
   extends TransactionConfirmationDisplayProps {
   data: RegisterMerchantDecodedData;
 }
 
-export const RegisterMerchantDisplay = (
-  props: RegisterMerchantDisplayProps
-) => {
+export const RegisterMerchantDisplay = ({
+  data: { infoDID, prepaidCard, spendAmount },
+}: RegisterMerchantDisplayProps) => {
+  const [merchantInfoDID, setMerchantInfoDID] = useState<MerchantInformation>();
+
+  const {
+    accountColor,
+    accountName,
+    accountSymbol,
+    accountAddress,
+  } = useAccountProfile();
+
+  const accountAvatarInfo = useMemo(
+    () => ({
+      color: accountColor,
+      name: accountSymbol || '?',
+    }),
+    [accountColor, accountSymbol]
+  );
+
+  useEffect(() => {
+    const getMerchantInfoDID = async () => {
+      try {
+        const info = await fetchMerchantInfoFromDID(infoDID);
+        setMerchantInfoDID(info);
+      } catch (e) {
+        logger.log('Error on getMerchantInfoDID', e);
+      }
+    };
+
+    getMerchantInfoDID();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
-      <PrepaidCardTransactionSection
-        prepaidCardAddress={props.data.prepaidCard}
+      <TransactionListItem
+        headerText="FROM"
+        title={accountName}
+        avatarInfo={accountAvatarInfo}
+        showNetworkBadge
+        address={accountAddress}
       />
-      <HorizontalDivider />
-      <PayThisAmountSection spendAmount={props.data.spendAmount} />
-      <HorizontalDivider />
-      <ToSection />
+      {merchantInfoDID && (
+        <TransactionListItem
+          headerText="CREATE THIS MERCHANT"
+          title={merchantInfoDID.name || 'Merchant Name'}
+          avatarInfo={merchantInfoDID}
+          address={merchantInfoDID.slug}
+        />
+      )}
+      <PrepaidCardTransactionSection
+        headerText="PAY WITH"
+        prepaidCardAddress={prepaidCard}
+      />
+      <PayThisAmountSection
+        headerText="PAY MERCHANT CREATION FEE"
+        spendAmount={spendAmount}
+      />
     </>
-  );
-};
-
-const ToSection = () => {
-  return (
-    <Container width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        CREATE THIS MERCHANT
-      </TransactionConfirmationSectionHeaderText>
-      <Container paddingHorizontal={3} marginTop={4}>
-        <Container flexDirection="row">
-          <Icon name="user" />
-          <Container marginLeft={4}>
-            <Text weight="extraBold">Merchant Name</Text>
-            <Text variant="subAddress" marginTop={1}>
-              {getAddressPreview('0xXXXXXXXXXXXX')}*
-            </Text>
-            <Container
-              width="100%"
-              paddingRight={5}
-              flexDirection="row"
-              marginTop={4}
-            >
-              <Text size="small" color="blueText" marginRight={1}>
-                *
-              </Text>
-              <Text size="small" color="blueText">
-                The address will be confirmed once the transaction is complete
-              </Text>
-            </Container>
-          </Container>
-        </Container>
-      </Container>
-    </Container>
   );
 };
