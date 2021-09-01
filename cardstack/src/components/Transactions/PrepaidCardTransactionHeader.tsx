@@ -23,7 +23,7 @@ export const PrepaidCardTransactionHeader = ({
     <CustomizableBackground
       cardCustomization={cardCustomization}
       address={address}
-      small
+      variant="small"
     />
     <Container flexDirection="row" alignItems="center">
       <NetworkBadge marginRight={2} />

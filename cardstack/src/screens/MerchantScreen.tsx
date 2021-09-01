@@ -183,7 +183,7 @@ const MerchantInfo = () => {
           color={merchantSafe.merchantInfo?.color}
           size="large"
           value={merchantSafe.merchantInfo?.name}
-          textColor={merchantSafe.merchantInfo?.['text-color']}
+          textColor={merchantSafe.merchantInfo?.textColor}
         />
       ) : (
         <Icon name="user" size={80} />

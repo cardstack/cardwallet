@@ -22,7 +22,7 @@ export const merchantRevenueEventsToTransactions = (
 
 export const fetchMerchantInfoFromDID = async (
   merchantInfoDID?: string
-): Promise<MerchantInformation> => {
+): Promise<MerchantInformation | undefined> => {
   if (!merchantInfoDID) {
     throw new Error('merchantInfoDID must be present!');
   }
@@ -39,7 +39,18 @@ export const fetchMerchantInfoFromDID = async (
     data: { attributes },
   } = await (await fetch(alsoKnownAs)).json();
 
-  return attributes || {};
+  if (attributes) {
+    const { name, slug, color } = attributes;
+
+    return {
+      name,
+      slug,
+      color,
+      did: attributes.did,
+      textColor: attributes['text-color'],
+      ownerAddress: attributes['owner-address'],
+    };
+  }
 };
 
 // ToDo: Add test once merchant flow finished
