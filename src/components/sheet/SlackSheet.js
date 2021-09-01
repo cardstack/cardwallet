@@ -44,6 +44,7 @@ const Content = styled(Animated.ScrollView).attrs(({ y }) => ({
     contentHeight ? `height: ${deviceHeight + contentHeight}` : null};
   padding-top: ${SheetHandleFixedToTopHeight};
   width: 100%;
+  display: flex;
   flex-grow: 1;
 `;
 
@@ -114,14 +115,7 @@ export default function SlackSheet({
           {...props}
         />
       )
-    : props => (
-        <Container
-          backgroundColor={bg}
-          style={{ flex: 1 }}
-          width="100%"
-          {...props}
-        />
-      );
+    : props => <Container backgroundColor={bg} flex={1} {...props} />;
 
   return (
     <Fragment>
