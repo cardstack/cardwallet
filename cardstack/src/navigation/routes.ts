@@ -5,4 +5,5 @@ export const Routes = {
   PREPAID_CARD_MODAL: 'PrepaidCardModal',
   BUY_PREPAID_CARD: 'BuyPrepaidCard',
   SEND_FLOW_DEPOT: 'SendFlowDepot',
+  SHOW_QRCODE_MODAL: 'ShowQRCodeModal',
 } as const;

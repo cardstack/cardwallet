@@ -21,7 +21,6 @@ import {
   formatNative,
   generateMerchantPaymentUrl,
   getAddressPreview,
-  nativeCurrencyToAmountInSpend,
   nativeCurrencyToSpend,
 } from '@cardstack/utils';
 
@@ -29,6 +28,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
+import Routes from '@rainbow-me/routes';
 import { shadow } from '@rainbow-me/styles';
 import deviceUtils from '@rainbow-me/utils/deviceUtils';
 import logger from 'logger';
@@ -116,11 +116,12 @@ export default function PaymentRequestExpandedState(props: {
         ) : (
           <AmountAndQRCodeButtons
             address={address}
-            amountInSpend={nativeCurrencyToAmountInSpend(
+            amountInSpend={nativeCurrencyToSpend(
               inputValue,
               currencyConversionRates[nativeCurrency]
             )}
             formattedAmount={inputValue}
+            merchantName={merchantInfo?.name}
             nativeCurrency={nativeCurrency}
             nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
           />
@@ -242,12 +243,14 @@ const AmountAndQRCodeButtons = ({
   nativeCurrency,
   nativeCurrencyRate,
   amountInSpend,
+  merchantName,
 }: {
   formattedAmount: string | undefined;
   address: string;
   nativeCurrency: string;
   nativeCurrencyRate: number;
   amountInSpend: number;
+  merchantName: string | undefined;
 }) => {
   const [copyCount, setCopyCount] = useState(0);
   const { network } = useAccountSettings();
@@ -255,17 +258,22 @@ const AmountAndQRCodeButtons = ({
     () => generateMerchantPaymentUrl(address, amountInSpend, network),
     [address, amountInSpend, network]
   );
-
+  const { navigate } = useNavigation();
   const { setClipboard } = useClipboard();
   const copyToClipboard = useCallback(() => {
     setClipboard(paymentRequestLink);
     setCopyCount(count => count + 1);
   }, [paymentRequestLink, setClipboard]);
+  const amountWithSymbol = `${
+    (supportedNativeCurrencies as any)[nativeCurrency].symbol
+  }${formattedAmount}`;
 
   const handleShareLink = useCallback(async () => {
     try {
       await Share.share({
-        message: `Payment Request\nTo: ${getAddressPreview(address)}`,
+        message: `Payment Request\nTo: ${getAddressPreview(
+          address
+        )}\nURL: ${paymentRequestLink}`,
         url: paymentRequestLink,
         title: 'Payment Request',
       });
@@ -273,6 +281,21 @@ const AmountAndQRCodeButtons = ({
       logger.sentry('Payment Request Link share failed', error.message);
     }
   }, [address, paymentRequestLink]);
+
+  const showQRCode = useCallback(() => {
+    navigate(Routes.SHOW_QRCODE_MODAL, {
+      value: paymentRequestLink,
+      amountInSpend,
+      amountWithSymbol,
+      name: merchantName,
+    });
+  }, [
+    amountInSpend,
+    amountWithSymbol,
+    merchantName,
+    navigate,
+    paymentRequestLink,
+  ]);
 
   return (
     <>
@@ -283,9 +306,7 @@ const AmountAndQRCodeButtons = ({
           </Text>
           <Container paddingLeft={6}>
             <Text fontSize={15} fontWeight="bold">
-              {`${
-                (supportedNativeCurrencies as any)[nativeCurrency].symbol
-              }${formattedAmount} ${nativeCurrency}`}
+              {`${amountWithSymbol} ${nativeCurrency}`}
             </Text>
             <SpendAmount
               formattedAmount={formattedAmount}
@@ -325,7 +346,7 @@ const AmountAndQRCodeButtons = ({
           </Container>
         </Container>
         <Container marginTop={6}>
-          <Button onPress={() => {}}>Show QR code</Button>
+          <Button onPress={showQRCode}>Show QR code</Button>
           <Container
             alignItems="center"
             alignSelf="center"
@@ -364,9 +385,11 @@ const AmountAndQRCodeButtons = ({
           </Container>
         </Container>
       </Container>
-      <ToastPositionContainer>
-        <CopyToast copiedText="Payment Request Link" copyCount={copyCount} />
-      </ToastPositionContainer>
+      {copyCount > 0 ? (
+        <ToastPositionContainer>
+          <CopyToast copiedText="Payment Request Link" copyCount={copyCount} />
+        </ToastPositionContainer>
+      ) : null}
     </>
   );
 };

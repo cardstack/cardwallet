@@ -42,10 +42,13 @@ export const fetchMerchantInfoFromDID = async (
   return attributes || {};
 };
 
+// ToDo: Add test once merchant flow finished
 export const generateMerchantPaymentUrl = (
   merchantSafeID: string,
-  amountInSpend: number,
-  network = 'sokol'
+  amount: number,
+  network = 'sokol',
+  currency = 'SPD'
 ) => {
-  return `https://wallet.cardstack.com/pay/${network}/${merchantSafeID}?amount=${amountInSpend}`;
+  // https://wallet.cardstack.com/pay/[sokol|xdai]/[merchant-safe-id]?amount=[amount-in-specified-currency]&currency=[3-letter-symbol]
+  return `https://wallet.cardstack.com/pay/${network}/${merchantSafeID}?amount=${amount}&currency=${currency}`;
 };
