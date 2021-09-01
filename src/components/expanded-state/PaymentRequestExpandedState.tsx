@@ -30,7 +30,6 @@ import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
 import { shadow } from '@rainbow-me/styles';
-import deviceUtils from '@rainbow-me/utils/deviceUtils';
 import logger from 'logger';
 const TOP_POSITION = 150;
 
@@ -39,7 +38,7 @@ export default function PaymentRequestExpandedState(props: {
 }) {
   const { address, merchantInfo } = props.asset;
   const { setOptions } = useNavigation();
-  const { height: deviceHeight, isSmallPhone } = useDimensions();
+  const { height: deviceHeight, isTallPhone } = useDimensions();
   const [inputValue, setInputValue] = useState<string>();
   const [editMode, setEditMode] = useState<boolean>(true);
   const [
@@ -49,11 +48,9 @@ export default function PaymentRequestExpandedState(props: {
 
   useEffect(() => {
     setOptions({
-      longFormHeight: isSmallPhone
-        ? deviceUtils.iPhone6Height
-        : deviceHeight - TOP_POSITION,
+      longFormHeight: isTallPhone ? deviceHeight - TOP_POSITION : deviceHeight,
     });
-  }, [setOptions, deviceHeight, isSmallPhone]);
+  }, [setOptions, deviceHeight, isTallPhone]);
 
   const EditFooter = () => (
     <Container paddingHorizontal={5}>
@@ -395,13 +392,13 @@ const AmountAndQRCodeButtons = ({
 };
 
 const QRCodeFooter = () => {
-  const { isSmallPhone } = useDimensions();
+  const { isTallPhone } = useDimensions();
 
   return (
     <Container
       alignSelf="flex-end"
       backgroundColor="white"
-      bottom={isSmallPhone ? 0 : 70}
+      bottom={isTallPhone ? 70 : 0}
       paddingHorizontal={5}
       paddingVertical={4}
       style={shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)}
