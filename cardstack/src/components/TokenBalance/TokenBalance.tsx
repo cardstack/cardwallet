@@ -1,4 +1,6 @@
+import { ResponsiveValue } from '@shopify/restyle';
 import React from 'react';
+import { Theme } from '@cardstack/theme';
 import {
   Container,
   ContainerProps,
@@ -13,6 +15,7 @@ export interface TokenBalanceProps extends ContainerProps {
   address?: string;
   tokenSymbol: string;
   tokenBalance?: string;
+  tokenBalanceFontSize?: ResponsiveValue<keyof Theme['fontSizes'], Theme>;
   nativeBalance: string;
   includeBorder?: boolean;
   isLastItemIfList?: boolean;
@@ -32,6 +35,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
     address,
     tokenSymbol,
     tokenBalance,
+    tokenBalanceFontSize,
     nativeBalance,
     onPress,
     Icon,
@@ -53,14 +57,16 @@ export const TokenBalance = (props: TokenBalanceProps) => {
         marginBottom={isLastItemIfList ? 0 : 4}
       >
         <Container>
-          <Container flexDirection="row">
+          <Container flexDirection="row" alignItems="center">
             {Icon ? (
               Icon
             ) : (
               <CoinIcon address={address} symbol={tokenSymbol} size={size} />
             )}
             <Container flexDirection="column" marginLeft={3}>
-              <Text weight="extraBold">{tokenBalance}</Text>
+              <Text weight="extraBold" size={tokenBalanceFontSize || 'body'}>
+                {tokenBalance}
+              </Text>
               <Text variant="subText">{nativeBalance}</Text>
             </Container>
           </Container>

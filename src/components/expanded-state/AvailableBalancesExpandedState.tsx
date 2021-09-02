@@ -168,6 +168,7 @@ const useBalancesSection = (
         type: 'token',
       }),
     key: token.tokenAddress,
+    tokenBalanceFontSize: 'largeBalance',
   }));
 
   const totalAmount = tokens.reduce(

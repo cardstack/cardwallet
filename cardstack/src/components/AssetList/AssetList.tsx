@@ -136,11 +136,7 @@ export const AssetList = (props: AssetListProps) => {
                   {title}
                 </Text>
                 {count ? (
-                  <Text
-                    color="buttonPrimaryBorder"
-                    size="medium"
-                    marginLeft={2}
-                  >
+                  <Text color="tealDark" size="medium" marginLeft={2}>
                     {count}
                   </Text>
                 ) : null}
@@ -152,7 +148,7 @@ export const AssetList = (props: AssetListProps) => {
               >
                 {total ? (
                   <Text
-                    color="buttonPrimaryBorder"
+                    color="tealDark"
                     size="body"
                     weight="extraBold"
                     marginRight={showContextMenu ? 3 : 0}
