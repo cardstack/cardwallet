@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Share } from 'react-native';
 import CardWalletLogo from '../../../cardstack/src/assets/cardstackLogo.png';
 import {
   CopyToast,
@@ -22,6 +21,7 @@ import {
   generateMerchantPaymentUrl,
   getAddressPreview,
   nativeCurrencyToSpend,
+  shareRequestPaymentLink,
 } from '@cardstack/utils';
 
 import { useNavigation } from '@rainbow-me/navigation';
@@ -31,6 +31,7 @@ import { supportedNativeCurrencies } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
 import { shadow } from '@rainbow-me/styles';
 import logger from 'logger';
+
 const TOP_POSITION = 150;
 
 export default function PaymentRequestExpandedState(props: {
@@ -64,7 +65,6 @@ export default function PaymentRequestExpandedState(props: {
 
   return (
     <>
-      {/* @ts-ignore */}
       <SlackSheet
         bottomInset={editMode ? 50 : 110}
         hasKeyboard={editMode}
@@ -250,34 +250,32 @@ const AmountAndQRCodeButtons = ({
   merchantName: string | undefined;
 }) => {
   const [copyCount, setCopyCount] = useState(0);
-  const { network } = useAccountSettings();
+
+  const { network, nativeCurrencySymbol } = useAccountSettings();
+  const { navigate } = useNavigation();
+  const { setClipboard } = useClipboard();
+
   const paymentRequestLink = useMemo(
     () => generateMerchantPaymentUrl(address, amountInSpend, network),
     [address, amountInSpend, network]
   );
-  const { navigate } = useNavigation();
-  const { setClipboard } = useClipboard();
+
   const copyToClipboard = useCallback(() => {
     setClipboard(paymentRequestLink);
     setCopyCount(count => count + 1);
   }, [paymentRequestLink, setClipboard]);
-  const amountWithSymbol = `${
-    (supportedNativeCurrencies as any)[nativeCurrency].symbol
-  }${formattedAmount}`;
 
   const handleShareLink = useCallback(async () => {
     try {
-      await Share.share({
-        message: `Payment Request\nTo: ${getAddressPreview(
-          address
-        )}\nURL: ${paymentRequestLink}`,
-        url: paymentRequestLink,
-        title: 'Payment Request',
-      });
+      await shareRequestPaymentLink(address, paymentRequestLink);
     } catch (error) {
       logger.sentry('Payment Request Link share failed', error.message);
     }
   }, [address, paymentRequestLink]);
+
+  // assuming we are using the global native currency,
+  // once it needs to change we probably should receive this as prop
+  const amountWithSymbol = `${nativeCurrencySymbol}${formattedAmount}`;
 
   const showQRCode = useCallback(() => {
     navigate(Routes.SHOW_QRCODE_MODAL, {
