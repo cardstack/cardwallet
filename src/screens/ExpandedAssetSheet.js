@@ -10,6 +10,7 @@ import {
   ChartExpandedState,
   LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
+  MerchantTransactionExpandedState,
   PaymentRequestExpandedState,
   UnclaimedRevenueExpandedState,
   UniqueTokenExpandedState,
@@ -27,6 +28,7 @@ const ScreenTypes = {
   unclaimedRevenue: UnclaimedRevenueExpandedState,
   availableBalances: AvailableBalancesExpandedState,
   paymentRequest: PaymentRequestExpandedState,
+  merchantTransaction: MerchantTransactionExpandedState,
 };
 
 const Container = styled(Centered).attrs({

@@ -114,6 +114,12 @@ export interface MerchantClaimType {
   };
   hideSafeHeader?: boolean;
   type: TransactionTypes.MERCHANT_CLAIM;
+  transaction?: {
+    grossClaimed?: string;
+    gasFee?: string;
+    gasUsdFee?: string;
+    netClaimed?: string;
+  };
 }
 
 export interface PrepaidCardPaymentTransactionType {

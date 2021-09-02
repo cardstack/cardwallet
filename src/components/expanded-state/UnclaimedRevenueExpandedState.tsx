@@ -10,9 +10,9 @@ import { ethereumUtils } from '../../../src/utils';
 import { SlackSheet } from '../sheet';
 import {
   Button,
+  CenteredContainer,
   Container,
   HorizontalDivider,
-  ListEmptyComponent,
   Text,
   TransactionItem,
   TransactionListLoading,
@@ -103,7 +103,7 @@ export default function UnclaimedRevenueExpandedState(props: {
   }, [merchantSafe.address, network, revenueBalances, selectedWallet.id]);
 
   return (
-    <SlackSheet flex={1}>
+    <SlackSheet flex={1} scrollEnabled>
       <Container paddingHorizontal={5} paddingVertical={3}>
         <Text size="medium">Unclaimed revenue</Text>
         <Container flexDirection="column" marginTop={5}>
@@ -138,7 +138,7 @@ const Activities = ({ address }: { address: string }) => {
         <TransactionListLoading light />
       ) : (
         <SectionList
-          ListEmptyComponent={<ListEmptyComponent text="No activity" />}
+          ListEmptyComponent={<ListEmptyComponent />}
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
@@ -185,3 +185,11 @@ const TokenItem = ({ token }: { token: TokenType }) => {
     </Container>
   );
 };
+
+const ListEmptyComponent = () => (
+  <CenteredContainer flex={1} height={100} width="100%">
+    <Text color="grayText" textAlign="center">
+      No activity Data
+    </Text>
+  </CenteredContainer>
+);

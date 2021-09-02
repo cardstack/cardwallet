@@ -8,4 +8,5 @@ export { default as WalletProfileState } from './WalletProfileState';
 export { default as LifetimeEarningsExpandedState } from './LifetimeEarningsExpandedState';
 export { default as UnclaimedRevenueExpandedState } from './UnclaimedRevenueExpandedState';
 export { default as AvailableBalancesExpandedState } from './AvailableBalancesExpandedState';
+export { default as MerchantTransactionExpandedState } from './MerchantTransactionExpandedState';
 export { default as PaymentRequestExpandedState } from './PaymentRequestExpandedState';
