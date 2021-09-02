@@ -35,6 +35,14 @@ fragment PrepaidCardPayment on PrepaidCardPayment {
   merchantSafe {
     id
   }
+  transaction {
+    merchantFeePayments {
+      feeCollected
+      issuingToken {
+        symbol
+      }
+    }
+  }
 }
 
 fragment BridgeToLayer1Event on BridgeToLayer1Event {
@@ -121,6 +129,19 @@ fragment MerchantClaim on MerchantClaim {
     decimals
   }
   amount
+  transaction {
+    id
+    tokenTransfers{
+      amount,
+      fromTokenHolder {
+        id
+      },
+      toTokenHolder {
+        id
+      },
+      token {symbol}
+    }
+  }
 }
 
 fragment MerchantRevenueEvent on MerchantRevenueEvent {

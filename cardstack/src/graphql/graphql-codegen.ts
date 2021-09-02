@@ -4514,7 +4514,17 @@ export type PrepaidCardPaymentFragment = (
   ), merchantSafe?: Maybe<(
     { __typename?: 'MerchantSafe' }
     & Pick<MerchantSafe, 'id'>
-  )> }
+  )>, transaction: (
+    { __typename?: 'Transaction' }
+    & { merchantFeePayments: Array<Maybe<(
+      { __typename?: 'MerchantFeePayment' }
+      & Pick<MerchantFeePayment, 'feeCollected'>
+      & { issuingToken: (
+        { __typename?: 'Token' }
+        & Pick<Token, 'symbol'>
+      ) }
+    )>> }
+  ) }
 );
 
 export type BridgeToLayer1EventFragment = (
@@ -4589,6 +4599,23 @@ export type MerchantClaimFragment = (
   & { token: (
     { __typename?: 'Token' }
     & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>
+  ), transaction: (
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id'>
+    & { tokenTransfers: Array<Maybe<(
+      { __typename?: 'TokenTransfer' }
+      & Pick<TokenTransfer, 'amount'>
+      & { fromTokenHolder?: Maybe<(
+        { __typename?: 'TokenHolder' }
+        & Pick<TokenHolder, 'id'>
+      )>, toTokenHolder?: Maybe<(
+        { __typename?: 'TokenHolder' }
+        & Pick<TokenHolder, 'id'>
+      )>, token: (
+        { __typename?: 'Token' }
+        & Pick<Token, 'symbol'>
+      ) }
+    )>> }
   ) }
 );
 
@@ -4799,6 +4826,40 @@ export type GetLifetimeEarningsAccumulationsQuery = (
   )> }
 );
 
+export type GetMerchantReceivedPaymentsQueryVariables = Exact<{
+  address: Scalars['ID'];
+}>;
+
+
+export type GetMerchantReceivedPaymentsQuery = (
+  { __typename?: 'Query' }
+  & { merchantSafe?: Maybe<(
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id'>
+    & { receivedPayments: Array<Maybe<(
+      { __typename?: 'PrepaidCardPayment' }
+      & Pick<PrepaidCardPayment, 'issuingTokenAmount' | 'issuingTokenUSDPrice' | 'spendAmount' | 'timestamp'>
+      & { prepaidCard: (
+        { __typename?: 'PrepaidCard' }
+        & Pick<PrepaidCard, 'id'>
+      ), issuingToken: (
+        { __typename?: 'Token' }
+        & Pick<Token, 'symbol'>
+      ), transaction: (
+        { __typename?: 'Transaction' }
+        & { merchantFeePayments: Array<Maybe<(
+          { __typename?: 'MerchantFeePayment' }
+          & Pick<MerchantFeePayment, 'feeCollected'>
+          & { issuingToken: (
+            { __typename?: 'Token' }
+            & Pick<Token, 'symbol'>
+          ) }
+        )>> }
+      ) }
+    )>> }
+  )> }
+);
+
 export const PrepaidCardPaymentFragmentDoc = gql`
     fragment PrepaidCardPayment on PrepaidCardPayment {
   id
@@ -4817,6 +4878,14 @@ export const PrepaidCardPaymentFragmentDoc = gql`
   merchantSafe {
     id
   }
+  transaction {
+    merchantFeePayments {
+      feeCollected
+      issuingToken {
+        symbol
+      }
+    }
+  }
 }
     `;
 export const MerchantClaimFragmentDoc = gql`
@@ -4830,6 +4899,21 @@ export const MerchantClaimFragmentDoc = gql`
     decimals
   }
   amount
+  transaction {
+    id
+    tokenTransfers {
+      amount
+      fromTokenHolder {
+        id
+      }
+      toTokenHolder {
+        id
+      }
+      token {
+        symbol
+      }
+    }
+  }
 }
     `;
 export const MerchantRevenueEventFragmentDoc = gql`
