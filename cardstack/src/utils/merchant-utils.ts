@@ -1,5 +1,8 @@
 import { Resolver } from 'did-resolver';
 import { getResolver } from '@cardstack/did-resolver';
+import { Share } from 'react-native';
+import { getAddressPreview } from './formatting-utils';
+import { Device } from './device';
 import { MerchantRevenueEventFragment } from '@cardstack/graphql';
 import { MerchantInformation } from '@cardstack/types';
 
@@ -53,13 +56,41 @@ export const fetchMerchantInfoFromDID = async (
   }
 };
 
-// ToDo: Add test once merchant flow finished
 export const generateMerchantPaymentUrl = (
   merchantSafeID: string,
   amount: number,
   network = 'sokol',
   currency = 'SPD'
+) =>
+  `https://wallet.cardstack.com/pay/${network}/${merchantSafeID}?amount=${amount}&currency=${currency}`;
+
+export const shareRequestPaymentLink = (
+  address: string,
+  paymentRequestLink: string
 ) => {
-  // https://wallet.cardstack.com/pay/[sokol|xdai]/[merchant-safe-id]?amount=[amount-in-specified-currency]&currency=[3-letter-symbol]
-  return `https://wallet.cardstack.com/pay/${network}/${merchantSafeID}?amount=${amount}&currency=${currency}`;
+  // Refer to https://developer.apple.com/documentation/uikit/uiactivitytype
+  const activityUiKitPath = 'com.apple.UIKit.activity';
+
+  const excludedActivityTypes = [
+    `${activityUiKitPath}.CopyToPasteboard`,
+    `${activityUiKitPath}.AddToReadingList`,
+  ];
+
+  const options = Device.isIOS
+    ? {
+        excludedActivityTypes,
+      }
+    : undefined;
+
+  const obfuscatedAddress = getAddressPreview(address);
+  const title = 'Payment Request';
+  const message = `${title}\nTo: ${obfuscatedAddress}\nURL: ${paymentRequestLink}`;
+
+  return Share.share(
+    {
+      message,
+      title,
+    },
+    options
+  );
 };
