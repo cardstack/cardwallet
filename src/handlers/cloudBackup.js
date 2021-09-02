@@ -5,7 +5,7 @@ import { RAINBOW_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
 import { logger } from '../utils';
-const REMOTE_BACKUP_WALLET_DIR = 'rainbow.me/wallet-backups';
+const REMOTE_BACKUP_WALLET_DIR = 'cardstack.com/wallet-backups';
 const USERDATA_FILE = 'UserData.json';
 const encryptor = new AesEncryptor();
 

@@ -23,23 +23,15 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleIdentifier</key>
+			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>me.rainbow</string>
+			<string>com.cardstack.cardpay</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>rainbow</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>Bundle ID</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.cardstack.cardpay</string>
+				<string>cardwallet</string>
 			</array>
 		</dict>
 	</array>
@@ -47,6 +39,11 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CodePushDeploymentKey</key>
 	<string>$(CODEPUSH_KEY)</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://pay.cardstack.com/request</string>
+		<string>https://cardpay.page.link/request</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -220,10 +217,5 @@
 	<string>${BRANCH_APP_DOMAIN)</string>
 	<key>branch_key</key>
 	<string>$(BRANCH_KEY)</string>
-  <key>FirebaseDynamicLinksCustomDomains</key>
-    <array>
-      <string>https://pay.cardstack.com/request</string>
-      <string>https://cardpay.page.link/request</string>
-    </array>
 </dict>
 </plist>
