@@ -223,7 +223,7 @@ export async function saveBackupPassword(
   try {
     if (ios) {
       await setSharedWebCredentials(
-        'cardstack.cardpay',
+        'cardstack.com',
         'Backup Password',
         password
       );
