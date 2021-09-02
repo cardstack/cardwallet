@@ -105,7 +105,11 @@ export default function UnclaimedRevenueExpandedState(props: {
   return (
     <>
       {/* @ts-ignore */}
-      <SlackSheet bottomInset={42} height="100%" scrollEnabled>
+      <SlackSheet
+        additionalTopPadding={android}
+        height="100%"
+        scrollEnabled={false}
+      >
         <Container paddingHorizontal={5} paddingVertical={3}>
           <Text size="medium">Unclaimed revenue</Text>
           <Container flexDirection="column" marginTop={5}>

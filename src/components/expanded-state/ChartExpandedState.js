@@ -100,7 +100,7 @@ export default function ChartExpandedState(props) {
           <TokenInfoItem asset={asset} title="Balance">
             <TokenInfoBalanceValue />
           </TokenInfoItem>
-          {asset?.native?.price.display && (
+          {asset?.native?.price?.display && (
             <TokenInfoItem align="right" title="Value" weight="bold">
               {`${asset?.native?.balance.display}`}
             </TokenInfoItem>

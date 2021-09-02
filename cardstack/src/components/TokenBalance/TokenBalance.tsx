@@ -7,7 +7,7 @@ import {
   CoinIcon,
 } from '@cardstack/components';
 
-interface TokenBalanceProps extends ContainerProps {
+export interface TokenBalanceProps extends ContainerProps {
   onPress?: () => void;
   Icon?: JSX.Element;
   address?: string;
