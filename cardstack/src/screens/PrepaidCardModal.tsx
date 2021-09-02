@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/core';
-import React from 'react';
-import { SectionList } from 'react-native';
+import React, { memo } from 'react';
+import { SectionList, StyleSheet } from 'react-native';
 import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
 import {
   CenteredContainer,
@@ -13,6 +13,11 @@ import {
   TransactionItem,
 } from '@cardstack/components';
 import { usePrepaidCardTransactions } from '@cardstack/hooks';
+
+const styles = StyleSheet.create({
+  contentContainerStyle: { paddingBottom: 400 },
+  sectionList: { width: '100%' },
+});
 
 const PrepaidCardModal = () => {
   const {
@@ -49,7 +54,7 @@ const PrepaidCardModal = () => {
         ) : (
           <SectionList
             ListEmptyComponent={<ListEmptyComponent />}
-            contentContainerStyle={{ paddingBottom: 400 }}
+            contentContainerStyle={styles.contentContainerStyle}
             renderItem={props => <TransactionItem {...props} includeBorder />}
             sections={sections}
             renderSectionHeader={({ section: { title } }) => (
@@ -62,7 +67,7 @@ const PrepaidCardModal = () => {
                 <Text color="blueText">{title}</Text>
               </Container>
             )}
-            style={{ width: '100%' }}
+            style={styles.sectionList}
           />
         )}
       </Container>
@@ -78,4 +83,4 @@ const ListEmptyComponent = () => (
   </CenteredContainer>
 );
 
-export default PrepaidCardModal;
+export default memo(PrepaidCardModal);

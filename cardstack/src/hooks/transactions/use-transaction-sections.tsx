@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
 import {
@@ -15,6 +15,7 @@ import {
   merchantRevenueEventsToTransactions,
   sortByTime,
 } from '@cardstack/utils';
+import usePrevious from '@rainbow-me/hooks/usePrevious';
 
 interface UseTransactionSectionsProps {
   transactions: ({ transaction: any } | null | undefined)[] | undefined;
@@ -55,9 +56,11 @@ export const useTransactionSections = ({
     state => state.settings.accountAddress
   );
 
+  const prevTransactionsLength = usePrevious(transactions?.length);
+
   useEffect(() => {
     const setSectionsData = async () => {
-      if (transactions) {
+      if (transactions && prevTransactionsLength !== transactions.length) {
         setLoading(true);
 
         try {
@@ -120,6 +123,7 @@ export const useTransactionSections = ({
     transactionStrategies,
     merchantSafes,
     prepaidCards,
+    prevTransactionsLength,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;
@@ -135,10 +139,13 @@ export const useTransactionSections = ({
     }
   }, [fetchMore, isFetchingMore, transactionsCount]);
 
-  return {
-    loading: isLoading && !isFetchingMore,
-    isFetchingMore,
-    onEndReached,
-    sections,
-  };
+  return useMemo(
+    () => ({
+      loading: isLoading && !isFetchingMore,
+      isFetchingMore,
+      onEndReached,
+      sections,
+    }),
+    [isFetchingMore, isLoading, onEndReached, sections]
+  );
 };
