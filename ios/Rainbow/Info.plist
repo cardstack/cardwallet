@@ -23,13 +23,15 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleIdentifier</key>
+			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>com.cardstack.cardpay</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.cardstack.cardpay</string>
+				<string>cardwallet</string>
 			</array>
 		</dict>
 	</array>

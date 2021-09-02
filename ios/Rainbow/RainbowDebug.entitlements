@@ -9,6 +9,7 @@
 		<string>applinks:cardpay.page.link</string>
 		<string>webcredentials:cardstack.cardpay</string>
 		<string>applinks:wallet.cardstack.com</string>
+		<string>applinks:wallet-staging.stack.cards</string>
 	</array>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
