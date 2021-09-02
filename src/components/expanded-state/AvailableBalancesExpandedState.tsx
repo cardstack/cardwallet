@@ -1,6 +1,6 @@
 import { add, convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SlackSheet } from '../sheet';
 import {
   AssetList,
@@ -25,7 +25,7 @@ import Routes from '@rainbow-me/routes';
 const CHART_HEIGHT = 650;
 
 enum Tabs {
-  Assets = 'Assets',
+  ASSETS = 'Assets',
   ACTIVITIES = 'Activities',
 }
 
@@ -43,7 +43,7 @@ export default function AvailableBalancesExpandedState(
   props: AvailableBalancesExpandedStateProps
 ) {
   const { setOptions } = useNavigation();
-  const [selectedTab, setSelectedTab] = useState<Tabs>(Tabs.Assets);
+  const [selectedTab, setSelectedTab] = useState<Tabs>(Tabs.ASSETS);
 
   useEffect(() => {
     setOptions({
@@ -52,36 +52,29 @@ export default function AvailableBalancesExpandedState(
   }, [setOptions]);
 
   return (
-    <>
-      {/* @ts-ignore */}
-      <SlackSheet
-        additionalTopPadding={android}
-        height="100%"
-        scrollEnabled={false}
-      >
-        <Container paddingHorizontal={5} paddingTop={3}>
-          <Text size="medium">Available balances</Text>
-          <Container flexDirection="row" justifyContent="space-between">
-            <TabHeader
-              selectedTab={selectedTab}
-              setSelectedTab={setSelectedTab}
-              tab={Tabs.Assets}
-            />
-            <TabHeader
-              selectedTab={selectedTab}
-              setSelectedTab={setSelectedTab}
-              tab={Tabs.ACTIVITIES}
-            />
-          </Container>
+    <SlackSheet flex={1} scrollEnabled={false}>
+      <Container paddingHorizontal={5} paddingTop={3}>
+        <Text size="medium">Available balances</Text>
+        <Container flexDirection="row" justifyContent="space-between">
+          <TabHeader
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            tab={Tabs.ASSETS}
+          />
+          <TabHeader
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            tab={Tabs.ACTIVITIES}
+          />
         </Container>
-        <HorizontalDivider marginVertical={0} />
-        {selectedTab === Tabs.Assets ? (
-          <Assets {...props} />
-        ) : (
-          <Activities {...props} />
-        )}
-      </SlackSheet>
-    </>
+      </Container>
+      <HorizontalDivider marginVertical={0} />
+      {selectedTab === Tabs.ASSETS ? (
+        <Assets {...props} />
+      ) : (
+        <Activities {...props} />
+      )}
+    </SlackSheet>
   );
 }
 
@@ -158,27 +151,33 @@ const useBalancesSection = (
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
   const { navigate } = useNavigation();
 
-  const assets = sortedByTokenBalanceAmount(tokens).map((token: TokenType) => ({
-    tokenSymbol: token.token.symbol,
-    tokenBalance: token.balance.display,
-    nativeBalance: token.native.balance.display,
-    onPress: () =>
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: token,
-        type: 'token',
-      }),
-    key: token.tokenAddress,
-    tokenBalanceFontSize: 'largeBalance',
-  }));
-
-  const totalAmount = tokens.reduce(
-    (total, token) => add(total, get(token, 'native.balance.amount', 0)),
-    '0'
+  const assets = useMemo(
+    () =>
+      sortedByTokenBalanceAmount(tokens).map((token: TokenType) => ({
+        tokenSymbol: token.token.symbol,
+        tokenBalance: token.balance.display,
+        nativeBalance: token.native.balance.display,
+        onPress: () =>
+          navigate(Routes.EXPANDED_ASSET_SHEET, {
+            asset: token,
+            type: 'token',
+          }),
+        key: token.tokenAddress,
+        tokenBalanceFontSize: 'largeBalance',
+      })),
+    [navigate, tokens]
   );
 
-  const totalDisplay = convertAmountToNativeDisplay(
-    totalAmount,
-    nativeCurrency
+  const totalDisplay = useMemo(
+    () =>
+      convertAmountToNativeDisplay(
+        tokens.reduce(
+          (total, token) => add(total, get(token, 'native.balance.amount', 0)),
+          '0'
+        ),
+        nativeCurrency
+      ),
+    [tokens, nativeCurrency]
   );
 
   return {

@@ -103,29 +103,22 @@ export default function UnclaimedRevenueExpandedState(props: {
   }, [merchantSafe.address, network, revenueBalances, selectedWallet.id]);
 
   return (
-    <>
-      {/* @ts-ignore */}
-      <SlackSheet
-        additionalTopPadding={android}
-        height="100%"
-        scrollEnabled={false}
-      >
-        <Container paddingHorizontal={5} paddingVertical={3}>
-          <Text size="medium">Unclaimed revenue</Text>
-          <Container flexDirection="column" marginTop={5}>
-            {revenueBalances.map(token => (
-              <TokenItem key={token.tokenAddress} token={token} />
-            ))}
-          </Container>
-          <Button loading={loading} marginTop={8} onPress={onClaimAll}>
-            Claim All
-          </Button>
-          <HorizontalDivider />
-          <Text size="medium">Activities</Text>
-          <Activities address={props.asset.address} />
+    <SlackSheet flex={1} scrollEnabled={false}>
+      <Container paddingHorizontal={5} paddingVertical={3}>
+        <Text size="medium">Unclaimed revenue</Text>
+        <Container flexDirection="column" marginTop={5}>
+          {revenueBalances.map(token => (
+            <TokenItem key={token.tokenAddress} token={token} />
+          ))}
         </Container>
-      </SlackSheet>
-    </>
+        <Button loading={loading} marginTop={8} onPress={onClaimAll}>
+          Claim All
+        </Button>
+        <HorizontalDivider />
+        <Text size="medium">Activities</Text>
+        <Activities address={props.asset.address} />
+      </Container>
+    </SlackSheet>
   );
 }
 
