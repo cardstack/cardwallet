@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
-
+import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
+import { Theme } from '../../theme';
 import { AssetFooter } from './AssetFooter';
 import { AssetListLoading } from './AssetListLoading';
 import { Button, Container, Icon, Text } from '@cardstack/components';
@@ -36,7 +37,9 @@ export type AssetListSectionItem<ComponentProps> = {
   data: ComponentProps[];
 };
 
-interface AssetListProps {
+interface AssetListProps
+  extends BackgroundColorProps<Theme>,
+    ColorProps<Theme> {
   isEmpty: boolean;
   loading: boolean;
   network: string;
@@ -45,6 +48,8 @@ interface AssetListProps {
     [key: string]: number;
   };
   sections: AssetListSectionItem<any>[];
+  headerPaddingVertical?: number;
+  headerPaddingHorizontal?: number;
 }
 
 export const AssetList = (props: AssetListProps) => {
@@ -58,6 +63,10 @@ export const AssetList = (props: AssetListProps) => {
     network,
     nativeCurrency,
     currencyConversionRates,
+    backgroundColor,
+    color,
+    headerPaddingVertical,
+    headerPaddingHorizontal,
   } = props;
 
   const networkName = getConstantByNetwork('name', network);
@@ -118,18 +127,16 @@ export const AssetList = (props: AssetListProps) => {
               flexDirection="row"
               justifyContent="space-between"
               padding={4}
-              backgroundColor="backgroundBlue"
+              paddingHorizontal={headerPaddingHorizontal}
+              paddingVertical={headerPaddingVertical}
+              backgroundColor={backgroundColor || 'backgroundBlue'}
             >
               <Container flexDirection="row">
-                <Text color="white" size="medium">
+                <Text color={color || 'white'} size="medium">
                   {title}
                 </Text>
                 {count ? (
-                  <Text
-                    color="buttonPrimaryBorder"
-                    size="medium"
-                    marginLeft={2}
-                  >
+                  <Text color="tealDark" size="medium" marginLeft={2}>
                     {count}
                   </Text>
                 ) : null}
@@ -141,7 +148,7 @@ export const AssetList = (props: AssetListProps) => {
               >
                 {total ? (
                   <Text
-                    color="buttonPrimaryBorder"
+                    color="tealDark"
                     size="body"
                     weight="extraBold"
                     marginRight={showContextMenu ? 3 : 0}

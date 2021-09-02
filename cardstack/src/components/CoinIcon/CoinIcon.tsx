@@ -8,9 +8,15 @@ interface CoinIconProps {
   address?: string;
   symbol?: string | null;
   size?: number;
+  shadowColor?: string;
 }
 
-export const CoinIcon = ({ address, symbol, size = 40 }: CoinIconProps) => {
+export const CoinIcon = ({
+  address,
+  symbol,
+  size = 40,
+  shadowColor = 'transparent', // 'transparent' is to remove drop shadow on Token icons
+}: CoinIconProps) => {
   const network = useRainbowSelector(state => state.settings.network);
   const forceFallback = !symbol && !isNativeToken(symbol || '', network);
 
@@ -21,6 +27,7 @@ export const CoinIcon = ({ address, symbol, size = 40 }: CoinIconProps) => {
       size={size}
       forceFallback={forceFallback}
       fallbackRenderer={CoinIconFallback}
+      shadowColor={shadowColor}
     />
   );
 };
