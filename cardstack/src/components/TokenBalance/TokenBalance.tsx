@@ -15,7 +15,7 @@ export interface TokenBalanceProps extends ContainerProps {
   address?: string;
   tokenSymbol: string;
   tokenBalance?: string;
-  tokenBalanceFontSize?: ResponsiveValue<keyof Theme['fontSizes'], Theme>;
+  tokenBalanceFontSize?: string;
   nativeBalance: string;
   includeBorder?: boolean;
   isLastItemIfList?: boolean;
@@ -64,7 +64,15 @@ export const TokenBalance = (props: TokenBalanceProps) => {
               <CoinIcon address={address} symbol={tokenSymbol} size={size} />
             )}
             <Container flexDirection="column" marginLeft={3}>
-              <Text weight="extraBold" size={tokenBalanceFontSize || 'body'}>
+              <Text
+                weight="extraBold"
+                size={
+                  (tokenBalanceFontSize as ResponsiveValue<
+                    keyof Theme['fontSizes'],
+                    Theme
+                  >) || 'body'
+                }
+              >
                 {tokenBalance}
               </Text>
               <Text variant="subText">{nativeBalance}</Text>
