@@ -3,7 +3,7 @@ import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useValue } from 'react-native-redash';
+import { useValue } from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
 
 import { OpacityToggler } from '../components/animations';

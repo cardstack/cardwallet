@@ -1,10 +1,8 @@
 import { get } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import Animated, { Value } from 'react-native-reanimated';
-import {
-  transformOrigin as transformOriginUtil,
-  useValues,
-} from 'react-native-redash';
+import { transformOrigin as transformOriginUtil } from 'react-native-redash';
+import { useValues } from 'react-native-redash/lib/module/v1';
 
 const { floor, divide, multiply } = Animated;
 

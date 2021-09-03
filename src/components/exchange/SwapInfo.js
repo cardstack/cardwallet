@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import Animated from 'react-native-reanimated';
 import {
   bin,
-  useSpringTransition,
-  useTimingTransition,
+  useSpring as useSpringTransition,
+  useTiming as useTimingTransition,
 } from 'react-native-redash';
 import styled from 'styled-components';
 import { darkModeThemeColors } from '../../styles/colors';
@@ -60,17 +60,17 @@ export default function SwapInfo({ asset, amount }) {
           inputRange: [0, 1],
           outputRange: [0, 35],
         }),
-        opacity: interpolate(animation, {
+        opacity: interpolate(animation.value, {
           inputRange: [0, 1],
           outputRange: [0, 1],
         }),
         transform: [
           {
-            scale: interpolate(animation, {
+            scale: interpolate(animation.value, {
               inputRange: [0, 1],
               outputRange: [0.8, 1],
             }),
-            translateY: interpolate(animation, {
+            translateY: interpolate(animation.value, {
               inputRange: [0, 1],
               outputRange: [1, 0],
             }),

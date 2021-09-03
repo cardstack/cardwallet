@@ -1,6 +1,6 @@
 import React from 'react';
 import Animated, { SpringUtils } from 'react-native-reanimated';
-import { bin, useSpringTransition } from 'react-native-redash';
+import { bin, useSpring as useSpringTransition } from 'react-native-redash';
 import styled from 'styled-components';
 import { useMemoOne } from 'use-memo-one';
 import { useTheme } from '../../context/ThemeContext';
@@ -52,7 +52,7 @@ const RoundButtonSizeToggler = ({
   const contentScaleX = useMemoOne(
     () =>
       add(
-        multiply(animation, endingWidth / 100 - startingWidth / 100),
+        multiply(animation.value, endingWidth / 100 - startingWidth / 100),
         startingWidth / 100
       ),
     [animation, endingWidth, startingWidth]

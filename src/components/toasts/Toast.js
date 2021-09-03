@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import Animated from 'react-native-reanimated';
-import { useSpringTransition } from 'react-native-redash';
+import { useSpring as useSpringTransition } from 'react-native-redash';
 import { useSafeArea } from 'react-native-safe-area-context';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
@@ -49,7 +49,7 @@ export default function Toast({
   distance = 60,
   targetTranslate = 0,
   icon,
-  isVisible,
+  isVisible = false,
   testID,
   text,
   textColor,
@@ -61,12 +61,12 @@ export default function Toast({
 
   const animation = useSpringTransition(isVisible, springConfig);
 
-  const opacity = interpolate(animation, {
+  const opacity = interpolate(animation.value, {
     inputRange: [0, 1],
     outputRange: [0, 1],
   });
 
-  const translateY = interpolate(animation, {
+  const translateY = interpolate(animation.value, {
     inputRange: [0, 1],
     outputRange: [distance, targetTranslate],
   });

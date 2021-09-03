@@ -14,7 +14,9 @@ const Swipe = createMaterialTopTabNavigator();
 
 const renderTabBar = () => null;
 
-const renderPager = props => <ScrollPagerWrapper {...props} />;
+const renderPager = props => (
+  <ScrollPagerWrapper {...props} id="swipeNavigator" />
+);
 
 export function SwipeNavigator() {
   const { isCoinListEdited } = useCoinListEdited();
