@@ -56,13 +56,24 @@ export const fetchMerchantInfoFromDID = async (
   }
 };
 
-export const generateMerchantPaymentUrl = (
-  merchantSafeID: string,
-  amount: number,
+interface MerchantPaymentURLParams {
+  merchantSafeID: string;
+  amount?: number;
+  network?: string;
+  currency?: string;
+}
+
+export const generateMerchantPaymentUrl = ({
+  merchantSafeID,
+  amount,
   network = 'sokol',
-  currency = 'SPD'
-) =>
-  `https://wallet.cardstack.com/pay/${network}/${merchantSafeID}?amount=${amount}&currency=${currency}`;
+  currency = 'SPD',
+}: MerchantPaymentURLParams) => {
+  const domain = `https://wallet.cardstack.com`;
+  const handleAmount = amount ? `amount=${amount}&` : '';
+
+  return `${domain}/pay/${network}/${merchantSafeID}?${handleAmount}currency=${currency}`;
+};
 
 export const shareRequestPaymentLink = (
   address: string,

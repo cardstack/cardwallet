@@ -255,8 +255,16 @@ const AmountAndQRCodeButtons = ({
   const { navigate } = useNavigation();
   const { setClipboard } = useClipboard();
 
+  // for now the amount is in spend, but once we get
+  // the currency selector we should pass the amount with currency
   const paymentRequestLink = useMemo(
-    () => generateMerchantPaymentUrl(address, amountInSpend, network),
+    () =>
+      generateMerchantPaymentUrl({
+        merchantSafeID: address,
+        amount: amountInSpend,
+        network,
+        currency: 'SPD',
+      }),
     [address, amountInSpend, network]
   );
 
@@ -268,8 +276,8 @@ const AmountAndQRCodeButtons = ({
   const handleShareLink = useCallback(async () => {
     try {
       await shareRequestPaymentLink(address, paymentRequestLink);
-    } catch (error) {
-      logger.sentry('Payment Request Link share failed', error.message);
+    } catch (e) {
+      logger.sentry('Payment Request Link share failed', e);
     }
   }, [address, paymentRequestLink]);
 

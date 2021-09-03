@@ -13,12 +13,12 @@ describe('Merchant utils', () => {
     const amount = 100;
 
     it('should return the right payment url given the specific parameters', () => {
-      const url = generateMerchantPaymentUrl(
+      const url = generateMerchantPaymentUrl({
         merchantSafeID,
         amount,
-        'xdai',
-        'USD'
-      );
+        network: 'xdai',
+        currency: 'USD',
+      });
 
       expect(url).toBe(
         `https://wallet.cardstack.com/pay/xdai/0x0000000000000000000000000000000000000000?amount=100&currency=USD`
@@ -26,10 +26,18 @@ describe('Merchant utils', () => {
     });
 
     it('should return the right payment url with default values', () => {
-      const url = generateMerchantPaymentUrl(merchantSafeID, amount);
+      const url = generateMerchantPaymentUrl({ merchantSafeID, amount });
 
       expect(url).toBe(
         `https://wallet.cardstack.com/pay/sokol/0x0000000000000000000000000000000000000000?amount=100&currency=SPD`
+      );
+    });
+
+    it('should return the right payment url without amount', () => {
+      const url = generateMerchantPaymentUrl({ merchantSafeID });
+
+      expect(url).toBe(
+        `https://wallet.cardstack.com/pay/sokol/0x0000000000000000000000000000000000000000?currency=SPD`
       );
     });
   });
