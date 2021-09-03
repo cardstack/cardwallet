@@ -10,9 +10,9 @@ import { ethereumUtils } from '../../../src/utils';
 import { SlackSheet } from '../sheet';
 import {
   Button,
-  CenteredContainer,
   Container,
   HorizontalDivider,
+  ListEmptyComponent,
   Text,
   TransactionItem,
   TransactionListLoading,
@@ -138,7 +138,7 @@ const Activities = ({ address }: { address: string }) => {
         <TransactionListLoading light />
       ) : (
         <SectionList
-          ListEmptyComponent={<ListEmptyComponent />}
+          ListEmptyComponent={<ListEmptyComponent text="No activity Data" />}
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
@@ -185,11 +185,3 @@ const TokenItem = ({ token }: { token: TokenType }) => {
     </Container>
   );
 };
-
-const ListEmptyComponent = () => (
-  <CenteredContainer flex={1} height={100} width="100%">
-    <Text color="grayText" textAlign="center">
-      No activity Data
-    </Text>
-  </CenteredContainer>
-);

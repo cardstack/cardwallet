@@ -1,15 +1,20 @@
 import { add, convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SectionList,
+  StyleSheet,
+} from 'react-native';
 import { SlackSheet } from '../sheet';
 
 import {
   AssetList,
   AssetListSectionItem,
-  CenteredContainer,
   Container,
   HorizontalDivider,
+  ListEmptyComponent,
   Text,
   TokenBalance,
   TokenBalanceProps,
@@ -27,6 +32,11 @@ import {
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
+
+const styles = StyleSheet.create({
+  contentContainerStyle: { paddingBottom: 200 },
+  sectionListStyle: { width: '100%' },
+});
 
 const CHART_HEIGHT = 650;
 
@@ -214,11 +224,11 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
         <TransactionListLoading light />
       ) : (
         <SectionList
-          ListEmptyComponent={<ListEmptyComponent />}
+          ListEmptyComponent={<ListEmptyComponent text="No activity Data" />}
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
-          contentContainerStyle={{ paddingBottom: 200 }}
+          contentContainerStyle={styles.contentContainerStyle}
           onEndReached={onEndReached}
           onEndReachedThreshold={1}
           refreshControl={
@@ -239,17 +249,9 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
             </Container>
           )}
           sections={sections}
-          style={{ width: '100%' }}
+          style={styles.sectionListStyle}
         />
       )}
     </Container>
   );
 };
-
-const ListEmptyComponent = () => (
-  <CenteredContainer flex={1} height={100} width="100%">
-    <Text color="grayText" textAlign="center">
-      No activity Data
-    </Text>
-  </CenteredContainer>
-);
