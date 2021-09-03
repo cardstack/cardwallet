@@ -9,10 +9,10 @@ import {
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
 export const PrepaidCardTransactionSection = ({
-  headerText = 'FROM',
+  headerText,
   prepaidCardAddress,
 }: {
-  headerText?: string;
+  headerText: string;
   prepaidCardAddress: string;
 }) => {
   const [

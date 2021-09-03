@@ -20,10 +20,14 @@ export const PayMerchantDisplay = (props: PayMerchantDisplayProps) => {
   return (
     <>
       <PrepaidCardTransactionSection
+        headerText="FROM"
         prepaidCardAddress={props.data.prepaidCard}
       />
-      <HorizontalDivider />
-      <PayThisAmountSection spendAmount={props.data.spendAmount} />
+
+      <PayThisAmountSection
+        headerText="PAY THIS AMOUNT"
+        spendAmount={props.data.spendAmount}
+      />
       <HorizontalDivider />
       <ToSection {...props} />
     </>
