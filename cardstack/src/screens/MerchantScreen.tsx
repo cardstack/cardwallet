@@ -1,6 +1,7 @@
 import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
 import { StatusBar } from 'react-native';
+import { ChartPath } from '@rainbow-me/animated-charts';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
@@ -28,7 +29,6 @@ import {
   getAddressPreview,
   sortedByTokenBalanceAmount,
 } from '@cardstack/utils';
-import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';

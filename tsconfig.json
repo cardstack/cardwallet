@@ -83,10 +83,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "include": ["node_modules/react-native-redash/lib/typescript/v1/index.d.ts"],
   "exclude": [
     "ios",
-    "patches/reanimated",
     "node_modules",
     "babel.config.js",
     "metro.config.js",
