@@ -3,8 +3,8 @@ import {
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { ContactAvatar } from '../../../../src/components/contacts';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
+import { ContactAvatar } from '../../../../../src/components/contacts';
+import { SectionHeaderText } from './components/SectionHeaderText';
 import {
   Container,
   HorizontalDivider,
@@ -42,9 +42,7 @@ const FromSection = ({ data }: { data: WithdrawalDecodedData }) => {
 
   return (
     <Container marginTop={8} width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        FROM
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>FROM</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <ContactAvatar
@@ -88,9 +86,7 @@ const WithdrawSection = ({ data }: { data: WithdrawalDecodedData }) => {
 
   return (
     <Container>
-      <TransactionConfirmationSectionHeaderText>
-        WITHDRAW THIS AMOUNT
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>WITHDRAW THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
           {tokenDisplay.display}
@@ -104,9 +100,7 @@ const WithdrawSection = ({ data }: { data: WithdrawalDecodedData }) => {
 const ToSection = ({ data }: { data: WithdrawalDecodedData }) => {
   return (
     <Container width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        TO
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>TO</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <NetworkBadge marginLeft={11} marginBottom={1} text="TO MAINNET" />
         <Container flexDirection="row">

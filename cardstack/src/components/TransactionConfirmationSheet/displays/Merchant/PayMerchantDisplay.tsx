@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { PrepaidCardTransactionSection } from './PrepaidCardTransactionSection';
-import { PayThisAmountSection } from './PayThisAmountSection';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
-import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
+import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
+import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
+import { SectionHeaderText } from '../components/SectionHeaderText';
+import { TransactionConfirmationDisplayProps } from '../../TransactionConfirmationSheet';
 import { PayMerchantDecodedData } from '@cardstack/types';
 import {
   Container,
@@ -37,9 +37,7 @@ export const PayMerchantDisplay = (props: PayMerchantDisplayProps) => {
 const ToSection = ({ data }: PayMerchantDisplayProps) => {
   return (
     <Container>
-      <TransactionConfirmationSectionHeaderText>
-        TO
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>TO</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4} flexDirection="column">
         <Text variant="subText" size="xxs" marginLeft={9}>
           MERCHANT

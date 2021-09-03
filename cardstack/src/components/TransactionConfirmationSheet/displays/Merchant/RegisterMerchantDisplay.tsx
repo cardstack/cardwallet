@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { PrepaidCardTransactionSection } from './PrepaidCardTransactionSection';
-import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
-import { PayThisAmountSection } from './PayThisAmountSection';
-import TransactionListItem from './components/TransactionListItem';
+import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
+import { TransactionConfirmationDisplayProps } from '../../TransactionConfirmationSheet';
+import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
+import TransactionListItem from '../components/TransactionListItem';
 import {
   MerchantInformation,
   RegisterMerchantDecodedData,

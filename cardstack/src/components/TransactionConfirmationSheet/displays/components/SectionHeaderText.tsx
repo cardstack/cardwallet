@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, TextProps } from '../Text';
+import { Text, TextProps } from '../../../Text';
 
-export const TransactionConfirmationSectionHeaderText = (props: TextProps) => (
+export const SectionHeaderText = (props: TextProps) => (
   <Text size="xxs" weight="extraBold" color="blueText" {...props}>
     {props.children}
   </Text>

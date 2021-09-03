@@ -21,6 +21,8 @@
       "@rainbow-me/handlers/*": ["src/handlers/*"],
       "@rainbow-me/helpers": ["src/helpers"],
       "@rainbow-me/helpers/*": ["src/helpers/*"],
+      "@rainbow-me/components": ["src/components"],
+      "@rainbow-me/components/*": ["src/components/*"],
       "@rainbow-me/hooks": ["src/hooks"],
       "@rainbow-me/hooks/*": ["src/hooks/*"],
       "@rainbow-me/images": ["src/components/images"],

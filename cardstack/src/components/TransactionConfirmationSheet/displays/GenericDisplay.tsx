@@ -1,10 +1,10 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 
-import { Container, HorizontalDivider, NetworkBadge, Text } from '../';
-import { ContactAvatar } from '../../../../src/components/contacts';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
-import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
+import { Container, HorizontalDivider, NetworkBadge, Text } from '../..';
+import { ContactAvatar } from '../../../../../src/components/contacts';
+import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
+import { SectionHeaderText } from './components/SectionHeaderText';
 import {
   useAccountProfile,
   useAccountSettings,
@@ -37,9 +37,7 @@ const FromSection = () => {
 
   return (
     <Container marginTop={8} width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        FROM
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>FROM</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <ContactAvatar
@@ -73,9 +71,7 @@ const MessageSection = ({
 }: TransactionConfirmationDisplayProps) => {
   return (
     <Container width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        MESSAGE
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>MESSAGE</SectionHeaderText>
       <Container
         paddingHorizontal={3}
         paddingVertical={2}
