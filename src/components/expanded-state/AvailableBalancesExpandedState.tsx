@@ -58,7 +58,7 @@ export default function AvailableBalancesExpandedState(
   }, [setOptions]);
 
   return (
-    <SlackSheet flex={1} scrollEnabled={false}>
+    <SlackSheet flex={1}>
       <Container paddingHorizontal={5} paddingTop={3}>
         <Text size="medium">Available balances</Text>
         <Container flexDirection="row" justifyContent="space-between">
