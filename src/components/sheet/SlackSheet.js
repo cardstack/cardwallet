@@ -59,12 +59,11 @@ export default function SlackSheet({
   additionalTopPadding = false,
   backgroundColor = undefined,
   borderRadius = 30,
-  children = undefined,
   contentHeight = undefined,
   deferredHeight = false,
   hideHandle = false,
-  renderHeader = undefined,
-  renderFooter = undefined,
+  renderHeader = () => {},
+  renderFooter = () => {},
   scrollEnabled = true,
   discoverSheet = undefined,
   hasKeyboard = false,
@@ -157,7 +156,7 @@ export default function SlackSheet({
             scrollIndicatorInsets={scrollIndicatorInsets}
             y={yPosition}
           >
-            {children}
+            {props.children}
             {!scrollEnabled && (
               <Whitespace backgroundColor={bg} deviceHeight={deviceHeight} />
             )}
