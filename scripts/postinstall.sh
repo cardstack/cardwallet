@@ -54,3 +54,7 @@ else
   sentry-cli --version
   echo "sentry-cli is already installed. Skipping" 
 fi
+
+# Remove CocoaAsyncSocket in react-native-tcp to fix duplication issue
+rm -rf node_modules/react-native-tcp/ios/CocoaAsyncSocket
+rm -rf node_modules/react-native-udp/ios/CocoaAsyncSocket

@@ -78,12 +78,12 @@
       "react-native-yet-another-bottom-sheet": [
         "src/react-native-yet-another-bottom-sheet"
       ],
-      "@rainbow-me/animated-charts": ["src/react-native-animated-charts/src"],
       "react-native-shadow-stack": ["src/react-native-shadow-stack"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
+  "include": ["node_modules/react-native-redash/lib/typescript/v1/index.d.ts"],
   "exclude": [
     "ios",
     "patches/reanimated",

@@ -11,6 +11,9 @@
 		01361B85D1CD438490C03DD1 /* Karbon-Semibold 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BEED7E48F54FC781D67548 /* Karbon-Semibold 2.otf */; };
 		019BFA419A1C493998D767A0 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B5AA0CC94474E5C961A2B62 /* OpenSans-LightItalic.ttf */; };
 		02DAD40A70B744479FCF8BCA /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3B5E0F4CE84A57A47D4C9F /* Roboto-BoldItalic.ttf */; };
+		04DDC71826E22D86002A7B7D /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
+		04DDC71A26E22DA4002A7B7D /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04DDC71926E22DA4002A7B7D /* libPods-Rainbow.a */; };
+		04DDC71C26E22DAF002A7B7D /* libCocoaAsyncSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04DDC71B26E22DAF002A7B7D /* libCocoaAsyncSocket.a */; };
 		0EFAF3F629434EEE9EB3D1AB /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67DA6C572CB04D0CAD69AAE8 /* OpenSans-ExtraBold.ttf */; };
 		11FF2DE427EF438DBF86BE59 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25C02488F53047498CA6CBCF /* Roboto-Thin.ttf */; };
 		1395452CAD2B4450A893408A /* Karbon-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 21725A18577446E1B4997238 /* Karbon-MediumItalic.otf */; };
@@ -28,7 +31,6 @@
 		1DBB1F630EE74E138B036226 /* Karbon-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8448A19D5AF4C0DB31375DC /* Karbon-Medium.otf */; };
 		1F245F1F49E64A0897622B8B /* Karbon-Regular 3.otf in Resources */ = {isa = PBXBuildFile; fileRef = C4751C49DC5D43F4A72FA7C4 /* Karbon-Regular 3.otf */; };
 		20C08F8159B44BF4B82630AF /* Karbon-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 28B0C6F8FA0F4632B1C5B8FD /* Karbon-Light.otf */; };
-		222F9EF5FAB00378C287F57B /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8C62475F7C54EB5D04FF460 /* libPods-Rainbow.a */; };
 		2235897B7C054EDC8FABC22D /* RobotoMono-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 377B36F88EA44BC18FC6AE3F /* RobotoMono-LightItalic.ttf */; };
 		24979E8920F84250007EB0DA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24979E7720F84004007EB0DA /* GoogleService-Info.plist */; };
 		29C8EACB0BD445E98A76426F /* KarbonSlabStencil-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1C57F319A21945DC9FDBFC91 /* KarbonSlabStencil-Regular.otf */; };
@@ -119,7 +121,6 @@
 		E21BF3E4E109427B8A178328 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A941015D5E754AED874CE796 /* Roboto-Medium.ttf */; };
 		E2CB54DCDAB14C97A5B6BD59 /* Karbon-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 782EDD99F9B749FCBC6E32B1 /* Karbon-SemiboldItalic.otf */; };
 		ECB27D15201C4C2E8081D7F6 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF1E79467D474B3E8E8AD0DF /* Roboto-Italic.ttf */; };
-		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		EFBB82F6FCF240EBA544BFFB /* Karbon-Hairline.otf in Resources */ = {isa = PBXBuildFile; fileRef = BF18560DA99F4DB584054092 /* Karbon-Hairline.otf */; };
 		F808F9C60013433CA7EACD8D /* RobotoMono-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33608FF0889740AD84C648DC /* RobotoMono-Thin.ttf */; };
 		FB7BFB556B6143988520C342 /* RobotoMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AF0E1269B254B038CB51E53 /* RobotoMono-BoldItalic.ttf */; };
@@ -132,6 +133,8 @@
 		009215AA8FF64348B2A73F5E /* RobotoMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Regular.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Regular.ttf"; sourceTree = "<group>"; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* RainbowTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RainbowTests.m; sourceTree = "<group>"; };
+		04DDC71926E22DA4002A7B7D /* libPods-Rainbow.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-Rainbow.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04DDC71B26E22DAF002A7B7D /* libCocoaAsyncSocket.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCocoaAsyncSocket.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		066F62BA80B3495F978116BD /* Karbon-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karbon-Thin.otf"; path = "../cardstack/src/assets/fonts/Karbon-Thin.otf"; sourceTree = "<group>"; };
 		07917270F7840DA516F244DA /* Pods-Rainbow.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.staging.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.staging.xcconfig"; sourceTree = "<group>"; };
 		09679E4D9CAD4F83BA18473F /* OpenSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-SemiBoldItalic.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
@@ -292,11 +295,9 @@
 		E94665EF41D34F1C81B39B3C /* Karbon-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karbon-Semibold.otf"; path = "../cardstack/src/assets/fonts/Karbon-Semibold.otf"; sourceTree = "<group>"; };
 		EBF5570607AA46F782096602 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../cardstack/src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EEB96DEC8E3B406C81F3D687 /* RobotoMono-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Italic.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Italic.ttf"; sourceTree = "<group>"; };
 		F49BB56FB93E44ADA35A03E0 /* Karbon-Regular 2.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Karbon-Regular 2.otf"; path = "../cardstack/src/assets/fonts/Karbon-Regular 2.otf"; sourceTree = "<group>"; };
 		F6675BC8DA824182B0621DCE /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
-		F8C62475F7C54EB5D04FF460 /* libPods-Rainbow.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rainbow.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA974DDEFF957851FFA4CECC /* Pods-Rainbow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rainbow.debug.xcconfig"; path = "Target Support Files/Pods-Rainbow/Pods-Rainbow.debug.xcconfig"; sourceTree = "<group>"; };
 		FD7A7D2583F9495698AD88C5 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../cardstack/src/assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -306,9 +307,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
+				04DDC71C26E22DAF002A7B7D /* libCocoaAsyncSocket.a in Frameworks */,
+				04DDC71A26E22DA4002A7B7D /* libPods-Rainbow.a in Frameworks */,
+				04DDC71826E22D86002A7B7D /* JavaScriptCore.framework in Frameworks */,
 				C72F456C99A646399192517D /* libz.tbd in Frameworks */,
-				222F9EF5FAB00378C287F57B /* libPods-Rainbow.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,8 +416,9 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04DDC71B26E22DAF002A7B7D /* libCocoaAsyncSocket.a */,
+				04DDC71926E22DA4002A7B7D /* libPods-Rainbow.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				24979E7920F84004007EB0DA /* Firebase.h */,
 				24979E7420F84004007EB0DA /* FirebaseAnalytics.framework */,
 				24979E7520F84004007EB0DA /* FirebaseCore.framework */,
@@ -429,7 +432,6 @@
 				24979E7E20F84005007EB0DA /* nanopb.framework */,
 				24979E3620F84003007EB0DA /* Protobuf.framework */,
 				98AED33BAB4247CEBEF8464D /* libz.tbd */,
-				F8C62475F7C54EB5D04FF460 /* libPods-Rainbow.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
