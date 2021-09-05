@@ -4504,7 +4504,7 @@ export type PrepaidCardCreationFragment = (
 
 export type PrepaidCardPaymentFragment = (
   { __typename?: 'PrepaidCardPayment' }
-  & Pick<PrepaidCardPayment, 'id' | 'timestamp' | 'spendAmount' | 'issuingTokenAmount'>
+  & Pick<PrepaidCardPayment, 'id' | 'timestamp' | 'spendAmount' | 'issuingTokenAmount' | 'issuingTokenUSDPrice'>
   & { issuingToken: (
     { __typename?: 'Token' }
     & Pick<Token, 'id' | 'symbol' | 'name'>
@@ -4826,46 +4826,13 @@ export type GetLifetimeEarningsAccumulationsQuery = (
   )> }
 );
 
-export type GetMerchantReceivedPaymentsQueryVariables = Exact<{
-  address: Scalars['ID'];
-}>;
-
-
-export type GetMerchantReceivedPaymentsQuery = (
-  { __typename?: 'Query' }
-  & { merchantSafe?: Maybe<(
-    { __typename?: 'MerchantSafe' }
-    & Pick<MerchantSafe, 'id'>
-    & { receivedPayments: Array<Maybe<(
-      { __typename?: 'PrepaidCardPayment' }
-      & Pick<PrepaidCardPayment, 'issuingTokenAmount' | 'issuingTokenUSDPrice' | 'spendAmount' | 'timestamp'>
-      & { prepaidCard: (
-        { __typename?: 'PrepaidCard' }
-        & Pick<PrepaidCard, 'id'>
-      ), issuingToken: (
-        { __typename?: 'Token' }
-        & Pick<Token, 'symbol'>
-      ), transaction: (
-        { __typename?: 'Transaction' }
-        & { merchantFeePayments: Array<Maybe<(
-          { __typename?: 'MerchantFeePayment' }
-          & Pick<MerchantFeePayment, 'feeCollected'>
-          & { issuingToken: (
-            { __typename?: 'Token' }
-            & Pick<Token, 'symbol'>
-          ) }
-        )>> }
-      ) }
-    )>> }
-  )> }
-);
-
 export const PrepaidCardPaymentFragmentDoc = gql`
     fragment PrepaidCardPayment on PrepaidCardPayment {
   id
   timestamp
   spendAmount
   issuingTokenAmount
+  issuingTokenUSDPrice
   issuingToken {
     id
     symbol

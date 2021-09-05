@@ -23,6 +23,7 @@ fragment PrepaidCardPayment on PrepaidCardPayment {
   timestamp
   spendAmount
   issuingTokenAmount
+  issuingTokenUSDPrice
   issuingToken {
     id
     symbol
