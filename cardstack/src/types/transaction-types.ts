@@ -145,6 +145,7 @@ export interface MerchantEarnedRevenueTransactionType {
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_REVENUE;
   transactionHash: string;
+  transaction?: any;
 }
 
 export interface MerchantEarnedSpendTransactionType {

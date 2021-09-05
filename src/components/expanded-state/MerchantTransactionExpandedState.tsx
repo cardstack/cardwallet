@@ -69,7 +69,7 @@ export default function MerchantTransactionExpandedState(props: any) {
           TRANSACTION EXCHANGE RATE
         </Text>
         <Text fontSize={16} marginBottom={8} weight="extraBold">
-          1 SPEND = 0.99 DAI
+          1 SPEND = {transactionData?.spendConversionRate}
         </Text>
       </>
     );
@@ -81,23 +81,18 @@ export default function MerchantTransactionExpandedState(props: any) {
         <TransactionExchangeRateRow />
         <ItemDetail
           description={'CUSTOMER \nSPEND'}
-          subValue={props.asset.subText}
+          subValue={transactionData?.customerSpendUsd}
           symbol="SPEND"
-          value="$2000 SPEND"
+          value={transactionData?.customerSpend + ' SPEND'}
         />
         <ItemDetail
-          description={'REVENUE \nCLAIMED'}
+          description={'REVENUE \nCOLLECTED'}
           value={props.asset.primaryText}
         />
         <ItemDetail
-          description="GAS FEE"
-          subValue="$20.00 USD"
-          value="$2000 SPEND"
-        />
-        <ItemDetail
           description={'PROTOCOL FEE \n(0.5%)'}
-          subValue="$20.00 USD"
-          value="$2000 SPEND"
+          subValue={transactionData?.protocolFeeUsd}
+          value={transactionData?.protocolFee}
         />
       </Container>
     );
