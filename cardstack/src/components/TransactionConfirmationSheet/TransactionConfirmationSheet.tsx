@@ -159,8 +159,6 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
     );
   }
 
-  console.log(JSON.stringify({ tx: props.data }));
-
   if (props.data.type === TransactionConfirmationType.HUB_AUTH) {
     return <HubAuthenticationDisplay />;
   } else if (

@@ -24,6 +24,7 @@ export const palette = {
   grayBackground: '#F7F7F7',
   white: '#FFFFFF',
   transparent: 'transparent',
+  grayCardBackground: '#F8F7FA',
 };
 
 export const colors = {
@@ -60,6 +61,7 @@ export const colors = {
   networkBadge: palette.blueDarkest,
   darkGrayText: palette.grayMediumDark,
   lightSkeleton: palette.skeletonGray,
+  grayCardBackground: palette.grayCardBackground,
 };
 
 export type ColorTypes = keyof typeof colors;
