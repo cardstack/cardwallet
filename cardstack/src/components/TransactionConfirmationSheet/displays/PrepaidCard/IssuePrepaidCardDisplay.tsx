@@ -1,7 +1,7 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { ContactAvatar } from '../../../../src/components/contacts';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
+import { ContactAvatar } from '../../../../../../src/components/contacts';
+import { SectionHeaderText } from '../components/SectionHeaderText';
 import {
   Container,
   HorizontalDivider,
@@ -55,9 +55,7 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
 
   return (
     <Container marginTop={8} width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        FROM
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>FROM</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <ContactAvatar
@@ -111,9 +109,7 @@ const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
 
   return (
     <Container>
-      <TransactionConfirmationSectionHeaderText>
-        LOAD THIS AMOUNT
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>LOAD THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
           {spendDisplay.tokenBalanceDisplay}
@@ -140,9 +136,7 @@ const ToSection = () => {
 
   return (
     <Container width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        TO
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>TO</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <Icon name="prepaid-card" />

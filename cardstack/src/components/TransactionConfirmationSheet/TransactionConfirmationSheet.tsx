@@ -3,15 +3,15 @@ import { LayoutAnimation, ActivityIndicator } from 'react-native';
 import URL from 'url-parse';
 
 import { CenteredContainer, ContainerProps } from '../Container';
-import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
-import { GenericDisplay } from './GenericDisplay';
-import { IssuePrepaidCardDisplay } from './IssuePrepaidCardDisplay';
-import { PayMerchantDisplay } from './PayMerchantDisplay';
-import { RegisterMerchantDisplay } from './RegisterMerchantDisplay';
-import { SplitPrepaidCardDisplay } from './SplitPrepaidCardDisplay';
-import { TransferPrepaidCardDisplay } from './TransferPrepaidCardDisplay';
-import { WithdrawalDisplay } from './WithdrawalDisplay';
-import { HubAuthenticationDisplay } from './HubAuthenticationDisplay';
+import { ClaimRevenueDisplay } from './displays/ClaimRevenueDisplay';
+import { GenericDisplay } from './displays/GenericDisplay';
+import { IssuePrepaidCardDisplay } from './displays/PrepaidCard/IssuePrepaidCardDisplay';
+import { PayMerchantDisplay } from './displays/Merchant/PayMerchantDisplay';
+import { RegisterMerchantDisplay } from './displays/Merchant/RegisterMerchantDisplay';
+import { SplitPrepaidCardDisplay } from './displays/PrepaidCard/SplitPrepaidCardDisplay';
+import { TransferPrepaidCardDisplay } from './displays/PrepaidCard/TransferPrepaidCardDisplay';
+import { WithdrawalDisplay } from './displays/WithdrawalDisplay';
+import { HubAuthenticationDisplay } from './displays/HubAuthenticationDisplay';
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
@@ -110,7 +110,7 @@ const Header = ({
     [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
     [TransactionConfirmationType.WITHDRAWAL]: 'Withdraw Funds',
     [TransactionConfirmationType.REGISTER_MERCHANT]: 'Create Merchant',
-    [TransactionConfirmationType.PAY_MERCHANT]: 'Pay with Prepaid Card',
+    [TransactionConfirmationType.PAY_MERCHANT]: 'Pay Merchant',
     [TransactionConfirmationType.CLAIM_REVENUE]: 'Claim Funds',
     [TransactionConfirmationType.SPLIT_PREPAID_CARD]: 'Split Prepaid Card',
     [TransactionConfirmationType.TRANSFER_PREPAID_CARD_1]:

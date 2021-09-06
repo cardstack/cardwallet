@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { ContactAvatar } from '../../../../src/components/contacts';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
+import { ContactAvatar } from '../../../../../src/components/contacts';
+import { SectionHeaderText } from './components/SectionHeaderText';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import {
   CenteredContainer,
@@ -32,9 +32,7 @@ const FromSection = () => {
 
   return (
     <Container marginTop={8} width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        FROM
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>FROM</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <ContactAvatar
@@ -58,9 +56,7 @@ const FromSection = () => {
 const AuthenticateSection = () => {
   return (
     <Container width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        AUTHENTICATE TO CARDSTACK HUB
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>AUTHENTICATE TO CARDSTACK HUB</SectionHeaderText>
       <CenteredContainer
         alignItems="center"
         paddingHorizontal={3}

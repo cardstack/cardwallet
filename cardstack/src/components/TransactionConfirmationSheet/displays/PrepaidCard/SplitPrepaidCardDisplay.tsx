@@ -1,6 +1,6 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
+import { SectionHeaderText } from '../components/SectionHeaderText';
 import {
   Container,
   HorizontalDivider,
@@ -61,9 +61,7 @@ const FromSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 
   return (
     <Container marginTop={8} width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        FROM
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>FROM</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <Icon name="prepaid-card" />
@@ -118,9 +116,7 @@ const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 
   return (
     <Container>
-      <TransactionConfirmationSectionHeaderText>
-        DEDUCT THIS AMOUNT
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>DEDUCT THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
           {spendDisplay.tokenBalanceDisplay}
@@ -154,9 +150,7 @@ const DistributeSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 
   return (
     <Container width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        DISTRIBUTE THIS AMOUNT TO
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>DISTRIBUTE THIS AMOUNT TO</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
           <Icon name="prepaid-card" />

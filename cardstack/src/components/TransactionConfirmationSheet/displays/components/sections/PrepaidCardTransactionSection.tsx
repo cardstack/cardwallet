@@ -1,6 +1,6 @@
 import React from 'react';
-import MiniPrepaidCard from '../PrepaidCard/MiniPrepaidCard';
-import TransactionListItem from './components/TransactionListItem';
+import MiniPrepaidCard from '../../../../PrepaidCard/MiniPrepaidCard';
+import TransactionListItem from '../TransactionListItem';
 import { Container, Text } from '@cardstack/components';
 import {
   useNativeCurrencyAndConversionRates,
@@ -9,10 +9,10 @@ import {
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
 export const PrepaidCardTransactionSection = ({
-  headerText = 'FROM',
+  headerText,
   prepaidCardAddress,
 }: {
-  headerText?: string;
+  headerText: string;
   prepaidCardAddress: string;
 }) => {
   const [

@@ -1,14 +1,14 @@
 import React from 'react';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
+import { SectionHeaderText } from '../SectionHeaderText';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { Container, Text } from '@cardstack/components';
 
 export const PayThisAmountSection = ({
-  headerText = 'PAY THIS AMOUNT',
+  headerText,
   spendAmount,
 }: {
-  headerText?: string;
+  headerText: string;
   spendAmount: string | number;
 }) => {
   const [
@@ -25,9 +25,7 @@ export const PayThisAmountSection = ({
 
   return (
     <Container>
-      <TransactionConfirmationSectionHeaderText>
-        {headerText}
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>{headerText}</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
           {spendDisplay.tokenBalanceDisplay}

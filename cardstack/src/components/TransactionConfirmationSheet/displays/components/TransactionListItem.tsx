@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
-import { ContactAvatar } from '../../../../../src/components/contacts';
-import { TransactionConfirmationSectionHeaderText } from '../TransactionConfirmationSectionHeaderText';
+import { ContactAvatar } from '../../../../../../src/components/contacts';
+import { SectionHeaderText } from './SectionHeaderText';
 import { NetworkBadge } from '@cardstack/components/NetworkBadge';
 import { Container, HorizontalDivider, Text } from '@cardstack/components';
 
@@ -37,9 +37,7 @@ const TransactionListItem = ({
 
   return (
     <>
-      <TransactionConfirmationSectionHeaderText>
-        {headerText}
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>{headerText}</SectionHeaderText>
       <Container paddingHorizontal={containerPaddingHorizontal} marginTop={4}>
         <Container flexDirection="row">
           {hasIcon &&

@@ -4,8 +4,8 @@ import {
   getAddressByNetwork,
 } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { TransactionConfirmationSectionHeaderText } from './TransactionConfirmationSectionHeaderText';
-import { TransactionConfirmationDisplayProps } from './TransactionConfirmationSheet';
+import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
+import { SectionHeaderText } from './components/SectionHeaderText';
 import {
   Container,
   HorizontalDivider,
@@ -41,9 +41,7 @@ const FromSection = () => {
 
   return (
     <Container marginTop={8} width="100%">
-      <TransactionConfirmationSectionHeaderText>
-        FROM
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>FROM</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4} flexDirection="row">
         <Icon name="cardstack" />
         <Container marginLeft={3}>
@@ -72,9 +70,7 @@ const ClaimSection = ({ data }: { data: ClaimRevenueDecodedData }) => {
 
   return (
     <Container>
-      <TransactionConfirmationSectionHeaderText>
-        LOAD THIS AMOUNT
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>LOAD THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
           {tokenDisplay.display}
@@ -88,9 +84,7 @@ const ClaimSection = ({ data }: { data: ClaimRevenueDecodedData }) => {
 const ToSection = ({ merchantSafe }: { merchantSafe: string }) => {
   return (
     <Container>
-      <TransactionConfirmationSectionHeaderText>
-        TO
-      </TransactionConfirmationSectionHeaderText>
+      <SectionHeaderText>TO</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4} flexDirection="column">
         <Text size="xxs" color="blueText" marginLeft={9}>
           MERCHANT SAFE
