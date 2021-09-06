@@ -1,15 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
 import { TransactionConfirmationDisplayProps } from '../../TransactionConfirmationSheet';
 import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
 import TransactionListItem from '../components/TransactionListItem';
-import {
-  MerchantInformation,
-  RegisterMerchantDecodedData,
-} from '@cardstack/types';
-import { fetchMerchantInfoFromDID } from '@cardstack/utils';
-import { logger } from '@rainbow-me/utils';
+import { useMerchantInfoDID } from './hooks';
+import { RegisterMerchantDecodedData } from '@cardstack/types';
 import { useAccountProfile } from '@rainbow-me/hooks';
 
 interface RegisterMerchantDisplayProps
@@ -20,7 +16,7 @@ interface RegisterMerchantDisplayProps
 export const RegisterMerchantDisplay = ({
   data: { infoDID, prepaidCard, spendAmount },
 }: RegisterMerchantDisplayProps) => {
-  const [merchantInfoDID, setMerchantInfoDID] = useState<MerchantInformation>();
+  const { merchantInfoDID } = useMerchantInfoDID(infoDID);
 
   const {
     accountColor,
@@ -36,20 +32,6 @@ export const RegisterMerchantDisplay = ({
     }),
     [accountColor, accountSymbol]
   );
-
-  useEffect(() => {
-    const getMerchantInfoDID = async () => {
-      try {
-        const info = await fetchMerchantInfoFromDID(infoDID);
-        setMerchantInfoDID(info);
-      } catch (e) {
-        logger.log('Error on getMerchantInfoDID', e);
-      }
-    };
-
-    getMerchantInfoDID();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
