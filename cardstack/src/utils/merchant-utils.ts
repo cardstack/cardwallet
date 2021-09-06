@@ -9,8 +9,16 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { getAddressPreview } from './formatting-utils';
 import { Device } from './device';
-import { MerchantRevenueEventFragment } from '@cardstack/graphql';
-import { MerchantInformation } from '@cardstack/types';
+import {
+  MerchantClaimFragment,
+  MerchantRevenueEventFragment,
+  PrepaidCardPaymentFragment,
+} from '@cardstack/graphql';
+import {
+  MerchantClaimTypeTxn,
+  MerchantEarnedRevenueTransactionTypeTxn,
+  MerchantInformation,
+} from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils/cardpay-utils';
 
 export const merchantRevenueEventsToTransactions = (
@@ -114,12 +122,10 @@ export const shareRequestPaymentLink = (
 };
 
 export function getMerchantClaimTransactionDetails(
-  merchantClaimTransaction: any,
+  merchantClaimTransaction: MerchantClaimFragment,
   nativeCurrency = 'USD',
   address?: string
-): any {
-  if (!merchantClaimTransaction || !address) return null;
-
+): MerchantClaimTypeTxn {
   const transactions = merchantClaimTransaction.transaction?.tokenTransfers;
 
   // find the GAS item by address
@@ -165,16 +171,14 @@ export function getMerchantClaimTransactionDetails(
 }
 
 export function getMerchantEarnedTransactionDetails(
-  prepaidCardPaymentTransaction: any,
+  prepaidCardPaymentTransaction: PrepaidCardPaymentFragment,
   nativeCurrency = 'USD',
   nativeBalance: number,
   currencyConversionRates: {
     [key: string]: number;
   },
   symbol: string
-): any {
-  if (!prepaidCardPaymentTransaction) return null;
-
+): MerchantEarnedRevenueTransactionTypeTxn {
   const feeCollectedRaw =
     prepaidCardPaymentTransaction.transaction?.merchantFeePayments[0]
       ?.feeCollected;

@@ -95,22 +95,6 @@ describe('Merchant utils', () => {
         grossClaimed: '0.00 DAI',
         netClaimed: '0.0000974 DAI',
       });
-
-      expect(
-        getMerchantClaimTransactionDetails(
-          MERCHANT_CLAIM_MOCK_DATA,
-          'USD',
-          undefined
-        )
-      ).toBeNull();
-
-      expect(
-        getMerchantClaimTransactionDetails(
-          undefined,
-          'USD',
-          '0xD7182E380b7dFa33C186358De7E1E5d0950fCAE7'
-        )
-      ).toBeNull();
     });
   });
 
@@ -147,16 +131,6 @@ describe('Merchant utils', () => {
         protocolFeeUsd: '$0.0025 USD',
         spendConversionRate: '$0.01 USD',
       });
-
-      expect(
-        getMerchantEarnedTransactionDetails(
-          null,
-          'USD',
-          0.49999999,
-          currencyConversionRates,
-          'DAI'
-        )
-      ).toBeNull();
     });
   });
 });

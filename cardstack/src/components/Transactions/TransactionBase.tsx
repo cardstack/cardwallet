@@ -1,5 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
 import { Icon, IconName, IconProps } from '../Icon';
 import { ContainerProps } from '../Container';
@@ -31,7 +31,7 @@ export interface TransactionBaseProps
   topText?: string;
   transactionHash: string;
   isFullWidth?: boolean;
-  toTransactionDetails?: any;
+  onPressTransaction?: (props: TransactionBaseProps) => void;
 }
 
 export const TransactionBase = (props: TransactionBaseProps) => {
@@ -41,7 +41,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
     transactionHash,
     includeBorder,
     isFullWidth,
-    toTransactionDetails,
+    onPressTransaction,
   } = props;
 
   const network = useRainbowSelector(state => state.settings.network);
@@ -49,19 +49,29 @@ export const TransactionBase = (props: TransactionBaseProps) => {
   const blockExplorerName = isLayer1(network) ? 'Etherscan' : 'Blockscout';
   const normalizedHash = normalizeTxHash(transactionHash);
 
-  const onPressBlockscout = () => {
-    showActionSheetWithOptions(
-      {
-        options: [`View on ${blockExplorerName}`, 'Cancel'],
-        cancelButtonIndex: 1,
-      },
-      (buttonIndex: number) => {
-        if (buttonIndex === 0) {
-          Linking.openURL(`${blockExplorer}/tx/${normalizedHash}`);
+  const handleOnPressTransaction = useCallback(() => {
+    const onPressBlockscout = () => {
+      showActionSheetWithOptions(
+        {
+          options: [`View on ${blockExplorerName}`, 'Cancel'],
+          cancelButtonIndex: 1,
+        },
+        (buttonIndex: number) => {
+          if (buttonIndex === 0) {
+            Linking.openURL(`${blockExplorer}/tx/${normalizedHash}`);
+          }
         }
-      }
-    );
-  };
+      );
+    };
+
+    onPressTransaction ? onPressTransaction(props) : onPressBlockscout;
+  }, [
+    blockExplorer,
+    blockExplorerName,
+    normalizedHash,
+    onPressTransaction,
+    props,
+  ]);
 
   return (
     <Container
@@ -72,11 +82,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
       <Touchable
         width="100%"
         testID="inventory-card"
-        onPress={
-          toTransactionDetails
-            ? () => toTransactionDetails(props)
-            : onPressBlockscout
-        }
+        onPress={handleOnPressTransaction}
       >
         <Container
           backgroundColor="white"
@@ -126,11 +132,6 @@ export const TransactionRow = ({
   hasBottomDivider = false,
   ...props
 }: TransactionRowProps) => {
-  const {
-    section: { data },
-    index,
-  }: any = props;
-
   return (
     <Container
       flexDirection="row"
@@ -141,19 +142,6 @@ export const TransactionRow = ({
       {...props}
     >
       <Container flexDirection="column" width="100%">
-        {data[index]?.address ? (
-          <Container flexDirection="row" width="50%" paddingBottom={4}>
-            <Text
-              color="blueText"
-              fontFamily="RobotoMono-Regular"
-              ellipsizeMode="middle"
-              fontSize={13}
-              numberOfLines={1}
-            >
-              {data[index]?.address}
-            </Text>
-          </Container>
-        ) : null}
         <Container
           alignItems="center"
           flexDirection="row"

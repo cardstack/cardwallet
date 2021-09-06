@@ -1,4 +1,5 @@
 import { BalanceType } from './AssetType';
+
 export enum TransactionTypes {
   DEPOT_BRIDGED_LAYER_1 = 'depotBridgedLayer1',
   DEPOT_BRIDGED_LAYER_2 = 'depotBridgedLayer2',
@@ -101,6 +102,13 @@ export interface MerchantRevenueEventType {
   type: TransactionTypes.MERCHANT_REVENUE_EVENT;
 }
 
+export interface MerchantClaimTypeTxn {
+  grossClaimed?: string;
+  gasFee?: string;
+  gasUsdFee?: string;
+  netClaimed?: string;
+}
+
 export interface MerchantClaimType {
   address: string;
   createdAt: string;
@@ -114,12 +122,7 @@ export interface MerchantClaimType {
   };
   hideSafeHeader?: boolean;
   type: TransactionTypes.MERCHANT_CLAIM;
-  transaction?: {
-    grossClaimed?: string;
-    gasFee?: string;
-    gasUsdFee?: string;
-    netClaimed?: string;
-  };
+  transaction: MerchantClaimTypeTxn;
 }
 
 export interface PrepaidCardPaymentTransactionType {
@@ -131,6 +134,14 @@ export interface PrepaidCardPaymentTransactionType {
   nativeBalanceDisplay: string;
   type: TransactionTypes.PREPAID_CARD_PAYMENT;
   transactionHash: string;
+}
+
+export interface MerchantEarnedRevenueTransactionTypeTxn {
+  customerSpend: any;
+  customerSpendUsd: string;
+  protocolFee: string;
+  protocolFeeUsd: string;
+  spendConversionRate: string;
 }
 
 export interface MerchantEarnedRevenueTransactionType {
@@ -145,7 +156,7 @@ export interface MerchantEarnedRevenueTransactionType {
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_REVENUE;
   transactionHash: string;
-  transaction?: any;
+  transaction: MerchantEarnedRevenueTransactionTypeTxn;
 }
 
 export interface MerchantEarnedSpendTransactionType {

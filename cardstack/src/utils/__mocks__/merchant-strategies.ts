@@ -1,4 +1,9 @@
-export const MERCHANT_CLAIM_MOCK_DATA = {
+import {
+  MerchantClaimFragment,
+  PrepaidCardPaymentFragment,
+} from '@cardstack/graphql';
+
+export const MERCHANT_CLAIM_MOCK_DATA: MerchantClaimFragment = {
   __typename: 'MerchantClaim',
   amount: '0',
   id: '0x245fe1637c6fc77ccb7c35f3d387f2c0e5fea1abfd9d788c988dca6a9770a8bf',
@@ -54,7 +59,7 @@ export const MERCHANT_CLAIM_MOCK_DATA = {
   },
 };
 
-export const MERCHANT_EARNED_MOCK_DATA = {
+export const MERCHANT_EARNED_MOCK_DATA: PrepaidCardPaymentFragment = {
   __typename: 'PrepaidCardPayment',
   id: '0x13b5bb885089e05bac61857d259c8bb590375dc1cc806f4ed53a312e6e211472',
   issuingToken: {
