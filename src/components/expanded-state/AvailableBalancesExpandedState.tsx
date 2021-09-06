@@ -12,7 +12,6 @@ import { SlackSheet } from '../sheet';
 import {
   AssetList,
   AssetListSectionItem,
-  CenteredContainer,
   Container,
   HorizontalDivider,
   ListEmptyComponent,
@@ -256,11 +255,3 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
     </Container>
   );
 };
-
-const ListEmptyComponent = () => (
-  <CenteredContainer flex={1} height={100} width="100%">
-    <Text color="grayText" textAlign="center">
-      No activity Data
-    </Text>
-  </CenteredContainer>
-);

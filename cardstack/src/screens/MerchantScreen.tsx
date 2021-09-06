@@ -1,6 +1,7 @@
 import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
 import { StatusBar } from 'react-native';
+// eslint-disable-next-line import/no-unresolved
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
