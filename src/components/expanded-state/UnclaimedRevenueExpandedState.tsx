@@ -138,7 +138,7 @@ const Activities = ({ address }: { address: string }) => {
         <TransactionListLoading light />
       ) : (
         <SectionList
-          ListEmptyComponent={<ListEmptyComponent text="No activity Data" />}
+          ListEmptyComponent={<ListEmptyComponent text="No activity" />}
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }

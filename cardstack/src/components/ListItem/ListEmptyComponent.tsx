@@ -9,7 +9,7 @@ interface ListEmptyComponentProps extends ContainerProps {
 }
 
 export const ListEmptyComponent = ({
-  text = '',
+  text = 'Empty List',
   textColor = 'grayText',
   ...props
 }: ListEmptyComponentProps) => {

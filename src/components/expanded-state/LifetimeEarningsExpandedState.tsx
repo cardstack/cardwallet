@@ -1,4 +1,3 @@
-import { ChartPath } from '@rainbow-me/animated-charts';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import {
@@ -20,6 +19,7 @@ import { useMerchantTransactions } from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { ChartPath } from '@rainbow-me/animated-charts';
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -167,7 +167,7 @@ const ActivitiesSection = ({ address }: { address: string }) => {
           <TransactionListLoading light />
         ) : (
           <SectionList
-            ListEmptyComponent={<ListEmptyComponent text="No activity Data" />}
+            ListEmptyComponent={<ListEmptyComponent text="No activity" />}
             ListFooterComponent={
               isFetchingMore ? <ActivityIndicator color="white" /> : null
             }
