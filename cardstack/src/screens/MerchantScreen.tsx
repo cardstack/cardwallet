@@ -2,7 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StatusBar } from 'react-native';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
-import { ContactAvatar } from '../../../src/components/contacts';
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
   CenteredContainer,

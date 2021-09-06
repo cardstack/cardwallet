@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContactAvatar } from '../../../../src/components/contacts';
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Container,
   HorizontalDivider,
