@@ -6,11 +6,11 @@ import {
 } from '../../../cardstack/src/hooks/use-lifetime-earnings-data';
 import { SlackSheet } from '../sheet';
 import {
-  CenteredContainer,
   Container,
   FilterOption,
   HorizontalDivider,
   Icon,
+  ListEmptyComponent,
   Text,
   TransactionItem,
   TransactionListLoading,
@@ -167,7 +167,7 @@ const ActivitiesSection = ({ address }: { address: string }) => {
           <TransactionListLoading light />
         ) : (
           <SectionList
-            ListEmptyComponent={<ListEmptyComponent />}
+            ListEmptyComponent={<ListEmptyComponent text="No activity" />}
             ListFooterComponent={
               isFetchingMore ? <ActivityIndicator color="white" /> : null
             }
@@ -191,11 +191,3 @@ const ActivitiesSection = ({ address }: { address: string }) => {
     </Container>
   );
 };
-
-const ListEmptyComponent = () => (
-  <CenteredContainer flex={1} height={100} width="100%">
-    <Text color="grayText" textAlign="center">
-      No activity Data
-    </Text>
-  </CenteredContainer>
-);

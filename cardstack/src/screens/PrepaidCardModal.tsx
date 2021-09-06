@@ -3,8 +3,8 @@ import React, { memo } from 'react';
 import { SectionList, StyleSheet } from 'react-native';
 import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
 import {
-  CenteredContainer,
   Container,
+  ListEmptyComponent,
   PrepaidCard,
   PrepaidCardProps,
   SafeAreaView,
@@ -53,7 +53,7 @@ const PrepaidCardModal = () => {
           <TransactionListLoading light />
         ) : (
           <SectionList
-            ListEmptyComponent={<ListEmptyComponent />}
+            ListEmptyComponent={<ListEmptyComponent text="No transactions" />}
             contentContainerStyle={styles.contentContainerStyle}
             renderItem={props => <TransactionItem {...props} includeBorder />}
             sections={sections}
@@ -74,13 +74,5 @@ const PrepaidCardModal = () => {
     </SafeAreaView>
   );
 };
-
-const ListEmptyComponent = () => (
-  <CenteredContainer width="100%" height={100} flex={1}>
-    <Text color="grayText" textAlign="center">
-      No transactions
-    </Text>
-  </CenteredContainer>
-);
 
 export default memo(PrepaidCardModal);

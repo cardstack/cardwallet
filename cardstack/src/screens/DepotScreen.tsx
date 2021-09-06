@@ -16,6 +16,7 @@ import {
   CenteredContainer,
   Container,
   Icon,
+  ListEmptyComponent,
   Text,
   TokenBalance,
   Touchable,
@@ -267,7 +268,7 @@ const Activities = () => {
         <TransactionListLoading light />
       ) : (
         <SectionList
-          ListEmptyComponent={<ListEmptyComponent />}
+          ListEmptyComponent={<ListEmptyComponent text="No transactions" />}
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
@@ -299,11 +300,3 @@ const Activities = () => {
     </Container>
   );
 };
-
-const ListEmptyComponent = () => (
-  <CenteredContainer width="100%" height={100} flex={1}>
-    <Text color="grayText" textAlign="center">
-      No transactions
-    </Text>
-  </CenteredContainer>
-);

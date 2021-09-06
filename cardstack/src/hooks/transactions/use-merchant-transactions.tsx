@@ -9,13 +9,21 @@ import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-stra
 import logger from 'logger';
 import { TransactionMappingStrategy } from '@cardstack/transaction-mapping-strategies/context';
 
-type MerchantTransactionTypes = 'lifetimeEarnings' | 'unclaimedRevenue';
+type MerchantTransactionTypes =
+  | 'lifetimeEarnings'
+  | 'unclaimedRevenue'
+  | 'availableBalances';
 
 const typeToStrategies: {
   [key in MerchantTransactionTypes]: TransactionMappingStrategy[];
 } = {
   lifetimeEarnings: [MerchantEarnedSpendStrategy],
   unclaimedRevenue: [MerchantClaimStrategy, MerchantEarnedRevenueStrategy],
+  availableBalances: [
+    MerchantClaimStrategy,
+    MerchantEarnedRevenueStrategy,
+    MerchantEarnedSpendStrategy,
+  ],
 };
 
 export const useMerchantTransactions = (

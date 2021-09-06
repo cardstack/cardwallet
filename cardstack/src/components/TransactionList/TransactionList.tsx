@@ -10,8 +10,8 @@ import { TransactionListLoading } from './TransactionListLoading';
 import { useFullTransactionList } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
 import {
-  CenteredContainer,
   Container,
+  ListEmptyComponent,
   ScrollView,
   Text,
   TransactionItem,
@@ -79,7 +79,7 @@ export const TransactionList = memo(
 
     return (
       <SectionList
-        ListEmptyComponent={<ListEmptyComponent />}
+        ListEmptyComponent={<ListEmptyComponent text="No transactions" />}
         ListHeaderComponent={Header}
         ListFooterComponent={
           isFetchingMore ? <ActivityIndicator color="white" /> : null
@@ -104,11 +104,3 @@ export const TransactionList = memo(
 );
 
 TransactionList.displayName = 'TransactionList';
-
-const ListEmptyComponent = () => (
-  <CenteredContainer width="100%" height={100} flex={1}>
-    <Text color="grayText" textAlign="center">
-      No transactions
-    </Text>
-  </CenteredContainer>
-);

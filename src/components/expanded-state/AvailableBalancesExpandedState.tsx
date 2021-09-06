@@ -1,17 +1,28 @@
 import { add, convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SectionList,
+  StyleSheet,
+} from 'react-native';
 import { SlackSheet } from '../sheet';
+
 import {
   AssetList,
   AssetListSectionItem,
   Container,
   HorizontalDivider,
+  ListEmptyComponent,
   Text,
   TokenBalance,
   TokenBalanceProps,
   Touchable,
+  TransactionItem,
+  TransactionListLoading,
 } from '@cardstack/components';
+import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { sortedByTokenBalanceAmount } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -21,6 +32,11 @@ import {
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
+
+const styles = StyleSheet.create({
+  contentContainerStyle: { paddingBottom: 200 },
+  sectionListStyle: { width: '100%' },
+});
 
 const CHART_HEIGHT = 650;
 
@@ -52,7 +68,7 @@ export default function AvailableBalancesExpandedState(
   }, [setOptions]);
 
   return (
-    <SlackSheet flex={1} scrollEnabled={false}>
+    <SlackSheet flex={1}>
       <Container paddingHorizontal={5} paddingTop={3}>
         <Text size="medium">Available balances</Text>
         <Container flexDirection="row" justifyContent="space-between">
@@ -191,14 +207,51 @@ const useBalancesSection = (
   };
 };
 
-const Activities = (_props: AvailableBalancesExpandedStateProps) => {
+const Activities = (props: AvailableBalancesExpandedStateProps) => {
+  const { address } = props.asset;
+  const {
+    sections,
+    isFetchingMore,
+    onEndReached,
+    refetchLoading,
+    refetch,
+    isLoadingTransactions,
+  } = useMerchantTransactions(address, 'availableBalances');
+
   return (
     <Container paddingBottom={3} paddingHorizontal={5}>
-      <Container alignItems="center" width="100%">
-        <Text marginBottom={3} marginTop={8} weight="bold">
-          No data to show
-        </Text>
-      </Container>
+      {isLoadingTransactions ? (
+        <TransactionListLoading light />
+      ) : (
+        <SectionList
+          ListEmptyComponent={<ListEmptyComponent text="No activity" />}
+          ListFooterComponent={
+            isFetchingMore ? <ActivityIndicator color="white" /> : null
+          }
+          contentContainerStyle={styles.contentContainerStyle}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={1}
+          refreshControl={
+            <RefreshControl
+              onRefresh={refetch}
+              refreshing={refetchLoading}
+              tintColor="white"
+            />
+          }
+          renderItem={props => (
+            <TransactionItem {...props} includeBorder isFullWidth />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Container backgroundColor="white" paddingVertical={2} width="100%">
+              <Text color="blueText" size="medium">
+                {title}
+              </Text>
+            </Container>
+          )}
+          sections={sections}
+          style={styles.sectionListStyle}
+        />
+      )}
     </Container>
   );
 };
