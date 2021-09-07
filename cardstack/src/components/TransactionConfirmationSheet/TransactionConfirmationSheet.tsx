@@ -28,14 +28,15 @@ import {
 } from '@cardstack/components';
 
 export interface TransactionConfirmationDisplayProps {
-  dappUrl: string;
-  message: any;
-  onCancel: () => void;
-  onConfirm: () => void;
-  methodName: string | null;
-  messageRequest: any;
+  dappUrl?: string;
+  message?: any; // seems it's only used on issuePrepaidCard, check need
+  methodName?: string;
+  messageRequest?: any;
   data: TransactionConfirmationData;
   loading: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+  onConfirmLoading?: boolean;
 }
 
 export const TransactionConfirmationSheet = (
@@ -52,16 +53,18 @@ export const TransactionConfirmationSheet = (
       paddingTop={3}
       borderRadius={20}
     >
-      <InformationIcon
-        isOpen={showFullMessage}
-        onPress={() => {
-          LayoutAnimation.configureNext(
-            LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-          );
+      {props.messageRequest && (
+        <InformationIcon
+          isOpen={showFullMessage}
+          onPress={() => {
+            LayoutAnimation.configureNext(
+              LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+            );
 
-          setShowFullMessage(!showFullMessage);
-        }}
-      />
+            setShowFullMessage(!showFullMessage);
+          }}
+        />
+      )}
       <Header {...props} showHeaderShadow={showHeaderShadow} />
       <ScrollView
         onScroll={event => {
@@ -100,7 +103,7 @@ const Header = ({
     return null;
   }
 
-  const { hostname } = new URL(dappUrl);
+  const { hostname } = new URL(dappUrl || '');
 
   const typeToHeaderText: {
     [key in TransactionConfirmationType]: string;
@@ -192,6 +195,7 @@ const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
 const SheetFooter = ({
   onConfirm,
   onCancel,
+  onConfirmLoading = false,
 }: TransactionConfirmationDisplayProps) => {
   return (
     <Container
@@ -213,6 +217,7 @@ const SheetFooter = ({
           Cancel
         </Button>
         <Button
+          loading={onConfirmLoading}
           variant="small"
           onPress={onConfirm}
           iconProps={{ name: 'face-id' }}
