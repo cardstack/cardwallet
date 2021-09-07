@@ -6,3 +6,4 @@ export { default as CopyAddressSheet } from './CopyAddressSheet';
 export { default as PrepaidCardModal } from './PrepaidCardModal';
 export { default as SendSheetDepot } from './SendSheetDepot';
 export { default as ShowQRCodeModal } from './ShowQRCodeModal';
+export { default as PayMerchantUniversalLink } from './PayMerchantUniversalLink';

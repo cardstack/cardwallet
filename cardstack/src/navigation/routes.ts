@@ -6,4 +6,5 @@ export const Routes = {
   BUY_PREPAID_CARD: 'BuyPrepaidCard',
   SEND_FLOW_DEPOT: 'SendFlowDepot',
   SHOW_QRCODE_MODAL: 'ShowQRCodeModal',
+  PAY_MERCHANT_LINK: 'PayMerchantUniLink',
 } as const;

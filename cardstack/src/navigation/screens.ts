@@ -1,10 +1,11 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { Routes } from './routes';
-import { horizontalInterpolator } from './presetOptions';
+import { horizontalInterpolator, overlayPreset } from './presetOptions';
 import {
   BuyPrepaidCard,
   DepotScreen,
   MerchantScreen,
+  PayMerchantUniversalLink,
   PrepaidCardModal,
   SendSheetDepot,
   ShowQRCodeModal,
@@ -39,5 +40,9 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
   SHOW_QRCODE_MODAL: {
     component: ShowQRCodeModal,
     options: sheetPreset as StackNavigationOptions,
+  },
+  PAY_MERCHANT_LINK: {
+    component: PayMerchantUniversalLink,
+    options: overlayPreset,
   },
 };
