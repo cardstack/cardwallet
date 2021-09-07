@@ -17,8 +17,7 @@ export const useMerchantInfoDID = (DID: string) => {
     };
 
     getMerchantInfoDID();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [DID]);
 
   return useMemo(
     () => ({

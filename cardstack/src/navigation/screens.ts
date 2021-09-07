@@ -5,6 +5,7 @@ import {
   BuyPrepaidCard,
   DepotScreen,
   MerchantScreen,
+  PayMerchantUniversalLink,
   PrepaidCardModal,
   SendSheetDepot,
   ShowQRCodeModal,
@@ -39,5 +40,21 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
   SHOW_QRCODE_MODAL: {
     component: ShowQRCodeModal,
     options: sheetPreset as StackNavigationOptions,
+  },
+  PAY_MERCHANT_LINK: {
+    component: PayMerchantUniversalLink,
+  },
+};
+
+export const linking = {
+  prefixes: [
+    'https://wallet.cardstack.com',
+    'https://wallet-staging.stack.cards',
+    'cardwallet://',
+  ],
+  config: {
+    screens: {
+      [Routes.PAY_MERCHANT_LINK]: 'pay/:network/:merchantAddress',
+    },
   },
 };

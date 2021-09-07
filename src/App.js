@@ -215,7 +215,6 @@ class App extends Component {
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
     this.backgroundNotificationHandler?.();
-    this.branchListener?.();
   }
 
   identifyFlow = async () => {

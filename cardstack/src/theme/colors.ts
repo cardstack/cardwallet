@@ -25,6 +25,7 @@ export const palette = {
   white: '#FFFFFF',
   transparent: 'transparent',
   grayCardBackground: '#F8F7FA',
+  blackOpacity50: '#00000080',
 };
 
 export const colors = {
@@ -62,6 +63,7 @@ export const colors = {
   darkGrayText: palette.grayMediumDark,
   lightSkeleton: palette.skeletonGray,
   grayCardBackground: palette.grayCardBackground,
+  overlay: palette.blackOpacity50,
 };
 
 export type ColorTypes = keyof typeof colors;

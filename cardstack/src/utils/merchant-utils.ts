@@ -84,7 +84,9 @@ export const generateMerchantPaymentUrl = ({
   network = 'sokol',
   currency = 'SPD',
 }: MerchantPaymentURLParams) => {
-  const domain = `https://wallet.cardstack.com`;
+  // We will be using the URI schema for first release, these things should be handle by env
+  // const domain = `https://wallet.cardstack.com`;
+  const domain = `cardwallet:/`;
   const handleAmount = amount ? `amount=${amount}&` : '';
 
   return `${domain}/pay/${network}/${merchantSafeID}?${handleAmount}currency=${currency}`;

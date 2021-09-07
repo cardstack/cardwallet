@@ -56,11 +56,12 @@ export const useTransactionSections = ({
     state => state.settings.accountAddress
   );
 
-  const prevTransactionsLength = usePrevious(transactions?.length);
+  const prevLastTransaction = usePrevious(transactions?.[0]?.transaction.id);
+  const currentLastTransaction = transactions?.[0]?.transaction.id;
 
   useEffect(() => {
     const setSectionsData = async () => {
-      if (transactions && prevTransactionsLength !== transactions.length) {
+      if (transactions && prevLastTransaction !== currentLastTransaction) {
         setLoading(true);
 
         try {
@@ -123,7 +124,8 @@ export const useTransactionSections = ({
     transactionStrategies,
     merchantSafes,
     prepaidCards,
-    prevTransactionsLength,
+    prevLastTransaction,
+    currentLastTransaction,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;

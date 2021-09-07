@@ -48,7 +48,7 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import { useCardstackScreens } from '@cardstack/navigation/hooks';
+import { linking, useCardstackScreens } from '@cardstack/navigation';
 import { ShowQRCodeModal } from '@cardstack/screen';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
@@ -379,7 +379,11 @@ function NativeStackNavigator() {
 }
 
 const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
-  <NavigationContainer onStateChange={onNavigationStateChange} ref={ref}>
+  <NavigationContainer
+    linking={linking}
+    onStateChange={onNavigationStateChange}
+    ref={ref}
+  >
     <NativeStackNavigator />
   </NavigationContainer>
 ));

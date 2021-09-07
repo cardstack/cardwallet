@@ -239,3 +239,11 @@ export const addGnosisTokenPrices = async (
     merchantSafes: [],
   };
 };
+
+export const getSafeData = async (address: string) => {
+  const web3 = new Web3(await getWeb3ProviderSdk());
+
+  const safesInstance = await getSDK('Safes', web3);
+
+  return safesInstance.viewSafe(address);
+};
