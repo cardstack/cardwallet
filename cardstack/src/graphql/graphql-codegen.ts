@@ -4504,7 +4504,7 @@ export type PrepaidCardCreationFragment = (
 
 export type PrepaidCardPaymentFragment = (
   { __typename?: 'PrepaidCardPayment' }
-  & Pick<PrepaidCardPayment, 'id' | 'timestamp' | 'spendAmount' | 'issuingTokenAmount'>
+  & Pick<PrepaidCardPayment, 'id' | 'timestamp' | 'spendAmount' | 'issuingTokenAmount' | 'issuingTokenUSDPrice'>
   & { issuingToken: (
     { __typename?: 'Token' }
     & Pick<Token, 'id' | 'symbol' | 'name'>
@@ -4514,7 +4514,17 @@ export type PrepaidCardPaymentFragment = (
   ), merchantSafe?: Maybe<(
     { __typename?: 'MerchantSafe' }
     & Pick<MerchantSafe, 'id'>
-  )> }
+  )>, transaction: (
+    { __typename?: 'Transaction' }
+    & { merchantFeePayments: Array<Maybe<(
+      { __typename?: 'MerchantFeePayment' }
+      & Pick<MerchantFeePayment, 'feeCollected'>
+      & { issuingToken: (
+        { __typename?: 'Token' }
+        & Pick<Token, 'symbol'>
+      ) }
+    )>> }
+  ) }
 );
 
 export type BridgeToLayer1EventFragment = (
@@ -4589,6 +4599,23 @@ export type MerchantClaimFragment = (
   & { token: (
     { __typename?: 'Token' }
     & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>
+  ), transaction: (
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id'>
+    & { tokenTransfers: Array<Maybe<(
+      { __typename?: 'TokenTransfer' }
+      & Pick<TokenTransfer, 'amount'>
+      & { fromTokenHolder?: Maybe<(
+        { __typename?: 'TokenHolder' }
+        & Pick<TokenHolder, 'id'>
+      )>, toTokenHolder?: Maybe<(
+        { __typename?: 'TokenHolder' }
+        & Pick<TokenHolder, 'id'>
+      )>, token: (
+        { __typename?: 'Token' }
+        & Pick<Token, 'symbol'>
+      ) }
+    )>> }
   ) }
 );
 
@@ -4805,6 +4832,7 @@ export const PrepaidCardPaymentFragmentDoc = gql`
   timestamp
   spendAmount
   issuingTokenAmount
+  issuingTokenUSDPrice
   issuingToken {
     id
     symbol
@@ -4816,6 +4844,14 @@ export const PrepaidCardPaymentFragmentDoc = gql`
   }
   merchantSafe {
     id
+  }
+  transaction {
+    merchantFeePayments {
+      feeCollected
+      issuingToken {
+        symbol
+      }
+    }
   }
 }
     `;
@@ -4830,6 +4866,21 @@ export const MerchantClaimFragmentDoc = gql`
     decimals
   }
   amount
+  transaction {
+    id
+    tokenTransfers {
+      amount
+      fromTokenHolder {
+        id
+      }
+      toTokenHolder {
+        id
+      }
+      token {
+        symbol
+      }
+    }
+  }
 }
     `;
 export const MerchantRevenueEventFragmentDoc = gql`

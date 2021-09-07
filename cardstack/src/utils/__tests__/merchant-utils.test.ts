@@ -2,8 +2,14 @@ import { Share } from 'react-native';
 import { Device } from '../device';
 import {
   generateMerchantPaymentUrl,
+  getMerchantClaimTransactionDetails,
+  getMerchantEarnedTransactionDetails,
   shareRequestPaymentLink,
 } from '../merchant-utils';
+import {
+  MERCHANT_CLAIM_MOCK_DATA,
+  MERCHANT_EARNED_MOCK_DATA,
+} from '@cardstack/utils/__mocks__/merchant-strategies';
 
 jest.mock('../device');
 
@@ -72,6 +78,59 @@ describe('Merchant utils', () => {
       await shareRequestPaymentLink(address, paymentRequestLink);
 
       expect(share).toBeCalledWith(expectedContent, undefined);
+    });
+  });
+
+  describe('Get Merchant Claim txn details', () => {
+    it('Should return proper object according to params', () => {
+      expect(
+        getMerchantClaimTransactionDetails(
+          MERCHANT_CLAIM_MOCK_DATA,
+          'USD',
+          '0xD7182E380b7dFa33C186358De7E1E5d0950fCAE7'
+        )
+      ).toStrictEqual({
+        gasFee: '0.0000974 DAI',
+        gasUsdFee: '$0.0000974 USD',
+        grossClaimed: '0.00 DAI',
+        netClaimed: '0.0000974 DAI',
+      });
+    });
+  });
+
+  describe('Get Merchant Earned txn details', () => {
+    const currencyConversionRates = {
+      AUD: 1.34202,
+      CAD: 1.252625,
+      CNY: 6.453498,
+      EUR: 0.841695,
+      GBP: 0.721335,
+      INR: 72.99465,
+      JPY: 109.749773,
+      KRW: 1155.749904,
+      NZD: 1.398215,
+      RUB: 72.69605,
+      TRY: 8.32148,
+      USD: 1,
+      ZAR: 14.297496,
+    };
+
+    it('Should return proper object according to params', () => {
+      expect(
+        getMerchantEarnedTransactionDetails(
+          MERCHANT_EARNED_MOCK_DATA,
+          'USD',
+          0.49999999,
+          currencyConversionRates,
+          'DAI'
+        )
+      ).toStrictEqual({
+        customerSpend: '50',
+        customerSpendUsd: '$0.50 USD',
+        protocolFee: '0.0025 DAI',
+        protocolFeeUsd: '$0.0025 USD',
+        spendConversionRate: '$0.01 USD',
+      });
     });
   });
 });

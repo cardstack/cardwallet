@@ -1,10 +1,25 @@
 import { Resolver } from 'did-resolver';
 import { getResolver } from '@cardstack/did-resolver';
 import { Share } from 'react-native';
+import {
+  convertAmountToNativeDisplay,
+  convertRawAmountToBalance,
+  fromWei,
+  subtract,
+} from '@cardstack/cardpay-sdk';
 import { getAddressPreview } from './formatting-utils';
 import { Device } from './device';
-import { MerchantRevenueEventFragment } from '@cardstack/graphql';
-import { MerchantInformation } from '@cardstack/types';
+import {
+  MerchantClaimFragment,
+  MerchantRevenueEventFragment,
+  PrepaidCardPaymentFragment,
+} from '@cardstack/graphql';
+import {
+  MerchantClaimTypeTxn,
+  MerchantEarnedRevenueTransactionTypeTxn,
+  MerchantInformation,
+} from '@cardstack/types';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils/cardpay-utils';
 
 export const merchantRevenueEventsToTransactions = (
   revenueEvents: MerchantRevenueEventFragment[]
@@ -105,3 +120,91 @@ export const shareRequestPaymentLink = (
     options
   );
 };
+
+export function getMerchantClaimTransactionDetails(
+  merchantClaimTransaction: MerchantClaimFragment,
+  nativeCurrency = 'USD',
+  address?: string
+): MerchantClaimTypeTxn {
+  const transactions = merchantClaimTransaction.transaction?.tokenTransfers;
+
+  // find the GAS item by address
+  const gasData = transactions?.find((item: any) =>
+    item?.toTokenHolder?.id?.includes(address)
+  );
+
+  const txnData = transactions?.find(
+    (item: any) => !item?.toTokenHolder?.id?.includes(address)
+  );
+
+  const grossRawAmount = txnData?.amount || '0';
+  const gasRawAmount = gasData?.amount || '0';
+
+  const gasFormatted = fromWei(gasRawAmount);
+
+  const grossFormattedValue = convertRawAmountToBalance(grossRawAmount, {
+    decimals: 18,
+    symbol: merchantClaimTransaction.token.symbol || undefined,
+  });
+
+  const gasFormattedValue = convertRawAmountToBalance(gasRawAmount, {
+    decimals: 18,
+    symbol: merchantClaimTransaction.token.symbol || undefined,
+  });
+
+  const gasUSD = convertAmountToNativeDisplay(gasFormatted, nativeCurrency);
+
+  const netFormattedValue = convertRawAmountToBalance(
+    subtract(gasRawAmount, grossRawAmount),
+    {
+      decimals: 18,
+      symbol: merchantClaimTransaction.token.symbol || undefined,
+    }
+  );
+
+  return {
+    grossClaimed: grossFormattedValue.display || '',
+    gasFee: gasFormattedValue.display || '',
+    gasUsdFee: gasUSD || '',
+    netClaimed: netFormattedValue.display || '',
+  };
+}
+
+export function getMerchantEarnedTransactionDetails(
+  prepaidCardPaymentTransaction: PrepaidCardPaymentFragment,
+  nativeCurrency = 'USD',
+  nativeBalance: number,
+  currencyConversionRates: {
+    [key: string]: number;
+  },
+  symbol: string
+): MerchantEarnedRevenueTransactionTypeTxn {
+  const feeCollectedRaw =
+    prepaidCardPaymentTransaction.transaction?.merchantFeePayments[0]
+      ?.feeCollected;
+
+  const feeCollectedDai = convertRawAmountToBalance(feeCollectedRaw, {
+    decimals: 18,
+    symbol,
+  }).display;
+
+  const feeCollectedUsd = convertAmountToNativeDisplay(
+    fromWei(feeCollectedRaw),
+    nativeCurrency
+  );
+
+  return {
+    customerSpend: prepaidCardPaymentTransaction.spendAmount,
+    customerSpendUsd: convertAmountToNativeDisplay(
+      nativeBalance,
+      nativeCurrency
+    ),
+    protocolFee: feeCollectedDai,
+    protocolFeeUsd: feeCollectedUsd,
+    spendConversionRate: convertSpendForBalanceDisplay(
+      '1',
+      nativeCurrency,
+      currencyConversionRates
+    ).nativeBalanceDisplay,
+  };
+}

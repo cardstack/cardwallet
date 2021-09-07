@@ -1,5 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
 import { Icon, IconName, IconProps } from '../Icon';
 import { ContainerProps } from '../Container';
@@ -17,7 +17,8 @@ export interface TransactionBaseCustomizationProps {
   includeBorder?: boolean;
 }
 
-interface TransactionBaseProps extends TransactionBaseCustomizationProps {
+export interface TransactionBaseProps
+  extends TransactionBaseCustomizationProps {
   CoinIcon: JSX.Element;
   Footer?: JSX.Element;
   Header?: JSX.Element | null;
@@ -30,29 +31,47 @@ interface TransactionBaseProps extends TransactionBaseCustomizationProps {
   topText?: string;
   transactionHash: string;
   isFullWidth?: boolean;
+  onPressTransaction?: (props: TransactionBaseProps) => void;
 }
 
 export const TransactionBase = (props: TransactionBaseProps) => {
-  const { Footer, Header, transactionHash, includeBorder, isFullWidth } = props;
+  const {
+    Footer,
+    Header,
+    transactionHash,
+    includeBorder,
+    isFullWidth,
+    onPressTransaction,
+  } = props;
 
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
   const blockExplorerName = isLayer1(network) ? 'Etherscan' : 'Blockscout';
   const normalizedHash = normalizeTxHash(transactionHash);
 
-  const onPressTransaction = () => {
-    showActionSheetWithOptions(
-      {
-        options: [`View on ${blockExplorerName}`, 'Cancel'],
-        cancelButtonIndex: 1,
-      },
-      (buttonIndex: number) => {
-        if (buttonIndex === 0) {
-          Linking.openURL(`${blockExplorer}/tx/${normalizedHash}`);
+  const handleOnPressTransaction = useCallback(() => {
+    const onPressBlockscout = () => {
+      showActionSheetWithOptions(
+        {
+          options: [`View on ${blockExplorerName}`, 'Cancel'],
+          cancelButtonIndex: 1,
+        },
+        (buttonIndex: number) => {
+          if (buttonIndex === 0) {
+            Linking.openURL(`${blockExplorer}/tx/${normalizedHash}`);
+          }
         }
-      }
-    );
-  };
+      );
+    };
+
+    onPressTransaction ? onPressTransaction(props) : onPressBlockscout;
+  }, [
+    blockExplorer,
+    blockExplorerName,
+    normalizedHash,
+    onPressTransaction,
+    props,
+  ]);
 
   return (
     <Container
@@ -63,7 +82,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
       <Touchable
         width="100%"
         testID="inventory-card"
-        onPress={onPressTransaction}
+        onPress={handleOnPressTransaction}
       >
         <Container
           backgroundColor="white"
@@ -97,6 +116,8 @@ export interface TransactionRowProps extends ContainerProps {
   statusSubText?: string;
   subText?: string;
   topText?: string;
+  address?: string;
+  hasBottomDivider?: boolean;
 }
 
 export const TransactionRow = ({
@@ -108,6 +129,7 @@ export const TransactionRow = ({
   topText,
   primaryText,
   subText,
+  hasBottomDivider = false,
   ...props
 }: TransactionRowProps) => {
   return (
@@ -119,41 +141,48 @@ export const TransactionRow = ({
       paddingTop={4}
       {...props}
     >
-      <Container
-        alignItems="center"
-        flexDirection="row"
-        justifyContent="space-between"
-        width="100%"
-      >
-        <Container flexDirection="row" alignItems="center">
-          {CoinIcon}
-          <Container marginLeft={4} flexDirection="row" alignItems="center">
-            <Container width={20}>
-              <Icon
-                name={statusIconName}
-                size={16}
-                color="blueText"
-                stroke="blueText"
-                {...statusIconProps}
-              />
-            </Container>
-            <Container flexDirection="column">
-              <Text variant="subText" weight="bold">
-                {statusText}
-              </Text>
-              {statusSubText && (
-                <Text size="smallest" weight="bold">
-                  {statusSubText}
+      <Container flexDirection="column" width="100%">
+        <Container
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between"
+          width="100%"
+        >
+          <Container flexDirection="row" alignItems="center">
+            {CoinIcon}
+            <Container marginLeft={4} flexDirection="row" alignItems="center">
+              <Container width={20}>
+                <Icon
+                  name={statusIconName}
+                  size={16}
+                  color="blueText"
+                  stroke="blueText"
+                  {...statusIconProps}
+                />
+              </Container>
+              <Container flexDirection="column">
+                <Text variant="subText" weight="bold">
+                  {statusText}
                 </Text>
-              )}
+                {statusSubText && (
+                  <Text size="smallest" weight="bold">
+                    {statusSubText}
+                  </Text>
+                )}
+              </Container>
             </Container>
           </Container>
+          <Container
+            flexDirection="column"
+            marginLeft={3}
+            alignItems="flex-end"
+          >
+            {topText && <Text size="small">{topText}</Text>}
+            <Text weight="extraBold">{primaryText}</Text>
+            {subText && <Text variant="subText">{subText}</Text>}
+          </Container>
         </Container>
-        <Container flexDirection="column" marginLeft={3} alignItems="flex-end">
-          {topText && <Text size="small">{topText}</Text>}
-          <Text weight="extraBold">{primaryText}</Text>
-          {subText && <Text variant="subText">{subText}</Text>}
-        </Container>
+        {hasBottomDivider && <HorizontalDivider />}
       </Container>
     </Container>
   );

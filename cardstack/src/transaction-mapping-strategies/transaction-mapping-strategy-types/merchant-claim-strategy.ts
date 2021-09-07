@@ -1,10 +1,14 @@
 import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
+  getAddress,
 } from '@cardstack/cardpay-sdk';
+import Web3 from 'web3';
 import { BaseStrategy } from '../base-strategy';
 import { MerchantClaimType, TransactionTypes } from '@cardstack/types';
 import { getNativeBalance } from '@cardstack/services';
+import { getMerchantClaimTransactionDetails } from '@cardstack/utils/merchant-utils';
+import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 
 export class MerchantClaimStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -23,6 +27,9 @@ export class MerchantClaimStrategy extends BaseStrategy {
     if (!merchantClaimTransaction) {
       return null;
     }
+
+    const web3 = new Web3(await getWeb3ProviderSdk());
+    const address = await getAddress('relay', web3);
 
     const nativeBalance = await getNativeBalance({
       symbol: merchantClaimTransaction.token.symbol,
@@ -53,6 +60,11 @@ export class MerchantClaimStrategy extends BaseStrategy {
         name: merchantClaimTransaction?.token.name,
       },
       type: TransactionTypes.MERCHANT_CLAIM,
+      transaction: getMerchantClaimTransactionDetails(
+        merchantClaimTransaction,
+        this.nativeCurrency,
+        address
+      ),
     };
   }
 }

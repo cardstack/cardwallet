@@ -103,7 +103,7 @@ export default function UnclaimedRevenueExpandedState(props: {
   }, [merchantSafe.address, network, revenueBalances, selectedWallet.id]);
 
   return (
-    <SlackSheet flex={1}>
+    <SlackSheet flex={1} scrollEnabled>
       <Container paddingHorizontal={5} paddingVertical={3}>
         <Text size="medium">Unclaimed revenue</Text>
         <Container flexDirection="column" marginTop={5}>

@@ -23,6 +23,7 @@ fragment PrepaidCardPayment on PrepaidCardPayment {
   timestamp
   spendAmount
   issuingTokenAmount
+  issuingTokenUSDPrice
   issuingToken {
     id
     symbol
@@ -34,6 +35,14 @@ fragment PrepaidCardPayment on PrepaidCardPayment {
   }
   merchantSafe {
     id
+  }
+  transaction {
+    merchantFeePayments {
+      feeCollected
+      issuingToken {
+        symbol
+      }
+    }
   }
 }
 
@@ -121,6 +130,19 @@ fragment MerchantClaim on MerchantClaim {
     decimals
   }
   amount
+  transaction {
+    id
+    tokenTransfers{
+      amount,
+      fromTokenHolder {
+        id
+      },
+      toTokenHolder {
+        id
+      },
+      token {symbol}
+    }
+  }
 }
 
 fragment MerchantRevenueEvent on MerchantRevenueEvent {

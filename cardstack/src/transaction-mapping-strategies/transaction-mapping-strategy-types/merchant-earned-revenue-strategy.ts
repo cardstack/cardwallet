@@ -8,6 +8,7 @@ import {
   TransactionTypes,
 } from '@cardstack/types';
 import { getNativeBalance } from '@cardstack/services';
+import { getMerchantEarnedTransactionDetails } from '@cardstack/utils';
 
 export class MerchantEarnedRevenueStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -59,6 +60,13 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       timestamp: prepaidCardPaymentTransaction.timestamp,
       type: TransactionTypes.MERCHANT_EARNED_REVENUE,
       transactionHash: this.transaction.id,
+      transaction: getMerchantEarnedTransactionDetails(
+        prepaidCardPaymentTransaction,
+        this.nativeCurrency,
+        nativeBalance,
+        this.currencyConversionRates,
+        symbol
+      ),
     };
   }
 }
