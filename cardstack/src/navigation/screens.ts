@@ -1,6 +1,6 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { Routes } from './routes';
-import { horizontalInterpolator, overlayPreset } from './presetOptions';
+import { horizontalInterpolator } from './presetOptions';
 import {
   BuyPrepaidCard,
   DepotScreen,
@@ -43,7 +43,6 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
   },
   PAY_MERCHANT_LINK: {
     component: PayMerchantUniversalLink,
-    options: overlayPreset,
   },
 };
 

@@ -34,14 +34,11 @@ export const useWorker = <T extends readonly any[], TReturn>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
-  return useMemo(
-    () => ({
-      callback,
-      error,
-      isLoading,
-      setError,
-      setIsLoading,
-    }),
-    [callback, error, isLoading]
-  );
+  return {
+    callback,
+    error,
+    isLoading,
+    setError,
+    setIsLoading,
+  };
 };

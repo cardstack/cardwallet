@@ -7,7 +7,7 @@ import { useRouteParams } from './use-route-params';
 import { useGas } from '@rainbow-me/hooks';
 
 export const useMethodName = () => {
-  const [methodName, setMethodName] = useState<string | null>(null);
+  const [methodName, setMethodName] = useState<string | undefined>();
   const isMessageRequest = useIsMessageRequest();
   const { startPollingGasPrices } = useGas();
 
