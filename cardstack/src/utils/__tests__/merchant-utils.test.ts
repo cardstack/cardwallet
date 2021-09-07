@@ -27,7 +27,7 @@ describe('Merchant utils', () => {
       });
 
       expect(url).toBe(
-        `https://wallet.cardstack.com/pay/xdai/0x0000000000000000000000000000000000000000?amount=100&currency=USD`
+        `cardwallet://pay/xdai/0x0000000000000000000000000000000000000000?amount=100&currency=USD`
       );
     });
 
@@ -35,7 +35,7 @@ describe('Merchant utils', () => {
       const url = generateMerchantPaymentUrl({ merchantSafeID, amount });
 
       expect(url).toBe(
-        `https://wallet.cardstack.com/pay/sokol/0x0000000000000000000000000000000000000000?amount=100&currency=SPD`
+        `cardwallet://pay/sokol/0x0000000000000000000000000000000000000000?amount=100&currency=SPD`
       );
     });
 
@@ -43,17 +43,17 @@ describe('Merchant utils', () => {
       const url = generateMerchantPaymentUrl({ merchantSafeID });
 
       expect(url).toBe(
-        `https://wallet.cardstack.com/pay/sokol/0x0000000000000000000000000000000000000000?currency=SPD`
+        `cardwallet://pay/sokol/0x0000000000000000000000000000000000000000?currency=SPD`
       );
     });
   });
 
   describe('shareRequestPaymentLink', () => {
     const address = '0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811';
-    const paymentRequestLink = `https://wallet.cardstack.com/pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`;
+    const paymentRequestLink = `cardwallet://pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`;
 
     const expectedContent = {
-      message: `Payment Request\nTo: 0xd6F3...5811\nURL: https://wallet.cardstack.com/pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`,
+      message: `Payment Request\nTo: 0xd6F3...5811\nURL: cardwallet://pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`,
       title: 'Payment Request',
     };
 
