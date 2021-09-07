@@ -14,10 +14,7 @@ import {
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { CurrencyConversionRates } from '@cardstack/types';
-import {
-  fetchCardCustomizationFromDID,
-  fetchMerchantInfoFromDID,
-} from '@cardstack/utils';
+import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import logger from 'logger';
 
 export const fetchGnosisSafes = async (address: string) => {
@@ -90,26 +87,9 @@ export const fetchGnosisSafes = async (address: string) => {
       })
     );
 
-    const extendedMerchants = await Promise.all(
-      merchantSafes.map(async (merchantSafe: MerchantSafe) => {
-        // TODO CHANGE HARDCODED VARIABLE
-        const INFO_DID =
-          'did:cardstack:1m8oR2jV2aKZqQXttNzhB2vga2fe8168b71700c5';
-
-        try {
-          const merchantInfo = await fetchMerchantInfoFromDID(INFO_DID);
-          return { ...merchantSafe, merchantInfo };
-        } catch (e) {
-          logger.sentry('Fetch DID failed:', e, `DID = ${INFO_DID}`);
-
-          return merchantSafes;
-        }
-      })
-    );
-
     return {
       depots,
-      merchantSafes: extendedMerchants,
+      merchantSafes,
       prepaidCards: extendedPrepaidCards,
     };
   } catch (error) {

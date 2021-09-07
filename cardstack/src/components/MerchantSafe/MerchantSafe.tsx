@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Container,
@@ -14,6 +14,7 @@ import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
+import { useMerchantInfoDID } from '@cardstack/components/TransactionConfirmationSheet/displays/Merchant/hooks';
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
@@ -22,6 +23,7 @@ interface MerchantSafeProps extends MerchantSafeType {
     [key: string]: number;
   };
   merchantInfo?: MerchantInformation;
+  infoDID: string;
 }
 
 const smallTokenSize = 30;
@@ -29,8 +31,12 @@ const smallTokenSize = 30;
 export const MerchantSafe = (props: MerchantSafeProps) => {
   const { navigate } = useNavigation();
 
-  const onPress = () =>
-    navigate(Routes.MERCHANT_SCREEN, { merchantSafe: props });
+  const { merchantInfoDID } = useMerchantInfoDID(props.infoDID);
+
+  const onPress = useCallback(() => {
+    const merchantData = { ...props, merchantInfo: merchantInfoDID };
+    navigate(Routes.MERCHANT_SCREEN, { merchantSafe: merchantData });
+  }, [merchantInfoDID, navigate, props]);
 
   return (
     <Container paddingHorizontal={4} marginBottom={4}>
@@ -43,7 +49,11 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
         >
           <SafeHeader {...props} onPress={onPress} />
           <Container paddingHorizontal={6}>
-            <MerchantInfo {...props} />
+            <MerchantInfo
+              color={merchantInfoDID?.color}
+              textColor={merchantInfoDID?.textColor}
+              name={merchantInfoDID?.name}
+            />
             <Bottom {...props} />
           </Container>
         </Container>
@@ -52,15 +62,23 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
   );
 };
 
-export const MerchantInfo = (props: MerchantSafeProps) => (
-  <>
+export const MerchantInfo = ({
+  textColor,
+  name,
+  color,
+}: {
+  textColor?: string;
+  name?: string;
+  color?: string;
+}) => {
+  return (
     <Container flexDirection="row" paddingVertical={8}>
-      {props.merchantInfo ? (
+      {name ? (
         <ContactAvatar
-          color={props.merchantInfo?.color}
+          color={color}
           size="medium"
-          value={props.merchantInfo?.name}
-          textColor={props.merchantInfo?.textColor}
+          value={name}
+          textColor={textColor}
         />
       ) : (
         <Icon name="user" />
@@ -73,13 +91,13 @@ export const MerchantInfo = (props: MerchantSafeProps) => (
         width="85%"
       >
         <Text weight="bold" ellipsizeMode="tail" numberOfLines={1}>
-          {props.merchantInfo?.name || ''}
+          {name || ''}
         </Text>
         <Text variant="subText">Merchant Account</Text>
       </Container>
     </Container>
-  </>
-);
+  );
+};
 
 const Bottom = (props: MerchantSafeProps) => {
   return (
