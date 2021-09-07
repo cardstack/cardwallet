@@ -9,7 +9,6 @@
 #import "Firebase.h"
 #import "AppDelegate.h"
 #import "Rainbow-Swift.h"
-#import <RNBranch/RNBranch.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
@@ -89,8 +88,6 @@ RCT_EXPORT_METHOD(hideAnimated) {
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
 
-  [RNBranch initSessionWithLaunchOptions:launchOptions isReferrable:YES];
-
   // React Native - Defaults
   self.bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:self.bridge
@@ -168,20 +165,21 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
   [RNCPushNotificationIOS didReceiveLocalNotification:notification];
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+// Targeting iOS 9.x+ 
+- (BOOL)application:(UIApplication *)application
+   openURL:(NSURL *)url
+   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-	return [RCTLinkingManager application:application openURL:url
-	sourceApplication:sourceApplication annotation:annotation];
+  return [RCTLinkingManager application:application openURL:url options:options];
 }
 
 // Only if your app is using [Universal Links]
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
- restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
+ restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
-
-  return [RNBranch continueUserActivity:userActivity];
-
+ return [RCTLinkingManager application:application
+                  continueUserActivity:userActivity
+                    restorationHandler:restorationHandler];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -195,12 +193,6 @@ sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-    if ([RNBranch application:app openURL:url options:options])  {
-        // do other deep link routing for other SDKs
-    }
-    return YES;
-}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application{
   BOOL action = [SettingsBundleHelper checkAndExecuteSettings];

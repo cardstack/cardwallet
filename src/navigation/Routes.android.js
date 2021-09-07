@@ -1,4 +1,3 @@
-import { useCardstackScreens } from '@cardstack/navigation';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useMemo } from 'react';
@@ -46,6 +45,7 @@ import {
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
+import { linking, useCardstackScreens } from '@cardstack/navigation';
 
 const Stack = createStackNavigator();
 const OuterStack = createStackNavigator();
@@ -258,7 +258,11 @@ function MainOuterNavigator() {
 }
 
 const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
-  <NavigationContainer onStateChange={onNavigationStateChange} ref={ref}>
+  <NavigationContainer
+    linking={linking}
+    onStateChange={onNavigationStateChange}
+    ref={ref}
+  >
     <MainOuterNavigator />
   </NavigationContainer>
 ));

@@ -46,3 +46,16 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
     options: overlayPreset,
   },
 };
+
+export const linking = {
+  prefixes: [
+    'https://wallet.cardstack.com',
+    'https://wallet-staging.stack.cards',
+    'cardwallet://',
+  ],
+  config: {
+    screens: {
+      [Routes.PAY_MERCHANT_LINK]: 'pay/:network/:merchantAddress',
+    },
+  },
+};
