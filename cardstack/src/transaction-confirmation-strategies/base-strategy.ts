@@ -1,5 +1,4 @@
 import { ERC20ABI } from '@cardstack/cardpay-sdk';
-import Safes from '@cardstack/cardpay-sdk/sdk/safes/base';
 import Web3 from 'web3';
 import { ActionDispatcherDecodedData } from './../types/transaction-confirmation-types';
 import {
@@ -8,6 +7,7 @@ import {
   TransactionConfirmationData,
 } from '@cardstack/types';
 import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { getSafeData } from '@cardstack/services';
 
 interface BaseStrategyParams {
   message: {
@@ -65,10 +65,7 @@ export abstract class BaseStrategy {
   };
 
   getSafeData = async (address: string) => {
-    const web3 = new Web3((await getWeb3ProviderSdk()) as any);
-    const safes = new Safes(web3);
-
-    return safes.viewSafe(address);
+    return getSafeData(address);
   };
 
   shouldDecodeRequest() {

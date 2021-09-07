@@ -32,13 +32,15 @@ export const getHdSignedProvider = async ({
     return hdProvider;
   } catch (e) {
     logger.error('Unable to getSeedPhrase', e);
+
+    return null;
   }
 };
 
 export const getSafesInstance = async (
   signedProviderParams?: SignedProviderParams
 ) => {
-  let web3Provider = await getWeb3ProviderSdk();
+  let web3Provider: HDWalletProvider | null = await getWeb3ProviderSdk();
 
   if (signedProviderParams) {
     web3Provider = await getHdSignedProvider(signedProviderParams);
