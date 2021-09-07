@@ -64,7 +64,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
       );
     };
 
-    onPressTransaction ? onPressTransaction(props) : onPressBlockscout;
+    onPressTransaction ? onPressTransaction(props) : onPressBlockscout();
   }, [
     blockExplorer,
     blockExplorerName,
