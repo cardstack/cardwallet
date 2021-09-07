@@ -45,7 +45,10 @@ export const TransactionList = memo(
 
     useEffect(() => {
       if (isFocused) {
-        onRefresh();
+        // Wait a bit to refresh to get tx from be
+        setTimeout(() => {
+          onRefresh();
+        }, 1000);
       }
     }, [onRefresh, isFocused]);
 
