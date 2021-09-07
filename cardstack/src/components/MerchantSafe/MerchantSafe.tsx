@@ -77,7 +77,7 @@ export const MerchantInfo = ({
           />
         </Container>
       ) : (
-        <Icon name="user" />
+        <Icon name="user" size={80} />
       )}
 
       <Container
