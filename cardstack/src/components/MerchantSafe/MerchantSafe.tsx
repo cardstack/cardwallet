@@ -2,16 +2,12 @@ import React, { useCallback } from 'react';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Container,
-  HorizontalDivider,
   Icon,
-  MoreItemsFooter,
   SafeHeader,
   Text,
-  TokenBalance,
   Touchable,
 } from '@cardstack/components';
 import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { useMerchantInfoDID } from '@cardstack/components/TransactionConfirmationSheet/displays/Merchant/hooks';
@@ -25,8 +21,6 @@ interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
   infoDID: string;
 }
-
-const smallTokenSize = 30;
 
 export const MerchantSafe = (props: MerchantSafeProps) => {
   const { navigate } = useNavigation();
@@ -54,7 +48,7 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
               textColor={merchantInfoDID?.textColor}
               name={merchantInfoDID?.name}
             />
-            <Bottom {...props} />
+            <Bottom slug={merchantInfoDID?.slug} />
           </Container>
         </Container>
       </Touchable>
@@ -72,25 +66,32 @@ export const MerchantInfo = ({
   color?: string;
 }) => {
   return (
-    <Container flexDirection="row" paddingVertical={8}>
+    <Container flexDirection="column" paddingVertical={8} alignItems="center">
       {name ? (
-        <ContactAvatar
-          color={color}
-          size="medium"
-          value={name}
-          textColor={textColor}
-        />
+        <Container marginBottom={4}>
+          <ContactAvatar
+            color={color}
+            size="xlarge"
+            value={name}
+            textColor={textColor}
+          />
+        </Container>
       ) : (
         <Icon name="user" />
       )}
 
       <Container
         flexDirection="column"
-        marginLeft={4}
         justifyContent="center"
         width="85%"
+        alignItems="center"
       >
-        <Text weight="bold" ellipsizeMode="tail" numberOfLines={1}>
+        <Text
+          weight="bold"
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          fontSize={20}
+        >
           {name || ''}
         </Text>
         <Text variant="subText">Merchant Account</Text>
@@ -99,101 +100,30 @@ export const MerchantInfo = ({
   );
 };
 
-const Bottom = (props: MerchantSafeProps) => {
+const Bottom = ({ slug }: { slug?: string }) => {
   return (
     <Container paddingBottom={6}>
-      <LifetimeEarningsSection {...props} />
-      <HorizontalDivider />
-      <UnclaimedRevenueSection {...props} />
-      <HorizontalDivider />
-      <AvailableBalancesSection {...props} />
-    </Container>
-  );
-};
-
-const LifetimeEarningsSection = ({
-  accumulatedSpendValue,
-  nativeCurrency,
-  currencyConversionRates,
-}: MerchantSafeProps) => {
-  const {
-    tokenBalanceDisplay,
-    nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(
-    accumulatedSpendValue,
-    nativeCurrency,
-    currencyConversionRates
-  );
-
-  return (
-    <Container flexDirection="column">
-      <SectionHeader>Lifetime earnings</SectionHeader>
-      <TokenBalance
-        Icon={<Icon name="spend" />}
-        tokenSymbol="SPEND"
-        tokenBalance={tokenBalanceDisplay}
-        nativeBalance={nativeBalanceDisplay}
-      />
-    </Container>
-  );
-};
-
-const UnclaimedRevenueSection = ({ revenueBalances }: MerchantSafeProps) => {
-  const firstToken = revenueBalances.length ? revenueBalances[0] : null;
-
-  return (
-    <Container flexDirection="column">
-      <SectionHeader>Unclaimed revenue</SectionHeader>
-      {firstToken ? (
-        <TokenBalance
-          address={firstToken.tokenAddress}
-          tokenSymbol={firstToken.token.symbol}
-          tokenBalance={firstToken.balance.display}
-          nativeBalance={firstToken.native.balance.display}
-          size={smallTokenSize}
-        />
-      ) : (
-        <EmptySection>No revenue to be claimed</EmptySection>
-      )}
-      <MoreItemsFooter tokens={revenueBalances} />
-    </Container>
-  );
-};
-
-const AvailableBalancesSection = ({ tokens }: MerchantSafeProps) => {
-  const firstToken = tokens.length ? tokens[0] : null;
-
-  return (
-    <Container flexDirection="column">
-      <SectionHeader>Available balances</SectionHeader>
-      <Container
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        {firstToken ? (
-          <TokenBalance
-            address={firstToken.tokenAddress}
-            tokenSymbol={firstToken.token.symbol}
-            tokenBalance={firstToken.balance.display}
-            nativeBalance={firstToken.native.balance.display}
-            size={smallTokenSize}
-          />
-        ) : (
-          <EmptySection>No available assets</EmptySection>
-        )}
+      <Container flexDirection="row" justifyContent="space-between">
+        <Container>
+          <Text fontWeight="400" fontSize={11}>
+            Merchant ID
+          </Text>
+          <Text fontWeight="bold" fontSize={13}>
+            {slug}
+          </Text>
+        </Container>
+        <Container flexDirection="row" alignItems="center">
+          <Container flexDirection="row" marginRight={3}>
+            <Text fontWeight="bold" fontSize={13}>
+              1{' '}
+            </Text>
+            <Text fontWeight="400" fontSize={13}>
+              manager
+            </Text>
+          </Container>
+          <Icon name="user" />
+        </Container>
       </Container>
-      <MoreItemsFooter tokens={tokens} />
     </Container>
   );
 };
-
-const SectionHeader = ({ children }: { children: string }) => (
-  <Text marginBottom={3}>{children}</Text>
-);
-
-const EmptySection = ({ children }: { children: string }) => (
-  <Container>
-    <Text variant="subText">{children}</Text>
-  </Container>
-);
