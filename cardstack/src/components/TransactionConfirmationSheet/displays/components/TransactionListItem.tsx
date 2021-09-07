@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 
-import { ContactAvatar } from '../../../../../../src/components/contacts';
 import { SectionHeaderText } from './SectionHeaderText';
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { NetworkBadge } from '@cardstack/components/NetworkBadge';
 import { Container, HorizontalDivider, Text } from '@cardstack/components';
 

@@ -8,6 +8,10 @@ import { Text } from '../text';
 import { borders } from '@rainbow-me/styles';
 
 const sizeConfigs = () => ({
+  xlarge: {
+    dimensions: 80,
+    textSize: 'biggest',
+  },
   large: {
     dimensions: 65,
     textSize: 'bigger',
@@ -38,13 +42,7 @@ const ContactAvatarContainer = styled.View`
   overflow: hidden;
 `;
 
-const ContactAvatar = ({
-  color,
-  size = 'medium',
-  value,
-  textColor = null,
-  ...props
-}) => {
+const ContactAvatar = ({ color, size = 'medium', value, ...props }) => {
   const { colors } = useTheme();
   const { dimensions, textSize } = useMemo(() => sizeConfigs(colors)[size], [
     colors,
@@ -60,7 +58,7 @@ const ContactAvatar = ({
       <Centered flex={1}>
         <Text
           align="center"
-          color={textColor ? textColor : colors.whiteLabel}
+          color={props.textColor || colors.whiteLabel}
           letterSpacing="zero"
           size={textSize}
           weight="bold"

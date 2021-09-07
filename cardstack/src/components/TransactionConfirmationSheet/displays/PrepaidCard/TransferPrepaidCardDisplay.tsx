@@ -1,6 +1,6 @@
 import React from 'react';
-import { ContactAvatar } from '../../../../../../src/components/contacts';
 import { SectionHeaderText } from '../components/SectionHeaderText';
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Container,
   HorizontalDivider,
