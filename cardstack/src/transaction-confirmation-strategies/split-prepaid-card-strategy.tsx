@@ -19,11 +19,13 @@ export class SplitPrepaidCardStrategy extends BaseStrategyWithActionDispatcherDa
       issuingTokenAmounts: string[];
       spendAmounts: string[];
       customizationDID: string;
+      marketAddress: string;
     }>(
       [
         { type: 'uint256[]', name: 'issuingTokenAmounts' },
         { type: 'uint256[]', name: 'spendAmounts' },
         { type: 'string', name: 'customizationDID' },
+        { type: 'string', name: 'marketAddress' },
       ],
       this.actionDispatcherData.actionData
     );
