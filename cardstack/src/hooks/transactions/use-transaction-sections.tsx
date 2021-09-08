@@ -56,9 +56,11 @@ export const useTransactionSections = ({
     state => state.settings.accountAddress
   );
 
-  const prevLastTransaction = usePrevious(transactions?.[0]?.transaction.id);
-  const currentLastTransaction = transactions?.[0]?.transaction.id;
+  const prevLastTransaction = usePrevious(
+    transactions?.[0]?.transaction?.id || ''
+  );
 
+  const currentLastTransaction = transactions?.[0]?.transaction?.id || '';
   useEffect(() => {
     const setSectionsData = async () => {
       if (transactions && prevLastTransaction !== currentLastTransaction) {
