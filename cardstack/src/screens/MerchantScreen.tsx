@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { StatusBar } from 'react-native';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
@@ -28,13 +28,9 @@ import {
 } from '@cardstack/utils';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { useDimensions } from '@rainbow-me/hooks';
-import { MerchantSafe } from '@cardstack/cardpay-sdk';
 
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
@@ -43,34 +39,50 @@ const TOTAL_HORIZONTAL_PADDING = HORIZONTAL_PADDING_PIXELS * 2;
 const isLastItem = (items: TokenType[], index: number): boolean =>
   items.length - 1 === index;
 
+interface MerchantSafeProps {
+  merchantSafe: MerchantSafeType;
+}
 interface RouteType {
-  params: { merchantSafe: MerchantSafeType };
+  params: MerchantSafeProps;
   key: string;
   name: string;
 }
 
-interface MerchantSafeProps {
-  merchantSafe: MerchantSafeType;
+type onPressProps = {
+  onPress: () => void;
+};
+
+export enum ExpandedMerchantRoutes {
+  lifetimeEarnings = 'lifetimeEarnings',
+  unclaimedRevenue = 'unclaimedRevenue',
+  availableBalances = 'availableBalances',
+  paymentRequest = 'paymentRequest',
 }
 
-export default function MerchantScreen() {
+const MerchantScreen = () => {
   const { navigate } = useNavigation();
 
   const {
     params: { merchantSafe },
   } = useRoute<RouteType>();
 
-  const onPressRequestPayment = useCallback(() => {
-    navigate(Routes.EXPANDED_ASSET_SHEET, {
-      asset: merchantSafe,
-      type: 'paymentRequest',
-    });
-  }, [merchantSafe, navigate]);
+  const onPressGoTo = useCallback(
+    (type: ExpandedMerchantRoutes) => () => {
+      navigate(Routes.EXPANDED_ASSET_SHEET, {
+        asset: merchantSafe,
+        type,
+      });
+    },
+    [merchantSafe, navigate]
+  );
 
   return (
     <Container top={0} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
-      <Header merchantSafe={merchantSafe} />
+      <Header
+        address={merchantSafe.address}
+        name={merchantSafe.merchantInfo?.name}
+      />
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <ScrollView
           flex={1}
@@ -82,29 +94,44 @@ export default function MerchantScreen() {
           <Button
             marginTop={2}
             marginBottom={4}
-            onPress={onPressRequestPayment}
+            onPress={onPressGoTo(ExpandedMerchantRoutes.paymentRequest)}
           >
             Request Payment
           </Button>
           <HorizontalDivider />
-          <LifetimeEarningsSection merchantSafe={merchantSafe} />
-          <UnclaimedRevenueSection merchantSafe={merchantSafe} />
-          <AvailableBalancesSection merchantSafe={merchantSafe} />
+          <LifetimeEarningsSection
+            merchantSafe={merchantSafe}
+            onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
+          />
+          <TokensSection
+            title="Unclaimed revenue"
+            onPress={onPressGoTo(ExpandedMerchantRoutes.unclaimedRevenue)}
+            emptyText="No revenue to be claimed"
+            tokens={merchantSafe.revenueBalances}
+          />
+          <TokensSection
+            title="Available balances"
+            onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
+            emptyText="No available assets"
+            tokens={merchantSafe.tokens}
+          />
         </ScrollView>
       </Container>
     </Container>
   );
-}
+};
 
-const Header = ({ merchantSafe }: MerchantSafeProps) => {
+export default memo(MerchantScreen);
+
+const Header = ({ address, name }: { address: string; name?: string }) => {
   const { goBack, navigate } = useNavigation();
 
   const onPressInformation = useCallback(() => {
     navigate(Routes.MODAL_SCREEN, {
-      address: merchantSafe.address,
+      address,
       type: 'copy_address',
     });
-  }, [merchantSafe.address, navigate]);
+  }, [address, navigate]);
 
   return (
     <Container paddingTop={14} backgroundColor="black">
@@ -120,7 +147,7 @@ const Header = ({ merchantSafe }: MerchantSafeProps) => {
               ellipsizeMode="tail"
               numberOfLines={1}
             >
-              {merchantSafe?.merchantInfo?.name || ''}
+              {name || ''}
             </Text>
             <Container flexDirection="row" alignItems="center">
               <NetworkBadge marginRight={2} />
@@ -132,7 +159,7 @@ const Header = ({ merchantSafe }: MerchantSafeProps) => {
                     size="xs"
                     marginRight={2}
                   >
-                    {getAddressPreview(merchantSafe.address)}
+                    {getAddressPreview(address)}
                   </Text>
                   <Icon name="info" size={15} />
                 </Container>
@@ -205,8 +232,10 @@ const MerchantInfo = ({
   );
 };
 
-const LifetimeEarningsSection = ({ merchantSafe }: MerchantSafeProps) => {
-  const { navigate } = useNavigation();
+const LifetimeEarningsSection = ({
+  merchantSafe,
+  onPress,
+}: MerchantSafeProps & onPressProps) => {
   const { width: screenWidth } = useDimensions();
 
   const { accumulatedSpendValue } = merchantSafe;
@@ -226,12 +255,6 @@ const LifetimeEarningsSection = ({ merchantSafe }: MerchantSafeProps) => {
     nativeCurrency,
     currencyConversionRates
   );
-
-  const onPress = () =>
-    navigate(Routes.EXPANDED_ASSET_SHEET, {
-      asset: merchantSafe,
-      type: 'lifetimeEarnings',
-    });
 
   return (
     <Container flexDirection="column" width="100%">
@@ -264,69 +287,41 @@ const LifetimeEarningsSection = ({ merchantSafe }: MerchantSafeProps) => {
   );
 };
 
-const UnclaimedRevenueSection = ({ merchantSafe }: MerchantSafeProps) => {
-  const { navigate } = useNavigation();
+interface TokensSectionProps extends onPressProps {
+  title: string;
+  tokens: TokenType[];
+  emptyText: string;
+}
 
-  const { revenueBalances } = merchantSafe;
-
-  const onPress = () =>
-    navigate(Routes.EXPANDED_ASSET_SHEET, {
-      asset: merchantSafe,
-      type: 'unclaimedRevenue',
-    });
-
-  return (
-    <Container flexDirection="column" width="100%">
-      <SectionHeader>Unclaimed revenue</SectionHeader>
-      <SectionWrapper onPress={onPress}>
-        <>
-          {revenueBalances.length ? (
-            sortedByTokenBalanceAmount(revenueBalances).map((token, index) => (
-              <TokenBalance
-                tokenSymbol={token.token.symbol}
-                tokenBalance={token.balance.display}
-                nativeBalance={token.native.balance.display}
-                key={token.tokenAddress}
-                isLastItemIfList={isLastItem(revenueBalances, index)}
-              />
-            ))
-          ) : (
-            <EmptySection>No revenue to be claimed</EmptySection>
-          )}
-        </>
-      </SectionWrapper>
-    </Container>
+const TokensSection = ({
+  title,
+  onPress,
+  tokens,
+  emptyText,
+}: TokensSectionProps) => {
+  const renderTokens = useMemo(
+    () =>
+      sortedByTokenBalanceAmount(tokens).map((token, index) => (
+        <TokenBalance
+          tokenSymbol={token.token.symbol}
+          tokenBalance={token.balance.display}
+          nativeBalance={token.native.balance.display}
+          key={token.tokenAddress}
+          isLastItemIfList={isLastItem(tokens, index)}
+        />
+      )),
+    [tokens]
   );
-};
-
-const AvailableBalancesSection = ({ merchantSafe }: MerchantSafeProps) => {
-  const { tokens } = merchantSafe;
-
-  const { navigate } = useNavigation();
-
-  const onPress = () =>
-    navigate(Routes.EXPANDED_ASSET_SHEET, {
-      asset: merchantSafe,
-      type: 'availableBalances',
-    });
 
   return (
     <Container flexDirection="column" width="100%">
-      <SectionHeader>Available balances</SectionHeader>
+      <SectionHeader>{title}</SectionHeader>
       <SectionWrapper onPress={onPress}>
         <>
           {tokens.length ? (
-            sortedByTokenBalanceAmount(tokens).map((token, index) => (
-              <TokenBalance
-                tokenSymbol={token.token.symbol}
-                tokenBalance={token.balance.display}
-                nativeBalance={token.native.balance.display}
-                key={token.tokenAddress}
-                isLastItemIfList={isLastItem(tokens, index)}
-              />
-            ))
+            renderTokens
           ) : (
-            <EmptySection>No available assets</EmptySection>
+            <Text variant="subText">{emptyText}</Text>
           )}
         </>
       </SectionWrapper>
@@ -360,10 +355,4 @@ const SectionWrapper = ({
     </Container>
     {children}
   </Touchable>
-);
-
-const EmptySection = ({ children }: { children: string }) => (
-  <Container>
-    <Text variant="subText">{children}</Text>
-  </Container>
 );
