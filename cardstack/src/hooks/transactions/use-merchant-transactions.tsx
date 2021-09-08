@@ -68,6 +68,7 @@ export const useMerchantTransactions = (
     fetchMore,
     merchantSafeAddress: safeAddress,
     transactionStrategies: strategies,
+    isMerchantTransaction: true,
   });
 
   return {

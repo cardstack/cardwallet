@@ -25,6 +25,7 @@ interface UseTransactionSectionsProps {
   fetchMore?: (props: any) => void;
   merchantSafeAddress?: string;
   transactionStrategies?: TransactionMappingStrategy[];
+  isMerchantTransaction?: boolean;
 }
 
 export const useTransactionSections = ({
@@ -35,6 +36,7 @@ export const useTransactionSections = ({
   fetchMore,
   merchantSafeAddress,
   transactionStrategies,
+  isMerchantTransaction = false,
 }: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -56,12 +58,17 @@ export const useTransactionSections = ({
     state => state.settings.accountAddress
   );
 
-  const prevLastTransaction = usePrevious(transactions?.[0]?.transaction.id);
-  const currentLastTransaction = transactions?.[0]?.transaction.id;
+  const prevLastTransaction = usePrevious(transactions?.[0]?.transaction?.id);
+  const currentLastTransaction = transactions?.[0]?.transaction?.id;
+
+  // Quick workaround to have merchant tx working
+  // TODO: refactor and add tests
+  const shouldUpdate =
+    prevLastTransaction !== currentLastTransaction || isMerchantTransaction;
 
   useEffect(() => {
     const setSectionsData = async () => {
-      if (transactions && prevLastTransaction !== currentLastTransaction) {
+      if (transactions && shouldUpdate) {
         setLoading(true);
 
         try {
@@ -124,8 +131,7 @@ export const useTransactionSections = ({
     transactionStrategies,
     merchantSafes,
     prepaidCards,
-    prevLastTransaction,
-    currentLastTransaction,
+    shouldUpdate,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;
