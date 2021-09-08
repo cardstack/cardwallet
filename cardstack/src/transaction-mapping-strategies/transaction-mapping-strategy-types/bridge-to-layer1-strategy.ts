@@ -37,7 +37,7 @@ export class BridgeToLayer1EventStrategy extends BaseStrategy {
     return {
       balance: convertRawAmountToBalance(bridgeToLayer1Event.amount, {
         decimals: 18,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         symbol: bridgeToLayer1Event.token.symbol,
       }),

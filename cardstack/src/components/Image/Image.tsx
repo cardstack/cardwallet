@@ -26,7 +26,7 @@ type ImageProps = ReactNativeImageProps &
  * This is our primitive Image component with restyle props applied
  */
 export const Image = createRestyleComponent<ImageProps, Theme>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   [layout, spacing, position, backgroundColor],
   ReactNativeImage

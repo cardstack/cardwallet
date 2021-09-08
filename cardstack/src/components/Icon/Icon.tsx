@@ -38,7 +38,7 @@ export interface IconProps extends ContainerProps {
   color?: ColorTypes | null;
   stroke?: ColorTypes | null;
   strokeWidth?: number;
-  onPress?: Function;
+  onPress?: () => void;
 }
 
 export const Icon = ({

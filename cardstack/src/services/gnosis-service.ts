@@ -25,7 +25,7 @@ export const fetchGnosisSafes = async (address: string) => {
 
     safes?.forEach(safe => {
       safe?.tokens.forEach(({ balance, token }) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         token.value = Web3.utils.fromWei(balance);
       });
@@ -102,7 +102,7 @@ export const getTokensWithPrice = async (
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
 ) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const web3 = new Web3(await getWeb3ProviderSdk());
   const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
@@ -147,7 +147,7 @@ export const addGnosisTokenPrices = async (
   currencyConversionRates: CurrencyConversionRates
 ) => {
   const { depots, merchantSafes, prepaidCards } = payload;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const web3 = new Web3(await getWeb3ProviderSdk());
 

@@ -40,7 +40,7 @@ const VariantRestyleComponent = createVariant({
 });
 
 const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   [layout, spacing, border, VariantRestyleComponent],
   ButtonPressAnimation

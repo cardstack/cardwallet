@@ -24,7 +24,8 @@ jest.mock('@cardstack/utils');
 const chance = new Chance();
 
 describe('Button', () => {
-  let expectedTextStyle: object, expectedDisabledTextStyle: object;
+  let expectedTextStyle: Record<string, string>,
+    expectedDisabledTextStyle: Record<string, string>;
 
   const { useVariantValue } = utils as jest.Mocked<typeof utils>;
 

@@ -1,6 +1,5 @@
 import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react-native';
-/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { BalanceCoinRow, Container } from '@cardstack/components';
 

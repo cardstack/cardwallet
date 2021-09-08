@@ -220,7 +220,6 @@ export enum TransactionStatus {
   self = 'self',
   sending = 'sending',
   sent = 'sent',
-  // eslint-disable-next-line @typescript-eslint/camelcase
   speeding_up = 'speeding up',
   swapped = 'swapped',
   swapping = 'swapping',
