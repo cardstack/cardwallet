@@ -16,7 +16,11 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { palette, SPACING_MULTIPLIER } from '@cardstack/theme';
-import { MerchantSafeType, TokenType } from '@cardstack/types';
+import {
+  MerchantInformation,
+  MerchantSafeType,
+  TokenType,
+} from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
@@ -30,6 +34,7 @@ import {
 } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { useDimensions } from '@rainbow-me/hooks';
+import { MerchantSafe } from '@cardstack/cardpay-sdk';
 
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
@@ -44,25 +49,16 @@ interface RouteType {
   name: string;
 }
 
-const useMerchantSafe = () => {
-  const {
-    params: {
-      merchantSafe: { address },
-    },
-  } = useRoute<RouteType>();
-
-  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
-
-  const merchantSafe = merchantSafes.find(
-    safe => safe.address === address
-  ) as MerchantSafeType;
-
-  return merchantSafe;
-};
+interface MerchantSafeProps {
+  merchantSafe: MerchantSafeType;
+}
 
 export default function MerchantScreen() {
   const { navigate } = useNavigation();
-  const merchantSafe = useMerchantSafe();
+
+  const {
+    params: { merchantSafe },
+  } = useRoute<RouteType>();
 
   const onPressRequestPayment = useCallback(() => {
     navigate(Routes.EXPANDED_ASSET_SHEET, {
@@ -74,7 +70,7 @@ export default function MerchantScreen() {
   return (
     <Container top={0} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
-      <Header />
+      <Header merchantSafe={merchantSafe} />
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <ScrollView
           flex={1}
@@ -82,7 +78,7 @@ export default function MerchantScreen() {
           contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
           paddingHorizontal={HORIZONTAL_PADDING}
         >
-          <MerchantInfo />
+          <MerchantInfo merchantInfo={merchantSafe.merchantInfo} />
           <Button
             marginTop={2}
             marginBottom={4}
@@ -91,18 +87,17 @@ export default function MerchantScreen() {
             Request Payment
           </Button>
           <HorizontalDivider />
-          <LifetimeEarningsSection />
-          <UnclaimedRevenueSection />
-          <AvailableBalancesSection />
+          <LifetimeEarningsSection merchantSafe={merchantSafe} />
+          <UnclaimedRevenueSection merchantSafe={merchantSafe} />
+          <AvailableBalancesSection merchantSafe={merchantSafe} />
         </ScrollView>
       </Container>
     </Container>
   );
 }
 
-const Header = () => {
+const Header = ({ merchantSafe }: MerchantSafeProps) => {
   const { goBack, navigate } = useNavigation();
-  const merchantSafe = useMerchantSafe();
 
   const onPressInformation = useCallback(() => {
     navigate(Routes.MODAL_SCREEN, {
@@ -166,11 +161,11 @@ const Header = () => {
   );
 };
 
-const MerchantInfo = () => {
-  const {
-    params: { merchantSafe },
-  } = useRoute<RouteType>();
-
+const MerchantInfo = ({
+  merchantInfo,
+}: {
+  merchantInfo?: MerchantInformation;
+}) => {
   return (
     <Container
       width="100%"
@@ -178,12 +173,12 @@ const MerchantInfo = () => {
       alignItems="center"
       paddingVertical={5}
     >
-      {merchantSafe.merchantInfo ? (
+      {merchantInfo ? (
         <ContactAvatar
-          color={merchantSafe.merchantInfo?.color}
+          color={merchantInfo?.color}
           size="large"
-          value={merchantSafe.merchantInfo?.name}
-          textColor={merchantSafe.merchantInfo?.textColor}
+          value={merchantInfo?.name}
+          textColor={merchantInfo?.textColor}
         />
       ) : (
         <Icon name="user" size={80} />
@@ -195,7 +190,7 @@ const MerchantInfo = () => {
         ellipsizeMode="tail"
         numberOfLines={1}
       >
-        {merchantSafe.merchantInfo?.name || ''}
+        {merchantInfo?.name || ''}
       </Text>
       <Container flexDirection="row" marginTop={2}>
         <Text weight="extraBold" size="xs">
@@ -210,9 +205,7 @@ const MerchantInfo = () => {
   );
 };
 
-const LifetimeEarningsSection = () => {
-  const merchantSafe = useMerchantSafe();
-
+const LifetimeEarningsSection = ({ merchantSafe }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
   const { width: screenWidth } = useDimensions();
 
@@ -271,9 +264,7 @@ const LifetimeEarningsSection = () => {
   );
 };
 
-const UnclaimedRevenueSection = () => {
-  const merchantSafe = useMerchantSafe();
-
+const UnclaimedRevenueSection = ({ merchantSafe }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
 
   const { revenueBalances } = merchantSafe;
@@ -308,9 +299,7 @@ const UnclaimedRevenueSection = () => {
   );
 };
 
-const AvailableBalancesSection = () => {
-  const merchantSafe = useMerchantSafe();
-
+const AvailableBalancesSection = ({ merchantSafe }: MerchantSafeProps) => {
   const { tokens } = merchantSafe;
 
   const { navigate } = useNavigation();
