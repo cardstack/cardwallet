@@ -7,4 +7,5 @@ export const Routes = {
   SEND_FLOW_DEPOT: 'SendFlowDepot',
   SHOW_QRCODE_MODAL: 'ShowQRCodeModal',
   PAY_MERCHANT_LINK: 'PayMerchantUniLink',
+  PAY_MERCHANT_CUSTOM_AMOUNT: 'PayMerchantCustomAmount',
 } as const;

@@ -5,6 +5,7 @@ import {
   BuyPrepaidCard,
   DepotScreen,
   MerchantScreen,
+  PayMerchantCustomAmount,
   PayMerchantUniversalLink,
   PrepaidCardModal,
   SendSheetDepot,
@@ -43,6 +44,9 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
   },
   PAY_MERCHANT_LINK: {
     component: PayMerchantUniversalLink,
+  },
+  PAY_MERCHANT_CUSTOM_AMOUNT: {
+    component: PayMerchantCustomAmount,
   },
 };
 

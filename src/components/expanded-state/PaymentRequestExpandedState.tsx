@@ -12,12 +12,11 @@ import {
   Container,
   HorizontalDivider,
   Image,
-  Input,
+  InputAmount,
   Text,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
 import {
-  formatNative,
   generateMerchantPaymentUrl,
   getAddressPreview,
   nativeCurrencyToSpend,
@@ -27,7 +26,6 @@ import {
 import { useNavigation } from '@rainbow-me/navigation';
 
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
 import { shadow } from '@rainbow-me/styles';
 import logger from 'logger';
@@ -64,67 +62,65 @@ export default function PaymentRequestExpandedState(props: {
   );
 
   return (
-    <>
-      <SlackSheet
-        bottomInset={editMode ? 50 : 110}
-        hasKeyboard={editMode}
-        height="100%"
-        renderFooter={() => (editMode ? <EditFooter /> : <QRCodeFooter />)}
-        renderHeader={() => (
-          <MerchantInfo address={address} name={merchantInfo?.name} />
-        )}
-        scrollEnabled
+    <SlackSheet
+      bottomInset={editMode ? 50 : 110}
+      hasKeyboard={editMode}
+      height="100%"
+      renderFooter={() => (editMode ? <EditFooter /> : <QRCodeFooter />)}
+      renderHeader={() => (
+        <MerchantInfo address={address} name={merchantInfo?.name} />
+      )}
+      scrollEnabled
+    >
+      <Container
+        flex={1}
+        flexDirection="row"
+        justifyContent="space-between"
+        marginTop={!editMode ? 9 : 15}
+        paddingHorizontal={5}
+        width="100%"
       >
-        <Container
-          flex={1}
-          flexDirection="row"
-          justifyContent="space-between"
-          marginTop={!editMode ? 9 : 15}
-          paddingHorizontal={5}
-          width="100%"
-        >
-          <Text size="medium">Payment Request</Text>
-          {!editMode && (
-            <Text
-              fontSize={12}
-              fontWeight="600"
-              marginTop={2}
-              onPress={() => setEditMode(true)}
-            >
-              Edit amount
-            </Text>
-          )}
-        </Container>
-        {editMode ? (
-          <>
-            <InputAmount
-              inputValue={inputValue}
-              nativeCurrency={nativeCurrency}
-              setInputValue={setInputValue}
-            />
-            <Container paddingHorizontal={5}>
-              <HorizontalDivider />
-              <SpendAmount
-                formattedAmount={inputValue}
-                nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
-              />
-            </Container>
-          </>
-        ) : (
-          <AmountAndQRCodeButtons
-            address={address}
-            amountInSpend={nativeCurrencyToSpend(
-              inputValue,
-              currencyConversionRates[nativeCurrency]
-            )}
-            formattedAmount={inputValue}
-            merchantName={merchantInfo?.name}
-            nativeCurrency={nativeCurrency}
-            nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
-          />
+        <Text size="medium">Payment Request</Text>
+        {!editMode && (
+          <Text
+            fontSize={12}
+            fontWeight="600"
+            marginTop={2}
+            onPress={() => setEditMode(true)}
+          >
+            Edit amount
+          </Text>
         )}
-      </SlackSheet>
-    </>
+      </Container>
+      {editMode ? (
+        <>
+          <InputAmount
+            inputValue={inputValue}
+            nativeCurrency={nativeCurrency}
+            setInputValue={setInputValue}
+          />
+          <Container paddingHorizontal={5}>
+            <HorizontalDivider />
+            <SpendAmount
+              formattedAmount={inputValue}
+              nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
+            />
+          </Container>
+        </>
+      ) : (
+        <AmountAndQRCodeButtons
+          address={address}
+          amountInSpend={nativeCurrencyToSpend(
+            inputValue,
+            currencyConversionRates[nativeCurrency]
+          )}
+          formattedAmount={inputValue}
+          merchantName={merchantInfo?.name}
+          nativeCurrency={nativeCurrency}
+          nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
+        />
+      )}
+    </SlackSheet>
   );
 }
 
@@ -157,69 +153,6 @@ const MerchantInfo = ({
     </Text>
   </Container>
 );
-
-type InputAmountProps = {
-  inputValue: string | undefined;
-  setInputValue: (_val: string | undefined) => void;
-  nativeCurrency: string;
-};
-
-const InputAmount = ({
-  inputValue,
-  setInputValue,
-  nativeCurrency,
-}: InputAmountProps) => {
-  const onChangeText = useCallback(
-    text => {
-      setInputValue(formatNative(text, nativeCurrency));
-    },
-    [setInputValue, nativeCurrency]
-  );
-
-  return (
-    <Container
-      flex={1}
-      flexDirection="row"
-      marginTop={8}
-      paddingHorizontal={5}
-      width="100%"
-    >
-      <Text
-        color={inputValue ? 'black' : 'underlineGray'}
-        fontWeight="bold"
-        paddingRight={1}
-        paddingTop={1}
-        size="largeBalance"
-      >
-        {(supportedNativeCurrencies as any)[nativeCurrency].symbol}
-      </Text>
-      <Container flex={1} flexGrow={1}>
-        <Input
-          alignSelf="stretch"
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoFocus
-          color="black"
-          fontSize={30}
-          fontWeight="bold"
-          keyboardType="numeric"
-          maxLength={(inputValue || '').length + 2} // just to avoid possible flicker issue
-          multiline
-          onChangeText={onChangeText}
-          placeholder="0.00"
-          placeholderTextColor="grayMediumLight"
-          spellCheck={false}
-          testID="RequestPaymentInput"
-          value={inputValue}
-          zIndex={1}
-        />
-      </Container>
-      <Text paddingLeft={1} paddingTop={1} size="largeBalance">
-        {nativeCurrency}
-      </Text>
-    </Container>
-  );
-};
 
 const SpendAmount = ({
   formattedAmount,
