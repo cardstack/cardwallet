@@ -31,7 +31,7 @@ export interface TouchableProps extends RestyleProps {
  * This is our primitive TouchableOpacity component with restyle props applied
  */
 export const Touchable = createRestyleComponent<TouchableProps, Theme>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   [layout, spacing, position, border, backgroundColor],
   TouchableOpacity

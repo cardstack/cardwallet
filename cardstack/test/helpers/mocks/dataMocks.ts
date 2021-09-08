@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
-
 // Assets and Safes mock data
 const assets = [
   {

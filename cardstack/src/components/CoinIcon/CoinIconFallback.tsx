@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { FallbackIcon } from 'react-coin-icon';
 import { CenteredContainer, Image } from '@cardstack/components';

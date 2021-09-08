@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import logger from 'logger';
 
 export const safeDecodeParameters = <T>(
-  params: object[],
+  params: Record<string, unknown>[],
   data: string
 ): T | null => {
   const web3 = new Web3();
@@ -16,7 +16,10 @@ export const safeDecodeParameters = <T>(
   }
 };
 
-export const decodeParameters = <T>(params: object[], data: string): T => {
+export const decodeParameters = <T>(
+  params: Record<string, unknown>[],
+  data: string
+): T => {
   const result = safeDecodeParameters<T>(params, data);
 
   if (!result) {

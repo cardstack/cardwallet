@@ -311,7 +311,7 @@
     "chance": "^1.1.7",
     "detox": "^17.11.0",
     "dotenv": "^8.2.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.32.0",
     "eslint-config-satya164": "^3.1.6",
     "eslint-import-resolver-babel-module": "^5.1.2",
     "eslint-plugin-echobind": "^0.2.0",
@@ -331,7 +331,7 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "stylelint-react-native": "^2.2.0",
     "ts-jest": "^23.10.5",
-    "typescript": "^3.9.7"
+    "typescript": "4.2.3"
   },
   "resolutions": {
     "**/tunnel-agent": "0.6.0",
@@ -345,7 +345,9 @@
     "**/resolve": "1.8.1",
     "**/semver": "7.3.2",
     "**/yargs-parser": "20.2.5",
-    "**/@hapi/hoek": "8.5.1"
+    "**/@hapi/hoek": "8.5.1",
+    "**/@typescript-eslint/eslint-plugin": "4.31.0",
+    "**/@typescript-eslint/parser": "4.31.0"
   },
   "detox": {
     "configurations": {

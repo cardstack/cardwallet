@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as React from 'react';
 import Svg, { SvgProps, Defs, G, Image, Path } from 'react-native-svg';
 import { colors } from '@cardstack/theme';

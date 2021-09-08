@@ -26,7 +26,6 @@ describe('Sorting by token balance amount', () => {
           decimals: 18,
           value: '100',
         },
-        // eslint-disable-next-line @typescript-eslint/camelcase
         coingecko_id: 'cardstack',
         balance: { amount: '100', display: '100.00 CARD' },
         native: { balance: { amount: 0.733227, display: '$0.733 USD' } },
@@ -39,7 +38,6 @@ describe('Sorting by token balance amount', () => {
           decimals: 18,
           value: '3.475236916195608782',
         },
-        // eslint-disable-next-line @typescript-eslint/camelcase
         coingecko_id: 'dai',
         balance: { amount: '3.475236916195608782', display: '3.475 DAI' },
         native: { balance: { amount: 3.48218739, display: '$3.48 USD' } },

@@ -99,7 +99,7 @@ export class TransactionMappingContext {
               const mappedTransaction = await strategy.mapTransaction();
 
               const additionalHandlers =
-                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore some types won't have a key on the map but that will just return undefined
                 mapTransactionTypeToAdditionalHandlers[
                   mappedTransaction?.type || ''

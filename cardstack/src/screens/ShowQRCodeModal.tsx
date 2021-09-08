@@ -17,7 +17,7 @@ type ShowQRCodeModalParamTypes = {
   amountWithSymbol: string;
   amountInSpend: number;
   name: string | undefined;
-  style: object;
+  style: Record<string, string>;
 };
 
 export const AmountQRCode = ({

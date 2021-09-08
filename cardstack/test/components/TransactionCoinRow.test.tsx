@@ -36,7 +36,7 @@ describe('TransactionCoinRow', () => {
   });
 
   it('should not blow up if item is null', () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     item = null;
 
@@ -44,7 +44,7 @@ describe('TransactionCoinRow', () => {
   });
 
   it('should not blow up if item.balance is null', () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     item.balance = null;
 
@@ -52,7 +52,7 @@ describe('TransactionCoinRow', () => {
   });
 
   it('should not blow up if item.native is null', () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     item.native = null;
 

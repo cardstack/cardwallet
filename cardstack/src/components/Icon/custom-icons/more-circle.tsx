@@ -6,7 +6,7 @@ function SvgComponent(props: SvgProps) {
   return (
     <Svg
       data-name="Category header - More"
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       xmlns="http://www.w3.org/2000/svg"
       width={props.width || 24.108}

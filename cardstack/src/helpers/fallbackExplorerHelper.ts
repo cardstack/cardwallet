@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
-
 // Creating helper to modify data.
 
 import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';

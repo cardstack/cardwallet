@@ -4,7 +4,7 @@ import React from 'react';
 import { Container } from '../Container';
 import { Text } from '../Text';
 import { customIcons } from './custom-icons';
-import { Icon } from './Icon';
+import { Icon, IconName } from './Icon';
 
 storiesOf('Icon', module).add('Custom Icons', () => (
   <Container
@@ -16,8 +16,7 @@ storiesOf('Icon', module).add('Custom Icons', () => (
   >
     {Object.keys(customIcons).map(iconName => (
       <Container margin={4} alignItems="center">
-        {/* @ts-ignore */}
-        <Icon name={iconName} />
+        <Icon name={iconName as IconName} />
         <Text variant="smallGrey" marginTop={1}>
           {iconName}
         </Text>

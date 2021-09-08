@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import Chance from 'chance';
 import React from 'react';
 
