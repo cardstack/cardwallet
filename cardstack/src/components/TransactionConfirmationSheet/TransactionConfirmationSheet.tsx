@@ -53,7 +53,7 @@ export const TransactionConfirmationSheet = (
       paddingTop={3}
       borderRadius={20}
     >
-      {props.messageRequest && (
+      {!!props?.messageRequest && (
         <InformationIcon
           isOpen={showFullMessage}
           onPress={() => {
