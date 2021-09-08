@@ -2,6 +2,7 @@ import { useRoute } from '@react-navigation/core';
 import React from 'react';
 import CardstackColorLogo from '../assets/cardstackColorLogo.png';
 import {
+  CenteredContainer,
   Container,
   QRCode,
   SafeAreaView,
@@ -73,14 +74,22 @@ export const AmountQRCode = ({
           </Text>
         ) : null}
         {amountInSpend ? (
-          <Text size="xs" color="underlineGray" fontWeight="600">
+          <Text size="large" color="underlineGray" fontWeight="600">
             {`§${amountInSpend} SPEND`}
           </Text>
         ) : null}
         {name ? (
-          <Text size="large" letterSpacing={0.39} color="white" marginTop={5}>
-            {`to ${name}`}
-          </Text>
+          <CenteredContainer paddingHorizontal={4}>
+            <Text
+              size="large"
+              letterSpacing={0.39}
+              color="white"
+              marginTop={5}
+              textAlign="center"
+            >
+              {`to ${name}`}
+            </Text>
+          </CenteredContainer>
         ) : null}
       </Container>
     </Container>

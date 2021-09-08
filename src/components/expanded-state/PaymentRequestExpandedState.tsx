@@ -283,7 +283,7 @@ const AmountAndQRCodeButtons = ({
 
   // assuming we are using the global native currency,
   // once it needs to change we probably should receive this as prop
-  const amountWithSymbol = `${nativeCurrencySymbol}${formattedAmount}`;
+  const amountWithSymbol = `${nativeCurrencySymbol}${formattedAmount} ${nativeCurrency}`;
 
   const showQRCode = useCallback(() => {
     navigate(Routes.SHOW_QRCODE_MODAL, {
