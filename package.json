@@ -458,5 +458,9 @@
       "pattern": "**/*.story.tsx",
       "outputFile": "./cardstack/storybook/storyLoader.js"
     }
+  },
+  "volta": {
+    "node": "14.17.6",
+    "yarn": "1.22.11"
   }
 }

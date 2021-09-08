@@ -4,7 +4,7 @@
 ## Requirements
 
 * A computer running macOS.
-* NVM installed or Node.js 14: https://github.com/creationix/nvm
+* Volta installed for node/yarn version management: https://volta.sh/
 * Install CocoaPods by running `sudo gem install cocoapods`
 * Install Watchman `brew install watchman`
 * xCode Version 12.4 (can be found [here](https://developer.apple.com/download/all/?q=xcode))
@@ -14,8 +14,6 @@
 If you are new to React Native, this is a helpful introduction: https://facebook.github.io/react-native/docs/getting-started.html
 
 1. Clone the GitHub repository to your machine.
-
-1. Run `nvm use` to use set the version of node for this project.
 
 2. Set up your .env file. For information how to do this, look [here](#project-secrets)
 

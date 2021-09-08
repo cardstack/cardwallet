@@ -38,10 +38,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ env.CHECKOUT_REF }}
-      - name: Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.15.5
+      - uses: volta-cli/action@v1
       - name: Bundle install
         run: bundle install
       - name: Decrypt fastlane vars
