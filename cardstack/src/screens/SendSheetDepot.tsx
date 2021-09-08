@@ -251,8 +251,6 @@ export const useSendSheetDepotScreen = () => {
       recipient,
       amountInWei,
       undefined,
-      undefined,
-      undefined,
       { from: accountAddress }
     );
   }, [
