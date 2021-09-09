@@ -34,7 +34,7 @@ const handleAlertError = (message: string) => {
   Alert.alert(`Oops!`, message);
 };
 
-const usePaymentMerchantUniversalLink = () => {
+export const usePaymentMerchantUniversalLink = () => {
   const {
     params: { merchantAddress, amount = '0', network },
   } = useRoute<RouteType>();
