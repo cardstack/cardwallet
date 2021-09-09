@@ -38,12 +38,20 @@ export const SafeHeader = (props: SafeHeaderProps) => {
             {getAddressPreview(address)}
           </Text>
         </Container>
-        <Touchable flexDirection="row" alignItems="center" onPress={onPress}>
+        <Touchable
+          flex={0.6}
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="flex-end"
+          onPress={onPress}
+        >
           <Text
             color="white"
             weight="extraBold"
+            ellipsizeMode="tail"
             size={small ? 'xs' : 'small'}
             marginRight={rightText ? 0 : 1}
+            numberOfLines={1}
           >
             {rightText || 'View'}
           </Text>
