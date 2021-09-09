@@ -25,7 +25,7 @@ export class MerchantCreationStrategy extends BaseStrategy {
     return {
       address: merchantCreationTransaction.id,
       createdAt: merchantCreationTransaction.createdAt,
-      infoDid: merchantCreationTransaction.merchantSafe.infoDid,
+      infoDid: merchantCreationTransaction?.merchantSafe?.infoDid || undefined,
       transactionHash: this.transaction.id,
       type: TransactionTypes.MERCHANT_CREATION,
     };

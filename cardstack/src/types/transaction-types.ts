@@ -89,7 +89,7 @@ export interface PrepaidCardCreatedTransactionType {
 export interface MerchantCreationTransactionType {
   address: string;
   createdAt: string;
-  infoDid?: string | null;
+  infoDid?: string;
   transactionHash: string;
   type: TransactionTypes.MERCHANT_CREATION;
 }
@@ -123,6 +123,7 @@ export interface MerchantClaimType {
   hideSafeHeader?: boolean;
   type: TransactionTypes.MERCHANT_CLAIM;
   transaction: MerchantClaimTypeTxn;
+  infoDid?: string;
 }
 
 export interface PrepaidCardPaymentTransactionType {
@@ -157,6 +158,7 @@ export interface MerchantEarnedRevenueTransactionType {
   type: TransactionTypes.MERCHANT_EARNED_REVENUE;
   transactionHash: string;
   transaction: MerchantEarnedRevenueTransactionTypeTxn;
+  infoDid?: string;
 }
 
 export interface MerchantEarnedSpendTransactionType {
@@ -166,6 +168,7 @@ export interface MerchantEarnedSpendTransactionType {
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_SPEND;
   transactionHash: string;
+  infoDid?: string;
 }
 
 export interface MerchantEarnedSpendAndRevenueTransactionType {
@@ -182,6 +185,7 @@ export interface MerchantEarnedSpendAndRevenueTransactionType {
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_SPEND_AND_REVENUE;
   transactionHash: string;
+  infoDid?: string;
 }
 
 export interface PrepaidCardSplitTransactionType {

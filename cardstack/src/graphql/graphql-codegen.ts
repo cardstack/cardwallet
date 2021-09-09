@@ -4513,7 +4513,7 @@ export type PrepaidCardPaymentFragment = (
     & Pick<PrepaidCard, 'id' | 'customizationDID'>
   ), merchantSafe?: Maybe<(
     { __typename?: 'MerchantSafe' }
-    & Pick<MerchantSafe, 'id'>
+    & Pick<MerchantSafe, 'id' | 'infoDid'>
   )>, transaction: (
     { __typename?: 'Transaction' }
     & { merchantFeePayments: Array<Maybe<(
@@ -4616,6 +4616,9 @@ export type MerchantClaimFragment = (
         & Pick<Token, 'symbol'>
       ) }
     )>> }
+  ), merchantSafe: (
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id' | 'infoDid'>
   ) }
 );
 
@@ -4844,6 +4847,7 @@ export const PrepaidCardPaymentFragmentDoc = gql`
   }
   merchantSafe {
     id
+    infoDid
   }
   transaction {
     merchantFeePayments {
@@ -4880,6 +4884,10 @@ export const MerchantClaimFragmentDoc = gql`
         symbol
       }
     }
+  }
+  merchantSafe {
+    id
+    infoDid
   }
 }
     `;
