@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { useMerchantInfoDID } from './hooks';
+import { useMerchantInfoFromDID } from '../useMerchantInfoFromDID';
 import * as MerchantUtils from '@cardstack/utils/merchant-utils';
 
-describe('useMerchantInfoDID', () => {
+describe('useMerchantInfoFromDID', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -22,7 +22,7 @@ describe('useMerchantInfoDID', () => {
       .mockResolvedValueOnce(mockedDID);
 
     const { result, waitForNextUpdate } = renderHook(() =>
-      useMerchantInfoDID('foo')
+      useMerchantInfoFromDID('foo')
     );
 
     await waitForNextUpdate();
@@ -32,15 +32,28 @@ describe('useMerchantInfoDID', () => {
     expect(result.current.merchantInfoDID).toStrictEqual(mockedDID);
   });
 
-  it('should call fetchMerchantInfoFromDID and return undefined if no DID is provided', async () => {
+  it('should call fetchMerchantInfoFromDID and return undefined if did is invalid', async () => {
     const spyFetchDID = jest
       .spyOn(MerchantUtils, 'fetchMerchantInfoFromDID')
       .mockRejectedValueOnce(new Error('foo error'));
 
-    const { result } = renderHook(() => useMerchantInfoDID(''));
+    const { result } = renderHook(() =>
+      useMerchantInfoFromDID('did does not exist')
+    );
 
-    expect(spyFetchDID).toBeCalledWith('');
+    expect(spyFetchDID).toBeCalledWith('did does not exist');
     expect(spyFetchDID).toBeCalledTimes(1);
+    expect(result.current.merchantInfoDID).toStrictEqual(undefined);
+  });
+
+  it('should not call fetchMerchantInfoFromDID and return undefined if no DID is provided', async () => {
+    const spyFetchDID = jest
+      .spyOn(MerchantUtils, 'fetchMerchantInfoFromDID')
+      .mockRejectedValueOnce(new Error('foo error'));
+
+    const { result } = renderHook(() => useMerchantInfoFromDID(undefined));
+
+    expect(spyFetchDID).not.toBeCalled();
     expect(result.current.merchantInfoDID).toStrictEqual(undefined);
   });
 });

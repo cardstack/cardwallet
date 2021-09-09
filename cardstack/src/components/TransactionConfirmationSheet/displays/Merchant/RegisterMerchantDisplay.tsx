@@ -4,9 +4,9 @@ import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCar
 import { TransactionConfirmationDisplayProps } from '../../TransactionConfirmationSheet';
 import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
 import TransactionListItem from '../components/TransactionListItem';
-import { useMerchantInfoDID } from './hooks';
 import { RegisterMerchantDecodedData } from '@cardstack/types';
 import { useAccountProfile } from '@rainbow-me/hooks';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 interface RegisterMerchantDisplayProps
   extends TransactionConfirmationDisplayProps {
@@ -16,7 +16,7 @@ interface RegisterMerchantDisplayProps
 export const RegisterMerchantDisplay = ({
   data: { infoDID, prepaidCard, spendAmount },
 }: RegisterMerchantDisplayProps) => {
-  const { merchantInfoDID } = useMerchantInfoDID(infoDID);
+  const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
 
   const {
     accountColor,
