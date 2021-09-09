@@ -47,6 +47,7 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
   },
   PAY_MERCHANT_CUSTOM_AMOUNT: {
     component: PayMerchantCustomAmount,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 
