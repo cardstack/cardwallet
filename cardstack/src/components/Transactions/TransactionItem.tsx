@@ -3,16 +3,16 @@ import React from 'react';
 import { DepotBridgedLayer1Transaction } from './DepotBridgedLayer1Transaction';
 import { DepotBridgedLayer2Transaction } from './DepotBridgedLayer2Transaction';
 import { ERC20Transaction } from './ERC20Transaction';
-import { MerchantClaimTransaction } from './MerchantClaimTransaction';
-import { MerchantCreationTransaction } from './MerchantCreationTransaction';
-import { MerchantEarnedRevenueTransaction } from './MerchantEarnedRevenueTransaction';
+import { MerchantClaimTransaction } from './Merchant/MerchantClaimTransaction';
+import { MerchantCreationTransaction } from './Merchant/MerchantCreationTransaction';
+import { MerchantEarnedRevenueTransaction } from './Merchant/MerchantEarnedRevenueTransaction';
 import { PrepaidCardCreatedTransaction } from './PrepaidCardCreatedTransaction';
 import { PrepaidCardPaymentTransaction } from './PrepaidCardPaymentTransaction';
 import { PrepaidCardSplitTransaction } from './PrepaidCardSplitTransaction';
 import { PrepaidCardTransferTransaction } from './PrepaidCardTransferTransaction';
 import { TransactionBaseCustomizationProps } from './TransactionBase';
-import { MerchantEarnedSpendTransaction } from './MerchantEarnedSpendTransaction';
-import { MerchantEarnedSpendAndRevenueTransaction } from './MerchantEarnedSpendAndRevenueTransaction';
+import { MerchantEarnedSpendTransaction } from './Merchant/MerchantEarnedSpendTransaction';
+import { MerchantEarnedSpendAndRevenueTransaction } from './Merchant/MerchantEarnedSpendAndRevenueTransaction';
 import { TransactionType, TransactionTypes } from '@cardstack/types';
 
 interface TransactionItemProps extends TransactionBaseCustomizationProps {
