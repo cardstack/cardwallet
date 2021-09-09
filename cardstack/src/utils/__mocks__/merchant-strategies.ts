@@ -8,6 +8,10 @@ export const MERCHANT_CLAIM_MOCK_DATA: MerchantClaimFragment = {
   amount: '0',
   id: '0x245fe1637c6fc77ccb7c35f3d387f2c0e5fea1abfd9d788c988dca6a9770a8bf',
   timestamp: '1630108305',
+  merchantSafe: {
+    id: '0x245fe1637c6e767ccb7c35f3d387f2c0e5fea1abfd9d788c988dca6a9770a8bf',
+    infoDid: undefined,
+  },
   token: {
     __typename: 'Token',
     decimals: '18',
