@@ -12,6 +12,7 @@ import {
   LiquidityPoolExpandedState,
   MerchantTransactionExpandedState,
   PaymentRequestExpandedState,
+  RecentActivityExpandedState,
   UnclaimedRevenueExpandedState,
   UniqueTokenExpandedState,
 } from '../components/expanded-state';
@@ -29,6 +30,7 @@ const ScreenTypes = {
   [ExpandedMerchantRoutes.unclaimedRevenue]: UnclaimedRevenueExpandedState,
   [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
   [ExpandedMerchantRoutes.paymentRequest]: PaymentRequestExpandedState,
+  [ExpandedMerchantRoutes.recentActivity]: RecentActivityExpandedState,
   merchantTransaction: MerchantTransactionExpandedState,
 };
 
