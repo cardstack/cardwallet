@@ -1,22 +1,22 @@
 import React from 'react';
 
-import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
-} from './TransactionBase';
+} from '../TransactionBase';
+import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
 import { Icon } from '@cardstack/components';
-import { PrepaidCardSplitTransactionType } from '@cardstack/types';
+import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
 
-interface PrepaidCardSplitTransactionProps
+interface PrepaidCardPaymentTransactionProps
   extends TransactionBaseCustomizationProps {
-  item: PrepaidCardSplitTransactionType;
+  item: PrepaidCardPaymentTransactionType;
 }
 
-export const PrepaidCardSplitTransaction = ({
+export const PrepaidCardPaymentTransaction = ({
   item,
   ...props
-}: PrepaidCardSplitTransactionProps) => {
+}: PrepaidCardPaymentTransactionProps) => {
   return (
     <TransactionBase
       {...props}
@@ -27,10 +27,10 @@ export const PrepaidCardSplitTransaction = ({
           cardCustomization={item.cardCustomization}
         />
       }
-      statusIconName="split"
-      statusText="Split"
-      primaryText={item.spendBalanceDisplay}
-      topText={`${item.prepaidCardCount} prepaid cards of`}
+      statusIconName="arrow-up"
+      statusText="Paid"
+      primaryText={`- ${item.spendBalanceDisplay}`}
+      subText={item.nativeBalanceDisplay}
       transactionHash={item.transactionHash}
     />
   );

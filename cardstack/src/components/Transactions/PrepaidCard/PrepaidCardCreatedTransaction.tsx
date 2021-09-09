@@ -2,7 +2,7 @@ import React from 'react';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
-} from './TransactionBase';
+} from '../TransactionBase';
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
 import { PrepaidCardCreatedTransactionType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
