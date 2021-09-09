@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
-import { LayoutAnimation, ActivityIndicator } from 'react-native';
+import { LayoutAnimation } from 'react-native';
 import URL from 'url-parse';
 
-import { CenteredContainer, ContainerProps } from '../Container';
-import { ClaimRevenueDisplay } from './displays/ClaimRevenueDisplay';
-import { GenericDisplay } from './displays/GenericDisplay';
-import { IssuePrepaidCardDisplay } from './displays/PrepaidCard/IssuePrepaidCardDisplay';
-import { PayMerchantDisplay } from './displays/Merchant/PayMerchantDisplay';
-import { RegisterMerchantDisplay } from './displays/Merchant/RegisterMerchantDisplay';
-import { SplitPrepaidCardDisplay } from './displays/PrepaidCard/SplitPrepaidCardDisplay';
-import { TransferPrepaidCardDisplay } from './displays/PrepaidCard/TransferPrepaidCardDisplay';
-import { WithdrawalDisplay } from './displays/WithdrawalDisplay';
-import { HubAuthenticationDisplay } from './displays/HubAuthenticationDisplay';
+import { ContainerProps } from '../Container';
 import {
-  TransactionConfirmationData,
-  TransactionConfirmationType,
-} from '@cardstack/types';
+  DisplayInformation,
+  transactionTypeMap,
+} from './displays/DisplayInformation';
+import { TransactionConfirmationData } from '@cardstack/types';
 import {
   Button,
   Container,
@@ -94,7 +86,7 @@ export const TransactionConfirmationSheet = (
 
 const Header = ({
   dappUrl,
-  methodName,
+  methodName = '',
   showHeaderShadow,
   data,
   loading,
@@ -104,23 +96,6 @@ const Header = ({
   }
 
   const { hostname } = new URL(dappUrl || '');
-
-  const typeToHeaderText: {
-    [key in TransactionConfirmationType]: string;
-  } = {
-    [TransactionConfirmationType.GENERIC]: methodName || '',
-    [TransactionConfirmationType.HUB_AUTH]: 'Authenticate Account',
-    [TransactionConfirmationType.ISSUE_PREPAID_CARD]: 'Issue Prepaid Card',
-    [TransactionConfirmationType.WITHDRAWAL]: 'Withdraw Funds',
-    [TransactionConfirmationType.REGISTER_MERCHANT]: 'Create Merchant',
-    [TransactionConfirmationType.PAY_MERCHANT]: 'Pay Merchant',
-    [TransactionConfirmationType.CLAIM_REVENUE]: 'Claim Funds',
-    [TransactionConfirmationType.SPLIT_PREPAID_CARD]: 'Split Prepaid Card',
-    [TransactionConfirmationType.TRANSFER_PREPAID_CARD_1]:
-      'Transfer Prepaid Card - Step 1/2',
-    [TransactionConfirmationType.TRANSFER_PREPAID_CARD_2]:
-      'Transfer Prepaid Card - Step 2/2',
-  };
 
   const shadowProps: ContainerProps = showHeaderShadow
     ? {
@@ -144,52 +119,13 @@ const Header = ({
       {...shadowProps}
     >
       <Text marginTop={4} weight="extraBold">
-        {typeToHeaderText[data.type]}
+        {transactionTypeMap[data.type]?.title || methodName}
       </Text>
       <Text variant="subText" weight="bold">
         {hostname}
       </Text>
     </Container>
   );
-};
-
-const DisplayInformation = (props: TransactionConfirmationDisplayProps) => {
-  if (props.loading) {
-    return (
-      <CenteredContainer width="100%" height={475}>
-        <ActivityIndicator size="large" />
-      </CenteredContainer>
-    );
-  }
-
-  if (props.data.type === TransactionConfirmationType.HUB_AUTH) {
-    return <HubAuthenticationDisplay />;
-  } else if (
-    props.data.type === TransactionConfirmationType.ISSUE_PREPAID_CARD
-  ) {
-    return <IssuePrepaidCardDisplay {...props} data={props.data} />;
-  } else if (
-    props.data.type === TransactionConfirmationType.REGISTER_MERCHANT
-  ) {
-    return <RegisterMerchantDisplay {...props} data={props.data} />;
-  } else if (props.data.type === TransactionConfirmationType.PAY_MERCHANT) {
-    return <PayMerchantDisplay {...props} data={props.data} />;
-  } else if (props.data.type === TransactionConfirmationType.WITHDRAWAL) {
-    return <WithdrawalDisplay {...props} data={props.data} />;
-  } else if (props.data.type === TransactionConfirmationType.CLAIM_REVENUE) {
-    return <ClaimRevenueDisplay {...props} data={props.data} />;
-  } else if (
-    props.data.type === TransactionConfirmationType.SPLIT_PREPAID_CARD
-  ) {
-    return <SplitPrepaidCardDisplay {...props} data={props.data} />;
-  } else if (
-    props.data.type === TransactionConfirmationType.TRANSFER_PREPAID_CARD_1 ||
-    props.data.type === TransactionConfirmationType.TRANSFER_PREPAID_CARD_2
-  ) {
-    return <TransferPrepaidCardDisplay {...props} data={props.data} />;
-  }
-
-  return <GenericDisplay {...props} />;
 };
 
 const SheetFooter = ({
