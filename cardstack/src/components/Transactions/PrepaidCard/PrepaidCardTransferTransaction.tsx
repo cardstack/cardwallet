@@ -3,20 +3,20 @@ import React from 'react';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
-} from './TransactionBase';
+} from '../TransactionBase';
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
 import { Icon } from '@cardstack/components';
-import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
+import { PrepaidCardTransferTransactionType } from '@cardstack/types';
 
-interface PrepaidCardPaymentTransactionProps
+interface PrepaidCardTransferTransactionProps
   extends TransactionBaseCustomizationProps {
-  item: PrepaidCardPaymentTransactionType;
+  item: PrepaidCardTransferTransactionType;
 }
 
-export const PrepaidCardPaymentTransaction = ({
+export const PrepaidCardTransferTransaction = ({
   item,
   ...props
-}: PrepaidCardPaymentTransactionProps) => {
+}: PrepaidCardTransferTransactionProps) => {
   return (
     <TransactionBase
       {...props}
@@ -28,8 +28,9 @@ export const PrepaidCardPaymentTransaction = ({
         />
       }
       statusIconName="arrow-up"
-      statusText="Paid"
-      primaryText={`- ${item.spendBalanceDisplay}`}
+      statusText="Transferred"
+      topText="Face value"
+      primaryText={item.spendBalanceDisplay}
       subText={item.nativeBalanceDisplay}
       transactionHash={item.transactionHash}
     />

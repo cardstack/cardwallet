@@ -1,15 +1,16 @@
 import React, { useCallback } from 'react';
 
 import { useNavigation } from '@react-navigation/core';
-import { SafeHeader } from '../SafeHeader';
+import { SafeHeader } from '../../SafeHeader';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
   TransactionBaseProps,
-} from './TransactionBase';
+} from '../TransactionBase';
 import { MerchantClaimType } from '@cardstack/types';
 import { CoinIcon } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 export interface MerchantClaimTransactionProps
   extends TransactionBaseCustomizationProps {
@@ -20,6 +21,7 @@ export const MerchantClaimTransaction = ({
   item,
   ...props
 }: MerchantClaimTransactionProps) => {
+  const { merchantInfoDID } = useMerchantInfoFromDID(item.infoDid);
   const { navigate } = useNavigation();
 
   const onPressTransaction = useCallback(
@@ -39,7 +41,11 @@ export const MerchantClaimTransaction = ({
       }
       Header={
         !item.hideSafeHeader ? (
-          <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
+          <SafeHeader
+            address={item.address}
+            rightText={merchantInfoDID?.name || 'Merchant'}
+            small
+          />
         ) : null
       }
       primaryText={`- ${item.balance.display}`}

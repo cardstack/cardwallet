@@ -8,9 +8,9 @@ import {
 import { TransactionConfirmationDisplayProps } from '../../TransactionConfirmationSheet';
 import TransactionListItem from '../components/TransactionListItem';
 import MerchantSectionCard from '../components/sections/MerchantSectionCard';
-import { useMerchantInfoDID } from './hooks';
 import { PayMerchantDecodedData } from '@cardstack/types';
 import { Container, HorizontalDivider, Text } from '@cardstack/components';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
   data: PayMerchantDecodedData;
@@ -19,7 +19,7 @@ interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
 export const PayMerchantDisplay = ({
   data: { infoDID = '', spendAmount, prepaidCard, merchantSafe },
 }: PayMerchantDisplayProps) => {
-  const { merchantInfoDID } = useMerchantInfoDID(infoDID);
+  const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
 
   // Defaul to spend while we don't have a currency selector
   const spendDisplay = useSpendDisplay(spendAmount, false);

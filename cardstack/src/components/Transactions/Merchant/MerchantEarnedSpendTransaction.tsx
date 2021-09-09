@@ -1,10 +1,9 @@
 import React from 'react';
-
-import { Icon } from '../Icon';
+import { Icon } from '../../Icon';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
-} from './TransactionBase';
+} from '../TransactionBase';
 import { MerchantEarnedSpendTransactionType } from '@cardstack/types';
 
 export interface MerchantEarnSpendTransactionProps

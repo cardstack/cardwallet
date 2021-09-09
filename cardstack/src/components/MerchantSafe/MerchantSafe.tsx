@@ -10,7 +10,7 @@ import {
 import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { useMerchantInfoDID } from '@cardstack/components/TransactionConfirmationSheet/displays/Merchant/hooks';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
@@ -25,7 +25,7 @@ interface MerchantSafeProps extends MerchantSafeType {
 export const MerchantSafe = (props: MerchantSafeProps) => {
   const { navigate } = useNavigation();
 
-  const { merchantInfoDID } = useMerchantInfoDID(props.infoDID);
+  const { merchantInfoDID } = useMerchantInfoFromDID(props.infoDID);
 
   const onPress = useCallback(() => {
     const merchantData = { ...props, merchantInfo: merchantInfoDID };

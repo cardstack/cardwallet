@@ -1,12 +1,13 @@
 import React from 'react';
-
-import { Icon } from '../Icon';
+import { Icon } from '../../Icon';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
-} from './TransactionBase';
+} from '../TransactionBase';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
 import { CoinIcon, Container, SafeHeader, Text } from '@cardstack/components';
+
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 export interface MerchantEarnSpendAndRevenueTransactionProps
   extends TransactionBaseCustomizationProps {
@@ -17,12 +18,18 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
   item,
   ...props
 }: MerchantEarnSpendAndRevenueTransactionProps) => {
+  const { merchantInfoDID } = useMerchantInfoFromDID(item.infoDid);
+
   return (
     <TransactionBase
       {...props}
       CoinIcon={<Icon name="spend" />}
       Header={
-        <SafeHeader address={item.address} rightText="MERCHANT NAME" small />
+        <SafeHeader
+          address={item.address}
+          rightText={merchantInfoDID?.name || 'Merchant'}
+          small
+        />
       }
       Footer={
         <Container

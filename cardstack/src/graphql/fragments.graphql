@@ -35,6 +35,7 @@ fragment PrepaidCardPayment on PrepaidCardPayment {
   }
   merchantSafe {
     id
+    infoDid
   }
   transaction {
     merchantFeePayments {
@@ -132,16 +133,22 @@ fragment MerchantClaim on MerchantClaim {
   amount
   transaction {
     id
-    tokenTransfers{
-      amount,
+    tokenTransfers {
+      amount
       fromTokenHolder {
         id
-      },
+      }
       toTokenHolder {
         id
-      },
-      token {symbol}
+      }
+      token {
+        symbol
+      }
     }
+  }
+  merchantSafe {
+    id
+    infoDid
   }
 }
 

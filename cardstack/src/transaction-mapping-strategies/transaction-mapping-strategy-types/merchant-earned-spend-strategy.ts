@@ -38,6 +38,7 @@ export class MerchantEarnedSpendStrategy extends BaseStrategy {
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
       nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
       transactionHash: this.transaction.id,
+      infoDid: prepaidCardPaymentTransaction.merchantSafe?.infoDid || undefined,
     };
   }
 }

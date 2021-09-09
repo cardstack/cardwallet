@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomizableBackground } from '../PrepaidCard/CustomizableBackground';
+import { CustomizableBackground } from '../../PrepaidCard/CustomizableBackground';
 import { Container, NetworkBadge, Text } from '@cardstack/components';
 import { PrepaidCardCustomization } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';

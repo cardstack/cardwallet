@@ -5,7 +5,7 @@ import {
   TransactionBase,
   TransactionBaseCustomizationProps,
   TransactionBaseProps,
-} from './TransactionBase';
+} from '../TransactionBase';
 import { CoinIcon } from '@cardstack/components';
 import { MerchantEarnedRevenueTransactionType } from '@cardstack/types';
 import Routes from '@rainbow-me/routes';

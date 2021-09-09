@@ -67,6 +67,7 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
         this.currencyConversionRates,
         symbol
       ),
+      infoDid: prepaidCardPaymentTransaction.merchantSafe?.infoDid || undefined,
     };
   }
 }

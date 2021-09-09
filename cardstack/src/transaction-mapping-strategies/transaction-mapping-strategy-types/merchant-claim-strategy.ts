@@ -39,7 +39,7 @@ export class MerchantClaimStrategy extends BaseStrategy {
     });
 
     return {
-      address: merchantClaimTransaction.id,
+      address: merchantClaimTransaction.merchantSafe.id,
       balance: convertRawAmountToBalance(merchantClaimTransaction.amount, {
         decimals: 18,
         symbol: merchantClaimTransaction.token.symbol || undefined,
@@ -65,6 +65,7 @@ export class MerchantClaimStrategy extends BaseStrategy {
         this.nativeCurrency,
         address
       ),
+      infoDid: merchantClaimTransaction.merchantSafe.infoDid || undefined,
     };
   }
 }
