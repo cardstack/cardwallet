@@ -64,9 +64,9 @@ export const Icon = ({
     return (
       <Container
         testID="custom-icon"
-        {...props}
         height={sizeWithDefault}
         width={sizeWithDefault}
+        {...props}
       >
         <CustomIcon
           color={colorWithDefault}

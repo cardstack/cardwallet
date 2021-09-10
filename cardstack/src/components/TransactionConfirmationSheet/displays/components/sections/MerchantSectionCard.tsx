@@ -1,21 +1,22 @@
 import React, { memo, ReactNode } from 'react';
 
 import { MerchantInformation } from '@cardstack/types';
-import { Container, Icon, Text } from '@cardstack/components';
+import { Container, ContainerProps, Icon, Text } from '@cardstack/components';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
 const MerchantSectionCard = ({
   merchantInfoDID,
   children,
+  ...props
 }: {
   merchantInfoDID?: MerchantInformation;
   children: ReactNode;
-}) => (
+} & ContainerProps) => (
   <Container
     backgroundColor="grayCardBackground"
-    alignItems="center"
     borderRadius={10}
     padding={8}
+    {...props}
   >
     {merchantInfoDID ? (
       <ContactAvatar

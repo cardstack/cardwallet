@@ -1,41 +1,26 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { usePaymentMerchantUniversalLink } from './PayMerchantUniversalLink';
+import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
   SafeAreaView,
   Container,
-  Input,
-  HorizontalDivider,
+  InputAmount,
   SheetHandle,
   Text,
   Button,
 } from '@cardstack/components';
 import { useMerchantInfoDID } from '@cardstack/hooks';
-import { Network } from '@rainbow-me/helpers/networkTypes';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
+import { MerchantInformation } from '@cardstack/types';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
-import { formatNative } from '@cardstack/utils';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
+
+// import { supportedNativeCurrencies } from '@rainbow-me/references';
 
 const PayMerchantCustomAmount = () => {
-  const [
-    nativeCurrency,
-    // currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
   const { isLoading, data } = usePaymentMerchantUniversalLink();
-
   const { infoDID = '', spendAmount, prepaidCard, merchantSafe } = data;
   const { merchantInfoDID } = useMerchantInfoDID(infoDID);
-  console.log('data----', data, isLoading, merchantInfoDID);
-  const [inputValue, setInputValue] = useState<string>(`${spendAmount}`);
-
-  const onChangeText = useCallback(
-    text => {
-      setInputValue(formatNative(text, nativeCurrency));
-    },
-    [setInputValue, nativeCurrency]
-  );
 
   return (
     <SafeAreaView flex={1} width="100%" backgroundColor="black">
@@ -55,78 +40,102 @@ const PayMerchantCustomAmount = () => {
             <ActivityIndicator />
           </Container>
         ) : (
-          <Container flexDirection="column" flex={1}>
-            <Container flex={1} padding={5} paddingTop={3} width="100%">
-              <Container
-                borderRadius={10}
-                backgroundColor="grayCardBackground"
-                flex={1}
-                width="100%"
-                padding={5}
-                flexDirection="column"
-              >
-                <Container flex={1} alignItems="center" width="100%">
-                  <ContactAvatar
-                    color={merchantInfoDID?.color}
-                    size="xlarge"
-                    value={merchantInfoDID?.name}
-                    textColor={merchantInfoDID?.textColor}
-                  />
-                  <Text
-                    weight="bold"
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                    fontSize={20}
-                    marginTop={3}
-                  >
-                    {merchantInfoDID?.name}
-                  </Text>
-                </Container>
-                <Container
-                  flex={1}
-                  alignItems="center"
-                  justifyContent="center"
-                  width="100%"
-                >
-                  <Text weight="bold" numberOfLines={1} fontSize={11}>
-                    SPEND (§1 = 0.01 USD)
-                  </Text>
-                  <Container flex={1} flexDirection="row" width="100%">
-                    <Container flex={1} flexGrow={1}>
-                      <Input
-                        alignSelf="stretch"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        autoFocus
-                        color="black"
-                        fontSize={30}
-                        fontWeight="bold"
-                        keyboardType="numeric"
-                        maxLength={(inputValue || '').length + 2} // just to avoid possible flicker issue
-                        multiline
-                        onChangeText={onChangeText}
-                        placeholder="0.00"
-                        placeholderTextColor="grayMediumLight"
-                        spellCheck={false}
-                        testID="RequestPaymentInput"
-                        value={inputValue}
-                        zIndex={1}
-                      />
-                    </Container>
-                    <Text paddingLeft={1} paddingTop={1} size="largeBalance">
-                      {nativeCurrency}
-                    </Text>
-                  </Container>
-                </Container>
-              </Container>
-            </Container>
-            <Container flex={1}>
-              <Button onPress={() => {}}>Next</Button>
-            </Container>
-          </Container>
+          <CustomAmountBody
+            merchantInfoDID={merchantInfoDID}
+            spendAmount={spendAmount}
+          />
         )}
       </Container>
     </SafeAreaView>
+  );
+};
+
+interface CustomAmountBodyProps {
+  merchantInfoDID: MerchantInformation | undefined;
+  spendAmount: number | undefined;
+}
+
+const CustomAmountBody = memo(
+  ({ merchantInfoDID, spendAmount }: CustomAmountBodyProps) => {
+    const [selectedCurrency, setCurrency] = useState<string>('SPEND');
+
+    const [inputValue, setInputValue] = useState<string | undefined>(
+      `${spendAmount || 0}`
+    );
+
+    return (
+      <Container flex={1} flexDirection="column" width="100%">
+        <Container padding={5} paddingTop={3} flex={1}>
+          <MerchantSectionCard
+            merchantInfoDID={merchantInfoDID}
+            flex={1}
+            justifyContent="space-between"
+          >
+            <AmountInputSection
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              selectedCurrency={selectedCurrency}
+              setCurrency={setCurrency}
+            />
+          </MerchantSectionCard>
+        </Container>
+        <Container alignItems="center" flex={1}>
+          <Button>
+            <Text>Next</Text>
+          </Button>
+        </Container>
+      </Container>
+    );
+  }
+);
+
+interface AmountInputSectionProps {
+  inputValue: string | undefined;
+  setInputValue: (_val: string | undefined) => void;
+  selectedCurrency: string;
+  setCurrency: (_val: string) => void;
+}
+
+const AmountInputSection = ({
+  inputValue,
+  setInputValue,
+  selectedCurrency,
+  setCurrency,
+}: AmountInputSectionProps) => {
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
+
+  return (
+    <Container alignItems="center" width="100%" justifyContent="center">
+      <Text weight="bold" numberOfLines={1} fontSize={11}>
+        SPEND (§1 = 0.01 USD)
+      </Text>
+      <InputAmount
+        flexGrow={1}
+        borderBottomWidth={1}
+        borderBottomColor="borderBlue"
+        paddingBottom={1}
+        hasCurrencySymbol={false}
+        nativeCurrency={selectedCurrency}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        setCurrency={setCurrency}
+      />
+      {inputValue && (
+        <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
+          {
+            convertSpendForBalanceDisplay(
+              inputValue,
+              nativeCurrency,
+              currencyConversionRates,
+              true
+            ).nativeBalanceDisplay
+          }
+        </Text>
+      )}
+    </Container>
   );
 };
 

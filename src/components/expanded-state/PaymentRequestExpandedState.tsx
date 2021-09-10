@@ -95,8 +95,11 @@ export default function PaymentRequestExpandedState(props: {
       {editMode ? (
         <>
           <InputAmount
+            flex={1}
             inputValue={inputValue}
+            marginTop={8}
             nativeCurrency={nativeCurrency}
+            paddingHorizontal={5}
             setInputValue={setInputValue}
           />
           <Container paddingHorizontal={5}>
