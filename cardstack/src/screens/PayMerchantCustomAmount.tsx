@@ -10,7 +10,7 @@ import {
   Text,
   Button,
 } from '@cardstack/components';
-import { useMerchantInfoDID } from '@cardstack/hooks';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import { MerchantInformation } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
@@ -20,7 +20,7 @@ import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 const PayMerchantCustomAmount = () => {
   const { isLoading, data } = usePaymentMerchantUniversalLink();
   const { infoDID = '', spendAmount, prepaidCard, merchantSafe } = data;
-  const { merchantInfoDID } = useMerchantInfoDID(infoDID);
+  const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
 
   return (
     <SafeAreaView flex={1} width="100%" backgroundColor="black">
