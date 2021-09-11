@@ -1,12 +1,9 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import Web3 from 'web3';
 import { getSDK, MerchantSafe } from '@cardstack/cardpay-sdk';
-import {
-  SafeAreaView,
-  TransactionConfirmationSheet,
-} from '@cardstack/components';
+import { PrepaidCard } from '@cardstack/cardpay-sdk/sdk/prepaid-card';
 import { getHdSignedProvider } from '@cardstack/models';
 import {
   PayMerchantDecodedData,
@@ -84,7 +81,7 @@ export const usePaymentMerchantUniversalLink = () => {
       })
     );
 
-    const prepaidCard = await getSDK('PrepaidCard', web3);
+    const prepaidCard: PrepaidCard = await getSDK('PrepaidCard', web3);
 
     await prepaidCard.payMerchant(
       merchantAddress,
@@ -116,30 +113,3 @@ export const usePaymentMerchantUniversalLink = () => {
 
   return { noPrepaidCard, goBack, onConfirm, isLoadingTx, isLoading, data };
 };
-
-const PayMerchantUniversalLink = () => {
-  const {
-    noPrepaidCard,
-    goBack,
-    onConfirm,
-    isLoadingTx,
-    isLoading,
-    data,
-  } = usePaymentMerchantUniversalLink();
-
-  if (noPrepaidCard) return null;
-
-  return (
-    <SafeAreaView backgroundColor="black" flex={1} width="100%">
-      <TransactionConfirmationSheet
-        data={data}
-        onCancel={goBack}
-        onConfirm={onConfirm}
-        onConfirmLoading={isLoadingTx}
-        loading={isLoading}
-      />
-    </SafeAreaView>
-  );
-};
-
-export default memo(PayMerchantUniversalLink);

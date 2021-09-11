@@ -21,7 +21,7 @@ export const PayMerchantDisplay = ({
 }: PayMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
 
-  // Defaul to spend while we don't have a currency selector
+  // Default to spend while we don't have a currency selector
   const spendDisplay = useSpendDisplay(spendAmount, false);
 
   return (

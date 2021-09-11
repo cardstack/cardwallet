@@ -6,7 +6,6 @@ import {
   DepotScreen,
   MerchantScreen,
   PayMerchantCustomAmount,
-  PayMerchantUniversalLink,
   PrepaidCardModal,
   SendSheetDepot,
   ShowQRCodeModal,
@@ -42,9 +41,6 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
     component: ShowQRCodeModal,
     options: sheetPreset as StackNavigationOptions,
   },
-  PAY_MERCHANT_LINK: {
-    component: PayMerchantUniversalLink,
-  },
   PAY_MERCHANT_CUSTOM_AMOUNT: {
     component: PayMerchantCustomAmount,
     options: expandedPreset as StackNavigationOptions,
@@ -59,7 +55,7 @@ export const linking = {
   ],
   config: {
     screens: {
-      [Routes.PAY_MERCHANT_LINK]: 'pay/:network/:merchantAddress',
+      [Routes.PAY_MERCHANT_CUSTOM_AMOUNT]: 'pay/:network/:merchantAddress',
     },
   },
 };

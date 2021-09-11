@@ -1,6 +1,5 @@
 import React, { memo, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { usePaymentMerchantUniversalLink } from './PayMerchantUniversalLink';
+import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
   SafeAreaView,
@@ -9,85 +8,119 @@ import {
   SheetHandle,
   Text,
   Button,
+  TransactionConfirmationSheet,
 } from '@cardstack/components';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import { MerchantInformation } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import {
+  convertSpendForBalanceDisplay,
+  localCurrencyToAbsNum,
+} from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
-// import { supportedNativeCurrencies } from '@rainbow-me/references';
-
 const PayMerchantCustomAmount = () => {
-  const { isLoading, data } = usePaymentMerchantUniversalLink();
-  const { infoDID = '', spendAmount, prepaidCard, merchantSafe } = data;
+  const {
+    noPrepaidCard,
+    goBack,
+    onConfirm,
+    isLoadingTx,
+    isLoading,
+    data,
+  } = usePaymentMerchantUniversalLink();
+
+  const { infoDID = '', spendAmount } = data;
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
+
+  const [isConfirmScreen, setConfirmScreen] = useState(false);
+
+  const [inputValue, setInputValue] = useState<string | undefined>(
+    `${spendAmount || 0}`
+  );
+
+  const goToConfirm = () => {
+    setConfirmScreen(true);
+  };
 
   return (
     <SafeAreaView flex={1} width="100%" backgroundColor="black">
-      <Container
-        flex={1}
-        alignItems="center"
-        marginTop={4}
-        borderTopRightRadius={20}
-        borderTopLeftRadius={20}
-        backgroundColor="white"
-        width="100%"
-        paddingTop={3}
-      >
-        <SheetHandle />
-        {isLoading ? (
-          <Container flex={1} alignItems="center" justifyContent="center">
-            <ActivityIndicator />
-          </Container>
-        ) : (
+      {isConfirmScreen && !noPrepaidCard ? (
+        <TransactionConfirmationSheet
+          data={{
+            ...data,
+            spendAmount: localCurrencyToAbsNum(`${inputValue || 0}`),
+          }}
+          onCancel={goBack}
+          onConfirm={onConfirm}
+          onConfirmLoading={isLoadingTx}
+          loading={isLoading}
+        />
+      ) : (
+        <Container
+          flex={1}
+          alignItems="center"
+          marginTop={4}
+          borderTopRightRadius={20}
+          borderTopLeftRadius={20}
+          backgroundColor="white"
+          width="100%"
+          paddingTop={3}
+        >
+          <SheetHandle />
           <CustomAmountBody
             merchantInfoDID={merchantInfoDID}
-            spendAmount={spendAmount}
+            goToConfirm={goToConfirm}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            isLoading={isLoading}
           />
-        )}
-      </Container>
+        </Container>
+      )}
     </SafeAreaView>
   );
 };
 
 interface CustomAmountBodyProps {
   merchantInfoDID: MerchantInformation | undefined;
-  spendAmount: number | undefined;
+  goToConfirm: () => void;
+  inputValue: string | undefined;
+  setInputValue: (_val: string | undefined) => void;
+  isLoading: boolean;
 }
 
-const CustomAmountBody = memo(
-  ({ merchantInfoDID, spendAmount }: CustomAmountBodyProps) => {
-    const [selectedCurrency, setCurrency] = useState<string>('SPEND');
+const CustomAmountBody = ({
+  merchantInfoDID,
+  goToConfirm,
+  inputValue,
+  setInputValue,
+  isLoading,
+}: CustomAmountBodyProps) => {
+  const [selectedCurrency, setCurrency] = useState<string>('SPD');
 
-    const [inputValue, setInputValue] = useState<string | undefined>(
-      `${spendAmount || 0}`
-    );
-
-    return (
-      <Container flex={1} flexDirection="column" width="100%">
-        <Container padding={5} paddingTop={3} flex={1}>
-          <MerchantSectionCard
-            merchantInfoDID={merchantInfoDID}
-            flex={1}
-            justifyContent="space-between"
-          >
-            <AmountInputSection
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-              selectedCurrency={selectedCurrency}
-              setCurrency={setCurrency}
-            />
-          </MerchantSectionCard>
-        </Container>
-        <Container alignItems="center" flex={1}>
-          <Button>
-            <Text>Next</Text>
-          </Button>
-        </Container>
+  return (
+    <Container flex={1} flexDirection="column" width="100%">
+      <Container padding={5} paddingTop={3} flex={1}>
+        <MerchantSectionCard
+          merchantInfoDID={merchantInfoDID}
+          flex={1}
+          justifyContent="space-between"
+          isLoading={isLoading}
+        >
+          <AmountInputSection
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            selectedCurrency={selectedCurrency}
+            setCurrency={setCurrency}
+          />
+        </MerchantSectionCard>
       </Container>
-    );
-  }
-);
+      <Container alignItems="center" flex={1}>
+        <Button onPress={goToConfirm}>
+          <Text>Next</Text>
+        </Button>
+      </Container>
+    </Container>
+  );
+};
 
 interface AmountInputSectionProps {
   inputValue: string | undefined;
@@ -127,7 +160,7 @@ const AmountInputSection = ({
         <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
           {
             convertSpendForBalanceDisplay(
-              inputValue,
+              localCurrencyToAbsNum(inputValue),
               nativeCurrency,
               currencyConversionRates,
               true

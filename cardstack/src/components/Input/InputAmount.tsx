@@ -28,6 +28,7 @@ export const InputAmount = ({
 }: InputAmountProps) => {
   const onChangeText = useCallback(
     text => {
+      console.log('onChangeText--', text, nativeCurrency);
       setInputValue(formatNative(text, nativeCurrency));
     },
     [setInputValue, nativeCurrency]
