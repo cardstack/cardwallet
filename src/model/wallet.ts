@@ -578,7 +578,7 @@ export const createWallet = async (
     const id = existingWalletId || `wallet_${Date.now()}`;
     logger.sentry('[createWallet] - wallet ID', { id });
 
-    // Android users without biometrics need to secure their keys with a PIN
+    // Android users without biometrics need to secure their keys with a PIN.
     let userPIN = null;
     if (Device.isAndroid) {
       const hasBiometricsEnabled = await getSupportedBiometryType();
