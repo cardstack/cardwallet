@@ -14,9 +14,11 @@ import {
   Text,
   TokenBalance,
   Touchable,
+  TransactionItem,
 } from '@cardstack/components';
 import { palette, SPACING_MULTIPLIER } from '@cardstack/theme';
 import {
+  MerchantEarnedSpendTransactionType,
   MerchantInformation,
   MerchantSafeType,
   TokenType,
@@ -31,6 +33,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { useDimensions } from '@rainbow-me/hooks';
+import { useMerchantTransactions } from '@cardstack/hooks';
 
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
@@ -57,6 +60,7 @@ export enum ExpandedMerchantRoutes {
   unclaimedRevenue = 'unclaimedRevenue',
   availableBalances = 'availableBalances',
   paymentRequest = 'paymentRequest',
+  recentActivity = 'recentActivity',
 }
 
 const MerchantScreen = () => {
@@ -74,6 +78,11 @@ const MerchantScreen = () => {
       });
     },
     [merchantSafe, navigate]
+  );
+
+  const { sections } = useMerchantTransactions(
+    merchantSafe.address,
+    'recentActivity'
   );
 
   return (
@@ -99,6 +108,10 @@ const MerchantScreen = () => {
             Request Payment
           </Button>
           <HorizontalDivider />
+          <RecentActivitySection
+            sections={sections}
+            onPress={onPressGoTo(ExpandedMerchantRoutes.recentActivity)}
+          />
           <LifetimeEarningsSection
             merchantSafe={merchantSafe}
             onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
@@ -135,7 +148,7 @@ const Header = ({ address, name }: { address: string; name?: string }) => {
 
   return (
     <Container paddingTop={14} backgroundColor="black">
-      <Container>
+      <Container paddingBottom={6}>
         <CenteredContainer flexDirection="row">
           <Touchable onPress={goBack} left={12} position="absolute">
             <Icon name="chevron-left" color="teal" size={30} />
@@ -168,22 +181,6 @@ const Header = ({ address, name }: { address: string; name?: string }) => {
           </Container>
         </CenteredContainer>
       </Container>
-      <Container
-        alignItems="center"
-        flexDirection="row"
-        paddingVertical={4}
-        paddingHorizontal={5}
-        justifyContent="space-between"
-      >
-        <Text color="white" size="medium">
-          Merchant account
-        </Text>
-        <Container>
-          <Touchable onPress={onPressInformation}>
-            <Icon name="more-circle" iconSize="large" />
-          </Touchable>
-        </Container>
-      </Container>
     </Container>
   );
 };
@@ -201,12 +198,14 @@ const MerchantInfo = ({
       paddingVertical={5}
     >
       {merchantInfo ? (
-        <ContactAvatar
-          color={merchantInfo?.color}
-          size="large"
-          value={merchantInfo?.name}
-          textColor={merchantInfo?.textColor}
-        />
+        <Container marginBottom={3}>
+          <ContactAvatar
+            color={merchantInfo?.color}
+            size="large"
+            value={merchantInfo?.name}
+            textColor={merchantInfo?.textColor}
+          />
+        </Container>
       ) : (
         <Icon name="user" size={80} />
       )}
@@ -219,6 +218,7 @@ const MerchantInfo = ({
       >
         {merchantInfo?.name || ''}
       </Text>
+      <Text variant="subText">Merchant account</Text>
       <Container flexDirection="row" marginTop={2}>
         <Text weight="extraBold" size="xs">
           1{' '}
@@ -356,3 +356,40 @@ const SectionWrapper = ({
     {children}
   </Touchable>
 );
+
+export interface RecentActivityDataSectionProps {
+  data: MerchantEarnedSpendTransactionType[];
+  title: string;
+}
+
+const RecentActivitySection = ({
+  sections,
+  onPress,
+}: {
+  sections: RecentActivityDataSectionProps[];
+  onPress: () => void;
+}) => {
+  const firstActivityDataListItem = sections[0]?.data[0];
+
+  const recentActivityDataSectionData = {
+    item: firstActivityDataListItem,
+    onPressTransaction: onPress,
+  };
+
+  return (
+    <Container flexDirection="column" width="100%">
+      <SectionHeader>Recent activity</SectionHeader>
+      {sections[0]?.data.length > 0 ? (
+        <TransactionItem
+          {...recentActivityDataSectionData}
+          includeBorder
+          isFullWidth
+        />
+      ) : (
+        <SectionWrapper>
+          <Text variant="subText">No recent activity</Text>
+        </SectionWrapper>
+      )}
+    </Container>
+  );
+};

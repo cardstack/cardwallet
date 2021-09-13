@@ -19,6 +19,7 @@ import { useMerchantTransactions } from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { sectionStyle } from '@cardstack/utils/layouts';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -171,7 +172,7 @@ const ActivitiesSection = ({ address }: { address: string }) => {
             ListFooterComponent={
               isFetchingMore ? <ActivityIndicator color="white" /> : null
             }
-            contentContainerStyle={{ paddingBottom: 40 }}
+            contentContainerStyle={sectionStyle.contentContainerStyle}
             onEndReached={onEndReached}
             onEndReachedThreshold={1}
             refreshControl={
@@ -184,7 +185,7 @@ const ActivitiesSection = ({ address }: { address: string }) => {
             renderItem={renderItem}
             renderSectionHeader={renderSectionHeader}
             sections={sections}
-            style={{ width: '100%' }}
+            style={sectionStyle.sectionList}
           />
         )}
       </Container>
