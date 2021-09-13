@@ -35,10 +35,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: SendSheetDepot,
     options: sheetPreset as StackNavigationOptions,
   },
-  PAY_MERCHANT: {
-    component: PayMerchant,
-    options: expandedPreset as StackNavigationOptions,
-  },
 };
 
 export const GlobalScreens: Record<
@@ -52,6 +48,10 @@ export const GlobalScreens: Record<
   SHOW_QRCODE_MODAL: {
     component: ShowQRCodeModal,
     options: nativeStackModalConfig as StackNavigationOptions,
+  },
+  PAY_MERCHANT: {
+    component: PayMerchant,
+    options: expandedPreset as StackNavigationOptions,
   },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,
@@ -73,7 +73,7 @@ export const linking = {
   ],
   config: {
     screens: {
-      [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
+      [GlobalRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
     },
   },
 };
