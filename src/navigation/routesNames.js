@@ -1,5 +1,8 @@
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
-import { Routes as CSRoutes } from '@cardstack/navigation/routes';
+import {
+  GlobalRoutes as CSGlobalRoutes,
+  MainRoutes as CSMainRoutes,
+} from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils/device';
 
 const Routes = {
@@ -51,7 +54,8 @@ const Routes = {
   WYRE_WEBVIEW: 'WyreWebview',
   WYRE_WEBVIEW_NAVIGATOR: 'WyreWebviewNavigator',
   // Cardstack Screens
-  ...CSRoutes,
+  ...CSMainRoutes,
+  ...CSGlobalRoutes,
 };
 
 export const NATIVE_ROUTES = [

@@ -1,5 +1,5 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
-import { Routes } from './routes';
+import { MainRoutes, GlobalRoutes } from './routes';
 import { horizontalInterpolator } from './presetOptions';
 import {
   BuyPrepaidCard,
@@ -13,13 +13,14 @@ import {
   TransactionConfirmation,
 } from '@cardstack/screen';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
+import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 
 interface ScreenNavigation {
   component: React.ComponentType<any>;
   options?: StackNavigationOptions;
 }
 
-export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
+export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   DEPOT_SCREEN: { component: DepotScreen, options: horizontalInterpolator },
   MERCHANT_SCREEN: {
     component: MerchantScreen,
@@ -30,25 +31,37 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
     options: expandedPreset as StackNavigationOptions,
   },
   BUY_PREPAID_CARD: { component: BuyPrepaidCard },
-  CONFIRM_REQUEST: {
-    component: TransactionConfirmation,
-    options: { gestureEnabled: false },
-  },
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
-    options: sheetPreset as StackNavigationOptions,
-  },
-  SHOW_QRCODE_MODAL: {
-    component: ShowQRCodeModal,
     options: sheetPreset as StackNavigationOptions,
   },
   PAY_MERCHANT: {
     component: PayMerchant,
     options: expandedPreset as StackNavigationOptions,
   },
+};
+
+export const GlobalScreens: Record<
+  keyof typeof GlobalRoutes,
+  ScreenNavigation
+> = {
+  CONFIRM_REQUEST: {
+    component: TransactionConfirmation,
+    options: { gestureEnabled: false },
+  },
+  SHOW_QRCODE_MODAL: {
+    component: ShowQRCodeModal,
+    options: nativeStackModalConfig as StackNavigationOptions,
+  },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,
-    options: expandedPreset as StackNavigationOptions,
+    options: {
+      customStack: true,
+      ignoreBottomOffset: true,
+      onAppear: null,
+      topOffset: 0,
+      animationEnabled: true,
+    } as StackNavigationOptions,
   },
 };
 
@@ -60,7 +73,7 @@ export const linking = {
   ],
   config: {
     screens: {
-      [Routes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
+      [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
     },
   },
 };
