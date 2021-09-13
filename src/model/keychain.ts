@@ -18,6 +18,7 @@ import {
   setInternetCredentials,
   UserCredentials,
 } from 'react-native-keychain';
+import { Device } from '@cardstack/utils/device';
 import logger from 'logger';
 
 interface AnonymousKey {
@@ -200,7 +201,7 @@ export async function getPrivateAccessControlOptions(): Promise<Options> {
   try {
     let canAuthenticate;
 
-    if (ios) {
+    if (Device.isIOS) {
       canAuthenticate = await canImplyAuthentication({
         authenticationType: AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
       });
@@ -216,7 +217,7 @@ export async function getPrivateAccessControlOptions(): Promise<Options> {
     }
     if (canAuthenticate && !isSimulator) {
       res = {
-        accessControl: ios
+        accessControl: Device.isIOS
           ? ACCESS_CONTROL.USER_PRESENCE
           : ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
         accessible: ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
