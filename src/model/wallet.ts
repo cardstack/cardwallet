@@ -51,6 +51,7 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
+import { Device } from '@cardstack/utils/device';
 import logger from 'logger';
 const encryptor = new AesEncryptor();
 
@@ -224,7 +225,7 @@ export const loadWallet = async (): Promise<null | Wallet> => {
   if (privateKey) {
     return new Wallet(privateKey, web3Provider);
   }
-  if (ios) {
+  if (Device.isIOS) {
     showWalletErrorAlert();
   }
   return null;
@@ -429,7 +430,7 @@ const loadPrivateKey = async (): Promise<
       privateKey = get(privateKeyData, 'privateKey', null);
 
       let userPIN = null;
-      if (android) {
+      if (Device.isAndroid) {
         const hasBiometricsEnabled = await getSupportedBiometryType();
         // Fallback to custom PIN
         if (!hasBiometricsEnabled) {
@@ -501,7 +502,7 @@ export const createWallet = async (
   try {
     let wasLoading = false;
     const { dispatch } = store;
-    if (!checkedWallet && android) {
+    if (!checkedWallet && Device.isAndroid) {
       wasLoading = true;
       dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
     }
@@ -579,7 +580,7 @@ export const createWallet = async (
 
     // Android users without biometrics need to secure their keys with a PIN
     let userPIN = null;
-    if (android) {
+    if (Device.isAndroid) {
       const hasBiometricsEnabled = await getSupportedBiometryType();
       // Fallback to custom PIN
       if (!hasBiometricsEnabled) {
@@ -949,7 +950,7 @@ export const generateAccount = async (
     }
 
     let userPIN = null;
-    if (android) {
+    if (Device.isAndroid) {
       const hasBiometricsEnabled = await getSupportedBiometryType();
       // Fallback to custom PIN
       if (!hasBiometricsEnabled) {
@@ -1177,7 +1178,7 @@ export const loadSeedPhraseAndMigrateIfNeeded = async (
       const seedData = await getSeedPhrase(id);
       seedPhrase = get(seedData, 'seedphrase', null);
       let userPIN = null;
-      if (android) {
+      if (Device.isAndroid) {
         const hasBiometricsEnabled = await getSupportedBiometryType();
         // Fallback to custom PIN
         if (!hasBiometricsEnabled) {
