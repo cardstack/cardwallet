@@ -50,7 +50,6 @@ const Routes = {
   WELCOME_SCREEN: 'WelcomeScreen',
   WYRE_WEBVIEW: 'WyreWebview',
   WYRE_WEBVIEW_NAVIGATOR: 'WyreWebviewNavigator',
-  CURRENCY_SELECT_MODAL: 'CurrencySelectModal',
   // Cardstack Screens
   ...CSRoutes,
 };
