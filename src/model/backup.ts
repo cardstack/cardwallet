@@ -26,6 +26,7 @@ import {
   RainbowWallet,
 } from './wallet';
 
+import { Device } from '@cardstack/utils/device';
 import logger from 'logger';
 
 type BackupPassword = string;
@@ -221,7 +222,7 @@ export async function saveBackupPassword(
   password: BackupPassword
 ): Promise<void> {
   try {
-    if (ios) {
+    if (Device.isIOS) {
       await setSharedWebCredentials(
         'cardstack.com',
         'Backup Password',
@@ -236,7 +237,7 @@ export async function saveBackupPassword(
 
 // Attempts to fetch the password to decrypt the backup from the iCloud keychain
 export async function fetchBackupPassword(): Promise<null | BackupPassword> {
-  if (android) {
+  if (Device.isAndroid) {
     return null;
   }
 
