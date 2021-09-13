@@ -1,38 +1,37 @@
-import { forEach } from 'lodash';
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { Column } from '../layout';
 import { OptionItem, Text } from '@cardstack/components';
-import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
-import { useNavigation } from '@rainbow-me/navigation';
 
 const Wrapper = styled(Column)`
   margin-top: -8;
 `;
 
 export default function RestoreSheetFirstStep({
-  onCloudRestore,
   onManualRestore,
   onWatchAddress,
-  userData,
 }) {
-  const { setParams } = useNavigation();
+  // Temp disabling iCloud restore
 
-  const walletsBackedUp = useMemo(() => {
-    let count = 0;
-    forEach(userData?.wallets, wallet => {
-      if (wallet.backedUp && wallet.backupType === WalletBackupTypes.cloud) {
-        count++;
-      }
-    });
-    return count;
-  }, [userData]);
+  // const { setParams } = useNavigation();
 
-  const enableCloudRestore = android || walletsBackedUp > 0;
-  useEffect(() => {
-    setParams({ enableCloudRestore });
-  }, [enableCloudRestore, setParams]);
+  // const walletsBackedUp = useMemo(() => {
+  //   let count = 0;
+  //   forEach(userData?.wallets, wallet => {
+  //     console.log({ userData });
+  //     if (wallet.backedUp && wallet.backupType === WalletBackupTypes.cloud) {
+  //       count++;
+  //     }
+  //   });
+  //   console.log({ count });
+  //   return count;
+  // }, [userData]);
+
+  // const enableCloudRestore = android || walletsBackedUp > 0;
+  // useEffect(() => {
+  //   setParams({ enableCloudRestore });
+  // }, [enableCloudRestore, setParams]);
 
   return (
     <Wrapper>
@@ -45,7 +44,7 @@ export default function RestoreSheetFirstStep({
       >
         Add account
       </Text>
-      {enableCloudRestore && (
+      {/* {enableCloudRestore && (
         <OptionItem
           horizontalSpacing={4}
           iconProps={{
@@ -59,7 +58,7 @@ export default function RestoreSheetFirstStep({
           } backed up in your iCloud`}
           title="Restore from backup"
         />
-      )}
+      )} */}
       <OptionItem
         horizontalSpacing={4}
         iconProps={{
