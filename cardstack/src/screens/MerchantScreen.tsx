@@ -369,8 +369,10 @@ const RecentActivitySection = ({
   sections: RecentActivityDataSectionProps[];
   onPress: () => void;
 }) => {
+  const firstActivityDataListItem = sections[0]?.data[0];
+
   const recentActivityDataSectionData = {
-    item: sections[0]?.data[0],
+    item: firstActivityDataListItem,
     onPressTransaction: onPress,
   };
 

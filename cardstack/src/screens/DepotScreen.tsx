@@ -29,6 +29,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { sectionStyle } from '@cardstack/utils/layouts';
 
 interface RouteType {
   params: { depot: DepotType };
@@ -273,7 +274,7 @@ const Activities = () => {
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={sectionStyle.contentContainerStyle}
           renderItem={props => <TransactionItem {...props} includeBorder />}
           sections={sections}
           renderSectionHeader={({ section: { title } }) => (
@@ -295,7 +296,7 @@ const Activities = () => {
           }
           onEndReached={onEndReached}
           onEndReachedThreshold={1}
-          style={{ width: '100%' }}
+          style={sectionStyle.sectionList}
         />
       )}
     </Container>

@@ -10,6 +10,7 @@ import {
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType } from '@cardstack/types';
+import { sectionStyle } from '@cardstack/utils/layouts';
 
 export default function UnclaimedRevenueExpandedState(props: {
   asset: MerchantSafeType;
@@ -44,7 +45,7 @@ const Activities = ({ address }: { address: string }) => {
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={sectionStyle.contentContainerStyle}
           onEndReached={onEndReached}
           onEndReachedThreshold={1}
           refreshControl={
@@ -65,7 +66,7 @@ const Activities = ({ address }: { address: string }) => {
             </Container>
           )}
           sections={sections}
-          style={{ width: '100%' }}
+          style={sectionStyle.sectionList}
         />
       )}
     </Container>
