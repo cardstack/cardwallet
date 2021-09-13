@@ -3,9 +3,10 @@ import { Routes } from './routes';
 import { horizontalInterpolator } from './presetOptions';
 import {
   BuyPrepaidCard,
+  CurrencySelectionGlobalModal,
   DepotScreen,
   MerchantScreen,
-  PayMerchantCustomAmount,
+  PayMerchant,
   PrepaidCardModal,
   SendSheetDepot,
   ShowQRCodeModal,
@@ -41,8 +42,12 @@ export const Screens: Record<keyof typeof Routes, ScreenNavigation> = {
     component: ShowQRCodeModal,
     options: sheetPreset as StackNavigationOptions,
   },
-  PAY_MERCHANT_CUSTOM_AMOUNT: {
-    component: PayMerchantCustomAmount,
+  PAY_MERCHANT: {
+    component: PayMerchant,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  CURRENCY_SELECTION_MODAL: {
+    component: CurrencySelectionGlobalModal,
     options: expandedPreset as StackNavigationOptions,
   },
 };
@@ -55,7 +60,7 @@ export const linking = {
   ],
   config: {
     screens: {
-      [Routes.PAY_MERCHANT_CUSTOM_AMOUNT]: 'pay/:network/:merchantAddress',
+      [Routes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
     },
   },
 };

@@ -1,27 +1,12 @@
 import analytics from '@segment/analytics-react-native';
-import { isNil } from 'lodash';
 import React, { useCallback } from 'react';
-import { CoinIcon, EmojiText, RadioList, RadioListItem } from '../';
+import { RadioList } from '../';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
 
-const renderCurrencyIcon = (currency, emojiName) => {
-  if (!currency) return null;
-  if (!isNil(emojiName)) return <EmojiText name={'flag_' + emojiName} />;
+// ToDo: Refactor RadioListItem with ability to show icon like i.e. renderCurrencyIcon
 
-  return <CoinIcon address={currency} size={23} symbol={currency} />;
-};
-
-const CurrencyListItem = ({ currency, emojiName, label, ...item }) => (
-  <RadioListItem
-    {...item}
-    icon={renderCurrencyIcon(currency, emojiName)}
-    label={`${label}`}
-    value={currency}
-  />
-);
-
-const CurrencySection = () => {
+export const CurrencySelection = () => {
   const { nativeCurrency, settingsChangeNativeCurrency } = useAccountSettings();
 
   const onSelectCurrency = useCallback(
@@ -49,13 +34,5 @@ const CurrencySection = () => {
     }))
     .filter(({ title }) => title !== 'ETH');
 
-  return (
-    <RadioList
-      items={currencyListItems}
-      onChange={onSelectCurrency}
-      // value={nativeCurrency}
-    />
-  );
+  return <RadioList items={currencyListItems} onChange={onSelectCurrency} />;
 };
-
-export default CurrencySection;

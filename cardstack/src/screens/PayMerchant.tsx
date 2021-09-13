@@ -18,7 +18,7 @@ import {
 } from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
-const PayMerchantCustomAmount = () => {
+const PayMerchant = () => {
   const {
     noPrepaidCard,
     goBack,
@@ -172,4 +172,4 @@ const AmountInputSection = ({
   );
 };
 
-export default memo(PayMerchantCustomAmount);
+export default memo(PayMerchant);
