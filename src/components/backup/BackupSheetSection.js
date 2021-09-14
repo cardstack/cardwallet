@@ -1,5 +1,4 @@
-import analytics from '@segment/analytics-react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { Button, Container, Icon, Text } from '@cardstack/components';
 
@@ -12,15 +11,7 @@ export default function BackupSheetSection({
   secondaryButtonTestId,
   secondaryLabel,
   titleText,
-  type,
 }) {
-  useEffect(() => {
-    analytics.track('BackupSheet shown', {
-      category: 'backup',
-      label: type,
-    });
-  }, [type]);
-
   return (
     <Container paddingHorizontal={8} paddingTop={6}>
       <Container

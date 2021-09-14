@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import { captureException, captureMessage } from '@sentry/react-native';
 import { find, map, toLower } from 'lodash';
 import {
@@ -154,12 +153,6 @@ export const addCashGetOrderStatus = (
         captureMessage(
           `Wyre final check - order status failed - ${referenceInfo.referenceId}`
         );
-        analytics.track('Purchase failed', {
-          category: 'add cash',
-          error_category: errorCategory,
-          error_code: errorCode,
-          error_message: errorMessage,
-        });
       }
 
       if (transferId) {
@@ -171,9 +164,7 @@ export const addCashGetOrderStatus = (
         dispatch(
           addCashGetTransferHash(referenceInfo, transferId, sourceAmount)
         );
-        analytics.track('Purchase completed', {
-          category: 'add cash',
-        });
+
         maybeReviewAlert();
       } else if (!isFailed) {
         orderStatusHandle = setTimeout(

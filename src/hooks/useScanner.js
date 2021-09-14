@@ -1,5 +1,4 @@
 import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
-import analytics from '@segment/analytics-react-native';
 import lang from 'i18n-js';
 import { useCallback, useEffect, useState } from 'react';
 import { InteractionManager, Alert as NativeAlert } from 'react-native';
@@ -88,7 +87,6 @@ export default function useScanner(enabled) {
       }
 
       haptics.notificationSuccess();
-      analytics.track('Scanned address QR code');
 
       // First navigate to wallet screen
       navigate(Routes.WALLET_SCREEN);
@@ -111,7 +109,6 @@ export default function useScanner(enabled) {
   const handleScanWalletConnect = useCallback(
     async qrCodeData => {
       haptics.notificationSuccess();
-      analytics.track('Scanned WalletConnect QR code');
       await checkPushNotificationPermissions();
 
       try {
@@ -128,8 +125,8 @@ export default function useScanner(enabled) {
 
   const handleScanInvalid = useCallback(
     qrCodeData => {
+      logger.error({ qrCodeData });
       haptics.notificationError();
-      analytics.track('Scanned broken or unsupported QR code', { qrCodeData });
       return Alert({
         callback: enableScanning,
         message: lang.t('wallet.unrecognized_qrcode'),

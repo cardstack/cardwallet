@@ -7,7 +7,6 @@ import {
   multiply,
 } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import BigNumber from 'bignumber.js';
 import lang from 'i18n-js';
 import { get, isEmpty, isNil, omit } from 'lodash';
@@ -242,10 +241,6 @@ const TransactionConfirmationScreen = () => {
   );
 
   useEffect(() => {
-    analytics.track('Shown Walletconnect signing request');
-  }, []);
-
-  useEffect(() => {
     if (openAutomatically && !isEmulatorSync()) {
       Vibration.vibrate();
     }
@@ -308,7 +303,6 @@ const TransactionConfirmationScreen = () => {
         }
         const rejectionType =
           method === SEND_TRANSACTION ? 'transaction' : 'signature';
-        analytics.track(`Rejected WalletConnect ${rejectionType} request`);
       }, 300);
     } catch (error) {
       logger.log('error while handling cancel request', error);
@@ -493,7 +487,6 @@ const TransactionConfirmationScreen = () => {
 
         dispatch(dataAddNewTransaction(txDetails));
       }
-      analytics.track('Approved WalletConnect transaction request');
       if (requestId) {
         dispatch(removeRequest(requestId));
         await dispatch(walletConnectSendStatus(peerId, requestId, result.hash));
@@ -543,7 +536,6 @@ const TransactionConfirmationScreen = () => {
     }
 
     if (flatFormatSignature) {
-      analytics.track('Approved WalletConnect signature request');
       if (requestId) {
         dispatch(removeRequest(requestId));
         await dispatch(

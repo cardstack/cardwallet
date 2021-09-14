@@ -1,13 +1,11 @@
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Alert, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { saveBackupPassword } from '../../model/backup';
-import { cloudPlatform } from '../../utils/platform';
 import { DelayedAlert } from '../alerts';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
@@ -59,10 +57,6 @@ export default function BackupCloudStep() {
     setTimeout(() => {
       passwordRef.current?.focus();
     }, 1);
-    analytics.track('Choose Password Step', {
-      category: 'backup',
-      label: cloudPlatform,
-    });
   }, []);
 
   const { handleFocus } = useMagicAutofocus(passwordRef);
@@ -132,10 +126,6 @@ export default function BackupCloudStep() {
     }
     // This means the user set a new password
     // and it was the first account backed up
-    analytics.track('Backup Complete', {
-      category: 'backup',
-      label: cloudPlatform,
-    });
     goBack();
   }, [goBack, isSettingsRoute, password]);
 

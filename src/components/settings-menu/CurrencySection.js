@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import { isNil } from 'lodash';
 import React, { useCallback } from 'react';
 import { CoinIcon } from '../coin-icon';
@@ -38,7 +37,6 @@ const CurrencySection = () => {
   const onSelectCurrency = useCallback(
     currency => {
       settingsChangeNativeCurrency(currency);
-      analytics.track('Changed native currency', { currency });
     },
     [settingsChangeNativeCurrency]
   );

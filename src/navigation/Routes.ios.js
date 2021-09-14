@@ -383,7 +383,7 @@ function NativeStackNavigator() {
   );
 }
 
-const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
+const AppContainer = React.forwardRef((_, ref) => (
   <NavigationContainer
     linking={linking}
     onStateChange={onNavigationStateChange}
@@ -393,6 +393,6 @@ const AppContainerWithAnalytics = React.forwardRef((props, ref) => (
   </NavigationContainer>
 ));
 
-AppContainerWithAnalytics.displayName = 'AppContainerWithAnalytics';
+AppContainer.displayName = 'AppContainer';
 
-export default React.memo(AppContainerWithAnalytics);
+export default React.memo(AppContainer);

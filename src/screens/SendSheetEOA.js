@@ -4,9 +4,8 @@ import {
   formatInputDecimals,
 } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import { captureEvent, captureException } from '@sentry/react-native';
-import { get, isEmpty, isString, toLower } from 'lodash';
+import { get, isEmpty, isString } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import { isIphoneX } from 'react-native-iphone-x-helper';
@@ -238,7 +237,6 @@ const useSendSheetScreen = () => {
         isSufficientBalance: _isSufficientBalance,
         nativeAmount: _nativeAmount,
       });
-      analytics.track('Changed native currency input in Send flow');
     },
     [maxInputBalance, selected]
   );
@@ -252,7 +250,6 @@ const useSendSheetScreen = () => {
     newAssetAmount => {
       if (isString(newAssetAmount)) {
         sendUpdateAssetAmount(newAssetAmount);
-        analytics.track('Changed token input in Send flow');
       }
     },
     [sendUpdateAssetAmount]
@@ -360,18 +357,14 @@ const useSendSheetScreen = () => {
 
     try {
       const submitSuccessful = await onSubmit();
-      analytics.track('Sent transaction', {
-        assetName: selected?.name || '',
-        assetType: selected?.type || '',
-        isRecepientENS: toLower(recipient.slice(-4)) === '.eth',
-      });
+
       if (submitSuccessful) {
         navigate(Routes.PROFILE_SCREEN);
       }
     } catch (error) {
       setIsAuthorizing(false);
     }
-  }, [amountDetails.assetAmount, navigate, onSubmit, recipient, selected]);
+  }, [amountDetails.assetAmount, navigate, onSubmit]);
 
   const onPressTransactionSpeed = useCallback(
     onSuccess => {
@@ -396,7 +389,6 @@ const useSendSheetScreen = () => {
   }, [onPressTransactionSpeed, submitTransaction]);
 
   const onResetAssetSelection = useCallback(() => {
-    analytics.track('Reset asset selection in Send flow');
     onSelectAsset({});
   }, [onSelectAsset]);
 

@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import { toLower, values } from 'lodash';
 import React, { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
@@ -70,7 +69,6 @@ const NetworkSection = () => {
       InteractionManager.runAfterInteractions(async () => {
         await loadAccountData(network);
         initializeAccountData();
-        analytics.track('Changed network', { network });
       });
     },
     [dispatch, initializeAccountData, loadAccountData, resetAccountState]

@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import lang from 'i18n-js';
 import React, { useCallback, useMemo } from 'react';
 import { RequestVendorLogoIcon } from '../coin-icon';
@@ -41,13 +40,9 @@ export default function WalletConnectListItem({ dappIcon, dappName, dappUrl }) {
     buttonIndex => {
       if (buttonIndex === 0) {
         walletConnectDisconnectAllByDappName(dappName);
-        analytics.track('Manually disconnected from WalletConnect connection', {
-          dappName,
-          dappUrl,
-        });
       }
     },
-    [dappName, dappUrl, walletConnectDisconnectAllByDappName]
+    [dappName, walletConnectDisconnectAllByDappName]
   );
 
   return (

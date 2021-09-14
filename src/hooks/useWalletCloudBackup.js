@@ -1,5 +1,4 @@
 import { delay } from '@cardstack/cardpay-sdk';
-import analytics from '@segment/analytics-react-native';
 import { captureException } from '@sentry/react-native';
 import { values } from 'lodash';
 import { useCallback } from 'react';
@@ -54,9 +53,6 @@ export default function useWalletCloudBackup() {
     }) => {
       const isAvailable = await isCloudBackupAvailable();
       if (!isAvailable) {
-        analytics.track('iCloud not enabled', {
-          category: 'backup',
-        });
         Alert.alert(
           'iCloud Not Enabled',
           `Looks like iCloud drive is not enabled on your device.
@@ -65,18 +61,10 @@ export default function useWalletCloudBackup() {
             {
               onPress: () => {
                 Linking.openURL('https://support.apple.com/en-us/HT204025');
-                analytics.track('View how to Enable iCloud', {
-                  category: 'backup',
-                });
               },
               text: 'Yes, Show me',
             },
             {
-              onPress: () => {
-                analytics.track('Ignore how to enable iCloud', {
-                  category: 'backup',
-                });
-              },
               style: 'cancel',
               text: 'No thanks',
             },
@@ -148,11 +136,7 @@ export default function useWalletCloudBackup() {
           `error while trying to backup wallet to ${cloudPlatform}`
         );
         captureException(e);
-        analytics.track(`Error during ${cloudPlatform} Backup`, {
-          category: 'backup',
-          error: userError,
-          label: cloudPlatform,
-        });
+
         return null;
       }
 
@@ -174,10 +158,6 @@ export default function useWalletCloudBackup() {
           new Error(CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED)
         );
         onError && onError(userError);
-        analytics.track('Error updating Backup status', {
-          category: 'backup',
-          label: cloudPlatform,
-        });
       }
     },
     [dispatch, latestBackup, setIsWalletLoading, wallets]

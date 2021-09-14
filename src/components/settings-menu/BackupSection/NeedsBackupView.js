@@ -1,5 +1,4 @@
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import React, { Fragment, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { cloudPlatform } from '../../../utils/platform';
@@ -30,16 +29,7 @@ export default function NeedsBackupView() {
     }
   }, [setParams, walletId, wallets]);
 
-  useEffect(() => {
-    analytics.track('Needs Backup View', {
-      category: 'settings backup',
-    });
-  }, []);
-
   const onIcloudBackup = useCallback(() => {
-    analytics.track(`Back up to ${cloudPlatform} pressed`, {
-      category: 'settings backup',
-    });
     navigate(ios ? Routes.BACKUP_SHEET : Routes.BACKUP_SCREEN, {
       nativeScreen: true,
       step: WalletBackupStepTypes.cloud,
@@ -48,9 +38,6 @@ export default function NeedsBackupView() {
   }, [navigate, walletId]);
 
   const onManualBackup = useCallback(() => {
-    analytics.track('Manual Backup pressed', {
-      category: 'settings backup',
-    });
     navigate(ios ? Routes.BACKUP_SHEET : Routes.BACKUP_SCREEN, {
       nativeScreen: true,
       step: WalletBackupStepTypes.manual,

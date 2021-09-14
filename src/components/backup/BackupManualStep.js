@@ -1,6 +1,5 @@
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 import { Column } from '../layout';
@@ -39,19 +38,9 @@ export default function BackupManualStep() {
 
   const onComplete = useCallback(() => {
     onManuallyBackupWalletId(walletId);
-    analytics.track('Backup Complete', {
-      category: 'backup',
-      label: 'manual',
-    });
+
     goBack();
   }, [goBack, onManuallyBackupWalletId, walletId]);
-
-  useEffect(() => {
-    analytics.track('Manual Backup Step', {
-      category: 'backup',
-      label: 'manual',
-    });
-  }, []);
 
   const isPrivateKey = type === walletTypes.privateKey;
   const subText = isPrivateKey

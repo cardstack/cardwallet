@@ -1,5 +1,4 @@
 import { useIsFocused } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import Animated, { useCode } from 'react-native-reanimated';
@@ -77,13 +76,9 @@ const QRScannerScreen = () => {
   }, [initializeCamera, isFocusedAndroid]);
 
   const handlePressActionSheet = useCallback(
-    ({ dappName, dappUrl, index }) => {
+    ({ dappName, index }) => {
       if (index === 0) {
         walletConnectDisconnectAllByDappName(dappName);
-        analytics.track('Manually disconnected from WalletConnect connection', {
-          dappName,
-          dappUrl,
-        });
       }
     },
     [walletConnectDisconnectAllByDappName]

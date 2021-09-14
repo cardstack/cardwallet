@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import { toLower } from 'lodash';
 import React, { useCallback, useRef } from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -150,10 +149,6 @@ export default function ProfileMasthead({
       showWalletErrorAlert();
       return;
     }
-
-    analytics.track('Tapped Add Cash', {
-      category: 'add cash',
-    });
 
     if (ios) {
       navigate(Routes.ADD_CASH_FLOW);

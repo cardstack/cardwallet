@@ -1,7 +1,6 @@
 import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
-import React, { Fragment, useCallback, useEffect, useMemo } from 'react';
+import React, { Fragment, useCallback, useMemo } from 'react';
 import { Alert, StatusBar } from 'react-native';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
 import { useSafeArea } from 'react-native-safe-area-context';
@@ -87,17 +86,6 @@ const SavingsSheet = () => {
     ]
   );
 
-  useEffect(() => {
-    return () => {
-      analytics.track('Closed Savings Sheet', {
-        category: 'savings',
-        empty: isEmpty,
-        label: underlying.symbol,
-      });
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const onWithdraw = useCallback(() => {
     if (!isReadOnlyWallet || enableActionsOnReadOnlyWallet) {
       navigate(Routes.SAVINGS_WITHDRAW_MODAL, {
@@ -105,11 +93,6 @@ const SavingsSheet = () => {
         defaultInputAsset: underlying,
         supplyBalanceUnderlying,
         underlyingPrice,
-      });
-
-      analytics.track('Navigated to SavingsWithdrawModal', {
-        category: 'savings',
-        label: underlying.symbol,
       });
     } else {
       Alert.alert(`You need to import the account in order to do this`);
@@ -135,16 +118,10 @@ const SavingsSheet = () => {
         },
         screen: Routes.MAIN_EXCHANGE_NAVIGATOR,
       });
-
-      analytics.track('Navigated to SavingsDepositModal', {
-        category: 'savings',
-        empty: isEmpty,
-        label: underlying.symbol,
-      });
     } else {
       Alert.alert(`You need to import the account in order to do this`);
     }
-  }, [isEmpty, isReadOnlyWallet, navigate, underlying, underlyingPrice]);
+  }, [isReadOnlyWallet, navigate, underlying, underlyingPrice]);
 
   return (
     <Container

@@ -1,5 +1,4 @@
 import { useIsFocused, useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import { map, toLower } from 'lodash';
 import matchSorter from 'match-sorter';
 import React, {
@@ -202,13 +201,6 @@ export default function CurrencySelectModal() {
         ...prevFavoriteQueue,
         [asset.address]: isFavorited,
       }));
-      analytics.track('Toggled an asset as Favorited', {
-        isFavorited,
-        name: asset.name,
-        symbol: asset.symbol,
-        tokenAddress: asset.address,
-        type,
-      });
     },
     [type]
   );
@@ -217,15 +209,7 @@ export default function CurrencySelectModal() {
     item => {
       setPointerEvents(false);
       onSelectCurrency(item);
-      if (searchQueryForSearch) {
-        analytics.track('Selected a search result in Swap', {
-          name: item.name,
-          searchQueryForSearch,
-          symbol: item.symbol,
-          tokenAddress: item.address,
-          type,
-        });
-      }
+
       delayNext();
       dangerouslyGetState().index = 1;
       navigate(Routes.MAIN_EXCHANGE_SCREEN);

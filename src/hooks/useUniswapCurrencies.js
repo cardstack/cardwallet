@@ -1,7 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { multiply } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import { find, get, isEmpty } from 'lodash';
 import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 import { InteractionManager } from 'react-native';
@@ -58,7 +57,6 @@ export default function useUniswapCurrencies({
   inputHeaderTitle,
   isDeposit,
   isWithdrawal,
-  type,
   underlyingPrice,
 }) {
   const dispatch = useDispatch();
@@ -187,24 +185,15 @@ export default function useUniswapCurrencies({
         );
         updateOutputCurrency(defaultChosenInputItem, false);
       }
-
-      analytics.track('Switched input asset', {
-        defaultInputAsset: get(defaultInputAsset, 'symbol', ''),
-        from: get(previousInputCurrency, 'symbol', ''),
-        label: get(newInputCurrency, 'symbol', ''),
-        type,
-      });
     },
     [
       defaultChosenInputItem,
       defaultInputAddress,
-      defaultInputAsset,
       dispatch,
       isDeposit,
       isWithdrawal,
       outputCurrency,
       previousInputCurrency,
-      type,
       updateOutputCurrency,
     ]
   );
@@ -243,20 +232,11 @@ export default function useUniswapCurrencies({
           updateInputCurrency(null, false);
         }
       }
-
-      analytics.track('Switched output asset', {
-        defaultInputAsset: get(defaultInputAsset, 'symbol', ''),
-        from: get(previousOutputCurrency, 'symbol', ''),
-        label: get(newOutputCurrency, 'symbol', ''),
-        type,
-      });
     },
     [
-      defaultInputAsset,
       dispatch,
       inputCurrency,
       previousOutputCurrency,
-      type,
       uniswapAssetsInWallet,
       updateInputCurrency,
     ]

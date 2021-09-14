@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import { captureException } from '@sentry/react-native';
 import WalletConnect from '@walletconnect/client';
 import lang from 'i18n-js';
@@ -116,10 +115,6 @@ export const walletConnectOnSessionRequest = (
       walletConnector = new WalletConnect({ clientMeta, uri }, push);
       walletConnector.on('session_request', (error, payload) => {
         if (error) {
-          analytics.track('Error on wc session_request', {
-            error,
-            payload,
-          });
           logger.log('Error on wc session_request', payload);
           captureException(error);
           throw error;
@@ -133,11 +128,6 @@ export const walletConnectOnSessionRequest = (
         const dappUrl = peerMeta.url;
         const dappScheme = peerMeta.scheme;
 
-        analytics.track('Showing Walletconnect session request', {
-          dappName,
-          dappUrl,
-        });
-
         Navigation.handleAction(Routes.WALLET_CONNECT_APPROVAL_SHEET, {
           callback: async approved => {
             if (approved) {
@@ -145,19 +135,11 @@ export const walletConnectOnSessionRequest = (
               dispatch(
                 walletConnectApproveSession(peerId, callback, dappScheme)
               );
-              analytics.track('Approved new WalletConnect session', {
-                dappName,
-                dappUrl,
-              });
             } else {
               await dispatch(
                 walletConnectRejectSession(peerId, walletConnector)
               );
               callback && callback('reject', dappScheme);
-              analytics.track('Rejected new WalletConnect session', {
-                dappName,
-                dappUrl,
-              });
             }
           },
           meta: {
@@ -169,17 +151,12 @@ export const walletConnectOnSessionRequest = (
       });
     } catch (error) {
       logger.log('Exception during wc session_request');
-      analytics.track('Exception on wc session_request', {
-        error,
-      });
+
       captureException(error);
       Alert.alert(lang.t('wallet.wallet_connect.error'));
     }
   } catch (error) {
     logger.log('FCM exception during wc session_request');
-    analytics.track('FCM exception on wc session_request', {
-      error,
-    });
     captureException(error);
     Alert.alert(lang.t('wallet.wallet_connect.missing_fcm'));
   }
@@ -189,10 +166,6 @@ const listenOnNewMessages = walletConnector => (dispatch, getState) => {
   walletConnector.on('call_request', async (error, payload) => {
     logger.log('WC Request!', error, payload);
     if (error) {
-      analytics.track('Error on wc call_request', {
-        error,
-        payload,
-      });
       logger.log('Error on wc call_request');
       captureException(error);
       throw error;
@@ -234,7 +207,6 @@ const listenOnNewMessages = walletConnector => (dispatch, getState) => {
         : null;
 
       if (request) {
-        analytics.track('Showing Walletconnect signing request');
         InteractionManager.runAfterInteractions(() => {
           setTimeout(() => {
             Navigation.handleAction(Routes.CONFIRM_REQUEST, {
@@ -279,9 +251,6 @@ export const walletConnectLoadState = () => async (dispatch, getState) => {
       return dispatch(listenOnNewMessages(walletConnector));
     });
   } catch (error) {
-    analytics.track('Error on walletConnectLoadState', {
-      error,
-    });
     logger.log('Error on wc walletConnectLoadState', error);
     captureException(error);
     newWalletConnectors = {};
