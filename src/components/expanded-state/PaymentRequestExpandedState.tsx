@@ -25,17 +25,17 @@ import {
 
 import { useNavigation } from '@rainbow-me/navigation';
 
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { usePaymentCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { shadow } from '@rainbow-me/styles';
 import logger from 'logger';
 
 const TOP_POSITION = 150;
 
-export default function PaymentRequestExpandedState(props: {
-  asset: MerchantSafeType;
-}) {
-  const { address, merchantInfo } = props.asset;
+const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
+  const {
+    asset: { address, merchantInfo },
+  } = props;
   const { setOptions } = useNavigation();
   const { height: deviceHeight, isTallPhone } = useDimensions();
   const [inputValue, setInputValue] = useState<string>();
@@ -43,7 +43,7 @@ export default function PaymentRequestExpandedState(props: {
   const [
     nativeCurrency,
     currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  ] = usePaymentCurrencyAndConversionRates();
 
   useEffect(() => {
     setOptions({
@@ -60,6 +60,9 @@ export default function PaymentRequestExpandedState(props: {
       >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
     </Container>
   );
+
+  const currencyConversionRate =
+    nativeCurrency === 'SPD' ? 100 : currencyConversionRates[nativeCurrency];
 
   return (
     <SlackSheet
@@ -106,7 +109,7 @@ export default function PaymentRequestExpandedState(props: {
             <HorizontalDivider />
             <SpendAmount
               formattedAmount={inputValue}
-              nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
+              nativeCurrencyRate={currencyConversionRate}
             />
           </Container>
         </>
@@ -115,17 +118,17 @@ export default function PaymentRequestExpandedState(props: {
           address={address}
           amountInSpend={nativeCurrencyToSpend(
             inputValue,
-            currencyConversionRates[nativeCurrency]
+            currencyConversionRate
           )}
           formattedAmount={inputValue}
           merchantName={merchantInfo?.name}
           nativeCurrency={nativeCurrency}
-          nativeCurrencyRate={currencyConversionRates[nativeCurrency]}
+          nativeCurrencyRate={currencyConversionRate}
         />
       )}
     </SlackSheet>
   );
-}
+};
 
 const MerchantInfo = ({
   address,
@@ -368,3 +371,5 @@ const QRCodeFooter = () => {
     </Container>
   );
 };
+
+export default PaymentRequestExpandedState;

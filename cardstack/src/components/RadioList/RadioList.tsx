@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { SectionList } from 'react-native';
-import { IconProps, Text, Container } from '../.';
-import { RadioListItem } from './RadioListItem';
+import { Text, Container } from '../.';
+import { RadioListItem, RadioListItemProps } from './RadioListItem';
 
 export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
   const setSelectedItem = useCallback(() => {
@@ -9,7 +9,8 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
       return arr
         .map((section: RadioItemProps) => {
           const radioItem = section.data.filter(
-            (item: RadioItemData) => item[type as keyof RadioItemData] === true
+            (item: RadioListItemProps) =>
+              item[type as keyof RadioListItemProps] === true
           );
 
           return radioItem;
@@ -49,7 +50,7 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sections]);
 
-  const renderItem = ({ item }: { item: RadioItemData }) => {
+  const renderItem = ({ item }: { item: RadioListItemProps }) => {
     return (
       <RadioListItem
         {...item}
@@ -67,15 +68,17 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
       }}
       renderItem={renderItem}
       stickySectionHeadersEnabled={false}
-      renderSectionHeader={({ section: { title } }) => (
-        <Container
-          backgroundColor="backgroundGray"
-          paddingVertical={2}
-          paddingHorizontal={5}
-        >
-          <Text color="blueText">{`${title}`.toUpperCase()}</Text>
-        </Container>
-      )}
+      renderSectionHeader={({ section: { title } }) =>
+        title ? (
+          <Container
+            backgroundColor="backgroundGray"
+            paddingVertical={2}
+            paddingHorizontal={5}
+          >
+            <Text color="blueText">{`${title}`.toUpperCase()}</Text>
+          </Container>
+        ) : null
+      }
       sections={sections}
     />
   );
@@ -88,16 +91,6 @@ export interface RadioListProps {
 }
 
 export interface RadioItemProps {
-  title: string | number;
-  data: Array<RadioItemData>;
-}
-
-export interface RadioItemData {
-  iconProps?: IconProps;
-  label: string;
-  key: number;
-  value: string;
-  disabled: boolean;
-  default: boolean;
-  selected: boolean;
+  title?: string | number;
+  data: Array<RadioListItemProps>;
 }

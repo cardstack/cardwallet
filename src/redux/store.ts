@@ -11,6 +11,7 @@ const store = createStore(
 
 export default store;
 
+export type RootState = ReturnType<typeof reducers>;
 export type AppState = ReturnType<typeof store.getState>;
 export type AppGetState = typeof store.getState;
 export type AppDispatch = typeof store.dispatch;

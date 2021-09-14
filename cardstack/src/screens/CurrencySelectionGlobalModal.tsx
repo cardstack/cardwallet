@@ -1,6 +1,9 @@
 import React from 'react';
-import CurrencySection from '@rainbow-me/components/settings-menu/CurrencySection';
-import { Container, SheetHandle } from '@cardstack/components';
+import {
+  Container,
+  SheetHandle,
+  CurrencySelection,
+} from '@cardstack/components';
 
 const CurrencySelectionGlobalModal = () => {
   return (
@@ -16,7 +19,7 @@ const CurrencySelectionGlobalModal = () => {
         <Container width="100%" alignItems="center" padding={5}>
           <SheetHandle />
         </Container>
-        <CurrencySection />
+        <CurrencySelection />
       </Container>
     </Container>
   );

@@ -16,6 +16,7 @@ import {
   fallbackExplorerInit,
 } from './fallbackExplorer';
 import { walletConnectUpdateSessions } from './walletconnect';
+import { paymentChangeCurrency } from '@cardstack/redux/payment';
 import logger from 'logger';
 
 // -- Constants ------------------------------------------------------------- //
@@ -38,6 +39,7 @@ export const settingsLoadState = () => async dispatch => {
       payload: nativeCurrency,
       type: SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS,
     });
+    dispatch(paymentChangeCurrency(nativeCurrency));
   } catch (error) {
     logger.log('Error loading native currency', error);
   }
@@ -105,6 +107,7 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
     });
     dispatch(fallbackExplorerInit());
     saveNativeCurrency(nativeCurrency);
+    dispatch(paymentChangeCurrency(nativeCurrency));
   } catch (error) {
     logger.log('Error changing native currency', error);
   }

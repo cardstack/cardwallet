@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { Touchable, Icon, Text, Container } from '../.';
+import { Touchable, Icon, Text, EmojiText, Container } from '../.';
 import { IconProps } from '../Icon';
 
 export const RadioListItem = ({
@@ -26,28 +26,39 @@ export const RadioListItem = ({
       width="100%"
       justifyContent="flex-start"
       paddingHorizontal={5}
-      paddingVertical={6}
+      paddingVertical={5}
     >
       <Container flexDirection="row">
-        <Text weight="bold">
+        {props.emojiName ? (
+          <EmojiText name={`flag_${props.emojiName}`} paddingRight={3} />
+        ) : null}
+        <Text weight="bold" size="body">
           {label}
           {'   '}
-          {props.default && (
+          {props.default ? (
             <Text variant="subText" textTransform="uppercase">
               Default
             </Text>
-          )}
+          ) : null}
         </Text>
-        {selected ? (
-          <Container flex={1} alignItems="flex-end">
+        <Container flex={1} alignItems="flex-end">
+          {selected ? (
             <Icon
               name="check-circle"
               color="lightGreen"
               iconSize="medium"
               {...iconProps}
             />
-          </Container>
-        ) : null}
+          ) : (
+            <Container
+              width={22}
+              height={22}
+              borderRadius={11}
+              borderColor="buttonSecondaryBorder"
+              borderWidth={1}
+            />
+          )}
+        </Container>
       </Container>
     </Touchable>
   );
@@ -61,6 +72,7 @@ export interface RadioListItemProps {
   value: string;
   disabled: boolean;
   selected: boolean;
-  default: boolean;
-  onPress: ({ index, value }: { index: number; value: string }) => void;
+  default?: boolean;
+  emojiName?: string;
+  onPress?: ({ index, value }: { index: number; value: string }) => void;
 }

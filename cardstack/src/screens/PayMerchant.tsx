@@ -16,7 +16,7 @@ import {
   convertSpendForBalanceDisplay,
   localCurrencyToAbsNum,
 } from '@cardstack/utils';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { usePaymentCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
 const PayMerchant = () => {
   const {
@@ -108,7 +108,6 @@ const CustomAmountBody = ({
             inputValue={inputValue}
             setInputValue={setInputValue}
             selectedCurrency={selectedCurrency}
-            setCurrency={setCurrency}
           />
         </MerchantSectionCard>
       </Container>
@@ -125,19 +124,17 @@ interface AmountInputSectionProps {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
   selectedCurrency: string;
-  setCurrency: (_val: string) => void;
 }
 
 const AmountInputSection = ({
   inputValue,
   setInputValue,
   selectedCurrency,
-  setCurrency,
 }: AmountInputSectionProps) => {
   const [
     nativeCurrency,
     currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  ] = usePaymentCurrencyAndConversionRates();
 
   return (
     <Container alignItems="center" width="100%" justifyContent="center">
@@ -153,7 +150,6 @@ const AmountInputSection = ({
         nativeCurrency={selectedCurrency}
         inputValue={inputValue}
         setInputValue={setInputValue}
-        setCurrency={setCurrency}
       />
       <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
         {

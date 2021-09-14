@@ -1,5 +1,6 @@
 import React, { useCallback, memo } from 'react';
 import {
+  CenteredContainer,
   Container,
   ContainerProps,
   Input,
@@ -16,7 +17,6 @@ type InputAmountProps = {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
   nativeCurrency: string;
-  setCurrency?: (_val: string) => void;
   hasCurrencySymbol?: boolean;
 } & ContainerProps;
 
@@ -26,7 +26,6 @@ export const InputAmount = memo(
     setInputValue,
     nativeCurrency,
     hasCurrencySymbol = true,
-    setCurrency,
     ...containerProps
   }: InputAmountProps) => {
     const { navigate } = useNavigation();
@@ -39,17 +38,13 @@ export const InputAmount = memo(
     );
 
     const openCurrencySelectionModal = useCallback(() => {
-      navigate(Routes.CURRENCY_SELECTION_MODAL);
-    }, [navigate]);
+      navigate(Routes.CURRENCY_SELECTION_MODAL, {
+        defaultCurrency: nativeCurrency,
+      });
+    }, [nativeCurrency, navigate]);
 
     return (
-      <Container
-        flexDirection="row"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-        {...containerProps}
-      >
+      <CenteredContainer flexDirection="row" width="100%" {...containerProps}>
         {hasCurrencySymbol ? (
           <Text
             color={inputValue ? 'black' : 'underlineGray'}
@@ -58,7 +53,9 @@ export const InputAmount = memo(
             paddingTop={1}
             size="largeBalance"
           >
-            {(supportedNativeCurrencies as any)[nativeCurrency].symbol}
+            {nativeCurrency === 'SPD'
+              ? '§'
+              : (supportedNativeCurrencies as any)[nativeCurrency].symbol}
           </Text>
         ) : null}
         <Container flex={1} flexGrow={1}>
@@ -82,38 +79,26 @@ export const InputAmount = memo(
             zIndex={1}
           />
         </Container>
-        {setCurrency ? (
-          <Touchable
-            onPress={openCurrencySelectionModal}
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="center"
-            marginTop={2}
+        <Touchable
+          onPress={openCurrencySelectionModal}
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="center"
+          marginTop={2}
+          paddingLeft={1}
+        >
+          <Text size="body" fontWeight="bold">
+            {nativeCurrency}
+          </Text>
+          <Icon
+            name="doubleCaret"
+            iconSize="medium"
             paddingLeft={1}
-          >
-            <Text size="body" fontWeight="bold">
-              {nativeCurrency}
-            </Text>
-            <Icon
-              name="doubleCaret"
-              iconSize="medium"
-              paddingLeft={1}
-              marginTop={1}
-              width={14}
-            />
-          </Touchable>
-        ) : (
-          <Container
-            justifyContent="flex-end"
-            alignItems="flex-end"
-            height="100%"
-          >
-            <Text size="body" fontWeight="bold">
-              {nativeCurrency}
-            </Text>
-          </Container>
-        )}
-      </Container>
+            marginTop={1}
+            width={14}
+          />
+        </Touchable>
+      </CenteredContainer>
     );
   }
 );

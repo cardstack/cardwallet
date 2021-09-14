@@ -1,38 +1,52 @@
-import analytics from '@segment/analytics-react-native';
 import React, { useCallback } from 'react';
 import { RadioList } from '../';
-import { useAccountSettings } from '@rainbow-me/hooks';
+import usePayment from '@cardstack/redux/hooks/usePayment';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
 
-// ToDo: Refactor RadioListItem with ability to show icon like i.e. renderCurrencyIcon
+const SPDCurrency = {
+  alignment: 'left',
+  assetLimit: 1,
+  currency: 'SPD',
+  decimals: 2,
+  emojiName: '§',
+  label: 'SPEND',
+  mask: '[099999999999]{.}[00]',
+  placeholder: '0.00',
+  smallThreshold: 1,
+  symbol: '§',
+};
 
 export const CurrencySelection = () => {
-  const { nativeCurrency, settingsChangeNativeCurrency } = useAccountSettings();
+  const { paymentChangeCurrency, currency } = usePayment();
 
   const onSelectCurrency = useCallback(
-    currency => {
-      settingsChangeNativeCurrency(currency);
-      analytics.track('Changed native currency', { currency });
+    (selectedCurrency: string) => {
+      if (currency !== selectedCurrency) {
+        paymentChangeCurrency(selectedCurrency);
+      }
     },
-    [settingsChangeNativeCurrency]
+    [currency, paymentChangeCurrency]
   );
 
-  const currencyListItems = Object.values(supportedNativeCurrencies)
-    .map(({ currency, ...item }, index) => ({
-      title: currency,
-      data: [
-        {
-          ...item,
-          disabled: false,
-          label: currency,
-          key: index,
-          value: currency,
-          default: !!currency,
-          selected: currency === nativeCurrency,
-        },
-      ],
+  const currencyListItems = [
+    SPDCurrency,
+    ...Object.values(supportedNativeCurrencies),
+  ]
+    .map(({ currency: nativeCurrency, label, ...item }, index) => ({
+      ...item,
+      disabled: false,
+      label: `${label} (${nativeCurrency})`,
+      key: index,
+      index: index,
+      value: nativeCurrency,
+      selected: nativeCurrency === currency,
     }))
-    .filter(({ title }) => title !== 'ETH');
+    .filter(({ value }) => value !== 'ETH');
 
-  return <RadioList items={currencyListItems} onChange={onSelectCurrency} />;
+  return (
+    <RadioList
+      items={[{ data: currencyListItems }]}
+      onChange={onSelectCurrency}
+    />
+  );
 };
