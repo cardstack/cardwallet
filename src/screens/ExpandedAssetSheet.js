@@ -11,6 +11,7 @@ import {
   LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
   MerchantTransactionExpandedState,
+  PaymentConfirmationExpandedState,
   PaymentRequestExpandedState,
   RecentActivityExpandedState,
   UnclaimedRevenueExpandedState,
@@ -32,6 +33,7 @@ const ScreenTypes = {
   [ExpandedMerchantRoutes.paymentRequest]: PaymentRequestExpandedState,
   [ExpandedMerchantRoutes.recentActivity]: RecentActivityExpandedState,
   merchantTransaction: MerchantTransactionExpandedState,
+  paymentConfirmationTransaction: PaymentConfirmationExpandedState,
 };
 
 const Container = styled(Centered).attrs({

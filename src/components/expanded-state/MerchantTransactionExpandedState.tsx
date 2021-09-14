@@ -1,9 +1,7 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import React, { useCallback } from 'react';
-import { Linking } from 'react-native';
+import React, { useEffect } from 'react';
 import { SlackSheet } from '../sheet';
 import {
-  Button,
+  BlockscoutButton,
   CoinIcon,
   Container,
   HorizontalDivider,
@@ -17,7 +15,7 @@ import {
   MerchantClaimTypeTxn,
   MerchantEarnedRevenueTransactionTypeTxn,
 } from '@cardstack/types';
-import { normalizeTxHash } from '@cardstack/utils';
+import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface ItemDetailProps {
@@ -157,69 +155,52 @@ const ClaimedTransaction = ({
   );
 };
 
-const BlockscoutButton = ({
-  network,
-  transactionHash,
-}: {
-  network: string;
-  transactionHash: string;
-}) => {
-  const onPress = useCallback(() => {
-    const blockExplorer = getConstantByNetwork('blockExplorer', network);
-    const normalizedHash = normalizeTxHash(transactionHash);
-    Linking.openURL(`${blockExplorer}/tx/${normalizedHash}`);
-  }, [network, transactionHash]);
-  return (
-    <Button
-      marginBottom={12}
-      onPress={onPress}
-      variant="smallWhite"
-      width="100%"
-    >
-      View on Blockscout
-    </Button>
-  );
-};
+const CHART_HEIGHT = 650;
 
 export default function MerchantTransactionExpandedState(
   props: MerchantTransactionExpandedStateProps
 ) {
+  const { setOptions } = useNavigation();
+
+  useEffect(() => {
+    setOptions({
+      longFormHeight: CHART_HEIGHT,
+    });
+  }, [setOptions]);
   const transactionData =
     props.asset?.section?.data[props.asset.index]?.transaction;
 
   const network = useRainbowSelector(state => state.settings.network);
   const earnedTxnData = { ...transactionData, subText: props.asset?.subText };
   return (
-    <>
-      <SlackSheet bottomInset={42} height="100%" scrollEnabled={false}>
-        <Container backgroundColor="white" padding={8}>
-          <Text marginBottom={10} size="medium">
-            Transaction details
-          </Text>
-          <Container
-            backgroundColor="white"
-            borderColor="borderGray"
-            borderRadius={10}
-            borderWidth={1}
-            marginBottom={8}
-            overflow="scroll"
-            paddingHorizontal={2}
-          >
-            <TransactionRow {...props.asset} hasBottomDivider />
-            <Container padding={6}>
-              {props.asset.statusText === CLAIMED_STATUS ? (
-                <ClaimedTransaction {...transactionData} />
-              ) : (
-                <EarnedTransaction {...earnedTxnData} />
-              )}
-            </Container>
+    <SlackSheet flex={1} scrollEnabled>
+      <Container backgroundColor="white" marginBottom={32} padding={8}>
+        <Text marginBottom={10} size="medium">
+          Transaction details
+        </Text>
+        <Container
+          backgroundColor="white"
+          borderColor="borderGray"
+          borderRadius={10}
+          borderWidth={1}
+          marginBottom={8}
+          overflow="scroll"
+          paddingHorizontal={2}
+        >
+          <TransactionRow {...props.asset} hasBottomDivider />
+          <Container padding={6}>
+            {props.asset.statusText === CLAIMED_STATUS ? (
+              <ClaimedTransaction {...transactionData} />
+            ) : (
+              <EarnedTransaction {...earnedTxnData} />
+            )}
           </Container>
-          <BlockscoutButton
-            network={network}
-            transactionHash={props.asset.transactionHash}
-          />
         </Container>
-      </SlackSheet>
-    </>
+        <BlockscoutButton
+          network={network}
+          transactionHash={props.asset.transactionHash}
+        />
+      </Container>
+    </SlackSheet>
   );
 }
