@@ -33,7 +33,7 @@ const handleAlertError = (message: string) => {
 
 export const usePaymentMerchantUniversalLink = () => {
   const {
-    params: { merchantAddress, amount = '0', network },
+    params: { merchantAddress, amount = '0', network, currency },
   } = useRoute<RouteType>();
 
   const { goBack, navigate } = useNavigation();
@@ -107,8 +107,9 @@ export const usePaymentMerchantUniversalLink = () => {
       spendAmount,
       prepaidCard: prepaidCardAddress,
       merchantSafe: merchantAddress,
+      currency,
     }),
-    [infoDID, merchantAddress, prepaidCardAddress, spendAmount]
+    [infoDID, merchantAddress, prepaidCardAddress, spendAmount, currency]
   );
 
   return { noPrepaidCard, goBack, onConfirm, isLoadingTx, isLoading, data };

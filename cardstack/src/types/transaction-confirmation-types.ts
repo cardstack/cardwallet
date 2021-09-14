@@ -53,6 +53,7 @@ export interface PayMerchantDecodedData {
   merchantSafe: string;
   prepaidCard: string;
   infoDID?: string;
+  currency?: string;
   type: TransactionConfirmationType.PAY_MERCHANT;
 }
 

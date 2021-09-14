@@ -75,7 +75,7 @@ export const AmountQRCode = ({
         ) : null}
         {amountInSpend ? (
           <Text size="large" color="underlineGray" fontWeight="600">
-            {`§${amountInSpend} SPEND`}
+            {`§${amountInSpend.toLocaleString()} SPEND`}
           </Text>
         ) : null}
         {name ? (

@@ -116,10 +116,10 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
       ) : (
         <AmountAndQRCodeButtons
           address={address}
-          amountInSpend={nativeCurrencyToSpend(
-            inputValue,
-            currencyConversionRate
-          )}
+          amountInSpend={
+            nativeCurrencyToSpend(inputValue, currencyConversionRate)
+              .spendAmount
+          }
           formattedAmount={inputValue}
           merchantName={merchantInfo?.name}
           nativeCurrency={nativeCurrency}
@@ -167,10 +167,12 @@ const SpendAmount = ({
   formattedAmount: string | undefined;
   nativeCurrencyRate: number;
 }) => (
-  <Text color="blueText" size="xs">{`§${nativeCurrencyToSpend(
-    formattedAmount,
-    nativeCurrencyRate
-  )} SPEND`}</Text>
+  <Text color="blueText" size="xs">
+    {
+      nativeCurrencyToSpend(formattedAmount, nativeCurrencyRate, true)
+        .tokenBalanceDisplay
+    }
+  </Text>
 );
 
 const AmountAndQRCodeButtons = ({

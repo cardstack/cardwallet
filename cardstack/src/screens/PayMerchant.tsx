@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
@@ -10,73 +10,120 @@ import {
   Button,
   TransactionConfirmationSheet,
 } from '@cardstack/components';
+import usePayment from '@cardstack/redux/hooks/usePayment';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
-import { MerchantInformation } from '@cardstack/types';
+import { MerchantInformation, PayMerchantDecodedData } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   localCurrencyToAbsNum,
+  nativeCurrencyToSpend,
 } from '@cardstack/utils';
-import { usePaymentCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+
+import {
+  useNativeCurrencyAndConversionRates,
+  usePaymentCurrencyAndConversionRates,
+} from '@rainbow-me/redux/hooks';
 
 const PayMerchant = () => {
   const {
     noPrepaidCard,
     goBack,
     onConfirm,
-    isLoadingTx,
+    isLoadingTx: onConfirmLoading,
     isLoading,
     data,
   } = usePaymentMerchantUniversalLink();
 
-  const { infoDID = '', spendAmount } = data;
+  return (
+    <SafeAreaView flex={1} width="100%" backgroundColor="black">
+      <PayMerchantBody
+        noPrepaidCard={noPrepaidCard}
+        onCancel={goBack}
+        onConfirm={onConfirm}
+        onConfirmLoading={onConfirmLoading}
+        loading={isLoading}
+        data={data}
+      />
+    </SafeAreaView>
+  );
+};
+
+type PayMerchantBodyProps = {
+  noPrepaidCard: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+  onConfirmLoading: boolean;
+  loading: boolean;
+  data: PayMerchantDecodedData;
+};
+
+const PayMerchantBody = memo((props: PayMerchantBodyProps) => {
+  const {
+    infoDID = '',
+    spendAmount: initialSpendAmount,
+    currency,
+  } = props.data;
+
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
+  const { paymentChangeCurrency } = usePayment();
+
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = usePaymentCurrencyAndConversionRates();
+
+  useEffect(() => {
+    if (currency) {
+      paymentChangeCurrency(currency);
+    }
+  }, [currency, paymentChangeCurrency]);
 
   const [isConfirmScreen, setConfirmScreen] = useState(false);
 
   const [inputValue, setInputValue] = useState<string | undefined>(
-    `${spendAmount || 0}`
+    `${initialSpendAmount ? initialSpendAmount.toLocaleString() : 0}`
   );
 
-  const goToConfirm = () => {
-    setConfirmScreen(true);
-  };
+  const spendAmount =
+    nativeCurrency === 'SPD'
+      ? localCurrencyToAbsNum(`${inputValue || 0}`)
+      : nativeCurrencyToSpend(
+          inputValue,
+          currencyConversionRates[nativeCurrency],
+          true
+        ).spendAmount;
 
-  return (
-    <SafeAreaView flex={1} width="100%" backgroundColor="black">
-      {isConfirmScreen && !noPrepaidCard ? (
-        <TransactionConfirmationSheet
-          data={{
-            ...data,
-            spendAmount: localCurrencyToAbsNum(`${inputValue || 0}`),
-          }}
-          onCancel={goBack}
-          onConfirm={onConfirm}
-          onConfirmLoading={isLoadingTx}
-          loading={isLoading}
-        />
-      ) : (
-        <Container
-          flex={1}
-          alignItems="center"
-          marginTop={4}
-          borderTopRightRadius={20}
-          borderTopLeftRadius={20}
-          backgroundColor="white"
-          paddingTop={3}
-        >
-          <SheetHandle />
-          <CustomAmountBody
-            merchantInfoDID={merchantInfoDID}
-            goToConfirm={goToConfirm}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            isLoading={isLoading}
-          />
-        </Container>
-      )}
-    </SafeAreaView>
+  return isConfirmScreen && !props.noPrepaidCard ? (
+    <TransactionConfirmationSheet
+      {...props}
+      data={{
+        ...props.data,
+        spendAmount,
+      }}
+      onCancel={() => setConfirmScreen(false)}
+    />
+  ) : (
+    <Container
+      flex={1}
+      alignItems="center"
+      marginTop={4}
+      borderTopRightRadius={20}
+      borderTopLeftRadius={20}
+      backgroundColor="white"
+      paddingTop={3}
+    >
+      <SheetHandle />
+      <CustomAmountBody
+        merchantInfoDID={merchantInfoDID}
+        goToConfirm={() => setConfirmScreen(true)}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        isLoading={props.loading}
+        nativeCurrency={nativeCurrency || 'SPD'}
+      />
+    </Container>
   );
-};
+});
 
 interface CustomAmountBodyProps {
   merchantInfoDID: MerchantInformation | undefined;
@@ -84,6 +131,7 @@ interface CustomAmountBodyProps {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
   isLoading: boolean;
+  nativeCurrency: string;
 }
 
 const CustomAmountBody = ({
@@ -92,9 +140,8 @@ const CustomAmountBody = ({
   inputValue,
   setInputValue,
   isLoading,
+  nativeCurrency,
 }: CustomAmountBodyProps) => {
-  const [selectedCurrency, setCurrency] = useState<string>('SPD');
-
   return (
     <Container flex={1} flexDirection="column" width="100%">
       <Container padding={5} paddingTop={3} flex={1}>
@@ -107,7 +154,7 @@ const CustomAmountBody = ({
           <AmountInputSection
             inputValue={inputValue}
             setInputValue={setInputValue}
-            selectedCurrency={selectedCurrency}
+            nativeCurrency={nativeCurrency}
           />
         </MerchantSectionCard>
       </Container>
@@ -123,18 +170,18 @@ const CustomAmountBody = ({
 interface AmountInputSectionProps {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
-  selectedCurrency: string;
+  nativeCurrency: string;
 }
 
 const AmountInputSection = ({
   inputValue,
   setInputValue,
-  selectedCurrency,
+  nativeCurrency,
 }: AmountInputSectionProps) => {
   const [
-    nativeCurrency,
+    accountCurrency,
     currencyConversionRates,
-  ] = usePaymentCurrencyAndConversionRates();
+  ] = useNativeCurrencyAndConversionRates();
 
   return (
     <Container alignItems="center" width="100%" justifyContent="center">
@@ -147,19 +194,23 @@ const AmountInputSection = ({
         borderBottomColor="borderBlue"
         paddingBottom={1}
         hasCurrencySymbol={false}
-        nativeCurrency={selectedCurrency}
+        nativeCurrency={nativeCurrency}
         inputValue={inputValue}
         setInputValue={setInputValue}
       />
       <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
-        {
-          convertSpendForBalanceDisplay(
-            inputValue ? localCurrencyToAbsNum(inputValue) : 0,
-            nativeCurrency,
-            currencyConversionRates,
-            true
-          ).nativeBalanceDisplay
-        }
+        {nativeCurrency === 'SPD'
+          ? convertSpendForBalanceDisplay(
+              inputValue ? localCurrencyToAbsNum(inputValue) : 0,
+              accountCurrency,
+              currencyConversionRates,
+              true
+            ).nativeBalanceDisplay
+          : nativeCurrencyToSpend(
+              inputValue,
+              currencyConversionRates[nativeCurrency],
+              true
+            ).tokenBalanceDisplay}
       </Text>
     </Container>
   );
