@@ -42,6 +42,7 @@ const NetworkSection = () => {
             {
               disabled: curr.disabled,
               key: currentIndex,
+              index: currentIndex,
               label: curr.name,
               value: curr.value,
               selected: toLower(network) === toLower(curr.value),
