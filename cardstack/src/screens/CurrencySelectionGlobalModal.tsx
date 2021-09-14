@@ -4,12 +4,7 @@ import { Container, SheetHandle } from '@cardstack/components';
 
 const CurrencySelectionGlobalModal = () => {
   return (
-    <Container
-      flex={1}
-      width="100%"
-      justifyContent="flex-end"
-      alignItems="center"
-    >
+    <Container flex={1} justifyContent="flex-end" alignItems="center">
       <Container
         width="100%"
         borderRadius={20}

@@ -62,7 +62,6 @@ const PayMerchant = () => {
           borderTopRightRadius={20}
           borderTopLeftRadius={20}
           backgroundColor="white"
-          width="100%"
           paddingTop={3}
         >
           <SheetHandle />
@@ -156,18 +155,16 @@ const AmountInputSection = ({
         setInputValue={setInputValue}
         setCurrency={setCurrency}
       />
-      {inputValue && (
-        <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
-          {
-            convertSpendForBalanceDisplay(
-              localCurrencyToAbsNum(inputValue),
-              nativeCurrency,
-              currencyConversionRates,
-              true
-            ).nativeBalanceDisplay
-          }
-        </Text>
-      )}
+      <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
+        {
+          convertSpendForBalanceDisplay(
+            inputValue ? localCurrencyToAbsNum(inputValue) : 0,
+            nativeCurrency,
+            currencyConversionRates,
+            true
+          ).nativeBalanceDisplay
+        }
+      </Text>
     </Container>
   );
 };

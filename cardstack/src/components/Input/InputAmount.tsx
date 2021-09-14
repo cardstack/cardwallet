@@ -50,7 +50,7 @@ export const InputAmount = memo(
         justifyContent="center"
         {...containerProps}
       >
-        {hasCurrencySymbol && (
+        {hasCurrencySymbol ? (
           <Text
             color={inputValue ? 'black' : 'underlineGray'}
             fontWeight="bold"
@@ -60,7 +60,7 @@ export const InputAmount = memo(
           >
             {(supportedNativeCurrencies as any)[nativeCurrency].symbol}
           </Text>
-        )}
+        ) : null}
         <Container flex={1} flexGrow={1}>
           <Input
             alignSelf="stretch"
@@ -84,9 +84,7 @@ export const InputAmount = memo(
         </Container>
         {setCurrency ? (
           <Touchable
-            onPress={() => {
-              openCurrencySelectionModal();
-            }}
+            onPress={openCurrencySelectionModal}
             flexDirection="row"
             alignItems="center"
             justifyContent="center"
