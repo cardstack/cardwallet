@@ -69,28 +69,27 @@ export const usePaymentMerchantUniversalLink = () => {
     getMerchantSafeData();
   }, [getMerchantSafeData, goBack, noPrepaidCard, prepaidCards.length]);
 
-  const {
-    isLoading: isLoadingTx,
-    callback: onConfirm,
-    error,
-  } = useWorker(async () => {
-    const web3 = new Web3(
-      await getHdSignedProvider({
-        selectedWallet,
-        network,
-      })
-    );
+  const { isLoading: isLoadingTx, callback: onConfirm, error } = useWorker(
+    async (updatedSpendAmount: number) => {
+      const web3 = new Web3(
+        await getHdSignedProvider({
+          selectedWallet,
+          network,
+        })
+      );
 
-    const prepaidCard: PrepaidCard = await getSDK('PrepaidCard', web3);
+      const prepaidCard: PrepaidCard = await getSDK('PrepaidCard', web3);
 
-    await prepaidCard.payMerchant(
-      merchantAddress,
-      prepaidCardAddress,
-      spendAmount
-    );
+      await prepaidCard.payMerchant(
+        merchantAddress,
+        prepaidCardAddress,
+        updatedSpendAmount
+      );
 
-    navigate(RainbowRoutes.PROFILE_SCREEN);
-  }, [merchantAddress, prepaidCardAddress, spendAmount]);
+      navigate(RainbowRoutes.PROFILE_SCREEN);
+    },
+    [merchantAddress, prepaidCardAddress]
+  );
 
   useEffect(() => {
     if (error) {
