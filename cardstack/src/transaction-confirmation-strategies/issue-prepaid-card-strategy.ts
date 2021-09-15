@@ -23,14 +23,12 @@ export class IssuePrepaidCardStrategy extends BaseStrategyWithLevel1Data {
       issuingTokenAmounts: string[];
       spendAmounts: string[];
       customizationDID: string;
-      marketAddress: string;
     }>(
       [
         { type: 'address', name: 'owner' },
         { type: 'uint256[]', name: 'issuingTokenAmounts' },
         { type: 'uint256[]', name: 'spendAmounts' },
         { type: 'string', name: 'customizationDID' },
-        { type: 'string', name: 'marketAddress' },
       ],
       this.level1Data.data
     );

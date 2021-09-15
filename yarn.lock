@@ -1260,16 +1260,17 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cardstack/cardpay-sdk@0.24.5":
-  version "0.24.5"
-  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.24.5.tgz#af3181aaf111686db06ca6d1afa989637beaa551"
-  integrity sha512-0sk5ijIf8iKKN3dDGKQT3ACNyVvkHLAl2tUHO8DMp3AmY23/tO1uzd33xNZik5P/ba6wtyXvSrtzlrdCxM9Prg==
+"@cardstack/cardpay-sdk@0.25.1":
+  version "0.25.1"
+  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.25.1.tgz#92b7dd987056191c9b7b5c347e5f1188a7f997c6"
+  integrity sha512-ehFBK0xpSGgefQX1TxJjcD2dQr0J8yj4usDZ0IUh5kgUnY2/Oz/FSn6DPi9Q2pWR2QfNgtd9sPQ8K5CRNyBoJg==
   dependencies:
     "@truffle/hdwallet-provider" "^1.2.6"
     "@trufflesuite/web3-provider-engine" "^15.0.13-1"
     "@types/bn.js" "^5.1.0"
     "@types/lodash" "^4.14.168"
     "@types/node-fetch" "^2.5.10"
+    "@types/url-parse" "^1.4.4"
     "@types/web3-provider-engine" "^14.0.0"
     bignumber.js "^9.0.1"
     bn.js "^5.2.0"
@@ -1279,6 +1280,7 @@
     ethereumjs-wallet "^1.0.1"
     lodash "^4.17.21"
     semver "^7.3.5"
+    url-parse "^1.5.3"
     web3 "1.3.6"
     web3-core "1.3.6"
     web3-eth "1.3.6"
@@ -1286,10 +1288,10 @@
     web3-provider-engine "^16.0.1"
     web3-utils "1.3.6"
 
-"@cardstack/did-resolver@0.24.5":
-  version "0.24.5"
-  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-0.24.5.tgz#eff1822a825e3195a0f3ab001664a302b1fdda48"
-  integrity sha512-mezSeEXmDUYZvlV55qENP/ClMbYP82dJ1yiG3+I/nIvHr5iANToV6Edg7jKZIVMUyVr+obAZ67d86ZMAcKjqwQ==
+"@cardstack/did-resolver@0.25.1":
+  version "0.25.1"
+  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-0.25.1.tgz#5363698a2e8dce21c0dc6a14143653ab86bf6351"
+  integrity sha512-55rPUaURzwJHYi+ll8+ILRLud1m7JLMZ7VqXWsInXkI2STV26ufDTAyuU/nZIVnWDMEiqTf9UJkLejVLWYXRdQ==
   dependencies:
     "@types/uuid" "^8.3.0"
     did-resolver "^3.1.0"
@@ -4627,6 +4629,11 @@
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/@types/url-parse/-/url-parse-1.4.3.tgz#fba49d90f834951cb000a674efee3d6f20968329"
   integrity sha512-4kHAkbV/OfW2kb5BLVUuUMoumB3CP8rHqlw48aHvFy5tf9ER0AfOonBlX29l/DD68G70DmyhRlSYfQPSYpC5Vw==
+
+"@types/url-parse@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@types/url-parse/-/url-parse-1.4.4.tgz#ebeb0ec8b581318739cf73e9f9b186f610764255"
+  integrity sha512-KtQLad12+4T/NfSxpoDhmr22+fig3T7/08QCgmutYA6QSznSRmEtuL95GrhVV40/0otTEdFc+etRcCTqhh1q5Q==
 
 "@types/uuid@^8.3.0":
   version "8.3.1"
@@ -19640,6 +19647,14 @@ url-parse@^1.4.7:
   version "1.4.7"
   resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
   integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
+  dependencies:
+    querystringify "^2.1.1"
+    requires-port "^1.0.0"
+
+url-parse@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.3.tgz#71c1303d38fb6639ade183c2992c8cc0686df862"
+  integrity sha512-IIORyIQD9rvj0A4CLWsHkBBJuNqWpFQe224b6j9t/ABmquIS0qDU2pY6kl6AuOrL5OkCXHMCFNe1jBcuAggjvQ==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
