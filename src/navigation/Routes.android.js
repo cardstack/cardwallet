@@ -45,7 +45,11 @@ import {
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import { linking, useCardstackScreens } from '@cardstack/navigation';
+import {
+  linking,
+  useCardstackGlobalScreens,
+  useCardstackMainScreens,
+} from '@cardstack/navigation';
 
 const Stack = createStackNavigator();
 const OuterStack = createStackNavigator();
@@ -107,7 +111,7 @@ function AddCashFlowNavigator() {
 
 function MainNavigator() {
   const initialRoute = useContext(InitialRouteContext);
-  const cardstackScreens = useCardstackScreens(Stack);
+  const cardstackMainScreens = useCardstackMainScreens(Stack);
 
   return (
     <Stack.Navigator
@@ -211,13 +215,15 @@ function MainNavigator() {
         component={AddCashFlowNavigator}
         name={Routes.WYRE_WEBVIEW_NAVIGATOR}
       />
-      {cardstackScreens}
+      {cardstackMainScreens}
     </Stack.Navigator>
   );
 }
 
 // FIXME do it in one navigator
 function MainOuterNavigator() {
+  const cardstackGlobalScreens = useCardstackGlobalScreens(OuterStack);
+
   return (
     <OuterStack.Navigator
       initialRouteName={Routes.MAIN_NAVIGATOR}
@@ -253,6 +259,7 @@ function MainOuterNavigator() {
         name={Routes.SEND_SHEET_NAVIGATOR}
         options={sheetPresetWithSmallGestureResponseDistance}
       />
+      {cardstackGlobalScreens}
     </OuterStack.Navigator>
   );
 }
