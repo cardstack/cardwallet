@@ -25,7 +25,7 @@ const MerchantSectionCard = ({
         <ActivityIndicator />
       </Container>
     ) : (
-      <>
+      <Container alignItems="center">
         {merchantInfoDID ? (
           <ContactAvatar
             color={merchantInfoDID?.color}
@@ -46,7 +46,7 @@ const MerchantSectionCard = ({
             {merchantInfoDID?.name || ''}
           </Text>
         </Container>
-      </>
+      </Container>
     )}
     {children}
   </Container>
