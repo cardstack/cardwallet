@@ -6,25 +6,16 @@ import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import BigNumber from 'bignumber.js';
 import { get, isEmpty, isString } from 'lodash';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Web3 from 'web3';
-import SendSheet, {
-  useSendAddressValidation,
-} from '../../../src/components/send/SendSheet';
-import { getSafesInstance } from '../models';
-import { Alert } from '../../../src/components/alerts';
-import { toWei } from '@rainbow-me/handlers/web3';
+import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
+import { getSafesInstance } from '@cardstack/models/safes-providers';
+import { Alert } from '@rainbow-me/components/alerts';
 import { useNavigation } from '@rainbow-me/navigation/Navigation';
 import {
   reshapeDepotTokensToAssets,
   reshapeSingleDepotTokenToAsset,
-} from '@cardstack/utils';
+} from '@cardstack/utils/depot-utils';
 import {
   useAccountAssets,
   useAccountSettings,
@@ -34,7 +25,7 @@ import {
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { DepotAsset, TokenType } from '@cardstack/types';
-import { getUsdConverter } from '@cardstack/services';
+import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 
 interface RouteType {
   params: { asset: TokenType };
@@ -64,7 +55,9 @@ export const useSendSheetDepotScreen = () => {
   );
 
   const [selected, setSelected] = useState<DepotAsset | undefined>(
-    reshapeSingleDepotTokenToAsset(params?.asset)
+    params?.asset?.tokenAddress
+      ? reshapeSingleDepotTokenToAsset(params?.asset)
+      : undefined
   );
 
   // Inputs
@@ -92,9 +85,9 @@ export const useSendSheetDepotScreen = () => {
 
       const gasEstimate =
         (await safes?.sendTokensGasEstimate(
-          depot.address,
+          depot?.address,
           selected?.address || '',
-          recipient || depot.address, // Fallback to a valid recipient to get gasEstimation on first render
+          recipient || depot?.address, // Fallback to a valid recipient to get gasEstimation on first render
           amountWei
         )) || '0';
 
@@ -120,7 +113,7 @@ export const useSendSheetDepotScreen = () => {
     } catch (e) {
       logger.error('Error getting gasPriceEstimate or maxBalance', e);
     }
-  }, [amountDetails.assetAmount, depot.address, recipient, selected]);
+  }, [amountDetails.assetAmount, depot, recipient, selected]);
 
   // Update gasFee initial render and when asset changes
   useEffect(() => {
@@ -158,11 +151,11 @@ export const useSendSheetDepotScreen = () => {
 
   const updateAssetAmount = useCallback(
     async newAssetAmount => {
-      const assetAmount = newAssetAmount.replace(/[^0-9.]/g, '');
+      const assetAmount: string = newAssetAmount.replace(/[^0-9.]/g, '');
 
       try {
         const nativeAmount = assetAmount.length
-          ? usdConverter.current?.(toWei(assetAmount)).toString()
+          ? usdConverter.current?.(Web3.utils.toWei(assetAmount)).toString()
           : '';
 
         handleAmountDetails({
@@ -190,7 +183,7 @@ export const useSendSheetDepotScreen = () => {
       try {
         // Getting how much on token is worth in usd in order to calculate usdToTokenValue
         const usdPriceUnit =
-          usdConverter.current?.(toWei('1')).toString() ||
+          usdConverter.current?.(Web3.utils.toWei('1')).toString() ||
           get(selected, 'price.value', 0);
 
         const convertedAssetAmount = convertAmountFromNativeValue(
@@ -246,7 +239,7 @@ export const useSendSheetDepotScreen = () => {
     const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
 
     return safes?.sendTokens(
-      depot.address,
+      depot?.address,
       selected?.address || '',
       recipient,
       amountInWei,
@@ -256,7 +249,7 @@ export const useSendSheetDepotScreen = () => {
   }, [
     accountAddress,
     amountDetails.assetAmount,
-    depot.address,
+    depot,
     network,
     recipient,
     selected,
@@ -340,11 +333,3 @@ export const useSendSheetDepotScreen = () => {
     ]
   );
 };
-
-const SendSheetDepot = () => {
-  const hookProps = useSendSheetDepotScreen();
-
-  return <SendSheet {...hookProps} />;
-};
-
-export default SendSheetDepot;
