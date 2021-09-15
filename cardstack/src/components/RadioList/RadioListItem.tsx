@@ -10,18 +10,18 @@ export const RadioListItem = ({
   disabled,
   value,
   iconProps,
+  onPress,
   ...props
 }: RadioListItemProps) => {
-  const onPress = useCallback(() => {
-    if (props.onPress && !disabled) {
-      props.onPress({ value, index });
+  const onPressHandler = useCallback(() => {
+    if (onPress && !disabled) {
+      onPress({ value, index });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, props.onPress, disabled]);
+  }, [onPress, disabled, value, index]);
 
   return (
     <Touchable
-      onPress={onPress}
+      onPress={onPressHandler}
       disabled={disabled}
       width="100%"
       justifyContent="flex-start"

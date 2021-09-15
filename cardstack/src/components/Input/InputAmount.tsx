@@ -1,4 +1,5 @@
 import React, { useCallback, memo } from 'react';
+import { InteractionManager } from 'react-native';
 import {
   CenteredContainer,
   Container,
@@ -38,9 +39,11 @@ export const InputAmount = memo(
     );
 
     const openCurrencySelectionModal = useCallback(() => {
-      navigate(Routes.CURRENCY_SELECTION_MODAL, {
-        defaultCurrency: nativeCurrency,
-      });
+      InteractionManager.runAfterInteractions(() =>
+        navigate(Routes.CURRENCY_SELECTION_MODAL, {
+          defaultCurrency: nativeCurrency,
+        })
+      );
     }, [nativeCurrency, navigate]);
 
     return (

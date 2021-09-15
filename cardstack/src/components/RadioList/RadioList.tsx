@@ -28,21 +28,18 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
 
   const [selected, setSelected] = useState<number>(setSelectedItem()?.index);
 
-  const handleChange = ({
-    value,
-    index,
-  }: {
-    value?: string;
-    index: number;
-  }) => {
-    if (index !== selected) {
-      setSelected(index);
-    }
+  const handleChange = useCallback(
+    ({ value, index }: { value?: string; index: number }) => {
+      if (index !== selected) {
+        setSelected(index);
+      }
 
-    if (onChange) {
-      onChange(value);
-    }
-  };
+      if (onChange) {
+        onChange(value);
+      }
+    },
+    [onChange, selected]
+  );
 
   useEffect(() => {
     const { value, index } = setSelectedItem();
@@ -80,6 +77,7 @@ export const RadioList = ({ items: sections, onChange }: RadioListProps) => {
         ) : null
       }
       sections={sections}
+      keyboardShouldPersistTaps="handled"
     />
   );
 };

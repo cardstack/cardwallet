@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   Container,
@@ -6,6 +7,12 @@ import {
 } from '@cardstack/components';
 
 const CurrencySelectionGlobalModal = () => {
+  const { goBack } = useNavigation();
+
+  const onChange = () => {
+    goBack();
+  };
+
   return (
     <Container flex={1} justifyContent="flex-end" alignItems="center">
       <Container
@@ -19,7 +26,7 @@ const CurrencySelectionGlobalModal = () => {
         <Container width="100%" alignItems="center" padding={5}>
           <SheetHandle />
         </Container>
-        <CurrencySelection />
+        <CurrencySelection onChange={onChange} />
       </Container>
     </Container>
   );

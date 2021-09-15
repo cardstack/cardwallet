@@ -16,16 +16,21 @@ const SPDCurrency = {
   symbol: '§',
 };
 
-export const CurrencySelection = () => {
+export const CurrencySelection = ({
+  onChange,
+}: {
+  onChange: (selectedCurrency: string) => void;
+}) => {
   const { paymentChangeCurrency, currency } = usePayment();
 
   const onSelectCurrency = useCallback(
     (selectedCurrency: string) => {
       if (currency !== selectedCurrency) {
         paymentChangeCurrency(selectedCurrency);
+        onChange(selectedCurrency);
       }
     },
-    [currency, paymentChangeCurrency]
+    [currency, paymentChangeCurrency, onChange]
   );
 
   const currencyListItems = [

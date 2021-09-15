@@ -61,6 +61,7 @@ export const GlobalScreens: Record<
       onAppear: null,
       topOffset: 0,
       animationEnabled: true,
+      interactWithScrollView: false,
     } as StackNavigationOptions,
   },
 };
