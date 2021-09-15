@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
 import {
@@ -11,10 +11,20 @@ import {
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType } from '@cardstack/types';
 import { sectionStyle } from '@cardstack/utils/layouts';
+import { useNavigation } from '@rainbow-me/navigation';
+
+const CHART_HEIGHT = 650;
 
 export default function UnclaimedRevenueExpandedState(props: {
   asset: MerchantSafeType;
 }) {
+  const { setOptions } = useNavigation();
+
+  useEffect(() => {
+    setOptions({
+      longFormHeight: CHART_HEIGHT,
+    });
+  }, [setOptions]);
   return (
     <SlackSheet flex={1} scrollEnabled>
       <Container paddingHorizontal={5} paddingVertical={3}>

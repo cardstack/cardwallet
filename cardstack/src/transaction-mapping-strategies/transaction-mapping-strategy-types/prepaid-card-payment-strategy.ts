@@ -6,6 +6,7 @@ import {
 import {
   convertSpendForBalanceDisplay,
   fetchCardCustomizationFromDID,
+  fetchMerchantInfoFromDID,
 } from '@cardstack/utils';
 
 export class PrepaidCardPaymentStrategy extends BaseStrategy {
@@ -29,11 +30,20 @@ export class PrepaidCardPaymentStrategy extends BaseStrategy {
     }
 
     let cardCustomization;
+    let merchantInfo;
 
-    if (prepaidCardPaymentTransaction.prepaidCard.customizationDID) {
+    if (prepaidCardPaymentTransaction.prepaidCard?.customizationDID) {
       try {
         cardCustomization = await fetchCardCustomizationFromDID(
           prepaidCardPaymentTransaction.prepaidCard.customizationDID
+        );
+      } catch (error) {}
+    }
+
+    if (prepaidCardPaymentTransaction.merchantSafe?.infoDid) {
+      try {
+        merchantInfo = await fetchMerchantInfoFromDID(
+          prepaidCardPaymentTransaction.merchantSafe?.infoDid
         );
       } catch (error) {}
     }
@@ -54,6 +64,7 @@ export class PrepaidCardPaymentStrategy extends BaseStrategy {
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
       nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
       transactionHash: this.transaction.id,
+      merchantInfo: merchantInfo,
     };
   }
 }

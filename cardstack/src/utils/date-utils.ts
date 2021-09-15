@@ -113,3 +113,11 @@ export const groupAccumulations = (
 
   return '0';
 };
+
+export const dateFormatter = (ts: number) => {
+  const timestamp = new Date(ts * 1000);
+  return `${format(timestamp, 'MMM-dd-yyyy')} \n${format(
+    timestamp,
+    'h:mm:ss a'
+  )} UTC+`;
+};

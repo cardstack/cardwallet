@@ -9,5 +9,6 @@ export { default as LifetimeEarningsExpandedState } from './LifetimeEarningsExpa
 export { default as UnclaimedRevenueExpandedState } from './UnclaimedRevenueExpandedState';
 export { default as AvailableBalancesExpandedState } from './AvailableBalancesExpandedState';
 export { default as MerchantTransactionExpandedState } from './MerchantTransactionExpandedState';
+export { default as PaymentConfirmationExpandedState } from './PaymentConfirmationExpandedState';
 export { default as PaymentRequestExpandedState } from './PaymentRequestExpandedState';
 export { default as RecentActivityExpandedState } from './RecentActivityExpandedState';
