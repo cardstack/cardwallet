@@ -5,7 +5,7 @@ import {
   PureNativeButton,
 } from 'react-native-gesture-handler';
 import Animated, {
-  NewEasing as Easing,
+  Easing,
   runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,

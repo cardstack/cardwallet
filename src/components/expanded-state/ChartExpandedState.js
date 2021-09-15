@@ -1,4 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import React, { useRef } from 'react';
 
 import { useAccountSettings, useChartThrottledPoints } from '../../hooks';
@@ -18,7 +19,6 @@ import {
 } from '../token-info';
 import { Chart } from '../value-chart';
 import { Container } from '@cardstack/components';
-import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
 const heightWithoutChart = 309;

@@ -1,12 +1,13 @@
+import { ChartDot, ChartPath, useChartData } from '@rainbow-me/animated-charts';
 import { invert } from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, Linking } from 'react-native';
 import Animated, {
   cancelAnimation,
-  NewEasing,
-  repeat,
+  Easing,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from 'react-native-reanimated';
 import styled from 'styled-components';
@@ -16,7 +17,6 @@ import { ChartExpandedStateHeader } from '../expanded-state/chart';
 import { Column } from '../layout';
 import Labels from './ExtremeLabels';
 import { Button, CenteredContainer, Text } from '@cardstack/components';
-import { ChartDot, ChartPath, useChartData } from '@rainbow-me/animated-charts';
 import ChartTypes from '@rainbow-me/helpers/chartTypes';
 import { ImgixImage } from '@rainbow-me/images';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -83,7 +83,7 @@ const Overlay = styled(Animated.View).attrs({
 
 const rotationConfig = {
   duration: 500,
-  easing: NewEasing.linear,
+  easing: Easing.linear,
 };
 
 const timingConfig = {
@@ -147,7 +147,7 @@ export default function ChartWrapper({
     if (showLoadingState) {
       clearTimeout(spinnerTimeout.current);
       spinnerRotation.value = 0;
-      spinnerRotation.value = repeat(
+      spinnerRotation.value = withRepeat(
         withTiming(360, rotationConfig),
         -1,
         false

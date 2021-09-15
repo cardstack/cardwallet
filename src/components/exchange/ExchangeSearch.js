@@ -2,10 +2,10 @@ import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useRef } from 'react';
 import RadialGradient from 'react-native-radial-gradient';
 import Animated, {
-  NewEasing,
-  repeat,
+  Easing,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from 'react-native-reanimated';
 import styled from 'styled-components';
@@ -96,7 +96,7 @@ const SearchSpinnerWrapper = styled(Animated.View)`
 
 const rotationConfig = {
   duration: 500,
-  easing: NewEasing.linear,
+  easing: Easing.linear,
 };
 
 const timingConfig = {
@@ -120,7 +120,7 @@ const ExchangeSearch = (
     if ((isFetching || isSearching) && !isEmpty(searchQuery)) {
       clearTimeout(spinnerTimeout.current);
       spinnerRotation.value = 0;
-      spinnerRotation.value = repeat(
+      spinnerRotation.value = withRepeat(
         withTiming(360, rotationConfig),
         -1,
         false
