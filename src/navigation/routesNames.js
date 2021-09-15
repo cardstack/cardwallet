@@ -1,5 +1,6 @@
-import { Routes as CSRoutes } from '@cardstack/navigation/routes';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
+import { Routes as CSRoutes } from '@cardstack/navigation/routes';
+import { Device } from '@cardstack/utils/device';
 
 const Routes = {
   ADD_CASH_SCREEN_NAVIGATOR: 'AddCashSheetNavigator',
@@ -82,11 +83,11 @@ const RoutesWithNativeStackAvailability = {
     ? Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR
     : Routes.IMPORT_SEED_PHRASE_SHEET,
   SEND_FLOW:
-    isNativeStackAvailable || android
+    isNativeStackAvailable || Device.isAndroid
       ? Routes.SEND_SHEET_NAVIGATOR
       : Routes.SEND_SHEET,
   SPEND_FLOW:
-    isNativeStackAvailable || android
+    isNativeStackAvailable || Device.isAndroid
       ? Routes.SPEND_SHEET_NAVIGATOR
       : Routes.SPEND_SHEET,
 };
