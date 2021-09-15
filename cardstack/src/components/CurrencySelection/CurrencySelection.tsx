@@ -35,7 +35,9 @@ export const CurrencySelection = () => {
     .map(({ currency: nativeCurrency, label, ...item }, index) => ({
       ...item,
       disabled: false,
-      label: `${label} (${nativeCurrency})`,
+      label: `${label} (${
+        nativeCurrency === 'SPD' ? '§1 = 0.01 USD' : nativeCurrency
+      })`,
       key: index,
       index: index,
       value: nativeCurrency,
