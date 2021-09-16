@@ -154,7 +154,6 @@ export default function useScanner(enabled) {
       }
       if (isValidMerchantPaymentUrl(deeplink)) {
         const params = parseMerchantPaymentDeepLinkUrl(deeplink);
-        console.log(deeplink, params);
         return navigate(Routes.PAY_MERCHANT, params);
       }
       return handleScanInvalid(data);
