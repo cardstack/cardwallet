@@ -215,7 +215,7 @@ export const parseMerchantPaymentDeepLinkUrl = (
   deeplink: string
 ): MerchantPaymentURLParams => {
   const [merchantInfo, network] = deeplink.split('/').reverse();
-  const [merchantSafeID, params] = merchantInfo.split('?');
+  const [merchantAddress, params] = merchantInfo.split('?');
 
   // https://stackoverflow.com/questions/8648892/how-to-convert-url-parameters-to-a-javascript-object
   const parsedParams = JSON.parse(
@@ -228,7 +228,7 @@ export const parseMerchantPaymentDeepLinkUrl = (
   );
 
   return {
-    merchantSafeID,
+    merchantAddress,
     network,
     ...parsedParams,
   } as MerchantPaymentURLParams;
