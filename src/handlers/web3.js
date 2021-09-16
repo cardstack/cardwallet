@@ -33,19 +33,13 @@ import logger from 'logger';
 export let web3Provider = null;
 
 /**
- * @desc web3 http instance - to be used with web3 contracts
- */
-export let web3ProviderSdk = null;
-/**
  * @desc set a different web3 provider
  * @param {String} network
  */
-export const web3SetHttpProvider = async network => {
-  try {
-    const node = getConstantByNetwork('rpcWssNode', network);
-    web3ProviderSdk = new Web3.providers.WebsocketProvider(node);
 
-    web3Provider = new Web3Provider(web3ProviderSdk);
+export const web3SetHttpProvider = async () => {
+  try {
+    web3Provider = new Web3Provider(await getWeb3ProviderSdk());
   } catch (error) {
     logger.error('provider error', error);
   }
@@ -53,26 +47,38 @@ export const web3SetHttpProvider = async network => {
   return web3Provider.ready;
 };
 
-export const getWeb3ProviderSdk = async () => {
-  if (web3ProviderSdk && web3ProviderSdk.connected) {
-    return web3ProviderSdk;
-  }
+/**
+ * @desc web3 ws instance - to be used with web3 contracts
+ */
 
-  if (web3ProviderSdk && !web3ProviderSdk.connected) {
+let web3ProviderSdk = null;
+
+export const getWeb3ProviderSdk = async () => {
+  if (web3ProviderSdk === null) {
     try {
-      await web3ProviderSdk.reconnect();
-      if (web3ProviderSdk.connected) {
-        logger.sentry('web3ProviderSdk reconnected!!!!!!!');
-        return web3ProviderSdk;
-      }
-      logger.sentry('web3ProviderSdk reconnect failed without error');
-    } catch (e) {
-      logger.sentry('web3ProviderSdk reconnect failed --', e);
+      const network = await getNetwork();
+      const node = getConstantByNetwork('rpcWssNode', network);
+
+      web3ProviderSdk = new Web3.providers.WebsocketProvider(node, {
+        timeout: 30000,
+        reconnect: {
+          auto: true,
+          delay: 1000,
+          maxAttempts: 10,
+        },
+        clientConfig: {
+          keepalive: true,
+          keepaliveInterval: -1,
+        },
+      });
+
+      web3ProviderSdk.on('error', e => logger.sentry('WS socket error', e));
+      web3ProviderSdk.on('end', e => logger.sentry('WS socket ended', e));
+    } catch (error) {
+      logger.error('provider error', error);
     }
   }
 
-  const network = await getNetwork();
-  await web3SetHttpProvider(network);
   return web3ProviderSdk;
 };
 

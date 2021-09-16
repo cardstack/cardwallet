@@ -59,7 +59,6 @@ import { loadAddress } from './model/wallet';
 import { Navigation } from './navigation';
 import RoutesComponent from './navigation/Routes';
 import { requestsForTopic } from './redux/requests';
-import { settingsLoadNetwork } from './redux/settings';
 import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
@@ -303,8 +302,6 @@ class App extends Component {
     // Restore WC connectors when going from BG => FG
     if (this.state.appState === 'background' && nextAppState === 'active') {
       store.dispatch(walletConnectLoadState());
-      // reload network and initialize web3 websocket instance when state change back to active again
-      store.dispatch(settingsLoadNetwork());
     }
 
     this.setState({ appState: nextAppState });
