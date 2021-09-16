@@ -28,6 +28,7 @@ import uniswap from './uniswap';
 import uniswapLiquidity from './uniswapLiquidity';
 import walletconnect from './walletconnect';
 import wallets from './wallets';
+import payment from '@cardstack/redux/payment';
 
 export default combineReducers({
   addCash,
@@ -57,4 +58,5 @@ export default combineReducers({
   uniswapLiquidity,
   walletconnect,
   wallets,
+  payment,
 });

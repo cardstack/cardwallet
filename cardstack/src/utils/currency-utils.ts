@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { formatFixedDecimals } from '@cardstack/cardpay-sdk';
 
 const USD_TO_SPEND_RATE = 100;
+const SPEND_DECIMAL_PLACES = 4;
 
 export const getDollarsFromDai = (dai: number) => dai / 100;
 
@@ -56,12 +57,20 @@ export const nativeCurrencyToAmountInSpend = (
 
 export const nativeCurrencyToSpend = (
   amount: string | undefined,
-  nativeCurrencyRate: number
-): number => {
-  return parseFloat(
+  nativeCurrencyRate: number,
+  includeSuffix?: boolean
+) => {
+  const spendAmount = parseFloat(
     formatFixedDecimals(
       nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate),
-      4
+      SPEND_DECIMAL_PLACES
     )
   );
+
+  return {
+    tokenBalanceDisplay: `§${spendAmount.toLocaleString('en-US')}${
+      includeSuffix ? ' SPEND' : ''
+    }`,
+    spendAmount,
+  };
 };

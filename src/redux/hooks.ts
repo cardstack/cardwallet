@@ -34,6 +34,9 @@ interface ReduxState {
   walletconnect: {
     pendingRedirect: boolean;
   };
+  payment: {
+    currency: string;
+  };
 }
 
 export const useRainbowSelector = <TSelected = unknown>(
@@ -44,5 +47,11 @@ export const useRainbowSelector = <TSelected = unknown>(
 export const useNativeCurrencyAndConversionRates = () =>
   useRainbowSelector<[string, { [key: string]: number }]>(state => [
     state.settings.nativeCurrency,
+    state.currencyConversion.rates,
+  ]);
+
+export const usePaymentCurrencyAndConversionRates = () =>
+  useRainbowSelector<[string, { [key: string]: number }]>(state => [
+    state.payment.currency,
     state.currencyConversion.rates,
   ]);

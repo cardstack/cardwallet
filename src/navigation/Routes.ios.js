@@ -31,7 +31,6 @@ import {
   expandedAssetSheetConfig,
   nativeStackDefaultConfig,
   nativeStackDefaultConfigWithoutStatusBar,
-  nativeStackModalConfig,
   restoreSheetConfig,
   savingsSheetConfig,
   stackNavigationConfig,
@@ -48,8 +47,11 @@ import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import { ExchangeModalNavigator } from './index';
-import { linking, useCardstackScreens } from '@cardstack/navigation';
-import { ShowQRCodeModal } from '@cardstack/screen';
+import {
+  linking,
+  useCardstackGlobalScreens,
+  useCardstackMainScreens,
+} from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
@@ -137,7 +139,7 @@ function AddCashFlowNavigator() {
 
 function MainNavigator() {
   const initialRoute = useContext(InitialRouteContext);
-  const cardstackScreens = useCardstackScreens(Stack);
+  const cardstackMainScreens = useCardstackMainScreens(Stack);
 
   return (
     <Stack.Navigator
@@ -162,7 +164,7 @@ function MainNavigator() {
         name={Routes.WALLET_CONNECT_REDIRECT_SHEET}
         options={bottomSheetPreset}
       />
-      {cardstackScreens}
+      {cardstackMainScreens}
     </Stack.Navigator>
   );
 }
@@ -249,6 +251,8 @@ const MainStack = isNativeStackAvailable
   : NativeStackFallbackNavigator;
 
 function NativeStackNavigator() {
+  const cardstackGlobalScreens = useCardstackGlobalScreens(NativeStack);
+
   return (
     <NativeStack.Navigator {...nativeStackConfig}>
       <NativeStack.Screen component={MainStack} name={Routes.STACK} />
@@ -324,11 +328,6 @@ function NativeStackNavigator() {
         }}
       />
       <NativeStack.Screen
-        component={ShowQRCodeModal}
-        name={Routes.SHOW_QRCODE_MODAL}
-        options={nativeStackModalConfig}
-      />
-      <NativeStack.Screen
         component={RestoreSheet}
         name={Routes.RESTORE_SHEET}
         {...restoreSheetConfig}
@@ -374,6 +373,7 @@ function NativeStackNavigator() {
           options={{ customStack: true }}
         />
       )}
+      {cardstackGlobalScreens}
     </NativeStack.Navigator>
   );
 }

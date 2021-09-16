@@ -12,6 +12,7 @@ const DATA = [
       {
         disabled: false,
         key: 0,
+        index: 0,
         label: 'item 1',
         value: '1',
         default: true,
@@ -20,6 +21,7 @@ const DATA = [
       {
         disabled: false,
         key: 1,
+        index: 1,
         label: 'item 2',
         value: '2',
         default: false,
@@ -33,6 +35,7 @@ const DATA = [
       {
         disabled: false,
         key: 2,
+        index: 2,
         label: 'item 3',
         value: '3',
         default: false,

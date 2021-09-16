@@ -1,12 +1,9 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import Web3 from 'web3';
 import { getSDK, MerchantSafe } from '@cardstack/cardpay-sdk';
-import {
-  SafeAreaView,
-  TransactionConfirmationSheet,
-} from '@cardstack/components';
+import { PrepaidCard } from '@cardstack/cardpay-sdk/sdk/prepaid-card';
 import { getHdSignedProvider } from '@cardstack/models';
 import {
   PayMerchantDecodedData,
@@ -34,9 +31,9 @@ const handleAlertError = (message: string) => {
   Alert.alert(`Oops!`, message);
 };
 
-const usePaymentMerchantUniversalLink = () => {
+export const usePaymentMerchantUniversalLink = () => {
   const {
-    params: { merchantAddress, amount = '0', network },
+    params: { merchantAddress, amount = '0', network, currency },
   } = useRoute<RouteType>();
 
   const { goBack, navigate } = useNavigation();
@@ -72,28 +69,27 @@ const usePaymentMerchantUniversalLink = () => {
     getMerchantSafeData();
   }, [getMerchantSafeData, goBack, noPrepaidCard, prepaidCards.length]);
 
-  const {
-    isLoading: isLoadingTx,
-    callback: onConfirm,
-    error,
-  } = useWorker(async () => {
-    const web3 = new Web3(
-      await getHdSignedProvider({
-        selectedWallet,
-        network,
-      })
-    );
+  const { isLoading: isLoadingTx, callback: onConfirm, error } = useWorker(
+    async (updatedSpendAmount: number) => {
+      const web3 = new Web3(
+        await getHdSignedProvider({
+          selectedWallet,
+          network,
+        })
+      );
 
-    const prepaidCard = await getSDK('PrepaidCard', web3);
+      const prepaidCard: PrepaidCard = await getSDK('PrepaidCard', web3);
 
-    await prepaidCard.payMerchant(
-      merchantAddress,
-      prepaidCardAddress,
-      spendAmount
-    );
+      await prepaidCard.payMerchant(
+        merchantAddress,
+        prepaidCardAddress,
+        updatedSpendAmount
+      );
 
-    navigate(RainbowRoutes.PROFILE_SCREEN);
-  }, [merchantAddress, prepaidCardAddress, spendAmount]);
+      navigate(RainbowRoutes.PROFILE_SCREEN);
+    },
+    [merchantAddress, prepaidCardAddress]
+  );
 
   useEffect(() => {
     if (error) {
@@ -110,36 +106,10 @@ const usePaymentMerchantUniversalLink = () => {
       spendAmount,
       prepaidCard: prepaidCardAddress,
       merchantSafe: merchantAddress,
+      currency,
     }),
-    [infoDID, merchantAddress, prepaidCardAddress, spendAmount]
+    [infoDID, merchantAddress, prepaidCardAddress, spendAmount, currency]
   );
 
   return { noPrepaidCard, goBack, onConfirm, isLoadingTx, isLoading, data };
 };
-
-const PayMerchantUniversalLink = () => {
-  const {
-    noPrepaidCard,
-    goBack,
-    onConfirm,
-    isLoadingTx,
-    isLoading,
-    data,
-  } = usePaymentMerchantUniversalLink();
-
-  if (noPrepaidCard) return null;
-
-  return (
-    <SafeAreaView backgroundColor="black" flex={1} width="100%">
-      <TransactionConfirmationSheet
-        data={data}
-        onCancel={goBack}
-        onConfirm={onConfirm}
-        onConfirmLoading={isLoadingTx}
-        loading={isLoading}
-      />
-    </SafeAreaView>
-  );
-};
-
-export default memo(PayMerchantUniversalLink);

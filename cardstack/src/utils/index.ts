@@ -7,6 +7,7 @@ export * from './cardpay-utils';
 export * from './merchant-utils';
 export * from './async-utils';
 export * from './date-utils';
+export * from './device';
 export * from './sorting-utils';
 export * from './depot-utils';
 export * from './hooks-utilities';
