@@ -66,6 +66,17 @@ const invalid = {
   },
 };
 
+const disabled = {
+  backgroundColor: 'grayBackground',
+  borderColor: 'transparent',
+  textStyle: {
+    color: 'blueText',
+  },
+  disabledTextStyle: {
+    color: 'white',
+  },
+};
+
 export const buttonVariants = {
   defaults: {
     alignItems: 'center',
@@ -136,6 +147,7 @@ export const buttonVariants = {
       fontSize: 26,
     },
   },
+  disabled,
 };
 
 export type ButtonVariants = keyof typeof buttonVariants;

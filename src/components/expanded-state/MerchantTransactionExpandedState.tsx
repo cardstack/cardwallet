@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { SlackSheet } from '../sheet';
 import {
   BlockscoutButton,
@@ -172,35 +172,38 @@ export default function MerchantTransactionExpandedState(
 
   const network = useRainbowSelector(state => state.settings.network);
   const earnedTxnData = { ...transactionData, subText: props.asset?.subText };
-  return (
-    <SlackSheet flex={1} scrollEnabled>
-      <Container backgroundColor="white" marginBottom={32} padding={8}>
-        <Text marginBottom={10} size="medium">
-          Transaction details
-        </Text>
-        <Container
-          backgroundColor="white"
-          borderColor="borderGray"
-          borderRadius={10}
-          borderWidth={1}
-          marginBottom={8}
-          overflow="scroll"
-          paddingHorizontal={2}
-        >
-          <TransactionRow {...props.asset} hasBottomDivider />
-          <Container padding={6}>
-            {props.asset.statusText === CLAIMED_STATUS ? (
-              <ClaimedTransaction {...transactionData} />
-            ) : (
-              <EarnedTransaction {...earnedTxnData} />
-            )}
+  return useMemo(
+    () => (
+      <SlackSheet flex={1} scrollEnabled>
+        <Container backgroundColor="white" marginBottom={32} padding={8}>
+          <Text marginBottom={10} size="medium">
+            Transaction details
+          </Text>
+          <Container
+            backgroundColor="white"
+            borderColor="borderGray"
+            borderRadius={10}
+            borderWidth={1}
+            marginBottom={8}
+            overflow="scroll"
+            paddingHorizontal={2}
+          >
+            <TransactionRow {...props.asset} hasBottomDivider />
+            <Container padding={6}>
+              {props.asset.statusText === CLAIMED_STATUS ? (
+                <ClaimedTransaction {...transactionData} />
+              ) : (
+                <EarnedTransaction {...earnedTxnData} />
+              )}
+            </Container>
           </Container>
+          <BlockscoutButton
+            network={network}
+            transactionHash={props.asset.transactionHash}
+          />
         </Container>
-        <BlockscoutButton
-          network={network}
-          transactionHash={props.asset.transactionHash}
-        />
-      </Container>
-    </SlackSheet>
+      </SlackSheet>
+    ),
+    [props.asset]
   );
 }
