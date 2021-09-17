@@ -1,9 +1,9 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
-import usePayment from '@cardstack/redux/hooks/usePayment';
 import { TransactionReceipt } from 'web3-eth';
 import { BlockNumber } from 'web3-core';
 import Web3 from 'web3';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
+import usePayment from '@cardstack/redux/hooks/usePayment';
 import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {

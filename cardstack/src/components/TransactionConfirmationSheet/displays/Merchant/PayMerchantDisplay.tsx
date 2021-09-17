@@ -17,7 +17,7 @@ interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
 }
 
 export const PayMerchantDisplay = ({
-  data: { infoDID = '', spendAmount, prepaidCard, merchantSafe },
+  data: { infoDID = '', spendAmount, prepaidCard = '', merchantSafe },
 }: PayMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
 
