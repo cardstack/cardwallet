@@ -101,7 +101,7 @@ const PayMerchantBody = memo(
 
     const [accountCurrency] = useNativeCurrencyAndConversionRates();
 
-    const { navigate } = useNavigation();
+    const { navigate, goBack, canGoBack } = useNavigation();
 
     const [selectedPrepaidCardAddress, selectPrepaidCard] = useState<string>(
       prepaidCards[0]?.address
@@ -141,24 +141,31 @@ const PayMerchantBody = memo(
 
         const timestamp = await getBlockTimestamp(receipt.blockNumber);
 
-        setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD);
+        if (canGoBack()) {
+          goBack();
+        }
 
-        navigate(
-          RainbowRoutes.EXPANDED_ASSET_SHEET,
-          mapNavigationParams({
-            merchantInfo: merchantInfoDID,
-            spendAmount,
-            nativeBalanceDisplay,
-            timestamp,
-            transactionHash: receipt.transactionHash,
-            prepaidCardAddress: receipt.from,
-            prepaidCardCustomization: undefined,
-          })
-        );
+        // Wait goBack action to navigate
+        setTimeout(() => {
+          navigate(
+            RainbowRoutes.EXPANDED_ASSET_SHEET,
+            mapNavigationParams({
+              merchantInfo: merchantInfoDID,
+              spendAmount,
+              nativeBalanceDisplay,
+              timestamp,
+              transactionHash: receipt.transactionHash,
+              prepaidCardAddress: receipt.from,
+              prepaidCardCustomization: undefined,
+            })
+          );
+        }, 1000);
       },
       [
         accountCurrency,
+        canGoBack,
         currencyConversionRates,
+        goBack,
         inputValue,
         merchantInfoDID,
         navigate,
