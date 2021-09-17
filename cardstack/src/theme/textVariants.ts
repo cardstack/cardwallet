@@ -13,6 +13,10 @@ export const textVariants = {
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 0,
   },
+  xsGrey: {
+    color: 'grayText',
+    fontSize: 7,
+  },
   smallGrey: {
     color: 'grayText',
     fontSize: 10,

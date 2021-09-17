@@ -8,6 +8,7 @@ import { TransactionReceipt } from 'web3-core';
 import { getHdSignedProvider } from '@cardstack/models';
 import {
   PayMerchantDecodedData,
+  PrepaidCardType,
   TransactionConfirmationType,
 } from '@cardstack/types';
 import { getSafeData } from '@cardstack/services';
@@ -40,13 +41,12 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
-  const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
+  const prepaidCards: PrepaidCardType[] = useRainbowSelector(
+    state => state.data.prepaidCards
+  );
+
   const { selectedWallet } = useWallets();
 
-  const noPrepaidCard = !prepaidCards.length;
-
-  const firstCard = prepaidCards[0];
-  const prepaidCardAddress = firstCard?.address;
   const spendAmount = parseFloat(amount);
 
   const { isLoading, callback: getMerchantSafeData } = useWorker(async () => {
@@ -58,7 +58,7 @@ export const usePaymentMerchantUniversalLink = () => {
   }, [merchantAddress]);
 
   useEffect(() => {
-    if (noPrepaidCard) {
+    if (prepaidCards.length === 0) {
       handleAlertError(
         `You don't own a Prepaid card!\nYou can create one at app.cardstack.com`
       );
@@ -69,11 +69,12 @@ export const usePaymentMerchantUniversalLink = () => {
     }
 
     getMerchantSafeData();
-  }, [getMerchantSafeData, goBack, noPrepaidCard, prepaidCards.length]);
+  }, [getMerchantSafeData, goBack, prepaidCards.length]);
 
   const { isLoading: isLoadingTx, callback: onConfirm, error } = useWorker(
     async (
       updatedSpendAmount: number,
+      prepaidCardAddress: string,
       onSuccess: (receipt: TransactionReceipt) => void
     ) => {
       const web3 = new Web3(
@@ -96,7 +97,7 @@ export const usePaymentMerchantUniversalLink = () => {
 
       onSuccess(receipt);
     },
-    [merchantAddress, prepaidCardAddress]
+    [merchantAddress, prepaidCards.length]
   );
 
   useEffect(() => {
@@ -112,20 +113,12 @@ export const usePaymentMerchantUniversalLink = () => {
       type: TransactionConfirmationType.PAY_MERCHANT,
       infoDID,
       spendAmount,
-      prepaidCard: prepaidCardAddress,
-      prepaidCardCustomization: firstCard?.cardCustomization,
+      prepaidCard: prepaidCards[0]?.address,
       merchantSafe: merchantAddress,
       currency,
     }),
-    [
-      infoDID,
-      spendAmount,
-      prepaidCardAddress,
-      firstCard.cardCustomization,
-      merchantAddress,
-      currency,
-    ]
+    [infoDID, spendAmount, prepaidCards, merchantAddress, currency]
   );
 
-  return { noPrepaidCard, goBack, onConfirm, isLoadingTx, isLoading, data };
+  return { prepaidCards, goBack, onConfirm, isLoadingTx, isLoading, data };
 };
