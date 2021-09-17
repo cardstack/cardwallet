@@ -22,12 +22,14 @@ export interface ChoosePrepaidCardProps {
   prepaidCards: PrepaidCardType[];
   onSelectPrepaidCard: (prepaidAddress: string) => void;
   spendAmount: number;
+  onPressEditAmount: () => void;
 }
 
 const ChoosePrepaidCard = ({
   prepaidCards,
   onSelectPrepaidCard,
   spendAmount,
+  onPressEditAmount,
 }: ChoosePrepaidCardProps) => {
   const [showHeaderShadow, setShowHeaderShadow] = useState(false);
 
@@ -57,7 +59,11 @@ const ChoosePrepaidCard = ({
       borderRadius={20}
       justifyContent="center"
     >
-      <Header showHeaderShadow={showHeaderShadow} spendAmount={spendAmount} />
+      <Header
+        showHeaderShadow={showHeaderShadow}
+        spendAmount={spendAmount}
+        onPressEditAmount={onPressEditAmount}
+      />
       <FlatList
         data={prepaidCards}
         removeClippedSubviews
@@ -233,9 +239,11 @@ const PrepaidCardItem = ({
 const Header = ({
   showHeaderShadow,
   spendAmount,
+  onPressEditAmount,
 }: {
   showHeaderShadow: boolean;
   spendAmount: number;
+  onPressEditAmount: () => void;
 }) => {
   const shadowProps: ContainerProps = showHeaderShadow
     ? {
@@ -264,9 +272,14 @@ const Header = ({
       <Text variant="subText" weight="bold" marginTop={3}>
         To Pay This Amount
       </Text>
-      <Text weight="bold" size="body">
-        {`§${spendAmount} SPEND`}
-      </Text>
+      <Touchable width="100%" alignItems="center" onPress={onPressEditAmount}>
+        <Text weight="bold" size="body">
+          {`§${spendAmount} SPEND`}
+        </Text>
+        <Container position="absolute" right={20} paddingTop={1}>
+          <Text size="xxs">Edit Amount</Text>
+        </Container>
+      </Touchable>
       <HorizontalDivider height={2} marginTop={4} marginVertical={0} />
     </Container>
   );

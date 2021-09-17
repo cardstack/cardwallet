@@ -154,6 +154,7 @@ const PayMerchantBody = memo(
             ...data,
             spendAmount,
             currency: nativeCurrency === 'SPD' ? currency : nativeCurrency,
+            prepaidCard: selectedPrepaidCardAddress,
           }}
           onCancel={() => setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD)}
           onConfirm={onCustomConfirm}
@@ -166,6 +167,7 @@ const PayMerchantBody = memo(
         prepaidCards={prepaidCards}
         onSelectPrepaidCard={onSelectPrepaidCard}
         spendAmount={spendAmount}
+        onPressEditAmount={() => setPayStep(PAY_STEP.EDIT_AMOUNT)}
       />
     );
   }

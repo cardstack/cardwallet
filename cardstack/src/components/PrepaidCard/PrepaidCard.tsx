@@ -232,15 +232,7 @@ export const PrepaidCardInnerTop = ({
           </Text>
         </Container>
         <Container flexDirection="column" paddingTop={3}>
-          <Touchable
-            hitSlop={{
-              top: 5,
-              bottom: 5,
-              left: 5,
-              right: 5,
-            }}
-            onPress={onPress}
-          >
+          {smallCard ? (
             <Text
               variant="overGradient"
               fontFamily="RobotoMono-Regular"
@@ -250,7 +242,27 @@ export const PrepaidCardInnerTop = ({
             >
               {getAddressPreview(address)}
             </Text>
-          </Touchable>
+          ) : (
+            <Touchable
+              hitSlop={{
+                top: 5,
+                bottom: 5,
+                left: 5,
+                right: 5,
+              }}
+              onPress={onPress}
+            >
+              <Text
+                variant="overGradient"
+                fontFamily="RobotoMono-Regular"
+                fontSize={smallCard ? 13 : 18}
+                color={cardCustomization?.textColor as ColorTypes}
+                textShadowColor={cardCustomization?.patternColor as ColorTypes}
+              >
+                {getAddressPreview(address)}
+              </Text>
+            </Touchable>
+          )}
           <Text
             fontSize={smallCard ? 8 : 11}
             color={cardCustomization?.textColor as ColorTypes}
