@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import Web3 from 'web3';
 import { getSDK, MerchantSafe } from '@cardstack/cardpay-sdk';
 import { PrepaidCard } from '@cardstack/cardpay-sdk/sdk/prepaid-card';
+import { TransactionReceipt } from 'web3-core';
 import { getHdSignedProvider } from '@cardstack/models';
 import {
   PayMerchantDecodedData,
@@ -11,7 +12,6 @@ import {
 } from '@cardstack/types';
 import { getSafeData } from '@cardstack/services';
 import { useWorker } from '@cardstack/utils';
-import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { useWallets } from '@rainbow-me/hooks';
@@ -36,7 +36,7 @@ export const usePaymentMerchantUniversalLink = () => {
     params: { merchantAddress, amount = '0', network, currency },
   } = useRoute<RouteType>();
 
-  const { goBack, navigate } = useNavigation();
+  const { goBack } = useNavigation();
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
@@ -44,7 +44,9 @@ export const usePaymentMerchantUniversalLink = () => {
   const { selectedWallet } = useWallets();
 
   const noPrepaidCard = !prepaidCards.length;
-  const prepaidCardAddress = prepaidCards[0]?.address;
+
+  const firstCard = prepaidCards[0];
+  const prepaidCardAddress = firstCard?.address;
   const spendAmount = parseFloat(amount);
 
   const { isLoading, callback: getMerchantSafeData } = useWorker(async () => {
@@ -70,7 +72,10 @@ export const usePaymentMerchantUniversalLink = () => {
   }, [getMerchantSafeData, goBack, noPrepaidCard, prepaidCards.length]);
 
   const { isLoading: isLoadingTx, callback: onConfirm, error } = useWorker(
-    async (updatedSpendAmount: number) => {
+    async (
+      updatedSpendAmount: number,
+      onSuccess: (receipt: TransactionReceipt) => void
+    ) => {
       const web3 = new Web3(
         await getHdSignedProvider({
           selectedWallet,
@@ -78,15 +83,18 @@ export const usePaymentMerchantUniversalLink = () => {
         })
       );
 
-      const prepaidCard: PrepaidCard = await getSDK('PrepaidCard', web3);
+      const prepaidCardInstance: PrepaidCard = await getSDK(
+        'PrepaidCard',
+        web3
+      );
 
-      await prepaidCard.payMerchant(
+      const receipt = await prepaidCardInstance.payMerchant(
         merchantAddress,
         prepaidCardAddress,
         updatedSpendAmount
       );
 
-      navigate(RainbowRoutes.PROFILE_SCREEN);
+      onSuccess(receipt);
     },
     [merchantAddress, prepaidCardAddress]
   );
@@ -105,10 +113,18 @@ export const usePaymentMerchantUniversalLink = () => {
       infoDID,
       spendAmount,
       prepaidCard: prepaidCardAddress,
+      prepaidCardCustomization: firstCard?.cardCustomization,
       merchantSafe: merchantAddress,
       currency,
     }),
-    [infoDID, merchantAddress, prepaidCardAddress, spendAmount, currency]
+    [
+      infoDID,
+      spendAmount,
+      prepaidCardAddress,
+      firstCard.cardCustomization,
+      merchantAddress,
+      currency,
+    ]
   );
 
   return { noPrepaidCard, goBack, onConfirm, isLoadingTx, isLoading, data };

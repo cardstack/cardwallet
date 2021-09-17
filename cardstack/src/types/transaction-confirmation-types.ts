@@ -1,3 +1,5 @@
+import { PrepaidCardCustomization } from './transaction-types';
+
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
   HUB_AUTH = 'hubAuth',
@@ -52,6 +54,7 @@ export interface PayMerchantDecodedData {
   spendAmount: number;
   merchantSafe: string;
   prepaidCard: string;
+  prepaidCardCustomization?: PrepaidCardCustomization;
   infoDID?: string;
   currency?: string;
   type: TransactionConfirmationType.PAY_MERCHANT;
