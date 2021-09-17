@@ -119,10 +119,18 @@ export const getTokensWithPrice = async (
           ? usdBalance
           : currencyConversionRates[nativeCurrency] * usdBalance;
 
+      const isAmountDust = nativeBalance < 0.01;
+
+      //decimal places formatting for residual crypto values
+      const bufferValue = isAmountDust ? 0 : undefined;
       return {
         ...tokenItem,
         balance: {
-          ...convertRawAmountToBalance(tokenItem.balance, tokenItem.token),
+          ...convertRawAmountToBalance(
+            tokenItem.balance,
+            tokenItem.token,
+            bufferValue
+          ),
           wei: tokenItem.balance,
         },
         native: {
@@ -130,7 +138,8 @@ export const getTokensWithPrice = async (
             amount: nativeBalance,
             display: convertAmountToNativeDisplay(
               nativeBalance,
-              nativeCurrency
+              nativeCurrency,
+              bufferValue
             ),
           },
         },
