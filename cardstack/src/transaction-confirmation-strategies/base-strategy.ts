@@ -6,8 +6,8 @@ import {
   TokenData,
   TransactionConfirmationData,
 } from '@cardstack/types';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { getSafeData } from '@cardstack/services';
+import { getWeb3ProviderSdk } from '@cardstack/models/web3';
 
 interface BaseStrategyParams {
   message: {
@@ -50,7 +50,7 @@ export abstract class BaseStrategy {
   }
 
   getTokenData = async (tokenAddress: string): Promise<TokenData> => {
-    const web3 = new Web3((await getWeb3ProviderSdk()) as any);
+    const web3 = new Web3(await getWeb3ProviderSdk());
     const tokenContract = new web3.eth.Contract(ERC20ABI as any, tokenAddress);
 
     const [symbol, decimals] = await Promise.all([

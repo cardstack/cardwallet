@@ -16,13 +16,13 @@ import { Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
-import Web3 from 'web3';
-import { getNetwork } from '../handlers/localstorage/globalSettings';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
+
+import { getWeb3ProviderSdk } from '@cardstack/models/web3';
 import { isNativeToken } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
@@ -37,49 +37,14 @@ export let web3Provider = null;
  * @param {String} network
  */
 
-export const web3SetHttpProvider = async () => {
+export const web3SetHttpProvider = async network => {
   try {
-    web3Provider = new Web3Provider(await getWeb3ProviderSdk());
+    web3Provider = new Web3Provider(await getWeb3ProviderSdk(network));
   } catch (error) {
     logger.error('provider error', error);
   }
 
   return web3Provider.ready;
-};
-
-/**
- * @desc web3 ws instance - to be used with web3 contracts
- */
-
-let web3ProviderSdk = null;
-
-export const getWeb3ProviderSdk = async () => {
-  if (web3ProviderSdk === null) {
-    try {
-      const network = await getNetwork();
-      const node = getConstantByNetwork('rpcWssNode', network);
-
-      web3ProviderSdk = new Web3.providers.WebsocketProvider(node, {
-        timeout: 30000,
-        reconnect: {
-          auto: true,
-          delay: 1000,
-          maxAttempts: 10,
-        },
-        clientConfig: {
-          keepalive: true,
-          keepaliveInterval: -1,
-        },
-      });
-
-      web3ProviderSdk.on('error', e => logger.sentry('WS socket error', e));
-      web3ProviderSdk.on('end', e => logger.sentry('WS socket ended', e));
-    } catch (error) {
-      logger.error('provider error', error);
-    }
-  }
-
-  return web3ProviderSdk;
 };
 
 export const sendRpcCall = async payload =>

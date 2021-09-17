@@ -1,8 +1,8 @@
 import Web3 from 'web3';
 import { getSDK } from '@cardstack/cardpay-sdk';
 import { CurrencyConversionRates } from '@cardstack/types';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import logger from 'logger';
+import { getWeb3ProviderSdk } from '@cardstack/models/web3';
 
 export const getNativeBalance = async (props: {
   symbol: string | null | undefined;

@@ -12,14 +12,14 @@ import {
   saveMerchantSafes,
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { CurrencyConversionRates } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import logger from 'logger';
+import { getWeb3ProviderSdk } from '@cardstack/models/web3';
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
-    const web3 = new Web3((await getWeb3ProviderSdk()) as any);
+    const web3 = new Web3(await getWeb3ProviderSdk());
     const safesInstance = await getSDK('Safes', web3);
     const safes = await safesInstance.view(address);
 

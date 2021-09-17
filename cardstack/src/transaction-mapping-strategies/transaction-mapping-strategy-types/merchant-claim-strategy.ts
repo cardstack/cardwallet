@@ -8,7 +8,7 @@ import { BaseStrategy } from '../base-strategy';
 import { MerchantClaimType, TransactionTypes } from '@cardstack/types';
 import { getNativeBalance } from '@cardstack/services';
 import { getMerchantClaimTransactionDetails } from '@cardstack/utils/merchant-utils';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
+import { getWeb3ProviderSdk } from '@cardstack/models/web3';
 
 export class MerchantClaimStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

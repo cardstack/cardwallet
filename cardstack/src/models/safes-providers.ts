@@ -1,10 +1,10 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import HDWalletProvider from 'parity-hdwallet-provider';
 import Web3 from 'web3';
+import { getWeb3ProviderSdk } from './web3';
 import { getSeedPhrase, RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 import { ethereumUtils } from '@rainbow-me/utils';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface SignedProviderParams {
@@ -40,7 +40,7 @@ export const getHdSignedProvider = async ({
 export const getSafesInstance = async (
   signedProviderParams?: SignedProviderParams
 ) => {
-  let web3Provider: HDWalletProvider | null = await getWeb3ProviderSdk();
+  let web3Provider: HDWalletProvider | null = ((await getWeb3ProviderSdk()) as unknown) as HDWalletProvider;
 
   if (signedProviderParams) {
     web3Provider = await getHdSignedProvider(signedProviderParams);

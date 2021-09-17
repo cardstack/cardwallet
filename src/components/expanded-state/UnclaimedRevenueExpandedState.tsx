@@ -18,9 +18,9 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
+import { getWeb3ProviderSdk } from '@cardstack/models/web3';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { sectionStyle } from '@cardstack/utils/layouts';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
