@@ -1,4 +1,8 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
+import usePayment from '@cardstack/redux/hooks/usePayment';
+import { TransactionReceipt } from 'web3-eth';
+import { BlockNumber } from 'web3-core';
+import Web3 from 'web3';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
@@ -11,11 +15,11 @@ import {
   Button,
   TransactionConfirmationSheet,
 } from '@cardstack/components';
-import usePayment from '@cardstack/redux/hooks/usePayment';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import {
   MerchantInformation,
   PayMerchantDecodedData,
+  PrepaidCardCustomization,
   PrepaidCardType,
 } from '@cardstack/types';
 import {
@@ -27,6 +31,12 @@ import {
   useNativeCurrencyAndConversionRates,
   usePaymentCurrencyAndConversionRates,
 } from '@rainbow-me/redux/hooks';
+import { useNavigation } from '@rainbow-me/navigation';
+import RainbowRoutes from '@rainbow-me/navigation/routesNames';
+import { PrepaidCardTransactionHeader } from '@cardstack/components/Transactions/PrepaidCard/PrepaidCardTransactionHeader';
+import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
+import logger from 'logger';
+import { Icon } from '@rainbow-me/components/icons';
 
 const PAY_STEP = {
   EDIT_AMOUNT: 'EDIT_AMOUNT',
@@ -61,7 +71,11 @@ const PayMerchant = () => {
 type PayMerchantBodyProps = {
   prepaidCards: PrepaidCardType[];
   onCancel: () => void;
-  onConfirm: (spendAmount: number, prepaidCardAddress: string) => void;
+  onConfirm: (
+    spendAmount: number,
+    prepaidCardAddress: string,
+    onSuccess: (receipt: TransactionReceipt) => void
+  ) => void;
   onConfirmLoading: boolean;
   loading: boolean;
   data: PayMerchantDecodedData;
@@ -84,6 +98,10 @@ const PayMerchantBody = memo(
       nativeCurrency,
       currencyConversionRates,
     ] = usePaymentCurrencyAndConversionRates();
+
+    const [accountCurrency] = useNativeCurrencyAndConversionRates();
+
+    const { navigate } = useNavigation();
 
     const [selectedPrepaidCardAddress, selectPrepaidCard] = useState<string>(
       prepaidCards[0]?.address
@@ -112,9 +130,50 @@ const PayMerchantBody = memo(
             true
           ).spendAmount;
 
+    const onPayMerchantSuccess = useCallback(
+      async (receipt: TransactionReceipt) => {
+        const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+          inputValue ? localCurrencyToAbsNum(inputValue) : 0,
+          accountCurrency,
+          currencyConversionRates,
+          true
+        );
+
+        const timestamp = await getBlockTimestamp(receipt.blockNumber);
+
+        setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD);
+
+        navigate(
+          RainbowRoutes.EXPANDED_ASSET_SHEET,
+          mapNavigationParams({
+            merchantInfo: merchantInfoDID,
+            spendAmount,
+            nativeBalanceDisplay,
+            timestamp,
+            transactionHash: receipt.transactionHash,
+            prepaidCardAddress: receipt.from,
+            prepaidCardCustomization: undefined,
+          })
+        );
+      },
+      [
+        accountCurrency,
+        currencyConversionRates,
+        inputValue,
+        merchantInfoDID,
+        navigate,
+        spendAmount,
+      ]
+    );
+
     const onCustomConfirm = useCallback(() => {
-      onConfirm(spendAmount, selectedPrepaidCardAddress);
-    }, [onConfirm, spendAmount, selectedPrepaidCardAddress]);
+      onConfirm(spendAmount, selectedPrepaidCardAddress, onPayMerchantSuccess);
+    }, [
+      onConfirm,
+      spendAmount,
+      selectedPrepaidCardAddress,
+      onPayMerchantSuccess,
+    ]);
 
     const onSelectPrepaidCard = (prepaidAddress: string) => {
       selectPrepaidCard(prepaidAddress);
@@ -263,5 +322,66 @@ const AmountInputSection = memo(
     );
   }
 );
+
+const getBlockTimestamp = async (blockNumber: BlockNumber) => {
+  try {
+    const web3 = new Web3(await getWeb3ProviderSdk());
+    const block = await web3.eth.getBlock(blockNumber);
+    return block?.timestamp.toString();
+  } catch (error) {
+    logger.log(error);
+  }
+
+  return Date.now().toString();
+};
+
+// Workaround to reuse tx confirmation, will revisit it
+interface NavParams {
+  merchantInfo?: MerchantInformation;
+  spendAmount: number;
+  nativeBalanceDisplay: string;
+  timestamp: string;
+  transactionHash: string;
+  prepaidCardAddress: string;
+  prepaidCardCustomization?: PrepaidCardCustomization;
+}
+
+const mapNavigationParams = ({
+  merchantInfo,
+  spendAmount,
+  nativeBalanceDisplay,
+  timestamp,
+  transactionHash,
+  prepaidCardAddress,
+  prepaidCardCustomization,
+}: NavParams) => ({
+  asset: {
+    index: 0,
+    section: {
+      data: [
+        {
+          merchantInfo,
+          spendAmount,
+          nativeBalanceDisplay,
+          timestamp,
+          transactionHash,
+        },
+      ],
+    },
+    Header: (
+      <PrepaidCardTransactionHeader
+        address={prepaidCardAddress}
+        cardCustomization={prepaidCardCustomization}
+      />
+    ),
+    CoinIcon: <Icon name="spend" />,
+    statusIconName: 'arrow-up',
+    statusText: 'Paid',
+    primaryText: `- ${spendAmount}`,
+    subText: nativeBalanceDisplay,
+    transactionHash,
+  },
+  type: 'paymentConfirmationTransaction',
+});
 
 export default memo(PayMerchant);
