@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { SlackSheet } from '../sheet';
 import { BlockscoutButton, Container, Text } from '@cardstack/components';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
@@ -92,7 +92,7 @@ const PaymentDetailsItem = ({
   );
 };
 
-const CHART_HEIGHT = screenHeight * 0.8;
+const CHART_HEIGHT = screenHeight * 0.75;
 
 export default function PaymentConfirmationExpandedState(
   props: PaymentConfirmationExpandedStateProps
@@ -103,7 +103,7 @@ export default function PaymentConfirmationExpandedState(
     setOptions({
       longFormHeight: CHART_HEIGHT,
     });
-  }, [setOptions]);
+  });
   const {
     merchantInfo,
     spendAmount,
@@ -114,46 +114,49 @@ export default function PaymentConfirmationExpandedState(
   const { ownerAddress } = merchantInfo || {};
 
   const network = useRainbowSelector(state => state.settings.network);
-  return (
-    <SlackSheet flex={1} scrollEnabled>
-      <Container backgroundColor="white" marginBottom={16} padding={8}>
-        <Text marginBottom={10} size="medium">
-          Payment Confirmation
-        </Text>
-        <MerchantSectionCard merchantInfoDID={merchantInfo}>
-          <Container alignItems="center" paddingBottom={3}>
-            <Text fontSize={40} fontWeight="700">
-              §{spendAmount || ''}
-            </Text>
-            <Text color="blueText" fontSize={12}>
-              {nativeBalanceDisplay || ''}
-            </Text>
+  return useMemo(
+    () => (
+      <SlackSheet flex={1} scrollEnabled>
+        <Container backgroundColor="white" marginBottom={16} padding={8}>
+          <Text marginBottom={10} size="medium">
+            Payment Confirmation
+          </Text>
+          <MerchantSectionCard merchantInfoDID={merchantInfo}>
+            <Container alignItems="center" paddingBottom={3}>
+              <Text fontSize={40} fontWeight="700">
+                §{spendAmount || ''}
+              </Text>
+              <Text color="blueText" fontSize={12}>
+                {nativeBalanceDisplay || ''}
+              </Text>
+            </Container>
+          </MerchantSectionCard>
+          <Container marginBottom={3} />
+          <Container
+            backgroundColor="white"
+            borderColor="borderGray"
+            borderRadius={10}
+            borderWidth={1}
+            marginBottom={8}
+            overflow="scroll"
+          >
+            {props.asset.Header}
+            <TransactionRow {...props.asset} hasBottomDivider />
+            <PaymentDetailsItem
+              title="TO:"
+              {...merchantInfo}
+              info={ownerAddress}
+            />
+            <PaymentDetailsItem info={transactionHash} title="TXN HASH:" />
+            <PaymentDetailsItem info={timestamp} isTimestamp title="TIME:" />
           </Container>
-        </MerchantSectionCard>
-        <Container marginBottom={3} />
-        <Container
-          backgroundColor="white"
-          borderColor="borderGray"
-          borderRadius={10}
-          borderWidth={1}
-          marginBottom={8}
-          overflow="scroll"
-        >
-          {props.asset.Header}
-          <TransactionRow {...props.asset} hasBottomDivider />
-          <PaymentDetailsItem
-            title="TO:"
-            {...merchantInfo}
-            info={ownerAddress}
+          <BlockscoutButton
+            network={network}
+            transactionHash={props.asset.transactionHash}
           />
-          <PaymentDetailsItem info={transactionHash} title="TXN HASH:" />
-          <PaymentDetailsItem info={timestamp} isTimestamp title="TIME:" />
         </Container>
-        <BlockscoutButton
-          network={network}
-          transactionHash={props.asset.transactionHash}
-        />
-      </Container>
-    </SlackSheet>
+      </SlackSheet>
+    ),
+    [props.asset]
   );
 }

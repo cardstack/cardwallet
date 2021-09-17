@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import {
   ChartFilterOptions,
@@ -50,15 +50,17 @@ export default function LifetimeEarningsExpandedState(props: {
     });
   }, [setOptions]);
 
-  return (
-    // @ts-ignore doesn't understand the JS props
-    <SlackSheet bottomInset={42} height="100%" scrollEnabled>
-      <ChartSection address={address} />
-      <Container paddingHorizontal={5}>
-        <HorizontalDivider />
-      </Container>
-      <ActivitiesSection address={address} />
-    </SlackSheet>
+  return useMemo(
+    () => (
+      <SlackSheet bottomInset={42} height="100%" scrollEnabled>
+        <ChartSection address={address} />
+        <Container paddingHorizontal={5}>
+          <HorizontalDivider />
+        </Container>
+        <ActivitiesSection address={address} />
+      </SlackSheet>
+    ),
+    [address]
   );
 }
 

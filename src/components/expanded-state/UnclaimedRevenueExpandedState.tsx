@@ -1,7 +1,7 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
 import HDWalletProvider from 'parity-hdwallet-provider';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import CoinIcon from 'react-coin-icon';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import Web3 from 'web3';
@@ -103,23 +103,33 @@ export default function UnclaimedRevenueExpandedState(props: {
     setLoading(false);
   }, [merchantSafe.address, network, revenueBalances, selectedWallet.id]);
 
-  return (
-    <SlackSheet flex={1} scrollEnabled>
-      <Container paddingHorizontal={5} paddingVertical={3}>
-        <Text size="medium">Unclaimed revenue</Text>
-        <Container flexDirection="column" marginTop={5}>
-          {revenueBalances.map(token => (
-            <TokenItem key={token.tokenAddress} token={token} />
-          ))}
+  const nativeAmount = revenueBalances[0].native.balance.amount;
+  const isDust = parseFloat(nativeAmount) < 0.01;
+  return useMemo(
+    () => (
+      <SlackSheet flex={1} scrollEnabled>
+        <Container paddingHorizontal={5} paddingVertical={3}>
+          <Text size="medium">Unclaimed revenue</Text>
+          <Container flexDirection="column" marginTop={5}>
+            {revenueBalances.map(token => (
+              <TokenItem key={token.tokenAddress} token={token} />
+            ))}
+          </Container>
+          <Button
+            loading={loading}
+            marginTop={8}
+            onPress={isDust ? () => {} : onClaimAll}
+            variant={isDust ? 'disabled' : undefined}
+          >
+            Claim All
+          </Button>
+          <HorizontalDivider />
+          <Text size="medium">Activities</Text>
+          <Activities address={props.asset.address} />
         </Container>
-        <Button loading={loading} marginTop={8} onPress={onClaimAll}>
-          Claim All
-        </Button>
-        <HorizontalDivider />
-        <Text size="medium">Activities</Text>
-        <Activities address={props.asset.address} />
-      </Container>
-    </SlackSheet>
+      </SlackSheet>
+    ),
+    [props.asset]
   );
 }
 

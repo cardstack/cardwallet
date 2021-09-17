@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
 import {
@@ -10,10 +10,11 @@ import {
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType } from '@cardstack/types';
+import { screenHeight } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 import { useNavigation } from '@rainbow-me/navigation';
 
-const CHART_HEIGHT = 650;
+const CHART_HEIGHT = screenHeight * 0.75;
 
 export default function UnclaimedRevenueExpandedState(props: {
   asset: MerchantSafeType;
@@ -25,13 +26,16 @@ export default function UnclaimedRevenueExpandedState(props: {
       longFormHeight: CHART_HEIGHT,
     });
   }, [setOptions]);
-  return (
-    <SlackSheet flex={1} scrollEnabled>
-      <Container paddingHorizontal={5} paddingVertical={3}>
-        <Text size="medium">Recent activity</Text>
-        <Activities address={props.asset.address} />
-      </Container>
-    </SlackSheet>
+  return useMemo(
+    () => (
+      <SlackSheet flex={1} scrollEnabled>
+        <Container paddingHorizontal={5} paddingVertical={3}>
+          <Text size="medium">Recent activity</Text>
+          <Activities address={props.asset.address} />
+        </Container>
+      </SlackSheet>
+    ),
+    [props.asset.address]
   );
 }
 
