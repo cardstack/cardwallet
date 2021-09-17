@@ -272,14 +272,27 @@ const Header = ({
       <Text variant="subText" weight="bold" marginTop={3}>
         To Pay This Amount
       </Text>
-      <Touchable width="100%" alignItems="center" onPress={onPressEditAmount}>
-        <Text weight="bold" size="body">
-          {`§${spendAmount} SPEND`}
-        </Text>
-        <Container position="absolute" right={20} paddingTop={1}>
+      <Container width="100%" alignItems="center">
+        <Touchable onPress={onPressEditAmount}>
+          <Text weight="bold" size="body">
+            {`§${spendAmount} SPEND`}
+          </Text>
+        </Touchable>
+        <Touchable
+          position="absolute"
+          right={20}
+          paddingTop={1}
+          onPress={onPressEditAmount}
+          hitSlop={{
+            top: 5,
+            bottom: 5,
+            left: 5,
+            right: 5,
+          }}
+        >
           <Text size="xxs">Edit Amount</Text>
-        </Container>
-      </Touchable>
+        </Touchable>
+      </Container>
       <HorizontalDivider height={2} marginTop={4} marginVertical={0} />
     </Container>
   );
