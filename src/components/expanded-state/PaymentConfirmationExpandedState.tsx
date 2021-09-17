@@ -92,8 +92,6 @@ const PaymentDetailsItem = ({
   );
 };
 
-const CHART_HEIGHT = screenHeight * 0.75;
-
 export default function PaymentConfirmationExpandedState(
   props: PaymentConfirmationExpandedStateProps
 ) {
@@ -101,7 +99,7 @@ export default function PaymentConfirmationExpandedState(
 
   useEffect(() => {
     setOptions({
-      longFormHeight: CHART_HEIGHT,
+      longFormHeight: screenHeight,
     });
   });
   const {
@@ -157,6 +155,15 @@ export default function PaymentConfirmationExpandedState(
         </Container>
       </SlackSheet>
     ),
-    [props.asset]
+    [
+      merchantInfo,
+      nativeBalanceDisplay,
+      network,
+      ownerAddress,
+      props.asset,
+      spendAmount,
+      timestamp,
+      transactionHash,
+    ]
   );
 }

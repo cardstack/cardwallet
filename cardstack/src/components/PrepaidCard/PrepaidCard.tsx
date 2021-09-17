@@ -131,7 +131,6 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           backgroundColor="white"
           borderRadius={10}
           overflow="hidden"
-          borderColor="buttonPrimaryBorder"
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
         >
           <CustomizableBackground
@@ -139,8 +138,12 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             isEditing={isEditing}
             address={prepaidCard.address}
           />
-          <Top {...prepaidCard} networkName={networkName} />
-          <Bottom {...props} />
+          <PrepaidCardInnerTop
+            address={prepaidCard.address}
+            cardCustomization={prepaidCard.cardCustomization}
+            networkName={networkName}
+          />
+          <PrepaidCardInnerBottom {...props} />
         </Container>
         {isEditing && isHidden && (
           <Container
@@ -162,7 +165,17 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   );
 };
 
-const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
+export const PrepaidCardInnerTop = ({
+  address,
+  networkName,
+  cardCustomization,
+  smallCard = false,
+}: {
+  address: string;
+  networkName: string;
+  cardCustomization: PrepaidCardCustomization | undefined;
+  smallCard?: boolean;
+}) => {
   const { navigate } = useNavigation();
 
   const onPress = useCallback(() => {
@@ -182,7 +195,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
       >
         <Text
           variant="overGradient"
-          size="xxs"
+          fontSize={smallCard ? 9 : 11}
           color={cardCustomization?.textColor as ColorTypes}
           style={{ textShadowColor: cardCustomization?.patternColor }}
           textShadowColor={cardCustomization?.patternColor as ColorTypes}
@@ -191,7 +204,7 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         </Text>
         <Text
           variant="overGradient"
-          fontSize={11}
+          fontSize={smallCard ? 8 : 11}
           weight="bold"
           letterSpacing={0.55}
           color={cardCustomization?.textColor as ColorTypes}
@@ -206,10 +219,10 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
         justifyContent="space-between"
         alignItems="flex-start"
       >
-        <Container maxWidth={175}>
+        <Container maxWidth={smallCard ? 100 : 175}>
           <Text
             variant="overGradient"
-            size="xs"
+            fontSize={smallCard ? 10 : 13}
             weight="extraBold"
             color={cardCustomization?.textColor as ColorTypes}
             textShadowColor={cardCustomization?.patternColor as ColorTypes}
@@ -219,27 +232,39 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
           </Text>
         </Container>
         <Container flexDirection="column" paddingTop={3}>
-          <Touchable
-            hitSlop={{
-              top: 5,
-              bottom: 5,
-              left: 5,
-              right: 5,
-            }}
-            onPress={onPress}
-          >
+          {smallCard ? (
             <Text
               variant="overGradient"
               fontFamily="RobotoMono-Regular"
-              fontSize={18}
+              fontSize={smallCard ? 13 : 18}
               color={cardCustomization?.textColor as ColorTypes}
               textShadowColor={cardCustomization?.patternColor as ColorTypes}
             >
               {getAddressPreview(address)}
             </Text>
-          </Touchable>
+          ) : (
+            <Touchable
+              hitSlop={{
+                top: 5,
+                bottom: 5,
+                left: 5,
+                right: 5,
+              }}
+              onPress={onPress}
+            >
+              <Text
+                variant="overGradient"
+                fontFamily="RobotoMono-Regular"
+                fontSize={smallCard ? 13 : 18}
+                color={cardCustomization?.textColor as ColorTypes}
+                textShadowColor={cardCustomization?.patternColor as ColorTypes}
+              >
+                {getAddressPreview(address)}
+              </Text>
+            </Touchable>
+          )}
           <Text
-            fontSize={11}
+            fontSize={smallCard ? 8 : 11}
             color={cardCustomization?.textColor as ColorTypes}
             textShadowColor={cardCustomization?.patternColor as ColorTypes}
             textAlign="right"
@@ -250,13 +275,14 @@ const Top = ({ address, networkName, cardCustomization }: PrepaidCardProps) => {
   );
 };
 
-const Bottom = ({
+export const PrepaidCardInnerBottom = ({
   spendFaceValue,
   reloadable,
   nativeCurrency,
   currencyConversionRates,
   transferrable,
-}: PrepaidCardProps) => {
+  smallCard = false,
+}: PrepaidCardProps & { smallCard?: boolean }) => {
   const {
     tokenBalanceDisplay,
     nativeBalanceDisplay,
@@ -266,22 +292,30 @@ const Bottom = ({
     currencyConversionRates
   );
 
+  const iconSize = smallCard
+    ? { width: 28, height: 30, marginTop: 3 }
+    : { width: 42, height: 46 };
+
   return (
-    <Container paddingHorizontal={6} paddingVertical={4}>
+    <Container
+      paddingHorizontal={6}
+      paddingVertical={4}
+      paddingTop={smallCard ? 0 : 4}
+    >
       <Container
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
       >
         <Container>
-          <Text fontSize={13} color="spendableBalance">
+          <Text fontSize={smallCard ? 9 : 13} color="spendableBalance">
             Spendable Balance
           </Text>
-          <Text fontSize={40} fontWeight="700">
+          <Text fontSize={smallCard ? 29 : 40} fontWeight="700">
             {tokenBalanceDisplay}
           </Text>
         </Container>
-        <Container height={46} width={42}>
+        <Container {...iconSize}>
           <Image
             source={logo}
             style={{
@@ -300,10 +334,10 @@ const Bottom = ({
       >
         <Text fontWeight="700">{nativeBalanceDisplay}</Text>
         <Container alignItems="flex-end">
-          <Text variant="smallGrey">
+          <Text variant={smallCard ? 'xsGrey' : 'smallGrey'}>
             {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}
           </Text>
-          <Text variant="smallGrey">
+          <Text variant={smallCard ? 'xsGrey' : 'smallGrey'}>
             {transferrable ? 'TRANSFERRABLE' : 'NON-TRANSFERRABLE'}
           </Text>
         </Container>

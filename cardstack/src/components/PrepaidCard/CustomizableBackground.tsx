@@ -12,10 +12,14 @@ import { PrepaidCardCustomization } from '@cardstack/types';
 import { parseLinearGradient } from '@cardstack/utils';
 import { useDimensions } from '@rainbow-me/hooks';
 
-type CardVariants = 'normal' | 'small' | 'mini';
+type CardVariants = 'normal' | 'small' | 'mini' | 'medium';
 
-const cardType: Record<CardVariants, { width: string; height: number }> = {
-  normal: { width: '100%', height: 110 },
+const cardType: Record<
+  CardVariants,
+  { width: string; height: number; bottomX?: number; bottomY?: number }
+> = {
+  normal: { width: '100%', height: 110, bottomX: 0, bottomY: 71 },
+  medium: { width: '100%', height: 86, bottomX: -40, bottomY: 47 },
   small: { width: '115%', height: 40 },
   mini: { width: '100%', height: 14 },
 };
@@ -106,7 +110,11 @@ export const CustomizableBackground = ({
           />
         </G>
       ) : (
-        <G transform="translate(0 71)">
+        <G
+          transform={`translate(${cardType[variant].bottomX || 0} ${
+            cardType[variant].bottomY || 71
+          })`}
+        >
           <Path
             d="M 0 164.992 v -0.127 H 0 V 0 H 139.563 s 13.162 0.132 24.094 12.362 s 15.768 15.605 15.768 15.605 s 7.3 8.09 22.43 8.452 H 411 l -0.064 128.572 Z"
             fill="#fff"

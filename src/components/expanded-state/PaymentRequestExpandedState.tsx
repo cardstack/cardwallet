@@ -250,7 +250,7 @@ const AmountAndQRCodeButtons = ({
           </Text>
           <Container paddingLeft={6}>
             <Text fontSize={15} fontWeight="bold">
-              {`${amountWithSymbol} ${nativeCurrency}`}
+              {amountWithSymbol}
             </Text>
             <SpendAmount
               formattedAmount={formattedAmount}
