@@ -113,11 +113,10 @@ export const usePaymentMerchantUniversalLink = () => {
       type: TransactionConfirmationType.PAY_MERCHANT,
       infoDID,
       spendAmount,
-      prepaidCard: prepaidCards[0]?.address,
       merchantSafe: merchantAddress,
       currency,
     }),
-    [infoDID, spendAmount, prepaidCards, merchantAddress, currency]
+    [infoDID, spendAmount, merchantAddress, currency]
   );
 
   return { prepaidCards, goBack, onConfirm, isLoadingTx, isLoading, data };
