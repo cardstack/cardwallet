@@ -1,12 +1,9 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
-import HDWalletProvider from 'parity-hdwallet-provider';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import CoinIcon from 'react-coin-icon';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import Web3 from 'web3';
-import { getSeedPhrase } from '../../../src/model/wallet';
-import { ethereumUtils } from '../../../src/utils';
 import { SlackSheet } from '../sheet';
 import {
   Button,
@@ -18,9 +15,10 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
-import { getWeb3ProviderSdk } from '@cardstack/models/web3';
+import Web3Instance from '@cardstack/models/web3-instance';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { sectionStyle } from '@cardstack/utils/layouts';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
@@ -39,7 +37,9 @@ export default function UnclaimedRevenueExpandedState(props: {
   const { setOptions } = useNavigation();
   const [loading, setLoading] = useState(false);
   const { selectedWallet } = useWallets();
-  const network = useRainbowSelector(state => state.settings.network);
+  const network = useRainbowSelector(
+    state => state.settings.network
+  ) as Network;
 
   useEffect(() => {
     setOptions({
@@ -53,17 +53,10 @@ export default function UnclaimedRevenueExpandedState(props: {
     setLoading(true);
 
     try {
-      const seedPhrase = await getSeedPhrase(selectedWallet.id);
-      const chainId = ethereumUtils.getChainIdFromNetwork(network);
-      const web3ProviderSdk = await getWeb3ProviderSdk();
-      const hdProvider = new HDWalletProvider({
-        chainId,
-        mnemonic: {
-          phrase: seedPhrase?.seedphrase || '',
-        },
-        providerOrUrl: web3ProviderSdk,
+      const web3 = await Web3Instance.get({
+        selectedWallet,
+        network,
       });
-      const web3 = new Web3(hdProvider);
       const revenuePool = await getSDK('RevenuePool', web3);
       const promises = revenueBalances.map(async token => {
         const claimEstimateAmount = Web3.utils.toWei(
@@ -101,7 +94,7 @@ export default function UnclaimedRevenueExpandedState(props: {
     }
 
     setLoading(false);
-  }, [merchantSafe.address, network, revenueBalances, selectedWallet.id]);
+  }, [merchantSafe.address, network, revenueBalances, selectedWallet]);
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
   const isDust = parseFloat(nativeAmount) < 0.01;
@@ -129,7 +122,7 @@ export default function UnclaimedRevenueExpandedState(props: {
         </Container>
       </SlackSheet>
     ),
-    [props.asset]
+    [isDust, loading, onClaimAll, props.asset, revenueBalances]
   );
 }
 

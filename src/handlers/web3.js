@@ -22,7 +22,7 @@ import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
 
-import { getWeb3ProviderSdk } from '@cardstack/models/web3';
+import Web3WsProvider from '@cardstack/models/web3-provider';
 import { isNativeToken } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
@@ -39,7 +39,7 @@ export let web3Provider = null;
 
 export const web3SetHttpProvider = async network => {
   try {
-    web3Provider = new Web3Provider(await getWeb3ProviderSdk(network));
+    web3Provider = new Web3Provider(await Web3WsProvider.get(network));
   } catch (error) {
     logger.error('provider error', error);
   }

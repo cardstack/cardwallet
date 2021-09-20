@@ -1,8 +1,7 @@
-import Web3 from 'web3';
 import { getSDK } from '@cardstack/cardpay-sdk';
 import { CurrencyConversionRates } from '@cardstack/types';
 import logger from 'logger';
-import { getWeb3ProviderSdk } from '@cardstack/models/web3';
+import Web3Instance from '@cardstack/models/web3-instance';
 
 export const getNativeBalance = async (props: {
   symbol: string | null | undefined;
@@ -16,7 +15,7 @@ export const getNativeBalance = async (props: {
     return 0;
   }
 
-  const web3 = new Web3(await getWeb3ProviderSdk());
+  const web3 = await Web3Instance.get();
   const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
 
   const usdBalance = await layerTwoOracle.getUSDPrice(symbol, balance);
@@ -31,7 +30,7 @@ export const getNativeBalance = async (props: {
 
 export const getUsdConverter = async (symbol: string) => {
   try {
-    const web3 = new Web3(await getWeb3ProviderSdk());
+    const web3 = await Web3Instance.get();
     const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
     const converter = await layerTwoOracle.getUSDConverter(symbol);
 

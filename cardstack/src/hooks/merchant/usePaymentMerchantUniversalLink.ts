@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert } from 'react-native';
-import Web3 from 'web3';
 import { getSDK, MerchantSafe } from '@cardstack/cardpay-sdk';
 import { PrepaidCard } from '@cardstack/cardpay-sdk/sdk/prepaid-card';
 import { TransactionReceipt } from 'web3-core';
-import { getHdSignedProvider } from '@cardstack/models';
 import {
   PayMerchantDecodedData,
   PrepaidCardType,
@@ -16,6 +14,7 @@ import { useWorker } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { useWallets } from '@rainbow-me/hooks';
+import Web3Instance from '@cardstack/models/web3-instance';
 
 interface RouteType {
   params: {
@@ -77,12 +76,10 @@ export const usePaymentMerchantUniversalLink = () => {
       prepaidCardAddress: string,
       onSuccess: (receipt: TransactionReceipt) => void
     ) => {
-      const web3 = new Web3(
-        await getHdSignedProvider({
-          selectedWallet,
-          network,
-        })
-      );
+      const web3 = await Web3Instance.get({
+        selectedWallet,
+        network,
+      });
 
       const prepaidCardInstance: PrepaidCard = await getSDK(
         'PrepaidCard',

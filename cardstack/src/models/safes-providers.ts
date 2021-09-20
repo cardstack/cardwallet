@@ -1,54 +1,13 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
-import HDWalletProvider from 'parity-hdwallet-provider';
-import Web3 from 'web3';
-import { getWeb3ProviderSdk } from './web3';
-import { getSeedPhrase, RainbowWallet } from '@rainbow-me/model/wallet';
+import { SignedProviderParams } from './hd-provider';
+import Web3Instance from './web3-instance';
 import logger from 'logger';
-import { ethereumUtils } from '@rainbow-me/utils';
-import { Network } from '@rainbow-me/helpers/networkTypes';
-
-interface SignedProviderParams {
-  selectedWallet: RainbowWallet;
-  network: Network;
-}
-
-export const getHdSignedProvider = async ({
-  selectedWallet,
-  network,
-}: SignedProviderParams) => {
-  try {
-    const seedPhrase = await getSeedPhrase(selectedWallet.id);
-    const chainId = ethereumUtils.getChainIdFromNetwork(network);
-    const web3ProviderSdk = await getWeb3ProviderSdk();
-
-    const hdProvider = new HDWalletProvider({
-      chainId,
-      mnemonic: {
-        phrase: seedPhrase?.seedphrase || '',
-      },
-      providerOrUrl: web3ProviderSdk,
-    });
-
-    return hdProvider;
-  } catch (e) {
-    logger.error('Unable to getSeedPhrase', e);
-
-    return null;
-  }
-};
 
 export const getSafesInstance = async (
   signedProviderParams?: SignedProviderParams
 ) => {
-  let web3Provider: HDWalletProvider | null = ((await getWeb3ProviderSdk()) as unknown) as HDWalletProvider;
-
-  if (signedProviderParams) {
-    web3Provider = await getHdSignedProvider(signedProviderParams);
-  }
-
-  const web3 = new Web3(web3Provider);
-
   try {
+    const web3 = await Web3Instance.get(signedProviderParams);
     const safes = await getSDK('Safes', web3);
 
     return safes;

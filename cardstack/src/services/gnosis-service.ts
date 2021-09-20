@@ -15,11 +15,11 @@ import {
 import { CurrencyConversionRates } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import logger from 'logger';
-import { getWeb3ProviderSdk } from '@cardstack/models/web3';
+import Web3Instance from '@cardstack/models/web3-instance';
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
-    const web3 = new Web3(await getWeb3ProviderSdk());
+    const web3 = await Web3Instance.get();
     const safesInstance = await getSDK('Safes', web3);
     const safes = await safesInstance.view(address);
 
@@ -104,7 +104,7 @@ export const getTokensWithPrice = async (
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const web3 = new Web3(await getWeb3ProviderSdk());
+  const web3 = await Web3Instance.get();
   const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
 
   return Promise.all(
@@ -158,7 +158,7 @@ export const addGnosisTokenPrices = async (
   const { depots, merchantSafes, prepaidCards } = payload;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const web3 = new Web3(await getWeb3ProviderSdk());
+  const web3 = await Web3Instance.get();
 
   if (depots.length || merchantSafes.length || prepaidCards.length) {
     const revenuePool = await getSDK('RevenuePool', web3);
@@ -250,7 +250,7 @@ export const addGnosisTokenPrices = async (
 };
 
 export const getSafeData = async (address: string) => {
-  const web3 = new Web3(await getWeb3ProviderSdk());
+  const web3 = await Web3Instance.get();
 
   const safesInstance = await getSDK('Safes', web3);
 
