@@ -41,6 +41,11 @@ jest.mock('@cardstack/services/exchange-rate-service', () => ({
   getUsdConverter: jest.fn(),
 }));
 
+jest.mock('@cardstack/models/hd-provider', () => ({
+  get: jest.fn(),
+  reset: jest.fn(),
+}));
+
 describe('useSendSheetDepotScreen', () => {
   beforeEach(() => {
     (useAccountAssets as jest.Mock).mockImplementation(() => ({
