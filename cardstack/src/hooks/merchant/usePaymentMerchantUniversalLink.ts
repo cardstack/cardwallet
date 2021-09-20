@@ -15,6 +15,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { useWallets } from '@rainbow-me/hooks';
 import Web3Instance from '@cardstack/models/web3-instance';
+import HDProvider from '@cardstack/models/hd-provider';
 
 interface RouteType {
   params: {
@@ -91,6 +92,9 @@ export const usePaymentMerchantUniversalLink = () => {
         prepaidCardAddress,
         updatedSpendAmount
       );
+
+      // resets signed provider and web3 instance to kill poller
+      await HDProvider.reset();
 
       onSuccess(receipt);
     },

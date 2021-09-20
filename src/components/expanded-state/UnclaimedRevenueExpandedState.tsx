@@ -15,6 +15,7 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
+import HDProvider from '@cardstack/models/hd-provider';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { sectionStyle } from '@cardstack/utils/layouts';
@@ -87,6 +88,9 @@ export default function UnclaimedRevenueExpandedState(props: {
       });
 
       await Promise.all(promises);
+
+      // resets signed provider and web3 instance to kill poller
+      await HDProvider.reset();
 
       await fetchAssetsBalancesAndPrices();
     } catch (error) {
