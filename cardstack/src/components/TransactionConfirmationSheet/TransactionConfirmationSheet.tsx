@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { LayoutAnimation } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {
+  LayoutAnimation,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
 import URL from 'url-parse';
 
-import { ContainerProps } from '../Container';
 import {
   DisplayInformation,
   transactionTypeMap,
@@ -34,8 +37,17 @@ export interface TransactionConfirmationDisplayProps {
 export const TransactionConfirmationSheet = (
   props: TransactionConfirmationDisplayProps
 ) => {
-  const [showHeaderShadow, setShowHeaderShadow] = useState(false);
+  const [showHeaderDivider, setShowHeaderDivider] = useState(false);
   const [showFullMessage, setShowFullMessage] = useState(false);
+
+  const onScroll = useCallback(
+    ({
+      nativeEvent: { contentOffset },
+    }: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setShowHeaderDivider(contentOffset.y > 16);
+    },
+    []
+  );
 
   return (
     <Container
@@ -57,15 +69,9 @@ export const TransactionConfirmationSheet = (
           }}
         />
       )}
-      <Header {...props} showHeaderShadow={showHeaderShadow} />
+      <Header {...props} showDivider={showHeaderDivider} />
       <ScrollView
-        onScroll={event => {
-          if (event.nativeEvent.contentOffset.y > 16) {
-            setShowHeaderShadow(true);
-          } else {
-            setShowHeaderShadow(false);
-          }
-        }}
+        onScroll={onScroll}
         scrollEventThrottle={16}
         width="100%"
         paddingHorizontal={5}
@@ -87,27 +93,15 @@ export const TransactionConfirmationSheet = (
 const Header = ({
   dappUrl,
   methodName = '',
-  showHeaderShadow,
+  showDivider,
   data,
   loading,
-}: TransactionConfirmationDisplayProps & { showHeaderShadow: boolean }) => {
+}: TransactionConfirmationDisplayProps & { showDivider: boolean }) => {
   if (loading) {
     return null;
   }
 
   const { hostname } = new URL(dappUrl || '');
-
-  const shadowProps: ContainerProps = showHeaderShadow
-    ? {
-        shadowColor: 'black',
-        shadowOffset: {
-          height: 5,
-          width: 0,
-        },
-        shadowRadius: 2,
-        shadowOpacity: 0.1,
-      }
-    : {};
 
   return (
     <Container
@@ -115,8 +109,10 @@ const Header = ({
       backgroundColor="white"
       width="100%"
       paddingBottom={2}
-      borderRadius={20}
-      {...shadowProps}
+      borderTopLeftRadius={20}
+      borderTopRightRadius={20}
+      borderBottomWidth={2}
+      borderBottomColor={showDivider ? 'borderGray' : 'white'}
     >
       <Text marginTop={4} weight="extraBold">
         {transactionTypeMap[data.type]?.title || methodName}
