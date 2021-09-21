@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { TransactionReceipt } from 'web3-eth';
 import { BlockNumber } from 'web3-core';
+import { LayoutAnimation } from 'react-native';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
@@ -41,7 +42,9 @@ const PAY_STEP = {
   EDIT_AMOUNT: 'EDIT_AMOUNT',
   CHOOSE_PREPAID_CARD: 'CHOOSE_PREPAID_CARD',
   CONFIRMATION: 'CONFIRMATION',
-};
+} as const;
+
+type Step = keyof typeof PAY_STEP;
 
 const PayMerchant = () => {
   const {
@@ -80,6 +83,16 @@ type PayMerchantBodyProps = {
   data: PayMerchantDecodedData;
 };
 
+const layoutAnimation = () => {
+  LayoutAnimation.configureNext(
+    LayoutAnimation.create(
+      350,
+      LayoutAnimation.Types.easeIn,
+      LayoutAnimation.Properties.opacity
+    )
+  );
+};
+
 const PayMerchantBody = memo(
   ({
     data,
@@ -106,13 +119,11 @@ const PayMerchantBody = memo(
       prepaidCards[0]
     );
 
-    const [payStep, setPayStep] = useState<string>(
-      PAY_STEP.CHOOSE_PREPAID_CARD
-    );
-
     const [inputValue, setInputValue] = useState<string | undefined>(
       `${initialSpendAmount ? initialSpendAmount.toLocaleString() : 0}`
     );
+
+    const [payStep, setPayStep] = useState<Step>(PAY_STEP.CHOOSE_PREPAID_CARD);
 
     useEffect(() => {
       if (currency) {
@@ -184,31 +195,24 @@ const PayMerchantBody = memo(
       []
     );
 
-    const onConfirmSelectedCard = useCallback(() => {
-      setPayStep(PAY_STEP.CONFIRMATION);
-    }, []);
+    const onStepChange = useCallback(
+      (step: Step) => () => {
+        layoutAnimation();
+        setPayStep(step);
+      },
+      []
+    );
 
     if (payStep === PAY_STEP.EDIT_AMOUNT) {
       return (
-        <Container
-          flex={1}
-          alignItems="center"
-          marginTop={4}
-          borderTopRightRadius={20}
-          borderTopLeftRadius={20}
-          backgroundColor="white"
-          paddingTop={3}
-        >
-          <SheetHandle />
-          <CustomAmountBody
-            merchantInfoDID={merchantInfoDID}
-            onNextPress={() => setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD)}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            isLoading={loading}
-            nativeCurrency={nativeCurrency || 'SPD'}
-          />
-        </Container>
+        <CustomAmountBody
+          merchantInfoDID={merchantInfoDID}
+          onNextPress={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          isLoading={loading}
+          nativeCurrency={nativeCurrency || 'SPD'}
+        />
       );
     }
 
@@ -223,7 +227,7 @@ const PayMerchantBody = memo(
             currency: nativeCurrency === 'SPD' ? currency : nativeCurrency,
             prepaidCard: selectedPrepaidCard.address,
           }}
-          onCancel={() => setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD)}
+          onCancel={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
           onConfirm={onCustomConfirm}
         />
       );
@@ -232,11 +236,11 @@ const PayMerchantBody = memo(
     return (
       <ChoosePrepaidCard
         selectedCard={selectedPrepaidCard}
-        onConfirmSelectedCard={onConfirmSelectedCard}
+        onConfirmSelectedCard={onStepChange(PAY_STEP.CONFIRMATION)}
         prepaidCards={prepaidCards}
         onSelectPrepaidCard={onSelectPrepaidCard}
         spendAmount={spendAmount}
-        onPressEditAmount={() => setPayStep(PAY_STEP.EDIT_AMOUNT)}
+        onPressEditAmount={onStepChange(PAY_STEP.EDIT_AMOUNT)}
       />
     );
   }
@@ -261,25 +265,35 @@ const CustomAmountBody = memo(
     nativeCurrency,
   }: CustomAmountBodyProps) => {
     return (
-      <Container flex={1} flexDirection="column" width="100%">
-        <Container padding={5} paddingTop={3} flex={1}>
-          <MerchantSectionCard
-            merchantInfoDID={merchantInfoDID}
-            flex={1}
-            justifyContent="space-between"
-            isLoading={isLoading}
-          >
-            <AmountInputSection
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-              nativeCurrency={nativeCurrency}
-            />
-          </MerchantSectionCard>
-        </Container>
-        <Container alignItems="center" flex={1}>
-          <Button onPress={onNextPress}>
-            <Text>Next</Text>
-          </Button>
+      <Container
+        flex={1}
+        alignItems="center"
+        borderTopRightRadius={20}
+        borderTopLeftRadius={20}
+        backgroundColor="white"
+        paddingTop={3}
+      >
+        <SheetHandle />
+        <Container flex={1} flexDirection="column" width="100%">
+          <Container padding={5} flex={1}>
+            <MerchantSectionCard
+              merchantInfoDID={merchantInfoDID}
+              flex={1}
+              justifyContent="space-between"
+              isLoading={isLoading}
+            >
+              <AmountInputSection
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+                nativeCurrency={nativeCurrency}
+              />
+            </MerchantSectionCard>
+          </Container>
+          <Container alignItems="center" flex={1}>
+            <Button onPress={onNextPress}>
+              <Text>Next</Text>
+            </Button>
+          </Container>
         </Container>
       </Container>
     );

@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
   },
-  listContainer: { paddingBottom: 100 },
+  listContainer: { paddingBottom: 75 },
 });
 
 export default memo(ChoosePrepaidCard);
