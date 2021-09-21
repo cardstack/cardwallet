@@ -7,16 +7,14 @@ import {
   ContainerProps,
   HorizontalDivider,
   NetworkBadge,
-  PrepaidCardInnerTop,
-  PrepaidCardInnerBottom,
   Icon,
   Touchable,
   Text,
 } from '@cardstack/components';
-import { CustomizableBackground } from '@cardstack/components/PrepaidCard/CustomizableBackground';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { PrepaidCardType } from '@cardstack/types';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 
 export interface ChoosePrepaidCardProps {
   prepaidCards: PrepaidCardType[];
@@ -95,7 +93,13 @@ const ChoosePrepaidCard = ({
 };
 
 const PrepaidCardItem = ({
-  item,
+  item: {
+    address,
+    spendFaceValue,
+    cardCustomization,
+    reloadable,
+    transferrable,
+  },
   setAddress,
   selectedAddress,
   networkName,
@@ -114,25 +118,25 @@ const PrepaidCardItem = ({
   spendAmount: number;
 }) => {
   const itemBackground: ContainerProps =
-    selectedAddress === item.address
+    selectedAddress === address
       ? {
           backgroundColor: 'grayCardBackground',
         }
       : {};
 
   const { tokenBalanceDisplay } = convertSpendForBalanceDisplay(
-    item.spendFaceValue.toString(),
+    spendFaceValue.toString(),
     nativeCurrency,
     currencyConversionRates,
     true
   );
 
-  const isInsufficientFund = item.spendFaceValue < spendAmount;
+  const isInsufficientFund = spendFaceValue < spendAmount;
 
   return (
     <Touchable
-      key={item.address}
-      onPress={() => setAddress(item.address)}
+      key={address}
+      onPress={() => setAddress(address)}
       width="100%"
       disabled={isInsufficientFund}
     >
@@ -147,7 +151,7 @@ const PrepaidCardItem = ({
         <Container paddingTop={7} padding={5}>
           {isInsufficientFund ? (
             <Icon name="alert-circle" color="red" iconSize="medium" />
-          ) : selectedAddress === item.address ? (
+          ) : selectedAddress === address ? (
             <Icon name="check-circle" color="lightGreen" iconSize="medium" />
           ) : (
             <Container
@@ -175,16 +179,14 @@ const PrepaidCardItem = ({
                 color="blueText"
                 fontSize={14}
               >
-                {item.address.slice(0, item.address.length / 2)}
+                {address.slice(0, address.length / 2)}
               </Text>
               <Text
                 fontFamily="RobotoMono-Regular"
                 color="blueText"
                 fontSize={14}
               >
-                {item.address.slice(
-                  -(item.address.length - item.address.length / 2)
-                )}
+                {address.slice(-(address.length - address.length / 2))}
               </Text>
             </Container>
             <Container marginTop={1} marginBottom={4}>
@@ -192,43 +194,16 @@ const PrepaidCardItem = ({
                 {tokenBalanceDisplay}
               </Text>
             </Container>
-            <Container
-              borderRadius={10}
-              {...{
-                backgroundColor: 'white',
-                shadowColor: 'overlay',
-                shadowOffset: {
-                  width: 0,
-                  height: 1,
-                },
-                shadowRadius: 2,
-                shadowOpacity: 1,
-                borderStyle: 'solid',
-                borderColor: 'whiteOverlay',
-              }}
-            >
-              <Container borderRadius={10} overflow="hidden">
-                <CustomizableBackground
-                  cardCustomization={item.cardCustomization}
-                  address={item.address}
-                  isEditing={false}
-                  variant="medium"
-                />
-                <PrepaidCardInnerTop
-                  address={item.address}
-                  cardCustomization={item.cardCustomization}
-                  networkName={networkName}
-                  smallCard
-                />
-                <PrepaidCardInnerBottom
-                  {...item}
-                  nativeCurrency={nativeCurrency}
-                  networkName={networkName}
-                  currencyConversionRates={currencyConversionRates}
-                  smallCard
-                />
-              </Container>
-            </Container>
+            <MediumPrepaidCard
+              cardCustomization={cardCustomization}
+              address={address}
+              networkName={networkName}
+              spendFaceValue={spendFaceValue}
+              reloadable={reloadable}
+              nativeCurrency={nativeCurrency}
+              currencyConversionRates={currencyConversionRates}
+              transferrable={transferrable}
+            />
           </Container>
         </Container>
       </Container>
