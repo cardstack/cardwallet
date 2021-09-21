@@ -3,12 +3,11 @@ import {
   convertRawAmountToBalance,
   getAddress,
 } from '@cardstack/cardpay-sdk';
-import Web3 from 'web3';
 import { BaseStrategy } from '../base-strategy';
 import { MerchantClaimType, TransactionTypes } from '@cardstack/types';
 import { getNativeBalance } from '@cardstack/services';
 import { getMerchantClaimTransactionDetails } from '@cardstack/utils/merchant-utils';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
+import Web3Instance from '@cardstack/models/web3-instance';
 
 export class MerchantClaimStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -28,7 +27,7 @@ export class MerchantClaimStrategy extends BaseStrategy {
       return null;
     }
 
-    const web3 = new Web3(await getWeb3ProviderSdk());
+    const web3 = await Web3Instance.get();
     const address = await getAddress('relay', web3);
 
     const nativeBalance = await getNativeBalance({

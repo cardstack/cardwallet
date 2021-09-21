@@ -26,6 +26,7 @@ import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { DepotAsset, TokenType } from '@cardstack/types';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
+import HDProvider from '@cardstack/models/hd-provider';
 
 interface RouteType {
   params: { asset: TokenType };
@@ -271,6 +272,9 @@ export const useSendSheetDepotScreen = () => {
 
     try {
       await sendTokenFromDepot();
+
+      // resets signed provider and web3 instance to kill poller
+      await HDProvider.reset();
 
       navigate(Routes.PROFILE_SCREEN);
     } catch (error) {

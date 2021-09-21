@@ -3,9 +3,8 @@ import {
   convertRawAmountToDecimalFormat,
   getSDK,
 } from '@cardstack/cardpay-sdk';
-import Web3 from 'web3';
 
-import { getWeb3ProviderSdk } from './web3';
+import Web3Instance from '@cardstack/models/web3-instance';
 import { isNativeToken } from '@cardstack/utils';
 
 export async function getOnchainAssetBalance(
@@ -28,7 +27,7 @@ async function getOnchainTokenBalance(
   userAddress
 ) {
   try {
-    const web3 = new Web3(await getWeb3ProviderSdk());
+    const web3 = await Web3Instance.get();
     const assets = await getSDK('Assets', web3);
     const balance = await assets.getBalanceForToken(address, userAddress);
     const tokenBalance = convertRawAmountToDecimalFormat(
@@ -55,7 +54,7 @@ async function getOnchainNativeTokenBalance(
   userAddress
 ) {
   try {
-    const web3 = new Web3(await getWeb3ProviderSdk());
+    const web3 = await Web3Instance.get();
     const assets = await getSDK('Assets', web3);
     const balance = await assets.getNativeTokenBalance(userAddress);
 

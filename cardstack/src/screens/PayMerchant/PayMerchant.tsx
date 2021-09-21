@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { TransactionReceipt } from 'web3-eth';
 import { BlockNumber } from 'web3-core';
-import Web3 from 'web3';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
@@ -34,9 +33,9 @@ import {
 import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { PrepaidCardTransactionHeader } from '@cardstack/components/Transactions/PrepaidCard/PrepaidCardTransactionHeader';
-import { getWeb3ProviderSdk } from '@rainbow-me/handlers/web3';
 import logger from 'logger';
 import { Icon } from '@rainbow-me/components/icons';
+import Web3Instance from '@cardstack/models/web3-instance';
 
 const PAY_STEP = {
   EDIT_AMOUNT: 'EDIT_AMOUNT',
@@ -332,7 +331,7 @@ const AmountInputSection = memo(
 
 const getBlockTimestamp = async (blockNumber: BlockNumber) => {
   try {
-    const web3 = new Web3(await getWeb3ProviderSdk());
+    const web3 = await Web3Instance.get();
     const block = await web3.eth.getBlock(blockNumber);
     return block?.timestamp.toString();
   } catch (error) {

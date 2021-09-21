@@ -16,13 +16,13 @@ import { Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
-import Web3 from 'web3';
-import { getNetwork } from '../handlers/localstorage/globalSettings';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
 import { ethereumUtils } from '../utils';
+
+import Web3WsProvider from '@cardstack/models/web3-provider';
 import { isNativeToken } from '@cardstack/utils';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
@@ -33,47 +33,18 @@ import logger from 'logger';
 export let web3Provider = null;
 
 /**
- * @desc web3 http instance - to be used with web3 contracts
- */
-export let web3ProviderSdk = null;
-/**
  * @desc set a different web3 provider
  * @param {String} network
  */
+
 export const web3SetHttpProvider = async network => {
   try {
-    const node = getConstantByNetwork('rpcWssNode', network);
-    web3ProviderSdk = new Web3.providers.WebsocketProvider(node);
-
-    web3Provider = new Web3Provider(web3ProviderSdk);
+    web3Provider = new Web3Provider(await Web3WsProvider.get(network));
   } catch (error) {
     logger.error('provider error', error);
   }
 
   return web3Provider.ready;
-};
-
-export const getWeb3ProviderSdk = async () => {
-  if (web3ProviderSdk && web3ProviderSdk.connected) {
-    return web3ProviderSdk;
-  }
-
-  if (web3ProviderSdk && !web3ProviderSdk.connected) {
-    try {
-      await web3ProviderSdk.reconnect();
-      if (web3ProviderSdk.connected) {
-        logger.sentry('web3ProviderSdk reconnected!!!!!!!');
-        return web3ProviderSdk;
-      }
-      logger.sentry('web3ProviderSdk reconnect failed without error');
-    } catch (e) {
-      logger.sentry('web3ProviderSdk reconnect failed --', e);
-    }
-  }
-
-  const network = await getNetwork();
-  await web3SetHttpProvider(network);
-  return web3ProviderSdk;
 };
 
 export const sendRpcCall = async payload =>
