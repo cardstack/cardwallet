@@ -7,6 +7,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import { getAddressPreview } from '@cardstack/utils';
 import { ColorTypes } from '@cardstack/theme';
 import { Container, Text } from '@cardstack/components';
+import { hitSlop } from '@cardstack/utils/layouts';
 
 type CardVariants = 'normal' | 'medium';
 
@@ -29,13 +30,6 @@ const cardType: Record<CardVariants, VariantType> = {
     fontSize: { small: 8, mid: 10, big: 13 },
     maxWidth: 100,
   },
-};
-
-const hitSlop = {
-  top: 5,
-  bottom: 5,
-  left: 5,
-  right: 5,
 };
 
 const PrepaidCardInnerTop = ({
@@ -101,7 +95,11 @@ const PrepaidCardInnerTop = ({
           </Text>
         </Container>
         <Container flexDirection="column" paddingTop={3}>
-          <Touchable hitSlop={hitSlop} disabled={disabled} onPress={onPress}>
+          <Touchable
+            hitSlop={hitSlop.small}
+            disabled={disabled}
+            onPress={onPress}
+          >
             <Text
               variant="overGradient"
               fontFamily="RobotoMono-Regular"

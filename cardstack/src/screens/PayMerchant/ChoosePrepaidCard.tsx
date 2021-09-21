@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { FlatList } from 'react-native';
+import React, { memo, useCallback } from 'react';
+import { FlatList, StyleSheet } from 'react-native';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
   Button,
@@ -15,6 +15,7 @@ import { convertSpendForBalanceDisplay, splitAddress } from '@cardstack/utils';
 import { PrepaidCardType } from '@cardstack/types';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+import { hitSlop } from '@cardstack/utils/layouts';
 
 export interface ChoosePrepaidCardProps {
   prepaidCards: PrepaidCardType[];
@@ -33,8 +34,6 @@ const ChoosePrepaidCard = ({
   spendAmount,
   onPressEditAmount,
 }: ChoosePrepaidCardProps) => {
-  const [showHeaderShadow, setShowHeaderShadow] = useState(false);
-
   const [network, nativeCurrency, currencyConversionRates] = useRainbowSelector<
     [string, string, { [key: string]: number }]
   >(state => [
@@ -52,6 +51,30 @@ const ChoosePrepaidCard = ({
     [onSelectPrepaidCard]
   );
 
+  const renderItem = useCallback(
+    ({ item, index }: { item: PrepaidCardType; index: number }) => (
+      <PrepaidCardItem
+        item={item}
+        onPress={onSelect}
+        selectedAddress={selectedCard.address}
+        networkName={networkName}
+        nativeCurrency={nativeCurrency}
+        currencyConversionRates={currencyConversionRates}
+        spendAmount={spendAmount}
+        isLastItem={index === prepaidCards.length - 1}
+      />
+    ),
+    [
+      currencyConversionRates,
+      nativeCurrency,
+      networkName,
+      onSelect,
+      prepaidCards.length,
+      selectedCard.address,
+      spendAmount,
+    ]
+  );
+
   return (
     <Container
       flex={1}
@@ -60,193 +83,37 @@ const ChoosePrepaidCard = ({
       borderRadius={20}
       justifyContent="center"
     >
-      <Header
-        showHeaderShadow={showHeaderShadow}
-        spendAmount={spendAmount}
-        onPressEditAmount={onPressEditAmount}
-      />
+      <Header spendAmount={spendAmount} onPressEditAmount={onPressEditAmount} />
       <FlatList
         data={prepaidCards}
         removeClippedSubviews
         horizontal={false}
-        renderItem={({ item }) => (
-          <PrepaidCardItem
-            item={item}
-            onPress={onSelect}
-            selectedAddress={selectedCard.address}
-            networkName={networkName}
-            nativeCurrency={nativeCurrency}
-            currencyConversionRates={currencyConversionRates}
-            spendAmount={spendAmount}
-          />
-        )}
-        onScroll={event => {
-          if (event.nativeEvent.contentOffset.y > 16) {
-            setShowHeaderShadow(true);
-          } else {
-            setShowHeaderShadow(false);
-          }
-        }}
+        renderItem={renderItem}
         scrollEventThrottle={16}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={styles.listContainer}
       />
-      <SheetFooter onButtonPress={onConfirmSelectedCard} />
+      <Container style={styles.footerContainer} {...shadowStyles}>
+        <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
+        <Button onPress={onConfirmSelectedCard}>Select Card</Button>
+      </Container>
     </Container>
   );
 };
 
-const PrepaidCardItem = ({
-  item,
-  onPress,
-  selectedAddress,
-  networkName,
-  nativeCurrency,
-  currencyConversionRates,
-  spendAmount,
-}: {
-  item: PrepaidCardType;
-  onPress: (item: PrepaidCardType) => void;
-  selectedAddress: string;
-  networkName: string;
-  nativeCurrency: string;
-  currencyConversionRates: {
-    [key: string]: number;
-  };
-  spendAmount: number;
-}) => {
-  const {
-    address,
-    spendFaceValue,
-    cardCustomization,
-    reloadable,
-    transferrable,
-  } = item;
-
-  const itemBackground: ContainerProps = useMemo(
-    () =>
-      selectedAddress === address
-        ? {
-            backgroundColor: 'grayCardBackground',
-          }
-        : {},
-    [address, selectedAddress]
-  );
-
-  const { tokenBalanceDisplay } = convertSpendForBalanceDisplay(
-    spendFaceValue.toString(),
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
-
-  const { twoLinesAddress } = splitAddress(address);
-
-  const isInsufficientFund = spendFaceValue < spendAmount;
-
-  const handleOnPress = useCallback(() => {
-    onPress(item);
-  }, [item, onPress]);
-
-  return (
-    <Touchable
-      key={address}
-      onPress={handleOnPress}
-      width="100%"
-      disabled={isInsufficientFund}
-    >
-      <Container
-        flexDirection="row"
-        width="100%"
-        borderBottomColor="borderGray"
-        borderBottomWidth={1}
-        paddingVertical={6}
-        {...itemBackground}
-      >
-        <Container paddingTop={7} padding={5}>
-          {isInsufficientFund ? (
-            <Icon name="alert-circle" color="red" iconSize="medium" />
-          ) : selectedAddress === address ? (
-            <Icon name="check-circle" color="lightGreen" iconSize="medium" />
-          ) : (
-            <Container
-              width={22}
-              height={22}
-              borderRadius={11}
-              borderColor="buttonSecondaryBorder"
-              borderWidth={1}
-            />
-          )}
-        </Container>
-        <Container flexGrow={1} paddingRight={16}>
-          <Container flexDirection="row">
-            <NetworkBadge text={`ON ${networkName.toUpperCase()}`} />
-            {isInsufficientFund && (
-              <Text color="red" fontSize={10} fontWeight="600" paddingLeft={4}>
-                INSUFFICIENT FUNDS
-              </Text>
-            )}
-          </Container>
-          <Container opacity={isInsufficientFund ? 0.5 : 1}>
-            <Container maxWidth={230} marginTop={2}>
-              <Text
-                fontFamily="RobotoMono-Regular"
-                color="blueText"
-                fontSize={14}
-              >
-                {twoLinesAddress}
-              </Text>
-            </Container>
-            <Container marginTop={1} marginBottom={4}>
-              <Text color="black" fontWeight="bold" fontSize={14}>
-                {tokenBalanceDisplay}
-              </Text>
-            </Container>
-            <MediumPrepaidCard
-              cardCustomization={cardCustomization}
-              address={address}
-              networkName={networkName}
-              spendFaceValue={spendFaceValue}
-              reloadable={reloadable}
-              nativeCurrency={nativeCurrency}
-              currencyConversionRates={currencyConversionRates}
-              transferrable={transferrable}
-            />
-          </Container>
-        </Container>
-      </Container>
-    </Touchable>
-  );
-};
-
-const Header = ({
-  showHeaderShadow,
-  spendAmount,
-  onPressEditAmount,
-}: {
-  showHeaderShadow: boolean;
-  spendAmount: number;
-  onPressEditAmount: () => void;
-}) => {
-  const shadowProps: ContainerProps = showHeaderShadow
-    ? {
-        shadowColor: 'black',
-        shadowOffset: {
-          height: 5,
-          width: 0,
-        },
-        shadowRadius: 2,
-        shadowOpacity: 0.1,
-      }
-    : {};
-
-  return (
+const Header = memo(
+  ({
+    spendAmount,
+    onPressEditAmount,
+  }: {
+    spendAmount: number;
+    onPressEditAmount: () => void;
+  }) => (
     <Container
       alignItems="center"
       backgroundColor="white"
       width="100%"
       borderTopLeftRadius={20}
       borderTopRightRadius={20}
-      {...shadowProps}
     >
       <Text marginTop={4} weight="bold" size="body">
         Choose a Prepaid Card
@@ -265,50 +132,163 @@ const Header = ({
           right={20}
           paddingTop={1}
           onPress={onPressEditAmount}
-          hitSlop={{
-            top: 5,
-            bottom: 5,
-            left: 5,
-            right: 5,
-          }}
+          hitSlop={hitSlop.small}
         >
           <Text size="xxs">Edit Amount</Text>
         </Touchable>
       </Container>
       <HorizontalDivider height={2} marginTop={4} marginVertical={0} />
     </Container>
-  );
+  )
+);
+
+interface PrepaidCardItemProps {
+  item: PrepaidCardType;
+  onPress: (item: PrepaidCardType) => void;
+  selectedAddress: string;
+  networkName: string;
+  nativeCurrency: string;
+  currencyConversionRates: {
+    [key: string]: number;
+  };
+  spendAmount: number;
+  isLastItem: boolean;
+}
+
+const PrepaidCardItem = memo(
+  ({
+    item,
+    onPress,
+    selectedAddress,
+    networkName,
+    nativeCurrency,
+    currencyConversionRates,
+    spendAmount,
+    isLastItem,
+  }: PrepaidCardItemProps) => {
+    const {
+      address,
+      spendFaceValue,
+      cardCustomization,
+      reloadable,
+      transferrable,
+    } = item;
+
+    const { tokenBalanceDisplay } = convertSpendForBalanceDisplay(
+      spendFaceValue.toString(),
+      nativeCurrency,
+      currencyConversionRates,
+      true
+    );
+
+    const { twoLinesAddress } = splitAddress(address);
+
+    const isInsufficientFund = spendFaceValue < spendAmount;
+    const isSelected = selectedAddress === address;
+
+    const handleOnPress = useCallback(() => {
+      onPress(item);
+    }, [item, onPress]);
+
+    return (
+      <Touchable
+        key={address}
+        onPress={handleOnPress}
+        width="100%"
+        disabled={isInsufficientFund}
+      >
+        <Container
+          flexDirection="row"
+          width="100%"
+          borderBottomColor="borderGray"
+          borderBottomWidth={isLastItem ? 0 : 1}
+          paddingVertical={6}
+          backgroundColor={isSelected ? 'grayCardBackground' : 'white'}
+        >
+          <Container paddingTop={7} padding={5}>
+            {isInsufficientFund ? (
+              <Icon name="alert-circle" color="red" iconSize="medium" />
+            ) : isSelected ? (
+              <Icon name="check-circle" color="lightGreen" iconSize="medium" />
+            ) : (
+              <Container
+                width={22}
+                height={22}
+                borderRadius={11}
+                borderColor="buttonSecondaryBorder"
+                borderWidth={1}
+              />
+            )}
+          </Container>
+          <Container flexGrow={1} paddingRight={16}>
+            <Container flexDirection="row">
+              <NetworkBadge text={`ON ${networkName.toUpperCase()}`} />
+              {isInsufficientFund && (
+                <Text
+                  color="red"
+                  fontSize={10}
+                  fontWeight="600"
+                  paddingLeft={4}
+                >
+                  INSUFFICIENT FUNDS
+                </Text>
+              )}
+            </Container>
+            <Container opacity={isInsufficientFund ? 0.5 : 1}>
+              <Container maxWidth={230} marginTop={2}>
+                <Text
+                  fontFamily="RobotoMono-Regular"
+                  color="blueText"
+                  fontSize={14}
+                >
+                  {twoLinesAddress}
+                </Text>
+              </Container>
+              <Container marginTop={1} marginBottom={4}>
+                <Text color="black" fontWeight="bold" fontSize={14}>
+                  {tokenBalanceDisplay}
+                </Text>
+              </Container>
+              <MediumPrepaidCard
+                cardCustomization={cardCustomization}
+                address={address}
+                networkName={networkName}
+                spendFaceValue={spendFaceValue}
+                reloadable={reloadable}
+                nativeCurrency={nativeCurrency}
+                currencyConversionRates={currencyConversionRates}
+                transferrable={transferrable}
+              />
+            </Container>
+          </Container>
+        </Container>
+      </Touchable>
+    );
+  }
+);
+
+const shadowStyles: ContainerProps = {
+  shadowColor: 'black',
+  shadowOffset: {
+    height: 5,
+    width: 0,
+  },
+  shadowRadius: 2,
+  shadowOpacity: 0.1,
 };
 
-type SheetFooterProps = {
-  onButtonPress: () => void;
-};
+const styles = StyleSheet.create({
+  footerContainer: {
+    width: '100%',
+    bottom: 0,
+    paddingBottom: 10,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    position: 'absolute',
+    backgroundColor: 'white',
+    alignItems: 'center',
+  },
+  listContainer: { paddingBottom: 100 },
+});
 
-const SheetFooter = ({ onButtonPress }: SheetFooterProps) => {
-  return (
-    <Container
-      width="100%"
-      bottom={0}
-      paddingBottom={10}
-      borderBottomLeftRadius={20}
-      borderBottomRightRadius={20}
-      position="absolute"
-      backgroundColor="white"
-      alignItems="center"
-      {...{
-        shadowColor: 'black',
-        shadowOffset: {
-          height: 5,
-          width: 0,
-        },
-        shadowRadius: 2,
-        shadowOpacity: 0.1,
-      }}
-    >
-      <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
-      <Button onPress={onButtonPress}>Select Card</Button>
-    </Container>
-  );
-};
-
-export default ChoosePrepaidCard;
+export default memo(ChoosePrepaidCard);
