@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList } from 'react-native';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import {
@@ -11,29 +11,29 @@ import {
   Touchable,
   Text,
 } from '@cardstack/components';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { convertSpendForBalanceDisplay, splitAddress } from '@cardstack/utils';
 import { PrepaidCardType } from '@cardstack/types';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 
 export interface ChoosePrepaidCardProps {
   prepaidCards: PrepaidCardType[];
-  onSelectPrepaidCard: (prepaidAddress: string) => void;
+  selectedCard: PrepaidCardType;
+  onSelectPrepaidCard: (prepaidCard: PrepaidCardType) => void;
   spendAmount: number;
   onPressEditAmount: () => void;
+  onConfirmSelectedCard: () => void;
 }
 
 const ChoosePrepaidCard = ({
   prepaidCards,
+  selectedCard,
   onSelectPrepaidCard,
+  onConfirmSelectedCard,
   spendAmount,
   onPressEditAmount,
 }: ChoosePrepaidCardProps) => {
   const [showHeaderShadow, setShowHeaderShadow] = useState(false);
-
-  const [selectedAddress, setAddress] = useState<string>(
-    prepaidCards[0]?.address
-  );
 
   const [network, nativeCurrency, currencyConversionRates] = useRainbowSelector<
     [string, string, { [key: string]: number }]
@@ -45,9 +45,12 @@ const ChoosePrepaidCard = ({
 
   const networkName = getConstantByNetwork('name', network);
 
-  const onSelect = () => {
-    onSelectPrepaidCard(selectedAddress);
-  };
+  const onSelect = useCallback(
+    (item: PrepaidCardType) => {
+      onSelectPrepaidCard(item);
+    },
+    [onSelectPrepaidCard]
+  );
 
   return (
     <Container
@@ -69,8 +72,8 @@ const ChoosePrepaidCard = ({
         renderItem={({ item }) => (
           <PrepaidCardItem
             item={item}
-            setAddress={setAddress}
-            selectedAddress={selectedAddress}
+            onPress={onSelect}
+            selectedAddress={selectedCard.address}
             networkName={networkName}
             nativeCurrency={nativeCurrency}
             currencyConversionRates={currencyConversionRates}
@@ -87,20 +90,14 @@ const ChoosePrepaidCard = ({
         scrollEventThrottle={16}
         contentContainerStyle={{ paddingBottom: 100 }}
       />
-      <SheetFooter onSelect={onSelect} />
+      <SheetFooter onButtonPress={onConfirmSelectedCard} />
     </Container>
   );
 };
 
 const PrepaidCardItem = ({
-  item: {
-    address,
-    spendFaceValue,
-    cardCustomization,
-    reloadable,
-    transferrable,
-  },
-  setAddress,
+  item,
+  onPress,
   selectedAddress,
   networkName,
   nativeCurrency,
@@ -108,7 +105,7 @@ const PrepaidCardItem = ({
   spendAmount,
 }: {
   item: PrepaidCardType;
-  setAddress: (address: string) => void;
+  onPress: (item: PrepaidCardType) => void;
   selectedAddress: string;
   networkName: string;
   nativeCurrency: string;
@@ -117,12 +114,23 @@ const PrepaidCardItem = ({
   };
   spendAmount: number;
 }) => {
-  const itemBackground: ContainerProps =
-    selectedAddress === address
-      ? {
-          backgroundColor: 'grayCardBackground',
-        }
-      : {};
+  const {
+    address,
+    spendFaceValue,
+    cardCustomization,
+    reloadable,
+    transferrable,
+  } = item;
+
+  const itemBackground: ContainerProps = useMemo(
+    () =>
+      selectedAddress === address
+        ? {
+            backgroundColor: 'grayCardBackground',
+          }
+        : {},
+    [address, selectedAddress]
+  );
 
   const { tokenBalanceDisplay } = convertSpendForBalanceDisplay(
     spendFaceValue.toString(),
@@ -131,12 +139,18 @@ const PrepaidCardItem = ({
     true
   );
 
+  const { twoLinesAddress } = splitAddress(address);
+
   const isInsufficientFund = spendFaceValue < spendAmount;
+
+  const handleOnPress = useCallback(() => {
+    onPress(item);
+  }, [item, onPress]);
 
   return (
     <Touchable
       key={address}
-      onPress={() => setAddress(address)}
+      onPress={handleOnPress}
       width="100%"
       disabled={isInsufficientFund}
     >
@@ -179,14 +193,7 @@ const PrepaidCardItem = ({
                 color="blueText"
                 fontSize={14}
               >
-                {address.slice(0, address.length / 2)}
-              </Text>
-              <Text
-                fontFamily="RobotoMono-Regular"
-                color="blueText"
-                fontSize={14}
-              >
-                {address.slice(-(address.length - address.length / 2))}
+                {twoLinesAddress}
               </Text>
             </Container>
             <Container marginTop={1} marginBottom={4}>
@@ -274,10 +281,10 @@ const Header = ({
 };
 
 type SheetFooterProps = {
-  onSelect: () => void;
+  onButtonPress: () => void;
 };
 
-const SheetFooter = ({ onSelect }: SheetFooterProps) => {
+const SheetFooter = ({ onButtonPress }: SheetFooterProps) => {
   return (
     <Container
       width="100%"
@@ -299,7 +306,7 @@ const SheetFooter = ({ onSelect }: SheetFooterProps) => {
       }}
     >
       <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
-      <Button onPress={onSelect}>Select Card</Button>
+      <Button onPress={onButtonPress}>Select Card</Button>
     </Container>
   );
 };

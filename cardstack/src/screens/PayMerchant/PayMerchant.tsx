@@ -102,8 +102,8 @@ const PayMerchantBody = memo(
 
     const { navigate, goBack, canGoBack } = useNavigation();
 
-    const [selectedPrepaidCardAddress, selectPrepaidCard] = useState<string>(
-      prepaidCards[0]?.address
+    const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>(
+      prepaidCards[0]
     );
 
     const [payStep, setPayStep] = useState<string>(
@@ -155,7 +155,7 @@ const PayMerchantBody = memo(
               timestamp,
               transactionHash: receipt.transactionHash,
               prepaidCardAddress: receipt.from,
-              prepaidCardCustomization: undefined,
+              prepaidCardCustomization: selectedPrepaidCard.cardCustomization,
             })
           );
         }, 1000);
@@ -168,23 +168,25 @@ const PayMerchantBody = memo(
         inputValue,
         merchantInfoDID,
         navigate,
+        selectedPrepaidCard.cardCustomization,
         spendAmount,
       ]
     );
 
     const onCustomConfirm = useCallback(() => {
-      onConfirm(spendAmount, selectedPrepaidCardAddress, onPayMerchantSuccess);
-    }, [
-      onConfirm,
-      spendAmount,
-      selectedPrepaidCardAddress,
-      onPayMerchantSuccess,
-    ]);
+      onConfirm(spendAmount, selectedPrepaidCard.address, onPayMerchantSuccess);
+    }, [onConfirm, spendAmount, selectedPrepaidCard, onPayMerchantSuccess]);
 
-    const onSelectPrepaidCard = (prepaidAddress: string) => {
-      selectPrepaidCard(prepaidAddress);
+    const onSelectPrepaidCard = useCallback(
+      (prepaidCardItem: PrepaidCardType) => {
+        selectPrepaidCard(prepaidCardItem);
+      },
+      []
+    );
+
+    const onConfirmSelectedCard = useCallback(() => {
       setPayStep(PAY_STEP.CONFIRMATION);
-    };
+    }, []);
 
     if (payStep === PAY_STEP.EDIT_AMOUNT) {
       return (
@@ -219,7 +221,7 @@ const PayMerchantBody = memo(
             ...data,
             spendAmount,
             currency: nativeCurrency === 'SPD' ? currency : nativeCurrency,
-            prepaidCard: selectedPrepaidCardAddress,
+            prepaidCard: selectedPrepaidCard.address,
           }}
           onCancel={() => setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD)}
           onConfirm={onCustomConfirm}
@@ -229,6 +231,8 @@ const PayMerchantBody = memo(
 
     return (
       <ChoosePrepaidCard
+        selectedCard={selectedPrepaidCard}
+        onConfirmSelectedCard={onConfirmSelectedCard}
         prepaidCards={prepaidCards}
         onSelectPrepaidCard={onSelectPrepaidCard}
         spendAmount={spendAmount}
