@@ -44,7 +44,7 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
           </Container>
           <Container flexDirection="row" alignItems="center">
             <Text size="xs" weight="extraBold" marginRight={2}>
-              {`- ${item.balance.display}`}
+              {`+ ${item.balance.display}`}
             </Text>
             <CoinIcon
               address={item.token.address}

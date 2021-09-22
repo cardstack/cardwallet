@@ -288,6 +288,11 @@ function NativeStackNavigator() {
         {...expandedAssetSheetConfig}
       />
       <NativeStack.Screen
+        component={ExpandedAssetSheet}
+        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
+        {...expandedAssetSheetConfig}
+      />
+      <NativeStack.Screen
         component={SpeedUpAndCancelSheet}
         name={Routes.SPEED_UP_AND_CANCEL_SHEET}
         options={{

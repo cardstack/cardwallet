@@ -26,7 +26,7 @@ export const MerchantClaimTransaction = ({
 
   const onPressTransaction = useCallback(
     (assetProps: TransactionBaseProps) =>
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
+      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
         asset: { ...assetProps },
         type: 'merchantTransaction',
       }),
