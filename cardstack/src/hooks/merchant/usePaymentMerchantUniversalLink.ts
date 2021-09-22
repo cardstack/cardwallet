@@ -37,6 +37,12 @@ export const usePaymentMerchantUniversalLink = () => {
     params: { merchantAddress, amount = '0', network, currency },
   } = useRoute<RouteType>();
 
+  const networkName: Network = ['sokol', 'xdai'].includes(network)
+    ? network
+    : Network.sokol;
+
+  const currencyName = currency || 'SPD';
+
   const { goBack } = useNavigation();
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
@@ -79,7 +85,7 @@ export const usePaymentMerchantUniversalLink = () => {
     ) => {
       const web3 = await Web3Instance.get({
         selectedWallet,
-        network,
+        network: networkName,
       });
 
       const prepaidCardInstance: PrepaidCard = await getSDK(
@@ -115,9 +121,9 @@ export const usePaymentMerchantUniversalLink = () => {
       infoDID,
       spendAmount,
       merchantSafe: merchantAddress,
-      currency,
+      currency: currencyName,
     }),
-    [infoDID, spendAmount, merchantAddress, currency]
+    [infoDID, spendAmount, merchantAddress, currencyName]
   );
 
   return { prepaidCards, goBack, onConfirm, isLoadingTx, isLoading, data };
