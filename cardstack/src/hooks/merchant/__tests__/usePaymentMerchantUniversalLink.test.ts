@@ -46,6 +46,18 @@ jest.mock('@cardstack/utils', () => ({
   deviceUtils: { isIOS14: false },
 }));
 
+jest.mock('@cardstack/models/web3-instance', () => ({
+  Web3Instance: () => ({
+    get: jest.fn(),
+  }),
+}));
+
+jest.mock('@cardstack/models/hd-provider', () => ({
+  HDProvider: () => ({
+    reset: jest.fn(),
+  }),
+}));
+
 describe('usePaymentMerchantUniversalLink', () => {
   beforeEach(() => {
     (useRainbowSelector as jest.Mock).mockImplementation(
