@@ -22,12 +22,6 @@ echo "✅ rn-nodeify packages hacked succesfully"
 
 if [ -e .env ]
 then
-  cat .env | grep "BRANCH" | sed 's/=/ = /g' > ./ios/debug.xcconfig
-  cat .env | grep "BRANCH" | sed 's/=/ = /g' > ./ios/release.xcconfig
-  cat .env | grep "BRANCH" | sed 's/=/ = /g' > ./ios/localrelease.xcconfig
-  cat .env | grep "BRANCH" | sed 's/=/ = /g' > ./ios/staging.xcconfig
-  echo "✅ .xcconfig files created"
-
   source .env
   echo "✅ Android ENV vars exported"
 

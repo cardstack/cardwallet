@@ -1,7 +1,6 @@
 PODS:
   - Base64 (1.1.2)
   - boost-for-react-native (1.63.0)
-  - Branch (0.35.0)
   - BVLinearGradient (2.5.6):
     - React
   - CocoaAsyncSocket (7.6.4)
@@ -338,9 +337,6 @@ PODS:
     - React-Core
   - react-native-blur (0.8.0):
     - React
-  - react-native-branch (5.0.0):
-    - Branch (= 0.35.0)
-    - React
   - react-native-camera (3.40.0):
     - React-Core
     - react-native-camera/RCT (= 3.40.0)
@@ -619,7 +615,6 @@ DEPENDENCIES:
   - react-native-aes-crypto (from `../node_modules/react-native-aes-crypto`)
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
-  - react-native-branch (from `../node_modules/react-native-branch`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-cloud-fs (from `../node_modules/react-native-cloud-fs`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
@@ -685,7 +680,6 @@ SPEC REPOS:
   trunk:
     - Base64
     - boost-for-react-native
-    - Branch
     - CocoaAsyncSocket
     - CocoaLibEvent
     - Firebase
@@ -775,8 +769,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-background-timer"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
-  react-native-branch:
-    :path: "../node_modules/react-native-branch"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
   react-native-cloud-fs:
@@ -904,7 +896,6 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  Branch: 9a37f707974a128c37829033c49018b79c7e7a2d
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
@@ -957,7 +948,6 @@ SPEC CHECKSUMS:
   react-native-aes-crypto: d7e87fd02cee7285983c00957a34063dfc4c94b3
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
-  react-native-branch: 8bda99ca8dc5a16d32bd81c8a8d937cb3d2c5e0c
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
   react-native-cloud-fs: 1cb3deba691efbb5c6fcc831959be58762d8bdfe
   react-native-get-random-values: 1404bd5cc0ab0e287f75ee1c489555688fc65f89

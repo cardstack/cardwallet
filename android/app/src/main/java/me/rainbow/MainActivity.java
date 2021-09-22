@@ -6,7 +6,6 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 import org.devio.rn.splashscreen.SplashScreen;
-import io.branch.rnbranch.*;
 import me.rainbow.NativeModules.RNBackHandler.RNBackHandlerPackage;
 import android.webkit.WebView;
 
@@ -28,12 +27,6 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "Rainbow";
-  }
-
-  @Override
-  protected void onStart() {
-      super.onStart();
-      RNBranchModule.initSession(getIntent().getData(), this);
   }
 
   @Override
