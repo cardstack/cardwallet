@@ -49,17 +49,23 @@ export const InputAmount = memo(
     return (
       <CenteredContainer flexDirection="row" width="100%" {...containerProps}>
         {hasCurrencySymbol ? (
-          <Text
-            color={inputValue ? 'black' : 'underlineGray'}
-            fontWeight="bold"
-            paddingRight={1}
-            paddingTop={1}
-            size="largeBalance"
+          <Container
+            justifyContent="flex-start"
+            alignItems="center"
+            height="100%"
           >
-            {nativeCurrency === 'SPD'
-              ? '§'
-              : (supportedNativeCurrencies as any)[nativeCurrency].symbol}
-          </Text>
+            <Text
+              color={inputValue ? 'black' : 'underlineGray'}
+              fontWeight="bold"
+              paddingRight={1}
+              paddingTop={1}
+              size="largeBalance"
+            >
+              {nativeCurrency === 'SPD'
+                ? '§'
+                : (supportedNativeCurrencies as any)[nativeCurrency].symbol}
+            </Text>
+          </Container>
         ) : null}
         <Container flex={1} flexGrow={1}>
           <Input
@@ -71,7 +77,7 @@ export const InputAmount = memo(
             fontSize={30}
             fontWeight="bold"
             keyboardType="numeric"
-            maxLength={(inputValue || '').length + 2} // just to avoid possible flicker issue
+            maxLength={(inputValue || '').length + 1} // just to avoid possible flicker issue
             multiline
             onChangeText={onChangeText}
             placeholder="0.00"

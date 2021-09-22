@@ -1,8 +1,6 @@
 import BigNumber from 'bignumber.js';
-import { formatFixedDecimals } from '@cardstack/cardpay-sdk';
 
 const USD_TO_SPEND_RATE = 100;
-const SPEND_DECIMAL_PLACES = 4;
 
 export const getDollarsFromDai = (dai: number) => dai / 100;
 
@@ -16,6 +14,7 @@ export function localCurrencyToAbsNum(value: string): number {
   return result;
 }
 
+// format amount for amount TextInput box experience
 export function formatNative(value: string | undefined, currency = 'USD') {
   if (!value) {
     return '';
@@ -51,6 +50,7 @@ export const nativeCurrencyToAmountInSpend = (
     ? new BigNumber(localCurrencyToAbsNum(amount))
         .times(USD_TO_SPEND_RATE)
         .div(nativeCurrencyRate)
+        .integerValue() // round spend value to integer
         .toNumber()
     : 0;
 };
@@ -60,17 +60,12 @@ export const nativeCurrencyToSpend = (
   nativeCurrencyRate: number,
   includeSuffix?: boolean
 ) => {
-  const spendAmount = parseFloat(
-    formatFixedDecimals(
-      nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate),
-      SPEND_DECIMAL_PLACES
-    )
-  );
+  const spendAmount = nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate);
 
   return {
     tokenBalanceDisplay: `§${spendAmount.toLocaleString('en-US')}${
       includeSuffix ? ' SPEND' : ''
     }`,
-    spendAmount,
+    spendAmount: spendAmount,
   };
 };
