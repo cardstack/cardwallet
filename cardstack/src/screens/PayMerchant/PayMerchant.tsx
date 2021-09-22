@@ -1,10 +1,6 @@
-import React, { memo, useState, useEffect, useCallback } from 'react';
-import { TransactionReceipt } from 'web3-eth';
-import { BlockNumber } from 'web3-core';
-import { LayoutAnimation } from 'react-native';
+import React, { memo } from 'react';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
-import usePayment from '@cardstack/redux/hooks/usePayment';
-import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
+import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
   SafeAreaView,
@@ -15,244 +11,78 @@ import {
   Button,
   TransactionConfirmationSheet,
 } from '@cardstack/components';
-import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
-import {
-  MerchantInformation,
-  PayMerchantDecodedData,
-  PrepaidCardCustomization,
-  PrepaidCardType,
-} from '@cardstack/types';
+import { MerchantInformation } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   localCurrencyToAbsNum,
   nativeCurrencyToSpend,
 } from '@cardstack/utils';
-import {
-  useNativeCurrencyAndConversionRates,
-  usePaymentCurrencyAndConversionRates,
-} from '@rainbow-me/redux/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import RainbowRoutes from '@rainbow-me/navigation/routesNames';
-import { PrepaidCardTransactionHeader } from '@cardstack/components/Transactions/PrepaidCard/PrepaidCardTransactionHeader';
-import logger from 'logger';
-import { Icon } from '@rainbow-me/components/icons';
-import Web3Instance from '@cardstack/models/web3-instance';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
-const PAY_STEP = {
-  EDIT_AMOUNT: 'EDIT_AMOUNT',
-  CHOOSE_PREPAID_CARD: 'CHOOSE_PREPAID_CARD',
-  CONFIRMATION: 'CONFIRMATION',
-} as const;
-
-type Step = keyof typeof PAY_STEP;
-
-const PayMerchant = () => {
+const PayMerchant = memo(() => {
   const {
+    merchantInfoDID,
+    inputValue,
+    nativeCurrency,
+    spendAmount,
+    selectedPrepaidCard,
+    payStep,
     prepaidCards,
-    goBack,
-    onConfirm,
-    isLoadingTx: onConfirmLoading,
     isLoading,
-    data,
-  } = usePaymentMerchantUniversalLink();
-
-  return (
-    <SafeAreaView flex={1} width="100%" backgroundColor="black">
-      <PayMerchantBody
-        prepaidCards={prepaidCards}
-        onCancel={goBack}
-        onConfirm={onConfirm}
-        onConfirmLoading={onConfirmLoading}
-        loading={isLoading}
-        data={data}
-      />
-    </SafeAreaView>
-  );
-};
-
-type PayMerchantBodyProps = {
-  prepaidCards: PrepaidCardType[];
-  onCancel: () => void;
-  onConfirm: (
-    spendAmount: number,
-    prepaidCardAddress: string,
-    onSuccess: (receipt: TransactionReceipt) => void
-  ) => void;
-  onConfirmLoading: boolean;
-  loading: boolean;
-  data: PayMerchantDecodedData;
-};
-
-const layoutAnimation = () => {
-  LayoutAnimation.configureNext(
-    LayoutAnimation.create(
-      350,
-      LayoutAnimation.Types.easeIn,
-      LayoutAnimation.Properties.opacity
-    )
-  );
-};
-
-const PayMerchantBody = memo(
-  ({
-    data,
-    prepaidCards,
-    onConfirm,
     onConfirmLoading,
-    loading,
-  }: PayMerchantBodyProps) => {
-    const { infoDID = '', spendAmount: initialSpendAmount, currency } = data;
+    txSheetData,
+    onConfirm,
+    onStepChange,
+    onSelectPrepaidCard,
+    setInputValue,
+  } = usePayMerchant();
 
-    const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
-    const { paymentChangeCurrency } = usePayment();
-
-    const [
-      nativeCurrency,
-      currencyConversionRates,
-    ] = usePaymentCurrencyAndConversionRates();
-
-    const [accountCurrency] = useNativeCurrencyAndConversionRates();
-
-    const { navigate, goBack, canGoBack } = useNavigation();
-
-    const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>(
-      prepaidCards[0]
-    );
-
-    const [inputValue, setInputValue] = useState<string | undefined>(
-      `${initialSpendAmount ? initialSpendAmount.toLocaleString() : 0}`
-    );
-
-    const [payStep, setPayStep] = useState<Step>(PAY_STEP.CHOOSE_PREPAID_CARD);
-
-    useEffect(() => {
-      if (currency) {
-        paymentChangeCurrency(currency);
-      }
-    }, [currency, paymentChangeCurrency]);
-
-    const spendAmount =
-      nativeCurrency === 'SPD'
-        ? localCurrencyToAbsNum(`${inputValue || 0}`)
-        : nativeCurrencyToSpend(
-            inputValue,
-            currencyConversionRates[nativeCurrency],
-            true
-          ).spendAmount;
-
-    const onPayMerchantSuccess = useCallback(
-      async (receipt: TransactionReceipt) => {
-        const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-          inputValue ? localCurrencyToAbsNum(inputValue) : 0,
-          accountCurrency,
-          currencyConversionRates,
-          true
-        );
-
-        const timestamp = await getBlockTimestamp(receipt.blockNumber);
-
-        if (canGoBack()) {
-          goBack();
-        }
-
-        // Wait goBack action to navigate
-        setTimeout(() => {
-          navigate(
-            RainbowRoutes.EXPANDED_ASSET_SHEET,
-            mapNavigationParams({
-              merchantInfo: merchantInfoDID,
-              spendAmount,
-              nativeBalanceDisplay,
-              timestamp,
-              transactionHash: receipt.transactionHash,
-              prepaidCardAddress: receipt.from,
-              prepaidCardCustomization: selectedPrepaidCard.cardCustomization,
-            })
-          );
-        }, 1000);
-      },
-      [
-        accountCurrency,
-        canGoBack,
-        currencyConversionRates,
-        goBack,
-        inputValue,
-        merchantInfoDID,
-        navigate,
-        selectedPrepaidCard.cardCustomization,
-        spendAmount,
-      ]
-    );
-
-    const onCustomConfirm = useCallback(() => {
-      onConfirm(spendAmount, selectedPrepaidCard.address, onPayMerchantSuccess);
-    }, [onConfirm, spendAmount, selectedPrepaidCard, onPayMerchantSuccess]);
-
-    const onSelectPrepaidCard = useCallback(
-      (prepaidCardItem: PrepaidCardType) => {
-        selectPrepaidCard(prepaidCardItem);
-      },
-      []
-    );
-
-    const onStepChange = useCallback(
-      (step: Step) => () => {
-        layoutAnimation();
-        setPayStep(step);
-      },
-      []
-    );
-
-    if (payStep === PAY_STEP.EDIT_AMOUNT) {
-      return (
-        <CustomAmountBody
-          merchantInfoDID={merchantInfoDID}
-          onNextPress={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          isLoading={loading}
-          nativeCurrency={nativeCurrency || 'SPD'}
-        />
-      );
-    }
-
-    if (payStep === PAY_STEP.CONFIRMATION && prepaidCards.length > 0) {
-      return (
-        <TransactionConfirmationSheet
-          loading={loading}
-          onConfirmLoading={onConfirmLoading}
-          data={{
-            ...data,
-            spendAmount,
-            currency: nativeCurrency === 'SPD' ? currency : nativeCurrency,
-            prepaidCard: selectedPrepaidCard.address,
-          }}
-          onCancel={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
-          onConfirm={onCustomConfirm}
-        />
-      );
-    }
-
+  if (payStep === PAY_STEP.EDIT_AMOUNT) {
     return (
-      <ChoosePrepaidCard
-        selectedCard={selectedPrepaidCard}
-        onConfirmSelectedCard={onStepChange(PAY_STEP.CONFIRMATION)}
-        prepaidCards={prepaidCards}
-        onSelectPrepaidCard={onSelectPrepaidCard}
-        spendAmount={spendAmount}
-        onPressEditAmount={onStepChange(PAY_STEP.EDIT_AMOUNT)}
+      <CustomAmountBody
+        merchantInfoDID={merchantInfoDID}
+        onNextPress={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        isLoading={isLoading}
+        nativeCurrency={nativeCurrency || 'SPD'}
       />
     );
   }
-);
 
-interface CustomAmountBodyProps {
-  merchantInfoDID: MerchantInformation | undefined;
-  onNextPress: () => void;
+  if (payStep === PAY_STEP.CONFIRMATION && prepaidCards.length > 0) {
+    return (
+      <TransactionConfirmationSheet
+        loading={isLoading}
+        onConfirmLoading={onConfirmLoading}
+        data={txSheetData}
+        onCancel={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
+        onConfirm={onConfirm}
+      />
+    );
+  }
+
+  return (
+    <ChoosePrepaidCard
+      selectedCard={selectedPrepaidCard}
+      onConfirmSelectedCard={onStepChange(PAY_STEP.CONFIRMATION)}
+      prepaidCards={prepaidCards}
+      onSelectPrepaidCard={onSelectPrepaidCard}
+      spendAmount={spendAmount}
+      onPressEditAmount={onStepChange(PAY_STEP.EDIT_AMOUNT)}
+    />
+  );
+});
+
+interface AmountProps {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
-  isLoading: boolean;
   nativeCurrency: string;
+}
+interface CustomAmountBodyProps extends AmountProps {
+  merchantInfoDID: MerchantInformation | undefined;
+  onNextPress: () => void;
+  isLoading: boolean;
 }
 
 const CustomAmountBody = memo(
@@ -263,51 +93,43 @@ const CustomAmountBody = memo(
     setInputValue,
     isLoading,
     nativeCurrency,
-  }: CustomAmountBodyProps) => {
-    return (
-      <Container
-        flex={1}
-        alignItems="center"
-        borderTopRightRadius={20}
-        borderTopLeftRadius={20}
-        backgroundColor="white"
-        paddingTop={3}
-      >
-        <SheetHandle />
-        <Container flex={1} flexDirection="column" width="100%">
-          <Container padding={5} flex={1}>
-            <MerchantSectionCard
-              merchantInfoDID={merchantInfoDID}
-              flex={1}
-              justifyContent="space-between"
-              isLoading={isLoading}
-            >
-              <AmountInputSection
-                inputValue={inputValue}
-                setInputValue={setInputValue}
-                nativeCurrency={nativeCurrency}
-              />
-            </MerchantSectionCard>
-          </Container>
-          <Container alignItems="center" flex={1}>
-            <Button onPress={onNextPress}>
-              <Text>Next</Text>
-            </Button>
-          </Container>
+  }: CustomAmountBodyProps) => (
+    <Container
+      flex={1}
+      alignItems="center"
+      borderTopRightRadius={20}
+      borderTopLeftRadius={20}
+      backgroundColor="white"
+      paddingTop={3}
+    >
+      <SheetHandle />
+      <Container flex={1} flexDirection="column" width="100%">
+        <Container padding={5} flex={1}>
+          <MerchantSectionCard
+            merchantInfoDID={merchantInfoDID}
+            flex={1}
+            justifyContent="space-between"
+            isLoading={isLoading}
+          >
+            <AmountInputSection
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              nativeCurrency={nativeCurrency}
+            />
+          </MerchantSectionCard>
+        </Container>
+        <Container alignItems="center" flex={1}>
+          <Button onPress={onNextPress}>
+            <Text>Next</Text>
+          </Button>
         </Container>
       </Container>
-    );
-  }
+    </Container>
+  )
 );
 
-interface AmountInputSectionProps {
-  inputValue: string | undefined;
-  setInputValue: (_val: string | undefined) => void;
-  nativeCurrency: string;
-}
-
 const AmountInputSection = memo(
-  ({ inputValue, setInputValue, nativeCurrency }: AmountInputSectionProps) => {
+  ({ inputValue, setInputValue, nativeCurrency }: AmountProps) => {
     const [
       accountCurrency,
       currencyConversionRates,
@@ -347,65 +169,10 @@ const AmountInputSection = memo(
   }
 );
 
-const getBlockTimestamp = async (blockNumber: BlockNumber) => {
-  try {
-    const web3 = await Web3Instance.get();
-    const block = await web3.eth.getBlock(blockNumber);
-    return block?.timestamp.toString();
-  } catch (error) {
-    logger.log(error);
-  }
+const PayMerchantScreen = () => (
+  <SafeAreaView flex={1} width="100%" backgroundColor="black">
+    <PayMerchant />
+  </SafeAreaView>
+);
 
-  return Date.now().toString();
-};
-
-// Workaround to reuse tx confirmation, will revisit it
-interface NavParams {
-  merchantInfo?: MerchantInformation;
-  spendAmount: number;
-  nativeBalanceDisplay: string;
-  timestamp: string;
-  transactionHash: string;
-  prepaidCardAddress: string;
-  prepaidCardCustomization?: PrepaidCardCustomization;
-}
-
-const mapNavigationParams = ({
-  merchantInfo,
-  spendAmount,
-  nativeBalanceDisplay,
-  timestamp,
-  transactionHash,
-  prepaidCardAddress,
-  prepaidCardCustomization,
-}: NavParams) => ({
-  asset: {
-    index: 0,
-    section: {
-      data: [
-        {
-          merchantInfo,
-          spendAmount,
-          nativeBalanceDisplay,
-          timestamp,
-          transactionHash,
-        },
-      ],
-    },
-    Header: (
-      <PrepaidCardTransactionHeader
-        address={prepaidCardAddress}
-        cardCustomization={prepaidCardCustomization}
-      />
-    ),
-    CoinIcon: <Icon name="spend" />,
-    statusIconName: 'arrow-up',
-    statusText: 'Paid',
-    primaryText: `- ${spendAmount}`,
-    subText: nativeBalanceDisplay,
-    transactionHash,
-  },
-  type: 'paymentConfirmationTransaction',
-});
-
-export default memo(PayMerchant);
+export default memo(PayMerchantScreen);
