@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import { get, keys, pickBy } from 'lodash';
 import React, { useCallback } from 'react';
 import { resources, supportedLanguages } from '../../languages';
@@ -28,7 +27,6 @@ const LanguageSection = () => {
   const onSelectLanguage = useCallback(
     language => {
       settingsChangeLanguage(language);
-      analytics.track('Changed language', { language });
     },
     [settingsChangeLanguage]
   );

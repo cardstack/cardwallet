@@ -1,5 +1,4 @@
 import { Wallet } from '@ethersproject/wallet';
-import analytics from '@segment/analytics-react-native';
 import { captureException } from '@sentry/react-native';
 import { Trade } from '@uniswap/sdk';
 import { get, join, map } from 'lodash';
@@ -111,11 +110,6 @@ const findActionByType = (type: RapActionType) => {
   }
 };
 
-const getRapFullName = (actions: RapAction[]) => {
-  const actionTypes = map(actions, 'type');
-  return join(actionTypes, ' + ');
-};
-
 const defaultPreviousAction = {
   transaction: {
     confirmed: true,
@@ -124,12 +118,6 @@ const defaultPreviousAction = {
 
 export const executeRap = async (wallet: Wallet, rap: Rap) => {
   const { actions } = rap;
-  const rapName = getRapFullName(actions);
-
-  analytics.track('Rap started', {
-    category: 'raps',
-    label: rapName,
-  });
 
   logger.log('[common - executing rap]: actions', actions);
   for (let index = 0; index < actions.length; index++) {
@@ -177,19 +165,11 @@ export const executeRap = async (wallet: Wallet, rap: Rap) => {
     } catch (error) {
       logger.sentry('[5 INNER] error running action');
       captureException(error);
-      analytics.track('Rap failed', {
-        category: 'raps',
-        failed_action: type,
-        label: rapName,
-      });
+
       break;
     }
   }
 
-  analytics.track('Rap completed', {
-    category: 'raps',
-    label: rapName,
-  });
   logger.log('[common - executing rap] finished execute rap function');
 };
 

@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import React, { useCallback } from 'react';
 
 import { UnderlineField } from '../fields';
@@ -21,7 +20,6 @@ export default function SendAssetFormField({
 }) {
   const handlePressButton = useCallback(
     event => {
-      analytics.track('Clicked "Max" in Send flow input');
       onPressButton?.(event);
     },
     [onPressButton]

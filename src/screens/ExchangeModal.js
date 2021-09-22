@@ -1,5 +1,4 @@
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
 import { get } from 'lodash';
 import React, {
   Fragment,
@@ -320,57 +319,23 @@ export default function ExchangeModal({
 
   const isSlippageWarningVisible =
     isSufficientBalance && !!inputAmount && !!outputAmount;
-  const prevIsSlippageWarningVisible = usePrevious(isSlippageWarningVisible);
-  useEffect(() => {
-    if (isSlippageWarningVisible && !prevIsSlippageWarningVisible) {
-      analytics.track('Showing high slippage warning in Swap', {
-        name: outputCurrency.name,
-        slippage,
-        symbol: outputCurrency.symbol,
-        tokenAddress: outputCurrency.address,
-        type,
-      });
-    }
-  }, [
-    isSlippageWarningVisible,
-    outputCurrency,
-    prevIsSlippageWarningVisible,
-    slippage,
-    type,
-  ]);
 
   const handlePressMaxBalance = useCallback(async () => {
     let maxBalance = maxInputBalance;
     if (isWithdrawal) {
       maxBalance = supplyBalanceUnderlying;
     }
-    analytics.track('Selected max balance', {
-      defaultInputAsset: defaultInputAsset?.symbol,
-      type,
-      value: Number(maxBalance.toString()),
-    });
+
     return updateInputAmount(maxBalance, maxBalance, true, true);
   }, [
-    defaultInputAsset,
     isWithdrawal,
     maxInputBalance,
     supplyBalanceUnderlying,
-    type,
     updateInputAmount,
   ]);
 
   const handleSubmit = useCallback(() => {
     backgroundTask.execute(async () => {
-      analytics.track(`Submitted ${type}`, {
-        defaultInputAsset: defaultInputAsset?.symbol,
-        isSlippageWarningVisible,
-        name: outputCurrency?.name,
-        slippage,
-        symbol: outputCurrency?.symbol,
-        tokenAddress: outputCurrency?.address,
-        type,
-      });
-
       setIsAuthorizing(true);
       try {
         const wallet = await loadWallet();
@@ -398,10 +363,6 @@ export default function ExchangeModal({
         logger.log('[exchange - handle submit] rap', rap);
         await executeRap(wallet, rap);
         logger.log('[exchange - handle submit] executed rap!');
-        analytics.track(`Completed ${type}`, {
-          defaultInputAsset: defaultInputAsset?.symbol,
-          type,
-        });
       } catch (error) {
         setIsAuthorizing(false);
         logger.log('[exchange - handle submit] error submitting swap', error);
@@ -411,10 +372,7 @@ export default function ExchangeModal({
     });
   }, [
     type,
-    defaultInputAsset,
-    isSlippageWarningVisible,
     outputCurrency,
-    slippage,
     createRap,
     isWithdrawal,
     isMax,
@@ -446,12 +404,6 @@ export default function ExchangeModal({
         },
         type: 'swap_details',
       });
-      analytics.track('Opened Swap Details modal', {
-        name: outputCurrency?.name,
-        symbol: outputCurrency?.symbol,
-        tokenAddress: outputCurrency?.address,
-        type,
-      });
     };
     ios || !isKeyboardOpen()
       ? internalNavigate()
@@ -461,10 +413,8 @@ export default function ExchangeModal({
     lastFocusedInputHandle,
     nativeFieldRef,
     navigate,
-    outputCurrency,
     outputFieldRef,
     setParams,
-    type,
   ]);
 
   const showDetailsButton = useMemo(() => {

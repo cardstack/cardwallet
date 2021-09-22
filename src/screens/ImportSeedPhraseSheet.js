@@ -1,6 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import analytics from '@segment/analytics-react-native';
 import { isValidAddress } from 'ethereumjs-util';
 import { keys } from 'lodash';
 import React, {
@@ -344,9 +343,6 @@ export default function ImportSeedPhraseSheet() {
                       });
                   }
                 }, 1000);
-                analytics.track('Imported seed phrase', {
-                  isWalletEthZero,
-                });
               });
             } else {
               // Wait for error messages then refocus

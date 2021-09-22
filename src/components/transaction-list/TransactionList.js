@@ -1,5 +1,4 @@
 import Clipboard from '@react-native-community/clipboard';
-import analytics from '@segment/analytics-react-native';
 import { toLower } from 'lodash';
 import React, {
   useCallback,
@@ -100,9 +99,6 @@ export default function TransactionList({
     }
 
     navigate(Routes.ADD_CASH_FLOW);
-    analytics.track('Tapped Add Cash', {
-      category: 'add cash',
-    });
   }, [navigate, isDamaged]);
 
   const onRemovePhoto = useCallback(async () => {

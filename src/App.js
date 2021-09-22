@@ -2,12 +2,10 @@ import { ApolloProvider } from '@apollo/client';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
-import analytics from '@segment/analytics-react-native';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
 import compareVersions from 'compare-versions';
 import { get } from 'lodash';
-import nanoid from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
 import React, { Component, useEffect } from 'react';
 import {
@@ -20,12 +18,7 @@ import {
   StatusBar,
 } from 'react-native';
 import CodePush from 'react-native-code-push';
-import {
-  REACT_APP_SEGMENT_API_WRITE_KEY,
-  SENTRY_ENDPOINT,
-  // SENTRY_ENVIRONMENT,
-} from 'react-native-dotenv';
-import RNIOS11DeviceCheck from 'react-native-ios11-devicecheck';
+import { SENTRY_ENDPOINT } from 'react-native-dotenv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
@@ -54,7 +47,6 @@ import { PinnedHiddenItemOptionProvider } from './hooks';
 
 import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { registerTokenRefreshListener, saveFCMToken } from './model/firebase';
-import * as keychain from './model/keychain';
 import { loadAddress } from './model/wallet';
 import { Navigation } from './navigation';
 import RoutesComponent from './navigation/Routes';
@@ -124,7 +116,6 @@ class App extends Component {
 
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
-    await this.handleInitializeAnalytics();
     saveFCMToken();
     this.onTokenRefreshListener = registerTokenRefreshListener();
 
@@ -248,30 +239,6 @@ class App extends Component {
     // For ex. incoming txs, etc.
   };
 
-  handleInitializeAnalytics = async () => {
-    // Comment the line below to debug analytics
-    if (__DEV__) return false;
-    const storedIdentifier = await keychain.loadString(
-      'analyticsUserIdentifier'
-    );
-
-    if (!storedIdentifier) {
-      const identifier = await RNIOS11DeviceCheck.getToken()
-        .then(deviceId => deviceId)
-        .catch(() => nanoid());
-      await keychain.saveString('analyticsUserIdentifier', identifier);
-      analytics.identify(identifier);
-    }
-
-    await analytics.setup(REACT_APP_SEGMENT_API_WRITE_KEY, {
-      ios: {
-        trackDeepLinks: true,
-      },
-      trackAppLifecycleEvents: true,
-      trackAttributionData: true,
-    });
-  };
-
   performBackgroundTasks = () => {
     try {
       // TEMP: When the app goes into the background, we wish to log the size of
@@ -306,10 +273,6 @@ class App extends Component {
 
     this.setState({ appState: nextAppState });
 
-    analytics.track('State change', {
-      category: 'app state',
-      label: nextAppState,
-    });
     Logger.sentry(`App state change to ${nextAppState}`);
 
     // After a successful state transition, perform state-defined operations:

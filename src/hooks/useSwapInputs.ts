@@ -1,12 +1,10 @@
 import {
   convertAmountFromNativeValue,
   convertAmountToNativeAmount,
-  convertStringToNumber,
   greaterThanOrEqualTo,
   isZero,
   updatePrecisionToDisplay,
 } from '@cardstack/cardpay-sdk';
-import analytics from '@segment/analytics-react-native';
 import { get } from 'lodash';
 import { RefObject, useCallback } from 'react';
 import { TextInput } from 'react-native';
@@ -80,24 +78,14 @@ export default function useSwapInputs({
           dispatch(updateIsSufficientBalance(newIsSufficientBalance));
         }
       }
-
-      if (newAmountDisplay) {
-        analytics.track('Updated input amount', {
-          defaultInputAsset: get(defaultInputAsset, 'symbol', ''),
-          type,
-          value: convertStringToNumber(newAmountDisplay),
-        });
-      }
     },
     [
-      defaultInputAsset,
       dispatch,
       inputCurrency,
       isWithdrawal,
       maxInputBalance,
       nativeFieldRef,
       supplyBalanceUnderlying,
-      type,
     ]
   );
 
@@ -140,15 +128,8 @@ export default function useSwapInputs({
       dispatch(
         updateSwapOutputAmount(newOutputAmount, display, newInputAsExactAmount)
       );
-      if (newAmountDisplay) {
-        analytics.track('Updated output amount', {
-          defaultInputAsset: get(defaultInputAsset, 'symbol', ''),
-          type,
-          value: convertStringToNumber(newAmountDisplay),
-        });
-      }
     },
-    [defaultInputAsset, dispatch, type]
+    [dispatch]
   );
 
   return {

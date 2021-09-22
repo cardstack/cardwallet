@@ -1,4 +1,3 @@
-import analytics from '@segment/analytics-react-native';
 import {
   get,
   indexOf,
@@ -39,9 +38,6 @@ const showTransactionSpeedOptions = (
       if (buttonIndex !== undefined && buttonIndex !== cancelButtonIndex) {
         const selectedGasPriceItem = options[buttonIndex];
         updateGasOption(selectedGasPriceItem.speed);
-        analytics.track('Updated Gas Price', {
-          gasPrice: selectedGasPriceItem.gweiValue,
-        });
 
         if (isFunction(onSuccess)) {
           onSuccess();

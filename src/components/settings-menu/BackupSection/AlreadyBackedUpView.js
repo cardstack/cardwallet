@@ -1,11 +1,9 @@
 import { useRoute } from '@react-navigation/native';
-import analytics from '@segment/analytics-react-native';
-import React, { Fragment, useCallback, useEffect, useMemo } from 'react';
+import React, { Fragment, useCallback, useMemo } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { useTheme } from '../../../context/ThemeContext';
 import { deleteAllBackups } from '../../../handlers/cloudBackup';
 import { walletsUpdate } from '../../../redux/wallets';
 import { cloudPlatform } from '../../../utils/platform';
@@ -59,12 +57,6 @@ export default function AlreadyBackedUpView() {
   const { isSmallPhone } = useDimensions();
   const walletCloudBackup = useWalletCloudBackup();
   const walletId = params?.walletId || selectedWallet.id;
-
-  useEffect(() => {
-    analytics.track('Already Backed Up View', {
-      category: 'settings backup',
-    });
-  }, []);
 
   const walletStatus = useMemo(() => {
     let status = null;
@@ -155,10 +147,6 @@ export default function AlreadyBackedUpView() {
     ) {
       return;
     }
-
-    analytics.track(`Back up to ${cloudPlatform} pressed`, {
-      category: 'settings backup',
-    });
 
     walletCloudBackup({
       handleNoLatestBackup,
