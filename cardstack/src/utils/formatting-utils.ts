@@ -14,3 +14,14 @@ export const getAddressPreview = (address: string): string => {
 
 // Removes dash and everything after it
 export const normalizeTxHash = (hash: string) => hash.replace(/-.*/g, '');
+
+export const splitAddress = (address: string) => {
+  const half = address.length / 2;
+  const addressFirstHalf = address.slice(0, half);
+
+  const addressSecondHalf = address.slice(-half);
+
+  const twoLinesAddress = `${addressFirstHalf}\n${addressSecondHalf}`;
+
+  return { addressFirstHalf, addressSecondHalf, twoLinesAddress };
+};

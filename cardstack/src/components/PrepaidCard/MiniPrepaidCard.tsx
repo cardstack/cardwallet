@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
+import { CustomizableBackground } from './components/CustomizableBackground';
 import { Container } from '@cardstack/components';
-import { CustomizableBackground } from '@cardstack/components/PrepaidCard/CustomizableBackground';
 import { PrepaidCardCustomization } from '@cardstack/types';
 
 const styles = StyleSheet.create({
