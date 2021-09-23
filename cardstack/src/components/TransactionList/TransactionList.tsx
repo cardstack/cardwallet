@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect } from 'react';
+import React, { memo, useCallback } from 'react';
 import {
   RefreshControl,
   SectionList,
@@ -42,15 +42,6 @@ export const TransactionList = memo(
     const onRefresh = useCallback(() => {
       refetch && refetch();
     }, [refetch]);
-
-    useEffect(() => {
-      if (isFocused && !isFetchingMore && !refetchLoading) {
-        // Wait a bit to refresh to get tx from be
-        setTimeout(() => {
-          onRefresh();
-        }, 500);
-      }
-    }, [onRefresh, isFocused, isFetchingMore, refetchLoading]);
 
     const renderSectionHeader = useCallback(
       ({ section: { title } }) => (
