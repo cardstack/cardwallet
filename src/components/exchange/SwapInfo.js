@@ -1,10 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Animated from 'react-native-reanimated';
-import {
-  bin,
-  useSpring as useSpringTransition,
-  useTiming as useTimingTransition,
-} from 'react-native-redash';
+import { bin, useSpring, useTiming } from 'react-native-redash';
 import styled from 'styled-components';
 import { darkModeThemeColors } from '../../styles/colors';
 import { interpolate } from '../animations';
@@ -39,17 +35,17 @@ export default function SwapInfo({ asset, amount }) {
     amountToDisplay = prevAmount;
   }
 
-  const animation = useSpringTransition(bin(isVisible), {
+  const animationValue = useSpring(bin(isVisible), {
     damping: 14,
     mass: 1,
     overshootClamping: false,
     restDisplacementThreshold: 0.001,
     restSpeedThreshold: 0.001,
     stiffness: 121.5,
-  });
-  const animationHeight = useTimingTransition(bin(isVisible), {
+  }).value;
+  const animationHeight = useTiming(bin(isVisible), {
     duration: 100,
-  });
+  }).value;
 
   const { colors } = useTheme();
 
@@ -60,17 +56,17 @@ export default function SwapInfo({ asset, amount }) {
           inputRange: [0, 1],
           outputRange: [0, 35],
         }),
-        opacity: interpolate(animation.value, {
+        opacity: interpolate(animationValue, {
           inputRange: [0, 1],
           outputRange: [0, 1],
         }),
         transform: [
           {
-            scale: interpolate(animation.value, {
+            scale: interpolate(animationValue, {
               inputRange: [0, 1],
               outputRange: [0.8, 1],
             }),
-            translateY: interpolate(animation.value, {
+            translateY: interpolate(animationValue, {
               inputRange: [0, 1],
               outputRange: [1, 0],
             }),

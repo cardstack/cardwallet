@@ -1,6 +1,6 @@
 import React from 'react';
 import Animated, { SpringUtils } from 'react-native-reanimated';
-import { bin, useSpring as useSpringTransition } from 'react-native-redash';
+import { bin, useSpring } from 'react-native-redash';
 import styled from 'styled-components';
 import { useMemoOne } from 'use-memo-one';
 import { useTheme } from '../../context/ThemeContext';
@@ -40,22 +40,22 @@ const RoundButtonSizeToggler = ({
   isAbsolute,
   startingWidth,
 }) => {
-  const animation = useSpringTransition(
+  const animationValue = useSpring(
     bin(isOpen),
     SpringUtils.makeConfigFromOrigamiTensionAndFriction({
       ...SpringUtils.makeDefaultConfig(),
       friction: 20,
       tension: 200,
     })
-  );
+  ).value;
 
   const contentScaleX = useMemoOne(
     () =>
       add(
-        multiply(animation.value, endingWidth / 100 - startingWidth / 100),
+        multiply(animationValue, endingWidth / 100 - startingWidth / 100),
         startingWidth / 100
       ),
-    [animation, endingWidth, startingWidth]
+    [animationValue, endingWidth, startingWidth]
   );
 
   const centerStyle = useMemoOne(

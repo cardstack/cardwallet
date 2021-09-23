@@ -2,7 +2,7 @@ import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Animated, { Easing } from 'react-native-reanimated';
-import { toRad, useTimingTransition } from 'react-native-redash';
+import { toRad, useTiming } from 'react-native-redash';
 import styled from 'styled-components';
 import CaretImageSource from '../../assets/family-dropdown-arrow.png';
 import { useTheme } from '../../context/ThemeContext';
@@ -40,10 +40,10 @@ const SavingsListHeader = ({
   const { nativeCurrency } = useAccountSettings();
   const { colors } = useTheme();
 
-  const animation = useTimingTransition(isOpen, {
+  const animation = useTiming(isOpen, {
     duration: TokenFamilyHeaderAnimationDuration,
     easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-  });
+  }).value;
   return (
     <ButtonPressAnimation
       key={`${emoji}_${isOpen}`}

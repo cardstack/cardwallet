@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Animated, { Easing } from 'react-native-reanimated';
-import { useTimingTransition } from 'react-native-redash';
+import { useTiming } from 'react-native-redash';
 
 import { useInterval, useTimeout, useTransformOrigin } from '../../hooks';
 import { magicMemo } from '../../utils';
@@ -16,10 +16,10 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 const SheetSubtitleCyclerItem = ({ error, selected, subtitle }) => {
   const ease = Easing[error ? 'out' : 'in'](Easing.ease);
 
-  const opacity = useTimingTransition(selected, {
+  const opacity = useTiming(selected, {
     duration: 200,
     ease,
-  });
+  }).value;
 
   return (
     <Animated.View {...position.coverAsObject} style={{ opacity }}>

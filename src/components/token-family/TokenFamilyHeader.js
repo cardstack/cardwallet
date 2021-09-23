@@ -1,6 +1,6 @@
 import React from 'react';
 import Animated, { Easing } from 'react-native-reanimated';
-import { toRad, useTimingTransition } from 'react-native-redash';
+import { toRad, useTiming } from 'react-native-redash';
 import styled from 'styled-components';
 import CaretImageSource from '../../assets/family-dropdown-arrow.png';
 import { ButtonPressAnimation, interpolate } from '../animations';
@@ -69,13 +69,13 @@ const TokenFamilyHeader = ({
   testID,
   title,
 }) => {
-  const animation = useTimingTransition(!isOpen, {
+  const animationValue = useTiming(!isOpen, {
     duration: TokenFamilyHeaderAnimationDuration,
     easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-  });
+  }).value;
 
   const rotate = toRad(
-    interpolate(animation, {
+    interpolate(animationValue, {
       inputRange: [0, 1],
       outputRange: [90, 0],
     })
@@ -102,7 +102,7 @@ const TokenFamilyHeader = ({
         </RowWithMargins>
         <TitleText isShowcase={title === 'Showcase'}>{title}</TitleText>
         <RowWithMargins align="center" margin={13}>
-          <Animated.View style={{ opacity: animation }}>
+          <Animated.View style={{ opacity: animationValue }}>
             <ChildrenAmountText>{childrenAmount}</ChildrenAmountText>
           </Animated.View>
           <RotatingArrowIcon style={{ transform: [{ rotate }] }} />

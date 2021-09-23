@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Animated, { SpringUtils } from 'react-native-reanimated';
-import { useSpring as useSpringTransition } from 'react-native-redash';
+import { useSpring } from 'react-native-redash';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { useTimeout } from '../../hooks';
@@ -58,9 +58,9 @@ const Badge = ({
 
   startDelayTimeout(() => setDelayedIsVisible(isVisible), delay);
 
-  const animation = useSpringTransition(delayedIsVisible, BadgeSpringConfig);
+  const animationValue = useSpring(delayedIsVisible, BadgeSpringConfig).value;
 
-  const translateY = interpolate(animation.value, {
+  const translateY = interpolate(animationValue, {
     inputRange: [0, 1],
     outputRange: [1, 0],
   });
@@ -72,7 +72,7 @@ const Badge = ({
       {...props}
       offset={offset}
       size={size}
-      style={{ transform: [{ scale: animation.value, translateY }] }}
+      style={{ transform: [{ scale: animationValue, translateY }] }}
     >
       <Circle offset={offset} size={size} valueLength={valueLength}>
         <Text color={colors.whiteLabel} size="smaller" weight="semibold">

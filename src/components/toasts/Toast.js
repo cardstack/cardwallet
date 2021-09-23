@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import Animated from 'react-native-reanimated';
-import { useSpring as useSpringTransition } from 'react-native-redash';
+import { useSpring } from 'react-native-redash';
 import { useSafeArea } from 'react-native-safe-area-context';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
@@ -59,14 +59,14 @@ export default function Toast({
   const { width: deviceWidth } = useDimensions();
   const insets = useSafeArea();
 
-  const animation = useSpringTransition(isVisible, springConfig);
+  const animationValue = useSpring(isVisible, springConfig).value;
 
-  const opacity = interpolate(animation.value, {
+  const opacity = interpolate(animationValue, {
     inputRange: [0, 1],
     outputRange: [0, 1],
   });
 
-  const translateY = interpolate(animation.value, {
+  const translateY = interpolate(animationValue, {
     inputRange: [0, 1],
     outputRange: [distance, targetTranslate],
   });
