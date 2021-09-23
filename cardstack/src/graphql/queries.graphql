@@ -10,26 +10,10 @@ query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize:
   }
 }
 
-query GetDepotTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
-  safe(id: $address) {
-    id
-    safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
-      timestamp
-      transaction {
-        ...Transaction
-      }
-    }
-  }
-}
-
-query GetDepotTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
-  safe(id: $address) {
-    id
-    safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
-      timestamp
-      transaction {
-        ...Transaction
-      }
+query GetDepotTransactionHistoryData($address: String!, $skip: Int = 0, $pageSize: Int = 25) {
+  eoatransactions(where: {safe: $address}, first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: asc) {
+    transaction {
+      ...Transaction
     }
   }
 }

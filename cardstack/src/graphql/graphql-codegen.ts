@@ -30,10 +30,13 @@ export type Account = {
   splitPrepaidCards: Array<Maybe<PrepaidCardSplit>>;
   createdMerchants: Array<Maybe<MerchantCreation>>;
   receivedPrepaidCards: Array<Maybe<PrepaidCardTransfer>>;
+  provisionedPrepaidCards: Array<Maybe<PrepaidCardProvisionedEvent>>;
   sentPrepaidCards: Array<Maybe<PrepaidCardTransfer>>;
   tokenSwaps: Array<Maybe<TokenSwap>>;
   tokens: Array<Maybe<TokenHolder>>;
   transactions: Array<Maybe<EoaTransaction>>;
+  prepaidCardInventory: Array<Maybe<SkuInventory>>;
+  skus: Array<Maybe<Sku>>;
 };
 
 
@@ -118,6 +121,15 @@ export type AccountReceivedPrepaidCardsArgs = {
 };
 
 
+export type AccountProvisionedPrepaidCardsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardProvisionedEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardProvisionedEventFilter>;
+};
+
+
 export type AccountSentPrepaidCardsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -153,6 +165,24 @@ export type AccountTransactionsArgs = {
   where?: Maybe<EoaTransactionFilter>;
 };
 
+
+export type AccountPrepaidCardInventoryArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SkuInventoryOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SkuInventoryFilter>;
+};
+
+
+export type AccountSkusArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SkuOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SkuFilter>;
+};
+
 export type AccountFilter = {
   id?: Maybe<Scalars['ID']>;
   id_not?: Maybe<Scalars['ID']>;
@@ -175,10 +205,13 @@ export enum AccountOrderBy {
   SPLITPREPAIDCARDS = 'splitPrepaidCards',
   CREATEDMERCHANTS = 'createdMerchants',
   RECEIVEDPREPAIDCARDS = 'receivedPrepaidCards',
+  PROVISIONEDPREPAIDCARDS = 'provisionedPrepaidCards',
   SENTPREPAIDCARDS = 'sentPrepaidCards',
   TOKENSWAPS = 'tokenSwaps',
   TOKENS = 'tokens',
-  TRANSACTIONS = 'transactions'
+  TRANSACTIONS = 'transactions',
+  PREPAIDCARDINVENTORY = 'prepaidCardInventory',
+  SKUS = 'skus'
 }
 
 
@@ -500,6 +533,7 @@ export type EoaTransaction = {
   __typename?: 'EOATransaction';
   id: Scalars['ID'];
   account: Account;
+  safe?: Maybe<Safe>;
   timestamp: Scalars['BigInt'];
   blockNumber: Scalars['BigInt'];
   transaction: Transaction;
@@ -528,6 +562,20 @@ export type EoaTransactionFilter = {
   account_not_starts_with?: Maybe<Scalars['String']>;
   account_ends_with?: Maybe<Scalars['String']>;
   account_not_ends_with?: Maybe<Scalars['String']>;
+  safe?: Maybe<Scalars['String']>;
+  safe_not?: Maybe<Scalars['String']>;
+  safe_gt?: Maybe<Scalars['String']>;
+  safe_lt?: Maybe<Scalars['String']>;
+  safe_gte?: Maybe<Scalars['String']>;
+  safe_lte?: Maybe<Scalars['String']>;
+  safe_in?: Maybe<Array<Scalars['String']>>;
+  safe_not_in?: Maybe<Array<Scalars['String']>>;
+  safe_contains?: Maybe<Scalars['String']>;
+  safe_not_contains?: Maybe<Scalars['String']>;
+  safe_starts_with?: Maybe<Scalars['String']>;
+  safe_not_starts_with?: Maybe<Scalars['String']>;
+  safe_ends_with?: Maybe<Scalars['String']>;
+  safe_not_ends_with?: Maybe<Scalars['String']>;
   timestamp?: Maybe<Scalars['BigInt']>;
   timestamp_not?: Maybe<Scalars['BigInt']>;
   timestamp_gt?: Maybe<Scalars['BigInt']>;
@@ -563,6 +611,7 @@ export type EoaTransactionFilter = {
 export enum EoaTransactionOrderBy {
   ID = 'id',
   ACCOUNT = 'account',
+  SAFE = 'safe',
   TIMESTAMP = 'timestamp',
   BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction'
@@ -1304,6 +1353,7 @@ export type PrepaidCard = {
   payments: Array<Maybe<PrepaidCardPayment>>;
   splits: Array<Maybe<PrepaidCardSplit>>;
   transfers: Array<Maybe<PrepaidCardTransfer>>;
+  usages: Array<Maybe<PrepaidCardSendAction>>;
 };
 
 
@@ -1332,6 +1382,165 @@ export type PrepaidCardTransfersArgs = {
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<PrepaidCardTransferFilter>;
 };
+
+
+export type PrepaidCardUsagesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardSendActionOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardSendActionFilter>;
+};
+
+export type PrepaidCardAsk = {
+  __typename?: 'PrepaidCardAsk';
+  id: Scalars['ID'];
+  sku: Sku;
+  issuingToken: Token;
+  askPrice: Scalars['BigInt'];
+};
+
+export type PrepaidCardAskSetEvent = {
+  __typename?: 'PrepaidCardAskSetEvent';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  sku: Sku;
+  issuingToken: Token;
+  askPrice: Scalars['BigInt'];
+};
+
+export type PrepaidCardAskSetEventFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  sku?: Maybe<Scalars['String']>;
+  sku_not?: Maybe<Scalars['String']>;
+  sku_gt?: Maybe<Scalars['String']>;
+  sku_lt?: Maybe<Scalars['String']>;
+  sku_gte?: Maybe<Scalars['String']>;
+  sku_lte?: Maybe<Scalars['String']>;
+  sku_in?: Maybe<Array<Scalars['String']>>;
+  sku_not_in?: Maybe<Array<Scalars['String']>>;
+  sku_contains?: Maybe<Scalars['String']>;
+  sku_not_contains?: Maybe<Scalars['String']>;
+  sku_starts_with?: Maybe<Scalars['String']>;
+  sku_not_starts_with?: Maybe<Scalars['String']>;
+  sku_ends_with?: Maybe<Scalars['String']>;
+  sku_not_ends_with?: Maybe<Scalars['String']>;
+  issuingToken?: Maybe<Scalars['String']>;
+  issuingToken_not?: Maybe<Scalars['String']>;
+  issuingToken_gt?: Maybe<Scalars['String']>;
+  issuingToken_lt?: Maybe<Scalars['String']>;
+  issuingToken_gte?: Maybe<Scalars['String']>;
+  issuingToken_lte?: Maybe<Scalars['String']>;
+  issuingToken_in?: Maybe<Array<Scalars['String']>>;
+  issuingToken_not_in?: Maybe<Array<Scalars['String']>>;
+  issuingToken_contains?: Maybe<Scalars['String']>;
+  issuingToken_not_contains?: Maybe<Scalars['String']>;
+  issuingToken_starts_with?: Maybe<Scalars['String']>;
+  issuingToken_not_starts_with?: Maybe<Scalars['String']>;
+  issuingToken_ends_with?: Maybe<Scalars['String']>;
+  issuingToken_not_ends_with?: Maybe<Scalars['String']>;
+  askPrice?: Maybe<Scalars['BigInt']>;
+  askPrice_not?: Maybe<Scalars['BigInt']>;
+  askPrice_gt?: Maybe<Scalars['BigInt']>;
+  askPrice_lt?: Maybe<Scalars['BigInt']>;
+  askPrice_gte?: Maybe<Scalars['BigInt']>;
+  askPrice_lte?: Maybe<Scalars['BigInt']>;
+  askPrice_in?: Maybe<Array<Scalars['BigInt']>>;
+  askPrice_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum PrepaidCardAskSetEventOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  SKU = 'sku',
+  ISSUINGTOKEN = 'issuingToken',
+  ASKPRICE = 'askPrice'
+}
+
+export type PrepaidCardAskFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  sku?: Maybe<Scalars['String']>;
+  sku_not?: Maybe<Scalars['String']>;
+  sku_gt?: Maybe<Scalars['String']>;
+  sku_lt?: Maybe<Scalars['String']>;
+  sku_gte?: Maybe<Scalars['String']>;
+  sku_lte?: Maybe<Scalars['String']>;
+  sku_in?: Maybe<Array<Scalars['String']>>;
+  sku_not_in?: Maybe<Array<Scalars['String']>>;
+  sku_contains?: Maybe<Scalars['String']>;
+  sku_not_contains?: Maybe<Scalars['String']>;
+  sku_starts_with?: Maybe<Scalars['String']>;
+  sku_not_starts_with?: Maybe<Scalars['String']>;
+  sku_ends_with?: Maybe<Scalars['String']>;
+  sku_not_ends_with?: Maybe<Scalars['String']>;
+  issuingToken?: Maybe<Scalars['String']>;
+  issuingToken_not?: Maybe<Scalars['String']>;
+  issuingToken_gt?: Maybe<Scalars['String']>;
+  issuingToken_lt?: Maybe<Scalars['String']>;
+  issuingToken_gte?: Maybe<Scalars['String']>;
+  issuingToken_lte?: Maybe<Scalars['String']>;
+  issuingToken_in?: Maybe<Array<Scalars['String']>>;
+  issuingToken_not_in?: Maybe<Array<Scalars['String']>>;
+  issuingToken_contains?: Maybe<Scalars['String']>;
+  issuingToken_not_contains?: Maybe<Scalars['String']>;
+  issuingToken_starts_with?: Maybe<Scalars['String']>;
+  issuingToken_not_starts_with?: Maybe<Scalars['String']>;
+  issuingToken_ends_with?: Maybe<Scalars['String']>;
+  issuingToken_not_ends_with?: Maybe<Scalars['String']>;
+  askPrice?: Maybe<Scalars['BigInt']>;
+  askPrice_not?: Maybe<Scalars['BigInt']>;
+  askPrice_gt?: Maybe<Scalars['BigInt']>;
+  askPrice_lt?: Maybe<Scalars['BigInt']>;
+  askPrice_gte?: Maybe<Scalars['BigInt']>;
+  askPrice_lte?: Maybe<Scalars['BigInt']>;
+  askPrice_in?: Maybe<Array<Scalars['BigInt']>>;
+  askPrice_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum PrepaidCardAskOrderBy {
+  ID = 'id',
+  SKU = 'sku',
+  ISSUINGTOKEN = 'issuingToken',
+  ASKPRICE = 'askPrice'
+}
 
 export type PrepaidCardCreation = {
   __typename?: 'PrepaidCardCreation';
@@ -1487,6 +1696,340 @@ export enum PrepaidCardCreationOrderBy {
   ISSUINGTOKENAMOUNT = 'issuingTokenAmount',
   SPENDAMOUNT = 'spendAmount',
   CREATIONGASFEECOLLECTED = 'creationGasFeeCollected'
+}
+
+export type PrepaidCardInventoryAddEvent = {
+  __typename?: 'PrepaidCardInventoryAddEvent';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  prepaidCard: PrepaidCard;
+  inventory: SkuInventory;
+};
+
+export type PrepaidCardInventoryAddEventFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard?: Maybe<Scalars['String']>;
+  prepaidCard_not?: Maybe<Scalars['String']>;
+  prepaidCard_gt?: Maybe<Scalars['String']>;
+  prepaidCard_lt?: Maybe<Scalars['String']>;
+  prepaidCard_gte?: Maybe<Scalars['String']>;
+  prepaidCard_lte?: Maybe<Scalars['String']>;
+  prepaidCard_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_contains?: Maybe<Scalars['String']>;
+  prepaidCard_not_contains?: Maybe<Scalars['String']>;
+  prepaidCard_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_ends_with?: Maybe<Scalars['String']>;
+  inventory?: Maybe<Scalars['String']>;
+  inventory_not?: Maybe<Scalars['String']>;
+  inventory_gt?: Maybe<Scalars['String']>;
+  inventory_lt?: Maybe<Scalars['String']>;
+  inventory_gte?: Maybe<Scalars['String']>;
+  inventory_lte?: Maybe<Scalars['String']>;
+  inventory_in?: Maybe<Array<Scalars['String']>>;
+  inventory_not_in?: Maybe<Array<Scalars['String']>>;
+  inventory_contains?: Maybe<Scalars['String']>;
+  inventory_not_contains?: Maybe<Scalars['String']>;
+  inventory_starts_with?: Maybe<Scalars['String']>;
+  inventory_not_starts_with?: Maybe<Scalars['String']>;
+  inventory_ends_with?: Maybe<Scalars['String']>;
+  inventory_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum PrepaidCardInventoryAddEventOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  PREPAIDCARD = 'prepaidCard',
+  INVENTORY = 'inventory'
+}
+
+export type PrepaidCardInventoryEvent = {
+  __typename?: 'PrepaidCardInventoryEvent';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  inventory: SkuInventory;
+  prepaidCard: PrepaidCard;
+  inventoryAdded?: Maybe<PrepaidCardInventoryAddEvent>;
+  inventoryRemoved?: Maybe<PrepaidCardInventoryRemoveEvent>;
+  inventoryProvisioned?: Maybe<PrepaidCardProvisionedEvent>;
+};
+
+export type PrepaidCardInventoryEventFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  inventory?: Maybe<Scalars['String']>;
+  inventory_not?: Maybe<Scalars['String']>;
+  inventory_gt?: Maybe<Scalars['String']>;
+  inventory_lt?: Maybe<Scalars['String']>;
+  inventory_gte?: Maybe<Scalars['String']>;
+  inventory_lte?: Maybe<Scalars['String']>;
+  inventory_in?: Maybe<Array<Scalars['String']>>;
+  inventory_not_in?: Maybe<Array<Scalars['String']>>;
+  inventory_contains?: Maybe<Scalars['String']>;
+  inventory_not_contains?: Maybe<Scalars['String']>;
+  inventory_starts_with?: Maybe<Scalars['String']>;
+  inventory_not_starts_with?: Maybe<Scalars['String']>;
+  inventory_ends_with?: Maybe<Scalars['String']>;
+  inventory_not_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard?: Maybe<Scalars['String']>;
+  prepaidCard_not?: Maybe<Scalars['String']>;
+  prepaidCard_gt?: Maybe<Scalars['String']>;
+  prepaidCard_lt?: Maybe<Scalars['String']>;
+  prepaidCard_gte?: Maybe<Scalars['String']>;
+  prepaidCard_lte?: Maybe<Scalars['String']>;
+  prepaidCard_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_contains?: Maybe<Scalars['String']>;
+  prepaidCard_not_contains?: Maybe<Scalars['String']>;
+  prepaidCard_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_ends_with?: Maybe<Scalars['String']>;
+  inventoryAdded?: Maybe<Scalars['String']>;
+  inventoryAdded_not?: Maybe<Scalars['String']>;
+  inventoryAdded_gt?: Maybe<Scalars['String']>;
+  inventoryAdded_lt?: Maybe<Scalars['String']>;
+  inventoryAdded_gte?: Maybe<Scalars['String']>;
+  inventoryAdded_lte?: Maybe<Scalars['String']>;
+  inventoryAdded_in?: Maybe<Array<Scalars['String']>>;
+  inventoryAdded_not_in?: Maybe<Array<Scalars['String']>>;
+  inventoryAdded_contains?: Maybe<Scalars['String']>;
+  inventoryAdded_not_contains?: Maybe<Scalars['String']>;
+  inventoryAdded_starts_with?: Maybe<Scalars['String']>;
+  inventoryAdded_not_starts_with?: Maybe<Scalars['String']>;
+  inventoryAdded_ends_with?: Maybe<Scalars['String']>;
+  inventoryAdded_not_ends_with?: Maybe<Scalars['String']>;
+  inventoryRemoved?: Maybe<Scalars['String']>;
+  inventoryRemoved_not?: Maybe<Scalars['String']>;
+  inventoryRemoved_gt?: Maybe<Scalars['String']>;
+  inventoryRemoved_lt?: Maybe<Scalars['String']>;
+  inventoryRemoved_gte?: Maybe<Scalars['String']>;
+  inventoryRemoved_lte?: Maybe<Scalars['String']>;
+  inventoryRemoved_in?: Maybe<Array<Scalars['String']>>;
+  inventoryRemoved_not_in?: Maybe<Array<Scalars['String']>>;
+  inventoryRemoved_contains?: Maybe<Scalars['String']>;
+  inventoryRemoved_not_contains?: Maybe<Scalars['String']>;
+  inventoryRemoved_starts_with?: Maybe<Scalars['String']>;
+  inventoryRemoved_not_starts_with?: Maybe<Scalars['String']>;
+  inventoryRemoved_ends_with?: Maybe<Scalars['String']>;
+  inventoryRemoved_not_ends_with?: Maybe<Scalars['String']>;
+  inventoryProvisioned?: Maybe<Scalars['String']>;
+  inventoryProvisioned_not?: Maybe<Scalars['String']>;
+  inventoryProvisioned_gt?: Maybe<Scalars['String']>;
+  inventoryProvisioned_lt?: Maybe<Scalars['String']>;
+  inventoryProvisioned_gte?: Maybe<Scalars['String']>;
+  inventoryProvisioned_lte?: Maybe<Scalars['String']>;
+  inventoryProvisioned_in?: Maybe<Array<Scalars['String']>>;
+  inventoryProvisioned_not_in?: Maybe<Array<Scalars['String']>>;
+  inventoryProvisioned_contains?: Maybe<Scalars['String']>;
+  inventoryProvisioned_not_contains?: Maybe<Scalars['String']>;
+  inventoryProvisioned_starts_with?: Maybe<Scalars['String']>;
+  inventoryProvisioned_not_starts_with?: Maybe<Scalars['String']>;
+  inventoryProvisioned_ends_with?: Maybe<Scalars['String']>;
+  inventoryProvisioned_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum PrepaidCardInventoryEventOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  INVENTORY = 'inventory',
+  PREPAIDCARD = 'prepaidCard',
+  INVENTORYADDED = 'inventoryAdded',
+  INVENTORYREMOVED = 'inventoryRemoved',
+  INVENTORYPROVISIONED = 'inventoryProvisioned'
+}
+
+export type PrepaidCardInventoryItem = {
+  __typename?: 'PrepaidCardInventoryItem';
+  id: Scalars['ID'];
+  inventory: SkuInventory;
+  prepaidCard: PrepaidCard;
+};
+
+export type PrepaidCardInventoryItemFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  inventory?: Maybe<Scalars['String']>;
+  inventory_not?: Maybe<Scalars['String']>;
+  inventory_gt?: Maybe<Scalars['String']>;
+  inventory_lt?: Maybe<Scalars['String']>;
+  inventory_gte?: Maybe<Scalars['String']>;
+  inventory_lte?: Maybe<Scalars['String']>;
+  inventory_in?: Maybe<Array<Scalars['String']>>;
+  inventory_not_in?: Maybe<Array<Scalars['String']>>;
+  inventory_contains?: Maybe<Scalars['String']>;
+  inventory_not_contains?: Maybe<Scalars['String']>;
+  inventory_starts_with?: Maybe<Scalars['String']>;
+  inventory_not_starts_with?: Maybe<Scalars['String']>;
+  inventory_ends_with?: Maybe<Scalars['String']>;
+  inventory_not_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard?: Maybe<Scalars['String']>;
+  prepaidCard_not?: Maybe<Scalars['String']>;
+  prepaidCard_gt?: Maybe<Scalars['String']>;
+  prepaidCard_lt?: Maybe<Scalars['String']>;
+  prepaidCard_gte?: Maybe<Scalars['String']>;
+  prepaidCard_lte?: Maybe<Scalars['String']>;
+  prepaidCard_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_contains?: Maybe<Scalars['String']>;
+  prepaidCard_not_contains?: Maybe<Scalars['String']>;
+  prepaidCard_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum PrepaidCardInventoryItemOrderBy {
+  ID = 'id',
+  INVENTORY = 'inventory',
+  PREPAIDCARD = 'prepaidCard'
+}
+
+export type PrepaidCardInventoryRemoveEvent = {
+  __typename?: 'PrepaidCardInventoryRemoveEvent';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  prepaidCard: PrepaidCard;
+  inventory: SkuInventory;
+};
+
+export type PrepaidCardInventoryRemoveEventFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard?: Maybe<Scalars['String']>;
+  prepaidCard_not?: Maybe<Scalars['String']>;
+  prepaidCard_gt?: Maybe<Scalars['String']>;
+  prepaidCard_lt?: Maybe<Scalars['String']>;
+  prepaidCard_gte?: Maybe<Scalars['String']>;
+  prepaidCard_lte?: Maybe<Scalars['String']>;
+  prepaidCard_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_contains?: Maybe<Scalars['String']>;
+  prepaidCard_not_contains?: Maybe<Scalars['String']>;
+  prepaidCard_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_ends_with?: Maybe<Scalars['String']>;
+  inventory?: Maybe<Scalars['String']>;
+  inventory_not?: Maybe<Scalars['String']>;
+  inventory_gt?: Maybe<Scalars['String']>;
+  inventory_lt?: Maybe<Scalars['String']>;
+  inventory_gte?: Maybe<Scalars['String']>;
+  inventory_lte?: Maybe<Scalars['String']>;
+  inventory_in?: Maybe<Array<Scalars['String']>>;
+  inventory_not_in?: Maybe<Array<Scalars['String']>>;
+  inventory_contains?: Maybe<Scalars['String']>;
+  inventory_not_contains?: Maybe<Scalars['String']>;
+  inventory_starts_with?: Maybe<Scalars['String']>;
+  inventory_not_starts_with?: Maybe<Scalars['String']>;
+  inventory_ends_with?: Maybe<Scalars['String']>;
+  inventory_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum PrepaidCardInventoryRemoveEventOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  PREPAIDCARD = 'prepaidCard',
+  INVENTORY = 'inventory'
 }
 
 export type PrepaidCardPayment = {
@@ -1674,6 +2217,254 @@ export enum PrepaidCardPaymentOrderBy {
   HISTORICPREPAIDCARDFACEVALUE = 'historicPrepaidCardFaceValue',
   HISTORICPREPAIDCARDISSUINGTOKENBALANCE = 'historicPrepaidCardIssuingTokenBalance',
   MERCHANTREGISTRATIONPAYMENTS = 'merchantRegistrationPayments'
+}
+
+export type PrepaidCardProvisionedEvent = {
+  __typename?: 'PrepaidCardProvisionedEvent';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  prepaidCard: PrepaidCard;
+  customer: Account;
+  inventory: SkuInventory;
+  askPrice: Scalars['BigInt'];
+};
+
+export type PrepaidCardProvisionedEventFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard?: Maybe<Scalars['String']>;
+  prepaidCard_not?: Maybe<Scalars['String']>;
+  prepaidCard_gt?: Maybe<Scalars['String']>;
+  prepaidCard_lt?: Maybe<Scalars['String']>;
+  prepaidCard_gte?: Maybe<Scalars['String']>;
+  prepaidCard_lte?: Maybe<Scalars['String']>;
+  prepaidCard_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_contains?: Maybe<Scalars['String']>;
+  prepaidCard_not_contains?: Maybe<Scalars['String']>;
+  prepaidCard_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_ends_with?: Maybe<Scalars['String']>;
+  customer?: Maybe<Scalars['String']>;
+  customer_not?: Maybe<Scalars['String']>;
+  customer_gt?: Maybe<Scalars['String']>;
+  customer_lt?: Maybe<Scalars['String']>;
+  customer_gte?: Maybe<Scalars['String']>;
+  customer_lte?: Maybe<Scalars['String']>;
+  customer_in?: Maybe<Array<Scalars['String']>>;
+  customer_not_in?: Maybe<Array<Scalars['String']>>;
+  customer_contains?: Maybe<Scalars['String']>;
+  customer_not_contains?: Maybe<Scalars['String']>;
+  customer_starts_with?: Maybe<Scalars['String']>;
+  customer_not_starts_with?: Maybe<Scalars['String']>;
+  customer_ends_with?: Maybe<Scalars['String']>;
+  customer_not_ends_with?: Maybe<Scalars['String']>;
+  inventory?: Maybe<Scalars['String']>;
+  inventory_not?: Maybe<Scalars['String']>;
+  inventory_gt?: Maybe<Scalars['String']>;
+  inventory_lt?: Maybe<Scalars['String']>;
+  inventory_gte?: Maybe<Scalars['String']>;
+  inventory_lte?: Maybe<Scalars['String']>;
+  inventory_in?: Maybe<Array<Scalars['String']>>;
+  inventory_not_in?: Maybe<Array<Scalars['String']>>;
+  inventory_contains?: Maybe<Scalars['String']>;
+  inventory_not_contains?: Maybe<Scalars['String']>;
+  inventory_starts_with?: Maybe<Scalars['String']>;
+  inventory_not_starts_with?: Maybe<Scalars['String']>;
+  inventory_ends_with?: Maybe<Scalars['String']>;
+  inventory_not_ends_with?: Maybe<Scalars['String']>;
+  askPrice?: Maybe<Scalars['BigInt']>;
+  askPrice_not?: Maybe<Scalars['BigInt']>;
+  askPrice_gt?: Maybe<Scalars['BigInt']>;
+  askPrice_lt?: Maybe<Scalars['BigInt']>;
+  askPrice_gte?: Maybe<Scalars['BigInt']>;
+  askPrice_lte?: Maybe<Scalars['BigInt']>;
+  askPrice_in?: Maybe<Array<Scalars['BigInt']>>;
+  askPrice_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum PrepaidCardProvisionedEventOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  PREPAIDCARD = 'prepaidCard',
+  CUSTOMER = 'customer',
+  INVENTORY = 'inventory',
+  ASKPRICE = 'askPrice'
+}
+
+export type PrepaidCardSendAction = {
+  __typename?: 'PrepaidCardSendAction';
+  id: Scalars['ID'];
+  transaction: Transaction;
+  timestamp: Scalars['BigInt'];
+  prepaidCard: PrepaidCard;
+  spendAmount: Scalars['BigInt'];
+  rateLock: Scalars['BigInt'];
+  safeTxGas: Scalars['BigInt'];
+  baseGas: Scalars['BigInt'];
+  gasPrice: Scalars['BigInt'];
+  action: Scalars['String'];
+  data: Scalars['Bytes'];
+  ownerSignature: Scalars['Bytes'];
+};
+
+export type PrepaidCardSendActionFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  prepaidCard?: Maybe<Scalars['String']>;
+  prepaidCard_not?: Maybe<Scalars['String']>;
+  prepaidCard_gt?: Maybe<Scalars['String']>;
+  prepaidCard_lt?: Maybe<Scalars['String']>;
+  prepaidCard_gte?: Maybe<Scalars['String']>;
+  prepaidCard_lte?: Maybe<Scalars['String']>;
+  prepaidCard_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_contains?: Maybe<Scalars['String']>;
+  prepaidCard_not_contains?: Maybe<Scalars['String']>;
+  prepaidCard_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_ends_with?: Maybe<Scalars['String']>;
+  spendAmount?: Maybe<Scalars['BigInt']>;
+  spendAmount_not?: Maybe<Scalars['BigInt']>;
+  spendAmount_gt?: Maybe<Scalars['BigInt']>;
+  spendAmount_lt?: Maybe<Scalars['BigInt']>;
+  spendAmount_gte?: Maybe<Scalars['BigInt']>;
+  spendAmount_lte?: Maybe<Scalars['BigInt']>;
+  spendAmount_in?: Maybe<Array<Scalars['BigInt']>>;
+  spendAmount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  rateLock?: Maybe<Scalars['BigInt']>;
+  rateLock_not?: Maybe<Scalars['BigInt']>;
+  rateLock_gt?: Maybe<Scalars['BigInt']>;
+  rateLock_lt?: Maybe<Scalars['BigInt']>;
+  rateLock_gte?: Maybe<Scalars['BigInt']>;
+  rateLock_lte?: Maybe<Scalars['BigInt']>;
+  rateLock_in?: Maybe<Array<Scalars['BigInt']>>;
+  rateLock_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  safeTxGas?: Maybe<Scalars['BigInt']>;
+  safeTxGas_not?: Maybe<Scalars['BigInt']>;
+  safeTxGas_gt?: Maybe<Scalars['BigInt']>;
+  safeTxGas_lt?: Maybe<Scalars['BigInt']>;
+  safeTxGas_gte?: Maybe<Scalars['BigInt']>;
+  safeTxGas_lte?: Maybe<Scalars['BigInt']>;
+  safeTxGas_in?: Maybe<Array<Scalars['BigInt']>>;
+  safeTxGas_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  baseGas?: Maybe<Scalars['BigInt']>;
+  baseGas_not?: Maybe<Scalars['BigInt']>;
+  baseGas_gt?: Maybe<Scalars['BigInt']>;
+  baseGas_lt?: Maybe<Scalars['BigInt']>;
+  baseGas_gte?: Maybe<Scalars['BigInt']>;
+  baseGas_lte?: Maybe<Scalars['BigInt']>;
+  baseGas_in?: Maybe<Array<Scalars['BigInt']>>;
+  baseGas_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  gasPrice?: Maybe<Scalars['BigInt']>;
+  gasPrice_not?: Maybe<Scalars['BigInt']>;
+  gasPrice_gt?: Maybe<Scalars['BigInt']>;
+  gasPrice_lt?: Maybe<Scalars['BigInt']>;
+  gasPrice_gte?: Maybe<Scalars['BigInt']>;
+  gasPrice_lte?: Maybe<Scalars['BigInt']>;
+  gasPrice_in?: Maybe<Array<Scalars['BigInt']>>;
+  gasPrice_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  action?: Maybe<Scalars['String']>;
+  action_not?: Maybe<Scalars['String']>;
+  action_gt?: Maybe<Scalars['String']>;
+  action_lt?: Maybe<Scalars['String']>;
+  action_gte?: Maybe<Scalars['String']>;
+  action_lte?: Maybe<Scalars['String']>;
+  action_in?: Maybe<Array<Scalars['String']>>;
+  action_not_in?: Maybe<Array<Scalars['String']>>;
+  action_contains?: Maybe<Scalars['String']>;
+  action_not_contains?: Maybe<Scalars['String']>;
+  action_starts_with?: Maybe<Scalars['String']>;
+  action_not_starts_with?: Maybe<Scalars['String']>;
+  action_ends_with?: Maybe<Scalars['String']>;
+  action_not_ends_with?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['Bytes']>;
+  data_not?: Maybe<Scalars['Bytes']>;
+  data_in?: Maybe<Array<Scalars['Bytes']>>;
+  data_not_in?: Maybe<Array<Scalars['Bytes']>>;
+  data_contains?: Maybe<Scalars['Bytes']>;
+  data_not_contains?: Maybe<Scalars['Bytes']>;
+  ownerSignature?: Maybe<Scalars['Bytes']>;
+  ownerSignature_not?: Maybe<Scalars['Bytes']>;
+  ownerSignature_in?: Maybe<Array<Scalars['Bytes']>>;
+  ownerSignature_not_in?: Maybe<Array<Scalars['Bytes']>>;
+  ownerSignature_contains?: Maybe<Scalars['Bytes']>;
+  ownerSignature_not_contains?: Maybe<Scalars['Bytes']>;
+};
+
+export enum PrepaidCardSendActionOrderBy {
+  ID = 'id',
+  TRANSACTION = 'transaction',
+  TIMESTAMP = 'timestamp',
+  PREPAIDCARD = 'prepaidCard',
+  SPENDAMOUNT = 'spendAmount',
+  RATELOCK = 'rateLock',
+  SAFETXGAS = 'safeTxGas',
+  BASEGAS = 'baseGas',
+  GASPRICE = 'gasPrice',
+  ACTION = 'action',
+  DATA = 'data',
+  OWNERSIGNATURE = 'ownerSignature'
 }
 
 export type PrepaidCardSplit = {
@@ -1990,7 +2781,8 @@ export enum PrepaidCardOrderBy {
   CREATION = 'creation',
   PAYMENTS = 'payments',
   SPLITS = 'splits',
-  TRANSFERS = 'transfers'
+  TRANSFERS = 'transfers',
+  USAGES = 'usages'
 }
 
 export type Query = {
@@ -2013,6 +2805,24 @@ export type Query = {
   prepaidCardPayments: Array<PrepaidCardPayment>;
   prepaidCardSplit?: Maybe<PrepaidCardSplit>;
   prepaidCardSplits: Array<PrepaidCardSplit>;
+  sku?: Maybe<Sku>;
+  skus: Array<Sku>;
+  prepaidCardAsk?: Maybe<PrepaidCardAsk>;
+  prepaidCardAsks: Array<PrepaidCardAsk>;
+  prepaidCardAskSetEvent?: Maybe<PrepaidCardAskSetEvent>;
+  prepaidCardAskSetEvents: Array<PrepaidCardAskSetEvent>;
+  prepaidCardInventoryItem?: Maybe<PrepaidCardInventoryItem>;
+  prepaidCardInventoryItems: Array<PrepaidCardInventoryItem>;
+  skuinventory?: Maybe<SkuInventory>;
+  skuinventories: Array<SkuInventory>;
+  prepaidCardInventoryEvent?: Maybe<PrepaidCardInventoryEvent>;
+  prepaidCardInventoryEvents: Array<PrepaidCardInventoryEvent>;
+  prepaidCardInventoryAddEvent?: Maybe<PrepaidCardInventoryAddEvent>;
+  prepaidCardInventoryAddEvents: Array<PrepaidCardInventoryAddEvent>;
+  prepaidCardInventoryRemoveEvent?: Maybe<PrepaidCardInventoryRemoveEvent>;
+  prepaidCardInventoryRemoveEvents: Array<PrepaidCardInventoryRemoveEvent>;
+  prepaidCardProvisionedEvent?: Maybe<PrepaidCardProvisionedEvent>;
+  prepaidCardProvisionedEvents: Array<PrepaidCardProvisionedEvent>;
   prepaidCardTransfer?: Maybe<PrepaidCardTransfer>;
   prepaidCardTransfers: Array<PrepaidCardTransfer>;
   merchantRevenue?: Maybe<MerchantRevenue>;
@@ -2039,6 +2849,8 @@ export type Query = {
   safes: Array<Safe>;
   safeTransaction?: Maybe<SafeTransaction>;
   safeTransactions: Array<SafeTransaction>;
+  prepaidCardSendAction?: Maybe<PrepaidCardSendAction>;
+  prepaidCardSendActions: Array<PrepaidCardSendAction>;
   eoatransaction?: Maybe<EoaTransaction>;
   eoatransactions: Array<EoaTransaction>;
   transaction?: Maybe<Transaction>;
@@ -2200,6 +3012,150 @@ export type QueryPrepaidCardSplitsArgs = {
   orderBy?: Maybe<PrepaidCardSplitOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<PrepaidCardSplitFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QuerySkuArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QuerySkusArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SkuOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SkuFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardAskArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardAsksArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardAskOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardAskFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardAskSetEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardAskSetEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardAskSetEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardAskSetEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryItemArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryItemsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryItemOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryItemFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QuerySkuinventoryArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QuerySkuinventoriesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SkuInventoryOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SkuInventoryFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryAddEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryAddEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryAddEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryAddEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryRemoveEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardInventoryRemoveEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryRemoveEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryRemoveEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardProvisionedEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardProvisionedEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardProvisionedEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardProvisionedEventFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -2412,6 +3368,22 @@ export type QuerySafeTransactionsArgs = {
 };
 
 
+export type QueryPrepaidCardSendActionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryPrepaidCardSendActionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardSendActionOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardSendActionFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
 export type QueryEoatransactionArgs = {
   id: Scalars['ID'];
   block?: Maybe<BlockHeight>;
@@ -2616,6 +3588,160 @@ export enum RevenueEarningsByDayOrderBy {
   ISSUINGTOKENACCUMULATION = 'issuingTokenAccumulation'
 }
 
+export type Sku = {
+  __typename?: 'SKU';
+  id: Scalars['ID'];
+  issuer: Account;
+  issuingToken: Token;
+  faceValue: Scalars['BigInt'];
+  customizationDID?: Maybe<Scalars['String']>;
+  askPrice?: Maybe<PrepaidCardAsk>;
+};
+
+export type SkuInventory = {
+  __typename?: 'SKUInventory';
+  id: Scalars['ID'];
+  sku: Sku;
+  issuer: Account;
+  prepaidCards: Array<Maybe<PrepaidCardInventoryItem>>;
+  inventoryEvents: Array<Maybe<PrepaidCardInventoryEvent>>;
+};
+
+
+export type SkuInventoryPrepaidCardsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryItemOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryItemFilter>;
+};
+
+
+export type SkuInventoryInventoryEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryEventFilter>;
+};
+
+export type SkuInventoryFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  sku?: Maybe<Scalars['String']>;
+  sku_not?: Maybe<Scalars['String']>;
+  sku_gt?: Maybe<Scalars['String']>;
+  sku_lt?: Maybe<Scalars['String']>;
+  sku_gte?: Maybe<Scalars['String']>;
+  sku_lte?: Maybe<Scalars['String']>;
+  sku_in?: Maybe<Array<Scalars['String']>>;
+  sku_not_in?: Maybe<Array<Scalars['String']>>;
+  sku_contains?: Maybe<Scalars['String']>;
+  sku_not_contains?: Maybe<Scalars['String']>;
+  sku_starts_with?: Maybe<Scalars['String']>;
+  sku_not_starts_with?: Maybe<Scalars['String']>;
+  sku_ends_with?: Maybe<Scalars['String']>;
+  sku_not_ends_with?: Maybe<Scalars['String']>;
+  issuer?: Maybe<Scalars['String']>;
+  issuer_not?: Maybe<Scalars['String']>;
+  issuer_gt?: Maybe<Scalars['String']>;
+  issuer_lt?: Maybe<Scalars['String']>;
+  issuer_gte?: Maybe<Scalars['String']>;
+  issuer_lte?: Maybe<Scalars['String']>;
+  issuer_in?: Maybe<Array<Scalars['String']>>;
+  issuer_not_in?: Maybe<Array<Scalars['String']>>;
+  issuer_contains?: Maybe<Scalars['String']>;
+  issuer_not_contains?: Maybe<Scalars['String']>;
+  issuer_starts_with?: Maybe<Scalars['String']>;
+  issuer_not_starts_with?: Maybe<Scalars['String']>;
+  issuer_ends_with?: Maybe<Scalars['String']>;
+  issuer_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum SkuInventoryOrderBy {
+  ID = 'id',
+  SKU = 'sku',
+  ISSUER = 'issuer',
+  PREPAIDCARDS = 'prepaidCards',
+  INVENTORYEVENTS = 'inventoryEvents'
+}
+
+export type SkuFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  issuer?: Maybe<Scalars['String']>;
+  issuer_not?: Maybe<Scalars['String']>;
+  issuer_gt?: Maybe<Scalars['String']>;
+  issuer_lt?: Maybe<Scalars['String']>;
+  issuer_gte?: Maybe<Scalars['String']>;
+  issuer_lte?: Maybe<Scalars['String']>;
+  issuer_in?: Maybe<Array<Scalars['String']>>;
+  issuer_not_in?: Maybe<Array<Scalars['String']>>;
+  issuer_contains?: Maybe<Scalars['String']>;
+  issuer_not_contains?: Maybe<Scalars['String']>;
+  issuer_starts_with?: Maybe<Scalars['String']>;
+  issuer_not_starts_with?: Maybe<Scalars['String']>;
+  issuer_ends_with?: Maybe<Scalars['String']>;
+  issuer_not_ends_with?: Maybe<Scalars['String']>;
+  issuingToken?: Maybe<Scalars['String']>;
+  issuingToken_not?: Maybe<Scalars['String']>;
+  issuingToken_gt?: Maybe<Scalars['String']>;
+  issuingToken_lt?: Maybe<Scalars['String']>;
+  issuingToken_gte?: Maybe<Scalars['String']>;
+  issuingToken_lte?: Maybe<Scalars['String']>;
+  issuingToken_in?: Maybe<Array<Scalars['String']>>;
+  issuingToken_not_in?: Maybe<Array<Scalars['String']>>;
+  issuingToken_contains?: Maybe<Scalars['String']>;
+  issuingToken_not_contains?: Maybe<Scalars['String']>;
+  issuingToken_starts_with?: Maybe<Scalars['String']>;
+  issuingToken_not_starts_with?: Maybe<Scalars['String']>;
+  issuingToken_ends_with?: Maybe<Scalars['String']>;
+  issuingToken_not_ends_with?: Maybe<Scalars['String']>;
+  faceValue?: Maybe<Scalars['BigInt']>;
+  faceValue_not?: Maybe<Scalars['BigInt']>;
+  faceValue_gt?: Maybe<Scalars['BigInt']>;
+  faceValue_lt?: Maybe<Scalars['BigInt']>;
+  faceValue_gte?: Maybe<Scalars['BigInt']>;
+  faceValue_lte?: Maybe<Scalars['BigInt']>;
+  faceValue_in?: Maybe<Array<Scalars['BigInt']>>;
+  faceValue_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  customizationDID?: Maybe<Scalars['String']>;
+  customizationDID_not?: Maybe<Scalars['String']>;
+  customizationDID_gt?: Maybe<Scalars['String']>;
+  customizationDID_lt?: Maybe<Scalars['String']>;
+  customizationDID_gte?: Maybe<Scalars['String']>;
+  customizationDID_lte?: Maybe<Scalars['String']>;
+  customizationDID_in?: Maybe<Array<Scalars['String']>>;
+  customizationDID_not_in?: Maybe<Array<Scalars['String']>>;
+  customizationDID_contains?: Maybe<Scalars['String']>;
+  customizationDID_not_contains?: Maybe<Scalars['String']>;
+  customizationDID_starts_with?: Maybe<Scalars['String']>;
+  customizationDID_not_starts_with?: Maybe<Scalars['String']>;
+  customizationDID_ends_with?: Maybe<Scalars['String']>;
+  customizationDID_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum SkuOrderBy {
+  ID = 'id',
+  ISSUER = 'issuer',
+  ISSUINGTOKEN = 'issuingToken',
+  FACEVALUE = 'faceValue',
+  CUSTOMIZATIONDID = 'customizationDID',
+  ASKPRICE = 'askPrice'
+}
+
 export type Safe = {
   __typename?: 'Safe';
   id: Scalars['ID'];
@@ -2741,6 +3867,7 @@ export type SafeTransaction = {
   baseGas: Scalars['BigInt'];
   gasPrice: Scalars['BigInt'];
   gasToken?: Maybe<Token>;
+  gasPayment: Scalars['BigInt'];
   refundReceiver: Scalars['String'];
   signatures: Scalars['Bytes'];
 };
@@ -2864,6 +3991,14 @@ export type SafeTransactionFilter = {
   gasToken_not_starts_with?: Maybe<Scalars['String']>;
   gasToken_ends_with?: Maybe<Scalars['String']>;
   gasToken_not_ends_with?: Maybe<Scalars['String']>;
+  gasPayment?: Maybe<Scalars['BigInt']>;
+  gasPayment_not?: Maybe<Scalars['BigInt']>;
+  gasPayment_gt?: Maybe<Scalars['BigInt']>;
+  gasPayment_lt?: Maybe<Scalars['BigInt']>;
+  gasPayment_gte?: Maybe<Scalars['BigInt']>;
+  gasPayment_lte?: Maybe<Scalars['BigInt']>;
+  gasPayment_in?: Maybe<Array<Scalars['BigInt']>>;
+  gasPayment_not_in?: Maybe<Array<Scalars['BigInt']>>;
   refundReceiver?: Maybe<Scalars['String']>;
   refundReceiver_not?: Maybe<Scalars['String']>;
   refundReceiver_gt?: Maybe<Scalars['String']>;
@@ -2899,6 +4034,7 @@ export enum SafeTransactionOrderBy {
   BASEGAS = 'baseGas',
   GASPRICE = 'gasPrice',
   GASTOKEN = 'gasToken',
+  GASPAYMENT = 'gasPayment',
   REFUNDRECEIVER = 'refundReceiver',
   SIGNATURES = 'signatures'
 }
@@ -3036,6 +4172,24 @@ export type Subscription = {
   prepaidCardPayments: Array<PrepaidCardPayment>;
   prepaidCardSplit?: Maybe<PrepaidCardSplit>;
   prepaidCardSplits: Array<PrepaidCardSplit>;
+  sku?: Maybe<Sku>;
+  skus: Array<Sku>;
+  prepaidCardAsk?: Maybe<PrepaidCardAsk>;
+  prepaidCardAsks: Array<PrepaidCardAsk>;
+  prepaidCardAskSetEvent?: Maybe<PrepaidCardAskSetEvent>;
+  prepaidCardAskSetEvents: Array<PrepaidCardAskSetEvent>;
+  prepaidCardInventoryItem?: Maybe<PrepaidCardInventoryItem>;
+  prepaidCardInventoryItems: Array<PrepaidCardInventoryItem>;
+  skuinventory?: Maybe<SkuInventory>;
+  skuinventories: Array<SkuInventory>;
+  prepaidCardInventoryEvent?: Maybe<PrepaidCardInventoryEvent>;
+  prepaidCardInventoryEvents: Array<PrepaidCardInventoryEvent>;
+  prepaidCardInventoryAddEvent?: Maybe<PrepaidCardInventoryAddEvent>;
+  prepaidCardInventoryAddEvents: Array<PrepaidCardInventoryAddEvent>;
+  prepaidCardInventoryRemoveEvent?: Maybe<PrepaidCardInventoryRemoveEvent>;
+  prepaidCardInventoryRemoveEvents: Array<PrepaidCardInventoryRemoveEvent>;
+  prepaidCardProvisionedEvent?: Maybe<PrepaidCardProvisionedEvent>;
+  prepaidCardProvisionedEvents: Array<PrepaidCardProvisionedEvent>;
   prepaidCardTransfer?: Maybe<PrepaidCardTransfer>;
   prepaidCardTransfers: Array<PrepaidCardTransfer>;
   merchantRevenue?: Maybe<MerchantRevenue>;
@@ -3062,6 +4216,8 @@ export type Subscription = {
   safes: Array<Safe>;
   safeTransaction?: Maybe<SafeTransaction>;
   safeTransactions: Array<SafeTransaction>;
+  prepaidCardSendAction?: Maybe<PrepaidCardSendAction>;
+  prepaidCardSendActions: Array<PrepaidCardSendAction>;
   eoatransaction?: Maybe<EoaTransaction>;
   eoatransactions: Array<EoaTransaction>;
   transaction?: Maybe<Transaction>;
@@ -3223,6 +4379,150 @@ export type SubscriptionPrepaidCardSplitsArgs = {
   orderBy?: Maybe<PrepaidCardSplitOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<PrepaidCardSplitFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionSkuArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionSkusArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SkuOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SkuFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardAskArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardAsksArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardAskOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardAskFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardAskSetEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardAskSetEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardAskSetEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardAskSetEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryItemArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryItemsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryItemOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryItemFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionSkuinventoryArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionSkuinventoriesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SkuInventoryOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SkuInventoryFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryAddEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryAddEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryAddEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryAddEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryRemoveEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardInventoryRemoveEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryRemoveEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryRemoveEventFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardProvisionedEventArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardProvisionedEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardProvisionedEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardProvisionedEventFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -3431,6 +4731,22 @@ export type SubscriptionSafeTransactionsArgs = {
   orderBy?: Maybe<SafeTransactionOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<SafeTransactionFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardSendActionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionPrepaidCardSendActionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardSendActionOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardSendActionFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -4060,6 +5376,7 @@ export type TokenTransfer = {
   toTokenHolder?: Maybe<TokenHolder>;
   from?: Maybe<Scalars['String']>;
   to?: Maybe<Scalars['String']>;
+  isGasPayment?: Maybe<Scalars['Boolean']>;
 };
 
 export type TokenTransferFilter = {
@@ -4171,6 +5488,10 @@ export type TokenTransferFilter = {
   to_not_starts_with?: Maybe<Scalars['String']>;
   to_ends_with?: Maybe<Scalars['String']>;
   to_not_ends_with?: Maybe<Scalars['String']>;
+  isGasPayment?: Maybe<Scalars['Boolean']>;
+  isGasPayment_not?: Maybe<Scalars['Boolean']>;
+  isGasPayment_in?: Maybe<Array<Scalars['Boolean']>>;
+  isGasPayment_not_in?: Maybe<Array<Scalars['Boolean']>>;
 };
 
 export enum TokenTransferOrderBy {
@@ -4182,7 +5503,8 @@ export enum TokenTransferOrderBy {
   FROMTOKENHOLDER = 'fromTokenHolder',
   TOTOKENHOLDER = 'toTokenHolder',
   FROM = 'from',
-  TO = 'to'
+  TO = 'to',
+  ISGASPAYMENT = 'isGasPayment'
 }
 
 export type TokenFilter = {
@@ -4245,7 +5567,9 @@ export type Transaction = {
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
   blockNumber: Scalars['BigInt'];
+  gasUsed: Scalars['BigInt'];
   safeTxns: Array<Maybe<SafeTransaction>>;
+  prepaidCardSendActions: Array<Maybe<PrepaidCardSendAction>>;
   bridgeToLayer1Events: Array<Maybe<BridgeToLayer1Event>>;
   bridgeToLayer2Events: Array<Maybe<BridgeToLayer2Event>>;
   supplierInfoDIDUpdates: Array<Maybe<SupplierInfoDidUpdate>>;
@@ -4261,6 +5585,8 @@ export type Transaction = {
   merchantClaims: Array<Maybe<MerchantClaim>>;
   merchantRevenueEvents: Array<Maybe<MerchantRevenueEvent>>;
   tokenSwaps: Array<Maybe<TokenSwap>>;
+  prepaidCardInventoryEvents: Array<Maybe<PrepaidCardInventoryEvent>>;
+  PrepaidCardAskSetEvents: Array<Maybe<PrepaidCardAskSetEvent>>;
 };
 
 
@@ -4270,6 +5596,15 @@ export type TransactionSafeTxnsArgs = {
   orderBy?: Maybe<SafeTransactionOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<SafeTransactionFilter>;
+};
+
+
+export type TransactionPrepaidCardSendActionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardSendActionOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardSendActionFilter>;
 };
 
 
@@ -4407,6 +5742,24 @@ export type TransactionTokenSwapsArgs = {
   where?: Maybe<TokenSwapFilter>;
 };
 
+
+export type TransactionPrepaidCardInventoryEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardInventoryEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardInventoryEventFilter>;
+};
+
+
+export type TransactionPrepaidCardAskSetEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<PrepaidCardAskSetEventOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<PrepaidCardAskSetEventFilter>;
+};
+
 export type TransactionFilter = {
   id?: Maybe<Scalars['ID']>;
   id_not?: Maybe<Scalars['ID']>;
@@ -4432,13 +5785,23 @@ export type TransactionFilter = {
   blockNumber_lte?: Maybe<Scalars['BigInt']>;
   blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
   blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  gasUsed?: Maybe<Scalars['BigInt']>;
+  gasUsed_not?: Maybe<Scalars['BigInt']>;
+  gasUsed_gt?: Maybe<Scalars['BigInt']>;
+  gasUsed_lt?: Maybe<Scalars['BigInt']>;
+  gasUsed_gte?: Maybe<Scalars['BigInt']>;
+  gasUsed_lte?: Maybe<Scalars['BigInt']>;
+  gasUsed_in?: Maybe<Array<Scalars['BigInt']>>;
+  gasUsed_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum TransactionOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
   BLOCKNUMBER = 'blockNumber',
+  GASUSED = 'gasUsed',
   SAFETXNS = 'safeTxns',
+  PREPAIDCARDSENDACTIONS = 'prepaidCardSendActions',
   BRIDGETOLAYER1EVENTS = 'bridgeToLayer1Events',
   BRIDGETOLAYER2EVENTS = 'bridgeToLayer2Events',
   SUPPLIERINFODIDUPDATES = 'supplierInfoDIDUpdates',
@@ -4453,7 +5816,9 @@ export enum TransactionOrderBy {
   MERCHANTFEEPAYMENTS = 'merchantFeePayments',
   MERCHANTCLAIMS = 'merchantClaims',
   MERCHANTREVENUEEVENTS = 'merchantRevenueEvents',
-  TOKENSWAPS = 'tokenSwaps'
+  TOKENSWAPS = 'tokenSwaps',
+  PREPAIDCARDINVENTORYEVENTS = 'prepaidCardInventoryEvents',
+  PREPAIDCARDASKSETEVENTS = 'PrepaidCardAskSetEvents'
 }
 
 export type Block = {
@@ -4727,7 +6092,7 @@ export type GetAccountTransactionHistoryDataQuery = (
 );
 
 export type GetDepotTransactionHistoryDataQueryVariables = Exact<{
-  address: Scalars['ID'];
+  address: Scalars['String'];
   skip?: Maybe<Scalars['Int']>;
   pageSize?: Maybe<Scalars['Int']>;
 }>;
@@ -4735,17 +6100,12 @@ export type GetDepotTransactionHistoryDataQueryVariables = Exact<{
 
 export type GetDepotTransactionHistoryDataQuery = (
   { __typename?: 'Query' }
-  & { safe?: Maybe<(
-    { __typename?: 'Safe' }
-    & Pick<Safe, 'id'>
-    & { safeTxns: Array<Maybe<(
-      { __typename?: 'SafeTransaction' }
-      & Pick<SafeTransaction, 'timestamp'>
-      & { transaction: (
-        { __typename?: 'Transaction' }
-        & TransactionFragment
-      ) }
-    )>> }
+  & { eoatransactions: Array<(
+    { __typename?: 'EOATransaction' }
+    & { transaction: (
+      { __typename?: 'Transaction' }
+      & TransactionFragment
+    ) }
   )> }
 );
 
@@ -5146,14 +6506,10 @@ export type GetAccountTransactionHistoryDataQueryHookResult = ReturnType<typeof 
 export type GetAccountTransactionHistoryDataLazyQueryHookResult = ReturnType<typeof useGetAccountTransactionHistoryDataLazyQuery>;
 export type GetAccountTransactionHistoryDataQueryResult = ApolloReactCommon.QueryResult<GetAccountTransactionHistoryDataQuery, GetAccountTransactionHistoryDataQueryVariables>;
 export const GetDepotTransactionHistoryDataDocument = gql`
-    query GetDepotTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
-  safe(id: $address) {
-    id
-    safeTxns(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
-      timestamp
-      transaction {
-        ...Transaction
-      }
+    query GetDepotTransactionHistoryData($address: String!, $skip: Int = 0, $pageSize: Int = 25) {
+  eoatransactions(where: {safe: $address}, first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: asc) {
+    transaction {
+      ...Transaction
     }
   }
 }
