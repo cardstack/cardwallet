@@ -24,8 +24,7 @@ export const useDepotTransactions = (safeAddress: string) => {
     context: { network },
   });
 
-  const safe = data?.safe;
-  const transactions = safe?.safeTxns;
+  const transactions = data?.eoatransactions;
 
   if (error) {
     logger.log('Error getting Sokol transactions', error);
@@ -38,7 +37,7 @@ export const useDepotTransactions = (safeAddress: string) => {
     onEndReached,
   } = useTransactionSections({
     transactions,
-    isEmpty: safe === null,
+    isEmpty: data === null,
     transactionsCount: transactions?.length || 0,
     networkStatus,
     fetchMore,
