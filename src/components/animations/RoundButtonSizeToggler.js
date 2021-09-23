@@ -1,6 +1,6 @@
 import React from 'react';
 import Animated, { SpringUtils } from 'react-native-reanimated';
-import { bin, useSpring } from 'react-native-redash';
+import { bin, useSpringTransition } from 'react-native-redash/src/v1';
 import styled from 'styled-components';
 import { useMemoOne } from 'use-memo-one';
 import { useTheme } from '../../context/ThemeContext';
@@ -40,7 +40,7 @@ const RoundButtonSizeToggler = ({
   isAbsolute,
   startingWidth,
 }) => {
-  const animationValue = useSpring(
+  const animationValue = useSpringTransition(
     bin(isOpen),
     SpringUtils.makeConfigFromOrigamiTensionAndFriction({
       ...SpringUtils.makeDefaultConfig(),
