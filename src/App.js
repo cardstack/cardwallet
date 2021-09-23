@@ -17,7 +17,6 @@ import {
   NativeModules,
   StatusBar,
 } from 'react-native';
-import CodePush from 'react-native-code-push';
 import { SENTRY_ENDPOINT } from 'react-native-dotenv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
@@ -89,15 +88,6 @@ if (__DEV__) {
   }
   Sentry.init(sentryOptions);
 }
-
-CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING).then(update => {
-  if (update) {
-    // eslint-disable-next-line import/no-deprecated
-    Sentry.setRelease(
-      `me.rainbow-${VersionNumber.appVersion}-codepush:${update.label}`
-    );
-  }
-});
 
 enableScreens();
 
@@ -351,9 +341,6 @@ const AppWithRedux = connect(
   }
 )(App);
 
-const AppWithCodePush = CodePush({
-  checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
-  installMode: CodePush.InstallMode.ON_NEXT_RESUME,
-})(() => <AppWithRedux store={store} />);
+const AppWithStore = () => <AppWithRedux store={store} />;
 
-AppRegistry.registerComponent(appName, () => AppWithCodePush);
+AppRegistry.registerComponent(appName, () => AppWithStore);
