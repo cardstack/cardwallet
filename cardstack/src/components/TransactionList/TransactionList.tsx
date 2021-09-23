@@ -44,13 +44,13 @@ export const TransactionList = memo(
     }, [refetch]);
 
     useEffect(() => {
-      if (isFocused) {
+      if (isFocused && !isFetchingMore && !refetchLoading) {
         // Wait a bit to refresh to get tx from be
         setTimeout(() => {
           onRefresh();
-        }, 1000);
+        }, 500);
       }
-    }, [onRefresh, isFocused]);
+    }, [onRefresh, isFocused, isFetchingMore, refetchLoading]);
 
     const renderSectionHeader = useCallback(
       ({ section: { title } }) => (
