@@ -57,7 +57,8 @@
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
     "update-token-list": "./scripts/update-token-list.sh",
     "reset:cache": "yarn start --reset-cache",
-    "rebuild": "source $HOME/.nvm/nvm.sh; yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start",
+    "rebuild:ios": "yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start",
+    "rebuild": "yarn setup && yarn install-bundle && yarn install-pods && yarn start",
     "codegen": "graphql-codegen"
   },
   "husky": {
@@ -89,7 +90,7 @@
     "@ethersproject/units": "^5.0.8",
     "@ethersproject/wallet": "^5.0.9",
     "@lavamoat/preinstall-always-fail": "^1.0.0",
-    "@rainbow-me/animated-charts": "^1.0.0-alpha.5",
+    "@rainbow-me/animated-charts": "^1.0.0-alpha.6",
     "@rainbow-me/react-native-animated-number": "^0.0.2",
     "@rainbow-me/react-native-payments": "1.1.5",
     "@react-native-community/async-storage": "^1.11.0",

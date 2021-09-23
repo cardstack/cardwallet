@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { AssetWithNativeType } from '../../../cardstack/src/types';
 import Routes from '../../navigation/routesNames';
@@ -58,4 +58,4 @@ const BalanceCoinWrapper = (item: AssetWithNativeType) => {
   );
 };
 
-export default BalanceCoinWrapper;
+export default memo(BalanceCoinWrapper);

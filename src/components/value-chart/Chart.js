@@ -1,6 +1,6 @@
 import { ChartDot, ChartPath, useChartData } from '@rainbow-me/animated-charts';
 import { invert } from 'lodash';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { Dimensions, Linking } from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -23,15 +23,6 @@ import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
 export const { width: WIDTH } = Dimensions.get('window');
-
-const ChartTimespans = [
-  ChartTypes.hour,
-  ChartTypes.day,
-  ChartTypes.week,
-  ChartTypes.month,
-  ChartTypes.year,
-  //ChartTypes.max, todo restore after receiving proper data from zerion
-];
 
 const ChartContainer = styled.View`
   margin-vertical: ${({ showChart }) => (showChart ? '17px' : '0px')};
@@ -104,22 +95,15 @@ function useShowLoadingState(isFetching) {
   return isShow;
 }
 
-export default function ChartWrapper({
+function ChartWrapper({
   chartType,
   color,
   fetchingCharts,
   isPool,
-  updateChartType,
   showChart,
-  showMonth,
-  showYear,
   throttledData,
   ...props
 }) {
-  const timespanIndex = useMemo(() => ChartTimespans.indexOf(chartType), [
-    chartType,
-  ]);
-
   const { progress } = useChartData();
   const spinnerRotation = useSharedValue(0);
   const spinnerScale = useSharedValue(0);
@@ -251,3 +235,5 @@ export default function ChartWrapper({
     </Container>
   );
 }
+
+export default memo(ChartWrapper);

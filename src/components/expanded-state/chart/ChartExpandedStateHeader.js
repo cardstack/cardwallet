@@ -1,5 +1,5 @@
 import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
-import React, { useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { useCallbackOne } from 'use-memo-one';
@@ -42,7 +42,7 @@ function useTabularNumsWhileScrubbing(isScrubbing) {
   return tabularNums;
 }
 
-export default function ChartExpandedStateHeader({
+function ChartExpandedStateHeader({
   asset,
   changeDirection,
   changeRef,
@@ -58,9 +58,6 @@ export default function ChartExpandedStateHeader({
 }) {
   const { colors } = useTheme();
   const color = givenColors || colors.dark;
-  const tokens = useMemo(() => {
-    return isPool ? asset.tokens : [asset];
-  }, [asset, isPool]);
   const { nativeCurrency } = useAccountSettings();
   const tabularNums = useTabularNumsWhileScrubbing(isScrubbing);
 
@@ -143,3 +140,5 @@ export default function ChartExpandedStateHeader({
     </Container>
   );
 }
+
+export default memo(ChartExpandedStateHeader);

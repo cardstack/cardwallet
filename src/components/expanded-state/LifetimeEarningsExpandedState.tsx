@@ -1,3 +1,4 @@
+import { ChartPath, ChartPathProvider } from '@rainbow-me/animated-charts';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import {
@@ -20,7 +21,6 @@ import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
-import { ChartPath } from '@rainbow-me/animated-charts';
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -108,18 +108,17 @@ const ChartSection = ({ address }: { address: string }) => {
         </Container>
       </Container>
       <Container width="100%">
-        <ChartPath
-          data={{ points: data, smoothingStrategy: 'bezier' }}
-          gestureEnabled={false}
-          height={CHART_HEIGHT}
-          stroke={palette.tealDark}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={3.5}
-          width={screenWidth}
-        >
-          <Container height={CHART_HEIGHT} />
-        </ChartPath>
+        <ChartPathProvider data={{ points: data, smoothingStrategy: 'bezier' }}>
+          <ChartPath
+            gestureEnabled={false}
+            height={CHART_HEIGHT}
+            stroke={palette.tealDark}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={3.5}
+            width={screenWidth}
+          />
+        </ChartPathProvider>
         <Container
           flexDirection="row"
           justifyContent="space-between"

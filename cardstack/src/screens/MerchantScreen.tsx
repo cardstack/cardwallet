@@ -2,7 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
 import { StatusBar } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
-import { ChartPath } from '@rainbow-me/animated-charts';
+import { ChartPath, ChartPathProvider } from '@rainbow-me/animated-charts';
 import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
@@ -269,18 +269,19 @@ const LifetimeEarningsSection = ({
             nativeBalance={nativeBalanceDisplay}
           />
           <Container alignItems="center" justifyContent="center" width="100%">
-            <ChartPath
+            <ChartPathProvider
               data={{ points: data, smoothingStrategy: 'bezier' }}
-              gestureEnabled={false}
-              height={125}
-              stroke={palette.tealDark}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={3.5}
-              width={screenWidth - TOTAL_HORIZONTAL_PADDING}
             >
-              <Container />
-            </ChartPath>
+              <ChartPath
+                gestureEnabled={false}
+                height={125}
+                stroke={palette.tealDark}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3.5}
+                width={screenWidth - TOTAL_HORIZONTAL_PADDING}
+              />
+            </ChartPathProvider>
           </Container>
         </>
       </SectionWrapper>

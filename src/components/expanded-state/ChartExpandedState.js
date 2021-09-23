@@ -1,6 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 
 import { useAccountSettings, useChartThrottledPoints } from '../../hooks';
 import {
@@ -26,7 +26,7 @@ const heightWithChart = heightWithoutChart + 310;
 
 export const initialChartExpandedStateSheetHeight = heightWithChart;
 
-export default function ChartExpandedState(props) {
+function ChartExpandedState(props) {
   const currentAsset = props.asset;
 
   const asset = props.asset?.token
@@ -132,3 +132,5 @@ export default function ChartExpandedState(props) {
     </SlackSheet>
   );
 }
+
+export default memo(ChartExpandedState);

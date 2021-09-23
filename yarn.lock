@@ -3062,10 +3062,10 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.8.6.tgz#ad75ebe8dbecfa145af3c7e4d0ae98016458d005"
   integrity sha512-1oXH2bAFXz9SttE1v/0Jp+2ZVePsPEAPGIuPKrmljWZcS3FPBEn2Q4WcANozZC0YiCjTWOF55k0g6rbSZS39ew==
 
-"@rainbow-me/animated-charts@^1.0.0-alpha.5":
-  version "1.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/@rainbow-me/animated-charts/-/animated-charts-1.0.0-alpha.5.tgz#3de41b841a836dde98bc2c4103fc45856f658682"
-  integrity sha512-RABZH5WfDVAgXsUkxCf/GyV8qt5eqdQ7mHjYRMtgi2cKtk/uRhEAbwpsUBVEWl7jO0h8BRoBo2cjNX9gUrv1Wg==
+"@rainbow-me/animated-charts@^1.0.0-alpha.6":
+  version "1.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/@rainbow-me/animated-charts/-/animated-charts-1.0.0-alpha.6.tgz#b21a6886d4f662b7c12c10d3d2398f9e0d73d5bc"
+  integrity sha512-mJMKiHLxuU5FPIn/WR+klzA4Ug68zI+eCaqiBjd+s1QGfO2EF/za1PgN0GtCmm5iFDqdnE8FEoRk8RAI5p9WtQ==
   dependencies:
     react-native-gesture-handler "^1.7.0"
     react-native-haptic-feedback "^1.10.0"
