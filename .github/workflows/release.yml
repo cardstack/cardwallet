@@ -66,6 +66,8 @@ jobs:
         run: yarn install-pods-fast
       - name: Sync google_services
         run: yarn contexts:sync:google_services
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_12.4.app/Contents/Developer'
       - name: Run fastlane (ios)
         run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:${{ env.BUILD_NUMBER }}
         env:
