@@ -2,7 +2,11 @@ import Chance from 'chance';
 import React from 'react';
 
 import { render } from '../test-utils';
-import { Input, InputAmount } from '../../src/components/Input';
+import {
+  Input,
+  InputAmount,
+  CURRENCY_DISPLAY_MODE,
+} from '../../src/components/Input';
 import { Text } from '../../src/components/Text';
 import { Icon } from '../../src/components/Icon';
 import * as utils from '@cardstack/utils';
@@ -57,7 +61,7 @@ describe('Button', () => {
     const nativeCurrency = 'USD';
 
     const props = {
-      hasCurrencySymbol: false,
+      currencyDisplayMode: CURRENCY_DISPLAY_MODE.NO_DISPLAY,
       nativeCurrency: 'USD',
       inputValue,
       setInputValue,

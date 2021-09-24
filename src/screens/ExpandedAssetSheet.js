@@ -12,7 +12,6 @@ import {
   LiquidityPoolExpandedState,
   MerchantTransactionExpandedState,
   PaymentConfirmationExpandedState,
-  PaymentRequestExpandedState,
   RecentActivityExpandedState,
   UnclaimedRevenueExpandedState,
   UniqueTokenExpandedState,
@@ -21,6 +20,7 @@ import { Centered } from '../components/layout';
 import { useAsset, useDimensions } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { ExpandedMerchantRoutes } from '@cardstack/screen/MerchantScreen';
+import { PaymentRequestExpandedState } from '@cardstack/screen/PaymentRequest';
 import { position } from '@rainbow-me/styles';
 
 const ScreenTypes = {

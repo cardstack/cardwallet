@@ -5,6 +5,7 @@ import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSh
 import {
   SafeAreaView,
   Container,
+  CURRENCY_DISPLAY_MODE,
   InputAmount,
   SheetHandle,
   Text,
@@ -145,7 +146,7 @@ const AmountInputSection = memo(
           borderBottomWidth={1}
           borderBottomColor="borderBlue"
           paddingBottom={1}
-          hasCurrencySymbol={false}
+          currencyDisplayMode={CURRENCY_DISPLAY_MODE.NO_DISPLAY}
           nativeCurrency={nativeCurrency}
           inputValue={inputValue}
           setInputValue={setInputValue}

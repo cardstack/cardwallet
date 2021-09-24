@@ -17,7 +17,8 @@ const CurrencySelectionGlobalModal = () => {
     <Container flex={1} justifyContent="flex-end" alignItems="center">
       <Container
         width="100%"
-        borderRadius={20}
+        borderTopLeftRadius={20}
+        borderTopRightRadius={20}
         height="50%"
         backgroundColor="white"
         overflow="scroll"

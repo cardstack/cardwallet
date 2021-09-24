@@ -63,20 +63,22 @@ export const AmountQRCode = ({
         <Text size="large" letterSpacing={0.39} color="white">
           Scan to pay
         </Text>
-        {amountWithSymbol ? (
-          <Text
-            size="large"
-            letterSpacing={0.39}
-            color="white"
-            fontWeight="bold"
-          >
-            {amountWithSymbol}
-          </Text>
-        ) : null}
-        {amountInSpend ? (
-          <Text size="large" color="underlineGray" fontWeight="600">
-            {`§${amountInSpend.toLocaleString()} SPEND`}
-          </Text>
+        {amountInSpend && amountInSpend > 0 ? (
+          <>
+            {amountWithSymbol ? (
+              <Text
+                size="large"
+                letterSpacing={0.39}
+                color="white"
+                fontWeight="bold"
+              >
+                {amountWithSymbol}
+              </Text>
+            ) : null}
+            <Text size="large" color="underlineGray" fontWeight="600">
+              {`§${amountInSpend.toLocaleString()} SPEND`}
+            </Text>
+          </>
         ) : null}
         {name ? (
           <CenteredContainer paddingHorizontal={4}>
