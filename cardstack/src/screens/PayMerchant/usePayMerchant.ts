@@ -55,7 +55,17 @@ export const usePayMerchant = () => {
     `${initialSpendAmount ? initialSpendAmount.toString() : 0}`
   );
 
-  const [payStep, setPayStep] = useState<Step>(PAY_STEP.CHOOSE_PREPAID_CARD);
+  const hasMultipleCards = prepaidCards.length > 1;
+
+  const initialStep = hasMultipleCards
+    ? PAY_STEP.CHOOSE_PREPAID_CARD
+    : PAY_STEP.EDIT_AMOUNT;
+
+  const nextStep = hasMultipleCards
+    ? PAY_STEP.CHOOSE_PREPAID_CARD
+    : PAY_STEP.CONFIRMATION;
+
+  const [payStep, setPayStep] = useState<Step>(initialStep);
 
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
   const { paymentChangeCurrency } = usePayment();
@@ -163,6 +173,12 @@ export const usePayMerchant = () => {
     []
   );
 
+  const onCancelConfirmation = useCallback(onStepChange(initialStep), [
+    onStepChange,
+  ]);
+
+  const onAmountNext = useCallback(onStepChange(nextStep), [onStepChange]);
+
   const txSheetData = useMemo(
     () => ({
       ...data,
@@ -184,9 +200,12 @@ export const usePayMerchant = () => {
     prepaidCards,
     isLoading,
     onConfirmLoading,
+    hasMultipleCards,
     onConfirm: onCustomConfirm,
     onStepChange,
     onSelectPrepaidCard,
     setInputValue,
+    onCancelConfirmation,
+    onAmountNext,
   };
 };

@@ -37,6 +37,8 @@ const PayMerchant = memo(() => {
     onStepChange,
     onSelectPrepaidCard,
     setInputValue,
+    onAmountNext,
+    onCancelConfirmation,
   } = usePayMerchant();
 
   if (isLoading) {
@@ -47,11 +49,12 @@ const PayMerchant = memo(() => {
     );
   }
 
-  if (payStep === PAY_STEP.EDIT_AMOUNT) {
+  // Checking cards length to avoid keyboard flickring case user has no cards
+  if (payStep === PAY_STEP.EDIT_AMOUNT && !!prepaidCards.length) {
     return (
       <CustomAmountBody
         merchantInfoDID={merchantInfoDID}
-        onNextPress={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
+        onNextPress={onAmountNext}
         inputValue={inputValue}
         setInputValue={setInputValue}
         isLoading={isLoading}
@@ -60,13 +63,13 @@ const PayMerchant = memo(() => {
     );
   }
 
-  if (payStep === PAY_STEP.CONFIRMATION && prepaidCards.length > 0) {
+  if (payStep === PAY_STEP.CONFIRMATION) {
     return (
       <TransactionConfirmationSheet
         loading={isLoading}
         onConfirmLoading={onConfirmLoading}
         data={txSheetData}
-        onCancel={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
+        onCancel={onCancelConfirmation}
         onConfirm={onConfirm}
       />
     );
