@@ -58,13 +58,24 @@ export const useTransactionSections = ({
     state => state.settings.accountAddress
   );
 
-  const prevLastTransaction = usePrevious(transactions?.[0]?.transaction?.id);
-  const currentLastTransaction = transactions?.[0]?.transaction?.id;
+  const prevLastestTx = usePrevious(transactions?.[0]?.transaction?.id);
+  const currentLastestTx = transactions?.[0]?.transaction?.id;
+
+  const prevTxLength = usePrevious(transactions?.length) || 0;
+  const currentTxLength = transactions?.length || 0;
+
+  const isPagination =
+    prevLastestTx === currentLastestTx && currentTxLength > prevTxLength;
+
+  const isNewtx =
+    prevLastestTx !== currentLastestTx && prevTxLength === currentTxLength;
+
+  const isInitialTx = !prevLastestTx;
 
   // Quick workaround to have merchant tx working
   // TODO: refactor and add tests
   const shouldUpdate =
-    prevLastTransaction !== currentLastTransaction || isMerchantTransaction;
+    isInitialTx || isNewtx || isPagination || isMerchantTransaction;
 
   useEffect(() => {
     const setSectionsData = async () => {
@@ -72,8 +83,11 @@ export const useTransactionSections = ({
         setLoading(true);
 
         try {
-          const merchantSafeAddresses = merchantSafes.map(safe => safe.address);
-          const prepaidCardAddresses = prepaidCards.map(safe => safe.address);
+          const merchantSafeAddresses = merchantSafes?.map(
+            safe => safe.address
+          );
+
+          const prepaidCardAddresses = prepaidCards?.map(safe => safe.address);
 
           const transactionMappingContext = new TransactionMappingContext({
             transactions: merchantSafeAddress
@@ -135,7 +149,7 @@ export const useTransactionSections = ({
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;
-  const isFetchingMore = sections.length && isLoading;
+  const isFetchingMore = !!sections.length && isLoading;
 
   const onEndReached = useCallback(() => {
     if (!isFetchingMore && fetchMore) {
