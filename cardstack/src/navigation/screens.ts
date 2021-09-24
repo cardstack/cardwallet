@@ -14,6 +14,7 @@ import {
 } from '@cardstack/screen';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
+import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -74,7 +75,16 @@ export const linking = {
   ],
   config: {
     screens: {
-      [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
+      [RainbowRoutes.STACK]: {
+        screens: {
+          [RainbowRoutes.MAIN_NAVIGATOR]: {
+            initialRouteName: RainbowRoutes.SWIPE_LAYOUT,
+            screens: {
+              [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
+            },
+          },
+        },
+      },
     },
   },
 };
