@@ -14,11 +14,17 @@ import Routes from '@rainbow-me/routes';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { useNavigation } from '@rainbow-me/navigation';
 
+export enum CURRENCY_DISPLAY_MODE {
+  NO_DISPLAY = 'NO_DISPLAY',
+  SYMBOL = 'SYMBOL',
+  LABEL = 'LABEL',
+}
+
 type InputAmountProps = {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
   nativeCurrency: string;
-  hasCurrencySymbol?: boolean;
+  currencyDisplayMode?: CURRENCY_DISPLAY_MODE;
 } & ContainerProps;
 
 export const InputAmount = memo(
@@ -26,7 +32,7 @@ export const InputAmount = memo(
     inputValue,
     setInputValue,
     nativeCurrency,
-    hasCurrencySymbol = true,
+    currencyDisplayMode = CURRENCY_DISPLAY_MODE.SYMBOL,
     ...containerProps
   }: InputAmountProps) => {
     const { navigate } = useNavigation();
@@ -47,67 +53,86 @@ export const InputAmount = memo(
     }, [nativeCurrency, navigate]);
 
     return (
-      <CenteredContainer flexDirection="row" width="100%" {...containerProps}>
-        {hasCurrencySymbol ? (
-          <Container
-            justifyContent="flex-start"
-            alignItems="center"
-            height="100%"
-          >
-            <Text
-              color={inputValue ? 'black' : 'underlineGray'}
-              fontWeight="bold"
-              paddingRight={1}
-              paddingTop={1}
-              size="largeBalance"
-            >
-              {nativeCurrency === 'SPD'
-                ? '§'
-                : (supportedNativeCurrencies as any)[nativeCurrency].symbol}
-            </Text>
-          </Container>
-        ) : null}
-        <Container flex={1} flexGrow={1}>
-          <Input
-            alignSelf="stretch"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus
-            color="black"
-            fontSize={30}
+      <Container width="100%" {...containerProps}>
+        {currencyDisplayMode === CURRENCY_DISPLAY_MODE.LABEL ? (
+          <Text
+            size="xxs"
+            textAlign="center"
             fontWeight="bold"
-            keyboardType="numeric"
-            maxLength={(inputValue || '').length + 1} // just to avoid possible flicker issue
-            multiline
-            onChangeText={onChangeText}
-            placeholder="0.00"
-            placeholderTextColor="grayMediumLight"
-            spellCheck={false}
-            testID="RequestPaymentInput"
-            value={inputValue}
-            zIndex={1}
-          />
-        </Container>
-        <Touchable
-          onPress={openCurrencySelectionModal}
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="center"
-          marginTop={2}
-          paddingLeft={1}
-        >
-          <Text size="body" fontWeight="bold">
-            {nativeCurrency}
+            marginBottom={2}
+            textTransform="uppercase"
+            textShadowOffset={{
+              width: 0,
+              height: 1,
+            }}
+          >
+            {`${(supportedNativeCurrencies as any)[nativeCurrency].label} (${
+              (supportedNativeCurrencies as any)[nativeCurrency].currency
+            })`}
           </Text>
-          <Icon
-            name="doubleCaret"
-            iconSize="medium"
+        ) : null}
+        <CenteredContainer flexDirection="row" width="100%">
+          {currencyDisplayMode === CURRENCY_DISPLAY_MODE.SYMBOL ? (
+            <Container
+              justifyContent="flex-start"
+              alignItems="center"
+              height="100%"
+            >
+              <Text
+                color={inputValue ? 'black' : 'underlineGray'}
+                fontWeight="bold"
+                paddingRight={1}
+                paddingTop={1}
+                size="largeBalance"
+              >
+                {nativeCurrency === 'SPD'
+                  ? '§'
+                  : (supportedNativeCurrencies as any)[nativeCurrency].symbol}
+              </Text>
+            </Container>
+          ) : null}
+          <Container flex={1} flexGrow={1}>
+            <Input
+              alignSelf="stretch"
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus
+              color="black"
+              fontSize={30}
+              fontWeight="bold"
+              keyboardType="numeric"
+              maxLength={(inputValue || '').length + 1} // just to avoid possible flicker issue
+              multiline
+              onChangeText={onChangeText}
+              placeholder="0.00"
+              placeholderTextColor="grayMediumLight"
+              spellCheck={false}
+              testID="RequestPaymentInput"
+              value={inputValue}
+              zIndex={1}
+            />
+          </Container>
+          <Touchable
+            onPress={openCurrencySelectionModal}
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+            marginTop={2}
             paddingLeft={1}
-            marginTop={1}
-            width={14}
-          />
-        </Touchable>
-      </CenteredContainer>
+          >
+            <Text size="body" fontWeight="bold">
+              {nativeCurrency}
+            </Text>
+            <Icon
+              name="doubleCaret"
+              iconSize="medium"
+              paddingLeft={1}
+              marginTop={1}
+              width={14}
+            />
+          </Touchable>
+        </CenteredContainer>
+      </Container>
     );
   }
 );

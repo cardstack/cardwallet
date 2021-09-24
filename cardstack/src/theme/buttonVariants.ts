@@ -77,6 +77,17 @@ const disabled = {
   },
 };
 
+const disabledBlack = {
+  backgroundColor: 'buttonDarkBackground',
+  borderColor: 'transparent',
+  textStyle: {
+    color: 'blueText',
+  },
+  disabledTextStyle: {
+    color: 'blueText',
+  },
+};
+
 export const buttonVariants = {
   defaults: {
     alignItems: 'center',
@@ -148,6 +159,7 @@ export const buttonVariants = {
     },
   },
   disabled,
+  disabledBlack,
 };
 
 export type ButtonVariants = keyof typeof buttonVariants;

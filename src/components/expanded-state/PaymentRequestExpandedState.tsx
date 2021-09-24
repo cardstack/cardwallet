@@ -10,10 +10,12 @@ import { SlackSheet } from '../sheet';
 import {
   Button,
   Container,
+  CURRENCY_DISPLAY_MODE,
   HorizontalDivider,
   Image,
   InputAmount,
   Text,
+  Touchable,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
 import {
@@ -22,7 +24,7 @@ import {
   nativeCurrencyToSpend,
   shareRequestPaymentLink,
 } from '@cardstack/utils';
-
+import { hitSlop } from '@cardstack/utils/layouts';
 import { useNavigation } from '@rainbow-me/navigation';
 
 import { usePaymentCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
@@ -56,8 +58,15 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
       <Button
         disabled={!inputValue}
         onPress={() => setEditMode(false)}
-        variant={!inputValue ? 'dark' : undefined}
+        variant={!inputValue ? 'disabledBlack' : undefined}
       >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
+      <Container alignItems="center" justifyContent="center" marginTop={4}>
+        <Touchable hitSlop={hitSlop.small} onPress={() => setEditMode(false)}>
+          <Text color="blackEerie" fontWeight="600" size="xs">
+            Skip Amount
+          </Text>
+        </Touchable>
+      </Container>
     </Container>
   );
 
@@ -78,12 +87,11 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
       <Container
         flex={1}
         flexDirection="row"
-        justifyContent="space-between"
+        justifyContent="flex-end"
         marginTop={!editMode ? 9 : 15}
         paddingHorizontal={5}
         width="100%"
       >
-        <Text size="medium">Payment Request</Text>
         {!editMode && (
           <Text
             fontSize={12}
@@ -96,23 +104,25 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
         )}
       </Container>
       {editMode ? (
-        <>
+        <Container paddingHorizontal={5}>
           <InputAmount
+            borderBottomColor="black"
+            borderBottomWidth={1}
+            currencyDisplayMode={CURRENCY_DISPLAY_MODE.LABEL}
             flex={1}
             inputValue={inputValue}
+            marginBottom={2}
             marginTop={8}
             nativeCurrency={nativeCurrency}
-            paddingHorizontal={5}
+            paddingBottom={1}
             setInputValue={setInputValue}
           />
-          <Container paddingHorizontal={5}>
-            <HorizontalDivider />
-            <SpendAmount
-              formattedAmount={inputValue}
-              nativeCurrencyRate={currencyConversionRate}
-            />
-          </Container>
-        </>
+          <SpendAmount
+            formattedAmount={inputValue}
+            nativeCurrencyRate={currencyConversionRate}
+            textCenter
+          />
+        </Container>
       ) : (
         <AmountAndQRCodeButtons
           address={address}
@@ -143,18 +153,19 @@ const MerchantInfo = ({
     paddingTop={5}
     width="100%"
   >
-    <Text size="medium" weight="extraBold">
-      {name || ''}
+    <Text size="body" weight="extraBold">
+      Request Payment
     </Text>
     <Text
       color="blueText"
-      size="xxs"
+      marginTop={3}
+      size="smallest"
       textTransform="uppercase"
       weight="regular"
     >
-      Merchant
+      {name || ''}
     </Text>
-    <Text marginTop={1} size="xs" weight="regular">
+    <Text size="xs" weight="regular">
       {getAddressPreview(address)}
     </Text>
   </Container>
@@ -163,11 +174,18 @@ const MerchantInfo = ({
 const SpendAmount = ({
   formattedAmount,
   nativeCurrencyRate,
+  textCenter = false,
 }: {
   formattedAmount: string | undefined;
   nativeCurrencyRate: number;
+  textCenter?: boolean;
 }) => (
-  <Text color="blueText" size="xs">
+  <Text
+    color="blueText"
+    fontFamily="OpenSans-Regular"
+    fontSize={12}
+    textAlign={textCenter ? 'center' : undefined}
+  >
     {
       nativeCurrencyToSpend(formattedAmount, nativeCurrencyRate, true)
         .tokenBalanceDisplay

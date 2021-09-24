@@ -1,5 +1,6 @@
 export const palette = {
   black: '#000000',
+  blackEerie: '#1f1f1f',
   blueBright: '#6638FF',
   blueOcean: '#0069f9',
   tealLight: '#00EBE5',
@@ -35,6 +36,7 @@ export const colors = {
   backgroundBlue: palette.blueDark,
   brightBlue: palette.blueBright,
   black: palette.black,
+  blackEerie: palette.blackEerie,
   teal: palette.tealLight,
   tealDark: palette.tealDark,
   blueOcean: palette.blueOcean,
