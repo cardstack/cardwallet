@@ -21,6 +21,11 @@ export enum CURRENCY_DISPLAY_MODE {
   LABEL = 'LABEL',
 }
 
+const textShadowOffset = {
+  width: 0,
+  height: 1,
+};
+
 type InputAmountProps = {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
@@ -67,10 +72,7 @@ export const InputAmount = memo(
             fontWeight="bold"
             marginBottom={2}
             textTransform="uppercase"
-            textShadowOffset={{
-              width: 0,
-              height: 1,
-            }}
+            textShadowOffset={textShadowOffset}
           >
             {`${selectedCurrency.label} (${selectedCurrency.currency})`}
           </Text>
