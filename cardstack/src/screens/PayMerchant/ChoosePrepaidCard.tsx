@@ -19,7 +19,7 @@ import { hitSlop } from '@cardstack/utils/layouts';
 
 export interface ChoosePrepaidCardProps {
   prepaidCards: PrepaidCardType[];
-  selectedCard: PrepaidCardType;
+  selectedCard?: PrepaidCardType;
   onSelectPrepaidCard: (prepaidCard: PrepaidCardType) => void;
   spendAmount: number;
   onPressEditAmount: () => void;
@@ -56,7 +56,7 @@ const ChoosePrepaidCard = ({
       <PrepaidCardItem
         item={item}
         onPress={onSelect}
-        selectedAddress={selectedCard.address}
+        selectedAddress={selectedCard?.address}
         networkName={networkName}
         nativeCurrency={nativeCurrency}
         currencyConversionRates={currencyConversionRates}
@@ -70,7 +70,7 @@ const ChoosePrepaidCard = ({
       networkName,
       onSelect,
       prepaidCards.length,
-      selectedCard.address,
+      selectedCard,
       spendAmount,
     ]
   );
@@ -145,7 +145,7 @@ const Header = memo(
 interface PrepaidCardItemProps {
   item: PrepaidCardType;
   onPress: (item: PrepaidCardType) => void;
-  selectedAddress: string;
+  selectedAddress?: string;
   networkName: string;
   nativeCurrency: string;
   currencyConversionRates: {

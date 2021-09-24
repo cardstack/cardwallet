@@ -49,12 +49,10 @@ export const usePayMerchant = () => {
 
   const { infoDID = '', spendAmount: initialSpendAmount, currency } = data;
 
-  const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>(
-    prepaidCards[0]
-  );
+  const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
 
   const [inputValue, setInputValue] = useState<string | undefined>(
-    `${initialSpendAmount ? initialSpendAmount.toLocaleString() : 0}`
+    `${initialSpendAmount ? initialSpendAmount.toString() : 0}`
   );
 
   const [payStep, setPayStep] = useState<Step>(PAY_STEP.CHOOSE_PREPAID_CARD);
@@ -75,8 +73,22 @@ export const usePayMerchant = () => {
     }
   }, [currency, paymentChangeCurrency]);
 
+  // Updating in case first render selected is undefined
+  useEffect(() => {
+    if (!selectedPrepaidCard?.address) {
+      selectPrepaidCard(prepaidCards[0]);
+    }
+  }, [prepaidCards, selectedPrepaidCard]);
+
+  // Updating amount when nav param change
+  useEffect(() => {
+    if (initialSpendAmount) {
+      setInputValue(initialSpendAmount.toString());
+    }
+  }, [initialSpendAmount]);
+
   const spendAmount =
-    nativeCurrency === 'SPD'
+    currency === 'SPD'
       ? localCurrencyToAbsNum(`${inputValue || 0}`)
       : nativeCurrencyToSpend(
           inputValue,
@@ -110,7 +122,7 @@ export const usePayMerchant = () => {
             timestamp,
             transactionHash: receipt.transactionHash,
             prepaidCardAddress: receipt.from,
-            prepaidCardCustomization: selectedPrepaidCard.cardCustomization,
+            prepaidCardCustomization: selectedPrepaidCard?.cardCustomization,
           })
         );
       }, 1000);
@@ -123,13 +135,17 @@ export const usePayMerchant = () => {
       inputValue,
       merchantInfoDID,
       navigate,
-      selectedPrepaidCard.cardCustomization,
+      selectedPrepaidCard,
       spendAmount,
     ]
   );
 
   const onCustomConfirm = useCallback(() => {
-    onConfirm(spendAmount, selectedPrepaidCard.address, onPayMerchantSuccess);
+    onConfirm(
+      spendAmount,
+      selectedPrepaidCard?.address || '',
+      onPayMerchantSuccess
+    );
   }, [onConfirm, spendAmount, selectedPrepaidCard, onPayMerchantSuccess]);
 
   const onSelectPrepaidCard = useCallback(
@@ -152,9 +168,9 @@ export const usePayMerchant = () => {
       ...data,
       spendAmount,
       currency: nativeCurrency === 'SPD' ? currency : nativeCurrency,
-      prepaidCard: selectedPrepaidCard.address,
+      prepaidCard: selectedPrepaidCard?.address,
     }),
-    [currency, data, nativeCurrency, selectedPrepaidCard.address, spendAmount]
+    [currency, data, nativeCurrency, selectedPrepaidCard, spendAmount]
   );
 
   return {

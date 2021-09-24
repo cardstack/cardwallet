@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { ActivityIndicator } from 'react-native';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
@@ -10,6 +11,7 @@ import {
   Text,
   Button,
   TransactionConfirmationSheet,
+  CenteredContainer,
 } from '@cardstack/components';
 import { MerchantInformation } from '@cardstack/types';
 import {
@@ -36,6 +38,14 @@ const PayMerchant = memo(() => {
     onSelectPrepaidCard,
     setInputValue,
   } = usePayMerchant();
+
+  if (isLoading) {
+    return (
+      <CenteredContainer flex={1}>
+        <ActivityIndicator size="large" />
+      </CenteredContainer>
+    );
+  }
 
   if (payStep === PAY_STEP.EDIT_AMOUNT) {
     return (

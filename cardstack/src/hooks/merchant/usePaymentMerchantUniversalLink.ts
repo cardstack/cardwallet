@@ -13,7 +13,7 @@ import { getSafeData } from '@cardstack/services';
 import { useWorker } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { useWallets } from '@rainbow-me/hooks';
+import { useAssetListData, useWallets } from '@rainbow-me/hooks';
 import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
 
@@ -51,6 +51,8 @@ export const usePaymentMerchantUniversalLink = () => {
     state => state.data.prepaidCards
   );
 
+  const { isLoadingAssets } = useAssetListData();
+
   const { selectedWallet } = useWallets();
 
   const spendAmount = parseFloat(amount);
@@ -64,7 +66,11 @@ export const usePaymentMerchantUniversalLink = () => {
   }, [merchantAddress]);
 
   useEffect(() => {
-    if (prepaidCards.length === 0) {
+    getMerchantSafeData();
+  }, [getMerchantSafeData]);
+
+  useEffect(() => {
+    if (!isLoadingAssets && prepaidCards.length === 0) {
       handleAlertError(
         `You don't own a Prepaid card!\nYou can create one at app.cardstack.com`
       );
@@ -73,9 +79,7 @@ export const usePaymentMerchantUniversalLink = () => {
 
       return;
     }
-
-    getMerchantSafeData();
-  }, [getMerchantSafeData, goBack, prepaidCards.length]);
+  }, [isLoadingAssets, goBack, prepaidCards.length]);
 
   const { isLoading: isLoadingTx, callback: onConfirm, error } = useWorker(
     async (
@@ -126,5 +130,12 @@ export const usePaymentMerchantUniversalLink = () => {
     [infoDID, spendAmount, merchantAddress, currencyName]
   );
 
-  return { prepaidCards, goBack, onConfirm, isLoadingTx, isLoading, data };
+  return {
+    prepaidCards,
+    goBack,
+    onConfirm,
+    isLoadingTx,
+    isLoading: isLoading || isLoadingAssets,
+    data,
+  };
 };
