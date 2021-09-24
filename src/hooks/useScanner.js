@@ -1,7 +1,11 @@
 import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
 import lang from 'i18n-js';
 import { useCallback, useEffect, useState } from 'react';
-import { InteractionManager, Alert as NativeAlert } from 'react-native';
+import {
+  InteractionManager,
+  Linking,
+  Alert as NativeAlert,
+} from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { Alert } from '../components/alerts';
 import handleDeepLink from '../handlers/deeplinks';
@@ -11,7 +15,6 @@ import { useNavigation } from '../navigation/Navigation';
 import usePrevious from './usePrevious';
 import useWalletConnectConnections from './useWalletConnectConnections';
 import useWallets from './useWallets';
-import { parseMerchantPaymentDeepLinkUrl } from '@cardstack/utils';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';
 import { addressUtils, haptics } from '@rainbow-me/utils';
@@ -150,8 +153,8 @@ export default function useScanner(enabled) {
         return handleDeepLink(deeplink.split('?link=')[1]);
       }
       if (isValidMerchantPaymentUrl(deeplink)) {
-        const params = parseMerchantPaymentDeepLinkUrl(deeplink);
-        return navigate(Routes.PAY_MERCHANT, params);
+        haptics.notificationSuccess();
+        return Linking.openURL(deeplink);
       }
       return handleScanInvalid(data);
     },
@@ -161,7 +164,6 @@ export default function useScanner(enabled) {
       handleScanAddress,
       handleScanWalletConnect,
       handleScanInvalid,
-      navigate,
     ]
   );
 
