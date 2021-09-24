@@ -7,6 +7,7 @@ import {
   Input,
   Text,
   Icon,
+  SPDCurrency,
   Touchable,
 } from './../index';
 import { formatNative } from '@cardstack/utils';
@@ -52,6 +53,11 @@ export const InputAmount = memo(
       );
     }, [nativeCurrency, navigate]);
 
+    const selectedCurrency =
+      nativeCurrency === 'SPD'
+        ? SPDCurrency
+        : (supportedNativeCurrencies as any)[nativeCurrency];
+
     return (
       <Container width="100%" {...containerProps}>
         {currencyDisplayMode === CURRENCY_DISPLAY_MODE.LABEL ? (
@@ -66,9 +72,7 @@ export const InputAmount = memo(
               height: 1,
             }}
           >
-            {`${(supportedNativeCurrencies as any)[nativeCurrency].label} (${
-              (supportedNativeCurrencies as any)[nativeCurrency].currency
-            })`}
+            {`${selectedCurrency.label} (${selectedCurrency.currency})`}
           </Text>
         ) : null}
         <CenteredContainer flexDirection="row" width="100%">
@@ -85,9 +89,7 @@ export const InputAmount = memo(
                 paddingTop={1}
                 size="largeBalance"
               >
-                {nativeCurrency === 'SPD'
-                  ? '§'
-                  : (supportedNativeCurrencies as any)[nativeCurrency].symbol}
+                {selectedCurrency.symbol}
               </Text>
             </Container>
           ) : null}

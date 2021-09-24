@@ -1,3 +1,4 @@
+import { generateMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import CardWalletLogo from '../../../cardstack/src/assets/cardstackLogo.png';
 import {
@@ -11,23 +12,23 @@ import {
   Button,
   Container,
   CURRENCY_DISPLAY_MODE,
-  HorizontalDivider,
   Image,
   InputAmount,
   Text,
   Touchable,
 } from '@cardstack/components';
-import { MerchantSafeType } from '@cardstack/types';
+import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import {
-  generateMerchantPaymentUrl,
   getAddressPreview,
   nativeCurrencyToSpend,
   shareRequestPaymentLink,
+  splitAddress,
 } from '@cardstack/utils';
 import { hitSlop } from '@cardstack/utils/layouts';
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useNavigation } from '@rainbow-me/navigation';
-
 import { usePaymentCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { supportedNativeCurrencies } from '@rainbow-me/references';
 import Routes from '@rainbow-me/routes';
 import { shadow } from '@rainbow-me/styles';
 import logger from 'logger';
@@ -72,6 +73,15 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
 
   const currencyConversionRate =
     nativeCurrency === 'SPD' ? 100 : currencyConversionRates[nativeCurrency];
+  const amountWithSymbol = `${
+    nativeCurrency === 'SPD'
+      ? '§'
+      : (supportedNativeCurrencies as any)[nativeCurrency]?.symbol
+  }${inputValue} ${nativeCurrency}`;
+  const amountInSpend = nativeCurrencyToSpend(
+    inputValue,
+    currencyConversionRate
+  ).spendAmount;
 
   return (
     <SlackSheet
@@ -84,25 +94,6 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
       )}
       scrollEnabled
     >
-      <Container
-        flex={1}
-        flexDirection="row"
-        justifyContent="flex-end"
-        marginTop={!editMode ? 9 : 15}
-        paddingHorizontal={5}
-        width="100%"
-      >
-        {!editMode && (
-          <Text
-            fontSize={12}
-            fontWeight="600"
-            marginTop={2}
-            onPress={() => setEditMode(true)}
-          >
-            Edit amount
-          </Text>
-        )}
-      </Container>
       {editMode ? (
         <Container paddingHorizontal={5}>
           <InputAmount
@@ -124,17 +115,63 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
           />
         </Container>
       ) : (
-        <AmountAndQRCodeButtons
-          address={address}
-          amountInSpend={
-            nativeCurrencyToSpend(inputValue, currencyConversionRate)
-              .spendAmount
-          }
-          formattedAmount={inputValue}
-          merchantName={merchantInfo?.name}
-          nativeCurrency={nativeCurrency}
-          nativeCurrencyRate={currencyConversionRate}
-        />
+        <>
+          {amountInSpend && amountInSpend > 0 ? (
+            <>
+              <Container
+                flex={1}
+                flexDirection="row"
+                justifyContent="space-between"
+                marginTop={!editMode ? 9 : 15}
+                paddingHorizontal={5}
+              >
+                <Text
+                  color="blueText"
+                  fontWeight="bold"
+                  lineHeight={30}
+                  size="xxs"
+                >
+                  PAY THIS AMOUNT
+                </Text>
+                <Touchable
+                  borderColor="grayText"
+                  borderRadius={15}
+                  borderWidth={1}
+                  height={30}
+                  hitSlop={hitSlop.small}
+                  onPress={() => setEditMode(true)}
+                  paddingHorizontal={4}
+                >
+                  <Text fontSize={11} fontWeight="600" lineHeight={26}>
+                    Edit amount
+                  </Text>
+                </Touchable>
+              </Container>
+              <Container
+                borderBottomColor="backgroundLightGray"
+                borderBottomWidth={1}
+                marginHorizontal={5}
+                paddingBottom={4}
+              >
+                <Container paddingLeft={10}>
+                  <Text fontSize={25} fontWeight="bold">
+                    {amountWithSymbol}
+                  </Text>
+                  <SpendAmount
+                    formattedAmount={inputValue}
+                    nativeCurrencyRate={currencyConversionRate}
+                  />
+                </Container>
+              </Container>
+            </>
+          ) : null}
+          <AmountAndQRCodeButtons
+            address={address}
+            amountInSpend={amountInSpend}
+            amountWithSymbol={amountWithSymbol}
+            merchantInfo={merchantInfo}
+          />
+        </>
       )}
     </SlackSheet>
   );
@@ -158,14 +195,14 @@ const MerchantInfo = ({
     </Text>
     <Text
       color="blueText"
+      fontWeight="600"
       marginTop={3}
       size="smallest"
       textTransform="uppercase"
-      weight="regular"
     >
       {name || ''}
     </Text>
-    <Text size="xs" weight="regular">
+    <Text fontFamily="RobotoMono-Regular" size="xs" weight="regular">
       {getAddressPreview(address)}
     </Text>
   </Container>
@@ -194,23 +231,19 @@ const SpendAmount = ({
 );
 
 const AmountAndQRCodeButtons = ({
-  formattedAmount,
+  amountWithSymbol,
   address,
-  nativeCurrency,
-  nativeCurrencyRate,
   amountInSpend,
-  merchantName,
+  merchantInfo,
 }: {
-  formattedAmount: string | undefined;
+  amountWithSymbol: string | undefined;
   address: string;
-  nativeCurrency: string;
-  nativeCurrencyRate: number;
   amountInSpend: number;
-  merchantName: string | undefined;
+  merchantInfo?: MerchantInformation;
 }) => {
   const [copyCount, setCopyCount] = useState(0);
 
-  const { network, nativeCurrencySymbol } = useAccountSettings();
+  const { network } = useAccountSettings();
   const { navigate } = useNavigation();
   const { setClipboard } = useClipboard();
 
@@ -242,19 +275,18 @@ const AmountAndQRCodeButtons = ({
 
   // assuming we are using the global native currency,
   // once it needs to change we probably should receive this as prop
-  const amountWithSymbol = `${nativeCurrencySymbol}${formattedAmount} ${nativeCurrency}`;
 
   const showQRCode = useCallback(() => {
     navigate(Routes.SHOW_QRCODE_MODAL, {
       value: paymentRequestLink,
       amountInSpend,
       amountWithSymbol,
-      name: merchantName,
+      name: merchantInfo?.name,
     });
   }, [
     amountInSpend,
     amountWithSymbol,
-    merchantName,
+    merchantInfo,
     navigate,
     paymentRequestLink,
   ]);
@@ -264,86 +296,100 @@ const AmountAndQRCodeButtons = ({
       <Container paddingHorizontal={5} width="100%">
         <Container flexDirection="row" marginTop={8}>
           <Text color="blueText" fontWeight="bold" paddingTop={1} size="xxs">
-            PAY:
-          </Text>
-          <Container paddingLeft={6}>
-            <Text fontSize={15} fontWeight="bold">
-              {amountWithSymbol}
-            </Text>
-            <SpendAmount
-              formattedAmount={formattedAmount}
-              nativeCurrencyRate={nativeCurrencyRate}
-            />
-          </Container>
-        </Container>
-        <Container flexDirection="row" marginTop={3}>
-          <Text color="blueText" fontWeight="bold" paddingTop={1} size="xxs">
             TO:
           </Text>
-          <Container paddingLeft={7} width={205}>
-            <Text color="blueText" size="small">
-              {address}
-            </Text>
-          </Container>
-        </Container>
-        <Container marginTop={1}>
-          <HorizontalDivider />
-          <Container
-            alignItems="center"
-            alignSelf="center"
-            flexDirection="row"
-            marginTop={4}
-            width={200}
-          >
-            <Icon name="qrCodeBig" />
-            <Text
-              fontSize={15}
-              fontWeight="600"
-              letterSpacing={0.15}
-              lineHeight={20}
-              paddingLeft={3}
-            >
-              Let your customer scan a QR code to pay
-            </Text>
-          </Container>
-        </Container>
-        <Container marginTop={6}>
-          <Button onPress={showQRCode}>Show QR code</Button>
-          <Container
-            alignItems="center"
-            alignSelf="center"
-            flexDirection="row"
-            marginTop={7}
-            width={200}
-          >
-            <Icon name="link" />
-            <Text
-              fontSize={15}
-              fontWeight="600"
-              letterSpacing={0.15}
-              lineHeight={20}
-              paddingLeft={2}
-            >
-              Or send your customer the link to pay
-            </Text>
+          <Container flexDirection="row" marginTop={4}>
+            <Container paddingHorizontal={1} paddingTop={4}>
+              <ContactAvatar
+                color={merchantInfo?.color}
+                size="smaller"
+                textColor={merchantInfo?.textColor}
+                value={merchantInfo?.name}
+              />
+            </Container>
+            <Container paddingLeft={2}>
+              <Text color="blueText" size="smallest" textTransform="uppercase">
+                Merchant
+              </Text>
+              <Text fontSize={15} fontWeight="bold">
+                {merchantInfo?.name}
+              </Text>
+              <Text
+                color="blueText"
+                fontFamily="RobotoMono-Regular"
+                marginTop={2}
+                size="small"
+              >
+                {splitAddress(address).twoLinesAddress}
+              </Text>
+            </Container>
           </Container>
         </Container>
         <Container
-          flex={1}
-          flexDirection="row"
-          flexWrap="wrap"
-          marginTop={6}
-          width="100%"
+          backgroundColor="grayCardBackground"
+          borderRadius={10}
+          marginTop={8}
+          paddingVertical={5}
         >
-          <Container flex={1} paddingRight={2}>
-            <Button onPress={copyToClipboard} variant="small">
-              Copy Link
-            </Button>
+          <Container>
+            <Container
+              alignItems="center"
+              alignSelf="center"
+              flexDirection="row"
+              paddingLeft={4}
+            >
+              <Icon name="qrCodeBig" />
+              <Text
+                fontSize={15}
+                fontWeight="600"
+                letterSpacing={0.15}
+                lineHeight={20}
+                paddingLeft={3}
+              >
+                Let your customer scan a {'\n'}QR code to pay
+              </Text>
+            </Container>
           </Container>
-          <Container flex={1} paddingLeft={2}>
-            <Button onPress={handleShareLink} variant="small">
-              Share Link
+          <Container marginTop={6} paddingHorizontal={5}>
+            <Button onPress={showQRCode} width="100%">
+              Show QR code
             </Button>
+            <Container
+              alignItems="center"
+              alignSelf="center"
+              flexDirection="row"
+              marginTop={7}
+            >
+              <Icon name="link" />
+              <Text
+                fontSize={15}
+                fontWeight="600"
+                letterSpacing={0.15}
+                lineHeight={20}
+                paddingLeft={3}
+              >
+                Or send your customer {'\n'}the link to pay
+              </Text>
+            </Container>
+          </Container>
+          <Container
+            flex={1}
+            flexDirection="row"
+            flexWrap="wrap"
+            marginTop={6}
+            paddingHorizontal={5}
+            width="100%"
+          >
+            <Container flex={1} paddingRight={2}>
+              <Button onPress={copyToClipboard} variant="small" width="100%">
+                Copy Link
+              </Button>
+            </Container>
+            <Container flex={1} paddingLeft={2}>
+              <Button onPress={handleShareLink} variant="small" width="100%">
+                Share Link
+              </Button>
+            </Container>
           </Container>
         </Container>
       </Container>
@@ -364,25 +410,16 @@ const QRCodeFooter = () => {
       alignSelf="flex-end"
       backgroundColor="white"
       bottom={isTallPhone ? 70 : 0}
-      paddingHorizontal={5}
-      paddingVertical={4}
+      paddingBottom={5}
+      paddingTop={3}
       style={shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)}
       width="100%"
     >
-      <Container
-        alignItems="center"
-        backgroundColor="backgroundGray"
-        borderRadius={10}
-        flexDirection="row"
-        paddingBottom={2}
-        paddingHorizontal={4}
-        paddingTop={4}
-      >
+      <Container alignItems="center" justifyContent="center">
         <Image height={30} source={CardWalletLogo} width={30} />
-        <Text paddingLeft={4} paddingRight={6} size="xs">
-          Your customer must have the
+        <Text marginTop={1} size="xs" textAlign="center">
+          Your customer must have the {'\n'}
           <Text fontWeight="bold" size="xs">
-            {' '}
             Card Wallet mobile app
           </Text>{' '}
           installed.

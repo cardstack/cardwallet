@@ -3,7 +3,7 @@ import { RadioList } from '../';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import { supportedNativeCurrencies } from '@rainbow-me/references';
 
-const SPDCurrency = {
+export const SPDCurrency = {
   alignment: 'left',
   assetLimit: 1,
   currency: 'SPD',

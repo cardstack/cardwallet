@@ -16,7 +16,7 @@ const LinkIcon = props => (
         <Path
           d="M12.093 39V27.858H0V12.073h12.093V0h15.815v12.073H40v15.785H27.908V39z"
           data-name="Union 19"
-          fill="#fff"
+          fill={props.fill || '#F8F7FA'}
         />
       </G>
       <G
