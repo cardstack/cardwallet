@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { ActivityIndicator } from 'react-native';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
@@ -11,6 +12,7 @@ import {
   Text,
   Button,
   TransactionConfirmationSheet,
+  CenteredContainer,
 } from '@cardstack/components';
 import { MerchantInformation } from '@cardstack/types';
 import {
@@ -36,13 +38,24 @@ const PayMerchant = memo(() => {
     onStepChange,
     onSelectPrepaidCard,
     setInputValue,
+    onAmountNext,
+    onCancelConfirmation,
   } = usePayMerchant();
 
-  if (payStep === PAY_STEP.EDIT_AMOUNT) {
+  if (isLoading) {
+    return (
+      <CenteredContainer flex={1}>
+        <ActivityIndicator size="large" />
+      </CenteredContainer>
+    );
+  }
+
+  // Checking cards length to avoid keyboard flickring case user has no cards
+  if (payStep === PAY_STEP.EDIT_AMOUNT && !!prepaidCards.length) {
     return (
       <CustomAmountBody
         merchantInfoDID={merchantInfoDID}
-        onNextPress={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
+        onNextPress={onAmountNext}
         inputValue={inputValue}
         setInputValue={setInputValue}
         isLoading={isLoading}
@@ -51,13 +64,13 @@ const PayMerchant = memo(() => {
     );
   }
 
-  if (payStep === PAY_STEP.CONFIRMATION && prepaidCards.length > 0) {
+  if (payStep === PAY_STEP.CONFIRMATION) {
     return (
       <TransactionConfirmationSheet
         loading={isLoading}
         onConfirmLoading={onConfirmLoading}
         data={txSheetData}
-        onCancel={onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD)}
+        onCancel={onCancelConfirmation}
         onConfirm={onConfirm}
       />
     );

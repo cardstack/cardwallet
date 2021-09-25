@@ -3,7 +3,6 @@ import { Device } from '../device';
 import {
   getMerchantClaimTransactionDetails,
   getMerchantEarnedTransactionDetails,
-  parseMerchantPaymentDeepLinkUrl,
   shareRequestPaymentLink,
 } from '../merchant-utils';
 import {
@@ -96,22 +95,6 @@ describe('Merchant utils', () => {
         protocolFee: '0.0025 DAI',
         protocolFeeUsd: '$0.0025 USD',
         spendConversionRate: '$0.01 USD',
-      });
-    });
-  });
-
-  describe('Parse Merchant Payment deeplink url', () => {
-    const merchantPaymentDeepLink =
-      'cardwallet://pay/sokol/0x4721BeE9248389393460344Ff03f218Aee44a05c?amount=12300&currency=SPD';
-
-    it('Should return merchant payment info for the provided deeplink url', () => {
-      expect(
-        parseMerchantPaymentDeepLinkUrl(merchantPaymentDeepLink)
-      ).toStrictEqual({
-        amount: '12300',
-        currency: 'SPD',
-        merchantAddress: '0x4721BeE9248389393460344Ff03f218Aee44a05c',
-        network: 'sokol',
       });
     });
   });

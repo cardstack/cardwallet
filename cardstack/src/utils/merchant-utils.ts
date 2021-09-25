@@ -196,26 +196,3 @@ export function getMerchantEarnedTransactionDetails(
     ).nativeBalanceDisplay,
   };
 }
-
-export const parseMerchantPaymentDeepLinkUrl = (
-  deeplink: string
-): MerchantPaymentURLParams => {
-  const [merchantInfo, network] = deeplink.split('/').reverse();
-  const [merchantAddress, params] = merchantInfo.split('?');
-
-  // https://stackoverflow.com/questions/8648892/how-to-convert-url-parameters-to-a-javascript-object
-  const parsedParams = JSON.parse(
-    '{"' +
-      decodeURI(params)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/[=]/g, '":"') +
-      '"}'
-  );
-
-  return {
-    merchantAddress,
-    network,
-    ...parsedParams,
-  } as MerchantPaymentURLParams;
-};
