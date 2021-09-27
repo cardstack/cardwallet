@@ -9,7 +9,7 @@ import {
   PrepaidCardType,
   TransactionConfirmationType,
 } from '@cardstack/types';
-import { getSafeData } from '@cardstack/services';
+import { getSafeData, syncPrepaidCardFaceValue } from '@cardstack/services';
 import { useWorker } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -109,8 +109,11 @@ export const usePaymentMerchantUniversalLink = () => {
       // resets signed provider and web3 instance to kill poller
       await HDProvider.reset();
 
-      // refetch all assets to update prepaid cards - ToDo: update this with another mechanism that sync specific prepaid card only
-      fetchAssetsBalancesAndPrices();
+      // update prepaidcard facevalue almost instantly
+      await syncPrepaidCardFaceValue(prepaidCardAddress);
+
+      // refetch all assets to sync
+      await fetchAssetsBalancesAndPrices();
     },
     [merchantAddress, prepaidCards.length]
   );
