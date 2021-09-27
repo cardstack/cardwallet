@@ -1,76 +1,187 @@
-import React from 'react';
-import { StatusBar } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { FlatList } from 'react-native';
+import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import {
   Button,
-  CenteredContainer,
   Container,
+  PrepaidCard,
+  ScrollView,
   Text,
 } from '@cardstack/components';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
+import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
+
+interface Card {
+  amount: number;
+  isSelected: boolean;
+}
+
+const TopContent = () => {
+  return (
+    <>
+      <Text fontSize={26} color="white">
+        Buy a{' '}
+        <Text fontSize={26} color="teal">
+          Prepaid Card
+        </Text>{' '}
+        via Apple Pay to get started
+      </Text>
+    </>
+  );
+};
+
+const CardContent = ({
+  onPress,
+  amount,
+  isSelected,
+}: {
+  onPress: () => void;
+  amount: number;
+  isSelected: boolean;
+}) => {
+  return (
+    <Button
+      borderColor={isSelected ? 'buttonPrimaryBorder' : 'buttonSecondaryBorder'}
+      variant={isSelected ? 'squareSelected' : 'square'}
+      width="100%"
+      marginRight={4}
+      marginBottom={3}
+      borderRadius={4}
+      onPress={onPress}
+    >
+      <Text
+        color={isSelected ? 'black' : 'white'}
+        fontSize={28}
+        textAlign="center"
+      >
+        ${amount}
+      </Text>
+      <Text
+        color={isSelected ? 'black' : 'white'}
+        fontSize={14}
+        textAlign="center"
+        fontWeight="500"
+      >
+        {`\n`}
+        {amount * 100} SPEND
+      </Text>
+    </Button>
+  );
+};
+
+const Subtitle = ({ text }: { text: string }) => {
+  return (
+    <Text
+      fontSize={13}
+      color="underlineGray"
+      weight="bold"
+      marginBottom={5}
+      letterSpacing={0.4}
+    >
+      {text}
+    </Text>
+  );
+};
 
 const BuyPrepaidCard = () => {
-  const { navigate } = useNavigation();
+  const cardsList: Card[] = [
+    { amount: 5, isSelected: true },
+    { amount: 10, isSelected: false },
+    { amount: 25, isSelected: false },
+    { amount: 50, isSelected: false },
+  ];
 
-  const onPress = (amount?: number) => {
-    navigate(Routes.ADD_CASH_FLOW, {
-      params: !isNaN(amount || 0) ? { amount } : null,
-      screen: Routes.ADD_CASH_SCREEN_NAVIGATOR,
-    });
-  };
+  const network = useRainbowSelector(state => state.settings.network);
+  const address = getAddressByNetwork('prepaidCardManager', network);
+  const [amount, setAmount] = useState<number>(5);
+  const [cards, setCards] = useState<Card[]>(cardsList);
 
-  const onSkip = () => {
-    navigate(Routes.SWIPE_LAYOUT, {
-      screen: Routes.WALLET_SCREEN,
-    });
-  };
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
+
+  // const { results } = useInventories();
+
+  // const onSkip = () => {
+  //   navigate(Routes.SWIPE_LAYOUT, {
+  //     screen: Routes.WALLET_SCREEN,
+  //   });
+  // };
+
+  const onSelectCardCall = useCallback(
+    (item, index) => {
+      setAmount(item.amount);
+
+      const modifiedCards = cards.map(card => {
+        return { ...card, isSelected: false };
+      });
+
+      modifiedCards[index].isSelected = true;
+      setCards(modifiedCards);
+    },
+    [cards]
+  );
+
+  const renderItem = useCallback(
+    ({ item, index }) => (
+      <CardContent onPress={() => onSelectCardCall(item, index)} {...item} />
+    ),
+    [onSelectCardCall]
+  );
 
   return (
-    <CenteredContainer
-      backgroundColor="backgroundBlue"
-      height="100%"
-      width="100%"
-      flex={1}
-      padding={5}
-    >
-      <StatusBar barStyle="light-content" />
-      <Container
-        height={350}
-        alignItems="center"
-        width="100%"
-        justifyContent="space-between"
-      >
-        <Text fontSize={26} color="white">
-          Buy a Prepaid Card via Apple Pay to get started
-        </Text>
-        <Container width="100%">
-          <Container
-            flexDirection="row"
-            justifyContent="space-between"
-            width="100%"
-          >
-            {[25, 50, 75].map(amount => (
-              <Button
-                borderColor="buttonSecondaryBorder"
-                onPress={() => onPress(amount)}
-                variant="square"
-              >
-                ${amount}
-              </Button>
-            ))}
-          </Container>
-          <Button
-            variant="primary"
-            marginTop={5}
-            borderColor="buttonSecondaryBorder"
-            onPress={onPress}
-          >
-            Custom Amount
-          </Button>
-        </Container>
-        <Button onPress={onSkip}>Skip</Button>
+    <Container backgroundColor="backgroundBlue" flex={1}>
+      <Container marginTop={18} padding={4}>
+        <TopContent />
       </Container>
-    </CenteredContainer>
+      <ScrollView padding={5} flex={10}>
+        <Container width="100%" marginBottom={8}>
+          <Subtitle text="ENTER AMOUNT" />
+          <FlatList data={cards} renderItem={renderItem} numColumns={2} />
+        </Container>
+
+        <Container width="100%" marginBottom={16}>
+          <Subtitle text="PREVIEW" />
+          <PrepaidCard
+            networkName={network}
+            nativeCurrency={nativeCurrency}
+            currencyConversionRates={currencyConversionRates}
+            address={address}
+            issuer="Cardstack"
+            issuingToken=""
+            spendFaceValue={amount}
+            tokens={[]}
+            type="prepaid-card"
+            reloadable={false}
+            transferrable={false}
+            cardCustomization={{
+              background:
+                'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
+              issuerName: 'Cardstack',
+              patternColor: 'white',
+              patternUrl:
+                'https://app.cardstack.com/images/prepaid-card-customizations/pattern-5.svg',
+              textColor: 'black',
+            }}
+          />
+        </Container>
+      </ScrollView>
+      <Container
+        padding={8}
+        backgroundColor="grayButtonBackground"
+        justifyContent="center"
+      >
+        <ApplePayButton
+          disabled={true}
+          onDisabledPress={() => console.log('onDisabledPress')}
+          onSubmit={() => console.log('onSubmit')}
+        />
+      </Container>
+    </Container>
   );
 };
 

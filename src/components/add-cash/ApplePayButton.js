@@ -5,7 +5,9 @@ import Animated from 'react-native-reanimated';
 import { ButtonPressAnimation } from '../animations';
 import { Icon } from '../icons';
 import { Centered, InnerBorder } from '../layout';
+import { Container } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
+import { Text } from '@rainbow-me/components/text';
 import { position } from '@rainbow-me/styles';
 
 const AnimatedCenter = Animated.createAnimatedComponent(Centered);
@@ -38,6 +40,11 @@ const ApplePayButton = ({ disabled, onDisabledPress, onSubmit }) => {
           zIndex={1}
         >
           <Centered {...position.sizeAsObject('100%')}>
+            <Container marginBottom={1}>
+              <Text color="white" size={20}>
+                Pay with{' '}
+              </Text>
+            </Container>
             <Icon
               color={colors.white}
               flex={1}

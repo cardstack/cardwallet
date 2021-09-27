@@ -151,7 +151,7 @@ export default function ProfileMasthead({
     }
 
     if (ios) {
-      navigate(Routes.ADD_CASH_FLOW);
+      navigate(Routes.BUY_PREPAID_CARD);
     } else {
       navigate(Routes.WYRE_WEBVIEW_NAVIGATOR, {
         params: {
@@ -208,11 +208,9 @@ export default function ProfileMasthead({
           <Icon color="white" name="chevron-down" />
         </Container>
       </ButtonPressAnimation>
-      {addCashAvailable && (
-        <Container marginTop={4}>
-          <Button onPress={handlePressAddCash}>Add Funds</Button>
-        </Container>
-      )}
+      <Container marginTop={4}>
+        <Button onPress={handlePressAddCash}>Add Funds</Button>
+      </Container>
       <Container
         flexDirection="row"
         justifyContent="space-between"
