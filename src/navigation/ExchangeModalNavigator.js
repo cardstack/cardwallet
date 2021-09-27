@@ -3,7 +3,7 @@ import { useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard, View } from 'react-native';
-import { useValue } from 'react-native-redash';
+import { useValue } from 'react-native-redash/lib/module/v1';
 import { useMemoOne } from 'use-memo-one';
 import CurrencySelectModal from '../screens/CurrencySelectModal';
 import ModalScreen from '../screens/ModalScreen';

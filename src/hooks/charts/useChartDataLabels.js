@@ -1,6 +1,6 @@
 import { toFixedDecimals } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo } from 'react';
-import { useValue } from 'react-native-redash';
+import { useValue } from 'react-native-redash/lib/module/v1';
 import ChartTypes from '@rainbow-me/helpers/chartTypes';
 
 const formatPercentChange = (change = 0) => toFixedDecimals(change, 2);

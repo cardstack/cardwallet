@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Animated, { EasingNode } from 'react-native-reanimated';
-import { useTimingTransition } from 'react-native-redash';
+import { useTimingTransition } from 'react-native-redash/lib/module/v1';
 
 import { useInterval, useTimeout, useTransformOrigin } from '../../hooks';
 import { magicMemo } from '../../utils';
