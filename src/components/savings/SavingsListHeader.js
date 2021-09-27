@@ -1,7 +1,7 @@
 import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Animated, { Easing } from 'react-native-reanimated';
+import Animated, { EasingNode } from 'react-native-reanimated';
 import { toRad, useTimingTransition } from 'react-native-redash';
 import styled from 'styled-components';
 import CaretImageSource from '../../assets/family-dropdown-arrow.png';
@@ -42,7 +42,7 @@ const SavingsListHeader = ({
 
   const animation = useTimingTransition(isOpen, {
     duration: TokenFamilyHeaderAnimationDuration,
-    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+    easing: EasingNode.bezier(0.25, 0.1, 0.25, 1),
   });
   return (
     <ButtonPressAnimation

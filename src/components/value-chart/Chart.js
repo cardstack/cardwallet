@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, Linking } from 'react-native';
 import Animated, {
   cancelAnimation,
-  NewEasing,
+  EasingNode,
   repeat,
   useAnimatedStyle,
   useSharedValue,
@@ -83,7 +83,7 @@ const Overlay = styled(Animated.View).attrs({
 
 const rotationConfig = {
   duration: 500,
-  easing: NewEasing.linear,
+  easing: EasingNode.linear,
 };
 
 const timingConfig = {

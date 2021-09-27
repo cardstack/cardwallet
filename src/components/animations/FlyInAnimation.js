@@ -1,5 +1,5 @@
 import React from 'react';
-import Animated, { Easing } from 'react-native-reanimated';
+import Animated, { EasingNode } from 'react-native-reanimated';
 import { useTimingTransition } from 'react-native-redash';
 import styled from 'styled-components';
 import { interpolate } from './procs';
@@ -17,7 +17,7 @@ export default function FlyInAnimation({
 }) {
   const opacity = useTimingTransition(true, {
     duration,
-    easing: Easing.bezier(0.165, 0.84, 0.44, 1),
+    easing: EasingNode.bezier(0.165, 0.84, 0.44, 1),
   });
 
   const translateY = interpolate(opacity, {
