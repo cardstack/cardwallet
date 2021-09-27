@@ -1,7 +1,7 @@
 import { PrepaidCardSafe } from '@cardstack/cardpay-sdk';
 import { getSafeData } from '@cardstack/services';
 import store from '@rainbow-me/redux/store';
-import { DATA_UPDATE_A_PREPAID_SAFE } from '@rainbow-me/redux/data';
+import { DATA_UPDATE_PREPAIDCARDS } from '@rainbow-me/redux/data';
 import logger from 'logger';
 
 export const syncPrepaidCardFaceValue = async (address: string) => {
@@ -28,7 +28,7 @@ export const syncPrepaidCardFaceValue = async (address: string) => {
               : prepaidCard
           ),
         },
-        type: DATA_UPDATE_A_PREPAID_SAFE,
+        type: DATA_UPDATE_PREPAIDCARDS,
       });
     }
   } catch (error) {

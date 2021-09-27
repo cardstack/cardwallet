@@ -98,7 +98,7 @@ const DATA_ADD_NEW_SUBSCRIBER = 'data/DATA_ADD_NEW_SUBSCRIBER';
 const DATA_UPDATE_REFETCH_SAVINGS = 'data/DATA_UPDATE_REFETCH_SAVINGS';
 
 const DATA_CLEAR_STATE = 'data/DATA_CLEAR_STATE';
-export const DATA_UPDATE_A_PREPAID_SAFE = 'data/DATA_UPDATE_A_PREPAID_SAFE';
+export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
 
 // -- Actions ---------------------------------------- //
 export const dataLoadState = () => async (dispatch, getState) => {
@@ -744,7 +744,7 @@ export default (state = INITIAL_STATE, action) => {
       case DATA_ADD_NEW_SUBSCRIBER:
         draft.subscribers = action.payload;
         break;
-      case DATA_UPDATE_A_PREPAID_SAFE:
+      case DATA_UPDATE_PREPAIDCARDS:
         draft.prepaidCards = action.payload.prepaidCards;
         break;
       case DATA_CLEAR_STATE:
