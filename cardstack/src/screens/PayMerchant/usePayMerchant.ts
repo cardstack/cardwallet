@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { TransactionReceipt } from 'web3-eth';
-import { LayoutAnimation } from 'react-native';
+import { LayoutAnimation, InteractionManager } from 'react-native';
 import { getBlockTimestamp, mapPrepaidTxToNavigationParams } from './helpers';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
@@ -122,7 +122,7 @@ export const usePayMerchant = () => {
       }
 
       // Wait goBack action to navigate
-      setTimeout(() => {
+      InteractionManager.runAfterInteractions(() => {
         navigate(
           RainbowRoutes.EXPANDED_ASSET_SHEET,
           mapPrepaidTxToNavigationParams({
@@ -135,7 +135,7 @@ export const usePayMerchant = () => {
             prepaidCardCustomization: selectedPrepaidCard?.cardCustomization,
           })
         );
-      }, 1000);
+      });
     },
     [
       accountCurrency,

@@ -13,6 +13,7 @@ import { getSafeData } from '@cardstack/services';
 import { useWorker } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
 import { useAssetListData, useWallets } from '@rainbow-me/hooks';
 import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
@@ -103,10 +104,13 @@ export const usePaymentMerchantUniversalLink = () => {
         updatedSpendAmount
       );
 
+      onSuccess(receipt);
+
       // resets signed provider and web3 instance to kill poller
       await HDProvider.reset();
 
-      onSuccess(receipt);
+      // refetch all assets to update prepaid cards - ToDo: update this with another mechanism that sync specific prepaid card only
+      fetchAssetsBalancesAndPrices();
     },
     [merchantAddress, prepaidCards.length]
   );
