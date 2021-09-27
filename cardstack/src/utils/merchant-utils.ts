@@ -71,13 +71,6 @@ export const fetchMerchantInfoFromDID = async (
   }
 };
 
-interface MerchantPaymentURLParams {
-  merchantSafeID: string;
-  amount?: number;
-  network?: string;
-  currency?: string;
-}
-
 export const shareRequestPaymentLink = (
   address: string,
   paymentRequestLink: string
