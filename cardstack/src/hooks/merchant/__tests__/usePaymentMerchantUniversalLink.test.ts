@@ -34,6 +34,7 @@ jest.mock('@cardstack/models/safes-providers', () => ({
 
 jest.mock('@cardstack/services', () => ({
   getSafeData: jest.fn(),
+  syncPrepaidCardFaceValue: jest.fn(),
 }));
 
 jest.mock('@cardstack/utils', () => ({
@@ -57,6 +58,10 @@ jest.mock('@cardstack/models/hd-provider', () => ({
   HDProvider: () => ({
     reset: jest.fn(),
   }),
+}));
+
+jest.mock('@rainbow-me/redux/fallbackExplorer', () => ({
+  fetchAssetsBalancesAndPrices: () => jest.fn(),
 }));
 
 describe('usePaymentMerchantUniversalLink', () => {

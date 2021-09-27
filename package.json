@@ -40,6 +40,7 @@
     "install-all-no-flipper": "yarn setup && yarn install-pods-no-flipper",
     "install-bundle": "cd ios && bundle install && cd ..",
     "install-pods": "cd ios && bundle exec pod install --repo-update && cd ..",
+    "install-pods:m1": "cd ios && pod install --repo-update && cd ..",
     "install-pods-fast": "cd ios && bundle exec pod install && cd ..",
     "install-pods-no-flipper": "cd ios && bundle exec env SKIP_FLIPPER=true pod install --repo-update && cd ..",
     "ios": "react-native run-ios --simulator='iPhone 11'",
@@ -57,7 +58,8 @@
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
     "update-token-list": "./scripts/update-token-list.sh",
     "reset:cache": "yarn start --reset-cache",
-    "rebuild": "source $HOME/.nvm/nvm.sh; yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start",
+    "rebuild": "yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start",
+    "rebuild:m1": "yarn setup && yarn install-bundle && yarn install-pods:m1 && yarn build:ios && yarn start:clean",
     "codegen": "graphql-codegen"
   },
   "husky": {
