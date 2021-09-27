@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useAnimatedStyle } from 'react-native-reanimated';
+
 import ChartContext, { useGenerateValues } from '../../helpers/ChartContext';
 
 export default function ChartPathProvider({ data: providedData, children }) {
@@ -13,8 +14,7 @@ export default function ChartPathProvider({ data: providedData, children }) {
         { scale: values.dotScale.value },
       ],
     }),
-    [],
-    'dotStyle'
+    []
   );
   const [contextReanimatedValue, setContextValue] = useState({});
   const contextValue = useMemo(
