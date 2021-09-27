@@ -85,16 +85,14 @@ export default function ChartDateLabel({ chartTimeSharedValue }) {
   const ratio = useRatio('ChartDataLabel');
   const { colors } = useTheme();
 
-  const textStyle = useAnimatedStyle(() => {
-    return {
-      color:
-        ratio.value === 1
-          ? colors.blueGreyDark
-          : ratio.value < 1
-          ? colors.red
-          : colors.green,
-    };
-  }, [colors]);
+  const textStyle = useAnimatedStyle(() => ({
+    color:
+      ratio.value === 1
+        ? colors.blueGreyDark
+        : ratio.value < 1
+        ? colors.red
+        : colors.green,
+  }));
 
   return (
     <View style={{ overflow: 'hidden' }}>
