@@ -110,7 +110,6 @@ function setoriginalXYAccordingToPosition(
     // prevent the following error on android:
     // java.lang.RuntimeException: undefined is not an object (evaluating 'data.value[idx].originalX')
     // why data.value = [] sometimes onActive?
-    // eslint-disable-next-line no-console
     console.warn('No data available for chart', data.value.length, idx);
     return;
   }

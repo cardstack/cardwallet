@@ -1,6 +1,7 @@
 .env
 .env.*
 ios/Frameworks/GoogleService-Info.plist
+.eslintcache
 
 # OSX
 #
