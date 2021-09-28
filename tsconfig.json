@@ -86,10 +86,11 @@
   },
   "exclude": [
     "ios",
+    "node_modules",
     "patches/reanimated",
     "babel.config.js",
     "metro.config.js",
     "jest.config.js"
   ],
-  "include": ["node_modules/react-native-redash/lib/typescript/v1/index.d.ts"]
+  "files": ["node_modules/react-native-redash/lib/typescript/v1/index.d.ts"]
 }
