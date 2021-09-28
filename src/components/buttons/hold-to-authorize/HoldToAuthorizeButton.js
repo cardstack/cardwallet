@@ -6,7 +6,7 @@ import {
   State,
   TapGestureHandler,
 } from 'react-native-gesture-handler';
-import { Easing, timing, Value } from 'react-native-reanimated';
+import { EasingNode, timing, Value } from 'react-native-reanimated';
 
 import { useTheme } from '../../../context/ThemeContext';
 import BiometryTypes from '../../../helpers/biometryTypes';
@@ -22,7 +22,7 @@ const longPressProgressDurationMs = 450;
 const animate = (value, { duration = buttonScaleDurationMs, toValue }) =>
   timing(value, {
     duration,
-    easing: Easing.inOut(Easing.ease),
+    easing: EasingNode.inOut(EasingNode.ease),
     toValue,
   });
 

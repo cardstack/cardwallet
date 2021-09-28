@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   Clock,
-  Easing,
+  EasingNode,
   timing,
   Value,
 } from 'react-native-reanimated';
@@ -76,7 +76,7 @@ class AssetListItemSkeleton extends PureComponent {
 
     const config = {
       duration: new Value(1250),
-      easing: Easing.linear,
+      easing: EasingNode.linear,
       toValue: new Value(1),
     };
 

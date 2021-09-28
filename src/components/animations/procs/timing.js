@@ -1,6 +1,6 @@
 import Animated, {
   Clock,
-  Easing,
+  EasingNode,
   timing,
   Value,
 } from 'react-native-reanimated';
@@ -20,7 +20,7 @@ const timingProc = Animated.proc(
       },
       {
         duration,
-        easing: Easing.linear,
+        easing: EasingNode.linear,
         toValue,
       }
     )
@@ -41,7 +41,7 @@ export default function localTiming(params) {
   const { clock, duration, easing, from, to } = {
     clock: new Clock(),
     duration: 250,
-    easing: Easing.linear,
+    easing: EasingNode.linear,
     from: new Value(0),
     to: new Value(1),
     ...params,

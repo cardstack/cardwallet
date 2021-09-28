@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Animated, { SpringUtils } from 'react-native-reanimated';
-import { useSpringTransition } from 'react-native-redash';
+import { useSpringTransition } from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { useTimeout } from '../../hooks';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Animated from 'react-native-reanimated';
-import { useValues } from 'react-native-redash';
+import { useValues } from 'react-native-redash/lib/module/v1';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import TouchableBackdrop from '../components/TouchableBackdrop';

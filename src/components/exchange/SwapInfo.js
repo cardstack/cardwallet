@@ -4,7 +4,7 @@ import {
   bin,
   useSpringTransition,
   useTimingTransition,
-} from 'react-native-redash';
+} from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
 import { darkModeThemeColors } from '../../styles/colors';
 import { interpolate } from '../animations';

@@ -9,7 +9,7 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import Animated, {
   Clock,
   clockRunning,
-  Easing,
+  EasingNode,
   timing,
   Value,
 } from 'react-native-reanimated';
@@ -163,7 +163,7 @@ const ButtonPressAnimationProc = maybeProc(function (
         },
         {
           duration: durationVal,
-          easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+          easing: EasingNode.bezier(0.25, 0.46, 0.45, 0.94),
           toValue,
         }
       )
