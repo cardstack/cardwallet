@@ -1,6 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
@@ -9,7 +8,6 @@ import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component, useEffect } from 'react';
 import {
-  Alert,
   AppRegistry,
   AppState,
   Linking,
@@ -150,21 +148,6 @@ class App extends Component {
       Logger.sentry('✅ Wallet ready!');
       runKeychainIntegrityChecks();
       runWalletBackupStatusChecks();
-
-      const handleDynamicLink = link => {
-        if (link) {
-          handleDeepLink(link.url);
-        }
-      };
-
-      dynamicLinks().onLink(handleDynamicLink);
-
-      dynamicLinks()
-        .getInitialLink()
-        .then(link => {
-          handleDynamicLink(link);
-        })
-        .catch(err => Alert.alert(err));
     }
   }
 
@@ -191,10 +174,6 @@ class App extends Component {
     setTimeout(() => {
       this.onPushNotificationOpened(topic);
     }, WALLETCONNECT_SYNC_DELAY);
-  };
-
-  handleOpenLinkingURL = url => {
-    handleDeepLink(url);
   };
 
   onPushNotificationOpened = topic => {

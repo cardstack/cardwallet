@@ -6,9 +6,6 @@ import {
   walletConnectRemovePendingRedirect,
   walletConnectSetPendingRedirect,
 } from '../redux/walletconnect';
-import { Navigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
-import { parseQueryParams } from '@rainbow-me/utils';
 import logger from 'logger';
 
 export default function handleDeepLink(url) {
@@ -19,12 +16,6 @@ export default function handleDeepLink(url) {
       case 'wc': {
         const { uri } = qs.parse(urlObj.query.substring(1));
         handleWalletConnect(uri);
-        break;
-      }
-      case 'request': {
-        var params = parseQueryParams(urlObj.query);
-        //navigate to spend sheet, pass params to be ingested
-        Navigation.handleAction(Routes.SPEND_SHEET, { ...params });
         break;
       }
       default:
