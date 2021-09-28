@@ -4,19 +4,19 @@ import sentryUtils from './sentry';
 const Logger = {
   debug(...args) {
     if (__DEV__) {
-      console.debug(...args); // eslint-disable-line no-console
+      console.debug(...args);
     }
   },
 
   error(...args) {
     if (__DEV__) {
-      console.error(...args); // eslint-disable-line no-console
+      console.error(...args);
     }
   },
 
   log(...args) {
     if (__DEV__) {
-      console.log(...args); // eslint-disable-line no-console
+      console.log(...args);
     }
   },
 
@@ -33,12 +33,12 @@ const Logger = {
           return arg;
         }
       });
-      console.log(allArgs.length > 0 ? allArgs : allArgs[0]); // eslint-disable-line no-console
+      console.log(allArgs.length > 0 ? allArgs : allArgs[0]);
     }
   },
   sentry(...args) {
     if (__DEV__) {
-      console.log(...args); // eslint-disable-line no-console
+      console.log(...args);
     }
     if (args.length === 1 && typeof args[0] === 'string') {
       sentryUtils.addInfoBreadcrumb.apply(null, args);
@@ -49,7 +49,7 @@ const Logger = {
   },
   warn(...args) {
     if (__DEV__) {
-      console.warn(...args); // eslint-disable-line no-console
+      console.warn(...args);
     }
   },
 };

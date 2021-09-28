@@ -9,7 +9,6 @@ import { AddressField } from '../fields';
 import { Icon } from '../icons';
 import { Row } from '../layout';
 import { SheetHandle as SheetHandleAndroid } from '../sheet';
-import { Label } from '../text';
 import { Text } from '@cardstack/components';
 import { useClipboard, useDimensions } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
@@ -26,12 +25,6 @@ const AddressInputContainer = styled(Row).attrs({ align: 'center' })`
   background-color: ${({ theme: { colors } }) => colors.white};
   overflow: hidden;
   width: 100%;
-`;
-
-const AddressFieldLabel = styled(Label)`
-  color: ${({ theme: { colors } }) => colors.dark};
-  margin-right: 6;
-  opacity: 0.45;
 `;
 
 const SheetHandle = android

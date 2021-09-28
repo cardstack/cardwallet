@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { SectionList } from 'react-native';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
-import networkTypes from '../../helpers/networkTypes';
 import ActivityIndicator from '../ActivityIndicator';
 import Spinner from '../Spinner';
 import { ButtonPressAnimation } from '../animations';

@@ -20,19 +20,15 @@ import {
 import logger from 'logger';
 
 export default function useSwapInputs({
-  defaultInputAsset,
   isWithdrawal,
   maxInputBalance,
   nativeFieldRef,
   supplyBalanceUnderlying,
-  type,
 }: {
-  defaultInputAsset: string;
   isWithdrawal: boolean;
   maxInputBalance: string;
   nativeFieldRef: RefObject<TextInput>;
   supplyBalanceUnderlying: string;
-  type: string;
 }) {
   const dispatch = useDispatch();
   const { inputCurrency } = useSwapInputOutputTokens();

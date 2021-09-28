@@ -34,7 +34,6 @@ const PredictionNumber = styled(AnimatedNumber).attrs(
   flex-grow: 1;
 `;
 
-/* eslint-disable sort-keys */
 const steps = {
   'Monthly': {
     days: 30,
@@ -58,7 +57,6 @@ const steps = {
     days: 365 * 100,
   },
 };
-/* eslint-enable sort-keys */
 
 function useStepper(max, initial = 0) {
   const [step, setStep] = useState(initial);

@@ -11,7 +11,6 @@ import styled from 'styled-components';
 import Divider from '../components/Divider';
 import { Alert } from '../components/alerts';
 import { RequestVendorLogoIcon } from '../components/coin-icon';
-import { Centered, Row } from '../components/layout';
 import {
   Button,
   CenteredContainer,

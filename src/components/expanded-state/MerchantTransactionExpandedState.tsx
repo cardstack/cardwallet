@@ -204,6 +204,6 @@ export default function MerchantTransactionExpandedState(
         </Container>
       </SlackSheet>
     ),
-    [props.asset]
+    [earnedTxnData, network, props.asset, transactionData]
   );
 }

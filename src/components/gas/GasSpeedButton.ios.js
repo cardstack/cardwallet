@@ -35,11 +35,6 @@ const Container = styled(Column).attrs({
   width: 100%;
 `;
 
-const Label = styled(Text).attrs({
-  size: 'smsedium',
-  weight: 'semibold',
-})``;
-
 const ButtonLabel = styled(BorderlessButton).attrs(({ theme: { colors } }) => ({
   color: colors.appleBlue,
   hitSlop: 40,
@@ -359,8 +354,7 @@ const GasSpeedButton = ({
     customGasPriceInput,
     inputFocused,
     minGasPrice,
-    gasPricesAvailable?.slow?.value?.amount,
-    gasPricesAvailable?.fast?.value?.amount,
+    gasPricesAvailable,
     dontBlur,
     handleCustomGasBlur,
   ]);

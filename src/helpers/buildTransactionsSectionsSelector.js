@@ -15,8 +15,6 @@ import { ERC20Transaction } from '@cardstack/components';
 const contactsSelector = state => state.contacts;
 const requestsSelector = state => state.requests;
 const transactionsSelector = state => state.transactions;
-const focusedSelector = state => state.isFocused;
-const initializedSelector = state => state.initialized;
 
 const renderItemElement = renderItem =>
   function InternarSectionListRender(renderItemProps) {

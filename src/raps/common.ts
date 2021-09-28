@@ -1,7 +1,7 @@
 import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
 import { Trade } from '@uniswap/sdk';
-import { get, join, map } from 'lodash';
+import { get } from 'lodash';
 import { rapsAddOrUpdate } from '../redux/raps';
 import store from '../redux/store';
 import { depositCompound, swap, unlock, withdrawCompound } from './actions';

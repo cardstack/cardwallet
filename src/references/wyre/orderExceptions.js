@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 const errorCategories = {
   API_EXCEPTION: 'ApiException',
   GENERAL: 'GENERAL',

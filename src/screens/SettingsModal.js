@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Animated, InteractionManager, View } from 'react-native';
 import styled from 'styled-components';
 import { Modal } from '../components/modal';
-import ModalHeaderButton from '../components/modal/ModalHeaderButton';
 import {
   CurrencySection,
   LanguageSection,
@@ -178,11 +177,7 @@ export default function SettingsModal() {
           <Stack.Screen
             name="SettingsSection"
             options={{
-              headerTitle: () => (
-                <Text fontSize={18} fontWeight="700">
-                  Settings
-                </Text>
-              ),
+              headerTitle: 'Settings',
               headerLeft: null,
             }}
           >
@@ -219,11 +214,7 @@ export default function SettingsModal() {
             options={{
               cardStyle: { backgroundColor: colors.white, marginTop: 6 },
               cardStyleInterpolator,
-              headerTitle: () => (
-                <Text fontSize={18} fontWeight="700">
-                  Backup
-                </Text>
-              ),
+              headerTitle: 'Backup',
             }}
           />
           <Stack.Screen

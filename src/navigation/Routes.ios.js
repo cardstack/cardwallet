@@ -24,6 +24,7 @@ import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
 import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import WithdrawModal from '../screens/WithdrawModal';
+import ExchangeModalNavigator from './ExchangeModalNavigator';
 import { SwipeNavigator } from './SwipeNavigator';
 import {
   backupSheetConfig,
@@ -46,7 +47,6 @@ import {
 import { nativeStackConfig } from './nativeStackConfig';
 import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
-import { ExchangeModalNavigator } from './index';
 import {
   linking,
   useCardstackGlobalScreens,

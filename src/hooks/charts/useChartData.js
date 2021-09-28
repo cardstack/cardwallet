@@ -2,7 +2,6 @@ import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { disableCharts } from '../../config/debug';
 import { chartsUpdateChartType, DEFAULT_CHART_TYPE } from '../../redux/charts';
 import { daysFromTheFirstTx } from '../../utils/ethereumUtils';
 import useAsset from '../useAsset';

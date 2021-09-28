@@ -136,6 +136,8 @@ export const PinnedHiddenItemOptionProvider = ({
 
       setReady(true);
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { selected, pinned, hidden } = value;

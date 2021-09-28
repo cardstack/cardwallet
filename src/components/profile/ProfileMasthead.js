@@ -1,5 +1,5 @@
 import { toLower } from 'lodash';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useDispatch } from 'react-redux';
 

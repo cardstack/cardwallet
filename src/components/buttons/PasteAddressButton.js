@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text } from '../text';
-import MiniButton from './MiniButton';
 import { Button } from '@cardstack/components';
 import { checkIsValidAddressOrDomain } from '@rainbow-me/helpers/validators';
 import { useClipboard, useInvalidPaste } from '@rainbow-me/hooks';

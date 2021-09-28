@@ -145,7 +145,6 @@ export async function checkIfDisabled(elementId) {
     await element(by.id(elementId)).tap();
     return Promise.reject();
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.log(e);
     return Promise.resolve();
   }
