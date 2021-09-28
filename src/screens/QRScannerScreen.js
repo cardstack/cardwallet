@@ -1,7 +1,6 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
-import Animated, { useCode } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { DiscoverSheet } from '../components/discover-sheet';
 import { BackButton, Header, HeaderHeight } from '../components/header';
@@ -23,13 +22,8 @@ import useExperimentalFlag, {
 } from '@rainbow-me/config/experimentalHooks';
 import { useHeight, useWalletConnectConnections } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-import { scrollPosition } from '@rainbow-me/navigation/ScrollPagerWrapper';
 import Routes from '@rainbow-me/routes';
 import { shadow } from '@rainbow-me/styles';
-
-const { call, greaterThan, onChange } = Animated;
-
-const ENABLING_CAMERA_OFFSET = 1.01;
 
 const Background = styled.View`
   background-color: black;
@@ -38,25 +32,9 @@ const Background = styled.View`
   width: 100%;
 `;
 
-function useFocusFromSwipe() {
-  const [isFocused, setIsFocused] = useState(false);
-  useCode(
-    () =>
-      onChange(
-        greaterThan(scrollPosition, ENABLING_CAMERA_OFFSET),
-        call([scrollPosition], ([pos]) =>
-          setIsFocused(pos > ENABLING_CAMERA_OFFSET)
-        )
-      ),
-    []
-  );
-  return isFocused;
-}
-
 const QRScannerScreen = () => {
   const discoverSheetAvailable = useExperimentalFlag(DISCOVER_SHEET);
-  const isFocusedIOS = useFocusFromSwipe();
-  const isFocusedAndroid = useIsFocused();
+  const isFocused = useIsFocused();
   const [sheetHeight] = useHeight(240);
   const [initializeCamera, setInitializeCamera] = useState(ios ? true : false);
   const { navigate } = useNavigation();
@@ -66,14 +44,22 @@ const QRScannerScreen = () => {
     walletConnectDisconnectAllByDappName,
   } = useWalletConnectConnections();
 
+  const [cameraVisible, setCameraVisible] = useState();
+
   const handlePressBackButton = useCallback(
     () => navigate(Routes.WALLET_SCREEN),
     [navigate]
   );
 
+  const dsRef = useRef();
+  useEffect(
+    () => dsRef.current?.addOnCrossMagicBorderListener(setCameraVisible),
+    []
+  );
+
   useEffect(() => {
-    isFocusedAndroid && !initializeCamera && setInitializeCamera(true);
-  }, [initializeCamera, isFocusedAndroid]);
+    cameraVisible && !initializeCamera && setInitializeCamera(true);
+  }, [initializeCamera, cameraVisible]);
 
   const handlePressActionSheet = useCallback(
     ({ dappName, index }) => {
@@ -95,15 +81,18 @@ const QRScannerScreen = () => {
         />
         <EmulatorPasteUriButton />
       </Header>
-      {discoverSheetAvailable && ios ? <DiscoverSheet /> : null}
+      {discoverSheetAvailable && ios ? <DiscoverSheet ref={dsRef} /> : null}
       <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
         <Background />
-        <CameraDimmer>
+        <CameraDimmer cameraVisible={cameraVisible}>
           {initializeCamera && (
             <QRCodeScanner
               contentPositionBottom={sheetHeight + HeaderHeight}
+              // contentPositionTop={HeaderHeight}
+              // enableCamera={ios ? isFocusedIOS : isFocusedAndroid}
               contentPositionTop={HeaderHeight}
-              enableCamera={ios ? isFocusedIOS : isFocusedAndroid}
+              dsRef={dsRef}
+              enableCamera={isFocused}
             />
           )}
         </CameraDimmer>
@@ -111,7 +100,7 @@ const QRScannerScreen = () => {
         <Container bottom={0} position="absolute" width="100%">
           {discoverSheetAvailable ? (
             android ? (
-              <DiscoverSheet />
+              <DiscoverSheet ref={dsRef} />
             ) : null
           ) : (
             <Sheet
