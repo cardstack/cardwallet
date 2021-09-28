@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components';
 import { DiscoverSheet } from '../components/discover-sheet';
@@ -44,22 +44,14 @@ const QRScannerScreen = () => {
     walletConnectDisconnectAllByDappName,
   } = useWalletConnectConnections();
 
-  const [cameraVisible, setCameraVisible] = useState();
-
   const handlePressBackButton = useCallback(
     () => navigate(Routes.WALLET_SCREEN),
     [navigate]
   );
 
-  const dsRef = useRef();
-  useEffect(
-    () => dsRef.current?.addOnCrossMagicBorderListener(setCameraVisible),
-    []
-  );
-
   useEffect(() => {
-    cameraVisible && !initializeCamera && setInitializeCamera(true);
-  }, [initializeCamera, cameraVisible]);
+    isFocused && !initializeCamera && setInitializeCamera(true);
+  }, [initializeCamera, isFocused]);
 
   const handlePressActionSheet = useCallback(
     ({ dappName, index }) => {
@@ -81,17 +73,14 @@ const QRScannerScreen = () => {
         />
         <EmulatorPasteUriButton />
       </Header>
-      {discoverSheetAvailable && ios ? <DiscoverSheet ref={dsRef} /> : null}
+      {discoverSheetAvailable && ios ? <DiscoverSheet /> : null}
       <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
         <Background />
-        <CameraDimmer cameraVisible={cameraVisible}>
+        <CameraDimmer>
           {initializeCamera && (
             <QRCodeScanner
               contentPositionBottom={sheetHeight + HeaderHeight}
-              // contentPositionTop={HeaderHeight}
-              // enableCamera={ios ? isFocusedIOS : isFocusedAndroid}
               contentPositionTop={HeaderHeight}
-              dsRef={dsRef}
               enableCamera={isFocused}
             />
           )}
@@ -100,7 +89,7 @@ const QRScannerScreen = () => {
         <Container bottom={0} position="absolute" width="100%">
           {discoverSheetAvailable ? (
             android ? (
-              <DiscoverSheet ref={dsRef} />
+              <DiscoverSheet />
             ) : null
           ) : (
             <Sheet

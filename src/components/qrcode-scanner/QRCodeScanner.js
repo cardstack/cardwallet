@@ -21,12 +21,12 @@ const EmulatorCameraFallback = styled(ImgixImage).attrs({
 export default function QRCodeScanner({
   contentPositionBottom,
   contentPositionTop,
-  enableCamera: isEnabledByFocus,
+  enableCamera,
 }) {
   const [error, showError] = useBooleanState();
   const [isInitialized, setInitialized] = useBooleanState();
   const { result: isEmulator } = useIsEmulator();
-  const { isCameraAuthorized, onScan } = useScanner(isEnabledByFocus);
+  const { isCameraAuthorized, onScan } = useScanner(enableCamera);
 
   const showErrorMessage = error && !isInitialized;
   const showCrosshair = !error && !showErrorMessage;
@@ -36,24 +36,18 @@ export default function QRCodeScanner({
     if (ios || !isInitialized) {
       return;
     }
-    if (isEnabledByFocus) {
+    if (enableCamera) {
       cameraRef.current?.resumePreview?.();
     } else {
       cameraRef.current?.pausePreview?.();
     }
-  }, [isEnabledByFocus, isInitialized]);
-  console.log(
-    'isEnabledByFocus--',
-    isEnabledByFocus,
-    isInitialized,
-    (isEnabledByFocus || android) && !isEmulator
-  );
+  }, [enableCamera, isInitialized]);
 
   return (
     <Container backgroundColor="black">
       <CenteredContainer backgroundColor="white" height="100%">
-        {isEnabledByFocus && isEmulator && <EmulatorCameraFallback />}
-        {(isEnabledByFocus || android) && !isEmulator && (
+        {enableCamera && isEmulator && <EmulatorCameraFallback />}
+        {(enableCamera || android) && !isEmulator && (
           <RNCamera
             captureAudio={false}
             notAuthorizedView={QRCodeScannerNeedsAuthorization}
@@ -62,6 +56,14 @@ export default function QRCodeScanner({
             onMountError={showError}
             pendingAuthorizationView={null}
             ref={cameraRef}
+            style={{
+              height: '100%',
+              bottom: 0,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            }}
           />
         )}
       </CenteredContainer>
