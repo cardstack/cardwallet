@@ -23,7 +23,7 @@ import {
 } from '../components/exchange';
 import { FloatingPanel, FloatingPanels } from '../components/floating-panels';
 import { GasSpeedButton } from '../components/gas';
-import { Centered, KeyboardFixedOpenLayout } from '../components/layout';
+import { KeyboardFixedOpenLayout } from '../components/layout';
 import { CenteredContainer, Container } from '@cardstack/components';
 import ExchangeModalTypes from '@rainbow-me/helpers/exchangeModalTypes';
 import isKeyboardOpen from '@rainbow-me/helpers/isKeyboardOpen';
@@ -139,12 +139,10 @@ export default function ExchangeModal({
     updateNativeAmount,
     updateOutputAmount,
   } = useSwapInputs({
-    defaultInputAsset,
     isWithdrawal,
     maxInputBalance,
     nativeFieldRef,
     supplyBalanceUnderlying,
-    type,
   });
 
   const {

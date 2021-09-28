@@ -101,7 +101,7 @@ const QRCode = ({
     });
 
     return dots;
-  }, [ecl, rectangleSize, size, value]);
+  }, [ecl, size, value]);
 
   const logoPosition = size / 2 - logoSize / 2 - logoMargin;
   const logoWrapperSize = rectangleSize + logoMargin * 2;

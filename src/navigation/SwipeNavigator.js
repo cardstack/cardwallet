@@ -1,7 +1,7 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React from 'react';
 import { FlexItem } from '../components/layout';
-import { NetworkToast, OfflineToast } from '../components/toasts';
+import { NetworkToast } from '../components/toasts';
 import { useAccountSettings, useCoinListEdited } from '../hooks';
 import ProfileScreen from '../screens/ProfileScreen';
 import QRScannerScreen from '../screens/QRScannerScreen';

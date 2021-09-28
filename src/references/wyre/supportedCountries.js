@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 export const supportedCountries = {
   AU: {
     emojiName: 'flag_australia',

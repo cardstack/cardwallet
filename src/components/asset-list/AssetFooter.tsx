@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-use-before-define
 import React from 'react';
 import { LayoutAnimation } from 'react-native';
 import { Button, Container } from '@cardstack/components';

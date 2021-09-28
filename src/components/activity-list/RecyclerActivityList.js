@@ -6,7 +6,6 @@ import {
   RecyclerListView,
 } from 'recyclerlistview';
 import StickyContainer from 'recyclerlistview/dist/reactnative/core/StickyContainer';
-import styled from 'styled-components';
 import TransactionStatusTypes from '../../helpers/transactionStatusTypes';
 import { buildTransactionUniqueIdentifier } from '../../helpers/transactions';
 import {
@@ -20,11 +19,7 @@ import { ProfileMasthead } from '../profile';
 import ActivityListEmptyState from './ActivityListEmptyState';
 import ActivityListHeader from './ActivityListHeader';
 import LoadingState from './LoadingState';
-import {
-  Container,
-  ERC20Transaction,
-  TransactionType,
-} from '@cardstack/components';
+import { Container, ERC20Transaction } from '@cardstack/components';
 
 const ViewTypes = {
   COMPONENT_HEADER: 0,
@@ -33,12 +28,6 @@ const ViewTypes = {
   ROW: 3,
   SWAPPED_ROW: 4,
 };
-
-const Wrapper = styled.View`
-  flex: 1;
-  overflow: hidden;
-  width: 100%;
-`;
 
 const hasRowChanged = (r1, r2) => {
   if (

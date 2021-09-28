@@ -29,8 +29,6 @@ const FALLBACK_EXPLORER_SET_HANDLERS =
 const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
   'explorer/FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER';
 
-const COINGECKO_IDS_ENDPOINT =
-  'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum';
 const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
 const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;

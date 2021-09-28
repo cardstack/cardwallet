@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 export default {
   hour: 'h',
   day: 'd',
@@ -7,4 +6,3 @@ export default {
   year: 'y',
   max: 'a',
 };
-/* eslint-enable sort-keys */

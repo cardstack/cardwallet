@@ -195,15 +195,12 @@ export default function CurrencySelectModal() {
     );
   }, [searchQuery, startQueryDebounce, stopQueryDebounce]);
 
-  const handleFavoriteAsset = useCallback(
-    (asset, isFavorited) => {
-      setAssetsToFavoriteQueue(prevFavoriteQueue => ({
-        ...prevFavoriteQueue,
-        [asset.address]: isFavorited,
-      }));
-    },
-    [type]
-  );
+  const handleFavoriteAsset = useCallback((asset, isFavorited) => {
+    setAssetsToFavoriteQueue(prevFavoriteQueue => ({
+      ...prevFavoriteQueue,
+      [asset.address]: isFavorited,
+    }));
+  }, []);
 
   const handleSelectAsset = useCallback(
     item => {
@@ -214,14 +211,7 @@ export default function CurrencySelectModal() {
       dangerouslyGetState().index = 1;
       navigate(Routes.MAIN_EXCHANGE_SCREEN);
     },
-    [
-      setPointerEvents,
-      onSelectCurrency,
-      searchQueryForSearch,
-      dangerouslyGetState,
-      navigate,
-      type,
-    ]
+    [setPointerEvents, onSelectCurrency, dangerouslyGetState, navigate]
   );
 
   const itemProps = useMemo(

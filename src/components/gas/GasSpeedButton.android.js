@@ -416,8 +416,7 @@ const GasSpeedButton = ({
     customGasPriceInput,
     inputFocused,
     minGasPrice,
-    gasPricesAvailable?.slow?.value?.amount,
-    gasPricesAvailable?.fast?.value?.amount,
+    gasPricesAvailable,
     dontBlur,
     handleCustomGasBlur,
   ]);

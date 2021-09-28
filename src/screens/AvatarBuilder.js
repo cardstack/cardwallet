@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Animated from 'react-native-reanimated';
-import { useValues } from 'react-native-redash/lib/module/v1';
+import Animated, { spring } from 'react-native-reanimated';
+import { useValues } from 'react-native-redash';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import TouchableBackdrop from '../components/TouchableBackdrop';
@@ -32,8 +32,7 @@ const SheetContainer = styled(Column)`
 `;
 
 const springTo = (node, toValue) =>
-  // eslint-disable-next-line import/no-named-as-default-member
-  Animated.spring(node, {
+  spring(node, {
     damping: 38,
     mass: 1,
     overshootClamping: false,

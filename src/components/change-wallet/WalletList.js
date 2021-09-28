@@ -1,11 +1,5 @@
 import { get, isEmpty } from 'lodash';
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Transition, Transitioning } from 'react-native-reanimated';
 import styled from 'styled-components';
@@ -13,7 +7,6 @@ import styled from 'styled-components';
 import networkTypes from '../../helpers/networkTypes';
 import WalletTypes from '../../helpers/walletTypes';
 import { useAccountSettings } from '../../hooks';
-import { address } from '../../utils/abbreviations';
 import Divider from '../Divider';
 import { EmptyAssetList } from '../asset-list';
 import AddressRow from './AddressRow';

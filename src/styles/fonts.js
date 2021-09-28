@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 const font = {};
 
 font.family = {

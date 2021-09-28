@@ -36,7 +36,7 @@ export default function ChartContextButton({ asset, color }) {
         ethereumUtils.openTokenEtherscanURL(asset?.address);
       }
     },
-    [asset?.address, setHiddenCoins, setPinnedCoins]
+    [asset, setHiddenCoins, setPinnedCoins]
   );
 
   const options = useMemo(
@@ -46,7 +46,7 @@ export default function ChartContextButton({ asset, color }) {
       ...(asset?.address === 'eth' ? [] : ['🔍 View on Etherscan']),
       ...(ios ? [lang.t('wallet.action.cancel')] : []),
     ],
-    [asset?.address, currentAction]
+    [asset, currentAction]
   );
 
   return (

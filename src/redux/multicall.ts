@@ -19,7 +19,6 @@ const CALL_CHUNK_SIZE = 500;
 export interface MulticallState {
   listeners: {
     // on a per-chain basis
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [chainId in ChainId]?: {
       // stores how many listeners there are for each call key
       [callKey: string]: number;
@@ -27,7 +26,6 @@ export interface MulticallState {
   };
 
   results: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     [chainId in ChainId]?: {
       [callKey: string]: {
         data?: string | null;

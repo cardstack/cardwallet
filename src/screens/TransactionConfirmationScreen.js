@@ -301,8 +301,6 @@ const TransactionConfirmationScreen = () => {
           await dispatch(walletConnectSendStatus(peerId, requestId, null));
           dispatch(removeRequest(requestId));
         }
-        const rejectionType =
-          method === SEND_TRANSACTION ? 'transaction' : 'signature';
       }, 300);
     } catch (error) {
       logger.log('error while handling cancel request', error);
@@ -313,7 +311,6 @@ const TransactionConfirmationScreen = () => {
     callback,
     closeScreen,
     dispatch,
-    method,
     peerId,
     removeRequest,
     requestId,

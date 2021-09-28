@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, StatusBar } from 'react-native';
-import logo from '../../cardstack/src/assets/cardstackLogo.png';
+import { StatusBar } from 'react-native';
 import {
   fetchUserDataFromCloud,
   isCloudBackupAvailable,
@@ -13,7 +12,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
-import { useHideSplashScreen, useInitializeWallet } from '@rainbow-me/hooks';
+import { useHideSplashScreen } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
@@ -22,8 +21,6 @@ export default function WelcomeScreen() {
   const { navigate, replace } = useNavigation();
   const hideSplashScreen = useHideSplashScreen();
   const [userData, setUserData] = useState(null);
-  const initializeWallet = useInitializeWallet();
-  const [creatingWallet, setCreatingWallet] = useState(false);
 
   useEffect(() => {
     const initialize = async () => {
@@ -45,17 +42,11 @@ export default function WelcomeScreen() {
   }, [hideSplashScreen]);
 
   const onCreateWallet = useCallback(async () => {
-    // setCreatingWallet(true);
-
-    // await initializeWallet();
-
     replace(Routes.SWIPE_LAYOUT, {
       params: { emptyWallet: true },
       screen: Routes.WALLET_SCREEN,
     });
-
-    // setCreatingWallet(false);
-  }, [navigate, initializeWallet]);
+  }, [replace]);
 
   const showRestoreSheet = useCallback(() => {
     navigate(Routes.RESTORE_SHEET, {
@@ -82,15 +73,10 @@ export default function WelcomeScreen() {
         </Text>
       </CenteredContainer>
       <Container height={118} justifyContent="space-between" marginBottom="24">
-        <Button
-          disabled={creatingWallet}
-          onPress={onCreateWallet}
-          testID="new-wallet-button"
-        >
+        <Button onPress={onCreateWallet} testID="new-wallet-button">
           Create a new account
         </Button>
         <Button
-          disabled={creatingWallet}
           onPress={showRestoreSheet}
           testID="already-have-wallet-button"
           variant="primary"

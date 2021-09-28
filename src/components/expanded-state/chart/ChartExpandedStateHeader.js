@@ -58,9 +58,7 @@ export default function ChartExpandedStateHeader({
 }) {
   const { colors } = useTheme();
   const color = givenColors || colors.dark;
-  const tokens = useMemo(() => {
-    return isPool ? asset.tokens : [asset];
-  }, [asset, isPool]);
+
   const { nativeCurrency } = useAccountSettings();
   const tabularNums = useTabularNumsWhileScrubbing(isScrubbing);
 

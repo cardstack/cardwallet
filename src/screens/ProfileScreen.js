@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { ENABLE_PAYMENTS } from '../../cardstack/src/constants';
 
@@ -7,51 +7,32 @@ import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
 import { CopyToast, ToastPositionContainer } from '../components/toasts';
-import {
-  useAccountProfile,
-  useAccountSettings,
-  useAccountTransactions,
-  useRequests,
-} from '../hooks';
+import { useAccountProfile, useAccountSettings } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { Icon, TransactionList } from '@cardstack/components';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
 import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 
-const ACTIVITY_LIST_INITIALIZATION_DELAY = 5000;
-
 const ProfileScreenPage = styled(Page)`
   ${position.size('100%')};
   flex: 1;
 `;
 
-export default function ProfileScreen({ navigation }) {
-  const [activityListInitialized, setActivityListInitialized] = useState(false);
+const radiusWrapperStyle = {
+  alignItems: 'center',
+  height: 42,
+  justifyContent: 'center',
+  marginLeft: 5,
+  width: 42,
+};
+
+export default function ProfileScreen() {
   const isFocused = useIsFocused();
   const { navigate } = useNavigation();
 
-  const accountTransactions = useAccountTransactions(
-    activityListInitialized,
-    isFocused
-  );
-  const {
-    isLoadingTransactions: isLoading,
-    sections,
-
-    transactionsCount,
-  } = accountTransactions;
-  const { pendingRequestCount } = useRequests();
   const { network } = useAccountSettings();
   const { accountAddress } = useAccountProfile();
-
-  const isEmpty = !transactionsCount && !pendingRequestCount;
-
-  useEffect(() => {
-    setTimeout(() => {
-      setActivityListInitialized(true);
-    }, ACTIVITY_LIST_INITIALIZATION_DELAY);
-  }, []);
 
   const onPressBackButton = useCallback(() => navigate(Routes.WALLET_SCREEN), [
     navigate,
@@ -76,13 +57,7 @@ export default function ProfileScreen({ navigation }) {
           onPress={onPressSettings}
           opacityTouchable={false}
           radiusAndroid={42}
-          radiusWrapperStyle={{
-            alignItems: 'center',
-            height: 42,
-            justifyContent: 'center',
-            marginLeft: 5,
-            width: 42,
-          }}
+          radiusWrapperStyle={radiusWrapperStyle}
           testID="settings-button"
         >
           <Icon color="teal" iconSize="large" name="settings" />

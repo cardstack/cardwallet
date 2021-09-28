@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Alert, TouchableWithoutFeedback } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { TouchableWithoutFeedback } from 'react-native';
 import { Row } from '../layout';
 import ExchangeInput from './ExchangeInput';
 import { Text } from '@cardstack/components';
@@ -13,14 +13,12 @@ const ExchangeNativeField = (
     height,
     nativeAmount,
     nativeCurrency,
-    onFocus,
     setNativeAmount,
     testID,
   },
   ref
 ) => {
   const colorForAsset = useColorForAsset({ address });
-  const [isFocused, setIsFocused] = useState(false);
   const { mask, placeholder, symbol } = supportedNativeCurrencies[
     nativeCurrency
   ];
@@ -28,15 +26,6 @@ const ExchangeNativeField = (
   const handleFocusNativeField = useCallback(() => ref?.current?.focus(), [
     ref,
   ]);
-
-  const handleBlur = useCallback(() => setIsFocused(false), [setIsFocused]);
-  const handleFocus = useCallback(
-    event => {
-      setIsFocused(true);
-      if (onFocus) onFocus(event);
-    },
-    [onFocus, setIsFocused]
-  );
 
   const setTextStyle = useMemo(() => {
     const nativeAmountExists =
@@ -58,9 +47,7 @@ const ExchangeNativeField = (
           editable={editable}
           height={android ? height : 58}
           mask={mask}
-          onBlur={handleBlur}
           onChangeText={setNativeAmount}
-          onFocus={handleFocus}
           placeholder={placeholder}
           ref={ref}
           selectionColor={colorForAsset}
