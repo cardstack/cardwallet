@@ -1,6 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import lang from 'i18n-js';
 import { get } from 'lodash';
+import { requestNotifications } from 'react-native-permissions';
 import { Alert } from '../components/alerts';
 import { getLocal, saveLocal } from '../handlers/localstorage/common';
 import logger from 'logger';
@@ -16,29 +17,40 @@ export const getFCMToken = async () => {
   return fcmToken;
 };
 
+const getPermissionStatus = () => messaging().hasPermission();
+
 export const saveFCMToken = async () => {
   try {
-    await messaging().registerDeviceForRemoteMessages();
-
-    const fcmToken = await messaging().getToken();
-
-    if (fcmToken) {
-      saveLocal('rainbowFcmToken', { data: fcmToken });
+    const permissionStatus = await getPermissionStatus();
+    if (
+      permissionStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      permissionStatus === messaging.AuthorizationStatus.PROVISIONAL
+    ) {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+        saveLocal('rainbowFcmToken', { data: fcmToken });
+      }
     }
   } catch (error) {
     logger.log('error getting fcm token - cannot save', error);
   }
 };
 
-export const hasPermission = () => messaging().hasPermission();
-
-export const requestPermission = () => messaging().requestPermission();
+export const requestPermission = () => {
+  return new Promise((resolve, reject) => {
+    requestNotifications(['alert', 'sound', 'badge'])
+      .then(({ status }) => {
+        resolve(status === 'granted');
+      })
+      .catch(e => reject(e));
+  });
+};
 
 export const checkPushNotificationPermissions = async () => {
   return new Promise(async resolve => {
     let permissionStatus = null;
     try {
-      permissionStatus = await hasPermission();
+      permissionStatus = await getPermissionStatus();
     } catch (error) {
       logger.log(
         'Error checking if a user has push notifications permission',
@@ -46,7 +58,10 @@ export const checkPushNotificationPermissions = async () => {
       );
     }
 
-    if (permissionStatus !== messaging.AuthorizationStatus.AUTHORIZED) {
+    if (
+      permissionStatus !== messaging.AuthorizationStatus.AUTHORIZED &&
+      permissionStatus !== messaging.AuthorizationStatus.PROVISIONAL
+    ) {
       Alert({
         buttons: [
           {

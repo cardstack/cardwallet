@@ -111,13 +111,8 @@ class App extends Component {
       this.onRemoteNotification
     );
 
-    this.backgroundNotificationListener = messaging().onNotificationOpenedApp(
-      remoteMessage => {
-        setTimeout(() => {
-          const topic = get(remoteMessage, 'data.topic');
-          this.onPushNotificationOpened(topic);
-        }, WALLETCONNECT_SYNC_DELAY);
-      }
+    this.backgroundNotificationListener = messaging().setBackgroundMessageHandler(
+      this.onRemoteNotification
     );
 
     this.backgroundNotificationHandler = messaging().setBackgroundMessageHandler(
