@@ -1,22 +1,11 @@
 import React, { Fragment, useCallback, useState } from 'react';
 import { InteractionManager } from 'react-native';
-import styled from 'styled-components';
 
-import { InputMask, Text } from '@cardstack/components';
+import { InputMask } from '@cardstack/components';
 import { magicMemo } from '@rainbow-me/utils';
-
-const AndroidMaskWrapper = styled.View`
-  background-color: ${({ theme: { colors } }) => colors.white};
-  bottom: 0;
-  left: 68.7;
-  position: absolute;
-  right: 0;
-  top: 11.5;
-`;
 
 const ExchangeInput = (
   {
-    androidMaskMaxLength = 8,
     editable,
     keyboardAppearance = 'dark',
     mask = '[099999999999999999].[999999999999999999]',
@@ -28,7 +17,6 @@ const ExchangeInput = (
     placeholderTextColor = 'settingsGrayDark',
     size = 35,
     testID,
-    useCustomAndroidMask = false,
     value = '',
     weight = '700',
     ...props
@@ -84,11 +72,6 @@ const ExchangeInput = (
     [onFocus]
   );
 
-  let valueToRender = value;
-  if (value?.length > androidMaskMaxLength) {
-    valueToRender = value.substring(0, androidMaskMaxLength) + '...';
-  }
-
   return (
     <Fragment>
       <InputMask
@@ -113,19 +96,6 @@ const ExchangeInput = (
         testID={testID}
         value={value}
       />
-      {useCustomAndroidMask && !ref.current?.isFocused() && (
-        <AndroidMaskWrapper>
-          <Text
-            color="black"
-            size={size}
-            testID={testID}
-            weight={weight}
-            {...props}
-          >
-            {valueToRender}
-          </Text>
-        </AndroidMaskWrapper>
-      )}
     </Fragment>
   );
 };
