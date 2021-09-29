@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { Alert } from '../components/alerts';
-import handleDeepLink from '../handlers/deeplinks';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkPushNotificationPermissions } from '../model/firebase';
 import { useNavigation } from '../navigation/Navigation';
@@ -148,10 +147,6 @@ export default function useScanner(enabled) {
       const address = await addressUtils.getEthereumAddressFromQRCodeData(data);
       if (address) return handleScanAddress(address);
       if (deeplink.startsWith('wc:')) return handleScanWalletConnect(data);
-      if (deeplink.includes('cardpay.page.link')) {
-        haptics.notificationSuccess();
-        return handleDeepLink(deeplink.split('?link=')[1]);
-      }
       if (isValidMerchantPaymentUrl(deeplink)) {
         haptics.notificationSuccess();
         return Linking.openURL(deeplink);

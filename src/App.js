@@ -1,6 +1,4 @@
 import { ApolloProvider } from '@apollo/client';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
@@ -9,7 +7,6 @@ import { get } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component, useEffect } from 'react';
 import {
-  Alert,
   AppRegistry,
   AppState,
   Linking,
@@ -113,13 +110,8 @@ class App extends Component {
       this.onRemoteNotification
     );
 
-    this.backgroundNotificationListener = messaging().onNotificationOpenedApp(
-      remoteMessage => {
-        setTimeout(() => {
-          const topic = get(remoteMessage, 'data.topic');
-          this.onPushNotificationOpened(topic);
-        }, WALLETCONNECT_SYNC_DELAY);
-      }
+    this.backgroundNotificationListener = messaging().setBackgroundMessageHandler(
+      this.onRemoteNotification
     );
 
     this.backgroundNotificationHandler = messaging().setBackgroundMessageHandler(
@@ -150,21 +142,6 @@ class App extends Component {
       Logger.sentry('✅ Wallet ready!');
       runKeychainIntegrityChecks();
       runWalletBackupStatusChecks();
-
-      const handleDynamicLink = link => {
-        if (link) {
-          handleDeepLink(link.url);
-        }
-      };
-
-      dynamicLinks().onLink(handleDynamicLink);
-
-      dynamicLinks()
-        .getInitialLink()
-        .then(link => {
-          handleDynamicLink(link);
-        })
-        .catch(err => Alert.alert(err));
     }
   }
 
@@ -193,10 +170,6 @@ class App extends Component {
     }, WALLETCONNECT_SYNC_DELAY);
   };
 
-  handleOpenLinkingURL = url => {
-    handleDeepLink(url);
-  };
-
   onPushNotificationOpened = topic => {
     const { requestsForTopic } = this.props;
     const requests = requestsForTopic(topic);
@@ -209,33 +182,7 @@ class App extends Component {
     // For ex. incoming txs, etc.
   };
 
-  performBackgroundTasks = () => {
-    try {
-      // TEMP: When the app goes into the background, we wish to log the size of
-      //       Imgix's staticSignatureLru to benchmark performance.
-      //       https://github.com/rainbow-me/rainbow/pull/1529
-      const { capacity, size } = staticSignatureLRU;
-      const usage = size / capacity;
-      if (isNaN(usage)) {
-        throw new Error(`Expected number usage, encountered ${usage}.`);
-      }
-      Logger.log(
-        `[Imgix]: Cached signature buffer is at ${size}/${capacity} (${
-          usage * 100
-        }%) on application background.`
-      );
-    } catch (e) {
-      Logger.log(
-        `Failed to compute staticSignatureLRU usage on application background. (${e.message})`
-      );
-    }
-  };
-
   handleAppStateChange = async nextAppState => {
-    if (nextAppState === 'active') {
-      PushNotificationIOS.removeAllDeliveredNotifications();
-    }
-
     // Restore WC connectors when going from BG => FG
     if (this.state.appState === 'background' && nextAppState === 'active') {
       store.dispatch(walletConnectLoadState());
@@ -244,11 +191,6 @@ class App extends Component {
     this.setState({ appState: nextAppState });
 
     Logger.sentry(`App state change to ${nextAppState}`);
-
-    // After a successful state transition, perform state-defined operations:
-    if (nextAppState === 'background') {
-      this.performBackgroundTasks();
-    }
   };
 
   handleNavigatorRef = navigatorRef =>
