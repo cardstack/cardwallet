@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
-import { StatusBar } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 
 import { InitialRouteContext } from '../context/initialRoute';
 import AddCashSheet from '../screens/AddCashSheet';
@@ -140,6 +140,8 @@ function AddCashFlowNavigator() {
 function MainNavigator() {
   const initialRoute = useContext(InitialRouteContext);
   const cardstackMainScreens = useCardstackMainScreens(Stack);
+  // Temp disabling warning, but we definitely need to fix current behavior bc of android
+  LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
   return (
     <Stack.Navigator
