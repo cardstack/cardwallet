@@ -31,6 +31,7 @@ export default function QRCodeScanner({
   const showErrorMessage = error && !isInitialized;
   const showCrosshair = !error && !showErrorMessage;
   const cameraRef = useRef();
+
   useEffect(() => {
     if (ios || !isInitialized) {
       return;
