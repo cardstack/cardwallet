@@ -16,7 +16,7 @@
 #import <Sentry/Sentry.h>
 #import "RNSplashScreen.h"
 
-#if DEBUG
+#ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
 #import <FlipperKitUserDefaultsPlugin/FKUserDefaultsPlugin.h>
@@ -77,7 +77,7 @@ RCT_EXPORT_METHOD(hideAnimated) {
   // Developer support; define whether internal support has been declared for this build.
   NSLog(@"⚙️ Rainbow internals are %@.", RAINBOW_INTERNALS_ENABLED ? @"enabled" : @"disabled");
   
-  #if DEBUG
+  #ifdef FB_SONARKIT_ENABLED
     InitializeFlipper(application);
   #endif
 
