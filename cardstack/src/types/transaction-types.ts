@@ -142,8 +142,10 @@ export interface MerchantEarnedRevenueTransactionTypeTxn {
   customerSpend: any;
   customerSpendUsd: string;
   protocolFee: string;
-  protocolFeeUsd: string;
+  revenueCollected: string;
   spendConversionRate: string;
+  netEarned: string;
+  netEarnedNative: string;
 }
 
 export interface MerchantEarnedRevenueTransactionType {

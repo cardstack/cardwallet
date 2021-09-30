@@ -93,8 +93,10 @@ describe('Merchant utils', () => {
         customerSpend: '50',
         customerSpendUsd: '$0.50 USD',
         protocolFee: '0.0025 DAI',
-        protocolFeeUsd: '$0.0025 USD',
         spendConversionRate: '$0.01 USD',
+        revenueCollected: '0.499 DAI',
+        netEarned: '0.497 DAI',
+        netEarnedNative: '$0.497 USD',
       });
     });
   });
