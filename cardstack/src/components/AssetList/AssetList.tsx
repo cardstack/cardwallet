@@ -73,12 +73,12 @@ export const AssetList = (props: AssetListProps) => {
 
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
 
-  function toggleEditingPinnedHidden(type: PinnedHiddenSectionOption) {
+  function toggleEditingPinnedHidden(type?: PinnedHiddenSectionOption) {
     LayoutAnimation.configureNext(
       LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
     );
 
-    toggle(type);
+    type && toggle(type);
   }
 
   async function onRefresh() {
