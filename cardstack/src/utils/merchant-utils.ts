@@ -164,14 +164,22 @@ export function getMerchantEarnedTransactionDetails(
     prepaidCardPaymentTransaction.transaction?.merchantFeePayments[0]
       ?.feeCollected;
 
-  const feeCollectedDai = convertRawAmountToBalance(feeCollectedRaw, {
-    decimals: 18,
-    symbol,
-  }).display;
+  const feeCollectedDai = convertRawAmountToBalance(
+    feeCollectedRaw,
+    {
+      decimals: 18,
+      symbol,
+    },
+    3
+  ).display;
 
-  const feeCollectedUsd = convertAmountToNativeDisplay(
-    fromWei(feeCollectedRaw),
-    nativeCurrency
+  const netFormattedValue = convertRawAmountToBalance(
+    subtract(prepaidCardPaymentTransaction.issuingTokenAmount, feeCollectedRaw),
+    {
+      decimals: 18,
+      symbol: prepaidCardPaymentTransaction.issuingToken.symbol || undefined,
+    },
+    3
   );
 
   return {
@@ -181,11 +189,21 @@ export function getMerchantEarnedTransactionDetails(
       nativeCurrency
     ),
     protocolFee: feeCollectedDai,
-    protocolFeeUsd: feeCollectedUsd,
+    revenueCollected: convertRawAmountToBalance(
+      prepaidCardPaymentTransaction.issuingTokenAmount,
+      {
+        decimals: 18,
+        symbol: prepaidCardPaymentTransaction.issuingToken.symbol || undefined,
+      },
+      3
+    ).display,
     spendConversionRate: convertSpendForBalanceDisplay(
       '1',
       nativeCurrency,
       currencyConversionRates
     ).nativeBalanceDisplay,
+    netEarned: netFormattedValue.display || '',
+    netEarnedNative:
+      convertAmountToNativeDisplay(netFormattedValue.amount, 'USD') || '',
   };
 }

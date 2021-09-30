@@ -51,6 +51,11 @@ interface Section {
 interface EarnedTransactionProps
   extends MerchantEarnedRevenueTransactionTypeTxn {
   subText: string;
+  txRowProps: Asset;
+}
+
+interface ClaimedTransactionProps extends MerchantClaimTypeTxn {
+  txRowProps: Asset;
 }
 
 const CLAIMED_STATUS = 'Claimed';
@@ -68,7 +73,7 @@ const ItemDetail = ({
       marginBottom={10}
     >
       <Container flex={1}>
-        <Text color="blueText" fontSize={13} fontWeight="600">
+        <Text color="blueText" fontSize={13} fontWeight="600" marginTop={1}>
           {description}
         </Text>
       </Container>
@@ -103,40 +108,51 @@ const TransactionExchangeRateRow = ({ rate }: { rate: string }) => {
 const EarnedTransaction = (data: EarnedTransactionProps) => {
   const {
     customerSpend,
-    protocolFeeUsd,
+    customerSpendUsd,
     protocolFee,
-    subText,
+    revenueCollected,
     spendConversionRate,
+    netEarned,
+    netEarnedNative,
+    txRowProps,
   } = data;
   const earnedItems = [
     {
       description: 'CUSTOMER \nSPEND',
-      subValue: customerSpend,
+      subValue: customerSpendUsd,
       symbol: 'SPEND',
       value: customerSpend + ' SPEND',
     },
-    { description: 'REVENUE \nCOLLECTED', value: subText },
+    { description: 'REVENUE \nCOLLECTED', value: revenueCollected },
     {
       description: 'PROTOCOL FEE \n(0.5%)',
-      subValue: protocolFeeUsd,
       value: protocolFee,
     },
   ];
   return (
-    <Container>
-      <TransactionExchangeRateRow rate={spendConversionRate} />
-      {earnedItems.map((item: ItemDetailProps, index: number) => {
-        return (
-          <ItemDetail
-            description={item.description}
-            key={index}
-            subValue={item.subValue}
-            symbol={item.symbol}
-            value={item.value}
-          />
-        );
-      })}
-    </Container>
+    <>
+      <TransactionRow {...txRowProps} hasBottomDivider />
+      <Container padding={6}>
+        <TransactionExchangeRateRow rate={spendConversionRate} />
+        {earnedItems.map((item: ItemDetailProps, index: number) => {
+          return (
+            <ItemDetail
+              description={item.description}
+              key={index}
+              subValue={item.subValue}
+              symbol={item.symbol}
+              value={item.value}
+            />
+          );
+        })}
+        <HorizontalDivider />
+        <ItemDetail
+          description="NET EARNED"
+          subValue={netEarnedNative}
+          value={`+ ${netEarned}`}
+        />
+      </Container>
+    </>
   );
 };
 const ClaimedTransaction = ({
@@ -144,14 +160,18 @@ const ClaimedTransaction = ({
   gasUsdFee,
   gasFee,
   netClaimed,
-}: MerchantClaimTypeTxn) => {
+  txRowProps,
+}: ClaimedTransactionProps) => {
   return (
-    <Container>
-      <ItemDetail description={'REVENUE \nCLAIMED'} value={grossClaimed} />
-      <ItemDetail description="GAS FEE" subValue={gasUsdFee} value={gasFee} />
-      <HorizontalDivider />
-      <ItemDetail description="NET CLAIMED" value={netClaimed} />
-    </Container>
+    <>
+      <TransactionRow {...txRowProps} hasBottomDivider />
+      <Container padding={6}>
+        <ItemDetail description={'REVENUE \nCLAIMED'} value={grossClaimed} />
+        <ItemDetail description="GAS FEE" subValue={gasUsdFee} value={gasFee} />
+        <HorizontalDivider />
+        <ItemDetail description="NET CLAIMED" value={netClaimed} />
+      </Container>
+    </>
   );
 };
 
@@ -171,7 +191,17 @@ export default function MerchantTransactionExpandedState(
     props.asset?.section?.data[props.asset.index]?.transaction;
 
   const network = useRainbowSelector(state => state.settings.network);
-  const earnedTxnData = { ...transactionData, subText: props.asset?.subText };
+  const earnedTxnData = {
+    ...transactionData,
+    subText: transactionData.netEarned,
+  };
+
+  const rowProps = {
+    ...props.asset,
+    primaryText: `+ ${transactionData.netEarned}`,
+    subText: transactionData.netEarnedNative,
+  };
+
   return useMemo(
     () => (
       <SlackSheet flex={1} scrollEnabled>
@@ -188,14 +218,14 @@ export default function MerchantTransactionExpandedState(
             overflow="scroll"
             paddingHorizontal={2}
           >
-            <TransactionRow {...props.asset} hasBottomDivider />
-            <Container padding={6}>
-              {props.asset.statusText === CLAIMED_STATUS ? (
-                <ClaimedTransaction {...transactionData} />
-              ) : (
-                <EarnedTransaction {...earnedTxnData} />
-              )}
-            </Container>
+            {props.asset.statusText === CLAIMED_STATUS ? (
+              <ClaimedTransaction
+                {...transactionData}
+                txRowProps={props.asset}
+              />
+            ) : (
+              <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
+            )}
           </Container>
           <BlockscoutButton
             network={network}
@@ -204,6 +234,6 @@ export default function MerchantTransactionExpandedState(
         </Container>
       </SlackSheet>
     ),
-    [earnedTxnData, network, props.asset, transactionData]
+    [earnedTxnData, network, props.asset, rowProps, transactionData]
   );
 }
