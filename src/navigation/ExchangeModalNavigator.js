@@ -84,20 +84,24 @@ export function ExchangeNavigatorFactory(SwapModal = SwapModalScreen) {
     }, []);
 
     const handle = useRef();
+    const keyboardDidShowListener = useRef();
 
     const enableInteractionsAfterOpeningKeyboard = useCallback(() => {
-      Keyboard.removeListener('keyboardDidShow', handle.current);
+      keyboardDidShowListener.current?.remove();
       handle.current = () => {
         // this timeout helps to omit a visual glitch
         setTimeout(() => {
           setSwipeEnabled(true);
           handle.current = null;
         }, 200);
-        Keyboard.removeListener('keyboardDidShow', handle.current);
+        keyboardDidShowListener.current?.remove();
       };
       // fallback if was already opened
       setTimeout(() => handle.current?.(), 300);
-      Keyboard.addListener('keyboardDidShow', handle.current);
+      keyboardDidShowListener.current = Keyboard.addListener(
+        'keyboardDidShow',
+        handle.current
+      );
     }, [setSwipeEnabled]);
 
     const blockInteractions = useCallback(() => {
@@ -111,7 +115,7 @@ export function ExchangeNavigatorFactory(SwapModal = SwapModalScreen) {
           enableInteractionsAfterOpeningKeyboard();
         } else if (position === 0) {
           setSwipeEnabled(false, () => setPointerEvents(true));
-          Keyboard.removeListener('keyboardDidShow', handle.current);
+          keyboardDidShowListener.current?.remove();
         }
       },
       [
@@ -137,7 +141,7 @@ export function ExchangeNavigatorFactory(SwapModal = SwapModalScreen) {
         }
 
         if (targetContentOffset === 0) {
-          Keyboard.removeListener('keyboardDidShow', handle.current);
+          keyboardDidShowListener.current?.remove();
           setSwipeEnabled(false, () => setPointerEvents(true));
         }
       },

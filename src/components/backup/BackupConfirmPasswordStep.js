@@ -94,11 +94,19 @@ export default function BackupConfirmPasswordStep() {
     const keyboardDidHide = () => {
       setIsKeyboardOpen(false);
     };
-    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-    Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+
+    const didShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      keyboardDidShow
+    );
+
+    const didHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      keyboardDidHide
+    );
     return () => {
-      Keyboard.removeListener('keyboardDidShow', keyboardDidShow);
-      Keyboard.removeListener('keyboardDidHide', keyboardDidHide);
+      didShowListener.remove();
+      didHideListener.remove();
     };
   }, []);
 
