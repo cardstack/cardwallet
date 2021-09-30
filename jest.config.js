@@ -27,7 +27,7 @@ module.exports = {
     '!<rootDir>/cardstack/**/*.test.tsx',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@cardstack|@sentry)/)',
+    'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*)',
   ],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
 };
