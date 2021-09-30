@@ -33,7 +33,6 @@ import { MainThemeProvider } from './context/ThemeContext';
 import { InitialRouteContext } from './context/initialRoute';
 import monitorNetwork from './debugging/network';
 import handleDeepLink from './handlers/deeplinks';
-import { staticSignatureLRU } from './handlers/imgix';
 import {
   runKeychainIntegrityChecks,
   runWalletBackupStatusChecks,
