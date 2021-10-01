@@ -4,4 +4,11 @@ module.exports = {
     android: {},
     ios: {},
   },
+  dependencies: {
+    'react-native-tooltips': {
+      platforms: {
+        ios: null,
+      },
+    },
+  },
 };
