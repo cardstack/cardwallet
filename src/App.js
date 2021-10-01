@@ -50,12 +50,14 @@ import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
 import MinimumVersion from './screens/MinimumVersion';
+import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
 import Routes from '@rainbow-me/routes';
 import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
+
 const WALLETCONNECT_SYNC_DELAY = 500;
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'dark-content' });
@@ -199,29 +201,31 @@ class App extends Component {
     <ThemeProvider theme={theme}>
       <MainThemeProvider>
         <RainbowContextWrapper>
-          <Portal>
-            <SafeAreaProvider>
-              <PinnedHiddenItemOptionProvider>
-                <ApolloProvider client={apolloClient}>
-                  <Provider store={store}>
-                    <FlexItem>
-                      <CheckSystemReqs>
-                        {this.state.initialRoute && (
-                          <InitialRouteContext.Provider
-                            value={this.state.initialRoute}
-                          >
-                            <RoutesComponent ref={this.handleNavigatorRef} />
-                            <PortalConsumer />
-                          </InitialRouteContext.Provider>
-                        )}
-                      </CheckSystemReqs>
-                      <OfflineToast />
-                    </FlexItem>
-                  </Provider>
-                </ApolloProvider>
-              </PinnedHiddenItemOptionProvider>
-            </SafeAreaProvider>
-          </Portal>
+          <ErrorBoundary>
+            <Portal>
+              <SafeAreaProvider>
+                <PinnedHiddenItemOptionProvider>
+                  <ApolloProvider client={apolloClient}>
+                    <Provider store={store}>
+                      <FlexItem>
+                        <CheckSystemReqs>
+                          {this.state.initialRoute && (
+                            <InitialRouteContext.Provider
+                              value={this.state.initialRoute}
+                            >
+                              <RoutesComponent ref={this.handleNavigatorRef} />
+                              <PortalConsumer />
+                            </InitialRouteContext.Provider>
+                          )}
+                        </CheckSystemReqs>
+                        <OfflineToast />
+                      </FlexItem>
+                    </Provider>
+                  </ApolloProvider>
+                </PinnedHiddenItemOptionProvider>
+              </SafeAreaProvider>
+            </Portal>
+          </ErrorBoundary>
         </RainbowContextWrapper>
       </MainThemeProvider>
     </ThemeProvider>
