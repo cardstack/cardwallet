@@ -1,3 +1,4 @@
+import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
 import lang from 'i18n-js';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +7,6 @@ import {
   settingsChangeLanguage as changeLanguage,
   settingsChangeNativeCurrency as changeNativeCurrency,
 } from '../redux/settings';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 
 const languageSelector = state => state.settings.language;
 
