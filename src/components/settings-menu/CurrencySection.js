@@ -1,4 +1,7 @@
-import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
+import {
+  nativeCurrencies,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk/sdk/currencies';
 import { isNil } from 'lodash';
 import React, { useCallback } from 'react';
 import { CoinIcon } from '../coin-icon';
@@ -7,7 +10,7 @@ import { Emoji } from '../text';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const currencyListItems = Object.values(nativeCurrencies)
-  .filter(({ currency }) => currency !== 'SPD')
+  .filter(({ currency }) => currency !== NativeCurrency.SPD)
   .map(({ currency, ...item }) => ({
     ...item,
     currency,
