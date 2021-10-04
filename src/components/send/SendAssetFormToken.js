@@ -1,9 +1,9 @@
+import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { Column, ColumnWithMargins } from '../layout';
 import SendAssetFormField from './SendAssetFormField';
 import { useDimensions } from '@rainbow-me/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { removeLeadingZeros } from '@rainbow-me/utils';
 
 const footerMargin = 31;

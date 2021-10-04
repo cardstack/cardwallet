@@ -1,10 +1,10 @@
+import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
 import React, { useCallback, useMemo } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { Row } from '../layout';
 import ExchangeInput from './ExchangeInput';
 import { Text } from '@cardstack/components';
 import { useColorForAsset } from '@rainbow-me/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 
 const ExchangeNativeField = (
   {
