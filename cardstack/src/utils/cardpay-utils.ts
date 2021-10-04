@@ -31,8 +31,7 @@ export const getNativeBalanceFromSpend = (
 ): number => {
   const usdBalance = spendAmount / 100;
 
-  const currencyConversionRate =
-    nativeCurrency === 'SPD' ? 100 : currencyConversionRates?.[nativeCurrency];
+  const currencyConversionRate = currencyConversionRates?.[nativeCurrency];
 
   if (nativeCurrency === 'USD') {
     return usdBalance;

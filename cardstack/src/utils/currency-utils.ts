@@ -4,7 +4,11 @@ const USD_TO_SPEND_RATE = 100;
 
 export const getDollarsFromDai = (dai: number) => dai / 100;
 
-export function localCurrencyToAbsNum(value: string): number {
+export function formattedCurrencyToAbsNum(value?: string): number {
+  if (!value) {
+    return 0;
+  }
+
   const result = Math.abs(parseFloat(value.replace(/,/g, '')));
 
   if (isNaN(result)) {
@@ -21,7 +25,7 @@ export function formatNative(value: string | undefined, currency = 'USD') {
   }
 
   if (value.endsWith('.') && (value.match(/\./g) || []).length === 1) {
-    return `${localCurrencyToAbsNum(value).toLocaleString('en-US', {
+    return `${formattedCurrencyToAbsNum(value).toLocaleString('en-US', {
       currency,
       maximumFractionDigits: 20,
       maximumSignificantDigits: 20,
@@ -30,12 +34,12 @@ export function formatNative(value: string | undefined, currency = 'USD') {
 
   if ((value.match(/\./g) || []).length === 1) {
     const decimalStrings = value.split('.');
-    return `${localCurrencyToAbsNum(decimalStrings[0]).toLocaleString(
+    return `${formattedCurrencyToAbsNum(decimalStrings[0]).toLocaleString(
       'en-US'
     )}.${decimalStrings[1].replace(/\D/g, '')}`;
   }
 
-  return `${localCurrencyToAbsNum(value).toLocaleString('en-US', {
+  return `${formattedCurrencyToAbsNum(value).toLocaleString('en-US', {
     currency,
     maximumFractionDigits: 20,
     maximumSignificantDigits: 20,
@@ -47,7 +51,7 @@ export const nativeCurrencyToAmountInSpend = (
   nativeCurrencyRate: number
 ): number => {
   return amount
-    ? new BigNumber(localCurrencyToAbsNum(amount))
+    ? new BigNumber(formattedCurrencyToAbsNum(amount))
         .times(USD_TO_SPEND_RATE)
         .div(nativeCurrencyRate)
         .integerValue() // round spend value to integer

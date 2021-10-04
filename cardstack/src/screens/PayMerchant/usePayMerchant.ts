@@ -8,7 +8,7 @@ import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInf
 import { PrepaidCardType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
-  localCurrencyToAbsNum,
+  formattedCurrencyToAbsNum,
   nativeCurrencyToSpend,
 } from '@cardstack/utils';
 import {
@@ -99,7 +99,7 @@ export const usePayMerchant = () => {
 
   const spendAmount =
     currency === 'SPD'
-      ? localCurrencyToAbsNum(`${inputValue || 0}`)
+      ? formattedCurrencyToAbsNum(`${inputValue || 0}`)
       : nativeCurrencyToSpend(
           inputValue,
           currencyConversionRates[nativeCurrency],
@@ -109,7 +109,7 @@ export const usePayMerchant = () => {
   const onPayMerchantSuccess = useCallback(
     async (receipt: TransactionReceipt) => {
       const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-        inputValue ? localCurrencyToAbsNum(inputValue) : 0,
+        inputValue ? formattedCurrencyToAbsNum(inputValue) : 0,
         accountCurrency,
         currencyConversionRates,
         true

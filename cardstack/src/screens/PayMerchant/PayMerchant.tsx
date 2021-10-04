@@ -17,7 +17,7 @@ import {
 import { MerchantInformation } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
-  localCurrencyToAbsNum,
+  formattedCurrencyToAbsNum,
   nativeCurrencyToSpend,
 } from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
@@ -167,7 +167,7 @@ const AmountInputSection = memo(
         <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
           {nativeCurrency === 'SPD'
             ? convertSpendForBalanceDisplay(
-                inputValue ? localCurrencyToAbsNum(inputValue) : 0,
+                inputValue ? formattedCurrencyToAbsNum(inputValue) : 0,
                 accountCurrency,
                 currencyConversionRates,
                 true
