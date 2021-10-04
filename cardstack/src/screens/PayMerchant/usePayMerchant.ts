@@ -9,7 +9,7 @@ import { PrepaidCardType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
   formattedCurrencyToAbsNum,
-  nativeCurrencyToSpend,
+  nativeCurrencyToAmountInSpend,
 } from '@cardstack/utils';
 import {
   useNativeCurrencyAndConversionRates,
@@ -47,12 +47,12 @@ export const usePayMerchant = () => {
     data,
   } = usePaymentMerchantUniversalLink();
 
-  const { infoDID = '', spendAmount: initialSpendAmount, currency } = data;
+  const { infoDID = '', amount: initialAmount, currency } = data;
 
   const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
 
   const [inputValue, setInputValue] = useState<string | undefined>(
-    `${initialSpendAmount ? initialSpendAmount.toString() : 0}`
+    `${initialAmount ? initialAmount.toString() : 0}`
   );
 
   const hasMultipleCards = prepaidCards.length > 1;
@@ -92,19 +92,18 @@ export const usePayMerchant = () => {
 
   // Updating amount when nav param change
   useEffect(() => {
-    if (initialSpendAmount) {
-      setInputValue(initialSpendAmount.toString());
+    if (initialAmount) {
+      setInputValue(initialAmount.toString());
     }
-  }, [initialSpendAmount]);
+  }, [initialAmount]);
 
   const spendAmount =
     currency === 'SPD'
       ? formattedCurrencyToAbsNum(`${inputValue || 0}`)
-      : nativeCurrencyToSpend(
+      : nativeCurrencyToAmountInSpend(
           inputValue,
-          currencyConversionRates[nativeCurrency],
-          true
-        ).spendAmount;
+          currencyConversionRates[nativeCurrency]
+        );
 
   const onPayMerchantSuccess = useCallback(
     async (receipt: TransactionReceipt) => {

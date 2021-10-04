@@ -56,8 +56,6 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const { selectedWallet } = useWallets();
 
-  const spendAmount = parseFloat(amount);
-
   const { isLoading, callback: getMerchantSafeData } = useWorker(async () => {
     const { infoDID: did } = (await getSafeData(
       merchantAddress
@@ -130,11 +128,11 @@ export const usePaymentMerchantUniversalLink = () => {
     () => ({
       type: TransactionConfirmationType.PAY_MERCHANT,
       infoDID,
-      spendAmount,
+      amount: parseFloat(amount),
       merchantSafe: merchantAddress,
       currency: currencyName,
     }),
-    [infoDID, spendAmount, merchantAddress, currencyName]
+    [infoDID, amount, merchantAddress, currencyName]
   );
 
   return {

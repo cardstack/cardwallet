@@ -128,7 +128,7 @@ describe('usePaymentMerchantUniversalLink', () => {
 
     const { result } = renderHook(() => usePaymentMerchantUniversalLink());
 
-    expect(result.current.data.spendAmount).toBe(0);
+    expect(result.current.data.amount).toBe(0);
   });
 
   it('should call usePaymentMerchantUniversalLink and return network sokol if no network is provided in url', async () => {
@@ -140,6 +140,6 @@ describe('usePaymentMerchantUniversalLink', () => {
 
     const { result } = renderHook(() => usePaymentMerchantUniversalLink());
 
-    expect(result.current.data.spendAmount).toBe(0);
+    expect(result.current.data.amount).toBe(0);
   });
 });
