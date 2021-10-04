@@ -5,6 +5,7 @@ import {
   BuyPrepaidCard,
   CurrencySelectionGlobalModal,
   DepotScreen,
+  ErrorFallbackScreen,
   MerchantScreen,
   PayMerchant,
   PrepaidCardModal,
@@ -39,6 +40,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   PAY_MERCHANT: {
     component: PayMerchant,
     options: expandedPreset as StackNavigationOptions,
+  },
+  ERROR_FALLBACK_SCREEN: {
+    component: ErrorFallbackScreen,
+    options: horizontalInterpolator,
   },
 };
 

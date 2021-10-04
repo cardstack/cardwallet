@@ -5,6 +5,7 @@ export const MainRoutes = {
   BUY_PREPAID_CARD: 'BuyPrepaidCard',
   SEND_FLOW_DEPOT: 'SendFlowDepot',
   PAY_MERCHANT: 'PayMerchant',
+  ERROR_FALLBACK_SCREEN: 'ErrorFallbackScreen',
 } as const;
 
 export const GlobalRoutes = {
