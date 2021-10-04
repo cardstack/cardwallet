@@ -1,5 +1,6 @@
 import React, { useCallback, memo } from 'react';
 import { InteractionManager } from 'react-native';
+import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
 import {
   CenteredContainer,
   Container,
@@ -7,12 +8,10 @@ import {
   Input,
   Text,
   Icon,
-  SPDCurrency,
   Touchable,
 } from './../index';
 import { formatNative } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { useNavigation } from '@rainbow-me/navigation';
 
 export enum CURRENCY_DISPLAY_MODE {
@@ -58,10 +57,7 @@ export const InputAmount = memo(
       );
     }, [nativeCurrency, navigate]);
 
-    const selectedCurrency =
-      nativeCurrency === 'SPD'
-        ? SPDCurrency
-        : (supportedNativeCurrencies as any)[nativeCurrency];
+    const selectedCurrency = (supportedNativeCurrencies as any)[nativeCurrency];
 
     return (
       <Container width="100%" {...containerProps}>

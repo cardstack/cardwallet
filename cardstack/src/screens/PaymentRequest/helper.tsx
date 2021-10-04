@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Text } from '@cardstack/components';
-import { getAddressPreview, nativeCurrencyToSpend } from '@cardstack/utils';
+import { getAddressPreview } from '@cardstack/utils';
 
 export const RequestPaymentMerchantInfo = ({
   address,
@@ -33,13 +33,11 @@ export const RequestPaymentMerchantInfo = ({
   </Container>
 );
 
-export const SpendAmount = ({
-  formattedAmount,
-  nativeCurrencyRate,
+export const AmountInNativeCurrency = ({
+  amountWithSymbol,
   textCenter = false,
 }: {
-  formattedAmount: string | undefined;
-  nativeCurrencyRate: number;
+  amountWithSymbol: string;
   textCenter?: boolean;
 }) => (
   <Text
@@ -48,9 +46,6 @@ export const SpendAmount = ({
     fontSize={12}
     textAlign={textCenter ? 'center' : undefined}
   >
-    {
-      nativeCurrencyToSpend(formattedAmount, nativeCurrencyRate, true)
-        .tokenBalanceDisplay
-    }
+    {amountWithSymbol}
   </Text>
 );

@@ -23,13 +23,17 @@ import logger from 'logger';
 export const RequestPaymentConfirmation = ({
   amountWithSymbol,
   address,
-  amountInSpend,
+  amountInNum,
   merchantInfo,
+  nativeCurrency,
+  amountInAnotherCurrency,
 }: {
   amountWithSymbol: string | undefined;
   address: string;
-  amountInSpend: number;
+  amountInNum: number;
   merchantInfo?: MerchantInformation;
+  nativeCurrency?: string;
+  amountInAnotherCurrency: string;
 }) => {
   const [copyCount, setCopyCount] = useState(0);
 
@@ -43,11 +47,11 @@ export const RequestPaymentConfirmation = ({
     () =>
       generateMerchantPaymentUrl({
         merchantSafeID: address,
-        amount: amountInSpend,
+        amount: amountInNum,
         network,
-        currency: 'SPD',
+        currency: nativeCurrency,
       }),
-    [address, amountInSpend, network]
+    [address, amountInNum, nativeCurrency, network]
   );
 
   const copyToClipboard = useCallback(() => {
@@ -69,16 +73,18 @@ export const RequestPaymentConfirmation = ({
   const showQRCode = useCallback(() => {
     navigate(Routes.SHOW_QRCODE_MODAL, {
       value: paymentRequestLink,
-      amountInSpend,
       amountWithSymbol,
+      amountInAnotherCurrency,
       name: merchantInfo?.name,
+      hasAmount: amountInNum > 0,
     });
   }, [
-    amountInSpend,
-    amountWithSymbol,
-    merchantInfo,
     navigate,
     paymentRequestLink,
+    amountInNum,
+    amountWithSymbol,
+    amountInAnotherCurrency,
+    merchantInfo,
   ]);
 
   return (

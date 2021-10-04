@@ -15,16 +15,18 @@ import { shadow } from '@rainbow-me/styles';
 type ShowQRCodeModalParamTypes = {
   value: string;
   amountWithSymbol: string;
-  amountInSpend: number;
+  amountInAnotherCurrency: string;
   name: string | undefined;
+  hasAmount?: boolean;
   style: Record<string, string>;
 };
 
 export const AmountQRCode = ({
   value,
-  amountInSpend,
   amountWithSymbol,
+  amountInAnotherCurrency,
   name,
+  hasAmount,
   style,
 }: ShowQRCodeModalParamTypes) => {
   const { width } = useDimensions();
@@ -63,7 +65,7 @@ export const AmountQRCode = ({
         <Text size="large" letterSpacing={0.39} color="white">
           Scan to pay
         </Text>
-        {amountInSpend && amountInSpend > 0 ? (
+        {hasAmount ? (
           <>
             {amountWithSymbol ? (
               <Text
@@ -75,9 +77,11 @@ export const AmountQRCode = ({
                 {amountWithSymbol}
               </Text>
             ) : null}
-            <Text size="large" color="underlineGray" fontWeight="600">
-              {`§${amountInSpend.toLocaleString()} SPEND`}
-            </Text>
+            {amountInAnotherCurrency ? (
+              <Text size="large" color="underlineGray" fontWeight="600">
+                {amountInAnotherCurrency}
+              </Text>
+            ) : null}
           </>
         ) : null}
         {name ? (
