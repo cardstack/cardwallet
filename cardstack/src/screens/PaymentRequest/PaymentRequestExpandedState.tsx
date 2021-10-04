@@ -79,7 +79,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
     </Container>
   );
 
-  const amountInNum = formattedCurrencyToAbsNum(inputValue);
+  const amountInNum: number = formattedCurrencyToAbsNum(inputValue);
 
   const amountWithSymbol =
     nativeCurrency === 'SPD'
