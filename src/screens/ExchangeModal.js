@@ -384,6 +384,8 @@ export default function ExchangeModal({
     navigate,
   ]);
 
+  const keyboardDidHideListener = useRef(null);
+
   const navigateToSwapDetailsModal = useCallback(() => {
     android && Keyboard.dismiss();
     const lastFocusedInputHandleTemporary = lastFocusedInputHandle.current;
@@ -392,7 +394,7 @@ export default function ExchangeModal({
     outputFieldRef?.current?.blur();
     nativeFieldRef?.current?.blur();
     const internalNavigate = () => {
-      android && Keyboard.removeListener('keyboardDidHide', internalNavigate);
+      android && keyboardDidHideListener.current?.remove();
       setParams({ focused: false });
       navigate(Routes.SWAP_DETAILS_SCREEN, {
         restoreFocusOnSwapModal: () => {
@@ -405,7 +407,10 @@ export default function ExchangeModal({
     };
     ios || !isKeyboardOpen()
       ? internalNavigate()
-      : Keyboard.addListener('keyboardDidHide', internalNavigate);
+      : (keyboardDidHideListener.current = Keyboard.addListener(
+          'keyboardDidHide',
+          internalNavigate
+        ));
   }, [
     inputFieldRef,
     lastFocusedInputHandle,

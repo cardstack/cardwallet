@@ -91,6 +91,5 @@
     "babel.config.js",
     "metro.config.js",
     "jest.config.js"
-  ],
-  "files": ["node_modules/react-native-redash/lib/typescript/v1/index.d.ts"]
+  ]
 }

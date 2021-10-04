@@ -34,9 +34,12 @@ export default function useKeyboardHeight(options = {}) {
   );
 
   useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+    const didShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      handleKeyboardDidShow
+    );
     return () => {
-      Keyboard.removeListener('keyboardDidShow', handleKeyboardDidShow);
+      didShowListener.remove();
     };
   }, [handleKeyboardDidShow]);
 

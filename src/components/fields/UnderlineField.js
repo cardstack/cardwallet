@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import { useTheme } from '../../context/ThemeContext';
-import { ExchangeInput } from '../exchange';
+import ExchangeInput from '../exchange/ExchangeInput';
 import { Row } from '../layout';
 import { Button, Container } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';

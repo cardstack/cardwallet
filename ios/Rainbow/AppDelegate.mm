@@ -17,6 +17,7 @@
 #import "RNSplashScreen.h"
 
 #if DEBUG
+#ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
 #import <FlipperKitUserDefaultsPlugin/FKUserDefaultsPlugin.h>
@@ -33,6 +34,7 @@ static void InitializeFlipper(UIApplication *application) {
   [client addPlugin:[[FlipperKitNetworkPlugin alloc] initWithNetworkAdapter:[SKIOSNetworkAdapter new]]];
   [client start];
 }
+#endif
 #endif
 
 @interface RainbowSplashScreenManager : NSObject <RCTBridgeModule>
@@ -78,7 +80,9 @@ RCT_EXPORT_METHOD(hideAnimated) {
   NSLog(@"⚙️ Rainbow internals are %@.", RAINBOW_INTERNALS_ENABLED ? @"enabled" : @"disabled");
   
   #if DEBUG
+  #ifdef FB_SONARKIT_ENABLED
     InitializeFlipper(application);
+  #endif
   #endif
 
   [FIRApp configure];
@@ -92,7 +96,11 @@ RCT_EXPORT_METHOD(hideAnimated) {
                                                    moduleName:@"Rainbow"
                                             initialProperties:nil];
 
-  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+  if (@available(iOS 13.0, *)) {
+      rootView.backgroundColor = [UIColor systemBackgroundColor];
+  } else {
+      rootView.backgroundColor = [UIColor whiteColor];
+  }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];

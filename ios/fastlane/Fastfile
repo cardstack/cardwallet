@@ -30,7 +30,7 @@ platform :ios do
     ########################
     build_ios_app(
       export_method: "app-store",
-      include_bitcode: true,
+      include_bitcode: false,
       skip_profile_detection: true,
       scheme: "Rainbow",
       configuration: "Release"
@@ -61,7 +61,7 @@ platform :ios do
     ########################
     build_ios_app(
       export_method: "app-store",
-      include_bitcode: true,
+      include_bitcode: false,
       skip_profile_detection: true,
       scheme: "Rainbow",
       configuration: "Release"
@@ -100,7 +100,7 @@ platform :ios do
 
     build_ios_app(
       export_method: "app-store",
-      include_bitcode: true
+      include_bitcode: false
     )
 
     ########################
