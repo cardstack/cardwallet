@@ -4,6 +4,7 @@ import {
   convertAmountToNativeDisplay,
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { getResolver } from '@cardstack/did-resolver';
 import { Resolver } from 'did-resolver';
 import {
@@ -33,7 +34,7 @@ export const getNativeBalanceFromSpend = (
 
   const currencyConversionRate = currencyConversionRates?.[nativeCurrency];
 
-  if (nativeCurrency === 'USD') {
+  if (nativeCurrency === NativeCurrency.USD) {
     return usdBalance;
   } else if (currencyConversionRate) {
     return usdBalance * currencyConversionRate;

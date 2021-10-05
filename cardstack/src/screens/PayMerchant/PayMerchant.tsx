@@ -166,7 +166,7 @@ const AmountInputSection = memo(
           setInputValue={setInputValue}
         />
         <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
-          {nativeCurrency === 'SPD'
+          {nativeCurrency === NativeCurrency.SPD
             ? convertSpendForBalanceDisplay(
                 inputValue ? formattedCurrencyToAbsNum(inputValue) : 0,
                 accountCurrency,

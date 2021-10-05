@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { TransactionReceipt } from 'web3-eth';
 import { LayoutAnimation, InteractionManager } from 'react-native';
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { getBlockTimestamp, mapPrepaidTxToNavigationParams } from './helpers';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
@@ -182,7 +183,8 @@ export const usePayMerchant = () => {
     () => ({
       ...data,
       spendAmount,
-      currency: nativeCurrency === 'SPD' ? currency : nativeCurrency,
+      currency:
+        nativeCurrency === NativeCurrency.SPD ? currency : nativeCurrency,
       prepaidCard: selectedPrepaidCard?.address,
     }),
     [currency, data, nativeCurrency, selectedPrepaidCard, spendAmount]
