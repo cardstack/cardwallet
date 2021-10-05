@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
+  convertAmountToNativeDisplay,
+  convertAmountAndPriceToNativeDisplay,
+  spendToUsd,
+} from '@cardstack/cardpay-sdk';
+import {
   RequestPaymentConfirmation,
   RequestPaymentConfirmationFooter,
 } from './RequestPaymentConfirmation';
-import { SpendAmount, RequestPaymentMerchantInfo } from './helper';
+import { AmountInNativeCurrency, RequestPaymentMerchantInfo } from './helper';
 import { SlackSheet } from '@rainbow-me/components/sheet';
 import { useDimensions } from '@rainbow-me/hooks';
 import {
@@ -15,11 +20,17 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
-import { nativeCurrencyToSpend } from '@cardstack/utils';
+import {
+  formattedCurrencyToAbsNum,
+  formatNative,
+  nativeCurrencyToSpend,
+} from '@cardstack/utils';
 import { hitSlop } from '@cardstack/utils/layouts';
 import { useNavigation } from '@rainbow-me/navigation';
-import { usePaymentCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
+import {
+  usePaymentCurrencyAndConversionRates,
+  useNativeCurrencyAndConversionRates,
+} from '@rainbow-me/redux/hooks';
 
 const TOP_POSITION = 150;
 
@@ -37,6 +48,8 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
     nativeCurrency,
     currencyConversionRates,
   ] = usePaymentCurrencyAndConversionRates();
+
+  const [accountNativeCurrency] = useNativeCurrencyAndConversionRates();
 
   const onSkip = () => {
     setInputValue('');
@@ -66,19 +79,25 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
     </Container>
   );
 
-  const currencyConversionRate =
-    nativeCurrency === 'SPD' ? 100 : currencyConversionRates[nativeCurrency];
+  const amountInNum = formattedCurrencyToAbsNum(inputValue);
 
-  const amountWithSymbol = `${
+  const amountWithSymbol =
     nativeCurrency === 'SPD'
-      ? '§'
-      : (supportedNativeCurrencies as any)[nativeCurrency]?.symbol
-  }${inputValue} ${nativeCurrency}`;
+      ? `§${formatNative(`${amountInNum}`)} SPD`
+      : convertAmountToNativeDisplay(amountInNum, nativeCurrency);
 
-  const amountInSpend = nativeCurrencyToSpend(
-    inputValue,
-    currencyConversionRate
-  ).spendAmount;
+  const amountInAnotherCurrency =
+    nativeCurrency === 'SPD'
+      ? convertAmountAndPriceToNativeDisplay(
+          spendToUsd(amountInNum) || 0,
+          currencyConversionRates[accountNativeCurrency],
+          accountNativeCurrency
+        ).display
+      : nativeCurrencyToSpend(
+          inputValue,
+          currencyConversionRates[nativeCurrency],
+          true
+        ).tokenBalanceDisplay;
 
   return (
     <SlackSheet
@@ -110,15 +129,14 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
             paddingBottom={1}
             setInputValue={setInputValue}
           />
-          <SpendAmount
-            formattedAmount={inputValue}
-            nativeCurrencyRate={currencyConversionRate}
+          <AmountInNativeCurrency
+            amountWithSymbol={amountInAnotherCurrency}
             textCenter
           />
         </Container>
       ) : (
         <>
-          {amountInSpend && amountInSpend > 0 ? (
+          {amountInNum > 0 ? (
             <>
               <Container
                 flex={1}
@@ -159,9 +177,8 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
                   <Text fontSize={25} fontWeight="bold">
                     {amountWithSymbol}
                   </Text>
-                  <SpendAmount
-                    formattedAmount={inputValue}
-                    nativeCurrencyRate={currencyConversionRate}
+                  <AmountInNativeCurrency
+                    amountWithSymbol={amountInAnotherCurrency}
                   />
                 </Container>
               </Container>
@@ -169,9 +186,11 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
           ) : null}
           <RequestPaymentConfirmation
             address={address}
-            amountInSpend={amountInSpend}
+            amountInNum={amountInNum}
             amountWithSymbol={amountWithSymbol}
             merchantInfo={merchantInfo}
+            nativeCurrency={nativeCurrency}
+            amountInAnotherCurrency={amountInAnotherCurrency}
           />
         </>
       )}

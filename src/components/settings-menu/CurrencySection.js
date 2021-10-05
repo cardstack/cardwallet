@@ -1,19 +1,19 @@
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { isNil } from 'lodash';
 import React, { useCallback } from 'react';
 import { CoinIcon } from '../coin-icon';
 import { RadioList, RadioListItem } from '../radio-list';
 import { Emoji } from '../text';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 
-const currencyListItems = Object.values(supportedNativeCurrencies)
+const currencyListItems = Object.values(nativeCurrencies)
+  .filter(({ currency }) => currency !== 'SPD')
   .map(({ currency, ...item }) => ({
     ...item,
     currency,
     key: currency,
     value: currency,
-  }))
-  .filter(({ currency }) => currency !== 'ETH');
+  }));
 
 const renderCurrencyIcon = (currency, emojiName) => {
   if (!currency) return null;

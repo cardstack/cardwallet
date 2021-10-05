@@ -1,54 +1,36 @@
 import React, { useCallback } from 'react';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { RadioList } from '../';
 import usePayment from '@cardstack/redux/hooks/usePayment';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
-
-export const SPDCurrency = {
-  alignment: 'left',
-  assetLimit: 1,
-  currency: 'SPD',
-  decimals: 2,
-  emojiName: '§',
-  label: 'SPEND',
-  mask: '[099999999999]{.}[00]',
-  placeholder: '0.00',
-  smallThreshold: 1,
-  symbol: '§',
-};
 
 export const CurrencySelection = ({
   onChange,
 }: {
   onChange: (selectedCurrency: string) => void;
 }) => {
-  const { paymentChangeCurrency, currency } = usePayment();
+  const { paymentChangeCurrency, currency: paymentCurrency } = usePayment();
 
   const onSelectCurrency = useCallback(
     (selectedCurrency: string) => {
-      if (currency !== selectedCurrency) {
+      if (paymentCurrency !== selectedCurrency) {
         paymentChangeCurrency(selectedCurrency);
         onChange(selectedCurrency);
       }
     },
-    [currency, paymentChangeCurrency, onChange]
+    [paymentCurrency, paymentChangeCurrency, onChange]
   );
 
-  const currencyListItems = [
-    SPDCurrency,
-    ...Object.values(supportedNativeCurrencies),
-  ]
-    .map(({ currency: nativeCurrency, label, ...item }, index) => ({
+  const currencyListItems = Object.values(nativeCurrencies).map(
+    ({ currency, label, ...item }, index) => ({
       ...item,
       disabled: false,
-      label: `${label} (${
-        nativeCurrency === 'SPD' ? '§1 = 0.01 USD' : nativeCurrency
-      })`,
+      label: `${label} (${currency === 'SPD' ? '§1 = 0.01 USD' : currency})`,
       key: index,
       index: index,
-      value: nativeCurrency,
-      selected: nativeCurrency === currency,
-    }))
-    .filter(({ value }) => value !== 'ETH');
+      value: currency,
+      selected: currency === paymentCurrency,
+    })
+  );
 
   return (
     <RadioList

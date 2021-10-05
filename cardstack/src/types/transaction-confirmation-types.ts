@@ -94,7 +94,7 @@ export interface TransferPrepaidCard2DecodedData {
 export interface WithdrawalDecodedData {
   amount: string;
   address: string;
-  addressType: 'depot' | 'merchant' | 'prepaid-card' | 'external';
+  addressType: 'depot' | 'merchant' | 'prepaid-card' | 'external' | 'reward';
   layer1Recipient: string;
   tokenBalance: string;
   price: number;

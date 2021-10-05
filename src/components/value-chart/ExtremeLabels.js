@@ -1,3 +1,4 @@
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { get } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -5,7 +6,6 @@ import { formatNative } from '../expanded-state/chart/chart-data-labels/ChartPri
 import { Text } from '../text';
 import { useChartData } from '@rainbow-me/animated-charts';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { fonts } from '@rainbow-me/styles';
 
 function trim(val) {
@@ -61,7 +61,7 @@ const CenteredLabel = ({ position, style, width, ...props }) => {
 
 export default function Labels({ color, width }) {
   const { nativeCurrency } = useAccountSettings();
-  const nativeSelected = get(supportedNativeCurrencies, `${nativeCurrency}`);
+  const nativeSelected = get(nativeCurrencies, `${nativeCurrency}`);
   const { greatestX, greatestY, smallestX, smallestY } = useChartData();
   const { colors } = useTheme();
 

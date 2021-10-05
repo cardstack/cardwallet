@@ -1,3 +1,4 @@
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { get } from 'lodash';
 import React from 'react';
 import { PixelRatio, Text } from 'react-native';
@@ -6,7 +7,6 @@ import { Row } from '../../../layout';
 import ChartHeaderTitle from './ChartHeaderTitle';
 import { ChartYLabel } from '@rainbow-me/animated-charts';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { fonts, fontWithWidth } from '@rainbow-me/styles';
 
 const ChartPriceRow = styled(Row)``;
@@ -73,7 +73,7 @@ export default function ChartPriceLabel({
   priceSharedValue,
 }) {
   const { nativeCurrency } = useAccountSettings();
-  const nativeSelected = get(supportedNativeCurrencies, `${nativeCurrency}`);
+  const nativeSelected = get(nativeCurrencies, `${nativeCurrency}`);
 
   return isNoPriceData ? (
     <ChartHeaderTitle>{defaultValue}</ChartHeaderTitle>

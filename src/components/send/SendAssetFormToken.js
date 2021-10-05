@@ -1,9 +1,9 @@
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { Column, ColumnWithMargins } from '../layout';
 import SendAssetFormField from './SendAssetFormField';
 import { useDimensions } from '@rainbow-me/hooks';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 import { removeLeadingZeros } from '@rainbow-me/utils';
 
 const footerMargin = 31;
@@ -36,10 +36,9 @@ export default function SendAssetFormToken({
 }) {
   const { isSmallPhone, height: deviceHeight } = useDimensions();
 
-  const {
-    mask: nativeMask,
-    placeholder: nativePlaceholder,
-  } = supportedNativeCurrencies[nativeCurrency];
+  const { mask: nativeMask, placeholder: nativePlaceholder } = nativeCurrencies[
+    nativeCurrency
+  ];
 
   return (
     <Fragment>

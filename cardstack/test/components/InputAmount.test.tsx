@@ -1,6 +1,7 @@
 import Chance from 'chance';
 import React from 'react';
 
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { render } from '../test-utils';
 import {
   Input,
@@ -58,11 +59,11 @@ describe('Button', () => {
   it('should render the children', () => {
     const inputValue = chance.string();
     const setInputValue = jest.fn();
-    const nativeCurrency = 'USD';
+    const nativeCurrency = NativeCurrency.USD;
 
     const props = {
       currencyDisplayMode: CURRENCY_DISPLAY_MODE.NO_DISPLAY,
-      nativeCurrency: 'USD',
+      nativeCurrency: NativeCurrency.USD,
       inputValue,
       setInputValue,
     };

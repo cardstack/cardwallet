@@ -1,3 +1,4 @@
+import { currencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import lang from 'i18n-js';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +7,6 @@ import {
   settingsChangeLanguage as changeLanguage,
   settingsChangeNativeCurrency as changeNativeCurrency,
 } from '../redux/settings';
-import { supportedNativeCurrencies } from '@rainbow-me/references';
 
 const languageSelector = state => state.settings.language;
 
@@ -36,7 +36,7 @@ export default function useAccountSettings() {
       chainId,
       language,
       nativeCurrency,
-      nativeCurrencySymbol: supportedNativeCurrencies[nativeCurrency].symbol,
+      nativeCurrencySymbol: currencies[nativeCurrency].symbol,
       network,
       showTestnets,
     })
