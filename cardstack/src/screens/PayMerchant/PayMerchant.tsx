@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
@@ -91,7 +92,7 @@ const PayMerchant = memo(() => {
 interface AmountProps {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
-  nativeCurrency: string;
+  nativeCurrency: NativeCurrency;
 }
 interface CustomAmountBodyProps extends AmountProps {
   merchantInfoDID: MerchantInformation | undefined;
