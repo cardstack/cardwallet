@@ -1,10 +1,11 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { MainRoutes, GlobalRoutes } from './routes';
-import { horizontalInterpolator } from './presetOptions';
+import { horizontalInterpolator, overlayPreset } from './presetOptions';
 import {
   BuyPrepaidCard,
   CurrencySelectionGlobalModal,
   DepotScreen,
+  ErrorFallbackScreen,
   MerchantScreen,
   PayMerchant,
   PrepaidCardModal,
@@ -39,6 +40,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   PAY_MERCHANT: {
     component: PayMerchant,
     options: expandedPreset as StackNavigationOptions,
+  },
+  ERROR_FALLBACK_SCREEN: {
+    component: ErrorFallbackScreen,
+    options: { ...overlayPreset, gestureEnabled: false },
   },
 };
 

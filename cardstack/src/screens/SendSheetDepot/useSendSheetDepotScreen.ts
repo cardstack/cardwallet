@@ -11,7 +11,7 @@ import Web3 from 'web3';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { Alert } from '@rainbow-me/components/alerts';
-import { useNavigation } from '@rainbow-me/navigation/Navigation';
+import Navigation, { useNavigation } from '@rainbow-me/navigation/Navigation';
 import {
   reshapeDepotTokensToAssets,
   reshapeSingleDepotTokenToAsset,
@@ -27,6 +27,8 @@ import logger from 'logger';
 import { DepotAsset, TokenType } from '@cardstack/types';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import HDProvider from '@cardstack/models/hd-provider';
+import { useWorker } from '@cardstack/utils/hooks-utilities';
+import { MainRoutes } from '@cardstack/navigation/routes';
 
 interface RouteType {
   params: { asset: TokenType };
@@ -123,11 +125,21 @@ export const useSendSheetDepotScreen = () => {
     }
   }, [gasEstimatedFee, getGasPriceEstimate, selected]);
 
-  const getTokenToUsdConverter = useCallback(async () => {
+  const {
+    callback: getTokenToUsdConverter,
+    error: getConverterError,
+  } = useWorker(async () => {
     if (selected?.symbol) {
       usdConverter.current = await getUsdConverter(selected?.symbol);
     }
   }, [selected]);
+
+  useEffect(() => {
+    if (getConverterError) {
+      captureException(getConverterError);
+      Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
+    }
+  }, [getConverterError]);
 
   // Update converter on initial render and on reseting asset selection
   useEffect(() => {
@@ -235,18 +247,20 @@ export const useSendSheetDepotScreen = () => {
   const { selectedWallet } = useWallets();
 
   const sendTokenFromDepot = useCallback(async () => {
-    const safes = await getSafesInstance({ selectedWallet, network });
+    try {
+      const safes = await getSafesInstance({ selectedWallet, network });
 
-    const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
+      const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
 
-    return safes?.sendTokens(
-      depot?.address,
-      selected?.address || '',
-      recipient,
-      amountInWei,
-      undefined,
-      { from: accountAddress }
-    );
+      return safes?.sendTokens(
+        depot?.address,
+        selected?.address || '',
+        recipient,
+        amountInWei,
+        undefined,
+        { from: accountAddress }
+      );
+    } catch (e) {}
   }, [
     accountAddress,
     amountDetails.assetAmount,

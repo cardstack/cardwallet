@@ -5,45 +5,62 @@ import { WebsocketProvider } from 'web3-core';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
+import { Navigation } from '@rainbow-me/navigation';
+import { MainRoutes } from '@cardstack/navigation/routes';
 
 let provider: WebsocketProvider | null = null;
 
+const handleError = () => {
+  Navigation.handleAction(
+    MainRoutes.ERROR_FALLBACK_SCREEN,
+    { message: 'the web3 socket disconnected' },
+    true
+  );
+};
+
 const Web3WsProvider = {
   get: async (network?: Network) => {
-    if (provider === null || network) {
-      try {
-        const currentNetwork = await getNetwork();
-        const node = getConstantByNetwork('rpcWssNode', currentNetwork);
+    if (provider === null || network || !provider?.connected) {
+      const currentNetwork = await getNetwork();
+      const node = getConstantByNetwork('rpcWssNode', currentNetwork);
 
-        provider = new Web3.providers.WebsocketProvider(node, {
-          timeout: 30000,
-          reconnect: {
-            auto: true,
-            delay: 1000,
-            maxAttempts: 10,
-          },
-          clientConfig: {
-            keepalive: true,
-            keepaliveInterval: -1,
-          },
-        });
+      provider = new Web3.providers.WebsocketProvider(node, {
+        timeout: 30000,
+        reconnect: {
+          auto: true,
+          delay: 1000,
+          maxAttempts: 10,
+        },
+        clientConfig: {
+          keepalive: true,
+          keepaliveInterval: 60000,
+        },
+      });
 
-        //@ts-ignore it's wrongly typed bc it says it doesn't have param, but it does
-        provider?.on('error', e => logger.sentry('WS socket error', e));
-        //@ts-ignore
-        provider?.on('end', e => {
-          provider?.reconnect();
-          logger.sentry('WS socket ended', e);
-        });
-      } catch (error) {
-        logger.error('provider error', error);
-      }
+      //@ts-ignore it's wrongly typed bc it says it doesn't have param, but it does
+      provider?.on('error', e => {
+        logger.sentry('WS socket error', e);
+
+        // Navigate to error screen to force restart
+        handleError();
+      });
+
+      //@ts-ignore
+      provider?.on('end', e => {
+        provider?.reconnect();
+        logger.sentry('WS socket ended', e);
+      });
+
+      //@ts-ignore
+      provider?.on('close', e => {
+        // Navigate to error screen to force restart
+        handleError();
+        logger.sentry('WS socket close', e);
+      });
     }
 
     return provider;
   },
 };
-
-Object.freeze(Web3WsProvider);
 
 export default Web3WsProvider;
