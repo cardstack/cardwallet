@@ -75,7 +75,7 @@ export const RequestPaymentConfirmation = ({
       value: paymentRequestLink,
       amountWithSymbol,
       amountInAnotherCurrency,
-      name: merchantInfo?.name,
+      merchantInfo: merchantInfo,
       hasAmount: amountInNum > 0,
     });
   }, [

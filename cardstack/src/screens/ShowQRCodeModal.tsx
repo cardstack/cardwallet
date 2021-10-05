@@ -1,102 +1,130 @@
 import { useRoute } from '@react-navigation/core';
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback } from 'react';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import CardstackColorLogo from '../assets/cardstackColorLogo.png';
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
-  CenteredContainer,
+  Touchable,
   Container,
   QRCode,
   SafeAreaView,
   SheetHandle,
   Text,
 } from '@cardstack/components';
+import { MerchantInformation } from '@cardstack/types';
 import { useDimensions } from '@rainbow-me/hooks';
-import { shadow } from '@rainbow-me/styles';
+import { hitSlop } from '@cardstack/utils/layouts';
+
+const StatusBarHeight = getStatusBarHeight(true);
 
 type ShowQRCodeModalParamTypes = {
   value: string;
   amountWithSymbol: string;
   amountInAnotherCurrency: string;
-  name: string | undefined;
+  merchantInfo?: MerchantInformation;
   hasAmount?: boolean;
-  style: Record<string, string>;
 };
 
 export const AmountQRCode = ({
   value,
   amountWithSymbol,
   amountInAnotherCurrency,
-  name,
+  merchantInfo,
   hasAmount,
-  style,
 }: ShowQRCodeModalParamTypes) => {
   const { width } = useDimensions();
+  const QRCodeSize = width - 140;
+  const { goBack } = useNavigation();
+
+  const goBackToEditAmount = useCallback(() => {
+    goBack();
+  }, [goBack]);
 
   return (
-    <Container flex={1} alignItems="center">
+    <Container
+      flex={1}
+      alignItems="center"
+      backgroundColor="grayCardBackground"
+      borderRadius={20}
+      borderWidth={1}
+      borderColor="whiteOverlay"
+    >
       <Container
-        flex={1.5}
+        flex={1}
         flexDirection="column"
-        justifyContent="flex-end"
         alignItems="center"
+        paddingTop={4}
       >
-        <SheetHandle color="white" opacity={1} />
-        <Container
-          marginTop={8}
-          width="75%"
-          padding={4}
-          backgroundColor="white"
-          borderRadius={30}
-          alignItems="center"
-          style={[
-            shadow.buildAsObject(0, 30, 30, 'rgba(0, 0, 0, 0.25)', 1),
-            style,
-          ]}
-        >
-          <QRCode
-            size={width * 0.6}
-            value={value}
-            logoMargin={12}
-            logoBorderRadius={6}
-            logo={CardstackColorLogo}
-          />
-        </Container>
-      </Container>
-      <Container alignItems="center" flex={1} marginTop={15}>
-        <Text size="large" letterSpacing={0.39} color="white">
-          Scan to pay
+        <SheetHandle />
+        <Text size="body" color="black" marginTop={7} fontWeight="bold">
+          Scan to Pay
         </Text>
+        {merchantInfo && (
+          <Container marginTop={12}>
+            <ContactAvatar
+              color={merchantInfo.color}
+              size="xlarge"
+              value={merchantInfo.name}
+              textColor={merchantInfo.textColor}
+            />
+          </Container>
+        )}
+        {merchantInfo?.name ? (
+          <Text size="medium" color="black" marginTop={3} textAlign="center">
+            {merchantInfo.name}
+          </Text>
+        ) : null}
         {hasAmount ? (
           <>
             {amountWithSymbol ? (
-              <Text
-                size="large"
-                letterSpacing={0.39}
-                color="white"
-                fontWeight="bold"
-              >
+              <Text size="xl" color="black" fontWeight="bold" marginTop={4}>
                 {amountWithSymbol}
               </Text>
             ) : null}
             {amountInAnotherCurrency ? (
-              <Text size="large" color="underlineGray" fontWeight="600">
+              <Text size="medium" color="blueText">
                 {amountInAnotherCurrency}
               </Text>
             ) : null}
           </>
         ) : null}
-        {name ? (
-          <CenteredContainer paddingHorizontal={4}>
-            <Text
-              size="large"
-              letterSpacing={0.39}
-              color="white"
-              marginTop={5}
-              textAlign="center"
-            >
-              {`to ${name}`}
+        <Container
+          flexGrow={1}
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Touchable
+            borderColor="grayText"
+            borderRadius={15}
+            borderWidth={1}
+            height={30}
+            hitSlop={hitSlop.small}
+            onPress={goBackToEditAmount}
+            paddingHorizontal={4}
+          >
+            <Text size="xxs" weight="bold" lineHeight={29}>
+              Edit amount
             </Text>
-          </CenteredContainer>
-        ) : null}
+          </Touchable>
+        </Container>
+      </Container>
+      <Container alignItems="center" flex={1}>
+        <Container
+          padding={5}
+          backgroundColor="white"
+          alignItems="center"
+          borderRadius={40}
+        >
+          <QRCode
+            size={QRCodeSize}
+            value={value}
+            logoMargin={14}
+            logoBorderRadius={7}
+            logo={CardstackColorLogo}
+          />
+        </Container>
       </Container>
     </Container>
   );
@@ -106,7 +134,12 @@ const ShowQRCodeModal = () => {
   const { params } = useRoute() as { params: ShowQRCodeModalParamTypes };
 
   return (
-    <SafeAreaView flex={1} width="100%" backgroundColor="transparent">
+    <SafeAreaView
+      flex={1}
+      width="100%"
+      backgroundColor="transparent"
+      paddingTop={Math.round(StatusBarHeight / 4)}
+    >
       <AmountQRCode {...params} />
     </SafeAreaView>
   );
