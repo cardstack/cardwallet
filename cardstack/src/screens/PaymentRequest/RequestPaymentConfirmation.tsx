@@ -89,7 +89,7 @@ export const RequestPaymentConfirmation = ({
 
   return (
     <>
-      <Container paddingHorizontal={5} width="100%">
+      <Container paddingHorizontal={5} width="100%" paddingBottom={20}>
         <Container flexDirection="row" marginTop={8}>
           <Text color="blueText" fontWeight="bold" paddingTop={1} size="xxs">
             TO:
