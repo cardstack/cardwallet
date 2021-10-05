@@ -12,7 +12,7 @@ let provider: WebsocketProvider | null = null;
 
 const Web3WsProvider = {
   get: async (network?: Network) => {
-    if (provider === null || network) {
+    if (provider === null || network || !provider?.connected) {
       const currentNetwork = await getNetwork();
       const node = getConstantByNetwork('rpcWssNode', currentNetwork);
 
@@ -25,7 +25,7 @@ const Web3WsProvider = {
         },
         clientConfig: {
           keepalive: true,
-          keepaliveInterval: -1,
+          keepaliveInterval: 60000,
         },
       });
 
@@ -46,12 +46,15 @@ const Web3WsProvider = {
         provider?.reconnect();
         logger.sentry('WS socket ended', e);
       });
+
+      //@ts-ignore
+      provider.on('close', e => {
+        logger.sentry('WS socket close', e);
+      });
     }
 
     return provider;
   },
 };
-
-Object.freeze(Web3WsProvider);
 
 export default Web3WsProvider;

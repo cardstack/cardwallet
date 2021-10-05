@@ -23,6 +23,4 @@ const Web3Instance = {
   },
 };
 
-Object.freeze(Web3Instance);
-
 export default Web3Instance;
