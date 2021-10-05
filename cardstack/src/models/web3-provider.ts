@@ -10,6 +10,14 @@ import { MainRoutes } from '@cardstack/navigation/routes';
 
 let provider: WebsocketProvider | null = null;
 
+const handleError = () => {
+  Navigation.handleAction(
+    MainRoutes.ERROR_FALLBACK_SCREEN,
+    { message: 'the web3 socket disconnected' },
+    true
+  );
+};
+
 const Web3WsProvider = {
   get: async (network?: Network) => {
     if (provider === null || network || !provider?.connected) {
@@ -34,11 +42,7 @@ const Web3WsProvider = {
         logger.sentry('WS socket error', e);
 
         // Navigate to error screen to force restart
-        Navigation.handleAction(
-          MainRoutes.ERROR_FALLBACK_SCREEN,
-          { message: 'the web3 socket disconnected' },
-          true
-        );
+        handleError();
       });
 
       //@ts-ignore
@@ -48,7 +52,9 @@ const Web3WsProvider = {
       });
 
       //@ts-ignore
-      provider.on('close', e => {
+      provider?.on('close', e => {
+        // Navigate to error screen to force restart
+        handleError();
         logger.sentry('WS socket close', e);
       });
     }
