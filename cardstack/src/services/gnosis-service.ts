@@ -7,6 +7,7 @@ import {
   PrepaidCardSafe,
 } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
+import { captureException } from '@sentry/react-native';
 import {
   saveDepots,
   saveMerchantSafes,
@@ -16,6 +17,8 @@ import { CurrencyConversionRates } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import logger from 'logger';
 import Web3Instance from '@cardstack/models/web3-instance';
+import { Navigation } from '@rainbow-me/navigation';
+import { MainRoutes } from '@cardstack/navigation';
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
@@ -93,6 +96,8 @@ export const fetchGnosisSafes = async (address: string) => {
       prepaidCards: extendedPrepaidCards,
     };
   } catch (error) {
+    Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
+    captureException(error);
     logger.sentry('Fetch GnosisSafes failed', error);
   }
 };
