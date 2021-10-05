@@ -7,7 +7,6 @@ import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion
 const FIXER_BASE_URL = 'https://data.fixer.io/api';
 const currencySymbols = Object.keys(nativeCurrencies);
 const USD_TO_SPD_RATE = 100;
-
 export default function useLoadCurrencyConversionRates() {
   const dispatch = useDispatch();
 
