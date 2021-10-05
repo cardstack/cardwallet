@@ -98,7 +98,7 @@ describe('usePaymentMerchantUniversalLink', () => {
     expect(result.current.data).toStrictEqual({
       type: 'payMerchant',
       infoDID: undefined,
-      spendAmount: 100,
+      amount: 100,
       merchantSafe: '0x7bAeEbbd7Fd1f41f3DA69A08f8E053C8CCBb592b',
       currency: 'SPD',
     });
