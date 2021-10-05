@@ -1,4 +1,4 @@
-import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { Column, ColumnWithMargins } from '../layout';
@@ -36,10 +36,9 @@ export default function SendAssetFormToken({
 }) {
   const { isSmallPhone, height: deviceHeight } = useDimensions();
 
-  const {
-    mask: nativeMask,
-    placeholder: nativePlaceholder,
-  } = supportedNativeCurrencies[nativeCurrency];
+  const { mask: nativeMask, placeholder: nativePlaceholder } = nativeCurrencies[
+    nativeCurrency
+  ];
 
   return (
     <Fragment>

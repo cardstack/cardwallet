@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { useSelector } from 'react-redux';
 import {
   AssetType,
@@ -18,7 +19,7 @@ interface ReduxState {
   };
   settings: {
     accountAddress: string;
-    nativeCurrency: string;
+    nativeCurrency: NativeCurrency;
     network: string;
   };
   uniqueTokens: {
@@ -35,7 +36,7 @@ interface ReduxState {
     pendingRedirect: boolean;
   };
   payment: {
-    currency: string;
+    currency: NativeCurrency;
   };
 }
 
@@ -45,13 +46,13 @@ export const useRainbowSelector = <TSelected = unknown>(
 ): TSelected => useSelector(selector, equalityFn);
 
 export const useNativeCurrencyAndConversionRates = () =>
-  useRainbowSelector<[string, { [key: string]: number }]>(state => [
+  useRainbowSelector<[NativeCurrency, { [key: string]: number }]>(state => [
     state.settings.nativeCurrency,
     state.currencyConversion.rates,
   ]);
 
 export const usePaymentCurrencyAndConversionRates = () =>
-  useRainbowSelector<[string, { [key: string]: number }]>(state => [
+  useRainbowSelector<[NativeCurrency, { [key: string]: number }]>(state => [
     state.payment.currency,
     state.currencyConversion.rates,
   ]);

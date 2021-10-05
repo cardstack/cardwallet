@@ -1,4 +1,4 @@
-import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
+import { currencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import lang from 'i18n-js';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,7 +36,7 @@ export default function useAccountSettings() {
       chainId,
       language,
       nativeCurrency,
-      nativeCurrencySymbol: supportedNativeCurrencies[nativeCurrency].symbol,
+      nativeCurrencySymbol: currencies[nativeCurrency].symbol,
       network,
       showTestnets,
     })

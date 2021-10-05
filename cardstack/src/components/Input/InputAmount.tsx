@@ -1,6 +1,9 @@
 import React, { useCallback, memo } from 'react';
 import { InteractionManager } from 'react-native';
-import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
+import {
+  nativeCurrencies,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk/sdk/currencies';
 import {
   CenteredContainer,
   Container,
@@ -28,7 +31,7 @@ const textShadowOffset = {
 type InputAmountProps = {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
-  nativeCurrency: string;
+  nativeCurrency: NativeCurrency;
   currencyDisplayMode?: CURRENCY_DISPLAY_MODE;
 } & ContainerProps;
 
@@ -57,7 +60,7 @@ export const InputAmount = memo(
       );
     }, [nativeCurrency, navigate]);
 
-    const selectedCurrency = (supportedNativeCurrencies as any)[nativeCurrency];
+    const selectedCurrency = nativeCurrencies[nativeCurrency];
 
     return (
       <Container width="100%" {...containerProps}>

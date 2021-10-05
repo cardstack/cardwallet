@@ -1,4 +1,4 @@
-import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { isNil } from 'lodash';
 import React, { useCallback } from 'react';
 import { CoinIcon } from '../coin-icon';
@@ -6,14 +6,8 @@ import { RadioList, RadioListItem } from '../radio-list';
 import { Emoji } from '../text';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
-const currencyListItems = Object.values(supportedNativeCurrencies)
-  .filter(
-    ({ currency }) =>
-      currency !== 'ETH' &&
-      currency !== 'DAI' &&
-      currency !== 'CARD' &&
-      currency !== 'SPD'
-  )
+const currencyListItems = Object.values(nativeCurrencies)
+  .filter(({ currency }) => currency !== 'SPD')
   .map(({ currency, ...item }) => ({
     ...item,
     currency,

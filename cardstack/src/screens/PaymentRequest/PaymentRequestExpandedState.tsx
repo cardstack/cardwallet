@@ -136,7 +136,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
         </Container>
       ) : (
         <>
-          {amountInNum && amountInNum > 0 ? (
+          {amountInNum > 0 ? (
             <>
               <Container
                 flex={1}

@@ -1,4 +1,4 @@
-import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { get } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -61,7 +61,7 @@ const CenteredLabel = ({ position, style, width, ...props }) => {
 
 export default function Labels({ color, width }) {
   const { nativeCurrency } = useAccountSettings();
-  const nativeSelected = get(supportedNativeCurrencies, `${nativeCurrency}`);
+  const nativeSelected = get(nativeCurrencies, `${nativeCurrency}`);
   const { greatestX, greatestY, smallestX, smallestY } = useChartData();
   const { colors } = useTheme();
 

@@ -1,13 +1,12 @@
-import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { useCallback } from 'react';
 import { FIXER_API_KEY } from 'react-native-dotenv';
 import { useDispatch } from 'react-redux';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 
 const FIXER_BASE_URL = 'https://data.fixer.io/api';
-const currencySymbols = Object.keys(supportedNativeCurrencies);
+const currencySymbols = Object.keys(nativeCurrencies);
 const USD_TO_SPD_RATE = 100;
-
 export default function useLoadCurrencyConversionRates() {
   const dispatch = useDispatch();
 

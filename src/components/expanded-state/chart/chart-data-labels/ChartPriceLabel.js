@@ -1,4 +1,4 @@
-import supportedNativeCurrencies from '@cardstack/cardpay-sdk/sdk/native-currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { get } from 'lodash';
 import React from 'react';
 import { PixelRatio, Text } from 'react-native';
@@ -73,7 +73,7 @@ export default function ChartPriceLabel({
   priceSharedValue,
 }) {
   const { nativeCurrency } = useAccountSettings();
-  const nativeSelected = get(supportedNativeCurrencies, `${nativeCurrency}`);
+  const nativeSelected = get(nativeCurrencies, `${nativeCurrency}`);
 
   return isNoPriceData ? (
     <ChartHeaderTitle>{defaultValue}</ChartHeaderTitle>
