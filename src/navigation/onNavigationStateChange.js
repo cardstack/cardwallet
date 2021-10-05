@@ -8,7 +8,6 @@ import Routes from './routesNames';
 import { Navigation } from './index';
 
 let memRouteName;
-let memState;
 
 let action = null;
 
@@ -27,9 +26,7 @@ export function triggerOnSwipeLayout(newAction) {
   }
 }
 
-export function onNavigationStateChange(currentState) {
-  const prevState = memState;
-  memState = currentState;
+export function onNavigationStateChange() {
   const { name: routeName } = Navigation.getActiveRoute();
   if (isOnSwipeScreen(routeName)) {
     action?.();
@@ -41,81 +38,24 @@ export function onNavigationStateChange(currentState) {
   if (currentColors.theme === 'dark') {
     StatusBar.setBarStyle('light-content');
   } else {
-    if (ios) {
-      const oldBottomSheetStackRoute = prevState?.routes[prevState.index].name;
-      const newBottomSheetStackRoute =
-        currentState?.routes[currentState.index].name;
-
-      const wasCustomSlackOpen =
-        oldBottomSheetStackRoute === Routes.CONFIRM_REQUEST ||
-        oldBottomSheetStackRoute === Routes.RECEIVE_MODAL ||
-        oldBottomSheetStackRoute === Routes.SETTINGS_MODAL;
-      const isCustomSlackOpen =
-        newBottomSheetStackRoute === Routes.CONFIRM_REQUEST ||
-        newBottomSheetStackRoute === Routes.RECEIVE_MODAL ||
-        newBottomSheetStackRoute === Routes.SETTINGS_MODAL;
-
-      if (wasCustomSlackOpen !== isCustomSlackOpen) {
-        StatusBar.setBarStyle(
-          wasCustomSlackOpen ? 'dark-content' : 'light-content'
-        );
+    if (android && routeName !== prevRouteName) {
+      if (
+        routeName === Routes.MAIN_EXCHANGE_SCREEN ||
+        routeName === Routes.SAVINGS_WITHDRAW_MODAL ||
+        routeName === Routes.SEND_SHEET ||
+        routeName === Routes.SPEND_SHEET ||
+        routeName === Routes.SWAP_DETAILS_SCREEN
+      ) {
+        AndroidKeyboardAdjust.setAdjustPan();
+      } else {
+        AndroidKeyboardAdjust.setAdjustResize();
       }
-    } else {
-      if (routeName !== prevRouteName) {
-        if ([prevRouteName, routeName].includes(Routes.RECEIVE_MODAL)) {
-          StatusBar.setBarStyle(
-            routeName === Routes.RECEIVE_MODAL
-              ? 'light-content'
-              : 'dark-content',
-            true
-          );
-        }
 
-        if (
-          routeName === Routes.MAIN_EXCHANGE_SCREEN ||
-          routeName === Routes.SAVINGS_WITHDRAW_MODAL ||
-          routeName === Routes.SEND_SHEET ||
-          routeName === Routes.SPEND_SHEET ||
-          routeName === Routes.SWAP_DETAILS_SCREEN
-        ) {
-          AndroidKeyboardAdjust.setAdjustPan();
-        } else {
-          AndroidKeyboardAdjust.setAdjustResize();
-        }
-
-        if ([prevRouteName, routeName].includes(Routes.QR_SCANNER_SCREEN)) {
-          StatusBar.setBarStyle(
-            routeName === Routes.QR_SCANNER_SCREEN
-              ? 'light-content'
-              : 'dark-content',
-            true
-          );
-        }
-
-        if ([prevRouteName, routeName].includes(Routes.BACKUP_SHEET)) {
-          StatusBar.setBarStyle(
-            !isOnSwipeScreen(routeName) ? 'light-content' : 'dark-content',
-            true
-          );
-        }
-
-        if ([prevRouteName, routeName].includes(Routes.SAVINGS_SHEET)) {
-          StatusBar.setBarStyle(
-            !isOnSwipeScreen(routeName) ? 'light-content' : 'dark-content',
-            true
-          );
-        }
-
-        if (
-          routeName === Routes.EXPANDED_ASSET_SHEET &&
-          Navigation.getActiveRoute().params.type === 'uniswap'
-        ) {
-          StatusBar.setBarStyle('light-content', true);
-        }
-
-        if (prevRouteName === Routes.EXPANDED_ASSET_SHEET) {
-          StatusBar.setBarStyle('dark-content', true);
-        }
+      if (
+        routeName === Routes.EXPANDED_ASSET_SHEET &&
+        Navigation.getActiveRoute().params.type === 'uniswap'
+      ) {
+        StatusBar.setBarStyle('light-content', true);
       }
     }
   }
