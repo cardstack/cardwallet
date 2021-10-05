@@ -14,7 +14,6 @@ export default function useHideSplashScreen() {
     if (android) {
       StatusBar.setBackgroundColor('transparent', false);
       StatusBar.setTranslucent(true);
-      StatusBar.setBarStyle('dark-content', true);
     }
     // show the StatusBar
     (ios && StatusBar.setHidden(false, 'fade')) ||

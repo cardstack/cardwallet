@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { LayoutAnimation, NativeModules, StatusBar } from 'react-native';
+import { LayoutAnimation, NativeModules } from 'react-native';
 import { ThemeProvider } from 'styled-components';
 
 import { getTheme, saveTheme } from '../handlers/localstorage/theme';
@@ -44,12 +44,6 @@ export const MainThemeProvider = props => {
     const loadUserPref = async () => {
       const userPref = (await getTheme()) || THEMES.LIGHT;
       const userPrefSystemAdjusted = 'light';
-      StatusBar.setBarStyle(
-        userPrefSystemAdjusted === THEMES.DARK
-          ? 'light-content'
-          : 'dark-content',
-        true
-      );
       currentColors.theme = userPrefSystemAdjusted;
       currentColors.themedColors =
         userPrefSystemAdjusted === THEMES.DARK
@@ -82,12 +76,6 @@ export const MainThemeProvider = props => {
       setTheme: scheme => {
         const schemeSystemAdjusted = 'light';
         currentColors.theme = schemeSystemAdjusted;
-        StatusBar.setBarStyle(
-          schemeSystemAdjusted === THEMES.DARK
-            ? 'light-content'
-            : 'dark-content',
-          true
-        );
         currentColors.themedColors =
           schemeSystemAdjusted === THEMES.DARK
             ? darkModeThemeColors
