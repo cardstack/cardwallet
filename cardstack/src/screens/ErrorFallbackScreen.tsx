@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from 'react';
 import { useRoute } from '@react-navigation/core';
-import { captureException } from '@sentry/minimal';
+import { captureException } from '@sentry/react-native';
 import ErrorFallback from '@cardstack/components/ErrorBoundary/ErrorFallback';
 import logger from 'logger';
 

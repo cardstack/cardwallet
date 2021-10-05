@@ -13,7 +13,7 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     logger.sentry(`Unhandled JS exception: ${JSON.stringify(errorInfo)}`);
     logger.sentry('Error:', error);
-    captureException(new Error('ErrorBoundary'));
+    captureException(error);
   }
 
   render() {

@@ -1,6 +1,6 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { MainRoutes, GlobalRoutes } from './routes';
-import { horizontalInterpolator } from './presetOptions';
+import { horizontalInterpolator, overlayPreset } from './presetOptions';
 import {
   BuyPrepaidCard,
   CurrencySelectionGlobalModal,
@@ -43,7 +43,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   ERROR_FALLBACK_SCREEN: {
     component: ErrorFallbackScreen,
-    options: horizontalInterpolator,
+    options: { ...overlayPreset, gestureEnabled: false },
   },
 };
 
