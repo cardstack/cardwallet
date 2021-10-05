@@ -198,37 +198,33 @@ class App extends Component {
     Navigation.setTopLevelNavigator(navigatorRef);
 
   render = () => (
-    <ThemeProvider theme={theme}>
-      <MainThemeProvider>
-        <RainbowContextWrapper>
-          <ErrorBoundary>
-            <Portal>
-              <SafeAreaProvider>
-                <PinnedHiddenItemOptionProvider>
-                  <ApolloProvider client={apolloClient}>
-                    <Provider store={store}>
-                      <FlexItem>
-                        <CheckSystemReqs>
-                          {this.state.initialRoute && (
-                            <InitialRouteContext.Provider
-                              value={this.state.initialRoute}
-                            >
-                              <RoutesComponent ref={this.handleNavigatorRef} />
-                              <PortalConsumer />
-                            </InitialRouteContext.Provider>
-                          )}
-                        </CheckSystemReqs>
-                        <OfflineToast />
-                      </FlexItem>
-                    </Provider>
-                  </ApolloProvider>
-                </PinnedHiddenItemOptionProvider>
-              </SafeAreaProvider>
-            </Portal>
-          </ErrorBoundary>
-        </RainbowContextWrapper>
-      </MainThemeProvider>
-    </ThemeProvider>
+    <MainThemeProvider>
+      <RainbowContextWrapper>
+        <Portal>
+          <SafeAreaProvider>
+            <PinnedHiddenItemOptionProvider>
+              <ApolloProvider client={apolloClient}>
+                <Provider store={store}>
+                  <FlexItem>
+                    <CheckSystemReqs>
+                      {this.state.initialRoute && (
+                        <InitialRouteContext.Provider
+                          value={this.state.initialRoute}
+                        >
+                          <RoutesComponent ref={this.handleNavigatorRef} />
+                          <PortalConsumer />
+                        </InitialRouteContext.Provider>
+                      )}
+                    </CheckSystemReqs>
+                    <OfflineToast />
+                  </FlexItem>
+                </Provider>
+              </ApolloProvider>
+            </PinnedHiddenItemOptionProvider>
+          </SafeAreaProvider>
+        </Portal>
+      </RainbowContextWrapper>
+    </MainThemeProvider>
   );
 }
 
@@ -286,6 +282,12 @@ const AppWithRedux = connect(
   }
 )(App);
 
-const AppWithStore = () => <AppWithRedux store={store} />;
+const AppWithStore = () => (
+  <ThemeProvider theme={theme}>
+    <ErrorBoundary>
+      <AppWithRedux store={store} />
+    </ErrorBoundary>
+  </ThemeProvider>
+);
 
 AppRegistry.registerComponent(appName, () => AppWithStore);
