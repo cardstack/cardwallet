@@ -13,3 +13,7 @@
 ### Screenshots
 
 <!-- Screenshots or animated GIFs included here -->
+
+<!-- Use this tag to format the screenshot size
+
+<img width="300" alt="Screenshot" src="URL_GOES_HERE"> -->
