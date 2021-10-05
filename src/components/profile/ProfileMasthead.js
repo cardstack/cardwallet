@@ -20,7 +20,6 @@ import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
 const ACCOUNT_CONTAINER = screenWidth * 0.85;
 
 export default function ProfileMasthead({
-  addCashAvailable,
   recyclerListRef,
   setCopiedText,
   setCopyCount,
@@ -177,7 +176,7 @@ export default function ProfileMasthead({
     <Container
       alignItems="center"
       backgroundColor="backgroundBlue"
-      height={addCashAvailable ? 260 : 185}
+      height={270}
       paddingBottom={6}
     >
       {/* [AvatarCircle -> ImageAvatar -> ImgixImage], so no need to sign accountImage here. */}
@@ -208,7 +207,7 @@ export default function ProfileMasthead({
           <Icon color="white" name="chevron-down" />
         </Container>
       </ButtonPressAnimation>
-      <Container marginTop={4}>
+      <Container marginVertical={2}>
         <Button onPress={handlePressAddCash}>Add Funds</Button>
       </Container>
       <Container

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { fromWei } from '@cardstack/cardpay-sdk';
-import { useAuthToken } from '@cardstack/hooks/prepaid-card/useAuthToken';
 import { useWorker } from '@cardstack/utils';
 import logger from 'logger';
 import { PrepaidCardCustomization } from '@cardstack/types';
+import { axiosInstance } from '@cardstack/models/axios-instance';
 
 export interface Inventory {
   id: string;
@@ -26,32 +26,28 @@ interface InventoryAttrs {
   transferrable: boolean;
 }
 
-export const usePrepaidCardInventory = (hubURL?: string) => {
+export const usePrepaidCardInventory = (hubURL: string, authToken: string) => {
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
-  const { authToken } = useAuthToken(hubURL);
 
   const { callback: getInventories, error, isLoading } = useWorker(async () => {
-    const headerParams = {
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-        Authorization: `Bearer: ${authToken}`,
-      },
-    };
+    const results = await axiosInstance(authToken).get('/api/inventories');
 
-    const results = await fetch(`${hubURL}/api/inventories`, headerParams);
+    if (results?.data?.data) {
+      const inventory = results?.data?.data;
 
-    if (results.ok) {
-      const result = await results.json();
+      const dataWithIsSelected = inventory
+        .sort((a: Inventory, b: Inventory) => {
+          return a.attributes['face-value'] - b.attributes['face-value'];
+        })
+        .map((item: Inventory) => {
+          return {
+            ...item,
+            isSelected: false,
+            amount: fromWei(item?.attributes['ask-price']),
+          };
+        });
 
-      const dataWithIsSelected = result.data.map((item: Inventory) => {
-        return {
-          ...item,
-          isSelected: false,
-          amount: fromWei(item?.attributes['ask-price']),
-        };
-      });
-
-      setInventoryData(dataWithIsSelected);
+      setInventoryData(dataWithIsSelected || []);
     }
   }, [authToken]);
 

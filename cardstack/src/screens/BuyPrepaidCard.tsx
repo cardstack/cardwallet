@@ -5,7 +5,6 @@ import {
   Container,
   PrepaidCard,
   ScrollView,
-  Skeleton,
   Text,
 } from '@cardstack/components';
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
@@ -18,17 +17,10 @@ import {
   usePrepaidCardInventory,
 } from '@cardstack/hooks/prepaid-card/usePrepaidCardInventory';
 import {
-  useCustodialWallet,
+  useAuthToken,
+  // useCustodialWallet,
   usePrepaidCardReservation,
 } from '@cardstack/hooks';
-
-const Shimmer = () => {
-  return (
-    <Container>
-      <Skeleton light height={100} width="100%" marginTop={3} />
-    </Container>
-  );
-};
 
 const TopContent = () => {
   return (
@@ -62,7 +54,7 @@ const CardContent = ({
       width="100%"
       marginRight={4}
       marginBottom={3}
-      borderRadius={4}
+      borderRadius={10}
       onPress={onPress}
     >
       <Text
@@ -99,9 +91,19 @@ const Subtitle = ({ text }: { text: string }) => {
   );
 };
 
+const DEFAULT_CARD_CONFIG = {
+  background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
+  issuerName: 'Cardstack',
+  patternColor: 'white',
+  patternUrl:
+    'https://app.cardstack.com/images/prepaid-card-customizations/pattern-5.svg',
+  textColor: 'black',
+};
+
 const BuyPrepaidCard = () => {
   const network = useRainbowSelector(state => state.settings.network);
   const hubURL = 'https://hub-staging.stack.cards';
+  const { authToken } = useAuthToken(hubURL);
 
   const [
     nativeCurrency,
@@ -110,18 +112,18 @@ const BuyPrepaidCard = () => {
 
   const [card, setCard] = useState<Inventory>();
 
-  const {
-    inventoryData,
-    setInventoryData,
-    isLoading,
-  } = usePrepaidCardInventory(hubURL);
+  const { inventoryData, setInventoryData } = usePrepaidCardInventory(
+    hubURL,
+    authToken
+  );
 
   const { reservationData } = usePrepaidCardReservation(
     card?.attributes?.sku || '',
-    hubURL
+    hubURL,
+    authToken
   );
 
-  const { custodialWallet } = useCustodialWallet(hubURL);
+  // const { custodialWallet } = useCustodialWallet(hubURL, authToken);
 
   // const onSkip = () => {
   //   navigate(Routes.SWIPE_LAYOUT, {
@@ -130,7 +132,6 @@ const BuyPrepaidCard = () => {
   // };
 
   console.log('reservationData: ', reservationData);
-  console.log('custodialWallet: ', custodialWallet);
 
   const onSelectCard = useCallback(
     (item, index) => {
@@ -169,22 +170,18 @@ const BuyPrepaidCard = () => {
       </Container>
       <ScrollView padding={5} flex={10}>
         <Container width="100%" marginBottom={8}>
-          <Subtitle text="ENTER AMOUNT" />
-          {isLoading ? (
-            <Shimmer />
-          ) : (
-            <FlatList
-              data={inventoryData}
-              renderItem={renderItem}
-              numColumns={2}
-            />
-          )}
+          <Subtitle text="CHOOSE AMOUNT" />
+          <FlatList
+            data={inventoryData}
+            renderItem={renderItem}
+            numColumns={2}
+          />
         </Container>
-
         {card ? (
           <Container width="100%" marginBottom={16}>
             <Subtitle text="PREVIEW" />
             <PrepaidCard
+              disabled
               networkName={network}
               nativeCurrency={nativeCurrency}
               currencyConversionRates={currencyConversionRates}
@@ -199,15 +196,7 @@ const BuyPrepaidCard = () => {
               cardCustomization={
                 card?.attributes['customization-DID']
                   ? card?.attributes['customization-DID']
-                  : {
-                      background:
-                        'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
-                      issuerName: 'Cardstack',
-                      patternColor: 'white',
-                      patternUrl:
-                        'https://app.cardstack.com/images/prepaid-card-customizations/pattern-5.svg',
-                      textColor: 'black',
-                    }
+                  : DEFAULT_CARD_CONFIG
               }
             />
           </Container>

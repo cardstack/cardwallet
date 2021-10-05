@@ -7,7 +7,7 @@ import { Network } from '@rainbow-me/networkTypes';
 import { useWorker } from '@cardstack/utils';
 import logger from 'logger';
 
-export const useAuthToken = (hubURL?: string) => {
+export const useAuthToken = (hubURL: string) => {
   const [authToken, setAuthToken] = useState<string>('');
   const { selectedWallet } = useWallets();
 
@@ -19,11 +19,6 @@ export const useAuthToken = (hubURL?: string) => {
     const web3 = await Web3Instance.get({ selectedWallet, network });
     const authAPI = await getSDK('HubAuth', web3, hubURL);
     setAuthToken(await authAPI.authenticate());
-    const isValid = await authAPI.checkValidAuth(authToken);
-
-    if (!isValid) {
-      setAuthToken(await authAPI.authenticate());
-    }
   }, [hubURL]);
 
   useEffect(() => {

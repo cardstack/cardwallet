@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useAuthToken } from '@cardstack/hooks/prepaid-card/useAuthToken';
 import { useWorker } from '@cardstack/utils';
 import logger from 'logger';
+import { axiosInstance } from '@cardstack/models/axios-instance';
 
 interface CustodialWalletAttrs {
   'wyre-wallet-id': string;
@@ -15,21 +15,17 @@ interface CustodialWallet {
   attributes: CustodialWalletAttrs;
 }
 
-export const useCustodialWallet = (hubURL?: string) => {
-  const { authToken } = useAuthToken(hubURL);
+export const useCustodialWallet = (hubURL: string, authToken: string) => {
   const [custodialWallet, setCustodialWallet] = useState<CustodialWallet>();
 
   const { callback: getCustodialWallet, error } = useWorker(async () => {
-    const results = await fetch(`${hubURL}/api/custodial-wallet`, {
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-        Authorization: `Bearer: ${authToken}`,
-      },
-    });
+    const results = await axiosInstance(authToken).get(
+      `${hubURL}/api/custodial-wallet`
+    );
 
-    if (results.ok) {
-      const result = await results.json();
-      setCustodialWallet(result.data);
+    if (results.data?.data) {
+      const result = await results.data?.data;
+      setCustodialWallet(result);
     }
   }, [hubURL]);
 
