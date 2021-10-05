@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
 import {
   PayThisAmountSection,
@@ -20,8 +19,6 @@ export const PayMerchantDisplay = ({
   data: { infoDID = '', amount, prepaidCard = '', merchantSafe },
 }: PayMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
-
-  // Default to spend while we don't have a currency selector
   const spendDisplay = useSpendDisplay(amount, false);
 
   return (

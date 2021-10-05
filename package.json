@@ -40,7 +40,7 @@
     "install-all-no-flipper": "yarn setup && yarn install-pods-no-flipper",
     "install-bundle": "cd ios && bundle install && cd ..",
     "install-pods": "cd ios && bundle exec pod install --repo-update && cd ..",
-    "install-pods:m1": "cd ios && pod install --repo-update && cd ..",
+    "install-pods:m1": "cd ios && pod install && cd ..",
     "install-pods-fast": "cd ios && bundle exec pod install && cd ..",
     "install-pods-no-flipper": "cd ios && bundle exec env SKIP_FLIPPER=true pod install --repo-update && cd ..",
     "ios": "react-native run-ios --simulator='iPhone 11'",

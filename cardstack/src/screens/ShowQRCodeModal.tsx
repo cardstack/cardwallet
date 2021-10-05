@@ -1,7 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import CardstackColorLogo from '../assets/cardstackColorLogo.png';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
@@ -16,14 +15,13 @@ import { MerchantInformation } from '@cardstack/types';
 import { useDimensions } from '@rainbow-me/hooks';
 import { hitSlop } from '@cardstack/utils/layouts';
 
-const StatusBarHeight = getStatusBarHeight(true);
-
 type ShowQRCodeModalParamTypes = {
   value: string;
   amountWithSymbol: string;
   amountInAnotherCurrency: string;
   merchantInfo?: MerchantInformation;
   hasAmount?: boolean;
+  backToEditMode?: () => void;
 };
 
 export const AmountQRCode = ({
@@ -32,14 +30,16 @@ export const AmountQRCode = ({
   amountInAnotherCurrency,
   merchantInfo,
   hasAmount,
+  backToEditMode,
 }: ShowQRCodeModalParamTypes) => {
   const { width } = useDimensions();
   const QRCodeSize = width - 140;
   const { goBack } = useNavigation();
 
   const goBackToEditAmount = useCallback(() => {
+    backToEditMode && backToEditMode();
     goBack();
-  }, [goBack]);
+  }, [goBack, backToEditMode]);
 
   return (
     <Container
@@ -54,47 +54,54 @@ export const AmountQRCode = ({
         flex={1}
         flexDirection="column"
         alignItems="center"
+        justifyContent="space-between"
         paddingTop={4}
       >
-        <SheetHandle />
-        <Text size="body" color="black" marginTop={7} fontWeight="bold">
-          Scan to Pay
-        </Text>
-        {merchantInfo && (
-          <Container marginTop={12}>
+        <Container alignItems="center">
+          <SheetHandle />
+          <Text size="body" color="black" fontWeight="bold" marginTop={4}>
+            Scan to Pay
+          </Text>
+        </Container>
+        <Container alignItems="center">
+          {merchantInfo && (
             <ContactAvatar
               color={merchantInfo.color}
               size="xlarge"
               value={merchantInfo.name}
               textColor={merchantInfo.textColor}
             />
-          </Container>
-        )}
-        {merchantInfo?.name ? (
-          <Text size="medium" color="black" marginTop={3} textAlign="center">
-            {merchantInfo.name}
-          </Text>
-        ) : null}
-        {hasAmount ? (
-          <>
-            {amountWithSymbol ? (
-              <Text size="xl" color="black" fontWeight="bold" marginTop={4}>
-                {amountWithSymbol}
-              </Text>
-            ) : null}
-            {amountInAnotherCurrency ? (
-              <Text size="medium" color="blueText">
-                {amountInAnotherCurrency}
-              </Text>
-            ) : null}
-          </>
-        ) : null}
-        <Container
-          flexGrow={1}
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
+          )}
+          {merchantInfo?.name ? (
+            <Text
+              size="medium"
+              color="black"
+              weight="bold"
+              marginTop={2}
+              textAlign="center"
+            >
+              {merchantInfo.name}
+            </Text>
+          ) : null}
+          {hasAmount ? (
+            <>
+              {amountWithSymbol ? (
+                <Text
+                  size="largeBalance"
+                  color="black"
+                  fontWeight="bold"
+                  marginTop={4}
+                >
+                  {amountWithSymbol}
+                </Text>
+              ) : null}
+              {amountInAnotherCurrency ? (
+                <Text size="xs" color="blueText">
+                  {amountInAnotherCurrency}
+                </Text>
+              ) : null}
+            </>
+          ) : null}
           <Touchable
             borderColor="grayText"
             borderRadius={15}
@@ -103,6 +110,7 @@ export const AmountQRCode = ({
             hitSlop={hitSlop.small}
             onPress={goBackToEditAmount}
             paddingHorizontal={4}
+            marginTop={4}
           >
             <Text size="xxs" weight="bold" lineHeight={29}>
               Edit amount
@@ -110,7 +118,7 @@ export const AmountQRCode = ({
           </Touchable>
         </Container>
       </Container>
-      <Container alignItems="center" flex={1}>
+      <Container alignItems="center" flex={1} paddingTop={8}>
         <Container
           padding={5}
           backgroundColor="white"
@@ -134,12 +142,7 @@ const ShowQRCodeModal = () => {
   const { params } = useRoute() as { params: ShowQRCodeModalParamTypes };
 
   return (
-    <SafeAreaView
-      flex={1}
-      width="100%"
-      backgroundColor="transparent"
-      paddingTop={Math.round(StatusBarHeight / 4)}
-    >
+    <SafeAreaView flex={1} width="100%" backgroundColor="transparent">
       <AmountQRCode {...params} />
     </SafeAreaView>
   );

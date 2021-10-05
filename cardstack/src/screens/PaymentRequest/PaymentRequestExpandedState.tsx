@@ -192,6 +192,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
             merchantInfo={merchantInfo}
             nativeCurrency={nativeCurrency}
             amountInAnotherCurrency={amountInAnotherCurrency}
+            backToEditMode={() => setEditMode(true)}
           />
         </>
       )}
