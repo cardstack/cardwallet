@@ -27,6 +27,7 @@ export const RequestPaymentConfirmation = ({
   merchantInfo,
   nativeCurrency,
   amountInAnotherCurrency,
+  backToEditMode,
 }: {
   amountWithSymbol: string | undefined;
   address: string;
@@ -34,6 +35,7 @@ export const RequestPaymentConfirmation = ({
   merchantInfo?: MerchantInformation;
   nativeCurrency?: string;
   amountInAnotherCurrency: string;
+  backToEditMode: () => void;
 }) => {
   const [copyCount, setCopyCount] = useState(0);
 
@@ -41,8 +43,6 @@ export const RequestPaymentConfirmation = ({
   const { navigate } = useNavigation();
   const { setClipboard } = useClipboard();
 
-  // for now the amount is in spend, but once we get
-  // the currency selector we should pass the amount with currency
   const paymentRequestLink = useMemo(
     () =>
       generateMerchantPaymentUrl({
@@ -67,16 +67,14 @@ export const RequestPaymentConfirmation = ({
     }
   }, [address, paymentRequestLink]);
 
-  // assuming we are using the global native currency,
-  // once it needs to change we probably should receive this as prop
-
   const showQRCode = useCallback(() => {
     navigate(Routes.SHOW_QRCODE_MODAL, {
       value: paymentRequestLink,
       amountWithSymbol,
       amountInAnotherCurrency,
-      name: merchantInfo?.name,
+      merchantInfo: merchantInfo,
       hasAmount: amountInNum > 0,
+      backToEditMode,
     });
   }, [
     navigate,
@@ -85,11 +83,12 @@ export const RequestPaymentConfirmation = ({
     amountWithSymbol,
     amountInAnotherCurrency,
     merchantInfo,
+    backToEditMode,
   ]);
 
   return (
     <>
-      <Container paddingHorizontal={5} width="100%">
+      <Container paddingHorizontal={5} width="100%" paddingBottom={20}>
         <Container flexDirection="row" marginTop={8}>
           <Text color="blueText" fontWeight="bold" paddingTop={1} size="xxs">
             TO:

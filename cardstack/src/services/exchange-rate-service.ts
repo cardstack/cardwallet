@@ -1,4 +1,5 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { CurrencyConversionRates } from '@cardstack/types';
 import Web3Instance from '@cardstack/models/web3-instance';
 
@@ -20,7 +21,7 @@ export const getNativeBalance = async (props: {
   const usdBalance = await layerTwoOracle.getUSDPrice(symbol, balance);
 
   const nativeBalance =
-    nativeCurrency === 'USD'
+    nativeCurrency === NativeCurrency.USD
       ? usdBalance
       : currencyConversionRates[nativeCurrency] * usdBalance;
 

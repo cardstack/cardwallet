@@ -4,6 +4,7 @@ import {
   convertAmountAndPriceToNativeDisplay,
   spendToUsd,
 } from '@cardstack/cardpay-sdk';
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import {
   RequestPaymentConfirmation,
   RequestPaymentConfirmationFooter,
@@ -79,15 +80,15 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
     </Container>
   );
 
-  const amountInNum = formattedCurrencyToAbsNum(inputValue);
+  const amountInNum: number = formattedCurrencyToAbsNum(inputValue);
 
   const amountWithSymbol =
-    nativeCurrency === 'SPD'
+    nativeCurrency === NativeCurrency.SPD
       ? `§${formatNative(`${amountInNum}`)} SPD`
       : convertAmountToNativeDisplay(amountInNum, nativeCurrency);
 
   const amountInAnotherCurrency =
-    nativeCurrency === 'SPD'
+    nativeCurrency === NativeCurrency.SPD
       ? convertAmountAndPriceToNativeDisplay(
           spendToUsd(amountInNum) || 0,
           currencyConversionRates[accountNativeCurrency],
@@ -191,6 +192,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
             merchantInfo={merchantInfo}
             nativeCurrency={nativeCurrency}
             amountInAnotherCurrency={amountInAnotherCurrency}
+            backToEditMode={() => setEditMode(true)}
           />
         </>
       )}
