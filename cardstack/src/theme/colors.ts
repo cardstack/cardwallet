@@ -28,6 +28,8 @@ export const palette = {
   grayCardBackground: '#F8F7FA',
   blackOpacity50: '#00000080',
   whiteOpacity50: '#FFFFFF80',
+  grayButtonBackground: '#D1D5DB',
+  buttonDisabledBackground: '#2e2d38',
 };
 
 export const colors = {
@@ -68,6 +70,8 @@ export const colors = {
   grayCardBackground: palette.grayCardBackground,
   overlay: palette.blackOpacity50,
   whiteOverlay: palette.whiteOpacity50,
+  grayButtonBackground: palette.grayButtonBackground,
+  buttonDisabledBackground: palette.buttonDisabledBackground,
 };
 
 export type ColorTypes = keyof typeof colors;

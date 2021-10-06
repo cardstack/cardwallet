@@ -7,12 +7,17 @@ import { walletsSetSelected, walletsUpdate } from '../../redux/wallets';
 import { ButtonPressAnimation } from '../animations';
 import AvatarCircle from './AvatarCircle';
 import { Button, Container, Icon, Text } from '@cardstack/components';
-import { screenWidth } from '@cardstack/utils';
+import { isLayer1, screenWidth } from '@cardstack/utils';
 import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
-import { useAccountProfile, useClipboard, useWallets } from '@rainbow-me/hooks';
+import {
+  useAccountProfile,
+  useAccountSettings,
+  useClipboard,
+  useWallets,
+} from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
@@ -35,10 +40,10 @@ export default function ProfileMasthead({
     accountName,
     accountImage,
   } = useAccountProfile();
+  const { network } = useAccountSettings();
   const isAvatarPickerAvailable = useExperimentalFlag(AVATAR_PICKER);
   const isAvatarEmojiPickerEnabled = false;
   const isAvatarImagePickerEnabled = true;
-
   const onRemovePhoto = useCallback(async () => {
     const newWallets = {
       ...wallets,
@@ -144,14 +149,18 @@ export default function ProfileMasthead({
     navigate(Routes.RECEIVE_MODAL);
   }, [navigate, isDamaged]);
 
-  const handlePressAddCash = useCallback(() => {
+  const handlePress = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
       return;
     }
 
     if (ios) {
-      navigate(Routes.ADD_CASH_FLOW);
+      if (isLayer1(network)) {
+        navigate(Routes.ADD_CASH_FLOW);
+      } else {
+        navigate(Routes.BUY_PREPAID_CARD);
+      }
     } else {
       navigate(Routes.WYRE_WEBVIEW_NAVIGATOR, {
         params: {
@@ -160,7 +169,7 @@ export default function ProfileMasthead({
         screen: Routes.WYRE_WEBVIEW,
       });
     }
-  }, [accountAddress, navigate, isDamaged]);
+  }, [accountAddress, navigate, isDamaged, network]);
 
   const handlePressChangeWallet = useCallback(() => {
     navigate(Routes.CHANGE_WALLET_SHEET);
@@ -177,7 +186,7 @@ export default function ProfileMasthead({
     <Container
       alignItems="center"
       backgroundColor="backgroundBlue"
-      height={addCashAvailable ? 260 : 185}
+      height={270}
       paddingBottom={6}
     >
       {/* [AvatarCircle -> ImageAvatar -> ImgixImage], so no need to sign accountImage here. */}
@@ -208,11 +217,14 @@ export default function ProfileMasthead({
           <Icon color="white" name="chevron-down" />
         </Container>
       </ButtonPressAnimation>
-      {addCashAvailable && (
-        <Container marginTop={4}>
-          <Button onPress={handlePressAddCash}>Add Funds</Button>
-        </Container>
-      )}
+      <Container marginTop={4}>
+        {addCashAvailable && isLayer1(network) ? (
+          <Button onPress={handlePress}>Add Funds</Button>
+        ) : null}
+        {!isLayer1(network) ? (
+          <Button onPress={handlePress}>Buy Prepaid Card</Button>
+        ) : null}
+      </Container>
       <Container
         flexDirection="row"
         justifyContent="space-between"

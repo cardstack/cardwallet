@@ -88,6 +88,18 @@ const disabledBlack = {
   },
 };
 
+const square = {
+  ...primary,
+  height: 92,
+  width: 92,
+  borderRadius: 20,
+  textStyle: {
+    ...primary.textStyle,
+    fontWeight: '700',
+    fontSize: 26,
+  },
+};
+
 export const buttonVariants = {
   defaults: {
     alignItems: 'center',
@@ -147,16 +159,14 @@ export const buttonVariants = {
   },
   tiny,
   invalid: { ...invalid },
-  square: {
-    ...primary,
-    height: 92,
-    width: 92,
-    borderRadius: 20,
-    textStyle: {
-      ...primary.textStyle,
-      fontWeight: '700',
-      fontSize: 26,
-    },
+  square,
+  squareSelected: {
+    ...square,
+    backgroundColor: 'teal',
+  },
+  squareDisabled: {
+    ...square,
+    backgroundColor: 'buttonDisabledBackground',
   },
   disabled,
   disabledBlack,

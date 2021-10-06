@@ -29,5 +29,9 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*)',
   ],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+  moduleNameMapper: {
+    ...pathsToModuleNameMapper(compilerOptions.paths),
+    '^.+.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
+      'jest-transform-stub',
+  },
 };
