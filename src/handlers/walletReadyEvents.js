@@ -23,7 +23,24 @@ export const runKeychainIntegrityChecks = () => {
 };
 
 export const runWalletBackupStatusChecks = () => {
-  const { selected, wallets } = store.getState().wallets;
+  const state = store.getState();
+  const { selected, wallets } = state.wallets;
+  const {
+    prepaidCards = [],
+    merchantSafes = [],
+    depots = [],
+    assets = [],
+  } = state.data;
+
+  // Skip check if EOA has no safes or assets
+  if (
+    !prepaidCards.length &&
+    !merchantSafes.length &&
+    !depots.length &&
+    !assets.length
+  ) {
+    return;
+  }
 
   // count how many visible, non-imported and non-readonly wallets are not backed up
   const rainbowWalletsNotBackedUp = filter(wallets, wallet => {

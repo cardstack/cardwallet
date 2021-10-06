@@ -390,7 +390,7 @@ export default function ImportSeedPhraseSheet() {
   const { colors } = useTheme();
   return (
     <Container testID="import-sheet">
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
       <Sheet>
         <SheetHandle marginBottom={7} marginTop={6} />
         <Text fontSize={18} fontWeight="700">
