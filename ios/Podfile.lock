@@ -365,7 +365,7 @@ PODS:
     - React-Core
   - react-native-cloud-fs (2.3.0):
     - React
-  - react-native-flipper (0.113.0):
+  - react-native-flipper (0.114.0):
     - React-Core
   - react-native-get-random-values (1.5.0):
     - React
@@ -949,7 +949,7 @@ SPEC CHECKSUMS:
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
   react-native-cloud-fs: 1cb3deba691efbb5c6fcc831959be58762d8bdfe
-  react-native-flipper: 2a212eb0fead9ae9b42d1eb75604757cdf36f2bb
+  react-native-flipper: 117dac1f1758346575933a6d62d2c472c847a7b6
   react-native-get-random-values: 1404bd5cc0ab0e287f75ee1c489555688fc65f89
   react-native-mail: a864fb211feaa5845c6c478a3266de725afdce89
   react-native-netinfo: 250dc0ca126512f618a8a2ca6a936577e1f66586
