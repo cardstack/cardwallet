@@ -164,6 +164,10 @@ export const buttonVariants = {
     ...square,
     backgroundColor: 'teal',
   },
+  squareDisabled: {
+    ...square,
+    backgroundColor: 'buttonDisabledBackground',
+  },
   disabled,
   disabledBlack,
 };

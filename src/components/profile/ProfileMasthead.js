@@ -143,7 +143,7 @@ export default function ProfileMasthead({
     navigate(Routes.RECEIVE_MODAL);
   }, [navigate, isDamaged]);
 
-  const handlePressAddCash = useCallback(() => {
+  const handleBuyPrepaidCard = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
       return;
@@ -208,7 +208,7 @@ export default function ProfileMasthead({
         </Container>
       </ButtonPressAnimation>
       <Container marginVertical={2}>
-        <Button onPress={handlePressAddCash}>Add Funds</Button>
+        <Button onPress={handleBuyPrepaidCard}>Buy Prepaid Card</Button>
       </Container>
       <Container
         flexDirection="row"

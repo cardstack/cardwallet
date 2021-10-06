@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import {
   Button,
   Container,
   PrepaidCard,
-  ScrollView,
+  SheetHandle,
   Text,
 } from '@cardstack/components';
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
@@ -12,19 +12,19 @@ import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
+import { useAuthToken } from '@cardstack/hooks';
+import { SlackSheet } from '@rainbow-me/components/sheet';
 import {
+  getInventories,
   Inventory,
-  usePrepaidCardInventory,
-} from '@cardstack/hooks/prepaid-card/usePrepaidCardInventory';
-import {
-  useAuthToken,
-  // useCustodialWallet,
-  usePrepaidCardReservation,
-} from '@cardstack/hooks';
+  InventoryAttrs,
+  makeReservation,
+  ReservationData,
+} from '@cardstack/services';
 
 const TopContent = () => {
   return (
-    <>
+    <Container marginTop={4}>
       <Text fontSize={26} color="white">
         Buy a{' '}
         <Text fontSize={26} color="teal">
@@ -32,8 +32,15 @@ const TopContent = () => {
         </Text>{' '}
         via Apple Pay to get started
       </Text>
-    </>
+    </Container>
   );
+};
+
+const baseStyles = {
+  marginRight: 4,
+  marginBottom: 3,
+  borderRadius: 10,
+  width: '100%',
 };
 
 const CardContent = ({
@@ -41,21 +48,20 @@ const CardContent = ({
   amount,
   isSelected,
   faceValue,
+  quantity,
 }: {
   onPress: () => void;
   amount: number;
   faceValue: number;
   isSelected: boolean;
+  quantity: number;
 }) => {
-  return (
+  return quantity > 0 ? (
     <Button
       borderColor={isSelected ? 'buttonPrimaryBorder' : 'buttonSecondaryBorder'}
       variant={isSelected ? 'squareSelected' : 'square'}
-      width="100%"
-      marginRight={4}
-      marginBottom={3}
-      borderRadius={10}
       onPress={onPress}
+      {...baseStyles}
     >
       <Text
         color={isSelected ? 'black' : 'white'}
@@ -72,6 +78,25 @@ const CardContent = ({
       >
         {`\n`}
         {faceValue} SPEND
+      </Text>
+    </Button>
+  ) : (
+    <Button
+      borderColor="buttonDisabledBackground"
+      variant="squareDisabled"
+      {...baseStyles}
+    >
+      <Text color="blueText" fontSize={28} textAlign="center">
+        ${amount}
+      </Text>
+      <Text
+        color="buttonSecondaryBorder"
+        fontSize={13}
+        textAlign="center"
+        fontFamily="OpenSans-Semibold"
+      >
+        {`\n`}
+        SOLD OUT
       </Text>
     </Button>
   );
@@ -110,28 +135,27 @@ const BuyPrepaidCard = () => {
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
-  const [card, setCard] = useState<Inventory>();
+  const [card, setCard] = useState<InventoryAttrs>();
 
-  const { inventoryData, setInventoryData } = usePrepaidCardInventory(
-    hubURL,
-    authToken
+  const [inventoryData, setInventoryData] = useState<Inventory[]>();
+  const [, setReservationData] = useState<ReservationData>();
+
+  useEffect(() => {
+    const getInventoryData = async () => {
+      const data = await getInventories(hubURL, authToken);
+      setInventoryData(data);
+    };
+
+    getInventoryData();
+  }, [authToken]);
+
+  const reserveCard = useCallback(
+    async (sku: string) => {
+      const data = await makeReservation(hubURL, authToken, sku);
+      setReservationData(data);
+    },
+    [authToken]
   );
-
-  const { reservationData } = usePrepaidCardReservation(
-    card?.attributes?.sku || '',
-    hubURL,
-    authToken
-  );
-
-  // const { custodialWallet } = useCustodialWallet(hubURL, authToken);
-
-  // const onSkip = () => {
-  //   navigate(Routes.SWIPE_LAYOUT, {
-  //     screen: Routes.WALLET_SCREEN,
-  //   });
-  // };
-
-  console.log('reservationData: ', reservationData);
 
   const onSelectCard = useCallback(
     (item, index) => {
@@ -143,21 +167,26 @@ const BuyPrepaidCard = () => {
           : [];
 
       modifiedCards[index].isSelected = true;
+
       setInventoryData(modifiedCards);
       setCard(
         modifiedCards.filter((cardItem: Inventory) => cardItem.isSelected)[0]
+          .attributes
       );
+
+      reserveCard(modifiedCards[index].attributes.sku);
     },
-    [inventoryData, setInventoryData]
+    [inventoryData, reserveCard]
   );
 
   const renderItem = useCallback(
     ({ item, index }: { item: Inventory; index: number }) => (
       <CardContent
         onPress={() => onSelectCard(item, index)}
-        isSelected={item.isSelected}
-        amount={item.amount}
-        faceValue={item.attributes['face-value']}
+        isSelected={item?.isSelected}
+        amount={item?.amount}
+        faceValue={item?.attributes['face-value']}
+        quantity={item.attributes?.quantity}
       />
     ),
     [onSelectCard]
@@ -165,54 +194,69 @@ const BuyPrepaidCard = () => {
 
   return (
     <Container backgroundColor="backgroundBlue" flex={1}>
-      <Container marginTop={18} padding={4}>
-        <TopContent />
-      </Container>
-      <ScrollView padding={5} flex={10}>
-        <Container width="100%" marginBottom={8}>
-          <Subtitle text="CHOOSE AMOUNT" />
-          <FlatList
-            data={inventoryData}
-            renderItem={renderItem}
-            numColumns={2}
-          />
-        </Container>
-        {card ? (
-          <Container width="100%" marginBottom={16}>
-            <Subtitle text="PREVIEW" />
-            <PrepaidCard
-              disabled
-              networkName={network}
-              nativeCurrency={nativeCurrency}
-              currencyConversionRates={currencyConversionRates}
-              address={card?.attributes['issuing-token-address']}
-              issuer="Cardstack"
-              issuingToken={card?.attributes['issuing-token-symbol']}
-              spendFaceValue={card?.attributes['face-value'] || 0}
-              tokens={[]}
-              type="prepaid-card"
-              reloadable={card?.attributes.reloadable}
-              transferrable={card?.attributes.transferrable}
-              cardCustomization={
-                card?.attributes['customization-DID']
-                  ? card?.attributes['customization-DID']
-                  : DEFAULT_CARD_CONFIG
-              }
+      <SlackSheet
+        backgroundColor="transparent"
+        renderHeader={() => (
+          <Container
+            backgroundColor="backgroundBlue"
+            paddingTop={16}
+            paddingHorizontal={4}
+            alignItems="center"
+          >
+            <SheetHandle />
+            <TopContent />
+          </Container>
+        )}
+        renderFooter={() => (
+          <Container
+            padding={8}
+            backgroundColor="grayButtonBackground"
+            justifyContent="center"
+          >
+            <ApplePayButton
+              disabled={true}
+              onDisabledPress={() => console.log('onDisabledPress')}
+              onSubmit={() => console.log('onSubmit')}
             />
           </Container>
-        ) : null}
-      </ScrollView>
-      <Container
-        padding={8}
-        backgroundColor="grayButtonBackground"
-        justifyContent="center"
+        )}
+        scrollEnabled
       >
-        <ApplePayButton
-          disabled={true}
-          onDisabledPress={() => console.log('onDisabledPress')}
-          onSubmit={() => console.log('onSubmit')}
-        />
-      </Container>
+        <Container backgroundColor="backgroundBlue" height="100%" flex={1}>
+          <Container backgroundColor="backgroundBlue" width="100%" padding={4}>
+            <Subtitle text="CHOOSE AMOUNT" />
+            <FlatList
+              data={inventoryData}
+              renderItem={renderItem}
+              numColumns={2}
+            />
+          </Container>
+          {card ? (
+            <Container width="100%" marginBottom={16} padding={4}>
+              <Subtitle text="PREVIEW" />
+              <PrepaidCard
+                disabled
+                networkName={network}
+                nativeCurrency={nativeCurrency}
+                currencyConversionRates={currencyConversionRates}
+                address={card['issuing-token-address']}
+                issuer="Cardstack"
+                issuingToken={card['issuing-token-symbol']}
+                spendFaceValue={card['face-value'] || 0}
+                tokens={[]}
+                type="prepaid-card"
+                reloadable={card.reloadable}
+                transferrable={card.transferrable}
+                cardCustomization={
+                  card['customization-DID']
+                    ? card['customization-DID']
+                    : DEFAULT_CARD_CONFIG
+                }
+              />
+            </Container>
+          ) : null}
+        </Container>
+      </SlackSheet>
     </Container>
   );
 };
