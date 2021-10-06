@@ -1,36 +1,49 @@
-import { inventoryData } from '../helpers/mocks/hubMocks';
+import axios from 'axios';
 import {
-  // axiosService,
-  getInventories,
-  // getCustodialWallet,
-  // makeReservation,
-} from '@cardstack/services';
+  getInventoryDataResponse,
+  inventoryData,
+  reservationData,
+} from '../helpers/mocks/hubMocks';
+
+import { getInventories, makeReservation } from '@cardstack/services';
 
 jest.mock('axios');
-const axios = require('axios');
-jest.mock('axios', () => ({ post: jest.fn(), create: jest.fn() }));
 
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
+jest.mock('axios', () => ({
+  post: jest.fn(),
+  create: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/react-native-payments', () => ({
-  PaymentRequest: jest.mock,
-}));
+const tokenMock = 'TOKENMOCK123@';
 
-jest.mock('@react-native-community/async-storage', () => ({
-  AsyncStorage: jest.mock,
-}));
-
-jest.mock('@react-native-community/async-storage', () => ({
-  AsyncStorage: jest.mock,
-}));
-
-describe('getInventories', () => {
+describe('getInventories', async () => {
   it('Should return filtered data', async () => {
-    const mockedResponse = Promise.resolve(inventoryData);
-    axios.create.mockResolvedValue(mockedResponse);
-    axios.mockResolvedValue(mockedResponse);
-    expect(getInventories('hubURL', 'tokenURL')).toBe({});
+    axios.get = jest.fn().mockResolvedValue(inventoryData);
+    const result = await getInventories('hubURL', tokenMock);
+
+    expect(result).toStrictEqual(getInventoryDataResponse);
+  });
+
+  it('Should return undefined with empty API response', async () => {
+    axios.get = jest.fn().mockResolvedValue([]);
+    const result = await getInventories('hubURL', tokenMock);
+
+    expect(result).toStrictEqual(undefined);
+  });
+});
+
+describe('makeReservation', async () => {
+  it('Should return success data', async () => {
+    axios.post = jest.fn().mockResolvedValue(reservationData.data.data);
+    const result = await makeReservation('hubURL', tokenMock, 'SKU_MOCK');
+
+    expect(result).toBe(reservationData.data.data);
+  });
+
+  it('Should return undefined with empty API response', async () => {
+    axios.post = jest.fn().mockResolvedValue([]);
+    const result = await getInventories('hubURL', tokenMock);
+
+    expect(result).toStrictEqual(undefined);
   });
 });

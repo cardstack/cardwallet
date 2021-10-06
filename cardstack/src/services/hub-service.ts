@@ -3,15 +3,15 @@ import { fromWei } from '@cardstack/cardpay-sdk';
 import { PrepaidCardCustomization } from '@cardstack/types';
 import logger from 'logger';
 
-export const axiosService = (authToken: string) => {
-  return axios.create({
+const axiosConfig = (authToken: string) => {
+  return {
     baseURL: 'https://hub-staging.stack.cards/',
     headers: {
       'Content-Type': 'application/vnd.api+json',
       Authorization: `Bearer: ${authToken}`,
       Accept: 'application/vnd.api+json',
     },
-  });
+  };
 };
 
 export interface CustodialWalletAttrs {
@@ -65,8 +65,9 @@ export const getCustodialWallet = async (
   authToken: string
 ): Promise<CustodialWallet | undefined> => {
   try {
-    const results = await axiosService(authToken).get(
-      `${hubURL}/api/custodial-wallet`
+    const results = await axios.get(
+      `${hubURL}/api/custodial-wallet`,
+      axiosConfig(authToken)
     );
 
     if (results.data?.data) {
@@ -82,7 +83,7 @@ export const getInventories = async (
   authToken: string
 ): Promise<Inventory[] | undefined> => {
   try {
-    const results = await axiosService(authToken).get('/api/inventories');
+    const results = await axios.get('/api/inventories', axiosConfig(authToken));
 
     if (results?.data?.data) {
       const inventory = results?.data?.data;
@@ -110,7 +111,7 @@ export const makeReservation = async (
   sku: string
 ): Promise<ReservationData | undefined> => {
   try {
-    return await axiosService(authToken).post(
+    return await axios.post(
       `${hubURL}/api/reservations`,
       JSON.stringify({
         data: {
@@ -119,7 +120,8 @@ export const makeReservation = async (
             sku,
           },
         },
-      })
+      }),
+      axiosConfig(authToken)
     );
   } catch (e) {
     logger.sentry('Error while making reservation', e.response.error);

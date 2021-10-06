@@ -7,12 +7,17 @@ import { walletsSetSelected, walletsUpdate } from '../../redux/wallets';
 import { ButtonPressAnimation } from '../animations';
 import AvatarCircle from './AvatarCircle';
 import { Button, Container, Icon, Text } from '@cardstack/components';
-import { screenWidth } from '@cardstack/utils';
+import { isLayer1, screenWidth } from '@cardstack/utils';
 import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
-import { useAccountProfile, useClipboard, useWallets } from '@rainbow-me/hooks';
+import {
+  useAccountProfile,
+  useAccountSettings,
+  useClipboard,
+  useWallets,
+} from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
@@ -20,6 +25,7 @@ import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
 const ACCOUNT_CONTAINER = screenWidth * 0.85;
 
 export default function ProfileMasthead({
+  addCashAvailable,
   recyclerListRef,
   setCopiedText,
   setCopyCount,
@@ -34,10 +40,10 @@ export default function ProfileMasthead({
     accountName,
     accountImage,
   } = useAccountProfile();
+  const { network } = useAccountSettings();
   const isAvatarPickerAvailable = useExperimentalFlag(AVATAR_PICKER);
   const isAvatarEmojiPickerEnabled = false;
   const isAvatarImagePickerEnabled = true;
-
   const onRemovePhoto = useCallback(async () => {
     const newWallets = {
       ...wallets,
@@ -143,14 +149,18 @@ export default function ProfileMasthead({
     navigate(Routes.RECEIVE_MODAL);
   }, [navigate, isDamaged]);
 
-  const handleBuyPrepaidCard = useCallback(() => {
+  const handlePress = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
       return;
     }
 
     if (ios) {
-      navigate(Routes.BUY_PREPAID_CARD);
+      if (isLayer1(network)) {
+        navigate(Routes.ADD_CASH_FLOW);
+      } else {
+        navigate(Routes.BUY_PREPAID_CARD);
+      }
     } else {
       navigate(Routes.WYRE_WEBVIEW_NAVIGATOR, {
         params: {
@@ -159,7 +169,7 @@ export default function ProfileMasthead({
         screen: Routes.WYRE_WEBVIEW,
       });
     }
-  }, [accountAddress, navigate, isDamaged]);
+  }, [accountAddress, navigate, isDamaged, network]);
 
   const handlePressChangeWallet = useCallback(() => {
     navigate(Routes.CHANGE_WALLET_SHEET);
@@ -207,8 +217,13 @@ export default function ProfileMasthead({
           <Icon color="white" name="chevron-down" />
         </Container>
       </ButtonPressAnimation>
-      <Container marginVertical={2}>
-        <Button onPress={handleBuyPrepaidCard}>Buy Prepaid Card</Button>
+      <Container marginTop={4}>
+        {addCashAvailable && isLayer1(network) ? (
+          <Button onPress={handlePress}>Add Funds</Button>
+        ) : null}
+        {!isLayer1(network) ? (
+          <Button onPress={handlePress}>Buy Prepaid Card</Button>
+        ) : null}
       </Container>
       <Container
         flexDirection="row"
