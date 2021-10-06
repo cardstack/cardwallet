@@ -16,10 +16,10 @@ interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
 }
 
 export const PayMerchantDisplay = ({
-  data: { infoDID = '', amount, prepaidCard = '', merchantSafe },
+  data: { infoDID = '', spendAmount, prepaidCard = '', merchantSafe },
 }: PayMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
-  const spendDisplay = useSpendDisplay(amount, false);
+  const spendDisplay = useSpendDisplay(spendAmount || 0, false);
 
   return (
     <>
@@ -39,10 +39,13 @@ export const PayMerchantDisplay = ({
         headerText="FROM"
         prepaidCardAddress={prepaidCard}
       />
-      <PayThisAmountSection headerText="PAY THIS AMOUNT" spendAmount={amount} />
+      <PayThisAmountSection
+        headerText="PAY THIS AMOUNT"
+        spendAmount={spendAmount || 0}
+      />
       <HorizontalDivider />
       <TransactionListItem
-        headerText="TO:"
+        headerText="TO"
         title={merchantInfoDID?.name || 'Merchant'}
         avatarInfo={merchantInfoDID}
         address={merchantSafe}

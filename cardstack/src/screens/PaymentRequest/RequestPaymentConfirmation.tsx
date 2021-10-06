@@ -91,7 +91,7 @@ export const RequestPaymentConfirmation = ({
       <Container paddingHorizontal={5} width="100%" paddingBottom={20}>
         <Container flexDirection="row" marginTop={8}>
           <Text color="blueText" fontWeight="bold" paddingTop={1} size="xxs">
-            TO:
+            TO
           </Text>
           <Container flexDirection="row" marginTop={4}>
             <Container paddingHorizontal={1} paddingTop={4}>
