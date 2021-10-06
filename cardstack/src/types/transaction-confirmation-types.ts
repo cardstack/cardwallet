@@ -52,6 +52,7 @@ export interface RegisterMerchantDecodedData {
 
 export interface PayMerchantDecodedData {
   amount: number;
+  spendAmount?: number;
   merchantSafe: string;
   prepaidCard?: string;
   prepaidCardCustomization?: PrepaidCardCustomization;

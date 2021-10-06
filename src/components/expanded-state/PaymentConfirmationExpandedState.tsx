@@ -141,12 +141,12 @@ export default function PaymentConfirmationExpandedState(
             {props.asset.Header}
             <TransactionRow {...props.asset} hasBottomDivider />
             <PaymentDetailsItem
-              title="TO:"
+              title="TO"
               {...merchantInfo}
               info={ownerAddress}
             />
-            <PaymentDetailsItem info={transactionHash} title="TXN HASH:" />
-            <PaymentDetailsItem info={timestamp} isTimestamp title="TIME:" />
+            <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
+            <PaymentDetailsItem info={timestamp} isTimestamp title="TIME" />
           </Container>
           <BlockscoutButton
             network={network}
