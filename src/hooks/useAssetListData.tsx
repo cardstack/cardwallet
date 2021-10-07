@@ -164,7 +164,12 @@ export const useAssetListData = () => {
     balancesSection,
     collectiblesSection,
   ];
-  const sections = orderedSections.filter(section => section?.data?.length);
+
+  const sections = orderedSections.filter(
+    section =>
+      section?.data?.length ||
+      section?.header.type === PinnedHiddenSectionOption.PREPAID_CARDS
+  );
 
   const isEmpty = !sections.length;
 

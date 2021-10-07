@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
 import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
@@ -8,11 +8,17 @@ import { Theme } from '../../theme';
 import { AssetFooter } from './AssetFooter';
 import { AssetListLoading } from './AssetListLoading';
 import { Button, Container, Icon, Text } from '@cardstack/components';
+import { isLayer1, Device } from '@cardstack/utils';
 import {
   PinnedHiddenSectionOption,
+  useAccountProfile,
   usePinnedAndHiddenItemOptions,
   useRefreshAccountData,
+  useWallets,
 } from '@rainbow-me/hooks';
+import showWalletErrorAlert from '@rainbow-me/helpers/support';
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 interface HeaderItem {
@@ -55,6 +61,9 @@ interface AssetListProps
 export const AssetList = (props: AssetListProps) => {
   const refresh = useRefreshAccountData();
   const [refreshing, setRefreshing] = useState(false);
+  const { accountAddress } = useAccountProfile();
+  const { navigate } = useNavigation();
+  const { isDamaged } = useWallets();
 
   const {
     isEmpty,
@@ -87,6 +96,29 @@ export const AssetList = (props: AssetListProps) => {
     setRefreshing(false);
   }
 
+  const goToBuyPrepaidCard = useCallback(() => {
+    if (isDamaged) {
+      showWalletErrorAlert();
+
+      return;
+    }
+
+    if (Device.isIOS) {
+      if (isLayer1(networkName)) {
+        navigate(Routes.ADD_CASH_FLOW);
+      } else {
+        navigate(Routes.BUY_PREPAID_CARD);
+      }
+    } else {
+      navigate(Routes.WYRE_WEBVIEW_NAVIGATOR, {
+        params: {
+          address: accountAddress,
+        },
+        screen: Routes.WYRE_WEBVIEW,
+      });
+    }
+  }, [accountAddress, navigate, isDamaged, networkName]);
+
   if (loading) {
     return <AssetListLoading />;
   }
@@ -117,75 +149,100 @@ export const AssetList = (props: AssetListProps) => {
         renderSectionHeader={({ section }) => {
           const {
             header: { type, title, count, showContextMenu, total },
+            data,
           } = section;
 
           const isEditing = type === editing;
 
+          const isEmptyPrepaidCard =
+            type === PinnedHiddenSectionOption.PREPAID_CARDS &&
+            data.length === 0;
+
           return (
-            <Container
-              alignItems="center"
-              flexDirection="row"
-              justifyContent="space-between"
-              padding={4}
-              paddingHorizontal={headerPaddingHorizontal}
-              paddingVertical={headerPaddingVertical}
-              backgroundColor={backgroundColor || 'backgroundBlue'}
-            >
-              <Container flexDirection="row">
-                <Text color={color || 'white'} size="medium">
-                  {title}
-                </Text>
-                {count ? (
-                  <Text color="tealDark" size="medium" marginLeft={2}>
-                    {count}
-                  </Text>
-                ) : null}
-              </Container>
+            <>
               <Container
-                marginRight={3}
                 alignItems="center"
                 flexDirection="row"
+                justifyContent="space-between"
+                padding={4}
+                paddingHorizontal={headerPaddingHorizontal}
+                paddingVertical={headerPaddingVertical}
+                backgroundColor={backgroundColor || 'backgroundBlue'}
               >
-                {total ? (
-                  <Text
-                    color="tealDark"
-                    size="body"
-                    weight="extraBold"
-                    marginRight={showContextMenu ? 3 : 0}
-                  >
-                    {total}
+                <Container flexDirection="row">
+                  <Text color={color || 'white'} size="medium">
+                    {title}
                   </Text>
-                ) : null}
-                {showContextMenu ? (
-                  isEditing ? (
-                    <Button
-                      variant="tiny"
-                      onPress={() => toggleEditingPinnedHidden(type)}
+                  {count ? (
+                    <Text color="tealDark" size="medium" marginLeft={2}>
+                      {count}
+                    </Text>
+                  ) : null}
+                </Container>
+                <Container alignItems="center" flexDirection="row">
+                  {total ? (
+                    <Text
+                      color="tealDark"
+                      size="body"
+                      weight="extraBold"
+                      marginRight={showContextMenu ? 3 : 0}
                     >
-                      DONE
+                      {total}
+                    </Text>
+                  ) : null}
+                  {isEmptyPrepaidCard ? (
+                    <Button variant="tinyOpacity" onPress={goToBuyPrepaidCard}>
+                      New Card
                     </Button>
-                  ) : (
-                    <ButtonPressAnimation
-                      onPress={() => {
-                        showActionSheetWithOptions(
-                          {
-                            options: ['Edit', 'Cancel'],
-                            cancelButtonIndex: 1,
-                          },
-                          (buttonIndex: number) => {
-                            if (buttonIndex === 0) {
-                              toggleEditingPinnedHidden(type);
+                  ) : showContextMenu ? (
+                    isEditing ? (
+                      <Button
+                        variant="tiny"
+                        onPress={() => toggleEditingPinnedHidden(type)}
+                      >
+                        DONE
+                      </Button>
+                    ) : (
+                      <ButtonPressAnimation
+                        onPress={() => {
+                          showActionSheetWithOptions(
+                            {
+                              options: ['Edit', 'Cancel'],
+                              cancelButtonIndex: 1,
+                            },
+                            (buttonIndex: number) => {
+                              if (buttonIndex === 0) {
+                                toggleEditingPinnedHidden(type);
+                              }
                             }
-                          }
-                        );
-                      }}
-                    >
-                      <Icon name="more-circle" />
-                    </ButtonPressAnimation>
-                  )
-                ) : null}
+                          );
+                        }}
+                      >
+                        <Icon name="more-circle" />
+                      </ButtonPressAnimation>
+                    )
+                  ) : null}
+                </Container>
               </Container>
-            </Container>
+              {isEmptyPrepaidCard && (
+                <Container marginHorizontal={4} alignItems="center">
+                  <Container
+                    borderRadius={10}
+                    backgroundColor="buttonDisabledBackground"
+                    paddingVertical={23}
+                    width="100%"
+                  >
+                    <Text textAlign="center" color="blueText" size="body">
+                      You don’t own any{'\n'}
+                      Prepaid Cards yet
+                    </Text>
+                  </Container>
+                  <Button onPress={goToBuyPrepaidCard} marginTop={4}>
+                    Buy Prepaid Card
+                  </Button>
+                </Container>
+              )}
+            </>
           );
         }}
         contentContainerStyle={{ paddingBottom: 180 }}
