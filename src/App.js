@@ -97,6 +97,13 @@ class App extends Component {
   state = { appState: AppState.currentState, initialRoute: null };
 
   async componentDidMount() {
+    if (__DEV__) {
+      const RNAsyncStorageFlipper = require('rn-async-storage-flipper').default;
+      const AsyncStorage = require('@react-native-community/async-storage')
+        .default;
+      RNAsyncStorageFlipper(AsyncStorage);
+    }
+
     if (!__DEV__ && NativeModules.RNTestFlight) {
       const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
       Logger.sentry(`Test flight usage - ${isTestFlight}`);
