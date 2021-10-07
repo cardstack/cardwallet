@@ -109,12 +109,12 @@ export const SystemNotification = ({
       <AnimatedContainer
         backgroundColor="backgroundGray"
         padding={4}
-        width="95%"
         borderRadius={10}
         minHeight={minHeight}
         opacity={containerOpacity}
         visible={isVisible}
-        margin={2}
+        marginHorizontal={4}
+        marginVertical={2}
       >
         <Container
           flexDirection="row"

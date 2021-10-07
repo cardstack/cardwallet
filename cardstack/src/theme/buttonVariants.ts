@@ -47,6 +47,20 @@ const tiny = {
   ...extraSmall,
 };
 
+const tinyOpacity = {
+  height: 27,
+  paddingVertical: 0,
+  ...extraSmall,
+  backgroundColor: 'transparent',
+  borderColor: 'borderBlue',
+  textStyle: {
+    color: 'teal',
+    fontSize: 12,
+    paddingHorizontal: 4,
+  },
+  width: 'auto',
+};
+
 const dark = {
   backgroundColor: 'buttonDarkBackground',
   borderColor: 'transparent',
@@ -158,6 +172,7 @@ export const buttonVariants = {
     ...extraSmall,
   },
   tiny,
+  tinyOpacity,
   invalid: { ...invalid },
   square,
   squareSelected: {
