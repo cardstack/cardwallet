@@ -75,7 +75,7 @@ export const TransactionList = memo(
       <SectionList
         ListEmptyComponent={
           <ListEmptyComponent
-            text={`You don’t have any\ntransactions yet`}
+            text={`You don't have any\ntransactions yet`}
             textColor="blueText"
             hasRoundBox
           />

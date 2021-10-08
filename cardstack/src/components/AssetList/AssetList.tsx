@@ -233,7 +233,7 @@ export const AssetList = (props: AssetListProps) => {
               {isEmptyPrepaidCard && (
                 <Container marginHorizontal={4} alignItems="center">
                   <ListEmptyComponent
-                    text={`You don’t own any\nPrepaid Cards yet`}
+                    text={`You don't own any\nPrepaid Cards yet`}
                     width="100%"
                     hasRoundBox
                     textColor="blueText"
