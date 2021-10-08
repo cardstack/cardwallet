@@ -48,7 +48,16 @@ export const usePayMerchant = () => {
     data,
   } = usePaymentMerchantUniversalLink();
 
+  const { paymentChangeCurrency } = usePayment();
+
   const { infoDID = '', amount: initialAmount, currency } = data;
+
+  // Initialize input amount's currency with the curreny in merchant payment request link
+  useEffect(() => {
+    if (currency) {
+      paymentChangeCurrency(currency);
+    }
+  }, [currency, paymentChangeCurrency]);
 
   const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
 
@@ -69,7 +78,6 @@ export const usePayMerchant = () => {
   const [payStep, setPayStep] = useState<Step>(initialStep);
 
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
-  const { paymentChangeCurrency } = usePayment();
 
   const [
     nativeCurrency,
@@ -77,12 +85,6 @@ export const usePayMerchant = () => {
   ] = usePaymentCurrencyAndConversionRates();
 
   const [accountCurrency] = useNativeCurrencyAndConversionRates();
-
-  useEffect(() => {
-    if (currency) {
-      paymentChangeCurrency(currency);
-    }
-  }, [currency, paymentChangeCurrency]);
 
   // Updating in case first render selected is undefined
   useEffect(() => {
@@ -98,13 +100,14 @@ export const usePayMerchant = () => {
     }
   }, [initialAmount]);
 
-  const spendAmount =
-    currency === 'SPD'
-      ? formattedCurrencyToAbsNum(`${inputValue || 0}`)
-      : nativeCurrencyToAmountInSpend(
-          inputValue,
-          currencyConversionRates[nativeCurrency]
-        );
+  const spendAmount = useMemo(
+    () =>
+      nativeCurrencyToAmountInSpend(
+        inputValue,
+        currencyConversionRates[nativeCurrency]
+      ),
+    [currencyConversionRates, inputValue, nativeCurrency]
+  );
 
   const onPayMerchantSuccess = useCallback(
     async (receipt: TransactionReceipt) => {
