@@ -7,7 +7,13 @@ import ButtonPressAnimation from '../../../../src/components/animations/ButtonPr
 import { Theme } from '../../theme';
 import { AssetFooter } from './AssetFooter';
 import { AssetListLoading } from './AssetListLoading';
-import { Button, Container, Icon, Text } from '@cardstack/components';
+import {
+  Button,
+  Container,
+  ListEmptyComponent,
+  Icon,
+  Text,
+} from '@cardstack/components';
 import { isLayer1, Device } from '@cardstack/utils';
 import {
   PinnedHiddenSectionOption,
@@ -226,17 +232,12 @@ export const AssetList = (props: AssetListProps) => {
               </Container>
               {isEmptyPrepaidCard && (
                 <Container marginHorizontal={4} alignItems="center">
-                  <Container
-                    borderRadius={10}
-                    backgroundColor="buttonDisabledBackground"
-                    paddingVertical={23}
+                  <ListEmptyComponent
+                    text={`You don't own any\nPrepaid Cards yet`}
                     width="100%"
-                  >
-                    <Text textAlign="center" color="blueText" size="body">
-                      You don’t own any{'\n'}
-                      Prepaid Cards yet
-                    </Text>
-                  </Container>
+                    hasRoundBox
+                    textColor="blueText"
+                  />
                   <Button onPress={goToBuyPrepaidCard} marginTop={4}>
                     Buy Prepaid Card
                   </Button>

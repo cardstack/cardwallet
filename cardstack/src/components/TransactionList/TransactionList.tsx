@@ -73,7 +73,13 @@ export const TransactionList = memo(
 
     return (
       <SectionList
-        ListEmptyComponent={<ListEmptyComponent text="No transactions" />}
+        ListEmptyComponent={
+          <ListEmptyComponent
+            text={`You don't have any\ntransactions yet`}
+            textColor="blueText"
+            hasRoundBox
+          />
+        }
         ListHeaderComponent={Header}
         ListFooterComponent={
           isFetchingMore ? <ActivityIndicator color="white" /> : null
