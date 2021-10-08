@@ -1583,10 +1583,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cardstack/cardpay-sdk@0.26.8":
-  version "0.26.8"
-  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.26.8.tgz#cb31638f62b88eff10675364f1b713b0de7a43ce"
-  integrity sha512-v8E8ahYfLJK9yJYAAnatr+uBOtP7LeXcxdMS1ATzDo5n9IWTVvUP0yROyfFvXMrLQBKbP8dmBDa0Ow/MqEUa6Q==
+"@cardstack/cardpay-sdk@0.26.9":
+  version "0.26.9"
+  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-0.26.9.tgz#c751defb2bc36acb68fa4f248f30441189bcb308"
+  integrity sha512-alek3Ap+7Z+2KDPjHr8UeJbtfR6rxlYC4SuxO6htEeCAFX34nHyiK2qFljaKy7HlW5PUYo8McFAMGvpJTuUl7g==
   dependencies:
     "@truffle/hdwallet-provider" "^1.5.0"
     "@trufflesuite/web3-provider-engine" "^15.0.13-1"
@@ -1610,10 +1610,10 @@
     web3-provider-engine "^16.0.1"
     web3-utils "1.5.2"
 
-"@cardstack/did-resolver@0.26.8":
-  version "0.26.8"
-  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-0.26.8.tgz#ca4613c502fcd0d89844856d0a089e0cc8459443"
-  integrity sha512-mAlVyCDPcBXkx0B5JNniNZqJTDHx15fi0wsTEIj9CqLFUeueWXTbGF+VGaRd31GkVEcd87I6YD7B3sQsIFtjmA==
+"@cardstack/did-resolver@0.26.9":
+  version "0.26.9"
+  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-0.26.9.tgz#ffa647d905ade4da76973ba654029fc6edb4f0fb"
+  integrity sha512-C/YO5h0pnUXOv18e8u1N/is+zyh24ajj9ca6CG4MPMkRtVXHY9HIuIVIDmHEWK0fXQjKP3Tpdf5FBL/KwM3ytQ==
   dependencies:
     "@types/uuid" "^8.3.0"
     did-resolver "^3.1.0"
