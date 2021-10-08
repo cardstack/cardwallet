@@ -52,7 +52,7 @@ export const usePayMerchant = () => {
 
   const { infoDID = '', amount: initialAmount, currency } = data;
 
-  // Initialize input amount's currency with the curreny in merchant payment request link
+  // Initialize input amount's currency with the currency in merchant payment request link
   useEffect(() => {
     if (currency) {
       paymentChangeCurrency(currency);
