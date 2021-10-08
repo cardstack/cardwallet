@@ -1,4 +1,7 @@
-import { generateMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
+import {
+  generateMerchantPaymentUrl,
+  MERCHANT_PAYMENT_UNIVERSAL_LINK_STAGING_HOSTNAME,
+} from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo, useState } from 'react';
 import CardWalletLogo from '../../assets/cardstackLogo.png';
 import {
@@ -46,6 +49,8 @@ export const RequestPaymentConfirmation = ({
   const paymentRequestLink = useMemo(
     () =>
       generateMerchantPaymentUrl({
+        // Default to staging, while we don't handle envs yet
+        domain: MERCHANT_PAYMENT_UNIVERSAL_LINK_STAGING_HOSTNAME,
         merchantSafeID: address,
         amount: amountInNum,
         network,
