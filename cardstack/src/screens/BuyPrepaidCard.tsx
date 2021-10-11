@@ -15,12 +15,16 @@ import {
 import { useAuthToken } from '@cardstack/hooks';
 import { SlackSheet } from '@rainbow-me/components/sheet';
 import {
+  CustodialWallet,
+  getCustodialWallet,
   getInventories,
   Inventory,
   InventoryAttrs,
   makeReservation,
   ReservationData,
 } from '@cardstack/services';
+import { useBuyPrepaidCard } from '@rainbow-me/hooks';
+import { getNativeBalanceFromSpend } from '@cardstack/utils';
 
 const TopContent = () => {
   return (
@@ -68,7 +72,7 @@ const CardContent = ({
         fontSize={28}
         textAlign="center"
       >
-        ${amount}
+        $ {amount}
       </Text>
       <Text
         color={isSelected ? 'black' : 'white'}
@@ -139,14 +143,55 @@ const BuyPrepaidCard = () => {
 
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
   const [, setReservationData] = useState<ReservationData>();
+  const [paymentSheetVisible, setPaymentSheetVisible] = useState(false);
+
+  const [
+    custodialWalletData,
+    setCustodialWalletData,
+  ] = useState<CustodialWallet>();
+
+  // const {
+  //   error,
+  //   isPaymentComplete,
+  //   onPurchase,
+  //   orderCurrency,
+  //   orderStatus,
+  //   resetAddCashForm,
+  //   transferStatus,
+  // } = useBuyPrepaidCard();
+  const { onPurchase } = useBuyPrepaidCard();
 
   useEffect(() => {
     const getInventoryData = async () => {
       const data = await getInventories(hubURL, authToken);
-      setInventoryData(data);
+
+      const formattedData =
+        data !== undefined
+          ? data.map(item => {
+              const amountFormatter =
+                (item.attributes['face-value'] / 100) *
+                currencyConversionRates[nativeCurrency];
+
+              return {
+                ...item,
+                amount: amountFormatter,
+              };
+            })
+          : [];
+
+      setInventoryData(formattedData);
     };
 
     getInventoryData();
+  }, [authToken, currencyConversionRates, nativeCurrency]);
+
+  useEffect(() => {
+    const getCustodialWalletData = async () => {
+      const data = await getCustodialWallet(hubURL, authToken);
+      setCustodialWalletData(data);
+    };
+
+    getCustodialWalletData();
   }, [authToken]);
 
   const reserveCard = useCallback(
@@ -179,6 +224,50 @@ const BuyPrepaidCard = () => {
     [inventoryData, reserveCard]
   );
 
+  // const handlePurchase = useCallback(async () => {
+  //   try {
+  //     await onPurchase({
+  //       address: card?.['issuing-token-symbol'],
+  //       value: '1',
+  //       symbol: card?.['issuing-token-symbol'],
+  //     });
+  //   } catch (e) {
+  //     console.log('ERROR DATA: ', e)
+  //   } finally {
+  //   }
+  // }, [card, custodialWalletData, onPurchase]);
+
+  const handlePurchase = useCallback(async () => {
+    if (paymentSheetVisible) return;
+
+    const amount = getNativeBalanceFromSpend(
+      card?.['face-value'] || 0,
+      nativeCurrency,
+      currencyConversionRates
+    );
+
+    try {
+      setPaymentSheetVisible(true);
+      await onPurchase({
+        address: card?.['issuing-token-symbol'],
+        value: amount.toString(),
+        depositAddress: custodialWalletData?.attributes['deposit-address'],
+        sourceCurrency: nativeCurrency,
+      });
+    } catch (e) {
+    } finally {
+      setPaymentSheetVisible(false);
+    }
+  }, [
+    paymentSheetVisible,
+    card,
+    nativeCurrency,
+    currencyConversionRates,
+    onPurchase,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    custodialWalletData?.attributes,
+  ]);
+
   const renderItem = useCallback(
     ({ item, index }: { item: Inventory; index: number }) => (
       <CardContent
@@ -200,7 +289,7 @@ const BuyPrepaidCard = () => {
           <Container
             backgroundColor="backgroundBlue"
             paddingTop={16}
-            paddingHorizontal={4}
+            paddingHorizontal={2}
             alignItems="center"
           >
             <SheetHandle />
@@ -214,9 +303,8 @@ const BuyPrepaidCard = () => {
             justifyContent="center"
           >
             <ApplePayButton
-              disabled={true}
-              onDisabledPress={() => console.log('onDisabledPress')}
-              onSubmit={() => console.log('onSubmit')}
+              onSubmit={handlePurchase}
+              onDisabledPress={() => console.log('onDisablePress')}
             />
           </Container>
         )}
@@ -239,7 +327,7 @@ const BuyPrepaidCard = () => {
                 networkName={network}
                 nativeCurrency={nativeCurrency}
                 currencyConversionRates={currencyConversionRates}
-                address={card['issuing-token-address']}
+                address="0xXXXX…XXXX"
                 issuer="Cardstack"
                 issuingToken={card['issuing-token-symbol']}
                 spendFaceValue={card['face-value'] || 0}

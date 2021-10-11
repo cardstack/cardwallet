@@ -18,6 +18,7 @@ export {
   useBiometryIconName,
 } from './useBiometryType';
 export { default as useBlockPolling } from './useBlockPolling';
+export { default as useBuyPrepaidCard } from './useBuyPrepaidCard';
 export { default as useBooleanState } from './useBooleanState';
 export { default as useClipboard } from './useClipboard';
 export { default as useCoinListEdited } from './useCoinListEdited';
