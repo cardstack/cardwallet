@@ -111,7 +111,7 @@ export const makeReservation = async (
   sku: string
 ): Promise<ReservationData | undefined> => {
   try {
-    return await axios.post(
+    const results = await axios.post(
       `${hubURL}/api/reservations`,
       JSON.stringify({
         data: {
@@ -123,6 +123,10 @@ export const makeReservation = async (
       }),
       axiosConfig(authToken)
     );
+
+    if (results.data?.data) {
+      return results.data?.data;
+    }
   } catch (e) {
     logger.sentry('Error while making reservation', e.response.error);
   }
