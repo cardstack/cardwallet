@@ -60,6 +60,19 @@ export interface ReservationAttrs {
   'prepaid-card-address': null;
 }
 
+export interface OrderAttrs {
+  'order-id': string;
+  'user-address': string;
+  'wallet-id': string;
+  status: string;
+}
+
+export interface OrderData {
+  id: string;
+  type: string;
+  attributes: OrderAttrs;
+}
+
 export const getCustodialWallet = async (
   hubURL: string,
   authToken: string
@@ -129,5 +142,59 @@ export const makeReservation = async (
     }
   } catch (e) {
     logger.sentry('Error while making reservation', e.response.error);
+  }
+};
+
+export const updateOrder = async (
+  hubURL: string,
+  authToken: string,
+  wyreOrderId: string,
+  wyreWalletID: string,
+  reservationId: string
+): Promise<OrderData | undefined> => {
+  try {
+    const results = await axios.post(
+      `${hubURL}/api/orders`,
+      JSON.stringify({
+        data: {
+          type: 'orders',
+          attributes: {
+            'order-id': wyreOrderId,
+            'wallet-id': wyreWalletID,
+          },
+          relationships: {
+            reservation: {
+              data: { type: 'reservations', id: reservationId },
+            },
+          },
+        },
+      }),
+      axiosConfig(authToken)
+    );
+
+    if (results.data?.data) {
+      return results.data?.data;
+    }
+  } catch (e) {
+    logger.sentry('Error while making reservation', e.response);
+  }
+};
+
+export const getOrder = async (
+  hubURL: string,
+  authToken: string,
+  orderId: string
+): Promise<any | undefined> => {
+  try {
+    const results = await axios.get(
+      `${hubURL}/api/orders/${orderId}`,
+      axiosConfig(authToken)
+    );
+
+    if (results.data?.data) {
+      return await results.data?.data;
+    }
+  } catch (e) {
+    logger.sentry('Error while getting custodial wallet', e);
   }
 };

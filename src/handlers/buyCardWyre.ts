@@ -199,13 +199,14 @@ export const reserveWyreOrder = async (
 ) => {
   const partnerId =
     network === NetworkTypes.mainnet ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
-  const dest = `ethereum:${accountAddress}`;
+  const dest = `dai:${accountAddress}`;
   const data = {
     amount,
     dest,
     destCurrency,
     referrerAccountId: partnerId,
     sourceCurrency: sourceCurrency,
+    paymentMethod: null,
   };
   if (paymentMethod) {
     data.paymentMethod = paymentMethod;
@@ -232,7 +233,11 @@ export const reserveWyreOrder = async (
   }
 };
 
-export const trackWyreOrder = async (referenceInfo, orderId, network) => {
+export const trackWyreOrder = async (
+  referenceInfo,
+  orderId: string,
+  network: Network
+) => {
   try {
     const baseUrl = getBaseUrl(network);
     const response = await wyreApi.get(`${baseUrl}/v3/orders/${orderId}`);
@@ -284,8 +289,6 @@ export const getOrderId = async (
     ip
   );
 
-  console.log('PROCESS DATA', JSON.stringify(paymentResponse));
-
   try {
     const baseUrl = getBaseUrl(network);
     const response = await wyreApi.post(
@@ -308,7 +311,6 @@ export const getOrderId = async (
     const {
       data: { errorCode, exceptionId, message, type },
     } = response;
-    console.log('ERROR DATA', errorCode, exceptionId, message, type);
     captureException(
       new WyreException(
         WyreExceptionTypes.CREATE_ORDER,
@@ -372,7 +374,7 @@ const createPayload = (
   ip,
   sourceCurrency = SOURCE_CURRENCY_USD
 ) => {
-  const dest = `ethereum:${accountAddress}`;
+  const dest = `dai:${accountAddress}`;
 
   const {
     details: {
@@ -383,8 +385,6 @@ const createPayload = (
       transactionIdentifier,
     },
   } = paymentResponse;
-
-  console.log('PAYMENT RESPONSE', paymentResponse);
 
   const billingContact = getAddressDetails(billingInfo);
   const shippingContact = {
@@ -424,7 +424,7 @@ const createPayload = (
   };
 };
 
-const getAddressDetails = addressInfo => {
+const getAddressDetails = (addressInfo: { name: any; postalAddress: any }) => {
   const { name, postalAddress: address } = addressInfo;
   const addressLines = split(address.street, '\n');
   return {

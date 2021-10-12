@@ -15,6 +15,7 @@ import { getTokenMetadata } from '@rainbow-me/utils';
 import logger from 'logger';
 
 export default function useBuyPrepaidCard() {
+  const [orderId, setOrderId] = useState<string>('');
   const { accountAddress, network } = useAccountSettings();
 
   const [isPaymentComplete, setPaymentComplete] = useState(false);
@@ -40,8 +41,6 @@ export default function useBuyPrepaidCard() {
         referenceId: getReferenceId(accountAddress),
         orderId: undefined,
       };
-
-      console.log('referenceInfo: ', referenceInfo);
 
       const { reservation: reservationId } = await reserveWyreOrder(
         value,
@@ -104,9 +103,11 @@ export default function useBuyPrepaidCard() {
           reservationId
         );
         if (orderId) {
+          setOrderId(orderId);
           referenceInfo.orderId = orderId;
           applePayResponse.complete(PaymentRequestStatusTypes.SUCCESS);
           handlePaymentCallback();
+          return orderId;
           // TODO: Sentry?
           // dispatch(
           //   addCashGetOrderStatus(
@@ -141,5 +142,6 @@ export default function useBuyPrepaidCard() {
     orderCurrency,
     orderStatus,
     transferStatus,
+    orderId,
   };
 }

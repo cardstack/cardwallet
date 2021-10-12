@@ -1,12 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
-import {
-  Button,
-  Container,
-  PrepaidCard,
-  SheetHandle,
-  Text,
-} from '@cardstack/components';
+import { CardContent, Subtitle, TopContent } from './Components';
+import { Container, PrepaidCard, SheetHandle } from '@cardstack/components';
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import {
   useNativeCurrencyAndConversionRates,
@@ -21,104 +16,12 @@ import {
   Inventory,
   InventoryAttrs,
   makeReservation,
-  ReservationData,
+  updateOrder,
 } from '@cardstack/services';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
 import { getNativeBalanceFromSpend } from '@cardstack/utils';
-
-const TopContent = () => {
-  return (
-    <Container marginTop={4}>
-      <Text fontSize={26} color="white">
-        Buy a{' '}
-        <Text fontSize={26} color="teal">
-          Prepaid Card
-        </Text>{' '}
-        via Apple Pay to get started
-      </Text>
-    </Container>
-  );
-};
-
-const baseStyles = {
-  marginRight: 4,
-  marginBottom: 3,
-  borderRadius: 10,
-  width: '100%',
-};
-
-const CardContent = ({
-  onPress,
-  amount,
-  isSelected,
-  faceValue,
-  quantity,
-}: {
-  onPress: () => void;
-  amount: number;
-  faceValue: number;
-  isSelected: boolean;
-  quantity: number;
-}) => {
-  return quantity > 0 ? (
-    <Button
-      borderColor={isSelected ? 'buttonPrimaryBorder' : 'buttonSecondaryBorder'}
-      variant={isSelected ? 'squareSelected' : 'square'}
-      onPress={onPress}
-      {...baseStyles}
-    >
-      <Text
-        color={isSelected ? 'black' : 'white'}
-        fontSize={28}
-        textAlign="center"
-      >
-        $ {amount}
-      </Text>
-      <Text
-        color={isSelected ? 'black' : 'white'}
-        fontSize={14}
-        textAlign="center"
-        fontWeight="500"
-      >
-        {`\n`}
-        {faceValue} SPEND
-      </Text>
-    </Button>
-  ) : (
-    <Button
-      borderColor="buttonDisabledBackground"
-      variant="squareDisabled"
-      {...baseStyles}
-    >
-      <Text color="blueText" fontSize={28} textAlign="center">
-        ${amount}
-      </Text>
-      <Text
-        color="buttonSecondaryBorder"
-        fontSize={13}
-        textAlign="center"
-        fontFamily="OpenSans-Semibold"
-      >
-        {`\n`}
-        SOLD OUT
-      </Text>
-    </Button>
-  );
-};
-
-const Subtitle = ({ text }: { text: string }) => {
-  return (
-    <Text
-      fontSize={13}
-      color="underlineGray"
-      weight="bold"
-      marginBottom={5}
-      letterSpacing={0.4}
-    >
-      {text}
-    </Text>
-  );
-};
+import logger from 'logger';
+import { Alert } from '@rainbow-me/components/alerts';
 
 const DEFAULT_CARD_CONFIG = {
   background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
@@ -142,44 +45,19 @@ const BuyPrepaidCard = () => {
   const [card, setCard] = useState<InventoryAttrs>();
 
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
-  const [, setReservationData] = useState<ReservationData>();
-  const [paymentSheetVisible, setPaymentSheetVisible] = useState(false);
+  const [sku, setSku] = useState<string>('');
 
   const [
     custodialWalletData,
     setCustodialWalletData,
   ] = useState<CustodialWallet>();
 
-  // const {
-  //   error,
-  //   isPaymentComplete,
-  //   onPurchase,
-  //   orderCurrency,
-  //   orderStatus,
-  //   resetAddCashForm,
-  //   transferStatus,
-  // } = useBuyPrepaidCard();
   const { onPurchase } = useBuyPrepaidCard();
 
   useEffect(() => {
     const getInventoryData = async () => {
       const data = await getInventories(hubURL, authToken);
-
-      const formattedData =
-        data !== undefined
-          ? data.map(item => {
-              const amountFormatter =
-                (item.attributes['face-value'] / 100) *
-                currencyConversionRates[nativeCurrency];
-
-              return {
-                ...item,
-                amount: amountFormatter,
-              };
-            })
-          : [];
-
-      setInventoryData(formattedData);
+      setInventoryData(data);
     };
 
     getInventoryData();
@@ -194,16 +72,8 @@ const BuyPrepaidCard = () => {
     getCustodialWalletData();
   }, [authToken]);
 
-  const reserveCard = useCallback(
-    async (sku: string) => {
-      const data = await makeReservation(hubURL, authToken, sku);
-      setReservationData(data);
-    },
-    [authToken]
-  );
-
   const onSelectCard = useCallback(
-    (item, index) => {
+    async (item, index) => {
       const modifiedCards =
         inventoryData !== undefined
           ? inventoryData.map((cardItem: Inventory) => {
@@ -219,53 +89,85 @@ const BuyPrepaidCard = () => {
           .attributes
       );
 
-      reserveCard(modifiedCards[index].attributes.sku);
+      setSku(modifiedCards[index].attributes.sku);
     },
-    [inventoryData, reserveCard]
+    [inventoryData]
   );
 
-  // const handlePurchase = useCallback(async () => {
-  //   try {
-  //     await onPurchase({
-  //       address: card?.['issuing-token-symbol'],
-  //       value: '1',
-  //       symbol: card?.['issuing-token-symbol'],
-  //     });
-  //   } catch (e) {
-  //     console.log('ERROR DATA: ', e)
-  //   } finally {
-  //   }
-  // }, [card, custodialWalletData, onPurchase]);
-
   const handlePurchase = useCallback(async () => {
-    if (paymentSheetVisible) return;
-
     const amount = getNativeBalanceFromSpend(
       card?.['face-value'] || 0,
       nativeCurrency,
       currencyConversionRates
     );
 
+    let reservation;
+
     try {
-      setPaymentSheetVisible(true);
-      await onPurchase({
+      reservation = await makeReservation(hubURL, authToken, sku);
+    } catch (e) {
+      logger.sentry('Error while make reservation', e);
+      Alert({
+        buttons: [{ text: 'Okay' }],
+        message: 'Error while make reservation',
+      });
+    }
+
+    try {
+      const purchaseData = await onPurchase({
         address: card?.['issuing-token-symbol'],
         value: amount.toString(),
         depositAddress: custodialWalletData?.attributes['deposit-address'],
-        sourceCurrency: nativeCurrency,
       });
+
+      const wireWalletId =
+        custodialWalletData?.attributes['wyre-wallet-id'] || '';
+
+      const reservationId = reservation?.id || '';
+
+      try {
+        const orderId = await updateOrder(
+          hubURL,
+          authToken,
+          purchaseData,
+          wireWalletId,
+          reservationId
+        );
+
+        if (orderId) {
+          Alert({
+            buttons: [{ text: 'Okay' }],
+            message: 'Purchase completed successfully',
+            title: `OrderId: ${purchaseData}`,
+          });
+        }
+
+        // console.log('UPDATE ORDER SUCESS', JSON.stringify(data));
+        //
+        // const orderData = await getOrder(
+        //   hubURL,
+        //   authToken,
+        //   data?.attributes['order-id']
+        // );
+
+        // console.log('GET ORDER', JSON.stringify(orderData));
+      } catch (e) {
+        logger.sentry('Error updating order', e);
+        Alert({
+          buttons: [{ text: 'Okay' }],
+          message: 'Purchase not completed',
+        });
+      }
     } catch (e) {
     } finally {
-      setPaymentSheetVisible(false);
     }
   }, [
-    paymentSheetVisible,
     card,
     nativeCurrency,
     currencyConversionRates,
     onPurchase,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    custodialWalletData?.attributes,
+    authToken,
+    sku,
   ]);
 
   const renderItem = useCallback(
