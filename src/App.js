@@ -20,8 +20,6 @@ import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
 import { name as appName } from '../app.json';
-
-import PortalConsumer from './components/PortalConsumer';
 import { FlexItem } from './components/layout';
 import { OfflineToast } from './components/toasts';
 import {
@@ -50,6 +48,7 @@ import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
+import PortalConsumer from '@cardstack/components/LoadingOverlay/PortalConsumer';
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
