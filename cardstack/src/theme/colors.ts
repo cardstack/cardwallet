@@ -27,7 +27,7 @@ export const palette = {
   transparent: 'transparent',
   grayCardBackground: '#F8F7FA',
   blackOpacity50: '#00000080',
-  blackOpacity25: '#00000040',
+  blackLightOpacity: '#00000066',
   whiteOpacity50: '#FFFFFF80',
   grayButtonBackground: '#D1D5DB',
   buttonDisabledBackground: '#2e2d38',
@@ -71,7 +71,7 @@ export const colors = {
   grayCardBackground: palette.grayCardBackground,
   overlay: palette.blackOpacity50,
   whiteOverlay: palette.whiteOpacity50,
-  blackLightOpacity: palette.blackOpacity25,
+  blackLightOpacity: palette.blackLightOpacity,
   grayButtonBackground: palette.grayButtonBackground,
   buttonDisabledBackground: palette.buttonDisabledBackground,
 };
