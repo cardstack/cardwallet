@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import LoadingOverlay from './LoadingOverlay';
-// import { LoadingOverlay } from '@rainbow-me/components/modal';
 import { useWallets } from '@rainbow-me/hooks';
 import { usePortal } from 'react-native-cool-modals/Portal';
 import usePayment from '@cardstack/redux/hooks/usePayment';
