@@ -9,6 +9,12 @@ import logger from 'logger';
 const PAYMENT_UPDATE_CURRENCY_SUCCESS =
   'payment/PAYMENT_UPDATE_CURRENCY_SUCCESS';
 
+const PAYMENT_PROCESS_REQUEST = 'payment/PAYMENT_PROCESS_REQUEST';
+
+const PAYMENT_PROCESS_SUCCESS = 'payment/PAYMENT_PROCESS_SUCCESS';
+
+const PAYMENT_PROCESS_FAILURE = 'payment/PAYMENT_PROCESS_FAILURE';
+
 // -- Actions --------------------------------------------------------------- //
 export const paymentLoadState = () => async (dispatch: AppDispatch) => {
   try {
@@ -35,9 +41,36 @@ export const paymentChangeCurrency = (currency: string) => async (
   }
 };
 
+export const paymentProcessStart = (
+  processTitle?: string,
+  processSubTitle?: string
+) => async (dispatch: AppDispatch) => {
+  try {
+    dispatch({
+      payload: { processTitle, processSubTitle },
+      type: PAYMENT_PROCESS_REQUEST,
+    });
+  } catch (error) {
+    logger.log('Error in payment process start', error);
+  }
+};
+
+export const paymentProcessDone = () => async (dispatch: AppDispatch) => {
+  try {
+    dispatch({
+      type: PAYMENT_PROCESS_SUCCESS,
+    });
+  } catch (error) {
+    logger.log('Error in payment process', error);
+  }
+};
+
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
   currency: NativeCurrency.USD,
+  inProcess: false,
+  processTitle: undefined,
+  processSubTitle: undefined,
 };
 
 export default (state = INITIAL_STATE, action: AnyAction) => {
@@ -46,6 +79,27 @@ export default (state = INITIAL_STATE, action: AnyAction) => {
       return {
         ...state,
         currency: action.payload,
+      };
+    case PAYMENT_PROCESS_REQUEST:
+      return {
+        ...state,
+        inProcess: true,
+        processTitle: action.payload.processTitle,
+        processSubTitle: action.payload.processSubTitle,
+      };
+    case PAYMENT_PROCESS_SUCCESS:
+      return {
+        ...state,
+        inProcess: false,
+        processTitle: undefined,
+        processSubTitle: undefined,
+      };
+    case PAYMENT_PROCESS_FAILURE:
+      return {
+        ...state,
+        inProcess: false,
+        processTitle: undefined,
+        processSubTitle: undefined,
       };
     default:
       return state;
