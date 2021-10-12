@@ -1,10 +1,28 @@
 import React from 'react';
-import { Container, CenteredContainer, Text } from '@cardstack/components';
+import { StyleSheet } from 'react-native';
+import { Transition, Transitioning } from 'react-native-reanimated';
+import { CenteredContainer, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
 import { colors } from '@cardstack/theme';
 import ActivityIndicator from '@rainbow-me/components/ActivityIndicator';
 import Spinner from '@rainbow-me/components/Spinner';
 import { neverRerender } from '@rainbow-me/utils';
+
+const styles = StyleSheet.create({
+  overlayWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+const transition = (
+  <Transition.Sequence>
+    <Transition.Out durationMs={500} interpolation="easeOut" type="fade" />
+    <Transition.Change durationMs={500} interpolation="easeOut" />
+    <Transition.In durationMs={500} interpolation="easeOut" type="fade" />
+  </Transition.Sequence>
+);
 
 const OverlyStyle = {
   shadowOffset: {
@@ -23,13 +41,12 @@ const OverlyStyle = {
 const LoadingOverlay = ({
   title,
   subTitle,
-  ...props
 }: {
   title?: string;
   subTitle?: string;
 }) => {
   return (
-    <Container flex={1} justifyContent="center" alignItems="center" {...props}>
+    <Transitioning.View transition={transition} style={styles.overlayWrapper}>
       <CenteredContainer
         backgroundColor="white"
         borderColor="whiteOverlay"
@@ -56,7 +73,7 @@ const LoadingOverlay = ({
           </Text>
         ) : null}
       </CenteredContainer>
-    </Container>
+    </Transitioning.View>
   );
 };
 
