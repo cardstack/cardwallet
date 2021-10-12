@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 import { Transition, Transitioning } from 'react-native-reanimated';
+import { useRoute } from '@react-navigation/core';
 import { CenteredContainer, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
 import { colors } from '@cardstack/theme';
-import ActivityIndicator from '@rainbow-me/components/ActivityIndicator';
 import Spinner from '@rainbow-me/components/Spinner';
 import { neverRerender } from '@rainbow-me/utils';
 
@@ -38,13 +38,11 @@ const OverlyStyle = {
   borderRadius: 20,
 };
 
-const LoadingOverlay = ({
-  title,
-  subTitle,
-}: {
-  title?: string;
-  subTitle?: string;
-}) => {
+const LoadingOverlay = props => {
+  const {
+    params: { title, subTitle },
+  } = useRoute();
+
   return (
     <Transitioning.View transition={transition} style={styles.overlayWrapper}>
       <CenteredContainer

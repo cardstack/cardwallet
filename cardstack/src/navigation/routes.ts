@@ -6,6 +6,7 @@ export const MainRoutes = {
   SEND_FLOW_DEPOT: 'SendFlowDepot',
   PAY_MERCHANT: 'PayMerchant',
   ERROR_FALLBACK_SCREEN: 'ErrorFallbackScreen',
+  LOADING_OVERLAY: 'loadingOverlay',
 } as const;
 
 export const GlobalRoutes = {

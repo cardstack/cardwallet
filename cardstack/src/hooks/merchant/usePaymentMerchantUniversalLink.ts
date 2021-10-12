@@ -17,6 +17,7 @@ import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer
 import { useAssetListData, useWallets } from '@rainbow-me/hooks';
 import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
+import { MainRoutes } from '@cardstack/navigation';
 
 interface RouteType {
   params: {
@@ -44,7 +45,7 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const currencyName = currency || 'SPD';
 
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
@@ -89,6 +90,11 @@ export const usePaymentMerchantUniversalLink = () => {
       const web3 = await Web3Instance.get({
         selectedWallet,
         network: networkName,
+      });
+
+      navigate(MainRoutes.LOADING_OVERLAY, {
+        title: 'Processing Transaction',
+        subTitle: `This will take approximately\n10-15 seconds`,
       });
 
       const prepaidCardInstance: PrepaidCard = await getSDK(
