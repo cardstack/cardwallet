@@ -5,7 +5,6 @@ import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import runMigrations from '../model/migrations';
 import { walletInit } from '../model/wallet';
-import { appStateUpdate } from '../redux/appState';
 import {
   settingsLoadNetwork,
   settingsUpdateAccountAddress,
@@ -19,6 +18,7 @@ import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadCurrencyConversionRates from './useLoadCurrencyConversionRates';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
+import { appStateUpdate } from '@cardstack/redux/appState';
 import { web3Provider } from '@rainbow-me/handlers/web3';
 import logger from 'logger';
 
