@@ -16,7 +16,6 @@ import {
 } from '../../redux/settings';
 
 import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
-import networkTypes from '@rainbow-me/helpers/networkTypes';
 
 const networks = values(networkInfo);
 
@@ -30,30 +29,34 @@ const NetworkSection = () => {
   const defaultNetwork = INITIAL_STATE.network;
 
   //transform data for sectionList
-  const DATA = networks
-    .filter(item => (showTestnets ? true : !item.isTestnet))
-    .reduce((result, curr, currentIndex) => {
-      result[curr.layer] =
-        {
-          title: `Layer ${curr.layer}`,
-          data: [
-            ...(result[curr.layer]?.data || []),
+  const DATA = useMemo(
+    () =>
+      networks
+        .filter(item => (showTestnets ? true : !item.isTestnet))
+        .reduce((result, curr, currentIndex) => {
+          result[curr.layer] =
             {
-              disabled: curr.disabled,
-              key: currentIndex,
-              index: currentIndex,
-              label: curr.name,
-              value: curr.value,
-              selected: toLower(network) === toLower(curr.value),
-              default: curr.value === defaultNetwork,
-            },
-          ],
-        } || {};
+              title: `Layer ${curr.layer}`,
+              data: [
+                ...(result[curr.layer]?.data || []),
+                {
+                  disabled: curr.disabled,
+                  key: currentIndex,
+                  index: currentIndex,
+                  label: curr.name,
+                  value: curr.value,
+                  selected: toLower(network) === toLower(curr.value),
+                  default: curr.value === defaultNetwork,
+                },
+              ],
+            } || {};
 
-      return result;
-    }, [])
-    .flat()
-    .sort((a, b) => a.layer < b.layer);
+          return result;
+        }, [])
+        .flat()
+        .sort((a, b) => a.layer < b.layer),
+    [defaultNetwork, network, showTestnets]
+  );
 
   useEffect(() => {
     if (networkSelected.isTestnet !== showTestnets) {
@@ -64,15 +67,21 @@ const NetworkSection = () => {
 
   const onNetworkChange = useCallback(
     async network => {
-      await resetAccountState();
-      await dispatch(settingsUpdateNetwork(network));
-      InteractionManager.runAfterInteractions(async () => {
-        await loadAccountData(network);
-        initializeAccountData();
-      });
+      if (network) {
+        await resetAccountState();
+        await dispatch(settingsUpdateNetwork(network));
+        InteractionManager.runAfterInteractions(async () => {
+          await loadAccountData(network);
+          initializeAccountData();
+        });
+      }
     },
     [dispatch, initializeAccountData, loadAccountData, resetAccountState]
   );
+
+  const onShowTestsPress = useCallback(() => dispatch(toggleShowTestnets()), [
+    dispatch,
+  ]);
 
   return (
     <Container backgroundColor="white" paddingVertical={4} width="100%">
@@ -83,15 +92,10 @@ const NetworkSection = () => {
         <Checkbox
           isSelected={showTestnets}
           label="Show testnets"
-          onPress={() => {
-            if (networkSelected.isTestnet && showTestnets) {
-              onNetworkChange(networkTypes.mainnet);
-            }
-            dispatch(toggleShowTestnets());
-          }}
+          onPress={onShowTestsPress}
         />
       </Container>
-      <RadioList items={DATA} onChange={value => onNetworkChange(value)} />
+      <RadioList items={DATA} onChange={onNetworkChange} />
     </Container>
   );
 };
