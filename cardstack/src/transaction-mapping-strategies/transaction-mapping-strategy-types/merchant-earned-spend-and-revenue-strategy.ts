@@ -14,6 +14,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
 
     return Boolean(
       prepaidCardPayments?.[0] &&
+        this.merchantSafeAddresses &&
         this.merchantSafeAddresses.includes(
           prepaidCardPayments[0].merchantSafe?.id || ''
         )
