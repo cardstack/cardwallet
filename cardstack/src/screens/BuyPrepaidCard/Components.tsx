@@ -1,5 +1,17 @@
 import React from 'react';
-import { Button, Container, Text } from '@cardstack/components';
+import {
+  Button,
+  Container,
+  ContainerProps,
+  Skeleton,
+  Text,
+} from '@cardstack/components';
+
+export const InventorySection = (props: ContainerProps) => (
+  <Container {...props}>
+    <Skeleton height={200} width="100%" marginTop={3} />
+  </Container>
+);
 
 export const TopContent = () => {
   return (

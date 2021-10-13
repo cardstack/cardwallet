@@ -199,7 +199,7 @@ export const reserveWyreOrder = async (
 ) => {
   const partnerId =
     network === NetworkTypes.mainnet ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
-  const dest = `dai:${accountAddress}`;
+  const dest = `ethereum:${accountAddress}`;
   const data = {
     amount,
     dest,
@@ -335,33 +335,41 @@ export const getOrderId = async (
 };
 
 const getWyrePaymentDetails = (
-  sourceAmount: any,
-  destCurrency: any,
-  networkFee: any,
-  purchaseFee: any,
+  sourceAmount: string,
+  destCurrency: string,
+  networkFee: string,
+  purchaseFee: string,
   totalAmount: BigNumber.Value,
   sourceCurrency: string = SOURCE_CURRENCY_USD
-) => ({
-  displayItems: [
+) => {
+  const items = [
     {
       amount: { currency: sourceCurrency, value: sourceAmount },
       label: destCurrency,
     },
     {
       amount: { currency: sourceCurrency, value: purchaseFee },
-      label: 'Purchase Fee',
+      label: 'Activation Fee',
     },
+  ];
+
+  const itemsWithNetwork = [
+    ...items,
     {
       amount: { currency: sourceCurrency, value: networkFee },
       label: 'Network Fee',
     },
-  ],
-  id: 'cardwallet-wyre',
-  total: {
-    amount: { currency: sourceCurrency, value: totalAmount },
-    label: 'Cardstack',
-  },
-});
+  ];
+
+  return {
+    displayItems: parseFloat(networkFee) > 0 ? itemsWithNetwork : items,
+    id: 'cardwallet-wyre',
+    total: {
+      amount: { currency: sourceCurrency, value: totalAmount },
+      label: 'Cardstack',
+    },
+  };
+};
 
 const createPayload = (
   referenceInfo,
@@ -374,7 +382,7 @@ const createPayload = (
   ip,
   sourceCurrency = SOURCE_CURRENCY_USD
 ) => {
-  const dest = `dai:${accountAddress}`;
+  const dest = `ethereum:${accountAddress}`;
 
   const {
     details: {

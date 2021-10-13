@@ -176,7 +176,7 @@ export const updateOrder = async (
       return results.data?.data;
     }
   } catch (e) {
-    logger.sentry('Error while making reservation', e.response);
+    logger.sentry('Error updating order', e.response);
   }
 };
 
@@ -184,7 +184,7 @@ export const getOrder = async (
   hubURL: string,
   authToken: string,
   orderId: string
-): Promise<any | undefined> => {
+): Promise<OrderData | undefined> => {
   try {
     const results = await axios.get(
       `${hubURL}/api/orders/${orderId}`,
@@ -195,6 +195,6 @@ export const getOrder = async (
       return await results.data?.data;
     }
   } catch (e) {
-    logger.sentry('Error while getting custodial wallet', e);
+    logger.sentry('Error getting order details', e);
   }
 };

@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
-import { CardContent, Subtitle, TopContent } from './Components';
+import {
+  CardContent,
+  InventorySection,
+  Subtitle,
+  TopContent,
+} from './Components';
 import { Container, PrepaidCard, SheetHandle } from '@cardstack/components';
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import {
@@ -13,6 +18,7 @@ import {
   CustodialWallet,
   getCustodialWallet,
   getInventories,
+  getOrder,
   Inventory,
   InventoryAttrs,
   makeReservation,
@@ -22,6 +28,7 @@ import { useBuyPrepaidCard } from '@rainbow-me/hooks';
 import { getNativeBalanceFromSpend } from '@cardstack/utils';
 import logger from 'logger';
 import { Alert } from '@rainbow-me/components/alerts';
+import { LoadingOverlay } from '@rainbow-me/components/modal';
 
 const DEFAULT_CARD_CONFIG = {
   background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
@@ -46,6 +53,9 @@ const BuyPrepaidCard = () => {
 
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
   const [sku, setSku] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInventoryLoading, setIsInventoryLoading] = useState<boolean>(false);
+  const [orderId, setOrderId] = useState<string>('');
 
   const [
     custodialWalletData,
@@ -55,9 +65,26 @@ const BuyPrepaidCard = () => {
   const { onPurchase } = useBuyPrepaidCard();
 
   useEffect(() => {
+    const intervalId = setInterval(async () => {
+      if (orderId) {
+        const orderData = await getOrder(hubURL, authToken, orderId);
+        const status = orderData?.attributes?.status;
+
+        if (status === 'complete') {
+          setIsLoading(false);
+        }
+      }
+    }, 2000);
+
+    return () => clearInterval(intervalId); //This is important
+  }, [authToken, orderId]);
+
+  useEffect(() => {
     const getInventoryData = async () => {
+      setIsInventoryLoading(true);
       const data = await getInventories(hubURL, authToken);
       setInventoryData(data);
+      setIsInventoryLoading(false);
     };
 
     getInventoryData();
@@ -114,7 +141,7 @@ const BuyPrepaidCard = () => {
     }
 
     try {
-      const purchaseData = await onPurchase({
+      const orderIdData = await onPurchase({
         address: card?.['issuing-token-symbol'],
         value: amount.toString(),
         depositAddress: custodialWalletData?.attributes['deposit-address'],
@@ -126,31 +153,19 @@ const BuyPrepaidCard = () => {
       const reservationId = reservation?.id || '';
 
       try {
-        const orderId = await updateOrder(
+        setIsLoading(true);
+
+        const orderData = await updateOrder(
           hubURL,
           authToken,
-          purchaseData,
+          orderIdData,
           wireWalletId,
           reservationId
         );
 
-        if (orderId) {
-          Alert({
-            buttons: [{ text: 'Okay' }],
-            message: 'Purchase completed successfully',
-            title: `OrderId: ${purchaseData}`,
-          });
+        if (orderData) {
+          setOrderId(orderIdData);
         }
-
-        // console.log('UPDATE ORDER SUCESS', JSON.stringify(data));
-        //
-        // const orderData = await getOrder(
-        //   hubURL,
-        //   authToken,
-        //   data?.attributes['order-id']
-        // );
-
-        // console.log('GET ORDER', JSON.stringify(orderData));
       } catch (e) {
         logger.sentry('Error updating order', e);
         Alert({
@@ -160,6 +175,7 @@ const BuyPrepaidCard = () => {
       }
     } catch (e) {
     } finally {
+      // setIsLoading(false);
     }
   }, [
     card,
@@ -185,6 +201,11 @@ const BuyPrepaidCard = () => {
 
   return (
     <Container backgroundColor="backgroundBlue" flex={1}>
+      {isLoading ? (
+        <LoadingOverlay
+          title={`Processing Transaction \nThis will take approximately \n10-15 seconds`}
+        />
+      ) : null}
       <SlackSheet
         backgroundColor="transparent"
         renderHeader={() => (
@@ -205,6 +226,7 @@ const BuyPrepaidCard = () => {
             justifyContent="center"
           >
             <ApplePayButton
+              disabled={Object.keys(card || {}).length === 0}
               onSubmit={handlePurchase}
               onDisabledPress={() => console.log('onDisablePress')}
             />
@@ -215,11 +237,15 @@ const BuyPrepaidCard = () => {
         <Container backgroundColor="backgroundBlue" height="100%" flex={1}>
           <Container backgroundColor="backgroundBlue" width="100%" padding={4}>
             <Subtitle text="CHOOSE AMOUNT" />
-            <FlatList
-              data={inventoryData}
-              renderItem={renderItem}
-              numColumns={2}
-            />
+            {!isInventoryLoading ? (
+              <FlatList
+                data={inventoryData}
+                renderItem={renderItem}
+                numColumns={2}
+              />
+            ) : (
+              <InventorySection />
+            )}
           </Container>
           {card ? (
             <Container width="100%" marginBottom={16} padding={4}>
