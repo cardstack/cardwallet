@@ -12,7 +12,10 @@ function PortalConsumer() {
   useEffect(() => {
     if (isWalletLoading || inProcess) {
       setComponent(
-        <LoadingOverlay title={processTitle} subTitle={processSubTitle} />,
+        <LoadingOverlay
+          title={isWalletLoading ? isWalletLoading : processTitle}
+          subTitle={processSubTitle}
+        />,
         true
       );
     } else {

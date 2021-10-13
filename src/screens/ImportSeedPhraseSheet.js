@@ -324,6 +324,7 @@ export default function ImportSeedPhraseSheet() {
                     screen: Routes.WALLET_SCREEN,
                   });
                 } else {
+                  goBack();
                   navigate(Routes.WALLET_SCREEN, { initialized: true });
                 }
 

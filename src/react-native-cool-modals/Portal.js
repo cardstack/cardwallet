@@ -60,7 +60,7 @@ export function Portal({ children }) {
             }
             style={[
               StyleSheet.absoluteFillObject,
-              { backgroundColor: '#00000040' },
+              { backgroundColor: '#00000066' },
             ]}
           >
             {Component}
