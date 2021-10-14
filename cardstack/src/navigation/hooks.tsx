@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { StackNavigationOptions } from '@react-navigation/stack';
+import {
+  StackActions,
+  useRoute,
+  useNavigation,
+  useNavigationState,
+} from '@react-navigation/core';
 import { MainRoutes, GlobalRoutes } from './routes';
 import { MainScreens, GlobalScreens } from './screens';
+import { Navigation } from '@rainbow-me/navigation';
 
 // Not a big fan of returning components inside hooks,
 // but react-navigation does not allow components other than Screen
@@ -25,3 +32,25 @@ export const useCardstackMainScreens = (Stack: any) =>
 
 export const useCardstackGlobalScreens = (Stack: any) =>
   getScreens(GlobalRoutes, GlobalScreens, Stack);
+
+export const useLoadingOverlay = () => {
+  const { navigate, goBack } = useNavigation();
+
+  const showLoadingOverlay = useCallback(
+    ({ title, subTitle }) => {
+      navigate(MainRoutes.LOADING_OVERLAY, {
+        title,
+        subTitle,
+      });
+    },
+    [navigate]
+  );
+
+  const dismissLoadingOverlay = useCallback(() => {
+    if (Navigation.getActiveRouteName() === MainRoutes.LOADING_OVERLAY) {
+      goBack();
+    }
+  }, [goBack]);
+
+  return { showLoadingOverlay, dismissLoadingOverlay };
+};

@@ -17,7 +17,7 @@ import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer
 import { useAssetListData, useWallets } from '@rainbow-me/hooks';
 import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
-import { MainRoutes } from '@cardstack/navigation';
+import { useLoadingOverlay } from '@cardstack/navigation';
 
 interface RouteType {
   params: {
@@ -39,13 +39,15 @@ export const usePaymentMerchantUniversalLink = () => {
     params: { merchantAddress, amount = '0', network, currency },
   } = useRoute<RouteType>();
 
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+
+  const { goBack } = useNavigation();
+
   const networkName: Network = ['sokol', 'xdai'].includes(network)
     ? network
     : Network.sokol;
 
   const currencyName = currency || 'SPD';
-
-  const { goBack, navigate } = useNavigation();
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
@@ -92,7 +94,7 @@ export const usePaymentMerchantUniversalLink = () => {
         network: networkName,
       });
 
-      navigate(MainRoutes.LOADING_OVERLAY, {
+      showLoadingOverlay({
         title: 'Processing Transaction',
         subTitle: `This will take approximately\n10-15 seconds`,
       });
@@ -124,11 +126,12 @@ export const usePaymentMerchantUniversalLink = () => {
 
   useEffect(() => {
     if (error) {
+      dismissLoadingOverlay();
       handleAlertError(
         'Something went wrong, make sure you have enough balance'
       );
     }
-  }, [error]);
+  }, [dismissLoadingOverlay, error]);
 
   const data: PayMerchantDecodedData = useMemo(
     () => ({
