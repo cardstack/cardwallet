@@ -46,8 +46,8 @@ describe('Currency utils', () => {
       const formattedValue = nativeCurrencyToSpend('1', 1);
 
       expect(formattedValue).toStrictEqual({
-        tokenBalanceDisplay: '§100',
-        spendAmount: 100,
+        display: '§100',
+        amount: 100,
       });
     });
 
@@ -55,8 +55,8 @@ describe('Currency utils', () => {
       const formattedValue = nativeCurrencyToSpend('1', 1, true);
 
       expect(formattedValue).toStrictEqual({
-        tokenBalanceDisplay: '§100 SPEND',
-        spendAmount: 100,
+        display: '§100 SPEND',
+        amount: 100,
       });
     });
 
@@ -64,8 +64,8 @@ describe('Currency utils', () => {
       const formattedValue = nativeCurrencyToSpend('0.2345', 1, true);
 
       expect(formattedValue).toStrictEqual({
-        tokenBalanceDisplay: '§23 SPEND',
-        spendAmount: 23,
+        display: '§24 SPEND',
+        amount: 24,
       });
     });
 
@@ -73,8 +73,8 @@ describe('Currency utils', () => {
       const formattedValue = nativeCurrencyToSpend('0.2345', 1.2, true);
 
       expect(formattedValue).toStrictEqual({
-        tokenBalanceDisplay: '§20 SPEND',
-        spendAmount: 20,
+        display: '§20 SPEND',
+        amount: 20,
       });
     });
 
@@ -82,8 +82,8 @@ describe('Currency utils', () => {
       const formattedValue = nativeCurrencyToSpend('1,234.1234', 1.2, true);
 
       expect(formattedValue).toStrictEqual({
-        tokenBalanceDisplay: '§102,844 SPEND',
-        spendAmount: 102844,
+        display: '§102,844 SPEND',
+        amount: 102844,
       });
     });
   });
