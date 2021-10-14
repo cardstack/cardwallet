@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   getOrderId,
@@ -9,11 +9,26 @@ import {
   showApplePayRequest,
 } from '@cardstack/utils/wyre-utils';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
-import usePurchaseTransactionStatus from '@rainbow-me/hooks/usePurchaseTransactionStatus';
-import useTimeout from '@rainbow-me/hooks/useTimeout';
 import { getTokenMetadata } from '@rainbow-me/utils';
 import logger from 'logger';
 import NetworkTypes, { Network } from '@rainbow-me/networkTypes';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { useAuthToken } from '@cardstack/hooks';
+import {
+  CustodialWallet,
+  getCustodialWallet,
+  getInventories,
+  getOrder,
+  Inventory,
+  InventoryAttrs,
+  makeReservation,
+  updateOrder,
+} from '@cardstack/services';
+import {
+  fetchCardCustomizationFromDID,
+  getNativeBalanceFromSpend,
+} from '@cardstack/utils';
+import { PrepaidCardCustomization } from '@cardstack/types';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
@@ -21,25 +36,127 @@ const HUB_URL_PROD = 'https://hub.cardstack.com';
 const getHubUrl = (network: Network) =>
   network === NetworkTypes.mainnet ? HUB_URL_PROD : HUB_URL_STAGING;
 
+interface CardAttrs extends InventoryAttrs {
+  customizationDID?: PrepaidCardCustomization;
+}
+export interface Card {
+  id: string;
+  type: string;
+  isSelected: boolean;
+  amount: number;
+  attributes: CardAttrs;
+}
+
 export default function useBuyPrepaidCard() {
   const [order, setOrder] = useState<string>('');
   const { accountAddress, network } = useAccountSettings();
 
-  const [isPaymentComplete, setPaymentComplete] = useState(false);
-  const [orderCurrency] = useState(null);
-  const [hubURL] = useState<string>(getHubUrl(network));
+  const hubURL = getHubUrl(network);
 
-  const { error, orderStatus, transferStatus } = usePurchaseTransactionStatus();
+  const { authToken } = useAuthToken(hubURL);
 
-  const [startPaymentCompleteTimeout] = useTimeout();
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
 
-  const handlePaymentCallback = useCallback(() => {
-    // In order to have the UI appear to be in-sync with the Apple Pay modal's
-    // animation, we need to artificially delay before marking a purchase as pending.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    startPaymentCompleteTimeout(() => setPaymentComplete(true), 1500);
-  }, [startPaymentCompleteTimeout]);
+  const [card, setCard] = useState<CardAttrs>();
+  const [inventoryData, setInventoryData] = useState<Inventory[]>();
+  const [sku, setSku] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isInventoryLoading, setIsInventoryLoading] = useState<boolean>(false);
+  const [wyreOrderId, setWyreOrderId] = useState<string>('');
+
+  const [
+    custodialWalletData,
+    setCustodialWalletData,
+  ] = useState<CustodialWallet>();
+
+  useEffect(() => {
+    const orderStatusPolling = setInterval(async () => {
+      if (wyreOrderId) {
+        const orderData = await getOrder(hubURL, authToken, wyreOrderId);
+        const status = orderData?.attributes?.status;
+
+        if (status === 'complete') {
+          setIsLoading(false);
+          Alert({
+            buttons: [{ text: 'Okay' }],
+            message: 'Prepaid card purchased successfully',
+          });
+
+          clearInterval(orderStatusPolling);
+        }
+      }
+    }, 2000);
+
+    return () => clearInterval(orderStatusPolling);
+  }, [authToken, hubURL, wyreOrderId]);
+
+  useEffect(() => {
+    const getInventoryData = async () => {
+      try {
+        setIsInventoryLoading(true);
+        const data = await getInventories(hubURL, authToken);
+
+        setInventoryData(data);
+      } catch (e) {
+        Alert({
+          buttons: [{ text: 'Okay' }],
+          message: 'Error while available cards',
+        });
+      } finally {
+        setIsInventoryLoading(false);
+      }
+    };
+
+    getInventoryData();
+  }, [authToken, currencyConversionRates, hubURL, nativeCurrency]);
+
+  useEffect(() => {
+    const getCustodialWalletData = async () => {
+      const data = await getCustodialWallet(hubURL, authToken);
+      setCustodialWalletData(data);
+    };
+
+    getCustodialWalletData();
+  }, [authToken, hubURL]);
+
+  const onSelectCard = useCallback(
+    async (item, index) => {
+      const modifiedCards =
+        inventoryData !== undefined
+          ? inventoryData.map((cardItem: Card) => {
+              return { ...cardItem, isSelected: false };
+            })
+          : [];
+
+      modifiedCards[index].isSelected = true;
+
+      const customizationDid = modifiedCards[index].attributes[
+        'customization-DID'
+      ]
+        ? await fetchCardCustomizationFromDID(
+            modifiedCards[index].attributes['customization-DID']
+          )
+        : null;
+
+      setInventoryData(modifiedCards);
+      setCard(
+        modifiedCards
+          .filter((cardItem: Card) => cardItem.isSelected)
+          .map((carditem: Card) => {
+            return {
+              ...carditem,
+              customizationDid,
+            };
+          })[0].attributes
+      );
+
+      setSku(modifiedCards[index].attributes.sku);
+    },
+    [inventoryData]
+  );
 
   const onPurchase = useCallback(
     async ({ address, value, depositAddress, sourceCurrency }) => {
@@ -104,7 +221,7 @@ export default function useBuyPrepaidCard() {
       );
 
       if (applePayResponse) {
-        logger.log('[add cash] - get order id');
+        logger.log('[buy prepaid card] - get order id');
 
         const { orderId } = await getOrderId(
           referenceInfo,
@@ -118,9 +235,7 @@ export default function useBuyPrepaidCard() {
 
         if (orderId) {
           setOrder(orderId);
-          referenceInfo.orderId = orderId;
           applePayResponse.complete(PaymentRequestStatusTypes.SUCCESS);
-          handlePaymentCallback();
 
           return orderId;
         } else {
@@ -136,22 +251,101 @@ export default function useBuyPrepaidCard() {
             network,
             reservationId
           );
-
-          handlePaymentCallback();
         }
       }
     },
-    [accountAddress, handlePaymentCallback, network]
+    [accountAddress, network]
   );
 
-  return {
-    error,
-    isPaymentComplete,
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const handlePurchase = useCallback(async () => {
+    const amount = getNativeBalanceFromSpend(
+      card?.['face-value'] || 0,
+      nativeCurrency,
+      currencyConversionRates
+    );
+
+    let reservation;
+    let wyreOrderIdData;
+
+    try {
+      reservation = await makeReservation(hubURL, authToken, sku);
+    } catch (e) {
+      logger.sentry('Error while make reservation', e);
+
+      Alert({
+        buttons: [{ text: 'Okay' }],
+        message: 'Error while make reservation',
+      });
+    }
+
+    try {
+      wyreOrderIdData = await onPurchase({
+        address: card?.['issuing-token-symbol'],
+        value: amount.toString(),
+        depositAddress: custodialWalletData?.attributes['deposit-address'],
+      });
+    } catch (e) {
+      Alert({
+        buttons: [{ text: 'Okay' }],
+        message: 'Purchase not completed',
+      });
+    }
+
+    try {
+      if (wyreOrderIdData) {
+        setIsLoading(true);
+
+        const wyreWalletId =
+          custodialWalletData?.attributes['wyre-wallet-id'] || '';
+
+        const reservationId = reservation?.id || '';
+
+        const orderData = await updateOrder(
+          hubURL,
+          authToken,
+          wyreOrderIdData,
+          wyreWalletId,
+          reservationId
+        );
+
+        if (orderData) {
+          setWyreOrderId(wyreOrderIdData);
+        }
+      }
+    } catch (e) {
+      logger.sentry('Error updating order', e);
+
+      Alert({
+        buttons: [{ text: 'Okay' }],
+        message: 'Purchase not completed',
+      });
+    }
+  }, [
+    card,
+    nativeCurrency,
+    currencyConversionRates,
+    hubURL,
+    authToken,
+    sku,
     onPurchase,
-    orderCurrency,
-    orderStatus,
-    transferStatus,
+    custodialWalletData?.attributes,
+  ]);
+
+  return {
+    onPurchase,
     order,
     hubURL,
+    onSelectCard,
+    isLoading,
+    card,
+    setCard,
+    handlePurchase,
+    setIsInventoryLoading,
+    isInventoryLoading,
+    inventoryData,
+    network,
+    nativeCurrency,
+    currencyConversionRates,
   };
 }

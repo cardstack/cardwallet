@@ -4,7 +4,6 @@ import { subtract } from '@cardstack/cardpay-sdk';
 import { PaymentRequest } from '@rainbow-me/react-native-payments';
 import { captureException } from '@sentry/react-native';
 import axios from 'axios';
-import BigNumber from 'bignumber.js';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import cryptoJS from 'crypto-js';
@@ -22,18 +21,19 @@ import {
   WYRE_SECRET_KEY_TEST,
 } from 'react-native-dotenv';
 import publicIP from 'react-native-public-ip';
-import NetworkTypes, { Network } from '@rainbow-me/networkTypes';
+import { Network } from '@rainbow-me/networkTypes';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
 import logger from 'logger';
+import { isMainnet } from '@cardstack/utils/cardpay-utils';
 
 const SOURCE_CURRENCY_USD = 'USD';
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
 
 const getSecretKey = (network: Network) =>
-  network === NetworkTypes.mainnet ? WYRE_SECRET_KEY : WYRE_SECRET_KEY_TEST;
+  isMainnet(network) ? WYRE_SECRET_KEY : WYRE_SECRET_KEY_TEST;
 
 const getApiKey = (network: Network) =>
-  network === NetworkTypes.mainnet ? WYRE_API_KEY : WYRE_API_KEY_TEST;
+  isMainnet(network) ? WYRE_API_KEY : WYRE_API_KEY_TEST;
 
 const getAuthHeaders = (network: Network, url: string, data: string) => {
   const secret = getSecretKey(network);
@@ -55,7 +55,7 @@ export const PaymentRequestStatusTypes = {
 };
 
 const getBaseUrl = (network: Network) =>
-  network === NetworkTypes.mainnet ? WYRE_ENDPOINT : WYRE_ENDPOINT_TEST;
+  isMainnet(network) ? WYRE_ENDPOINT : WYRE_ENDPOINT_TEST;
 
 const wyreApi = axios.create({
   headers: {
@@ -72,10 +72,10 @@ const WyreExceptionTypes = {
 class WyreException extends Error {
   constructor(
     name: string,
-    referenceInfo: any,
-    errorId: any,
-    errorCode: any,
-    message: any
+    referenceInfo: { referenceId: string },
+    errorId: string,
+    errorCode: string,
+    message: string
   ) {
     const referenceInfoIds = values(referenceInfo);
     const referenceId = join(referenceInfoIds, ':');
@@ -84,28 +84,30 @@ class WyreException extends Error {
   }
 }
 
-export const getReferenceId = (accountAddress: string | undefined) => {
+export const getReferenceId = (accountAddress: string) => {
   const lowered = toLower(accountAddress);
   return lowered.substr(-12);
 };
 
 export const showApplePayRequest = async (
-  referenceInfo: { referenceId: any },
+  referenceInfo: { referenceId: string },
   accountAddress: string,
   destCurrency: string,
-  sourceAmountWithFees: any,
-  purchaseFee: any,
-  sourceAmount: any,
+  sourceAmountWithFees: number,
+  purchaseFee: string,
+  sourceAmount: string,
   network: Network,
   sourceCurrency = SOURCE_CURRENCY_USD
 ) => {
   const feeAmount = subtract(sourceAmountWithFees, sourceAmount);
   const networkFee = subtract(feeAmount, purchaseFee);
 
-  const merchantIdentifier =
-    network === NetworkTypes.mainnet ? MERCHANT_ID : MERCHANT_ID_TEST;
+  const merchantIdentifier = isMainnet(network)
+    ? MERCHANT_ID
+    : MERCHANT_ID_TEST;
 
   const methodData = [
+    // TODO: keep track of supported countries
     {
       data: {
         countryCode: PAYMENT_PROCESSOR_COUNTRY_CODE,
@@ -156,14 +158,13 @@ export const showApplePayRequest = async (
 };
 
 export const getWalletOrderQuotation = async (
-  amount: any,
+  amount: string,
   destCurrency: string,
-  accountAddress: any,
+  accountAddress: string,
   network: Network,
   sourceCurrency = SOURCE_CURRENCY_USD
 ) => {
-  const partnerId =
-    network === NetworkTypes.mainnet ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
+  const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
 
   const dest = `ethereum:${accountAddress}`;
 
@@ -202,15 +203,14 @@ export const getWalletOrderQuotation = async (
 };
 
 export const reserveWyreOrder = async (
-  amount: any,
-  destCurrency: any,
-  accountAddress: any,
-  network: any,
-  paymentMethod: null,
-  sourceCurrency: any = SOURCE_CURRENCY_USD
+  amount: string,
+  destCurrency: string,
+  accountAddress: string,
+  network: Network,
+  paymentMethod = null,
+  sourceCurrency: string = SOURCE_CURRENCY_USD
 ) => {
-  const partnerId =
-    network === NetworkTypes.mainnet ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
+  const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
 
   const dest = `ethereum:${accountAddress}`;
 
@@ -220,7 +220,7 @@ export const reserveWyreOrder = async (
     destCurrency,
     referrerAccountId: partnerId,
     sourceCurrency: sourceCurrency,
-    paymentMethod: null,
+    paymentMethod,
   };
 
   if (paymentMethod) {
@@ -230,6 +230,7 @@ export const reserveWyreOrder = async (
   const baseUrl = getBaseUrl(network);
 
   console.log('BASEURL: ', baseUrl);
+  console.log('DATA PAYMENT: ', data);
 
   try {
     const timestamp = Date.now();
@@ -253,13 +254,13 @@ export const reserveWyreOrder = async (
 };
 
 export const getOrderId = async (
-  referenceInfo: any,
+  referenceInfo: { referenceId: string },
   paymentResponse: any,
-  amount: number,
+  amount: string,
   accountAddress: string,
   destCurrency: string,
   network: Network,
-  reservationId: any
+  reservationId: string
 ) => {
   const ip = await publicIP();
 
@@ -331,7 +332,7 @@ const getWyrePaymentDetails = (
   destCurrency: string,
   networkFee: string,
   purchaseFee: string,
-  totalAmount: BigNumber.Value,
+  totalAmount: number,
   sourceCurrency: string = SOURCE_CURRENCY_USD
 ) => {
   const items = [
@@ -363,10 +364,23 @@ const getWyrePaymentDetails = (
   };
 };
 
+interface Payment {
+  details: {
+    billingContact: any;
+    paymentData: string;
+    paymentMethod: any;
+    shippingContact: {
+      emailAddress: string;
+      phoneNumber: string;
+    };
+    transactionIdentifier: string;
+  };
+}
+
 const createPayload = (
   referenceInfo: any,
-  paymentResponse: any,
-  amount: any,
+  paymentResponse: Payment,
+  amount: string,
   accountAddress: string,
   destCurrency: string,
   network: string,
@@ -386,7 +400,7 @@ const createPayload = (
     },
   } = paymentResponse;
 
-  const billingContact = getAddressDetails(billingInfo);
+  const billingContact = getAddressDetails({ addressInfo: billingInfo });
 
   const shippingContact = {
     ...billingContact,
@@ -394,8 +408,7 @@ const createPayload = (
     phoneNumber: shippingInfo.phoneNumber,
   };
 
-  const partnerId =
-    network === NetworkTypes.mainnet ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
+  const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
 
   return {
     partnerId,
@@ -426,7 +439,26 @@ const createPayload = (
   };
 };
 
-const getAddressDetails = (addressInfo: { name: any; postalAddress: any }) => {
+interface AddressDetails {
+  addressInfo: {
+    name: {
+      familyName: string;
+      givenName: string;
+    };
+    postalAddress: {
+      state: string;
+      country: string;
+      ISOCountryCode: string;
+      city: string;
+      postalCode: string;
+      subAdministrativeArea: string;
+      subLocality: string;
+      street: string;
+    };
+  };
+}
+
+const getAddressDetails = ({ addressInfo }: AddressDetails) => {
   const { name, postalAddress: address } = addressInfo;
   const addressLines = split(address.street, '\n');
   return {

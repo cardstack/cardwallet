@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { fromWei } from '@cardstack/cardpay-sdk';
-import { PrepaidCardCustomization } from '@cardstack/types';
 import logger from 'logger';
 
 const axiosConfig = (authToken: string) => {
@@ -41,7 +40,7 @@ export interface InventoryAttrs {
   'issuing-token-address': string;
   'face-value': number;
   'ask-price': string;
-  'customization-DID': PrepaidCardCustomization;
+  'customization-DID'?: string;
   quantity: number;
   reloadable: boolean;
   transferrable: boolean;
