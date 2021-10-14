@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import {
@@ -41,7 +42,7 @@ const DEFAULT_CARD_CONFIG = {
 
 const BuyPrepaidCard = () => {
   const network = useRainbowSelector(state => state.settings.network);
-  const hubURL = 'https://hub-staging.stack.cards';
+  const { onPurchase, hubURL } = useBuyPrepaidCard();
   const { authToken } = useAuthToken(hubURL);
 
   const [
@@ -50,7 +51,6 @@ const BuyPrepaidCard = () => {
   ] = useNativeCurrencyAndConversionRates();
 
   const [card, setCard] = useState<InventoryAttrs>();
-
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
   const [sku, setSku] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,29 +62,42 @@ const BuyPrepaidCard = () => {
     setCustodialWalletData,
   ] = useState<CustodialWallet>();
 
-  const { onPurchase } = useBuyPrepaidCard();
-
   useEffect(() => {
-    const intervalId = setInterval(async () => {
+    const orderStatusPolling = setInterval(async () => {
       if (orderId) {
         const orderData = await getOrder(hubURL, authToken, orderId);
         const status = orderData?.attributes?.status;
 
         if (status === 'complete') {
           setIsLoading(false);
+          Alert({
+            buttons: [{ text: 'Okay' }],
+            message: 'Prepaid card purchased successfully',
+          });
+
+          clearInterval(orderStatusPolling);
         }
       }
     }, 2000);
 
-    return () => clearInterval(intervalId); //This is important
+    return () => clearInterval(orderStatusPolling);
   }, [authToken, orderId]);
 
   useEffect(() => {
     const getInventoryData = async () => {
-      setIsInventoryLoading(true);
-      const data = await getInventories(hubURL, authToken);
-      setInventoryData(data);
-      setIsInventoryLoading(false);
+      try {
+        setIsInventoryLoading(true);
+        const data = await getInventories(hubURL, authToken);
+
+        setInventoryData(data);
+      } catch (e) {
+        return Alert({
+          buttons: [{ text: 'Okay' }],
+          message: 'Error while available cards',
+        });
+      } finally {
+        setIsInventoryLoading(false);
+      }
     };
 
     getInventoryData();
@@ -129,53 +142,60 @@ const BuyPrepaidCard = () => {
     );
 
     let reservation;
+    let orderIdData;
 
     try {
       reservation = await makeReservation(hubURL, authToken, sku);
     } catch (e) {
       logger.sentry('Error while make reservation', e);
-      Alert({
+
+      return Alert({
         buttons: [{ text: 'Okay' }],
         message: 'Error while make reservation',
       });
     }
 
     try {
-      const orderIdData = await onPurchase({
+      orderIdData = await onPurchase({
         address: card?.['issuing-token-symbol'],
         value: amount.toString(),
         depositAddress: custodialWalletData?.attributes['deposit-address'],
       });
+    } catch (e) {
+      return Alert({
+        buttons: [{ text: 'Okay' }],
+        message: 'Purchase not completed',
+      });
+    }
 
-      const wireWalletId =
-        custodialWalletData?.attributes['wyre-wallet-id'] || '';
-
-      const reservationId = reservation?.id || '';
-
-      try {
+    try {
+      if (orderIdData) {
         setIsLoading(true);
+
+        const wyreWalletId =
+          custodialWalletData?.attributes['wyre-wallet-id'] || '';
+
+        const reservationId = reservation?.id || '';
 
         const orderData = await updateOrder(
           hubURL,
           authToken,
           orderIdData,
-          wireWalletId,
+          wyreWalletId,
           reservationId
         );
 
         if (orderData) {
           setOrderId(orderIdData);
         }
-      } catch (e) {
-        logger.sentry('Error updating order', e);
-        Alert({
-          buttons: [{ text: 'Okay' }],
-          message: 'Purchase not completed',
-        });
       }
     } catch (e) {
-    } finally {
-      // setIsLoading(false);
+      logger.sentry('Error updating order', e);
+
+      return Alert({
+        buttons: [{ text: 'Okay' }],
+        message: 'Purchase not completed',
+      });
     }
   }, [
     card,
