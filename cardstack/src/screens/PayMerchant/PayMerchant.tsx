@@ -1,8 +1,17 @@
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import {
+  convertAmountAndPriceToNativeDisplay,
+  spendToUsd,
+} from '@cardstack/cardpay-sdk';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
+import {
+  AmountInNativeCurrency,
+  MIN_SPEND_AMOUNT,
+  useAmountConvertHelper,
+} from '@cardstack/screen/PaymentRequest/helper';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
   SafeAreaView,
@@ -16,11 +25,6 @@ import {
   CenteredContainer,
 } from '@cardstack/components';
 import { MerchantInformation } from '@cardstack/types';
-import {
-  convertSpendForBalanceDisplay,
-  formattedCurrencyToAbsNum,
-  nativeCurrencyToSpend,
-} from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
 const PayMerchant = memo(() => {
@@ -93,11 +97,19 @@ interface AmountProps {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
   nativeCurrency: NativeCurrency;
+  isInvalid?: boolean;
+  amountInAnotherCurrency: string;
+  currencyConversionRates: {
+    [key: string]: number;
+  };
 }
-interface CustomAmountBodyProps extends AmountProps {
+interface CustomAmountBodyProps {
   merchantInfoDID: MerchantInformation | undefined;
   onNextPress: () => void;
   isLoading: boolean;
+  inputValue: string | undefined;
+  setInputValue: (_val: string | undefined) => void;
+  nativeCurrency: NativeCurrency;
 }
 
 const CustomAmountBody = memo(
@@ -108,48 +120,71 @@ const CustomAmountBody = memo(
     setInputValue,
     isLoading,
     nativeCurrency,
-  }: CustomAmountBodyProps) => (
-    <Container
-      flex={1}
-      alignItems="center"
-      borderTopRightRadius={20}
-      borderTopLeftRadius={20}
-      backgroundColor="white"
-      paddingTop={3}
-    >
-      <SheetHandle />
-      <Container flex={1} flexDirection="column" width="100%">
-        <Container padding={5} flex={1}>
-          <MerchantSectionCard
-            merchantInfoDID={merchantInfoDID}
-            flex={1}
-            justifyContent="space-between"
-            isLoading={isLoading}
-          >
-            <AmountInputSection
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-              nativeCurrency={nativeCurrency}
-            />
-          </MerchantSectionCard>
-        </Container>
-        <Container alignItems="center" flex={1}>
-          <Button onPress={onNextPress}>
-            <Text>Next</Text>
-          </Button>
-        </Container>
-      </Container>
-    </Container>
-  )
-);
-
-const AmountInputSection = memo(
-  ({ inputValue, setInputValue, nativeCurrency }: AmountProps) => {
+  }: CustomAmountBodyProps) => {
     const [
       accountCurrency,
       currencyConversionRates,
     ] = useNativeCurrencyAndConversionRates();
 
+    const {
+      amountInNum,
+      amountInAnotherCurrency,
+      isInvalid,
+    } = useAmountConvertHelper(
+      inputValue,
+      nativeCurrency,
+      accountCurrency,
+      currencyConversionRates
+    );
+
+    return (
+      <Container
+        flex={1}
+        alignItems="center"
+        borderTopRightRadius={20}
+        borderTopLeftRadius={20}
+        backgroundColor="white"
+        paddingTop={3}
+      >
+        <SheetHandle />
+        <Container flex={1} flexDirection="column" width="100%">
+          <Container padding={5} flex={1}>
+            <MerchantSectionCard
+              merchantInfoDID={merchantInfoDID}
+              flex={1}
+              justifyContent="space-between"
+              isLoading={isLoading}
+            >
+              <AmountInputSection
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+                amountInAnotherCurrency={amountInAnotherCurrency.display}
+                nativeCurrency={nativeCurrency}
+                isInvalid={isInvalid}
+                currencyConversionRates={currencyConversionRates}
+              />
+            </MerchantSectionCard>
+          </Container>
+          <Container alignItems="center" flex={1} paddingHorizontal={5}>
+            <Button onPress={onNextPress} disabled={!amountInNum || isInvalid}>
+              <Text>Next</Text>
+            </Button>
+          </Container>
+        </Container>
+      </Container>
+    );
+  }
+);
+
+const AmountInputSection = memo(
+  ({
+    inputValue,
+    setInputValue,
+    nativeCurrency,
+    amountInAnotherCurrency,
+    isInvalid,
+    currencyConversionRates,
+  }: AmountProps) => {
     return (
       <Container alignItems="center" width="100%" justifyContent="center">
         <Text weight="bold" numberOfLines={1} fontSize={11}>
@@ -164,21 +199,29 @@ const AmountInputSection = memo(
           nativeCurrency={nativeCurrency}
           inputValue={inputValue}
           setInputValue={setInputValue}
+          isInvalid={isInvalid}
         />
-        <Text marginTop={2} numberOfLines={1} fontSize={12} color="blueText">
-          {nativeCurrency === NativeCurrency.SPD
-            ? convertSpendForBalanceDisplay(
-                inputValue ? formattedCurrencyToAbsNum(inputValue) : 0,
-                accountCurrency,
-                currencyConversionRates,
-                true
-              ).nativeBalanceDisplay
-            : nativeCurrencyToSpend(
-                inputValue,
-                currencyConversionRates[nativeCurrency],
-                true
-              ).tokenBalanceDisplay}
-        </Text>
+        <AmountInNativeCurrency
+          amountWithSymbol={amountInAnotherCurrency}
+          textCenter
+          marginTop={2}
+        />
+        {isInvalid ? (
+          <Text
+            textAlign="center"
+            textTransform="uppercase"
+            fontSize={12}
+            weight="bold"
+            color="red"
+            marginTop={1}
+          >{`minimum ${MIN_SPEND_AMOUNT} spend (${
+            convertAmountAndPriceToNativeDisplay(
+              spendToUsd(MIN_SPEND_AMOUNT) || 0,
+              currencyConversionRates[nativeCurrency],
+              nativeCurrency
+            ).display
+          })`}</Text>
+        ) : null}
       </Container>
     );
   }
