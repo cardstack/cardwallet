@@ -1,6 +1,7 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { orderBy } from 'lodash';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
+import useAccountSettings from './useAccountSettings';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
@@ -20,6 +21,7 @@ import {
   MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
+import { isLayer1 } from '@cardstack/utils';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
@@ -155,6 +157,7 @@ export const useAssetListData = () => {
   const isLoadingAssets = useRainbowSelector(
     state => state.data.isLoadingAssets
   );
+  const { network } = useAccountSettings();
 
   // order of sections in asset list
   const orderedSections = [
@@ -168,7 +171,8 @@ export const useAssetListData = () => {
   const sections = orderedSections.filter(
     section =>
       section?.data?.length ||
-      section?.header.type === PinnedHiddenSectionOption.PREPAID_CARDS
+      (section?.header.type === PinnedHiddenSectionOption.PREPAID_CARDS &&
+        !isLayer1(network))
   );
 
   const isEmpty = !sections.length;
