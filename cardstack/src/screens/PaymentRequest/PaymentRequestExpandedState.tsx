@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {
-  convertAmountToNativeDisplay,
   convertAmountAndPriceToNativeDisplay,
   spendToUsd,
 } from '@cardstack/cardpay-sdk';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import {
   RequestPaymentConfirmation,
   RequestPaymentConfirmationFooter,
 } from './RequestPaymentConfirmation';
-import { AmountInNativeCurrency, RequestPaymentMerchantInfo } from './helper';
+import {
+  AmountInNativeCurrency,
+  RequestPaymentMerchantInfo,
+  MIN_SPEND_AMOUNT,
+  useAmountConvertHelper,
+} from './helper';
 import { SlackSheet } from '@rainbow-me/components/sheet';
 import { useDimensions } from '@rainbow-me/hooks';
 import {
@@ -21,11 +24,6 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
-import {
-  formattedCurrencyToAbsNum,
-  formatNative,
-  nativeCurrencyToSpend,
-} from '@cardstack/utils';
 import { hitSlop } from '@cardstack/utils/layouts';
 import { useNavigation } from '@rainbow-me/navigation';
 import {
@@ -63,10 +61,22 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
     });
   }, [setOptions, deviceHeight, isTallPhone]);
 
+  const {
+    amountInNum,
+    amountWithSymbol,
+    amountInAnotherCurrency,
+    isInvalid,
+  } = useAmountConvertHelper(
+    inputValue,
+    nativeCurrency,
+    accountNativeCurrency,
+    currencyConversionRates
+  );
+
   const EditFooter = () => (
     <Container paddingHorizontal={5}>
       <Button
-        disabled={!inputValue}
+        disabled={!amountInNum || isInvalid}
         onPress={() => setEditMode(false)}
         variant={!inputValue ? 'disabledBlack' : undefined}
       >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
@@ -79,26 +89,6 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
       </Container>
     </Container>
   );
-
-  const amountInNum: number = formattedCurrencyToAbsNum(inputValue);
-
-  const amountWithSymbol =
-    nativeCurrency === NativeCurrency.SPD
-      ? `§${formatNative(`${amountInNum}`)} SPD`
-      : convertAmountToNativeDisplay(amountInNum, nativeCurrency);
-
-  const amountInAnotherCurrency =
-    nativeCurrency === NativeCurrency.SPD
-      ? convertAmountAndPriceToNativeDisplay(
-          spendToUsd(amountInNum) || 0,
-          currencyConversionRates[accountNativeCurrency],
-          accountNativeCurrency
-        ).display
-      : nativeCurrencyToSpend(
-          inputValue,
-          currencyConversionRates[nativeCurrency],
-          true
-        ).tokenBalanceDisplay;
 
   return (
     <SlackSheet
@@ -129,11 +119,28 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
             nativeCurrency={nativeCurrency}
             paddingBottom={1}
             setInputValue={setInputValue}
+            isInvalid={isInvalid}
           />
           <AmountInNativeCurrency
-            amountWithSymbol={amountInAnotherCurrency}
+            amountWithSymbol={amountInAnotherCurrency.display}
             textCenter
           />
+          {isInvalid ? (
+            <Text
+              textAlign="center"
+              textTransform="uppercase"
+              fontSize={12}
+              weight="bold"
+              color="red"
+              marginTop={1}
+            >{`minimum ${MIN_SPEND_AMOUNT} spend (${
+              convertAmountAndPriceToNativeDisplay(
+                spendToUsd(MIN_SPEND_AMOUNT) || 0,
+                currencyConversionRates[nativeCurrency],
+                nativeCurrency
+              ).display
+            })`}</Text>
+          ) : null}
         </Container>
       ) : (
         <>
@@ -179,7 +186,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
                     {amountWithSymbol}
                   </Text>
                   <AmountInNativeCurrency
-                    amountWithSymbol={amountInAnotherCurrency}
+                    amountWithSymbol={amountInAnotherCurrency.display}
                   />
                 </Container>
               </Container>
@@ -191,7 +198,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
             amountWithSymbol={amountWithSymbol}
             merchantInfo={merchantInfo}
             nativeCurrency={nativeCurrency}
-            amountInAnotherCurrency={amountInAnotherCurrency}
+            amountInAnotherCurrency={amountInAnotherCurrency.display}
             backToEditMode={() => setEditMode(true)}
           />
         </>

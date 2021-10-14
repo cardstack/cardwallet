@@ -33,6 +33,7 @@ type InputAmountProps = {
   setInputValue: (_val: string | undefined) => void;
   nativeCurrency: NativeCurrency;
   currencyDisplayMode?: CURRENCY_DISPLAY_MODE;
+  isInvalid?: boolean;
 } & ContainerProps;
 
 export const InputAmount = memo(
@@ -41,6 +42,7 @@ export const InputAmount = memo(
     setInputValue,
     nativeCurrency,
     currencyDisplayMode = CURRENCY_DISPLAY_MODE.SYMBOL,
+    isInvalid,
     ...containerProps
   }: InputAmountProps) => {
     const { navigate } = useNavigation();
@@ -100,7 +102,7 @@ export const InputAmount = memo(
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus
-              color="black"
+              color={isInvalid ? 'red' : 'black'}
               fontSize={30}
               fontWeight="bold"
               keyboardType="numeric"
