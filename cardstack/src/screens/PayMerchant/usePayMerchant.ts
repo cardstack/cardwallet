@@ -97,6 +97,8 @@ export const usePayMerchant = () => {
   useEffect(() => {
     if (initialAmount) {
       setInputValue(initialAmount.toString());
+    } else {
+      setPayStep(PAY_STEP.EDIT_AMOUNT);
     }
   }, [initialAmount]);
 
