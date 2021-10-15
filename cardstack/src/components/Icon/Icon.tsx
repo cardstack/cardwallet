@@ -52,7 +52,8 @@ export const Icon = ({
 }: IconProps) => {
   const theme = useTheme<Theme>();
   const isCustomIcon = Object.keys(customIcons).includes(name);
-  const colorWithDefault = color ? theme.colors[color] : null;
+
+  const colorWithDefault = (color && theme.colors[color]) || color;
 
   const strokeWithDefault = stroke ? theme.colors[stroke] : null;
 
