@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  convertAmountAndPriceToNativeDisplay,
-  spendToUsd,
-} from '@cardstack/cardpay-sdk';
-import {
   RequestPaymentConfirmation,
   RequestPaymentConfirmationFooter,
 } from './RequestPaymentConfirmation';
 import {
   AmountInNativeCurrency,
   RequestPaymentMerchantInfo,
-  MIN_SPEND_AMOUNT,
+  MinInvalidAmountText,
   useAmountConvertHelper,
 } from './helper';
 import { SlackSheet } from '@rainbow-me/components/sheet';
@@ -66,6 +62,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
     amountWithSymbol,
     amountInAnotherCurrency,
     isInvalid,
+    canSubmit,
   } = useAmountConvertHelper(
     inputValue,
     nativeCurrency,
@@ -76,7 +73,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
   const EditFooter = () => (
     <Container paddingHorizontal={5}>
       <Button
-        disabled={!amountInNum || isInvalid}
+        disabled={!canSubmit}
         onPress={() => setEditMode(false)}
         variant={!inputValue ? 'disabledBlack' : undefined}
       >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
@@ -126,20 +123,10 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
             textCenter
           />
           {isInvalid ? (
-            <Text
-              textAlign="center"
-              textTransform="uppercase"
-              fontSize={12}
-              weight="bold"
-              color="red"
-              marginTop={1}
-            >{`minimum ${MIN_SPEND_AMOUNT} spend (${
-              convertAmountAndPriceToNativeDisplay(
-                spendToUsd(MIN_SPEND_AMOUNT) || 0,
-                currencyConversionRates[nativeCurrency],
-                nativeCurrency
-              ).display
-            })`}</Text>
+            <MinInvalidAmountText
+              nativeCurrency={nativeCurrency}
+              currencyConversionRates={currencyConversionRates}
+            />
           ) : null}
         </Container>
       ) : (

@@ -64,6 +64,33 @@ export const AmountInNativeCurrency = ({
   </Text>
 );
 
+export const MinInvalidAmountText = ({
+  nativeCurrency,
+  currencyConversionRates,
+  ...textProps
+}: {
+  nativeCurrency: string;
+  currencyConversionRates: {
+    [key: string]: number;
+  };
+} & TextProps) => (
+  <Text
+    textAlign="center"
+    textTransform="uppercase"
+    fontSize={12}
+    weight="bold"
+    color="red"
+    marginTop={1}
+    {...textProps}
+  >{`minimum ${MIN_SPEND_AMOUNT} spend (${
+    convertAmountAndPriceToNativeDisplay(
+      spendToUsd(MIN_SPEND_AMOUNT) || 0,
+      currencyConversionRates[nativeCurrency],
+      nativeCurrency
+    ).display
+  })`}</Text>
+);
+
 export const useAmountConvertHelper = (
   inputValue: string | undefined,
   inputNativeCurrency: string,
@@ -73,31 +100,37 @@ export const useAmountConvertHelper = (
   }
 ) => {
   const amountInNum: number = formattedCurrencyToAbsNum(inputValue);
+  const isSPDCurrency: boolean = inputNativeCurrency === NativeCurrency.SPD;
 
-  const amountWithSymbol =
-    inputNativeCurrency === NativeCurrency.SPD
-      ? `§${formatNative(`${amountInNum}`)} SPD`
-      : convertAmountToNativeDisplay(amountInNum, inputNativeCurrency);
+  const amountWithSymbol = isSPDCurrency
+    ? `§${formatNative(`${amountInNum}`)} SPD`
+    : convertAmountToNativeDisplay(amountInNum, inputNativeCurrency);
 
-  const amountInAnotherCurrency =
-    inputNativeCurrency === NativeCurrency.SPD
-      ? convertAmountAndPriceToNativeDisplay(
-          spendToUsd(amountInNum) || 0,
-          currencyConversionRates[accountNativeCurrency],
-          accountNativeCurrency
-        )
-      : nativeCurrencyToSpend(
-          inputValue,
-          currencyConversionRates[inputNativeCurrency],
-          true
-        );
+  const amountInAnotherCurrency = isSPDCurrency
+    ? convertAmountAndPriceToNativeDisplay(
+        spendToUsd(amountInNum) || 0,
+        currencyConversionRates[accountNativeCurrency],
+        accountNativeCurrency
+      )
+    : nativeCurrencyToSpend(
+        inputValue,
+        currencyConversionRates[inputNativeCurrency],
+        true
+      );
 
   // input amount should be more than MIN_SPEND_AMOUNT (50)
   const isInvalid =
     amountInNum > 0 &&
-    (inputNativeCurrency === NativeCurrency.SPD
-      ? amountInNum
-      : amountInAnotherCurrency.amount) < MIN_SPEND_AMOUNT;
+    (isSPDCurrency ? amountInNum : amountInAnotherCurrency.amount) <
+      MIN_SPEND_AMOUNT;
 
-  return { amountInNum, amountWithSymbol, amountInAnotherCurrency, isInvalid };
+  const canSubmit = Boolean(amountInNum && !isInvalid);
+
+  return {
+    amountInNum,
+    amountWithSymbol,
+    amountInAnotherCurrency,
+    isInvalid,
+    canSubmit,
+  };
 };

@@ -1,15 +1,11 @@
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
-import {
-  convertAmountAndPriceToNativeDisplay,
-  spendToUsd,
-} from '@cardstack/cardpay-sdk';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 import {
   AmountInNativeCurrency,
-  MIN_SPEND_AMOUNT,
+  MinInvalidAmountText,
   useAmountConvertHelper,
 } from '@cardstack/screen/PaymentRequest/helper';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
@@ -127,9 +123,9 @@ const CustomAmountBody = memo(
     ] = useNativeCurrencyAndConversionRates();
 
     const {
-      amountInNum,
       amountInAnotherCurrency,
       isInvalid,
+      canSubmit,
     } = useAmountConvertHelper(
       inputValue,
       nativeCurrency,
@@ -166,7 +162,7 @@ const CustomAmountBody = memo(
             </MerchantSectionCard>
           </Container>
           <Container alignItems="center" flex={1} paddingHorizontal={5}>
-            <Button onPress={onNextPress} disabled={!amountInNum || isInvalid}>
+            <Button onPress={onNextPress} disabled={!canSubmit}>
               <Text>Next</Text>
             </Button>
           </Container>
@@ -207,20 +203,10 @@ const AmountInputSection = memo(
           marginTop={2}
         />
         {isInvalid ? (
-          <Text
-            textAlign="center"
-            textTransform="uppercase"
-            fontSize={12}
-            weight="bold"
-            color="red"
-            marginTop={1}
-          >{`minimum ${MIN_SPEND_AMOUNT} spend (${
-            convertAmountAndPriceToNativeDisplay(
-              spendToUsd(MIN_SPEND_AMOUNT) || 0,
-              currencyConversionRates[nativeCurrency],
-              nativeCurrency
-            ).display
-          })`}</Text>
+          <MinInvalidAmountText
+            nativeCurrency={nativeCurrency}
+            currencyConversionRates={currencyConversionRates}
+          />
         ) : null}
       </Container>
     );
