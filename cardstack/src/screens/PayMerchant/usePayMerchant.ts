@@ -184,11 +184,11 @@ export const usePayMerchant = () => {
       spendAmount,
       currency:
         nativeCurrency === NativeCurrency.SPD
-          ? initialCurrency
+          ? accountCurrency
           : nativeCurrency,
       prepaidCard: selectedPrepaidCard?.address,
     }),
-    [initialCurrency, data, nativeCurrency, selectedPrepaidCard, spendAmount]
+    [accountCurrency, data, nativeCurrency, selectedPrepaidCard, spendAmount]
   );
 
   return {
