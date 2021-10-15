@@ -9,13 +9,9 @@ import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInf
 import { PrepaidCardType } from '@cardstack/types';
 import {
   convertSpendForBalanceDisplay,
-  formattedCurrencyToAbsNum,
   nativeCurrencyToAmountInSpend,
 } from '@cardstack/utils';
-import {
-  useNativeCurrencyAndConversionRates,
-  usePaymentCurrencyAndConversionRates,
-} from '@rainbow-me/redux/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
@@ -48,16 +44,19 @@ export const usePayMerchant = () => {
     data,
   } = usePaymentMerchantUniversalLink();
 
-  const { paymentChangeCurrency } = usePayment();
+  const {
+    infoDID = '',
+    amount: initialAmount,
+    currency: initialCurrency,
+  } = data;
 
-  const { infoDID = '', amount: initialAmount, currency } = data;
-
+  const { paymentChangeCurrency, currency: nativeCurrency } = usePayment();
   // Initialize input amount's currency with the currency in merchant payment request link
   useEffect(() => {
-    if (currency) {
-      paymentChangeCurrency(currency);
+    if (initialCurrency) {
+      paymentChangeCurrency(initialCurrency);
     }
-  }, [currency, paymentChangeCurrency]);
+  }, [initialCurrency, paymentChangeCurrency]);
 
   const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
 
@@ -80,11 +79,9 @@ export const usePayMerchant = () => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
 
   const [
-    nativeCurrency,
+    accountCurrency,
     currencyConversionRates,
-  ] = usePaymentCurrencyAndConversionRates();
-
-  const [accountCurrency] = useNativeCurrencyAndConversionRates();
+  ] = useNativeCurrencyAndConversionRates();
 
   // Updating in case first render selected is undefined
   useEffect(() => {
@@ -112,7 +109,7 @@ export const usePayMerchant = () => {
   const onPayMerchantSuccess = useCallback(
     async (receipt: TransactionReceipt) => {
       const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-        inputValue ? formattedCurrencyToAbsNum(inputValue) : 0,
+        String(spendAmount),
         accountCurrency,
         currencyConversionRates,
         true
@@ -141,12 +138,11 @@ export const usePayMerchant = () => {
       });
     },
     [
-      accountCurrency,
       canGoBack,
       currencyConversionRates,
       goBack,
-      inputValue,
       merchantInfoDID,
+      accountCurrency,
       navigate,
       selectedPrepaidCard,
       spendAmount,
@@ -187,10 +183,12 @@ export const usePayMerchant = () => {
       ...data,
       spendAmount,
       currency:
-        nativeCurrency === NativeCurrency.SPD ? currency : nativeCurrency,
+        nativeCurrency === NativeCurrency.SPD
+          ? initialCurrency
+          : nativeCurrency,
       prepaidCard: selectedPrepaidCard?.address,
     }),
-    [currency, data, nativeCurrency, selectedPrepaidCard, spendAmount]
+    [initialCurrency, data, nativeCurrency, selectedPrepaidCard, spendAmount]
   );
 
   return {
