@@ -1,6 +1,9 @@
-import BigNumber from 'bignumber.js';
-
-const USD_TO_SPEND_RATE = 100;
+import {
+  usdToSpend,
+  convertAmountFromNativeValue,
+  formatCurrencyAmount,
+  convertStringToNumber,
+} from '@cardstack/cardpay-sdk';
 
 export const getDollarsFromDai = (dai: number) => dai / 100;
 
@@ -51,11 +54,13 @@ export const nativeCurrencyToAmountInSpend = (
   nativeCurrencyRate: number
 ): number => {
   return amount
-    ? new BigNumber(formattedCurrencyToAbsNum(amount))
-        .times(USD_TO_SPEND_RATE)
-        .div(nativeCurrencyRate)
-        .integerValue() // round spend value to integer
-        .toNumber()
+    ? convertStringToNumber(
+        convertAmountFromNativeValue(
+          usdToSpend(formattedCurrencyToAbsNum(amount)) || 0,
+          nativeCurrencyRate,
+          0
+        )
+      )
     : 0;
 };
 
@@ -67,9 +72,9 @@ export const nativeCurrencyToSpend = (
   const spendAmount = nativeCurrencyToAmountInSpend(amount, nativeCurrencyRate);
 
   return {
-    tokenBalanceDisplay: `§${spendAmount.toLocaleString('en-US')}${
+    display: `§${formatCurrencyAmount(spendAmount, 0)}${
       includeSuffix ? ' SPEND' : ''
     }`,
-    spendAmount: spendAmount,
+    amount: spendAmount,
   };
 };
