@@ -24,7 +24,7 @@ export const fetchGnosisSafes = async (address: string) => {
   try {
     const web3 = await Web3Instance.get();
     const safesInstance = await getSDK('Safes', web3);
-    const safes = await safesInstance.view(address);
+    const safes = (await safesInstance.view(address)).safes;
 
     safes?.forEach(safe => {
       safe?.tokens.forEach(({ balance, token }) => {
@@ -259,5 +259,6 @@ export const getSafeData = async (address: string) => {
 
   const safesInstance = await getSDK('Safes', web3);
 
-  return safesInstance.viewSafe(address);
+  const result = await safesInstance.viewSafe(address);
+  return result.safe;
 };
