@@ -7,7 +7,7 @@
 * Volta installed for node/yarn version management: https://volta.sh/
 * Install CocoaPods by running `sudo gem install cocoapods`
 * Install Watchman `brew install watchman`
-* xCode Version 12.4 (can be found [here](https://developer.apple.com/download/all/?q=xcode))
+* xCode Version 13.0 (can be found [here](https://developer.apple.com/download/all/?q=xcode))
 
 ## How to run the project
 
@@ -31,6 +31,9 @@ If you are new to React Native, this is a helpful introduction: https://facebook
 
 9. Run the project by clicking the play button.
 
+## How to run the tests
+
+`yarn test`
 ## Project Secrets
 
 ### Commands
@@ -69,6 +72,8 @@ MATCH_TYPE=appstore
 MATCH_APP_IDENTIFIER=com.cardstack.cardpay
 ```
 Once this is setup, and you have git access to the `cardwallet-context` repository, you can run `yarn contexts:sync` to pull all environment variables down into a root `.env` file.
+
+If you get an error and are prompted to login to Github when following the instructions to resolve, enter your username and when you are prompted for password, enter your Github personal access token.
 
 ### Adding Secrets
 
