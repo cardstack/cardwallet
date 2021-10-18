@@ -39,8 +39,10 @@ jobs:
         with:
           ref: ${{ env.CHECKOUT_REF }}
       - uses: volta-cli/action@v1
-      - name: Bundle install
-        run: bundle install
+      - name: Setup Ruby & bundle
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Decrypt fastlane vars
         run: bundle exec fastlane run decrypt_fastlane_vars
       - uses: actions/cache@v2
