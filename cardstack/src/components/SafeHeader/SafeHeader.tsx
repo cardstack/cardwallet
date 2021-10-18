@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Container,
   Icon,
@@ -7,16 +7,36 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { getAddressPreview } from '@cardstack/utils';
+import { ColorTypes } from '@cardstack/theme';
 
 interface SafeHeaderProps {
   address: string;
   rightText?: string;
   onPress?: () => void;
   small?: boolean;
+  backgroundColor?: string;
+  textColor?: string;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
-  const { address, onPress, rightText, small } = props;
+  const {
+    address,
+    onPress,
+    rightText,
+    small,
+    backgroundColor,
+    textColor,
+  } = props;
+
+  const style = useMemo(
+    () => ({
+      background: {
+        backgroundColor: backgroundColor || 'black',
+      },
+      text: { color: textColor || 'white' },
+    }),
+    [backgroundColor, textColor]
+  );
 
   return (
     <Container width="100%">
@@ -25,14 +45,14 @@ export const SafeHeader = (props: SafeHeaderProps) => {
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
-        backgroundColor="black"
+        style={style.background}
         paddingHorizontal={5}
       >
         <Container flexDirection="row" alignItems="center">
           <NetworkBadge marginRight={2} />
           <Text
             fontFamily="RobotoMono-Regular"
-            color="white"
+            style={style.text}
             size={small ? 'xs' : 'body'}
           >
             {getAddressPreview(address)}
@@ -46,7 +66,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
           onPress={onPress}
         >
           <Text
-            color="white"
+            style={style.text}
             weight="extraBold"
             ellipsizeMode="tail"
             size={small ? 'xs' : 'small'}
@@ -56,7 +76,11 @@ export const SafeHeader = (props: SafeHeaderProps) => {
             {rightText || 'View'}
           </Text>
           {!rightText && (
-            <Icon name="chevron-right" color="white" iconSize="medium" />
+            <Icon
+              name="chevron-right"
+              color={style.text.color as ColorTypes}
+              iconSize="medium"
+            />
           )}
         </Touchable>
       </Container>

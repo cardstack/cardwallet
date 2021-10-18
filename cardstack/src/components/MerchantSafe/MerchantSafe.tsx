@@ -41,7 +41,12 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
           overflow="hidden"
           borderColor="buttonPrimaryBorder"
         >
-          <SafeHeader {...props} onPress={onPress} />
+          <SafeHeader
+            {...props}
+            onPress={onPress}
+            backgroundColor={merchantInfoDID?.color}
+            textColor={merchantInfoDID?.textColor}
+          />
           <Container paddingHorizontal={6}>
             <MerchantInfo
               color={merchantInfoDID?.color}
