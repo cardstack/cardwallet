@@ -1,11 +1,7 @@
 import { subtract } from '@cardstack/cardpay-sdk';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { PaymentRequest } from '@rainbow-me/react-native-payments';
 import { captureException } from '@sentry/react-native';
 import axios from 'axios';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import cryptoJS from 'crypto-js';
 import { get, join, split, toLower, values } from 'lodash';
 import {
@@ -21,10 +17,10 @@ import {
   WYRE_SECRET_KEY_TEST,
 } from 'react-native-dotenv';
 import publicIP from 'react-native-public-ip';
-import { Network } from '@rainbow-me/networkTypes';
-import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
 import logger from 'logger';
 import { isMainnet } from '@cardstack/utils/cardpay-utils';
+import { Network } from '@rainbow-me/helpers/networkTypes';
+import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
 
 const SOURCE_CURRENCY_USD = 'USD';
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
@@ -49,7 +45,10 @@ const getAuthHeaders = (network: Network, url: string, data: string) => {
   };
 };
 
-export const PaymentRequestStatusTypes = {
+export const PaymentRequestStatusTypes: Record<
+  string,
+  RainbowPayments.PaymentComplete
+> = {
   FAIL: 'fail',
   SUCCESS: 'success',
 };
@@ -228,9 +227,6 @@ export const reserveWyreOrder = async (
   }
 
   const baseUrl = getBaseUrl(network);
-
-  console.log('BASEURL: ', baseUrl);
-  console.log('DATA PAYMENT: ', data);
 
   try {
     const timestamp = Date.now();

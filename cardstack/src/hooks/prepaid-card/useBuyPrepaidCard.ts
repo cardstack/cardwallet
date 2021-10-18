@@ -11,7 +11,7 @@ import {
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
 import { getTokenMetadata } from '@rainbow-me/utils';
 import logger from 'logger';
-import NetworkTypes, { Network } from '@rainbow-me/networkTypes';
+import { Network } from '@rainbow-me/networkTypes';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { useAuthToken } from '@cardstack/hooks';
 import {
@@ -34,7 +34,7 @@ const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
 
 const getHubUrl = (network: Network) =>
-  network === NetworkTypes.mainnet ? HUB_URL_PROD : HUB_URL_STAGING;
+  network === Network.xdai ? HUB_URL_PROD : HUB_URL_STAGING;
 
 interface CardAttrs extends InventoryAttrs {
   customizationDID?: PrepaidCardCustomization;
@@ -165,7 +165,6 @@ export default function useBuyPrepaidCard() {
 
       const referenceInfo = {
         referenceId: getReferenceId(accountAddress),
-        orderId: undefined,
       };
 
       const { reservation: reservationId } = await reserveWyreOrder(
