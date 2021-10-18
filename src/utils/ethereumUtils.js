@@ -257,20 +257,7 @@ const deriveAccountFromPrivateKey = privateKey => {
 };
 
 const deriveAccountFromWalletInput = input => {
-  const type = identifyWalletType(input);
-  if (type === WalletTypes.privateKey) {
-    return deriveAccountFromPrivateKey(input);
-  } else if (type === WalletTypes.readOnly) {
-    const ethersWallet = { address: addHexPrefix(input), privateKey: null };
-    return {
-      address: addHexPrefix(input),
-      isHDWallet: false,
-      root: null,
-      type: WalletTypes.readOnly,
-      wallet: ethersWallet,
-      walletType: WalletLibraryType.ethers,
-    };
-  }
+  // We only allow mnemonic derived account for now.
   return deriveAccountFromMnemonic(input);
 };
 

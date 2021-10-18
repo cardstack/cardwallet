@@ -304,14 +304,12 @@ export default function ImportSeedPhraseSheet() {
           : sanitizeSeedPhrase(seedPhrase);
 
         const previousWalletCount = keys(wallets).length;
-        initializeWallet(
-          input,
+        initializeWallet({
+          seedPhrase: input,
           color,
-          name ? name : '',
-          false,
-          false,
-          checkedWallet
-        )
+          name: name || '',
+          checkedWallet,
+        })
           .then(success => {
             handleSetImporting(false);
             if (success) {
