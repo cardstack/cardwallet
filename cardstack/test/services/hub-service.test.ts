@@ -34,7 +34,7 @@ describe('getInventories', async () => {
 
 describe('makeReservation', async () => {
   it('Should return success data', async () => {
-    axios.post = jest.fn().mockResolvedValue(reservationData.data.data);
+    axios.post = jest.fn().mockResolvedValue(reservationData);
     const result = await makeReservation('hubURL', tokenMock, 'SKU_MOCK');
 
     expect(result).toBe(reservationData.data.data);

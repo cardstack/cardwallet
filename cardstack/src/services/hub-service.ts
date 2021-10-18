@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { fromWei } from '@cardstack/cardpay-sdk';
-import { PrepaidCardCustomization } from '@cardstack/types';
 import logger from 'logger';
 
 const axiosConfig = (authToken: string) => {
@@ -41,7 +40,7 @@ export interface InventoryAttrs {
   'issuing-token-address': string;
   'face-value': number;
   'ask-price': string;
-  'customization-DID': PrepaidCardCustomization;
+  'customization-DID'?: string;
   quantity: number;
   reloadable: boolean;
   transferrable: boolean;
@@ -58,6 +57,19 @@ export interface ReservationAttrs {
   sku: string;
   'transaction-hash': null;
   'prepaid-card-address': null;
+}
+
+export interface OrderAttrs {
+  'order-id': string;
+  'user-address': string;
+  'wallet-id': string;
+  status: string;
+}
+
+export interface OrderData {
+  id: string;
+  type: string;
+  attributes: OrderAttrs;
 }
 
 export const getCustodialWallet = async (
@@ -111,7 +123,7 @@ export const makeReservation = async (
   sku: string
 ): Promise<ReservationData | undefined> => {
   try {
-    return await axios.post(
+    const results = await axios.post(
       `${hubURL}/api/reservations`,
       JSON.stringify({
         data: {
@@ -123,7 +135,65 @@ export const makeReservation = async (
       }),
       axiosConfig(authToken)
     );
+
+    if (results.data?.data) {
+      return results.data?.data;
+    }
   } catch (e) {
     logger.sentry('Error while making reservation', e.response.error);
+  }
+};
+
+export const updateOrder = async (
+  hubURL: string,
+  authToken: string,
+  wyreOrderId: string,
+  wyreWalletID: string,
+  reservationId: string
+): Promise<OrderData | undefined> => {
+  try {
+    const results = await axios.post(
+      `${hubURL}/api/orders`,
+      JSON.stringify({
+        data: {
+          type: 'orders',
+          attributes: {
+            'order-id': wyreOrderId,
+            'wallet-id': wyreWalletID,
+          },
+          relationships: {
+            reservation: {
+              data: { type: 'reservations', id: reservationId },
+            },
+          },
+        },
+      }),
+      axiosConfig(authToken)
+    );
+
+    if (results.data?.data) {
+      return results.data?.data;
+    }
+  } catch (e) {
+    logger.sentry('Error updating order', e.response);
+  }
+};
+
+export const getOrder = async (
+  hubURL: string,
+  authToken: string,
+  orderId: string
+): Promise<OrderData | undefined> => {
+  try {
+    const results = await axios.get(
+      `${hubURL}/api/orders/${orderId}`,
+      axiosConfig(authToken)
+    );
+
+    if (results.data?.data) {
+      return await results.data?.data;
+    }
+  } catch (e) {
+    logger.sentry('Error getting order details', e);
   }
 };

@@ -34,7 +34,19 @@ const ethWithAddress: RainbowToken = {
   uniqueId: 'eth',
 };
 
-const tokenListWithEth: RainbowToken[] = [ethWithAddress, ...tokenList];
+const daiWithAddress: RainbowToken = {
+  ...ethWithAddress,
+  address: 'dai',
+  name: 'Dai',
+  symbol: 'DAI',
+  uniqueId: 'dai',
+};
+
+const tokenListWithEth: RainbowToken[] = [
+  ethWithAddress,
+  daiWithAddress,
+  ...tokenList,
+];
 
 const RAINBOW_TOKEN_LIST: Record<string, RainbowToken> = keyBy(
   tokenListWithEth,
