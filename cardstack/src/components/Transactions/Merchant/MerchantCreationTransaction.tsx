@@ -25,6 +25,8 @@ export const MerchantCreationTransaction = ({
       Header={
         <SafeHeader
           address={item.address}
+          backgroundColor={merchantInfoDID?.color}
+          textColor={merchantInfoDID?.textColor}
           rightText={merchantInfoDID?.name || 'Merchant'}
           small
         />
