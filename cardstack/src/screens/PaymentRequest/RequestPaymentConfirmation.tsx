@@ -46,7 +46,7 @@ export const RequestPaymentConfirmation = ({
   const { navigate } = useNavigation();
   const { setClipboard } = useClipboard();
 
-  const paymentRequestLink = useMemo(
+  const paymentRequestWebLink = useMemo(
     () =>
       generateMerchantPaymentUrl({
         // Default to staging, while we don't handle envs yet
@@ -59,22 +59,33 @@ export const RequestPaymentConfirmation = ({
     [address, amountInNum, nativeCurrency, network]
   );
 
+  const paymentRequestDeepLink = useMemo(
+    () =>
+      generateMerchantPaymentUrl({
+        merchantSafeID: address,
+        amount: amountInNum,
+        network,
+        currency: nativeCurrency,
+      }),
+    [address, amountInNum, nativeCurrency, network]
+  );
+
   const copyToClipboard = useCallback(() => {
-    setClipboard(paymentRequestLink);
+    setClipboard(paymentRequestWebLink);
     setCopyCount(count => count + 1);
-  }, [paymentRequestLink, setClipboard]);
+  }, [paymentRequestWebLink, setClipboard]);
 
   const handleShareLink = useCallback(async () => {
     try {
-      await shareRequestPaymentLink(address, paymentRequestLink);
+      await shareRequestPaymentLink(address, paymentRequestWebLink);
     } catch (e) {
       logger.sentry('Payment Request Link share failed', e);
     }
-  }, [address, paymentRequestLink]);
+  }, [address, paymentRequestWebLink]);
 
   const showQRCode = useCallback(() => {
     navigate(Routes.SHOW_QRCODE_MODAL, {
-      value: paymentRequestLink,
+      value: paymentRequestDeepLink,
       amountWithSymbol,
       amountInAnotherCurrency,
       merchantInfo: merchantInfo,
@@ -83,7 +94,7 @@ export const RequestPaymentConfirmation = ({
     });
   }, [
     navigate,
-    paymentRequestLink,
+    paymentRequestDeepLink,
     amountInNum,
     amountWithSymbol,
     amountInAnotherCurrency,
