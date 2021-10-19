@@ -27,11 +27,13 @@ export const TopContent = () => {
   );
 };
 
-const baseStyles = {
-  marginRight: 4,
-  marginBottom: 3,
-  borderRadius: 10,
-  width: '100%',
+const baseStyles = (isEven: boolean) => {
+  return {
+    marginRight: 4,
+    marginBottom: 3,
+    borderRadius: 10,
+    width: isEven ? '67.4%' : '100%',
+  };
 };
 
 export const CardContent = ({
@@ -40,19 +42,21 @@ export const CardContent = ({
   isSelected,
   faceValue,
   quantity,
+  isLastItemOdd,
 }: {
   onPress: () => void;
   amount: number;
   faceValue: number;
   isSelected: boolean;
   quantity: number;
+  isLastItemOdd: boolean;
 }) => {
   return quantity > 0 ? (
     <Button
       borderColor={isSelected ? 'buttonPrimaryBorder' : 'buttonSecondaryBorder'}
       variant={isSelected ? 'squareSelected' : 'square'}
       onPress={onPress}
-      {...baseStyles}
+      {...baseStyles(isLastItemOdd)}
     >
       <Text
         color={isSelected ? 'black' : 'white'}

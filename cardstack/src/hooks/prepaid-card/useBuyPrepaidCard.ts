@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   getOrderId,
@@ -27,6 +28,7 @@ import {
 import {
   fetchCardCustomizationFromDID,
   getNativeBalanceFromSpend,
+  useWorker,
 } from '@cardstack/utils';
 import { PrepaidCardCustomization } from '@cardstack/types';
 
@@ -37,7 +39,7 @@ const getHubUrl = (network: Network) =>
   network === Network.xdai ? HUB_URL_PROD : HUB_URL_STAGING;
 
 interface CardAttrs extends InventoryAttrs {
-  customizationDID?: PrepaidCardCustomization;
+  customizationDID?: PrepaidCardCustomization | null;
 }
 export interface Card {
   id: string;
@@ -64,7 +66,6 @@ export default function useBuyPrepaidCard() {
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
   const [sku, setSku] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isInventoryLoading, setIsInventoryLoading] = useState<boolean>(false);
   const [wyreOrderId, setWyreOrderId] = useState<string>('');
 
   const [
@@ -93,34 +94,38 @@ export default function useBuyPrepaidCard() {
     return () => clearInterval(orderStatusPolling);
   }, [authToken, hubURL, wyreOrderId]);
 
+  const {
+    isLoading: isInventoryLoading,
+    setIsLoading: setIsInventoryLoading,
+    callback: getInventoryData,
+    error: inventoryError,
+  } = useWorker(async () => {
+    const issuerAddress = getAddressByNetwork('wyreIssuer', network);
+    const data = await getInventories(hubURL, authToken, issuerAddress);
+    setInventoryData(data);
+  }, [authToken, currencyConversionRates, hubURL, nativeCurrency, network]);
+
   useEffect(() => {
-    const getInventoryData = async () => {
-      try {
-        setIsInventoryLoading(true);
-        const data = await getInventories(hubURL, authToken);
-
-        setInventoryData(data);
-      } catch (e) {
-        Alert({
-          buttons: [{ text: 'Okay' }],
-          message: 'Error while available cards',
-        });
-      } finally {
-        setIsInventoryLoading(false);
-      }
-    };
-
     getInventoryData();
-  }, [authToken, currencyConversionRates, hubURL, nativeCurrency]);
+  }, [getInventoryData]);
 
   useEffect(() => {
-    const getCustodialWalletData = async () => {
-      const data = await getCustodialWallet(hubURL, authToken);
-      setCustodialWalletData(data);
-    };
+    if (inventoryError) {
+      Alert({
+        buttons: [{ text: 'Okay' }],
+        message: 'Error loading inventory',
+      });
+    }
+  }, [inventoryError]);
 
-    getCustodialWalletData();
+  const { callback: getCustodialWalletData } = useWorker(async () => {
+    const data = await getCustodialWallet(hubURL, authToken);
+    setCustodialWalletData(data);
   }, [authToken, hubURL]);
+
+  useEffect(() => {
+    getCustodialWalletData();
+  }, [getCustodialWalletData]);
 
   const onSelectCard = useCallback(
     async (item, index) => {
@@ -133,7 +138,7 @@ export default function useBuyPrepaidCard() {
 
       modifiedCards[index].isSelected = true;
 
-      const customizationDid = modifiedCards[index].attributes[
+      const customizationDID = modifiedCards[index].attributes[
         'customization-DID'
       ]
         ? await fetchCardCustomizationFromDID(
@@ -141,17 +146,17 @@ export default function useBuyPrepaidCard() {
           )
         : null;
 
+      const formattedCard = modifiedCards
+        .filter((cardItem: Card) => cardItem.isSelected)
+        .map((carditem: Card) => {
+          return {
+            ...carditem,
+            customizationDID,
+          };
+        })[0].attributes;
+
       setInventoryData(modifiedCards);
-      setCard(
-        modifiedCards
-          .filter((cardItem: Card) => cardItem.isSelected)
-          .map((carditem: Card) => {
-            return {
-              ...carditem,
-              customizationDid,
-            };
-          })[0].attributes
-      );
+      setCard({ ...formattedCard, customizationDID });
 
       setSku(modifiedCards[index].attributes.sku);
     },

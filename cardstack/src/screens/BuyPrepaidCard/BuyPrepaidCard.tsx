@@ -44,9 +44,14 @@ const BuyPrepaidCard = () => {
         amount={item?.amount}
         faceValue={item?.attributes['face-value']}
         quantity={item.attributes?.quantity}
+        isLastItemOdd={
+          inventoryData !== undefined &&
+          inventoryData.length % 2 !== 0 &&
+          inventoryData.length - 1 === index
+        }
       />
     ),
-    [onSelectCard]
+    [inventoryData, onSelectCard]
   );
 
   return (
@@ -72,7 +77,7 @@ const BuyPrepaidCard = () => {
         renderFooter={() => (
           <Container
             padding={8}
-            backgroundColor="grayButtonBackground"
+            backgroundColor="backgroundBlue"
             justifyContent="center"
           >
             <ApplePayButton

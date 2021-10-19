@@ -92,7 +92,8 @@ export const getCustodialWallet = async (
 
 export const getInventories = async (
   hubURL: string,
-  authToken: string
+  authToken: string,
+  issuerAddress: string
 ): Promise<Inventory[] | undefined> => {
   try {
     const results = await axios.get('/api/inventories', axiosConfig(authToken));
@@ -101,6 +102,7 @@ export const getInventories = async (
       const inventory = results?.data?.data;
 
       return inventory
+        .filter((item: Inventory) => item.attributes.issuer === issuerAddress)
         .sort((a: Inventory, b: Inventory) => {
           return a.attributes['face-value'] - b.attributes['face-value'];
         })
