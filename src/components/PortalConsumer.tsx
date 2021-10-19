@@ -1,8 +1,9 @@
+// We will need to get rid of this OLD PortalConsumer at some point, hopfully in near future
 import React, { useEffect } from 'react';
-import LoadingOverlay from './LoadingOverlay';
+import { LoadingOverlay } from '@cardstack/components';
+import usePayment from '@cardstack/redux/hooks/usePayment';
 import { useWallets } from '@rainbow-me/hooks';
 import { usePortal } from 'react-native-cool-modals/Portal';
-import usePayment from '@cardstack/redux/hooks/usePayment';
 
 function PortalConsumer() {
   const { isWalletLoading } = useWallets();
@@ -13,8 +14,8 @@ function PortalConsumer() {
     if (isWalletLoading || inProcess) {
       setComponent(
         <LoadingOverlay
-          title={isWalletLoading ? isWalletLoading : processTitle}
           subTitle={processSubTitle}
+          title={isWalletLoading ? isWalletLoading : processTitle}
         />,
         true
       );

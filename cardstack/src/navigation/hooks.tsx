@@ -1,11 +1,6 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { StackNavigationOptions } from '@react-navigation/stack';
-import {
-  StackActions,
-  useRoute,
-  useNavigation,
-  useNavigationState,
-} from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/core';
 import { MainRoutes, GlobalRoutes } from './routes';
 import { MainScreens, GlobalScreens } from './screens';
 import { Navigation } from '@rainbow-me/navigation';

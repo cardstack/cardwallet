@@ -6,6 +6,7 @@ import {
   CurrencySelectionGlobalModal,
   DepotScreen,
   ErrorFallbackScreen,
+  LoadingOverlayScreen,
   MerchantScreen,
   PayMerchant,
   PrepaidCardModal,
@@ -16,7 +17,6 @@ import {
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
-import LoadingOverlay from '@cardstack/components/LoadingOverlay/LoadingOverlay';
 
 interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -47,7 +47,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     options: { ...overlayPreset, gestureEnabled: false },
   },
   LOADING_OVERLAY: {
-    component: LoadingOverlay,
+    component: LoadingOverlayScreen,
     options: { ...overlayPreset, gestureEnabled: false },
   },
 };
