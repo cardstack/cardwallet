@@ -127,10 +127,10 @@ export const AmountQRCode = ({
         >
           <QRCode
             size={QRCodeSize}
-            value={value}
-            logoMargin={14}
-            logoBorderRadius={7}
+            data={value}
             logo={CardstackColorLogo}
+            logoWidth={34}
+            logoHeight={36}
           />
         </Container>
       </Container>
