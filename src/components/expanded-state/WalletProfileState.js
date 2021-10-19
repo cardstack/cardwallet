@@ -80,12 +80,11 @@ export default function WalletProfileState({
       name: nameEmoji ? `${nameEmoji} ${value}` : value,
     });
 
-    if (actionType !== 'Import') {
-      goBack();
+    // Dismiss WalletProfileModal
+    goBack();
 
-      if (actionType === 'Create' && isNewProfile) {
-        navigate(Routes.CHANGE_WALLET_SHEET);
-      }
+    if (actionType === 'Create' && isNewProfile) {
+      navigate(Routes.CHANGE_WALLET_SHEET);
     }
   }, [
     actionType,

@@ -100,9 +100,6 @@ export default function useInitializeWallet() {
 
         if (isNil(walletAddress)) {
           logger.sentry('walletAddress is nil');
-          Alert.alert(
-            'Import failed due to an invalid private key. Please try again.'
-          );
           if (!isImporting) {
             dispatch(appStateUpdate({ walletReady: true }));
           }
