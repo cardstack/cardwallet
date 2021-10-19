@@ -292,5 +292,12 @@ jest.mock('@cardstack/navigation/screens', () => ({
   default: jest.fn(),
 }));
 
+jest.mock('@cardstack/navigation', () => ({
+  useLoadingOverlay: () => ({
+    showLoadingOverlay: jest.fn(),
+    dismissLoadingOverlay: jest.fn(),
+  }),
+}));
+
 global.ios = true;
 global.android = false;
