@@ -52,20 +52,15 @@ export function Portal({ children }) {
         style={[StyleSheet.absoluteFillObject]}
       >
         {children}
-        {Component ? (
-          <NativePortal
-            blockTouches={blockTouches}
-            pointerEvents={
-              Platform.OS === 'ios' || !blockTouches ? 'none' : 'auto'
-            }
-            style={[
-              StyleSheet.absoluteFillObject,
-              { backgroundColor: '#00000066' },
-            ]}
-          >
-            {Component}
-          </NativePortal>
-        ) : null}
+        <NativePortal
+          blockTouches={blockTouches}
+          pointerEvents={
+            Platform.OS === 'ios' || !blockTouches ? 'none' : 'auto'
+          }
+          style={StyleSheet.absoluteFillObject}
+        >
+          {Component}
+        </NativePortal>
       </Wrapper>
     </NativePortalContext.Provider>
   );
