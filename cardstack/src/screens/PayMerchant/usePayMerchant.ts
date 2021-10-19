@@ -121,9 +121,9 @@ export const usePayMerchant = () => {
 
       const timestamp = await getBlockTimestamp(receipt.blockNumber);
 
+      // Dismisses PayMerchantModal
       dismissLoadingOverlay();
 
-      // Dismisses PayMerchantModal
       if (canGoBack()) {
         goBack();
       }
