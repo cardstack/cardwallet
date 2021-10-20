@@ -44,14 +44,9 @@ const BuyPrepaidCard = () => {
         amount={item?.amount}
         faceValue={item?.attributes['face-value']}
         quantity={item.attributes?.quantity}
-        isLastItemOdd={
-          inventoryData !== undefined &&
-          inventoryData.length % 2 !== 0 &&
-          inventoryData.length - 1 === index
-        }
       />
     ),
-    [inventoryData, onSelectCard]
+    [onSelectCard]
   );
 
   return (
@@ -103,22 +98,24 @@ const BuyPrepaidCard = () => {
             )}
           </Container>
           {card ? (
-            <Container width="100%" marginBottom={16} padding={4}>
+            <Container marginBottom={16} padding={4}>
               <Subtitle text="PREVIEW" />
-              <MediumPrepaidCard
-                networkName={network}
-                nativeCurrency={nativeCurrency}
-                currencyConversionRates={currencyConversionRates}
-                address="0xXXXX…XXXX"
-                spendFaceValue={card['face-value'] || 0}
-                reloadable={card.reloadable}
-                transferrable={card.transferrable}
-                cardCustomization={
-                  card.customizationDID
-                    ? card.customizationDID
-                    : DEFAULT_CARD_CONFIG
-                }
-              />
+              <Container paddingHorizontal={10}>
+                <MediumPrepaidCard
+                  networkName={network}
+                  nativeCurrency={nativeCurrency}
+                  currencyConversionRates={currencyConversionRates}
+                  address="0xXXXX…XXXX"
+                  spendFaceValue={card['face-value'] || 0}
+                  reloadable={card.reloadable}
+                  transferrable={card.transferrable}
+                  cardCustomization={
+                    card.customizationDID
+                      ? card.customizationDID
+                      : DEFAULT_CARD_CONFIG
+                  }
+                />
+              </Container>
             </Container>
           ) : null}
         </Container>
