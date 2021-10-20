@@ -318,6 +318,7 @@
     "metro-plugin-anisotropic-transform": "rainbow-me/metro-plugin-anisotropic-transform#463b4ca9f5631f9c5e6028d22a450f6f0e54214f",
     "metro-react-native-babel-preset": "^0.66.0",
     "prettier": "^2.2.1",
+    "react-devtools": "^4.19.1",
     "react-native-codegen": "^0.0.7",
     "react-native-storybook-loader": "^2.0.2",
     "react-native-svg-transformer": "^0.14.3",
@@ -344,7 +345,8 @@
     "**/yargs-parser": "20.2.5",
     "**/@hapi/hoek": "8.5.1",
     "**/@typescript-eslint/eslint-plugin": "4.31.0",
-    "**/@typescript-eslint/parser": "4.31.0"
+    "**/@typescript-eslint/parser": "4.31.0",
+    "**/react-devtools-core": "4.19.1"
   },
   "detox": {
     "configurations": {
