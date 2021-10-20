@@ -23,6 +23,18 @@ import Routes from '@rainbow-me/routes';
 import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const ACCOUNT_CONTAINER = screenWidth * 0.85;
+const copyIconProps = {
+  color: 'teal',
+  marginRight: 2,
+  name: 'copy',
+  size: 18,
+};
+const qrCodeIconProps = {
+  marginRight: 2,
+  color: 'teal',
+  name: 'qr-code',
+  size: 18,
+};
 
 export default function ProfileMasthead({
   addCashAvailable,
@@ -236,12 +248,7 @@ export default function ProfileMasthead({
         width="100%"
       >
         <Button
-          iconProps={{
-            color: 'teal',
-            marginRight: 2,
-            name: 'copy',
-            size: 18,
-          }}
+          iconProps={copyIconProps}
           onPress={handlePressCopyAddress}
           variant="smallBlue"
         >
@@ -249,12 +256,7 @@ export default function ProfileMasthead({
         </Button>
         {isLayer1(network) ? (
           <Button
-            iconProps={{
-              marginRight: 2,
-              color: 'teal',
-              name: 'qr-code',
-              size: 18,
-            }}
+            iconProps={qrCodeIconProps}
             onPress={handlePressReceive}
             variant="smallBlue"
           >
@@ -262,12 +264,7 @@ export default function ProfileMasthead({
           </Button>
         ) : (
           <Button
-            iconProps={{
-              marginRight: 2,
-              color: 'teal',
-              name: 'qr-code',
-              size: 18,
-            }}
+            iconProps={qrCodeIconProps}
             onPress={handlePressScan}
             variant="smallBlue"
           >
