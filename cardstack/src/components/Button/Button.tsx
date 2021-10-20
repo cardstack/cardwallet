@@ -73,7 +73,7 @@ export const Button = ({
   const disabledTextProps = disabled ? disabledTextStyle : {};
 
   return (
-    <Container backgroundColor="transparent" {...props} flex={-1}>
+    <>
       <AnimatedButton
         {...props}
         alignItems="center"
@@ -120,6 +120,6 @@ export const Button = ({
           testID="disabledOverlay"
         />
       )}
-    </Container>
+    </>
   );
 };
