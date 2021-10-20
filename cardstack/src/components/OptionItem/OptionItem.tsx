@@ -51,7 +51,7 @@ export const OptionItem = ({
           <Icon color="settingsTeal" {...iconProps} />
         </CenteredContainer>
       )}
-      <Container>
+      <Container flexShrink={1}>
         <Text fontWeight="600" {...textProps}>
           {title}
         </Text>
