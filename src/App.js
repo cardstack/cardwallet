@@ -260,7 +260,7 @@ const CheckSystemReqs = ({ children }) => {
     if (hasMaintenanceStatus && hasMinimumVersion) {
       setReady(true);
     }
-  }, [hasMaintenanceStatus, hasMinimumVersion, hideSplashScreen]);
+  }, [hasMaintenanceStatus, hasMinimumVersion]);
 
   if (ready) {
     if (maintenanceStatus.maintenanceActive) {
@@ -274,9 +274,9 @@ const CheckSystemReqs = ({ children }) => {
     if (forceUpdate) {
       return <MinimumVersion />;
     }
-  }
 
-  hideSplashScreen();
+    hideSplashScreen();
+  }
 
   return children;
 };

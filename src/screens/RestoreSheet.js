@@ -1,24 +1,19 @@
 import { useRoute } from '@react-navigation/native';
 import { forEach } from 'lodash';
 import React, { useCallback } from 'react';
-import { Alert, InteractionManager, StatusBar } from 'react-native';
-import RNCloudFs from 'react-native-cloud-fs';
+import { InteractionManager, StatusBar } from 'react-native';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
 import RestoreCloudStep from '../components/backup/RestoreCloudStep';
 import RestoreSheetFirstStep from '../components/backup/RestoreSheetFirstStep';
 import { Column } from '../components/layout';
 import { SlackSheet } from '../components/sheet';
-import {
-  fetchUserDataFromCloud,
-  isCloudBackupAvailable,
-} from '../handlers/cloudBackup';
-import { cloudPlatform } from '../utils/platform';
+
+import { Device } from '@cardstack/utils';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import logger from 'logger';
 
 export default function RestoreSheet() {
   const { goBack, navigate, setParams } = useNavigation();
@@ -32,42 +27,7 @@ export default function RestoreSheet() {
   } = useRoute();
 
   const onCloudRestore = useCallback(async () => {
-    let proceed = false;
-    if (android) {
-      const isAvailable = await isCloudBackupAvailable();
-      if (isAvailable) {
-        try {
-          const data = await fetchUserDataFromCloud();
-          forEach(data?.wallets, wallet => {
-            if (
-              wallet.backedUp &&
-              wallet.backupType === WalletBackupTypes.cloud
-            ) {
-              proceed = true;
-            }
-          });
-
-          if (proceed) {
-            setParams({ userData: data });
-          }
-
-          logger.log(`Downloaded ${cloudPlatform} backup info`);
-        } catch (e) {
-          logger.log(e);
-        } finally {
-          if (!proceed) {
-            Alert.alert(
-              'No Backups found',
-              "We couldn't find any backup on Google Drive. Make sure you are logged in with the right account."
-            );
-            await RNCloudFs.logout();
-          }
-        }
-      }
-    } else {
-      proceed = true;
-    }
-    if (proceed) {
+    if (Device.isIOS) {
       setParams({ step: WalletBackupStepTypes.cloud });
     }
   }, [setParams]);
@@ -79,12 +39,17 @@ export default function RestoreSheet() {
     });
   }, [goBack, navigate]);
 
-  const onWatchAddress = useCallback(() => {
-    InteractionManager.runAfterInteractions(goBack);
-    InteractionManager.runAfterInteractions(() => {
-      setTimeout(() => navigate(Routes.IMPORT_SEED_PHRASE_FLOW), 50);
+  const walletsBackedUp = useMemo(() => {
+    let count = 0;
+    forEach(userData?.wallets, wallet => {
+      if (wallet.backedUp && wallet.backupType === WalletBackupTypes.cloud) {
+        count++;
+      }
     });
-  }, [goBack, navigate]);
+    return count;
+  }, [userData]);
+
+  const enableCloudRestore = android || walletsBackedUp > 0;
 
   const wrapperHeight =
     deviceHeight + longFormHeight + (android ? getSoftMenuBarHeight() : 0);
@@ -101,10 +66,10 @@ export default function RestoreSheet() {
           <RestoreCloudStep userData={userData} />
         ) : (
           <RestoreSheetFirstStep
+            enableCloudRestore={enableCloudRestore}
             onCloudRestore={onCloudRestore}
             onManualRestore={onManualRestore}
-            onWatchAddress={onWatchAddress}
-            userData={userData}
+            walletsBackedUp={walletsBackedUp}
           />
         )}
       </SlackSheet>
