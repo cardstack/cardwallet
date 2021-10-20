@@ -23,6 +23,18 @@ import Routes from '@rainbow-me/routes';
 import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const ACCOUNT_CONTAINER = screenWidth * 0.85;
+const copyIconProps = {
+  color: 'teal',
+  marginRight: 2,
+  name: 'copy',
+  size: 18,
+};
+const qrCodeIconProps = {
+  marginRight: 2,
+  color: 'teal',
+  name: 'qr-code',
+  size: 18,
+};
 
 export default function ProfileMasthead({
   addCashAvailable,
@@ -149,6 +161,10 @@ export default function ProfileMasthead({
     navigate(Routes.RECEIVE_MODAL);
   }, [navigate, isDamaged]);
 
+  const handlePressScan = useCallback(() => {
+    navigate(Routes.QR_SCANNER_SCREEN);
+  }, [navigate]);
+
   const handlePress = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
@@ -232,29 +248,29 @@ export default function ProfileMasthead({
         width="100%"
       >
         <Button
-          iconProps={{
-            color: 'teal',
-            marginRight: 2,
-            name: 'copy',
-            size: 18,
-          }}
+          iconProps={copyIconProps}
           onPress={handlePressCopyAddress}
           variant="smallBlue"
         >
           Copy Address
         </Button>
-        <Button
-          iconProps={{
-            marginRight: 2,
-            color: 'teal',
-            name: 'qr-code',
-            size: 18,
-          }}
-          onPress={handlePressReceive}
-          variant="smallBlue"
-        >
-          Receive
-        </Button>
+        {isLayer1(network) ? (
+          <Button
+            iconProps={qrCodeIconProps}
+            onPress={handlePressReceive}
+            variant="smallBlue"
+          >
+            Receive
+          </Button>
+        ) : (
+          <Button
+            iconProps={qrCodeIconProps}
+            onPress={handlePressScan}
+            variant="smallBlue"
+          >
+            Scan
+          </Button>
+        )}
       </Container>
     </Container>
   );
