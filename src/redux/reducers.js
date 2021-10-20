@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 
 import addCash from './addCash';
-import appState from './appState';
 import charts from './charts';
 import coingecko from './coingecko';
 import contacts from './contacts';
@@ -28,6 +27,7 @@ import uniswap from './uniswap';
 import uniswapLiquidity from './uniswapLiquidity';
 import walletconnect from './walletconnect';
 import wallets from './wallets';
+import appState from '@cardstack/redux/appState';
 import payment from '@cardstack/redux/payment';
 
 export default combineReducers({

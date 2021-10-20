@@ -10,3 +10,4 @@ export { default as PayMerchant } from './PayMerchant/PayMerchant';
 export { default as CurrencySelectionGlobalModal } from './CurrencySelectionGlobalModal';
 export { default as PaymentRequestExpandedState } from './PaymentRequest/PaymentRequestExpandedState';
 export { default as ErrorFallbackScreen } from './ErrorFallbackScreen';
+export { default as LoadingOverlayScreen } from './LoadingOverlayScreen';

@@ -1,24 +1,27 @@
+// We will need to get rid of this OLD PortalConsumer at some point, hopfully in near future
 import React, { useEffect } from 'react';
-import { LoadingOverlay } from './modal';
+import { LoadingOverlay } from '@cardstack/components';
 import { useWallets } from '@rainbow-me/hooks';
-import { sheetVerticalOffset } from '@rainbow-me/navigation/effects';
 import { usePortal } from 'react-native-cool-modals/Portal';
 
-export default function PortalConsumer() {
+function PortalConsumer() {
   const { isWalletLoading } = useWallets();
   const { setComponent, hide } = usePortal();
+
   useEffect(() => {
     if (isWalletLoading) {
       setComponent(
-        <LoadingOverlay
-          paddingTop={sheetVerticalOffset}
-          title={isWalletLoading}
-        />,
+        <LoadingOverlay title={isWalletLoading ? isWalletLoading : ''} />,
         true
       );
+    } else {
+      setComponent(null, false);
     }
+
     return hide;
   }, [hide, isWalletLoading, setComponent]);
 
   return null;
 }
+
+export default PortalConsumer;

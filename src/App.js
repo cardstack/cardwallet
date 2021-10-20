@@ -20,8 +20,6 @@ import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
 import { name as appName } from '../app.json';
-
-import PortalConsumer from './components/PortalConsumer';
 import { FlexItem } from './components/layout';
 import { OfflineToast } from './components/toasts';
 import {
@@ -54,6 +52,7 @@ import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
+import PortalConsumer from '@rainbow-me/components/PortalConsumer';
 import Routes from '@rainbow-me/routes';
 import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';

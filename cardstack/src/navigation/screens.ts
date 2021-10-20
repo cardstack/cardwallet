@@ -6,6 +6,7 @@ import {
   CurrencySelectionGlobalModal,
   DepotScreen,
   ErrorFallbackScreen,
+  LoadingOverlayScreen,
   MerchantScreen,
   PayMerchant,
   PrepaidCardModal,
@@ -43,6 +44,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   ERROR_FALLBACK_SCREEN: {
     component: ErrorFallbackScreen,
+    options: { ...overlayPreset, gestureEnabled: false },
+  },
+  LOADING_OVERLAY: {
+    component: LoadingOverlayScreen,
     options: { ...overlayPreset, gestureEnabled: false },
   },
 };
