@@ -68,13 +68,13 @@ const CopyAddressSheet = () => {
             <Container
               flexDirection="row"
               justifyContent="center"
-              width="100%"
               paddingHorizontal={5}
             >
               <Button
                 iconProps={{ name: 'copy' }}
                 marginTop={4}
-                width="100%"
+                wrapper="fragment"
+                width="80%"
                 onPress={handleCopiedText}
               >
                 Copy Address
