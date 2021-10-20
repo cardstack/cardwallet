@@ -104,9 +104,8 @@ const disabledBlack = {
 
 const square = {
   ...primary,
-  height: 92,
-  width: 92,
-  borderRadius: 20,
+  height: 100,
+  borderRadius: 10,
   textStyle: {
     ...primary.textStyle,
     fontWeight: '700',

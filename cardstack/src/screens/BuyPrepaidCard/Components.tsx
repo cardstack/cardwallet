@@ -27,71 +27,50 @@ export const TopContent = () => {
   );
 };
 
-const baseStyles = (isEven: boolean) => {
-  return {
-    marginRight: 4,
-    marginBottom: 3,
-    borderRadius: 10,
-    width: isEven ? '67.4%' : '100%',
-  };
-};
-
 export const CardContent = ({
   onPress,
   amount,
   isSelected,
   faceValue,
   quantity,
-  isLastItemOdd,
 }: {
   onPress: () => void;
   amount: number;
   faceValue: number;
   isSelected: boolean;
   quantity: number;
-  isLastItemOdd: boolean;
 }) => {
-  return quantity > 0 ? (
+  const isSoldOut = quantity === 0;
+
+  // Would like to useMemo with object, but typing it, bc restyle it's a bit cumbersome
+  const borderColor = isSelected ? 'buttonPrimaryBorder' : 'borderBlue';
+  const variant = isSelected ? 'squareSelected' : 'square';
+  const titleColor = isSelected ? 'black' : 'white';
+  const subtitleColor = isSelected ? 'black' : 'buttonSecondaryBorder';
+
+  return (
     <Button
-      borderColor={isSelected ? 'buttonPrimaryBorder' : 'buttonSecondaryBorder'}
-      variant={isSelected ? 'squareSelected' : 'square'}
+      borderColor={isSoldOut ? 'buttonDisabledBackground' : borderColor}
+      variant={isSoldOut ? 'squareDisabled' : variant}
       onPress={onPress}
-      {...baseStyles(isLastItemOdd)}
+      flex={1}
+      margin={2}
     >
       <Text
-        color={isSelected ? 'black' : 'white'}
+        color={isSoldOut ? 'blueText' : titleColor}
         fontSize={28}
         textAlign="center"
       >
         $ {amount}
       </Text>
       <Text
-        color={isSelected ? 'black' : 'white'}
+        color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
         fontSize={14}
         textAlign="center"
         fontWeight="500"
       >
         {`\n`}
-        {faceValue} SPEND
-      </Text>
-    </Button>
-  ) : (
-    <Button
-      borderColor="buttonDisabledBackground"
-      variant="squareDisabled"
-      {...baseStyles}
-    >
-      <Text color="blueText" fontSize={28} textAlign="center">
-        ${amount}
-      </Text>
-      <Text
-        color="buttonSecondaryBorder"
-        fontSize={13}
-        textAlign="center"
-        fontFamily="OpenSans-Semibold"
-      >
-        {`\n`}
-        SOLD OUT
+        {isSoldOut ? 'SOLD OUT' : `${faceValue} SPEND`}
       </Text>
     </Button>
   );
