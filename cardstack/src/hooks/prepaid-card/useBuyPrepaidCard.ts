@@ -118,14 +118,14 @@ export default function useBuyPrepaidCard() {
     }
   }, [inventoryError]);
 
-  const { callback: getCustodialWalletData } = useWorker(async () => {
-    const data = await getCustodialWallet(hubURL, authToken);
-    setCustodialWalletData(data);
-  }, [authToken, hubURL]);
-
   useEffect(() => {
+    const getCustodialWalletData = async () => {
+      const data = await getCustodialWallet(hubURL, authToken);
+      setCustodialWalletData(data);
+    };
+
     getCustodialWalletData();
-  }, [getCustodialWalletData]);
+  }, [authToken, hubURL]);
 
   const onSelectCard = useCallback(
     async (item, index) => {
@@ -151,7 +151,6 @@ export default function useBuyPrepaidCard() {
         .map((carditem: Card) => {
           return {
             ...carditem,
-            customizationDID,
           };
         })[0].attributes;
 
