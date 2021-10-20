@@ -149,6 +149,10 @@ export default function ProfileMasthead({
     navigate(Routes.RECEIVE_MODAL);
   }, [navigate, isDamaged]);
 
+  const handlePressScan = useCallback(() => {
+    navigate(Routes.QR_SCANNER_SCREEN);
+  }, [navigate]);
+
   const handlePress = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
@@ -243,18 +247,33 @@ export default function ProfileMasthead({
         >
           Copy Address
         </Button>
-        <Button
-          iconProps={{
-            marginRight: 2,
-            color: 'teal',
-            name: 'qr-code',
-            size: 18,
-          }}
-          onPress={handlePressReceive}
-          variant="smallBlue"
-        >
-          Receive
-        </Button>
+        {isLayer1(network) ? (
+          <Button
+            iconProps={{
+              marginRight: 2,
+              color: 'teal',
+              name: 'qr-code',
+              size: 18,
+            }}
+            onPress={handlePressReceive}
+            variant="smallBlue"
+          >
+            Receive
+          </Button>
+        ) : (
+          <Button
+            iconProps={{
+              marginRight: 2,
+              color: 'teal',
+              name: 'qr-code',
+              size: 18,
+            }}
+            onPress={handlePressScan}
+            variant="smallBlue"
+          >
+            Scan
+          </Button>
+        )}
       </Container>
     </Container>
   );
