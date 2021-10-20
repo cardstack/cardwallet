@@ -55,6 +55,7 @@ export const CardContent = ({
       onPress={onPress}
       flex={1}
       margin={2}
+      wrapper="fragment"
     >
       <Text
         color={isSoldOut ? 'blueText' : titleColor}

@@ -23,6 +23,9 @@ type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
   LayoutProps<Theme> &
   BorderProps<Theme> &
   SpacingProps<Theme>;
+
+type ButtonWrappper = 'fragment' | 'container';
+
 interface ButtonProps extends RestyleProps {
   children: ReactNode;
   disabled?: boolean;
@@ -31,6 +34,7 @@ interface ButtonProps extends RestyleProps {
   small?: boolean;
   onPress?: () => void;
   loading?: boolean;
+  wrapper?: ButtonWrappper;
 }
 
 type IconPosition = 'left' | 'right';
@@ -46,6 +50,15 @@ const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
   ButtonPressAnimation
 );
 
+const ButtonContentWrapper = ({
+  children,
+  wrapper,
+}: {
+  children: ReactNode;
+  wrapper: ButtonWrappper;
+}) =>
+  wrapper === 'fragment' ? <>{children}</> : <Container>{children}</Container>;
+
 /**
  * A button with a simple press animation
  */
@@ -54,6 +67,7 @@ export const Button = ({
   disabled,
   iconProps,
   iconPosition = 'left',
+  wrapper = 'container',
   loading,
   onPress,
   ...props
@@ -73,7 +87,7 @@ export const Button = ({
   const disabledTextProps = disabled ? disabledTextStyle : {};
 
   return (
-    <>
+    <ButtonContentWrapper wrapper={wrapper}>
       <AnimatedButton
         {...props}
         alignItems="center"
@@ -120,6 +134,6 @@ export const Button = ({
           testID="disabledOverlay"
         />
       )}
-    </>
+    </ButtonContentWrapper>
   );
 };
