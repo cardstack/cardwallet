@@ -13,6 +13,7 @@ import {
   MerchantTransactionExpandedState,
   PaymentConfirmationExpandedState,
   RecentActivityExpandedState,
+  SupportAndFeedsState,
   UnclaimedRevenueExpandedState,
   UniqueTokenExpandedState,
 } from '../components/expanded-state';
@@ -34,6 +35,7 @@ const ScreenTypes = {
   [ExpandedMerchantRoutes.recentActivity]: RecentActivityExpandedState,
   merchantTransaction: MerchantTransactionExpandedState,
   paymentConfirmationTransaction: PaymentConfirmationExpandedState,
+  supportAndFees: SupportAndFeedsState,
 };
 
 const Container = styled(Centered).attrs({

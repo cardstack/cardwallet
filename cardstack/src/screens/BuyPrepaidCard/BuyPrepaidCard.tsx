@@ -1,18 +1,26 @@
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 import {
   CardContent,
   InventorySection,
   Subtitle,
   TopContent,
 } from './Components';
-import { Container, SheetHandle } from '@cardstack/components';
+import {
+  Container,
+  Icon,
+  SheetHandle,
+  Text,
+  Touchable,
+} from '@cardstack/components';
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { SlackSheet } from '@rainbow-me/components/sheet';
 import { Inventory } from '@cardstack/services';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
 import { LoadingOverlay } from '@rainbow-me/components/modal';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+import Routes from '@rainbow-me/routes';
 
 const DEFAULT_CARD_CONFIG = {
   background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
@@ -36,6 +44,8 @@ const BuyPrepaidCard = () => {
     currencyConversionRates,
   } = useBuyPrepaidCard();
 
+  const { navigate } = useNavigation();
+
   const renderItem = useCallback(
     ({ item, index }: { item: Inventory; index: number }) => (
       <CardContent
@@ -47,6 +57,14 @@ const BuyPrepaidCard = () => {
       />
     ),
     [onSelectCard]
+  );
+
+  const onPressSupport = useCallback(
+    () =>
+      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
+        type: 'supportAndFees',
+      }),
+    [navigate]
   );
 
   return (
@@ -80,6 +98,19 @@ const BuyPrepaidCard = () => {
               onSubmit={handlePurchase}
               onDisabledPress={() => console.log('onDisablePress')}
             />
+            <Touchable width="100%" onPress={onPressSupport}>
+              <Container
+                alignItems="center"
+                padding={6}
+                flexDirection="row"
+                justifyContent="center"
+              >
+                <Text color="white" marginRight={1}>
+                  Works with most debit cards
+                </Text>
+                <Icon name="info" size={15} />
+              </Container>
+            </Touchable>
           </Container>
         )}
         scrollEnabled
