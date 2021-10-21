@@ -8,13 +8,13 @@ import {
 } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
+import { updatePrepaidCardWithCustomization } from './prepaid-card-service';
 import {
   saveDepots,
   saveMerchantSafes,
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { CurrencyConversionRates } from '@cardstack/types';
-import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import logger from 'logger';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { Navigation } from '@rainbow-me/navigation';
@@ -70,24 +70,7 @@ export const fetchGnosisSafes = async (address: string) => {
     );
 
     const extendedPrepaidCards = await Promise.all(
-      prepaidCards.map(async (prepaidCard: PrepaidCardSafe) => {
-        try {
-          const cardCustomization = await fetchCardCustomizationFromDID(
-            prepaidCard.customizationDID
-          );
-
-          return { ...prepaidCard, cardCustomization };
-        } catch (e) {
-          logger.sentry(
-            'Fetch DID failed:',
-            e,
-            'DID =',
-            prepaidCard.customizationDID
-          );
-
-          return prepaidCard;
-        }
-      })
+      prepaidCards.map(updatePrepaidCardWithCustomization)
     );
 
     return {
