@@ -29,6 +29,7 @@ export type Account = {
   createdPrepaidCards: Array<Maybe<PrepaidCardCreation>>;
   splitPrepaidCards: Array<Maybe<PrepaidCardSplit>>;
   createdMerchants: Array<Maybe<MerchantCreation>>;
+  createdRewardSafes: Array<Maybe<RewardSafe>>;
   receivedPrepaidCards: Array<Maybe<PrepaidCardTransfer>>;
   provisionedPrepaidCards: Array<Maybe<PrepaidCardProvisionedEvent>>;
   sentPrepaidCards: Array<Maybe<PrepaidCardTransfer>>;
@@ -109,6 +110,15 @@ export type AccountCreatedMerchantsArgs = {
   orderBy?: Maybe<MerchantCreationOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantCreationFilter>;
+};
+
+
+export type AccountCreatedRewardSafesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardSafeOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardSafeFilter>;
 };
 
 
@@ -204,6 +214,7 @@ export enum AccountOrderBy {
   CREATEDPREPAIDCARDS = 'createdPrepaidCards',
   SPLITPREPAIDCARDS = 'splitPrepaidCards',
   CREATEDMERCHANTS = 'createdMerchants',
+  CREATEDREWARDSAFES = 'createdRewardSafes',
   RECEIVEDPREPAIDCARDS = 'receivedPrepaidCards',
   PROVISIONEDPREPAIDCARDS = 'provisionedPrepaidCards',
   SENTPREPAIDCARDS = 'sentPrepaidCards',
@@ -1906,6 +1917,7 @@ export type PrepaidCardInventoryItem = {
   __typename?: 'PrepaidCardInventoryItem';
   id: Scalars['ID'];
   inventory: SkuInventory;
+  prepaidCardId: Scalars['String'];
   prepaidCard: PrepaidCard;
 };
 
@@ -1932,6 +1944,20 @@ export type PrepaidCardInventoryItemFilter = {
   inventory_not_starts_with?: Maybe<Scalars['String']>;
   inventory_ends_with?: Maybe<Scalars['String']>;
   inventory_not_ends_with?: Maybe<Scalars['String']>;
+  prepaidCardId?: Maybe<Scalars['String']>;
+  prepaidCardId_not?: Maybe<Scalars['String']>;
+  prepaidCardId_gt?: Maybe<Scalars['String']>;
+  prepaidCardId_lt?: Maybe<Scalars['String']>;
+  prepaidCardId_gte?: Maybe<Scalars['String']>;
+  prepaidCardId_lte?: Maybe<Scalars['String']>;
+  prepaidCardId_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardId_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardId_contains?: Maybe<Scalars['String']>;
+  prepaidCardId_not_contains?: Maybe<Scalars['String']>;
+  prepaidCardId_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardId_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardId_ends_with?: Maybe<Scalars['String']>;
+  prepaidCardId_not_ends_with?: Maybe<Scalars['String']>;
   prepaidCard?: Maybe<Scalars['String']>;
   prepaidCard_not?: Maybe<Scalars['String']>;
   prepaidCard_gt?: Maybe<Scalars['String']>;
@@ -1951,6 +1977,7 @@ export type PrepaidCardInventoryItemFilter = {
 export enum PrepaidCardInventoryItemOrderBy {
   ID = 'id',
   INVENTORY = 'inventory',
+  PREPAIDCARDID = 'prepaidCardId',
   PREPAIDCARD = 'prepaidCard'
 }
 
@@ -2048,6 +2075,8 @@ export type PrepaidCardPayment = {
   historicPrepaidCardFaceValue: Scalars['BigInt'];
   historicPrepaidCardIssuingTokenBalance: Scalars['BigInt'];
   merchantRegistrationPayments: Array<Maybe<MerchantRegistrationPayment>>;
+  rewardProgramRegistrationPayments: Array<Maybe<RewardProgramRegistrationPayment>>;
+  rewardeeRegistrationPayments: Array<Maybe<RewardeeRegistrationPayment>>;
 };
 
 
@@ -2057,6 +2086,24 @@ export type PrepaidCardPaymentMerchantRegistrationPaymentsArgs = {
   orderBy?: Maybe<MerchantRegistrationPaymentOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantRegistrationPaymentFilter>;
+};
+
+
+export type PrepaidCardPaymentRewardProgramRegistrationPaymentsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardProgramRegistrationPaymentOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardProgramRegistrationPaymentFilter>;
+};
+
+
+export type PrepaidCardPaymentRewardeeRegistrationPaymentsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeRegistrationPaymentOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeRegistrationPaymentFilter>;
 };
 
 export type PrepaidCardPaymentFilter = {
@@ -2216,13 +2263,16 @@ export enum PrepaidCardPaymentOrderBy {
   ISSUINGTOKENUSDPRICE = 'issuingTokenUSDPrice',
   HISTORICPREPAIDCARDFACEVALUE = 'historicPrepaidCardFaceValue',
   HISTORICPREPAIDCARDISSUINGTOKENBALANCE = 'historicPrepaidCardIssuingTokenBalance',
-  MERCHANTREGISTRATIONPAYMENTS = 'merchantRegistrationPayments'
+  MERCHANTREGISTRATIONPAYMENTS = 'merchantRegistrationPayments',
+  REWARDPROGRAMREGISTRATIONPAYMENTS = 'rewardProgramRegistrationPayments',
+  REWARDEEREGISTRATIONPAYMENTS = 'rewardeeRegistrationPayments'
 }
 
 export type PrepaidCardProvisionedEvent = {
   __typename?: 'PrepaidCardProvisionedEvent';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  txnHash: Scalars['String'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
   customer: Account;
@@ -2247,6 +2297,20 @@ export type PrepaidCardProvisionedEventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  txnHash?: Maybe<Scalars['String']>;
+  txnHash_not?: Maybe<Scalars['String']>;
+  txnHash_gt?: Maybe<Scalars['String']>;
+  txnHash_lt?: Maybe<Scalars['String']>;
+  txnHash_gte?: Maybe<Scalars['String']>;
+  txnHash_lte?: Maybe<Scalars['String']>;
+  txnHash_in?: Maybe<Array<Scalars['String']>>;
+  txnHash_not_in?: Maybe<Array<Scalars['String']>>;
+  txnHash_contains?: Maybe<Scalars['String']>;
+  txnHash_not_contains?: Maybe<Scalars['String']>;
+  txnHash_starts_with?: Maybe<Scalars['String']>;
+  txnHash_not_starts_with?: Maybe<Scalars['String']>;
+  txnHash_ends_with?: Maybe<Scalars['String']>;
+  txnHash_not_ends_with?: Maybe<Scalars['String']>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -2316,6 +2380,7 @@ export type PrepaidCardProvisionedEventFilter = {
 export enum PrepaidCardProvisionedEventOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  TXNHASH = 'txnHash',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
   CUSTOMER = 'customer',
@@ -2849,6 +2914,8 @@ export type Query = {
   safes: Array<Safe>;
   safeTransaction?: Maybe<SafeTransaction>;
   safeTransactions: Array<SafeTransaction>;
+  safeOwnerChange?: Maybe<SafeOwnerChange>;
+  safeOwnerChanges: Array<SafeOwnerChange>;
   prepaidCardSendAction?: Maybe<PrepaidCardSendAction>;
   prepaidCardSendActions: Array<PrepaidCardSendAction>;
   eoatransaction?: Maybe<EoaTransaction>;
@@ -2867,6 +2934,18 @@ export type Query = {
   tokenHistories: Array<TokenHistory>;
   tokenPair?: Maybe<TokenPair>;
   tokenPairs: Array<TokenPair>;
+  rewardProgramRegistrationPayment?: Maybe<RewardProgramRegistrationPayment>;
+  rewardProgramRegistrationPayments: Array<RewardProgramRegistrationPayment>;
+  rewardeeRegistrationPayment?: Maybe<RewardeeRegistrationPayment>;
+  rewardeeRegistrationPayments: Array<RewardeeRegistrationPayment>;
+  rewardProgram?: Maybe<RewardProgram>;
+  rewardPrograms: Array<RewardProgram>;
+  rewardSafe?: Maybe<RewardSafe>;
+  rewardSafes: Array<RewardSafe>;
+  rewardeeClaim?: Maybe<RewardeeClaim>;
+  rewardeeClaims: Array<RewardeeClaim>;
+  rewardTokensAdd?: Maybe<RewardTokensAdd>;
+  rewardTokensAdds: Array<RewardTokensAdd>;
   /** Access to subgraph metadata */
   _meta?: Maybe<Meta>;
 };
@@ -3368,6 +3447,22 @@ export type QuerySafeTransactionsArgs = {
 };
 
 
+export type QuerySafeOwnerChangeArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QuerySafeOwnerChangesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SafeOwnerChangeOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SafeOwnerChangeFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
 export type QueryPrepaidCardSendActionArgs = {
   id: Scalars['ID'];
   block?: Maybe<BlockHeight>;
@@ -3512,6 +3607,102 @@ export type QueryTokenPairsArgs = {
 };
 
 
+export type QueryRewardProgramRegistrationPaymentArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardProgramRegistrationPaymentsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardProgramRegistrationPaymentOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardProgramRegistrationPaymentFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardeeRegistrationPaymentArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardeeRegistrationPaymentsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeRegistrationPaymentOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeRegistrationPaymentFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardProgramArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardProgramsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardProgramOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardProgramFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardSafeArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardSafesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardSafeOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardSafeFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardeeClaimArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardeeClaimsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeClaimOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeClaimFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardTokensAddArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryRewardTokensAddsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardTokensAddOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardTokensAddFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
 export type QueryMetaArgs = {
   block?: Maybe<BlockHeight>;
 };
@@ -3588,6 +3779,550 @@ export enum RevenueEarningsByDayOrderBy {
   ISSUINGTOKENACCUMULATION = 'issuingTokenAccumulation'
 }
 
+export type RewardProgram = {
+  __typename?: 'RewardProgram';
+  id: Scalars['ID'];
+  admin: Account;
+  rewardSafes: Array<Maybe<RewardSafe>>;
+  tokenAddEvents: Array<Maybe<RewardTokensAdd>>;
+  rewardClaimEvents: Array<Maybe<RewardeeClaim>>;
+};
+
+
+export type RewardProgramRewardSafesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardSafeOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardSafeFilter>;
+};
+
+
+export type RewardProgramTokenAddEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardTokensAddOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardTokensAddFilter>;
+};
+
+
+export type RewardProgramRewardClaimEventsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeClaimOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeClaimFilter>;
+};
+
+export type RewardProgramRegistrationPayment = {
+  __typename?: 'RewardProgramRegistrationPayment';
+  id: Scalars['ID'];
+  rewardProgram: RewardProgram;
+  admin: Account;
+  transaction: Transaction;
+  createdAt: Scalars['BigInt'];
+  prepaidCardPayment: PrepaidCardPayment;
+};
+
+export type RewardProgramRegistrationPaymentFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  rewardProgram?: Maybe<Scalars['String']>;
+  rewardProgram_not?: Maybe<Scalars['String']>;
+  rewardProgram_gt?: Maybe<Scalars['String']>;
+  rewardProgram_lt?: Maybe<Scalars['String']>;
+  rewardProgram_gte?: Maybe<Scalars['String']>;
+  rewardProgram_lte?: Maybe<Scalars['String']>;
+  rewardProgram_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_contains?: Maybe<Scalars['String']>;
+  rewardProgram_not_contains?: Maybe<Scalars['String']>;
+  rewardProgram_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_ends_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_ends_with?: Maybe<Scalars['String']>;
+  admin?: Maybe<Scalars['String']>;
+  admin_not?: Maybe<Scalars['String']>;
+  admin_gt?: Maybe<Scalars['String']>;
+  admin_lt?: Maybe<Scalars['String']>;
+  admin_gte?: Maybe<Scalars['String']>;
+  admin_lte?: Maybe<Scalars['String']>;
+  admin_in?: Maybe<Array<Scalars['String']>>;
+  admin_not_in?: Maybe<Array<Scalars['String']>>;
+  admin_contains?: Maybe<Scalars['String']>;
+  admin_not_contains?: Maybe<Scalars['String']>;
+  admin_starts_with?: Maybe<Scalars['String']>;
+  admin_not_starts_with?: Maybe<Scalars['String']>;
+  admin_ends_with?: Maybe<Scalars['String']>;
+  admin_not_ends_with?: Maybe<Scalars['String']>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['BigInt']>;
+  createdAt_not?: Maybe<Scalars['BigInt']>;
+  createdAt_gt?: Maybe<Scalars['BigInt']>;
+  createdAt_lt?: Maybe<Scalars['BigInt']>;
+  createdAt_gte?: Maybe<Scalars['BigInt']>;
+  createdAt_lte?: Maybe<Scalars['BigInt']>;
+  createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
+  createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  prepaidCardPayment?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not?: Maybe<Scalars['String']>;
+  prepaidCardPayment_gt?: Maybe<Scalars['String']>;
+  prepaidCardPayment_lt?: Maybe<Scalars['String']>;
+  prepaidCardPayment_gte?: Maybe<Scalars['String']>;
+  prepaidCardPayment_lte?: Maybe<Scalars['String']>;
+  prepaidCardPayment_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardPayment_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardPayment_contains?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not_contains?: Maybe<Scalars['String']>;
+  prepaidCardPayment_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardPayment_ends_with?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum RewardProgramRegistrationPaymentOrderBy {
+  ID = 'id',
+  REWARDPROGRAM = 'rewardProgram',
+  ADMIN = 'admin',
+  TRANSACTION = 'transaction',
+  CREATEDAT = 'createdAt',
+  PREPAIDCARDPAYMENT = 'prepaidCardPayment'
+}
+
+export type RewardProgramFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  admin?: Maybe<Scalars['String']>;
+  admin_not?: Maybe<Scalars['String']>;
+  admin_gt?: Maybe<Scalars['String']>;
+  admin_lt?: Maybe<Scalars['String']>;
+  admin_gte?: Maybe<Scalars['String']>;
+  admin_lte?: Maybe<Scalars['String']>;
+  admin_in?: Maybe<Array<Scalars['String']>>;
+  admin_not_in?: Maybe<Array<Scalars['String']>>;
+  admin_contains?: Maybe<Scalars['String']>;
+  admin_not_contains?: Maybe<Scalars['String']>;
+  admin_starts_with?: Maybe<Scalars['String']>;
+  admin_not_starts_with?: Maybe<Scalars['String']>;
+  admin_ends_with?: Maybe<Scalars['String']>;
+  admin_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum RewardProgramOrderBy {
+  ID = 'id',
+  ADMIN = 'admin',
+  REWARDSAFES = 'rewardSafes',
+  TOKENADDEVENTS = 'tokenAddEvents',
+  REWARDCLAIMEVENTS = 'rewardClaimEvents'
+}
+
+export type RewardSafe = {
+  __typename?: 'RewardSafe';
+  id: Scalars['ID'];
+  rewardProgram: RewardProgram;
+  rewardee: Account;
+  safe: Safe;
+  claims: Array<Maybe<RewardeeClaim>>;
+};
+
+
+export type RewardSafeClaimsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeClaimOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeClaimFilter>;
+};
+
+export type RewardSafeFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  rewardProgram?: Maybe<Scalars['String']>;
+  rewardProgram_not?: Maybe<Scalars['String']>;
+  rewardProgram_gt?: Maybe<Scalars['String']>;
+  rewardProgram_lt?: Maybe<Scalars['String']>;
+  rewardProgram_gte?: Maybe<Scalars['String']>;
+  rewardProgram_lte?: Maybe<Scalars['String']>;
+  rewardProgram_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_contains?: Maybe<Scalars['String']>;
+  rewardProgram_not_contains?: Maybe<Scalars['String']>;
+  rewardProgram_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_ends_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_ends_with?: Maybe<Scalars['String']>;
+  rewardee?: Maybe<Scalars['String']>;
+  rewardee_not?: Maybe<Scalars['String']>;
+  rewardee_gt?: Maybe<Scalars['String']>;
+  rewardee_lt?: Maybe<Scalars['String']>;
+  rewardee_gte?: Maybe<Scalars['String']>;
+  rewardee_lte?: Maybe<Scalars['String']>;
+  rewardee_in?: Maybe<Array<Scalars['String']>>;
+  rewardee_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardee_contains?: Maybe<Scalars['String']>;
+  rewardee_not_contains?: Maybe<Scalars['String']>;
+  rewardee_starts_with?: Maybe<Scalars['String']>;
+  rewardee_not_starts_with?: Maybe<Scalars['String']>;
+  rewardee_ends_with?: Maybe<Scalars['String']>;
+  rewardee_not_ends_with?: Maybe<Scalars['String']>;
+  safe?: Maybe<Scalars['String']>;
+  safe_not?: Maybe<Scalars['String']>;
+  safe_gt?: Maybe<Scalars['String']>;
+  safe_lt?: Maybe<Scalars['String']>;
+  safe_gte?: Maybe<Scalars['String']>;
+  safe_lte?: Maybe<Scalars['String']>;
+  safe_in?: Maybe<Array<Scalars['String']>>;
+  safe_not_in?: Maybe<Array<Scalars['String']>>;
+  safe_contains?: Maybe<Scalars['String']>;
+  safe_not_contains?: Maybe<Scalars['String']>;
+  safe_starts_with?: Maybe<Scalars['String']>;
+  safe_not_starts_with?: Maybe<Scalars['String']>;
+  safe_ends_with?: Maybe<Scalars['String']>;
+  safe_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum RewardSafeOrderBy {
+  ID = 'id',
+  REWARDPROGRAM = 'rewardProgram',
+  REWARDEE = 'rewardee',
+  SAFE = 'safe',
+  CLAIMS = 'claims'
+}
+
+export type RewardTokensAdd = {
+  __typename?: 'RewardTokensAdd';
+  id: Scalars['ID'];
+  rewardProgram: RewardProgram;
+  safe: Safe;
+  token: Token;
+  amount: Scalars['BigInt'];
+  transaction: Transaction;
+  timestamp: Scalars['BigInt'];
+};
+
+export type RewardTokensAddFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  rewardProgram?: Maybe<Scalars['String']>;
+  rewardProgram_not?: Maybe<Scalars['String']>;
+  rewardProgram_gt?: Maybe<Scalars['String']>;
+  rewardProgram_lt?: Maybe<Scalars['String']>;
+  rewardProgram_gte?: Maybe<Scalars['String']>;
+  rewardProgram_lte?: Maybe<Scalars['String']>;
+  rewardProgram_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_contains?: Maybe<Scalars['String']>;
+  rewardProgram_not_contains?: Maybe<Scalars['String']>;
+  rewardProgram_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_ends_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_ends_with?: Maybe<Scalars['String']>;
+  safe?: Maybe<Scalars['String']>;
+  safe_not?: Maybe<Scalars['String']>;
+  safe_gt?: Maybe<Scalars['String']>;
+  safe_lt?: Maybe<Scalars['String']>;
+  safe_gte?: Maybe<Scalars['String']>;
+  safe_lte?: Maybe<Scalars['String']>;
+  safe_in?: Maybe<Array<Scalars['String']>>;
+  safe_not_in?: Maybe<Array<Scalars['String']>>;
+  safe_contains?: Maybe<Scalars['String']>;
+  safe_not_contains?: Maybe<Scalars['String']>;
+  safe_starts_with?: Maybe<Scalars['String']>;
+  safe_not_starts_with?: Maybe<Scalars['String']>;
+  safe_ends_with?: Maybe<Scalars['String']>;
+  safe_not_ends_with?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum RewardTokensAddOrderBy {
+  ID = 'id',
+  REWARDPROGRAM = 'rewardProgram',
+  SAFE = 'safe',
+  TOKEN = 'token',
+  AMOUNT = 'amount',
+  TRANSACTION = 'transaction',
+  TIMESTAMP = 'timestamp'
+}
+
+export type RewardeeClaim = {
+  __typename?: 'RewardeeClaim';
+  id: Scalars['ID'];
+  rewardProgram: RewardProgram;
+  rewardee: Account;
+  rewardSafe: RewardSafe;
+  amount: Scalars['BigInt'];
+  transaction: Transaction;
+  timestamp: Scalars['BigInt'];
+};
+
+export type RewardeeClaimFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  rewardProgram?: Maybe<Scalars['String']>;
+  rewardProgram_not?: Maybe<Scalars['String']>;
+  rewardProgram_gt?: Maybe<Scalars['String']>;
+  rewardProgram_lt?: Maybe<Scalars['String']>;
+  rewardProgram_gte?: Maybe<Scalars['String']>;
+  rewardProgram_lte?: Maybe<Scalars['String']>;
+  rewardProgram_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_contains?: Maybe<Scalars['String']>;
+  rewardProgram_not_contains?: Maybe<Scalars['String']>;
+  rewardProgram_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_ends_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_ends_with?: Maybe<Scalars['String']>;
+  rewardee?: Maybe<Scalars['String']>;
+  rewardee_not?: Maybe<Scalars['String']>;
+  rewardee_gt?: Maybe<Scalars['String']>;
+  rewardee_lt?: Maybe<Scalars['String']>;
+  rewardee_gte?: Maybe<Scalars['String']>;
+  rewardee_lte?: Maybe<Scalars['String']>;
+  rewardee_in?: Maybe<Array<Scalars['String']>>;
+  rewardee_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardee_contains?: Maybe<Scalars['String']>;
+  rewardee_not_contains?: Maybe<Scalars['String']>;
+  rewardee_starts_with?: Maybe<Scalars['String']>;
+  rewardee_not_starts_with?: Maybe<Scalars['String']>;
+  rewardee_ends_with?: Maybe<Scalars['String']>;
+  rewardee_not_ends_with?: Maybe<Scalars['String']>;
+  rewardSafe?: Maybe<Scalars['String']>;
+  rewardSafe_not?: Maybe<Scalars['String']>;
+  rewardSafe_gt?: Maybe<Scalars['String']>;
+  rewardSafe_lt?: Maybe<Scalars['String']>;
+  rewardSafe_gte?: Maybe<Scalars['String']>;
+  rewardSafe_lte?: Maybe<Scalars['String']>;
+  rewardSafe_in?: Maybe<Array<Scalars['String']>>;
+  rewardSafe_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardSafe_contains?: Maybe<Scalars['String']>;
+  rewardSafe_not_contains?: Maybe<Scalars['String']>;
+  rewardSafe_starts_with?: Maybe<Scalars['String']>;
+  rewardSafe_not_starts_with?: Maybe<Scalars['String']>;
+  rewardSafe_ends_with?: Maybe<Scalars['String']>;
+  rewardSafe_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum RewardeeClaimOrderBy {
+  ID = 'id',
+  REWARDPROGRAM = 'rewardProgram',
+  REWARDEE = 'rewardee',
+  REWARDSAFE = 'rewardSafe',
+  AMOUNT = 'amount',
+  TRANSACTION = 'transaction',
+  TIMESTAMP = 'timestamp'
+}
+
+export type RewardeeRegistrationPayment = {
+  __typename?: 'RewardeeRegistrationPayment';
+  id: Scalars['ID'];
+  rewardProgram: RewardProgram;
+  rewardee: Account;
+  transaction: Transaction;
+  createdAt: Scalars['BigInt'];
+  prepaidCardPayment: PrepaidCardPayment;
+};
+
+export type RewardeeRegistrationPaymentFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  rewardProgram?: Maybe<Scalars['String']>;
+  rewardProgram_not?: Maybe<Scalars['String']>;
+  rewardProgram_gt?: Maybe<Scalars['String']>;
+  rewardProgram_lt?: Maybe<Scalars['String']>;
+  rewardProgram_gte?: Maybe<Scalars['String']>;
+  rewardProgram_lte?: Maybe<Scalars['String']>;
+  rewardProgram_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_contains?: Maybe<Scalars['String']>;
+  rewardProgram_not_contains?: Maybe<Scalars['String']>;
+  rewardProgram_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_ends_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_ends_with?: Maybe<Scalars['String']>;
+  rewardee?: Maybe<Scalars['String']>;
+  rewardee_not?: Maybe<Scalars['String']>;
+  rewardee_gt?: Maybe<Scalars['String']>;
+  rewardee_lt?: Maybe<Scalars['String']>;
+  rewardee_gte?: Maybe<Scalars['String']>;
+  rewardee_lte?: Maybe<Scalars['String']>;
+  rewardee_in?: Maybe<Array<Scalars['String']>>;
+  rewardee_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardee_contains?: Maybe<Scalars['String']>;
+  rewardee_not_contains?: Maybe<Scalars['String']>;
+  rewardee_starts_with?: Maybe<Scalars['String']>;
+  rewardee_not_starts_with?: Maybe<Scalars['String']>;
+  rewardee_ends_with?: Maybe<Scalars['String']>;
+  rewardee_not_ends_with?: Maybe<Scalars['String']>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['BigInt']>;
+  createdAt_not?: Maybe<Scalars['BigInt']>;
+  createdAt_gt?: Maybe<Scalars['BigInt']>;
+  createdAt_lt?: Maybe<Scalars['BigInt']>;
+  createdAt_gte?: Maybe<Scalars['BigInt']>;
+  createdAt_lte?: Maybe<Scalars['BigInt']>;
+  createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
+  createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  prepaidCardPayment?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not?: Maybe<Scalars['String']>;
+  prepaidCardPayment_gt?: Maybe<Scalars['String']>;
+  prepaidCardPayment_lt?: Maybe<Scalars['String']>;
+  prepaidCardPayment_gte?: Maybe<Scalars['String']>;
+  prepaidCardPayment_lte?: Maybe<Scalars['String']>;
+  prepaidCardPayment_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardPayment_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardPayment_contains?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not_contains?: Maybe<Scalars['String']>;
+  prepaidCardPayment_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardPayment_ends_with?: Maybe<Scalars['String']>;
+  prepaidCardPayment_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum RewardeeRegistrationPaymentOrderBy {
+  ID = 'id',
+  REWARDPROGRAM = 'rewardProgram',
+  REWARDEE = 'rewardee',
+  TRANSACTION = 'transaction',
+  CREATEDAT = 'createdAt',
+  PREPAIDCARDPAYMENT = 'prepaidCardPayment'
+}
+
 export type Sku = {
   __typename?: 'SKU';
   id: Scalars['ID'];
@@ -3603,6 +4338,7 @@ export type SkuInventory = {
   id: Scalars['ID'];
   sku: Sku;
   issuer: Account;
+  askPrice: Scalars['BigInt'];
   prepaidCards: Array<Maybe<PrepaidCardInventoryItem>>;
   inventoryEvents: Array<Maybe<PrepaidCardInventoryEvent>>;
 };
@@ -3662,12 +4398,21 @@ export type SkuInventoryFilter = {
   issuer_not_starts_with?: Maybe<Scalars['String']>;
   issuer_ends_with?: Maybe<Scalars['String']>;
   issuer_not_ends_with?: Maybe<Scalars['String']>;
+  askPrice?: Maybe<Scalars['BigInt']>;
+  askPrice_not?: Maybe<Scalars['BigInt']>;
+  askPrice_gt?: Maybe<Scalars['BigInt']>;
+  askPrice_lt?: Maybe<Scalars['BigInt']>;
+  askPrice_gte?: Maybe<Scalars['BigInt']>;
+  askPrice_lte?: Maybe<Scalars['BigInt']>;
+  askPrice_in?: Maybe<Array<Scalars['BigInt']>>;
+  askPrice_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum SkuInventoryOrderBy {
   ID = 'id',
   SKU = 'sku',
   ISSUER = 'issuer',
+  ASKPRICE = 'askPrice',
   PREPAIDCARDS = 'prepaidCards',
   INVENTORYEVENTS = 'inventoryEvents'
 }
@@ -3750,9 +4495,11 @@ export type Safe = {
   safeTxns: Array<Maybe<SafeTransaction>>;
   depot?: Maybe<Depot>;
   merchant?: Maybe<MerchantSafe>;
+  reward?: Maybe<RewardSafe>;
   prepaidCard?: Maybe<PrepaidCard>;
   tokens: Array<Maybe<TokenHolder>>;
   sentBridgedTokens: Array<Maybe<BridgeToLayer1Event>>;
+  ownerChanges: Array<Maybe<SafeOwnerChange>>;
 };
 
 
@@ -3791,13 +4538,117 @@ export type SafeSentBridgedTokensArgs = {
   where?: Maybe<BridgeToLayer1EventFilter>;
 };
 
+
+export type SafeOwnerChangesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SafeOwnerChangeOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SafeOwnerChangeFilter>;
+};
+
 export type SafeOwner = {
   __typename?: 'SafeOwner';
   id: Scalars['ID'];
   owner: Account;
   safe: Safe;
   createdAt: Scalars['BigInt'];
+  ownershipChangedAt: Scalars['BigInt'];
 };
+
+export type SafeOwnerChange = {
+  __typename?: 'SafeOwnerChange';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  safe: Safe;
+  ownerAdded?: Maybe<Scalars['String']>;
+  ownerRemoved?: Maybe<Scalars['String']>;
+};
+
+export type SafeOwnerChangeFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  safe?: Maybe<Scalars['String']>;
+  safe_not?: Maybe<Scalars['String']>;
+  safe_gt?: Maybe<Scalars['String']>;
+  safe_lt?: Maybe<Scalars['String']>;
+  safe_gte?: Maybe<Scalars['String']>;
+  safe_lte?: Maybe<Scalars['String']>;
+  safe_in?: Maybe<Array<Scalars['String']>>;
+  safe_not_in?: Maybe<Array<Scalars['String']>>;
+  safe_contains?: Maybe<Scalars['String']>;
+  safe_not_contains?: Maybe<Scalars['String']>;
+  safe_starts_with?: Maybe<Scalars['String']>;
+  safe_not_starts_with?: Maybe<Scalars['String']>;
+  safe_ends_with?: Maybe<Scalars['String']>;
+  safe_not_ends_with?: Maybe<Scalars['String']>;
+  ownerAdded?: Maybe<Scalars['String']>;
+  ownerAdded_not?: Maybe<Scalars['String']>;
+  ownerAdded_gt?: Maybe<Scalars['String']>;
+  ownerAdded_lt?: Maybe<Scalars['String']>;
+  ownerAdded_gte?: Maybe<Scalars['String']>;
+  ownerAdded_lte?: Maybe<Scalars['String']>;
+  ownerAdded_in?: Maybe<Array<Scalars['String']>>;
+  ownerAdded_not_in?: Maybe<Array<Scalars['String']>>;
+  ownerAdded_contains?: Maybe<Scalars['String']>;
+  ownerAdded_not_contains?: Maybe<Scalars['String']>;
+  ownerAdded_starts_with?: Maybe<Scalars['String']>;
+  ownerAdded_not_starts_with?: Maybe<Scalars['String']>;
+  ownerAdded_ends_with?: Maybe<Scalars['String']>;
+  ownerAdded_not_ends_with?: Maybe<Scalars['String']>;
+  ownerRemoved?: Maybe<Scalars['String']>;
+  ownerRemoved_not?: Maybe<Scalars['String']>;
+  ownerRemoved_gt?: Maybe<Scalars['String']>;
+  ownerRemoved_lt?: Maybe<Scalars['String']>;
+  ownerRemoved_gte?: Maybe<Scalars['String']>;
+  ownerRemoved_lte?: Maybe<Scalars['String']>;
+  ownerRemoved_in?: Maybe<Array<Scalars['String']>>;
+  ownerRemoved_not_in?: Maybe<Array<Scalars['String']>>;
+  ownerRemoved_contains?: Maybe<Scalars['String']>;
+  ownerRemoved_not_contains?: Maybe<Scalars['String']>;
+  ownerRemoved_starts_with?: Maybe<Scalars['String']>;
+  ownerRemoved_not_starts_with?: Maybe<Scalars['String']>;
+  ownerRemoved_ends_with?: Maybe<Scalars['String']>;
+  ownerRemoved_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum SafeOwnerChangeOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  SAFE = 'safe',
+  OWNERADDED = 'ownerAdded',
+  OWNERREMOVED = 'ownerRemoved'
+}
 
 export type SafeOwnerFilter = {
   id?: Maybe<Scalars['ID']>;
@@ -3844,13 +4695,22 @@ export type SafeOwnerFilter = {
   createdAt_lte?: Maybe<Scalars['BigInt']>;
   createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  ownershipChangedAt?: Maybe<Scalars['BigInt']>;
+  ownershipChangedAt_not?: Maybe<Scalars['BigInt']>;
+  ownershipChangedAt_gt?: Maybe<Scalars['BigInt']>;
+  ownershipChangedAt_lt?: Maybe<Scalars['BigInt']>;
+  ownershipChangedAt_gte?: Maybe<Scalars['BigInt']>;
+  ownershipChangedAt_lte?: Maybe<Scalars['BigInt']>;
+  ownershipChangedAt_in?: Maybe<Array<Scalars['BigInt']>>;
+  ownershipChangedAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum SafeOwnerOrderBy {
   ID = 'id',
   OWNER = 'owner',
   SAFE = 'safe',
-  CREATEDAT = 'createdAt'
+  CREATEDAT = 'createdAt',
+  OWNERSHIPCHANGEDAT = 'ownershipChangedAt'
 }
 
 export type SafeTransaction = {
@@ -4065,9 +4925,11 @@ export enum SafeOrderBy {
   SAFETXNS = 'safeTxns',
   DEPOT = 'depot',
   MERCHANT = 'merchant',
+  REWARD = 'reward',
   PREPAIDCARD = 'prepaidCard',
   TOKENS = 'tokens',
-  SENTBRIDGEDTOKENS = 'sentBridgedTokens'
+  SENTBRIDGEDTOKENS = 'sentBridgedTokens',
+  OWNERCHANGES = 'ownerChanges'
 }
 
 export type SpendAccumulation = {
@@ -4216,6 +5078,8 @@ export type Subscription = {
   safes: Array<Safe>;
   safeTransaction?: Maybe<SafeTransaction>;
   safeTransactions: Array<SafeTransaction>;
+  safeOwnerChange?: Maybe<SafeOwnerChange>;
+  safeOwnerChanges: Array<SafeOwnerChange>;
   prepaidCardSendAction?: Maybe<PrepaidCardSendAction>;
   prepaidCardSendActions: Array<PrepaidCardSendAction>;
   eoatransaction?: Maybe<EoaTransaction>;
@@ -4234,6 +5098,18 @@ export type Subscription = {
   tokenHistories: Array<TokenHistory>;
   tokenPair?: Maybe<TokenPair>;
   tokenPairs: Array<TokenPair>;
+  rewardProgramRegistrationPayment?: Maybe<RewardProgramRegistrationPayment>;
+  rewardProgramRegistrationPayments: Array<RewardProgramRegistrationPayment>;
+  rewardeeRegistrationPayment?: Maybe<RewardeeRegistrationPayment>;
+  rewardeeRegistrationPayments: Array<RewardeeRegistrationPayment>;
+  rewardProgram?: Maybe<RewardProgram>;
+  rewardPrograms: Array<RewardProgram>;
+  rewardSafe?: Maybe<RewardSafe>;
+  rewardSafes: Array<RewardSafe>;
+  rewardeeClaim?: Maybe<RewardeeClaim>;
+  rewardeeClaims: Array<RewardeeClaim>;
+  rewardTokensAdd?: Maybe<RewardTokensAdd>;
+  rewardTokensAdds: Array<RewardTokensAdd>;
   /** Access to subgraph metadata */
   _meta?: Maybe<Meta>;
 };
@@ -4735,6 +5611,22 @@ export type SubscriptionSafeTransactionsArgs = {
 };
 
 
+export type SubscriptionSafeOwnerChangeArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionSafeOwnerChangesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<SafeOwnerChangeOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<SafeOwnerChangeFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
 export type SubscriptionPrepaidCardSendActionArgs = {
   id: Scalars['ID'];
   block?: Maybe<BlockHeight>;
@@ -4875,6 +5767,102 @@ export type SubscriptionTokenPairsArgs = {
   orderBy?: Maybe<TokenPairOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<TokenPairFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardProgramRegistrationPaymentArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardProgramRegistrationPaymentsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardProgramRegistrationPaymentOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardProgramRegistrationPaymentFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardeeRegistrationPaymentArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardeeRegistrationPaymentsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeRegistrationPaymentOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeRegistrationPaymentFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardProgramArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardProgramsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardProgramOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardProgramFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardSafeArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardSafesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardSafeOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardSafeFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardeeClaimArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardeeClaimsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeClaimOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeClaimFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardTokensAddArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionRewardTokensAddsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardTokensAddOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardTokensAddFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -5583,6 +6571,7 @@ export type Transaction = {
   spendAccumulations: Array<Maybe<SpendAccumulation>>;
   merchantFeePayments: Array<Maybe<MerchantFeePayment>>;
   merchantClaims: Array<Maybe<MerchantClaim>>;
+  rewardClaims: Array<Maybe<RewardeeClaim>>;
   merchantRevenueEvents: Array<Maybe<MerchantRevenueEvent>>;
   tokenSwaps: Array<Maybe<TokenSwap>>;
   prepaidCardInventoryEvents: Array<Maybe<PrepaidCardInventoryEvent>>;
@@ -5725,6 +6714,15 @@ export type TransactionMerchantClaimsArgs = {
 };
 
 
+export type TransactionRewardClaimsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<RewardeeClaimOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<RewardeeClaimFilter>;
+};
+
+
 export type TransactionMerchantRevenueEventsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -5815,6 +6813,7 @@ export enum TransactionOrderBy {
   SPENDACCUMULATIONS = 'spendAccumulations',
   MERCHANTFEEPAYMENTS = 'merchantFeePayments',
   MERCHANTCLAIMS = 'merchantClaims',
+  REWARDCLAIMS = 'rewardClaims',
   MERCHANTREVENUEEVENTS = 'merchantRevenueEvents',
   TOKENSWAPS = 'tokenSwaps',
   PREPAIDCARDINVENTORYEVENTS = 'prepaidCardInventoryEvents',
@@ -5949,6 +6948,10 @@ export type PrepaidCardTransferFragment = (
   & { prepaidCard: (
     { __typename?: 'PrepaidCard' }
     & Pick<PrepaidCard, 'id' | 'customizationDID' | 'faceValue'>
+    & { creation?: Maybe<(
+      { __typename?: 'PrepaidCardCreation' }
+      & Pick<PrepaidCardCreation, 'spendAmount'>
+    )> }
   ), from: (
     { __typename?: 'Account' }
     & Pick<Account, 'id'>
@@ -6163,6 +7166,7 @@ export type GetPrepaidCardHistoryDataQuery = (
         ) }
       )>>, creation?: Maybe<(
         { __typename?: 'PrepaidCardCreation' }
+        & Pick<PrepaidCardCreation, 'spendAmount'>
         & { transaction: (
           { __typename?: 'Transaction' }
           & TransactionFragment
@@ -6323,6 +7327,9 @@ export const PrepaidCardTransferFragmentDoc = gql`
     id
     customizationDID
     faceValue
+    creation {
+      spendAmount
+    }
   }
   from {
     id
@@ -6603,6 +7610,7 @@ export const GetPrepaidCardHistoryDataDocument = gql`
         }
       }
       creation {
+        spendAmount
         transaction {
           ...Transaction
         }

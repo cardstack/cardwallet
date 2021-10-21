@@ -37,10 +37,8 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       } catch (error) {}
     }
 
-    const faceValue = prepaidCardTransferTransaction.prepaidCard.faceValue;
-
     const spendDisplay = convertSpendForBalanceDisplay(
-      faceValue,
+      prepaidCardTransferTransaction.prepaidCard.creation?.spendAmount, // faceValue when transfer happen
       this.nativeCurrency,
       this.currencyConversionRates,
       true

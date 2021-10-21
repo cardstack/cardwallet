@@ -49,6 +49,7 @@ query GetPrepaidCardHistoryData($address: ID!) {
         }
       }
       creation {
+        spendAmount
         transaction {
           ...Transaction
         }
