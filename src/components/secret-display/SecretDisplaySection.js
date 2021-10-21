@@ -108,7 +108,6 @@ export default function SecretDisplaySection({
             iconProps={{ name: 'face-id' }}
             onPress={loadSeed}
             variant="white"
-            width="100%"
           >
             Show Secret Recovery Phrase
           </Button>
