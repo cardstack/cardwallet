@@ -112,6 +112,9 @@ fragment PrepaidCardTransfer on PrepaidCardTransfer {
     id
     customizationDID
     faceValue
+    creation {
+      spendAmount
+    }
   }
   from {
     id
