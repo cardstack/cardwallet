@@ -70,6 +70,7 @@ export interface OrderData {
   id: string;
   type: string;
   attributes: OrderAttrs;
+  prepaidCardAddress?: string;
 }
 
 export const getCustodialWallet = async (
@@ -192,9 +193,10 @@ export const getOrder = async (
       axiosConfig(authToken)
     );
 
-    if (results.data?.data) {
-      return await results.data?.data;
-    }
+    const prepaidCardAddress =
+      results?.data?.included?.[0].attributes?.['prepaid-card-address'] || null;
+
+    return { ...results?.data?.data, prepaidCardAddress };
   } catch (e) {
     logger.sentry('Error getting order details', e);
   }
