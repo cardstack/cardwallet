@@ -39,6 +39,8 @@ export const PrepaidCardPaymentTransaction = ({
         <PrepaidCardTransactionHeader
           address={item.address}
           cardCustomization={item.cardCustomization}
+          prepaidInlineTransaction={props.prepaidInlineTransaction}
+          merchantName={item.merchantInfo?.name}
         />
       }
       statusIconName="arrow-up"

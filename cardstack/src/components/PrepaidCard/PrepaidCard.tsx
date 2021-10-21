@@ -79,7 +79,6 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         width="100%"
         testID="prepaid-card"
         alignItems="center"
-        paddingVertical={2}
         flexDirection="row"
         disabled={props.disabled}
         onPress={onPress}
@@ -124,7 +123,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         )}
         <Container
           backgroundColor="white"
-          borderRadius={10}
+          borderRadius={20}
           overflow="hidden"
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
         >
