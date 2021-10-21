@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, createRef } from 'react';
 import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
 import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { useRoute } from '@react-navigation/core';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { Theme } from '../../theme';
@@ -26,6 +27,7 @@ import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import logger from 'logger';
 
 interface HeaderItem {
   title: string;
@@ -64,11 +66,27 @@ interface AssetListProps
   headerPaddingHorizontal?: number;
 }
 
+interface RouteType {
+  params: {
+    scrollToPrepaidCardsSection?: boolean;
+  };
+  key: string;
+  name: string;
+}
+
+// We need to pass this prop if the section to scrollTo is not on viewport
+const onScrollToIndexFailed = () => {
+  logger.log('onScrollToIndexFailed');
+};
+
 export const AssetList = (props: AssetListProps) => {
+  const sectionListRef = createRef<SectionList>();
   const refresh = useRefreshAccountData();
   const [refreshing, setRefreshing] = useState(false);
   const { accountAddress } = useAccountProfile();
-  const { navigate } = useNavigation();
+  const { navigate, setParams } = useNavigation();
+  const { params } = useRoute<RouteType>();
+
   const { isDamaged } = useWallets();
 
   const {
@@ -95,6 +113,26 @@ export const AssetList = (props: AssetListProps) => {
 
     type && toggle(type);
   }
+
+  useEffect(() => {
+    if (params?.scrollToPrepaidCardsSection) {
+      const prepaidCardSectionIndex = sections.findIndex(
+        section =>
+          section.header.type === PinnedHiddenSectionOption.PREPAID_CARDS
+      );
+
+      sectionListRef.current?.scrollToLocation({
+        animated: false,
+        sectionIndex: prepaidCardSectionIndex,
+        itemIndex: 0,
+      });
+
+      // Set to false so it won't update on assetsRefresh
+      setTimeout(() => {
+        setParams({ scrollToPrepaidCardsSection: false });
+      }, 2500);
+    }
+  }, [params, sectionListRef, sections, setParams]);
 
   async function onRefresh() {
     setRefreshing(true);
@@ -136,6 +174,8 @@ export const AssetList = (props: AssetListProps) => {
   return (
     <>
       <SectionList
+        onScrollToIndexFailed={onScrollToIndexFailed}
+        ref={sectionListRef}
         refreshControl={
           <RefreshControl
             tintColor="white"

@@ -101,7 +101,7 @@ export default function useBuyPrepaidCard() {
     goBack();
 
     InteractionManager.runAfterInteractions(() => {
-      navigate(Routes.WALLET_SCREEN);
+      navigate(Routes.WALLET_SCREEN, { scrollToPrepaidCardsSection: true });
     });
   }, [goBack, navigate]);
 
@@ -114,6 +114,8 @@ export default function useBuyPrepaidCard() {
         const prepaidCardAddress = orderData?.prepaidCardAddress;
 
         if (status === 'complete') {
+          clearInterval(orderStatusPolling);
+
           if (prepaidCardAddress) {
             await updatePrepaidCardsState(prepaidCardAddress);
           }
@@ -129,8 +131,6 @@ export default function useBuyPrepaidCard() {
             ],
             message: 'Prepaid card purchased successfully',
           });
-
-          clearInterval(orderStatusPolling);
         }
       }
     }, 2000);
