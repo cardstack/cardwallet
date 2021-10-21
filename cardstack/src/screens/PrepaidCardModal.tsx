@@ -25,23 +25,29 @@ const PrepaidCardModal = () => {
   );
 
   return (
-    <SafeAreaView backgroundColor="black" flex={1} width="100%">
+    <SafeAreaView
+      backgroundColor="black"
+      flex={1}
+      width="100%"
+      alignItems="center"
+      paddingTop={1}
+    >
+      <SheetHandle color="buttonDarkBackground" opacity={1} />
       <PrepaidCard
         {...prepaidCardProps}
         disabled
         paddingHorizontal={0}
         marginBottom={1}
+        marginTop={2}
       />
       <Container
         alignItems="center"
         paddingTop={1}
-        borderRadius={10}
+        borderRadius={20}
         minHeight="100%"
         backgroundColor="white"
-        flexDirection="column"
         width="100%"
       >
-        <SheetHandle />
         <Container width="100%" paddingVertical={4} paddingHorizontal={5}>
           <Text size="medium">Recent Activity</Text>
         </Container>
@@ -51,7 +57,13 @@ const PrepaidCardModal = () => {
           <SectionList
             ListEmptyComponent={<ListEmptyComponent text="No transactions" />}
             contentContainerStyle={sectionStyle.contentContainerStyle}
-            renderItem={props => <TransactionItem {...props} includeBorder />}
+            renderItem={props => (
+              <TransactionItem
+                {...props}
+                includeBorder
+                prepaidInlineTransaction
+              />
+            )}
             sections={sections}
             renderSectionHeader={({ section: { title } }) => (
               <Container

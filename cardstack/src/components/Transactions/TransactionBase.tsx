@@ -15,6 +15,7 @@ import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 export interface TransactionBaseCustomizationProps {
   includeBorder?: boolean;
+  prepaidInlineTransaction?: boolean;
 }
 
 export interface TransactionBaseProps

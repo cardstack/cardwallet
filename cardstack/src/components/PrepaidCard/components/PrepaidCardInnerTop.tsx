@@ -24,7 +24,7 @@ interface VariantType {
 const cardType: Record<CardVariants, VariantType> = {
   normal: {
     fontSize: { small: 11, mid: 13, big: 18 },
-    maxWidth: 175,
+    maxWidth: 150,
   },
   medium: {
     fontSize: { small: 8, mid: 10, big: 13 },
