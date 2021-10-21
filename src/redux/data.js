@@ -663,6 +663,16 @@ export const updateRefetchSavings = fetch => dispatch =>
     type: DATA_UPDATE_REFETCH_SAVINGS,
   });
 
+export const addNewPrepaidCard = newPrepaidCard => (dispatch, getState) => {
+  const { prepaidCards } = getState().data;
+  const updatedCards = [newPrepaidCard, ...prepaidCards];
+
+  dispatch({
+    payload: { prepaidCards: updatedCards },
+    type: DATA_UPDATE_PREPAIDCARDS,
+  });
+};
+
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
   assetPricesFromUniswap: {},

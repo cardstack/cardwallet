@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/core';
+import { InteractionManager } from 'react-native';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   getOrderId,
@@ -12,7 +15,6 @@ import {
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
 import { getTokenMetadata } from '@rainbow-me/utils';
 import logger from 'logger';
-import { Network } from '@rainbow-me/networkTypes';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { useAuthToken } from '@cardstack/hooks';
 import {
@@ -31,6 +33,10 @@ import {
   useWorker,
 } from '@cardstack/utils';
 import { PrepaidCardCustomization } from '@cardstack/types';
+import { addNewPrepaidCard } from '@rainbow-me/redux/data';
+import { Network } from '@rainbow-me/helpers/networkTypes';
+import Routes from '@rainbow-me/navigation/routesNames';
+import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-card-service';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
@@ -50,7 +56,9 @@ export interface Card {
 }
 
 export default function useBuyPrepaidCard() {
-  const [order, setOrder] = useState<string>('');
+  const { goBack, navigate } = useNavigation();
+  const dispatch = useDispatch();
+
   const { accountAddress, network } = useAccountSettings();
 
   const hubURL = getHubUrl(network);
@@ -62,6 +70,7 @@ export default function useBuyPrepaidCard() {
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
+  const [order, setOrder] = useState<string>('');
   const [card, setCard] = useState<CardAttrs>();
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
   const [sku, setSku] = useState<string>('');
@@ -73,16 +82,51 @@ export default function useBuyPrepaidCard() {
     setCustodialWalletData,
   ] = useState<CustodialWallet>();
 
+  const updatePrepaidCardsState = useCallback(
+    async (address: string) => {
+      try {
+        const newPrepaidCard = await getPrepaidCardByAddress(address);
+
+        if (newPrepaidCard) {
+          await dispatch(addNewPrepaidCard(newPrepaidCard));
+        }
+      } catch (e) {
+        logger.sentry('Error updating card on state');
+      }
+    },
+    [dispatch]
+  );
+
+  const onSuccessAlertPress = useCallback(() => {
+    goBack();
+
+    InteractionManager.runAfterInteractions(() => {
+      navigate(Routes.WALLET_SCREEN);
+    });
+  }, [goBack, navigate]);
+
   useEffect(() => {
     const orderStatusPolling = setInterval(async () => {
       if (wyreOrderId) {
         const orderData = await getOrder(hubURL, authToken, wyreOrderId);
-        const status = orderData?.attributes?.status;
+
+        const status = orderData?.attributes.status;
+        const prepaidCardAddress = orderData?.prepaidCardAddress;
 
         if (status === 'complete') {
+          if (prepaidCardAddress) {
+            await updatePrepaidCardsState(prepaidCardAddress);
+          }
+
           setIsLoading(false);
+
           Alert({
-            buttons: [{ text: 'Okay' }],
+            buttons: [
+              {
+                text: 'Okay',
+                onPress: onSuccessAlertPress,
+              },
+            ],
             message: 'Prepaid card purchased successfully',
           });
 
@@ -92,7 +136,16 @@ export default function useBuyPrepaidCard() {
     }, 2000);
 
     return () => clearInterval(orderStatusPolling);
-  }, [authToken, hubURL, wyreOrderId]);
+  }, [
+    authToken,
+    dispatch,
+    goBack,
+    hubURL,
+    navigate,
+    onSuccessAlertPress,
+    updatePrepaidCardsState,
+    wyreOrderId,
+  ]);
 
   const {
     isLoading: isInventoryLoading,
