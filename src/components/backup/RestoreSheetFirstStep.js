@@ -39,7 +39,7 @@ export default function RestoreSheetFirstStep({
           size: 25,
         }}
         onPress={onManualRestore}
-        subText="Use the private secret phare for your crypto account"
+        subText="Use the private secret phrase for your crypto account"
         title="Import via secret recovery phrase"
       />
     </Container>
