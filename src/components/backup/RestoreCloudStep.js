@@ -96,21 +96,24 @@ export default function RestoreCloudStep({ userData }) {
   return (
     <BackupSheetKeyboardLayout
       footer={
-        <Button
-          disabled={!validPassword}
-          iconProps={
-            !incorrectPassword
-              ? {
-                  iconSize: 'medium',
-                  marginRight: 3,
-                  name: 'refresh-2',
-                }
-              : null
-          }
-          onPress={onPasswordSubmit}
-        >
-          {label}
-        </Button>
+        <Container>
+          <Button
+            disabled={!validPassword}
+            iconProps={
+              !incorrectPassword
+                ? {
+                    iconSize: 'large',
+                    stroke: validPassword ? 'black' : undefined,
+                    marginRight: 3,
+                    name: 'refresh',
+                  }
+                : null
+            }
+            onPress={onPasswordSubmit}
+          >
+            {label}
+          </Button>
+        </Container>
       }
     >
       <Container

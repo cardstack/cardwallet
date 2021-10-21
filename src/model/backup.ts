@@ -1,10 +1,6 @@
 import { captureException } from '@sentry/react-native';
 import { endsWith, forEach, map } from 'lodash';
-import {
-  Options,
-  requestSharedWebCredentials,
-  setSharedWebCredentials,
-} from 'react-native-keychain';
+import { ACCESSIBLE, Options } from 'react-native-keychain';
 import {
   CLOUD_BACKUP_ERRORS,
   encryptAndSaveDataToCloud,
@@ -14,6 +10,7 @@ import WalletBackupTypes from '../helpers/walletBackupTypes';
 import WalletTypes from '../helpers/walletTypes';
 import {
   allWalletsKey,
+  iCloudKey,
   privateKeyKey,
   seedPhraseKey,
   selectedWalletKey,
@@ -223,30 +220,26 @@ export async function saveBackupPassword(
 ): Promise<void> {
   try {
     if (Device.isIOS) {
-      await setSharedWebCredentials(
-        'cardstack.com',
-        'Backup Password',
-        password
-      );
+      await keychain.saveString(iCloudKey, password, {
+        accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
+      });
     }
   } catch (e) {
-    logger.sentry('Error while backing up password');
+    logger.sentry('Error while backing up password', e);
     captureException(e);
   }
 }
 
 // Attempts to fetch the password to decrypt the backup from the iCloud keychain
-export async function fetchBackupPassword(): Promise<null | BackupPassword> {
+export async function fetchBackupPassword() {
   if (Device.isAndroid) {
     return null;
   }
 
   try {
-    const results = await requestSharedWebCredentials();
-    if (results) {
-      return results.password as BackupPassword;
-    }
-    return null;
+    const password = (await keychain.loadString(iCloudKey)) || null;
+
+    return password;
   } catch (e) {
     logger.sentry('Error while fetching backup password', e);
     captureException(e);

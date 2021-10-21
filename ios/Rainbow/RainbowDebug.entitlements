@@ -6,8 +6,6 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:cardpay.page.link</string>
-		<string>webcredentials:cardstack.com</string>
 		<string>applinks:wallet.cardstack.com</string>
 		<string>applinks:wallet-staging.stack.cards</string>
 	</array>

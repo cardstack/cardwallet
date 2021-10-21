@@ -62,7 +62,7 @@ export const checkIsValidAddressOrDomain = async address => {
  * @param  {String} seed phrase mnemonic
  * @return {Boolean}
  */
-const isValidSeedPhrase = seedPhrase => {
+export const isValidSeedPhrase = seedPhrase => {
   const sanitizedSeedPhrase = sanitizeSeedPhrase(seedPhrase);
   return (
     sanitizedSeedPhrase.split(' ').length >= 12 &&

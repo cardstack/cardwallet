@@ -85,14 +85,14 @@ export const getAccountEmptyState = (accountAddress, network) =>
 
 /**
  * @desc save account empty state
- * @param  {Boolean}    [val]
+ * @param  {Boolean}  [isEmpty]
  * @param  {String}   [address]
  * @param  {String}   [network]
  */
-export const saveAccountEmptyState = (val, accountAddress, network) =>
+export const saveAccountEmptyState = (isEmpty, accountAddress, network) =>
   saveAccountLocal(
     ACCOUNT_EMPTY,
-    val,
+    isEmpty,
     accountAddress,
     network,
     accountEmptyVersion

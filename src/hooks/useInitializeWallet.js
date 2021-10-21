@@ -37,14 +37,14 @@ export default function useInitializeWallet() {
   const providerUrl = web3Provider?.connection?.url;
 
   const initializeWallet = useCallback(
-    async (
-      seedPhrase,
+    async ({
+      seedPhrase = undefined,
       color = null,
       name = null,
       shouldRunMigrations = false,
       overwrite = false,
-      checkedWallet = null
-    ) => {
+      checkedWallet = null,
+    } = {}) => {
       try {
         logger.sentry('Start wallet setup');
 
@@ -54,12 +54,13 @@ export default function useInitializeWallet() {
         const isImporting = !!seedPhrase;
         logger.sentry('isImporting?', isImporting);
 
+        // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
         await Promise.all([
           loadCoingeckoCoins(),
           loadCurrencyConversionRates(),
         ]);
 
-        if (shouldRunMigrations && !seedPhrase) {
+        if (shouldRunMigrations && !isImporting) {
           logger.sentry('shouldRunMigrations && !seedPhrase? => true');
           await dispatch(walletsLoadState());
           logger.sentry('walletsLoadState call #1');
@@ -92,25 +93,17 @@ export default function useInitializeWallet() {
           walletAddress,
         });
 
-        if (seedPhrase || isNew) {
+        if (isImporting || isNew) {
           logger.sentry('walletsLoadState call #2');
           await dispatch(walletsLoadState());
         }
 
         if (isNil(walletAddress)) {
           logger.sentry('walletAddress is nil');
-          Alert.alert(
-            'Import failed due to an invalid private key. Please try again.'
-          );
           if (!isImporting) {
             dispatch(appStateUpdate({ walletReady: true }));
           }
           return null;
-        }
-
-        if (!(isNew || isImporting)) {
-          await loadGlobalData();
-          logger.sentry('loaded global data...');
         }
 
         await dispatch(settingsUpdateAccountAddress(walletAddress));
@@ -118,6 +111,8 @@ export default function useInitializeWallet() {
 
         // Newly created / imported accounts have no data in localstorage
         if (!(isNew || isImporting)) {
+          await loadGlobalData();
+          logger.sentry('loaded global data...');
           await loadAccountData(network);
           logger.sentry('loaded account data', network);
         }

@@ -1,6 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { isValidAddress } from 'ethereumjs-util';
 import { keys } from 'lodash';
 import React, {
   useCallback,
@@ -9,8 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Alert, InteractionManager, StatusBar } from 'react-native';
-import { IS_TESTING } from 'react-native-dotenv';
+import { InteractionManager, StatusBar } from 'react-native';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import styled from 'styled-components';
 
@@ -23,14 +21,11 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import NetworkTypes, { networkTypes } from '../helpers/networkTypes';
 import { Button, Input, Text } from '@cardstack/components';
-import { resolveUnstoppableDomain } from '@rainbow-me/handlers/web3';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import {
-  isENSAddressFormat,
-  isUnstoppableAddressFormat,
+  isValidSeedPhrase,
   isValidWallet,
 } from '@rainbow-me/helpers/validators';
-import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import {
   useAccountSettings,
@@ -38,14 +33,12 @@ import {
   useDimensions,
   useInitializeWallet,
   useInvalidPaste,
-  useIsWalletEthZero,
   useKeyboardHeight,
   useMagicAutofocus,
   usePrevious,
-  useTimeout,
   useWallets,
 } from '@rainbow-me/hooks';
-import { Navigation, useNavigation } from '@rainbow-me/navigation';
+import { useNavigation } from '@rainbow-me/navigation';
 import { sheetVerticalOffset } from '@rainbow-me/navigation/effects';
 import Routes from '@rainbow-me/routes';
 import { borders, padding } from '@rainbow-me/styles';
@@ -105,39 +98,19 @@ const Sheet = styled(Column).attrs({
   z-index: 1;
 `;
 
-const placeholderBasedOnChain = chainName => {
-  switch (chainName) {
-    case networkTypes.kovan:
-      return 'Enter seed phrase, private key, Kovan address, or Kovan ENS name';
-    case networkTypes.mainnet:
-      return 'Enter seed phrase, private key, Ethereum address, or ENS name';
-    case networkTypes.sokol:
-      return 'Enter seed phrase, private key, or Sokol address';
-    case networkTypes.xdai:
-      return 'Enter seed phrase, private key, or xDai address';
-    default:
-      return 'Enter seed phrase, private key, Ethereum address, or ENS name';
-  }
-};
-
 export default function ImportSeedPhraseSheet() {
-  const { accountAddress, network } = useAccountSettings();
-  const { selectedWallet, setIsWalletLoading, wallets } = useWallets();
+  const { accountAddress } = useAccountSettings();
+  const { setIsWalletLoading, wallets } = useWallets();
   const { getClipboard, hasClipboardData, clipboard } = useClipboard();
   const { onInvalidPaste } = useInvalidPaste();
   const { isSmallPhone } = useDimensions();
   const keyboardHeight = useKeyboardHeight();
   const { goBack, navigate, replace, setParams } = useNavigation();
   const initializeWallet = useInitializeWallet();
-  const isWalletEthZero = useIsWalletEthZero();
   const [isImporting, setImporting] = useState(false);
   const [seedPhrase, setSeedPhrase] = useState('');
-  const [color, setColor] = useState(null);
-  const [name, setName] = useState(null);
   const [busy, setBusy] = useState(false);
   const [checkedWallet, setCheckedWallet] = useState(null);
-  const [resolvedAddress, setResolvedAddress] = useState(null);
-  const [startAnalyticsTimeout] = useTimeout();
   const wasImporting = usePrevious(isImporting);
 
   const inputRef = useRef(null);
@@ -158,9 +131,9 @@ export default function ImportSeedPhraseSheet() {
     [accountAddress, clipboard, hasClipboardData]
   );
 
-  const isSecretValid = useMemo(() => {
-    return seedPhrase !== accountAddress && isValidWallet(seedPhrase);
-  }, [accountAddress, seedPhrase]);
+  const isSecretValid = useMemo(() => isValidSeedPhrase(seedPhrase), [
+    seedPhrase,
+  ]);
 
   const handleSetImporting = useCallback(
     newImportingState => {
@@ -178,6 +151,66 @@ export default function ImportSeedPhraseSheet() {
     [isImporting]
   );
 
+  const handleImportAccount = useCallback(
+    async ({ name = null, color = null }) => {
+      handleSetImporting(true);
+
+      if (!wasImporting) {
+        const input = sanitizeSeedPhrase(seedPhrase);
+
+        const previousWalletCount = keys(wallets).length;
+        const isFreshWallet = previousWalletCount === 0;
+
+        try {
+          const wallet = await initializeWallet({
+            seedPhrase: input,
+            color,
+            name: name || '',
+            checkedWallet,
+          });
+
+          handleSetImporting(false);
+          // Early return to not dismiss the sheet on error
+          if (!wallet) return;
+
+          InteractionManager.runAfterInteractions(async () => {
+            // Fresh imported wallet
+            if (isFreshWallet) {
+              // Dismisses ImportSeedPhraseSheet
+              goBack();
+              // Replaces bc no route exist yet
+              replace(Routes.SWIPE_LAYOUT, {
+                params: { initialized: true },
+                screen: Routes.WALLET_SCREEN,
+              });
+            } else {
+              navigate(Routes.WALLET_SCREEN, {
+                initialized: true,
+              });
+            }
+          });
+        } catch (error) {
+          handleSetImporting(false);
+          logger.error('error importing seed phrase: ', error);
+          setTimeout(() => {
+            inputRef.current?.focus();
+          }, 100);
+        }
+      }
+    },
+    [
+      checkedWallet,
+      goBack,
+      handleSetImporting,
+      initializeWallet,
+      navigate,
+      replace,
+      seedPhrase,
+      wallets,
+      wasImporting,
+    ]
+  );
+
   const showWalletProfileModal = useCallback(
     name => {
       navigate(Routes.MODAL_SCREEN, {
@@ -185,17 +218,13 @@ export default function ImportSeedPhraseSheet() {
         additionalPadding: true,
         asset: [],
         isNewProfile: true,
-        onCloseModal: ({ color, name }) => {
-          if (color !== null) setColor(color);
-          if (name) setName(name);
-          handleSetImporting(true);
-        },
+        onCloseModal: handleImportAccount,
         profile: { name },
         type: 'wallet_profile',
         withoutStatusBar: true,
       });
     },
-    [handleSetImporting, navigate]
+    [handleImportAccount, navigate]
   );
 
   const handlePressImportButton = useCallback(async () => {
@@ -207,76 +236,22 @@ export default function ImportSeedPhraseSheet() {
       NetworkTypes.mainnet
     );
 
-    let name = null;
-    // Validate ENS
-    if (isENSAddressFormat(input)) {
-      try {
-        const address = await mainnetProvider.resolveName(input);
-        if (!address) {
-          Alert.alert('This is not a valid ENS name');
-          return;
-        }
-        setResolvedAddress(address);
-        name = input;
-        showWalletProfileModal(name);
-      } catch (e) {
-        Alert.alert(
-          'Sorry, we cannot add this ENS name at this time. Please try again later!'
-        );
-        return;
-      }
-      // Look up ENS for 0x address
-    } else if (isUnstoppableAddressFormat(input)) {
-      try {
-        const address = await resolveUnstoppableDomain(input);
-        if (!address) {
-          Alert.alert('This is not a valid Unstoppable name');
-          return;
-        }
-        setResolvedAddress(address);
-        name = input;
-        showWalletProfileModal(name);
-      } catch (e) {
-        Alert.alert(
-          'Sorry, we cannot add this Unstoppable name at this time. Please try again later!'
-        );
-        return;
-      }
-    } else if (isValidAddress(input)) {
-      try {
-        const ens = mainnetProvider.lookupAddress
-          ? await mainnetProvider.lookupAddress(input)
-          : null;
-        if (ens && ens !== input) {
-          name = ens;
-        }
-        showWalletProfileModal(name);
-      } catch (error) {
-        console.log({ error });
-      }
-    } else {
-      try {
-        setBusy(true);
-        setTimeout(async () => {
-          const walletResult = await ethereumUtils.deriveAccountFromWalletInput(
-            input
-          );
-          setCheckedWallet(walletResult);
+    try {
+      setBusy(true);
+      const walletResult = await ethereumUtils.deriveAccountFromWalletInput(
+        input
+      );
 
-          const ens = mainnetProvider.lookupAddress
-            ? await mainnetProvider.lookupAddress(walletResult.address)
-            : null;
+      setCheckedWallet(walletResult);
 
-          if (ens && ens !== input) {
-            name = ens;
-          }
-          setBusy(false);
-          showWalletProfileModal(name);
-        }, 100);
-      } catch (error) {
-        logger.log('Error looking up ENS for imported HD type wallet', error);
-        setBusy(false);
-      }
+      const ens =
+        (await mainnetProvider.lookupAddress?.(walletResult.address)) || null;
+
+      setBusy(false);
+      showWalletProfileModal(ens);
+    } catch (error) {
+      logger.log('Error looking up ENS for imported HD type wallet', error);
+      setBusy(false);
     }
   }, [isSecretValid, seedPhrase, showWalletProfileModal]);
 
@@ -297,98 +272,13 @@ export default function ImportSeedPhraseSheet() {
   ]);
 
   useEffect(() => {
-    if (!wasImporting && isImporting) {
-      startAnalyticsTimeout(async () => {
-        const input = resolvedAddress
-          ? resolvedAddress
-          : sanitizeSeedPhrase(seedPhrase);
-
-        const previousWalletCount = keys(wallets).length;
-        initializeWallet(
-          input,
-          color,
-          name ? name : '',
-          false,
-          false,
-          checkedWallet
-        )
-          .then(success => {
-            handleSetImporting(false);
-            if (success) {
-              goBack();
-              InteractionManager.runAfterInteractions(async () => {
-                if (previousWalletCount === 0) {
-                  goBack();
-                  replace(Routes.SWIPE_LAYOUT, {
-                    params: { initialized: true },
-                    screen: Routes.WALLET_SCREEN,
-                  });
-                } else {
-                  goBack();
-                  navigate(Routes.WALLET_SCREEN, { initialized: true });
-                }
-
-                setTimeout(() => {
-                  // If it's not read only, show the backup sheet
-                  if (
-                    !(
-                      isENSAddressFormat(input) ||
-                      isUnstoppableAddressFormat(input) ||
-                      isValidAddress(input)
-                    )
-                  ) {
-                    IS_TESTING !== 'true' &&
-                      Navigation.handleAction(Routes.BACKUP_SHEET, {
-                        single: true,
-                        step: WalletBackupStepTypes.imported,
-                      });
-                  }
-                }, 1000);
-              });
-            } else {
-              // Wait for error messages then refocus
-              setTimeout(() => {
-                inputRef.current?.focus();
-                initializeWallet();
-              }, 100);
-            }
-          })
-          .catch(error => {
-            handleSetImporting(false);
-            logger.error('error importing seed phrase: ', error);
-            setTimeout(() => {
-              inputRef.current?.focus();
-              initializeWallet();
-            }, 100);
-          });
-      }, 50);
-    }
-  }, [
-    checkedWallet,
-    color,
-    isWalletEthZero,
-    handleSetImporting,
-    goBack,
-    initializeWallet,
-    isImporting,
-    name,
-    navigate,
-    replace,
-    resolvedAddress,
-    seedPhrase,
-    selectedWallet.id,
-    selectedWallet.type,
-    startAnalyticsTimeout,
-    wallets,
-    wasImporting,
-  ]);
-
-  useEffect(() => {
     setIsWalletLoading(
       isImporting ? walletLoadingStates.IMPORTING_WALLET : null
     );
   }, [isImporting, setIsWalletLoading]);
+
   const { colors } = useTheme();
+
   return (
     <Container testID="import-sheet">
       <StatusBar barStyle="dark-content" />
@@ -413,7 +303,7 @@ export default function ImportSeedPhraseSheet() {
             onChangeText={handleSetSeedPhrase}
             onFocus={handleFocus}
             onSubmitEditing={handlePressImportButton}
-            placeholder={placeholderBasedOnChain(network)}
+            placeholder="Enter seed phrase or secret recovery phrase"
             placeholderTextColor={colors.alpha(colors.blueGreyDark, 0.3)}
             ref={inputRef}
             returnKeyType="done"

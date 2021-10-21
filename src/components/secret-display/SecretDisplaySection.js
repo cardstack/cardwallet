@@ -91,7 +91,6 @@ export default function SecretDisplaySection({
                 }}
                 onPress={handlePressCopySeed}
                 variant="white"
-                width="100%"
               >
                 Copy to clipboard
               </Button>

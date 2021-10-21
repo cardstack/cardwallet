@@ -31,11 +31,7 @@ import { isNativeToken, normalizeTxHash } from '@cardstack/utils';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
 
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import {
-  DEFAULT_HD_PATH,
-  identifyWalletType,
-  WalletLibraryType,
-} from '@rainbow-me/model/wallet';
+import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
 import store from '@rainbow-me/redux/store';
 import { chains } from '@rainbow-me/references';
 import logger from 'logger';
@@ -257,20 +253,7 @@ const deriveAccountFromPrivateKey = privateKey => {
 };
 
 const deriveAccountFromWalletInput = input => {
-  const type = identifyWalletType(input);
-  if (type === WalletTypes.privateKey) {
-    return deriveAccountFromPrivateKey(input);
-  } else if (type === WalletTypes.readOnly) {
-    const ethersWallet = { address: addHexPrefix(input), privateKey: null };
-    return {
-      address: addHexPrefix(input),
-      isHDWallet: false,
-      root: null,
-      type: WalletTypes.readOnly,
-      wallet: ethersWallet,
-      walletType: WalletLibraryType.ethers,
-    };
-  }
+  // We only allow mnemonic derived account for now.
   return deriveAccountFromMnemonic(input);
 };
 

@@ -191,10 +191,10 @@ export const walletInit = async (
   checkedWallet = null,
   network: string
 ): Promise<WalletInitialized> => {
-  let walletAddress = null;
-  let isNew = false;
+  const isImportingWallet = !isEmpty(seedPhrase);
+
   // Importing a seedphrase
-  if (!isEmpty(seedPhrase)) {
+  if (isImportingWallet) {
     const wallet = await createWallet(
       seedPhrase,
       color,
@@ -202,19 +202,22 @@ export const walletInit = async (
       overwrite,
       checkedWallet
     );
-    walletAddress = wallet?.address;
-    return { isNew, walletAddress };
+    return { isNew: false, walletAddress: wallet?.address };
   }
 
-  walletAddress = await loadAddress();
+  // If it's not importing, check if a wallet already exists
+  const storedWalletAddress = await loadAddress();
 
-  if (!walletAddress) {
-    const wallet = await createWallet();
-    walletAddress = wallet?.address;
-    isNew = true;
-    await saveAccountEmptyState(true, walletAddress?.toLowerCase(), network);
+  if (storedWalletAddress) {
+    return { isNew: false, walletAddress: storedWalletAddress };
   }
-  return { isNew, walletAddress };
+
+  // if no wallet, create a new one
+  const wallet = await createWallet();
+  const walletAddress = wallet?.address;
+  await saveAccountEmptyState(true, walletAddress?.toLowerCase(), network);
+
+  return { isNew: true, walletAddress };
 };
 
 export const loadWallet = async (): Promise<null | Wallet> => {
@@ -498,7 +501,9 @@ export const createWallet = async (
     logger.sentry('Generating a new seed phrase');
   }
   const walletSeed = seed || generateMnemonic();
+
   let addresses: RainbowAccount[] = [];
+
   try {
     let wasLoading = false;
     const { dispatch } = store;
@@ -507,19 +512,23 @@ export const createWallet = async (
       dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
     }
 
+    // Wallet can be checked while importing,
+    // if it's already checked use that info, otherwise ran the check here
     const {
       isHDWallet,
       type,
       root,
       wallet: walletResult,
-      address,
+      address: walletAddress,
       walletType,
     } =
       checkedWallet ||
       (await ethereumUtils.deriveAccountFromWalletInput(walletSeed));
+
     let pkey = walletSeed;
+
     if (!walletResult) return null;
-    const walletAddress = address;
+
     if (isHDWallet) {
       pkey = addHexPrefix(
         (walletResult as LibWallet).getPrivateKey().toString('hex')
@@ -550,18 +559,7 @@ export const createWallet = async (
 
       existingWalletId = alreadyExistingWallet?.id;
 
-      // Don't allow adding a readOnly wallet that you have already visible
-      // or a private key that you already have visible as a seed or mnemonic
-      const isPrivateKeyOverwritingSeedMnemonic =
-        type === EthereumWalletType.privateKey &&
-        (alreadyExistingWallet?.type === EthereumWalletType.seed ||
-          alreadyExistingWallet?.type === EthereumWalletType.mnemonic);
-      if (
-        !overwrite &&
-        alreadyExistingWallet &&
-        (type === EthereumWalletType.readOnly ||
-          isPrivateKeyOverwritingSeedMnemonic)
-      ) {
+      if (!overwrite && alreadyExistingWallet) {
         setTimeout(
           () =>
             Alert.alert(
@@ -639,6 +637,7 @@ export const createWallet = async (
     }
     logger.sentry('[createWallet] - saved private key');
 
+    // Adds an account
     addresses.push({
       address: walletAddress,
       avatar: null,
@@ -780,17 +779,20 @@ export const createWallet = async (
     logger.sentry('[createWallet] - saveAllWallets');
 
     if (walletResult && walletAddress) {
-      const ethersWallet =
-        walletType === WalletLibraryType.ethers
-          ? (walletResult as Wallet)
-          : new Wallet(pkey);
+      // bip39 are derived from mnemioc
+      // ethers are derived from privateKey
+      const createdWallet =
+        walletType === WalletLibraryType.bip39
+          ? new Wallet(pkey)
+          : (walletResult as Wallet);
+
       if (wasLoading) {
         setTimeout(() => {
           dispatch(setIsWalletLoading(null));
         }, 2000);
       }
 
-      return ethersWallet;
+      return createdWallet;
     }
     return null;
   } catch (error) {
