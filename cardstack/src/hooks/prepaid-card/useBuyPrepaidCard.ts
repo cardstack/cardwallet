@@ -287,6 +287,7 @@ export default function useBuyPrepaidCard() {
         address: card?.['issuing-token-symbol'],
         value: amount.toString(),
         depositAddress: custodialWalletData?.attributes['deposit-address'],
+        sourceCurrency: nativeCurrency,
       });
     } catch (e) {
       Alert({
