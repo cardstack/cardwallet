@@ -21,6 +21,7 @@ import logger from 'logger';
 import { isMainnet } from '@cardstack/utils/cardpay-utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
+import { decimalFixingConverter } from '@cardstack/utils/currency-utils';
 
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
 
@@ -97,8 +98,12 @@ export const showApplePayRequest = async (
   network: Network,
   sourceCurrency: string
 ) => {
-  const feeAmount = subtract(sourceAmountWithFees, sourceAmount);
-  const networkFee = subtract(feeAmount, purchaseFee);
+  const feeAmount = decimalFixingConverter(
+    subtract(sourceAmountWithFees, sourceAmount)
+  );
+
+  const networkFee = decimalFixingConverter(subtract(feeAmount, purchaseFee));
+  const fixedSourceAmount = decimalFixingConverter(sourceAmount);
 
   const merchantIdentifier = isMainnet(network)
     ? MERCHANT_ID
@@ -119,7 +124,7 @@ export const showApplePayRequest = async (
   ];
 
   const paymentDetails = getWyrePaymentDetails(
-    sourceAmount,
+    fixedSourceAmount,
     destCurrency,
     networkFee,
     purchaseFee,
