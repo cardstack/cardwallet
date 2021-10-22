@@ -28,11 +28,16 @@ export const useCardstackMainScreens = (Stack: any) =>
 export const useCardstackGlobalScreens = (Stack: any) =>
   getScreens(GlobalRoutes, GlobalScreens, Stack);
 
+const defaulLoadingtMessage = {
+  title: 'Processing Transaction',
+  subTitle: `This will take approximately\n10-15 seconds`,
+};
+
 export const useLoadingOverlay = () => {
   const { navigate, goBack } = useNavigation();
 
   const showLoadingOverlay = useCallback(
-    ({ title, subTitle }) => {
+    ({ title, subTitle } = defaulLoadingtMessage) => {
       navigate(MainRoutes.LOADING_OVERLAY, {
         title,
         subTitle,

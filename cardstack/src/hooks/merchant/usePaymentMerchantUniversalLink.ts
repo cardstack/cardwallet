@@ -94,10 +94,7 @@ export const usePaymentMerchantUniversalLink = () => {
         network: networkName,
       });
 
-      showLoadingOverlay({
-        title: 'Processing Transaction',
-        subTitle: `This will take approximately\n10-15 seconds`,
-      });
+      showLoadingOverlay();
 
       const prepaidCardInstance: PrepaidCard = await getSDK(
         'PrepaidCard',
