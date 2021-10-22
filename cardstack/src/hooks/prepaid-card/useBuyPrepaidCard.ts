@@ -129,7 +129,8 @@ export default function useBuyPrepaidCard() {
                 onPress: onSuccessAlertPress,
               },
             ],
-            message: 'Prepaid card purchased successfully',
+            title: 'Success',
+            message: 'Your Prepaid Card has arrived!',
           });
         }
       }
