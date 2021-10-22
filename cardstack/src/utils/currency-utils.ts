@@ -78,3 +78,6 @@ export const nativeCurrencyToSpend = (
     amount: spendAmount,
   };
 };
+
+export const decimalFixingConverter = (value: string) =>
+  Number(value).toFixed(2).toString();

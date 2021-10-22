@@ -287,7 +287,8 @@ export default function useBuyPrepaidCard() {
           depositAddress,
           currency,
           network,
-          reservationId
+          reservationId,
+          sourceCurrency
         );
 
         if (orderId) {
