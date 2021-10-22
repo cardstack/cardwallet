@@ -18,7 +18,6 @@ import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { SlackSheet } from '@rainbow-me/components/sheet';
 import { Inventory } from '@cardstack/services';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
-import { LoadingOverlay } from '@rainbow-me/components/modal';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 import Routes from '@rainbow-me/routes';
 
@@ -34,7 +33,6 @@ const DEFAULT_CARD_CONFIG = {
 const BuyPrepaidCard = () => {
   const {
     onSelectCard,
-    isLoading,
     card,
     handlePurchase,
     isInventoryLoading,
@@ -69,11 +67,6 @@ const BuyPrepaidCard = () => {
 
   return (
     <Container backgroundColor="backgroundBlue" flex={1}>
-      {isLoading ? (
-        <LoadingOverlay
-          title={`Processing Transaction \nThis will take approximately \n10-15 seconds`}
-        />
-      ) : null}
       <SlackSheet
         backgroundColor="transparent"
         renderHeader={() => (
