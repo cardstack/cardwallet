@@ -22,6 +22,7 @@ jest.mock('@react-navigation/native', () => ({
 jest.mock('@rainbow-me/hooks', () => ({
   useWallets: () => ({ selectedWallet: 'fooSelectedWallet' }),
   useAssetListData: () => ({ isLoadingAssets: false }),
+  useAccountSettings: () => ({ accountAddress: 'foo' }),
 }));
 
 jest.mock('@rainbow-me/redux/hooks', () => ({
