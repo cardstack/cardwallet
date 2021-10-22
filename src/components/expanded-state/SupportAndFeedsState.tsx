@@ -1,99 +1,97 @@
-import { useNavigation } from '@react-navigation/core';
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { FlatList } from 'react-native';
 import { SlackSheet } from '../sheet';
 import { Container, Text } from '@cardstack/components';
-import { screenHeight } from '@cardstack/utils';
 import { supportedCountries } from '@rainbow-me/references/wyre';
 
-const CHART_HEIGHT = screenHeight * 0.85;
+type Country = keyof typeof supportedCountries;
+const countriesKeys = Object.keys(supportedCountries);
 
-const countries = Object.keys(supportedCountries);
+const strings = {
+  header: `Support & Fees`,
+  activation: {
+    title: 'Activation Fee',
+    faceValueList: `- 2.9% of Facevalue + $.30 ($5 min) USA\n- 3.9% of Facevalue + $.30 ($5 min) International`,
+    limits: {
+      usa: {
+        title: 'USA: ',
+        info: '$500 per week max, $5000 per year max',
+      },
+      international: {
+        title: 'International: ',
+        info: '$1,000 per week  max equivalent, $7,500 yearly max equivalent',
+      },
+    },
+    footerInfo: `Card Pay does not currently work in NY & TX\nWyre currently only supports Visa or Mastercard`,
+  },
+  supportedCountriesTitle: 'Supported Countries',
+};
 
-const SupportedCountriesList = () => {
-  return useMemo(
-    () => (
-      <Container flexDirection="row" justifyContent="space-between">
-        <Container>
-          {countries
-            .filter((_, index) => index < countries.length / 2)
-            .map(item => (
-              <Text key={item} marginBottom={4}>
-                {
-                  supportedCountries[item as keyof typeof supportedCountries]
-                    .name
-                }{' '}
-                ({item as keyof typeof supportedCountries})
-              </Text>
-            ))}
-        </Container>
-        <Container>
-          {countries
-            .filter((_, index) => index > countries.length / 2)
-            .map(item => (
-              <Text key={item} marginBottom={4}>
-                {
-                  supportedCountries[item as keyof typeof supportedCountries]
-                    .name
-                }{' '}
-                ({item as keyof typeof supportedCountries})
-              </Text>
-            ))}
-        </Container>
+const SupportAndFeedsState = () => {
+  const renderItem = useCallback(
+    ({ item: country }) => (
+      <Container flex={1} marginBottom={2}>
+        <Text>
+          {`${supportedCountries[country as Country].name} (${country})`}
+        </Text>
       </Container>
     ),
     []
   );
-};
 
-export default function SupportAndFeedsState() {
-  const { setOptions } = useNavigation();
-  useEffect(() => {
-    setOptions({
-      longFormHeight: CHART_HEIGHT,
-    });
-  }, [setOptions]);
-
+  // Workaround to avoid not dismiss modal
   return useMemo(
     () => (
       <SlackSheet scrollEnabled>
-        <Container padding={6}>
-          <Container alignItems="center" paddingBottom={12}>
-            <Text color="black" fontWeight="bold" size="medium">
-              Support & Fees
-            </Text>
+        <Container marginBottom={12} padding={6}>
+          <Text
+            color="black"
+            fontWeight="bold"
+            paddingBottom={12}
+            size="medium"
+            textAlign="center"
+          >
+            {strings.header}
+          </Text>
+          <SectionHeaderText text={strings.activation.title} />
+          <Text>{strings.activation.faceValueList}</Text>
+          <Container paddingVertical={3}>
+            <TextBoldStart
+              info={strings.activation.limits.usa.info}
+              title={strings.activation.limits.usa.title}
+            />
+            <TextBoldStart
+              info={strings.activation.limits.international.info}
+              title={strings.activation.limits.international.title}
+            />
           </Container>
-          <Text color="black" fontSize={18} fontWeight="bold" marginBottom={3}>
-            Activation Fee
-          </Text>
-          <Text>- 2.9 % of Facevalue + $.30 ($5 min) USA</Text>
-          <Text marginBottom={6}>
-            - 3.9% of Facevalue + $.30 ($5 min) International
-          </Text>
-          <Text>
-            <Text color="black" fontWeight="bold">
-              USA:
-            </Text>{' '}
-            $500 per week max, $5000 per year max International: $1,000 per week
-            max equivalent, $7,5000 yearly max equivalent Cardpay does not
-            currently work in NY & TX
-          </Text>
-          <Text marginBottom={6}>
-            <Text color="black" fontWeight="bold">
-              International:
-            </Text>{' '}
-            $1,000 per week max equivalent, $7,5000 yearly max equivalent
-          </Text>
-          <Text marginBottom={12}>
-            Cardpay does not currently work in NY & TX
-          </Text>
-
-          <Text color="black" fontSize={18} fontWeight="bold" marginBottom={6}>
-            Supported Countries
-          </Text>
-          <SupportedCountriesList />
+          <Text marginBottom={10}>{strings.activation.footerInfo}</Text>
+          <SectionHeaderText text={strings.supportedCountriesTitle} />
+          <FlatList
+            data={countriesKeys}
+            numColumns={2}
+            renderItem={renderItem}
+          />
         </Container>
       </SlackSheet>
     ),
-    []
+    [renderItem]
   );
-}
+};
+
+const TextBoldStart = ({ title, info }: { title: string; info: string }) => (
+  <Text>
+    <Text color="black" fontWeight="bold">
+      {title}
+    </Text>
+    {info}
+  </Text>
+);
+
+const SectionHeaderText = ({ text }: { text: string }) => (
+  <Text color="black" fontSize={18} fontWeight="bold" marginBottom={4}>
+    {text}
+  </Text>
+);
+
+export default SupportAndFeedsState;
