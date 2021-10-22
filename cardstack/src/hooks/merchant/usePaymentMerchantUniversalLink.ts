@@ -14,7 +14,11 @@ import { useWorker } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
-import { useAssetListData, useWallets } from '@rainbow-me/hooks';
+import {
+  useAccountSettings,
+  useAssetListData,
+  useWallets,
+} from '@rainbow-me/hooks';
 import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
 import { useLoadingOverlay } from '@cardstack/navigation';
@@ -58,6 +62,7 @@ export const usePaymentMerchantUniversalLink = () => {
   const { isLoadingAssets } = useAssetListData();
 
   const { selectedWallet } = useWallets();
+  const { accountAddress } = useAccountSettings();
 
   const { isLoading, callback: getMerchantSafeData } = useWorker(async () => {
     const { infoDID: did } = (await getSafeData(
@@ -107,7 +112,9 @@ export const usePaymentMerchantUniversalLink = () => {
       const receipt = await prepaidCardInstance.payMerchant(
         merchantAddress,
         prepaidCardAddress,
-        updatedSpendAmount
+        updatedSpendAmount,
+        undefined,
+        { from: accountAddress }
       );
 
       onSuccess(receipt);
@@ -121,7 +128,13 @@ export const usePaymentMerchantUniversalLink = () => {
       // refetch all assets to sync
       await fetchAssetsBalancesAndPrices();
     },
-    [merchantAddress, prepaidCards.length]
+    [
+      merchantAddress,
+      prepaidCards.length,
+      accountAddress,
+      showLoadingOverlay,
+      selectedWallet,
+    ]
   );
 
   useEffect(() => {

@@ -6,10 +6,12 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { Network } from '@rainbow-me/networkTypes';
 import { useWorker } from '@cardstack/utils';
 import logger from 'logger';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 export const useAuthToken = (hubURL: string) => {
   const [authToken, setAuthToken] = useState<string>('');
   const { selectedWallet } = useWallets();
+  const { accountAddress } = useAccountSettings();
 
   const network = useRainbowSelector(
     state => state.settings.network
@@ -18,8 +20,8 @@ export const useAuthToken = (hubURL: string) => {
   const { callback: getAuthToken, error, isLoading } = useWorker(async () => {
     const web3 = await Web3Instance.get({ selectedWallet, network });
     const authAPI = await getSDK('HubAuth', web3, hubURL);
-    setAuthToken(await authAPI.authenticate());
-  }, [hubURL]);
+    setAuthToken(await authAPI.authenticate({ from: accountAddress }));
+  }, [hubURL, accountAddress, network]);
 
   useEffect(() => {
     getAuthToken();

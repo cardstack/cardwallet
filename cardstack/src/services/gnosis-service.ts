@@ -5,6 +5,7 @@ import {
   getSDK,
   MerchantSafe,
   PrepaidCardSafe,
+  Safe,
 } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
@@ -18,13 +19,51 @@ import { CurrencyConversionRates } from '@cardstack/types';
 import logger from 'logger';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { Navigation } from '@rainbow-me/navigation';
-import { MainRoutes } from '@cardstack/navigation';
+import { MainRoutes } from '@cardstack/navigation/routes';
+import { getSafesInstance } from '@cardstack/models/safes-providers';
+
+const normalizeSafesByType = (safes: Safe[]) =>
+  safes.reduce(
+    (
+      accum: {
+        depots: DepotSafe[];
+        merchantSafes: MerchantSafe[];
+        prepaidCards: PrepaidCardSafe[];
+      },
+      safe
+    ) => {
+      switch (safe.type) {
+        case 'prepaid-card':
+          return {
+            ...accum,
+            prepaidCards: [...accum.prepaidCards, safe],
+          };
+        case 'depot':
+          return {
+            ...accum,
+            depots: [...accum.depots, safe],
+          };
+        case 'merchant':
+          return {
+            ...accum,
+            merchantSafes: [...accum.merchantSafes, safe],
+          };
+        default:
+          return accum;
+      }
+    },
+    {
+      depots: [],
+      merchantSafes: [],
+      prepaidCards: [],
+    }
+  );
 
 export const fetchGnosisSafes = async (address: string) => {
   try {
-    const web3 = await Web3Instance.get();
-    const safesInstance = await getSDK('Safes', web3);
-    const safes = (await safesInstance.view(address)).safes;
+    const safesInstance = await getSafesInstance();
+
+    const safes = (await safesInstance?.view(address))?.safes || [];
 
     safes?.forEach(safe => {
       safe?.tokens.forEach(({ balance, token }) => {
@@ -34,40 +73,7 @@ export const fetchGnosisSafes = async (address: string) => {
       });
     });
 
-    const { depots, prepaidCards, merchantSafes } = safes.reduce(
-      (
-        accum: {
-          depots: DepotSafe[];
-          merchantSafes: MerchantSafe[];
-          prepaidCards: PrepaidCardSafe[];
-        },
-        safe
-      ) => {
-        if (safe.type === 'prepaid-card') {
-          return {
-            ...accum,
-            prepaidCards: [...accum.prepaidCards, safe],
-          };
-        } else if (safe.type === 'depot') {
-          return {
-            ...accum,
-            depots: [...accum.depots, safe],
-          };
-        } else if (safe.type === 'merchant') {
-          return {
-            ...accum,
-            merchantSafes: [...accum.merchantSafes, safe],
-          };
-        }
-
-        return accum;
-      },
-      {
-        depots: [],
-        merchantSafes: [],
-        prepaidCards: [],
-      }
-    );
+    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(safes);
 
     const extendedPrepaidCards = await Promise.all(
       prepaidCards.map(updatePrepaidCardWithCustomization)
@@ -238,10 +244,8 @@ export const addGnosisTokenPrices = async (
 };
 
 export const getSafeData = async (address: string) => {
-  const web3 = await Web3Instance.get();
+  const safesInstance = await getSafesInstance();
 
-  const safesInstance = await getSDK('Safes', web3);
-
-  const result = await safesInstance.viewSafe(address);
-  return result.safe;
+  const result = await safesInstance?.viewSafe(address);
+  return result?.safe;
 };

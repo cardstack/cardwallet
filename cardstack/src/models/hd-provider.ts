@@ -51,6 +51,4 @@ const HDProvider = {
   },
 };
 
-Object.freeze(HDProvider);
-
 export default HDProvider;

@@ -20,7 +20,7 @@ import Web3Instance from '@cardstack/models/web3-instance';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { sectionStyle } from '@cardstack/utils/layouts';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import { useWallets } from '@rainbow-me/hooks';
+import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -38,6 +38,8 @@ export default function UnclaimedRevenueExpandedState(props: {
   const { setOptions } = useNavigation();
   const [loading, setLoading] = useState(false);
   const { selectedWallet } = useWallets();
+  const { accountAddress } = useAccountSettings();
+
   const network = useRainbowSelector(
     state => state.settings.network
   ) as Network;
@@ -83,7 +85,9 @@ export default function UnclaimedRevenueExpandedState(props: {
         await revenuePool.claim(
           merchantSafe.address,
           token.tokenAddress,
-          claimAmount
+          claimAmount,
+          undefined,
+          { from: accountAddress }
         );
       });
 
@@ -98,7 +102,13 @@ export default function UnclaimedRevenueExpandedState(props: {
     }
 
     setLoading(false);
-  }, [merchantSafe.address, network, revenueBalances, selectedWallet]);
+  }, [
+    accountAddress,
+    merchantSafe.address,
+    network,
+    revenueBalances,
+    selectedWallet,
+  ]);
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
   const isDust = parseFloat(nativeAmount) < 0.01;
