@@ -167,8 +167,8 @@ export const AssetList = (props: AssetListProps) => {
     return <AssetListLoading />;
   }
 
-  if (isEmpty) {
-    return <AddFundsInterstitial network={network} />;
+  if (isEmpty && isLayer1(network)) {
+    return <AddFundsInterstitial />;
   }
 
   return (
