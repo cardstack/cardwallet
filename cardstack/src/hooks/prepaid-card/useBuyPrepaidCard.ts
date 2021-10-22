@@ -37,6 +37,7 @@ import { addNewPrepaidCard } from '@rainbow-me/redux/data';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import Routes from '@rainbow-me/navigation/routesNames';
 import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-card-service';
+import { useLoadingOverlay } from '@cardstack/navigation';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
@@ -60,6 +61,7 @@ export default function useBuyPrepaidCard() {
   const dispatch = useDispatch();
 
   const { accountAddress, network } = useAccountSettings();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const hubURL = getHubUrl(network);
 
@@ -74,7 +76,6 @@ export default function useBuyPrepaidCard() {
   const [card, setCard] = useState<CardAttrs>();
   const [inventoryData, setInventoryData] = useState<Inventory[]>();
   const [sku, setSku] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [wyreOrderId, setWyreOrderId] = useState<string>('');
 
   const [
@@ -110,6 +111,18 @@ export default function useBuyPrepaidCard() {
       if (wyreOrderId) {
         const orderData = await getOrder(hubURL, authToken, wyreOrderId);
 
+        if (!orderData) {
+          dismissLoadingOverlay();
+          clearInterval(orderStatusPolling);
+
+          Alert({
+            title: 'Error',
+            message: 'Something went wrong! Please try again.',
+          });
+
+          return;
+        }
+
         const status = orderData?.attributes.status;
         const prepaidCardAddress = orderData?.prepaidCardAddress;
 
@@ -120,7 +133,7 @@ export default function useBuyPrepaidCard() {
             await updatePrepaidCardsState(prepaidCardAddress);
           }
 
-          setIsLoading(false);
+          dismissLoadingOverlay();
 
           Alert({
             buttons: [
@@ -133,11 +146,12 @@ export default function useBuyPrepaidCard() {
           });
         }
       }
-    }, 2000);
+    }, 1000);
 
     return () => clearInterval(orderStatusPolling);
   }, [
     authToken,
+    dismissLoadingOverlay,
     dispatch,
     goBack,
     hubURL,
@@ -351,7 +365,7 @@ export default function useBuyPrepaidCard() {
 
     try {
       if (wyreOrderIdData) {
-        setIsLoading(true);
+        showLoadingOverlay();
 
         const wyreWalletId =
           custodialWalletData?.attributes['wyre-wallet-id'] || '';
@@ -394,7 +408,6 @@ export default function useBuyPrepaidCard() {
     order,
     hubURL,
     onSelectCard,
-    isLoading,
     card,
     setCard,
     handlePurchase,
