@@ -22,7 +22,6 @@ import { isMainnet } from '@cardstack/utils/cardpay-utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
 
-const SOURCE_CURRENCY_USD = 'USD';
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
 
 const getSecretKey = (network: Network) =>
@@ -96,7 +95,7 @@ export const showApplePayRequest = async (
   purchaseFee: string,
   sourceAmount: string,
   network: Network,
-  sourceCurrency = SOURCE_CURRENCY_USD
+  sourceCurrency: string
 ) => {
   const feeAmount = subtract(sourceAmountWithFees, sourceAmount);
   const networkFee = subtract(feeAmount, purchaseFee);
@@ -124,7 +123,8 @@ export const showApplePayRequest = async (
     destCurrency,
     networkFee,
     purchaseFee,
-    sourceAmountWithFees
+    sourceAmountWithFees,
+    sourceCurrency
   );
 
   const paymentOptions = {
@@ -161,7 +161,7 @@ export const getWalletOrderQuotation = async (
   destCurrency: string,
   accountAddress: string,
   network: Network,
-  sourceCurrency = SOURCE_CURRENCY_USD
+  sourceCurrency: string
 ) => {
   const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
 
@@ -207,7 +207,7 @@ export const reserveWyreOrder = async (
   accountAddress: string,
   network: Network,
   paymentMethod = null,
-  sourceCurrency: string = SOURCE_CURRENCY_USD
+  sourceCurrency: string
 ) => {
   const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
 
@@ -256,7 +256,8 @@ export const getOrderId = async (
   accountAddress: string,
   destCurrency: string,
   network: Network,
-  reservationId: string
+  reservationId: string,
+  sourceCurrency: string
 ) => {
   const ip = await publicIP();
 
@@ -268,7 +269,8 @@ export const getOrderId = async (
     destCurrency,
     network,
     reservationId,
-    ip
+    ip,
+    sourceCurrency
   );
 
   try {
@@ -329,7 +331,7 @@ const getWyrePaymentDetails = (
   networkFee: string,
   purchaseFee: string,
   totalAmount: number,
-  sourceCurrency: string = SOURCE_CURRENCY_USD
+  sourceCurrency: string
 ) => {
   const items = [
     {
@@ -382,7 +384,7 @@ const createPayload = (
   network: string,
   reservationId: string,
   ip: string,
-  sourceCurrency = SOURCE_CURRENCY_USD
+  sourceCurrency: string
 ) => {
   const dest = `ethereum:${accountAddress}`;
 
