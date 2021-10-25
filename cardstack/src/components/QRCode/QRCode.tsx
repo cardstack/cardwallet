@@ -19,6 +19,7 @@ interface QRCodeProps {
   logoHeight?: number;
   logoBackgroundTransparent?: boolean;
   logoBackgroundColor?: string;
+  correctLevel?: string;
 }
 
 export const QRCode = ({
@@ -29,6 +30,7 @@ export const QRCode = ({
   logoHeight = 40,
   logoBackgroundTransparent = false,
   logoBackgroundColor = '#fff',
+  correctLevel = EasyQRCode.CorrectLevel.M,
 }: QRCodeProps) => {
   const generateQRCode = (canvas: any) => {
     if (data && canvas !== null) {
@@ -43,6 +45,7 @@ export const QRCode = ({
         logoHeight,
         logoBackgroundTransparent,
         logoBackgroundColor,
+        correctLevel,
       };
 
       // Create QRCode Object

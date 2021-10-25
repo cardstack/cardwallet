@@ -44,6 +44,12 @@ const ChoosePrepaidCard = ({
 
   const networkName = getConstantByNetwork('name', network);
 
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+    spendAmount,
+    nativeCurrency,
+    currencyConversionRates
+  );
+
   const onSelect = useCallback(
     (item: PrepaidCardType) => {
       onSelectPrepaidCard(item);
@@ -83,7 +89,11 @@ const ChoosePrepaidCard = ({
       borderRadius={20}
       justifyContent="center"
     >
-      <Header spendAmount={spendAmount} onPressEditAmount={onPressEditAmount} />
+      <Header
+        spendAmount={spendAmount}
+        nativeBalanceDisplay={nativeBalanceDisplay}
+        onPressEditAmount={onPressEditAmount}
+      />
       <FlatList
         data={prepaidCards}
         removeClippedSubviews
@@ -103,9 +113,11 @@ const ChoosePrepaidCard = ({
 const Header = memo(
   ({
     spendAmount,
+    nativeBalanceDisplay,
     onPressEditAmount,
   }: {
     spendAmount: number;
+    nativeBalanceDisplay: string;
     onPressEditAmount: () => void;
   }) => (
     <Container
@@ -118,7 +130,7 @@ const Header = memo(
       <Text marginTop={4} weight="bold" size="body">
         Choose a Prepaid Card
       </Text>
-      <Text variant="subText" weight="bold" marginTop={3}>
+      <Text variant="subText" weight="bold" marginTop={3} marginBottom={1}>
         To Pay This Amount
       </Text>
       <Container width="100%" alignItems="center">
@@ -137,7 +149,10 @@ const Header = memo(
           <Text size="xxs">Edit Amount</Text>
         </Touchable>
       </Container>
-      <HorizontalDivider height={2} marginTop={4} marginVertical={0} />
+      <Container width="100%" alignItems="center">
+        <Text size="xxs">{nativeBalanceDisplay}</Text>
+      </Container>
+      <HorizontalDivider height={2} marginVertical={0} marginTop={1} />
     </Container>
   )
 );
