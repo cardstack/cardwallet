@@ -39,8 +39,8 @@ export const textVariants = {
   },
   welcomeScreen: {
     color: 'white',
-    fontSize: 21,
-    fontWeight: '600',
+    fontSize: 24,
+    fontWeight: '800',
     fontFamily: 'Karbon',
   },
   overGradient: {
