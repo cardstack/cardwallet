@@ -7,6 +7,7 @@ export const MainRoutes = {
   PAY_MERCHANT: 'PayMerchant',
   ERROR_FALLBACK_SCREEN: 'ErrorFallbackScreen',
   LOADING_OVERLAY: 'LoadingOverlay',
+  WELCOME_SCREEN: 'WelcomeScreen',
 } as const;
 
 export const GlobalRoutes = {

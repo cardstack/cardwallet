@@ -11,3 +11,4 @@ export { default as CurrencySelectionGlobalModal } from './CurrencySelectionGlob
 export { default as PaymentRequestExpandedState } from './PaymentRequest/PaymentRequestExpandedState';
 export { default as ErrorFallbackScreen } from './ErrorFallbackScreen';
 export { default as LoadingOverlayScreen } from './LoadingOverlayScreen';
+export { default as WelcomeScreen } from './WelcomeScreen/WelcomeScreen';

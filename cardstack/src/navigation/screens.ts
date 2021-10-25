@@ -13,6 +13,7 @@ import {
   SendSheetDepot,
   ShowQRCodeModal,
   TransactionConfirmation,
+  WelcomeScreen,
 } from '@cardstack/screen';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
@@ -49,6 +50,9 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   LOADING_OVERLAY: {
     component: LoadingOverlayScreen,
     options: { ...overlayPreset, gestureEnabled: false },
+  },
+  WELCOME_SCREEN: {
+    component: WelcomeScreen,
   },
 };
 
