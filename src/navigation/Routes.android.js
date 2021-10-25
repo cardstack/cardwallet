@@ -19,7 +19,6 @@ import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
 import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
-import WelcomeScreen from '../screens/WelcomeScreen';
 import WithdrawModal from '../screens/WithdrawModal';
 import WyreWebview from '../screens/WyreWebview';
 import ExchangeModalNavigator from './ExchangeModalNavigator';
@@ -211,7 +210,6 @@ function MainNavigator() {
         name={Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR}
         options={sheetPresetWithSmallGestureResponseDistance}
       />
-      <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
       <Stack.Screen
         component={AddCashFlowNavigator}
         name={Routes.WYRE_WEBVIEW_NAVIGATOR}

@@ -22,7 +22,6 @@ import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import SpendSheet from '../screens/SpendSheet';
 import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
 import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
-import WelcomeScreen from '../screens/WelcomeScreen';
 import WithdrawModal from '../screens/WithdrawModal';
 import ExchangeModalNavigator from './ExchangeModalNavigator';
 import { SwipeNavigator } from './SwipeNavigator';
@@ -148,7 +147,6 @@ function MainNavigator() {
       screenOptions={defaultScreenStackOptions}
     >
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
-      <Stack.Screen component={WelcomeScreen} name={Routes.WELCOME_SCREEN} />
       <Stack.Screen
         component={AvatarBuilder}
         name={Routes.AVATAR_BUILDER}

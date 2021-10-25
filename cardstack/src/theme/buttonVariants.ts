@@ -136,6 +136,12 @@ export const buttonVariants = {
   tertiary: { ...tertiary },
   dark,
   primary,
+  primaryWhite: {
+    ...primary,
+    textStyle: {
+      color: 'white',
+    },
+  },
   small,
   white,
   smallBlue: {
