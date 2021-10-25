@@ -4,7 +4,6 @@ import logger from 'logger';
 import { useGetPrepaidCardHistoryDataQuery } from '@cardstack/graphql';
 import { PrepaidCardCreationStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-creation-strategy';
 import { PrepaidCardPaymentStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-payment-strategy';
-import { PrepaidCardSplitStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-split-strategy';
 import { PrepaidCardTransferStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-transfer-strategy';
 
 export const usePrepaidCardTransactions = (prepaidCardAddress: string) => {
@@ -27,9 +26,9 @@ export const usePrepaidCardTransactions = (prepaidCardAddress: string) => {
   const prepaidCard = data?.safe?.prepaidCard;
 
   if (prepaidCard) {
-    const { splits, transfers, payments, creation } = prepaidCard;
+    const { transfers, payments, creation } = prepaidCard;
 
-    transactions = [...splits, ...transfers, ...payments, creation];
+    transactions = [...transfers, ...payments, creation];
   }
 
   if (error) {
@@ -43,7 +42,6 @@ export const usePrepaidCardTransactions = (prepaidCardAddress: string) => {
     networkStatus,
     fetchMore,
     transactionStrategies: [
-      PrepaidCardSplitStrategy,
       PrepaidCardCreationStrategy,
       PrepaidCardPaymentStrategy,
       PrepaidCardTransferStrategy,
