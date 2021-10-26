@@ -3,18 +3,18 @@ import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { useTransactionSections } from './use-transaction-sections';
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
-import { isLayer1 } from '@cardstack/utils';
+import { isLayer1, isLayer2 } from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
-import { Network, networkTypes } from '@rainbow-me/networkTypes';
+import { Network } from '@rainbow-me/networkTypes';
 import logger from 'logger';
 
-const useSokolTransactions = () => {
+const useLayer2Transactions = () => {
   const [accountAddress, network] = useRainbowSelector(state => [
     state.settings.accountAddress,
     state.settings.network,
   ]);
 
-  const isNotSokol = network !== networkTypes.sokol;
+  const isNotLayer2 = !isLayer2(network as Network);
 
   const {
     data,
@@ -24,7 +24,7 @@ const useSokolTransactions = () => {
     error,
   } = useGetAccountTransactionHistoryDataQuery({
     notifyOnNetworkStatusChange: true,
-    skip: isNotSokol,
+    skip: isNotLayer2,
     variables: {
       address: accountAddress,
       pageSize: TRANSACTION_PAGE_SIZE,
@@ -39,7 +39,7 @@ const useSokolTransactions = () => {
     logger.log(
       'Error getting full transactions',
       error,
-      isNotSokol,
+      isNotLayer2,
       accountAddress
     );
   }
@@ -73,7 +73,11 @@ export const useFullTransactionList = () => {
   ) as Network;
 
   const layer1Data = useAccountTransactions();
-  const layer2Data = useSokolTransactions();
+  const layer2Data = useLayer2Transactions();
+
+  if (isLayer2(network)) {
+    return layer2Data;
+  }
 
   if (isLayer1(network)) {
     return {
@@ -81,8 +85,6 @@ export const useFullTransactionList = () => {
       refetch: () => ({}),
       refetchLoading: false,
     };
-  } else if (network === networkTypes.sokol) {
-    return layer2Data;
   }
 
   return {

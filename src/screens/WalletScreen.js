@@ -31,7 +31,6 @@ import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { Container, SystemNotification, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { isLayer2, NOTIFICATION_KEY } from '@cardstack/utils';
-import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
