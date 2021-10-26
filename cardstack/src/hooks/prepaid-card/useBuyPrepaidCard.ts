@@ -25,6 +25,7 @@ import {
   Inventory,
   InventoryAttrs,
   makeReservation,
+  ReservationData,
   updateOrder,
 } from '@cardstack/services';
 import {
@@ -107,17 +108,21 @@ export default function useBuyPrepaidCard() {
   }, [goBack, navigate]);
 
   useEffect(() => {
+    const startTime = new Date().getTime();
+
     const orderStatusPolling = setInterval(async () => {
+      const currentTime = new Date().getTime();
+
       if (wyreOrderId) {
         const orderData = await getOrder(hubURL, authToken, wyreOrderId);
 
-        if (!orderData) {
+        if (!orderData || currentTime - startTime > 60000) {
           dismissLoadingOverlay();
           clearInterval(orderStatusPolling);
 
           Alert({
             title: 'Error',
-            message: 'Something went wrong! Please try again.',
+            message: `Something went wrong! Please try again. \nOrder Id: ${wyreOrderId}`,
           });
 
           return;
@@ -249,6 +254,14 @@ export default function useBuyPrepaidCard() {
       );
 
       if (!reservationId) {
+        logger.sentry('Error while making reservation on Wyre', {
+          value,
+          currency,
+          depositAddress,
+          network,
+          sourceCurrency,
+        });
+
         Alert({
           buttons: [{ text: 'Okay' }],
           message:
@@ -268,6 +281,14 @@ export default function useBuyPrepaidCard() {
       );
 
       if (!quotation) {
+        logger.sentry('Error while getting quotation on Wyre', {
+          value,
+          currency,
+          depositAddress,
+          network,
+          sourceCurrency,
+        });
+
         Alert({
           buttons: [{ text: 'Okay' }],
           message:
@@ -337,7 +358,7 @@ export default function useBuyPrepaidCard() {
       currencyConversionRates
     );
 
-    let reservation;
+    let reservation: ReservationData | undefined;
     let wyreOrderIdData;
 
     try {
@@ -358,19 +379,24 @@ export default function useBuyPrepaidCard() {
         depositAddress: custodialWalletData?.attributes['deposit-address'],
         sourceCurrency: nativeCurrency,
       });
-    } catch (e) {
+    } catch (error) {
+      logger.sentry('Error while make reservation', {
+        error,
+        reservationData: reservation,
+      });
+
       Alert({
         buttons: [{ text: 'Okay' }],
-        message: 'Purchase not completed',
+        message: `Purchase not completed \nReservation Id: ${reservation?.id}`,
       });
     }
+
+    const wyreWalletId =
+      custodialWalletData?.attributes['wyre-wallet-id'] || '';
 
     try {
       if (wyreOrderIdData) {
         showLoadingOverlay();
-
-        const wyreWalletId =
-          custodialWalletData?.attributes['wyre-wallet-id'] || '';
 
         const reservationId = reservation?.id || '';
 
@@ -386,12 +412,17 @@ export default function useBuyPrepaidCard() {
           setWyreOrderId(wyreOrderIdData);
         }
       }
-    } catch (e) {
-      logger.sentry('Error updating order', e);
+    } catch (error) {
+      logger.sentry('Error updating order', {
+        error,
+        reservationData: reservation,
+        wyreWalletId,
+        wyreOrderIdData,
+      });
 
       Alert({
         buttons: [{ text: 'Okay' }],
-        message: 'Purchase not completed',
+        message: `Purchase not completed \nReservation Id: ${reservation?.id}`,
       });
     }
   }, [

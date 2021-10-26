@@ -87,7 +87,7 @@ const BuyPrepaidCard = () => {
             justifyContent="center"
           >
             <ApplePayButton
-              disabled={Object.keys(card || {}).length === 0}
+              disabled={card?.quantity === 0}
               onSubmit={handlePurchase}
               onDisabledPress={() => console.log('onDisablePress')}
             />
