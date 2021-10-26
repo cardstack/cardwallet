@@ -128,7 +128,7 @@
     "console-browserify": "^1.2.0",
     "constants-browserify": "^1.0.0",
     "crypto-js": "^4.0.0",
-    "date-fns": "^2.13.0",
+    "date-fns": "^2.25.0",
     "delay": "^4.3.0",
     "did-resolver": "^3.1.0",
     "dns.js": "^1.0.1",

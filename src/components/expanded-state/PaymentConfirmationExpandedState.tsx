@@ -1,3 +1,4 @@
+import { ResponsiveValue } from '@shopify/restyle';
 import React, { useEffect, useMemo } from 'react';
 import { SlackSheet } from '../sheet';
 import { BlockscoutButton, Container, Text } from '@cardstack/components';
@@ -6,6 +7,7 @@ import {
   TransactionRow,
   TransactionRowProps,
 } from '@cardstack/components/Transactions/TransactionBase';
+import { Theme } from '@cardstack/theme';
 import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
 import { dateFormatter, screenHeight } from '@cardstack/utils';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
@@ -41,18 +43,22 @@ const PaymentDetailsItem = ({
   textColor,
   name,
   info,
+  infoColor = 'blueText',
   isTimestamp = false,
+  isLocalTime = false,
 }: {
   title: string;
   color?: string;
   textColor?: string;
   info: any;
+  infoColor?: ResponsiveValue<keyof Theme['colors'], Theme>;
   name?: string;
   isTimestamp?: boolean;
+  isLocalTime?: boolean;
 }) => {
   return (
     <Container marginBottom={6} paddingHorizontal={6}>
-      <Text color="blueText" fontSize={13} marginBottom={2} weight="extraBold">
+      <Text color="blueText" marginBottom={2} size="xxs" weight="extraBold">
         {title}
       </Text>
       {name ? (
@@ -60,7 +66,7 @@ const PaymentDetailsItem = ({
           <Container flexDirection="row" marginBottom={1}>
             <Container flex={2} />
             <Container flex={8}>
-              <Text color="blueText" fontSize={10} weight="bold">
+              <Text color="blueText" size="smallest" weight="bold">
                 MERCHANT
               </Text>
             </Container>
@@ -83,8 +89,8 @@ const PaymentDetailsItem = ({
       <Container flexDirection="row" marginBottom={1}>
         <Container flex={2} />
         <Container flex={8}>
-          <Text color="blueText" fontSize={13}>
-            {isTimestamp ? dateFormatter(info) : info}
+          <Text color={infoColor} size="small">
+            {isTimestamp ? dateFormatter(info, isLocalTime) : info}
           </Text>
         </Container>
       </Container>
@@ -119,14 +125,20 @@ export default function PaymentConfirmationExpandedState(
           <Text marginBottom={10} size="medium">
             Payment Confirmation
           </Text>
-          <MerchantSectionCard merchantInfoDID={merchantInfo}>
-            <Container alignItems="center" paddingBottom={3}>
+          <MerchantSectionCard merchantInfoDID={merchantInfo} paddingBottom={5}>
+            <Container alignItems="center">
               <Text fontSize={40} fontWeight="700">
                 §{spendAmount || ''}
               </Text>
               <Text color="blueText" fontSize={12}>
                 {nativeBalanceDisplay || ''}
               </Text>
+
+              {timestamp ? (
+                <Text color="black" marginTop={4} size="medium" weight="bold">
+                  {dateFormatter(timestamp, true, 'MMM dd', 'h:mm a', ', ')}
+                </Text>
+              ) : null}
             </Container>
           </MerchantSectionCard>
           <Container marginBottom={3} />
@@ -146,7 +158,19 @@ export default function PaymentConfirmationExpandedState(
               info={ownerAddress}
             />
             <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
-            <PaymentDetailsItem info={timestamp} isTimestamp title="TIME" />
+            <PaymentDetailsItem
+              info={timestamp}
+              infoColor="black"
+              isLocalTime
+              isTimestamp
+              title="LOCAL TIME"
+            />
+            <PaymentDetailsItem
+              info={timestamp}
+              infoColor="black"
+              isTimestamp
+              title="UTC TIME"
+            />
           </Container>
           <BlockscoutButton
             network={network}
