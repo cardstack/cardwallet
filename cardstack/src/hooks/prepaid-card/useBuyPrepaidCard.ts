@@ -108,17 +108,21 @@ export default function useBuyPrepaidCard() {
   }, [goBack, navigate]);
 
   useEffect(() => {
+    const startTime = new Date().getTime();
+
     const orderStatusPolling = setInterval(async () => {
+      const currentTime = new Date().getTime();
+
       if (wyreOrderId) {
         const orderData = await getOrder(hubURL, authToken, wyreOrderId);
 
-        if (!orderData) {
+        if (!orderData || currentTime - startTime > 60000) {
           dismissLoadingOverlay();
           clearInterval(orderStatusPolling);
 
           Alert({
             title: 'Error',
-            message: 'Something went wrong! Please try again.',
+            message: `Something went wrong! Please try again. \nOrder Id: ${wyreOrderId}`,
           });
 
           return;
