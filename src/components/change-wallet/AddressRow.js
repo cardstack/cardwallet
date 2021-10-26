@@ -7,8 +7,7 @@ import { ButtonPressAnimation } from '../animations';
 import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { Container, Icon, Text, TruncatedAddress } from '@cardstack/components';
-import { getAddressPreview, screenWidth } from '@cardstack/utils';
-import networkInfo from '@rainbow-me/helpers/networkInfo';
+import { getAddressPreview, isLayer2, screenWidth } from '@cardstack/utils';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const sx = StyleSheet.create({
@@ -40,7 +39,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
 
   let accountSubLabel;
 
-  if (networkInfo[network].layer === 2) {
+  if (isLayer2(network)) {
     accountSubLabel = getAddressPreview(address);
   } else {
     let balanceAmount;

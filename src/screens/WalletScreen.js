@@ -30,7 +30,7 @@ import {
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { Container, SystemNotification, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
-import { NOTIFICATION_KEY } from '@cardstack/utils';
+import { isLayer2, NOTIFICATION_KEY } from '@cardstack/utils';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
@@ -124,6 +124,10 @@ export default function WalletScreen() {
     openedHeaderText,
     openedBodyText,
   };
+
+  const showNotificationBanner =
+    notificationsVisible === 'true' && !isEmpty && isLayer2(network);
+
   return (
     <WalletPage testID="wallet-screen">
       <StatusBar barStyle="light-content" />
@@ -154,11 +158,9 @@ export default function WalletScreen() {
               )}
             </Container>
           </Header>
-          {notificationsVisible === 'true' &&
-            !isEmpty &&
-            networkInfo[network].layer === 2 && (
-              <SystemNotification type="info" {...notificationProps} />
-            )}
+          {showNotificationBanner && (
+            <SystemNotification type="info" {...notificationProps} />
+          )}
         </HeaderOpacityToggler>
         <AssetListWrapper />
       </FabWrapper>
