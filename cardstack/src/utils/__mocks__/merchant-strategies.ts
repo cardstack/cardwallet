@@ -249,3 +249,172 @@ export const PREPAID_CARD_PAYMENT_MOCK = {
     },
   ],
 };
+
+export const PREPAID_CARD_TRANSFER_MOCK = {
+  __typename: 'Transaction',
+  bridgeToLayer1Events: [],
+  bridgeToLayer2Events: [],
+  id: '0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a',
+  merchantClaims: [],
+  merchantCreations: [],
+  merchantFeePayments: [],
+  merchantRegistrationPayments: [],
+  prepaidCardCreations: [],
+  prepaidCardInventoryEvents: [],
+  prepaidCardPayments: [],
+  prepaidCardSplits: [],
+  prepaidCardTransfers: [
+    {
+      __typename: 'PrepaidCardTransfer',
+      from: {
+        __typename: 'Account',
+        id: '0x41149498EAc53F8C15Fe848bC5f010039A130963',
+      },
+      id: '0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a',
+      prepaidCard: {
+        __typename: 'PrepaidCard',
+        creation: {
+          __typename: 'PrepaidCardCreation',
+          spendAmount: '111',
+        },
+        customizationDID: 'abcdefg',
+        faceValue: '11',
+        id: '0xcC91634e10345125E0234EF88cf422381D9E7483',
+      },
+      timestamp: '1634832515',
+      to: {
+        __typename: 'Account',
+        id: '0x8e9E9bB54BE3D6aa9756E254a0c93c851Cabd2B9',
+      },
+    },
+  ],
+  spendAccumulations: [],
+  supplierInfoDIDUpdates: [],
+  timestamp: '1634832515',
+  tokenSwaps: [],
+  tokenTransfers: [
+    {
+      __typename: 'TokenTransfer',
+      amount: '0',
+      from: '0xcC91634e10345125E0234EF88cf422381D9E7483',
+      id:
+        '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1-0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a-7',
+      timestamp: '1634832515',
+      to: '0xaE5AC3685630b33Ed2677438EEaAe0aD5372c795',
+      token: {
+        __typename: 'Token',
+        id: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
+        name: 'Dai Stablecoin.CPXD',
+        symbol: 'DAI',
+      },
+    },
+    {
+      __typename: 'TokenTransfer',
+      amount: '0',
+      from: '0xaE5AC3685630b33Ed2677438EEaAe0aD5372c795',
+      id:
+        '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1-0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a-9',
+      timestamp: '1634832515',
+      to: '0x311529D6DB926441c352725448eeF4A64f71438e',
+      token: {
+        __typename: 'Token',
+        id: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
+        name: 'Dai Stablecoin.CPXD',
+        symbol: 'DAI',
+      },
+    },
+  ],
+};
+
+export const PREPAID_CARD_PURCHASED_MOCK = {
+  __typename: 'Transaction',
+  bridgeToLayer1Events: [],
+  bridgeToLayer2Events: [],
+  id: '0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a',
+  merchantClaims: [],
+  merchantCreations: [],
+  merchantFeePayments: [],
+  merchantRegistrationPayments: [],
+  prepaidCardCreations: [],
+  prepaidCardPayments: [],
+  prepaidCardSplits: [],
+  prepaidCardTransfers: [
+    {
+      __typename: 'PrepaidCardTransfer',
+      from: {
+        __typename: 'Account',
+        id: '0x41149498EAc53F8C15Fe848bC5f010039A130963',
+      },
+      id: '0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a',
+      prepaidCard: {
+        __typename: 'PrepaidCard',
+        creation: {
+          __typename: 'PrepaidCardCreation',
+          spendAmount: '111',
+        },
+        customizationDID: 'abcdefg',
+        faceValue: '11',
+        id: '0xcC91634e10345125E0234EF88cf422381D9E7483',
+      },
+      timestamp: '1634832515',
+      to: {
+        __typename: 'Account',
+        id: '0x8e9E9bB54BE3D6aa9756E254a0c93c851Cabd2B9',
+      },
+    },
+  ],
+  prepaidCardInventoryEvents: [
+    {
+      inventoryProvisioned: {
+        inventory: {
+          sku: {
+            faceValue: '2500',
+            issuer: {
+              id: '0xEdEeb0Ec367CF65Be7efA8340be05170028679aA',
+            },
+            issuingToken: {
+              symbol: 'DAI',
+            },
+          },
+        },
+        timestamp: '1634604805',
+      },
+    },
+  ],
+  spendAccumulations: [],
+  supplierInfoDIDUpdates: [],
+  timestamp: '1634832515',
+  tokenSwaps: [],
+  tokenTransfers: [
+    {
+      __typename: 'TokenTransfer',
+      amount: '0',
+      from: '0xcC91634e10345125E0234EF88cf422381D9E7483',
+      id:
+        '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1-0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a-7',
+      timestamp: '1634832515',
+      to: '0xaE5AC3685630b33Ed2677438EEaAe0aD5372c795',
+      token: {
+        __typename: 'Token',
+        id: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
+        name: 'Dai Stablecoin.CPXD',
+        symbol: 'DAI',
+      },
+    },
+    {
+      __typename: 'TokenTransfer',
+      amount: '0',
+      from: '0xaE5AC3685630b33Ed2677438EEaAe0aD5372c795',
+      id:
+        '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1-0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a-9',
+      timestamp: '1634832515',
+      to: '0x311529D6DB926441c352725448eeF4A64f71438e',
+      token: {
+        __typename: 'Token',
+        id: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
+        name: 'Dai Stablecoin.CPXD',
+        symbol: 'DAI',
+      },
+    },
+  ],
+};
