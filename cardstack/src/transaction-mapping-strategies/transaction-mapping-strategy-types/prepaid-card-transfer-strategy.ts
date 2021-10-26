@@ -29,6 +29,9 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
 
     let cardCustomization;
 
+    const prepaidCardInventoryEvent = this.transaction
+      .prepaidCardInventoryEvents?.[0];
+
     if (prepaidCardTransferTransaction.prepaidCard.customizationDID) {
       try {
         cardCustomization = await fetchCardCustomizationFromDID(
@@ -38,19 +41,28 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
     }
 
     const spendDisplay = convertSpendForBalanceDisplay(
-      prepaidCardTransferTransaction.prepaidCard.creation?.spendAmount, // faceValue when transfer happen
+      prepaidCardInventoryEvent
+        ? prepaidCardInventoryEvent.inventoryProvisioned?.inventory.sku
+            .faceValue
+        : prepaidCardTransferTransaction.prepaidCard.creation?.spendAmount, // faceValue when transfer happen
       this.nativeCurrency,
       this.currencyConversionRates,
       true
     );
 
     return {
-      address: prepaidCardTransferTransaction.prepaidCard.id,
+      address: prepaidCardInventoryEvent
+        ? prepaidCardInventoryEvent.inventoryProvisioned?.inventory.sku.issuer
+            .id || ''
+        : prepaidCardTransferTransaction.prepaidCard.id,
       cardCustomization,
-      timestamp: prepaidCardTransferTransaction.timestamp,
+      timestamp: prepaidCardInventoryEvent
+        ? prepaidCardInventoryEvent.inventoryProvisioned?.timestamp
+        : prepaidCardTransferTransaction.timestamp,
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
       nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
       transactionHash: this.transaction.id,
+      statusText: prepaidCardInventoryEvent ? 'Purchased' : 'Transferred',
       type: TransactionTypes.PREPAID_CARD_TRANSFER,
     };
   }

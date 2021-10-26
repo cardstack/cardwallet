@@ -28,7 +28,7 @@ export const PrepaidCardTransferTransaction = ({
         />
       }
       statusIconName="arrow-up"
-      statusText="Transferred"
+      statusText={item.statusText}
       topText="Face value"
       primaryText={item.spendBalanceDisplay}
       subText={item.nativeBalanceDisplay}

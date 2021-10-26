@@ -209,6 +209,7 @@ export interface PrepaidCardTransferTransactionType {
   spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   transactionHash: string;
+  statusText: string;
   type: TransactionTypes.PREPAID_CARD_TRANSFER;
 }
 
