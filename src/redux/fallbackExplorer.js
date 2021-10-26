@@ -16,7 +16,7 @@ import {
   reduceDepotsWithPricesAndChart,
 } from '@cardstack/helpers/fallbackExplorerHelper';
 import { addGnosisTokenPrices, fetchGnosisSafes } from '@cardstack/services';
-import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
+import { isLayer1, isLayer2, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -341,8 +341,7 @@ const fetchGnosisSafesAndAddCoingeckoId = async () => {
   const coingeckoCoins = store.getState().coingecko.coins;
   const currencyConversionRates = store.getState().currencyConversion.rates;
 
-  // not functional on xdai chain yet
-  if (network === networkTypes.sokol) {
+  if (isLayer2(network)) {
     try {
       const gnosisSafeData = await fetchGnosisSafes(accountAddress);
       const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);

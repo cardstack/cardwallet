@@ -128,8 +128,8 @@ export const INITIAL_STATE = {
   chainId: 1,
   language: 'en',
   nativeCurrency: 'USD',
-  network: networkTypes.sokol,
-  showTestnets: true,
+  network: networkTypes.xdai,
+  showTestnets: false,
 };
 
 export default (state = INITIAL_STATE, action) => {

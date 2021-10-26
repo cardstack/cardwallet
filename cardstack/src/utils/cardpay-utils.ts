@@ -11,9 +11,14 @@ import {
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai', 'keth'];
-const MAINNETS = ['mainnet', 'xdai'];
-const LAYER_1_NETWORKS = ['mainnet', 'kovan'];
+
+const MAINNETS = [Network.mainnet, Network.xdai];
+
+const LAYER_1_NETWORKS = [Network.mainnet, Network.kovan];
+
+const LAYER_2_NETWORKS = [Network.xdai, Network.sokol];
 
 export const isNativeToken = (symbol: string, network: string) => {
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
@@ -21,9 +26,13 @@ export const isNativeToken = (symbol: string, network: string) => {
   return symbol === nativeTokenSymbol;
 };
 
-export const isLayer1 = (network: string) => LAYER_1_NETWORKS.includes(network);
+export const isLayer1 = (network: Network) =>
+  LAYER_1_NETWORKS.includes(network);
 
-export const isMainnet = (network: string) => MAINNETS.includes(network);
+export const isLayer2 = (network: Network) =>
+  LAYER_2_NETWORKS.includes(network);
+
+export const isMainnet = (network: Network) => MAINNETS.includes(network);
 
 export const getNativeBalanceFromSpend = (
   spendAmount: number,

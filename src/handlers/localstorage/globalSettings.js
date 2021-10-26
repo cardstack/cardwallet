@@ -29,7 +29,7 @@ export const getLanguage = () => getGlobal(LANGUAGE, 'en');
 
 export const saveLanguage = language => saveGlobal(LANGUAGE, language);
 
-export const getNetwork = () => getGlobal(NETWORK, networkTypes.sokol);
+export const getNetwork = () => getGlobal(NETWORK, networkTypes.xdai);
 
 export const saveNetwork = network => saveGlobal(NETWORK, network);
 

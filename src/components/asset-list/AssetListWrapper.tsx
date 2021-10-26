@@ -1,5 +1,6 @@
 import React from 'react';
 import { AssetList } from '@cardstack/components';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAssetListData } from '@rainbow-me/hooks';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
@@ -19,7 +20,7 @@ const AssetListWrapper = () => {
       isEmpty={isEmpty}
       loading={isLoadingAssets}
       nativeCurrency={nativeCurrency}
-      network={network}
+      network={network as Network}
       sections={sections}
     />
   );

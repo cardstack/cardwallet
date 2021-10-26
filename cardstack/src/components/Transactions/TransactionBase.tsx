@@ -12,6 +12,7 @@ import {
 import { isLayer1, normalizeTxHash } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 export interface TransactionBaseCustomizationProps {
   includeBorder?: boolean;
@@ -45,7 +46,10 @@ export const TransactionBase = (props: TransactionBaseProps) => {
     onPressTransaction,
   } = props;
 
-  const network = useRainbowSelector(state => state.settings.network);
+  const network = useRainbowSelector(
+    state => state.settings.network
+  ) as Network;
+
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
   const blockExplorerName = isLayer1(network) ? 'Etherscan' : 'Blockscout';
   const normalizedHash = normalizeTxHash(transactionHash);
