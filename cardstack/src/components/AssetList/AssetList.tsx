@@ -28,6 +28,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface HeaderItem {
   title: string;
@@ -56,7 +57,7 @@ interface AssetListProps
     ColorProps<Theme> {
   isEmpty: boolean;
   loading: boolean;
-  network: string;
+  network: Network;
   nativeCurrency: string;
   currencyConversionRates: {
     [key: string]: number;
@@ -148,7 +149,7 @@ export const AssetList = (props: AssetListProps) => {
     }
 
     if (Device.isIOS) {
-      if (isLayer1(networkName)) {
+      if (isLayer1(network)) {
         navigate(Routes.ADD_CASH_FLOW);
       } else {
         navigate(Routes.BUY_PREPAID_CARD);
@@ -161,7 +162,7 @@ export const AssetList = (props: AssetListProps) => {
         screen: Routes.WYRE_WEBVIEW,
       });
     }
-  }, [accountAddress, navigate, isDamaged, networkName]);
+  }, [isDamaged, network, navigate, accountAddress]);
 
   if (loading) {
     return <AssetListLoading />;

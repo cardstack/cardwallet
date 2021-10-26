@@ -386,7 +386,7 @@ const createPayload = (
   amount: string,
   accountAddress: string,
   destCurrency: string,
-  network: string,
+  network: Network,
   reservationId: string,
   ip: string,
   sourceCurrency: string

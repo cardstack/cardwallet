@@ -5,7 +5,7 @@ import { useTransactionSections } from './use-transaction-sections';
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { isLayer1 } from '@cardstack/utils';
 import { useAccountTransactions } from '@rainbow-me/hooks';
-import { networkTypes } from '@rainbow-me/networkTypes';
+import { Network, networkTypes } from '@rainbow-me/networkTypes';
 import logger from 'logger';
 
 const useSokolTransactions = () => {
@@ -68,7 +68,10 @@ const useSokolTransactions = () => {
 };
 
 export const useFullTransactionList = () => {
-  const network = useRainbowSelector(state => state.settings.network);
+  const network = useRainbowSelector(
+    state => state.settings.network
+  ) as Network;
+
   const layer1Data = useAccountTransactions();
   const layer2Data = useSokolTransactions();
 

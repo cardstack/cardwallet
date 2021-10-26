@@ -25,6 +25,7 @@ import {
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { sortedByTokenBalanceAmount } from '@cardstack/utils';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useNavigation } from '@rainbow-me/navigation';
 
 import {
@@ -154,7 +155,7 @@ const Assets = (props: AvailableBalancesExpandedStateProps) => {
         isEmpty={isEmpty}
         loading={isLoadingAssets}
         nativeCurrency={nativeCurrency}
-        network={network}
+        network={network as Network}
         sections={sections}
       />
     </Container>

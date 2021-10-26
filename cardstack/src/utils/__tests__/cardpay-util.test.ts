@@ -2,7 +2,13 @@ import {
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
-import { parseLinearGradient } from '@cardstack/utils/cardpay-utils';
+import {
+  isLayer1,
+  isLayer2,
+  isMainnet,
+  parseLinearGradient,
+} from '@cardstack/utils/cardpay-utils';
+import { Network, networkTypes } from '@rainbow-me/helpers/networkTypes';
 
 it('parseLinearGradient with 2 stop linear gradient', () => {
   const cardCustomization: PrepaidCardCustomization = {
@@ -76,4 +82,84 @@ it('parseLinearGradient with no gradient', () => {
 
   const result = parseLinearGradient(cardCustomization);
   expect(result).toEqual(parsedGradientResult);
+});
+
+const layer2Cases = [
+  'xdai',
+  Network.xdai,
+  networkTypes.xdai,
+  Network.sokol,
+  'sokol',
+  networkTypes.sokol,
+];
+
+const layer1Cases = [
+  'mainnet',
+  Network.mainnet,
+  networkTypes.mainnet,
+  networkTypes.kovan,
+  Network.kovan,
+  'kovan',
+];
+
+const mainnetCases = [
+  'mainnet',
+  Network.mainnet,
+  networkTypes.mainnet,
+  'xdai',
+  Network.xdai,
+  networkTypes.xdai,
+];
+
+const testeNetCases = [
+  'sokol',
+  Network.sokol,
+  networkTypes.sokol,
+  'kovan',
+  Network.kovan,
+  networkTypes.kovan,
+];
+
+describe('Network utils', () => {
+  test.each(layer2Cases)(
+    'given %p as network, returns true for Layer2',
+    network => {
+      expect(isLayer2(network as Network)).toBeTruthy();
+    }
+  );
+
+  test.each(layer2Cases)(
+    'given %p as network, returns false for Layer1',
+    network => {
+      expect(isLayer1(network as Network)).toBeFalsy();
+    }
+  );
+
+  test.each(layer1Cases)(
+    'given %p as network, returns true for Layer1',
+    network => {
+      expect(isLayer1(network as Network)).toBeTruthy();
+    }
+  );
+
+  test.each(layer1Cases)(
+    'given %p as network, returns false for Layer2',
+    network => {
+      expect(isLayer2(network as Network)).toBeFalsy();
+    }
+  );
+
+  test.each(mainnetCases)(
+    'given %p as network, returns true for mainnet',
+    network => {
+      expect(isMainnet(network as Network)).toBeTruthy();
+    }
+  );
+
+  test.each(testeNetCases)(
+    'given %p as network, returns false for mainnet',
+    network => {
+      expect(isMainnet(network as Network)).toBeFalsy();
+    }
+  );
 });
