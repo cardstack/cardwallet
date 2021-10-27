@@ -35,6 +35,7 @@ interface ButtonProps extends RestyleProps {
   onPress?: () => void;
   loading?: boolean;
   wrapper?: ButtonWrappper;
+  disablePress?: boolean;
 }
 
 type IconPosition = 'left' | 'right';
@@ -64,8 +65,9 @@ const ButtonContentWrapper = ({
  */
 export const Button = ({
   children,
-  disabled,
   iconProps,
+  disabled,
+  disablePress = false,
   iconPosition = 'left',
   wrapper = 'container',
   loading,
@@ -91,7 +93,7 @@ export const Button = ({
       <AnimatedButton
         {...props}
         alignItems="center"
-        disabled={disabled}
+        disabled={disabled || disablePress}
         onPress={onPress}
       >
         {loading ? (
