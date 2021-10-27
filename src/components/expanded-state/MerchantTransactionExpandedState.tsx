@@ -157,7 +157,7 @@ const EarnedTransaction = (data: EarnedTransactionProps) => {
 };
 const ClaimedTransaction = ({
   grossClaimed,
-  gasUsdFee,
+  gasNativeFee,
   gasFee,
   netClaimed,
   txRowProps,
@@ -167,7 +167,11 @@ const ClaimedTransaction = ({
       <TransactionRow {...txRowProps} hasBottomDivider />
       <Container padding={6}>
         <ItemDetail description={'REVENUE \nCLAIMED'} value={grossClaimed} />
-        <ItemDetail description="GAS FEE" subValue={gasUsdFee} value={gasFee} />
+        <ItemDetail
+          description="GAS FEE"
+          subValue={gasNativeFee}
+          value={gasFee}
+        />
         <HorizontalDivider />
         <ItemDetail description="NET CLAIMED" value={netClaimed} />
       </Container>

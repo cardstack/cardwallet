@@ -4,7 +4,6 @@ import { Share } from 'react-native';
 import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
-  fromWei,
   subtract,
 } from '@cardstack/cardpay-sdk';
 import { getAddressPreview } from './formatting-utils';
@@ -20,6 +19,7 @@ import {
   MerchantInformation,
 } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils/cardpay-utils';
+import { getNativeBalance } from '@cardstack/services';
 
 export const merchantRevenueEventsToTransactions = (
   revenueEvents: MerchantRevenueEventFragment[]
@@ -102,11 +102,14 @@ export const shareRequestPaymentLink = (
   );
 };
 
-export function getMerchantClaimTransactionDetails(
+export async function getMerchantClaimTransactionDetails(
   merchantClaimTransaction: MerchantClaimFragment,
   nativeCurrency = 'USD',
+  currencyConversionRates: {
+    [key: string]: number;
+  },
   address?: string
-): MerchantClaimTypeTxn {
+): Promise<MerchantClaimTypeTxn> {
   const transactions = merchantClaimTransaction.transaction?.tokenTransfers;
 
   // find the GAS item by address
@@ -121,7 +124,12 @@ export function getMerchantClaimTransactionDetails(
   const grossRawAmount = txnData?.amount || '0';
   const gasRawAmount = gasData?.amount || '0';
 
-  const gasFormatted = fromWei(gasRawAmount);
+  const gasBalance = await getNativeBalance({
+    symbol: merchantClaimTransaction.token.symbol,
+    balance: gasRawAmount,
+    nativeCurrency,
+    currencyConversionRates,
+  });
 
   const grossFormattedValue = convertRawAmountToBalance(grossRawAmount, {
     decimals: 18,
@@ -133,7 +141,7 @@ export function getMerchantClaimTransactionDetails(
     symbol: merchantClaimTransaction.token.symbol || undefined,
   });
 
-  const gasUSD = convertAmountToNativeDisplay(gasFormatted, nativeCurrency);
+  const gasNative = convertAmountToNativeDisplay(gasBalance, nativeCurrency);
 
   const netFormattedValue = convertRawAmountToBalance(
     subtract(gasRawAmount, grossRawAmount),
@@ -146,7 +154,7 @@ export function getMerchantClaimTransactionDetails(
   return {
     grossClaimed: grossFormattedValue.display || '',
     gasFee: gasFormattedValue.display || '',
-    gasUsdFee: gasUSD || '',
+    gasNativeFee: gasNative || '',
     netClaimed: netFormattedValue.display || '',
   };
 }

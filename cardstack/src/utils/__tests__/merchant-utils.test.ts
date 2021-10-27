@@ -4,13 +4,33 @@ import {
   getMerchantClaimTransactionDetails,
   getMerchantEarnedTransactionDetails,
   shareRequestPaymentLink,
-} from '../merchant-utils';
+} from '@cardstack/utils';
 import {
   MERCHANT_CLAIM_MOCK_DATA,
   MERCHANT_EARNED_MOCK_DATA,
 } from '@cardstack/utils/__mocks__/merchant-strategies';
 
 jest.mock('../device');
+
+jest.mock('@cardstack/services', () => ({
+  getNativeBalance: jest.fn().mockReturnValue(0.0000974),
+}));
+
+const currencyConversionRates = {
+  AUD: 1.34202,
+  CAD: 1.252625,
+  CNY: 6.453498,
+  EUR: 0.841695,
+  GBP: 0.721335,
+  INR: 72.99465,
+  JPY: 109.749773,
+  KRW: 1155.749904,
+  NZD: 1.398215,
+  RUB: 72.69605,
+  TRY: 8.32148,
+  USD: 1,
+  ZAR: 14.297496,
+};
 
 describe('Merchant utils', () => {
   describe('shareRequestPaymentLink', () => {
@@ -47,16 +67,17 @@ describe('Merchant utils', () => {
   });
 
   describe('Get Merchant Claim txn details', () => {
-    it('Should return proper object according to params', () => {
+    it('Should return proper object according to params', async () => {
       expect(
-        getMerchantClaimTransactionDetails(
+        await getMerchantClaimTransactionDetails(
           MERCHANT_CLAIM_MOCK_DATA,
           'USD',
+          currencyConversionRates,
           '0xD7182E380b7dFa33C186358De7E1E5d0950fCAE7'
         )
       ).toStrictEqual({
         gasFee: '0.0000974 DAI',
-        gasUsdFee: '$0.0000974 USD',
+        gasNativeFee: '$0.0000974 USD',
         grossClaimed: '0.00 DAI',
         netClaimed: '0.0000974 DAI',
       });
@@ -64,22 +85,6 @@ describe('Merchant utils', () => {
   });
 
   describe('Get Merchant Earned txn details', () => {
-    const currencyConversionRates = {
-      AUD: 1.34202,
-      CAD: 1.252625,
-      CNY: 6.453498,
-      EUR: 0.841695,
-      GBP: 0.721335,
-      INR: 72.99465,
-      JPY: 109.749773,
-      KRW: 1155.749904,
-      NZD: 1.398215,
-      RUB: 72.69605,
-      TRY: 8.32148,
-      USD: 1,
-      ZAR: 14.297496,
-    };
-
     it('Should return proper object according to params', () => {
       expect(
         getMerchantEarnedTransactionDetails(
