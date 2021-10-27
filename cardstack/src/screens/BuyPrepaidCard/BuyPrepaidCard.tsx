@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import {
   CardContent,
-  InventorySection,
+  CardLoaderSkeleton,
   Subtitle,
   TopContent,
 } from './Components';
@@ -45,16 +45,19 @@ const BuyPrepaidCard = () => {
   const { navigate } = useNavigation();
 
   const renderItem = useCallback(
-    ({ item, index }: { item: Inventory; index: number }) => (
-      <CardContent
-        onPress={() => onSelectCard(item, index)}
-        isSelected={item?.isSelected}
-        amount={item?.amount}
-        faceValue={item?.attributes['face-value']}
-        quantity={item.attributes?.quantity}
-      />
-    ),
-    [onSelectCard]
+    ({ item, index }: { item: Inventory; index: number }) =>
+      isInventoryLoading || !item.attributes ? (
+        <CardLoaderSkeleton />
+      ) : (
+        <CardContent
+          onPress={() => onSelectCard(item, index)}
+          isSelected={item?.isSelected}
+          amount={item?.amount}
+          faceValue={item?.attributes?.['face-value']}
+          quantity={item.attributes?.quantity}
+        />
+      ),
+    [isInventoryLoading, onSelectCard]
   );
 
   const onPressSupport = useCallback(
@@ -111,15 +114,11 @@ const BuyPrepaidCard = () => {
         <Container backgroundColor="backgroundBlue" height="100%" flex={1}>
           <Container backgroundColor="backgroundBlue" width="100%" padding={4}>
             <Subtitle text="CHOOSE AMOUNT" />
-            {!isInventoryLoading ? (
-              <FlatList
-                data={inventoryData}
-                renderItem={renderItem}
-                numColumns={2}
-              />
-            ) : (
-              <InventorySection />
-            )}
+            <FlatList
+              data={inventoryData}
+              renderItem={renderItem}
+              numColumns={2}
+            />
           </Container>
           {card ? (
             <Container marginBottom={16} padding={4}>

@@ -1,17 +1,6 @@
 import React from 'react';
-import {
-  Button,
-  Container,
-  ContainerProps,
-  Skeleton,
-  Text,
-} from '@cardstack/components';
-
-export const InventorySection = (props: ContainerProps) => (
-  <Container {...props}>
-    <Skeleton height={200} width="100%" marginTop={3} />
-  </Container>
-);
+import { StyleSheet } from 'react-native';
+import { Button, Container, Skeleton, Text } from '@cardstack/components';
 
 export const TopContent = () => {
   return (
@@ -26,6 +15,19 @@ export const TopContent = () => {
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    flex: 1,
+    margin: 2,
+  },
+});
+
+export const CardLoaderSkeleton = () => (
+  <Container {...styles.cardContainer}>
+    <Skeleton height={100} />
+  </Container>
+);
 
 export const CardContent = ({
   onPress,
@@ -53,9 +55,9 @@ export const CardContent = ({
       borderColor={isSoldOut ? 'buttonDisabledBackground' : borderColor}
       variant={isSoldOut ? 'squareDisabled' : variant}
       onPress={onPress}
-      flex={1}
-      margin={2}
       wrapper="fragment"
+      disablePress={isSoldOut}
+      {...styles.cardContainer}
     >
       <Text
         color={isSoldOut ? 'blueText' : titleColor}
