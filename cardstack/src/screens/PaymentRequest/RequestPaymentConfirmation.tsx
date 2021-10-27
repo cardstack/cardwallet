@@ -197,7 +197,7 @@ export const RequestPaymentConfirmation = ({
             </Container>
             <Container flex={1} paddingLeft={2}>
               <Button onPress={handleShareLink} variant="small" width="100%">
-                Share Link
+                Share Request
               </Button>
             </Container>
           </Container>
