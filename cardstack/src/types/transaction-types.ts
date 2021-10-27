@@ -105,7 +105,7 @@ export interface MerchantRevenueEventType {
 export interface MerchantClaimTypeTxn {
   grossClaimed?: string;
   gasFee?: string;
-  gasUsdFee?: string;
+  gasNativeFee?: string;
   netClaimed?: string;
 }
 

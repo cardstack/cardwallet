@@ -59,9 +59,10 @@ export class MerchantClaimStrategy extends BaseStrategy {
         name: merchantClaimTransaction?.token.name,
       },
       type: TransactionTypes.MERCHANT_CLAIM,
-      transaction: getMerchantClaimTransactionDetails(
+      transaction: await getMerchantClaimTransactionDetails(
         merchantClaimTransaction,
         this.nativeCurrency,
+        this.currencyConversionRates,
         address
       ),
       infoDid: merchantClaimTransaction.merchantSafe.infoDid || undefined,
