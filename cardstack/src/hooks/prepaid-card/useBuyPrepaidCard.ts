@@ -56,6 +56,16 @@ export interface Card {
   attributes: CardAttrs;
 }
 
+const emptyInventory = {
+  id: '',
+  type: '',
+  isSelected: false,
+  amount: 0,
+  attributes: undefined,
+};
+
+const inventoryInitialState = Array(4).fill(emptyInventory);
+
 export default function useBuyPrepaidCard() {
   const { goBack, navigate } = useNavigation();
   const dispatch = useDispatch();
@@ -74,7 +84,11 @@ export default function useBuyPrepaidCard() {
 
   const [order, setOrder] = useState<string>('');
   const [card, setCard] = useState<CardAttrs>();
-  const [inventoryData, setInventoryData] = useState<Inventory[]>();
+
+  const [inventoryData, setInventoryData] = useState<Inventory[] | undefined>(
+    inventoryInitialState
+  );
+
   const [sku, setSku] = useState<string>('');
   const [wyreOrderId, setWyreOrderId] = useState<string>('');
 
@@ -170,7 +184,10 @@ export default function useBuyPrepaidCard() {
   } = useWorker(async () => {
     const issuerAddress = getAddressByNetwork('wyreIssuer', network);
     const data = await getInventories(hubURL, authToken, issuerAddress);
-    setInventoryData(data);
+
+    if (data) {
+      setInventoryData(data);
+    }
   }, [authToken, currencyConversionRates, hubURL, nativeCurrency, network]);
 
   useEffect(() => {
