@@ -159,7 +159,7 @@ export async function getMerchantClaimTransactionDetails(
   };
 }
 
-export function getMerchantEarnedTransactionDetails(
+export async function getMerchantEarnedTransactionDetails(
   prepaidCardPaymentTransaction: PrepaidCardPaymentFragment,
   nativeCurrency = 'USD',
   nativeBalance: number,
@@ -167,7 +167,7 @@ export function getMerchantEarnedTransactionDetails(
     [key: string]: number;
   },
   symbol: string
-): MerchantEarnedRevenueTransactionTypeTxn {
+): Promise<MerchantEarnedRevenueTransactionTypeTxn> {
   const feeCollectedRaw =
     prepaidCardPaymentTransaction.transaction?.merchantFeePayments[0]
       ?.feeCollected;
@@ -181,18 +181,27 @@ export function getMerchantEarnedTransactionDetails(
     3
   ).display;
 
+  const netValue = await getNativeBalance({
+    symbol,
+    balance: subtract(
+      prepaidCardPaymentTransaction.issuingTokenAmount,
+      feeCollectedRaw
+    ),
+    nativeCurrency,
+    currencyConversionRates,
+  });
+
   const netFormattedValue = convertRawAmountToBalance(
     subtract(prepaidCardPaymentTransaction.issuingTokenAmount, feeCollectedRaw),
     {
       decimals: 18,
       symbol: prepaidCardPaymentTransaction.issuingToken.symbol || undefined,
-    },
-    3
+    }
   );
 
   return {
     customerSpend: prepaidCardPaymentTransaction.spendAmount,
-    customerSpendUsd: convertAmountToNativeDisplay(
+    customerSpendNative: convertAmountToNativeDisplay(
       nativeBalance,
       nativeCurrency
     ),
@@ -210,8 +219,7 @@ export function getMerchantEarnedTransactionDetails(
       nativeCurrency,
       currencyConversionRates
     ).nativeBalanceDisplay,
-    netEarned: netFormattedValue.display || '',
-    netEarnedNative:
-      convertAmountToNativeDisplay(netFormattedValue.amount, 'USD') || '',
+    netEarned: netFormattedValue.display,
+    netEarnedNative: convertAmountToNativeDisplay(netValue, nativeCurrency),
   };
 }

@@ -85,23 +85,23 @@ describe('Merchant utils', () => {
   });
 
   describe('Get Merchant Earned txn details', () => {
-    it('Should return proper object according to params', () => {
+    it('Should return proper object according to params', async () => {
       expect(
-        getMerchantEarnedTransactionDetails(
+        await getMerchantEarnedTransactionDetails(
           MERCHANT_EARNED_MOCK_DATA,
           'USD',
-          0.49999999,
+          149.99999999,
           currencyConversionRates,
           'DAI'
         )
       ).toStrictEqual({
         customerSpend: '50',
-        customerSpendUsd: '$0.50 USD',
+        customerSpendNative: '$150.00 USD',
         protocolFee: '0.0025 DAI',
         spendConversionRate: '$0.01 USD',
         revenueCollected: '0.499 DAI',
         netEarned: '0.497 DAI',
-        netEarnedNative: '$0.497 USD',
+        netEarnedNative: '$0.0000974 USD',
       });
     });
   });

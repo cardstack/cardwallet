@@ -60,7 +60,7 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       timestamp: prepaidCardPaymentTransaction.timestamp,
       type: TransactionTypes.MERCHANT_EARNED_REVENUE,
       transactionHash: this.transaction.id,
-      transaction: getMerchantEarnedTransactionDetails(
+      transaction: await getMerchantEarnedTransactionDetails(
         prepaidCardPaymentTransaction,
         this.nativeCurrency,
         nativeBalance,

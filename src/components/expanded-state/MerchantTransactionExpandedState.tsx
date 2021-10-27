@@ -108,7 +108,7 @@ const TransactionExchangeRateRow = ({ rate }: { rate: string }) => {
 const EarnedTransaction = (data: EarnedTransactionProps) => {
   const {
     customerSpend,
-    customerSpendUsd,
+    customerSpendNative,
     protocolFee,
     revenueCollected,
     spendConversionRate,
@@ -119,7 +119,7 @@ const EarnedTransaction = (data: EarnedTransactionProps) => {
   const earnedItems = [
     {
       description: 'CUSTOMER \nSPEND',
-      subValue: customerSpendUsd,
+      subValue: customerSpendNative,
       symbol: 'SPEND',
       value: customerSpend + ' SPEND',
     },
