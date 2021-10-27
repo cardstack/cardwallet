@@ -7,6 +7,13 @@ import logger from 'logger';
 const web3Instance: Web3 = new Web3();
 
 const Web3Instance = {
+  /**
+   * Return web3Instance either with a signed provider or not.
+   * @param signedProviderParams - info to sign the provider
+   *
+   * WARNING: After using a signed provider,
+   * it's recommended to reset it with `HDProvider.reset()`
+   */
   get: async (signedProviderParams?: SignedProviderParams) => {
     const isProviderDisconnected = !(web3Instance.currentProvider as WebsocketProvider)
       ?.connected;

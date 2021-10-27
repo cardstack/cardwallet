@@ -25,8 +25,8 @@ const Web3WsProvider = {
         clientConfig: {
           keepalive: true,
           keepaliveInterval: 60000,
-          maxReceivedFrameSize: 200000000, // 2MiB
-          maxReceivedMessageSize: 100000000, // 10MiB
+          maxReceivedFrameSize: 100000000,
+          maxReceivedMessageSize: 100000000,
         },
       });
 

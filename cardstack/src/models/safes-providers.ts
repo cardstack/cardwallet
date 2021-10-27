@@ -1,7 +1,10 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
+import { captureException } from '@sentry/minimal';
 import { SignedProviderParams } from './hd-provider';
 import Web3Instance from './web3-instance';
 import logger from 'logger';
+import { MainRoutes } from '@cardstack/navigation';
+import { Navigation } from '@rainbow-me/navigation';
 
 export const getSafesInstance = async (
   signedProviderParams?: SignedProviderParams
@@ -12,6 +15,8 @@ export const getSafesInstance = async (
 
     return safes;
   } catch (e) {
-    logger.error('Unable to get safeInstance', e);
+    Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
+    captureException(e);
+    logger.sentry('Unable to get safeInstance', e);
   }
 };
