@@ -38,11 +38,6 @@ query GetPrepaidCardHistoryData($address: ID!) {
           ...Transaction
         }
       }
-      splits {
-        transaction {
-          ...Transaction
-        }
-      }
       transfers {
         transaction {
           ...Transaction

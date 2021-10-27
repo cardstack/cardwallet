@@ -124,6 +124,23 @@ fragment PrepaidCardTransfer on PrepaidCardTransfer {
   }
 }
 
+fragment PrepaidCardInventoryEvent on PrepaidCardInventoryEvent {
+  inventoryProvisioned {
+    timestamp
+    inventory {
+      sku {
+        issuer {
+          id
+        }
+        issuingToken {
+          symbol
+        }
+        faceValue
+      }
+    }
+  }
+}
+
 fragment MerchantClaim on MerchantClaim {
   id
   timestamp
@@ -200,6 +217,9 @@ fragment Transaction on Transaction {
   }
   prepaidCardPayments {
     ...PrepaidCardPayment
+  }
+  prepaidCardInventoryEvents {
+    ...PrepaidCardInventoryEvent
   }
   spendAccumulations {
     id

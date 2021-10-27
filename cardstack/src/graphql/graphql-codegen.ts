@@ -6961,6 +6961,28 @@ export type PrepaidCardTransferFragment = (
   ) }
 );
 
+export type PrepaidCardInventoryEventFragment = (
+  { __typename?: 'PrepaidCardInventoryEvent' }
+  & { inventoryProvisioned?: Maybe<(
+    { __typename?: 'PrepaidCardProvisionedEvent' }
+    & Pick<PrepaidCardProvisionedEvent, 'timestamp'>
+    & { inventory: (
+      { __typename?: 'SKUInventory' }
+      & { sku: (
+        { __typename?: 'SKU' }
+        & Pick<Sku, 'faceValue'>
+        & { issuer: (
+          { __typename?: 'Account' }
+          & Pick<Account, 'id'>
+        ), issuingToken: (
+          { __typename?: 'Token' }
+          & Pick<Token, 'symbol'>
+        ) }
+      ) }
+    ) }
+  )> }
+);
+
 export type MerchantClaimFragment = (
   { __typename?: 'MerchantClaim' }
   & Pick<MerchantClaim, 'id' | 'timestamp' | 'amount'>
@@ -7035,6 +7057,9 @@ export type TransactionFragment = (
   )>>, prepaidCardPayments: Array<Maybe<(
     { __typename?: 'PrepaidCardPayment' }
     & PrepaidCardPaymentFragment
+  )>>, prepaidCardInventoryEvents: Array<Maybe<(
+    { __typename?: 'PrepaidCardInventoryEvent' }
+    & PrepaidCardInventoryEventFragment
   )>>, spendAccumulations: Array<Maybe<(
     { __typename?: 'SpendAccumulation' }
     & Pick<SpendAccumulation, 'id'>
@@ -7148,12 +7173,6 @@ export type GetPrepaidCardHistoryDataQuery = (
       { __typename?: 'PrepaidCard' }
       & { payments: Array<Maybe<(
         { __typename?: 'PrepaidCardPayment' }
-        & { transaction: (
-          { __typename?: 'Transaction' }
-          & TransactionFragment
-        ) }
-      )>>, splits: Array<Maybe<(
-        { __typename?: 'PrepaidCardSplit' }
         & { transaction: (
           { __typename?: 'Transaction' }
           & TransactionFragment
@@ -7374,6 +7393,24 @@ export const MerchantCreationFragmentDoc = gql`
   }
 }
     `;
+export const PrepaidCardInventoryEventFragmentDoc = gql`
+    fragment PrepaidCardInventoryEvent on PrepaidCardInventoryEvent {
+  inventoryProvisioned {
+    timestamp
+    inventory {
+      sku {
+        issuer {
+          id
+        }
+        issuingToken {
+          symbol
+        }
+        faceValue
+      }
+    }
+  }
+}
+    `;
 export const TransactionFragmentDoc = gql`
     fragment Transaction on Transaction {
   id
@@ -7408,6 +7445,9 @@ export const TransactionFragmentDoc = gql`
   prepaidCardPayments {
     ...PrepaidCardPayment
   }
+  prepaidCardInventoryEvents {
+    ...PrepaidCardInventoryEvent
+  }
   spendAccumulations {
     id
   }
@@ -7429,6 +7469,7 @@ ${PrepaidCardSplitFragmentDoc}
 ${TokenTransferFragmentDoc}
 ${MerchantCreationFragmentDoc}
 ${PrepaidCardPaymentFragmentDoc}
+${PrepaidCardInventoryEventFragmentDoc}
 ${MerchantClaimFragmentDoc}`;
 export const GetMerchantSafeDocument = gql`
     query GetMerchantSafe($address: ID!) {
@@ -7595,11 +7636,6 @@ export const GetPrepaidCardHistoryDataDocument = gql`
   safe(id: $address) {
     prepaidCard {
       payments {
-        transaction {
-          ...Transaction
-        }
-      }
-      splits {
         transaction {
           ...Transaction
         }

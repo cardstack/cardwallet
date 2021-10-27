@@ -120,7 +120,7 @@ export const Button = ({
           </Container>
         )}
       </AnimatedButton>
-      {disabled && (
+      {disabled ? (
         <Container
           backgroundColor="black"
           top={0}
@@ -133,7 +133,7 @@ export const Button = ({
           width="100%"
           testID="disabledOverlay"
         />
-      )}
+      ) : null}
     </ButtonContentWrapper>
   );
 };
