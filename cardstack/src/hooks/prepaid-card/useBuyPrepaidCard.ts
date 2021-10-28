@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/core';
@@ -20,6 +20,7 @@ import { useAuthToken } from '@cardstack/hooks';
 import {
   CustodialWallet,
   getCustodialWallet,
+  getHubUrl,
   getInventories,
   getOrder,
   Inventory,
@@ -35,16 +36,9 @@ import {
 } from '@cardstack/utils';
 import { PrepaidCardCustomization } from '@cardstack/types';
 import { addNewPrepaidCard } from '@rainbow-me/redux/data';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 import Routes from '@rainbow-me/navigation/routesNames';
 import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-card-service';
 import { useLoadingOverlay } from '@cardstack/navigation';
-
-const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
-const HUB_URL_PROD = 'https://hub.cardstack.com';
-
-const getHubUrl = (network: Network) =>
-  network === Network.xdai ? HUB_URL_PROD : HUB_URL_STAGING;
 
 interface CardAttrs extends InventoryAttrs {
   customizationDID?: PrepaidCardCustomization | null;
@@ -74,7 +68,7 @@ export default function useBuyPrepaidCard() {
   const { accountAddress, network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const hubURL = getHubUrl(network);
+  const hubURL = useMemo(() => getHubUrl(network), [network]);
 
   const { authToken } = useAuthToken(hubURL);
 
@@ -196,8 +190,10 @@ export default function useBuyPrepaidCard() {
   }, [authToken, currencyConversionRates, hubURL, nativeCurrency, network]);
 
   useEffect(() => {
-    getInventoryData();
-  }, [getInventoryData]);
+    if (authToken) {
+      getInventoryData();
+    }
+  }, [authToken, getInventoryData]);
 
   useEffect(() => {
     if (inventoryError) {
@@ -209,12 +205,14 @@ export default function useBuyPrepaidCard() {
   }, [inventoryError]);
 
   useEffect(() => {
-    const getCustodialWalletData = async () => {
-      const data = await getCustodialWallet(hubURL, authToken);
-      setCustodialWalletData(data);
-    };
+    if (authToken) {
+      const getCustodialWalletData = async () => {
+        const data = await getCustodialWallet(hubURL, authToken);
+        setCustodialWalletData(data);
+      };
 
-    getCustodialWalletData();
+      getCustodialWalletData();
+    }
   }, [authToken, hubURL]);
 
   const onSelectCard = useCallback(

@@ -1,10 +1,17 @@
 import axios from 'axios';
 import { fromWei } from '@cardstack/cardpay-sdk';
 import logger from 'logger';
+import { Network } from '@rainbow-me/helpers/networkTypes';
+
+const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
+const HUB_URL_PROD = 'https://hub.cardstack.com';
+
+export const getHubUrl = (network: Network) =>
+  network === Network.xdai ? HUB_URL_PROD : HUB_URL_STAGING;
 
 const axiosConfig = (authToken: string) => {
   return {
-    baseURL: 'https://hub-staging.stack.cards/',
+    baseURL: HUB_URL_PROD,
     headers: {
       'Content-Type': 'application/vnd.api+json',
       Authorization: `Bearer: ${authToken}`,
@@ -97,7 +104,10 @@ export const getInventories = async (
   issuerAddress: string
 ): Promise<Inventory[] | undefined> => {
   try {
-    const results = await axios.get('/api/inventories', axiosConfig(authToken));
+    const results = await axios.get(
+      `${hubURL}/api/inventories`,
+      axiosConfig(authToken)
+    );
 
     if (results?.data?.data) {
       const inventory = results?.data?.data;
