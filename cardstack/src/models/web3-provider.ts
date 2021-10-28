@@ -5,18 +5,8 @@ import { WebsocketProvider } from 'web3-core';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
-import { Navigation } from '@rainbow-me/navigation';
-import { MainRoutes } from '@cardstack/navigation/routes';
 
 let provider: WebsocketProvider | null = null;
-
-const handleError = () => {
-  Navigation.handleAction(
-    MainRoutes.ERROR_FALLBACK_SCREEN,
-    { message: 'the web3 socket disconnected' },
-    true
-  );
-};
 
 const Web3WsProvider = {
   get: async (network?: Network) => {
@@ -29,32 +19,29 @@ const Web3WsProvider = {
         reconnect: {
           auto: true,
           delay: 1000,
+          onTimeout: true,
           maxAttempts: 10,
         },
         clientConfig: {
           keepalive: true,
           keepaliveInterval: 60000,
+          maxReceivedFrameSize: 100000000,
+          maxReceivedMessageSize: 100000000,
         },
       });
 
       //@ts-ignore it's wrongly typed bc it says it doesn't have param, but it does
       provider?.on('error', e => {
         logger.sentry('WS socket error', e);
-
-        // Navigate to error screen to force restart
-        handleError();
       });
 
       //@ts-ignore
       provider?.on('end', e => {
-        provider?.reconnect();
         logger.sentry('WS socket ended', e);
       });
 
       //@ts-ignore
       provider?.on('close', e => {
-        // Navigate to error screen to force restart
-        handleError();
         logger.sentry('WS socket close', e);
       });
     }
