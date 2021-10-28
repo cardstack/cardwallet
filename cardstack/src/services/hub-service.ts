@@ -97,7 +97,10 @@ export const getInventories = async (
   issuerAddress: string
 ): Promise<Inventory[] | undefined> => {
   try {
-    const results = await axios.get('/api/inventories', axiosConfig(authToken));
+    const results = await axios.get(
+      `${hubURL}/api/inventories`,
+      axiosConfig(authToken)
+    );
 
     if (results?.data?.data) {
       const inventory = results?.data?.data;

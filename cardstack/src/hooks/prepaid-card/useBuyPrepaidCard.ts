@@ -196,8 +196,10 @@ export default function useBuyPrepaidCard() {
   }, [authToken, currencyConversionRates, hubURL, nativeCurrency, network]);
 
   useEffect(() => {
-    getInventoryData();
-  }, [getInventoryData]);
+    if (authToken) {
+      getInventoryData();
+    }
+  }, [authToken, getInventoryData]);
 
   useEffect(() => {
     if (inventoryError) {
@@ -209,12 +211,14 @@ export default function useBuyPrepaidCard() {
   }, [inventoryError]);
 
   useEffect(() => {
-    const getCustodialWalletData = async () => {
-      const data = await getCustodialWallet(hubURL, authToken);
-      setCustodialWalletData(data);
-    };
+    if (authToken) {
+      const getCustodialWalletData = async () => {
+        const data = await getCustodialWallet(hubURL, authToken);
+        setCustodialWalletData(data);
+      };
 
-    getCustodialWalletData();
+      getCustodialWalletData();
+    }
   }, [authToken, hubURL]);
 
   const onSelectCard = useCallback(
