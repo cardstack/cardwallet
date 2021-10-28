@@ -678,6 +678,7 @@ const INITIAL_STATE = {
   assetPricesFromUniswap: {},
   assets: [], // for account-specific assets
   depots: [],
+  merchantSafes: [],
   prepaidCards: [],
   genericAssets: {},
   isLoadingAssets: true,
