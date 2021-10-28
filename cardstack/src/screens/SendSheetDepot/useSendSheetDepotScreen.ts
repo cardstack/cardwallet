@@ -4,10 +4,10 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
-import BigNumber from 'bignumber.js';
 import { get, isEmpty, isString } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Web3 from 'web3';
+import BN from 'bn.js';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { Alert } from '@rainbow-me/components/alerts';
@@ -99,18 +99,17 @@ export const useSendSheetDepotScreen = () => {
       setGasEstimatedFee(gasFeeInUsd);
 
       // Calculate maxBalance
-      const currentBalanceWei = new BigNumber(selected?.balance?.wei || '0');
-      const gasEstimateWei = new BigNumber(gasEstimate);
+      const currentBalanceWei = new BN(selected?.balance?.wei || '0');
 
-      const isNotEnoughBalance = gasEstimateWei.isGreaterThanOrEqualTo(
-        currentBalanceWei
-      );
+      const gasEstimateWei = new BN(gasEstimate);
+
+      const isNotEnoughBalance = gasEstimateWei.gte(currentBalanceWei);
 
       const maxBalanceWei = isNotEnoughBalance
-        ? 0
-        : currentBalanceWei.minus(gasEstimateWei);
+        ? new BN(0)
+        : currentBalanceWei.sub(gasEstimateWei);
 
-      const maxBalanceEth = Web3.utils.fromWei(maxBalanceWei.toString());
+      const maxBalanceEth = Web3.utils.fromWei(maxBalanceWei, 'ether');
 
       updateMaxInputBalance(maxBalanceEth);
     } catch (e) {
@@ -292,7 +291,7 @@ export const useSendSheetDepotScreen = () => {
 
       navigate(Routes.PROFILE_SCREEN);
     } catch (error) {
-      const errorMessage = error.toString();
+      const errorMessage = (error as any).toString();
 
       if (errorMessage) {
         Alert({
