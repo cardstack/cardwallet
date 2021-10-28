@@ -45,7 +45,6 @@ const PaymentDetailsItem = ({
   info,
   infoColor = 'blueText',
   isTimestamp = false,
-  isLocalTime = false,
 }: {
   title: string;
   color?: string;
@@ -54,7 +53,6 @@ const PaymentDetailsItem = ({
   infoColor?: ResponsiveValue<keyof Theme['colors'], Theme>;
   name?: string;
   isTimestamp?: boolean;
-  isLocalTime?: boolean;
 }) => {
   return (
     <Container marginBottom={6} paddingHorizontal={6}>
@@ -90,7 +88,7 @@ const PaymentDetailsItem = ({
         <Container flex={2} />
         <Container flex={8}>
           <Text color={infoColor} size="small">
-            {isTimestamp ? dateFormatter(info, isLocalTime) : info}
+            {isTimestamp ? dateFormatter(info) : info}
           </Text>
         </Container>
       </Container>
@@ -136,7 +134,7 @@ export default function PaymentConfirmationExpandedState(
 
               {timestamp ? (
                 <Text color="black" marginTop={4} size="medium" weight="bold">
-                  {dateFormatter(timestamp, true, 'MMM dd', 'h:mm a', ', ')}
+                  {dateFormatter(timestamp, 'MMM dd', 'h:mm a', ', ')}
                 </Text>
               ) : null}
             </Container>
@@ -161,15 +159,8 @@ export default function PaymentConfirmationExpandedState(
             <PaymentDetailsItem
               info={timestamp}
               infoColor="black"
-              isLocalTime
               isTimestamp
               title="LOCAL TIME"
-            />
-            <PaymentDetailsItem
-              info={timestamp}
-              infoColor="black"
-              isTimestamp
-              title="UTC TIME"
             />
           </Container>
           <BlockscoutButton

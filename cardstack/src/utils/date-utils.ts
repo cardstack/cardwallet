@@ -1,4 +1,4 @@
-import { format, subMinutes } from 'date-fns';
+import { format } from 'date-fns';
 
 export type Units = 'days' | 'hours';
 
@@ -116,18 +116,11 @@ export const groupAccumulations = (
 
 export const dateFormatter = (
   ts: number,
-  isLocalTime = false,
   dateTimeFormat = 'MMM-dd-yyyy',
   timeFormat = 'h:mm:ss a',
   delimitation = '\n'
 ) => {
-  let timestamp = new Date(ts * 1000);
-
-  if (isLocalTime) {
-    // get local time based on timezone offset
-    const offsetInMinites = new Date().getTimezoneOffset();
-    timestamp = subMinutes(timestamp, offsetInMinites);
-  }
+  const timestamp = new Date(ts * 1000);
 
   return `${format(timestamp, dateTimeFormat)}${delimitation}${format(
     timestamp,
