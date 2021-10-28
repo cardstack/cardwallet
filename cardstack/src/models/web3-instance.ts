@@ -19,12 +19,13 @@ const Web3Instance = {
       ?.connected;
 
     try {
-      if (web3Instance.currentProvider === null || isProviderDisconnected) {
-        web3Instance.setProvider(await Web3WsProvider.get());
-      }
-
       if (signedProviderParams) {
         web3Instance.setProvider(await HDProvider.get(signedProviderParams));
+      } else if (
+        web3Instance.currentProvider === null ||
+        isProviderDisconnected
+      ) {
+        web3Instance.setProvider(await Web3WsProvider.get());
       }
     } catch (e) {
       logger.log('Failed while getting web3Instance', e);

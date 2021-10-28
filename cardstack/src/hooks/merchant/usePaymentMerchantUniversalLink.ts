@@ -94,12 +94,12 @@ export const usePaymentMerchantUniversalLink = () => {
       prepaidCardAddress: string,
       onSuccess: (receipt: TransactionReceipt) => void
     ) => {
+      showLoadingOverlay();
+
       const web3 = await Web3Instance.get({
         selectedWallet,
         network: networkName,
       });
-
-      showLoadingOverlay();
 
       const prepaidCardInstance: PrepaidCard = await getSDK(
         'PrepaidCard',
@@ -114,16 +114,16 @@ export const usePaymentMerchantUniversalLink = () => {
         { from: accountAddress }
       );
 
-      onSuccess(receipt);
-
-      // resets signed provider and web3 instance to kill poller
-      await HDProvider.reset();
-
       // update prepaidcard facevalue almost instantly
       await syncPrepaidCardFaceValue(prepaidCardAddress);
 
       // refetch all assets to sync
       await fetchAssetsBalancesAndPrices();
+
+      // resets signed provider and web3 instance to kill poller
+      await HDProvider.reset();
+
+      onSuccess(receipt);
     },
     [
       merchantAddress,
