@@ -214,5 +214,8 @@ DEPENDENCIES
   fastlane-plugin-cryptex
   fastlane-plugin-react_native_release!
 
+RUBY VERSION
+   ruby 2.6.8p205
+
 BUNDLED WITH
-   2.0.2
+   2.2.24
