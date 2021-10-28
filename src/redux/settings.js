@@ -1,3 +1,4 @@
+import RNRestart from 'react-native-restart';
 import {
   getNativeCurrency,
   getNetwork,
@@ -9,16 +10,22 @@ import { web3SetHttpProvider } from '../handlers/web3';
 import networkTypes from '../helpers/networkTypes';
 import { updateLanguage } from '../languages';
 
-import { ethereumUtils } from '../utils';
+import { ethereumUtils, promiseUtils } from '../utils';
+import { addCashClearState } from './addCash';
 import { dataResetState } from './data';
+import { explorerClearState } from './explorer';
 import {
   fallbackExplorerClearState,
   fallbackExplorerInit,
 } from './fallbackExplorer';
+import { resetOpenStateSettings } from './openStateSettings';
+import { requestsResetState } from './requests';
+import { uniqueTokensResetState } from './uniqueTokens';
+import { uniswapResetState } from './uniswap';
+import { uniswapLiquidityResetState } from './uniswapLiquidity';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { paymentChangeCurrency } from '@cardstack/redux/payment';
 import logger from 'logger';
-
 // -- Constants ------------------------------------------------------------- //
 
 const SETTINGS_UPDATE_SETTINGS_ADDRESS =
@@ -67,18 +74,23 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
   dispatch(walletConnectUpdateSessions());
 };
 
+export const resetAccountState = async dispatch => {
+  const p0 = dispatch(explorerClearState());
+  const p1 = dispatch(dataResetState());
+  const p2 = dispatch(uniqueTokensResetState());
+  const p3 = dispatch(resetOpenStateSettings());
+  const p4 = dispatch(requestsResetState());
+  const p5 = dispatch(uniswapResetState());
+  const p6 = dispatch(uniswapLiquidityResetState());
+  const p7 = dispatch(addCashClearState());
+  await promiseUtils.PromiseAllWithFails([p0, p1, p2, p3, p4, p5, p6, p7]);
+};
+
 export const settingsUpdateNetwork = network => async dispatch => {
   try {
-    const chainId = ethereumUtils.getChainIdFromNetwork(network);
-    await web3SetHttpProvider(network);
-    await dispatch({
-      payload: { chainId, network },
-      type: SETTINGS_UPDATE_NETWORK_SUCCESS,
-    });
-    await dispatch(fallbackExplorerClearState());
     await saveNetwork(network);
-    dispatch(fallbackExplorerInit());
-    dispatch(walletConnectUpdateSessions());
+    await resetAccountState(dispatch);
+    RNRestart.Restart(); // restart app so it reloads with updated network
   } catch (error) {
     logger.log('Error updating network settings', error);
   }

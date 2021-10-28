@@ -1,29 +1,27 @@
 import { toLower, values } from 'lodash';
-import React, { useCallback } from 'react';
-import { InteractionManager } from 'react-native';
+import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import networkInfo from '../../helpers/networkInfo';
-import {
-  useAccountSettings,
-  useInitializeAccountData,
-  useLoadAccountData,
-  useResetAccountState,
-} from '../../hooks';
+import { useAccountSettings } from '../../hooks';
 import {
   INITIAL_STATE,
   settingsUpdateNetwork,
   toggleShowTestnets,
 } from '../../redux/settings';
 
-import { Checkbox, Container, RadioList, Text } from '@cardstack/components';
+import {
+  Button,
+  Checkbox,
+  Container,
+  RadioList,
+  Text,
+} from '@cardstack/components';
 
 const networks = values(networkInfo);
 
 const NetworkSection = () => {
   const { network, showTestnets } = useAccountSettings();
-  const resetAccountState = useResetAccountState();
-  const loadAccountData = useLoadAccountData();
-  const initializeAccountData = useInitializeAccountData();
+  const [selectedNetwork, setSelectedNetwork] = useState(network);
   const dispatch = useDispatch();
   const networkSelected = networkInfo[network];
   const defaultNetwork = INITIAL_STATE.network;
@@ -45,7 +43,7 @@ const NetworkSection = () => {
                   index: currentIndex,
                   label: curr.name,
                   value: curr.value,
-                  selected: toLower(network) === toLower(curr.value),
+                  selected: toLower(selectedNetwork) === toLower(curr.value),
                   default: curr.value === defaultNetwork,
                 },
               ],
@@ -55,7 +53,7 @@ const NetworkSection = () => {
         }, [])
         .flat()
         .sort((a, b) => a.layer < b.layer),
-    [defaultNetwork, network, showTestnets]
+    [defaultNetwork, selectedNetwork, showTestnets]
   );
 
   useEffect(() => {
@@ -65,19 +63,24 @@ const NetworkSection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (network) {
+      setSelectedNetwork(network);
+    }
+  }, [network, setSelectedNetwork]);
+
   const onNetworkChange = useCallback(
-    async network => {
-      if (network) {
-        await resetAccountState();
-        await dispatch(settingsUpdateNetwork(network));
-        InteractionManager.runAfterInteractions(async () => {
-          await loadAccountData(network);
-          initializeAccountData();
-        });
+    async selected => {
+      if (selected) {
+        setSelectedNetwork(selected);
       }
     },
-    [dispatch, initializeAccountData, loadAccountData, resetAccountState]
+    [setSelectedNetwork]
   );
+
+  const updateNetwork = useCallback(() => {
+    dispatch(settingsUpdateNetwork(selectedNetwork));
+  }, [dispatch, selectedNetwork]);
 
   const onShowTestsPress = useCallback(() => dispatch(toggleShowTestnets()), [
     dispatch,
@@ -96,6 +99,15 @@ const NetworkSection = () => {
         />
       </Container>
       <RadioList items={DATA} onChange={onNetworkChange} />
+      <Container marginTop={4} paddingHorizontal={4}>
+        <Button
+          disabled={selectedNetwork === network}
+          onPress={updateNetwork}
+          width="100%"
+        >
+          Update
+        </Button>
+      </Container>
     </Container>
   );
 };
