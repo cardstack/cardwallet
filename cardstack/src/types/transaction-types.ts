@@ -140,7 +140,7 @@ export interface PrepaidCardPaymentTransactionType {
 
 export interface MerchantEarnedRevenueTransactionTypeTxn {
   customerSpend: any;
-  customerSpendUsd: string;
+  customerSpendNative: string;
   protocolFee: string;
   revenueCollected: string;
   spendConversionRate: string;
