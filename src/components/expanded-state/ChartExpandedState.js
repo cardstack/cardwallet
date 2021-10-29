@@ -125,6 +125,7 @@ export default function ChartExpandedState(props) {
           <SendActionButton
             asset={currentAsset}
             color={color}
+            safeAddress={props.safeAddress}
             small={showSwapButton} //reenable once swap functionality is fixed
           />
         </Container>

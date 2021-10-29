@@ -123,8 +123,6 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
 };
 
 const Assets = (props: AvailableBalancesExpandedStateProps) => {
-  const { tokens } = props.asset;
-
   const [network, nativeCurrency, currencyConversionRates] = useRainbowSelector<
     [string, string, { [key: string]: number }]
   >(state => [
@@ -132,7 +130,7 @@ const Assets = (props: AvailableBalancesExpandedStateProps) => {
     state.settings.nativeCurrency,
     state.currencyConversion.rates,
   ]);
-  const balancesSection = useBalancesSection(tokens);
+  const balancesSection = useBalancesSection(props.asset);
   const orderedSections = [
     balancesSection,
     // ToDo: add more sections here later
@@ -163,10 +161,12 @@ const Assets = (props: AvailableBalancesExpandedStateProps) => {
 };
 
 const useBalancesSection = (
-  tokens: TokenType[]
+  asset: MerchantSafeType
 ): AssetListSectionItem<TokenBalanceProps> => {
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
   const { navigate } = useNavigation();
+
+  const { tokens, address: safeAddress } = asset;
 
   const assets = useMemo(
     () =>
@@ -176,13 +176,14 @@ const useBalancesSection = (
         nativeBalance: token.native.balance.display,
         onPress: () =>
           navigate(Routes.EXPANDED_ASSET_SHEET, {
+            safeAddress,
             asset: token,
             type: 'token',
           }),
         key: token.tokenAddress,
         tokenBalanceFontSize: 'largeBalance',
       })),
-    [navigate, tokens]
+    [navigate, tokens, safeAddress]
   );
 
   const totalDisplay = useMemo(

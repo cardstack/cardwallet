@@ -5,6 +5,7 @@ import { useSendSheetDepotScreen } from './useSendSheetDepotScreen';
 import { useAccountAssets } from '@rainbow-me/hooks';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
+import { reshapeSingleDepotTokenToAsset } from '@cardstack/utils';
 
 jest.mock('@cardstack/utils/device', () => ({ Device: { isAndroid: false } }));
 jest.mock('@rainbow-me/navigation/Navigation', () => ({
@@ -71,14 +72,20 @@ describe('useSendSheetDepotScreen', () => {
     expect(result.current.selected).toBeUndefined();
   });
 
-  it('should return empty array if not depot is found without error', async () => {
+  it('should return the current reshaped token from params if no depot is found', async () => {
     (useAccountAssets as jest.Mock).mockImplementation(() => ({
       depots: [],
     }));
 
+    const expectedAssets = [
+      reshapeSingleDepotTokenToAsset(
+        updatedData.updatedDepots[0].tokens[0] as any
+      ),
+    ];
+
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
-    expect(result.current.allAssets).toEqual([]);
+    expect(result.current.allAssets).toEqual(expectedAssets);
   });
 
   it('should update gas fee and usdConverter initial render', async () => {
