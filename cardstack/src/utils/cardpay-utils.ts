@@ -12,7 +12,7 @@ import {
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'dai', 'keth'];
+export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'xdai', 'keth'];
 
 const MAINNETS = [Network.mainnet, Network.xdai];
 
