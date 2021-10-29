@@ -31,7 +31,7 @@ import { useWorker } from '@cardstack/utils/hooks-utilities';
 import { MainRoutes } from '@cardstack/navigation/routes';
 
 interface RouteType {
-  params: { asset: TokenType };
+  params: { asset: TokenType; safeAddress?: string };
   key: string;
   name: string;
 }
@@ -52,16 +52,30 @@ export const useSendSheetDepotScreen = () => {
     depots: [depot],
   } = useAccountAssets();
 
-  const depotAssets = useMemo(
-    () => (depot ? reshapeDepotTokensToAssets(depot) : []),
-    [depot]
+  const reshapedAsset = useMemo(
+    () =>
+      params?.asset?.tokenAddress
+        ? reshapeSingleDepotTokenToAsset(params?.asset)
+        : undefined,
+    [params.asset]
   );
 
   const [selected, setSelected] = useState<DepotAsset | undefined>(
-    params?.asset?.tokenAddress
-      ? reshapeSingleDepotTokenToAsset(params?.asset)
-      : undefined
+    reshapedAsset
   );
+
+  // If there's safeAddress, for now it means it's from a merchant,
+  // so we only show one asset in the assets list, which is the one
+  // that started the send flow
+  const depotAssets = useMemo(
+    () =>
+      depot && !params?.safeAddress
+        ? reshapeDepotTokensToAssets(depot)
+        : [reshapedAsset],
+    [depot, params.safeAddress, reshapedAsset]
+  );
+
+  const safeAddress = params?.safeAddress || depot?.address;
 
   // Inputs
   const recipientFieldRef = useRef();
@@ -88,9 +102,9 @@ export const useSendSheetDepotScreen = () => {
 
       const gasEstimate =
         (await safes?.sendTokensGasEstimate(
-          depot?.address,
+          safeAddress,
           selected?.address || '',
-          recipient || depot?.address, // Fallback to a valid recipient to get gasEstimation on first render
+          recipient || safeAddress, // Fallback to a valid recipient to get gasEstimation on first render
           amountWei
         )) || '0';
 
@@ -115,7 +129,7 @@ export const useSendSheetDepotScreen = () => {
     } catch (e) {
       logger.error('Error getting gasPriceEstimate or maxBalance', e);
     }
-  }, [amountDetails.assetAmount, depot, recipient, selected]);
+  }, [amountDetails.assetAmount, recipient, safeAddress, selected]);
 
   // Update gasFee initial render and when asset changes
   useEffect(() => {
@@ -252,7 +266,7 @@ export const useSendSheetDepotScreen = () => {
       const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
 
       return safes?.sendTokens(
-        depot?.address,
+        safeAddress,
         selected?.address || '',
         recipient,
         amountInWei,
@@ -263,9 +277,9 @@ export const useSendSheetDepotScreen = () => {
   }, [
     accountAddress,
     amountDetails.assetAmount,
-    depot,
     network,
     recipient,
+    safeAddress,
     selected,
     selectedWallet,
   ]);
