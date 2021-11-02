@@ -6,7 +6,7 @@ import {
   saveNativeCurrency,
   saveNetwork,
 } from '../handlers/localstorage/globalSettings';
-import { web3SetHttpProvider } from '../handlers/web3';
+import { etherWeb3SetHttpProvider } from '../handlers/web3';
 import networkTypes from '../helpers/networkTypes';
 import { updateLanguage } from '../languages';
 
@@ -56,7 +56,7 @@ export const settingsLoadNetwork = () => async dispatch => {
   try {
     const network = await getNetwork();
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
-    await web3SetHttpProvider(network);
+    await etherWeb3SetHttpProvider(network);
     dispatch({
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,

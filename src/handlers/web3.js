@@ -24,20 +24,21 @@ import { ethereumUtils } from '../utils';
 
 import Web3WsProvider from '@cardstack/models/web3-provider';
 import { isNativeToken } from '@cardstack/utils';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 /**
  * @desc web3 http instance - to be used with ethersproject contracts
  */
-export let web3Provider = null;
+export let web3Provider;
 
 /**
  * @desc set a different web3 provider
  * @param {String} network
  */
 
-export const web3SetHttpProvider = async network => {
+export const etherWeb3SetHttpProvider = async network => {
   try {
     web3Provider = new Web3Provider(await Web3WsProvider.get(network));
   } catch (error) {
@@ -47,8 +48,29 @@ export const web3SetHttpProvider = async network => {
   return web3Provider.ready;
 };
 
-export const sendRpcCall = async payload =>
-  web3Provider.send(payload.method, payload.params);
+/**
+ * @desc returns connected web3Provider, reconnect when it's not connected
+ * @param {String} network
+ */
+
+export const getEtherWeb3Provider = async (network = undefined) => {
+  let wsConnected = web3Provider.provider?.connected;
+
+  // check websocket state and reconnect if disconnected
+  while (!wsConnected) {
+    const currentNetwork = network || (await getNetwork());
+    await etherWeb3SetHttpProvider(currentNetwork);
+    wsConnected = web3Provider.provider?.connected;
+    logger.log('ws restarted', wsConnected, network);
+  }
+
+  return web3Provider;
+};
+
+export const sendRpcCall = async payload => {
+  const web3ProviderInstance = await getEtherWeb3Provider();
+  return web3ProviderInstance.send(payload.method, payload.params);
+};
 
 export const getTransactionReceipt = txHash =>
   sendRpcCall({
@@ -102,7 +124,8 @@ export const toChecksumAddress = address => {
  */
 export const estimateGas = async estimateGasData => {
   try {
-    const gasLimit = await web3Provider.estimateGas(estimateGasData);
+    const web3ProviderInstance = await getEtherWeb3Provider();
+    const gasLimit = await web3ProviderInstance.estimateGas(estimateGasData);
     return gasLimit.toString();
   } catch (error) {
     return null;
@@ -111,14 +134,16 @@ export const estimateGas = async estimateGasData => {
 
 export const estimateGasWithPadding = async (
   txPayload,
+  network = undefined,
   paddingFactor = 1.1
 ) => {
   try {
     const txPayloadToEstimate = { ...txPayload };
-    const { gasLimit } = await web3Provider.getBlock();
+    const web3ProviderInstance = await getEtherWeb3Provider(network);
+    const { gasLimit } = await web3ProviderInstance.getBlock();
     const { to, data } = txPayloadToEstimate;
     // 1 - Check if the receiver is a contract
-    const code = to ? await web3Provider.getCode(to) : undefined;
+    const code = to ? await web3ProviderInstance.getCode(to) : undefined;
     // 2 - if it's not a contract AND it doesn't have any data use the default gas limit
     if (!to || (to && !data && (!code || code === '0x'))) {
       logger.log(
@@ -133,7 +158,9 @@ export const estimateGasWithPadding = async (
     logger.log('⛽ safer gas limit for last block is', saferGasLimit);
 
     txPayloadToEstimate.gas = toHex(saferGasLimit);
-    const estimatedGas = await web3Provider.estimateGas(txPayloadToEstimate);
+    const estimatedGas = await web3ProviderInstance.estimateGas(
+      txPayloadToEstimate
+    );
 
     const lastBlockGasLimit = addBuffer(gasLimit.toString(), 0.9);
     const paddedGas = addBuffer(
@@ -238,7 +265,8 @@ const resolveNameOrAddress = async nameOrAddress => {
     if (/^([\w-]+\.)+(crypto)$/.test(nameOrAddress)) {
       return resolveUnstoppableDomain(nameOrAddress);
     }
-    return web3Provider.resolveName(nameOrAddress);
+    const web3ProviderInstance = await getEtherWeb3Provider();
+    return web3ProviderInstance.resolveName(nameOrAddress);
   }
   return nameOrAddress;
 };
@@ -250,8 +278,9 @@ const resolveNameOrAddress = async nameOrAddress => {
  */
 export const getTransferNftTransaction = async transaction => {
   const recipient = await resolveNameOrAddress(transaction.to);
-  const { from } = transaction;
-  const contractAddress = get(transaction, 'asset.asset_contract.address');
+  const { from, to } = transaction;
+  const contractAddress =
+    get(transaction, 'asset.asset_contract.address') || to;
   const data = getDataForNftTransfer(from, recipient, transaction.asset);
   return {
     data,
@@ -279,7 +308,7 @@ export const getTransferTokenTransaction = async transaction => {
     from: transaction.from,
     gasLimit: transaction.gasLimit,
     gasPrice: transaction.gasPrice,
-    to: transaction.asset.address,
+    to: transaction.asset.address || transaction.to,
   };
 };
 
@@ -394,7 +423,7 @@ export const estimateGasLimit = async (
     };
   }
   if (addPadding) {
-    return estimateGasWithPadding(estimateGasData);
+    return estimateGasWithPadding(estimateGasData, network);
   } else {
     return estimateGas(estimateGasData);
   }
