@@ -292,10 +292,6 @@ const useSendSheetScreen = () => {
       } catch (e) {}
     }
 
-    if (!recipient) {
-      console.log('onSubmit recipient===', recipient);
-      return;
-    }
     const txDetails = {
       amount: amountDetails.assetAmount,
       asset: selected,
@@ -310,13 +306,6 @@ const useSendSheetScreen = () => {
         txDetails,
         network
       );
-      console.log(
-        'signableTransaction--',
-        txDetails,
-        network,
-        signableTransaction
-      );
-
       const txResult = await sendTransaction({
         transaction: signableTransaction,
       });
