@@ -7,7 +7,7 @@ import {
   getWalletNames,
   saveWalletNames,
 } from '../handlers/localstorage/walletNames';
-import { getWeb3Provider } from '../handlers/web3';
+import { getEtherWeb3Provider } from '../handlers/web3';
 import WalletBackupTypes from '../helpers/walletBackupTypes';
 import WalletTypes from '../helpers/walletTypes';
 import { hasKey } from '../model/keychain';
@@ -219,7 +219,7 @@ export const fetchWalletNames = () => async (dispatch, getState) => {
       const visibleAccounts = filter(wallet.addresses, 'visible');
       return map(visibleAccounts, async account => {
         try {
-          const web3Provider = await getWeb3Provider();
+          const web3Provider = await getEtherWeb3Provider();
           const ens = await web3Provider.lookupAddress(account.address);
           if (ens && ens !== account.address) {
             updatedWalletNames[account.address] = ens;

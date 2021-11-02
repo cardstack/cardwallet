@@ -33,7 +33,7 @@ import { uniswapClient } from '../apollo/client';
 import { UNISWAP_ALL_TOKENS } from '../apollo/queries';
 import { loadWallet } from '../model/wallet';
 import { ETH_ADDRESS_SYMBOL } from '../references/addresses';
-import { getWeb3Provider, toHex } from './web3';
+import { getEtherWeb3Provider, toHex } from './web3';
 import {
   Asset,
   RawUniswapSubgraphAsset,
@@ -111,7 +111,7 @@ export const estimateSwapGasLimit = async ({
       gasLimit: ethUnits.basic_swap,
     };
   }
-  const web3Provider = await getWeb3Provider();
+  const web3Provider = await getEtherWeb3Provider();
   try {
     const {
       exchange,

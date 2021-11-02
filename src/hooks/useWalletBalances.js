@@ -11,7 +11,7 @@ import {
   saveWalletBalances,
   WALLET_BALANCES_FROM_STORAGE,
 } from '../handlers/localstorage/walletBalances';
-import { getWeb3Provider } from '../handlers/web3';
+import { getEtherWeb3Provider } from '../handlers/web3';
 import { ETH_ADDRESS } from '../references/addresses';
 
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
@@ -37,7 +37,7 @@ const useWalletBalances = wallets => {
         'balanceCheckerContractAddress',
         network
       );
-      const web3Provider = await getWeb3Provider();
+      const web3Provider = await getEtherWeb3Provider();
       const balanceCheckerContract = new Contract(
         balanceCheckerContractAddress,
         balanceCheckerContractAbi,

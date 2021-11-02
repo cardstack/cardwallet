@@ -38,7 +38,7 @@ export let web3Provider;
  * @param {String} network
  */
 
-export const web3SetHttpProvider = async network => {
+export const etherWeb3SetHttpProvider = async network => {
   try {
     web3Provider = new Web3Provider(await Web3WsProvider.get(network));
   } catch (error) {
@@ -53,13 +53,13 @@ export const web3SetHttpProvider = async network => {
  * @param {String} network
  */
 
-export const getWeb3Provider = async (network = undefined) => {
+export const getEtherWeb3Provider = async (network = undefined) => {
   let wsConnected = web3Provider.provider?.connected;
 
   // check websocket state and reconnect if disconnected
   while (!wsConnected) {
     const currentNetwork = network || (await getNetwork());
-    await web3SetHttpProvider(currentNetwork);
+    await etherWeb3SetHttpProvider(currentNetwork);
     wsConnected = web3Provider.provider?.connected;
     logger.log('ws restarted', wsConnected, network);
   }
@@ -68,7 +68,7 @@ export const getWeb3Provider = async (network = undefined) => {
 };
 
 export const sendRpcCall = async payload => {
-  const web3ProviderInstance = await getWeb3Provider();
+  const web3ProviderInstance = await getEtherWeb3Provider();
   return web3ProviderInstance.send(payload.method, payload.params);
 };
 
@@ -124,7 +124,7 @@ export const toChecksumAddress = address => {
  */
 export const estimateGas = async estimateGasData => {
   try {
-    const web3ProviderInstance = await getWeb3Provider();
+    const web3ProviderInstance = await getEtherWeb3Provider();
     const gasLimit = await web3ProviderInstance.estimateGas(estimateGasData);
     return gasLimit.toString();
   } catch (error) {
@@ -139,7 +139,7 @@ export const estimateGasWithPadding = async (
 ) => {
   try {
     const txPayloadToEstimate = { ...txPayload };
-    const web3ProviderInstance = await getWeb3Provider(network);
+    const web3ProviderInstance = await getEtherWeb3Provider(network);
     const { gasLimit } = await web3ProviderInstance.getBlock();
     const { to, data } = txPayloadToEstimate;
     // 1 - Check if the receiver is a contract
@@ -265,7 +265,7 @@ const resolveNameOrAddress = async nameOrAddress => {
     if (/^([\w-]+\.)+(crypto)$/.test(nameOrAddress)) {
       return resolveUnstoppableDomain(nameOrAddress);
     }
-    const web3ProviderInstance = await getWeb3Provider();
+    const web3ProviderInstance = await getEtherWeb3Provider();
     return web3ProviderInstance.resolveName(nameOrAddress);
   }
   return nameOrAddress;

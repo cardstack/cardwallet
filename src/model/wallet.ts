@@ -29,7 +29,7 @@ import {
 import { saveAccountEmptyState } from '../handlers/localstorage/accountLocal';
 import {
   addHexPrefix,
-  getWeb3Provider,
+  getEtherWeb3Provider,
   isHexString,
   isHexStringIgnorePrefix,
   isValidMnemonic,
@@ -226,7 +226,7 @@ export const loadWallet = async (): Promise<null | Wallet> => {
     return null;
   }
   if (privateKey) {
-    const web3Provider = await getWeb3Provider();
+    const web3Provider = await getEtherWeb3Provider();
     return new Wallet(privateKey, web3Provider);
   }
   if (Device.isIOS) {

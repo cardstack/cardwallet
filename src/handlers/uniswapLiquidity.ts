@@ -10,7 +10,7 @@ import { ChainId, WETH } from '@uniswap/sdk';
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json';
 import contractMap from 'eth-contract-metadata';
 import { compact, get, keyBy, map, partition, toLower } from 'lodash';
-import { getWeb3Provider } from './web3';
+import { getEtherWeb3Provider } from './web3';
 import { Asset, ParsedAddressAsset } from '@rainbow-me/entities';
 import { parseAssetsNative } from '@rainbow-me/parsers';
 import { erc20ABI, UNISWAP_V1_EXCHANGE_ABI } from '@rainbow-me/references';
@@ -39,7 +39,7 @@ const getTokenDetails = async (
       symbol: 'ETH',
     };
   }
-  const web3Provider = await getWeb3Provider();
+  const web3Provider = await getEtherWeb3Provider();
   const tokenContract = new Contract(tokenAddress, erc20ABI, web3Provider);
 
   const token = get(pairs, `[${toLower(tokenAddress)}]`);
@@ -146,7 +146,7 @@ const getLiquidityInfoV2 = async (
 ): Promise<Record<string, LiquidityInfo>> => {
   const promises = map(liquidityTokens, async lpToken => {
     try {
-      const web3Provider = await getWeb3Provider();
+      const web3Provider = await getEtherWeb3Provider();
       const liquidityPoolAddress = lpToken.address;
       const pair = new Contract(
         liquidityPoolAddress,
@@ -231,7 +231,7 @@ const getLiquidityInfoV1 = async (
   const promises = map(liquidityTokens, async lpToken => {
     try {
       const liquidityPoolAddress = lpToken.address;
-      const web3Provider = await getWeb3Provider();
+      const web3Provider = await getEtherWeb3Provider();
       const ethReserveCall = web3Provider.getBalance(liquidityPoolAddress);
       const lpTokenBalance = convertAmountToRawAmount(
         lpToken?.balance?.amount || 0,

@@ -2,7 +2,7 @@ import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
 
-import { getWeb3Provider } from '../handlers/web3';
+import { getEtherWeb3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
 import { ETH_ADDRESS } from '../references/addresses';
@@ -310,7 +310,7 @@ const fetchAssetBalances = async (tokens, address, network) => {
       'balanceCheckerContractAddress',
       network
     );
-    const web3Provider = await getWeb3Provider(network);
+    const web3Provider = await getEtherWeb3Provider(network);
     const balanceCheckerContract = new Contract(
       balanceCheckerContractAddress,
       balanceCheckerContractAbi,
