@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
-import { toHex, web3Provider } from '../handlers/web3';
+import { getEtherWeb3Provider, toHex } from '../handlers/web3';
 import { loadWallet } from '../model/wallet';
 import { ethUnits } from '../references';
 import erc20ABI from '../references/erc20-abi.json';
@@ -20,10 +20,11 @@ const estimateApproveWithExchange = async (owner, spender, exchange) => {
   }
 };
 
-const estimateApprove = (owner, tokenAddress, spender) => {
+const estimateApprove = async (owner, tokenAddress, spender) => {
   logger.sentry('exchange estimate approve', { owner, spender, tokenAddress });
+  const web3Provider = await getEtherWeb3Provider();
   const exchange = new Contract(tokenAddress, erc20ABI, web3Provider);
-  return estimateApproveWithExchange(owner, spender, exchange);
+  return await estimateApproveWithExchange(owner, spender, exchange);
 };
 
 const approve = async (
@@ -49,6 +50,7 @@ const approve = async (
 const getRawAllowance = async (owner, token, spender) => {
   try {
     const { address: tokenAddress } = token;
+    const web3Provider = await getEtherWeb3Provider();
     const tokenContract = new Contract(tokenAddress, erc20ABI, web3Provider);
     const allowance = await tokenContract.allowance(owner, spender);
     return allowance.toString();

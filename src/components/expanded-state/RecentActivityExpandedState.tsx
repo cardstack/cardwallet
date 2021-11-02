@@ -16,7 +16,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 
 const CHART_HEIGHT = screenHeight * 0.75;
 
-export default function UnclaimedRevenueExpandedState(props: {
+export default function RecentActivityExpandedState(props: {
   asset: MerchantSafeType;
 }) {
   const { setOptions } = useNavigation();
@@ -30,7 +30,7 @@ export default function UnclaimedRevenueExpandedState(props: {
     () => (
       <SlackSheet flex={1} scrollEnabled>
         <Container paddingHorizontal={5} paddingVertical={3}>
-          <Text size="medium">Recent activity</Text>
+          <Text size="medium">Transactions</Text>
           <Activities address={props.asset.address} />
         </Container>
       </SlackSheet>

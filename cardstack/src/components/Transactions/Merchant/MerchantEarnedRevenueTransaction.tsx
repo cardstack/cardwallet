@@ -37,7 +37,7 @@ export const MerchantEarnedRevenueTransaction = ({
         <CoinIcon address={item.token.address} symbol={item.token.symbol} />
       }
       primaryText={`+ ${item.balance.display}`}
-      statusIconName="arrow-down"
+      statusIconName="plus"
       statusText="Earned"
       subText={item.native.display}
       transactionHash={item.transactionHash}

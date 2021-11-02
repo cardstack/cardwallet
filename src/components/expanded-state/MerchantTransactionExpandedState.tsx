@@ -58,7 +58,8 @@ interface ClaimedTransactionProps extends MerchantClaimTypeTxn {
   txRowProps: Asset;
 }
 
-const CLAIMED_STATUS = 'Claimed';
+const CLAIMED_TEXT = `Claimed from \nAvailable Revenue`;
+const DEPOSITED_TEXT = `Deposited into \nAccount`;
 
 const ItemDetail = ({
   description,
@@ -222,7 +223,7 @@ export default function MerchantTransactionExpandedState(
             overflow="scroll"
             paddingHorizontal={2}
           >
-            {props.asset.statusText === CLAIMED_STATUS ? (
+            {props.asset.statusText === DEPOSITED_TEXT || CLAIMED_TEXT ? (
               <ClaimedTransaction
                 {...transactionData}
                 txRowProps={props.asset}

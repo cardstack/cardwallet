@@ -17,6 +17,9 @@ export interface MerchantClaimTransactionProps
   item: MerchantClaimType;
 }
 
+const CLAIMED_TEXT = `Claimed from \nAvailable Revenue`;
+const DEPOSITED_TEXT = `Deposited into \nAccount`;
+
 export const MerchantClaimTransaction = ({
   item,
   ...props
@@ -50,9 +53,15 @@ export const MerchantClaimTransaction = ({
           />
         ) : null
       }
-      primaryText={`- ${item.balance.display}`}
-      statusIconName="arrow-up"
-      statusText="Claimed"
+      primaryText={`${props.isClaimedFromAvailableRevenue ? '-' : '+'} ${
+        item.balance.display
+      }`}
+      statusIconName={
+        props.isClaimedFromAvailableRevenue ? 'arrow-up' : 'arrow-down'
+      }
+      statusText={
+        props.isClaimedFromAvailableRevenue ? CLAIMED_TEXT : DEPOSITED_TEXT
+      }
       subText={item.native.display}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}

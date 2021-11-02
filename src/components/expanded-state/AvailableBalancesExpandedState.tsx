@@ -71,7 +71,7 @@ export default function AvailableBalancesExpandedState(
   return (
     <SlackSheet flex={1} scrollEnabled={false}>
       <Container paddingHorizontal={5} paddingTop={3}>
-        <Text size="medium">Available balances</Text>
+        <Text size="medium">Account balances</Text>
         <Container flexDirection="row" justifyContent="space-between">
           <TabHeader
             selectedTab={selectedTab}

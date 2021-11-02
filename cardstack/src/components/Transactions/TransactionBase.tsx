@@ -17,6 +17,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 export interface TransactionBaseCustomizationProps {
   includeBorder?: boolean;
   prepaidInlineTransaction?: boolean;
+  isClaimedFromAvailableRevenue?: boolean;
 }
 
 export interface TransactionBaseProps
