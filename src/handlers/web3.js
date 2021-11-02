@@ -47,6 +47,24 @@ export const web3SetHttpProvider = async network => {
   return web3Provider.ready;
 };
 
+/**
+ * @desc returns connected web3Provider, reconnect when it's not connected
+ * @param {String} network
+ */
+
+export const getWeb3Provider = async network => {
+  let wsConnected = web3Provider.provider?.connected;
+
+  // check websocket state and reconnect if disconnected
+  while (!wsConnected) {
+    await web3SetHttpProvider(network);
+    wsConnected = web3Provider.provider?.connected;
+    logger.log('ws restarted', wsConnected, network);
+  }
+
+  return web3Provider;
+};
+
 export const sendRpcCall = async payload =>
   web3Provider.send(payload.method, payload.params);
 
@@ -111,14 +129,16 @@ export const estimateGas = async estimateGasData => {
 
 export const estimateGasWithPadding = async (
   txPayload,
+  network = undefined,
   paddingFactor = 1.1
 ) => {
   try {
     const txPayloadToEstimate = { ...txPayload };
-    const { gasLimit } = await web3Provider.getBlock();
+    const web3ProviderInstance = await getWeb3Provider(network);
+    const { gasLimit } = await web3ProviderInstance.getBlock();
     const { to, data } = txPayloadToEstimate;
     // 1 - Check if the receiver is a contract
-    const code = to ? await web3Provider.getCode(to) : undefined;
+    const code = to ? await web3ProviderInstance.getCode(to) : undefined;
     // 2 - if it's not a contract AND it doesn't have any data use the default gas limit
     if (!to || (to && !data && (!code || code === '0x'))) {
       logger.log(
@@ -133,7 +153,9 @@ export const estimateGasWithPadding = async (
     logger.log('⛽ safer gas limit for last block is', saferGasLimit);
 
     txPayloadToEstimate.gas = toHex(saferGasLimit);
-    const estimatedGas = await web3Provider.estimateGas(txPayloadToEstimate);
+    const estimatedGas = await web3ProviderInstance.estimateGas(
+      txPayloadToEstimate
+    );
 
     const lastBlockGasLimit = addBuffer(gasLimit.toString(), 0.9);
     const paddedGas = addBuffer(
@@ -250,8 +272,9 @@ const resolveNameOrAddress = async nameOrAddress => {
  */
 export const getTransferNftTransaction = async transaction => {
   const recipient = await resolveNameOrAddress(transaction.to);
-  const { from } = transaction;
-  const contractAddress = get(transaction, 'asset.asset_contract.address');
+  const { from, to } = transaction;
+  const contractAddress =
+    get(transaction, 'asset.asset_contract.address') || to;
   const data = getDataForNftTransfer(from, recipient, transaction.asset);
   return {
     data,
@@ -279,7 +302,7 @@ export const getTransferTokenTransaction = async transaction => {
     from: transaction.from,
     gasLimit: transaction.gasLimit,
     gasPrice: transaction.gasPrice,
-    to: transaction.asset.address,
+    to: transaction.asset.address || transaction.to,
   };
 };
 
@@ -394,7 +417,7 @@ export const estimateGasLimit = async (
     };
   }
   if (addPadding) {
-    return estimateGasWithPadding(estimateGasData);
+    return estimateGasWithPadding(estimateGasData, network);
   } else {
     return estimateGas(estimateGasData);
   }
