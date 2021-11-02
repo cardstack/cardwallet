@@ -1,9 +1,9 @@
 import { isValidAddress } from 'ethereumjs-util';
 import {
+  getWeb3Provider,
   isHexStringIgnorePrefix,
   isValidMnemonic,
   resolveUnstoppableDomain,
-  web3Provider,
 } from '@rainbow-me/handlers/web3';
 import { sanitizeSeedPhrase } from '@rainbow-me/utils';
 
@@ -44,6 +44,7 @@ export const isUnstoppableAddressFormat = address => {
 export const checkIsValidAddressOrDomain = async address => {
   if (isENSAddressFormat(address)) {
     try {
+      const web3Provider = await getWeb3Provider();
       const resolvedAddress = await web3Provider.resolveName(address);
       return !!resolvedAddress;
     } catch (error) {

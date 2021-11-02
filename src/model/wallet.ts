@@ -29,10 +29,10 @@ import {
 import { saveAccountEmptyState } from '../handlers/localstorage/accountLocal';
 import {
   addHexPrefix,
+  getWeb3Provider,
   isHexString,
   isHexStringIgnorePrefix,
   isValidMnemonic,
-  web3Provider,
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
 import WalletLoadingStates from '../helpers/walletLoadingStates';
@@ -226,6 +226,7 @@ export const loadWallet = async (): Promise<null | Wallet> => {
     return null;
   }
   if (privateKey) {
+    const web3Provider = await getWeb3Provider();
     return new Wallet(privateKey, web3Provider);
   }
   if (Device.isIOS) {

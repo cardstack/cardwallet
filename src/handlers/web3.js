@@ -24,13 +24,14 @@ import { ethereumUtils } from '../utils';
 
 import Web3WsProvider from '@cardstack/models/web3-provider';
 import { isNativeToken } from '@cardstack/utils';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 /**
  * @desc web3 http instance - to be used with ethersproject contracts
  */
-export let web3Provider = null;
+export let web3Provider;
 
 /**
  * @desc set a different web3 provider
@@ -52,12 +53,13 @@ export const web3SetHttpProvider = async network => {
  * @param {String} network
  */
 
-export const getWeb3Provider = async network => {
+export const getWeb3Provider = async (network = undefined) => {
   let wsConnected = web3Provider.provider?.connected;
 
   // check websocket state and reconnect if disconnected
   while (!wsConnected) {
-    await web3SetHttpProvider(network);
+    const currentNetwork = network || (await getNetwork());
+    await web3SetHttpProvider(currentNetwork);
     wsConnected = web3Provider.provider?.connected;
     logger.log('ws restarted', wsConnected, network);
   }
@@ -65,8 +67,10 @@ export const getWeb3Provider = async network => {
   return web3Provider;
 };
 
-export const sendRpcCall = async payload =>
-  web3Provider.send(payload.method, payload.params);
+export const sendRpcCall = async payload => {
+  const web3ProviderInstance = await getWeb3Provider();
+  return web3ProviderInstance.send(payload.method, payload.params);
+};
 
 export const getTransactionReceipt = txHash =>
   sendRpcCall({
@@ -120,7 +124,8 @@ export const toChecksumAddress = address => {
  */
 export const estimateGas = async estimateGasData => {
   try {
-    const gasLimit = await web3Provider.estimateGas(estimateGasData);
+    const web3ProviderInstance = await getWeb3Provider();
+    const gasLimit = await web3ProviderInstance.estimateGas(estimateGasData);
     return gasLimit.toString();
   } catch (error) {
     return null;
@@ -260,7 +265,8 @@ const resolveNameOrAddress = async nameOrAddress => {
     if (/^([\w-]+\.)+(crypto)$/.test(nameOrAddress)) {
       return resolveUnstoppableDomain(nameOrAddress);
     }
-    return web3Provider.resolveName(nameOrAddress);
+    const web3ProviderInstance = await getWeb3Provider();
+    return web3ProviderInstance.resolveName(nameOrAddress);
   }
   return nameOrAddress;
 };
