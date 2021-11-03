@@ -87,11 +87,17 @@ export const parseAssetsNative = (assets, nativeCurrency) =>
     });
 
     const priceUnit = get(assetNativePrice, 'value', 0);
-    const nativeDisplay = convertAmountAndPriceToNativeDisplay(
-      get(asset, 'balance.amount', 0),
-      priceUnit,
-      nativeCurrency
-    );
+
+    const hasPrice = priceUnit;
+
+    // Only try to convertAmount if there's a price otherwise use default balance
+    const nativeDisplay = hasPrice
+      ? convertAmountAndPriceToNativeDisplay(
+          get(asset, 'balance.amount', 0),
+          priceUnit,
+          nativeCurrency
+        )
+      : asset?.native?.balance;
 
     return {
       ...asset,
