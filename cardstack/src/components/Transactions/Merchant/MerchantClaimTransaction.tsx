@@ -11,6 +11,7 @@ import { MerchantClaimType } from '@cardstack/types';
 import { CoinIcon } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { ClaimStatuses, getClaimProps } from '@cardstack/utils';
 
 export interface MerchantClaimTransactionProps
   extends TransactionBaseCustomizationProps {
@@ -27,11 +28,16 @@ export const MerchantClaimTransaction = ({
   const onPressTransaction = useCallback(
     (assetProps: TransactionBaseProps) =>
       navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
-        asset: { ...assetProps },
+        asset: {
+          ...assetProps,
+          claimStatus: item.claimStatus || ClaimStatuses.DEPOSITED,
+        },
         type: 'merchantTransaction',
       }),
-    [navigate]
+    [item.claimStatus, navigate]
   );
+
+  const claimProps = getClaimProps(item.claimStatus);
 
   return (
     <TransactionBase
@@ -50,9 +56,9 @@ export const MerchantClaimTransaction = ({
           />
         ) : null
       }
-      primaryText={`- ${item.balance.display}`}
-      statusIconName="arrow-up"
-      statusText="Claimed"
+      primaryText={`${claimProps.sign} ${item.balance.display}`}
+      statusIconName={claimProps.icon}
+      statusText={claimProps.text}
       subText={item.native.display}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}

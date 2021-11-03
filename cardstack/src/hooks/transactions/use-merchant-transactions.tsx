@@ -1,7 +1,7 @@
 import { NetworkStatus } from '@apollo/client';
-import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
 import { useTransactionSections } from './use-transaction-sections';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
 import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
@@ -20,11 +20,7 @@ const typeToStrategies: {
 } = {
   lifetimeEarnings: [MerchantEarnedSpendStrategy],
   unclaimedRevenue: [MerchantClaimStrategy, MerchantEarnedRevenueStrategy],
-  availableBalances: [
-    MerchantClaimStrategy,
-    MerchantEarnedRevenueStrategy,
-    MerchantEarnedSpendStrategy,
-  ],
+  availableBalances: [MerchantClaimStrategy],
   recentActivity: [MerchantEarnedSpendStrategy],
 };
 

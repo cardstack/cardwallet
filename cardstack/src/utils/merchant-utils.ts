@@ -20,6 +20,19 @@ import {
 } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils/cardpay-utils';
 import { getNativeBalance } from '@cardstack/services';
+import { IconName } from '@cardstack/components';
+
+export const ClaimedStatus = {
+  CLAIMED_TEXT: `Claimed from \nAvailable Revenue`,
+  DEPOSITED_TEXT: `Deposited into \nAccount`,
+};
+
+export enum ClaimStatuses {
+  DEPOSITED = 'deposited',
+  CLAIMED = 'claimed',
+}
+
+export type ClaimStatusTypes = ClaimStatuses;
 
 export const merchantRevenueEventsToTransactions = (
   revenueEvents: MerchantRevenueEventFragment[]
@@ -223,3 +236,28 @@ export async function getMerchantEarnedTransactionDetails(
     netEarnedNative: convertAmountToNativeDisplay(netValue, nativeCurrency),
   };
 }
+
+export const getClaimProps = (
+  status: ClaimStatusTypes = ClaimStatuses.DEPOSITED
+) => {
+  const PROPS: {
+    [key: string]: {
+      text: string;
+      sign: string;
+      icon: IconName;
+    };
+  } = {
+    claimed: {
+      text: ClaimedStatus.CLAIMED_TEXT,
+      sign: '-',
+      icon: 'arrow-up',
+    },
+    deposited: {
+      text: ClaimedStatus.DEPOSITED_TEXT,
+      sign: '+',
+      icon: 'arrow-down',
+    },
+  };
+
+  return PROPS[status];
+};

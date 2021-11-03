@@ -1,9 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
-import {
-  ChartFilterOptions,
-  useLifetimeEarningsData,
-} from '../../../cardstack/src/hooks/use-lifetime-earnings-data';
 import { SlackSheet } from '../sheet';
 import {
   Container,
@@ -15,7 +11,11 @@ import {
   TransactionItem,
   TransactionListLoading,
 } from '@cardstack/components';
-import { useMerchantTransactions } from '@cardstack/hooks';
+import {
+  ChartFilterOptions,
+  useLifetimeEarningsData,
+  useMerchantTransactions,
+} from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
@@ -93,7 +93,7 @@ const ChartSection = ({ address }: { address: string }) => {
   return (
     <>
       <Container paddingHorizontal={5} paddingTop={3}>
-        <Text size="medium">Lifetime earnings</Text>
+        <Text size="medium">Earnings history</Text>
         <Container alignItems="flex-start" flexDirection="row" marginTop={8}>
           <Icon name="spend" size={40} />
           <Container flexDirection="column" marginLeft={4}>
