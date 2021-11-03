@@ -408,6 +408,8 @@ export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
   const { accountAddress, nativeCurrency, network } = store.getState().settings;
+  const currencyConversionRates = store.getState().currencyConversion.rates;
+
   const formattedNativeCurrency = toLower(nativeCurrency);
 
   const {
@@ -446,24 +448,15 @@ export const fetchAssetsBalancesAndPrices = async () => {
       return ids;
     }, []);
 
-    const prices = await fetchAssetPrices(
+    const fetchPrices = fetchAssetPrices(coingeckoIds, formattedNativeCurrency);
+
+    const fetchChartData = fetchAssetCharts(
       coingeckoIds,
       formattedNativeCurrency
     );
-
-    const chartData = await fetchAssetCharts(
-      coingeckoIds,
-      formattedNativeCurrency
-    );
-
-    const {
-      depots,
-      prepaidCards,
-      merchantSafes,
-    } = await fetchGnosisSafesAndAddCoingeckoId();
 
     // needs to be fetched after safes, because of contract signing
-    const balances = await fetchAssetBalances(
+    const fetchBalances = fetchAssetBalances(
       assets.map(({ asset: { asset_code, symbol } }) =>
         isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
       ),
@@ -471,16 +464,30 @@ export const fetchAssetsBalancesAndPrices = async () => {
       network
     );
 
-    const updatedAssets = reduceAssetsWithPriceChartAndBalances({
+    const [
+      prices,
+      chartData,
+      { depots, prepaidCards, merchantSafes },
+      balances,
+    ] = await Promise.all([
+      fetchPrices,
+      fetchChartData,
+      fetchGnosisSafesAndAddCoingeckoId(),
+      fetchBalances,
+    ]);
+
+    const reduceAssets = reduceAssetsWithPriceChartAndBalances({
       assets,
       prices,
       formattedNativeCurrency,
       chartData,
       balances,
       network,
+      currencyConversionRates,
+      nativeCurrency,
     });
 
-    const updatedDepots = depots
+    const reduceDepots = depots
       ? reduceDepotsWithPricesAndChart({
           depots,
           prices,
@@ -491,7 +498,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
       : [];
 
     // Depots, prepaidCards and merchants have the same token structure
-    const updatedPrePaidCards = prepaidCards
+    const reducePrepaidCards = prepaidCards
       ? reduceDepotsWithPricesAndChart({
           depots: prepaidCards,
           prices,
@@ -500,6 +507,12 @@ export const fetchAssetsBalancesAndPrices = async () => {
           nativeCurrency,
         })
       : [];
+
+    const [
+      updatedAssets = [],
+      updatedDepots = [],
+      updatedPrePaidCards = [],
+    ] = await Promise.all([reduceAssets, reduceDepots, reducePrepaidCards]);
 
     logger.log('😬 FallbackExplorer updating assets');
 
@@ -519,6 +532,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
         },
       })
     );
+    logger.log('😬 FallbackExplorer updating success');
   } catch (e) {
     logger.log('😬 FallbackExplorer updating assets error', e);
   }
