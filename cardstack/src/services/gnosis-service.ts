@@ -6,10 +6,12 @@ import {
   MerchantSafe,
   PrepaidCardSafe,
   Safe,
+  TokenInfo,
 } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
 import { updatePrepaidCardWithCustomization } from './prepaid-card-service';
+import { getNativeBalance } from './exchange-rate-service';
 import {
   saveDepots,
   saveMerchantSafes,
@@ -92,26 +94,23 @@ export const fetchGnosisSafes = async (address: string) => {
 };
 
 export const getTokensWithPrice = async (
-  tokens: any[],
+  tokens: TokenInfo[],
   nativeCurrency: string,
   currencyConversionRates: CurrencyConversionRates
-) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const web3 = await Web3Instance.get();
-  const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
-
-  return Promise.all(
+) =>
+  Promise.all(
     tokens.map(async tokenItem => {
-      const usdBalance = await layerTwoOracle.getUSDPrice(
-        tokenItem.token.symbol,
-        tokenItem.balance
-      );
+      const {
+        balance,
+        token: { symbol },
+      } = tokenItem;
 
-      const nativeBalance =
-        nativeCurrency === 'USD'
-          ? usdBalance
-          : currencyConversionRates[nativeCurrency] * usdBalance;
+      const nativeBalance = await getNativeBalance({
+        nativeCurrency,
+        currencyConversionRates,
+        balance,
+        symbol,
+      });
 
       const isAmountDust = nativeBalance < 0.01;
 
@@ -140,7 +139,6 @@ export const getTokensWithPrice = async (
       };
     })
   );
-};
 
 export const addGnosisTokenPrices = async (
   payload: any,
@@ -154,7 +152,7 @@ export const addGnosisTokenPrices = async (
   // @ts-ignore
   const web3 = await Web3Instance.get();
 
-  if (depots.length || merchantSafes.length || prepaidCards.length) {
+  if (depots?.length || merchantSafes?.length || prepaidCards?.length) {
     const revenuePool = await getSDK('RevenuePool', web3);
 
     const [
@@ -204,12 +202,15 @@ export const addGnosisTokenPrices = async (
                 currencyConversionRates
               ),
               getTokensWithPrice(
-                revenueBalances.map(revenueToken => ({
-                  ...revenueToken,
-                  token: {
-                    symbol: revenueToken.tokenSymbol,
-                  },
-                })),
+                revenueBalances.map(
+                  revenueToken =>
+                    (({
+                      ...revenueToken,
+                      token: {
+                        symbol: revenueToken.tokenSymbol,
+                      },
+                    } as unknown) as TokenInfo)
+                ),
                 nativeCurrency,
                 currencyConversionRates
               ),
