@@ -136,7 +136,7 @@ export default function UnclaimedRevenueExpandedState(props: {
         </Container>
       </SlackSheet>
     ),
-    [isDust, loading, onClaimAll, props.asset, revenueBalances]
+    [isDust, onClaimAll, props.asset, revenueBalances]
   );
 }
 
