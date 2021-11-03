@@ -1,4 +1,5 @@
 import { BalanceType } from './AssetType';
+import { ClaimStatusTypes } from '@cardstack/utils';
 
 export enum TransactionTypes {
   DEPOT_BRIDGED_LAYER_1 = 'depotBridgedLayer1',
@@ -124,6 +125,7 @@ export interface MerchantClaimType {
   type: TransactionTypes.MERCHANT_CLAIM;
   transaction: MerchantClaimTypeTxn;
   infoDid?: string;
+  claimStatus?: ClaimStatusTypes;
 }
 
 export interface PrepaidCardPaymentTransactionType {

@@ -18,6 +18,7 @@ import { useMerchantTransactions } from '@cardstack/hooks';
 import HDProvider from '@cardstack/models/hd-provider';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
+import { ClaimStatuses } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
@@ -116,7 +117,7 @@ export default function UnclaimedRevenueExpandedState(props: {
     () => (
       <SlackSheet flex={1} scrollEnabled>
         <Container paddingHorizontal={5} paddingVertical={3}>
-          <Text size="medium">Unclaimed revenue</Text>
+          <Text size="medium">Claim available revenue</Text>
           <Container flexDirection="column" marginTop={5}>
             {revenueBalances.map(token => (
               <TokenItem key={token.tokenAddress} token={token} />
@@ -170,9 +171,15 @@ const Activities = ({ address }: { address: string }) => {
               tintColor="white"
             />
           }
-          renderItem={props => (
-            <TransactionItem {...props} includeBorder isFullWidth />
-          )}
+          renderItem={props => {
+            const claimedProps = {
+              ...props,
+              item: { ...props.item, claimStatus: ClaimStatuses.CLAIMED },
+            };
+            return (
+              <TransactionItem {...claimedProps} includeBorder isFullWidth />
+            );
+          }}
           renderSectionHeader={({ section: { title } }) => (
             <Container backgroundColor="white" paddingVertical={2} width="100%">
               <Text color="blueText" size="medium">

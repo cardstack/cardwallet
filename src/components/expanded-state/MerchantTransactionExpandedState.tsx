@@ -15,6 +15,7 @@ import {
   MerchantClaimTypeTxn,
   MerchantEarnedRevenueTransactionTypeTxn,
 } from '@cardstack/types';
+import { ClaimStatuses, ClaimStatusTypes } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
@@ -41,6 +42,7 @@ interface Asset extends TransactionRowProps {
   statusText: string;
   subText: string;
   transactionHash: string;
+  claimStatus: ClaimStatusTypes;
 }
 
 interface Section {
@@ -57,8 +59,6 @@ interface EarnedTransactionProps
 interface ClaimedTransactionProps extends MerchantClaimTypeTxn {
   txRowProps: Asset;
 }
-
-const CLAIMED_STATUS = 'Claimed';
 
 const ItemDetail = ({
   description,
@@ -222,7 +222,9 @@ export default function MerchantTransactionExpandedState(
             overflow="scroll"
             paddingHorizontal={2}
           >
-            {props.asset.statusText === CLAIMED_STATUS ? (
+            {Object.values<string>(ClaimStatuses).includes(
+              props.asset.claimStatus
+            ) ? (
               <ClaimedTransaction
                 {...transactionData}
                 txRowProps={props.asset}

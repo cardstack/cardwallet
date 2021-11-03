@@ -1,7 +1,10 @@
 import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
 import { StatusBar } from 'react-native';
-import { useLifetimeEarningsData } from '../hooks/use-lifetime-earnings-data';
+import {
+  useLifetimeEarningsData,
+  useMerchantTransactions,
+} from '@cardstack/hooks';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
@@ -33,7 +36,6 @@ import { useNavigation } from '@rainbow-me/navigation';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { useDimensions } from '@rainbow-me/hooks';
-import { useMerchantTransactions } from '@cardstack/hooks';
 
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
@@ -117,13 +119,13 @@ const MerchantScreen = () => {
             onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
           />
           <TokensSection
-            title="Unclaimed revenue"
+            title="Available revenue"
             onPress={onPressGoTo(ExpandedMerchantRoutes.unclaimedRevenue)}
             emptyText="No revenue to be claimed"
             tokens={merchantSafe.revenueBalances}
           />
           <TokensSection
-            title="Available balances"
+            title="Account balances"
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
             emptyText="No available assets"
             tokens={merchantSafe.tokens}
@@ -258,7 +260,7 @@ const LifetimeEarningsSection = ({
 
   return (
     <Container flexDirection="column" width="100%">
-      <SectionHeader>Lifetime earnings</SectionHeader>
+      <SectionHeader>Earnings history</SectionHeader>
       <SectionWrapper onPress={onPress}>
         <>
           <TokenBalance
@@ -378,7 +380,7 @@ const RecentActivitySection = ({
 
   return (
     <Container flexDirection="column" width="100%">
-      <SectionHeader>Recent activity</SectionHeader>
+      <SectionHeader>Transactions</SectionHeader>
       {sections[0]?.data.length > 0 ? (
         <TransactionItem
           {...recentActivityDataSectionData}
