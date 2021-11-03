@@ -13,7 +13,6 @@ import {
   showApplePayRequest,
 } from '@cardstack/utils/wyre-utils';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
-import { getTokenMetadata } from '@rainbow-me/utils';
 import logger from 'logger';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { useAuthToken } from '@cardstack/hooks';
@@ -251,9 +250,8 @@ export default function useBuyPrepaidCard() {
   );
 
   const onPurchase = useCallback(
-    async ({ address, value, depositAddress, sourceCurrency }) => {
-      const metadata = getTokenMetadata(address);
-      const currency = metadata?.symbol || '';
+    async ({ value, depositAddress, sourceCurrency }) => {
+      const currency = 'DAI'; // TODO this will come from a service in #CS-2194
 
       const referenceInfo = {
         referenceId: getReferenceId(accountAddress),
@@ -389,7 +387,6 @@ export default function useBuyPrepaidCard() {
 
     try {
       wyreOrderIdData = await onPurchase({
-        address: card?.['issuing-token-symbol'],
         value: amount.toString(),
         depositAddress: custodialWalletData?.attributes['deposit-address'],
         sourceCurrency: nativeCurrency,
