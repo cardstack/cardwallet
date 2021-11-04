@@ -1,8 +1,13 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import CoinIcon from 'react-coin-icon';
-import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  RefreshControl,
+  SectionList,
+} from 'react-native';
 import Web3 from 'web3';
 import { SlackSheet } from '../sheet';
 import {
@@ -17,6 +22,7 @@ import {
 import { useMerchantTransactions } from '@cardstack/hooks';
 import HDProvider from '@cardstack/models/hd-provider';
 import Web3Instance from '@cardstack/models/web3-instance';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { ClaimStatuses } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
@@ -37,9 +43,9 @@ export default function UnclaimedRevenueExpandedState(props: {
     safe => safe.address === props.asset.address
   ) as MerchantSafeType;
   const { setOptions } = useNavigation();
-  const [loading, setLoading] = useState(false);
   const { selectedWallet } = useWallets();
   const { accountAddress } = useAccountSettings();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const network = useRainbowSelector(
     state => state.settings.network
@@ -54,7 +60,7 @@ export default function UnclaimedRevenueExpandedState(props: {
   const { revenueBalances } = merchantSafe;
 
   const onClaimAll = useCallback(async () => {
-    setLoading(true);
+    showLoadingOverlay({ title: 'Claiming Revenue' });
 
     try {
       const web3 = await Web3Instance.get({
@@ -100,15 +106,20 @@ export default function UnclaimedRevenueExpandedState(props: {
       await fetchAssetsBalancesAndPrices();
     } catch (error) {
       logger.sentry('Error claiming revenue', error);
+      Alert.alert(
+        'Could not claim revenue, please try again. If this problem persists please reach out to support@cardstack.com'
+      );
     }
 
-    setLoading(false);
+    dismissLoadingOverlay();
   }, [
     accountAddress,
+    dismissLoadingOverlay,
     merchantSafe.address,
     network,
     revenueBalances,
     selectedWallet,
+    showLoadingOverlay,
   ]);
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
@@ -124,7 +135,6 @@ export default function UnclaimedRevenueExpandedState(props: {
             ))}
           </Container>
           <Button
-            loading={loading}
             marginTop={8}
             onPress={isDust ? () => {} : onClaimAll}
             variant={isDust ? 'disabled' : undefined}
@@ -137,7 +147,7 @@ export default function UnclaimedRevenueExpandedState(props: {
         </Container>
       </SlackSheet>
     ),
-    [isDust, loading, onClaimAll, props.asset, revenueBalances]
+    [isDust, onClaimAll, props.asset, revenueBalances]
   );
 }
 
