@@ -4,6 +4,7 @@ export const MainRoutes = {
   PREPAID_CARD_MODAL: 'PrepaidCardModal',
   BUY_PREPAID_CARD: 'BuyPrepaidCard',
   SEND_FLOW_DEPOT: 'SendFlowDepot',
+  SEND_FLOW_EOA: 'SendFlowEOA',
   PAY_MERCHANT: 'PayMerchant',
   ERROR_FALLBACK_SCREEN: 'ErrorFallbackScreen',
   LOADING_OVERLAY: 'LoadingOverlay',

@@ -70,6 +70,7 @@ interface AssetListProps
 interface RouteType {
   params: {
     scrollToPrepaidCardsSection?: boolean;
+    forceRefreshOnce?: boolean;
   };
   key: string;
   name: string;
@@ -115,6 +116,20 @@ export const AssetList = (props: AssetListProps) => {
     type && toggle(type);
   }
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refresh();
+    setRefreshing(false);
+  }, [refresh, setRefreshing]);
+
+  useEffect(() => {
+    if (params?.forceRefreshOnce) {
+      // Set to false so it won't update on assetsRefresh
+      onRefresh();
+      setParams({ forceRefreshOnce: false });
+    }
+  }, [onRefresh, params, sectionListRef, sections, setParams]);
+
   useEffect(() => {
     if (params?.scrollToPrepaidCardsSection) {
       const prepaidCardSectionIndex = sections.findIndex(
@@ -134,12 +149,6 @@ export const AssetList = (props: AssetListProps) => {
       }, 2500);
     }
   }, [params, sectionListRef, sections, setParams]);
-
-  async function onRefresh() {
-    setRefreshing(true);
-    await refresh();
-    setRefreshing(false);
-  }
 
   const goToBuyPrepaidCard = useCallback(() => {
     if (isDamaged) {

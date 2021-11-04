@@ -19,6 +19,7 @@ import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { isNativeToken } from '@cardstack/utils';
 import {
   useAccountAssets,
@@ -36,7 +37,6 @@ import {
 } from '@rainbow-me/hooks';
 import { ETH_ADDRESS_SYMBOL } from '@rainbow-me/references/addresses';
 import Routes from '@rainbow-me/routes';
-
 import { gasUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 
@@ -64,6 +64,7 @@ const useSendSheetScreen = () => {
   const isDismissing = useRef(false);
 
   const recipientFieldRef = useRef();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   useEffect(() => {
     if (ios) {
@@ -355,15 +356,23 @@ const useSendSheetScreen = () => {
     }
 
     try {
+      showLoadingOverlay({ title: 'Sending...' });
       const submitSuccessful = await onSubmit();
 
       if (submitSuccessful) {
-        navigate(Routes.PROFILE_SCREEN);
+        navigate(Routes.WALLET_SCREEN, { forceRefreshOnce: true });
       }
     } catch (error) {
       setIsAuthorizing(false);
+      dismissLoadingOverlay();
     }
-  }, [amountDetails.assetAmount, navigate, onSubmit]);
+  }, [
+    amountDetails.assetAmount,
+    dismissLoadingOverlay,
+    navigate,
+    onSubmit,
+    showLoadingOverlay,
+  ]);
 
   const onPressTransactionSpeed = useCallback(
     onSuccess => {
