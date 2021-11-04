@@ -30,6 +30,7 @@ const useLayer2Transactions = () => {
       pageSize: TRANSACTION_PAGE_SIZE,
     },
     context: { network },
+    fetchPolicy: 'network-only',
   });
 
   const account = data?.account;
