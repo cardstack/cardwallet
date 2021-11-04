@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client';
 import { captureException } from '@sentry/react-native';
 import { get, toLower } from 'lodash';
 import React, {
@@ -83,6 +84,8 @@ export default function ChangeWalletSheet() {
     selectedWallet
   );
 
+  const apolloClient = useApolloClient();
+
   const walletRowCount = useMemo(() => getWalletRowCount(wallets), [wallets]);
 
   const deviceHeight = deviceUtils.dimensions.height;
@@ -110,6 +113,8 @@ export default function ChangeWalletSheet() {
       if (editMode && !fromDeletion) return;
       if (address === currentAddress) return;
       try {
+        // Nuke apollo data to refetch after changing account
+        await apolloClient.clearStore();
         const wallet = wallets[walletId];
         setCurrentAddress(address);
         setCurrentSelectedWallet(wallet);
@@ -123,7 +128,15 @@ export default function ChangeWalletSheet() {
         logger.log('error while switching account', e);
       }
     },
-    [currentAddress, dispatch, editMode, goBack, initializeWallet, wallets]
+    [
+      apolloClient,
+      currentAddress,
+      dispatch,
+      editMode,
+      goBack,
+      initializeWallet,
+      wallets,
+    ]
   );
 
   const deleteWallet = useCallback(
