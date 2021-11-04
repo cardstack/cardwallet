@@ -302,11 +302,11 @@ const updatedAssets = [
       native: {
         balance: {
           amount: '0',
-          display: '',
+          display: '$0.00 USD',
         },
         price: {
-          amount: 0,
-          display: '',
+          amount: 1,
+          display: '$1.00 USD',
         },
       },
       price: {
@@ -333,12 +333,12 @@ const updatedAssets = [
       name: 'Dominic',
       native: {
         balance: {
-          amount: '0',
-          display: '',
+          amount: '4.5',
+          display: '$4.50 USD',
         },
         price: {
           amount: 0,
-          display: '',
+          display: '$0.00 USD',
         },
       },
       price: {
@@ -362,11 +362,11 @@ const updatedAssets = [
       native: {
         balance: {
           amount: '0',
-          display: '',
+          display: '$0.00 USD',
         },
         price: {
-          amount: 0,
-          display: '',
+          amount: 1,
+          display: '$1.00 USD',
         },
       },
       price: {
@@ -395,11 +395,11 @@ const updatedAssets = [
       native: {
         balance: {
           amount: '0',
-          display: '',
+          display: '$0.00 USD',
         },
         price: {
-          amount: 0,
-          display: '',
+          amount: 0.00889263,
+          display: '$0.00889 USD',
         },
       },
       price: {

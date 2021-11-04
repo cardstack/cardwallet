@@ -7,6 +7,10 @@ import {
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { CurrencyConversionRates } from '@cardstack/types';
 
+jest.mock('@cardstack/services', () => ({
+  getNativeBalance: jest.fn().mockResolvedValue(4.5),
+}));
+
 describe('Fallback Explorer Helpers', () => {
   it(`should return updated assets with prices, chartData and balances`, async () => {
     const { assets } = inputData;
@@ -19,12 +23,12 @@ describe('Fallback Explorer Helpers', () => {
       chartData,
       formattedNativeCurrency: 'usd',
       network: Network.sokol,
-      nativeCurrency: '',
+      nativeCurrency: 'USD',
       currencyConversionRates: ([''] as unknown) as CurrencyConversionRates,
     });
 
     expect(updatedAssets).toEqual(updatedData.updatedAssets);
-  }, 30000);
+  });
 
   it(`should return updated depots safes with prices, chartData and native price`, async () => {
     const { depots } = inputData;
