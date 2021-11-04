@@ -8,7 +8,7 @@ export default function SendAssetFormField({
   autoFocus,
   format,
   label,
-  labelMaxLength = 6,
+  labelMaxLength = 9,
   mask,
   onChange,
   onFocus,
