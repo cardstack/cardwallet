@@ -122,7 +122,7 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
 
   return {
     header: {
-      title: 'Balances',
+      title: 'Other Tokens',
       count,
       total: assetsWithNative.total.display,
       type: PinnedHiddenSectionOption.BALANCES,

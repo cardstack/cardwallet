@@ -408,7 +408,10 @@ export default function useBuyPrepaidCard() {
 
     try {
       if (wyreOrderIdData) {
-        showLoadingOverlay();
+        showLoadingOverlay({
+          title: 'Purchasing Prepaid Card',
+          subTitle: 'This may take up to a minute.',
+        });
 
         const reservationId = reservation?.id || '';
 
