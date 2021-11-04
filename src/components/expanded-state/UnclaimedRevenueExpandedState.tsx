@@ -1,6 +1,6 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import CoinIcon from 'react-coin-icon';
 import {
   ActivityIndicator,
@@ -43,7 +43,6 @@ export default function UnclaimedRevenueExpandedState(props: {
     safe => safe.address === props.asset.address
   ) as MerchantSafeType;
   const { setOptions } = useNavigation();
-  const [loading, setLoading] = useState(false);
   const { selectedWallet } = useWallets();
   const { accountAddress } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
@@ -61,7 +60,6 @@ export default function UnclaimedRevenueExpandedState(props: {
   const { revenueBalances } = merchantSafe;
 
   const onClaimAll = useCallback(async () => {
-    setLoading(true);
     showLoadingOverlay({ title: 'Claiming Revenue' });
 
     try {
@@ -113,7 +111,6 @@ export default function UnclaimedRevenueExpandedState(props: {
       );
     }
 
-    setLoading(false);
     dismissLoadingOverlay();
   }, [
     accountAddress,
@@ -138,7 +135,6 @@ export default function UnclaimedRevenueExpandedState(props: {
             ))}
           </Container>
           <Button
-            loading={loading}
             marginTop={8}
             onPress={isDust ? () => {} : onClaimAll}
             variant={isDust ? 'disabled' : undefined}
@@ -151,7 +147,7 @@ export default function UnclaimedRevenueExpandedState(props: {
         </Container>
       </SlackSheet>
     ),
-    [isDust, loading, onClaimAll, props.asset, revenueBalances]
+    [isDust, onClaimAll, props.asset, revenueBalances]
   );
 }
 
