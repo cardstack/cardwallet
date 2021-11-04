@@ -4,7 +4,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '../../types/transaction-types';
 import { BaseStrategy } from '../base-strategy';
-import { getNativeBalance } from '@cardstack/services';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { TransactionTypes } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
@@ -32,7 +32,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
     const symbol = prepaidCardPaymentTransaction.issuingToken.symbol || '';
     const amount = prepaidCardPaymentTransaction.issuingTokenAmount;
 
-    const nativeBalance = await getNativeBalance({
+    const nativeBalance = await getNativeBalanceFromOracle({
       symbol,
       balance: amount,
       nativeCurrency: this.nativeCurrency,

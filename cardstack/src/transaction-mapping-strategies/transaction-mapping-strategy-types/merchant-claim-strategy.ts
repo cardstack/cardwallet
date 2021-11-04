@@ -5,7 +5,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
 import { MerchantClaimType, TransactionTypes } from '@cardstack/types';
-import { getNativeBalance } from '@cardstack/services';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { getMerchantClaimTransactionDetails } from '@cardstack/utils/merchant-utils';
 import Web3Instance from '@cardstack/models/web3-instance';
 
@@ -30,7 +30,7 @@ export class MerchantClaimStrategy extends BaseStrategy {
     const web3 = await Web3Instance.get();
     const address = await getAddress('relay', web3);
 
-    const nativeBalance = await getNativeBalance({
+    const nativeBalance = await getNativeBalanceFromOracle({
       symbol: merchantClaimTransaction.token.symbol,
       balance: merchantClaimTransaction.amount,
       nativeCurrency: this.nativeCurrency,

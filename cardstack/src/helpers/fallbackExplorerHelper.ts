@@ -15,7 +15,7 @@ import {
   TokenType,
 } from '@cardstack/types';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import { getNativeBalance } from '@cardstack/services';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 
 interface Prices {
   [key: string]: {
@@ -32,7 +32,10 @@ interface PriceByCoingeckoParams
   extends Omit<ReduceWithPriceChartBaseParams, 'chartData'> {
   coingeckoId: string;
   nativeCurrency: string;
-  tokenInfo?: Omit<Parameters<typeof getNativeBalance>[0], 'nativeCurrency'>;
+  tokenInfo?: Omit<
+    Parameters<typeof getNativeBalanceFromOracle>[0],
+    'nativeCurrency'
+  >;
 }
 
 interface BalanceQuantityParams {
@@ -107,7 +110,7 @@ export const addPriceByCoingeckoId = async ({
   // So we check the oracle to get the prices
   if (!coingeckoId && tokenInfo) {
     try {
-      const nativeBalance = await getNativeBalance({
+      const nativeBalance = await getNativeBalanceFromOracle({
         ...tokenInfo,
         nativeCurrency,
       });

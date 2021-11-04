@@ -11,7 +11,7 @@ import {
 import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
 import { updatePrepaidCardWithCustomization } from './prepaid-card-service';
-import { getNativeBalance } from './exchange-rate-service';
+import { getNativeBalanceFromOracle } from './exchange-rate-service';
 import {
   saveDepots,
   saveMerchantSafes,
@@ -105,7 +105,7 @@ export const getTokensWithPrice = async (
         token: { symbol },
       } = tokenItem;
 
-      const nativeBalance = await getNativeBalance({
+      const nativeBalance = await getNativeBalanceFromOracle({
         nativeCurrency,
         currencyConversionRates,
         balance,

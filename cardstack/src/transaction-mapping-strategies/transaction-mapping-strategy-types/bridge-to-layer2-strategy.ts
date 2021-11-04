@@ -7,7 +7,7 @@ import {
   DepotBridgedLayer2TransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { getNativeBalance } from '@cardstack/services';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 
 export class BridgeToLayer2EventStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -27,7 +27,7 @@ export class BridgeToLayer2EventStrategy extends BaseStrategy {
       return null;
     }
 
-    const nativeBalance = await getNativeBalance({
+    const nativeBalance = await getNativeBalanceFromOracle({
       symbol: bridgeToLayer2Event.token.symbol,
       balance: bridgeToLayer2Event.amount,
       nativeCurrency: this.nativeCurrency,

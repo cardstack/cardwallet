@@ -8,7 +8,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 import { CurrencyConversionRates } from '@cardstack/types';
 
 jest.mock('@cardstack/services', () => ({
-  getNativeBalance: jest.fn().mockResolvedValue(4.5),
+  getNativeBalanceFromOracle: jest.fn().mockResolvedValue(4.5),
 }));
 
 describe('Fallback Explorer Helpers', () => {
