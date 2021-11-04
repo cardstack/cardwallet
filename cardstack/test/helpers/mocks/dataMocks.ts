@@ -299,6 +299,16 @@ const updatedAssets = [
       decimals: 18,
       icon_url: 'https://s3.amazonaws.com/icons.assets/ETH.png',
       name: 'Spoa',
+      native: {
+        balance: {
+          amount: '0',
+          display: '$0.00 USD',
+        },
+        price: {
+          amount: 1,
+          display: '$1.00 USD',
+        },
+      },
       price: {
         changed_at: 1629399932,
         relative_change_24h: 0.5608860044696169,
@@ -321,6 +331,16 @@ const updatedAssets = [
       decimals: 18,
       icon_url: 'https://s3.amazonaws.com/icons.assets/ETH.png',
       name: 'Dominic',
+      native: {
+        balance: {
+          amount: '4.5',
+          display: '$4.50 USD',
+        },
+        price: {
+          amount: 0,
+          display: '$0.00 USD',
+        },
+      },
       price: {
         changed_at: null,
         relative_change_24h: 0,
@@ -339,6 +359,16 @@ const updatedAssets = [
       icon_url:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
       name: 'DAI.CPXD',
+      native: {
+        balance: {
+          amount: '0',
+          display: '$0.00 USD',
+        },
+        price: {
+          amount: 1,
+          display: '$1.00 USD',
+        },
+      },
       price: {
         changed_at: 1629399932,
         relative_change_24h: 0.5608860044696169,
@@ -362,6 +392,16 @@ const updatedAssets = [
       icon_url:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x954b890704693af242613edEf1B603825afcD708/logo.png',
       name: 'CARD.CPXD',
+      native: {
+        balance: {
+          amount: '0',
+          display: '$0.00 USD',
+        },
+        price: {
+          amount: 0.00889263,
+          display: '$0.00889 USD',
+        },
+      },
       price: {
         changed_at: 1629399408,
         relative_change_24h: 22.304616235477624,

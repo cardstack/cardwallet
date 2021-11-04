@@ -3,7 +3,7 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { CurrencyConversionRates } from '@cardstack/types';
 import Web3Instance from '@cardstack/models/web3-instance';
 
-export const getNativeBalance = async (props: {
+export const getNativeBalanceFromOracle = async (props: {
   symbol: string | null | undefined;
   balance: string;
   nativeCurrency: string;

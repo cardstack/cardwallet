@@ -13,7 +13,7 @@ import {
 jest.mock('../device');
 
 jest.mock('@cardstack/services', () => ({
-  getNativeBalance: jest.fn().mockReturnValue(0.0000974),
+  getNativeBalanceFromOracle: jest.fn().mockReturnValue(0.0000974),
 }));
 
 const currencyConversionRates = {

@@ -9,11 +9,13 @@ import { isNativeToken } from '@cardstack/utils/cardpay-utils';
 import {
   AssetType,
   AssetWithNativeType,
+  CurrencyConversionRates,
   DepotType,
   PrepaidCardType,
   TokenType,
 } from '@cardstack/types';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 
 interface Prices {
   [key: string]: {
@@ -29,7 +31,11 @@ interface ChartData {
 interface PriceByCoingeckoParams
   extends Omit<ReduceWithPriceChartBaseParams, 'chartData'> {
   coingeckoId: string;
-  nativeCurrency?: string;
+  nativeCurrency: string;
+  tokenInfo?: Omit<
+    Parameters<typeof getNativeBalanceFromOracle>[0],
+    'nativeCurrency'
+  >;
 }
 
 interface BalanceQuantityParams {
@@ -50,6 +56,8 @@ interface ReduceAssetsParams extends ReduceWithPriceChartBaseParams {
   assets: AssetWithQuantity[];
   balances: BalanceQuantityParams['balances'];
   network: Network;
+  currencyConversionRates: CurrencyConversionRates;
+  nativeCurrency: string;
 }
 
 interface TokenWithRBData extends TokenType {
@@ -70,26 +78,52 @@ export interface ReduceDepotsParams extends ReduceWithPriceChartBaseParams {
   nativeCurrency?: string;
 }
 
-export const addPriceByCoingeckoId = ({
+export const addPriceByCoingeckoId = async ({
   coingeckoId,
   prices,
   formattedNativeCurrency,
   nativeCurrency,
+  tokenInfo,
 }: PriceByCoingeckoParams) => {
+  const defaultDisplay = nativeCurrency
+    ? convertAmountToNativeDisplay(0, nativeCurrency)
+    : '';
+
   let price: AssetWithNativeType['price'] = {
     changed_at: null,
     relative_change_24h: 0,
     value: 0,
   };
 
-  let native: Omit<AssetWithNativeType['native'], 'balance' | 'change'> = {
+  let native: Omit<AssetWithNativeType['native'], 'change'> = {
     price: {
       amount: 0,
-      display: nativeCurrency
-        ? convertAmountToNativeDisplay(0, nativeCurrency)
-        : '',
+      display: defaultDisplay,
+    },
+    balance: {
+      amount: '0',
+      display: defaultDisplay,
     },
   };
+
+  // No coingeckoId means the prices array won't have any pricing info
+  // So we check the oracle to get the prices
+  if (!coingeckoId && tokenInfo) {
+    try {
+      const nativeBalance = await getNativeBalanceFromOracle({
+        ...tokenInfo,
+        nativeCurrency,
+      });
+
+      native = {
+        ...native,
+        balance: {
+          amount: nativeBalance.toString(),
+          display: convertAmountToNativeDisplay(nativeBalance, nativeCurrency),
+        },
+      };
+    } catch {}
+  }
 
   if (prices) {
     Object.keys(prices).forEach(assetKey => {
@@ -104,6 +138,7 @@ export const addPriceByCoingeckoId = ({
 
         if (nativeCurrency) {
           native = {
+            ...native,
             price: {
               amount: value,
               display: convertAmountToNativeDisplay(value, nativeCurrency),
@@ -158,45 +193,55 @@ export const addQuantityBalance = ({
   return quantity;
 };
 
-export const reduceAssetsWithPriceChartAndBalances = ({
+export const reduceAssetsWithPriceChartAndBalances = async ({
   assets,
   prices,
   formattedNativeCurrency,
   chartData,
   balances,
   network,
+  currencyConversionRates,
+  nativeCurrency = '',
 }: ReduceAssetsParams) =>
-  assets.reduce((updatedAssets, { asset }) => {
+  assets.reduce(async (updatedAssets, { asset }) => {
     const coingeckoId = asset.coingecko_id || '';
 
-    const { price } = addPriceByCoingeckoId({
+    const { price, native } = await addPriceByCoingeckoId({
       coingeckoId,
       prices,
       formattedNativeCurrency,
+      nativeCurrency,
+      tokenInfo: {
+        symbol: asset.symbol,
+        balance: asset.asset_code ? balances[asset.asset_code] : '0',
+        currencyConversionRates,
+      },
     });
-
-    const chartPrices = addChartPriceByCoingeckoId(coingeckoId, chartData);
 
     const quantity = addQuantityBalance({ balances, asset, network });
 
-    return [
-      ...updatedAssets,
-      { asset: { ...asset, price, chartPrices }, quantity },
-    ];
-  }, [] as AssetWithQuantity[]);
+    const chartPrices = addChartPriceByCoingeckoId(coingeckoId, chartData);
 
-export const reduceDepotsWithPricesAndChart = ({
+    return [
+      ...(await updatedAssets),
+      { asset: { ...asset, price, chartPrices, native }, quantity },
+    ];
+  }, Promise.resolve([] as AssetWithQuantity[]));
+
+export const reduceDepotsWithPricesAndChart = async ({
   depots,
   prices,
   formattedNativeCurrency,
   chartData,
-  nativeCurrency,
+  nativeCurrency = '',
 }: ReduceDepotsParams) =>
-  depots.reduce((updatedDepots, depot) => {
-    const tokens = depot.tokens.reduce((updatedTokens, token) => {
+  // Reduce over each depot to return updated tokens
+  depots.reduce(async (updatedDepots, depot) => {
+    // Add price and chart data to each token of currently depot
+    const tokens = await depot.tokens.reduce(async (updatedTokens, token) => {
       const coingeckoId = token.coingecko_id;
 
-      const { price, native } = addPriceByCoingeckoId({
+      const { price, native } = await addPriceByCoingeckoId({
         coingeckoId,
         prices,
         formattedNativeCurrency,
@@ -206,15 +251,16 @@ export const reduceDepotsWithPricesAndChart = ({
       const chartPrices = addChartPriceByCoingeckoId(coingeckoId, chartData);
 
       return [
-        ...updatedTokens,
+        ...(await updatedTokens),
         {
           ...token,
           price,
-          native: { ...token.native, ...native },
+          // We just want the price, bc the balance is already added on gnosis-service
+          native: { ...token.native, price: native.price },
           chartPrices,
         },
       ];
-    }, [] as any);
+    }, Promise.resolve([] as any));
 
-    return [...updatedDepots, { ...depot, tokens }];
-  }, [] as any);
+    return [...(await updatedDepots), { ...depot, tokens }];
+  }, Promise.resolve([] as any));

@@ -7,7 +7,7 @@ import {
   MerchantEarnedRevenueTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { getNativeBalance } from '@cardstack/services';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { getMerchantEarnedTransactionDetails } from '@cardstack/utils';
 
 export class MerchantEarnedRevenueStrategy extends BaseStrategy {
@@ -32,7 +32,7 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
     const symbol = prepaidCardPaymentTransaction.issuingToken.symbol || '';
     const amount = prepaidCardPaymentTransaction.issuingTokenAmount;
 
-    const nativeBalance = await getNativeBalance({
+    const nativeBalance = await getNativeBalanceFromOracle({
       symbol,
       balance: amount,
       nativeCurrency: this.nativeCurrency,

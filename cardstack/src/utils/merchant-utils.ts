@@ -19,8 +19,8 @@ import {
   MerchantInformation,
 } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils/cardpay-utils';
-import { getNativeBalance } from '@cardstack/services';
 import { IconName } from '@cardstack/components';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 
 export const ClaimedStatus = {
   CLAIMED_TEXT: `Claimed from \nAvailable Revenue`,
@@ -137,7 +137,7 @@ export async function getMerchantClaimTransactionDetails(
   const grossRawAmount = txnData?.amount || '0';
   const gasRawAmount = gasData?.amount || '0';
 
-  const gasBalance = await getNativeBalance({
+  const gasBalance = await getNativeBalanceFromOracle({
     symbol: merchantClaimTransaction.token.symbol,
     balance: gasRawAmount,
     nativeCurrency,
@@ -194,7 +194,7 @@ export async function getMerchantEarnedTransactionDetails(
     3
   ).display;
 
-  const netValue = await getNativeBalance({
+  const netValue = await getNativeBalanceFromOracle({
     symbol,
     balance: subtract(
       prepaidCardPaymentTransaction.issuingTokenAmount,

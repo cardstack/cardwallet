@@ -16,8 +16,6 @@ import { padding } from '@rainbow-me/styles';
 
 const { call, cond, onChange, useCode } = Animated;
 
-const noPriceData = 'No price data';
-
 const Container = styled(ColumnWithMargins).attrs({
   margin: 12,
   marginTop: android ? -10 : 0,
@@ -51,7 +49,7 @@ export default function ChartExpandedStateHeader({
   isPool,
   isScrubbing,
   latestChange,
-  latestPrice = noPriceData,
+  latestPrice,
   priceRef,
   chartTimeSharedValue,
   showChart,
@@ -62,7 +60,7 @@ export default function ChartExpandedStateHeader({
   const { nativeCurrency } = useAccountSettings();
   const tabularNums = useTabularNumsWhileScrubbing(isScrubbing);
 
-  const isNoPriceData = latestPrice === noPriceData;
+  const isNoPriceData = !latestPrice;
 
   const price = useMemo(
     () => convertAmountToNativeDisplay(latestPrice, nativeCurrency),
@@ -81,7 +79,7 @@ export default function ChartExpandedStateHeader({
 
   const title = isPool ? `${asset.tokenNames} Pool` : asset?.name;
 
-  const titleOrNoPriceData = isNoPriceData ? noPriceData : title;
+  const titleOrNoPriceData = isNoPriceData ? '' : title;
 
   const showPriceChange = !isNoPriceData && showChart && !isNaN(latestChange);
 
