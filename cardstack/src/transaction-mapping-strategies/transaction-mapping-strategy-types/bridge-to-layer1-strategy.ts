@@ -31,7 +31,6 @@ export class BridgeToLayer1EventStrategy extends BaseStrategy {
       symbol: bridgeToLayer1Event.token.symbol,
       balance: bridgeToLayer1Event.amount,
       nativeCurrency: this.nativeCurrency,
-      currencyConversionRates: this.currencyConversionRates,
     });
 
     return {

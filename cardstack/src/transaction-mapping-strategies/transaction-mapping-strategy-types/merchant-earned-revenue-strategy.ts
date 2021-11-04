@@ -36,7 +36,6 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       symbol,
       balance: amount,
       nativeCurrency: this.nativeCurrency,
-      currencyConversionRates: this.currencyConversionRates,
     });
 
     return {

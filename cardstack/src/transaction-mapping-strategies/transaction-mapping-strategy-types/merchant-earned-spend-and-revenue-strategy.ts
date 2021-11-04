@@ -36,7 +36,6 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
       symbol,
       balance: amount,
       nativeCurrency: this.nativeCurrency,
-      currencyConversionRates: this.currencyConversionRates,
     });
 
     const spendDisplay = convertSpendForBalanceDisplay(

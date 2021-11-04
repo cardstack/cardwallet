@@ -17,7 +17,6 @@ import {
   saveMerchantSafes,
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { CurrencyConversionRates } from '@cardstack/types';
 import logger from 'logger';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { Navigation } from '@rainbow-me/navigation';
@@ -95,8 +94,7 @@ export const fetchGnosisSafes = async (address: string) => {
 
 export const getTokensWithPrice = async (
   tokens: TokenInfo[],
-  nativeCurrency: string,
-  currencyConversionRates: CurrencyConversionRates
+  nativeCurrency: string
 ) =>
   Promise.all(
     tokens.map(async tokenItem => {
@@ -107,7 +105,6 @@ export const getTokensWithPrice = async (
 
       const nativeBalance = await getNativeBalanceFromOracle({
         nativeCurrency,
-        currencyConversionRates,
         balance,
         symbol,
       });
@@ -144,8 +141,7 @@ export const addGnosisTokenPrices = async (
   payload: any,
   network: string,
   accountAddress: string,
-  nativeCurrency: string,
-  currencyConversionRates: CurrencyConversionRates
+  nativeCurrency: string
 ) => {
   const { depots, merchantSafes, prepaidCards } = payload;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -164,8 +160,7 @@ export const addGnosisTokenPrices = async (
         depots.map(async (depot: any) => {
           const tokensWithPrice = await getTokensWithPrice(
             depot.tokens,
-            nativeCurrency,
-            currencyConversionRates
+            nativeCurrency
           );
 
           return {
@@ -178,8 +173,7 @@ export const addGnosisTokenPrices = async (
         prepaidCards.map(async (prepaidCard: any) => {
           const tokensWithPrice = await getTokensWithPrice(
             prepaidCard.tokens,
-            nativeCurrency,
-            currencyConversionRates
+            nativeCurrency
           );
 
           return {
@@ -196,11 +190,7 @@ export const addGnosisTokenPrices = async (
 
           const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all(
             [
-              getTokensWithPrice(
-                merchantSafe.tokens,
-                nativeCurrency,
-                currencyConversionRates
-              ),
+              getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
               getTokensWithPrice(
                 revenueBalances.map(
                   revenueToken =>
@@ -211,8 +201,7 @@ export const addGnosisTokenPrices = async (
                       },
                     } as unknown) as TokenInfo)
                 ),
-                nativeCurrency,
-                currencyConversionRates
+                nativeCurrency
               ),
             ]
           );

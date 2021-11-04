@@ -9,7 +9,6 @@ import { isNativeToken } from '@cardstack/utils/cardpay-utils';
 import {
   AssetType,
   AssetWithNativeType,
-  CurrencyConversionRates,
   DepotType,
   PrepaidCardType,
   TokenType,
@@ -56,7 +55,6 @@ interface ReduceAssetsParams extends ReduceWithPriceChartBaseParams {
   assets: AssetWithQuantity[];
   balances: BalanceQuantityParams['balances'];
   network: Network;
-  currencyConversionRates: CurrencyConversionRates;
   nativeCurrency: string;
 }
 
@@ -200,7 +198,6 @@ export const reduceAssetsWithPriceChartAndBalances = async ({
   chartData,
   balances,
   network,
-  currencyConversionRates,
   nativeCurrency = '',
 }: ReduceAssetsParams) =>
   assets.reduce(async (updatedAssets, { asset }) => {
@@ -214,7 +211,6 @@ export const reduceAssetsWithPriceChartAndBalances = async ({
       tokenInfo: {
         symbol: asset.symbol,
         balance: asset.asset_code ? balances[asset.asset_code] : '0',
-        currencyConversionRates,
       },
     });
 
