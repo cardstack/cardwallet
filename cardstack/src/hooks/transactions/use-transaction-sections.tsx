@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
 import {
@@ -16,6 +16,7 @@ import {
   sortByTime,
 } from '@cardstack/utils';
 import usePrevious from '@rainbow-me/hooks/usePrevious';
+import { TRANSACTION_PAGE_SIZE } from '@cardstack/constants';
 
 interface UseTransactionSectionsProps {
   transactions: ({ transaction: any } | null | undefined)[] | undefined;
@@ -72,10 +73,18 @@ export const useTransactionSections = ({
 
   const isInitialTx = !prevLastestTx;
 
+  const previousNativeCurrency = usePrevious(nativeCurrency);
+
+  const didNativeCurrencyChanged = previousNativeCurrency !== nativeCurrency;
+
   // Quick workaround to have merchant tx working
   // TODO: refactor and add tests
   const shouldUpdate =
-    isInitialTx || isNewtx || isPagination || isMerchantTransaction;
+    isInitialTx ||
+    isNewtx ||
+    isPagination ||
+    isMerchantTransaction ||
+    didNativeCurrencyChanged;
 
   useEffect(() => {
     const setSectionsData = async () => {
@@ -152,7 +161,11 @@ export const useTransactionSections = ({
   const isFetchingMore = !!sections.length && isLoading;
 
   const onEndReached = useCallback(() => {
-    if (!isFetchingMore && fetchMore) {
+    if (
+      !isFetchingMore &&
+      fetchMore &&
+      transactionsCount >= TRANSACTION_PAGE_SIZE
+    ) {
       fetchMore({
         variables: {
           skip: transactionsCount,
@@ -161,13 +174,10 @@ export const useTransactionSections = ({
     }
   }, [fetchMore, isFetchingMore, transactionsCount]);
 
-  return useMemo(
-    () => ({
-      loading: isLoading && !isFetchingMore,
-      isFetchingMore,
-      onEndReached,
-      sections,
-    }),
-    [isFetchingMore, isLoading, onEndReached, sections]
-  );
+  return {
+    loading: isLoading && !isFetchingMore,
+    isFetchingMore,
+    onEndReached,
+    sections,
+  };
 };
