@@ -15,7 +15,6 @@ import useHideSplashScreen from './useHideSplashScreen';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
-import useLoadCurrencyConversionRates from './useLoadCurrencyConversionRates';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
 import { appStateUpdate } from '@cardstack/redux/appState';
@@ -27,7 +26,6 @@ export default function useInitializeWallet() {
   const resetAccountState = useResetAccountState();
   const loadAccountData = useLoadAccountData();
   const loadCoingeckoCoins = useLoadCoingeckoCoins();
-  const loadCurrencyConversionRates = useLoadCurrencyConversionRates();
   const loadGlobalData = useLoadGlobalData();
   const initializeAccountData = useInitializeAccountData();
 
@@ -55,10 +53,7 @@ export default function useInitializeWallet() {
         logger.sentry('isImporting?', isImporting);
 
         // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
-        await Promise.all([
-          loadCoingeckoCoins(),
-          loadCurrencyConversionRates(),
-        ]);
+        await loadCoingeckoCoins();
 
         if (shouldRunMigrations && !isImporting) {
           logger.sentry('shouldRunMigrations && !seedPhrase? => true');
@@ -139,7 +134,6 @@ export default function useInitializeWallet() {
     [
       resetAccountState,
       loadCoingeckoCoins,
-      loadCurrencyConversionRates,
       providerUrl,
       network,
       dispatch,

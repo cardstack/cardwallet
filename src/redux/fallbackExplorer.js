@@ -9,13 +9,18 @@ import { ETH_ADDRESS } from '../references/addresses';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
+import { setCurrencyConversionRates } from './currencyConversion';
 import { addressAssetsReceived } from './data';
 import store from './store';
 import {
   reduceAssetsWithPriceChartAndBalances,
   reduceDepotsWithPricesAndChart,
 } from '@cardstack/helpers/fallbackExplorerHelper';
-import { addGnosisTokenPrices, fetchGnosisSafes } from '@cardstack/services';
+import {
+  addGnosisTokenPrices,
+  fetchGnosisSafes,
+  getCurrencyConversionsRates,
+} from '@cardstack/services';
 import { isLayer1, isLayer2, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
@@ -340,7 +345,6 @@ const fetchAssetBalances = async (tokens, address, network) => {
 const fetchGnosisSafesAndAddCoingeckoId = async () => {
   const { accountAddress, nativeCurrency, network } = store.getState().settings;
   const coingeckoCoins = store.getState().coingecko.coins;
-  const currencyConversionRates = store.getState().currencyConversion.rates;
 
   if (isLayer2(network)) {
     try {
@@ -384,8 +388,7 @@ const fetchGnosisSafesAndAddCoingeckoId = async () => {
         },
         network,
         accountAddress,
-        nativeCurrency,
-        currencyConversionRates
+        nativeCurrency
       );
 
       return {
@@ -408,7 +411,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
   const { accountAddress, nativeCurrency, network } = store.getState().settings;
-  const currencyConversionRates = store.getState().currencyConversion.rates;
 
   const formattedNativeCurrency = toLower(nativeCurrency);
 
@@ -482,7 +484,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
       chartData,
       balances,
       network,
-      currencyConversionRates,
       nativeCurrency,
     });
 
@@ -595,6 +596,10 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       type: FALLBACK_EXPLORER_SET_ASSETS,
     });
   }
+
+  const conversionsRates = await getCurrencyConversionsRates();
+
+  await dispatch(setCurrencyConversionRates(conversionsRates));
 
   fetchAssetsBalancesAndPrices();
 };
