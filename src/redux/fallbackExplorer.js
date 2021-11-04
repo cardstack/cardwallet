@@ -455,8 +455,14 @@ export const fetchAssetsBalancesAndPrices = async () => {
       formattedNativeCurrency
     );
 
+    const {
+      depots,
+      prepaidCards,
+      merchantSafes,
+    } = await fetchGnosisSafesAndAddCoingeckoId();
+
     // needs to be fetched after safes, because of contract signing
-    const fetchBalances = fetchAssetBalances(
+    const balances = await fetchAssetBalances(
       assets.map(({ asset: { asset_code, symbol } }) =>
         isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
       ),
@@ -464,16 +470,9 @@ export const fetchAssetsBalancesAndPrices = async () => {
       network
     );
 
-    const [
-      prices,
-      chartData,
-      { depots, prepaidCards, merchantSafes },
-      balances,
-    ] = await Promise.all([
+    const [prices, chartData] = await Promise.all([
       fetchPrices,
       fetchChartData,
-      fetchGnosisSafesAndAddCoingeckoId(),
-      fetchBalances,
     ]);
 
     const reduceAssets = reduceAssetsWithPriceChartAndBalances({
