@@ -34,7 +34,6 @@ export class MerchantClaimStrategy extends BaseStrategy {
       symbol: merchantClaimTransaction.token.symbol,
       balance: merchantClaimTransaction.amount,
       nativeCurrency: this.nativeCurrency,
-      currencyConversionRates: this.currencyConversionRates,
     });
 
     return {

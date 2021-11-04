@@ -141,7 +141,6 @@ export async function getMerchantClaimTransactionDetails(
     symbol: merchantClaimTransaction.token.symbol,
     balance: gasRawAmount,
     nativeCurrency,
-    currencyConversionRates,
   });
 
   const grossFormattedValue = convertRawAmountToBalance(grossRawAmount, {
@@ -201,7 +200,6 @@ export async function getMerchantEarnedTransactionDetails(
       feeCollectedRaw
     ),
     nativeCurrency,
-    currencyConversionRates,
   });
 
   const netFormattedValue = convertRawAmountToBalance(

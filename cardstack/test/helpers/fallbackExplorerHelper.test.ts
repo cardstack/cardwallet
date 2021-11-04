@@ -5,7 +5,6 @@ import {
 } from '@cardstack/helpers/fallbackExplorerHelper';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import { CurrencyConversionRates } from '@cardstack/types';
 
 jest.mock('@cardstack/services', () => ({
   getNativeBalanceFromOracle: jest.fn().mockResolvedValue(4.5),
@@ -24,7 +23,6 @@ describe('Fallback Explorer Helpers', () => {
       formattedNativeCurrency: 'usd',
       network: Network.sokol,
       nativeCurrency: 'USD',
-      currencyConversionRates: ([''] as unknown) as CurrencyConversionRates,
     });
 
     expect(updatedAssets).toEqual(updatedData.updatedAssets);

@@ -1,15 +1,59 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import {
+  nativeCurrencies,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk/sdk/currencies';
+import { FIXER_API_KEY } from 'react-native-dotenv';
 import { CurrencyConversionRates } from '@cardstack/types';
 import Web3Instance from '@cardstack/models/web3-instance';
+import { logger } from '@rainbow-me/utils';
 
+// Currency conversions
+const CurrencyConsts = {
+  fixerApi: 'https://data.fixer.io/api',
+  usdToSpendRate: 100,
+  currencySymbols: Object.keys(nativeCurrencies),
+};
+
+let cachedCurrencyConversionRates: CurrencyConversionRates | null = null;
+
+export const getCurrencyConversionsRates = async () => {
+  const defaults = CurrencyConsts.currencySymbols.reduce(
+    (accum, symbol) => ({
+      ...accum,
+      [symbol]: 0,
+    }),
+    {}
+  );
+
+  try {
+    const request = await fetch(
+      `${CurrencyConsts.fixerApi}/latest?access_key=${FIXER_API_KEY}&base=USD&symbols=${CurrencyConsts.currencySymbols}`
+    );
+
+    const data = await request.json();
+
+    cachedCurrencyConversionRates = {
+      ...data.rates,
+      SPD: CurrencyConsts.usdToSpendRate,
+    };
+  } catch (e) {
+    cachedCurrencyConversionRates = defaults;
+    logger.log('Error on getCurrencyConversionsRates');
+  }
+
+  return cachedCurrencyConversionRates;
+};
+
+// Token price to native currency
 export const getNativeBalanceFromOracle = async (props: {
   symbol: string | null | undefined;
   balance: string;
   nativeCurrency: string;
-  currencyConversionRates: CurrencyConversionRates;
 }): Promise<number> => {
-  const { symbol, balance, nativeCurrency, currencyConversionRates } = props;
+  const { symbol, balance, nativeCurrency } = props;
+
+  const isNativeCurrencyUSD = nativeCurrency === NativeCurrency.USD;
 
   if (!symbol) {
     return 0;
@@ -20,12 +64,15 @@ export const getNativeBalanceFromOracle = async (props: {
 
   const usdBalance = await layerTwoOracle.getUSDPrice(symbol, balance);
 
-  const nativeBalance =
-    nativeCurrency === NativeCurrency.USD
-      ? usdBalance
-      : currencyConversionRates[nativeCurrency] * usdBalance;
+  if (isNativeCurrencyUSD) {
+    return usdBalance;
+  } else {
+    while (cachedCurrencyConversionRates === null) {
+      await getCurrencyConversionsRates();
+    }
 
-  return nativeBalance;
+    return cachedCurrencyConversionRates[nativeCurrency] * usdBalance;
+  }
 };
 
 export const getUsdConverter = async (symbol: string) => {
