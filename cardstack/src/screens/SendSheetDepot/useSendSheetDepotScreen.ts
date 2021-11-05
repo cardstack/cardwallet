@@ -25,10 +25,11 @@ import {
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { DepotAsset, TokenType } from '@cardstack/types';
+import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import HDProvider from '@cardstack/models/hd-provider';
 import { useWorker } from '@cardstack/utils/hooks-utilities';
-import { MainRoutes } from '@cardstack/navigation/routes';
+import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 
 interface RouteType {
   params: { asset: TokenType; safeAddress?: string };
@@ -46,6 +47,7 @@ export const useSendSheetDepotScreen = () => {
   const usdConverter = useRef<undefined | ((amountInWei: string) => number)>();
   const { navigate } = useNavigation();
   const { params } = useRoute<RouteType>();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   // Assets
   const {
@@ -296,6 +298,7 @@ export const useSendSheetDepotScreen = () => {
   const onSendPress = useCallback(async () => {
     setIsAuthorizing(true);
     if (!canSubmit) return;
+    showLoadingOverlay({ title: 'Sending...' });
 
     try {
       await sendTokenFromDepot();
@@ -303,15 +306,18 @@ export const useSendSheetDepotScreen = () => {
       // resets signed provider and web3 instance to kill poller
       await HDProvider.reset();
 
-      navigate(Routes.PROFILE_SCREEN);
+      navigate(Routes.WALLET_SCREEN, { forceRefreshOnce: true });
     } catch (error) {
+      dismissLoadingOverlay();
       const errorMessage = (error as any).toString();
 
       if (errorMessage) {
         Alert({
           message: errorMessage,
-          title: 'An error ocurred',
+          title: SEND_TRANSACTION_ERROR_MESSAGE,
         });
+      } else {
+        Alert({ title: SEND_TRANSACTION_ERROR_MESSAGE });
       }
 
       logger.sentry('TX Details', error);
@@ -319,7 +325,13 @@ export const useSendSheetDepotScreen = () => {
     } finally {
       setIsAuthorizing(false);
     }
-  }, [canSubmit, navigate, sendTokenFromDepot]);
+  }, [
+    canSubmit,
+    dismissLoadingOverlay,
+    navigate,
+    sendTokenFromDepot,
+    showLoadingOverlay,
+  ]);
 
   return useMemo(
     () => ({
