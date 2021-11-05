@@ -362,12 +362,16 @@ const useSendSheetScreen = () => {
       const submitSuccessful = await onSubmit();
 
       if (submitSuccessful) {
+        setIsAuthorizing(false);
         navigate(Routes.WALLET_SCREEN, { forceRefreshOnce: true });
+      } else {
+        setIsAuthorizing(false);
+        dismissLoadingOverlay();
       }
     } catch (error) {
       setIsAuthorizing(false);
-      Alert({ title: SEND_TRANSACTION_ERROR_MESSAGE });
       dismissLoadingOverlay();
+      Alert({ title: SEND_TRANSACTION_ERROR_MESSAGE });
     }
   }, [
     amountDetails.assetAmount,
