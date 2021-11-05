@@ -40,6 +40,7 @@ interface TransactionData {
   merchantSafeAddresses: string[];
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
+  isDepotTransaction?: boolean;
 }
 
 // used for the full transaction list
@@ -90,6 +91,7 @@ export class TransactionMappingContext {
             merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
             prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
             merchantSafeAddress: this.transactionData.merchantSafeAddress,
+            isDepotTransaction: this.transactionData.isDepotTransaction,
           };
 
           for (let i = 0; i < transactionStrategies.length; i++) {

@@ -27,6 +27,7 @@ interface UseTransactionSectionsProps {
   merchantSafeAddress?: string;
   transactionStrategies?: TransactionMappingStrategy[];
   isMerchantTransaction?: boolean;
+  isDepotTransaction?: boolean;
 }
 
 export const useTransactionSections = ({
@@ -38,6 +39,7 @@ export const useTransactionSections = ({
   merchantSafeAddress,
   transactionStrategies,
   isMerchantTransaction = false,
+  isDepotTransaction = false,
 }: UseTransactionSectionsProps) => {
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -102,7 +104,7 @@ export const useTransactionSections = ({
             transactions: merchantSafeAddress
               ? merchantRevenueEventsToTransactions(transactions as any[])
               : transactions.map((t: any) => t?.transaction),
-            accountAddress,
+            accountAddress: accountAddress,
             nativeCurrency,
             currencyConversionRates,
             transactionStrategies,
@@ -110,6 +112,7 @@ export const useTransactionSections = ({
             merchantSafeAddresses,
             prepaidCardAddresses,
             merchantSafeAddress,
+            isDepotTransaction,
           });
 
           const mappedTransactions = await transactionMappingContext.mapTransactions();
@@ -155,6 +158,7 @@ export const useTransactionSections = ({
     merchantSafes,
     prepaidCards,
     shouldUpdate,
+    isDepotTransaction,
   ]);
 
   const isLoading = networkStatus === NetworkStatus.loading || loading;

@@ -44,7 +44,7 @@ export class ERC20TokenStrategy extends BaseStrategy {
 
     const { status, title } = this.getStatusAndTitle(
       userTransaction,
-      this.accountAddress
+      this.isDepotTransaction ? this.depotAddress : this.accountAddress
     );
 
     let price = 0;
@@ -83,12 +83,12 @@ export class ERC20TokenStrategy extends BaseStrategy {
 
   getStatusAndTitle(
     transfer: TokenTransferFragment,
-    accountAddress: string
+    toAddress: string
   ): {
     status: TransactionStatus;
     title: string;
   } {
-    if (transfer.to === accountAddress) {
+    if (transfer.to === toAddress) {
       return {
         status: TransactionStatus.received,
         title: 'Received',

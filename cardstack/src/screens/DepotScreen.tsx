@@ -23,6 +23,7 @@ import {
   TransactionItem,
 } from '@cardstack/components';
 import { useDepotTransactions } from '@cardstack/hooks';
+import { colors } from '@cardstack/theme';
 import { DepotType, TokenType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -289,7 +290,7 @@ const Activities = () => {
           )}
           refreshControl={
             <RefreshControl
-              tintColor="white"
+              tintColor={colors.borderBlue}
               refreshing={refetchLoading}
               onRefresh={refetch}
             />
