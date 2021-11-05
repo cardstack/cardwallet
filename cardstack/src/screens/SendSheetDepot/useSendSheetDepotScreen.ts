@@ -25,6 +25,7 @@ import {
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { DepotAsset, TokenType } from '@cardstack/types';
+import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import HDProvider from '@cardstack/models/hd-provider';
 import { useWorker } from '@cardstack/utils/hooks-utilities';
@@ -313,13 +314,10 @@ export const useSendSheetDepotScreen = () => {
       if (errorMessage) {
         Alert({
           message: errorMessage,
-          title:
-            'An error has occurred, could not send. If this persists, please contact support@cardstack.com',
+          title: SEND_TRANSACTION_ERROR_MESSAGE,
         });
       } else {
-        Alert(
-          'An error has occurred, could not send. If this persists, please contact support@cardstack.com'
-        );
+        Alert({ title: SEND_TRANSACTION_ERROR_MESSAGE });
       }
 
       logger.sentry('TX Details', error);
