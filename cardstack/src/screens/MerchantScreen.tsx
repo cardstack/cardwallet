@@ -220,12 +220,12 @@ const MerchantInfo = ({
       >
         {merchantInfo?.name || ''}
       </Text>
-      <Text variant="subText">Merchant account</Text>
+      <Text variant="subText">Business Account</Text>
       <Container flexDirection="row" marginTop={2}>
         <Text weight="extraBold" size="xs">
           1{' '}
           <Text weight="regular" size="xs">
-            owner
+            manager
           </Text>
         </Text>
         <Icon name="user" color="black" iconSize="small" marginLeft={2} />

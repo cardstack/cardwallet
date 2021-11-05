@@ -4,11 +4,15 @@ import {
   PayThisAmountSection,
   useSpendDisplay,
 } from '../components/sections/PayThisAmountSection';
-import { TransactionConfirmationDisplayProps } from '../../TransactionConfirmationSheet';
 import TransactionListItem from '../components/TransactionListItem';
 import MerchantSectionCard from '../components/sections/MerchantSectionCard';
 import { PayMerchantDecodedData } from '@cardstack/types';
-import { Container, HorizontalDivider, Text } from '@cardstack/components';
+import {
+  Container,
+  HorizontalDivider,
+  Text,
+  TransactionConfirmationDisplayProps,
+} from '@cardstack/components';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
@@ -46,7 +50,7 @@ export const PayMerchantDisplay = ({
       <HorizontalDivider />
       <TransactionListItem
         headerText="TO"
-        title={merchantInfoDID?.name || 'Merchant'}
+        title={merchantInfoDID?.name || 'Business'}
         avatarInfo={merchantInfoDID}
         address={merchantSafe}
         hideDivider

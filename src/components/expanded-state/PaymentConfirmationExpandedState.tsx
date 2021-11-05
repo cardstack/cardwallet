@@ -65,7 +65,7 @@ const PaymentDetailsItem = ({
             <Container flex={2} />
             <Container flex={8}>
               <Text color="blueText" size="smallest" weight="bold">
-                MERCHANT
+                BUSINESS
               </Text>
             </Container>
           </Container>
