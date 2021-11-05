@@ -119,7 +119,7 @@ export const RequestPaymentConfirmation = ({
             </Container>
             <Container paddingLeft={2}>
               <Text color="blueText" size="smallest" textTransform="uppercase">
-                Merchant
+                Business
               </Text>
               <Text fontSize={15} fontWeight="bold">
                 {merchantInfo?.name}

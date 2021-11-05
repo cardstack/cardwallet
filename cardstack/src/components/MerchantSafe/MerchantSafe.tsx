@@ -99,7 +99,7 @@ export const MerchantInfo = ({
         >
           {name || ''}
         </Text>
-        <Text variant="subText">Merchant Account</Text>
+        <Text variant="subText">Business Account</Text>
       </Container>
     </Container>
   );
@@ -111,7 +111,7 @@ const Bottom = ({ slug }: { slug?: string }) => {
       <Container flexDirection="row" justifyContent="space-between">
         <Container>
           <Text fontWeight="400" fontSize={11}>
-            Merchant ID
+            Account ID
           </Text>
           <Text fontWeight="bold" fontSize={13}>
             {slug}

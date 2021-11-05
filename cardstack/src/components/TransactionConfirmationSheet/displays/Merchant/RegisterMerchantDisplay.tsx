@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 
 import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
-import { TransactionConfirmationDisplayProps } from '../../TransactionConfirmationSheet';
 import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
 import TransactionListItem from '../components/TransactionListItem';
+import { TransactionConfirmationDisplayProps } from '@cardstack/components';
 import { RegisterMerchantDecodedData } from '@cardstack/types';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
@@ -45,7 +45,7 @@ export const RegisterMerchantDisplay = ({
       {merchantInfoDID && (
         <TransactionListItem
           headerText="CREATE THIS MERCHANT"
-          title={merchantInfoDID.name || 'Merchant Name'}
+          title={merchantInfoDID.name || 'Business Name'}
           avatarInfo={merchantInfoDID}
           address={merchantInfoDID.slug}
         />

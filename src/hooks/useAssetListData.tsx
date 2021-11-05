@@ -70,7 +70,7 @@ const useMerchantSafeSection = (): AssetListSectionItem<MerchantSafeType> => {
 
   return {
     header: {
-      title: 'Merchants',
+      title: 'Accounts',
       count: merchantSafes?.length,
     },
     data: merchantSafes,
