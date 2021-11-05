@@ -7,7 +7,11 @@ import {
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
 jest.mock('@cardstack/services', () => ({
-  getNativeBalanceFromOracle: jest.fn().mockResolvedValue(4.5),
+  getNativeBalanceFromOracle: jest.fn().mockImplementation(({ balance }) => {
+    const fromWei = require('@cardstack/cardpay-sdk').fromWei;
+    const balanceNumber = parseFloat(fromWei(balance));
+    return balanceNumber > 0 ? balanceNumber * 4.5 : balanceNumber;
+  }),
 }));
 
 describe('Fallback Explorer Helpers', () => {

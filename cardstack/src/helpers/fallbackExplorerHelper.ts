@@ -4,7 +4,7 @@ import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { BigNumber } from '@ethersproject/bignumber';
 import { toLower } from 'lodash';
 import { ETH_ADDRESS } from '@rainbow-me/references/addresses';
-import { isNativeToken } from '@cardstack/utils/cardpay-utils';
+import { isCPXDToken, isNativeToken } from '@cardstack/utils/cardpay-utils';
 
 import {
   AssetType,
@@ -15,6 +15,7 @@ import {
 } from '@cardstack/types';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { getNativeBalanceFromOracle } from '@cardstack/services';
+import { toWei } from '@rainbow-me/handlers/web3';
 
 interface Prices {
   [key: string]: {
@@ -104,9 +105,11 @@ export const addPriceByCoingeckoId = async ({
     },
   };
 
+  const symbol = tokenInfo?.symbol || '';
+
   // No coingeckoId means the prices array won't have any pricing info
   // So we check the oracle to get the prices
-  if (!coingeckoId && tokenInfo) {
+  if (tokenInfo && (isCPXDToken(symbol) || !coingeckoId)) {
     try {
       const nativeBalance = await getNativeBalanceFromOracle({
         ...tokenInfo,
@@ -119,6 +122,17 @@ export const addPriceByCoingeckoId = async ({
           amount: nativeBalance.toString(),
           display: convertAmountToNativeDisplay(nativeBalance, nativeCurrency),
         },
+      };
+
+      const priceUnit = await getNativeBalanceFromOracle({
+        ...tokenInfo,
+        balance: toWei('1'),
+        nativeCurrency,
+      });
+
+      price = {
+        ...price,
+        value: priceUnit,
       };
     } catch {}
   }

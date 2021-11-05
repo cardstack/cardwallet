@@ -286,7 +286,7 @@ const chartData = {
 
 const balances = {
   '0x0000000000000000000000000000000000000000': '499703144000000000',
-  '0x6B78C121bBd10D8ef0dd3623CC1abB077b186F65': '0',
+  '0x6B78C121bBd10D8ef0dd3623CC1abB077b186F65': '1000000000000000000',
   '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1': '57823293170000000002',
   '0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee': '0',
 };
@@ -344,12 +344,12 @@ const updatedAssets = [
       price: {
         changed_at: null,
         relative_change_24h: 0,
-        value: 0,
+        value: 4.5,
       },
       symbol: 'DOM',
       chartPrices: null,
     },
-    quantity: '0',
+    quantity: '1000000000000000000',
   },
   {
     asset: {
