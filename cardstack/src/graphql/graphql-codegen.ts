@@ -4131,6 +4131,7 @@ export type RewardeeClaim = {
   rewardProgram: RewardProgram;
   rewardee: Account;
   rewardSafe: RewardSafe;
+  token: Token;
   amount: Scalars['BigInt'];
   transaction: Transaction;
   timestamp: Scalars['BigInt'];
@@ -4187,6 +4188,20 @@ export type RewardeeClaimFilter = {
   rewardSafe_not_starts_with?: Maybe<Scalars['String']>;
   rewardSafe_ends_with?: Maybe<Scalars['String']>;
   rewardSafe_not_ends_with?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['BigInt']>;
   amount_not?: Maybe<Scalars['BigInt']>;
   amount_gt?: Maybe<Scalars['BigInt']>;
@@ -4224,6 +4239,7 @@ export enum RewardeeClaimOrderBy {
   REWARDPROGRAM = 'rewardProgram',
   REWARDEE = 'rewardee',
   REWARDSAFE = 'rewardSafe',
+  TOKEN = 'token',
   AMOUNT = 'amount',
   TRANSACTION = 'transaction',
   TIMESTAMP = 'timestamp'

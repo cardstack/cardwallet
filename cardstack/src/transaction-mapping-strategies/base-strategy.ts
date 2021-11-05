@@ -10,6 +10,7 @@ interface BaseStrategyParams {
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
   depotAddress: string;
+  isDepotTransaction?: boolean;
 }
 
 export abstract class BaseStrategy {
@@ -26,6 +27,7 @@ export abstract class BaseStrategy {
   merchantSafeAddresses: string[];
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
+  isDepotTransaction?: boolean;
 
   constructor({
     transaction,
@@ -36,6 +38,7 @@ export abstract class BaseStrategy {
     prepaidCardAddresses,
     merchantSafeAddress,
     depotAddress,
+    isDepotTransaction,
   }: BaseStrategyParams) {
     this.transaction = transaction;
     this.accountAddress = accountAddress;
@@ -45,5 +48,6 @@ export abstract class BaseStrategy {
     this.prepaidCardAddresses = prepaidCardAddresses;
     this.merchantSafeAddress = merchantSafeAddress;
     this.depotAddress = depotAddress;
+    this.isDepotTransaction = isDepotTransaction;
   }
 }

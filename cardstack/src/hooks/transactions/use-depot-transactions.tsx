@@ -22,6 +22,7 @@ export const useDepotTransactions = (safeAddress: string) => {
       pageSize: TRANSACTION_PAGE_SIZE,
     },
     context: { network },
+    fetchPolicy: 'network-only',
   });
 
   const transactions = data?.eoatransactions;
@@ -41,6 +42,7 @@ export const useDepotTransactions = (safeAddress: string) => {
     transactionsCount: transactions?.length || 0,
     networkStatus,
     fetchMore,
+    isDepotTransaction: true,
   });
 
   return {
