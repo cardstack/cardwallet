@@ -1,10 +1,10 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { render } from '../test-utils';
-import { Button } from '../../src/components/Button';
-import { Text } from '../../src/components/Text';
-import { Icon } from '../../src/components/Icon';
+import { render } from '../../../test/test-utils';
+import { Button } from '../Button';
+import { Text } from '../Text';
+import { Icon } from '../Icon';
 import * as utils from '@cardstack/utils';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>

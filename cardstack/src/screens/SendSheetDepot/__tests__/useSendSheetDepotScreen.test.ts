@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { useRoute } from '@react-navigation/native';
-import { updatedData } from '../../../test/helpers/mocks/dataMocks';
-import { useSendSheetDepotScreen } from './useSendSheetDepotScreen';
+import { updatedData } from '../../../helpers/__mocks__/dataMocks';
+import { useSendSheetDepotScreen } from '../useSendSheetDepotScreen';
 import { useAccountAssets } from '@rainbow-me/hooks';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';

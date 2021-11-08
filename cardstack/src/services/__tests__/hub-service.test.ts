@@ -3,7 +3,7 @@ import {
   getInventoryDataResponse,
   inventoryData,
   reservationData,
-} from '../helpers/mocks/hubMocks';
+} from '../../../src/helpers/__mocks__/hubMocks';
 
 import { getInventories, makeReservation } from '@cardstack/services';
 

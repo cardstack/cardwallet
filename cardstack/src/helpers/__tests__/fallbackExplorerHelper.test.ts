@@ -1,4 +1,4 @@
-import { fetchedData, inputData, updatedData } from './mocks/dataMocks';
+import { fetchedData, inputData, updatedData } from '../__mocks__/dataMocks';
 import {
   reduceAssetsWithPriceChartAndBalances,
   reduceDepotsWithPricesAndChart,

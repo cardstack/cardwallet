@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { useRoute } from '@react-navigation/native';
-import { updatedData } from '../../../../test/helpers/mocks/dataMocks';
+import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { usePaymentMerchantUniversalLink } from '../usePaymentMerchantUniversalLink';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { getSafeData } from '@cardstack/services';

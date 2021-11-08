@@ -1,8 +1,8 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { fireEvent, render, waitFor, act } from '../test-utils';
-import { AnimatedText } from '../../src/components/Animated';
+import { fireEvent, render, waitFor, act } from '../../../test/test-utils';
+import { AnimatedText } from '../Animated';
 import {
   SystemNotification,
   SystemNotificationProps,
