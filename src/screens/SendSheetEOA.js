@@ -490,6 +490,8 @@ const useSendSheetScreen = () => {
     onMaxBalancePress,
     selectedGasPrice,
     onPressTransactionSpeed,
+    // without price, hide fiat field, since there's no way to calculate it
+    showNativeCurrencyField: Boolean(selected?.price?.value),
   };
 };
 

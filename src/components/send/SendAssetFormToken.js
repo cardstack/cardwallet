@@ -32,6 +32,7 @@ export default function SendAssetFormToken({
   selected,
   sendMaxBalance,
   txSpeedRenderer,
+  showNativeCurrencyField = true,
   ...props
 }) {
   const { isSmallPhone, height: deviceHeight } = useDimensions();
@@ -53,17 +54,19 @@ export default function SendAssetFormToken({
           testID="selected-asset-field"
           value={assetAmount}
         />
-        <SendAssetFormField
-          autoFocus
-          label={nativeCurrency}
-          mask={nativeMask}
-          onChange={onChangeNativeAmount}
-          onFocus={onFocus}
-          onPressButton={sendMaxBalance}
-          placeholder={nativePlaceholder}
-          testID="selected-asset-quantity-field"
-          value={nativeAmount}
-        />
+        {showNativeCurrencyField && (
+          <SendAssetFormField
+            autoFocus
+            label={nativeCurrency}
+            mask={nativeMask}
+            onChange={onChangeNativeAmount}
+            onFocus={onFocus}
+            onPressButton={sendMaxBalance}
+            placeholder={nativePlaceholder}
+            testID="selected-asset-quantity-field"
+            value={nativeAmount}
+          />
+        )}
       </FormContainer>
       <FooterContainer deviceHeight={deviceHeight}>
         {buttonRenderer}

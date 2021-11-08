@@ -14,14 +14,18 @@ import { CenteredContainer } from '@cardstack/components';
 const isTinyPhone = deviceUtils.dimensions.height <= 568;
 const selectedHeight = isTinyPhone ? 62 : 78;
 
-const BottomRow = ({ balance, native, nativeCurrencySymbol }) => {
+const BottomRow = ({ balance, native }) => {
   const { colors } = useTheme();
-  const fiatValue =
-    get(native, 'balance.display') || `${nativeCurrencySymbol}0.00`;
+
+  const hasNativeBalance = !!parseFloat(native?.balance?.amount);
+
+  const fiatValue = hasNativeBalance
+    ? `≈ ${get(native, 'balance.display')}`
+    : '';
 
   return (
     <Text color={colors.alpha(colors.blueGreyDark, 0.5)} size="smedium">
-      {get(balance, 'display')} ≈ {fiatValue}
+      {get(balance, 'display')} {fiatValue}
     </Text>
   );
 };
