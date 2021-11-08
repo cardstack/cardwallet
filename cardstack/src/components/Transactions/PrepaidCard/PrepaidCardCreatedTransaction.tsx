@@ -27,7 +27,7 @@ export const PrepaidCardCreatedTransaction = ({
           cardCustomization={item.cardCustomization}
         />
       }
-      statusIconName="arrow-down"
+      statusIconName="git-commit"
       statusText="Loaded"
       primaryText={`+ ${item.spendBalanceDisplay}`}
       subText={item.nativeBalanceDisplay}
