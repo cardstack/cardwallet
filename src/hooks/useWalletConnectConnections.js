@@ -11,7 +11,7 @@ import {
 const formatDappData = connections =>
   values(
     mapValues(connections, connection => ({
-      dappIcon: connection?.[0].peerMeta.icons[0],
+      dappIcon: connection?.[0].peerMeta.icons?.[0],
       dappName: connection?.[0].peerMeta.name,
       dappUrl: connection?.[0].peerMeta.url,
     }))
