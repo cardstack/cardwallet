@@ -1,6 +1,6 @@
 // import Animated from 'react-native-reanimated';
-import { sortList } from '../helpers/sortList';
 import { reduceArrayToObject } from '../utils';
+import { sortList } from '@cardstack/helpers/sortList';
 
 // const { SpringUtils } = Animated;
 

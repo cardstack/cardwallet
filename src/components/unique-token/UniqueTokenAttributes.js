@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { sortList } from '../../helpers/sortList';
 import { magicMemo } from '../../utils';
 import Tag from '../Tag';
 import { Row } from '../layout';
+import { sortList } from '@cardstack/helpers/sortList';
 import { margin } from '@rainbow-me/styles';
 
 const AttributeItem = ({ trait_type: type, value }) =>

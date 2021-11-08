@@ -1,6 +1,6 @@
 import { filter, get, groupBy, isEmpty, isNil, map, toNumber } from 'lodash';
 import { createSelector } from 'reselect';
-import { sortList } from '../helpers/sortList';
+import { sortList } from '@cardstack/helpers/sortList';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 
 const EMPTY_ARRAY = [];
