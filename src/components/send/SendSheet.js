@@ -96,6 +96,7 @@ export default function SendSheet({
   selectedGasPrice,
   fetchData = undefined,
   onPressTransactionSpeed = undefined,
+  showNativeCurrencyField = true,
 }) {
   const [currentInput, setCurrentInput] = useState('');
 
@@ -177,6 +178,7 @@ export default function SendSheet({
             onResetAssetSelection={onResetAssetSelection}
             selected={selected}
             sendMaxBalance={onMaxBalancePress}
+            showNativeCurrencyField={showNativeCurrencyField}
             txSpeedRenderer={
               isIphoneX() && (
                 <SendTransactionSpeed
