@@ -30,6 +30,11 @@ export const BalanceCoinRow = ({
   pinned = false,
   hidden = false,
 }: BalanceCoinRowProps) => {
+  // Without price there's no way to get currency conversion
+  const hasPriceUnit = !!item.native?.price?.amount;
+
+  const nativeBalance = hasPriceUnit ? item.native?.balance?.display : '';
+
   return (
     <Touchable onPress={onPress}>
       <Container
@@ -57,7 +62,7 @@ export const BalanceCoinRow = ({
             address={item.address}
             tokenSymbol={item.symbol}
             tokenBalance={item.balance?.display}
-            nativeBalance={item.native?.balance?.display}
+            nativeBalance={nativeBalance}
           />
         </Container>
         <HiddenOverlay isEditing={isEditing} hidden={hidden} />
