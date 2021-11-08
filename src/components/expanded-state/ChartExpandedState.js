@@ -74,6 +74,8 @@ export default function ChartExpandedState(props) {
   const ChartExpandedStateSheetHeight =
     ios || showChart ? heightWithChart : heightWithoutChart;
 
+  const hasNativeBalance = !!parseFloat(asset?.native?.balance?.amount);
+
   return (
     <SlackSheet
       additionalTopPadding={android}
@@ -100,7 +102,7 @@ export default function ChartExpandedState(props) {
           <TokenInfoItem asset={asset} title="Balance">
             <TokenInfoBalanceValue />
           </TokenInfoItem>
-          {asset?.native?.price?.display && (
+          {hasNativeBalance && (
             <TokenInfoItem align="right" title="Value" weight="bold">
               {`${asset?.native?.balance.display}`}
             </TokenInfoItem>
