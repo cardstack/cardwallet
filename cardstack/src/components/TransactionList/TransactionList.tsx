@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 import {
   RefreshControl,
   SectionList,
@@ -28,6 +28,23 @@ const styles = StyleSheet.create({
   background: { backgroundColor: colors.backgroundBlue },
 });
 
+const renderSectionHeader = ({
+  section: { title },
+}: {
+  section: { title: string };
+}) => (
+  <Container
+    paddingVertical={2}
+    paddingHorizontal={5}
+    width="100%"
+    backgroundColor="backgroundBlue"
+  >
+    <Text size="medium" color="white">
+      {title}
+    </Text>
+  </Container>
+);
+
 export const TransactionList = memo(
   ({ Header, isFocused }: TransactionListProps) => {
     const {
@@ -43,21 +60,11 @@ export const TransactionList = memo(
       refetch && refetch();
     }, [refetch]);
 
-    const renderSectionHeader = useCallback(
-      ({ section: { title } }) => (
-        <Container
-          paddingVertical={2}
-          paddingHorizontal={5}
-          width="100%"
-          backgroundColor="backgroundBlue"
-        >
-          <Text size="medium" color="white">
-            {title}
-          </Text>
-        </Container>
-      ),
-      []
-    );
+    useEffect(() => {
+      if (isFocused) {
+        onRefresh();
+      }
+    }, [isFocused, onRefresh]);
 
     if (isLoadingTransactions) {
       return (
