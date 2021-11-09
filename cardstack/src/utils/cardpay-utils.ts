@@ -20,7 +20,7 @@ const LAYER_1_NETWORKS = [Network.mainnet, Network.kovan];
 
 const LAYER_2_NETWORKS = [Network.xdai, Network.sokol];
 
-const CPXD_TOKEN_SUFFIX = 'CPXD';
+const CPXD_TOKEN_SUFFIX = '.CPXD';
 
 export const isNativeToken = (symbol: string, network: string) => {
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
@@ -30,6 +30,9 @@ export const isNativeToken = (symbol: string, network: string) => {
 
 export const isCPXDToken = (symbol: string) =>
   symbol.includes(CPXD_TOKEN_SUFFIX);
+
+export const removeCPXDTokenSuffix = (symbol: string) =>
+  symbol.replace(CPXD_TOKEN_SUFFIX, '');
 
 export const isLayer1 = (network: Network) =>
   LAYER_1_NETWORKS.includes(network);
