@@ -63,7 +63,6 @@ export const TransactionList = memo(
     useEffect(() => {
       if (isFocused) {
         onRefresh();
-        console.log('TransactionList refetch..');
       }
     }, [isFocused, onRefresh]);
 
