@@ -21,7 +21,7 @@ import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { useLoadingOverlay } from '@cardstack/navigation';
-import { isNativeToken } from '@cardstack/utils';
+import { isLayer2, isNativeToken } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   useAccountAssets,
@@ -489,7 +489,9 @@ const useSendSheetScreen = () => {
     selected,
     onMaxBalancePress,
     selectedGasPrice,
-    onPressTransactionSpeed,
+    onPressTransactionSpeed: isLayer2(network)
+      ? undefined
+      : onPressTransactionSpeed, // Temporary turn off gas price picker on layer 2
     // without price, hide fiat field, since there's no way to calculate it
     showNativeCurrencyField: Boolean(selected?.price?.value),
   };
