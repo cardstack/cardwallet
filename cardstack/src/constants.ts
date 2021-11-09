@@ -11,5 +11,5 @@ export const SettingsExternalURLs = {
     'itms-apps://itunes.apple.com/us/app/appName/id1457119021?mt=8&action=write-review',
   twitterDeepLink: 'twitter://user?screen_name=cardstack',
   twitterWebUrl: 'https://twitter.com/cardstack',
-  discordInviteLink: 'https://discord.gg/NYtJY5Fx',
+  discordInviteLink: 'https://discord.gg/cardstack',
 };
