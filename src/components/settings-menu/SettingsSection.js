@@ -13,6 +13,7 @@ import {
   ListItemDivider,
 } from '../list';
 import { Icon } from '@cardstack/components';
+import { SettingsExternalURLs } from '@cardstack/constants';
 import { getReviewFeature } from '@cardstack/services';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -29,14 +30,6 @@ import {
 } from '@rainbow-me/utils/reviewAlert';
 
 const { RainbowRequestReview, RNReview } = NativeModules;
-
-export const SettingsExternalURLs = {
-  cardstackHomepage: 'https://cardstack.com/',
-  review:
-    'itms-apps://itunes.apple.com/us/app/appName/id1457119021?mt=8&action=write-review',
-  twitterDeepLink: 'twitter://user?screen_name=cardstack',
-  twitterWebUrl: 'https://twitter.com/cardstack',
-};
 
 const contentContainerStyle = { flex: 1 };
 const Container = styled(ScrollView).attrs({
@@ -89,7 +82,7 @@ export default function SettingsSection({
   onPressShowSecret,
 }) {
   const { wallets } = useWallets();
-  const { /*language,*/ nativeCurrency, network } = useAccountSettings();
+  const { nativeCurrency, network } = useAccountSettings();
   const { isTinyPhone } = useDimensions();
 
   const { colors } = useTheme();
@@ -120,6 +113,10 @@ export default function SettingsSection({
     Share.share({
       message: `Hello, I wanted to introduce you to Card Wallet. It makes crypto payments and loyalty rewards easy. Download it today at ${SettingsExternalURLs.cardstackHomepage}`,
     });
+  }, []);
+
+  const onPressDiscord = useCallback(() => {
+    Linking.openURL(SettingsExternalURLs.discordInviteLink);
   }, []);
 
   const onPressTwitter = useCallback(async () => {
@@ -186,14 +183,21 @@ export default function SettingsSection({
           label="Share"
           onPress={onPressShare}
           testID="share-section"
-          value={SettingsExternalURLs.rainbowHomepage}
+          value={SettingsExternalURLs.cardstackHomepage}
+        />
+        <ListItem
+          icon={<Icon name="discord" />}
+          label="Discord"
+          onPress={onPressDiscord}
+          testID="discord-section"
+          value={SettingsExternalURLs.cardstackHomepage}
         />
         <ListItem
           icon={<Icon color="settingsTeal" name="twitter" />}
           label="Follow"
           onPress={onPressTwitter}
           testID="twitter-section"
-          value={SettingsExternalURLs.twitter}
+          value={SettingsExternalURLs.twitterWebUrl}
         />
         <ListItem
           icon={<Icon color="settingsTeal" name="life-buoy" />}
