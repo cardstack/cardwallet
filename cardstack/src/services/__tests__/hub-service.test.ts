@@ -3,9 +3,14 @@ import {
   getInventoryDataResponse,
   inventoryData,
   reservationData,
-} from '../../../src/helpers/__mocks__/hubMocks';
+  wyrePriceData,
+} from '@cardstack/helpers/__mocks__/hubMocks';
 
-import { getInventories, makeReservation } from '@cardstack/services';
+import {
+  getInventories,
+  getWyrePrice,
+  makeReservation,
+} from '@cardstack/services';
 
 jest.mock('axios');
 
@@ -47,6 +52,22 @@ describe('makeReservation', () => {
   it('Should return undefined with empty API response', async () => {
     axios.post = jest.fn().mockResolvedValue([]);
     const result = await getInventories('hubURL', tokenMock, issuerAddress);
+
+    expect(result).toStrictEqual(undefined);
+  });
+});
+
+describe('getWyrePrice', () => {
+  it('Should return success data', async () => {
+    axios.get = jest.fn().mockResolvedValue(wyrePriceData);
+    const result = await getWyrePrice('hubURL', tokenMock);
+
+    expect(result).toBe(wyrePriceData.data.data);
+  });
+
+  it('Should return undefined with empty API response', async () => {
+    axios.get = jest.fn().mockResolvedValue([]);
+    const result = await getWyrePrice('hubURL', tokenMock);
 
     expect(result).toStrictEqual(undefined);
   });

@@ -22,17 +22,15 @@ import {
   getHubUrl,
   getInventories,
   getOrder,
+  getWyrePrice,
   Inventory,
   InventoryAttrs,
   makeReservation,
   ReservationData,
   updateOrder,
+  WyrePriceData,
 } from '@cardstack/services';
-import {
-  fetchCardCustomizationFromDID,
-  getNativeBalanceFromSpend,
-  useWorker,
-} from '@cardstack/utils';
+import { fetchCardCustomizationFromDID, useWorker } from '@cardstack/utils';
 import { PrepaidCardCustomization } from '@cardstack/types';
 import { addNewPrepaidCard } from '@rainbow-me/redux/data';
 import Routes from '@rainbow-me/navigation/routesNames';
@@ -41,7 +39,12 @@ import { useLoadingOverlay } from '@cardstack/navigation';
 
 interface CardAttrs extends InventoryAttrs {
   customizationDID?: PrepaidCardCustomization | null;
+  'source-currency'?: string;
+  'dest-currency'?: string;
+  'source-currency-price'?: number;
+  'includes-fee'?: boolean;
 }
+
 export interface Card {
   id: string;
   type: string;
@@ -85,6 +88,10 @@ export default function useBuyPrepaidCard() {
 
   const [sku, setSku] = useState<string>('');
   const [wyreOrderId, setWyreOrderId] = useState<string>('');
+
+  const [wyrePriceData, setWyrePriceData] = useState<
+    WyrePriceData[] | undefined
+  >();
 
   const [
     custodialWalletData,
@@ -214,6 +221,17 @@ export default function useBuyPrepaidCard() {
     }
   }, [authToken, hubURL]);
 
+  useEffect(() => {
+    if (authToken) {
+      const getWyrePriceData = async () => {
+        const data = await getWyrePrice(hubURL, authToken);
+        setWyrePriceData(data);
+      };
+
+      getWyrePriceData();
+    }
+  }, [authToken, hubURL]);
+
   const onSelectCard = useCallback(
     async (item, index) => {
       const modifiedCards =
@@ -224,6 +242,11 @@ export default function useBuyPrepaidCard() {
           : [];
 
       modifiedCards[index].isSelected = true;
+
+      const priceAttributes = wyrePriceData?.find(
+        priceDataItem =>
+          priceDataItem.id === modifiedCards[index].attributes.sku
+      );
 
       const customizationDID = modifiedCards[index].attributes[
         'customization-DID'
@@ -242,24 +265,27 @@ export default function useBuyPrepaidCard() {
         })[0].attributes;
 
       setInventoryData(modifiedCards);
-      setCard({ ...formattedCard, customizationDID });
+
+      setCard({
+        ...formattedCard,
+        ...priceAttributes?.attributes,
+        customizationDID,
+      });
 
       setSku(modifiedCards[index].attributes.sku);
     },
-    [inventoryData]
+    [inventoryData, wyrePriceData]
   );
 
   const onPurchase = useCallback(
-    async ({ value, depositAddress, sourceCurrency }) => {
-      const currency = 'DAI'; // TODO this will come from a service in #CS-2194
-
+    async ({ value, depositAddress, sourceCurrency, destCurrency }) => {
       const referenceInfo = {
         referenceId: getReferenceId(accountAddress),
       };
 
       const { reservation: reservationId } = await reserveWyreOrder(
         value,
-        currency,
+        destCurrency,
         depositAddress,
         network,
         null,
@@ -269,7 +295,7 @@ export default function useBuyPrepaidCard() {
       if (!reservationId) {
         logger.sentry('Error while making reservation on Wyre', {
           value,
-          currency,
+          destCurrency,
           depositAddress,
           network,
           sourceCurrency,
@@ -287,7 +313,7 @@ export default function useBuyPrepaidCard() {
 
       const quotation = await getWalletOrderQuotation(
         value,
-        currency,
+        destCurrency,
         depositAddress,
         network,
         sourceCurrency
@@ -296,7 +322,7 @@ export default function useBuyPrepaidCard() {
       if (!quotation) {
         logger.sentry('Error while getting quotation on Wyre', {
           value,
-          currency,
+          destCurrency,
           depositAddress,
           network,
           sourceCurrency,
@@ -317,7 +343,7 @@ export default function useBuyPrepaidCard() {
       const applePayResponse = await showApplePayRequest(
         referenceInfo,
         depositAddress,
-        currency,
+        destCurrency,
         sourceAmountWithFees,
         purchaseFee,
         value,
@@ -333,7 +359,7 @@ export default function useBuyPrepaidCard() {
           applePayResponse,
           sourceAmountWithFees,
           depositAddress,
-          currency,
+          destCurrency,
           network,
           reservationId,
           sourceCurrency
@@ -353,7 +379,7 @@ export default function useBuyPrepaidCard() {
             applePayResponse,
             sourceAmountWithFees,
             depositAddress,
-            currency,
+            destCurrency,
             network,
             reservationId
           );
@@ -365,11 +391,9 @@ export default function useBuyPrepaidCard() {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   const handlePurchase = useCallback(async () => {
-    const amount = getNativeBalanceFromSpend(
-      card?.['face-value'] || 0,
-      nativeCurrency,
-      currencyConversionRates
-    );
+    const amount =
+      (card?.['source-currency-price'] || 0) *
+      currencyConversionRates[nativeCurrency];
 
     let reservation: ReservationData | undefined;
     let wyreOrderIdData;
@@ -389,7 +413,8 @@ export default function useBuyPrepaidCard() {
       wyreOrderIdData = await onPurchase({
         value: amount.toString(),
         depositAddress: custodialWalletData?.attributes['deposit-address'],
-        sourceCurrency: nativeCurrency,
+        sourceCurrency: nativeCurrency || card?.['source-currency'],
+        destCurrency: card?.['dest-currency'] || 'DAI',
       });
     } catch (error) {
       logger.sentry('Error while make reservation', {
