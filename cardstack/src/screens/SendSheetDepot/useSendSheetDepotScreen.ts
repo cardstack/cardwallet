@@ -4,7 +4,7 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
-import { get, isEmpty, isString } from 'lodash';
+import { isEmpty, isString } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Web3 from 'web3';
 import BN from 'bn.js';
@@ -30,6 +30,7 @@ import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import HDProvider from '@cardstack/models/hd-provider';
 import { useWorker } from '@cardstack/utils/hooks-utilities';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
 interface RouteType {
   params: { asset: TokenType; safeAddress?: string };
@@ -91,7 +92,21 @@ export const useSendSheetDepotScreen = () => {
   const isValidAddress = useSendAddressValidation(recipient);
   const [isAuthorizing, setIsAuthorizing] = useState(false);
 
-  const { accountAddress, nativeCurrency, network } = useAccountSettings();
+  const { accountAddress, network } = useAccountSettings();
+
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
+
+  const getNativeCurrencyAmount = useCallback(
+    (amount: string) => {
+      const usdConvertedAmount = usdConverter.current?.(amount) || 0;
+
+      return currencyConversionRates[nativeCurrency] * usdConvertedAmount;
+    },
+    [currencyConversionRates, nativeCurrency]
+  );
 
   // Gas Estimates
   const [gasEstimatedFee, setGasEstimatedFee] = useState(0);
@@ -110,9 +125,9 @@ export const useSendSheetDepotScreen = () => {
           amountWei
         )) || '0';
 
-      const gasFeeInUsd = usdConverter.current?.(gasEstimate) || 0;
+      const nativeCurrencyGasFee = getNativeCurrencyAmount(gasEstimate) || 0;
 
-      setGasEstimatedFee(gasFeeInUsd);
+      setGasEstimatedFee(nativeCurrencyGasFee);
 
       // Calculate maxBalance
       const currentBalanceWei = new BN(selected?.balance?.wei || '0');
@@ -144,6 +159,7 @@ export const useSendSheetDepotScreen = () => {
   }, [
     amountDetails.assetAmount,
     amountDetails.isSufficientBalance,
+    getNativeCurrencyAmount,
     recipient,
     safeAddress,
     selected,
@@ -196,10 +212,15 @@ export const useSendSheetDepotScreen = () => {
   const updateAssetAmount = useCallback(
     async newAssetAmount => {
       const assetAmount: string = newAssetAmount.replace(/[^0-9.]/g, '');
+      const hasAmount = !!assetAmount.length;
+
+      const nativeCurrencyAssetAmount = hasAmount
+        ? getNativeCurrencyAmount(Web3.utils.toWei(assetAmount))
+        : 0;
 
       try {
-        const nativeAmount = assetAmount.length
-          ? usdConverter.current?.(Web3.utils.toWei(assetAmount)).toString()
+        const nativeAmount = hasAmount
+          ? nativeCurrencyAssetAmount.toString()
           : '';
 
         handleAmountDetails({
@@ -210,7 +231,7 @@ export const useSendSheetDepotScreen = () => {
         logger.error('Failed to convert token amount to usd', e);
       }
     },
-    [handleAmountDetails]
+    [getNativeCurrencyAmount, handleAmountDetails]
   );
 
   const onChangeNativeAmount = useCallback(
@@ -225,14 +246,14 @@ export const useSendSheetDepotScreen = () => {
       }
 
       try {
-        // Getting how much on token is worth in usd in order to calculate usdToTokenValue
-        const usdPriceUnit =
-          usdConverter.current?.(Web3.utils.toWei('1')).toString() ||
-          get(selected, 'price.value', 0);
+        // Getting how much one token is worth in order to calculate currencyToToken
+        const nativeCurrencyPriceUnit = getNativeCurrencyAmount(
+          Web3.utils.toWei('1')
+        ).toString();
 
         const convertedAssetAmount = convertAmountFromNativeValue(
           nativeAmount,
-          usdPriceUnit,
+          nativeCurrencyPriceUnit,
           selected?.decimals
         );
 
@@ -249,7 +270,7 @@ export const useSendSheetDepotScreen = () => {
         logger.error('Failed to use usdConverter', e);
       }
     },
-    [handleAmountDetails, selected]
+    [getNativeCurrencyAmount, handleAmountDetails, selected]
   );
 
   const onMaxBalancePress = useCallback(async () => {

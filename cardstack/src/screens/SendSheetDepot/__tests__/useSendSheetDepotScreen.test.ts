@@ -6,6 +6,7 @@ import { useAccountAssets } from '@rainbow-me/hooks';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import { reshapeSingleDepotTokenToAsset } from '@cardstack/utils';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
 jest.mock('@cardstack/utils/device', () => ({ Device: { isAndroid: false } }));
 jest.mock('@rainbow-me/navigation/Navigation', () => ({
@@ -28,6 +29,12 @@ jest.mock('@rainbow-me/hooks', () => ({
     triggerFocus: jest.fn(),
   }),
   useWallets: () => ({ selectedWallet: 'fooSelectedWallet' }),
+}));
+
+jest.mock('@rainbow-me/redux/hooks', () => ({
+  useNativeCurrencyAndConversionRates: jest
+    .fn()
+    .mockImplementation(() => ['USD', { USD: 1, EUR: 0.86 }]),
 }));
 
 jest.mock('@rainbow-me/components/send/SendSheet', () => ({
@@ -104,7 +111,9 @@ describe('useSendSheetDepotScreen', () => {
 
     (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
 
-    const { waitForNextUpdate } = renderHook(() => useSendSheetDepotScreen());
+    const { waitForNextUpdate, result } = renderHook(() =>
+      useSendSheetDepotScreen()
+    );
 
     await waitForNextUpdate();
 
@@ -117,5 +126,39 @@ describe('useSendSheetDepotScreen', () => {
 
     expect(mockConverter).toBeCalledWith(weiGasEstimate);
     expect(getUsdConverter).toBeCalledWith('CARD');
+    expect(result.current.selectedGasPrice).toEqual(usdGasEstimate);
+  });
+
+  it('should update estimated gas fee with native currency amount', async () => {
+    const currencyConversionRate = { EUR: 0.86 };
+    const nativeCurrency = 'EUR';
+
+    (useNativeCurrencyAndConversionRates as jest.Mock).mockImplementation(
+      () => [nativeCurrency, currencyConversionRate]
+    );
+
+    const weiGasEstimate = '12041962649411652';
+    const usdGasEstimate = 0.00020291;
+    const eurGasEstimate = usdGasEstimate * currencyConversionRate.EUR;
+
+    const mockSendTokensGasEstimate = jest
+      .fn()
+      .mockResolvedValue(weiGasEstimate);
+
+    (getSafesInstance as jest.Mock).mockResolvedValue({
+      sendTokensGasEstimate: mockSendTokensGasEstimate,
+    });
+
+    const mockConverter = jest.fn(() => usdGasEstimate);
+
+    (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
+
+    const { waitForNextUpdate, result } = renderHook(() =>
+      useSendSheetDepotScreen()
+    );
+
+    await waitForNextUpdate();
+
+    expect(result.current.selectedGasPrice).toEqual(eurGasEstimate);
   });
 });
