@@ -18,7 +18,7 @@ module.exports = {
   coverageDirectory: '.coverage',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   preset: 'react-native',
-  setupFilesAfterEnv: ['<rootDir>/cardstack/test/jest-setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/cardstack/src/test-utils/jest-setup.js'],
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',

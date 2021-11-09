@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { fireEvent, render, waitFor, act } from '../../../test/test-utils';
+import { fireEvent, render, waitFor, act } from '../../test-utils';
 import { AnimatedText } from '../Animated';
 import {
   SystemNotification,

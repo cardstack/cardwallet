@@ -2,7 +2,7 @@ import Chance from 'chance';
 import React from 'react';
 
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
-import { render } from '../../../../test/test-utils';
+import { render } from '../../../test-utils';
 import { Input, InputAmount, CURRENCY_DISPLAY_MODE } from '..';
 import { Text } from '../../Text';
 import { Icon } from '../../Icon';

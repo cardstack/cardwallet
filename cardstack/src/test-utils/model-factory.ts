@@ -4,7 +4,7 @@ import {
   ERC20TransactionType,
   TransactionStatus,
   TransactionTypes,
-} from '../../src/types';
+} from '../types';
 
 const chance = new Chance();
 

@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { fireEvent, render } from '../../../test/test-utils';
+import { fireEvent, render } from '../../test-utils';
 import { OptionItem } from '../OptionItem';
 
 jest.mock('@cardstack/components/Icon', () => ({

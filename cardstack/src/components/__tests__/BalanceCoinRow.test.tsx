@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Icon } from '../Icon';
 import { BalanceCoinRow } from '../BalanceCoinRow';
-import { render } from '../../../test/test-utils';
+import { render } from '../../test-utils';
 import { colors } from '@cardstack/theme';
 
 const chance = new Chance();
