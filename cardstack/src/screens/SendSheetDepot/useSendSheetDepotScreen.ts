@@ -322,11 +322,7 @@ export const useSendSheetDepotScreen = () => {
       // resets signed provider and web3 instance to kill poller
       await HDProvider.reset();
 
-      navigate(
-        Routes.WALLET_SCREEN,
-        { forceRefreshOnce: true, initialized: false },
-        true
-      );
+      navigate(Routes.WALLET_SCREEN, { forceRefreshOnce: true });
     } catch (error) {
       dismissLoadingOverlay();
       const errorMessage = (error as any).toString();
