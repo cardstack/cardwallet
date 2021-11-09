@@ -5,3 +5,11 @@ export const SEND_TRANSACTION_ERROR_MESSAGE =
   'An error has occurred, could not send. If this persists, please contact support@cardstack.com';
 export const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
 export const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
+export const SettingsExternalURLs = {
+  cardstackHomepage: 'https://cardstack.com/',
+  review:
+    'itms-apps://itunes.apple.com/us/app/appName/id1457119021?mt=8&action=write-review',
+  twitterDeepLink: 'twitter://user?screen_name=cardstack',
+  twitterWebUrl: 'https://twitter.com/cardstack',
+  discordInviteLink: 'https://discord.gg/NYtJY5Fx',
+};

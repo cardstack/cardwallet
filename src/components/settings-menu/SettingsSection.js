@@ -13,6 +13,7 @@ import {
   ListItemDivider,
 } from '../list';
 import { Icon } from '@cardstack/components';
+import { SettingsExternalURLs } from '@cardstack/constants';
 import { getReviewFeature } from '@cardstack/services';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -29,15 +30,6 @@ import {
 } from '@rainbow-me/utils/reviewAlert';
 
 const { RainbowRequestReview, RNReview } = NativeModules;
-
-export const SettingsExternalURLs = {
-  cardstackHomepage: 'https://cardstack.com/',
-  review:
-    'itms-apps://itunes.apple.com/us/app/appName/id1457119021?mt=8&action=write-review',
-  twitterDeepLink: 'twitter://user?screen_name=cardstack',
-  twitterWebUrl: 'https://twitter.com/cardstack',
-  discordInviteLink: 'https://discord.gg/NYtJY5Fx',
-};
 
 const contentContainerStyle = { flex: 1 };
 const Container = styled(ScrollView).attrs({
