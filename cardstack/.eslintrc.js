@@ -10,6 +10,7 @@ module.exports = {
           '.ios.js',
           '.android.js',
           '.native.js',
+          '.d.ts',
           '.ts',
           '.tsx',
           '.png',

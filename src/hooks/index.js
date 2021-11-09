@@ -82,7 +82,7 @@ export { default as useUpdateAssetOnchainBalance } from './useUpdateAssetOnchain
 export { default as useUniswapPairs } from './useUniswapPairs';
 export { default as useWalletBalances } from './useWalletBalances';
 export { default as useWalletCloudBackup } from './useWalletCloudBackup';
-export { default as useWalletConnectConnections } from './useWalletConnectConnections';
+export { default as useWalletConnectConnections } from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 export { default as useWalletManualBackup } from './useWalletManualBackup';
 export { default as useWallets } from './useWallets';
 export { default as useWalletsDebug } from './useWalletsDebug';

@@ -1,17 +1,17 @@
 import { get, isFunction, isString, toLower } from 'lodash';
 
-export const sortList = (
-  array = [],
-  sortByKey,
-  direction,
-  defaultValue,
-  formatter
-) =>
-  array.slice(0).sort((a, b) => {
+export function sortList<T>(
+  array: T[] = [],
+  sortByKey: string,
+  direction: 'asc' | 'desc' = 'asc',
+  defaultValue: any = undefined,
+  formatter: ((item: any) => any) | undefined = undefined
+) {
+  return array.slice(0).sort((a, b) => {
     const isAscending = direction === 'asc';
 
-    let itemA = a;
-    let itemB = b;
+    let itemA: T | string = a;
+    let itemB: T | string = b;
 
     if (sortByKey) {
       itemA = get(a, sortByKey, defaultValue);
@@ -33,3 +33,4 @@ export const sortList = (
 
     return 0;
   });
+}
