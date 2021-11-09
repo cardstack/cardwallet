@@ -1,7 +1,7 @@
 import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { MERCHANT_EARNED_SPEND_MOCK_DATA } from '@cardstack/utils/__mocks__/merchant-strategies';
 
-jest.mock('../../../src/utils', () => ({ deviceUtils: { isIOS14: false } }));
+jest.mock('../../../utils', () => ({ deviceUtils: { isIOS14: false } }));
 
 jest.mock('@rainbow-me/references', () => ({
   shitcoins: 'JSON-MOCK-RETURN',

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ERC20TransactionType } from '../../src/types';
-import { render } from '../test-utils';
-import { createRandomTransactionItem } from '../test-utils/model-factory';
-import { ERC20Transaction } from '@cardstack/components';
+import { ERC20TransactionType } from '../../../types';
+import { render } from '../../../test-utils';
+import { createRandomTransactionItem } from '../../../test-utils/model-factory';
+import { ERC20Transaction } from '../ERC20Transaction';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)
@@ -13,7 +13,7 @@ jest.mock('../../src/components/Icon', () => ({
   Icon: jest.fn(() => null),
 }));
 
-describe('TransactionCoinRow', () => {
+describe('ERC20Transaction', () => {
   let item: ERC20TransactionType;
 
   const renderComponent = () => render(<ERC20Transaction item={item} />);

@@ -2,14 +2,10 @@ import Chance from 'chance';
 import React from 'react';
 
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
-import { render } from '../test-utils';
-import {
-  Input,
-  InputAmount,
-  CURRENCY_DISPLAY_MODE,
-} from '../../src/components/Input';
-import { Text } from '../../src/components/Text';
-import { Icon } from '../../src/components/Icon';
+import { render } from '../../../test-utils';
+import { Input, InputAmount, CURRENCY_DISPLAY_MODE } from '..';
+import { Text } from '../../Text';
+import { Icon } from '../../Icon';
 import * as utils from '@cardstack/utils';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>

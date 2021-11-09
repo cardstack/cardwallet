@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react-native';
 import React from 'react';
 
-import theme from '../../src/theme';
+import theme from '../theme';
 
 const customerRender = (
   component: React.ReactElement,

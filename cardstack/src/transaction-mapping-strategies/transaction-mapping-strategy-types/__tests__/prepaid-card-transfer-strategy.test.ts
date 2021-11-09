@@ -5,7 +5,7 @@ import {
 } from '@cardstack/utils/__mocks__/merchant-strategies';
 import { PrepaidCardTransferStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-transfer-strategy';
 
-jest.mock('../../../src/utils', () => ({ deviceUtils: { isIOS14: false } }));
+jest.mock('../../../utils', () => ({ deviceUtils: { isIOS14: false } }));
 
 jest.mock('@rainbow-me/references', () => ({
   shitcoins: 'JSON-MOCK-RETURN',

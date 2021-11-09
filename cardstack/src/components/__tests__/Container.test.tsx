@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { render } from '../test-utils';
+import { render } from '../../test-utils';
 import { CenteredContainer, Text } from '@cardstack/components';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>

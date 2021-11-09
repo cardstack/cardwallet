@@ -2,12 +2,9 @@ import Chance from 'chance';
 import React from 'react';
 import { SectionList } from 'react-native';
 
-import {
-  ExpandedCard,
-  ExpandedCardProps,
-} from '../../src/components/PrepaidCard/ExpandedCard';
-import { render } from '../test-utils';
-import { createRandomTransactionItem } from '../test-utils/model-factory';
+import { ExpandedCard, ExpandedCardProps } from '../ExpandedCard';
+import { render } from '../../../test-utils';
+import { createRandomTransactionItem } from '../../../test-utils/model-factory';
 
 jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
   jest.fn(({ children }) => children)

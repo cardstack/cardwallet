@@ -1,9 +1,9 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { Icon } from '../../src/components/Icon';
-import { BalanceCoinRow } from '../../src/components/BalanceCoinRow';
-import { render } from '../test-utils';
+import { Icon } from '../Icon';
+import { BalanceCoinRow } from '../BalanceCoinRow';
+import { render } from '../../test-utils';
 import { colors } from '@cardstack/theme';
 
 const chance = new Chance();
