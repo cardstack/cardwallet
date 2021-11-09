@@ -128,10 +128,26 @@ export const useSendSheetDepotScreen = () => {
       const maxBalanceEth = Web3.utils.fromWei(maxBalanceWei, 'ether');
 
       updateMaxInputBalance(maxBalanceEth);
+
+      const isSufficientBalance =
+        Number(amountDetails.assetAmount) <= Number(maxBalanceEth);
+
+      if (isSufficientBalance !== amountDetails.isSufficientBalance) {
+        setAmountDetails(oldAmountDetails => ({
+          ...oldAmountDetails,
+          isSufficientBalance,
+        }));
+      }
     } catch (e) {
       logger.error('Error getting gasPriceEstimate or maxBalance', e);
     }
-  }, [amountDetails.assetAmount, recipient, safeAddress, selected]);
+  }, [
+    amountDetails.assetAmount,
+    amountDetails.isSufficientBalance,
+    recipient,
+    safeAddress,
+    selected,
+  ]);
 
   // Update gasFee initial render and when asset changes
   useEffect(() => {
@@ -306,7 +322,11 @@ export const useSendSheetDepotScreen = () => {
       // resets signed provider and web3 instance to kill poller
       await HDProvider.reset();
 
-      navigate(Routes.WALLET_SCREEN, { forceRefreshOnce: true });
+      navigate(
+        Routes.WALLET_SCREEN,
+        { forceRefreshOnce: true, initialized: false },
+        true
+      );
     } catch (error) {
       dismissLoadingOverlay();
       const errorMessage = (error as any).toString();
