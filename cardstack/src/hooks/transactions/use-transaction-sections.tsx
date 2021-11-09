@@ -71,7 +71,7 @@ export const useTransactionSections = ({
     prevLastestTx === currentLastestTx && currentTxLength > prevTxLength;
 
   const isNewtx =
-    prevLastestTx !== currentLastestTx && prevTxLength === currentTxLength;
+    prevLastestTx !== currentLastestTx && prevTxLength !== currentTxLength;
 
   const isInitialTx = !prevLastestTx;
 

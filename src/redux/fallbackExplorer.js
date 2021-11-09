@@ -13,6 +13,10 @@ import { setCurrencyConversionRates } from './currencyConversion';
 import { addressAssetsReceived } from './data';
 import store from './store';
 import {
+  DISCOVER_NEW_ASSETS_FREQUENCY,
+  UPDATE_BALANCE_AND_PRICE_FREQUENCY,
+} from '@cardstack/constants';
+import {
   reduceAssetsWithPriceChartAndBalances,
   reduceDepotsWithPricesAndChart,
 } from '@cardstack/helpers/fallbackExplorerHelper';
@@ -35,8 +39,6 @@ const FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER =
   'explorer/FALLBACK_EXPLORER_SET_LATEST_TX_BLOCK_NUMBER';
 
 const HONEYSWAP_ENDPOINT = 'https://tokens.honeyswap.org';
-const UPDATE_BALANCE_AND_PRICE_FREQUENCY = 10000;
-const DISCOVER_NEW_ASSETS_FREQUENCY = 13000;
 
 // Some contracts like SNX / SUSD use an ERC20 proxy
 // some of those tokens have been migrated to a new address
