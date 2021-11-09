@@ -489,7 +489,9 @@ const useSendSheetScreen = () => {
     selected,
     onMaxBalancePress,
     selectedGasPrice,
-    onPressTransactionSpeed: isLayer2 ? undefined : onPressTransactionSpeed, // Temporary turn off gas price picker on layer 2
+    onPressTransactionSpeed: isLayer2(network)
+      ? undefined
+      : onPressTransactionSpeed, // Temporary turn off gas price picker on layer 2
     // without price, hide fiat field, since there's no way to calculate it
     showNativeCurrencyField: Boolean(selected?.price?.value),
   };
