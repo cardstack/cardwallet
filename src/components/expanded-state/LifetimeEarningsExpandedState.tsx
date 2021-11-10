@@ -18,15 +18,15 @@ import {
 } from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { convertSpendForBalanceDisplay, screenHeight } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
-const CHART_HEIGHT = 200;
-const HEIGHT = CHART_HEIGHT + 400;
+const CHART_HEIGHT = screenHeight * 0.25;
+const HEIGHT = screenHeight * 0.85;
 
 const useMerchantSafe = (address: string) => {
   const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
