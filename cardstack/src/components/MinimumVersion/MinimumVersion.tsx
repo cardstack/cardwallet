@@ -57,9 +57,11 @@ const handleUriOrUrl = ({ uri, url }: { uri: string; url: string }) => {
 
 export const MinimumVersion = () => {
   const onUpdatePress = useCallback(() => {
-    const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
+    if (NativeModules.RNTestFlight) {
+      const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
 
-    handleUriOrUrl(paths[isTestFlight ? 'testFlight' : 'appStore']);
+      handleUriOrUrl(paths[isTestFlight ? 'testFlight' : 'appStore']);
+    }
   }, []);
 
   return (
