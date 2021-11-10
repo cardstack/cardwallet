@@ -23,11 +23,11 @@ export const Sheet = ({
         backgroundColor="white"
         borderTopStartRadius={borderRadius}
         borderTopEndRadius={borderRadius}
-        paddingBottom={
-          isTallPhone
+        style={{
+          paddingBottom: isTallPhone
             ? Math.round(insets.top / 2.5)
-            : Math.round(insets.top / 1.2)
-        }
+            : Math.round(insets.top / 1.2),
+        }}
         {...props}
       >
         <Container
