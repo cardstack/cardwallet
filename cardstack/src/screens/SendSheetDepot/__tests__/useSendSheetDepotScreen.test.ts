@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { useRoute } from '@react-navigation/native';
+import { waitFor } from '@testing-library/react-native';
 import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { useSendSheetDepotScreen } from '../useSendSheetDepotScreen';
 import { useAccountAssets } from '@rainbow-me/hooks';
@@ -92,7 +93,9 @@ describe('useSendSheetDepotScreen', () => {
 
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
-    expect(result.current.allAssets).toEqual(expectedAssets);
+    await waitFor(() =>
+      expect(result.current.allAssets).toEqual(expectedAssets)
+    );
   });
 
   it('should update gas fee and usdConverter initial render', async () => {
@@ -111,11 +114,11 @@ describe('useSendSheetDepotScreen', () => {
 
     (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
 
-    const { waitForNextUpdate, result } = renderHook(() =>
-      useSendSheetDepotScreen()
-    );
+    const { result } = renderHook(() => useSendSheetDepotScreen());
 
-    await waitForNextUpdate();
+    await waitFor(() =>
+      expect(result.current.selectedGasPrice).toEqual(usdGasEstimate)
+    );
 
     expect(mockSendTokensGasEstimate).toBeCalledWith(
       '0x107c1F2e2cE594cCb60629eaf33cF703419E01fb',
@@ -126,7 +129,6 @@ describe('useSendSheetDepotScreen', () => {
 
     expect(mockConverter).toBeCalledWith(weiGasEstimate);
     expect(getUsdConverter).toBeCalledWith('CARD');
-    expect(result.current.selectedGasPrice).toEqual(usdGasEstimate);
   });
 
   it('should update estimated gas fee with native currency amount', async () => {
@@ -153,12 +155,10 @@ describe('useSendSheetDepotScreen', () => {
 
     (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
 
-    const { waitForNextUpdate, result } = renderHook(() =>
-      useSendSheetDepotScreen()
+    const { result } = renderHook(() => useSendSheetDepotScreen());
+
+    await waitFor(() =>
+      expect(result.current.selectedGasPrice).toEqual(eurGasEstimate)
     );
-
-    await waitForNextUpdate();
-
-    expect(result.current.selectedGasPrice).toEqual(eurGasEstimate);
   });
 });
