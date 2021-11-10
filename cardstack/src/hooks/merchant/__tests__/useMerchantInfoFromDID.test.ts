@@ -1,6 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks';
+import { waitFor } from '@testing-library/react-native';
 import { useMerchantInfoFromDID } from '../useMerchantInfoFromDID';
 import * as MerchantUtils from '@cardstack/utils/merchant-utils';
+
+jest.mock('logger');
 
 describe('useMerchantInfoFromDID', () => {
   afterEach(() => {
@@ -21,14 +24,11 @@ describe('useMerchantInfoFromDID', () => {
       .spyOn(MerchantUtils, 'fetchMerchantInfoFromDID')
       .mockResolvedValueOnce(mockedDID);
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useMerchantInfoFromDID('foo')
-    );
+    const { result } = renderHook(() => useMerchantInfoFromDID('foo'));
 
-    await waitForNextUpdate();
+    await waitFor(() => expect(spyFetchDID).toBeCalledTimes(1));
 
     expect(spyFetchDID).toBeCalledWith('foo');
-    expect(spyFetchDID).toBeCalledTimes(1);
     expect(result.current.merchantInfoDID).toStrictEqual(mockedDID);
   });
 
@@ -41,8 +41,9 @@ describe('useMerchantInfoFromDID', () => {
       useMerchantInfoFromDID('did does not exist')
     );
 
+    await waitFor(() => expect(spyFetchDID).toBeCalledTimes(1));
+
     expect(spyFetchDID).toBeCalledWith('did does not exist');
-    expect(spyFetchDID).toBeCalledTimes(1);
     expect(result.current.merchantInfoDID).toStrictEqual(undefined);
   });
 
