@@ -80,6 +80,19 @@ export interface OrderData {
   prepaidCardAddress?: string;
 }
 
+export interface WyrePriceData {
+  id: string;
+  type: string;
+  attributes: WyrePriceAttrs;
+}
+
+export interface WyrePriceAttrs {
+  'source-currency': string;
+  'dest-currency': string;
+  'source-currency-price': number;
+  'includes-fee': boolean;
+}
+
 export const getCustodialWallet = async (
   hubURL: string,
   authToken: string
@@ -207,6 +220,22 @@ export const getOrder = async (
       results?.data?.included?.[0].attributes?.['prepaid-card-address'] || null;
 
     return { ...results?.data?.data, prepaidCardAddress };
+  } catch (e) {
+    logger.sentry('Error getting order details', e);
+  }
+};
+
+export const getWyrePrice = async (
+  hubURL: string,
+  authToken: string
+): Promise<WyrePriceData[] | undefined> => {
+  try {
+    const results = await axios.get(
+      `${hubURL}/api/wyre-prices`,
+      axiosConfig(authToken)
+    );
+
+    return results?.data?.data;
   } catch (e) {
     logger.sentry('Error getting order details', e);
   }
