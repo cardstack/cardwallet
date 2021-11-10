@@ -44,7 +44,7 @@ export const RegisterMerchantDisplay = ({
       />
       {merchantInfoDID && (
         <TransactionListItem
-          headerText="CREATE THIS MERCHANT"
+          headerText="CREATE THIS BUSINESS ACCOUNT"
           title={merchantInfoDID.name || 'Business Name'}
           avatarInfo={merchantInfoDID}
           address={merchantInfoDID.slug}
@@ -55,7 +55,7 @@ export const RegisterMerchantDisplay = ({
         prepaidCardAddress={prepaidCard}
       />
       <PayThisAmountSection
-        headerText="PAY MERCHANT CREATION FEE"
+        headerText="PAY BUSINESS CREATION FEE"
         spendAmount={spendAmount}
       />
     </>

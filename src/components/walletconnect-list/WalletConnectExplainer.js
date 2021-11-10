@@ -66,7 +66,7 @@ export default function WalletConnectExplainer() {
           </CustomText>
         )}
         renderImage={() => <IconQRScanImg />}
-        title="Scan Merchant QR code"
+        title="Scan QR code"
       />
     </Container>
   );

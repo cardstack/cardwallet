@@ -51,7 +51,7 @@ export const MerchantClaimTransaction = ({
             address={item.address}
             backgroundColor={merchantInfoDID?.color}
             textColor={merchantInfoDID?.textColor}
-            rightText={merchantInfoDID?.name || 'Merchant'}
+            rightText={merchantInfoDID?.name || 'Business'}
             small
           />
         ) : null

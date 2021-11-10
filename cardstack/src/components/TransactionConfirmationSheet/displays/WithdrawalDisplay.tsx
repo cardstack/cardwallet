@@ -37,7 +37,7 @@ export const WithdrawalDisplay = (props: WithdrawalDisplayProps) => {
 
 const FromSection = ({ data }: { data: WithdrawalDecodedData }) => {
   const { accountColor, accountName, accountSymbol } = useAccountProfile();
-  const typeText = data.addressType === 'depot' ? 'DEPOT' : 'MERCHANT';
+  const typeText = data.addressType === 'depot' ? 'DEPOT' : 'BUSINESS';
   const tokenDisplay = convertRawAmountToBalance(data.tokenBalance, data.token);
 
   return (
