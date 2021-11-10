@@ -51,7 +51,7 @@ const ListItem = ({
       >
         <RowWithMargins
           align="center"
-          flex={1}
+          flex={2}
           justify={justify}
           margin={iconMargin}
         >
