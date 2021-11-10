@@ -37,11 +37,11 @@ export const transactionTypeMap: Record<
     component: WithdrawalDisplay,
   },
   [TransactionConfirmationType.REGISTER_MERCHANT]: {
-    title: 'Create Merchant',
+    title: 'Create Business',
     component: RegisterMerchantDisplay,
   },
   [TransactionConfirmationType.PAY_MERCHANT]: {
-    title: 'Pay Merchant',
+    title: 'Pay Business',
     component: PayMerchantDisplay,
   },
   [TransactionConfirmationType.CLAIM_REVENUE]: {

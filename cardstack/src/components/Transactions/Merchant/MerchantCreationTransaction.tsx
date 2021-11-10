@@ -27,14 +27,14 @@ export const MerchantCreationTransaction = ({
           address={item.address}
           backgroundColor={merchantInfoDID?.color}
           textColor={merchantInfoDID?.textColor}
-          rightText={merchantInfoDID?.name || 'Merchant'}
+          rightText={merchantInfoDID?.name || 'Business'}
           small
         />
       }
       statusIconName="plus"
       statusText="Created"
-      primaryText={merchantInfoDID?.name || 'Merchant'}
-      subText="Merchant Account"
+      primaryText={merchantInfoDID?.name || 'Business'}
+      subText="Business Account"
       transactionHash={item.transactionHash}
     />
   );

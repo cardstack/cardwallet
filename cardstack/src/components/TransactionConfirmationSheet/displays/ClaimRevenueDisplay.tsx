@@ -87,12 +87,12 @@ const ToSection = ({ merchantSafe }: { merchantSafe: string }) => {
       <SectionHeaderText>TO</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4} flexDirection="column">
         <Text size="xxs" color="blueText" marginLeft={9}>
-          MERCHANT SAFE
+          BUSINESS SAFE
         </Text>
         <Container flexDirection="row" alignItems="center">
           <Icon name="user" />
           <Text size="small" weight="extraBold" style={{ marginLeft: 6 }}>
-            Merchant Name
+            Business
           </Text>
         </Container>
         <Container maxWidth={180} marginLeft={9}>
