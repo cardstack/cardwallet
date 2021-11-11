@@ -49,7 +49,7 @@ export default function RestoreSheet() {
     return count;
   }, [userData]);
 
-  const enableCloudRestore = android || walletsBackedUp > 0;
+  const enableCloudRestore = walletsBackedUp > 0;
 
   const wrapperHeight =
     deviceHeight + longFormHeight + (android ? getSoftMenuBarHeight() : 0);

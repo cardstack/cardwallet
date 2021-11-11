@@ -1,6 +1,7 @@
 const baseText = {
   fontFamily: 'OpenSans-Regular',
   fontSize: 16,
+  color: 'black',
 };
 
 export const textVariants = {
@@ -40,8 +41,8 @@ export const textVariants = {
   welcomeScreen: {
     color: 'white',
     fontSize: 24,
-    fontWeight: '800',
-    fontFamily: 'Karbon',
+    fontWeight: '700',
+    fontFamily: 'OpenSans-Bold',
   },
   overGradient: {
     textShadowOffset: {
