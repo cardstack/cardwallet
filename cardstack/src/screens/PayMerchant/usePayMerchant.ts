@@ -87,10 +87,16 @@ export const usePayMerchant = () => {
 
   // Updating in case first render selected is undefined
   useEffect(() => {
-    if (!selectedPrepaidCard?.address) {
+    if (!selectedPrepaidCard?.address && prepaidCards.length > 0) {
       selectPrepaidCard(prepaidCards[0]);
     }
   }, [prepaidCards, selectedPrepaidCard]);
+
+  useEffect(() => {
+    if (hasMultipleCards) {
+      setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD);
+    }
+  }, [hasMultipleCards]);
 
   // Updating amount when nav param change
   useEffect(() => {
