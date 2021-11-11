@@ -1,3 +1,4 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { useCallback, useMemo } from 'react';
 import { Linking, NativeModules, ScrollView, Share } from 'react-native';
@@ -82,7 +83,7 @@ export default function SettingsSection({
   onPressShowSecret,
 }) {
   const { wallets } = useWallets();
-  const { nativeCurrency, network } = useAccountSettings();
+  const { nativeCurrency, network, accountAddress } = useAccountSettings();
   const { isTinyPhone } = useDimensions();
 
   const { colors } = useTheme();
@@ -126,6 +127,11 @@ export default function SettingsSection({
         : Linking.openURL(SettingsExternalURLs.twitterWebUrl)
     );
   }, []);
+
+  const onPressBlockscout = useCallback(() => {
+    const blockExplorer = getConstantByNetwork('blockExplorer', network);
+    Linking.openURL(`${blockExplorer}/address/${accountAddress}`);
+  }, [accountAddress, network]);
 
   const { areBackedUp, canBeBackedUp } = useMemo(
     () => checkAllWallets(wallets),
@@ -175,6 +181,12 @@ export default function SettingsSection({
             {networkInfo?.[network]?.name}
           </ListItemArrowGroup>
         </ListItem>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="eye" />}
+          label="View on Blockscout"
+          onPress={onPressBlockscout}
+          testID="blockscout-section"
+        />
       </ColumnWithDividers>
       <ListFooter />
       <ColumnWithDividers dividerRenderer={ListItemDivider}>

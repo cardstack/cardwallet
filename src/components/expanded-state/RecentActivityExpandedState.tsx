@@ -14,7 +14,7 @@ import { screenHeight } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 import { useNavigation } from '@rainbow-me/navigation';
 
-const CHART_HEIGHT = screenHeight * 0.75;
+const HEIGHT = screenHeight * 0.85;
 
 export default function RecentActivityExpandedState(props: {
   asset: MerchantSafeType;
@@ -23,7 +23,7 @@ export default function RecentActivityExpandedState(props: {
 
   useEffect(() => {
     setOptions({
-      longFormHeight: CHART_HEIGHT,
+      longFormHeight: HEIGHT,
     });
   }, [setOptions]);
   return useMemo(
