@@ -63,6 +63,10 @@ const emptyInventory = {
 
 const inventoryInitialState = Array(4).fill(emptyInventory);
 
+const hasSku = (inventory: Inventory, price: WyrePriceData[]): boolean =>
+  price.filter(priceItem => priceItem?.id === inventory?.attributes?.sku)
+    .length > 0;
+
 export default function useBuyPrepaidCard() {
   const { goBack, navigate } = useNavigation();
   const dispatch = useDispatch();
@@ -188,10 +192,24 @@ export default function useBuyPrepaidCard() {
     error: inventoryError,
   } = useWorker(async () => {
     const issuerAddress = getAddressByNetwork('wyreIssuer', network);
-    const data = await getInventories(hubURL, authToken, issuerAddress);
 
-    if (data) {
-      setInventoryData(data);
+    const inventoryItems = await getInventories(
+      hubURL,
+      authToken,
+      issuerAddress
+    );
+
+    if (inventoryItems) {
+      const priceData = await getWyrePrice(hubURL, authToken);
+      setWyrePriceData(priceData);
+
+      if (priceData) {
+        const formattedData = inventoryItems.filter(inventoryItem =>
+          hasSku(inventoryItem, priceData)
+        );
+
+        setInventoryData(formattedData);
+      }
     }
   }, [authToken, currencyConversionRates, hubURL, nativeCurrency, network]);
 
@@ -218,17 +236,6 @@ export default function useBuyPrepaidCard() {
       };
 
       getCustodialWalletData();
-    }
-  }, [authToken, hubURL]);
-
-  useEffect(() => {
-    if (authToken) {
-      const getWyrePriceData = async () => {
-        const data = await getWyrePrice(hubURL, authToken);
-        setWyrePriceData(data);
-      };
-
-      getWyrePriceData();
     }
   }, [authToken, hubURL]);
 
