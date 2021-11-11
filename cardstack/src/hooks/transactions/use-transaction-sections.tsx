@@ -70,9 +70,7 @@ export const useTransactionSections = ({
   const isPagination =
     prevLastestTx === currentLastestTx && currentTxLength > prevTxLength;
 
-  const isNewtx =
-    prevLastestTx !== currentLastestTx && prevTxLength !== currentTxLength;
-
+  const isNewtx = prevLastestTx !== currentLastestTx;
   const isInitialTx = !prevLastestTx;
 
   const previousNativeCurrency = usePrevious(nativeCurrency);
