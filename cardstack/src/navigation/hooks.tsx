@@ -30,7 +30,6 @@ export const useCardstackGlobalScreens = (Stack: any) =>
 
 const defaulLoadingtMessage = {
   title: 'Processing Transaction',
-  subTitle: `This will take approximately\n10-15 seconds`,
 };
 
 export const useLoadingOverlay = () => {

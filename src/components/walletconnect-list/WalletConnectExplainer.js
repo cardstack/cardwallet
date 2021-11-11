@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import { Linking } from 'react-native';
+import React from 'react';
 import styled from 'styled-components';
 import WalletConnectExplainerItem from './WalletConnectExplainerItem';
 import { Container, Text } from '@cardstack/components';
@@ -37,19 +36,13 @@ const CustomText = props => (
 );
 
 export default function WalletConnectExplainer() {
-  const openWalletConnectWebsite = useCallback(() => {
-    Linking.openURL('https://walletconnect.org/');
-  }, []);
-
   return (
     <Container>
       <WalletConnectExplainerItem
         renderContent={() => (
           <CustomText style={{ marginTop: 5 }}>
             <CustomText>Visit </CustomText>
-            <CustomText bold onPress={openWalletConnectWebsite}>
-              app.cardstack.com
-            </CustomText>
+            <CustomText bold>app.cardstack.com</CustomText>
             <CustomText>
               {' '}
               to connect your wallet to use the full Card Pay functions

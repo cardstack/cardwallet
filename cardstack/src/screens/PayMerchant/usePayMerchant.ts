@@ -14,7 +14,6 @@ import {
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
-import { useLoadingOverlay } from '@cardstack/navigation';
 
 export const PAY_STEP = {
   EDIT_AMOUNT: 'EDIT_AMOUNT',
@@ -35,8 +34,7 @@ const layoutAnimation = () => {
 };
 
 export const usePayMerchant = () => {
-  const { navigate, canGoBack, goBack } = useNavigation();
-  const { dismissLoadingOverlay } = useLoadingOverlay();
+  const { navigate } = useNavigation();
 
   const {
     prepaidCards,
@@ -127,12 +125,8 @@ export const usePayMerchant = () => {
 
       const timestamp = await getBlockTimestamp(receipt.blockNumber);
 
-      // Dismisses PayMerchantModal
-      dismissLoadingOverlay();
-
-      if (canGoBack()) {
-        goBack();
-      }
+      // Navigate to Transaction screen
+      navigate(RainbowRoutes.PROFILE_SCREEN);
 
       // Wait goBack action to navigate
       InteractionManager.runAfterInteractions(() => {
@@ -151,10 +145,7 @@ export const usePayMerchant = () => {
       });
     },
     [
-      canGoBack,
       currencyConversionRates,
-      dismissLoadingOverlay,
-      goBack,
       merchantInfoDID,
       accountCurrency,
       navigate,

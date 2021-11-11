@@ -94,7 +94,10 @@ export const usePaymentMerchantUniversalLink = () => {
       prepaidCardAddress: string,
       onSuccess: (receipt: TransactionReceipt) => void
     ) => {
-      showLoadingOverlay();
+      showLoadingOverlay({
+        title: 'Processing Transaction',
+        subTitle: `This will take approximately\n10-15 seconds`,
+      });
 
       const web3 = await Web3Instance.get({
         selectedWallet,

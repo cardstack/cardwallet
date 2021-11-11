@@ -1,4 +1,3 @@
-import { useIsFocused } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { ENABLE_PAYMENTS } from '../../cardstack/src/constants';
@@ -28,7 +27,6 @@ const radiusWrapperStyle = {
 };
 
 export default function ProfileScreen() {
-  const isFocused = useIsFocused();
   const { navigate } = useNavigation();
 
   const { network } = useAccountSettings();
@@ -78,7 +76,6 @@ export default function ProfileScreen() {
           />
         }
         accountAddress={accountAddress}
-        isFocused={isFocused}
       />
       <ToastPositionContainer>
         <CopyToast copiedText={copiedText} copyCount={copyCount} />
