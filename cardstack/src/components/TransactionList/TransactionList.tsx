@@ -1,4 +1,5 @@
-import React, { memo, useCallback, useEffect } from 'react';
+import React, { memo, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   RefreshControl,
   SectionList,
@@ -20,7 +21,6 @@ import {
 interface TransactionListProps {
   Header: JSX.Element;
   accountAddress: string;
-  isFocused: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -45,69 +45,67 @@ const renderSectionHeader = ({
   </Container>
 );
 
-export const TransactionList = memo(
-  ({ Header, isFocused }: TransactionListProps) => {
-    const {
-      onEndReached,
-      isLoadingTransactions,
-      isFetchingMore,
-      sections,
-      refetch,
-      refetchLoading,
-    } = useFullTransactionList();
+export const TransactionList = memo(({ Header }: TransactionListProps) => {
+  const {
+    onEndReached,
+    isLoadingTransactions,
+    isFetchingMore,
+    sections,
+    refetch,
+    refetchLoading,
+  } = useFullTransactionList();
 
-    const onRefresh = useCallback(() => {
-      refetch && refetch();
-    }, [refetch]);
+  const onRefresh = useCallback(() => {
+    refetch && refetch();
+  }, [refetch]);
 
-    useEffect(() => {
-      if (isFocused) {
-        onRefresh();
-      }
-    }, [isFocused, onRefresh]);
+  useFocusEffect(
+    useCallback(() => {
+      onRefresh();
+    }, [onRefresh])
+  );
 
-    if (isLoadingTransactions) {
-      return (
-        <ScrollView
-          backgroundColor="backgroundBlue"
-          contentContainerStyle={styles.contentContainerStyle}
-        >
-          {Header}
-          <TransactionListLoading />
-        </ScrollView>
-      );
-    }
-
+  if (isLoadingTransactions) {
     return (
-      <SectionList
-        ListEmptyComponent={
-          <ListEmptyComponent
-            text={`You don't have any\ntransactions yet`}
-            textColor="blueText"
-            hasRoundBox
-          />
-        }
-        ListHeaderComponent={Header}
-        ListFooterComponent={
-          isFetchingMore ? <ActivityIndicator color="white" /> : null
-        }
+      <ScrollView
+        backgroundColor="backgroundBlue"
         contentContainerStyle={styles.contentContainerStyle}
-        renderItem={props => <TransactionItem {...props} />}
-        sections={sections}
-        renderSectionHeader={renderSectionHeader}
-        refreshControl={
-          <RefreshControl
-            tintColor="white"
-            refreshing={refetchLoading && !isFocused}
-            onRefresh={onRefresh}
-          />
-        }
-        onEndReached={onEndReached}
-        onEndReachedThreshold={1}
-        style={styles.background}
-      />
+      >
+        {Header}
+        <TransactionListLoading />
+      </ScrollView>
     );
   }
-);
+
+  return (
+    <SectionList
+      ListEmptyComponent={
+        <ListEmptyComponent
+          text={`You don't have any\ntransactions yet`}
+          textColor="blueText"
+          hasRoundBox
+        />
+      }
+      ListHeaderComponent={Header}
+      ListFooterComponent={
+        isFetchingMore ? <ActivityIndicator color="white" /> : null
+      }
+      contentContainerStyle={styles.contentContainerStyle}
+      renderItem={props => <TransactionItem {...props} />}
+      sections={sections}
+      renderSectionHeader={renderSectionHeader}
+      refreshControl={
+        <RefreshControl
+          tintColor="white"
+          refreshing={refetchLoading}
+          onRefresh={onRefresh}
+        />
+      }
+      onEndReached={onEndReached}
+      onEndReachedThreshold={1}
+      style={styles.background}
+    />
+  );
+});
 
 TransactionList.displayName = 'TransactionList';

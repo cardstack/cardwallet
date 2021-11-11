@@ -34,7 +34,7 @@ const layoutAnimation = () => {
 };
 
 export const usePayMerchant = () => {
-  const { navigate, setParams } = useNavigation();
+  const { navigate } = useNavigation();
 
   const {
     prepaidCards,
@@ -125,8 +125,7 @@ export const usePayMerchant = () => {
 
       const timestamp = await getBlockTimestamp(receipt.blockNumber);
 
-      // Navigate to Transaction screen. somtimes useIsFocused does not work, so added this hack
-      setParams({ focused: false });
+      // Navigate to Transaction screen
       navigate(RainbowRoutes.PROFILE_SCREEN);
 
       // Wait goBack action to navigate
@@ -151,7 +150,6 @@ export const usePayMerchant = () => {
       accountCurrency,
       navigate,
       selectedPrepaidCard,
-      setParams,
       spendAmount,
     ]
   );
