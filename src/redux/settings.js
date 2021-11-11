@@ -39,14 +39,17 @@ const SETTINGS_UPDATE_NETWORK_SUCCESS =
 const SETTINGS_UPDATE_SHOW_TESTNETS = 'settings/SETTINGS_UPDATE_SHOW_TESTNETS';
 
 // -- Actions --------------------------------------------------------------- //
-export const settingsLoadState = () => async dispatch => {
+export const settingsLoadState = () => async (dispatch, getState) => {
   try {
     const nativeCurrency = await getNativeCurrency();
+    const paymentCurrency = getState().payment.currency;
     dispatch({
       payload: nativeCurrency,
       type: SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS,
     });
-    dispatch(paymentChangeCurrency(nativeCurrency));
+    if (!paymentCurrency) {
+      dispatch(paymentChangeCurrency(nativeCurrency));
+    }
   } catch (error) {
     logger.log('Error loading native currency', error);
   }

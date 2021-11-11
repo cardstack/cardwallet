@@ -1,5 +1,4 @@
 import { AnyAction } from 'redux';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { getNativeCurrency } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { AppDispatch } from '@rainbow-me/redux/store';
 import logger from 'logger';
@@ -37,7 +36,7 @@ export const paymentChangeCurrency = (currency: string) => async (
 
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
-  currency: NativeCurrency.USD,
+  currency: null,
 };
 
 export default (state = INITIAL_STATE, action: AnyAction) => {
