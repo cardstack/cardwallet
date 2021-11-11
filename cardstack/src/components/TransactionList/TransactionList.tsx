@@ -59,11 +59,7 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     refetch && refetch();
   }, [refetch]);
 
-  useFocusEffect(
-    useCallback(() => {
-      onRefresh();
-    }, [onRefresh])
-  );
+  useFocusEffect(onRefresh);
 
   if (isLoadingTransactions) {
     return (
