@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
 import { usePayloadParams } from './use-payload-params';
-import { useVerifyingContract } from './use-verifying-contract';
 import { logger } from '@rainbow-me/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import {
@@ -22,8 +21,11 @@ export const useTransactionConfirmationDataWithDecoding = () => {
     type: TransactionConfirmationType.GENERIC,
   });
 
-  const { message, primaryType } = usePayloadParams();
-  const verifyingContract = useVerifyingContract();
+  const {
+    message,
+    primaryType,
+    domain: { verifyingContract },
+  } = usePayloadParams();
 
   useEffect(() => {
     const setData = async () => {

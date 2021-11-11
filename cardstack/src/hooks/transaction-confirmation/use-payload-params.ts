@@ -1,17 +1,22 @@
 import { useRouteParams } from './use-route-params';
 
-export const usePayloadParams = (): {
+const payloadParamsFallback = {
   message: {
-    to: string;
-    data: string;
-  };
-  primaryType: string;
-} => {
+    to: '',
+    data: '',
+  },
+  primaryType: '',
+  domain: {
+    verifyingContract: '',
+  },
+};
+
+export const usePayloadParams = (): typeof payloadParamsFallback => {
   const {
     transactionDetails: { payload },
   } = useRouteParams();
 
   const { params } = payload;
 
-  return params[1];
+  return params[1] || payloadParamsFallback;
 };
