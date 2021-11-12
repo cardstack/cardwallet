@@ -1,5 +1,4 @@
-import { useIsFocused } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components';
 import { BackButton, Header, HeaderHeight } from '../components/header';
@@ -30,9 +29,7 @@ const Background = styled.View`
 `;
 
 const QRScannerScreen = () => {
-  const isFocused = useIsFocused();
   const [sheetHeight] = useHeight(240);
-  const [initializeCamera, setInitializeCamera] = useState(ios ? true : false);
   const { navigate } = useNavigation();
   const {
     walletConnectorsByDappName,
@@ -44,10 +41,6 @@ const QRScannerScreen = () => {
     () => navigate(Routes.WALLET_SCREEN),
     [navigate]
   );
-
-  useEffect(() => {
-    isFocused && !initializeCamera && setInitializeCamera(true);
-  }, [initializeCamera, isFocused]);
 
   const handlePressActionSheet = useCallback(
     ({ dappName, index }) => {
@@ -72,13 +65,10 @@ const QRScannerScreen = () => {
       <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
         <Background />
         <CameraDimmer>
-          {initializeCamera && (
-            <QRCodeScanner
-              contentPositionBottom={sheetHeight + HeaderHeight}
-              contentPositionTop={HeaderHeight}
-              enableCamera={isFocused}
-            />
-          )}
+          <QRCodeScanner
+            contentPositionBottom={sheetHeight + HeaderHeight}
+            contentPositionTop={HeaderHeight}
+          />
         </CameraDimmer>
 
         <Container bottom={0} position="absolute" width="100%">
