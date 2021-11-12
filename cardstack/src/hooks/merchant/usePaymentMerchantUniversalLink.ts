@@ -140,9 +140,7 @@ export const usePaymentMerchantUniversalLink = () => {
   useEffect(() => {
     if (error) {
       dismissLoadingOverlay();
-      handleAlertError(
-        'Something went wrong, make sure you have enough balance'
-      );
+      handleAlertError('Something unexpected happened!');
     }
   }, [dismissLoadingOverlay, error]);
 
