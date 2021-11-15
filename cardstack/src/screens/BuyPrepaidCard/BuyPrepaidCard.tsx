@@ -68,6 +68,11 @@ const BuyPrepaidCard = () => {
     [navigate]
   );
 
+  const isDisabled =
+    card?.quantity === 0 ||
+    inventoryData?.length === 0 ||
+    inventoryData?.filter(item => item?.isSelected).length === 0;
+
   return (
     <Container backgroundColor="backgroundBlue" flex={1}>
       <SlackSheet
@@ -89,11 +94,13 @@ const BuyPrepaidCard = () => {
             backgroundColor="backgroundBlue"
             justifyContent="center"
           >
-            <ApplePayButton
-              disabled={card?.quantity === 0}
-              onSubmit={handlePurchase}
-              onDisabledPress={() => console.log('onDisablePress')}
-            />
+            {isDisabled ? null : (
+              <ApplePayButton
+                disabled={isDisabled}
+                onSubmit={handlePurchase}
+                onDisabledPress={() => console.log('onDisablePress')}
+              />
+            )}
             <Touchable width="100%" onPress={onPressSupport}>
               <Container
                 alignItems="center"
