@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { Alert, AlertButton, InteractionManager } from 'react-native';
 import { getSDK, MerchantSafe } from '@cardstack/cardpay-sdk';
 import { PrepaidCard } from '@cardstack/cardpay-sdk/sdk/prepaid-card';
 import { TransactionReceipt } from 'web3-core';
@@ -12,6 +12,7 @@ import {
 import { getSafeData, syncPrepaidCardFaceValue } from '@cardstack/services';
 import { useWorker } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
 import {
@@ -22,6 +23,7 @@ import {
 import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
 import { useLoadingOverlay } from '@cardstack/navigation';
+import logger from 'logger';
 
 interface RouteType {
   params: {
@@ -34,22 +36,20 @@ interface RouteType {
   name: string;
 }
 
-const handleAlertError = (message: string) => {
-  Alert.alert(`Oops!`, message);
-};
+export const handleAlertError = (
+  message: string,
+  title = 'Oops!',
+  buttons?: AlertButton[]
+) => Alert.alert(title, message, buttons);
 
 export const usePaymentMerchantUniversalLink = () => {
   const {
-    params: { merchantAddress, amount = '0', network, currency },
+    params: { merchantAddress, amount = '0', network: qrCodeNetwork, currency },
   } = useRoute<RouteType>();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const { goBack } = useNavigation();
-
-  const networkName: Network = ['sokol', 'xdai'].includes(network)
-    ? network
-    : Network.sokol;
 
   const currencyName = currency || 'SPD';
 
@@ -62,7 +62,7 @@ export const usePaymentMerchantUniversalLink = () => {
   const { isLoadingAssets } = useAssetListData();
 
   const { selectedWallet } = useWallets();
-  const { accountAddress } = useAccountSettings();
+  const { accountAddress, network: accountNetwork } = useAccountSettings();
 
   const { isLoading, callback: getMerchantSafeData } = useWorker(async () => {
     const { infoDID: did } = (await getSafeData(
@@ -88,6 +88,25 @@ export const usePaymentMerchantUniversalLink = () => {
     }
   }, [isLoadingAssets, goBack, prepaidCards.length]);
 
+  useEffect(() => {
+    if (qrCodeNetwork && accountNetwork && qrCodeNetwork !== accountNetwork) {
+      InteractionManager.runAfterInteractions(() => {
+        handleAlertError(
+          `This is a ${networkInfo[qrCodeNetwork].name} QR Code, please confirm your device is on ${networkInfo[qrCodeNetwork].name}.`,
+          'Oops!',
+          [
+            {
+              text: 'OK',
+              onPress: () => goBack(),
+            },
+          ]
+        );
+      });
+
+      return;
+    }
+  }, [accountNetwork, qrCodeNetwork, goBack]);
+
   const { isLoading: isLoadingTx, callback: onConfirm, error } = useWorker(
     async (
       updatedSpendAmount: number,
@@ -101,7 +120,7 @@ export const usePaymentMerchantUniversalLink = () => {
 
       const web3 = await Web3Instance.get({
         selectedWallet,
-        network: networkName,
+        network: qrCodeNetwork,
       });
 
       const prepaidCardInstance: PrepaidCard = await getSDK(
@@ -140,8 +159,9 @@ export const usePaymentMerchantUniversalLink = () => {
   useEffect(() => {
     if (error) {
       dismissLoadingOverlay();
+      logger.sentry('Pay Merchant failed!', error);
       handleAlertError(
-        'Something went wrong, make sure you have enough balance'
+        'Something unexpected happened! Please try again. If this error persists please contact support@cardstack.com'
       );
     }
   }, [dismissLoadingOverlay, error]);

@@ -4,7 +4,10 @@ import { LayoutAnimation, InteractionManager } from 'react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { getBlockTimestamp, mapPrepaidTxToNavigationParams } from './helpers';
 import usePayment from '@cardstack/redux/hooks/usePayment';
-import { usePaymentMerchantUniversalLink } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
+import {
+  handleAlertError,
+  usePaymentMerchantUniversalLink,
+} from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import { PrepaidCardType } from '@cardstack/types';
 import {
@@ -155,6 +158,15 @@ export const usePayMerchant = () => {
   );
 
   const onCustomConfirm = useCallback(() => {
+    // if have multiple prepaid cards, prepaid cards that has not enough balance should not be selected
+    if (spendAmount > (selectedPrepaidCard?.spendFaceValue || 0)) {
+      handleAlertError(
+        'Selected prepaid card does not have enough balance to pay merchant.'
+      );
+
+      return;
+    }
+
     onConfirm(
       spendAmount,
       selectedPrepaidCard?.address || '',
