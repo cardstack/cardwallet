@@ -6,7 +6,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import CardWalletLogo from '../../assets/cardstackLogo.png';
 import {
   CopyToast,
-  ToastPositionContainer,
+  ToastPositionContainerHeight,
 } from '@rainbow-me/components/toasts';
 import { Icon } from '@rainbow-me/components/icons';
 import {
@@ -204,9 +204,15 @@ export const RequestPaymentConfirmation = ({
         </Container>
       </Container>
       {copyCount > 0 ? (
-        <ToastPositionContainer>
+        <Container
+          zIndex={10}
+          position="absolute"
+          height={ToastPositionContainerHeight}
+          width="100%"
+          bottom={ToastPositionContainerHeight + 20}
+        >
           <CopyToast copiedText="Payment Request Link" copyCount={copyCount} />
-        </ToastPositionContainer>
+        </Container>
       ) : null}
     </>
   );
