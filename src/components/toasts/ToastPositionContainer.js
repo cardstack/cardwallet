@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Column } from '../layout';
 
-const ToastPositionContainerHeight = 40;
+export const ToastPositionContainerHeight = 40;
 
 const ToastPositionContainer = styled(Column).attrs({
   pointerEvents: 'none',
