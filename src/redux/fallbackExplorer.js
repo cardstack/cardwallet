@@ -212,6 +212,7 @@ const discoverTokens = async (
         return {
           asset: {
             asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
+            token_id: tx.tokenID,
             coingecko_id: coingeckoId || null,
             decimals: Number(tx.tokenDecimal),
             name: tx.tokenName,
@@ -220,7 +221,8 @@ const discoverTokens = async (
           },
         };
       }),
-      token => token.asset.asset_code
+      token =>
+        [token.asset.asset_code, token.asset.token_id].filter(Boolean).join('-')
     );
   }
   return [];
@@ -458,7 +460,15 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     });
   }
 
+<<<<<<< HEAD
   fetchAssetsBalancesAndPrices();
+=======
+  const conversionsRates = await getCurrencyConversionsRates();
+
+  await dispatch(setCurrencyConversionRates(conversionsRates));
+
+  return fetchAssetsBalancesAndPrices();
+>>>>>>> 2cf51ed5b (WIP Discover collectibles for xdai/sokol)
 };
 
 export const fallbackExplorerClearState = () => (dispatch, getState) => {

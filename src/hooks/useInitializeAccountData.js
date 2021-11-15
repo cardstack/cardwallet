@@ -16,11 +16,11 @@ export default function useInitializeAccountData() {
 
   const initializeAccountData = useCallback(async () => {
     try {
-      InteractionManager.runAfterInteractions(() => {
+      InteractionManager.runAfterInteractions(async () => {
         logger.sentry('Initialize account data');
         dispatch(fallbackExplorerClearState());
         dispatch(explorerInit());
-        dispatch(fallbackExplorerInit());
+        await dispatch(fallbackExplorerInit());
       });
 
       InteractionManager.runAfterInteractions(async () => {

@@ -78,11 +78,15 @@ const useMerchantSafeSection = (
   Component: MerchantSafe,
 });
 
-const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
-  const [stateAssets, nativeCurrency, network] = useRainbowSelector<
-    [AssetType[], string, string]
-  >(state => [
+const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
+  const [
+    stateAssets,
+    collectibles,
+    nativeCurrency,
+    network,
+  ] = useRainbowSelector<[AssetType[], any[], string, string]>(state => [
     state.data.assets,
+    state.collectibles.collectibles,
     state.settings.nativeCurrency,
     state.settings.network,
   ]);
@@ -119,6 +123,12 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
   if (nativeBalancePinned) {
     assets = assets.sort(a => (nativeTokenSymbol.includes(a.symbol) ? -1 : 1));
   }
+
+  console.log('useOtherTokensSection assets', assets);
+  console.log(
+    'useOtherTokensSection collectibles',
+    JSON.stringify(collectibles)
+  );
 
   return {
     header: {
@@ -177,7 +187,7 @@ export const useAssetListData = () => {
   const prepaidCardSection = usePrepaidCardSection(prepaidCards);
   const depotSection = useDepotSection(depots);
   const merchantSafesSection = useMerchantSafeSection(merchantSafes);
-  const balancesSection = useBalancesSection();
+  const otherTokensSection = useOtherTokensSection();
   const collectiblesSection = useCollectiblesSection();
 
   const isLoadingAssets =
@@ -190,7 +200,7 @@ export const useAssetListData = () => {
     merchantSafesSection,
     prepaidCardSection,
     depotSection,
-    balancesSection,
+    otherTokensSection,
     collectiblesSection,
   ];
 
@@ -202,7 +212,7 @@ export const useAssetListData = () => {
   );
 
   const isEmpty = !sections.length;
-
+  console.log('useAssetListData', sections);
   return {
     isLoadingAssets,
     isEmpty,

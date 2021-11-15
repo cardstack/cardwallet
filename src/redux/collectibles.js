@@ -1,5 +1,10 @@
+import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
 import { concat, isEmpty, without } from 'lodash';
+import { getEtherWeb3Provider } from '../handlers/web3';
+import AssetTypes from '../helpers/assetTypes';
+import { erc721ABI } from '../references';
+
 /* eslint-disable-next-line import/no-cycle */
 import { dataUpdateAssets } from './data';
 import {
@@ -50,15 +55,25 @@ export const collectiblesResetState = () => dispatch => {
 export const collectiblesRefreshState = () => async (dispatch, getState) => {
   const { network } = getState().settings;
 
-  // Currently not supported in testnets
-  if (network !== NetworkTypes.mainnet && network !== NetworkTypes.rinkeby) {
-    return;
+  switch (network) {
+    case NetworkTypes.mainnet:
+    case NetworkTypes.rinkeby:
+      // OpenSea API only supports Ethereum mainnet and rinkeby
+      dispatch(fetchNFTsViaOpenSea());
+      break;
+    case NetworkTypes.xdai:
+    case NetworkTypes.sokol:
+      // This is where we will delegate to logic to find NFTs via RPC node APIs
+      dispatch(fetchNFTsViaRpcNode());
+      break;
+    default:
+      console.log(
+        `Skipping fetching collectibles because we have no mechanism to do so on ${network}`
+      );
   }
-
-  dispatch(fetchNFTs());
 };
 
-const fetchNFTs = () => async (dispatch, getState) => {
+const fetchNFTsViaOpenSea = () => (dispatch, getState) => {
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
   const { accountAddress, network } = getState().settings;
   const { assets } = getState().data;
@@ -122,6 +137,76 @@ const fetchNFTs = () => async (dispatch, getState) => {
   };
 
   fetchPage();
+};
+
+const fetchNFTsViaRpcNode = () => async (dispatch, getState) => {
+  const { accountAddress, network } = getState().settings;
+  //   grab assets data from redux state
+  var { assets } = getState().data;
+  //   find the assets that are NFTs
+  let collectibles = assets.filter(asset => asset.token_id);
+
+  dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
+  // TODO: enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
+  // TODO: cache tokenURIJSON
+  console.log('collectibles before mapping', JSON.stringify(collectibles));
+  try {
+    console.log('fetchNFTsViaRpcNode: getEtherWeb3Provider');
+    const web3Provider = await getEtherWeb3Provider();
+    console.log('fetchNFTsViaRpcNode: starting mapping', collectibles.length);
+    collectibles = await Promise.all(
+      collectibles.map(async c => {
+        console.log('fetchNFTsViaRpcNode: map item', c.address, c.token_id);
+        try {
+          console.log('fetchNFTsViaRpcNode: creating contract for', c.address);
+          let nftContract = new Contract(c.address, erc721ABI, web3Provider);
+          console.log('fetchNFTsViaRpcNode: getting tokenURI');
+          let tokenURI = await nftContract.tokenURI(c.token_id);
+          console.log('fetchNFTsViaRpcNode: fetching', tokenURI);
+          let tokenURIRequest = await fetch(tokenURI);
+          console.log('fetchNFTsViaRpcNode: parsing', tokenURI);
+          let tokenURIJSON = await tokenURIRequest.json();
+
+          console.log('fetchNFTsViaRpcNode tokenURIJSON', tokenURIJSON);
+          let augmentedCollectible = {
+            id: c.token_id,
+            address: c.address,
+            symbol: c.symbol,
+            name: tokenURIJSON.name || c.name,
+            description: tokenURIJSON.description,
+            external_link: tokenURIJSON.external_url,
+            image_preview_url: tokenURIJSON.image_url,
+            image_url: tokenURIJSON.image_url,
+            asset_contract: {
+              address: c.address,
+              symbol: c.symbol,
+              name: c.name,
+            },
+            type: AssetTypes.nft,
+          };
+          console.log('augmentedCollectible', augmentedCollectible);
+          return augmentedCollectible;
+        } catch (error) {
+          console.log('Error augmenting collectible', error);
+          return c;
+        }
+      })
+    );
+    console.log('saving collectibles', JSON.stringify(collectibles));
+    // save the collectibles to local storage
+    saveCollectibles(collectibles, accountAddress, network);
+    // save the collectibles to redux state
+    dispatch({
+      payload: collectibles,
+      type: COLLECTIBLES_FETCH_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      payload: collectibles,
+      type: COLLECTIBLES_FETCH_FAILURE,
+    });
+    console.error('Error fetching collectibles', error);
+  }
 };
 
 // -- Reducer --------------------------------------------------------------- //

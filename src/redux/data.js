@@ -694,6 +694,7 @@ export default (state = INITIAL_STATE, action) => {
         draft.genericAssets = action.payload;
         break;
       case DATA_UPDATE_ASSETS:
+        console.log('DATA_UPDATE_ASSETS', action.payload);
         draft.assets = action.payload;
         draft.isLoadingAssets = false;
         break;

@@ -3,14 +3,13 @@ import { sortAssetsByNativeAmountSelector } from '@rainbow-me/helpers/assetSelec
 
 export default function useAccountAssets() {
   const assets = useSelector(sortAssetsByNativeAmountSelector);
-  const { depots, prepaidCards } = useSelector(state => ({
+  const { collectibles, depots, prepaidCards } = useSelector(state => ({
+    collectibles: state.data.collectibles,
     depots: state.data.depots || [],
     prepaidCards: state.data.prepaidCards,
   }));
 
-  const collectibles = useSelector(
-    ({ collectibles: { collectibles } }) => collectibles
-  );
+  console.log('useAccountAssets', JSON.stringify(useAccountAssets));
 
   return {
     ...assets,
