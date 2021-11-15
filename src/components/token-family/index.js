@@ -1,4 +1,3 @@
-export { default as CollectibleTokenFamily } from './CollectibleTokenFamily';
 export {
   default as TokenFamilyHeader,
   TokenFamilyHeaderAnimationDuration,

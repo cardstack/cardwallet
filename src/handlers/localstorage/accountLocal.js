@@ -21,12 +21,10 @@ const DEPOTS = 'depots';
 const MERCHANT_SAFES = 'merchantSafes';
 const ACCOUNT_CHARTS = 'accountCharts';
 const OPEN_FAMILIES = 'openFamilies';
-const OPEN_INVESTMENT_CARDS = 'openInvestmentCards';
 const PURCHASE_TRANSACTIONS = 'purchaseTransactions';
 const SMALL_BALANCE_TOGGLE = 'smallBalanceToggle';
 const SAVINGS = 'savings';
 const SAVINGS_TOGGLE = 'savingsToggle';
-const SHOWCASE_TOKENS = 'showcaseTokens';
 const TRANSACTIONS = 'transactions';
 const UNIQUE_TOKENS = 'uniquetokens';
 const PINNED_COINS = 'pinnedCoins';
@@ -38,12 +36,10 @@ export const accountLocalKeys = [
   ASSETS,
   ACCOUNT_CHARTS,
   OPEN_FAMILIES,
-  OPEN_INVESTMENT_CARDS,
   PURCHASE_TRANSACTIONS,
   SMALL_BALANCE_TOGGLE,
   SAVINGS,
   SAVINGS_TOGGLE,
-  SHOWCASE_TOKENS,
   TRANSACTIONS,
   UNIQUE_TOKENS,
   PINNED_COINS,
@@ -386,33 +382,6 @@ export const saveSavingsToggle = (isOpen, accountAddress, network) =>
   saveAccountLocal(SAVINGS_TOGGLE, isOpen, accountAddress, network);
 
 /**
- * @desc get open investment cards
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getOpenInvestmentCards = (accountAddress, network) =>
-  getAccountLocal(OPEN_INVESTMENT_CARDS, accountAddress, network, {});
-
-/**
- * @desc save open investment cards
- * @param  {String}   [address]
- * @param  {Object}    [open investment cards]
- * @param  {String}   [network]
- */
-export const saveOpenInvestmentCards = (
-  openInvestmentCards,
-  accountAddress,
-  network
-) =>
-  saveAccountLocal(
-    OPEN_INVESTMENT_CARDS,
-    openInvestmentCards,
-    accountAddress,
-    network
-  );
-
-/**
  * @desc get open families
  * @param  {String}   [address]
  * @param  {String}   [network]
@@ -483,21 +452,3 @@ export const getHiddenCoins = (accountAddress, network) =>
  */
 export const saveHiddenCoins = (hiddenCoins, accountAddress, network) =>
   saveAccountLocal(HIDDEN_COINS, hiddenCoins, accountAddress, network);
-
-/**
- * @desc get showcase tokens
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Afray}
- */
-export const getShowcaseTokens = (accountAddress, network) =>
-  getAccountLocal(SHOWCASE_TOKENS, accountAddress, network, []);
-
-/**
- * @desc save showcase tokens
- * @param  {String}   [address]
- * @param  {Array}    [Showcase tokens]
- * @param  {String}   [network]
- */
-export const saveShowcaseTokens = (showcaseTokens, accountAddress, network) =>
-  saveAccountLocal(SHOWCASE_TOKENS, showcaseTokens, accountAddress, network);

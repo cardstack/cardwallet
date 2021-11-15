@@ -6,7 +6,6 @@ import { dataLoadState } from '../redux/data';
 import { coinListLoadState } from '../redux/editOptions';
 import { openStateSettingsLoadState } from '../redux/openStateSettings';
 import { requestsLoadState } from '../redux/requests';
-import { showcaseTokensLoadState } from '../redux/showcaseTokens';
 import { uniqueTokensLoadState } from '../redux/uniqueTokens';
 import { uniswapLoadState } from '../redux/uniswap';
 import { uniswapLiquidityLoadState } from '../redux/uniswapLiquidity';
@@ -23,7 +22,6 @@ export default function useLoadAccountData() {
       logger.sentry('Load wallet account data');
       await dispatch(openStateSettingsLoadState());
       await dispatch(coinListLoadState());
-      await dispatch(showcaseTokensLoadState());
       const promises = [];
       const p1 = dispatch(dataLoadState());
       promises.push(p1);

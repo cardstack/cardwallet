@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
-import styled from 'styled-components';
 import { initials } from '../../utils';
-import { Emoji } from '../text';
 import { ImageWithCachedMetadata } from '@rainbow-me/images';
 import { borders } from '@rainbow-me/styles';
 import ShadowStack from 'react-native-shadow-stack';
@@ -11,16 +9,6 @@ const shadowsFactory = colors => [
   [0, 4, android ? 1 : 6, colors.shadow, 0.04],
   [0, 1, 3, colors.shadow, 0.08],
 ];
-
-const TrophyEmoji = styled(Emoji).attrs({
-  align: 'center',
-  name: 'trophy',
-  size: 'medium',
-})`
-  height: 22;
-  margin-right: 4.5;
-  text-align-vertical: center;
-`;
 
 const TokenFamilyHeaderIcon = ({
   familyImage,
@@ -36,9 +24,7 @@ const TokenFamilyHeaderIcon = ({
 
   const shadows = useMemo(() => shadowsFactory(colors), [colors]);
 
-  return familyName === 'Showcase' ? (
-    <TrophyEmoji />
-  ) : (
+  return (
     <ShadowStack
       {...circleStyle}
       backgroundColor={colors.white}

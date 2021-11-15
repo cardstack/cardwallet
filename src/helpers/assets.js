@@ -4,18 +4,14 @@ import {
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import {
-  chunk,
   compact,
   concat,
   find,
   forEach,
   get,
-  groupBy,
-  includes,
   isEmpty,
   reduce,
   slice,
-  sortBy,
 } from 'lodash';
 import store from '@rainbow-me/redux/store';
 import { ETH_ICON_URL } from '@rainbow-me/references';
@@ -181,88 +177,6 @@ export const buildCoinsList = (
   }
 
   return { assets: allAssets, totalBalancesValue };
-};
-
-export const buildUniqueTokenList = (uniqueTokens, selectedShowcaseTokens) => {
-  let rows = [];
-  const showcaseTokens = [];
-  const bundledShowcaseTokens = [];
-
-  const grouped = groupBy(uniqueTokens, token => token.asset_contract.name);
-  const families = Object.keys(grouped);
-
-  for (let i = 0; i < families.length; i++) {
-    const tokensRow = [];
-    for (let j = 0; j < grouped[families[i]].length; j += 2) {
-      if (includes(selectedShowcaseTokens, grouped[families[i]][j].uniqueId)) {
-        showcaseTokens.push(grouped[families[i]][j]);
-      }
-      if (grouped[families[i]][j + 1]) {
-        if (
-          includes(selectedShowcaseTokens, grouped[families[i]][j + 1].uniqueId)
-        ) {
-          showcaseTokens.push(grouped[families[i]][j + 1]);
-        }
-        tokensRow.push([grouped[families[i]][j], grouped[families[i]][j + 1]]);
-      } else {
-        tokensRow.push([grouped[families[i]][j]]);
-      }
-    }
-    let tokens = compact(tokensRow);
-    tokens = chunk(tokens, tokens.length > 25 ? 4 : 25);
-    // eslint-disable-next-line no-loop-func
-    tokens.forEach((tokenChunk, index) => {
-      const id = tokensRow[0]
-        .map(({ uniqueId }) => uniqueId)
-        .join(`__${index}`);
-      rows.push({
-        childrenAmount: grouped[families[i]].length,
-        familyImage: get(tokensRow, '[0][0].familyImage', null),
-        familyName: families[i],
-        isHeader: index === 0,
-        stableId: id,
-        tokens: tokenChunk,
-        uniqueId: id,
-      });
-    });
-  }
-
-  rows = sortBy(rows, ['familyName']);
-
-  showcaseTokens.sort(function (a, b) {
-    return (
-      selectedShowcaseTokens.indexOf(a.uniqueId) -
-      selectedShowcaseTokens.indexOf(b.uniqueId)
-    );
-  });
-
-  for (let i = 0; i < showcaseTokens.length; i += 2) {
-    if (showcaseTokens[i + 1]) {
-      bundledShowcaseTokens.push([showcaseTokens[i], showcaseTokens[i + 1]]);
-    } else {
-      bundledShowcaseTokens.push([showcaseTokens[i]]);
-    }
-  }
-  if (showcaseTokens.length > 0) {
-    rows = [
-      {
-        childrenAmount: showcaseTokens.length,
-        familyName: 'Showcase',
-        isHeader: true,
-        stableId: 'showcase_stable_id',
-        tokens: bundledShowcaseTokens,
-        uniqueId: `sc_${showcaseTokens
-          .map(({ uniqueId }) => uniqueId)
-          .join('__')}`,
-      },
-    ].concat(rows);
-  }
-
-  rows.forEach((row, i) => {
-    row.familyId = i;
-    row.tokens[0][0].rowNumber = i;
-  });
-  return rows;
 };
 
 export const buildUniqueTokenName = ({ asset_contract, id, name }) =>

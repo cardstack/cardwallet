@@ -20,7 +20,6 @@ import openStateSettings, {
 import raps from './raps';
 import requests from './requests';
 import settings from './settings';
-import showcaseTokens from './showcaseTokens';
 import swap from './swap';
 import uniqueTokens from './uniqueTokens';
 import uniswap from './uniswap';
@@ -51,7 +50,6 @@ export default combineReducers({
   raps,
   requests,
   settings,
-  showcaseTokens,
   swap,
   uniqueTokens,
   uniswap,
