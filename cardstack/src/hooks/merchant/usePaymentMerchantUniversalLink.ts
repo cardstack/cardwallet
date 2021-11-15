@@ -22,6 +22,7 @@ import {
 import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
 import { useLoadingOverlay } from '@cardstack/navigation';
+import logger from 'logger';
 
 interface RouteType {
   params: {
@@ -140,7 +141,10 @@ export const usePaymentMerchantUniversalLink = () => {
   useEffect(() => {
     if (error) {
       dismissLoadingOverlay();
-      handleAlertError('Something unexpected happened!');
+      logger.sentry('Merchat Payment failed!', error);
+      handleAlertError(
+        'Something unexpected happened! Please try again. If this error persists please contact support@cardstack.com'
+      );
     }
   }, [dismissLoadingOverlay, error]);
 
