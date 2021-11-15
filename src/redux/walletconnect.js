@@ -238,7 +238,9 @@ export const walletConnectLoadState = () => async (dispatch, getState) => {
       // to prevent having the same callbacks
       Object.keys(walletConnectors).forEach(key => {
         const connector = walletConnectors[key];
-        connector._eventManager = null;
+        if (connector?._eventManager) {
+          connector._eventManager = null;
+        }
       });
     }
 

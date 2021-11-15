@@ -35,7 +35,7 @@ function useScannerState(enabled) {
 
   const enableScanning = useCallback(() => {
     InteractionManager.runAfterInteractions(() => {
-      logger.log('📠✅ Enabling QR Code Scanner');
+      logger.log('📠✅ Enabling QR Code Scanner', enabled);
       setIsScanningEnabled(enabled);
     });
   }, [enabled]);

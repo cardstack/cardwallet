@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { InteractionManager } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
 import styled from 'styled-components';
@@ -6,6 +8,7 @@ import { ErrorText } from '../text';
 import QRCodeScannerCrosshair from './QRCodeScannerCrosshair';
 import QRCodeScannerNeedsAuthorization from './QRCodeScannerNeedsAuthorization';
 import { CenteredContainer, Container } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 import SimulatorFakeCameraImageSource from '@rainbow-me/assets/simulator-fake-camera-image.jpg';
 import { useBooleanState, useScanner } from '@rainbow-me/hooks';
 import { ImgixImage } from '@rainbow-me/images';
@@ -21,33 +24,44 @@ const EmulatorCameraFallback = styled(ImgixImage).attrs({
 export default function QRCodeScanner({
   contentPositionBottom,
   contentPositionTop,
-  enableCamera,
 }) {
   const [error, showError] = useBooleanState();
-  const [isInitialized, setInitialized] = useBooleanState();
+  const [isInitialized, setInitialized] = useBooleanState(Device.isIOS);
   const { result: isEmulator } = useIsEmulator();
-  const { isCameraAuthorized, onScan } = useScanner(enableCamera);
-
-  const showErrorMessage = error && !isInitialized;
-  const showCrosshair = !error && !showErrorMessage;
+  const [cameraEnableState, enableCamera, disableCamera] = useBooleanState(
+    false
+  );
+  const { isCameraAuthorized, onScan } = useScanner(cameraEnableState);
   const cameraRef = useRef();
 
+  useFocusEffect(
+    useCallback(() => {
+      InteractionManager.runAfterInteractions(() => {
+        enableCamera();
+      });
+      return () => disableCamera();
+    }, [disableCamera, enableCamera])
+  );
+
   useEffect(() => {
-    if (ios || !isInitialized) {
+    if (Device.isIOS || !isInitialized) {
       return;
     }
-    if (enableCamera) {
+    if (cameraEnableState) {
       cameraRef.current?.resumePreview?.();
     } else {
       cameraRef.current?.pausePreview?.();
     }
-  }, [enableCamera, isInitialized]);
+  }, [cameraEnableState, isInitialized]);
+
+  if (!cameraEnableState) return null;
 
   return (
-    <Container backgroundColor="black">
-      <CenteredContainer backgroundColor="white" height="100%">
-        {enableCamera && isEmulator && <EmulatorCameraFallback />}
-        {(enableCamera || android) && !isEmulator && (
+    <Container backgroundColor="transparent">
+      <CenteredContainer backgroundColor="transparent" height="100%">
+        {isEmulator ? (
+          <EmulatorCameraFallback />
+        ) : (
           <RNCamera
             captureAudio={false}
             notAuthorizedView={QRCodeScannerNeedsAuthorization}
@@ -63,6 +77,8 @@ export default function QRCodeScanner({
               position: 'absolute',
               right: 0,
               top: 0,
+              backgroundColor: 'transparent',
+              zIndex: 1,
             }}
           />
         )}
@@ -74,8 +90,11 @@ export default function QRCodeScanner({
           top={contentPositionTop}
           width="100%"
         >
-          {showErrorMessage && <ErrorText error="Error mounting camera" />}
-          {showCrosshair && <QRCodeScannerCrosshair />}
+          {error ? (
+            <ErrorText error="Error mounting camera" />
+          ) : (
+            isInitialized && <QRCodeScannerCrosshair />
+          )}
         </CenteredContainer>
       ) : (
         <QRCodeScannerNeedsAuthorization />
