@@ -1,6 +1,4 @@
-import { add, convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
-import { get } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -10,29 +8,20 @@ import {
 import { SlackSheet } from '../sheet';
 
 import {
-  AssetList,
-  AssetListSectionItem,
+  BalanceSection,
   Container,
   HorizontalDivider,
   ListEmptyComponent,
   Text,
-  TokenBalance,
-  TokenBalanceProps,
   Touchable,
   TransactionItem,
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
-import { MerchantSafeType, TokenType } from '@cardstack/types';
-import { sortedByTokenBalanceAmount } from '@cardstack/utils';
-import { Network } from '@rainbow-me/helpers/networkTypes';
+import { MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
-import Routes from '@rainbow-me/routes';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const styles = StyleSheet.create({
   contentContainerStyle: { paddingBottom: 200 },
@@ -61,6 +50,15 @@ export default function AvailableBalancesExpandedState(
 ) {
   const { setOptions } = useNavigation();
   const [selectedTab, setSelectedTab] = useState<Tabs>(Tabs.ASSETS);
+  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
+
+  const merchantSafe = merchantSafes.find(
+    safe => safe.address === props.asset.address
+  ) as MerchantSafeType;
+
+  const { address: safeAddress } = props.asset;
+
+  const tokensData = merchantSafe?.tokens;
 
   useEffect(() => {
     setOptions({
@@ -87,7 +85,7 @@ export default function AvailableBalancesExpandedState(
       </Container>
       <HorizontalDivider marginVertical={0} />
       {selectedTab === Tabs.ASSETS ? (
-        <Assets {...props} />
+        <BalanceSection navProps={{ safeAddress }} tokens={tokensData} />
       ) : (
         <Activities {...props} />
       )}
@@ -120,93 +118,6 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
       />
     </Touchable>
   );
-};
-
-const Assets = (props: AvailableBalancesExpandedStateProps) => {
-  const [network, nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, string, { [key: string]: number }]
-  >(state => [
-    state.settings.network,
-    state.settings.nativeCurrency,
-    state.currencyConversion.rates,
-  ]);
-  const balancesSection = useBalancesSection(props.asset);
-  const orderedSections = [
-    balancesSection,
-    // ToDo: add more sections here later
-  ];
-  const sections = orderedSections.filter(section => section?.data?.length);
-
-  const isEmpty = !sections.length;
-  const isLoadingAssets = useRainbowSelector(
-    state => state.data.isLoadingAssets
-  );
-
-  return (
-    <Container paddingBottom={3} paddingHorizontal={5}>
-      <AssetList
-        backgroundColor="transparent"
-        color="black"
-        currencyConversionRates={currencyConversionRates}
-        headerPaddingHorizontal={0}
-        headerPaddingVertical={8}
-        isEmpty={isEmpty}
-        loading={isLoadingAssets}
-        nativeCurrency={nativeCurrency}
-        network={network as Network}
-        sections={sections}
-      />
-    </Container>
-  );
-};
-
-const useBalancesSection = (
-  asset: MerchantSafeType
-): AssetListSectionItem<TokenBalanceProps> => {
-  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
-  const { navigate } = useNavigation();
-
-  const { tokens, address: safeAddress } = asset;
-
-  const assets = useMemo(
-    () =>
-      sortedByTokenBalanceAmount(tokens).map((token: TokenType) => ({
-        tokenSymbol: token.token.symbol,
-        tokenBalance: token.balance.display,
-        nativeBalance: token.native.balance.display,
-        onPress: () =>
-          navigate(Routes.EXPANDED_ASSET_SHEET, {
-            safeAddress,
-            asset: token,
-            type: 'token',
-          }),
-        key: token.tokenAddress,
-        tokenBalanceFontSize: 'largeBalance',
-      })),
-    [navigate, tokens, safeAddress]
-  );
-
-  const totalDisplay = useMemo(
-    () =>
-      convertAmountToNativeDisplay(
-        tokens.reduce(
-          (total, token) => add(total, get(token, 'native.balance.amount', 0)),
-          '0'
-        ),
-        nativeCurrency
-      ),
-    [tokens, nativeCurrency]
-  );
-
-  return {
-    header: {
-      title: 'Balances',
-      count: assets.length,
-      total: totalDisplay,
-    },
-    data: assets,
-    Component: TokenBalance,
-  };
 };
 
 const Activities = (props: AvailableBalancesExpandedStateProps) => {
