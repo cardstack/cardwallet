@@ -22,7 +22,7 @@ const strings = {
         info: '$1,000 per week  max equivalent, $7,500 yearly max equivalent',
       },
     },
-    footerInfo: `Card Pay does not currently work in NY & TX\nWyre currently only supports Visa or Mastercard`,
+    footerInfo: `Buy Prepaid Card is not available in NY & TX\nWyre currently only supports Visa or Mastercard`,
   },
   supportedCountriesTitle: 'Supported Countries',
 };
