@@ -58,7 +58,7 @@ export default function QRCodeScanner({
 
   return (
     <Container backgroundColor="transparent">
-      <CenteredContainer backgroundColor="transparent" height="100%" zIndex={1}>
+      <CenteredContainer backgroundColor="transparent" height="100%">
         {isEmulator ? (
           <EmulatorCameraFallback />
         ) : (
@@ -77,6 +77,7 @@ export default function QRCodeScanner({
               position: 'absolute',
               right: 0,
               top: 0,
+              backgroundColor: 'transparent',
               zIndex: 1,
             }}
           />
@@ -92,7 +93,7 @@ export default function QRCodeScanner({
           {error ? (
             <ErrorText error="Error mounting camera" />
           ) : (
-            !isInitialized && <QRCodeScannerCrosshair />
+            isInitialized && <QRCodeScannerCrosshair />
           )}
         </CenteredContainer>
       ) : (
