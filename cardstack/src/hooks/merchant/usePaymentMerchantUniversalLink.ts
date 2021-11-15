@@ -36,7 +36,7 @@ interface RouteType {
   name: string;
 }
 
-const handleAlertError = (
+export const handleAlertError = (
   message: string,
   title = 'Oops!',
   buttons?: AlertButton[]
