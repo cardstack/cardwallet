@@ -25,8 +25,8 @@ export {
   getTransactionLabel,
 } from './transactions';
 export {
-  parseAccountUniqueTokens,
-  getFamilies,
-  dedupeUniqueTokens,
-  dedupeAssetsWithFamilies,
-} from './uniqueTokens';
+  parseCollectiblesFromOpenSeaResponse,
+  getNFTFamilies as getFamilies,
+  assetsWithoutNFTs,
+  assetsWithoutNFTsByFamily,
+} from './collectibles';

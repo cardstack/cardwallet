@@ -83,7 +83,7 @@ export default function SendSheet({
   hiddenCoins = [],
   pinnedCoins = [],
   savings = [],
-  sendableUniqueTokens = [],
+  sendableCollectibles = [],
   amountDetails,
   isAuthorizing,
   isSufficientGas,
@@ -145,6 +145,7 @@ export default function SendSheet({
         {showAssetList && (
           <SendAssetList
             allAssets={allAssets}
+            collectibles={sendableCollectibles}
             fetchData={fetchData}
             hiddenCoins={hiddenCoins}
             nativeCurrency={nativeCurrency}
@@ -152,7 +153,6 @@ export default function SendSheet({
             onSelectAsset={onSelectAsset}
             pinnedCoins={pinnedCoins}
             savings={savings}
-            uniqueTokens={sendableUniqueTokens}
           />
         )}
         {showAssetForm && (

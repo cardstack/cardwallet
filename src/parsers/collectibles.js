@@ -2,11 +2,11 @@ import { filter, find, get, isNil, map, pick, uniq } from 'lodash';
 import AssetTypes from '../helpers/assetTypes';
 
 /**
- * @desc parse unique tokens from opensea
+ * @desc parse collectibles from opensea
  * @param  {Object}
  * @return {Array}
  */
-export const parseAccountUniqueTokens = data => {
+export const parseCollectiblesFromOpenSeaResponse = data => {
   const erc721s = get(data, 'data.assets', null);
   if (isNil(erc721s)) throw new Error('Invalid data from OpenSea');
   return erc721s.map(
@@ -53,27 +53,25 @@ export const parseAccountUniqueTokens = data => {
   );
 };
 
-export const getFamilies = uniqueTokens =>
-  uniq(map(uniqueTokens, u => get(u, 'asset_contract.address', '')));
+export const getNFTFamilies = nfts =>
+  uniq(map(nfts, u => get(u, 'asset_contract.address', '')));
 
-export const dedupeUniqueTokens = (assets, uniqueTokens) => {
-  const uniqueTokenFamilies = getFamilies(uniqueTokens);
-  let updatedAssets = assets;
-  if (assets.length) {
-    updatedAssets = filter(updatedAssets, asset => {
-      const matchingElement = find(
-        uniqueTokenFamilies,
-        uniqueTokenFamily =>
-          uniqueTokenFamily === get(asset, 'asset.asset_code')
-      );
-      return !matchingElement;
-    });
+export const assetsWithoutNFTs = (assets, nfts) => {
+  if (!assets.length) {
+    return assets;
   }
-  return updatedAssets;
+  const nftFamilies = getNFTFamilies(nfts);
+  return filter(assets, asset => {
+    return !find(
+      nftFamilies,
+      nftFamily => nftFamily === get(asset, 'asset.asset_code')
+    );
+  });
 };
 
-export const dedupeAssetsWithFamilies = (assets, families) =>
+export const assetsWithoutNFTsByFamily = (assets, nftFamilies) =>
   filter(
     assets,
-    asset => !find(families, family => family === get(asset, 'address'))
+    asset =>
+      !find(nftFamilies, nftFamily => nftFamily === get(asset, 'address'))
   );

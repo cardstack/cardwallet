@@ -1,7 +1,7 @@
 import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { uniqueTokensRefreshState } from '../redux/uniqueTokens';
+import { collectiblesRefreshState } from '../redux/collectibles';
 import { fetchWalletNames } from '../redux/wallets';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
 import logger from 'logger';
@@ -12,11 +12,11 @@ export default function useRefreshAccountData() {
   const refreshAccountData = useCallback(async () => {
     try {
       const getWalletNames = dispatch(fetchWalletNames());
-      const getUniqueTokens = dispatch(uniqueTokensRefreshState());
+      const fetchCollectibles = dispatch(collectiblesRefreshState());
 
       return Promise.all([
         getWalletNames,
-        getUniqueTokens,
+        fetchCollectibles,
         fetchAssetsBalancesAndPrices(),
       ]);
     } catch (error) {

@@ -61,7 +61,7 @@ export default class SendAssetList extends React.Component {
       network,
       pinnedCoins,
       savings,
-      uniqueTokens,
+      collectibles,
     } = props;
 
     const { assets } = buildCoinsList(
@@ -98,8 +98,8 @@ export default class SendAssetList extends React.Component {
     if (savings && savings.length > 0 && network === networkTypes.mainnet) {
       this.data = this.data.concat([{ data: savings, name: 'Savings' }]);
     }
-    if (uniqueTokens && uniqueTokens.length > 0) {
-      this.data = this.data.concat(uniqueTokens);
+    if (collectibles && collectibles.length > 0) {
+      this.data = this.data.concat(collectibles);
     }
     this.state = {
       dataProvider: new DataProvider((r1, r2) => {
@@ -112,7 +112,7 @@ export default class SendAssetList extends React.Component {
     };
 
     const imageTokens = [];
-    uniqueTokens.forEach(family => {
+    collectibles.forEach(family => {
       family.data.forEach(token => {
         if (token.image_thumbnail_url) {
           imageTokens.push({
@@ -158,7 +158,7 @@ export default class SendAssetList extends React.Component {
         } else {
           if (
             this.state.openCards[
-              uniqueTokens[
+              collectibles[
                 i -
                   visibleAssetsLength -
                   (savings && savings.length > 0 ? 1 : 0) -
@@ -168,7 +168,7 @@ export default class SendAssetList extends React.Component {
           ) {
             return {
               size:
-                uniqueTokens[
+                collectibles[
                   i -
                     visibleAssetsLength -
                     (savings && savings.length > 0 ? 1 : 0) -
@@ -217,7 +217,7 @@ export default class SendAssetList extends React.Component {
   };
 
   changeOpenTab = index => {
-    const { allAssets, savings, uniqueTokens } = this.props;
+    const { allAssets, savings, collectibles } = this.props;
     const {
       openCards,
       openSavings,
@@ -235,7 +235,7 @@ export default class SendAssetList extends React.Component {
       for (let i = 0; i < index; i++) {
         if (openCards[i]) {
           familiesHeight +=
-            familyHeaderHeight + uniqueTokens[i].data.length * familyRowHeight;
+            familyHeaderHeight + collectibles[i].data.length * familyRowHeight;
         } else {
           familiesHeight += familyHeaderHeight;
         }
@@ -258,7 +258,7 @@ export default class SendAssetList extends React.Component {
         familiesHeight +
         dividerHeight;
       const renderSize =
-        familyHeaderHeight + uniqueTokens[index].data.length * familyRowHeight;
+        familyHeaderHeight + collectibles[index].data.length * familyRowHeight;
       const screenHeight = this.position + this.componentHeight;
       if (heightBelow + renderSize + rowHeight > screenHeight) {
         if (renderSize < this.componentHeight) {

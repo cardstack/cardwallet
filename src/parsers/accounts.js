@@ -6,7 +6,7 @@ import {
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
 import { get, map, toUpper } from 'lodash';
-import { dedupeUniqueTokens } from './uniqueTokens';
+import { assetsWithoutNFTs } from './collectibles';
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import { getTokenMetadata, isLowerCaseMatch } from '@rainbow-me/utils';
 
@@ -15,8 +15,8 @@ import { getTokenMetadata, isLowerCaseMatch } from '@rainbow-me/utils';
  * @param  {Object} [data]
  * @return {Array}
  */
-export const parseAccountAssets = (data, uniqueTokens) => {
-  const dedupedAssets = dedupeUniqueTokens(data, uniqueTokens);
+export const parseAccountAssets = (data, collectibles) => {
+  const dedupedAssets = assetsWithoutNFTs(data, collectibles);
   return dedupedAssets.map(assetData => {
     const asset = parseAsset(assetData.asset);
     return {

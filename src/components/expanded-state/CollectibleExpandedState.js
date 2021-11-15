@@ -3,14 +3,14 @@ import React, { Fragment } from 'react';
 import { SendActionButton, SheetActionButtonRow, SlackSheet } from '../sheet';
 import ExpandedStateSection from './ExpandedStateSection';
 import {
-  UniqueTokenExpandedStateHeader,
-  UniqueTokenExpandedStateImage,
-} from './unique-token';
+  CollectibleExpandedStateHeader,
+  CollectibleExpandedStateImage,
+} from './collectible';
 import { Container, HorizontalDivider } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
 import { magicMemo } from '@rainbow-me/utils';
 
-const UniqueTokenExpandedState = ({ asset }) => {
+const CollectibleExpandedState = ({ asset }) => {
   const { description, isSendable } = asset;
 
   const { height: screenHeight } = useDimensions();
@@ -24,8 +24,8 @@ const UniqueTokenExpandedState = ({ asset }) => {
           : { additionalTopPadding: true, contentHeight: screenHeight - 80 })}
         scrollEnabled
       >
-        <UniqueTokenExpandedStateHeader asset={asset} />
-        <UniqueTokenExpandedStateImage asset={asset} />
+        <CollectibleExpandedStateHeader asset={asset} />
+        <CollectibleExpandedStateImage asset={asset} />
         <SheetActionButtonRow>
           {isSendable && <SendActionButton />}
         </SheetActionButtonRow>
@@ -44,4 +44,4 @@ const UniqueTokenExpandedState = ({ asset }) => {
   );
 };
 
-export default magicMemo(UniqueTokenExpandedState, 'asset');
+export default magicMemo(CollectibleExpandedState, 'asset');

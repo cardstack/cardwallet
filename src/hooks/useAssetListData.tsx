@@ -135,7 +135,7 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
 
 const useCollectiblesSection = (): AssetListSectionItem<CollectibleType> => {
   const collectibles = useRainbowSelector(
-    state => state.uniqueTokens.uniqueTokens
+    state => state.collectibles.collectibles
   );
 
   return {

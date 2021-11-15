@@ -179,5 +179,5 @@ export const buildCoinsList = (
   return { assets: allAssets, totalBalancesValue };
 };
 
-export const buildUniqueTokenName = ({ asset_contract, id, name }) =>
+export const buildCollectibleName = ({ asset_contract, id, name }) =>
   name || `${asset_contract.name} #${id}`;

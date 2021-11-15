@@ -12,6 +12,7 @@ import { updateLanguage } from '../languages';
 
 import { ethereumUtils, promiseUtils } from '../utils';
 import { addCashClearState } from './addCash';
+import { collectiblesResetState } from './collectibles';
 import { dataResetState } from './data';
 import { explorerClearState } from './explorer';
 import {
@@ -20,7 +21,6 @@ import {
 } from './fallbackExplorer';
 import { resetOpenStateSettings } from './openStateSettings';
 import { requestsResetState } from './requests';
-import { uniqueTokensResetState } from './uniqueTokens';
 import { uniswapResetState } from './uniswap';
 import { uniswapLiquidityResetState } from './uniswapLiquidity';
 import { walletConnectUpdateSessions } from './walletconnect';
@@ -80,7 +80,7 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 export const resetAccountState = async dispatch => {
   const p0 = dispatch(explorerClearState());
   const p1 = dispatch(dataResetState());
-  const p2 = dispatch(uniqueTokensResetState());
+  const p2 = dispatch(collectiblesResetState());
   const p3 = dispatch(resetOpenStateSettings());
   const p4 = dispatch(requestsResetState());
   const p5 = dispatch(uniswapResetState());

@@ -3,24 +3,24 @@ import styled from 'styled-components';
 import { magicMemo } from '../../utils';
 import { ButtonPressAnimation } from '../animations';
 import { InnerBorder } from '../layout';
-import UniqueTokenImage from './UniqueTokenImage';
+import CollectibleImage from './CollectibleImage';
 import { shadow as shadowUtil } from '@rainbow-me/styles';
 
-const UniqueTokenCardBorderRadius = 20;
-const UniqueTokenCardShadowFactory = colors => [0, 2, 6, colors.shadow, 0.08];
+const CollectibleCardBorderRadius = 20;
+const CollectibleCardShadowFactory = colors => [0, 2, 6, colors.shadow, 0.08];
 
 const Container = styled.View`
   ${({ shadow }) => shadowUtil.build(...shadow)};
 `;
 
 const Content = styled.View`
-  border-radius: ${UniqueTokenCardBorderRadius};
+  border-radius: ${CollectibleCardBorderRadius};
   height: ${({ height }) => height};
   overflow: hidden;
   width: ${({ width }) => width};
 `;
 
-const UniqueTokenCard = ({
+const CollectibleCard = ({
   borderEnabled = true,
   disabled,
   enableHapticFeedback = true,
@@ -42,7 +42,7 @@ const UniqueTokenCard = ({
 
   const { colors } = useTheme();
 
-  const defaultShadow = useMemo(() => UniqueTokenCardShadowFactory(colors), [
+  const defaultShadow = useMemo(() => CollectibleCardShadowFactory(colors), [
     colors,
   ]);
 
@@ -56,7 +56,7 @@ const UniqueTokenCard = ({
       shadow={shadow || defaultShadow}
     >
       <Content {...props} height={height} style={style} width={width}>
-        <UniqueTokenImage
+        <CollectibleImage
           backgroundColor={background || colors.lightestGrey}
           imageUrl={image_preview_url}
           item={item}
@@ -65,7 +65,7 @@ const UniqueTokenCard = ({
         {borderEnabled && (
           <InnerBorder
             opacity={0.04}
-            radius={UniqueTokenCardBorderRadius}
+            radius={CollectibleCardBorderRadius}
             width={0.5}
           />
         )}
@@ -74,7 +74,7 @@ const UniqueTokenCard = ({
   );
 };
 
-export default magicMemo(UniqueTokenCard, [
+export default magicMemo(CollectibleCard, [
   'height',
   'item.uniqueId',
   'style',
