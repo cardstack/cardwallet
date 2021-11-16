@@ -34,7 +34,7 @@ export default combineReducers({
   appState,
   coingecko,
   charts,
-  collectibles,
+  collectibles, // responsible for extracting collectibles (NFTs) from the assets state and fetching additional metadata for display
   contacts,
   currencyConversion,
   data,
