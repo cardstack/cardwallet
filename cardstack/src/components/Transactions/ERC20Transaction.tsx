@@ -1,6 +1,4 @@
 import React from 'react';
-
-import { NetworkBadge } from '../NetworkBadge';
 import { getDisplayDataByStatus } from './statusToDisplayData';
 import {
   TransactionBase,
@@ -8,7 +6,10 @@ import {
   TransactionRow,
 } from './TransactionBase';
 import { ERC20TransactionType } from '@cardstack/types';
-import { CoinIcon, Container } from '@cardstack/components';
+import { CoinIcon, SafeHeader } from '@cardstack/components';
+import { colors, avatarColor } from '@cardstack/theme';
+import { getAddressPreview } from '@cardstack/utils';
+import { useAccountProfile } from '@rainbow-me/hooks';
 
 export interface ERC20TransactionProps
   extends TransactionBaseCustomizationProps {
@@ -21,6 +22,8 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
   const swappedForDisplayData = item.swappedFor
     ? getDisplayDataByStatus(item.swappedFor.status)
     : displayData;
+
+  const { accountAddress, accountColor, accountName } = useAccountProfile();
 
   const calculatedProps = item.swappedFor
     ? {
@@ -36,9 +39,14 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
           />
         ),
         Header: (
-          <Container paddingTop={4} paddingHorizontal={5}>
-            <NetworkBadge />
-          </Container>
+          <SafeHeader
+            address={accountName}
+            backgroundColor={accountColor}
+            textColor={colors.white}
+            rightText="Other Tokens"
+            small
+            isFormattedAddress
+          />
         ),
         CoinIcon: <CoinIcon size={40} {...item.swappedFor} />,
         statusIconName: swappedForDisplayData.iconProps.name,
@@ -51,9 +59,14 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
     : {
         CoinIcon: <CoinIcon size={40} {...item} />,
         Header: (
-          <Container paddingTop={4} paddingHorizontal={5}>
-            <NetworkBadge />
-          </Container>
+          <SafeHeader
+            address={accountName}
+            backgroundColor={avatarColor[accountColor]}
+            textColor={colors.white}
+            rightText="Other Tokens"
+            small
+            isFormattedAddress
+          />
         ),
         statusIconName: displayData.iconProps.name,
         statusIconProps: displayData.iconProps,
@@ -63,5 +76,15 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
         transactionHash: item.hash,
       };
 
-  return <TransactionBase {...props} {...calculatedProps} />;
+  return (
+    <TransactionBase
+      {...props}
+      {...calculatedProps}
+      toAddress={
+        item.to !== accountAddress
+          ? `To: ${getAddressPreview(item.to)}`
+          : undefined
+      }
+    />
+  );
 };
