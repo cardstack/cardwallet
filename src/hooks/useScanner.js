@@ -1,4 +1,7 @@
-import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
+import {
+  CARDWALLET_SCHEME,
+  isValidMerchantPaymentUrl,
+} from '@cardstack/cardpay-sdk';
 import lang from 'i18n-js';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -7,6 +10,7 @@ import {
   Alert as NativeAlert,
 } from 'react-native';
 import { PERMISSIONS, request } from 'react-native-permissions';
+import Url from 'url-parse';
 import { Alert } from '../components/alerts';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkPushNotificationPermissions } from '../model/firebase';
@@ -68,6 +72,15 @@ function useScannerState(enabled) {
     isScanningEnabled,
   };
 }
+
+// convert https:// to `${CARDWALLET_SCHEME}:/`
+const convertDeepLinkToCustomProtocol = deepLink => {
+  let url = new Url(deepLink);
+  if (url.protocol === 'https:') {
+    return `${CARDWALLET_SCHEME}:/${url.pathname}${url.query || ''}`;
+  }
+  return deepLink;
+};
 
 export default function useScanner(enabled) {
   const { navigate } = useNavigation();
@@ -148,8 +161,9 @@ export default function useScanner(enabled) {
       if (address) return handleScanAddress(address);
       if (deeplink.startsWith('wc:')) return handleScanWalletConnect(data);
       if (isValidMerchantPaymentUrl(deeplink)) {
+        const updatedDeepLink = convertDeepLinkToCustomProtocol(deeplink);
         haptics.notificationSuccess();
-        return Linking.openURL(deeplink);
+        return Linking.openURL(updatedDeepLink);
       }
       return handleScanInvalid(data);
     },
