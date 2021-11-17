@@ -1,30 +1,29 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Linking,
   RefreshControl,
-  ScrollView,
   SectionList,
   StatusBar,
 } from 'react-native';
 import { BackButton } from '../../../src/components/header';
 import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
-import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
 import {
+  BalanceSection,
   CenteredContainer,
   Container,
   Icon,
   ListEmptyComponent,
   Text,
-  TokenBalance,
   Touchable,
   TransactionItem,
+  TransactionListLoading,
 } from '@cardstack/components';
 import { useDepotTransactions } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
-import { DepotType, TokenType } from '@cardstack/types';
+import { DepotType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -144,7 +143,10 @@ export default function DepotScreen() {
             position="absolute"
             zIndex={selectedTab === Tabs.BALANCES ? 1 : 0}
           >
-            <Balances tokens={tokens} />
+            <BalanceSection
+              navProps={{ safeAddress: address }}
+              tokens={tokens}
+            />
           </Container>
           <Container
             flex={1}
@@ -191,61 +193,6 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
         width="100%"
       />
     </Touchable>
-  );
-};
-
-interface BalancesProps {
-  tokens: TokenType[];
-}
-
-const Balances = ({ tokens }: BalancesProps) => {
-  const { navigate } = useNavigation();
-
-  const onPress = useCallback(
-    (token: TokenType) => () => {
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: token,
-        type: 'token',
-      });
-    },
-    [navigate]
-  );
-
-  const renderTokens = useMemo(
-    () =>
-      tokens.map(token => (
-        <TokenBalance
-          key={token.tokenAddress}
-          address={token.tokenAddress}
-          includeBorder
-          marginHorizontal={5}
-          nativeBalance={token.native.balance.display}
-          onPress={onPress(token)}
-          tokenBalance={token.balance.display}
-          tokenSymbol={token.token.symbol}
-          zIndex={1}
-        />
-      )),
-    [onPress, tokens]
-  );
-
-  return (
-    <ScrollView>
-      <Container
-        paddingHorizontal={5}
-        paddingBottom={3}
-        marginTop={7}
-        flexDirection="row"
-      >
-        <Text size="medium" marginRight={2}>
-          Balances
-        </Text>
-        <Text size="medium" color="tealDark">
-          {tokens.length}
-        </Text>
-      </Container>
-      {renderTokens}
-    </ScrollView>
   );
 };
 

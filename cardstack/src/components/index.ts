@@ -35,3 +35,4 @@ export * from './TransactionConfirmationSheet';
 export * from './SafeAreaView';
 export * from './FilterOption';
 export * from './LoadingOverlay';
+export * from './BalanceSection';
