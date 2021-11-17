@@ -74,7 +74,7 @@ function useScannerState(enabled) {
 }
 
 // convert https:// to `${CARDWALLET_SCHEME}:/`
-const convertDeepLinkToCustomProtocol = deepLink => {
+const convertDeepLinkToCardWalletProtocol = deepLink => {
   let url = new Url(deepLink);
   if (url.protocol === 'https:') {
     return `${CARDWALLET_SCHEME}:/${url.pathname}${url.query || ''}`;
@@ -161,7 +161,7 @@ export default function useScanner(enabled) {
       if (address) return handleScanAddress(address);
       if (deeplink.startsWith('wc:')) return handleScanWalletConnect(data);
       if (isValidMerchantPaymentUrl(deeplink)) {
-        const updatedDeepLink = convertDeepLinkToCustomProtocol(deeplink);
+        const updatedDeepLink = convertDeepLinkToCardWalletProtocol(deeplink);
         haptics.notificationSuccess();
         return Linking.openURL(updatedDeepLink);
       }
