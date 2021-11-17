@@ -24,6 +24,7 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
     : displayData;
 
   const { accountAddress, accountColor, accountName } = useAccountProfile();
+  const isSentTransaction = item.to !== accountAddress;
 
   const calculatedProps = item.swappedFor
     ? {
@@ -40,12 +41,12 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
         ),
         Header: (
           <SafeHeader
-            address={accountName}
+            address={item.to}
+            accountName={accountName}
             backgroundColor={accountColor}
             textColor={colors.white}
             rightText="Other Tokens"
             small
-            isFormattedAddress
           />
         ),
         CoinIcon: <CoinIcon size={40} {...item.swappedFor} />,
@@ -60,12 +61,12 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
         CoinIcon: <CoinIcon size={40} {...item} />,
         Header: (
           <SafeHeader
-            address={accountName}
+            address={item.to}
+            accountName={accountName}
             backgroundColor={avatarColor[accountColor]}
             textColor={colors.white}
             rightText="Other Tokens"
             small
-            isFormattedAddress
           />
         ),
         statusIconName: displayData.iconProps.name,
@@ -80,11 +81,7 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
     <TransactionBase
       {...props}
       {...calculatedProps}
-      toAddress={
-        item.to !== accountAddress
-          ? `To: ${getAddressPreview(item.to)}`
-          : undefined
-      }
+      recipientName={isSentTransaction ? getAddressPreview(item.to) : undefined}
     />
   );
 };

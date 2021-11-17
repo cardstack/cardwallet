@@ -34,7 +34,7 @@ export interface TransactionBaseProps
   transactionHash: string;
   isFullWidth?: boolean;
   onPressTransaction?: (props: TransactionBaseProps) => void;
-  toAddress?: string;
+  recipientName?: string;
 }
 
 export const TransactionBase = (props: TransactionBaseProps) => {
@@ -124,7 +124,7 @@ export interface TransactionRowProps extends ContainerProps {
   topText?: string;
   address?: string;
   hasBottomDivider?: boolean;
-  toAddress?: string;
+  recipientName?: string;
 }
 
 export const TransactionRow = ({
@@ -137,7 +137,7 @@ export const TransactionRow = ({
   primaryText,
   subText,
   hasBottomDivider = false,
-  toAddress,
+  recipientName,
   ...props
 }: TransactionRowProps) => {
   return (
@@ -146,7 +146,7 @@ export const TransactionRow = ({
       justifyContent="space-between"
       alignItems="center"
       paddingHorizontal={5}
-      paddingTop={toAddress ? 2 : 3}
+      paddingTop={recipientName ? 2 : 3}
       {...props}
     >
       <Container flexDirection="column" width="100%">
@@ -157,10 +157,10 @@ export const TransactionRow = ({
           width="100%"
         >
           <Container flexDirection="column" alignItems="center">
-            {toAddress ? (
+            {recipientName ? (
               <Container paddingBottom={3}>
                 <Text variant="subText" size="xs">
-                  {toAddress}
+                  {`To ${recipientName}`}
                 </Text>
               </Container>
             ) : null}

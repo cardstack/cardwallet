@@ -16,7 +16,7 @@ interface SafeHeaderProps {
   small?: boolean;
   backgroundColor?: string;
   textColor?: string;
-  isFormattedAddress?: boolean;
+  accountName?: string;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
@@ -27,7 +27,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
     small,
     backgroundColor,
     textColor,
-    isFormattedAddress,
+    accountName,
   } = props;
 
   const style = useMemo(
@@ -58,7 +58,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
             ellipsizeMode="tail"
             size={small ? 'xs' : 'body'}
           >
-            {isFormattedAddress ? address : getAddressPreview(address)}
+            {accountName ? accountName : getAddressPreview(address)}
           </Text>
         </Container>
         <Touchable
