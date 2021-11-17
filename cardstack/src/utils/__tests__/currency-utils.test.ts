@@ -37,7 +37,7 @@ describe('Currency utils', () => {
     it('should work for difference currencies', () => {
       const formattedValue = formatNative('12345.67890', 'SPD');
 
-      expect(formattedValue).toBe('12,345.67890');
+      expect(formattedValue).toBe('12,345');
     });
   });
 
