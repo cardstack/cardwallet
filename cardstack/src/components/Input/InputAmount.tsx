@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, memo, useEffect } from 'react';
 import { InteractionManager } from 'react-native';
 import {
   nativeCurrencies,
@@ -61,6 +61,13 @@ export const InputAmount = memo(
         })
       );
     }, [nativeCurrency, navigate]);
+
+    useEffect(() => {
+      if (nativeCurrency === NativeCurrency.SPD) {
+        setInputValue(formatNative(inputValue, nativeCurrency));
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nativeCurrency, setInputValue]);
 
     const selectedCurrency = nativeCurrencies[nativeCurrency];
 
