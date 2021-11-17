@@ -56,7 +56,7 @@ export const PrepaidCardTransactionHeader = ({
         size="small"
         color={cardCustomization?.textColor as ColorTypes}
       >
-        PREPAID CARD
+        RECEIPT
       </Text>
     </Container>
   );
