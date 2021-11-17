@@ -345,7 +345,7 @@ const getWyrePaymentDetails = (
     },
     {
       amount: { currency: sourceCurrency, value: purchaseFee },
-      label: 'Activation Fee',
+      label: 'Wyre Fee',
     },
   ];
 
