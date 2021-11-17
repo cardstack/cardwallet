@@ -13,7 +13,6 @@ import DepositModal from '../screens/DepositModal';
 import ExpandedAssetSheet from '../screens/ExpandedAssetSheet';
 import ImportSeedPhraseSheet from '../screens/ImportSeedPhraseSheet';
 import ModalScreen from '../screens/ModalScreen';
-import ReceiveModal from '../screens/ReceiveModal';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
 import SendSheetEOA from '../screens/SendSheetEOA';
@@ -51,7 +50,6 @@ import {
   useCardstackGlobalScreens,
   useCardstackMainScreens,
 } from '@cardstack/navigation';
-import { colors } from '@cardstack/theme';
 import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
 
@@ -254,15 +252,6 @@ function NativeStackNavigator() {
   return (
     <NativeStack.Navigator {...nativeStackConfig}>
       <NativeStack.Screen component={MainStack} name={Routes.STACK} />
-      <NativeStack.Screen
-        component={ReceiveModal}
-        name={Routes.RECEIVE_MODAL}
-        options={{
-          backgroundColor: colors.backgroundBlue,
-          backgroundOpacity: 1,
-          customStack: true,
-        }}
-      />
       <NativeStack.Screen
         component={SettingsModal}
         name={Routes.SETTINGS_MODAL}

@@ -11,7 +11,6 @@ import ExpandedAssetSheet from '../screens/ExpandedAssetSheet';
 import ImportSeedPhraseSheet from '../screens/ImportSeedPhraseSheet';
 import ModalScreen from '../screens/ModalScreen';
 import PinAuthenticationScreen from '../screens/PinAuthenticationScreen';
-import ReceiveModal from '../screens/ReceiveModal';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
 import SendSheetEOA from '../screens/SendSheetEOA';
@@ -153,11 +152,6 @@ function MainNavigator() {
         {...closeKeyboardOnClose}
         name={Routes.MODAL_SCREEN}
         options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={ReceiveModal}
-        name={Routes.RECEIVE_MODAL}
-        options={expandedPreset}
       />
       <Stack.Screen
         component={WalletConnectApprovalSheet}
