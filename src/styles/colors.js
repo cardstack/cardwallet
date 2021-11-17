@@ -2,6 +2,7 @@ import chroma from 'chroma-js';
 import { toLower } from 'lodash';
 import PropTypes from 'prop-types';
 import currentColors from '../context/currentColors';
+import { avatarColor } from '@cardstack/theme';
 
 const buildRgba = (color, alpha = 1) => `rgba(${chroma(color).rgb()},${alpha})`;
 const darkModeColors = {
@@ -96,18 +97,6 @@ const getColorsByTheme = darkMode => {
     yellowFavorite: '#FFB200', // '255, 178, 0'
     yellowOrange: '#FFC400', // '255, 196, 0'
   };
-
-  const avatarColor = [
-    '#FF494A', // '255, 73, 74'
-    '#01D3FF', // '2, 211, 255'
-    '#FB60C4', // '251, 96, 196'
-    '#3F6AFF', // '63, 106, 255'
-    '#FFD963', // '255, 217, 99'
-    '#B140FF', // '177, 64, 255'
-    '#41EBC1', // '64, 235, 193'
-    '#F46E38', // '244, 110, 56'
-    '#6D7E8F', // '109, 126, 143'
-  ];
 
   const assetIcon = {
     blue: '#7DABF0', // '125, 171, 240'

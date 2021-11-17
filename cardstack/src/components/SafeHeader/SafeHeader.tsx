@@ -16,6 +16,7 @@ interface SafeHeaderProps {
   small?: boolean;
   backgroundColor?: string;
   textColor?: string;
+  accountName?: string;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
@@ -26,6 +27,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
     small,
     backgroundColor,
     textColor,
+    accountName,
   } = props;
 
   const style = useMemo(
@@ -53,13 +55,14 @@ export const SafeHeader = (props: SafeHeaderProps) => {
           <Text
             fontFamily="RobotoMono-Regular"
             style={style.text}
+            ellipsizeMode="tail"
             size={small ? 'xs' : 'body'}
           >
-            {getAddressPreview(address)}
+            {accountName ? accountName : getAddressPreview(address)}
           </Text>
         </Container>
         <Touchable
-          flex={0.6}
+          flex={0.8}
           flexDirection="row"
           alignItems="center"
           justifyContent="flex-end"
@@ -72,6 +75,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
             size={small ? 'xs' : 'small'}
             marginRight={rightText ? 0 : 1}
             numberOfLines={1}
+            textTransform="uppercase"
           >
             {rightText || 'View'}
           </Text>

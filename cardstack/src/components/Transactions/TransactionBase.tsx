@@ -34,6 +34,7 @@ export interface TransactionBaseProps
   transactionHash: string;
   isFullWidth?: boolean;
   onPressTransaction?: (props: TransactionBaseProps) => void;
+  recipientName?: string;
 }
 
 export const TransactionBase = (props: TransactionBaseProps) => {
@@ -123,6 +124,7 @@ export interface TransactionRowProps extends ContainerProps {
   topText?: string;
   address?: string;
   hasBottomDivider?: boolean;
+  recipientName?: string;
 }
 
 export const TransactionRow = ({
@@ -135,6 +137,7 @@ export const TransactionRow = ({
   primaryText,
   subText,
   hasBottomDivider = false,
+  recipientName,
   ...props
 }: TransactionRowProps) => {
   return (
@@ -143,7 +146,7 @@ export const TransactionRow = ({
       justifyContent="space-between"
       alignItems="center"
       paddingHorizontal={5}
-      paddingTop={4}
+      paddingTop={recipientName ? 2 : 3}
       {...props}
     >
       <Container flexDirection="column" width="100%">
@@ -153,27 +156,36 @@ export const TransactionRow = ({
           justifyContent="space-between"
           width="100%"
         >
-          <Container flexDirection="row" alignItems="center">
-            {CoinIcon}
-            <Container marginLeft={4} flexDirection="row" alignItems="center">
-              <Container width={20}>
-                <Icon
-                  name={statusIconName}
-                  size={16}
-                  color="blueText"
-                  stroke="blueText"
-                  {...statusIconProps}
-                />
-              </Container>
-              <Container flexDirection="column">
-                <Text variant="subText" weight="bold">
-                  {statusText}
+          <Container flexDirection="column" alignItems="center">
+            {recipientName ? (
+              <Container paddingBottom={3}>
+                <Text variant="subText" size="xs">
+                  {`To ${recipientName}`}
                 </Text>
-                {statusSubText && (
-                  <Text size="smallest" weight="bold">
-                    {statusSubText}
+              </Container>
+            ) : null}
+            <Container flexDirection="row" alignItems="center">
+              {CoinIcon}
+              <Container marginLeft={4} flexDirection="row" alignItems="center">
+                <Container width={20}>
+                  <Icon
+                    name={statusIconName}
+                    size={16}
+                    color="blueText"
+                    stroke="blueText"
+                    {...statusIconProps}
+                  />
+                </Container>
+                <Container flexDirection="column">
+                  <Text variant="subText" weight="bold">
+                    {statusText}
                   </Text>
-                )}
+                  {statusSubText && (
+                    <Text size="smallest" weight="bold">
+                      {statusSubText}
+                    </Text>
+                  )}
+                </Container>
               </Container>
             </Container>
           </Container>

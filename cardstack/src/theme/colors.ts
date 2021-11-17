@@ -76,4 +76,16 @@ export const colors = {
   buttonDisabledBackground: palette.buttonDisabledBackground,
 };
 
+export const avatarColor = [
+  '#FF494A', // '255, 73, 74'
+  '#01D3FF', // '2, 211, 255'
+  '#FB60C4', // '251, 96, 196'
+  '#3F6AFF', // '63, 106, 255'
+  '#FFD963', // '255, 217, 99'
+  '#B140FF', // '177, 64, 255'
+  '#41EBC1', // '64, 235, 193'
+  '#F46E38', // '244, 110, 56'
+  '#6D7E8F', // '109, 126, 143'
+];
+
 export type ColorTypes = keyof typeof colors;
