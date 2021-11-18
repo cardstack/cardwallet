@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRoute } from '@react-navigation/core';
+import { TouchableOpacity } from 'react-native';
 import {
   ToastPositionContainerHeight,
   CopyToast,
@@ -10,6 +11,7 @@ import {
   SheetHandle,
   NetworkBadge,
   Button,
+  Checkbox,
 } from '@cardstack/components';
 import { useClipboard } from '@rainbow-me/hooks';
 import { abbreviations } from '@rainbow-me/utils';
@@ -22,12 +24,17 @@ const CopyAddressSheet = () => {
   const { setClipboard } = useClipboard();
   const [copiedText, setCopiedText] = useState(undefined);
   const [copyCount, setCopyCount] = useState(0);
+  const [checked, setChecked] = useState(false);
 
   const handleCopiedText = () => {
     setClipboard(address);
     setCopiedText(abbreviations.formatAddressForDisplay(address));
     setCopyCount(count => count + 1);
   };
+
+  const toogleCheckbox = useCallback(() => {
+    setChecked(!checked);
+  }, [checked]);
 
   return (
     <>
@@ -47,6 +54,25 @@ const CopyAddressSheet = () => {
             alignItems="center"
             width="100%"
           >
+            {!disableCopying ? (
+              <Container flexDirection="row" marginBottom={6}>
+                <Container flex={1} justifyContent="center">
+                  <Checkbox isSelected={checked} onPress={toogleCheckbox} />
+                </Container>
+                <Container flex={4}>
+                  <TouchableOpacity onPress={toogleCheckbox}>
+                    <Text
+                      fontFamily="OpenSans-Regular"
+                      fontSize={14}
+                      color="red"
+                    >
+                      I acknowledge that I can only send DAI.CPXD and CARD.CPXD
+                      to this address. All other funds may be lost.
+                    </Text>
+                  </TouchableOpacity>
+                </Container>
+              </Container>
+            ) : null}
             <Container maxWidth={230}>
               <Text
                 fontFamily="RobotoMono-Regular"
@@ -72,8 +98,10 @@ const CopyAddressSheet = () => {
                 paddingHorizontal={5}
               >
                 <Button
+                  disablePress={!checked}
                   iconProps={{ name: 'copy' }}
                   marginTop={4}
+                  variant={checked ? undefined : 'disabled'}
                   wrapper="fragment"
                   width="80%"
                   onPress={handleCopiedText}

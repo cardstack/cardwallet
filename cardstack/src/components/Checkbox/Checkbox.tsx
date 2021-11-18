@@ -4,7 +4,7 @@ import { IconProps } from '../Icon';
 
 interface CheckboxProps {
   onPress?: () => void;
-  label: string;
+  label?: string;
   isDisabled?: boolean;
   iconProps?: IconProps;
   isSelected?: boolean;
