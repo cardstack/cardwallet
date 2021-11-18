@@ -3,6 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import thunk from 'redux-thunk';
 
 import reducers from './reducers';
+import { safesApi } from '@cardstack/services/safes';
 
 const enableReduxFlipper = false;
 const enableReduxLogger = false;
@@ -28,6 +29,7 @@ const reduxLogger = (store: any) => (next: any) => (action: any) => {
 const store = configureStore({
   reducer: {
     ...reducers,
+    [safesApi.reducerPath]: safesApi.reducer,
   },
   middleware: () => {
     const debugMiddlewares = [];
@@ -45,7 +47,7 @@ const store = configureStore({
       }
     }
 
-    return [thunk, ...debugMiddlewares];
+    return [thunk, safesApi.middleware, ...debugMiddlewares];
   },
 });
 
