@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import React from 'react';
 import { AssetList } from '@cardstack/components';
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -6,12 +7,13 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const AssetListWrapper = () => {
   const [network, nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, string, { [key: string]: number }]
+    [Network, NativeCurrency, { [key: string]: number }]
   >(state => [
-    state.settings.network,
+    state.settings.network as Network,
     state.settings.nativeCurrency,
     state.currencyConversion.rates,
   ]);
+
   const { sections, isLoadingAssets, isEmpty } = useAssetListData();
 
   return (
@@ -20,7 +22,7 @@ const AssetListWrapper = () => {
       isEmpty={isEmpty}
       loading={isLoadingAssets}
       nativeCurrency={nativeCurrency}
-      network={network as Network}
+      network={network}
       sections={sections}
     />
   );

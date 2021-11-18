@@ -16,16 +16,9 @@ import {
   DISCOVER_NEW_ASSETS_FREQUENCY,
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
-import {
-  reduceAssetsWithPriceChartAndBalances,
-  reduceDepotsWithPricesAndChart,
-} from '@cardstack/helpers/fallbackExplorerHelper';
-import {
-  addGnosisTokenPrices,
-  fetchGnosisSafes,
-  getCurrencyConversionsRates,
-} from '@cardstack/services';
-import { isLayer1, isLayer2, isMainnet, isNativeToken } from '@cardstack/utils';
+import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
+import { getCurrencyConversionsRates } from '@cardstack/services';
+import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -344,71 +337,6 @@ const fetchAssetBalances = async (tokens, address, network) => {
   }
 };
 
-const fetchGnosisSafesAndAddCoingeckoId = async () => {
-  const { accountAddress, nativeCurrency, network } = store.getState().settings;
-  const coingeckoCoins = store.getState().coingecko.coins;
-
-  if (isLayer2(network)) {
-    try {
-      const gnosisSafeData = await fetchGnosisSafes(accountAddress);
-      const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
-      const depotsWithIds = (gnosisSafeData?.depots || []).map(depot => ({
-        ...depot,
-        tokens: depot.tokens.map(token => ({
-          ...token,
-          coingecko_id: coingeckoIds[token.tokenAddress] || null,
-        })),
-      }));
-      const prepaidCardsWithIds = (gnosisSafeData?.prepaidCards || []).map(
-        prepaidCard => ({
-          ...prepaidCard,
-          tokens: prepaidCard.tokens.map(token => ({
-            ...token,
-            coingecko_id: coingeckoIds[token.tokenAddress] || null,
-          })),
-        })
-      );
-      const merchantSafesWithIds = (gnosisSafeData?.merchantSafes || []).map(
-        merchantSafe => ({
-          ...merchantSafe,
-          tokens: merchantSafe.tokens.map(token => ({
-            ...token,
-            coingecko_id: coingeckoIds[token.tokenAddress] || null,
-          })),
-        })
-      );
-
-      const {
-        depots,
-        prepaidCards,
-        merchantSafes,
-      } = await addGnosisTokenPrices(
-        {
-          depots: depotsWithIds,
-          prepaidCards: prepaidCardsWithIds,
-          merchantSafes: merchantSafesWithIds,
-        },
-        network,
-        accountAddress,
-        nativeCurrency
-      );
-
-      return {
-        depots,
-        prepaidCards,
-        merchantSafes,
-      };
-    } catch (error) {
-      logger.error('Error getting Gnosis data', error);
-    }
-  }
-  return {
-    depots: undefined,
-    prepaidCards: undefined,
-    merchantSafes: undefined,
-  };
-};
-
 export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
@@ -459,12 +387,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
       formattedNativeCurrency
     );
 
-    const {
-      depots,
-      prepaidCards,
-      merchantSafes,
-    } = await fetchGnosisSafesAndAddCoingeckoId();
-
     // needs to be fetched after safes, because of contract signing
     const balances = await fetchAssetBalances(
       assets.map(({ asset: { asset_code, symbol } }) =>
@@ -479,7 +401,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
       fetchChartData,
     ]);
 
-    const reduceAssets = reduceAssetsWithPriceChartAndBalances({
+    const updatedAssets = await reduceAssetsWithPriceChartAndBalances({
       assets,
       prices,
       formattedNativeCurrency,
@@ -488,33 +410,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
       network,
       nativeCurrency,
     });
-
-    const reduceDepots = depots
-      ? reduceDepotsWithPricesAndChart({
-          depots,
-          prices,
-          formattedNativeCurrency,
-          chartData,
-          nativeCurrency,
-        })
-      : [];
-
-    // Depots, prepaidCards and merchants have the same token structure
-    const reducePrepaidCards = prepaidCards
-      ? reduceDepotsWithPricesAndChart({
-          depots: prepaidCards,
-          prices,
-          formattedNativeCurrency,
-          chartData,
-          nativeCurrency,
-        })
-      : [];
-
-    const [
-      updatedAssets = [],
-      updatedDepots = [],
-      updatedPrePaidCards = [],
-    ] = await Promise.all([reduceAssets, reduceDepots, reducePrepaidCards]);
 
     logger.log('😬 FallbackExplorer updating assets');
 
@@ -528,9 +423,9 @@ export const fetchAssetsBalancesAndPrices = async () => {
         },
         payload: {
           assets: updatedAssets,
-          depots: updatedDepots,
-          prepaidCards: updatedPrePaidCards,
-          merchantSafes,
+          depots: [],
+          prepaidCards: [],
+          merchantSafes: [],
         },
       })
     );
