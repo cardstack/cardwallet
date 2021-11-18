@@ -103,7 +103,7 @@ export const useAmountConvertHelper = (
   const isSPDCurrency: boolean = inputNativeCurrency === NativeCurrency.SPD;
 
   const amountWithSymbol = isSPDCurrency
-    ? `§${formatNative(`${amountInNum}`)} SPD`
+    ? `§${formatNative(`${amountInNum}`, inputNativeCurrency)} SPD`
     : convertAmountToNativeDisplay(amountInNum, inputNativeCurrency);
 
   const amountInAnotherCurrency = isSPDCurrency
