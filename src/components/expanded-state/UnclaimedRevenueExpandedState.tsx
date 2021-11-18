@@ -29,19 +29,16 @@ import { sectionStyle } from '@cardstack/utils/layouts';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
 const CHART_HEIGHT = 600;
 
-export default function UnclaimedRevenueExpandedState(props: {
+export default function UnclaimedRevenueExpandedState({
+  asset: merchantSafe,
+}: {
   asset: MerchantSafeType;
 }) {
-  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
-  const merchantSafe = merchantSafes.find(
-    safe => safe.address === props.asset.address
-  ) as MerchantSafeType;
   const { setOptions } = useNavigation();
   const { selectedWallet } = useWallets();
   const { accountAddress } = useAccountSettings();
@@ -102,8 +99,7 @@ export default function UnclaimedRevenueExpandedState(props: {
 
       // resets signed provider and web3 instance to kill poller
       await HDProvider.reset();
-
-      await fetchAssetsBalancesAndPrices();
+      // TODO: Update after claiming
     } catch (error) {
       logger.sentry('Error claiming revenue', error);
       Alert.alert(
@@ -143,11 +139,11 @@ export default function UnclaimedRevenueExpandedState(props: {
           </Button>
           <HorizontalDivider />
           <Text size="medium">Activities</Text>
-          <Activities address={props.asset.address} />
+          <Activities address={merchantSafe.address} />
         </Container>
       </SlackSheet>
     ),
-    [isDust, onClaimAll, props.asset, revenueBalances]
+    [isDust, onClaimAll, merchantSafe, revenueBalances]
   );
 }
 

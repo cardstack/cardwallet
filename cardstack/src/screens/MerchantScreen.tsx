@@ -33,10 +33,7 @@ import {
 } from '@cardstack/utils';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { useDimensions } from '@rainbow-me/hooks';
 
@@ -75,27 +72,18 @@ const MerchantScreen = () => {
     params: { merchantSafe },
   } = useRoute<RouteType>();
 
-  const [merchantSafes] = useRainbowSelector(state => [
-    state.data.merchantSafes,
-  ]);
-
-  const merchantSafeData = {
-    ...merchantSafes.find(safe => safe.address === merchantSafe.address),
-    merchantInfo: merchantSafe.merchantInfo,
-  } as MerchantSafeType;
-
   const onPressGoTo = useCallback(
     (type: ExpandedMerchantRoutes) => () => {
       navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: merchantSafeData,
+        asset: merchantSafe,
         type,
       });
     },
-    [merchantSafeData, navigate]
+    [merchantSafe, navigate]
   );
 
   const { sections } = useMerchantTransactions(
-    merchantSafeData.address,
+    merchantSafe.address,
     'recentActivity'
   );
 
@@ -103,8 +91,8 @@ const MerchantScreen = () => {
     <Container top={0} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
       <Header
-        address={merchantSafeData.address}
-        name={merchantSafeData.merchantInfo?.name}
+        address={merchantSafe.address}
+        name={merchantSafe.merchantInfo?.name}
       />
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <ScrollView
@@ -113,7 +101,7 @@ const MerchantScreen = () => {
           contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
           paddingHorizontal={HORIZONTAL_PADDING}
         >
-          <MerchantInfo merchantInfo={merchantSafeData.merchantInfo} />
+          <MerchantInfo merchantInfo={merchantSafe.merchantInfo} />
           <Button
             marginTop={2}
             marginBottom={4}
@@ -127,20 +115,20 @@ const MerchantScreen = () => {
             onPress={onPressGoTo(ExpandedMerchantRoutes.recentActivity)}
           />
           <LifetimeEarningsSection
-            merchantSafe={merchantSafeData}
+            merchantSafe={merchantSafe}
             onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
           />
           <TokensSection
             title="Available revenue"
             onPress={onPressGoTo(ExpandedMerchantRoutes.unclaimedRevenue)}
             emptyText="No revenue to be claimed"
-            tokens={merchantSafeData.revenueBalances}
+            tokens={merchantSafe.revenueBalances}
           />
           <TokensSection
             title="Account balances"
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
             emptyText="No available assets"
-            tokens={merchantSafeData.tokens}
+            tokens={merchantSafe.tokens}
           />
         </ScrollView>
       </Container>
