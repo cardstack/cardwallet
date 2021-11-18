@@ -35,13 +35,10 @@ export function formatNative(value: string | undefined, currency = 'USD') {
     return '';
   }
 
-  const noDecimal = currency === NativeCurrency.SPD;
+  const decimalAllowed = currency !== NativeCurrency.SPD;
+  const isIncludeOneDot = (value.match(/\./g) || []).length === 1;
 
-  if (
-    !noDecimal &&
-    value.endsWith('.') &&
-    (value.match(/\./g) || []).length === 1
-  ) {
+  if (decimalAllowed && value.endsWith('.') && isIncludeOneDot) {
     return `${formattedCurrencyToAbsNum(value).toLocaleString('en-US', {
       currency,
       maximumFractionDigits: 20,
@@ -49,14 +46,14 @@ export function formatNative(value: string | undefined, currency = 'USD') {
     })}.`;
   }
 
-  if (!noDecimal && (value.match(/\./g) || []).length === 1) {
+  if (decimalAllowed && isIncludeOneDot) {
     const decimalStrings = value.split('.');
     return `${formattedCurrencyToAbsNum(decimalStrings[0]).toLocaleString(
       'en-US'
     )}.${decimalStrings[1].replace(/\D/g, '')}`;
   }
 
-  return `${formattedCurrencyToAbsNum(value, noDecimal).toLocaleString(
+  return `${formattedCurrencyToAbsNum(value, !decimalAllowed).toLocaleString(
     'en-US',
     {
       currency,
