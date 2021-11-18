@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux';
-
 import addCash from './addCash';
 import charts from './charts';
 import coingecko from './coingecko';
@@ -29,7 +27,7 @@ import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import payment from '@cardstack/redux/payment';
 
-export default combineReducers({
+export default {
   addCash,
   appState,
   coingecko,
@@ -57,4 +55,4 @@ export default combineReducers({
   walletconnect,
   wallets,
   payment,
-});
+};

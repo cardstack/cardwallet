@@ -1,4 +1,5 @@
-import { applyMiddleware, createStore } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import thunk from 'redux-thunk';
 
 import reducers from './reducers';
@@ -24,26 +25,34 @@ const reduxLogger = (store: any) => (next: any) => (action: any) => {
   return result;
 };
 
-const configureStore = () => {
-  const middlewares = [thunk];
+const store = configureStore({
+  reducer: {
+    ...reducers,
+  },
+  middleware: () => {
+    const debugMiddlewares = [];
 
-  if (__DEV__) {
-    enableReduxLogger && middlewares.push(reduxLogger as any);
+    if (__DEV__) {
+      enableReduxLogger && debugMiddlewares.push(reduxLogger as any);
 
-    if (enableReduxFlipper) {
-      const createDebugger = require('redux-flipper').default;
-      middlewares.push(createDebugger({ resolveCyclic: true }));
+      if (enableReduxFlipper) {
+        const createDebugger = require('redux-flipper').default;
+        debugMiddlewares.push(
+          createDebugger({
+            resolveCyclic: true,
+          })
+        );
+      }
     }
-  }
 
-  return createStore(reducers, applyMiddleware(...middlewares));
-};
+    return [thunk, ...debugMiddlewares];
+  },
+});
 
-const store = configureStore();
+setupListeners(store.dispatch);
 
 export default store;
 
-export type RootState = ReturnType<typeof reducers>;
 export type AppState = ReturnType<typeof store.getState>;
 export type AppGetState = typeof store.getState;
 export type AppDispatch = typeof store.dispatch;

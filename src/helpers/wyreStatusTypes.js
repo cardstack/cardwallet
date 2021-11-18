@@ -3,6 +3,7 @@ export const WYRE_ORDER_STATUS_TYPES = {
   failed: 'FAILED',
   pending: 'PROCESSING',
   success: 'COMPLETE',
+  notStarted: 'NOT_STARTED',
 };
 
 export const ADD_CASH_STATUS_TYPES = {
