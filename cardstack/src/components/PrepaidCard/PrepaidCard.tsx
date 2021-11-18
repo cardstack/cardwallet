@@ -142,10 +142,10 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         {isEditing && isHidden && (
           <Container
             backgroundColor="black"
-            top={8}
+            top={0}
             bottom={0}
             right={0}
-            borderRadius={10}
+            borderRadius={20}
             opacity={0.5}
             position="absolute"
             height="100%"
