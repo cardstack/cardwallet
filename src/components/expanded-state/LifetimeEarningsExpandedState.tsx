@@ -28,20 +28,11 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 const CHART_HEIGHT = screenHeight * 0.25;
 const HEIGHT = screenHeight * 0.85;
 
-const useMerchantSafe = (address: string) => {
-  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
-
-  const merchantSafe = merchantSafes.find(
-    safe => safe.address === address
-  ) as MerchantSafeType;
-
-  return merchantSafe;
-};
-
-export default function LifetimeEarningsExpandedState(props: {
+export default function LifetimeEarningsExpandedState({
+  asset: merchantSafe,
+}: {
   asset: MerchantSafeType;
 }) {
-  const { address } = props.asset;
   const { setOptions } = useNavigation();
 
   useEffect(() => {
@@ -53,29 +44,25 @@ export default function LifetimeEarningsExpandedState(props: {
   return useMemo(
     () => (
       <SlackSheet bottomInset={42} height="100%" scrollEnabled>
-        <ChartSection address={address} />
+        <ChartSection merchantSafe={merchantSafe} />
         <Container paddingHorizontal={5}>
           <HorizontalDivider />
         </Container>
-        <ActivitiesSection address={address} />
+        <ActivitiesSection address={merchantSafe.address} />
       </SlackSheet>
     ),
-    [address]
+    [merchantSafe]
   );
 }
 
-const ChartSection = ({ address }: { address: string }) => {
+const ChartSection = ({ merchantSafe }: { merchantSafe: MerchantSafeType }) => {
   const [selectedFilterOption, setSelectedFilterOption] = useState(
     ChartFilterOptions.MONTH
   );
   const { width: screenWidth } = useDimensions();
-  const merchantSafe = useMerchantSafe(address);
-  const { accumulatedSpendValue } = merchantSafe;
+  const { accumulatedSpendValue, address } = merchantSafe;
 
-  const { data } = useLifetimeEarningsData(
-    merchantSafe.address,
-    selectedFilterOption
-  );
+  const { data } = useLifetimeEarningsData(address, selectedFilterOption);
 
   const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
     [string, { [key: string]: number }]
