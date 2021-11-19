@@ -11,6 +11,7 @@ import {
 import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { AnyAction } from 'redux';
 import { updatePrepaidCardWithCustomization } from './prepaid-card-service';
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
 import {
@@ -24,6 +25,9 @@ import { Navigation } from '@rainbow-me/navigation';
 import { MainRoutes } from '@cardstack/navigation/routes';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { dataLoadState } from '@rainbow-me/redux/data';
+import store from '@rainbow-me/redux/store';
 
 export const getSafeData = async (address: string) => {
   const safesInstance = await getSafesInstance();
@@ -81,6 +85,25 @@ export const fetchSafes = async (
 
       data.merchantSafes = merchantSafesWithRevenue;
     }
+
+    // TODO: REMOVE
+    // Temporally saving on storage to keep old redux state
+    // block-start
+    const network = await getNetwork();
+
+    const saveCards = savePrepaidCards(data.prepaidCards, address, network);
+    const saveDepts = saveDepots(data.depots, address, network);
+
+    const saveMerchant = saveMerchantSafes(
+      data.merchantSafes,
+      address,
+      network
+    );
+
+    await Promise.all([saveCards, saveDepts, saveMerchant]);
+
+    store.dispatch((dataLoadState() as unknown) as AnyAction);
+    // block-end
 
     return { data };
   } catch (error) {
@@ -367,10 +390,6 @@ export const addGnosisTokenPrices = async (
         })
       ),
     ]);
-
-    savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
-    saveDepots(depotsWithPrice, accountAddress, network);
-    saveMerchantSafes(merchantSafesWithPrice, accountAddress, network);
 
     return {
       depots: depotsWithPrice,

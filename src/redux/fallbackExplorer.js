@@ -423,9 +423,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
         },
         payload: {
           assets: updatedAssets,
-          depots: [],
-          prepaidCards: [],
-          merchantSafes: [],
         },
       })
     );

@@ -39,7 +39,6 @@ import {
   saveAccountEmptyState,
   saveAssetPricesFromUniswap,
   saveAssets,
-  saveDepots,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
@@ -310,28 +309,12 @@ export const addressAssetsReceived = (
     saveAccountEmptyState(false, accountAddress, network);
   }
 
-  const depots = get(message, 'payload.depots', null);
-  const prepaidCards = get(message, 'payload.prepaidCards', null);
-  const merchantSafes = get(message, 'payload.merchantSafes', null);
-
-  if (depots && prepaidCards && merchantSafes) {
-    dispatch({
-      payload: {
-        depots,
-        prepaidCards,
-        merchantSafes,
-      },
-      type: DATA_UPDATE_GNOSIS_DATA,
-    });
-  }
-
   dispatch({
     payload: parsedAssets,
     type: DATA_UPDATE_ASSETS,
   });
   saveAssets(parsedAssets, accountAddress, network);
 
-  await saveDepots(depots, accountAddress, network);
   if (!change) {
     const missingPriceAssetAddresses = map(
       filter(parsedAssets, asset => isNil(asset.price)),

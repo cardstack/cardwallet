@@ -44,6 +44,7 @@ export const useTransactionSections = ({
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // TODO: Replace with RTK
   const [merchantSafes, prepaidCards, depots] = useRainbowSelector(state => [
     state.data.merchantSafes,
     state.data.prepaidCards,
