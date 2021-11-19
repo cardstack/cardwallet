@@ -14,15 +14,23 @@ const AssetListWrapper = () => {
     state.currencyConversion.rates,
   ]);
 
-  const { sections, isLoadingAssets, isEmpty } = useAssetListData();
+  const {
+    sections,
+    isLoadingAssets,
+    isEmpty,
+    refetchSafes,
+    isFetchingSafes,
+  } = useAssetListData();
 
   return (
     <AssetList
       currencyConversionRates={currencyConversionRates}
       isEmpty={isEmpty}
+      isFetchingSafes={isFetchingSafes}
       loading={isLoadingAssets}
       nativeCurrency={nativeCurrency}
       network={network}
+      refetchSafes={refetchSafes}
       sections={sections}
     />
   );

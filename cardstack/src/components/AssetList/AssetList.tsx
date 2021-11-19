@@ -75,6 +75,8 @@ interface AssetListProps
   sections: AssetListSectionItem<any>[];
   headerPaddingVertical?: number;
   headerPaddingHorizontal?: number;
+  refetchSafes: () => void;
+  isFetchingSafes: boolean;
 }
 
 interface RouteType {
@@ -141,9 +143,12 @@ export const AssetList = (props: AssetListProps) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+
+    props.refetchSafes();
     await refresh();
+
     setRefreshing(false);
-  }, [refresh, setRefreshing]);
+  }, [props, refresh]);
 
   useEffect(() => {
     if (params?.forceRefreshOnce) {
