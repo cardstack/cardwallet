@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactCoinIcon from 'react-coin-icon';
 import { CoinIconFallback } from './CoinIconFallback';
-import { isNativeToken } from '@cardstack/utils';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface CoinIconProps {
   address?: string;
@@ -16,18 +14,12 @@ export const CoinIcon = ({
   symbol,
   size = 40,
   shadowColor = 'transparent', // 'transparent' is to remove drop shadow on Token icons
-}: CoinIconProps) => {
-  const network = useRainbowSelector(state => state.settings.network);
-  const forceFallback = !symbol && !isNativeToken(symbol || '', network);
-
-  return (
-    <ReactCoinIcon
-      address={address}
-      symbol={symbol}
-      size={size}
-      forceFallback={forceFallback}
-      fallbackRenderer={CoinIconFallback}
-      shadowColor={shadowColor}
-    />
-  );
-};
+}: CoinIconProps) => (
+  <ReactCoinIcon
+    address={address}
+    symbol={symbol}
+    size={size}
+    fallbackRenderer={CoinIconFallback}
+    shadowColor={shadowColor}
+  />
+);

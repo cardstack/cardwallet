@@ -171,7 +171,7 @@
     "querystring-es3": "^0.2.1",
     "rainbow-token-list": "rainbow-me/token-lists#092bd84fac3b2032b94f05a1a49899252e5eb923",
     "react": "17.0.2",
-    "react-coin-icon": "^0.1.36",
+    "react-coin-icon": "^0.1.42",
     "react-fast-compare": "^2.0.4",
     "react-flatten-children": "^1.1.2",
     "react-native": "0.65.1",

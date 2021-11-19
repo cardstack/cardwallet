@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-import CoinIcon from 'react-coin-icon';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
 import {
   Button,
+  CoinIcon,
   Container,
   HorizontalDivider,
   ListEmptyComponent,
