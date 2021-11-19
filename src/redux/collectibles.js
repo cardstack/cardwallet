@@ -149,6 +149,7 @@ const fetchNFTsViaRpcNode = () => async (dispatch, getState) => {
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
   // TODO: enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
   // TODO: cache tokenURIJSON
+  // TODO: Collectible typescript type
   console.log('collectibles before mapping', JSON.stringify(collectibles));
   try {
     console.log('fetchNFTsViaRpcNode: getEtherWeb3Provider');
