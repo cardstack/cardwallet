@@ -13,7 +13,7 @@ import {
   MerchantSafe,
   PrepaidCard,
 } from '@cardstack/components';
-import { useGetSafesDataQuery } from '@cardstack/services/safes';
+import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   AssetType,
   AssetWithNativeType,

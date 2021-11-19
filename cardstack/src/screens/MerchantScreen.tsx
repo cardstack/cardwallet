@@ -45,7 +45,7 @@ import { useLoadingOverlay } from '@cardstack/navigation';
 import {
   useClaimRevenueMutation,
   useGetSafesDataQuery,
-} from '@cardstack/services/safes';
+} from '@cardstack/services';
 import logger from 'logger';
 
 const HORIZONTAL_PADDING = 5;

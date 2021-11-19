@@ -6,12 +6,11 @@ import {
   PayMerchantDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
-import { getSafeData } from '@cardstack/services';
 import { isLayer1, useWorker } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { useGetSafesDataQuery } from '@cardstack/services/safes';
+import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
 
 interface RouteType {
   params: {

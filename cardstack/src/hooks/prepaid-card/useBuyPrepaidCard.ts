@@ -34,7 +34,7 @@ import { fetchCardCustomizationFromDID, useWorker } from '@cardstack/utils';
 import { PrepaidCardCustomization } from '@cardstack/types';
 import { addNewPrepaidCard } from '@rainbow-me/redux/data';
 import Routes from '@rainbow-me/navigation/routesNames';
-import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-card-service';
+import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-cards/prepaid-card-service';
 import { useLoadingOverlay } from '@cardstack/navigation';
 
 interface CardAttrs extends InventoryAttrs {
@@ -121,7 +121,10 @@ export default function useBuyPrepaidCard() {
     goBack();
 
     InteractionManager.runAfterInteractions(() => {
-      navigate(Routes.WALLET_SCREEN, { scrollToPrepaidCardsSection: true });
+      navigate(Routes.WALLET_SCREEN, {
+        scrollToPrepaidCardsSection: true,
+        forceRefreshOnce: true,
+      });
     });
   }, [goBack, navigate]);
 

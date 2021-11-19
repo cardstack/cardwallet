@@ -1,65 +1,16 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
-import { fetchSafes } from './gnosis-service';
+import { fetchSafes } from '../gnosis-service';
+import { CacheTags, safesApi } from '../safes-api';
 import HDProvider from '@cardstack/models/hd-provider';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { TokenType } from '@cardstack/types';
 
-export const safesApi = createApi({
-  reducerPath: 'safesApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
-  tagTypes: ['SAFES'],
+const merchantApi = safesApi.injectEndpoints({
   endpoints: builder => ({
-    // TODO: Add right return type
-    getSafesData: builder.query<
-      any,
-      { address: string; nativeCurrency: NativeCurrency }
-    >({
-      async queryFn({ address, nativeCurrency = NativeCurrency.USD }) {
-        return await fetchSafes(address, nativeCurrency);
-      },
-      providesTags: ['SAFES'],
-    }),
-    // TODO: Add right types, split endpoints and extract to own service
-    payMerchant: builder.mutation<any, any>({
-      async queryFn({
-        selectedWallet,
-        network,
-        merchantAddress,
-        prepaidCardAddress,
-        spendAmount,
-        accountAddress,
-      }) {
-        try {
-          const web3 = await Web3Instance.get({
-            selectedWallet,
-            network,
-          });
-
-          const prepaidCardInstance = await getSDK('PrepaidCard', web3);
-
-          const receipt = await prepaidCardInstance.payMerchant(
-            merchantAddress,
-            prepaidCardAddress,
-            spendAmount,
-            undefined,
-            { from: accountAddress }
-          );
-
-          await HDProvider.reset();
-
-          return { data: receipt };
-        } catch (error) {
-          return {
-            error: { status: 418, data: error },
-          };
-        }
-      },
-      invalidatesTags: ['SAFES'],
-    }),
+    // TODO: add types and move to merchant-services
     claimRevenue: builder.mutation<any, any>({
       async queryFn({
         selectedWallet,
@@ -118,13 +69,9 @@ export const safesApi = createApi({
           return { error: { status: 418, data: error } };
         }
       },
-      invalidatesTags: ['SAFES'],
+      invalidatesTags: [CacheTags.SAFES],
     }),
   }),
 });
 
-export const {
-  useGetSafesDataQuery,
-  usePayMerchantMutation,
-  useClaimRevenueMutation,
-} = safesApi;
+export const { useClaimRevenueMutation } = merchantApi;

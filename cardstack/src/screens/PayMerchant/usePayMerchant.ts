@@ -18,7 +18,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import logger from 'logger';
-import { usePayMerchantMutation } from '@cardstack/services/safes';
+import { usePayMerchantMutation } from '@cardstack/services';
 import { useLoadingOverlay } from '@cardstack/navigation';
 
 export const PAY_STEP = {

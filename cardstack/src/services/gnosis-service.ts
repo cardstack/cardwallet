@@ -12,7 +12,7 @@ import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { AnyAction } from 'redux';
-import { updatePrepaidCardWithCustomization } from './prepaid-card-service';
+import { updatePrepaidCardWithCustomization } from './prepaid-cards/prepaid-card-service';
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
 import {
   saveDepots,
