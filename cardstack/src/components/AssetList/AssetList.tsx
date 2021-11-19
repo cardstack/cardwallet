@@ -298,7 +298,7 @@ export const AssetList = (props: AssetListProps) => {
         }}
         contentContainerStyle={{ paddingBottom: 180 }}
       />
-      <AssetFooter sections={sections} />
+      <AssetFooter />
     </>
   );
 };

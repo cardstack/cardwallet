@@ -1,13 +1,9 @@
 import React from 'react';
 import { LayoutAnimation } from 'react-native';
-import { AssetListSectionItem, Button, Container } from '@cardstack/components';
+import { Button, Container } from '@cardstack/components';
 import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
 
-interface AssetListProps {
-  sections: AssetListSectionItem<any>[];
-}
-
-export const AssetFooter = ({ sections }: AssetListProps) => {
+export const AssetFooter = () => {
   const {
     editing,
     selected,
@@ -22,12 +18,7 @@ export const AssetFooter = ({ sections }: AssetListProps) => {
   const isInitialSelectionPinned = pinned.includes(selected[0]);
   const isInitialSelectionHidden = hidden.includes(selected[0]);
 
-  const sectionCount = sections.find(section =>
-    section.data.every(item => (item.address = selected[0]))
-  )?.header.count;
-
   const buttonsDisabled = selected?.length === 0; //selected length is zero
-  const hiddenButtonDisabled = buttonsDisabled || sectionCount === 1;
 
   const handleHiddenPress = () => {
     if (isInitialSelectionHidden) {
@@ -89,7 +80,7 @@ export const AssetFooter = ({ sections }: AssetListProps) => {
         {isInitialSelectionPinned ? 'Unpin' : 'Pin'}
       </Button>
       <Button
-        disabled={hiddenButtonDisabled}
+        disabled={buttonsDisabled}
         iconProps={
           !isInitialSelectionHidden
             ? {
