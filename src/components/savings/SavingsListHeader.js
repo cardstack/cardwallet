@@ -47,7 +47,7 @@ const SavingsListHeader = ({
   return (
     <ButtonPressAnimation
       key={`${emoji}_${isOpen}`}
-      marginBottom={title === 'Pools' ? -6 : 0}
+      marginBottom={0}
       onPress={onPress}
       scaleTo={1.05}
     >

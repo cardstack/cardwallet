@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { useCoinListEditOptions, useDimensions } from '../../hooks';
 import { ContextMenu } from '../context-menu';
 import { Row } from '../layout';
-import SavingsListHeader from '../savings/SavingsListHeader';
 import { Button, Container, Text } from '@cardstack/components';
 import { colors as cardstackColors } from '@cardstack/theme';
 import { padding } from '@rainbow-me/styles';
@@ -36,7 +35,6 @@ export default function ListHeader({
   isSticky,
   title,
   titleRenderer = Text,
-  totalValue,
   totalItems,
 }) {
   const deviceDimensions = useDimensions();
@@ -48,53 +46,40 @@ export default function ListHeader({
     setIsCoinListEdited(false);
   }, [setIsCoinListEdited]);
 
-  if (title === 'Pools') {
-    return (
-      <SavingsListHeader
-        emoji="whale"
-        isOpen={false}
-        onPress={() => {}}
-        savingsSumValue={totalValue}
-        showSumValue
-        title="Pools"
-      />
-    );
-  } else {
-    return (
-      <Fragment>
-        <Content isSticky={isSticky}>
-          <Container flexDirection="row">
-            {createElement(titleRenderer, {
-              children: title,
-              color: 'white',
-              fontSize: 20,
-            })}
-            {!hideCount && (
-              <Text color="buttonPrimaryBorder" fontSize={20} marginLeft={2}>
-                {totalItems}
-              </Text>
-            )}
-          </Container>
-          <Row align="center">
-            {isCoinListEdited ? (
-              <Button onPress={handlePress} variant="extraSmall">
-                Done
-              </Button>
-            ) : (
-              <>
-                {children}
-                <ContextMenu marginTop={3} {...contextMenuOptions} />
-              </>
-            )}
-          </Row>
-        </Content>
-        {!isSticky && title !== 'Prepaid Cards' && (
-          <StickyBackgroundBlocker
-            deviceDimensions={deviceDimensions}
-            isEditMode={isCoinListEdited}
-          />
-        )}
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <Content isSticky={isSticky}>
+        <Container flexDirection="row">
+          {createElement(titleRenderer, {
+            children: title,
+            color: 'white',
+            fontSize: 20,
+          })}
+          {!hideCount && (
+            <Text color="buttonPrimaryBorder" fontSize={20} marginLeft={2}>
+              {totalItems}
+            </Text>
+          )}
+        </Container>
+        <Row align="center">
+          {isCoinListEdited ? (
+            <Button onPress={handlePress} variant="extraSmall">
+              Done
+            </Button>
+          ) : (
+            <>
+              {children}
+              <ContextMenu marginTop={3} {...contextMenuOptions} />
+            </>
+          )}
+        </Row>
+      </Content>
+      {!isSticky && title !== 'Prepaid Cards' && (
+        <StickyBackgroundBlocker
+          deviceDimensions={deviceDimensions}
+          isEditMode={isCoinListEdited}
+        />
+      )}
+    </Fragment>
+  );
 }

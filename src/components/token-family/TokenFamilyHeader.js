@@ -55,7 +55,7 @@ const TitleText = styled(TruncatedText).attrs({
 })`
   flex: 1;
   margin-bottom: 1;
-  padding-left: ${({ isShowcase }) => (!isShowcase ? 9 : 0)};
+  padding-left: 9;
   padding-right: 9;
 `;
 
@@ -100,7 +100,7 @@ const TokenFamilyHeader = ({
             />
           )}
         </RowWithMargins>
-        <TitleText isShowcase={title === 'Showcase'}>{title}</TitleText>
+        <TitleText>{title}</TitleText>
         <RowWithMargins align="center" margin={13}>
           <Animated.View style={{ opacity: animation }}>
             <ChildrenAmountText>{childrenAmount}</ChildrenAmountText>

@@ -1,11 +1,9 @@
 import produce from 'immer';
 import {
   getOpenFamilies,
-  getOpenInvestmentCards,
   getSavingsToggle,
   getSmallBalanceToggle,
   saveOpenFamilies,
-  saveOpenInvestmentCards,
   saveSavingsToggle,
   saveSmallBalanceToggle,
 } from '../handlers/localstorage/accountLocal';
@@ -20,7 +18,6 @@ const PUSH_OPEN_FAMILY_TAB = 'openStateSettings/PUSH_OPEN_FAMILY_TAB';
 const SET_OPEN_FAMILY_TABS = 'openStateSettings/SET_OPEN_FAMILY_TABS';
 const SET_OPEN_SAVINGS = 'openStateSettings/SET_OPEN_SAVINGS';
 const SET_OPEN_SMALL_BALANCES = 'openStateSettings/SET_OPEN_SMALL_BALANCES';
-const SET_OPEN_INVESTMENT_CARDS = 'openStateSettings/SET_OPEN_INVESTMENT_CARDS';
 
 // -- Actions --------------------------------------------------------------- //
 export const openStateSettingsLoadState = () => async (dispatch, getState) => {
@@ -31,15 +28,10 @@ export const openStateSettingsLoadState = () => async (dispatch, getState) => {
       accountAddress,
       network
     );
-    const openInvestmentCards = await getOpenInvestmentCards(
-      accountAddress,
-      network
-    );
     const openFamilyTabs = await getOpenFamilies(accountAddress, network);
     dispatch({
       payload: {
         openFamilyTabs,
-        openInvestmentCards,
         openSavings,
         openSmallBalances,
       },
@@ -88,15 +80,6 @@ export const setOpenFamilyTabs = payload => (dispatch, getState) => {
   });
 };
 
-export const setOpenInvestmentCards = payload => (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
-  saveOpenInvestmentCards(payload, accountAddress, network);
-  dispatch({
-    payload,
-    type: SET_OPEN_INVESTMENT_CARDS,
-  });
-};
-
 export const resetOpenStateSettings = () => dispatch =>
   dispatch({
     type: CLEAR_OPEN_STATE_SETTINGS,
@@ -105,20 +88,16 @@ export const resetOpenStateSettings = () => dispatch =>
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
   openFamilyTabs: {},
-  openInvestmentCards: {},
 };
 
 export default (state = INITIAL_STATE, action) =>
   produce(state, draft => {
     if (action.type === OPEN_STATE_SETTINGS_LOAD_SUCCESS) {
       draft.openFamilyTabs = action.payload.openFamilyTabs;
-      draft.openInvestmentCards = action.payload.openInvestmentCards;
     } else if (action.type === SET_OPEN_FAMILY_TABS) {
       draft.openFamilyTabs = action.payload;
     } else if (action.type === PUSH_OPEN_FAMILY_TAB) {
       draft.openFamilyTabs = action.payload;
-    } else if (action.type === SET_OPEN_INVESTMENT_CARDS) {
-      draft.openInvestmentCards = action.payload;
     } else if (action.type === CLEAR_OPEN_STATE_SETTINGS) {
       return INITIAL_STATE;
     }
