@@ -1,14 +1,6 @@
-import { getSDK } from '@cardstack/cardpay-sdk';
-import BigNumber from 'bignumber.js';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import CoinIcon from 'react-coin-icon';
-import {
-  ActivityIndicator,
-  Alert,
-  RefreshControl,
-  SectionList,
-} from 'react-native';
-import Web3 from 'web3';
+import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
 import {
   Button,
@@ -20,33 +12,21 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
-import HDProvider from '@cardstack/models/hd-provider';
-import Web3Instance from '@cardstack/models/web3-instance';
-import { useLoadingOverlay } from '@cardstack/navigation';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { ClaimStatuses } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
-import { Network } from '@rainbow-me/helpers/networkTypes';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import logger from 'logger';
 
 const CHART_HEIGHT = 600;
 
 export default function UnclaimedRevenueExpandedState({
   asset: merchantSafe,
+  customFunction: onClaimAll,
 }: {
   asset: MerchantSafeType;
+  customFunction: () => void;
 }) {
   const { setOptions } = useNavigation();
-  const { selectedWallet } = useWallets();
-  const { accountAddress } = useAccountSettings();
-  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  const network = useRainbowSelector(
-    state => state.settings.network
-  ) as Network;
 
   useEffect(() => {
     setOptions({
@@ -56,70 +36,9 @@ export default function UnclaimedRevenueExpandedState({
 
   const { revenueBalances } = merchantSafe;
 
-  const onClaimAll = useCallback(async () => {
-    showLoadingOverlay({ title: 'Claiming Revenue' });
-
-    try {
-      const web3 = await Web3Instance.get({
-        selectedWallet,
-        network,
-      });
-      const revenuePool = await getSDK('RevenuePool', web3);
-      const promises = revenueBalances.map(async token => {
-        const claimEstimateAmount = Web3.utils.toWei(
-          new BigNumber(token.balance.amount)
-            .div(new BigNumber('2'))
-            .toPrecision(8)
-            .toString()
-        );
-
-        const gasEstimate = await revenuePool.claimGasEstimate(
-          merchantSafe.address,
-          token.tokenAddress,
-          // divide amount by 2 for estimate since we can't estimate the full amount and the amount doesn't affect the gas price
-          claimEstimateAmount
-        );
-
-        const claimAmount = new BigNumber(
-          Web3.utils.toWei(token.balance.amount)
-        )
-          .minus(new BigNumber(gasEstimate))
-          .toString();
-
-        await revenuePool.claim(
-          merchantSafe.address,
-          token.tokenAddress,
-          claimAmount,
-          undefined,
-          { from: accountAddress }
-        );
-      });
-
-      await Promise.all(promises);
-
-      // resets signed provider and web3 instance to kill poller
-      await HDProvider.reset();
-      // TODO: Update after claiming
-    } catch (error) {
-      logger.sentry('Error claiming revenue', error);
-      Alert.alert(
-        'Could not claim revenue, please try again. If this problem persists please reach out to support@cardstack.com'
-      );
-    }
-
-    dismissLoadingOverlay();
-  }, [
-    accountAddress,
-    dismissLoadingOverlay,
-    merchantSafe.address,
-    network,
-    revenueBalances,
-    selectedWallet,
-    showLoadingOverlay,
-  ]);
-
   const nativeAmount = revenueBalances[0].native.balance.amount;
   const isDust = parseFloat(nativeAmount) < 0.01;
+
   return useMemo(
     () => (
       <SlackSheet flex={1} scrollEnabled>
