@@ -3,8 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDimensions, useImageMetadata } from '../../../hooks';
 import { magicMemo } from '../../../utils';
+import { CollectibleImage } from '../../collectible';
 import { Centered } from '../../layout';
-import { UniqueTokenImage } from '../../unique-token';
 import { Container } from '@cardstack/components';
 import { margin, position } from '@rainbow-me/styles';
 
@@ -17,7 +17,7 @@ const ImageWrapper = styled(Centered)`
   overflow: hidden;
 `;
 
-const UniqueTokenExpandedStateImage = ({ asset }) => {
+const CollectibleExpandedStateImage = ({ asset }) => {
   const { width: deviceWidth } = useDimensions();
 
   const isSVG = endsWith(asset.image_url, '.svg');
@@ -44,7 +44,7 @@ const UniqueTokenExpandedStateImage = ({ asset }) => {
       style={{ paddingHorizontal }}
     >
       <ImageWrapper isImageHuge={heightForDeviceSize > maxImageHeight}>
-        <UniqueTokenImage
+        <CollectibleImage
           backgroundColor={asset.background}
           imageUrl={imageUrl}
           item={asset}
@@ -55,4 +55,4 @@ const UniqueTokenExpandedStateImage = ({ asset }) => {
   );
 };
 
-export default magicMemo(UniqueTokenExpandedStateImage, 'asset.uniqueId');
+export default magicMemo(CollectibleExpandedStateImage, 'asset.uniqueId');

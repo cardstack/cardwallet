@@ -32,7 +32,7 @@ import {
   useMaxInputBalance,
   usePrevious,
   useRefreshAccountData,
-  useSendableUniqueTokens,
+  useSendableCollectibles,
   useSendSavingsAccount,
   useTransactionConfirmation,
   useUpdateAssetOnchainBalance,
@@ -93,7 +93,7 @@ const useSendSheetScreen = () => {
 
   const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
-  const { sendableUniqueTokens } = useSendableUniqueTokens();
+  const { sendableCollectibles } = useSendableCollectibles();
   const savings = useSendSavingsAccount();
   const fetchData = useRefreshAccountData();
   const { hiddenCoins, pinnedCoins } = useCoinListEditOptions();
@@ -478,7 +478,7 @@ const useSendSheetScreen = () => {
     onSelectAsset,
     pinnedCoins,
     savings,
-    sendableUniqueTokens,
+    sendableCollectibles,
     amountDetails,
     isAuthorizing,
     isSufficientGas,

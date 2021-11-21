@@ -4,8 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import styled from 'styled-components';
 import { useDimensions, useImageMetadata } from '../../hooks';
 import { OpacityToggler } from '../animations';
+import { CollectibleCard } from '../collectible';
 import { Column, ColumnWithMargins } from '../layout';
-import { UniqueTokenCard } from '../unique-token';
 import { padding, position } from '@rainbow-me/styles';
 
 const defaultImageDimensions = { height: 512, width: 512 };
@@ -43,7 +43,7 @@ const GradientToggler = styled(OpacityToggler).attrs({
   ${position.cover};
 `;
 
-const SendFormUniqueTokenCard = styled(UniqueTokenCard).attrs(
+const SendFormCollectibleCard = styled(CollectibleCard).attrs(
   ({ theme: { colors } }) => ({
     borderEnabled: false,
     enableHapticFeedback: false,
@@ -112,7 +112,7 @@ export default function SendAssetFormCollectible({
       <Column align="end" flex={1} width="100%">
         <Column align="center" flex={1} onLayout={handleLayout} width="100%">
           {!!containerHeight && !!containerWidth && (
-            <SendFormUniqueTokenCard
+            <SendFormCollectibleCard
               {...props}
               height={imageHeight}
               item={asset}

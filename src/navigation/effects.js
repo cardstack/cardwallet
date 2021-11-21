@@ -391,8 +391,8 @@ export const sheetPresetWithSmallGestureResponseDistance = navigation => ({
 export const sheetPreset = ({ route }) => {
   const shouldUseNonTransparentOverlay =
     route.params?.type === 'token' ||
-    route.params?.type === 'unique_token' ||
-    route.params?.type === 'unique_token' ||
+    route.params?.type === 'collectible' ||
+    route.params?.type === 'collectible' ||
     route.name === Routes.SEND_SHEET_NAVIGATOR ||
     route.name === Routes.SPEND_SHEET_NAVIGATOR ||
     route.name === Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR ||
@@ -407,7 +407,7 @@ export const sheetPreset = ({ route }) => {
     cardTransparent: true,
     gestureDirection: 'vertical',
     gestureResponseDistance:
-      route.params?.type === 'unique_token'
+      route.params?.type === 'collectible'
         ? gestureResponseDistanceFactory(150)
         : gestureResponseDistance,
     transitionSpec: { close: closeSpec, open: sheetOpenSpec },

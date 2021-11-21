@@ -43,7 +43,7 @@ const TopRow = ({ id, name, selected }) => (
   </CoinName>
 );
 
-const UniqueTokenCoinIcon = magicMemo(
+const CollectibleCoinIcon = magicMemo(
   ({
     asset_contract: { name },
     background,
@@ -69,7 +69,7 @@ const UniqueTokenCoinIcon = magicMemo(
   ['background', 'image_thumbnail_url']
 );
 
-UniqueTokenCoinIcon.propTypes = {
+CollectibleCoinIcon.propTypes = {
   asset_contract: PropTypes.shape({ name: PropTypes.string }),
   background: PropTypes.string,
   image_thumbnail_url: PropTypes.string,
@@ -105,7 +105,7 @@ const CollectiblesSendRow = React.memo(
             {...props}
             {...item}
             bottomRowRender={BottomRow}
-            coinIconRender={UniqueTokenCoinIcon}
+            coinIconRender={CollectibleCoinIcon}
             containerStyles={selected ? selectedStyles : null}
             selected={selected}
             subtitle={subtitle}

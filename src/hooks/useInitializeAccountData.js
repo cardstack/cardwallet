@@ -2,7 +2,7 @@ import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { uniqueTokensRefreshState } from '../redux/uniqueTokens';
+import { collectiblesRefreshState } from '../redux/collectibles';
 import { uniswapGetAllExchanges, uniswapPairsInit } from '../redux/uniswap';
 import { explorerInit } from '@rainbow-me/redux/explorer';
 import {
@@ -30,8 +30,8 @@ export default function useInitializeAccountData() {
       });
 
       InteractionManager.runAfterInteractions(async () => {
-        logger.sentry('Initialize uniqueTokens');
-        await dispatch(uniqueTokensRefreshState());
+        logger.sentry('Initialize collectibles');
+        await dispatch(collectiblesRefreshState());
       });
     } catch (error) {
       logger.sentry('Error initializing account data');

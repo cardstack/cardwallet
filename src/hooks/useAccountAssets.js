@@ -9,7 +9,7 @@ export default function useAccountAssets() {
   }));
 
   const collectibles = useSelector(
-    ({ uniqueTokens: { uniqueTokens } }) => uniqueTokens
+    ({ collectibles: { collectibles } }) => collectibles
   );
 
   return {

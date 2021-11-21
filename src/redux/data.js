@@ -27,7 +27,7 @@ import { getTransactionReceipt } from '../handlers/web3';
 // eslint-disable-next-line import/no-cycle
 import { addCashUpdatePurchases } from './addCash';
 // eslint-disable-next-line import/no-cycle
-import { uniqueTokensRefreshState } from './uniqueTokens';
+import { collectiblesRefreshState } from './collectibles';
 import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import {
   getAssetPricesFromUniswap,
@@ -220,7 +220,7 @@ export const transactionsReceived = (message, appended = false) => async (
   );
   if (appended && potentialNftTransaction) {
     setTimeout(() => {
-      dispatch(uniqueTokensRefreshState());
+      dispatch(collectiblesRefreshState());
     }, 60000);
   }
   dispatch({
@@ -257,7 +257,7 @@ export const addressAssetsReceived = (
 
   const { accountAddress, network } = getState().settings;
 
-  const { uniqueTokens } = getState().uniqueTokens;
+  const { collectibles } = getState().collectibles;
   const payload = values(get(message, 'payload.assets', {}));
   let assets = filter(
     payload,
@@ -280,7 +280,7 @@ export const addressAssetsReceived = (
     shitcoins.includes(toLower(asset?.asset?.asset_code))
   );
 
-  let parsedAssets = parseAccountAssets(assets, uniqueTokens);
+  let parsedAssets = parseAccountAssets(assets, collectibles);
 
   // remove LP tokens
   const liquidityTokens = remove(

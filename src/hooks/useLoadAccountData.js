@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { addCashLoadState } from '../redux/addCash';
+import { collectiblesLoadState } from '../redux/collectibles';
 import { dataLoadState } from '../redux/data';
 import { coinListLoadState } from '../redux/editOptions';
 import { openStateSettingsLoadState } from '../redux/openStateSettings';
 import { requestsLoadState } from '../redux/requests';
-import { uniqueTokensLoadState } from '../redux/uniqueTokens';
 import { uniswapLoadState } from '../redux/uniswap';
 import { uniswapLiquidityLoadState } from '../redux/uniswapLiquidity';
 import { walletConnectLoadState } from '../redux/walletconnect';
@@ -26,7 +26,7 @@ export default function useLoadAccountData() {
       const p1 = dispatch(dataLoadState());
       promises.push(p1);
       if (isMainnet(network)) {
-        const p2 = dispatch(uniqueTokensLoadState());
+        const p2 = dispatch(collectiblesLoadState());
         promises.push(p2);
       }
       const p3 = dispatch(requestsLoadState());

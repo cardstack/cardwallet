@@ -22,10 +22,10 @@ interface ReduxState {
     nativeCurrency: NativeCurrency;
     network: string;
   };
-  uniqueTokens: {
-    fetchingUniqueTokens: boolean;
-    loadingUniqueTokens: boolean;
-    uniqueTokens: any[];
+  collectibles: {
+    fetchingCollectibles: boolean;
+    loadingCollectibles: boolean;
+    collectibles: any[];
   };
   currencyConversion: {
     rates: {

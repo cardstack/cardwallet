@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import { buildUniqueTokenName } from '../../helpers/assets';
+import { buildCollectibleName } from '../../helpers/assets';
 import { magicMemo } from '../../utils';
 import { Centered } from '../layout';
 import { Monospace } from '../text';
@@ -20,7 +20,7 @@ const getFallbackTextColor = (bg, darkMode, colors) =>
     FallbackTextColorVariants(darkMode, colors)
   );
 
-const UniqueTokenImage = ({
+const CollectibleImage = ({
   backgroundColor,
   imageUrl,
   item,
@@ -46,11 +46,11 @@ const UniqueTokenImage = ({
           lineHeight="looser"
           size="smedium"
         >
-          {buildUniqueTokenName(item)}
+          {buildCollectibleName(item)}
         </Monospace>
       )}
     </Centered>
   );
 };
 
-export default magicMemo(UniqueTokenImage, 'imageUrl');
+export default magicMemo(CollectibleImage, 'imageUrl');

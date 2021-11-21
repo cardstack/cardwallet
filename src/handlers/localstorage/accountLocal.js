@@ -9,7 +9,7 @@ const merchantSafeVersion = '0.1.0';
 const purchaseTransactionsVersion = '0.1.0';
 const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.5';
-const uniqueTokensVersion = '0.2.0';
+const collectiblesVersion = '0.2.0';
 const accountEmptyVersion = '0.1.0';
 
 const ACCOUNT_INFO = 'accountInfo';
@@ -26,7 +26,7 @@ const SMALL_BALANCE_TOGGLE = 'smallBalanceToggle';
 const SAVINGS = 'savings';
 const SAVINGS_TOGGLE = 'savingsToggle';
 const TRANSACTIONS = 'transactions';
-const UNIQUE_TOKENS = 'uniquetokens';
+const COLLECTIBLES = 'collectibles';
 const PINNED_COINS = 'pinnedCoins';
 const HIDDEN_COINS = 'hiddenCoins';
 
@@ -41,7 +41,7 @@ export const accountLocalKeys = [
   SAVINGS,
   SAVINGS_TOGGLE,
   TRANSACTIONS,
-  UNIQUE_TOKENS,
+  COLLECTIBLES,
   PINNED_COINS,
   HIDDEN_COINS,
 ];
@@ -307,33 +307,33 @@ export const saveLocalTransactions = (transactions, accountAddress, network) =>
   );
 
 /**
- * @desc get unique tokens
+ * @desc get collectibles
  * @param  {String}   [address]
  * @param  {String}   [network]
  * @return {Object}
  */
-export const getUniqueTokens = (accountAddress, network) =>
+export const getCollectibles = (accountAddress, network) =>
   getAccountLocal(
-    UNIQUE_TOKENS,
+    COLLECTIBLES,
     accountAddress,
     network,
     [],
-    uniqueTokensVersion
+    collectiblesVersion
   );
 
 /**
- * @desc save unique tokens
+ * @desc save collectibles
  * @param  {String}   [address]
- * @param  {Array}    [uniqueTokens]
+ * @param  {Array}    [collectibles]
  * @param  {String}   [network]
  */
-export const saveUniqueTokens = (uniqueTokens, accountAddress, network) =>
+export const saveCollectibles = (collectibles, accountAddress, network) =>
   saveAccountLocal(
-    UNIQUE_TOKENS,
-    uniqueTokens,
+    COLLECTIBLES,
+    collectibles,
     accountAddress,
     network,
-    uniqueTokensVersion
+    collectiblesVersion
   );
 
 /**

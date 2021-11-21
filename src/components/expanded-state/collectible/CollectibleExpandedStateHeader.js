@@ -1,12 +1,12 @@
 import React from 'react';
 import { Linking, Share } from 'react-native';
 
-import ButtonPressAnimation from '../../../components/animations/ButtonPressAnimation';
-import { buildUniqueTokenName } from '../../../helpers/assets';
+import { buildCollectibleName } from '../../../helpers/assets';
 import { magicMemo, showActionSheetWithOptions } from '../../../utils';
+import ButtonPressAnimation from '../../animations/ButtonPressAnimation';
 import { Container, Icon, Text } from '@cardstack/components';
 
-const UniqueTokenExpandedStateHeader = ({ asset }) => {
+const CollectibleExpandedStateHeader = ({ asset }) => {
   const onContextMenuPress = () => {
     showActionSheetWithOptions(
       {
@@ -16,7 +16,7 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           Share.share({
-            title: `Share ${buildUniqueTokenName(asset)} Info`,
+            title: `Share ${buildCollectibleName(asset)} Info`,
             url: asset.permalink,
           });
         } else if (buttonIndex === 1) {
@@ -71,7 +71,7 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
         >
           <Container width="80%">
             <Text size="medium" weight="extraBold">
-              {buildUniqueTokenName(asset)}
+              {buildCollectibleName(asset)}
             </Text>
           </Container>
           <ButtonPressAnimation onPress={onContextMenuPress}>
@@ -83,4 +83,4 @@ const UniqueTokenExpandedStateHeader = ({ asset }) => {
   );
 };
 
-export default magicMemo(UniqueTokenExpandedStateHeader, 'asset');
+export default magicMemo(CollectibleExpandedStateHeader, 'asset');

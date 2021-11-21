@@ -2,12 +2,12 @@ import { filter, groupBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
-const uniqueTokensSelector = state => state.uniqueTokens.uniqueTokens;
+const collectiblesSelector = state => state.collectibles.collectibles;
 
-const sendableUniqueTokens = uniqueTokens => {
-  const sendableUniqueTokens = filter(uniqueTokens, ['isSendable', true]);
+const sendableCollectibles = collectibles => {
+  const sendableCollectibles = filter(collectibles, ['isSendable', true]);
   const grouped = groupBy(
-    sendableUniqueTokens,
+    sendableCollectibles,
     token => token.asset_contract.name
   );
   const families = Object.keys(grouped).sort();
@@ -22,14 +22,14 @@ const sendableUniqueTokens = uniqueTokens => {
     };
     sendableTokens.push(newObject);
   }
-  return { sendableUniqueTokens: sendableTokens, uniqueTokens };
+  return { sendableCollectibles: sendableTokens, collectibles };
 };
 
-const sendableUniqueTokensSelector = createSelector(
-  [uniqueTokensSelector],
-  sendableUniqueTokens
+const sendableCollectiblesSelector = createSelector(
+  [collectiblesSelector],
+  sendableCollectibles
 );
 
-export default function useSendableUniqueTokens() {
-  return useSelector(sendableUniqueTokensSelector);
+export default function useSendableCollectibles() {
+  return useSelector(sendableCollectiblesSelector);
 }

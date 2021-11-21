@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import addCash from './addCash';
 import charts from './charts';
 import coingecko from './coingecko';
+import collectibles from './collectibles';
 import contacts from './contacts';
 import currencyConversion from './currencyConversion';
 import data from './data';
@@ -21,7 +22,6 @@ import raps from './raps';
 import requests from './requests';
 import settings from './settings';
 import swap from './swap';
-import uniqueTokens from './uniqueTokens';
 import uniswap from './uniswap';
 import uniswapLiquidity from './uniswapLiquidity';
 import walletconnect from './walletconnect';
@@ -34,6 +34,7 @@ export default combineReducers({
   appState,
   coingecko,
   charts,
+  collectibles, // responsible for extracting collectibles (NFTs) from the assets state and fetching additional metadata for display
   contacts,
   currencyConversion,
   data,
@@ -51,7 +52,6 @@ export default combineReducers({
   requests,
   settings,
   swap,
-  uniqueTokens,
   uniswap,
   uniswapLiquidity,
   walletconnect,
