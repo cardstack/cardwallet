@@ -59,13 +59,10 @@ export const collectiblesRefreshState = () => async (dispatch, getState) => {
     case NetworkTypes.mainnet:
     case NetworkTypes.rinkeby:
       // OpenSea API only supports Ethereum mainnet and rinkeby
-      dispatch(fetchNFTsViaOpenSea());
-      break;
+      return dispatch(fetchNFTsViaOpenSea());
     case NetworkTypes.xdai:
     case NetworkTypes.sokol:
-      // This is where we will delegate to logic to find NFTs via RPC node APIs
-      dispatch(fetchNFTsViaRpcNode());
-      break;
+      return dispatch(fetchNFTsViaRpcNode());
     default:
       console.log(
         `Skipping fetching collectibles because we have no mechanism to do so on ${network}`
@@ -73,7 +70,7 @@ export const collectiblesRefreshState = () => async (dispatch, getState) => {
   }
 };
 
-const fetchNFTsViaOpenSea = () => (dispatch, getState) => {
+const fetchNFTsViaOpenSea = () => async (dispatch, getState) => {
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
   const { accountAddress, network } = getState().settings;
   const { assets } = getState().data;
@@ -145,6 +142,7 @@ const fetchNFTsViaRpcNode = () => async (dispatch, getState) => {
   var { assets } = getState().data;
   //   find the assets that are NFTs
   let collectibles = assets.filter(asset => asset.token_id);
+  const { collectibles: existingNFTs } = getState().collectibles;
 
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
   // TODO: enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
@@ -158,6 +156,17 @@ const fetchNFTsViaRpcNode = () => async (dispatch, getState) => {
     collectibles = await Promise.all(
       collectibles.map(async c => {
         console.log('fetchNFTsViaRpcNode: map item', c.address, c.token_id);
+        let existingNFT = existingNFTs.find(
+          nft => nft.address === c.address && nft.token_id === c.token_id
+        );
+        if (existingNFT) {
+          console.log(
+            'fetchNFTsViaRpcNode: use cached NFT',
+            c.address,
+            c.token_id
+          );
+          return existingNFT;
+        }
         try {
           console.log('fetchNFTsViaRpcNode: creating contract for', c.address);
           let nftContract = new Contract(c.address, erc721ABI, web3Provider);
