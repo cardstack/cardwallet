@@ -1,16 +1,12 @@
-import React, { useCallback } from 'react';
-
-import { useNavigation } from '@react-navigation/core';
+import React from 'react';
 import { SafeHeader } from '../../SafeHeader';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
-  TransactionBaseProps,
 } from '../TransactionBase';
 import { MerchantWithdrawType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { CoinIcon } from '@cardstack/components';
-import Routes from '@rainbow-me/routes';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
@@ -24,21 +20,8 @@ export const MerchantWithdrawTransaction = ({
   ...props
 }: MerchantWithdrawTransactionProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(item.infoDid);
-  const { navigate } = useNavigation();
 
   const { accountName } = useAccountProfile();
-
-  const onPressTransaction = useCallback(
-    (assetProps: TransactionBaseProps) =>
-      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
-        asset: {
-          ...assetProps,
-          claimStatus: 'Withdraw',
-        },
-        type: 'merchantTransaction',
-      }),
-    [navigate]
-  );
 
   return (
     <TransactionBase
@@ -60,7 +43,6 @@ export const MerchantWithdrawTransaction = ({
       statusText={`Withdrawn from \nAccount`}
       subText={item.native.display}
       transactionHash={item.transactionHash}
-      onPressTransaction={onPressTransaction}
       recipientName={accountName || getAddressPreview(item.to)}
     />
   );
