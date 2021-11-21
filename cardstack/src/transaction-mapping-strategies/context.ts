@@ -1,6 +1,9 @@
 import { flatten } from 'lodash';
 
-import { TransactionTypes } from '../types/transaction-types';
+import {
+  AdvancedTransactionFragment,
+  TransactionTypes,
+} from '../types/transaction-types';
 import { BridgeToLayer1EventStrategy } from './transaction-mapping-strategy-types/bridge-to-layer1-strategy';
 import { BridgeToLayer2EventStrategy } from './transaction-mapping-strategy-types/bridge-to-layer2-strategy';
 import { ERC20TokenStrategy } from './transaction-mapping-strategy-types/erc20-token-strategy';
@@ -8,6 +11,8 @@ import { MerchantClaimStrategy } from './transaction-mapping-strategy-types/merc
 import { MerchantCreationStrategy } from './transaction-mapping-strategy-types/merchant-creation-strategy';
 import { MerchantEarnedRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 import { MerchantEarnedSpendAndRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-and-revenue-strategy';
+import { MerchantWithdrawStrategy } from './transaction-mapping-strategy-types/merchant-withdraw-strategy';
+import { MerchantDepositStrategy } from './transaction-mapping-strategy-types/merchant-deposit-strategy';
 import { MerchantEarnedSpendStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { PrepaidCardCreationStrategy } from './transaction-mapping-strategy-types/prepaid-card-creation-strategy';
 import { PrepaidCardPaymentStrategy } from './transaction-mapping-strategy-types/prepaid-card-payment-strategy';
@@ -15,7 +20,6 @@ import { PrepaidCardSplitStrategy } from './transaction-mapping-strategy-types/p
 import { PrepaidCardTransferStrategy } from './transaction-mapping-strategy-types/prepaid-card-transfer-strategy';
 import logger from 'logger';
 import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
-import { TransactionFragment } from '@cardstack/graphql';
 
 export type TransactionMappingStrategy =
   | typeof PrepaidCardSplitStrategy
@@ -28,10 +32,12 @@ export type TransactionMappingStrategy =
   | typeof MerchantCreationStrategy
   | typeof MerchantEarnedSpendAndRevenueStrategy
   | typeof MerchantEarnedSpendStrategy
-  | typeof MerchantEarnedRevenueStrategy;
+  | typeof MerchantEarnedRevenueStrategy
+  | typeof MerchantWithdrawStrategy
+  | typeof MerchantDepositStrategy;
 
 interface TransactionData {
-  transactions: (TransactionFragment | undefined)[];
+  transactions: (AdvancedTransactionFragment | undefined)[];
   accountAddress: string;
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
@@ -75,7 +81,7 @@ export class TransactionMappingContext {
     const mappedTransactions = await Promise.all(
       this.transactionData.transactions.map<
         Promise<TransactionType | null | (TransactionType | null)[]>
-      >(async (transaction: TransactionFragment | undefined) => {
+      >(async (transaction: AdvancedTransactionFragment | undefined) => {
         try {
           if (!transaction) {
             return null;

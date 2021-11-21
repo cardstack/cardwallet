@@ -1,8 +1,11 @@
-import { TransactionFragment } from '@cardstack/graphql';
-import { TransactionType, CurrencyConversionRates } from '@cardstack/types';
+import {
+  AdvancedTransactionFragment,
+  TransactionType,
+  CurrencyConversionRates,
+} from '@cardstack/types';
 
 interface BaseStrategyParams {
-  transaction: TransactionFragment;
+  transaction: AdvancedTransactionFragment;
   accountAddress: string;
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;
@@ -19,7 +22,7 @@ export abstract class BaseStrategy {
     | Promise<TransactionType | null>
     | (TransactionType | null);
 
-  transaction: TransactionFragment;
+  transaction: AdvancedTransactionFragment;
   accountAddress: string;
   nativeCurrency: string;
   currencyConversionRates: CurrencyConversionRates;

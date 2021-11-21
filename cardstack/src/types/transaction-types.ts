@@ -1,5 +1,11 @@
 import { BalanceType } from './AssetType';
 import { ClaimStatusTypes } from '@cardstack/utils';
+import {
+  TransactionFragment,
+  Maybe,
+  MerchantDepositFragment,
+  MerchantWithdrawFragment,
+} from '@cardstack/graphql';
 
 export enum TransactionTypes {
   DEPOT_BRIDGED_LAYER_1 = 'depotBridgedLayer1',
@@ -14,8 +20,19 @@ export enum TransactionTypes {
   MERCHANT_EARNED_SPEND_AND_REVENUE = 'merchantEarnedSpendAndRevenue',
   MERCHANT_EARNED_REVENUE = 'merchantEarnedRevenue',
   MERCHANT_EARNED_SPEND = 'merchantEarnedSpend',
+  MERCHANT_WITHDRAW = 'merchantWithdraw',
+  MERCHANT_DEPOSIT = 'merchantDeposit',
   ERC_20 = 'erc20',
 }
+
+export type AdvancedTransactionFragment = TransactionFragment & {
+  merchantWithdraw?: Maybe<
+    { __typename?: 'MerchantWithdraw' } & MerchantWithdrawFragment
+  >;
+  merchantDeposit?: Maybe<
+    { __typename?: 'MerchantDeposit' } & MerchantDepositFragment
+  >;
+};
 
 export interface DepotBridgedLayer2TransactionType {
   balance: BalanceType;
@@ -176,6 +193,40 @@ export interface MerchantEarnedSpendTransactionType {
   infoDid?: string;
 }
 
+export interface MerchantWithdrawType {
+  address: string;
+  createdAt: string;
+  transactionHash: string;
+  balance: BalanceType;
+  native: BalanceType;
+  type: TransactionTypes.MERCHANT_WITHDRAW;
+  to: string;
+  infoDid?: string;
+  hideSafeHeader?: boolean;
+  token: {
+    id: string;
+    name?: string | null;
+    symbol?: string | null;
+  };
+}
+
+export interface MerchantDepositType {
+  address: string;
+  createdAt: string;
+  transactionHash: string;
+  balance: BalanceType;
+  native: BalanceType;
+  type: TransactionTypes.MERCHANT_DEPOSIT;
+  from: string;
+  infoDid?: string;
+  hideSafeHeader?: boolean;
+  token: {
+    id: string;
+    name?: string | null;
+    symbol?: string | null;
+  };
+}
+
 export interface MerchantEarnedSpendAndRevenueTransactionType {
   address: string;
   balance: BalanceType;
@@ -262,7 +313,9 @@ export type TransactionType =
   | PrepaidCardTransferTransactionType
   | PrepaidCardSplitTransactionType
   | MerchantRevenueEventType
-  | MerchantClaimType
   | MerchantEarnedSpendAndRevenueTransactionType
   | MerchantEarnedRevenueTransactionType
-  | MerchantEarnedSpendTransactionType;
+  | MerchantEarnedSpendTransactionType
+  | MerchantClaimType
+  | MerchantWithdrawType
+  | MerchantDepositType;

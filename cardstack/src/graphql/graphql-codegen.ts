@@ -794,6 +794,110 @@ export enum MerchantCreationOrderBy {
   MERCHANT = 'merchant'
 }
 
+export type MerchantDeposit = {
+  __typename?: 'MerchantDeposit';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  merchantSafe: MerchantSafe;
+  token: Token;
+  amount: Scalars['BigInt'];
+  from: Scalars['String'];
+};
+
+export type MerchantDepositFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  merchantSafe?: Maybe<Scalars['String']>;
+  merchantSafe_not?: Maybe<Scalars['String']>;
+  merchantSafe_gt?: Maybe<Scalars['String']>;
+  merchantSafe_lt?: Maybe<Scalars['String']>;
+  merchantSafe_gte?: Maybe<Scalars['String']>;
+  merchantSafe_lte?: Maybe<Scalars['String']>;
+  merchantSafe_in?: Maybe<Array<Scalars['String']>>;
+  merchantSafe_not_in?: Maybe<Array<Scalars['String']>>;
+  merchantSafe_contains?: Maybe<Scalars['String']>;
+  merchantSafe_not_contains?: Maybe<Scalars['String']>;
+  merchantSafe_starts_with?: Maybe<Scalars['String']>;
+  merchantSafe_not_starts_with?: Maybe<Scalars['String']>;
+  merchantSafe_ends_with?: Maybe<Scalars['String']>;
+  merchantSafe_not_ends_with?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  from?: Maybe<Scalars['String']>;
+  from_not?: Maybe<Scalars['String']>;
+  from_gt?: Maybe<Scalars['String']>;
+  from_lt?: Maybe<Scalars['String']>;
+  from_gte?: Maybe<Scalars['String']>;
+  from_lte?: Maybe<Scalars['String']>;
+  from_in?: Maybe<Array<Scalars['String']>>;
+  from_not_in?: Maybe<Array<Scalars['String']>>;
+  from_contains?: Maybe<Scalars['String']>;
+  from_not_contains?: Maybe<Scalars['String']>;
+  from_starts_with?: Maybe<Scalars['String']>;
+  from_not_starts_with?: Maybe<Scalars['String']>;
+  from_ends_with?: Maybe<Scalars['String']>;
+  from_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum MerchantDepositOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  MERCHANTSAFE = 'merchantSafe',
+  TOKEN = 'token',
+  AMOUNT = 'amount',
+  FROM = 'from'
+}
+
 export type MerchantFeePayment = {
   __typename?: 'MerchantFeePayment';
   id: Scalars['ID'];
@@ -1051,6 +1155,8 @@ export type MerchantRevenueEvent = {
   merchantRevenue: MerchantRevenue;
   prepaidCardPayment?: Maybe<PrepaidCardPayment>;
   merchantClaim?: Maybe<MerchantClaim>;
+  merchantWithdraw?: Maybe<MerchantWithdraw>;
+  merchantDeposit?: Maybe<MerchantDeposit>;
 };
 
 export type MerchantRevenueEventFilter = {
@@ -1142,6 +1248,34 @@ export type MerchantRevenueEventFilter = {
   merchantClaim_not_starts_with?: Maybe<Scalars['String']>;
   merchantClaim_ends_with?: Maybe<Scalars['String']>;
   merchantClaim_not_ends_with?: Maybe<Scalars['String']>;
+  merchantWithdraw?: Maybe<Scalars['String']>;
+  merchantWithdraw_not?: Maybe<Scalars['String']>;
+  merchantWithdraw_gt?: Maybe<Scalars['String']>;
+  merchantWithdraw_lt?: Maybe<Scalars['String']>;
+  merchantWithdraw_gte?: Maybe<Scalars['String']>;
+  merchantWithdraw_lte?: Maybe<Scalars['String']>;
+  merchantWithdraw_in?: Maybe<Array<Scalars['String']>>;
+  merchantWithdraw_not_in?: Maybe<Array<Scalars['String']>>;
+  merchantWithdraw_contains?: Maybe<Scalars['String']>;
+  merchantWithdraw_not_contains?: Maybe<Scalars['String']>;
+  merchantWithdraw_starts_with?: Maybe<Scalars['String']>;
+  merchantWithdraw_not_starts_with?: Maybe<Scalars['String']>;
+  merchantWithdraw_ends_with?: Maybe<Scalars['String']>;
+  merchantWithdraw_not_ends_with?: Maybe<Scalars['String']>;
+  merchantDeposit?: Maybe<Scalars['String']>;
+  merchantDeposit_not?: Maybe<Scalars['String']>;
+  merchantDeposit_gt?: Maybe<Scalars['String']>;
+  merchantDeposit_lt?: Maybe<Scalars['String']>;
+  merchantDeposit_gte?: Maybe<Scalars['String']>;
+  merchantDeposit_lte?: Maybe<Scalars['String']>;
+  merchantDeposit_in?: Maybe<Array<Scalars['String']>>;
+  merchantDeposit_not_in?: Maybe<Array<Scalars['String']>>;
+  merchantDeposit_contains?: Maybe<Scalars['String']>;
+  merchantDeposit_not_contains?: Maybe<Scalars['String']>;
+  merchantDeposit_starts_with?: Maybe<Scalars['String']>;
+  merchantDeposit_not_starts_with?: Maybe<Scalars['String']>;
+  merchantDeposit_ends_with?: Maybe<Scalars['String']>;
+  merchantDeposit_not_ends_with?: Maybe<Scalars['String']>;
 };
 
 export enum MerchantRevenueEventOrderBy {
@@ -1152,7 +1286,9 @@ export enum MerchantRevenueEventOrderBy {
   HISTORICUNCLAIMEDBALANCE = 'historicUnclaimedBalance',
   MERCHANTREVENUE = 'merchantRevenue',
   PREPAIDCARDPAYMENT = 'prepaidCardPayment',
-  MERCHANTCLAIM = 'merchantClaim'
+  MERCHANTCLAIM = 'merchantClaim',
+  MERCHANTWITHDRAW = 'merchantWithdraw',
+  MERCHANTDEPOSIT = 'merchantDeposit'
 }
 
 export type MerchantRevenueFilter = {
@@ -1342,6 +1478,110 @@ export enum MerchantSafeOrderBy {
   RECEIVEDPAYMENTS = 'receivedPayments',
   MERCHANTFEES = 'merchantFees',
   MERCHANTREVENUE = 'merchantRevenue'
+}
+
+export type MerchantWithdraw = {
+  __typename?: 'MerchantWithdraw';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  merchantSafe: MerchantSafe;
+  token: Token;
+  amount: Scalars['BigInt'];
+  to: Scalars['String'];
+};
+
+export type MerchantWithdrawFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  merchantSafe?: Maybe<Scalars['String']>;
+  merchantSafe_not?: Maybe<Scalars['String']>;
+  merchantSafe_gt?: Maybe<Scalars['String']>;
+  merchantSafe_lt?: Maybe<Scalars['String']>;
+  merchantSafe_gte?: Maybe<Scalars['String']>;
+  merchantSafe_lte?: Maybe<Scalars['String']>;
+  merchantSafe_in?: Maybe<Array<Scalars['String']>>;
+  merchantSafe_not_in?: Maybe<Array<Scalars['String']>>;
+  merchantSafe_contains?: Maybe<Scalars['String']>;
+  merchantSafe_not_contains?: Maybe<Scalars['String']>;
+  merchantSafe_starts_with?: Maybe<Scalars['String']>;
+  merchantSafe_not_starts_with?: Maybe<Scalars['String']>;
+  merchantSafe_ends_with?: Maybe<Scalars['String']>;
+  merchantSafe_not_ends_with?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  to?: Maybe<Scalars['String']>;
+  to_not?: Maybe<Scalars['String']>;
+  to_gt?: Maybe<Scalars['String']>;
+  to_lt?: Maybe<Scalars['String']>;
+  to_gte?: Maybe<Scalars['String']>;
+  to_lte?: Maybe<Scalars['String']>;
+  to_in?: Maybe<Array<Scalars['String']>>;
+  to_not_in?: Maybe<Array<Scalars['String']>>;
+  to_contains?: Maybe<Scalars['String']>;
+  to_not_contains?: Maybe<Scalars['String']>;
+  to_starts_with?: Maybe<Scalars['String']>;
+  to_not_starts_with?: Maybe<Scalars['String']>;
+  to_ends_with?: Maybe<Scalars['String']>;
+  to_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum MerchantWithdrawOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  TRANSACTION = 'transaction',
+  MERCHANTSAFE = 'merchantSafe',
+  TOKEN = 'token',
+  AMOUNT = 'amount',
+  TO = 'to'
 }
 
 export enum OrderDirection {
@@ -2896,6 +3136,10 @@ export type Query = {
   revenueEarningsByDays: Array<RevenueEarningsByDay>;
   merchantClaim?: Maybe<MerchantClaim>;
   merchantClaims: Array<MerchantClaim>;
+  merchantWithdraw?: Maybe<MerchantWithdraw>;
+  merchantWithdraws: Array<MerchantWithdraw>;
+  merchantDeposit?: Maybe<MerchantDeposit>;
+  merchantDeposits: Array<MerchantDeposit>;
   merchantRevenueEvent?: Maybe<MerchantRevenueEvent>;
   merchantRevenueEvents: Array<MerchantRevenueEvent>;
   spendAccumulation?: Maybe<SpendAccumulation>;
@@ -3299,6 +3543,38 @@ export type QueryMerchantClaimsArgs = {
   orderBy?: Maybe<MerchantClaimOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantClaimFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryMerchantWithdrawArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryMerchantWithdrawsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerchantWithdrawOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerchantWithdrawFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryMerchantDepositArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryMerchantDepositsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerchantDepositOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerchantDepositFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -4568,6 +4844,7 @@ export type SafeOwner = {
   id: Scalars['ID'];
   owner: Account;
   safe: Safe;
+  type?: Maybe<Scalars['String']>;
   createdAt: Scalars['BigInt'];
   ownershipChangedAt: Scalars['BigInt'];
 };
@@ -4703,6 +4980,20 @@ export type SafeOwnerFilter = {
   safe_not_starts_with?: Maybe<Scalars['String']>;
   safe_ends_with?: Maybe<Scalars['String']>;
   safe_not_ends_with?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  type_not?: Maybe<Scalars['String']>;
+  type_gt?: Maybe<Scalars['String']>;
+  type_lt?: Maybe<Scalars['String']>;
+  type_gte?: Maybe<Scalars['String']>;
+  type_lte?: Maybe<Scalars['String']>;
+  type_in?: Maybe<Array<Scalars['String']>>;
+  type_not_in?: Maybe<Array<Scalars['String']>>;
+  type_contains?: Maybe<Scalars['String']>;
+  type_not_contains?: Maybe<Scalars['String']>;
+  type_starts_with?: Maybe<Scalars['String']>;
+  type_not_starts_with?: Maybe<Scalars['String']>;
+  type_ends_with?: Maybe<Scalars['String']>;
+  type_not_ends_with?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['BigInt']>;
   createdAt_not?: Maybe<Scalars['BigInt']>;
   createdAt_gt?: Maybe<Scalars['BigInt']>;
@@ -4725,6 +5016,7 @@ export enum SafeOwnerOrderBy {
   ID = 'id',
   OWNER = 'owner',
   SAFE = 'safe',
+  TYPE = 'type',
   CREATEDAT = 'createdAt',
   OWNERSHIPCHANGEDAT = 'ownershipChangedAt'
 }
@@ -5076,6 +5368,10 @@ export type Subscription = {
   revenueEarningsByDays: Array<RevenueEarningsByDay>;
   merchantClaim?: Maybe<MerchantClaim>;
   merchantClaims: Array<MerchantClaim>;
+  merchantWithdraw?: Maybe<MerchantWithdraw>;
+  merchantWithdraws: Array<MerchantWithdraw>;
+  merchantDeposit?: Maybe<MerchantDeposit>;
+  merchantDeposits: Array<MerchantDeposit>;
   merchantRevenueEvent?: Maybe<MerchantRevenueEvent>;
   merchantRevenueEvents: Array<MerchantRevenueEvent>;
   spendAccumulation?: Maybe<SpendAccumulation>;
@@ -5479,6 +5775,38 @@ export type SubscriptionMerchantClaimsArgs = {
   orderBy?: Maybe<MerchantClaimOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantClaimFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionMerchantWithdrawArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionMerchantWithdrawsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerchantWithdrawOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerchantWithdrawFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionMerchantDepositArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionMerchantDepositsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerchantDepositOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerchantDepositFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -7028,6 +7356,30 @@ export type MerchantClaimFragment = (
   ) }
 );
 
+export type MerchantWithdrawFragment = (
+  { __typename?: 'MerchantWithdraw' }
+  & Pick<MerchantWithdraw, 'id' | 'timestamp' | 'amount' | 'to'>
+  & { token: (
+    { __typename?: 'Token' }
+    & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>
+  ), merchantSafe: (
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id' | 'infoDid'>
+  ) }
+);
+
+export type MerchantDepositFragment = (
+  { __typename?: 'MerchantDeposit' }
+  & Pick<MerchantDeposit, 'id' | 'timestamp' | 'amount' | 'from'>
+  & { token: (
+    { __typename?: 'Token' }
+    & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>
+  ), merchantSafe: (
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id' | 'infoDid'>
+  ) }
+);
+
 export type MerchantRevenueEventFragment = (
   { __typename?: 'MerchantRevenueEvent' }
   & Pick<MerchantRevenueEvent, 'id' | 'timestamp' | 'historicLifetimeAccumulation' | 'historicUnclaimedBalance'>
@@ -7037,6 +7389,12 @@ export type MerchantRevenueEventFragment = (
   )>, merchantClaim?: Maybe<(
     { __typename?: 'MerchantClaim' }
     & MerchantClaimFragment
+  )>, merchantWithdraw?: Maybe<(
+    { __typename?: 'MerchantWithdraw' }
+    & MerchantWithdrawFragment
+  )>, merchantDeposit?: Maybe<(
+    { __typename?: 'MerchantDeposit' }
+    & MerchantDepositFragment
   )> }
 );
 
@@ -7290,6 +7648,42 @@ export const MerchantClaimFragmentDoc = gql`
   }
 }
     `;
+export const MerchantWithdrawFragmentDoc = gql`
+    fragment MerchantWithdraw on MerchantWithdraw {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+  to
+  merchantSafe {
+    id
+    infoDid
+  }
+}
+    `;
+export const MerchantDepositFragmentDoc = gql`
+    fragment MerchantDeposit on MerchantDeposit {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+  from
+  merchantSafe {
+    id
+    infoDid
+  }
+}
+    `;
 export const MerchantRevenueEventFragmentDoc = gql`
     fragment MerchantRevenueEvent on MerchantRevenueEvent {
   id
@@ -7302,9 +7696,17 @@ export const MerchantRevenueEventFragmentDoc = gql`
   merchantClaim {
     ...MerchantClaim
   }
+  merchantWithdraw {
+    ...MerchantWithdraw
+  }
+  merchantDeposit {
+    ...MerchantDeposit
+  }
 }
     ${PrepaidCardPaymentFragmentDoc}
-${MerchantClaimFragmentDoc}`;
+${MerchantClaimFragmentDoc}
+${MerchantWithdrawFragmentDoc}
+${MerchantDepositFragmentDoc}`;
 export const BridgeToLayer1EventFragmentDoc = gql`
     fragment BridgeToLayer1Event on BridgeToLayer1Event {
   amount
