@@ -470,7 +470,7 @@ const useClaimAllRevenue = ({
     showLoadingOverlay,
   ]);
 
-  // isRefreshing may be false when isSucess is truthy on the first time
+  // isRefreshing may be false when isSuccess is truthy on the first time
   // so we use the previous value to make sure
   const hasUpdated = usePrevious(isRefreshingBalances);
 

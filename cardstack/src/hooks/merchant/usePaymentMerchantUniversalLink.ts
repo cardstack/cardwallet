@@ -86,12 +86,11 @@ export const usePaymentMerchantUniversalLink = () => {
   }, [isLoadingCards, goBack, prepaidCards.length, isLoading]);
 
   useEffect(() => {
-    if (
-      !isLoading &&
-      qrCodeNetwork &&
-      accountNetwork &&
-      qrCodeNetwork !== accountNetwork
-    ) {
+    if (isLoading) {
+      return;
+    }
+
+    if (qrCodeNetwork && accountNetwork && qrCodeNetwork !== accountNetwork) {
       InteractionManager.runAfterInteractions(() => {
         handleAlertError(
           `This is a ${networkInfo[qrCodeNetwork].name} QR Code, please confirm your device is on ${networkInfo[qrCodeNetwork].name}.`,

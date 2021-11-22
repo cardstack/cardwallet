@@ -19,13 +19,15 @@ import { useNavigation } from '@rainbow-me/navigation';
 
 const CHART_HEIGHT = 600;
 
+interface Props {
+  asset: MerchantSafeType;
+  customFunction: () => void;
+}
+
 export default function UnclaimedRevenueExpandedState({
   asset: merchantSafe,
   customFunction: onClaimAll,
-}: {
-  asset: MerchantSafeType;
-  customFunction: () => void;
-}) {
+}: Props) {
   const { setOptions } = useNavigation();
 
   useEffect(() => {
