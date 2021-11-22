@@ -3,7 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import thunk from 'redux-thunk';
 
 import reducers from './reducers';
-import { safesApi } from '@cardstack/services';
+import { safesApi } from '@cardstack/services/safes-api';
 
 const enableReduxFlipper = false;
 const enableReduxLogger = false;

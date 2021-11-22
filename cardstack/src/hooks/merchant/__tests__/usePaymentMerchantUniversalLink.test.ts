@@ -2,8 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { useRoute } from '@react-navigation/native';
 import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { usePaymentMerchantUniversalLink } from '../usePaymentMerchantUniversalLink';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { getSafeData } from '@cardstack/services';
+import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
 
 const mockedDID = {
   did: 'did',
@@ -36,6 +35,7 @@ jest.mock('@cardstack/models/safes-providers', () => ({
 jest.mock('@cardstack/services', () => ({
   getSafeData: jest.fn(),
   syncPrepaidCardFaceValue: jest.fn(),
+  useGetSafesDataQuery: jest.fn(),
 }));
 
 jest.mock('@cardstack/utils', () => ({
@@ -47,6 +47,7 @@ jest.mock('@cardstack/utils', () => ({
     setIsLoading: jest.fn(),
   }),
   deviceUtils: { isIOS14: false },
+  isLayer1: () => false,
 }));
 
 jest.mock('@cardstack/models/web3-instance', () => ({
@@ -67,12 +68,13 @@ jest.mock('@rainbow-me/redux/fallbackExplorer', () => ({
 
 describe('usePaymentMerchantUniversalLink', () => {
   beforeEach(() => {
-    (useRainbowSelector as jest.Mock).mockImplementation(
-      () => updatedData.updatedPrepaidCards
-    );
-
     (getSafeData as jest.Mock).mockImplementation(() => ({
       infoDID: mockedDID,
+    }));
+
+    (useGetSafesDataQuery as jest.Mock).mockImplementation(() => ({
+      prepaidCards: updatedData.updatedPrepaidCards,
+      isLoadingCards: false,
     }));
   });
 
@@ -102,6 +104,7 @@ describe('usePaymentMerchantUniversalLink', () => {
       amount: 100,
       merchantSafe: '0x7bAeEbbd7Fd1f41f3DA69A08f8E053C8CCBb592b',
       currency: 'SPD',
+      qrCodeNetwork: 'sokol',
     });
   });
 
