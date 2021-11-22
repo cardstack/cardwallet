@@ -5,7 +5,6 @@ import {
   TransactionBaseCustomizationProps,
 } from '../TransactionBase';
 import { MerchantDepositType } from '@cardstack/types';
-import { getAddressPreview } from '@cardstack/utils';
 import { CoinIcon } from '@cardstack/components';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
@@ -37,10 +36,9 @@ export const MerchantDepositTransaction = ({
       }
       primaryText={`${item.balance.display}`}
       statusIconName="arrow-down"
-      statusText={`Deposited into \nAccount`}
+      statusText="Deposited"
       subText={item.native.display}
       transactionHash={item.transactionHash}
-      recipientName={merchantInfoDID?.name || getAddressPreview(item.address)}
     />
   );
 };

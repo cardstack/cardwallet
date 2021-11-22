@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  RefreshControl,
-  SectionList,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
 
 import {
@@ -19,14 +14,9 @@ import {
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType } from '@cardstack/types';
+import { sectionStyle } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
-
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-
-const styles = StyleSheet.create({
-  contentContainerStyle: { paddingBottom: 200 },
-  sectionListStyle: { width: '100%' },
-});
 
 const CHART_HEIGHT = 650;
 
@@ -67,7 +57,7 @@ export default function AvailableBalancesExpandedState(
   }, [setOptions]);
 
   return (
-    <SlackSheet flex={1} scrollEnabled={false}>
+    <SlackSheet scrollEnabled>
       <Container paddingHorizontal={5} paddingTop={3}>
         <Text size="medium">Account balances</Text>
         <Container flexDirection="row" justifyContent="space-between">
@@ -141,7 +131,7 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
           ListFooterComponent={
             isFetchingMore ? <ActivityIndicator color="white" /> : null
           }
-          contentContainerStyle={styles.contentContainerStyle}
+          contentContainerStyle={sectionStyle.contentContainerStyle}
           onEndReached={onEndReached}
           onEndReachedThreshold={1}
           refreshControl={
@@ -162,7 +152,7 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
             </Container>
           )}
           sections={sections}
-          style={styles.sectionListStyle}
+          style={sectionStyle.sectionList}
         />
       )}
     </Container>

@@ -5,9 +5,8 @@ import {
   TransactionBaseCustomizationProps,
 } from '../TransactionBase';
 import { MerchantWithdrawType } from '@cardstack/types';
-import { getAddressPreview } from '@cardstack/utils';
+import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
 import { CoinIcon } from '@cardstack/components';
-import { useAccountProfile } from '@rainbow-me/hooks';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 export interface MerchantWithdrawTransactionProps
@@ -20,8 +19,7 @@ export const MerchantWithdrawTransaction = ({
   ...props
 }: MerchantWithdrawTransactionProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(item.infoDid);
-
-  const { accountName } = useAccountProfile();
+  const { name: nameForAddress } = useNameOrPreviewFromAddress(item.to);
 
   return (
     <TransactionBase
@@ -40,10 +38,10 @@ export const MerchantWithdrawTransaction = ({
       }
       primaryText={`${item.balance.display}`}
       statusIconName="arrow-up"
-      statusText={`Withdrawn from \nAccount`}
+      statusText="Withdrawn"
       subText={item.native.display}
       transactionHash={item.transactionHash}
-      recipientName={accountName || getAddressPreview(item.to)}
+      recipientName={nameForAddress}
     />
   );
 };
