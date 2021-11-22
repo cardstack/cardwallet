@@ -1,4 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
 import { orderBy } from 'lodash';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
@@ -92,8 +93,9 @@ const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
   ]);
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
+  let assetsToInclude = assetsWithoutNFTs(stateAssets, collectibles);
   const assetsWithNative = parseAssetsNativeWithTotals(
-    stateAssets,
+    assetsToInclude,
     nativeCurrency
   );
 
@@ -123,12 +125,6 @@ const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
   if (nativeBalancePinned) {
     assets = assets.sort(a => (nativeTokenSymbol.includes(a.symbol) ? -1 : 1));
   }
-
-  console.log('useOtherTokensSection assets', assets);
-  console.log(
-    'useOtherTokensSection collectibles',
-    JSON.stringify(collectibles)
-  );
 
   return {
     header: {
@@ -212,7 +208,6 @@ export const useAssetListData = () => {
   );
 
   const isEmpty = !sections.length;
-  console.log('useAssetListData', sections);
   return {
     isLoadingAssets,
     isEmpty,

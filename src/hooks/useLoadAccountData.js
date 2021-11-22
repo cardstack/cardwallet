@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { addCashLoadState } from '../redux/addCash';
-import { collectiblesLoadState } from '../redux/collectibles';
 import { dataLoadState } from '../redux/data';
 import { coinListLoadState } from '../redux/editOptions';
 import { openStateSettingsLoadState } from '../redux/openStateSettings';
@@ -11,6 +10,7 @@ import { uniswapLoadState } from '../redux/uniswap';
 import { uniswapLiquidityLoadState } from '../redux/uniswapLiquidity';
 import { walletConnectLoadState } from '../redux/walletconnect';
 import { promiseUtils } from '../utils';
+import { collectiblesLoadState } from '@cardstack/redux/collectibles';
 import { isMainnet } from '@cardstack/utils';
 import logger from 'logger';
 

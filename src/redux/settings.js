@@ -12,7 +12,6 @@ import { updateLanguage } from '../languages';
 
 import { ethereumUtils, promiseUtils } from '../utils';
 import { addCashClearState } from './addCash';
-import { collectiblesResetState } from './collectibles';
 import { dataResetState } from './data';
 import { explorerClearState } from './explorer';
 import {
@@ -24,6 +23,7 @@ import { requestsResetState } from './requests';
 import { uniswapResetState } from './uniswap';
 import { uniswapLiquidityResetState } from './uniswapLiquidity';
 import { walletConnectUpdateSessions } from './walletconnect';
+import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { paymentChangeCurrency } from '@cardstack/redux/payment';
 import logger from 'logger';
 // -- Constants ------------------------------------------------------------- //

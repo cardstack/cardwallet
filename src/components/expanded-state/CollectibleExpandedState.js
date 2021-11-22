@@ -34,7 +34,7 @@ const CollectibleExpandedState = ({ asset }) => {
         </Container>
         <Container flexDirection="column">
           {!!description && (
-            <ExpandedStateSection title="Bio">
+            <ExpandedStateSection title="About">
               {description}
             </ExpandedStateSection>
           )}

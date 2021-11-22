@@ -26,9 +26,9 @@ import {
 import { getTransactionReceipt } from '../handlers/web3';
 // eslint-disable-next-line import/no-cycle
 import { addCashUpdatePurchases } from './addCash';
-// eslint-disable-next-line import/no-cycle
-import { collectiblesRefreshState } from './collectibles';
 import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
+// eslint-disable-next-line import/no-cycle
+import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import {
   getAssetPricesFromUniswap,
   getAssets,
@@ -256,7 +256,6 @@ export const addressAssetsReceived = (
 
   const { accountAddress, network } = getState().settings;
 
-  const { collectibles } = getState().collectibles;
   const payload = values(get(message, 'payload.assets', {}));
   let assets = filter(
     payload,
@@ -279,7 +278,7 @@ export const addressAssetsReceived = (
     shitcoins.includes(toLower(asset?.asset?.asset_code))
   );
 
-  let parsedAssets = parseAccountAssets(assets, collectibles);
+  let parsedAssets = parseAccountAssets(assets);
 
   // remove LP tokens
   const liquidityTokens = remove(
@@ -314,6 +313,7 @@ export const addressAssetsReceived = (
     type: DATA_UPDATE_ASSETS,
   });
   saveAssets(parsedAssets, accountAddress, network);
+  dispatch(collectiblesRefreshState());
 
   if (!change) {
     const missingPriceAssetAddresses = map(
@@ -694,7 +694,6 @@ export default (state = INITIAL_STATE, action) => {
         draft.genericAssets = action.payload;
         break;
       case DATA_UPDATE_ASSETS:
-        console.log('DATA_UPDATE_ASSETS', action.payload);
         draft.assets = action.payload;
         draft.isLoadingAssets = false;
         break;

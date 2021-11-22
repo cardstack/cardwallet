@@ -24,9 +24,3 @@ export {
   getDescription,
   getTransactionLabel,
 } from './transactions';
-export {
-  parseCollectiblesFromOpenSeaResponse,
-  getNFTFamilies as getFamilies,
-  assetsWithoutNFTs,
-  assetsWithoutNFTsByFamily,
-} from './collectibles';

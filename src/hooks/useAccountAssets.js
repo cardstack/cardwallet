@@ -9,8 +9,6 @@ export default function useAccountAssets() {
     prepaidCards: state.data.prepaidCards,
   }));
 
-  console.log('useAccountAssets', JSON.stringify(useAccountAssets));
-
   return {
     ...assets,
     collectibles,

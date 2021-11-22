@@ -12,6 +12,7 @@ export interface AssetType {
   decimals: number;
   icon_url: string;
   name: string;
+  token_id?: string;
   price: {
     changed_at: number | null;
     relative_change_24h: number;

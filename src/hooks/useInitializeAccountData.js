@@ -2,8 +2,8 @@ import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { collectiblesRefreshState } from '../redux/collectibles';
 import { uniswapGetAllExchanges, uniswapPairsInit } from '../redux/uniswap';
+import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import { explorerInit } from '@rainbow-me/redux/explorer';
 import {
   fallbackExplorerClearState,

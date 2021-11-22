@@ -1,23 +1,30 @@
+import assert from 'assert';
 import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
 import { concat, isEmpty, without } from 'lodash';
-import { getEtherWeb3Provider } from '../handlers/web3';
-import AssetTypes from '../helpers/assetTypes';
-import { erc721ABI } from '../references';
+import { AnyAction } from 'redux';
+import {
+  assetsWithoutNFTsByFamily,
+  getNFTFamilies,
+} from '@cardstack/parsers/collectibles';
+import { getEtherWeb3Provider } from '../../../src/handlers/web3';
+import AssetTypes from '../../../src/helpers/assetTypes';
+import { erc721ABI } from '../../../src/references';
 
 /* eslint-disable-next-line import/no-cycle */
-import { dataUpdateAssets } from './data';
+import { dataUpdateAssets } from '../../../src/redux/data';
 import {
-  getCollectibles,
-  saveCollectibles,
+  getCollectibles as getCollectiblesFromStorage,
+  saveCollectibles as saveCollectiblesToStorage,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import {
   apiFetchCollectiblesForOwner,
   OPENSEA_LIMIT_PER_PAGE,
   OPENSEA_LIMIT_TOTAL,
-} from '@rainbow-me/handlers/opensea-api';
+} from '@cardstack/services/opensea-api';
 import NetworkTypes from '@rainbow-me/networkTypes';
-import { assetsWithoutNFTsByFamily, getFamilies } from '@rainbow-me/parsers';
+import { AppDispatch, AppGetState } from '@rainbow-me/redux/store';
+import { AssetType, CollectibleType } from '@cardstack/types';
 
 // -- Constants ------------------------------------------------------------- //
 const COLLECTIBLES_LOAD_REQUEST = 'collectibles/COLLECTIBLES_LOAD_REQUEST';
@@ -31,13 +38,21 @@ const COLLECTIBLES_FETCH_FAILURE = 'collectibles/COLLECTIBLES_FETCH_FAILURE';
 const COLLECTIBLES_CLEAR_STATE = 'collectibles/COLLECTIBLES_CLEAR_STATE';
 
 // -- Actions --------------------------------------------------------------- //
-let scheduledFetchHandle = null;
+let scheduledFetchHandle: ReturnType<typeof setTimeout> | undefined;
 
-export const collectiblesLoadState = () => async (dispatch, getState) => {
+export const collectiblesLoadState = () => async (
+  dispatch: AppDispatch,
+  getState: AppGetState
+) => {
   const { accountAddress, network } = getState().settings;
   dispatch({ type: COLLECTIBLES_LOAD_REQUEST });
+
   try {
-    const cachedCollectibles = await getCollectibles(accountAddress, network);
+    const cachedCollectibles = await getCollectiblesFromStorage(
+      accountAddress,
+      network
+    );
+
     dispatch({
       payload: cachedCollectibles,
       type: COLLECTIBLES_LOAD_SUCCESS,
@@ -47,18 +62,20 @@ export const collectiblesLoadState = () => async (dispatch, getState) => {
   }
 };
 
-export const collectiblesResetState = () => dispatch => {
+export const collectiblesResetState = () => (dispatch: AppDispatch) => {
   scheduledFetchHandle && clearTimeout(scheduledFetchHandle);
   dispatch({ type: COLLECTIBLES_CLEAR_STATE });
 };
 
-export const collectiblesRefreshState = () => async (dispatch, getState) => {
+export const collectiblesRefreshState = () => async (
+  dispatch: AppDispatch,
+  getState: AppGetState
+) => {
   const { network } = getState().settings;
 
   switch (network) {
     case NetworkTypes.mainnet:
-    case NetworkTypes.rinkeby:
-      // OpenSea API only supports Ethereum mainnet and rinkeby
+      // OpenSea API only supports Ethereum mainnet
       return dispatch(fetchNFTsViaOpenSea());
     case NetworkTypes.xdai:
     case NetworkTypes.sokol:
@@ -70,21 +87,25 @@ export const collectiblesRefreshState = () => async (dispatch, getState) => {
   }
 };
 
-const fetchNFTsViaOpenSea = () => async (dispatch, getState) => {
+const fetchNFTsViaOpenSea = () => async (
+  dispatch: AppDispatch,
+  getState: AppGetState
+) => {
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
-  const { accountAddress, network } = getState().settings;
+  const { accountAddress, nativeCurrency, network } = getState().settings;
   const { assets } = getState().data;
   const { collectibles: existingNFTs } = getState().collectibles;
   const shouldUpdateInBatches = isEmpty(existingNFTs);
 
   let shouldStopFetching = false;
   let page = 0;
-  let nfts = [];
+  let nfts: CollectibleType[] = [];
 
   const fetchPage = async () => {
     try {
       const newPageResults = await apiFetchCollectiblesForOwner(
         network,
+        nativeCurrency,
         accountAddress,
         page
       );
@@ -97,6 +118,7 @@ const fetchNFTsViaOpenSea = () => async (dispatch, getState) => {
       shouldStopFetching =
         newPageResults.length < OPENSEA_LIMIT_PER_PAGE ||
         nfts.length >= OPENSEA_LIMIT_TOTAL;
+
       page += 1;
 
       if (shouldUpdateInBatches) {
@@ -113,17 +135,21 @@ const fetchNFTsViaOpenSea = () => async (dispatch, getState) => {
             type: COLLECTIBLES_FETCH_SUCCESS,
           });
         }
-        const existingFamilies = getFamilies(existingNFTs);
-        const newFamilies = getFamilies(nfts);
+
+        const existingFamilies = getNFTFamilies(existingNFTs);
+        const newFamilies = getNFTFamilies(nfts);
         const incomingFamilies = without(newFamilies, ...existingFamilies);
+
         if (incomingFamilies.length) {
           const assetsWithoutNFTs = assetsWithoutNFTsByFamily(
             assets,
             incomingFamilies
           );
+
           dispatch(dataUpdateAssets(assetsWithoutNFTs));
         }
-        saveCollectibles(nfts, accountAddress, network);
+
+        saveCollectiblesToStorage(nfts, accountAddress, network);
       } else {
         scheduledFetchHandle = setTimeout(fetchPage, 200);
       }
@@ -136,75 +162,93 @@ const fetchNFTsViaOpenSea = () => async (dispatch, getState) => {
   fetchPage();
 };
 
-const fetchNFTsViaRpcNode = () => async (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
-  //   grab assets data from redux state
-  var { assets } = getState().data;
-  //   find the assets that are NFTs
-  let collectibles = assets.filter(asset => asset.token_id);
-  const { collectibles: existingNFTs } = getState().collectibles;
+const fetchNFTsViaRpcNode = () => async (
+  dispatch: AppDispatch,
+  getState: AppGetState
+) => {
+  const { accountAddress, nativeCurrency, network } = getState().settings;
+  const assets: AssetType[] = getState().data.assets;
+
+  // find the assets that are NFTs. TODO: consider checking contract interfaces for a more reliable filter.
+  const assetsWithTokenIds = assets.filter(asset => asset.token_id);
+
+  const existingNFTs: CollectibleType[] = getState().collectibles.collectibles;
 
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
+
   // TODO: enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
-  // TODO: cache tokenURIJSON
-  // TODO: Collectible typescript type
-  console.log('collectibles before mapping', JSON.stringify(collectibles));
   try {
-    console.log('fetchNFTsViaRpcNode: getEtherWeb3Provider');
     const web3Provider = await getEtherWeb3Provider();
-    console.log('fetchNFTsViaRpcNode: starting mapping', collectibles.length);
-    collectibles = await Promise.all(
-      collectibles.map(async c => {
-        console.log('fetchNFTsViaRpcNode: map item', c.address, c.token_id);
-        let existingNFT = existingNFTs.find(
-          nft => nft.address === c.address && nft.token_id === c.token_id
+
+    const collectibles = await Promise.all(
+      assetsWithTokenIds.map(async asset => {
+        assert(asset.address);
+        assert(asset.token_id);
+
+        const existingNFT = existingNFTs.find(
+          nft =>
+            nft.asset_contract.address === asset.address &&
+            nft.id === asset.token_id
         );
+
         if (existingNFT) {
-          console.log(
-            'fetchNFTsViaRpcNode: use cached NFT',
-            c.address,
-            c.token_id
-          );
           return existingNFT;
         }
-        try {
-          console.log('fetchNFTsViaRpcNode: creating contract for', c.address);
-          let nftContract = new Contract(c.address, erc721ABI, web3Provider);
-          console.log('fetchNFTsViaRpcNode: getting tokenURI');
-          let tokenURI = await nftContract.tokenURI(c.token_id);
-          console.log('fetchNFTsViaRpcNode: fetching', tokenURI);
-          let tokenURIRequest = await fetch(tokenURI);
-          console.log('fetchNFTsViaRpcNode: parsing', tokenURI);
-          let tokenURIJSON = await tokenURIRequest.json();
 
-          console.log('fetchNFTsViaRpcNode tokenURIJSON', tokenURIJSON);
-          let augmentedCollectible = {
-            id: c.token_id,
-            address: c.address,
-            symbol: c.symbol,
-            name: tokenURIJSON.name || c.name,
+        try {
+          const nftContract = new Contract(
+            asset.address,
+            erc721ABI,
+            web3Provider
+          );
+
+          const tokenURI = await nftContract.tokenURI(asset.token_id);
+          const tokenURIRequest = await fetch(tokenURI);
+          const tokenURIJSON = await tokenURIRequest.json();
+
+          const augmentedCollectible: CollectibleType = {
+            id: asset.token_id,
+            name: tokenURIJSON.name || asset.name,
             description: tokenURIJSON.description,
             external_link: tokenURIJSON.external_url,
             image_preview_url: tokenURIJSON.image_url,
             image_url: tokenURIJSON.image_url,
+            image_original_url: tokenURIJSON.image_url,
+            image_thumbnail_url: tokenURIJSON.image_url,
+            animation_url: null,
+            permalink: tokenURIJSON.external_url,
+            traits: [],
+            background: null,
+            familyImage: null,
+            isSendable: false,
             asset_contract: {
-              address: c.address,
-              symbol: c.symbol,
-              name: c.name,
+              address: asset.address,
+              description: tokenURIJSON.description,
+              external_link: tokenURIJSON.external_url,
+              image_url: tokenURIJSON.image_url,
+              name: asset.name,
+              nft_version: null,
+              schema_name: null,
+              symbol: asset.symbol,
+              total_supply: null,
             },
+            nativeCurrency,
+            networkName: network,
+            lastPrice: null,
             type: AssetTypes.nft,
+            uniqueId: `${asset.address}_${asset.token_id}`,
           };
-          console.log('augmentedCollectible', augmentedCollectible);
+
           return augmentedCollectible;
         } catch (error) {
           console.log('Error augmenting collectible', error);
-          return c;
+
+          return asset;
         }
       })
     );
-    console.log('saving collectibles', JSON.stringify(collectibles));
-    // save the collectibles to local storage
-    saveCollectibles(collectibles, accountAddress, network);
+
+    saveCollectiblesToStorage(collectibles, accountAddress, network);
     // save the collectibles to redux state
     dispatch({
       payload: collectibles,
@@ -212,9 +256,10 @@ const fetchNFTsViaRpcNode = () => async (dispatch, getState) => {
     });
   } catch (error) {
     dispatch({
-      payload: collectibles,
+      payload: assetsWithTokenIds,
       type: COLLECTIBLES_FETCH_FAILURE,
     });
+
     console.error('Error fetching collectibles', error);
   }
 };
@@ -223,10 +268,10 @@ const fetchNFTsViaRpcNode = () => async (dispatch, getState) => {
 export const INITIAL_COLLECTIBLES_STATE = {
   fetchingCollectibles: false,
   loadingCollectibles: false,
-  collectibles: [],
+  collectibles: [] as CollectibleType[],
 };
 
-export default (state = INITIAL_COLLECTIBLES_STATE, action) => {
+export default (state = INITIAL_COLLECTIBLES_STATE, action: AnyAction) => {
   switch (action.type) {
     case COLLECTIBLES_LOAD_REQUEST:
       return {

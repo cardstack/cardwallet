@@ -1,7 +1,6 @@
 import addCash from './addCash';
 import charts from './charts';
 import coingecko from './coingecko';
-import collectibles from './collectibles';
 import contacts from './contacts';
 import currencyConversion from './currencyConversion';
 import data from './data';
@@ -25,6 +24,7 @@ import uniswapLiquidity from './uniswapLiquidity';
 import walletconnect from './walletconnect';
 import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
+import collectibles from '@cardstack/redux/collectibles';
 import payment from '@cardstack/redux/payment';
 
 export default {
