@@ -49,7 +49,7 @@ const getCurrentAddress = address => {
 
 const findNewAssetsToWatch = () => async (dispatch, getState) => {
   const { accountAddress } = getState().settings;
-  let { assets, latestTxBlockNumber } = getState().fallbackExplorer;
+  const { assets, latestTxBlockNumber } = getState().fallbackExplorer;
 
   const newAssets = await findAssetsToWatch(
     accountAddress,
@@ -59,11 +59,14 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
   if (newAssets.length > 0) {
     logger.log('😬 Found new assets!', newAssets);
 
-    assets = uniqBy([...assets, ...newAssets], token => token.asset.asset_code);
+    const updateAssets = uniqBy(
+      [...assets, ...newAssets],
+      token => token.asset.asset_code
+    );
 
     dispatch({
       payload: {
-        assets,
+        assets: updateAssets,
       },
       type: FALLBACK_EXPLORER_SET_ASSETS,
     });
@@ -399,12 +402,12 @@ export const fetchAssetsBalancesAndPrices = async () => {
 
   const formattedNativeCurrency = toLower(nativeCurrency);
 
-  let {
-    assets,
+  const {
+    assets: currentAssets,
     fallbackExplorerBalancesHandle: currentBalancesTimeout,
   } = store.getState().fallbackExplorer;
 
-  assets = isMainnet(network) ? assets : testnetAssets[network];
+  const assets = isMainnet(network) ? currentAssets : testnetAssets[network];
 
   if (!assets || !assets.length) {
     const fallbackExplorerBalancesHandle = setTimeout(
@@ -543,7 +546,7 @@ export const fetchAssetsBalancesAndPrices = async () => {
 
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
-  let { latestTxBlockNumber, assets } = getState().fallbackExplorer;
+  const { latestTxBlockNumber, assets } = getState().fallbackExplorer;
   const coingeckoCoins = getState().coingecko.coins;
   // If mainnet, we need to get all the info
   // 1 - Coingecko ids
@@ -556,11 +559,10 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       dispatch,
       coingeckoCoins
     );
-    assets = assets.concat(newAssets);
 
     await dispatch({
       payload: {
-        assets,
+        assets: [...assets, ...newAssets],
       },
       type: FALLBACK_EXPLORER_SET_ASSETS,
     });
@@ -601,7 +603,7 @@ export default (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
-        assets: assets ? assets : state.assets,
+        assets: assets || state.assets,
       };
     case FALLBACK_EXPLORER_CLEAR_STATE:
       return {
