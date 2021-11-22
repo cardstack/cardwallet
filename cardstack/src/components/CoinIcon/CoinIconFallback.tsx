@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
-import CUSTOM_COIN_ICONS from './CustomCoinIcons';
 import { CenteredContainer, Image } from '@cardstack/components';
 import { toChecksumAddress } from '@rainbow-me/handlers/web3';
 
@@ -11,17 +10,9 @@ interface CoinIconFallbackProps {
   width: number;
 }
 
-const getIconForCoin = (symbol?: string, address?: string) => {
-  const customCoinIcon = CUSTOM_COIN_ICONS.find(
-    ({ symbol: coinSymbol }) => symbol && coinSymbol === symbol.toUpperCase()
-  );
-
-  if (customCoinIcon) {
-    return customCoinIcon.icon;
-  }
-
+const getIconForCoin = (address?: string) => {
   if (!address) {
-    return '';
+    return null;
   }
 
   const checksummedAddress = toChecksumAddress(address);
@@ -33,7 +24,7 @@ const getIconForCoin = (symbol?: string, address?: string) => {
 export const CoinIconFallback = (props: CoinIconFallbackProps) => {
   const { address, symbol, height, width } = props;
   const [showImage, setShowImage] = useState(false);
-  const imageSource = getIconForCoin(symbol, address);
+  const imageSource = getIconForCoin(address);
 
   return (
     <CenteredContainer height={height} width={width}>
@@ -49,20 +40,23 @@ export const CoinIconFallback = (props: CoinIconFallbackProps) => {
           }}
         />
       )}
-      <Image
-        backgroundColor={showImage ? 'white' : 'transparent'}
-        bottom={0}
-        source={imageSource}
-        left={0}
-        position="absolute"
-        right={0}
-        top={0}
-        onError={() => setShowImage(false)}
-        onLoad={() => setShowImage(true)}
-        borderRadius={100}
-        height={height}
-        width={width}
-      />
+      {imageSource ? (
+        <Image
+          backgroundColor={showImage ? 'white' : 'transparent'}
+          bottom={0}
+          source={imageSource}
+          left={0}
+          position="absolute"
+          right={0}
+          top={0}
+          onError={() => setShowImage(false)}
+          onLoad={() => setShowImage(true)}
+          borderRadius={width || 40}
+          height={height}
+          width={width}
+          resizeMode="contain"
+        />
+      ) : null}
     </CenteredContainer>
   );
 };
