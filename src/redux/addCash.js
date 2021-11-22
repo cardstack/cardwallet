@@ -308,7 +308,7 @@ export const addCashOrderCreationFailure = error => dispatch =>
 
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
-  currentOrderStatus: null,
+  currentOrderStatus: WYRE_ORDER_STATUS_TYPES.notStarted,
   currentTransferId: null,
   error: {},
   purchaseTransactions: [],
@@ -319,7 +319,7 @@ export default (state = INITIAL_STATE, action) => {
     case ADD_CASH_RESET_CURRENT_ORDER:
       return {
         ...state,
-        currentOrderStatus: null,
+        currentOrderStatus: WYRE_ORDER_STATUS_TYPES.notStarted,
         currentTransferId: null,
         error: {},
       };

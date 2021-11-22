@@ -1,5 +1,5 @@
+import { AnyAction } from '@reduxjs/toolkit';
 import { Trade } from '@uniswap/sdk';
-import { AnyAction } from 'redux';
 import { Numberish, UniswapCurrency } from '@rainbow-me/entities';
 import { AppDispatch } from '@rainbow-me/redux/store';
 

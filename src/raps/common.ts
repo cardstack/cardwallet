@@ -185,6 +185,7 @@ export const createNewRap = (actions: RapAction[], callback = NOOP) => {
   };
 
   logger.log('[common] Creating a new rap', currentRap);
+  //@ts-expect-error
   dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
   return currentRap;
 };

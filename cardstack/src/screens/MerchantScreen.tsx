@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native';
-import React, { memo, useCallback, useMemo } from 'react';
-import { StatusBar } from 'react-native';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
+import { Alert, StatusBar } from 'react-native';
 import {
   useLifetimeEarningsData,
   useMerchantTransactions,
@@ -33,12 +33,20 @@ import {
 } from '@cardstack/utils';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
-import { useDimensions } from '@rainbow-me/hooks';
+import {
+  useAccountSettings,
+  useDimensions,
+  usePrevious,
+  useWallets,
+} from '@rainbow-me/hooks';
+import { useLoadingOverlay } from '@cardstack/navigation';
+import {
+  useClaimRevenueMutation,
+  useGetSafesDataQuery,
+} from '@cardstack/services';
+import logger from 'logger';
 
 const HORIZONTAL_PADDING = 5;
 const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
@@ -72,30 +80,48 @@ const MerchantScreen = () => {
   const { navigate } = useNavigation();
 
   const {
-    params: { merchantSafe },
+    params: { merchantSafe: merchantSafeFallback },
   } = useRoute<RouteType>();
 
-  const [merchantSafes] = useRainbowSelector(state => [
-    state.data.merchantSafes,
-  ]);
+  const { accountAddress, nativeCurrency } = useAccountSettings();
 
-  const merchantSafeData = {
-    ...merchantSafes.find(safe => safe.address === merchantSafe.address),
-    merchantInfo: merchantSafe.merchantInfo,
-  } as MerchantSafeType;
+  const { updatedMerchantSafe, isRefreshingBalances } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
+    {
+      refetchOnMountOrArgChange: 60,
+      selectFromResult: ({ data, isFetching }) => ({
+        updatedMerchantSafe: data?.merchantSafes.find(
+          (safe: MerchantSafeType) =>
+            safe.address === merchantSafeFallback.address
+        ),
+        isRefreshingBalances: isFetching,
+      }),
+    }
+  );
+
+  const merchantSafe = updatedMerchantSafe || merchantSafeFallback;
+
+  const onClaimAllPress = useClaimAllRevenue({
+    merchantSafe,
+    isRefreshingBalances,
+  });
 
   const onPressGoTo = useCallback(
     (type: ExpandedMerchantRoutes) => () => {
       navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: merchantSafeData,
+        asset: merchantSafe,
         type,
+        customFunction:
+          type === ExpandedMerchantRoutes.unclaimedRevenue
+            ? onClaimAllPress
+            : undefined,
       });
     },
-    [merchantSafeData, navigate]
+    [merchantSafe, navigate, onClaimAllPress]
   );
 
   const { sections } = useMerchantTransactions(
-    merchantSafeData.address,
+    merchantSafe.address,
     'recentActivity'
   );
 
@@ -103,8 +129,8 @@ const MerchantScreen = () => {
     <Container top={0} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
       <Header
-        address={merchantSafeData.address}
-        name={merchantSafeData.merchantInfo?.name}
+        address={merchantSafe.address}
+        name={merchantSafe.merchantInfo?.name}
       />
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <ScrollView
@@ -113,7 +139,7 @@ const MerchantScreen = () => {
           contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
           paddingHorizontal={HORIZONTAL_PADDING}
         >
-          <MerchantInfo merchantInfo={merchantSafeData.merchantInfo} />
+          <MerchantInfo merchantInfo={merchantSafe.merchantInfo} />
           <Button
             marginTop={2}
             marginBottom={4}
@@ -127,20 +153,20 @@ const MerchantScreen = () => {
             onPress={onPressGoTo(ExpandedMerchantRoutes.recentActivity)}
           />
           <LifetimeEarningsSection
-            merchantSafe={merchantSafeData}
+            merchantSafe={merchantSafe}
             onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
           />
           <TokensSection
             title="Available revenue"
             onPress={onPressGoTo(ExpandedMerchantRoutes.unclaimedRevenue)}
             emptyText="No revenue to be claimed"
-            tokens={merchantSafeData.revenueBalances}
+            tokens={merchantSafe.revenueBalances}
           />
           <TokensSection
             title="Account balances"
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
             emptyText="No available assets"
-            tokens={merchantSafeData.tokens}
+            tokens={merchantSafe.tokens}
           />
         </ScrollView>
       </Container>
@@ -406,4 +432,63 @@ const RecentActivitySection = ({
       )}
     </Container>
   );
+};
+
+const useClaimAllRevenue = ({
+  merchantSafe,
+  isRefreshingBalances,
+}: {
+  merchantSafe: MerchantSafeType;
+  isRefreshingBalances: boolean;
+}) => {
+  const { selectedWallet } = useWallets();
+  const { accountAddress, network } = useAccountSettings();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+
+  const [
+    claimRevenue,
+    { isSuccess, isError, error },
+  ] = useClaimRevenueMutation();
+
+  const onClaimAllPress = useCallback(async () => {
+    showLoadingOverlay({ title: 'Claiming Revenue' });
+
+    claimRevenue({
+      selectedWallet,
+      revenueBalances: merchantSafe.revenueBalances,
+      accountAddress,
+      merchantSafeAddress: merchantSafe.address,
+      network,
+    });
+  }, [
+    accountAddress,
+    claimRevenue,
+    merchantSafe.address,
+    merchantSafe.revenueBalances,
+    network,
+    selectedWallet,
+    showLoadingOverlay,
+  ]);
+
+  // isRefreshing may be false when isSuccess is truthy on the first time
+  // so we use the previous value to make sure
+  const hasUpdated = usePrevious(isRefreshingBalances);
+
+  useEffect(() => {
+    if (isSuccess && hasUpdated) {
+      dismissLoadingOverlay();
+    }
+  }, [dismissLoadingOverlay, isSuccess, hasUpdated]);
+
+  useEffect(() => {
+    if (isError) {
+      dismissLoadingOverlay();
+      logger.sentry('Error claiming revenue', error);
+      Alert.alert(
+        'Could not claim revenue, please try again. If this problem persists please reach out to support@cardstack.com'
+      );
+    }
+  }, [dismissLoadingOverlay, error, isError]);
+
+  return onClaimAllPress;
 };

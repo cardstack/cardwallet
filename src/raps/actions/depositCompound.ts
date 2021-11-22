@@ -104,6 +104,7 @@ const depositCompound = async (
   };
   logger.log('[deposit] adding new txn', newTransaction);
   // Disable the txn watcher because Compound can silently fail
+  //@ts-expect-error
   await dispatch(dataAddNewTransaction(newTransaction, accountAddress, true));
   logger.log('[deposit] calling the callback');
   currentRap.callback();
@@ -117,16 +118,19 @@ const depositCompound = async (
     logger.log('[deposit] receipt:', receipt);
     if (receipt.status && !isZero(receipt.status)) {
       currentRap.actions[index].transaction.confirmed = true;
+      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
       logger.log('[deposit] updated raps');
     } else {
       logger.log('[deposit] status not success');
       currentRap.actions[index].transaction.confirmed = false;
+      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
     }
   } catch (error) {
     logger.log('[deposit] error waiting for deposit', error);
     currentRap.actions[index].transaction.confirmed = false;
+    //@ts-expect-error
     dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
   }
   logger.log('[deposit] completed');

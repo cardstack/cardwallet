@@ -1,12 +1,12 @@
 import React from 'react';
+import { PrepaidCardSafe } from '@cardstack/cardpay-sdk';
 import MiniPrepaidCard from '../../../../PrepaidCard/MiniPrepaidCard';
 import TransactionListItem from '../TransactionListItem';
 import { Container, Text } from '@cardstack/components';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { useGetSafesDataQuery } from '@cardstack/services';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 export const PrepaidCardTransactionSection = ({
   headerText,
@@ -20,10 +20,17 @@ export const PrepaidCardTransactionSection = ({
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
-  const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
+  const { accountAddress } = useAccountSettings();
 
-  const prepaidCard = prepaidCards.find(
-    card => card.address === prepaidCardAddress
+  const { prepaidCard } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
+    {
+      selectFromResult: ({ data }) => ({
+        prepaidCard: data?.prepaidCards.find(
+          (card: PrepaidCardSafe) => card.address === prepaidCardAddress
+        ),
+      }),
+    }
   );
 
   const spendDisplay = convertSpendForBalanceDisplay(

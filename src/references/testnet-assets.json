@@ -142,7 +142,7 @@
           "relative_change_24h": 0,
           "value": 0
         },
-        "symbol": "DAI"
+        "symbol": "DAI.CPXD"
       },
       "quantity": 0
     },
@@ -158,7 +158,7 @@
           "relative_change_24h": 0,
           "value": 0
         },
-        "symbol": "CARD"
+        "symbol": "CARD.CPXD"
       },
       "quantity": 0
     }

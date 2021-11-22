@@ -10,7 +10,9 @@ import {
 } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
-import { updatePrepaidCardWithCustomization } from './prepaid-card-service';
+import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { AnyAction } from '@reduxjs/toolkit';
+import { updatePrepaidCardWithCustomization } from './prepaid-cards/prepaid-card-service';
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
 import {
   saveDepots,
@@ -22,7 +24,134 @@ import Web3Instance from '@cardstack/models/web3-instance';
 import { Navigation } from '@rainbow-me/navigation';
 import { MainRoutes } from '@cardstack/navigation/routes';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
+import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { dataLoadState } from '@rainbow-me/redux/data';
+import store from '@rainbow-me/redux/store';
 
+export const getSafeData = async (address: string) => {
+  const safesInstance = await getSafesInstance();
+
+  const result = await safesInstance?.viewSafe(address);
+  return result?.safe;
+};
+
+export const fetchSafes = async (
+  address: string,
+  nativeCurrency: NativeCurrency
+) => {
+  try {
+    const safesInstance = await getSafesInstance();
+
+    const safes = (await safesInstance?.view(address))?.safes || [];
+
+    const safesWithTokenPrices = await Promise.all(
+      safes?.map(safe => addPricesToSafe(safe, nativeCurrency))
+    );
+
+    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(
+      (safesWithTokenPrices as unknown) as Safe[]
+    );
+
+    const addPrepaidCardCustomization = Promise.all(
+      prepaidCards.map(updatePrepaidCardWithCustomization)
+    );
+
+    const addMerchantSafesCustomization = Promise.all(
+      merchantSafes.map(updateMerchantSafeWithCustomization)
+    );
+
+    const [extendedPrepaidCards, extendedMerchantSafes] = await Promise.all([
+      addPrepaidCardCustomization,
+      addMerchantSafesCustomization,
+    ]);
+
+    const data = {
+      depots,
+      prepaidCards: extendedPrepaidCards,
+      merchantSafes: extendedMerchantSafes,
+    };
+
+    if (extendedMerchantSafes.length) {
+      const merchantSafesWithRevenue = await Promise.all(
+        extendedMerchantSafes.map(async merchantSafe => ({
+          ...merchantSafe,
+          revenueBalances: await getRevenuePoolBalances(
+            merchantSafe.address,
+            nativeCurrency
+          ),
+        }))
+      );
+
+      data.merchantSafes = merchantSafesWithRevenue;
+    }
+
+    // TODO: REMOVE
+    // Temporally saving on storage to keep old redux state
+    // block-start
+    const network = await getNetwork();
+
+    const saveCards = savePrepaidCards(data.prepaidCards, address, network);
+    const saveDepts = saveDepots(data.depots, address, network);
+
+    const saveMerchant = saveMerchantSafes(
+      data.merchantSafes,
+      address,
+      network
+    );
+
+    await Promise.all([saveCards, saveDepts, saveMerchant]);
+
+    store.dispatch((dataLoadState() as unknown) as AnyAction);
+    // block-end
+
+    return { data };
+  } catch (error) {
+    captureException(error);
+    logger.sentry('Fetch GnosisSafes failed', error);
+
+    return {
+      error: {
+        status: 418,
+        data: error,
+      },
+    };
+  }
+};
+
+export const fetchGnosisSafes = async (address: string) => {
+  try {
+    const safesInstance = await getSafesInstance();
+
+    const safes = (await safesInstance?.view(address))?.safes || [];
+
+    safes?.forEach(safe => {
+      safe?.tokens.forEach(({ balance, token }) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        token.value = Web3.utils.fromWei(balance);
+      });
+    });
+
+    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(safes);
+
+    const extendedPrepaidCards = await Promise.all(
+      prepaidCards.map(updatePrepaidCardWithCustomization)
+    );
+
+    return {
+      depots,
+      merchantSafes,
+      prepaidCards: extendedPrepaidCards,
+    };
+  } catch (error) {
+    Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
+    captureException(error);
+    logger.sentry('Fetch GnosisSafes failed', error);
+  }
+};
+
+// Helpers
 const normalizeSafesByType = (safes: Safe[]) =>
   safes.reduce(
     (
@@ -60,36 +189,83 @@ const normalizeSafesByType = (safes: Safe[]) =>
     }
   );
 
-export const fetchGnosisSafes = async (address: string) => {
-  try {
-    const safesInstance = await getSafesInstance();
+export const addPricesToSafe = async (
+  safe: Safe,
+  nativeCurrency: NativeCurrency
+) => {
+  const tokensWithPrice = await Promise.all(
+    safe?.tokens.map(async tokenInfo =>
+      addNativePriceToToken(tokenInfo, nativeCurrency)
+    )
+  );
 
-    const safes = (await safesInstance?.view(address))?.safes || [];
+  return { ...safe, tokens: tokensWithPrice };
+};
 
-    safes?.forEach(safe => {
-      safe?.tokens.forEach(({ balance, token }) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        token.value = Web3.utils.fromWei(balance);
-      });
-    });
+export const addNativePriceToToken = async (
+  tokenInfo: TokenInfo,
+  nativeCurrency: string
+) => {
+  const {
+    balance,
+    token: { symbol, decimals },
+  } = tokenInfo;
 
-    const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(safes);
+  const nativeBalance = await getNativeBalanceFromOracle({
+    nativeCurrency,
+    balance,
+    symbol,
+  });
 
-    const extendedPrepaidCards = await Promise.all(
-      prepaidCards.map(updatePrepaidCardWithCustomization)
-    );
+  const isAmountDust = nativeBalance < 0.01;
 
-    return {
-      depots,
-      merchantSafes,
-      prepaidCards: extendedPrepaidCards,
-    };
-  } catch (error) {
-    Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
-    captureException(error);
-    logger.sentry('Fetch GnosisSafes failed', error);
-  }
+  //decimal places formatting for residual crypto values
+  const bufferValue = isAmountDust ? 0 : undefined;
+  return {
+    ...tokenInfo,
+    balance: {
+      ...convertRawAmountToBalance(balance, { symbol, decimals }, bufferValue),
+      wei: balance,
+    },
+    native: {
+      balance: {
+        amount: nativeBalance,
+        display: convertAmountToNativeDisplay(
+          nativeBalance,
+          nativeCurrency,
+          bufferValue
+        ),
+      },
+    },
+  };
+};
+
+export const getRevenuePoolBalances = async (
+  merchantAddress: string,
+  nativeCurrency: NativeCurrency
+) => {
+  const web3 = await Web3Instance.get();
+
+  const revenuePool = await getSDK('RevenuePool', web3);
+  const revenueBalances = await revenuePool.balances(merchantAddress);
+
+  const revenueTokensWithPrice = await Promise.all(
+    revenueBalances?.map(
+      async ({ tokenSymbol: symbol, balance, tokenAddress }) => {
+        const tokenWithPrice = await addNativePriceToToken(
+          {
+            token: { symbol },
+            balance,
+          } as TokenInfo,
+          nativeCurrency
+        );
+
+        return { ...tokenWithPrice, tokenAddress };
+      }
+    )
+  );
+
+  return revenueTokensWithPrice;
 };
 
 export const getTokensWithPrice = async (
@@ -215,10 +391,6 @@ export const addGnosisTokenPrices = async (
       ),
     ]);
 
-    savePrepaidCards(prepaidCardsWithPrice, accountAddress, network);
-    saveDepots(depotsWithPrice, accountAddress, network);
-    saveMerchantSafes(merchantSafesWithPrice, accountAddress, network);
-
     return {
       depots: depotsWithPrice,
       prepaidCards: prepaidCardsWithPrice,
@@ -231,11 +403,4 @@ export const addGnosisTokenPrices = async (
     prepaidCards: [],
     merchantSafes: [],
   };
-};
-
-export const getSafeData = async (address: string) => {
-  const safesInstance = await getSafesInstance();
-
-  const result = await safesInstance?.viewSafe(address);
-  return result?.safe;
 };

@@ -104,10 +104,12 @@ const unlock = async (
   // update rap for hash
   currentRap.actions[index].transaction.hash = approval.hash;
   logger.log('[unlock] adding a new txn for the approval', approval.hash);
+  //@ts-expect-error
   dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
 
   logger.log('[unlock] add a new txn');
   await dispatch(
+    //@ts-expect-error
     dataAddNewTransaction(
       {
         amount: 0,
@@ -135,16 +137,19 @@ const unlock = async (
     if (receipt.status && !isZero(receipt.status)) {
       // update rap for confirmed status
       currentRap.actions[index].transaction.confirmed = true;
+      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
       logger.log('[unlock] APPROVED');
     } else {
       logger.log('[unlock] error waiting for approval');
       currentRap.actions[index].transaction.confirmed = false;
+      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
     }
   } catch (error) {
     logger.log('[unlock] approval status not success', error);
     currentRap.actions[index].transaction.confirmed = false;
+    //@ts-expect-error
     dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
   }
   logger.log('[unlock] completed', currentRap, approval);

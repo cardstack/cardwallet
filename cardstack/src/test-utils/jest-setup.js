@@ -185,6 +185,11 @@ jest.mock('react-native-version-number', () => ({
   VersionNumber: jest.fn(),
 }));
 
+jest.mock('@reduxjs/toolkit/query/react', () => ({
+  ...jest.requireActual('@reduxjs/toolkit/query/react'),
+  fetchBaseQuery: jest.fn(),
+}));
+
 // RAINBOW MOCKS
 
 jest.mock('@rainbow-me/references', () => ({

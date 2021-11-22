@@ -22,9 +22,8 @@ export default function useLoadAccountData() {
       logger.sentry('Load wallet account data');
       await dispatch(openStateSettingsLoadState());
       await dispatch(coinListLoadState());
+      await dispatch(dataLoadState());
       const promises = [];
-      const p1 = dispatch(dataLoadState());
-      promises.push(p1);
       if (isMainnet(network)) {
         const p2 = dispatch(collectiblesLoadState());
         promises.push(p2);

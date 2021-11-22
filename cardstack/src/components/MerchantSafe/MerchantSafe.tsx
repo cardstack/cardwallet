@@ -10,7 +10,6 @@ import {
 import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
@@ -22,15 +21,13 @@ interface MerchantSafeProps extends MerchantSafeType {
   infoDID: string;
 }
 
-export const MerchantSafe = (props: MerchantSafeProps) => {
+export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
 
-  const { merchantInfoDID } = useMerchantInfoFromDID(props.infoDID);
-
   const onPress = useCallback(() => {
-    const merchantData = { ...props, merchantInfo: merchantInfoDID };
+    const merchantData = { ...props, merchantInfo };
     navigate(Routes.MERCHANT_SCREEN, { merchantSafe: merchantData });
-  }, [merchantInfoDID, navigate, props]);
+  }, [merchantInfo, navigate, props]);
 
   return (
     <Container paddingHorizontal={4} marginBottom={4}>
@@ -44,16 +41,16 @@ export const MerchantSafe = (props: MerchantSafeProps) => {
           <SafeHeader
             {...props}
             onPress={onPress}
-            backgroundColor={merchantInfoDID?.color}
-            textColor={merchantInfoDID?.textColor}
+            backgroundColor={merchantInfo?.color}
+            textColor={merchantInfo?.textColor}
           />
           <Container paddingHorizontal={6}>
             <MerchantInfo
-              color={merchantInfoDID?.color}
-              textColor={merchantInfoDID?.textColor}
-              name={merchantInfoDID?.name}
+              color={merchantInfo?.color}
+              textColor={merchantInfo?.textColor}
+              name={merchantInfo?.name}
             />
-            <Bottom slug={merchantInfoDID?.slug} />
+            <Bottom slug={merchantInfo?.slug} />
           </Container>
         </Container>
       </Touchable>

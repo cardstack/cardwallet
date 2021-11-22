@@ -4,3 +4,6 @@ export * from './exchange-rate-service';
 export * from './firebase-cloud-functions';
 export * from './sync-prepaidcard-service';
 export * from './hub-service';
+export * from './safes-api';
+export * from './merchant/merchant-api';
+export * from './prepaid-cards/prepaid-card-api';

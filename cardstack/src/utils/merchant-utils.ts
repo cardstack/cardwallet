@@ -4,6 +4,7 @@ import { Share } from 'react-native';
 import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
+  MerchantSafe,
   subtract,
 } from '@cardstack/cardpay-sdk';
 import { getAddressPreview } from './formatting-utils';
@@ -21,6 +22,7 @@ import {
 import { convertSpendForBalanceDisplay } from '@cardstack/utils/cardpay-utils';
 import { IconName } from '@cardstack/components';
 import { getNativeBalanceFromOracle } from '@cardstack/services';
+import logger from 'logger';
 
 export const ClaimedStatus = {
   CLAIMED_TEXT: `Claimed from \nAvailable Revenue`,
@@ -82,6 +84,23 @@ export const fetchMerchantInfoFromDID = async (
       ownerAddress: attributes['owner-address'],
     };
   }
+};
+
+export const updateMerchantSafeWithCustomization = async (
+  merchant: MerchantSafe
+) => {
+  try {
+    const merchantInfo = await fetchMerchantInfoFromDID(merchant.infoDID);
+
+    return {
+      ...merchant,
+      merchantInfo,
+    };
+  } catch (e) {
+    logger.sentry('Error getting merchantCustomization', e);
+  }
+
+  return merchant;
 };
 
 export const shareRequestPaymentLink = (

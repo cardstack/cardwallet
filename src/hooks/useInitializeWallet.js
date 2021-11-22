@@ -18,7 +18,6 @@ import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
 import { appStateUpdate } from '@cardstack/redux/appState';
-import { web3Provider } from '@rainbow-me/handlers/web3';
 import logger from 'logger';
 
 export default function useInitializeWallet() {
@@ -31,8 +30,6 @@ export default function useInitializeWallet() {
 
   const { network } = useAccountSettings();
   const hideSplashScreen = useHideSplashScreen();
-
-  const providerUrl = web3Provider?.connection?.url;
 
   const initializeWallet = useCallback(
     async ({
@@ -49,6 +46,10 @@ export default function useInitializeWallet() {
         await resetAccountState();
         logger.sentry('resetAccountState ran ok');
 
+        await dispatch(settingsLoadNetwork());
+
+        logger.sentry('done loading network');
+
         const isImporting = !!seedPhrase;
         logger.sentry('isImporting?', isImporting);
 
@@ -62,17 +63,6 @@ export default function useInitializeWallet() {
           await runMigrations();
           logger.sentry('done with migrations');
         }
-
-        // Load the network first
-        console.log('useInitializeWallet.js, providerUrl: ' + providerUrl);
-
-        const shouldLoadNetwork = !providerUrl?.startsWith('http://');
-
-        if (shouldLoadNetwork) {
-          await dispatch(settingsLoadNetwork());
-        }
-
-        logger.sentry('done loading network');
 
         const { isNew, walletAddress } = await walletInit(
           seedPhrase,
@@ -134,7 +124,6 @@ export default function useInitializeWallet() {
     [
       resetAccountState,
       loadCoingeckoCoins,
-      providerUrl,
       network,
       dispatch,
       hideSplashScreen,
