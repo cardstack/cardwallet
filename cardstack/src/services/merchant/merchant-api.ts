@@ -1,8 +1,6 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
-import { fetchSafes } from '../gnosis-service';
 import { CacheTags, safesApi } from '../safes-api';
 import HDProvider from '@cardstack/models/hd-provider';
 import Web3Instance from '@cardstack/models/web3-instance';

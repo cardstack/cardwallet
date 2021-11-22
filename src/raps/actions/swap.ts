@@ -147,6 +147,7 @@ const swap = async (
 
   logger.log('[swap] response', swap);
   currentRap.actions[index].transaction.hash = swap.hash;
+  //@ts-expect-error
   dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
   logger.log('[swap] adding a new swap txn to pending', swap.hash);
   const newTransaction = {
@@ -163,6 +164,7 @@ const swap = async (
     type: TransactionTypes.trade,
   };
   logger.log('[swap] adding new txn', newTransaction);
+  //@ts-expect-error
   await dispatch(dataAddNewTransaction(newTransaction, accountAddress, true));
   logger.log('[swap] calling the callback');
   currentRap.callback();
@@ -174,6 +176,7 @@ const swap = async (
     logger.log('[swap] receipt:', receipt);
     if (receipt.status && !isZero(receipt.status)) {
       currentRap.actions[index].transaction.confirmed = true;
+      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
       const rawReceivedAmount = findSwapOutputAmount(receipt, accountAddress);
       logger.log('[swap] raw received amount', rawReceivedAmount);
@@ -188,12 +191,14 @@ const swap = async (
     } else {
       logger.log('[swap] status not success');
       currentRap.actions[index].transaction.confirmed = false;
+      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
       return null;
     }
   } catch (error) {
     logger.log('[swap] error waiting for swap', error);
     currentRap.actions[index].transaction.confirmed = false;
+    //@ts-expect-error
     dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
     return null;
   }
