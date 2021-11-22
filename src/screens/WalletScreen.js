@@ -29,10 +29,6 @@ import {
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { Container, SystemNotification, Text } from '@cardstack/components';
-import {
-  DiscordPromoBanner,
-  useDiscordPromoBanner,
-} from '@cardstack/components/DiscordPromoBanner';
 import { colors } from '@cardstack/theme';
 import { isLayer2, NOTIFICATION_KEY } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -66,11 +62,6 @@ export default function WalletScreen() {
 
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
-
-  const {
-    showPromoBanner,
-    onPress: onDiscordPromoPress,
-  } = useDiscordPromoBanner();
 
   const setNotifications = async () => {
     try {
@@ -170,9 +161,6 @@ export default function WalletScreen() {
             <SystemNotification type="info" {...notificationProps} />
           )}
         </HeaderOpacityToggler>
-        {showPromoBanner && (
-          <DiscordPromoBanner onPress={onDiscordPromoPress} />
-        )}
         <AssetListWrapper />
       </FabWrapper>
     </WalletPage>
