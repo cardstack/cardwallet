@@ -5,10 +5,10 @@ import {
   TransactionBaseCustomizationProps,
   TransactionRow,
 } from './TransactionBase';
+import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
 import { ERC20TransactionType } from '@cardstack/types';
 import { CoinIcon, SafeHeader } from '@cardstack/components';
 import { colors, avatarColor } from '@cardstack/theme';
-import { getAddressPreview } from '@cardstack/utils';
 import { useAccountProfile } from '@rainbow-me/hooks';
 
 export interface ERC20TransactionProps
@@ -18,6 +18,7 @@ export interface ERC20TransactionProps
 
 export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
   const displayData = getDisplayDataByStatus(item.status);
+  const { name: nameForAddress } = useNameOrPreviewFromAddress(item.to);
 
   const swappedForDisplayData = item.swappedFor
     ? getDisplayDataByStatus(item.swappedFor.status)
@@ -81,7 +82,7 @@ export const ERC20Transaction = ({ item, ...props }: ERC20TransactionProps) => {
     <TransactionBase
       {...props}
       {...calculatedProps}
-      recipientName={isSentTransaction ? getAddressPreview(item.to) : undefined}
+      recipientName={isSentTransaction ? nameForAddress : undefined}
     />
   );
 };
