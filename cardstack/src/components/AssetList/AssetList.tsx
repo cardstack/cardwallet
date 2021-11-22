@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useEffect, createRef } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  createRef,
+  useMemo,
+} from 'react';
 import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
 import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
@@ -8,6 +14,10 @@ import ButtonPressAnimation from '../../../../src/components/animations/ButtonPr
 import { Theme } from '../../theme';
 import { AssetFooter } from './AssetFooter';
 import { AssetListLoading } from './AssetListLoading';
+import {
+  DiscordPromoBanner,
+  useDiscordPromoBanner,
+} from '@cardstack/components/DiscordPromoBanner';
 import {
   Button,
   Container,
@@ -116,6 +126,19 @@ export const AssetList = (props: AssetListProps) => {
     type && toggle(type);
   }
 
+  const {
+    showPromoBanner,
+    onPress: onDiscordPromoPress,
+  } = useDiscordPromoBanner();
+
+  const renderPromoBanner = useMemo(
+    () =>
+      showPromoBanner ? (
+        <DiscordPromoBanner onPress={onDiscordPromoPress} />
+      ) : null,
+    [onDiscordPromoPress, showPromoBanner]
+  );
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await refresh();
@@ -184,6 +207,7 @@ export const AssetList = (props: AssetListProps) => {
   return (
     <>
       <SectionList
+        ListHeaderComponent={renderPromoBanner}
         onScrollToIndexFailed={onScrollToIndexFailed}
         ref={sectionListRef}
         refreshControl={
