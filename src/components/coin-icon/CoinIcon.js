@@ -1,9 +1,9 @@
 import { isNil } from 'lodash';
 import React, { Fragment } from 'react';
-import ReactCoinIcon from 'react-coin-icon';
 import styled from 'styled-components';
 import CoinIconFallback from './CoinIconFallback';
 import CoinIconIndicator from './CoinIconIndicator';
+import { CoinIcon as ReactCoinIcon } from '@cardstack/components';
 import { useColorForAsset } from '@rainbow-me/hooks';
 import { getTokenMetadata, isETH, magicMemo } from '@rainbow-me/utils';
 

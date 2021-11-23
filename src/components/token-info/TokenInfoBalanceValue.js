@@ -1,8 +1,7 @@
 import React from 'react';
-import CoinIcon from 'react-coin-icon';
-
 import { RowWithMargins } from '../layout';
-import { Text } from '@cardstack/components';
+import { CoinIcon, Text } from '@cardstack/components';
+
 import { magicMemo } from '@rainbow-me/utils';
 
 const TokenInfoBalanceValue = ({ align, asset, ...props }) => {
