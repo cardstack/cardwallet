@@ -25,7 +25,7 @@ export const apiFetchCollectiblesForOwner = async (
   try {
     const networkPrefix = network === NetworkTypes.mainnet ? '' : `${network}-`;
     const offset = page * OPENSEA_LIMIT_PER_PAGE;
-    const url = `https://${networkPrefix}api.opensea.io/api/v1/assets?exclude_currencies=true&owner=${ownerAddress}&limit=${OPENSEA_LIMIT_PER_PAGE}&offset=${offset}`;
+    const url = `https://${networkPrefix}api.opensea.io/api/v1/assets?owner=${ownerAddress}&limit=${OPENSEA_LIMIT_PER_PAGE}&offset=${offset}`;
     const response = await api.get(url);
     return parseCollectiblesFromOpenSeaResponse(
       response,

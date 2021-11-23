@@ -123,7 +123,6 @@ export const createUnlockAndSwapRap = async ({
 
   // update the rap store
   const { dispatch } = store;
-  //@ts-expect-error
   dispatch(rapsAddOrUpdate(newRap.id, newRap));
   return newRap;
 };

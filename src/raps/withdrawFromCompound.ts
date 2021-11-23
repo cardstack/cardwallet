@@ -40,7 +40,6 @@ export const createWithdrawFromCompoundRap = ({
 
   // update the rap store
   const { dispatch } = store;
-  //@ts-expect-error
   dispatch(rapsAddOrUpdate(newRap.id, newRap));
   logger.log('[withdraw rap] new rap!', newRap);
   return newRap;

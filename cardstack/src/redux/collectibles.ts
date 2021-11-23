@@ -86,7 +86,7 @@ export const collectiblesRefreshState = () => async (
   }
 };
 
-const fetchNFTsViaOpenSea = () => async (
+const fetchNFTsViaOpenSea = () => (
   dispatch: AppDispatch,
   getState: AppGetState
 ) => {

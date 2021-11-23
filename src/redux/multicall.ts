@@ -229,7 +229,6 @@ export const multicallUpdateOutdatedListeners = (
           }, {});
 
         dispatch(
-          //@ts-expect-error
           multicallUpdateResults({
             blockNumber: resultsBlockNumber.toNumber(),
             chainId,
