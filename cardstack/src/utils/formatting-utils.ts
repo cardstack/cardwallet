@@ -35,5 +35,7 @@ export const getSymbolCharacterFromAddress = (string?: string) => {
     string.toUpperCase()
   );
 
-  return characters.length > 2 ? characters[2] : characters[0];
+  return characters.length > 2 && string.startsWith('0x')
+    ? characters[2]
+    : characters[0];
 };

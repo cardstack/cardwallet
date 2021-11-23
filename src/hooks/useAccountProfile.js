@@ -1,5 +1,4 @@
 import { get, toUpper } from 'lodash';
-import { removeFirstEmojiFromString } from '../helpers/emojiHandler';
 import networkTypes from '../helpers/networkTypes';
 import useAccountSettings from './useAccountSettings';
 import useWallets from './useWallets';
@@ -40,22 +39,19 @@ export default function useAccountProfile() {
 
   const { label, color, address, image } = selectedAccount;
 
-  const accountName = removeFirstEmojiFromString(
+  const accountAddressPreview =
+    label === accountENS
+      ? getAddressPreview(accountAddress)
+      : label || getAddressPreview(accountAddress);
+  const accountName =
     network === networkTypes.mainnet
       ? label || accountENS || getAddressPreview(accountAddress)
-      : label === accountENS
-      ? getAddressPreview(accountAddress)
-      : label || getAddressPreview(accountAddress)
-  ).join('');
+      : accountAddressPreview;
 
-  const labelOrAccountName =
-    accountName === label ? toUpper(accountName) : label;
   const accountSymbol = getSymbolCharacterFromAddress(
     network === networkTypes.mainnet
-      ? labelOrAccountName || toUpper(accountENS) || address
-      : label === accountENS
-      ? toUpper(accountName)
-      : toUpper(label) || toUpper(accountName)
+      ? label || toUpper(accountENS) || address
+      : toUpper(accountName)
   );
   const accountColor = color;
   const accountImage = image;
