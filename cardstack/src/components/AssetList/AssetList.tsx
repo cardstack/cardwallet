@@ -114,6 +114,7 @@ export const AssetList = (props: AssetListProps) => {
     color,
     headerPaddingVertical,
     headerPaddingHorizontal,
+    isFetchingSafes,
   } = props;
 
   const networkName = getConstantByNetwork('name', network);
@@ -201,7 +202,12 @@ export const AssetList = (props: AssetListProps) => {
     }
   }, [isDamaged, network, navigate, accountAddress]);
 
-  if (loading) {
+  const isNotManualRefetch = useMemo(() => !refreshing && isFetchingSafes, [
+    isFetchingSafes,
+    refreshing,
+  ]);
+
+  if (loading || isNotManualRefetch) {
     return <AssetListLoading />;
   }
 
