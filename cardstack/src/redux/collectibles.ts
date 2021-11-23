@@ -5,9 +5,9 @@ import { concat, isEmpty, without } from 'lodash';
 import { AnyAction } from 'redux';
 import { getEtherWeb3Provider } from '../../../src/handlers/web3';
 import AssetTypes from '../../../src/helpers/assetTypes';
-import { erc721ABI } from '../../../src/references';
-
 import { dataUpdateAssets } from '../../../src/redux/data';
+import { erc721ABI } from '@rainbow-me/references';
+
 import {
   assetsWithoutNFTsByFamily,
   getNFTFamilies,
@@ -171,7 +171,8 @@ const fetchNFTsViaRpcNode = () => async (
   // find the assets that are NFTs. TODO: consider checking contract interfaces for a more reliable filter.
   const assetsWithTokenIds = assets.filter(asset => asset.token_id);
 
-  const existingNFTs: CollectibleType[] = getState().collectibles.collectibles;
+  const existingNFTs: CollectibleType[] = (getState().collectibles as any)
+    .collectibles;
 
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
 
@@ -215,7 +216,7 @@ const fetchNFTsViaRpcNode = () => async (
             image_original_url: tokenURIJSON.image_url,
             image_thumbnail_url: tokenURIJSON.image_url,
             animation_url: null,
-            permalink: tokenURIJSON.external_url,
+            permalink: tokenURIJSON.home_url || tokenURIJSON.external_url,
             traits: [],
             background: null,
             familyImage: null,

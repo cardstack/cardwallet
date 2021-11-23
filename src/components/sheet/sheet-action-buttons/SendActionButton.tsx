@@ -4,19 +4,30 @@ import { useExpandedStateNavigation } from '../../../hooks';
 import { Button } from '@cardstack/components';
 import Routes from '@rainbow-me/routes';
 
-export default function SendActionButton({ small, asset, safeAddress }) {
+interface SendActionButtonProps {
+  asset?: any;
+  safeAddress?: string;
+  small?: boolean;
+}
+
+export default function SendActionButton({
+  asset,
+  safeAddress,
+  small,
+}: SendActionButtonProps) {
   const navigate = useExpandedStateNavigation();
 
   const handlePress = useCallback(() => {
     const isDepot = !!asset?.tokenAddress;
     const route = isDepot ? Routes.SEND_FLOW_DEPOT : Routes.SEND_FLOW_EOA;
 
-    navigate(route, params => ({ ...params, asset, safeAddress }));
+    navigate(route, (params: any) => ({ ...params, asset, safeAddress }));
   }, [asset, safeAddress, navigate]);
 
   const variantProp = small ? { variant: 'small' } : {};
 
   return (
+    // @ts-ignore could not figure out how to type variant prop
     <Button
       iconProps={{
         iconSize: 'medium',
