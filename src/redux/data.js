@@ -27,7 +27,6 @@ import { getTransactionReceipt } from '../handlers/web3';
 // eslint-disable-next-line import/no-cycle
 import { addCashUpdatePurchases } from './addCash';
 import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
-// eslint-disable-next-line import/no-cycle
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import {
   getAssetPricesFromUniswap,

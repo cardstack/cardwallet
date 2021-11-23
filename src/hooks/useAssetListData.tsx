@@ -1,5 +1,4 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
 import { orderBy } from 'lodash';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
@@ -14,6 +13,7 @@ import {
   MerchantSafe,
   PrepaidCard,
 } from '@cardstack/components';
+import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   AssetType,

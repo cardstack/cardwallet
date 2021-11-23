@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import reducers from './reducers';
 import { safesApi } from '@cardstack/services/safes-api';
 
-const enableReduxFlipper = true;
+const enableReduxFlipper = false;
 const enableReduxLogger = false;
 
 // Ignoring types, bc it's just a debug helper

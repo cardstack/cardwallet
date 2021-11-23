@@ -3,16 +3,15 @@ import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
 import { concat, isEmpty, without } from 'lodash';
 import { AnyAction } from 'redux';
-import {
-  assetsWithoutNFTsByFamily,
-  getNFTFamilies,
-} from '@cardstack/parsers/collectibles';
 import { getEtherWeb3Provider } from '../../../src/handlers/web3';
 import AssetTypes from '../../../src/helpers/assetTypes';
 import { erc721ABI } from '../../../src/references';
 
-/* eslint-disable-next-line import/no-cycle */
 import { dataUpdateAssets } from '../../../src/redux/data';
+import {
+  assetsWithoutNFTsByFamily,
+  getNFTFamilies,
+} from '@cardstack/parsers/collectibles';
 import {
   getCollectibles as getCollectiblesFromStorage,
   saveCollectibles as saveCollectiblesToStorage,

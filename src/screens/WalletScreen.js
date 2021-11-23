@@ -102,8 +102,7 @@ export default function WalletScreen() {
   // (mainnet & rinkeby)
   const fabs = [];
 
-  // const isCoinListEditedValue = useCoinListEditedValue();
-  const isCoinListEditedValue = true; //temporary
+  const isCoinListEditedValue = useCoinListEditedValue();
 
   const closedText = (
     <Text>
