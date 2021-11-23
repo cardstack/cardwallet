@@ -4,7 +4,10 @@ import { AssetType, CollectibleType } from '@cardstack/types';
 export const getNFTFamilies = (nfts: CollectibleType[]): string[] =>
   uniq(map(nfts, c => c.asset_contract.address ?? ''));
 
-export const assetsWithoutNFTs = (assets: any[], nfts: CollectibleType[]) => {
+export const assetsWithoutNFTs = (
+  assets: AssetType[],
+  nfts: CollectibleType[]
+) => {
   if (!assets.length) {
     return assets;
   }

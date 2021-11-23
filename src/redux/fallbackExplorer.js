@@ -222,7 +222,7 @@ const discoverTokens = async (
         };
       }),
       token =>
-        [token.asset.asset_code, token.asset.token_id].filter(Boolean).join('-')
+        [token.asset.asset_code, token.asset.token_id].filter(Boolean).join('-') // unique key takes token_id into account so that we retain all instances of NFTs
     );
   }
   return [];

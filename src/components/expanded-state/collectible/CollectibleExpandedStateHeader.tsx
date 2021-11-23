@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Linking, Share } from 'react-native';
 
 import { buildCollectibleName } from '../../../helpers/assets';
-import { magicMemo, showActionSheetWithOptions } from '../../../utils';
+import { showActionSheetWithOptions } from '../../../utils';
 import ButtonPressAnimation from '../../animations/ButtonPressAnimation';
 import { Container, Icon, Text } from '@cardstack/components';
 import { CollectibleType } from '@cardstack/types';
@@ -103,4 +103,4 @@ const CollectibleExpandedStateHeader = ({
   );
 };
 
-export default magicMemo(CollectibleExpandedStateHeader, 'collectible');
+export default memo(CollectibleExpandedStateHeader);

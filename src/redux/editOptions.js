@@ -1,6 +1,5 @@
 import produce from 'immer';
 import { concat, difference, filter, union, without } from 'lodash';
-import { Value } from 'react-native-reanimated';
 import {
   getHiddenCoins,
   getPinnedCoins,

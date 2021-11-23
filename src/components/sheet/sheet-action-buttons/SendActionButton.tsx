@@ -27,7 +27,7 @@ export default function SendActionButton({
   const variantProp = small ? { variant: 'small' } : {};
 
   return (
-    // @ts-ignore could not figure out how to type variant prop
+    // @ts-expect-error could not figure out how to type variant prop
     <Button
       iconProps={{
         iconSize: 'medium',

@@ -176,77 +176,79 @@ const fetchNFTsViaRpcNode = () => async (
 
   dispatch({ type: COLLECTIBLES_FETCH_REQUEST });
 
-  // TODO: enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
+  // enhance them with metadata from the tokenURI so that they have a similar shape to what parseCollectiblesFromOpenSeaResponse creates
   try {
     const web3Provider = await getEtherWeb3Provider();
 
-    const collectibles = await Promise.all(
-      assetsWithTokenIds.map(async asset => {
-        assert(asset.address);
-        assert(asset.token_id);
+    const collectibles = (
+      await Promise.all(
+        assetsWithTokenIds.map(async asset => {
+          assert(asset.address);
+          assert(asset.token_id);
 
-        const existingNFT = existingNFTs.find(
-          nft =>
-            nft.asset_contract.address === asset.address &&
-            nft.id === asset.token_id
-        );
-
-        if (existingNFT) {
-          return existingNFT;
-        }
-
-        try {
-          const nftContract = new Contract(
-            asset.address,
-            erc721ABI,
-            web3Provider
+          const existingNFT = existingNFTs.find(
+            nft =>
+              nft.asset_contract.address === asset.address &&
+              nft.id === asset.token_id
           );
 
-          const tokenURI = await nftContract.tokenURI(asset.token_id);
-          const tokenURIRequest = await fetch(tokenURI);
-          const tokenURIJSON = await tokenURIRequest.json();
+          if (existingNFT) {
+            return existingNFT;
+          }
 
-          const augmentedCollectible: CollectibleType = {
-            id: asset.token_id,
-            name: tokenURIJSON.name || asset.name,
-            description: tokenURIJSON.description,
-            external_link: tokenURIJSON.external_url,
-            image_preview_url: tokenURIJSON.image_url,
-            image_url: tokenURIJSON.image_url,
-            image_original_url: tokenURIJSON.image_url,
-            image_thumbnail_url: tokenURIJSON.image_url,
-            animation_url: null,
-            permalink: tokenURIJSON.home_url || tokenURIJSON.external_url,
-            traits: [],
-            background: null,
-            familyImage: null,
-            isSendable: false,
-            asset_contract: {
-              address: asset.address,
+          try {
+            const nftContract = new Contract(
+              asset.address,
+              erc721ABI,
+              web3Provider
+            );
+
+            const tokenURI = await nftContract.tokenURI(asset.token_id);
+            const tokenURIRequest = await fetch(tokenURI);
+            const tokenURIJSON = await tokenURIRequest.json();
+
+            const collectible: CollectibleType = {
+              id: asset.token_id,
+              name: tokenURIJSON.name || asset.name,
               description: tokenURIJSON.description,
               external_link: tokenURIJSON.external_url,
+              image_preview_url: tokenURIJSON.image_url,
               image_url: tokenURIJSON.image_url,
-              name: asset.name,
-              nft_version: null,
-              schema_name: null,
-              symbol: asset.symbol,
-              total_supply: null,
-            },
-            nativeCurrency,
-            networkName: network,
-            lastPrice: null,
-            type: AssetTypes.nft,
-            uniqueId: `${asset.address}_${asset.token_id}`,
-          };
+              image_original_url: tokenURIJSON.image_url,
+              image_thumbnail_url: tokenURIJSON.image_url,
+              animation_url: null,
+              permalink: tokenURIJSON.home_url || tokenURIJSON.external_url,
+              traits: [],
+              background: null,
+              familyImage: null,
+              isSendable: false,
+              asset_contract: {
+                address: asset.address,
+                description: tokenURIJSON.description,
+                external_link: tokenURIJSON.external_url,
+                image_url: tokenURIJSON.image_url,
+                name: asset.name,
+                nft_version: null,
+                schema_name: null,
+                symbol: asset.symbol,
+                total_supply: null,
+              },
+              nativeCurrency,
+              networkName: network,
+              lastPrice: null,
+              type: AssetTypes.nft,
+              uniqueId: `${asset.address}_${asset.token_id}`,
+            };
 
-          return augmentedCollectible;
-        } catch (error) {
-          console.log('Error augmenting collectible', error);
+            return collectible;
+          } catch (error) {
+            console.log('Error creating collectible', error);
 
-          return asset;
-        }
-      })
-    );
+            return null;
+          }
+        })
+      )
+    ).filter(Boolean);
 
     saveCollectiblesToStorage(collectibles, accountAddress, network);
     // save the collectibles to redux state

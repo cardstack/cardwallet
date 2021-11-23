@@ -1,8 +1,7 @@
 import { endsWith } from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 import { useDimensions, useImageMetadata } from '../../../hooks';
-import { magicMemo } from '../../../utils';
 import { CollectibleImage } from '../../collectible';
 import { Centered } from '../../layout';
 import { Container } from '@cardstack/components';
@@ -64,4 +63,4 @@ const CollectibleExpandedStateImage = ({
   );
 };
 
-export default magicMemo(CollectibleExpandedStateImage, 'collectible.uniqueId');
+export default memo(CollectibleExpandedStateImage);

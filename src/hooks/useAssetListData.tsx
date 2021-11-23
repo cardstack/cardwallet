@@ -93,7 +93,7 @@ const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
   ]);
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
-  let assetsToInclude = assetsWithoutNFTs(stateAssets, collectibles);
+  const assetsToInclude = assetsWithoutNFTs(stateAssets, collectibles);
   const assetsWithNative = parseAssetsNativeWithTotals(
     assetsToInclude,
     nativeCurrency
