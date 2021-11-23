@@ -12,7 +12,10 @@ import { ButtonPressAnimation } from '../../animations';
 import { ContactAvatar } from '../../contacts';
 import { Centered, Column, ColumnWithMargins, Row } from '../../layout';
 import { Icon, Text, TruncatedAddress } from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
+import {
+  getAddressPreview,
+  getSymbolCharacterFromAddress,
+} from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useWallets } from '@rainbow-me/hooks';
@@ -108,7 +111,7 @@ const WalletSelectionView = () => {
           const visibleAccounts = wallet.addresses.filter(a => a.visible);
           const account = visibleAccounts[0];
           const totalAccounts = visibleAccounts.length;
-          const { color, label, index, address } = account;
+          const { color, label, address } = account;
           if (wallet.backupType === WalletBackupTypes.cloud) {
             cloudBackedUpWallets += 1;
           }
@@ -134,7 +137,9 @@ const WalletSelectionView = () => {
                       color={color}
                       marginRight={10}
                       size="smedium"
-                      value={labelOrName || `${index + 1}`}
+                      value={
+                        labelOrName || getSymbolCharacterFromAddress(address)
+                      }
                     />
                     <ColumnWithMargins margin={3} marginBottom={0.5}>
                       <Row>
