@@ -23,17 +23,11 @@ const typeToStrategies: {
   lifetimeEarnings: [MerchantEarnedSpendStrategy],
   unclaimedRevenue: [MerchantClaimStrategy, MerchantEarnedRevenueStrategy],
   availableBalances: [
-    MerchantEarnedSpendStrategy,
     MerchantClaimStrategy,
     MerchantWithdrawStrategy,
     MerchantDepositStrategy,
   ],
-  recentActivity: [
-    MerchantEarnedSpendStrategy,
-    MerchantWithdrawStrategy,
-    MerchantDepositStrategy,
-    MerchantClaimStrategy,
-  ],
+  recentActivity: [MerchantEarnedSpendStrategy],
 };
 
 export const useMerchantTransactions = (
