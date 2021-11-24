@@ -13,3 +13,4 @@ export const SettingsExternalURLs = {
   twitterWebUrl: 'https://twitter.com/cardstack',
   discordInviteLink: 'https://discord.gg/cardstack',
 };
+export const IPFS_HTTP_URL = 'https://ipfs.infura.io';

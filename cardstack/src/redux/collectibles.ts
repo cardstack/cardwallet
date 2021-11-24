@@ -3,15 +3,15 @@ import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
 import { concat, isEmpty, without } from 'lodash';
 import { AnyAction } from 'redux';
-import { getEtherWeb3Provider } from '../../../src/handlers/web3';
-import AssetTypes from '../../../src/helpers/assetTypes';
-import { dataUpdateAssets } from '../../../src/redux/data';
-import { erc721ABI } from '@rainbow-me/references';
-
 import {
   assetsWithoutNFTsByFamily,
   getNFTFamilies,
 } from '@cardstack/parsers/collectibles';
+import { dataUpdateAssets } from '../../../src/redux/data';
+import { getEtherWeb3Provider } from '../../../src/handlers/web3';
+import AssetTypes from '../../../src/helpers/assetTypes';
+import { erc721ABI } from '@rainbow-me/references';
+
 import {
   getCollectibles as getCollectiblesFromStorage,
   saveCollectibles as saveCollectiblesToStorage,
@@ -24,6 +24,7 @@ import {
 import NetworkTypes from '@rainbow-me/networkTypes';
 import { AppDispatch, AppGetState } from '@rainbow-me/redux/store';
 import { AssetType, CollectibleType } from '@cardstack/types';
+import { IPFS_HTTP_URL } from '@cardstack/constants';
 
 // -- Constants ------------------------------------------------------------- //
 const COLLECTIBLES_LOAD_REQUEST = 'collectibles/COLLECTIBLES_LOAD_REQUEST';
@@ -204,18 +205,18 @@ const fetchNFTsViaRpcNode = () => async (
             );
 
             const tokenURI = await nftContract.tokenURI(asset.token_id);
-            const tokenURIRequest = await fetch(tokenURI);
-            const tokenURIJSON = await tokenURIRequest.json();
+            const tokenURIJSON = await fetchJsonFromTokenUri(tokenURI);
+            const imageURL = tokenURIJSON.image_url || tokenURIJSON.image;
 
             const collectible: CollectibleType = {
               id: asset.token_id,
               name: tokenURIJSON.name || asset.name,
               description: tokenURIJSON.description,
               external_link: tokenURIJSON.external_url,
-              image_preview_url: tokenURIJSON.image_url,
-              image_url: tokenURIJSON.image_url,
-              image_original_url: tokenURIJSON.image_url,
-              image_thumbnail_url: tokenURIJSON.image_url,
+              image_preview_url: imageURL,
+              image_url: imageURL,
+              image_original_url: imageURL,
+              image_thumbnail_url: imageURL,
               animation_url: null,
               permalink: tokenURIJSON.home_url || tokenURIJSON.external_url,
               traits: [],
@@ -226,7 +227,7 @@ const fetchNFTsViaRpcNode = () => async (
                 address: asset.address,
                 description: tokenURIJSON.description,
                 external_link: tokenURIJSON.external_url,
-                image_url: tokenURIJSON.image_url,
+                image_url: imageURL,
                 name: asset.name,
                 nft_version: null,
                 schema_name: null,
@@ -264,6 +265,21 @@ const fetchNFTsViaRpcNode = () => async (
 
     console.error('Error fetching collectibles', error);
   }
+};
+
+const fetchJsonFromTokenUri = async (tokenURI: string) => {
+  let httpFetchableUri = tokenURI;
+
+  // Use a public IPFS HTTP gateway if necessary. In the future, we should consider using ipfs-js to connect directly to IPFS.
+  if (httpFetchableUri.startsWith('ipfs://ipfs/')) {
+    httpFetchableUri = `${IPFS_HTTP_URL}/${tokenURI.slice(7)}`;
+  } else if (httpFetchableUri.startsWith('ipfs://')) {
+    httpFetchableUri = `${IPFS_HTTP_URL}/ipfs/${tokenURI.slice(7)}`;
+  }
+
+  const tokenURIRequest = await fetch(httpFetchableUri);
+  const tokenURIJSON = await tokenURIRequest.json();
+  return tokenURIJSON;
 };
 
 // -- Reducer --------------------------------------------------------------- //
