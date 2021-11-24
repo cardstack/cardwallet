@@ -172,8 +172,16 @@ const getTransactionDisplayDetails = (
         to: transaction.to,
         data: transaction.data,
         from: transaction.from,
-        gasLimit: BigNumber(convertHexToString(transaction.gasLimit)),
-        gasPrice: BigNumber(convertHexToString(transaction.gasPrice)),
+        ...(!isNil(transaction.gasLimit)
+          ? {
+              gasLimit: BigNumber(convertHexToString(transaction.gasLimit)),
+            }
+          : {}),
+        ...(!isNil(transaction.gasPrice)
+          ? {
+              gasPrice: BigNumber(convertHexToString(transaction.gasPrice)),
+            }
+          : {}),
         ...(!isNil(transaction.nonce)
           ? { nonce: Number(convertHexToString(transaction.nonce)) }
           : {}),
