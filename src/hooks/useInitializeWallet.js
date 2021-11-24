@@ -19,6 +19,8 @@ import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
 import { appStateUpdate } from '@cardstack/redux/appState';
 import logger from 'logger';
+import { getCurrencyConversionsRates } from '@cardstack/services';
+import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 
 export default function useInitializeWallet() {
   const dispatch = useDispatch();
@@ -47,6 +49,11 @@ export default function useInitializeWallet() {
         logger.sentry('resetAccountState ran ok');
 
         await dispatch(settingsLoadNetwork());
+
+        // TODO: move to rtk query
+        const conversionsRates = await getCurrencyConversionsRates();
+
+        await dispatch(setCurrencyConversionRates(conversionsRates));
 
         logger.sentry('done loading network');
 
