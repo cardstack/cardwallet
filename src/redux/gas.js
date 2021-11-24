@@ -285,8 +285,7 @@ const getSelectedGasPrice = (
   assets,
   gasPrices,
   txFees,
-  selectedGasPriceOption,
-  network
+  selectedGasPriceOption
 ) => {
   let txFee = txFees[selectedGasPriceOption];
   // If no custom price is set we default to FAST
@@ -296,12 +295,8 @@ const getSelectedGasPrice = (
   ) {
     txFee = txFees[gasUtils.FAST];
   }
-  const nativeTokenAddress = getConstantByNetwork(
-    'nativeTokenAddress',
-    network
-  );
-  const ethAsset = ethereumUtils.getAsset(assets, nativeTokenAddress);
-  const balanceAmount = get(ethAsset, 'balance.amount', 0);
+  const nativeTokenAsset = ethereumUtils.getNativeTokenAsset(assets);
+  const balanceAmount = get(nativeTokenAsset, 'balance.amount', 0);
   const txFeeAmount = fromWei(get(txFee, 'txFee.value.amount', 0));
   const isSufficientGas = greaterThanOrEqualTo(balanceAmount, txFeeAmount);
   return {
