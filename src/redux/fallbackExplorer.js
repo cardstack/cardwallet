@@ -16,7 +16,9 @@ import {
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
+import { getCurrencyConversionsRates } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
+import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -460,15 +462,11 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     });
   }
 
-<<<<<<< HEAD
-  fetchAssetsBalancesAndPrices();
-=======
   const conversionsRates = await getCurrencyConversionsRates();
 
   await dispatch(setCurrencyConversionRates(conversionsRates));
 
   return fetchAssetsBalancesAndPrices();
->>>>>>> 2cf51ed5b (WIP Discover collectibles for xdai/sokol)
 };
 
 export const fallbackExplorerClearState = () => (dispatch, getState) => {
