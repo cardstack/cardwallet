@@ -38,6 +38,9 @@ interface ReduxState {
   payment: {
     currency: NativeCurrency;
   };
+  appState: {
+    walletReady: boolean;
+  };
 }
 
 export const useRainbowSelector = <TSelected = unknown>(

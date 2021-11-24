@@ -11,6 +11,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface RouteType {
   params: {
@@ -40,6 +41,8 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
+  const walletReady = useRainbowSelector(state => state.appState.walletReady);
+
   const {
     accountAddress,
     network: accountNetwork,
@@ -50,10 +53,10 @@ export const usePaymentMerchantUniversalLink = () => {
     { address: accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
-      skip: isLayer1(accountNetwork) || !accountAddress,
-      selectFromResult: ({ data, isLoading }) => ({
+      skip: isLayer1(accountNetwork) || !accountAddress || !walletReady,
+      selectFromResult: ({ data, isLoading, isUninitialized }) => ({
         prepaidCards: data?.prepaidCards || [],
-        isLoadingCards: isLoading,
+        isLoadingCards: isLoading || isUninitialized,
       }),
     }
   );

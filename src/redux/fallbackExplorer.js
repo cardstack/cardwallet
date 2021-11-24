@@ -9,7 +9,6 @@ import { ETH_ADDRESS } from '../references/addresses';
 import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
-import { setCurrencyConversionRates } from './currencyConversion';
 import { addressAssetsReceived } from './data';
 import store from './store';
 import {
@@ -17,7 +16,6 @@ import {
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
-import { getCurrencyConversionsRates } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
 import logger from 'logger';
 
@@ -459,10 +457,6 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       type: FALLBACK_EXPLORER_SET_ASSETS,
     });
   }
-
-  const conversionsRates = await getCurrencyConversionsRates();
-
-  await dispatch(setCurrencyConversionRates(conversionsRates));
 
   fetchAssetsBalancesAndPrices();
 };

@@ -157,16 +157,18 @@ const safesInitialState = {
 export const useAssetListData = () => {
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
   const { network, accountAddress } = useAccountSettings();
+  const walletReady = useRainbowSelector(state => state.appState.walletReady);
 
   const {
     isFetching: isFetchingSafes,
     isLoading: isLoadingSafes,
     refetch: refetchSafes,
     data = safesInitialState,
+    isUninitialized,
   } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
-      skip: isLayer1(network) || !accountAddress,
+      skip: isLayer1(network) || !accountAddress || !walletReady,
     }
   );
 
@@ -179,7 +181,9 @@ export const useAssetListData = () => {
   const collectiblesSection = useCollectiblesSection();
 
   const isLoadingAssets =
-    useRainbowSelector(state => state.data.isLoadingAssets) || isLoadingSafes;
+    useRainbowSelector(state => state.data.isLoadingAssets) ||
+    isLoadingSafes ||
+    isUninitialized;
 
   // order of sections in asset list
   const orderedSections = [
