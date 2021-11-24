@@ -172,6 +172,40 @@ fragment MerchantClaim on MerchantClaim {
   }
 }
 
+fragment MerchantWithdraw on MerchantWithdraw {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+  to
+  merchantSafe {
+    id
+    infoDid
+  }
+}
+
+fragment MerchantDeposit on MerchantDeposit {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+  from
+  merchantSafe {
+    id
+    infoDid
+  }
+}
+
 fragment MerchantRevenueEvent on MerchantRevenueEvent {
   id
   timestamp
@@ -182,6 +216,12 @@ fragment MerchantRevenueEvent on MerchantRevenueEvent {
   }
   merchantClaim {
     ...MerchantClaim
+  }
+  merchantWithdraw {
+    ...MerchantWithdraw
+  }
+  merchantDeposit {
+    ...MerchantDeposit
   }
 }
 

@@ -697,6 +697,57 @@ const updatedPrepaidCards = [
   },
 ];
 
+const updatedMerchantSafes = [
+  {
+    accumulatedSpendValue: 6908,
+    address: '0x2eA77A0a4475204E9AaD18114eBD718E6a264749',
+    createdAt: 1634833295,
+    infoDID: 'did:cardstack:1mjFHWdpm3PQeeqChDVZqGow4fcf21a530fbcfe0',
+    merchant: '0x8e9E9bB54BE3D6aa9756E254a0c93c851Cabd2B9',
+    merchantInfo: {
+      color: '#f53695',
+      did: 'did:cardstack:1mjFHWdpm3PQeeqChDVZqGow4fcf21a530fbcfe0',
+      name: "B's merchant",
+      ownerAddress: '0x8e9E9bB54BE3D6aa9756E254a0c93c851Cabd2B9',
+      slug: 'bw',
+      textColor: '#000000',
+    },
+    owners: ['0x8e9E9bB54BE3D6aa9756E254a0c93c851Cabd2B9'],
+    revenueBalances: [
+      {
+        balance: {
+          amount: '0.003818914',
+          display: '0.00 DAI',
+          wei: '3818914000000000',
+        },
+        native: { balance: [Object] },
+        token: { symbol: 'DAI' },
+        tokenAddress: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
+        tokenSymbol: 'DAI',
+      },
+    ],
+    tokens: [
+      {
+        balance: {
+          amount: '58.702316848670658683',
+          display: '58.702 DAI',
+          wei: '58702316848670658683',
+        },
+        coingecko_id: 'dai',
+        native: { balance: { amount: 58.70231684, display: '$58.70 USD' } },
+        token: {
+          decimals: 18,
+          name: 'Dai Stablecoin.CPXD',
+          symbol: 'DAI',
+          value: '58.702316848670658683',
+        },
+        tokenAddress: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
+      },
+    ],
+    type: 'merchant',
+  },
+];
+
 export const inputData = {
   assets,
   depots,
@@ -713,4 +764,5 @@ export const updatedData = {
   updatedAssets,
   updatedDepots,
   updatedPrepaidCards,
+  updatedMerchantSafes,
 };

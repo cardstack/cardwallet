@@ -156,7 +156,7 @@ export const TransactionRow = ({
           justifyContent="space-between"
           width="100%"
         >
-          <Container flexDirection="column" alignItems="center">
+          <Container flexDirection="column">
             {recipientName ? (
               <Container paddingBottom={3}>
                 <Text variant="subText" size="xs">

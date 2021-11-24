@@ -12,3 +12,4 @@ export * from './sorting-utils';
 export * from './depot-utils';
 export * from './hooks-utilities';
 export * from './wyre-utils';
+export * from './layouts';

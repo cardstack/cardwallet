@@ -4,6 +4,8 @@ import { useTransactionSections } from './use-transaction-sections';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
+import { MerchantWithdrawStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-withdraw-strategy';
+import { MerchantDepositStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-deposit-strategy';
 import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import logger from 'logger';
@@ -20,7 +22,11 @@ const typeToStrategies: {
 } = {
   lifetimeEarnings: [MerchantEarnedSpendStrategy],
   unclaimedRevenue: [MerchantClaimStrategy, MerchantEarnedRevenueStrategy],
-  availableBalances: [MerchantClaimStrategy],
+  availableBalances: [
+    MerchantClaimStrategy,
+    MerchantWithdrawStrategy,
+    MerchantDepositStrategy,
+  ],
   recentActivity: [MerchantEarnedSpendStrategy],
 };
 

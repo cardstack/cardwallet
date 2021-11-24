@@ -418,7 +418,7 @@ const RecentActivitySection = ({
 
   return (
     <Container flexDirection="column" width="100%">
-      <SectionHeader>Transactions</SectionHeader>
+      <SectionHeader>Payment History</SectionHeader>
       {sections[0]?.data.length > 0 ? (
         <TransactionItem
           {...recentActivityDataSectionData}
