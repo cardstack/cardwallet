@@ -168,6 +168,8 @@ const getTransactionDisplayDetails = (
     return {
       request: {
         asset: asset.symbol,
+        value,
+        to: transaction.to,
         data: transaction.data,
         from: transaction.from,
         gasLimit: BigNumber(convertHexToString(transaction.gasLimit)),
@@ -175,8 +177,6 @@ const getTransactionDisplayDetails = (
         ...(!isNil(transaction.nonce)
           ? { nonce: Number(convertHexToString(transaction.nonce)) }
           : {}),
-        to: transaction.to,
-        value,
       },
       timestampInMs,
     };
