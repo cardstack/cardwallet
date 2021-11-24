@@ -61,7 +61,7 @@ export const getEtherWeb3Provider = async (network = undefined) => {
     const currentNetwork = network || (await getNetwork());
     await etherWeb3SetHttpProvider(currentNetwork);
     wsConnected = web3Provider.provider?.connected;
-    logger.log('ws restarted', wsConnected, network);
+    logger.log('ws restarted', wsConnected, currentNetwork);
   }
 
   return web3Provider;
