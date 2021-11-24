@@ -18,9 +18,9 @@ import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
 import { appStateUpdate } from '@cardstack/redux/appState';
-import logger from 'logger';
 import { getCurrencyConversionsRates } from '@cardstack/services';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
+import logger from 'logger';
 
 export default function useInitializeWallet() {
   const dispatch = useDispatch();
