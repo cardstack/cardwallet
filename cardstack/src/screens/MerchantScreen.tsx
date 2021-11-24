@@ -299,7 +299,7 @@ const LifetimeEarningsSection = ({
   return (
     <Container flexDirection="column" width="100%">
       <SectionHeader>Earnings history</SectionHeader>
-      <SectionWrapper onPress={onPress}>
+      <SectionWrapper onPress={onPress} disabled={!accumulatedSpendValue}>
         <>
           <TokenBalance
             Icon={<Icon name="spend" />}
@@ -307,20 +307,22 @@ const LifetimeEarningsSection = ({
             tokenBalance={tokenBalanceDisplay}
             nativeBalance={nativeBalanceDisplay}
           />
-          <Container alignItems="center" justifyContent="center" width="100%">
-            <ChartPath
-              data={{ points: data, smoothingStrategy: 'bezier' }}
-              gestureEnabled={false}
-              height={125}
-              stroke={palette.tealDark}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={3.5}
-              width={screenWidth - TOTAL_HORIZONTAL_PADDING}
-            >
-              <Container />
-            </ChartPath>
-          </Container>
+          {!!accumulatedSpendValue && (
+            <Container alignItems="center" justifyContent="center" width="100%">
+              <ChartPath
+                data={{ points: data, smoothingStrategy: 'bezier' }}
+                gestureEnabled={false}
+                height={125}
+                stroke={palette.tealDark}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3.5}
+                width={screenWidth - TOTAL_HORIZONTAL_PADDING}
+              >
+                <Container />
+              </ChartPath>
+            </Container>
+          )}
         </>
       </SectionWrapper>
     </Container>
@@ -339,6 +341,8 @@ const TokensSection = ({
   tokens,
   emptyText,
 }: TokensSectionProps) => {
+  const hasTokens = !!tokens?.length;
+
   const renderTokens = useMemo(
     () =>
       sortedByTokenBalanceAmount(tokens).map((token, index) => (
@@ -356,9 +360,9 @@ const TokensSection = ({
   return (
     <Container flexDirection="column" width="100%">
       <SectionHeader>{title}</SectionHeader>
-      <SectionWrapper onPress={onPress}>
+      <SectionWrapper onPress={onPress} disabled={!hasTokens}>
         <>
-          {tokens.length ? (
+          {hasTokens ? (
             renderTokens
           ) : (
             <Text variant="subText">{emptyText}</Text>
@@ -375,13 +379,17 @@ const SectionHeader = ({ children }: { children: string }) => (
   </Text>
 );
 
+interface SectionWrapperProps {
+  children: JSX.Element;
+  onPress?: () => void;
+  disabled?: boolean;
+}
+
 const SectionWrapper = ({
   children,
   onPress,
-}: {
-  children: JSX.Element;
-  onPress?: () => void;
-}) => (
+  disabled = false,
+}: SectionWrapperProps) => (
   <Touchable
     width="100%"
     borderColor="borderGray"
@@ -389,9 +397,10 @@ const SectionWrapper = ({
     borderWidth={1}
     padding={4}
     onPress={onPress}
+    disabled={disabled}
   >
     <Container position="absolute" top={8} right={8}>
-      <Text size="xs">Details</Text>
+      {!disabled && <Text size="xs">Details</Text>}
     </Container>
     {children}
   </Touchable>
@@ -426,7 +435,7 @@ const RecentActivitySection = ({
           isFullWidth
         />
       ) : (
-        <SectionWrapper>
+        <SectionWrapper disabled={!firstActivityDataListItem}>
           <Text variant="subText">No recent activity</Text>
         </SectionWrapper>
       )}
