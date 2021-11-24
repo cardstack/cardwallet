@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { AssetWithNativeType } from '../../../cardstack/src/types';
 import Routes from '../../navigation/routesNames';
 import { BalanceCoinRow } from '@cardstack/components';
+import { AssetWithNativeType } from '@cardstack/types';
 import {
   PinnedHiddenSectionOption,
-  usePinnedAndHiddenItemOptions,
+  useHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 
@@ -17,9 +17,8 @@ const BalanceCoinWrapper = (item: AssetWithNativeType) => {
     selected,
     pinned,
     hidden,
-    select,
-    deselect,
-  } = usePinnedAndHiddenItemOptions();
+    handleSelection,
+  } = useHiddenItemOptions();
 
   const isEditing = editing === PinnedHiddenSectionOption.BALANCES;
   const isHidden = hidden.includes(item.address);
@@ -33,17 +32,14 @@ const BalanceCoinWrapper = (item: AssetWithNativeType) => {
 
   const onPress = () => {
     if (isEditing) {
-      if (isSelected) {
-        deselect(item.address);
-      } else {
-        select(item.address);
-      }
-    } else {
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: item,
-        type: 'token',
-      });
+      handleSelection(isEditing, isSelected, item.address);
+
+      return;
     }
+    navigate(Routes.EXPANDED_ASSET_SHEET, {
+      asset: item,
+      type: 'token',
+    });
   };
 
   return (

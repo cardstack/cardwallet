@@ -89,4 +89,4 @@ export { default as useWyreApplePay } from './useWyreApplePay';
 export { default as useAccountEmptyState } from './useAccountEmptyState';
 export * from './useTransactionConfirmationUtils';
 export * from './useAssetListData';
-export * from './usePinnedAndHiddenItemOptions';
+export * from './useHiddenItemOptions';

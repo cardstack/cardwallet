@@ -29,7 +29,7 @@ import { isLayer1, Device } from '@cardstack/utils';
 import {
   PinnedHiddenSectionOption,
   useAccountProfile,
-  usePinnedAndHiddenItemOptions,
+  useHiddenItemOptions,
   useRefreshAccountData,
   useWallets,
 } from '@rainbow-me/hooks';
@@ -119,7 +119,7 @@ export const AssetList = (props: AssetListProps) => {
 
   const networkName = getConstantByNetwork('name', network);
 
-  const { editing, toggle } = usePinnedAndHiddenItemOptions();
+  const { editing, toggle } = useHiddenItemOptions();
 
   function toggleEditingPinnedHidden(type?: PinnedHiddenSectionOption) {
     LayoutAnimation.configureNext(

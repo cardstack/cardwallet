@@ -1,21 +1,11 @@
 import React from 'react';
 import { LayoutAnimation } from 'react-native';
 import { Button, Container } from '@cardstack/components';
-import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
+import { useHiddenItemOptions } from '@rainbow-me/hooks';
 
 export const AssetFooter = () => {
-  const {
-    editing,
-    selected,
-    pinned,
-    hidden,
-    pin,
-    unpin,
-    show,
-    hide,
-  } = usePinnedAndHiddenItemOptions();
+  const { editing, selected, hidden, show, hide } = useHiddenItemOptions();
 
-  const isInitialSelectionPinned = pinned.includes(selected[0]);
   const isInitialSelectionHidden = hidden.includes(selected[0]);
 
   const buttonsDisabled = selected?.length === 0; //selected length is zero
@@ -25,18 +15,6 @@ export const AssetFooter = () => {
       show();
     } else {
       hide();
-    }
-
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
-  };
-
-  const handlePinnedPress = () => {
-    if (isInitialSelectionPinned) {
-      unpin();
-    } else {
-      pin();
     }
 
     LayoutAnimation.configureNext(
@@ -57,28 +35,6 @@ export const AssetFooter = () => {
       position="absolute"
       width="100%"
     >
-      <Button
-        disabled={buttonsDisabled}
-        iconProps={
-          !isInitialSelectionPinned
-            ? {
-                iconFamily: 'MaterialCommunity',
-                iconSize: 'medium',
-                marginRight: 2,
-                name: 'pin',
-              }
-            : {
-                iconFamily: 'MaterialCommunity',
-                iconSize: 'medium',
-                marginRight: 2,
-                name: 'pin-off',
-              }
-        }
-        onPress={handlePinnedPress}
-        variant="small"
-      >
-        {isInitialSelectionPinned ? 'Unpin' : 'Pin'}
-      </Button>
       <Button
         disabled={buttonsDisabled}
         iconProps={

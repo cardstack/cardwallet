@@ -23,8 +23,8 @@ import {
   useAccountEmptyState,
   useAccountSettings,
   useCoinListEdited,
+  useHiddenItemOptions,
   useInitializeWallet,
-  usePinnedAndHiddenItemOptions,
   useWallets,
 } from '../hooks';
 import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
@@ -61,7 +61,7 @@ export default function WalletScreen() {
   const { network } = useAccountSettings();
 
   const navigation = useNavigation();
-  const { editing, toggle } = usePinnedAndHiddenItemOptions();
+  const { editing, toggle } = useHiddenItemOptions();
 
   const setNotifications = async () => {
     try {

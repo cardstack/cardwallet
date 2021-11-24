@@ -14,6 +14,7 @@ type PinnedAndHiddenItemOptionContextType = any;
 
 export enum PinnedHiddenSectionOption {
   BALANCES = 'BALANCES',
+  BUSINESS_ACCOUNTS = 'BUSINESS_ACCOUNTS',
   PREPAID_CARDS = 'PREPAID_CARDS',
 }
 
@@ -29,9 +30,14 @@ const PinnedHiddenItemOptionContext = createContext({
   show: () => {},
   select: (_key: string) => {},
   deselect: (_key: string) => {},
+  handleSelection: (
+    _isEditing: boolean,
+    _isSelected: boolean,
+    _address: string
+  ) => {},
 });
 
-export const usePinnedAndHiddenItemOptions = (): PinnedAndHiddenItemOptionContextType =>
+export const useHiddenItemOptions = (): PinnedAndHiddenItemOptionContextType =>
   useContext(PinnedHiddenItemOptionContext);
 
 export const PinnedHiddenItemOptionProvider = ({
@@ -125,6 +131,18 @@ export const PinnedHiddenItemOptionProvider = ({
     setValue(stored);
   };
 
+  const handleSelection = (
+    isEditing: boolean,
+    isSelected: boolean,
+    address: string
+  ) => {
+    if (isSelected) {
+      deselect(address);
+    } else {
+      select(address);
+    }
+  };
+
   useEffect(() => {
     getItem((_err, result) => {
       if (result) {
@@ -156,6 +174,7 @@ export const PinnedHiddenItemOptionProvider = ({
         unpin,
         hide,
         show,
+        handleSelection,
       }}
     >
       {ready ? children : null}

@@ -10,7 +10,7 @@ import Routes from '@rainbow-me/routes';
 import { useNavigation } from '@rainbow-me/navigation';
 import {
   PinnedHiddenSectionOption,
-  usePinnedAndHiddenItemOptions,
+  useHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import { Container, Icon, ScrollView } from '@cardstack/components';
 
@@ -41,9 +41,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
     selected,
     pinned,
     hidden,
-    select,
-    deselect,
-  } = usePinnedAndHiddenItemOptions();
+    handleSelection,
+  } = useHiddenItemOptions();
 
   const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
   const isHidden = hidden.includes(prepaidCard.address);
@@ -61,16 +60,14 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
 
   const onPress = () => {
     if (isEditing) {
-      if (isSelected) {
-        deselect(prepaidCard.address);
-      } else {
-        select(prepaidCard.address);
-      }
-    } else {
-      navigate(Routes.PREPAID_CARD_MODAL, {
-        prepaidCardProps: props,
-      });
+      handleSelection(isEditing, isSelected, props.address);
+
+      return;
     }
+
+    navigate(Routes.PREPAID_CARD_MODAL, {
+      prepaidCardProps: props,
+    });
   };
 
   return (

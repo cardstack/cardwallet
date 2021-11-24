@@ -4,8 +4,8 @@ import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
 import {
   PinnedHiddenSectionOption,
-  usePinnedAndHiddenItemOptions,
-} from './usePinnedAndHiddenItemOptions';
+  useHiddenItemOptions,
+} from './useHiddenItemOptions';
 import {
   AssetListSectionItem,
   CollectibleRow,
@@ -32,7 +32,7 @@ import {
 const usePrepaidCardSection = (
   prepaidCards: PrepaidCardType[]
 ): AssetListSectionItem<PrepaidCardType> => {
-  const { hidden, pinned } = usePinnedAndHiddenItemOptions();
+  const { hidden, pinned } = useHiddenItemOptions();
   const count = prepaidCards.filter(pc => !hidden.includes(pc.address)).length;
 
   prepaidCards = orderBy(
@@ -73,6 +73,8 @@ const useMerchantSafeSection = (
   header: {
     title: 'Accounts',
     count: merchantSafes?.length,
+    type: PinnedHiddenSectionOption.BUSINESS_ACCOUNTS,
+    showContextMenu: true,
   },
   data: merchantSafes,
   Component: MerchantSafe,
@@ -95,7 +97,7 @@ const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
 
   let assetBalances = assetsWithNative.assetsNativePrices;
 
-  const { hidden, pinned } = usePinnedAndHiddenItemOptions();
+  const { hidden, pinned } = useHiddenItemOptions();
   const count = assetBalances.filter(a => !hidden.includes(a.address)).length;
 
   let assets = orderBy(

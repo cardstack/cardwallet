@@ -1,7 +1,7 @@
 import React from 'react';
 import { LayoutAnimation } from 'react-native';
 import { Button, Container } from '@cardstack/components';
-import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
+import { useHiddenItemOptions } from '@rainbow-me/hooks';
 
 const AssetFooter = () => {
   const {
@@ -13,7 +13,7 @@ const AssetFooter = () => {
     unpin,
     show,
     hide,
-  } = usePinnedAndHiddenItemOptions();
+  } = useHiddenItemOptions();
 
   const isInitialSelectionPinned = pinned.includes(selected[0]);
   const isInitialSelectionHidden = hidden.includes(selected[0]);
