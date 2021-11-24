@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Linking, Share } from 'react-native';
+import URL from 'url-parse';
 
 import { buildCollectibleName } from '../../../helpers/assets';
 import { showActionSheetWithOptions } from '../../../utils';
@@ -13,8 +14,13 @@ function viewMenuItemLabel(collectible: CollectibleType) {
     return 'View on OpenSea';
   }
 
-  if (collectible.asset_contract.name.toUpperCase() === 'POAP') {
-    return 'View on POAP';
+  try {
+    if (collectible.permalink) {
+      return `View on ${tldFromUrlString(collectible.permalink)}`;
+    }
+  } catch (e) {
+    console.log('viewMenuItemLabel', e.message);
+    // do nothing
   }
 
   return 'View on the web';
@@ -104,3 +110,8 @@ const CollectibleExpandedStateHeader = ({
 };
 
 export default memo(CollectibleExpandedStateHeader);
+
+function tldFromUrlString(urlString: string) {
+  const url = new URL(urlString);
+  return url.host.split('.').slice(-2).join('.');
+}
