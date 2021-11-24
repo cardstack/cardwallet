@@ -169,6 +169,7 @@ export const useAssetListData = () => {
     isFetching: isFetchingSafes,
     isLoading: isLoadingSafes,
     refetch: refetchSafes,
+    error,
     data = safesInitialState,
     isUninitialized,
   } = useGetSafesDataQuery(
@@ -177,7 +178,7 @@ export const useAssetListData = () => {
       skip: isLayer1(network) || !accountAddress || !walletReady,
     }
   );
-
+  console.log({ error });
   const { prepaidCards, depots, merchantSafes } = data;
 
   const prepaidCardSection = usePrepaidCardSection(prepaidCards);

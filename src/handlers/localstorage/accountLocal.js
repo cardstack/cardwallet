@@ -2,7 +2,7 @@ import { getAccountLocal, saveAccountLocal } from './common';
 import { NATIVE_TOKEN_SYMBOLS } from '@cardstack/utils';
 
 const assetPricesFromUniswapVersion = '0.1.0';
-const assetsVersion = '0.2.0';
+const assetsVersion = '0.2.1';
 const prepaidCardsVersion = '0.1.0';
 const depotVersion = '0.1.0';
 const merchantSafeVersion = '0.1.0';
