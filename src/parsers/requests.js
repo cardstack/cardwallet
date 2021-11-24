@@ -167,7 +167,7 @@ const getTransactionDisplayDetails = (
       : 0;
     return {
       request: {
-        asset,
+        asset: asset.symbol,
         data: transaction.data,
         from: transaction.from,
         gasLimit: BigNumber(convertHexToString(transaction.gasLimit)),
