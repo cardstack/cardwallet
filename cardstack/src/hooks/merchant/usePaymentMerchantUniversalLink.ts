@@ -46,7 +46,7 @@ export const usePaymentMerchantUniversalLink = () => {
     nativeCurrency,
   } = useAccountSettings();
 
-  const { isLoadingCards, prepaidCards } = useGetSafesDataQuery(
+  const { isLoadingCards = true, prepaidCards } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
@@ -83,7 +83,7 @@ export const usePaymentMerchantUniversalLink = () => {
 
       goBack();
     }
-  }, [isLoadingCards, goBack, prepaidCards.length, isLoading]);
+  }, [goBack, prepaidCards.length, isLoading]);
 
   useEffect(() => {
     if (isLoading) {
