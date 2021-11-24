@@ -1,10 +1,11 @@
-import GraphemeSplitter from 'grapheme-splitter';
 import { get, toUpper } from 'lodash';
-import { removeFirstEmojiFromString } from '../helpers/emojiHandler';
 import networkTypes from '../helpers/networkTypes';
 import useAccountSettings from './useAccountSettings';
 import useWallets from './useWallets';
-import { getAddressPreview } from '@cardstack/utils';
+import {
+  getAddressPreview,
+  getSymbolCharacterFromAddress,
+} from '@cardstack/utils';
 
 export default function useAccountProfile() {
   const wallets = useWallets();
@@ -36,25 +37,22 @@ export default function useAccountProfile() {
     return {};
   }
 
-  const { label, color, index, image } = selectedAccount;
+  const { label, color, address, image } = selectedAccount;
 
-  const accountName = removeFirstEmojiFromString(
+  const accountAddressPreview =
+    label === accountENS
+      ? getAddressPreview(accountAddress)
+      : label || getAddressPreview(accountAddress);
+  const accountName =
     network === networkTypes.mainnet
       ? label || accountENS || getAddressPreview(accountAddress)
-      : label === accountENS
-      ? getAddressPreview(accountAddress)
-      : label || getAddressPreview(accountAddress)
-  ).join('');
+      : accountAddressPreview;
 
-  const labelOrAccountName =
-    accountName === label ? toUpper(accountName) : label;
-  const accountSymbol = new GraphemeSplitter().splitGraphemes(
+  const accountSymbol = getSymbolCharacterFromAddress(
     network === networkTypes.mainnet
-      ? labelOrAccountName || toUpper(accountENS) || `${index + 1}`
-      : label === accountENS
-      ? toUpper(accountName)
-      : toUpper(label) || toUpper(accountName)
-  )[0];
+      ? label || toUpper(accountENS) || address
+      : toUpper(accountName)
+  );
   const accountColor = color;
   const accountImage = image;
 

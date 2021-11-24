@@ -1,3 +1,5 @@
+import GraphemeSplitter from 'grapheme-splitter';
+
 export const numberWithCommas = (number: string) =>
   number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
@@ -24,4 +26,16 @@ export const splitAddress = (address: string) => {
   const twoLinesAddress = `${addressFirstHalf}\n${addressSecondHalf}`;
 
   return { addressFirstHalf, addressSecondHalf, twoLinesAddress };
+};
+
+export const getSymbolCharacterFromAddress = (string?: string) => {
+  if (!string) return '';
+
+  const characters = new GraphemeSplitter().splitGraphemes(
+    string.toUpperCase()
+  );
+
+  return characters.length > 2 && string.startsWith('0x')
+    ? characters[2]
+    : characters[0];
 };

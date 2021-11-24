@@ -7,7 +7,12 @@ import { ButtonPressAnimation } from '../animations';
 import { ContactAvatar } from '../contacts';
 import ImageAvatar from '../contacts/ImageAvatar';
 import { Container, Icon, Text, TruncatedAddress } from '@cardstack/components';
-import { getAddressPreview, isLayer2, screenWidth } from '@cardstack/utils';
+import {
+  getAddressPreview,
+  getSymbolCharacterFromAddress,
+  isLayer2,
+  screenWidth,
+} from '@cardstack/utils';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const sx = StyleSheet.create({
@@ -28,7 +33,6 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
     color: accountColor,
     ens,
     image: accountImage,
-    index,
     isSelected,
     isReadOnly,
     label,
@@ -82,7 +86,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
                 color={accountColor}
                 marginRight={10}
                 size="medium"
-                value={label || ens || `${index + 1}`}
+                value={label || ens || getSymbolCharacterFromAddress(address)}
               />
             )}
             <Container
