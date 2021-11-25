@@ -8,7 +8,7 @@ const depotVersion = '0.1.0';
 const merchantSafeVersion = '0.1.0';
 const purchaseTransactionsVersion = '0.1.0';
 const savingsVersion = '0.2.0';
-const transactionsVersion = '0.2.5';
+const transactionsVersion = '0.2.6';
 const collectiblesVersion = '0.2.4';
 const accountEmptyVersion = '0.1.0';
 
