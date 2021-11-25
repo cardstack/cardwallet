@@ -16,7 +16,9 @@ import {
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
+import { getCurrencyConversionsRates } from '@cardstack/services';
 import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
+import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -212,6 +214,7 @@ const discoverTokens = async (
         return {
           asset: {
             asset_code: getCurrentAddress(tx.contractAddress.toLowerCase()),
+            token_id: tx.tokenID,
             coingecko_id: coingeckoId || null,
             decimals: Number(tx.tokenDecimal),
             name: tx.tokenName,
@@ -220,7 +223,8 @@ const discoverTokens = async (
           },
         };
       }),
-      token => token.asset.asset_code
+      token =>
+        [token.asset.asset_code, token.asset.token_id].filter(Boolean).join('-') // unique key takes token_id into account so that we retain all instances of NFTs
     );
   }
   return [];
@@ -458,7 +462,11 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
     });
   }
 
-  fetchAssetsBalancesAndPrices();
+  const conversionsRates = await getCurrencyConversionsRates();
+
+  await dispatch(setCurrencyConversionRates(conversionsRates));
+
+  return fetchAssetsBalancesAndPrices();
 };
 
 export const fallbackExplorerClearState = () => (dispatch, getState) => {

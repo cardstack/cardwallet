@@ -2,6 +2,7 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { useSelector } from 'react-redux';
 import {
   AssetType,
+  CollectibleType,
   DepotType,
   ERC20TransactionType,
   MerchantSafeType,
@@ -25,7 +26,7 @@ interface ReduxState {
   collectibles: {
     fetchingCollectibles: boolean;
     loadingCollectibles: boolean;
-    collectibles: any[];
+    collectibles: CollectibleType[];
   };
   currencyConversion: {
     rates: {

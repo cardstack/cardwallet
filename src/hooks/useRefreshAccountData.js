@@ -1,8 +1,8 @@
 import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { collectiblesRefreshState } from '../redux/collectibles';
 import { fetchWalletNames } from '../redux/wallets';
+import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import { fetchAssetsBalancesAndPrices } from '@rainbow-me/redux/fallbackExplorer';
 import logger from 'logger';
 

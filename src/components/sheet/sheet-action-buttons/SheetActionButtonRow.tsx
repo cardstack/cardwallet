@@ -1,6 +1,7 @@
-import React, { Children } from 'react';
+import React, { Children, ReactNode } from 'react';
 import styled from 'styled-components';
 import { FlexItem, Row } from '../../layout';
+import { Device } from '@cardstack/utils';
 import { padding } from '@rainbow-me/styles';
 
 const Container = styled(Row).attrs({
@@ -12,19 +13,25 @@ const Container = styled(Row).attrs({
   z-index: 2;
 `;
 
-function renderButton(child) {
-  if (android) {
+function renderButton(child: any) {
+  if (Device.isAndroid) {
     return child;
   }
   if (!child) return null;
   return <FlexItem marginHorizontal={7.5}>{child}</FlexItem>;
 }
 
+interface SheetActionButtonRowProps {
+  children?: ReactNode;
+  ignorePaddingBottom?: boolean;
+  ignorePaddingTop?: boolean;
+}
+
 export default function SheetActionButtonRow({
   children,
   ignorePaddingBottom,
   ignorePaddingTop,
-}) {
+}: SheetActionButtonRowProps) {
   return (
     <Container
       ignorePaddingBottom={ignorePaddingBottom}

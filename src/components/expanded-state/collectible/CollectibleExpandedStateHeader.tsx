@@ -1,27 +1,53 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Linking, Share } from 'react-native';
+import URL from 'url-parse';
 
 import { buildCollectibleName } from '../../../helpers/assets';
-import { magicMemo, showActionSheetWithOptions } from '../../../utils';
+import { showActionSheetWithOptions } from '../../../utils';
 import ButtonPressAnimation from '../../animations/ButtonPressAnimation';
 import { Container, Icon, Text } from '@cardstack/components';
+import { CollectibleType } from '@cardstack/types';
+import NetworkTypes from '@rainbow-me/networkTypes';
 
-const CollectibleExpandedStateHeader = ({ asset }) => {
+function viewMenuItemLabel(collectible: CollectibleType) {
+  if (collectible.networkName === NetworkTypes.mainnet) {
+    return 'View on OpenSea';
+  }
+
+  try {
+    if (collectible.permalink) {
+      return `View on ${tldFromUrlString(collectible.permalink)}`;
+    }
+  } catch (e) {
+    console.log('viewMenuItemLabel', e.message);
+    // do nothing
+  }
+
+  return 'View on the web';
+}
+
+interface CollectibleExpandedStateHeaderProps {
+  collectible: CollectibleType;
+}
+
+const CollectibleExpandedStateHeader = ({
+  collectible,
+}: CollectibleExpandedStateHeaderProps) => {
   const onContextMenuPress = () => {
     showActionSheetWithOptions(
       {
-        options: ['Share', 'View on OpenSea', 'Cancel'],
+        options: ['Share', viewMenuItemLabel(collectible), 'Cancel'],
         cancelButtonIndex: 2,
       },
-      buttonIndex => {
+      (buttonIndex: number) => {
         if (buttonIndex === 0) {
           Share.share({
-            title: `Share ${buildCollectibleName(asset)} Info`,
-            url: asset.permalink,
+            title: `Share ${buildCollectibleName(collectible)} Info`,
+            url: collectible.permalink,
           });
         } else if (buttonIndex === 1) {
-          // View on OpenSea
-          Linking.openURL(asset.permalink);
+          // View
+          Linking.openURL(collectible.permalink);
         }
       }
     );
@@ -39,8 +65,8 @@ const CollectibleExpandedStateHeader = ({ asset }) => {
       <Container
         alignItems="flex-start"
         flex={1}
+        flexShrink={1}
         justifyContent="flex-start"
-        shrink={1}
       >
         <Container>
           <Container
@@ -57,11 +83,11 @@ const CollectibleExpandedStateHeader = ({ asset }) => {
               numberOfLines={1}
               weight="bold"
             >
-              #{asset.id}
+              #{collectible.id}
             </Text>
           </Container>
           <Text color="blueText" size="small" weight="extraBold">
-            {asset.asset_contract.name.toUpperCase()}
+            {collectible.asset_contract.name.toUpperCase()}
           </Text>
         </Container>
         <Container
@@ -71,7 +97,7 @@ const CollectibleExpandedStateHeader = ({ asset }) => {
         >
           <Container width="80%">
             <Text size="medium" weight="extraBold">
-              {buildCollectibleName(asset)}
+              {buildCollectibleName(collectible)}
             </Text>
           </Container>
           <ButtonPressAnimation onPress={onContextMenuPress}>
@@ -83,4 +109,9 @@ const CollectibleExpandedStateHeader = ({ asset }) => {
   );
 };
 
-export default magicMemo(CollectibleExpandedStateHeader, 'asset');
+export default memo(CollectibleExpandedStateHeader);
+
+function tldFromUrlString(urlString: string) {
+  const url = new URL(urlString);
+  return url.host.split('.').slice(-2).join('.');
+}

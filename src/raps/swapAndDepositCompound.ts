@@ -201,7 +201,6 @@ export const createSwapAndDepositCompoundRap = async ({
 
   // update the rap store
   const { dispatch } = store;
-  //@ts-expect-error
   dispatch(rapsAddOrUpdate(newRap.id, newRap));
   logger.log('[swap and deposit] new rap!', newRap);
   return newRap;

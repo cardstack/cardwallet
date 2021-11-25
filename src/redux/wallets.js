@@ -128,7 +128,6 @@ export const walletsSetSelected = wallet => async dispatch => {
   });
 };
 
-// TODO: Remove @ts-expect-error from wallets.ts after migrating to .ts
 export const setIsWalletLoading = val => dispatch => {
   dispatch({
     payload: val,

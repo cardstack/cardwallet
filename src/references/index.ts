@@ -21,6 +21,7 @@ export { default as compoundCERC20ABI } from './compound/compound-cerc20-abi.jso
 export { default as compoundCETHABI } from './compound/compound-ceth-abi.json';
 export { default as emojis } from './emojis.json';
 export { default as erc20ABI } from './erc20-abi.json';
+export { default as erc721ABI } from './erc721-abi.json';
 export { default as ethUnits } from './ethereum-units.json';
 export { default as shitcoins } from './shitcoins.json';
 

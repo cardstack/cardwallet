@@ -510,7 +510,6 @@ export const createWallet = async (
     const { dispatch } = store;
     if (!checkedWallet && Device.isAndroid) {
       wasLoading = true;
-      // @ts-expect-error
       dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
     }
 
@@ -588,11 +587,9 @@ export const createWallet = async (
           userPIN = await getExistingPIN();
           if (!userPIN) {
             // We gotta dismiss the modal before showing the PIN screen
-            // @ts-expect-error
             dispatch(setIsWalletLoading(null));
             userPIN = await authenticateWithPIN();
             dispatch(
-              // @ts-expect-error
               setIsWalletLoading(
                 seed
                   ? WalletLoadingStates.IMPORTING_WALLET
@@ -792,7 +789,6 @@ export const createWallet = async (
 
       if (wasLoading) {
         setTimeout(() => {
-          // @ts-expect-error
           dispatch(setIsWalletLoading(null));
         }, 2000);
       }
@@ -964,10 +960,8 @@ export const generateAccount = async (
         try {
           const { dispatch } = store;
           // Hide the loading overlay while showing the pin auth screen
-          // @ts-expect-error
           dispatch(setIsWalletLoading(null));
           userPIN = await authenticateWithPIN();
-          // @ts-expect-error
           dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
         } catch (e) {
           return null;

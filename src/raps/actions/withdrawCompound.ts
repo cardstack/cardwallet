@@ -106,7 +106,6 @@ const withdrawCompound = async (
 
   logger.log('[withdraw] adding new txn', newTransaction);
   // Disable the txn watcher because Compound can silently fail
-  //@ts-expect-error
   await dispatch(dataAddNewTransaction(newTransaction, accountAddress, true));
 
   logger.log('[withdraw] calling the callback');
@@ -122,19 +121,16 @@ const withdrawCompound = async (
     if (receipt.status && !isZero(receipt.status)) {
       currentRap.actions[index].transaction.confirmed = true;
       logger.log('[withdraw] updated txn confirmed to true');
-      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
       logger.log('[withdraw] updated raps');
     } else {
       logger.log('[withdraw] status not success');
       currentRap.actions[index].transaction.confirmed = false;
-      //@ts-expect-error
       dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
     }
   } catch (error) {
     logger.log('[withdraw] error waiting for withdraw', error);
     currentRap.actions[index].transaction.confirmed = false;
-    //@ts-expect-error
     dispatch(rapsAddOrUpdate(currentRap.id, currentRap));
   }
   logger.log('[withdraw] complete!');

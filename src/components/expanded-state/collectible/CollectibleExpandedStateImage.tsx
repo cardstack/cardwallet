@@ -1,11 +1,11 @@
 import { endsWith } from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 import { useDimensions, useImageMetadata } from '../../../hooks';
-import { magicMemo } from '../../../utils';
 import { CollectibleImage } from '../../collectible';
 import { Centered } from '../../layout';
 import { Container } from '@cardstack/components';
+import { CollectibleType } from '@cardstack/types';
 import { margin, position } from '@rainbow-me/styles';
 
 const paddingHorizontal = 19;
@@ -17,11 +17,19 @@ const ImageWrapper = styled(Centered)`
   overflow: hidden;
 `;
 
-const CollectibleExpandedStateImage = ({ asset }) => {
+interface CollectibleExpandedStateImageProps {
+  collectible: CollectibleType;
+}
+
+const CollectibleExpandedStateImage = ({
+  collectible,
+}: CollectibleExpandedStateImageProps) => {
   const { width: deviceWidth } = useDimensions();
 
-  const isSVG = endsWith(asset.image_url, '.svg');
-  const imageUrl = isSVG ? asset.image_preview_url : asset.image_url;
+  const isSVG = endsWith(collectible.image_url, '.svg');
+  const imageUrl = isSVG
+    ? collectible.image_preview_url
+    : collectible.image_url;
 
   const { dimensions: imageDimensions } = useImageMetadata(imageUrl);
 
@@ -45,9 +53,9 @@ const CollectibleExpandedStateImage = ({ asset }) => {
     >
       <ImageWrapper isImageHuge={heightForDeviceSize > maxImageHeight}>
         <CollectibleImage
-          backgroundColor={asset.background}
+          backgroundColor={collectible.background}
           imageUrl={imageUrl}
-          item={asset}
+          item={collectible}
           resizeMode="contain"
         />
       </ImageWrapper>
@@ -55,4 +63,4 @@ const CollectibleExpandedStateImage = ({ asset }) => {
   );
 };
 
-export default magicMemo(CollectibleExpandedStateImage, 'asset.uniqueId');
+export default memo(CollectibleExpandedStateImage);

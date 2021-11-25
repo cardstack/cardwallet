@@ -13,6 +13,7 @@ import {
   MerchantSafe,
   PrepaidCard,
 } from '@cardstack/components';
+import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   AssetType,
@@ -78,18 +79,23 @@ const useMerchantSafeSection = (
   Component: MerchantSafe,
 });
 
-const useBalancesSection = (): AssetListSectionItem<AssetWithNativeType> => {
-  const [stateAssets, nativeCurrency, network] = useRainbowSelector<
-    [AssetType[], string, string]
-  >(state => [
+const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
+  const [
+    stateAssets,
+    collectibles,
+    nativeCurrency,
+    network,
+  ] = useRainbowSelector<[AssetType[], any[], string, string]>(state => [
     state.data.assets,
+    state.collectibles.collectibles,
     state.settings.nativeCurrency,
     state.settings.network,
   ]);
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
+  const assetsToInclude = assetsWithoutNFTs(stateAssets, collectibles);
   const assetsWithNative = parseAssetsNativeWithTotals(
-    stateAssets,
+    assetsToInclude,
     nativeCurrency
   );
 
@@ -161,7 +167,7 @@ export const useAssetListData = () => {
 
   const {
     isFetching: isFetchingSafes,
-    isLoading: isLoadingSafes,
+    isLoading,
     refetch: refetchSafes,
     data = safesInitialState,
     isUninitialized,
@@ -177,20 +183,22 @@ export const useAssetListData = () => {
   const prepaidCardSection = usePrepaidCardSection(prepaidCards);
   const depotSection = useDepotSection(depots);
   const merchantSafesSection = useMerchantSafeSection(merchantSafes);
-  const balancesSection = useBalancesSection();
+  const otherTokensSection = useOtherTokensSection();
   const collectiblesSection = useCollectiblesSection();
 
+  const isUninitializedOnLayer2 = !isLayer1(network) && isUninitialized;
+
+  const isLoadingSafes = isLoading || isUninitializedOnLayer2;
+
   const isLoadingAssets =
-    useRainbowSelector(state => state.data.isLoadingAssets) ||
-    isLoadingSafes ||
-    isUninitialized;
+    useRainbowSelector(state => state.data.isLoadingAssets) || isLoadingSafes;
 
   // order of sections in asset list
   const orderedSections = [
     merchantSafesSection,
     prepaidCardSection,
     depotSection,
-    balancesSection,
+    otherTokensSection,
     collectiblesSection,
   ];
 
@@ -202,7 +210,6 @@ export const useAssetListData = () => {
   );
 
   const isEmpty = !sections.length;
-
   return {
     isLoadingAssets,
     isEmpty,

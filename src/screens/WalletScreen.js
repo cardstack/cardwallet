@@ -27,7 +27,6 @@ import {
   usePinnedAndHiddenItemOptions,
   useWallets,
 } from '../hooks';
-import { useCoinListEditedValue } from '../hooks/useCoinListEdited';
 import { Container, SystemNotification, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { isLayer2, NOTIFICATION_KEY } from '@cardstack/utils';
@@ -102,8 +101,6 @@ export default function WalletScreen() {
   // (mainnet & rinkeby)
   const fabs = [];
 
-  const isCoinListEditedValue = useCoinListEditedValue();
-
   const closedText = (
     <Text>
       Prepaid cards are denominated {`\n`} in{' '}
@@ -133,7 +130,6 @@ export default function WalletScreen() {
 
       {/* Line below appears to be needed for having scrollViewTracker persistent while
       reattaching of react subviews */}
-      <Animated.View style={{ opacity: isCoinListEditedValue }} />
       <Animated.Code exec={scrollViewTracker} />
       <FabWrapper
         disabled={isEmpty || !!params?.emptyWallet}
