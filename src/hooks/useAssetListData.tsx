@@ -167,9 +167,8 @@ export const useAssetListData = () => {
 
   const {
     isFetching: isFetchingSafes,
-    isLoading: isLoadingSafes,
+    isLoading,
     refetch: refetchSafes,
-    error,
     data = safesInitialState,
     isUninitialized,
   } = useGetSafesDataQuery(
@@ -178,7 +177,7 @@ export const useAssetListData = () => {
       skip: isLayer1(network) || !accountAddress || !walletReady,
     }
   );
-  console.log({ error });
+
   const { prepaidCards, depots, merchantSafes } = data;
 
   const prepaidCardSection = usePrepaidCardSection(prepaidCards);
@@ -187,10 +186,12 @@ export const useAssetListData = () => {
   const otherTokensSection = useOtherTokensSection();
   const collectiblesSection = useCollectiblesSection();
 
+  const isUninitializedOnLayer2 = !isLayer1(network) && isUninitialized;
+
+  const isLoadingSafes = isLoading || isUninitializedOnLayer2;
+
   const isLoadingAssets =
-    useRainbowSelector(state => state.data.isLoadingAssets) ||
-    isLoadingSafes ||
-    isUninitialized;
+    useRainbowSelector(state => state.data.isLoadingAssets) || isLoadingSafes;
 
   // order of sections in asset list
   const orderedSections = [
