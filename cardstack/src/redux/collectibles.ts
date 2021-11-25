@@ -3,10 +3,6 @@ import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
 import { concat, isEmpty, without } from 'lodash';
 import { AnyAction } from 'redux';
-import {
-  assetsWithoutNFTsByFamily,
-  getNFTFamilies,
-} from '@cardstack/parsers/collectibles';
 import { dataUpdateAssets } from '../../../src/redux/data';
 import { getEtherWeb3Provider } from '../../../src/handlers/web3';
 import AssetTypes from '../../../src/helpers/assetTypes';
@@ -25,6 +21,10 @@ import NetworkTypes from '@rainbow-me/networkTypes';
 import { AppDispatch, AppGetState } from '@rainbow-me/redux/store';
 import { AssetType, CollectibleType } from '@cardstack/types';
 import { IPFS_HTTP_URL } from '@cardstack/constants';
+import {
+  assetsWithoutNFTsByFamily,
+  getNFTFamilies,
+} from '@cardstack/parsers/collectibles';
 
 // -- Constants ------------------------------------------------------------- //
 const COLLECTIBLES_LOAD_REQUEST = 'collectibles/COLLECTIBLES_LOAD_REQUEST';
