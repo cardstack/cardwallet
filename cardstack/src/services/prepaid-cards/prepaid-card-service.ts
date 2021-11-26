@@ -1,11 +1,13 @@
 import { PrepaidCardSafe } from '@cardstack/cardpay-sdk';
+import { updateSafeWithTokenPrices } from '../gnosis-service';
+import { PrepaidCardSafeQueryParams } from './prepaid-card-types';
 import { getSafeData } from '@cardstack/services';
 import logger from 'logger';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
+import { getSafesInstance } from '@cardstack/models';
+import { PrepaidCardType } from '@cardstack/types';
 
-export const updatePrepaidCardWithCustomization = async (
-  card: PrepaidCardSafe
-) => {
+export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
   try {
     const cardCustomization = await fetchCardCustomizationFromDID(
       card.customizationDID
@@ -31,9 +33,7 @@ export const getPrepaidCardByAddress = async (
       | undefined;
 
     if (prepaidCard) {
-      const updatedPrepaidCard = updatePrepaidCardWithCustomization(
-        prepaidCard
-      );
+      const updatedPrepaidCard = addPrepaidCardCustomization(prepaidCard);
 
       return updatedPrepaidCard;
     }
