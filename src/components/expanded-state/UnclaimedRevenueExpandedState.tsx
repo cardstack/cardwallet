@@ -39,7 +39,7 @@ export default function UnclaimedRevenueExpandedState({
   const { revenueBalances } = merchantSafe;
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
-  const isDust = parseFloat(nativeAmount) < 0.01;
+  const isDust = nativeAmount < 0.01;
 
   return useMemo(
     () => (
