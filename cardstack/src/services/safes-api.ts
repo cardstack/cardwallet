@@ -4,12 +4,13 @@ import { fetchSafes } from './gnosis-service';
 
 export enum CacheTags {
   SAFES = 'SAFES',
+  PREPAID_CARDS = 'PREPAID_CARDS',
 }
 
 export const safesApi = createApi({
   reducerPath: 'safesApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
-  tagTypes: [CacheTags.SAFES],
+  tagTypes: [...Object.values(CacheTags)],
   endpoints: builder => ({
     // TODO: Add right return type
     getSafesData: builder.query<
