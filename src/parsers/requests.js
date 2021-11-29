@@ -101,7 +101,7 @@ const getTransactionDisplayDetails = (
   const tokenTransferHash = smartContractMethods.token_transfer.hash;
   if (transaction.data === '0x') {
     const value = fromWei(convertHexToString(transaction.value));
-    const asset = ethereumUtils.getAsset(assets);
+    const asset = ethereumUtils.getNativeTokenAsset(assets);
     const priceUnit = get(asset, 'price.value', 0);
     const { amount, display } = convertAmountAndPriceToNativeDisplay(
       value,
@@ -161,22 +161,30 @@ const getTransactionDisplayDetails = (
   if (transaction.data) {
     // If it's not a token transfer, let's assume it's an ETH transaction
     // Once it confirmed, zerion will show the correct data
-    const asset = ethereumUtils.getAsset(assets);
+    const asset = ethereumUtils.getNativeTokenAsset(assets);
     const value = transaction.value
       ? fromWei(convertHexToString(transaction.value))
       : 0;
     return {
       request: {
-        asset,
+        asset: asset.symbol,
+        value,
+        to: transaction.to,
         data: transaction.data,
         from: transaction.from,
-        gasLimit: BigNumber(convertHexToString(transaction.gasLimit)),
-        gasPrice: BigNumber(convertHexToString(transaction.gasPrice)),
+        ...(!isNil(transaction.gasLimit)
+          ? {
+              gasLimit: BigNumber(convertHexToString(transaction.gasLimit)),
+            }
+          : {}),
+        ...(!isNil(transaction.gasPrice)
+          ? {
+              gasPrice: BigNumber(convertHexToString(transaction.gasPrice)),
+            }
+          : {}),
         ...(!isNil(transaction.nonce)
           ? { nonce: Number(convertHexToString(transaction.nonce)) }
           : {}),
-        to: transaction.to,
-        value,
       },
       timestampInMs,
     };

@@ -98,7 +98,7 @@ export default function useUniswapCurrencies({
       defaultInputItemInWallet = defaultChosenInputItem;
     } else if (!defaultInputItemInWallet) {
       // If there is not default input item, set the default to ETH
-      defaultInputItemInWallet = ethereumUtils.getAsset(allAssets);
+      defaultInputItemInWallet = ethereumUtils.getNativeTokenAsset(allAssets);
     }
 
     let defaultOutputItem = null;

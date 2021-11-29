@@ -43,9 +43,9 @@ export const useIsBalanceEnough = () => {
     // Get the TX fee Amount
     const txFeeAmount = fromWei(get(txFee, 'value.amount', 0));
 
-    // Get the ETH balance
-    const ethAsset = ethereumUtils.getAsset(allAssets);
-    const balanceAmount = get(ethAsset, 'balance.amount', 0);
+    // Get the gas token balance
+    const nativeAsset = ethereumUtils.getNativeTokenAsset(allAssets);
+    const balanceAmount = get(nativeAsset, 'balance.amount', 0);
 
     // Get the TX value
     const txPayload = get(params, '[0]');

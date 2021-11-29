@@ -67,8 +67,17 @@ const getBalanceAmount = async (selectedGasPrice, selected) => {
 
 const getHash = txn => txn.hash.split('-').shift();
 
-const getAsset = (assets, address = 'eth') =>
+const getAsset = (assets, address) =>
   find(assets, matchesProperty('address', toLower(address)));
+
+const getNativeTokenAsset = assets => {
+  const { network } = store.getState().settings;
+  const nativeTokenAddress = getConstantByNetwork(
+    'nativeTokenAddress',
+    network
+  );
+  return getAsset(assets, nativeTokenAddress);
+};
 
 export const checkWalletEthZero = assets => {
   const ethAsset = find(assets, asset => asset.address === 'eth');
@@ -281,6 +290,7 @@ export default {
   getDataString,
   getEthPriceUnit,
   getHash,
+  getNativeTokenAsset,
   getNetworkFromChainId,
   hasPreviousTransactions,
   isEthAddress,
