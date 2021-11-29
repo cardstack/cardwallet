@@ -86,6 +86,11 @@ const SettingsPages = {
     key: 'NetworkSection',
     title: 'Network',
   },
+  notifications: {
+    component: NotificationsSection,
+    key: 'NotificationsSection',
+    title: 'Notifications',
+  },
 };
 
 const Container = styled.View`

@@ -182,6 +182,14 @@ export default function SettingsSection({
           </ListItemArrowGroup>
         </ListItem>
         <ListItem
+          icon={<Icon color="settingsTeal" name="face-id" />}
+          label="Notifications"
+          onPress={onPressBlockscout}
+          testID="notifications-section"
+        >
+          <ListItemArrowGroup />
+        </ListItem>
+        <ListItem
           icon={<Icon color="settingsTeal" name="eye" />}
           label="View on Blockscout"
           onPress={onPressBlockscout}
