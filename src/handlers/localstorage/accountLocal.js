@@ -3,9 +3,9 @@ import { NATIVE_TOKEN_SYMBOLS } from '@cardstack/utils';
 
 const assetPricesFromUniswapVersion = '0.1.0';
 const assetsVersion = '0.2.1';
-const prepaidCardsVersion = '0.1.0';
-const depotVersion = '0.1.0';
-const merchantSafeVersion = '0.1.0';
+const prepaidCardsVersion = '0.2.0';
+const depotVersion = '0.2.0';
+const merchantSafeVersion = '0.2.0';
 const purchaseTransactionsVersion = '0.1.0';
 const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.6';
@@ -44,6 +44,9 @@ export const accountLocalKeys = [
   COLLECTIBLES,
   PINNED_COINS,
   HIDDEN_COINS,
+  DEPOTS,
+  MERCHANT_SAFES,
+  PREPAID_CARDS,
 ];
 
 /**
@@ -116,14 +119,14 @@ export const saveAssets = (assets, accountAddress, network) =>
  * @desc get prepaid cards
  * @param  {String}   [address]
  * @param  {String}   [network]
- * @return {Object}
+ * @return {{prepaidCards: Array, timestamp: String}}
  */
 export const getPrepaidCards = (accountAddress, network) =>
   getAccountLocal(
     PREPAID_CARDS,
     accountAddress,
     network,
-    [],
+    { prepaidCards: [], timestamp: '' },
     prepaidCardsVersion
   );
 
@@ -133,10 +136,15 @@ export const getPrepaidCards = (accountAddress, network) =>
  * @param  {String}   [address]
  * @param  {String}   [network]
  */
-export const savePrepaidCards = (prepaidCards, accountAddress, network) =>
+export const savePrepaidCards = (
+  prepaidCards,
+  accountAddress,
+  network,
+  timestamp
+) =>
   saveAccountLocal(
     PREPAID_CARDS,
-    prepaidCards,
+    { prepaidCards, timestamp },
     accountAddress,
     network,
     prepaidCardsVersion
@@ -146,10 +154,16 @@ export const savePrepaidCards = (prepaidCards, accountAddress, network) =>
  * @desc get depots
  * @param  {String}   [address]
  * @param  {String}   [network]
- * @return {Object}
+ * @return {{depots: Array, timestamp: String}}
  */
 export const getDepots = (accountAddress, network) =>
-  getAccountLocal(DEPOTS, accountAddress, network, [], depotVersion);
+  getAccountLocal(
+    DEPOTS,
+    accountAddress,
+    network,
+    { depots: [], timestamp: '' },
+    depotVersion
+  );
 
 /**
  * @desc save depots
@@ -157,21 +171,27 @@ export const getDepots = (accountAddress, network) =>
  * @param  {String}   [address]
  * @param  {String}   [network]
  */
-export const saveDepots = (depots, accountAddress, network) =>
-  saveAccountLocal(DEPOTS, depots, accountAddress, network, depotVersion);
+export const saveDepots = (depots, accountAddress, network, timestamp) =>
+  saveAccountLocal(
+    DEPOTS,
+    { depots, timestamp },
+    accountAddress,
+    network,
+    depotVersion
+  );
 
 /**
  * @desc get merchant safes
  * @param  {String}   [address]
  * @param  {String}   [network]
- * @return {Object}
+ * @return {{merchantSafes: Array, timestamp: String}}
  */
 export const getMerchantSafes = (accountAddress, network) =>
   getAccountLocal(
     MERCHANT_SAFES,
     accountAddress,
     network,
-    [],
+    { merchantSafes: [], timestamp: '' },
     merchantSafeVersion
   );
 
@@ -181,10 +201,15 @@ export const getMerchantSafes = (accountAddress, network) =>
  * @param  {String}   [address]
  * @param  {String}   [network]
  */
-export const saveMerchantSafes = (merchantSafes, accountAddress, network) =>
+export const saveMerchantSafes = (
+  merchantSafes,
+  accountAddress,
+  network,
+  timestamp
+) =>
   saveAccountLocal(
     MERCHANT_SAFES,
-    merchantSafes,
+    { merchantSafes, timestamp },
     accountAddress,
     network,
     merchantSafeVersion
