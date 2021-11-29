@@ -1,5 +1,5 @@
 import {
-  convertAmountToNativeDisplay,
+  convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
@@ -7,8 +7,11 @@ import {
   MerchantEarnedRevenueTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { getNativeBalanceFromOracle } from '@cardstack/services';
-import { getMerchantEarnedTransactionDetails } from '@cardstack/utils';
+import { fetchHistoricalPrice } from '@cardstack/services';
+import {
+  getMerchantEarnedTransactionDetails,
+  formattedCurrencyToAbsNum,
+} from '@cardstack/utils';
 
 export class MerchantEarnedRevenueStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -30,26 +33,28 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
     }
 
     const symbol = prepaidCardPaymentTransaction.issuingToken.symbol || '';
+
+    const price = await fetchHistoricalPrice(
+      symbol,
+      prepaidCardPaymentTransaction.timestamp,
+      this.nativeCurrency
+    );
+
     const amount = prepaidCardPaymentTransaction.issuingTokenAmount;
 
-    const nativeBalance = await getNativeBalanceFromOracle({
-      symbol,
-      balance: amount,
-      nativeCurrency: this.nativeCurrency,
-    });
+    const nativeBalance = convertRawAmountToNativeDisplay(
+      amount,
+      18,
+      price,
+      this.nativeCurrency
+    );
 
     return {
       balance: convertRawAmountToBalance(amount, {
         decimals: 18,
         symbol,
       }),
-      native: {
-        amount: nativeBalance.toString(),
-        display: convertAmountToNativeDisplay(
-          nativeBalance,
-          this.nativeCurrency
-        ),
-      },
+      native: nativeBalance,
       address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
       token: {
         address: prepaidCardPaymentTransaction.issuingToken.id,
@@ -62,7 +67,7 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       transaction: await getMerchantEarnedTransactionDetails(
         prepaidCardPaymentTransaction,
         this.nativeCurrency,
-        nativeBalance,
+        formattedCurrencyToAbsNum(nativeBalance.amount),
         this.currencyConversionRates,
         symbol
       ),

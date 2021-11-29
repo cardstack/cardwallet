@@ -1,5 +1,5 @@
 import {
-  convertAmountToNativeDisplay,
+  convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
@@ -7,7 +7,7 @@ import {
   DepotBridgedLayer1TransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { getNativeBalanceFromOracle } from '@cardstack/services';
+import { fetchHistoricalPrice } from '@cardstack/services';
 
 export class BridgeToLayer1EventStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -27,26 +27,25 @@ export class BridgeToLayer1EventStrategy extends BaseStrategy {
       return null;
     }
 
-    const nativeBalance = await getNativeBalanceFromOracle({
-      symbol: bridgeToLayer1Event.token.symbol,
-      balance: bridgeToLayer1Event.amount,
-      nativeCurrency: this.nativeCurrency,
-    });
+    const symbol = bridgeToLayer1Event.token.symbol || '';
+
+    const price = await fetchHistoricalPrice(
+      symbol,
+      bridgeToLayer1Event.timestamp,
+      this.nativeCurrency
+    );
 
     return {
       balance: convertRawAmountToBalance(bridgeToLayer1Event.amount, {
         decimals: 18,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        symbol: bridgeToLayer1Event.token.symbol,
+        symbol,
       }),
-      native: {
-        amount: nativeBalance.toString(),
-        display: convertAmountToNativeDisplay(
-          nativeBalance,
-          this.nativeCurrency
-        ),
-      },
+      native: convertRawAmountToNativeDisplay(
+        bridgeToLayer1Event.amount,
+        18,
+        price,
+        this.nativeCurrency
+      ),
       transactionHash: this.transaction.id,
       to: bridgeToLayer1Event.account.id,
       token: {

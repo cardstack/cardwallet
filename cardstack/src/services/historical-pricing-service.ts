@@ -1,3 +1,4 @@
+import { cryptoCurrencies } from '@cardstack/cardpay-sdk';
 import { CRYPTOCOMPARE_API_KEY } from 'react-native-dotenv';
 import logger from 'logger';
 import { removeCPXDTokenSuffix } from '@cardstack/utils';
@@ -8,12 +9,16 @@ export const fetchHistoricalPrice = async (
   nativeCurrency: string
 ) => {
   try {
+    if (!symbol) {
+      return 0;
+    }
+
     // For cpxd tokens we chop off .CPXD in order to get mainnet's historical price
     const tokenSymbol = removeCPXDTokenSuffix(symbol);
 
     // cryptocompare does not support CARD price history correctly,
     // so uses kucoin exchange to get CARD price in USDT(kucoin supports only USDT) and convert it to native currency
-    if (tokenSymbol === 'CARD') {
+    if (tokenSymbol === cryptoCurrencies.CARD.currency) {
       const usdtPriceData = await (
         await fetch(
           `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${tokenSymbol}&tsyms=USDT&ts=${timestamp}&e=kucoin&api_key=${CRYPTOCOMPARE_API_KEY}`
