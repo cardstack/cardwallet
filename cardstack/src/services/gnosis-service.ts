@@ -15,6 +15,9 @@ import { AnyAction } from '@reduxjs/toolkit';
 import { updatePrepaidCardWithCustomization } from './prepaid-cards/prepaid-card-service';
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
 import {
+  getDepots,
+  getMerchantSafes,
+  getPrepaidCards,
   saveDepots,
   saveMerchantSafes,
   savePrepaidCards,
@@ -37,13 +40,13 @@ export const getSafeData = async (address: string) => {
 };
 
 export const fetchSafes = async (
-  address: string,
+  accountAddress: string,
   nativeCurrency: NativeCurrency
 ) => {
   try {
     const safesInstance = await getSafesInstance();
 
-    const safes = (await safesInstance?.view(address))?.safes || [];
+    const safes = (await safesInstance?.view(accountAddress))?.safes || [];
 
     const safesWithTokenPrices = await Promise.all(
       safes?.map(safe => addPricesToSafe(safe, nativeCurrency))
@@ -66,10 +69,14 @@ export const fetchSafes = async (
       addMerchantSafesCustomization,
     ]);
 
+    // Unix timestamp
+    const timestamp = Math.ceil(Date.now() / 1000).toString();
+
     const data = {
       depots,
       prepaidCards: extendedPrepaidCards,
       merchantSafes: extendedMerchantSafes,
+      timestamp,
     };
 
     if (extendedMerchantSafes.length) {
@@ -91,13 +98,25 @@ export const fetchSafes = async (
     // block-start
     const network = await getNetwork();
 
-    const saveCards = savePrepaidCards(data.prepaidCards, address, network);
-    const saveDepts = saveDepots(data.depots, address, network);
+    const saveCards = savePrepaidCards(
+      data.prepaidCards,
+      accountAddress,
+      network,
+      timestamp
+    );
+
+    const saveDepts = saveDepots(
+      data.depots,
+      accountAddress,
+      network,
+      timestamp
+    );
 
     const saveMerchant = saveMerchantSafes(
       data.merchantSafes,
-      address,
-      network
+      accountAddress,
+      network,
+      timestamp
     );
 
     await Promise.all([saveCards, saveDepts, saveMerchant]);
@@ -110,12 +129,41 @@ export const fetchSafes = async (
     captureException(error);
     logger.sentry('Fetch GnosisSafes failed', error);
 
-    return {
+    const errorResponse = {
       error: {
         status: 418,
         data: error,
       },
     };
+
+    // fallback to previous data to avoid safes disappearing
+    const localCache = await getSafesPersistedCache(accountAddress);
+
+    return localCache || errorResponse;
+  }
+};
+
+const getSafesPersistedCache = async (accountAddress: string) => {
+  try {
+    const network = await getNetwork();
+
+    const [
+      { prepaidCards, timestamp },
+      { depots },
+      { merchantSafes },
+    ] = await Promise.all([
+      getPrepaidCards(accountAddress, network),
+      getDepots(accountAddress, network),
+      getMerchantSafes(accountAddress, network),
+    ]);
+
+    // Using a single timestamp for now, but as we move to fetch safes individually
+    // we should restructure the data to support one for each section
+    if (prepaidCards || depots || merchantSafes) {
+      return { data: { prepaidCards, depots, merchantSafes, timestamp } };
+    }
+  } catch (e) {
+    logger.sentry('Retrieving local cache failed', e);
   }
 };
 
