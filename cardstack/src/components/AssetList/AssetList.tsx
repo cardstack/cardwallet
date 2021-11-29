@@ -25,7 +25,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
-import { isLayer1, Device } from '@cardstack/utils';
+import { isLayer1, Device, dateFormatter } from '@cardstack/utils';
 import {
   PinnedHiddenSectionOption,
   useAccountProfile,
@@ -60,6 +60,7 @@ export type AssetListSectionItem<ComponentProps> = {
   ) => JSX.Element | null;
   header: HeaderItem;
   data: ComponentProps[];
+  timestamp?: string;
 };
 
 interface AssetListProps
@@ -91,6 +92,16 @@ interface RouteType {
 // We need to pass this prop if the section to scrollTo is not on viewport
 const onScrollToIndexFailed = () => {
   logger.log('onScrollToIndexFailed');
+};
+
+const strings = {
+  lastUpdatedAt: (timestamp: string) =>
+    `Last updated at: ${dateFormatter(
+      parseFloat(timestamp),
+      'MM/dd/yy',
+      'h:mm a',
+      ', '
+    )}`,
 };
 
 export const AssetList = (props: AssetListProps) => {
@@ -207,6 +218,22 @@ export const AssetList = (props: AssetListProps) => {
     refreshing,
   ]);
 
+  const renderSectionFooter = useCallback(
+    ({ section: { timestamp } }) =>
+      timestamp ? (
+        <Container
+          paddingHorizontal={4}
+          alignItems="flex-end"
+          justifyContent="center"
+        >
+          <Text color="white" size="xs">
+            {strings.lastUpdatedAt(timestamp)}
+          </Text>
+        </Container>
+      ) : null,
+    []
+  );
+
   if (loading || isNotManualRefetch) {
     return <AssetListLoading />;
   }
@@ -237,6 +264,7 @@ export const AssetList = (props: AssetListProps) => {
             currencyConversionRates={currencyConversionRates}
           />
         )}
+        renderSectionFooter={renderSectionFooter}
         renderSectionHeader={({ section }) => {
           const {
             header: { type, title, count, showContextMenu, total },
