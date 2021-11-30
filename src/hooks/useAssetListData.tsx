@@ -31,7 +31,8 @@ import {
 } from '@rainbow-me/redux/hooks';
 
 const usePrepaidCardSection = (
-  prepaidCards: PrepaidCardType[]
+  prepaidCards: PrepaidCardType[],
+  timestamp: string
 ): AssetListSectionItem<PrepaidCardType> => {
   const { hidden, pinned } = usePinnedAndHiddenItemOptions();
   const count = prepaidCards.filter(pc => !hidden.includes(pc.address)).length;
@@ -54,28 +55,33 @@ const usePrepaidCardSection = (
       showContextMenu: true,
     },
     data: prepaidCards,
+    timestamp,
     Component: PrepaidCard,
   };
 };
 
 const useDepotSection = (
-  depots: DepotType[]
+  depots: DepotType[],
+  timestamp: string
 ): AssetListSectionItem<DepotType> => ({
   header: {
     title: 'Depot',
   },
   data: depots,
+  timestamp,
   Component: Depot,
 });
 
 const useMerchantSafeSection = (
-  merchantSafes: MerchantSafeType[]
+  merchantSafes: MerchantSafeType[],
+  timestamp: string
 ): AssetListSectionItem<MerchantSafeType> => ({
   header: {
     title: 'Accounts',
     count: merchantSafes?.length,
   },
   data: merchantSafes,
+  timestamp,
   Component: MerchantSafe,
 });
 
@@ -158,6 +164,7 @@ const safesInitialState = {
   prepaidCards: [],
   depots: [],
   merchantSafes: [],
+  timestamp: '',
 };
 
 export const useAssetListData = () => {
@@ -178,11 +185,11 @@ export const useAssetListData = () => {
     }
   );
 
-  const { prepaidCards, depots, merchantSafes } = data;
+  const { prepaidCards, depots, merchantSafes, timestamp } = data;
 
-  const prepaidCardSection = usePrepaidCardSection(prepaidCards);
-  const depotSection = useDepotSection(depots);
-  const merchantSafesSection = useMerchantSafeSection(merchantSafes);
+  const prepaidCardSection = usePrepaidCardSection(prepaidCards, timestamp);
+  const depotSection = useDepotSection(depots, timestamp);
+  const merchantSafesSection = useMerchantSafeSection(merchantSafes, timestamp);
   const otherTokensSection = useOtherTokensSection();
   const collectiblesSection = useCollectiblesSection();
 

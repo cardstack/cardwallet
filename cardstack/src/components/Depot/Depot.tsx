@@ -24,7 +24,7 @@ export const Depot = (depot: DepotProps) => {
   const onPress = () => navigate(Routes.DEPOT_SCREEN, { depot });
 
   return (
-    <Container width="100%" paddingHorizontal={4}>
+    <Container width="100%" paddingHorizontal={4} marginBottom={4}>
       <Touchable width="100%" testID="inventory-card" onPress={onPress}>
         <Container
           backgroundColor="white"

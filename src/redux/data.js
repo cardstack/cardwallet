@@ -114,7 +114,12 @@ export const dataLoadState = () => async (dispatch, getState) => {
   } catch (error) {}
   try {
     dispatch({ type: DATA_LOAD_ASSETS_REQUEST });
-    const [assets, prepaidCards, depots, merchantSafes] = await Promise.all([
+    const [
+      assets,
+      { prepaidCards },
+      { depots },
+      { merchantSafes },
+    ] = await Promise.all([
       getAssets(accountAddress, network),
       getPrepaidCards(accountAddress, network),
       getDepots(accountAddress, network),
