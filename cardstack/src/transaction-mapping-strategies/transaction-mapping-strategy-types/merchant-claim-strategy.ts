@@ -1,11 +1,11 @@
 import {
-  convertAmountToNativeDisplay,
+  convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
   getAddress,
 } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
 import { MerchantClaimType, TransactionTypes } from '@cardstack/types';
-import { getNativeBalanceFromOracle } from '@cardstack/services';
+import { fetchHistoricalPrice } from '@cardstack/services';
 import { getMerchantClaimTransactionDetails } from '@cardstack/utils/merchant-utils';
 import Web3Instance from '@cardstack/models/web3-instance';
 
@@ -30,25 +30,26 @@ export class MerchantClaimStrategy extends BaseStrategy {
     const web3 = await Web3Instance.get();
     const address = await getAddress('relay', web3);
 
-    const nativeBalance = await getNativeBalanceFromOracle({
-      symbol: merchantClaimTransaction.token.symbol,
-      balance: merchantClaimTransaction.amount,
-      nativeCurrency: this.nativeCurrency,
-    });
+    const symbol = merchantClaimTransaction.token.symbol || '';
+
+    const price = await fetchHistoricalPrice(
+      symbol,
+      merchantClaimTransaction.timestamp,
+      this.nativeCurrency
+    );
 
     return {
       address: merchantClaimTransaction.merchantSafe.id,
       balance: convertRawAmountToBalance(merchantClaimTransaction.amount, {
         decimals: 18,
-        symbol: merchantClaimTransaction.token.symbol || undefined,
+        symbol,
       }),
-      native: {
-        amount: nativeBalance.toString(),
-        display: convertAmountToNativeDisplay(
-          nativeBalance,
-          this.nativeCurrency
-        ),
-      },
+      native: convertRawAmountToNativeDisplay(
+        merchantClaimTransaction.amount,
+        18,
+        price,
+        this.nativeCurrency
+      ),
       createdAt: merchantClaimTransaction.timestamp,
       transactionHash: this.transaction.id,
       hideSafeHeader: Boolean(this.merchantSafeAddress),

@@ -1,10 +1,10 @@
 import {
-  convertAmountToNativeDisplay,
+  convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '../../types/transaction-types';
 import { BaseStrategy } from '../base-strategy';
-import { getNativeBalanceFromOracle } from '@cardstack/services';
+import { fetchHistoricalPrice } from '@cardstack/services';
 import { TransactionTypes } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
@@ -32,11 +32,11 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
     const symbol = prepaidCardPaymentTransaction.issuingToken.symbol || '';
     const amount = prepaidCardPaymentTransaction.issuingTokenAmount;
 
-    const nativeBalance = await getNativeBalanceFromOracle({
+    const price = await fetchHistoricalPrice(
       symbol,
-      balance: amount,
-      nativeCurrency: this.nativeCurrency,
-    });
+      prepaidCardPaymentTransaction.timestamp,
+      this.nativeCurrency
+    );
 
     const spendDisplay = convertSpendForBalanceDisplay(
       prepaidCardPaymentTransaction.spendAmount,
@@ -51,13 +51,12 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
         decimals: 18,
         symbol,
       }),
-      native: {
-        amount: nativeBalance.toString(),
-        display: convertAmountToNativeDisplay(
-          nativeBalance,
-          this.nativeCurrency
-        ),
-      },
+      native: convertRawAmountToNativeDisplay(
+        amount,
+        18,
+        price,
+        this.nativeCurrency
+      ),
       token: {
         address: prepaidCardPaymentTransaction.issuingToken.id,
         symbol: prepaidCardPaymentTransaction.issuingToken.symbol,

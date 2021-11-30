@@ -1,10 +1,10 @@
 import {
-  convertAmountToNativeDisplay,
+  convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
 import { MerchantWithdrawType, TransactionTypes } from '@cardstack/types';
-import { getNativeBalanceFromOracle } from '@cardstack/services';
+import { fetchHistoricalPrice } from '@cardstack/services';
 
 export class MerchantWithdrawStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -24,28 +24,29 @@ export class MerchantWithdrawStrategy extends BaseStrategy {
       return null;
     }
 
-    const nativeBalance = await getNativeBalanceFromOracle({
-      symbol: merchantWithdraw.token.symbol,
-      balance: merchantWithdraw.amount,
-      nativeCurrency: this.nativeCurrency,
-    });
+    const symbol = merchantWithdraw.token.symbol || '';
+
+    const price = await fetchHistoricalPrice(
+      symbol,
+      merchantWithdraw.timestamp,
+      this.nativeCurrency
+    );
 
     return {
       address: merchantWithdraw.merchantSafe?.id || '',
       createdAt: merchantWithdraw.timestamp,
       balance: convertRawAmountToBalance(merchantWithdraw.amount, {
         decimals: 18,
-        symbol: merchantWithdraw.token.symbol || undefined,
+        symbol,
       }),
       type: TransactionTypes.MERCHANT_WITHDRAW,
       hideSafeHeader: Boolean(this.merchantSafeAddress),
-      native: {
-        amount: nativeBalance.toString(),
-        display: convertAmountToNativeDisplay(
-          nativeBalance,
-          this.nativeCurrency
-        ),
-      },
+      native: convertRawAmountToNativeDisplay(
+        merchantWithdraw.amount,
+        18,
+        price,
+        this.nativeCurrency
+      ),
       transactionHash: this.transaction.id,
       infoDid: merchantWithdraw.merchantSafe?.infoDid || undefined,
       to: merchantWithdraw.to,

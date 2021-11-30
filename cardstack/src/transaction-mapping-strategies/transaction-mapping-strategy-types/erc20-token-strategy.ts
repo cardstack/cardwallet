@@ -47,17 +47,13 @@ export class ERC20TokenStrategy extends BaseStrategy {
       this.isDepotTransaction ? this.depotAddress : this.accountAddress
     );
 
-    let price = 0;
-
     const symbol = userTransaction.token.symbol || '';
 
-    if (symbol) {
-      price = await fetchHistoricalPrice(
-        symbol,
-        userTransaction.timestamp,
-        this.nativeCurrency
-      );
-    }
+    const price = await fetchHistoricalPrice(
+      symbol,
+      userTransaction.timestamp,
+      this.nativeCurrency
+    );
 
     return {
       from: userTransaction.from || 'Unknown',
