@@ -80,7 +80,7 @@ const ChartSection = ({ merchantSafe }: { merchantSafe: MerchantSafeType }) => {
   return (
     <>
       <Container paddingHorizontal={5} paddingTop={3}>
-        <Text size="medium">Earnings history</Text>
+        <Text size="medium">Payment history</Text>
         <Container alignItems="flex-start" flexDirection="row" marginTop={8}>
           <Icon name="spend" size={40} />
           <Container flexDirection="column" marginLeft={4}>

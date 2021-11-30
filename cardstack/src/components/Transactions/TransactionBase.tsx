@@ -17,6 +17,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 export interface TransactionBaseCustomizationProps {
   includeBorder?: boolean;
   prepaidInlineTransaction?: boolean;
+  disabled?: boolean;
 }
 
 export interface TransactionBaseProps
@@ -45,6 +46,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
     includeBorder,
     isFullWidth,
     onPressTransaction,
+    disabled,
   } = props;
 
   const network = useRainbowSelector(
@@ -89,6 +91,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
         width="100%"
         testID="inventory-card"
         onPress={handleOnPressTransaction}
+        disabled={disabled}
       >
         <Container
           backgroundColor="white"
