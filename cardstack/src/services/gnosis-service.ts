@@ -12,7 +12,7 @@ import Web3 from 'web3';
 import { captureException } from '@sentry/react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { AnyAction } from '@reduxjs/toolkit';
-import { updatePrepaidCardWithCustomization } from './prepaid-cards/prepaid-card-service';
+import { addPrepaidCardCustomization } from './prepaid-cards/prepaid-card-service';
 import { getNativeBalanceFromOracle } from './exchange-rate-service';
 import {
   saveDepots,
@@ -46,15 +46,15 @@ export const fetchSafes = async (
     const safes = (await safesInstance?.view(address))?.safes || [];
 
     const safesWithTokenPrices = await Promise.all(
-      safes?.map(safe => addPricesToSafe(safe, nativeCurrency))
+      safes?.map(safe => updateSafeWithTokenPrices(safe, nativeCurrency))
     );
 
     const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(
       (safesWithTokenPrices as unknown) as Safe[]
     );
 
-    const addPrepaidCardCustomization = Promise.all(
-      prepaidCards.map(updatePrepaidCardWithCustomization)
+    const addPrepaidCardsCustomization = Promise.all(
+      prepaidCards.map(addPrepaidCardCustomization)
     );
 
     const addMerchantSafesCustomization = Promise.all(
@@ -62,7 +62,7 @@ export const fetchSafes = async (
     );
 
     const [extendedPrepaidCards, extendedMerchantSafes] = await Promise.all([
-      addPrepaidCardCustomization,
+      addPrepaidCardsCustomization,
       addMerchantSafesCustomization,
     ]);
 
@@ -136,7 +136,7 @@ export const fetchGnosisSafes = async (address: string) => {
     const { depots, prepaidCards, merchantSafes } = normalizeSafesByType(safes);
 
     const extendedPrepaidCards = await Promise.all(
-      prepaidCards.map(updatePrepaidCardWithCustomization)
+      prepaidCards.map(addPrepaidCardCustomization)
     );
 
     return {
@@ -189,7 +189,7 @@ const normalizeSafesByType = (safes: Safe[]) =>
     }
   );
 
-export const addPricesToSafe = async (
+export const updateSafeWithTokenPrices = async (
   safe: Safe,
   nativeCurrency: NativeCurrency
 ) => {
