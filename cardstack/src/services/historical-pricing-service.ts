@@ -3,11 +3,13 @@ import { CRYPTOCOMPARE_API_KEY } from 'react-native-dotenv';
 import logger from 'logger';
 import { removeCPXDTokenSuffix } from '@cardstack/utils';
 
+const CryptoCompareAPIBaseURL = `https://min-api.cryptocompare.com/data/pricehistorical?&api_key=${CRYPTOCOMPARE_API_KEY}`;
+
 export const fetchHistoricalPrice = async (
   symbol: string,
   timestamp: string | number,
   nativeCurrency: string
-) => {
+): Promise<number> => {
   try {
     if (!symbol) {
       return 0;
@@ -21,26 +23,23 @@ export const fetchHistoricalPrice = async (
     if (tokenSymbol === cryptoCurrencies.CARD.currency) {
       const usdtPriceData = await (
         await fetch(
-          `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${tokenSymbol}&tsyms=USDT&ts=${timestamp}&e=kucoin&api_key=${CRYPTOCOMPARE_API_KEY}`
+          `${CryptoCompareAPIBaseURL}&fsym=${tokenSymbol}&tsyms=USDT&ts=${timestamp}&e=kucoin`
         )
       ).json();
 
       const usdtPrice = usdtPriceData.CARD.USDT;
 
-      const nativeCurrencyDataForUSDT = await (
-        await fetch(
-          `https://min-api.cryptocompare.com/data/pricehistorical?fsym=USDT&tsyms=${nativeCurrency}&ts=${timestamp}&api_key=${CRYPTOCOMPARE_API_KEY}`
-        )
-      ).json();
-
-      const nativeCurrencyPriceForUSDT =
-        nativeCurrencyDataForUSDT.USDT[nativeCurrency];
+      const nativeCurrencyPriceForUSDT = await fetchHistoricalPrice(
+        'USDT',
+        timestamp,
+        nativeCurrency
+      );
 
       return usdtPrice * nativeCurrencyPriceForUSDT;
     }
 
     const response = await fetch(
-      `https://min-api.cryptocompare.com/data/pricehistorical?fsym=${tokenSymbol}&tsyms=${nativeCurrency}&ts=${timestamp}&api_key=${CRYPTOCOMPARE_API_KEY}`
+      `${CryptoCompareAPIBaseURL}&fsym=${tokenSymbol}&tsyms=${nativeCurrency}&ts=${timestamp}`
     );
 
     const data = await response.json();
