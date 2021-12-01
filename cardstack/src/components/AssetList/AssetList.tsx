@@ -4,8 +4,14 @@ import React, {
   useEffect,
   createRef,
   useMemo,
+  useRef,
 } from 'react';
-import { LayoutAnimation, RefreshControl, SectionList } from 'react-native';
+import {
+  LayoutAnimation,
+  RefreshControl,
+  SectionList,
+  ActivityIndicator,
+} from 'react-native';
 import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/core';
@@ -154,9 +160,10 @@ export const AssetList = (props: AssetListProps) => {
   );
 
   const onRefresh = useCallback(async () => {
+    props.refetchSafes();
+
     setRefreshing(true);
 
-    props.refetchSafes();
     await refresh();
 
     setRefreshing(false);
@@ -213,28 +220,41 @@ export const AssetList = (props: AssetListProps) => {
     }
   }, [isDamaged, network, navigate, accountAddress]);
 
-  const isNotManualRefetch = useMemo(() => !refreshing && isFetchingSafes, [
-    isFetchingSafes,
-    refreshing,
-  ]);
+  const prevAccount = useRef(null);
+
+  useEffect(() => {
+    if (accountAddress) {
+      prevAccount.current = accountAddress;
+    }
+  }, [accountAddress]);
 
   const renderSectionFooter = useCallback(
-    ({ section: { timestamp } }) =>
-      timestamp ? (
+    ({ section: { timestamp, data } }) =>
+      timestamp && !!data.length ? (
         <Container
           paddingHorizontal={4}
           alignItems="flex-end"
           justifyContent="center"
         >
-          <Text color="white" size="xs">
-            {strings.lastUpdatedAt(timestamp)}
-          </Text>
+          {isFetchingSafes ? (
+            <ActivityIndicator size={15} color="white" />
+          ) : (
+            <Text color="white" size="xs">
+              {strings.lastUpdatedAt(timestamp)}
+            </Text>
+          )}
         </Container>
       ) : null,
-    []
+    [isFetchingSafes]
   );
 
-  if (loading || isNotManualRefetch) {
+  // Account was switched so show loading skeleton
+  const isLoadingSafesDiffAccount = useMemo(
+    () => isFetchingSafes && prevAccount.current !== accountAddress,
+    [accountAddress, isFetchingSafes, prevAccount]
+  );
+
+  if (loading || isLoadingSafesDiffAccount) {
     return <AssetListLoading />;
   }
 
