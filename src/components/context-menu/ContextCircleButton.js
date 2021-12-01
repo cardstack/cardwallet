@@ -1,8 +1,8 @@
 import React from 'react';
 import RadialGradient from 'react-native-radial-gradient';
-import styled from 'styled-components';
-import { Icon } from '../icons';
+import styled from 'styled-components/native';
 import ContextMenu from './ContextMenu';
+import { Icon } from '@cardstack/components/Icon';
 import { borders, position } from '@rainbow-me/styles';
 
 const CircleButton = styled(RadialGradient).attrs(({ theme: { colors } }) => ({

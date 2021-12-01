@@ -89,7 +89,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
     >
       <Touchable
         width="100%"
-        testID="inventory-card"
+        testID="transaction-card"
         onPress={handleOnPressTransaction}
         disabled={disabled}
       >

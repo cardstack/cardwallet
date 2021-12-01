@@ -1,7 +1,7 @@
 import { PrepaidCardSafe } from '@cardstack/cardpay-sdk';
-import { updateSafeWithTokenPrices } from '../gnosis-service';
+import { updateSafeWithTokenPrices, getSafeData } from '../gnosis-service';
 import { PrepaidCardSafeQueryParams } from './prepaid-card-types';
-import { getSafeData } from '@cardstack/services';
+
 import logger from 'logger';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import { getSafesInstance } from '@cardstack/models';

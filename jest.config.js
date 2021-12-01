@@ -22,9 +22,8 @@ module.exports = {
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
-    // Avoid testing components for now
-    '!<rootDir>/cardstack/**/*.test.jsx',
-    '!<rootDir>/cardstack/**/*.test.tsx',
+    '<rootDir>/cardstack/**/*.test.jsx',
+    '<rootDir>/cardstack/**/*.test.tsx',
   ],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*)',

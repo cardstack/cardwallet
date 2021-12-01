@@ -15,9 +15,6 @@ interface DepotProps extends DepotType {
   networkName: string;
 }
 
-/**
- * A inventory card component
- */
 export const Depot = (depot: DepotProps) => {
   const { navigate } = useNavigation();
 
@@ -25,7 +22,7 @@ export const Depot = (depot: DepotProps) => {
 
   return (
     <Container width="100%" paddingHorizontal={4} marginBottom={4}>
-      <Touchable width="100%" testID="inventory-card" onPress={onPress}>
+      <Touchable width="100%" testID="depot-card" onPress={onPress}>
         <Container
           backgroundColor="white"
           borderRadius={10}

@@ -1,9 +1,59 @@
 /* eslint-disable no-undef */
+import React from 'react';
+import 'react-native-gesture-handler/jestSetup';
+import { View as RNView } from 'react-native';
 import '@testing-library/jest-native/extend-expect';
 
 // GLOBAL LIBS MOCKS
 
 jest.mock('react-native-flipper');
+import * as ReactNative from 'react-native';
+
+export const alert = jest.fn();
+export const Alert = { alert };
+
+export const dimensionWidth = 480;
+export const Dimensions = {
+  get: jest.fn().mockReturnValue({ width: dimensionWidth, height: 960 }),
+};
+
+export const Image = 'Image';
+
+export const keyboardDismiss = jest.fn();
+export const Keyboard = {
+  dismiss: keyboardDismiss,
+};
+
+export const Platform = {
+  ...ReactNative.Platform,
+  OS: 'ios',
+  Version: 16,
+  isTesting: true,
+  select: objs => objs.ios,
+};
+
+export const StyleSheet = {
+  create: jest.fn(),
+};
+
+export default Object.setPrototypeOf(
+  {
+    Alert,
+    Dimensions,
+    Image,
+    Keyboard,
+    NativeModules: {
+      RNSentry: {},
+    },
+    Platform,
+    StyleSheet,
+  },
+  ReactNative
+);
+
+jest.mock('@sentry/react-native', () => ({
+  captureException: jest.fn(),
+}));
 
 jest.mock('react-native-background-timer', () => ({
   start: jest.fn(),
@@ -24,87 +74,27 @@ jest.mock('react-native-device-info', () => ({
 }));
 
 jest.mock('react-native-reanimated', () => {
-  const View = require('react-native/Libraries/Components/View/View');
-  return {
-    Value: jest.fn(),
-    event: jest.fn(),
-    add: jest.fn(),
-    eq: jest.fn(),
-    set: jest.fn(),
-    cond: jest.fn(),
-    interpolate: jest.fn(),
-    View,
-    Extrapolate: { CLAMP: jest.fn() },
-    Clock: jest.fn(),
-    greaterThan: jest.fn(),
-    lessThan: jest.fn(),
-    startClock: jest.fn(),
-    stopClock: jest.fn(),
-    clockRunning: jest.fn(),
-    not: jest.fn(),
-    or: jest.fn(),
-    and: jest.fn(),
-    spring: jest.fn(),
-    decay: jest.fn(),
-    defined: jest.fn(),
-    call: jest.fn(),
-    Code: View,
-    block: jest.fn(),
-    abs: jest.fn(),
-    greaterOrEq: jest.fn(),
-    lessOrEq: jest.fn(),
-    debug: jest.fn(),
-    Easing: {
-      in: jest.fn(),
-      out: jest.fn(),
-    },
-    Transition: {
-      Out: 'Out',
-    },
+  const Reanimated = require('react-native-reanimated/mock');
+
+  // The mock for `call` immediately calls the callback which is incorrect
+  // So we override it with a no-op
+  Reanimated.default.call = () => {
+    /* noop */
   };
+
+  return Reanimated;
 });
 
-jest.mock('react-native-gesture-handler', () => {
-  const View = require('react-native/Libraries/Components/View/View');
-  return {
-    Swipeable: View,
-    DrawerLayout: View,
-    State: {},
-    ScrollView: View,
-    Slider: View,
-    Switch: View,
-    TextInput: View,
-    ToolbarAndroid: View,
-    ViewPagerAndroid: View,
-    DrawerLayoutAndroid: View,
-    WebView: View,
-    NativeViewGestureHandler: View,
-    TapGestureHandler: View,
-    FlingGestureHandler: View,
-    ForceTouchGestureHandler: View,
-    LongPressGestureHandler: View,
-    PanGestureHandler: View,
-    PinchGestureHandler: View,
-    RotationGestureHandler: View,
-    /* Buttons */
-    RawButton: View,
-    BaseButton: View,
-    RectButton: View,
-    BorderlessButton: View,
-    /* Other */
-    FlatList: View,
-    gestureHandlerRootHOC: jest.fn(),
-    Directions: {},
-  };
-});
+// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
 jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: jest.fn(),
 }));
 
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-}));
+// jest.mock('react-redux', () => ({
+//   useSelector: jest.fn(),
+// }));
 
 jest.mock('react-native-iphone-x-helper', () => ({
   isIphoneX: jest.fn(),
@@ -179,9 +169,19 @@ jest.mock('react-native-splash-screen', () => ({
   SplashScreen: jest.fn(),
 }));
 
-jest.mock('styled-components', () => ({
-  styled: jest.fn(),
-}));
+// jest.mock('styled-components', () => ({
+//   styled: jest.fn(),
+// }));
+
+jest.mock('@shopify/restyle', () => {
+  const RealModule = jest.requireActual('@shopify/restyle');
+  const RN = jest.requireActual('react-native');
+  RealModule.createText = () => RN.Text;
+  RealModule.createBox = () => RN.View;
+  RealModule.createRestyleComponent = (_f, c) => c || RN.View;
+
+  return RealModule;
+});
 
 jest.mock('react-native-version-number', () => ({
   VersionNumber: jest.fn(),
@@ -240,9 +240,9 @@ jest.mock('@rainbow-me/components/animations/procs', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/components/animations/ButtonPressAnimation', () => ({
-  default: jest.fn(),
-}));
+jest.mock('@rainbow-me/components/animations/ButtonPressAnimation', () =>
+  jest.fn(({ children }) => children)
+);
 
 jest.mock('@rainbow-me/components/animations', () => ({
   default: jest.fn(),
@@ -258,15 +258,6 @@ jest.mock('@rainbow-me/components/coin-row', () => ({
 
 jest.mock('@rainbow-me/hooks', () => ({
   useInitializeWallet: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/redux/hooks', () => ({
-  useRainbowSelector: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/styles', () => ({
-  buildTextStyles: jest.fn(),
-  calcDirectionToDegrees: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/utils/measureText', () => ({
@@ -287,8 +278,9 @@ jest.mock('@rainbow-me/components/icons', () => ({
 
 // CARDSTACK MOCKS
 
-jest.mock('@cardstack/components', () => ({
-  default: jest.fn(),
+const mockIcon = () => <RNView />;
+jest.mock('@cardstack/components/Icon', () => ({
+  Icon: jest.fn(mockIcon),
 }));
 
 jest.mock('@cardstack/components/Text/EmojiText', () => ({
@@ -310,6 +302,11 @@ jest.mock('@cardstack/navigation', () => ({
     showLoadingOverlay: jest.fn(),
     dismissLoadingOverlay: jest.fn(),
   }),
+}));
+
+jest.mock('easyqrcode-react-native', () => ({
+  QRCode: jest.fn(),
+  Canvas: jest.fn(),
 }));
 
 global.ios = true;

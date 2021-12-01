@@ -96,7 +96,7 @@ class App extends Component {
   state = { appState: AppState.currentState, initialRoute: null };
 
   async componentDidMount() {
-    if (__DEV__) {
+    if (__DEV__ && process.env.JEST_WORKER_ID) {
       const RNAsyncStorageFlipper = require('rn-async-storage-flipper').default;
       const AsyncStorage = require('@react-native-community/async-storage')
         .default;

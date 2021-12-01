@@ -31,7 +31,7 @@ export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
 
   return (
     <Container paddingHorizontal={4} marginBottom={4}>
-      <Touchable testID="inventory-card" onPress={onPress}>
+      <Touchable testID="merchant-card" onPress={onPress}>
         <Container
           backgroundColor="white"
           borderRadius={10}

@@ -1,6 +1,6 @@
 import { toUpper } from 'lodash';
 import React, { useMemo } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import { useTheme } from '../../context/ThemeContext';
 import { getFirstGrapheme } from '../../utils';
 import { Centered } from '../layout';

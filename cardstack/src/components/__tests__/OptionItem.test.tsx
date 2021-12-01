@@ -52,13 +52,14 @@ describe('OptionItem', () => {
     getByText(props.subText);
   });
 
-  it('should render the icon border if borderIcon is true', () => {
+  it.only('should render the icon border if borderIcon is true', () => {
     props.borderIcon = true;
 
-    const { getByTestId } = renderComponent();
+    const { debug, getByTestId } = renderComponent();
+    debug('render:');
 
     const iconWrapper = getByTestId('option-item-icon-wrapper');
-
+    console.log('iconWrapper.props.borderWidth', iconWrapper.props.borderWidth);
     expect(iconWrapper).toHaveStyle({ borderWidth: 1 });
   });
 });

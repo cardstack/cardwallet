@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import LayoutWithMargins from './LayoutWithMargins';
 
 const RowWithMargins = styled(LayoutWithMargins).attrs(

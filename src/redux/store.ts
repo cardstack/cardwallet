@@ -18,7 +18,7 @@ const store = configureStore({
     middlewares.push(safesApi.middleware);
 
     if (__DEV__) {
-      if (enableReduxFlipper) {
+      if (enableReduxFlipper && process.env.JEST_WORKER_ID) {
         const createDebugger = require('redux-flipper').default;
         middlewares.push(
           createDebugger({
