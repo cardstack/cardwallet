@@ -41,6 +41,7 @@ const PayMerchant = memo(() => {
     setInputValue,
     onAmountNext,
     onCancelConfirmation,
+    isLoadingMerchantInfo,
   } = usePayMerchant();
 
   if (isLoading) {
@@ -59,7 +60,7 @@ const PayMerchant = memo(() => {
         onNextPress={onAmountNext}
         inputValue={inputValue}
         setInputValue={setInputValue}
-        isLoading={isLoading}
+        isLoading={isLoadingMerchantInfo}
         nativeCurrency={nativeCurrency || 'SPD'}
       />
     );
@@ -68,7 +69,7 @@ const PayMerchant = memo(() => {
   if (payStep === PAY_STEP.CONFIRMATION) {
     return (
       <TransactionConfirmationSheet
-        loading={isLoading}
+        loading={isLoadingMerchantInfo}
         onConfirmLoading={onConfirmLoading}
         data={txSheetData}
         onCancel={onCancelConfirmation}

@@ -49,30 +49,29 @@ export const usePaymentMerchantUniversalLink = () => {
     nativeCurrency,
   } = useAccountSettings();
 
-  const { isLoadingCards = true, prepaidCards } = useGetSafesDataQuery(
+  const { isLoading = true, prepaidCards } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
       skip: isLayer1(accountNetwork) || !accountAddress || !walletReady,
-      selectFromResult: ({ data, isLoading, isUninitialized }) => ({
+      selectFromResult: ({
+        data,
+        isLoading: isLoadingCards,
+        isUninitialized,
+      }) => ({
         prepaidCards: data?.prepaidCards || [],
-        isLoadingCards: isLoading || isUninitialized,
+        isLoading: isLoadingCards || isUninitialized,
       }),
     }
   );
 
-  const {
-    isLoading: isLoadingMerchantInfo,
-    callback: getMerchantSafeData,
-  } = useWorker(async () => {
+  const { callback: getMerchantSafeData } = useWorker(async () => {
     const { infoDID: did } = (await getSafeData(
       merchantAddress
     )) as MerchantSafe;
 
     setInfoDID(did);
   }, [merchantAddress]);
-
-  const isLoading = !infoDID || isLoadingMerchantInfo || isLoadingCards;
 
   useEffect(() => {
     getMerchantSafeData();
@@ -96,7 +95,7 @@ export const usePaymentMerchantUniversalLink = () => {
     if (qrCodeNetwork && accountNetwork && qrCodeNetwork !== accountNetwork) {
       InteractionManager.runAfterInteractions(() => {
         handleAlertError(
-          `This is a ${networkInfo[qrCodeNetwork].name} QR Code, please confirm your device is on ${networkInfo[qrCodeNetwork].name}.`,
+          `This is a ${networkInfo[qrCodeNetwork].name} request, please confirm your device is on ${networkInfo[qrCodeNetwork].name}.`,
           'Oops!',
           [
             {
@@ -109,7 +108,7 @@ export const usePaymentMerchantUniversalLink = () => {
 
       return;
     }
-  }, [accountNetwork, qrCodeNetwork, goBack, isLoading, isLoadingCards]);
+  }, [accountNetwork, qrCodeNetwork, goBack, isLoading]);
 
   const data: PayMerchantDecodedData & { qrCodeNetwork: string } = useMemo(
     () => ({
