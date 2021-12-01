@@ -140,7 +140,7 @@ export const toggleShowTestnets = () => (dispatch, getState) => {
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
   accountAddress: '',
-  chainId: 1,
+  chainId: 100,
   language: 'en',
   nativeCurrency: 'USD',
   network: networkTypes.xdai,
