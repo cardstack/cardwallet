@@ -18,7 +18,9 @@ export function formattedCurrencyToAbsNum(
     return 0;
   }
 
-  const result = Math.abs(parseFloat(value.replace(/,/g, '')));
+  const result = Math.abs(
+    parseFloat(value.replace(new RegExp(`\\${groupingSeparator}`, 'g'), ''))
+  );
 
   if (isNaN(result)) {
     return 0;
@@ -54,10 +56,13 @@ export function formatNative(
     (value.match(new RegExp(`\\${decimalSeparator}`, 'g')) || []).length === 1;
 
   if (isIncludeOneDecimalSeparator) {
-    const valueSplittedWithDecimal = value.split('.');
+    const valueSplittedWithDecimal = value.split(decimalSeparator);
     return `${convertToReadableCurrency(valueSplittedWithDecimal[0])}${
       decimalAllowed
-        ? `${decimalSeparator}${valueSplittedWithDecimal[1].replace(/\D/g, '')}`
+        ? `${decimalSeparator}${(valueSplittedWithDecimal[1] || '').replace(
+            /\D/g,
+            ''
+          )}`
         : ''
     }`;
   }
