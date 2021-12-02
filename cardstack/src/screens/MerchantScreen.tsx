@@ -1,10 +1,7 @@
 import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import { Alert, StatusBar } from 'react-native';
-import {
-  useLifetimeEarningsData,
-  useMerchantTransactions,
-} from '@cardstack/hooks';
+import { useMerchantTransactions } from '@cardstack/hooks';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
@@ -19,7 +16,6 @@ import {
   Touchable,
   TransactionItem,
 } from '@cardstack/components';
-import { palette, SPACING_MULTIPLIER } from '@cardstack/theme';
 import {
   MerchantEarnedSpendTransactionType,
   MerchantInformation,
@@ -27,20 +23,12 @@ import {
   TokenType,
 } from '@cardstack/types';
 import {
-  convertSpendForBalanceDisplay,
   getAddressPreview,
   sortedByTokenBalanceAmount,
 } from '@cardstack/utils';
-import { ChartPath } from '@rainbow-me/animated-charts';
 import { useNavigation } from '@rainbow-me/navigation';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
-import {
-  useAccountSettings,
-  useDimensions,
-  usePrevious,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountSettings, usePrevious, useWallets } from '@rainbow-me/hooks';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import {
   useClaimRevenueMutation,
@@ -49,8 +37,6 @@ import {
 import logger from 'logger';
 
 const HORIZONTAL_PADDING = 5;
-const HORIZONTAL_PADDING_PIXELS = HORIZONTAL_PADDING * SPACING_MULTIPLIER;
-const TOTAL_HORIZONTAL_PADDING = HORIZONTAL_PADDING_PIXELS * 2;
 
 const isLastItem = (items: TokenType[], index: number): boolean =>
   items.length - 1 === index;
@@ -73,7 +59,6 @@ export enum ExpandedMerchantRoutes {
   unclaimedRevenue = 'unclaimedRevenue',
   availableBalances = 'availableBalances',
   paymentRequest = 'paymentRequest',
-  recentActivity = 'recentActivity',
 }
 
 const MerchantScreen = () => {
@@ -122,7 +107,7 @@ const MerchantScreen = () => {
 
   const { sections } = useMerchantTransactions(
     merchantSafe.address,
-    'recentActivity'
+    'lifetimeEarnings'
   );
 
   return (
@@ -134,9 +119,8 @@ const MerchantScreen = () => {
       />
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <ScrollView
-          flex={1}
           width="100%"
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 400 }}
+          contentContainerStyle={{ alignItems: 'center', paddingBottom: 260 }}
           paddingHorizontal={HORIZONTAL_PADDING}
         >
           <MerchantInfo merchantInfo={merchantSafe.merchantInfo} />
@@ -148,14 +132,6 @@ const MerchantScreen = () => {
             Request Payment
           </Button>
           <HorizontalDivider />
-          <RecentActivitySection
-            sections={sections}
-            onPress={onPressGoTo(ExpandedMerchantRoutes.recentActivity)}
-          />
-          <LifetimeEarningsSection
-            merchantSafe={merchantSafe}
-            onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
-          />
           <TokensSection
             title="Available revenue"
             onPress={onPressGoTo(ExpandedMerchantRoutes.unclaimedRevenue)}
@@ -167,6 +143,10 @@ const MerchantScreen = () => {
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
             emptyText="No available assets"
             tokens={merchantSafe.tokens}
+          />
+          <PaymentHistorySection
+            sections={sections}
+            onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
           />
         </ScrollView>
       </Container>
@@ -272,63 +252,6 @@ const MerchantInfo = ({
   );
 };
 
-const LifetimeEarningsSection = ({
-  merchantSafe,
-  onPress,
-}: MerchantSafeProps & onPressProps) => {
-  const { width: screenWidth } = useDimensions();
-
-  const { accumulatedSpendValue } = merchantSafe;
-
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
-  const { data } = useLifetimeEarningsData(merchantSafe.address);
-
-  const {
-    tokenBalanceDisplay,
-    nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(
-    accumulatedSpendValue,
-    nativeCurrency,
-    currencyConversionRates
-  );
-
-  return (
-    <Container flexDirection="column" width="100%">
-      <SectionHeader>Earnings history</SectionHeader>
-      <SectionWrapper onPress={onPress} disabled={!accumulatedSpendValue}>
-        <>
-          <TokenBalance
-            Icon={<Icon name="spend" />}
-            tokenSymbol="SPEND"
-            tokenBalance={tokenBalanceDisplay}
-            nativeBalance={nativeBalanceDisplay}
-          />
-          {!!accumulatedSpendValue && (
-            <Container alignItems="center" justifyContent="center" width="100%">
-              <ChartPath
-                data={{ points: data, smoothingStrategy: 'bezier' }}
-                gestureEnabled={false}
-                height={125}
-                stroke={palette.tealDark}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={3.5}
-                width={screenWidth - TOTAL_HORIZONTAL_PADDING}
-              >
-                <Container />
-              </ChartPath>
-            </Container>
-          )}
-        </>
-      </SectionWrapper>
-    </Container>
-  );
-};
-
 interface TokensSectionProps extends onPressProps {
   title: string;
   tokens: TokenType[];
@@ -383,12 +306,14 @@ interface SectionWrapperProps {
   children: JSX.Element;
   onPress?: () => void;
   disabled?: boolean;
+  hasDetailsText?: boolean;
 }
 
 const SectionWrapper = ({
   children,
   onPress,
   disabled = false,
+  hasDetailsText = true,
 }: SectionWrapperProps) => (
   <Touchable
     width="100%"
@@ -399,46 +324,54 @@ const SectionWrapper = ({
     onPress={onPress}
     disabled={disabled}
   >
-    <Container position="absolute" top={8} right={8}>
-      {!disabled && <Text size="xs">Details</Text>}
-    </Container>
+    {hasDetailsText && (
+      <Container position="absolute" top={8} right={8}>
+        {!disabled && <Text size="xs">Details</Text>}
+      </Container>
+    )}
     {children}
   </Touchable>
 );
 
-export interface RecentActivityDataSectionProps {
+export interface PaymentHistorySectionProps {
   data: MerchantEarnedSpendTransactionType[];
   title: string;
 }
 
-const RecentActivitySection = ({
+const PaymentHistorySection = ({
   sections,
   onPress,
 }: {
-  sections: RecentActivityDataSectionProps[];
+  sections: PaymentHistorySectionProps[];
   onPress: () => void;
 }) => {
-  const firstActivityDataListItem = sections[0]?.data[0];
+  const numberOfTransactions = sections[0]?.data?.length || 0;
 
-  const recentActivityDataSectionData = {
-    item: firstActivityDataListItem,
-    onPressTransaction: onPress,
-  };
+  const first3ActivityLists = sections[0]?.data
+    ?.slice(0, 3)
+    .map(item => <TransactionItem item={item} isFullWidth disabled />);
 
   return (
     <Container flexDirection="column" width="100%">
       <SectionHeader>Payment History</SectionHeader>
-      {sections[0]?.data.length > 0 ? (
-        <TransactionItem
-          {...recentActivityDataSectionData}
-          includeBorder
-          isFullWidth
-        />
-      ) : (
-        <SectionWrapper disabled={!firstActivityDataListItem}>
-          <Text variant="subText">No recent activity</Text>
-        </SectionWrapper>
-      )}
+      <SectionWrapper
+        onPress={onPress}
+        hasDetailsText={false}
+        disabled={numberOfTransactions === 0}
+      >
+        {numberOfTransactions ? (
+          <>
+            {first3ActivityLists}
+            {numberOfTransactions > 3 && (
+              <Text variant="subText" paddingHorizontal={5}>
+                + more
+              </Text>
+            )}
+          </>
+        ) : (
+          <Text variant="subText">No activity</Text>
+        )}
+      </SectionWrapper>
     </Container>
   );
 };

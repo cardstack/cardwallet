@@ -14,8 +14,7 @@ import { TransactionMappingStrategy } from '@cardstack/transaction-mapping-strat
 type MerchantTransactionTypes =
   | 'lifetimeEarnings'
   | 'unclaimedRevenue'
-  | 'availableBalances'
-  | 'recentActivity';
+  | 'availableBalances';
 
 const typeToStrategies: {
   [key in MerchantTransactionTypes]: TransactionMappingStrategy[];
@@ -27,7 +26,6 @@ const typeToStrategies: {
     MerchantWithdrawStrategy,
     MerchantDepositStrategy,
   ],
-  recentActivity: [MerchantEarnedSpendStrategy],
 };
 
 export const useMerchantTransactions = (

@@ -10,5 +10,4 @@ export { default as UnclaimedRevenueExpandedState } from './UnclaimedRevenueExpa
 export { default as AvailableBalancesExpandedState } from './AvailableBalancesExpandedState';
 export { default as MerchantTransactionExpandedState } from './MerchantTransactionExpandedState';
 export { default as PaymentConfirmationExpandedState } from './PaymentConfirmationExpandedState';
-export { default as RecentActivityExpandedState } from './RecentActivityExpandedState';
 export { default as SupportAndFeedsState } from './SupportAndFeedsState';
