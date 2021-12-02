@@ -10,12 +10,6 @@ describe('Currency utils', () => {
       expect(formattedValue).toBe('');
     });
 
-    it('should return only number if non-number is provided', () => {
-      const formattedValue = formatNative('123A');
-
-      expect(formattedValue).toBe('123');
-    });
-
     it("should not get rid of .(dot) even if it's not number", () => {
       const formattedValue = formatNative('12345.');
 

@@ -19,7 +19,7 @@ export function formattedCurrencyToAbsNum(
   }
 
   const result = Math.abs(
-    parseFloat(value.replace(new RegExp(`\\${groupingSeparator}`, 'g'), ''))
+    numbro.unformat(value, { output: 'number', base: 'decimal' })
   );
 
   if (isNaN(result)) {
