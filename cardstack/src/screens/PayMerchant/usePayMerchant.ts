@@ -202,7 +202,10 @@ export const usePayMerchant = () => {
 
   const [payStep, setPayStep] = useState<Step>(initialStep);
 
-  const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
+  const {
+    merchantInfoDID,
+    isLoading: isLoadingMerchantInfo,
+  } = useMerchantInfoFromDID(infoDID);
 
   const [
     accountCurrency,
@@ -313,5 +316,6 @@ export const usePayMerchant = () => {
     setInputValue,
     onCancelConfirmation,
     onAmountNext,
+    isLoadingMerchantInfo,
   };
 };
