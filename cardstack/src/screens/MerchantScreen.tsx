@@ -120,7 +120,7 @@ const MerchantScreen = () => {
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <ScrollView
           width="100%"
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 200 }}
+          contentContainerStyle={{ alignItems: 'center', paddingBottom: 260 }}
           paddingHorizontal={HORIZONTAL_PADDING}
         >
           <MerchantInfo merchantInfo={merchantSafe.merchantInfo} />
@@ -354,7 +354,11 @@ const PaymentHistorySection = ({
   return (
     <Container flexDirection="column" width="100%">
       <SectionHeader>Payment History</SectionHeader>
-      <SectionWrapper onPress={onPress} hasDetailsText={false}>
+      <SectionWrapper
+        onPress={onPress}
+        hasDetailsText={false}
+        disabled={numberOfTransactions === 0}
+      >
         {numberOfTransactions ? (
           <>
             {first3ActivityLists}
