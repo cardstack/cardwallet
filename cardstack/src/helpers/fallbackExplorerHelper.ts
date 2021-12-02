@@ -8,7 +8,7 @@ import { AssetType, AssetWithNativeType, BalanceType } from '@cardstack/types';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { toWei } from '@rainbow-me/handlers/web3';
-import { getOnchainAssetBalance } from '@rainbow-me/handlers/assets';
+import { getOnChainAssetBalance } from '@cardstack/services/assets';
 
 interface Prices {
   [key: string]: {
@@ -143,11 +143,11 @@ export const reduceAssetsWithPriceChartAndBalances = async ({
   assets.reduce(async (updatedAssets, { asset }) => {
     const coingeckoId = asset.coingecko_id || '';
 
-    const balance = await getOnchainAssetBalance(
-      { address: asset.asset_code || '', ...asset },
+    const balance = await getOnChainAssetBalance({
+      asset: { address: asset.asset_code || '', ...asset },
       accountAddress,
-      network
-    );
+      network,
+    });
 
     const { price, native } = await addPriceByCoingeckoIdOrOracle({
       coingeckoId,

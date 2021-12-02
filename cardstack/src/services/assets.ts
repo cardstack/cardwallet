@@ -6,37 +6,36 @@ import {
 
 import Web3Instance from '@cardstack/models/web3-instance';
 import { isNativeToken } from '@cardstack/utils';
+import { Asset } from '@rainbow-me/entities';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';
 
-export async function getOnchainAssetBalance(
-  { address, decimals, symbol },
-  userAddress,
-  network
-) {
-  if (isNativeToken(symbol, network)) {
-    return getOnchainNativeTokenBalance(
-      { address, decimals, symbol },
-      userAddress
-    );
-  }
-
-  return getOnchainTokenBalance({ address, decimals, symbol }, userAddress);
+interface GetAssetBalanceParams {
+  asset: Asset;
+  accountAddress: string;
+  network: Network;
 }
 
-async function getOnchainTokenBalance(
-  { address, decimals, symbol },
-  userAddress
-) {
+export const getOnChainAssetBalance = async (params: GetAssetBalanceParams) =>
+  isNativeToken(params.asset.symbol, params.network)
+    ? getOnChainNativeTokenBalance(params)
+    : getOnChainTokenBalance(params);
+
+const getOnChainTokenBalance = async ({
+  asset: { address, decimals, symbol },
+  accountAddress,
+}: GetAssetBalanceParams) => {
   try {
     const web3 = await Web3Instance.get();
     const assets = await getSDK('Assets', web3);
-    const balance = await assets.getBalanceForToken(address, userAddress);
+    const balance = await assets.getBalanceForToken(address, accountAddress);
+
     const tokenBalance = convertRawAmountToDecimalFormat(
       balance.toString(),
       decimals
     );
+
     const displayBalance = convertAmountToBalanceDisplay(tokenBalance, {
-      address,
       decimals,
       symbol,
     });
@@ -46,26 +45,27 @@ async function getOnchainTokenBalance(
       display: displayBalance,
     };
   } catch (e) {
-    logger.sentry('Error getOnchainTokenBalance', e);
+    logger.sentry('Error getOnChainTokenBalance, symbol:', symbol, e);
+
     return { amount: '0', display: '' };
   }
-}
+};
 
-async function getOnchainNativeTokenBalance(
-  { address, decimals, symbol },
-  userAddress
-) {
+export const getOnChainNativeTokenBalance = async ({
+  asset: { decimals, symbol },
+  accountAddress,
+}: GetAssetBalanceParams) => {
   try {
     const web3 = await Web3Instance.get();
     const assets = await getSDK('Assets', web3);
-    const balance = await assets.getNativeTokenBalance(userAddress);
+    const balance = await assets.getNativeTokenBalance(accountAddress);
 
     const tokenBalance = convertRawAmountToDecimalFormat(
       balance.toString(),
       decimals
     );
+
     const displayBalance = convertAmountToBalanceDisplay(tokenBalance, {
-      address,
       decimals,
       symbol,
     });
@@ -75,7 +75,8 @@ async function getOnchainNativeTokenBalance(
       display: displayBalance,
     };
   } catch (e) {
-    logger.sentry('Error getOnchainNativeTokenBalance', e);
+    logger.sentry('Error getOnChainNativeTokenBalance,symbol:', symbol, e);
+
     return { amount: '0', display: '' };
   }
-}
+};

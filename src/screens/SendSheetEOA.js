@@ -195,6 +195,10 @@ const useSendSheetScreen = () => {
       } else {
         setSelected(newSelected);
         sendUpdateAssetAmount('');
+
+        // Selection might be empty so we check before trying to update
+        if (isEmpty(newSelected)) return;
+
         // Since we don't trust the balance from zerion,
         // let's hit the blockchain and update it
         updateAssetOnchainBalanceIfNeeded(
