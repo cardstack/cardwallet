@@ -6,6 +6,7 @@ import {
 
 import Web3Instance from '@cardstack/models/web3-instance';
 import { isNativeToken } from '@cardstack/utils';
+import logger from 'logger';
 
 export async function getOnchainAssetBalance(
   { address, decimals, symbol },
@@ -45,7 +46,8 @@ async function getOnchainTokenBalance(
       display: displayBalance,
     };
   } catch (e) {
-    return null;
+    logger.sentry('Error getOnchainTokenBalance', e);
+    return { amount: '0', display: '' };
   }
 }
 
@@ -73,6 +75,7 @@ async function getOnchainNativeTokenBalance(
       display: displayBalance,
     };
   } catch (e) {
-    return null;
+    logger.sentry('Error getOnchainNativeTokenBalance', e);
+    return { amount: '0', display: '' };
   }
 }

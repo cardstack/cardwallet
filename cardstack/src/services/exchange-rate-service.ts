@@ -47,7 +47,7 @@ export const getCurrencyConversionsRates = async () => {
 
 // Token price to native currency
 export const getNativeBalanceFromOracle = async (props: {
-  symbol: string | null | undefined;
+  symbol?: string;
   balance: string;
   nativeCurrency: string;
 }): Promise<number> => {

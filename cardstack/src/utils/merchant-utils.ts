@@ -157,7 +157,7 @@ export async function getMerchantClaimTransactionDetails(
   const gasRawAmount = gasData?.amount || '0';
 
   const gasBalance = await getNativeBalanceFromOracle({
-    symbol: merchantClaimTransaction.token.symbol,
+    symbol: merchantClaimTransaction.token.symbol || '',
     balance: gasRawAmount,
     nativeCurrency,
   });

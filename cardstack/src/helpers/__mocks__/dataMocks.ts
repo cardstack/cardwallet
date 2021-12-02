@@ -13,8 +13,11 @@ const assets = [
         value: 259.2,
       },
       symbol: 'SPOA',
+      balance: {
+        amount: '',
+        display: '',
+      },
     },
-    quantity: '0',
   },
   {
     asset: {
@@ -28,9 +31,12 @@ const assets = [
         relative_change_24h: 0,
         value: 0,
       },
+      balance: {
+        amount: '',
+        display: '',
+      },
       symbol: 'DOM',
     },
-    quantity: '0',
   },
   {
     asset: {
@@ -45,9 +51,12 @@ const assets = [
         relative_change_24h: 0,
         value: 0,
       },
+      balance: {
+        amount: '',
+        display: '',
+      },
       symbol: 'DAI',
     },
-    quantity: '0',
   },
   {
     asset: {
@@ -63,8 +72,11 @@ const assets = [
         value: 0,
       },
       symbol: 'CARD',
+      balance: {
+        amount: '',
+        display: '',
+      },
     },
-    quantity: '0',
   },
 ];
 

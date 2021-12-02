@@ -3,7 +3,6 @@ import {
   convertAmountAndPriceToNativeDisplay,
   convertAmountToNativeDisplay,
   convertAmountToPercentageDisplay,
-  convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
 import { get, map, toUpper } from 'lodash';
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
@@ -14,15 +13,8 @@ import { getTokenMetadata, isLowerCaseMatch } from '@rainbow-me/utils';
  * @param  {Object} [data]
  * @return {Array}
  */
-export const parseAccountAssets = assets => {
-  return assets.map(assetData => {
-    const asset = parseAsset(assetData.asset);
-    return {
-      ...asset,
-      balance: convertRawAmountToBalance(assetData.quantity, asset),
-    };
-  });
-};
+export const parseAccountAssets = assets =>
+  assets.map(assetData => parseAsset(assetData.asset));
 
 // eslint-disable-next-line no-useless-escape
 const sanitize = s => s.replace(/[^a-z0-9áéíóúñü \.,_@:-]/gim, '');
