@@ -46,10 +46,9 @@ const ButtonLabel = styled(BorderlessButton).attrs(({ theme: { colors } }) => ({
 `;
 
 const LittleBorderlessButton = ({ onPress, children, testID }) => {
-  const { colors } = useTheme();
   return (
     <ButtonLabel onPress={onPress} testID={testID} width={120}>
-      <Text color={colors.appleBlue} size="smedium" weight="bold">
+      <Text color="appleBlue" size="smedium" weight="bold">
         {children}
       </Text>
     </ButtonLabel>
