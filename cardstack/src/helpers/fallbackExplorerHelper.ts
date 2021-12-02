@@ -1,6 +1,9 @@
 // Creating helper to modify data.
 
-import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
+import {
+  convertAmountAndPriceToNativeDisplay,
+  convertAmountToNativeDisplay,
+} from '@cardstack/cardpay-sdk';
 import { toLower } from 'lodash';
 import { isCPXDToken } from '@cardstack/utils/cardpay-utils';
 
@@ -45,6 +48,27 @@ interface ReduceAssetsParams extends ReduceWithPriceChartBaseParams {
   accountAddress: string;
 }
 
+interface BuildNativeBalanceParams extends BalanceObject {
+  nativeCurrency: string;
+  priceUnit: number;
+}
+
+const buildNativeBalance = ({
+  nativeCurrency,
+  priceUnit,
+  balance,
+}: BuildNativeBalanceParams) => ({
+  price: {
+    amount: priceUnit,
+    display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
+  },
+  balance: convertAmountAndPriceToNativeDisplay(
+    balance.amount,
+    priceUnit,
+    nativeCurrency
+  ),
+});
+
 export const addPriceByCoingeckoIdOrOracle = async ({
   coingeckoId,
   prices,
@@ -68,7 +92,10 @@ export const addPriceByCoingeckoIdOrOracle = async ({
       amount: 0,
       display: defaultDisplay,
     },
-    balance,
+    balance: {
+      amount: '0',
+      display: defaultDisplay,
+    },
   };
 
   // No coingeckoId means the prices array won't have any pricing info
@@ -80,10 +107,18 @@ export const addPriceByCoingeckoIdOrOracle = async ({
         balance: toWei('1'),
       });
 
-      price = {
+      const priceFromOracle = {
         ...price,
         value: priceUnit,
       };
+
+      const nativeBalanceFromOracle = buildNativeBalance({
+        priceUnit,
+        nativeCurrency,
+        balance,
+      });
+
+      return { price: priceFromOracle, native: nativeBalanceFromOracle };
     } catch {}
   }
 
@@ -91,6 +126,7 @@ export const addPriceByCoingeckoIdOrOracle = async ({
     Object.keys(prices).forEach(assetKey => {
       if (toLower(coingeckoId) === toLower(assetKey)) {
         const value = prices[assetKey][`${formattedNativeCurrency}`];
+
         price = {
           changed_at: prices[assetKey].last_updated_at,
           relative_change_24h:
@@ -98,15 +134,11 @@ export const addPriceByCoingeckoIdOrOracle = async ({
           value,
         };
 
-        if (nativeCurrency) {
-          native = {
-            ...native,
-            price: {
-              amount: value,
-              display: convertAmountToNativeDisplay(value, nativeCurrency),
-            },
-          };
-        }
+        native = buildNativeBalance({
+          priceUnit: value,
+          nativeCurrency,
+          balance,
+        });
       }
     });
   }

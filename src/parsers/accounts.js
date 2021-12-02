@@ -1,6 +1,5 @@
 import {
   add,
-  convertAmountAndPriceToNativeDisplay,
   convertAmountToNativeDisplay,
   convertAmountToPercentageDisplay,
 } from '@cardstack/cardpay-sdk';
@@ -76,23 +75,10 @@ export const parseAssetsNative = (assets, nativeCurrency) =>
       value: 0,
     });
 
-    const priceUnit = get(assetNativePrice, 'value', 0);
-
-    const hasPrice = priceUnit;
-
-    // Only try to convertAmount if there's a price otherwise use default balance
-    const nativeDisplay = hasPrice
-      ? convertAmountAndPriceToNativeDisplay(
-          get(asset, 'balance.amount', 0),
-          priceUnit,
-          nativeCurrency
-        )
-      : asset?.native?.balance;
-
     return {
       ...asset,
       native: {
-        balance: nativeDisplay,
+        ...asset.native,
         change: isLowerCaseMatch(get(asset, 'symbol'), nativeCurrency)
           ? null
           : assetNativePrice.relative_change_24h
@@ -100,10 +86,6 @@ export const parseAssetsNative = (assets, nativeCurrency) =>
               assetNativePrice.relative_change_24h
             )
           : '',
-        price: {
-          amount: priceUnit,
-          display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
-        },
       },
     };
   });

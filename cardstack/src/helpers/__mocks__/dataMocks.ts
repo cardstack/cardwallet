@@ -3,7 +3,7 @@ const assets = [
   {
     asset: {
       asset_code: 'spoa',
-      coingecko_id: 'dai',
+      coingecko_id: 'spoa',
       decimals: 18,
       icon_url: 'https://s3.amazonaws.com/icons.assets/ETH.png',
       name: 'Spoa',
@@ -55,13 +55,13 @@ const assets = [
         amount: '',
         display: '',
       },
-      symbol: 'DAI',
+      symbol: 'DAI.CPXD',
     },
   },
   {
     asset: {
       asset_code: '0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee',
-      coingecko_id: 'cardstack',
+      coingecko_id: null,
       decimals: 18,
       icon_url:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x954b890704693af242613edEf1B603825afcD708/logo.png',
@@ -71,7 +71,7 @@ const assets = [
         relative_change_24h: 0,
         value: 0,
       },
-      symbol: 'CARD',
+      symbol: 'CARD.CPXD',
       balance: {
         amount: '',
         display: '',
@@ -269,64 +269,47 @@ const prepaidCards = [
 ];
 
 const prices = {
-  dai: {
-    usd: 1,
-    usd_24h_change: 0.5608860044696169,
-    last_updated_at: 1629399932,
-  },
-  cardstack: {
-    usd: 0.00889263,
+  spoa: {
+    usd: 0.2,
     usd_24h_change: 22.304616235477624,
     last_updated_at: 1629399408,
   },
 };
 
 const chartData = {
-  dai: [
+  spoa: [
     [1629316840055, 0.9992493517535592],
     [1629317140870, 0.9983760748596904],
     [1629320428398, 0.9988230904876851],
     [1629320760703, 1.0006668259255413],
   ],
-  cardstack: [
-    [1629314735879, 0.0072259548640652245],
-    [1629315032452, 0.007219093412036481],
-    [1629315351742, 0.007221452392607805],
-    [1629315563048, 0.007215497853372955],
-  ],
-};
-
-const balances = {
-  '0x0000000000000000000000000000000000000000': '499703144000000000',
-  '0x6B78C121bBd10D8ef0dd3623CC1abB077b186F65': '1000000000000000000',
-  '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1': '57823293170000000002',
-  '0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee': '0',
 };
 
 const updatedAssets = [
   {
     asset: {
       asset_code: 'spoa',
-      coingecko_id: 'dai',
+      coingecko_id: 'spoa',
       decimals: 18,
       icon_url: 'https://s3.amazonaws.com/icons.assets/ETH.png',
       name: 'Spoa',
       native: {
         balance: {
-          amount: '0',
-          display: '$0.00 USD',
+          amount: '0.00098',
+          display: '$0.00098 USD',
         },
         price: {
-          amount: 1,
-          display: '$1.00 USD',
+          amount: 0.2,
+          display: '$0.20 USD',
         },
       },
       price: {
-        changed_at: 1629399932,
-        relative_change_24h: 0.5608860044696169,
-        value: 1,
+        changed_at: 1629399408,
+        relative_change_24h: 22.304616235477624,
+        value: 0.2,
       },
       symbol: 'SPOA',
+      balance: { amount: '0.0049', display: '0.0049 SPOA' },
       chartPrices: [
         [1629316840055, 0.9992493517535592],
         [1629317140870, 0.9983760748596904],
@@ -334,7 +317,6 @@ const updatedAssets = [
         [1629320760703, 1.0006668259255413],
       ],
     },
-    quantity: '499703144000000000',
   },
   {
     asset: {
@@ -345,12 +327,12 @@ const updatedAssets = [
       name: 'Dominic',
       native: {
         balance: {
-          amount: '4.5',
-          display: '$4.50 USD',
+          amount: '9',
+          display: '$9.00 USD',
         },
         price: {
-          amount: 0,
-          display: '$0.00 USD',
+          amount: 4.5,
+          display: '$4.50 USD',
         },
       },
       price: {
@@ -359,9 +341,9 @@ const updatedAssets = [
         value: 4.5,
       },
       symbol: 'DOM',
+      balance: { amount: '2', display: '2 DOM' },
       chartPrices: null,
     },
-    quantity: '1000000000000000000',
   },
   {
     asset: {
@@ -373,8 +355,8 @@ const updatedAssets = [
       name: 'DAI.CPXD',
       native: {
         balance: {
-          amount: '0',
-          display: '$0.00 USD',
+          amount: '57',
+          display: '$57.00 USD',
         },
         price: {
           amount: 1,
@@ -382,32 +364,27 @@ const updatedAssets = [
         },
       },
       price: {
-        changed_at: 1629399932,
-        relative_change_24h: 0.5608860044696169,
+        changed_at: null,
+        relative_change_24h: 0,
         value: 1,
       },
-      symbol: 'DAI',
-      chartPrices: [
-        [1629316840055, 0.9992493517535592],
-        [1629317140870, 0.9983760748596904],
-        [1629320428398, 0.9988230904876851],
-        [1629320760703, 1.0006668259255413],
-      ],
+      symbol: 'DAI.CPXD',
+      balance: { amount: '57', display: '57 DAI.CPXD' },
+      chartPrices: null,
     },
-    quantity: '57823293170000000002',
   },
   {
     asset: {
       asset_code: '0xB236ca8DbAB0644ffCD32518eBF4924ba866f7Ee',
-      coingecko_id: 'cardstack',
+      coingecko_id: null,
       decimals: 18,
       icon_url:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x954b890704693af242613edEf1B603825afcD708/logo.png',
       name: 'CARD.CPXD',
       native: {
         balance: {
-          amount: '0',
-          display: '$0.00 USD',
+          amount: '0.00889263',
+          display: '$0.00889 USD',
         },
         price: {
           amount: 0.00889263,
@@ -415,19 +392,14 @@ const updatedAssets = [
         },
       },
       price: {
-        changed_at: 1629399408,
-        relative_change_24h: 22.304616235477624,
+        changed_at: null,
+        relative_change_24h: 0,
         value: 0.00889263,
       },
-      symbol: 'CARD',
-      chartPrices: [
-        [1629314735879, 0.0072259548640652245],
-        [1629315032452, 0.007219093412036481],
-        [1629315351742, 0.007221452392607805],
-        [1629315563048, 0.007215497853372955],
-      ],
+      symbol: 'CARD.CPXD',
+      balance: { amount: '1', display: '1 CARD.CPXD' },
+      chartPrices: null,
     },
-    quantity: '0',
   },
 ];
 
@@ -769,7 +741,6 @@ export const inputData = {
 export const fetchedData = {
   prices,
   chartData,
-  balances,
 };
 
 export const updatedData = {
