@@ -1,6 +1,17 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
-
+import {
+  getNumberFormatSettings,
+  getCurrencies,
+  getLocales,
+} from 'react-native-localize';
+import numbro from 'numbro';
 export const getDollarsFromDai = (dai: number) => dai / 100;
+export const {
+  decimalSeparator,
+  groupingSeparator,
+} = getNumberFormatSettings();
+export const currentLocale = getLocales()[0].languageTag;
+export const CURRENT_CURRENCY = getCurrencies()[0];
 
 export function formattedCurrencyToAbsNum(
   value?: string,
@@ -10,7 +21,9 @@ export function formattedCurrencyToAbsNum(
     return 0;
   }
 
-  const result = Math.abs(parseFloat(value.replace(/,/g, '')));
+  const result = Math.abs(
+    numbro.unformat(value, { output: 'number', base: 'decimal' })
+  );
 
   if (isNaN(result)) {
     return 0;
@@ -23,38 +36,40 @@ export function formattedCurrencyToAbsNum(
   return result;
 }
 
-// format amount for amount TextInput box experience
-export function formatNative(value: string | undefined, currency = 'USD') {
+const convertToReadableCurrency = (
+  value: string | undefined,
+  noDecimal?: boolean
+) =>
+  numbro(formattedCurrencyToAbsNum(value, noDecimal)).format({
+    thousandSeparated: true,
+  });
+
+// format amount string value based on user's region and number format settings for input amount experience
+export function formatNative(
+  value: string | undefined,
+  currency = CURRENT_CURRENCY
+) {
   if (!value) {
     return '';
   }
 
   const decimalAllowed = currency !== NativeCurrency.SPD;
-  const isIncludeOneDot = (value.match(/\./g) || []).length === 1;
 
-  if (decimalAllowed && value.endsWith('.') && isIncludeOneDot) {
-    return `${formattedCurrencyToAbsNum(value).toLocaleString('en-US', {
-      currency,
-      maximumFractionDigits: 20,
-      maximumSignificantDigits: 20,
-    })}.`;
+  const isIncludeOneDecimalSeparator =
+    (value.match(new RegExp(decimalSeparator, 'g')) || []).length === 1;
+
+  if (value.endsWith(decimalSeparator) && isIncludeOneDecimalSeparator) {
+    return `${convertToReadableCurrency(
+      value,
+      !decimalAllowed
+    )}${decimalSeparator}`;
   }
 
-  if (decimalAllowed && isIncludeOneDot) {
-    const decimalStrings = value.split('.');
-    return `${formattedCurrencyToAbsNum(decimalStrings[0]).toLocaleString(
-      'en-US'
-    )}.${decimalStrings[1].replace(/\D/g, '')}`;
+  if (value.endsWith(decimalSeparator)) {
+    return convertToReadableCurrency(value.slice(0, -1), !decimalAllowed);
   }
 
-  return `${formattedCurrencyToAbsNum(value, !decimalAllowed).toLocaleString(
-    'en-US',
-    {
-      currency,
-      maximumFractionDigits: 20,
-      maximumSignificantDigits: 20,
-    }
-  )}`;
+  return `${convertToReadableCurrency(value, !decimalAllowed)}`;
 }
 
 export const decimalFixingConverter = (value: string) =>
