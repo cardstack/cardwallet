@@ -1,17 +1,11 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
-import {
-  getNumberFormatSettings,
-  getCurrencies,
-  getLocales,
-} from 'react-native-localize';
+import { getNumberFormatSettings, getCurrencies } from 'react-native-localize';
 import numbro from 'numbro';
-export const getDollarsFromDai = (dai: number) => dai / 100;
-export const {
-  decimalSeparator,
-  groupingSeparator,
-} = getNumberFormatSettings();
-export const currentLocale = getLocales()[0].languageTag;
+
+export const { decimalSeparator } = getNumberFormatSettings();
 export const CURRENT_CURRENCY = getCurrencies()[0];
+
+export const getDollarsFromDai = (dai: number) => dai / 100;
 
 export function formattedCurrencyToAbsNum(
   value?: string,
@@ -56,7 +50,7 @@ export function formatNative(
   const decimalAllowed = currency !== NativeCurrency.SPD;
 
   const isIncludeOneDecimalSeparator =
-    (value.match(new RegExp(decimalSeparator, 'g')) || []).length === 1;
+    (value.match(new RegExp(`\\${decimalSeparator}`, 'g')) || []).length === 1;
 
   if (value.endsWith(decimalSeparator) && isIncludeOneDecimalSeparator) {
     return `${convertToReadableCurrency(
