@@ -2,7 +2,10 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { getNumberFormatSettings, getCurrencies } from 'react-native-localize';
 import numbro from 'numbro';
 
-export const { decimalSeparator } = getNumberFormatSettings();
+export const {
+  decimalSeparator,
+  groupingSeparator,
+} = getNumberFormatSettings();
 export const CURRENT_CURRENCY = getCurrencies()[0];
 
 export const getDollarsFromDai = (dai: number) => dai / 100;
@@ -15,9 +18,7 @@ export function formattedCurrencyToAbsNum(
     return 0;
   }
 
-  const result = Math.abs(
-    numbro.unformat(value, { output: 'number', base: 'decimal' })
-  );
+  const result = Math.abs(parseFloat(value.replace(/,/g, '')));
 
   if (isNaN(result)) {
     return 0;
@@ -42,7 +43,7 @@ const convertToReadableCurrency = (
 export function formatNative(
   value: string | undefined,
   currency = CURRENT_CURRENCY
-) {
+): string {
   if (!value) {
     return '';
   }
@@ -52,15 +53,18 @@ export function formatNative(
   const isIncludeOneDecimalSeparator =
     (value.match(new RegExp(`\\${decimalSeparator}`, 'g')) || []).length === 1;
 
-  if (value.endsWith(decimalSeparator) && isIncludeOneDecimalSeparator) {
-    return `${convertToReadableCurrency(
-      value,
-      !decimalAllowed
-    )}${decimalSeparator}`;
+  if (isIncludeOneDecimalSeparator) {
+    const valueSplittedWithDecimal = value.split('.');
+    return `${convertToReadableCurrency(valueSplittedWithDecimal[0])}${
+      decimalAllowed
+        ? `${decimalSeparator}${valueSplittedWithDecimal[1].replace(/\D/g, '')}`
+        : ''
+    }`;
   }
 
-  if (value.endsWith(decimalSeparator)) {
-    return convertToReadableCurrency(value.slice(0, -1), !decimalAllowed);
+  // check for groupingSeparator as android keyboard has groupingSeparator as well
+  if (value.endsWith(decimalSeparator) || value.endsWith(groupingSeparator)) {
+    return value.slice(0, -1);
   }
 
   return `${convertToReadableCurrency(value, !decimalAllowed)}`;
