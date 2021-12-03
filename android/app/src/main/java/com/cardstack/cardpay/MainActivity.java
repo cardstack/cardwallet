@@ -1,4 +1,4 @@
-package me.rainbow;
+package com.cardstack.cardpay;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
@@ -6,7 +6,7 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 import org.devio.rn.splashscreen.SplashScreen;
-import me.rainbow.NativeModules.RNBackHandler.RNBackHandlerPackage;
+import com.cardstack.cardpay.NativeModules.RNBackHandler.RNBackHandlerPackage;
 import android.webkit.WebView;
 
 import android.content.Intent;

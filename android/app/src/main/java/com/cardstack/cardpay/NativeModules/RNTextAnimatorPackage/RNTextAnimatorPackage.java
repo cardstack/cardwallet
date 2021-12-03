@@ -1,4 +1,4 @@
-package me.rainbow.NativeModules.RNTextAnimatorPackage;
+package com.cardstack.cardpay.NativeModules.RNTextAnimatorPackage;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -15,7 +15,6 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.ViewManager;
-import com.facebook.react.views.text.ReactTextView;
 import com.facebook.react.views.textinput.ReactEditText;
 
 import java.lang.reflect.Field;

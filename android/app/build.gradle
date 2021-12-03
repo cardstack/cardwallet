@@ -153,7 +153,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     def env = project.file('../../.env')
-    def props = project.file('src/main/java/me/rainbow/MainApplication.java')
+    def props = project.file('src/main/java/com/cardstack/cardpay/MainApplication.java')
     def contents2 = props.getText( 'UTF-8' ).replaceAll( "//_REA ", '' ).replaceAll('/\\* REA', '//_REA /* REA')
     props.delete()
     props << contents2
@@ -174,7 +174,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "me.rainbow"
+        applicationId "com.cardstack.cardpay"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 24

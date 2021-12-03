@@ -1,4 +1,4 @@
-package me.rainbow.NativeModules.RNBip39;
+package com.cardstack.cardpay.NativeModules.RNBip39;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;

@@ -1,25 +1,25 @@
-package me.rainbow;
+package com.cardstack.cardpay;
 
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import me.rainbow.NativeModules.RNBip39.RNBip39Package;
-import me.rainbow.NativeModules.RNBackHandler.RNBackHandlerPackage;
-import me.rainbow.NativeModules.RNReview.RNReviewPackage;
-import me.rainbow.NativeModules.RNTextAnimatorPackage.RNTextAnimatorPackage;
-import me.rainbow.NativeModules.RNZoomableButton.RNZoomableButtonPackage;
+import com.cardstack.cardpay.NativeModules.RNBip39.RNBip39Package;
+import com.cardstack.cardpay.NativeModules.RNBackHandler.RNBackHandlerPackage;
+import com.cardstack.cardpay.NativeModules.RNReview.RNReviewPackage;
+import com.cardstack.cardpay.NativeModules.RNTextAnimatorPackage.RNTextAnimatorPackage;
+import com.cardstack.cardpay.NativeModules.RNZoomableButton.RNZoomableButtonPackage;
 
 import com.facebook.react.bridge.JSIModulePackage;
-import com.swmansion.gesturehandler.react.RNZoomableButtonManager;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
+
+import com.cardstack.cardpay.BuildConfig;
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -85,7 +85,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("me.rainbow.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.cardstack.cardpay.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);
