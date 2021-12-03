@@ -112,9 +112,8 @@ export default function useInitializeWallet() {
         hideSplashScreen();
         logger.sentry('Hide splash screen');
         initializeAccountData();
-        if (!isImporting) {
-          dispatch(appStateUpdate({ walletReady: true }));
-        }
+
+        dispatch(appStateUpdate({ walletReady: true }));
 
         logger.sentry('💰 Wallet initialized');
         return walletAddress;
