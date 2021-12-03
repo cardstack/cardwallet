@@ -3,6 +3,8 @@ import '@testing-library/jest-native/extend-expect';
 
 // GLOBAL LIBS MOCKS
 
+jest.mock('react-native-flipper');
+
 jest.mock('react-native-background-timer', () => ({
   start: jest.fn(),
   stop: jest.fn(),

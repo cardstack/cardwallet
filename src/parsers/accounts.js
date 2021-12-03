@@ -1,9 +1,7 @@
 import {
   add,
-  convertAmountAndPriceToNativeDisplay,
   convertAmountToNativeDisplay,
   convertAmountToPercentageDisplay,
-  convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
 import { get, map, toUpper } from 'lodash';
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
@@ -14,15 +12,8 @@ import { getTokenMetadata, isLowerCaseMatch } from '@rainbow-me/utils';
  * @param  {Object} [data]
  * @return {Array}
  */
-export const parseAccountAssets = assets => {
-  return assets.map(assetData => {
-    const asset = parseAsset(assetData.asset);
-    return {
-      ...asset,
-      balance: convertRawAmountToBalance(assetData.quantity, asset),
-    };
-  });
-};
+export const parseAccountAssets = assets =>
+  assets.map(assetData => parseAsset(assetData.asset));
 
 // eslint-disable-next-line no-useless-escape
 const sanitize = s => s.replace(/[^a-z0-9áéíóúñü \.,_@:-]/gim, '');
@@ -84,23 +75,10 @@ export const parseAssetsNative = (assets, nativeCurrency) =>
       value: 0,
     });
 
-    const priceUnit = get(assetNativePrice, 'value', 0);
-
-    const hasPrice = priceUnit;
-
-    // Only try to convertAmount if there's a price otherwise use default balance
-    const nativeDisplay = hasPrice
-      ? convertAmountAndPriceToNativeDisplay(
-          get(asset, 'balance.amount', 0),
-          priceUnit,
-          nativeCurrency
-        )
-      : asset?.native?.balance;
-
     return {
       ...asset,
       native: {
-        balance: nativeDisplay,
+        ...asset.native,
         change: isLowerCaseMatch(get(asset, 'symbol'), nativeCurrency)
           ? null
           : assetNativePrice.relative_change_24h
@@ -108,10 +86,6 @@ export const parseAssetsNative = (assets, nativeCurrency) =>
               assetNativePrice.relative_change_24h
             )
           : '',
-        price: {
-          amount: priceUnit,
-          display: convertAmountToNativeDisplay(priceUnit, nativeCurrency),
-        },
       },
     };
   });

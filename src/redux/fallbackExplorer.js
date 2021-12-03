@@ -1,12 +1,8 @@
 import { delay, getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { Contract } from '@ethersproject/contracts';
 import { toLower, uniqBy } from 'lodash';
 
-import { getEtherWeb3Provider } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import networkTypes from '../helpers/networkTypes';
-import { ETH_ADDRESS } from '../references/addresses';
-import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import migratedTokens from '../references/migratedTokens.json';
 import testnetAssets from '../references/testnet-assets.json';
 import { addressAssetsReceived } from './data';
@@ -17,7 +13,7 @@ import {
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
 import { getCurrencyConversionsRates } from '@cardstack/services';
-import { isLayer1, isMainnet, isNativeToken } from '@cardstack/utils';
+import { isLayer1, isMainnet } from '@cardstack/utils';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
 
@@ -292,39 +288,6 @@ const fetchAssetCharts = async (coingeckoIds, nativeCurrency) => {
   }
 };
 
-const fetchAssetBalances = async (tokens, address, network) => {
-  try {
-    const balanceCheckerContractAddress = getConstantByNetwork(
-      'balanceCheckerContractAddress',
-      network
-    );
-    const web3Provider = await getEtherWeb3Provider(network);
-    const balanceCheckerContract = new Contract(
-      balanceCheckerContractAddress,
-      balanceCheckerContractAbi,
-      web3Provider
-    );
-    const values = await balanceCheckerContract.balances([address], tokens);
-
-    const balances = {};
-    [address].forEach((addr, addrIdx) => {
-      balances[addr] = {};
-      tokens.forEach((tokenAddr, tokenIdx) => {
-        const balance = values[addrIdx * tokens.length + tokenIdx];
-        balances[addr][tokenAddr] = balance.toString();
-      });
-    });
-    return balances[address];
-  } catch (e) {
-    logger.log(
-      'Error fetching balances from balanceCheckerContract',
-      network,
-      e
-    );
-    return null;
-  }
-};
-
 export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
@@ -370,15 +333,6 @@ export const fetchAssetsBalancesAndPrices = async () => {
       formattedNativeCurrency
     );
 
-    // needs to be fetched after safes, because of contract signing
-    const balances = await fetchAssetBalances(
-      assets.map(({ asset: { asset_code, symbol } }) =>
-        isNativeToken(symbol, network) ? ETH_ADDRESS : asset_code
-      ),
-      accountAddress,
-      network
-    );
-
     const [prices, chartData] = await Promise.all([
       fetchPrices,
       fetchChartData,
@@ -389,9 +343,9 @@ export const fetchAssetsBalancesAndPrices = async () => {
       prices,
       formattedNativeCurrency,
       chartData,
-      balances,
       network,
       nativeCurrency,
+      accountAddress,
     });
 
     logger.log('😬 FallbackExplorer updating assets');

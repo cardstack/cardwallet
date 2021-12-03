@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { getOnchainAssetBalance } from '../handlers/assets';
 import { dataUpdateAssets } from '../redux/data';
 import useAccountAssets from './useAccountAssets';
 import useAccountSettings from './useAccountSettings';
+import { getOnChainAssetBalance } from '@cardstack/services/assets';
 import { logger } from '@rainbow-me/utils';
 
 export default function useUpdateAssetOnchainBalance() {
@@ -13,11 +13,11 @@ export default function useUpdateAssetOnchainBalance() {
 
   const useUpdateAssetOnchainBalance = useCallback(
     async (assetToUpdate, accountAddress, successCallback) => {
-      const balance = await getOnchainAssetBalance(
-        assetToUpdate,
+      const balance = await getOnChainAssetBalance({
+        asset: assetToUpdate,
         accountAddress,
-        network
-      );
+        network,
+      });
       if (balance && balance?.amount !== assetToUpdate?.balance?.amount) {
         // Now we need to update the asset
         // First in the state

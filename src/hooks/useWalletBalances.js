@@ -31,6 +31,7 @@ const useWalletBalances = wallets => {
       });
     });
 
+    // TODO: check if this can be replaced by SDK
     try {
       // Check all the ETH balances at once
       const balanceCheckerContractAddress = getConstantByNetwork(
