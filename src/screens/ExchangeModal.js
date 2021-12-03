@@ -12,7 +12,6 @@ import { Keyboard } from 'react-native';
 import Animated, { Extrapolate } from 'react-native-reanimated';
 import { useAndroidBackHandler } from 'react-navigation-backhandler';
 import { useDispatch } from 'react-redux';
-import { dismissingScreenListener } from '../../shim';
 import { interpolate } from '../components/animations';
 import {
   ConfirmExchangeButton,
@@ -24,6 +23,7 @@ import {
 import { FloatingPanel, FloatingPanels } from '../components/floating-panels';
 import { GasSpeedButton } from '../components/gas';
 import { KeyboardFixedOpenLayout } from '../components/layout';
+import { dismissingScreenListener } from '../utils/modalUtils';
 import { CenteredContainer, Container } from '@cardstack/components';
 import ExchangeModalTypes from '@rainbow-me/helpers/exchangeModalTypes';
 import isKeyboardOpen from '@rainbow-me/helpers/isKeyboardOpen';

@@ -1,5 +1,4 @@
 import addCash from './addCash';
-import charts from './charts';
 import coingecko from './coingecko';
 import contacts from './contacts';
 import currencyConversion from './currencyConversion';
@@ -26,7 +25,9 @@ import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import collectibles from '@cardstack/redux/collectibles';
 import payment from '@cardstack/redux/payment';
+import charts from '@rainbow-me/redux/charts';
 
+console.log('reducers.js', { charts });
 export default {
   addCash,
   appState,

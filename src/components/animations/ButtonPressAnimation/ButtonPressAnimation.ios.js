@@ -13,8 +13,9 @@ import Animated, {
 import stylePropType from 'react-style-proptype';
 import { useMemoOne } from 'use-memo-one';
 import useNativeButtonAvailable from '../../../helpers/isNativeButtonAvailable';
-import { useInteraction, useTransformOrigin } from '../../../hooks';
-import { directionPropType } from '../../../utils';
+import useInteraction from '../../../hooks/useInteraction';
+import useTransformOrigin from '../../../hooks/useTransformOrigin';
+import directionPropType from '../../../utils/directionPropType';
 import NativeButton from './NativeButton';
 
 const {

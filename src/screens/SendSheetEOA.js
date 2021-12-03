@@ -10,7 +10,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import { useDispatch } from 'react-redux';
-import { dismissingScreenListener } from '../../shim';
 import SendSheet, {
   useSendAddressValidation,
   useShowAssetFlags,
@@ -19,6 +18,7 @@ import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
+import { dismissingScreenListener } from '../utils/modalUtils';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { isLayer2, isNativeToken } from '@cardstack/utils';

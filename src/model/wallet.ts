@@ -40,7 +40,8 @@ import { EthereumWalletType } from '../helpers/walletTypes';
 import store from '../redux/store';
 import { setIsWalletLoading } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
-import { ethereumUtils } from '../utils';
+import ethereumUtils from '../utils/ethereumUtils';
+
 import {
   addressKey,
   allWalletsKey,

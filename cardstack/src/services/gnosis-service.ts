@@ -170,9 +170,9 @@ const getSafesPersistedCache = async (accountAddress: string) => {
 export const fetchGnosisSafes = async (address: string) => {
   try {
     const safesInstance = await getSafesInstance();
+    console.log('safesInstance.view', safesInstance?.view);
 
     const safes = (await safesInstance?.view(address))?.safes || [];
-
     safes?.forEach(safe => {
       safe?.tokens.forEach(({ balance, token }) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -193,6 +193,7 @@ export const fetchGnosisSafes = async (address: string) => {
       prepaidCards: extendedPrepaidCards,
     };
   } catch (error) {
+    console.log({ error });
     Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
     captureException(error);
     logger.sentry('Fetch GnosisSafes failed', error);

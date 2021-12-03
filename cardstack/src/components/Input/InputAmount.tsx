@@ -12,7 +12,7 @@ import {
   Text,
   Icon,
   Touchable,
-} from './../index';
+} from '@cardstack/components';
 import { formatNative } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -117,7 +117,7 @@ export const InputAmount = memo(
               multiline
               onChangeText={onChangeText}
               placeholder="0.00"
-              placeholderTextColor="grayMediumLight"
+              placeholderTextColor="#d1d1d1"
               spellCheck={false}
               testID="RequestPaymentInput"
               value={inputValue}

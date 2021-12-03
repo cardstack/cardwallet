@@ -100,9 +100,9 @@ export const Button = ({
           <ActivityIndicator testID="button-loading" />
         ) : (
           <Container
+            alignItems="center"
             flexDirection={iconPosition === 'left' ? 'row' : 'row-reverse'}
             justifyContent="center"
-            alignItems="center"
           >
             {iconProps && (
               <Icon
@@ -116,6 +116,7 @@ export const Button = ({
               {...textStyle}
               {...disabledTextProps}
               allowFontScaling={false}
+              testID="button-text"
             >
               {children}
             </Text>

@@ -111,10 +111,6 @@ if (typeof process === 'undefined') {
   }
 }
 
-export const dismissingScreenListener = { current: undefined };
-
-global.__rainbowDismissScreen = () => dismissingScreenListener.current?.();
-
 process.browser = false;
 if (typeof Buffer === 'undefined') global.Buffer = require('buffer').Buffer;
 // global.location = global.location || { port: 80 }

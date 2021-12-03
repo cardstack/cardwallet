@@ -20,7 +20,7 @@ import { get, startsWith } from 'lodash';
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
 import smartContractMethods from '../references/smartcontract-methods.json';
-import { ethereumUtils } from '../utils';
+import ethereumUtils from '../utils/ethereumUtils';
 
 import Web3WsProvider from '@cardstack/models/web3-provider';
 import { isNativeToken } from '@cardstack/utils';

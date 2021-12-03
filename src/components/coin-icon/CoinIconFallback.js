@@ -7,7 +7,8 @@ import { Centered } from '../layout';
 import { colors } from '@cardstack/theme';
 import { useBooleanState } from '@rainbow-me/hooks';
 import { borders, fonts, position, shadow } from '@rainbow-me/styles';
-import { getUrlForTrustIconFallback, magicMemo } from '@rainbow-me/utils';
+import getUrlForTrustIconFallback from '@rainbow-me/utils/getUrlForTrustIconFallback';
+import magicMemo from '@rainbow-me/utils/magicMemo';
 
 const fallbackTextStyles = {
   fontFamily: fonts.family.SFProRounded,

@@ -10,9 +10,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import RNRestart from 'react-native-restart';
-import styled from 'styled-components';
-import { ButtonPressAnimation } from '../animations';
+import styled from 'styled-components/native';
 import { Icon } from '../icons';
+import ButtonPressAnimation from '@rainbow-me/components/animations/ButtonPressAnimation';
 
 const Button = styled(ButtonPressAnimation)`
   border-radius: 35;

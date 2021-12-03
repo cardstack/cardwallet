@@ -5,14 +5,6 @@ import { render } from '../../../test-utils';
 import { createRandomTransactionItem } from '../../../test-utils/model-factory';
 import { ERC20Transaction } from '../ERC20Transaction';
 
-jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
-  jest.fn(({ children }) => children)
-);
-
-jest.mock('../../src/components/Icon', () => ({
-  Icon: jest.fn(() => null),
-}));
-
 describe('ERC20Transaction', () => {
   let item: ERC20TransactionType;
 
@@ -23,8 +15,8 @@ describe('ERC20Transaction', () => {
   });
 
   it('should render the item title and name', () => {
-    const { getByText } = renderComponent();
-
+    const { debug, getByText } = renderComponent();
+    debug();
     getByText(item.title);
   });
 

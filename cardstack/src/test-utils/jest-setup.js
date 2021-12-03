@@ -3,11 +3,12 @@ import React from 'react';
 import 'react-native-gesture-handler/jestSetup';
 import { View as RNView } from 'react-native';
 import '@testing-library/jest-native/extend-expect';
+import * as ReactNative from 'react-native';
+import * as RainbowHooks from '@rainbow-me/hooks';
 
 // GLOBAL LIBS MOCKS
 
 jest.mock('react-native-flipper');
-import * as ReactNative from 'react-native';
 
 export const alert = jest.fn();
 export const Alert = { alert };
@@ -44,6 +45,10 @@ export default Object.setPrototypeOf(
     Keyboard,
     NativeModules: {
       RNSentry: {},
+      NetInfo: {},
+      RNGetRandomValues: {
+        getRandomBase64: jest.fn(),
+      },
     },
     Platform,
     StyleSheet,
@@ -51,9 +56,29 @@ export default Object.setPrototypeOf(
   ReactNative
 );
 
+jest.doMock('react-native', () => {
+  // Extend ReactNative
+  return Object.setPrototypeOf(
+    {
+      useWindowDimensions: jest.fn().mockReturnValue({
+        width: dimensionWidth,
+        height: 960,
+        scale: 1,
+        fontScale: 1,
+      }),
+    },
+    ReactNative
+  );
+});
+
 jest.mock('@sentry/react-native', () => ({
+  addBreadcrumb: jest.fn(),
   captureException: jest.fn(),
 }));
+
+jest.mock('react-native-get-random-values/getRandomBase64', () => () => {
+  // nada
+});
 
 jest.mock('react-native-background-timer', () => ({
   start: jest.fn(),
@@ -173,18 +198,34 @@ jest.mock('react-native-splash-screen', () => ({
 //   styled: jest.fn(),
 // }));
 
-jest.mock('@shopify/restyle', () => {
-  const RealModule = jest.requireActual('@shopify/restyle');
-  const RN = jest.requireActual('react-native');
-  RealModule.createText = () => RN.Text;
-  RealModule.createBox = () => RN.View;
-  RealModule.createRestyleComponent = (_f, c) => c || RN.View;
+// jest.mock('@shopify/restyle', () => {
+//   const RealModule = jest.requireActual('@shopify/restyle');
+//   const RN = jest.requireActual('react-native');
+//   RealModule.createText = () => RN.Text;
+//   RealModule.createBox = () => RN.View;
+//   RealModule.createRestyleComponent = (_f, c) => c || RN.View;
 
-  return RealModule;
-});
+//   return RealModule;
+// });
 
-jest.mock('react-native-version-number', () => ({
-  VersionNumber: jest.fn(),
+jest.mock('@react-native-community/netinfo', () => ({
+  default: {
+    getCurrentConnectivity: jest.fn(),
+    isConnectionMetered: jest.fn(),
+    addListener: jest.fn(),
+    removeListeners: jest.fn(),
+    isConnected: {
+      fetch: () => {
+        return Promise.resolve(true);
+      },
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    },
+  },
+}));
+
+jest.mock('@rainbow-me/components/text', () => ({
+  default: jest.fn(),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -194,12 +235,13 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
 
 // RAINBOW MOCKS
 
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
-}));
+// jest.mock('@rainbow-me/references', () => ({
+//   shitcoins: 'JSON-MOCK-RETURN',
+// }));
 
 jest.mock('@rainbow-me/navigation/', () => ({
   ExchangeModalNavigator: jest.fn(),
+  useNavigation: jest.fn(() => ({ navigate: jest.fn() })),
 }));
 
 jest.mock('@rainbow-me/react-native-payments', () => ({
@@ -208,10 +250,6 @@ jest.mock('@rainbow-me/react-native-payments', () => ({
 
 jest.mock('@rainbow-me/parsers/gas', () => ({
   default: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
 }));
 
 jest.mock('@rainbow-me/references/migratedTokens.json', () => ({}));
@@ -232,16 +270,17 @@ jest.mock('@rainbow-me/utils/safeAreaInsetValues', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/hooks/charts/useChartThrottledPoints', () => ({
-  default: jest.fn(),
-}));
+// jest.mock('@rainbow-me/hooks/charts/useChartThrottledPoints', () => ({
+//   default: jest.fn(),
+// }));
 
 jest.mock('@rainbow-me/components/animations/procs', () => ({
   default: jest.fn(),
 }));
 
+const mockButtonPressAnimation = ({ children }) => <RNView>{children}</RNView>;
 jest.mock('@rainbow-me/components/animations/ButtonPressAnimation', () =>
-  jest.fn(({ children }) => children)
+  jest.fn(mockButtonPressAnimation)
 );
 
 jest.mock('@rainbow-me/components/animations', () => ({
@@ -256,9 +295,14 @@ jest.mock('@rainbow-me/components/coin-row', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/hooks', () => ({
-  useInitializeWallet: jest.fn(),
-}));
+jest.doMock('@rainbow-me/hooks', () => {
+  return {
+    ...RainbowHooks,
+    useAccountProfile: jest.fn(),
+    useInitializeWallet: jest.fn(),
+    useInternetStatus: jest.fn(() => true),
+  };
+});
 
 jest.mock('@rainbow-me/utils/measureText', () => ({
   default: jest.fn(),
@@ -266,6 +310,10 @@ jest.mock('@rainbow-me/utils/measureText', () => ({
 
 jest.mock('@rainbow-me/react-native-animated-number', () => ({
   AnimatedNumber: jest.fn(),
+}));
+
+jest.mock('@rainbow-me/animated-charts', () => ({
+  default: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/components/text', () => ({
@@ -278,7 +326,7 @@ jest.mock('@rainbow-me/components/icons', () => ({
 
 // CARDSTACK MOCKS
 
-const mockIcon = () => <RNView />;
+const mockIcon = props => <RNView testID={'icon-' + props.name} />;
 jest.mock('@cardstack/components/Icon', () => ({
   Icon: jest.fn(mockIcon),
 }));

@@ -1,11 +1,12 @@
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 import logger from 'logger';
 
-let NotificationManager = ios ? NativeModules.NotificationManager : null;
+let NotificationManager =
+  Platform.os === 'ios' ? NativeModules.NotificationManager : null;
 
 const execute = async callback => {
-  if (ios) {
+  if (Platform.os === 'ios') {
     try {
       logger.log('[BG EXEC]: starting background execution');
       // Tell iOS we're running a rap (for tracking purposes)

@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 /**
  * This file contains flags for enabling features which are still in development.
  * While adding new functionality, please verify it against these features
@@ -9,7 +11,7 @@ export const DISCOVER_SHEET = 'discoverSheet';
 export const REVIEW_ANDROID = 'reviewAndroid';
 
 export const defaultConfig = {
-  [AVATAR_PICKER]: ios,
+  [AVATAR_PICKER]: Platform.os === 'ios',
   [DISCOVER_SHEET]: false,
   [REVIEW_ANDROID]: false,
 };

@@ -1,20 +1,10 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { Icon } from '../Icon';
 import { BalanceCoinRow } from '../BalanceCoinRow';
 import { render } from '../../test-utils';
-import { colors } from '@cardstack/theme';
 
 const chance = new Chance();
-
-jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
-  jest.fn(({ children }) => children)
-);
-
-jest.mock('../../src/components/Icon', () => ({
-  Icon: jest.fn(() => null),
-}));
 
 describe('BalanceCoinRow', () => {
   let item: any, props: any;
@@ -23,9 +13,9 @@ describe('BalanceCoinRow', () => {
     item = {
       isHidden: false,
       isPinned: false,
-      name: chance.string(),
+      symbol: 'ABCD',
       balance: {
-        display: chance.string(),
+        display: '2.45 ABCD',
       },
       native: {
         balance: {
@@ -42,42 +32,14 @@ describe('BalanceCoinRow', () => {
       item,
       onPress: jest.fn(),
       isEditing: false,
+      pinned: false,
       selected: false,
     };
   });
 
-  it('should render the item correctly if change is positive', () => {
+  it('should render the item correctly', () => {
     const { getByText } = render(<BalanceCoinRow {...props} />);
-
-    getByText(item.name);
     getByText(item.balance.display);
-    getByText(`${item.native.change}`);
-  });
-
-  it('should render change in green if it is positive', () => {
-    const { getByText } = render(<BalanceCoinRow {...props} />);
-
-    const change = getByText(`${item.native.change}`);
-
-    expect(change).toHaveStyle({ color: colors.green });
-  });
-
-  it('should render change in blue if relative change is 0', () => {
-    item.price.relative_change_24h = 0;
-    const { getByText } = render(<BalanceCoinRow {...props} />);
-
-    const change = getByText(`${item.native.change}`);
-
-    expect(change).toHaveStyle({ color: colors.blueText });
-  });
-
-  it('should render change in blue if relative change is less than 0', () => {
-    item.price.relative_change_24h = -1;
-    const { getByText } = render(<BalanceCoinRow {...props} />);
-
-    const change = getByText(`${item.native.change}`);
-
-    expect(change).toHaveStyle({ color: colors.blueText });
   });
 
   it('should render the editing icon if isEditing', () => {
@@ -97,34 +59,22 @@ describe('BalanceCoinRow', () => {
 
   it('should render the icon with the correct name if item is hidden and isEditing', () => {
     props.isEditing = true;
-    props.item.isHidden = true;
-    render(<BalanceCoinRow {...props} />);
-
-    expect(Icon).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'eye-off' }),
-      {}
-    );
+    props.hidden = true;
+    const { getByTestId } = render(<BalanceCoinRow {...props} />);
+    getByTestId('icon-eye-off');
   });
 
   it('should render the icon with the correct name if item is pinned and isEditing', () => {
     props.isEditing = true;
-    props.item.isPinned = true;
-    render(<BalanceCoinRow {...props} />);
-
-    expect(Icon).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'pin' }),
-      {}
-    );
+    props.pinned = true;
+    const { getByTestId } = render(<BalanceCoinRow {...props} />);
+    getByTestId('icon-pin');
   });
 
   it('should render the coin row overlay if isEditing and the item is hidden', () => {
     props.isEditing = true;
-    props.item.isHidden = true;
-    render(<BalanceCoinRow {...props} />);
-
-    expect(Icon).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'eye-off' }),
-      {}
-    );
+    props.hidden = true;
+    const { getByTestId } = render(<BalanceCoinRow {...props} />);
+    getByTestId('icon-eye-off');
   });
 });
