@@ -4,8 +4,8 @@
   "scripts": {
     "setup": "yarn install && yarn postinstall",
     "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
-    "android": "adb uninstall me.rainbow || true && react-native run-android",
-    "android:apk": "cd android && ./gradlew assembleRelease && (adb uninstall me.rainbow || true) && adb install app/build/outputs/apk/release/app-release.apk",
+    "android": "adb uninstall com.cardstack.cardpay || true && react-native run-android",
+    "android:apk": "cd android && ./gradlew assembleRelease && (adb uninstall com.cardstack.cardpay || true) && adb install app/build/outputs/apk/release/app-release.apk",
     "android:bundle": "./scripts/check-env.sh && cd android && ./gradlew bundleRelease && open app/build/outputs/bundle/release/",
     "contexts:app:sync": "bundle exec fastlane sync_app_vars",
     "contexts:app:publish": "bundle exec fastlane publish_app_vars",
