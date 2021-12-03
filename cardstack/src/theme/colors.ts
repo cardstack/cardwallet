@@ -31,6 +31,7 @@ export const palette = {
   whiteOpacity50: '#FFFFFF80',
   grayButtonBackground: '#D1D5DB',
   buttonDisabledBackground: '#2e2d38',
+  appleBlue: '#0E76FD',
 };
 
 export const colors = {
@@ -74,6 +75,7 @@ export const colors = {
   blackLightOpacity: palette.blackLightOpacity,
   grayButtonBackground: palette.grayButtonBackground,
   buttonDisabledBackground: palette.buttonDisabledBackground,
+  appleBlue: palette.appleBlue,
 };
 
 export const avatarColor = [
