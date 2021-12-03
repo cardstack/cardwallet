@@ -3433,6 +3433,17 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@jest/types@^27.4.2":
+  version "27.4.2"
+  resolved "https://registry.npmjs.org/@jest/types/-/types-27.4.2.tgz#96536ebd34da6392c2b7c7737d693885b5dd44a5"
+  integrity sha512-j35yw0PMTPpZsUoOBiuHzr1zTYoad1cVIE0ajEjcrJONxxrko/IRGKkXx3os0Nsi4Hu3+5VmDbVfq5WhG/pWAg==
+  dependencies:
+    "@types/istanbul-lib-coverage" "^2.0.0"
+    "@types/istanbul-reports" "^3.0.0"
+    "@types/node" "*"
+    "@types/yargs" "^16.0.0"
+    chalk "^4.0.0"
+
 "@lavamoat/allow-scripts@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@lavamoat/allow-scripts/-/allow-scripts-1.0.3.tgz#8fa54a3f250977fdc85484d0870ae65c4e50a0c8"
@@ -3925,10 +3936,10 @@
     xcode "2.0.0"
     yargs "^12.0.2"
 
-"@shopify/restyle@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@shopify/restyle/-/restyle-1.4.0.tgz#81d1fbfd16bf1688e7638aa53e6a524c623f936c"
-  integrity sha512-wzckvAzDE8Xi39EFAoO0cWpkvWY0sDI5CrxBn7Ae1Xzc9J17/IQKvTU8uxMN32jjE2VPwQ8i0BVuS8lJfIxUcQ==
+"@shopify/restyle@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.npmjs.org/@shopify/restyle/-/restyle-1.6.1.tgz#64645f06b5848029b3bac73a3859e35ba5c1332e"
+  integrity sha512-y31cYkp/fGGLunBerzNnHaLSPB4VvNhoaPF7GR0V6FFgf12rRUTZCHJyeR+dYn6rlworjad7zMZRnIkSgZLWOw==
 
 "@sideway/address@^4.1.0":
   version "4.1.2"
@@ -4547,15 +4558,15 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@testing-library/jest-native@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-native/-/jest-native-4.0.1.tgz#000902622cb44f0d723a9f0e9eb8699f3ea511ae"
-  integrity sha512-dqeVpMSb8nZ1QxvzHxiKb4MqepNfFt8MeUwq9r/BTIOIrUFjDRDSpReZXVv9tcQypz2BcjbNK7BAEvyLSF33hQ==
+"@testing-library/jest-native@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.npmjs.org/@testing-library/jest-native/-/jest-native-4.0.4.tgz#25e2046896118f887683202a6e5fd8a4056131cd"
+  integrity sha512-4q5FeTFyFgPCmQH18uMJsZkVnYvBtK24yhSfbd9hQi0SZzCpbjSeQQcsGXIaX+WjWcMeeip8B7NUvZmLhGHiZw==
   dependencies:
     chalk "^2.4.1"
     jest-diff "^24.0.0"
     jest-matcher-utils "^24.0.0"
-    pretty-format "^24.0.0"
+    pretty-format "^27.3.1"
     ramda "^0.26.1"
     redent "^2.0.0"
 
@@ -4570,12 +4581,12 @@
     "@types/react-test-renderer" ">=16.9.0"
     react-error-boundary "^3.1.0"
 
-"@testing-library/react-native@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/react-native/-/react-native-7.0.0.tgz#86745f5a14e7a9f19c236d828cd6a3bfd7e45726"
-  integrity sha512-GF67VnpfdY5XLxY5hJyQCVZfi0icYl+bfau5mL4MsXh85F9Wf8ged3vklP4JjQL2i/rZGJV6YosKK0PEj18aIQ==
+"@testing-library/react-native@8.0.0":
+  version "8.0.0"
+  resolved "https://registry.npmjs.org/@testing-library/react-native/-/react-native-8.0.0.tgz#f1b8f6bcc9f0ef6026b0ec7d072faf4af0e622fa"
+  integrity sha512-XwQIv4Amj8AYsPjASo+1XLFWY7qMm+FyV4+QU5j97CpRd+YasCBNnvfyDAZoudm/5Y0Yx55DYjAX36RugxasPQ==
   dependencies:
-    pretty-format "^26.0.1"
+    pretty-format "^27.0.0"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -5745,6 +5756,11 @@ ansi-regex@^5.0.0:
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.0.tgz#388539f55179bf39339c81af30a654d69f87cb75"
   integrity sha512-bY6fj56OUQ0hU1KjFNDQuJFezqKdrAyFdIevADiqrWHwSlbmBNMHp5ak2f40Pm8JTFyM2mqxkG6ngkHO11f/lg==
 
+ansi-regex@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
+  integrity sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==
+
 ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
@@ -5763,6 +5779,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   integrity sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==
   dependencies:
     color-convert "^2.0.1"
+
+ansi-styles@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-5.2.0.tgz#07449690ad45777d1924ac2abb2fc8895dba836b"
+  integrity sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==
 
 any-base@^1.1.0:
   version "1.1.0"
@@ -16935,7 +16956,7 @@ prettier@^2.0.5, prettier@^2.2.1:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"
   integrity sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==
 
-pretty-format@^24.0.0, pretty-format@^24.9.0:
+pretty-format@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-24.9.0.tgz#12fac31b37019a4eea3c11aa9a959eb7628aa7c9"
   integrity sha512-00ZMZUiHaJrNfk33guavqgvfJS30sLYf0f8+Srklv0AMPodGGHcoHgksZ3OThYnIvOd+8yMCn0YiEOogjlgsnA==
@@ -16955,16 +16976,6 @@ pretty-format@^25.2.1, pretty-format@^25.5.0:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
-pretty-format@^26.0.1, pretty-format@^26.6.2:
-  version "26.6.2"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.6.2.tgz#e35c2705f14cb7fe2fe94fa078345b444120fc93"
-  integrity sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==
-  dependencies:
-    "@jest/types" "^26.6.2"
-    ansi-regex "^5.0.0"
-    ansi-styles "^4.0.0"
-    react-is "^17.0.1"
-
 pretty-format@^26.5.2:
   version "26.5.2"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.5.2.tgz#5d896acfdaa09210683d34b6dc0e6e21423cd3e1"
@@ -16974,6 +16985,26 @@ pretty-format@^26.5.2:
     ansi-regex "^5.0.0"
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
+
+pretty-format@^26.6.2:
+  version "26.6.2"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.6.2.tgz#e35c2705f14cb7fe2fe94fa078345b444120fc93"
+  integrity sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==
+  dependencies:
+    "@jest/types" "^26.6.2"
+    ansi-regex "^5.0.0"
+    ansi-styles "^4.0.0"
+    react-is "^17.0.1"
+
+pretty-format@^27.0.0, pretty-format@^27.3.1:
+  version "27.4.2"
+  resolved "https://registry.npmjs.org/pretty-format/-/pretty-format-27.4.2.tgz#e4ce92ad66c3888423d332b40477c87d1dac1fb8"
+  integrity sha512-p0wNtJ9oLuvgOQDEIZ9zQjZffK7KtyR6Si0jnXULIDwrlNF8Cuir3AZP0hHv0jmKuNN/edOnbMjnzd4uTcmWiw==
+  dependencies:
+    "@jest/types" "^27.4.2"
+    ansi-regex "^5.0.1"
+    ansi-styles "^5.0.0"
+    react-is "^17.0.1"
 
 pretty-ms@^7.0.0:
   version "7.0.1"
