@@ -5,7 +5,7 @@ import {
   isValidMnemonic,
   resolveUnstoppableDomain,
 } from '@rainbow-me/handlers/web3';
-import { sanitizeSeedPhrase } from '@rainbow-me/utils';
+import { sanitizeSeedPhrase } from '@rainbow-me/utils/formatters';
 
 // Currently supported Top Level Domains from ENS
 const supportedTLDs = ['eth', 'test', 'xyz', 'luxe', 'kred', 'club', 'art'];
