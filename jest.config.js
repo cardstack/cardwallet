@@ -24,7 +24,8 @@ module.exports = {
     '<rootDir>/cardstack/src/components/__tests__/Button.test.tsx',
     '<rootDir>/cardstack/src/components/__tests__/Container.test.tsx',
     '<rootDir>/cardstack/src/components/__tests__/OptionItem.test.tsx',
-    // Avoid testing components for now
+    '<rootDir>/cardstack/src/components/__tests__/SystemNotification.test.tsx',
+    // Avoid testing other components for now
     '!<rootDir>/cardstack/**/*.test.jsx',
     '!<rootDir>/cardstack/**/*.test.tsx',
   ],

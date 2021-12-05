@@ -1,5 +1,6 @@
 import { toUpper } from 'lodash';
 import React, { useMemo } from 'react';
+import { View } from 'react-native';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { getFirstGrapheme } from '../../utils';
@@ -34,7 +35,7 @@ const sizeConfigs = () => ({
   },
 });
 
-const ContactAvatarContainer = styled.View`
+const ContactAvatarContainer = styled(View)`
   background-color: ${({ backgroundColor = 'transparent' }) => backgroundColor};
   border-color: rgba(255, 255, 255, 0.4);
   border-radius: 100px;

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import { ViewPropTypes } from 'react-native';
+import { Text as RNText, ViewPropTypes } from 'react-native';
 import styled from 'styled-components';
 import { buildTextStyles } from '@rainbow-me/styles';
 
-const Text = styled.Text.attrs({ allowFontScaling: false })`
+const Text = styled(RNText).attrs({ allowFontScaling: false })`
   ${buildTextStyles};
 `;
 

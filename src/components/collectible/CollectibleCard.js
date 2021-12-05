@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
+import { View } from 'react-native';
 import styled from 'styled-components';
 import { magicMemo } from '../../utils';
 import { ButtonPressAnimation } from '../animations';
@@ -9,11 +10,11 @@ import { shadow as shadowUtil } from '@rainbow-me/styles';
 const CollectibleCardBorderRadius = 20;
 const CollectibleCardShadowFactory = colors => [0, 2, 6, colors.shadow, 0.08];
 
-const Container = styled.View`
+const Container = styled(View)`
   ${({ shadow }) => shadowUtil.build(...shadow)};
 `;
 
-const Content = styled.View`
+const Content = styled(View)`
   border-radius: ${CollectibleCardBorderRadius};
   height: ${({ height }) => height};
   overflow: hidden;
