@@ -8,6 +8,7 @@ module.exports = {
     '<rootDir>/cardstack/src/*/**/*.tsx',
     '!<rootDir>/cardstack/src/*/**/*.story.tsx',
     '!<rootDir>/cardstack/src/theme/*',
+    '!<rootDir>/cardstack/src/types/*',
 
     // ran into a weeeeird issue testing this so ignoring for now, will try to fix later
     '!<rootDir>/cardstack/src/components/Icon/Icon.tsx',
