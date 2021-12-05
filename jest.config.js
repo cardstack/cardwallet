@@ -5,8 +5,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/cardstack/src/*/**/*.js',
     '<rootDir>/cardstack/src/*/**/*.ts',
-    // Avoid testing components for now
-    '!<rootDir>/cardstack/src/*/**/*.tsx',
+    '<rootDir>/cardstack/src/*/**/*.tsx',
     '!<rootDir>/cardstack/src/*/**/*.story.tsx',
     '!<rootDir>/cardstack/src/theme/*',
 
@@ -22,6 +21,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
+    '<rootDir>/cardstack/src/components/__tests__/Button.test.tsx',
     // Avoid testing components for now
     '!<rootDir>/cardstack/**/*.test.jsx',
     '!<rootDir>/cardstack/**/*.test.tsx',
