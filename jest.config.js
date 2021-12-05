@@ -22,6 +22,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
+    '<rootDir>/cardstack/src/components/__tests__/BalanceCoinRow.test.tsx',
     '<rootDir>/cardstack/src/components/__tests__/Button.test.tsx',
     '<rootDir>/cardstack/src/components/__tests__/Container.test.tsx',
     '<rootDir>/cardstack/src/components/__tests__/OptionItem.test.tsx',
