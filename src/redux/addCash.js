@@ -1,5 +1,5 @@
 import { captureException, captureMessage } from '@sentry/react-native';
-import { find, map, toLower } from 'lodash';
+import { toLower } from 'lodash';
 import {
   getPurchaseTransactions,
   savePurchaseTransactions,
@@ -9,16 +9,14 @@ import TransactionStatusTypes from '../helpers/transactionStatusTypes';
 import TransactionTypes from '../helpers/transactionTypes';
 import { WYRE_ORDER_STATUS_TYPES } from '../helpers/wyreStatusTypes';
 import { AddCashCurrencies, AddCashCurrencyInfo } from '../references';
-import { ethereumUtils } from '../utils';
+import ethereumUtils from '../utils/ethereumUtils';
 import maybeReviewAlert from '../utils/reviewAlert';
+import { ADD_CASH_UPDATE_PURCHASE_TRANSACTIONS } from './addCashData';
 
-/* eslint-disable-next-line import/no-cycle */
 import { dataAddNewTransaction } from './data';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
-const ADD_CASH_UPDATE_PURCHASE_TRANSACTIONS =
-  'addCash/ADD_CASH_UPDATE_PURCHASE_TRANSACTIONS';
 
 const ADD_CASH_UPDATE_CURRENT_ORDER_STATUS =
   'addCash/ADD_CASH_UPDATE_CURRENT_ORDER_STATUS';
@@ -58,35 +56,6 @@ export const addCashClearState = () => dispatch => {
   orderStatusHandle && clearTimeout(orderStatusHandle);
   transferHashHandle && clearTimeout(transferHashHandle);
   dispatch({ type: ADD_CASH_CLEAR_STATE });
-};
-
-export const addCashUpdatePurchases = purchases => (dispatch, getState) => {
-  const { purchaseTransactions } = getState().addCash;
-  const { accountAddress, network } = getState().settings;
-
-  const updatedPurchases = map(purchaseTransactions, txn => {
-    if (txn.status === TransactionStatusTypes.purchasing) {
-      const updatedPurchase = find(
-        purchases,
-        purchase =>
-          ethereumUtils.getHash(purchase) === ethereumUtils.getHash(txn)
-      );
-      if (updatedPurchase) {
-        return {
-          ...txn,
-          ...updatedPurchase,
-        };
-      }
-      return txn;
-    }
-    return txn;
-  });
-
-  dispatch({
-    payload: updatedPurchases,
-    type: ADD_CASH_UPDATE_PURCHASE_TRANSACTIONS,
-  });
-  savePurchaseTransactions(updatedPurchases, accountAddress, network);
 };
 
 export const addCashNewPurchaseTransaction = txDetails => (

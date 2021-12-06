@@ -24,8 +24,7 @@ import {
   UNISWAP_PRICES_QUERY,
 } from '../apollo/queries';
 import { getTransactionReceipt } from '../handlers/web3';
-// eslint-disable-next-line import/no-cycle
-import { addCashUpdatePurchases } from './addCash';
+import { addCashUpdatePurchases } from './addCashData';
 import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import {
