@@ -15,7 +15,7 @@ const EmptyValue = styled(Column)`
   border-width: 3;
   width: 20;
   height: 20;
-  border-color: ${({ theme: { colors } }) => colors.appleBlue};
+  border-color: ${({ theme: { colors } }) => colors.white};
   border-radius: 20;
   margin-left: 10;
   margin-right: 10;
@@ -32,22 +32,22 @@ const PinValue = ({ translateX, value, ...props }) => {
         }}
       >
         {value && value.length ? (
-          <FilledValue backgroundColor={colors.appleBlue} />
+          <FilledValue backgroundColor={colors.white} />
         ) : (
           <EmptyValue />
         )}
         {value && value.length > 1 ? (
-          <FilledValue backgroundColor={colors.appleBlue} />
+          <FilledValue backgroundColor={colors.white} />
         ) : (
           <EmptyValue />
         )}
         {value && value.length > 2 ? (
-          <FilledValue backgroundColor={colors.appleBlue} />
+          <FilledValue backgroundColor={colors.white} />
         ) : (
           <EmptyValue />
         )}
         {value && value.length > 3 ? (
-          <FilledValue backgroundColor={colors.appleBlue} />
+          <FilledValue backgroundColor={colors.white} />
         ) : (
           <EmptyValue />
         )}

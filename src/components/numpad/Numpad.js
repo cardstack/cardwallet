@@ -34,7 +34,9 @@ const KeyboardButton = ({ children, ...props }) => {
   );
 };
 
-const Numpad = ({ decimal = true, onPress, width }) => {
+const Numpad = ({ decimal = true, onPress, width, light = false }) => {
+  const color = light ? 'white' : 'black';
+
   const renderCell = useCallback(
     symbol => (
       <KeyboardButton
@@ -42,12 +44,12 @@ const Numpad = ({ decimal = true, onPress, width }) => {
         onPress={() => onPress(symbol.toString())}
         testID={`numpad-button-${symbol}`}
       >
-        <Text fontSize={44} fontWeight="600" textAlign="center">
+        <Text color={color} fontSize={44} fontWeight="600" textAlign="center">
           {symbol}
         </Text>
       </KeyboardButton>
     ),
-    [onPress]
+    [color, onPress]
   );
 
   const renderRow = useCallback(
@@ -68,7 +70,7 @@ const Numpad = ({ decimal = true, onPress, width }) => {
         {decimal ? renderCell('.') : <Container width={80} />}
         {renderCell(0)}
         <KeyboardButton onPress={() => onPress('back')}>
-          <Icon color="black" name="delete" size={55} textAlign="center" />
+          <Icon color={color} name="delete" size={55} textAlign="center" />
         </KeyboardButton>
       </Container>
     </CenteredContainer>
