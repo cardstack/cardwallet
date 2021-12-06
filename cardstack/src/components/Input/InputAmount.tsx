@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useEffect } from 'react';
+import React, { useCallback, memo, useEffect, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import {
   nativeCurrencies,
@@ -8,14 +8,14 @@ import {
   CenteredContainer,
   Container,
   ContainerProps,
-  Input,
+  InputMask,
   Text,
   Icon,
   Touchable,
 } from './../index';
-import { formatNative } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 import { useNavigation } from '@rainbow-me/navigation';
+import { removeLeadingZeros } from '@rainbow-me/utils';
 
 export enum CURRENCY_DISPLAY_MODE {
   NO_DISPLAY = 'NO_DISPLAY',
@@ -28,12 +28,15 @@ const textShadowOffset = {
   height: 1,
 };
 
+const INPUT_MASK = '[099999999999999999].[999999999999999999]';
+
 type InputAmountProps = {
   inputValue: string | undefined;
   setInputValue: (_val: string | undefined) => void;
   nativeCurrency: NativeCurrency;
   currencyDisplayMode?: CURRENCY_DISPLAY_MODE;
   isInvalid?: boolean;
+  testID?: string;
 } & ContainerProps;
 
 export const InputAmount = memo(
@@ -43,16 +46,52 @@ export const InputAmount = memo(
     nativeCurrency,
     currencyDisplayMode = CURRENCY_DISPLAY_MODE.SYMBOL,
     isInvalid,
+    testID,
     ...containerProps
   }: InputAmountProps) => {
     const { navigate } = useNavigation();
+    const [isFocused, setIsFocused] = useState(false);
+    const [isTouched, setIsTouched] = useState(false);
+
+    const handleChange = useCallback(() => {
+      if (isFocused && !isTouched) {
+        InteractionManager.runAfterInteractions(() => setIsTouched(true));
+      }
+    }, [isFocused, isTouched]);
+
+    const handleFocus = useCallback(() => {
+      setIsFocused(true);
+    }, []);
 
     const onChangeText = useCallback(
-      text => {
-        setInputValue(formatNative(text, nativeCurrency));
+      formatted => {
+        let text = formatted;
+
+        if (isTouched && !text.length && !inputValue) {
+          text = '0.';
+        }
+
+        const formattedValue = removeLeadingZeros(formatted);
+
+        if (formatted !== formattedValue) {
+          setInputValue(formattedValue);
+        }
       },
-      [setInputValue, nativeCurrency]
+      [inputValue, isTouched, setInputValue]
     );
+
+    const handleBlur = useCallback(() => {
+      if (typeof inputValue === 'string') {
+        const parts = inputValue.split('.');
+
+        if (parts[0].length > 1 && !Number(parts[0])) {
+          onChangeText(`0.${parts[1]}`);
+        }
+      }
+
+      setIsFocused(false);
+      setIsTouched(false);
+    }, [inputValue, onChangeText]);
 
     const openCurrencySelectionModal = useCallback(() => {
       InteractionManager.runAfterInteractions(() =>
@@ -64,7 +103,11 @@ export const InputAmount = memo(
 
     useEffect(() => {
       if (nativeCurrency === NativeCurrency.SPD) {
-        setInputValue(formatNative(inputValue, nativeCurrency));
+        const formattedValue = removeLeadingZeros(inputValue);
+
+        if (inputValue !== formattedValue) {
+          setInputValue(formattedValue);
+        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nativeCurrency, setInputValue]);
@@ -104,7 +147,7 @@ export const InputAmount = memo(
             </Container>
           ) : null}
           <Container flex={1} flexGrow={1}>
-            <Input
+            <InputMask
               alignSelf="stretch"
               autoCapitalize="none"
               autoCorrect={false}
@@ -112,14 +155,17 @@ export const InputAmount = memo(
               color={isInvalid ? 'red' : 'black'}
               fontSize={30}
               fontWeight="bold"
-              keyboardType="numeric"
-              maxLength={(inputValue || '').length + 1} // just to avoid possible flicker issue
+              keyboardType="decimal-pad"
+              mask={INPUT_MASK}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              onFocus={handleFocus}
               multiline
               onChangeText={onChangeText}
-              placeholder="0.00"
+              placeholder="0"
               placeholderTextColor="grayMediumLight"
               spellCheck={false}
-              testID="RequestPaymentInput"
+              testID={testID || 'RequestPaymentInput'}
               value={inputValue}
               zIndex={1}
             />
