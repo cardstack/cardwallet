@@ -13,6 +13,7 @@ import { MerchantEarnedRevenueStrategy } from './transaction-mapping-strategy-ty
 import { MerchantEarnedSpendAndRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-and-revenue-strategy';
 import { MerchantWithdrawStrategy } from './transaction-mapping-strategy-types/merchant-withdraw-strategy';
 import { MerchantDepositStrategy } from './transaction-mapping-strategy-types/merchant-deposit-strategy';
+import { MerchantPrepaidCardIssuancetrategy } from './transaction-mapping-strategy-types/merchant-prepaid-card-issuance-strategy';
 import { MerchantEarnedSpendStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { PrepaidCardCreationStrategy } from './transaction-mapping-strategy-types/prepaid-card-creation-strategy';
 import { PrepaidCardPaymentStrategy } from './transaction-mapping-strategy-types/prepaid-card-payment-strategy';
@@ -34,7 +35,8 @@ export type TransactionMappingStrategy =
   | typeof MerchantEarnedSpendStrategy
   | typeof MerchantEarnedRevenueStrategy
   | typeof MerchantWithdrawStrategy
-  | typeof MerchantDepositStrategy;
+  | typeof MerchantDepositStrategy
+  | typeof MerchantPrepaidCardIssuancetrategy;
 
 interface TransactionData {
   transactions: (AdvancedTransactionFragment | undefined)[];

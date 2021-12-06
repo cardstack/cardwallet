@@ -5,6 +5,7 @@ import {
   Maybe,
   MerchantDepositFragment,
   MerchantWithdrawFragment,
+  MerchantPrepaidCardIssuance,
 } from '@cardstack/graphql';
 
 export enum TransactionTypes {
@@ -22,6 +23,7 @@ export enum TransactionTypes {
   MERCHANT_EARNED_SPEND = 'merchantEarnedSpend',
   MERCHANT_WITHDRAW = 'merchantWithdraw',
   MERCHANT_DEPOSIT = 'merchantDeposit',
+  MERCHANT_PREPAIDCARD_ISSUANCE = 'merchantPrepaidCardIssuance',
   ERC_20 = 'erc20',
 }
 
@@ -31,6 +33,9 @@ export type AdvancedTransactionFragment = TransactionFragment & {
   >;
   merchantDeposit?: Maybe<
     { __typename?: 'MerchantDeposit' } & MerchantDepositFragment
+  >;
+  prepaidCardIssuance?: Maybe<
+    { __typename?: 'MerchantPrepaidCardIssuance' } & MerchantPrepaidCardIssuance
   >;
 };
 
@@ -227,6 +232,22 @@ export interface MerchantDepositType {
   };
 }
 
+export interface MerchantPrepaidCardIssuanceType {
+  address: string;
+  createdAt: string;
+  transactionHash: string;
+  balance: BalanceType;
+  native: BalanceType;
+  type: TransactionTypes.MERCHANT_PREPAIDCARD_ISSUANCE;
+  infoDid?: string;
+  hideSafeHeader?: boolean;
+  token: {
+    id: string;
+    name?: string | null;
+    symbol?: string | null;
+  };
+}
+
 export interface MerchantEarnedSpendAndRevenueTransactionType {
   address: string;
   balance: BalanceType;
@@ -318,4 +339,5 @@ export type TransactionType =
   | MerchantEarnedSpendTransactionType
   | MerchantClaimType
   | MerchantWithdrawType
-  | MerchantDepositType;
+  | MerchantDepositType
+  | MerchantPrepaidCardIssuanceType;

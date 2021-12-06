@@ -238,6 +238,7 @@ export type BridgeToLayer1Event = {
   transaction: Transaction;
   safe?: Maybe<Safe>;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   account: Account;
   token: Token;
   amount: Scalars['BigInt'];
@@ -288,6 +289,14 @@ export type BridgeToLayer1EventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   account?: Maybe<Scalars['String']>;
   account_not?: Maybe<Scalars['String']>;
   account_gt?: Maybe<Scalars['String']>;
@@ -331,6 +340,7 @@ export enum BridgeToLayer1EventOrderBy {
   TRANSACTION = 'transaction',
   SAFE = 'safe',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   ACCOUNT = 'account',
   TOKEN = 'token',
   AMOUNT = 'amount'
@@ -632,6 +642,7 @@ export type MerchantClaim = {
   __typename?: 'MerchantClaim';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   merchantSafe: MerchantSafe;
   token: Token;
@@ -655,6 +666,14 @@ export type MerchantClaimFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -710,6 +729,7 @@ export type MerchantClaimFilter = {
 export enum MerchantClaimOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   MERCHANTSAFE = 'merchantSafe',
   TOKEN = 'token',
@@ -721,6 +741,7 @@ export type MerchantCreation = {
   id: Scalars['ID'];
   transaction: Transaction;
   createdAt: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   merchantSafe: MerchantSafe;
   merchant: Account;
 };
@@ -756,6 +777,14 @@ export type MerchantCreationFilter = {
   createdAt_lte?: Maybe<Scalars['BigInt']>;
   createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   merchantSafe?: Maybe<Scalars['String']>;
   merchantSafe_not?: Maybe<Scalars['String']>;
   merchantSafe_gt?: Maybe<Scalars['String']>;
@@ -790,6 +819,7 @@ export enum MerchantCreationOrderBy {
   ID = 'id',
   TRANSACTION = 'transaction',
   CREATEDAT = 'createdAt',
+  BLOCKNUMBER = 'blockNumber',
   MERCHANTSAFE = 'merchantSafe',
   MERCHANT = 'merchant'
 }
@@ -798,6 +828,7 @@ export type MerchantDeposit = {
   __typename?: 'MerchantDeposit';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   merchantSafe: MerchantSafe;
   token: Token;
@@ -822,6 +853,14 @@ export type MerchantDepositFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -891,6 +930,7 @@ export type MerchantDepositFilter = {
 export enum MerchantDepositOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   MERCHANTSAFE = 'merchantSafe',
   TOKEN = 'token',
@@ -902,6 +942,7 @@ export type MerchantFeePayment = {
   __typename?: 'MerchantFeePayment';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
   merchantSafe: MerchantSafe;
@@ -926,6 +967,14 @@ export type MerchantFeePaymentFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -995,6 +1044,7 @@ export type MerchantFeePaymentFilter = {
 export enum MerchantFeePaymentOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
   MERCHANTSAFE = 'merchantSafe',
@@ -1002,11 +1052,126 @@ export enum MerchantFeePaymentOrderBy {
   FEECOLLECTED = 'feeCollected'
 }
 
+export type MerchantPrepaidCardIssuance = {
+  __typename?: 'MerchantPrepaidCardIssuance';
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+  transaction: Transaction;
+  merchantSafe: MerchantSafe;
+  token: Token;
+  amount: Scalars['BigInt'];
+  prepaidCard: PrepaidCard;
+};
+
+export type MerchantPrepaidCardIssuanceFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  transaction?: Maybe<Scalars['String']>;
+  transaction_not?: Maybe<Scalars['String']>;
+  transaction_gt?: Maybe<Scalars['String']>;
+  transaction_lt?: Maybe<Scalars['String']>;
+  transaction_gte?: Maybe<Scalars['String']>;
+  transaction_lte?: Maybe<Scalars['String']>;
+  transaction_in?: Maybe<Array<Scalars['String']>>;
+  transaction_not_in?: Maybe<Array<Scalars['String']>>;
+  transaction_contains?: Maybe<Scalars['String']>;
+  transaction_not_contains?: Maybe<Scalars['String']>;
+  transaction_starts_with?: Maybe<Scalars['String']>;
+  transaction_not_starts_with?: Maybe<Scalars['String']>;
+  transaction_ends_with?: Maybe<Scalars['String']>;
+  transaction_not_ends_with?: Maybe<Scalars['String']>;
+  merchantSafe?: Maybe<Scalars['String']>;
+  merchantSafe_not?: Maybe<Scalars['String']>;
+  merchantSafe_gt?: Maybe<Scalars['String']>;
+  merchantSafe_lt?: Maybe<Scalars['String']>;
+  merchantSafe_gte?: Maybe<Scalars['String']>;
+  merchantSafe_lte?: Maybe<Scalars['String']>;
+  merchantSafe_in?: Maybe<Array<Scalars['String']>>;
+  merchantSafe_not_in?: Maybe<Array<Scalars['String']>>;
+  merchantSafe_contains?: Maybe<Scalars['String']>;
+  merchantSafe_not_contains?: Maybe<Scalars['String']>;
+  merchantSafe_starts_with?: Maybe<Scalars['String']>;
+  merchantSafe_not_starts_with?: Maybe<Scalars['String']>;
+  merchantSafe_ends_with?: Maybe<Scalars['String']>;
+  merchantSafe_not_ends_with?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+  token_not?: Maybe<Scalars['String']>;
+  token_gt?: Maybe<Scalars['String']>;
+  token_lt?: Maybe<Scalars['String']>;
+  token_gte?: Maybe<Scalars['String']>;
+  token_lte?: Maybe<Scalars['String']>;
+  token_in?: Maybe<Array<Scalars['String']>>;
+  token_not_in?: Maybe<Array<Scalars['String']>>;
+  token_contains?: Maybe<Scalars['String']>;
+  token_not_contains?: Maybe<Scalars['String']>;
+  token_starts_with?: Maybe<Scalars['String']>;
+  token_not_starts_with?: Maybe<Scalars['String']>;
+  token_ends_with?: Maybe<Scalars['String']>;
+  token_not_ends_with?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['BigInt']>;
+  amount_not?: Maybe<Scalars['BigInt']>;
+  amount_gt?: Maybe<Scalars['BigInt']>;
+  amount_lt?: Maybe<Scalars['BigInt']>;
+  amount_gte?: Maybe<Scalars['BigInt']>;
+  amount_lte?: Maybe<Scalars['BigInt']>;
+  amount_in?: Maybe<Array<Scalars['BigInt']>>;
+  amount_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  prepaidCard?: Maybe<Scalars['String']>;
+  prepaidCard_not?: Maybe<Scalars['String']>;
+  prepaidCard_gt?: Maybe<Scalars['String']>;
+  prepaidCard_lt?: Maybe<Scalars['String']>;
+  prepaidCard_gte?: Maybe<Scalars['String']>;
+  prepaidCard_lte?: Maybe<Scalars['String']>;
+  prepaidCard_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCard_contains?: Maybe<Scalars['String']>;
+  prepaidCard_not_contains?: Maybe<Scalars['String']>;
+  prepaidCard_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCard_ends_with?: Maybe<Scalars['String']>;
+  prepaidCard_not_ends_with?: Maybe<Scalars['String']>;
+};
+
+export enum MerchantPrepaidCardIssuanceOrderBy {
+  ID = 'id',
+  TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
+  TRANSACTION = 'transaction',
+  MERCHANTSAFE = 'merchantSafe',
+  TOKEN = 'token',
+  AMOUNT = 'amount',
+  PREPAIDCARD = 'prepaidCard'
+}
+
 export type MerchantRegistrationPayment = {
   __typename?: 'MerchantRegistrationPayment';
   id: Scalars['ID'];
   transaction: Transaction;
   createdAt: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   paidWith: PrepaidCard;
   prepaidCardPayment: PrepaidCardPayment;
   issuingToken: Token;
@@ -1045,6 +1210,14 @@ export type MerchantRegistrationPaymentFilter = {
   createdAt_lte?: Maybe<Scalars['BigInt']>;
   createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   paidWith?: Maybe<Scalars['String']>;
   paidWith_not?: Maybe<Scalars['String']>;
   paidWith_gt?: Maybe<Scalars['String']>;
@@ -1109,6 +1282,7 @@ export enum MerchantRegistrationPaymentOrderBy {
   ID = 'id',
   TRANSACTION = 'transaction',
   CREATEDAT = 'createdAt',
+  BLOCKNUMBER = 'blockNumber',
   PAIDWITH = 'paidWith',
   PREPAIDCARDPAYMENT = 'prepaidCardPayment',
   ISSUINGTOKEN = 'issuingToken',
@@ -1150,6 +1324,7 @@ export type MerchantRevenueEvent = {
   id: Scalars['ID'];
   transaction: Transaction;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   historicLifetimeAccumulation: Scalars['BigInt'];
   historicUnclaimedBalance: Scalars['BigInt'];
   merchantRevenue: MerchantRevenue;
@@ -1157,6 +1332,7 @@ export type MerchantRevenueEvent = {
   merchantClaim?: Maybe<MerchantClaim>;
   merchantWithdraw?: Maybe<MerchantWithdraw>;
   merchantDeposit?: Maybe<MerchantDeposit>;
+  prepaidCardIssuance?: Maybe<MerchantPrepaidCardIssuance>;
 };
 
 export type MerchantRevenueEventFilter = {
@@ -1190,6 +1366,14 @@ export type MerchantRevenueEventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   historicLifetimeAccumulation?: Maybe<Scalars['BigInt']>;
   historicLifetimeAccumulation_not?: Maybe<Scalars['BigInt']>;
   historicLifetimeAccumulation_gt?: Maybe<Scalars['BigInt']>;
@@ -1276,19 +1460,35 @@ export type MerchantRevenueEventFilter = {
   merchantDeposit_not_starts_with?: Maybe<Scalars['String']>;
   merchantDeposit_ends_with?: Maybe<Scalars['String']>;
   merchantDeposit_not_ends_with?: Maybe<Scalars['String']>;
+  prepaidCardIssuance?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_not?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_gt?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_lt?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_gte?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_lte?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardIssuance_not_in?: Maybe<Array<Scalars['String']>>;
+  prepaidCardIssuance_contains?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_not_contains?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_not_starts_with?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_ends_with?: Maybe<Scalars['String']>;
+  prepaidCardIssuance_not_ends_with?: Maybe<Scalars['String']>;
 };
 
 export enum MerchantRevenueEventOrderBy {
   ID = 'id',
   TRANSACTION = 'transaction',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   HISTORICLIFETIMEACCUMULATION = 'historicLifetimeAccumulation',
   HISTORICUNCLAIMEDBALANCE = 'historicUnclaimedBalance',
   MERCHANTREVENUE = 'merchantRevenue',
   PREPAIDCARDPAYMENT = 'prepaidCardPayment',
   MERCHANTCLAIM = 'merchantClaim',
   MERCHANTWITHDRAW = 'merchantWithdraw',
-  MERCHANTDEPOSIT = 'merchantDeposit'
+  MERCHANTDEPOSIT = 'merchantDeposit',
+  PREPAIDCARDISSUANCE = 'prepaidCardIssuance'
 }
 
 export type MerchantRevenueFilter = {
@@ -1484,6 +1684,7 @@ export type MerchantWithdraw = {
   __typename?: 'MerchantWithdraw';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   merchantSafe: MerchantSafe;
   token: Token;
@@ -1508,6 +1709,14 @@ export type MerchantWithdrawFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -1577,6 +1786,7 @@ export type MerchantWithdrawFilter = {
 export enum MerchantWithdrawOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   MERCHANTSAFE = 'merchantSafe',
   TOKEN = 'token',
@@ -1655,6 +1865,7 @@ export type PrepaidCardAskSetEvent = {
   __typename?: 'PrepaidCardAskSetEvent';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   sku: Sku;
   issuingToken: Token;
@@ -1678,6 +1889,14 @@ export type PrepaidCardAskSetEventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -1733,6 +1952,7 @@ export type PrepaidCardAskSetEventFilter = {
 export enum PrepaidCardAskSetEventOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   SKU = 'sku',
   ISSUINGTOKEN = 'issuingToken',
@@ -1798,6 +2018,7 @@ export type PrepaidCardCreation = {
   id: Scalars['ID'];
   transaction: Transaction;
   createdAt: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   prepaidCard: PrepaidCard;
   depot?: Maybe<Depot>;
   createdFromAddress: Scalars['String'];
@@ -1839,6 +2060,14 @@ export type PrepaidCardCreationFilter = {
   createdAt_lte?: Maybe<Scalars['BigInt']>;
   createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   prepaidCard?: Maybe<Scalars['String']>;
   prepaidCard_not?: Maybe<Scalars['String']>;
   prepaidCard_gt?: Maybe<Scalars['String']>;
@@ -1939,6 +2168,7 @@ export enum PrepaidCardCreationOrderBy {
   ID = 'id',
   TRANSACTION = 'transaction',
   CREATEDAT = 'createdAt',
+  BLOCKNUMBER = 'blockNumber',
   PREPAIDCARD = 'prepaidCard',
   DEPOT = 'depot',
   CREATEDFROMADDRESS = 'createdFromAddress',
@@ -1953,6 +2183,7 @@ export type PrepaidCardInventoryAddEvent = {
   __typename?: 'PrepaidCardInventoryAddEvent';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
   inventory: SkuInventory;
@@ -1975,6 +2206,14 @@ export type PrepaidCardInventoryAddEventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -2022,6 +2261,7 @@ export type PrepaidCardInventoryAddEventFilter = {
 export enum PrepaidCardInventoryAddEventOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
   INVENTORY = 'inventory'
@@ -2031,6 +2271,7 @@ export type PrepaidCardInventoryEvent = {
   __typename?: 'PrepaidCardInventoryEvent';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   inventory: SkuInventory;
   prepaidCard: PrepaidCard;
@@ -2056,6 +2297,14 @@ export type PrepaidCardInventoryEventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -2145,6 +2394,7 @@ export type PrepaidCardInventoryEventFilter = {
 export enum PrepaidCardInventoryEventOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   INVENTORY = 'inventory',
   PREPAIDCARD = 'prepaidCard',
@@ -2225,6 +2475,7 @@ export type PrepaidCardInventoryRemoveEvent = {
   __typename?: 'PrepaidCardInventoryRemoveEvent';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
   inventory: SkuInventory;
@@ -2247,6 +2498,14 @@ export type PrepaidCardInventoryRemoveEventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -2294,6 +2553,7 @@ export type PrepaidCardInventoryRemoveEventFilter = {
 export enum PrepaidCardInventoryRemoveEventOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
   INVENTORY = 'inventory'
@@ -2303,6 +2563,7 @@ export type PrepaidCardPayment = {
   __typename?: 'PrepaidCardPayment';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
   prepaidCardOwner: Account;
@@ -2363,6 +2624,14 @@ export type PrepaidCardPaymentFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -2492,6 +2761,7 @@ export type PrepaidCardPaymentFilter = {
 export enum PrepaidCardPaymentOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
   PREPAIDCARDOWNER = 'prepaidCardOwner',
@@ -2512,6 +2782,7 @@ export type PrepaidCardProvisionedEvent = {
   __typename?: 'PrepaidCardProvisionedEvent';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   txnHash: Scalars['String'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
@@ -2537,6 +2808,14 @@ export type PrepaidCardProvisionedEventFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   txnHash?: Maybe<Scalars['String']>;
   txnHash_not?: Maybe<Scalars['String']>;
   txnHash_gt?: Maybe<Scalars['String']>;
@@ -2620,6 +2899,7 @@ export type PrepaidCardProvisionedEventFilter = {
 export enum PrepaidCardProvisionedEventOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TXNHASH = 'txnHash',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
@@ -2633,6 +2913,7 @@ export type PrepaidCardSendAction = {
   id: Scalars['ID'];
   transaction: Transaction;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   prepaidCard: PrepaidCard;
   spendAmount: Scalars['BigInt'];
   rateLock: Scalars['BigInt'];
@@ -2675,6 +2956,14 @@ export type PrepaidCardSendActionFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   prepaidCard?: Maybe<Scalars['String']>;
   prepaidCard_not?: Maybe<Scalars['String']>;
   prepaidCard_gt?: Maybe<Scalars['String']>;
@@ -2761,6 +3050,7 @@ export enum PrepaidCardSendActionOrderBy {
   ID = 'id',
   TRANSACTION = 'transaction',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   PREPAIDCARD = 'prepaidCard',
   SPENDAMOUNT = 'spendAmount',
   RATELOCK = 'rateLock',
@@ -2776,6 +3066,7 @@ export type PrepaidCardSplit = {
   __typename?: 'PrepaidCardSplit';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
   issuer: Account;
@@ -2801,6 +3092,14 @@ export type PrepaidCardSplitFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -2870,6 +3169,7 @@ export type PrepaidCardSplitFilter = {
 export enum PrepaidCardSplitOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
   ISSUER = 'issuer',
@@ -2882,6 +3182,7 @@ export type PrepaidCardTransfer = {
   __typename?: 'PrepaidCardTransfer';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   prepaidCard: PrepaidCard;
   from: Account;
@@ -2905,6 +3206,14 @@ export type PrepaidCardTransferFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -2966,6 +3275,7 @@ export type PrepaidCardTransferFilter = {
 export enum PrepaidCardTransferOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   PREPAIDCARD = 'prepaidCard',
   FROM = 'from',
@@ -3140,6 +3450,8 @@ export type Query = {
   merchantWithdraws: Array<MerchantWithdraw>;
   merchantDeposit?: Maybe<MerchantDeposit>;
   merchantDeposits: Array<MerchantDeposit>;
+  merchantPrepaidCardIssuance?: Maybe<MerchantPrepaidCardIssuance>;
+  merchantPrepaidCardIssuances: Array<MerchantPrepaidCardIssuance>;
   merchantRevenueEvent?: Maybe<MerchantRevenueEvent>;
   merchantRevenueEvents: Array<MerchantRevenueEvent>;
   spendAccumulation?: Maybe<SpendAccumulation>;
@@ -3575,6 +3887,22 @@ export type QueryMerchantDepositsArgs = {
   orderBy?: Maybe<MerchantDepositOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<MerchantDepositFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryMerchantPrepaidCardIssuanceArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type QueryMerchantPrepaidCardIssuancesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerchantPrepaidCardIssuanceOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerchantPrepaidCardIssuanceFilter>;
   block?: Maybe<BlockHeight>;
 };
 
@@ -4098,6 +4426,7 @@ export type RewardProgramRegistrationPayment = {
   admin: Account;
   transaction: Transaction;
   createdAt: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   prepaidCardPayment: PrepaidCardPayment;
 };
 
@@ -4160,6 +4489,14 @@ export type RewardProgramRegistrationPaymentFilter = {
   createdAt_lte?: Maybe<Scalars['BigInt']>;
   createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   prepaidCardPayment?: Maybe<Scalars['String']>;
   prepaidCardPayment_not?: Maybe<Scalars['String']>;
   prepaidCardPayment_gt?: Maybe<Scalars['String']>;
@@ -4182,6 +4519,7 @@ export enum RewardProgramRegistrationPaymentOrderBy {
   ADMIN = 'admin',
   TRANSACTION = 'transaction',
   CREATEDAT = 'createdAt',
+  BLOCKNUMBER = 'blockNumber',
   PREPAIDCARDPAYMENT = 'prepaidCardPayment'
 }
 
@@ -4306,6 +4644,7 @@ export type RewardTokensAdd = {
   amount: Scalars['BigInt'];
   transaction: Transaction;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
 };
 
 export type RewardTokensAddFilter = {
@@ -4389,6 +4728,14 @@ export type RewardTokensAddFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum RewardTokensAddOrderBy {
@@ -4398,7 +4745,8 @@ export enum RewardTokensAddOrderBy {
   TOKEN = 'token',
   AMOUNT = 'amount',
   TRANSACTION = 'transaction',
-  TIMESTAMP = 'timestamp'
+  TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber'
 }
 
 export type RewardeeClaim = {
@@ -4411,6 +4759,7 @@ export type RewardeeClaim = {
   amount: Scalars['BigInt'];
   transaction: Transaction;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
 };
 
 export type RewardeeClaimFilter = {
@@ -4508,6 +4857,14 @@ export type RewardeeClaimFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
 };
 
 export enum RewardeeClaimOrderBy {
@@ -4518,7 +4875,8 @@ export enum RewardeeClaimOrderBy {
   TOKEN = 'token',
   AMOUNT = 'amount',
   TRANSACTION = 'transaction',
-  TIMESTAMP = 'timestamp'
+  TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber'
 }
 
 export type RewardeeRegistrationPayment = {
@@ -4528,6 +4886,7 @@ export type RewardeeRegistrationPayment = {
   rewardee: Account;
   transaction: Transaction;
   createdAt: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   prepaidCardPayment: PrepaidCardPayment;
 };
 
@@ -4590,6 +4949,14 @@ export type RewardeeRegistrationPaymentFilter = {
   createdAt_lte?: Maybe<Scalars['BigInt']>;
   createdAt_in?: Maybe<Array<Scalars['BigInt']>>;
   createdAt_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   prepaidCardPayment?: Maybe<Scalars['String']>;
   prepaidCardPayment_not?: Maybe<Scalars['String']>;
   prepaidCardPayment_gt?: Maybe<Scalars['String']>;
@@ -4612,6 +4979,7 @@ export enum RewardeeRegistrationPaymentOrderBy {
   REWARDEE = 'rewardee',
   TRANSACTION = 'transaction',
   CREATEDAT = 'createdAt',
+  BLOCKNUMBER = 'blockNumber',
   PREPAIDCARDPAYMENT = 'prepaidCardPayment'
 }
 
@@ -4853,6 +5221,7 @@ export type SafeOwnerChange = {
   __typename?: 'SafeOwnerChange';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   safe: Safe;
   ownerAdded?: Maybe<Scalars['String']>;
@@ -4876,6 +5245,14 @@ export type SafeOwnerChangeFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -4937,6 +5314,7 @@ export type SafeOwnerChangeFilter = {
 export enum SafeOwnerChangeOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   SAFE = 'safe',
   OWNERADDED = 'ownerAdded',
@@ -5026,6 +5404,7 @@ export type SafeTransaction = {
   id: Scalars['ID'];
   transaction: Transaction;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   safe: Safe;
   to: Scalars['String'];
   value: Scalars['BigInt'];
@@ -5071,6 +5450,14 @@ export type SafeTransactionFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   safe?: Maybe<Scalars['String']>;
   safe_not?: Maybe<Scalars['String']>;
   safe_gt?: Maybe<Scalars['String']>;
@@ -5193,6 +5580,7 @@ export enum SafeTransactionOrderBy {
   ID = 'id',
   TRANSACTION = 'transaction',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   SAFE = 'safe',
   TO = 'to',
   VALUE = 'value',
@@ -5244,6 +5632,7 @@ export type SpendAccumulation = {
   __typename?: 'SpendAccumulation';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   merchantSafe: MerchantSafe;
   amount: Scalars['BigInt'];
@@ -5267,6 +5656,14 @@ export type SpendAccumulationFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -5316,6 +5713,7 @@ export type SpendAccumulationFilter = {
 export enum SpendAccumulationOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   MERCHANTSAFE = 'merchantSafe',
   AMOUNT = 'amount',
@@ -5372,6 +5770,8 @@ export type Subscription = {
   merchantWithdraws: Array<MerchantWithdraw>;
   merchantDeposit?: Maybe<MerchantDeposit>;
   merchantDeposits: Array<MerchantDeposit>;
+  merchantPrepaidCardIssuance?: Maybe<MerchantPrepaidCardIssuance>;
+  merchantPrepaidCardIssuances: Array<MerchantPrepaidCardIssuance>;
   merchantRevenueEvent?: Maybe<MerchantRevenueEvent>;
   merchantRevenueEvents: Array<MerchantRevenueEvent>;
   spendAccumulation?: Maybe<SpendAccumulation>;
@@ -5811,6 +6211,22 @@ export type SubscriptionMerchantDepositsArgs = {
 };
 
 
+export type SubscriptionMerchantPrepaidCardIssuanceArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+};
+
+
+export type SubscriptionMerchantPrepaidCardIssuancesArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerchantPrepaidCardIssuanceOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerchantPrepaidCardIssuanceFilter>;
+  block?: Maybe<BlockHeight>;
+};
+
+
 export type SubscriptionMerchantRevenueEventArgs = {
   id: Scalars['ID'];
   block?: Maybe<BlockHeight>;
@@ -6221,6 +6637,7 @@ export type SupplierInfoDidUpdate = {
   transaction: Transaction;
   infoDID: Scalars['String'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   supplier: Account;
 };
 
@@ -6269,6 +6686,14 @@ export type SupplierInfoDidUpdateFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   supplier?: Maybe<Scalars['String']>;
   supplier_not?: Maybe<Scalars['String']>;
   supplier_gt?: Maybe<Scalars['String']>;
@@ -6290,6 +6715,7 @@ export enum SupplierInfoDidUpdateOrderBy {
   TRANSACTION = 'transaction',
   INFODID = 'infoDID',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   SUPPLIER = 'supplier'
 }
 
@@ -6318,6 +6744,7 @@ export type TokenHistory = {
   sent?: Maybe<TokenTransfer>;
   received?: Maybe<TokenTransfer>;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   tokenHolder: TokenHolder;
 };
 
@@ -6380,6 +6807,14 @@ export type TokenHistoryFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   tokenHolder?: Maybe<Scalars['String']>;
   tokenHolder_not?: Maybe<Scalars['String']>;
   tokenHolder_gt?: Maybe<Scalars['String']>;
@@ -6402,6 +6837,7 @@ export enum TokenHistoryOrderBy {
   SENT = 'sent',
   RECEIVED = 'received',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TOKENHOLDER = 'tokenHolder'
 }
 
@@ -6584,6 +7020,7 @@ export type TokenSwap = {
   id: Scalars['ID'];
   transaction: Transaction;
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   tokenPair: TokenPair;
   to: Account;
   token0AmountIn: Scalars['BigInt'];
@@ -6623,6 +7060,14 @@ export type TokenSwapFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   tokenPair?: Maybe<Scalars['String']>;
   tokenPair_not?: Maybe<Scalars['String']>;
   tokenPair_gt?: Maybe<Scalars['String']>;
@@ -6689,6 +7134,7 @@ export enum TokenSwapOrderBy {
   ID = 'id',
   TRANSACTION = 'transaction',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TOKENPAIR = 'tokenPair',
   TO = 'to',
   TOKEN0AMOUNTIN = 'token0AmountIn',
@@ -6701,6 +7147,7 @@ export type TokenTransfer = {
   __typename?: 'TokenTransfer';
   id: Scalars['ID'];
   timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
   transaction: Transaction;
   token: Token;
   amount: Scalars['BigInt'];
@@ -6728,6 +7175,14 @@ export type TokenTransferFilter = {
   timestamp_lte?: Maybe<Scalars['BigInt']>;
   timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
   timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
   transaction?: Maybe<Scalars['String']>;
   transaction_not?: Maybe<Scalars['String']>;
   transaction_gt?: Maybe<Scalars['String']>;
@@ -6829,6 +7284,7 @@ export type TokenTransferFilter = {
 export enum TokenTransferOrderBy {
   ID = 'id',
   TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber',
   TRANSACTION = 'transaction',
   TOKEN = 'token',
   AMOUNT = 'amount',
@@ -7380,6 +7836,21 @@ export type MerchantDepositFragment = (
   ) }
 );
 
+export type MerchantPrepaidCardIssuanceFragment = (
+  { __typename?: 'MerchantPrepaidCardIssuance' }
+  & Pick<MerchantPrepaidCardIssuance, 'id' | 'timestamp' | 'amount'>
+  & { token: (
+    { __typename?: 'Token' }
+    & Pick<Token, 'id' | 'symbol' | 'name' | 'decimals'>
+  ), merchantSafe: (
+    { __typename?: 'MerchantSafe' }
+    & Pick<MerchantSafe, 'id' | 'infoDid'>
+  ), prepaidCard: (
+    { __typename?: 'PrepaidCard' }
+    & Pick<PrepaidCard, 'id' | 'customizationDID'>
+  ) }
+);
+
 export type MerchantRevenueEventFragment = (
   { __typename?: 'MerchantRevenueEvent' }
   & Pick<MerchantRevenueEvent, 'id' | 'timestamp' | 'historicLifetimeAccumulation' | 'historicUnclaimedBalance'>
@@ -7395,6 +7866,9 @@ export type MerchantRevenueEventFragment = (
   )>, merchantDeposit?: Maybe<(
     { __typename?: 'MerchantDeposit' }
     & MerchantDepositFragment
+  )>, prepaidCardIssuance?: Maybe<(
+    { __typename?: 'MerchantPrepaidCardIssuance' }
+    & MerchantPrepaidCardIssuanceFragment
   )> }
 );
 
@@ -7684,6 +8158,27 @@ export const MerchantDepositFragmentDoc = gql`
   }
 }
     `;
+export const MerchantPrepaidCardIssuanceFragmentDoc = gql`
+    fragment MerchantPrepaidCardIssuance on MerchantPrepaidCardIssuance {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+  merchantSafe {
+    id
+    infoDid
+  }
+  prepaidCard {
+    id
+    customizationDID
+  }
+}
+    `;
 export const MerchantRevenueEventFragmentDoc = gql`
     fragment MerchantRevenueEvent on MerchantRevenueEvent {
   id
@@ -7702,11 +8197,15 @@ export const MerchantRevenueEventFragmentDoc = gql`
   merchantDeposit {
     ...MerchantDeposit
   }
+  prepaidCardIssuance {
+    ...MerchantPrepaidCardIssuance
+  }
 }
     ${PrepaidCardPaymentFragmentDoc}
 ${MerchantClaimFragmentDoc}
 ${MerchantWithdrawFragmentDoc}
-${MerchantDepositFragmentDoc}`;
+${MerchantDepositFragmentDoc}
+${MerchantPrepaidCardIssuanceFragmentDoc}`;
 export const BridgeToLayer1EventFragmentDoc = gql`
     fragment BridgeToLayer1Event on BridgeToLayer1Event {
   amount
