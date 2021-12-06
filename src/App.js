@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
 import compareVersions from 'compare-versions';
 import { get } from 'lodash';
-import numbro from 'numbro';
 import PropTypes from 'prop-types';
 import React, { Component, useEffect } from 'react';
 import {
@@ -16,11 +15,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { SENTRY_ENDPOINT } from 'react-native-dotenv';
-import {
-  addEventListener,
-  getLocales,
-  removeEventListener,
-} from 'react-native-localize';
+import { addEventListener, removeEventListener } from 'react-native-localize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
@@ -206,11 +201,6 @@ class App extends Component {
     this.setState({ appState: nextAppState });
 
     Logger.sentry(`App state change to ${nextAppState}`);
-  };
-
-  handleLocalizationChange = () => {
-    // set numbro language
-    numbro.setLanguage(getLocales()[0].languageTag);
   };
 
   handleNavigatorRef = navigatorRef =>

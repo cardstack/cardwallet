@@ -2,8 +2,8 @@ import 'react-native-gesture-handler';
 import './shim';
 
 import lang from 'i18n-js';
-import numbro from 'numbro';
-import numbroLangs from 'numbro/dist/languages.min';
+// import numbro from 'numbro';
+// import numbroLangs from 'numbro/dist/languages.min';
 import { getLocales } from 'react-native-localize';
 import { resources } from './src/languages';
 
@@ -21,6 +21,8 @@ lang.translations = Object.assign(
   }))
 );
 
+// TODO: uncomment this when implement regional support
+/*
 const configureNumbroUsingLanguageTag = tagOrCountryCode => {
   Object.values(numbroLangs).forEach(l => numbro.registerLanguage(l));
   const numbroLang = numbro.language();
@@ -49,10 +51,13 @@ const configureNumbroUsingLanguageTag = tagOrCountryCode => {
     }
   }
 };
+*/
 
 const initializeApp = () => {
   // set numbro config based on selected country code(default 'en' as same number format for english countries)
-  configureNumbroUsingLanguageTag(getLocales()?.[0]?.countryCode || 'en');
+  // TODO: uncomment this line when implement regional support
+  // configureNumbroUsingLanguageTag(getLocales()?.[0]?.countryCode || 'en');
+
   if (!USE_STORYBOOK) {
     require('./src/App');
   } else {
