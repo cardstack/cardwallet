@@ -1,5 +1,9 @@
 import 'react-native-get-random-values';
 import '@ethersproject/shims';
+<<<<<<< HEAD
+=======
+import AsyncStorage from '@react-native-async-storage/async-storage';
+>>>>>>> df41b9939 (Update @react-native-community/async-storage to @react-native-async-storage/async-storage)
 import { enableES5 } from 'immer';
 import { Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
