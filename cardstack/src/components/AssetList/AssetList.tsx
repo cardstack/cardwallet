@@ -6,18 +6,13 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import {
-  LayoutAnimation,
-  RefreshControl,
-  SectionList,
-  ActivityIndicator,
-} from 'react-native';
+import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/core';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
-import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { Theme } from '../../theme';
+import { PinnedHiddenSectionMenu } from '../PinnedHiddenSectionMenu';
 import { AssetFooter } from './AssetFooter';
 import { AssetListLoading } from './AssetListLoading';
 import {
@@ -28,21 +23,18 @@ import {
   Button,
   Container,
   ListEmptyComponent,
-  Icon,
   Text,
 } from '@cardstack/components';
-import { isLayer1, Device, dateFormatter } from '@cardstack/utils';
+import { isLayer1, dateFormatter } from '@cardstack/utils';
 import {
   PinnedHiddenSectionOption,
   useAccountProfile,
-  usePinnedAndHiddenItemOptions,
   useRefreshAccountData,
   useWallets,
 } from '@rainbow-me/hooks';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
@@ -136,16 +128,6 @@ export const AssetList = (props: AssetListProps) => {
 
   const networkName = getConstantByNetwork('name', network);
 
-  const { editing, toggle } = usePinnedAndHiddenItemOptions();
-
-  function toggleEditingPinnedHidden(type?: PinnedHiddenSectionOption) {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
-
-    type && toggle(type);
-  }
-
   const {
     showPromoBanner,
     onPress: onDiscordPromoPress,
@@ -204,21 +186,8 @@ export const AssetList = (props: AssetListProps) => {
       return;
     }
 
-    if (Device.isIOS) {
-      if (isLayer1(network)) {
-        navigate(Routes.ADD_CASH_FLOW);
-      } else {
-        navigate(Routes.BUY_PREPAID_CARD);
-      }
-    } else {
-      navigate(Routes.WYRE_WEBVIEW_NAVIGATOR, {
-        params: {
-          address: accountAddress,
-        },
-        screen: Routes.WYRE_WEBVIEW,
-      });
-    }
-  }, [isDamaged, network, navigate, accountAddress]);
+    navigate(Routes.BUY_PREPAID_CARD);
+  }, [isDamaged, navigate]);
 
   const prevAccount = useRef(null);
 
@@ -291,8 +260,6 @@ export const AssetList = (props: AssetListProps) => {
             data,
           } = section;
 
-          const isEditing = type === editing;
-
           const isEmptyPrepaidCard =
             type === PinnedHiddenSectionOption.PREPAID_CARDS &&
             data.length === 0;
@@ -333,34 +300,9 @@ export const AssetList = (props: AssetListProps) => {
                     <Button variant="tinyOpacity" onPress={goToBuyPrepaidCard}>
                       New Card
                     </Button>
-                  ) : showContextMenu ? (
-                    isEditing ? (
-                      <Button
-                        variant="tiny"
-                        onPress={() => toggleEditingPinnedHidden(type)}
-                      >
-                        DONE
-                      </Button>
-                    ) : (
-                      <ButtonPressAnimation
-                        onPress={() => {
-                          showActionSheetWithOptions(
-                            {
-                              options: ['Edit', 'Cancel'],
-                              cancelButtonIndex: 1,
-                            },
-                            (buttonIndex: number) => {
-                              if (buttonIndex === 0) {
-                                toggleEditingPinnedHidden(type);
-                              }
-                            }
-                          );
-                        }}
-                      >
-                        <Icon name="more-circle" />
-                      </ButtonPressAnimation>
-                    )
-                  ) : null}
+                  ) : (
+                    showContextMenu && <PinnedHiddenSectionMenu type={type} />
+                  )}
                 </Container>
               </Container>
               {isEmptyPrepaidCard && (
