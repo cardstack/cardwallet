@@ -4,11 +4,20 @@ import { FlexItem, Row } from '../../layout';
 import { Device } from '@cardstack/utils';
 import { padding } from '@rainbow-me/styles';
 
+interface ContainerProps {
+  ignorePaddingTop?: boolean;
+  ignorePaddingBottom?: boolean;
+}
+
 const Container = styled(Row).attrs({
   justify: 'space-around',
 })`
-  ${({ ignorePaddingBottom, ignorePaddingTop }) =>
-    padding(ignorePaddingTop ? 0 : 19, 11.5, ignorePaddingBottom ? 0 : 24)};
+  ${(props: ContainerProps) =>
+    padding(
+      props.ignorePaddingTop ? 0 : 19,
+      11.5,
+      props.ignorePaddingBottom ? 0 : 24
+    )};
   width: 100%;
   z-index: 2;
 `;
