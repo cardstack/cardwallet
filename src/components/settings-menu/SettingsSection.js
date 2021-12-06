@@ -1,5 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useMemo } from 'react';
 import { Linking, NativeModules, ScrollView, Share } from 'react-native';
 import styled from 'styled-components';

@@ -462,7 +462,7 @@ PODS:
   - reactnativeslackbottomsheet (0.5.0):
     - PanModal
     - React
-  - RNCAsyncStorage (1.12.1):
+  - RNCAsyncStorage (1.15.14):
     - React-Core
   - RNCClipboard (1.2.3):
     - React
@@ -654,7 +654,7 @@ DEPENDENCIES:
   - ReactNativeDarkMode (from `../node_modules/react-native-dark-mode`)
   - "ReactNativePayments (from `../node_modules/@rainbow-me/react-native-payments/lib/ios`)"
   - reactnativeslackbottomsheet (from `../node_modules/react-native-slack-bottom-sheet`)
-  - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -832,7 +832,7 @@ EXTERNAL SOURCES:
   reactnativeslackbottomsheet:
     :path: "../node_modules/react-native-slack-bottom-sheet"
   RNCAsyncStorage:
-    :path: "../node_modules/@react-native-community/async-storage"
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-community/clipboard"
   RNCMaskedView:
@@ -976,7 +976,7 @@ SPEC CHECKSUMS:
   ReactNativeDarkMode: 0178ffca3b10f6a7c9f49d6f9810232b328fa949
   ReactNativePayments: 40a266450628c05db440fe219b631210e4358a49
   reactnativeslackbottomsheet: d44b4c59c1e69c045983044d2f361d256d3ddb98
-  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
+  RNCAsyncStorage: ea6b5c280997b2b32a587793163b1f10e580c4f7
   RNCClipboard: 48eaf27bea3de7c9a265529725434268d47a2ee9
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDeviceInfo: 6f20764111df002b4484f90cbe0a861be29bcc6c

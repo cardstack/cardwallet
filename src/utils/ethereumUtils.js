@@ -6,7 +6,7 @@ import {
   subtract,
 } from '@cardstack/cardpay-sdk';
 import { Wallet } from '@ethersproject/wallet';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
 import { mnemonicToSeed } from 'bip39';
 import {

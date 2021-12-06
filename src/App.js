@@ -98,7 +98,7 @@ class App extends Component {
   async componentDidMount() {
     if (__DEV__) {
       const RNAsyncStorageFlipper = require('rn-async-storage-flipper').default;
-      const AsyncStorage = require('@react-native-community/async-storage')
+      const AsyncStorage = require('@react-native-async-storage/async-storage')
         .default;
       RNAsyncStorageFlipper(AsyncStorage);
     }

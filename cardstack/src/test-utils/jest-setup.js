@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 import '@testing-library/jest-native/extend-expect';
+import 'react-native-gesture-handler/jestSetup';
+import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
 // GLOBAL LIBS MOCKS
 
@@ -124,9 +126,7 @@ jest.mock('react-native-public-ip', () => ({
   publicIP: jest.fn(),
 }));
 
-jest.mock('@react-native-community/async-storage', () => ({
-  AsyncStorage: jest.fn(),
-}));
+jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
 
 jest.mock('@apollo/client', () => ({
   ApolloClient: jest.fn(),

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import downIcon from '../../assets/chevron-down.png';
 import { AnimatedContainer, AnimatedText } from '../Animated';
 import { Container, Icon, Text, IconName } from '@cardstack/components';
