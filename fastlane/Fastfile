@@ -137,6 +137,11 @@ lane :publish_google_service_info do
       key: 'google_service_info',
       in: './ios/Frameworks/GoogleService-Info.plist'
     )
+  cryptex(
+      type: "import",
+      key: 'google_service_info_android',
+      in: './android/app/google-services.json'
+  )
 end
 
 desc "Download encrypted google service info"
@@ -146,6 +151,11 @@ lane :sync_google_service_info do
       key: 'google_service_info',
       out: './ios/Frameworks/GoogleService-Info.plist'
     )
+  cryptex(
+      type: "export",
+      key: 'google_service_info_android',
+      out: './android/app/google-services.json'
+  )
 end
 
 

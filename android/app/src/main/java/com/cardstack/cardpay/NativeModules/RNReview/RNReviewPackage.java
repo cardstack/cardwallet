@@ -1,25 +1,22 @@
-package me.rainbow.NativeModules.RNZoomableButton;
+package com.cardstack.cardpay.NativeModules.RNReview;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.swmansion.gesturehandler.react.RNZoomableButtonManager;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class RNZoomableButtonPackage implements ReactPackage {
-
+public class RNReviewPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
+        return Arrays.asList(new RNReviewModule());
     }
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Arrays.<ViewManager>asList(
-                new RNZoomableButtonManager());
+        return Collections.emptyList();
     }
 }

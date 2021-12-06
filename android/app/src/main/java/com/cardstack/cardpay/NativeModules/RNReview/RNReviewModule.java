@@ -1,4 +1,4 @@
-package me.rainbow.NativeModules.RNReview;
+package com.cardstack.cardpay.NativeModules.RNReview;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
