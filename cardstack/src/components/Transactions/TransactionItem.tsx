@@ -8,6 +8,7 @@ import { MerchantWithdrawTransaction } from './Merchant/MerchantWithdrawTransact
 import { MerchantDepositTransaction } from './Merchant/MerchantDepositTransaction';
 import { MerchantCreationTransaction } from './Merchant/MerchantCreationTransaction';
 import { MerchantEarnedRevenueTransaction } from './Merchant/MerchantEarnedRevenueTransaction';
+import { MerchantPrepaidCardIssuanceTransaction } from './Merchant/MerchantPrepaidCardIssuanceTransaction';
 import { PrepaidCardCreatedTransaction } from './PrepaidCard/PrepaidCardCreatedTransaction';
 import { PrepaidCardPaymentTransaction } from './PrepaidCard/PrepaidCardPaymentTransaction';
 import { PrepaidCardSplitTransaction } from './PrepaidCard/PrepaidCardSplitTransaction';
@@ -44,6 +45,7 @@ const transactionItemMap: Record<
   [TransactionTypes.MERCHANT_EARNED_REVENUE]: MerchantEarnedRevenueTransaction,
   [TransactionTypes.MERCHANT_EARNED_SPEND]: MerchantEarnedSpendTransaction,
   [TransactionTypes.MERCHANT_EARNED_SPEND_AND_REVENUE]: MerchantEarnedSpendAndRevenueTransaction,
+  [TransactionTypes.MERCHANT_PREPAIDCARD_ISSUANCE]: MerchantPrepaidCardIssuanceTransaction,
   [TransactionTypes.ERC_20]: ERC20Transaction,
 };
 

@@ -6,6 +6,7 @@ import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
 import { MerchantWithdrawStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-withdraw-strategy';
 import { MerchantDepositStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-deposit-strategy';
+import { MerchantPrepaidCardIssuancetrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-prepaid-card-issuance-strategy';
 import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import logger from 'logger';
@@ -23,6 +24,7 @@ const typeToStrategies: {
   unclaimedRevenue: [MerchantClaimStrategy, MerchantEarnedRevenueStrategy],
   availableBalances: [
     MerchantClaimStrategy,
+    MerchantPrepaidCardIssuancetrategy,
     MerchantWithdrawStrategy,
     MerchantDepositStrategy,
   ],

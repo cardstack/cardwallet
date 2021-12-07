@@ -206,6 +206,26 @@ fragment MerchantDeposit on MerchantDeposit {
   }
 }
 
+fragment MerchantPrepaidCardIssuance on MerchantPrepaidCardIssuance {
+  id
+  timestamp
+  token {
+    id
+    symbol
+    name
+    decimals
+  }
+  amount
+  merchantSafe {
+    id
+    infoDid
+  }
+  prepaidCard {
+    id
+    customizationDID
+  }
+}
+
 fragment MerchantRevenueEvent on MerchantRevenueEvent {
   id
   timestamp
@@ -222,6 +242,9 @@ fragment MerchantRevenueEvent on MerchantRevenueEvent {
   }
   merchantDeposit {
     ...MerchantDeposit
+  }
+  prepaidCardIssuance {
+    ...MerchantPrepaidCardIssuance
   }
 }
 
