@@ -15,7 +15,6 @@ import {
   StatusBar,
 } from 'react-native';
 import { SENTRY_ENDPOINT } from 'react-native-dotenv';
-import { addEventListener, removeEventListener } from 'react-native-localize';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
@@ -109,7 +108,6 @@ class App extends Component {
       Logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
 
-    addEventListener('change', this.handleLocaleStateChange);
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
     saveFCMToken();
@@ -156,8 +154,6 @@ class App extends Component {
 
   componentWillUnmount() {
     Logger.sentry('Unmount');
-    removeEventListener('change', this.handleLocalizationChange);
-    AppState.removeEventListener('change', this.handleLocalizationChange);
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
