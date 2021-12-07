@@ -16,7 +16,7 @@ const actionSheetOptions = {
 const PinnedHiddenSectionMenu = ({
   type,
 }: {
-  type: PinnedHiddenSectionOption;
+  type?: PinnedHiddenSectionOption;
 }) => {
   const { editing: editingSection, toggle } = usePinnedAndHiddenItemOptions();
 

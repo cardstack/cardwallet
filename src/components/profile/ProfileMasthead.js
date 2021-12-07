@@ -7,7 +7,7 @@ import { walletsSetSelected, walletsUpdate } from '../../redux/wallets';
 import { ButtonPressAnimation } from '../animations';
 import AvatarCircle from './AvatarCircle';
 import { Button, Container, Icon, Text } from '@cardstack/components';
-import { isLayer1, screenWidth } from '@cardstack/utils';
+import { Device, isLayer1, screenWidth } from '@cardstack/utils';
 import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
@@ -194,7 +194,6 @@ export default function ProfileMasthead({
     <Container
       alignItems="center"
       backgroundColor="backgroundBlue"
-      height={270}
       paddingBottom={6}
     >
       {/* [AvatarCircle -> ImageAvatar -> ImgixImage], so no need to sign accountImage here. */}
@@ -229,7 +228,7 @@ export default function ProfileMasthead({
         {addCashAvailable && isLayer1(network) ? (
           <Button onPress={handlePress}>Add Funds</Button>
         ) : null}
-        {!isLayer1(network) ? (
+        {!isLayer1(network) && Device.isIOS ? (
           <Button onPress={handlePress}>Buy Prepaid Card</Button>
         ) : null}
       </Container>

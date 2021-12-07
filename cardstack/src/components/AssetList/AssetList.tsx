@@ -6,7 +6,12 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
+import {
+  RefreshControl,
+  SectionList,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/core';
@@ -25,7 +30,7 @@ import {
   ListEmptyComponent,
   Text,
 } from '@cardstack/components';
-import { isLayer1, dateFormatter } from '@cardstack/utils';
+import { isLayer1, dateFormatter, Device } from '@cardstack/utils';
 import {
   PinnedHiddenSectionOption,
   useAccountProfile,
@@ -37,6 +42,13 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import {
+  AssetWithNativeType,
+  CollectibleType,
+  DepotType,
+  MerchantSafeType,
+  PrepaidCardType,
+} from '@cardstack/types';
 
 interface HeaderItem {
   title: string;
@@ -61,6 +73,13 @@ export type AssetListSectionItem<ComponentProps> = {
   timestamp?: string;
 };
 
+type SectionType =
+  | PrepaidCardType
+  | DepotType
+  | MerchantSafeType
+  | AssetWithNativeType
+  | CollectibleType;
+
 interface AssetListProps
   extends BackgroundColorProps<Theme>,
     ColorProps<Theme> {
@@ -71,7 +90,7 @@ interface AssetListProps
   currencyConversionRates: {
     [key: string]: number;
   };
-  sections: AssetListSectionItem<any>[];
+  sections: AssetListSectionItem<SectionType>[];
   headerPaddingVertical?: number;
   headerPaddingHorizontal?: number;
   refetchSafes: () => void;
@@ -92,6 +111,12 @@ const onScrollToIndexFailed = () => {
   logger.log('onScrollToIndexFailed');
 };
 
+const styles = StyleSheet.create({
+  contentContainer: {
+    paddingBottom: 180,
+  },
+});
+
 const strings = {
   lastUpdatedAt: (timestamp: string) =>
     `Last updated at: ${dateFormatter(
@@ -100,6 +125,9 @@ const strings = {
       'h:mm a',
       ', '
     )}`,
+  newCardLabel: 'New Card',
+  buyCardLabel: 'Buy Prepaid Card',
+  emptyCardMessage: `You don't own any\nPrepaid Cards yet`,
 };
 
 export const AssetList = (props: AssetListProps) => {
@@ -119,10 +147,6 @@ export const AssetList = (props: AssetListProps) => {
     network,
     nativeCurrency,
     currencyConversionRates,
-    backgroundColor,
-    color,
-    headerPaddingVertical,
-    headerPaddingHorizontal,
     isFetchingSafes,
   } = props;
 
@@ -197,6 +221,16 @@ export const AssetList = (props: AssetListProps) => {
     }
   }, [accountAddress]);
 
+  const renderSectionHeader = useCallback(
+    ({ section }) => (
+      <AssetSectionHeader
+        section={section}
+        onBuyCardPress={goToBuyPrepaidCard}
+      />
+    ),
+    [goToBuyPrepaidCard]
+  );
+
   const renderSectionFooter = useCallback(
     ({ section: { timestamp, data } }) =>
       timestamp && !!data.length ? (
@@ -254,76 +288,88 @@ export const AssetList = (props: AssetListProps) => {
           />
         )}
         renderSectionFooter={renderSectionFooter}
-        renderSectionHeader={({ section }) => {
-          const {
-            header: { type, title, count, showContextMenu, total },
-            data,
-          } = section;
-
-          const isEmptyPrepaidCard =
-            type === PinnedHiddenSectionOption.PREPAID_CARDS &&
-            data.length === 0;
-
-          return (
-            <>
-              <Container
-                alignItems="center"
-                flexDirection="row"
-                justifyContent="space-between"
-                padding={4}
-                paddingHorizontal={headerPaddingHorizontal}
-                paddingVertical={headerPaddingVertical}
-                backgroundColor={backgroundColor || 'backgroundBlue'}
-              >
-                <Container flexDirection="row">
-                  <Text color={color || 'white'} size="medium">
-                    {title}
-                  </Text>
-                  {count ? (
-                    <Text color="tealDark" size="medium" marginLeft={2}>
-                      {count}
-                    </Text>
-                  ) : null}
-                </Container>
-                <Container alignItems="center" flexDirection="row">
-                  {total ? (
-                    <Text
-                      color="tealDark"
-                      size="body"
-                      weight="extraBold"
-                      marginRight={showContextMenu ? 3 : 0}
-                    >
-                      {total}
-                    </Text>
-                  ) : null}
-                  {isEmptyPrepaidCard ? (
-                    <Button variant="tinyOpacity" onPress={goToBuyPrepaidCard}>
-                      New Card
-                    </Button>
-                  ) : (
-                    showContextMenu && <PinnedHiddenSectionMenu type={type} />
-                  )}
-                </Container>
-              </Container>
-              {isEmptyPrepaidCard && (
-                <Container marginHorizontal={4} alignItems="center">
-                  <ListEmptyComponent
-                    text={`You don't own any\nPrepaid Cards yet`}
-                    width="100%"
-                    hasRoundBox
-                    textColor="blueText"
-                  />
-                  <Button onPress={goToBuyPrepaidCard} marginTop={4}>
-                    Buy Prepaid Card
-                  </Button>
-                </Container>
-              )}
-            </>
-          );
-        }}
-        contentContainerStyle={{ paddingBottom: 180 }}
+        renderSectionHeader={renderSectionHeader}
+        contentContainerStyle={styles.contentContainer}
       />
       <AssetFooter />
+    </>
+  );
+};
+
+interface AssetSectionProps {
+  section: AssetListSectionItem<SectionType>;
+  onBuyCardPress: () => void;
+}
+
+const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
+  const {
+    header: { type, title, count, showContextMenu, total },
+    data,
+  } = section;
+
+  const isEmptyPrepaidCard =
+    type === PinnedHiddenSectionOption.PREPAID_CARDS && data.length === 0;
+
+  const renderNewCardButton = useMemo(
+    () =>
+      Device.isIOS && (
+        <Button variant="tinyOpacity" onPress={onBuyCardPress}>
+          {strings.newCardLabel}
+        </Button>
+      ),
+    [onBuyCardPress]
+  );
+
+  return (
+    <>
+      <Container
+        alignItems="center"
+        flexDirection="row"
+        justifyContent="space-between"
+        padding={4}
+        backgroundColor="backgroundBlue"
+      >
+        <Container flexDirection="row">
+          <Text color="white" size="medium">
+            {title}
+          </Text>
+          {count ? (
+            <Text color="tealDark" size="medium" marginLeft={2}>
+              {count}
+            </Text>
+          ) : null}
+        </Container>
+        <Container alignItems="center" flexDirection="row">
+          {total ? (
+            <Text
+              color="tealDark"
+              size="body"
+              weight="extraBold"
+              marginRight={showContextMenu ? 3 : 0}
+            >
+              {total}
+            </Text>
+          ) : null}
+          {isEmptyPrepaidCard
+            ? renderNewCardButton
+            : showContextMenu && <PinnedHiddenSectionMenu type={type} />}
+        </Container>
+      </Container>
+      {isEmptyPrepaidCard && (
+        <Container marginHorizontal={4} alignItems="center">
+          <ListEmptyComponent
+            text={strings.emptyCardMessage}
+            width="100%"
+            hasRoundBox
+            textColor="blueText"
+          />
+          {Device.isIOS && (
+            <Button onPress={onBuyCardPress} marginTop={4}>
+              {strings.buyCardLabel}
+            </Button>
+          )}
+        </Container>
+      )}
     </>
   );
 };
