@@ -1,8 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
-import styled from 'styled-components';
-import RainbowLogo from '../assets/rainbows/light.png';
 import { Centered, Column, ColumnWithMargins } from '../components/layout';
 import { Numpad, PinValue } from '../components/numpad';
 import { SheetTitle } from '../components/sheet';
@@ -15,15 +13,13 @@ import {
 import { useDimensions, useShakeAnimation } from '../hooks';
 import { useBlockBackButton } from '../hooks/useBlockBackButton';
 import { useNavigation } from '../navigation/Navigation';
-import { ImgixImage } from '@rainbow-me/images';
+import { CenteredContainer, Icon, Text } from '@cardstack/components';
+import { colors } from '@cardstack/theme';
 import { padding } from '@rainbow-me/styles';
 
-const Logo = styled(ImgixImage).attrs({
-  source: RainbowLogo,
-})`
-  width: 80;
-  height: 80;
-`;
+const layouts = {
+  iconSize: 80,
+};
 
 const MAX_ATTEMPTS = 10;
 const TIMELOCK_INTERVAL_MINUTES = 5;
@@ -184,11 +180,9 @@ const PinAuthenticationScreen = () => {
     [actionType, attemptsLeft, goBack, initialPin, onShake, params]
   );
 
-  const { colors } = useTheme();
-
   return (
     <Column
-      backgroundColor={colors.white}
+      backgroundColor={colors.backgroundBlue}
       flex={1}
       testID="pin-authentication-screen"
     >
@@ -200,8 +194,13 @@ const PinAuthenticationScreen = () => {
           justify="center"
           margin={isSmallPhone ? 0 : 28}
         >
-          <Logo />
-          <SheetTitle>
+          <CenteredContainer>
+            <Icon name="cardstack" size={layouts.iconSize} />
+            <Text fontSize={18} marginTop={6} variant="welcomeScreen">
+              CARD WALLET
+            </Text>
+          </CenteredContainer>
+          <SheetTitle color="white">
             {actionType === 'authentication'
               ? 'Type your PIN'
               : actionType === 'creation'
@@ -215,6 +214,7 @@ const PinAuthenticationScreen = () => {
         <Centered maxWidth={313}>
           <Numpad
             decimal={false}
+            light
             onPress={handleNumpadPress}
             width={isNarrowPhone ? 275 : '100%'}
           />
