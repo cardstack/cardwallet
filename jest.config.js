@@ -22,16 +22,8 @@ module.exports = {
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
-    '<rootDir>/cardstack/src/components/__tests__/BalanceCoinRow.test.tsx',
-    '<rootDir>/cardstack/src/components/__tests__/Button.test.tsx',
-    '<rootDir>/cardstack/src/components/__tests__/Container.test.tsx',
-    '<rootDir>/cardstack/src/components/__tests__/OptionItem.test.tsx',
-    '<rootDir>/cardstack/src/components/__tests__/SystemNotification.test.tsx',
-    '<rootDir>/cardstack/src/components/Input/__tests__/InputAmount.test.tsx',
-    '<rootDir>/cardstack/src/components/Transactions/__tests__/ERC20Transaction.test.tsx',
-    // Avoid testing other components for now
-    '!<rootDir>/cardstack/**/*.test.jsx',
-    '!<rootDir>/cardstack/**/*.test.tsx',
+    '<rootDir>/cardstack/**/*.test.jsx',
+    '<rootDir>/cardstack/**/*.test.tsx',
   ],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*)',
