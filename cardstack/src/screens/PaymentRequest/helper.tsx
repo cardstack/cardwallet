@@ -3,6 +3,8 @@ import {
   convertAmountToNativeDisplay,
   convertAmountAndPriceToNativeDisplay,
   spendToUsd,
+  convertToSpend,
+  convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
 import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
 import { Container, Text, TextProps } from '@cardstack/components';
@@ -10,7 +12,6 @@ import {
   getAddressPreview,
   formattedCurrencyToAbsNum,
   formatNative,
-  nativeCurrencyToSpend,
 } from '@cardstack/utils';
 
 export const MIN_SPEND_AMOUNT = 50;
@@ -106,17 +107,19 @@ export const useAmountConvertHelper = (
     ? `§${formatNative(`${amountInNum}`, inputNativeCurrency)} SPD`
     : convertAmountToNativeDisplay(amountInNum, inputNativeCurrency);
 
+  const spendAmount = convertToSpend(
+    convertStringToNumber(inputValue || '0'),
+    inputNativeCurrency,
+    currencyConversionRates[inputNativeCurrency]
+  );
+
   const amountInAnotherCurrency = isSPDCurrency
     ? convertAmountAndPriceToNativeDisplay(
         spendToUsd(amountInNum) || 0,
         currencyConversionRates[accountNativeCurrency],
         accountNativeCurrency
       )
-    : nativeCurrencyToSpend(
-        inputValue,
-        currencyConversionRates[inputNativeCurrency],
-        true
-      );
+    : { amount: spendAmount, display: `${spendAmount} SPEND` };
 
   // input amount should be more than MIN_SPEND_AMOUNT (50)
   const isInvalid =
