@@ -4,5 +4,4 @@ export {
   AssetListHeaderHeight,
 } from './AssetListHeader';
 export { default as AssetListItemSkeleton } from './AssetListItemSkeleton';
-export { default as AssetFooter } from './AssetFooter';
 export { default as EmptyAssetList } from './EmptyAssetList';
