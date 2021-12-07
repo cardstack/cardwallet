@@ -73,7 +73,7 @@ export const InputAmount = memo(
 
         const formattedValue = removeLeadingZeros(formatted);
 
-        if (formatted !== formattedValue) {
+        if (inputValue !== formattedValue) {
           setInputValue(formattedValue);
         }
       },
@@ -104,10 +104,7 @@ export const InputAmount = memo(
     useEffect(() => {
       if (nativeCurrency === NativeCurrency.SPD) {
         const formattedValue = removeLeadingZeros(inputValue);
-
-        if (inputValue !== formattedValue) {
-          setInputValue(formattedValue);
-        }
+        setInputValue(formattedValue);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nativeCurrency, setInputValue]);

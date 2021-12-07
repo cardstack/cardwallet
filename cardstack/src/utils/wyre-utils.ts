@@ -1,4 +1,4 @@
-import { subtract } from '@cardstack/cardpay-sdk';
+import { subtract, formatCurrencyAmount } from '@cardstack/cardpay-sdk';
 import { PaymentRequest } from '@rainbow-me/react-native-payments';
 import { captureException } from '@sentry/react-native';
 import axios from 'axios';
@@ -21,7 +21,6 @@ import logger from 'logger';
 import { isMainnet } from '@cardstack/utils/cardpay-utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
-import { decimalFixingConverter } from '@cardstack/utils/currency-utils';
 
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
 
@@ -98,12 +97,10 @@ export const showApplePayRequest = async (
   network: Network,
   sourceCurrency: string
 ) => {
-  const feeAmount = decimalFixingConverter(
-    subtract(sourceAmountWithFees, sourceAmount)
-  );
+  const feeAmount = subtract(sourceAmountWithFees, sourceAmount);
 
-  const networkFee = decimalFixingConverter(subtract(feeAmount, purchaseFee));
-  const fixedSourceAmount = decimalFixingConverter(sourceAmount);
+  const networkFee = formatCurrencyAmount(subtract(feeAmount, purchaseFee));
+  const fixedSourceAmount = formatCurrencyAmount(sourceAmount);
 
   const merchantIdentifier = isMainnet(network)
     ? MERCHANT_ID
