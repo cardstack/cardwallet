@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { LayoutAnimation, StyleSheet } from 'react-native';
 
 export const sectionStyle = StyleSheet.create({
   contentContainerStyle: { paddingBottom: 400 },
@@ -12,4 +12,10 @@ export const hitSlop = {
     left: 5,
     right: 5,
   },
+};
+
+export const layoutOpacityAnimation = () => {
+  LayoutAnimation.configureNext(
+    LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+  );
 };

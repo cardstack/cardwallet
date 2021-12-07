@@ -1,5 +1,4 @@
 import React, { createElement, Fragment, useCallback } from 'react';
-import { LayoutAnimation } from 'react-native';
 import styled from 'styled-components';
 
 import { useCoinListEditOptions, useDimensions } from '../../hooks';
@@ -7,6 +6,7 @@ import { ContextMenu } from '../context-menu';
 import { Row } from '../layout';
 import { Button, Container, Text } from '@cardstack/components';
 import { colors as cardstackColors } from '@cardstack/theme';
+import { layoutOpacityAnimation } from '@cardstack/utils';
 import { padding } from '@rainbow-me/styles';
 
 export const ListHeaderHeight = 44;
@@ -39,10 +39,10 @@ export default function ListHeader({
 }) {
   const deviceDimensions = useDimensions();
   const { setIsCoinListEdited } = useCoinListEditOptions();
+
   const handlePress = useCallback(() => {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
+    layoutOpacityAnimation();
+
     setIsCoinListEdited(false);
   }, [setIsCoinListEdited]);
 

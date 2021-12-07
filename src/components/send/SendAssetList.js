@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import { LayoutAnimation } from 'react-native';
 import { View } from 'react-primitives';
 import {
   DataProvider,
@@ -22,6 +21,7 @@ import {
 import { Centered } from '../layout';
 import SavingsListHeader from '../savings/SavingsListHeader';
 import TokenFamilyHeader from '../token-family/TokenFamilyHeader';
+import { layoutOpacityAnimation } from '@cardstack/utils';
 import { ImgixImage } from '@rainbow-me/images';
 
 const dividerMargin = 10;
@@ -225,9 +225,8 @@ export default class SendAssetList extends React.Component {
       visibleAssetsLength,
     } = this.state;
 
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
+    layoutOpacityAnimation();
+
     openCards[index] = !openCards[index];
     this.setState({ openCards });
     let familiesHeight = 0;
@@ -284,16 +283,14 @@ export default class SendAssetList extends React.Component {
   };
 
   changeOpenSavings = () => {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
+    layoutOpacityAnimation();
+
     this.setState(prevState => ({ openSavings: !prevState.openSavings }));
   };
 
   changeOpenShitcoins = () => {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
+    layoutOpacityAnimation();
+
     this.setState(prevState => ({ openShitcoins: !prevState.openShitcoins }));
   };
 

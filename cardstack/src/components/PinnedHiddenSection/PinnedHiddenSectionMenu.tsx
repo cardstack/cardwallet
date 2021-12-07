@@ -1,5 +1,4 @@
 import React, { memo, useCallback } from 'react';
-import { LayoutAnimation } from 'react-native';
 import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
 import { Button, Icon } from '@cardstack/components';
 import {
@@ -7,6 +6,7 @@ import {
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { layoutOpacityAnimation } from '@cardstack/utils';
 
 const actionSheetOptions = {
   Edit: { idx: 0 },
@@ -21,9 +21,7 @@ const PinnedHiddenSectionMenu = ({
   const { editing: editingSection, toggle } = usePinnedAndHiddenItemOptions();
 
   const toggleEditingPinnedHidden = useCallback(() => {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
+    layoutOpacityAnimation();
 
     type && toggle(type);
   }, [toggle, type]);
