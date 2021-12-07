@@ -1,5 +1,15 @@
 import axios from 'axios';
-import { fromWei } from '@cardstack/cardpay-sdk';
+import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
+import Web3Instance from '@cardstack/models/web3-instance';
+import { getSelectedWallet, loadAddress } from '@rainbow-me/model/wallet';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import {
+  CustodialWallet,
+  Inventory,
+  ReservationData,
+  OrderData,
+  WyrePriceData,
+} from '@cardstack/types';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
@@ -20,78 +30,54 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
-export interface CustodialWalletAttrs {
-  'wyre-wallet-id': string;
-  'user-address': string;
-  'deposit-address': string;
-}
+export const getHubAuthToken = async (): Promise<string | null> => {
+  const network: Network = await getNetwork();
+  const hubURL = getHubUrl(network);
+  const selectedWallet = await getSelectedWallet();
 
-export interface CustodialWallet {
-  id: string;
-  type: string;
-  attributes: CustodialWalletAttrs;
-}
+  if (selectedWallet) {
+    const address = await loadAddress();
 
-export interface Inventory {
-  id: string;
-  type: string;
-  isSelected: boolean;
-  amount: number;
-  attributes: InventoryAttrs;
-}
+    if (address) {
+      const web3 = await Web3Instance.get({
+        selectedWallet: selectedWallet.wallet,
+        network,
+      });
 
-export interface InventoryAttrs {
-  issuer: string;
-  sku: string;
-  'issuing-token-symbol': string;
-  'issuing-token-address': string;
-  'face-value': number;
-  'ask-price': string;
-  'customization-DID'?: string;
-  quantity: number;
-  reloadable: boolean;
-  transferrable: boolean;
-}
+      const authAPI = await getSDK('HubAuth', web3, hubURL);
+      return await authAPI.authenticate({ from: address });
+    }
+  }
 
-export interface ReservationData {
-  id: string;
-  type: string;
-  attributes: ReservationAttrs;
-}
+  return null;
+};
 
-export interface ReservationAttrs {
-  'user-address': string;
-  sku: string;
-  'transaction-hash': null;
-  'prepaid-card-address': null;
-}
+export const registerPushNotification = async (
+  hubURL: string,
+  authToken: string,
+  fcmToken: string
+): Promise<ReservationData | undefined> => {
+  try {
+    const results = await axios.post(
+      `${hubURL}/api/push-notification-registrations`,
+      JSON.stringify({
+        data: {
+          type: 'push-notification-registration',
+          attributes: {
+            'push-client-id': fcmToken,
+          },
+        },
+      }),
+      axiosConfig(authToken)
+    );
 
-export interface OrderAttrs {
-  'order-id': string;
-  'user-address': string;
-  'wallet-id': string;
-  status: string;
-}
-
-export interface OrderData {
-  id: string;
-  type: string;
-  attributes: OrderAttrs;
-  prepaidCardAddress?: string;
-}
-
-export interface WyrePriceData {
-  id: string;
-  type: string;
-  attributes: WyrePriceAttrs;
-}
-
-export interface WyrePriceAttrs {
-  'source-currency': string;
-  'dest-currency': string;
-  'source-currency-price': number;
-  'includes-fee': boolean;
-}
+    if (results.data?.data) {
+      return results.data?.data;
+    }
+  } catch (e: any) {
+    logger.sentry('Error while registering fcmToken to hub', e?.response || e);
+  }
+};
 
 export const getCustodialWallet = async (
   hubURL: string,
@@ -165,8 +151,8 @@ export const makeReservation = async (
     if (results.data?.data) {
       return results.data?.data;
     }
-  } catch (e) {
-    logger.sentry('Error while making reservation', e.response.error);
+  } catch (e: any) {
+    logger.sentry('Error while making reservation', e?.response?.error || e);
   }
 };
 
@@ -200,8 +186,8 @@ export const updateOrder = async (
     if (results.data?.data) {
       return results.data?.data;
     }
-  } catch (e) {
-    logger.sentry('Error updating order', e.response);
+  } catch (e: any) {
+    logger.sentry('Error updating order', e?.response || e);
   }
 };
 
@@ -220,7 +206,7 @@ export const getOrder = async (
       results?.data?.included?.[0].attributes?.['prepaid-card-address'] || null;
 
     return { ...results?.data?.data, prepaidCardAddress };
-  } catch (e) {
+  } catch (e: any) {
     logger.sentry('Error getting order details', e);
   }
 };
