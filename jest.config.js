@@ -28,6 +28,7 @@ module.exports = {
     '<rootDir>/cardstack/src/components/__tests__/OptionItem.test.tsx',
     '<rootDir>/cardstack/src/components/__tests__/SystemNotification.test.tsx',
     '<rootDir>/cardstack/src/components/Input/__tests__/InputAmount.test.tsx',
+    '<rootDir>/cardstack/src/components/Transactions/__tests__/ERC20Transaction.test.tsx',
     // Avoid testing other components for now
     '!<rootDir>/cardstack/**/*.test.jsx',
     '!<rootDir>/cardstack/**/*.test.tsx',
