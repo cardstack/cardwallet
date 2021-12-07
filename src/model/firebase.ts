@@ -4,12 +4,13 @@ import { get } from 'lodash';
 import { requestNotifications } from 'react-native-permissions';
 import { Alert } from '../components/alerts';
 import { getLocal, saveLocal } from '../handlers/localstorage/common';
+import { getHubAuthToken } from '@cardstack/services/hub-service';
 import logger from 'logger';
 
-export const getFCMToken = async () => {
+export const getFCMToken = async (): Promise<string> => {
   const fcmTokenLocal = await getLocal('rainbowFcmToken');
 
-  const fcmToken = get(fcmTokenLocal, 'data', null);
+  const fcmToken: string = get(fcmTokenLocal, 'data', null);
 
   if (!fcmToken) {
     throw new Error('Push notification token unavailable.');
@@ -27,7 +28,12 @@ export const saveFCMToken = async () => {
       permissionStatus === messaging.AuthorizationStatus.PROVISIONAL
     ) {
       const fcmToken = await messaging().getToken();
-      if (fcmToken) {
+      const oldFcmToken = await getFCMToken();
+
+      // TODO: TESTING
+      const token = await getHubAuthToken();
+      console.log('token', token, fcmToken);
+      if (oldFcmToken !== fcmToken) {
         saveLocal('rainbowFcmToken', { data: fcmToken });
       }
     }
