@@ -23,18 +23,15 @@ export const claimMerchantRevenue = async ({
   const revenuePool = await getSDK('RevenuePool', web3);
 
   const promises = revenueBalances.map(async (token: TokenType) => {
+    // divide amount by 2 for estimate since we can't estimate the full amount
+    // and the amount doesn't affect the gas price
     const claimEstimateAmount = Web3.utils.toWei(
-      new BigNumber(token.balance.amount)
-        .div(new BigNumber('2'))
-        .toPrecision(8)
-        .toString()
+      new BigNumber(token.balance.amount).div(new BigNumber('2')).toString()
     );
 
     const gasEstimate = await revenuePool.claimGasEstimate(
       merchantSafeAddress,
       token.tokenAddress,
-      // divide amount by 2 for estimate since we can't estimate the full amount
-      // and the amount doesn't affect the gas price
       claimEstimateAmount
     );
 
