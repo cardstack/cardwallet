@@ -7,12 +7,12 @@ import {
   usePinnedAndHiddenItemOptions,
 } from './usePinnedAndHiddenItemOptions';
 import {
-  AssetListSectionItem,
   CollectibleRow,
   Depot,
   MerchantSafe,
   PrepaidCard,
 } from '@cardstack/components';
+import { AssetListSectionItem } from '@cardstack/components/AssetList/types';
 import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import {

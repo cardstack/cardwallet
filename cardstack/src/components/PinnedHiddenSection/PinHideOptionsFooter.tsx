@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { LayoutAnimation } from 'react-native';
+import { IconProps } from '../Icon';
 import { Button, Container } from '@cardstack/components';
 import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
 
-export const AssetFooter = () => {
+const layoutAnimation = () => {
+  LayoutAnimation.configureNext(
+    LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+  );
+};
+
+const PinHideOptionsFooter = () => {
   const {
     editing,
     selected,
@@ -20,29 +27,44 @@ export const AssetFooter = () => {
 
   const buttonsDisabled = selected?.length === 0; //selected length is zero
 
-  const handleHiddenPress = () => {
+  const handleHiddenPress = useCallback(() => {
     if (isInitialSelectionHidden) {
       show();
     } else {
       hide();
     }
 
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
-  };
+    layoutAnimation();
+  }, [hide, isInitialSelectionHidden, show]);
 
-  const handlePinnedPress = () => {
+  const handlePinnedPress = useCallback(() => {
     if (isInitialSelectionPinned) {
       unpin();
     } else {
       pin();
     }
 
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
-  };
+    layoutAnimation();
+  }, [isInitialSelectionPinned, pin, unpin]);
+
+  const pinIconProps: IconProps = useMemo(
+    () => ({
+      iconFamily: 'MaterialCommunity',
+      iconSize: 'medium',
+      marginRight: 2,
+      name: isInitialSelectionPinned ? 'pin-off' : 'pin',
+    }),
+    [isInitialSelectionPinned]
+  );
+
+  const hideIconProps: IconProps = useMemo(
+    () => ({
+      iconSize: 'medium',
+      marginRight: 2,
+      name: isInitialSelectionHidden ? 'eye' : 'eye-off',
+    }),
+    [isInitialSelectionHidden]
+  );
 
   if (!editing) {
     return null;
@@ -59,21 +81,7 @@ export const AssetFooter = () => {
     >
       <Button
         disabled={buttonsDisabled}
-        iconProps={
-          !isInitialSelectionPinned
-            ? {
-                iconFamily: 'MaterialCommunity',
-                iconSize: 'medium',
-                marginRight: 2,
-                name: 'pin',
-              }
-            : {
-                iconFamily: 'MaterialCommunity',
-                iconSize: 'medium',
-                marginRight: 2,
-                name: 'pin-off',
-              }
-        }
+        iconProps={pinIconProps}
         onPress={handlePinnedPress}
         variant="small"
       >
@@ -81,19 +89,7 @@ export const AssetFooter = () => {
       </Button>
       <Button
         disabled={buttonsDisabled}
-        iconProps={
-          !isInitialSelectionHidden
-            ? {
-                iconSize: 'medium',
-                marginRight: 2,
-                name: 'eye-off',
-              }
-            : {
-                iconSize: 'medium',
-                marginRight: 2,
-                name: 'eye',
-              }
-        }
+        iconProps={hideIconProps}
         onPress={handleHiddenPress}
         variant="small"
       >
@@ -102,3 +98,5 @@ export const AssetFooter = () => {
     </Container>
   );
 };
+
+export default memo(PinHideOptionsFooter);

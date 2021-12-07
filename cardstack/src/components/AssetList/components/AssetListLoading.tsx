@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContainerProps } from '../Container';
+import { ContainerProps } from '../../Container';
 import { Container, Skeleton, ScrollView } from '@cardstack/components';
 
 const PrepaidCardSection = (props: ContainerProps) => (
