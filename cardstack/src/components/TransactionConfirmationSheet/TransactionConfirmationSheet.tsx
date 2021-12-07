@@ -1,9 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import {
-  LayoutAnimation,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-} from 'react-native';
+import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import URL from 'url-parse';
 
 import {
@@ -21,6 +17,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
+import { layoutOpacityAnimation } from '@cardstack/utils';
 
 export interface TransactionConfirmationDisplayProps {
   dappUrl?: string;
@@ -49,6 +46,12 @@ export const TransactionConfirmationSheet = (
     []
   );
 
+  const onInfoPress = useCallback(() => {
+    layoutOpacityAnimation();
+
+    setShowFullMessage(!showFullMessage);
+  }, [showFullMessage]);
+
   return (
     <Container
       flex={1}
@@ -58,16 +61,7 @@ export const TransactionConfirmationSheet = (
       borderRadius={20}
     >
       {!!props?.messageRequest && (
-        <InformationIcon
-          isOpen={showFullMessage}
-          onPress={() => {
-            LayoutAnimation.configureNext(
-              LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-            );
-
-            setShowFullMessage(!showFullMessage);
-          }}
-        />
+        <InformationIcon isOpen={showFullMessage} onPress={onInfoPress} />
       )}
       <Header {...props} showDivider={showHeaderDivider} />
       <ScrollView

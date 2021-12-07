@@ -13,6 +13,7 @@ import {
   LogBox,
   NativeModules,
   StatusBar,
+  UIManager,
 } from 'react-native';
 import { SENTRY_ENDPOINT } from 'react-native-dotenv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -52,6 +53,7 @@ import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
 import PortalConsumer from '@rainbow-me/components/PortalConsumer';
 import Routes from '@rainbow-me/routes';
 import Logger from 'logger';
@@ -87,6 +89,12 @@ if (__DEV__) {
 }
 
 enableScreens();
+
+if (Device.isAndroid) {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 class App extends Component {
   static propTypes = {
