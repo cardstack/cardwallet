@@ -1,8 +1,12 @@
 import { Platform } from 'react-native';
 
+const isIOS = Platform.OS === 'ios';
+const isAndroid = Platform.OS === 'android';
+
 const Device = {
-  isIOS: Platform.OS === 'ios',
-  isAndroid: Platform.OS === 'android',
+  isIOS,
+  isAndroid,
+  supportsFiatOnRamp: isIOS,
 };
 
 export { Device };

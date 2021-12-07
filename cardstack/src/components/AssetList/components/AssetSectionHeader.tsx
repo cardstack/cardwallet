@@ -27,7 +27,7 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
 
   const renderNewCardButton = useMemo(
     () =>
-      Device.isIOS && (
+      Device.supportsFiatOnRamp && (
         <Button variant="tinyOpacity" onPress={onBuyCardPress}>
           {strings.newCardLabel}
         </Button>
@@ -78,7 +78,7 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
             hasRoundBox
             textColor="blueText"
           />
-          {Device.isIOS && (
+          {Device.supportsFiatOnRamp && (
             <Button onPress={onBuyCardPress} marginTop={4}>
               {strings.buyCardLabel}
             </Button>

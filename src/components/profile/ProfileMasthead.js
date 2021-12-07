@@ -228,7 +228,7 @@ export default function ProfileMasthead({
         {addCashAvailable && isLayer1(network) ? (
           <Button onPress={handlePress}>Add Funds</Button>
         ) : null}
-        {!isLayer1(network) && Device.isIOS ? (
+        {!isLayer1(network) && Device.supportsFiatOnRamp ? (
           <Button onPress={handlePress}>Buy Prepaid Card</Button>
         ) : null}
       </Container>
