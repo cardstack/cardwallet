@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useEffect, useState } from 'react';
+import React, { useCallback, memo } from 'react';
 import { InteractionManager } from 'react-native';
 import {
   nativeCurrencies,
@@ -50,48 +50,17 @@ export const InputAmount = memo(
     ...containerProps
   }: InputAmountProps) => {
     const { navigate } = useNavigation();
-    const [isFocused, setIsFocused] = useState(false);
-    const [isTouched, setIsTouched] = useState(false);
-
-    const handleChange = useCallback(() => {
-      if (isFocused && !isTouched) {
-        InteractionManager.runAfterInteractions(() => setIsTouched(true));
-      }
-    }, [isFocused, isTouched]);
-
-    const handleFocus = useCallback(() => {
-      setIsFocused(true);
-    }, []);
 
     const onChangeText = useCallback(
       formatted => {
-        let text = formatted;
-
-        if (isTouched && !text.length && !inputValue) {
-          text = '0.';
-        }
-
         const formattedValue = removeLeadingZeros(formatted);
 
         if (inputValue !== formattedValue) {
           setInputValue(formattedValue);
         }
       },
-      [inputValue, isTouched, setInputValue]
+      [inputValue, setInputValue]
     );
-
-    const handleBlur = useCallback(() => {
-      if (typeof inputValue === 'string') {
-        const parts = inputValue.split('.');
-
-        if (parts[0].length > 1 && !Number(parts[0])) {
-          onChangeText(`0.${parts[1]}`);
-        }
-      }
-
-      setIsFocused(false);
-      setIsTouched(false);
-    }, [inputValue, onChangeText]);
 
     const openCurrencySelectionModal = useCallback(() => {
       InteractionManager.runAfterInteractions(() =>
@@ -100,14 +69,6 @@ export const InputAmount = memo(
         })
       );
     }, [nativeCurrency, navigate]);
-
-    useEffect(() => {
-      if (nativeCurrency === NativeCurrency.SPD) {
-        const formattedValue = removeLeadingZeros(inputValue);
-        setInputValue(formattedValue);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nativeCurrency, setInputValue]);
 
     const selectedCurrency = nativeCurrencies[nativeCurrency];
 
@@ -154,9 +115,6 @@ export const InputAmount = memo(
               fontWeight="bold"
               keyboardType="decimal-pad"
               mask={INPUT_MASK}
-              onBlur={handleBlur}
-              onChange={handleChange}
-              onFocus={handleFocus}
               multiline
               onChangeText={onChangeText}
               placeholder="0"

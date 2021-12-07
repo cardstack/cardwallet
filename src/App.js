@@ -154,6 +154,7 @@ class App extends Component {
 
   componentWillUnmount() {
     Logger.sentry('Unmount');
+    AppState.removeEventListener('change', this.handleAppStateChange);
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
