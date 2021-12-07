@@ -1,7 +1,12 @@
 import React from 'react';
+import {
+  spendToUsd,
+  formatCurrencyAmount,
+  nativeCurrencies,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk';
 import SVG, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Container, Text } from '@cardstack/components';
-import { getDollarsFromDai, numberWithCommas } from '@cardstack/utils';
 
 interface SmallPrepaidCardProps {
   /** unique identifier, displayed in top right corner of card */
@@ -72,8 +77,8 @@ const Top = ({ id }: { id: string }) => (
 );
 
 const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
-  const formattedSpendableBalance = numberWithCommas(
-    getDollarsFromDai(spendableBalance).toFixed(2)
+  const formattedSpendableBalance = formatCurrencyAmount(
+    spendToUsd(spendableBalance) || 0
   );
 
   return (
@@ -88,7 +93,10 @@ const Bottom = ({ spendableBalance }: { spendableBalance: number }) => {
             Spendable Balance
           </Text>
           <Text fontSize={26} fontWeight="700">
-            {`§${numberWithCommas(spendableBalance.toString())}`}
+            {`§${formatCurrencyAmount(
+              spendableBalance.toString(),
+              nativeCurrencies[NativeCurrency.SPD].decimals
+            )}`}
           </Text>
         </Container>
         <Text fontWeight="700">{`$${formattedSpendableBalance} USD`}</Text>
