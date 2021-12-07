@@ -1,6 +1,7 @@
 import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
+  convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
 import {
@@ -8,10 +9,7 @@ import {
   TransactionTypes,
 } from '@cardstack/types';
 import { fetchHistoricalPrice } from '@cardstack/services';
-import {
-  getMerchantEarnedTransactionDetails,
-  formattedCurrencyToAbsNum,
-} from '@cardstack/utils';
+import { getMerchantEarnedTransactionDetails } from '@cardstack/utils';
 
 export class MerchantEarnedRevenueStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -67,7 +65,7 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       transaction: await getMerchantEarnedTransactionDetails(
         prepaidCardPaymentTransaction,
         this.nativeCurrency,
-        formattedCurrencyToAbsNum(nativeBalance.amount),
+        convertStringToNumber(nativeBalance.amount),
         this.currencyConversionRates,
         symbol
       ),

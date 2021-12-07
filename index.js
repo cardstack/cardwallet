@@ -2,15 +2,14 @@ import 'react-native-gesture-handler';
 import './shim';
 
 import lang from 'i18n-js';
-import { language } from 'react-native-languages';
-
+import { getLocales } from 'react-native-localize';
 import { resources } from './src/languages';
 
 const USE_STORYBOOK = false;
 
 // Languages (i18n)
 lang.defaultLocale = 'en';
-lang.locale = language;
+lang.locale = getLocales()?.[0]?.languageCode || 'en';
 lang.fallbacks = true;
 
 lang.translations = Object.assign(
