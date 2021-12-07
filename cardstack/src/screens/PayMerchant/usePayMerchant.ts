@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { LayoutAnimation, InteractionManager } from 'react-native';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import {
+  NativeCurrency,
+  convertToSpend,
+  convertStringToNumber,
+} from '@cardstack/cardpay-sdk';
 import { getBlockTimestamp, mapPrepaidTxToNavigationParams } from './helpers';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import {
@@ -9,10 +13,7 @@ import {
 } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import { MerchantInformation, PrepaidCardType } from '@cardstack/types';
-import {
-  convertSpendForBalanceDisplay,
-  nativeCurrencyToAmountInSpend,
-} from '@cardstack/utils';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
@@ -236,8 +237,9 @@ export const usePayMerchant = () => {
 
   const spendAmount = useMemo(
     () =>
-      nativeCurrencyToAmountInSpend(
-        inputValue,
+      convertToSpend(
+        convertStringToNumber(inputValue || '0'),
+        nativeCurrency,
         currencyConversionRates[nativeCurrency]
       ),
     [currencyConversionRates, inputValue, nativeCurrency]
