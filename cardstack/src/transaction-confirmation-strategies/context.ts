@@ -19,11 +19,11 @@ import { Level1DecodedData } from '@cardstack/types';
 
 interface TransactionRequestData {
   message: {
-    to: string;
+    to?: string;
     data?: string;
   };
-  verifyingContract: string;
-  primaryType: string;
+  verifyingContract?: string;
+  primaryType: string | number;
   network: string;
   nativeCurrency: string;
   level1Data: Level1DecodedData | null;
@@ -47,11 +47,11 @@ export class TransactionConfirmationContext {
 
   constructor(
     message: {
-      to: string;
+      to?: string;
       data?: string;
     },
-    verifyingContract: string,
-    primaryType: string,
+    verifyingContract: string | undefined,
+    primaryType: string | number,
     network: string,
     nativeCurrency: string
   ) {

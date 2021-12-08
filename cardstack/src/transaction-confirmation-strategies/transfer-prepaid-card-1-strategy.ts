@@ -1,3 +1,4 @@
+import assert from 'assert';
 import Web3 from 'web3';
 import { TransferPrepaidCard1DecodedData } from '../types/transaction-confirmation-types';
 import { BaseStrategy } from './base-strategy';
@@ -12,10 +13,14 @@ export class TransferPrepaidCard1Strategy extends BaseStrategy {
       'swapOwner(address,address,address)'
     );
 
-    return this.message.data?.slice(0, 10) === transferPrefix;
+    return (
+      !!this.verifyingContract &&
+      this.message.data?.slice(0, 10) === transferPrefix
+    );
   }
 
   public async decodeRequest(): Promise<TransferPrepaidCard1DecodedData> {
+    assert(typeof this.verifyingContract === 'string');
     const data = this.message.data?.slice(10) || '';
 
     const { newOwner, oldOwner } = decodeParameters<{

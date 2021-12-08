@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { BaseStrategyWithLevel1Data } from './base-strategy';
 import { safeDecodeParameters } from './decoding-utils';
@@ -14,10 +15,12 @@ export class IssuePrepaidCardStrategy extends BaseStrategyWithLevel1Data {
       this.network
     );
 
-    return this.level1Data.to === prepaidCardManager;
+    return !!this.message.to && this.level1Data.to === prepaidCardManager;
   }
 
   public async decodeRequest(): Promise<IssuePrepaidCardDecodedData> {
+    assert(typeof this.message.to === 'string');
+
     const decodedPrepaidCardData = safeDecodeParameters<{
       owner: string;
       issuingTokenAmounts: string[];

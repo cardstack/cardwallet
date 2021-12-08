@@ -1,22 +1,16 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Vibration, InteractionManager } from 'react-native';
 import { isEmulatorSync } from 'react-native-device-info';
-import { methodRegistryLookupAndParse } from '../../../../src/utils/methodRegistry';
-import { useIsMessageRequest } from './use-is-message-request';
-import { useRouteParams } from './use-route-params';
+import { methodRegistryLookupAndParse } from '@rainbow-me/utils/methodRegistry';
 import { useGas } from '@rainbow-me/hooks';
 
-export const useMethodName = () => {
+export const useMethodName = (
+  isMessageRequest: boolean,
+  openAutomatically: boolean,
+  rawPayloadParams: any
+) => {
   const [methodName, setMethodName] = useState<string | undefined>();
-  const isMessageRequest = useIsMessageRequest();
   const { startPollingGasPrices } = useGas();
-
-  const {
-    openAutomatically,
-    transactionDetails: {
-      payload: { params },
-    },
-  } = useRouteParams();
 
   const fetchMethodName = useCallback(
     async data => {
@@ -53,7 +47,7 @@ export const useMethodName = () => {
     InteractionManager.runAfterInteractions(() => {
       if (!isMessageRequest) {
         startPollingGasPrices();
-        fetchMethodName(params[0].data);
+        fetchMethodName(rawPayloadParams[0].data);
       } else {
         setMethodName('Message Signing Request');
       }
@@ -62,7 +56,7 @@ export const useMethodName = () => {
     fetchMethodName,
     isMessageRequest,
     openAutomatically,
-    params,
+    rawPayloadParams,
     startPollingGasPrices,
   ]);
 

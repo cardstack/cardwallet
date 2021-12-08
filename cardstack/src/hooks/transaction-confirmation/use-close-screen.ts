@@ -2,16 +2,17 @@ import { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { SEND_TRANSACTION } from '../../../../src/utils/signingMethods';
-import { useIsMessageRequest } from './use-is-message-request';
 import { useRouteParams } from './use-route-params';
+import {
+  SEND_TRANSACTION,
+  isMessageDisplayType,
+} from '@rainbow-me/utils/signingMethods';
 import { walletConnectRemovePendingRedirect } from '@rainbow-me/redux/walletconnect';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useGas } from '@rainbow-me/hooks';
 
 export const useCloseScreen = () => {
-  const isMessageRequest = useIsMessageRequest();
   const dispatch = useDispatch();
   const { goBack } = useNavigation();
 
@@ -27,6 +28,8 @@ export const useCloseScreen = () => {
       payload: { method },
     },
   } = useRouteParams();
+
+  const isMessageRequest = isMessageDisplayType(method);
 
   const closeScreen = useCallback(
     canceled => {

@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { BaseStrategyWithActionDispatcherData } from './base-strategy';
 import { decodeParameters } from './decoding-utils';
 import {
@@ -7,10 +8,17 @@ import {
 
 export class SplitPrepaidCardStrategy extends BaseStrategyWithActionDispatcherData {
   isApplicable(): boolean {
-    return this.actionDispatcherData.actionName === 'split';
+    return (
+      !!this.message.to &&
+      !!this.verifyingContract &&
+      this.actionDispatcherData.actionName === 'split'
+    );
   }
 
   public async decodeRequest(): Promise<SplitPrepaidCardDecodedData> {
+    assert(typeof this.verifyingContract === 'string');
+    assert(typeof this.message.to === 'string');
+
     const {
       issuingTokenAmounts,
       spendAmounts,
