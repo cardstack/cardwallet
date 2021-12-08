@@ -15,8 +15,8 @@ import { RowWithMargins } from '../layout';
 import { Emoji, Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
+import { removeRequest } from '@cardstack/redux/requests';
 import { useNavigation } from '@rainbow-me/navigation';
-import { removeRequest } from '@rainbow-me/redux/requests';
 import Routes from '@rainbow-me/routes';
 
 const getPercentageOfTimeElapsed = (startDate, endDate) => {

@@ -16,7 +16,6 @@ import openStateSettings, {
   openSmallBalancesReducer,
 } from './openStateSettings';
 import raps from './raps';
-import requests from './requests';
 import settings from './settings';
 import swap from './swap';
 import uniswap from './uniswap';
@@ -26,6 +25,7 @@ import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import collectibles from '@cardstack/redux/collectibles';
 import payment from '@cardstack/redux/payment';
+import requests from '@cardstack/redux/requests';
 
 export default {
   addCash,

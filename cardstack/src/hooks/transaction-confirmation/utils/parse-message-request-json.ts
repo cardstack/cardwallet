@@ -1,4 +1,8 @@
-export const parseMessageRequestJson = (displayDetails: any) => {
+import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
+
+export const parseMessageRequestJson = (
+  displayDetails: ReturnType<typeof getRequestDisplayDetails>
+) => {
   let msg = displayDetails.request;
 
   try {
