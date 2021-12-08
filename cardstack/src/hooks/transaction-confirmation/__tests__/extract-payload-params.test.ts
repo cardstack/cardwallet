@@ -1,4 +1,4 @@
-import { extractPayloadParams } from '../extract-payload-params';
+import { extractPayloadParams } from '../utils';
 import { TypedData } from '@rainbow-me/model/wallet';
 
 describe('extractPayloadParams', () => {

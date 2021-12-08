@@ -1,4 +1,5 @@
 import { TypedData } from '@rainbow-me/model/wallet';
+import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
 
 interface EIP712TypedDataPayload {
   params: [string, TypedData | string];
@@ -28,4 +29,16 @@ export const extractPayloadParams = (
   }
 
   return params[1] || payloadParamsFallback;
+};
+
+export const parseMessageRequestJson = (
+  displayDetails: ReturnType<typeof getRequestDisplayDetails>
+) => {
+  let msg = displayDetails.request;
+
+  try {
+    msg = JSON.parse(msg);
+  } catch (e) {}
+
+  return JSON.stringify(msg, null, 4);
 };

@@ -3,9 +3,8 @@ import { TransactionConfirmationContext } from '../../transaction-confirmation-s
 import { useCalculateGas } from './use-calculate-gas';
 import { useCancelTransaction } from './use-cancel-transaction';
 import { useConfirmTransaction } from './use-confirm-transaction';
-import { extractPayloadParams } from './utils/extract-payload-params';
+import { extractPayloadParams, parseMessageRequestJson } from './utils';
 import { useMethodName } from './use-method-name';
-import { parseMessageRequestJson } from './utils/parse-message-request-json';
 import { useRouteParams } from './use-route-params';
 import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
