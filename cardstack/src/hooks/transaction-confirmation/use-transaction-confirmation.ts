@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
 import { useCalculateGas } from './use-calculate-gas';
 import { useCancelTransaction } from './use-cancel-transaction';
@@ -13,7 +13,6 @@ import {
   TransactionConfirmationType,
 } from '@cardstack/types';
 import { logger } from '@rainbow-me/utils';
-import { TypedData } from '@rainbow-me/model/wallet';
 
 export const useTransactionConfirmation = () => {
   const {
@@ -38,15 +37,9 @@ export const useTransactionConfirmation = () => {
     payload.params
   );
 
-  const payloadRef = useRef<any>();
-  const typedDataRef = useRef<TypedData>();
+  const typedData = useMemo(() => extractPayloadParams(payload), [payload]);
 
-  if (payloadRef.current !== payload) {
-    payloadRef.current = payload;
-    typedDataRef.current = extractPayloadParams(payload);
-  }
-
-  const { message, domain, primaryType } = typedDataRef.current as TypedData;
+  const { message, domain, primaryType } = typedData;
 
   const [loading, setLoading] = useState(false);
 
