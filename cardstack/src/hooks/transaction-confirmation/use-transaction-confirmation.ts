@@ -29,6 +29,8 @@ export const useTransactionConfirmation = () => {
   const isMessageRequest = isMessageDisplayType(payload.method);
 
   useCalculateGas(isMessageRequest, payload.params);
+  const onConfirm = useConfirmTransaction();
+  const onCancel = useCancelTransaction();
 
   const methodName = useMethodName(
     isMessageRequest,
@@ -79,8 +81,8 @@ export const useTransactionConfirmation = () => {
   return {
     data,
     loading,
-    onConfirm: useConfirmTransaction(),
-    onCancel: useCancelTransaction(),
+    onConfirm,
+    onCancel,
     message,
     isMessageRequest,
     dappUrl,
