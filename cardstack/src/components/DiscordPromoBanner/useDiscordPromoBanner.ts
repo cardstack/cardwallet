@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Linking } from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SettingsExternalURLs } from '@cardstack/constants';
 import { SHOW_PROMO_BANNER_KEY, useWorker } from '@cardstack/utils';
 
