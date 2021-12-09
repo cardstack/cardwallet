@@ -19,7 +19,6 @@ import {
 import { useHeight, useWalletConnectConnections } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { shadow } from '@rainbow-me/styles';
 
 const Background = styled.View`
   background-color: black;
@@ -72,11 +71,7 @@ const QRScannerScreen = () => {
         </CameraDimmer>
 
         <Container bottom={0} position="absolute" width="100%">
-          <Sheet
-            borderRadius={20}
-            css={shadow.buildAsObject(0, 1, 2)}
-            hideHandle
-          >
+          <Sheet borderRadius={20} hideHandle shadowEnabled>
             {walletConnectorsCount ? (
               <>
                 <FlatList

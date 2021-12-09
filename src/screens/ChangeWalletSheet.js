@@ -11,7 +11,6 @@ import React, {
 import { InteractionManager } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
 
 import Divider from '../components/Divider';
 import WalletList from '../components/change-wallet/WalletList';
@@ -42,14 +41,6 @@ import {
 import Routes from '@rainbow-me/routes';
 import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
-
-const Whitespace = styled.View`
-  background-color: ${({ theme: { colors } }) => colors.white};
-  bottom: -400px;
-  height: 400px;
-  position: absolute;
-  width: 100%;
-`;
 
 const getWalletRowCount = wallets => {
   let count = 0;
@@ -93,13 +84,13 @@ export default function ChangeWalletSheet() {
   const listPaddingBottom = 6;
   const walletRowHeight = 60;
   const maxListHeight = deviceHeight - 220;
-  let headerHeight = android ? 0 : 30;
+  let headerHeight = 30;
   let listHeight =
     walletRowHeight * walletRowCount + footerHeight + listPaddingBottom;
   let scrollEnabled = false;
   let showDividers = false;
   if (listHeight > maxListHeight) {
-    headerHeight = android ? 0 : 40;
+    headerHeight = 40;
     listHeight = maxListHeight;
     scrollEnabled = true;
     showDividers = true;
@@ -430,8 +421,7 @@ export default function ChangeWalletSheet() {
   }, [navigate]);
 
   return (
-    <Sheet borderRadius={30} hideHandle={false}>
-      {android && <Whitespace />}
+    <Sheet>
       <Container height={headerHeight}>
         <Text fontSize={18} fontWeight="700" textAlign="center">
           Accounts
