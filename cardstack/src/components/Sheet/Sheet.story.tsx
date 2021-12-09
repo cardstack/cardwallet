@@ -2,6 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { View } from 'react-native';
 import { Sheet } from '../.';
 
 const Stack = createStackNavigator();
@@ -23,4 +24,8 @@ const reactNavigationDecorator = (story: any) => {
 
 storiesOf('Sheet', module)
   .addDecorator(reactNavigationDecorator)
-  .add('Default', () => <Sheet />);
+  .add('Default', () => (
+    <Sheet>
+      <View />
+    </Sheet>
+  ));
