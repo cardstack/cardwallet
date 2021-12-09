@@ -1,11 +1,14 @@
 import React from 'react';
 import { useRoute } from '@react-navigation/core';
 import { LoadingOverlay } from '@cardstack/components';
+import { useBlockBackButton } from '@rainbow-me/hooks/useBlockBackButton';
 
 const LoadingOverlayScreen = () => {
   const {
     params: { title, subTitle },
   } = useRoute() as { params: { title: string; subTitle: string } };
+
+  useBlockBackButton();
 
   return <LoadingOverlay title={title} subTitle={subTitle} />;
 };
