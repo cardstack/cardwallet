@@ -88,7 +88,7 @@ const Sheet = ({
     <Container flex={1} justifyContent="flex-end" style={containerStyle}>
       <TouchableBackDrop onPress={goBack} />
       <KeyboardAvoidingView
-        behavior={Device.isIOS ? 'padding' : 'height'}
+        behavior={Device.keyboardBehavior}
         style={wrapperStyle}
       >
         <CenteredContainer paddingVertical={4}>
