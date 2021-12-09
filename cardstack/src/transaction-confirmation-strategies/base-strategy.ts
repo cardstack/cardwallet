@@ -10,11 +10,11 @@ import Web3Instance from '@cardstack/models/web3-instance';
 
 interface BaseStrategyParams {
   message: {
-    to: string;
+    to?: string;
     data?: string;
   };
-  verifyingContract: string;
-  primaryType: string;
+  verifyingContract?: string;
+  primaryType: string | number;
   network: string;
   nativeCurrency: string;
 }
@@ -26,11 +26,11 @@ export abstract class BaseStrategy {
     | TransactionConfirmationData;
 
   message: {
-    to: string;
+    to?: string;
     data?: string;
   };
-  verifyingContract: string;
-  primaryType: string;
+  verifyingContract?: string;
+  primaryType: string | number;
   network: string;
   nativeCurrency: string;
 

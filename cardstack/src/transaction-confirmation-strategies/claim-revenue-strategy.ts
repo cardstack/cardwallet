@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from './base-strategy';
 import { decodeParameters } from './decoding-utils';
@@ -11,10 +12,12 @@ export class ClaimRevenueStrategy extends BaseStrategy {
   isApplicable(): boolean {
     const revenuePool = getAddressByNetwork('revenuePool', this.network);
 
-    return this.message.to === revenuePool;
+    return !!this.verifyingContract && this.message.to === revenuePool;
   }
 
   public async decodeRequest(): Promise<ClaimRevenueDecodedData> {
+    assert(typeof this.verifyingContract === 'string');
+
     const data = this.message.data?.slice(10) || '';
 
     const { amount, tokenAddress } = decodeParameters<{

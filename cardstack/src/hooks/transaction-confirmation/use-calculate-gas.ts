@@ -2,29 +2,21 @@ import { convertHexToString } from '@cardstack/cardpay-sdk';
 import { get, isEmpty } from 'lodash';
 import { useCallback, useEffect, useRef } from 'react';
 import { InteractionManager } from 'react-native';
-import { useIsMessageRequest } from './use-is-message-request';
-
-import { useRouteParams } from './use-route-params';
 import logger from 'logger';
 import { useGas } from '@rainbow-me/hooks';
 import { estimateGas, toHex } from '@rainbow-me/handlers/web3';
 
-export const useCalculateGas = () => {
-  const {
-    transactionDetails: {
-      payload: { method, params },
-    },
-  } = useRouteParams();
-
+export const useCalculateGas = (
+  isMessageRequest: boolean,
+  rawPayloadParams: any
+) => {
   const { gasLimit, gasPrices, updateTxFee } = useGas();
-
-  const isMessageRequest = useIsMessageRequest();
 
   const calculatingGasLimit = useRef(false);
 
   const calculateGasLimit = useCallback(async () => {
     calculatingGasLimit.current = true;
-    const txPayload = get(params, '[0]');
+    const txPayload = get(rawPayloadParams, '[0]');
     // use the default
     let gas = txPayload.gasLimit || txPayload.gas;
 
@@ -46,7 +38,7 @@ export const useCalculateGas = () => {
     setTimeout(() => {
       updateTxFee(gas);
     }, 1000);
-  }, [params, updateTxFee]);
+  }, [rawPayloadParams, updateTxFee]);
 
   useEffect(() => {
     if (
@@ -63,8 +55,7 @@ export const useCalculateGas = () => {
     gasLimit,
     gasPrices,
     isMessageRequest,
-    method,
-    params,
+    rawPayloadParams,
     updateTxFee,
   ]);
 };

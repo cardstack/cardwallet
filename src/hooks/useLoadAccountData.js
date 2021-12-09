@@ -5,12 +5,12 @@ import { addCashLoadState } from '../redux/addCash';
 import { dataLoadState } from '../redux/data';
 import { coinListLoadState } from '../redux/editOptions';
 import { openStateSettingsLoadState } from '../redux/openStateSettings';
-import { requestsLoadState } from '../redux/requests';
 import { uniswapLoadState } from '../redux/uniswap';
 import { uniswapLiquidityLoadState } from '../redux/uniswapLiquidity';
 import { walletConnectLoadState } from '../redux/walletconnect';
 import { promiseUtils } from '../utils';
 import { collectiblesLoadState } from '@cardstack/redux/collectibles';
+import { requestsLoadState } from '@cardstack/redux/requests';
 import { isMainnet } from '@cardstack/utils';
 import logger from 'logger';
 

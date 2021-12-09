@@ -19,12 +19,12 @@ import {
   fallbackExplorerInit,
 } from './fallbackExplorer';
 import { resetOpenStateSettings } from './openStateSettings';
-import { requestsResetState } from './requests';
 import { uniswapResetState } from './uniswap';
 import { uniswapLiquidityResetState } from './uniswapLiquidity';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { paymentChangeCurrency } from '@cardstack/redux/payment';
+import { requestsResetState } from '@cardstack/redux/requests';
 import logger from 'logger';
 // -- Constants ------------------------------------------------------------- //
 

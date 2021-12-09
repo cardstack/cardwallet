@@ -16,7 +16,6 @@ export {
   weiToGwei,
 } from './gas';
 export { parseNewTransaction } from './newTransaction';
-export { getRequestDisplayDetails } from './requests';
 export {
   parseTransactions,
   dedupePendingTransactions,

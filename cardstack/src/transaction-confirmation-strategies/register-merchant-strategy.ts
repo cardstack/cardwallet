@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { BaseStrategyWithActionDispatcherData } from './base-strategy';
 import { decodeParameters } from './decoding-utils';
 import {
@@ -7,10 +8,15 @@ import {
 
 export class RegisterMerchantStrategy extends BaseStrategyWithActionDispatcherData {
   isApplicable(): boolean {
-    return this.actionDispatcherData.actionName === 'registerMerchant';
+    return (
+      !!this.verifyingContract &&
+      this.actionDispatcherData.actionName === 'registerMerchant'
+    );
   }
 
   public decodeRequest(): RegisterMerchantDecodedData {
+    assert(typeof this.verifyingContract === 'string');
+
     const { infoDID } = decodeParameters<{ infoDID: string }>(
       [
         {

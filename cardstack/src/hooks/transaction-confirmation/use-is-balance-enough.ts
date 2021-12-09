@@ -2,22 +2,23 @@ import { fromWei, greaterThanOrEqualTo } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
 import { get } from 'lodash';
 import { useState, useEffect } from 'react';
-import { useIsMessageRequest } from './use-is-message-request';
 import { useRouteParams } from './use-route-params';
 import { ethereumUtils } from '@rainbow-me/utils';
 import { useAccountAssets, useGas } from '@rainbow-me/hooks';
+import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
 
 export const useIsBalanceEnough = () => {
   const { allAssets } = useAccountAssets();
-  const isMessageRequest = useIsMessageRequest();
   const [isBalanceEnough, setIsBalanceEnough] = useState(true);
   const { isSufficientGas, selectedGasPrice } = useGas();
 
   const {
     transactionDetails: {
-      payload: { params },
+      payload: { method, params },
     },
   } = useRouteParams();
+
+  const isMessageRequest = isMessageDisplayType(method);
 
   useEffect(() => {
     if (isMessageRequest) {

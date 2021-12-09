@@ -126,7 +126,7 @@ export const PinnedHiddenItemOptionProvider = ({
   };
 
   useEffect(() => {
-    getItem((_err, result) => {
+    getItem((_err: any, result: any) => {
       if (result) {
         const { pinned = [], hidden = [] } = JSON.parse(result);
         setValue({ pinned, hidden, selected: [] });

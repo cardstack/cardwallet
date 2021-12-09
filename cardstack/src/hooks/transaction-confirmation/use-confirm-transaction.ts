@@ -10,22 +10,22 @@ import {
   signPersonalMessage,
   signTypedDataMessage,
 } from '../../../../src/model/wallet';
+import { useRouteParams } from './use-route-params';
+import { useIsBalanceEnough } from './use-is-balance-enough';
+import { useCloseScreen } from './use-close-screen';
+import { useCancelTransaction } from './use-cancel-transaction';
 import {
   SEND_TRANSACTION,
+  isMessageDisplayType,
   isSignFirstParamType,
   isSignSecondParamType,
   SIGN,
   PERSONAL_SIGN,
   SIGN_TYPED_DATA,
-} from '../../../../src/utils/signingMethods';
-import { useIsMessageRequest } from './use-is-message-request';
-import { useRouteParams } from './use-route-params';
-import { useIsBalanceEnough } from './use-is-balance-enough';
-import { useCloseScreen } from './use-close-screen';
-import { useCancelTransaction } from './use-cancel-transaction';
+} from '@rainbow-me/utils/signingMethods';
 import logger from 'logger';
 import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
-import { removeRequest } from '@rainbow-me/redux/requests';
+import { removeRequest } from '@cardstack/redux/requests';
 import { dataAddNewTransaction } from '@rainbow-me/redux/data';
 import { toHex, estimateGasWithPadding } from '@rainbow-me/handlers/web3';
 import { useGas } from '@rainbow-me/hooks';
@@ -47,7 +47,7 @@ export const useConfirmTransaction = () => {
   const dispatch = useDispatch();
   const [isAuthorizing, setIsAuthorizing] = useState(false);
   const isBalanceEnough = useIsBalanceEnough();
-  const isMessageRequest = useIsMessageRequest();
+  const isMessageRequest = isMessageDisplayType(method);
   const closeScreen = useCloseScreen();
   const onCancel = useCancelTransaction();
 

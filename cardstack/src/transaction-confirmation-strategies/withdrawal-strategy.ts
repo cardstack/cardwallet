@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { BaseStrategyWithLevel1Data } from './base-strategy';
 import {
@@ -10,10 +11,17 @@ export class WithdrawalStrategy extends BaseStrategyWithLevel1Data {
   isApplicable(): boolean {
     const homeBridgeContract = getAddressByNetwork('homeBridge', this.network);
 
-    return this.level1Data.to === homeBridgeContract;
+    return (
+      !!this.verifyingContract &&
+      !!this.message.to &&
+      this.level1Data.to === homeBridgeContract
+    );
   }
 
   public async decodeRequest(): Promise<WithdrawalDecodedData> {
+    assert(typeof this.verifyingContract === 'string');
+    assert(typeof this.message.to === 'string');
+
     const tokenAddress = this.message.to;
 
     const [safeData, tokenData] = await Promise.all([

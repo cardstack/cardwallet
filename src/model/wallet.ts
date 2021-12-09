@@ -84,7 +84,7 @@ interface TypedDataTypes {
   [additionalProperties: string]: MessageTypeProperty[];
 }
 
-interface TypedData {
+export interface TypedData {
   types: TypedDataTypes;
   primaryType: keyof TypedDataTypes;
   domain: {
@@ -93,7 +93,10 @@ interface TypedData {
     chainId?: number;
     verifyingContract?: string;
   };
-  message: object;
+  message: {
+    to?: string;
+    data?: string;
+  };
 }
 
 interface ReadOnlyWallet {

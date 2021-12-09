@@ -4,11 +4,11 @@ import { addCashClearState } from '../redux/addCash';
 import { dataResetState } from '../redux/data';
 import { explorerClearState } from '../redux/explorer';
 import { resetOpenStateSettings } from '../redux/openStateSettings';
-import { requestsResetState } from '../redux/requests';
 import { uniswapResetState } from '../redux/uniswap';
 import { uniswapLiquidityResetState } from '../redux/uniswapLiquidity';
 import { promiseUtils } from '../utils';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
+import { requestsResetState } from '@cardstack/redux/requests';
 
 export default function useResetAccountState() {
   const dispatch = useDispatch();

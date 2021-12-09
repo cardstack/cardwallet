@@ -5,7 +5,7 @@ import { useCloseScreen } from './use-close-screen';
 import { useRouteParams } from './use-route-params';
 import logger from 'logger';
 import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
-import { removeRequest } from '@rainbow-me/redux/requests';
+import { removeRequest } from '@cardstack/redux/requests';
 
 export const useCancelTransaction = () => {
   const dispatch = useDispatch();

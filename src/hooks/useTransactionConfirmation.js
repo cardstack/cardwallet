@@ -1,6 +1,6 @@
 import { dataAddNewTransaction } from '../redux/data';
-import { removeRequest } from '../redux/requests';
 import { walletConnectSendStatus } from '../redux/walletconnect';
+import { removeRequest } from '@cardstack/redux/requests';
 
 export default function useTransactionConfirmation() {
   return {

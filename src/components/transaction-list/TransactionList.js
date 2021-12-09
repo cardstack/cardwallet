@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { getRandomColor } from '../../styles/colors';
 import { FloatingEmojis } from '../floating-emojis';
+import { removeRequest } from '@cardstack/redux/requests';
 import useExperimentalFlag, {
   AVATAR_PICKER,
 } from '@rainbow-me/config/experimentalHooks';
@@ -27,7 +28,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation/Navigation';
-import { removeRequest } from '@rainbow-me/redux/requests';
 import { walletsSetSelected, walletsUpdate } from '@rainbow-me/redux/wallets';
 import Routes from '@rainbow-me/routes';
 import {

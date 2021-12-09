@@ -1,27 +1,75 @@
+import { useEffect, useMemo, useState } from 'react';
+import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
 import { useCalculateGas } from './use-calculate-gas';
 import { useCancelTransaction } from './use-cancel-transaction';
 import { useConfirmTransaction } from './use-confirm-transaction';
-import { useTransactionConfirmationDataWithDecoding } from './use-transaction-confirmation-data-with-decoding';
-import { useIsMessageRequest } from './use-is-message-request';
-import { usePayloadParams } from './use-payload-params';
+import { extractPayloadParams, parseMessageRequestJson } from './utils';
 import { useMethodName } from './use-method-name';
-import { useParsedMessage } from './use-parsed-message';
 import { useRouteParams } from './use-route-params';
+import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {
+  TransactionConfirmationData,
+  TransactionConfirmationType,
+} from '@cardstack/types';
+import { logger } from '@rainbow-me/utils';
 
 export const useTransactionConfirmation = () => {
-  useCalculateGas();
-
   const {
-    transactionDetails: { dappUrl },
+    openAutomatically,
+    transactionDetails: { dappUrl, displayDetails, payload },
   } = useRouteParams();
 
-  const { message } = usePayloadParams();
-  const { data, loading } = useTransactionConfirmationDataWithDecoding();
-  const onCancel = useCancelTransaction();
+  const [network, nativeCurrency] = useRainbowSelector(state => [
+    state.settings.network,
+    state.settings.nativeCurrency,
+  ]);
+
+  const isMessageRequest = isMessageDisplayType(payload.method);
+
+  useCalculateGas(isMessageRequest, payload.params);
   const onConfirm = useConfirmTransaction();
-  const isMessageRequest = useIsMessageRequest();
-  const parsedMessage = useParsedMessage();
-  const methodName = useMethodName();
+  const onCancel = useCancelTransaction();
+
+  const methodName = useMethodName(
+    isMessageRequest,
+    openAutomatically,
+    payload.params
+  );
+
+  const typedData = useMemo(() => extractPayloadParams(payload), [payload]);
+
+  const { message, domain, primaryType } = typedData;
+
+  const [loading, setLoading] = useState(false);
+
+  const [data, setData] = useState<TransactionConfirmationData>({
+    type: TransactionConfirmationType.GENERIC,
+  });
+
+  useEffect(() => {
+    const setDecodedData = async () => {
+      try {
+        setLoading(true);
+
+        const result = await new TransactionConfirmationContext(
+          message,
+          domain.verifyingContract,
+          primaryType,
+          network,
+          nativeCurrency
+        ).getDecodedData();
+
+        setData(result);
+      } catch (error) {
+        logger.error(`Decoding data error - ${error}`);
+      }
+
+      setLoading(false);
+    };
+
+    setDecodedData();
+  }, [message, domain, primaryType, network, nativeCurrency]);
 
   return {
     data,
@@ -32,6 +80,6 @@ export const useTransactionConfirmation = () => {
     isMessageRequest,
     dappUrl,
     methodName,
-    messageRequest: parsedMessage,
+    messageRequest: parseMessageRequestJson(displayDetails),
   };
 };
