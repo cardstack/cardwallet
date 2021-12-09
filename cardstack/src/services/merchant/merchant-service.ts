@@ -16,7 +16,7 @@ export const claimMerchantRevenue = async ({
   merchantSafeAddress,
 }: ClaimRevenueQueryParams) => {
   const web3 = await Web3Instance.get({
-    selectedWallet,
+    walletId: selectedWallet.id,
     network,
   });
 

@@ -37,7 +37,7 @@ const prepaidCardApi = safesApi.injectEndpoints({
       }) {
         try {
           const web3 = await Web3Instance.get({
-            selectedWallet,
+            walletId: selectedWallet.id || '',
             network,
           });
 
