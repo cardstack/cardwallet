@@ -1,17 +1,25 @@
 # Cardwallet
 
 > DeFi payments made easy
+
 ## Requirements
 
 * A computer running macOS.
 * Volta installed for node/yarn version management: https://volta.sh/
+
+For iOS:
+
 * Install CocoaPods by running `sudo gem install cocoapods`
 * Install Watchman `brew install watchman`
 * xCode Version 13.0 (can be found [here](https://developer.apple.com/download/all/?q=xcode))
 
-## How to run the project
+For Android:
+
+* Install Android Studio https://developer.android.com/studio/install
 
 If you are new to React Native, this is a helpful introduction: https://facebook.github.io/react-native/docs/getting-started.html
+
+## How to run the project on iOS
 
 1. Clone the GitHub repository to your machine.
 
@@ -30,6 +38,16 @@ If you are new to React Native, this is a helpful introduction: https://facebook
 8. Open `cardwallet/ios/Rainbow.xcworkspace` in XCode.
 
 9. Run the project by clicking the play button.
+
+## How to run the project on Android
+
+Follow steps 1 through 4 from the iOS steps above, then:
+
+5. Run `bundle exec fastlane sync_google_service_info`
+  
+6. Run `yarn android`
+
+7. Launch an Android emulator or connect a test device
 
 ## How to run the tests
 
