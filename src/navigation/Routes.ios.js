@@ -30,7 +30,6 @@ import {
   expandedAssetSheetConfig,
   nativeStackDefaultConfig,
   nativeStackDefaultConfigWithoutStatusBar,
-  restoreSheetConfig,
   savingsSheetConfig,
   stackNavigationConfig,
 } from './config';
@@ -110,6 +109,7 @@ function ImportSeedPhraseFlowNavigator() {
       <Stack.Screen
         component={ImportSeedPhraseSheet}
         name={Routes.IMPORT_SEED_PHRASE_SHEET}
+        options={bottomSheetPreset}
       />
     </Stack.Navigator>
   );
@@ -191,12 +191,12 @@ function NativeStackFallbackNavigator() {
       <Stack.Screen
         component={ImportSeedPhraseSheet}
         name={Routes.IMPORT_SEED_PHRASE_SHEET}
-        options={{
-          ...sheetPreset,
-          onTransitionStart: () => {
-            StatusBar.setBarStyle('light-content');
-          },
-        }}
+        options={bottomSheetPreset}
+      />
+      <Stack.Screen
+        component={RestoreSheet}
+        name={Routes.RESTORE_SHEET}
+        options={bottomSheetPreset}
       />
       <Stack.Screen
         component={AddCashSheet}
@@ -318,11 +318,6 @@ function NativeStackNavigator() {
           onAppear: null,
           topOffset: 0,
         }}
-      />
-      <NativeStack.Screen
-        component={RestoreSheet}
-        name={Routes.RESTORE_SHEET}
-        {...restoreSheetConfig}
       />
       <NativeStack.Screen
         component={SavingsSheet}
