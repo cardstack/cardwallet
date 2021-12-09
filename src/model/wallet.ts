@@ -20,7 +20,11 @@ import {
 import lang from 'i18n-js';
 import { find, findKey, forEach, get, isEmpty } from 'lodash';
 import { Alert } from 'react-native';
-import { ACCESSIBLE, getSupportedBiometryType } from 'react-native-keychain';
+import {
+  ACCESSIBLE,
+  AuthenticationPrompt,
+  getSupportedBiometryType,
+} from 'react-native-keychain';
 import AesEncryptor from '../handlers/aesEncryption';
 import {
   authenticateWithPIN,
@@ -865,12 +869,13 @@ export const saveSeedPhrase = async (
 
 // use only inside wallet model
 const getSeedPhrase = async (
-  id: RainbowWallet['id']
+  id: RainbowWallet['id'],
+  promptMessage?: string | AuthenticationPrompt
 ): Promise<null | SeedPhraseData> => {
   try {
     const key = `${id}_${seedPhraseKey}`;
     const seedPhraseData = (await keychain.loadObject(key, {
-      authenticationPrompt,
+      authenticationPrompt: promptMessage || authenticationPrompt,
     })) as SeedPhraseData | -2;
 
     if (seedPhraseData === -2) {
@@ -1158,7 +1163,8 @@ export const cleanUpWalletKeys = async (): Promise<boolean> => {
 };
 
 export const loadSeedPhrase = async (
-  id: RainbowWallet['id']
+  id: RainbowWallet['id'],
+  promptMessage?: string | AuthenticationPrompt
 ): Promise<null | EthereumWalletSeed> => {
   try {
     let seedPhrase = null;
@@ -1183,7 +1189,7 @@ export const loadSeedPhrase = async (
       }
     } else {
       logger.sentry('Getting seed directly');
-      const seedData = await getSeedPhrase(id);
+      const seedData = await getSeedPhrase(id, promptMessage);
       seedPhrase = get(seedData, 'seedphrase', null);
       let userPIN = null;
       if (Device.isAndroid) {
