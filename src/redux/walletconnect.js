@@ -49,15 +49,7 @@ const WALLETCONNECT_REMOVE_PENDING_REDIRECT =
 // -- Actions ---------------------------------------- //
 const getNativeOptions = async () => {
   const language = 'en'; // TODO use lang from settings
-  let token = null;
-  try {
-    token = await getFCMToken();
-  } catch (error) {
-    logger.log(
-      'Error getting FCM token, ignoring token for WC connection',
-      error
-    );
-  }
+  const token = (await getFCMToken()).fcmToken;
 
   const nativeOptions = {
     clientMeta: {

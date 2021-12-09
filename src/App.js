@@ -40,7 +40,7 @@ import RainbowContextWrapper from './helpers/RainbowContext';
 import { PinnedHiddenItemOptionProvider } from './hooks';
 
 import useHideSplashScreen from './hooks/useHideSplashScreen';
-import { registerTokenRefreshListener, saveFCMToken } from './model/firebase';
+import { registerTokenRefreshListener } from './model/firebase';
 import { loadAddress } from './model/wallet';
 import { Navigation } from './navigation';
 import RoutesComponent from './navigation/Routes';
@@ -118,7 +118,6 @@ class App extends Component {
 
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
-    saveFCMToken();
     this.onTokenRefreshListener = registerTokenRefreshListener();
 
     this.foregroundNotificationListener = messaging().onMessage(

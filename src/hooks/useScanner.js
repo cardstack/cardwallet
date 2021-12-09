@@ -13,7 +13,6 @@ import { PERMISSIONS, request } from 'react-native-permissions';
 import Url from 'url-parse';
 import { Alert } from '../components/alerts';
 import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
-import { checkPushNotificationPermissions } from '../model/firebase';
 import { useNavigation } from '../navigation/Navigation';
 import usePrevious from './usePrevious';
 import useWallets from './useWallets';
@@ -124,8 +123,6 @@ export default function useScanner(enabled) {
   const handleScanWalletConnect = useCallback(
     async qrCodeData => {
       haptics.notificationSuccess();
-      await checkPushNotificationPermissions();
-
       try {
         await walletConnectOnSessionRequest(qrCodeData, () => {
           setTimeout(enableScanning, 2000);
