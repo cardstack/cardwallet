@@ -1,7 +1,12 @@
+import Web3 from 'web3';
 import axios from 'axios';
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
-import Web3Instance from '@cardstack/models/web3-instance';
-import { getSelectedWallet, loadAddress } from '@rainbow-me/model/wallet';
+import HDWalletProvider from 'parity-hdwallet-provider';
+import {
+  getSeedPhrase,
+  getSelectedWallet,
+  loadAddress,
+} from '@rainbow-me/model/wallet';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import {
   CustodialWallet,
@@ -12,9 +17,14 @@ import {
 } from '@cardstack/types';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { ethereumUtils } from '@rainbow-me/utils';
+import Web3WsProvider from '@cardstack/models/web3-provider';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
+
+const HUBAUTH_PROMPT_MESSAGE =
+  'To enable notifications, please authenticate your ownership of this account with the Cardstack Hub server';
 
 export const getHubUrl = (network: Network) =>
   network === Network.xdai ? HUB_URL_PROD : HUB_URL_STAGING;
@@ -30,34 +40,70 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
-export const getHubAuthToken = async (): Promise<string | null> => {
-  const network: Network = await getNetwork();
-  const hubURL = getHubUrl(network);
+const getHubAuthToken = async (
+  hubURL: string,
+  network: Network,
+  walletAddress?: string,
+  seedPhrase?: string
+): Promise<string | null> => {
   const selectedWallet = await getSelectedWallet();
 
   if (selectedWallet) {
-    const address = await loadAddress();
+    try {
+      // access keychain (asks biometric auth/passcode as seedPhrase stored protected)
+      // to get seedPhrase only when it's not provided as an argument
+      const seedPhraseString =
+        seedPhrase ||
+        (await getSeedPhrase(selectedWallet.wallet.id, HUBAUTH_PROMPT_MESSAGE))
+          ?.seedphrase ||
+        '';
 
-    if (address) {
-      const web3 = await Web3Instance.get({
-        selectedWallet: selectedWallet.wallet,
-        network,
+      const chainId = ethereumUtils.getChainIdFromNetwork(network);
+      const web3ProviderSdk = await Web3WsProvider.get();
+
+      const hdProvider = new HDWalletProvider({
+        chainId,
+        mnemonic: {
+          phrase: seedPhraseString,
+        },
+        providerOrUrl: web3ProviderSdk,
       });
 
+      const web3 = new Web3(hdProvider);
       const authAPI = await getSDK('HubAuth', web3, hubURL);
+      // load wallet address when not provided as an argument(it does not ask passcode/biometric auth)
+      const address = walletAddress || (await loadAddress()) || '';
       return await authAPI.authenticate({ from: address });
+    } catch (e) {
+      logger.sentry('Hub authenticate failed', e);
+
+      return null;
     }
   }
 
   return null;
 };
 
-export const registerPushNotification = async (
-  hubURL: string,
-  authToken: string,
-  fcmToken: string
+export const registerFcmToken = async (
+  fcmToken: string,
+  walletAddress?: string,
+  seedPhrase?: string
 ): Promise<ReservationData | undefined> => {
   try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    const authToken = await getHubAuthToken(
+      hubURL,
+      network,
+      walletAddress,
+      seedPhrase
+    );
+
+    if (!authToken) {
+      return;
+    }
+
     const results = await axios.post(
       `${hubURL}/api/push-notification-registrations`,
       JSON.stringify({
