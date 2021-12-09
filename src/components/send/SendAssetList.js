@@ -21,7 +21,7 @@ import {
 import { Centered } from '../layout';
 import SavingsListHeader from '../savings/SavingsListHeader';
 import TokenFamilyHeader from '../token-family/TokenFamilyHeader';
-import { layoutOpacityAnimation } from '@cardstack/utils';
+import { layoutEasingAnimation } from '@cardstack/utils';
 import { ImgixImage } from '@rainbow-me/images';
 
 const dividerMargin = 10;
@@ -225,7 +225,7 @@ export default class SendAssetList extends React.Component {
       visibleAssetsLength,
     } = this.state;
 
-    layoutOpacityAnimation();
+    layoutEasingAnimation();
 
     openCards[index] = !openCards[index];
     this.setState({ openCards });
@@ -283,13 +283,13 @@ export default class SendAssetList extends React.Component {
   };
 
   changeOpenSavings = () => {
-    layoutOpacityAnimation();
+    layoutEasingAnimation();
 
     this.setState(prevState => ({ openSavings: !prevState.openSavings }));
   };
 
   changeOpenShitcoins = () => {
-    layoutOpacityAnimation();
+    layoutEasingAnimation();
 
     this.setState(prevState => ({ openShitcoins: !prevState.openShitcoins }));
   };

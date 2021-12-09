@@ -12,7 +12,7 @@ export default function RestoreSheetFirstStep({
     <Container marginTop={2} paddingHorizontal={2}>
       <Text
         fontSize={18}
-        fontWeight="700"
+        fontWeight="bold"
         marginBottom={5}
         marginTop={2}
         textAlign="center"

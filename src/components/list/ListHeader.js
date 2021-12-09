@@ -6,7 +6,7 @@ import { ContextMenu } from '../context-menu';
 import { Row } from '../layout';
 import { Button, Container, Text } from '@cardstack/components';
 import { colors as cardstackColors } from '@cardstack/theme';
-import { layoutOpacityAnimation } from '@cardstack/utils';
+import { layoutEasingAnimation } from '@cardstack/utils';
 import { padding } from '@rainbow-me/styles';
 
 export const ListHeaderHeight = 44;
@@ -41,7 +41,7 @@ export default function ListHeader({
   const { setIsCoinListEdited } = useCoinListEditOptions();
 
   const handlePress = useCallback(() => {
-    layoutOpacityAnimation();
+    layoutEasingAnimation();
 
     setIsCoinListEdited(false);
   }, [setIsCoinListEdited]);

@@ -6,7 +6,7 @@ import RestoreCloudStep from '../components/backup/RestoreCloudStep';
 import RestoreSheetFirstStep from '../components/backup/RestoreSheetFirstStep';
 
 import { Sheet } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
+import { Device, layoutEasingAnimation } from '@cardstack/utils';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -19,6 +19,9 @@ export default function RestoreSheet() {
   } = useRoute();
 
   const onCloudRestore = useCallback(async () => {
+    // Animate transforming into backup sheet
+    layoutEasingAnimation();
+
     if (Device.isIOS) {
       setParams({ step: WalletBackupStepTypes.cloud });
     }
@@ -46,7 +49,7 @@ export default function RestoreSheet() {
   const isCloudStep = step === WalletBackupStepTypes.cloud;
 
   return (
-    <Sheet isFullScreen={isCloudStep}>
+    <Sheet isFullScreen={isCloudStep} scrollEnabled={isCloudStep}>
       <StatusBar barStyle="light-content" />
       {isCloudStep ? (
         <RestoreCloudStep userData={userData} />
