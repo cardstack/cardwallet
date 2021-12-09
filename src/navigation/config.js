@@ -83,41 +83,6 @@ export const expandedAssetSheetConfig = {
   }),
 };
 
-const restoreSheetSizes = {
-  ...backupSheetSizes,
-  medium: 505,
-  short: 363,
-};
-
-export const restoreSheetConfig = {
-  options: ({ navigation, route }) => {
-    const {
-      params: {
-        longFormHeight,
-        step = WalletBackupStepTypes.first,
-        ...params
-      } = {},
-    } = route;
-
-    let heightForStep = restoreSheetSizes.short;
-    if (step === WalletBackupStepTypes.cloud) {
-      heightForStep = restoreSheetSizes.long;
-    }
-
-    if (longFormHeight !== heightForStep) {
-      navigation.setParams({
-        longFormHeight: heightForStep,
-      });
-    }
-
-    return buildCoolModalConfig({
-      ...params,
-      backgroundColor: colors.themedColors.dark,
-      longFormHeight: heightForStep,
-    });
-  },
-};
-
 export const savingsSheetConfig = {
   options: ({ route: { params = {} } }) => ({
     ...buildCoolModalConfig({

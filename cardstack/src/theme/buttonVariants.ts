@@ -176,6 +176,14 @@ export const buttonVariants = {
   extraSmall: {
     ...extraSmall,
   },
+  extraSmallDark: {
+    ...extraSmall,
+    ...dark,
+    textStyle: {
+      ...extraSmall.textStyle,
+      ...dark.textStyle,
+    },
+  },
   tiny,
   tinyOpacity,
   invalid: { ...invalid },

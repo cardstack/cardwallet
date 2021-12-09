@@ -14,7 +14,7 @@ export const hitSlop = {
   },
 };
 
-export const layoutOpacityAnimation = () => {
+export const layoutEasingAnimation = () => {
   LayoutAnimation.configureNext(
     LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
   );

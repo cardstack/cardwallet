@@ -1,64 +1,112 @@
-import React, { ReactNode } from 'react';
+import React, { memo, ReactNode, useMemo } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
+import { ScrollView } from '../ScrollView';
+import { CenteredContainer } from '../Container';
 import { TouchableBackDrop } from './TouchableBackDrop';
-import { Container, ContainerProps } from '@cardstack/components';
-import { useDimensions } from '@rainbow-me/hooks';
+import { SheetHandle } from './SheetHandle';
+import { Container } from '@cardstack/components';
 
-export const Sheet = ({
-  borderRadius = 39,
+import { Device } from '@cardstack/utils';
+import { shadow } from '@rainbow-me/styles';
+
+const styles = StyleSheet.create({
+  wrapperBase: {
+    justifyContent: 'flex-end',
+    backgroundColor: 'white',
+    minHeight: '40%',
+  },
+});
+
+const layouts = {
+  contentPaddingBottom: {
+    scrollable: 42,
+    fixed: 30,
+  },
+  wrapperFlex: {
+    full: 1,
+    fixed: 0,
+  },
+};
+
+export interface SheetProps {
+  children: ReactNode;
+  borderRadius?: number;
+  hideHandle?: boolean;
+  isFullScreen?: boolean;
+  scrollEnabled?: boolean;
+  shadowEnabled?: boolean;
+}
+
+const Sheet = ({
+  borderRadius = 30,
   children,
   hideHandle = false,
-  ...props
+  isFullScreen = false,
+  scrollEnabled = false,
+  shadowEnabled = false,
 }: SheetProps) => {
-  const { goBack } = useNavigation();
   const insets = useSafeArea();
-  const { isTallPhone } = useDimensions();
+  const { goBack } = useNavigation();
+
+  const containerStyle = useMemo(
+    () => ({
+      // Android barHeight or iOS top insets
+      paddingTop: StatusBar.currentHeight || insets.top,
+    }),
+    [insets]
+  );
+
+  const wrapperStyle = useMemo(() => {
+    const { full, fixed } = layouts.wrapperFlex;
+
+    const flex = isFullScreen ? full : fixed;
+    const shadowStyle = shadowEnabled ? shadow.buildAsObject(0, 1, 2) : {};
+
+    return {
+      ...styles.wrapperBase,
+      ...shadowStyle,
+      flex,
+      borderTopStartRadius: borderRadius,
+      borderTopEndRadius: borderRadius,
+    };
+  }, [borderRadius, isFullScreen, shadowEnabled]);
+
+  const contentContainerStyle = useMemo(() => {
+    const { scrollable, fixed } = layouts.contentPaddingBottom;
+
+    const isScrollableOrHasBottom = insets.bottom || scrollEnabled;
+
+    return {
+      flexGrow: 1,
+      paddingBottom: isScrollableOrHasBottom ? scrollable : fixed,
+    };
+  }, [insets, scrollEnabled]);
 
   return (
-    <Container flex={1} justifyContent="flex-end">
+    <Container flex={1} justifyContent="flex-end" style={containerStyle}>
       <TouchableBackDrop onPress={goBack} />
-      <Container
-        width="100%"
-        backgroundColor="white"
-        borderTopStartRadius={borderRadius}
-        borderTopEndRadius={borderRadius}
-        style={{
-          paddingBottom: isTallPhone
-            ? Math.round(insets.top / 2.5)
-            : Math.round(insets.top / 1.2),
-        }}
-        {...props}
+      <KeyboardAvoidingView
+        behavior={Device.keyboardBehavior}
+        style={wrapperStyle}
       >
-        <Container
-          paddingTop={hideHandle ? 0 : 3}
-          paddingBottom={4}
-          height={5}
-          justifyContent="center"
-          alignItems="center"
-          flex={-1}
+        <CenteredContainer paddingVertical={4}>
+          {!hideHandle && <SheetHandle />}
+        </CenteredContainer>
+        <ScrollView
+          contentContainerStyle={contentContainerStyle}
+          directionalLockEnabled
+          keyboardShouldPersistTaps="always"
+          scrollEnabled={scrollEnabled}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
         >
-          {!hideHandle && (
-            <Container
-              backgroundColor="black"
-              height={5}
-              width={36}
-              borderRadius={5}
-              opacity={0.25}
-            />
-          )}
-        </Container>
-        {children}
-      </Container>
+          {children}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Container>
   );
 };
 
-export interface SheetProps extends ContainerProps {
-  /** optional children */
-  children?: ReactNode;
-  /** borderRadius for initials */
-  borderRadius?: number;
-  /** hideHandle */
-  hideHandle?: boolean;
-}
+export default memo(Sheet);

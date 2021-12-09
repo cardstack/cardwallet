@@ -17,7 +17,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { layoutOpacityAnimation } from '@cardstack/utils';
+import { layoutEasingAnimation } from '@cardstack/utils';
 
 export interface TransactionConfirmationDisplayProps {
   dappUrl?: string;
@@ -47,7 +47,7 @@ export const TransactionConfirmationSheet = (
   );
 
   const onInfoPress = useCallback(() => {
-    layoutOpacityAnimation();
+    layoutEasingAnimation();
 
     setShowFullMessage(!showFullMessage);
   }, [showFullMessage]);

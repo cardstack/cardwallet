@@ -6,7 +6,7 @@ import {
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { layoutOpacityAnimation } from '@cardstack/utils';
+import { layoutEasingAnimation } from '@cardstack/utils';
 
 const actionSheetOptions = {
   Edit: { idx: 0 },
@@ -21,7 +21,7 @@ const PinnedHiddenSectionMenu = ({
   const { editing: editingSection, toggle } = usePinnedAndHiddenItemOptions();
 
   const toggleEditingPinnedHidden = useCallback(() => {
-    layoutOpacityAnimation();
+    layoutEasingAnimation();
 
     type && toggle(type);
   }, [toggle, type]);
