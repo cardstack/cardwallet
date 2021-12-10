@@ -73,6 +73,7 @@ export const Input = React.forwardRef(
         fontSize={16}
         textContentType="none"
         ref={ref}
+        color="black"
         {...props}
       />
       {props.iconProps && (
