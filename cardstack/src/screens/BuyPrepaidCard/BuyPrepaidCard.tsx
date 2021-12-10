@@ -16,7 +16,7 @@ import {
 } from '@cardstack/components';
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { SlackSheet } from '@rainbow-me/components/sheet';
-import { Inventory } from '@cardstack/services';
+import { Inventory } from '@cardstack/types';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 import Routes from '@rainbow-me/routes';

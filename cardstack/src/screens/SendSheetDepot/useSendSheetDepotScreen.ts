@@ -300,7 +300,10 @@ export const useSendSheetDepotScreen = () => {
 
   const sendTokenFromDepot = useCallback(async () => {
     try {
-      const safes = await getSafesInstance({ selectedWallet, network });
+      const safes = await getSafesInstance({
+        walletId: selectedWallet.id,
+        network,
+      });
 
       const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
 

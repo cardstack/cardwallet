@@ -17,21 +17,23 @@ import logger from 'logger';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { useAuthToken } from '@cardstack/hooks';
 import {
-  CustodialWallet,
   getCustodialWallet,
   getHubUrl,
   getInventories,
   getOrder,
   getWyrePrice,
-  Inventory,
-  InventoryAttrs,
   makeReservation,
-  ReservationData,
   updateOrder,
-  WyrePriceData,
 } from '@cardstack/services';
 import { fetchCardCustomizationFromDID, useWorker } from '@cardstack/utils';
-import { PrepaidCardCustomization } from '@cardstack/types';
+import {
+  PrepaidCardCustomization,
+  CustodialWallet,
+  Inventory,
+  InventoryAttrs,
+  ReservationData,
+  WyrePriceData,
+} from '@cardstack/types';
 import { addNewPrepaidCard } from '@rainbow-me/redux/data';
 import Routes from '@rainbow-me/navigation/routesNames';
 import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-cards/prepaid-card-service';
