@@ -34,15 +34,13 @@ const HDProvider = {
         const chainId = ethereumUtils.getChainIdFromNetwork(network);
         const web3ProviderSdk = await Web3WsProvider.get();
 
-        const hdProvider = new HDWalletProvider({
+        provider = new HDWalletProvider({
           chainId,
           mnemonic: {
             phrase,
           },
           providerOrUrl: web3ProviderSdk,
         });
-
-        provider = hdProvider;
       } catch (e) {
         logger.error('Unable to getHdSignedProvider', e);
       }

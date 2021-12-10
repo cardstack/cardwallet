@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
+import Web3 from 'web3';
 import { getSelectedWallet, loadAddress } from '@rainbow-me/model/wallet';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import {
@@ -11,7 +12,6 @@ import {
 } from '@cardstack/types';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import Web3Instance from '@cardstack/models/web3-instance';
 import HDProvider from '@cardstack/models/hd-provider';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
@@ -44,22 +44,18 @@ export const getHubAuthToken = async (
 
   if (selectedWallet) {
     try {
-      const web3 = await Web3Instance.get({
+      const hdProvider = await HDProvider.get({
         walletId: selectedWallet.wallet.id,
         network,
         seedPhrase,
         keychainAcessAskPrompt: HUBAUTH_PROMPT_MESSAGE,
       });
 
+      const web3 = new Web3(hdProvider);
       const authAPI = await getSDK('HubAuth', web3, hubURL);
-
       // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
       const address = walletAddress || (await loadAddress()) || '';
       const authToken = await authAPI.authenticate({ from: address });
-
-      // resets signed provider and web3 instance to kill poller
-      await HDProvider.reset();
-
       return authToken;
     } catch (e) {
       logger.sentry('Hub authenticate failed', e);

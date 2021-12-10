@@ -35,6 +35,7 @@
     "e2e:smoke:ios": "yarn detox:build:ios && yarn detox:smoke:ios",
     "e2e:smoke:android": "yarn detox:build:android && yarn detox:smoke:android",
     "fast": "yarn setup && yarn install-pods-fast",
+    "fast:m1": "yarn setup && yarn install-pods:m1",
     "ganache": "source .env && ganache-cli --f https://mainnet.infura.io/v3/${INFURA_PROJECT_ID_DEV} -p 7545 -i 1 -b 10",
     "install-all": "yarn setup && yarn install-pods",
     "install-all-no-flipper": "yarn setup && yarn install-pods-no-flipper",
