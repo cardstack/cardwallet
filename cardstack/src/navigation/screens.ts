@@ -19,6 +19,7 @@ import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
+import { Device } from '@cardstack/utils';
 
 interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -86,6 +87,22 @@ export const GlobalScreens: Record<
   },
 };
 
+// TODO: Merge paths once, navigation redesign happens
+const sharedNavigatorPath = {
+  [RainbowRoutes.MAIN_NAVIGATOR]: {
+    initialRouteName: RainbowRoutes.SWIPE_LAYOUT,
+    screens: {
+      [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
+    },
+  },
+};
+
+const iOSNavigatorPath = {
+  [RainbowRoutes.STACK]: {
+    screens: sharedNavigatorPath,
+  },
+};
+
 export const linking = {
   prefixes: [
     'https://wallet.cardstack.com',
@@ -93,17 +110,6 @@ export const linking = {
     'cardwallet://',
   ],
   config: {
-    screens: {
-      [RainbowRoutes.STACK]: {
-        screens: {
-          [RainbowRoutes.MAIN_NAVIGATOR]: {
-            initialRouteName: RainbowRoutes.SWIPE_LAYOUT,
-            screens: {
-              [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
-            },
-          },
-        },
-      },
-    },
+    screens: Device.isIOS ? iOSNavigatorPath : sharedNavigatorPath,
   },
 };
