@@ -22,11 +22,8 @@ const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStat
 
 export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
   const {
-    data: fcmToken,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    storageVersion,
-    ...addressesByNetwork
-  } = (await getLocal(DEVICE_FCM_TOKEN_KEY)) as any;
+    data: { fcmToken, ...addressesByNetwork },
+  } = ((await getLocal(DEVICE_FCM_TOKEN_KEY)) || {}) as any;
 
   if (!fcmToken) {
     return { fcmToken: null };
@@ -83,19 +80,20 @@ export const saveFCMToken = async (
         // otherwise replace addresses value with [walletAddress] so can be replaced in next app load on other accounts
         if (fcmToken !== newFcmToken) {
           saveLocal(DEVICE_FCM_TOKEN_KEY, {
-            data: newFcmToken,
-            [network]: [walletAddress],
+            data: { fcmToken: newFcmToken, [network]: [walletAddress] },
           });
         } else {
           saveLocal(DEVICE_FCM_TOKEN_KEY, {
-            data: newFcmToken,
-            ...addressesByNetwork,
-            [network]: [
-              ...(addressesByNetwork?.[network] || []),
-              walletAddress,
-            ].filter(
-              (address, index, self) => self.indexOf(address) === index // remove duplicates
-            ),
+            data: {
+              fcmToken: newFcmToken,
+              ...addressesByNetwork,
+              [network]: [
+                ...(addressesByNetwork?.[network] || []),
+                walletAddress,
+              ].filter(
+                (address, index, self) => self.indexOf(address) === index // remove duplicates
+              ),
+            },
           });
         }
 
@@ -185,8 +183,7 @@ export const registerTokenRefreshListener = () =>
         const walletAddress = (await loadAddress()) || '';
         const network = await getNetwork();
         saveLocal(DEVICE_FCM_TOKEN_KEY, {
-          data: fcmToken,
-          [network]: [walletAddress],
+          data: { fcmToken, [network]: [walletAddress] },
         });
       }
     } catch (error) {
