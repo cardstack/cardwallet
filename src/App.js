@@ -40,7 +40,6 @@ import RainbowContextWrapper from './helpers/RainbowContext';
 import { PinnedHiddenItemOptionProvider } from './hooks';
 
 import useHideSplashScreen from './hooks/useHideSplashScreen';
-import { registerTokenRefreshListener } from './model/firebase';
 import { loadAddress } from './model/wallet';
 import { Navigation } from './navigation';
 import RoutesComponent from './navigation/Routes';
@@ -50,6 +49,7 @@ import MaintenanceMode from './screens/MaintenanceMode';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
+import { registerTokenRefreshListener } from '@cardstack/models/firebase';
 import { requestsForTopic } from '@cardstack/redux/requests';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
