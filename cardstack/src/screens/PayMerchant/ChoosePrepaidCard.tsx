@@ -11,7 +11,11 @@ import {
   Touchable,
   Text,
 } from '@cardstack/components';
-import { convertSpendForBalanceDisplay, splitAddress } from '@cardstack/utils';
+import {
+  convertSpendForBalanceDisplay,
+  Device,
+  splitAddress,
+} from '@cardstack/utils';
 import { PrepaidCardType } from '@cardstack/types';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
@@ -170,6 +174,10 @@ interface PrepaidCardItemProps {
   isLastItem: boolean;
 }
 
+// Android has a shadow issue,
+// the default opacity adds a weird shadow on press
+const activeOpacity = Device.isAndroid ? 0.85 : undefined;
+
 const PrepaidCardItem = memo(
   ({
     item,
@@ -211,6 +219,7 @@ const PrepaidCardItem = memo(
         onPress={handleOnPress}
         width="100%"
         disabled={isInsufficientFund}
+        activeOpacity={activeOpacity}
       >
         <Container
           flexDirection="row"

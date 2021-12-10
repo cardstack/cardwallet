@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     borderStyle: 'solid',
     borderRadius: 10,
+    elevation: 2,
   },
 });
 
