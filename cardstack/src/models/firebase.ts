@@ -2,33 +2,37 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import lang from 'i18n-js';
-import { get } from 'lodash';
 import { requestNotifications } from 'react-native-permissions';
 import { registerFcmToken } from '@cardstack/services/hub-service';
 import { Alert } from '@rainbow-me/components/alerts';
 import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { loadAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 const DEVICE_FCM_TOKEN_KEY = 'cardwalletFcmToken';
+type FCMTokenStorageType = {
+  fcmToken: string | null;
+  addressesByNetwork?: Record<Network, string | string[]>;
+};
 
 const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
   messaging().hasPermission();
 
-export const getFCMToken = async (): Promise<{
-  fcmToken: string | null;
-  addresses: string[];
-}> => {
-  const fcmTokenLocal = await getLocal(DEVICE_FCM_TOKEN_KEY);
-
-  const fcmToken: string = get(fcmTokenLocal, 'data', null);
+export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
+  const {
+    data: fcmToken,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    storageVersion,
+    ...addressesByNetwork
+  } = (await getLocal(DEVICE_FCM_TOKEN_KEY)) as any;
 
   if (!fcmToken) {
-    return { fcmToken: null, addresses: [] };
+    return { fcmToken: null };
   }
 
-  const addresses: string[] = get(fcmTokenLocal, 'addresses', []);
-  return { fcmToken, addresses };
+  return { fcmToken, addressesByNetwork };
 };
 
 // check if token's stored by confirming addresses includes wallet address
@@ -36,14 +40,17 @@ export const isFCMTokenStored = async (
   walletAddress: string
 ): Promise<{
   isTokenStored: boolean;
-  addresses: string[];
+  addressesByNetwork?: Record<Network, string | string[]>;
   fcmToken: string | null;
 }> => {
-  const { fcmToken, addresses } = await getFCMToken();
+  const { fcmToken, addressesByNetwork } = await getFCMToken();
+  const network: Network = await getNetwork();
   return {
-    isTokenStored: !!fcmToken && addresses.includes(walletAddress),
+    isTokenStored:
+      !!fcmToken &&
+      (addressesByNetwork?.[network] || []).includes(walletAddress),
     fcmToken,
-    addresses,
+    addressesByNetwork,
   };
 };
 
@@ -54,9 +61,11 @@ export const saveFCMToken = async (
   seedPhrase?: string
 ) => {
   try {
-    const { isTokenStored, addresses, fcmToken } = await isFCMTokenStored(
-      walletAddress
-    );
+    const {
+      isTokenStored,
+      addressesByNetwork,
+      fcmToken,
+    } = await isFCMTokenStored(walletAddress);
 
     if (!isTokenStored) {
       const newFcmToken = await messaging().getToken();
@@ -68,33 +77,39 @@ export const saveFCMToken = async (
       );
 
       if (registeredRespose) {
+        const network: Network = await getNetwork();
+
         // if newFcmToken is same as old stored one, then add wallet address to asyncStorage,
         // otherwise replace addresses value with [walletAddress] so can be replaced in next app load on other accounts
         if (fcmToken !== newFcmToken) {
           saveLocal(DEVICE_FCM_TOKEN_KEY, {
             data: newFcmToken,
-            addresses: [walletAddress],
+            [network]: [walletAddress],
           });
         } else {
           saveLocal(DEVICE_FCM_TOKEN_KEY, {
             data: newFcmToken,
-            addresses: [...addresses, walletAddress].filter(
+            ...addressesByNetwork,
+            [network]: [
+              ...(addressesByNetwork?.[network] || []),
+              walletAddress,
+            ].filter(
               (address, index, self) => self.indexOf(address) === index // remove duplicates
             ),
           });
         }
 
-        logger.log('FCM token registered');
+        logger.log('FCM token registered!!!');
 
         return;
       }
 
-      logger.sentry('FCM token register failed', walletAddress);
+      logger.sentry('FCM token register failed!', walletAddress);
     } else {
       logger.sentry('FCM token already registered for this account!');
     }
   } catch (error) {
-    logger.sentry('error fcm token - cannot register fcm token', error);
+    logger.sentry('error fcm token - cannot register fcm token!', error);
   }
 };
 
@@ -168,9 +183,10 @@ export const registerTokenRefreshListener = () =>
 
       if (tokenRegisterResponse) {
         const walletAddress = (await loadAddress()) || '';
+        const network = await getNetwork();
         saveLocal(DEVICE_FCM_TOKEN_KEY, {
           data: fcmToken,
-          addresses: [walletAddress],
+          [network]: [walletAddress],
         });
       }
     } catch (error) {
