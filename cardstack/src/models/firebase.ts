@@ -60,20 +60,38 @@ export const saveFCMToken = async (
 
     if (!isTokenStored) {
       const newFcmToken = await messaging().getToken();
-      await registerFcmToken(newFcmToken, walletAddress, seedPhrase);
 
-      // check if newFcmToken is same as old stored one and if same, add wallet address, otherwise replace addresses value with [walletAddress]
-      if (fcmToken !== newFcmToken) {
-        saveLocal(DEVICE_FCM_TOKEN_KEY, {
-          data: newFcmToken,
-          addresses: [walletAddress],
-        });
-      } else {
-        saveLocal(DEVICE_FCM_TOKEN_KEY, {
-          data: newFcmToken,
-          addresses: [...addresses, walletAddress],
-        });
+      const registeredRespose = await registerFcmToken(
+        newFcmToken,
+        walletAddress,
+        seedPhrase
+      );
+
+      if (registeredRespose) {
+        // if newFcmToken is same as old stored one, then add wallet address to asyncStorage,
+        // otherwise replace addresses value with [walletAddress] so can be replaced in next app load on other accounts
+        if (fcmToken !== newFcmToken) {
+          saveLocal(DEVICE_FCM_TOKEN_KEY, {
+            data: newFcmToken,
+            addresses: [walletAddress],
+          });
+        } else {
+          saveLocal(DEVICE_FCM_TOKEN_KEY, {
+            data: newFcmToken,
+            addresses: [...addresses, walletAddress].filter(
+              (address, index, self) => self.indexOf(address) === index // remove duplicates
+            ),
+          });
+        }
+
+        logger.log('FCM token registered');
+
+        return;
       }
+
+      logger.sentry('FCM token register failed', walletAddress);
+    } else {
+      logger.sentry('FCM token already registered for this account!');
     }
   } catch (error) {
     logger.sentry('error fcm token - cannot register fcm token', error);

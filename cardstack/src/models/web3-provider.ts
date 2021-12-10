@@ -10,8 +10,9 @@ let provider: WebsocketProvider | null = null;
 
 const Web3WsProvider = {
   get: async (network?: Network) => {
-    if (provider === null || network || !provider?.connected) {
-      const currentNetwork = await getNetwork();
+    if (provider === null || !provider?.connected) {
+      const currentNetwork = network || (await getNetwork());
+
       const node = getConstantByNetwork('rpcWssNode', currentNetwork);
 
       provider = new Web3.providers.WebsocketProvider(node, {
