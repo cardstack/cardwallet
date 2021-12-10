@@ -1,38 +1,41 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { InteractionManager } from 'react-native';
+import React, { memo, useCallback } from 'react';
+import { InteractionManager, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
 import styled from 'styled-components';
+import PeopleIllustrationBackground from '../../../cardstack/src/assets/people-ill-bg.png';
 import { ErrorText } from '../text';
 import QRCodeScannerCrosshair from './QRCodeScannerCrosshair';
 import QRCodeScannerNeedsAuthorization from './QRCodeScannerNeedsAuthorization';
 import { CenteredContainer, Container } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
-import SimulatorFakeCameraImageSource from '@rainbow-me/assets/simulator-fake-camera-image.jpg';
 import { useBooleanState, useScanner } from '@rainbow-me/hooks';
 import { ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
 
 const EmulatorCameraFallback = styled(ImgixImage).attrs({
-  source: SimulatorFakeCameraImageSource,
+  source: PeopleIllustrationBackground,
 })`
   ${position.cover};
   ${position.size('100%')};
 `;
 
-export default function QRCodeScanner({
-  contentPositionBottom,
-  contentPositionTop,
-}) {
+const styles = StyleSheet.create({
+  camera: {
+    ...StyleSheet.absoluteFillObject,
+    height: '100%',
+    backgroundColor: 'transparent',
+    zIndex: 1,
+  },
+});
+
+const QRCodeScanner = ({ contentPositionBottom, contentPositionTop }) => {
   const [error, showError] = useBooleanState();
-  const [isInitialized, setInitialized] = useBooleanState(Device.isIOS);
   const { result: isEmulator } = useIsEmulator();
   const [cameraEnableState, enableCamera, disableCamera] = useBooleanState(
     false
   );
   const { isCameraAuthorized, onScan } = useScanner(cameraEnableState);
-  const cameraRef = useRef();
 
   useFocusEffect(
     useCallback(() => {
@@ -42,17 +45,6 @@ export default function QRCodeScanner({
       return () => disableCamera();
     }, [disableCamera, enableCamera])
   );
-
-  useEffect(() => {
-    if (Device.isIOS || !isInitialized) {
-      return;
-    }
-    if (cameraEnableState) {
-      cameraRef.current?.resumePreview?.();
-    } else {
-      cameraRef.current?.pausePreview?.();
-    }
-  }, [cameraEnableState, isInitialized]);
 
   if (!cameraEnableState) return null;
 
@@ -66,20 +58,9 @@ export default function QRCodeScanner({
             captureAudio={false}
             notAuthorizedView={QRCodeScannerNeedsAuthorization}
             onBarCodeRead={onScan}
-            onCameraReady={setInitialized}
             onMountError={showError}
             pendingAuthorizationView={null}
-            ref={cameraRef}
-            style={{
-              height: '100%',
-              bottom: 0,
-              left: 0,
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              backgroundColor: 'transparent',
-              zIndex: 1,
-            }}
+            style={styles.camera}
           />
         )}
       </CenteredContainer>
@@ -93,7 +74,7 @@ export default function QRCodeScanner({
           {error ? (
             <ErrorText error="Error mounting camera" />
           ) : (
-            isInitialized && <QRCodeScannerCrosshair />
+            <QRCodeScannerCrosshair />
           )}
         </CenteredContainer>
       ) : (
@@ -101,4 +82,6 @@ export default function QRCodeScanner({
       )}
     </Container>
   );
-}
+};
+
+export default memo(QRCodeScanner);
