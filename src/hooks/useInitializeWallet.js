@@ -3,7 +3,6 @@ import { isNil } from 'lodash';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { checkPushPermissionAndRegisterToken } from '../model/firebase';
 import runMigrations from '../model/migrations';
 import { walletInit } from '../model/wallet';
 import {
@@ -18,6 +17,7 @@ import useLoadAccountData from './useLoadAccountData';
 import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
+import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { appStateUpdate } from '@cardstack/redux/appState';
 import { getCurrencyConversionsRates } from '@cardstack/services';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';

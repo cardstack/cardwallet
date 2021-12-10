@@ -19,9 +19,9 @@ import {
 import { sendRpcCall } from '../handlers/web3';
 import { dappLogoOverride, dappNameOverride } from '../helpers/dappNameHandler';
 import WalletTypes from '../helpers/walletTypes';
-import { getFCMToken } from '../model/firebase';
 import { Navigation } from '../navigation';
 import { isSigningMethod } from '../utils/signingMethods';
+import { getFCMToken } from '@cardstack/models/firebase';
 import { addRequestToApprove } from '@cardstack/redux/requests';
 import { baseCloudFunctionsUrl } from '@cardstack/services';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
