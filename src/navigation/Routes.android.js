@@ -231,6 +231,11 @@ function MainOuterNavigator() {
         options={sheetPreset}
       />
       <OuterStack.Screen
+        component={ExpandedAssetSheet}
+        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
+        options={sheetPreset}
+      />
+      <OuterStack.Screen
         component={SettingsModal}
         name={Routes.SETTINGS_MODAL}
         options={settingsPreset}
