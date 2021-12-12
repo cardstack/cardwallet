@@ -21,15 +21,21 @@ const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStat
   messaging().hasPermission();
 
 export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
-  const {
-    data: { fcmToken, ...addressesByNetwork },
-  } = ((await getLocal(DEVICE_FCM_TOKEN_KEY)) || {}) as any;
+  try {
+    const {
+      data: { fcmToken, ...addressesByNetwork },
+    } = ((await getLocal(DEVICE_FCM_TOKEN_KEY)) || {
+      data: { fcmToken: null },
+    }) as any;
 
-  if (!fcmToken) {
+    if (!fcmToken) {
+      return { fcmToken: null };
+    }
+
+    return { fcmToken, addressesByNetwork };
+  } catch {
     return { fcmToken: null };
   }
-
-  return { fcmToken, addressesByNetwork };
 };
 
 // check if token's stored by confirming addresses includes wallet address
