@@ -31,7 +31,10 @@ import {
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
+import { getFCMToken } from '@cardstack/models/firebase';
+import { unregisterFcmToken } from '@cardstack/services/hub-service';
 import { getAddressPreview } from '@cardstack/utils';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
@@ -148,15 +151,27 @@ export default function ChangeWalletSheet() {
       const visibleAddresses = newWallets[walletId].addresses.filter(
         account => account.visible
       );
+      setIsWalletLoading(WalletLoadingStates.DELETING_WALLET);
+
+      const network = await getNetwork();
+      const { fcmToken, addressesByNetwork } = await getFCMToken();
+      if (
+        addressesByNetwork[network] &&
+        addressesByNetwork[network].includes(address)
+      ) {
+        const unreigsterResponse = await unregisterFcmToken(fcmToken, address);
+        logger.log('UnregisterFcmToken response ---', unreigsterResponse);
+      }
       if (visibleAddresses.length === 0) {
         delete newWallets[walletId];
         await dispatch(walletsUpdate(newWallets));
       } else {
         await dispatch(walletsUpdate(newWallets));
       }
-      removeWalletData(address);
+      await removeWalletData(address);
+      setIsWalletLoading(null);
     },
-    [dispatch, wallets]
+    [dispatch, setIsWalletLoading, wallets]
   );
 
   const renameWallet = useCallback(

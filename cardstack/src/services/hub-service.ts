@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
-import { getSelectedWallet, loadAddress } from '@rainbow-me/model/wallet';
+import { getAllWallets, loadAddress } from '@rainbow-me/model/wallet';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import {
   CustodialWallet,
@@ -40,39 +40,44 @@ export const getHubAuthToken = async (
   walletAddress?: string,
   seedPhrase?: string
 ): Promise<string | null> => {
-  const selectedWallet = await getSelectedWallet();
+  const allWallets = (await getAllWallets()) || { wallets: [] };
 
-  if (selectedWallet) {
-    try {
-      const hdProvider = await HDProvider.get({
-        walletId: selectedWallet.wallet.id,
-        network,
-        seedPhrase,
-        keychainAcessAskPrompt: HUBAUTH_PROMPT_MESSAGE,
-      });
+  // get wallet id through allWallets using wallet address
+  const walletId =
+    Object.values(allWallets.wallets).find(
+      wallet =>
+        wallet.addresses.findIndex(
+          account => account.address === walletAddress
+        ) > -1
+    )?.id || '';
 
-      // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
-      const web3 = new Web3(hdProvider);
-      const authAPI = await getSDK('HubAuth', web3, hubURL);
-      // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
-      const address = walletAddress || (await loadAddress()) || '';
-      const authToken = await authAPI.authenticate({ from: address });
-      return authToken;
-    } catch (e) {
-      logger.sentry('Hub authenticate failed', e);
+  try {
+    const hdProvider = await HDProvider.get({
+      walletId,
+      network,
+      seedPhrase,
+      keychainAcessAskPrompt: HUBAUTH_PROMPT_MESSAGE,
+    });
 
-      return null;
-    }
+    // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
+    const web3 = new Web3(hdProvider);
+    const authAPI = await getSDK('HubAuth', web3, hubURL);
+    // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
+    const address = walletAddress || (await loadAddress()) || '';
+    const authToken = await authAPI.authenticate({ from: address });
+    return authToken;
+  } catch (e) {
+    logger.sentry('Hub authenticate failed', e);
+
+    return null;
   }
-
-  return null;
 };
 
 export const registerFcmToken = async (
   fcmToken: string,
   walletAddress?: string,
   seedPhrase?: string
-): Promise<ReservationData | undefined> => {
+): Promise<{ success: boolean } | undefined> => {
   try {
     const network: Network = await getNetwork();
     const hubURL = getHubUrl(network);
@@ -85,7 +90,7 @@ export const registerFcmToken = async (
     );
 
     if (!authToken) {
-      return;
+      return { success: false };
     }
 
     const results = await axios.post(
@@ -101,11 +106,47 @@ export const registerFcmToken = async (
       axiosConfig(authToken)
     );
 
-    if (results.data?.data) {
-      return results.data?.data;
+    if (results.data) {
+      return { success: true };
     }
   } catch (e: any) {
     logger.sentry('Error while registering fcmToken to hub', e?.response || e);
+  }
+};
+
+export const unregisterFcmToken = async (
+  fcmToken: string,
+  walletAddress?: string,
+  seedPhrase?: string
+): Promise<{ success: boolean } | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    const authToken = await getHubAuthToken(
+      hubURL,
+      network,
+      walletAddress,
+      seedPhrase
+    );
+
+    if (!authToken) {
+      return { success: false };
+    }
+
+    const results = await axios.delete(
+      `${hubURL}/api/push-notification-registrations/${fcmToken}`,
+      axiosConfig(authToken)
+    );
+
+    if (results.data) {
+      return { success: true };
+    }
+  } catch (e: any) {
+    logger.sentry(
+      'Error while unregistering fcmToken from hub',
+      e?.response || e
+    );
   }
 };
 

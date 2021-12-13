@@ -4,9 +4,9 @@ import { Network } from '@rainbow-me/networkTypes';
 import { useWorker } from '@cardstack/utils';
 import logger from 'logger';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { getHubAuthToken } from '@cardstack/services/hub-service';
+import { getHubAuthToken, getHubUrl } from '@cardstack/services/hub-service';
 
-export const useAuthToken = (hubURL: string, seedPhrase?: string) => {
+export const useAuthToken = (hubURL?: string, seedPhrase?: string) => {
   const [authToken, setAuthToken] = useState<string>('');
   const { accountAddress } = useAccountSettings();
 
@@ -15,8 +15,10 @@ export const useAuthToken = (hubURL: string, seedPhrase?: string) => {
   ) as Network;
 
   const { callback: getAuthToken, error, isLoading } = useWorker(async () => {
+    const hubURLString = hubURL || getHubUrl(network);
+
     const authTokenValue = await getHubAuthToken(
-      hubURL,
+      hubURLString,
       network,
       accountAddress,
       seedPhrase

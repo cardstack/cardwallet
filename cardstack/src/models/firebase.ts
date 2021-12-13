@@ -79,7 +79,7 @@ export const saveFCMToken = async (
         seedPhrase
       );
 
-      if (registeredRespose) {
+      if (registeredRespose?.success) {
         const network: Network = await getNetwork();
 
         // if newFcmToken is same as old stored one, then add wallet address to asyncStorage,
@@ -185,7 +185,7 @@ export const registerTokenRefreshListener = () =>
     try {
       const tokenRegisterResponse = await registerFcmToken(fcmToken);
 
-      if (tokenRegisterResponse) {
+      if (tokenRegisterResponse?.success) {
         const walletAddress = (await loadAddress()) || '';
         const network = await getNetwork();
         saveLocal(DEVICE_FCM_TOKEN_KEY, {

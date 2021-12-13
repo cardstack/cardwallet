@@ -116,9 +116,13 @@ export default function useInitializeWallet() {
 
         dispatch(appStateUpdate({ walletReady: true }));
 
-        logger.sentry('💰 Wallet initialized');
-
-        checkPushPermissionAndRegisterToken(walletAddress, seedPhrase);
+        logger.log('💰 Wallet initialized');
+        setTimeout(
+          () => {
+            checkPushPermissionAndRegisterToken(walletAddress, seedPhrase);
+          },
+          isNew ? 1000 : 0 // hub auth fails if we try too soon after wallet created
+        );
         return walletAddress;
       } catch (error) {
         logger.sentry('Error while initializing wallet', error);
