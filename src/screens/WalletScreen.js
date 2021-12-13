@@ -11,14 +11,11 @@ import { AssetListWrapper } from '../components/asset-list';
 import { FabWrapper } from '../components/fab';
 import {
   CameraHeaderButton,
-  DiscoverHeaderButton,
   Header,
   ProfileHeaderButton,
 } from '../components/header';
 import { Page } from '../components/layout';
-import useExperimentalFlag, {
-  DISCOVER_SHEET,
-} from '../config/experimentalHooks';
+
 import {
   useAccountEmptyState,
   useAccountSettings,
@@ -49,7 +46,6 @@ const WalletPage = styled(Page)`
 
 export default function WalletScreen() {
   const { params } = useRoute();
-  const discoverSheetAvailable = useExperimentalFlag(DISCOVER_SHEET);
   const [initialized, setInitialized] = useState(!!params?.initialized);
   const [notificationsVisible, setNotificationsVisible] = useState('false');
   const initializeWallet = useInitializeWallet();
@@ -146,11 +142,16 @@ export default function WalletScreen() {
               justifyContent="space-between"
             >
               <ProfileHeaderButton />
-              {discoverSheetAvailable ? (
-                <DiscoverHeaderButton />
-              ) : (
-                <CameraHeaderButton />
-              )}
+              <Container
+                alignItems="flex-end"
+                flex={0.5}
+                justifyContent="center"
+              >
+                <Text color="white" fontWeight="bold">
+                  ASSETS
+                </Text>
+              </Container>
+              <CameraHeaderButton />
             </Container>
           </Header>
           {showNotificationBanner && (
