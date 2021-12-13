@@ -8,7 +8,13 @@ import { ProfileMasthead } from '../components/profile';
 import { CopyToast, ToastPositionContainer } from '../components/toasts';
 import { useAccountProfile, useAccountSettings } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
-import { Icon, TransactionList } from '@cardstack/components';
+import {
+  CenteredContainer,
+  Icon,
+  Text,
+  TransactionList,
+} from '@cardstack/components';
+import { colors } from '@cardstack/theme';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
 import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
@@ -49,22 +55,31 @@ export default function ProfileScreen() {
   const [copyCount, setCopyCount] = useState(0);
 
   return (
-    <ProfileScreenPage testID="profile-screen">
-      <Header backgroundColor="backgroundBlue">
-        <HeaderButton
-          onPress={onPressSettings}
-          opacityTouchable={false}
-          radiusAndroid={42}
-          radiusWrapperStyle={radiusWrapperStyle}
-          testID="settings-button"
+    <ProfileScreenPage color={colors.backgroundBlue} testID="profile-screen">
+      <Header marginVertical={2}>
+        <CenteredContainer
+          flex={1}
+          flexDirection="row"
+          justifyContent="space-between"
         >
-          <Icon color="teal" iconSize="large" name="settings" />
-        </HeaderButton>
-        <BackButton
-          color="teal"
-          direction="right"
-          onPress={onPressBackButton}
-        />
+          <HeaderButton
+            onPress={onPressSettings}
+            opacityTouchable={false}
+            radiusAndroid={42}
+            radiusWrapperStyle={radiusWrapperStyle}
+            testID="settings-button"
+          >
+            <Icon color="teal" iconSize="large" name="settings" />
+          </HeaderButton>
+          <Text color="white" fontWeight="bold">
+            ACTIVITY
+          </Text>
+          <BackButton
+            color="teal"
+            direction="right"
+            onPress={onPressBackButton}
+          />
+        </CenteredContainer>
       </Header>
       <TransactionList
         Header={
