@@ -4,16 +4,10 @@ import React from 'react';
 import { fireEvent, render } from '../../test-utils';
 import { OptionItem } from '../OptionItem';
 
-jest.mock('@cardstack/components/Icon', () => ({
-  Icon: jest.fn(() => null),
-}));
-
 const chance = new Chance();
 
 describe('OptionItem', () => {
   let props: any;
-
-  const renderComponent = () => render(<OptionItem {...props} />);
 
   beforeEach(() => {
     props = {
@@ -29,13 +23,13 @@ describe('OptionItem', () => {
   });
 
   it('should render the title', () => {
-    const { getByText } = renderComponent();
+    const { getByText } = render(<OptionItem {...props} />);
 
     getByText(props.title);
   });
 
   it('should render a touchable with onPress', () => {
-    const { getByTestId } = renderComponent();
+    const { getByTestId } = render(<OptionItem {...props} />);
 
     const touchable = getByTestId('option-item');
 
@@ -47,7 +41,7 @@ describe('OptionItem', () => {
   it('should render the subtext if it is passed', () => {
     props.subText = chance.string();
 
-    const { getByText } = renderComponent();
+    const { getByText } = render(<OptionItem {...props} />);
 
     getByText(props.subText);
   });
@@ -55,7 +49,7 @@ describe('OptionItem', () => {
   it('should render the icon border if borderIcon is true', () => {
     props.borderIcon = true;
 
-    const { getByTestId } = renderComponent();
+    const { getByTestId } = render(<OptionItem {...props} />);
 
     const iconWrapper = getByTestId('option-item-icon-wrapper');
 

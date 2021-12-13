@@ -1,40 +1,14 @@
-import Chance from 'chance';
 import React from 'react';
 
 import { fireEvent, render, waitFor, act } from '../../test-utils';
-import { AnimatedText } from '../Animated';
 import {
   SystemNotification,
   SystemNotificationProps,
-} from '@cardstack/components';
-
-jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
-  jest.fn(({ children }) => children)
-);
-
-jest.mock('../../src/components/Icon', () => ({
-  Icon: jest.fn(() => null),
-}));
-
-const mockStart = jest.fn();
-
-jest.mock('react-native/Libraries/Animated/src/Animated', () => ({
-  createAnimatedComponent: jest.fn(() => jest.fn(({ children }) => children)),
-  timing: jest.fn(),
-  parallel: jest.fn(() => ({
-    start: mockStart,
-  })),
-  Value: jest.fn(() => ({
-    interpolate: jest.fn(),
-  })),
-  Image: jest.fn(() => null),
-}));
+} from '@cardstack/components/SystemNotification/SystemNotification';
 
 jest.mock('react-native/Libraries/Components/Touchable/TouchableOpacity', () =>
   jest.fn(({ children }) => children)
 );
-
-const chance = new Chance();
 
 describe('SystemNotification', () => {
   let props: SystemNotificationProps,
@@ -43,9 +17,9 @@ describe('SystemNotification', () => {
     openedHeaderText: string;
 
   beforeEach(() => {
-    closedText = chance.string();
-    openedBodyText = chance.string();
-    openedHeaderText = chance.string();
+    closedText = 'Closed';
+    openedBodyText = 'Opened Body';
+    openedHeaderText = 'Opened Header';
 
     props = {
       closedText,
@@ -55,15 +29,11 @@ describe('SystemNotification', () => {
   });
 
   it('should render only the children text if it is not open', () => {
-    const { queryByText } = render(<SystemNotification {...props} />);
-
-    expect(AnimatedText).toHaveBeenCalledWith(
-      expect.objectContaining({
-        children: closedText,
-      }),
-      {}
+    const { getByText, queryByText } = render(
+      <SystemNotification {...props} />
     );
 
+    getByText(closedText);
     expect(queryByText(openedHeaderText)).toBeNull();
   });
 
@@ -76,14 +46,13 @@ describe('SystemNotification', () => {
 
     await act(async () => {
       await fireEvent.press(systemNotification);
-      mockStart.mock.calls[0][0]();
     });
 
     await waitFor(() => getByText(openedHeaderText));
     await waitFor(() => getByText(openedBodyText));
 
     await act(async () => {
-      await fireEvent.press(systemNotification);
+      fireEvent.press(systemNotification);
     });
 
     expect(queryByText(openedHeaderText)).toBeNull();

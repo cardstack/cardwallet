@@ -1,177 +1,45 @@
-import Chance from 'chance';
 import React from 'react';
-
 import { render } from '../../test-utils';
-import { Button } from '../Button';
-import { Text } from '../Text';
-import { Icon } from '../Icon';
-import * as utils from '@cardstack/utils';
-
-jest.mock('../../../src/components/animations/ButtonPressAnimation', () =>
-  jest.fn(({ children }) => children)
-);
-
-jest.mock('@cardstack/components/Icon', () => ({
-  Icon: jest.fn(() => null),
-}));
-
-jest.mock('@cardstack/components/Text', () => ({
-  Text: jest.fn(({ children }) => children),
-}));
-
-jest.mock('@cardstack/utils');
-
-const chance = new Chance();
+import { Button } from '../Button/Button';
 
 describe('Button', () => {
-  let expectedTextStyle: Record<string, string>,
-    expectedDisabledTextStyle: Record<string, string>;
-
-  const { useVariantValue } = utils as jest.Mocked<typeof utils>;
-
-  beforeEach(() => {
-    expectedTextStyle = {
-      [chance.string()]: chance.string(),
-    };
-
-    expectedDisabledTextStyle = {
-      [chance.string()]: chance.string(),
-    };
-
-    useVariantValue.mockImplementation((themeKey, key) => {
-      if (key === 'disabledTextStyle') {
-        return expectedDisabledTextStyle;
-      }
-
-      return expectedTextStyle;
-    });
-  });
-
-  afterEach(() => {
-    useVariantValue.mockReset();
-  });
-
   it('should render the children', () => {
-    const buttonText = chance.string();
-
-    render(<Button>{buttonText}</Button>);
-
-    expect(Text).toHaveBeenCalledWith(
-      expect.objectContaining({ children: buttonText }),
-      {}
-    );
+    const { getByText } = render(<Button>Hello world!</Button>);
+    getByText('Hello world!');
   });
 
-  it('should call useVariantValue four times', () => {
-    const buttonText = chance.string();
-
-    const variant = chance.pickone<'secondary' | 'primary'>([
-      'secondary',
-      'primary',
-    ]);
-
-    render(<Button variant={variant}>{buttonText}</Button>);
-
-    expect(useVariantValue).toHaveBeenCalledTimes(4);
-    expect(useVariantValue).toHaveBeenCalledWith(
-      'buttonVariants',
-      'width',
-      variant
-    );
-
-    expect(useVariantValue).toHaveBeenCalledWith(
-      'buttonVariants',
-      'maxWidth',
-      variant
-    );
-
-    expect(useVariantValue).toHaveBeenCalledWith(
-      'buttonVariants',
-      'textStyle',
-      variant
-    );
-
-    expect(useVariantValue).toHaveBeenCalledWith(
-      'buttonVariants',
-      'disabledTextStyle',
-      variant
-    );
-  });
-
-  it('should pass the variant return value to text', () => {
-    const buttonText = chance.string();
-
-    const variant = chance.pickone<'secondary' | 'primary'>([
-      'secondary',
-      'primary',
-    ]);
-
-    render(<Button variant={variant}>{buttonText}</Button>);
-
-    expect(Text).toHaveBeenCalledWith(
-      expect.objectContaining(expectedTextStyle),
-      {}
-    );
-  });
+  //TODO: test rendering secondary variant
+  //TODO: test rendering tertiary variant
+  //TODO: test rendering small variant
+  //TODO: test rendering extraSmall variant
 
   it('should handle disabled styles', () => {
-    const buttonText = chance.string();
-
-    const { getByTestId } = render(<Button disabled>{buttonText}</Button>);
-
-    expect(Text).toHaveBeenCalledWith(
-      expect.objectContaining(expectedDisabledTextStyle),
-      {}
-    );
-
+    const { getByTestId } = render(<Button disabled>Not Enabled</Button>);
+    //TODO: verify disabled button variant styles are applied
     getByTestId('disabledOverlay');
   });
 
   it('should render the icon if iconProps are passed', () => {
-    const buttonText = chance.string();
-
-    const iconProps: {
-      [key: string]: any;
-      name: 'pin';
-    } = {
-      [chance.string()]: chance.string(),
-      name: 'pin',
-    };
-
-    render(<Button iconProps={iconProps}>{buttonText}</Button>);
-
-    expect(Icon).toHaveBeenCalledTimes(1);
-    expect(Icon).toHaveBeenCalledWith(expect.objectContaining(iconProps), {});
-  });
-
-  it('should render the icon with the correct color if iconProps and disabled', () => {
-    const buttonText = chance.string();
-
-    const iconProps: {
-      [key: string]: any;
-      name: 'pin';
-    } = {
-      [chance.string()]: chance.string(),
-      name: 'pin',
-    };
-
-    render(
-      <Button iconProps={iconProps} disabled>
-        {buttonText}
+    const { getByTestId } = render(
+      <Button
+        iconProps={{
+          iconSize: 'medium',
+          marginRight: 2,
+          name: 'camera',
+        }}
+      >
+        With Icon
       </Button>
     );
 
-    expect(Icon).toHaveBeenCalledWith(
-      expect.objectContaining({ color: 'primaryText' }),
-      {}
-    );
+    //TODO: verify styles if icon are applied
+    getByTestId('icon-camera');
   });
 
+  //TODO: verify disabled button with icon and confirm correct icon color is applied
+
   it('should render an activity indicator when button is loading', () => {
-    const buttonText = chance.string();
-
-    const { getByTestId } = render(<Button loading>{buttonText}</Button>);
-
+    const { getByTestId } = render(<Button loading>Please wait</Button>);
     getByTestId('button-loading');
   });
 });

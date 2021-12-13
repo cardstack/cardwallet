@@ -16,6 +16,7 @@ import {
 import Routes from '@rainbow-me/routes';
 import { useNavigation } from '@rainbow-me/navigation';
 import { removeLeadingZeros } from '@rainbow-me/utils';
+import { palette } from '@cardstack/theme/colors';
 
 export enum CURRENCY_DISPLAY_MODE {
   NO_DISPLAY = 'NO_DISPLAY',
@@ -118,7 +119,7 @@ export const InputAmount = memo(
               multiline
               onChangeText={onChangeText}
               placeholder="0"
-              placeholderTextColor="grayMediumLight"
+              placeholderTextColor={palette.grayMediumLight}
               spellCheck={false}
               testID={testID || 'RequestPaymentInput'}
               value={inputValue}

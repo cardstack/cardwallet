@@ -12,6 +12,7 @@ const CLOSED_HEIGHT = 40;
 const OPENED_HEIGHT = 150;
 const VISIBLE_OPACITY = 1;
 const HIDDEN_OPACITY = 0;
+const SUPPORTS_NATIVE_ANIM_DRIVER = !process.env.JEST_WORKER_ID;
 
 type SystemNotificationType = 'info' | 'alert' | 'error';
 
@@ -48,12 +49,12 @@ export const SystemNotification = ({
       Animated.timing(closedTextOpacity, {
         duration: ANIMATION_DURATION,
         toValue: HIDDEN_OPACITY,
-        useNativeDriver: true,
+        useNativeDriver: SUPPORTS_NATIVE_ANIM_DRIVER,
       }),
       Animated.timing(iconRotation, {
         duration: ANIMATION_DURATION,
         toValue: 1,
-        useNativeDriver: true,
+        useNativeDriver: SUPPORTS_NATIVE_ANIM_DRIVER,
       }),
       Animated.timing(minHeight, {
         duration: ANIMATION_DURATION,
@@ -70,12 +71,12 @@ export const SystemNotification = ({
       Animated.timing(closedTextOpacity, {
         duration: ANIMATION_DURATION,
         toValue: VISIBLE_OPACITY,
-        useNativeDriver: true,
+        useNativeDriver: SUPPORTS_NATIVE_ANIM_DRIVER,
       }),
       Animated.timing(iconRotation, {
         duration: ANIMATION_DURATION,
         toValue: 0,
-        useNativeDriver: true,
+        useNativeDriver: SUPPORTS_NATIVE_ANIM_DRIVER,
       }),
       Animated.timing(minHeight, {
         duration: ANIMATION_DURATION,
@@ -94,7 +95,7 @@ export const SystemNotification = ({
         Animated.timing(containerOpacity, {
           duration: ANIMATION_DURATION,
           toValue: HIDDEN_OPACITY,
-          useNativeDriver: true,
+          useNativeDriver: SUPPORTS_NATIVE_ANIM_DRIVER,
         }),
       ]).start(() => setIsVisible(false));
     } catch (error) {

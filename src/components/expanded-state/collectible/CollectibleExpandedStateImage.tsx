@@ -10,8 +10,13 @@ import { margin, position } from '@rainbow-me/styles';
 
 const paddingHorizontal = 19;
 
+interface ImageWrapperProps {
+  isImageHuge?: boolean;
+}
+
 const ImageWrapper = styled(Centered)`
-  ${({ isImageHuge }) => margin(isImageHuge ? paddingHorizontal : 0, 0)};
+  ${(props: ImageWrapperProps) =>
+    margin(props.isImageHuge ? paddingHorizontal : 0, 0)};
   ${position.size('100%')};
   border-radius: 10;
   overflow: hidden;

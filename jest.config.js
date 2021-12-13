@@ -5,10 +5,10 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/cardstack/src/*/**/*.js',
     '<rootDir>/cardstack/src/*/**/*.ts',
-    // Avoid testing components for now
-    '!<rootDir>/cardstack/src/*/**/*.tsx',
+    '<rootDir>/cardstack/src/*/**/*.tsx',
     '!<rootDir>/cardstack/src/*/**/*.story.tsx',
     '!<rootDir>/cardstack/src/theme/*',
+    '!<rootDir>/cardstack/src/types/*',
 
     // ran into a weeeeird issue testing this so ignoring for now, will try to fix later
     '!<rootDir>/cardstack/src/components/Icon/Icon.tsx',
@@ -22,9 +22,8 @@ module.exports = {
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
-    // Avoid testing components for now
-    '!<rootDir>/cardstack/**/*.test.jsx',
-    '!<rootDir>/cardstack/**/*.test.tsx',
+    '<rootDir>/cardstack/**/*.test.jsx',
+    '<rootDir>/cardstack/**/*.test.tsx',
   ],
   transformIgnorePatterns: [
     'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*)',

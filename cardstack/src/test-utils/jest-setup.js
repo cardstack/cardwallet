@@ -1,4 +1,7 @@
-/* eslint-disable no-undef */
+/* global jest */
+/* eslint no-undef: "error" */
+import React from 'react';
+import { View as RNView } from 'react-native';
 import '@testing-library/jest-native/extend-expect';
 import 'react-native-gesture-handler/jestSetup';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
@@ -26,78 +29,15 @@ jest.mock('react-native-device-info', () => ({
 }));
 
 jest.mock('react-native-reanimated', () => {
-  const View = require('react-native/Libraries/Components/View/View');
-  return {
-    Value: jest.fn(),
-    event: jest.fn(),
-    add: jest.fn(),
-    eq: jest.fn(),
-    set: jest.fn(),
-    cond: jest.fn(),
-    interpolate: jest.fn(),
-    View,
-    Extrapolate: { CLAMP: jest.fn() },
-    Clock: jest.fn(),
-    greaterThan: jest.fn(),
-    lessThan: jest.fn(),
-    startClock: jest.fn(),
-    stopClock: jest.fn(),
-    clockRunning: jest.fn(),
-    not: jest.fn(),
-    or: jest.fn(),
-    and: jest.fn(),
-    spring: jest.fn(),
-    decay: jest.fn(),
-    defined: jest.fn(),
-    call: jest.fn(),
-    Code: View,
-    block: jest.fn(),
-    abs: jest.fn(),
-    greaterOrEq: jest.fn(),
-    lessOrEq: jest.fn(),
-    debug: jest.fn(),
-    Easing: {
-      in: jest.fn(),
-      out: jest.fn(),
-    },
-    Transition: {
-      Out: 'Out',
-    },
-  };
-});
+  const Reanimated = require('react-native-reanimated/mock');
 
-jest.mock('react-native-gesture-handler', () => {
-  const View = require('react-native/Libraries/Components/View/View');
-  return {
-    Swipeable: View,
-    DrawerLayout: View,
-    State: {},
-    ScrollView: View,
-    Slider: View,
-    Switch: View,
-    TextInput: View,
-    ToolbarAndroid: View,
-    ViewPagerAndroid: View,
-    DrawerLayoutAndroid: View,
-    WebView: View,
-    NativeViewGestureHandler: View,
-    TapGestureHandler: View,
-    FlingGestureHandler: View,
-    ForceTouchGestureHandler: View,
-    LongPressGestureHandler: View,
-    PanGestureHandler: View,
-    PinchGestureHandler: View,
-    RotationGestureHandler: View,
-    /* Buttons */
-    RawButton: View,
-    BaseButton: View,
-    RectButton: View,
-    BorderlessButton: View,
-    /* Other */
-    FlatList: View,
-    gestureHandlerRootHOC: jest.fn(),
-    Directions: {},
+  // The mock for `call` immediately calls the callback which is incorrect
+  // So we override it with a no-op
+  Reanimated.default.call = () => {
+    /* noop */
   };
+
+  return Reanimated;
 });
 
 jest.mock('@react-navigation/material-top-tabs', () => ({
@@ -179,10 +119,6 @@ jest.mock('react-native-splash-screen', () => ({
   SplashScreen: jest.fn(),
 }));
 
-jest.mock('styled-components', () => ({
-  styled: jest.fn(),
-}));
-
 jest.mock('react-native-version-number', () => ({
   VersionNumber: jest.fn(),
 }));
@@ -240,9 +176,10 @@ jest.mock('@rainbow-me/components/animations/procs', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/components/animations/ButtonPressAnimation', () => ({
-  default: jest.fn(),
-}));
+const mockButtonPressAnimation = ({ children }) => <RNView>{children}</RNView>;
+jest.mock('@rainbow-me/components/animations/ButtonPressAnimation', () =>
+  jest.fn(mockButtonPressAnimation)
+);
 
 jest.mock('@rainbow-me/components/animations', () => ({
   default: jest.fn(),
@@ -264,11 +201,6 @@ jest.mock('@rainbow-me/redux/hooks', () => ({
   useRainbowSelector: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/styles', () => ({
-  buildTextStyles: jest.fn(),
-  calcDirectionToDegrees: jest.fn(),
-}));
-
 jest.mock('@rainbow-me/utils/measureText', () => ({
   default: jest.fn(),
 }));
@@ -281,18 +213,26 @@ jest.mock('@rainbow-me/components/text', () => ({
   default: jest.fn(),
 }));
 
+const mockIcon = props => <RNView testID={'icon-' + props.name} />;
 jest.mock('@rainbow-me/components/icons', () => ({
-  default: jest.fn(),
+  Icon: jest.fn(mockIcon),
 }));
 
 // CARDSTACK MOCKS
 
-jest.mock('@cardstack/components', () => ({
-  default: jest.fn(),
+jest.mock('@cardstack/components/Icon', () => ({
+  Icon: jest.fn(mockIcon),
 }));
 
 jest.mock('@cardstack/components/Text/EmojiText', () => ({
   default: jest.fn(),
+}));
+
+jest.mock('@cardstack/navigation', () => ({
+  useLoadingOverlay: () => ({
+    showLoadingOverlay: jest.fn(),
+    dismissLoadingOverlay: jest.fn(),
+  }),
 }));
 
 jest.mock('@cardstack/navigation/screens', () => ({
@@ -305,11 +245,9 @@ jest.mock('@uniswap/sdk', () => ({
   Token: jest.fn(),
 }));
 
-jest.mock('@cardstack/navigation', () => ({
-  useLoadingOverlay: () => ({
-    showLoadingOverlay: jest.fn(),
-    dismissLoadingOverlay: jest.fn(),
-  }),
+jest.mock('easyqrcode-react-native', () => ({
+  QRCode: jest.fn(),
+  Canvas: jest.fn(),
 }));
 
 jest.mock('react-native-localize', () => ({
