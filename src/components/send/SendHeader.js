@@ -16,12 +16,7 @@ import { padding } from '@rainbow-me/styles';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const AddressInputContainer = styled(Row).attrs({ align: 'center' })`
-  ${({ isSmallPhone }) =>
-    isSmallPhone
-      ? padding(12, 15)
-      : android
-      ? padding(5, 15)
-      : padding(19, 15)};
+  ${({ isSmallPhone }) => (isSmallPhone ? padding(12, 15) : padding(19, 15))};
   background-color: ${({ theme: { colors } }) => colors.white};
   overflow: hidden;
   width: 100%;

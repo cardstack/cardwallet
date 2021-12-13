@@ -4,6 +4,7 @@ import { isHexString } from '../../handlers/web3';
 import { checkIsValidAddressOrDomain } from '../../helpers/validators';
 import { Row } from '../layout';
 import { Container, Input, Text, Touchable } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 import { useClipboard } from '@rainbow-me/hooks';
 import { abbreviations, addressUtils } from '@rainbow-me/utils';
 
@@ -47,6 +48,15 @@ const AddressField = (
     }
   }, [address, inputValue, name]);
 
+  const androidProps = useMemo(
+    () => ({
+      ...(Device.isAndroid && {
+        top: '28%',
+      }),
+    }),
+    []
+  );
+
   return (
     <Row flex={1}>
       <Input
@@ -72,7 +82,7 @@ const AddressField = (
         zIndex={1}
       />
       {!inputValue && (
-        <Container position="absolute" top={0} zIndex={1}>
+        <Container position="absolute" zIndex={1} {...androidProps}>
           <Touchable onPress={ref?.current?.focus}>
             <Text color="grayText" fontSize={15} fontWeight="600">
               Enter Address (0x...) or ENS
