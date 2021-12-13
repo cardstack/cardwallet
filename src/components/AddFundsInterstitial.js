@@ -3,17 +3,39 @@ import React, { memo } from 'react';
 import { useNavigation } from '../navigation/Navigation';
 import { Button, Container, Text } from '@cardstack/components';
 
+import { Device } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 
 const AddFundsInterstitial = () => {
   const { navigate } = useNavigation();
 
-  const onPress = amount => () => {
-    navigate(Routes.ADD_CASH_FLOW, {
-      params: !isNaN(amount || 0) ? { amount } : null,
-      screen: Routes.ADD_CASH_SCREEN_NAVIGATOR,
-    });
-  };
+  const onPress = useCallback(
+    amount => () => {
+      navigate(Routes.ADD_CASH_FLOW, {
+        params: !isNaN(amount || 0) ? { amount } : null,
+        screen: Routes.ADD_CASH_SCREEN_NAVIGATOR,
+      });
+    },
+    [navigate]
+  );
+
+  const renderAmounts = useMemo(
+    () =>
+      Device.supportsPrefilledAmount &&
+      [25, 50, 75].map(amount => (
+        <Button
+          borderColor="buttonSecondaryBorder"
+          key={amount}
+          maxWidth="30%"
+          onPress={onPress(amount)}
+          variant="square"
+          wrapper="fragment"
+        >
+          ${amount}
+        </Button>
+      )),
+    [onPress]
+  );
 
   return (
     <Container flex={0.8} justifyContent="center" padding={5} width="100%">
@@ -25,18 +47,7 @@ const AddFundsInterstitial = () => {
         justifyContent="space-between"
         marginTop={4}
       >
-        {[25, 50, 75].map(amount => (
-          <Button
-            borderColor="buttonSecondaryBorder"
-            key={amount}
-            maxWidth="30%"
-            onPress={onPress(amount)}
-            variant="square"
-            wrapper="fragment"
-          >
-            ${amount}
-          </Button>
-        ))}
+        {renderAmounts}
       </Container>
       <Button
         borderColor="buttonSecondaryBorder"
