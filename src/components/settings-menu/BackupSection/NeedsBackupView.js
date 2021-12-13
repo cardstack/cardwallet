@@ -1,9 +1,9 @@
 import { useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { cloudPlatform } from '../../../utils/platform';
 import { Centered, Column } from '../../layout';
 import { Button, Container, Icon, Text } from '@cardstack/components';
+import { Device } from '@cardstack/utils/device';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -29,7 +29,7 @@ export default function NeedsBackupView() {
     }
   }, [setParams, walletId, wallets]);
 
-  const onIcloudBackup = useCallback(() => {
+  const onCloudBackup = useCallback(() => {
     navigate(ios ? Routes.BACKUP_SHEET : Routes.BACKUP_SCREEN, {
       nativeScreen: true,
       step: WalletBackupStepTypes.cloud,
@@ -69,8 +69,8 @@ export default function NeedsBackupView() {
           </Text>
         </Column>
         <Container width="100%">
-          <Button marginBottom={5} onPress={onIcloudBackup} width="100%">
-            {`Back up to ${cloudPlatform}`}
+          <Button marginBottom={5} onPress={onCloudBackup} width="100%">
+            {`Back up to ${Device.cloudPlatform}`}
           </Button>
           <Button onPress={onManualBackup} variant="secondary" width="100%">
             Back up manually

@@ -5,12 +5,12 @@ import { Keyboard } from 'react-native';
 import styled from 'styled-components';
 import { isSamsungGalaxy } from '../../helpers/samsung';
 import { saveBackupPassword } from '../../model/backup';
-import { cloudPlatform } from '../../utils/platform';
 import { DelayedAlert } from '../alerts';
 import { PasswordField } from '../fields';
 import { Centered, Column } from '../layout';
 import { GradientText, Text } from '../text';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
+import { Device } from '@cardstack/utils/device';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
@@ -26,6 +26,8 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { margin, padding } from '@rainbow-me/styles';
 import logger from 'logger';
+
+const { cloudPlatform } = Device;
 
 const DescriptionText = styled(Text).attrs(({ theme: { colors } }) => ({
   align: 'center',

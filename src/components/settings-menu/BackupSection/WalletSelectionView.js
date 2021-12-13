@@ -3,7 +3,6 @@ import { ScrollView } from 'react-native';
 import styled from 'styled-components';
 
 import { useTheme } from '../../../context/ThemeContext';
-import { cloudPlatform } from '../../../utils/platform';
 import Divider from '../../Divider';
 import { ButtonPressAnimation } from '../../animations';
 import { ContactAvatar } from '../../contacts';
@@ -13,6 +12,7 @@ import {
   getAddressPreview,
   getSymbolCharacterFromAddress,
 } from '@cardstack/utils';
+import { Device } from '@cardstack/utils/device';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useManageCloudBackups, useWallets } from '@rainbow-me/hooks';
@@ -170,7 +170,7 @@ const WalletSelectionView = () => {
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
             <Text align="center" color="backgroundBlue">
-              􀍢 Manage {cloudPlatform} Backups
+              􀍢 Manage {Device.cloudPlatform} Backups
             </Text>
           </ButtonPressAnimation>
         </Footer>

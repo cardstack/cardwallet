@@ -1,7 +1,7 @@
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { cloudPlatform } from '../utils/platform';
 import useWallets from './useWallets';
+import { Device } from '@cardstack/utils/device';
 import {
   deleteAllBackups,
   fetchAllBackups,
@@ -12,6 +12,8 @@ import { useNavigation } from '@rainbow-me/navigation/Navigation';
 import { walletsUpdate } from '@rainbow-me/redux/wallets';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
+
+const { cloudPlatform } = Device;
 
 export default function useManageCloudBackups() {
   const dispatch = useDispatch();

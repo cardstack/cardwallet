@@ -10,8 +10,8 @@ import {
   fetchBackupPassword,
 } from '../model/backup';
 import { setWalletBackedUp } from '../redux/wallets';
-import { cloudPlatform } from '../utils/platform';
 import useWallets from './useWallets';
+import { Device } from '@cardstack/utils/device';
 import {
   CLOUD_BACKUP_ERRORS,
   isCloudBackupAvailable,
@@ -19,6 +19,8 @@ import {
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
+
+const { cloudPlatform } = Device;
 
 function getUserError(e) {
   switch (e.message) {

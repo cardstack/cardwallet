@@ -6,9 +6,9 @@ import {
   restoreCloudBackup,
   saveBackupPassword,
 } from '../../model/backup';
-import { cloudPlatform } from '../../utils/platform';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
+import { Device } from '@cardstack/utils/device';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
@@ -68,7 +68,7 @@ export default function RestoreCloudStep({
         passwordIsValid = true;
       }
 
-      newLabel = `Restore from ${cloudPlatform}`;
+      newLabel = `Restore from ${Device.cloudPlatform}`;
     }
 
     setValidPassword(passwordIsValid);

@@ -1,7 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { cloudPlatform } from '../../../utils/platform';
 import { DelayedAlert } from '../../alerts';
 import { ButtonPressAnimation } from '../../animations';
 import { Centered } from '../../layout';
@@ -12,6 +11,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+import { Device } from '@cardstack/utils/device';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -30,6 +30,7 @@ const WalletBackupStatus = {
   IMPORTED: 1,
   MANUAL_BACKUP: 2,
 };
+const { cloudPlatform } = Device;
 
 const Content = styled(Centered).attrs({
   direction: 'column',
