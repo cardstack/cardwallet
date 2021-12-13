@@ -8,7 +8,6 @@ import { captureEvent, captureException } from '@sentry/react-native';
 import { get, isEmpty, isString } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
-import { isIphoneX } from 'react-native-iphone-x-helper';
 import { useDispatch } from 'react-redux';
 import SendSheet, {
   useSendAddressValidation,
@@ -16,7 +15,6 @@ import SendSheet, {
 } from '../components/send/SendSheet';
 import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
-import { dismissingScreenListener } from '../initializers/screen-dismissal';
 import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
@@ -45,7 +43,7 @@ import logger from 'logger';
 const useSendSheetScreen = () => {
   const dispatch = useDispatch();
 
-  const { navigate, addListener } = useNavigation();
+  const { navigate } = useNavigation();
   const { params } = useRoute();
   const { dataAddNewTransaction } = useTransactionConfirmation();
   const updateAssetOnchainBalanceIfNeeded = useUpdateAssetOnchainBalance();
@@ -63,33 +61,9 @@ const useSendSheetScreen = () => {
     updateGasPriceOption,
     updateTxFee,
   } = useGas();
-  const isDismissing = useRef(false);
 
   const recipientFieldRef = useRef();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  useEffect(() => {
-    if (ios) {
-      return;
-    }
-    dismissingScreenListener.current = () => {
-      Keyboard.dismiss();
-      isDismissing.current = true;
-    };
-    const unsubscribe = addListener(
-      'transitionEnd',
-      ({ data: { closing } }) => {
-        if (!closing && isDismissing.current) {
-          isDismissing.current = false;
-          recipientFieldRef?.current?.focus();
-        }
-      }
-    );
-    return () => {
-      unsubscribe();
-      dismissingScreenListener.current = undefined;
-    };
-  }, [addListener]);
 
   const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
@@ -399,13 +373,7 @@ const useSendSheetScreen = () => {
     [txFees, gasPrices, updateGasPriceOption]
   );
 
-  const onSendPress = useCallback(() => {
-    if (isIphoneX()) {
-      submitTransaction();
-    } else {
-      onPressTransactionSpeed(submitTransaction);
-    }
-  }, [onPressTransactionSpeed, submitTransaction]);
+  const onSendPress = useCallback(submitTransaction, [submitTransaction]);
 
   const onResetAssetSelection = useCallback(() => {
     onSelectAsset({});

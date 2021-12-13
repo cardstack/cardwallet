@@ -7,7 +7,7 @@ import {
   sortBy,
   upperFirst,
 } from 'lodash';
-import { showActionSheetWithOptions } from '@rainbow-me/utils/actionsheet';
+import showActionSheetWithOptions from './actionsheet';
 
 const CUSTOM = 'custom';
 const FAST = 'fast';
