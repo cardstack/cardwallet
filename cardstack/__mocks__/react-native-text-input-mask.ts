@@ -1,10 +1,6 @@
-import React from 'react';
+import { TextInput } from 'react-native';
 
-class TextInputMask extends React.Component {
-  render() {
-    return null;
-  }
-}
+const TextInputMask = TextInput;
 
 const mask = () => ({});
 const unmask = () => ({});
