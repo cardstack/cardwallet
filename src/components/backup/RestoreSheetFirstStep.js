@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { Container, OptionItem, Text } from '@cardstack/components';
+import { Device } from '@cardstack/utils/device';
 
 export default function RestoreSheetFirstStep({
   onManualRestore,
@@ -42,6 +42,18 @@ export default function RestoreSheetFirstStep({
         subText="Use the private secret phrase for your crypto account"
         title="Import via secret recovery phrase"
       />
+      {Device.isAndroid && (
+        <OptionItem
+          iconProps={{
+            name: 'download-cloud',
+            size: 25,
+          }}
+          marginTop={4}
+          onPress={onCloudRestore}
+          subText={`Connect to ${Device.cloudPlatform} to restore`}
+          title="Have a Card Wallet backup?"
+        />
+      )}
     </Container>
   );
 }

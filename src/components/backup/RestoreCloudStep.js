@@ -17,8 +17,8 @@ import { removeWalletData } from '@rainbow-me/handlers/localstorage/removeWallet
 import walletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import {
+  useAccountSettings,
   useInitializeWallet,
-  useUserAccounts,
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -44,7 +44,7 @@ export default function RestoreCloudStep({
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('Restore from backup');
   const passwordRef = useRef();
-  const { userAccounts } = useUserAccounts();
+  const { accountAddress } = useAccountSettings();
   const initializeWallet = useInitializeWallet();
 
   useEffect(() => {
@@ -95,11 +95,8 @@ export default function RestoreCloudStep({
         // Store it in the keychain in case it was missing
         await saveBackupPassword(password);
 
-        // Get rid of the old wallets
-        for (let i = 0; i < userAccounts.length; i++) {
-          const account = userAccounts[i];
-          await removeWalletData(account.address);
-        }
+        // Get rid of the current wallet
+        await removeWalletData(accountAddress);
 
         goBack();
 
@@ -129,7 +126,7 @@ export default function RestoreCloudStep({
           const p1 = dispatch(walletsSetSelected(firstWallet));
           const p2 = dispatch(addressSetSelected(firstAddress));
           await Promise.all([p1, p2]);
-          await initializeWallet(null, null, null, false, false, null, true);
+          await initializeWallet();
           if (fromSettings) {
             logger.log('navigating to wallet');
             navigate(Routes.WALLET_SCREEN);
@@ -148,6 +145,7 @@ export default function RestoreCloudStep({
       Alert.alert('Error while restoring backup');
     }
   }, [
+    accountAddress,
     backupSelected?.name,
     dispatch,
     fromSettings,
@@ -157,7 +155,6 @@ export default function RestoreCloudStep({
     password,
     replace,
     setIsWalletLoading,
-    userAccounts,
     userData,
   ]);
 

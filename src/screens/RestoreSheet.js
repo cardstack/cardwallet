@@ -7,6 +7,7 @@ import RestoreSheetFirstStep from '../components/backup/RestoreSheetFirstStep';
 
 import { Sheet } from '@cardstack/components';
 import { Device, layoutEasingAnimation } from '@cardstack/utils';
+import { fetchUserDataFromCloud } from '@rainbow-me/handlers/cloudBackup';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -27,9 +28,12 @@ export default function RestoreSheet() {
     // Animate transforming into backup sheet
     layoutEasingAnimation();
 
-    if (Device.isIOS) {
-      setParams({ step: WalletBackupStepTypes.cloud });
+    if (Device.isAndroid) {
+      // we didn't yet fetch the user data from the cloud
+      const data = await fetchUserDataFromCloud();
+      setParams({ userData: data });
     }
+    setParams({ step: WalletBackupStepTypes.cloud });
   }, [setParams]);
 
   const onManualRestore = useCallback(() => {
