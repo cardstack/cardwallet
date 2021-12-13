@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
-import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import styled from 'styled-components';
 import isNativeStackAvailable from '../../helpers/isNativeStackAvailable';
@@ -180,13 +180,11 @@ export default function SendSheet({
             sendMaxBalance={onMaxBalancePress}
             showNativeCurrencyField={showNativeCurrencyField}
             txSpeedRenderer={
-              isIphoneX() && (
-                <SendTransactionSpeed
-                  gasPrice={selectedGasPrice}
-                  nativeCurrencySymbol={nativeCurrencySymbol}
-                  onPressTransactionSpeed={onPressTransactionSpeed}
-                />
-              )
+              <SendTransactionSpeed
+                gasPrice={selectedGasPrice}
+                nativeCurrencySymbol={nativeCurrencySymbol}
+                onPressTransactionSpeed={onPressTransactionSpeed}
+              />
             }
           />
         )}

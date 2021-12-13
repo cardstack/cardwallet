@@ -20,7 +20,9 @@ export default function SendTransactionSpeed({
         `${nativeCurrencySymbol}0.00`
       );
 
-  const timeAmount = isGasNumber ? 0 : get(gasPrice, 'estimatedTime.amount', 0);
+  const hasTimeAmount = !!(isGasNumber
+    ? 0
+    : get(gasPrice, 'estimatedTime.amount', 0));
 
   const time = isGasNumber ? '' : get(gasPrice, 'estimatedTime.display', '');
 
@@ -28,19 +30,18 @@ export default function SendTransactionSpeed({
     <Row justify="center">
       <Touchable
         disabled={!onPressTransactionSpeed}
-        marginRight={5}
+        flexDirection="row"
         onPress={onPressTransactionSpeed}
       >
         <Container alignItems="center" flexDirection="row">
           <Text variant="subText">Fee: {fee}</Text>
-          {!timeAmount && !!onPressTransactionSpeed && (
+          {!hasTimeAmount && !!onPressTransactionSpeed && (
             <Icon color="settingsTeal" iconSize="small" name="chevron-right" />
           )}
         </Container>
-      </Touchable>
-      {!!timeAmount && (
-        <Touchable onPress={onPressTransactionSpeed}>
-          <Container alignItems="center" flexDirection="row">
+
+        {hasTimeAmount && (
+          <Container alignItems="center" flexDirection="row" marginLeft={2}>
             <Text
               color="black"
               fontWeight="600"
@@ -51,8 +52,8 @@ export default function SendTransactionSpeed({
             </Text>
             <Icon color="settingsTeal" iconSize="small" name="chevron-right" />
           </Container>
-        </Touchable>
-      )}
+        )}
+      </Touchable>
     </Row>
   );
 }
