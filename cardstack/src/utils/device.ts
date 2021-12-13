@@ -8,6 +8,7 @@ const Device = {
   isAndroid,
   supportsFiatOnRamp: isIOS,
   keyboardBehavior: isIOS ? ('padding' as const) : undefined,
+  supportsPrefilledAmount: isIOS,
 };
 
 export { Device };
