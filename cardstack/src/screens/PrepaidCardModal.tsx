@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import React, { memo } from 'react';
-import { SectionList } from 'react-native';
+import { SectionList, StatusBar, StyleSheet } from 'react-native';
 import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
 import {
   Container,
@@ -14,6 +14,12 @@ import {
 } from '@cardstack/components';
 import { usePrepaidCardTransactions } from '@cardstack/hooks';
 import { sectionStyle } from '@cardstack/utils/layouts';
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: StatusBar.currentHeight || 1,
+  },
+});
 
 const PrepaidCardModal = () => {
   const {
@@ -30,7 +36,7 @@ const PrepaidCardModal = () => {
       flex={1}
       width="100%"
       alignItems="center"
-      paddingTop={1}
+      style={styles.container}
     >
       <SheetHandle color="buttonDarkBackground" opacity={1} />
       <PrepaidCard
