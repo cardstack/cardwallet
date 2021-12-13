@@ -172,12 +172,16 @@ export const usePayMerchant = () => {
   const {
     infoDID = '',
     amount: initialAmount,
-    currency: initialCurrency,
+    currency: initialCurrency = NativeCurrency.SPD,
     merchantSafe: merchantAddress,
     qrCodeNetwork,
   } = data;
 
-  const { paymentChangeCurrency, currency: nativeCurrency } = usePayment();
+  const {
+    paymentChangeCurrency,
+    currency: nativeCurrency = initialCurrency,
+  } = usePayment();
+
   // Initialize input amount's currency with the currency in merchant payment request link
   useEffect(() => {
     if (initialCurrency) {
