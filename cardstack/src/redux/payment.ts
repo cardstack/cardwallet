@@ -36,7 +36,7 @@ export const paymentChangeCurrency = (currency: string) => async (
 
 // -- Reducer --------------------------------------------------------------- //
 export const INITIAL_STATE = {
-  currency: null,
+  currency: undefined,
 };
 
 export default (state = INITIAL_STATE, action: AnyAction) => {

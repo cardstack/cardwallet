@@ -177,7 +177,11 @@ export const usePayMerchant = () => {
     qrCodeNetwork,
   } = data;
 
-  const { paymentChangeCurrency, currency: nativeCurrency } = usePayment();
+  const {
+    paymentChangeCurrency,
+    currency: nativeCurrency = initialCurrency || NativeCurrency.SPD,
+  } = usePayment();
+
   // Initialize input amount's currency with the currency in merchant payment request link
   useEffect(() => {
     if (initialCurrency) {
@@ -235,14 +239,15 @@ export const usePayMerchant = () => {
     }
   }, [initialAmount]);
 
-  const spendAmount = useMemo(() => {
-    const currency = nativeCurrency || initialCurrency || 'SPD';
-    return convertToSpend(
-      convertStringToNumber(inputValue || '0'),
-      currency,
-      currencyConversionRates[currency]
-    );
-  }, [currencyConversionRates, initialCurrency, inputValue, nativeCurrency]);
+  const spendAmount = useMemo(
+    () =>
+      convertToSpend(
+        convertStringToNumber(inputValue || '0'),
+        nativeCurrency,
+        currencyConversionRates[nativeCurrency]
+      ),
+    [currencyConversionRates, inputValue, nativeCurrency]
+  );
 
   const { payMerchantRequest, isLoadingPayment } = usePayMerchantRequest({
     spendAmount,
