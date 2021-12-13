@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
-<<<<<<< HEAD
 import Web3 from 'web3';
-=======
->>>>>>> 7176e6b95 (Refactor hub service with web3instance, updated hd-provider)
 import { getSelectedWallet, loadAddress } from '@rainbow-me/model/wallet';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import {
@@ -15,10 +12,6 @@ import {
 } from '@cardstack/types';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-<<<<<<< HEAD
-=======
-import Web3Instance from '@cardstack/models/web3-instance';
->>>>>>> 7176e6b95 (Refactor hub service with web3instance, updated hd-provider)
 import HDProvider from '@cardstack/models/hd-provider';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
@@ -51,35 +44,19 @@ export const getHubAuthToken = async (
 
   if (selectedWallet) {
     try {
-<<<<<<< HEAD
       const hdProvider = await HDProvider.get({
-=======
-      const web3 = await Web3Instance.get({
->>>>>>> 7176e6b95 (Refactor hub service with web3instance, updated hd-provider)
         walletId: selectedWallet.wallet.id,
         network,
         seedPhrase,
         keychainAcessAskPrompt: HUBAUTH_PROMPT_MESSAGE,
       });
 
-<<<<<<< HEAD
       // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
       const web3 = new Web3(hdProvider);
       const authAPI = await getSDK('HubAuth', web3, hubURL);
       // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
       const address = walletAddress || (await loadAddress()) || '';
       const authToken = await authAPI.authenticate({ from: address });
-=======
-      const authAPI = await getSDK('HubAuth', web3, hubURL);
-
-      // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
-      const address = walletAddress || (await loadAddress()) || '';
-      const authToken = await authAPI.authenticate({ from: address });
-
-      // resets signed provider and web3 instance to kill poller
-      await HDProvider.reset();
-
->>>>>>> 7176e6b95 (Refactor hub service with web3instance, updated hd-provider)
       return authToken;
     } catch (e) {
       logger.sentry('Hub authenticate failed', e);
