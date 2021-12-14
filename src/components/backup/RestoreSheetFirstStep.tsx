@@ -4,14 +4,16 @@ import { Device } from '@cardstack/utils/device';
 
 interface RestoreSheetFirstStepProps {
   enableCloudRestore: boolean;
+  noBackupsFound: boolean;
   onCloudRestore: () => Promise<void>;
   onManualRestore: () => Promise<void>;
   walletsBackedUp: any;
 }
 export default function RestoreSheetFirstStep({
-  onManualRestore,
   enableCloudRestore,
+  noBackupsFound,
   onCloudRestore,
+  onManualRestore,
   walletsBackedUp,
 }: RestoreSheetFirstStepProps) {
   return (
@@ -48,7 +50,7 @@ export default function RestoreSheetFirstStep({
         subText="Use the private secret phrase for your crypto account"
         title="Import via secret recovery phrase"
       />
-      {Device.isAndroid && (
+      {Device.isAndroid && !noBackupsFound && (
         <OptionItem
           iconProps={{
             name: 'download-cloud',
@@ -58,6 +60,19 @@ export default function RestoreSheetFirstStep({
           onPress={onCloudRestore}
           subText={`Connect to ${Device.cloudPlatform} to restore`}
           title="Have a Card Wallet backup?"
+        />
+      )}
+      {Device.isAndroid && noBackupsFound && (
+        <OptionItem
+          disabled
+          iconProps={{
+            name: 'download-cloud',
+            size: 25,
+          }}
+          marginTop={4}
+          onPress={() => {}}
+          subText="Connected. No backups available."
+          title={`No backups found in ${Device.cloudPlatform}`}
         />
       )}
     </Container>
