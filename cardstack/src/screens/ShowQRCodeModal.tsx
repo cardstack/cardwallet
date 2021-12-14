@@ -137,8 +137,8 @@ export const AmountQRCode = ({
           alignItems="center"
           justifyContent="center"
           borderRadius={40}
-          width={QRCodeSize + 40}
-          height={QRCodeSize + 40}
+          width={QRCodeSize + 50}
+          height={QRCodeSize + 50}
         >
           {isFocus && (
             <QRCode
