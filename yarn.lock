@@ -9033,12 +9033,13 @@ duplexer@^0.1.1, duplexer@~0.1.1:
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.2.tgz#3abe43aef3835f8ae077d136ddce0f276b0400e6"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
-easyqrcode-react-native@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/easyqrcode-react-native/-/easyqrcode-react-native-4.0.2.tgz#eff66ba1129c170f95d510743be2359587da0d1f"
-  integrity sha512-GqHuhkREhxewoNNfmoB1i91kiPtzwU9/NsNpRa1b9JbUqZjyQ+i2abZPO+wPyIsMoq3sl9+NW8aInTuerI2Stw==
+easyqrcode-react-native@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/easyqrcode-react-native/-/easyqrcode-react-native-4.0.4.tgz#a60378e80bd621a333e57151717b36dc950f9cdf"
+  integrity sha512-jy5EXNQKpd/IjI3rqbqdgkw653dZkZzrq7nV4kzwXSGXHJ7hSkqxDGpKWBKgbZ+WkPBhUvXQuN5MIqhZf9aWIw==
   dependencies:
     react-native-canvas "^0.1.37"
+    react-native-svg "^12.1.1"
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"

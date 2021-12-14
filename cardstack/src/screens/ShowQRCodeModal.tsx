@@ -1,6 +1,7 @@
 import { useRoute } from '@react-navigation/core';
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator } from 'react-native';
 import CardstackColorLogo from '../assets/cardstackColorLogo.png';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
@@ -12,6 +13,7 @@ import {
   Text,
 } from '@cardstack/components';
 import { MerchantInformation } from '@cardstack/types';
+import { colors } from '@cardstack/theme';
 import { useDimensions } from '@rainbow-me/hooks';
 import { hitSlop } from '@cardstack/utils/layouts';
 
@@ -33,13 +35,24 @@ export const AmountQRCode = ({
   backToEditMode,
 }: ShowQRCodeModalParamTypes) => {
   const { width } = useDimensions();
-  const QRCodeSize = width - 140;
+  const QRCodeSize = Math.round(width - 160);
   const { goBack } = useNavigation();
 
   const goBackToEditAmount = useCallback(() => {
     backToEditMode && backToEditMode();
     goBack();
   }, [goBack, backToEditMode]);
+
+  const [isFocus, setFocus] = useState(false);
+  const [isQRCodeRendering, setQRCodeState] = useState(true);
+  const onQRCodeRendered = useCallback(() => setQRCodeState(false), []);
+  useFocusEffect(
+    useCallback(() => {
+      setFocus(true);
+
+      return () => setFocus(false);
+    }, [])
+  );
 
   return (
     <Container
@@ -120,18 +133,28 @@ export const AmountQRCode = ({
       </Container>
       <Container alignItems="center" flex={1} paddingTop={8}>
         <Container
-          padding={5}
           backgroundColor="white"
           alignItems="center"
+          justifyContent="center"
           borderRadius={40}
+          width={QRCodeSize + 40}
+          height={QRCodeSize + 40}
         >
-          <QRCode
-            size={QRCodeSize}
-            data={value}
-            logo={CardstackColorLogo}
-            logoWidth={34}
-            logoHeight={36}
-          />
+          {isFocus && (
+            <QRCode
+              size={QRCodeSize}
+              data={value}
+              logo={CardstackColorLogo}
+              logoWidth={34}
+              logoHeight={36}
+              onRenderingEnd={onQRCodeRendered}
+            />
+          )}
+          {isQRCodeRendering && (
+            <Container position="absolute">
+              <ActivityIndicator size="large" color={colors.blueText} />
+            </Container>
+          )}
         </Container>
       </Container>
     </Container>
