@@ -36,6 +36,7 @@ export default function RestoreCloudStep({
   backupSelected,
   fromSettings,
 }) {
+  const selectedBackupName = backupSelected?.name;
   const dispatch = useDispatch();
   const { navigate, goBack, replace } = useNavigation();
   const { setIsWalletLoading } = useWallets();
@@ -89,7 +90,7 @@ export default function RestoreCloudStep({
       const success = await restoreCloudBackup(
         password,
         userData,
-        backupSelected?.name
+        selectedBackupName
       );
       if (success) {
         // Store it in the keychain in case it was missing
@@ -102,19 +103,19 @@ export default function RestoreCloudStep({
 
         InteractionManager.runAfterInteractions(async () => {
           const wallets = await dispatch(walletsLoadState());
-          if (!userData && backupSelected?.name) {
+          if (!userData && selectedBackupName) {
             goBack();
             logger.log('updating backup state of wallets');
             await Promise.all(
               Object.keys(wallets).map(walletId => {
                 logger.log('updating backup state of wallet', walletId);
-                logger.log('backupSelected?.name', backupSelected?.name);
+                logger.log('selectedBackupName', selectedBackupName);
                 // Mark the wallet as backed up
                 return dispatch(
                   setWalletBackedUp(
                     walletId,
                     walletBackupTypes.cloud,
-                    backupSelected?.name
+                    selectedBackupName
                   )
                 );
               })
@@ -146,7 +147,7 @@ export default function RestoreCloudStep({
     }
   }, [
     accountAddress,
-    backupSelected?.name,
+    selectedBackupName,
     dispatch,
     fromSettings,
     goBack,
