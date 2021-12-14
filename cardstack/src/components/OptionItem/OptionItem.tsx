@@ -10,7 +10,7 @@ interface OptionItemProps extends ContainerProps {
   iconProps: IconProps;
   title: string;
   subText?: string;
-  textProps: TextProps;
+  textProps?: TextProps;
   borderIcon?: boolean;
   horizontalSpacing?: number;
   disabled?: boolean;

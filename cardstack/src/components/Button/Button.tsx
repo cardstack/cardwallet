@@ -36,6 +36,7 @@ interface ButtonProps extends RestyleProps {
   loading?: boolean;
   wrapper?: ButtonWrappper;
   disablePress?: boolean;
+  testID?: string;
 }
 
 type IconPosition = 'left' | 'right';

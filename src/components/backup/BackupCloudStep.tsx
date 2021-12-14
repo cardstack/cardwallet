@@ -3,12 +3,21 @@ import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Keyboard } from 'react-native';
+import { Keyboard, TextInputProps } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { saveBackupPassword } from '../../model/backup';
 import { DelayedAlert } from '../alerts';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
-import { Button, Container, Icon, Input, Text } from '@cardstack/components';
+import {
+  BaseInputProps,
+  Button,
+  Container,
+  Icon,
+  IconName,
+  Input,
+  InputProps,
+  Text,
+} from '@cardstack/components';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
@@ -49,9 +58,9 @@ export default function BackupCloudStep() {
     Routes.SETTINGS_MODAL
   );
 
-  const walletId = params?.walletId || selectedWallet.id;
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
+  const walletId = (params as any)?.walletId || selectedWallet.id;
+  const passwordRef = useRef<any>();
+  const confirmPasswordRef = useRef<any>();
 
   useEffect(() => {
     setTimeout(() => {
@@ -142,7 +151,9 @@ export default function BackupCloudStep() {
     validPassword && onConfirmBackup();
   }, [onConfirmBackup, validPassword]);
 
-  const sharedPasswordProps = {
+  const sharedPasswordProps: Partial<
+    TextInputProps & InputProps & BaseInputProps
+  > = {
     autoCompleteType: 'password',
     blurOnSubmit: false,
     border: true,
@@ -150,7 +161,7 @@ export default function BackupCloudStep() {
     passwordRules: `minlength: ${cloudBackupPasswordMinLength};`,
     secureTextEntry: true,
     selectTextOnFocus: true,
-    type: 'password',
+    textContentType: 'password',
   };
 
   return (
@@ -163,9 +174,9 @@ export default function BackupCloudStep() {
                 ? {
                     iconSize: 'medium',
                     marginRight: 3,
-                    name: biometryIconName,
+                    name: biometryIconName as IconName,
                   }
-                : null
+                : undefined
             }
             onPress={onConfirmBackup}
           >
@@ -187,7 +198,7 @@ export default function BackupCloudStep() {
             recovered.
           </Text>
         </Container>
-        <Container flex={1} margin={5} textAlign="center">
+        <Container alignItems="center" flex={1} margin={5}>
           <Input
             {...sharedPasswordProps}
             iconProps={
@@ -195,7 +206,7 @@ export default function BackupCloudStep() {
                 ? {
                     name: 'success',
                   }
-                : null
+                : undefined
             }
             onBlur={onPasswordBlur}
             onChange={onPasswordChange}
@@ -221,7 +232,6 @@ export default function BackupCloudStep() {
             onSubmitEditing={onConfirmPasswordSubmit}
             placeholder="Confirm password"
             ref={confirmPasswordRef}
-            type="password"
             value={confirmPassword}
           />
         </Container>

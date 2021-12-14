@@ -99,7 +99,7 @@ export async function addWalletToCloudBackup(
   password: BackupPassword,
   wallet: RainbowWallet,
   filename: string
-): Promise<null | boolean> {
+): Promise<boolean> {
   const backup = await getDataFromCloud(password, filename);
 
   const now = Date.now();
@@ -112,7 +112,12 @@ export async function addWalletToCloudBackup(
     ...backup.secrets,
     ...secrets,
   };
-  return encryptAndSaveDataToCloud(backup, password, filename);
+  const savedFilename = await encryptAndSaveDataToCloud(
+    backup,
+    password,
+    filename
+  );
+  return !!savedFilename;
 }
 
 export function findLatestBackUp(wallets: AllRainbowWallets): string | null {
@@ -261,15 +266,17 @@ export async function saveBackupPassword(
 }
 
 // Attempts to fetch the password to decrypt the backup from the iCloud keychain
-export async function fetchBackupPassword() {
+export async function fetchBackupPassword(): Promise<string | null> {
   if (Device.isAndroid) {
     return null;
   }
 
   try {
     const password = (await keychain.loadString(iCloudKey)) || null;
-
-    return password;
+    if (typeof password === 'string') {
+      return password;
+    }
+    throw new Error('Unexpected response loading decryption password');
   } catch (e) {
     logger.sentry('Error while fetching backup password', e);
     captureException(e);

@@ -27,11 +27,13 @@ describe('useWelcomeScreen', () => {
 
   const spyIsCloudAvailable = jest
     .spyOn(cloudBackup, 'isCloudBackupAvailable')
-    .mockReturnValue(true);
+    .mockReturnValue(Promise.resolve(true));
+
+  jest.spyOn(cloudBackup, 'syncCloud').mockReturnValue(Promise.resolve(true));
 
   const fetchUserDataFromCloud = jest
     .spyOn(cloudBackup, 'fetchUserDataFromCloud')
-    .mockResolvedValue(mockedUserData);
+    .mockResolvedValue(Promise.resolve(mockedUserData));
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -61,7 +63,7 @@ describe('useWelcomeScreen', () => {
   });
 
   it('should navigate to RestoreSheet on onAddExistingWallet press without userData', async () => {
-    spyIsCloudAvailable.mockReturnValue(false);
+    spyIsCloudAvailable.mockReturnValue(Promise.resolve(false));
 
     const { result } = renderHook(() => useWelcomeScreen());
 

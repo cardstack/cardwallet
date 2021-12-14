@@ -5,12 +5,21 @@ import styled from 'styled-components';
 
 import { Column } from '../layout';
 import { Container } from '@cardstack/components';
+import { Device } from '@cardstack/utils/device';
 
 const KeyboardSizeView = styled(KeyboardArea)`
   background-color: ${({ theme: { colors } }) => colors.transparent};
 `;
 
-export default function BackupSheetKeyboardLayout({ children, footer }) {
+interface BackupSheetKeyboardLayoutProps {
+  children: React.ReactNode;
+  footer: React.ReactNode;
+}
+
+export default function BackupSheetKeyboardLayout({
+  children,
+  footer,
+}: BackupSheetKeyboardLayoutProps) {
   return (
     <Column>
       <StatusBar barStyle="light-content" />
@@ -18,7 +27,11 @@ export default function BackupSheetKeyboardLayout({ children, footer }) {
       <Container alignItems="center" width="100%">
         {footer}
       </Container>
-      {android ? <KeyboardSizeView /> : null}
+      {Device.isAndroid ? (
+        <KeyboardSizeView>
+          <Container />
+        </KeyboardSizeView>
+      ) : null}
     </Column>
   );
 }

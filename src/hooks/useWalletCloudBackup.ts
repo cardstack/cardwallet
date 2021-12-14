@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { delay } from '@cardstack/cardpay-sdk';
 import { captureException } from '@sentry/react-native';
 import { values } from 'lodash';
@@ -22,7 +23,7 @@ import logger from 'logger';
 
 const { cloudPlatform } = Device;
 
-function getUserError(e) {
+function getUserError(e: Error) {
   switch (e.message) {
     case CLOUD_BACKUP_ERRORS.KEYCHAIN_ACCESS_ERROR:
       return 'You need to authenticate to proceed with the Backup process';
@@ -78,7 +79,7 @@ export default function useWalletCloudBackup() {
       if (!password && !latestBackup) {
         // No password, No latest backup meaning
         // it's a first time backup so we need to show the password sheet
-        handleNoLatestBackup && handleNoLatestBackup();
+        handleNoLatestBackup?.();
         return;
       }
 
@@ -98,7 +99,7 @@ export default function useWalletCloudBackup() {
 
       // If we still can't get the password, handle password not found
       if (!fetchedPassword) {
-        handlePasswordNotFound && handlePasswordNotFound();
+        handlePasswordNotFound?.();
         return;
       }
 
@@ -121,6 +122,7 @@ export default function useWalletCloudBackup() {
             wallets[walletId]
           );
         } else {
+          assert(typeof latestBackup === 'string');
           logger.log(
             `adding wallet to ${cloudPlatform} backup`,
             wallets[walletId]
@@ -133,7 +135,7 @@ export default function useWalletCloudBackup() {
         }
       } catch (e) {
         const userError = getUserError(e);
-        onError && onError(userError);
+        onError?.(userError);
         logger.sentry(
           `error while trying to backup wallet to ${cloudPlatform}`
         );
@@ -152,14 +154,14 @@ export default function useWalletCloudBackup() {
           )
         );
         logger.log('backup saved everywhere!');
-        onSuccess && onSuccess();
+        onSuccess?.();
       } catch (e) {
         logger.sentry('error while trying to save wallet backup state');
         captureException(e);
         const userError = getUserError(
           new Error(CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED)
         );
-        onError && onError(userError);
+        onError?.(userError);
       }
     },
     [dispatch, latestBackup, setIsWalletLoading, wallets]

@@ -2,12 +2,18 @@ import React from 'react';
 import { Container, OptionItem, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils/device';
 
+interface RestoreSheetFirstStepProps {
+  enableCloudRestore: boolean;
+  onCloudRestore: () => Promise<void>;
+  onManualRestore: () => Promise<void>;
+  walletsBackedUp: any;
+}
 export default function RestoreSheetFirstStep({
   onManualRestore,
   enableCloudRestore,
   onCloudRestore,
   walletsBackedUp,
-}) {
+}: RestoreSheetFirstStepProps) {
   return (
     <Container marginTop={2} paddingHorizontal={2}>
       <Text

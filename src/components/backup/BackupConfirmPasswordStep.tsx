@@ -8,14 +8,16 @@ import { saveBackupPassword } from '../../model/backup';
 import { DelayedAlert } from '../alerts';
 import { PasswordField } from '../fields';
 import { Centered, Column } from '../layout';
-import { GradientText, Text } from '../text';
+import { GradientText } from '../text';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
+import { Button, IconName, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils/device';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
 } from '@rainbow-me/handlers/cloudBackup';
 import {
+  useBiometryIconName,
   useBooleanState,
   useDimensions,
   useRouteExistsInNavigationState,
@@ -58,19 +60,20 @@ const MastheadIcon = styled(GradientText).attrs({
 })``;
 
 const Title = styled(Text).attrs({
-  size: 'big',
+  size: 'large',
   weight: 'bold',
 })`
   ${margin(15, 0, 12)};
 `;
 
-const samsungGalaxy = (android && isSamsungGalaxy()) || false;
+const samsungGalaxy = (Device.isAndroid && isSamsungGalaxy()) || false;
 
 export default function BackupConfirmPasswordStep() {
   const { isTinyPhone } = useDimensions();
   const { params } = useRoute();
   const { goBack } = useNavigation();
   const walletCloudBackup = useWalletCloudBackup();
+  const biometryIconName = useBiometryIconName();
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [validPassword, setValidPassword] = useState(false);
   const [
@@ -80,9 +83,9 @@ export default function BackupConfirmPasswordStep() {
   ] = useBooleanState(true);
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('􀎽 Confirm Backup');
-  const passwordRef = useRef();
+  const passwordRef = useRef<any>();
   const { selectedWallet, setIsWalletLoading } = useWallets();
-  const walletId = params?.walletId || selectedWallet.id;
+  const walletId = (params as any)?.walletId || selectedWallet.id;
 
   const isSettingsRoute = useRouteExistsInNavigationState(
     Routes.SETTINGS_MODAL
@@ -169,9 +172,26 @@ export default function BackupConfirmPasswordStep() {
 
   return (
     <BackupSheetKeyboardLayout
-      footerButtonDisabled={!validPassword}
-      footerButtonLabel={label}
-      onSubmit={onSubmit}
+      footer={
+        validPassword ? (
+          <Button
+            iconProps={
+              biometryIconName
+                ? {
+                    iconSize: 'medium',
+                    marginRight: 3,
+                    name: biometryIconName as IconName,
+                  }
+                : undefined
+            }
+            onPress={onSubmit}
+          >
+            {label}
+          </Button>
+        ) : (
+          <Text variant="subText">Minimum 8 characters</Text>
+        )
+      }
     >
       <Masthead>
         {(isTinyPhone || samsungGalaxy) && isKeyboardOpen ? null : (
