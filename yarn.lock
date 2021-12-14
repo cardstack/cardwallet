@@ -5029,13 +5029,6 @@
   resolved "https://registry.yarnpkg.com/@types/react-native-dotenv/-/react-native-dotenv-0.2.0.tgz#32c58422a422c1adf68acce363ed791314d5a8e7"
   integrity sha512-ZxX+dU/yoQc0jTk+/NWttkiuXceJyN5FpOSqDl0WynN5GDzxwH7OMruQ47qcY8llo2RD3irjvzJ9BwC8gDiq0A==
 
-"@types/react-native-mail@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.npmjs.org/@types/react-native-mail/-/react-native-mail-6.0.1.tgz#1b71d2f52ded235e8867ea4d135f498c16c15adb"
-  integrity sha512-V6zGX4zuNUHIrxn8NRHXsTMkqqYYBqRjW7Rfo2AlkmNdbem9ZO40UHzBvJGitb697wTHLHePadvT+fDRx/VTyQ==
-  dependencies:
-    react-native-mail "*"
-
 "@types/react-native-text-input-mask@^0.7.5":
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/@types/react-native-text-input-mask/-/react-native-text-input-mask-0.7.5.tgz#0dff36337e253d9891851cfb3ba89fe50dc14c50"
@@ -17676,15 +17669,10 @@ react-native-localize@^2.1.5:
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-2.1.5.tgz#79b4cd39151d4f38f8d6602572b0cbf9d7e7578d"
   integrity sha512-1ADxILk78P1iA5vdhfD/UsrlliINA1iuExu0n7l+0XpYsNIo5S68HFAkhGiZqO8cZUPNlpx75klZkAu9c3iMXw==
 
-react-native-mail@*:
+react-native-mail@^6.1.1:
   version "6.1.1"
   resolved "https://registry.npmjs.org/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
   integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
-
-react-native-mail@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-4.1.0.tgz#2ebe2df2211a84862a3aea77316736189e23435b"
-  integrity sha512-3IHQmUQJwFFV7HwDONeIEahhaEvK9u23liqIUQajPy7frk/AoIGhkdKf4FVSTeq+VlUx97qls4uNizP7hBXIIw==
 
 react-native-modal-datetime-picker@^7.4.2:
   version "7.6.1"
