@@ -39,7 +39,12 @@ export default function BackupCloudStep() {
   const { goBack } = useNavigation();
   const { params } = useRoute();
   const walletCloudBackup = useWalletCloudBackup();
-  const { selectedWallet, setIsWalletLoading, isDamaged } = useWallets();
+  const {
+    selectedWallet,
+    setIsWalletLoading,
+    isDamaged,
+    isWalletLoading,
+  } = useWallets();
   const [validPassword, setValidPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(true);
   const [password, setPassword] = useState('');
@@ -165,77 +170,79 @@ export default function BackupCloudStep() {
   };
 
   return (
-    <BackupSheetKeyboardLayout
-      footer={
-        validPassword ? (
-          <Button
-            iconProps={
-              biometryIconName
-                ? {
-                    iconSize: 'medium',
-                    marginRight: 3,
-                    name: biometryIconName as IconName,
-                  }
-                : undefined
-            }
-            onPress={onConfirmBackup}
-          >
-            Confirm
-          </Button>
-        ) : (
-          <Text variant="subText">Minimum 8 characters</Text>
-        )
-      }
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <Container alignItems="center" marginVertical={10} padding={9}>
-          <Icon color="settingsTeal" iconSize="xl" name="lock" />
-          <Text fontSize={20} margin={3}>
-            Choose a password
-          </Text>
-          <Text color="blueText" textAlign="center">
-            Be careful with your password. If you lose it, it cannot be
-            recovered.
-          </Text>
-        </Container>
-        <Container alignItems="center" flex={1} margin={5}>
-          <Input
-            {...sharedPasswordProps}
-            iconProps={
-              isCloudBackupPasswordValid(password)
-                ? {
-                    name: 'success',
-                  }
-                : undefined
-            }
-            onBlur={onPasswordBlur}
-            onChange={onPasswordChange}
-            onFocus={onPasswordFocus}
-            onSubmitEditing={onPasswordSubmit}
-            placeholder="Enter password"
-            ref={passwordRef}
-            returnKeyType="next"
-            textContentType="newPassword"
-            value={password}
-          />
-          <Input
-            {...sharedPasswordProps}
-            iconProps={
-              validPassword
-                ? {
-                    name: 'success',
-                  }
-                : null
-            }
-            onChange={onConfirmPasswordChange}
-            onFocus={onConfirmPasswordFocus}
-            onSubmitEditing={onConfirmPasswordSubmit}
-            placeholder="Confirm password"
-            ref={confirmPasswordRef}
-            value={confirmPassword}
-          />
-        </Container>
-      </TouchableWithoutFeedback>
-    </BackupSheetKeyboardLayout>
+    !isWalletLoading && (
+      <BackupSheetKeyboardLayout
+        footer={
+          validPassword ? (
+            <Button
+              iconProps={
+                biometryIconName
+                  ? {
+                      iconSize: 'medium',
+                      marginRight: 3,
+                      name: biometryIconName as IconName,
+                    }
+                  : undefined
+              }
+              onPress={onConfirmBackup}
+            >
+              Confirm
+            </Button>
+          ) : (
+            <Text variant="subText">Minimum 8 characters</Text>
+          )
+        }
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Container alignItems="center" marginVertical={10} padding={9}>
+            <Icon color="settingsTeal" iconSize="xl" name="lock" />
+            <Text fontSize={20} margin={3}>
+              Choose a password
+            </Text>
+            <Text color="blueText" textAlign="center">
+              Be careful with your password. If you lose it, it cannot be
+              recovered.
+            </Text>
+          </Container>
+          <Container alignItems="center" flex={1} margin={5}>
+            <Input
+              {...sharedPasswordProps}
+              iconProps={
+                isCloudBackupPasswordValid(password)
+                  ? {
+                      name: 'success',
+                    }
+                  : undefined
+              }
+              onBlur={onPasswordBlur}
+              onChange={onPasswordChange}
+              onFocus={onPasswordFocus}
+              onSubmitEditing={onPasswordSubmit}
+              placeholder="Enter password"
+              ref={passwordRef}
+              returnKeyType="next"
+              textContentType="newPassword"
+              value={password}
+            />
+            <Input
+              {...sharedPasswordProps}
+              iconProps={
+                validPassword
+                  ? {
+                      name: 'success',
+                    }
+                  : null
+              }
+              onChange={onConfirmPasswordChange}
+              onFocus={onConfirmPasswordFocus}
+              onSubmitEditing={onConfirmPasswordSubmit}
+              placeholder="Confirm password"
+              ref={confirmPasswordRef}
+              value={confirmPassword}
+            />
+          </Container>
+        </TouchableWithoutFeedback>
+      </BackupSheetKeyboardLayout>
+    )
   );
 }
