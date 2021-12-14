@@ -214,13 +214,11 @@ android {
             keyPassword 'android'
         }
 
-        def pass = getPassword("rainbow","rainbow-android-key")
-
         release {
-            storeFile file('../keystores/rainbow-key.keystore')
-            storePassword pass
-            keyAlias 'rainbow-alias'
-            keyPassword pass
+            storeFile file('../keystores/upload-keystore.jks')
+            storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+            keyAlias System.getenv('ANDROID_KEYSTORE_ALIAS')
+            keyPassword System.getenv('ANDROID_KEY_PASSWORD')
         }
     }
 

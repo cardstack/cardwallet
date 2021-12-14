@@ -4,18 +4,18 @@
 
 ## Requirements
 
-* A computer running macOS.
-* Volta installed for node/yarn version management: https://volta.sh/
+- A computer running macOS.
+- Volta installed for node/yarn version management: https://volta.sh/
 
 For iOS:
 
-* Install CocoaPods by running `sudo gem install cocoapods`
-* Install Watchman `brew install watchman`
-* xCode Version 13.0 (can be found [here](https://developer.apple.com/download/all/?q=xcode))
+- Install CocoaPods by running `sudo gem install cocoapods`
+- Install Watchman `brew install watchman`
+- xCode Version 13.0 (can be found [here](https://developer.apple.com/download/all/?q=xcode))
 
 For Android:
 
-* Install Android Studio https://developer.android.com/studio/install
+- Install Android Studio https://developer.android.com/studio/install
 
 If you are new to React Native, this is a helpful introduction: https://facebook.github.io/react-native/docs/getting-started.html
 
@@ -32,7 +32,7 @@ If you are new to React Native, this is a helpful introduction: https://facebook
 5. Install required Pods by running `yarn install-pods`.
 
 6. Run `yarn build:ios` to generate the main.jsbundle bundle for Xcode.
-   
+
 7. Run `yarn start` to start the React Native Bundler.
 
 8. Open `cardwallet/ios/Rainbow.xcworkspace` in XCode.
@@ -44,7 +44,7 @@ If you are new to React Native, this is a helpful introduction: https://facebook
 Follow steps 1 through 4 from the iOS steps above, then:
 
 5. Run `bundle exec fastlane sync_google_service_info`
-  
+
 6. Run `yarn android`
 
 7. Launch an Android emulator or connect a test device
@@ -52,24 +52,26 @@ Follow steps 1 through 4 from the iOS steps above, then:
 ## How to run the tests
 
 `yarn test`
+
 ## Project Secrets
 
 ### Commands
 
 #### Syncing
 
-* `yarn contexts:app:sync`
-  * Syncs app vars from context repo (corresponds to `.env` file)
-* `yarn contexts:app:${LANE}:sync`
-  * Syncs app vars for lane specific variables to `.env.${LANE}` file (lanes are alpha, beta, release)
-* `yarn contexts:sync`
-  * Syncs all app and lane-specific variables from the context repo
+- `yarn contexts:app:sync`
+  - Syncs app vars from context repo (corresponds to `.env` file)
+- `yarn contexts:app:${LANE}:sync`
+  - Syncs app vars for lane specific variables to `.env.${LANE}` file (lanes are alpha, beta, release)
+- `yarn contexts:sync`
+  - Syncs all app and lane-specific variables from the context repo
+
 #### Publishing
 
-* `yarn contexts:app:publish`
-  * Publishes app vars to context repo (pushes variables from `.env` file)
-* `yarn contexts:app:${LANE}:publish`
-  * Publishes lane specific variables to context repo (pushes variable from `.env.${LANE}` file)
+- `yarn contexts:app:publish`
+  - Publishes app vars to context repo (pushes variables from `.env` file)
+- `yarn contexts:app:${LANE}:publish`
+  - Publishes lane specific variables to context repo (pushes variable from `.env.${LANE}` file)
 
 ### Pulling Secrets
 
@@ -80,8 +82,6 @@ CRYPTEX_GIT_URL=https://github.com/cardstack/cardwallet-context
 CRYPTEX_GIT_REPOSITORY=cardstack/cardwallet-context
 CRYPTEX_PASSWORD=${{CRYPTEX_PASSWORD}}
 CRYPTEX_SKIP_DOCS=true
-ANDROID_KEYSTORE_ALIAS=android_release_keystore
-ANDROID_KEYSTORE_PATH=./fastlane/android/signing/release.keystore
 ANDROID_KEYSTORE_CRYPTEX_KEY=android_release_keystore
 MATCH_GIT_URL=https://github.com/cardstack/cardwallet-context
 MATCH_PASSWORD=${{CRYPTEX_PASSWORD}}
@@ -89,12 +89,21 @@ MATCH_STORAGE_MODE=git
 MATCH_TYPE=appstore
 MATCH_APP_IDENTIFIER=com.cardstack.cardpay
 ```
+
 Once this is setup, and you have git access to the `cardwallet-context` repository, you can run `yarn contexts:sync` to pull all environment variables down into a root `.env` file.
 
 If you get an error and are prompted to login to Github when following the instructions to resolve, enter your username and when you are prompted for password, enter your Github personal access token.
 
 ### Adding Secrets
 
-If you have already completed the necessary steps for pulling secrets, and have write access to the `cardwallet-context` repository, then you can now update these secrets within the context repo. 
+If you have already completed the necessary steps for pulling secrets, and have write access to the `cardwallet-context` repository, then you can now update these secrets within the context repo.
 
 First, ensure that you have the current up to date variables by running `yarn contexts:sync`. Once you have these, you can add or change any environment variables and run the [publish commands](#publishing).
+
+## Manual Release
+
+### Android
+
+To generate an Android bundle for release, make sure to have synced the secrets in order to have the `envs` and `release-keys` then run:
+
+`yarn android:bundle`
