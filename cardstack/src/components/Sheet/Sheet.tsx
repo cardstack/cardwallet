@@ -37,6 +37,7 @@ export interface SheetProps {
   isFullScreen?: boolean;
   scrollEnabled?: boolean;
   shadowEnabled?: boolean;
+  overlayColor?: string;
 }
 
 const Sheet = ({
@@ -46,6 +47,7 @@ const Sheet = ({
   isFullScreen = false,
   scrollEnabled = false,
   shadowEnabled = false,
+  overlayColor = 'transparent',
 }: SheetProps) => {
   const insets = useSafeArea();
   const { goBack } = useNavigation();
@@ -54,8 +56,9 @@ const Sheet = ({
     () => ({
       // Android barHeight or iOS top insets
       paddingTop: StatusBar.currentHeight || insets.top,
+      backgroundColor: overlayColor,
     }),
-    [insets]
+    [insets, overlayColor]
   );
 
   const wrapperStyle = useMemo(() => {

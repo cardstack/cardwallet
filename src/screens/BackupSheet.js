@@ -12,7 +12,8 @@ import {
 } from '../components/backup';
 import { SlackSheet } from '../components/sheet';
 import { cloudPlatform } from '../utils/platform';
-import { Container } from '@cardstack/components';
+import { Container, Sheet } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import {
@@ -185,7 +186,29 @@ export default function BackupSheet() {
   return (
     <Container flex={1} testID="backup-sheet">
       <StatusBar barStyle="light-content" />
-      <SlackSheet flex={1}>{renderStep()}</SlackSheet>
+      <PlataformSheet step={step}>{renderStep()}</PlataformSheet>
     </Container>
   );
 }
+
+// Temp workaround until nav redesign
+const PlataformSheet = ({ children, step }) => {
+  const isFullScreenStep =
+    step === WalletBackupStepTypes.manual ||
+    step === WalletBackupStepTypes.cloud;
+
+  const bgColor =
+    step === WalletBackupStepTypes.cloud ? 'black' : 'transparent';
+
+  return Device.isAndroid ? (
+    <Sheet
+      isFullScreen={isFullScreenStep}
+      overlayColor={bgColor}
+      scrollEnabled={isFullScreenStep}
+    >
+      {children}
+    </Sheet>
+  ) : (
+    <SlackSheet flex={1}>{children}</SlackSheet>
+  );
+};
