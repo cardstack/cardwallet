@@ -202,4 +202,5 @@ lane :contexts_sync_all do
   sync_beta_app_vars
   sync_release_app_vars
   sync_google_service_info
+  sync_android_keystore
 end
