@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Image } from 'react-native';
 import { QRCode as EasyQRCode, Canvas } from 'easyqrcode-react-native';
 import CardstackLogo from '../../assets/cardstackColorLogo.png';
@@ -20,43 +20,48 @@ interface QRCodeProps {
   logoBackgroundTransparent?: boolean;
   logoBackgroundColor?: string;
   correctLevel?: string;
+  onRenderingEnd?: () => void;
 }
 
-export const QRCode = ({
-  size = 300,
-  data,
-  logo = CardstackLogo,
-  logoWidth = 40,
-  logoHeight = 40,
-  logoBackgroundTransparent = false,
-  logoBackgroundColor = '#fff',
-  correctLevel = EasyQRCode.CorrectLevel.M,
-}: QRCodeProps) => {
-  const generateQRCode = (canvas: any) => {
-    if (data && canvas !== null) {
-      // QRCode options
-      const options = {
-        ...Default_QRCode_Options,
-        text: data,
-        width: size,
-        height: size,
-        logo: Image.resolveAssetSource(logo).uri,
-        logoWidth,
-        logoHeight,
-        logoBackgroundTransparent,
-        logoBackgroundColor,
-        correctLevel,
-      };
+export const QRCode = memo(
+  ({
+    size = 300,
+    data,
+    logo = CardstackLogo,
+    logoWidth = 40,
+    logoHeight = 40,
+    logoBackgroundTransparent = false,
+    logoBackgroundColor = '#fff',
+    correctLevel = EasyQRCode.CorrectLevel.L,
+    onRenderingEnd = () => 0,
+  }: QRCodeProps) => {
+    const generateQRCode = (canvas: any) => {
+      if (data && canvas !== null) {
+        // QRCode options
+        const options = {
+          ...Default_QRCode_Options,
+          text: data,
+          width: size,
+          height: size,
+          logo: Image.resolveAssetSource(logo).uri,
+          logoMaxWidth: logoWidth,
+          logoMaxHeight: logoHeight,
+          logoBackgroundTransparent,
+          logoBackgroundColor,
+          correctLevel,
+          onRenderingEnd,
+        };
 
-      // Create QRCode Object
-      // eslint-disable-next-line no-new
-      new EasyQRCode(canvas, options);
-    }
-  };
+        // Create QRCode Object
+        // eslint-disable-next-line no-new
+        new EasyQRCode(canvas, options);
+      }
+    };
 
-  return (
-    <CenteredContainer>
-      <Canvas ref={generateQRCode} />
-    </CenteredContainer>
-  );
-};
+    return (
+      <CenteredContainer>
+        <Canvas ref={generateQRCode} />
+      </CenteredContainer>
+    );
+  }
+);
