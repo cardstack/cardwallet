@@ -222,7 +222,7 @@ export default function BackupCloudStep() {
         }
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Container alignItems="center" marginVertical={10} padding={9}>
+          <Container alignItems="center" padding={9}>
             <Icon color="settingsTeal" iconSize="xl" name="lock" />
             <Text fontSize={20} margin={3}>
               Choose a password
@@ -232,7 +232,7 @@ export default function BackupCloudStep() {
               recovered.
             </Text>
           </Container>
-          <Container alignItems="center" flex={1} margin={5}>
+          <Container margin={5}>
             <Input
               {...sharedPasswordProps}
               iconProps={passwordFieldIconProps}
