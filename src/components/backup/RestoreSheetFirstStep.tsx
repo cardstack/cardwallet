@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, OptionItem, Text } from '@cardstack/components';
+import { Container, IconProps, OptionItem, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils/device';
 
 interface RestoreSheetFirstStepProps {
@@ -9,6 +9,12 @@ interface RestoreSheetFirstStepProps {
   onManualRestore: () => Promise<void>;
   walletsBackedUp: any;
 }
+
+const cloudIconProps = {
+  name: 'download-cloud',
+  size: 25,
+} as IconProps;
+
 export default function RestoreSheetFirstStep({
   enableCloudRestore,
   noBackupsFound,
@@ -29,10 +35,7 @@ export default function RestoreSheetFirstStep({
       </Text>
       {enableCloudRestore && (
         <OptionItem
-          iconProps={{
-            name: 'download-cloud',
-            size: 25,
-          }}
+          iconProps={cloudIconProps}
           marginBottom={4}
           onPress={onCloudRestore}
           subText={`${walletsBackedUp} ${
@@ -52,10 +55,7 @@ export default function RestoreSheetFirstStep({
       />
       {Device.isAndroid && !noBackupsFound && (
         <OptionItem
-          iconProps={{
-            name: 'download-cloud',
-            size: 25,
-          }}
+          iconProps={cloudIconProps}
           marginTop={4}
           onPress={onCloudRestore}
           subText={`Connect to ${Device.cloudPlatform} to restore`}
@@ -65,10 +65,7 @@ export default function RestoreSheetFirstStep({
       {Device.isAndroid && noBackupsFound && (
         <OptionItem
           disabled
-          iconProps={{
-            name: 'download-cloud',
-            size: 25,
-          }}
+          iconProps={cloudIconProps}
           marginTop={4}
           onPress={() => {}}
           subText="Connected. No backups available."
