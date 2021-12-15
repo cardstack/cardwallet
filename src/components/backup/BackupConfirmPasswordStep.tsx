@@ -1,6 +1,12 @@
 import { useRoute } from '@react-navigation/native';
 import lang from 'i18n-js';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Keyboard } from 'react-native';
 import styled from 'styled-components';
 import { isSamsungGalaxy } from '../../helpers/samsung';
