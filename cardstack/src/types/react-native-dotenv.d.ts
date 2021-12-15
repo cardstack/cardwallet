@@ -8,7 +8,7 @@ declare module 'react-native-dotenv' {
   export const CRYPTOCOMPARE_API_KEY: string;
   export const MERCHANT_ID: string;
   export const MERCHANT_ID_TEST: string;
-  export const RAINBOW_MASTER_KEY: string;
+  export const CARDWALLET_MASTER_KEY: string;
   export const WYRE_ACCOUNT_ID: string;
   export const WYRE_ACCOUNT_ID_TEST: string;
   export const WYRE_API_KEY: string;

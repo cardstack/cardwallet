@@ -2,7 +2,7 @@ import assert from 'assert';
 import { captureException } from '@sentry/react-native';
 import { sortBy } from 'lodash';
 import RNCloudFs, { BackupFile } from 'react-native-cloud-fs';
-import { RAINBOW_MASTER_KEY } from 'react-native-dotenv';
+import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
 import { logger } from '../utils';
@@ -199,13 +199,13 @@ export async function getDataFromCloud(
 
 export async function backupUserDataIntoCloud(data: any) {
   const filename = USERDATA_FILE;
-  const password = RAINBOW_MASTER_KEY;
+  const password = CARDWALLET_MASTER_KEY;
   return encryptAndSaveDataToCloud(data, password, filename);
 }
 
 export async function fetchUserDataFromCloud() {
   const filename = USERDATA_FILE;
-  const password = RAINBOW_MASTER_KEY;
+  const password = CARDWALLET_MASTER_KEY;
   return getDataFromCloud(password, filename);
 }
 
