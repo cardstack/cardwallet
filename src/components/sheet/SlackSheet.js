@@ -3,6 +3,7 @@ import React, { Fragment, useEffect, useMemo, useRef } from 'react';
 import {
   KeyboardAvoidingView,
   Pressable,
+  StatusBar,
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -116,6 +117,13 @@ export default function SlackSheet({
       )
     : props => <Container backgroundColor={bg} flex={1} {...props} />;
 
+  const oldTopCondition =
+    deferredHeight || ios
+      ? 0
+      : contentHeight && additionalTopPadding
+      ? deviceHeight - contentHeight
+      : 0;
+
   return (
     <Fragment>
       {android ? (
@@ -123,18 +131,15 @@ export default function SlackSheet({
       ) : null}
       <Container
         backgroundColor={bg}
+        borderTopLeftRadius={30}
+        borderTopRightRadius={30}
         bottom={0}
         left={0}
         overflow="hidden"
         position="absolute"
         right={0}
-        top={
-          deferredHeight || ios
-            ? 0
-            : contentHeight && additionalTopPadding
-            ? deviceHeight - contentHeight
-            : 0
-        }
+        // Temp workaround until migration os SlackSheet to Sheet
+        top={android ? StatusBar.currentHeight : oldTopCondition}
         {...props}
       >
         {android && (
