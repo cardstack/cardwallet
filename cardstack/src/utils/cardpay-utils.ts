@@ -3,8 +3,9 @@
 import {
   convertAmountToNativeDisplay,
   getConstantByNetwork,
+  NativeCurrency,
 } from '@cardstack/cardpay-sdk';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+
 import { getResolver } from '@cardstack/did-resolver';
 import { Resolver } from 'did-resolver';
 import {

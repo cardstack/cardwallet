@@ -1,6 +1,6 @@
 import { BlockNumber } from 'web3-core';
 import React from 'react';
-import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import { Icon } from '@cardstack/components';
 import { PrepaidCardTransactionHeader } from '@cardstack/components/Transactions/PrepaidCard/PrepaidCardTransactionHeader';
 import Web3Instance from '@cardstack/models/web3-instance';

@@ -1,4 +1,4 @@
-import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { Column, ColumnWithMargins } from '../layout';

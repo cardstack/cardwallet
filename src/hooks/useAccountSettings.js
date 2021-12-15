@@ -1,4 +1,4 @@
-import { currencies } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { currencies } from '@cardstack/cardpay-sdk';
 import lang from 'i18n-js';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

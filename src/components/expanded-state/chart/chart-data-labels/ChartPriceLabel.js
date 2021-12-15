@@ -1,4 +1,4 @@
-import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
 import React from 'react';
 import { PixelRatio, Text } from 'react-native';

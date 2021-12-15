@@ -1,4 +1,4 @@
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { AssetList } from '@cardstack/components';
 import { Network } from '@rainbow-me/helpers/networkTypes';

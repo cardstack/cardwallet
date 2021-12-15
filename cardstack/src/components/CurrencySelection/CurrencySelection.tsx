@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import { RadioList } from '../';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 

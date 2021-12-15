@@ -1,9 +1,6 @@
 import React, { useCallback, memo } from 'react';
 import { InteractionManager } from 'react-native';
-import {
-  nativeCurrencies,
-  NativeCurrency,
-} from '@cardstack/cardpay-sdk/sdk/currencies';
+import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import {
   CenteredContainer,
   Container,

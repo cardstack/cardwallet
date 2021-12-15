@@ -1,8 +1,9 @@
-import { getSDK } from '@cardstack/cardpay-sdk';
 import {
+  getSDK,
   nativeCurrencies,
   NativeCurrency,
-} from '@cardstack/cardpay-sdk/sdk/currencies';
+} from '@cardstack/cardpay-sdk';
+
 import { FIXER_API_KEY } from 'react-native-dotenv';
 import { CurrencyConversionRates } from '@cardstack/types';
 import Web3Instance from '@cardstack/models/web3-instance';

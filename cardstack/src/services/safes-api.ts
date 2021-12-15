@@ -1,4 +1,4 @@
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { fetchSafes } from './gnosis-service';
 

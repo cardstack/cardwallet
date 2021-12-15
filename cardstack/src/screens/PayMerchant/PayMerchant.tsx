@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 import {
