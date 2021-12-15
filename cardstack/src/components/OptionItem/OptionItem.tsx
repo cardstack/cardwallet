@@ -5,7 +5,7 @@ import { Icon, IconProps } from '../Icon';
 import { Text, TextProps } from '../Text';
 import { Touchable } from '../Touchable';
 
-interface OptionItemProps extends ContainerProps {
+export interface OptionItemProps extends ContainerProps {
   onPress?: () => void;
   iconProps: IconProps;
   title: string;

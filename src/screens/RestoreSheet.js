@@ -27,17 +27,19 @@ export default function RestoreSheet() {
     } = {},
   } = useRoute();
   const [noBackupsFound, setNoBackupsFound] = useState(false);
+  const [isFetchingBackups, setIsFetchingBackups] = useState(false);
 
   const onCloudRestore = useCallback(async () => {
-    // Animate transforming into backup sheet
-    layoutEasingAnimation();
-
     try {
       if (Device.isAndroid) {
         // we didn't yet fetch the user data from the cloud
+        setIsFetchingBackups(true);
         const data = await fetchUserDataFromCloud();
         setParams({ userData: data });
       }
+
+      // Animate transforming into backup sheet
+      layoutEasingAnimation();
       setParams({ step: WalletBackupStepTypes.cloud });
     } catch (e) {
       if (e.message === CLOUD_BACKUP_ERRORS.NO_BACKUPS_FOUND) {
@@ -45,8 +47,10 @@ export default function RestoreSheet() {
       } else {
         throw e;
       }
+    } finally {
+      setIsFetchingBackups(false);
     }
-  }, [setParams, setNoBackupsFound]);
+  }, [setParams, setNoBackupsFound, setIsFetchingBackups]);
 
   const onManualRestore = useCallback(() => {
     InteractionManager.runAfterInteractions(goBack);
@@ -81,6 +85,7 @@ export default function RestoreSheet() {
       ) : (
         <RestoreSheetFirstStep
           enableCloudRestore={enableCloudRestore}
+          isFetchingBackups={isFetchingBackups}
           noBackupsFound={noBackupsFound}
           onCloudRestore={onCloudRestore}
           onManualRestore={onManualRestore}
