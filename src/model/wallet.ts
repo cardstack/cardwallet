@@ -863,13 +863,37 @@ export const saveSeedPhrase = async (
 };
 
 export const getSeedPhrase = async (
-  id: RainbowWallet['id']
+  id: RainbowWallet['id'],
+  userPinCode?: string
 ): Promise<null | SeedPhraseData> => {
   try {
     const key = `${id}_${seedPhraseKey}`;
     const seedPhraseData = (await keychain.loadObject(key, {
       authenticationPrompt,
     })) as SeedPhraseData | -2;
+
+    if (Device.isAndroid && seedPhraseData !== -2) {
+      if (userPinCode) {
+        seedPhraseData.seedphrase = await encryptor.decrypt(
+          userPinCode,
+          seedPhraseData?.seedphrase
+        );
+      } else {
+        const hasBiometricsEnabled = await getSupportedBiometryType();
+        // Fallback to custom PIN
+        if (!hasBiometricsEnabled) {
+          try {
+            const userPIN = await authenticateWithPIN();
+            seedPhraseData.seedphrase = await encryptor.decrypt(
+              userPIN,
+              seedPhraseData?.seedphrase
+            );
+          } catch (e) {
+            logger.sentry('PIN authenticate failed--', e);
+          }
+        }
+      }
+    }
 
     if (seedPhraseData === -2) {
       Alert.alert(
@@ -966,6 +990,10 @@ export const generateAccount = async (
           dispatch(setIsWalletLoading(null));
           userPIN = await authenticateWithPIN();
           dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
+          if (!seedphrase) {
+            const seedData = await getSeedPhrase(id, userPIN);
+            seedphrase = seedData?.seedphrase;
+          }
         } catch (e) {
           return null;
         }
@@ -975,13 +1003,6 @@ export const generateAccount = async (
     if (!seedphrase) {
       const seedData = await getSeedPhrase(id);
       seedphrase = seedData?.seedphrase;
-      if (userPIN) {
-        try {
-          seedphrase = await encryptor.decrypt(userPIN, seedphrase);
-        } catch (e) {
-          return null;
-        }
-      }
     }
 
     if (!seedphrase) {
@@ -1183,24 +1204,6 @@ export const loadSeedPhraseAndMigrateIfNeeded = async (
       logger.sentry('Getting seed directly');
       const seedData = await getSeedPhrase(id);
       seedPhrase = get(seedData, 'seedphrase', null);
-      let userPIN = null;
-      if (Device.isAndroid) {
-        const hasBiometricsEnabled = await getSupportedBiometryType();
-        // Fallback to custom PIN
-        if (!hasBiometricsEnabled) {
-          try {
-            userPIN = await authenticateWithPIN();
-            if (userPIN) {
-              // Dencrypt with the PIN
-              seedPhrase = await encryptor.decrypt(userPIN, seedPhrase);
-            } else {
-              return null;
-            }
-          } catch (e) {
-            return null;
-          }
-        }
-      }
 
       if (seedPhrase) {
         logger.sentry('got seed succesfully');
