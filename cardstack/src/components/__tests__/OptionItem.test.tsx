@@ -55,4 +55,16 @@ describe('OptionItem', () => {
 
     expect(iconWrapper).toHaveStyle({ borderWidth: 1 });
   });
+
+  it('should render in a disabled state when disabled', () => {
+    props.disabled = true;
+    const { getByTestId } = render(<OptionItem {...props} />);
+    expect(getByTestId('option-item')).toBeDisabled();
+  });
+
+  it('should render in a disabled state when no onPress', () => {
+    props.onPress = undefined;
+    const { getByTestId } = render(<OptionItem {...props} />);
+    expect(getByTestId('option-item')).toBeDisabled();
+  });
 });

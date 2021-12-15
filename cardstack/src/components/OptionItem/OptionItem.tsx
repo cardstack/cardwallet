@@ -6,7 +6,7 @@ import { Text, TextProps } from '../Text';
 import { Touchable } from '../Touchable';
 
 interface OptionItemProps extends ContainerProps {
-  onPress: () => void;
+  onPress?: () => void;
   iconProps: IconProps;
   title: string;
   subText?: string;
@@ -32,7 +32,7 @@ export const OptionItem = ({
   return (
     <Touchable
       alignItems="center"
-      disabled={disabled}
+      disabled={disabled || !onPress}
       flexDirection="row"
       onPress={onPress}
       testID="option-item"

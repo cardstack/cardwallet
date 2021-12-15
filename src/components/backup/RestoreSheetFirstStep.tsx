@@ -67,7 +67,6 @@ export default function RestoreSheetFirstStep({
           disabled
           iconProps={cloudIconProps}
           marginTop={4}
-          onPress={() => {}}
           subText="Connected. No backups available."
           title={`No backups found in ${Device.cloudPlatform}`}
         />
