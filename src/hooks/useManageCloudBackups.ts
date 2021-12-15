@@ -115,8 +115,8 @@ function promptToChooseFromBackups(
 const displayNameForBackup = (file: BackupFile, i: number) => {
   const ts = Number(
     file.name
+      .replace(/^.*backup_/, '')
       .replace('.backup_', '')
-      .replace('backup_', '')
       .replace('.json', '')
       .replace('.icloud', '')
   );
