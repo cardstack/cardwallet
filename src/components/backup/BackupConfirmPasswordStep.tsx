@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import lang from 'i18n-js';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard } from 'react-native';
 import styled from 'styled-components';
 import { isSamsungGalaxy } from '../../helpers/samsung';
@@ -10,7 +10,7 @@ import { PasswordField } from '../fields';
 import { Centered, Column } from '../layout';
 import { GradientText } from '../text';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
-import { Button, IconName, Text } from '@cardstack/components';
+import { Button, IconName, IconProps, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils/device';
 import {
   cloudBackupPasswordMinLength,
@@ -115,6 +115,18 @@ export default function BackupConfirmPasswordStep() {
     };
   }, []);
 
+  const biometryIconProps: IconProps | undefined = useMemo(
+    () =>
+      biometryIconName
+        ? {
+            iconSize: 'medium',
+            marginRight: 3,
+            name: biometryIconName as IconName,
+          }
+        : undefined,
+    [biometryIconName]
+  );
+
   useEffect(() => {
     let passwordIsValid = false;
 
@@ -174,18 +186,7 @@ export default function BackupConfirmPasswordStep() {
     <BackupSheetKeyboardLayout
       footer={
         validPassword ? (
-          <Button
-            iconProps={
-              biometryIconName
-                ? {
-                    iconSize: 'medium',
-                    marginRight: 3,
-                    name: biometryIconName as IconName,
-                  }
-                : undefined
-            }
-            onPress={onSubmit}
-          >
+          <Button iconProps={biometryIconProps} onPress={onSubmit}>
             {label}
           </Button>
         ) : (
