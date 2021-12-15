@@ -1,7 +1,13 @@
 import { useRoute } from '@react-navigation/native';
 import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { Keyboard, TextInputProps } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -14,6 +20,7 @@ import {
   Container,
   Icon,
   IconName,
+  IconProps,
   Input,
   InputProps,
   Text,
@@ -156,6 +163,38 @@ export default function BackupCloudStep() {
     validPassword && onConfirmBackup();
   }, [onConfirmBackup, validPassword]);
 
+  const biometryIconProps: IconProps | undefined = useMemo(
+    () =>
+      biometryIconName
+        ? {
+            iconSize: 'medium',
+            marginRight: 3,
+            name: biometryIconName as IconName,
+          }
+        : undefined,
+    [biometryIconName]
+  );
+
+  const passwordFieldIconProps: IconProps | undefined = useMemo(
+    () =>
+      isCloudBackupPasswordValid(password)
+        ? {
+            name: 'success',
+          }
+        : undefined,
+    [password]
+  );
+
+  const confirmPasswordFieldIconProps: IconProps | undefined = useMemo(
+    () =>
+      validPassword
+        ? {
+            name: 'success',
+          }
+        : undefined,
+    [validPassword]
+  );
+
   const sharedPasswordProps: Partial<
     TextInputProps & InputProps & BaseInputProps
   > = {
@@ -174,18 +213,7 @@ export default function BackupCloudStep() {
       <BackupSheetKeyboardLayout
         footer={
           validPassword ? (
-            <Button
-              iconProps={
-                biometryIconName
-                  ? {
-                      iconSize: 'medium',
-                      marginRight: 3,
-                      name: biometryIconName as IconName,
-                    }
-                  : undefined
-              }
-              onPress={onConfirmBackup}
-            >
+            <Button iconProps={biometryIconProps} onPress={onConfirmBackup}>
               Confirm
             </Button>
           ) : (
@@ -207,13 +235,7 @@ export default function BackupCloudStep() {
           <Container alignItems="center" flex={1} margin={5}>
             <Input
               {...sharedPasswordProps}
-              iconProps={
-                isCloudBackupPasswordValid(password)
-                  ? {
-                      name: 'success',
-                    }
-                  : undefined
-              }
+              iconProps={passwordFieldIconProps}
               onBlur={onPasswordBlur}
               onChange={onPasswordChange}
               onFocus={onPasswordFocus}
@@ -226,13 +248,7 @@ export default function BackupCloudStep() {
             />
             <Input
               {...sharedPasswordProps}
-              iconProps={
-                validPassword
-                  ? {
-                      name: 'success',
-                    }
-                  : null
-              }
+              iconProps={confirmPasswordFieldIconProps}
               onChange={onConfirmPasswordChange}
               onFocus={onConfirmPasswordFocus}
               onSubmitEditing={onConfirmPasswordSubmit}
