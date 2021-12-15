@@ -12,7 +12,7 @@ import {
 } from '../components/backup';
 import { SlackSheet } from '../components/sheet';
 import { Container, Sheet } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
+import { Device } from '@cardstack/utils/device';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import {
