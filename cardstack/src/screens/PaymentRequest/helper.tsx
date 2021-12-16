@@ -7,8 +7,8 @@ import {
   convertStringToNumber,
   formatCurrencyAmount,
   currencies,
+  NativeCurrency,
 } from '@cardstack/cardpay-sdk';
-import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { Container, Text, TextProps } from '@cardstack/components';
 import { getAddressPreview } from '@cardstack/utils';
 
