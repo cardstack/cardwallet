@@ -172,7 +172,7 @@ export async function getDataFromCloud(
     document = sortedBackups[0];
   }
   const encryptedData = Device.isIOS
-    ? await getICloudDocument(document.path)
+    ? await getICloudDocument(document.name)
     : await getGoogleDriveDocument(document.id);
 
   if (encryptedData) {
