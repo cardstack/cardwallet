@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { render } from '../../../test-utils';
 import { InputAmount, CURRENCY_DISPLAY_MODE } from '../InputAmount';
 

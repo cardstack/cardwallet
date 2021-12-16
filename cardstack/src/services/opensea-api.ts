@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { isNil, pick } from 'lodash';
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import logger from 'logger';
 import NetworkTypes, { Network } from '@rainbow-me/networkTypes';
 import { CollectibleType } from '@cardstack/types';

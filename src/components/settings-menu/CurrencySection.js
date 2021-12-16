@@ -1,7 +1,4 @@
-import {
-  nativeCurrencies,
-  NativeCurrency,
-} from '@cardstack/cardpay-sdk/sdk/currencies';
+import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import { isNil } from 'lodash';
 import React, { useCallback } from 'react';
 import { CoinIcon } from '../coin-icon';

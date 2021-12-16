@@ -1,4 +1,4 @@
-import { NativeCurrency } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useSelector } from 'react-redux';
 import {
   AssetType,

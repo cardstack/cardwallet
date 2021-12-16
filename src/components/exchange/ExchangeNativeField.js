@@ -1,4 +1,4 @@
-import { nativeCurrencies } from '@cardstack/cardpay-sdk/sdk/currencies';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { Row } from '../layout';
