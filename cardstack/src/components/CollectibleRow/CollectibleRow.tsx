@@ -2,20 +2,16 @@ import React from 'react';
 import { CollectibleImage } from '../../../../src/components/collectible';
 import { CollectibleType } from '@cardstack/types';
 import { Touchable, Container, Text } from '@cardstack/components';
-import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { buildCollectibleName } from '@rainbow-me/helpers/assets';
 
 export const CollectibleRow = (collectible: CollectibleType) => {
-  const { isReadOnlyWallet } = useWallets();
   const { navigate } = useNavigation();
 
   const onPress = () => {
-    navigate(Routes.EXPANDED_ASSET_SHEET, {
-      asset: collectible,
-      isReadOnlyWallet,
-      type: 'collectible',
+    navigate(Routes.COLLECTIBLE_SHEET, {
+      collectible,
     });
   };
 

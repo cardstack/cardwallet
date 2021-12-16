@@ -9,6 +9,7 @@ export const MainRoutes = {
   ERROR_FALLBACK_SCREEN: 'ErrorFallbackScreen',
   LOADING_OVERLAY: 'LoadingOverlay',
   WELCOME_SCREEN: 'WelcomeScreen',
+  COLLECTIBLE_SHEET: 'CollectibleSheet',
 } as const;
 
 export const GlobalRoutes = {
