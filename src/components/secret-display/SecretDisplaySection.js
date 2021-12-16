@@ -2,10 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 
-import {
-  identifyWalletType,
-  loadSeedPhraseAndMigrateIfNeeded,
-} from '../../model/wallet';
+import { identifyWalletType, loadSeedPhrase } from '../../model/wallet';
 import ActivityIndicator from '../ActivityIndicator';
 import Spinner from '../Spinner';
 import { ColumnWithMargins } from '../layout';
@@ -33,7 +30,7 @@ export default function SecretDisplaySection({
 
   const loadSeed = useCallback(async () => {
     try {
-      const s = await loadSeedPhraseAndMigrateIfNeeded(walletId);
+      const s = await loadSeedPhrase(walletId);
       if (s) {
         const walletType = identifyWalletType(s);
         setType(walletType);

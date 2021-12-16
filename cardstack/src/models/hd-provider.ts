@@ -1,7 +1,7 @@
 import HDWalletProvider from 'parity-hdwallet-provider';
 import Web3WsProvider from './web3-provider';
 import Web3Instance from './web3-instance';
-import { getSeedPhrase, RainbowWallet } from '@rainbow-me/model/wallet';
+import { loadSeedPhrase, RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 import { ethereumUtils } from '@rainbow-me/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -17,14 +17,14 @@ const HDProvider = {
   get: async ({ selectedWallet, network }: SignedProviderParams) => {
     if (provider === null) {
       try {
-        const seedPhrase = await getSeedPhrase(selectedWallet.id);
+        const seedPhrase = await loadSeedPhrase(selectedWallet.id);
         const chainId = ethereumUtils.getChainIdFromNetwork(network);
         const web3ProviderSdk = await Web3WsProvider.get();
 
         const hdProvider = new HDWalletProvider({
           chainId,
           mnemonic: {
-            phrase: seedPhrase?.seedphrase || '',
+            phrase: seedPhrase || '',
           },
           providerOrUrl: web3ProviderSdk,
         });

@@ -427,9 +427,7 @@ const useClaimAllRevenue = ({
           if (canGoBack()) {
             goBack();
           } else {
-            navigate(Routes.WALLET_SCREEN, {
-              forceRefreshOnce: true,
-            });
+            navigate(Routes.WALLET_SCREEN);
           }
         });
       }
