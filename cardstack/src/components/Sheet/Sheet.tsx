@@ -1,4 +1,4 @@
-import React, { memo, ReactNode, useMemo } from 'react';
+import React, { memo, ReactNode, useCallback, useMemo, useRef } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
@@ -50,7 +50,7 @@ const Sheet = ({
   overlayColor = 'transparent',
 }: SheetProps) => {
   const insets = useSafeArea();
-  const { goBack } = useNavigation();
+  const { goBack, setOptions } = useNavigation();
 
   const containerStyle = useMemo(
     () => ({
@@ -87,6 +87,50 @@ const Sheet = ({
     };
   }, [insets, scrollEnabled]);
 
+  const prevVerticalDistance = useRef(0);
+
+  const onScroll = useCallback(
+    ({ nativeEvent: { contentOffset } }) => {
+      if (Device.isIOS) {
+        return;
+      }
+
+      const hasScrollUp = contentOffset.y <= Device.scrollSheetOffset;
+
+      const fullVerticalDistance = Device.screenHeight;
+      // Distance for gesture from top set to 30% of screen height
+      const smallVerticalDistance = fullVerticalDistance * 0.3;
+
+      const verticalDistance = hasScrollUp
+        ? fullVerticalDistance
+        : smallVerticalDistance;
+
+      if (prevVerticalDistance.current !== verticalDistance) {
+        setOptions({
+          gestureResponseDistance: { vertical: verticalDistance },
+        });
+
+        prevVerticalDistance.current = verticalDistance;
+      }
+    },
+    [setOptions]
+  );
+
+  const onMomentumScrollBegin = useCallback(
+    ({ nativeEvent: { contentOffset } }) => {
+      if (Device.isAndroid) {
+        return;
+      }
+
+      const hasOverScrolledToTop = contentOffset.y <= Device.scrollSheetOffset;
+
+      if (hasOverScrolledToTop) {
+        goBack();
+      }
+    },
+    [goBack]
+  );
+
   return (
     <Container flex={1} justifyContent="flex-end" style={containerStyle}>
       <TouchableBackDrop onPress={goBack} />
@@ -98,6 +142,9 @@ const Sheet = ({
           {!hideHandle && <SheetHandle />}
         </CenteredContainer>
         <ScrollView
+          onMomentumScrollBegin={onMomentumScrollBegin}
+          overScrollMode="always"
+          onScroll={onScroll}
           contentContainerStyle={contentContainerStyle}
           directionalLockEnabled
           keyboardShouldPersistTaps="always"

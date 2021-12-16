@@ -3,7 +3,6 @@ export { default as ContactProfileState } from './ContactProfileState';
 export { default as LiquidityPoolExpandedState } from './LiquidityPoolExpandedState';
 export { default as SupportedCountriesExpandedState } from './SupportedCountriesExpandedState';
 export { default as SwapDetailsState } from './SwapDetailsState';
-export { default as CollectibleExpandedState } from './CollectibleExpandedState';
 export { default as WalletProfileState } from './WalletProfileState';
 export { default as LifetimeEarningsExpandedState } from './LifetimeEarningsExpandedState';
 export { default as UnclaimedRevenueExpandedState } from './UnclaimedRevenueExpandedState';

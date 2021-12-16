@@ -1,13 +1,13 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Linking, Share } from 'react-native';
 import URL from 'url-parse';
 
-import { buildCollectibleName } from '../../../helpers/assets';
-import { showActionSheetWithOptions } from '../../../utils';
-import ButtonPressAnimation from '../../animations/ButtonPressAnimation';
 import { Container, Icon, Text } from '@cardstack/components';
 import { CollectibleType } from '@cardstack/types';
 import NetworkTypes from '@rainbow-me/networkTypes';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
+import { buildCollectibleName } from '@rainbow-me/helpers/assets';
+import { ButtonPressAnimation } from '@rainbow-me/components/animations';
 
 function viewMenuItemLabel(collectible: CollectibleType) {
   if (collectible.networkName === NetworkTypes.mainnet) {
@@ -26,14 +26,12 @@ function viewMenuItemLabel(collectible: CollectibleType) {
   return 'View on the web';
 }
 
-interface CollectibleExpandedStateHeaderProps {
+interface CollectibleHeaderProps {
   collectible: CollectibleType;
 }
 
-const CollectibleExpandedStateHeader = ({
-  collectible,
-}: CollectibleExpandedStateHeaderProps) => {
-  const onContextMenuPress = () => {
+const CollectibleHeader = ({ collectible }: CollectibleHeaderProps) => {
+  const onContextMenuPress = useCallback(() => {
     showActionSheetWithOptions(
       {
         options: ['Share', viewMenuItemLabel(collectible), 'Cancel'],
@@ -51,7 +49,7 @@ const CollectibleExpandedStateHeader = ({
         }
       }
     );
-  };
+  }, [collectible]);
 
   return (
     <Container
@@ -109,7 +107,7 @@ const CollectibleExpandedStateHeader = ({
   );
 };
 
-export default memo(CollectibleExpandedStateHeader);
+export default memo(CollectibleHeader);
 
 function tldFromUrlString(urlString: string) {
   const url = new URL(urlString);

@@ -20,6 +20,7 @@ import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
+import CollectibleSheet from '@cardstack/screen/sheets/collectibles/CollectibleSheet';
 
 interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -59,6 +60,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   WELCOME_SCREEN: {
     component: WelcomeScreen,
+  },
+  COLLECTIBLE_SHEET: {
+    component: CollectibleSheet,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 

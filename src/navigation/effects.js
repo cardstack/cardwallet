@@ -282,7 +282,8 @@ const gestureResponseDistanceFactory = distance => ({
 const gestureResponseDistance = gestureResponseDistanceFactory(
   deviceUtils.dimensions.height
 );
-const smallGestureResponseDistance = gestureResponseDistanceFactory(100);
+
+export const smallGestureResponseDistance = gestureResponseDistanceFactory(100);
 
 export const backgroundPreset = {
   cardStyle: { backgroundColor: 'transparent' },

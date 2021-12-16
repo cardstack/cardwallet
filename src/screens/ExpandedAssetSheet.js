@@ -8,7 +8,6 @@ import TouchableBackdrop from '../components/TouchableBackdrop';
 import {
   AvailableBalancesExpandedState,
   ChartExpandedState,
-  CollectibleExpandedState,
   LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
   MerchantTransactionExpandedState,
@@ -25,7 +24,6 @@ import { position } from '@rainbow-me/styles';
 
 const ScreenTypes = {
   token: ChartExpandedState,
-  collectible: CollectibleExpandedState,
   uniswap: LiquidityPoolExpandedState,
   [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
   [ExpandedMerchantRoutes.unclaimedRevenue]: UnclaimedRevenueExpandedState,
