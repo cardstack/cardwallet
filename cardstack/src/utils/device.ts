@@ -10,6 +10,7 @@ const Device = {
   isIOS,
   supportsFiatOnRamp: isIOS,
   supportsPrefilledAmount: isIOS,
+  scrollOffset: isIOS ? -60 : 1,
 };
 
 export { Device };

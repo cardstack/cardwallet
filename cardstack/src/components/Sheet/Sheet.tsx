@@ -1,4 +1,4 @@
-import React, { memo, ReactNode, useMemo } from 'react';
+import React, { memo, ReactNode, useCallback, useMemo } from 'react';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
@@ -87,6 +87,18 @@ const Sheet = ({
     };
   }, [insets, scrollEnabled]);
 
+  const onMomentumScrollBegin = useCallback(
+    ({ nativeEvent: { contentOffset } }) => {
+      const currentVerticalOffset = contentOffset.y;
+      const hasOverScrolledToTop = currentVerticalOffset <= Device.scrollOffset;
+
+      if (hasOverScrolledToTop) {
+        goBack();
+      }
+    },
+    [goBack]
+  );
+
   return (
     <Container flex={1} justifyContent="flex-end" style={containerStyle}>
       <TouchableBackDrop onPress={goBack} />
@@ -98,6 +110,8 @@ const Sheet = ({
           {!hideHandle && <SheetHandle />}
         </CenteredContainer>
         <ScrollView
+          onMomentumScrollBegin={onMomentumScrollBegin}
+          overScrollMode="always"
           contentContainerStyle={contentContainerStyle}
           directionalLockEnabled
           keyboardShouldPersistTaps="always"
