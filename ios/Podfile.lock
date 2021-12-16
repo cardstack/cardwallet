@@ -363,14 +363,14 @@ PODS:
     - React-Core
   - react-native-camera/RN (3.44.3):
     - React-Core
-  - react-native-cloud-fs (2.3.0):
+  - react-native-cloud-fs (2.4.0):
     - React
   - react-native-flipper (0.114.0):
     - React-Core
   - react-native-get-random-values (1.5.0):
     - React
-  - react-native-mail (4.1.0):
-    - React
+  - react-native-mail (6.1.1):
+    - React-Core
   - react-native-netinfo (6.1.0):
     - React-Core
   - react-native-randombytes (3.5.3):
@@ -948,10 +948,10 @@ SPEC CHECKSUMS:
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
-  react-native-cloud-fs: 1cb3deba691efbb5c6fcc831959be58762d8bdfe
+  react-native-cloud-fs: 1e883ec82ff418d320c128f61971dd971b128ca0
   react-native-flipper: 117dac1f1758346575933a6d62d2c472c847a7b6
   react-native-get-random-values: 1404bd5cc0ab0e287f75ee1c489555688fc65f89
-  react-native-mail: a864fb211feaa5845c6c478a3266de725afdce89
+  react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-netinfo: 5a001e406317eaaf1e4846906650e107dadcaa72
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-restart: a01029aadfe8e71f9e8205fdb17da2f0a4472d50

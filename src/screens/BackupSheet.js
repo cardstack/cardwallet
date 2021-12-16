@@ -11,9 +11,8 @@ import {
   BackupSheetSection,
 } from '../components/backup';
 import { SlackSheet } from '../components/sheet';
-import { cloudPlatform } from '../utils/platform';
 import { Container, Sheet } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
+import { Device } from '@cardstack/utils/device';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import {
@@ -24,6 +23,7 @@ import {
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
+const { cloudPlatform } = Device;
 const onError = error => DelayedAlert({ title: error }, 500);
 
 export default function BackupSheet() {
@@ -80,7 +80,7 @@ export default function BackupSheet() {
     // and at least an other wallet already backed up
   }, [goBack, isSettingsRoute]);
 
-  const onIcloudBackup = useCallback(() => {
+  const onCloudBackup = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
       captureMessage('Damaged account preventing cloud backup');
@@ -144,7 +144,7 @@ export default function BackupSheet() {
         return (
           <BackupSheetSection
             descriptionText={`Don't lose your account! Save an encrypted copy to ${cloudPlatform}.`}
-            onPrimaryAction={onIcloudBackup}
+            onPrimaryAction={onCloudBackup}
             onSecondaryAction={goBack}
             primaryLabel={`Back up to ${cloudPlatform}`}
             secondaryButtonTestId="backup-sheet-imported-cancel-button"
@@ -165,7 +165,7 @@ export default function BackupSheet() {
         return (
           <BackupSheetSection
             descriptionText={`Don't lose your account! Save an encrypted copy to ${cloudPlatform}.`}
-            onPrimaryAction={onIcloudBackup}
+            onPrimaryAction={onCloudBackup}
             onSecondaryAction={onManualBackup}
             primaryLabel={`Back up to ${cloudPlatform}`}
             secondaryLabel="Back up manually"
@@ -178,7 +178,7 @@ export default function BackupSheet() {
     goBack,
     missingPassword,
     onBackupNow,
-    onIcloudBackup,
+    onCloudBackup,
     onManualBackup,
     step,
   ]);

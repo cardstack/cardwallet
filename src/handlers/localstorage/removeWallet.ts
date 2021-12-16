@@ -7,7 +7,7 @@ import { uniswapAccountLocalKeys } from './uniswap';
 import { walletConnectAccountLocalKeys } from './walletconnectRequests';
 import logger from 'logger';
 
-export const removeWalletData = async accountAddress => {
+export const removeWalletData = async (accountAddress: string) => {
   logger.log('[remove wallet]', accountAddress);
   const allPrefixes = concat(
     accountLocalKeys,

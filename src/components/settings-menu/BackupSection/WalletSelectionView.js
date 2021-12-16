@@ -1,12 +1,8 @@
 import React, { useCallback } from 'react';
-import { Alert, ScrollView } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { ScrollView } from 'react-native';
 import styled from 'styled-components';
 
 import { useTheme } from '../../../context/ThemeContext';
-import { deleteAllBackups } from '../../../handlers/cloudBackup';
-import { walletsUpdate } from '../../../redux/wallets';
-import { cloudPlatform } from '../../../utils/platform';
 import Divider from '../../Divider';
 import { ButtonPressAnimation } from '../../animations';
 import { ContactAvatar } from '../../contacts';
@@ -16,13 +12,12 @@ import {
   getAddressPreview,
   getSymbolCharacterFromAddress,
 } from '@cardstack/utils';
+import { Device } from '@cardstack/utils/device';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { useWallets } from '@rainbow-me/hooks';
-
+import { useManageCloudBackups, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { padding } from '@rainbow-me/styles';
-import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const Footer = styled(Centered)`
   flex: 1;
@@ -33,8 +28,8 @@ const Footer = styled(Centered)`
 const WalletSelectionView = () => {
   const { navigate } = useNavigation();
   const { colors } = useTheme();
-  const dispatch = useDispatch();
   const { walletNames, wallets } = useWallets();
+  const { manageCloudBackups } = useManageCloudBackups();
   const onPress = useCallback(
     (walletId, name) => {
       const wallet = wallets[walletId];
@@ -55,50 +50,6 @@ const WalletSelectionView = () => {
     },
     [navigate, wallets]
   );
-
-  const manageCloudBackups = useCallback(() => {
-    const buttons = [`Delete All ${cloudPlatform} Backups`, 'Cancel'];
-
-    showActionSheetWithOptions(
-      {
-        cancelButtonIndex: 1,
-        destructiveButtonIndex: 0,
-        options: buttons,
-        title: `Manage ${cloudPlatform} Backups`,
-      },
-      buttonIndex => {
-        if (buttonIndex === 0) {
-          // Delete wallet with confirmation
-          showActionSheetWithOptions(
-            {
-              cancelButtonIndex: 1,
-              destructiveButtonIndex: 0,
-              message: `Are you sure you want to delete your ${cloudPlatform} wallet backups?`,
-              options: [`Confirm and Delete Backups`, 'Cancel'],
-            },
-            async buttonIndex => {
-              if (buttonIndex === 0) {
-                const newWallets = { ...wallets };
-                Object.keys(newWallets).forEach(key => {
-                  newWallets[key].backedUp = undefined;
-                  newWallets[key].backupDate = undefined;
-                  newWallets[key].backupFile = undefined;
-                  newWallets[key].backupType = undefined;
-                });
-
-                await dispatch(walletsUpdate(newWallets));
-
-                // Delete all backups (debugging)
-                await deleteAllBackups();
-
-                Alert.alert('Backups Deleted Succesfully');
-              }
-            }
-          );
-        }
-      }
-    );
-  }, [dispatch, wallets]);
 
   let cloudBackedUpWallets = 0;
 
@@ -219,7 +170,7 @@ const WalletSelectionView = () => {
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
             <Text align="center" color="backgroundBlue">
-              􀍢 Manage {cloudPlatform} Backups
+              􀍢 Manage {Device.cloudPlatform} Backups
             </Text>
           </ButtonPressAnimation>
         </Footer>

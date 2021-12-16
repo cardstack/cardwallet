@@ -2,6 +2,17 @@ import React from 'react';
 
 import { Button, Container, Icon, Text } from '@cardstack/components';
 
+interface BackupSheetSectionProps {
+  descriptionText: string;
+  onPrimaryAction: () => Promise<void>;
+  onSecondaryAction: () => Promise<void>;
+  primaryButtonTestId?: string;
+  primaryLabel: string;
+  secondaryButtonTestId?: string;
+  secondaryLabel: string;
+  titleText: string;
+}
+
 export default function BackupSheetSection({
   descriptionText,
   onPrimaryAction,
@@ -11,7 +22,7 @@ export default function BackupSheetSection({
   secondaryButtonTestId,
   secondaryLabel,
   titleText,
-}) {
+}: BackupSheetSectionProps) {
   return (
     <Container paddingHorizontal={8} paddingTop={6}>
       <Container

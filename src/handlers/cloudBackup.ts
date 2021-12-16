@@ -1,12 +1,15 @@
+import assert from 'assert';
 import { captureException } from '@sentry/react-native';
 import { sortBy } from 'lodash';
-import RNCloudFs from 'react-native-cloud-fs';
-import { RAINBOW_MASTER_KEY } from 'react-native-dotenv';
+import RNCloudFs, { BackupFile } from 'react-native-cloud-fs';
+import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
 import { logger } from '../utils';
-const REMOTE_BACKUP_WALLET_DIR = 'cardstack.com/wallet-backups';
-const USERDATA_FILE = 'UserData.json';
+import { Device } from '@cardstack/utils/device';
+
+const REMOTE_BACKUP_WALLET_DIR: string = 'cardstack.com/wallet-backups';
+const USERDATA_FILE: string = 'UserData.json';
 const encryptor = new AesEncryptor();
 
 export const CLOUD_BACKUP_ERRORS = {
@@ -22,12 +25,12 @@ export const CLOUD_BACKUP_ERRORS = {
 };
 
 export function logoutFromGoogleDrive() {
-  android && RNCloudFs.logout();
+  Device.isAndroid && RNCloudFs.logout();
 }
 
 // This is used for dev purposes only!
 export async function deleteAllBackups() {
-  if (android) {
+  if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
   const backups = await RNCloudFs.listFiles({
@@ -41,13 +44,29 @@ export async function deleteAllBackups() {
   );
 }
 
-export async function encryptAndSaveDataToCloud(data, password, filename) {
+export async function fetchAllBackups() {
+  if (Device.isAndroid) {
+    await RNCloudFs.loginIfNeeded();
+  }
+  return RNCloudFs.listFiles({
+    scope: 'hidden',
+    targetPath: REMOTE_BACKUP_WALLET_DIR,
+  });
+}
+
+export async function encryptAndSaveDataToCloud(
+  data: any,
+  password: string,
+  filename: string
+) {
   // Encrypt the data
   try {
     const encryptedData = await encryptor.encrypt(
       password,
       JSON.stringify(data)
     );
+    assert(encryptedData, 'Encrypted data should not be null');
+
     // Store it on the FS first
     const path = `${RNFS.DocumentDirectoryPath}/${filename}`;
     await RNFS.writeFile(path, encryptedData, 'utf8');
@@ -56,7 +75,7 @@ export async function encryptAndSaveDataToCloud(data, password, filename) {
     const mimeType = 'application/json';
     // Only available to our app
     const scope = 'hidden';
-    if (android) {
+    if (Device.isAndroid) {
       await RNCloudFs.loginIfNeeded();
     }
     const result = await RNCloudFs.copyToCloud({
@@ -67,7 +86,7 @@ export async function encryptAndSaveDataToCloud(data, password, filename) {
     });
     // Now we need to verify the file has been stored in the cloud
     const exists = await RNCloudFs.fileExists(
-      ios
+      Device.isIOS
         ? {
             scope,
             targetPath: destinationPath,
@@ -94,16 +113,26 @@ export async function encryptAndSaveDataToCloud(data, password, filename) {
   }
 }
 
-function getICloudDocument(filename) {
+function getICloudDocument(filename: string): Promise<any> {
   return RNCloudFs.getIcloudDocument(filename);
 }
 
-function getGoogleDriveDocument(id) {
+function getGoogleDriveDocument(id: string): Promise<any> {
   return RNCloudFs.getGoogleDriveDocument(id);
 }
 
-export async function getDataFromCloud(backupPassword, filename = null) {
-  if (android) {
+export async function syncCloud(): Promise<any> {
+  if (Device.isIOS) {
+    return RNCloudFs.syncCloud();
+  }
+  return true;
+}
+
+export async function getDataFromCloud(
+  backupPassword: string,
+  filename: string | null = null
+): Promise<any> {
+  if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
 
@@ -119,9 +148,9 @@ export async function getDataFromCloud(backupPassword, filename = null) {
     throw error;
   }
 
-  let document;
+  let document: BackupFile | undefined;
   if (filename) {
-    if (ios) {
+    if (Device.isIOS) {
       // .icloud are files that were not yet synced
       document = backups.files.find(
         file => file.name === filename || file.name === `.${filename}.icloud`
@@ -142,8 +171,8 @@ export async function getDataFromCloud(backupPassword, filename = null) {
     const sortedBackups = sortBy(backups.files, 'lastModified').reverse();
     document = sortedBackups[0];
   }
-  const encryptedData = ios
-    ? await getICloudDocument(filename)
+  const encryptedData = Device.isIOS
+    ? await getICloudDocument(document.name)
     : await getGoogleDriveDocument(document.id);
 
   if (encryptedData) {
@@ -168,21 +197,21 @@ export async function getDataFromCloud(backupPassword, filename = null) {
   throw error;
 }
 
-export async function backupUserDataIntoCloud(data) {
+export async function backupUserDataIntoCloud(data: any) {
   const filename = USERDATA_FILE;
-  const password = RAINBOW_MASTER_KEY;
+  const password = CARDWALLET_MASTER_KEY;
   return encryptAndSaveDataToCloud(data, password, filename);
 }
 
 export async function fetchUserDataFromCloud() {
   const filename = USERDATA_FILE;
-  const password = RAINBOW_MASTER_KEY;
+  const password = CARDWALLET_MASTER_KEY;
   return getDataFromCloud(password, filename);
 }
 
 export const cloudBackupPasswordMinLength = 8;
 
-export function isCloudBackupPasswordValid(password) {
+export function isCloudBackupPasswordValid(password?: string) {
   return !!(
     password &&
     password !== '' &&
@@ -191,7 +220,7 @@ export function isCloudBackupPasswordValid(password) {
 }
 
 export function isCloudBackupAvailable() {
-  if (ios) {
+  if (Device.isIOS) {
     return RNCloudFs.isAvailable();
   }
   return true;

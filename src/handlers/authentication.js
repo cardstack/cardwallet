@@ -1,5 +1,5 @@
 import { captureException } from '@sentry/react-native';
-import { RAINBOW_MASTER_KEY } from 'react-native-dotenv';
+import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import AesEncryptor from '../handlers/aesEncryption';
 import * as keychain from '../model/keychain';
 import { Navigation } from '../navigation';
@@ -14,7 +14,10 @@ export async function getExistingPIN() {
     const encryptedPin = await keychain.loadString(pinKey);
     // The user has a PIN already, we need to decrypt it
     if (encryptedPin) {
-      const userPIN = await encryptor.decrypt(RAINBOW_MASTER_KEY, encryptedPin);
+      const userPIN = await encryptor.decrypt(
+        CARDWALLET_MASTER_KEY,
+        encryptedPin
+      );
       return userPIN;
     }
     // eslint-disable-next-line no-empty
@@ -24,7 +27,7 @@ export async function getExistingPIN() {
 
 export async function savePIN(pin) {
   try {
-    const encryptedPin = await encryptor.encrypt(RAINBOW_MASTER_KEY, pin);
+    const encryptedPin = await encryptor.encrypt(CARDWALLET_MASTER_KEY, pin);
     if (encryptedPin) {
       await keychain.saveString(pinKey, encryptedPin);
     }

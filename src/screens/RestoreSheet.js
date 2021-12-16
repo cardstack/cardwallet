@@ -7,6 +7,10 @@ import RestoreSheetFirstStep from '../components/backup/RestoreSheetFirstStep';
 
 import { Sheet } from '@cardstack/components';
 import { Device, layoutEasingAnimation } from '@cardstack/utils';
+import {
+  CLOUD_BACKUP_ERRORS,
+  fetchUserDataFromCloud,
+} from '@rainbow-me/handlers/cloudBackup';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -15,17 +19,38 @@ import Routes from '@rainbow-me/routes';
 export default function RestoreSheet() {
   const { goBack, navigate, setParams } = useNavigation();
   const {
-    params: { step = WalletBackupStepTypes.first, userData } = {},
+    params: {
+      step = WalletBackupStepTypes.first,
+      userData,
+      backupSelected,
+      fromSettings,
+    } = {},
   } = useRoute();
+  const [noBackupsFound, setNoBackupsFound] = useState(false);
+  const [isFetchingBackups, setIsFetchingBackups] = useState(false);
 
   const onCloudRestore = useCallback(async () => {
-    // Animate transforming into backup sheet
-    layoutEasingAnimation();
+    try {
+      if (Device.isAndroid) {
+        // we didn't yet fetch the user data from the cloud
+        setIsFetchingBackups(true);
+        const data = await fetchUserDataFromCloud();
+        setParams({ userData: data });
+      }
 
-    if (Device.isIOS) {
+      // Animate transforming into backup sheet
+      layoutEasingAnimation();
       setParams({ step: WalletBackupStepTypes.cloud });
+    } catch (e) {
+      if (e.message === CLOUD_BACKUP_ERRORS.NO_BACKUPS_FOUND) {
+        setNoBackupsFound(true);
+      } else {
+        throw e;
+      }
+    } finally {
+      setIsFetchingBackups(false);
     }
-  }, [setParams]);
+  }, [setParams, setNoBackupsFound, setIsFetchingBackups]);
 
   const onManualRestore = useCallback(() => {
     InteractionManager.runAfterInteractions(goBack);
@@ -52,10 +77,16 @@ export default function RestoreSheet() {
     <Sheet isFullScreen={isCloudStep} scrollEnabled={isCloudStep}>
       <StatusBar barStyle="light-content" />
       {isCloudStep ? (
-        <RestoreCloudStep userData={userData} />
+        <RestoreCloudStep
+          backupSelected={backupSelected}
+          fromSettings={fromSettings}
+          userData={userData}
+        />
       ) : (
         <RestoreSheetFirstStep
           enableCloudRestore={enableCloudRestore}
+          isFetchingBackups={isFetchingBackups}
+          noBackupsFound={noBackupsFound}
           onCloudRestore={onCloudRestore}
           onManualRestore={onManualRestore}
           walletsBackedUp={walletsBackedUp}

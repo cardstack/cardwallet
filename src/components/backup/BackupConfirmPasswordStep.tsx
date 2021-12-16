@@ -1,21 +1,29 @@
 import { useRoute } from '@react-navigation/native';
 import lang from 'i18n-js';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Keyboard } from 'react-native';
 import styled from 'styled-components';
 import { isSamsungGalaxy } from '../../helpers/samsung';
 import { saveBackupPassword } from '../../model/backup';
-import { cloudPlatform } from '../../utils/platform';
 import { DelayedAlert } from '../alerts';
 import { PasswordField } from '../fields';
 import { Centered, Column } from '../layout';
-import { GradientText, Text } from '../text';
+import { GradientText } from '../text';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
+import { Button, IconName, IconProps, Text } from '@cardstack/components';
+import { Device } from '@cardstack/utils/device';
 import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
 } from '@rainbow-me/handlers/cloudBackup';
 import {
+  useBiometryIconName,
   useBooleanState,
   useDimensions,
   useRouteExistsInNavigationState,
@@ -26,6 +34,8 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { margin, padding } from '@rainbow-me/styles';
 import logger from 'logger';
+
+const { cloudPlatform } = Device;
 
 const DescriptionText = styled(Text).attrs(({ theme: { colors } }) => ({
   align: 'center',
@@ -56,19 +66,20 @@ const MastheadIcon = styled(GradientText).attrs({
 })``;
 
 const Title = styled(Text).attrs({
-  size: 'big',
+  size: 'large',
   weight: 'bold',
 })`
   ${margin(15, 0, 12)};
 `;
 
-const samsungGalaxy = (android && isSamsungGalaxy()) || false;
+const samsungGalaxy = (Device.isAndroid && isSamsungGalaxy()) || false;
 
 export default function BackupConfirmPasswordStep() {
   const { isTinyPhone } = useDimensions();
   const { params } = useRoute();
   const { goBack } = useNavigation();
   const walletCloudBackup = useWalletCloudBackup();
+  const biometryIconName = useBiometryIconName();
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [validPassword, setValidPassword] = useState(false);
   const [
@@ -78,9 +89,9 @@ export default function BackupConfirmPasswordStep() {
   ] = useBooleanState(true);
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('􀎽 Confirm Backup');
-  const passwordRef = useRef();
+  const passwordRef = useRef<any>();
   const { selectedWallet, setIsWalletLoading } = useWallets();
-  const walletId = params?.walletId || selectedWallet.id;
+  const walletId = (params as any)?.walletId || selectedWallet.id;
 
   const isSettingsRoute = useRouteExistsInNavigationState(
     Routes.SETTINGS_MODAL
@@ -109,6 +120,18 @@ export default function BackupConfirmPasswordStep() {
       didHideListener.remove();
     };
   }, []);
+
+  const biometryIconProps: IconProps | undefined = useMemo(
+    () =>
+      biometryIconName
+        ? {
+            iconSize: 'medium',
+            marginRight: 3,
+            name: biometryIconName as IconName,
+          }
+        : undefined,
+    [biometryIconName]
+  );
 
   useEffect(() => {
     let passwordIsValid = false;
@@ -167,9 +190,15 @@ export default function BackupConfirmPasswordStep() {
 
   return (
     <BackupSheetKeyboardLayout
-      footerButtonDisabled={!validPassword}
-      footerButtonLabel={label}
-      onSubmit={onSubmit}
+      footer={
+        validPassword ? (
+          <Button iconProps={biometryIconProps} onPress={onSubmit}>
+            {label}
+          </Button>
+        ) : (
+          <Text variant="subText">Minimum 8 characters</Text>
+        )
+      }
     >
       <Masthead>
         {(isTinyPhone || samsungGalaxy) && isKeyboardOpen ? null : (

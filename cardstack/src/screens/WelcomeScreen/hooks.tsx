@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   fetchUserDataFromCloud,
   isCloudBackupAvailable,
+  syncCloud,
 } from '@rainbow-me/handlers/cloudBackup';
 
 import { Device } from '@cardstack/utils';
@@ -23,10 +24,12 @@ export const useWelcomeScreen = () => {
   useEffect(() => {
     const checkCloudBackupOnInit = async () => {
       try {
-        logger.log(`downloading backup info...`);
         const isAvailable = await isCloudBackupAvailable();
 
         if (isAvailable && Device.isIOS) {
+          logger.log('syncing...');
+          await syncCloud();
+          logger.log('fetching backup info...');
           const data = await fetchUserDataFromCloud();
           setUserData(data);
           logger.log(`Downloaded backup info`);

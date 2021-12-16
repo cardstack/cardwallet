@@ -6,6 +6,7 @@ import { Column } from '../layout';
 import { SecretDisplaySection } from '../secret-display';
 import { CopyToast, ToastPositionContainer } from '../toasts';
 import { Button, Container, Icon, Text } from '@cardstack/components';
+import { Device } from '@cardstack/utils/device';
 import walletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useDimensions,
@@ -17,10 +18,12 @@ import { useNavigation } from '@rainbow-me/navigation';
 const Content = styled(Column).attrs({
   align: 'center',
   justify: 'start',
+  isTallPhone: false,
 })`
   flex-grow: 1;
   flex-shrink: 0;
-  padding-top: ${({ isTallPhone }) => (android ? 30 : isTallPhone ? 65 : 15)};
+  padding-top: ${({ isTallPhone }) =>
+    Device.isAndroid ? 30 : isTallPhone ? 65 : 15};
 `;
 
 export default function BackupManualStep() {
@@ -29,7 +32,7 @@ export default function BackupManualStep() {
   const { selectedWallet } = useWallets();
   const { onManuallyBackupWalletId } = useWalletManualBackup();
   const { params } = useRoute();
-  const walletId = params?.walletId || selectedWallet.id;
+  const walletId = (params as any)?.walletId || selectedWallet.id;
 
   const [type, setType] = useState(null);
   const [secretLoaded, setSecretLoaded] = useState(false);
@@ -51,7 +54,7 @@ export default function BackupManualStep() {
   return (
     <Fragment>
       <Container alignItems="center" marginTop={5} paddingHorizontal={10}>
-        <Icon color="settingsGray" name="file-text" size={35} />
+        <Icon color="settingsGrayDark" name="file-text" size={35} />
         <Text marginTop={2} size="medium" weight="bold">
           Manual Backup
         </Text>

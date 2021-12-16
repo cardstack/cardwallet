@@ -24,7 +24,7 @@ import { Theme } from '../../theme';
 import { Icon, IconProps } from '../Icon';
 import { Container } from '../Container';
 
-type BaseInputProps = TextInputProps &
+export type BaseInputProps = TextInputProps &
   LayoutProps<Theme> &
   SpacingProps<Theme> &
   TypographyProps<Theme> &
@@ -47,7 +47,7 @@ const BasicInput = createRestyleComponent<BaseInputProps, Theme>(
   TextInput
 );
 
-interface InputProps {
+export interface InputProps {
   border?: boolean;
   iconProps?: IconProps | null;
 }
