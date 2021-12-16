@@ -862,7 +862,8 @@ export const saveSeedPhrase = async (
   return keychain.saveObject(key, val, privateAccessControlOptions);
 };
 
-export const getSeedPhrase = async (
+// use only inside wallet model
+const getSeedPhrase = async (
   id: RainbowWallet['id']
 ): Promise<null | SeedPhraseData> => {
   try {
