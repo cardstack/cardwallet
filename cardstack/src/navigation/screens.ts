@@ -15,11 +15,7 @@ import {
   TransactionConfirmation,
   WelcomeScreen,
 } from '@cardstack/screen';
-import {
-  expandedPreset,
-  sheetPreset,
-  smallGestureResponseDistance,
-} from '@rainbow-me/navigation/effects';
+import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
@@ -67,10 +63,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   COLLECTIBLE_SHEET: {
     component: CollectibleSheet,
-    options: {
-      ...expandedPreset,
-      gestureResponseDistance: smallGestureResponseDistance,
-    } as StackNavigationOptions,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 
