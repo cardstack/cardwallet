@@ -967,17 +967,6 @@ export const generateAccount = async (
           dispatch(setIsWalletLoading(null));
           userPIN = await authenticateWithPIN();
           dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
-          if (!seedphrase) {
-            const seedData = await getSeedPhrase(id);
-            seedphrase = seedData?.seedphrase;
-            if (userPIN) {
-              try {
-                seedphrase = await encryptor.decrypt(userPIN, seedphrase);
-              } catch (e) {
-                return null;
-              }
-            }
-          }
         } catch (e) {
           return null;
         }
@@ -987,6 +976,13 @@ export const generateAccount = async (
     if (!seedphrase) {
       const seedData = await getSeedPhrase(id);
       seedphrase = seedData?.seedphrase;
+      if (userPIN) {
+        try {
+          seedphrase = await encryptor.decrypt(userPIN, seedphrase);
+        } catch (e) {
+          return null;
+        }
+      }
     }
 
     if (!seedphrase) {
