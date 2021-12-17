@@ -53,14 +53,17 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
     options: sheetPreset as StackNavigationOptions,
+    listeners: dismissAndroidKeyboardOnClose,
   },
   SEND_FLOW_EOA: {
     component: SendSheetEOA,
     options: sheetPreset as StackNavigationOptions,
+    listeners: dismissAndroidKeyboardOnClose,
   },
   PAY_MERCHANT: {
     component: PayMerchant,
     options: expandedPreset as StackNavigationOptions,
+    listeners: dismissAndroidKeyboardOnClose,
   },
   ERROR_FALLBACK_SCREEN: {
     component: ErrorFallbackScreen,

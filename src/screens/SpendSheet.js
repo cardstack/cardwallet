@@ -9,10 +9,12 @@ import { Column } from '../components/layout';
 
 import { Text } from '@cardstack/components';
 
+import { Device } from '@cardstack/utils';
 import { borders } from '@rainbow-me/styles';
 import { deviceUtils } from '@rainbow-me/utils';
 
-const sheetHeight = deviceUtils.dimensions.height - (android ? 30 : 10);
+const sheetHeight =
+  deviceUtils.dimensions.height - (Device.isAndroid ? 30 : 10);
 const statusBarHeight = getStatusBarHeight(true);
 
 const Container = styled.View`
@@ -28,7 +30,7 @@ const SheetContainer = styled(Column).attrs({
 })`
   ${borders.buildRadius('top', 16)};
   background-color: ${({ theme: { colors } }) => colors.white};
-  height: ${android ? sheetHeight : '100%'};
+  height: ${Device.isAndroid ? sheetHeight : '100%'};
   width: 100%;
 `;
 

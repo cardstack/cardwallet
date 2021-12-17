@@ -43,6 +43,7 @@ import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 
 import {
+  dismissAndroidKeyboardOnClose,
   linking,
   useCardstackGlobalScreens,
   useCardstackMainScreens,
@@ -104,8 +105,15 @@ function MainNavigator() {
       />
       <Stack.Screen
         component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
         name={Routes.EXPANDED_ASSET_SHEET}
         options={expandedPreset}
+      />
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
+        options={sheetPreset}
       />
       <Stack.Screen
         component={ChangeWalletSheet}
@@ -193,16 +201,6 @@ function MainOuterNavigator() {
       <OuterStack.Screen
         component={MainNavigator}
         name={Routes.MAIN_NAVIGATOR}
-      />
-      <OuterStack.Screen
-        component={ExpandedAssetSheet}
-        name={Routes.EXPANDED_ASSET_SCREEN}
-        options={sheetPreset}
-      />
-      <OuterStack.Screen
-        component={ExpandedAssetSheet}
-        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
-        options={sheetPreset}
       />
       <OuterStack.Screen
         component={SettingsModal}
