@@ -12,3 +12,4 @@ export { default as PaymentRequestExpandedState } from './PaymentRequest/Payment
 export { default as ErrorFallbackScreen } from './ErrorFallbackScreen';
 export { default as LoadingOverlayScreen } from './LoadingOverlayScreen';
 export { default as WelcomeScreen } from './WelcomeScreen/WelcomeScreen';
+export { default as ImportSeedSheet } from './sheets/ImportSeed/ImportSeedSheet';

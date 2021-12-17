@@ -417,7 +417,7 @@ export default function ChangeWalletSheet() {
   ]);
 
   const onPressImportSeedPhrase = useCallback(() => {
-    navigate(Routes.IMPORT_SEED_PHRASE_FLOW);
+    navigate(Routes.IMPORT_SEED_SHEET);
   }, [navigate]);
 
   return (

@@ -1,12 +1,19 @@
 import { StackNavigationOptions } from '@react-navigation/stack';
+import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
+import { NavigationState, ScreenListeners } from '@react-navigation/core';
 import { MainRoutes, GlobalRoutes } from './routes';
-import { horizontalInterpolator, overlayPreset } from './presetOptions';
+import {
+  dismissAndroidKeyboardOnClose,
+  horizontalInterpolator,
+  overlayPreset,
+} from './presetOptions';
 import {
   BuyPrepaidCard,
   CurrencySelectionGlobalModal,
   DepotScreen,
   ErrorFallbackScreen,
   LoadingOverlayScreen,
+  ImportSeedSheet,
   MerchantScreen,
   PayMerchant,
   PrepaidCardModal,
@@ -15,16 +22,21 @@ import {
   TransactionConfirmation,
   WelcomeScreen,
 } from '@cardstack/screen';
-import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
+import {
+  bottomSheetPreset,
+  expandedPreset,
+  sheetPreset,
+} from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
 import CollectibleSheet from '@cardstack/screen/sheets/collectibles/CollectibleSheet';
 
-interface ScreenNavigation {
+export interface ScreenNavigation {
   component: React.ComponentType<any>;
   options?: StackNavigationOptions;
+  listeners?: ScreenListeners<NavigationState, StackNavigationEventMap>;
 }
 
 export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
@@ -64,6 +76,11 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   COLLECTIBLE_SHEET: {
     component: CollectibleSheet,
     options: expandedPreset as StackNavigationOptions,
+  },
+  IMPORT_SEED_SHEET: {
+    component: ImportSeedSheet,
+    options: bottomSheetPreset as StackNavigationOptions,
+    listeners: dismissAndroidKeyboardOnClose,
   },
 };
 
