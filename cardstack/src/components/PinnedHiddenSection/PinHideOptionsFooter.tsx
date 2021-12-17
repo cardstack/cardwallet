@@ -3,6 +3,7 @@ import { LayoutAnimation } from 'react-native';
 import { IconProps } from '../Icon';
 import { Button, Container } from '@cardstack/components';
 import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
+import { ENABLE_PIN_ITEMS } from '@cardstack/constants';
 
 const layoutAnimation = () => {
   LayoutAnimation.configureNext(
@@ -79,14 +80,16 @@ const PinHideOptionsFooter = () => {
       position="absolute"
       width="100%"
     >
-      <Button
-        disabled={buttonsDisabled}
-        iconProps={pinIconProps}
-        onPress={handlePinnedPress}
-        variant="small"
-      >
-        {isInitialSelectionPinned ? 'Unpin' : 'Pin'}
-      </Button>
+      {ENABLE_PIN_ITEMS && (
+        <Button
+          disabled={buttonsDisabled}
+          iconProps={pinIconProps}
+          onPress={handlePinnedPress}
+          variant="small"
+        >
+          {isInitialSelectionPinned ? 'Unpin' : 'Pin'}
+        </Button>
+      )}
       <Button
         disabled={buttonsDisabled}
         iconProps={hideIconProps}
