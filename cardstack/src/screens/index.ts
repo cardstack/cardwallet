@@ -13,3 +13,4 @@ export { default as ErrorFallbackScreen } from './ErrorFallbackScreen';
 export { default as LoadingOverlayScreen } from './LoadingOverlayScreen';
 export { default as WelcomeScreen } from './WelcomeScreen/WelcomeScreen';
 export { default as ImportSeedSheet } from './sheets/ImportSeed/ImportSeedSheet';
+export { default as CollectibleSheet } from './sheets/Collectible/CollectibleSheet';

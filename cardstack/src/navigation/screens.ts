@@ -21,6 +21,7 @@ import {
   ShowQRCodeModal,
   TransactionConfirmation,
   WelcomeScreen,
+  CollectibleSheet,
 } from '@cardstack/screen';
 import {
   bottomSheetPreset,
@@ -31,7 +32,6 @@ import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
-import CollectibleSheet from '@cardstack/screen/sheets/collectibles/CollectibleSheet';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
