@@ -54,7 +54,7 @@ const ImportSeedSheet = () => {
               onFocus={handleFocus}
               onSubmitEditing={handlePressImportButton}
               placeholder="Enter seed phrase or secret recovery phrase"
-              placeholderTextColor={colors.backgroundLightGray}
+              placeholderTextColor={colors.grayText}
               ref={inputRef}
               returnKeyType="done"
               spellCheck={false}

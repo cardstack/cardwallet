@@ -4,8 +4,7 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import { Keyboard } from 'react-native';
-import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
-import { NavigationState, ScreenListeners } from '@react-navigation/core';
+import { ScreenNavigation } from './screens';
 import { Device } from '@cardstack/utils';
 import { colors } from '@cardstack/theme';
 
@@ -26,10 +25,7 @@ export const overlayPreset: StackNavigationOptions = {
   cardStyleInterpolator: forFade,
 };
 
-export const dismissAndroidKeyboardOnClose: ScreenListeners<
-  NavigationState,
-  StackNavigationEventMap
-> = {
+export const dismissAndroidKeyboardOnClose: ScreenNavigation['listeners'] = {
   transitionStart: ({ data: { closing } }) => {
     closing && Device.isAndroid && Keyboard.dismiss();
   },

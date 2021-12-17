@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react';
-import { StackNavigationOptions } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/core';
 import { MainRoutes, GlobalRoutes } from './routes';
-import { MainScreens, GlobalScreens } from './screens';
+import { MainScreens, GlobalScreens, ScreenNavigation } from './screens';
 import { Navigation } from '@rainbow-me/navigation';
 
 // Not a big fan of returning components inside hooks,
@@ -10,15 +9,14 @@ import { Navigation } from '@rainbow-me/navigation';
 
 const getScreens = (
   routes: Record<string, string>,
-  screens: Record<string, { component: any; options?: StackNavigationOptions }>,
+  screens: Record<string, ScreenNavigation>,
   Stack: any
 ) =>
-  Object.entries(screens).map(([name, { component, options }]) => (
+  Object.entries(screens).map(([name, props]) => (
     <Stack.Screen
-      component={component}
       key={name}
       name={routes[name as keyof typeof routes]}
-      options={options}
+      {...props}
     />
   ));
 
