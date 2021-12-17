@@ -104,7 +104,7 @@ interface ReadOnlyWallet {
   privateKey: null;
 }
 
-interface EthereumWalletFromSeed {
+export interface EthereumWalletFromSeed {
   hdnode: null | HDNode;
   isHDWallet: boolean;
   wallet: null | EthereumWallet;
