@@ -214,7 +214,7 @@ const useImportFromProfileModal = (
           InteractionManager.runAfterInteractions(async () => {
             // Fresh imported wallet
             if (isFreshWallet) {
-              // Dismisses ImportSeedPhraseSheet
+              // Dismisses ImportSeedSheet
               goBack();
               // Replaces bc no route exist yet
               replace(Routes.SWIPE_LAYOUT, {

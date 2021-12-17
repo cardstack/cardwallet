@@ -11,7 +11,6 @@ import BackupSheet from '../screens/BackupSheet';
 import ChangeWalletSheet from '../screens/ChangeWalletSheet';
 import DepositModal from '../screens/DepositModal';
 import ExpandedAssetSheet from '../screens/ExpandedAssetSheet';
-import ImportSeedPhraseSheet from '../screens/ImportSeedPhraseSheet';
 import ModalScreen from '../screens/ModalScreen';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
@@ -93,11 +92,6 @@ function NativeStackFallbackNavigator() {
       screenOptions={defaultScreenStackOptions}
     >
       <Stack.Screen component={MainNavigator} name={Routes.MAIN_NAVIGATOR} />
-      <Stack.Screen
-        component={ImportSeedPhraseSheet}
-        name={Routes.IMPORT_SEED_PHRASE_SHEET}
-        options={bottomSheetPreset}
-      />
       <Stack.Screen
         component={RestoreSheet}
         name={Routes.RESTORE_SHEET}
