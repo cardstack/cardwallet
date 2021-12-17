@@ -51,6 +51,7 @@ export const getHubAuthToken = async (
         keychainAcessAskPrompt: HUBAUTH_PROMPT_MESSAGE,
       });
 
+      // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
       const web3 = new Web3(hdProvider);
       const authAPI = await getSDK('HubAuth', web3, hubURL);
       // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
