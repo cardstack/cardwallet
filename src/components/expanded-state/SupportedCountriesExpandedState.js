@@ -5,7 +5,6 @@ import { FloatingEmojisTapper } from '../floating-emojis';
 import { AssetPanel, FloatingPanels } from '../floating-panels';
 import { Centered } from '../layout';
 import { Text } from '../text';
-import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import { useDimensions } from '@rainbow-me/hooks';
 import { supportedCountries } from '@rainbow-me/references/wyre';
 import { padding } from '@rainbow-me/styles';
@@ -13,7 +12,7 @@ import { neverRerender } from '@rainbow-me/utils';
 
 const Panel = styled(FloatingPanels)`
   margin-bottom: ${({ deviceDimensions: { isTallPhone } }) =>
-    (isTallPhone ? 90 : 45) + (isNativeStackAvailable ? 10 : 0)};
+    isTallPhone ? 90 : 45};
   max-width: ${({ deviceDimensions: { width } }) => Math.min(270, width - 100)};
 `;
 

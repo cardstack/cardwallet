@@ -12,7 +12,6 @@ import {
 import { PERMISSIONS, request } from 'react-native-permissions';
 import Url from 'url-parse';
 import { Alert } from '../components/alerts';
-import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { checkPushNotificationPermissions } from '../model/firebase';
 import { useNavigation } from '../navigation/Navigation';
 import usePrevious from './usePrevious';
@@ -22,6 +21,7 @@ import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';
 import { addressUtils, haptics } from '@rainbow-me/utils';
 import logger from 'logger';
+import { Device } from '@cardstack/utils';
 
 function useScannerState(enabled) {
   const [isCameraAuthorized, setIsCameraAuthorized] = useState(true);
@@ -107,7 +107,7 @@ export default function useScanner(enabled) {
       navigate(Routes.WALLET_SCREEN);
 
       // And then navigate to Send sheet
-      if (isNativeStackAvailable || android) {
+      if (Device.isAndroid) {
         navigate(Routes.SEND_FLOW, {
           params: { address },
           screen: Routes.SEND_SHEET,

@@ -1,4 +1,3 @@
-import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import {
   GlobalRoutes as CSGlobalRoutes,
   MainRoutes as CSMainRoutes,
@@ -67,32 +66,16 @@ export const NATIVE_ROUTES = [
   Routes.SAVINGS_SHEET,
   Routes.SAVINGS_WITHDRAW_MODAL,
   Routes.SAVINGS_DEPOSIT_MODAL,
-  ...(isNativeStackAvailable
-    ? [
-        Routes.SEND_SHEET_NAVIGATOR,
-        Routes.SPEND_SHEET_NAVIGATOR,
-        Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR,
-        Routes.ADD_CASH_SCREEN_NAVIGATOR,
-      ]
-    : []),
 ];
 
 const RoutesWithNativeStackAvailability = {
   ...Routes,
-  ADD_CASH_FLOW: isNativeStackAvailable
-    ? Routes.ADD_CASH_SCREEN_NAVIGATOR
-    : Routes.ADD_CASH_SHEET,
-  IMPORT_SEED_PHRASE_FLOW: isNativeStackAvailable
-    ? Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR
-    : Routes.IMPORT_SEED_PHRASE_SHEET,
-  SEND_FLOW:
-    isNativeStackAvailable || Device.isAndroid
-      ? Routes.SEND_SHEET_NAVIGATOR
-      : Routes.SEND_SHEET,
-  SPEND_FLOW:
-    isNativeStackAvailable || Device.isAndroid
-      ? Routes.SPEND_SHEET_NAVIGATOR
-      : Routes.SPEND_SHEET,
+  ADD_CASH_FLOW: Routes.ADD_CASH_SHEET,
+  IMPORT_SEED_PHRASE_FLOW: Routes.IMPORT_SEED_PHRASE_SHEET,
+  SEND_FLOW: Device.isAndroid ? Routes.SEND_SHEET_NAVIGATOR : Routes.SEND_SHEET,
+  SPEND_FLOW: Device.isAndroid
+    ? Routes.SPEND_SHEET_NAVIGATOR
+    : Routes.SPEND_SHEET,
 };
 
 export default RoutesWithNativeStackAvailability;
