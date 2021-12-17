@@ -44,10 +44,10 @@ export default function useInitializeWallet() {
       checkedWallet = null,
     } = {}) => {
       try {
-        logger.log('Start wallet setup');
+        logger.sentry('Start wallet setup');
 
         await resetAccountState();
-        logger.log('resetAccountState ran ok');
+        logger.sentry('resetAccountState ran ok');
 
         await dispatch(settingsLoadNetwork());
 
@@ -56,20 +56,20 @@ export default function useInitializeWallet() {
 
         await dispatch(setCurrencyConversionRates(conversionsRates));
 
-        logger.log('done loading network');
+        logger.sentry('done loading network');
 
         const isImporting = !!seedPhrase;
-        logger.log('isImporting?', isImporting);
+        logger.sentry('isImporting?', isImporting);
 
         // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
         await loadCoingeckoCoins();
 
         if (shouldRunMigrations && !isImporting) {
-          logger.log('shouldRunMigrations && !seedPhrase? => true');
+          logger.sentry('shouldRunMigrations && !seedPhrase? => true');
           await dispatch(walletsLoadState());
-          logger.log('walletsLoadState call #1');
+          logger.sentry('walletsLoadState call #1');
           await runMigrations();
-          logger.log('done with migrations');
+          logger.sentry('done with migrations');
         }
 
         const { isNew, walletAddress } = await walletInit(
@@ -81,18 +81,18 @@ export default function useInitializeWallet() {
           network
         );
 
-        logger.log('walletInit returned ', {
+        logger.sentry('walletInit returned ', {
           isNew,
           walletAddress,
         });
 
         if (isImporting || isNew) {
-          logger.log('walletsLoadState call #2');
+          logger.sentry('walletsLoadState call #2');
           await dispatch(walletsLoadState());
         }
 
         if (isNil(walletAddress)) {
-          logger.log('walletAddress is nil');
+          logger.sentry('walletAddress is nil');
           if (!isImporting) {
             dispatch(appStateUpdate({ walletReady: true }));
           }
@@ -100,23 +100,23 @@ export default function useInitializeWallet() {
         }
 
         await dispatch(settingsUpdateAccountAddress(walletAddress));
-        logger.log('updated settings address', walletAddress);
+        logger.sentry('updated settings address', walletAddress);
 
         // Newly created / imported accounts have no data in localstorage
         if (!(isNew || isImporting)) {
           await loadGlobalData();
-          logger.log('loaded global data...');
+          logger.sentry('loaded global data...');
           await loadAccountData(network);
-          logger.log('loaded account data', network);
+          logger.sentry('loaded account data', network);
         }
 
         hideSplashScreen();
-        logger.log('Hide splash screen');
+        logger.sentry('Hide splash screen');
         initializeAccountData();
 
         dispatch(appStateUpdate({ walletReady: true }));
 
-        logger.log('💰 Wallet initialized');
+        logger.sentry('💰 Wallet initialized');
 
         checkPushPermissionAndRegisterToken(walletAddress, seedPhrase);
         return walletAddress;
