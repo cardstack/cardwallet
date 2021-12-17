@@ -1,4 +1,5 @@
 export const ENABLE_PAYMENTS = true;
+export const ENABLE_PIN_ITEMS = false;
 export const TRANSACTION_PAGE_SIZE = 100; // Temp increase the page size
 export const SUPPORT_EMAIL_ADDRESS = 'appfeedback@cardstack.com';
 export const SEND_TRANSACTION_ERROR_MESSAGE =
