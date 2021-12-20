@@ -52,6 +52,7 @@ export const PaymentDetailsItem = ({
   info,
   infoColor = 'blueText',
   isTimestamp = false,
+  isPrepaidCard = false,
 }: {
   title: string;
   color?: string;
@@ -60,6 +61,7 @@ export const PaymentDetailsItem = ({
   infoColor?: ResponsiveValue<keyof Theme['colors'], Theme>;
   name?: string;
   isTimestamp?: boolean;
+  isPrepaidCard?: boolean;
 }) => {
   return (
     <Container marginBottom={6} paddingHorizontal={6}>
@@ -94,6 +96,11 @@ export const PaymentDetailsItem = ({
       <Container flexDirection="row" marginBottom={1}>
         <Container flex={2} />
         <Container flex={8}>
+          {isPrepaidCard && (
+            <Text color={infoColor} size="smallest">
+              PREPAID CARD
+            </Text>
+          )}
           <Text color={infoColor} size="small">
             {isTimestamp ? dateFormatter(info) : info}
           </Text>

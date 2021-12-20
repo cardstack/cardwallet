@@ -263,6 +263,7 @@ export interface MerchantEarnedSpendAndRevenueTransactionType {
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_SPEND_AND_REVENUE;
   transactionHash: string;
+  transaction: MerchantEarnedRevenueTransactionTypeTxn;
   infoDid?: string;
 }
 

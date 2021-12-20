@@ -9,7 +9,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { isLayer1, normalizeTxHash } from '@cardstack/utils';
+import { isLayer1, normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -128,6 +128,25 @@ export interface TransactionRowProps extends ContainerProps {
   address?: string;
   hasBottomDivider?: boolean;
   recipientName?: string;
+}
+
+export interface Asset extends TransactionRowProps {
+  CoinIcon: JSX.Element;
+  Header: any;
+  includeBorder: boolean;
+  index: number;
+  isFullWidth: boolean;
+  primaryText: string;
+  section: Section;
+  statusText: string;
+  subText: string;
+  transactionHash: string;
+  claimStatus: ClaimStatusTypes;
+}
+
+interface Section {
+  data: any[];
+  title: string;
 }
 
 export const TransactionRow = ({

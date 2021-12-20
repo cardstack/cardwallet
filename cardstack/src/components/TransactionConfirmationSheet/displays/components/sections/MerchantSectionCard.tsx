@@ -1,13 +1,16 @@
 import React, { memo, ReactNode } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { MerchantInformation } from '@cardstack/types';
-import { Container, ContainerProps, Icon, Text } from '@cardstack/components';
+import { Container, ContainerProps, Text } from '@cardstack/components';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
+import { Icon } from '@rainbow-me/components/icons';
+import { colors } from '@cardstack/theme';
 
 const MerchantSectionCard = ({
   merchantInfoDID,
   children,
   isLoading = false,
+  isPaymentReceived = false,
   ...props
 }: {
   merchantInfoDID?: MerchantInformation;
@@ -27,7 +30,20 @@ const MerchantSectionCard = ({
       </Container>
     ) : (
       <Container alignItems="center">
-        {merchantInfoDID ? (
+        {isPaymentReceived ? (
+          <Container
+            borderRadius={70}
+            borderColor="blueLightBorder"
+            borderWidth={5}
+          >
+            <Icon
+              name="checkmarkCircled"
+              width={70}
+              height={70}
+              color={colors.blueOcean}
+            />
+          </Container>
+        ) : merchantInfoDID ? (
           <ContactAvatar
             color={merchantInfoDID?.color}
             size="xlarge"
@@ -37,16 +53,18 @@ const MerchantSectionCard = ({
         ) : (
           <Icon name="user" size={80} />
         )}
-        <Container paddingTop={3} marginBottom={4}>
-          <Text
-            weight="extraBold"
-            size="medium"
-            ellipsizeMode="tail"
-            numberOfLines={1}
-          >
-            {merchantInfoDID?.name || ''}
-          </Text>
-        </Container>
+        {!isPaymentReceived && (
+          <Container paddingTop={3} marginBottom={4}>
+            <Text
+              weight="extraBold"
+              size="medium"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {merchantInfoDID?.name || ''}
+            </Text>
+          </Container>
+        )}
       </Container>
     )}
     {children}

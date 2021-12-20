@@ -11,39 +11,20 @@ import {
   Text,
 } from '@cardstack/components';
 import {
+  Asset,
   TransactionRow,
-  TransactionRowProps,
 } from '@cardstack/components/Transactions/TransactionBase';
 import {
   MerchantClaimTypeTxn,
   MerchantEarnedRevenueTransactionTypeTxn,
 } from '@cardstack/types';
-import { ClaimStatuses, ClaimStatusTypes } from '@cardstack/utils';
+import { ClaimStatuses } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface MerchantTransactionExpandedStateProps {
   asset: Asset;
   type: string;
-}
-
-interface Asset extends TransactionRowProps {
-  CoinIcon: JSX.Element;
-  Header: any;
-  includeBorder: boolean;
-  index: number;
-  isFullWidth: boolean;
-  primaryText: string;
-  section: Section;
-  statusText: string;
-  subText: string;
-  transactionHash: string;
-  claimStatus: ClaimStatusTypes;
-}
-
-interface Section {
-  data: any[];
-  title: string;
 }
 
 interface EarnedTransactionProps
@@ -69,7 +50,7 @@ const TransactionExchangeRateRow = ({ rate }: { rate: string }) => {
   );
 };
 
-const EarnedTransaction = (data: EarnedTransactionProps) => {
+export const EarnedTransaction = (data: EarnedTransactionProps) => {
   const {
     customerSpend,
     customerSpendNative,
@@ -153,20 +134,11 @@ const ClaimedTransaction = ({
 
 const CHART_HEIGHT = 650;
 
-export default function MerchantTransactionExpandedState(
-  props: MerchantTransactionExpandedStateProps
-) {
-  const { setOptions } = useNavigation();
-
-  useEffect(() => {
-    setOptions({
-      longFormHeight: CHART_HEIGHT,
-    });
-  }, [setOptions]);
+export const MerchantTransactionExpandedStateBody = (
+  props: MerchantTransactionExpandedStateProps & { inlineContent?: boolean }
+) => {
   const transactionData =
     props.asset?.section?.data[props.asset.index]?.transaction;
-
-  const network = useRainbowSelector(state => state.settings.network);
   const earnedTxnData = {
     ...transactionData,
     subText: transactionData.netEarned.display,
@@ -178,6 +150,39 @@ export default function MerchantTransactionExpandedState(
     subText: transactionData.netEarnedNativeDisplay,
   };
 
+  return (
+    <Container
+      backgroundColor="white"
+      borderColor="borderGray"
+      borderRadius={10}
+      borderWidth={1}
+      marginBottom={8}
+      overflow="scroll"
+      paddingHorizontal={2}
+    >
+      {Object.values<string>(ClaimStatuses).includes(
+        props.asset.claimStatus
+      ) ? (
+        <ClaimedTransaction {...transactionData} txRowProps={props.asset} />
+      ) : (
+        <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
+      )}
+    </Container>
+  );
+};
+
+export default function MerchantTransactionExpandedState(
+  props: MerchantTransactionExpandedStateProps
+) {
+  const { setOptions } = useNavigation();
+
+  useEffect(() => {
+    setOptions({
+      longFormHeight: CHART_HEIGHT,
+    });
+  }, [setOptions]);
+
+  const network = useRainbowSelector(state => state.settings.network);
   return useMemo(
     () => (
       <SlackSheet flex={1} scrollEnabled>
@@ -185,26 +190,7 @@ export default function MerchantTransactionExpandedState(
           <Text marginBottom={10} size="medium">
             Transaction details
           </Text>
-          <Container
-            backgroundColor="white"
-            borderColor="borderGray"
-            borderRadius={10}
-            borderWidth={1}
-            marginBottom={8}
-            overflow="scroll"
-            paddingHorizontal={2}
-          >
-            {Object.values<string>(ClaimStatuses).includes(
-              props.asset.claimStatus
-            ) ? (
-              <ClaimedTransaction
-                {...transactionData}
-                txRowProps={props.asset}
-              />
-            ) : (
-              <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
-            )}
-          </Container>
+          <MerchantTransactionExpandedStateBody {...props} />
           <BlockscoutButton
             network={network}
             transactionHash={props.asset.transactionHash}
@@ -212,6 +198,6 @@ export default function MerchantTransactionExpandedState(
         </Container>
       </SlackSheet>
     ),
-    [earnedTxnData, network, props.asset, rowProps, transactionData]
+    [network, props]
   );
 }

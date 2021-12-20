@@ -68,9 +68,9 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
           </Container>
         </Container>
       }
-      primaryText={`+ ${item.spendBalanceDisplay}`}
+      primaryText={`+ ${item.spendBalanceDisplay} SPEND`}
       statusIconName="arrow-down"
-      statusText="Earned"
+      statusText="Received"
       subText={item.nativeBalanceDisplay}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}
