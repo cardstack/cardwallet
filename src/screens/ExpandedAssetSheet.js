@@ -10,6 +10,7 @@ import {
   ChartExpandedState,
   LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
+  MerchantSpendReceivedExpandedState,
   MerchantTransactionExpandedState,
   PaymentConfirmationExpandedState,
   SupportAndFeedsState,
@@ -31,6 +32,7 @@ const ScreenTypes = {
   [ExpandedMerchantRoutes.paymentRequest]: PaymentRequestExpandedState,
   merchantTransaction: MerchantTransactionExpandedState,
   paymentConfirmationTransaction: PaymentConfirmationExpandedState,
+  merchantSpendReceivedExpandedState: MerchantSpendReceivedExpandedState,
   supportAndFees: SupportAndFeedsState,
 };
 

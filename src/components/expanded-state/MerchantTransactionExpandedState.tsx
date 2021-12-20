@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import { SlackSheet } from '../sheet';
 import {
+  MerchantPaymentItemDetail,
+  MerchantPaymentItemDetailProps,
+} from './payment-item-details';
+import {
   BlockscoutButton,
-  CoinIcon,
   Container,
   HorizontalDivider,
   Text,
@@ -18,13 +21,6 @@ import {
 import { ClaimStatuses, ClaimStatusTypes } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-
-interface ItemDetailProps {
-  description: string;
-  value?: string;
-  subValue?: string;
-  symbol?: string;
-}
 
 interface MerchantTransactionExpandedStateProps {
   asset: Asset;
@@ -59,38 +55,6 @@ interface EarnedTransactionProps
 interface ClaimedTransactionProps extends MerchantClaimTypeTxn {
   txRowProps: Asset;
 }
-
-const ItemDetail = ({
-  description,
-  value,
-  subValue = '',
-  symbol = 'DAI',
-}: ItemDetailProps) => {
-  return (
-    <Container
-      flexDirection="row"
-      justifyContent="space-between"
-      marginBottom={10}
-    >
-      <Container flex={1}>
-        <Text color="blueText" fontSize={13} fontWeight="600" marginTop={1}>
-          {description}
-        </Text>
-      </Container>
-      <Container flex={1} flexDirection="row">
-        <Container marginRight={3} marginTop={1}>
-          <CoinIcon size={20} symbol={symbol} />
-        </Container>
-        <Container>
-          <Text weight="extraBold">{value}</Text>
-          <Text color="blueText" fontSize={13}>
-            {subValue}
-          </Text>
-        </Container>
-      </Container>
-    </Container>
-  );
-};
 
 const TransactionExchangeRateRow = ({ rate }: { rate: string }) => {
   return (
@@ -134,19 +98,21 @@ const EarnedTransaction = (data: EarnedTransactionProps) => {
       <TransactionRow {...txRowProps} hasBottomDivider />
       <Container padding={6}>
         <TransactionExchangeRateRow rate={spendConversionRate} />
-        {earnedItems.map((item: ItemDetailProps, index: number) => {
-          return (
-            <ItemDetail
-              description={item.description}
-              key={index}
-              subValue={item.subValue}
-              symbol={item.symbol}
-              value={item.value}
-            />
-          );
-        })}
+        {earnedItems.map(
+          (item: MerchantPaymentItemDetailProps, index: number) => {
+            return (
+              <MerchantPaymentItemDetail
+                description={item.description}
+                key={index}
+                subValue={item.subValue}
+                symbol={item.symbol}
+                value={item.value}
+              />
+            );
+          }
+        )}
         <HorizontalDivider />
-        <ItemDetail
+        <MerchantPaymentItemDetail
           description="NET EARNED"
           subValue={netEarnedNativeDisplay}
           value={`+ ${netEarned.display}`}
@@ -166,14 +132,20 @@ const ClaimedTransaction = ({
     <>
       <TransactionRow {...txRowProps} hasBottomDivider />
       <Container padding={6}>
-        <ItemDetail description={'REVENUE \nCLAIMED'} value={grossClaimed} />
-        <ItemDetail
+        <MerchantPaymentItemDetail
+          description={'REVENUE \nCLAIMED'}
+          value={grossClaimed}
+        />
+        <MerchantPaymentItemDetail
           description="GAS FEE"
           subValue={gasNativeFee}
           value={gasFee}
         />
         <HorizontalDivider />
-        <ItemDetail description="NET CLAIMED" value={netClaimed} />
+        <MerchantPaymentItemDetail
+          description="NET CLAIMED"
+          value={netClaimed}
+        />
       </Container>
     </>
   );

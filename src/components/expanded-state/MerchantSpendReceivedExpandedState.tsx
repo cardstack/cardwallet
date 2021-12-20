@@ -7,12 +7,12 @@ import {
   TransactionRow,
   TransactionRowProps,
 } from '@cardstack/components/Transactions/TransactionBase';
-import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
+import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
 import { dateFormatter, screenHeight } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
-interface PaymentConfirmationExpandedStateProps {
+interface MerchantSpendReceivedExpandedStateProps {
   asset: Asset;
   type: string;
 }
@@ -31,12 +31,12 @@ interface Asset extends TransactionRowProps {
 }
 
 interface Section {
-  data: PrepaidCardPaymentTransactionType[];
+  data: MerchantEarnedSpendAndRevenueTransactionType[];
   title: string;
 }
 
-export default function PaymentConfirmationExpandedState(
-  props: PaymentConfirmationExpandedStateProps
+export default function MerchantSpendReceivedExpandedState(
+  props: MerchantSpendReceivedExpandedStateProps
 ) {
   const { setOptions } = useNavigation();
 
@@ -45,27 +45,30 @@ export default function PaymentConfirmationExpandedState(
       longFormHeight: screenHeight,
     });
   });
+
   const {
-    merchantInfo,
-    spendAmount,
+    address,
+    spendBalanceDisplay,
     nativeBalanceDisplay,
     timestamp,
     transactionHash,
   } = props.asset?.section?.data[props.asset.index];
-  const { ownerAddress } = merchantInfo || {};
 
   const network = useRainbowSelector(state => state.settings.network);
   return useMemo(
     () => (
       <SlackSheet flex={1} scrollEnabled>
         <Container backgroundColor="white" marginBottom={16} padding={8}>
-          <Text marginBottom={10} size="medium">
-            Payment Confirmation
+          <Text marginBottom={2} size="medium">
+            Payment Received
           </Text>
-          <MerchantSectionCard merchantInfoDID={merchantInfo} paddingBottom={5}>
+          <MerchantSectionCard paddingBottom={5}>
             <Container alignItems="center">
+              <Text color="blueText" fontSize={12}>
+                {address || ''}
+              </Text>
               <Text fontSize={40} fontWeight="700">
-                §{spendAmount || ''}
+                {spendBalanceDisplay || ''}
               </Text>
               <Text color="blueText" fontSize={12}>
                 {nativeBalanceDisplay || ''}
@@ -89,11 +92,11 @@ export default function PaymentConfirmationExpandedState(
           >
             {props.asset.Header}
             <TransactionRow {...props.asset} hasBottomDivider />
-            <PaymentDetailsItem
+            {/* <PaymentDetailsItem
               title="TO"
               {...merchantInfo}
               info={ownerAddress}
-            />
+            /> */}
             <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
             <PaymentDetailsItem
               info={timestamp}
@@ -110,12 +113,11 @@ export default function PaymentConfirmationExpandedState(
       </SlackSheet>
     ),
     [
-      merchantInfo,
+      address,
       nativeBalanceDisplay,
       network,
-      ownerAddress,
       props.asset,
-      spendAmount,
+      spendBalanceDisplay,
       timestamp,
       transactionHash,
     ]

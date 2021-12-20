@@ -27,7 +27,7 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
     (assetProps: TransactionBaseProps) =>
       navigate(Routes.EXPANDED_ASSET_SHEET, {
         asset: { ...assetProps },
-        type: 'paymentConfirmationTransaction',
+        type: 'merchantSpendReceivedExpandedState',
       }),
     [navigate]
   );
