@@ -10,7 +10,6 @@ import {
   SheetTitle,
 } from '../components/sheet';
 import { useTheme } from '../context/ThemeContext';
-import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import {
   useAddCashLimits,
   useShakeAnimation,
@@ -23,10 +22,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 
 const deviceHeight = deviceUtils.dimensions.height;
 const statusBarHeight = getStatusBarHeight(true);
-const sheetHeight =
-  deviceHeight -
-  statusBarHeight -
-  (isNativeStackAvailable ? (deviceHeight >= 812 ? 10 : 20) : 0);
+const sheetHeight = deviceHeight - statusBarHeight;
 
 const SubtitleInterval = 3000;
 
@@ -78,24 +74,20 @@ export default function AddCashSheet() {
   return (
     <Container
       backgroundColor="white"
-      borderTopLeftRadius={isNativeStackAvailable ? 0 : 16}
-      borderTopRightRadius={isNativeStackAvailable ? 0 : 16}
+      borderTopLeftRadius={16}
+      borderTopRightRadius={16}
       colors={colors}
-      height={isNativeStackAvailable ? deviceHeight : sheetHeight}
-      top={isNativeStackAvailable ? 0 : statusBarHeight}
+      height={sheetHeight}
+      top={statusBarHeight}
       width="100%"
     >
       <StatusBar barStyle="light-content" />
-      <Container
-        height={isNativeStackAvailable ? sheetHeight : '100%'}
-        justifyContent="flex-end"
-        paddingBottom={4}
-      >
+      <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <Container paddingVertical={2}>
           <Container alignSelf="center">
             <SheetHandle />
           </Container>
-          <Container paddingTop={isNativeStackAvailable ? 4 : 1}>
+          <Container paddingTop={1}>
             <CenteredContainer flexDirection="row">
               <Container left={0} position="absolute">
                 <BackButton

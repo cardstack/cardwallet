@@ -8,7 +8,6 @@ import BackupSheet from '../screens/BackupSheet';
 import ChangeWalletSheet from '../screens/ChangeWalletSheet';
 import DepositModal from '../screens/DepositModal';
 import ExpandedAssetSheet from '../screens/ExpandedAssetSheet';
-import ImportSeedPhraseSheet from '../screens/ImportSeedPhraseSheet';
 import ModalScreen from '../screens/ModalScreen';
 import PinAuthenticationScreen from '../screens/PinAuthenticationScreen';
 import RestoreSheet from '../screens/RestoreSheet';
@@ -44,6 +43,7 @@ import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 
 import {
+  dismissAndroidKeyboardOnClose,
   linking,
   useCardstackGlobalScreens,
   useCardstackMainScreens,
@@ -66,26 +66,6 @@ function SendFlowNavigator() {
       <Stack.Screen
         component={SendSheetEOA}
         name={Routes.SEND_SHEET}
-        options={sheetPreset}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ImportSeedPhraseFlowNavigator() {
-  return (
-    <Stack.Navigator
-      {...stackNavigationConfig}
-      initialRouteName={Routes.IMPORT_SEED_PHRASE_SHEET}
-    >
-      <Stack.Screen
-        component={ModalScreen}
-        name={Routes.MODAL_SCREEN}
-        options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={ImportSeedPhraseSheet}
-        name={Routes.IMPORT_SEED_PHRASE_SHEET}
         options={sheetPreset}
       />
     </Stack.Navigator>
@@ -125,8 +105,15 @@ function MainNavigator() {
       />
       <Stack.Screen
         component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
         name={Routes.EXPANDED_ASSET_SHEET}
         options={expandedPreset}
+      />
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
+        options={sheetPreset}
       />
       <Stack.Screen
         component={ChangeWalletSheet}
@@ -168,11 +155,6 @@ function MainNavigator() {
         options={sheetPreset}
       />
       <Stack.Screen
-        component={ImportSeedPhraseSheet}
-        name={Routes.IMPORT_SEED_PHRASE_SHEET}
-        options={sheetPreset}
-      />
-      <Stack.Screen
         component={SavingsSheet}
         name={Routes.SAVINGS_SHEET}
         options={bottomSheetPreset}
@@ -198,11 +180,6 @@ function MainNavigator() {
         options={bottomSheetPreset}
       />
       <Stack.Screen
-        component={ImportSeedPhraseFlowNavigator}
-        name={Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR}
-        options={bottomSheetPreset}
-      />
-      <Stack.Screen
         component={AddCashFlowNavigator}
         name={Routes.WYRE_WEBVIEW_NAVIGATOR}
       />
@@ -224,16 +201,6 @@ function MainOuterNavigator() {
       <OuterStack.Screen
         component={MainNavigator}
         name={Routes.MAIN_NAVIGATOR}
-      />
-      <OuterStack.Screen
-        component={ExpandedAssetSheet}
-        name={Routes.EXPANDED_ASSET_SCREEN}
-        options={sheetPreset}
-      />
-      <OuterStack.Screen
-        component={ExpandedAssetSheet}
-        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
-        options={sheetPreset}
       />
       <OuterStack.Screen
         component={SettingsModal}

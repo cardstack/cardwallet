@@ -10,6 +10,7 @@ export const MainRoutes = {
   LOADING_OVERLAY: 'LoadingOverlay',
   WELCOME_SCREEN: 'WelcomeScreen',
   COLLECTIBLE_SHEET: 'CollectibleSheet',
+  IMPORT_SEED_SHEET: 'ImportSeedSheet',
 } as const;
 
 export const GlobalRoutes = {

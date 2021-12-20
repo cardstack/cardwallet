@@ -4,7 +4,6 @@ import { StatusBar } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { KeyboardArea } from 'react-native-keyboard-area';
 import styled from 'styled-components';
-import isNativeStackAvailable from '../../helpers/isNativeStackAvailable';
 import { checkIsValidAddressOrDomain } from '../../helpers/validators';
 import { Column } from '../layout';
 import {
@@ -15,6 +14,7 @@ import {
   SendHeader,
   SendTransactionSpeed,
 } from '.';
+import { Device } from '@cardstack/utils';
 import {
   useAccountSettings,
   useContacts,
@@ -29,7 +29,7 @@ const statusBarHeight = getStatusBarHeight(true);
 const Container = styled.View`
   background-color: ${({ theme: { colors } }) => colors.transparent};
   flex: 1;
-  padding-top: ${isNativeStackAvailable ? 0 : statusBarHeight};
+  padding-top: ${statusBarHeight};
   width: 100%;
 `;
 
@@ -37,9 +37,9 @@ const SheetContainer = styled(Column).attrs({
   align: 'center',
   flex: 1,
 })`
-  ${borders.buildRadius('top', isNativeStackAvailable ? 0 : 16)};
+  ${borders.buildRadius('top', 16)};
   background-color: ${({ theme: { colors } }) => colors.white};
-  height: ${isNativeStackAvailable || android ? sheetHeight : '100%'};
+  height: ${Device.isAndroid ? sheetHeight : '100%'};
   width: 100%;
 `;
 

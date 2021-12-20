@@ -55,7 +55,7 @@ export default function RestoreSheet() {
   const onManualRestore = useCallback(() => {
     InteractionManager.runAfterInteractions(goBack);
     InteractionManager.runAfterInteractions(() => {
-      setTimeout(() => navigate(Routes.IMPORT_SEED_PHRASE_FLOW), 50);
+      setTimeout(() => navigate(Routes.IMPORT_SEED_SHEET), 50);
     });
   }, [goBack, navigate]);
 

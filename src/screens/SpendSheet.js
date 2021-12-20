@@ -7,20 +7,20 @@ import styled from 'styled-components';
 
 import { Column } from '../components/layout';
 
-import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
-
 import { Text } from '@cardstack/components';
 
+import { Device } from '@cardstack/utils';
 import { borders } from '@rainbow-me/styles';
 import { deviceUtils } from '@rainbow-me/utils';
 
-const sheetHeight = deviceUtils.dimensions.height - (android ? 30 : 10);
+const sheetHeight =
+  deviceUtils.dimensions.height - (Device.isAndroid ? 30 : 10);
 const statusBarHeight = getStatusBarHeight(true);
 
 const Container = styled.View`
   background-color: ${({ theme: { colors } }) => colors.transparent};
   flex: 1;
-  padding-top: ${isNativeStackAvailable ? 0 : statusBarHeight};
+  padding-top: ${statusBarHeight};
   width: 100%;
 `;
 
@@ -28,9 +28,9 @@ const SheetContainer = styled(Column).attrs({
   align: 'center',
   flex: 1,
 })`
-  ${borders.buildRadius('top', isNativeStackAvailable ? 0 : 16)};
+  ${borders.buildRadius('top', 16)};
   background-color: ${({ theme: { colors } }) => colors.white};
-  height: ${isNativeStackAvailable || android ? sheetHeight : '100%'};
+  height: ${Device.isAndroid ? sheetHeight : '100%'};
   width: 100%;
 `;
 

@@ -9,7 +9,6 @@ import {
   StatusBar,
 } from 'react-native';
 import { BackButton } from '../../../src/components/header';
-import isNativeStackAvailable from '../../../src/helpers/isNativeStackAvailable';
 import {
   BalanceSection,
   CenteredContainer,
@@ -80,7 +79,7 @@ export default function DepotScreen() {
       <StatusBar barStyle="light-content" />
       <Container height="100%" justifyContent="flex-end">
         <Container paddingTop={14} backgroundColor="black">
-          <Container paddingTop={isNativeStackAvailable ? 4 : 1}>
+          <Container paddingTop={1}>
             <CenteredContainer flexDirection="row">
               <Container left={0} position="absolute">
                 <BackButton

@@ -1,7 +1,6 @@
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useCallback, useRef } from 'react';
 import { InteractionManager, TextInput } from 'react-native';
-import isNativeStackAvailable from '../helpers/isNativeStackAvailable';
 import { setListener } from '../navigation/nativeStackHelpers';
 import useInteraction from './useInteraction';
 
@@ -79,9 +78,7 @@ export default function useMagicAutofocus(
 
       // We need to do this in order to assure that the input gets focused
       // when using fallback stacks.
-      if (!isNativeStackAvailable) {
-        InteractionManager.runAfterInteractions(fallbackRefocusLastInput);
-      }
+      InteractionManager.runAfterInteractions(fallbackRefocusLastInput);
 
       return () => {
         setListener(null);

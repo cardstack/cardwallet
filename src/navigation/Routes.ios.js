@@ -11,7 +11,6 @@ import BackupSheet from '../screens/BackupSheet';
 import ChangeWalletSheet from '../screens/ChangeWalletSheet';
 import DepositModal from '../screens/DepositModal';
 import ExpandedAssetSheet from '../screens/ExpandedAssetSheet';
-import ImportSeedPhraseSheet from '../screens/ImportSeedPhraseSheet';
 import ModalScreen from '../screens/ModalScreen';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
@@ -49,90 +48,10 @@ import {
   useCardstackGlobalScreens,
   useCardstackMainScreens,
 } from '@cardstack/navigation';
-import isNativeStackAvailable from '@rainbow-me/helpers/isNativeStackAvailable';
 import createNativeStackNavigator from 'react-native-cool-modals/createNativeStackNavigator';
 
 const Stack = createStackNavigator();
 const NativeStack = createNativeStackNavigator();
-
-function SendFlowNavigator() {
-  return (
-    <Stack.Navigator
-      {...stackNavigationConfig}
-      initialRouteName={Routes.SEND_SHEET}
-    >
-      <Stack.Screen
-        component={ModalScreen}
-        name={Routes.MODAL_SCREEN}
-        options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={SendSheetEOA}
-        name={Routes.SEND_SHEET}
-        options={sheetPreset}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function SpendFlowNavigator() {
-  return (
-    <Stack.Navigator
-      {...stackNavigationConfig}
-      initialRouteName={Routes.SPEND_SHEET}
-    >
-      <Stack.Screen
-        component={ModalScreen}
-        name={Routes.MODAL_SCREEN}
-        options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={SpendSheet}
-        name={Routes.SPEND_SHEET}
-        options={sheetPreset}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ImportSeedPhraseFlowNavigator() {
-  return (
-    <Stack.Navigator
-      {...stackNavigationConfig}
-      initialRouteName={Routes.IMPORT_SEED_PHRASE_SHEET}
-    >
-      <Stack.Screen
-        component={ModalScreen}
-        name={Routes.MODAL_SCREEN}
-        options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={ImportSeedPhraseSheet}
-        name={Routes.IMPORT_SEED_PHRASE_SHEET}
-        options={bottomSheetPreset}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function AddCashFlowNavigator() {
-  return (
-    <Stack.Navigator
-      {...stackNavigationConfig}
-      initialRouteName={Routes.ADD_CASH_SCREEN_NAVIGATOR}
-    >
-      <Stack.Screen
-        component={ModalScreen}
-        name={Routes.SUPPORTED_COUNTRIES_MODAL_SCREEN}
-        options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={AddCashSheet}
-        name={Routes.ADD_CASH_SCREEN_NAVIGATOR}
-      />
-    </Stack.Navigator>
-  );
-}
 
 function MainNavigator() {
   const initialRoute = useContext(InitialRouteContext);
@@ -165,21 +84,6 @@ function MainNavigator() {
   );
 }
 
-function MainNavigatorWrapper() {
-  return (
-    <Stack.Navigator
-      initialRouteName={Routes.MAIN_NAVIGATOR_WRAPPER}
-      {...stackNavigationConfig}
-      screenOptions={defaultScreenStackOptions}
-    >
-      <Stack.Screen
-        component={MainNavigator}
-        name={Routes.MAIN_NAVIGATOR_WRAPPER}
-      />
-    </Stack.Navigator>
-  );
-}
-
 function NativeStackFallbackNavigator() {
   return (
     <Stack.Navigator
@@ -188,11 +92,6 @@ function NativeStackFallbackNavigator() {
       screenOptions={defaultScreenStackOptions}
     >
       <Stack.Screen component={MainNavigator} name={Routes.MAIN_NAVIGATOR} />
-      <Stack.Screen
-        component={ImportSeedPhraseSheet}
-        name={Routes.IMPORT_SEED_PHRASE_SHEET}
-        options={bottomSheetPreset}
-      />
       <Stack.Screen
         component={RestoreSheet}
         name={Routes.RESTORE_SHEET}
@@ -242,16 +141,15 @@ function NativeStackFallbackNavigator() {
   );
 }
 
-const MainStack = isNativeStackAvailable
-  ? MainNavigatorWrapper
-  : NativeStackFallbackNavigator;
-
 function NativeStackNavigator() {
   const cardstackGlobalScreens = useCardstackGlobalScreens(NativeStack);
 
   return (
     <NativeStack.Navigator {...nativeStackConfig}>
-      <NativeStack.Screen component={MainStack} name={Routes.STACK} />
+      <NativeStack.Screen
+        component={NativeStackFallbackNavigator}
+        name={Routes.STACK}
+      />
       <NativeStack.Screen
         component={SettingsModal}
         name={Routes.SETTINGS_MODAL}
@@ -334,32 +232,6 @@ function NativeStackNavigator() {
         name={Routes.SAVINGS_DEPOSIT_MODAL}
         options={nativeStackDefaultConfigWithoutStatusBar}
       />
-      {isNativeStackAvailable ? (
-        <>
-          <NativeStack.Screen
-            component={SendFlowNavigator}
-            name={Routes.SEND_SHEET_NAVIGATOR}
-          />
-          <NativeStack.Screen
-            component={SpendFlowNavigator}
-            name={Routes.SPEND_SHEET_NAVIGATOR}
-          />
-          <NativeStack.Screen
-            component={ImportSeedPhraseFlowNavigator}
-            name={Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR}
-          />
-          <NativeStack.Screen
-            component={AddCashFlowNavigator}
-            name={Routes.ADD_CASH_SCREEN_NAVIGATOR}
-          />
-        </>
-      ) : (
-        <NativeStack.Screen
-          component={ImportSeedPhraseFlowNavigator}
-          name={Routes.IMPORT_SEED_PHRASE_SHEET_NAVIGATOR}
-          options={{ customStack: true }}
-        />
-      )}
       {cardstackGlobalScreens}
     </NativeStack.Navigator>
   );
