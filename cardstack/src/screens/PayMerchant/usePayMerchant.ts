@@ -217,12 +217,37 @@ export const usePayMerchant = () => {
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
+  const spendAmount = useMemo(
+    () =>
+      convertToSpend(
+        convertStringToNumber(inputValue || '0'),
+        nativeCurrency,
+        currencyConversionRates[nativeCurrency]
+      ),
+    [currencyConversionRates, inputValue, nativeCurrency]
+  );
+
+  const sortedPrepaidCards: PrepaidCardType[] = useMemo(
+    () =>
+      []
+        .concat(prepaidCards || [])
+        .sort(
+          (a: PrepaidCardType, b: PrepaidCardType) =>
+            b.spendFaceValue - a.spendFaceValue
+        ),
+    [prepaidCards]
+  );
+
   // Updating in case first render selected is undefined
   useEffect(() => {
-    if (!selectedPrepaidCard?.address && prepaidCards.length > 0) {
-      selectPrepaidCard(prepaidCards[0]);
+    if (
+      !selectedPrepaidCard?.address &&
+      hasMultipleCards &&
+      (sortedPrepaidCards[0]?.spendFaceValue || 0) > spendAmount
+    ) {
+      selectPrepaidCard(sortedPrepaidCards[0]);
     }
-  }, [prepaidCards, selectedPrepaidCard]);
+  }, [hasMultipleCards, sortedPrepaidCards, selectedPrepaidCard, spendAmount]);
 
   useEffect(() => {
     if (hasMultipleCards) {
@@ -238,16 +263,6 @@ export const usePayMerchant = () => {
       setPayStep(PAY_STEP.EDIT_AMOUNT);
     }
   }, [initialAmount]);
-
-  const spendAmount = useMemo(
-    () =>
-      convertToSpend(
-        convertStringToNumber(inputValue || '0'),
-        nativeCurrency,
-        currencyConversionRates[nativeCurrency]
-      ),
-    [currencyConversionRates, inputValue, nativeCurrency]
-  );
 
   const { payMerchantRequest, isLoadingPayment } = usePayMerchantRequest({
     spendAmount,
@@ -312,7 +327,7 @@ export const usePayMerchant = () => {
     spendAmount,
     payStep,
     txSheetData,
-    prepaidCards,
+    prepaidCards: sortedPrepaidCards,
     isLoading,
     onConfirmLoading: isLoadingPayment,
     hasMultipleCards,

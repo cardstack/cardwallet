@@ -108,7 +108,16 @@ const ChoosePrepaidCard = ({
       />
       <Container style={styles.footerContainer} {...shadowStyles}>
         <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
-        <Button onPress={onConfirmSelectedCard}>Select Card</Button>
+        <Container>
+          <Button
+            onPress={onConfirmSelectedCard}
+            disabled={
+              !selectedCard || selectedCard.spendFaceValue < spendAmount
+            }
+          >
+            Select Card
+          </Button>
+        </Container>
       </Container>
     </Container>
   );
