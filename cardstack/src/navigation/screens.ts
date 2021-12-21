@@ -102,11 +102,8 @@ export const GlobalScreens: Record<
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,
     options: {
-      customStack: true,
+      ...expandedPreset,
       ignoreBottomOffset: true,
-      onAppear: null,
-      topOffset: 0,
-      animationEnabled: true,
       interactWithScrollView: false,
     } as StackNavigationOptions,
   },

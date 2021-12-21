@@ -1,5 +1,5 @@
 import React, { useCallback, memo } from 'react';
-import { InteractionManager } from 'react-native';
+import { Keyboard } from 'react-native';
 import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import {
   CenteredContainer,
@@ -61,11 +61,10 @@ export const InputAmount = memo(
     );
 
     const openCurrencySelectionModal = useCallback(() => {
-      InteractionManager.runAfterInteractions(() =>
-        navigate(Routes.CURRENCY_SELECTION_MODAL, {
-          defaultCurrency: nativeCurrency,
-        })
-      );
+      Keyboard.dismiss();
+      navigate(Routes.CURRENCY_SELECTION_MODAL, {
+        defaultCurrency: nativeCurrency,
+      });
     }, [nativeCurrency, navigate]);
 
     const selectedCurrency = nativeCurrencies[nativeCurrency];
