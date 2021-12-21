@@ -22,6 +22,7 @@ export const CLOUD_BACKUP_ERRORS = {
   SPECIFIC_BACKUP_NOT_FOUND: 'No backup found with that name',
   UKNOWN_ERROR: 'Unknown Error',
   WALLET_BACKUP_STATUS_UPDATE_FAILED: 'Update wallet backup status failed',
+  USER_CANCELED_DRIVE_API_AUTH: 'User canceled Google Drive OAuth',
 };
 
 export function logoutFromGoogleDrive() {
@@ -107,6 +108,9 @@ export async function encryptAndSaveDataToCloud(
     await RNFS.unlink(path);
     return filename;
   } catch (e) {
+    if (e.code === 'canceled') {
+      throw new Error(CLOUD_BACKUP_ERRORS.USER_CANCELED_DRIVE_API_AUTH);
+    }
     logger.sentry('Error during encryptAndSaveDataToCloud', e);
     captureException(e);
     throw new Error(CLOUD_BACKUP_ERRORS.GENERAL_ERROR);
