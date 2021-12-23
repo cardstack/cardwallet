@@ -225,10 +225,11 @@ export const usePayMerchant = () => {
   }, [prepaidCards, selectedPrepaidCard]);
 
   useEffect(() => {
-    if (hasMultipleCards) {
+    // Go to choose prepaid card step if have multiple prepaid cards and has amount in deeplink
+    if (hasMultipleCards && initialAmount) {
       setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD);
     }
-  }, [hasMultipleCards]);
+  }, [hasMultipleCards, initialAmount]);
 
   // Updating amount when nav param change
   useEffect(() => {
