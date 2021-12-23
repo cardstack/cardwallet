@@ -1,12 +1,16 @@
 import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
+  convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '../../types/transaction-types';
 import { BaseStrategy } from '../base-strategy';
 import { fetchHistoricalPrice } from '@cardstack/services';
 import { TransactionTypes } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import {
+  convertSpendForBalanceDisplay,
+  getMerchantEarnedTransactionDetails,
+} from '@cardstack/utils';
 
 export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -45,18 +49,29 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
       true
     );
 
+    const nativeBalance = convertRawAmountToNativeDisplay(
+      amount,
+      18,
+      price,
+      this.nativeCurrency
+    );
+
+    const transactionDetails = await getMerchantEarnedTransactionDetails(
+      prepaidCardPaymentTransaction,
+      this.nativeCurrency,
+      convertStringToNumber(nativeBalance.amount),
+      this.currencyConversionRates,
+      symbol
+    );
+
     return {
       address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
       balance: convertRawAmountToBalance(amount, {
         decimals: 18,
         symbol,
       }),
-      native: convertRawAmountToNativeDisplay(
-        amount,
-        18,
-        price,
-        this.nativeCurrency
-      ),
+      netEarned: transactionDetails.netEarned,
+      native: nativeBalance,
       token: {
         address: prepaidCardPaymentTransaction.issuingToken.id,
         symbol: prepaidCardPaymentTransaction.issuingToken.symbol,

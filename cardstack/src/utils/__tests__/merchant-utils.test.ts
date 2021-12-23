@@ -100,8 +100,11 @@ describe('Merchant utils', () => {
         protocolFee: '0.0025 DAI',
         spendConversionRate: '$0.01 USD',
         revenueCollected: '0.499 DAI',
-        netEarned: '0.497 DAI',
-        netEarnedNative: '$0.0000974 USD',
+        netEarned: {
+          amount: '0.496506986027944111',
+          display: '0.497 DAI',
+        },
+        netEarnedNativeDisplay: '$0.0000974 USD',
       });
     });
   });

@@ -168,8 +168,8 @@ export interface MerchantEarnedRevenueTransactionTypeTxn {
   protocolFee: string;
   revenueCollected: string;
   spendConversionRate: string;
-  netEarned: string;
-  netEarnedNative: string;
+  netEarned: BalanceType;
+  netEarnedNativeDisplay: string;
 }
 
 export interface MerchantEarnedRevenueTransactionType {
@@ -252,6 +252,7 @@ export interface MerchantEarnedSpendAndRevenueTransactionType {
   address: string;
   balance: BalanceType;
   native: BalanceType;
+  netEarned: BalanceType;
   token: {
     address: string;
     name?: string | null;
