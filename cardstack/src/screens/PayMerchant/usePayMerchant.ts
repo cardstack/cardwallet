@@ -229,12 +229,10 @@ export const usePayMerchant = () => {
 
   const sortedPrepaidCards: PrepaidCardType[] = useMemo(
     () =>
-      []
-        .concat(prepaidCards || [])
-        .sort(
-          (a: PrepaidCardType, b: PrepaidCardType) =>
-            b.spendFaceValue - a.spendFaceValue
-        ),
+      [...(prepaidCards || [])].sort(
+        (a: PrepaidCardType, b: PrepaidCardType) =>
+          b.spendFaceValue - a.spendFaceValue
+      ),
     [prepaidCards]
   );
 
