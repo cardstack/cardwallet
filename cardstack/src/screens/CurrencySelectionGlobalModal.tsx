@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Keyboard } from 'react-native';
 import {
   Container,
   SheetHandle,
@@ -8,6 +9,10 @@ import {
 
 const CurrencySelectionGlobalModal = () => {
   const { goBack } = useNavigation();
+
+  useEffect(() => {
+    Keyboard.dismiss();
+  }, []);
 
   const onChange = () => {
     goBack();
