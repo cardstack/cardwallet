@@ -1,23 +1,6 @@
 import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { MERCHANT_EARNED_SPEND_MOCK_DATA } from '@cardstack/utils/__mocks__/merchant-strategies';
 
-jest.mock('../../../utils', () => ({ deviceUtils: { isIOS14: false } }));
-
-jest.mock('@rainbow-me/references', () => ({
-  shitcoins: 'JSON-MOCK-RETURN',
-}));
-
-const result = {
-  address: '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
-  infoDid: '3a13a41e-e44a-4b0f-b079-2d3d53571870',
-  nativeBalanceDisplay: '$1.50 USD',
-  spendBalanceDisplay: '§150 SPEND',
-  timestamp: '1629156260',
-  transactionHash:
-    '0x5293d95a240c231852724fd31ff6df119e5b5cf7661a7aec38f7cf10893dc2eb',
-  type: 'merchantEarnedSpend',
-};
-
 describe('MerchantEarnedSpendStrategy', () => {
   const contructorParams = {
     accountAddress: '0x64Fbf34FaC77696112F1Abaa69D28211214d76c7',
@@ -55,15 +38,23 @@ describe('MerchantEarnedSpendStrategy', () => {
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const MerchantInstance = new MerchantEarnedSpendStrategy(contructorParams);
+  const strategy = new MerchantEarnedSpendStrategy(contructorParams);
 
   test('returns the proper object', async () => {
-    MerchantInstance.mapTransaction().then(value => {
-      expect(value).toBe(result);
+    const value = await strategy.mapTransaction();
+    expect(value).toEqual({
+      address: '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
+      infoDid: '3a13a41e-e44a-4b0f-b079-2d3d53571870',
+      nativeBalanceDisplay: '$1.50 USD',
+      spendBalanceDisplay: '§150 SPEND',
+      timestamp: '1629156260',
+      transactionHash:
+        '0x5293d95a240c231852724fd31ff6df119e5b5cf7661a7aec38f7cf10893dc2eb',
+      type: 'merchantEarnedSpend',
     });
   });
 
   test('returns true with proper constructors', () => {
-    expect(MerchantInstance.handlesTransaction()).toBeTruthy();
+    expect(strategy.handlesTransaction()).toBeTruthy();
   });
 });
