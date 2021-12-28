@@ -150,6 +150,10 @@ export const MerchantTransactionExpandedStateBody = (
     subText: transactionData.netEarnedNativeDisplay,
   };
 
+  const isClaimedTransaction = Object.values<string>(ClaimStatuses).includes(
+    props.asset.claimStatus
+  );
+
   return (
     <Container
       backgroundColor="white"
@@ -160,9 +164,7 @@ export const MerchantTransactionExpandedStateBody = (
       overflow="scroll"
       paddingHorizontal={2}
     >
-      {Object.values<string>(ClaimStatuses).includes(
-        props.asset.claimStatus
-      ) ? (
+      {isClaimedTransaction ? (
         <ClaimedTransaction {...transactionData} txRowProps={props.asset} />
       ) : (
         <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />

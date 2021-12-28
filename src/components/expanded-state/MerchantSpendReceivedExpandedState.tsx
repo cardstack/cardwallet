@@ -13,9 +13,11 @@ import {
   Asset,
   TransactionRow,
 } from '@cardstack/components/Transactions/TransactionBase';
+import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
 import {
   dateFormatter,
   getAddressPreview,
+  removeCPXDTokenSuffix,
   screenHeight,
 } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -43,7 +45,10 @@ export default function MerchantSpendReceivedExpandedState(
     timestamp,
     transactionHash,
     transaction: transactionData,
-  } = props.asset?.section?.data[props.asset.index];
+    token,
+  } = props.asset?.section?.data[
+    props.asset.index
+  ] as MerchantEarnedSpendAndRevenueTransactionType;
 
   const network = useRainbowSelector(state => state.settings.network);
 
@@ -54,7 +59,9 @@ export default function MerchantSpendReceivedExpandedState(
 
   const rowProps = {
     ...props.asset,
-    CoinIcon: <CoinIcon size={30} symbol="DAI" />,
+    CoinIcon: (
+      <CoinIcon size={30} symbol={removeCPXDTokenSuffix(token.symbol || '')} />
+    ),
     primaryText: `+ ${transactionData.netEarned}`,
     subText: transactionData.netEarnedNative,
   };

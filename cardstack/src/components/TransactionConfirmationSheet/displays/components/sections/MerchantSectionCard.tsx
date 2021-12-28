@@ -6,6 +6,8 @@ import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { Icon } from '@rainbow-me/components/icons';
 import { colors } from '@cardstack/theme';
 
+const USER_ICON_SIZE = 80;
+
 const MerchantSectionCard = ({
   merchantInfoDID,
   children,
@@ -32,14 +34,14 @@ const MerchantSectionCard = ({
       <Container alignItems="center">
         {isPaymentReceived ? (
           <Container
-            borderRadius={70}
+            borderRadius={USER_ICON_SIZE}
             borderColor="blueLightBorder"
             borderWidth={5}
           >
             <Icon
               name="checkmarkCircled"
-              width={70}
-              height={70}
+              width={USER_ICON_SIZE}
+              height={USER_ICON_SIZE}
               color={colors.blueOcean}
             />
           </Container>
@@ -51,7 +53,7 @@ const MerchantSectionCard = ({
             textColor={merchantInfoDID?.textColor}
           />
         ) : (
-          <Icon name="user" size={80} />
+          <Icon name="user" size={USER_ICON_SIZE} />
         )}
         {!isPaymentReceived && (
           <Container paddingTop={3} marginBottom={4}>
