@@ -1,23 +1,18 @@
 import React, { useEffect, useMemo } from 'react';
 import { SlackSheet } from '../sheet';
 import {
-  MerchantPaymentItemDetail,
-  MerchantPaymentItemDetailProps,
-} from './payment-item-details';
-import {
   BlockscoutButton,
   Container,
+  EarnedTransaction,
   HorizontalDivider,
+  MerchantPaymentItemDetail,
   Text,
 } from '@cardstack/components';
 import {
   Asset,
   TransactionRow,
 } from '@cardstack/components/Transactions/TransactionBase';
-import {
-  MerchantClaimTypeTxn,
-  MerchantEarnedRevenueTransactionTypeTxn,
-} from '@cardstack/types';
+import { MerchantClaimTypeTxn } from '@cardstack/types';
 import { ClaimStatuses } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -27,81 +22,10 @@ interface MerchantTransactionExpandedStateProps {
   type: string;
 }
 
-interface EarnedTransactionProps
-  extends MerchantEarnedRevenueTransactionTypeTxn {
-  subText: string;
-  txRowProps: Asset;
-}
-
 interface ClaimedTransactionProps extends MerchantClaimTypeTxn {
   txRowProps: Asset;
 }
 
-const TransactionExchangeRateRow = ({ rate }: { rate: string }) => {
-  return (
-    <>
-      <Text color="blueText" fontSize={13} marginBottom={1} weight="bold">
-        TRANSACTION EXCHANGE RATE
-      </Text>
-      <Text fontSize={16} marginBottom={8} weight="extraBold">
-        1 SPEND = {rate}
-      </Text>
-    </>
-  );
-};
-
-export const EarnedTransaction = (data: EarnedTransactionProps) => {
-  const {
-    customerSpend,
-    customerSpendNative,
-    protocolFee,
-    revenueCollected,
-    spendConversionRate,
-    netEarned,
-    netEarnedNativeDisplay,
-    txRowProps,
-  } = data;
-  const earnedItems = [
-    {
-      description: 'CUSTOMER \nSPEND',
-      subValue: customerSpendNative,
-      symbol: 'SPEND',
-      value: customerSpend + ' SPEND',
-    },
-    { description: 'REVENUE \nCOLLECTED', value: revenueCollected },
-    {
-      description: 'PROTOCOL FEE \n(0.5%)',
-      value: protocolFee,
-    },
-  ];
-  return (
-    <>
-      <TransactionRow {...txRowProps} hasBottomDivider />
-      <Container padding={6}>
-        <TransactionExchangeRateRow rate={spendConversionRate} />
-        {earnedItems.map(
-          (item: MerchantPaymentItemDetailProps, index: number) => {
-            return (
-              <MerchantPaymentItemDetail
-                description={item.description}
-                key={index}
-                subValue={item.subValue}
-                symbol={item.symbol}
-                value={item.value}
-              />
-            );
-          }
-        )}
-        <HorizontalDivider />
-        <MerchantPaymentItemDetail
-          description="NET EARNED"
-          subValue={netEarnedNativeDisplay}
-          value={`+ ${netEarned.display}`}
-        />
-      </Container>
-    </>
-  );
-};
 const ClaimedTransaction = ({
   grossClaimed,
   gasNativeFee,
@@ -135,7 +59,7 @@ const ClaimedTransaction = ({
 const CHART_HEIGHT = 650;
 
 export const MerchantTransactionExpandedStateBody = (
-  props: MerchantTransactionExpandedStateProps & { inlineContent?: boolean }
+  props: MerchantTransactionExpandedStateProps
 ) => {
   const transactionData =
     props.asset?.section?.data[props.asset.index]?.transaction;

@@ -1,7 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import { SlackSheet } from '../sheet';
-import { PaymentDetailsItem } from './payment-item-details';
-import { BlockscoutButton, Container, Text } from '@cardstack/components';
+import {
+  BlockscoutButton,
+  Container,
+  PaymentDetailsItem,
+  Text,
+} from '@cardstack/components';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
   TransactionRow,

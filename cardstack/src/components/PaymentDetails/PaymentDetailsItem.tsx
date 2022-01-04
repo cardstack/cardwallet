@@ -1,48 +1,20 @@
 import { ResponsiveValue } from '@shopify/restyle';
 import React from 'react';
-import { CoinIcon, Container, Text } from '@cardstack/components';
+import { Container, Text } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
 import { dateFormatter } from '@cardstack/utils';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
-export interface MerchantPaymentItemDetailProps {
-  description: string;
-  value?: string;
-  subValue?: string;
-  symbol?: string;
+export interface PaymentDetailsItemProps {
+  title: string;
+  color?: string;
+  textColor?: string;
+  info: any;
+  infoColor?: ResponsiveValue<keyof Theme['colors'], Theme>;
+  name?: string;
+  isTimestamp?: boolean;
+  isPrepaidCard?: boolean;
 }
-
-export const MerchantPaymentItemDetail = ({
-  description,
-  value,
-  subValue = '',
-  symbol = 'DAI',
-}: MerchantPaymentItemDetailProps) => {
-  return (
-    <Container
-      flexDirection="row"
-      justifyContent="space-between"
-      marginBottom={10}
-    >
-      <Container flex={1}>
-        <Text color="blueText" fontSize={13} fontWeight="600" marginTop={1}>
-          {description}
-        </Text>
-      </Container>
-      <Container flex={1} flexDirection="row">
-        <Container marginRight={3} marginTop={1}>
-          <CoinIcon size={20} symbol={symbol} />
-        </Container>
-        <Container>
-          <Text weight="extraBold">{value}</Text>
-          <Text color="blueText" fontSize={13}>
-            {subValue}
-          </Text>
-        </Container>
-      </Container>
-    </Container>
-  );
-};
 
 export const PaymentDetailsItem = ({
   title,
@@ -53,16 +25,7 @@ export const PaymentDetailsItem = ({
   infoColor = 'blueText',
   isTimestamp = false,
   isPrepaidCard = false,
-}: {
-  title: string;
-  color?: string;
-  textColor?: string;
-  info: any;
-  infoColor?: ResponsiveValue<keyof Theme['colors'], Theme>;
-  name?: string;
-  isTimestamp?: boolean;
-  isPrepaidCard?: boolean;
-}) => {
+}: PaymentDetailsItemProps) => {
   return (
     <Container marginBottom={6} paddingHorizontal={6}>
       <Text color="blueText" marginBottom={2} size="xxs" weight="extraBold">

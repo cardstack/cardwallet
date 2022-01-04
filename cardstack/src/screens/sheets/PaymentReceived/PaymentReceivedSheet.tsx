@@ -1,18 +1,16 @@
-import React, { useEffect, useMemo } from 'react';
-import { SlackSheet } from '../sheet';
-import { EarnedTransaction } from './MerchantTransactionExpandedState';
-import { PaymentDetailsItem } from './payment-item-details';
+import React, { useEffect, useMemo, memo } from 'react';
+import { useRoute } from '@react-navigation/core';
 import {
   BlockscoutButton,
   CoinIcon,
   Container,
+  EarnedTransaction,
+  PaymentDetailsItem,
+  Sheet,
   Text,
 } from '@cardstack/components';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
-import {
-  Asset,
-  TransactionRow,
-} from '@cardstack/components/Transactions/TransactionBase';
+import { TransactionBaseProps } from '@cardstack/components/Transactions/TransactionBase';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
 import {
   dateFormatter,
@@ -22,14 +20,21 @@ import {
 } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-interface MerchantSpendReceivedExpandedStateProps {
-  asset: Asset;
-  type: string;
+
+interface RouteType {
+  params: {
+    asset: TransactionBaseProps;
+    item: MerchantEarnedSpendAndRevenueTransactionType;
+  };
+  key: string;
+  name: string;
 }
 
-export default function MerchantSpendReceivedExpandedState(
-  props: MerchantSpendReceivedExpandedStateProps
-) {
+const PaymentReceivedSheet = () => {
+  const {
+    params: { asset, item },
+  } = useRoute<RouteType>();
+
   const { setOptions } = useNavigation();
 
   useEffect(() => {
@@ -46,9 +51,7 @@ export default function MerchantSpendReceivedExpandedState(
     transactionHash,
     transaction: transactionData,
     token,
-  } = props.asset?.section?.data[
-    props.asset.index
-  ] as MerchantEarnedSpendAndRevenueTransactionType;
+  } = item;
 
   const network = useRainbowSelector(state => state.settings.network);
 
@@ -58,7 +61,7 @@ export default function MerchantSpendReceivedExpandedState(
   };
 
   const rowProps = {
-    ...props.asset,
+    ...asset,
     CoinIcon: (
       <CoinIcon size={30} symbol={removeCPXDTokenSuffix(token.symbol || '')} />
     ),
@@ -68,7 +71,7 @@ export default function MerchantSpendReceivedExpandedState(
 
   return useMemo(
     () => (
-      <SlackSheet flex={1} scrollEnabled>
+      <Sheet isFullScreen scrollEnabled>
         <Container backgroundColor="white" marginBottom={16} padding={8}>
           <Text marginBottom={2} size="medium">
             Payment Received
@@ -101,8 +104,7 @@ export default function MerchantSpendReceivedExpandedState(
             marginBottom={8}
             overflow="scroll"
           >
-            {props.asset.Header}
-            <TransactionRow {...props.asset} hasBottomDivider />
+            {asset.Header}
             <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
             <PaymentDetailsItem info={address} isPrepaidCard title="FROM" />
             <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
@@ -115,21 +117,23 @@ export default function MerchantSpendReceivedExpandedState(
           </Container>
           <BlockscoutButton
             network={network}
-            transactionHash={props.asset.transactionHash}
+            transactionHash={asset.transactionHash}
           />
         </Container>
-      </SlackSheet>
+      </Sheet>
     ),
     [
       address,
       earnedTxnData,
       nativeBalanceDisplay,
       network,
-      props.asset,
+      asset,
       rowProps,
       spendBalanceDisplay,
       timestamp,
       transactionHash,
     ]
   );
-}
+};
+
+export default memo(PaymentReceivedSheet);

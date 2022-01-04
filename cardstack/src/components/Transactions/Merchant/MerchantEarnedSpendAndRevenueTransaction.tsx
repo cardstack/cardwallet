@@ -24,12 +24,12 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
   const { navigate } = useNavigation();
 
   const onPressTransaction = useCallback(
-    (assetProps: TransactionBaseProps) =>
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: { ...assetProps },
-        type: 'merchantSpendReceivedExpandedState',
+    (asset: TransactionBaseProps) =>
+      navigate(Routes.PAYMENT_RECEIVED_SHEET, {
+        asset,
+        item,
       }),
-    [navigate]
+    [item, navigate]
   );
 
   return (

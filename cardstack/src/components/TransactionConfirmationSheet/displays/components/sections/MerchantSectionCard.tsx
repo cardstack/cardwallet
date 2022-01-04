@@ -1,10 +1,8 @@
 import React, { memo, ReactNode } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { MerchantInformation } from '@cardstack/types';
-import { Container, ContainerProps, Text } from '@cardstack/components';
+import { Container, ContainerProps, Icon, Text } from '@cardstack/components';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { Icon } from '@rainbow-me/components/icons';
-import { colors } from '@cardstack/theme';
 
 const USER_ICON_SIZE = 80;
 
@@ -33,18 +31,12 @@ const MerchantSectionCard = ({
     ) : (
       <Container alignItems="center">
         {isPaymentReceived ? (
-          <Container
-            borderRadius={USER_ICON_SIZE}
-            borderColor="blueLightBorder"
-            borderWidth={5}
-          >
-            <Icon
-              name="checkmarkCircled"
-              width={USER_ICON_SIZE}
-              height={USER_ICON_SIZE}
-              color={colors.blueOcean}
-            />
-          </Container>
+          <Icon
+            name="check-circle"
+            size={USER_ICON_SIZE}
+            stroke="blueLightBorder"
+            color="blueOcean"
+          />
         ) : merchantInfoDID ? (
           <ContactAvatar
             color={merchantInfoDID?.color}
