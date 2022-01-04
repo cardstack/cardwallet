@@ -4,18 +4,20 @@ import { MerchantInformation } from '@cardstack/types';
 import { Container, ContainerProps, Icon, Text } from '@cardstack/components';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
-const USER_ICON_SIZE = 80;
+export const USER_ICON_SIZE = 80;
 
 const MerchantSectionCard = ({
   merchantInfoDID,
   children,
   isLoading = false,
   isPaymentReceived = false,
+  customIcon = <Icon name="user" size={USER_ICON_SIZE} />,
   ...props
 }: {
   merchantInfoDID?: MerchantInformation;
   isLoading?: boolean;
   isPaymentReceived?: boolean;
+  customIcon: ReactNode;
   children: ReactNode;
 } & ContainerProps) => (
   <Container
@@ -30,14 +32,7 @@ const MerchantSectionCard = ({
       </Container>
     ) : (
       <Container alignItems="center">
-        {isPaymentReceived ? (
-          <Icon
-            name="check-circle"
-            size={USER_ICON_SIZE}
-            stroke="blueLightBorder"
-            color="blueOcean"
-          />
-        ) : merchantInfoDID ? (
+        {merchantInfoDID ? (
           <ContactAvatar
             color={merchantInfoDID?.color}
             size="xlarge"
@@ -45,7 +40,7 @@ const MerchantSectionCard = ({
             textColor={merchantInfoDID?.textColor}
           />
         ) : (
-          <Icon name="user" size={USER_ICON_SIZE} />
+          customIcon
         )}
         {!isPaymentReceived && (
           <Container paddingTop={3} marginBottom={4}>

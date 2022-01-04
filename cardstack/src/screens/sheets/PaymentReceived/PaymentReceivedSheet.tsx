@@ -5,11 +5,14 @@ import {
   CoinIcon,
   Container,
   EarnedTransaction,
+  Icon,
   PaymentDetailsItem,
   Sheet,
   Text,
 } from '@cardstack/components';
-import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
+import MerchantSectionCard, {
+  USER_ICON_SIZE,
+} from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import { TransactionBaseProps } from '@cardstack/components/Transactions/TransactionBase';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
 import {
@@ -76,7 +79,16 @@ const PaymentReceivedSheet = () => {
           <Text marginBottom={2} size="medium">
             Payment Received
           </Text>
-          <MerchantSectionCard isPaymentReceived>
+          <MerchantSectionCard
+            customIcon={
+              <Icon
+                name="check-circle"
+                size={USER_ICON_SIZE}
+                stroke="blueLightBorder"
+                color="blueOcean"
+              />
+            }
+          >
             <Container alignItems="center">
               <Text color="black" fontWeight="bold" marginTop={2} size="xs">
                 {getAddressPreview(address)}
