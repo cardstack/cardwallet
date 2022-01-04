@@ -10,13 +10,11 @@ const MerchantSectionCard = ({
   merchantInfoDID,
   children,
   isLoading = false,
-  isPaymentReceived = false,
   customIcon = <Icon name="user" size={USER_ICON_SIZE} />,
   ...props
 }: {
   merchantInfoDID?: MerchantInformation;
   isLoading?: boolean;
-  isPaymentReceived?: boolean;
   customIcon?: ReactNode;
   children: ReactNode;
 } & ContainerProps) => (
@@ -42,7 +40,7 @@ const MerchantSectionCard = ({
         ) : (
           customIcon
         )}
-        {!isPaymentReceived && (
+        {!!merchantInfoDID && (
           <Container paddingTop={3} marginBottom={4}>
             <Text
               weight="extraBold"

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, memo } from 'react';
+import React, { memo } from 'react';
 import { useRoute } from '@react-navigation/core';
 import {
   BlockscoutButton,
@@ -19,9 +19,7 @@ import {
   dateFormatter,
   getAddressPreview,
   removeCPXDTokenSuffix,
-  screenHeight,
 } from '@cardstack/utils';
-import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface RouteType {
@@ -37,14 +35,6 @@ const PaymentReceivedSheet = () => {
   const {
     params: { asset, item },
   } = useRoute<RouteType>();
-
-  const { setOptions } = useNavigation();
-
-  useEffect(() => {
-    setOptions({
-      longFormHeight: screenHeight,
-    });
-  });
 
   const {
     address,
@@ -72,79 +62,66 @@ const PaymentReceivedSheet = () => {
     subText: transactionData.netEarnedNativeDisplay,
   };
 
-  return useMemo(
-    () => (
-      <Sheet isFullScreen scrollEnabled>
-        <Container backgroundColor="white" marginBottom={16} padding={8}>
-          <Text marginBottom={2} size="medium">
-            Payment Received
-          </Text>
-          <MerchantSectionCard
-            customIcon={
-              <Icon
-                name="check-circle"
-                size={USER_ICON_SIZE}
-                stroke="blueLightBorder"
-                color="blueOcean"
-              />
-            }
-          >
-            <Container alignItems="center">
-              <Text color="black" fontWeight="bold" marginTop={2} size="xs">
-                {getAddressPreview(address)}
-              </Text>
-              <Text fontSize={40} fontWeight="700" marginTop={4}>
-                {spendBalanceDisplay || ''}
-              </Text>
-              <Text color="blueText" fontSize={12}>
-                {nativeBalanceDisplay || ''}
-              </Text>
-
-              {timestamp ? (
-                <Text color="black" marginTop={4} size="medium" weight="bold">
-                  {dateFormatter(timestamp, 'MMM dd', 'h:mm a', ', ')}
-                </Text>
-              ) : null}
-            </Container>
-          </MerchantSectionCard>
-          <Container marginBottom={3} />
-          <Container
-            backgroundColor="white"
-            borderColor="borderGray"
-            borderRadius={10}
-            borderWidth={1}
-            marginBottom={8}
-            overflow="scroll"
-          >
-            {asset.Header}
-            <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
-            <PaymentDetailsItem info={address} isPrepaidCard title="FROM" />
-            <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
-            <PaymentDetailsItem
-              info={timestamp}
-              infoColor="black"
-              isTimestamp
-              title="LOCAL TIME"
+  return (
+    <Sheet isFullScreen scrollEnabled>
+      <Container backgroundColor="white" marginBottom={16} padding={8}>
+        <Text marginBottom={2} size="medium">
+          Payment Received
+        </Text>
+        <MerchantSectionCard
+          customIcon={
+            <Icon
+              name="check-circle"
+              size={USER_ICON_SIZE}
+              stroke="blueLightBorder"
+              color="blueOcean"
             />
+          }
+        >
+          <Container alignItems="center">
+            <Text color="black" fontWeight="bold" marginTop={2} size="xs">
+              {getAddressPreview(address)}
+            </Text>
+            <Text fontSize={40} fontWeight="700" marginTop={4}>
+              {spendBalanceDisplay || ''}
+            </Text>
+            <Text color="blueText" fontSize={12}>
+              {nativeBalanceDisplay || ''}
+            </Text>
+
+            {timestamp ? (
+              <Text color="black" marginTop={4} size="medium" weight="bold">
+                {dateFormatter(timestamp, 'MMM dd', 'h:mm a', ', ')}
+              </Text>
+            ) : null}
           </Container>
-          <BlockscoutButton
-            network={network}
-            transactionHash={asset.transactionHash}
+        </MerchantSectionCard>
+        <Container marginBottom={3} />
+        <Container
+          backgroundColor="white"
+          borderColor="borderGray"
+          borderRadius={10}
+          borderWidth={1}
+          marginBottom={8}
+          overflow="scroll"
+        >
+          {asset.Header}
+          <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
+          <PaymentDetailsItem info={address} isPrepaidCard title="FROM" />
+          <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
+          <PaymentDetailsItem
+            info={timestamp}
+            infoColor="black"
+            isTimestamp
+            title="LOCAL TIME"
           />
         </Container>
-      </Sheet>
-    ),
-    [
-      address,
-      earnedTxnData,
-      nativeBalanceDisplay,
-      network,
-      asset,
-      rowProps,
-      spendBalanceDisplay,
-      timestamp,
-      transactionHash,
-    ]
+        <BlockscoutButton
+          network={network}
+          transactionHash={asset.transactionHash}
+        />
+      </Container>
+    </Sheet>
   );
 };
 
