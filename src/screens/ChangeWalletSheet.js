@@ -148,7 +148,7 @@ export default function ChangeWalletSheet() {
       };
       // If there are no visible wallets
       // then delete the wallet
-      const visibleAddresses = newWallets[walletId].addresses.filter(
+      const hasVisibleAddresses = newWallets[walletId].addresses.some(
         account => account.visible
       );
       setIsWalletLoading(WalletLoadingStates.DELETING_WALLET);
@@ -159,10 +159,10 @@ export default function ChangeWalletSheet() {
         addressesByNetwork[network] &&
         addressesByNetwork[network].includes(address)
       ) {
-        const unreigsterResponse = await unregisterFcmToken(fcmToken, address);
-        logger.log('UnregisterFcmToken response ---', unreigsterResponse);
+        const unregisterResponse = await unregisterFcmToken(fcmToken, address);
+        logger.log('UnregisterFcmToken response ---', unregisterResponse);
       }
-      if (visibleAddresses.length === 0) {
+      if (!hasVisibleAddresses) {
         delete newWallets[walletId];
         await dispatch(walletsUpdate(newWallets));
       } else {

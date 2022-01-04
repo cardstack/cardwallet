@@ -78,7 +78,7 @@ export default function useBuyPrepaidCard() {
 
   const hubURL = useMemo(() => getHubUrl(network), [network]);
 
-  const { authToken } = useAuthToken(hubURL);
+  const { authToken } = useAuthToken();
 
   const [
     nativeCurrency,

@@ -38,14 +38,16 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
   }
 };
 
-// check if token's stored by confirming addresses includes wallet address
-export const isFCMTokenStored = async (
-  walletAddress: string
-): Promise<{
+interface isFCMTokenStoredProps {
   isTokenStored: boolean;
   addressesByNetwork?: Record<Network, string | string[]>;
   fcmToken: string | null;
-}> => {
+}
+
+// check if token's stored by confirming addresses includes wallet address
+export const isFCMTokenStored = async (
+  walletAddress: string
+): Promise<isFCMTokenStoredProps> => {
   const { fcmToken, addressesByNetwork } = await getFCMToken();
   const network: Network = await getNetwork();
   return {
@@ -117,15 +119,14 @@ export const saveFCMToken = async (
   }
 };
 
-export const requestPermission = () => {
-  return new Promise((resolve, reject) => {
+export const requestPermission = () =>
+  new Promise((resolve, reject) => {
     requestNotifications(['alert', 'sound', 'badge'])
       .then(({ status }) => {
         resolve(status === 'granted');
       })
       .catch(e => reject(e));
   });
-};
 
 export const checkPushPermissionAndRegisterToken = async (
   walletAddress: string,

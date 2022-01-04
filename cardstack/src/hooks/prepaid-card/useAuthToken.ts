@@ -5,8 +5,9 @@ import { useWorker } from '@cardstack/utils';
 import logger from 'logger';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { getHubAuthToken, getHubUrl } from '@cardstack/services/hub-service';
+import HDProvider from '@cardstack/models/hd-provider';
 
-export const useAuthToken = (hubURL?: string, seedPhrase?: string) => {
+export const useAuthToken = (seedPhrase?: string) => {
   const [authToken, setAuthToken] = useState<string>('');
   const { accountAddress } = useAccountSettings();
 
@@ -15,7 +16,7 @@ export const useAuthToken = (hubURL?: string, seedPhrase?: string) => {
   ) as Network;
 
   const { callback: getAuthToken, error, isLoading } = useWorker(async () => {
-    const hubURLString = hubURL || getHubUrl(network);
+    const hubURLString = getHubUrl(network);
 
     const authTokenValue = await getHubAuthToken(
       hubURLString,
@@ -25,7 +26,9 @@ export const useAuthToken = (hubURL?: string, seedPhrase?: string) => {
     );
 
     setAuthToken(authTokenValue || '');
-  }, [hubURL, accountAddress, network]);
+
+    await HDProvider.reset();
+  }, [accountAddress, network]);
 
   useEffect(() => {
     getAuthToken();
