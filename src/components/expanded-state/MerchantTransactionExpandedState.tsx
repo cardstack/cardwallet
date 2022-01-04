@@ -83,7 +83,6 @@ export const MerchantTransactionExpandedStateBody = (
       ) : (
         <EarnedTransaction
           {...transactionData}
-          subText={transactionData.netEarnedNativeDisplay}
           txRowProps={{
             ...props.asset,
             primaryText: `+ ${transactionData.netEarned.display}`,
