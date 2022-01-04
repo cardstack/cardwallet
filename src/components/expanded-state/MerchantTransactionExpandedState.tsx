@@ -63,16 +63,6 @@ export const MerchantTransactionExpandedStateBody = (
 ) => {
   const transactionData =
     props.asset?.section?.data[props.asset.index]?.transaction;
-  const earnedTxnData = {
-    ...transactionData,
-    subText: transactionData.netEarned.display,
-  };
-
-  const rowProps = {
-    ...props.asset,
-    primaryText: `+ ${transactionData.netEarned}`,
-    subText: transactionData.netEarnedNativeDisplay,
-  };
 
   const isClaimedTransaction = Object.values<string>(ClaimStatuses).includes(
     props.asset.claimStatus
@@ -91,7 +81,15 @@ export const MerchantTransactionExpandedStateBody = (
       {isClaimedTransaction ? (
         <ClaimedTransaction {...transactionData} txRowProps={props.asset} />
       ) : (
-        <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
+        <EarnedTransaction
+          {...transactionData}
+          subText={transactionData.netEarnedNativeDisplay}
+          txRowProps={{
+            ...props.asset,
+            primaryText: `+ ${transactionData.netEarned.display}`,
+            subText: transactionData.netEarnedNativeDisplay,
+          }}
+        />
       )}
     </Container>
   );

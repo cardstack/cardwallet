@@ -60,7 +60,7 @@ const PaymentReceivedSheet = () => {
 
   const earnedTxnData = {
     ...transactionData,
-    subText: transactionData.netEarned,
+    subText: transactionData.netEarned.display,
   };
 
   const rowProps = {
@@ -68,8 +68,8 @@ const PaymentReceivedSheet = () => {
     CoinIcon: (
       <CoinIcon size={30} symbol={removeCPXDTokenSuffix(token.symbol || '')} />
     ),
-    primaryText: `+ ${transactionData.netEarned}`,
-    subText: transactionData.netEarnedNative,
+    primaryText: `+ ${transactionData.netEarned.display}`,
+    subText: transactionData.netEarnedNativeDisplay,
   };
 
   return useMemo(

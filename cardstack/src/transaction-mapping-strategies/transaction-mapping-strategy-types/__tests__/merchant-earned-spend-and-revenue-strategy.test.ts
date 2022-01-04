@@ -65,12 +65,24 @@ describe('MerchantEarnedSpendAndRevenueStrategy', () => {
         display: '1.49 DAI',
       },
       nativeBalanceDisplay: '$1.50 USD',
-      spendBalanceDisplay: '§150 SPEND',
+      spendBalanceDisplay: '§150',
       timestamp: 1629156261,
       token: {
         address: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
         name: 'Dai Stablecoin.CPXD',
         symbol: 'DAI',
+      },
+      transaction: {
+        customerSpend: '150',
+        customerSpendNative: '$0.00 USD',
+        netEarned: {
+          amount: '1.489520958083832335',
+          display: '1.49 DAI',
+        },
+        netEarnedNativeDisplay: '$0.0000974 USD',
+        protocolFee: '0.00749 DAI',
+        revenueCollected: '1.497 DAI',
+        spendConversionRate: '$0.01 USD',
       },
       transactionHash:
         '0x5293d95a240c231852724fd31ff6df119e5b5cf7661a7aec38f7cf10893dc2eb',
