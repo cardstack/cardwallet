@@ -17,7 +17,7 @@ const MerchantSectionCard = ({
   merchantInfoDID?: MerchantInformation;
   isLoading?: boolean;
   isPaymentReceived?: boolean;
-  customIcon: ReactNode;
+  customIcon?: ReactNode;
   children: ReactNode;
 } & ContainerProps) => (
   <Container
