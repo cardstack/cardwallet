@@ -40,7 +40,7 @@ describe('MerchantEarnedSpendStrategy', () => {
   // @ts-ignore
   const strategy = new MerchantEarnedSpendStrategy(contructorParams);
 
-  test('returns the proper object', async () => {
+  it('returns the proper object', async () => {
     const value = await strategy.mapTransaction();
     expect(value).toEqual({
       address: '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
@@ -54,7 +54,7 @@ describe('MerchantEarnedSpendStrategy', () => {
     });
   });
 
-  test('returns true with proper constructors', () => {
+  it('returns true with proper constructors', () => {
     expect(strategy.handlesTransaction()).toBeTruthy();
   });
 });
