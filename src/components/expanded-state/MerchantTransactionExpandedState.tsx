@@ -113,7 +113,7 @@ const EarnedTransaction = (data: EarnedTransactionProps) => {
     revenueCollected,
     spendConversionRate,
     netEarned,
-    netEarnedNative,
+    netEarnedNativeDisplay,
     txRowProps,
   } = data;
   const earnedItems = [
@@ -148,8 +148,8 @@ const EarnedTransaction = (data: EarnedTransactionProps) => {
         <HorizontalDivider />
         <ItemDetail
           description="NET EARNED"
-          subValue={netEarnedNative}
-          value={`+ ${netEarned}`}
+          subValue={netEarnedNativeDisplay}
+          value={`+ ${netEarned.display}`}
         />
       </Container>
     </>
@@ -197,13 +197,13 @@ export default function MerchantTransactionExpandedState(
   const network = useRainbowSelector(state => state.settings.network);
   const earnedTxnData = {
     ...transactionData,
-    subText: transactionData.netEarned,
+    subText: transactionData.netEarned.display,
   };
 
   const rowProps = {
     ...props.asset,
     primaryText: `+ ${transactionData.netEarned}`,
-    subText: transactionData.netEarnedNative,
+    subText: transactionData.netEarnedNativeDisplay,
   };
 
   return useMemo(

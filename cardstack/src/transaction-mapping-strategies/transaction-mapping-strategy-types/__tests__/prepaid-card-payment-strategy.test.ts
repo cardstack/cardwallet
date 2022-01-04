@@ -95,7 +95,7 @@ describe('PrepaidCardPaymentStrategy', () => {
   // @ts-ignore
   const PrepaidCardPayment = new PrepaidCardPaymentStrategy(contructorParams);
 
-  test('returns the proper object', async () => {
+  it('returns the proper object', async () => {
     PrepaidCardPayment.mapTransaction()
       .then(value => {
         expect(value).toEqual(result);
@@ -103,7 +103,7 @@ describe('PrepaidCardPaymentStrategy', () => {
       .catch(err => console.log('Error: ', err));
   });
 
-  test('returns the proper object without merchant info and card customization', async () => {
+  it('returns the proper object without merchant info and card customization', async () => {
     const newParams = {
       ...contructorParams,
       transaction: {
@@ -132,11 +132,11 @@ describe('PrepaidCardPaymentStrategy', () => {
       .catch(err => console.log('Error: ', err));
   });
 
-  test('returns true with proper constructors', () => {
+  it('returns true with proper constructors', () => {
     expect(PrepaidCardPayment.handlesTransaction()).toBeTruthy();
   });
 
-  test('returns false with empty prepaidCardPayments', () => {
+  it('returns false with empty prepaidCardPayments', () => {
     const newParams = {
       ...contructorParams,
       transaction: { prepaidCardPayments: [] },

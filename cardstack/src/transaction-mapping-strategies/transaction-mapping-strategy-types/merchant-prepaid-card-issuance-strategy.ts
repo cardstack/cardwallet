@@ -9,7 +9,7 @@ import {
 } from '@cardstack/types';
 import { fetchHistoricalPrice } from '@cardstack/services';
 
-export class MerchantPrepaidCardIssuancetrategy extends BaseStrategy {
+export class MerchantPrepaidCardIssuanceStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
     const { prepaidCardIssuance } = this.transaction;
 

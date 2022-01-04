@@ -221,7 +221,7 @@ export async function getMerchantEarnedTransactionDetails(
     nativeCurrency,
   });
 
-  const netFormattedValue = convertRawAmountToBalance(
+  const netEarned = convertRawAmountToBalance(
     subtract(prepaidCardPaymentTransaction.issuingTokenAmount, feeCollectedRaw),
     {
       decimals: 18,
@@ -249,8 +249,11 @@ export async function getMerchantEarnedTransactionDetails(
       nativeCurrency,
       currencyConversionRates
     ).nativeBalanceDisplay,
-    netEarned: netFormattedValue.display,
-    netEarnedNative: convertAmountToNativeDisplay(netValue, nativeCurrency),
+    netEarned,
+    netEarnedNativeDisplay: convertAmountToNativeDisplay(
+      netValue,
+      nativeCurrency
+    ),
   };
 }
 
