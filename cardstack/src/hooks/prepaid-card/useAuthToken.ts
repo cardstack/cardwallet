@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react';
-import { getSDK } from '@cardstack/cardpay-sdk';
-import Web3Instance from '@cardstack/models/web3-instance';
-import useWallets from '@rainbow-me/hooks/useWallets';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { Network } from '@rainbow-me/networkTypes';
 import { useWorker } from '@cardstack/utils';
 import logger from 'logger';
 import { useAccountSettings } from '@rainbow-me/hooks';
+import { getHubAuthToken, getHubUrl } from '@cardstack/services/hub-service';
 import HDProvider from '@cardstack/models/hd-provider';
 
-export const useAuthToken = (hubURL: string) => {
+export const useAuthToken = (seedPhrase?: string) => {
   const [authToken, setAuthToken] = useState<string>('');
-  const { selectedWallet } = useWallets();
   const { accountAddress } = useAccountSettings();
 
   const network = useRainbowSelector(
@@ -19,13 +16,19 @@ export const useAuthToken = (hubURL: string) => {
   ) as Network;
 
   const { callback: getAuthToken, error, isLoading } = useWorker(async () => {
-    const web3 = await Web3Instance.get({ selectedWallet, network });
-    const authAPI = await getSDK('HubAuth', web3, hubURL);
-    setAuthToken(await authAPI.authenticate({ from: accountAddress }));
+    const hubURLString = getHubUrl(network);
 
-    // resets signed provider and web3 instance to kill poller
+    const authTokenValue = await getHubAuthToken(
+      hubURLString,
+      network,
+      accountAddress,
+      seedPhrase
+    );
+
+    setAuthToken(authTokenValue || '');
+
     await HDProvider.reset();
-  }, [hubURL, accountAddress, network]);
+  }, [accountAddress, network]);
 
   useEffect(() => {
     getAuthToken();

@@ -1,12 +1,26 @@
 import axios from 'axios';
-import { fromWei } from '@cardstack/cardpay-sdk';
+import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
+import Web3 from 'web3';
+import { getAllWallets, loadAddress } from '@rainbow-me/model/wallet';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import {
+  CustodialWallet,
+  Inventory,
+  ReservationData,
+  OrderData,
+  WyrePriceData,
+} from '@cardstack/types';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import HDProvider from '@cardstack/models/hd-provider';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
 
-export const getHubUrl = (network: Network) =>
+const HUBAUTH_PROMPT_MESSAGE =
+  'To enable notifications, please authenticate your ownership of this account with the Cardstack Hub server';
+
+export const getHubUrl = (network: Network): string =>
   network === Network.xdai ? HUB_URL_PROD : HUB_URL_STAGING;
 
 const axiosConfig = (authToken: string) => {
@@ -20,78 +34,125 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
-export interface CustodialWalletAttrs {
-  'wyre-wallet-id': string;
-  'user-address': string;
-  'deposit-address': string;
-}
+export const getHubAuthToken = async (
+  hubURL: string,
+  network: Network,
+  walletAddress?: string,
+  seedPhrase?: string
+): Promise<string | null> => {
+  const allWallets = (await getAllWallets()) || { wallets: [] };
 
-export interface CustodialWallet {
-  id: string;
-  type: string;
-  attributes: CustodialWalletAttrs;
-}
+  // get wallet id through allWallets using wallet address
+  const walletId =
+    Object.values(allWallets.wallets).find(
+      wallet =>
+        wallet.addresses.findIndex(
+          account => account.address === walletAddress
+        ) > -1
+    )?.id || '';
 
-export interface Inventory {
-  id: string;
-  type: string;
-  isSelected: boolean;
-  amount: number;
-  attributes: InventoryAttrs;
-}
+  try {
+    const hdProvider = await HDProvider.get({
+      walletId,
+      network,
+      seedPhrase,
+      keychainAcessAskPrompt: HUBAUTH_PROMPT_MESSAGE,
+    });
 
-export interface InventoryAttrs {
-  issuer: string;
-  sku: string;
-  'issuing-token-symbol': string;
-  'issuing-token-address': string;
-  'face-value': number;
-  'ask-price': string;
-  'customization-DID'?: string;
-  quantity: number;
-  reloadable: boolean;
-  transferrable: boolean;
-}
+    // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
+    const web3 = new Web3(hdProvider);
+    const authAPI = await getSDK('HubAuth', web3, hubURL);
+    // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
+    const address = walletAddress || (await loadAddress()) || '';
+    const authToken = await authAPI.authenticate({ from: address });
+    return authToken;
+  } catch (e) {
+    logger.sentry('Hub authenticate failed', e);
 
-export interface ReservationData {
-  id: string;
-  type: string;
-  attributes: ReservationAttrs;
-}
+    return null;
+  }
+};
 
-export interface ReservationAttrs {
-  'user-address': string;
-  sku: string;
-  'transaction-hash': null;
-  'prepaid-card-address': null;
-}
+export const registerFcmToken = async (
+  fcmToken: string,
+  walletAddress?: string,
+  seedPhrase?: string
+): Promise<{ success: boolean } | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
 
-export interface OrderAttrs {
-  'order-id': string;
-  'user-address': string;
-  'wallet-id': string;
-  status: string;
-}
+    const authToken = await getHubAuthToken(
+      hubURL,
+      network,
+      walletAddress,
+      seedPhrase
+    );
 
-export interface OrderData {
-  id: string;
-  type: string;
-  attributes: OrderAttrs;
-  prepaidCardAddress?: string;
-}
+    await HDProvider.reset();
 
-export interface WyrePriceData {
-  id: string;
-  type: string;
-  attributes: WyrePriceAttrs;
-}
+    if (!authToken) {
+      return { success: false };
+    }
 
-export interface WyrePriceAttrs {
-  'source-currency': string;
-  'dest-currency': string;
-  'source-currency-price': number;
-  'includes-fee': boolean;
-}
+    const results = await axios.post(
+      `${hubURL}/api/push-notification-registrations`,
+      JSON.stringify({
+        data: {
+          type: 'push-notification-registration',
+          attributes: {
+            'push-client-id': fcmToken,
+          },
+        },
+      }),
+      axiosConfig(authToken)
+    );
+
+    if (results.data) {
+      return { success: true };
+    }
+  } catch (e: any) {
+    logger.sentry('Error while registering fcmToken to hub', e?.response || e);
+  }
+};
+
+export const unregisterFcmToken = async (
+  fcmToken: string,
+  walletAddress?: string,
+  seedPhrase?: string
+): Promise<{ success: boolean } | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    const authToken = await getHubAuthToken(
+      hubURL,
+      network,
+      walletAddress,
+      seedPhrase
+    );
+
+    await HDProvider.reset();
+
+    if (!authToken) {
+      return { success: false };
+    }
+
+    const results = await axios.delete(
+      `${hubURL}/api/push-notification-registrations/${fcmToken}`,
+      axiosConfig(authToken)
+    );
+
+    if (results.data) {
+      return { success: true };
+    }
+  } catch (e: any) {
+    logger.sentry(
+      'Error while unregistering fcmToken from hub',
+      e?.response || e
+    );
+  }
+};
 
 export const getCustodialWallet = async (
   hubURL: string,
@@ -165,8 +226,8 @@ export const makeReservation = async (
     if (results.data?.data) {
       return results.data?.data;
     }
-  } catch (e) {
-    logger.sentry('Error while making reservation', e.response.error);
+  } catch (e: any) {
+    logger.sentry('Error while making reservation', e?.response?.error || e);
   }
 };
 
@@ -200,8 +261,8 @@ export const updateOrder = async (
     if (results.data?.data) {
       return results.data?.data;
     }
-  } catch (e) {
-    logger.sentry('Error updating order', e.response);
+  } catch (e: any) {
+    logger.sentry('Error updating order', e?.response || e);
   }
 };
 
@@ -220,7 +281,7 @@ export const getOrder = async (
       results?.data?.included?.[0].attributes?.['prepaid-card-address'] || null;
 
     return { ...results?.data?.data, prepaidCardAddress };
-  } catch (e) {
+  } catch (e: any) {
     logger.sentry('Error getting order details', e);
   }
 };

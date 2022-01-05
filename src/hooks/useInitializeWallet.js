@@ -17,6 +17,7 @@ import useLoadAccountData from './useLoadAccountData';
 import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
+import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { appStateUpdate } from '@cardstack/redux/appState';
 import { getCurrencyConversionsRates } from '@cardstack/services';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
@@ -115,10 +116,16 @@ export default function useInitializeWallet() {
 
         dispatch(appStateUpdate({ walletReady: true }));
 
-        logger.sentry('💰 Wallet initialized');
+        logger.log('💰 Wallet initialized');
+        setTimeout(
+          () => {
+            checkPushPermissionAndRegisterToken(walletAddress, seedPhrase);
+          },
+          isNew ? 1000 : 0 // hub auth fails if we try too soon after wallet created
+        );
         return walletAddress;
       } catch (error) {
-        logger.sentry('Error while initializing wallet');
+        logger.sentry('Error while initializing wallet', error);
         // TODO specify error states more granular
         hideSplashScreen();
         captureException(error);

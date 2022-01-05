@@ -19,9 +19,9 @@ import {
 import { sendRpcCall } from '../handlers/web3';
 import { dappLogoOverride, dappNameOverride } from '../helpers/dappNameHandler';
 import WalletTypes from '../helpers/walletTypes';
-import { getFCMToken } from '../model/firebase';
 import { Navigation } from '../navigation';
 import { isSigningMethod } from '../utils/signingMethods';
+import { getFCMToken } from '@cardstack/models/firebase';
 import { addRequestToApprove } from '@cardstack/redux/requests';
 import { baseCloudFunctionsUrl } from '@cardstack/services';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
@@ -49,15 +49,7 @@ const WALLETCONNECT_REMOVE_PENDING_REDIRECT =
 // -- Actions ---------------------------------------- //
 const getNativeOptions = async () => {
   const language = 'en'; // TODO use lang from settings
-  let token = null;
-  try {
-    token = await getFCMToken();
-  } catch (error) {
-    logger.log(
-      'Error getting FCM token, ignoring token for WC connection',
-      error
-    );
-  }
+  const token = (await getFCMToken()).fcmToken;
 
   const nativeOptions = {
     clientMeta: {
