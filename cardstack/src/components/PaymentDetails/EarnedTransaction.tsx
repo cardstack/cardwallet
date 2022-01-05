@@ -14,7 +14,6 @@ import { MerchantEarnedRevenueTransactionTypeTxn } from '@cardstack/types';
 
 interface EarnedTransactionProps
   extends MerchantEarnedRevenueTransactionTypeTxn {
-  subText: string;
   txRowProps: TransactionRowProps;
 }
 

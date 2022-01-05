@@ -24,8 +24,8 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface RouteType {
   params: {
-    asset: TransactionBaseProps;
-    item: MerchantEarnedSpendAndRevenueTransactionType;
+    transaction: TransactionBaseProps &
+      MerchantEarnedSpendAndRevenueTransactionType;
   };
   key: string;
   name: string;
@@ -33,7 +33,7 @@ interface RouteType {
 
 const PaymentReceivedSheet = () => {
   const {
-    params: { asset, item },
+    params: { transaction },
   } = useRoute<RouteType>();
 
   const {
@@ -44,7 +44,7 @@ const PaymentReceivedSheet = () => {
     transactionHash,
     transaction: transactionData,
     token,
-  } = item;
+  } = transaction;
 
   const network = useRainbowSelector(state => state.settings.network);
 
@@ -54,7 +54,7 @@ const PaymentReceivedSheet = () => {
   };
 
   const rowProps = {
-    ...asset,
+    ...transaction,
     CoinIcon: (
       <CoinIcon size={30} symbol={removeCPXDTokenSuffix(token.symbol || '')} />
     ),
@@ -105,7 +105,7 @@ const PaymentReceivedSheet = () => {
           marginBottom={8}
           overflow="scroll"
         >
-          {asset.Header}
+          {transaction.Header}
           <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
           <PaymentDetailsItem info={address} isPrepaidCard title="FROM" />
           <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
@@ -118,7 +118,7 @@ const PaymentReceivedSheet = () => {
         </Container>
         <BlockscoutButton
           network={network}
-          transactionHash={asset.transactionHash}
+          transactionHash={transaction.transactionHash}
         />
       </Container>
     </Sheet>

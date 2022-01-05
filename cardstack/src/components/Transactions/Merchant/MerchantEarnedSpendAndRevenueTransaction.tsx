@@ -24,10 +24,9 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
   const { navigate } = useNavigation();
 
   const onPressTransaction = useCallback(
-    (asset: TransactionBaseProps) =>
+    (transaction: TransactionBaseProps) =>
       navigate(Routes.PAYMENT_RECEIVED_SHEET, {
-        asset,
-        item,
+        transaction: { ...transaction, ...item },
       }),
     [item, navigate]
   );
