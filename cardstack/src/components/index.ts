@@ -36,3 +36,4 @@ export * from './SafeAreaView';
 export * from './FilterOption';
 export * from './LoadingOverlay';
 export * from './BalanceSection';
+export * from './AnimatedPressable';
