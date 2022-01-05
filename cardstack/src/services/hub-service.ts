@@ -89,6 +89,8 @@ export const registerFcmToken = async (
       seedPhrase
     );
 
+    await HDProvider.reset();
+
     if (!authToken) {
       return { success: false };
     }
@@ -129,6 +131,8 @@ export const unregisterFcmToken = async (
       walletAddress,
       seedPhrase
     );
+
+    await HDProvider.reset();
 
     if (!authToken) {
       return { success: false };
