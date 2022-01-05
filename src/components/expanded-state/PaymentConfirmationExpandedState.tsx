@@ -1,16 +1,18 @@
-import { ResponsiveValue } from '@shopify/restyle';
 import React, { useEffect, useMemo } from 'react';
 import { SlackSheet } from '../sheet';
-import { BlockscoutButton, Container, Text } from '@cardstack/components';
+import {
+  BlockscoutButton,
+  Container,
+  PaymentDetailsItem,
+  Text,
+} from '@cardstack/components';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
   TransactionRow,
   TransactionRowProps,
 } from '@cardstack/components/Transactions/TransactionBase';
-import { Theme } from '@cardstack/theme';
 import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
 import { dateFormatter, screenHeight } from '@cardstack/utils';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
@@ -36,65 +38,6 @@ interface Section {
   data: PrepaidCardPaymentTransactionType[];
   title: string;
 }
-
-const PaymentDetailsItem = ({
-  title,
-  color,
-  textColor,
-  name,
-  info,
-  infoColor = 'blueText',
-  isTimestamp = false,
-}: {
-  title: string;
-  color?: string;
-  textColor?: string;
-  info: any;
-  infoColor?: ResponsiveValue<keyof Theme['colors'], Theme>;
-  name?: string;
-  isTimestamp?: boolean;
-}) => {
-  return (
-    <Container marginBottom={6} paddingHorizontal={6}>
-      <Text color="blueText" marginBottom={2} size="xxs" weight="extraBold">
-        {title}
-      </Text>
-      {name ? (
-        <>
-          <Container flexDirection="row" marginBottom={1}>
-            <Container flex={2} />
-            <Container flex={8}>
-              <Text color="blueText" size="smallest" weight="bold">
-                BUSINESS
-              </Text>
-            </Container>
-          </Container>
-          <Container flexDirection="row">
-            <Container alignItems="center" flex={2}>
-              <ContactAvatar
-                color={color}
-                size="smaller"
-                textColor={textColor}
-                value={name}
-              />
-            </Container>
-            <Container flex={8} marginBottom={1}>
-              <Text weight="extraBold">{name}</Text>
-            </Container>
-          </Container>
-        </>
-      ) : null}
-      <Container flexDirection="row" marginBottom={1}>
-        <Container flex={2} />
-        <Container flex={8}>
-          <Text color={infoColor} size="small">
-            {isTimestamp ? dateFormatter(info) : info}
-          </Text>
-        </Container>
-      </Container>
-    </Container>
-  );
-};
 
 export default function PaymentConfirmationExpandedState(
   props: PaymentConfirmationExpandedStateProps

@@ -30,6 +30,7 @@ export * from './HorizontalDivider';
 export * from './MoreItemsFooter';
 export * from './CollectibleRow';
 export * from './CoinIcon';
+export * from './PaymentDetails';
 export * from './TransactionList';
 export * from './TransactionConfirmationSheet';
 export * from './SafeAreaView';

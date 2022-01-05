@@ -45,8 +45,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
     const spendDisplay = convertSpendForBalanceDisplay(
       prepaidCardPaymentTransaction.spendAmount,
       this.nativeCurrency,
-      this.currencyConversionRates,
-      true
+      this.currencyConversionRates
     );
 
     const nativeBalance = convertRawAmountToNativeDisplay(
@@ -77,6 +76,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
         symbol: prepaidCardPaymentTransaction.issuingToken.symbol,
         name: prepaidCardPaymentTransaction.issuingToken.name,
       },
+      transaction: transactionDetails,
       /* 
           we want the earned revenue transaction to show after the prepaid card payment, but since they're the same transaction they have the same timestamp
           so add one ms to make sure it's sorted to come after the payment

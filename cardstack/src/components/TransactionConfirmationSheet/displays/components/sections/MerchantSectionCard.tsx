@@ -4,14 +4,18 @@ import { MerchantInformation } from '@cardstack/types';
 import { Container, ContainerProps, Icon, Text } from '@cardstack/components';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
+export const USER_ICON_SIZE = 80;
+
 const MerchantSectionCard = ({
   merchantInfoDID,
   children,
   isLoading = false,
+  customIcon = <Icon name="user" size={USER_ICON_SIZE} />,
   ...props
 }: {
   merchantInfoDID?: MerchantInformation;
   isLoading?: boolean;
+  customIcon?: ReactNode;
   children: ReactNode;
 } & ContainerProps) => (
   <Container
@@ -34,18 +38,20 @@ const MerchantSectionCard = ({
             textColor={merchantInfoDID?.textColor}
           />
         ) : (
-          <Icon name="user" size={80} />
+          customIcon
         )}
-        <Container paddingTop={3} marginBottom={4}>
-          <Text
-            weight="extraBold"
-            size="medium"
-            ellipsizeMode="tail"
-            numberOfLines={1}
-          >
-            {merchantInfoDID?.name || ''}
-          </Text>
-        </Container>
+        {!!merchantInfoDID && (
+          <Container paddingTop={3} marginBottom={4}>
+            <Text
+              weight="extraBold"
+              size="medium"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {merchantInfoDID?.name || ''}
+            </Text>
+          </Container>
+        )}
       </Container>
     )}
     {children}

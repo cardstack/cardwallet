@@ -22,6 +22,7 @@ import {
   TransactionConfirmation,
   WelcomeScreen,
   CollectibleSheet,
+  PaymentReceivedSheet,
 } from '@cardstack/screen';
 import {
   bottomSheetPreset,
@@ -84,6 +85,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: ImportSeedSheet,
     options: bottomSheetPreset as StackNavigationOptions,
     listeners: dismissAndroidKeyboardOnClose,
+  },
+  PAYMENT_RECEIVED_SHEET: {
+    component: PaymentReceivedSheet,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 

@@ -11,6 +11,7 @@ export const MainRoutes = {
   WELCOME_SCREEN: 'WelcomeScreen',
   COLLECTIBLE_SHEET: 'CollectibleSheet',
   IMPORT_SEED_SHEET: 'ImportSeedSheet',
+  PAYMENT_RECEIVED_SHEET: 'PaymentReceivedSheet',
 } as const;
 
 export const GlobalRoutes = {
