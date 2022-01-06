@@ -32,29 +32,30 @@ const ClaimedTransaction = ({
   gasFee,
   netClaimed,
   txRowProps,
-}: ClaimedTransactionProps) => {
-  return (
-    <>
-      <TransactionRow {...txRowProps} hasBottomDivider />
-      <Container padding={6}>
-        <MerchantPaymentItemDetail
-          description={'REVENUE \nCLAIMED'}
-          value={grossClaimed}
-        />
-        <MerchantPaymentItemDetail
-          description="GAS FEE"
-          subValue={gasNativeFee}
-          value={gasFee}
-        />
-        <HorizontalDivider />
-        <MerchantPaymentItemDetail
-          description="NET CLAIMED"
-          value={netClaimed}
-        />
-      </Container>
-    </>
-  );
-};
+}: ClaimedTransactionProps) => (
+  <>
+    <TransactionRow {...txRowProps} hasBottomDivider />
+    <Container padding={6}>
+      <MerchantPaymentItemDetail
+        description={'REVENUE \nCLAIMED'}
+        symbol={txRowProps.symbol}
+        value={grossClaimed}
+      />
+      <MerchantPaymentItemDetail
+        description="GAS FEE"
+        subValue={gasNativeFee}
+        symbol={txRowProps.symbol}
+        value={gasFee}
+      />
+      <HorizontalDivider />
+      <MerchantPaymentItemDetail
+        description="NET CLAIMED"
+        symbol={txRowProps.symbol}
+        value={netClaimed}
+      />
+    </Container>
+  </>
+);
 
 const CHART_HEIGHT = 650;
 
@@ -87,6 +88,7 @@ export const MerchantTransactionExpandedStateBody = (
             ...props.asset,
             primaryText: `+ ${transactionData.netEarned.display}`,
             subText: transactionData.netEarnedNativeDisplay,
+            symbol: props.asset.symbol,
           }}
         />
       )}

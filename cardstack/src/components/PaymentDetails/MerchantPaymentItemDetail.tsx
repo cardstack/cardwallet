@@ -12,7 +12,7 @@ export const MerchantPaymentItemDetail = ({
   description,
   value,
   subValue = '',
-  symbol = 'DAI',
+  symbol,
 }: MerchantPaymentItemDetailProps) => {
   return (
     <Container

@@ -61,11 +61,17 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
           description={item.description}
           key={index}
           subValue={item.subValue}
-          symbol={item.symbol}
+          symbol={item.symbol || txRowProps.symbol}
           value={item.value}
         />
       )),
-    [customerSpend, customerSpendNative, protocolFee, revenueCollected]
+    [
+      customerSpend,
+      customerSpendNative,
+      protocolFee,
+      revenueCollected,
+      txRowProps.symbol,
+    ]
   );
 
   return (
@@ -79,6 +85,7 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
           description="NET EARNED"
           subValue={netEarnedNativeDisplay}
           value={`+ ${netEarned.display}`}
+          symbol={txRowProps.symbol}
         />
       </Container>
     </>

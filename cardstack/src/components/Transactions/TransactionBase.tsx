@@ -128,6 +128,7 @@ export interface TransactionRowProps extends ContainerProps {
   address?: string;
   hasBottomDivider?: boolean;
   recipientName?: string;
+  symbol?: string;
 }
 
 export interface Asset extends TransactionRowProps {
@@ -142,6 +143,7 @@ export interface Asset extends TransactionRowProps {
   subText: string;
   transactionHash: string;
   claimStatus: ClaimStatusTypes;
+  symbol?: string;
 }
 
 interface Section {
