@@ -61,6 +61,7 @@ const AnimatedPressable = ({ children, ...props }: PressableProps) => {
         {...props}
         onPressIn={onPressAnimate(Scale.shrink)}
         onPressOut={onPressAnimate(Scale.grow)}
+        testID="animated-pressable"
       >
         {children}
       </Pressable>

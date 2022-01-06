@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '../../test-utils';
 import { Button } from '../Button/Button';
+import { palette } from '@cardstack/theme';
 
 describe('Button', () => {
   it('should render the children', () => {
@@ -15,8 +16,28 @@ describe('Button', () => {
 
   it('should handle disabled styles', () => {
     const { getByTestId } = render(<Button disabled>Not Enabled</Button>);
-    //TODO: verify disabled button variant styles are applied
-    getByTestId('disabledOverlay');
+
+    const style = getByTestId('animated-pressable').props.style[0];
+
+    expect(style.backgroundColor).toEqual(palette.grayDark);
+  });
+
+  it('should handle disabled state', () => {
+    const { getByTestId } = render(<Button disabled>Not Enabled</Button>);
+
+    const button = getByTestId('animated-pressable');
+
+    expect(button).toBeDisabled();
+  });
+
+  it('should be disabled on press but not on style', () => {
+    const { getByTestId } = render(<Button disablePress>Not Enabled</Button>);
+
+    const button = getByTestId('animated-pressable');
+    const style = getByTestId('animated-pressable').props.style[0];
+
+    expect(button).toBeDisabled();
+    expect(style.backgroundColor).not.toEqual(palette.grayDark);
   });
 
   it('should render the icon if iconProps are passed', () => {
