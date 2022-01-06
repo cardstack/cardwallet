@@ -24,10 +24,10 @@ export const MerchantEarnedRevenueTransaction = ({
   const onPressTransaction = useCallback(
     (assetProps: TransactionBaseProps) =>
       navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
-        asset: { ...assetProps },
+        asset: { ...assetProps, symbol: item.token.symbol },
         type: 'merchantTransaction',
       }),
-    [navigate]
+    [item.token.symbol, navigate]
   );
 
   return (

@@ -31,10 +31,11 @@ export const MerchantClaimTransaction = ({
         asset: {
           ...assetProps,
           claimStatus: item.claimStatus || ClaimStatuses.DEPOSITED,
+          symbol: item.token.symbol,
         },
         type: 'merchantTransaction',
       }),
-    [item.claimStatus, navigate]
+    [item.claimStatus, item.token.symbol, navigate]
   );
 
   const claimProps = getClaimProps(item.claimStatus);

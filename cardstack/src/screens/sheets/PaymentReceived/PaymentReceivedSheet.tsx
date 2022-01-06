@@ -15,11 +15,7 @@ import MerchantSectionCard, {
 } from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import { TransactionBaseProps } from '@cardstack/components/Transactions/TransactionBase';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
-import {
-  dateFormatter,
-  getAddressPreview,
-  removeCPXDTokenSuffix,
-} from '@cardstack/utils';
+import { dateFormatter, getAddressPreview } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface RouteType {
@@ -55,11 +51,10 @@ const PaymentReceivedSheet = () => {
 
   const rowProps = {
     ...transaction,
-    CoinIcon: (
-      <CoinIcon size={30} symbol={removeCPXDTokenSuffix(token.symbol || '')} />
-    ),
+    CoinIcon: <CoinIcon size={30} symbol={token.symbol} />,
     primaryText: `+ ${transactionData.netEarned.display}`,
     subText: transactionData.netEarnedNativeDisplay,
+    symbol: token.symbol || undefined,
   };
 
   return (
