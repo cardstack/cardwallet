@@ -12,7 +12,7 @@ const Device = {
   cloudPlatform: isIOS ? 'iCloud' : 'Google Drive',
   keyboardBehavior: isIOS ? ('padding' as const) : undefined,
   supportsFiatOnRamp: isIOS,
-  supportsPrefilledAmount: isIOS,
+  supportsNativeWyreIntegration: isIOS,
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
 };
 

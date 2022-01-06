@@ -106,6 +106,7 @@ const square = {
   ...primary,
   height: 100,
   borderRadius: 10,
+  maxWidth: '100%',
   textStyle: {
     ...primary.textStyle,
     fontWeight: '700',

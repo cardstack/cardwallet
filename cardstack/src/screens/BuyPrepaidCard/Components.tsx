@@ -1,6 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Button, Container, Skeleton, Text } from '@cardstack/components';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  Skeleton,
+  Text,
+} from '@cardstack/components';
 
 export const TopContent = () => {
   return (
@@ -51,31 +57,31 @@ export const CardContent = ({
   const subtitleColor = isSelected ? 'black' : 'buttonSecondaryBorder';
 
   return (
-    <Button
-      borderColor={isSoldOut ? 'buttonDisabledBackground' : borderColor}
-      variant={isSoldOut ? 'squareDisabled' : variant}
-      onPress={onPress}
-      wrapper="fragment"
-      disablePress={isSoldOut}
-      {...styles.cardContainer}
-    >
-      <Text
-        color={isSoldOut ? 'blueText' : titleColor}
-        fontSize={28}
-        textAlign="center"
+    <CenteredContainer {...styles.cardContainer}>
+      <Button
+        borderColor={isSoldOut ? 'buttonDisabledBackground' : borderColor}
+        variant={isSoldOut ? 'squareDisabled' : variant}
+        onPress={onPress}
+        disablePress={isSoldOut}
       >
-        $ {amount}
-      </Text>
-      <Text
-        color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
-        fontSize={14}
-        textAlign="center"
-        fontWeight="500"
-      >
-        {`\n`}
-        {isSoldOut ? 'SOLD OUT' : `${faceValue} SPEND`}
-      </Text>
-    </Button>
+        <Text
+          color={isSoldOut ? 'blueText' : titleColor}
+          fontSize={28}
+          textAlign="center"
+        >
+          $ {amount}
+        </Text>
+        <Text
+          color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
+          fontSize={14}
+          textAlign="center"
+          fontWeight="500"
+        >
+          {`\n`}
+          {isSoldOut ? 'SOLD OUT' : `${faceValue} SPEND`}
+        </Text>
+      </Button>
+    </CenteredContainer>
   );
 };
 
