@@ -102,7 +102,6 @@ export const Button = ({
       disabled={disabled || disablePress}
       onPress={onPress}
       variant={disabled ? 'disabledBlack' : props.variant}
-      maxWidth={props.maxWidth || '100%'}
     >
       {loading ? (
         <ActivityIndicator testID="button-loading" />
