@@ -80,6 +80,11 @@ const invalid = {
   },
 };
 
+const disabledInvalid = {
+  ...invalid,
+  backgroundColor: 'invalidDark',
+};
+
 const disabled = {
   backgroundColor: 'grayBackground',
   borderColor: 'transparent',
@@ -187,7 +192,8 @@ export const buttonVariants = {
   },
   tiny,
   tinyOpacity,
-  invalid: { ...invalid },
+  invalid,
+  disabledInvalid,
   square,
   squareSelected: {
     ...square,
