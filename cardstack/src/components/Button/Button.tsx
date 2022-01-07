@@ -101,7 +101,6 @@ export const Button = ({
       {...props}
       disabled={disabled || disablePress}
       onPress={onPress}
-      variant={disabled ? 'disabledBlack' : props.variant}
     >
       {loading ? (
         <ActivityIndicator testID="button-loading" />
