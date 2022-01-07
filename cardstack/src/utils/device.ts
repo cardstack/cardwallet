@@ -13,6 +13,7 @@ const Device = {
   keyboardBehavior: isIOS ? ('padding' as const) : undefined,
   supportsFiatOnRamp: isIOS,
   supportsNativeWyreIntegration: isIOS,
+  supportsHapticFeedback: isIOS,
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
 };
 
