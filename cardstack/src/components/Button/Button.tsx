@@ -8,15 +8,16 @@ import {
   VariantProps,
   border,
   BorderProps,
+  backgroundColor,
 } from '@shopify/restyle';
 import { ActivityIndicator } from 'react-native';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 
 import { Text } from '../Text';
 import { Container } from '../Container';
 import { Icon, IconProps } from '../Icon';
 import { AnimatedPressable } from '../AnimatedPressable';
-import { useVariantValue } from '@cardstack/utils';
+import { useVariantStyle, useVariantValue } from '@cardstack/utils';
 import { Theme } from '@cardstack/theme';
 
 type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
@@ -48,7 +49,7 @@ const VariantRestyleComponent = createVariant({
 const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  [layout, spacing, border, VariantRestyleComponent],
+  [layout, spacing, border, VariantRestyleComponent, backgroundColor],
   AnimatedPressable
 );
 
@@ -77,14 +78,29 @@ export const Button = ({
     props.variant
   );
 
+  const { variantStyles: disabledVariantStyles } = useVariantStyle(
+    'buttonVariants',
+    'disabledBlack'
+  );
+
+  const { mergedStyles } = useVariantStyle('buttonVariants', props.variant);
+
+  const variantMergedStyles = useMemo(
+    () => ({
+      ...mergedStyles,
+      ...(disabled ? { ...disabledVariantStyles } : {}),
+    }),
+    [disabled, disabledVariantStyles, mergedStyles]
+  );
+
   const disabledTextProps = disabled ? disabledTextStyle : {};
 
   return (
     <AnimatedButton
+      {...variantMergedStyles}
       {...props}
       disabled={disabled || disablePress}
       onPress={onPress}
-      variant={disabled ? 'disabledBlack' : props.variant}
     >
       {loading ? (
         <ActivityIndicator testID="button-loading" />
