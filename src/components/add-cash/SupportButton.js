@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import { ButtonPressAnimation } from '../animations';
 import { Centered } from '../layout';
 import { Text } from '../text';
+import { AnimatedPressable } from '@cardstack/components';
 import { padding } from '@rainbow-me/styles';
 
 const SupportButton = ({ label, onPress, ...props }) => {
   const { colors } = useTheme();
   return (
-    <ButtonPressAnimation onPress={onPress} scaleTo={0.9}>
+    <AnimatedPressable onPress={onPress}>
       <Centered
         backgroundColor={colors.alpha(colors.blueGreyDark, 0.06)}
         borderRadius={15}
@@ -26,7 +26,7 @@ const SupportButton = ({ label, onPress, ...props }) => {
           {label}
         </Text>
       </Centered>
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 

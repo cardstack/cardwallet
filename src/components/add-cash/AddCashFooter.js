@@ -3,9 +3,9 @@ import React, { useCallback } from 'react';
 
 import { useDimensions } from '../../hooks';
 import { useNavigation } from '../../navigation/Navigation';
-import { ButtonPressAnimation } from '../animations';
 import ApplePayButton from './ApplePayButton';
 import {
+  AnimatedPressable,
   CenteredContainer,
   Container,
   Icon,
@@ -38,11 +38,10 @@ const AddCashFooter = ({ disabled, onDisabledPress, onSubmit, ...props }) => {
         />
       </Container>
       {!isTinyPhone && (
-        <ButtonPressAnimation
+        <AnimatedPressable
           onPress={onSupportedGeoPress}
           paddingBottom={isTallPhone ? 10 : 15}
           paddingHorizontal={10}
-          scaleTo={0.96}
         >
           <Container alignItems="center" flexDirection="row" margin={2}>
             <Text color="blueText">Works with most debit cards</Text>
@@ -50,7 +49,7 @@ const AddCashFooter = ({ disabled, onDisabledPress, onSubmit, ...props }) => {
               <Icon color="blueText" name="question-square" />
             </CenteredContainer>
           </Container>
-        </ButtonPressAnimation>
+        </AnimatedPressable>
       )}
     </Container>
   );
