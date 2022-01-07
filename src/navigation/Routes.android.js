@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useMemo } from 'react';
 import { InitialRouteContext } from '../context/initialRoute';
 import AddCashSheet from '../screens/AddCashSheet';
-import AvatarBuilder from '../screens/AvatarBuilder';
 import BackupSheet from '../screens/BackupSheet';
 import ChangeWalletSheet from '../screens/ChangeWalletSheet';
 import DepositModal from '../screens/DepositModal';
@@ -29,7 +28,6 @@ import {
 } from './config';
 import {
   bottomSheetPreset,
-  emojiPreset,
   exchangePreset,
   expandedPreset,
   overlayExpandedPreset,
@@ -98,11 +96,6 @@ function MainNavigator() {
       screenOptions={defaultScreenStackOptions}
     >
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
-      <Stack.Screen
-        component={AvatarBuilder}
-        name={Routes.AVATAR_BUILDER}
-        options={emojiPreset}
-      />
       <Stack.Screen
         component={ExpandedAssetSheet}
         listeners={dismissAndroidKeyboardOnClose}

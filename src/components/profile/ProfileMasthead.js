@@ -4,13 +4,16 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { useDispatch } from 'react-redux';
 
 import { walletsSetSelected, walletsUpdate } from '../../redux/wallets';
-import { ButtonPressAnimation } from '../animations';
 import AvatarCircle from './AvatarCircle';
-import { Button, Container, Icon, Text } from '@cardstack/components';
+import {
+  AnimatedPressable,
+  Button,
+  Container,
+  Icon,
+  Text,
+} from '@cardstack/components';
 import { Device, isLayer1, screenWidth } from '@cardstack/utils';
-import useExperimentalFlag, {
-  AVATAR_PICKER,
-} from '@rainbow-me/config/experimentalHooks';
+
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   useAccountProfile,
@@ -38,7 +41,6 @@ const qrCodeIconProps = {
 
 export default function ProfileMasthead({
   addCashAvailable,
-  recyclerListRef,
   setCopiedText,
   setCopyCount,
 }) {
@@ -53,8 +55,6 @@ export default function ProfileMasthead({
     accountImage,
   } = useAccountProfile();
   const { network } = useAccountSettings();
-  const isAvatarPickerAvailable = useExperimentalFlag(AVATAR_PICKER);
-  const isAvatarEmojiPickerEnabled = false;
   const isAvatarImagePickerEnabled = true;
   const onRemovePhoto = useCallback(async () => {
     const newWallets = {
@@ -74,81 +74,64 @@ export default function ProfileMasthead({
   }, [dispatch, selectedWallet, accountAddress, wallets]);
 
   const handlePressAvatar = useCallback(() => {
-    recyclerListRef?.scrollToTop(true);
-    setTimeout(
-      () => {
-        if (isAvatarImagePickerEnabled) {
-          const processPhoto = image => {
-            const stringIndex = image?.path.indexOf('/tmp');
-            const newWallets = {
-              ...wallets,
-              [selectedWallet.id]: {
-                ...wallets[selectedWallet.id],
-                addresses: wallets[selectedWallet.id].addresses.map(account =>
-                  toLower(account.address) === toLower(accountAddress)
-                    ? {
-                        ...account,
-                        image: `~${image?.path.slice(stringIndex)}`,
-                      }
-                    : account
-                ),
-              },
-            };
-            dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
-            dispatch(walletsUpdate(newWallets));
-          };
-
-          const avatarActionSheetOptions = [
-            'Choose from Library',
-            ...(isAvatarEmojiPickerEnabled ? ['Pick an Emoji'] : []),
-            ...(accountImage ? ['Remove Photo'] : []),
-            ...(ios ? ['Cancel'] : []),
-          ];
-
-          showActionSheetWithOptions(
-            {
-              cancelButtonIndex: avatarActionSheetOptions.length - 1,
-              destructiveButtonIndex: accountImage
-                ? avatarActionSheetOptions.length - 2
-                : undefined,
-              options: avatarActionSheetOptions,
+    setTimeout(() => {
+      if (isAvatarImagePickerEnabled) {
+        const processPhoto = image => {
+          const stringIndex = image?.path.indexOf('/tmp');
+          const newWallets = {
+            ...wallets,
+            [selectedWallet.id]: {
+              ...wallets[selectedWallet.id],
+              addresses: wallets[selectedWallet.id].addresses.map(account =>
+                toLower(account.address) === toLower(accountAddress)
+                  ? {
+                      ...account,
+                      image: `~${image?.path.slice(stringIndex)}`,
+                    }
+                  : account
+              ),
             },
-            async buttonIndex => {
-              if (buttonIndex === 0) {
-                ImagePicker.openPicker({
-                  cropperCircleOverlay: true,
-                  cropping: true,
-                }).then(processPhoto);
-              } else if (buttonIndex === 1 && isAvatarEmojiPickerEnabled) {
-                navigate(Routes.AVATAR_BUILDER, {
-                  initialAccountColor: accountColor,
-                  initialAccountName: accountName,
-                });
-              } else if (buttonIndex === 1 && accountImage) {
-                onRemovePhoto();
-              }
+          };
+          dispatch(walletsSetSelected(newWallets[selectedWallet.id]));
+          dispatch(walletsUpdate(newWallets));
+        };
+
+        const avatarActionSheetOptions = [
+          'Choose from Library',
+          ...(accountImage ? ['Remove Photo'] : []),
+          ...(ios ? ['Cancel'] : []),
+        ];
+
+        showActionSheetWithOptions(
+          {
+            cancelButtonIndex: avatarActionSheetOptions.length - 1,
+            destructiveButtonIndex: accountImage
+              ? avatarActionSheetOptions.length - 2
+              : undefined,
+            options: avatarActionSheetOptions,
+          },
+          async buttonIndex => {
+            if (buttonIndex === 0) {
+              ImagePicker.openPicker({
+                cropperCircleOverlay: true,
+                cropping: true,
+              }).then(processPhoto);
+              return;
             }
-          );
-        } else if (isAvatarEmojiPickerEnabled) {
-          navigate(Routes.AVATAR_BUILDER, {
-            initialAccountColor: accountColor,
-            initialAccountName: accountName,
-          });
-        }
-      },
-      recyclerListRef?.getCurrentScrollOffset() > 0 ? 200 : 1
-    );
+            if (buttonIndex === 1) {
+              onRemovePhoto();
+              return;
+            }
+          }
+        );
+      }
+    });
   }, [
     accountAddress,
-    accountColor,
     accountImage,
-    accountName,
     dispatch,
-    isAvatarEmojiPickerEnabled,
     isAvatarImagePickerEnabled,
-    navigate,
     onRemovePhoto,
-    recyclerListRef,
     selectedWallet.id,
     wallets,
   ]);
@@ -201,10 +184,9 @@ export default function ProfileMasthead({
         accountColor={accountColor}
         accountSymbol={accountSymbol}
         image={accountImage}
-        isAvatarPickerAvailable={isAvatarPickerAvailable}
         onPress={handlePressAvatar}
       />
-      <ButtonPressAnimation onPress={handlePressChangeWallet}>
+      <AnimatedPressable onPress={handlePressChangeWallet}>
         <Container
           alignItems="center"
           flexDirection="row"
@@ -223,7 +205,7 @@ export default function ProfileMasthead({
           </Text>
           <Icon color="white" name="chevron-down" />
         </Container>
-      </ButtonPressAnimation>
+      </AnimatedPressable>
       <Container marginTop={4}>
         {addCashAvailable && isLayer1(network) ? (
           <Button onPress={handlePress}>Add Funds</Button>
