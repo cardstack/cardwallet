@@ -19,7 +19,6 @@ import { Centered } from '../components/layout';
 import { useAsset, useDimensions } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import { ExpandedMerchantRoutes } from '@cardstack/screen/MerchantScreen';
-import { PaymentRequestExpandedState } from '@cardstack/screen/PaymentRequest';
 import { position } from '@rainbow-me/styles';
 
 const ScreenTypes = {
@@ -28,7 +27,6 @@ const ScreenTypes = {
   [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
   [ExpandedMerchantRoutes.unclaimedRevenue]: UnclaimedRevenueExpandedState,
   [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
-  [ExpandedMerchantRoutes.paymentRequest]: PaymentRequestExpandedState,
   merchantTransaction: MerchantTransactionExpandedState,
   paymentConfirmationTransaction: PaymentConfirmationExpandedState,
   supportAndFees: SupportAndFeedsState,

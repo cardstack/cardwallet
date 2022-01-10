@@ -8,7 +8,7 @@ export { default as SendSheetDepot } from './SendSheetDepot/SendSheetDepot';
 export { default as ShowQRCodeModal } from './ShowQRCodeModal';
 export { default as PayMerchant } from './PayMerchant/PayMerchant';
 export { default as CurrencySelectionGlobalModal } from './CurrencySelectionGlobalModal';
-export { default as PaymentRequestExpandedState } from './PaymentRequest/PaymentRequestExpandedState';
+export { default as PaymentRequestExpandedSheet } from './PaymentRequest/PaymentRequestExpandedSheet';
 export { default as ErrorFallbackScreen } from './ErrorFallbackScreen';
 export { default as LoadingOverlayScreen } from './LoadingOverlayScreen';
 export { default as WelcomeScreen } from './WelcomeScreen/WelcomeScreen';

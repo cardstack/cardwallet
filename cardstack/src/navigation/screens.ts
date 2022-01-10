@@ -23,6 +23,7 @@ import {
   WelcomeScreen,
   CollectibleSheet,
   PaymentReceivedSheet,
+  PaymentRequestExpandedSheet,
 } from '@cardstack/screen';
 import {
   bottomSheetPreset,
@@ -45,6 +46,11 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   MERCHANT_SCREEN: {
     component: MerchantScreen,
     options: horizontalInterpolator,
+  },
+  MERCHANT_PAYMENT_REQUEST_SHEET: {
+    component: PaymentRequestExpandedSheet,
+    options: expandedPreset as StackNavigationOptions,
+    listeners: dismissAndroidKeyboardOnClose,
   },
   PREPAID_CARD_MODAL: {
     component: PrepaidCardModal,

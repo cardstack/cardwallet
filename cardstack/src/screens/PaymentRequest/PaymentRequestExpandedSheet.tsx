@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRoute } from '@react-navigation/core';
 import {
   RequestPaymentConfirmation,
   RequestPaymentConfirmationFooter,
@@ -9,17 +10,17 @@ import {
   MinInvalidAmountText,
   useAmountConvertHelper,
 } from './helper';
-import { SlackSheet } from '@rainbow-me/components/sheet';
 import { useDimensions } from '@rainbow-me/hooks';
 import {
   Button,
   Container,
   CURRENCY_DISPLAY_MODE,
   InputAmount,
+  Sheet,
   Text,
   Touchable,
 } from '@cardstack/components';
-import { MerchantSafeType } from '@cardstack/types';
+import { MerchantInformation } from '@cardstack/types';
 import { hitSlop } from '@cardstack/utils/layouts';
 import { useNavigation } from '@rainbow-me/navigation';
 import {
@@ -29,10 +30,19 @@ import {
 
 const TOP_POSITION = 150;
 
-const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
+interface RouteType {
+  params: {
+    address: string;
+    merchantInfo: MerchantInformation;
+  };
+  key: string;
+  name: string;
+}
+
+const PaymentRequestExpandedSheet = () => {
   const {
-    asset: { address, merchantInfo },
-  } = props;
+    params: { address, merchantInfo },
+  } = useRoute<RouteType>();
 
   const { setOptions } = useNavigation();
   const { height: deviceHeight, isTallPhone } = useDimensions();
@@ -71,7 +81,7 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
   );
 
   const EditFooter = () => (
-    <Container paddingHorizontal={5}>
+    <Container paddingTop={5} paddingHorizontal={5}>
       <Button
         disabled={!canSubmit}
         onPress={() => setEditMode(false)}
@@ -88,21 +98,8 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
   );
 
   return (
-    <SlackSheet
-      bottomInset={editMode ? 50 : 110}
-      hasKeyboard={editMode}
-      height="100%"
-      renderFooter={() =>
-        editMode ? <EditFooter /> : <RequestPaymentConfirmationFooter />
-      }
-      renderHeader={() => (
-        <RequestPaymentMerchantInfo
-          address={address}
-          name={merchantInfo?.name}
-        />
-      )}
-      scrollEnabled
-    >
+    <Sheet isFullScreen scrollEnabled>
+      <RequestPaymentMerchantInfo address={address} name={merchantInfo?.name} />
       {editMode ? (
         <Container paddingHorizontal={5}>
           <InputAmount
@@ -190,8 +187,9 @@ const PaymentRequestExpandedState = (props: { asset: MerchantSafeType }) => {
           />
         </>
       )}
-    </SlackSheet>
+      {editMode ? <EditFooter /> : <RequestPaymentConfirmationFooter />}
+    </Sheet>
   );
 };
 
-export default PaymentRequestExpandedState;
+export default PaymentRequestExpandedSheet;
