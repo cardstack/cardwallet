@@ -81,7 +81,7 @@ const PaymentRequestExpandedSheet = () => {
   );
 
   const EditFooter = () => (
-    <Container paddingTop={5} paddingHorizontal={5}>
+    <Container padding={5}>
       <Button
         disabled={!canSubmit}
         onPress={() => setEditMode(false)}
@@ -98,8 +98,17 @@ const PaymentRequestExpandedSheet = () => {
   );
 
   return (
-    <Sheet isFullScreen scrollEnabled>
-      <RequestPaymentMerchantInfo address={address} name={merchantInfo?.name} />
+    <Sheet
+      isFullScreen
+      scrollEnabled
+      Header={
+        <RequestPaymentMerchantInfo
+          address={address}
+          name={merchantInfo?.name}
+        />
+      }
+      Footer={editMode ? <EditFooter /> : <RequestPaymentConfirmationFooter />}
+    >
       {editMode ? (
         <Container paddingHorizontal={5}>
           <InputAmount
@@ -187,7 +196,6 @@ const PaymentRequestExpandedSheet = () => {
           />
         </>
       )}
-      {editMode ? <EditFooter /> : <RequestPaymentConfirmationFooter />}
     </Sheet>
   );
 };
