@@ -2,10 +2,9 @@ import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import Animated from 'react-native-reanimated';
 
-import { ButtonPressAnimation } from '../animations';
 import { Icon } from '../icons';
 import { Centered, InnerBorder } from '../layout';
-import { Container } from '@cardstack/components';
+import { AnimatedPressable, Container } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { Text } from '@rainbow-me/components/text';
 import { position } from '@rainbow-me/styles';
@@ -15,7 +14,7 @@ const AnimatedCenter = Animated.createAnimatedComponent(Centered);
 const ApplePayButtonBorderRadius = 28;
 const ApplePayButtonDimensions = {
   height: 56,
-  width: '100%',
+  minWidth: '100%',
 };
 
 const ApplePayButton = ({ disabled, onDisabledPress, onSubmit }) => {
@@ -25,10 +24,9 @@ const ApplePayButton = ({ disabled, onDisabledPress, onSubmit }) => {
   );
 
   return (
-    <ButtonPressAnimation
+    <AnimatedPressable
       hapticType={disabled ? 'notificationWarning' : 'selection'}
       onPress={handlePress}
-      scaleTo={disabled ? 0.99 : 0.97}
       style={ApplePayButtonDimensions}
     >
       <Centered {...position.sizeAsObject('100%')}>
@@ -55,7 +53,7 @@ const ApplePayButton = ({ disabled, onDisabledPress, onSubmit }) => {
           <InnerBorder radius={ApplePayButtonBorderRadius} />
         </AnimatedCenter>
       </Centered>
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 
