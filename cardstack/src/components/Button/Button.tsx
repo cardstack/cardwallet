@@ -25,8 +25,6 @@ type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
   BorderProps<Theme> &
   SpacingProps<Theme>;
 
-type ButtonWrappper = 'fragment' | 'container';
-
 interface ButtonProps extends RestyleProps {
   children: ReactNode;
   disabled?: boolean;
@@ -35,7 +33,6 @@ interface ButtonProps extends RestyleProps {
   small?: boolean;
   onPress?: () => void;
   loading?: boolean;
-  wrapper?: ButtonWrappper;
   disablePress?: boolean;
   testID?: string;
 }
