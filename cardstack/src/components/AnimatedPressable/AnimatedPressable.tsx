@@ -32,13 +32,13 @@ const styles = StyleSheet.create({
 
 interface AnimatedPressableProps extends PressableProps {
   enableHapticFeedback?: boolean;
-  hepaticType?: HapticFeedbackTypes;
+  hapticType?: HapticFeedbackTypes;
 }
 
 const AnimatedPressable = ({
   children,
   enableHapticFeedback = false,
-  hepaticType = 'selection',
+  hapticType = 'selection',
   ...props
 }: AnimatedPressableProps) => {
   const animatedValue = useRef(new Animated.Value(Scale.grow)).current;
@@ -73,12 +73,12 @@ const AnimatedPressable = ({
   const handleOnPress = useCallback(
     (e: GestureResponderEvent) => {
       if (enableHapticFeedback && Device.supportsHapticFeedback) {
-        ReactNativeHapticFeedback?.trigger(hepaticType);
+        ReactNativeHapticFeedback?.trigger(hapticType);
       }
 
       props?.onPress?.(e);
     },
-    [enableHapticFeedback, hepaticType, props]
+    [enableHapticFeedback, hapticType, props]
   );
 
   return (
