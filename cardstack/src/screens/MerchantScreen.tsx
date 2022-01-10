@@ -110,12 +110,11 @@ const MerchantScreen = () => {
     'lifetimeEarnings'
   );
 
-  const goToMerchantPaymentRequest = () => {
+  const goToMerchantPaymentRequest = () =>
     navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
       address: merchantSafe.address,
       merchantInfo: merchantSafe.merchantInfo,
     });
-  };
 
   return (
     <Container top={0} width="100%" backgroundColor="white">
