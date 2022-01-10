@@ -129,7 +129,7 @@ class HoldToAuthorizeButton extends PureComponent {
         >
           <Container {...props} style={style} testID={testID}>
             <Button
-              disabled={disabled}
+              disablePress={disabled}
               iconProps={
                 !android && !disabled && !hideBiometricIcon
                   ? { name: biometryIconName, color: 'black' }
@@ -140,7 +140,7 @@ class HoldToAuthorizeButton extends PureComponent {
               }
               loading={android && (isAuthorizing || this.props.isAuthorizing)}
               style={{ width: '100%' }}
-              variant={disabled ? 'invalid' : null}
+              variant={disabled ? 'disabledInvalid' : null}
             >
               {isAuthorizing || this.props.isAuthorizing
                 ? 'Authorizing'

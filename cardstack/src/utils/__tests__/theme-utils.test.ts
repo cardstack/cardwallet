@@ -2,7 +2,7 @@ import * as shopifyRestyle from '@shopify/restyle';
 import Chance from 'chance';
 import { Dimensions } from 'react-native';
 import { breakpoints } from '@cardstack/theme/breakpoints';
-import { useVariantValue } from '@cardstack/utils/theme-utils';
+import { useVariantStyle, useVariantValue } from '@cardstack/utils/theme-utils';
 
 const chance = new Chance();
 
@@ -123,6 +123,41 @@ describe('theme utils', () => {
       expect(textStyle).toEqual({
         ...theme.buttonVariants.defaults.textStyle,
         ...theme.buttonVariants.primary.textStyle,
+      });
+    });
+  });
+
+  describe('useVarianteStyle', () => {
+    beforeEach(() => {
+      useTheme.mockReturnValue(theme);
+    });
+
+    it('should pull the correct textStyle off of the theme if no variant is passed', () => {
+      const { variantStyles } = useVariantStyle('buttonVariants', undefined);
+
+      expect(variantStyles).toEqual({
+        ...theme.buttonVariants.defaults,
+      });
+    });
+
+    it('should pull the correct variant off of the theme', () => {
+      const { variantStyles } = useVariantStyle('buttonVariants', 'secondary');
+
+      expect(variantStyles).toEqual(theme.buttonVariants.secondary);
+    });
+
+    it('should return the correct default variant style', () => {
+      const { defaultStyles } = useVariantStyle('buttonVariants', undefined);
+
+      expect(defaultStyles).toEqual(theme.buttonVariants.defaults);
+    });
+
+    it('should return the correct merged variant style', () => {
+      const { mergedStyles } = useVariantStyle('buttonVariants', 'primary');
+
+      expect(mergedStyles).toEqual({
+        ...theme.buttonVariants.defaults,
+        ...theme.buttonVariants.primary,
       });
     });
   });

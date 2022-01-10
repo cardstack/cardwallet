@@ -43,19 +43,40 @@ export const useVariantValue = <T extends keyof SafeVariants<Theme>>(
     Theme
   >
 ) => {
-  const theme = useTheme();
-  const variant = getVariantValue(responsiveVariantValue);
-  const variantObject = theme[themeKey];
-  const defaultStyles = variantObject.defaults;
-  const variantStyles = variantObject[variant];
+  const { variantStyles, defaultStyles } = useVariantStyle(
+    themeKey,
+    responsiveVariantValue
+  );
+
   const value = variantStyles[key];
 
   if (typeof value === 'object') {
-    return {
-      ...defaultStyles[key],
-      ...value,
-    };
+    return { ...defaultStyles[key], ...value };
   }
 
   return value || defaultStyles[key];
+};
+
+/**
+ * Pull the variant styles
+ */
+export const useVariantStyle = <T extends keyof SafeVariants<Theme>>(
+  themeKey: T,
+  responsiveVariantValue?: ResponsiveValue<
+    keyof Omit<Theme[T], 'defaults'>,
+    Theme
+  >
+) => {
+  const theme = useTheme();
+  const variant = getVariantValue(responsiveVariantValue);
+
+  const variantObject = theme[themeKey];
+  const defaultStyles = variantObject.defaults;
+  const variantStyles = variantObject[variant];
+
+  return {
+    variantStyles,
+    defaultStyles,
+    mergedStyles: { ...defaultStyles, ...variantStyles },
+  };
 };

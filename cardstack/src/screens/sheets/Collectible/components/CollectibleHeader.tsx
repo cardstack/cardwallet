@@ -2,12 +2,16 @@ import React, { memo, useCallback } from 'react';
 import { Linking, Share } from 'react-native';
 import URL from 'url-parse';
 
-import { Container, Icon, Text } from '@cardstack/components';
+import {
+  AnimatedPressable,
+  Container,
+  Icon,
+  Text,
+} from '@cardstack/components';
 import { CollectibleType } from '@cardstack/types';
 import NetworkTypes from '@rainbow-me/networkTypes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { buildCollectibleName } from '@rainbow-me/helpers/assets';
-import { ButtonPressAnimation } from '@rainbow-me/components/animations';
 
 function viewMenuItemLabel(collectible: CollectibleType) {
   if (collectible.networkName === NetworkTypes.mainnet) {
@@ -98,9 +102,9 @@ const CollectibleHeader = ({ collectible }: CollectibleHeaderProps) => {
               {buildCollectibleName(collectible)}
             </Text>
           </Container>
-          <ButtonPressAnimation onPress={onContextMenuPress}>
+          <AnimatedPressable onPress={onContextMenuPress}>
             <Icon color="backgroundBlue" name="more-circle" />
-          </ButtonPressAnimation>
+          </AnimatedPressable>
         </Container>
       </Container>
     </Container>

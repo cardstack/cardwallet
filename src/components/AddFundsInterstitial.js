@@ -4,35 +4,46 @@ import { useNavigation } from '../navigation/Navigation';
 import { Button, Container, Text } from '@cardstack/components';
 
 import { Device } from '@cardstack/utils';
+import { useAccountSettings } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 
 const AddFundsInterstitial = () => {
   const { navigate } = useNavigation();
+  const { accountAddress } = useAccountSettings();
 
   const onPress = useCallback(
     amount => () => {
-      navigate(Routes.ADD_CASH_FLOW, {
-        params: !isNaN(amount || 0) ? { amount } : null,
-        screen: Routes.ADD_CASH_SCREEN_NAVIGATOR,
-      });
+      if (Device.supportsNativeWyreIntegration) {
+        navigate(Routes.ADD_CASH_FLOW, {
+          params: !isNaN(amount || 0) ? { amount } : null,
+          screen: Routes.ADD_CASH_SCREEN_NAVIGATOR,
+        });
+      } else {
+        navigate(Routes.WYRE_WEBVIEW_NAVIGATOR, {
+          params: {
+            amount,
+            address: accountAddress,
+          },
+          screen: Routes.WYRE_WEBVIEW,
+        });
+      }
     },
-    [navigate]
+    [navigate, accountAddress]
   );
 
   const renderAmounts = useMemo(
     () =>
-      Device.supportsPrefilledAmount &&
       [25, 50, 75].map(amount => (
-        <Button
-          borderColor="buttonSecondaryBorder"
-          key={amount}
-          maxWidth="30%"
-          onPress={onPress(amount)}
-          variant="square"
-          wrapper="fragment"
-        >
-          ${amount}
-        </Button>
+        <Container flex={1} key={amount} marginHorizontal={2}>
+          <Button
+            borderColor="buttonSecondaryBorder"
+            marginVertical={2}
+            onPress={onPress(amount)}
+            variant="square"
+          >
+            ${amount}
+          </Button>
+        </Container>
       )),
     [onPress]
   );
