@@ -37,6 +37,7 @@ export default function SendAssetFormToken({
         <SendAssetFormField
           autoFocus
           label={nativeCurrency}
+          marginTop={5}
           mask={nativeMask}
           onChange={onChangeNativeAmount}
           onFocus={onFocus}

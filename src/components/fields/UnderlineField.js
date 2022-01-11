@@ -125,7 +125,7 @@ const UnderlineField = (
       <Container
         border-radius={1}
         flexDirection="row"
-        height={isFocused ? 2 : 1}
+        height={2}
         overflow="hidden"
         width="100%"
       >

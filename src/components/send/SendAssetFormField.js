@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { UnderlineField } from '../fields';
 import { CenteredContainer, Text } from '@cardstack/components';
 
+// set currency label with fixed width to have same width inputs. 100 is good for longest currency label for now
 const CURRENCY_LABEL_WIDTH = 100;
 export default function SendAssetFormField({
   autoFocus,
@@ -16,6 +17,7 @@ export default function SendAssetFormField({
   placeholder,
   value,
   testID,
+  ...props
 }) {
   const handlePressButton = useCallback(
     event => {
@@ -25,7 +27,7 @@ export default function SendAssetFormField({
   );
 
   return (
-    <CenteredContainer flexDirection="row">
+    <CenteredContainer flexDirection="row" {...props}>
       <UnderlineField
         autoFocus={autoFocus}
         buttonText="Max"
