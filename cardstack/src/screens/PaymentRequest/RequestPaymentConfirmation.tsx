@@ -3,6 +3,7 @@ import {
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo, useState } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 import CardWalletLogo from '../../assets/cardstackLogo.png';
 import {
   CopyToast,
@@ -218,22 +219,22 @@ export const RequestPaymentConfirmation = ({
   );
 };
 
+const footerStyle: StyleProp<ViewStyle> = Device.isIOS
+  ? shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)
+  : {
+      borderTopWidth: 0.5,
+      borderTopColor: 'rgba(0, 0, 0, 0.25)',
+      shadowColor: 'rgba(0, 0, 0, 0.25)',
+      elevation: 3,
+    };
+
 export const RequestPaymentConfirmationFooter = () => (
   <Container
     alignSelf="flex-end"
     backgroundColor="white"
     paddingBottom={5}
     paddingTop={3}
-    style={
-      Device.isIOS
-        ? shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)
-        : {
-            borderTopWidth: 0.5,
-            borderTopColor: 'rgba(0, 0, 0, 0.25)',
-            shadowColor: 'rgba(0, 0, 0, 0.25)',
-            elevation: 3,
-          }
-    }
+    style={footerStyle}
     width="100%"
   >
     <Container alignItems="center" justifyContent="center">

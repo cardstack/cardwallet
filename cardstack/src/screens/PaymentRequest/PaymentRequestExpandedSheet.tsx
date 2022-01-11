@@ -100,7 +100,7 @@ const PaymentRequestExpandedSheet = () => {
   return (
     <Sheet
       isFullScreen
-      scrollEnabled
+      scrollEnabled={!editMode}
       Header={
         <RequestPaymentMerchantInfo
           address={address}
