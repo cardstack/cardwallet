@@ -39,7 +39,8 @@ export default function UnclaimedRevenueExpandedState({
   const { revenueBalances } = merchantSafe;
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
-  const isDust = nativeAmount < 0.01;
+
+  const isDust = !!nativeAmount;
 
   return useMemo(
     () => (
@@ -51,11 +52,7 @@ export default function UnclaimedRevenueExpandedState({
               <TokenItem key={token.tokenAddress} token={token} />
             ))}
           </Container>
-          <Button
-            marginTop={8}
-            onPress={isDust ? () => {} : onClaimAll}
-            variant={isDust ? 'disabled' : undefined}
-          >
+          <Button disabled={!isDust} marginTop={8} onPress={onClaimAll}>
             Claim All
           </Button>
           <HorizontalDivider />
