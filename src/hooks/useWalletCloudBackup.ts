@@ -34,6 +34,8 @@ function getUserError(e: Error) {
       return `We couldn't find your previous backup!`;
     case CLOUD_BACKUP_ERRORS.ERROR_GETTING_ENCRYPTED_DATA:
       return `We couldn't access your backup at this time. Please try again later.`;
+    case CLOUD_BACKUP_ERRORS.USER_CANCELED_DRIVE_API_AUTH:
+      return `Not authorized to interact with Google Drive.`;
     default:
       return `Error while trying to backup. Error code: ${values(
         CLOUD_BACKUP_ERRORS

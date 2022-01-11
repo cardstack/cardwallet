@@ -1,5 +1,4 @@
 export { default as AddContactButton } from './AddContactButton';
-export { default as BiometricButtonContent } from './BiometricButtonContent';
 export { default as Button } from './Button';
 export {
   HoldToAuthorizeButton,
