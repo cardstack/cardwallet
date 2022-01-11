@@ -34,6 +34,7 @@ export const palette = {
   grayButtonBackground: '#D1D5DB',
   buttonDisabledBackground: '#2e2d38',
   appleBlue: '#0E76FD',
+  yellow: '#F9D849',
 };
 
 export const colors = {
@@ -80,6 +81,8 @@ export const colors = {
   grayButtonBackground: palette.grayButtonBackground,
   buttonDisabledBackground: palette.buttonDisabledBackground,
   appleBlue: palette.appleBlue,
+  warning: palette.yellow,
+  error: palette.red,
 };
 
 export const avatarColor = [

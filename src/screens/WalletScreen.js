@@ -24,7 +24,12 @@ import {
   usePinnedAndHiddenItemOptions,
   useWallets,
 } from '../hooks';
-import { Container, SystemNotification, Text } from '@cardstack/components';
+import {
+  Container,
+  ServiceStatusNotice,
+  SystemNotification,
+  Text,
+} from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { isLayer2, NOTIFICATION_KEY } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -154,6 +159,7 @@ export default function WalletScreen() {
               <CameraHeaderButton />
             </Container>
           </Header>
+          <ServiceStatusNotice />
           {showNotificationBanner && (
             <SystemNotification type="info" {...notificationProps} />
           )}

@@ -9,3 +9,4 @@ export * from './CurrencyConversionRates';
 export * from './WyreTypes';
 export * from './transaction-confirmation-types';
 export * from './transaction-types';
+export * from './NoticeType';
