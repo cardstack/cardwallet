@@ -28,7 +28,6 @@ import {
 import {
   bottomSheetPreset,
   expandedPreset,
-  sheetPreset,
 } from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
@@ -59,12 +58,12 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   BUY_PREPAID_CARD: { component: BuyPrepaidCard },
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
-    options: sheetPreset as StackNavigationOptions,
+    options: expandedPreset as StackNavigationOptions,
     listeners: dismissAndroidKeyboardOnClose,
   },
   SEND_FLOW_EOA: {
     component: SendSheetEOA,
-    options: sheetPreset as StackNavigationOptions,
+    options: expandedPreset as StackNavigationOptions,
     listeners: dismissAndroidKeyboardOnClose,
   },
   PAY_MERCHANT: {

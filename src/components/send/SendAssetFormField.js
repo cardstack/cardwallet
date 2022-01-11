@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 
 import { UnderlineField } from '../fields';
-import { RowWithMargins } from '../layout';
-import { Text } from '@cardstack/components';
+import { CenteredContainer, Text } from '@cardstack/components';
 
+const CURRENCY_LABEL_WIDTH = 100;
 export default function SendAssetFormField({
   autoFocus,
   format,
@@ -16,7 +16,6 @@ export default function SendAssetFormField({
   placeholder,
   value,
   testID,
-  ...props
 }) {
   const handlePressButton = useCallback(
     event => {
@@ -26,16 +25,11 @@ export default function SendAssetFormField({
   );
 
   return (
-    <RowWithMargins
-      align="center"
-      flex={1}
-      justify="space-between"
-      margin={23}
-      {...props}
-    >
+    <CenteredContainer flexDirection="row">
       <UnderlineField
         autoFocus={autoFocus}
         buttonText="Max"
+        flexGrow={1}
         format={format}
         keyboardType="decimal-pad"
         mask={mask}
@@ -46,16 +40,13 @@ export default function SendAssetFormField({
         testID={testID}
         value={value}
       />
-      <Text
-        fontSize={20}
-        fontWeight="700"
-        position="absolute"
-        textAlign="right"
-      >
-        {label?.length > labelMaxLength
-          ? label.substring(0, labelMaxLength)
-          : label}
-      </Text>
-    </RowWithMargins>
+      <CenteredContainer width={CURRENCY_LABEL_WIDTH}>
+        <Text fontSize={20} fontWeight="700">
+          {label?.length > labelMaxLength
+            ? label.substring(0, labelMaxLength)
+            : label}
+        </Text>
+      </CenteredContainer>
+    </CenteredContainer>
   );
 }

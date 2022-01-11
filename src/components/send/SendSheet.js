@@ -1,11 +1,7 @@
 import { isEmpty } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { KeyboardArea } from 'react-native-keyboard-area';
-import styled from 'styled-components';
 import { checkIsValidAddressOrDomain } from '../../helpers/validators';
-import { Column } from '../layout';
 import {
   SendAssetForm,
   SendAssetList,
@@ -14,40 +10,12 @@ import {
   SendHeader,
   SendTransactionSpeed,
 } from '.';
-import { Device } from '@cardstack/utils';
+import { Sheet } from '@cardstack/components';
 import {
   useAccountSettings,
   useContacts,
   useDimensions,
 } from '@rainbow-me/hooks';
-import { borders } from '@rainbow-me/styles';
-import { deviceUtils } from '@rainbow-me/utils';
-
-const sheetHeight = deviceUtils.dimensions.height - (android ? 30 : 10);
-const statusBarHeight = getStatusBarHeight(true);
-
-const Container = styled.View`
-  background-color: ${({ theme: { colors } }) => colors.transparent};
-  flex: 1;
-  padding-top: ${statusBarHeight};
-  width: 100%;
-`;
-
-const SheetContainer = styled(Column).attrs({
-  align: 'center',
-  flex: 1,
-})`
-  ${borders.buildRadius('top', 16)};
-  background-color: ${({ theme: { colors } }) => colors.white};
-  height: ${Device.isAndroid ? sheetHeight : '100%'};
-  width: 100%;
-`;
-
-const KeyboardSizeView = styled(KeyboardArea)`
-  width: 100%;
-  background-color: ${({ showAssetForm, theme: { colors } }) =>
-    showAssetForm ? colors.lighterGrey : colors.white};
-`;
 
 export const useShowAssetFlags = (isValidAddress, selected) => ({
   showAssetList: isValidAddress && isEmpty(selected),
@@ -119,79 +87,74 @@ export default function SendSheet({
   );
 
   return (
-    <Container>
+    <Sheet isFullScreen>
       {ios && <StatusBar barStyle="light-content" />}
-      <SheetContainer>
-        <SendHeader
-          contacts={contacts}
-          isValidAddress={isValidAddress}
-          onChangeAddressInput={onChangeInput}
-          onFocus={handleFocus}
-          onPressPaste={setRecipient}
-          onRefocusInput={triggerFocus}
-          recipient={recipient}
-          recipientFieldRef={recipientFieldRef}
+      <SendHeader
+        contacts={contacts}
+        isValidAddress={isValidAddress}
+        onChangeAddressInput={onChangeInput}
+        onFocus={handleFocus}
+        onPressPaste={setRecipient}
+        onRefocusInput={triggerFocus}
+        recipient={recipient}
+        recipientFieldRef={recipientFieldRef}
+        removeContact={onRemoveContact}
+        showAssetList={showAssetList}
+      />
+      {showEmptyState && (
+        <SendContactList
+          contacts={filteredContacts}
+          currentInput={currentInput}
+          onPressContact={setRecipient}
           removeContact={onRemoveContact}
-          showAssetList={showAssetList}
         />
-        {showEmptyState && (
-          <SendContactList
-            contacts={filteredContacts}
-            currentInput={currentInput}
-            onPressContact={setRecipient}
-            removeContact={onRemoveContact}
-          />
-        )}
-        {showAssetList && (
-          <SendAssetList
-            allAssets={allAssets}
-            collectibles={sendableCollectibles}
-            fetchData={fetchData}
-            hiddenCoins={hiddenCoins}
-            nativeCurrency={nativeCurrency}
-            network={network}
-            onSelectAsset={onSelectAsset}
-            pinnedCoins={pinnedCoins}
-            savings={savings}
-          />
-        )}
-        {showAssetForm && (
-          <SendAssetForm
-            allAssets={allAssets}
-            assetAmount={amountDetails.assetAmount}
-            buttonRenderer={
-              <SendButton
-                assetAmount={amountDetails.assetAmount}
-                isAuthorizing={isAuthorizing}
-                isSufficientBalance={amountDetails.isSufficientBalance}
-                isSufficientGas={isSufficientGas}
-                onPress={onSendPress}
-                smallButton={isTinyPhone}
-                testID="send-sheet-confirm"
-              />
-            }
-            nativeAmount={amountDetails.nativeAmount}
-            nativeCurrency={nativeCurrency}
-            onChangeAssetAmount={onChangeAssetAmount}
-            onChangeNativeAmount={onChangeNativeAmount}
-            onFocus={handleFocus}
-            onResetAssetSelection={onResetAssetSelection}
-            selected={selected}
-            sendMaxBalance={onMaxBalancePress}
-            showNativeCurrencyField={showNativeCurrencyField}
-            txSpeedRenderer={
-              <SendTransactionSpeed
-                gasPrice={selectedGasPrice}
-                nativeCurrencySymbol={nativeCurrencySymbol}
-                onPressTransactionSpeed={onPressTransactionSpeed}
-              />
-            }
-          />
-        )}
-        {android && showAssetForm ? (
-          <KeyboardSizeView showAssetForm={showAssetForm} />
-        ) : null}
-      </SheetContainer>
-    </Container>
+      )}
+      {showAssetList && (
+        <SendAssetList
+          allAssets={allAssets}
+          collectibles={sendableCollectibles}
+          fetchData={fetchData}
+          hiddenCoins={hiddenCoins}
+          nativeCurrency={nativeCurrency}
+          network={network}
+          onSelectAsset={onSelectAsset}
+          pinnedCoins={pinnedCoins}
+          savings={savings}
+        />
+      )}
+      {showAssetForm && (
+        <SendAssetForm
+          allAssets={allAssets}
+          assetAmount={amountDetails.assetAmount}
+          buttonRenderer={
+            <SendButton
+              assetAmount={amountDetails.assetAmount}
+              isAuthorizing={isAuthorizing}
+              isSufficientBalance={amountDetails.isSufficientBalance}
+              isSufficientGas={isSufficientGas}
+              onPress={onSendPress}
+              smallButton={isTinyPhone}
+              testID="send-sheet-confirm"
+            />
+          }
+          nativeAmount={amountDetails.nativeAmount}
+          nativeCurrency={nativeCurrency}
+          onChangeAssetAmount={onChangeAssetAmount}
+          onChangeNativeAmount={onChangeNativeAmount}
+          onFocus={handleFocus}
+          onResetAssetSelection={onResetAssetSelection}
+          selected={selected}
+          sendMaxBalance={onMaxBalancePress}
+          showNativeCurrencyField={showNativeCurrencyField}
+          txSpeedRenderer={
+            <SendTransactionSpeed
+              gasPrice={selectedGasPrice}
+              nativeCurrencySymbol={nativeCurrencySymbol}
+              onPressTransactionSpeed={onPressTransactionSpeed}
+            />
+          }
+        />
+      )}
+    </Sheet>
   );
 }
