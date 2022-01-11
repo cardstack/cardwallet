@@ -1,1 +1,1 @@
-export { default as PaymentRequestExpandedState } from './PaymentRequestExpandedState';
+export { default as PaymentRequestExpandedSheet } from './PaymentRequestExpandedSheet';

@@ -1,6 +1,7 @@
 export const MainRoutes = {
   DEPOT_SCREEN: 'DepotScreen',
   MERCHANT_SCREEN: 'MerchantScreen',
+  MERCHANT_PAYMENT_REQUEST_SHEET: 'MerchantPaymentRequestSheet',
   PREPAID_CARD_MODAL: 'PrepaidCardModal',
   BUY_PREPAID_CARD: 'BuyPrepaidCard',
   SEND_FLOW_DEPOT: 'SendFlowDepot',

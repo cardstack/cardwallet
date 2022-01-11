@@ -23,7 +23,7 @@ export const RequestPaymentMerchantInfo = ({
   <Container
     alignItems="center"
     flexDirection="column"
-    paddingTop={5}
+    paddingVertical={5}
     width="100%"
   >
     <Text size="body" weight="extraBold">

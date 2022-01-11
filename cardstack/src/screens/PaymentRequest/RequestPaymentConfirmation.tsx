@@ -3,20 +3,21 @@ import {
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo, useState } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 import CardWalletLogo from '../../assets/cardstackLogo.png';
 import {
   CopyToast,
   ToastPositionContainerHeight,
 } from '@rainbow-me/components/toasts';
 import { Icon } from '@rainbow-me/components/icons';
-import {
-  useAccountSettings,
-  useClipboard,
-  useDimensions,
-} from '@rainbow-me/hooks';
+import { useAccountSettings, useClipboard } from '@rainbow-me/hooks';
 import { Button, Container, Image, Text } from '@cardstack/components';
 import { MerchantInformation } from '@cardstack/types';
-import { shareRequestPaymentLink, splitAddress } from '@cardstack/utils';
+import {
+  shareRequestPaymentLink,
+  splitAddress,
+  Device,
+} from '@cardstack/utils';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useNavigation } from '@rainbow-me/navigation';
 import { shadow } from '@rainbow-me/styles';
@@ -218,29 +219,33 @@ export const RequestPaymentConfirmation = ({
   );
 };
 
-export const RequestPaymentConfirmationFooter = () => {
-  const { isTallPhone } = useDimensions();
+const footerStyle: StyleProp<ViewStyle> = Device.isIOS
+  ? shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)
+  : {
+      borderTopWidth: 0.5,
+      borderTopColor: 'rgba(0, 0, 0, 0.25)',
+      shadowColor: 'rgba(0, 0, 0, 0.25)',
+      elevation: 3,
+    };
 
-  return (
-    <Container
-      alignSelf="flex-end"
-      backgroundColor="white"
-      bottom={isTallPhone ? 70 : 0}
-      paddingBottom={5}
-      paddingTop={3}
-      style={shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)}
-      width="100%"
-    >
-      <Container alignItems="center" justifyContent="center">
-        <Image height={30} source={CardWalletLogo} width={30} />
-        <Text marginTop={1} size="xs" textAlign="center">
-          Your customer must have the {'\n'}
-          <Text fontWeight="bold" size="xs">
-            Card Wallet mobile app
-          </Text>{' '}
-          installed.
-        </Text>
-      </Container>
+export const RequestPaymentConfirmationFooter = () => (
+  <Container
+    alignSelf="flex-end"
+    backgroundColor="white"
+    paddingBottom={5}
+    paddingTop={3}
+    style={footerStyle}
+    width="100%"
+  >
+    <Container alignItems="center" justifyContent="center">
+      <Image height={30} source={CardWalletLogo} width={30} />
+      <Text marginTop={1} size="xs" textAlign="center">
+        Your customer must have the {'\n'}
+        <Text fontWeight="bold" size="xs">
+          Card Wallet mobile app
+        </Text>{' '}
+        installed.
+      </Text>
     </Container>
-  );
-};
+  </Container>
+);
