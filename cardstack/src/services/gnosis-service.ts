@@ -270,7 +270,7 @@ export const addNativePriceToToken = async (
   const isAmountDust = nativeBalance < 0.01;
 
   //decimal places formatting for residual crypto values
-  const bufferValue = isAmountDust ? -1 : undefined;
+  const bufferValue = isAmountDust ? 0 : undefined;
 
   const amount = isAmountDust ? 0 : nativeBalance;
 

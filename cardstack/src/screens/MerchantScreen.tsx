@@ -1,6 +1,7 @@
 import { useRoute } from '@react-navigation/native';
-import React, { memo, useCallback, useEffect, useMemo } from 'react';
-import { Alert, StatusBar, InteractionManager } from 'react-native';
+import React, { memo, useCallback, useMemo } from 'react';
+import { StatusBar } from 'react-native';
+import { useClaimAllRevenue } from './sheets/UnclaimedRevenue/useClaimAllRevenue';
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
@@ -28,14 +29,8 @@ import {
 } from '@cardstack/utils';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { useAccountSettings, usePrevious, useWallets } from '@rainbow-me/hooks';
-import { useLoadingOverlay } from '@cardstack/navigation';
-import { Device } from '@cardstack/utils/device';
-import {
-  useClaimRevenueMutation,
-  useGetSafesDataQuery,
-} from '@cardstack/services';
-import logger from 'logger';
+import { useAccountSettings } from '@rainbow-me/hooks';
+import { useGetSafesDataQuery } from '@cardstack/services';
 
 const HORIZONTAL_PADDING = 5;
 
@@ -96,13 +91,9 @@ const MerchantScreen = () => {
       navigate(Routes.EXPANDED_ASSET_SHEET, {
         asset: merchantSafe,
         type,
-        customFunction:
-          type === ExpandedMerchantRoutes.unclaimedRevenue
-            ? onClaimAllPress
-            : undefined,
       });
     },
-    [merchantSafe, navigate, onClaimAllPress]
+    [merchantSafe, navigate]
   );
 
   const { sections } = useMerchantTransactions(
@@ -122,10 +113,10 @@ const MerchantScreen = () => {
   const goToUnclaimedRevenue = useCallback(
     () =>
       navigate(Routes.UNCLAIMED_REVENUE_SHEET, {
-        asset: merchantSafe,
-        customFunction: onClaimAllPress,
+        merchantSafe,
+        onClaimAllPress,
       }),
-    [merchantSafe, navigate, onClaimAllPress]
+    [onClaimAllPress, merchantSafe, navigate]
   );
 
   return (
@@ -392,81 +383,4 @@ const PaymentHistorySection = ({
       </SectionWrapper>
     </Container>
   );
-};
-
-const useClaimAllRevenue = ({
-  merchantSafe,
-  isRefreshingBalances,
-}: {
-  merchantSafe: MerchantSafeType;
-  isRefreshingBalances: boolean;
-}) => {
-  const { selectedWallet } = useWallets();
-  const { accountAddress, network } = useAccountSettings();
-  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-  const { goBack, canGoBack, navigate } = useNavigation();
-
-  const [
-    claimRevenue,
-    { isSuccess, isError, error },
-  ] = useClaimRevenueMutation();
-
-  const onClaimAllPress = useCallback(async () => {
-    showLoadingOverlay({ title: 'Claiming Revenue' });
-
-    claimRevenue({
-      selectedWallet,
-      revenueBalances: merchantSafe.revenueBalances,
-      accountAddress,
-      merchantSafeAddress: merchantSafe.address,
-      network,
-    });
-  }, [
-    accountAddress,
-    claimRevenue,
-    merchantSafe.address,
-    merchantSafe.revenueBalances,
-    network,
-    selectedWallet,
-    showLoadingOverlay,
-  ]);
-
-  // isRefreshing may be false when isSuccess is truthy on the first time
-  // so we use the previous value to make sure
-  const hasUpdated = usePrevious(isRefreshingBalances);
-
-  useEffect(() => {
-    if (isSuccess && hasUpdated) {
-      dismissLoadingOverlay();
-
-      if (Device.isAndroid) {
-        InteractionManager.runAfterInteractions(() => {
-          if (canGoBack()) {
-            goBack();
-          } else {
-            navigate(Routes.WALLET_SCREEN);
-          }
-        });
-      }
-    }
-  }, [
-    dismissLoadingOverlay,
-    isSuccess,
-    hasUpdated,
-    goBack,
-    canGoBack,
-    navigate,
-  ]);
-
-  useEffect(() => {
-    if (isError) {
-      dismissLoadingOverlay();
-      logger.sentry('Error claiming revenue', error);
-      Alert.alert(
-        'Could not claim revenue, please try again. If this problem persists please reach out to support@cardstack.com'
-      );
-    }
-  }, [dismissLoadingOverlay, error, isError]);
-
-  return onClaimAllPress;
 };

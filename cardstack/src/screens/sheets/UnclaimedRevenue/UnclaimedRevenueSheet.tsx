@@ -18,40 +18,25 @@ import { ClaimStatuses } from '@cardstack/utils';
 import { RouteType } from '@cardstack/navigation/types';
 
 interface Params {
-  asset: MerchantSafeType;
-  customFunction: () => void;
+  merchantSafe: MerchantSafeType;
+  onClaimAllPress: () => void;
 }
 
 const UnclaimedRevenueSheet = () => {
-  const {
-    params: { asset: merchantSafe, customFunction: onClaimAll },
-  } = useRoute<RouteType<Params>>();
+  const { params } = useRoute<RouteType<Params>>();
 
   return (
-    <Sheet
-      scrollEnabled
-      isFullScreen
-      Header={
-        <Header
-          revenueBalances={merchantSafe.revenueBalances}
-          onClaimAll={onClaimAll}
-        />
-      }
-    >
+    <Sheet scrollEnabled isFullScreen Header={<Header {...params} />}>
       <Container paddingHorizontal={5}>
-        <ActivitiesList address={merchantSafe.address} />
+        <ActivitiesList address={params.merchantSafe.address} />
       </Container>
     </Sheet>
   );
 };
 
-const Header = ({
-  revenueBalances,
-  onClaimAll,
-}: {
-  revenueBalances: TokenType[];
-  onClaimAll: () => void;
-}) => {
+const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
+  const { revenueBalances } = merchantSafe;
+
   const nativeAmount = revenueBalances[0].native.balance.amount;
 
   const isDust = !!nativeAmount;
@@ -70,7 +55,7 @@ const Header = ({
       <Container flexDirection="column" marginTop={5}>
         {renderTokens}
       </Container>
-      <Button disabled={!isDust} marginTop={8} onPress={onClaimAll}>
+      <Button disabled={!isDust} marginTop={8} onPress={onClaimAllPress}>
         Claim All
       </Button>
       <HorizontalDivider />
