@@ -14,7 +14,7 @@ import {
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
-import { ClaimStatuses } from '@cardstack/utils';
+import { ClaimStatuses, Device } from '@cardstack/utils';
 import { RouteType } from '@cardstack/navigation/types';
 
 interface Params {
@@ -26,7 +26,11 @@ const UnclaimedRevenueSheet = () => {
   const { params } = useRoute<RouteType<Params>>();
 
   return (
-    <Sheet scrollEnabled isFullScreen Header={<Header {...params} />}>
+    <Sheet
+      Header={<Header {...params} />}
+      scrollEnabled
+      isFullScreen={Device.isIOS}
+    >
       <Container paddingHorizontal={5}>
         <ActivitiesList address={params.merchantSafe.address} />
       </Container>

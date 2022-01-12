@@ -1,13 +1,11 @@
 import { useNavigation } from '@react-navigation/core';
 import { useCallback, useEffect } from 'react';
-import { Alert, InteractionManager } from 'react-native';
+import { Alert } from 'react-native';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { useClaimRevenueMutation } from '@cardstack/services';
 import { MerchantSafeType } from '@cardstack/types';
-import { Device } from '@cardstack/utils';
 import { useAccountSettings, usePrevious, useWallets } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
-import Routes from '@rainbow-me/routes';
 
 export const useClaimAllRevenue = ({
   merchantSafe,
@@ -26,7 +24,9 @@ export const useClaimAllRevenue = ({
     { isSuccess, isError, error },
   ] = useClaimRevenueMutation();
 
-  const onClaimAllPress = useCallback(async () => {
+  const onClaimAllPress = useCallback(() => {
+    goBack();
+
     showLoadingOverlay({ title: 'Claiming Revenue' });
 
     claimRevenue({
@@ -39,6 +39,7 @@ export const useClaimAllRevenue = ({
   }, [
     accountAddress,
     claimRevenue,
+    goBack,
     merchantSafe.address,
     merchantSafe.revenueBalances,
     network,
@@ -53,16 +54,6 @@ export const useClaimAllRevenue = ({
   useEffect(() => {
     if (isSuccess && hasUpdated) {
       dismissLoadingOverlay();
-
-      if (Device.isAndroid) {
-        InteractionManager.runAfterInteractions(() => {
-          if (canGoBack()) {
-            goBack();
-          } else {
-            navigate(Routes.WALLET_SCREEN);
-          }
-        });
-      }
     }
   }, [
     dismissLoadingOverlay,
