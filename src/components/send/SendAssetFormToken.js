@@ -47,7 +47,7 @@ export default function SendAssetFormToken({
           value={nativeAmount}
         />
       )}
-      <Container marginTop={12}>
+      <Container marginTop={10}>
         {buttonRenderer}
         {txSpeedRenderer}
       </Container>
