@@ -13,7 +13,6 @@ import {
   MerchantTransactionExpandedState,
   PaymentConfirmationExpandedState,
   SupportAndFeedsState,
-  UnclaimedRevenueExpandedState,
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
 import { useAsset, useDimensions } from '../hooks';
@@ -25,7 +24,6 @@ const ScreenTypes = {
   token: ChartExpandedState,
   uniswap: LiquidityPoolExpandedState,
   [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
-  [ExpandedMerchantRoutes.unclaimedRevenue]: UnclaimedRevenueExpandedState,
   [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
   merchantTransaction: MerchantTransactionExpandedState,
   paymentConfirmationTransaction: PaymentConfirmationExpandedState,
@@ -59,7 +57,6 @@ export default function ExpandedAssetSheet(props) {
       {createElement(ScreenTypes[params.type], {
         asset: selectedAsset,
         safeAddress: params?.safeAddress,
-        customFunction: params?.customFunction,
         ...props,
       })}
     </Container>

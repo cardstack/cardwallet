@@ -48,7 +48,6 @@ type onPressProps = {
 
 export enum ExpandedMerchantRoutes {
   lifetimeEarnings = 'lifetimeEarnings',
-  unclaimedRevenue = 'unclaimedRevenue',
   availableBalances = 'availableBalances',
 }
 
