@@ -12,19 +12,16 @@ import {
   SendActionButton,
   SheetActionButtonRow,
 } from '@rainbow-me/components/sheet';
+import { RouteType } from '@cardstack/navigation/types';
 
-interface RouteType {
-  params: {
-    collectible: CollectibleType;
-  };
-  key: string;
-  name: string;
+interface Params {
+  collectible: CollectibleType;
 }
 
 const CollectibleSheet = () => {
   const {
     params: { collectible },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<Params>>();
 
   const { isSendable, description } = collectible;
 

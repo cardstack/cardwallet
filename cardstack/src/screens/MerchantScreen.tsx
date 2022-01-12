@@ -31,6 +31,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { useGetSafesDataQuery } from '@cardstack/services';
+import { RouteType } from '@cardstack/navigation/types';
 
 const HORIZONTAL_PADDING = 5;
 
@@ -39,11 +40,6 @@ const isLastItem = (items: TokenType[], index: number): boolean =>
 
 interface MerchantSafeProps {
   merchantSafe: MerchantSafeType;
-}
-interface RouteType {
-  params: MerchantSafeProps;
-  key: string;
-  name: string;
 }
 
 type onPressProps = {
@@ -61,7 +57,7 @@ const MerchantScreen = () => {
 
   const {
     params: { merchantSafe: merchantSafeFallback },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<MerchantSafeProps>>();
 
   const { accountAddress, nativeCurrency } = useAccountSettings();
 

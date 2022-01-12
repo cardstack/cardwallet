@@ -17,11 +17,11 @@ import {
 } from '@cardstack/components';
 import { useClipboard } from '@rainbow-me/hooks';
 import { abbreviations } from '@rainbow-me/utils';
+import { RouteType } from '@cardstack/navigation/types';
 
-interface RouteType {
-  params: { address: string; disableCopying?: boolean };
-  key: string;
-  name: string;
+interface Params {
+  address: string;
+  disableCopying?: boolean;
 }
 
 const iconProps: IconProps = { name: 'copy' };
@@ -29,7 +29,7 @@ const iconProps: IconProps = { name: 'copy' };
 const CopyAddressSheet = () => {
   const {
     params: { address, disableCopying },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<Params>>();
 
   const { setClipboard } = useClipboard();
   const [copiedText, setCopiedText] = useState(undefined);

@@ -17,20 +17,17 @@ import { TransactionBaseProps } from '@cardstack/components/Transactions/Transac
 import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
 import { dateFormatter, getAddressPreview } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 
-interface RouteType {
-  params: {
-    transaction: TransactionBaseProps &
-      MerchantEarnedSpendAndRevenueTransactionType;
-  };
-  key: string;
-  name: string;
+interface Params {
+  transaction: TransactionBaseProps &
+    MerchantEarnedSpendAndRevenueTransactionType;
 }
 
 const PaymentReceivedSheet = () => {
   const {
     params: { transaction },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<Params>>();
 
   const {
     address,

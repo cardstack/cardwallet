@@ -9,6 +9,7 @@ import {
   MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
+import { RouteType } from '@cardstack/navigation/types';
 
 interface HeaderItem {
   title: string;
@@ -63,11 +64,7 @@ export interface AssetListProps
   isFetchingSafes: boolean;
 }
 
-export interface AssetListRouteType {
-  params: {
-    scrollToPrepaidCardsSection?: boolean;
-    forceRefreshOnce?: boolean;
-  };
-  key: string;
-  name: string;
-}
+export type AssetListRouteType = RouteType<{
+  scrollToPrepaidCardsSection?: boolean;
+  forceRefreshOnce?: boolean;
+}>;
