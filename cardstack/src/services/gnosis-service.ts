@@ -46,7 +46,9 @@ export const fetchSafes = async (
   try {
     const safesInstance = await getSafesInstance();
 
-    const safes = (await safesInstance?.view(accountAddress))?.safes || [];
+    const safes =
+      (await safesInstance?.view(accountAddress, { viewAll: true }))?.safes ||
+      [];
 
     const safesWithTokenPrices = await Promise.all(
       safes?.map(safe => updateSafeWithTokenPrices(safe, nativeCurrency))
@@ -267,21 +269,18 @@ export const addNativePriceToToken = async (
 
   const isAmountDust = nativeBalance < 0.01;
 
-  //decimal places formatting for residual crypto values
-  const bufferValue = isAmountDust ? 0 : undefined;
   return {
     ...tokenInfo,
     balance: {
-      ...convertRawAmountToBalance(balance, { symbol, decimals }, bufferValue),
+      ...convertRawAmountToBalance(balance, { symbol, decimals }),
       wei: balance,
     },
     native: {
       balance: {
         amount: nativeBalance,
         display: convertAmountToNativeDisplay(
-          nativeBalance,
-          nativeCurrency,
-          bufferValue
+          isAmountDust ? 0 : nativeBalance,
+          nativeCurrency
         ),
       },
     },

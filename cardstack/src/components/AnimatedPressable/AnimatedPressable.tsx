@@ -5,7 +5,12 @@ import {
   Animated,
   ViewStyle,
   StyleSheet,
+  GestureResponderEvent,
 } from 'react-native';
+import ReactNativeHapticFeedback, {
+  HapticFeedbackTypes,
+} from 'react-native-haptic-feedback';
+import { Device } from '@cardstack/utils';
 
 enum Scale {
   grow = 0,
@@ -25,7 +30,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const AnimatedPressable = ({ children, ...props }: PressableProps) => {
+interface AnimatedPressableProps extends PressableProps {
+  enableHapticFeedback?: boolean;
+  hapticType?: HapticFeedbackTypes;
+}
+
+const AnimatedPressable = ({
+  children,
+  enableHapticFeedback = false,
+  hapticType = 'selection',
+  ...props
+}: AnimatedPressableProps) => {
   const animatedValue = useRef(new Animated.Value(Scale.grow)).current;
 
   const onPressAnimate = useCallback(
@@ -55,12 +70,24 @@ const AnimatedPressable = ({ children, ...props }: PressableProps) => {
     [animatedValue]
   );
 
+  const handleOnPress = useCallback(
+    (e: GestureResponderEvent) => {
+      if (enableHapticFeedback && Device.supportsHapticFeedback) {
+        ReactNativeHapticFeedback?.trigger(hapticType);
+      }
+
+      props?.onPress?.(e);
+    },
+    [enableHapticFeedback, hapticType, props]
+  );
+
   return (
     <Animated.View style={animatedStyle} pointerEvents="box-none">
       <Pressable
         {...props}
         onPressIn={onPressAnimate(Scale.shrink)}
         onPressOut={onPressAnimate(Scale.grow)}
+        onPress={handleOnPress}
         testID="animated-pressable"
       >
         {children}

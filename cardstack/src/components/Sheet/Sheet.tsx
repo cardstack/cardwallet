@@ -38,6 +38,8 @@ export interface SheetProps {
   scrollEnabled?: boolean;
   shadowEnabled?: boolean;
   overlayColor?: string;
+  Header?: JSX.Element;
+  Footer?: JSX.Element;
 }
 
 const Sheet = ({
@@ -48,6 +50,8 @@ const Sheet = ({
   scrollEnabled = false,
   shadowEnabled = false,
   overlayColor = 'transparent',
+  Header,
+  Footer,
 }: SheetProps) => {
   const insets = useSafeArea();
   const { goBack, setOptions } = useNavigation();
@@ -141,6 +145,7 @@ const Sheet = ({
         <CenteredContainer paddingVertical={4}>
           {!hideHandle && <SheetHandle />}
         </CenteredContainer>
+        {Header}
         <ScrollView
           onMomentumScrollBegin={onMomentumScrollBegin}
           overScrollMode="always"
@@ -154,6 +159,7 @@ const Sheet = ({
         >
           {children}
         </ScrollView>
+        {Footer}
       </KeyboardAvoidingView>
     </Container>
   );

@@ -59,7 +59,6 @@ export enum ExpandedMerchantRoutes {
   lifetimeEarnings = 'lifetimeEarnings',
   unclaimedRevenue = 'unclaimedRevenue',
   availableBalances = 'availableBalances',
-  paymentRequest = 'paymentRequest',
 }
 
 const MerchantScreen = () => {
@@ -111,6 +110,12 @@ const MerchantScreen = () => {
     'lifetimeEarnings'
   );
 
+  const goToMerchantPaymentRequest = () =>
+    navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
+      address: merchantSafe.address,
+      merchantInfo: merchantSafe.merchantInfo,
+    });
+
   return (
     <Container top={0} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
@@ -128,7 +133,7 @@ const MerchantScreen = () => {
           <Button
             marginTop={2}
             marginBottom={4}
-            onPress={onPressGoTo(ExpandedMerchantRoutes.paymentRequest)}
+            onPress={goToMerchantPaymentRequest}
           >
             Request Payment
           </Button>

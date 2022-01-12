@@ -1,6 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import ButtonPressAnimation from '../../../../src/components/animations/ButtonPressAnimation';
-import { Button, Icon } from '@cardstack/components';
+import { Button, Icon, AnimatedPressable } from '@cardstack/components';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
@@ -53,9 +52,9 @@ const PinnedHiddenSectionMenu = ({
   }
 
   return (
-    <ButtonPressAnimation onPress={showActionSheet}>
+    <AnimatedPressable onPress={showActionSheet}>
       <Icon name="more-circle" />
-    </ButtonPressAnimation>
+    </AnimatedPressable>
   );
 };
 
