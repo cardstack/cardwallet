@@ -110,11 +110,23 @@ const MerchantScreen = () => {
     'lifetimeEarnings'
   );
 
-  const goToMerchantPaymentRequest = () =>
-    navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
-      address: merchantSafe.address,
-      merchantInfo: merchantSafe.merchantInfo,
-    });
+  const goToMerchantPaymentRequest = useCallback(
+    () =>
+      navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
+        address: merchantSafe.address,
+        merchantInfo: merchantSafe.merchantInfo,
+      }),
+    [merchantSafe, navigate]
+  );
+
+  const goToUnclaimedRevenue = useCallback(
+    () =>
+      navigate(Routes.UNCLAIMED_REVENUE_SHEET, {
+        asset: merchantSafe,
+        customFunction: onClaimAllPress,
+      }),
+    [merchantSafe, navigate, onClaimAllPress]
+  );
 
   return (
     <Container top={0} width="100%" backgroundColor="white">
@@ -140,7 +152,7 @@ const MerchantScreen = () => {
           <HorizontalDivider />
           <TokensSection
             title="Available revenue"
-            onPress={onPressGoTo(ExpandedMerchantRoutes.unclaimedRevenue)}
+            onPress={goToUnclaimedRevenue}
             emptyText="No revenue to be claimed"
             tokens={merchantSafe.revenueBalances}
           />
