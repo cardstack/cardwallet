@@ -29,11 +29,10 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
+import { RouteType } from '@cardstack/navigation/types';
 
-interface RouteType {
-  params: { depot: DepotType };
-  key: string;
-  name: string;
+interface Params {
+  depot: DepotType;
 }
 
 enum Tabs {
@@ -49,7 +48,7 @@ export default function DepotScreen() {
 
   const {
     params: { depot },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<Params>>();
 
   const { address, tokens } = depot;
 
@@ -198,7 +197,7 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
 const Activities = () => {
   const {
     params: { depot },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<Params>>();
 
   const { address } = depot;
 

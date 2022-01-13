@@ -269,19 +269,21 @@ export const addNativePriceToToken = async (
 
   const isAmountDust = nativeBalance < 0.01;
 
+  //decimal places formatting for residual crypto values
+  const bufferValue = isAmountDust ? 0 : undefined;
+
+  const amount = isAmountDust ? 0 : nativeBalance;
+
   return {
     ...tokenInfo,
     balance: {
-      ...convertRawAmountToBalance(balance, { symbol, decimals }),
+      ...convertRawAmountToBalance(balance, { symbol, decimals }, bufferValue),
       wei: balance,
     },
     native: {
       balance: {
-        amount: nativeBalance,
-        display: convertAmountToNativeDisplay(
-          isAmountDust ? 0 : nativeBalance,
-          nativeCurrency
-        ),
+        amount,
+        display: convertAmountToNativeDisplay(amount, nativeCurrency),
       },
     },
   };

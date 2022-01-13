@@ -12,16 +12,13 @@ import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 
-interface RouteType {
-  params: {
-    merchantAddress: string;
-    network: Network;
-    amount?: string;
-    currency?: string;
-  };
-  key: string;
-  name: string;
+interface Params {
+  merchantAddress: string;
+  network: Network;
+  amount?: string;
+  currency?: string;
 }
 
 export const handleAlertError = (
@@ -33,7 +30,7 @@ export const handleAlertError = (
 export const usePaymentMerchantUniversalLink = () => {
   const {
     params: { merchantAddress, amount = '0', network: qrCodeNetwork, currency },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<Params>>();
 
   const { goBack } = useNavigation();
 

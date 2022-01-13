@@ -13,6 +13,7 @@ export const MainRoutes = {
   COLLECTIBLE_SHEET: 'CollectibleSheet',
   IMPORT_SEED_SHEET: 'ImportSeedSheet',
   PAYMENT_RECEIVED_SHEET: 'PaymentReceivedSheet',
+  UNCLAIMED_REVENUE_SHEET: 'UnclaimedRevenueSheet',
 } as const;
 
 export const GlobalRoutes = {

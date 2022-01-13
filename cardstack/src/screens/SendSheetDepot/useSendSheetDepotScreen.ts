@@ -31,11 +31,11 @@ import HDProvider from '@cardstack/models/hd-provider';
 import { useWorker } from '@cardstack/utils/hooks-utilities';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 
-interface RouteType {
-  params: { asset: TokenType; safeAddress?: string };
-  key: string;
-  name: string;
+interface Params {
+  asset: TokenType;
+  safeAddress?: string;
 }
 
 const amountDetailsInitialState = {
@@ -47,7 +47,7 @@ const amountDetailsInitialState = {
 export const useSendSheetDepotScreen = () => {
   const usdConverter = useRef<undefined | ((amountInWei: string) => number)>();
   const { navigate } = useNavigation();
-  const { params } = useRoute<RouteType>();
+  const { params } = useRoute<RouteType<Params>>();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   // Assets

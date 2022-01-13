@@ -3,19 +3,12 @@ import { useRoute } from '@react-navigation/core';
 import { captureException } from '@sentry/react-native';
 import ErrorFallback from '@cardstack/components/ErrorBoundary/ErrorFallback';
 import logger from 'logger';
-
-interface RouteType {
-  params: {
-    message?: string;
-  };
-  key: string;
-  name: string;
-}
+import { RouteType } from '@cardstack/navigation/types';
 
 const ErrorFallbackScreen = () => {
   const {
     params: { message = 'something went wrong' },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<{ message?: string }>>();
 
   useEffect(() => {
     logger.sentry('Error:', message);

@@ -27,22 +27,19 @@ import {
   usePaymentCurrencyAndConversionRates,
   useNativeCurrencyAndConversionRates,
 } from '@rainbow-me/redux/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 
 const TOP_POSITION = 150;
 
-interface RouteType {
-  params: {
-    address: string;
-    merchantInfo: MerchantInformation;
-  };
-  key: string;
-  name: string;
+interface Params {
+  address: string;
+  merchantInfo: MerchantInformation;
 }
 
 const PaymentRequestExpandedSheet = () => {
   const {
     params: { address, merchantInfo },
-  } = useRoute<RouteType>();
+  } = useRoute<RouteType<Params>>();
 
   const { setOptions } = useNavigation();
   const { height: deviceHeight, isTallPhone } = useDimensions();

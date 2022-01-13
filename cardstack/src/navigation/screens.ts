@@ -24,6 +24,7 @@ import {
   CollectibleSheet,
   PaymentReceivedSheet,
   PaymentRequestExpandedSheet,
+  UnclaimedRevenueSheet,
 } from '@cardstack/screen';
 import {
   bottomSheetPreset,
@@ -94,6 +95,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   PAYMENT_RECEIVED_SHEET: {
     component: PaymentReceivedSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  UNCLAIMED_REVENUE_SHEET: {
+    component: UnclaimedRevenueSheet,
     options: expandedPreset as StackNavigationOptions,
   },
 };
