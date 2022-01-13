@@ -1,8 +1,21 @@
-import React from 'react';
-
-import { Container, Touchable, Icon, Text } from '@cardstack/components';
+import React, { useEffect } from 'react';
+import { LayoutAnimation, UIManager, Platform } from 'react-native';
+import {
+  AnimatedContainer,
+  Container,
+  Touchable,
+  Icon,
+  Text,
+} from '@cardstack/components';
 import { NoticeType } from '@cardstack/types';
 import { ColorTypes } from '@cardstack/theme';
+
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const backgroundColorByType: {
   [key in NoticeType]: ColorTypes;
@@ -43,31 +56,44 @@ export const Notice = ({
   type = 'warning',
   icon,
 }: NoticeProps) => {
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, []);
+
   return (
-    (isVisible && (
-      <Touchable onPress={onPress} testID="notice-pressable">
-        <Container
-          alignItems="center"
-          flexDirection="row"
-          justifyContent="flex-start"
-          paddingVertical={1}
-          paddingHorizontal={2}
-          marginHorizontal={4}
-          marginVertical={2}
-          borderRadius={50}
-          testID="notice-container"
-          backgroundColor={backgroundColorByType[type]}
-        >
-          {icon || (
-            <Icon iconSize="medium" name="info" color={iconColorByType[type]} />
-          )}
-          <Container margin={1} />
-          <Text fontWeight="bold" marginRight={4} color={textColorByType[type]}>
-            {description}
-          </Text>
-        </Container>
-      </Touchable>
-    )) ||
-    null
+    <AnimatedContainer>
+      {isVisible && (
+        <Touchable onPress={onPress} testID="notice-pressable">
+          <Container
+            alignItems="center"
+            flexDirection="row"
+            justifyContent="flex-start"
+            paddingVertical={1}
+            paddingHorizontal={2}
+            marginHorizontal={4}
+            marginVertical={2}
+            borderRadius={50}
+            testID="notice-container"
+            backgroundColor={backgroundColorByType[type]}
+          >
+            {icon || (
+              <Icon
+                iconSize="medium"
+                name="info"
+                color={iconColorByType[type]}
+              />
+            )}
+            <Container margin={1} />
+            <Text
+              fontWeight="bold"
+              marginRight={4}
+              color={textColorByType[type]}
+            >
+              {description}
+            </Text>
+          </Container>
+        </Touchable>
+      )}
+    </AnimatedContainer>
   );
 };

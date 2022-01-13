@@ -10,7 +10,7 @@ export const ServiceStatusNotice = () => {
   return (
     <Notice
       isVisible={!!data}
-      description={data?.name || 'Test'}
+      description={data?.name || 'Incident reported.'}
       type="warning"
       onPress={() => {
         Linking.openURL(`https://status.cardstack.com`);
