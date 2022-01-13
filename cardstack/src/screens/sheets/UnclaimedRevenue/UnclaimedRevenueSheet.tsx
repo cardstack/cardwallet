@@ -43,7 +43,7 @@ const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
 
-  const isDust = !!nativeAmount;
+  const hasClaimableAmount = !!nativeAmount;
 
   const renderTokens = useMemo(
     () =>
@@ -59,7 +59,11 @@ const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
       <Container flexDirection="column" marginTop={5}>
         {renderTokens}
       </Container>
-      <Button disabled={!isDust} marginTop={8} onPress={onClaimAllPress}>
+      <Button
+        disabled={!hasClaimableAmount}
+        marginTop={8}
+        onPress={onClaimAllPress}
+      >
         Claim All
       </Button>
       <HorizontalDivider />
