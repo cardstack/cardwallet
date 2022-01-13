@@ -10,7 +10,7 @@ import React, {
 import { useTheme } from '../../context/ThemeContext';
 import ExchangeInput from '../exchange/ExchangeInput';
 import { Row } from '../layout';
-import { Button, Container } from '@cardstack/components';
+import { Button, Container, Text } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
 
 const defaultFormatter = string => string;
@@ -30,6 +30,7 @@ const UnderlineField = (
     placeholder,
     testID,
     value: valueProp,
+    rightLabel,
     ...props
   },
   forwardedRef
@@ -116,11 +117,23 @@ const UnderlineField = (
           testID={testID + '-input'}
           value={formattedValue}
         />
-        {buttonText && isFocused && (
-          <Button onPress={handleButtonPress} variant="tiny">
-            {buttonText}
-          </Button>
-        )}
+        <Container flexDirection="row">
+          {buttonText && isFocused && (
+            <Button onPress={handleButtonPress} variant="tiny">
+              {buttonText}
+            </Button>
+          )}
+          {rightLabel && (
+            <Text
+              fontSize={17}
+              fontWeight="700"
+              lineHeight={24}
+              paddingLeft={2}
+            >
+              {rightLabel}
+            </Text>
+          )}
+        </Container>
       </Row>
       <Container
         border-radius={1}

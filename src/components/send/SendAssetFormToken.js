@@ -26,6 +26,7 @@ export default function SendAssetFormToken({
       <SendAssetFormField
         format={removeLeadingZeros}
         label={selected.symbol}
+        marginTop={5}
         onChange={onChangeAssetAmount}
         onFocus={onFocus}
         onPressButton={sendMaxBalance}
@@ -37,7 +38,7 @@ export default function SendAssetFormToken({
         <SendAssetFormField
           autoFocus
           label={nativeCurrency}
-          marginTop={5}
+          marginTop={10}
           mask={nativeMask}
           onChange={onChangeNativeAmount}
           onFocus={onFocus}
@@ -47,7 +48,7 @@ export default function SendAssetFormToken({
           value={nativeAmount}
         />
       )}
-      <Container marginTop={10}>
+      <Container marginTop={5}>
         {buttonRenderer}
         {txSpeedRenderer}
       </Container>
