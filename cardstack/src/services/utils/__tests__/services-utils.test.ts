@@ -1,5 +1,6 @@
 import * as sentry from '@sentry/minimal';
-import { queryPromiseWrapper } from '../index';
+import { queryPromiseWrapper, filterIncident } from '../index';
+import { IncidentType } from '@cardstack/types';
 import logger from 'logger';
 
 describe('service utils', () => {
@@ -74,6 +75,57 @@ describe('service utils', () => {
           data: 'Error',
         },
       });
+    });
+  });
+
+  describe('filterIncident', () => {
+    it('it should return critical incident from a full list', async () => {
+      const incidents: IncidentType[] = [
+        {
+          name: 'All systems down.',
+          impact: 'major',
+          started_at: '2021-10-10T10:10:00.000Z',
+        },
+        {
+          name: 'One small system down.',
+          impact: 'minor',
+          started_at: '2021-10-10T10:10:00.003Z',
+        },
+        {
+          name: 'World down.',
+          impact: 'critical',
+          started_at: '2021-10-10T10:10:00.002Z',
+        },
+        {
+          name: 'Internet down.',
+          impact: 'critical',
+          started_at: '2021-10-10T10:10:00.001Z',
+        },
+      ];
+
+      expect(filterIncident(incidents)).toStrictEqual({
+        name: 'World down.',
+        impact: 'critical',
+        started_at: '2021-10-10T10:10:00.002Z',
+      });
+    });
+
+    it('it should return null given a empty incidents collection', async () => {
+      const incidents: IncidentType[] = [];
+
+      expect(filterIncident(incidents)).toBeNull();
+    });
+
+    it('it should return null given no matching impact type', async () => {
+      const incidents: IncidentType[] = [
+        {
+          name: 'Not defined',
+          impact: 'not-defined',
+          started_at: '2021-10-10T10:10:00.000Z',
+        },
+      ];
+
+      expect(filterIncident(incidents)).toBeNull();
     });
   });
 });

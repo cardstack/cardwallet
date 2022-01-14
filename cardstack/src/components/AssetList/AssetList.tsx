@@ -32,6 +32,7 @@ import {
   useRefreshAccountData,
   useWallets,
 } from '@rainbow-me/hooks';
+import { useGetServiceStatusQuery } from '@cardstack/services';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
@@ -51,6 +52,7 @@ const onScrollToIndexFailed = () => {
 export const AssetList = (props: AssetListProps) => {
   const sectionListRef = createRef<SectionList>();
   const refresh = useRefreshAccountData();
+  const { refetch: refetchServiceStatus } = useGetServiceStatusQuery();
   const [refreshing, setRefreshing] = useState(false);
   const { accountAddress } = useAccountProfile();
   const { navigate, setParams } = useNavigation();
@@ -88,10 +90,14 @@ export const AssetList = (props: AssetListProps) => {
 
     setRefreshing(true);
 
+    // Refresh Service Status Notice
+    refetchServiceStatus();
+
+    // Refresh Account Data
     await refresh();
 
     setRefreshing(false);
-  }, [props, refresh]);
+  }, [props, refresh, refetchServiceStatus]);
 
   useEffect(() => {
     if (params?.forceRefreshOnce) {
