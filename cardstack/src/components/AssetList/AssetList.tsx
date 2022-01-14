@@ -52,7 +52,7 @@ const onScrollToIndexFailed = () => {
 export const AssetList = (props: AssetListProps) => {
   const sectionListRef = createRef<SectionList>();
   const refresh = useRefreshAccountData();
-  const { refetch: refetchServiceStatus } = useGetServiceStatusQuery(null);
+  const { refetch: refetchServiceStatus } = useGetServiceStatusQuery();
   const [refreshing, setRefreshing] = useState(false);
   const { accountAddress } = useAccountProfile();
   const { navigate, setParams } = useNavigation();

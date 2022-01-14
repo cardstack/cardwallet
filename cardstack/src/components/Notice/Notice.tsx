@@ -1,44 +1,31 @@
-import React, { useEffect } from 'react';
-import { LayoutAnimation, UIManager, Platform } from 'react-native';
-import {
-  AnimatedContainer,
-  Container,
-  Touchable,
-  Icon,
-  Text,
-} from '@cardstack/components';
+import React, { useLayoutEffect } from 'react';
+import { LayoutAnimation } from 'react-native';
+import { Container, Touchable, Icon, Text } from '@cardstack/components';
 import { NoticeType } from '@cardstack/types';
 import { ColorTypes } from '@cardstack/theme';
 
-if (
-  Platform.OS === 'android' &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
+interface NoticeStyle {
+  iconColor: ColorTypes;
+  backgroundColor: ColorTypes;
+  textColor: ColorTypes;
 }
 
-const backgroundColorByType: {
-  [key in NoticeType]: ColorTypes;
-} = {
-  info: 'backgroundGray',
-  warning: 'warning',
-  error: 'error',
-};
-
-const textColorByType: {
-  [key in NoticeType]: ColorTypes;
-} = {
-  info: 'black',
-  warning: 'black',
-  error: 'white',
-};
-
-const iconColorByType: {
-  [key in NoticeType]: ColorTypes;
-} = {
-  info: 'appleBlue',
-  warning: 'black',
-  error: 'black',
+const noticeColorConfig: Record<NoticeType, NoticeStyle> = {
+  info: {
+    iconColor: 'appleBlue',
+    backgroundColor: 'backgroundGray',
+    textColor: 'black',
+  },
+  warning: {
+    iconColor: 'black',
+    backgroundColor: 'warning',
+    textColor: 'black',
+  },
+  error: {
+    iconColor: 'black',
+    backgroundColor: 'error',
+    textColor: 'white',
+  },
 };
 
 export interface NoticeProps {
@@ -56,12 +43,14 @@ export const Notice = ({
   type = 'warning',
   icon,
 }: NoticeProps) => {
-  useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
+  useLayoutEffect(() => {
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
+    );
+  }, [isVisible]);
 
   return (
-    <AnimatedContainer>
+    <>
       {isVisible && (
         <Touchable onPress={onPress} testID="notice-pressable">
           <Container
@@ -74,26 +63,26 @@ export const Notice = ({
             marginVertical={2}
             borderRadius={50}
             testID="notice-container"
-            backgroundColor={backgroundColorByType[type]}
+            backgroundColor={noticeColorConfig[type].backgroundColor}
           >
             {icon || (
               <Icon
                 iconSize="medium"
                 name="info"
-                color={iconColorByType[type]}
+                color={noticeColorConfig[type].iconColor}
               />
             )}
             <Container margin={1} />
             <Text
               fontWeight="bold"
               marginRight={4}
-              color={textColorByType[type]}
+              color={noticeColorConfig[type].textColor}
             >
               {description}
             </Text>
           </Container>
         </Touchable>
       )}
-    </AnimatedContainer>
+    </>
   );
 };
