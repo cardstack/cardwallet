@@ -1,8 +1,8 @@
 import React, { useLayoutEffect } from 'react';
-import { LayoutAnimation } from 'react-native';
 import { Container, Touchable, Icon, Text } from '@cardstack/components';
 import { NoticeType } from '@cardstack/types';
 import { ColorTypes } from '@cardstack/theme';
+import { layoutEasingAnimation } from '@cardstack/utils';
 
 interface NoticeStyle {
   iconColor: ColorTypes;
@@ -44,9 +44,7 @@ export const Notice = ({
   icon,
 }: NoticeProps) => {
   useLayoutEffect(() => {
-    LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, 'easeInEaseOut', 'opacity')
-    );
+    layoutEasingAnimation();
   }, [isVisible]);
 
   return (
