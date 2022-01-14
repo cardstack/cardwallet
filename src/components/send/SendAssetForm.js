@@ -1,7 +1,4 @@
-import React, { Fragment } from 'react';
-import { KeyboardArea } from 'react-native-keyboard-area';
-import styled from 'styled-components';
-
+import React from 'react';
 import AssetTypes from '../../helpers/assetTypes';
 import { useAsset } from '../../hooks';
 import { SendCoinRow } from '../coin-row';
@@ -11,10 +8,6 @@ import { Icon } from '../icons';
 import SendAssetFormCollectible from './SendAssetFormCollectible';
 import SendAssetFormToken from './SendAssetFormToken';
 import { CenteredContainer, Container } from '@cardstack/components';
-
-const KeyboardSizeView = styled(KeyboardArea)`
-  background-color: ${({ theme: { colors } }) => colors.white};
-`;
 
 export default function SendAssetForm({
   assetAmount,
@@ -76,22 +69,19 @@ export default function SendAssetForm({
             txSpeedRenderer={txSpeedRenderer}
           />
         ) : (
-          <Fragment>
-            <SendAssetFormToken
-              {...props}
-              assetAmount={assetAmount}
-              buttonRenderer={buttonRenderer}
-              nativeAmount={nativeAmount}
-              nativeCurrency={nativeCurrency}
-              onChangeAssetAmount={onChangeAssetAmount}
-              onChangeNativeAmount={onChangeNativeAmount}
-              onFocus={onFocus}
-              selected={selectedAsset}
-              sendMaxBalance={sendMaxBalance}
-              txSpeedRenderer={txSpeedRenderer}
-            />
-            {ios ? <KeyboardSizeView isOpen /> : null}
-          </Fragment>
+          <SendAssetFormToken
+            {...props}
+            assetAmount={assetAmount}
+            buttonRenderer={buttonRenderer}
+            nativeAmount={nativeAmount}
+            nativeCurrency={nativeCurrency}
+            onChangeAssetAmount={onChangeAssetAmount}
+            onChangeNativeAmount={onChangeNativeAmount}
+            onFocus={onFocus}
+            selected={selectedAsset}
+            sendMaxBalance={sendMaxBalance}
+            txSpeedRenderer={txSpeedRenderer}
+          />
         )}
       </Container>
     </Container>

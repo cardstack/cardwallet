@@ -27,7 +27,7 @@ export default function SendTransactionSpeed({
   const time = isGasNumber ? '' : get(gasPrice, 'estimatedTime.display', '');
 
   return (
-    <Row justify="center">
+    <Row justify="center" marginTop={2}>
       <Touchable
         disabled={!onPressTransactionSpeed}
         flexDirection="row"

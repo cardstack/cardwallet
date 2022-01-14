@@ -6,9 +6,7 @@ import { useNavigation } from '../../navigation/Navigation';
 import Divider from '../Divider';
 import { AddContactButton, PasteAddressButton } from '../buttons';
 import { AddressField } from '../fields';
-import { Icon } from '../icons';
 import { Row } from '../layout';
-import { SheetHandle as SheetHandleAndroid } from '../sheet';
 import { Text } from '@cardstack/components';
 import { useClipboard, useDimensions } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
@@ -21,19 +19,6 @@ const AddressInputContainer = styled(Row).attrs({ align: 'center' })`
   overflow: hidden;
   width: 100%;
 `;
-
-const SheetHandle = android
-  ? styled(SheetHandleAndroid)`
-      margin-top: 6;
-    `
-  : styled(Icon).attrs(({ theme: { colors } }) => ({
-      color: colors.sendScreen.grey,
-      name: 'handle',
-      testID: 'sheet-handle',
-    }))`
-      height: 11;
-      margin-top: 13;
-    `;
 
 const DefaultContactItem = {
   address: '',
@@ -125,7 +110,6 @@ export default function SendHeader({
 
   return (
     <Fragment>
-      <SheetHandle />
       <AddressInputContainer isSmallPhone={isSmallPhone}>
         <Text fontSize={15} fontWeight="600" marginRight={2}>
           To:
