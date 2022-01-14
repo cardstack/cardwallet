@@ -1,4 +1,5 @@
 import React from 'react';
+import { StatusBar, StyleSheet } from 'react-native';
 import { GasSpeedButton } from '../../../src/components/gas';
 import { useTransactionConfirmation } from '@cardstack/hooks';
 import {
@@ -6,6 +7,15 @@ import {
   TransactionConfirmationSheet,
   SafeAreaView,
 } from '@cardstack/components';
+
+const styles = StyleSheet.create({
+  safeAreaViewStyle: {
+    backgroundColor: 'black',
+    flex: 1,
+    width: '100%',
+    paddingTop: StatusBar.currentHeight || 0,
+  },
+});
 
 const TransactionConfirmation = () => {
   const {
@@ -21,7 +31,8 @@ const TransactionConfirmation = () => {
   } = useTransactionConfirmation();
 
   return (
-    <SafeAreaView backgroundColor="black" flex={1} width="100%">
+    <SafeAreaView style={styles.safeAreaViewStyle}>
+      <StatusBar barStyle="light-content" />
       <TransactionConfirmationSheet
         data={data}
         dappUrl={dappUrl}
