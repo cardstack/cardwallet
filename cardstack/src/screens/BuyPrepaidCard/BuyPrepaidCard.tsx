@@ -35,6 +35,7 @@ const BuyPrepaidCard = () => {
     onSelectCard,
     card,
     handlePurchase,
+    isPurchaseInProgress,
     isInventoryLoading,
     inventoryData,
     network,
@@ -96,7 +97,7 @@ const BuyPrepaidCard = () => {
           >
             {isDisabled ? null : (
               <ApplePayButton
-                disabled={isDisabled}
+                disabled={isPurchaseInProgress}
                 onSubmit={handlePurchase}
                 onDisabledPress={() => console.log('onDisablePress')}
               />

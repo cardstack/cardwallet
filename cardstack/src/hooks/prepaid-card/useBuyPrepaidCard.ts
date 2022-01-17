@@ -99,6 +99,8 @@ export default function useBuyPrepaidCard() {
     WyrePriceData[] | undefined
   >();
 
+  const [isPurchaseInProgress, setIsPurchaseInProgress] = useState(false);
+
   const [
     custodialWalletData,
     setCustodialWalletData,
@@ -403,6 +405,8 @@ export default function useBuyPrepaidCard() {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   const handlePurchase = useCallback(async () => {
+    setIsPurchaseInProgress(true);
+
     const amount =
       (card?.['source-currency-price'] || 0) *
       currencyConversionRates[nativeCurrency];
@@ -477,6 +481,8 @@ export default function useBuyPrepaidCard() {
         message: `Purchase not completed \nReservation Id: ${reservation?.id}`,
       });
     }
+
+    setIsPurchaseInProgress(false);
   }, [
     card,
     nativeCurrency,
@@ -496,6 +502,7 @@ export default function useBuyPrepaidCard() {
     card,
     setCard,
     handlePurchase,
+    isPurchaseInProgress,
     setIsInventoryLoading,
     isInventoryLoading,
     inventoryData,
