@@ -33,13 +33,15 @@ const ApplePayButton = ({ disabled, onDisabledPress, onSubmit }) => {
         <AnimatedCenter
           {...position.coverAsObject}
           {...ApplePayButtonDimensions}
-          backgroundColor={colors.black}
+          backgroundColor={
+            disabled ? colors.buttonDarkBackground : colors.black
+          }
           borderRadius={ApplePayButtonBorderRadius}
           zIndex={1}
         >
           <Centered {...position.sizeAsObject('100%')}>
             <Container marginBottom={1}>
-              <Text color="white" size={20}>
+              <Text color={colors.white} size={20}>
                 Pay with{' '}
               </Text>
             </Container>
