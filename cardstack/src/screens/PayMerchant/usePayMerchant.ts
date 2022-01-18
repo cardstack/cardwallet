@@ -238,14 +238,16 @@ export const usePayMerchant = () => {
 
   // Updating in case first render selected is undefined
   useEffect(() => {
-    if (
-      !selectedPrepaidCard?.address &&
-      hasMultipleCards &&
-      (sortedPrepaidCards[0]?.spendFaceValue || 0) > spendAmount
-    ) {
-      selectPrepaidCard(sortedPrepaidCards[0]);
+    const firstPrepaidCard = sortedPrepaidCards[0];
+    const noCardSelected = !selectedPrepaidCard?.address;
+
+    const firstCardHasEnoughBalance =
+      (firstPrepaidCard?.spendFaceValue || 0) > spendAmount;
+
+    if (noCardSelected && firstCardHasEnoughBalance) {
+      selectPrepaidCard(firstPrepaidCard);
     }
-  }, [hasMultipleCards, sortedPrepaidCards, selectedPrepaidCard, spendAmount]);
+  }, [sortedPrepaidCards, selectedPrepaidCard, spendAmount]);
 
   useEffect(() => {
     // Go to choose prepaid card step if have multiple prepaid cards and has amount in deeplink
