@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
+import { notificationHandler } from '@cardstack/notification-handler';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
@@ -178,18 +179,24 @@ class App extends Component {
   };
 
   onRemoteNotification = notification => {
-    const topic = get(notification, 'data.topic');
+    const data = get(notification, 'data');
+    const topic = get(notification, 'topic');
     setTimeout(() => {
-      this.onPushNotificationOpened(topic);
+      this.onPushNotificationOpened(topic, data);
     }, WALLETCONNECT_SYNC_DELAY);
   };
 
-  onPushNotificationOpened = topic => {
+  onPushNotificationOpened = (topic, data) => {
     const { requestsForTopic } = this.props;
     const requests = requestsForTopic(topic);
-    if (requests) {
+
+    if (requests && Array.isArray(requests) && requests.length > 0) {
       // WC requests will open automatically
       return false;
+    }
+
+    if (data) {
+      notificationHandler(data);
     }
     // In the future, here  is where we should
     // handle all other kinds of push notifications
