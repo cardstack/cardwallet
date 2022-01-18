@@ -51,6 +51,7 @@ describe('MerchantEarnedSpendAndRevenueStrategy', () => {
     const value = await strategy.mapTransaction();
     expect(value).toEqual({
       address: '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
+      fromAddress: '0x72DB39da38fa313A004770E8C4d9416428068024',
       balance: {
         amount: '1.497005988023952095',
         display: '1.497 DAI',
