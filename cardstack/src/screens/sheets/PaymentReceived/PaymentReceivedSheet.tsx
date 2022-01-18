@@ -31,20 +31,17 @@ const PaymentReceivedSheet = () => {
 
   const {
     address,
+    fromAddress,
     spendBalanceDisplay,
     nativeBalanceDisplay,
     timestamp,
     transactionHash,
     transaction: transactionData,
     token,
+    Header,
   } = transaction;
 
   const network = useRainbowSelector(state => state.settings.network);
-
-  const earnedTxnData = {
-    ...transactionData,
-    subText: transactionData.netEarned.display,
-  };
 
   const rowProps = {
     ...transaction,
@@ -97,9 +94,9 @@ const PaymentReceivedSheet = () => {
           marginBottom={8}
           overflow="scroll"
         >
-          {transaction.Header}
-          <EarnedTransaction {...earnedTxnData} txRowProps={rowProps} />
-          <PaymentDetailsItem info={address} isPrepaidCard title="FROM" />
+          {Header}
+          <EarnedTransaction {...transactionData} txRowProps={rowProps} />
+          <PaymentDetailsItem info={fromAddress} isPrepaidCard title="FROM" />
           <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
           <PaymentDetailsItem
             info={timestamp}
@@ -108,10 +105,7 @@ const PaymentReceivedSheet = () => {
             title="LOCAL TIME"
           />
         </Container>
-        <BlockscoutButton
-          network={network}
-          transactionHash={transaction.transactionHash}
-        />
+        <BlockscoutButton network={network} transactionHash={transactionHash} />
       </Container>
     </Sheet>
   );
