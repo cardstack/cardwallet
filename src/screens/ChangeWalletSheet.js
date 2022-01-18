@@ -31,7 +31,7 @@ import {
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
-import { getFCMToken } from '@cardstack/models/firebase';
+import { getFCMToken, removeFCMToken } from '@cardstack/models/firebase';
 import { unregisterFcmToken } from '@cardstack/services/hub-service';
 import { getAddressPreview } from '@cardstack/utils';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
@@ -161,6 +161,7 @@ export default function ChangeWalletSheet() {
       ) {
         const unregisterResponse = await unregisterFcmToken(fcmToken, address);
         logger.log('UnregisterFcmToken response ---', unregisterResponse);
+        removeFCMToken(address);
       }
       if (!hasVisibleAddresses) {
         delete newWallets[walletId];

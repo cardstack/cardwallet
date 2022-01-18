@@ -14,7 +14,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 const DEVICE_FCM_TOKEN_KEY = 'cardwalletFcmToken';
 type FCMTokenStorageType = {
   fcmToken: string | null;
-  addressesByNetwork?: Record<Network, string | string[]>;
+  addressesByNetwork?: Record<Network, string[]>;
 };
 
 const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
@@ -38,9 +38,24 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
   }
 };
 
+export const removeFCMToken = async (address: string) => {
+  const network: Network = await getNetwork();
+  const { fcmToken, addressesByNetwork } = await getFCMToken();
+  // remove fcm token in asyncStorage
+  await saveLocal(DEVICE_FCM_TOKEN_KEY, {
+    data: {
+      ...addressesByNetwork,
+      fcmToken,
+      [network]: (addressesByNetwork?.[network] || []).filter(
+        (addr: string) => addr !== address
+      ),
+    },
+  });
+};
+
 interface isFCMTokenStoredProps {
   isTokenStored: boolean;
-  addressesByNetwork?: Record<Network, string | string[]>;
+  addressesByNetwork?: Record<Network, string[]>;
   fcmToken: string | null;
 }
 
