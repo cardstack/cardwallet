@@ -3,6 +3,8 @@ import { Container, Touchable, Icon, Text } from '@cardstack/components';
 import { NoticeType } from '@cardstack/types';
 import { ColorTypes } from '@cardstack/theme';
 import { layoutEasingAnimation } from '@cardstack/utils';
+import { differenceInCalendarDays } from 'date-fns';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 interface NoticeStyle {
   iconColor: ColorTypes;
@@ -73,7 +75,7 @@ export const Notice = ({
             <Container margin={1} />
             <Text
               fontWeight="bold"
-              marginRight={4}
+              marginRight={8}
               color={noticeColorConfig[type].textColor}
             >
               {description}
