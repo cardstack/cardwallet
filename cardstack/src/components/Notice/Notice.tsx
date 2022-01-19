@@ -73,7 +73,7 @@ export const Notice = ({
             <Container margin={1} />
             <Text
               fontWeight="bold"
-              marginRight={4}
+              marginRight={8}
               color={noticeColorConfig[type].textColor}
             >
               {description}
