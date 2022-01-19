@@ -47,12 +47,22 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       this.nativeCurrency
     );
 
+    const transactionDetails = await getMerchantEarnedTransactionDetails(
+      prepaidCardPaymentTransaction,
+      this.nativeCurrency,
+      convertStringToNumber(nativeBalance.amount),
+      this.currencyConversionRates,
+      symbol
+    );
+
     return {
       balance: convertRawAmountToBalance(amount, {
         decimals: 18,
         symbol,
       }),
       native: nativeBalance,
+      netEarned: transactionDetails.netEarned,
+      netEarnedNativeDisplay: transactionDetails.netEarnedNativeDisplay,
       address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
       token: {
         address: prepaidCardPaymentTransaction.issuingToken.id,
