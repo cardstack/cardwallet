@@ -36,10 +36,10 @@ export const MerchantEarnedRevenueTransaction = ({
       CoinIcon={
         <CoinIcon address={item.token.address} symbol={item.token.symbol} />
       }
-      primaryText={`+ ${item.balance.display}`}
+      primaryText={`+ ${item.netEarned.display}`}
       statusIconName="plus"
       statusText="Earned"
-      subText={item.native.display}
+      subText={item.netEarnedNativeDisplay}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}
     />

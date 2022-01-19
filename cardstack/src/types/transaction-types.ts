@@ -176,6 +176,8 @@ export interface MerchantEarnedRevenueTransactionType {
   address: string;
   balance: BalanceType;
   native: BalanceType;
+  netEarned: BalanceType;
+  netEarnedNativeDisplay: string;
   token: {
     address: string;
     name?: string | null;
