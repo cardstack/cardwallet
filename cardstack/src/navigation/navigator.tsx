@@ -4,6 +4,7 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import { linking } from './screens';
+import { TabBarFeatureProvider } from './tabBarNavigator';
 import { onNavigationStateChange } from '@rainbow-me/navigation/onNavigationStateChange';
 // @ts-expect-error ts doesn't know about Platform-specific extensions
 import PlatformNavigator from '@rainbow-me/navigation/Routes';
@@ -17,7 +18,9 @@ const AppContainer = React.forwardRef<
     onStateChange={onNavigationStateChange}
     ref={ref}
   >
-    <PlatformNavigator />
+    <TabBarFeatureProvider>
+      <PlatformNavigator />
+    </TabBarFeatureProvider>
   </NavigationContainer>
 ));
 
