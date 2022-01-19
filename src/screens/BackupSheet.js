@@ -131,7 +131,7 @@ export default function BackupSheet() {
       case WalletBackupStepTypes.existing_user:
         return (
           <BackupSheetSection
-            descriptionText="Save an encrypted copy of your account, so you can restore it from iCloud at any time."
+            descriptionText={`Save an encrypted copy of your account, so you can restore it from ${cloudPlatform} at any time.`}
             onPrimaryAction={onBackupNow}
             onSecondaryAction={goBack}
             primaryLabel="Back up"
