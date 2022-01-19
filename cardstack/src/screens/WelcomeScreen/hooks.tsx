@@ -17,7 +17,7 @@ export const useWelcomeScreen = () => {
     StackNavigationProp<ParamListBase>
   >();
 
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(null as JSON | null);
 
   const hideSplashScreen = useHideSplashScreen();
 
@@ -31,8 +31,13 @@ export const useWelcomeScreen = () => {
           await syncCloud();
           logger.log('fetching backup info...');
           const data = await fetchUserDataFromCloud();
-          setUserData(data);
-          logger.log(`Downloaded backup info`);
+
+          if (data) {
+            setUserData(data);
+            logger.log(`Downloaded backup info`);
+          } else {
+            logger.log('No backups found');
+          }
         }
       } catch (e) {
         logger.log('error getting userData', e);
