@@ -33,6 +33,7 @@ export const customIcons = {
   crosshair: require('./crosshair').default,
   mandello: require('./mandello').default,
   spend: require('./spend').default,
+  wallet: require('./wallet').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;
