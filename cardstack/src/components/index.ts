@@ -39,3 +39,4 @@ export * from './LoadingOverlay';
 export * from './BalanceSection';
 export * from './AnimatedPressable';
 export * from './Notice';
+export * from './TabBarIcon';
