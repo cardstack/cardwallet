@@ -39,16 +39,19 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
 };
 
 export const removeFCMToken = async (address: string) => {
-  const network: Network = await getNetwork();
   const { fcmToken, addressesByNetwork } = await getFCMToken();
-  // remove fcm token in asyncStorage
+
+  // remove address from AsyncStorage for all networks
+  for (const networkName in addressesByNetwork) {
+    addressesByNetwork[networkName as Network] = addressesByNetwork[
+      networkName as Network
+    ].filter((addr: string) => addr !== address);
+  }
+
   await saveLocal(DEVICE_FCM_TOKEN_KEY, {
     data: {
       ...addressesByNetwork,
       fcmToken,
-      [network]: (addressesByNetwork?.[network] || []).filter(
-        (addr: string) => addr !== address
-      ),
     },
   });
 };

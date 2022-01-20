@@ -153,16 +153,26 @@ export default function ChangeWalletSheet() {
       );
       setIsWalletLoading(WalletLoadingStates.DELETING_WALLET);
 
-      const network = await getNetwork();
-      const { fcmToken, addressesByNetwork } = await getFCMToken();
-      if (
-        addressesByNetwork[network] &&
-        addressesByNetwork[network].includes(address)
-      ) {
-        const unregisterResponse = await unregisterFcmToken(fcmToken, address);
-        logger.log('UnregisterFcmToken response ---', unregisterResponse);
-        removeFCMToken(address);
+      try {
+        const network = await getNetwork();
+        const { fcmToken, addressesByNetwork } = await getFCMToken();
+        if (
+          addressesByNetwork[network] &&
+          addressesByNetwork[network].includes(address)
+        ) {
+          const unregisterResponse = await unregisterFcmToken(
+            fcmToken,
+            address
+          );
+          logger.sentry('UnregisterFcmToken response ---', unregisterResponse);
+          if (unregisterResponse && unregisterResponse.success) {
+            await removeFCMToken(address);
+          }
+        }
+      } catch (e) {
+        logger.sentry('Unregister FcmToken failed --', e);
       }
+
       if (!hasVisibleAddresses) {
         delete newWallets[walletId];
         await dispatch(walletsUpdate(newWallets));

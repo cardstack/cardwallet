@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
-import { notificationHandler } from '@cardstack/notification-handler';
+import notifee, { EventType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
@@ -51,6 +51,10 @@ import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
 import { AppContainer } from '@cardstack/navigation';
+import {
+  displayLocalNotification,
+  notificationHandler,
+} from '@cardstack/notification-handler';
 import { requestsForTopic } from '@cardstack/redux/requests';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
@@ -129,11 +133,26 @@ class App extends Component {
       this.onRemoteNotification
     );
 
-    this.backgroundNotificationHandler = messaging().setBackgroundMessageHandler(
-      async remoteMessage => {
-        console.log('Message handled in the background!', remoteMessage);
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      if (remoteMessage && remoteMessage.notification) {
+        notificationHandler(remoteMessage.notification);
       }
-    );
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage && remoteMessage.notification) {
+          notificationHandler(remoteMessage.notification);
+        }
+      });
+
+    notifee.onForegroundEvent(({ type, detail }) => {
+      if (type === EventType.PRESS) {
+        notificationHandler(detail.notification);
+      }
+    });
 
     // Walletconnect uses direct deeplinks
     if (android) {
@@ -166,7 +185,6 @@ class App extends Component {
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
-    this.backgroundNotificationHandler?.();
   }
 
   identifyFlow = async () => {
@@ -179,28 +197,20 @@ class App extends Component {
   };
 
   onRemoteNotification = notification => {
-    const data = get(notification, 'data');
     const topic = get(notification, 'topic');
-    setTimeout(() => {
-      this.onPushNotificationOpened(topic, data);
-    }, WALLETCONNECT_SYNC_DELAY);
-  };
-
-  onPushNotificationOpened = (topic, data) => {
-    const { requestsForTopic } = this.props;
-    const requests = requestsForTopic(topic);
-
-    if (requests && Array.isArray(requests) && requests.length > 0) {
-      // WC requests will open automatically
-      return false;
+    if (topic) {
+      setTimeout(() => {
+        const { requestsForTopic } = this.props;
+        const requests = requestsForTopic(topic);
+        if (requests && Array.isArray(requests) && requests.length > 0) {
+          // WC requests will open automatically
+          return false;
+        }
+        displayLocalNotification(notification);
+      }, WALLETCONNECT_SYNC_DELAY);
+    } else {
+      displayLocalNotification(notification);
     }
-
-    if (data) {
-      notificationHandler(data);
-    }
-    // In the future, here  is where we should
-    // handle all other kinds of push notifications
-    // For ex. incoming txs, etc.
   };
 
   handleAppStateChange = async nextAppState => {

@@ -503,6 +503,11 @@ PODS:
     - React
   - RNLocalize (2.1.5):
     - React-Core
+  - RNNotifee (4.0.1):
+    - React-Core
+    - RNNotifee/NotifeeCore (= 4.0.1)
+  - RNNotifee/NotifeeCore (4.0.1):
+    - React-Core
   - RNOS (1.2.8):
     - React
   - RNPermissions (3.0.5):
@@ -669,6 +674,7 @@ DEPENDENCIES:
   - RNKeyboard (from `../node_modules/react-native-keyboard-area`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNLocalize (from `../node_modules/react-native-localize`)
+  - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNOS (from `../node_modules/react-native-os`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
@@ -861,6 +867,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keychain"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
+  RNNotifee:
+    :path: "../node_modules/@notifee/react-native"
   RNOS:
     :path: "../node_modules/react-native-os"
   RNPermissions:
@@ -991,6 +999,7 @@ SPEC CHECKSUMS:
   RNKeyboard: ceec456427493b286539f40442620881b5840dff
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
   RNLocalize: 74b82db20cc3895ccc25af992c644879bcec2815
+  RNNotifee: ed6c0b5ffc0b021507fe196a1c4cfd1fe002410c
   RNOS: 31db6fa4a197d179afbba9e6b4d28d450a7f250b
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
