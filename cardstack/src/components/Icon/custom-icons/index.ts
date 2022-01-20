@@ -10,6 +10,7 @@ export const customIcons = {
   'prepaid-card': require('./prepaid-card').default,
   'user-check-square': require('./user-check-square').default,
   'phone-pc': require('./phone-pc').default,
+  'user-with-background': require('./user').default,
   info: require('./info').default,
   split: require('./split').default,
   cardstack: require('./cardstack').default,
@@ -32,7 +33,6 @@ export const customIcons = {
   crosshair: require('./crosshair').default,
   mandello: require('./mandello').default,
   spend: require('./spend').default,
-  user: require('./user').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;

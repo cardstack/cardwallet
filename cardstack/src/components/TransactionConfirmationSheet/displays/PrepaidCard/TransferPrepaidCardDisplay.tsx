@@ -139,7 +139,7 @@ const ToSection = ({ data }: { data: TransferDecodedDataType }) => {
       <SectionHeaderText>TO</SectionHeaderText>
       <Container paddingHorizontal={3} marginTop={4}>
         <Container flexDirection="row">
-          <Icon name="user" />
+          <Icon name="user-with-background" />
           <Container marginLeft={4}>
             <Container maxWidth={180}>
               <Text variant="subAddress">{data.newOwner}</Text>

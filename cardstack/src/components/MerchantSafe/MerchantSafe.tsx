@@ -79,7 +79,7 @@ export const MerchantInfo = ({
           />
         </Container>
       ) : (
-        <Icon name="user" size={80} />
+        <Icon name="user-with-background" size={80} />
       )}
 
       <Container
@@ -123,7 +123,7 @@ const Bottom = ({ slug }: { slug?: string }) => {
               manager
             </Text>
           </Container>
-          <Icon name="user" />
+          <Icon name="user-with-background" />
         </Container>
       </Container>
     </Container>

@@ -10,7 +10,7 @@ const MerchantSectionCard = ({
   merchantInfoDID,
   children,
   isLoading = false,
-  customIcon = <Icon name="user" size={USER_ICON_SIZE} />,
+  customIcon = <Icon name="user-with-background" size={USER_ICON_SIZE} />,
   ...props
 }: {
   merchantInfoDID?: MerchantInformation;
