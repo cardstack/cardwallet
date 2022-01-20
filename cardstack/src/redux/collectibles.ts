@@ -223,7 +223,7 @@ const fetchNFTsViaRpcNode = () => async (
               traits: [],
               background: null,
               familyImage: null,
-              isSendable: false,
+              isSendable: true,
               asset_contract: {
                 address: asset.address,
                 description: tokenURIJSON.description,
