@@ -14,14 +14,14 @@ interface NotificationDataType {
 }
 
 interface NotificationInfoType {
-  data: NotificationDataType;
+  data?: NotificationDataType;
   body: string;
 }
 
 export const notificationHandler = ({ data }: NotificationInfoType) => {
-  const { notificationType } = data;
+  const { notificationType } = data || {};
 
-  if (notificationType) {
+  if (data && notificationType) {
     switch (notificationType) {
       case NotificationType.customer_payment:
         const { transactionInformation } = data;

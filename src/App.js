@@ -134,8 +134,8 @@ class App extends Component {
     );
 
     messaging().onNotificationOpenedApp(remoteMessage => {
-      if (remoteMessage && remoteMessage.notification) {
-        notificationHandler(remoteMessage.notification);
+      if (remoteMessage) {
+        notificationHandler(remoteMessage);
       }
     });
 
@@ -143,8 +143,8 @@ class App extends Component {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-        if (remoteMessage && remoteMessage.notification) {
-          notificationHandler(remoteMessage.notification);
+        if (remoteMessage) {
+          notificationHandler(remoteMessage);
         }
       });
 
