@@ -3,7 +3,10 @@ import messaging, {
 } from '@react-native-firebase/messaging';
 import lang from 'i18n-js';
 import { requestNotifications } from 'react-native-permissions';
-import { registerFcmToken } from '@cardstack/services/hub-service';
+import {
+  registerFcmToken,
+  unregisterFcmToken,
+} from '@cardstack/services/hub-service';
 import { Alert } from '@rainbow-me/components/alerts';
 import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
@@ -32,6 +35,11 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
       return { fcmToken: null };
     }
 
+    console.log('{ fcmToken, addressesByNetwork }---', {
+      fcmToken,
+      addressesByNetwork,
+    });
+
     return { fcmToken, addressesByNetwork };
   } catch {
     return { fcmToken: null };
@@ -39,21 +47,39 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
 };
 
 export const removeFCMToken = async (address: string) => {
-  const { fcmToken, addressesByNetwork } = await getFCMToken();
+  try {
+    const network: Network = await getNetwork();
+    const { fcmToken, addressesByNetwork } = await getFCMToken();
 
-  // remove address from AsyncStorage for all networks
-  for (const networkName in addressesByNetwork) {
-    addressesByNetwork[networkName as Network] = addressesByNetwork[
-      networkName as Network
-    ].filter((addr: string) => addr !== address);
+    if (
+      fcmToken &&
+      addressesByNetwork &&
+      addressesByNetwork[network] &&
+      addressesByNetwork[network].includes(address)
+    ) {
+      const unregisterResponse = await unregisterFcmToken(fcmToken, address);
+
+      logger.sentry('UnregisterFcmToken response ---', unregisterResponse);
+
+      if (unregisterResponse && unregisterResponse.success) {
+        // remove address from AsyncStorage for all networks
+        for (const networkName in addressesByNetwork) {
+          addressesByNetwork[networkName as Network] = addressesByNetwork[
+            networkName as Network
+          ].filter((addr: string) => addr !== address);
+        }
+
+        await saveLocal(DEVICE_FCM_TOKEN_KEY, {
+          data: {
+            ...addressesByNetwork,
+            fcmToken,
+          },
+        });
+      }
+    }
+  } catch (e) {
+    logger.sentry('Unregister FcmToken failed --', e);
   }
-
-  await saveLocal(DEVICE_FCM_TOKEN_KEY, {
-    data: {
-      ...addressesByNetwork,
-      fcmToken,
-    },
-  });
 };
 
 interface isFCMTokenStoredProps {

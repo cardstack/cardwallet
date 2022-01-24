@@ -31,10 +31,9 @@ import {
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
-import { getFCMToken, removeFCMToken } from '@cardstack/models/firebase';
-import { unregisterFcmToken } from '@cardstack/services/hub-service';
+import { removeFCMToken } from '@cardstack/models/firebase';
 import { getAddressPreview } from '@cardstack/utils';
-import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
@@ -153,26 +152,8 @@ export default function ChangeWalletSheet() {
       );
       setIsWalletLoading(WalletLoadingStates.DELETING_WALLET);
 
-      try {
-        const network = await getNetwork();
-        const { fcmToken, addressesByNetwork } = await getFCMToken();
-        if (
-          addressesByNetwork[network] &&
-          addressesByNetwork[network].includes(address)
-        ) {
-          const unregisterResponse = await unregisterFcmToken(
-            fcmToken,
-            address
-          );
-          logger.sentry('UnregisterFcmToken response ---', unregisterResponse);
-          if (unregisterResponse && unregisterResponse.success) {
-            await removeFCMToken(address);
-          }
-        }
-      } catch (e) {
-        logger.sentry('Unregister FcmToken failed --', e);
-      }
-
+      // unregister in hub and remove fcm for this account from asyncStorage
+      await removeFCMToken(address);
       if (!hasVisibleAddresses) {
         delete newWallets[walletId];
         await dispatch(walletsUpdate(newWallets));
