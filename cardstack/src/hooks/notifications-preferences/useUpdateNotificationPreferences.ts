@@ -33,7 +33,7 @@ export const useUpdateNotificationPreferences = () => {
   }, [authToken]);
 
   const onUpdateOptionStatus = useCallback(
-    async (value, item) => {
+    async (item, value) => {
       const updateList = options?.map(
         (option: NotificationsPreferenceDataType) => {
           if (
