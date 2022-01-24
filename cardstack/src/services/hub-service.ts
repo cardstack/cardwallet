@@ -9,6 +9,7 @@ import {
   ReservationData,
   OrderData,
   WyrePriceData,
+  NotificationsPreferenceDataType,
 } from '@cardstack/types';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -149,6 +150,58 @@ export const unregisterFcmToken = async (
   } catch (e: any) {
     logger.sentry(
       'Error while unregistering fcmToken from hub',
+      e?.response || e
+    );
+  }
+};
+
+export const getNotificationsPreferences = async (
+  authToken: string,
+  fcmToken: string
+): Promise<NotificationsPreferenceDataType[] | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    const results = await axios.get(
+      `${hubURL}/api/notification-preferences/${fcmToken}`,
+      axiosConfig(authToken)
+    );
+
+    return results?.data?.data as NotificationsPreferenceDataType[];
+  } catch (e: any) {
+    logger.sentry(
+      'Error while fetching notifications preferences from hub',
+      e?.response || e
+    );
+  }
+};
+
+export const setNotificationsPreferences = async (
+  authToken: string,
+  fcmToken: string,
+  update: NotificationsPreferenceDataType
+) => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    await axios.put(
+      `${hubURL}/api/notification-preferences/${fcmToken}`,
+      JSON.stringify({
+        data: {
+          type: 'notification-preference',
+          attributes: {
+            'notification-type': update.attributes['notification-type'],
+            status: update.attributes.status,
+          },
+        },
+      }),
+      axiosConfig(authToken)
+    );
+  } catch (e: any) {
+    logger.sentry(
+      'Error while saving notifications preferences on hub',
       e?.response || e
     );
   }

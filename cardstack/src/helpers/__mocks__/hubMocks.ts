@@ -558,3 +558,26 @@ export const wyrePriceData = {
     ],
   },
 };
+
+export const notificationsPreferences = {
+  data: [
+    {
+      type: 'notification-preference',
+      attributes: {
+        'owner-address': '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13',
+        'push-client-id': '1234567',
+        'notification-type': 'merchant_claim',
+        status: 'disabled',
+      },
+    },
+    {
+      type: 'notification-preference',
+      attributes: {
+        'owner-address': '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13',
+        'push-client-id': '1234567',
+        'notification-type': 'customer_payment',
+        status: 'enabled',
+      },
+    },
+  ],
+};

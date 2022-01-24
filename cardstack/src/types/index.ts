@@ -11,3 +11,4 @@ export * from './transaction-confirmation-types';
 export * from './transaction-types';
 export * from './NoticeType';
 export * from './IncidentType';
+export * from './NotificationsPreferenceDataType';
