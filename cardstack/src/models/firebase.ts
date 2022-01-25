@@ -35,11 +35,6 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
       return { fcmToken: null };
     }
 
-    console.log('{ fcmToken, addressesByNetwork }---', {
-      fcmToken,
-      addressesByNetwork,
-    });
-
     return { fcmToken, addressesByNetwork };
   } catch {
     return { fcmToken: null };

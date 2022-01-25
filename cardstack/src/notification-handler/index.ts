@@ -1,16 +1,20 @@
 import notifee from '@notifee/react-native';
 import { merchantPrepaidCardPaymentReceivedHandler } from './merchantPrepaidCardPaymentReceived';
+import { merchantClaimHandler } from './merchantClaim';
 import logger from 'logger';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 // add more notification types here
 export enum NotificationType {
-  'customer_payment' = 'customer_payment',
-  'merchant_claim' = 'merchant_claim',
+  customerPayment = 'customer_payment',
+  merchantClaim = 'merchant_claim',
 }
 
 interface NotificationDataType {
   notificationType: NotificationType;
-  transactionInformation: string;
+  transactionInformation?: string;
+  network?: Network;
+  ownerAddress?: string;
 }
 
 interface NotificationInfoType {
@@ -18,37 +22,66 @@ interface NotificationInfoType {
   body: string;
 }
 
+interface LocalNotificationDataType {
+  [key: string]: string;
+}
+interface LocalNotificationType {
+  notification: { title?: string; body: string };
+  data: LocalNotificationDataType;
+}
+
+interface NotificationConfig {
+  title: string;
+  handler: (data?: NotificationDataType) => void;
+}
+
+const notificationConfig: Record<NotificationType, NotificationConfig> = {
+  [NotificationType.customerPayment]: {
+    title: 'Payment Received',
+    handler: data => {
+      if (!data?.transactionInformation) return;
+      // parse to object as hub sends data as a string
+      const { transactionInformation } = data;
+      const transactionData = JSON.parse(transactionInformation);
+      merchantPrepaidCardPaymentReceivedHandler(transactionData);
+    },
+  },
+  [NotificationType.merchantClaim]: {
+    title: 'Merchant claimed successfully',
+    handler: data => {
+      logger.log('merchantClaim notif--', data);
+      if (!data?.transactionInformation) return;
+      // parse to object as hub sends data as a string
+      const { transactionInformation } = data;
+      const transactionData = JSON.parse(transactionInformation);
+      merchantClaimHandler(transactionData);
+    },
+  },
+};
+
 export const notificationHandler = ({ data }: NotificationInfoType) => {
   const { notificationType } = data || {};
 
   if (data && notificationType) {
-    switch (notificationType) {
-      case NotificationType.customer_payment:
-        const { transactionInformation } = data;
-        const transactionData = JSON.parse(transactionInformation); // parse to object as hub sends data as a string
-        merchantPrepaidCardPaymentReceivedHandler(transactionData);
-        break;
-    }
+    notificationConfig?.[notificationType]?.handler(data);
   }
 };
 
-export const displayLocalNotification = async (notificationData: any) => {
+export const displayLocalNotification = async (
+  notificationData: LocalNotificationType
+) => {
   try {
     const {
       notification: { title, body },
       data,
     } = notificationData;
 
-    let notificationTitle = title;
     const { notificationType } = data;
 
     // update notification title when no title from hub side(mostly had no title)
-    if (
-      !notificationTitle &&
-      notificationType === NotificationType.customer_payment
-    ) {
-      notificationTitle = 'Payment Received';
-    }
+    const notificationTitle =
+      title ||
+      notificationConfig?.[notificationType as NotificationType]?.title;
 
     await notifee.displayNotification({
       title: notificationTitle,

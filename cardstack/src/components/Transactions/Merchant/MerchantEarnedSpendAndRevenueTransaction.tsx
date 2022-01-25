@@ -17,13 +17,15 @@ export interface MerchantEarnSpendAndRevenueTransactionProps
   item: MerchantEarnedSpendAndRevenueTransactionType;
 }
 
+interface MerchantEarnedSpendAndRevenueTransactionFooter {
+  token: { address: string; symbol?: string | null };
+  netEarnedDisplayValue: string;
+}
+
 export const MerchantEarnedSpendAndRevenueTransactionFooter = ({
   token,
   netEarnedDisplayValue,
-}: {
-  token: { address: string; symbol?: string | null };
-  netEarnedDisplayValue: string;
-}) => (
+}: MerchantEarnedSpendAndRevenueTransactionFooter) => (
   <Container
     paddingHorizontal={5}
     flexDirection="row"

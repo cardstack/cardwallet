@@ -33,7 +33,10 @@ export const merchantPrepaidCardPaymentReceivedHandler = async (
       });
     });
   } catch (e) {
-    Logger.sentry('Push notification in-app handling failed - ', e);
+    Logger.sentry(
+      'merchantPrepaidCardPaymentReceivedHandler handling failed - ',
+      e
+    );
   }
 };
 
