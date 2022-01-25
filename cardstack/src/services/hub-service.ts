@@ -39,10 +39,9 @@ const axiosConfig = (authToken: string) => {
 
 const hubAuthTokenStorageKey = (
   hubURL: string,
-  network: Network,
   walletAddress?: string
 ): string => {
-  const key = `hubAuthToken-${hubURL}-${network}-${walletAddress}`;
+  const key = `hubAuthToken-${hubURL}-${walletAddress}`;
 
   return key;
 };
@@ -86,7 +85,7 @@ export const getHubAuthToken = async (
 
   // Validate if authToken isn't already saved and use it.
   const savedAuthToken = await loadHubAuthToken(
-    hubAuthTokenStorageKey(hubURL, network, walletAddress)
+    hubAuthTokenStorageKey(hubURL, walletAddress)
   );
 
   if (savedAuthToken) {
@@ -110,7 +109,7 @@ export const getHubAuthToken = async (
     await HDProvider.reset();
 
     await storeHubAuthToken(
-      hubAuthTokenStorageKey(hubURL, network, walletAddress),
+      hubAuthTokenStorageKey(hubURL, walletAddress),
       authToken
     );
 
