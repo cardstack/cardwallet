@@ -42,16 +42,13 @@ export const runWalletBackupStatusChecks = () => {
 
   if (!rainbowWalletsNotBackedUp.length) return;
 
-  logger.log('there is a rainbow wallet not backed up');
-  const hasSelectedWallet = find(
+  logger.log('device has at least one wallet that is not backed up');
+  const hasSelectedWallet = !!find(
     rainbowWalletsNotBackedUp,
     notBackedUpWallet => notBackedUpWallet.id === selected.id
   );
 
-  logger.log(
-    'rainbow wallet not backed up that is selected?',
-    hasSelectedWallet
-  );
+  logger.log('wallet not backed up that is selected?', hasSelectedWallet);
 
   // if one of them is selected, show the default BackupSheet
   if (selected && hasSelectedWallet && IS_TESTING !== 'true') {

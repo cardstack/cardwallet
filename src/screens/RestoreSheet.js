@@ -7,10 +7,7 @@ import RestoreSheetFirstStep from '../components/backup/RestoreSheetFirstStep';
 
 import { Sheet } from '@cardstack/components';
 import { Device, layoutEasingAnimation } from '@cardstack/utils';
-import {
-  CLOUD_BACKUP_ERRORS,
-  fetchUserDataFromCloud,
-} from '@rainbow-me/handlers/cloudBackup';
+import { fetchUserDataFromCloud } from '@rainbow-me/handlers/cloudBackup';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -35,18 +32,16 @@ export default function RestoreSheet() {
         // we didn't yet fetch the user data from the cloud
         setIsFetchingBackups(true);
         const data = await fetchUserDataFromCloud();
-        setParams({ userData: data });
+        if (data) {
+          setParams({ userData: data });
+        } else {
+          setNoBackupsFound(true);
+        }
       }
 
       // Animate transforming into backup sheet
       layoutEasingAnimation();
       setParams({ step: WalletBackupStepTypes.cloud });
-    } catch (e) {
-      if (e.message === CLOUD_BACKUP_ERRORS.NO_BACKUPS_FOUND) {
-        setNoBackupsFound(true);
-      } else {
-        throw e;
-      }
     } finally {
       setIsFetchingBackups(false);
     }

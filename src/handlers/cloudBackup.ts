@@ -5,6 +5,7 @@ import RNCloudFs, { BackupFile } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
+import { ICloudBackupData } from '../model/backup';
 import { logger } from '../utils';
 import { Device } from '@cardstack/utils/device';
 
@@ -18,7 +19,6 @@ export const CLOUD_BACKUP_ERRORS = {
   GENERAL_ERROR: 'Backup failed',
   INTEGRITY_CHECK_FAILED: 'Backup integrity check failed',
   KEYCHAIN_ACCESS_ERROR: `Couldn't read items from keychain`,
-  NO_BACKUPS_FOUND: 'No backups found',
   SPECIFIC_BACKUP_NOT_FOUND: 'No backup found with that name',
   UKNOWN_ERROR: 'Unknown Error',
   WALLET_BACKUP_STATUS_UPDATE_FAILED: 'Update wallet backup status failed',
@@ -135,7 +135,7 @@ export async function syncCloud(): Promise<any> {
 export async function getDataFromCloud(
   backupPassword: string,
   filename: string | null = null
-): Promise<any> {
+): Promise<ICloudBackupData | null> {
   if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
@@ -146,10 +146,8 @@ export async function getDataFromCloud(
   });
 
   if (!backups || !backups.files || !backups.files.length) {
-    logger.sentry('No backups found');
-    const error = new Error(CLOUD_BACKUP_ERRORS.NO_BACKUPS_FOUND);
-    captureException(error);
-    throw error;
+    logger.log('No backups found');
+    return null;
   }
 
   let document: BackupFile | undefined;
