@@ -3,6 +3,7 @@ import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { getAllWallets, loadAddress } from '@rainbow-me/model/wallet';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
 import {
   CustodialWallet,
   Inventory,
@@ -35,6 +36,36 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
+const hubAuthTokenStorageKey = (
+  hubURL: string,
+  network: Network,
+  walletAddress?: string
+): string => {
+  const key = `hubAuthToken-${hubURL}-${network}-${walletAddress}`;
+
+  return key;
+};
+
+const loadHubAuthToken = async (
+  tokenStorageKey: string
+): Promise<string | null> => {
+  const {
+    data: { authToken },
+  } = ((await getLocal(tokenStorageKey)) || {
+    data: { authToken: null },
+  }) as any;
+
+  return authToken;
+};
+
+const storeHubAuthToken = async (
+  tokenStorageKey: string,
+  authToken: string
+) => {
+  // expires in a day.
+  await saveLocal(tokenStorageKey, { data: { authToken } }, 1000 * 3600 * 24);
+};
+
 export const getHubAuthToken = async (
   hubURL: string,
   network: Network,
@@ -52,6 +83,15 @@ export const getHubAuthToken = async (
         ) > -1
     )?.id || '';
 
+  // Validate if authToken isn't already saved and use it.
+  const savedAuthToken = await loadHubAuthToken(
+    hubAuthTokenStorageKey(hubURL, network, walletAddress)
+  );
+
+  if (savedAuthToken) {
+    return savedAuthToken;
+  }
+
   try {
     const hdProvider = await HDProvider.get({
       walletId,
@@ -66,6 +106,13 @@ export const getHubAuthToken = async (
     // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
     const address = walletAddress || (await loadAddress()) || '';
     const authToken = await authAPI.authenticate({ from: address });
+    await HDProvider.reset();
+
+    await storeHubAuthToken(
+      hubAuthTokenStorageKey(hubURL, network, walletAddress),
+      authToken
+    );
+
     return authToken;
   } catch (e) {
     logger.sentry('Hub authenticate failed', e);
@@ -89,8 +136,6 @@ export const registerFcmToken = async (
       walletAddress,
       seedPhrase
     );
-
-    await HDProvider.reset();
 
     if (!authToken) {
       return { success: false };
@@ -132,8 +177,6 @@ export const unregisterFcmToken = async (
       walletAddress,
       seedPhrase
     );
-
-    await HDProvider.reset();
 
     if (!authToken) {
       return { success: false };

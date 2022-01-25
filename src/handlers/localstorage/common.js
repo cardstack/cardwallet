@@ -16,13 +16,14 @@ export const getKey = (prefix, accountAddress, network) =>
 export const saveLocal = async (
   key = '',
   data = {},
+  expires = 0, // 0 means never expires
   version = defaultVersion
 ) => {
   try {
     data.storageVersion = version;
     await storage.save({
       data,
-      expires: null,
+      expires: expires ? expires : null,
       key,
     });
   } catch (error) {
@@ -79,7 +80,7 @@ export const getGlobal = async (
 };
 
 export const saveGlobal = (key, data, version = defaultVersion) =>
-  saveLocal(key, { data }, version);
+  saveLocal(key, { data }, null, version);
 
 export const getAccountLocal = async (
   prefix,
@@ -99,7 +100,8 @@ export const saveAccountLocal = (
   accountAddress,
   network,
   version = defaultVersion
-) => saveLocal(getKey(prefix, accountAddress, network), { data }, version);
+) =>
+  saveLocal(getKey(prefix, accountAddress, network), { data }, null, version);
 
 export const removeAccountLocal = (prefix, accountAddress, network) => {
   const key = getKey(prefix, accountAddress, network);
