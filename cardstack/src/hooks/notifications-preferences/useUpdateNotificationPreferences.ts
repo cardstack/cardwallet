@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useAuthToken } from '@cardstack/hooks';
 
-import { getFCMToken } from '@cardstack/models/firebase';
 import {
   getNotificationsPreferences,
   setNotificationsPreferences,
@@ -21,14 +20,10 @@ export const useUpdateNotificationPreferences = () => {
   >([]);
 
   const fetchNotificationPreferences = useCallback(async () => {
-    const { fcmToken } = await getFCMToken();
+    const result = await getNotificationsPreferences(authToken);
 
-    if (fcmToken) {
-      const result = await getNotificationsPreferences(authToken, fcmToken);
-
-      if (result && result.length > 0) {
-        setOptions(result);
-      }
+    if (result && result.length > 0) {
+      setOptions(result);
     }
   }, [authToken]);
 
@@ -55,10 +50,8 @@ export const useUpdateNotificationPreferences = () => {
           item.attributes['notification-type']
       );
 
-      const { fcmToken } = await getFCMToken();
-
-      if (fcmToken && authToken && updateItem) {
-        await setNotificationsPreferences(authToken, fcmToken, updateItem);
+      if (authToken && updateItem) {
+        await setNotificationsPreferences(authToken, updateItem);
       }
     },
     [authToken, options]

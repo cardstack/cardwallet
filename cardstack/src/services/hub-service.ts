@@ -14,6 +14,7 @@ import {
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import HDProvider from '@cardstack/models/hd-provider';
+import { getFCMToken } from '@cardstack/models/firebase';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
@@ -156,12 +157,12 @@ export const unregisterFcmToken = async (
 };
 
 export const getNotificationsPreferences = async (
-  authToken: string,
-  fcmToken: string
+  authToken: string
 ): Promise<NotificationsPreferenceDataType[] | undefined> => {
   try {
     const network: Network = await getNetwork();
     const hubURL = getHubUrl(network);
+    const { fcmToken } = await getFCMToken();
 
     const results = await axios.get(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
@@ -179,12 +180,12 @@ export const getNotificationsPreferences = async (
 
 export const setNotificationsPreferences = async (
   authToken: string,
-  fcmToken: string,
   update: NotificationsPreferenceDataType
 ) => {
   try {
     const network: Network = await getNetwork();
     const hubURL = getHubUrl(network);
+    const { fcmToken } = await getFCMToken();
 
     await axios.put(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
