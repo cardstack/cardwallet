@@ -1,5 +1,5 @@
-import React from 'react';
-import { FlatList, Switch } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { FlatList, ListRenderItemInfo, StyleSheet, Switch } from 'react-native';
 import { Container, Skeleton, Text } from '@cardstack/components';
 import {
   NotificationsOptionsStrings,
@@ -14,61 +14,84 @@ const NotificationsSection = () => {
     error,
   } = useUpdateNotificationPreferences();
 
-  const OptionListItem = ({
-    item,
-  }: {
-    item: NotificationsPreferenceDataType;
-  }) => {
-    return (
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<NotificationsPreferenceDataType>) => {
+      return (
+        <Container
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between"
+          paddingHorizontal={6}
+          paddingVertical={2}
+          testID="option-item"
+        >
+          <Text>
+            {
+              NotificationsOptionsStrings[
+                item?.attributes[
+                  'notification-type'
+                ] as keyof typeof NotificationsOptionsStrings
+              ]
+            }
+          </Text>
+          <Switch
+            onValueChange={value => onUpdateOptionStatus(item, value)}
+            value={item?.attributes.status === 'enabled'}
+          />
+        </Container>
+      );
+    },
+    [onUpdateOptionStatus]
+  );
+
+  const ListError = useMemo(
+    () => (
+      <Container alignItems="center" flex={1} justifyContent="center">
+        <Text>{error}</Text>
+      </Container>
+    ),
+    [error]
+  );
+
+  const ListLoading = useMemo(
+    () => (
       <Container
-        alignItems="center"
-        flexDirection="row"
-        justifyContent="space-between"
+        flexDirection="column"
         paddingHorizontal={6}
         paddingVertical={2}
-        testID="option-item"
       >
-        <Text>
-          {
-            NotificationsOptionsStrings[
-              item?.attributes[
-                'notification-type'
-              ] as keyof typeof NotificationsOptionsStrings
-            ]
-          }
-        </Text>
-        <Switch
-          onValueChange={value => onUpdateOptionStatus(item, value)}
-          value={item?.attributes.status === 'enabled'}
-        />
+        {[...Array(2)].map((v, i) => (
+          <Skeleton
+            height={40}
+            key={`${i}`}
+            light
+            marginBottom={1}
+            width="100%"
+          />
+        ))}
       </Container>
-    );
-  };
-
-  const ListError = () => (
-    <Container alignItems="center" flex={1} justifyContent="center">
-      <Text>{error}</Text>
-    </Container>
+    ),
+    []
   );
 
-  const ListLoading = () => (
-    <Container flexDirection="column" paddingHorizontal={6} paddingVertical={2}>
-      <Skeleton height={40} light marginBottom={1} width="100%" />
-      <Skeleton height={40} light width="100%" />
-    </Container>
-  );
+  const keyExtractor = (item: NotificationsPreferenceDataType) =>
+    item.attributes['notification-type'];
 
   return (
     <FlatList
       ListEmptyComponent={error ? ListError : ListLoading}
-      contentContainerStyle={{ paddingTop: 16 }}
+      contentContainerStyle={styles.contentContainer}
       data={options}
-      keyExtractor={(item: NotificationsPreferenceDataType) =>
-        item.attributes['notification-type']
-      }
-      renderItem={OptionListItem}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    paddingTop: 16,
+  },
+});
 
 export default NotificationsSection;
