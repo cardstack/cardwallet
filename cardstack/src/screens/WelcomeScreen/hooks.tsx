@@ -18,7 +18,7 @@ export const useWelcomeScreen = () => {
     StackNavigationProp<ParamListBase>
   >();
 
-  const [userData, setUserData] = useState(null as ICloudBackupData | null);
+  const [userData, setUserData] = useState<ICloudBackupData | null>(null);
 
   const hideSplashScreen = useHideSplashScreen();
 
