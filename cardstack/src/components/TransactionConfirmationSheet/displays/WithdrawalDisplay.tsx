@@ -104,7 +104,7 @@ const ToSection = ({ data }: { data: WithdrawalDecodedData }) => {
       <Container paddingHorizontal={3} marginTop={4}>
         <NetworkBadge marginLeft={11} marginBottom={1} text="TO MAINNET" />
         <Container flexDirection="row">
-          <Icon name="user" />
+          <Icon name="user-with-background" />
           <Container marginLeft={4}>
             <Container maxWidth={180}>
               <Text variant="subAddress">{data.layer1Recipient}</Text>

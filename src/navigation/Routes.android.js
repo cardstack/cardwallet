@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useMemo } from 'react';
 import { InitialRouteContext } from '../context/initialRoute';
@@ -37,12 +36,10 @@ import {
   speedUpAndCancelStyleInterpolator,
   wcPromptPreset,
 } from './effects';
-import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 
 import {
   dismissAndroidKeyboardOnClose,
-  linking,
   useCardstackGlobalScreens,
   useCardstackMainScreens,
 } from '@cardstack/navigation';
@@ -220,16 +217,4 @@ function MainOuterNavigator() {
   );
 }
 
-const AppContainer = React.forwardRef((props, ref) => (
-  <NavigationContainer
-    linking={linking}
-    onStateChange={onNavigationStateChange}
-    ref={ref}
-  >
-    <MainOuterNavigator />
-  </NavigationContainer>
-));
-
-AppContainer.displayName = 'AppContainer';
-
-export default React.memo(AppContainer);
+export default React.memo(MainOuterNavigator);

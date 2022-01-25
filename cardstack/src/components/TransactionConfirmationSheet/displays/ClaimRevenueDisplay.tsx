@@ -90,7 +90,7 @@ const ToSection = ({ merchantSafe }: { merchantSafe: string }) => {
           BUSINESS SAFE
         </Text>
         <Container flexDirection="row" alignItems="center">
-          <Icon name="user" />
+          <Icon name="user-with-background" />
           <Text size="small" weight="extraBold" style={{ marginLeft: 6 }}>
             Business
           </Text>

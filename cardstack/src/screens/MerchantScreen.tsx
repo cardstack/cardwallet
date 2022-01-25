@@ -231,7 +231,7 @@ const MerchantInfo = ({
           />
         </Container>
       ) : (
-        <Icon name="user" size={80} />
+        <Icon name="user-with-background" size={80} />
       )}
 
       <Text
@@ -250,7 +250,12 @@ const MerchantInfo = ({
             manager
           </Text>
         </Text>
-        <Icon name="user" color="black" iconSize="small" marginLeft={2} />
+        <Icon
+          name="user-with-background"
+          color="black"
+          iconSize="small"
+          marginLeft={2}
+        />
       </Container>
     </Container>
   );
