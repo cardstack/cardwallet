@@ -11,13 +11,14 @@ import { Device } from '@cardstack/utils';
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
+import { ICloudBackupData } from '@rainbow-me/model/backup';
 
 export const useWelcomeScreen = () => {
   const { navigate, replace } = useNavigation<
     StackNavigationProp<ParamListBase>
   >();
 
-  const [userData, setUserData] = useState(null as JSON | null);
+  const [userData, setUserData] = useState(null as ICloudBackupData | null);
 
   const hideSplashScreen = useHideSplashScreen();
 

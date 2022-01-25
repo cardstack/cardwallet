@@ -5,6 +5,7 @@ import RNCloudFs, { BackupFile } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
+import { ICloudBackupData } from '../model/backup';
 import { logger } from '../utils';
 import { Device } from '@cardstack/utils/device';
 
@@ -134,7 +135,7 @@ export async function syncCloud(): Promise<any> {
 export async function getDataFromCloud(
   backupPassword: string,
   filename: string | null = null
-): Promise<JSON | null> {
+): Promise<ICloudBackupData | null> {
   if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }

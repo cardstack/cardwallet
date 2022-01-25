@@ -23,7 +23,11 @@ jest.mock('@rainbow-me/hooks', () => ({
 describe('useWelcomeScreen', () => {
   Device.isIOS = true;
 
-  const mockedUserData = { foo: 'bar' };
+  const mockedUserData = {
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    secrets: { foo: 'bar' },
+  };
 
   const spyIsCloudAvailable = jest
     .spyOn(cloudBackup, 'isCloudBackupAvailable')
