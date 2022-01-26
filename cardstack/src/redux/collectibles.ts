@@ -25,6 +25,7 @@ import {
   assetsWithoutNFTsByFamily,
   getNFTFamilies,
 } from '@cardstack/parsers/collectibles';
+import logger from 'logger';
 
 // -- Constants ------------------------------------------------------------- //
 const COLLECTIBLES_LOAD_REQUEST = 'collectibles/COLLECTIBLES_LOAD_REQUEST';
@@ -81,7 +82,7 @@ export const collectiblesRefreshState = () => async (
     case NetworkTypes.sokol:
       return dispatch(fetchNFTsViaRpcNode());
     default:
-      console.log(
+      logger.log(
         `Skipping fetching collectibles because we have no mechanism to do so on ${network}`
       );
   }
@@ -243,7 +244,7 @@ const fetchNFTsViaRpcNode = () => async (
 
             return collectible;
           } catch (error) {
-            console.log('Error creating collectible', error);
+            logger.sentry('Error creating collectible', error);
 
             return null;
           }

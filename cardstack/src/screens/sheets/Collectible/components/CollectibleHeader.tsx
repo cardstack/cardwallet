@@ -1,6 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { Linking, Share } from 'react-native';
 import URL from 'url-parse';
+import logger from 'logger';
 
 import {
   AnimatedPressable,
@@ -23,7 +24,7 @@ function viewMenuItemLabel(collectible: CollectibleType) {
       return `View on ${tldFromUrlString(collectible.permalink)}`;
     }
   } catch (e) {
-    console.log('viewMenuItemLabel', e.message);
+    logger.log('viewMenuItemLabel', e.message);
     // do nothing
   }
 

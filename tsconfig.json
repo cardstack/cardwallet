@@ -61,6 +61,8 @@
       "@cardstack/models/*": ["cardstack/src/models/*"],
       "@cardstack/navigation": ["cardstack/src/navigation"],
       "@cardstack/navigation/*": ["cardstack/src/navigation/*"],
+      "@cardstack/notification-handler": ["cardstack/src/notification-handler"],
+      "@cardstack/notification-handler/*": ["cardstack/src/notification-handler/*"],
       "@cardstack/parsers": ["cardstack/src/parsers"],
       "@cardstack/parsers/*": ["cardstack/src/parsers/*"],
       "@cardstack/redux": ["cardstack/src/redux"],

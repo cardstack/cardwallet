@@ -65,6 +65,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
 
     return {
       address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
+      fromAddress: prepaidCardPaymentTransaction.prepaidCard.id,
       balance: convertRawAmountToBalance(amount, {
         decimals: 18,
         symbol,

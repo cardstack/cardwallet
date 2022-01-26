@@ -92,6 +92,7 @@
     "@ethersproject/units": "^5.0.8",
     "@ethersproject/wallet": "^5.0.9",
     "@lavamoat/preinstall-always-fail": "^1.0.0",
+    "@notifee/react-native": "^4.0.1",
     "@rainbow-me/react-native-animated-number": "^0.0.2",
     "@rainbow-me/react-native-payments": "1.1.5",
     "@react-native-async-storage/async-storage": "^1.15.14",

@@ -252,6 +252,7 @@ export interface MerchantPrepaidCardIssuanceType {
 
 export interface MerchantEarnedSpendAndRevenueTransactionType {
   address: string;
+  fromAddress: string;
   balance: BalanceType;
   native: BalanceType;
   netEarned: BalanceType;
