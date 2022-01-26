@@ -49,7 +49,6 @@ const notificationConfig: Record<NotificationType, NotificationConfig> = {
   [NotificationType.merchantClaim]: {
     title: 'Merchant claimed successfully',
     handler: data => {
-      logger.log('merchantClaim notif--', data);
       if (!data?.transactionInformation) return;
       // parse to object as hub sends data as a string
       const { transactionInformation } = data;
@@ -60,9 +59,8 @@ const notificationConfig: Record<NotificationType, NotificationConfig> = {
 };
 
 export const notificationHandler = ({ data }: NotificationInfoType) => {
-  const { notificationType } = data || {};
-
-  if (data && notificationType) {
+  if (data?.notificationType) {
+    const { notificationType } = data;
     notificationConfig?.[notificationType]?.handler(data);
   }
 };

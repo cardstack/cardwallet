@@ -56,7 +56,7 @@ export const removeFCMToken = async (address: string) => {
 
       logger.sentry('UnregisterFcmToken response ---', unregisterResponse);
 
-      if (unregisterResponse && unregisterResponse.success) {
+      if (unregisterResponse?.success) {
         // remove address from AsyncStorage for all networks
         for (const networkName in addressesByNetwork) {
           addressesByNetwork[networkName as Network] = addressesByNetwork[
