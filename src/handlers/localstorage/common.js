@@ -17,15 +17,18 @@ export const saveLocal = async (
   key = '',
   data = {},
   expires = 0, // 0 means never expires
-  version = defaultVersion
+  version = defaultVersion,
+  id = ''
 ) => {
   try {
     data.storageVersion = version;
-    await storage.save({
-      data,
-      expires: expires ? expires : null,
+    const params = {
       key,
-    });
+      data,
+      ...(id ? { id } : {}),
+      ...(expires ? { expires } : {}),
+    };
+    await storage.save(params);
   } catch (error) {
     logger.log('Storage: error saving to local for key', key);
   }
@@ -36,13 +39,16 @@ export const saveLocal = async (
  * @param  {String}  [key='']
  * @return {Object}
  */
-export const getLocal = async (key = '', version = defaultVersion) => {
+export const getLocal = async (key = '', version = defaultVersion, id = '') => {
   try {
-    const result = await storage.load({
-      autoSync: false,
+    const params = {
       key,
+      autoSync: false,
       syncInBackground: false,
-    });
+      ...(id ? { id } : {}),
+    };
+    console.log('::: getLocal', params);
+    const result = await storage.load(params);
     if (result && result.storageVersion === version) {
       return result;
     }
@@ -52,7 +58,7 @@ export const getLocal = async (key = '', version = defaultVersion) => {
     }
     return null;
   } catch (error) {
-    logger.log('Storage: error getting from local for key', key);
+    logger.log('Storage: error getting from local for key', key, error);
     return null;
   }
 };
