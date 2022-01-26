@@ -85,14 +85,14 @@ function promptToChooseFromBackups(
         async (actionIndex: number) => {
           if (actionIndex === 0) {
             const potentialUserData = await fetchUserDataFromCloud();
-            let backupSelected = null;
-            let userData = null;
             // If the backup is the latest, we use the normal restore flow
             // To preserve account names, colors, etc
             const isUserdataAvailableForThisBackup =
               potentialUserData
-                .toString()
+                ?.toString()
                 .indexOf(filteredFiles[buttonIndex].name) !== -1;
+            let backupSelected = null;
+            let userData = null;
             if (isUserdataAvailableForThisBackup) {
               userData = potentialUserData;
             } else {

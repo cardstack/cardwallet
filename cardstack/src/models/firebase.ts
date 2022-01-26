@@ -3,7 +3,10 @@ import messaging, {
 } from '@react-native-firebase/messaging';
 import lang from 'i18n-js';
 import { requestNotifications } from 'react-native-permissions';
-import { registerFcmToken } from '@cardstack/services/hub-service';
+import {
+  registerFcmToken,
+  unregisterFcmToken,
+} from '@cardstack/services/hub-service';
 import { Alert } from '@rainbow-me/components/alerts';
 import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
@@ -14,7 +17,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 const DEVICE_FCM_TOKEN_KEY = 'cardwalletFcmToken';
 type FCMTokenStorageType = {
   fcmToken: string | null;
-  addressesByNetwork?: Record<Network, string | string[]>;
+  addressesByNetwork?: Record<Network, string[]>;
 };
 
 const getPermissionStatus = (): Promise<FirebaseMessagingTypes.AuthorizationStatus> =>
@@ -38,9 +41,45 @@ export const getFCMToken = async (): Promise<FCMTokenStorageType> => {
   }
 };
 
+export const removeFCMToken = async (address: string) => {
+  try {
+    const network: Network = await getNetwork();
+    const { fcmToken, addressesByNetwork } = await getFCMToken();
+
+    if (
+      fcmToken &&
+      addressesByNetwork &&
+      addressesByNetwork[network] &&
+      addressesByNetwork[network].includes(address)
+    ) {
+      const unregisterResponse = await unregisterFcmToken(fcmToken, address);
+
+      logger.sentry('UnregisterFcmToken response ---', unregisterResponse);
+
+      if (unregisterResponse?.success) {
+        // remove address from AsyncStorage for all networks
+        for (const networkName in addressesByNetwork) {
+          addressesByNetwork[networkName as Network] = addressesByNetwork[
+            networkName as Network
+          ].filter((addr: string) => addr !== address);
+        }
+
+        await saveLocal(DEVICE_FCM_TOKEN_KEY, {
+          data: {
+            ...addressesByNetwork,
+            fcmToken,
+          },
+        });
+      }
+    }
+  } catch (e) {
+    logger.sentry('Unregister FcmToken failed --', e);
+  }
+};
+
 interface isFCMTokenStoredProps {
   isTokenStored: boolean;
-  addressesByNetwork?: Record<Network, string | string[]>;
+  addressesByNetwork?: Record<Network, string[]>;
   fcmToken: string | null;
 }
 

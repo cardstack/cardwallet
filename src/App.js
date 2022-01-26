@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
+import notifee, { EventType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
@@ -42,7 +43,6 @@ import { PinnedHiddenItemOptionProvider } from './hooks';
 import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { loadAddress } from './model/wallet';
 import { Navigation } from './navigation';
-import RoutesComponent from './navigation/Routes';
 import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
@@ -50,6 +50,11 @@ import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
+import { AppContainer } from '@cardstack/navigation';
+import {
+  displayLocalNotification,
+  notificationHandler,
+} from '@cardstack/notification-handler';
 import { requestsForTopic } from '@cardstack/redux/requests';
 import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
@@ -128,11 +133,26 @@ class App extends Component {
       this.onRemoteNotification
     );
 
-    this.backgroundNotificationHandler = messaging().setBackgroundMessageHandler(
-      async remoteMessage => {
-        console.log('Message handled in the background!', remoteMessage);
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      if (remoteMessage) {
+        notificationHandler(remoteMessage);
       }
-    );
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          notificationHandler(remoteMessage);
+        }
+      });
+
+    notifee.onForegroundEvent(({ type, detail }) => {
+      if (type === EventType.PRESS) {
+        notificationHandler(detail.notification);
+      }
+    });
 
     // Walletconnect uses direct deeplinks
     if (android) {
@@ -165,7 +185,6 @@ class App extends Component {
     this.onTokenRefreshListener?.();
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
-    this.backgroundNotificationHandler?.();
   }
 
   identifyFlow = async () => {
@@ -178,22 +197,20 @@ class App extends Component {
   };
 
   onRemoteNotification = notification => {
-    const topic = get(notification, 'data.topic');
-    setTimeout(() => {
-      this.onPushNotificationOpened(topic);
-    }, WALLETCONNECT_SYNC_DELAY);
-  };
-
-  onPushNotificationOpened = topic => {
-    const { requestsForTopic } = this.props;
-    const requests = requestsForTopic(topic);
-    if (requests) {
-      // WC requests will open automatically
-      return false;
+    const topic = get(notification, 'topic');
+    if (topic) {
+      setTimeout(() => {
+        const { requestsForTopic } = this.props;
+        const requests = requestsForTopic(topic);
+        if (requests && Array.isArray(requests) && requests.length > 0) {
+          // WC requests will open automatically
+          return false;
+        }
+        displayLocalNotification(notification);
+      }, WALLETCONNECT_SYNC_DELAY);
+    } else {
+      displayLocalNotification(notification);
     }
-    // In the future, here  is where we should
-    // handle all other kinds of push notifications
-    // For ex. incoming txs, etc.
   };
 
   handleAppStateChange = async nextAppState => {
@@ -224,7 +241,7 @@ class App extends Component {
                         <InitialRouteContext.Provider
                           value={this.state.initialRoute}
                         >
-                          <RoutesComponent ref={this.handleNavigatorRef} />
+                          <AppContainer ref={this.handleNavigatorRef} />
                           <PortalConsumer />
                         </InitialRouteContext.Provider>
                       )}

@@ -29,7 +29,6 @@ function getUserError(e: Error) {
       return 'You need to authenticate to proceed with the Backup process';
     case CLOUD_BACKUP_ERRORS.ERROR_DECRYPTING_DATA:
       return 'Incorrect password! Please try again.';
-    case CLOUD_BACKUP_ERRORS.NO_BACKUPS_FOUND:
     case CLOUD_BACKUP_ERRORS.SPECIFIC_BACKUP_NOT_FOUND:
       return `We couldn't find your previous backup!`;
     case CLOUD_BACKUP_ERRORS.ERROR_GETTING_ENCRYPTED_DATA:

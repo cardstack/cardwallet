@@ -21,7 +21,7 @@ export const MerchantCreationTransaction = ({
   return (
     <TransactionBase
       {...props}
-      CoinIcon={<Icon name="user" />}
+      CoinIcon={<Icon name="user-with-background" />}
       Header={
         <SafeHeader
           address={item.address}

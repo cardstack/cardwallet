@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { omit } from 'lodash';
 import React, { useContext } from 'react';
@@ -39,10 +38,8 @@ import {
   sheetPreset,
 } from './effects';
 import { nativeStackConfig } from './nativeStackConfig';
-import { onNavigationStateChange } from './onNavigationStateChange';
 import Routes from './routesNames';
 import {
-  linking,
   useCardstackGlobalScreens,
   useCardstackMainScreens,
 } from '@cardstack/navigation';
@@ -230,16 +227,4 @@ function NativeStackNavigator() {
   );
 }
 
-const AppContainer = React.forwardRef((_, ref) => (
-  <NavigationContainer
-    linking={linking}
-    onStateChange={onNavigationStateChange}
-    ref={ref}
-  >
-    <NativeStackNavigator />
-  </NavigationContainer>
-));
-
-AppContainer.displayName = 'AppContainer';
-
-export default React.memo(AppContainer);
+export default React.memo(NativeStackNavigator);

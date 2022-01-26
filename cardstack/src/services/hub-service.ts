@@ -7,7 +7,6 @@ import {
   getLocal,
   saveLocal,
   removeLocal,
-  getKey,
 } from '@rainbow-me/handlers/localstorage/common';
 import {
   CustodialWallet,
@@ -21,7 +20,6 @@ import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import HDProvider from '@cardstack/models/hd-provider';
 import { getFCMToken } from '@cardstack/models/firebase';
-import Storage from 'react-native-storage';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';

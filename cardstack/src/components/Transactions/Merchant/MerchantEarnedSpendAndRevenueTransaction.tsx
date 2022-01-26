@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useNavigation } from '@react-navigation/core';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import { Icon } from '../../Icon';
 import {
   TransactionBase,
@@ -15,6 +16,34 @@ export interface MerchantEarnSpendAndRevenueTransactionProps
   extends TransactionBaseCustomizationProps {
   item: MerchantEarnedSpendAndRevenueTransactionType;
 }
+
+interface MerchantEarnedSpendAndRevenueTransactionFooter {
+  token: { address: string; symbol?: string | null };
+  netEarnedDisplayValue: string;
+}
+
+export const MerchantEarnedSpendAndRevenueTransactionFooter = ({
+  token,
+  netEarnedDisplayValue,
+}: MerchantEarnedSpendAndRevenueTransactionFooter) => (
+  <Container
+    paddingHorizontal={5}
+    flexDirection="row"
+    justifyContent="space-between"
+  >
+    <Container maxWidth={100}>
+      <Text variant="subText" marginBottom={1}>
+        Added to revenue pool
+      </Text>
+    </Container>
+    <Container flexDirection="row" alignItems="center">
+      <Text size="xs" weight="extraBold" marginRight={2}>
+        {`+ ${netEarnedDisplayValue}`}
+      </Text>
+      <CoinIcon address={token.address} symbol={token.symbol} size={20} />
+    </Container>
+  </Container>
+);
 
 export const MerchantEarnedSpendAndRevenueTransaction = ({
   item,
@@ -45,29 +74,12 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
         />
       }
       Footer={
-        <Container
-          paddingHorizontal={5}
-          flexDirection="row"
-          justifyContent="space-between"
-        >
-          <Container maxWidth={100}>
-            <Text variant="subText" marginBottom={1}>
-              Added to revenue pool
-            </Text>
-          </Container>
-          <Container flexDirection="row" alignItems="center">
-            <Text size="xs" weight="extraBold" marginRight={2}>
-              {`+ ${item.netEarned.display}`}
-            </Text>
-            <CoinIcon
-              address={item.token.address}
-              symbol={item.token.symbol}
-              size={20}
-            />
-          </Container>
-        </Container>
+        <MerchantEarnedSpendAndRevenueTransactionFooter
+          token={item.token}
+          netEarnedDisplayValue={item.netEarned.display}
+        />
       }
-      primaryText={`+ ${item.spendBalanceDisplay} SPEND`}
+      primaryText={`+ ${item.spendBalanceDisplay} ${nativeCurrencies.SPD.currency}`}
       statusIconName="arrow-down"
       statusText="Received"
       subText={item.nativeBalanceDisplay}

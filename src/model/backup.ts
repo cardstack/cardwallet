@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { captureException } from '@sentry/react-native';
 import { endsWith, forEach, map } from 'lodash';
 import { ACCESSIBLE, Options } from 'react-native-keychain';
@@ -30,11 +31,22 @@ import logger from 'logger';
 type BackupPassword = string;
 
 interface BackedUpData {
-  [key: string]: string;
+  [key: string]:
+    | string
+    | {
+        version: number;
+        wallets: AllRainbowWallets;
+      };
 }
 
 interface BackupUserData {
   wallets: AllRainbowWallets;
+}
+
+export interface ICloudBackupData {
+  createdAt: number;
+  updatedAt: number;
+  secrets: { [key: string]: string };
 }
 
 async function extractSecretsForWallet(wallet: RainbowWallet) {
@@ -90,7 +102,7 @@ export async function backupWalletToCloud(
   const data = {
     createdAt: now,
     secrets,
-  };
+  } as ICloudBackupData;
   logger.log('calling encryptAndSaveDataToCloud');
   return encryptAndSaveDataToCloud(data, password, `backup_${now}.json`);
 }
@@ -101,7 +113,7 @@ export async function addWalletToCloudBackup(
   filename: string
 ): Promise<boolean> {
   const backup = await getDataFromCloud(password, filename);
-
+  assert(backup, 'No backup found');
   const now = Date.now();
 
   const secrets = await extractSecretsForWallet(wallet);
@@ -165,6 +177,8 @@ export async function restoreCloudBackup(
     }
     let dataToRestore = {
       ...data.secrets,
+    } as {
+      [key: string]: string | { version: number; wallets: AllRainbowWallets };
     };
 
     if (userData) {
@@ -207,6 +221,7 @@ async function restoreSpecificBackupIntoKeychain(
     for (const key of Object.keys(backedUpData)) {
       if (endsWith(key, seedPhraseKey)) {
         const valueStr = backedUpData[key];
+        assert(typeof valueStr == 'string', 'Seed is not a string');
         const { seedphrase } = JSON.parse(valueStr);
         await createWallet(seedphrase, null, null, true);
       }
