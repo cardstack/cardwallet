@@ -40,5 +40,5 @@ export const useAuthToken = (seedPhrase?: string) => {
     }
   }, [error]);
 
-  return { authToken, isLoading };
+  return { authToken, isLoading, error };
 };

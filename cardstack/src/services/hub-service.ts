@@ -9,10 +9,12 @@ import {
   ReservationData,
   OrderData,
   WyrePriceData,
+  NotificationsPreferenceDataType,
 } from '@cardstack/types';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import HDProvider from '@cardstack/models/hd-provider';
+import { getFCMToken } from '@cardstack/models/firebase';
 
 const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
 const HUB_URL_PROD = 'https://hub.cardstack.com';
@@ -149,6 +151,58 @@ export const unregisterFcmToken = async (
   } catch (e: any) {
     logger.sentry(
       'Error while unregistering fcmToken from hub',
+      e?.response || e
+    );
+  }
+};
+
+export const getNotificationsPreferences = async (
+  authToken: string
+): Promise<NotificationsPreferenceDataType[] | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+    const { fcmToken } = await getFCMToken();
+
+    const results = await axios.get(
+      `${hubURL}/api/notification-preferences/${fcmToken}`,
+      axiosConfig(authToken)
+    );
+
+    return results?.data?.data as NotificationsPreferenceDataType[];
+  } catch (e: any) {
+    logger.sentry(
+      'Error while fetching notifications preferences from hub',
+      e?.response || e
+    );
+  }
+};
+
+export const setNotificationsPreferences = async (
+  authToken: string,
+  update: NotificationsPreferenceDataType
+) => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+    const { fcmToken } = await getFCMToken();
+
+    await axios.put(
+      `${hubURL}/api/notification-preferences/${fcmToken}`,
+      JSON.stringify({
+        data: {
+          type: 'notification-preference',
+          attributes: {
+            'notification-type': update.attributes['notification-type'],
+            status: update.attributes.status,
+          },
+        },
+      }),
+      axiosConfig(authToken)
+    );
+  } catch (e: any) {
+    logger.sentry(
+      'Error while saving notifications preferences on hub',
       e?.response || e
     );
   }
