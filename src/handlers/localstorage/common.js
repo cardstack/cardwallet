@@ -47,7 +47,6 @@ export const getLocal = async (key = '', version = defaultVersion, id = '') => {
       syncInBackground: false,
       ...(id ? { id } : {}),
     };
-    console.log('::: getLocal', params);
     const result = await storage.load(params);
     if (result && result.storageVersion === version) {
       return result;
@@ -58,7 +57,7 @@ export const getLocal = async (key = '', version = defaultVersion, id = '') => {
     }
     return null;
   } catch (error) {
-    logger.log('Storage: error getting from local for key', key, error);
+    logger.log('Storage: error getting from local for key', key);
     return null;
   }
 };
