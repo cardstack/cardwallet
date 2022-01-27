@@ -8,6 +8,7 @@
     "android:clean": "adb uninstall com.cardstack.cardpay || true && yarn android",
     "android:apk": "./scripts/check-env.sh && cd android && bash -c 'set -a && source ../.env && set +a && ./gradlew assembleRelease && (adb uninstall com.cardstack.cardpay || true) && adb install app/build/outputs/apk/release/app-release.apk'",
     "android:bundle": "./scripts/check-env.sh && cd android && bash -c 'set -a && source ../.env && set +a && ./gradlew bundleRelease && open app/build/outputs/bundle/release/'",
+    "android:publish:internal": "./scripts/check-env.sh && cd android && bash -c 'set -a && source ../.env && set +a && bundle exec fastlane internal'",
     "contexts:app:sync": "bundle exec fastlane sync_app_vars",
     "contexts:app:publish": "bundle exec fastlane publish_app_vars",
     "contexts:app:alpha:sync": "bundle exec fastlane sync_alpha_app_vars",
