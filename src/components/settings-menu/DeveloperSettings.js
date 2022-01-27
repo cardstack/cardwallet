@@ -38,7 +38,7 @@ const DeveloperSettings = () => {
    */
   const openOnramperWebview = useCallback(async () => {
     const params = {
-      apiKey: 'OUR_API_KEY',
+      // apiKey: 'OUR_API_KEY',
       color: '00EBE5', // button color
       wallets: `ETH:${selectedWallet?.addresses?.[0].address}`,
       isAddressEditable: 'false',
