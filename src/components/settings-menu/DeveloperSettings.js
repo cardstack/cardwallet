@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useContext } from 'react';
-import { Alert, ScrollView, Linking } from 'react-native';
+import { Alert, Linking, ScrollView } from 'react-native';
 import { Restart } from 'react-native-restart';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
