@@ -23,7 +23,10 @@ end
 
 desc "Download encrypted base app vars"
 lane :sync_app_vars do
-  if (UI.confirm("This will overwrite your local <root>/.env with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+  
+  promptMessage = "This will overwrite your local <root>/.env with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"
+
+  if (is_ci || UI.confirm(promptMessage))
     app_vars = cryptex(
       type: "export_env",
       key: "app_vars"
