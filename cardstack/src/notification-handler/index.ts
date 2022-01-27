@@ -2,7 +2,9 @@ import notifee from '@notifee/react-native';
 import { merchantPrepaidCardPaymentReceivedHandler } from './merchantPrepaidCardPaymentReceived';
 import { merchantClaimHandler } from './merchantClaim';
 import logger from 'logger';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { loadAddress } from '@rainbow-me/model/wallet';
 
 // add more notification types here
 export enum NotificationType {
@@ -58,16 +60,31 @@ const notificationConfig: Record<NotificationType, NotificationConfig> = {
   },
 };
 
-export const notificationHandler = ({ data }: NotificationInfoType) => {
-  if (data?.notificationType) {
-    const { notificationType } = data;
-    notificationConfig?.[notificationType]?.handler(data);
+export const notificationHandler = async ({ data }: NotificationInfoType) => {
+  logger.log('notifi====== ', data);
+
+  if (data?.notificationType && data.network && data.ownerAddress) {
+    const currentNetwork = await getNetwork();
+    const address = await loadAddress();
+    logger.log('currentNetwork====== ', currentNetwork, address);
+    const { notificationType, network, ownerAddress } = data;
+
+    // handle notification only in same network
+    if (currentNetwork === network) {
+      if (address === ownerAddress) {
+        notificationConfig?.[notificationType]?.handler(data);
+      } else {
+        // if different EOA switch account and then handle notification
+      }
+    }
   }
 };
 
 export const displayLocalNotification = async (
   notificationData: LocalNotificationType
 ) => {
+  logger.log('displayLocalNotification====== ', notificationData);
+
   try {
     const {
       notification: { title, body },

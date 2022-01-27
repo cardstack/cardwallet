@@ -1,8 +1,14 @@
+import { MerchantSafe, NativeCurrency } from '@cardstack/cardpay-sdk';
 import { Navigation } from '@rainbow-me/navigation';
 import { MainRoutes } from '@cardstack/navigation/routes';
-import store from '@rainbow-me/redux/store';
+import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 import Logger from 'logger';
-import { MerchantSafeType } from '@cardstack/types';
+import {
+  getSafeData,
+  getRevenuePoolBalances,
+  updateSafeWithTokenPrices,
+} from '@cardstack/services';
+import { getNativeCurrency } from '@rainbow-me/handlers/localstorage/globalSettings';
 
 export type MerchantClaimNotificationBody = {
   merchantId: string;
@@ -12,16 +18,23 @@ export const merchantClaimHandler = async (
   data: MerchantClaimNotificationBody
 ) => {
   try {
-    const { merchantSafes } = store.getState().data;
+    const merchantSafe = (await getSafeData(data.merchantId)) as MerchantSafe;
 
-    const merchantData = merchantSafes.find(
-      (merchantSafe: MerchantSafeType) =>
-        merchantSafe.address === data.merchantId
-    );
+    if (merchantSafe) {
+      const nativeCurrency = await getNativeCurrency();
 
-    if (merchantData) {
+      const extendedMerchantSafe = await updateSafeWithTokenPrices(
+        await updateMerchantSafeWithCustomization(merchantSafe),
+        nativeCurrency || NativeCurrency.USD
+      );
+
+      const revenueBalances = await getRevenuePoolBalances(
+        merchantSafe.address,
+        nativeCurrency
+      );
+
       Navigation.handleAction(MainRoutes.MERCHANT_SCREEN, {
-        merchantSafe: merchantData,
+        merchantSafe: { ...extendedMerchantSafe, revenueBalances },
       });
     }
   } catch (e) {
