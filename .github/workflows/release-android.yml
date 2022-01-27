@@ -12,7 +12,7 @@ on:
 jobs:
   release-android:
     name: Release Android
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       CRYPTEX_GIT_URL: https://${{ secrets.CI_GITHUB_PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.CRYPTEX_GIT_REPOSITORY }}.git
       CRYPTEX_PASSWORD: ${{ secrets.CRYPTEX_PASSWORD }}
@@ -49,10 +49,12 @@ jobs:
         run: yarn postinstall
       - name: Sync google_services
         run: yarn contexts:sync:google_services
+      - name: Sync app_vars
+        run: yarn contexts:app:sync
       - name: Sync google_play_credentials
         run: bundle exec fastlane sync_google_play_credentials
       - name: Run fastlane (android)
-        run: yarn android:publish:internal
+        run: cd android && bundle install && bundle exec fastlane internal
       - uses: actions/upload-artifact@v2
         with:
           name: Android bundle
