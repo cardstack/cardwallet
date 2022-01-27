@@ -406,8 +406,8 @@ export const getWyrePrice = async (
   }
 };
 
-axios.interceptors.response.use(undefined, async (error: AxiosError) => {
-  if (error.response?.status !== 401) {
+axios?.interceptors?.response?.use?.(undefined, async (error: AxiosError) => {
+  if (error?.response?.status !== 401) {
     return Promise.reject(error);
   }
   // Got API error 401, auth token should be refreshed.
