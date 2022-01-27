@@ -59,7 +59,7 @@ export const Notice = ({
             paddingHorizontal={2}
             marginHorizontal={4}
             marginVertical={2}
-            borderRadius={50}
+            borderRadius={10}
             testID="notice-container"
             backgroundColor={noticeColorConfig[type].backgroundColor}
           >
