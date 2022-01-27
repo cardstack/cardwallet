@@ -72,13 +72,7 @@ export class MerchantEarnedRevenueStrategy extends BaseStrategy {
       timestamp: prepaidCardPaymentTransaction.timestamp,
       type: TransactionTypes.MERCHANT_EARNED_REVENUE,
       transactionHash: this.transaction.id,
-      transaction: await getMerchantEarnedTransactionDetails(
-        prepaidCardPaymentTransaction,
-        this.nativeCurrency,
-        convertStringToNumber(nativeBalance.amount),
-        this.currencyConversionRates,
-        symbol
-      ),
+      transaction: transactionDetails,
       infoDid: prepaidCardPaymentTransaction.merchantSafe?.infoDid || undefined,
     };
   }
