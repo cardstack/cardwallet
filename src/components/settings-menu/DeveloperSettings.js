@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useContext } from 'react';
-import { Alert, ScrollView } from 'react-native';
+import { Alert, ScrollView, Linking } from 'react-native';
 import { Restart } from 'react-native-restart';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
@@ -18,7 +18,7 @@ import Routes from '@rainbow-me/routes';
 const DeveloperSettings = () => {
   const { navigate } = useNavigation();
   const { config, setConfig } = useContext(RainbowContext);
-  const { wallets } = useWallets();
+  const { wallets, selectedWallet } = useWallets();
 
   const onNetworkChange = useCallback(
     value => {
@@ -32,6 +32,28 @@ const DeveloperSettings = () => {
       navigate(Routes.PROFILE_SCREEN);
     });
   }, [navigate]);
+
+  /**
+   * Opens Onramper Webview for testing porpuses.
+   */
+  const openOnramperWebview = useCallback(async () => {
+    const params = {
+      apiKey: 'OUR_API_KEY',
+      color: '00EBE5', // button color
+      wallets: `ETH:${selectedWallet?.addresses?.[0].address}`,
+      isAddressEditable: 'false',
+    };
+    // URLSearchParams does not work on Android:
+    // https://github.com/facebook/react-native/issues/23922
+    // const url = new URL(`https://widget.onramper.com`);
+    // url.search = new URLSearchParams(params);
+    // Linking.openURL(url.href);
+    const url = `https://widget.onramper.com?${Object.entries(params)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')}`;
+    console.log(url);
+    Linking.openURL(url);
+  }, [selectedWallet]);
 
   const removeBackups = async () => {
     const newWallets = { ...wallets };
@@ -73,6 +95,11 @@ const DeveloperSettings = () => {
         label="‍👾 Connect to ganache"
         onPress={connectToGanache}
         testID="ganache-section"
+      />
+      <ListItem
+        label="🤑 Open Onramper"
+        onPress={openOnramperWebview}
+        testID="onramper-section"
       />
       <ListFooter />
 
