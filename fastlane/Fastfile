@@ -4,7 +4,7 @@ lane :publish_android_keystore do
     cryptex(
       type: "import",
       in: './android/keystores/upload-keystore.jks',
-      key: ENV['ANDROID_KEYSTORE_CRYPTEX_KEY']
+      key: 'android_release_keystore'
     )
   end
 end
@@ -15,7 +15,7 @@ lane :sync_android_keystore do
     cryptex(
       type: "export",
       out: './android/keystores/upload-keystore.jks',
-      key: ENV['ANDROID_KEYSTORE_CRYPTEX_KEY']
+      key: 'android_release_keystore'
     )
   end
 end
@@ -163,7 +163,7 @@ desc "Upload encrypted google play credentials"
 lane :publish_google_play_credentials do
   cryptex(
       type: "import",
-      key: ENV['GOOGLE_PLAY_CREDENTIALS_CRYPTEX_KEY'],
+      key: 'google_credentials_key',
       in: './android/app/google-play-credentials.json'
     )
 end
@@ -172,7 +172,7 @@ desc "Download encrypted google play credentials"
 lane :sync_google_play_credentials do
   cryptex(
       type: "export",
-      key: ENV['GOOGLE_PLAY_CREDENTIALS_CRYPTEX_KEY'],
+      key: 'google_credentials_key',
       out: './android/app/google-play-credentials.json'
     )
 end

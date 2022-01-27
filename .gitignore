@@ -38,6 +38,7 @@ build/
 local.properties
 *.iml
 android/app/google-services.json
+android/app/google-play-credentials.json
 android/keystores/upload-keystore.jks
 
 # node.js
