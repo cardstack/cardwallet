@@ -50,7 +50,7 @@ jobs:
       - name: Sync google_services
         run: yarn contexts:sync:google_services
       - name: Sync google_play_credentials
-        run: yarn contexts:sync:sync_google_play_credentials
+        run: bundle exec fastlane sync_google_play_credentials
       - name: Run fastlane (android)
         run: yarn android:publish:internal
       - uses: actions/upload-artifact@v2
