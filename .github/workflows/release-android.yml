@@ -50,6 +50,8 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
+      - name: Install NDK
+        run: echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;20.1.5948944" --sdk_root=${ANDROID_SDK_ROOT}
       - name: Yarn Install
         run: yarn install --network-timeout 300000 --network-concurrency 1
       - name: Yarn Setup
@@ -60,8 +62,6 @@ jobs:
         run: yarn contexts:app:sync
       - name: Sync google_play_credentials
         run: bundle exec fastlane sync_google_play_credentials
-      - name: Install NDK
-        run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;20.1.5948944" --sdk_root=${ANDROID_SDK_ROOT}
       - name: Run fastlane (android)
         run: cd android && bundle install && bundle exec fastlane internal
       - uses: actions/upload-artifact@v2
