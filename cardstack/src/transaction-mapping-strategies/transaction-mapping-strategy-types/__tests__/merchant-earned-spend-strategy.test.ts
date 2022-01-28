@@ -1,6 +1,13 @@
 import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { MERCHANT_EARNED_SPEND_MOCK_DATA } from '@cardstack/utils/__mocks__/merchant-strategies';
 
+const mockServices = jest.requireActual('../../../services');
+jest.mock('../../../services', () => ({
+  ...mockServices,
+  fetchHistoricalPrice: jest.fn().mockReturnValue(Promise.resolve(0)),
+  getNativeBalanceFromOracle: jest.fn().mockReturnValue(0.0000974),
+}));
+
 describe('MerchantEarnedSpendStrategy', () => {
   const contructorParams = {
     accountAddress: '0x64Fbf34FaC77696112F1Abaa69D28211214d76c7',
@@ -75,7 +82,7 @@ describe('MerchantEarnedSpendStrategy', () => {
           amount: '1.489520958083832335',
           display: '1.49 DAI',
         },
-        netEarnedNativeDisplay: '$1.49 USD',
+        netEarnedNativeDisplay: '$0.0000974 USD',
         protocolFee: '0.00749 DAI',
         revenueCollected: '1.497 DAI',
         spendConversionRate: '$0.01 USD',
