@@ -44,12 +44,42 @@ describe('MerchantEarnedSpendStrategy', () => {
     const value = await strategy.mapTransaction();
     expect(value).toEqual({
       address: '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
+      balance: {
+        amount: '1.497005988023952095',
+        display: '1.497 DAI',
+      },
+      fromAddress: '0x72DB39da38fa313A004770E8C4d9416428068024',
+      native: {
+        amount: '0',
+        display: '$0.00 USD',
+      },
+      netEarned: {
+        amount: '1.489520958083832335',
+        display: '1.49 DAI',
+      },
       infoDid: '3a13a41e-e44a-4b0f-b079-2d3d53571870',
       nativeBalanceDisplay: '$1.50 USD',
       spendBalanceDisplay: '§150 SPEND',
       timestamp: '1629156260',
       transactionHash:
         '0x5293d95a240c231852724fd31ff6df119e5b5cf7661a7aec38f7cf10893dc2eb',
+      token: {
+        address: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',
+        name: 'Dai Stablecoin.CPXD',
+        symbol: 'DAI',
+      },
+      transaction: {
+        customerSpend: '150',
+        customerSpendNative: '$0.00 USD',
+        netEarned: {
+          amount: '1.489520958083832335',
+          display: '1.49 DAI',
+        },
+        netEarnedNativeDisplay: '$1.49 USD',
+        protocolFee: '0.00749 DAI',
+        revenueCollected: '1.497 DAI',
+        spendConversionRate: '$0.01 USD',
+      },
       type: 'merchantEarnedSpend',
     });
   });
