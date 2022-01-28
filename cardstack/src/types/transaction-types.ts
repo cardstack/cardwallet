@@ -192,12 +192,22 @@ export interface MerchantEarnedRevenueTransactionType {
 
 export interface MerchantEarnedSpendTransactionType {
   address: string;
+  fromAddress: string;
+  balance: BalanceType;
+  native: BalanceType;
+  netEarned: BalanceType;
   spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_SPEND;
   transactionHash: string;
   infoDid?: string;
+  token: {
+    address: string;
+    name?: string | null;
+    symbol?: string | null;
+  };
+  transaction: MerchantEarnedRevenueTransactionTypeTxn;
 }
 
 export interface MerchantWithdrawType {

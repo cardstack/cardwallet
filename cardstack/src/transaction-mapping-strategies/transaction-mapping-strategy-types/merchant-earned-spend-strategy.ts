@@ -1,9 +1,18 @@
+import {
+  convertRawAmountToNativeDisplay,
+  convertRawAmountToBalance,
+  convertStringToNumber,
+} from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
 import {
   MerchantEarnedSpendTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { fetchHistoricalPrice } from '@cardstack/services';
+import {
+  convertSpendForBalanceDisplay,
+  getMerchantEarnedTransactionDetails,
+} from '@cardstack/utils';
 
 export class MerchantEarnedSpendStrategy extends BaseStrategy {
   handlesTransaction(): boolean {
@@ -24,6 +33,23 @@ export class MerchantEarnedSpendStrategy extends BaseStrategy {
       return null;
     }
 
+    const symbol = prepaidCardPaymentTransaction.issuingToken.symbol || '';
+
+    const amount = prepaidCardPaymentTransaction.issuingTokenAmount;
+
+    const price = await fetchHistoricalPrice(
+      symbol,
+      prepaidCardPaymentTransaction.timestamp,
+      this.nativeCurrency
+    );
+
+    const nativeBalance = convertRawAmountToNativeDisplay(
+      amount,
+      18,
+      price,
+      this.nativeCurrency
+    );
+
     const spendDisplay = convertSpendForBalanceDisplay(
       prepaidCardPaymentTransaction.spendAmount,
       this.nativeCurrency,
@@ -31,14 +57,35 @@ export class MerchantEarnedSpendStrategy extends BaseStrategy {
       true
     );
 
+    const transactionDetails = await getMerchantEarnedTransactionDetails(
+      prepaidCardPaymentTransaction,
+      this.nativeCurrency,
+      convertStringToNumber(nativeBalance.amount),
+      this.currencyConversionRates,
+      symbol
+    );
+
     return {
       address: prepaidCardPaymentTransaction.merchantSafe?.id || '',
+      fromAddress: prepaidCardPaymentTransaction.prepaidCard.id,
+      balance: convertRawAmountToBalance(amount, {
+        decimals: 18,
+        symbol,
+      }),
+      netEarned: transactionDetails.netEarned,
+      native: nativeBalance,
+      token: {
+        address: prepaidCardPaymentTransaction.issuingToken.id,
+        symbol: prepaidCardPaymentTransaction.issuingToken.symbol,
+        name: prepaidCardPaymentTransaction.issuingToken.name,
+      },
       timestamp: prepaidCardPaymentTransaction.timestamp,
       type: TransactionTypes.MERCHANT_EARNED_SPEND,
       spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
       nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
       transactionHash: this.transaction.id,
       infoDid: prepaidCardPaymentTransaction.merchantSafe?.infoDid || undefined,
+      transaction: transactionDetails,
     };
   }
 }
