@@ -43,6 +43,8 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
+const hubapi = axios.create(axiosConfig(''));
+
 const hubTokenStorageKey = (network: string): string => {
   return `${HUBTOKEN_KEY}-${network}`;
 };
@@ -149,7 +151,7 @@ export const registerFcmToken = async (
       return { success: false };
     }
 
-    const results = await axios.post(
+    const results = await hubapi.post(
       `${hubURL}/api/push-notification-registrations`,
       JSON.stringify({
         data: {
@@ -190,7 +192,7 @@ export const unregisterFcmToken = async (
       return { success: false };
     }
 
-    const results = await axios.delete(
+    const results = await hubapi.delete(
       `${hubURL}/api/push-notification-registrations/${fcmToken}`,
       axiosConfig(authToken)
     );
@@ -214,7 +216,7 @@ export const getNotificationsPreferences = async (
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
-    const results = await axios.get(
+    const results = await hubapi.get(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
       axiosConfig(authToken)
     );
@@ -237,7 +239,7 @@ export const setNotificationsPreferences = async (
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
-    await axios.put(
+    await hubapi.put(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
       JSON.stringify({
         data: {
@@ -263,7 +265,7 @@ export const getCustodialWallet = async (
   authToken: string
 ): Promise<CustodialWallet | undefined> => {
   try {
-    const results = await axios.get(
+    const results = await hubapi.get(
       `${hubURL}/api/custodial-wallet`,
       axiosConfig(authToken)
     );
@@ -282,7 +284,7 @@ export const getInventories = async (
   issuerAddress: string
 ): Promise<Inventory[] | undefined> => {
   try {
-    const results = await axios.get(
+    const results = await hubapi.get(
       `${hubURL}/api/inventories`,
       axiosConfig(authToken)
     );
@@ -314,7 +316,7 @@ export const makeReservation = async (
   sku: string
 ): Promise<ReservationData | undefined> => {
   try {
-    const results = await axios.post(
+    const results = await hubapi.post(
       `${hubURL}/api/reservations`,
       JSON.stringify({
         data: {
@@ -343,7 +345,7 @@ export const updateOrder = async (
   reservationId: string
 ): Promise<OrderData | undefined> => {
   try {
-    const results = await axios.post(
+    const results = await hubapi.post(
       `${hubURL}/api/orders`,
       JSON.stringify({
         data: {
@@ -376,7 +378,7 @@ export const getOrder = async (
   orderId: string
 ): Promise<OrderData | undefined> => {
   try {
-    const results = await axios.get(
+    const results = await hubapi.get(
       `${hubURL}/api/orders/${orderId}`,
       axiosConfig(authToken)
     );
@@ -395,7 +397,7 @@ export const getWyrePrice = async (
   authToken: string
 ): Promise<WyrePriceData[] | undefined> => {
   try {
-    const results = await axios.get(
+    const results = await hubapi.get(
       `${hubURL}/api/wyre-prices`,
       axiosConfig(authToken)
     );
@@ -406,7 +408,7 @@ export const getWyrePrice = async (
   }
 };
 
-axios?.interceptors?.response?.use?.(undefined, async (error: AxiosError) => {
+hubapi?.interceptors?.response?.use?.(undefined, async (error: AxiosError) => {
   if (error?.response?.status !== 401) {
     return Promise.reject(error);
   }
