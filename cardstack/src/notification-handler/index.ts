@@ -2,7 +2,9 @@ import notifee from '@notifee/react-native';
 import { merchantPrepaidCardPaymentReceivedHandler } from './merchantPrepaidCardPaymentReceived';
 import { merchantClaimHandler } from './merchantClaim';
 import logger from 'logger';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { loadAddress } from '@rainbow-me/model/wallet';
 
 // add more notification types here
 export enum NotificationType {
@@ -58,10 +60,20 @@ const notificationConfig: Record<NotificationType, NotificationConfig> = {
   },
 };
 
-export const notificationHandler = ({ data }: NotificationInfoType) => {
-  if (data?.notificationType) {
-    const { notificationType } = data;
-    notificationConfig?.[notificationType]?.handler(data);
+export const notificationHandler = async ({ data }: NotificationInfoType) => {
+  if (data?.notificationType && data.network && data.ownerAddress) {
+    const currentNetwork = await getNetwork();
+    const address = await loadAddress();
+    const { notificationType, network, ownerAddress } = data;
+
+    // handle notification in same network only
+    if (currentNetwork === network) {
+      if (address === ownerAddress) {
+        notificationConfig?.[notificationType]?.handler(data);
+      } else {
+        // if different EOA with notification address, switch account to correct one and then handle notification
+      }
+    }
   }
 };
 
@@ -74,18 +86,22 @@ export const displayLocalNotification = async (
       data,
     } = notificationData;
 
-    const { notificationType } = data;
+    const { notificationType, network } = data;
+    const currentNetwork = await getNetwork();
 
-    // update notification title when no title from hub side(mostly had no title)
-    const notificationTitle =
-      title ||
-      notificationConfig?.[notificationType as NotificationType]?.title;
+    // show local notification in same network only
+    if (network === currentNetwork) {
+      // update notification title when no title from hub side(mostly had no title)
+      const notificationTitle =
+        title ||
+        notificationConfig?.[notificationType as NotificationType]?.title;
 
-    await notifee.displayNotification({
-      title: notificationTitle,
-      body,
-      data,
-    });
+      await notifee.displayNotification({
+        title: notificationTitle,
+        body,
+        data,
+      });
+    }
   } catch (e) {
     logger.sentry('Display LocalNotification failed - ', e);
   }
