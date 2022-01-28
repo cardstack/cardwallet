@@ -69,7 +69,7 @@ jobs:
       - name: Sync android_keystore
         run: bundle exec fastlane sync_android_keystore
       - name: Run fastlane (android)
-        run: cd android && bundle install && bundle exec fastlane internal
+        run: cd android && bundle install && bash -c 'set -a && source ../.env && set +a && bundle exec fastlane internal'
       - uses: actions/upload-artifact@v2
         with:
           name: Android bundle
