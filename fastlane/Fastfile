@@ -11,7 +11,10 @@ end
 
 desc "Download encrypted android release keystore"
 lane :sync_android_keystore do
-  if (UI.confirm("This will overwrite your remote release.keystore version at #{'./android/keystores/upload-keystore.jks'} with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"))
+  
+  promptMessage = "This will overwrite your remote release.keystore version at #{'./android/keystores/upload-keystore.jks'} with the file stored in #{ENV['CRYPTEX_GIT_URL']}. Proceed?"
+
+  if (is_ci || UI.confirm(promptMessage))
     cryptex(
       type: "export",
       out: './android/keystores/upload-keystore.jks',
