@@ -43,7 +43,7 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
-const hubapi = axios.create(axiosConfig(''));
+export const hubapi = axios.create(axiosConfig(''));
 
 const hubTokenStorageKey = (network: string): string => {
   return `${HUBTOKEN_KEY}-${network}`;
@@ -265,7 +265,7 @@ export const getCustodialWallet = async (
   authToken: string
 ): Promise<CustodialWallet | undefined> => {
   try {
-    const results = await hubapi.get(
+    const results = await axios.get(
       `${hubURL}/api/custodial-wallet`,
       axiosConfig(authToken)
     );
@@ -284,7 +284,7 @@ export const getInventories = async (
   issuerAddress: string
 ): Promise<Inventory[] | undefined> => {
   try {
-    const results = await hubapi.get(
+    const results = await axios.get(
       `${hubURL}/api/inventories`,
       axiosConfig(authToken)
     );
@@ -316,7 +316,7 @@ export const makeReservation = async (
   sku: string
 ): Promise<ReservationData | undefined> => {
   try {
-    const results = await hubapi.post(
+    const results = await axios.post(
       `${hubURL}/api/reservations`,
       JSON.stringify({
         data: {
@@ -345,7 +345,7 @@ export const updateOrder = async (
   reservationId: string
 ): Promise<OrderData | undefined> => {
   try {
-    const results = await hubapi.post(
+    const results = await axios.post(
       `${hubURL}/api/orders`,
       JSON.stringify({
         data: {
@@ -378,7 +378,7 @@ export const getOrder = async (
   orderId: string
 ): Promise<OrderData | undefined> => {
   try {
-    const results = await hubapi.get(
+    const results = await axios.get(
       `${hubURL}/api/orders/${orderId}`,
       axiosConfig(authToken)
     );
@@ -397,7 +397,7 @@ export const getWyrePrice = async (
   authToken: string
 ): Promise<WyrePriceData[] | undefined> => {
   try {
-    const results = await hubapi.get(
+    const results = await axios.get(
       `${hubURL}/api/wyre-prices`,
       axiosConfig(authToken)
     );
