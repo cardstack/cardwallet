@@ -101,6 +101,11 @@ describe('service utils', () => {
           impact: 'critical',
           started_at: '2021-10-10T10:10:00.001Z',
         },
+        {
+          name: 'Upgrade RPC node',
+          impact: 'maintenance',
+          started_at: '2022-01-25T19:33:29.478Z',
+        },
       ];
 
       expect(filterIncident(incidents)).toStrictEqual({
@@ -126,6 +131,27 @@ describe('service utils', () => {
       ];
 
       expect(filterIncident(incidents)).toBeNull();
+    });
+
+    it('it should return valid incident given list has one or more invalid impact type', async () => {
+      const incidents: IncidentType[] = [
+        {
+          name: 'Internet down.',
+          impact: 'critical',
+          started_at: '2021-10-10T10:10:00.001Z',
+        },
+        {
+          name: 'Not defined',
+          impact: 'not-defined',
+          started_at: '2021-10-10T10:10:00.000Z',
+        },
+      ];
+
+      expect(filterIncident(incidents)).toStrictEqual({
+        name: 'Internet down.',
+        impact: 'critical',
+        started_at: '2021-10-10T10:10:00.001Z',
+      });
     });
   });
 });

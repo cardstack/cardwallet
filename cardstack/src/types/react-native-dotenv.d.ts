@@ -18,4 +18,7 @@ declare module 'react-native-dotenv' {
   export const WYRE_SECRET_KEY: string;
   export const WYRE_SECRET_KEY_TEST: string;
   export const FIXER_API_KEY: string;
+  export const HUB_URL: string;
+  export const HUB_URL_STAGING: string;
+  export const STATUS_API_BASE_URL: string;
 }
