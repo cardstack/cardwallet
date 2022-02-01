@@ -43,7 +43,7 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
-export const hubapi = axios.create(axiosConfig(''));
+export const hubApi = axios.create(axiosConfig(''));
 
 const hubTokenStorageKey = (network: string): string => {
   return `${HUBTOKEN_KEY}-${network}`;
@@ -151,7 +151,7 @@ export const registerFcmToken = async (
       return { success: false };
     }
 
-    const results = await hubapi.post(
+    const results = await hubApi.post(
       `${hubURL}/api/push-notification-registrations`,
       JSON.stringify({
         data: {
@@ -192,7 +192,7 @@ export const unregisterFcmToken = async (
       return { success: false };
     }
 
-    const results = await hubapi.delete(
+    const results = await hubApi.delete(
       `${hubURL}/api/push-notification-registrations/${fcmToken}`,
       axiosConfig(authToken)
     );
@@ -216,7 +216,7 @@ export const getNotificationsPreferences = async (
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
-    const results = await hubapi.get(
+    const results = await hubApi.get(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
       axiosConfig(authToken)
     );
@@ -239,7 +239,7 @@ export const setNotificationsPreferences = async (
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
-    await hubapi.put(
+    await hubApi.put(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
       JSON.stringify({
         data: {
@@ -408,7 +408,7 @@ export const getWyrePrice = async (
   }
 };
 
-hubapi?.interceptors?.response?.use?.(undefined, async (error: AxiosError) => {
+hubApi?.interceptors?.response?.use?.(undefined, async (error: AxiosError) => {
   if (error?.response?.status !== 401) {
     return Promise.reject(error);
   }
