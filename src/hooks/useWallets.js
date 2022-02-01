@@ -33,20 +33,28 @@ export default function useWallets() {
     wallets,
   } = useSelector(walletSelector);
 
+  const walletReady = useSelector(state => state.appState.walletReady);
+
   const setIsWalletLoading = useCallback(
     isLoading => dispatch(rawSetIsWalletLoading(isLoading)),
     [dispatch]
   );
 
   const isDamaged = useMemo(() => {
-    const bool = isEmpty(selectedWallet) || !wallets || selectedWallet?.damaged;
-    if (bool) {
-      logger.sentry('Wallet is damaged. Check values below:');
-      logger.sentry('selectedWallet: ', selectedWallet);
-      logger.sentry('wallets: ', wallets);
+    if (!walletReady) return;
+
+    const isInvalidWallet =
+      isEmpty(selectedWallet) || !wallets || selectedWallet?.damaged;
+
+    if (isInvalidWallet) {
+      logger.sentry('Wallet does not exist yet or is damaged. Check values:', {
+        selectedWallet,
+        wallets,
+        isDamaged: selectedWallet?.damaged,
+      });
     }
-    return bool;
-  }, [selectedWallet, wallets]);
+    return isInvalidWallet;
+  }, [selectedWallet, walletReady, wallets]);
 
   return {
     isDamaged,
