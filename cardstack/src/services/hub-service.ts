@@ -2,7 +2,11 @@ import axios, { AxiosError } from 'axios';
 import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
-import { getAllWallets, loadAddress } from '@rainbow-me/model/wallet';
+import {
+  getAllWallets,
+  getWalletByAddress,
+  loadAddress,
+} from '@rainbow-me/model/wallet';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import {
   getLocal,
@@ -81,17 +85,6 @@ export const getHubAuthToken = async (
   walletAddress?: string,
   seedPhrase?: string
 ): Promise<string | null> => {
-  const allWallets = (await getAllWallets()) || { wallets: [] };
-
-  // get wallet id through allWallets using wallet address
-  const walletId =
-    Object.values(allWallets.wallets).find(
-      wallet =>
-        wallet.addresses.findIndex(
-          account => account.address === walletAddress
-        ) > -1
-    )?.id || '';
-
   // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
   const address = walletAddress || (await loadAddress()) || '';
 
@@ -104,6 +97,12 @@ export const getHubAuthToken = async (
   if (savedAuthToken) {
     return savedAuthToken;
   }
+
+  const allWallets = await getAllWallets();
+
+  // get wallet id through allWallets using wallet address
+  const walletId =
+    getWalletByAddress({ walletAddress: address, allWallets })?.id || '';
 
   try {
     const hdProvider = await HDProvider.get({
