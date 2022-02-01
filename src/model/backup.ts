@@ -223,7 +223,7 @@ async function restoreSpecificBackupIntoKeychain(
         const valueStr = backedUpData[key];
         assert(typeof valueStr == 'string', 'Seed is not a string');
         const { seedphrase } = JSON.parse(valueStr);
-        await createWallet(seedphrase, null, null, true);
+        await createWallet(seedphrase, null, null);
       }
     }
     return true;

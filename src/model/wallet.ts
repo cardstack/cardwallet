@@ -48,7 +48,6 @@ import { ethereumUtils } from '../utils';
 import {
   addressKey,
   allWalletsKey,
-  oldSeedPhraseMigratedKey,
   pinKey,
   privateKeyKey,
   seedPhraseKey,
@@ -164,13 +163,6 @@ interface PrivateKeyData {
 interface SeedPhraseData {
   seedphrase: EthereumPrivateKey;
   version: string;
-}
-
-interface MigratedSecretsResult {
-  hdnode: undefined | HDNode;
-  privateKey: EthereumPrivateKey;
-  seedphrase: EthereumWalletSeed;
-  type: EthereumWalletType;
 }
 
 export enum WalletLibraryType {
@@ -410,44 +402,35 @@ const loadPrivateKey = async (): Promise<
   null | EthereumPrivateKey | -1 | -2
 > => {
   try {
-    const isSeedPhraseMigrated = await keychain.loadString(
-      oldSeedPhraseMigratedKey
-    );
-
-    // We need to migrate the seedphrase & private key first
-    // In that case we regenerate the existing private key to store it with the new format
-    let privateKey = null;
-    if (!isSeedPhraseMigrated) {
-      const migratedSecrets = await migrateSecrets();
-      privateKey = migratedSecrets?.privateKey;
+    const address = await loadAddress();
+    if (!address) {
+      return null;
     }
 
-    if (!privateKey) {
-      const address = await loadAddress();
-      if (!address) {
-        return null;
-      }
+    const privateKeyData = await getPrivateKey(address);
+    if (privateKeyData === -1) {
+      return privateKeyData;
+    }
+    const privateKey = get(privateKeyData, 'privateKey', null);
 
-      const privateKeyData = await getPrivateKey(address);
-      if (privateKeyData === -1) {
-        return -1;
-      }
-      privateKey = get(privateKeyData, 'privateKey', null);
+    if (Device.isAndroid && privateKey) {
+      const hasBiometricsEnabled = await getSupportedBiometryType();
+      // Fallback to custom PIN
+      if (!hasBiometricsEnabled) {
+        try {
+          const userPIN = await authenticateWithPIN();
 
-      let userPIN = null;
-      if (Device.isAndroid) {
-        const hasBiometricsEnabled = await getSupportedBiometryType();
-        // Fallback to custom PIN
-        if (!hasBiometricsEnabled) {
-          try {
-            userPIN = await authenticateWithPIN();
-          } catch (e) {
-            return null;
+          if (userPIN) {
+            const decryptedPrivateKey = await encryptor.decrypt(
+              userPIN,
+              privateKey
+            );
+
+            return decryptedPrivateKey;
           }
+        } catch (e) {
+          return null;
         }
-      }
-      if (privateKey && userPIN) {
-        privateKey = await encryptor.decrypt(userPIN, privateKey);
       }
     }
 
@@ -529,10 +512,9 @@ export const createWallet = async (
   const walletSeed = seed || generateMnemonic();
 
   let addresses: RainbowAccount[] = [];
+  const { dispatch } = store;
 
   try {
-    const { dispatch } = store;
-
     // Wallet can be checked while importing,
     // if it's already checked use that info, otherwise ran the check here
     const {
@@ -694,7 +676,6 @@ export const createWallet = async (
             color = discoveredAccount.color;
             label = discoveredAccount.label ?? '';
           }
-          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
           delete allWallets?.[discoveredWalletId];
         }
 
@@ -790,6 +771,8 @@ export const createWallet = async (
     logger.sentry('Error in createWallet');
     captureException(error);
     return null;
+  } finally {
+    dispatch(setIsWalletLoading(null));
   }
 };
 
@@ -935,17 +918,6 @@ export const generateAccount = async (
   index: number
 ): Promise<null | EthereumWallet> => {
   try {
-    const isSeedPhraseMigrated = await keychain.loadString(
-      oldSeedPhraseMigratedKey
-    );
-    let seedphrase;
-    // We need to migrate the seedphrase & private key first
-    // In that case we regenerate the existing private key to store it with the new format
-    if (!isSeedPhraseMigrated) {
-      const migratedSecrets = await migrateSecrets();
-      seedphrase = migratedSecrets?.seedphrase;
-    }
-
     let userPIN = null;
     if (Device.isAndroid) {
       const hasBiometricsEnabled = await getSupportedBiometryType();
@@ -963,20 +935,21 @@ export const generateAccount = async (
       }
     }
 
-    if (!seedphrase) {
-      const seedData = await getSeedPhrase(id);
-      seedphrase = seedData?.seedphrase;
-      if (userPIN) {
-        try {
-          seedphrase = await encryptor.decrypt(userPIN, seedphrase);
-        } catch (e) {
-          return null;
-        }
-      }
-    }
+    const seedData = await getSeedPhrase(id);
+    const seedphrase = seedData?.seedphrase;
 
-    if (!seedphrase) {
-      throw new Error(`Can't access seed phrase to create new accounts`);
+    if (userPIN) {
+      try {
+        const decryptedSeedphrase = await encryptor.decrypt(
+          userPIN,
+          seedphrase
+        );
+        if (!decryptedSeedphrase) {
+          throw new Error(`Can't access seed phrase to create new accounts`);
+        }
+      } catch (e) {
+        return null;
+      }
     }
 
     const {
@@ -1016,117 +989,8 @@ export const generateAccount = async (
   }
 };
 
-const migrateSecrets = async (): Promise<MigratedSecretsResult | null> => {
-  try {
-    logger.sentry('migrating secrets!');
-    const seedphrase = await oldLoadSeedPhrase();
-
-    if (!seedphrase) {
-      logger.sentry('old seed doesnt exist!');
-      // Save the migration flag to prevent this flow in the future
-      await keychain.saveString(
-        oldSeedPhraseMigratedKey,
-        'true',
-        publicAccessControlOptions
-      );
-      logger.sentry(
-        'Saved the migration flag to prevent this flow in the future'
-      );
-      return null;
-    }
-
-    logger.sentry('Got secret, now idenfifying wallet type');
-    const type = identifyWalletType(seedphrase);
-    logger.sentry('Got type: ', type);
-    let hdnode: undefined | HDNode,
-      node: undefined | HDNode,
-      existingAccount: undefined | Wallet;
-    switch (type) {
-      case EthereumWalletType.privateKey:
-        existingAccount = new Wallet(addHexPrefix(seedphrase));
-        break;
-      case EthereumWalletType.mnemonic:
-        {
-          const {
-            wallet: ethereumJSWallet,
-          } = await ethereumUtils.deriveAccountFromMnemonic(seedphrase);
-          if (!ethereumJSWallet) return null;
-          const walletPkey = addHexPrefix(
-            ethereumJSWallet.getPrivateKey().toString('hex')
-          );
-
-          existingAccount = new Wallet(walletPkey);
-        }
-        break;
-      case EthereumWalletType.seed:
-        hdnode = HDNode.fromSeed(seedphrase);
-        break;
-      default:
-    }
-
-    if (!existingAccount && hdnode) {
-      logger.sentry('No existing account, so we have to derive it');
-      node = hdnode.derivePath(`${DEFAULT_HD_PATH}/0`);
-      existingAccount = new Wallet(node.privateKey);
-      logger.sentry('Got existing account');
-    }
-
-    if (!existingAccount) {
-      return null;
-    }
-
-    // Check that wasn't migrated already!
-    const pkeyExists = await keychain.hasKey(
-      `${existingAccount.address}_${privateKeyKey}`
-    );
-    if (!pkeyExists) {
-      logger.sentry('new pkey didnt exist so we should save it');
-      // Save the private key in the new format
-      await savePrivateKey(existingAccount.address, existingAccount.privateKey);
-      logger.sentry('new pkey saved');
-    }
-
-    const selectedWalletData = await getSelectedWallet();
-    let wallet: undefined | RainbowWallet = selectedWalletData?.wallet;
-    if (!wallet) {
-      return null;
-    }
-
-    // Save the seedphrase in the new format
-    const seedExists = await keychain.hasKey(`${wallet.id}_${seedPhraseKey}`);
-    if (!seedExists) {
-      logger.sentry('new seed didnt exist so we should save it');
-      await saveSeedPhrase(seedphrase, wallet.id);
-      logger.sentry('new seed saved');
-    }
-    // Save the migration flag to prevent this flow in the future
-    await keychain.saveString(
-      oldSeedPhraseMigratedKey,
-      'true',
-      publicAccessControlOptions
-    );
-    logger.sentry('saved migrated key');
-    return {
-      hdnode,
-      privateKey: existingAccount.privateKey,
-      seedphrase,
-      type,
-    };
-  } catch (e) {
-    logger.sentry('Error while migrating secrets');
-    captureException(e);
-    return null;
-  }
-};
-
 export const cleanUpWalletKeys = async (): Promise<boolean> => {
-  const keys = [
-    addressKey,
-    allWalletsKey,
-    oldSeedPhraseMigratedKey,
-    pinKey,
-    selectedWalletKey,
-  ];
+  const keys = [addressKey, allWalletsKey, pinKey, selectedWalletKey];
 
   try {
     await Promise.all(
@@ -1151,61 +1015,37 @@ export const loadSeedPhrase = async (
   promptMessage?: string | AuthenticationPrompt
 ): Promise<null | EthereumWalletSeed> => {
   try {
-    let seedPhrase = null;
-    // First we need to check if that key already exists
-    const keyFound = await keychain.hasKey(`${id}_${seedPhraseKey}`);
-    if (!keyFound) {
-      logger.sentry('key not found, we should have a migration pending...');
-      // if it doesn't we might have a migration pending
-      const isSeedPhraseMigrated = await keychain.loadString(
-        oldSeedPhraseMigratedKey
-      );
-      logger.sentry('Migration pending?', !isSeedPhraseMigrated);
+    const seedData = await getSeedPhrase(id, promptMessage);
 
-      // We need to migrate the seedphrase & private key first
-      // In that case we regenerate the existing private key to store it with the new format
-      if (!isSeedPhraseMigrated) {
-        const migratedSecrets = await migrateSecrets();
-        seedPhrase = get(migratedSecrets, 'seedphrase', null);
-      } else {
-        logger.sentry('Migrated flag was set but there is no key!', id);
-        captureMessage('Missing seed for account');
-      }
+    const seedPhrase = get(seedData, 'seedphrase', null);
+
+    if (seedPhrase) {
+      logger.sentry('got seed succesfully');
     } else {
-      logger.sentry('Getting seed directly');
-      const seedData = await getSeedPhrase(id, promptMessage);
-      seedPhrase = get(seedData, 'seedphrase', null);
-      let userPIN = null;
-      if (Device.isAndroid) {
-        const hasBiometricsEnabled = await getSupportedBiometryType();
-        // Fallback to custom PIN
-        if (!hasBiometricsEnabled) {
-          try {
-            userPIN = await authenticateWithPIN();
-            if (userPIN) {
-              // Dencrypt with the PIN
-              seedPhrase = await encryptor.decrypt(userPIN, seedPhrase);
-            } else {
-              return null;
-            }
-          } catch (e) {
-            return null;
-          }
-        }
-      }
+      captureMessage(
+        'Missing seed for account - (Key exists but value isnt valid)!'
+      );
+    }
 
-      if (seedPhrase) {
-        logger.sentry('got seed succesfully');
-      } else {
-        captureMessage(
-          'Missing seed for account - (Key exists but value isnt valid)!'
-        );
+    if (Device.isAndroid && seedPhrase) {
+      const hasBiometricsEnabled = await getSupportedBiometryType();
+      // Fallback to custom PIN
+      if (!hasBiometricsEnabled) {
+        try {
+          const userPIN = await authenticateWithPIN();
+          if (userPIN) {
+            const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
+            return decryptedSeed;
+          }
+        } catch (e) {
+          return null;
+        }
       }
     }
 
     return seedPhrase;
   } catch (error) {
-    logger.sentry('Error in loadSeedPhraseAndMigrateIfNeeded');
+    logger.sentry('Error in loadSeedPhrase');
     captureException(error);
     return null;
   }
