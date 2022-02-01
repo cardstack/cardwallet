@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { getAllWallets, loadAddress } from '@rainbow-me/model/wallet';
@@ -21,20 +22,17 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 import HDProvider from '@cardstack/models/hd-provider';
 import { getFCMToken } from '@cardstack/models/firebase';
 
-const HUB_URL_STAGING = 'https://hub-staging.stack.cards';
-const HUB_URL_PROD = 'https://hub.cardstack.com';
-
 const HUBAUTH_PROMPT_MESSAGE =
   'To enable notifications, please authenticate your ownership of this account with the Cardstack Hub server';
 
 const HUBTOKEN_KEY = 'hubToken';
 
 export const getHubUrl = (network: Network): string =>
-  network === Network.xdai ? HUB_URL_PROD : HUB_URL_STAGING;
+  network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
 
 const axiosConfig = (authToken: string) => {
   return {
-    baseURL: HUB_URL_PROD,
+    baseURL: HUB_URL,
     headers: {
       'Content-Type': 'application/vnd.api+json',
       Authorization: `Bearer: ${authToken}`,

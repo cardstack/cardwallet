@@ -1,1 +1,2 @@
-package_name("com.cardstack.cardpay") # e.g.s
+package_name("com.cardstack.cardpay")
+json_key_file("../android/app/google-play-credentials.json")

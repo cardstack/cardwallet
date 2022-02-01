@@ -17,8 +17,19 @@ default_platform(:android)
 
 platform :android do
   lane :internal do
-    gradle(task: 'assemble', build_type: 'Release')
-    upload_to_play_store(track: 'internal')
+    internalVersionCodes = google_play_track_version_codes(track: 'internal')
+
+    currentVersionCode = internalVersionCodes.max
+    nextVersionCode = currentVersionCode + 1
+
+    gradle(
+      task: 'bundle', 
+      build_type: 'Release',     
+      properties: {
+      'versionCode' => nextVersionCode,
+    })
+
+    upload_to_play_store(track: 'internal', version_name: nextVersionCode.to_s)
   end
 
   lane :alpha do

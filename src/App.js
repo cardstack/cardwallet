@@ -130,7 +130,7 @@ class App extends Component {
     );
 
     this.backgroundNotificationListener = messaging().setBackgroundMessageHandler(
-      this.onRemoteNotification
+      notificationHandler
     );
 
     messaging().onNotificationOpenedApp(remoteMessage => {

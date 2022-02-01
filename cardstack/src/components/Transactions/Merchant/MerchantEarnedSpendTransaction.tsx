@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+
+import { useNavigation } from '@react-navigation/core';
 import { Icon } from '../../Icon';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
+  TransactionBaseProps,
 } from '../TransactionBase';
 import { MerchantEarnedSpendTransactionType } from '@cardstack/types';
+import Routes from '@rainbow-me/routes';
 
 export interface MerchantEarnSpendTransactionProps
   extends TransactionBaseCustomizationProps {
@@ -15,6 +19,16 @@ export const MerchantEarnedSpendTransaction = ({
   item,
   ...props
 }: MerchantEarnSpendTransactionProps) => {
+  const { navigate } = useNavigation();
+
+  const onPressTransaction = useCallback(
+    (transaction: TransactionBaseProps) =>
+      navigate(Routes.PAYMENT_RECEIVED_SHEET, {
+        transaction: { ...transaction, ...item },
+      }),
+    [item, navigate]
+  );
+
   return (
     <TransactionBase
       {...props}
@@ -24,6 +38,7 @@ export const MerchantEarnedSpendTransaction = ({
       statusText="Earned"
       subText={item.nativeBalanceDisplay}
       transactionHash={item.transactionHash}
+      onPressTransaction={onPressTransaction}
     />
   );
 };
