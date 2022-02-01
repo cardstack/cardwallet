@@ -42,8 +42,7 @@ export const walletsLoadState = () => async (dispatch, getState) => {
   try {
     const { accountAddress } = getState().settings;
     let addressFromKeychain = accountAddress;
-    const allWalletsResult = await getAllWallets();
-    const wallets = allWalletsResult?.wallets || {};
+    const wallets = await getAllWallets();
     if (isEmpty(wallets)) return;
     const selected = await getSelectedWallet();
     // Prevent irrecoverable state (no selected wallet)

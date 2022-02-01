@@ -40,7 +40,6 @@ export default function useInitializeWallet() {
       color = null,
       name = null,
       shouldRunMigrations = false,
-      overwrite = false,
       checkedWallet = null,
     } = {}) => {
       try {
@@ -76,7 +75,6 @@ export default function useInitializeWallet() {
           seedPhrase,
           color,
           name,
-          overwrite,
           checkedWallet,
           network
         );

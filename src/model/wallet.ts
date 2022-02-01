@@ -195,7 +195,6 @@ export const walletInit = async (
   seedPhrase = null,
   color = null,
   name = null,
-  overwrite = false,
   checkedWallet = null,
   network: string
 ): Promise<WalletInitialized> => {
@@ -203,13 +202,7 @@ export const walletInit = async (
 
   // Importing a seedphrase
   if (isImportingWallet) {
-    const wallet = await createWallet(
-      seedPhrase,
-      color,
-      name,
-      overwrite,
-      checkedWallet
-    );
+    const wallet = await createWallet(seedPhrase, color, name, checkedWallet);
     return { isNew: false, walletAddress: wallet?.address };
   }
 
@@ -497,11 +490,35 @@ export const identifyWalletType = (
   return EthereumWalletType.seed;
 };
 
+export const getWalletByAddress = ({
+  skip = false,
+  walletAddress,
+  allWallets,
+}: {
+  walletAddress: string;
+  skip?: boolean;
+  allWallets?: AllRainbowWallets;
+}) => {
+  if (skip || isEmpty(allWallets)) return;
+
+  const wallet = find(
+    allWallets,
+    (someWallet: RainbowWallet) =>
+      !!find(
+        someWallet.addresses,
+        account =>
+          toChecksumAddress(account.address) ===
+            toChecksumAddress(walletAddress) && account.visible
+      )
+  );
+
+  return wallet;
+};
+
 export const createWallet = async (
   seed: null | EthereumSeed = null,
   color: null | number = null,
   name: null | string = null,
-  overwrite: boolean = false,
   checkedWallet: null | EthereumWalletFromSeed = null
 ): Promise<null | EthereumWallet> => {
   const isImported = !!seed;
@@ -514,12 +531,7 @@ export const createWallet = async (
   let addresses: RainbowAccount[] = [];
 
   try {
-    let wasLoading = false;
     const { dispatch } = store;
-    if (!checkedWallet && Device.isAndroid) {
-      wasLoading = true;
-      dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
-    }
 
     // Wallet can be checked while importing,
     // if it's already checked use that info, otherwise ran the check here
@@ -533,56 +545,27 @@ export const createWallet = async (
     } =
       checkedWallet ||
       (await ethereumUtils.deriveAccountFromWalletInput(walletSeed));
-
-    let pkey = walletSeed;
+    logger.sentry('[createWallet] - getWallet from seed');
 
     if (!walletResult) return null;
 
-    if (isHDWallet) {
-      pkey = addHexPrefix(
-        (walletResult as LibWallet).getPrivateKey().toString('hex')
-      );
-    }
-    logger.sentry('[createWallet] - getWallet from seed');
-
     // Get all wallets
-    const allWalletsResult = await getAllWallets();
     logger.sentry('[createWallet] - getAllWallets');
-    const allWallets: AllRainbowWallets = get(allWalletsResult, 'wallets', {});
+    const allWallets = (await getAllWallets()) || {};
 
-    let existingWalletId = null;
-    if (isImported) {
-      // Checking if the generated account already exists and is visible
-      logger.sentry('[createWallet] - isImported >> true');
-      const alreadyExistingWallet = find(
-        allWallets,
-        (someWallet: RainbowWallet) => {
-          return !!find(
-            someWallet.addresses,
-            account =>
-              toChecksumAddress(account.address) ===
-                toChecksumAddress(walletAddress) && account.visible
-          );
-        }
-      );
+    const existingWallet = getWalletByAddress({
+      allWallets,
+      skip: !isImported,
+      walletAddress,
+    });
 
-      existingWalletId = alreadyExistingWallet?.id;
-
-      if (!overwrite && alreadyExistingWallet) {
-        setTimeout(
-          () =>
-            Alert.alert(
-              'Oops!',
-              'Looks like you already imported this account!'
-            ),
-          1
-        );
-        logger.sentry('[createWallet] - already imported this wallet');
-        return null;
-      }
+    if (existingWallet) {
+      Alert.alert('Oops!', 'Looks like you already imported this account!');
+      logger.sentry('[createWallet] - already imported this wallet');
+      return null;
     }
 
-    const id = existingWalletId || `wallet_${Date.now()}`;
+    const id = `wallet_${Date.now()}`;
     logger.sentry('[createWallet] - wallet ID', { id });
 
     // Android users without biometrics need to secure their keys with a PIN.
@@ -630,6 +613,11 @@ export const createWallet = async (
     // Save address
     await saveAddress(walletAddress);
     logger.sentry('[createWallet] - saved address');
+
+    // No need to check if its's HD wallet, bc only HD is allowed
+    const pkey = addHexPrefix(
+      (walletResult as LibWallet).getPrivateKey().toString('hex')
+    );
 
     // Save private key
     if (userPIN) {
@@ -707,7 +695,7 @@ export const createWallet = async (
             label = discoveredAccount.label ?? '';
           }
           // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete allWallets[discoveredWalletId];
+          delete allWallets?.[discoveredWalletId];
         }
 
         if (hasTxHistory) {
@@ -794,12 +782,6 @@ export const createWallet = async (
         walletType === WalletLibraryType.bip39
           ? new Wallet(pkey)
           : (walletResult as Wallet);
-
-      if (wasLoading) {
-        setTimeout(() => {
-          dispatch(setIsWalletLoading(null));
-        }, 2000);
-      }
 
       return createdWallet;
     }
@@ -932,17 +914,19 @@ export const saveAllWallets = async (wallets: AllRainbowWallets) => {
   await keychain.saveObject(allWalletsKey, val, publicAccessControlOptions);
 };
 
-export const getAllWallets = async (): Promise<null | AllRainbowWalletsData> => {
+export const getAllWallets = async (): Promise<
+  AllRainbowWallets | undefined
+> => {
   try {
-    const allWallets = await keychain.loadObject(allWalletsKey);
-    if (allWallets) {
-      return allWallets as AllRainbowWalletsData;
-    }
-    return null;
+    const allWallets = (await keychain.loadObject(
+      allWalletsKey
+    )) as AllRainbowWalletsData;
+
+    return allWallets?.wallets;
   } catch (error) {
     logger.sentry('Error in getAllWallets');
     captureException(error);
-    return null;
+    return;
   }
 };
 
