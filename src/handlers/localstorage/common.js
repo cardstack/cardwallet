@@ -16,15 +16,19 @@ export const getKey = (prefix, accountAddress, network) =>
 export const saveLocal = async (
   key = '',
   data = {},
-  version = defaultVersion
+  expires = 0, // 0 means never expires
+  version = defaultVersion,
+  id = ''
 ) => {
   try {
     data.storageVersion = version;
-    await storage.save({
-      data,
-      expires: null,
+    const params = {
       key,
-    });
+      data,
+      ...(id ? { id } : {}),
+      ...(expires ? { expires } : {}),
+    };
+    await storage.save(params);
   } catch (error) {
     logger.log('Storage: error saving to local for key', key);
   }
@@ -35,13 +39,15 @@ export const saveLocal = async (
  * @param  {String}  [key='']
  * @return {Object}
  */
-export const getLocal = async (key = '', version = defaultVersion) => {
+export const getLocal = async (key = '', version = defaultVersion, id = '') => {
   try {
-    const result = await storage.load({
-      autoSync: false,
+    const params = {
       key,
+      autoSync: false,
       syncInBackground: false,
-    });
+      ...(id ? { id } : {}),
+    };
+    const result = await storage.load(params);
     if (result && result.storageVersion === version) {
       return result;
     }
@@ -79,7 +85,7 @@ export const getGlobal = async (
 };
 
 export const saveGlobal = (key, data, version = defaultVersion) =>
-  saveLocal(key, { data }, version);
+  saveLocal(key, { data }, null, version);
 
 export const getAccountLocal = async (
   prefix,
@@ -99,7 +105,8 @@ export const saveAccountLocal = (
   accountAddress,
   network,
   version = defaultVersion
-) => saveLocal(getKey(prefix, accountAddress, network), { data }, version);
+) =>
+  saveLocal(getKey(prefix, accountAddress, network), { data }, null, version);
 
 export const removeAccountLocal = (prefix, accountAddress, network) => {
   const key = getKey(prefix, accountAddress, network);

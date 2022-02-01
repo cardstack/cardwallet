@@ -1,9 +1,14 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { getAllWallets, loadAddress } from '@rainbow-me/model/wallet';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import {
+  getLocal,
+  saveLocal,
+  removeLocal,
+} from '@rainbow-me/handlers/localstorage/common';
 import {
   CustodialWallet,
   Inventory,
@@ -20,6 +25,8 @@ import { getFCMToken } from '@cardstack/models/firebase';
 const HUBAUTH_PROMPT_MESSAGE =
   'To enable notifications, please authenticate your ownership of this account with the Cardstack Hub server';
 
+const HUBTOKEN_KEY = 'hubToken';
+
 export const getHubUrl = (network: Network): string =>
   network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
 
@@ -32,6 +39,40 @@ const axiosConfig = (authToken: string) => {
       Accept: 'application/vnd.api+json',
     },
   };
+};
+
+export const hubApi = axios.create(axiosConfig(''));
+
+const hubTokenStorageKey = (network: string): string => {
+  return `${HUBTOKEN_KEY}-${network}`;
+};
+
+const loadHubAuthToken = async (
+  tokenStorageKey: string,
+  walletAddress: string
+): Promise<string | null> => {
+  const {
+    data: { authToken },
+  } = ((await getLocal(tokenStorageKey, undefined, walletAddress)) || {
+    data: { authToken: null },
+  }) as any;
+
+  return authToken;
+};
+
+const storeHubAuthToken = async (
+  tokenStorageKey: string,
+  authToken: string,
+  walletAddress: string
+) => {
+  // expires in a day.
+  await saveLocal(
+    tokenStorageKey,
+    { data: { authToken } },
+    1000 * 3600 * 24,
+    undefined,
+    walletAddress
+  );
 };
 
 export const getHubAuthToken = async (
@@ -51,6 +92,19 @@ export const getHubAuthToken = async (
         ) > -1
     )?.id || '';
 
+  // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
+  const address = walletAddress || (await loadAddress()) || '';
+
+  // Validate if authToken isn't already saved and use it.
+  const savedAuthToken = await loadHubAuthToken(
+    hubTokenStorageKey(network),
+    address
+  );
+
+  if (savedAuthToken) {
+    return savedAuthToken;
+  }
+
   try {
     const hdProvider = await HDProvider.get({
       walletId,
@@ -62,9 +116,11 @@ export const getHubAuthToken = async (
     // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
     const web3 = new Web3(hdProvider);
     const authAPI = await getSDK('HubAuth', web3, hubURL);
-    // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
-    const address = walletAddress || (await loadAddress()) || '';
     const authToken = await authAPI.authenticate({ from: address });
+    await HDProvider.reset();
+
+    await storeHubAuthToken(hubTokenStorageKey(network), authToken, address);
+
     return authToken;
   } catch (e) {
     logger.sentry('Hub authenticate failed', e);
@@ -89,13 +145,11 @@ export const registerFcmToken = async (
       seedPhrase
     );
 
-    await HDProvider.reset();
-
     if (!authToken) {
       return { success: false };
     }
 
-    const results = await axios.post(
+    const results = await hubApi.post(
       `${hubURL}/api/push-notification-registrations`,
       JSON.stringify({
         data: {
@@ -132,13 +186,11 @@ export const unregisterFcmToken = async (
       seedPhrase
     );
 
-    await HDProvider.reset();
-
     if (!authToken) {
       return { success: false };
     }
 
-    const results = await axios.delete(
+    const results = await hubApi.delete(
       `${hubURL}/api/push-notification-registrations/${fcmToken}`,
       axiosConfig(authToken)
     );
@@ -162,7 +214,7 @@ export const getNotificationsPreferences = async (
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
-    const results = await axios.get(
+    const results = await hubApi.get(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
       axiosConfig(authToken)
     );
@@ -185,7 +237,7 @@ export const setNotificationsPreferences = async (
     const hubURL = getHubUrl(network);
     const { fcmToken } = await getFCMToken();
 
-    await axios.put(
+    await hubApi.put(
       `${hubURL}/api/notification-preferences/${fcmToken}`,
       JSON.stringify({
         data: {
@@ -353,3 +405,19 @@ export const getWyrePrice = async (
     logger.sentry('Error getting order details', e);
   }
 };
+
+hubApi?.interceptors?.response?.use?.(undefined, async (error: AxiosError) => {
+  if (error?.response?.status !== 401) {
+    return Promise.reject(error);
+  }
+  // Got API error 401, auth token should be refreshed.
+
+  // Remove token from local storage
+  const network: Network = await getNetwork();
+  await removeLocal(hubTokenStorageKey(network));
+
+  // We can't refresh and re-run the request without improving
+  // how the auth token is being kept outside this scope.
+  // So ftm, we reject the request.
+  return Promise.reject(error);
+});
