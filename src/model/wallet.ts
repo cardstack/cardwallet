@@ -498,6 +498,119 @@ export const getWalletByAddress = ({
   return wallet;
 };
 
+interface SaveSeedAndPkeyParams {
+  walletSeed: string;
+  pkey: string;
+  walletAddress: string;
+  id: string;
+}
+
+const saveSeedAndPkey = ({
+  walletSeed,
+  pkey,
+  walletAddress,
+  id,
+}: SaveSeedAndPkeyParams) => {
+  const saveSeed = saveSeedPhrase(walletSeed, id);
+  const savePkey = savePrivateKey(walletAddress, pkey);
+
+  return Promise.all([saveSeed, savePkey]);
+};
+
+const addAccountsWithTxHistory = async (
+  root: EthereumHDKey,
+  allWallets: AllRainbowWallets,
+  userPIN: string,
+  addresses: RainbowAccount[]
+) => {
+  logger.sentry('[createWallet] - isHDWallet && isImported');
+  let index = 1;
+  let lookup = true;
+  // Starting on index 1, we are gonna hit etherscan API and check the tx history
+  // for each account. If there's history we add it to the wallet.
+  //(We stop once we find the first one with no history)
+  while (lookup) {
+    const child = root.deriveChild(index);
+    const walletObj = child.getWallet();
+    const nextWallet = new Wallet(
+      addHexPrefix(walletObj.getPrivateKey().toString('hex'))
+    );
+    let hasTxHistory = false;
+    try {
+      hasTxHistory = await ethereumUtils.hasPreviousTransactions(
+        nextWallet.address
+      );
+    } catch (error) {
+      logger.sentry('[createWallet] - Error getting txn history');
+      captureException(error);
+    }
+
+    let discoveredAccount: RainbowAccount | undefined;
+    let discoveredWalletId: RainbowWallet['id'] | undefined;
+    forEach(allWallets, someWallet => {
+      const existingAccount = find(
+        someWallet.addresses,
+        account =>
+          toChecksumAddress(account.address) ===
+          toChecksumAddress(nextWallet.address)
+      );
+      if (existingAccount) {
+        discoveredAccount = existingAccount as RainbowAccount;
+        discoveredWalletId = someWallet.id;
+        return true;
+      }
+      return false;
+    });
+
+    // Remove any discovered wallets if they already exist
+    // and copy over label and color if account was visible
+    let color = getRandomColor();
+    let label = '';
+
+    if (discoveredAccount && discoveredWalletId) {
+      if (discoveredAccount.visible) {
+        color = discoveredAccount.color;
+        label = discoveredAccount.label ?? '';
+      }
+      delete allWallets?.[discoveredWalletId];
+    }
+
+    if (hasTxHistory) {
+      // Save private key
+      if (userPIN) {
+        // Encrypt with the PIN
+        const encryptedPkey = await encryptor.encrypt(
+          userPIN,
+          nextWallet.privateKey
+        );
+        if (encryptedPkey) {
+          await savePrivateKey(nextWallet.address, encryptedPkey);
+        } else {
+          logger.sentry('Error encrypting pkey to save it');
+          return null;
+        }
+      } else {
+        await savePrivateKey(nextWallet.address, nextWallet.privateKey);
+      }
+      logger.sentry(
+        `[createWallet] - saved private key for next wallet ${index}`
+      );
+      // Adds account into wallet
+      addresses.push({
+        address: nextWallet.address,
+        avatar: null,
+        color,
+        index,
+        label,
+        visible: true,
+      });
+      index++;
+    } else {
+      lookup = false;
+    }
+  }
+};
+
 export const createWallet = async (
   seed: null | EthereumSeed = null,
   color: null | number = null,
@@ -511,14 +624,13 @@ export const createWallet = async (
   }
   const walletSeed = seed || generateMnemonic();
 
-  let addresses: RainbowAccount[] = [];
+  const addresses: RainbowAccount[] = [];
   const { dispatch } = store;
 
   try {
     // Wallet can be checked while importing,
     // if it's already checked use that info, otherwise ran the check here
     const {
-      isHDWallet,
       type,
       root,
       wallet: walletResult,
@@ -576,45 +688,35 @@ export const createWallet = async (
       }
     }
 
-    // Save seed - save this first
-    if (userPIN) {
-      // Encrypt with the PIN
-      const encryptedSeed = await encryptor.encrypt(userPIN, walletSeed);
-      if (encryptedSeed) {
-        await saveSeedPhrase(encryptedSeed, id);
-      } else {
-        logger.sentry('Error encrypting seed to save it');
-        return null;
-      }
-    } else {
-      await saveSeedPhrase(walletSeed, id);
-    }
-
-    logger.sentry('[createWallet] - saved seed phrase');
-
-    // Save address
-    await saveAddress(walletAddress);
-    logger.sentry('[createWallet] - saved address');
-
     // No need to check if its's HD wallet, bc only HD is allowed
     const pkey = addHexPrefix(
       (walletResult as LibWallet).getPrivateKey().toString('hex')
     );
 
-    // Save private key
+    const seedAndPkeyParams = {
+      walletSeed,
+      pkey,
+      walletAddress,
+      id,
+    };
+
     if (userPIN) {
-      // Encrypt with the PIN
-      const encryptedPkey = await encryptor.encrypt(userPIN, pkey);
-      if (encryptedPkey) {
-        await savePrivateKey(walletAddress, encryptedPkey);
+      const [encryptedSeed, encryptedPkey] = await Promise.all([
+        encryptor.encrypt(userPIN, walletSeed),
+        encryptor.encrypt(userPIN, pkey),
+      ]);
+
+      if (encryptedSeed && encryptedPkey) {
+        seedAndPkeyParams.walletSeed = encryptedSeed;
+        seedAndPkeyParams.pkey = encryptedPkey;
       } else {
-        logger.sentry('Error encrypting pkey to save it');
+        logger.sentry('Error encrypting seed and pkey to save it');
         return null;
       }
-    } else {
-      await savePrivateKey(walletAddress, pkey);
     }
-    logger.sentry('[createWallet] - saved private key');
+    logger.sentry('[createWallet] - saved seed and private key');
+
+    await saveSeedAndPkey(seedAndPkeyParams);
 
     // Adds an account
     addresses.push({
@@ -626,92 +728,9 @@ export const createWallet = async (
       visible: true,
     });
 
-    if (isHDWallet && root && isImported) {
-      logger.sentry('[createWallet] - isHDWallet && isImported');
-      let index = 1;
-      let lookup = true;
-      // Starting on index 1, we are gonna hit etherscan API and check the tx history
-      // for each account. If there's history we add it to the wallet.
-      //(We stop once we find the first one with no history)
-      while (lookup) {
-        const child = root.deriveChild(index);
-        const walletObj = child.getWallet();
-        const nextWallet = new Wallet(
-          addHexPrefix(walletObj.getPrivateKey().toString('hex'))
-        );
-        let hasTxHistory = false;
-        try {
-          hasTxHistory = await ethereumUtils.hasPreviousTransactions(
-            nextWallet.address
-          );
-        } catch (error) {
-          logger.sentry('[createWallet] - Error getting txn history');
-          captureException(error);
-        }
-
-        let discoveredAccount: RainbowAccount | undefined;
-        let discoveredWalletId: RainbowWallet['id'] | undefined;
-        forEach(allWallets, someWallet => {
-          const existingAccount = find(
-            someWallet.addresses,
-            account =>
-              toChecksumAddress(account.address) ===
-              toChecksumAddress(nextWallet.address)
-          );
-          if (existingAccount) {
-            discoveredAccount = existingAccount as RainbowAccount;
-            discoveredWalletId = someWallet.id;
-            return true;
-          }
-          return false;
-        });
-
-        // Remove any discovered wallets if they already exist
-        // and copy over label and color if account was visible
-        let color = getRandomColor();
-        let label = '';
-
-        if (discoveredAccount && discoveredWalletId) {
-          if (discoveredAccount.visible) {
-            color = discoveredAccount.color;
-            label = discoveredAccount.label ?? '';
-          }
-          delete allWallets?.[discoveredWalletId];
-        }
-
-        if (hasTxHistory) {
-          // Save private key
-          if (userPIN) {
-            // Encrypt with the PIN
-            const encryptedPkey = await encryptor.encrypt(
-              userPIN,
-              nextWallet.privateKey
-            );
-            if (encryptedPkey) {
-              await savePrivateKey(nextWallet.address, encryptedPkey);
-            } else {
-              logger.sentry('Error encrypting pkey to save it');
-              return null;
-            }
-          } else {
-            await savePrivateKey(nextWallet.address, nextWallet.privateKey);
-          }
-          logger.sentry(
-            `[createWallet] - saved private key for next wallet ${index}`
-          );
-          addresses.push({
-            address: nextWallet.address,
-            avatar: null,
-            color,
-            index,
-            label,
-            visible: true,
-          });
-          index++;
-        } else {
-          lookup = false;
-        }
-      }
+    // For HDWallet we check to add derived accounts
+    if (root && isImported) {
+      await addAccountsWithTxHistory(root, allWallets, userPIN, addresses);
     }
 
     // if imported and we have only one account, we name the wallet too.
@@ -768,7 +787,7 @@ export const createWallet = async (
     }
     return null;
   } catch (error) {
-    logger.sentry('Error in createWallet');
+    logger.sentry('Error in createWallet', error);
     captureException(error);
     return null;
   } finally {
