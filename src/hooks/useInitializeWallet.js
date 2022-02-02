@@ -61,6 +61,13 @@ export default function useInitializeWallet() {
         // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
         await loadCoingeckoCoins();
 
+        // It seems there's a race condition between walletsLoadState, and walletInit
+        // if it's new, imported or not
+        if (!isImporting) {
+          await dispatch(walletsLoadState());
+          logger.sentry('walletsLoadState call #1');
+        }
+
         const { isNew, walletAddress } = await walletInit(
           seedPhrase,
           color,
@@ -74,8 +81,10 @@ export default function useInitializeWallet() {
           walletAddress,
         });
 
-        logger.sentry('walletsLoadState');
-        await dispatch(walletsLoadState());
+        if (isImporting || isNew) {
+          logger.sentry('walletsLoadState call #2');
+          await dispatch(walletsLoadState());
+        }
 
         if (isNil(walletAddress)) {
           logger.sentry('walletAddress is nil');
