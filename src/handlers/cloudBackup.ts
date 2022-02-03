@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { captureException } from '@sentry/react-native';
 import { sortBy } from 'lodash';
-import RNCloudFs, { BackupFile } from 'react-native-cloud-fs';
+import RNCloudFs, { ListFilesResult } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
@@ -132,6 +132,36 @@ export async function syncCloud(): Promise<any> {
   return true;
 }
 
+const getBackupDocumentByFilename = (
+  backups: ListFilesResult,
+  filename: string
+) => {
+  const filenameMatcher = [
+    filename,
+    `.${filename}.icloud`,
+    `${REMOTE_BACKUP_WALLET_DIR}/${filename}`,
+  ];
+
+  const document = backups.files.find(file =>
+    filenameMatcher.includes(file.name)
+  );
+
+  if (!document) {
+    logger.sentry('No backup found with that name!', filename);
+    const error = new Error(CLOUD_BACKUP_ERRORS.SPECIFIC_BACKUP_NOT_FOUND);
+    captureException(error);
+    throw error;
+  }
+
+  return document;
+};
+
+const getLatestBackupDocument = (backups: ListFilesResult) => {
+  const sortedBackups = sortBy(backups.files, 'lastModified').reverse();
+  const latestBackup = sortedBackups[0];
+  return latestBackup;
+};
+
 export async function getDataFromCloud(
   backupPassword: string,
   filename: string | null = null
@@ -150,29 +180,10 @@ export async function getDataFromCloud(
     return null;
   }
 
-  let document: BackupFile | undefined;
-  if (filename) {
-    if (Device.isIOS) {
-      // .icloud are files that were not yet synced
-      document = backups.files.find(
-        file => file.name === filename || file.name === `.${filename}.icloud`
-      );
-    } else {
-      document = backups.files.find(file => {
-        return file.name === `${REMOTE_BACKUP_WALLET_DIR}/${filename}`;
-      });
-    }
+  const document = filename
+    ? getBackupDocumentByFilename(backups, filename)
+    : getLatestBackupDocument(backups);
 
-    if (!document) {
-      logger.sentry('No backup found with that name!', filename);
-      const error = new Error(CLOUD_BACKUP_ERRORS.SPECIFIC_BACKUP_NOT_FOUND);
-      captureException(error);
-      throw error;
-    }
-  } else {
-    const sortedBackups = sortBy(backups.files, 'lastModified').reverse();
-    document = sortedBackups[0];
-  }
   const encryptedData = Device.isIOS
     ? await getICloudDocument(document.name)
     : await getGoogleDriveDocument(document.id);
