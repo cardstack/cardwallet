@@ -199,6 +199,7 @@ export default function ChangeWalletSheet() {
                   });
                   await dispatch(walletsUpdate(newWallets));
                 }
+                await dispatch(walletsLoadState());
               }
             },
             profile: {
