@@ -498,21 +498,21 @@ export const getWalletByAddress = ({
   return wallet;
 };
 
-interface SaveSeedAndPkeyParams {
+interface SaveSeedAndPrivateKeyParams {
   walletSeed: string;
-  pkey: string;
+  privateKey: string;
   walletAddress: string;
   id: string;
 }
 
-const saveSeedAndPkey = ({
+const saveSeedAndPrivateKey = ({
   walletSeed,
-  pkey,
+  privateKey,
   walletAddress,
   id,
-}: SaveSeedAndPkeyParams) => {
+}: SaveSeedAndPrivateKeyParams) => {
   const saveSeed = saveSeedPhrase(walletSeed, id);
-  const savePkey = savePrivateKey(walletAddress, pkey);
+  const savePkey = savePrivateKey(walletAddress, privateKey);
 
   return Promise.all([saveSeed, savePkey]);
 };
@@ -586,7 +586,7 @@ const addAccountsWithTxHistory = async (
         if (encryptedPkey) {
           await savePrivateKey(nextWallet.address, encryptedPkey);
         } else {
-          logger.sentry('Error encrypting pkey to save it');
+          logger.sentry('Error encrypting privateKey to save it');
           return null;
         }
       } else {
@@ -689,13 +689,13 @@ export const createWallet = async (
     }
 
     // No need to check if its's HD wallet, bc only HD is allowed
-    const pkey = addHexPrefix(
+    const privateKey = addHexPrefix(
       (walletResult as LibWallet).getPrivateKey().toString('hex')
     );
 
-    const seedAndPkeyParams = {
+    const seedAndPrivateKeyParams = {
       walletSeed,
-      pkey,
+      privateKey,
       walletAddress,
       id,
     };
@@ -703,20 +703,20 @@ export const createWallet = async (
     if (userPIN) {
       const [encryptedSeed, encryptedPkey] = await Promise.all([
         encryptor.encrypt(userPIN, walletSeed),
-        encryptor.encrypt(userPIN, pkey),
+        encryptor.encrypt(userPIN, privateKey),
       ]);
 
       if (encryptedSeed && encryptedPkey) {
-        seedAndPkeyParams.walletSeed = encryptedSeed;
-        seedAndPkeyParams.pkey = encryptedPkey;
+        seedAndPrivateKeyParams.walletSeed = encryptedSeed;
+        seedAndPrivateKeyParams.privateKey = encryptedPkey;
       } else {
-        logger.sentry('Error encrypting seed and pkey to save it');
+        logger.sentry('Error encrypting seed and privateKey to save it');
         return null;
       }
     }
     logger.sentry('[createWallet] - saved seed and private key');
 
-    await saveSeedAndPkey(seedAndPkeyParams);
+    await saveSeedAndPrivateKey(seedAndPrivateKeyParams);
 
     // Adds an account
     addresses.push({
@@ -780,7 +780,7 @@ export const createWallet = async (
       // ethers are derived from privateKey
       const createdWallet =
         walletType === WalletLibraryType.bip39
-          ? new Wallet(pkey)
+          ? new Wallet(privateKey)
           : (walletResult as Wallet);
 
       return createdWallet;
