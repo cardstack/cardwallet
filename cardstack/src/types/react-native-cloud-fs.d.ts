@@ -6,7 +6,7 @@ declare module 'react-native-cloud-fs' {
     lastModified: string;
   }
 
-  interface ListFilesResult {
+  export interface ListFilesResult {
     files: BackupFile[];
   }
 
