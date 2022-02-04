@@ -39,7 +39,6 @@ import {
   isValidMnemonic,
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
-import WalletLoadingStates from '../helpers/walletLoadingStates';
 import { EthereumWalletType } from '../helpers/walletTypes';
 import store from '../redux/store';
 import { setIsWalletLoading } from '../redux/wallets';
@@ -671,16 +670,7 @@ export const createWallet = async (
         try {
           userPIN = await getExistingPIN();
           if (!userPIN) {
-            // We gotta dismiss the modal before showing the PIN screen
-            dispatch(setIsWalletLoading(null));
             userPIN = await authenticateWithPIN();
-            dispatch(
-              setIsWalletLoading(
-                seed
-                  ? WalletLoadingStates.IMPORTING_WALLET
-                  : WalletLoadingStates.CREATING_WALLET
-              )
-            );
           }
         } catch (e) {
           return null;
