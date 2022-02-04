@@ -16,7 +16,6 @@ import {
   getAllWallets,
   getSelectedWallet,
   loadAddress,
-  oldSeedPhraseMigratedKey,
   saveAddress,
   saveAllWallets,
   setSelectedWallet,
@@ -42,8 +41,7 @@ export const walletsLoadState = () => async (dispatch, getState) => {
   try {
     const { accountAddress } = getState().settings;
     let addressFromKeychain = accountAddress;
-    const allWalletsResult = await getAllWallets();
-    const wallets = allWalletsResult?.wallets || {};
+    const wallets = await getAllWallets();
     if (isEmpty(wallets)) return;
     const selected = await getSelectedWallet();
     // Prevent irrecoverable state (no selected wallet)
@@ -254,24 +252,6 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
       );
     }
 
-    const hasOldSeedPhraseMigratedFlag = await hasKey(oldSeedPhraseMigratedKey);
-    if (hasOldSeedPhraseMigratedFlag) {
-      logger.sentry('[KeychainIntegrityCheck]: migrated flag is OK');
-    } else {
-      logger.sentry(
-        `[KeychainIntegrityCheck]: migrated flag is present: ${hasOldSeedPhraseMigratedFlag}`
-      );
-    }
-
-    const hasOldSeedphrase = await hasKey(seedPhraseKey);
-    if (hasOldSeedphrase) {
-      logger.sentry('[KeychainIntegrityCheck]: old seed is still present!');
-    } else {
-      logger.sentry(
-        `[KeychainIntegrityCheck]: old seed is present: ${hasOldSeedphrase}`
-      );
-    }
-
     const { wallets, selected } = getState().wallets;
     if (!wallets) {
       logger.sentry(
@@ -321,13 +301,7 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
       // Handle race condition:
       // A wallet is NOT damaged if:
       // - it's not imported
-      // - and hasn't been migrated yet
-      // - and the old seedphrase is still there
-      if (
-        !wallet.imported &&
-        !hasOldSeedPhraseMigratedFlag &&
-        hasOldSeedphrase
-      ) {
+      if (!wallet.imported) {
         healthyWallet = true;
       }
 

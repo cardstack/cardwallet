@@ -3,7 +3,6 @@ import { isNil } from 'lodash';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
-import runMigrations from '../model/migrations';
 import { walletInit } from '../model/wallet';
 import {
   settingsLoadNetwork,
@@ -39,8 +38,6 @@ export default function useInitializeWallet() {
       seedPhrase = undefined,
       color = null,
       name = null,
-      shouldRunMigrations = false,
-      overwrite = false,
       checkedWallet = null,
     } = {}) => {
       try {
@@ -64,19 +61,17 @@ export default function useInitializeWallet() {
         // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
         await loadCoingeckoCoins();
 
-        if (shouldRunMigrations && !isImporting) {
-          logger.sentry('shouldRunMigrations && !seedPhrase? => true');
+        // It seems there's a race condition between walletsLoadState, and walletInit
+        // if it's new, imported or not
+        if (!isImporting) {
           await dispatch(walletsLoadState());
           logger.sentry('walletsLoadState call #1');
-          await runMigrations();
-          logger.sentry('done with migrations');
         }
 
         const { isNew, walletAddress } = await walletInit(
           seedPhrase,
           color,
           name,
-          overwrite,
           checkedWallet,
           network
         );

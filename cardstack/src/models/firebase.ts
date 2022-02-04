@@ -223,10 +223,14 @@ export const checkPushPermissionAndRegisterToken = async (
 export const registerTokenRefreshListener = () =>
   messaging().onTokenRefresh(async fcmToken => {
     try {
-      const tokenRegisterResponse = await registerFcmToken(fcmToken);
+      const walletAddress = (await loadAddress()) || '';
+
+      const tokenRegisterResponse = await registerFcmToken(
+        fcmToken,
+        walletAddress
+      );
 
       if (tokenRegisterResponse?.success) {
-        const walletAddress = (await loadAddress()) || '';
         const network = await getNetwork();
         saveLocal(DEVICE_FCM_TOKEN_KEY, {
           data: { fcmToken, [network]: [walletAddress] },
