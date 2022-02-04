@@ -30,8 +30,10 @@ import {
   SystemNotification,
   Text,
 } from '@cardstack/components';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
 import { isLayer2, NOTIFICATION_KEY } from '@cardstack/utils';
+import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
@@ -62,6 +64,7 @@ export default function WalletScreen() {
 
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
+  const { showLoadingOverlay } = useLoadingOverlay();
 
   const setNotifications = async () => {
     try {
@@ -91,11 +94,17 @@ export default function WalletScreen() {
 
   useEffect(() => {
     if (!initialized) {
+      const isCreatingWallet = params?.emptyWallet;
+
+      if (isCreatingWallet) {
+        showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
+      }
+
       initializeWallet();
       setInitialized(true);
       setNotifications();
     }
-  }, [initializeWallet, initialized, params]);
+  }, [initializeWallet, initialized, params, showLoadingOverlay]);
 
   // Show the exchange fab only for supported networks
   // (mainnet & rinkeby)
