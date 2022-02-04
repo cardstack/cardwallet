@@ -24,6 +24,7 @@ const emojisMap = {
   'sign-canceled': '👻',
   'transaction': '🥳',
   'transaction-canceled': '👻',
+  'qrcode_timeout': '👻',
 };
 
 const titlesMap = {
@@ -33,6 +34,7 @@ const titlesMap = {
   'sign-canceled': 'Transaction canceled!',
   'transaction': 'Transaction sent!',
   'transaction-canceled': 'Transaction canceled!',
+  'qrcode_timeout': 'The QR Code is invalid or expired!',
 };
 
 const WalletConnectRedirectSheet = () => {
@@ -60,7 +62,11 @@ const WalletConnectRedirectSheet = () => {
             {titlesMap[type]}
           </Text>
         </Centered>
-        <BodyText color={colors.dark}>Go back to your browser</BodyText>
+        <BodyText color={colors.dark}>
+          {type === 'qrcode_timeout'
+            ? 'Please scan valid QR Code'
+            : 'Go back to your browser'}
+        </BodyText>
       </Centered>
     </Sheet>
   );

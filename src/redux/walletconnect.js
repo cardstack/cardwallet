@@ -30,6 +30,8 @@ import logger from 'logger';
 
 // -- Constants --------------------------------------- //
 
+const WC_REQUEST_TIMEOUT = 10000;
+
 const WALLETCONNECT_ADD_REQUEST = 'walletconnect/WALLETCONNECT_ADD_REQUEST';
 const WALLETCONNECT_REMOVE_REQUEST =
   'walletconnect/WALLETCONNECT_REMOVE_REQUEST';
@@ -105,7 +107,13 @@ export const walletConnectOnSessionRequest = (
     const { clientMeta, push } = await getNativeOptions();
     try {
       walletConnector = new WalletConnect({ clientMeta, uri }, push);
+      const timeoutHandler = setTimeout(() => {
+        callback && callback('qrcode_timeout');
+      }, WC_REQUEST_TIMEOUT);
       walletConnector.on('session_request', (error, payload) => {
+        if (timeoutHandler) {
+          clearTimeout(timeoutHandler);
+        }
         if (error) {
           logger.log('Error on wc session_request', payload);
           captureException(error);

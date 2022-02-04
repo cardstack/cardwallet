@@ -124,7 +124,12 @@ export default function useScanner(enabled) {
     async qrCodeData => {
       haptics.notificationSuccess();
       try {
-        await walletConnectOnSessionRequest(qrCodeData, () => {
+        await walletConnectOnSessionRequest(qrCodeData, status => {
+          if (status === 'qrcode_timeout' && isScanningEnabled) {
+            return navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
+              type: 'qrcode_timeout',
+            });
+          }
           setTimeout(enableScanning, 2000);
         });
       } catch (e) {
@@ -132,7 +137,8 @@ export default function useScanner(enabled) {
         setTimeout(enableScanning, 2000);
       }
     },
-    [enableScanning, walletConnectOnSessionRequest]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [enableScanning, navigate, walletConnectOnSessionRequest]
   );
 
   const handleScanInvalid = useCallback(
@@ -175,6 +181,7 @@ export default function useScanner(enabled) {
 
   return {
     isCameraAuthorized,
+    isScanningEnabled,
     onScan,
   };
 }
