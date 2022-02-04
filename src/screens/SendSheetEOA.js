@@ -15,7 +15,7 @@ import SendSheet, {
 } from '../components/send/SendSheet';
 import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
-import { sendTransaction } from '../model/wallet';
+import { sendTransaction, sendNft } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { useLoadingOverlay } from '@cardstack/navigation';
@@ -283,13 +283,24 @@ const useSendSheetScreen = () => {
       to: recipient,
     };
     try {
-      const signableTransaction = await createSignableTransaction(
-        txDetails,
-        network
-      );
-      const txResult = await sendTransaction({
-        transaction: signableTransaction,
-      });
+      let txResult;
+      if (txDetails.asset?.type === AssetTypes.nft) {
+        txResult = await sendNft({
+          from: txDetails.from,
+          to: txDetails.to,
+          id: selected.id,
+        });
+      } else {
+        const signableTransaction = await createSignableTransaction(
+          txDetails,
+          network
+        );
+        txResult = await sendTransaction({
+          transaction: signableTransaction,
+        });
+      }
+
+      console.log('::: tx result', txResult);
 
       const { hash, nonce } = txResult;
 

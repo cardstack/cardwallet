@@ -5,6 +5,7 @@ import {
   Hexable,
   joinSignature,
 } from '@ethersproject/bytes';
+import { Contract } from '@ethersproject/contracts';
 import { HDNode } from '@ethersproject/hdnode';
 import { SigningKey } from '@ethersproject/signing-key';
 import { Transaction } from '@ethersproject/transactions';
@@ -56,6 +57,7 @@ import {
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
 import { Device } from '@cardstack/utils/device';
+import { erc721ABI } from '@rainbow-me/references';
 import logger from 'logger';
 const encryptor = new AesEncryptor();
 
@@ -77,6 +79,12 @@ interface WalletInitialized {
 interface TransactionRequestParam {
   transaction: TransactionRequest;
   existingWallet?: Wallet;
+}
+
+interface ContractTransferFromParam {
+  from: string;
+  to: string;
+  id: number;
 }
 
 interface MessageTypeProperty {
@@ -241,6 +249,21 @@ export const loadWallet = async (): Promise<null | Wallet> => {
     showWalletErrorAlert();
   }
   return null;
+};
+
+export const sendNft = async ({
+  from,
+  to,
+  id,
+}: ContractTransferFromParam): Promise<null | Transaction> => {
+  try {
+    const wallet = await loadWallet();
+    const contract = new Contract(to, erc721ABI, wallet?.provider);
+    return await contract.transferFrom(from, to, id);
+  } catch (e) {
+    console.error('::: NFT transfer error', e);
+    return null;
+  }
 };
 
 export const sendTransaction = async ({
