@@ -30,7 +30,7 @@ const CollectibleSheet = () => {
       <CollectibleHeader collectible={collectible} />
       <CollectibleImageWrapper collectible={collectible} />
       <SheetActionButtonRow>
-        {isSendable && <SendActionButton />}
+        {isSendable && <SendActionButton asset={collectible} />}
       </SheetActionButtonRow>
       <Container paddingHorizontal={5}>
         <HorizontalDivider />
