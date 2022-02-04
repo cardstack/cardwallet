@@ -30,11 +30,16 @@ const defaulLoadingtMessage = {
   title: 'Processing Transaction',
 };
 
+interface ShowOverlayParams {
+  title: string;
+  subTitle?: string;
+}
+
 export const useLoadingOverlay = () => {
   const { navigate, goBack } = useNavigation();
 
   const showLoadingOverlay = useCallback(
-    ({ title, subTitle } = defaulLoadingtMessage) => {
+    ({ title, subTitle }: ShowOverlayParams = defaulLoadingtMessage) => {
       navigate(MainRoutes.LOADING_OVERLAY, {
         title,
         subTitle,
