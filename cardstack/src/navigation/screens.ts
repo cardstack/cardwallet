@@ -48,20 +48,12 @@ export interface ScreenNavigation {
 // Native iOS custom option, should be removed after deleting NativeStack
 const nativeStackiOSLoadingConfig = {
   customStack: true,
-  onAppear: null,
-  allowsDragToDismiss: false,
-  allowsTapToDismiss: false,
-  onTouchTop: null,
+  // onAppear: null,
   transitionDuration: 0,
-  onWillDismiss: null,
-  dismissable: false,
-  gesturedEnabled: false,
 };
 
 // Shareable component,
-// for now android/ios needs on MainStack
-// and iOS only on GlobalStack
-// the navigator looks for the nearest route
+// for now android needs on MainStack and iOS on GlobalStack
 const LoadingOverlayComponent = {
   LOADING_OVERLAY: {
     component: LoadingOverlayScreen,
