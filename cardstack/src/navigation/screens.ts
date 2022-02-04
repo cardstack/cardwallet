@@ -45,6 +45,27 @@ export interface ScreenNavigation {
   listeners?: ScreenListeners<NavigationState, StackNavigationEventMap>;
 }
 
+// Native iOS custom option, should be removed after deleting NativeStack
+const nativeStackiOSLoadingConfig = {
+  customStack: true,
+  // onAppear: null,
+  transitionDuration: 0,
+};
+
+// Shareable component,
+// for now android needs on MainStack and iOS on GlobalStack
+const LoadingOverlayComponent = {
+  LOADING_OVERLAY: {
+    component: LoadingOverlayScreen,
+    options: {
+      ...overlayPreset,
+      gestureEnabled: false,
+
+      ...(Device.isIOS ? nativeStackiOSLoadingConfig : {}),
+    } as StackNavigationOptions,
+  },
+};
+
 export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   DEPOT_SCREEN: { component: DepotScreen, options: horizontalInterpolator },
   MERCHANT_SCREEN: {
@@ -80,10 +101,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: ErrorFallbackScreen,
     options: { ...overlayPreset, gestureEnabled: false },
   },
-  LOADING_OVERLAY: {
-    component: LoadingOverlayScreen,
-    options: { ...overlayPreset, gestureEnabled: false },
-  },
   WELCOME_SCREEN: {
     component: WelcomeScreen,
   },
@@ -116,8 +133,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
       ? bottomSheetPreset
       : wcPromptPreset) as StackNavigationOptions,
   },
+  ...LoadingOverlayComponent,
 };
 
+// @ts-expect-error it alows undefined for temp solution on loadingOverlay, will be removed on nav redesign
 export const GlobalScreens: Record<
   keyof typeof GlobalRoutes,
   ScreenNavigation
@@ -138,6 +157,7 @@ export const GlobalScreens: Record<
       interactWithScrollView: false,
     } as StackNavigationOptions,
   },
+  ...(Device.isIOS ? LoadingOverlayComponent : {}),
 };
 
 // TODO: Merge paths once, navigation redesign happens

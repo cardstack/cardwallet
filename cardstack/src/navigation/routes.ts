@@ -22,4 +22,5 @@ export const GlobalRoutes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
   SHOW_QRCODE_MODAL: 'ShowQRCodeModal',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
+  LOADING_OVERLAY: 'LoadingOverlay',
 } as const;
