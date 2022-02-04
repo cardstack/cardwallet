@@ -32,6 +32,7 @@ import {
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
@@ -79,6 +80,8 @@ export default function ChangeWalletSheet() {
   const apolloClient = useApolloClient();
 
   const walletRowCount = useMemo(() => getWalletRowCount(wallets), [wallets]);
+
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const deviceHeight = deviceUtils.dimensions.height;
   const footerHeight = 160;
@@ -318,7 +321,10 @@ export default function ChangeWalletSheet() {
             isNewProfile: true,
             onCloseModal: async args => {
               if (args) {
-                setIsWalletLoading(WalletLoadingStates.CREATING_WALLET);
+                showLoadingOverlay({
+                  title: WalletLoadingStates.CREATING_WALLET,
+                });
+
                 const name = get(args, 'name', '');
                 const color = get(args, 'color', getRandomColor());
                 // Check if the selected wallet is the primary
@@ -397,7 +403,8 @@ export default function ChangeWalletSheet() {
                 }
               }
               creatingWallet.current = false;
-              setIsWalletLoading(null);
+
+              dismissLoadingOverlay();
             },
             profile: {
               color: null,
@@ -408,10 +415,11 @@ export default function ChangeWalletSheet() {
         }, 50);
       });
     } catch (e) {
-      setIsWalletLoading(null);
+      dismissLoadingOverlay();
       logger.log('Error while trying to add account', e);
     }
   }, [
+    dismissLoadingOverlay,
     dispatch,
     goBack,
     initializeWallet,
@@ -419,7 +427,7 @@ export default function ChangeWalletSheet() {
     navigate,
     selectedWallet.id,
     selectedWallet.primary,
-    setIsWalletLoading,
+    showLoadingOverlay,
     wallets,
   ]);
 

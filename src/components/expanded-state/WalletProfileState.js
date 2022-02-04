@@ -21,7 +21,7 @@ import {
 } from '@rainbow-me/helpers/emojiHandler';
 import { useAccountProfile, useBiometryIconName } from '@rainbow-me/hooks';
 
-import { useNavigation } from '@rainbow-me/navigation';
+import { Navigation, useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 
@@ -67,32 +67,41 @@ export default function WalletProfileState({
   );
   const inputRef = useRef(null);
 
-  const handleCancel = useCallback(() => {
-    goBack();
+  const dismissProfileModal = useCallback(() => {
+    if (Navigation.getActiveRouteName() === Routes.MODAL_SCREEN) {
+      goBack();
+    }
+  }, [goBack]);
+
+  const goToChangeWalletOnCreate = useCallback(() => {
     if (actionType === 'Create') {
       navigate(Routes.CHANGE_WALLET_SHEET);
     }
-  }, [actionType, goBack, navigate]);
+  }, [actionType, navigate]);
 
-  const handleSubmit = useCallback(() => {
-    onCloseModal({
+  const handleCancel = useCallback(() => {
+    dismissProfileModal();
+
+    goToChangeWalletOnCreate();
+  }, [dismissProfileModal, goToChangeWalletOnCreate]);
+
+  const handleSubmit = useCallback(async () => {
+    dismissProfileModal();
+
+    await onCloseModal({
       color,
       name: nameEmoji ? `${nameEmoji} ${value}` : value,
     });
 
-    // Dismiss WalletProfileModal
-    goBack();
-
-    if (actionType === 'Create' && isNewProfile) {
-      navigate(Routes.CHANGE_WALLET_SHEET);
+    if (isNewProfile) {
+      goToChangeWalletOnCreate();
     }
   }, [
-    actionType,
     color,
-    goBack,
+    dismissProfileModal,
     isNewProfile,
     nameEmoji,
-    navigate,
+    goToChangeWalletOnCreate,
     onCloseModal,
     value,
   ]);
