@@ -2,7 +2,6 @@
   {
     "name": "Ethereum Mainnet",
     "short_name": "eth",
-    "chain": "ETH",
     "network": "mainnet",
     "chain_id": 1,
     "network_id": 1
@@ -10,15 +9,13 @@
   {
     "name": "Ethereum Kovan",
     "short_name": "kov",
-    "chain": "ETH",
     "network": "kovan",
     "chain_id": 42,
     "network_id": 42
   },
   {
-    "name": "xDai Chain",
-    "short_name": "xdai",
-    "chain": "XDAI",
+    "name": "Gnosis Chain",
+    "short_name": "gnosis",
     "network": "xdai",
     "chain_id": 100,
     "network_id": 100
@@ -26,7 +23,6 @@
   {
     "name": "Sokol",
     "short_name": "sok",
-    "chain": "XDAI",
     "network": "sokol",
     "chain_id": 77,
     "network_id": 77
