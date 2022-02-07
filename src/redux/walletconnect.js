@@ -23,6 +23,7 @@ import { Navigation } from '../navigation';
 import { isSigningMethod } from '../utils/signingMethods';
 import { getFCMToken } from '@cardstack/models/firebase';
 import { addRequestToApprove } from '@cardstack/redux/requests';
+import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
 import { baseCloudFunctionsUrl } from '@cardstack/services';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';
@@ -30,7 +31,7 @@ import logger from 'logger';
 
 // -- Constants --------------------------------------- //
 
-const WC_REQUEST_TIMEOUT = 10000;
+const WC_REQUEST_TIMEOUT = 5000;
 
 const WALLETCONNECT_ADD_REQUEST = 'walletconnect/WALLETCONNECT_ADD_REQUEST';
 const WALLETCONNECT_REMOVE_REQUEST =
@@ -108,7 +109,7 @@ export const walletConnectOnSessionRequest = (
     try {
       walletConnector = new WalletConnect({ clientMeta, uri }, push);
       const timeoutHandler = setTimeout(() => {
-        callback && callback('qrcode_timeout');
+        callback && callback(WCRedirectTypes.qrcodeInvalid);
       }, WC_REQUEST_TIMEOUT);
       walletConnector.on('session_request', (error, payload) => {
         if (timeoutHandler) {
@@ -139,7 +140,7 @@ export const walletConnectOnSessionRequest = (
               await dispatch(
                 walletConnectRejectSession(peerId, walletConnector)
               );
-              callback && callback('reject', dappScheme);
+              callback && callback(WCRedirectTypes.reject, dappScheme);
             }
           },
           meta: {
@@ -363,7 +364,7 @@ export const walletConnectApproveSession = (peerId, callback, dappScheme) => (
 
   dispatch(setWalletConnector(listeningWalletConnector));
   if (callback) {
-    callback('connect', dappScheme);
+    callback(WCRedirectTypes.connect, dappScheme);
   }
 };
 

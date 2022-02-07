@@ -7,14 +7,14 @@ import React, {
   useState,
 } from 'react';
 import { InteractionManager } from 'react-native';
-import styled from 'styled-components';
-import Divider from '../components/Divider';
-import { Alert } from '../components/alerts';
-import { RequestVendorLogoIcon } from '../components/coin-icon';
+import { RouteType } from '@cardstack/navigation/types';
+import { Alert } from '@rainbow-me/components/alerts';
+import { RequestVendorLogoIcon } from '@rainbow-me/components/coin-icon';
 import {
   Button,
   CenteredContainer,
   Container,
+  HorizontalDivider,
   Sheet,
   Text,
 } from '@cardstack/components';
@@ -25,21 +25,18 @@ import {
 import { useNavigation } from '@rainbow-me/navigation';
 import { ethereumUtils } from '@rainbow-me/utils';
 
-const DappLogo = styled(RequestVendorLogoIcon).attrs(
-  ({ theme: { colors } }) => ({
-    backgroundColor: colors.transparent,
-    borderRadius: 18,
-    showLargeShadow: false,
-    size: 60,
-  })
-)`
-  margin-bottom: 24;
-`;
+interface Params {
+  meta?: {
+    dappName?: string;
+    dappUrl?: string;
+    imageUrl?: string;
+  };
+  callback: (success: boolean) => void;
+}
 
-export default function WalletConnectApprovalSheet() {
-  const { colors } = useTheme();
+const WalletConnectApprovalSheet = () => {
   const { goBack } = useNavigation();
-  const { params } = useRoute();
+  const { params } = useRoute<RouteType<Params>>();
   const [scam, setScam] = useState(false);
   const handled = useRef(false);
   const meta = params?.meta || {};
@@ -47,8 +44,9 @@ export default function WalletConnectApprovalSheet() {
   const callback = params?.callback;
 
   const checkIfScam = useCallback(
-    async dappUrl => {
-      const isScam = await ethereumUtils.checkIfUrlIsAScam(dappUrl);
+    async dappUrlParam => {
+      const isScam = await ethereumUtils.checkIfUrlIsAScam(dappUrlParam);
+
       if (isScam) {
         Alert({
           buttons: [
@@ -91,6 +89,7 @@ export default function WalletConnectApprovalSheet() {
     InteractionManager.runAfterInteractions(() => {
       checkIfScam(dappUrl);
     });
+
     // Reject if the modal is dismissed
     return () => {
       if (!handled.current) {
@@ -125,8 +124,16 @@ export default function WalletConnectApprovalSheet() {
         paddingHorizontal={19}
         paddingTop={5}
       >
-        <DappLogo dappName={dappName || ''} imageUrl={imageUrl} />
-        <Container justifyContent="center" marginBottom={5}>
+        <RequestVendorLogoIcon
+          dappName={dappName || ''}
+          imageUrl={imageUrl}
+          backgroundColor="transparent"
+          shouldPrioritizeImageLoading
+          showLargeShadow={false}
+          borderRadius={18}
+          size={60}
+        />
+        <Container justifyContent="center" marginBottom={5} marginTop={6}>
           <Text size="medium" textAlign="center" weight="bold">
             {dappName}
           </Text>
@@ -139,7 +146,7 @@ export default function WalletConnectApprovalSheet() {
             {isAuthenticated ? `􀇻 ${formattedDappUrl}` : formattedDappUrl}
           </Text>
         </Container>
-        <Divider color={colors.rowDividerLight} inset={[0, 84]} />
+        <HorizontalDivider />
       </CenteredContainer>
       <Container flexDirection="row" justifyContent="space-evenly">
         <Button onPress={handleCancel} variant="smallSecondary">
@@ -151,4 +158,6 @@ export default function WalletConnectApprovalSheet() {
       </Container>
     </Sheet>
   );
-}
+};
+
+export default React.memo(WalletConnectApprovalSheet);

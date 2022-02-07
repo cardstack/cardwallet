@@ -6,6 +6,7 @@ import {
   walletConnectRemovePendingRedirect,
   walletConnectSetPendingRedirect,
 } from '../redux/walletconnect';
+import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
 import logger from 'logger';
 
 export default function handleDeepLink(url) {
@@ -34,10 +35,20 @@ function handleWalletConnect(uri) {
   if (uri && query) {
     dispatch(
       walletConnectOnSessionRequest(uri, (status, dappScheme) => {
-        if (status === 'reject') {
-          dispatch(walletConnectRemovePendingRedirect('reject', dappScheme));
+        if (status === WCRedirectTypes.reject) {
+          dispatch(
+            walletConnectRemovePendingRedirect(
+              WCRedirectTypes.reject,
+              dappScheme
+            )
+          );
         } else {
-          dispatch(walletConnectRemovePendingRedirect('connect', dappScheme));
+          dispatch(
+            walletConnectRemovePendingRedirect(
+              WCRedirectTypes.connect,
+              dappScheme
+            )
+          );
         }
       })
     );

@@ -25,11 +25,14 @@ import {
   PaymentReceivedSheet,
   PaymentRequestExpandedSheet,
   UnclaimedRevenueSheet,
+  WalletConnectApprovalSheet,
+  WalletConnectRedirectSheet,
 } from '@cardstack/screen';
 import {
   bottomSheetPreset,
   expandedPreset,
   sheetPreset,
+  wcPromptPreset,
 } from '@rainbow-me/navigation/effects';
 import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
@@ -100,6 +103,18 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   UNCLAIMED_REVENUE_SHEET: {
     component: UnclaimedRevenueSheet,
     options: expandedPreset as StackNavigationOptions,
+  },
+  WALLET_CONNECT_APPROVAL_SHEET: {
+    component: WalletConnectApprovalSheet,
+    options: (Device.isIOS
+      ? expandedPreset
+      : wcPromptPreset) as StackNavigationOptions,
+  },
+  WALLET_CONNECT_REDIRECT_SHEET: {
+    component: WalletConnectRedirectSheet,
+    options: (Device.isIOS
+      ? bottomSheetPreset
+      : wcPromptPreset) as StackNavigationOptions,
   },
 };
 

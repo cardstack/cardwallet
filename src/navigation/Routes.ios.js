@@ -16,8 +16,6 @@ import SendSheetEOA from '../screens/SendSheetEOA';
 import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import SpendSheet from '../screens/SpendSheet';
-import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
-import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
 import WithdrawModal from '../screens/WithdrawModal';
 import ExchangeModalNavigator from './ExchangeModalNavigator';
 import { SwipeNavigator } from './SwipeNavigator';
@@ -33,7 +31,6 @@ import {
 import {
   bottomSheetPreset,
   exchangePreset,
-  expandedPreset,
   overlayExpandedPreset,
   sheetPreset,
 } from './effects';
@@ -59,16 +56,6 @@ function MainNavigator() {
       screenOptions={defaultScreenStackOptions}
     >
       <Stack.Screen component={SwipeNavigator} name={Routes.SWIPE_LAYOUT} />
-      <Stack.Screen
-        component={WalletConnectApprovalSheet}
-        name={Routes.WALLET_CONNECT_APPROVAL_SHEET}
-        options={expandedPreset}
-      />
-      <Stack.Screen
-        component={WalletConnectRedirectSheet}
-        name={Routes.WALLET_CONNECT_REDIRECT_SHEET}
-        options={bottomSheetPreset}
-      />
       {cardstackMainScreens}
     </Stack.Navigator>
   );

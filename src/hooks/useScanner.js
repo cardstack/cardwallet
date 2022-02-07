@@ -3,7 +3,7 @@ import {
   isValidMerchantPaymentUrl,
 } from '@cardstack/cardpay-sdk';
 import lang from 'i18n-js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   InteractionManager,
   Linking,
@@ -16,6 +16,7 @@ import { useNavigation } from '../navigation/Navigation';
 import usePrevious from './usePrevious';
 import useWallets from './useWallets';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
+import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
 import { Device } from '@cardstack/utils';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';
@@ -85,6 +86,9 @@ export default function useScanner(enabled) {
   const { navigate } = useNavigation();
   const { isReadOnlyWallet } = useWallets();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
+  const enabledStateRef = useRef();
+  // save up-to-date enabled state to ref so can be used in callback function
+  enabledStateRef.current = enabled;
 
   const {
     disableScanning,
@@ -120,25 +124,36 @@ export default function useScanner(enabled) {
     [enableScanning, isReadOnlyWallet, navigate]
   );
 
+  const walletConnectOnSessionRequestCallback = useCallback(
+    type => {
+      if (type === WCRedirectTypes.qrcodeInvalid && enabledStateRef.current) {
+        return navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
+          type,
+        });
+      }
+      setTimeout(enableScanning, 2000);
+    },
+    [enableScanning, navigate]
+  );
+
   const handleScanWalletConnect = useCallback(
     async qrCodeData => {
       haptics.notificationSuccess();
       try {
-        await walletConnectOnSessionRequest(qrCodeData, status => {
-          if (status === 'qrcode_timeout' && isScanningEnabled) {
-            return navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
-              type: 'qrcode_timeout',
-            });
-          }
-          setTimeout(enableScanning, 2000);
-        });
+        walletConnectOnSessionRequest(
+          qrCodeData,
+          walletConnectOnSessionRequestCallback
+        );
       } catch (e) {
         logger.log('walletConnectOnSessionRequest exception', e);
         setTimeout(enableScanning, 2000);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [enableScanning, navigate, walletConnectOnSessionRequest]
+    [
+      enableScanning,
+      walletConnectOnSessionRequest,
+      walletConnectOnSessionRequestCallback,
+    ]
   );
 
   const handleScanInvalid = useCallback(
