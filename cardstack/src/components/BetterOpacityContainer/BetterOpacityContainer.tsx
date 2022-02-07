@@ -1,3 +1,10 @@
+/**
+ * This Wrap is specificly to solve an Android issue where opacity of several stacked
+ * views blend badly together, which in our case, was occuring on all list row components.
+ * It only wraps a simple Container component and adds props `needsOffscreenAlphaCompositing`
+ * and `renderToHardwareTextureAndroid`.
+ */
+
 import React, { ReactNode } from 'react';
 import { ViewProps } from 'react-native';
 
