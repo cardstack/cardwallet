@@ -9,29 +9,19 @@ import React, {
   useState,
 } from 'react';
 
-import { Keyboard, TextInputProps } from 'react-native';
+import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { saveBackupPassword } from '../../model/backup';
 import { DelayedAlert } from '../alerts';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import {
-  BaseInputProps,
-  Button,
-  Container,
-  Icon,
-  IconName,
-  IconProps,
-  Input,
-  InputProps,
-  Text,
-} from '@cardstack/components';
-import {
-  cloudBackupPasswordMinLength,
-  isCloudBackupPasswordValid,
-} from '@rainbow-me/handlers/cloudBackup';
+  BackupPasswordButtonFooter,
+  backupPasswordInputProps,
+} from './backupComponentsUtils';
+import { Container, Icon, IconProps, Input, Text } from '@cardstack/components';
+import { isCloudBackupPasswordValid } from '@rainbow-me/handlers/cloudBackup';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
-  useBiometryIconName,
   useMagicAutofocus,
   useRouteExistsInNavigationState,
   useWalletCloudBackup,
@@ -56,7 +46,6 @@ export default function BackupCloudStep() {
   const [passwordFocused, setPasswordFocused] = useState(true);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const biometryIconName = useBiometryIconName();
 
   useEffect(() => {
     if (isDamaged) {
@@ -163,18 +152,6 @@ export default function BackupCloudStep() {
     validPassword && onConfirmBackup();
   }, [onConfirmBackup, validPassword]);
 
-  const biometryIconProps: IconProps | undefined = useMemo(
-    () =>
-      biometryIconName
-        ? {
-            iconSize: 'medium',
-            marginRight: 3,
-            name: biometryIconName as IconName,
-          }
-        : undefined,
-    [biometryIconName]
-  );
-
   const passwordFieldIconProps: IconProps | undefined = useMemo(
     () =>
       isCloudBackupPasswordValid(password)
@@ -195,30 +172,15 @@ export default function BackupCloudStep() {
     [validPassword]
   );
 
-  const sharedPasswordProps: Partial<
-    TextInputProps & InputProps & BaseInputProps
-  > = {
-    autoCompleteType: 'password',
-    blurOnSubmit: false,
-    border: true,
-    marginVertical: 2,
-    passwordRules: `minlength: ${cloudBackupPasswordMinLength};`,
-    secureTextEntry: true,
-    selectTextOnFocus: true,
-    textContentType: 'password',
-  };
-
   return (
     !isWalletLoading && (
       <BackupSheetKeyboardLayout
         footer={
-          validPassword ? (
-            <Button iconProps={biometryIconProps} onPress={onConfirmBackup}>
-              Confirm
-            </Button>
-          ) : (
-            <Text variant="subText">Minimum 8 characters</Text>
-          )
+          <BackupPasswordButtonFooter
+            buttonLabel="Confirm"
+            isValidPassword={validPassword}
+            onButtonPress={onConfirmBackup}
+          />
         }
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -234,7 +196,7 @@ export default function BackupCloudStep() {
           </Container>
           <Container margin={5}>
             <Input
-              {...sharedPasswordProps}
+              {...backupPasswordInputProps}
               iconProps={passwordFieldIconProps}
               onBlur={onPasswordBlur}
               onChange={onPasswordChange}
@@ -247,7 +209,7 @@ export default function BackupCloudStep() {
               value={password}
             />
             <Input
-              {...sharedPasswordProps}
+              {...backupPasswordInputProps}
               iconProps={confirmPasswordFieldIconProps}
               onChange={onConfirmPasswordChange}
               onFocus={onConfirmPasswordFocus}
