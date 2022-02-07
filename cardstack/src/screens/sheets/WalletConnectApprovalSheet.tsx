@@ -14,7 +14,6 @@ import {
   Button,
   CenteredContainer,
   Container,
-  HorizontalDivider,
   Sheet,
   Text,
 } from '@cardstack/components';
@@ -141,12 +140,15 @@ const WalletConnectApprovalSheet = () => {
             wants to connect to your account
           </Text>
         </Container>
-        <Container flexDirection="row">
+        <Container
+          flexDirection="row"
+          borderBottomColor="borderGray"
+          borderBottomWidth={1}
+        >
           <Text color="settingsTeal" lineHeight={29} weight="bold">
             {isAuthenticated ? `􀇻 ${formattedDappUrl}` : formattedDappUrl}
           </Text>
         </Container>
-        <HorizontalDivider />
       </CenteredContainer>
       <Container flexDirection="row" justifyContent="space-evenly">
         <Button onPress={handleCancel} variant="smallSecondary">
