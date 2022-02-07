@@ -4,6 +4,7 @@ import { Linking } from 'react-native';
 import { Icon, IconName, IconProps } from '../Icon';
 import { ContainerProps } from '../Container';
 import {
+  BetterOpacityContainer,
   Container,
   HorizontalDivider,
   Text,
@@ -93,7 +94,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
         onPress={handleOnPressTransaction}
         disabled={disabled}
       >
-        <Container
+        <BetterOpacityContainer
           backgroundColor="white"
           borderWidth={includeBorder ? 1 : 0}
           borderRadius={10}
@@ -110,7 +111,7 @@ export const TransactionBase = (props: TransactionBaseProps) => {
               {Footer}
             </>
           )}
-        </Container>
+        </BetterOpacityContainer>
       </Touchable>
     </Container>
   );
