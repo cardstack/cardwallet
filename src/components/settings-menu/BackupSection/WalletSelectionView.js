@@ -170,7 +170,7 @@ const WalletSelectionView = () => {
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
             <Text align="center" color="backgroundBlue">
-              􀍢 Manage {Device.cloudPlatform} Backups
+              Manage {Device.cloudPlatform} Backups
             </Text>
           </ButtonPressAnimation>
         </Footer>
