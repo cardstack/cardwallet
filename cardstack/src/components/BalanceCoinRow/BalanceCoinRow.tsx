@@ -43,6 +43,8 @@ export const BalanceCoinRow = ({
         paddingHorizontal={5}
         paddingVertical={2}
         flexDirection="row"
+        needsOffscreenAlphaCompositing
+        renderToHardwareTextureAndroid
       >
         <EditingSelectIcon isEditing={isEditing} selected={selected} />
         <PinnedOrHiddenIcon

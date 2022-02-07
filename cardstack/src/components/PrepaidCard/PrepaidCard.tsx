@@ -126,6 +126,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
           borderRadius={20}
           overflow="hidden"
           width={isEditing ? EDITING_COIN_ROW_WIDTH : '100%'}
+          needsOffscreenAlphaCompositing
+          renderToHardwareTextureAndroid
         >
           <CustomizableBackground
             cardCustomization={prepaidCard.cardCustomization}

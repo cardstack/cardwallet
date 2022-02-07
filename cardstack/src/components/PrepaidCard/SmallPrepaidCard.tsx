@@ -26,6 +26,8 @@ export const SmallPrepaidCard = (props: SmallPrepaidCardProps) => {
       borderWidth={1}
       borderRadius={10}
       borderColor="borderGray"
+      needsOffscreenAlphaCompositing
+      renderToHardwareTextureAndroid
     >
       <Container
         backgroundColor="white"

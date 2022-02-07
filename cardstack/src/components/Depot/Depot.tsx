@@ -32,6 +32,8 @@ export const Depot = (depot: DepotProps) => {
           overflow="hidden"
           borderColor="buttonPrimaryBorder"
           width="100%"
+          needsOffscreenAlphaCompositing
+          renderToHardwareTextureAndroid
         >
           <SafeHeader {...depot} onPress={onPress} />
           <Bottom {...depot} />

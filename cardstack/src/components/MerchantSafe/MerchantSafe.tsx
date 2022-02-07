@@ -37,6 +37,8 @@ export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
           borderRadius={10}
           overflow="hidden"
           borderColor="buttonPrimaryBorder"
+          renderToHardwareTextureAndroid
+          needsOffscreenAlphaCompositing
         >
           <SafeHeader
             {...props}

@@ -24,6 +24,8 @@ export const CollectibleRow = (collectible: CollectibleType) => {
         padding={4}
         width="100%"
         flexDirection="row"
+        renderToHardwareTextureAndroid
+        needsOffscreenAlphaCompositing
       >
         <Container
           width={130}
