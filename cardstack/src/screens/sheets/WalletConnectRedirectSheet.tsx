@@ -22,7 +22,7 @@ const emojisMap: Record<WCRedirectTypes, string> = {
   signCanceled: '👻',
   transaction: '🥳',
   transactionCanceled: '👻',
-  qrcodeInvalid: '👻',
+  qrcodeInvalid: '',
 };
 
 const titlesMap: Record<WCRedirectTypes, string> = {
@@ -60,7 +60,7 @@ const WalletConnectRedirectSheet = () => {
           {emojisMap[type]}
         </Text>
         <CenteredContainer marginTop={2}>
-          <Text color="black" size="large" weight="bold">
+          <Text color="black" size="large" weight="bold" textAlign="center">
             {titlesMap[type]}
           </Text>
         </CenteredContainer>
