@@ -67,9 +67,9 @@ const PrepaidCardInnerTop = ({
         </Text>
         <Text
           variant="overGradient"
-          fontSize={cardType[variant].fontSize.small}
+          fontSize={cardType[variant].fontSize.mid}
           weight="bold"
-          letterSpacing={0.55}
+          letterSpacing={0.33}
           color={cardCustomization?.textColor as ColorTypes}
           style={{ textShadowColor: cardCustomization?.patternColor }}
           textShadowColor={cardCustomization?.patternColor as ColorTypes}

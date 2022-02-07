@@ -1,11 +1,12 @@
 import React from 'react';
+import { currencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import { Image, StyleSheet } from 'react-native';
 
 import { ResponsiveValue } from '@shopify/restyle';
 import logo from '../../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardProps } from '../PrepaidCard';
 
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+import { getNativeBalanceFromSpend } from '@cardstack/utils';
 import { Container, Text } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
 
@@ -20,6 +21,7 @@ interface VariantType {
   paddingTop: number;
   balanceFontSize: number;
   tokenFontSize: number;
+  currencyFontSize: number;
   textVariant: ResponsiveValue<
     keyof Omit<Theme['textVariants'], 'defaults'>,
     Theme
@@ -38,13 +40,14 @@ export type PrepaidCardInnerBottomProps = Pick<
 const cardType: Record<CardVariants, VariantType> = {
   normal: {
     iconSize: {
-      width: 42,
-      height: 46,
+      width: 37,
+      height: 39,
       marginTop: 0,
     },
     paddingTop: 4,
     balanceFontSize: 13,
     tokenFontSize: 40,
+    currencyFontSize: 20,
     textVariant: 'smallGrey',
   },
   medium: {
@@ -56,6 +59,7 @@ const cardType: Record<CardVariants, VariantType> = {
     paddingTop: 0,
     balanceFontSize: 9,
     tokenFontSize: 29,
+    currencyFontSize: 14,
     textVariant: 'xsGrey',
   },
 };
@@ -72,14 +76,13 @@ const PrepaidCardInnerBottom = ({
   transferrable,
   variant = 'normal',
 }: PrepaidCardInnerBottomProps) => {
-  const {
-    tokenBalanceDisplay,
-    nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(
-    spendFaceValue.toString(),
+  const nativeBalance = getNativeBalanceFromSpend(
+    spendFaceValue,
     nativeCurrency,
     currencyConversionRates
   );
+
+  const nativeCurrencyInfo = currencies[nativeCurrency as NativeCurrency];
 
   return (
     <Container
@@ -99,28 +102,36 @@ const PrepaidCardInnerBottom = ({
           >
             Spendable Balance
           </Text>
-          <Text fontSize={cardType[variant].tokenFontSize} fontWeight="700">
-            {tokenBalanceDisplay}
-          </Text>
-        </Container>
-        <Container {...cardType[variant].iconSize}>
-          <Image source={logo} style={styles.logo} />
+          <Container flexDirection="row" alignItems="flex-end">
+            <Text fontSize={cardType[variant].tokenFontSize} fontWeight="700">
+              {`${nativeCurrencyInfo.symbol}${nativeBalance}`}
+            </Text>
+            <Text
+              fontSize={cardType[variant].currencyFontSize}
+              fontWeight="bold"
+              letterSpacing={0}
+              paddingBottom={2}
+            >
+              {` ${nativeCurrencyInfo.currency}`}
+            </Text>
+          </Container>
         </Container>
       </Container>
       <Container
         flexDirection="row"
         alignItems="flex-end"
         justifyContent="space-between"
-        marginTop={2}
       >
-        <Text fontWeight="700">{nativeBalanceDisplay}</Text>
-        <Container alignItems="flex-end">
+        <Container>
           <Text variant={cardType[variant].textVariant}>
             {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}
           </Text>
           <Text variant={cardType[variant].textVariant}>
             {transferrable ? 'TRANSFERRABLE' : 'NON-TRANSFERRABLE'}
           </Text>
+        </Container>
+        <Container {...cardType[variant].iconSize}>
+          <Image source={logo} style={styles.logo} />
         </Container>
       </Container>
     </Container>
