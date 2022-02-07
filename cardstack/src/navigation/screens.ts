@@ -48,8 +48,14 @@ export interface ScreenNavigation {
 // Native iOS custom option, should be removed after deleting NativeStack
 const nativeStackiOSLoadingConfig = {
   customStack: true,
-  // onAppear: null,
+  onAppear: null,
+  allowsDragToDismiss: false,
+  allowsTapToDismiss: false,
+  onTouchTop: null,
   transitionDuration: 0,
+  onWillDismiss: null,
+  dismissable: false,
+  gesturedEnabled: false,
 };
 
 // Shareable component,
