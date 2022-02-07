@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { CenteredContainer, Sheet, Text } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 import { useAppState } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation/Navigation';
+import { useNavigation } from '@rainbow-me/navigation';
 
 export enum WCRedirectTypes {
   connect = 'connect',
@@ -55,7 +55,7 @@ const WalletConnectRedirectSheet = () => {
 
   return (
     <Sheet hideHandle>
-      <CenteredContainer paddingTop={3}>
+      <CenteredContainer paddingTop={3} paddingHorizontal={1}>
         <Text letterSpacing={0} fontSize={32}>
           {emojisMap[type]}
         </Text>
