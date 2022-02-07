@@ -2,6 +2,7 @@ import React from 'react';
 import { HorizontalDivider } from '../HorizontalDivider';
 import { MoreItemsFooter } from '../MoreItemsFooter';
 import {
+  BetterOpacityContainer,
   Container,
   SafeHeader,
   TokenBalance,
@@ -26,18 +27,16 @@ export const Depot = (depot: DepotProps) => {
   return (
     <Container width="100%" paddingHorizontal={4} marginBottom={4}>
       <Touchable width="100%" testID="inventory-card" onPress={onPress}>
-        <Container
+        <BetterOpacityContainer
           backgroundColor="white"
           borderRadius={10}
           overflow="hidden"
           borderColor="buttonPrimaryBorder"
           width="100%"
-          needsOffscreenAlphaCompositing
-          renderToHardwareTextureAndroid
         >
           <SafeHeader {...depot} onPress={onPress} />
           <Bottom {...depot} />
-        </Container>
+        </BetterOpacityContainer>
       </Touchable>
     </Container>
   );

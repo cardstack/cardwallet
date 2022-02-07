@@ -6,7 +6,7 @@ import {
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
 import SVG, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import { Container, Text } from '@cardstack/components';
+import { BetterOpacityContainer, Container, Text } from '@cardstack/components';
 
 interface SmallPrepaidCardProps {
   /** unique identifier, displayed in top right corner of card */
@@ -21,13 +21,11 @@ interface SmallPrepaidCardProps {
 export const SmallPrepaidCard = (props: SmallPrepaidCardProps) => {
   const { id, spendableBalance } = props;
   return (
-    <Container
+    <BetterOpacityContainer
       width="100%"
       borderWidth={1}
       borderRadius={10}
       borderColor="borderGray"
-      needsOffscreenAlphaCompositing
-      renderToHardwareTextureAndroid
     >
       <Container
         backgroundColor="white"
@@ -40,7 +38,7 @@ export const SmallPrepaidCard = (props: SmallPrepaidCardProps) => {
         <Top id={id} />
         <Bottom spendableBalance={spendableBalance} />
       </Container>
-    </Container>
+    </BetterOpacityContainer>
   );
 };
 
