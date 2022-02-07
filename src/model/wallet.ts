@@ -1,4 +1,5 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider';
+import { Signer } from '@ethersproject/abstract-signer';
 import {
   arrayify,
   BytesLike,
@@ -58,6 +59,7 @@ import {
 import * as keychain from './keychain';
 import { Device } from '@cardstack/utils/device';
 import { erc721ABI } from '@rainbow-me/references';
+
 import logger from 'logger';
 const encryptor = new AesEncryptor();
 
@@ -258,8 +260,9 @@ export const sendNft = async ({
 }: ContractTransferFromParam): Promise<null | Transaction> => {
   try {
     const wallet = await loadWallet();
-    const contract = new Contract(to, erc721ABI, wallet?.provider);
-    return await contract.transferFrom(from, to, id);
+
+    const contract = new Contract(to, erc721ABI);
+    return await contract.connect(wallet as Signer).transferFrom(from, to, id);
   } catch (e) {
     console.error('::: NFT transfer error', e);
     return null;

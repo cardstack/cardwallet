@@ -188,15 +188,15 @@ const fetchNFTsViaRpcNode = () => async (
           assert(asset.address);
           assert(asset.token_id);
 
-          const existingNFT = existingNFTs.find(
-            nft =>
-              nft.asset_contract.address === asset.address &&
-              nft.id === asset.token_id
-          );
+          // const existingNFT = existingNFTs.find(
+          //   nft =>
+          //     nft.asset_contract.address === asset.address &&
+          //     nft.id === asset.token_id
+          // );
 
-          if (existingNFT) {
-            return existingNFT;
-          }
+          // if (existingNFT) {
+          //   return existingNFT;
+          // }
 
           try {
             const nftContract = new Contract(
@@ -207,6 +207,9 @@ const fetchNFTsViaRpcNode = () => async (
 
             const tokenURI = await nftContract.tokenURI(asset.token_id);
             const tokenURIJSON = await fetchJsonFromTokenUri(tokenURI);
+
+            console.log('::: NFT', tokenURIJSON);
+
             const imageURL = tokenURIJSON.image_url || tokenURIJSON.image;
 
             const collectible: CollectibleType = {

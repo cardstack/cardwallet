@@ -319,17 +319,21 @@ const resolveNameOrAddress = async nameOrAddress => {
  * @return {Object}
  */
 export const getTransferNftTransaction = async transaction => {
-  const recipient = await resolveNameOrAddress(transaction.to);
-  const { from, to } = transaction;
+  const { from, to, asset } = transaction;
   const contractAddress =
     get(transaction, 'asset.asset_contract.address') || to;
-  const data = getDataForNftTransfer(from, recipient, transaction.asset);
+  const gasLimit = toHex(transaction.gasLimit) || undefined;
+  const gasPrice = toHex(transaction.gasPrice) || undefined;
+  const value = transaction.amount ? toHex(toWei(transaction.amount)) : '0x00';
+  const recipient = await resolveNameOrAddress(to);
+  const data = getDataForNftTransfer(from, recipient, asset);
   return {
     data,
     from,
-    gasLimit: transaction.gasLimit,
-    gasPrice: transaction.gasPrice,
     to: contractAddress,
+    gasLimit,
+    gasPrice,
+    value,
   };
 };
 
@@ -365,11 +369,10 @@ export const createSignableTransaction = async (transaction, network) => {
   if (isNativeToken(assetSymbol, network)) {
     return getTxDetails(transaction);
   }
-  const isNft = get(transaction, 'asset.type') === AssetTypes.nft;
-  const result = isNft
-    ? await getTransferNftTransaction(transaction)
-    : await getTransferTokenTransaction(transaction);
-  return getTxDetails(result);
+  if (get(transaction, 'asset.type') === AssetTypes.nft) {
+    return await getTransferNftTransaction(transaction);
+  }
+  return getTxDetails(await getTransferTokenTransaction(transaction));
 };
 
 const estimateAssetBalancePortion = asset => {
@@ -395,12 +398,14 @@ export const getDataForTokenTransfer = (value, to) => {
 export const getDataForNftTransfer = (from, to, asset) => {
   const nftVersion = get(asset, 'asset_contract.nft_version');
   const schema_name = get(asset, 'asset_contract.schema_name');
+  const assetIdHex = convertStringToHex(asset.id);
+  console.log('::: getDataForNftTransfer', nftVersion, schema_name, assetIdHex);
   if (nftVersion === '3.0') {
     const transferMethodHash = smartContractMethods.nft_transfer_from.hash;
     const data = ethereumUtils.getDataString(transferMethodHash, [
       ethereumUtils.removeHexPrefix(from),
       ethereumUtils.removeHexPrefix(to),
-      convertStringToHex(asset.id),
+      assetIdHex,
     ]);
     return data;
   } else if (schema_name === 'ERC1155') {
@@ -409,18 +414,20 @@ export const getDataForNftTransfer = (from, to, asset) => {
     const data = ethereumUtils.getDataString(transferMethodHash, [
       ethereumUtils.removeHexPrefix(from),
       ethereumUtils.removeHexPrefix(to),
-      convertStringToHex(asset.id),
+      assetIdHex,
       convertStringToHex('1'),
       convertStringToHex('160'),
       convertStringToHex('0'),
     ]);
     return data;
   }
-  const transferMethodHash = smartContractMethods.nft_transfer.hash;
+  const transferMethodHash = smartContractMethods.nft_transfer_from.hash;
   const data = ethereumUtils.getDataString(transferMethodHash, [
+    ethereumUtils.removeHexPrefix(from),
     ethereumUtils.removeHexPrefix(to),
-    convertStringToHex(asset.id),
+    assetIdHex,
   ]);
+  console.log('::: getDataForNftTransfer data', data);
   return data;
 };
 
