@@ -59,7 +59,9 @@ const nativeStackiOSLoadingConfig = {
 };
 
 // Shareable component,
-// for now android needs on MainStack and iOS on GlobalStack
+// for now android/ios needs on MainStack
+// and iOS only on GlobalStack
+// the navigator looks for the nearest route
 const LoadingOverlayComponent = {
   LOADING_OVERLAY: {
     component: LoadingOverlayScreen,
