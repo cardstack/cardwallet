@@ -40,8 +40,6 @@ import {
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
 import { EthereumWalletType } from '../helpers/walletTypes';
-import store from '../redux/store';
-import { setIsWalletLoading } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { ethereumUtils } from '../utils';
 import {
@@ -624,7 +622,6 @@ export const createWallet = async (
   const walletSeed = seed || generateMnemonic();
 
   const addresses: RainbowAccount[] = [];
-  const { dispatch } = store;
 
   try {
     // Wallet can be checked while importing,
@@ -780,8 +777,6 @@ export const createWallet = async (
     logger.sentry('Error in createWallet', error);
     captureException(error);
     return null;
-  } finally {
-    dispatch(setIsWalletLoading(null));
   }
 };
 
