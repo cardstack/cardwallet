@@ -12,8 +12,9 @@ import {
 } from '../handlers/localstorage/globalSettings';
 import { useDimensions, useShakeAnimation } from '../hooks';
 import { useBlockBackButton } from '../hooks/useBlockBackButton';
-import Navigation, { useNavigation } from '../navigation/Navigation';
+import { useNavigation } from '../navigation/Navigation';
 import { CenteredContainer, Icon, Text } from '@cardstack/components';
+import { useDismissCurrentRoute } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
 import Routes from '@rainbow-me/navigation/routesNames';
 import { padding } from '@rainbow-me/styles';
@@ -28,7 +29,7 @@ const TIMELOCK_INTERVAL_MINUTES = 5;
 const PinAuthenticationScreen = () => {
   useBlockBackButton();
   const { params } = useRoute();
-  const { goBack, setParams } = useNavigation();
+  const { setParams } = useNavigation();
   const [errorAnimation, onShake] = useShakeAnimation();
 
   const { isNarrowPhone, isSmallPhone, isTallPhone } = useDimensions();
@@ -40,11 +41,9 @@ const PinAuthenticationScreen = () => {
     params.validPin ? 'authentication' : 'creation'
   );
 
-  const dismissPinScreen = useCallback(() => {
-    if (Navigation.getActiveRouteName() === Routes.PIN_AUTHENTICATION_SCREEN) {
-      goBack();
-    }
-  }, [goBack]);
+  const dismissPinScreen = useDismissCurrentRoute(
+    Routes.PIN_AUTHENTICATION_SCREEN
+  );
 
   const finished = useRef(false);
 
@@ -100,7 +99,7 @@ const PinAuthenticationScreen = () => {
     };
 
     checkTimelock();
-  }, [dismissPinScreen, goBack, params]);
+  }, [dismissPinScreen, params]);
 
   useEffect(() => {
     if (attemptsLeft === 0) {
@@ -114,7 +113,7 @@ const PinAuthenticationScreen = () => {
       finished.current = true;
       dismissPinScreen();
     }
-  }, [attemptsLeft, dismissPinScreen, goBack, params]);
+  }, [attemptsLeft, dismissPinScreen, params]);
 
   const handleNumpadPress = useCallback(
     newValue => {

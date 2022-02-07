@@ -14,6 +14,7 @@ import {
   Text,
   TruncatedAddress,
 } from '@cardstack/components';
+import { useDismissCurrentRoute } from '@cardstack/navigation';
 import theme from '@cardstack/theme';
 import {
   removeFirstEmojiFromString,
@@ -21,7 +22,7 @@ import {
 } from '@rainbow-me/helpers/emojiHandler';
 import { useAccountProfile, useBiometryIconName } from '@rainbow-me/hooks';
 
-import { Navigation, useNavigation } from '@rainbow-me/navigation';
+import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 
@@ -54,8 +55,10 @@ export default function WalletProfileState({
   profile,
 }) {
   const nameEmoji = returnStringFirstEmoji(profile?.name);
-  const { goBack, navigate } = useNavigation();
+  const { navigate } = useNavigation();
   const { accountImage } = useAccountProfile();
+
+  const dismissProfileModal = useDismissCurrentRoute(Routes.MODAL_SCREEN);
 
   const { colors } = useTheme();
   const [color, setColor] = useState(
@@ -66,12 +69,6 @@ export default function WalletProfileState({
     profile?.name ? removeFirstEmojiFromString(profile.name).join('') : ''
   );
   const inputRef = useRef(null);
-
-  const dismissProfileModal = useCallback(() => {
-    if (Navigation.getActiveRouteName() === Routes.MODAL_SCREEN) {
-      goBack();
-    }
-  }, [goBack]);
 
   const goToChangeWalletOnCreate = useCallback(() => {
     if (actionType === 'Create') {
