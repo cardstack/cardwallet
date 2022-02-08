@@ -164,6 +164,11 @@ jest.mock('@rainbow-me/redux/uniswap', () => ({
   default: jest.fn(),
 }));
 
+jest.mock('@rainbow-me/utils', () => ({
+  magicMemo: jest.fn(),
+  neverRerender: jest.fn(),
+}));
+
 jest.mock('@rainbow-me/utils/safeAreaInsetValues', () => ({
   default: jest.fn(),
 }));
