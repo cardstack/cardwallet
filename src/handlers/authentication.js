@@ -37,7 +37,7 @@ export async function savePIN(pin) {
   }
 }
 
-export async function authenticateWithPIN() {
+export async function authenticateWithPIN(promptMessage) {
   let validPin;
   try {
     validPin = await getExistingPIN();
@@ -58,6 +58,7 @@ export async function authenticateWithPIN() {
         resolve(pin);
       },
       validPin,
+      promptMessage,
     });
   });
 }

@@ -385,13 +385,6 @@ export const signTypedDataMessage = async (
   }
 };
 
-export const oldLoadSeedPhrase = async (): Promise<null | EthereumWalletSeed> => {
-  const seedPhrase = await keychain.loadString(seedPhraseKey, {
-    authenticationPrompt,
-  });
-  return seedPhrase as string | null;
-};
-
 export const loadAddress = (): Promise<null | EthereumAddress> =>
   keychain.loadString(addressKey) as Promise<string | null>;
 
@@ -1032,7 +1025,7 @@ export const loadSeedPhrase = async (
       // Fallback to custom PIN
       if (!hasBiometricsEnabled) {
         try {
-          const userPIN = await authenticateWithPIN();
+          const userPIN = await authenticateWithPIN(promptMessage);
           if (userPIN) {
             const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
             return decryptedSeed;

@@ -186,6 +186,15 @@ const PinAuthenticationScreen = () => {
     [actionType, attemptsLeft, dismissPinScreen, initialPin, onShake, params]
   );
 
+  const titleMap = useMemo(
+    () => ({
+      authentication: params?.promptMessage || 'Type your PIN',
+      creation: 'Choose your PIN',
+      confirmation: 'Confirm your PIN',
+    }),
+    [params]
+  );
+
   return (
     <Column
       backgroundColor={colors.backgroundBlue}
@@ -206,13 +215,7 @@ const PinAuthenticationScreen = () => {
               CARD WALLET
             </Text>
           </CenteredContainer>
-          <SheetTitle color="white">
-            {actionType === 'authentication'
-              ? 'Type your PIN'
-              : actionType === 'creation'
-              ? 'Choose your PIN'
-              : 'Confirm your PIN'}
-          </SheetTitle>
+          <SheetTitle color="white">{titleMap[actionType]}</SheetTitle>
           <PinValue translateX={errorAnimation} value={value} />
         </ColumnWithMargins>
       </Centered>
