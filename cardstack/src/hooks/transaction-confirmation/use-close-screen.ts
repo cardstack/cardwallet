@@ -3,6 +3,7 @@ import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { useRouteParams } from './use-route-params';
+import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
 import {
   SEND_TRANSACTION,
   isMessageDisplayType,
@@ -41,10 +42,16 @@ export const useCloseScreen = () => {
 
       if (pendingRedirect) {
         InteractionManager.runAfterInteractions(() => {
-          let type = method === SEND_TRANSACTION ? 'transaction' : 'sign';
+          let type: WCRedirectTypes =
+            method === SEND_TRANSACTION
+              ? WCRedirectTypes.transaction
+              : WCRedirectTypes.sign;
 
           if (canceled) {
-            type = `${type}-canceled`;
+            type =
+              method === SEND_TRANSACTION
+                ? WCRedirectTypes.transactionCanceled
+                : WCRedirectTypes.signCanceled;
           }
 
           dispatch(walletConnectRemovePendingRedirect(type, dappScheme));

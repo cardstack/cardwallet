@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
-import { magicMemo } from '../../utils';
 import { ButtonPressAnimation } from '../animations';
 import Column from '../layout/Column';
 import RowWithMargins from '../layout/RowWithMargins';
 import ContactAvatar from './ContactAvatar';
 import { Text, TruncatedAddress } from '@cardstack/components';
 import { margin } from '@rainbow-me/styles';
+import { magicMemo } from '@rainbow-me/utils';
 
 const ContactRow = ({ address, color, nickname, ...props }, ref) => {
   return (

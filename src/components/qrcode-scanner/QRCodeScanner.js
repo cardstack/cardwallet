@@ -35,7 +35,9 @@ const QRCodeScanner = ({ contentPositionBottom, contentPositionTop }) => {
   const [cameraEnableState, enableCamera, disableCamera] = useBooleanState(
     false
   );
-  const { isCameraAuthorized, onScan } = useScanner(cameraEnableState);
+  const { isCameraAuthorized, isScanningEnabled, onScan } = useScanner(
+    cameraEnableState
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -74,7 +76,7 @@ const QRCodeScanner = ({ contentPositionBottom, contentPositionTop }) => {
           {error ? (
             <ErrorText error="Error mounting camera" />
           ) : (
-            <QRCodeScannerCrosshair />
+            <QRCodeScannerCrosshair isScanningEnabled={isScanningEnabled} />
           )}
         </CenteredContainer>
       ) : (

@@ -13,8 +13,6 @@ import SavingsSheet from '../screens/SavingsSheet';
 import SendSheetEOA from '../screens/SendSheetEOA';
 import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
-import WalletConnectApprovalSheet from '../screens/WalletConnectApprovalSheet';
-import WalletConnectRedirectSheet from '../screens/WalletConnectRedirectSheet';
 import WithdrawModal from '../screens/WithdrawModal';
 import WyreWebview from '../screens/WyreWebview';
 import ExchangeModalNavigator from './ExchangeModalNavigator';
@@ -34,7 +32,6 @@ import {
   sheetPreset,
   sheetPresetWithSmallGestureResponseDistance,
   speedUpAndCancelStyleInterpolator,
-  wcPromptPreset,
 } from './effects';
 import Routes from './routesNames';
 
@@ -128,16 +125,6 @@ function MainNavigator() {
         {...closeKeyboardOnClose}
         name={Routes.MODAL_SCREEN}
         options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={WalletConnectApprovalSheet}
-        name={Routes.WALLET_CONNECT_APPROVAL_SHEET}
-        options={wcPromptPreset}
-      />
-      <Stack.Screen
-        component={WalletConnectRedirectSheet}
-        name={Routes.WALLET_CONNECT_REDIRECT_SHEET}
-        options={wcPromptPreset}
       />
       <Stack.Screen
         component={AddCashSheet}

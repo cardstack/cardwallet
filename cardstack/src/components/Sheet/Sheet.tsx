@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   wrapperBase: {
     justifyContent: 'flex-end',
     backgroundColor: 'white',
-    minHeight: '40%',
+    minHeight: '30%',
   },
 });
 

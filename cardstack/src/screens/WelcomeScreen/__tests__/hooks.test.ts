@@ -20,6 +20,11 @@ jest.mock('@rainbow-me/hooks', () => ({
   useHideSplashScreen: () => mockedHideSplashScreen,
 }));
 
+jest.mock('@rainbow-me/utils', () => ({
+  magicMemo: jest.fn(),
+  neverRerender: jest.fn(),
+}));
+
 describe('useWelcomeScreen', () => {
   Device.isIOS = true;
 
