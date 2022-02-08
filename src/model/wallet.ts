@@ -85,8 +85,9 @@ interface TransactionRequestParam {
 
 interface ContractTransferFromParam {
   from: string;
-  to: string;
+  contractAddress: string;
   id: number;
+  data: string;
 }
 
 interface MessageTypeProperty {
@@ -255,16 +256,19 @@ export const loadWallet = async (): Promise<null | Wallet> => {
 
 export const sendNft = async ({
   from,
-  to,
+  contractAddress,
   id,
+  data,
 }: ContractTransferFromParam): Promise<null | Transaction> => {
   try {
     const wallet = await loadWallet();
-
-    const contract = new Contract(to, erc721ABI);
-    return await contract.connect(wallet as Signer).transferFrom(from, to, id);
-  } catch (e) {
-    console.error('::: NFT transfer error', e);
+    const contract = new Contract(contractAddress, erc721ABI);
+    return await contract
+      .connect(wallet as Signer)
+      .safeTransferFrom(from, contractAddress, id, data);
+  } catch (error) {
+    logger.sentry('Failed to SEND ERC-721 transaction.');
+    captureException(error);
     return null;
   }
 };

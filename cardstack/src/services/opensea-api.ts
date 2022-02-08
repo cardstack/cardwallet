@@ -46,8 +46,6 @@ const parseCollectiblesFromOpenSeaResponse = (
   const openSeaAssets = response.data.assets;
   if (isNil(openSeaAssets)) throw new Error('Invalid data from OpenSea');
 
-  console.log('::: openSeaAssets', openSeaAssets);
-
   return openSeaAssets.map((openSeaAsset: any) => {
     const asset_contract: any = openSeaAsset.asset_contract;
     const background_color: any = openSeaAsset.background_color;

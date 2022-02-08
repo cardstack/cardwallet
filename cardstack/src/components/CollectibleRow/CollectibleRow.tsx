@@ -10,7 +10,6 @@ export const CollectibleRow = (collectible: CollectibleType) => {
   const { navigate } = useNavigation();
 
   const onPress = () => {
-    console.log('::: collectible', collectible);
     navigate(Routes.COLLECTIBLE_SHEET, {
       collectible,
     });

@@ -283,25 +283,26 @@ const useSendSheetScreen = () => {
       to: recipient,
     };
     try {
-      let txResult;
-      // if (txDetails.asset?.type === AssetTypes.nft) {
-      //   const params = {
-      //     from: txDetails.from,
-      //     to: txDetails.to,
-      //     id: selected.id,
-      //   };
-      //   console.log('::: sendNft', params);
-      //   txResult = await sendNft(params);
-      // } else {
       const signableTransaction = await createSignableTransaction(
         txDetails,
         network
       );
       console.log('::: tx signableTransaction', signableTransaction);
-      txResult = await sendTransaction({
-        transaction: signableTransaction,
-      });
-      // }
+
+      let txResult;
+      if (txDetails.asset?.type === AssetTypes.nft) {
+        const params = {
+          from: txDetails.from,
+          contractAddress: signableTransaction.to,
+          id: selected.id,
+          data: signableTransaction.data,
+        };
+        txResult = await sendNft(params);
+      } else {
+        txResult = await sendTransaction({
+          transaction: signableTransaction,
+        });
+      }
 
       console.log('::: tx result', txResult);
 

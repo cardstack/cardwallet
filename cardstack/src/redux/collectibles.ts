@@ -208,8 +208,6 @@ const fetchNFTsViaRpcNode = () => async (
             const tokenURI = await nftContract.tokenURI(asset.token_id);
             const tokenURIJSON = await fetchJsonFromTokenUri(tokenURI);
 
-            console.log('::: NFT', tokenURIJSON);
-
             const imageURL = tokenURIJSON.image_url || tokenURIJSON.image;
 
             const collectible: CollectibleType = {

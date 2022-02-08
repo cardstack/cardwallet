@@ -399,7 +399,7 @@ export const getDataForNftTransfer = (from, to, asset) => {
   const nftVersion = get(asset, 'asset_contract.nft_version');
   const schema_name = get(asset, 'asset_contract.schema_name');
   const assetIdHex = convertStringToHex(asset.id);
-  console.log('::: getDataForNftTransfer', nftVersion, schema_name, assetIdHex);
+
   if (nftVersion === '3.0') {
     const transferMethodHash = smartContractMethods.nft_transfer_from.hash;
     const data = ethereumUtils.getDataString(transferMethodHash, [
@@ -427,7 +427,7 @@ export const getDataForNftTransfer = (from, to, asset) => {
     ethereumUtils.removeHexPrefix(to),
     assetIdHex,
   ]);
-  console.log('::: getDataForNftTransfer data', data);
+
   return data;
 };
 
