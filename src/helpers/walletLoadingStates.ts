@@ -5,4 +5,5 @@ export default {
   FETCHING_PASSWORD: 'Fetching Password...',
   IMPORTING_WALLET: 'Importing...',
   RESTORING_WALLET: 'Restoring...',
+  SWITCHING_ACCOUNT: 'Switching account...',
 };

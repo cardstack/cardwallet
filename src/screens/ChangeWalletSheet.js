@@ -103,6 +103,7 @@ export default function ChangeWalletSheet() {
       if (editMode && !fromDeletion) return;
       if (address === currentAddress) return;
       try {
+        showLoadingOverlay({ title: WalletLoadingStates.SWITCHING_ACCOUNT });
         // Nuke apollo data to refetch after changing account
         await apolloClient.clearStore();
         const wallet = wallets[walletId];
@@ -112,19 +113,23 @@ export default function ChangeWalletSheet() {
         const p2 = dispatch(addressSetSelected(address));
         await Promise.all([p1, p2]);
 
-        initializeWallet();
+        await initializeWallet();
         !fromDeletion && goBack();
       } catch (e) {
         logger.log('error while switching account', e);
+      } finally {
+        dismissLoadingOverlay();
       }
     },
     [
       apolloClient,
       currentAddress,
+      dismissLoadingOverlay,
       dispatch,
       editMode,
       goBack,
       initializeWallet,
+      showLoadingOverlay,
       wallets,
     ]
   );
