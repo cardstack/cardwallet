@@ -46,7 +46,7 @@ const WalletConnectRedirectSheet = () => {
   return (
     <Sheet hideHandle>
       <CenteredContainer paddingTop={3} paddingHorizontal={1}>
-        <CenteredContainer marginTop={2}>
+        <CenteredContainer>
           <Text color="black" size="large" weight="bold" textAlign="center">
             {titlesMap[type]}
           </Text>
