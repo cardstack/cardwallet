@@ -15,16 +15,6 @@ export enum WCRedirectTypes {
   qrcodeInvalid = 'qrcodeInvalid',
 }
 
-const emojisMap: Record<WCRedirectTypes, string> = {
-  connect: '🥳',
-  reject: '👻',
-  sign: '🥳',
-  signCanceled: '👻',
-  transaction: '🥳',
-  transactionCanceled: '👻',
-  qrcodeInvalid: '',
-};
-
 const titlesMap: Record<WCRedirectTypes, string> = {
   connect: "You're connected!",
   reject: 'Connection canceled',
@@ -56,9 +46,6 @@ const WalletConnectRedirectSheet = () => {
   return (
     <Sheet hideHandle>
       <CenteredContainer paddingTop={3} paddingHorizontal={1}>
-        <Text letterSpacing={0} fontSize={32}>
-          {emojisMap[type]}
-        </Text>
         <CenteredContainer marginTop={2}>
           <Text color="black" size="large" weight="bold" textAlign="center">
             {titlesMap[type]}
