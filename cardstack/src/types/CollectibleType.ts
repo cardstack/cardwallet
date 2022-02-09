@@ -24,7 +24,7 @@ export interface CollectibleType {
   familyImage: string | null;
   id: string;
   isSendable: boolean;
-  isInterfaceValidated: boolean;
+  isInterfaceValidated?: boolean;
   lastPrice: number | null;
   type: string;
   uniqueId: string;
