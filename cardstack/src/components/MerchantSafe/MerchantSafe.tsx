@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
+  BetterOpacityContainer,
   Container,
   Icon,
   SafeHeader,
@@ -32,7 +33,7 @@ export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
   return (
     <Container paddingHorizontal={4} marginBottom={4}>
       <Touchable testID="inventory-card" onPress={onPress}>
-        <Container
+        <BetterOpacityContainer
           backgroundColor="white"
           borderRadius={10}
           overflow="hidden"
@@ -52,7 +53,7 @@ export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
             />
             <Bottom slug={merchantInfo?.slug} />
           </Container>
-        </Container>
+        </BetterOpacityContainer>
       </Touchable>
     </Container>
   );

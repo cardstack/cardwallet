@@ -1,7 +1,12 @@
 import React from 'react';
 import { CollectibleImage } from '../../../../src/components/collectible';
 import { CollectibleType } from '@cardstack/types';
-import { Touchable, Container, Text } from '@cardstack/components';
+import {
+  BetterOpacityContainer,
+  Touchable,
+  Container,
+  Text,
+} from '@cardstack/components';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import { buildCollectibleName } from '@rainbow-me/helpers/assets';
@@ -17,7 +22,7 @@ export const CollectibleRow = (collectible: CollectibleType) => {
 
   return (
     <Touchable onPress={onPress} marginHorizontal={5} marginVertical={2}>
-      <Container
+      <BetterOpacityContainer
         alignItems="center"
         backgroundColor="white"
         borderRadius={10}
@@ -43,7 +48,7 @@ export const CollectibleRow = (collectible: CollectibleType) => {
           </Text>
           <Text variant="subText">{collectible.asset_contract?.name}</Text>
         </Container>
-      </Container>
+      </BetterOpacityContainer>
     </Touchable>
   );
 };

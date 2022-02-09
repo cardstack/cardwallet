@@ -40,3 +40,4 @@ export * from './BalanceSection';
 export * from './AnimatedPressable';
 export * from './Notice';
 export * from './TabBarIcon';
+export * from './BetterOpacityContainer';

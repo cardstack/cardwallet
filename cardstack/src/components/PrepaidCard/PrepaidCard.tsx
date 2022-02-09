@@ -12,7 +12,12 @@ import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
-import { Container, Icon, ScrollView } from '@cardstack/components';
+import {
+  BetterOpacityContainer,
+  Container,
+  Icon,
+  ScrollView,
+} from '@cardstack/components';
 
 export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
   networkName: string;
@@ -121,7 +126,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             </CenteredContainer>
           </Container>
         )}
-        <Container
+        <BetterOpacityContainer
           backgroundColor="white"
           borderRadius={20}
           overflow="hidden"
@@ -138,7 +143,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             networkName={networkName}
           />
           <PrepaidCardInnerBottom {...props} />
-        </Container>
+        </BetterOpacityContainer>
         {isEditing && isHidden && (
           <Container
             backgroundColor="black"

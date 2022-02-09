@@ -2,6 +2,7 @@ import React from 'react';
 
 import { AssetWithNativeType } from '../../types';
 import {
+  BetterOpacityContainer,
   CenteredContainer,
   Container,
   Icon,
@@ -37,7 +38,7 @@ export const BalanceCoinRow = ({
 
   return (
     <Touchable onPress={onPress}>
-      <Container
+      <BetterOpacityContainer
         alignItems="center"
         width="100%"
         paddingHorizontal={5}
@@ -66,7 +67,7 @@ export const BalanceCoinRow = ({
           />
         </Container>
         <HiddenOverlay isEditing={isEditing} hidden={hidden} />
-      </Container>
+      </BetterOpacityContainer>
     </Touchable>
   );
 };
