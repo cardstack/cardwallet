@@ -15,7 +15,7 @@ import SendSheet, {
 } from '../components/send/SendSheet';
 import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
-import { sendNft, sendTransaction } from '../model/wallet';
+import { sendTransaction } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { useLoadingOverlay } from '@cardstack/navigation';
