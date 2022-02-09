@@ -134,7 +134,7 @@ export const addPaddingToGasEstimate = async (
 
   // If the safe estimation is above the last block gas limit, use it
   if (greaterThan(estimatedGas, lastBlockGasLimit)) {
-    logger.log('⛽ using orginal gas estimation', estimatedGas.toString());
+    logger.log('⛽ using original gas estimation', estimatedGas.toString());
     return estimatedGas.toString();
   }
   // If the estimation is below the last block gas limit, use the padded estimate
