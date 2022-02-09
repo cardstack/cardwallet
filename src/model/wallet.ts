@@ -929,15 +929,17 @@ export const generateAccount = async (
     }
 
     const seedData = await getSeedPhrase(id);
-    const seedphrase = seedData?.seedphrase;
+    let seedphrase = seedData?.seedphrase;
 
     if (userPIN) {
       try {
-        const decryptedSeedphrase = await encryptor.decrypt(
+        const decryptedSeedPhrase = await encryptor.decrypt(
           userPIN,
           seedphrase
         );
-        if (!decryptedSeedphrase) {
+        if (decryptedSeedPhrase) {
+          seedphrase = decryptedSeedPhrase;
+        } else {
           throw new Error(`Can't access seed phrase to create new accounts`);
         }
       } catch (e) {
@@ -949,9 +951,11 @@ export const generateAccount = async (
       wallet: ethereumJSWallet,
     } = await ethereumUtils.deriveAccountFromMnemonic(seedphrase, index);
     if (!ethereumJSWallet) return null;
+
     const walletAddress = addHexPrefix(
       toChecksumAddress(ethereumJSWallet.getAddress().toString('hex'))
     );
+
     const walletPkey = addHexPrefix(
       ethereumJSWallet.getPrivateKey().toString('hex')
     );
