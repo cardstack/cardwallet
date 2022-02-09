@@ -1,12 +1,10 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider';
-import { Signer } from '@ethersproject/abstract-signer';
 import {
   arrayify,
   BytesLike,
   Hexable,
   joinSignature,
 } from '@ethersproject/bytes';
-import { Contract } from '@ethersproject/contracts';
 import { HDNode } from '@ethersproject/hdnode';
 import { SigningKey } from '@ethersproject/signing-key';
 import { Transaction } from '@ethersproject/transactions';
@@ -58,7 +56,6 @@ import {
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
 import { Device } from '@cardstack/utils/device';
-import { erc721ABI } from '@rainbow-me/references';
 
 import logger from 'logger';
 const encryptor = new AesEncryptor();
@@ -81,13 +78,6 @@ interface WalletInitialized {
 interface TransactionRequestParam {
   transaction: TransactionRequest;
   existingWallet?: Wallet;
-}
-
-interface ContractTransferFromParam {
-  from: string;
-  contractAddress: string;
-  id: number;
-  data: string;
 }
 
 interface MessageTypeProperty {
