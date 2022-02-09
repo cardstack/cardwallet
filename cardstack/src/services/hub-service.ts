@@ -27,7 +27,15 @@ import HDProvider from '@cardstack/models/hd-provider';
 import { getFCMToken } from '@cardstack/models/firebase';
 
 const HUBAUTH_PROMPT_MESSAGE =
-  'To enable notifications, please authenticate your ownership of this account with the Cardstack Hub server';
+  'Please authenticate your ownership of this account with the Cardstack Hub server';
+
+const hubAuthPromptMessages = {
+  notifications: {
+    register: `${HUBAUTH_PROMPT_MESSAGE} to enable notifications`,
+    unregister: `${HUBAUTH_PROMPT_MESSAGE} to unregister`,
+  },
+  default: HUBAUTH_PROMPT_MESSAGE,
+};
 
 const HUBTOKEN_KEY = 'hubToken';
 
@@ -83,7 +91,8 @@ export const getHubAuthToken = async (
   hubURL: string,
   network: Network,
   walletAddress?: string,
-  seedPhrase?: string
+  seedPhrase?: string,
+  keychainAcessAskPrompt: string = hubAuthPromptMessages.default
 ): Promise<string | null> => {
   // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
   const address = walletAddress || (await loadAddress()) || '';
@@ -109,14 +118,13 @@ export const getHubAuthToken = async (
       walletId,
       network,
       seedPhrase,
-      keychainAcessAskPrompt: HUBAUTH_PROMPT_MESSAGE,
+      keychainAcessAskPrompt,
     });
 
     // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
     const web3 = new Web3(hdProvider);
     const authAPI = await getSDK('HubAuth', web3, hubURL);
     const authToken = await authAPI.authenticate({ from: address });
-    await HDProvider.reset();
 
     await storeHubAuthToken(hubTokenStorageKey(network), authToken, address);
 
@@ -125,6 +133,8 @@ export const getHubAuthToken = async (
     logger.sentry('Hub authenticate failed', e);
 
     return null;
+  } finally {
+    await HDProvider.reset();
   }
 };
 
@@ -141,7 +151,8 @@ export const registerFcmToken = async (
       hubURL,
       network,
       walletAddress,
-      seedPhrase
+      seedPhrase,
+      hubAuthPromptMessages.notifications.register
     );
 
     if (!authToken) {
@@ -182,7 +193,8 @@ export const unregisterFcmToken = async (
       hubURL,
       network,
       walletAddress,
-      seedPhrase
+      seedPhrase,
+      hubAuthPromptMessages.notifications.unregister
     );
 
     if (!authToken) {
