@@ -14,7 +14,9 @@ import { useDimensions, useShakeAnimation } from '../hooks';
 import { useBlockBackButton } from '../hooks/useBlockBackButton';
 import { useNavigation } from '../navigation/Navigation';
 import { CenteredContainer, Icon, Text } from '@cardstack/components';
+import { useDismissCurrentRoute } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
+import Routes from '@rainbow-me/navigation/routesNames';
 import { padding } from '@rainbow-me/styles';
 
 const layouts = {
@@ -27,7 +29,7 @@ const TIMELOCK_INTERVAL_MINUTES = 5;
 const PinAuthenticationScreen = () => {
   useBlockBackButton();
   const { params } = useRoute();
-  const { goBack, setParams } = useNavigation();
+  const { setParams } = useNavigation();
   const [errorAnimation, onShake] = useShakeAnimation();
 
   const { isNarrowPhone, isSmallPhone, isTallPhone } = useDimensions();
@@ -37,6 +39,10 @@ const PinAuthenticationScreen = () => {
   const [initialPin, setInitialPin] = useState('');
   const [actionType, setActionType] = useState(
     params.validPin ? 'authentication' : 'creation'
+  );
+
+  const dismissPinScreen = useDismissCurrentRoute(
+    Routes.PIN_AUTHENTICATION_SCREEN
   );
 
   const finished = useRef(false);
@@ -84,7 +90,7 @@ const PinAuthenticationScreen = () => {
           );
           params.onCancel();
           finished.current = true;
-          goBack();
+          dismissPinScreen();
         } else {
           await saveAuthTimelock(null);
           await savePinAuthAttemptsLeft(null);
@@ -93,7 +99,7 @@ const PinAuthenticationScreen = () => {
     };
 
     checkTimelock();
-  }, [goBack, params]);
+  }, [dismissPinScreen, params]);
 
   useEffect(() => {
     if (attemptsLeft === 0) {
@@ -105,9 +111,9 @@ const PinAuthenticationScreen = () => {
       saveAuthTimelock(Date.now() + TIMELOCK_INTERVAL_MINUTES * 60 * 1000);
       params.onCancel();
       finished.current = true;
-      goBack();
+      dismissPinScreen();
     }
-  }, [attemptsLeft, goBack, params]);
+  }, [attemptsLeft, dismissPinScreen, params]);
 
   const handleNumpadPress = useCallback(
     newValue => {
@@ -146,7 +152,7 @@ const PinAuthenticationScreen = () => {
               params.onSuccess(nextValue);
               finished.current = true;
               setTimeout(() => {
-                goBack();
+                dismissPinScreen();
               }, 300);
             }
           } else if (actionType === 'creation') {
@@ -168,7 +174,7 @@ const PinAuthenticationScreen = () => {
               params.onSuccess(nextValue);
               finished.current = true;
               setTimeout(() => {
-                goBack();
+                dismissPinScreen();
               }, 300);
             }
           }
@@ -177,7 +183,7 @@ const PinAuthenticationScreen = () => {
         return nextValue;
       });
     },
-    [actionType, attemptsLeft, goBack, initialPin, onShake, params]
+    [actionType, attemptsLeft, dismissPinScreen, initialPin, onShake, params]
   );
 
   return (

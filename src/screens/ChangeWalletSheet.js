@@ -32,6 +32,7 @@ import {
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
@@ -55,12 +56,7 @@ const getWalletRowCount = wallets => {
 };
 
 export default function ChangeWalletSheet() {
-  const {
-    isDamaged,
-    selectedWallet,
-    setIsWalletLoading,
-    wallets,
-  } = useWallets();
+  const { isDamaged, selectedWallet, wallets } = useWallets();
   const [editMode, setEditMode] = useState(false);
   const { colors } = useTheme();
 
@@ -79,6 +75,8 @@ export default function ChangeWalletSheet() {
   const apolloClient = useApolloClient();
 
   const walletRowCount = useMemo(() => getWalletRowCount(wallets), [wallets]);
+
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const deviceHeight = deviceUtils.dimensions.height;
   const footerHeight = 160;
@@ -133,36 +131,38 @@ export default function ChangeWalletSheet() {
 
   const deleteWallet = useCallback(
     async (walletId, address) => {
-      const newWallets = {
-        ...wallets,
-        [walletId]: {
-          ...wallets[walletId],
-          addresses: wallets[walletId].addresses.map(account =>
-            toLower(account.address) === toLower(address)
-              ? { ...account, visible: false }
-              : account
-          ),
-        },
-      };
-      // If there are no visible wallets
-      // then delete the wallet
-      const hasVisibleAddresses = newWallets[walletId].addresses.some(
-        account => account.visible
-      );
-      setIsWalletLoading(WalletLoadingStates.DELETING_WALLET);
+      try {
+        const newWallets = {
+          ...wallets,
+          [walletId]: {
+            ...wallets[walletId],
+            addresses: wallets[walletId].addresses.map(account =>
+              toLower(account.address) === toLower(address)
+                ? { ...account, visible: false }
+                : account
+            ),
+          },
+        };
+        // If there are no visible wallets
+        // then delete the wallet
+        const hasVisibleAddresses = newWallets[walletId].addresses.some(
+          account => account.visible
+        );
 
-      // unregister in hub and remove fcm for this account from asyncStorage
-      await removeFCMToken(address);
-      if (!hasVisibleAddresses) {
-        delete newWallets[walletId];
-        await dispatch(walletsUpdate(newWallets));
-      } else {
-        await dispatch(walletsUpdate(newWallets));
+        // unregister in hub and remove fcm for this account from asyncStorage
+        await removeFCMToken(address);
+        if (!hasVisibleAddresses) {
+          delete newWallets[walletId];
+          await dispatch(walletsUpdate(newWallets));
+        } else {
+          await dispatch(walletsUpdate(newWallets));
+        }
+        await removeWalletData(address);
+      } catch (e) {
+        logger.sentry('Error deleting account', e);
       }
-      await removeWalletData(address);
-      setIsWalletLoading(null);
     },
-    [dispatch, setIsWalletLoading, wallets]
+    [dispatch, wallets]
   );
 
   const renameWallet = useCallback(
@@ -257,11 +257,18 @@ export default function ChangeWalletSheet() {
               },
               async buttonIndex => {
                 if (buttonIndex === 0) {
+                  showLoadingOverlay({
+                    title: WalletLoadingStates.DELETING_WALLET,
+                  });
+
                   await deleteWallet(walletId, address);
                   ReactNativeHapticFeedback.trigger('notificationSuccess');
 
                   if (!isLastAvailableWallet) {
                     await cleanUpWalletKeys();
+                    dismissLoadingOverlay();
+
+                    // Dismiss change wallet
                     goBack();
                     replace(Routes.WELCOME_SCREEN);
                   } else {
@@ -283,6 +290,8 @@ export default function ChangeWalletSheet() {
                       }
                     }
                   }
+                  dismissLoadingOverlay();
+                  setEditMode(false);
                 }
               }
             );
@@ -293,10 +302,12 @@ export default function ChangeWalletSheet() {
     [
       currentAddress,
       deleteWallet,
+      dismissLoadingOverlay,
       goBack,
       onChangeAccount,
       renameWallet,
       replace,
+      showLoadingOverlay,
       wallets,
     ]
   );
@@ -318,7 +329,10 @@ export default function ChangeWalletSheet() {
             isNewProfile: true,
             onCloseModal: async args => {
               if (args) {
-                setIsWalletLoading(WalletLoadingStates.CREATING_WALLET);
+                showLoadingOverlay({
+                  title: WalletLoadingStates.CREATING_WALLET,
+                });
+
                 const name = get(args, 'name', '');
                 const color = get(args, 'color', getRandomColor());
                 // Check if the selected wallet is the primary
@@ -397,7 +411,8 @@ export default function ChangeWalletSheet() {
                 }
               }
               creatingWallet.current = false;
-              setIsWalletLoading(null);
+
+              dismissLoadingOverlay();
             },
             profile: {
               color: null,
@@ -408,10 +423,11 @@ export default function ChangeWalletSheet() {
         }, 50);
       });
     } catch (e) {
-      setIsWalletLoading(null);
+      dismissLoadingOverlay();
       logger.log('Error while trying to add account', e);
     }
   }, [
+    dismissLoadingOverlay,
     dispatch,
     goBack,
     initializeWallet,
@@ -419,7 +435,7 @@ export default function ChangeWalletSheet() {
     navigate,
     selectedWallet.id,
     selectedWallet.primary,
-    setIsWalletLoading,
+    showLoadingOverlay,
     wallets,
   ]);
 

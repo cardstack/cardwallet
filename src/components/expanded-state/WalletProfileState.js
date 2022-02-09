@@ -14,6 +14,7 @@ import {
   Text,
   TruncatedAddress,
 } from '@cardstack/components';
+import { useDismissCurrentRoute } from '@cardstack/navigation';
 import theme from '@cardstack/theme';
 import {
   removeFirstEmojiFromString,
@@ -54,8 +55,10 @@ export default function WalletProfileState({
   profile,
 }) {
   const nameEmoji = returnStringFirstEmoji(profile?.name);
-  const { goBack, navigate } = useNavigation();
+  const { navigate } = useNavigation();
   const { accountImage } = useAccountProfile();
+
+  const dismissProfileModal = useDismissCurrentRoute(Routes.MODAL_SCREEN);
 
   const { colors } = useTheme();
   const [color, setColor] = useState(
@@ -67,32 +70,35 @@ export default function WalletProfileState({
   );
   const inputRef = useRef(null);
 
-  const handleCancel = useCallback(() => {
-    goBack();
+  const goToChangeWalletOnCreate = useCallback(() => {
     if (actionType === 'Create') {
       navigate(Routes.CHANGE_WALLET_SHEET);
     }
-  }, [actionType, goBack, navigate]);
+  }, [actionType, navigate]);
 
-  const handleSubmit = useCallback(() => {
-    onCloseModal({
+  const handleCancel = useCallback(() => {
+    dismissProfileModal();
+
+    goToChangeWalletOnCreate();
+  }, [dismissProfileModal, goToChangeWalletOnCreate]);
+
+  const handleSubmit = useCallback(async () => {
+    dismissProfileModal();
+
+    await onCloseModal({
       color,
       name: nameEmoji ? `${nameEmoji} ${value}` : value,
     });
 
-    // Dismiss WalletProfileModal
-    goBack();
-
-    if (actionType === 'Create' && isNewProfile) {
-      navigate(Routes.CHANGE_WALLET_SHEET);
+    if (isNewProfile) {
+      goToChangeWalletOnCreate();
     }
   }, [
-    actionType,
     color,
-    goBack,
+    dismissProfileModal,
     isNewProfile,
     nameEmoji,
-    navigate,
+    goToChangeWalletOnCreate,
     onCloseModal,
     value,
   ]);

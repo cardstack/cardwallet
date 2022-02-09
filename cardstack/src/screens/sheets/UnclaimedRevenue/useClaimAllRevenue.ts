@@ -25,8 +25,6 @@ export const useClaimAllRevenue = ({
   ] = useClaimRevenueMutation();
 
   const onClaimAllPress = useCallback(() => {
-    goBack();
-
     showLoadingOverlay({ title: 'Claiming Revenue' });
 
     claimRevenue({
@@ -39,7 +37,6 @@ export const useClaimAllRevenue = ({
   }, [
     accountAddress,
     claimRevenue,
-    goBack,
     merchantSafe.address,
     merchantSafe.revenueBalances,
     network,
@@ -54,6 +51,8 @@ export const useClaimAllRevenue = ({
   useEffect(() => {
     if (isSuccess && hasUpdated) {
       dismissLoadingOverlay();
+
+      goBack();
     }
   }, [
     dismissLoadingOverlay,

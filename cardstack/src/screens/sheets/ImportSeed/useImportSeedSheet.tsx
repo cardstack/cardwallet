@@ -26,7 +26,6 @@ import {
   useClipboard,
   useInitializeWallet,
   useInvalidPaste,
-  usePrevious,
   useWallets,
 } from '@rainbow-me/hooks';
 
@@ -39,6 +38,7 @@ import {
 } from '@rainbow-me/utils';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { useLoadingOverlay } from '@cardstack/navigation';
 
 interface CheckedWallet {
   address: string;
@@ -64,7 +64,7 @@ const useImportSeedSheet = () => {
 
   const inputRef = useRef<TextInput>(null);
 
-  const { showWalletProfileModal, isImporting } = useImportFromProfileModal(
+  const { showWalletProfileModal } = useImportFromProfileModal(
     checkedWallet,
     seedPhrase,
     inputRef
@@ -79,11 +79,11 @@ const useImportSeedSheet = () => {
 
   const handleSetSeedPhrase = useCallback(
     text => {
-      if (isImporting) return null;
+      if (busy) return null;
 
       return setSeedPhrase(text);
     },
-    [isImporting]
+    [busy]
   );
 
   const isClipboardValidSecret = useMemo(
@@ -165,88 +165,67 @@ const useImportFromProfileModal = (
   seedPhrase: string,
   inputRef: RefObject<TextInput>
 ) => {
-  const { goBack, navigate, replace, setParams } = useNavigation<
+  const { navigate, replace } = useNavigation<
     StackNavigationProp<ParamListBase>
   >();
 
-  const [isImporting, setImporting] = useState(false);
-  const wasImporting = usePrevious(isImporting);
-
-  const { setIsWalletLoading, wallets } = useWallets();
+  const { wallets } = useWallets();
   const initializeWallet = useInitializeWallet();
 
-  useEffect(() => {
-    setIsWalletLoading(
-      isImporting ? walletLoadingStates.IMPORTING_WALLET : null
-    );
-  }, [isImporting, setIsWalletLoading]);
-
-  const handleSetImporting = useCallback(
-    newImportingState => {
-      setImporting(newImportingState);
-      setParams({ gesturesEnabled: !newImportingState });
-    },
-    [setParams]
-  );
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const handleImportAccountOnCloseModal = useCallback(
     async ({ name = null, color = null }) => {
-      handleSetImporting(true);
+      showLoadingOverlay({ title: walletLoadingStates.IMPORTING_WALLET });
 
-      if (!wasImporting) {
-        const input = sanitizeSeedPhrase(seedPhrase);
+      const input = sanitizeSeedPhrase(seedPhrase);
 
-        const previousWalletCount = keys(wallets).length;
-        const isFreshWallet = previousWalletCount === 0;
+      const previousWalletCount = keys(wallets).length;
+      const isFreshWallet = previousWalletCount === 0;
 
-        try {
-          const wallet = await initializeWallet({
-            seedPhrase: input,
-            color,
-            name: name || '',
-            checkedWallet,
-          });
+      try {
+        const wallet = await initializeWallet({
+          seedPhrase: input,
+          color,
+          name: name || '',
+          checkedWallet,
+        });
 
-          handleSetImporting(false);
-          // Early return to not dismiss the sheet on error
-          if (!wallet) return;
+        dismissLoadingOverlay();
+        // Early return to not dismiss the sheet on error
+        if (!wallet) return;
 
-          InteractionManager.runAfterInteractions(async () => {
-            // Fresh imported wallet
-            if (isFreshWallet) {
-              // Dismisses ImportSeedSheet
-              goBack();
-              // Replaces bc no route exist yet
-              replace(Routes.SWIPE_LAYOUT, {
-                params: { initialized: true },
-                screen: Routes.WALLET_SCREEN,
-              });
-            } else {
-              navigate(Routes.WALLET_SCREEN, {
-                initialized: true,
-              });
-            }
-          });
-        } catch (error) {
-          handleSetImporting(false);
-          logger.error('error importing seed phrase: ', error);
-          setTimeout(() => {
-            inputRef.current?.focus();
-          }, 100);
-        }
+        InteractionManager.runAfterInteractions(async () => {
+          // Fresh imported wallet
+          if (isFreshWallet) {
+            // Replaces bc no route exist yet
+            replace(Routes.SWIPE_LAYOUT, {
+              params: { initialized: true },
+              screen: Routes.WALLET_SCREEN,
+            });
+          } else {
+            navigate(Routes.WALLET_SCREEN, {
+              initialized: true,
+            });
+          }
+        });
+      } catch (error) {
+        logger.error('error importing seed phrase: ', error);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
       }
     },
     [
       checkedWallet,
-      goBack,
-      handleSetImporting,
+      dismissLoadingOverlay,
       initializeWallet,
       inputRef,
       navigate,
       replace,
       seedPhrase,
+      showLoadingOverlay,
       wallets,
-      wasImporting,
     ]
   );
 
@@ -266,5 +245,5 @@ const useImportFromProfileModal = (
     [handleImportAccountOnCloseModal, navigate]
   );
 
-  return { showWalletProfileModal, isImporting };
+  return { showWalletProfileModal };
 };

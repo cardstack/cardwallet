@@ -26,15 +26,37 @@ export const useCardstackMainScreens = (Stack: any) =>
 export const useCardstackGlobalScreens = (Stack: any) =>
   getScreens(GlobalRoutes, GlobalScreens, Stack);
 
+// Once we merge the routes, we can type it better
+export const useDismissCurrentRoute = (routeName: string) => {
+  const { goBack } = useNavigation();
+
+  const checkAndDismissCurrentRoute = useCallback(() => {
+    if (Navigation.getActiveRouteName() === routeName) {
+      goBack();
+    }
+  }, [goBack, routeName]);
+
+  return checkAndDismissCurrentRoute;
+};
+
 const defaulLoadingtMessage = {
   title: 'Processing Transaction',
 };
 
+interface ShowOverlayParams {
+  title: string;
+  subTitle?: string;
+}
+
 export const useLoadingOverlay = () => {
-  const { navigate, goBack } = useNavigation();
+  const { navigate } = useNavigation();
+
+  const dismissLoadingOverlay = useDismissCurrentRoute(
+    MainRoutes.LOADING_OVERLAY
+  );
 
   const showLoadingOverlay = useCallback(
-    ({ title, subTitle } = defaulLoadingtMessage) => {
+    ({ title, subTitle }: ShowOverlayParams = defaulLoadingtMessage) => {
       navigate(MainRoutes.LOADING_OVERLAY, {
         title,
         subTitle,
@@ -42,12 +64,6 @@ export const useLoadingOverlay = () => {
     },
     [navigate]
   );
-
-  const dismissLoadingOverlay = useCallback(() => {
-    if (Navigation.getActiveRouteName() === MainRoutes.LOADING_OVERLAY) {
-      goBack();
-    }
-  }, [goBack]);
 
   return { showLoadingOverlay, dismissLoadingOverlay };
 };

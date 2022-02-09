@@ -17,6 +17,7 @@ import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
 import useResetAccountState from './useResetAccountState';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 import { getCurrencyConversionsRates } from '@cardstack/services';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
@@ -24,14 +25,16 @@ import logger from 'logger';
 
 export default function useInitializeWallet() {
   const dispatch = useDispatch();
+
   const resetAccountState = useResetAccountState();
   const loadAccountData = useLoadAccountData();
   const loadCoingeckoCoins = useLoadCoingeckoCoins();
   const loadGlobalData = useLoadGlobalData();
   const initializeAccountData = useInitializeAccountData();
+  const hideSplashScreen = useHideSplashScreen();
 
   const { network } = useAccountSettings();
-  const hideSplashScreen = useHideSplashScreen();
+  const { dismissLoadingOverlay } = useLoadingOverlay();
 
   const initializeWallet = useCallback(
     async ({
@@ -127,17 +130,20 @@ export default function useInitializeWallet() {
         Alert.alert('Something went wrong while importing. Please try again!');
         dispatch(appStateUpdate({ walletReady: true }));
         return null;
+      } finally {
+        dismissLoadingOverlay();
       }
     },
     [
       resetAccountState,
+      dispatch,
       loadCoingeckoCoins,
       network,
-      dispatch,
       hideSplashScreen,
       initializeAccountData,
       loadGlobalData,
       loadAccountData,
+      dismissLoadingOverlay,
     ]
   );
 

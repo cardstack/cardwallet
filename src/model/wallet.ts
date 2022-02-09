@@ -39,10 +39,7 @@ import {
   isValidMnemonic,
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
-import WalletLoadingStates from '../helpers/walletLoadingStates';
 import { EthereumWalletType } from '../helpers/walletTypes';
-import store from '../redux/store';
-import { setIsWalletLoading } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { ethereumUtils } from '../utils';
 import {
@@ -625,7 +622,6 @@ export const createWallet = async (
   const walletSeed = seed || generateMnemonic();
 
   const addresses: RainbowAccount[] = [];
-  const { dispatch } = store;
 
   try {
     // Wallet can be checked while importing,
@@ -671,16 +667,7 @@ export const createWallet = async (
         try {
           userPIN = await getExistingPIN();
           if (!userPIN) {
-            // We gotta dismiss the modal before showing the PIN screen
-            dispatch(setIsWalletLoading(null));
             userPIN = await authenticateWithPIN();
-            dispatch(
-              setIsWalletLoading(
-                seed
-                  ? WalletLoadingStates.IMPORTING_WALLET
-                  : WalletLoadingStates.CREATING_WALLET
-              )
-            );
           }
         } catch (e) {
           return null;
@@ -790,8 +777,6 @@ export const createWallet = async (
     logger.sentry('Error in createWallet', error);
     captureException(error);
     return null;
-  } finally {
-    dispatch(setIsWalletLoading(null));
   }
 };
 
@@ -943,11 +928,7 @@ export const generateAccount = async (
       // Fallback to custom PIN
       if (!hasBiometricsEnabled) {
         try {
-          const { dispatch } = store;
-          // Hide the loading overlay while showing the pin auth screen
-          dispatch(setIsWalletLoading(null));
           userPIN = await authenticateWithPIN();
-          dispatch(setIsWalletLoading(WalletLoadingStates.CREATING_WALLET));
         } catch (e) {
           return null;
         }
