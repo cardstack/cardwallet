@@ -164,7 +164,7 @@ export const estimateTransferNFTGas = async (
     const contract = new Contract(params.to, erc721ABI, provider);
     const contractEstGas = await contract.estimateGas.transferFrom(
       params.from,
-      params.to,
+      params.to, // LOOK IT UP
       params.id
     );
     if (!addPadding) {
@@ -320,11 +320,9 @@ const resolveNameOrAddress = async nameOrAddress => {
  */
 export const getTransferNftTransaction = async transaction => {
   const { from, to, asset } = transaction;
-  const contractAddress =
-    get(transaction, 'asset.asset_contract.address') || to;
+  const contractAddress = get(transaction, 'asset.asset_contract.address');
   const gasLimit = toHex(transaction.gasLimit) || undefined;
   const gasPrice = toHex(transaction.gasPrice) || undefined;
-  const value = transaction.amount ? toHex(toWei(transaction.amount)) : '0x00';
   const recipient = await resolveNameOrAddress(to);
   const data = getDataForNftTransfer(from, recipient, asset);
   return {
@@ -333,7 +331,7 @@ export const getTransferNftTransaction = async transaction => {
     to: contractAddress,
     gasLimit,
     gasPrice,
-    value,
+    value: '0x0',
   };
 };
 
@@ -396,19 +394,11 @@ export const getDataForTokenTransfer = (value, to) => {
 };
 
 export const getDataForNftTransfer = (from, to, asset) => {
-  const nftVersion = get(asset, 'asset_contract.nft_version');
   const schema_name = get(asset, 'asset_contract.schema_name');
   const assetIdHex = convertStringToHex(asset.id);
 
-  if (nftVersion === '3.0') {
-    const transferMethodHash = smartContractMethods.nft_transfer_from.hash;
-    const data = ethereumUtils.getDataString(transferMethodHash, [
-      ethereumUtils.removeHexPrefix(from),
-      ethereumUtils.removeHexPrefix(to),
-      assetIdHex,
-    ]);
-    return data;
-  } else if (schema_name === 'ERC1155') {
+  // Handling transfer for ERC1155
+  if (schema_name === 'ERC1155') {
     const transferMethodHash =
       smartContractMethods.erc1155_safe_transfer_from.hash;
     const data = ethereumUtils.getDataString(transferMethodHash, [
@@ -421,6 +411,8 @@ export const getDataForNftTransfer = (from, to, asset) => {
     ]);
     return data;
   }
+
+  // Handling transfer for ERC712
   const transferMethodHash = smartContractMethods.nft_transfer_from.hash;
   const data = ethereumUtils.getDataString(transferMethodHash, [
     ethereumUtils.removeHexPrefix(from),

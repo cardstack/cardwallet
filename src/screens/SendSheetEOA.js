@@ -287,24 +287,10 @@ const useSendSheetScreen = () => {
         txDetails,
         network
       );
-      console.log('::: tx signableTransaction', signableTransaction);
 
-      let txResult;
-      if (txDetails.asset?.type === AssetTypes.nft) {
-        const params = {
-          from: txDetails.from,
-          contractAddress: signableTransaction.to,
-          id: selected.id,
-          data: signableTransaction.data,
-        };
-        txResult = await sendNft(params);
-      } else {
-        txResult = await sendTransaction({
-          transaction: signableTransaction,
-        });
-      }
-
-      console.log('::: tx result', txResult);
+      const txResult = await sendTransaction({
+        transaction: signableTransaction,
+      });
 
       const { hash, nonce } = txResult;
 
