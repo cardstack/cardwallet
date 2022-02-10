@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import { useDispatch } from 'react-redux';
 import SendSheet, {
+  SendSheetType,
   useSendAddressValidation,
   useShowAssetFlags,
 } from '../components/send/SendSheet';
@@ -473,5 +474,5 @@ const useSendSheetScreen = () => {
 export default function SendSheetEOA() {
   const props = useSendSheetScreen();
 
-  return <SendSheet {...props} />;
+  return <SendSheet {...props} type={SendSheetType.SEND_FROM_EOA} />;
 }

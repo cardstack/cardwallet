@@ -15,7 +15,7 @@ const SendButton = ({
 }) => {
   const isZeroAssetAmount = Number(assetAmount) <= 0;
   const { network } = useAccountSettings();
-  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenName', network);
 
   let disabled = true;
   let label = 'Enter an Amount';

@@ -17,6 +17,11 @@ import {
   useDimensions,
 } from '@rainbow-me/hooks';
 
+export const SendSheetType = {
+  SEND_FROM_EOA: 'SEND_FROM_EOA',
+  SEND_FROM_DEPOT: 'SEND_FROM_DEPOT',
+};
+
 export const useShowAssetFlags = (isValidAddress, selected) => ({
   showAssetList: isValidAddress && isEmpty(selected),
   showAssetForm: isValidAddress && !isEmpty(selected),
@@ -62,6 +67,7 @@ export default function SendSheet({
   selected,
   onMaxBalancePress,
   selectedGasPrice,
+  type = SendSheetType.SEND_FROM_EOA,
   fetchData = undefined,
   onPressTransactionSpeed = undefined,
   showNativeCurrencyField = true,
@@ -149,8 +155,10 @@ export default function SendSheet({
           txSpeedRenderer={
             <SendTransactionSpeed
               gasPrice={selectedGasPrice}
+              isSufficientGas={isSufficientGas}
               nativeCurrencySymbol={nativeCurrencySymbol}
               onPressTransactionSpeed={onPressTransactionSpeed}
+              sendType={type}
             />
           }
         />
