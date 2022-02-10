@@ -5,7 +5,7 @@ import { Image, Touchable } from '@cardstack/components';
 import { screenWidth } from '@cardstack/utils';
 
 const layouts = {
-  maxWidth: screenWidth * 0.92, // magic number but it works good on big and smaller devices
+  maxWidth: screenWidth * 0.91, // magic number but it works good on big and smaller devices
 };
 
 export const DiscordPromoBanner = ({ onPress }: { onPress: () => void }) => (
