@@ -52,6 +52,7 @@ import {
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
 import { Device } from '@cardstack/utils/device';
+
 import logger from 'logger';
 const encryptor = new AesEncryptor();
 

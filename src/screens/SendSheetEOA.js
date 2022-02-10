@@ -287,6 +287,7 @@ const useSendSheetScreen = () => {
         txDetails,
         network
       );
+
       const txResult = await sendTransaction({
         transaction: signableTransaction,
       });

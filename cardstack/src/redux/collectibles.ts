@@ -38,6 +38,18 @@ const COLLECTIBLES_FETCH_FAILURE = 'collectibles/COLLECTIBLES_FETCH_FAILURE';
 
 const COLLECTIBLES_CLEAR_STATE = 'collectibles/COLLECTIBLES_CLEAR_STATE';
 
+// ERC-165 identifier for interfaces 721 and 1155, stated in their specification.
+const nftSchemas = {
+  erc721: {
+    name: 'ERC721',
+    identifier: 0x80ac58cd,
+  },
+  erc1155: {
+    name: 'ERC1155',
+    identifier: 0xd9b67a26,
+  },
+};
+
 // -- Actions --------------------------------------------------------------- //
 let scheduledFetchHandle: ReturnType<typeof setTimeout> | undefined;
 
@@ -170,7 +182,7 @@ const fetchNFTsViaRpcNode = () => async (
   const { accountAddress, nativeCurrency, network } = getState().settings;
   const assets: AssetType[] = getState().data.assets;
 
-  // find the assets that are NFTs. TODO: consider checking contract interfaces for a more reliable filter.
+  // Find the assets that are NFTs.
   const assetsWithTokenIds = assets.filter(asset => asset.token_id);
 
   const existingNFTs: CollectibleType[] = (getState().collectibles as any)
@@ -191,7 +203,10 @@ const fetchNFTsViaRpcNode = () => async (
           const existingNFT = existingNFTs.find(
             nft =>
               nft.asset_contract.address === asset.address &&
-              nft.id === asset.token_id
+              nft.id === asset.token_id &&
+              // We were not considering NFTs to be sendable before so all
+              // previously saved tokens need to be updated.
+              nft.isInterfaceValidated
           );
 
           if (existingNFT) {
@@ -205,9 +220,31 @@ const fetchNFTsViaRpcNode = () => async (
               web3Provider
             );
 
+            let schema_name = null;
+
+            if (
+              await nftContract.supportsInterface?.(
+                nftSchemas.erc1155.identifier
+              )
+            ) {
+              schema_name = nftSchemas.erc1155.name;
+            } else if (
+              await nftContract.supportsInterface?.(
+                nftSchemas.erc721.identifier
+              )
+            ) {
+              schema_name = nftSchemas.erc721.name;
+            }
+
             const tokenURI = await nftContract.tokenURI(asset.token_id);
             const tokenURIJSON = await fetchJsonFromTokenUri(tokenURI);
+
             const imageURL = tokenURIJSON.image_url || tokenURIJSON.image;
+
+            logger.log(
+              `Reloaded NFT ${asset.name} [${asset.token_id}]`,
+              `with interface: ${schema_name}`
+            );
 
             const collectible: CollectibleType = {
               id: asset.token_id,
@@ -223,7 +260,8 @@ const fetchNFTsViaRpcNode = () => async (
               traits: [],
               background: null,
               familyImage: null,
-              isSendable: false,
+              isSendable: !!schema_name,
+              isInterfaceValidated: true,
               asset_contract: {
                 address: asset.address,
                 description: tokenURIJSON.description,
@@ -231,7 +269,7 @@ const fetchNFTsViaRpcNode = () => async (
                 image_url: imageURL,
                 name: asset.name,
                 nft_version: null,
-                schema_name: null,
+                schema_name,
                 symbol: asset.symbol,
                 total_supply: null,
               },

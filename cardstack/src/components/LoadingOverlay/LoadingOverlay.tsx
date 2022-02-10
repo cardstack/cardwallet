@@ -28,6 +28,7 @@ const OverlyStyle = {
     width: 0,
     height: 15,
   },
+  elevation: 20,
   shadowRadius: 30,
   shadowOpacity: 1,
   borderWidth: 1,

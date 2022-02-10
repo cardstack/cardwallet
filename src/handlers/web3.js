@@ -11,6 +11,7 @@ import {
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
 import { isHexString as isEthersHexString } from '@ethersproject/bytes';
+import { Contract } from '@ethersproject/contracts';
 import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
 import { Web3Provider } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
@@ -25,7 +26,7 @@ import ethereumUtils from '../utils/ethereumUtils';
 import Web3WsProvider from '@cardstack/models/web3-provider';
 import { isNativeToken } from '@cardstack/utils/cardpay-utils';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { ethUnits } from '@rainbow-me/references';
+import { erc721ABI, ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 /**
@@ -117,6 +118,66 @@ export const toChecksumAddress = address => {
   }
 };
 
+export const addPaddingToGasEstimate = async (
+  estimatedGas,
+  paddingFactor,
+  provider
+) => {
+  // Adding buffer padding to gas estimate
+  const { gasLimit } = await provider.getBlock();
+
+  const lastBlockGasLimit = addBuffer(gasLimit.toString(), 0.9);
+  const paddedGas = addBuffer(
+    estimatedGas.toString(),
+    paddingFactor.toString()
+  );
+
+  // If the safe estimation is above the last block gas limit, use it
+  if (greaterThan(estimatedGas, lastBlockGasLimit)) {
+    logger.log('⛽ using original gas estimation', estimatedGas.toString());
+    return estimatedGas.toString();
+  }
+  // If the estimation is below the last block gas limit, use the padded estimate
+  if (greaterThan(lastBlockGasLimit, paddedGas)) {
+    logger.log('⛽ using padded gas estimation', paddedGas);
+    return paddedGas;
+  }
+  // otherwise default to the last block gas limit
+  logger.log('⛽ using last block gas limit', lastBlockGasLimit);
+  return lastBlockGasLimit;
+};
+
+/**
+ * @desc estimate gas limit to transfer token using Contract estimation.
+ * @param  {Object} params: { from, to, id }
+ * @param {Boolean} addPadding (default false) flag if a padding should be added or not.
+ * @param {Number} paddingFactor (default 1.1) buffer to be added to gas limit.
+ */
+export const estimateTransferNFTGas = async (
+  params,
+  addPadding = false,
+  paddingFactor = 1.1
+) => {
+  try {
+    const provider = await getEtherWeb3Provider();
+
+    const contract = new Contract(params.to, erc721ABI, provider);
+    const contractEstGas = await contract.estimateGas.transferFrom(
+      params.from,
+      params.to, // LOOK IT UP
+      params.id
+    );
+    if (!addPadding) {
+      return contractEstGas.toString();
+    }
+
+    return addPaddingToGasEstimate(contractEstGas, paddingFactor, provider);
+  } catch (error) {
+    logger.error('Error estimating gas for NFT transfer', error);
+    return null;
+  }
+};
+
 /**
  * @desc estimate gas limit
  * @param  {String} address
@@ -125,9 +186,12 @@ export const toChecksumAddress = address => {
 export const estimateGas = async estimateGasData => {
   try {
     const web3ProviderInstance = await getEtherWeb3Provider();
-    const gasLimit = await web3ProviderInstance.estimateGas(estimateGasData);
-    return gasLimit.toString();
+    const estimatedGas = await web3ProviderInstance.estimateGas(
+      estimateGasData
+    );
+    return estimatedGas.toString();
   } catch (error) {
+    logger.error('Error calculating gas limit for token', error);
     return null;
   }
 };
@@ -162,33 +226,11 @@ export const estimateGasWithPadding = async (
       txPayloadToEstimate
     );
 
-    const lastBlockGasLimit = addBuffer(gasLimit.toString(), 0.9);
-    const paddedGas = addBuffer(
-      estimatedGas.toString(),
-      paddingFactor.toString()
+    return addPaddingToGasEstimate(
+      estimatedGas,
+      paddingFactor,
+      web3ProviderInstance
     );
-    logger.log('⛽ GAS CALCULATIONS!', {
-      estimatedGas: estimatedGas.toString(),
-      gasLimit: gasLimit.toString(),
-      lastBlockGasLimit: lastBlockGasLimit,
-      paddedGas: paddedGas,
-    });
-    // If the safe estimation is above the last block gas limit, use it
-    if (greaterThan(estimatedGas, lastBlockGasLimit)) {
-      logger.log(
-        '⛽ returning orginal gas estimation',
-        estimatedGas.toString()
-      );
-      return estimatedGas.toString();
-    }
-    // If the estimation is below the last block gas limit, use the padded estimate
-    if (greaterThan(lastBlockGasLimit, paddedGas)) {
-      logger.log('⛽ returning padded gas estimation', paddedGas);
-      return paddedGas;
-    }
-    // otherwise default to the last block gas limit
-    logger.log('⛽ returning last block gas limit', lastBlockGasLimit);
-    return lastBlockGasLimit;
   } catch (error) {
     logger.error('Error calculating gas limit with padding', error);
     return null;
@@ -277,17 +319,19 @@ const resolveNameOrAddress = async nameOrAddress => {
  * @return {Object}
  */
 export const getTransferNftTransaction = async transaction => {
-  const recipient = await resolveNameOrAddress(transaction.to);
-  const { from, to } = transaction;
-  const contractAddress =
-    get(transaction, 'asset.asset_contract.address') || to;
-  const data = getDataForNftTransfer(from, recipient, transaction.asset);
+  const { from, to, asset } = transaction;
+  const contractAddress = get(transaction, 'asset.asset_contract.address');
+  const gasLimit = toHex(transaction.gasLimit) || undefined;
+  const gasPrice = toHex(transaction.gasPrice) || undefined;
+  const recipient = await resolveNameOrAddress(to);
+  const data = getDataForNftTransfer(from, recipient, asset);
   return {
     data,
     from,
-    gasLimit: transaction.gasLimit,
-    gasPrice: transaction.gasPrice,
     to: contractAddress,
+    gasLimit,
+    gasPrice,
+    value: '0x0',
   };
 };
 
@@ -323,11 +367,10 @@ export const createSignableTransaction = async (transaction, network) => {
   if (isNativeToken(assetSymbol, network)) {
     return getTxDetails(transaction);
   }
-  const isNft = get(transaction, 'asset.type') === AssetTypes.nft;
-  const result = isNft
-    ? await getTransferNftTransaction(transaction)
-    : await getTransferTokenTransaction(transaction);
-  return getTxDetails(result);
+  if (get(transaction, 'asset.type') === AssetTypes.nft) {
+    return await getTransferNftTransaction(transaction);
+  }
+  return getTxDetails(await getTransferTokenTransaction(transaction));
 };
 
 const estimateAssetBalancePortion = asset => {
@@ -351,34 +394,32 @@ export const getDataForTokenTransfer = (value, to) => {
 };
 
 export const getDataForNftTransfer = (from, to, asset) => {
-  const nftVersion = get(asset, 'asset_contract.nft_version');
   const schema_name = get(asset, 'asset_contract.schema_name');
-  if (nftVersion === '3.0') {
-    const transferMethodHash = smartContractMethods.nft_transfer_from.hash;
-    const data = ethereumUtils.getDataString(transferMethodHash, [
-      ethereumUtils.removeHexPrefix(from),
-      ethereumUtils.removeHexPrefix(to),
-      convertStringToHex(asset.id),
-    ]);
-    return data;
-  } else if (schema_name === 'ERC1155') {
+  const assetIdHex = convertStringToHex(asset.id);
+
+  // Handling transfer for ERC1155
+  if (schema_name === 'ERC1155') {
     const transferMethodHash =
       smartContractMethods.erc1155_safe_transfer_from.hash;
     const data = ethereumUtils.getDataString(transferMethodHash, [
       ethereumUtils.removeHexPrefix(from),
       ethereumUtils.removeHexPrefix(to),
-      convertStringToHex(asset.id),
+      assetIdHex,
       convertStringToHex('1'),
       convertStringToHex('160'),
       convertStringToHex('0'),
     ]);
     return data;
   }
-  const transferMethodHash = smartContractMethods.nft_transfer.hash;
+
+  // Handling transfer for ERC712
+  const transferMethodHash = smartContractMethods.nft_transfer_from.hash;
   const data = ethereumUtils.getDataString(transferMethodHash, [
+    ethereumUtils.removeHexPrefix(from),
     ethereumUtils.removeHexPrefix(to),
-    convertStringToHex(asset.id),
+    assetIdHex,
   ]);
+
   return data;
 };
 
@@ -412,7 +453,11 @@ export const estimateGasLimit = async (
       data,
       from: address,
       to: contractAddress,
+      id: asset.id,
     };
+
+    logger.log('⛽ Calculating gas limit for NFT transfer');
+    return estimateTransferNFTGas(estimateGasData, addPadding);
   } else if (!isNativeToken(asset.symbol, network)) {
     const transferData = getDataForTokenTransfer(value, _recipient);
     estimateGasData = {
@@ -425,6 +470,6 @@ export const estimateGasLimit = async (
   if (addPadding) {
     return estimateGasWithPadding(estimateGasData, network);
   } else {
-    return estimateGas(estimateGasData);
+    return estimateGas(estimateGasData, asset);
   }
 };
