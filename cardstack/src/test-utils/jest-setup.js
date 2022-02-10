@@ -44,6 +44,10 @@ jest.mock('@react-navigation/material-top-tabs', () => ({
   createMaterialTopTabNavigator: jest.fn(),
 }));
 
+jest.mock('@react-navigation/bottom-tabs', () => ({
+  useBottomTabBarHeight: jest.fn(),
+}));
+
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
@@ -242,6 +246,10 @@ jest.mock('@cardstack/navigation', () => ({
 
 jest.mock('@cardstack/navigation/screens', () => ({
   default: jest.fn(),
+}));
+
+jest.mock('@cardstack/navigation/tabBarNavigator', () => ({
+  useTabBarFlag: jest.fn(),
 }));
 
 // Mock to avoid not checksum address console.warn
