@@ -9,10 +9,9 @@ import React, {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
+import { WelcomeScreen, HomeScreen } from '@cardstack/screens';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
-import { WelcomeScreen } from '@cardstack/screen';
-import ProfileScreen from '@rainbow-me/screens/ProfileScreen';
 import QRScannerScreen from '@rainbow-me/screens/QRScannerScreen';
 import WalletScreen from '@rainbow-me/screens/WalletScreen';
 import { TabBarIcon } from '@cardstack/components';
@@ -46,11 +45,11 @@ const TabNavigator = () => (
     tabBarOptions={tabBarOptions}
   >
     <Tab.Screen
-      component={ProfileScreen}
+      component={HomeScreen}
       name={RainbowRoutes.PROFILE_SCREEN}
       options={{
         tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="user" label="HOME" focused={focused} />
+          <TabBarIcon iconName="home" label="HOME" focused={focused} />
         ),
       }}
     />
@@ -123,3 +122,5 @@ export const TabBarFeatureProvider: React.FC = ({ children }) => {
     </TabBarFeatureContext.Provider>
   );
 };
+
+export const useTabBarFlag = () => useContext(TabBarFeatureContext);
