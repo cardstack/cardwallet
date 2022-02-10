@@ -3,6 +3,7 @@ import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { TouchableOpacity } from 'react-native';
 import { CustomIconNames, customIcons } from './custom-icons';
 import { FeatherIconNames } from './feather-icon-names';
 import { MaterialCommunityIconNames } from './material-community-icon-names';
@@ -48,6 +49,7 @@ export const Icon = ({
   name,
   color,
   stroke,
+  onPress,
   ...props
 }: IconProps) => {
   const theme = useTheme<Theme>();
@@ -63,32 +65,36 @@ export const Icon = ({
     const CustomIcon = customIcons[name as CustomIconNames];
 
     return (
-      <Container
-        testID="custom-icon"
-        height={sizeWithDefault}
-        width={sizeWithDefault}
-        {...props}
-      >
-        <CustomIcon
-          color={colorWithDefault}
-          fill={colorWithDefault}
-          stroke={strokeWithDefault}
-          width={sizeWithDefault}
+      <TouchableOpacity disabled={!onPress} onPress={onPress}>
+        <Container
+          testID="custom-icon"
           height={sizeWithDefault}
-        />
-      </Container>
+          width={sizeWithDefault}
+          {...props}
+        >
+          <CustomIcon
+            color={colorWithDefault}
+            fill={colorWithDefault}
+            stroke={strokeWithDefault}
+            width={sizeWithDefault}
+            height={sizeWithDefault}
+          />
+        </Container>
+      </TouchableOpacity>
     );
   }
 
   const IconComponent = IconFamilies[iconFamily];
 
   return (
-    <Container {...props}>
-      <IconComponent
-        color={colorWithDefault || 'transparent'}
-        name={name}
-        size={sizeWithDefault}
-      />
-    </Container>
+    <TouchableOpacity disabled={!onPress} onPress={onPress}>
+      <Container {...props}>
+        <IconComponent
+          color={colorWithDefault || 'transparent'}
+          name={name}
+          size={sizeWithDefault}
+        />
+      </Container>
+    </TouchableOpacity>
   );
 };
