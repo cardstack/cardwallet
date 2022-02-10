@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { ENABLE_PAYMENTS } from '../../cardstack/src/constants';
 
 import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
@@ -50,7 +49,8 @@ export default function ProfileScreen() {
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const addCashAvailable = network === networkTypes.mainnet && ENABLE_PAYMENTS;
+  const addCashAvailable = network === networkTypes.mainnet;
+
   const [copiedText, setCopiedText] = useState(undefined);
   const [copyCount, setCopyCount] = useState(0);
 
