@@ -22,7 +22,7 @@ const CHART_HEIGHT = 650;
 
 enum Tabs {
   ASSETS = 'Assets',
-  ACTIVITIES = 'Activities',
+  ACTIVITIES = 'History',
 }
 
 interface TabHeaderProps {

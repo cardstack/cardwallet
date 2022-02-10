@@ -55,7 +55,7 @@ const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
 
   return (
     <Container paddingHorizontal={5} paddingVertical={3}>
-      <Text size="medium">Claim available revenue</Text>
+      <Text size="medium">Pending Payment Balance</Text>
       <Container flexDirection="column" marginTop={5}>
         {renderTokens}
       </Container>
@@ -67,7 +67,7 @@ const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
         Claim All
       </Button>
       <HorizontalDivider />
-      <Text size="medium">Activities</Text>
+      <Text size="medium">History</Text>
     </Container>
   );
 };

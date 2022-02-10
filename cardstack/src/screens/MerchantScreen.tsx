@@ -137,21 +137,21 @@ const MerchantScreen = () => {
           </Button>
           <HorizontalDivider />
           <TokensSection
-            title="Available revenue"
+            title="Pending Payment Balance"
             onPress={goToUnclaimedRevenue}
-            emptyText="No revenue to be claimed"
+            emptyText="No pending payments"
             tokens={merchantSafe.revenueBalances}
           />
           <TokensSection
-            title="Account balances"
+            title="Available Balance"
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
-            emptyText="No available assets"
+            emptyText="No balance available"
             tokens={merchantSafe.tokens}
           />
-          <PaymentHistorySection
+          {/* <PaymentHistorySection
             sections={sections}
             onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
-          />
+          /> */}
         </ScrollView>
       </Container>
     </Container>
@@ -243,20 +243,6 @@ const MerchantInfo = ({
         {merchantInfo?.name || ''}
       </Text>
       <Text variant="subText">Business Account</Text>
-      <Container flexDirection="row" marginTop={2}>
-        <Text weight="extraBold" size="xs">
-          1{' '}
-          <Text weight="regular" size="xs">
-            manager
-          </Text>
-        </Text>
-        <Icon
-          name="user-with-background"
-          color="black"
-          iconSize="small"
-          marginLeft={2}
-        />
-      </Container>
     </Container>
   );
 };

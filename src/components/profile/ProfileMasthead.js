@@ -214,27 +214,6 @@ export default function ProfileMasthead({
           <Button onPress={handlePress}>Buy Prepaid Card</Button>
         ) : null}
       </Container>
-      <Container
-        flexDirection="row"
-        justifyContent="space-between"
-        padding={4}
-        width="100%"
-      >
-        <Button
-          iconProps={copyIconProps}
-          onPress={handlePressCopyAddress}
-          variant="smallBlue"
-        >
-          Copy Address
-        </Button>
-        <Button
-          iconProps={qrCodeIconProps}
-          onPress={handlePressScan}
-          variant="smallBlue"
-        >
-          Scan
-        </Button>
-      </Container>
     </Container>
   );
 }
