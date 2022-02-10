@@ -7,7 +7,7 @@ import {
   AmountInNativeCurrency,
   MinInvalidAmountText,
   useAmountConvertHelper,
-} from '@cardstack/screen/PaymentRequest/helper';
+} from '@cardstack/screens/PaymentRequest/helper';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import {
   SafeAreaView,

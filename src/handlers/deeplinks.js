@@ -6,7 +6,7 @@ import {
   walletConnectRemovePendingRedirect,
   walletConnectSetPendingRedirect,
 } from '../redux/walletconnect';
-import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
+import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import logger from 'logger';
 
 export default function handleDeepLink(url) {

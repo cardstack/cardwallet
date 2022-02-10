@@ -23,7 +23,7 @@ import { Navigation } from '../navigation';
 import { isSigningMethod } from '../utils/signingMethods';
 import { getFCMToken } from '@cardstack/models/firebase';
 import { addRequestToApprove } from '@cardstack/redux/requests';
-import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
+import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { baseCloudFunctionsUrl } from '@cardstack/services';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';
