@@ -5,8 +5,14 @@
  * and `renderToHardwareTextureAndroid`.
  */
 
-import React, { ReactNode } from 'react';
-import { Animated, Pressable, ViewProps, PressableProps } from 'react-native';
+import React, { useCallback, useRef, useState, ReactNode } from 'react';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  ViewProps,
+  PressableProps,
+} from 'react-native';
 
 import {
   LayoutProps,
@@ -17,7 +23,11 @@ import {
 } from '@shopify/restyle';
 
 import { Theme } from '../../theme';
-// import { Container } from '@cardstack/components';
+
+enum Opacity {
+  opaque = 1.0,
+  translucent = 0.2,
+}
 
 type RestyleProps = ViewProps &
   LayoutProps<Theme> &
@@ -35,14 +45,53 @@ export const CardPressable = ({
   onPress,
   disabled,
   ...rest
-}: CardPressableProps & RestyleProps) => (
-  <Animated.View
-    needsOffscreenAlphaCompositing
-    renderToHardwareTextureAndroid
-    {...rest}
-  >
-    <Pressable onPress={onPress} disabled={disabled} {...rest}>
-      {children}
-    </Pressable>
-  </Animated.View>
-);
+}: CardPressableProps & RestyleProps) => {
+  const [animating, setAnimating] = useState(false);
+  const animatedValue = useRef(new Animated.Value(Opacity.opaque)).current;
+
+  const onPressAnimate = useCallback(
+    (toValue: Opacity) => () => {
+      setAnimating(true);
+      Animated.timing(animatedValue, {
+        toValue,
+        duration: 100,
+        easing: Easing.ease,
+        useNativeDriver: true,
+      }).start();
+    },
+    [animatedValue]
+  );
+
+  // const animatedStyle: Animated.WithAnimatedObject<ViewStyle> = useMemo(
+  //   () => ({
+  //     ...styles,
+  //     transform: [
+  //       {
+  //         scale: animatedValue.interpolate({
+  //           inputRange: [Scale.grow, Scale.shrink],
+  //           outputRange: [scaleRatio.full, scaleRatio.decreased],
+  //         }),
+  //       },
+  //     ],
+  //   }),
+  //   [animatedValue]
+  // );
+
+  return (
+    <Animated.View
+      needsOffscreenAlphaCompositing
+      renderToHardwareTextureAndroid={animating}
+      {...rest}
+    >
+      <Pressable
+        onPress={onPress}
+        disabled={disabled}
+        // onPressIn={onPressAnimate(Scale.shrink)}
+        // onPressOut={onPressAnimate(Scale.grow)}
+        {...rest}
+      >
+        {children}
+      </Pressable>
+    </Animated.View>
+  );
+};
