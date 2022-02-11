@@ -18,31 +18,31 @@ import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   useAccountProfile,
   useAccountSettings,
-  useClipboard,
+  // useClipboard,
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const ACCOUNT_CONTAINER = screenWidth * 0.85;
-const copyIconProps = {
-  color: 'teal',
-  marginRight: 2,
-  name: 'copy',
-  size: 18,
-};
-const qrCodeIconProps = {
-  marginRight: 2,
-  color: 'teal',
-  name: 'qr-code',
-  size: 18,
-};
+// const copyIconProps = {
+//   color: 'teal',
+//   marginRight: 2,
+//   name: 'copy',
+//   size: 18,
+// };
+// const qrCodeIconProps = {
+//   marginRight: 2,
+//   color: 'teal',
+//   name: 'qr-code',
+//   size: 18,
+// };
 
 export default function ProfileMasthead({
   addCashAvailable,
-  setCopiedText,
-  setCopyCount,
+  // setCopiedText,
+  // setCopyCount,
 }) {
   const { wallets, selectedWallet, isDamaged } = useWallets();
   const dispatch = useDispatch();
@@ -136,9 +136,9 @@ export default function ProfileMasthead({
     wallets,
   ]);
 
-  const handlePressScan = useCallback(() => {
-    navigate(Routes.QR_SCANNER_SCREEN);
-  }, [navigate]);
+  // const handlePressScan = useCallback(() => {
+  //   navigate(Routes.QR_SCANNER_SCREEN);
+  // }, [navigate]);
 
   const handlePress = useCallback(() => {
     if (isDamaged) {
@@ -166,12 +166,12 @@ export default function ProfileMasthead({
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
 
-  const { setClipboard } = useClipboard();
-  const handlePressCopyAddress = () => {
-    setClipboard(accountAddress);
-    setCopiedText(abbreviations.formatAddressForDisplay(accountAddress));
-    setCopyCount(count => count + 1);
-  };
+  // const { setClipboard } = useClipboard();
+  // const handlePressCopyAddress = () => {
+  //   setClipboard(accountAddress);
+  //   setCopiedText(abbreviations.formatAddressForDisplay(accountAddress));
+  //   setCopyCount(count => count + 1);
+  // };
 
   return (
     <Container
