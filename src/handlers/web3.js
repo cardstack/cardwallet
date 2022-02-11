@@ -164,7 +164,7 @@ export const estimateTransferNFTGas = async (
     const contract = new Contract(params.to, erc721ABI, provider);
     const contractEstGas = await contract.estimateGas.transferFrom(
       params.from,
-      params.to, // LOOK IT UP
+      params.to,
       params.id
     );
     if (!addPadding) {
