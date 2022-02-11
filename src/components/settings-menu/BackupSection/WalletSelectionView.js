@@ -25,6 +25,8 @@ const Footer = styled(Centered)`
   ${padding(19, 15, 30)};
 `;
 
+const style = { paddingTop: 10 };
+
 const WalletSelectionView = () => {
   const { navigate } = useNavigation();
   const { colors } = useTheme();
@@ -54,7 +56,7 @@ const WalletSelectionView = () => {
   let cloudBackedUpWallets = 0;
 
   return (
-    <ScrollView>
+    <ScrollView style={style}>
       {Object.keys(wallets)
         .filter(key => wallets[key].type !== WalletTypes.readOnly)
         .map(key => {
@@ -152,7 +154,6 @@ const WalletSelectionView = () => {
                         name="warning"
                       />
                     )}
-
                     <Icon
                       alignSelf="center"
                       color="settingsGrayChevron"
