@@ -22,7 +22,7 @@ import { getNativeBalanceFromOracle } from '@cardstack/services';
 import logger from 'logger';
 
 export const ClaimedStatus = {
-  CLAIMED_TEXT: `Payment\nAmount`,
+  CLAIMED_TEXT: `Amount\nClaimed`,
   DEPOSITED_TEXT: `Claimed\nAmount`,
 };
 

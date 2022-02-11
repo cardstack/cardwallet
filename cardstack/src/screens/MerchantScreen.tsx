@@ -137,7 +137,7 @@ const MerchantScreen = () => {
           </Button>
           <HorizontalDivider />
           <TokensSection
-            title="Pending Payment Balance"
+            title="Pending Balance"
             onPress={goToUnclaimedRevenue}
             emptyText="No pending payments"
             tokens={merchantSafe.revenueBalances}
