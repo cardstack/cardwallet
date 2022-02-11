@@ -27,7 +27,6 @@ import {
   exchangePreset,
   expandedPreset,
   overlayExpandedPreset,
-  settingsPreset,
   sheetPreset,
   sheetPresetWithSmallGestureResponseDistance,
   speedUpAndCancelStyleInterpolator,

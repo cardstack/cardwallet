@@ -171,6 +171,8 @@ export const GlobalScreens: Record<
       interactWithScrollView: false,
     } as StackNavigationOptions,
   },
+
+  // Needs to be the last item of the object, until we move to a single navigator
   ...(Device.isIOS ? LoadingOverlayComponent : {}),
 };
 
