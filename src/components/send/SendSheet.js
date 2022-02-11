@@ -8,7 +8,6 @@ import {
   SendButton,
   SendContactList,
   SendHeader,
-  SendSheetType,
   SendTransactionSpeed,
 } from '.';
 import { Sheet } from '@cardstack/components';
@@ -63,7 +62,7 @@ export default function SendSheet({
   selected,
   onMaxBalancePress,
   selectedGasPrice,
-  type = SendSheetType.SEND_FROM_EOA,
+  type,
   fetchData = undefined,
   onPressTransactionSpeed = undefined,
   showNativeCurrencyField = true,
