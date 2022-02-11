@@ -143,14 +143,13 @@ export default function SettingsModal() {
   );
 
   const renderHeaderRight = useCallback(
-    () =>
-      ios ? (
-        <Touchable marginRight={5} onPress={goBack}>
-          <Text color="settingsTeal" fontWeight="600">
-            Done
-          </Text>
-        </Touchable>
-      ) : null,
+    () => (
+      <Touchable marginRight={5} onPress={goBack}>
+        <Text color="settingsTeal" fontWeight="600">
+          Done
+        </Text>
+      </Touchable>
+    ),
     [goBack]
   );
 
