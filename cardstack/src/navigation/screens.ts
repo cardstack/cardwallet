@@ -27,7 +27,7 @@ import {
   UnclaimedRevenueSheet,
   WalletConnectApprovalSheet,
   WalletConnectRedirectSheet,
-} from '@cardstack/screen';
+} from '@cardstack/screens';
 import {
   bottomSheetPreset,
   expandedPreset,

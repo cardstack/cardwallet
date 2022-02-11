@@ -20,7 +20,6 @@ export const customIcons = {
   doubleCaret: require('./doubleCaret').default,
   inventory: require('./inventory').default,
   error: require('./error').default,
-  gift: require('./gift').default,
   more: require('./more').default,
   pay: require('./pay').default,
   refresh: require('./refresh').default,

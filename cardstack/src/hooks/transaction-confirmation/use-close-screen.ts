@@ -3,7 +3,7 @@ import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { useRouteParams } from './use-route-params';
-import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
+import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import {
   SEND_TRANSACTION,
   isMessageDisplayType,

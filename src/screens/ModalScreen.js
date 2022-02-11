@@ -11,7 +11,7 @@ import {
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
 import { useNavigation } from '../navigation/Navigation';
-import { CopyAddressSheet } from '@cardstack/screen';
+import { CopyAddressSheet } from '@cardstack/screens';
 import { padding, position } from '@rainbow-me/styles';
 
 const ModalTypes = {

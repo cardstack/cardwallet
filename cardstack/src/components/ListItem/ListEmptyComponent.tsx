@@ -21,7 +21,7 @@ export const ListEmptyComponent = ({
       borderRadius={10}
       backgroundColor={hasRoundBox ? 'buttonDisabledBackground' : 'transparent'}
       paddingVertical={9}
-      marginHorizontal={5}
+      marginHorizontal={4}
       {...props}
     >
       <Text color={textColor} textAlign="center" size="body">

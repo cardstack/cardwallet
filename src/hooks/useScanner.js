@@ -16,7 +16,7 @@ import { useNavigation } from '../navigation/Navigation';
 import usePrevious from './usePrevious';
 import useWallets from './useWallets';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
-import { WCRedirectTypes } from '@cardstack/screen/sheets/WalletConnectRedirectSheet';
+import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { Device } from '@cardstack/utils';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';

@@ -35,9 +35,11 @@ export const palette = {
   buttonDisabledBackground: '#2e2d38',
   appleBlue: '#0E76FD',
   yellow: '#F9D849',
+  darkPurple: '#272330',
 };
 
 export const colors = {
+  backgroundDarkPurple: palette.darkPurple,
   backgroundGray: palette.grayBackground,
   backgroundLightGray: palette.grayBackgroundLight,
   backgroundBlue: palette.blueDark,

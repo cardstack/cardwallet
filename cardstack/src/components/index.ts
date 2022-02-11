@@ -41,3 +41,4 @@ export * from './AnimatedPressable';
 export * from './Notice';
 export * from './TabBarIcon';
 export * from './BetterOpacityContainer';
+export * from './MainHeader';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { DepotBridgedLayer1Transaction } from './DepotBridgedLayer1Transaction';
 import { DepotBridgedLayer2Transaction } from './DepotBridgedLayer2Transaction';
@@ -18,7 +18,8 @@ import { MerchantEarnedSpendTransaction } from './Merchant/MerchantEarnedSpendTr
 import { MerchantEarnedSpendAndRevenueTransaction } from './Merchant/MerchantEarnedSpendAndRevenueTransaction';
 import { TransactionType, TransactionTypes } from '@cardstack/types';
 
-interface TransactionItemProps extends TransactionBaseCustomizationProps {
+export interface TransactionItemProps
+  extends TransactionBaseCustomizationProps {
   item: TransactionType;
   isFullWidth?: boolean;
 }
@@ -49,7 +50,7 @@ const transactionItemMap: Record<
   [TransactionTypes.ERC_20]: ERC20Transaction,
 };
 
-export const TransactionItem = (props: TransactionItemProps) => {
+export const TransactionItem = memo((props: TransactionItemProps) => {
   const { item } = props;
 
   if (!item) {
@@ -60,4 +61,4 @@ export const TransactionItem = (props: TransactionItemProps) => {
     transactionItemMap[item.type as TxTypesWithoutReneveueEvent] || null;
 
   return <Transaction {...props} item={item} />;
-};
+});

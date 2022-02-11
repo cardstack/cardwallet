@@ -62,13 +62,15 @@
       "@cardstack/navigation": ["cardstack/src/navigation"],
       "@cardstack/navigation/*": ["cardstack/src/navigation/*"],
       "@cardstack/notification-handler": ["cardstack/src/notification-handler"],
-      "@cardstack/notification-handler/*": ["cardstack/src/notification-handler/*"],
+      "@cardstack/notification-handler/*": [
+        "cardstack/src/notification-handler/*"
+      ],
       "@cardstack/parsers": ["cardstack/src/parsers"],
       "@cardstack/parsers/*": ["cardstack/src/parsers/*"],
       "@cardstack/redux": ["cardstack/src/redux"],
       "@cardstack/redux/*": ["cardstack/src/redux/*"],
-      "@cardstack/screen": ["cardstack/src/screens"],
-      "@cardstack/screen/*": ["cardstack/src/screens/*"],
+      "@cardstack/screens": ["cardstack/src/screens"],
+      "@cardstack/screens/*": ["cardstack/src/screens/*"],
       "@cardstack/services": ["cardstack/src/services"],
       "@cardstack/services/*": ["cardstack/src/services/*"],
       "@cardstack/theme": ["cardstack/src/theme"],
