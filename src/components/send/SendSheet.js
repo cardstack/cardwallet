@@ -8,6 +8,7 @@ import {
   SendButton,
   SendContactList,
   SendHeader,
+  SendSheetType,
   SendTransactionSpeed,
 } from '.';
 import { Sheet } from '@cardstack/components';
@@ -16,11 +17,6 @@ import {
   useContacts,
   useDimensions,
 } from '@rainbow-me/hooks';
-
-export const SendSheetType = {
-  SEND_FROM_EOA: 'SEND_FROM_EOA',
-  SEND_FROM_DEPOT: 'SEND_FROM_DEPOT',
-};
 
 export const useShowAssetFlags = (isValidAddress, selected) => ({
   showAssetList: isValidAddress && isEmpty(selected),

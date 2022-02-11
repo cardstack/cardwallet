@@ -1,7 +1,9 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import {
+  convertAmountToBalanceDisplay,
+  getConstantByNetwork,
+} from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
 import React from 'react';
-import { SendSheetType } from './SendSheet';
 import {
   CenteredContainer,
   Icon,
@@ -9,6 +11,11 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { useAccountSettings } from '@rainbow-me/hooks';
+
+export const SendSheetType = {
+  SEND_FROM_EOA: 'SEND_FROM_EOA',
+  SEND_FROM_DEPOT: 'SEND_FROM_DEPOT',
+};
 
 export default function SendTransactionSpeed({
   gasPrice,
@@ -19,22 +26,34 @@ export default function SendTransactionSpeed({
 }) {
   const { network } = useAccountSettings();
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenName', network);
-  // Checking format to proper display gas fee to EOA and depot flows
-  const isGasNumber = typeof gasPrice === 'number';
+  const isDepot = sendType === SendSheetType.SEND_FROM_DEPOT;
+  let fee;
+  if (isDepot) {
+    fee = `${get(gasPrice, 'nativeDisplay', 0)} ≈ ${nativeCurrencySymbol}${get(
+      gasPrice,
+      'amount',
+      0
+    )}`;
+  } else {
+    const nativeValueDisplay = convertAmountToBalanceDisplay(
+      get(gasPrice, 'txFee.native.value.amount', 0),
+      {
+        decimals: 6,
+        symbol: nativeTokenSymbol,
+      }
+    );
+    fee = `${nativeValueDisplay} ≈ ${get(
+      gasPrice,
+      'txFee.native.value.display',
+      `${nativeCurrencySymbol}0.00`
+    )}`;
+  }
 
-  const fee = isGasNumber
-    ? `${nativeCurrencySymbol}${gasPrice}`
-    : get(
-        gasPrice,
-        'txFee.native.value.display',
-        `${nativeCurrencySymbol}0.00`
-      );
-
-  const hasTimeAmount = !!(isGasNumber
+  const hasTimeAmount = !!(isDepot
     ? 0
     : get(gasPrice, 'estimatedTime.amount', 0));
 
-  const time = isGasNumber ? '' : get(gasPrice, 'estimatedTime.display', '');
+  const time = isDepot ? '' : get(gasPrice, 'estimatedTime.display', '');
   return (
     <CenteredContainer marginTop={3}>
       <Touchable
@@ -43,9 +62,7 @@ export default function SendTransactionSpeed({
       >
         {!isSufficientGas && (
           <Text variant="subText">{`You need ${
-            sendType === SendSheetType.SEND_FROM_EOA
-              ? nativeTokenSymbol
-              : '.CPXD tokens'
+            isDepot ? '.CPXD tokens' : nativeTokenSymbol
           } to send this transaction`}</Text>
         )}
         <CenteredContainer flexDirection="row">

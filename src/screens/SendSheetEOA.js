@@ -9,8 +9,8 @@ import { get, isEmpty, isString } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { SendSheetType } from '../components/send';
 import SendSheet, {
-  SendSheetType,
   useSendAddressValidation,
   useShowAssetFlags,
 } from '../components/send/SendSheet';
