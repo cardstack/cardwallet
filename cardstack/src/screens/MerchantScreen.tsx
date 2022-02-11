@@ -242,7 +242,6 @@ const MerchantInfo = ({
       >
         {merchantInfo?.name || ''}
       </Text>
-      <Text variant="subText">Business Account</Text>
     </Container>
   );
 };
@@ -327,46 +326,3 @@ const SectionWrapper = ({
     {children}
   </Touchable>
 );
-
-export interface PaymentHistorySectionProps {
-  data: MerchantEarnedSpendTransactionType[];
-  title: string;
-}
-
-// const PaymentHistorySection = ({
-//   sections,
-//   onPress,
-// }: {
-//   sections: PaymentHistorySectionProps[];
-//   onPress: () => void;
-// }) => {
-//   const numberOfTransactions = sections[0]?.data?.length || 0;
-
-//   const first3ActivityLists = sections[0]?.data
-//     ?.slice(0, 3)
-//     .map(item => <TransactionItem item={item} isFullWidth disabled />);
-
-//   return (
-//     <Container flexDirection="column" width="100%">
-//       <SectionHeader>Payment History</SectionHeader>
-//       <SectionWrapper
-//         onPress={onPress}
-//         hasDetailsText={false}
-//         disabled={numberOfTransactions === 0}
-//       >
-//         {numberOfTransactions ? (
-//           <>
-//             {first3ActivityLists}
-//             {numberOfTransactions > 3 && (
-//               <Text variant="subText" paddingHorizontal={5}>
-//                 + more
-//               </Text>
-//             )}
-//           </>
-//         ) : (
-//           <Text variant="subText">No activity</Text>
-//         )}
-//       </SectionWrapper>
-//     </Container>
-//   );
-// };
