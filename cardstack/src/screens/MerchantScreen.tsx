@@ -133,7 +133,7 @@ const MerchantScreen = () => {
             marginBottom={4}
             onPress={goToMerchantPaymentRequest}
           >
-            Request Payment
+            Request Amount
           </Button>
           <HorizontalDivider />
           <TokensSection

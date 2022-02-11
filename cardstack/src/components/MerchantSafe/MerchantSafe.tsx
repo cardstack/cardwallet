@@ -96,7 +96,7 @@ export const MerchantInfo = ({
         >
           {name || ''}
         </Text>
-        <Text variant="subText">Business Account</Text>
+        <Text variant="subText">Profile</Text>
       </Container>
     </Container>
   );
@@ -113,17 +113,6 @@ const Bottom = ({ slug }: { slug?: string }) => {
           <Text weight="bold" fontSize={13}>
             {slug}
           </Text>
-        </Container>
-        <Container flexDirection="row" alignItems="center">
-          <Container flexDirection="row" marginRight={3}>
-            <Text weight="bold" fontSize={13}>
-              1{' '}
-            </Text>
-            <Text weight="regular" fontSize={13}>
-              manager
-            </Text>
-          </Container>
-          <Icon name="user-with-background" />
         </Container>
       </Container>
     </Container>

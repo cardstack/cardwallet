@@ -49,14 +49,7 @@ export const BalanceSection = ({ tokens, navProps }: BalancesProps) => {
         paddingBottom={3}
         marginTop={7}
         flexDirection="row"
-      >
-        <Text size="medium" marginRight={2}>
-          Balances
-        </Text>
-        <Text size="medium" color="tealDark">
-          {tokens.length}
-        </Text>
-      </Container>
+      />
       {renderTokens}
     </ScrollView>
   );

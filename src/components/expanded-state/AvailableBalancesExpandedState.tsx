@@ -21,7 +21,7 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 const CHART_HEIGHT = 650;
 
 enum Tabs {
-  ASSETS = 'Assets',
+  ASSETS = 'Balance',
   ACTIVITIES = 'History',
 }
 
@@ -59,7 +59,7 @@ export default function AvailableBalancesExpandedState(
   return (
     <SlackSheet scrollEnabled>
       <Container paddingHorizontal={5} paddingTop={3}>
-        <Text size="medium">Account balances</Text>
+        <Text size="medium">Available Balance</Text>
         <Container flexDirection="row" justifyContent="space-between">
           <TabHeader
             selectedTab={selectedTab}
