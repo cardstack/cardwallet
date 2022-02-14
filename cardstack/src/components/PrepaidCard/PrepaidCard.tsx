@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { PrepaidCardCustomization, PrepaidCardType } from '../../types';
 import { CenteredContainer, ContainerProps } from '../Container';
-import { Touchable } from '../Touchable';
 import { CustomizableBackground } from './components/CustomizableBackground';
 import PrepaidCardInnerTop from './components/PrepaidCardInnerTop';
 import PrepaidCardInnerBottom from './components/PrepaidCardInnerBottom';
@@ -13,7 +12,7 @@ import {
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import {
-  BetterOpacityContainer,
+  CardPressable,
   Container,
   Icon,
   ScrollView,
@@ -80,7 +79,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
 
   return (
     <Wrapper width="100%" paddingHorizontal={4} marginBottom={4} {...props}>
-      <Touchable
+      <CardPressable
         width="100%"
         testID="prepaid-card"
         alignItems="center"
@@ -126,7 +125,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             </CenteredContainer>
           </Container>
         )}
-        <BetterOpacityContainer
+        <Container
           backgroundColor="white"
           borderRadius={20}
           overflow="hidden"
@@ -143,7 +142,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             networkName={networkName}
           />
           <PrepaidCardInnerBottom {...props} />
-        </BetterOpacityContainer>
+        </Container>
         {isEditing && isHidden && (
           <Container
             backgroundColor="black"
@@ -159,7 +158,7 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             testID="coin-row-hidden-overlay"
           />
         )}
-      </Touchable>
+      </CardPressable>
     </Wrapper>
   );
 };

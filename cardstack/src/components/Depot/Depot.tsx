@@ -2,11 +2,10 @@ import React from 'react';
 import { HorizontalDivider } from '../HorizontalDivider';
 import { MoreItemsFooter } from '../MoreItemsFooter';
 import {
-  BetterOpacityContainer,
+  CardPressable,
   Container,
   SafeHeader,
   TokenBalance,
-  Touchable,
 } from '@cardstack/components';
 import { DepotType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -26,18 +25,18 @@ export const Depot = (depot: DepotProps) => {
 
   return (
     <Container width="100%" paddingHorizontal={4} marginBottom={4}>
-      <Touchable width="100%" testID="inventory-card" onPress={onPress}>
-        <BetterOpacityContainer
-          backgroundColor="white"
-          borderRadius={10}
-          overflow="hidden"
-          borderColor="buttonPrimaryBorder"
-          width="100%"
-        >
-          <SafeHeader {...depot} onPress={onPress} />
-          <Bottom {...depot} />
-        </BetterOpacityContainer>
-      </Touchable>
+      <CardPressable
+        backgroundColor="white"
+        borderRadius={10}
+        overflow="hidden"
+        borderColor="buttonPrimaryBorder"
+        width="100%"
+        testID="inventory-card"
+        onPress={onPress}
+      >
+        <SafeHeader {...depot} onPress={onPress} />
+        <Bottom {...depot} />
+      </CardPressable>
     </Container>
   );
 };

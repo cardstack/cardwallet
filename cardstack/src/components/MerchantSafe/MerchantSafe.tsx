@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
-  BetterOpacityContainer,
+  CardPressable,
   Container,
   Icon,
   SafeHeader,
   Text,
-  Touchable,
 } from '@cardstack/components';
 import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -32,29 +31,29 @@ export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
 
   return (
     <Container paddingHorizontal={4} marginBottom={4}>
-      <Touchable testID="inventory-card" onPress={onPress}>
-        <BetterOpacityContainer
-          backgroundColor="white"
-          borderRadius={10}
-          overflow="hidden"
-          borderColor="buttonPrimaryBorder"
-        >
-          <SafeHeader
-            {...props}
-            onPress={onPress}
-            backgroundColor={merchantInfo?.color}
+      <CardPressable
+        backgroundColor="white"
+        borderRadius={10}
+        overflow="hidden"
+        borderColor="buttonPrimaryBorder"
+        testID="inventory-card"
+        onPress={onPress}
+      >
+        <SafeHeader
+          {...props}
+          onPress={onPress}
+          backgroundColor={merchantInfo?.color}
+          textColor={merchantInfo?.textColor}
+        />
+        <Container paddingHorizontal={6}>
+          <MerchantInfo
+            color={merchantInfo?.color}
             textColor={merchantInfo?.textColor}
+            name={merchantInfo?.name}
           />
-          <Container paddingHorizontal={6}>
-            <MerchantInfo
-              color={merchantInfo?.color}
-              textColor={merchantInfo?.textColor}
-              name={merchantInfo?.name}
-            />
-            <Bottom slug={merchantInfo?.slug} />
-          </Container>
-        </BetterOpacityContainer>
-      </Touchable>
+          <Bottom slug={merchantInfo?.slug} />
+        </Container>
+      </CardPressable>
     </Container>
   );
 };

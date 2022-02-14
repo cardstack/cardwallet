@@ -4,11 +4,10 @@ import { Linking } from 'react-native';
 import { Icon, IconName, IconProps } from '../Icon';
 import { ContainerProps } from '../Container';
 import {
-  BetterOpacityContainer,
+  CardPressable,
   Container,
   HorizontalDivider,
   Text,
-  Touchable,
 } from '@cardstack/components';
 import { isLayer1, normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -88,20 +87,20 @@ export const TransactionBase = (props: TransactionBaseProps) => {
       paddingHorizontal={isFullWidth ? 0 : 4}
       marginVertical={2}
     >
-      <Touchable
-        width="100%"
+      <CardPressable
         testID="inventory-card"
         onPress={handleOnPressTransaction}
         disabled={disabled}
+        width="100%"
       >
-        <BetterOpacityContainer
+        <Container
+          width="100%"
+          paddingBottom={4}
           backgroundColor="white"
           borderWidth={includeBorder ? 1 : 0}
           borderRadius={10}
           overflow="hidden"
           borderColor="borderGray"
-          width="100%"
-          paddingBottom={4}
         >
           {Header}
           <TransactionRow {...props} />
@@ -111,8 +110,8 @@ export const TransactionBase = (props: TransactionBaseProps) => {
               {Footer}
             </>
           )}
-        </BetterOpacityContainer>
-      </Touchable>
+        </Container>
+      </CardPressable>
     </Container>
   );
 };
