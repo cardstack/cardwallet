@@ -15,5 +15,5 @@ export default function useTimeout() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => stop(), []);
 
-  return [start, stop, handle];
+  return [start, stop];
 }
