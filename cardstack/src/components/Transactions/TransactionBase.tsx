@@ -8,7 +8,6 @@ import {
   Container,
   HorizontalDivider,
   Text,
-  Touchable,
 } from '@cardstack/components';
 import { isLayer1, normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';

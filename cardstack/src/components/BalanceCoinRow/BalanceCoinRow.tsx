@@ -8,7 +8,6 @@ import {
   Icon,
   NetworkBadge,
   TokenBalance,
-  Touchable,
 } from '@cardstack/components';
 
 interface BalanceCoinRowProps {
