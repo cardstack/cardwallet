@@ -3,7 +3,7 @@ import {
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   CenteredContainer,
   Icon,
@@ -27,33 +27,39 @@ export default function SendTransactionSpeed({
   const { network } = useAccountSettings();
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenName', network);
   const isDepot = sendType === SendSheetType.SEND_FROM_DEPOT;
-  let fee;
-  if (isDepot) {
-    fee = `${get(gasPrice, 'nativeDisplay', 0)} ≈ ${nativeCurrencySymbol}${get(
-      gasPrice,
-      'amount',
-      0
-    )}`;
-  } else {
-    const nativeValueDisplay = convertAmountToBalanceDisplay(
-      get(gasPrice, 'txFee.native.value.amount', 0),
-      {
-        decimals: 6,
-        symbol: nativeTokenSymbol,
-      }
-    );
-    fee = `${nativeValueDisplay} ≈ ${get(
-      gasPrice,
-      'txFee.native.value.display',
-      `${nativeCurrencySymbol}0.00`
-    )}`;
-  }
+  const feeDescription = useMemo(() => {
+    if (isDepot) {
+      return `${get(
+        gasPrice,
+        'nativeDisplay',
+        0
+      )} ≈ ${nativeCurrencySymbol}${get(gasPrice, 'amount', 0)}`;
+    } else {
+      const nativeValueDisplay = convertAmountToBalanceDisplay(
+        get(gasPrice, 'txFee.native.value.amount', 0),
+        {
+          decimals: 6,
+          symbol: nativeTokenSymbol,
+        }
+      );
+      return `${nativeValueDisplay} ≈ ${get(
+        gasPrice,
+        'txFee.native.value.display',
+        `${nativeCurrencySymbol}0.00`
+      )}`;
+    }
+  }, [gasPrice, isDepot, nativeCurrencySymbol, nativeTokenSymbol]);
 
-  const hasTimeAmount = !!(isDepot
-    ? 0
-    : get(gasPrice, 'estimatedTime.amount', 0));
+  const hasTimeAmount = useMemo(
+    () => !!(isDepot ? 0 : get(gasPrice, 'estimatedTime.amount', 0)),
+    [gasPrice, isDepot]
+  );
 
-  const time = isDepot ? '' : get(gasPrice, 'estimatedTime.display', '');
+  const time = useMemo(
+    () => (isDepot ? '' : get(gasPrice, 'estimatedTime.display', '')),
+    [gasPrice, isDepot]
+  );
+
   return (
     <CenteredContainer marginTop={3}>
       <Touchable
@@ -66,7 +72,7 @@ export default function SendTransactionSpeed({
           } to send this transaction`}</Text>
         )}
         <CenteredContainer flexDirection="row">
-          <Text variant="subText">Fee: {fee}</Text>
+          <Text variant="subText">{`Fee: ${feeDescription}`}</Text>
           {!hasTimeAmount && !!onPressTransactionSpeed && (
             <Icon color="settingsTeal" iconSize="small" name="chevron-right" />
           )}

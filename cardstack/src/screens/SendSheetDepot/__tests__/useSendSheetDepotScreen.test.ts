@@ -76,7 +76,7 @@ describe('useSendSheetDepotScreen', () => {
     }));
 
     const { result } = renderHook(() => useSendSheetDepotScreen());
-
+    console.log('result---', result.current);
     expect(result.current.selected).toBeUndefined();
   });
 
@@ -85,14 +85,32 @@ describe('useSendSheetDepotScreen', () => {
       depots: [],
     }));
 
+    const weiGasEstimate = '12041962649411652';
+    const usdGasEstimate = 0.00020291;
+
+    const mockSendTokensGasEstimate = jest
+      .fn()
+      .mockResolvedValue(weiGasEstimate);
+
+    (getSafesInstance as jest.Mock).mockResolvedValue({
+      sendTokensGasEstimate: mockSendTokensGasEstimate,
+    });
+
+    const mockConverter = jest.fn(() => usdGasEstimate);
+
+    (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
+
     const expectedAssets = [
       reshapeSingleDepotTokenToAsset(
         updatedData.updatedDepots[0].tokens[0] as any
       ),
     ];
 
+    console.log('expectedAssets---', expectedAssets);
+
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
+    console.log('result---', result.current.allAssets);
     await waitFor(() =>
       expect(result.current.allAssets).toEqual(expectedAssets)
     );
@@ -117,7 +135,10 @@ describe('useSendSheetDepotScreen', () => {
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
-      expect(result.current.selectedGasPrice).toEqual(usdGasEstimate)
+      expect(result.current.selectedGasPrice).toEqual({
+        amount: usdGasEstimate,
+        nativeDisplay: '0.012041962649411652 CARD',
+      })
     );
 
     expect(mockSendTokensGasEstimate).toBeCalledWith(
@@ -158,7 +179,10 @@ describe('useSendSheetDepotScreen', () => {
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
-      expect(result.current.selectedGasPrice).toEqual(eurGasEstimate)
+      expect(result.current.selectedGasPrice).toEqual({
+        amount: eurGasEstimate,
+        nativeDisplay: '0.012041962649411652 CARD',
+      })
     );
   });
 });
