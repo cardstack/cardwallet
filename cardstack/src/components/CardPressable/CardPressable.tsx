@@ -40,6 +40,11 @@ enum Animate {
   in = 0.2,
 }
 
+enum Duration {
+  in = 50,
+  out = 120,
+}
+
 type RestyleProps = ViewProps &
   LayoutProps<Theme> &
   SpacingProps<Theme> &
@@ -60,18 +65,18 @@ export const CardPressable = ({
   onPress,
   ...rest
 }: CardPressableProps & RestyleProps) => {
-  const [animating, setAnimating] = useState(false);
+  const animating = useRef(false);
   const animatedValue = useRef(new Animated.Value(Animate.out)).current;
 
   const onPressOpacity = useCallback(
-    (toValue: Animate) => () => {
-      setAnimating(true);
+    (toValue: Animate, duration: Duration) => () => {
+      animating.current = true;
       Animated.timing(animatedValue, {
         toValue,
-        duration: toValue === Animate.in ? 50 : 120,
+        duration,
         easing: Easing.ease,
         useNativeDriver: true,
-      }).start(() => setAnimating(false));
+      }).start(() => (animating.current = false));
     },
     [animatedValue]
   );
@@ -97,15 +102,15 @@ export const CardPressable = ({
   return (
     <Animated.View
       needsOffscreenAlphaCompositing
-      renderToHardwareTextureAndroid={animating}
+      renderToHardwareTextureAndroid={animating.current}
       style={animatedStyle}
       pointerEvents="box-none"
       {...rest}
     >
       <Pressable
         onPress={handleOnPress}
-        onPressIn={onPressOpacity(Animate.in)}
-        onPressOut={onPressOpacity(Animate.out)}
+        onPressIn={onPressOpacity(Animate.in, Duration.in)}
+        onPressOut={onPressOpacity(Animate.out, Duration.out)}
         testID="card-pressable"
         {...rest}
       >

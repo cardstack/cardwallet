@@ -16,7 +16,7 @@ export const CollectibleRow = (collectible: CollectibleType) => {
   };
 
   return (
-    <Container paddingHorizontal={4} marginBottom={4}>
+    <Container paddingHorizontal={4} marginBottom={2}>
       <CardPressable
         alignItems="center"
         backgroundColor="white"

@@ -36,7 +36,7 @@ export const BalanceCoinRow = ({
   const nativeBalance = hasPriceUnit ? item.native?.balance?.display : '';
 
   return (
-    <Container width="100%" paddingHorizontal={4} marginBottom={4}>
+    <Container width="100%" paddingHorizontal={4} marginBottom={2}>
       <CardPressable
         alignItems="center"
         width="100%"
