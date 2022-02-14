@@ -13,7 +13,6 @@ import ModalScreen from '../screens/ModalScreen';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
 import SendSheetEOA from '../screens/SendSheetEOA';
-import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import SpendSheet from '../screens/SpendSheet';
 import WithdrawModal from '../screens/WithdrawModal';
@@ -126,18 +125,6 @@ function NativeStackNavigator() {
       <NativeStack.Screen
         component={NativeStackFallbackNavigator}
         name={Routes.STACK}
-      />
-      <NativeStack.Screen
-        component={SettingsModal}
-        name={Routes.SETTINGS_MODAL}
-        options={{
-          backgroundColor: '#25292E',
-          backgroundOpacity: 0.7,
-          cornerRadius: 0,
-          customStack: true,
-          ignoreBottomOffset: true,
-          topOffset: 0,
-        }}
       />
       <NativeStack.Screen
         component={ExchangeModalNavigator}

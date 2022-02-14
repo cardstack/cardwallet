@@ -6,6 +6,7 @@ import {
   dismissAndroidKeyboardOnClose,
   horizontalInterpolator,
   overlayPreset,
+  slideLeftToRightPreset,
 } from './presetOptions';
 import {
   BuyPrepaidCard,
@@ -38,6 +39,7 @@ import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
+import SettingsModal from '@rainbow-me/screens/SettingsModal';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -142,6 +144,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
       : wcPromptPreset) as StackNavigationOptions,
   },
   ...LoadingOverlayComponent,
+  SETTINGS_MODAL: {
+    component: SettingsModal,
+    options: slideLeftToRightPreset,
+  },
 };
 
 // @ts-expect-error it alows undefined for temp solution on loadingOverlay, will be removed on nav redesign
@@ -165,6 +171,8 @@ export const GlobalScreens: Record<
       interactWithScrollView: false,
     } as StackNavigationOptions,
   },
+
+  // Needs to be the last item of the object, until we move to a single navigator
   ...(Device.isIOS ? LoadingOverlayComponent : {}),
 };
 

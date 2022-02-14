@@ -20,26 +20,15 @@ import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useAccountSettings,
-  useDimensions,
   useSendFeedback,
   useWallets,
 } from '@rainbow-me/hooks';
-import { position } from '@rainbow-me/styles';
 import {
   AppleReviewAddress,
   REVIEW_DONE_KEY,
 } from '@rainbow-me/utils/reviewAlert';
 
 const { RainbowRequestReview, RNReview } = NativeModules;
-
-const contentContainerStyle = { flex: 1 };
-const Container = styled(ScrollView).attrs({
-  contentContainerStyle,
-  scrollEventThrottle: 32,
-})`
-  ${position.cover};
-  background-color: ${({ backgroundColor }) => backgroundColor};
-`;
 
 const VersionStampContainer = styled(Column).attrs({
   align: 'center',
@@ -85,7 +74,6 @@ export default function SettingsSection({
 }) {
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
-  const { isTinyPhone } = useDimensions();
 
   const { colors } = useTheme();
 
@@ -145,7 +133,7 @@ export default function SettingsSection({
   };
 
   return (
-    <Container backgroundColor={colors.white} scrollEnabled={isTinyPhone}>
+    <ScrollView backgroundColor={colors.white}>
       <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
         {canBeBackedUp && (
           <ListItem
@@ -249,6 +237,6 @@ export default function SettingsSection({
       <VersionStampContainer>
         <AppVersionStamp />
       </VersionStampContainer>
-    </Container>
+    </ScrollView>
   );
 }

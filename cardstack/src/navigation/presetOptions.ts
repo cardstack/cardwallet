@@ -19,6 +19,30 @@ const forFade = ({ current }: StackCardInterpolationProps) => ({
   },
 });
 
+const forSlideLeftToRight = ({
+  current,
+  layouts: { screen },
+}: StackCardInterpolationProps) => {
+  const translateFocused = current.progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-screen.width, 0],
+  });
+
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateX: translateFocused,
+        },
+      ],
+    },
+  };
+};
+
+export const slideLeftToRightPreset: StackNavigationOptions = {
+  cardStyleInterpolator: forSlideLeftToRight,
+};
+
 export const overlayPreset: StackNavigationOptions = {
   cardOverlayEnabled: true,
   cardStyle: { backgroundColor: colors.overlay },

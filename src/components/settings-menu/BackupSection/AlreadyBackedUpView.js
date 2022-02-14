@@ -131,7 +131,7 @@ export default function AlreadyBackedUpView() {
   return (
     <Fragment>
       <Container alignItems="center" width="100%">
-        <Text style={{ marginTop: -10 }} variant="subText">
+        <Text paddingTop={1} variant="subText">
           {(walletStatus === WalletBackupStatus.CLOUD_BACKUP && `Backed up`) ||
             (walletStatus === WalletBackupStatus.MANUAL_BACKUP &&
               `Backed up manually`) ||

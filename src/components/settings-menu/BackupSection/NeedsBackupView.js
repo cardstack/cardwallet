@@ -48,7 +48,7 @@ export default function NeedsBackupView() {
   return (
     <Fragment>
       <Container alignItems="center" width="100%">
-        <Text color="red" style={{ marginTop: -10 }} variant="subText">
+        <Text color="red" paddingTop={1} variant="subText">
           Not backed up
         </Text>
       </Container>

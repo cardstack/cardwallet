@@ -11,7 +11,6 @@ import PinAuthenticationScreen from '../screens/PinAuthenticationScreen';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
 import SendSheetEOA from '../screens/SendSheetEOA';
-import SettingsModal from '../screens/SettingsModal';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import WithdrawModal from '../screens/WithdrawModal';
 import WyreWebview from '../screens/WyreWebview';
@@ -28,7 +27,6 @@ import {
   exchangePreset,
   expandedPreset,
   overlayExpandedPreset,
-  settingsPreset,
   sheetPreset,
   sheetPresetWithSmallGestureResponseDistance,
   speedUpAndCancelStyleInterpolator,
@@ -178,11 +176,6 @@ function MainOuterNavigator() {
       <OuterStack.Screen
         component={MainNavigator}
         name={Routes.MAIN_NAVIGATOR}
-      />
-      <OuterStack.Screen
-        component={SettingsModal}
-        name={Routes.SETTINGS_MODAL}
-        options={settingsPreset}
       />
       <OuterStack.Screen
         component={PinAuthenticationScreen}

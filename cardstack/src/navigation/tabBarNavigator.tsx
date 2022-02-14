@@ -9,7 +9,8 @@ import React, {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
-import { WelcomeScreen, HomeScreen } from '@cardstack/screens';
+import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
+import { HomeScreen } from '@cardstack/screens';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 import QRScannerScreen from '@rainbow-me/screens/QRScannerScreen';
@@ -79,16 +80,22 @@ const Stack = createStackNavigator();
 const StackNavigator = () => {
   const initialRoute = useContext(InitialRouteContext) || '';
 
+  const cardstackMainScreens = useCardstackMainScreens(Stack);
+  const cardstackGlobalScreens = useCardstackGlobalScreens(Stack);
+
+  // TODO: Create a navigator for each flow and split auth/non-auth
+
+  // Remove last item aka LoadingOverlay, to avoid dupe
+  cardstackGlobalScreens.pop();
+
   return (
-    <Stack.Navigator initialRouteName={initialRoute} headerMode="none">
+    <Stack.Navigator headerMode="none" initialRouteName={initialRoute}>
       <Stack.Screen
         component={TabNavigator}
         name={RainbowRoutes.SWIPE_LAYOUT}
       />
-      <Stack.Screen
-        component={WelcomeScreen}
-        name={RainbowRoutes.WELCOME_SCREEN}
-      />
+      {cardstackMainScreens}
+      {cardstackGlobalScreens}
     </Stack.Navigator>
   );
 };
