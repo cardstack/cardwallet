@@ -1,19 +1,17 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useMemo } from 'react';
-import { Linking, NativeModules, ScrollView, Share } from 'react-native';
-import styled from 'styled-components';
+import { Linking, NativeModules, Share } from 'react-native';
 
-import { useTheme } from '../../context/ThemeContext';
 import AppVersionStamp from '../AppVersionStamp';
-import { Column, ColumnWithDividers } from '../layout';
+import { ColumnWithDividers } from '../layout';
 import {
   ListFooter,
   ListItem,
   ListItemArrowGroup,
   ListItemDivider,
 } from '../list';
-import { Icon } from '@cardstack/components';
+import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
 import { getReviewFeature } from '@cardstack/services';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
@@ -29,14 +27,6 @@ import {
 } from '@rainbow-me/utils/reviewAlert';
 
 const { RainbowRequestReview, RNReview } = NativeModules;
-
-const VersionStampContainer = styled(Column).attrs({
-  align: 'center',
-  justify: 'end',
-})`
-  flex: 1;
-  padding-bottom: 19;
-`;
 
 const checkAllWallets = wallets => {
   if (!wallets) return false;
@@ -74,8 +64,6 @@ export default function SettingsSection({
 }) {
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
-
-  const { colors } = useTheme();
 
   const onSendFeedback = useSendFeedback();
 
@@ -133,7 +121,7 @@ export default function SettingsSection({
   };
 
   return (
-    <ScrollView backgroundColor={colors.white}>
+    <ScrollView backgroundColor="white">
       <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
         {canBeBackedUp && (
           <ListItem
@@ -234,9 +222,9 @@ export default function SettingsSection({
           />
         </>
       )}
-      <VersionStampContainer>
+      <CenteredContainer flex={1} paddingBottom={8} paddingTop={2}>
         <AppVersionStamp />
-      </VersionStampContainer>
+      </CenteredContainer>
     </ScrollView>
   );
 }
