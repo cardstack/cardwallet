@@ -76,7 +76,6 @@ describe('useSendSheetDepotScreen', () => {
     }));
 
     const { result } = renderHook(() => useSendSheetDepotScreen());
-
     expect(result.current.selected).toBeUndefined();
   });
 
@@ -84,6 +83,21 @@ describe('useSendSheetDepotScreen', () => {
     (useAccountAssets as jest.Mock).mockImplementation(() => ({
       depots: [],
     }));
+
+    const weiGasEstimate = '12041962649411652';
+    const usdGasEstimate = 0.00020291;
+
+    const mockSendTokensGasEstimate = jest
+      .fn()
+      .mockResolvedValue(weiGasEstimate);
+
+    (getSafesInstance as jest.Mock).mockResolvedValue({
+      sendTokensGasEstimate: mockSendTokensGasEstimate,
+    });
+
+    const mockConverter = jest.fn(() => usdGasEstimate);
+
+    (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
 
     const expectedAssets = [
       reshapeSingleDepotTokenToAsset(
@@ -102,6 +116,11 @@ describe('useSendSheetDepotScreen', () => {
     const weiGasEstimate = '12041962649411652';
     const usdGasEstimate = 0.00020291;
 
+    const selectedGasPrice = {
+      amount: usdGasEstimate,
+      nativeDisplay: '0.012041962649411652 CARD',
+    };
+
     const mockSendTokensGasEstimate = jest
       .fn()
       .mockResolvedValue(weiGasEstimate);
@@ -117,7 +136,7 @@ describe('useSendSheetDepotScreen', () => {
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
-      expect(result.current.selectedGasPrice).toEqual(usdGasEstimate)
+      expect(result.current.selectedGasPrice).toEqual(selectedGasPrice)
     );
 
     expect(mockSendTokensGasEstimate).toBeCalledWith(
@@ -143,6 +162,11 @@ describe('useSendSheetDepotScreen', () => {
     const usdGasEstimate = 0.00020291;
     const eurGasEstimate = usdGasEstimate * currencyConversionRate.EUR;
 
+    const SelectedGasPrice = {
+      amount: eurGasEstimate,
+      nativeDisplay: '0.012041962649411652 CARD',
+    };
+
     const mockSendTokensGasEstimate = jest
       .fn()
       .mockResolvedValue(weiGasEstimate);
@@ -158,7 +182,7 @@ describe('useSendSheetDepotScreen', () => {
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
-      expect(result.current.selectedGasPrice).toEqual(eurGasEstimate)
+      expect(result.current.selectedGasPrice).toEqual(SelectedGasPrice)
     );
   });
 });

@@ -109,7 +109,10 @@ export const useSendSheetDepotScreen = () => {
   );
 
   // Gas Estimates
-  const [gasEstimatedFee, setGasEstimatedFee] = useState(0);
+  const [gasEstimatedFee, setGasEstimatedFee] = useState({
+    amount: 0,
+    nativeDisplay: `0 ${selected?.symbol || ''}`,
+  });
 
   const getGasPriceEstimate = useCallback(async () => {
     try {
@@ -126,8 +129,12 @@ export const useSendSheetDepotScreen = () => {
         )) || '0';
 
       const nativeCurrencyGasFee = getNativeCurrencyAmount(gasEstimate) || 0;
-
-      setGasEstimatedFee(nativeCurrencyGasFee);
+      setGasEstimatedFee({
+        amount: nativeCurrencyGasFee,
+        nativeDisplay: `${Web3.utils.fromWei(gasEstimate)} ${
+          selected?.symbol || ''
+        }`,
+      });
 
       // Calculate maxBalance
       const currentBalanceWei = new BN(selected?.balance?.wei || '0');
@@ -167,10 +174,10 @@ export const useSendSheetDepotScreen = () => {
 
   // Update gasFee initial render and when asset changes
   useEffect(() => {
-    if (!gasEstimatedFee && !isEmpty(selected)) {
+    if (!gasEstimatedFee.amount && !isEmpty(selected)) {
       getGasPriceEstimate();
     }
-  }, [gasEstimatedFee, getGasPriceEstimate, selected]);
+  }, [gasEstimatedFee.amount, getGasPriceEstimate, selected]);
 
   const {
     callback: getTokenToUsdConverter,
@@ -290,7 +297,11 @@ export const useSendSheetDepotScreen = () => {
   const onResetAssetSelection = useCallback(() => {
     setSelected(undefined);
     setAmountDetails(amountDetailsInitialState);
-    setGasEstimatedFee(0);
+    setGasEstimatedFee({
+      amount: 0,
+      nativeDisplay: '',
+    });
+
     updateMaxInputBalance('');
     usdConverter.current = undefined;
   }, []);

@@ -62,6 +62,7 @@ export default function SendSheet({
   selected,
   onMaxBalancePress,
   selectedGasPrice,
+  type,
   fetchData = undefined,
   onPressTransactionSpeed = undefined,
   showNativeCurrencyField = true,
@@ -149,8 +150,10 @@ export default function SendSheet({
           txSpeedRenderer={
             <SendTransactionSpeed
               gasPrice={selectedGasPrice}
+              isSufficientGas={isSufficientGas}
               nativeCurrencySymbol={nativeCurrencySymbol}
               onPressTransactionSpeed={onPressTransactionSpeed}
+              sendType={type}
             />
           }
         />
