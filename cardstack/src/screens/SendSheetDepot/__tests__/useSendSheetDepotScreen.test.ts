@@ -76,7 +76,6 @@ describe('useSendSheetDepotScreen', () => {
     }));
 
     const { result } = renderHook(() => useSendSheetDepotScreen());
-    console.log('result---', result.current);
     expect(result.current.selected).toBeUndefined();
   });
 
@@ -106,11 +105,8 @@ describe('useSendSheetDepotScreen', () => {
       ),
     ];
 
-    console.log('expectedAssets---', expectedAssets);
-
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
-    console.log('result---', result.current.allAssets);
     await waitFor(() =>
       expect(result.current.allAssets).toEqual(expectedAssets)
     );
