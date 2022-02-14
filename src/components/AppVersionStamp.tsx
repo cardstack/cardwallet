@@ -1,35 +1,20 @@
-import React, { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import styled from 'styled-components';
-import { Text } from './text';
-import { useAppVersion, useTimeout, useWalletsDebug } from '@rainbow-me/hooks';
+import React, { memo, useCallback, useRef } from 'react';
+import { Alert, TouchableWithoutFeedback } from 'react-native';
 
-const DEBUG_TAP_COUNT = 15;
+import { Text } from '@cardstack/components';
+import { useAppVersion, useWalletsDebug } from '@rainbow-me/hooks';
 
-const StampText = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.alpha(colors.blueGreyDark, 0.2),
-  lineHeight: 'normal',
-  size: 'smedium',
-  weight: 'bold',
-}))``;
+const VERSION_TAP_COUNT = 3;
 
-export default function AppVersionStamp() {
+const AppVersionStamp = () => {
   const appVersion = useAppVersion();
-  const [numberOfTaps, setNumberOfTaps] = useState(0);
-  const [startTimeout, stopTimeout] = useTimeout();
+  const numberOfTaps = useRef(0);
   const debug = useWalletsDebug();
 
   const handleVersionPress = useCallback(async () => {
-    stopTimeout();
+    numberOfTaps.current++;
 
-    const tapCount = numberOfTaps + 1;
-    setNumberOfTaps(tapCount);
-
-    // Only show the secret "debug info" alert if the
-    // user has tapped this AppVersionStamp the secret amount of times
-    if (tapCount === DEBUG_TAP_COUNT) {
+    if (numberOfTaps.current === VERSION_TAP_COUNT) {
       const { status, data } = await debug();
       if (status === 'restored') {
         Alert.alert('Account restored successfully!', data);
@@ -37,13 +22,15 @@ export default function AppVersionStamp() {
         Alert.alert('DEBUG INFO', data);
       }
     }
-
-    startTimeout(() => setNumberOfTaps(0), 3000);
-  }, [debug, numberOfTaps, startTimeout, stopTimeout]);
+  }, [debug]);
 
   return (
     <TouchableWithoutFeedback onPress={handleVersionPress}>
-      <StampText>{appVersion}</StampText>
+      <Text color="grayText" fontWeight="bold" size="small">
+        {appVersion}
+      </Text>
     </TouchableWithoutFeedback>
   );
-}
+};
+
+export default memo(AppVersionStamp);
