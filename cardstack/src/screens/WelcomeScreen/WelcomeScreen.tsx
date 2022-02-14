@@ -8,7 +8,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
-import { useAppVersion } from '@rainbow-me/hooks';
+import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
 
 const layouts = {
   iconSize: 100,
@@ -17,7 +17,6 @@ const layouts = {
 
 const WelcomeScreen = () => {
   const { onCreateWallet, onAddExistingWallet } = useWelcomeScreen();
-  const appVersion = useAppVersion();
 
   return (
     <CenteredContainer backgroundColor="black" flex={1} paddingBottom={10}>
@@ -53,9 +52,7 @@ const WelcomeScreen = () => {
           {strings.existingAccBtn}
         </Button>
       </CenteredContainer>
-      <Text color="grayText" fontSize={14} fontWeight="600" textAlign="center">
-        Version {appVersion}
-      </Text>
+      <AppVersionStamp />
     </CenteredContainer>
   );
 };
