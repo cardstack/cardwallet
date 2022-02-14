@@ -25,7 +25,7 @@ export default function SendTransactionSpeed({
   isSufficientGas,
 }) {
   const { network } = useAccountSettings();
-  const nativeTokenSymbol = getConstantByNetwork('nativeTokenName', network);
+  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
   const isDepot = sendType === SendSheetType.SEND_FROM_DEPOT;
   const feeDescription = useMemo(() => {
     if (isDepot) {

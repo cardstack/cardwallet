@@ -116,6 +116,11 @@ describe('useSendSheetDepotScreen', () => {
     const weiGasEstimate = '12041962649411652';
     const usdGasEstimate = 0.00020291;
 
+    const selectedGasPrice = {
+      amount: usdGasEstimate,
+      nativeDisplay: '0.012041962649411652 CARD',
+    };
+
     const mockSendTokensGasEstimate = jest
       .fn()
       .mockResolvedValue(weiGasEstimate);
@@ -131,10 +136,7 @@ describe('useSendSheetDepotScreen', () => {
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
-      expect(result.current.selectedGasPrice).toEqual({
-        amount: usdGasEstimate,
-        nativeDisplay: '0.012041962649411652 CARD',
-      })
+      expect(result.current.selectedGasPrice).toEqual(selectedGasPrice)
     );
 
     expect(mockSendTokensGasEstimate).toBeCalledWith(
@@ -160,6 +162,11 @@ describe('useSendSheetDepotScreen', () => {
     const usdGasEstimate = 0.00020291;
     const eurGasEstimate = usdGasEstimate * currencyConversionRate.EUR;
 
+    const SelectedGasPrice = {
+      amount: eurGasEstimate,
+      nativeDisplay: '0.012041962649411652 CARD',
+    };
+
     const mockSendTokensGasEstimate = jest
       .fn()
       .mockResolvedValue(weiGasEstimate);
@@ -175,10 +182,7 @@ describe('useSendSheetDepotScreen', () => {
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
-      expect(result.current.selectedGasPrice).toEqual({
-        amount: eurGasEstimate,
-        nativeDisplay: '0.012041962649411652 CARD',
-      })
+      expect(result.current.selectedGasPrice).toEqual(SelectedGasPrice)
     );
   });
 });
