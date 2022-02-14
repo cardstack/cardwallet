@@ -2,7 +2,7 @@ import React from 'react';
 import { CollectibleImage } from '../../../../src/components/collectible';
 import { CollectibleType } from '@cardstack/types';
 import {
-  BetterOpacityContainer,
+  CardPressable,
   Touchable,
   Container,
   Text,
@@ -21,14 +21,15 @@ export const CollectibleRow = (collectible: CollectibleType) => {
   };
 
   return (
-    <Touchable onPress={onPress} marginHorizontal={5} marginVertical={2}>
-      <BetterOpacityContainer
+    <Container paddingHorizontal={4} marginBottom={4}>
+      <CardPressable
         alignItems="center"
         backgroundColor="white"
         borderRadius={10}
         padding={4}
         width="100%"
         flexDirection="row"
+        onPress={onPress}
       >
         <Container
           width={130}
@@ -48,7 +49,7 @@ export const CollectibleRow = (collectible: CollectibleType) => {
           </Text>
           <Text variant="subText">{collectible.asset_contract?.name}</Text>
         </Container>
-      </BetterOpacityContainer>
-    </Touchable>
+      </CardPressable>
+    </Container>
   );
 };

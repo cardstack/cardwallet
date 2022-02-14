@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { PrepaidCardCustomization, PrepaidCardType } from '../../types';
 import { CenteredContainer, ContainerProps } from '../Container';
-import { Touchable } from '../Touchable';
 import { CustomizableBackground } from './components/CustomizableBackground';
 import PrepaidCardInnerTop from './components/PrepaidCardInnerTop';
 import PrepaidCardInnerBottom from './components/PrepaidCardInnerBottom';
@@ -13,7 +12,6 @@ import {
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import {
-  BetterOpacityContainer,
   CardPressable,
   Container,
   Icon,

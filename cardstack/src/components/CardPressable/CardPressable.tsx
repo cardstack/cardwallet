@@ -5,13 +5,21 @@
  * and `renderToHardwareTextureAndroid`.
  */
 
-import React, { useCallback, useRef, useState, ReactNode } from 'react';
+import React, {
+  useCallback,
+  useRef,
+  useState,
+  useMemo,
+  ReactNode,
+} from 'react';
 import {
   Animated,
   Easing,
   Pressable,
   ViewProps,
   PressableProps,
+  ViewStyle,
+  GestureResponderEvent,
 } from 'react-native';
 
 import {
@@ -21,12 +29,15 @@ import {
   BorderProps,
   BackgroundColorProps,
 } from '@shopify/restyle';
-
+import ReactNativeHapticFeedback, {
+  HapticFeedbackTypes,
+} from 'react-native-haptic-feedback';
 import { Theme } from '../../theme';
+import { Device } from '@cardstack/utils';
 
-enum Opacity {
-  opaque = 1.0,
-  translucent = 0.2,
+enum Animate {
+  out = 1.0,
+  in = 0.2,
 }
 
 type RestyleProps = ViewProps &
@@ -37,57 +48,65 @@ type RestyleProps = ViewProps &
   BorderProps<Theme>;
 
 interface CardPressableProps extends PressableProps {
+  enableHapticFeedback?: boolean;
+  hapticType?: HapticFeedbackTypes;
   children: ReactNode;
 }
 
 export const CardPressable = ({
   children,
+  enableHapticFeedback = false,
+  hapticType = 'selection',
   onPress,
-  disabled,
   ...rest
 }: CardPressableProps & RestyleProps) => {
   const [animating, setAnimating] = useState(false);
-  const animatedValue = useRef(new Animated.Value(Opacity.opaque)).current;
+  const animatedValue = useRef(new Animated.Value(Animate.out)).current;
 
-  const onPressAnimate = useCallback(
-    (toValue: Opacity) => () => {
+  const onPressOpacity = useCallback(
+    (toValue: Animate) => () => {
       setAnimating(true);
       Animated.timing(animatedValue, {
         toValue,
-        duration: 100,
+        duration: toValue === Animate.in ? 50 : 120,
         easing: Easing.ease,
         useNativeDriver: true,
-      }).start();
+      }).start(() => setAnimating(false));
     },
     [animatedValue]
   );
 
-  // const animatedStyle: Animated.WithAnimatedObject<ViewStyle> = useMemo(
-  //   () => ({
-  //     ...styles,
-  //     transform: [
-  //       {
-  //         scale: animatedValue.interpolate({
-  //           inputRange: [Scale.grow, Scale.shrink],
-  //           outputRange: [scaleRatio.full, scaleRatio.decreased],
-  //         }),
-  //       },
-  //     ],
-  //   }),
-  //   [animatedValue]
-  // );
+  const animatedStyle: Animated.WithAnimatedObject<ViewStyle> = useMemo(
+    () => ({
+      opacity: animatedValue,
+    }),
+    [animatedValue]
+  );
+
+  const handleOnPress = useCallback(
+    (e: GestureResponderEvent) => {
+      if (enableHapticFeedback && Device.supportsHapticFeedback) {
+        ReactNativeHapticFeedback?.trigger(hapticType);
+      }
+
+      onPress?.(e);
+    },
+    [enableHapticFeedback, hapticType, onPress]
+  );
 
   return (
     <Animated.View
       needsOffscreenAlphaCompositing
       renderToHardwareTextureAndroid={animating}
+      style={animatedStyle}
+      pointerEvents="box-none"
       {...rest}
     >
       <Pressable
-        onPress={onPress}
-        disabled={disabled}
-        // onPressIn={onPressAnimate(Scale.shrink)}
-        // onPressOut={onPressAnimate(Scale.grow)}
+        onPress={handleOnPress}
+        onPressIn={onPressOpacity(Animate.in)}
+        onPressOut={onPressOpacity(Animate.out)}
+        testID="card-pressable"
         {...rest}
       >
         {children}

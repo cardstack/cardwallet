@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AssetWithNativeType } from '../../types';
 import {
-  BetterOpacityContainer,
+  CardPressable,
   CenteredContainer,
   Container,
   Icon,
@@ -37,13 +37,12 @@ export const BalanceCoinRow = ({
   const nativeBalance = hasPriceUnit ? item.native?.balance?.display : '';
 
   return (
-    <Touchable onPress={onPress}>
-      <BetterOpacityContainer
+    <Container width="100%" paddingHorizontal={4} marginBottom={4}>
+      <CardPressable
         alignItems="center"
         width="100%"
-        paddingHorizontal={5}
-        paddingVertical={2}
         flexDirection="row"
+        onPress={onPress}
       >
         <EditingSelectIcon isEditing={isEditing} selected={selected} />
         <PinnedOrHiddenIcon
@@ -67,8 +66,8 @@ export const BalanceCoinRow = ({
           />
         </Container>
         <HiddenOverlay isEditing={isEditing} hidden={hidden} />
-      </BetterOpacityContainer>
-    </Touchable>
+      </CardPressable>
+    </Container>
   );
 };
 
