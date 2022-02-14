@@ -66,6 +66,7 @@ const cardType: Record<CardVariants, VariantType> = {
 
 const styles = StyleSheet.create({
   logo: { height: '100%', resizeMode: 'contain', width: '100%' },
+  currencySufix: { paddingBottom: 5 },
 });
 
 const PrepaidCardInnerBottom = ({
@@ -104,13 +105,13 @@ const PrepaidCardInnerBottom = ({
           </Text>
           <Container flexDirection="row" alignItems="flex-end">
             <Text fontSize={cardType[variant].tokenFontSize} fontWeight="700">
-              {`${nativeCurrencyInfo.symbol}${nativeBalance}`}
+              {`${nativeCurrencyInfo.symbol}${nativeBalance.toFixed(2)}`}
             </Text>
             <Text
               fontSize={cardType[variant].currencyFontSize}
               fontWeight="bold"
               letterSpacing={0}
-              paddingBottom={2}
+              style={styles.currencySufix}
             >
               {` ${nativeCurrencyInfo.currency}`}
             </Text>

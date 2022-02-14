@@ -145,14 +145,14 @@ const PatternUri = ({
 
     async function getPattern() {
       try {
-        const response = await (
-          await fetch(
-            uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
-          )
-        ).text();
+        const response = await fetch(
+          uri.startsWith('http') ? uri : `https://app.cardstack.com${uri}`
+        );
 
-        const viewBox = response
-          ? (/viewBox="([^"]+)"/.exec(response) || '')[1].trim().split(' ')
+        const svgContent = await response.text();
+
+        const viewBox = svgContent
+          ? (/viewBox="([^"]+)"/.exec(svgContent) || '')[1].trim().split(' ')
           : [];
 
         // mapping svg pattern width
@@ -168,7 +168,7 @@ const PatternUri = ({
             : Number(viewBox[3]) || cardType.normal.height;
 
         setPattern({
-          pattern: response,
+          pattern: svgContent,
           width,
           height,
         });
