@@ -1,11 +1,10 @@
 import React, { memo, useCallback, useRef } from 'react';
 
+import { VERSION_TAP_COUNT } from 'react-native-dotenv';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Text } from '@cardstack/components';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 import { useAppVersion } from '@rainbow-me/hooks';
-
-const VERSION_TAP_COUNT = 3;
 
 const AppVersionStamp = () => {
   const appVersion = useAppVersion();
@@ -16,7 +15,7 @@ const AppVersionStamp = () => {
   const handleVersionPress = useCallback(async () => {
     numberOfTaps.current++;
 
-    if (numberOfTaps.current === VERSION_TAP_COUNT) {
+    if (numberOfTaps.current === parseInt(VERSION_TAP_COUNT)) {
       setIsTabBarEnabled(!isTabBarEnabled);
     }
   }, [isTabBarEnabled, setIsTabBarEnabled]);
