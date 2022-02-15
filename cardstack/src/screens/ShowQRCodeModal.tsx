@@ -20,7 +20,6 @@ import { hitSlop } from '@cardstack/utils/layouts';
 type ShowQRCodeModalParamTypes = {
   value: string;
   amountWithSymbol: string;
-  amountInAnotherCurrency: string;
   merchantInfo?: MerchantInformation;
   hasAmount?: boolean;
   backToEditMode?: () => void;
@@ -29,7 +28,6 @@ type ShowQRCodeModalParamTypes = {
 export const AmountQRCode = ({
   value,
   amountWithSymbol,
-  amountInAnotherCurrency,
   merchantInfo,
   hasAmount,
   backToEditMode,
@@ -106,11 +104,6 @@ export const AmountQRCode = ({
                   marginTop={4}
                 >
                   {amountWithSymbol}
-                </Text>
-              ) : null}
-              {amountInAnotherCurrency ? (
-                <Text size="xs" color="blueText">
-                  {amountInAnotherCurrency}
                 </Text>
               ) : null}
             </>
