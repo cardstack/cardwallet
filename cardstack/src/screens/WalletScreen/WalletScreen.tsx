@@ -10,6 +10,7 @@ import {
 } from '@cardstack/components';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
+import { BusinessAccountBanner } from '@cardstack/components/CollapsibleBanner';
 
 export const WalletScreen = () => {
   const { params } = useRoute();
@@ -35,6 +36,7 @@ export const WalletScreen = () => {
     <Container backgroundColor="backgroundDarkPurple" flex={1} height="100%">
       <MainHeader title="WALLET" />
       <ServiceStatusNotice />
+      <BusinessAccountBanner />
       <AssetList />
     </Container>
   );
