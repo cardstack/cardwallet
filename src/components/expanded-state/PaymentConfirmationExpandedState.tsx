@@ -51,7 +51,6 @@ export default function PaymentConfirmationExpandedState(
   });
   const {
     merchantInfo,
-    spendAmount,
     nativeBalanceDisplay,
     timestamp,
     transactionHash,
@@ -68,10 +67,7 @@ export default function PaymentConfirmationExpandedState(
           </Text>
           <MerchantSectionCard merchantInfoDID={merchantInfo} paddingBottom={5}>
             <Container alignItems="center">
-              <Text fontSize={40} fontWeight="700">
-                §{spendAmount || ''}
-              </Text>
-              <Text color="blueText" fontSize={12}>
+              <Text fontSize={34} fontWeight="700">
                 {nativeBalanceDisplay || ''}
               </Text>
 
@@ -119,7 +115,6 @@ export default function PaymentConfirmationExpandedState(
       network,
       ownerAddress,
       props.asset,
-      spendAmount,
       timestamp,
       transactionHash,
     ]
