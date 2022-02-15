@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
@@ -18,21 +17,19 @@ import { Page } from '../components/layout';
 
 import {
   useAccountEmptyState,
-  useAccountSettings,
   useCoinListEdited,
   useInitializeWallet,
   usePinnedAndHiddenItemOptions,
   useWallets,
 } from '../hooks';
 import {
+  BusinessAccountBanner,
   Container,
   ServiceStatusNotice,
-  SystemNotification,
   Text,
 } from '@cardstack/components';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
-import { isLayer2, NOTIFICATION_KEY } from '@cardstack/utils';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
@@ -54,33 +51,15 @@ const WalletPage = styled(Page)`
 export default function WalletScreen() {
   const { params } = useRoute();
   const [initialized, setInitialized] = useState(!!params?.initialized);
-  const [notificationsVisible, setNotificationsVisible] = useState('false');
   const initializeWallet = useInitializeWallet();
   const { isCoinListEdited } = useCoinListEdited();
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();
   const { isEmpty } = useAccountEmptyState();
-  const { network } = useAccountSettings();
 
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
   const { showLoadingOverlay } = useLoadingOverlay();
-
-  const setNotifications = async () => {
-    try {
-      const value = await AsyncStorage.getItem(NOTIFICATION_KEY);
-      if (value === null) {
-        // value previously stored
-        AsyncStorage.setItem(NOTIFICATION_KEY, 'true');
-        setNotificationsVisible('true');
-      } else {
-        setNotificationsVisible(value);
-      }
-    } catch (e) {
-      // error reading value
-      console.log('error', e);
-    }
-  };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -102,36 +81,12 @@ export default function WalletScreen() {
 
       initializeWallet();
       setInitialized(true);
-      setNotifications();
     }
   }, [initializeWallet, initialized, params, showLoadingOverlay]);
 
   // Show the exchange fab only for supported networks
   // (mainnet & rinkeby)
   const fabs = [];
-
-  const closedText = (
-    <Text>
-      Prepaid cards are denominated {`\n`} in{' '}
-      <Text flex={1} weight="bold">
-        SPEND §
-      </Text>
-    </Text>
-  );
-
-  const openedHeaderText = '1 SPEND = $0.01 USD';
-
-  const openedBodyText =
-    'The Spendable Balance may fluctuate slightly based on the exchange rate of the underlying token (USD_DAI).';
-
-  const notificationProps = {
-    closedText,
-    openedHeaderText,
-    openedBodyText,
-  };
-
-  const showNotificationBanner =
-    notificationsVisible === 'true' && !isEmpty && isLayer2(network);
 
   return (
     <WalletPage testID="wallet-screen">
@@ -168,9 +123,7 @@ export default function WalletScreen() {
             </Container>
           </Header>
           <ServiceStatusNotice />
-          {showNotificationBanner && (
-            <SystemNotification type="info" {...notificationProps} />
-          )}
+          <BusinessAccountBanner />
         </HeaderOpacityToggler>
         <AssetListWrapper />
       </FabWrapper>
