@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { CollapsableBanner } from './CollapsableBanner';
+import { CollapsibleBanner } from './CollapsibleBanner';
 import { useBusinessAccountBanner } from './useBusinessAccountBanner';
 import { Text } from '@cardstack/components';
 
@@ -35,7 +35,7 @@ export const BusinessAccountBanner = memo(() => {
   };
 
   return showBusinessAccountBanner ? (
-    <CollapsableBanner
+    <CollapsibleBanner
       type="info"
       closeForeverPress={() => closeBannerForever()}
       {...notificationProps}

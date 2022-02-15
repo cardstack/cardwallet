@@ -1,2 +1,2 @@
-export * from './CollapsableBanner';
+export * from './CollapsibleBanner';
 export * from './BusinessAccountBanner';

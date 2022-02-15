@@ -2,7 +2,7 @@ import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
-import { CollapsableBanner } from './CollapsableBanner';
+import { CollapsibleBanner } from './CollapsibleBanner';
 import { Container } from '@cardstack/components';
 
 storiesOf('System Notification', module).add('Default', () => {
@@ -29,9 +29,9 @@ storiesOf('System Notification', module).add('Default', () => {
 
   return (
     <Container position="absolute" top={200} width="100%" alignItems="center">
-      <CollapsableBanner {...props} />
-      <CollapsableBanner type="alert" {...props} />
-      <CollapsableBanner type="error" {...props} />
+      <CollapsibleBanner {...props} />
+      <CollapsibleBanner type="alert" {...props} />
+      <CollapsibleBanner type="error" {...props} />
     </Container>
   );
 });

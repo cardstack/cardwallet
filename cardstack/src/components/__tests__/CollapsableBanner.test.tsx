@@ -2,16 +2,16 @@ import React from 'react';
 
 import { fireEvent, render, waitFor, act } from '../../test-utils';
 import {
-  CollapsableBanner,
-  CollapsableBannerProps,
-} from '@cardstack/components/CollapsableBanner/CollapsableBanner';
+  CollapsibleBanner,
+  CollapsibleBannerProps,
+} from '@cardstack/components/CollapsibleBanner/CollapsibleBanner';
 
 jest.mock('react-native/Libraries/Components/Touchable/TouchableOpacity', () =>
   jest.fn(({ children }) => children)
 );
 
-describe('CollapsableBanner', () => {
-  let props: CollapsableBannerProps,
+describe('CollapsibleBanner', () => {
+  let props: CollapsibleBannerProps,
     closedText: string,
     openedBodyText: string,
     openedHeaderText: string,
@@ -32,7 +32,7 @@ describe('CollapsableBanner', () => {
   });
 
   it('should render only the children text if it is not open', () => {
-    const { getByText, queryByText } = render(<CollapsableBanner {...props} />);
+    const { getByText, queryByText } = render(<CollapsibleBanner {...props} />);
 
     getByText(closedText);
     expect(queryByText(openedHeaderText)).toBeNull();
@@ -40,20 +40,20 @@ describe('CollapsableBanner', () => {
 
   it('should render only the opened text if it is open', async () => {
     const { getByText, getByTestId, queryByText } = render(
-      <CollapsableBanner {...props} />
+      <CollapsibleBanner {...props} />
     );
 
-    const collapsableBanner = getByTestId('collapsable-banner');
+    const collapsibleBanner = getByTestId('collapsible-banner');
 
     await act(async () => {
-      await fireEvent.press(collapsableBanner);
+      await fireEvent.press(collapsibleBanner);
     });
 
     await waitFor(() => getByText(openedHeaderText));
     await waitFor(() => getByText(openedBodyText));
 
     await act(async () => {
-      fireEvent.press(collapsableBanner);
+      fireEvent.press(collapsibleBanner);
     });
 
     expect(queryByText(openedHeaderText)).toBeNull();

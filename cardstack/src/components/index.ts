@@ -5,7 +5,7 @@ export * from './CurrencySelection';
 export * from './Text';
 export * from './Depot';
 export * from './PrepaidCard';
-export * from './CollapsableBanner';
+export * from './CollapsibleBanner';
 export * from './Animated';
 export * from './ScrollView';
 export * from './Touchable';

@@ -12,33 +12,33 @@ const VISIBLE_OPACITY = 1;
 const HIDDEN_OPACITY = 0;
 const SUPPORTS_NATIVE_ANIM_DRIVER = !process.env.JEST_WORKER_ID;
 
-type CollapsableBannerType = 'info' | 'alert' | 'error';
+type CollapsibleBannerType = 'info' | 'alert' | 'error';
 
 const typeToIcon: {
-  [key in CollapsableBannerType]: IconName;
+  [key in CollapsibleBannerType]: IconName;
 } = {
   alert: 'warning',
   error: 'error',
   info: 'info',
 };
 
-export interface CollapsableBannerProps {
+export interface CollapsibleBannerProps {
   closedText: string | React.ReactNode;
   openedHeaderText: string | React.ReactNode;
   openedBodyText: string | React.ReactNode;
   closeForeverButtonText: string;
   closeForeverPress?: () => void;
-  type?: CollapsableBannerType;
+  type?: CollapsibleBannerType;
 }
 
-export const CollapsableBanner = ({
+export const CollapsibleBanner = ({
   closedText,
   openedHeaderText,
   openedBodyText,
   closeForeverButtonText,
   closeForeverPress,
   type = 'info',
-}: CollapsableBannerProps) => {
+}: CollapsibleBannerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [closedTextOpacity] = useState(new Animated.Value(VISIBLE_OPACITY));
@@ -126,7 +126,7 @@ export const CollapsableBanner = ({
           alignItems="center"
           justifyContent="space-between"
           marginBottom={isOpen ? 4 : 0}
-          testID="collapsable-banner"
+          testID="collapsible-banner"
         >
           <Icon iconSize="medium" marginRight={2} name={typeToIcon[type]} />
           <AnimatedText opacity={closedTextOpacity}>{closedText}</AnimatedText>
