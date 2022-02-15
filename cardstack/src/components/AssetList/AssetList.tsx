@@ -37,6 +37,7 @@ import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 const styles = StyleSheet.create({
   contentContainer: {
@@ -72,6 +73,8 @@ export const AssetList = (props: AssetListProps) => {
 
   const networkName = getConstantByNetwork('name', network);
 
+  const { isTabBarEnabled } = useTabBarFlag();
+
   const {
     showPromoBanner,
     onPress: onDiscordPromoPress,
@@ -79,10 +82,10 @@ export const AssetList = (props: AssetListProps) => {
 
   const renderPromoBanner = useMemo(
     () =>
-      showPromoBanner ? (
+      showPromoBanner && !isTabBarEnabled ? (
         <DiscordPromoBanner onPress={onDiscordPromoPress} />
       ) : null,
-    [onDiscordPromoPress, showPromoBanner]
+    [onDiscordPromoPress, showPromoBanner, isTabBarEnabled]
   );
 
   const onRefresh = useCallback(async () => {
