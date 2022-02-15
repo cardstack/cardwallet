@@ -2,7 +2,7 @@ import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
-import { SystemNotification } from './SystemNotification';
+import { CollapsibleBanner } from './CollapsibleBanner';
 import { Container } from '@cardstack/components';
 
 storiesOf('System Notification', module).add('Default', () => {
@@ -18,17 +18,20 @@ storiesOf('System Notification', module).add('Default', () => {
     'The Spendable Balance may fluctuate slightly based on the exchange rate of the underlying token (USD_DAI)'
   );
 
+  const closeForeverButtonText = text('Close Button text', "Don't show again");
+
   const props = {
     closedText,
     openedHeaderText,
     openedBodyText,
+    closeForeverButtonText,
   };
 
   return (
     <Container position="absolute" top={200} width="100%" alignItems="center">
-      <SystemNotification {...props} />
-      <SystemNotification type="alert" {...props} />
-      <SystemNotification type="error" {...props} />
+      <CollapsibleBanner {...props} />
+      <CollapsibleBanner type="alert" {...props} />
+      <CollapsibleBanner type="error" {...props} />
     </Container>
   );
 });

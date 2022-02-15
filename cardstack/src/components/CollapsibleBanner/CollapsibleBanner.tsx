@@ -1,42 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import downIcon from '../../assets/chevron-down.png';
 import { AnimatedContainer, AnimatedText } from '../Animated';
 import { Container, Icon, Text, IconName } from '@cardstack/components';
-import { NOTIFICATION_KEY } from '@cardstack/utils';
 
 const ANIMATION_DURATION = 150;
 const CLOSED_HEIGHT = 40;
-const OPENED_HEIGHT = 150;
+const OPENED_HEIGHT = 285;
 const VISIBLE_OPACITY = 1;
 const HIDDEN_OPACITY = 0;
 const SUPPORTS_NATIVE_ANIM_DRIVER = !process.env.JEST_WORKER_ID;
 
-type SystemNotificationType = 'info' | 'alert' | 'error';
+type CollapsibleBannerType = 'info' | 'alert' | 'error';
 
 const typeToIcon: {
-  [key in SystemNotificationType]: IconName;
+  [key in CollapsibleBannerType]: IconName;
 } = {
   alert: 'warning',
   error: 'error',
   info: 'info',
 };
 
-export interface SystemNotificationProps {
-  closedText: string;
-  openedHeaderText: string;
-  openedBodyText: string;
-  type?: SystemNotificationType;
+export interface CollapsibleBannerProps {
+  closedText: string | React.ReactNode;
+  openedHeaderText: string | React.ReactNode;
+  openedBodyText: string | React.ReactNode;
+  closeForeverButtonText: string;
+  closeForeverPress?: () => void;
+  type?: CollapsibleBannerType;
 }
 
-export const SystemNotification = ({
+export const CollapsibleBanner = ({
   closedText,
   openedHeaderText,
   openedBodyText,
+  closeForeverButtonText,
+  closeForeverPress,
   type = 'info',
-}: SystemNotificationProps) => {
+}: CollapsibleBannerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [closedTextOpacity] = useState(new Animated.Value(VISIBLE_OPACITY));
@@ -44,7 +46,7 @@ export const SystemNotification = ({
   const [minHeight] = useState(new Animated.Value(CLOSED_HEIGHT));
   const [iconRotation] = useState(new Animated.Value(0));
 
-  const openNotification = () => {
+  const openNotification = useCallback(() => {
     Animated.parallel([
       Animated.timing(closedTextOpacity, {
         duration: ANIMATION_DURATION,
@@ -64,9 +66,9 @@ export const SystemNotification = ({
     ]).start(() => {
       setIsOpen(true);
     });
-  };
+  }, [closedTextOpacity, iconRotation, minHeight]);
 
-  const closeNotification = () => {
+  const closeNotification = useCallback(() => {
     Animated.parallel([
       Animated.timing(closedTextOpacity, {
         duration: ANIMATION_DURATION,
@@ -86,22 +88,24 @@ export const SystemNotification = ({
     ]).start();
 
     setIsOpen(false);
-  };
+  }, [closedTextOpacity, iconRotation, minHeight]);
 
-  const hideNotification = () => {
+  const hideNotification = useCallback(() => {
     try {
-      AsyncStorage.setItem(NOTIFICATION_KEY, 'false');
       Animated.parallel([
         Animated.timing(containerOpacity, {
           duration: ANIMATION_DURATION,
           toValue: HIDDEN_OPACITY,
           useNativeDriver: SUPPORTS_NATIVE_ANIM_DRIVER,
         }),
-      ]).start(() => setIsVisible(false));
+      ]).start(() => {
+        setIsVisible(false);
+        closeForeverPress?.();
+      });
     } catch (error) {
       console.log('error', error);
     }
-  };
+  }, [containerOpacity, setIsVisible, closeForeverPress]);
 
   const toggle = isOpen ? closeNotification : openNotification;
 
@@ -122,7 +126,7 @@ export const SystemNotification = ({
           alignItems="center"
           justifyContent="space-between"
           marginBottom={isOpen ? 4 : 0}
-          testID="system-notification"
+          testID="collapsible-banner"
         >
           <Icon iconSize="medium" marginRight={2} name={typeToIcon[type]} />
           <AnimatedText opacity={closedTextOpacity}>{closedText}</AnimatedText>
@@ -152,11 +156,13 @@ export const SystemNotification = ({
             </Text>
             <Text size="body">{openedBodyText}</Text>
             <Container marginTop={12} alignItems="flex-end">
-              <TouchableOpacity onPress={() => hideNotification()}>
-                <Text weight="bold" textTransform="uppercase">
-                  Don't Show again
-                </Text>
-              </TouchableOpacity>
+              {closeForeverButtonText && (
+                <TouchableOpacity onPress={hideNotification}>
+                  <Text weight="bold" textTransform="uppercase">
+                    {closeForeverButtonText}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </Container>
           </Container>
         )}
