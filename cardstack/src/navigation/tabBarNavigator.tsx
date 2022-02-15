@@ -10,11 +10,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
-import { HomeScreen } from '@cardstack/screens';
+import { HomeScreen, WalletScreen } from '@cardstack/screens';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 import QRScannerScreen from '@rainbow-me/screens/QRScannerScreen';
-import WalletScreen from '@rainbow-me/screens/WalletScreen';
 import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { Device, screenHeight } from '@cardstack/utils';
