@@ -6,7 +6,6 @@ import { useValue } from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
 
 import { OpacityToggler } from '../components/animations';
-import { AssetListWrapper } from '../components/asset-list';
 import { FabWrapper } from '../components/fab';
 import {
   CameraHeaderButton,
@@ -23,6 +22,7 @@ import {
   useWallets,
 } from '../hooks';
 import {
+  AssetList,
   BusinessAccountBanner,
   Container,
   ServiceStatusNotice,
@@ -125,7 +125,7 @@ export default function WalletScreen() {
           <ServiceStatusNotice />
           <BusinessAccountBanner />
         </HeaderOpacityToggler>
-        <AssetListWrapper />
+        <AssetList />
       </FabWrapper>
     </WalletPage>
   );

@@ -1,10 +1,9 @@
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 
-import { AssetListWrapper } from '../../../../src/components/asset-list';
-
 import { useInitializeWallet } from '../../../../src/hooks';
 import {
+  AssetList,
   Container,
   MainHeader,
   ServiceStatusNotice,
@@ -36,7 +35,7 @@ export const WalletScreen = () => {
     <Container backgroundColor="backgroundDarkPurple" flex={1} height="100%">
       <MainHeader title="WALLET" />
       <ServiceStatusNotice />
-      <AssetListWrapper />
+      <AssetList />
     </Container>
   );
 };

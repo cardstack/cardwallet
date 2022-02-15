@@ -1,4 +1,3 @@
-export { default as AssetListWrapper } from './AssetListWrapper';
 export {
   default as AssetListHeader,
   AssetListHeaderHeight,
