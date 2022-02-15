@@ -3,12 +3,11 @@ import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { TouchableOpacity } from 'react-native';
+import { Touchable, TouchableProps } from '../Touchable';
 import { CustomIconNames, customIcons } from './custom-icons';
 import { FeatherIconNames } from './feather-icon-names';
 import { MaterialCommunityIconNames } from './material-community-icon-names';
 import { ColorTypes, Theme } from '@cardstack/theme';
-import { Container, ContainerProps } from '@cardstack/components';
 
 const iconSizeToValue = {
   small: 15,
@@ -29,7 +28,7 @@ export type IconName =
   | CustomIconNames
   | FeatherIconNames
   | MaterialCommunityIconNames;
-export interface IconProps extends ContainerProps {
+export interface IconProps extends Omit<TouchableProps, 'children'> {
   /** specify the size using T-Shirt sizes */
   iconSize?: IconSize;
   iconFamily?: IconFamily;
@@ -39,7 +38,7 @@ export interface IconProps extends ContainerProps {
   color?: ColorTypes | null;
   stroke?: ColorTypes | null;
   strokeWidth?: number;
-  onPress?: () => void;
+  visible?: boolean;
 }
 
 export const Icon = ({
@@ -65,36 +64,34 @@ export const Icon = ({
     const CustomIcon = customIcons[name as CustomIconNames];
 
     return (
-      <TouchableOpacity disabled={!onPress} onPress={onPress}>
-        <Container
-          testID="custom-icon"
-          height={sizeWithDefault}
+      <Touchable
+        testID="custom-icon"
+        height={sizeWithDefault}
+        width={sizeWithDefault}
+        disabled={!onPress}
+        onPress={onPress}
+        {...props}
+      >
+        <CustomIcon
+          color={colorWithDefault}
+          fill={colorWithDefault}
+          stroke={strokeWithDefault}
           width={sizeWithDefault}
-          {...props}
-        >
-          <CustomIcon
-            color={colorWithDefault}
-            fill={colorWithDefault}
-            stroke={strokeWithDefault}
-            width={sizeWithDefault}
-            height={sizeWithDefault}
-          />
-        </Container>
-      </TouchableOpacity>
+          height={sizeWithDefault}
+        />
+      </Touchable>
     );
   }
 
   const IconComponent = IconFamilies[iconFamily];
 
   return (
-    <TouchableOpacity disabled={!onPress} onPress={onPress}>
-      <Container {...props}>
-        <IconComponent
-          color={colorWithDefault || 'transparent'}
-          name={name}
-          size={sizeWithDefault}
-        />
-      </Container>
-    </TouchableOpacity>
+    <Touchable {...props} disabled={!onPress} onPress={onPress}>
+      <IconComponent
+        color={colorWithDefault || 'transparent'}
+        name={name}
+        size={sizeWithDefault}
+      />
+    </Touchable>
   );
 };
