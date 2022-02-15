@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
 import downIcon from '../../assets/chevron-down.png';
@@ -46,7 +46,7 @@ export const CollapsibleBanner = ({
   const [minHeight] = useState(new Animated.Value(CLOSED_HEIGHT));
   const [iconRotation] = useState(new Animated.Value(0));
 
-  const openNotification = () => {
+  const openNotification = useCallback(() => {
     Animated.parallel([
       Animated.timing(closedTextOpacity, {
         duration: ANIMATION_DURATION,
@@ -66,9 +66,9 @@ export const CollapsibleBanner = ({
     ]).start(() => {
       setIsOpen(true);
     });
-  };
+  }, [closedTextOpacity, iconRotation, minHeight]);
 
-  const closeNotification = () => {
+  const closeNotification = useCallback(() => {
     Animated.parallel([
       Animated.timing(closedTextOpacity, {
         duration: ANIMATION_DURATION,
@@ -88,9 +88,9 @@ export const CollapsibleBanner = ({
     ]).start();
 
     setIsOpen(false);
-  };
+  }, [closedTextOpacity, iconRotation, minHeight]);
 
-  const hideNotification = () => {
+  const hideNotification = useCallback(() => {
     try {
       Animated.parallel([
         Animated.timing(containerOpacity, {
@@ -105,7 +105,7 @@ export const CollapsibleBanner = ({
     } catch (error) {
       console.log('error', error);
     }
-  };
+  }, [containerOpacity, setIsVisible, closeForeverPress]);
 
   const toggle = isOpen ? closeNotification : openNotification;
 
@@ -157,7 +157,7 @@ export const CollapsibleBanner = ({
             <Text size="body">{openedBodyText}</Text>
             <Container marginTop={12} alignItems="flex-end">
               {closeForeverButtonText && (
-                <TouchableOpacity onPress={() => hideNotification()}>
+                <TouchableOpacity onPress={hideNotification}>
                   <Text weight="bold" textTransform="uppercase">
                     {closeForeverButtonText}
                   </Text>

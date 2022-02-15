@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SHOW_BUSINESS_ACCOUNT_BANNER_KEY, useWorker } from '@cardstack/utils';
+import {
+  SHOW_BUSINESS_ACCOUNT_BANNER_KEY,
+  useWorker,
+  isLayer2,
+} from '@cardstack/utils';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 export const useBusinessAccountBanner = () => {
+  const { network } = useAccountSettings();
+
   const [showBusinessAccountBanner, setShowBusinessAccountBanner] = useState(
     false
   );
@@ -12,12 +19,12 @@ export const useBusinessAccountBanner = () => {
     const flag =
       (await AsyncStorage.getItem(SHOW_BUSINESS_ACCOUNT_BANNER_KEY)) || 'true';
 
-    setShowBusinessAccountBanner(JSON.parse(flag));
-  }, []);
+    setShowBusinessAccountBanner(JSON.parse(flag) && isLayer2(network));
+  }, [network]);
 
   useEffect(() => {
     getShowBanner();
-  }, [getShowBanner]);
+  }, [getShowBanner, network]);
 
   const { callback: hideBanner } = useWorker(async () => {
     await AsyncStorage.setItem(
