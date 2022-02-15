@@ -18,7 +18,7 @@ storiesOf('System Notification', module).add('Default', () => {
     'The Spendable Balance may fluctuate slightly based on the exchange rate of the underlying token (USD_DAI)'
   );
 
-  const closeForeverButtonText = text("Don't show again");
+  const closeForeverButtonText = text('Close Button text', "Don't show again");
 
   const props = {
     closedText,
