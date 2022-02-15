@@ -56,9 +56,8 @@ export const PrepaidCardTransactionSection = ({
           <Container marginTop={3}>
             <Text fontSize={12}>Spendable Balance</Text>
             <Text fontSize={15} weight="extraBold">
-              {spendDisplay.tokenBalanceDisplay}
+              {spendDisplay.nativeBalanceDisplay}
             </Text>
-            <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
           </Container>
         )
       }
