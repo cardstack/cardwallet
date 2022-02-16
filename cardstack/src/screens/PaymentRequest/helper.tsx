@@ -79,13 +79,13 @@ export const MinInvalidAmountText = ({
     color="red"
     marginTop={1}
     {...textProps}
-  >{`minimum ${MIN_SPEND_AMOUNT} spend (${
+  >{`minimum ${
     convertAmountAndPriceToNativeDisplay(
       spendToUsd(MIN_SPEND_AMOUNT) || 0,
       currencyConversionRates[nativeCurrency],
       nativeCurrency
     ).display
-  })`}</Text>
+  }`}</Text>
 );
 
 export const useAmountConvertHelper = (

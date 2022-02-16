@@ -180,9 +180,6 @@ const AmountInputSection = memo(
   }: AmountProps) => {
     return (
       <Container alignItems="center" width="100%" justifyContent="center">
-        <Text weight="bold" numberOfLines={1} fontSize={11}>
-          SPEND (§1 = 0.01 USD)
-        </Text>
         <InputAmount
           flexGrow={1}
           borderBottomWidth={1}
