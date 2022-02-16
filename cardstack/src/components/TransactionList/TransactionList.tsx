@@ -86,7 +86,7 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
       ListEmptyComponent={
         // Use fallback to avoid flickering empty component,
         // when fetching hasn't started yet
-        isLoadingTransactions || isLoadingFallback ? (
+        isLoadingTransactions || isLoadingFallback.current ? (
           <TransactionListLoading />
         ) : (
           <ListEmptyComponent
