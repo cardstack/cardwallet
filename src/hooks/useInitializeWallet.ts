@@ -10,7 +10,6 @@ import {
 } from '../redux/settings';
 import { walletsLoadState } from '../redux/wallets';
 import useAccountSettings from './useAccountSettings';
-import useHideSplashScreen from './useHideSplashScreen';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
@@ -31,7 +30,6 @@ export default function useInitializeWallet() {
   const loadCoingeckoCoins = useLoadCoingeckoCoins();
   const loadGlobalData = useLoadGlobalData();
   const initializeAccountData = useInitializeAccountData();
-  const hideSplashScreen = useHideSplashScreen();
 
   const { network } = useAccountSettings();
   const { dismissLoadingOverlay } = useLoadingOverlay();
@@ -108,7 +106,6 @@ export default function useInitializeWallet() {
           logger.sentry('loaded account data', network);
         }
 
-        hideSplashScreen();
         logger.sentry('Hide splash screen');
         await initializeAccountData();
 
@@ -121,7 +118,6 @@ export default function useInitializeWallet() {
       } catch (error) {
         logger.sentry('Error while initializing wallet', error);
         // TODO specify error states more granular
-        hideSplashScreen();
         captureException(error);
         Alert.alert('Something went wrong while importing. Please try again!');
         dispatch(appStateUpdate({ walletReady: true }));
@@ -135,7 +131,6 @@ export default function useInitializeWallet() {
       dispatch,
       loadCoingeckoCoins,
       network,
-      hideSplashScreen,
       initializeAccountData,
       loadGlobalData,
       loadAccountData,

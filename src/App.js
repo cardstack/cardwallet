@@ -266,6 +266,7 @@ const CheckSystemReqs = ({ children }) => {
   const [maintenanceStatus, setMaintenanceStatus] = useState(null);
   const hasMaintenanceStatus = Boolean(maintenanceStatus);
   const hasMinimumVersion = Boolean(minimumVersion);
+
   async function getReqs() {
     const [maintenanceStatusResponse, minVersionResponse] = await Promise.all([
       getMaintenanceStatus(),
@@ -283,8 +284,9 @@ const CheckSystemReqs = ({ children }) => {
   useEffect(() => {
     if (hasMaintenanceStatus && hasMinimumVersion) {
       setReady(true);
+      hideSplashScreen();
     }
-  }, [hasMaintenanceStatus, hasMinimumVersion]);
+  }, [hasMaintenanceStatus, hasMinimumVersion, hideSplashScreen]);
 
   if (ready) {
     if (maintenanceStatus.maintenanceActive) {
@@ -298,9 +300,9 @@ const CheckSystemReqs = ({ children }) => {
     if (forceUpdate) {
       return <MinimumVersion />;
     }
-
-    hideSplashScreen();
   }
+
+  hideSplashScreen();
 
   return children;
 };
