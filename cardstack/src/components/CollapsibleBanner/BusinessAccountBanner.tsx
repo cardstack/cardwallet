@@ -14,7 +14,7 @@ export const BusinessAccountBanner = memo(() => {
 
   const closedText = useMemo(
     () => (
-      <Text weight="bold">
+      <Text fontWeight="bold">
         Want to request a payment?{`\n`}Click here to learn more
       </Text>
     ),
@@ -24,9 +24,9 @@ export const BusinessAccountBanner = memo(() => {
   const openedBodyText = useMemo(
     () => (
       <Text>
-        Go to <Text weight="bold">app.cardstack.com/cardpay</Text> on a computer
-        and click the <Text weight="bold">Business</Text> tab. Follow the
-        instructions to create a business account.
+        Go to <Text fontWeight="bold">app.cardstack.com/cardpay</Text> on a
+        computer and click the <Text fontWeight="bold">Business</Text> tab.
+        Follow the instructions to create a business account.
       </Text>
     ),
     []

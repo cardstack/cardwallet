@@ -2,7 +2,6 @@ import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
 import { StatusBar } from 'react-native';
 import { useClaimAllRevenue } from './sheets/UnclaimedRevenue/useClaimAllRevenue';
-// import { useMerchantTransactions } from '@cardstack/hooks';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
@@ -18,7 +17,6 @@ import {
   // TransactionItem,
 } from '@cardstack/components';
 import {
-  MerchantEarnedSpendTransactionType,
   MerchantInformation,
   MerchantSafeType,
   TokenType,
@@ -133,17 +131,17 @@ const MerchantScreen = () => {
             marginBottom={4}
             onPress={goToMerchantPaymentRequest}
           >
-            Request Amount
+            Request Payment
           </Button>
           <HorizontalDivider />
           <TokensSection
-            title="Pending Balance"
+            title="Money Waiting"
             onPress={goToUnclaimedRevenue}
             emptyText="No pending payments"
             tokens={merchantSafe.revenueBalances}
           />
           <TokensSection
-            title="Available Balance"
+            title="Your Available Balance"
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
             emptyText="No balance available"
             tokens={merchantSafe.tokens}

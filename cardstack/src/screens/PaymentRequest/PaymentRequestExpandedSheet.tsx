@@ -5,7 +5,11 @@ import {
   PaymentRequestFooter,
   PaymentRequestHeader,
 } from './components';
-import { MinInvalidAmountText, useAmountConvertHelper } from './helper';
+import {
+  MemoTextInput,
+  MinInvalidAmountText,
+  useAmountConvertHelper,
+} from './helper';
 import { useDimensions } from '@rainbow-me/hooks';
 import {
   Button,
@@ -117,6 +121,7 @@ const PaymentRequestExpandedSheet = () => {
               currencyConversionRates={currencyConversionRates}
             />
           ) : null}
+          <MemoTextInput />
         </Container>
       ) : (
         <>
@@ -125,7 +130,7 @@ const PaymentRequestExpandedSheet = () => {
               <Container
                 flex={1}
                 flexDirection="row"
-                justifyContent="space-between"
+                justifyContent="flex-end"
                 marginTop={!editMode ? 9 : 15}
                 paddingHorizontal={5}
               >
