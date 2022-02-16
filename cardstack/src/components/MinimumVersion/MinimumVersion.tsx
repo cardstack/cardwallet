@@ -18,6 +18,11 @@ const strings = {
   button: 'Update',
 };
 
+const screenWidthPercentage = {
+  '100': screenWidth,
+  '110': screenWidth * 1.1,
+};
+
 // Not quite sure about these magical numbers but it works
 const Constants = {
   iconSize: screenWidth * 0.25,
@@ -28,7 +33,7 @@ const Constants = {
     },
     image: {
       height: screenHeight * 0.48,
-      width: screenWidth,
+      width: screenWidthPercentage[Device.isAndroid ? 110 : 100],
       bottom: -25,
     },
   },
