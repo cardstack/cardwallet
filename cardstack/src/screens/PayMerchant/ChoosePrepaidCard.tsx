@@ -94,7 +94,6 @@ const ChoosePrepaidCard = ({
       justifyContent="center"
     >
       <Header
-        spendAmount={spendAmount}
         nativeBalanceDisplay={nativeBalanceDisplay}
         onPressEditAmount={onPressEditAmount}
       />
@@ -125,11 +124,9 @@ const ChoosePrepaidCard = ({
 
 const Header = memo(
   ({
-    spendAmount,
     nativeBalanceDisplay,
     onPressEditAmount,
   }: {
-    spendAmount: number;
     nativeBalanceDisplay: string;
     onPressEditAmount: () => void;
   }) => (
@@ -149,7 +146,7 @@ const Header = memo(
       <Container width="100%" alignItems="center">
         <Touchable onPress={onPressEditAmount}>
           <Text weight="bold" size="body">
-            {`§${spendAmount} SPEND`}
+            {nativeBalanceDisplay}
           </Text>
         </Touchable>
         <Touchable
@@ -161,9 +158,6 @@ const Header = memo(
         >
           <Text size="xxs">Edit Amount</Text>
         </Touchable>
-      </Container>
-      <Container width="100%" alignItems="center">
-        <Text size="xxs">{nativeBalanceDisplay}</Text>
       </Container>
       <HorizontalDivider height={2} marginVertical={0} marginTop={1} />
     </Container>
@@ -206,7 +200,7 @@ const PrepaidCardItem = memo(
       transferrable,
     } = item;
 
-    const { tokenBalanceDisplay } = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
       spendFaceValue.toString(),
       nativeCurrency,
       currencyConversionRates,
@@ -279,7 +273,7 @@ const PrepaidCardItem = memo(
               </Container>
               <Container marginTop={1} marginBottom={4}>
                 <Text color="black" fontWeight="bold" fontSize={14}>
-                  {tokenBalanceDisplay}
+                  {nativeBalanceDisplay}
                 </Text>
               </Container>
               <MediumPrepaidCard

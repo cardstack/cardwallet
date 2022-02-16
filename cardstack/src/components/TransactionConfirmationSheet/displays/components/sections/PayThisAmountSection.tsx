@@ -37,9 +37,8 @@ export const PayThisAmountSection = ({
       <SectionHeaderText>{headerText}</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
-          {spendDisplay.tokenBalanceDisplay}
+          {spendDisplay.nativeBalanceDisplay}
         </Text>
-        <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
       </Container>
     </Container>
   );

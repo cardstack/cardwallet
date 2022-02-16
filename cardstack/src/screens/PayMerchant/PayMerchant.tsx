@@ -123,11 +123,7 @@ const CustomAmountBody = memo(
       currencyConversionRates,
     ] = useNativeCurrencyAndConversionRates();
 
-    const {
-      amountInAnotherCurrency,
-      isInvalid,
-      canSubmit,
-    } = useAmountConvertHelper(
+    const { amountWithSymbol, isInvalid, canSubmit } = useAmountConvertHelper(
       inputValue,
       nativeCurrency,
       accountCurrency,
@@ -155,7 +151,7 @@ const CustomAmountBody = memo(
               <AmountInputSection
                 inputValue={inputValue}
                 setInputValue={setInputValue}
-                amountInAnotherCurrency={amountInAnotherCurrency.display}
+                amountInAnotherCurrency={amountWithSymbol}
                 nativeCurrency={nativeCurrency}
                 isInvalid={isInvalid}
                 currencyConversionRates={currencyConversionRates}
@@ -184,9 +180,6 @@ const AmountInputSection = memo(
   }: AmountProps) => {
     return (
       <Container alignItems="center" width="100%" justifyContent="center">
-        <Text weight="bold" numberOfLines={1} fontSize={11}>
-          SPEND (§1 = 0.01 USD)
-        </Text>
         <InputAmount
           flexGrow={1}
           borderBottomWidth={1}

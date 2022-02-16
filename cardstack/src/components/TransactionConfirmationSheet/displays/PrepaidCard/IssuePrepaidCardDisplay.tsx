@@ -112,9 +112,8 @@ const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
       <SectionHeaderText>LOAD THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
-          {spendDisplay.tokenBalanceDisplay}
+          {spendDisplay.nativeBalanceDisplay}
         </Text>
-        <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
         <Text variant="subText">{tokenDisplay.display}</Text>
       </Container>
     </Container>
@@ -149,9 +148,6 @@ const ToSection = () => {
               Current Face Value
             </Text>
             <Text marginTop={1} fontSize={15} weight="extraBold">
-              {zeroSpendDisplay.tokenBalanceDisplay}
-            </Text>
-            <Text size="xs" color="blueText">
               {zeroSpendDisplay.nativeBalanceDisplay}
             </Text>
             <Container

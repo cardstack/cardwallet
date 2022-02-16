@@ -146,10 +146,6 @@ const AddCashForm = ({
               isWalletEthZero={isWalletEthZero}
               onSelect={onCurrencyChange}
             />
-            {/* <SmallPrepaidCard
-              id="0xbeA3123457eF8"
-              spendableBalance={Number(value) * 100}
-            /> */}
           </CenteredContainer>
         </CenteredContainer>
       </CenteredContainer>

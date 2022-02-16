@@ -30,10 +30,7 @@ export const PayMerchantDisplay = ({
       <Container paddingBottom={4} paddingTop={1}>
         <MerchantSectionCard merchantInfoDID={merchantInfoDID}>
           <Container paddingTop={6} paddingBottom={3} alignItems="center">
-            <Text fontSize={40} fontWeight="700">
-              {spendDisplay.tokenBalanceDisplay}
-            </Text>
-            <Text fontSize={12} color="blueText">
+            <Text fontSize={34} fontWeight="700">
               {spendDisplay.nativeBalanceDisplay}
             </Text>
           </Container>

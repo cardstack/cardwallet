@@ -5,8 +5,6 @@ import {
   spendToUsd,
   convertToSpend,
   convertStringToNumber,
-  formatCurrencyAmount,
-  currencies,
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
 import { Container, Text, TextProps } from '@cardstack/components';
@@ -81,13 +79,13 @@ export const MinInvalidAmountText = ({
     color="red"
     marginTop={1}
     {...textProps}
-  >{`minimum ${MIN_SPEND_AMOUNT} spend (${
+  >{`minimum ${
     convertAmountAndPriceToNativeDisplay(
       spendToUsd(MIN_SPEND_AMOUNT) || 0,
       currencyConversionRates[nativeCurrency],
       nativeCurrency
     ).display
-  })`}</Text>
+  }`}</Text>
 );
 
 export const useAmountConvertHelper = (
@@ -102,44 +100,29 @@ export const useAmountConvertHelper = (
   const isSPDCurrency: boolean = inputNativeCurrency === NativeCurrency.SPD;
 
   const amountWithSymbol = isSPDCurrency
-    ? `§${formatCurrencyAmount(
-        amountInNum,
-        currencies[NativeCurrency.SPD].decimals
-      )} SPD`
-    : convertAmountToNativeDisplay(amountInNum, inputNativeCurrency);
-
-  const spendAmount = convertToSpend(
-    convertStringToNumber(inputValue || '0'),
-    inputNativeCurrency,
-    currencyConversionRates[inputNativeCurrency]
-  );
-
-  const amountInAnotherCurrency = isSPDCurrency
     ? convertAmountAndPriceToNativeDisplay(
         spendToUsd(amountInNum) || 0,
         currencyConversionRates[accountNativeCurrency],
         accountNativeCurrency
-      )
-    : {
-        amount: spendAmount,
-        display: `${formatCurrencyAmount(
-          spendAmount,
-          currencies[NativeCurrency.SPD].decimals
-        )} SPEND`,
-      };
+      ).display
+    : convertAmountToNativeDisplay(amountInNum, inputNativeCurrency);
+
+  const spendAmount = isSPDCurrency
+    ? amountInNum
+    : convertToSpend(
+        convertStringToNumber(inputValue || '0'),
+        inputNativeCurrency,
+        currencyConversionRates[inputNativeCurrency]
+      );
 
   // input amount should be more than MIN_SPEND_AMOUNT (50)
-  const isInvalid =
-    amountInNum > 0 &&
-    (isSPDCurrency ? amountInNum : amountInAnotherCurrency.amount) <
-      MIN_SPEND_AMOUNT;
+  const isInvalid = amountInNum > 0 && spendAmount < MIN_SPEND_AMOUNT;
 
   const canSubmit = Boolean(amountInNum && !isInvalid);
 
   return {
     amountInNum,
     amountWithSymbol,
-    amountInAnotherCurrency,
     isInvalid,
     canSubmit,
   };

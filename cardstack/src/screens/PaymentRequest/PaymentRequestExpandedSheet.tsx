@@ -5,7 +5,6 @@ import {
   RequestPaymentConfirmationFooter,
 } from './RequestPaymentConfirmation';
 import {
-  AmountInNativeCurrency,
   RequestPaymentMerchantInfo,
   MinInvalidAmountText,
   useAmountConvertHelper,
@@ -67,7 +66,6 @@ const PaymentRequestExpandedSheet = () => {
   const {
     amountInNum,
     amountWithSymbol,
-    amountInAnotherCurrency,
     isInvalid,
     canSubmit,
   } = useAmountConvertHelper(
@@ -121,10 +119,6 @@ const PaymentRequestExpandedSheet = () => {
             setInputValue={setInputValue}
             isInvalid={isInvalid}
           />
-          <AmountInNativeCurrency
-            amountWithSymbol={amountInAnotherCurrency.display}
-            textCenter
-          />
           {isInvalid ? (
             <MinInvalidAmountText
               nativeCurrency={nativeCurrency}
@@ -175,9 +169,6 @@ const PaymentRequestExpandedSheet = () => {
                   <Text fontSize={25} fontWeight="bold">
                     {amountWithSymbol}
                   </Text>
-                  <AmountInNativeCurrency
-                    amountWithSymbol={amountInAnotherCurrency.display}
-                  />
                 </Container>
               </Container>
             </>
@@ -188,7 +179,6 @@ const PaymentRequestExpandedSheet = () => {
             amountWithSymbol={amountWithSymbol}
             merchantInfo={merchantInfo}
             nativeCurrency={nativeCurrency}
-            amountInAnotherCurrency={amountInAnotherCurrency.display}
             backToEditMode={() => setEditMode(true)}
           />
         </>

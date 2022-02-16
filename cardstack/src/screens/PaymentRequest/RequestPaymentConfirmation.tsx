@@ -30,7 +30,6 @@ export const RequestPaymentConfirmation = ({
   amountInNum,
   merchantInfo,
   nativeCurrency,
-  amountInAnotherCurrency,
   backToEditMode,
 }: {
   amountWithSymbol: string | undefined;
@@ -38,7 +37,6 @@ export const RequestPaymentConfirmation = ({
   amountInNum: number;
   merchantInfo?: MerchantInformation;
   nativeCurrency?: string;
-  amountInAnotherCurrency: string;
   backToEditMode: () => void;
 }) => {
   const [copyCount, setCopyCount] = useState(0);
@@ -87,7 +85,6 @@ export const RequestPaymentConfirmation = ({
     navigate(Routes.SHOW_QRCODE_MODAL, {
       value: paymentRequestDeepLink,
       amountWithSymbol,
-      amountInAnotherCurrency,
       merchantInfo: merchantInfo,
       hasAmount: amountInNum > 0,
       backToEditMode,
@@ -97,7 +94,6 @@ export const RequestPaymentConfirmation = ({
     paymentRequestDeepLink,
     amountInNum,
     amountWithSymbol,
-    amountInAnotherCurrency,
     merchantInfo,
     backToEditMode,
   ]);
