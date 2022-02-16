@@ -10,23 +10,12 @@ import {
   Text,
   CenteredContainer,
 } from '@cardstack/components';
-import { screenHeight, screenWidth } from '@cardstack/utils';
+import { Device, screenHeight, screenWidth } from '@cardstack/utils';
 
 const strings = {
   title: 'There is a new version of Card Wallet.',
   subtitle: 'Update now for the best experience.',
   button: 'Update',
-};
-
-const paths = {
-  appStore: {
-    uri: `itms-apps://apps.apple.com/app/1549183378?mt=8`,
-    url: `https://apps.apple.com/app/1549183378?mt=8`,
-  },
-  testFlight: {
-    uri: `itms-beta://beta.itunes.apple.com/v1/app/1549183378?mt=8`,
-    url: `https://beta.itunes.apple.com/v1/app/1549183378?mt=8`,
-  },
 };
 
 // Not quite sure about these magical numbers but it works
@@ -45,23 +34,30 @@ const Constants = {
   },
 };
 
-const handleUriOrUrl = ({ uri, url }: { uri: string; url: string }) => {
-  Linking.canOpenURL(uri).then(supported => {
-    if (supported) {
-      Linking.openURL(uri);
-    } else {
-      Linking.openURL(url);
-    }
-  });
+const getStoreOrBetaPath = () => {
+  const paths = {
+    ios: {
+      store: `https://apps.apple.com/app/1549183378?mt=8`,
+      testFlight: `https://beta.itunes.apple.com/v1/app/1549183378?mt=8`,
+    },
+    android:
+      'https://play.google.com/store/apps/details?id=com.cardstack.cardpay',
+  };
+
+  if (Device.isAndroid) {
+    return paths.android;
+  } else {
+    const { isTestFlight } = NativeModules?.RNTestFlight?.getConstants();
+
+    return paths.ios[isTestFlight ? 'testFlight' : 'store'];
+  }
 };
 
 export const MinimumVersion = () => {
   const onUpdatePress = useCallback(() => {
-    if (NativeModules.RNTestFlight) {
-      const { isTestFlight } = NativeModules.RNTestFlight.getConstants();
+    const url = getStoreOrBetaPath();
 
-      handleUriOrUrl(paths[isTestFlight ? 'testFlight' : 'appStore']);
-    }
+    Linking.openURL(url);
   }, []);
 
   return (
