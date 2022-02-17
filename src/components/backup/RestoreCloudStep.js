@@ -18,7 +18,7 @@ import walletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import {
   useAccountSettings,
-  useInitializeWallet,
+  useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -41,7 +41,7 @@ export default function RestoreCloudStep({
   const [label, setLabel] = useState('Restore from backup');
   const passwordRef = useRef();
   const { accountAddress } = useAccountSettings();
-  const { changeSelectedWallet } = useInitializeWallet();
+  const { changeSelectedWallet } = useWalletManager();
 
   useEffect(() => {
     const fetchPasswordIfPossible = async () => {

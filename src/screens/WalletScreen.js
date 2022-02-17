@@ -17,8 +17,8 @@ import { Page } from '../components/layout';
 import {
   useAccountEmptyState,
   useCoinListEdited,
-  useInitializeWallet,
   usePinnedAndHiddenItemOptions,
+  useWalletManager,
   useWallets,
 } from '../hooks';
 import {
@@ -49,7 +49,7 @@ const WalletPage = styled(Page)`
 export default function WalletScreen() {
   const { params } = useRoute();
   const [initialized, setInitialized] = useState(!!params?.initialized);
-  const { initializeWallet } = useInitializeWallet();
+  const { initializeWallet } = useWalletManager();
   const { isCoinListEdited } = useCoinListEdited();
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();

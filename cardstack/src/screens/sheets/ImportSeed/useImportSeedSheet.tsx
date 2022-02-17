@@ -22,7 +22,7 @@ import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import {
   useAccountSettings,
   useClipboard,
-  useInitializeWallet,
+  useWalletManager,
   useInvalidPaste,
   useWallets,
 } from '@rainbow-me/hooks';
@@ -159,7 +159,7 @@ const useImportFromProfileModal = (
   >();
 
   const { wallets } = useWallets();
-  const { importWallet } = useInitializeWallet();
+  const { importWallet } = useWalletManager();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 

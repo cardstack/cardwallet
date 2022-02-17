@@ -8,7 +8,7 @@ import {
 } from '@rainbow-me/handlers/cloudBackup';
 
 import { Device } from '@cardstack/utils';
-import { useHideSplashScreen, useInitializeWallet } from '@rainbow-me/hooks';
+import { useHideSplashScreen, useWalletManager } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { ICloudBackupData } from '@rainbow-me/model/backup';
@@ -24,7 +24,7 @@ export const useWelcomeScreen = () => {
 
   const hideSplashScreen = useHideSplashScreen();
 
-  const { createNewWallet } = useInitializeWallet();
+  const { createNewWallet } = useWalletManager();
 
   const { showLoadingOverlay } = useLoadingOverlay();
 

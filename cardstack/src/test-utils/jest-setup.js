@@ -203,7 +203,7 @@ jest.mock('@rainbow-me/components/coin-row', () => ({
 }));
 
 jest.mock('@rainbow-me/hooks', () => ({
-  useInitializeWallet: jest.fn(),
+  useWalletManager: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/redux/hooks', () => ({

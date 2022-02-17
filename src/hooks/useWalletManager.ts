@@ -31,7 +31,7 @@ import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/account
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
 
-export default function useInitializeWallet() {
+export default function useWalletManager() {
   const dispatch = useDispatch();
 
   const resetAccountState = useResetAccountState();

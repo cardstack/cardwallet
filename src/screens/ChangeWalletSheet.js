@@ -36,7 +36,7 @@ import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
-  useInitializeWallet,
+  useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
@@ -66,7 +66,7 @@ export default function ChangeWalletSheet() {
     changeSelectedWallet,
     createNewWallet,
     initializeWallet,
-  } = useInitializeWallet();
+  } = useWalletManager();
   const walletsWithBalancesAndNames = useWalletsWithBalancesAndNames();
   const creatingWallet = useRef();
 
