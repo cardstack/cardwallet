@@ -96,7 +96,8 @@ export const MerchantInfo = ({
         >
           {name || ''}
         </Text>
-        <Text variant="subText">Profile</Text>
+        {/* Note: Will be later used for a different term. */}
+        {/* <Text variant="subText">Profile</Text> */}
       </Container>
     </Container>
   );
