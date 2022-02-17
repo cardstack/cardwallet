@@ -27,7 +27,7 @@ const cardType: Record<CardVariants, VariantType> = {
     maxWidth: 150,
   },
   medium: {
-    fontSize: { small: 8, mid: 10, big: 13 },
+    fontSize: { small: 8, mid: 10, big: 11 },
     maxWidth: 100,
   },
 };
