@@ -8,6 +8,7 @@ import TouchableBackdrop from '../components/TouchableBackdrop';
 import {
   AvailableBalancesExpandedState,
   ChartExpandedState,
+  ConfirmClaimDestinyState,
   LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
   SupportAndFeedsState,
@@ -24,6 +25,7 @@ const ScreenTypes = {
   [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
   [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
   supportAndFees: SupportAndFeedsState,
+  confirmClaimDestiny: ConfirmClaimDestinyState,
 };
 
 const Container = styled(Centered).attrs({

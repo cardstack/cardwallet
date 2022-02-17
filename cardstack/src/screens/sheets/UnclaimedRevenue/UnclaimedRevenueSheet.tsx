@@ -1,6 +1,8 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { useRoute } from '@react-navigation/core';
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 import {
   Button,
   CoinIcon,
@@ -22,12 +24,27 @@ interface Params {
   onClaimAllPress: () => void;
 }
 
+interface HeaderParams {
+  merchantSafe: MerchantSafeType;
+  onAcceptPress: () => void;
+}
+
 const UnclaimedRevenueSheet = () => {
+  const { navigate } = useNavigation();
   const { params } = useRoute<RouteType<Params>>();
+
+  const openClaimWhereSheet = useCallback(
+    () =>
+      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
+        type: 'confirmClaimDestiny',
+        onClaimAllPress: params.onClaimAllPress,
+      }),
+    [navigate, params.onClaimAllPress]
+  );
 
   return (
     <Sheet
-      Header={<Header {...params} />}
+      Header={<Header onAcceptPress={openClaimWhereSheet} {...params} />}
       scrollEnabled
       isFullScreen={Device.isIOS}
     >
@@ -38,7 +55,7 @@ const UnclaimedRevenueSheet = () => {
   );
 };
 
-const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
+const Header = ({ merchantSafe, onAcceptPress }: HeaderParams) => {
   const { revenueBalances } = merchantSafe;
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
@@ -62,7 +79,7 @@ const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
       <Button
         disabled={!hasClaimableAmount}
         marginTop={8}
-        onPress={onClaimAllPress}
+        onPress={onAcceptPress}
       >
         Accept
       </Button>
