@@ -14,7 +14,6 @@ import {
   Text,
   TokenBalance,
   Touchable,
-  // TransactionItem,
 } from '@cardstack/components';
 import {
   MerchantInformation,
@@ -89,11 +88,6 @@ const MerchantScreen = () => {
     [merchantSafe, navigate]
   );
 
-  // const { sections } = useMerchantTransactions(
-  //   merchantSafe.address,
-  //   'lifetimeEarnings'
-  // );
-
   const goToMerchantPaymentRequest = useCallback(
     () =>
       navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
@@ -146,10 +140,6 @@ const MerchantScreen = () => {
             emptyText="No balance available"
             tokens={merchantSafe.tokens}
           />
-          {/* <PaymentHistorySection
-            sections={sections}
-            onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
-          /> */}
         </ScrollView>
       </Container>
     </Container>
