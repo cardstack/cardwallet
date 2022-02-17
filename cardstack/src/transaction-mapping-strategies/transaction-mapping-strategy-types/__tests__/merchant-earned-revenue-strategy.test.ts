@@ -72,8 +72,6 @@ describe('MerchantEarnedRevenueStrategy', () => {
         symbol: 'DAI',
       },
       transaction: {
-        customerSpend: '150',
-        customerSpendNative: '$0.00 USD',
         netEarned: {
           amount: '1.489520958083832335',
           display: '1.49 DAI',
@@ -81,7 +79,6 @@ describe('MerchantEarnedRevenueStrategy', () => {
         netEarnedNativeDisplay: '$1.49 USD',
         protocolFee: '0.00749 DAI',
         revenueCollected: '1.497 DAI',
-        spendConversionRate: '$0.01 USD',
       },
       transactionHash:
         '0x5293d95a240c231852724fd31ff6df119e5b5cf7661a7aec38f7cf10893dc2eb',

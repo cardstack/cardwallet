@@ -1,13 +1,8 @@
 import React from 'react';
 import { InteractionManager } from 'react-native';
-import {
-  convertRawAmountToNativeDisplay,
-  convertStringToNumber,
-} from '@cardstack/cardpay-sdk';
 import { PrepaidCardPayment } from '@cardstack/graphql';
 import { Navigation } from '@rainbow-me/navigation';
 import { fetchMerchantInfoFromDID } from '@cardstack/utils/merchant-utils';
-import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   convertSpendForBalanceDisplay,
   getMerchantEarnedTransactionDetails,
@@ -47,7 +42,6 @@ export const mapMerchantPaymentTxToNavigationParams = async (
     merchantSafe,
     spendAmount,
     issuingToken,
-    issuingTokenAmount,
     timestamp,
     prepaidCard,
   } = transactionDetails;
@@ -64,26 +58,15 @@ export const mapMerchantPaymentTxToNavigationParams = async (
 
   const symbol = issuingToken.symbol || '';
 
-  const price = await fetchHistoricalPrice(symbol, timestamp, nativeCurrency);
-
   const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     spendAmount,
     nativeCurrency,
     currencyConversionRates
   );
 
-  const nativeBalance = convertRawAmountToNativeDisplay(
-    issuingTokenAmount,
-    18,
-    price,
-    nativeCurrency
-  );
-
   const earnedTransactionDetails = await getMerchantEarnedTransactionDetails(
     transactionDetails,
     nativeCurrency,
-    convertStringToNumber(nativeBalance.amount),
-    currencyConversionRates,
     symbol
   );
 

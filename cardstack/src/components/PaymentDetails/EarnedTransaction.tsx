@@ -4,7 +4,6 @@ import {
   HorizontalDivider,
   MerchantPaymentItemDetail,
   MerchantPaymentItemDetailProps,
-  Text,
 } from '@cardstack/components';
 import {
   TransactionRow,
@@ -17,26 +16,10 @@ interface EarnedTransactionProps
   txRowProps: TransactionRowProps;
 }
 
-const TransactionExchangeRateRow = ({ rate }: { rate: string }) => {
-  return (
-    <>
-      <Text color="blueText" fontSize={13} marginBottom={1} weight="bold">
-        TRANSACTION EXCHANGE RATE
-      </Text>
-      <Text fontSize={16} marginBottom={8} weight="extraBold">
-        1 SPEND = {rate}
-      </Text>
-    </>
-  );
-};
-
 export const EarnedTransaction = (data: EarnedTransactionProps) => {
   const {
-    customerSpend,
-    customerSpendNative,
     protocolFee,
     revenueCollected,
-    spendConversionRate,
     netEarned,
     netEarnedNativeDisplay,
     txRowProps,
@@ -45,12 +28,6 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
   const MerchantPaymentItemDetails = useMemo(
     () =>
       [
-        {
-          description: 'CUSTOMER \nSPEND',
-          subValue: customerSpendNative,
-          symbol: 'SPEND',
-          value: customerSpend + ' SPEND',
-        },
         { description: 'REVENUE \nCOLLECTED', value: revenueCollected },
         {
           description: 'PROTOCOL FEE \n(0.5%)',
@@ -65,20 +42,13 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
           value={item.value}
         />
       )),
-    [
-      customerSpend,
-      customerSpendNative,
-      protocolFee,
-      revenueCollected,
-      txRowProps.symbol,
-    ]
+    [protocolFee, revenueCollected, txRowProps.symbol]
   );
 
   return (
     <>
       <TransactionRow {...txRowProps} hasBottomDivider />
       <Container padding={6}>
-        <TransactionExchangeRateRow rate={spendConversionRate} />
         {MerchantPaymentItemDetails}
         <HorizontalDivider />
         <MerchantPaymentItemDetail

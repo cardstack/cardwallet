@@ -1,7 +1,6 @@
 import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
-  convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
 import { BaseStrategy } from '../base-strategy';
 import {
@@ -60,8 +59,6 @@ export class MerchantEarnedSpendStrategy extends BaseStrategy {
     const transactionDetails = await getMerchantEarnedTransactionDetails(
       prepaidCardPaymentTransaction,
       this.nativeCurrency,
-      convertStringToNumber(nativeBalance.amount),
-      this.currencyConversionRates,
       symbol
     );
 

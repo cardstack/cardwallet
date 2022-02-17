@@ -161,11 +161,8 @@ export interface PrepaidCardPaymentTransactionType {
 }
 
 export interface MerchantEarnedRevenueTransactionTypeTxn {
-  customerSpend: any;
-  customerSpendNative: string;
   protocolFee: string;
   revenueCollected: string;
-  spendConversionRate: string;
   netEarned: BalanceType;
   netEarnedNativeDisplay: string;
 }

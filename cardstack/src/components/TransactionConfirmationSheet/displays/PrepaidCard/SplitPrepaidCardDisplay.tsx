@@ -104,7 +104,7 @@ const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 
   const tokenDisplay = convertRawAmountToBalance(issuingTokenTotal, data.token);
 
-  const spendDisplay = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     spendAmountTotal,
     nativeCurrency,
     currencyConversionRates,
@@ -116,7 +116,7 @@ const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
       <SectionHeaderText>DEDUCT THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
-          {spendDisplay.nativeBalanceDisplay}
+          {nativeBalanceDisplay}
         </Text>
         <Text variant="subText">{tokenDisplay.display}</Text>
       </Container>

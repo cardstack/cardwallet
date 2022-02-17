@@ -19,7 +19,6 @@ import {
   MerchantEarnedRevenueTransactionTypeTxn,
   MerchantInformation,
 } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils/cardpay-utils';
 import { IconName } from '@cardstack/components';
 import { getNativeBalanceFromOracle } from '@cardstack/services';
 import logger from 'logger';
@@ -193,10 +192,6 @@ export async function getMerchantClaimTransactionDetails(
 export async function getMerchantEarnedTransactionDetails(
   prepaidCardPaymentTransaction: PrepaidCardPaymentFragment,
   nativeCurrency = 'USD',
-  nativeBalance: number,
-  currencyConversionRates: {
-    [key: string]: number;
-  },
   symbol: string
 ): Promise<MerchantEarnedRevenueTransactionTypeTxn> {
   const feeCollectedRaw =
@@ -230,11 +225,6 @@ export async function getMerchantEarnedTransactionDetails(
   );
 
   return {
-    customerSpend: prepaidCardPaymentTransaction.spendAmount,
-    customerSpendNative: convertAmountToNativeDisplay(
-      nativeBalance,
-      nativeCurrency
-    ),
     protocolFee: feeCollectedDai,
     revenueCollected: convertRawAmountToBalance(
       prepaidCardPaymentTransaction.issuingTokenAmount,
@@ -244,11 +234,6 @@ export async function getMerchantEarnedTransactionDetails(
       },
       3
     ).display,
-    spendConversionRate: convertSpendForBalanceDisplay(
-      '1',
-      nativeCurrency,
-      currencyConversionRates
-    ).nativeBalanceDisplay,
     netEarned,
     netEarnedNativeDisplay: convertAmountToNativeDisplay(
       netValue,
