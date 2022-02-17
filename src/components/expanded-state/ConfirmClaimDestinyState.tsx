@@ -46,7 +46,7 @@ const ConfirmClaimDestinyState = () => {
         </Container>
       </Sheet>
     ),
-    []
+    [onClaimAllPress]
   );
 };
 

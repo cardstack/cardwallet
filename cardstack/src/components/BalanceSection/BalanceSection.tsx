@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import { TokenType } from '@cardstack/types';
 import Routes from '@rainbow-me/routes';
-import { Container, Text, TokenBalance } from '@cardstack/components';
+import { Container, TokenBalance } from '@cardstack/components';
 import { useNavigation } from '@rainbow-me/navigation';
 
 interface BalancesProps {
