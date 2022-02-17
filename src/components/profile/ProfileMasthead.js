@@ -18,7 +18,6 @@ import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   useAccountProfile,
   useAccountSettings,
-  // useClipboard,
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
