@@ -2,7 +2,6 @@ import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { ParamListBase, useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Wallet, { hdkey } from 'ethereumjs-wallet';
 import { keys } from 'lodash';
 import {
   RefObject,
@@ -20,7 +19,6 @@ import {
   isValidWallet,
 } from '@rainbow-me/helpers/validators';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
-import { EthereumWalletType } from '@rainbow-me/helpers/walletTypes';
 import {
   useAccountSettings,
   useClipboard,
@@ -29,7 +27,7 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 
-import { WalletLibraryType } from '@rainbow-me/model/wallet';
+import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
 import Routes from '@rainbow-me/routes';
 import {
   deviceUtils,
@@ -40,15 +38,6 @@ import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useLoadingOverlay } from '@cardstack/navigation';
 
-interface CheckedWallet {
-  address: string;
-  isHDWallet: boolean;
-  root: hdkey;
-  type: EthereumWalletType;
-  wallet: Wallet;
-  walletType: WalletLibraryType;
-}
-
 const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();
 
@@ -58,16 +47,16 @@ const useImportSeedSheet = () => {
   const [busy, setBusy] = useState(false);
   const [seedPhrase, setSeedPhrase] = useState('');
 
-  const [checkedWallet, setCheckedWallet] = useState<CheckedWallet | null>(
-    null
-  );
+  const [checkedWallet, setCheckedWallet] = useState<
+    EthereumWalletFromSeed | undefined
+  >();
 
   const inputRef = useRef<TextInput>(null);
 
   const { showWalletProfileModal } = useImportFromProfileModal(
-    checkedWallet,
     seedPhrase,
-    inputRef
+    inputRef,
+    checkedWallet
   );
 
   useEffect(() => {
@@ -161,16 +150,16 @@ export { useImportSeedSheet };
 
 // Scoped helper hook
 const useImportFromProfileModal = (
-  checkedWallet: CheckedWallet | null,
   seedPhrase: string,
-  inputRef: RefObject<TextInput>
+  inputRef: RefObject<TextInput>,
+  checkedWallet?: EthereumWalletFromSeed
 ) => {
   const { navigate, replace } = useNavigation<
     StackNavigationProp<ParamListBase>
   >();
 
   const { wallets } = useWallets();
-  const initializeWallet = useInitializeWallet();
+  const { importWallet } = useInitializeWallet();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -178,14 +167,14 @@ const useImportFromProfileModal = (
     async ({ name = null, color = null }) => {
       showLoadingOverlay({ title: walletLoadingStates.IMPORTING_WALLET });
 
-      const input = sanitizeSeedPhrase(seedPhrase);
+      const seed = sanitizeSeedPhrase(seedPhrase);
 
       const previousWalletCount = keys(wallets).length;
       const isFreshWallet = previousWalletCount === 0;
 
       try {
-        const wallet = await initializeWallet({
-          seedPhrase: input,
+        const wallet = await importWallet({
+          seed,
           color,
           name: name || '',
           checkedWallet,
@@ -219,7 +208,7 @@ const useImportFromProfileModal = (
     [
       checkedWallet,
       dismissLoadingOverlay,
-      initializeWallet,
+      importWallet,
       inputRef,
       navigate,
       replace,

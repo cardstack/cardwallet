@@ -5,7 +5,6 @@ import {
   Hexable,
   joinSignature,
 } from '@ethersproject/bytes';
-import { HDNode } from '@ethersproject/hdnode';
 import { SigningKey } from '@ethersproject/signing-key';
 import { Transaction } from '@ethersproject/transactions';
 import { Wallet } from '@ethersproject/wallet';
@@ -30,7 +29,6 @@ import {
   authenticateWithPIN,
   getExistingPIN,
 } from '../handlers/authentication';
-import { saveAccountEmptyState } from '../handlers/localstorage/accountLocal';
 import {
   addHexPrefix,
   getEtherWeb3Provider,
@@ -66,11 +64,6 @@ type EthereumWalletSeed =
   | EthereumMnemonic
   | EthereumSeed;
 
-interface WalletInitialized {
-  isNew: boolean;
-  walletAddress?: EthereumAddress;
-}
-
 interface TransactionRequestParam {
   transaction: TransactionRequest;
   existingWallet?: Wallet;
@@ -100,22 +93,14 @@ export interface TypedData {
   };
 }
 
-interface ReadOnlyWallet {
-  address: EthereumAddress;
-  privateKey: null;
-}
-
 export interface EthereumWalletFromSeed {
-  hdnode: null | HDNode;
   isHDWallet: boolean;
-  wallet: null | EthereumWallet;
+  wallet: LibWallet;
   type: EthereumWalletType;
   walletType: WalletLibraryType;
   root: EthereumHDKey;
   address: EthereumAddress;
 }
-
-type EthereumWallet = Wallet | ReadOnlyWallet;
 
 interface RainbowAccount {
   index: number;
@@ -179,36 +164,6 @@ export const DEFAULT_WALLET_NAME = 'My Wallet';
 const authenticationPrompt = lang.t('wallet.authenticate.please');
 export const publicAccessControlOptions = {
   accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
-};
-
-export const walletInit = async (
-  seedPhrase = null,
-  color = null,
-  name = null,
-  checkedWallet = null,
-  network: string
-): Promise<WalletInitialized> => {
-  const isImportingWallet = !isEmpty(seedPhrase);
-
-  // Importing a seedphrase
-  if (isImportingWallet) {
-    const wallet = await createWallet(seedPhrase, color, name, checkedWallet);
-    return { isNew: false, walletAddress: wallet?.address };
-  }
-
-  // If it's not importing, check if a wallet already exists
-  const storedWalletAddress = await loadAddress();
-
-  if (storedWalletAddress) {
-    return { isNew: false, walletAddress: storedWalletAddress };
-  }
-
-  // if no wallet, create a new one
-  const wallet = await createWallet();
-  const walletAddress = wallet?.address;
-  await saveAccountEmptyState(true, walletAddress?.toLowerCase(), network);
-
-  return { isNew: true, walletAddress };
 };
 
 export const loadWallet = async (): Promise<null | Wallet> => {
@@ -602,12 +557,19 @@ const addAccountsWithTxHistory = async (
   }
 };
 
-export const createWallet = async (
-  seed: null | EthereumSeed = null,
-  color: null | number = null,
-  name: null | string = null,
-  checkedWallet: null | EthereumWalletFromSeed = null
-): Promise<null | EthereumWallet> => {
+export interface CreateImportParams {
+  seed?: string;
+  color?: number;
+  name?: string;
+  checkedWallet?: EthereumWalletFromSeed;
+}
+
+export const createOrImportWallet = async ({
+  seed,
+  color,
+  name,
+  checkedWallet,
+}: CreateImportParams = {}) => {
   const isImported = !!seed;
   logger.sentry('Creating wallet, isImported?', isImported);
   if (!seed) {
@@ -703,7 +665,7 @@ export const createWallet = async (
     addresses.push({
       address: walletAddress,
       avatar: null,
-      color: color !== null ? color : getRandomColor(),
+      color: color ?? getRandomColor(),
       index: 0,
       label: name || '',
       visible: true,
@@ -758,11 +720,8 @@ export const createWallet = async (
 
     if (walletResult && walletAddress) {
       // bip39 are derived from mnemioc
-      // ethers are derived from privateKey
       const createdWallet =
-        walletType === WalletLibraryType.bip39
-          ? new Wallet(privateKey)
-          : (walletResult as Wallet);
+        walletType === WalletLibraryType.bip39 ? new Wallet(privateKey) : null;
 
       return createdWallet;
     }
@@ -914,7 +873,7 @@ export const getAllWallets = async (): Promise<
 export const generateAccount = async (
   id: RainbowWallet['id'],
   index: number
-): Promise<null | EthereumWallet> => {
+): Promise<null | Wallet> => {
   try {
     let userPIN = null;
     if (Device.isAndroid) {

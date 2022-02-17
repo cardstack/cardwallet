@@ -28,9 +28,7 @@ import {
   ServiceStatusNotice,
   Text,
 } from '@cardstack/components';
-import { useLoadingOverlay } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
-import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
@@ -51,7 +49,7 @@ const WalletPage = styled(Page)`
 export default function WalletScreen() {
   const { params } = useRoute();
   const [initialized, setInitialized] = useState(!!params?.initialized);
-  const initializeWallet = useInitializeWallet();
+  const { initializeWallet } = useInitializeWallet();
   const { isCoinListEdited } = useCoinListEdited();
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();
@@ -59,7 +57,6 @@ export default function WalletScreen() {
 
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
-  const { showLoadingOverlay } = useLoadingOverlay();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -73,16 +70,10 @@ export default function WalletScreen() {
 
   useEffect(() => {
     if (!initialized) {
-      const isCreatingWallet = params?.emptyWallet;
-
-      if (isCreatingWallet) {
-        showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
-      }
-
       initializeWallet();
       setInitialized(true);
     }
-  }, [initializeWallet, initialized, params, showLoadingOverlay]);
+  }, [initializeWallet, initialized]);
 
   // Show the exchange fab only for supported networks
   // (mainnet & rinkeby)

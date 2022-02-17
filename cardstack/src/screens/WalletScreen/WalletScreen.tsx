@@ -1,5 +1,5 @@
 import { useRoute } from '@react-navigation/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { useInitializeWallet } from '../../../../src/hooks';
 import {
@@ -8,29 +8,21 @@ import {
   MainHeader,
   ServiceStatusNotice,
 } from '@cardstack/components';
-import { useLoadingOverlay } from '@cardstack/navigation';
-import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { BusinessAccountBanner } from '@cardstack/components/CollapsibleBanner';
+import { RouteType } from '@cardstack/navigation/types';
 
 export const WalletScreen = () => {
-  const { params } = useRoute();
-  const [initialized, setInitialized] = useState(!!params?.initialized);
-  const initializeWallet = useInitializeWallet();
+  const { params } = useRoute<RouteType<{ initialized?: boolean }>>();
+  const { initializeWallet } = useInitializeWallet();
 
-  const { showLoadingOverlay } = useLoadingOverlay();
+  const initialized = useRef(!!params?.initialized);
 
   useEffect(() => {
-    if (!initialized) {
-      const isCreatingWallet = params?.emptyWallet;
-
-      if (isCreatingWallet) {
-        showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
-      }
-
+    if (!initialized.current) {
       initializeWallet();
-      setInitialized(true);
+      initialized.current = true;
     }
-  }, [initializeWallet, initialized, params, showLoadingOverlay]);
+  }, [initializeWallet]);
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1} height="100%">

@@ -32,7 +32,7 @@ const keysOnly = keysWithValues => map(keysWithValues, item => item?.username);
 
 export default function useWalletsDebug() {
   const { selectedWallet, wallets } = useWallets();
-  const initializeWallet = useInitializeWallet();
+  const { initializeWallet } = useInitializeWallet();
   const dispatch = useDispatch();
   const { colors } = useTheme();
 

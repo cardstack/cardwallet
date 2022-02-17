@@ -8,10 +8,12 @@ import {
 } from '@rainbow-me/handlers/cloudBackup';
 
 import { Device } from '@cardstack/utils';
-import { useHideSplashScreen } from '@rainbow-me/hooks';
+import { useHideSplashScreen, useInitializeWallet } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { ICloudBackupData } from '@rainbow-me/model/backup';
+import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
+import { useLoadingOverlay } from '@cardstack/navigation';
 
 export const useWelcomeScreen = () => {
   const { navigate, replace } = useNavigation<
@@ -21,6 +23,10 @@ export const useWelcomeScreen = () => {
   const [userData, setUserData] = useState<ICloudBackupData | null>(null);
 
   const hideSplashScreen = useHideSplashScreen();
+
+  const { createNewWallet } = useInitializeWallet();
+
+  const { showLoadingOverlay } = useLoadingOverlay();
 
   useEffect(() => {
     const checkCloudBackupOnInit = async () => {
@@ -52,11 +58,12 @@ export const useWelcomeScreen = () => {
   }, []);
 
   const onCreateWallet = useCallback(async () => {
-    replace(Routes.SWIPE_LAYOUT, {
-      params: { emptyWallet: true },
-      screen: Routes.WALLET_SCREEN,
-    });
-  }, [replace]);
+    replace(Routes.SWIPE_LAYOUT);
+
+    showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
+
+    createNewWallet();
+  }, [replace, createNewWallet, showLoadingOverlay]);
 
   const onAddExistingWallet = useCallback(() => {
     navigate(Routes.RESTORE_SHEET, {

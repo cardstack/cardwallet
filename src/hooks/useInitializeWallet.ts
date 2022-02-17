@@ -3,12 +3,20 @@ import { isNil } from 'lodash';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { walletInit } from '../model/wallet';
+import {
+  CreateImportParams,
+  createOrImportWallet,
+  loadAddress,
+} from '../model/wallet';
 import {
   settingsLoadNetwork,
   settingsUpdateAccountAddress,
 } from '../redux/settings';
-import { walletsLoadState } from '../redux/wallets';
+import {
+  addressSetSelected,
+  walletsLoadState,
+  walletsSetSelected,
+} from '../redux/wallets';
 import useAccountSettings from './useAccountSettings';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
@@ -19,6 +27,7 @@ import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase'
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 import { getCurrencyConversionsRates } from '@cardstack/services';
+import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
 
@@ -35,81 +44,43 @@ export default function useInitializeWallet() {
   const { dismissLoadingOverlay } = useLoadingOverlay();
 
   const initializeWallet = useCallback(
-    async ({
-      seedPhrase = undefined,
-      color = null,
-      name = null,
-      checkedWallet = null,
-    } = {}) => {
+    async (seedPhrase?: string) => {
       try {
-        logger.sentry('Start wallet setup');
+        logger.sentry('Start wallet init');
 
         await resetAccountState();
         logger.sentry('resetAccountState ran ok');
 
         await dispatch(settingsLoadNetwork());
 
+        logger.sentry('done loading network');
+
+        // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
+        loadCoingeckoCoins();
+
         // TODO: move to rtk query
         const conversionsRates = await getCurrencyConversionsRates();
 
         await dispatch(setCurrencyConversionRates(conversionsRates));
 
-        logger.sentry('done loading network');
+        await dispatch(walletsLoadState());
 
-        const isImporting = !!seedPhrase;
-        logger.sentry('isImporting?', isImporting);
-
-        // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
-        await loadCoingeckoCoins();
-
-        // It seems there's a race condition between walletsLoadState, and walletInit
-        // if it's new, imported or not
-        if (!isImporting) {
-          await dispatch(walletsLoadState());
-          logger.sentry('walletsLoadState call #1');
-        }
-
-        const { isNew, walletAddress } = await walletInit(
-          seedPhrase,
-          color,
-          name,
-          checkedWallet,
-          network
-        );
-
-        logger.sentry('walletInit returned ', {
-          isNew,
-          walletAddress,
-        });
-
-        if (isImporting || isNew) {
-          logger.sentry('walletsLoadState call #2');
-          await dispatch(walletsLoadState());
-        }
+        const walletAddress = await loadAddress();
 
         if (isNil(walletAddress)) {
-          logger.sentry('walletAddress is nil');
-          if (!isImporting) {
-            dispatch(appStateUpdate({ walletReady: true }));
-          }
+          dispatch(appStateUpdate({ walletReady: true }));
           return null;
         }
 
         await dispatch(settingsUpdateAccountAddress(walletAddress));
-        logger.sentry('updated settings address', walletAddress);
 
-        // Newly created / imported accounts have no data in localstorage
-        if (!(isNew || isImporting)) {
-          await loadGlobalData();
-          logger.sentry('loaded global data...');
-          await loadAccountData(network);
-          logger.sentry('loaded account data', network);
-        }
+        await loadGlobalData();
+        logger.sentry('loaded global data...');
+        await loadAccountData(network);
+        logger.sentry('loaded account data', network);
 
-        logger.sentry('Hide splash screen');
         await initializeAccountData();
 
-        logger.log('💰 Wallet initialized');
         await checkPushPermissionAndRegisterToken(walletAddress, seedPhrase);
 
         dispatch(appStateUpdate({ walletReady: true }));
@@ -117,13 +88,12 @@ export default function useInitializeWallet() {
         return walletAddress;
       } catch (error) {
         logger.sentry('Error while initializing wallet', error);
-        // TODO specify error states more granular
         captureException(error);
-        Alert.alert('Something went wrong while importing. Please try again!');
-        dispatch(appStateUpdate({ walletReady: true }));
+
         return null;
       } finally {
         dismissLoadingOverlay();
+        dispatch(appStateUpdate({ walletReady: true }));
       }
     },
     [
@@ -138,5 +108,61 @@ export default function useInitializeWallet() {
     ]
   );
 
-  return initializeWallet;
+  const createNewWallet = useCallback(
+    async ({
+      color,
+      name,
+    }: Pick<CreateImportParams, 'color' | 'name'> = {}) => {
+      try {
+        const wallet = await createOrImportWallet({ color, name });
+
+        const walletAddress = wallet?.address;
+
+        await saveAccountEmptyState(
+          true,
+          walletAddress?.toLowerCase(),
+          network
+        );
+        await initializeWallet();
+      } catch (e) {
+        logger.sentry('Error creating new wallet', e);
+      }
+    },
+    [initializeWallet, network]
+  );
+
+  const importWallet = useCallback(
+    async (params: CreateImportParams) => {
+      try {
+        const wallet = await createOrImportWallet(params);
+
+        await initializeWallet(params.seed);
+
+        return wallet;
+      } catch (e) {
+        logger.sentry('Error while importing wallet', e);
+
+        Alert.alert('Something went wrong while importing. Please try again!');
+      }
+    },
+    [initializeWallet]
+  );
+
+  const changeSelectedWallet = useCallback(
+    async (wallet, address) => {
+      const p1 = dispatch(walletsSetSelected(wallet));
+      const p2 = dispatch(addressSetSelected(address));
+      await Promise.all([p1, p2]);
+
+      await initializeWallet();
+    },
+    [dispatch, initializeWallet]
+  );
+
+  return {
+    initializeWallet,
+    createNewWallet,
+    importWallet,
+    changeSelectedWallet,
+  };
 }
