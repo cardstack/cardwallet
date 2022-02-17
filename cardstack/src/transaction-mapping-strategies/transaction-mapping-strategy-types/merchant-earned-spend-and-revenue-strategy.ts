@@ -42,7 +42,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
       this.nativeCurrency
     );
 
-    const spendDisplay = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
       prepaidCardPaymentTransaction.spendAmount,
       this.nativeCurrency,
       this.currencyConversionRates
@@ -84,8 +84,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
       */
       timestamp: Number(prepaidCardPaymentTransaction.timestamp) + 1,
       type: TransactionTypes.MERCHANT_EARNED_SPEND_AND_REVENUE,
-      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
-      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+      nativeBalanceDisplay,
       transactionHash: this.transaction.id,
       infoDid: prepaidCardPaymentTransaction.merchantSafe?.infoDid || undefined,
     };

@@ -32,7 +32,7 @@ export class PrepaidCardCreationStrategy extends BaseStrategy {
       return null;
     }
 
-    const spendDisplay = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
       prepaidCardCreationTransaction.spendAmount,
       this.nativeCurrency,
       this.currencyConversionRates,
@@ -84,8 +84,7 @@ export class PrepaidCardCreationStrategy extends BaseStrategy {
         ),
       },
       type: TransactionTypes.PREPAID_CARD_CREATED,
-      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
-      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+      nativeBalanceDisplay,
       transactionHash: this.transaction.id,
     };
   }

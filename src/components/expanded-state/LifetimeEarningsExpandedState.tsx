@@ -68,10 +68,7 @@ const ChartSection = ({ merchantSafe }: { merchantSafe: MerchantSafeType }) => {
     [string, { [key: string]: number }]
   >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
 
-  const {
-    tokenBalanceDisplay,
-    nativeBalanceDisplay,
-  } = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     accumulatedSpendValue,
     nativeCurrency,
     currencyConversionRates
@@ -85,12 +82,8 @@ const ChartSection = ({ merchantSafe }: { merchantSafe: MerchantSafeType }) => {
           <Icon name="spend" size={40} />
           <Container flexDirection="column" marginLeft={4}>
             <Text size="largeBalance" weight="extraBold">
-              {tokenBalanceDisplay}
+              {nativeBalanceDisplay}
             </Text>
-            <Text weight="extraBold">
-              SPEND <Text weight="regular">to date</Text>
-            </Text>
-            <Text variant="subText">{nativeBalanceDisplay}</Text>
           </Container>
         </Container>
       </Container>

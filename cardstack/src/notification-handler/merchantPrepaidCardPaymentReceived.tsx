@@ -66,7 +66,7 @@ export const mapMerchantPaymentTxToNavigationParams = async (
 
   const price = await fetchHistoricalPrice(symbol, timestamp, nativeCurrency);
 
-  const spendDisplay = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     spendAmount,
     nativeCurrency,
     currencyConversionRates
@@ -107,8 +107,7 @@ export const mapMerchantPaymentTxToNavigationParams = async (
     statusText: 'Received',
     address: merchantSafe?.id || '',
     fromAddress: prepaidCard.id,
-    spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
-    nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+    nativeBalanceDisplay,
     timestamp: Number(timestamp) + 1,
     spendAmount,
     transactionHash: transactionDetails.id,

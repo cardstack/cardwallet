@@ -52,7 +52,7 @@ const FromSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
     card => card.address === data.prepaidCard
   );
 
-  const spendDisplay = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     prepaidCard?.spendFaceValue || 0,
     nativeCurrency,
     currencyConversionRates,
@@ -75,10 +75,7 @@ const FromSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
               <Container marginTop={2}>
                 <Text size="xxs">Face Value</Text>
                 <Text fontSize={15} weight="extraBold">
-                  {spendDisplay.tokenBalanceDisplay}
-                </Text>
-                <Text variant="subText">
-                  {spendDisplay.nativeBalanceDisplay}
+                  {nativeBalanceDisplay}
                 </Text>
               </Container>
             )}
@@ -119,9 +116,8 @@ const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
       <SectionHeaderText>DEDUCT THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
-          {spendDisplay.tokenBalanceDisplay}
+          {spendDisplay.nativeBalanceDisplay}
         </Text>
-        <Text variant="subText">{spendDisplay.nativeBalanceDisplay}</Text>
         <Text variant="subText">{tokenDisplay.display}</Text>
       </Container>
     </Container>
@@ -156,7 +152,7 @@ const DistributeSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
           <Icon name="prepaid-card" />
           <Container marginLeft={4}>
             <Text weight="extraBold">{`Prepaid Card x ${data.spendAmounts.length}`}</Text>
-            <Text weight="extraBold">{`${spendDisplay.tokenBalanceDisplay} each`}</Text>
+            <Text weight="extraBold">{`${spendDisplay.nativeBalanceDisplay} each`}</Text>
             <Text variant="subAddress" marginTop={1}>
               {getAddressPreview('0xXXXXXXXXXXXX')}*
             </Text>
@@ -164,9 +160,6 @@ const DistributeSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
               Current Face Value
             </Text>
             <Text marginTop={1} fontSize={15} weight="extraBold">
-              {zeroSpendDisplay.tokenBalanceDisplay}
-            </Text>
-            <Text size="xs" color="blueText">
               {zeroSpendDisplay.nativeBalanceDisplay}
             </Text>
             <Container

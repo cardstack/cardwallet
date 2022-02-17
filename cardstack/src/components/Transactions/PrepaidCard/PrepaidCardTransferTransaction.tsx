@@ -30,8 +30,7 @@ export const PrepaidCardTransferTransaction = ({
       statusIconName="arrow-up"
       statusText={item.statusText}
       topText="Face value"
-      primaryText={item.spendBalanceDisplay}
-      subText={item.nativeBalanceDisplay}
+      primaryText={item.nativeBalanceDisplay}
       transactionHash={item.transactionHash}
     />
   );

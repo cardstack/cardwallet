@@ -33,10 +33,9 @@ export const MerchantEarnedSpendTransaction = ({
     <TransactionBase
       {...props}
       CoinIcon={<Icon name="spend" />}
-      primaryText={`+ ${item.spendBalanceDisplay}`}
+      primaryText={`+ ${item.nativeBalanceDisplay}`}
       statusIconName="arrow-down"
       statusText="Earned"
-      subText={item.nativeBalanceDisplay}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}
     />

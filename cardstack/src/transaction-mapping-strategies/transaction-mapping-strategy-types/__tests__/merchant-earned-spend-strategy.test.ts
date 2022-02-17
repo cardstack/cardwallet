@@ -66,7 +66,6 @@ describe('MerchantEarnedSpendStrategy', () => {
       },
       infoDid: '3a13a41e-e44a-4b0f-b079-2d3d53571870',
       nativeBalanceDisplay: '$1.50 USD',
-      spendBalanceDisplay: '§150 SPEND',
       timestamp: '1629156260',
       transactionHash:
         '0x5293d95a240c231852724fd31ff6df119e5b5cf7661a7aec38f7cf10893dc2eb',

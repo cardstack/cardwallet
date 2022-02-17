@@ -66,7 +66,6 @@ describe('MerchantEarnedSpendAndRevenueStrategy', () => {
         display: '1.49 DAI',
       },
       nativeBalanceDisplay: '$1.50 USD',
-      spendBalanceDisplay: '§150',
       timestamp: 1629156261,
       token: {
         address: '0xFeDc0c803390bbdA5C4C296776f4b574eC4F30D1',

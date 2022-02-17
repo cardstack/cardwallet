@@ -33,7 +33,7 @@ export const PrepaidCardTransactionSection = ({
     }
   );
 
-  const spendDisplay = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     String(prepaidCard?.spendFaceValue || 0),
     nativeCurrency,
     currencyConversionRates,
@@ -56,7 +56,7 @@ export const PrepaidCardTransactionSection = ({
           <Container marginTop={3}>
             <Text fontSize={12}>Spendable Balance</Text>
             <Text fontSize={15} weight="extraBold">
-              {spendDisplay.nativeBalanceDisplay}
+              {nativeBalanceDisplay}
             </Text>
           </Container>
         )
