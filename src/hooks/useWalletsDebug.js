@@ -24,7 +24,7 @@ import {
   seedPhraseKey,
   selectedWalletKey,
 } from '../utils/keychainConstants';
-import useInitializeWallet from './useInitializeWallet';
+import useWalletManager from './useWalletManager';
 import useWallets from './useWallets';
 import logger from 'logger';
 
@@ -32,7 +32,7 @@ const keysOnly = keysWithValues => map(keysWithValues, item => item?.username);
 
 export default function useWalletsDebug() {
   const { selectedWallet, wallets } = useWallets();
-  const initializeWallet = useInitializeWallet();
+  const { initializeWallet } = useWalletManager();
   const dispatch = useDispatch();
   const { colors } = useTheme();
 

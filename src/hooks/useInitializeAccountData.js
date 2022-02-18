@@ -4,7 +4,6 @@ import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { uniswapGetAllExchanges, uniswapPairsInit } from '../redux/uniswap';
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
-import { explorerInit } from '@rainbow-me/redux/explorer';
 import {
   fallbackExplorerClearState,
   fallbackExplorerInit,
@@ -18,8 +17,7 @@ export default function useInitializeAccountData() {
     try {
       InteractionManager.runAfterInteractions(async () => {
         logger.sentry('Initialize account data');
-        dispatch(fallbackExplorerClearState());
-        dispatch(explorerInit());
+        await dispatch(fallbackExplorerClearState());
         await dispatch(fallbackExplorerInit());
       });
 

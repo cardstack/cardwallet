@@ -14,15 +14,25 @@ jest.mock('@react-navigation/core', () => ({
   }),
 }));
 
-// Mock hideSplash
+// Mock rainbow hooks
 const mockedHideSplashScreen = jest.fn();
+const mockedCreateWallet = jest.fn();
+
 jest.mock('@rainbow-me/hooks', () => ({
   useHideSplashScreen: () => mockedHideSplashScreen,
+  useWalletManager: () => ({ createNewWallet: mockedCreateWallet }),
 }));
 
 jest.mock('@rainbow-me/utils', () => ({
   magicMemo: jest.fn(),
   neverRerender: jest.fn(),
+}));
+
+const mockedShowOverlay = jest.fn();
+jest.mock('@cardstack/navigation', () => ({
+  useLoadingOverlay: () => ({
+    showLoadingOverlay: mockedShowOverlay,
+  }),
 }));
 
 describe('useWelcomeScreen', () => {
@@ -92,9 +102,11 @@ describe('useWelcomeScreen', () => {
       result.current.onCreateWallet();
     });
 
-    expect(mockedReplace).toBeCalledWith(Routes.SWIPE_LAYOUT, {
-      params: { emptyWallet: true },
-      screen: Routes.WALLET_SCREEN,
+    expect(mockedReplace).toBeCalledWith(Routes.SWIPE_LAYOUT);
+    expect(mockedShowOverlay).toBeCalledWith({
+      title: 'Creating account...',
     });
+
+    expect(mockedCreateWallet).toBeCalled();
   });
 });

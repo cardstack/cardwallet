@@ -10,6 +10,7 @@ import {
 import { Device } from '@cardstack/utils';
 import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
 import { PinnedHiddenSectionMenu } from '@cardstack/components/PinnedHiddenSection';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 interface AssetSectionProps {
   section: AssetListSectionItem<SectionType>;
@@ -17,6 +18,8 @@ interface AssetSectionProps {
 }
 
 const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
+  const { isTabBarEnabled } = useTabBarFlag();
+
   const {
     header: { type, title, count, showContextMenu, total },
     data,
@@ -42,7 +45,9 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
         flexDirection="row"
         justifyContent="space-between"
         padding={4}
-        backgroundColor="backgroundBlue"
+        backgroundColor={
+          isTabBarEnabled ? 'backgroundDarkPurple' : 'backgroundBlue'
+        }
       >
         <Container flexDirection="row">
           <Text color="white" size="medium">

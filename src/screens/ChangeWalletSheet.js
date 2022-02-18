@@ -20,10 +20,9 @@ import showWalletErrorAlert from '../helpers/support';
 import WalletLoadingStates from '../helpers/walletLoadingStates';
 import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
-import { cleanUpWalletKeys, createWallet } from '../model/wallet';
+import { cleanUpWalletKeys } from '../model/wallet';
 import { useNavigation } from '../navigation/Navigation';
 import {
-  addressSetSelected,
   createAccountForWallet,
   walletsLoadState,
   walletsSetSelected,
@@ -37,7 +36,7 @@ import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
   useAccountSettings,
-  useInitializeWallet,
+  useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
@@ -63,7 +62,11 @@ export default function ChangeWalletSheet() {
   const { goBack, navigate, replace } = useNavigation();
   const dispatch = useDispatch();
   const { accountAddress } = useAccountSettings();
-  const initializeWallet = useInitializeWallet();
+  const {
+    changeSelectedWallet,
+    createNewWallet,
+    initializeWallet,
+  } = useWalletManager();
   const walletsWithBalancesAndNames = useWalletsWithBalancesAndNames();
   const creatingWallet = useRef();
 
@@ -107,13 +110,7 @@ export default function ChangeWalletSheet() {
         // Nuke apollo data to refetch after changing account
         await apolloClient.clearStore();
         const wallet = wallets[walletId];
-        setCurrentAddress(address);
-        setCurrentSelectedWallet(wallet);
-        const p1 = dispatch(walletsSetSelected(wallet));
-        const p2 = dispatch(addressSetSelected(address));
-        await Promise.all([p1, p2]);
-
-        await initializeWallet();
+        await changeSelectedWallet(wallet, address);
         !fromDeletion && goBack();
       } catch (e) {
         logger.log('error while switching account', e);
@@ -123,12 +120,11 @@ export default function ChangeWalletSheet() {
     },
     [
       apolloClient,
+      changeSelectedWallet,
       currentAddress,
       dismissLoadingOverlay,
-      dispatch,
       editMode,
       goBack,
-      initializeWallet,
       showLoadingOverlay,
       wallets,
     ]
@@ -401,9 +397,7 @@ export default function ChangeWalletSheet() {
 
                     // If doesn't exist, we need to create a new wallet
                   } else {
-                    await createWallet(null, color, name);
-                    await dispatch(walletsLoadState());
-                    await initializeWallet();
+                    await createNewWallet({ color, name });
                   }
                 } catch (e) {
                   logger.sentry('Error while trying to add account');
@@ -432,6 +426,7 @@ export default function ChangeWalletSheet() {
       logger.log('Error while trying to add account', e);
     }
   }, [
+    createNewWallet,
     dismissLoadingOverlay,
     dispatch,
     goBack,
