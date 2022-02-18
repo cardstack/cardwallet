@@ -56,7 +56,7 @@ export default function useWalletManager() {
         logger.sentry('done loading network');
 
         // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
-        loadCoingeckoCoins();
+        await loadCoingeckoCoins();
 
         // TODO: move to rtk query
         const conversionsRates = await getCurrencyConversionsRates();
