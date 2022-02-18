@@ -8,8 +8,7 @@ import {
   Touchable,
   Container,
   QRCode,
-  SafeAreaView,
-  SheetHandle,
+  Sheet,
   Text,
 } from '@cardstack/components';
 import { MerchantInformation } from '@cardstack/types';
@@ -53,23 +52,14 @@ export const AmountQRCode = ({
   );
 
   return (
-    <Container
-      flex={1}
-      alignItems="center"
-      backgroundColor="grayCardBackground"
-      borderRadius={20}
-      borderWidth={1}
-      borderColor="whiteOverlay"
-    >
+    <Container flex={1} alignItems="center">
       <Container
         flex={1}
         flexDirection="column"
         alignItems="center"
         justifyContent="space-between"
-        paddingTop={4}
       >
         <Container alignItems="center">
-          <SheetHandle />
           <Text size="body" color="black" fontWeight="bold" marginTop={4}>
             Scan to Pay
           </Text>
@@ -158,9 +148,9 @@ const ShowQRCodeModal = () => {
   const { params } = useRoute() as { params: ShowQRCodeModalParamTypes };
 
   return (
-    <SafeAreaView flex={1} width="100%" backgroundColor="transparent">
+    <Sheet isFullScreen cardBackgroundColor={colors.grayCardBackground}>
       <AmountQRCode {...params} />
-    </SafeAreaView>
+    </Sheet>
   );
 };
 
