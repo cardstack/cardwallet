@@ -27,7 +27,6 @@ const Routes = {
   NATIVE_STACK: 'NativeStack',
   NON_MODAL_SCREENS: 'NonModalScreens',
   PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
-  PROFILE_SCREEN: 'ProfileScreen',
   QR_SCANNER_SCREEN: 'QRScannerScreen',
   RESTORE_SHEET: 'RestoreSheet',
   SAVINGS_DEPOSIT_MODAL: 'SavingsDepositModal',
@@ -49,6 +48,7 @@ const Routes = {
   // Cardstack Screens
   ...CSMainRoutes,
   ...CSGlobalRoutes,
+  HOME_SCREEN: 'HomeScreen',
 };
 
 export const NATIVE_ROUTES = [

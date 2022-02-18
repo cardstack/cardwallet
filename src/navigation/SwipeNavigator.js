@@ -30,7 +30,7 @@ export function SwipeNavigator() {
         swipeEnabled={!isCoinListEdited}
         tabBar={renderTabBar}
       >
-        <Swipe.Screen component={ProfileScreen} name={Routes.PROFILE_SCREEN} />
+        <Swipe.Screen component={ProfileScreen} name={Routes.HOME_SCREEN} />
         <Swipe.Screen component={WalletScreen} name={Routes.WALLET_SCREEN} />
         <Swipe.Screen
           component={QRScannerScreen}

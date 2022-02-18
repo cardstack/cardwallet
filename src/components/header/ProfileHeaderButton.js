@@ -11,9 +11,7 @@ export default function ProfileHeaderButton() {
   const { navigate } = useNavigation();
   const { accountSymbol, accountColor, accountImage } = useAccountProfile();
 
-  const onPress = useCallback(() => navigate(Routes.PROFILE_SCREEN), [
-    navigate,
-  ]);
+  const onPress = useCallback(() => navigate(Routes.HOME_SCREEN), [navigate]);
 
   const onLongPress = useCallback(() => navigate(Routes.CHANGE_WALLET_SHEET), [
     navigate,
