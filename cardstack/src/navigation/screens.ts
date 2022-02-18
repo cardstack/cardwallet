@@ -35,7 +35,6 @@ import {
   sheetPreset,
   wcPromptPreset,
 } from '@rainbow-me/navigation/effects';
-import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
@@ -161,7 +160,7 @@ export const GlobalScreens: Record<
   },
   SHOW_QRCODE_MODAL: {
     component: ShowQRCodeModal,
-    options: nativeStackModalConfig as StackNavigationOptions,
+    options: sheetPreset as StackNavigationOptions,
   },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,
