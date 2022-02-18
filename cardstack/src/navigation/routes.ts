@@ -16,12 +16,12 @@ export const MainRoutes = {
   UNCLAIMED_REVENUE_SHEET: 'UnclaimedRevenueSheet',
   WALLET_CONNECT_APPROVAL_SHEET: 'WalletConnectApprovalSheet',
   WALLET_CONNECT_REDIRECT_SHEET: 'WalletConnectRedirectSheet',
+  SHOW_QRCODE_MODAL: 'ShowQRCodeModal',
   SETTINGS_MODAL: 'SettingModal',
 } as const;
 
 export const GlobalRoutes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
-  SHOW_QRCODE_MODAL: 'ShowQRCodeModal',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
   LOADING_OVERLAY: 'LoadingOverlay',
 } as const;

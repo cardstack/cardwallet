@@ -142,6 +142,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
       ? bottomSheetPreset
       : wcPromptPreset) as StackNavigationOptions,
   },
+  SHOW_QRCODE_MODAL: {
+    component: ShowQRCodeModal,
+    options: expandedPreset as StackNavigationOptions,
+  },
   ...LoadingOverlayComponent,
   SETTINGS_MODAL: {
     component: SettingsModal,
@@ -157,10 +161,6 @@ export const GlobalScreens: Record<
   CONFIRM_REQUEST: {
     component: TransactionConfirmation,
     options: { gestureEnabled: false },
-  },
-  SHOW_QRCODE_MODAL: {
-    component: ShowQRCodeModal,
-    options: sheetPreset as StackNavigationOptions,
   },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,

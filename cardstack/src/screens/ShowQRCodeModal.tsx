@@ -60,7 +60,6 @@ export const AmountQRCode = ({
         justifyContent="space-between"
       >
         <Container alignItems="center">
-          {/* <SheetHandle /> */}
           <Text size="body" color="black" fontWeight="bold" marginTop={4}>
             Scan to Pay
           </Text>
