@@ -103,7 +103,6 @@ export interface PrepaidCardCreatedTransactionType {
       display: string;
     };
   };
-  spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   transactionHash: string;
   type: TransactionTypes.PREPAID_CARD_CREATED;
@@ -155,7 +154,6 @@ export interface PrepaidCardPaymentTransactionType {
   cardCustomization?: PrepaidCardCustomization;
   timestamp: number;
   spendAmount: string;
-  spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   type: TransactionTypes.PREPAID_CARD_PAYMENT;
   transactionHash: string;
@@ -163,11 +161,8 @@ export interface PrepaidCardPaymentTransactionType {
 }
 
 export interface MerchantEarnedRevenueTransactionTypeTxn {
-  customerSpend: any;
-  customerSpendNative: string;
   protocolFee: string;
   revenueCollected: string;
-  spendConversionRate: string;
   netEarned: BalanceType;
   netEarnedNativeDisplay: string;
 }
@@ -196,7 +191,6 @@ export interface MerchantEarnedSpendTransactionType {
   balance: BalanceType;
   native: BalanceType;
   netEarned: BalanceType;
-  spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_SPEND;
@@ -271,7 +265,6 @@ export interface MerchantEarnedSpendAndRevenueTransactionType {
     name?: string | null;
     symbol?: string | null;
   };
-  spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   timestamp: number;
   type: TransactionTypes.MERCHANT_EARNED_SPEND_AND_REVENUE;
@@ -285,7 +278,7 @@ export interface PrepaidCardSplitTransactionType {
   cardCustomization?: PrepaidCardCustomization;
   timestamp: number;
   spendAmount: string;
-  spendBalanceDisplay: string;
+  nativeBalanceDisplay: string;
   transactionHash: string;
   prepaidCardCount: number;
   type: TransactionTypes.PREPAID_CARD_SPLIT;
@@ -295,7 +288,6 @@ export interface PrepaidCardTransferTransactionType {
   address: string;
   cardCustomization?: PrepaidCardCustomization;
   timestamp: number;
-  spendBalanceDisplay: string;
   nativeBalanceDisplay: string;
   transactionHash: string;
   statusText: string;

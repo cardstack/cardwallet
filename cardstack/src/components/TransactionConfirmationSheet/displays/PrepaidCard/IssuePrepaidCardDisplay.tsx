@@ -100,7 +100,7 @@ const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
     data.token
   );
 
-  const spendDisplay = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     data.spendAmounts[0],
     nativeCurrency,
     currencyConversionRates,
@@ -112,7 +112,7 @@ const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
       <SectionHeaderText>LOAD THIS AMOUNT</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
-          {spendDisplay.nativeBalanceDisplay}
+          {nativeBalanceDisplay}
         </Text>
         <Text variant="subText">{tokenDisplay.display}</Text>
       </Container>
@@ -126,7 +126,7 @@ const ToSection = () => {
     currencyConversionRates,
   ] = useNativeCurrencyAndConversionRates();
 
-  const zeroSpendDisplay = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     '0',
     nativeCurrency,
     currencyConversionRates,
@@ -148,7 +148,7 @@ const ToSection = () => {
               Current Face Value
             </Text>
             <Text marginTop={1} fontSize={15} weight="extraBold">
-              {zeroSpendDisplay.nativeBalanceDisplay}
+              {nativeBalanceDisplay}
             </Text>
             <Container
               width="100%"

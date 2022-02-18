@@ -32,7 +32,6 @@ const PaymentReceivedSheet = () => {
   const {
     address,
     fromAddress,
-    spendBalanceDisplay,
     nativeBalanceDisplay,
     timestamp,
     transactionHash,
@@ -70,9 +69,6 @@ const PaymentReceivedSheet = () => {
           <Container alignItems="center">
             <Text color="black" fontWeight="bold" marginTop={2} size="xs">
               {getAddressPreview(address)}
-            </Text>
-            <Text fontSize={40} fontWeight="700" marginTop={4}>
-              {spendBalanceDisplay || ''}
             </Text>
             <Text color="blueText" fontSize={12}>
               {nativeBalanceDisplay || ''}

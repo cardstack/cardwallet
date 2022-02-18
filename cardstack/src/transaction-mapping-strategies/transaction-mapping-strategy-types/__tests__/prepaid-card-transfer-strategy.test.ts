@@ -37,7 +37,6 @@ const result = {
     textColor: 'black',
   },
   nativeBalanceDisplay: '$1.00 USD',
-  spendBalanceDisplay: '§100 SPEND',
   statusText: 'Transferred',
   timestamp: '1634832515',
   transactionHash:
@@ -56,7 +55,6 @@ const purchasedResult = {
     textColor: 'black',
   },
   nativeBalanceDisplay: '$1.00 USD',
-  spendBalanceDisplay: '§100 SPEND',
   statusText: 'Purchased',
   timestamp: '1634604805',
   transactionHash:

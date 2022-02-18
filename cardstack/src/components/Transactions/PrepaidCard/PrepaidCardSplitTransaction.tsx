@@ -29,7 +29,7 @@ export const PrepaidCardSplitTransaction = ({
       }
       statusIconName="split"
       statusText="Split"
-      primaryText={item.spendBalanceDisplay}
+      primaryText={item.nativeBalanceDisplay}
       topText={`${item.prepaidCardCount} prepaid cards of`}
       transactionHash={item.transactionHash}
     />

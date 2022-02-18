@@ -50,7 +50,6 @@ const result = {
   },
   nativeBalanceDisplay: '$1.00 USD',
   spendAmount: '100',
-  spendBalanceDisplay: '§100 SPEND',
   timestamp: '1629411270',
   transactionHash:
     '0x7e3d3ad2b3cc284a96339b0f0e0a2eabce1fc7a8438858b358aa2cbd55cef333',

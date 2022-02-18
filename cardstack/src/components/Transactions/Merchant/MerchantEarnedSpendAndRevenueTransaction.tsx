@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { useNavigation } from '@react-navigation/core';
-import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import { Icon } from '../../Icon';
 import {
   TransactionBase,
@@ -79,10 +78,9 @@ export const MerchantEarnedSpendAndRevenueTransaction = ({
           netEarnedDisplayValue={item.netEarned.display}
         />
       }
-      primaryText={`+ ${item.spendBalanceDisplay} ${nativeCurrencies.SPD.currency}`}
+      primaryText={`+ ${item.nativeBalanceDisplay}`}
       statusIconName="arrow-down"
       statusText="Received"
-      subText={item.nativeBalanceDisplay}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}
     />

@@ -30,14 +30,14 @@ export const PayThisAmountSection = ({
   headerText: string;
   spendAmount: string | number;
 }) => {
-  const spendDisplay = useSpendDisplay(spendAmount);
+  const { nativeBalanceDisplay } = useSpendDisplay(spendAmount);
 
   return (
     <Container>
       <SectionHeaderText>{headerText}</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
         <Text size="large" weight="extraBold">
-          {spendDisplay.nativeBalanceDisplay}
+          {nativeBalanceDisplay}
         </Text>
       </Container>
     </Container>

@@ -45,8 +45,7 @@ export const PrepaidCardPaymentTransaction = ({
       }
       statusIconName="arrow-up"
       statusText="Paid"
-      primaryText={`- ${item.spendBalanceDisplay}`}
-      subText={item.nativeBalanceDisplay}
+      primaryText={`- ${item.nativeBalanceDisplay}`}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}
     />

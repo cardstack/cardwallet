@@ -96,7 +96,7 @@ const TransferSection = ({ data }: { data: TransferDecodedDataType }) => {
     card => card.address === data.prepaidCard
   );
 
-  const spendDisplay = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     prepaidCard?.spendFaceValue || 0,
     nativeCurrency,
     currencyConversionRates,
@@ -119,10 +119,7 @@ const TransferSection = ({ data }: { data: TransferDecodedDataType }) => {
               <Container marginTop={2}>
                 <Text size="xxs">Face Value</Text>
                 <Text fontSize={15} weight="extraBold">
-                  {spendDisplay.tokenBalanceDisplay}
-                </Text>
-                <Text variant="subText">
-                  {spendDisplay.nativeBalanceDisplay}
+                  {nativeBalanceDisplay}
                 </Text>
               </Container>
             )}

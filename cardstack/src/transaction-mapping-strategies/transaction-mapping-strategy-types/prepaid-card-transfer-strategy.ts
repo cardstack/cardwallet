@@ -40,7 +40,7 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       } catch (error) {}
     }
 
-    const spendDisplay = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
       prepaidCardInventoryEvent
         ? prepaidCardInventoryEvent.inventoryProvisioned?.inventory.sku
             .faceValue
@@ -59,8 +59,7 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       timestamp: prepaidCardInventoryEvent
         ? prepaidCardInventoryEvent.inventoryProvisioned?.timestamp
         : prepaidCardTransferTransaction.timestamp,
-      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
-      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+      nativeBalanceDisplay,
       transactionHash: this.transaction.id,
       statusText: prepaidCardInventoryEvent ? 'Purchased' : 'Transferred',
       type: TransactionTypes.PREPAID_CARD_TRANSFER,

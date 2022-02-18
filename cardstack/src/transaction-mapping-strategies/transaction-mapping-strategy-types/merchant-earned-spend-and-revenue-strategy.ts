@@ -1,7 +1,6 @@
 import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
-  convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '../../types/transaction-types';
 import { BaseStrategy } from '../base-strategy';
@@ -42,7 +41,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
       this.nativeCurrency
     );
 
-    const spendDisplay = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
       prepaidCardPaymentTransaction.spendAmount,
       this.nativeCurrency,
       this.currencyConversionRates
@@ -58,8 +57,6 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
     const transactionDetails = await getMerchantEarnedTransactionDetails(
       prepaidCardPaymentTransaction,
       this.nativeCurrency,
-      convertStringToNumber(nativeBalance.amount),
-      this.currencyConversionRates,
       symbol
     );
 
@@ -84,8 +81,7 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
       */
       timestamp: Number(prepaidCardPaymentTransaction.timestamp) + 1,
       type: TransactionTypes.MERCHANT_EARNED_SPEND_AND_REVENUE,
-      spendBalanceDisplay: spendDisplay.tokenBalanceDisplay,
-      nativeBalanceDisplay: spendDisplay.nativeBalanceDisplay,
+      nativeBalanceDisplay,
       transactionHash: this.transaction.id,
       infoDid: prepaidCardPaymentTransaction.merchantSafe?.infoDid || undefined,
     };

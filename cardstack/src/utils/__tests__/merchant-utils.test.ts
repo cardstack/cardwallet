@@ -90,15 +90,10 @@ describe('Merchant utils', () => {
         await getMerchantEarnedTransactionDetails(
           MERCHANT_EARNED_MOCK_DATA,
           'USD',
-          149.99999999,
-          currencyConversionRates,
           'DAI'
         )
       ).toStrictEqual({
-        customerSpend: '50',
-        customerSpendNative: '$150.00 USD',
         protocolFee: '0.0025 DAI',
-        spendConversionRate: '$0.01 USD',
         revenueCollected: '0.499 DAI',
         netEarned: {
           amount: '0.496506986027944111',

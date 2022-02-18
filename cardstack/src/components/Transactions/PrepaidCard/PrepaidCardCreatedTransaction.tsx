@@ -29,8 +29,7 @@ export const PrepaidCardCreatedTransaction = ({
       }
       statusIconName="git-commit"
       statusText="Loaded"
-      primaryText={`+ ${item.spendBalanceDisplay}`}
-      subText={item.nativeBalanceDisplay}
+      primaryText={`+ ${item.nativeBalanceDisplay}`}
       Footer={
         <Container
           paddingHorizontal={5}
