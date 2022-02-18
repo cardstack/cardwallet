@@ -46,7 +46,7 @@ const TabNavigator = () => (
   >
     <Tab.Screen
       component={HomeScreen}
-      name={RainbowRoutes.PROFILE_SCREEN}
+      name={RainbowRoutes.HOME_SCREEN}
       options={{
         tabBarIcon: ({ focused }) => (
           <TabBarIcon iconName="home" label="HOME" focused={focused} />
@@ -55,7 +55,7 @@ const TabNavigator = () => (
     />
     <Tab.Screen
       component={ProfileScreen}
-      name="Profile"
+      name={RainbowRoutes.PROFILE_SCREEN}
       options={{
         tabBarIcon: ({ focused }) => (
           <TabBarIcon iconName="user" label="PROFILE" focused={focused} />

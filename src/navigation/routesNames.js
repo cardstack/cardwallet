@@ -42,13 +42,14 @@ const Routes = {
   SUPPORTED_COUNTRIES_MODAL_SCREEN: 'SupportedCountriesModalScreen',
   SWAP_DETAILS_SCREEN: 'SwapDetailsScreen',
   SWIPE_LAYOUT: 'SwipeLayout',
-  WALLET_SCREEN: 'WalletScreen',
   WYRE_WEBVIEW: 'WyreWebview',
   WYRE_WEBVIEW_NAVIGATOR: 'WyreWebviewNavigator',
   // Cardstack Screens
   ...CSMainRoutes,
   ...CSGlobalRoutes,
   HOME_SCREEN: 'HomeScreen',
+  PROFILE_SCREEN: 'ProfileScreen',
+  WALLET_SCREEN: 'WalletScreen',
 };
 
 export const NATIVE_ROUTES = [
