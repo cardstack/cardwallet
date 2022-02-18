@@ -10,7 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
-import { HomeScreen, WalletScreen } from '@cardstack/screens';
+import { HomeScreen, WalletScreen, ProfileScreen } from '@cardstack/screens';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 import QRScannerScreen from '@rainbow-me/screens/QRScannerScreen';
@@ -54,11 +54,11 @@ const TabNavigator = () => (
       }}
     />
     <Tab.Screen
-      component={QRScannerScreen}
-      name={RainbowRoutes.QR_SCANNER_SCREEN}
+      component={ProfileScreen}
+      name="Profile"
       options={{
         tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="qr-code" label="SCAN" focused={focused} />
+          <TabBarIcon iconName="user" label="PROFILE" focused={focused} />
         ),
       }}
     />
@@ -68,6 +68,15 @@ const TabNavigator = () => (
       options={{
         tabBarIcon: ({ focused }) => (
           <TabBarIcon iconName="wallet" label="WALLET" focused={focused} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      component={QRScannerScreen}
+      name={RainbowRoutes.QR_SCANNER_SCREEN}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <TabBarIcon iconName="dollar-sign" label="SCAN" focused={focused} />
         ),
       }}
     />
