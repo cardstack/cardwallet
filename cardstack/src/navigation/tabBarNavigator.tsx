@@ -7,9 +7,13 @@ import React, {
   useState,
 } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
+import { dismissAndroidKeyboardOnClose } from '.';
 import { HomeScreen, WalletScreen, ProfileScreen } from '@cardstack/screens';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
@@ -17,6 +21,8 @@ import QRScannerScreen from '@rainbow-me/screens/QRScannerScreen';
 import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { Device, screenHeight } from '@cardstack/utils';
+import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
+import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 
 const Tab = createBottomTabNavigator();
 
@@ -104,6 +110,22 @@ const StackNavigator = () => {
       />
       {cardstackMainScreens}
       {cardstackGlobalScreens}
+
+      {
+        // Temp rainbow components until migration
+      }
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={RainbowRoutes.EXPANDED_ASSET_SHEET}
+        options={expandedPreset as StackNavigationOptions}
+      />
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={RainbowRoutes.EXPANDED_ASSET_SHEET_DRILL}
+        options={sheetPreset as StackNavigationOptions}
+      />
     </Stack.Navigator>
   );
 };
