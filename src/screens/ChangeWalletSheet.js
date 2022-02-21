@@ -446,7 +446,7 @@ export default function ChangeWalletSheet() {
   return (
     <Sheet>
       <Container height={headerHeight}>
-        <Text fontSize={18} weight="extraBold" textAlign="center">
+        <Text fontSize={18} textAlign="center" weight="extraBold">
           Accounts
         </Text>
         <Touchable

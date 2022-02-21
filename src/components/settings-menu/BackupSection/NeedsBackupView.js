@@ -60,7 +60,7 @@ export default function NeedsBackupView() {
             marginBottom={2}
             name="upload-cloud"
           />
-          <Text fontSize={20} weight="bold" marginBottom={2}>
+          <Text fontSize={20} marginBottom={2} weight="bold">
             Back up your account{' '}
           </Text>
           <Text color="blueText" marginBottom={15} textAlign="center">

@@ -94,7 +94,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
               width={isReadOnly ? WITH_WATCHING_LABEL : WITHOUT_WATCHING_LABEL}
             >
               {cleanedUpLabel || ens ? (
-                <Text ellipsizeMode="tail" weight="bold" numberOfLines={1}>
+                <Text ellipsizeMode="tail" numberOfLines={1} weight="bold">
                   {cleanedUpLabel || ens}
                 </Text>
               ) : (
@@ -110,7 +110,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
             justifyContent="flex-end"
           >
             {isReadOnly && (
-              <Text color="backgroundBlue" weight="extraBold" marginRight={2}>
+              <Text color="backgroundBlue" marginRight={2} weight="extraBold">
                 Watching
               </Text>
             )}

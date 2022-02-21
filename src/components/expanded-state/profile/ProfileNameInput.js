@@ -38,7 +38,6 @@ function ProfileNameInput(
         autoCapitalize="words"
         autoFocus
         fontSize={20}
-        weight="bold"
         onChange={handleChange}
         onFocus={handleFocus}
         ref={ref}
@@ -47,6 +46,7 @@ function ProfileNameInput(
         testID={testID}
         textAlign="center"
         value={value}
+        weight="bold"
       />
     </Fragment>
   );

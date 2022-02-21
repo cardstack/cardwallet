@@ -8,10 +8,10 @@ const PlaceholderText = (props, ref) => {
     <Text
       color="grayText"
       fontSize={20}
-      weight="bold"
       ref={ref}
       style={{ marginBottom: -27 }}
       textAlign="center"
+      weight="bold"
       width="100%"
     >
       {value}

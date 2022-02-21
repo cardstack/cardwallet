@@ -80,7 +80,7 @@ export default function SendTransactionSpeed({
 
         {hasTimeAmount && (
           <CenteredContainer flexDirection="row" marginLeft={2}>
-            <Text color="black" weight="bold" marginRight={1} variant="subText">
+            <Text color="black" marginRight={1} variant="subText" weight="bold">
               Arrives in ~ {time}
             </Text>
             <Icon color="settingsTeal" iconSize="small" name="chevron-right" />

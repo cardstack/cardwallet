@@ -46,7 +46,7 @@ const ExchangeModalHeader = ({
   return (
     <Container alignItems="center" css={padding(6, 0)} testID={testID}>
       <SheetHandle marginBottom={SheetHandleMargin} />
-      <Text alignItems="center" color="black" weight="bold" size="medium">
+      <Text alignItems="center" color="black" size="medium" weight="bold">
         {title}
       </Text>
       <InfoButtonTransition ref={transitionRef} transition={transition}>

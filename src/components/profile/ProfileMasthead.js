@@ -197,9 +197,9 @@ export default function ProfileMasthead({
             color="white"
             ellipsizeMode="tail"
             fontSize={24}
-            weight="bold"
             marginRight={1}
             numberOfLines={1}
+            weight="bold"
           >
             {accountName}
           </Text>

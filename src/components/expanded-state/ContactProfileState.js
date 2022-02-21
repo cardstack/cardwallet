@@ -129,7 +129,7 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
                 }
           }
         >
-          <Text color="grayText" weight="bold" textAlign="center">
+          <Text color="grayText" textAlign="center" weight="bold">
             {contact ? 'Delete Contact' : 'Cancel'}
           </Text>
         </ButtonPressAnimation>

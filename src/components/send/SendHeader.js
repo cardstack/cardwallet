@@ -111,7 +111,7 @@ export default function SendHeader({
   return (
     <Fragment>
       <AddressInputContainer isSmallPhone={isSmallPhone}>
-        <Text fontSize={15} weight="bold" marginRight={2}>
+        <Text fontSize={15} marginRight={2} weight="bold">
           To:
         </Text>
         <AddressField

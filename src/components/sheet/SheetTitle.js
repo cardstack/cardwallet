@@ -3,7 +3,7 @@ import { Text } from '@cardstack/components';
 
 const SheetTitle = props => {
   return (
-    <Text fontSize={18} weight="extraBold" textAlign="center" {...props} />
+    <Text fontSize={18} textAlign="center" weight="extraBold" {...props} />
   );
 };
 

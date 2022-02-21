@@ -67,7 +67,6 @@ const AddressField = (
         color={isValid ? 'settingsTeal' : 'invalid'}
         flexGrow={1}
         fontSize={15}
-        weight="bold"
         keyboardType={android ? 'visible-password' : 'default'}
         maxLength={addressUtils.maxLength}
         onBlur={expandAbbreviatedClipboard}
@@ -79,6 +78,7 @@ const AddressField = (
         spellCheck={false}
         testID={testID}
         value={formatValue(inputValue)}
+        weight="bold"
         zIndex={1}
       />
       {!inputValue && (

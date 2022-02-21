@@ -46,10 +46,10 @@ const SupportAndFeedsState = () => {
         <Container marginBottom={12} padding={6}>
           <Text
             color="black"
-            weight="bold"
             paddingBottom={12}
             size="medium"
             textAlign="center"
+            weight="bold"
           >
             {strings.header}
           </Text>
@@ -89,7 +89,7 @@ const TextBoldStart = ({ title, info }: { title: string; info: string }) => (
 );
 
 const SectionHeaderText = ({ text }: { text: string }) => (
-  <Text color="black" fontSize={18} weight="bold" marginBottom={4}>
+  <Text color="black" fontSize={18} marginBottom={4} weight="bold">
     {text}
   </Text>
 );

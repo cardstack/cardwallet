@@ -141,7 +141,7 @@ export default function AlreadyBackedUpView() {
       <Content>
         <Centered direction="column">
           <Icon iconSize="xl" marginBottom={4} name="success" />
-          <Text fontSize={20} weight="bold" marginBottom={1}>
+          <Text fontSize={20} marginBottom={1} weight="bold">
             {(walletStatus === WalletBackupStatus.IMPORTED &&
               `Your account was imported`) ||
               `Your account is backed up`}
