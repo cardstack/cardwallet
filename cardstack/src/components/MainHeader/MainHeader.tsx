@@ -5,9 +5,12 @@ import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Container, Icon, Text } from '@cardstack/components';
 import Routes from '@rainbow-me/navigation/routesNames';
+import { useAccountSettings } from '@rainbow-me/hooks';
+import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 
 const MainHeader = ({ title }: { title: string }) => {
   const { navigate } = useNavigation();
+  const { network } = useAccountSettings();
 
   const insets = useSafeArea();
   const style = useMemo(() => ({ paddingTop: insets.top + 10 }), [insets]);
@@ -36,9 +39,19 @@ const MainHeader = ({ title }: { title: string }) => {
         onPress={onMenuPress}
         size={28}
       />
-      <Container alignSelf="flex-end">
+      <Container
+        flex={1}
+        alignSelf="flex-end"
+        alignItems="center"
+        justifyContent="space-between"
+        flexDirection="column"
+        paddingTop={2}
+      >
         <Text color="white" size="small" weight="bold">
           {title}
+        </Text>
+        <Text color="backgroundLightGray" size="xxs">
+          {networkInfo[network].name}
         </Text>
       </Container>
       <Icon
