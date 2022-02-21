@@ -20,3 +20,4 @@ export { default as WalletConnectApprovalSheet } from './sheets/WalletConnectApp
 export { default as WalletConnectRedirectSheet } from './sheets/WalletConnectRedirectSheet';
 export { default as HomeScreen } from './HomeScreen/HomeScreen';
 export { default as WalletScreen } from './WalletScreen/WalletScreen';
+export { default as ProfileScreen } from './ProfileScreen/ProfileScreen';

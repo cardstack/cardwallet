@@ -110,7 +110,7 @@ const usePayMerchantRequest = ({
     dismissLoadingOverlay();
 
     // Navigate to Transaction screen
-    navigate(RainbowRoutes.PROFILE_SCREEN);
+    navigate(RainbowRoutes.HOME_SCREEN);
 
     // Wait goBack action to navigate
     InteractionManager.runAfterInteractions(() => {
