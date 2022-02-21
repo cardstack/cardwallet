@@ -6,10 +6,11 @@ import {
   walletConnectRemovePendingRedirect,
   walletConnectSetPendingRedirect,
 } from '../redux/walletconnect';
-import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
+import { fullyDecodeURI } from '@cardstack/utils';
 import logger from 'logger';
 
 export default function handleDeepLink(url) {
+  if (!url || typeof url !== 'string') return;
   const urlObj = new URL(url);
   if (urlObj.protocol === 'https:') {
     const action = urlObj.pathname.split('/')[1];
@@ -24,7 +25,12 @@ export default function handleDeepLink(url) {
     }
     // Android uses normal deeplinks
   } else if (urlObj.protocol === 'wc:') {
-    handleWalletConnect(url);
+    handleWalletConnect(fullyDecodeURI(url));
+  } else if (urlObj.origin === 'cardwallet://wc') {
+    const wcUri = urlObj.query?.split('?uri=')?.[1];
+    if (wcUri) {
+      handleWalletConnect(fullyDecodeURI(wcUri));
+    }
   }
 }
 
@@ -35,24 +41,8 @@ function handleWalletConnect(uri) {
   if (uri && query) {
     dispatch(
       walletConnectOnSessionRequest(uri, (status, dappScheme) => {
-        if (status === WCRedirectTypes.reject) {
-          dispatch(
-            walletConnectRemovePendingRedirect(
-              WCRedirectTypes.reject,
-              dappScheme
-            )
-          );
-        } else {
-          dispatch(
-            walletConnectRemovePendingRedirect(
-              WCRedirectTypes.connect,
-              dappScheme
-            )
-          );
-        }
+        dispatch(walletConnectRemovePendingRedirect(status, dappScheme));
       })
     );
-  } else {
-    // This is when we get focused by WC due to a signing request
   }
 }

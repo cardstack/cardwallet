@@ -154,20 +154,18 @@ class App extends Component {
       }
     });
 
-    // Walletconnect uses direct deeplinks
-    if (android) {
-      try {
-        const initialUrl = await Linking.getInitialURL();
-        if (initialUrl) {
-          handleDeepLink(initialUrl);
-        }
-      } catch (e) {
-        Logger.log('Error opening deeplink', e);
+    // Handle direct WC deeplinks
+    try {
+      const initialUrl = await Linking.getInitialURL();
+      if (initialUrl) {
+        handleDeepLink(initialUrl);
       }
-      Linking.addEventListener('url', ({ url }) => {
-        handleDeepLink(url);
-      });
+    } catch (e) {
+      Logger.log('Error opening deeplink', e);
     }
+    Linking.addEventListener('url', ({ url }) => {
+      handleDeepLink(url);
+    });
   }
 
   componentDidUpdate(prevProps) {
