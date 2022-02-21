@@ -7,17 +7,22 @@ import React, {
   useState,
 } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
-import { HomeScreen } from '@cardstack/screens';
+import { dismissAndroidKeyboardOnClose } from '.';
+import { HomeScreen, WalletScreen, ProfileScreen } from '@cardstack/screens';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 import QRScannerScreen from '@rainbow-me/screens/QRScannerScreen';
-import WalletScreen from '@rainbow-me/screens/WalletScreen';
 import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { Device, screenHeight } from '@cardstack/utils';
+import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
+import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +52,7 @@ const TabNavigator = () => (
   >
     <Tab.Screen
       component={HomeScreen}
-      name={RainbowRoutes.PROFILE_SCREEN}
+      name={RainbowRoutes.HOME_SCREEN}
       options={{
         tabBarIcon: ({ focused }) => (
           <TabBarIcon iconName="home" label="HOME" focused={focused} />
@@ -55,11 +60,11 @@ const TabNavigator = () => (
       }}
     />
     <Tab.Screen
-      component={QRScannerScreen}
-      name={RainbowRoutes.QR_SCANNER_SCREEN}
+      component={ProfileScreen}
+      name={RainbowRoutes.PROFILE_SCREEN}
       options={{
         tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="qr-code" label="SCAN" focused={focused} />
+          <TabBarIcon iconName="user" label="PROFILE" focused={focused} />
         ),
       }}
     />
@@ -69,6 +74,15 @@ const TabNavigator = () => (
       options={{
         tabBarIcon: ({ focused }) => (
           <TabBarIcon iconName="wallet" label="WALLET" focused={focused} />
+        ),
+      }}
+    />
+    <Tab.Screen
+      component={QRScannerScreen}
+      name={RainbowRoutes.QR_SCANNER_SCREEN}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <TabBarIcon iconName="dollar-sign" label="SCAN" focused={focused} />
         ),
       }}
     />
@@ -96,6 +110,22 @@ const StackNavigator = () => {
       />
       {cardstackMainScreens}
       {cardstackGlobalScreens}
+
+      {
+        // Temp rainbow components until migration
+      }
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={RainbowRoutes.EXPANDED_ASSET_SHEET}
+        options={expandedPreset as StackNavigationOptions}
+      />
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={RainbowRoutes.EXPANDED_ASSET_SHEET_DRILL}
+        options={sheetPreset as StackNavigationOptions}
+      />
     </Stack.Navigator>
   );
 };

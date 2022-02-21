@@ -346,7 +346,7 @@ export default function ExchangeModal({
         setIsAuthorizing(false);
         const callback = () => {
           setParams({ focused: false });
-          navigate(Routes.PROFILE_SCREEN);
+          navigate(Routes.HOME_SCREEN);
         };
         const rap = await createRap({
           callback,

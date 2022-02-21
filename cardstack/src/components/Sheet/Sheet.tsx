@@ -14,7 +14,6 @@ import { shadow } from '@rainbow-me/styles';
 const styles = StyleSheet.create({
   wrapperBase: {
     justifyContent: 'flex-end',
-    backgroundColor: 'white',
     minHeight: '40%',
   },
 });
@@ -38,6 +37,7 @@ export interface SheetProps {
   scrollEnabled?: boolean;
   shadowEnabled?: boolean;
   overlayColor?: string;
+  cardBackgroundColor?: string;
   Header?: JSX.Element;
   Footer?: JSX.Element;
 }
@@ -50,6 +50,7 @@ const Sheet = ({
   scrollEnabled = false,
   shadowEnabled = false,
   overlayColor = 'transparent',
+  cardBackgroundColor = 'white',
   Header,
   Footer,
 }: SheetProps) => {
@@ -75,10 +76,11 @@ const Sheet = ({
       ...styles.wrapperBase,
       ...shadowStyle,
       flex,
+      backgroundColor: cardBackgroundColor,
       borderTopStartRadius: borderRadius,
       borderTopEndRadius: borderRadius,
     };
-  }, [borderRadius, isFullScreen, shadowEnabled]);
+  }, [borderRadius, isFullScreen, shadowEnabled, cardBackgroundColor]);
 
   const contentContainerStyle = useMemo(() => {
     const { scrollable, fixed } = layouts.contentPaddingBottom;

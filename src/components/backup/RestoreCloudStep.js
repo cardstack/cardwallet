@@ -18,16 +18,11 @@ import walletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import {
   useAccountSettings,
-  useInitializeWallet,
+  useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-import {
-  addressSetSelected,
-  setWalletBackedUp,
-  walletsLoadState,
-  walletsSetSelected,
-} from '@rainbow-me/redux/wallets';
+import { setWalletBackedUp, walletsLoadState } from '@rainbow-me/redux/wallets';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 
@@ -46,7 +41,7 @@ export default function RestoreCloudStep({
   const [label, setLabel] = useState('Restore from backup');
   const passwordRef = useRef();
   const { accountAddress } = useAccountSettings();
-  const initializeWallet = useInitializeWallet();
+  const { changeSelectedWallet } = useWalletManager();
 
   useEffect(() => {
     const fetchPasswordIfPossible = async () => {
@@ -124,10 +119,7 @@ export default function RestoreCloudStep({
           }
           const firstWallet = wallets[Object.keys(wallets)[0]];
           const firstAddress = firstWallet.addresses[0].address;
-          const p1 = dispatch(walletsSetSelected(firstWallet));
-          const p2 = dispatch(addressSetSelected(firstAddress));
-          await Promise.all([p1, p2]);
-          await initializeWallet();
+          await changeSelectedWallet(firstWallet, firstAddress);
           if (fromSettings) {
             logger.log('navigating to wallet');
             navigate(Routes.WALLET_SCREEN);
@@ -146,17 +138,17 @@ export default function RestoreCloudStep({
       Alert.alert('Error while restoring backup');
     }
   }, [
-    accountAddress,
-    selectedBackupName,
-    dispatch,
-    fromSettings,
-    goBack,
-    initializeWallet,
-    navigate,
-    password,
-    replace,
     setIsWalletLoading,
+    password,
     userData,
+    selectedBackupName,
+    accountAddress,
+    goBack,
+    dispatch,
+    changeSelectedWallet,
+    fromSettings,
+    navigate,
+    replace,
   ]);
 
   const onPasswordSubmit = useCallback(() => {

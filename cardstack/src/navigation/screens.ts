@@ -35,7 +35,6 @@ import {
   sheetPreset,
   wcPromptPreset,
 } from '@rainbow-me/navigation/effects';
-import { nativeStackModalConfig } from '@rainbow-me/navigation/config';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
@@ -143,6 +142,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
       ? bottomSheetPreset
       : wcPromptPreset) as StackNavigationOptions,
   },
+  SHOW_QRCODE_MODAL: {
+    component: ShowQRCodeModal,
+    options: expandedPreset as StackNavigationOptions,
+  },
   ...LoadingOverlayComponent,
   SETTINGS_MODAL: {
     component: SettingsModal,
@@ -158,10 +161,6 @@ export const GlobalScreens: Record<
   CONFIRM_REQUEST: {
     component: TransactionConfirmation,
     options: { gestureEnabled: false },
-  },
-  SHOW_QRCODE_MODAL: {
-    component: ShowQRCodeModal,
-    options: nativeStackModalConfig as StackNavigationOptions,
   },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,

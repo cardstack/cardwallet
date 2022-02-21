@@ -19,3 +19,5 @@ export { default as UnclaimedRevenueSheet } from './sheets/UnclaimedRevenue/Uncl
 export { default as WalletConnectApprovalSheet } from './sheets/WalletConnectApprovalSheet';
 export { default as WalletConnectRedirectSheet } from './sheets/WalletConnectRedirectSheet';
 export { default as HomeScreen } from './HomeScreen/HomeScreen';
+export { default as WalletScreen } from './WalletScreen/WalletScreen';
+export { default as ProfileScreen } from './ProfileScreen/ProfileScreen';

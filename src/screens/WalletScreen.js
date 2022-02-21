@@ -6,7 +6,6 @@ import { useValue } from 'react-native-redash/lib/module/v1';
 import styled from 'styled-components';
 
 import { OpacityToggler } from '../components/animations';
-import { AssetListWrapper } from '../components/asset-list';
 import { FabWrapper } from '../components/fab';
 import {
   CameraHeaderButton,
@@ -18,19 +17,18 @@ import { Page } from '../components/layout';
 import {
   useAccountEmptyState,
   useCoinListEdited,
-  useInitializeWallet,
   usePinnedAndHiddenItemOptions,
+  useWalletManager,
   useWallets,
 } from '../hooks';
 import {
+  AssetList,
   BusinessAccountBanner,
   Container,
   ServiceStatusNotice,
   Text,
 } from '@cardstack/components';
-import { useLoadingOverlay } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
-import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
@@ -51,7 +49,7 @@ const WalletPage = styled(Page)`
 export default function WalletScreen() {
   const { params } = useRoute();
   const [initialized, setInitialized] = useState(!!params?.initialized);
-  const initializeWallet = useInitializeWallet();
+  const { initializeWallet } = useWalletManager();
   const { isCoinListEdited } = useCoinListEdited();
   const scrollViewTracker = useValue(0);
   const { isReadOnlyWallet } = useWallets();
@@ -59,7 +57,6 @@ export default function WalletScreen() {
 
   const navigation = useNavigation();
   const { editing, toggle } = usePinnedAndHiddenItemOptions();
-  const { showLoadingOverlay } = useLoadingOverlay();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -73,16 +70,10 @@ export default function WalletScreen() {
 
   useEffect(() => {
     if (!initialized) {
-      const isCreatingWallet = params?.emptyWallet;
-
-      if (isCreatingWallet) {
-        showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
-      }
-
       initializeWallet();
       setInitialized(true);
     }
-  }, [initializeWallet, initialized, params, showLoadingOverlay]);
+  }, [initializeWallet, initialized]);
 
   // Show the exchange fab only for supported networks
   // (mainnet & rinkeby)
@@ -125,7 +116,7 @@ export default function WalletScreen() {
           <ServiceStatusNotice />
           <BusinessAccountBanner />
         </HeaderOpacityToggler>
-        <AssetListWrapper />
+        <AssetList />
       </FabWrapper>
     </WalletPage>
   );

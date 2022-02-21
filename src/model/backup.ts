@@ -20,7 +20,7 @@ import * as keychain from './keychain';
 import {
   AllRainbowWallets,
   allWalletsVersion,
-  createWallet,
+  createOrImportWallet,
   publicAccessControlOptions,
   RainbowWallet,
 } from './wallet';
@@ -223,7 +223,7 @@ async function restoreSpecificBackupIntoKeychain(
         const valueStr = backedUpData[key];
         assert(typeof valueStr == 'string', 'Seed is not a string');
         const { seedphrase } = JSON.parse(valueStr);
-        await createWallet(seedphrase, null, null);
+        await createOrImportWallet({ seed: seedphrase });
       }
     }
     return true;

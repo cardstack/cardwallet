@@ -88,7 +88,7 @@ export default function SendSheet({
   );
 
   return (
-    <Sheet isFullScreen>
+    <Sheet isFullScreen scrollEnabled>
       {ios && <StatusBar barStyle="light-content" />}
       <SendHeader
         contacts={contacts}

@@ -1,42 +1,23 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  createRef,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useCallback, createRef, useMemo } from 'react';
 import {
   RefreshControl,
   SectionList,
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/core';
 import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 import { AssetListLoading } from './components/AssetListLoading';
-import { AssetListProps, AssetListRouteType } from './types';
 import { strings } from './strings';
 import AssetSectionHeader from './components/AssetSectionHeader';
+import { useAssetList } from './useAssetList';
 import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';
 import {
   DiscordPromoBanner,
   useDiscordPromoBanner,
 } from '@cardstack/components/DiscordPromoBanner';
 import { Container, Text } from '@cardstack/components';
-import { isLayer1 } from '@cardstack/utils';
-import {
-  PinnedHiddenSectionOption,
-  useAccountProfile,
-  useRefreshAccountData,
-  useWallets,
-} from '@rainbow-me/hooks';
-import { useGetServiceStatusQuery } from '@cardstack/services';
-import showWalletErrorAlert from '@rainbow-me/helpers/support';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import logger from 'logger';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 const styles = StyleSheet.create({
   contentContainer: {
@@ -49,93 +30,33 @@ const onScrollToIndexFailed = () => {
   logger.log('onScrollToIndexFailed');
 };
 
-export const AssetList = (props: AssetListProps) => {
+export const AssetList = () => {
   const sectionListRef = createRef<SectionList>();
-  const refresh = useRefreshAccountData();
-  const { refetch: refetchServiceStatus } = useGetServiceStatusQuery();
-  const [refreshing, setRefreshing] = useState(false);
-  const { accountAddress } = useAccountProfile();
-  const { navigate, setParams } = useNavigation();
-  const { params } = useRoute<AssetListRouteType>();
-
-  const { isDamaged } = useWallets();
-
-  const {
-    isEmpty,
-    loading,
-    sections,
-    network,
-    nativeCurrency,
-    currencyConversionRates,
-    isFetchingSafes,
-  } = props;
-
-  const networkName = getConstantByNetwork('name', network);
+  const { isTabBarEnabled } = useTabBarFlag();
 
   const {
     showPromoBanner,
     onPress: onDiscordPromoPress,
   } = useDiscordPromoBanner();
 
+  const {
+    sections,
+    isFetchingSafes,
+    isLoading,
+    goToBuyPrepaidCard,
+    onRefresh,
+    componentItemExtraProps,
+    showAddFundsInterstitial,
+    refreshing,
+  } = useAssetList({ sectionListRef });
+
   const renderPromoBanner = useMemo(
     () =>
-      showPromoBanner ? (
+      showPromoBanner && !isTabBarEnabled ? (
         <DiscordPromoBanner onPress={onDiscordPromoPress} />
       ) : null,
-    [onDiscordPromoPress, showPromoBanner]
+    [onDiscordPromoPress, showPromoBanner, isTabBarEnabled]
   );
-
-  const onRefresh = useCallback(async () => {
-    props.refetchSafes();
-
-    setRefreshing(true);
-
-    // Refresh Service Status Notice
-    refetchServiceStatus();
-
-    // Refresh Account Data
-    await refresh();
-
-    setRefreshing(false);
-  }, [props, refresh, refetchServiceStatus]);
-
-  useEffect(() => {
-    if (params?.forceRefreshOnce) {
-      // Set to false so it won't update on assetsRefresh
-      onRefresh();
-      setParams({ forceRefreshOnce: false });
-    }
-  }, [onRefresh, params, sectionListRef, sections, setParams]);
-
-  useEffect(() => {
-    if (params?.scrollToPrepaidCardsSection) {
-      const prepaidCardSectionIndex = sections.findIndex(
-        section =>
-          section.header.type === PinnedHiddenSectionOption.PREPAID_CARDS
-      );
-
-      sectionListRef.current?.scrollToLocation({
-        animated: false,
-        sectionIndex: prepaidCardSectionIndex,
-        itemIndex: 0,
-      });
-
-      // Set to false so it won't update on assetsRefresh
-      setTimeout(() => {
-        setParams({ scrollToPrepaidCardsSection: false });
-      }, 2500);
-    }
-  }, [params, sectionListRef, sections, setParams]);
-
-  const goToBuyPrepaidCard = useCallback(() => {
-    if (isDamaged) {
-      showWalletErrorAlert();
-
-      return;
-    }
-
-    navigate(Routes.BUY_PREPAID_CARD);
-  }, [isDamaged, navigate]);
 
   const renderSectionHeader = useCallback(
     ({ section }) => (
@@ -145,6 +66,13 @@ export const AssetList = (props: AssetListProps) => {
       />
     ),
     [goToBuyPrepaidCard]
+  );
+
+  const renderItem = useCallback(
+    ({ item, section: { Component } }) => (
+      <Component {...item} {...componentItemExtraProps} />
+    ),
+    [componentItemExtraProps]
   );
 
   const renderSectionFooter = useCallback(
@@ -167,25 +95,11 @@ export const AssetList = (props: AssetListProps) => {
     [isFetchingSafes]
   );
 
-  const prevAccount = useRef(null);
-
-  useEffect(() => {
-    if (accountAddress) {
-      prevAccount.current = accountAddress;
-    }
-  }, [accountAddress]);
-
-  // Account was switched so show loading skeleton
-  const isLoadingSafesDiffAccount = useMemo(
-    () => isFetchingSafes && prevAccount.current !== accountAddress,
-    [accountAddress, isFetchingSafes, prevAccount]
-  );
-
-  if (loading || isLoadingSafesDiffAccount) {
+  if (isLoading) {
     return <AssetListLoading />;
   }
 
-  if (isEmpty && isLayer1(network)) {
+  if (showAddFundsInterstitial) {
     return <AddFundsInterstitial />;
   }
 
@@ -203,14 +117,7 @@ export const AssetList = (props: AssetListProps) => {
           />
         }
         sections={sections}
-        renderItem={({ item, section: { Component } }) => (
-          <Component
-            {...item}
-            networkName={networkName}
-            nativeCurrency={nativeCurrency}
-            currencyConversionRates={currencyConversionRates}
-          />
-        )}
+        renderItem={renderItem}
         renderSectionFooter={renderSectionFooter}
         renderSectionHeader={renderSectionHeader}
         contentContainerStyle={styles.contentContainer}

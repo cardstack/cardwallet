@@ -29,7 +29,7 @@ const DeveloperSettings = () => {
 
   const connectToGanache = useCallback(async () => {
     GanacheUtils.connect(() => {
-      navigate(Routes.PROFILE_SCREEN);
+      navigate(Routes.HOME_SCREEN);
     });
   }, [navigate]);
 
