@@ -3,8 +3,8 @@ import { ActivityIndicator } from 'react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
+import { AmountInNativeCurrency } from './components/AmountInNativeCurrency';
 import {
-  AmountInNativeCurrency,
   MinInvalidAmountText,
   useAmountConvertHelper,
 } from '@cardstack/screens/PaymentRequest/helper';
