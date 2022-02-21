@@ -71,7 +71,7 @@ export default function ProfileScreen() {
           >
             <Icon color="teal" iconSize="large" name="settings" />
           </HeaderButton>
-          <Text color="white" fontWeight="bold">
+          <Text color="white" weight="bold">
             ACTIVITY
           </Text>
           <BackButton

@@ -29,7 +29,7 @@ export const RequestPaymentMerchantInfo = ({
     </Text>
     <Text
       color="blueText"
-      fontWeight="600"
+      weight="bold"
       marginTop={3}
       size="smallest"
       textTransform="uppercase"

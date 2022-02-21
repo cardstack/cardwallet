@@ -37,7 +37,7 @@ const MainHeader = ({ title }: { title: string }) => {
         size={28}
       />
       <Container alignSelf="flex-end">
-        <Text color="white" size="small" fontWeight="bold">
+        <Text color="white" size="small" weight="bold">
           {title}
         </Text>
       </Container>

@@ -25,10 +25,10 @@ const IconQRScanImg = styled(ImgixImage).attrs({
 const CustomText = props => (
   <Text
     color="blueText"
-    fontWeight={props.bold ? '500' : '400'}
     letterSpacing={0.32}
     size="xs"
     textAlign="center"
+    weight={props.bold ? 'bold' : 'regular'}
     {...props}
   >
     {props.children}

@@ -76,14 +76,14 @@ const CopyAddressSheet = () => {
           <Text
             fontFamily="RobotoMono-Regular"
             fontSize={18}
-            fontWeight="bold"
+            weight="bold"
             textAlign="center"
           >
             {address.slice(0, 6)}
             <Text
               fontFamily="RobotoMono-Regular"
               fontSize={18}
-              fontWeight="normal"
+              weight="regular"
             >
               {address.slice(6, -4)}
             </Text>

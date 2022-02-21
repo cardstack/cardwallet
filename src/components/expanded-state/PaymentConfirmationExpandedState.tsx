@@ -67,7 +67,7 @@ export default function PaymentConfirmationExpandedState(
           </Text>
           <MerchantSectionCard merchantInfoDID={merchantInfo} paddingBottom={5}>
             <Container alignItems="center">
-              <Text fontSize={34} fontWeight="700">
+              <Text fontSize={34} weight="extraBold">
                 {nativeBalanceDisplay || ''}
               </Text>
 

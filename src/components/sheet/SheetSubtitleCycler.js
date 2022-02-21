@@ -26,7 +26,7 @@ const SheetSubtitleCyclerItem = ({ error, selected, subtitle }) => {
       <AnimatedText
         color="grayText"
         fontSize={13}
-        fontWeight="600"
+        weight="bold"
         textAlign="center"
         textTransform="uppercase"
       >

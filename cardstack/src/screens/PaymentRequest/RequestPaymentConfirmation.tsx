@@ -102,7 +102,7 @@ export const RequestPaymentConfirmation = ({
     <>
       <Container paddingHorizontal={5} width="100%" paddingBottom={20}>
         <Container flexDirection="row" marginTop={8}>
-          <Text color="blueText" fontWeight="bold" paddingTop={1} size="xxs">
+          <Text color="blueText" weight="bold" paddingTop={1} size="xxs">
             TO
           </Text>
           <Container flexDirection="row" marginTop={4}>
@@ -118,7 +118,7 @@ export const RequestPaymentConfirmation = ({
               <Text color="blueText" size="smallest" textTransform="uppercase">
                 Business
               </Text>
-              <Text fontSize={15} fontWeight="bold">
+              <Text fontSize={15} weight="bold">
                 {merchantInfo?.name}
               </Text>
               <Text
@@ -148,7 +148,7 @@ export const RequestPaymentConfirmation = ({
               <Icon name="qrCodeBig" />
               <Text
                 fontSize={15}
-                fontWeight="600"
+                weight="bold"
                 letterSpacing={0.15}
                 lineHeight={20}
                 paddingLeft={3}
@@ -170,7 +170,7 @@ export const RequestPaymentConfirmation = ({
               <Icon name="link" />
               <Text
                 fontSize={15}
-                fontWeight="600"
+                weight="bold"
                 letterSpacing={0.15}
                 lineHeight={20}
                 paddingLeft={3}
@@ -237,7 +237,7 @@ export const RequestPaymentConfirmationFooter = () => (
       <Image height={30} source={CardWalletLogo} width={30} />
       <Text marginTop={1} size="xs" textAlign="center">
         Your customer must have the {'\n'}
-        <Text fontWeight="bold" size="xs">
+        <Text weight="bold" size="xs">
           Card Wallet mobile app
         </Text>{' '}
         installed.

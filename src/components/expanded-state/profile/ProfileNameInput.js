@@ -38,7 +38,7 @@ function ProfileNameInput(
         autoCapitalize="words"
         autoFocus
         fontSize={20}
-        fontWeight="600"
+        weight="bold"
         onChange={handleChange}
         onFocus={handleFocus}
         ref={ref}

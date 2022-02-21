@@ -158,7 +158,7 @@ export default function SettingsModal() {
   const renderHeaderRight = useCallback(
     () => (
       <Touchable marginRight={5} onPress={goBack}>
-        <Text color="settingsTeal" fontWeight="600">
+        <Text color="settingsTeal" weight="bold">
           Done
         </Text>
       </Touchable>

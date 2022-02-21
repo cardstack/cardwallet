@@ -94,11 +94,11 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
               width={isReadOnly ? WITH_WATCHING_LABEL : WITHOUT_WATCHING_LABEL}
             >
               {cleanedUpLabel || ens ? (
-                <Text ellipsizeMode="tail" fontWeight="600" numberOfLines={1}>
+                <Text ellipsizeMode="tail" weight="bold" numberOfLines={1}>
                   {cleanedUpLabel || ens}
                 </Text>
               ) : (
-                <TruncatedAddress address={address} fontWeight="600" />
+                <TruncatedAddress address={address} weight="bold" />
               )}
               <Text variant="subText">{accountSubLabel}</Text>
             </Container>
@@ -110,7 +110,7 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
             justifyContent="flex-end"
           >
             {isReadOnly && (
-              <Text color="backgroundBlue" fontWeight="700" marginRight={2}>
+              <Text color="backgroundBlue" weight="extraBold" marginRight={2}>
                 Watching
               </Text>
             )}

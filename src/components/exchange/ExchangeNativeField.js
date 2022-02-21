@@ -38,7 +38,7 @@ const ExchangeNativeField = (
   return (
     <TouchableWithoutFeedback onPress={handleFocusNativeField}>
       <Row align="center" flex={1} height={height}>
-        <Text fontSize={22} fontWeight="100" height={height} {...setTextStyle}>
+        <Text fontSize={22} height={height} weight="regular" {...setTextStyle}>
           {symbol}
         </Text>
         <ExchangeInput

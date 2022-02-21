@@ -48,7 +48,7 @@ export const ListItem = ({
           <Avatar {...avatarProps} />
         </CenteredContainer>
         <Container marginLeft={4}>
-          <Text variant="body" fontWeight="600" {...textProps}>
+          <Text variant="body" weight="bold" {...textProps}>
             {title}
           </Text>
           {subText && <Text variant="subText">{subText}</Text>}

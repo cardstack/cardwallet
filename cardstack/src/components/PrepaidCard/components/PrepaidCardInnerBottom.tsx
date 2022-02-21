@@ -104,12 +104,12 @@ const PrepaidCardInnerBottom = ({
             Spendable Balance
           </Text>
           <Container flexDirection="row" alignItems="flex-end">
-            <Text fontSize={cardType[variant].tokenFontSize} fontWeight="700">
+            <Text fontSize={cardType[variant].tokenFontSize} weight="extraBold">
               {`${nativeCurrencyInfo.symbol}${nativeBalance.toFixed(2)}`}
             </Text>
             <Text
               fontSize={cardType[variant].currencyFontSize}
-              fontWeight="bold"
+              weight="bold"
               letterSpacing={0}
               style={styles.currencySufix}
             >

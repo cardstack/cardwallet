@@ -17,7 +17,7 @@ export default function TokenInfoItem({
       {asset ? (
         <TokenInfoBalanceValue align={align} asset={asset} />
       ) : (
-        <Text fontSize={20} fontWeight="700">
+        <Text fontSize={20} weight="extraBold">
           {children}
         </Text>
       )}

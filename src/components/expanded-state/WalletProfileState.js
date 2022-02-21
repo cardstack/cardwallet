@@ -170,7 +170,7 @@ export default function WalletProfileState({
               title={`${actionType} Account`}
             />
           ) : (
-            <Text color="settingsTeal" fontWeight="600" textAlign="center">
+            <Text color="settingsTeal" weight="bold" textAlign="center">
               Done
             </Text>
           )}
@@ -178,7 +178,7 @@ export default function WalletProfileState({
       </Container>
       <Container marginBottom={6} marginTop={5}>
         <ButtonPressAnimation onPress={handleCancel}>
-          <Text color="grayText" fontWeight="600" textAlign="center">
+          <Text color="grayText" weight="bold" textAlign="center">
             Cancel
           </Text>
         </ButtonPressAnimation>

@@ -70,7 +70,7 @@ export const AmountQRCode = ({
       >
         <Container alignItems="center">
           <SheetHandle />
-          <Text size="body" color="black" fontWeight="bold" marginTop={4}>
+          <Text size="body" color="black" weight="bold" marginTop={4}>
             Scan to Pay
           </Text>
         </Container>
@@ -100,7 +100,7 @@ export const AmountQRCode = ({
                 <Text
                   size="largeBalance"
                   color="black"
-                  fontWeight="bold"
+                  weight="bold"
                   marginTop={4}
                 >
                   {amountWithSymbol}

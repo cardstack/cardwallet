@@ -197,7 +197,7 @@ export default function ProfileMasthead({
             color="white"
             ellipsizeMode="tail"
             fontSize={24}
-            fontWeight="600"
+            weight="bold"
             marginRight={1}
             numberOfLines={1}
           >

@@ -16,7 +16,7 @@ const TokenInfoBalanceValue = ({ align, asset, ...props }) => {
       marginKey={align === 'left' ? 'marginRight' : 'marginLeft'}
     >
       <CoinIcon {...asset} size={20} />
-      <Text fontSize={20} fontWeight="700">
+      <Text fontSize={20} weight="extraBold">
         {balance?.display || value}
       </Text>
     </RowWithMargins>

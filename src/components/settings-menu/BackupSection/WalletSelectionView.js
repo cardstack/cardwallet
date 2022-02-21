@@ -97,13 +97,13 @@ const WalletSelectionView = () => {
                     <ColumnWithMargins margin={3} marginBottom={0.5}>
                       <Row>
                         {labelOrName ? (
-                          <Text fontWeight="600">{labelOrName}</Text>
+                          <Text weight="bold">{labelOrName}</Text>
                         ) : (
                           <TruncatedAddress address={address} />
                         )}
                       </Row>
                       {totalAccounts > 1 ? (
-                        <Text fontSize={14} fontWeight="600">
+                        <Text fontSize={14} weight="bold">
                           And {totalAccounts - 1} more{' '}
                           {totalAccounts > 2 ? `accounts` : `account`}
                         </Text>

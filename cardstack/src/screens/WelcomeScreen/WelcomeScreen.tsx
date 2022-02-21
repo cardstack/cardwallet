@@ -25,7 +25,7 @@ const WelcomeScreen = () => {
         <Text marginTop={6} variant="welcomeScreen">
           {strings.title}
         </Text>
-        <Text color="white" fontSize={14} fontWeight="600">
+        <Text color="white" fontSize={14} weight="bold">
           {strings.subtitle}
         </Text>
       </CenteredContainer>
@@ -36,7 +36,7 @@ const WelcomeScreen = () => {
         <Text
           color="buttonSecondaryBorder"
           fontSize={14}
-          fontWeight="600"
+          weight="bold"
           textAlign="center"
         >
           {strings.midtitle}
