@@ -40,9 +40,9 @@ function handleWalletConnect(uri) {
   const { query } = new URL(uri);
   if (uri && query) {
     dispatch(
-      walletConnectOnSessionRequest(uri, (status, dappScheme) => {
-        dispatch(walletConnectRemovePendingRedirect(status, dappScheme));
-      })
+      walletConnectOnSessionRequest(uri, (status, dappScheme) =>
+        dispatch(walletConnectRemovePendingRedirect(status, dappScheme))
+      )
     );
   }
 }
