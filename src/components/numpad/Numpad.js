@@ -44,7 +44,7 @@ const Numpad = ({ decimal = true, onPress, width, light = false }) => {
         onPress={() => onPress(symbol.toString())}
         testID={`numpad-button-${symbol}`}
       >
-        <Text color={color} fontSize={44} fontWeight="600" textAlign="center">
+        <Text color={color} fontSize={44} textAlign="center" weight="bold">
           {symbol}
         </Text>
       </KeyboardButton>

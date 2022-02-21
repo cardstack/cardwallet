@@ -75,7 +75,7 @@ export const InputAmount = memo(
           <Text
             size="xxs"
             textAlign="center"
-            fontWeight="bold"
+            weight="bold"
             marginBottom={2}
             textTransform="uppercase"
             textShadowOffset={textShadowOffset}
@@ -92,7 +92,7 @@ export const InputAmount = memo(
             >
               <Text
                 color={inputValue ? 'black' : 'underlineGray'}
-                fontWeight="bold"
+                weight="bold"
                 paddingRight={1}
                 paddingTop={1}
                 size="largeBalance"
@@ -130,7 +130,7 @@ export const InputAmount = memo(
             marginTop={2}
             paddingLeft={1}
           >
-            <Text size="body" fontWeight="bold">
+            <Text size="body" weight="bold">
               {nativeCurrency}
             </Text>
             <Icon

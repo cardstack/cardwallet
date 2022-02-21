@@ -107,19 +107,19 @@ const Bottom = ({ slug }: { slug?: string }) => {
     <Container paddingBottom={6}>
       <Container flexDirection="row" justifyContent="space-between">
         <Container>
-          <Text fontWeight="400" fontSize={11}>
+          <Text weight="regular" fontSize={11}>
             Account ID
           </Text>
-          <Text fontWeight="bold" fontSize={13}>
+          <Text weight="bold" fontSize={13}>
             {slug}
           </Text>
         </Container>
         <Container flexDirection="row" alignItems="center">
           <Container flexDirection="row" marginRight={3}>
-            <Text fontWeight="bold" fontSize={13}>
+            <Text weight="bold" fontSize={13}>
               1{' '}
             </Text>
-            <Text fontWeight="400" fontSize={13}>
+            <Text weight="regular" fontSize={13}>
               manager
             </Text>
           </Container>

@@ -52,7 +52,7 @@ export const OptionItem = ({
         </CenteredContainer>
       )}
       <Container flexShrink={1}>
-        <Text fontWeight="600" {...textProps}>
+        <Text weight="bold" {...textProps}>
           {title}
         </Text>
         {subText && (

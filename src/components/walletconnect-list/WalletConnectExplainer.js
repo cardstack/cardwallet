@@ -25,7 +25,6 @@ const IconQRScanImg = styled(ImgixImage).attrs({
 const CustomText = props => (
   <Text
     color="blueText"
-    fontWeight={props.bold ? '500' : '400'}
     letterSpacing={0.32}
     size="xs"
     textAlign="center"
@@ -42,7 +41,7 @@ export default function WalletConnectExplainer() {
         renderContent={() => (
           <CustomText style={{ marginTop: 5 }}>
             <CustomText>Visit </CustomText>
-            <CustomText bold>app.cardstack.com</CustomText>
+            <CustomText weight="bold">app.cardstack.com</CustomText>
             <CustomText>
               {' '}
               to connect your wallet to use the full Card Pay functions

@@ -35,7 +35,7 @@ const ImportSeedSheet = () => {
   return (
     <>
       <Sheet isFullScreen>
-        <Text fontSize={18} fontWeight="bold" textAlign="center">
+        <Text fontSize={18} weight="bold" textAlign="center">
           Add account
         </Text>
         <Container flex={1} paddingHorizontal={4}>

@@ -126,9 +126,9 @@ const UnderlineField = (
           {rightLabel && (
             <Text
               fontSize={17}
-              fontWeight="700"
               lineHeight={24}
               paddingLeft={2}
+              weight="extraBold"
             >
               {rightLabel}
             </Text>

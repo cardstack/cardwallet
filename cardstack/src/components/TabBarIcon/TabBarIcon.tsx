@@ -44,7 +44,7 @@ const TabBarIcon = ({ focused, iconName, label }: TabBarIconProps) => {
       <Text
         color={styles.iconLabelColor}
         paddingTop={2}
-        fontWeight="bold"
+        weight="bold"
         fontSize={10}
       >
         {label}

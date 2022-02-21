@@ -67,7 +67,6 @@ const AddressField = (
         color={isValid ? 'settingsTeal' : 'invalid'}
         flexGrow={1}
         fontSize={15}
-        fontWeight="600"
         keyboardType={android ? 'visible-password' : 'default'}
         maxLength={addressUtils.maxLength}
         onBlur={expandAbbreviatedClipboard}
@@ -79,12 +78,13 @@ const AddressField = (
         spellCheck={false}
         testID={testID}
         value={formatValue(inputValue)}
+        weight="bold"
         zIndex={1}
       />
       {!inputValue && (
         <Container position="absolute" zIndex={1} {...androidProps}>
           <Touchable onPress={ref?.current?.focus}>
-            <Text color="grayText" fontSize={15} fontWeight="600">
+            <Text color="grayText" fontSize={15} weight="bold">
               Enter Address (0x...) or ENS
             </Text>
           </Touchable>

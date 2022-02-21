@@ -21,7 +21,7 @@ export const MerchantPaymentItemDetail = ({
       marginBottom={10}
     >
       <Container flex={1}>
-        <Text color="blueText" fontSize={13} fontWeight="600" marginTop={1}>
+        <Text color="blueText" fontSize={13} weight="bold" marginTop={1}>
           {description}
         </Text>
       </Container>

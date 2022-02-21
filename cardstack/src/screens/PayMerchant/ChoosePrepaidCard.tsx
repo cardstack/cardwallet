@@ -251,12 +251,7 @@ const PrepaidCardItem = memo(
             <Container flexDirection="row">
               <NetworkBadge text={`ON ${networkName.toUpperCase()}`} />
               {isInsufficientFund && (
-                <Text
-                  color="red"
-                  fontSize={10}
-                  fontWeight="600"
-                  paddingLeft={4}
-                >
+                <Text color="red" fontSize={10} weight="bold" paddingLeft={4}>
                   INSUFFICIENT FUNDS
                 </Text>
               )}
@@ -272,7 +267,7 @@ const PrepaidCardItem = memo(
                 </Text>
               </Container>
               <Container marginTop={1} marginBottom={4}>
-                <Text color="black" fontWeight="bold" fontSize={14}>
+                <Text color="black" weight="bold" fontSize={14}>
                   {nativeBalanceDisplay}
                 </Text>
               </Container>

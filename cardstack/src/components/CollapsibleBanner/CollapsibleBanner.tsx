@@ -151,7 +151,7 @@ export const CollapsibleBanner = ({
         </Container>
         {isOpen && (
           <Container>
-            <Text fontWeight="700" marginBottom={2}>
+            <Text weight="extraBold" marginBottom={2}>
               {openedHeaderText}
             </Text>
             <Text size="body">{openedBodyText}</Text>

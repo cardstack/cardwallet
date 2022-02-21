@@ -74,7 +74,7 @@ export const MinimumVersion = () => {
           width={Constants.iconSize}
         />
         <Container padding={8}>
-          <Text color="white" fontWeight="bold" size="body" textAlign="center">
+          <Text color="white" weight="bold" size="body" textAlign="center">
             {strings.title}
           </Text>
           <Text color="white" size="body" textAlign="center">

@@ -446,7 +446,7 @@ export default function ChangeWalletSheet() {
   return (
     <Sheet>
       <Container height={headerHeight}>
-        <Text fontSize={18} fontWeight="700" textAlign="center">
+        <Text fontSize={18} textAlign="center" weight="extraBold">
           Accounts
         </Text>
         <Touchable
@@ -455,7 +455,7 @@ export default function ChangeWalletSheet() {
           right={20}
           top={4}
         >
-          <Text color="tealDark" fontWeight="600">
+          <Text color="tealDark" weight="bold">
             {editMode ? 'Done' : 'Edit'}
           </Text>
         </Touchable>

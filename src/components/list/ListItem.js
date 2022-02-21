@@ -56,7 +56,7 @@ const ListItem = ({
           margin={iconMargin}
         >
           {icon && <Centered>{renderIcon(icon)}</Centered>}
-          <Text fontWeight="600" paddingHorizontal={4}>
+          <Text paddingHorizontal={4} weight="bold">
             {label}
           </Text>
         </RowWithMargins>

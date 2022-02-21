@@ -84,7 +84,7 @@ const PaymentRequestExpandedSheet = () => {
       >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
       <Container alignItems="center" justifyContent="center" marginTop={4}>
         <Touchable hitSlop={hitSlop.small} onPress={onSkip}>
-          <Text color="blackEerie" fontWeight="600" size="xs">
+          <Text color="blackEerie" weight="bold" size="xs">
             Skip Amount
           </Text>
         </Touchable>
@@ -137,12 +137,7 @@ const PaymentRequestExpandedSheet = () => {
                 marginTop={!editMode ? 9 : 15}
                 paddingHorizontal={5}
               >
-                <Text
-                  color="blueText"
-                  fontWeight="bold"
-                  lineHeight={30}
-                  size="xxs"
-                >
+                <Text color="blueText" weight="bold" lineHeight={30} size="xxs">
                   PAY THIS AMOUNT
                 </Text>
                 <Touchable
@@ -154,7 +149,7 @@ const PaymentRequestExpandedSheet = () => {
                   onPress={() => setEditMode(true)}
                   paddingHorizontal={4}
                 >
-                  <Text fontSize={11} fontWeight="600" lineHeight={26}>
+                  <Text fontSize={11} weight="bold" lineHeight={26}>
                     Edit amount
                   </Text>
                 </Touchable>
@@ -166,7 +161,7 @@ const PaymentRequestExpandedSheet = () => {
                 paddingBottom={4}
               >
                 <Container paddingLeft={10}>
-                  <Text fontSize={25} fontWeight="bold">
+                  <Text fontSize={25} weight="bold">
                     {amountWithSymbol}
                   </Text>
                 </Container>

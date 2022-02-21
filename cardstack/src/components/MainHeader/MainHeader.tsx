@@ -47,7 +47,7 @@ const MainHeader = ({ title }: { title: string }) => {
         flexDirection="column"
         paddingTop={2}
       >
-        <Text color="white" size="small" fontWeight="bold">
+        <Text color="white" size="small" weight="bold">
           {title}
         </Text>
         <Text color="backgroundLightGray" size="xxs">

@@ -141,7 +141,7 @@ export default function AlreadyBackedUpView() {
       <Content>
         <Centered direction="column">
           <Icon iconSize="xl" marginBottom={4} name="success" />
-          <Text fontSize={20} fontWeight="600" marginBottom={1}>
+          <Text fontSize={20} marginBottom={1} weight="bold">
             {(walletStatus === WalletBackupStatus.IMPORTED &&
               `Your account was imported`) ||
               `Your account is backed up`}
@@ -171,7 +171,7 @@ export default function AlreadyBackedUpView() {
                 marginRight={2}
                 name="download-cloud"
               />
-              <Text color="settingsTeal" fontWeight="600">
+              <Text color="settingsTeal" weight="bold">
                 Back up to {cloudPlatform}
               </Text>
             </CenteredContainer>
@@ -180,7 +180,7 @@ export default function AlreadyBackedUpView() {
       ) : !hasMultipleWallets ? (
         <Footer>
           <ButtonPressAnimation onPress={manageCloudBackups}>
-            <Text color="settingsTeal" fontWeight="600">
+            <Text color="settingsTeal" weight="bold">
               Manage {cloudPlatform} Backups
             </Text>
           </ButtonPressAnimation>

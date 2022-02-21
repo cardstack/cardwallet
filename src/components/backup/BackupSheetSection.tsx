@@ -31,7 +31,7 @@ export default function BackupSheetSection({
         paddingHorizontal={8}
       >
         <Icon color="tealDark" name="upload-cloud" size={60} />
-        <Text fontSize={20} fontWeight="600" marginVertical={2}>
+        <Text fontSize={20} marginVertical={2} weight="bold">
           {titleText}
         </Text>
         <Text color="blueText" marginBottom={12} textAlign="center">

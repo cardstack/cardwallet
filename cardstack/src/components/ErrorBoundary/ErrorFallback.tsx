@@ -21,7 +21,7 @@ const ErrorFallback = ({
   return (
     <SafeAreaView backgroundColor="backgroundBlue" flex={1}>
       <CenteredContainer flex={1} paddingHorizontal={5}>
-        <Text size="large" textAlign="center" color="white" fontWeight="bold">
+        <Text size="large" textAlign="center" color="white" weight="bold">
           Uh oh!
         </Text>
         <Text

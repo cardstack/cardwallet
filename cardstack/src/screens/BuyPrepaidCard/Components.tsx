@@ -75,7 +75,7 @@ export const CardContent = ({
           color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
           fontSize={14}
           textAlign="center"
-          fontWeight="500"
+          weight="regular"
         >
           {`\n`}
           {isSoldOut ? 'SOLD OUT' : `${faceValue} SPEND`}

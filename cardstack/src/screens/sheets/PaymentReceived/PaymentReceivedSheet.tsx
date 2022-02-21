@@ -67,7 +67,7 @@ const PaymentReceivedSheet = () => {
           }
         >
           <Container alignItems="center">
-            <Text color="black" fontWeight="bold" marginTop={2} size="xs">
+            <Text color="black" weight="bold" marginTop={2} size="xs">
               {getAddressPreview(address)}
             </Text>
             <Text color="blueText" fontSize={12}>

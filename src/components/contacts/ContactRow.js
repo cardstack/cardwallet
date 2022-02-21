@@ -21,7 +21,7 @@ const ContactRow = ({ address, color, nickname, ...props }, ref) => {
       <RowWithMargins css={margin(0, 15, 22)} height={40} margin={15}>
         <ContactAvatar color={color} size="medium" value={nickname} />
         <Column justify={ios ? 'space-between' : 'center'}>
-          <Text fontWeight="600">{removeFirstEmojiFromString(nickname)}</Text>
+          <Text weight="bold">{removeFirstEmojiFromString(nickname)}</Text>
           <TruncatedAddress
             address={address}
             fontFamily="OpenSans-Regular"
