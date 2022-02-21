@@ -4,7 +4,6 @@ import networkInfo from '../../helpers/networkInfo';
 import { useAccountSettings, useInternetStatus } from '../../hooks';
 import { Nbsp, Text } from '../text';
 import Toast from './Toast';
-import networkTypes from '@rainbow-me/helpers/networkTypes';
 
 const NetworkToast = () => {
   const isConnected = useInternetStatus();
@@ -15,7 +14,7 @@ const NetworkToast = () => {
   const [networkName, setNetworkName] = useState(name);
 
   useEffect(() => {
-    setVisible(isConnected && network !== networkTypes.xdai);
+    setVisible(isConnected);
     setNetworkName(networkInfo[network].shortName);
   }, [name, network, providerUrl, isConnected, isTestnet, networkName]);
 
