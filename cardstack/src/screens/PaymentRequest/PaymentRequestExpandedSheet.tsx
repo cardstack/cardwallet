@@ -137,8 +137,9 @@ const PaymentRequestExpandedSheet = () => {
                 marginTop={!editMode ? 9 : 15}
                 paddingHorizontal={5}
               >
-                <Text color="blueText" weight="bold" lineHeight={30} size="xxs">
-                  PAY THIS AMOUNT
+                <Text>
+                  <Text weight="bold">{merchantInfo?.name}</Text> requests{' '}
+                  <Text weight="bold">{amountWithSymbol}</Text>
                 </Text>
                 <Touchable
                   borderColor="grayText"
