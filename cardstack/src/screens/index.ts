@@ -21,3 +21,4 @@ export { default as WalletConnectRedirectSheet } from './sheets/WalletConnectRed
 export { default as HomeScreen } from './HomeScreen/HomeScreen';
 export { default as WalletScreen } from './WalletScreen/WalletScreen';
 export { default as ProfileScreen } from './ProfileScreen/ProfileScreen';
+export { default as TransferCardScreen } from './TransferCardScreen/TransferCardScreen';
