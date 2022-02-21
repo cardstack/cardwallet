@@ -28,7 +28,6 @@ const CustomText = props => (
     letterSpacing={0.32}
     size="xs"
     textAlign="center"
-    weight={props.bold ? 'bold' : 'regular'}
     {...props}
   >
     {props.children}
@@ -42,7 +41,7 @@ export default function WalletConnectExplainer() {
         renderContent={() => (
           <CustomText style={{ marginTop: 5 }}>
             <CustomText>Visit </CustomText>
-            <CustomText bold>app.cardstack.com</CustomText>
+            <CustomText weight="bold">app.cardstack.com</CustomText>
             <CustomText>
               {' '}
               to connect your wallet to use the full Card Pay functions
