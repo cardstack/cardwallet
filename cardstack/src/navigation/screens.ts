@@ -19,7 +19,6 @@ import {
   PayMerchant,
   PrepaidCardModal,
   SendSheetDepot,
-  ShowQRCodeModal,
   TransactionConfirmation,
   WelcomeScreen,
   CollectibleSheet,
@@ -141,10 +140,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     options: (Device.isIOS
       ? bottomSheetPreset
       : wcPromptPreset) as StackNavigationOptions,
-  },
-  SHOW_QRCODE_MODAL: {
-    component: ShowQRCodeModal,
-    options: expandedPreset as StackNavigationOptions,
   },
   ...LoadingOverlayComponent,
   SETTINGS_MODAL: {
