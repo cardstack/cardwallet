@@ -1,33 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 
 import { useNavigation } from '@react-navigation/core';
+import { useTransferCardScreen } from './useTransferCardScreen';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
-import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
-
-const useTransferCardScreen = () => {
-  const [address, setAddress] = useState();
-
-  const isValidAddress = useSendAddressValidation(address);
-
-  const onChangeText = useCallback(text => {
-    setAddress(text);
-  }, []);
-
-  const onTransferPress = useCallback(() => {
-    // TODO: handle transfer
-  }, []);
-
-  const onScanPress = useCallback(() => {
-    // TODO: handle scan qr code
-  }, []);
-
-  return {
-    isValidAddress,
-    onChangeText,
-    onTransferPress,
-    onScanPress,
-  };
-};
 
 const TransferCardScreen = () => {
   const { goBack } = useNavigation();
