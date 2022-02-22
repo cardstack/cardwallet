@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
+import CardstackLogo from '../../assets/cardstackColorLogo.png';
 import { useDimensions } from '@rainbow-me/hooks';
 import { Container, QRCode } from '@cardstack/components';
-import CardstackLogo from '../../assets/cardstackColorLogo.png';
 
 const PADDING = 80;
 
