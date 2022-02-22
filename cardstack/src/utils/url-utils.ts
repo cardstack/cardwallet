@@ -1,10 +1,7 @@
-export const isEncodedUri = (uri: string): boolean => {
-  uri = uri || '';
+export const isEncodedUri = (uri = ''): boolean =>
+  uri !== decodeURIComponent(uri);
 
-  return uri !== decodeURIComponent(uri);
-};
-
-export const fullyDecodeURI = (uri: string): string => {
+export const decodeNestedURI = (uri: string): string => {
   while (isEncodedUri(uri)) {
     uri = decodeURIComponent(uri);
   }

@@ -6,7 +6,7 @@ import {
   walletConnectRemovePendingRedirect,
   walletConnectSetPendingRedirect,
 } from '../redux/walletconnect';
-import { fullyDecodeURI } from '@cardstack/utils';
+import { decodeNestedURI } from '@cardstack/utils';
 import logger from 'logger';
 
 export default function handleDeepLink(url) {
@@ -25,11 +25,11 @@ export default function handleDeepLink(url) {
     }
     // Android uses normal deeplinks
   } else if (urlObj.protocol === 'wc:') {
-    handleWalletConnect(fullyDecodeURI(url));
+    handleWalletConnect(decodeNestedURI(url));
   } else if (urlObj.origin === 'cardwallet://wc') {
     const wcUri = urlObj.query?.split('?uri=')?.[1];
     if (wcUri) {
-      handleWalletConnect(fullyDecodeURI(wcUri));
+      handleWalletConnect(decodeNestedURI(wcUri));
     }
   }
 }
