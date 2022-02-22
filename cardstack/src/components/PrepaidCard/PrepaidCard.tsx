@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { PrepaidCardCustomization, PrepaidCardType } from '../../types';
 import { CenteredContainer, ContainerProps } from '../Container';
@@ -31,6 +31,8 @@ export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
 const SELECT_ICON_WIDTH = '13%';
 const EDITING_COIN_ROW_WIDTH = '87%';
 
+const delayLongPressMs = 2500;
+
 /**
  * A prepaid card component
  */
@@ -52,10 +54,6 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const isEditing = editing === PinnedHiddenSectionOption.PREPAID_CARDS;
   const isHidden = hidden.includes(prepaidCard.address);
 
-  if (!isEditing && isHidden) {
-    return null;
-  }
-
   const isSelected = selected.includes(prepaidCard.address);
   const isPinned = pinned.includes(prepaidCard.address);
   const showIcon = isPinned || isHidden;
@@ -63,19 +61,37 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
   const editingIconName = isSelected ? 'check-circle' : 'circle';
 
-  const onPress = () => {
-    if (isEditing) {
-      if (isSelected) {
-        deselect(prepaidCard.address);
-      } else {
-        select(prepaidCard.address);
-      }
-    } else {
+  const onPress = useCallback(() => {
+    if (!isEditing) {
       navigate(Routes.PREPAID_CARD_MODAL, {
         prepaidCardProps: props,
       });
+
+      return;
     }
-  };
+
+    if (isSelected) {
+      deselect(prepaidCard.address);
+    } else {
+      select(prepaidCard.address);
+    }
+  }, [
+    deselect,
+    isEditing,
+    isSelected,
+    navigate,
+    prepaidCard.address,
+    props,
+    select,
+  ]);
+
+  const onLongPress = useCallback(() => {
+    navigate(Routes.TRANSFER_CARD);
+  }, [navigate]);
+
+  if (!isEditing && isHidden) {
+    return null;
+  }
 
   return (
     <Wrapper width="100%" paddingHorizontal={4} marginBottom={4} {...props}>
@@ -86,6 +102,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
         flexDirection="row"
         disabled={props.disabled}
         onPress={onPress}
+        onLongPress={onLongPress}
+        delayLongPress={delayLongPressMs}
       >
         {isEditing && (
           <Container

@@ -18,6 +18,7 @@ export const MainRoutes = {
   WALLET_CONNECT_REDIRECT_SHEET: 'WalletConnectRedirectSheet',
   SHOW_QRCODE_MODAL: 'ShowQRCodeModal',
   SETTINGS_MODAL: 'SettingModal',
+  TRANSFER_CARD: 'TransferCardScreen',
 } as const;
 
 export const GlobalRoutes = {

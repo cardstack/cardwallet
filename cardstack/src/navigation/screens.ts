@@ -28,6 +28,7 @@ import {
   UnclaimedRevenueSheet,
   WalletConnectApprovalSheet,
   WalletConnectRedirectSheet,
+  TransferCardScreen,
 } from '@cardstack/screens';
 import {
   bottomSheetPreset,
@@ -150,6 +151,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   SETTINGS_MODAL: {
     component: SettingsModal,
     options: slideLeftToRightPreset,
+  },
+  TRANSFER_CARD: {
+    component: TransferCardScreen,
+    options: { ...overlayPreset, gestureEnabled: false },
   },
 };
 
