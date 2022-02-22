@@ -5,8 +5,13 @@ import {
   PrepaidCardPayMerchantQueryParams,
   PrepaidCardSafeQueryParams,
   PrepaidCardsQueryResult,
+  PrepaidCardTransferQueryParams,
 } from './prepaid-card-types';
-import { fetchPrepaidCards, payMerchant } from './prepaid-card-service';
+import {
+  fetchPrepaidCards,
+  payMerchant,
+  transferPrepaidCard,
+} from './prepaid-card-service';
 
 const prepaidCardApi = safesApi.injectEndpoints({
   endpoints: builder => ({
@@ -24,7 +29,6 @@ const prepaidCardApi = safesApi.injectEndpoints({
       },
       providesTags: [CacheTags.PREPAID_CARDS],
     }),
-
     payMerchant: builder.mutation<
       TransactionReceipt,
       PrepaidCardPayMerchantQueryParams
@@ -40,10 +44,26 @@ const prepaidCardApi = safesApi.injectEndpoints({
       },
       invalidatesTags: [CacheTags.SAFES],
     }),
+    transferPrepaidCard: builder.mutation<
+      TransactionReceipt,
+      PrepaidCardTransferQueryParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          TransactionReceipt,
+          PrepaidCardTransferQueryParams
+        >(transferPrepaidCard, params, {
+          errorLogMessage: 'Error while transferring prepaid card',
+          resetHdProvider: true,
+        });
+      },
+      invalidatesTags: [CacheTags.SAFES],
+    }),
   }),
 });
 
 export const {
   usePayMerchantMutation,
   useGetPrepaidCardsQuery,
+  useTransferPrepaidCardMutation,
 } = prepaidCardApi;
