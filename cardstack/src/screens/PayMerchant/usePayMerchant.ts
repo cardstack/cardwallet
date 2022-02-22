@@ -21,6 +21,7 @@ import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import logger from 'logger';
 import { usePayMerchantMutation } from '@cardstack/services';
 import { useLoadingOverlay } from '@cardstack/navigation';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 export const PAY_STEP = {
   EDIT_AMOUNT: 'EDIT_AMOUNT',
@@ -79,8 +80,8 @@ const usePayMerchantRequest = ({
     });
 
     payMerchant({
-      selectedWallet,
-      network: qrCodeNetwork,
+      walletId: selectedWallet.id,
+      network: qrCodeNetwork as Network,
       merchantAddress,
       prepaidCardAddress: selectedPrepaidCard?.address || '',
       spendAmount,
@@ -98,6 +99,10 @@ const usePayMerchantRequest = ({
   ]);
 
   const onPayMerchantSuccess = useCallback(async () => {
+    if (!receipt) {
+      return;
+    }
+
     const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
       String(spendAmount),
       accountCurrency,
@@ -139,17 +144,10 @@ const usePayMerchantRequest = ({
   ]);
 
   useEffect(() => {
-    if (isSuccess && receipt) {
+    if (isSuccess) {
       onPayMerchantSuccess();
     }
-  }, [
-    dismissLoadingOverlay,
-    error,
-    isError,
-    isSuccess,
-    onPayMerchantSuccess,
-    receipt,
-  ]);
+  }, [isSuccess, onPayMerchantSuccess]);
 
   useEffect(() => {
     if (isError) {

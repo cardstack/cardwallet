@@ -1,13 +1,12 @@
-import { getSDK } from '@cardstack/cardpay-sdk';
+import { TransactionReceipt } from 'web3-eth';
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 import {
+  PrepaidCardPayMerchantQueryParams,
   PrepaidCardSafeQueryParams,
   PrepaidCardsQueryResult,
 } from './prepaid-card-types';
-import { fetchPrepaidCards } from './prepaid-card-service';
-import HDProvider from '@cardstack/models/hd-provider';
-import Web3Instance from '@cardstack/models/web3-instance';
+import { fetchPrepaidCards, payMerchant } from './prepaid-card-service';
 
 const prepaidCardApi = safesApi.injectEndpoints({
   endpoints: builder => ({
@@ -25,40 +24,19 @@ const prepaidCardApi = safesApi.injectEndpoints({
       },
       providesTags: [CacheTags.PREPAID_CARDS],
     }),
-    // TODO: Add right types, and extract to prepaid-card-service service
-    payMerchant: builder.mutation<any, any>({
-      async queryFn({
-        selectedWallet,
-        network,
-        merchantAddress,
-        prepaidCardAddress,
-        spendAmount,
-        accountAddress,
-      }) {
-        try {
-          const web3 = await Web3Instance.get({
-            walletId: selectedWallet.id || '',
-            network,
-          });
 
-          const prepaidCardInstance = await getSDK('PrepaidCard', web3);
-
-          const receipt = await prepaidCardInstance.payMerchant(
-            merchantAddress,
-            prepaidCardAddress,
-            spendAmount,
-            undefined,
-            { from: accountAddress }
-          );
-
-          await HDProvider.reset();
-
-          return { data: receipt };
-        } catch (error) {
-          return {
-            error: { status: 418, data: error },
-          };
-        }
+    payMerchant: builder.mutation<
+      TransactionReceipt,
+      PrepaidCardPayMerchantQueryParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          TransactionReceipt,
+          PrepaidCardPayMerchantQueryParams
+        >(payMerchant, params, {
+          errorLogMessage: 'Error while paying merchant',
+          resetHdProvider: true,
+        });
       },
       invalidatesTags: [CacheTags.SAFES],
     }),

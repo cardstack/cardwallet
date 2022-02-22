@@ -1,6 +1,7 @@
 import { getSDK, PrepaidCardSafe } from '@cardstack/cardpay-sdk';
 import { updateSafeWithTokenPrices } from '../gnosis-service';
 import {
+  PrepaidCardPayMerchantQueryParams,
   PrepaidCardSafeQueryParams,
   PrepaidCardTransferQueryParams,
 } from './prepaid-card-types';
@@ -10,6 +11,7 @@ import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import { getSafesInstance } from '@cardstack/models';
 import { PrepaidCardType } from '@cardstack/types';
 import Web3Instance from '@cardstack/models/web3-instance';
+import { SignedProviderParams } from '@cardstack/models/hd-provider';
 
 export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
   try {
@@ -46,6 +48,14 @@ export const getPrepaidCardByAddress = async (
   } catch (e) {
     logger.sentry('Error getPrepaidCardByAddress', e);
   }
+};
+
+const getPrepaidCardInstance = async (signedParams?: SignedProviderParams) => {
+  const web3 = await Web3Instance.get(signedParams);
+
+  const prepaidCardInstance = await getSDK('PrepaidCard', web3);
+
+  return prepaidCardInstance;
 };
 
 // Queries
@@ -89,12 +99,10 @@ export const transferPrepaidCard = async ({
   network,
   accountAddress,
 }: PrepaidCardTransferQueryParams) => {
-  const web3 = await Web3Instance.get({
+  const prepaidCardInstance = await getPrepaidCardInstance({
     walletId,
     network,
   });
-
-  const prepaidCardInstance = await getSDK('PrepaidCard', web3);
 
   const transfer = await prepaidCardInstance.transfer(
     prepaidCardAddress,
@@ -104,4 +112,28 @@ export const transferPrepaidCard = async ({
   );
 
   return transfer;
+};
+
+export const payMerchant = async ({
+  prepaidCardAddress,
+  merchantAddress,
+  walletId,
+  network,
+  accountAddress,
+  spendAmount,
+}: PrepaidCardPayMerchantQueryParams) => {
+  const prepaidCardInstance = await getPrepaidCardInstance({
+    walletId,
+    network,
+  });
+
+  const receipt = await prepaidCardInstance.payMerchant(
+    merchantAddress,
+    prepaidCardAddress,
+    spendAmount,
+    undefined,
+    { from: accountAddress }
+  );
+
+  return receipt;
 };
