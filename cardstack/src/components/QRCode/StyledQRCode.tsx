@@ -1,9 +1,7 @@
-import React, { useCallback, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { memo } from 'react';
 import { useDimensions } from '@rainbow-me/hooks';
 import { Container, QRCode } from '@cardstack/components';
-import { colors } from '@cardstack/theme';
+import CardstackLogo from '../../assets/cardstackColorLogo.png';
 
 const PADDING = 80;
 
@@ -11,20 +9,10 @@ type QRCodeParam = {
   value: string;
 };
 
-export const StyledQRCode = ({ value }: QRCodeParam) => {
+export const StyledQRCode = memo(({ value }: QRCodeParam) => {
   const { width } = useDimensions();
   const QRCodeSize = Math.round(width - PADDING * 2);
-
-  const [isFocus, setFocus] = useState(false);
-  const [isQRCodeRendering, setQRCodeState] = useState(true);
-  const onQRCodeRendered = useCallback(() => setQRCodeState(false), []);
-  useFocusEffect(
-    useCallback(() => {
-      setFocus(true);
-
-      return () => setFocus(false);
-    }, [])
-  );
+  const LogoSize = Math.round(QRCodeSize * 0.15);
 
   return (
     <Container alignItems="center" flex={1} paddingTop={8}>
@@ -38,19 +26,13 @@ export const StyledQRCode = ({ value }: QRCodeParam) => {
         width={QRCodeSize + 50}
         height={QRCodeSize + 50}
       >
-        {isFocus && (
-          <QRCode
-            size={QRCodeSize}
-            data={value}
-            onRenderingEnd={onQRCodeRendered}
-          />
-        )}
-        {isQRCodeRendering && (
-          <Container position="absolute">
-            <ActivityIndicator size="large" color={colors.blueText} />
-          </Container>
-        )}
+        <QRCode
+          size={QRCodeSize}
+          value={value}
+          logo={CardstackLogo}
+          logoSize={LogoSize}
+        />
       </Container>
     </Container>
   );
-};
+});
