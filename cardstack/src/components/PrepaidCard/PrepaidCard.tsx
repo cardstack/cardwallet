@@ -86,8 +86,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   ]);
 
   const onLongPress = useCallback(() => {
-    navigate(Routes.TRANSFER_CARD);
-  }, [navigate]);
+    navigate(Routes.TRANSFER_CARD, { prepaidCardAddress: props.address });
+  }, [navigate, props.address]);
 
   if (!isEditing && isHidden) {
     return null;
