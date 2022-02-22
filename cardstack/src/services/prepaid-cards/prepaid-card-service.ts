@@ -1,11 +1,15 @@
-import { PrepaidCardSafe } from '@cardstack/cardpay-sdk';
+import { getSDK, PrepaidCardSafe } from '@cardstack/cardpay-sdk';
 import { updateSafeWithTokenPrices } from '../gnosis-service';
-import { PrepaidCardSafeQueryParams } from './prepaid-card-types';
+import {
+  PrepaidCardSafeQueryParams,
+  PrepaidCardTransferQueryParams,
+} from './prepaid-card-types';
 import { getSafeData } from '@cardstack/services';
 import logger from 'logger';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
 import { getSafesInstance } from '@cardstack/models';
 import { PrepaidCardType } from '@cardstack/types';
+import Web3Instance from '@cardstack/models/web3-instance';
 
 export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
   try {
@@ -74,4 +78,30 @@ export const fetchPrepaidCards = async ({
   return {
     prepaidCards: extendedPrepaidCards,
   };
+};
+
+// Mutations
+
+export const transferPrepaidCard = async ({
+  prepaidCardAddress,
+  newOwner,
+  walletId,
+  network,
+  accountAddress,
+}: PrepaidCardTransferQueryParams) => {
+  const web3 = await Web3Instance.get({
+    walletId,
+    network,
+  });
+
+  const prepaidCardInstance = await getSDK('PrepaidCard', web3);
+
+  const transfer = await prepaidCardInstance.transfer(
+    prepaidCardAddress,
+    newOwner,
+    undefined,
+    { from: accountAddress }
+  );
+
+  return transfer;
 };
