@@ -7,59 +7,9 @@ import {
   convertStringToNumber,
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
-import { Container, Text, TextProps } from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
+import { Text, TextProps } from '@cardstack/components';
 
 export const MIN_SPEND_AMOUNT = 50;
-export const RequestPaymentMerchantInfo = ({
-  address,
-  name,
-}: {
-  address: string;
-  name: string | undefined;
-}) => (
-  <Container
-    alignItems="center"
-    flexDirection="column"
-    paddingVertical={5}
-    width="100%"
-  >
-    <Text size="body" weight="extraBold">
-      Request Payment
-    </Text>
-    <Text
-      color="blueText"
-      weight="bold"
-      marginTop={3}
-      size="smallest"
-      textTransform="uppercase"
-    >
-      {name || ''}
-    </Text>
-    <Text fontFamily="RobotoMono-Regular" size="xs" weight="regular">
-      {getAddressPreview(address)}
-    </Text>
-  </Container>
-);
-
-export const AmountInNativeCurrency = ({
-  amountWithSymbol,
-  textCenter = false,
-  ...textProps
-}: {
-  amountWithSymbol: string;
-  textCenter?: boolean;
-} & TextProps) => (
-  <Text
-    color="blueText"
-    fontFamily="OpenSans-Regular"
-    fontSize={12}
-    textAlign={textCenter ? 'center' : undefined}
-    {...textProps}
-  >
-    {amountWithSymbol}
-  </Text>
-);
 
 export const MinInvalidAmountText = ({
   nativeCurrency,

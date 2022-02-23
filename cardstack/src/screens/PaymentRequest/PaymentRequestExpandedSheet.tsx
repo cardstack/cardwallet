@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/core';
 import {
-  RequestPaymentConfirmation,
-  RequestPaymentConfirmationFooter,
-} from './RequestPaymentConfirmation';
-import {
-  RequestPaymentMerchantInfo,
-  MinInvalidAmountText,
-  useAmountConvertHelper,
-} from './helper';
+  PaymentRequestConfirmation,
+  PaymentRequestFooter,
+  PaymentRequestHeader,
+} from './components';
+import { MinInvalidAmountText, useAmountConvertHelper } from './helper';
 import { useDimensions } from '@rainbow-me/hooks';
 import {
   Button,
@@ -96,13 +93,8 @@ const PaymentRequestExpandedSheet = () => {
     <Sheet
       isFullScreen
       scrollEnabled={!editMode}
-      Header={
-        <RequestPaymentMerchantInfo
-          address={address}
-          name={merchantInfo?.name}
-        />
-      }
-      Footer={editMode ? <EditFooter /> : <RequestPaymentConfirmationFooter />}
+      Header={<PaymentRequestHeader />}
+      Footer={editMode ? <EditFooter /> : <PaymentRequestFooter />}
     >
       {editMode ? (
         <Container paddingHorizontal={5}>
@@ -137,44 +129,48 @@ const PaymentRequestExpandedSheet = () => {
                 marginTop={!editMode ? 9 : 15}
                 paddingHorizontal={5}
               >
-                <Text color="blueText" weight="bold" lineHeight={30} size="xxs">
-                  PAY THIS AMOUNT
-                </Text>
-                <Touchable
-                  borderColor="grayText"
-                  borderRadius={15}
-                  borderWidth={1}
-                  height={30}
-                  hitSlop={hitSlop.small}
-                  onPress={() => setEditMode(true)}
-                  paddingHorizontal={4}
+                <Container
+                  flex={4}
+                  alignItems="flex-start"
+                  justifyContent="center"
                 >
-                  <Text fontSize={11} weight="bold" lineHeight={26}>
-                    Edit amount
+                  <Text>
+                    <Text weight="bold">{merchantInfo?.name}</Text> requests{' '}
+                    <Text weight="bold">{amountWithSymbol}</Text>
                   </Text>
-                </Touchable>
+                </Container>
+                <Container
+                  flex={1}
+                  alignItems="flex-end"
+                  justifyContent="center"
+                >
+                  <Touchable
+                    borderColor="grayText"
+                    borderRadius={15}
+                    borderWidth={1}
+                    height={30}
+                    hitSlop={hitSlop.small}
+                    onPress={() => setEditMode(true)}
+                    paddingHorizontal={4}
+                  >
+                    <Text fontSize={11} weight="bold" lineHeight={26}>
+                      Edit
+                    </Text>
+                  </Touchable>
+                </Container>
               </Container>
               <Container
                 borderBottomColor="backgroundLightGray"
                 borderBottomWidth={1}
                 marginHorizontal={5}
                 paddingBottom={4}
-              >
-                <Container paddingLeft={10}>
-                  <Text fontSize={25} weight="bold">
-                    {amountWithSymbol}
-                  </Text>
-                </Container>
-              </Container>
+              />
             </>
           ) : null}
-          <RequestPaymentConfirmation
+          <PaymentRequestConfirmation
             address={address}
             amountInNum={amountInNum}
-            amountWithSymbol={amountWithSymbol}
-            merchantInfo={merchantInfo}
             nativeCurrency={nativeCurrency}
-            backToEditMode={() => setEditMode(true)}
           />
         </>
       )}
