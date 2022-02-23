@@ -147,7 +147,6 @@
     "path-browserify": "0.0.0",
     "prop-types": "^15.7.2",
     "punycode": "^1.4.1",
-    "qs": "^6.9.4",
     "querystring-es3": "^0.2.1",
     "rainbow-token-list": "rainbow-me/token-lists#092bd84fac3b2032b94f05a1a49899252e5eb923",
     "react": "17.0.2",
