@@ -64,7 +64,7 @@ export const useTransferCardScreen = () => {
         error: {
           status: isError,
           callback: onTransferFinishedAlert({
-            title: 'Ops!',
+            title: 'Oops!',
             message: 'Something went wrong',
           }),
         },

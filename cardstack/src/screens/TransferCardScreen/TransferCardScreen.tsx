@@ -1,17 +1,15 @@
 import React from 'react';
 
-import { useNavigation } from '@react-navigation/core';
 import { useTransferCardScreen } from './useTransferCardScreen';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
 
 const TransferCardScreen = () => {
-  const { goBack } = useNavigation();
-
   const {
     isValidAddress,
     onChangeText,
     onTransferPress,
     onScanPress,
+    goBack,
   } = useTransferCardScreen();
 
   return (
