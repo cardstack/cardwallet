@@ -34,35 +34,56 @@ const currencyConversionRates = {
 
 describe('Merchant utils', () => {
   describe('shareRequestPaymentLink', () => {
-    const address = '0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811';
+    const merchantName = 'MerchantName';
+    const amountWithSymbol = '$1.00 USD';
     const paymentRequestLink = `cardwallet://pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`;
 
-    const expectedContent = {
-      message: `Payment Request\nTo: 0xd6F3...5811\nURL: cardwallet://pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`,
-      title: 'Payment Request',
-    };
+    const title = `${merchantName} Requests ${amountWithSymbol}`;
+    const message = `${title} \nURL: ${paymentRequestLink}`;
 
     it('should return a share link with right params for iOS', async () => {
       Device.isIOS = true;
       const share = jest.spyOn(Share, 'share').mockImplementation(jest.fn());
 
-      await shareRequestPaymentLink(address, paymentRequestLink);
+      await shareRequestPaymentLink(
+        paymentRequestLink,
+        merchantName,
+        amountWithSymbol
+      );
 
-      expect(share).toBeCalledWith(expectedContent, {
-        excludedActivityTypes: [
-          `com.apple.UIKit.activity.CopyToPasteboard`,
-          `com.apple.UIKit.activity.AddToReadingList`,
-        ],
-      });
+      expect(share).toBeCalledWith(
+        {
+          title,
+          message,
+          url: paymentRequestLink,
+        },
+        {
+          excludedActivityTypes: [
+            `com.apple.UIKit.activity.CopyToPasteboard`,
+            `com.apple.UIKit.activity.AddToReadingList`,
+          ],
+          subject: title,
+        }
+      );
     });
 
     it('should return a share link with right params and without iOS specifics if not iOS', async () => {
       Device.isIOS = false;
       const share = jest.spyOn(Share, 'share').mockImplementation(jest.fn());
 
-      await shareRequestPaymentLink(address, paymentRequestLink);
+      await shareRequestPaymentLink(
+        paymentRequestLink,
+        merchantName,
+        amountWithSymbol
+      );
 
-      expect(share).toBeCalledWith(expectedContent, undefined);
+      expect(share).toBeCalledWith(
+        {
+          title,
+          message,
+        },
+        { dialogTitle: title }
+      );
     });
   });
 
