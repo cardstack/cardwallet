@@ -1,0 +1,159 @@
+import { act, renderHook } from '@testing-library/react-hooks';
+
+import { Alert } from 'react-native';
+import { useTransferCardScreen } from '../useTransferCardScreen';
+import { useTransferPrepaidCardMutation } from '@cardstack/services';
+
+const validAddress = '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13';
+const prepaidCardAddress = '0x4ba1A50Aecba077Acdf4625BF9aDB3Fe964eEA17';
+const accountAddress = '0x0000000000000000000000000000000000000000';
+
+// Mock navigation
+const mockedGoBack = jest.fn();
+jest.mock('@react-navigation/core', () => ({
+  useNavigation: () => ({
+    goBack: mockedGoBack,
+  }),
+  useRoute: () => ({
+    params: { prepaidCardAddress },
+  }),
+}));
+
+jest.mock('@rainbow-me/hooks', () => ({
+  useAccountSettings: () => ({
+    accountAddress,
+    network: 'xdai',
+  }),
+  useWallets: () => ({ selectedWallet: { id: '123' } }),
+}));
+
+const mockedShowOverlay = jest.fn();
+const mockedDismissOverlay = jest.fn();
+jest.mock('@cardstack/navigation', () => ({
+  useLoadingOverlay: () => ({
+    showLoadingOverlay: mockedShowOverlay,
+    dismissLoadingOverlay: mockedDismissOverlay,
+  }),
+}));
+
+jest.mock('@cardstack/services', () => ({
+  useTransferPrepaidCardMutation: jest.fn(),
+}));
+
+jest.mock('@rainbow-me/components/send/SendSheet', () => ({
+  useSendAddressValidation: jest.fn(() => true),
+}));
+
+describe('useTransferCardScreen', () => {
+  const mockedTransferPrepaidCard = jest.fn();
+
+  const spyAlert = jest.spyOn(Alert, 'alert');
+
+  const mockTransferCardHelper = (overwriteStatus?: {
+    isSuccess: boolean;
+    isError: boolean;
+  }) => {
+    (useTransferPrepaidCardMutation as jest.Mock).mockImplementation(() => [
+      mockedTransferPrepaidCard.mockResolvedValue(Promise.resolve()),
+      {
+        isSuccess: true,
+        isError: false,
+        ...overwriteStatus,
+      },
+    ]);
+  };
+
+  beforeEach(() => {
+    mockTransferCardHelper();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should show loading and call transferPrepaidCard onTransferPress', async () => {
+    const { result } = renderHook(() => useTransferCardScreen());
+
+    act(() => {
+      result.current.onChangeText(validAddress);
+    });
+
+    act(() => {
+      result.current.onTransferPress();
+    });
+
+    expect(mockedShowOverlay).toBeCalledWith({
+      title: 'Transferring Prepaid Card...',
+    });
+
+    expect(mockedTransferPrepaidCard).toBeCalledWith({
+      accountAddress,
+      network: 'xdai',
+      prepaidCardAddress,
+      newOwner: validAddress,
+      walletId: '123',
+    });
+  });
+
+  it('should dismiss loading and show alert on success', async () => {
+    const { result } = renderHook(() => useTransferCardScreen());
+
+    act(() => {
+      result.current.onChangeText(validAddress);
+    });
+
+    act(() => {
+      result.current.onTransferPress();
+    });
+
+    expect(spyAlert).toBeCalledWith(
+      'Success',
+      'Your Prepaid Card has been transferred!',
+      [{ text: 'Okay', onPress: mockedGoBack }],
+      undefined
+    );
+  });
+
+  it('should dismiss loading and show alert on error', async () => {
+    const { result } = renderHook(() => useTransferCardScreen());
+
+    mockTransferCardHelper({
+      isSuccess: false,
+      isError: true,
+    });
+
+    act(() => {
+      result.current.onChangeText(validAddress);
+    });
+
+    act(() => {
+      result.current.onTransferPress();
+    });
+
+    expect(spyAlert).toBeCalledWith(
+      'Oops!',
+      'Something went wrong',
+      [{ text: 'Okay', onPress: mockedGoBack }],
+      undefined
+    );
+  });
+
+  it('should goBack on alert Okay press', async () => {
+    const { result } = renderHook(() => useTransferCardScreen());
+
+    act(() => {
+      result.current.onChangeText(validAddress);
+    });
+
+    act(() => {
+      result.current.onTransferPress();
+    });
+
+    act(() => {
+      // Tap Okay button on Alert
+      spyAlert.mock.calls?.[0]?.[2]?.[0]?.onPress?.();
+    });
+
+    expect(mockedGoBack).toBeCalled();
+  });
+});
