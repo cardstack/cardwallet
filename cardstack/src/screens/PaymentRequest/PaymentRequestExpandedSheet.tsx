@@ -171,6 +171,8 @@ const PaymentRequestExpandedSheet = () => {
             address={address}
             amountInNum={amountInNum}
             nativeCurrency={nativeCurrency}
+            amountWithSymbol={amountWithSymbol}
+            merchantInfo={merchantInfo}
           />
         </>
       )}

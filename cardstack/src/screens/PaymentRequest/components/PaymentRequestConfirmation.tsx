@@ -10,18 +10,25 @@ import {
 import { Icon } from '@rainbow-me/components/icons';
 import { useAccountSettings, useClipboard } from '@rainbow-me/hooks';
 import { Button, Container, StyledQRCode, Text } from '@cardstack/components';
+import { MerchantInformation } from '@cardstack/types';
 import { shareRequestPaymentLink } from '@cardstack/utils';
 import logger from 'logger';
+
+interface PaymentRequestConfirmationProps {
+  address: string;
+  amountInNum: number;
+  nativeCurrency?: string;
+  amountWithSymbol: string;
+  merchantInfo: MerchantInformation;
+}
 
 export const PaymentRequestConfirmation = ({
   address,
   amountInNum,
   nativeCurrency,
-}: {
-  address: string;
-  amountInNum: number;
-  nativeCurrency?: string;
-}) => {
+  amountWithSymbol,
+  merchantInfo,
+}: PaymentRequestConfirmationProps) => {
   const [copyCount, setCopyCount] = useState(0);
 
   const { network } = useAccountSettings();
@@ -57,11 +64,15 @@ export const PaymentRequestConfirmation = ({
 
   const handleShareLink = useCallback(async () => {
     try {
-      await shareRequestPaymentLink(address, paymentRequestWebLink);
+      await shareRequestPaymentLink(
+        paymentRequestWebLink,
+        merchantInfo?.name || '',
+        amountWithSymbol
+      );
     } catch (e) {
       logger.sentry('Payment Request Link share failed', e);
     }
-  }, [address, paymentRequestWebLink]);
+  }, [amountWithSymbol, merchantInfo.name, paymentRequestWebLink]);
 
   return (
     <>

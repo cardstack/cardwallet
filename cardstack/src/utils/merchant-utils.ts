@@ -7,7 +7,6 @@ import {
   MerchantSafe,
   subtract,
 } from '@cardstack/cardpay-sdk';
-import { getAddressPreview } from './formatting-utils';
 import { Device } from './device';
 import {
   MerchantClaimFragment,
@@ -103,8 +102,9 @@ export const updateMerchantSafeWithCustomization = async (
 };
 
 export const shareRequestPaymentLink = (
-  address: string,
-  paymentRequestLink: string
+  paymentRequestLink: string,
+  merchantName: string,
+  amountWithSymbol: string
 ) => {
   // Refer to https://developer.apple.com/documentation/uikit/uiactivitytype
   const activityUiKitPath = 'com.apple.UIKit.activity';
@@ -114,23 +114,30 @@ export const shareRequestPaymentLink = (
     `${activityUiKitPath}.AddToReadingList`,
   ];
 
+  const title = `${merchantName} Requests ${amountWithSymbol}`;
+  const message = `${title} \nURL: ${paymentRequestLink}`;
+
   const options = Device.isIOS
     ? {
         excludedActivityTypes,
+        subject: title,
       }
-    : undefined;
+    : {
+        dialogTitle: title,
+      };
 
-  const obfuscatedAddress = getAddressPreview(address);
-  const title = 'Payment Request';
-  const message = `${title}\nTo: ${obfuscatedAddress}\nURL: ${paymentRequestLink}`;
+  const content = Device.isIOS
+    ? {
+        title,
+        message,
+        url: paymentRequestLink,
+      }
+    : {
+        title,
+        message,
+      };
 
-  return Share.share(
-    {
-      message,
-      title,
-    },
-    options
-  );
+  return Share.share(content, options);
 };
 
 export async function getMerchantClaimTransactionDetails(
