@@ -158,6 +158,7 @@ export interface PrepaidCardPaymentTransactionType {
   type: TransactionTypes.PREPAID_CARD_PAYMENT;
   transactionHash: string;
   merchantInfo?: MerchantInformation;
+  merchantSafeAddress: string;
 }
 
 export interface MerchantEarnedRevenueTransactionTypeTxn {
