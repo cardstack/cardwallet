@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent, act } from '../../../../src/test-utils';
+import { strings } from '../strings';
 import TransferCardScreen from '../TransferCardScreen';
 import { useTransferCardScreen } from '../useTransferCardScreen';
 
@@ -42,7 +43,7 @@ describe('TransferCardScreen', () => {
   it('should call onScanPress', () => {
     const { getByText } = render(<TransferCardScreen />);
 
-    const scanBtn = getByText('Scan QR code');
+    const scanBtn = getByText(strings.scanQrBtn);
 
     act(() => {
       fireEvent.press(scanBtn);
@@ -56,7 +57,7 @@ describe('TransferCardScreen', () => {
 
     const { getByText } = render(<TransferCardScreen />);
 
-    const transferBtn = getByText('Transfer');
+    const transferBtn = getByText(strings.transferBtn);
 
     expect(transferBtn).toBeDisabled();
   });
@@ -66,7 +67,7 @@ describe('TransferCardScreen', () => {
 
     const { getByText } = render(<TransferCardScreen />);
 
-    const transferBtn = getByText('Transfer');
+    const transferBtn = getByText(strings.transferBtn);
 
     expect(transferBtn).toBeEnabled();
   });
@@ -74,7 +75,7 @@ describe('TransferCardScreen', () => {
   it('should call onTrasferPress', () => {
     const { getByText } = render(<TransferCardScreen />);
 
-    const transferBtn = getByText('Transfer');
+    const transferBtn = getByText(strings.transferBtn);
 
     act(() => {
       fireEvent.press(transferBtn);
