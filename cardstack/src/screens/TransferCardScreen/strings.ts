@@ -5,4 +5,16 @@ export const strings = {
   inputPlaceholder: 'Enter address (0x...)',
   scanQrBtn: 'Scan QR Code',
   transferBtn: 'Transfer',
+  loadingTitle: 'Transferring Prepaid Card...',
+  alert: {
+    btnLabel: 'Okay',
+    success: {
+      title: 'Success',
+      message: 'Your Prepaid Card has been transferred!',
+    },
+    error: {
+      title: 'Oops!',
+      message: 'Something went wrong',
+    },
+  },
 };

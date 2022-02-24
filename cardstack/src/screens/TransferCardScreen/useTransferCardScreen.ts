@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { useNavigation, useRoute } from '@react-navigation/core';
+import { strings } from './strings';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
 import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { RouteType } from '@cardstack/navigation/types';
@@ -45,7 +46,7 @@ export const useTransferCardScreen = () => {
       Alert({
         message,
         title,
-        buttons: [{ text: 'Okay', onPress: goBack }],
+        buttons: [{ text: strings.alert.btnLabel, onPress: goBack }],
       });
     },
     [dismissLoadingOverlay, goBack]
@@ -57,15 +58,15 @@ export const useTransferCardScreen = () => {
         success: {
           status: isSuccess,
           callback: onTransferFinishedAlert({
-            title: 'Success',
-            message: 'Your Prepaid Card has been transferred!',
+            title: strings.alert.success.title,
+            message: strings.alert.success.message,
           }),
         },
         error: {
           status: isError,
           callback: onTransferFinishedAlert({
-            title: 'Oops!',
-            message: 'Something went wrong',
+            title: strings.alert.error.title,
+            message: strings.alert.error.message,
           }),
         },
       }),
@@ -74,7 +75,7 @@ export const useTransferCardScreen = () => {
   );
 
   const onTransferPress = useCallback(async () => {
-    showLoadingOverlay({ title: 'Transferring Prepaid Card...' });
+    showLoadingOverlay({ title: strings.loadingTitle });
 
     transferPrepaidCard({
       accountAddress,

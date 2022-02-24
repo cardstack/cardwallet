@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 
 import { Alert } from 'react-native';
 import { useTransferCardScreen } from '../useTransferCardScreen';
+import { strings } from '../strings';
 import { useTransferPrepaidCardMutation } from '@cardstack/services';
 
 const validAddress = '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13';
@@ -83,7 +84,7 @@ describe('useTransferCardScreen', () => {
     });
 
     expect(mockedShowOverlay).toBeCalledWith({
-      title: 'Transferring Prepaid Card...',
+      title: strings.loadingTitle,
     });
 
     expect(mockedTransferPrepaidCard).toBeCalledWith({
@@ -107,9 +108,9 @@ describe('useTransferCardScreen', () => {
     });
 
     expect(spyAlert).toBeCalledWith(
-      'Success',
-      'Your Prepaid Card has been transferred!',
-      [{ text: 'Okay', onPress: mockedGoBack }],
+      strings.alert.success.title,
+      strings.alert.success.message,
+      [{ text: strings.alert.btnLabel, onPress: mockedGoBack }],
       undefined
     );
   });
@@ -131,9 +132,9 @@ describe('useTransferCardScreen', () => {
     });
 
     expect(spyAlert).toBeCalledWith(
-      'Oops!',
-      'Something went wrong',
-      [{ text: 'Okay', onPress: mockedGoBack }],
+      strings.alert.error.title,
+      strings.alert.error.message,
+      [{ text: strings.alert.btnLabel, onPress: mockedGoBack }],
       undefined
     );
   });
