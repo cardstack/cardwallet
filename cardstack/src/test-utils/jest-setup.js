@@ -258,11 +258,6 @@ jest.mock('@uniswap/sdk', () => ({
   Token: jest.fn(),
 }));
 
-jest.mock('easyqrcode-react-native', () => ({
-  QRCode: jest.fn(),
-  Canvas: jest.fn(),
-}));
-
 jest.mock('react-native-localize', () => ({
   getLocales: () => [
     {
