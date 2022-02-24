@@ -1,17 +1,16 @@
 import React from 'react';
 
-import { useNavigation } from '@react-navigation/core';
 import { useTransferCardScreen } from './useTransferCardScreen';
+import { strings } from './strings';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
 
 const TransferCardScreen = () => {
-  const { goBack } = useNavigation();
-
   const {
     isValidAddress,
     onChangeText,
     onTransferPress,
     onScanPress,
+    goBack,
   } = useTransferCardScreen();
 
   return (
@@ -30,15 +29,15 @@ const TransferCardScreen = () => {
         alignSelf="flex-end"
       />
       <Text color="white" weight="bold" textAlign="center" size="medium">
-        Transfer Card
+        {strings.title}
       </Text>
       <Text color="blueText" size="body" padding={10} textAlign="center">
-        You can enter an EOA address or Scan it to transfer this PrepaidCard
+        {strings.subtitle}
       </Text>
       <Container paddingVertical={5}>
         <Input
           paddingVertical={2}
-          placeholder="Enter address (0x...)"
+          placeholder={strings.inputPlaceholder}
           color="white"
           placeholderTextColor="gray"
           borderBottomColor="teal"
@@ -47,11 +46,16 @@ const TransferCardScreen = () => {
           multiline
         />
       </Container>
-      <Button marginVertical={5} variant="primary" onPress={onScanPress}>
-        Scan QR code
+      <Button
+        marginVertical={5}
+        variant="primary"
+        onPress={onScanPress}
+        disabled
+      >
+        {strings.scanQrBtn}
       </Button>
       <Button disabled={!isValidAddress} onPress={onTransferPress}>
-        Transfer
+        {strings.transferBtn}
       </Button>
     </Container>
   );

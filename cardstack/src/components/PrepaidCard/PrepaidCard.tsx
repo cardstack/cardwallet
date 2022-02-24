@@ -17,6 +17,7 @@ import {
   Icon,
   ScrollView,
 } from '@cardstack/components';
+import { Alert } from '@rainbow-me/components/alerts';
 
 export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
   networkName: string;
@@ -86,8 +87,16 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   ]);
 
   const onLongPress = useCallback(() => {
-    navigate(Routes.TRANSFER_CARD);
-  }, [navigate]);
+    if (props.transferrable) {
+      navigate(Routes.TRANSFER_CARD, {
+        prepaidCardAddress: props.address,
+      });
+
+      return;
+    }
+
+    Alert({ title: 'Oops!', message: 'Prepaid card not transferrable.' });
+  }, [navigate, props.address, props.transferrable]);
 
   if (!isEditing && isHidden) {
     return null;

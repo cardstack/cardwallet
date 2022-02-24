@@ -4,7 +4,6 @@ import BigNumber from 'bignumber.js';
 import { ClaimRevenueQueryParams } from './merchant-types';
 import { TokenType } from '@cardstack/types';
 import Web3Instance from '@cardstack/models/web3-instance';
-import HDProvider from '@cardstack/models/hd-provider';
 
 // Mutations
 
@@ -49,7 +48,4 @@ export const claimMerchantRevenue = async ({
   });
 
   await Promise.all(promises);
-
-  // resets signed provider and web3 instance to kill poller
-  await HDProvider.reset();
 };

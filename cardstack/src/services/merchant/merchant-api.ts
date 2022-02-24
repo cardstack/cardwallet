@@ -12,6 +12,7 @@ const merchantApi = safesApi.injectEndpoints({
           params,
           {
             errorLogMessage: 'Error claiming merchant revenue',
+            resetHdProvider: true,
           }
         );
       },
