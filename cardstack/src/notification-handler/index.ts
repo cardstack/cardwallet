@@ -1,4 +1,4 @@
-import notifee from '@notifee/react-native';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 import { merchantPrepaidCardPaymentReceivedHandler } from './merchantPrepaidCardPaymentReceived';
 import { merchantClaimHandler } from './merchantClaim';
 import logger from 'logger';
@@ -96,10 +96,21 @@ export const displayLocalNotification = async (
         title ||
         notificationConfig?.[notificationType as NotificationType]?.title;
 
+      // A channel is required on Android for displaying local notifications.
+      // The default channel can't have custom 'importance'.
+      const channelId = await notifee.createChannel({
+        id: notificationType,
+        name: notificationTitle,
+        importance: AndroidImportance.HIGH,
+      });
+
       await notifee.displayNotification({
         title: notificationTitle,
         body,
         data,
+        android: {
+          channelId,
+        },
       });
     }
   } catch (e) {
