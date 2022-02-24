@@ -1,4 +1,3 @@
-import qs from 'qs';
 import URL from 'url-parse';
 import store from '../redux/store';
 import {
@@ -12,35 +11,38 @@ import logger from 'logger';
 export default function handleDeepLink(url) {
   if (!url || typeof url !== 'string') return;
   const urlObj = new URL(url);
-  if (urlObj.protocol === 'https:') {
-    const action = urlObj.pathname.split('/')[1];
+  if (urlObj.protocol === 'https:' || urlObj.protocol === 'cardwallet:') {
+    // cardwallet://wc?uri=wc:xxxx
+    // https://wallet.cardstack.com/wc?uri=wc:xxxx
+    // https://wallet-staging.stack.cards/wc?uri=wc:xxxx
+    const action = urlObj.pathname
+      ? urlObj.pathname.split('/')[1]
+      : urlObj.hostname;
     switch (action) {
       case 'wc': {
-        const { uri } = qs.parse(urlObj.query.substring(1));
-        handleWalletConnect(uri);
+        const wcUri = urlObj.query?.split('?uri=')?.[1];
+        if (wcUri) {
+          handleWalletConnect(wcUri);
+        }
         break;
       }
       default:
         logger.log('unknown deeplink');
     }
-    // Android uses normal deeplinks
   } else if (urlObj.protocol === 'wc:') {
-    handleWalletConnect(decodeNestedURI(url));
-  } else if (urlObj.origin === 'cardwallet://wc') {
-    const wcUri = urlObj.query?.split('?uri=')?.[1];
-    if (wcUri) {
-      handleWalletConnect(decodeNestedURI(wcUri));
-    }
+    // Handle direct WC deeplink (wc:xxxx)
+    handleWalletConnect(url);
   }
 }
 
 function handleWalletConnect(uri) {
   const { dispatch } = store;
   dispatch(walletConnectSetPendingRedirect());
-  const { query } = new URL(uri);
-  if (uri && query) {
+  const decodedUri = decodeNestedURI(uri);
+  const { query } = new URL(decodedUri);
+  if (decodedUri && query) {
     dispatch(
-      walletConnectOnSessionRequest(uri, (status, dappScheme) =>
+      walletConnectOnSessionRequest(decodedUri, (status, dappScheme) =>
         dispatch(walletConnectRemovePendingRedirect(status, dappScheme))
       )
     );
