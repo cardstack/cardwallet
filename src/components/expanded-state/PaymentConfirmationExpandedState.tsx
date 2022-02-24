@@ -54,8 +54,8 @@ export default function PaymentConfirmationExpandedState(
     nativeBalanceDisplay,
     timestamp,
     transactionHash,
+    merchantSafeAddress,
   } = props.asset?.section?.data[props.asset.index];
-  const { ownerAddress } = merchantInfo || {};
 
   const network = useRainbowSelector(state => state.settings.network);
   return useMemo(
@@ -92,7 +92,7 @@ export default function PaymentConfirmationExpandedState(
             <PaymentDetailsItem
               title="TO"
               {...merchantInfo}
-              info={ownerAddress}
+              info={merchantSafeAddress}
             />
             <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
             <PaymentDetailsItem
@@ -111,9 +111,9 @@ export default function PaymentConfirmationExpandedState(
     ),
     [
       merchantInfo,
+      merchantSafeAddress,
       nativeBalanceDisplay,
       network,
-      ownerAddress,
       props.asset,
       timestamp,
       transactionHash,

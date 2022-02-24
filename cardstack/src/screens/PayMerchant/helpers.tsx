@@ -30,6 +30,7 @@ interface NavParams {
   transactionHash: string;
   prepaidCardAddress: string;
   prepaidCardCustomization?: PrepaidCardCustomization;
+  merchantSafeAddress: string;
 }
 
 export const mapPrepaidTxToNavigationParams = ({
@@ -40,6 +41,7 @@ export const mapPrepaidTxToNavigationParams = ({
   transactionHash,
   prepaidCardAddress,
   prepaidCardCustomization,
+  merchantSafeAddress,
 }: NavParams) => ({
   asset: {
     index: 0,
@@ -51,6 +53,7 @@ export const mapPrepaidTxToNavigationParams = ({
           nativeBalanceDisplay,
           timestamp,
           transactionHash,
+          merchantSafeAddress,
         },
       ],
     },
