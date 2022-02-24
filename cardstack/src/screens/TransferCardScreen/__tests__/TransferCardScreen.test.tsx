@@ -40,7 +40,7 @@ describe('TransferCardScreen', () => {
     expect(goBack).toBeCalledTimes(1);
   });
 
-  it('should call onScanPress', () => {
+  it('should not call onScanPress', () => {
     const { getByText } = render(<TransferCardScreen />);
 
     const scanBtn = getByText(strings.scanQrBtn);
@@ -49,7 +49,8 @@ describe('TransferCardScreen', () => {
       fireEvent.press(scanBtn);
     });
 
-    expect(onScanPress).toBeCalledTimes(1);
+    expect(scanBtn).toBeDisabled();
+    expect(onScanPress).not.toBeCalled();
   });
 
   it('should disable transfer btn if address is not valid', () => {

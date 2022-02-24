@@ -46,7 +46,12 @@ const TransferCardScreen = () => {
           multiline
         />
       </Container>
-      <Button marginVertical={5} variant="primary" onPress={onScanPress}>
+      <Button
+        marginVertical={5}
+        variant="primary"
+        onPress={onScanPress}
+        disabled
+      >
         {strings.scanQrBtn}
       </Button>
       <Button disabled={!isValidAddress} onPress={onTransferPress}>
