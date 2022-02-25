@@ -62,7 +62,6 @@ export class MerchantClaimStrategy extends BaseStrategy {
       transaction: await getMerchantClaimTransactionDetails(
         merchantClaimTransaction,
         this.nativeCurrency,
-        this.currencyConversionRates,
         address
       ),
       infoDid: merchantClaimTransaction.merchantSafe.infoDid || undefined,

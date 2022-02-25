@@ -1,13 +1,12 @@
 import { Resolver } from 'did-resolver';
 import { getResolver } from '@cardstack/did-resolver';
-import { Share } from 'react-native';
+import { Share, Platform } from 'react-native';
 import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
   MerchantSafe,
   subtract,
 } from '@cardstack/cardpay-sdk';
-import { Device } from './device';
 import {
   MerchantClaimFragment,
   MerchantRevenueEventFragment,
@@ -117,35 +116,36 @@ export const shareRequestPaymentLink = (
   const title = `${merchantName} Requests ${amountWithSymbol}`;
   const message = `${title} \nURL: ${paymentRequestLink}`;
 
-  const options = Device.isIOS
-    ? {
+  const shareConfig = {
+    options: Platform.select({
+      android: {
+        dialogTitle: title,
+      },
+      ios: {
         excludedActivityTypes,
         subject: title,
-      }
-    : {
-        dialogTitle: title,
-      };
-
-  const content = Device.isIOS
-    ? {
+      },
+    }),
+    content: Platform.select({
+      android: {
+        title,
+        message,
+      },
+      ios: {
         title,
         message,
         url: paymentRequestLink,
-      }
-    : {
-        title,
-        message,
-      };
+      },
+      default: { message },
+    }),
+  };
 
-  return Share.share(content, options);
+  return Share.share(shareConfig.content, shareConfig.options);
 };
 
 export async function getMerchantClaimTransactionDetails(
   merchantClaimTransaction: MerchantClaimFragment,
   nativeCurrency = 'USD',
-  currencyConversionRates: {
-    [key: string]: number;
-  },
   address?: string
 ): Promise<MerchantClaimTypeTxn> {
   const transactions = merchantClaimTransaction.transaction?.tokenTransfers;
