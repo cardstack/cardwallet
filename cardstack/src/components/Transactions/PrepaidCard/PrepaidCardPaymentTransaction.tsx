@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/core';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
-  TransactionBaseProps,
 } from '../TransactionBase';
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
 import { Icon } from '@cardstack/components';
@@ -23,12 +22,11 @@ export const PrepaidCardPaymentTransaction = ({
   const { navigate } = useNavigation();
 
   const onPressTransaction = useCallback(
-    (assetProps: TransactionBaseProps) =>
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: { ...assetProps },
-        type: 'paymentConfirmationTransaction',
+    () =>
+      navigate(Routes.PAYMENT_CONFIRMATION_SHEET, {
+        ...item,
       }),
-    [navigate]
+    [item, navigate]
   );
 
   return (

@@ -114,19 +114,16 @@ const usePayMerchantRequest = ({
 
     // Wait goBack action to navigate
     InteractionManager.runAfterInteractions(() => {
-      navigate(
-        RainbowRoutes.EXPANDED_ASSET_SHEET,
-        mapPrepaidTxToNavigationParams({
-          merchantInfo: merchantInfoDID,
-          merchantSafeAddress: merchantAddress,
-          transactionHash: receipt.transactionHash,
-          prepaidCardAddress: receipt.from,
-          prepaidCardCustomization: selectedPrepaidCard?.cardCustomization,
-          spendAmount,
-          nativeBalanceDisplay,
-          timestamp,
-        })
-      );
+      navigate(RainbowRoutes.PAYMENT_CONFIRMATION_SHEET, {
+        merchantInfo: merchantInfoDID,
+        spendAmount,
+        nativeBalanceDisplay,
+        timestamp,
+        transactionHash: receipt.transactionHash,
+        merchantSafeAddress: merchantAddress,
+        address: receipt.from,
+        cardCustomization: selectedPrepaidCard?.cardCustomization,
+      });
     });
   }, [
     spendAmount,
