@@ -30,8 +30,13 @@ const ClaimedTransaction = ({
   txRowProps,
 }: ClaimedTransactionProps) => (
   <>
-    <TransactionRow {...txRowProps} hasBottomDivider />
-    <Container padding={6}>
+    <TransactionRow
+      {...txRowProps}
+      hasBottomDivider
+      marginHorizontal={3}
+      paddingHorizontal={0}
+    />
+    <Container padding={5}>
       <MerchantPaymentItemDetail
         description={strings.revenueClaimed}
         symbol={txRowProps.symbol}
@@ -73,7 +78,7 @@ const MerchantTransactionSheet = () => {
       ...txBaseProps,
       txRowProps: {
         ...txBaseProps.txRowProps,
-        primaryText: `+ ${item.transaction?.netEarned.display}`,
+        primaryText: `+ ${item.transaction?.netEarned?.display}`,
         subText: item.transaction?.netEarnedNativeDisplay,
         symbol: item.token.symbol,
       },
@@ -82,8 +87,8 @@ const MerchantTransactionSheet = () => {
   );
 
   return (
-    <Sheet isFullScreen scrollEnabled>
-      <Container backgroundColor="white" marginBottom={4} padding={6}>
+    <Sheet>
+      <Container backgroundColor="white" padding={5}>
         <Text marginBottom={10} size="medium">
           {strings.title}
         </Text>
@@ -93,8 +98,7 @@ const MerchantTransactionSheet = () => {
           borderRadius={10}
           borderWidth={1}
           marginBottom={8}
-          overflow="scroll"
-          paddingHorizontal={2}
+          paddingRight={4}
         >
           {isClaimedTransaction ? (
             <ClaimedTransaction {...txBaseProps} />
