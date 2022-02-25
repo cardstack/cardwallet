@@ -7,5 +7,4 @@ export { default as WalletProfileState } from './WalletProfileState';
 export { default as LifetimeEarningsExpandedState } from './LifetimeEarningsExpandedState';
 export { default as AvailableBalancesExpandedState } from './AvailableBalancesExpandedState';
 export { default as MerchantTransactionExpandedState } from './MerchantTransactionExpandedState';
-export { default as PaymentConfirmationExpandedState } from './PaymentConfirmationExpandedState';
 export { default as SupportAndFeedsState } from './SupportAndFeedsState';

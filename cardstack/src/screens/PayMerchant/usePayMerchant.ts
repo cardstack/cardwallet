@@ -5,7 +5,7 @@ import {
   convertToSpend,
   convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
-import { getBlockTimestamp, mapPrepaidTxToNavigationParams } from './helpers';
+import { getBlockTimestamp } from './helpers';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import {
   handleAlertError,
