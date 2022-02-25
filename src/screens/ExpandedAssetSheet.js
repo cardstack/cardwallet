@@ -10,7 +10,6 @@ import {
   ChartExpandedState,
   LifetimeEarningsExpandedState,
   LiquidityPoolExpandedState,
-  MerchantTransactionExpandedState,
   SupportAndFeedsState,
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
@@ -24,7 +23,6 @@ const ScreenTypes = {
   uniswap: LiquidityPoolExpandedState,
   [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
   [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
-  merchantTransaction: MerchantTransactionExpandedState,
   supportAndFees: SupportAndFeedsState,
 };
 
