@@ -77,7 +77,7 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
   useFocusEffect(onRefresh);
 
   const renderItem = useCallback(
-    (props: TransactionItemProps) => <TransactionItem {...props} />,
+    ({ item }: TransactionItemProps) => <TransactionItem item={item} />,
     []
   );
 
