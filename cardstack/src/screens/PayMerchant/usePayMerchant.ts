@@ -118,12 +118,13 @@ const usePayMerchantRequest = ({
         RainbowRoutes.EXPANDED_ASSET_SHEET,
         mapPrepaidTxToNavigationParams({
           merchantInfo: merchantInfoDID,
-          spendAmount,
-          nativeBalanceDisplay,
-          timestamp,
+          merchantSafeAddress: merchantAddress,
           transactionHash: receipt.transactionHash,
           prepaidCardAddress: receipt.from,
           prepaidCardCustomization: selectedPrepaidCard?.cardCustomization,
+          spendAmount,
+          nativeBalanceDisplay,
+          timestamp,
         })
       );
     });
@@ -135,6 +136,7 @@ const usePayMerchantRequest = ({
     dismissLoadingOverlay,
     navigate,
     merchantInfoDID,
+    merchantAddress,
     selectedPrepaidCard,
   ]);
 
