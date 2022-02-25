@@ -1,14 +1,12 @@
 import { Resolver } from 'did-resolver';
 import { getResolver } from '@cardstack/did-resolver';
-import { Share } from 'react-native';
+import { Share, Platform } from 'react-native';
 import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
   MerchantSafe,
   subtract,
 } from '@cardstack/cardpay-sdk';
-import { getAddressPreview } from './formatting-utils';
-import { Device } from './device';
 import {
   MerchantClaimFragment,
   MerchantRevenueEventFragment,
@@ -103,8 +101,9 @@ export const updateMerchantSafeWithCustomization = async (
 };
 
 export const shareRequestPaymentLink = (
-  address: string,
-  paymentRequestLink: string
+  paymentRequestLink: string,
+  merchantName: string,
+  amountWithSymbol: string
 ) => {
   // Refer to https://developer.apple.com/documentation/uikit/uiactivitytype
   const activityUiKitPath = 'com.apple.UIKit.activity';
@@ -114,31 +113,39 @@ export const shareRequestPaymentLink = (
     `${activityUiKitPath}.AddToReadingList`,
   ];
 
-  const options = Device.isIOS
-    ? {
+  const title = `${merchantName} Requests ${amountWithSymbol}`;
+  const message = `${title} \nURL: ${paymentRequestLink}`;
+
+  const shareConfig = {
+    options: Platform.select({
+      android: {
+        dialogTitle: title,
+      },
+      ios: {
         excludedActivityTypes,
-      }
-    : undefined;
+        subject: title,
+      },
+    }),
+    content: Platform.select({
+      android: {
+        title,
+        message,
+      },
+      ios: {
+        title,
+        message,
+        url: paymentRequestLink,
+      },
+      default: { message },
+    }),
+  };
 
-  const obfuscatedAddress = getAddressPreview(address);
-  const title = 'Payment Request';
-  const message = `${title}\nTo: ${obfuscatedAddress}\nURL: ${paymentRequestLink}`;
-
-  return Share.share(
-    {
-      message,
-      title,
-    },
-    options
-  );
+  return Share.share(shareConfig.content, shareConfig.options);
 };
 
 export async function getMerchantClaimTransactionDetails(
   merchantClaimTransaction: MerchantClaimFragment,
   nativeCurrency = 'USD',
-  currencyConversionRates: {
-    [key: string]: number;
-  },
   address?: string
 ): Promise<MerchantClaimTypeTxn> {
   const transactions = merchantClaimTransaction.transaction?.tokenTransfers;
