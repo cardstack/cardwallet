@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { useRoute } from '@react-navigation/core';
+import { strings } from './strings';
 import {
   BlockscoutButton,
   Container,
@@ -20,7 +21,7 @@ const PaymentConfirmationSheet = () => {
   const {
     params: {
       merchantInfo,
-      nativeBalanceDisplay,
+      nativeBalanceDisplay = '',
       timestamp,
       transactionHash,
       merchantSafeAddress,
@@ -35,14 +36,13 @@ const PaymentConfirmationSheet = () => {
     <Sheet isFullScreen scrollEnabled>
       <Container backgroundColor="white" padding={6}>
         <Text marginBottom={10} size="medium">
-          Payment Confirmation
+          {strings.title}
         </Text>
         <MerchantSectionCard merchantInfoDID={merchantInfo} paddingBottom={5}>
           <Container alignItems="center">
             <Text fontSize={34} weight="extraBold">
-              {nativeBalanceDisplay || ''}
+              {nativeBalanceDisplay}
             </Text>
-
             {timestamp ? (
               <Text color="black" marginTop={4} size="medium" weight="bold">
                 {dateFormatter(timestamp, 'MMM dd', 'h:mm a', ', ')}
@@ -65,21 +65,21 @@ const PaymentConfirmationSheet = () => {
           <TransactionRow
             CoinIcon={<Icon name="spend" />}
             statusIconName="arrow-up"
-            statusText="Paid"
+            statusText={strings.paid}
             primaryText={nativeBalanceDisplay}
             hasBottomDivider
           />
           <PaymentDetailsItem
-            title="TO"
+            title={strings.to}
             {...merchantInfo}
             info={merchantSafeAddress}
           />
-          <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
+          <PaymentDetailsItem info={transactionHash} title={strings.txHash} />
           <PaymentDetailsItem
             info={timestamp}
             infoColor="black"
             isTimestamp
-            title="LOCAL TIME"
+            title={strings.localTime}
           />
         </Container>
         <BlockscoutButton network={network} transactionHash={transactionHash} />
