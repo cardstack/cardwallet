@@ -17,6 +17,7 @@ export { default as PaymentReceivedSheet } from './sheets/PaymentReceived/Paymen
 export { default as UnclaimedRevenueSheet } from './sheets/UnclaimedRevenue/UnclaimedRevenueSheet';
 export { default as WalletConnectApprovalSheet } from './sheets/WalletConnectApprovalSheet';
 export { default as WalletConnectRedirectSheet } from './sheets/WalletConnectRedirectSheet';
+export { default as PaymentConfirmationSheet } from './sheets/PaymentConfirmation/PaymentConfirmationSheet';
 export { default as HomeScreen } from './HomeScreen/HomeScreen';
 export { default as WalletScreen } from './WalletScreen/WalletScreen';
 export { default as ProfileScreen } from './ProfileScreen/ProfileScreen';

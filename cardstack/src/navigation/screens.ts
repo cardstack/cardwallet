@@ -28,6 +28,7 @@ import {
   WalletConnectApprovalSheet,
   WalletConnectRedirectSheet,
   TransferCardScreen,
+  PaymentConfirmationSheet,
 } from '@cardstack/screens';
 import {
   bottomSheetPreset,
@@ -150,6 +151,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TRANSFER_CARD: {
     component: TransferCardScreen,
     options: { ...overlayPreset, gestureEnabled: false },
+  },
+  PAYMENT_CONFIRMATION_SHEET: {
+    component: PaymentConfirmationSheet,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 
