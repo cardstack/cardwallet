@@ -60,6 +60,7 @@ export default function SettingsSection({
   onPressIcloudBackup,
   onPressNetwork,
   onPressNotifications,
+  onPressPrimaryPaymentAccount,
   onPressShowSecret,
 }) {
   const { wallets } = useWallets();
@@ -157,6 +158,14 @@ export default function SettingsSection({
           <ListItemArrowGroup>
             {networkInfo?.[network]?.name}
           </ListItemArrowGroup>
+        </ListItem>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="credit-card" />}
+          label="Primary Payment Account"
+          onPress={onPressPrimaryPaymentAccount}
+          testID="notifications-section"
+        >
+          <ListItemArrowGroup />
         </ListItem>
         <ListItem
           icon={<Icon color="settingsTeal" name="bell" />}

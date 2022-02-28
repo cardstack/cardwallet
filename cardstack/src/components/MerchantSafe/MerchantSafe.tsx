@@ -11,7 +11,7 @@ import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
-interface MerchantSafeProps extends MerchantSafeType {
+export interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
   nativeCurrency: string;
   currencyConversionRates: {

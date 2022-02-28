@@ -72,7 +72,7 @@ const useDepotSection = (
   Component: Depot,
 });
 
-const useMerchantSafeSection = (
+export const useMerchantSafeSection = (
   merchantSafes: MerchantSafeType[],
   timestamp: string
 ): AssetListSectionItem<MerchantSafeType> => ({
