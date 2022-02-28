@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
 
@@ -121,6 +121,11 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
     isLoadingTransactions,
   } = useMerchantTransactions(address, 'availableBalances');
 
+  const renderItem = useCallback(
+    ({ item }) => <TransactionItem includeBorder isFullWidth item={item} />,
+    []
+  );
+
   return (
     <Container paddingBottom={3} paddingHorizontal={5}>
       {isLoadingTransactions ? (
@@ -141,9 +146,7 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
               tintColor="white"
             />
           }
-          renderItem={props => (
-            <TransactionItem {...props} includeBorder isFullWidth />
-          )}
+          renderItem={renderItem}
           renderSectionHeader={({ section: { title } }) => (
             <Container backgroundColor="white" paddingVertical={2} width="100%">
               <Text color="blueText" size="medium">

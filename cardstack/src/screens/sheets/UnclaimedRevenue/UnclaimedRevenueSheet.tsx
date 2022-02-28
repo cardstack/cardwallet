@@ -85,12 +85,9 @@ const ActivitiesList = ({ address }: { address: string }) => {
   } = useMerchantTransactions(address, 'unclaimedRevenue');
 
   const renderItem = useCallback(props => {
-    const claimedProps = {
-      ...props,
-      item: { ...props.item, claimStatus: ClaimStatuses.CLAIMED },
-    };
+    const claimedProps = { ...props.item, claimStatus: ClaimStatuses.CLAIMED };
 
-    return <TransactionItem {...claimedProps} includeBorder isFullWidth />;
+    return <TransactionItem item={claimedProps} includeBorder isFullWidth />;
   }, []);
 
   const renderSectionHeader = useCallback(

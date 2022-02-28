@@ -57,13 +57,14 @@ export class PrepaidCardPaymentStrategy extends BaseStrategy {
 
     return {
       address: prepaidCardPaymentTransaction.prepaidCard.id,
-      cardCustomization,
       timestamp: prepaidCardPaymentTransaction.timestamp,
       spendAmount: prepaidCardPaymentTransaction.spendAmount,
       type: TransactionTypes.PREPAID_CARD_PAYMENT,
-      nativeBalanceDisplay,
+      merchantSafeAddress: prepaidCardPaymentTransaction.merchantSafe?.id || '',
       transactionHash: this.transaction.id,
-      merchantInfo: merchantInfo,
+      nativeBalanceDisplay,
+      cardCustomization,
+      merchantInfo,
     };
   }
 }

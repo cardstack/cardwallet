@@ -16,6 +16,8 @@ export const MainRoutes = {
   UNCLAIMED_REVENUE_SHEET: 'UnclaimedRevenueSheet',
   WALLET_CONNECT_APPROVAL_SHEET: 'WalletConnectApprovalSheet',
   WALLET_CONNECT_REDIRECT_SHEET: 'WalletConnectRedirectSheet',
+  PAYMENT_CONFIRMATION_SHEET: 'PaymentConfirmationSheet',
+  MERCHANT_TRANSACTION_SHEET: 'MerchantTransactionSheet',
   SETTINGS_MODAL: 'SettingModal',
   TRANSFER_CARD: 'TransferCardScreen',
 } as const;
