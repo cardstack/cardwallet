@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   CardPressable,
-  CenteredContainer,
   Container,
   Icon,
   SafeHeader,
