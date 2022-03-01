@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
+import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import reducers from './reducers';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
@@ -41,3 +42,4 @@ export default store;
 export type AppState = ReturnType<typeof store.getState>;
 export type AppGetState = typeof store.getState;
 export type AppDispatch = typeof store.dispatch;
+export const useTypedSelector: TypedUseSelectorHook<AppState> = useSelector;

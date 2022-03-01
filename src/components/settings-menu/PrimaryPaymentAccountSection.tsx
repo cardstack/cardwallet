@@ -1,55 +1,46 @@
 import React, { useCallback, useMemo } from 'react';
-import { FlatList, ListRenderItemInfo, StyleSheet, Switch } from 'react-native';
+import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native';
 import {
   Container,
-  Skeleton,
-  Text,
   MerchantSafe,
   MerchantSafeProps,
+  Skeleton,
+  Text,
 } from '@cardstack/components';
+import usePrimaryMerchant from '@cardstack/redux/hooks/usePrimaryMerchant';
 import { useGetSafesDataQuery } from '@cardstack/services';
-import { isLayer1 } from '@cardstack/utils';
-import { useAccountSettings, useMerchantSafeSection } from '@rainbow-me/hooks';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { colors } from '@cardstack/theme';
+import { MerchantSafeType } from '@cardstack/types';
+import { useAccountSettings } from '@rainbow-me/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
-const safesInitialState = {
-  prepaidCards: [],
-  depots: [],
+const initialState = {
   merchantSafes: [],
-  timestamp: '',
 };
 
 const PrimaryPaymentAccountSection = () => {
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
-  const { network, accountAddress } = useAccountSettings();
-  const walletReady = useRainbowSelector(state => state.appState.walletReady);
+  const { accountAddress } = useAccountSettings();
+  const { changePrimaryMerchant, primaryMerchant } = usePrimaryMerchant();
 
-  const {
-    isFetching,
-    isLoading,
-    refetch,
-    data = safesInitialState,
-    isUninitialized,
-    error,
-  } = useGetSafesDataQuery(
-    { address: accountAddress, nativeCurrency },
-    {
-      skip: isLayer1(network) || !accountAddress || !walletReady,
-    }
-  );
+  const { data = initialState, error } = useGetSafesDataQuery({
+    address: accountAddress,
+    nativeCurrency,
+  });
 
-  const { merchantSafes, timestamp } = data;
-
-  const merchantSafesSection = useMerchantSafeSection(merchantSafes, timestamp);
+  const { merchantSafes } = data;
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<MerchantSafeProps>) => {
-      return <MerchantSafe {...item} />;
+    ({ item }: ListRenderItemInfo<MerchantSafeType>) => {
+      return (
+        <MerchantSafe
+          isSelected={primaryMerchant?.address === item.address}
+          setSelected={() => changePrimaryMerchant(item)}
+          {...(item as MerchantSafeProps)}
+        />
+      );
     },
-    [onUpdateOptionStatus]
+    [changePrimaryMerchant, primaryMerchant]
   );
 
   const ListError = useMemo(
@@ -82,7 +73,7 @@ const PrimaryPaymentAccountSection = () => {
     []
   );
 
-  const keyExtractor = (item: MerchantSafeProps, index: number) => `${index}`;
+  const keyExtractor = (item: MerchantSafeType) => item.address;
 
   return (
     <FlatList
@@ -98,6 +89,7 @@ const PrimaryPaymentAccountSection = () => {
 const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 16,
+    backgroundColor: colors.backgroundBlue,
   },
 });
 

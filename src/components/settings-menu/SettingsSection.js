@@ -161,7 +161,7 @@ export default function SettingsSection({
         </ListItem>
         <ListItem
           icon={<Icon color="settingsTeal" name="credit-card" />}
-          label="Primary Payment Account"
+          label="Payment Account"
           onPress={onPressPrimaryPaymentAccount}
           testID="notifications-section"
         >

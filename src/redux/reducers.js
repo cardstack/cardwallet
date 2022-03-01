@@ -24,6 +24,7 @@ import walletconnect from './walletconnect';
 import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import collectibles from '@cardstack/redux/collectibles';
+import merchant from '@cardstack/redux/merchantSlice';
 import payment from '@cardstack/redux/payment';
 import requests from '@cardstack/redux/requests';
 
@@ -54,5 +55,6 @@ export default {
   uniswapLiquidity,
   walletconnect,
   wallets,
+  merchant,
   payment,
 };
