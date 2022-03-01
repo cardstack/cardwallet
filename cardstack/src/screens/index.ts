@@ -15,6 +15,7 @@ export { default as ImportSeedSheet } from './sheets/ImportSeed/ImportSeedSheet'
 export { default as CollectibleSheet } from './sheets/Collectible/CollectibleSheet';
 export { default as PaymentReceivedSheet } from './sheets/PaymentReceived/PaymentReceivedSheet';
 export { default as UnclaimedRevenueSheet } from './sheets/UnclaimedRevenue/UnclaimedRevenueSheet';
+export { default as ConfirmClaimDestinySheet } from './sheets/ConfirmClaimDestinySheet/ConfirmClaimDestinySheet';
 export { default as WalletConnectApprovalSheet } from './sheets/WalletConnectApprovalSheet';
 export { default as WalletConnectRedirectSheet } from './sheets/WalletConnectRedirectSheet';
 export { default as PaymentConfirmationSheet } from './sheets/PaymentConfirmation/PaymentConfirmationSheet';

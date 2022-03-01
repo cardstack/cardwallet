@@ -26,7 +26,7 @@ interface Params {
 
 interface HeaderParams {
   merchantSafe: MerchantSafeType;
-  onAcceptPress: () => void;
+  onClaimPress: () => void;
 }
 
 const UnclaimedRevenueSheet = () => {
@@ -35,8 +35,7 @@ const UnclaimedRevenueSheet = () => {
 
   const openClaimWhereSheet = useCallback(
     () =>
-      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
-        type: 'confirmClaimDestiny',
+      navigate(Routes.CONFIRM_CLAIM_DESTINY_SHEET, {
         onClaimAllPress: params.onClaimAllPress,
       }),
     [navigate, params.onClaimAllPress]
@@ -44,7 +43,7 @@ const UnclaimedRevenueSheet = () => {
 
   return (
     <Sheet
-      Header={<Header onAcceptPress={openClaimWhereSheet} {...params} />}
+      Header={<Header onClaimPress={openClaimWhereSheet} {...params} />}
       scrollEnabled
       isFullScreen={Device.isIOS}
     >
@@ -55,7 +54,7 @@ const UnclaimedRevenueSheet = () => {
   );
 };
 
-const Header = ({ merchantSafe, onAcceptPress }: HeaderParams) => {
+const Header = ({ merchantSafe, onClaimPress }: HeaderParams) => {
   const { revenueBalances } = merchantSafe;
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
@@ -79,7 +78,7 @@ const Header = ({ merchantSafe, onAcceptPress }: HeaderParams) => {
       <Button
         disabled={!hasClaimableAmount}
         marginTop={8}
-        onPress={onAcceptPress}
+        onPress={onClaimPress}
       >
         Claim
       </Button>

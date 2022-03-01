@@ -7,7 +7,7 @@ interface Params {
   onClaimAllPress: () => void;
 }
 
-const ConfirmClaimDestinyState = () => {
+const ConfirmClaimDestinySheet = () => {
   const {
     params: { onClaimAllPress },
   } = useRoute<RouteType<Params>>();
@@ -50,4 +50,4 @@ const ConfirmClaimDestinyState = () => {
   );
 };
 
-export default ConfirmClaimDestinyState;
+export default ConfirmClaimDestinySheet;
