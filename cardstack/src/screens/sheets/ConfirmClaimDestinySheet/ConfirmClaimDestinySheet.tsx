@@ -28,11 +28,6 @@ const ConfirmClaimDestinySheet = () => {
             onPress={onClaimAllPress}
             title="Claim to Account"
           />
-        </Container>
-        <Container paddingHorizontal={5} paddingVertical={3}>
-          <Text fontStyle="italic" paddingBottom={4} size="medium">
-            Coming Soon:
-          </Text>
           <TextOptionRow
             description="Refill or top up an existing prepaid card."
             disabled
