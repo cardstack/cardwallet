@@ -22,8 +22,8 @@ import { getNativeBalanceFromOracle } from '@cardstack/services';
 import logger from 'logger';
 
 export const ClaimedStatus = {
-  CLAIMED_TEXT: `Claimed from \nAvailable Revenue`,
-  DEPOSITED_TEXT: `Deposited into \nAccount`,
+  CLAIMED_TEXT: `Amount\nClaimed`,
+  DEPOSITED_TEXT: `Claimed\nAmount`,
 };
 
 export enum ClaimStatuses {
@@ -267,7 +267,7 @@ export const getClaimProps = (
     deposited: {
       text: ClaimedStatus.DEPOSITED_TEXT,
       sign: '+',
-      icon: 'arrow-down',
+      icon: 'plus',
     },
   };
 

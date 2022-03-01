@@ -49,7 +49,7 @@ const notificationConfig: Record<NotificationType, NotificationConfig> = {
     },
   },
   [NotificationType.merchantClaim]: {
-    title: 'Merchant claimed successfully',
+    title: 'Balance claimed successfully',
     handler: data => {
       if (!data?.transactionInformation) return;
       // parse to object as hub sends data as a string

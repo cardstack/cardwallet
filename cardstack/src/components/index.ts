@@ -42,3 +42,4 @@ export * from './CardPressable';
 export * from './Notice';
 export * from './TabBarIcon';
 export * from './MainHeader';
+export * from './TextOptionRow';

@@ -41,7 +41,7 @@ export const transactionTypeMap: Record<
     component: RegisterMerchantDisplay,
   },
   [TransactionConfirmationType.PAY_MERCHANT]: {
-    title: 'Pay Business',
+    title: 'Pay',
     component: PayMerchantDisplay,
   },
   [TransactionConfirmationType.CLAIM_REVENUE]: {

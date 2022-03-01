@@ -37,7 +37,7 @@ export const MerchantEarnedRevenueTransaction = ({
       }
       primaryText={`+ ${item.netEarned.display}`}
       statusIconName="plus"
-      statusText="Earned"
+      statusText="Received"
       subText={item.netEarnedNativeDisplay}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}

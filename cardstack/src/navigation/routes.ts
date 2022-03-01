@@ -14,6 +14,7 @@ export const MainRoutes = {
   IMPORT_SEED_SHEET: 'ImportSeedSheet',
   PAYMENT_RECEIVED_SHEET: 'PaymentReceivedSheet',
   UNCLAIMED_REVENUE_SHEET: 'UnclaimedRevenueSheet',
+  CONFIRM_CLAIM_DESTINY_SHEET: 'ConfirmClaimDestinySheet',
   WALLET_CONNECT_APPROVAL_SHEET: 'WalletConnectApprovalSheet',
   WALLET_CONNECT_REDIRECT_SHEET: 'WalletConnectRedirectSheet',
   PAYMENT_CONFIRMATION_SHEET: 'PaymentConfirmationSheet',

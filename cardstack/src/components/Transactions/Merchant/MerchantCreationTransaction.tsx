@@ -34,7 +34,6 @@ export const MerchantCreationTransaction = ({
       statusIconName="plus"
       statusText="Created"
       primaryText={merchantInfoDID?.name || 'Business'}
-      subText="Business Account"
       transactionHash={item.transactionHash}
     />
   );

@@ -2,7 +2,6 @@ import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
 import { StatusBar } from 'react-native';
 import { useClaimAllRevenue } from './sheets/UnclaimedRevenue/useClaimAllRevenue';
-import { useMerchantTransactions } from '@cardstack/hooks';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
@@ -15,10 +14,8 @@ import {
   Text,
   TokenBalance,
   Touchable,
-  TransactionItem,
 } from '@cardstack/components';
 import {
-  MerchantEarnedSpendTransactionType,
   MerchantInformation,
   MerchantSafeType,
   TokenType,
@@ -91,11 +88,6 @@ const MerchantScreen = () => {
     [merchantSafe, navigate]
   );
 
-  const { sections } = useMerchantTransactions(
-    merchantSafe.address,
-    'lifetimeEarnings'
-  );
-
   const goToMerchantPaymentRequest = useCallback(
     () =>
       navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
@@ -137,20 +129,16 @@ const MerchantScreen = () => {
           </Button>
           <HorizontalDivider />
           <TokensSection
-            title="Available revenue"
+            title="Ready to Claim"
             onPress={goToUnclaimedRevenue}
-            emptyText="No revenue to be claimed"
+            emptyText="No pending payments"
             tokens={merchantSafe.revenueBalances}
           />
           <TokensSection
-            title="Account balances"
+            title="Your Available Balance"
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
-            emptyText="No available assets"
+            emptyText="No balance available"
             tokens={merchantSafe.tokens}
-          />
-          <PaymentHistorySection
-            sections={sections}
-            onPress={onPressGoTo(ExpandedMerchantRoutes.lifetimeEarnings)}
           />
         </ScrollView>
       </Container>
@@ -242,21 +230,6 @@ const MerchantInfo = ({
       >
         {merchantInfo?.name || ''}
       </Text>
-      <Text variant="subText">Business Account</Text>
-      <Container flexDirection="row" marginTop={2}>
-        <Text weight="extraBold" size="xs">
-          1{' '}
-          <Text weight="regular" size="xs">
-            manager
-          </Text>
-        </Text>
-        <Icon
-          name="user-with-background"
-          color="black"
-          iconSize="small"
-          marginLeft={2}
-        />
-      </Container>
     </Container>
   );
 };
@@ -341,46 +314,3 @@ const SectionWrapper = ({
     {children}
   </Touchable>
 );
-
-export interface PaymentHistorySectionProps {
-  data: MerchantEarnedSpendTransactionType[];
-  title: string;
-}
-
-const PaymentHistorySection = ({
-  sections,
-  onPress,
-}: {
-  sections: PaymentHistorySectionProps[];
-  onPress: () => void;
-}) => {
-  const numberOfTransactions = sections[0]?.data?.length || 0;
-
-  const first3ActivityLists = sections[0]?.data
-    ?.slice(0, 3)
-    .map(item => <TransactionItem item={item} isFullWidth disabled />);
-
-  return (
-    <Container flexDirection="column" width="100%">
-      <SectionHeader>Payment History</SectionHeader>
-      <SectionWrapper
-        onPress={onPress}
-        hasDetailsText={false}
-        disabled={numberOfTransactions === 0}
-      >
-        {numberOfTransactions ? (
-          <>
-            {first3ActivityLists}
-            {numberOfTransactions > 3 && (
-              <Text variant="subText" paddingHorizontal={5}>
-                + more
-              </Text>
-            )}
-          </>
-        ) : (
-          <Text variant="subText">No activity</Text>
-        )}
-      </SectionWrapper>
-    </Container>
-  );
-};

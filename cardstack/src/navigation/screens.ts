@@ -25,6 +25,7 @@ import {
   PaymentReceivedSheet,
   PaymentRequestExpandedSheet,
   UnclaimedRevenueSheet,
+  ConfirmClaimDestinySheet,
   WalletConnectApprovalSheet,
   WalletConnectRedirectSheet,
   TransferCardScreen,
@@ -130,6 +131,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   UNCLAIMED_REVENUE_SHEET: {
     component: UnclaimedRevenueSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  CONFIRM_CLAIM_DESTINY_SHEET: {
+    component: ConfirmClaimDestinySheet,
     options: expandedPreset as StackNavigationOptions,
   },
   WALLET_CONNECT_APPROVAL_SHEET: {
