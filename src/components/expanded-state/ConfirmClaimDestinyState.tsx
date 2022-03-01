@@ -18,15 +18,15 @@ const ConfirmClaimDestinyState = () => {
       <Sheet
         Header={
           <Container paddingHorizontal={5} paddingVertical={3}>
-            <Text size="medium">What do you want to do with your money?</Text>
+            <Text size="medium">How do you want to claim?</Text>
           </Container>
         }
       >
         <Container paddingHorizontal={5} paddingVertical={2}>
           <TextOptionRow
-            description="Claim to your balance and it will be available to withdraw to an exchange."
+            description="Claim to your account balance."
             onPress={onClaimAllPress}
-            title="Profile Balance Account"
+            title="Claim to Account"
           />
         </Container>
         <Container paddingHorizontal={5} paddingVertical={3}>

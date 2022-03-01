@@ -81,7 +81,7 @@ const Header = ({ merchantSafe, onAcceptPress }: HeaderParams) => {
         marginTop={8}
         onPress={onAcceptPress}
       >
-        Accept
+        Claim
       </Button>
       <HorizontalDivider />
       <Text size="medium">History</Text>
