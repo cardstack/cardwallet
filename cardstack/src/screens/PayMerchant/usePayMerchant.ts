@@ -126,7 +126,7 @@ const usePayMerchantRequest = ({
         timestamp,
         transactionHash: receipt.transactionHash,
         merchantSafeAddress: merchantAddress,
-        address: receipt.from,
+        address: selectedPrepaidCard?.address,
         cardCustomization: selectedPrepaidCard?.cardCustomization,
       });
     });
