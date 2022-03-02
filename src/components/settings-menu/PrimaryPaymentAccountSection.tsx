@@ -57,14 +57,14 @@ const PrimaryPaymentAccountSection = () => {
       <Container
         flexDirection="column"
         paddingHorizontal={6}
-        paddingVertical={2}
+        paddingVertical={4}
       >
         {[...Array(2)].map((v, i) => (
           <Skeleton
-            height={100}
+            height={310}
             key={`${i}`}
             light
-            marginBottom={1}
+            marginBottom={4}
             width="100%"
           />
         ))}
@@ -82,14 +82,18 @@ const PrimaryPaymentAccountSection = () => {
       data={merchantSafes}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
+      style={styles.list}
     />
   );
 };
 
 const styles = StyleSheet.create({
+  list: {
+    flex: 1,
+    backgroundColor: colors.backgroundBlue,
+  },
   contentContainer: {
     paddingTop: 16,
-    backgroundColor: colors.backgroundBlue,
   },
 });
 
