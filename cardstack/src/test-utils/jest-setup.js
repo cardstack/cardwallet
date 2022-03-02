@@ -8,6 +8,16 @@ import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/asy
 
 // GLOBAL LIBS MOCKS
 
+jest.mock('redux-persist', () => {
+  const real = jest.requireActual('redux-persist');
+  return {
+    ...real,
+    persistReducer: jest
+      .fn()
+      .mockImplementation((config, reducers) => reducers),
+  };
+});
+
 jest.mock('react-native-flipper');
 
 jest.mock('react-native-background-timer', () => ({
