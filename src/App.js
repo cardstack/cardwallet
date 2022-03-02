@@ -21,6 +21,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import { name as appName } from '../app.json';
 import { FlexItem } from './components/layout';
 import { OfflineToast } from './components/toasts';
@@ -43,7 +44,7 @@ import { PinnedHiddenItemOptionProvider } from './hooks';
 import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { loadAddress } from './model/wallet';
 import { Navigation } from './navigation';
-import store from './redux/store';
+import store, { persistor } from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
@@ -233,19 +234,21 @@ class App extends Component {
             <PinnedHiddenItemOptionProvider>
               <ApolloProvider client={apolloClient}>
                 <Provider store={store}>
-                  <FlexItem>
-                    <CheckSystemReqs>
-                      {this.state.initialRoute && (
-                        <InitialRouteContext.Provider
-                          value={this.state.initialRoute}
-                        >
-                          <AppContainer ref={this.handleNavigatorRef} />
-                          <PortalConsumer />
-                        </InitialRouteContext.Provider>
-                      )}
-                    </CheckSystemReqs>
-                    <OfflineToast />
-                  </FlexItem>
+                  <PersistGate loading={null} persistor={persistor}>
+                    <FlexItem>
+                      <CheckSystemReqs>
+                        {this.state.initialRoute && (
+                          <InitialRouteContext.Provider
+                            value={this.state.initialRoute}
+                          >
+                            <AppContainer ref={this.handleNavigatorRef} />
+                            <PortalConsumer />
+                          </InitialRouteContext.Provider>
+                        )}
+                      </CheckSystemReqs>
+                      <OfflineToast />
+                    </FlexItem>
+                  </PersistGate>
                 </Provider>
               </ApolloProvider>
             </PinnedHiddenItemOptionProvider>

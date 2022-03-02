@@ -23,9 +23,12 @@ const slice = createSlice({
   },
 });
 
-export const { changePrimaryMerchant } = slice.actions;
-
-export default slice.reducer;
+export const {
+  name,
+  actions: { changePrimaryMerchant },
+} = slice;
 
 export const selectPrimaryMerchantSafe = (state: AppState) =>
   state.merchant.primary;
+
+export default slice.reducer;
