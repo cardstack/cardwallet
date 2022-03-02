@@ -27,6 +27,7 @@ interface SwitchSelectorOption {
 interface SwitchSelectorProps {
   options: SwitchSelectorOption[];
   height?: number;
+  borderRadius?: number;
   returnObject?: boolean;
   animationDuration?: number;
   disabled?: boolean;
@@ -61,6 +62,7 @@ export const SwitchSelector = ({
   initial = 0,
   options = [],
   height = 40,
+  borderRadius = 50,
   returnObject = false,
   animationDuration = 100,
   disabled = false,
@@ -152,6 +154,8 @@ export const SwitchSelector = ({
             justifyContent="center"
             alignItems="center"
             onPress={() => toggleItem(index)}
+            height={height}
+            borderRadius={borderRadius}
           >
             <Text
               fontWeight="600"
@@ -164,7 +168,7 @@ export const SwitchSelector = ({
           </Touchable>
         );
       }),
-    [disabled, options, selected, toggleItem]
+    [borderRadius, disabled, height, options, selected, toggleItem]
   );
 
   return (
@@ -173,13 +177,13 @@ export const SwitchSelector = ({
       accessibilityLabel={accessibilityLabel}
       testID={testID}
       backgroundColor="darkGrayOpacity"
-      borderRadius={50}
+      borderRadius={borderRadius}
       {...otherProps}
     >
       <Container {...panResponder.panHandlers} flex={1}>
         <Container
           height={height}
-          borderRadius={50}
+          borderRadius={borderRadius}
           onLayout={event => {
             const { width } = event.nativeEvent.layout;
             setSliderWidth(width - 2);
@@ -191,12 +195,12 @@ export const SwitchSelector = ({
             borderWidth={1.5}
             borderColor="whiteLightOpacity"
             alignItems="center"
-            borderRadius={50}
+            borderRadius={borderRadius}
           >
             {!!sliderWidth && (
               <Animated.View
                 style={{
-                  borderRadius: 50,
+                  borderRadius,
                   borderWidth: 0,
                   position: 'absolute',
                   height: height - 4, // add more space vertically

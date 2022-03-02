@@ -7,14 +7,18 @@ import { useDimensions } from '@rainbow-me/hooks';
 
 const CrossHairAspectRatio = 259 / 375;
 
-export default function QRCodeScannerCrosshair({ isScanningEnabled }) {
+export default function QRCodeScannerCrosshair({
+  isScanningEnabled,
+}: {
+  isScanningEnabled: boolean;
+}) {
   const { width: deviceWidth } = useDimensions();
   const { result: isEmulator } = useIsEmulator();
   const size = deviceWidth * CrossHairAspectRatio;
 
   return (
     <CenteredContainer height={size} marginBottom={10} width={size} zIndex={1}>
-      <Icon color="white" name="crosshair" position="absolute" size={size} />
+      <Icon color="teal" name="crosshair" position="absolute" size={size} />
       {isScanningEnabled ? (
         <Text color="white" size="small" textAlign="center" weight="bold">
           {isEmulator ? `Simulator Mode\n (Paste in URI Code)` : 'Scan QR Code'}

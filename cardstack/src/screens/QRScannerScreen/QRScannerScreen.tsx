@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 import {
+  CameraDimmer,
+  EmulatorPasteUriButton,
+  QRCodeScanner,
+} from './components';
+import {
   BackButton,
   Header,
   HeaderHeight,
 } from '@rainbow-me/components/header';
 
-import {
-  CameraDimmer,
-  EmulatorPasteUriButton,
-  QRCodeScanner,
-} from '@rainbow-me/components/qrcode-scanner';
 import { WalletConnectExplainer } from '@rainbow-me/components/walletconnect-list';
 import {
   CenteredContainer,
@@ -93,7 +93,7 @@ const QRScannerScreen = () => {
           />
         </CameraDimmer>
 
-        <Container bottom={0} position="absolute" width="100%">
+        {/* <Container bottom={0} position="absolute" width="100%">
           <Sheet borderRadius={20} hideHandle shadowEnabled>
             {walletConnectorsCount ? (
               <>
@@ -125,7 +125,7 @@ const QRScannerScreen = () => {
               <WalletConnectExplainer />
             )}
           </Sheet>
-        </Container>
+        </Container> */}
       </CenteredContainer>
     </Container>
   );

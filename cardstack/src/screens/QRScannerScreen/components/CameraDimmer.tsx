@@ -7,20 +7,25 @@ import Animated, {
   min,
   set,
   sub,
+  Value,
 } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { useMemoOne } from 'use-memo-one';
-import { scrollPosition } from '../../navigation/ScrollPagerWrapper';
-import { useReanimatedValue } from '../list/MarqueeList';
+import { scrollPosition } from '@rainbow-me/navigation/ScrollPagerWrapper';
+import { useReanimatedValue } from '@rainbow-me/components/list/MarqueeList';
 
 const Dim = styled(Animated.View)`
   flex: 1;
   width: 100%;
 `;
 
-export default function CameraDimmer({ children }) {
-  const prev = useReanimatedValue(0);
-  const prevMem = useReanimatedValue(0);
+export default function CameraDimmer({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const prev = (useReanimatedValue(0) as unknown) as Value<number>;
+  const prevMem = (useReanimatedValue(0) as unknown) as Value<number>;
 
   const style = useMemoOne(
     () => ({
@@ -41,5 +46,6 @@ export default function CameraDimmer({ children }) {
     }),
     []
   );
+
   return <Dim style={style}>{children}</Dim>;
 }

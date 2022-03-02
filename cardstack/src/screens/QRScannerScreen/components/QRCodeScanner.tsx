@@ -4,11 +4,10 @@ import { InteractionManager, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
 import styled from 'styled-components';
-import PeopleIllustrationBackground from '../../../cardstack/src/assets/people-ill-bg.png';
-import { ErrorText } from '../text';
+import PeopleIllustrationBackground from '../../../assets/people-ill-bg.png';
 import QRCodeScannerCrosshair from './QRCodeScannerCrosshair';
 import QRCodeScannerNeedsAuthorization from './QRCodeScannerNeedsAuthorization';
-import { CenteredContainer, Container } from '@cardstack/components';
+import { CenteredContainer, Container, Text } from '@cardstack/components';
 import { useBooleanState, useScanner } from '@rainbow-me/hooks';
 import { ImgixImage } from '@rainbow-me/images';
 import { position } from '@rainbow-me/styles';
@@ -29,12 +28,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const QRCodeScanner = ({ contentPositionBottom, contentPositionTop }) => {
+interface QRCodeScannerProps {
+  contentPositionBottom: number;
+  contentPositionTop: number;
+}
+
+const QRCodeScanner = ({
+  contentPositionBottom,
+  contentPositionTop,
+}: QRCodeScannerProps) => {
   const [error, showError] = useBooleanState();
   const { result: isEmulator } = useIsEmulator();
+
   const [cameraEnableState, enableCamera, disableCamera] = useBooleanState(
     false
   );
+
   const { isCameraAuthorized, isScanningEnabled, onScan } = useScanner(
     cameraEnableState
   );
@@ -44,6 +53,7 @@ const QRCodeScanner = ({ contentPositionBottom, contentPositionTop }) => {
       InteractionManager.runAfterInteractions(() => {
         enableCamera();
       });
+
       return () => disableCamera();
     }, [disableCamera, enableCamera])
   );
@@ -58,10 +68,10 @@ const QRCodeScanner = ({ contentPositionBottom, contentPositionTop }) => {
         ) : (
           <RNCamera
             captureAudio={false}
-            notAuthorizedView={QRCodeScannerNeedsAuthorization}
+            notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
             onBarCodeRead={onScan}
             onMountError={showError}
-            pendingAuthorizationView={null}
+            // pendingAuthorizationView={null}
             style={styles.camera}
           />
         )}
@@ -74,7 +84,7 @@ const QRCodeScanner = ({ contentPositionBottom, contentPositionTop }) => {
           width="100%"
         >
           {error ? (
-            <ErrorText error="Error mounting camera" />
+            <Text>Error mounting camera"</Text>
           ) : (
             <QRCodeScannerCrosshair isScanningEnabled={isScanningEnabled} />
           )}

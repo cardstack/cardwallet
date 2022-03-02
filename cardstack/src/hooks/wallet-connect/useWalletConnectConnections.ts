@@ -47,7 +47,7 @@ export default function useWalletConnectConnections() {
   );
 
   const walletConnectOnSessionRequest = useCallback(
-    (uri, callback) =>
+    (uri: string, callback?: () => void) =>
       dispatch(rawWalletConnectOnSessionRequest(uri, callback)),
     [dispatch]
   );

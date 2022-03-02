@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useIsEmulator } from 'react-native-device-info';
-import { Prompt } from '../alerts';
-import { ButtonPressAnimation } from '../animations';
+import { Prompt } from '@rainbow-me/components/alerts';
+import { ButtonPressAnimation } from '@rainbow-me/components/animations';
 import { Icon } from '@cardstack/components';
 import { useWalletConnectConnections } from '@rainbow-me/hooks';
 
