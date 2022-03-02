@@ -8,6 +8,12 @@ jest.mock('../useTransferCardScreen', () => ({
   useTransferCardScreen: jest.fn(),
 }));
 
+jest.mock('@rainbow-me/hooks', () => ({
+  useDimensions: () => ({
+    isTinyPhone: false,
+  }),
+}));
+
 describe('TransferCardScreen', () => {
   const onTransferPress = jest.fn();
   const onScanPress = jest.fn();
