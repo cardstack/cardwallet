@@ -89,7 +89,7 @@ const SettingsPages = {
   primaryPaymentAccount: {
     component: PrimaryPaymentAccountSection,
     key: 'PrimaryPaymentAccountSection',
-    title: 'Primary Payment Account',
+    title: 'Primary Account',
   },
   notifications: {
     component: NotificationsSection,
