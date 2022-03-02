@@ -114,7 +114,7 @@ export const shareRequestPaymentLink = (
   ];
 
   const title = `${merchantName} Requests ${amountWithSymbol}`;
-  const message = `${title} \nURL: ${paymentRequestLink}`;
+  const message = paymentRequestLink;
 
   const shareConfig = {
     options: Platform.select({
@@ -123,17 +123,14 @@ export const shareRequestPaymentLink = (
       },
       ios: {
         excludedActivityTypes,
-        subject: title,
+        subject: message,
       },
     }),
     content: Platform.select({
       android: {
-        title,
         message,
       },
       ios: {
-        title,
-        message,
         url: paymentRequestLink,
       },
       default: { message },
