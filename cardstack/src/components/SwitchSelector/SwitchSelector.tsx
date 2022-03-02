@@ -1,82 +1,81 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
 import {
   Animated,
   Easing,
-  I18nManager,
-  Image,
   PanResponder,
-  Text,
-  TouchableOpacity,
-  View,
   GestureResponderEvent,
   PanResponderGestureState,
-  ImageSourcePropType,
-  StyleSheet,
 } from 'react-native';
-
-const styles = StyleSheet.create({
-  button: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  animated: {
-    borderWidth: 0,
-    position: 'absolute',
-  },
-});
-
+import {
+  Container,
+  ContainerProps,
+  Text,
+  Touchable,
+} from '@cardstack/components';
+import { colors } from '@cardstack/theme';
 interface SwitchSelectorOption {
   label: string;
-  value: number;
-  customIcon?: (_: boolean) => JSX.Element;
-  imageIcon: ImageSourcePropType;
-  accessibilityLabel?: string;
-  testID?: string;
+  value: string;
 }
 
 interface SwitchSelectorProps {
   options: SwitchSelectorOption[];
-  height: number;
-  returnObject: boolean;
-  animationDuration: number;
-  disabled: boolean;
-  disableValueChangeOnPress: boolean;
-  initial: number;
-  value: number;
-  onPress: (value: number | SwitchSelectorOption) => void;
-  accessibilityLabel: string;
-  testID: string;
+  height?: number;
+  returnObject?: boolean;
+  animationDuration?: number;
+  disabled?: boolean;
+  initial?: number;
+  value?: number;
+  onPress?: (value: string | SwitchSelectorOption) => void;
+  accessibilityLabel?: string;
+  testID?: string;
 }
 
+const SWIPE_DIRECTION = { LEFT: 'LEFT', RIGHT: 'RIGHT' };
+
+const getSwipeDirection = (gestureState: PanResponderGestureState) => {
+  const { dx, dy, vx } = gestureState;
+
+  // 0.1 velocity
+  if (Math.abs(vx) > 0.1 && Math.abs(dy) < 80) {
+    return dx > 0 ? SWIPE_DIRECTION.RIGHT : SWIPE_DIRECTION.LEFT;
+  }
+
+  return null;
+};
+
+const shouldSetResponder = (
+  evt: GestureResponderEvent,
+  gestureState: PanResponderGestureState
+) =>
+  evt.nativeEvent.touches.length === 1 &&
+  !(Math.abs(gestureState.dx) < 5 && Math.abs(gestureState.dy) < 5);
+
 export const SwitchSelector = ({
-  initial = -1,
+  initial = 0,
   options = [],
   height = 40,
   returnObject = false,
   animationDuration = 100,
   disabled = false,
-  disableValueChangeOnPress = false,
-  value = 1,
+  value,
   onPress,
   accessibilityLabel,
   testID,
-}: SwitchSelectorProps) => {
+  ...otherProps
+}: SwitchSelectorProps & ContainerProps) => {
   const [selected, setSelected] = useState<number>(initial);
-  const [sliderWidth, setSliderWidth] = useState<number>(initial);
+  const [sliderWidth, setSliderWidth] = useState<number>();
 
-  const animatedValue = useMemo(
-    () =>
-      new Animated.Value(
-        initial
-          ? I18nManager.isRTL
-            ? -(initial / options.length)
-            : initial / options.length
-          : 0
-      ),
-    [initial, options]
-  );
+  const animatedValue = useRef(
+    new Animated.Value(initial ? initial / options.length : 0)
+  ).current;
 
   const animate = useCallback(
     (toValue: number, last: number) => {
@@ -94,17 +93,10 @@ export const SwitchSelector = ({
   const toggleItem = useCallback(
     (index: number, callOnPress = true) => {
       if (options.length <= 1 || index === null || isNaN(index)) return;
-      animate(
-        I18nManager.isRTL ? -(index / options.length) : index / options.length,
-        I18nManager.isRTL
-          ? -(selected / options.length)
-          : selected / options.length
-      );
+      animate(index / options.length, selected / options.length);
 
       if (callOnPress && onPress) {
         onPress(returnObject ? options[index] : options[index].value);
-      } else {
-        console.log('Call onPress with value: ', options[index].value);
       }
 
       setSelected(index);
@@ -112,39 +104,21 @@ export const SwitchSelector = ({
     [animate, onPress, options, returnObject, selected]
   );
 
-  const getSwipeDirection = useCallback(
-    (gestureState: PanResponderGestureState) => {
-      const { dx, dy, vx } = gestureState;
-
-      // 0.1 velocity
-      if (Math.abs(vx) > 0.1 && Math.abs(dy) < 80) {
-        return dx > 0 ? 'RIGHT' : 'LEFT';
-      }
-
-      return null;
-    },
-    []
-  );
-
   const responderEnd = useCallback(
     (_evt: GestureResponderEvent, gestureState: PanResponderGestureState) => {
       if (disabled) return;
       const swipeDirection = getSwipeDirection(gestureState);
 
-      if (swipeDirection === 'RIGHT' && selected < options.length - 1) {
+      if (
+        swipeDirection === SWIPE_DIRECTION.RIGHT &&
+        selected < options.length - 1
+      ) {
         toggleItem(selected + 1);
-      } else if (swipeDirection === 'LEFT' && selected > 0) {
+      } else if (swipeDirection === SWIPE_DIRECTION.LEFT && selected > 0) {
         toggleItem(selected - 1);
       }
     },
-    [disabled, getSwipeDirection, options.length, selected, toggleItem]
-  );
-
-  const shouldSetResponder = useCallback(
-    (evt: GestureResponderEvent, gestureState: PanResponderGestureState) =>
-      evt.nativeEvent.touches.length === 1 &&
-      !(Math.abs(gestureState.dx) < 5 && Math.abs(gestureState.dy) < 5),
-    []
+    [disabled, options.length, selected, toggleItem]
   );
 
   const panResponder = useMemo(
@@ -155,104 +129,95 @@ export const SwitchSelector = ({
         onPanResponderRelease: responderEnd,
         onPanResponderTerminate: responderEnd,
       }),
-    [responderEnd, shouldSetResponder]
+    [responderEnd]
   );
 
   useEffect(() => {
-    toggleItem(value, !disableValueChangeOnPress);
-  }, [disableValueChangeOnPress, toggleItem, value]);
+    if (value !== undefined) {
+      toggleItem(value);
+    }
+  }, [toggleItem, value]);
 
-  const optionsMap = options.map((element, index) => {
-    const isSelected = selected === index;
+  const optionsMap = useMemo(
+    () =>
+      options.map((element, index) => {
+        const isSelected = selected === index;
 
-    return (
-      <TouchableOpacity
-        key={index}
-        disabled={disabled}
-        style={styles.button}
-        onPress={() => toggleItem(index)}
-        accessibilityLabel={element.accessibilityLabel}
-        testID={element.testID}
-      >
-        {typeof element.customIcon === 'function'
-          ? element.customIcon(isSelected)
-          : element.customIcon}
-        {element.imageIcon && (
-          <Image
-            source={element.imageIcon}
-            style={[
-              {
-                height: 30,
-                width: 30,
-                tintColor: '#fff',
-              },
-            ]}
-          />
-        )}
-        <Text
-          style={[
-            {
-              fontWeight: 'bold',
-              textAlign: 'center',
-              color: '#fff',
-              backgroundColor: 'transparent',
-            },
-          ]}
-        >
-          {element.label}
-        </Text>
-      </TouchableOpacity>
-    );
-  });
+        return (
+          <Touchable
+            key={index}
+            disabled={disabled}
+            flex={1}
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+            onPress={() => toggleItem(index)}
+          >
+            <Text
+              fontWeight="600"
+              fontSize={13}
+              textAlign="center"
+              color={isSelected ? 'black' : 'white'}
+            >
+              {element.label}
+            </Text>
+          </Touchable>
+        );
+      }),
+    [disabled, options, selected, toggleItem]
+  );
 
   return (
-    <View
-      style={[{ flexDirection: 'row' }]}
+    <Container
+      flexDirection="row"
       accessibilityLabel={accessibilityLabel}
       testID={testID}
+      backgroundColor="darkGrayOpacity"
+      borderRadius={50}
+      {...otherProps}
     >
-      <View {...panResponder.panHandlers} style={{ flex: 1 }}>
-        <View
-          style={{
-            height,
-          }}
+      <Container {...panResponder.panHandlers} flex={1}>
+        <Container
+          height={height}
+          borderRadius={50}
           onLayout={event => {
             const { width } = event.nativeEvent.layout;
             setSliderWidth(width - 2);
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              borderWidth: 0,
-              alignItems: 'center',
-            }}
+          <Container
+            flex={1}
+            flexDirection="row"
+            borderWidth={1.5}
+            borderColor="whiteLightOpacity"
+            alignItems="center"
+            borderRadius={50}
           >
             {!!sliderWidth && (
               <Animated.View
-                style={[
-                  {
-                    height,
-                    backgroundColor: selected === -1 ? 'transparent' : '#fff',
-                    width: sliderWidth / options.length,
-                    transform: [
-                      {
-                        translateX: animatedValue.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, sliderWidth - 0],
-                        }),
-                      },
-                    ],
-                  },
-                  styles.animated,
-                ]}
+                style={{
+                  borderRadius: 50,
+                  borderWidth: 0,
+                  position: 'absolute',
+                  height: height - 4, // add more space vertically
+                  backgroundColor:
+                    selected === -1 ? 'transparent' : colors.teal,
+                  width: sliderWidth / options.length - 2,
+                  transform: [
+                    {
+                      translateX: animatedValue.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [1, sliderWidth],
+                      }),
+                    },
+                  ],
+                }}
               />
             )}
             {optionsMap}
-          </View>
-        </View>
-      </View>
-    </View>
+          </Container>
+        </Container>
+      </Container>
+    </Container>
   );
 };
