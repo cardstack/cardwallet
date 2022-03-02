@@ -1,35 +1,33 @@
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
-import styled from 'styled-components';
-import { BackButton, Header, HeaderHeight } from '../components/header';
+import {
+  BackButton,
+  Header,
+  HeaderHeight,
+} from '@rainbow-me/components/header';
 
 import {
   CameraDimmer,
   EmulatorPasteUriButton,
   QRCodeScanner,
-} from '../components/qrcode-scanner';
-import { WalletConnectExplainer } from '../components/walletconnect-list';
+} from '@rainbow-me/components/qrcode-scanner';
+import { WalletConnectExplainer } from '@rainbow-me/components/walletconnect-list';
 import {
   CenteredContainer,
   Container,
   ListItem,
   Sheet,
+  SwitchSelector,
 } from '@cardstack/components';
 
-import { useHeight, useWalletConnectConnections } from '@rainbow-me/hooks';
+import { useWalletConnectConnections } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-
-const Background = styled.View`
-  background-color: black;
-  height: 100%;
-  position: absolute;
-  width: 100%;
-`;
+const SHEET_HEIGHT = 240;
 
 const QRScannerScreen = () => {
-  const [sheetHeight] = useHeight(240);
   const { navigate } = useNavigation();
+
   const {
     walletConnectorsByDappName,
     walletConnectorsCount,
@@ -52,20 +50,45 @@ const QRScannerScreen = () => {
 
   return (
     <Container>
-      <Header backgroundColor="transparent" position="absolute" zIndex={1}>
-        <BackButton
-          color="teal"
-          direction="left"
-          onPress={handlePressBackButton}
-          testID="goToBalancesFromScanner"
+      <Header
+        backgroundColor="transparent"
+        position="absolute"
+        zIndex={1}
+        width="100%"
+        justifyContent="center"
+      >
+        <SwitchSelector
+          options={[
+            { label: 'Scan', value: 'scan' },
+            { label: 'Request', value: 'request' },
+          ]}
+          width="60%"
+          height={38}
         />
-        <EmulatorPasteUriButton />
+        <Container position="absolute" left={0}>
+          <BackButton
+            color="teal"
+            direction="left"
+            onPress={handlePressBackButton}
+            testID="goToBalancesFromScanner"
+            throttle={undefined}
+            textChevron={undefined}
+          />
+        </Container>
+        <Container position="absolute" right={0}>
+          <EmulatorPasteUriButton />
+        </Container>
       </Header>
       <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
-        <Background />
+        <Container
+          backgroundColor="black"
+          position="absolute"
+          width="100%"
+          height="100%"
+        />
         <CameraDimmer>
           <QRCodeScanner
-            contentPositionBottom={sheetHeight + HeaderHeight}
+            contentPositionBottom={SHEET_HEIGHT + HeaderHeight}
             contentPositionTop={HeaderHeight}
           />
         </CameraDimmer>
@@ -77,13 +100,13 @@ const QRScannerScreen = () => {
                 <FlatList
                   alwaysBounceVertical={false}
                   data={walletConnectorsByDappName}
-                  keyExtractor={item => item.dappUrl}
+                  keyExtractor={item => `${item.dappUrl}`}
                   removeClippedSubviews
-                  renderItem={({ item }) => (
+                  renderItem={({ item, index }) => (
                     <>
                       <ListItem
                         actionSheetProps={{
-                          onPress: index => {
+                          onPress: () => {
                             handlePressActionSheet({ ...item, index });
                           },
                           options: ['Disconnect', 'Cancel'],
@@ -91,7 +114,7 @@ const QRScannerScreen = () => {
                         }}
                         avatarProps={{ source: item.dappIcon }}
                         subText="Connected"
-                        title={item.dappName}
+                        title={item.dappName || ''}
                       />
                     </>
                   )}

@@ -31,11 +31,13 @@ export const palette = {
   blackOpacity50: '#00000080',
   blackLightOpacity: '#00000066',
   whiteOpacity50: '#FFFFFF80',
+  whiteLightOpacity: '#FFFFFF5A',
   grayButtonBackground: '#D1D5DB',
   buttonDisabledBackground: '#2e2d38',
   appleBlue: '#0E76FD',
   yellow: '#F9D849',
   darkPurple: '#272330',
+  darkGrayOpacity: 'rgba(39, 35, 48, 0.75)',
 };
 
 export const colors = {
@@ -85,6 +87,8 @@ export const colors = {
   appleBlue: palette.appleBlue,
   warning: palette.yellow,
   error: palette.red,
+  darkGrayOpacity: palette.darkGrayOpacity,
+  whiteLightOpacity: palette.whiteLightOpacity,
 };
 
 export const avatarColor = [
