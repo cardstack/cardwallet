@@ -28,7 +28,7 @@ describe('Merchant utils', () => {
     const paymentRequestLink = `cardwallet://pay/xdai/0xd6F3F565E207A4e4B1b2E51F1A86d26D3DBf5811?amount=100&currency=USD`;
 
     const title = `${merchantName} Requests ${amountWithSymbol}`;
-    const message = `${title} \nURL: ${paymentRequestLink}`;
+    const message = paymentRequestLink;
 
     it('should return a share link with right params for iOS', async () => {
       Platform.OS = 'ios';
@@ -42,8 +42,6 @@ describe('Merchant utils', () => {
 
       expect(share).toBeCalledWith(
         {
-          title,
-          message,
           url: paymentRequestLink,
         },
         {
@@ -51,7 +49,7 @@ describe('Merchant utils', () => {
             `com.apple.UIKit.activity.CopyToPasteboard`,
             `com.apple.UIKit.activity.AddToReadingList`,
           ],
-          subject: title,
+          subject: paymentRequestLink,
         }
       );
     });
@@ -68,7 +66,6 @@ describe('Merchant utils', () => {
 
       expect(share).toBeCalledWith(
         {
-          title,
           message,
         },
         { dialogTitle: title }
