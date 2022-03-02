@@ -14,7 +14,6 @@ import {
 } from '@cardstack/components';
 import { AssetListSectionItem } from '@cardstack/components/AssetList/types';
 import { assetsWithoutNFTs } from '@cardstack/parsers/collectibles';
-import usePrimaryMerchant from '@cardstack/redux/hooks/usePrimaryMerchant';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   AssetType,
@@ -76,19 +75,15 @@ const useDepotSection = (
 const useMerchantSafeSection = (
   merchantSafes: MerchantSafeType[],
   timestamp: string
-): AssetListSectionItem<MerchantSafeType> => {
-  const { primaryMerchant } = usePrimaryMerchant();
-  const data = [primaryMerchant || merchantSafes?.[0]];
-  return {
-    header: {
-      title: 'Account',
-      count: 1,
-    },
-    data,
-    timestamp,
-    Component: MerchantSafe,
-  };
-};
+): AssetListSectionItem<MerchantSafeType> => ({
+  header: {
+    title: 'Accounts',
+    count: merchantSafes?.length,
+  },
+  data: merchantSafes,
+  timestamp,
+  Component: MerchantSafe,
+});
 
 const useOtherTokensSection = (): AssetListSectionItem<AssetWithNativeType> => {
   const [
