@@ -5,8 +5,9 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   TouchableWithoutFeedback,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTransferCardScreen } from './useTransferCardScreen';
 import { strings } from './strings';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundDarkPurple,
   },
   safeArea: {
+    paddingTop: StatusBar.currentHeight,
     flex: 1,
     margin: 8,
     alignItems: 'center',
