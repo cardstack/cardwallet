@@ -1,58 +1,6 @@
 import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
-import styled from 'styled-components';
-import { darkModeThemeColors } from '@rainbow-me/styles/colors';
-import { ButtonPressAnimation } from '@rainbow-me/components/animations';
-import { Icon } from '@rainbow-me/components/icons';
-import { Centered } from '@rainbow-me/components/layout';
-import { Text } from '@rainbow-me/components/text';
-import { margin, padding, position } from '@rainbow-me/styles';
-
-const Button = styled(ButtonPressAnimation).attrs({
-  scaleTo: 1.1,
-})`
-  ${padding(20)};
-  margin-top: 22;
-`;
-
-const ButtonLabel = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.mintDark,
-  size: 'large',
-  weight: 'semibold',
-}))``;
-
-const Container = styled(Centered).attrs({
-  direction: 'column',
-})`
-  ${padding(30, 50, 60, 30)};
-  ${position.cover};
-  background-color: ${({ theme: { colors } }) => colors.black};
-`;
-
-const QRIcon = styled(Icon).attrs(({ theme: { colors } }) => ({
-  color: colors.mintDark,
-  name: 'camera',
-  outerOpacity: 0.5,
-}))`
-  ${position.size(43)};
-`;
-
-const Subtitle = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.alpha(darkModeThemeColors.blueGreyDark, 0.6),
-  size: 'smedium',
-  weight: 'semibold',
-}))``;
-
-const Title = styled(Text).attrs(({ theme: { colors } }) => ({
-  align: 'center',
-  color: colors.white,
-  size: 'larger',
-  weight: 'bold',
-}))`
-  ${margin(20.5, 0, 8)};
-`;
+import { Text, Icon, CenteredContainer, Button } from '@cardstack/components';
 
 export default function QRCodeScannerNeedsAuthorization() {
   const handlePressSettings = useCallback(() => {
@@ -62,13 +10,39 @@ export default function QRCodeScannerNeedsAuthorization() {
   }, []);
 
   return (
-    <Container>
-      <QRIcon />
-      <Title>Scan to pay or connect</Title>
-      <Subtitle>Camera access needed to scan!</Subtitle>
-      <Button onPress={handlePressSettings}>
-        <ButtonLabel>Enable camera access 􀄫</ButtonLabel>
+    <CenteredContainer
+      backgroundColor="black"
+      position="absolute"
+      flex={1}
+      padding={30}
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Icon name="camera-icon" color="mintDark" size={43} />
+      <Text
+        textAlign="center"
+        color="white"
+        fontSize={20}
+        fontWeight="600"
+        marginBottom={30}
+        marginTop={5}
+      >
+        Scan to pay or connect
+      </Text>
+      <Text
+        textAlign="center"
+        color="blueGreyDark"
+        size="medium"
+        fontWeight="600"
+        marginBottom={10}
+      >
+        Camera access needed to scan!
+      </Text>
+      <Button onPress={handlePressSettings} padding={5}>
+        <Text textAlign="center" color="black" fontWeight="600" fontSize={18}>
+          Enable camera access
+        </Text>
       </Button>
-    </Container>
+    </CenteredContainer>
   );
 }
