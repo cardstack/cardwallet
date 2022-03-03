@@ -211,7 +211,7 @@ export const SwitchSelector = ({
                     {
                       translateX: animatedValue.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [1, sliderWidth],
+                        outputRange: [1, sliderWidth - 1],
                       }),
                     },
                   ],
