@@ -32,8 +32,8 @@ interface SwitchSelectorProps {
   animationDuration?: number;
   disabled?: boolean;
   initial?: number;
-  value?: number;
-  onPress?: (value: string | SwitchSelectorOption) => void;
+  value?: string;
+  onPress?: (value: string) => void;
   accessibilityLabel?: string;
   testID?: string;
 }
@@ -63,7 +63,6 @@ export const SwitchSelector = ({
   options = [],
   height = 40,
   borderRadius = 50,
-  returnObject = false,
   animationDuration = 100,
   disabled = false,
   value,
@@ -98,12 +97,12 @@ export const SwitchSelector = ({
       animate(index / options.length, selected / options.length);
 
       if (callOnPress && onPress) {
-        onPress(returnObject ? options[index] : options[index].value);
+        onPress(options[index].value);
       }
 
       setSelected(index);
     },
-    [animate, onPress, options, returnObject, selected]
+    [animate, onPress, options, selected]
   );
 
   const responderEnd = useCallback(
@@ -136,9 +135,9 @@ export const SwitchSelector = ({
 
   useEffect(() => {
     if (value !== undefined) {
-      toggleItem(value);
+      toggleItem(options.findIndex(option => option.value === value));
     }
-  }, [toggleItem, value]);
+  }, [options, toggleItem, value]);
 
   const optionsMap = useMemo(
     () =>
