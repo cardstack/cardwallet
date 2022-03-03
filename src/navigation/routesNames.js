@@ -27,6 +27,7 @@ const Routes = {
   NATIVE_STACK: 'NativeStack',
   NON_MODAL_SCREENS: 'NonModalScreens',
   PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
+  QR_SCANNER_SCREEN: 'QRScannerScreen',
   RESTORE_SHEET: 'RestoreSheet',
   SAVINGS_DEPOSIT_MODAL: 'SavingsDepositModal',
   SAVINGS_SHEET: 'SavingsSheet',
