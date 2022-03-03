@@ -21,6 +21,7 @@ export const MainRoutes = {
   MERCHANT_TRANSACTION_SHEET: 'MerchantTransactionSheet',
   SETTINGS_MODAL: 'SettingModal',
   TRANSFER_CARD: 'TransferCardScreen',
+  QR_SCANNER_SCREEN: 'QRScannerScreen',
 } as const;
 
 export const GlobalRoutes = {

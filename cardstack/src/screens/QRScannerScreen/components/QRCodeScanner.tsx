@@ -54,14 +54,12 @@ export const QRCodeScanner = memo(() => {
     }, [disableCamera, enableCamera])
   );
 
-  if (!cameraEnableState) return null;
-
   return (
     <CenteredContainer
-      backgroundColor="black"
       height="100%"
       width="100%"
       position="relative"
+      backgroundColor="transparent"
     >
       {isEmulator ? (
         <>
@@ -74,7 +72,7 @@ export const QRCodeScanner = memo(() => {
             alignSelf="center"
           />
         </>
-      ) : (
+      ) : cameraEnableState ? (
         <RNCamera
           captureAudio={false}
           notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
@@ -82,7 +80,7 @@ export const QRCodeScanner = memo(() => {
           onMountError={showError}
           style={styles.camera}
         />
-      )}
+      ) : null}
       {isCameraAuthorized ? (
         <CenteredContainer
           position="absolute"
