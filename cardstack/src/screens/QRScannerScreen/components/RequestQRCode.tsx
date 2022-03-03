@@ -3,8 +3,10 @@ import {
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import React, { useCallback, useMemo } from 'react';
+import { useNavigation } from '@react-navigation/core';
 import { strings, SWITCH_SELECTOR_TOP } from './';
 import { useAccountSettings, useDimensions } from '@rainbow-me/hooks';
+import Routes from '@rainbow-me/routes';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
@@ -21,6 +23,7 @@ import logger from 'logger';
 export const RequestQRCode = () => {
   const { network } = useAccountSettings();
   const { isSmallPhone } = useDimensions();
+  const { navigate } = useNavigation();
 
   // ToDo: Update after choosing primary merchant's done
   const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
@@ -62,6 +65,15 @@ export const RequestQRCode = () => {
       logger.sentry('Payment Request Link share failed', e);
     }
   }, [paymentRequestWebLink, primaryMerchant]);
+
+  const goToMerchantPaymentRequest = useCallback(() => {
+    if (primaryMerchantAddress) {
+      navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
+        address: primaryMerchantAddress,
+        merchantInfo: primaryMerchantInfo,
+      });
+    }
+  }, [primaryMerchantAddress, navigate, primaryMerchantInfo]);
 
   if (!primaryMerchant) {
     logger.log('No primary merchant!');
@@ -117,7 +129,12 @@ export const RequestQRCode = () => {
           >
             {strings.requestViaText}
           </Text>
-          <Button variant="primaryWhite" borderColor="teal" marginTop={3}>
+          <Button
+            variant="primaryWhite"
+            borderColor="teal"
+            marginTop={3}
+            onPress={goToMerchantPaymentRequest}
+          >
             {strings.requestAmountBtn}
           </Button>
         </Container>
