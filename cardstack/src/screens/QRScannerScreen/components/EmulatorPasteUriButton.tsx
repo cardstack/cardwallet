@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
 import { useIsEmulator } from 'react-native-device-info';
 import { Prompt } from '@rainbow-me/components/alerts';
-import { ButtonPressAnimation } from '@rainbow-me/components/animations';
 import { Icon } from '@cardstack/components';
 import { useWalletConnectConnections } from '@rainbow-me/hooks';
 
-export default function EmulatorPasteUriButton() {
+export function EmulatorPasteUriButton() {
   const { result: isEmulator } = useIsEmulator();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
 
@@ -24,14 +23,13 @@ export default function EmulatorPasteUriButton() {
   }, [handlePastedUri]);
 
   return isEmulator ? (
-    <ButtonPressAnimation onPress={handlePressPasteSessionUri}>
-      <Icon
-        color="teal"
-        iconSize="large"
-        marginBottom={2}
-        marginRight={8}
-        name="link"
-      />
-    </ButtonPressAnimation>
+    <Icon
+      color="teal"
+      iconSize="medium"
+      marginBottom={2}
+      marginRight={8}
+      name="link"
+      onPress={handlePressPasteSessionUri}
+    />
   ) : null;
 }
