@@ -7,7 +7,6 @@ import {
   LanguageSection,
   NetworkSection,
   NotificationsSection,
-  PrimaryPaymentAccountSection,
   SettingsSection,
 } from '../components/settings-menu';
 import SettingsBackupView from '../components/settings-menu/BackupSection/SettingsBackupView';
@@ -85,11 +84,6 @@ const SettingsPages = {
     component: NetworkSection,
     key: 'NetworkSection',
     title: 'Network',
-  },
-  primaryPaymentAccount: {
-    component: PrimaryPaymentAccountSection,
-    key: 'PrimaryPaymentAccountSection',
-    title: 'Primary Account',
   },
   notifications: {
     component: NotificationsSection,
@@ -205,9 +199,6 @@ export default function SettingsModal() {
             onPressLanguage={onPressSection(SettingsPages.language)}
             onPressNetwork={onPressSection(SettingsPages.network)}
             onPressNotifications={onPressSection(SettingsPages.notifications)}
-            onPressPrimaryPaymentAccount={onPressSection(
-              SettingsPages.primaryPaymentAccount
-            )}
           />
         )}
       </Stack.Screen>
