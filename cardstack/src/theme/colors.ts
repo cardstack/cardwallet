@@ -32,6 +32,7 @@ export const palette = {
   blackLightOpacity: '#00000066',
   whiteOpacity50: '#FFFFFF80',
   whiteLightOpacity: '#FFFFFF5A',
+  whiteTinyLightOpacity: '#FFFFFF3A',
   grayButtonBackground: '#D1D5DB',
   buttonDisabledBackground: '#2e2d38',
   appleBlue: '#0E76FD',
@@ -91,6 +92,7 @@ export const colors = {
   error: palette.red,
   darkGrayOpacity: palette.darkGrayOpacity,
   whiteLightOpacity: palette.whiteLightOpacity,
+  whiteTinyLightOpacity: palette.whiteTinyLightOpacity,
   mintDark: palette.mintDark,
   blueGreyDark: palette.blueGreyDark,
 };
