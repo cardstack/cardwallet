@@ -1,4 +1,3 @@
-export * from './CameraDimmer';
 export * from './EmulatorPasteUriButton';
 export * from './QRCodeScanner';
 export * from './QRCodeScannerCrosshair';
