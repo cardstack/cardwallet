@@ -7,7 +7,7 @@ import { useDimensions } from '@rainbow-me/hooks';
 
 const CrossHairAspectRatio = 259 / 375;
 
-export default function QRCodeScannerCrosshair({
+export function QRCodeScannerCrosshair({
   isScanningEnabled,
 }: {
   isScanningEnabled: boolean;

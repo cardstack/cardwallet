@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
 import { Text, Icon, CenteredContainer, Button } from '@cardstack/components';
 
-export default function QRCodeScannerNeedsAuthorization() {
+export function QRCodeScannerNeedsAuthorization() {
   const handlePressSettings = useCallback(() => {
     Linking.canOpenURL('app-settings:').then(() =>
       Linking.openURL('app-settings:')

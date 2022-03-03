@@ -1,5 +1,7 @@
-export { default as CameraDimmer } from './CameraDimmer';
-export { default as EmulatorPasteUriButton } from './EmulatorPasteUriButton';
-export { default as QRCodeScanner } from './QRCodeScanner';
-export { default as QRCodeScannerCrosshair } from './QRCodeScannerCrosshair';
-export { default as QRCodeScannerNeedsAuthorization } from './QRCodeScannerNeedsAuthorization';
+export * from './CameraDimmer';
+export * from './EmulatorPasteUriButton';
+export * from './QRCodeScanner';
+export * from './QRCodeScannerCrosshair';
+export * from './QRCodeScannerNeedsAuthorization';
+export * from './RequestQRCode';
+export * from './fixture';
