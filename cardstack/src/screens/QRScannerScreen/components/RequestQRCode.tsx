@@ -120,7 +120,7 @@ export const RequestQRCode = () => {
             {primaryMerchantInfo?.name || ''}
           </Text>
         </Container>
-        <Container paddingBottom={isSmallPhone ? 10 : 30}>
+        <Container paddingBottom={isSmallPhone ? 10 : 20}>
           <Text
             fontSize={20}
             numberOfLines={1}
