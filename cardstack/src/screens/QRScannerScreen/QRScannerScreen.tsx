@@ -1,10 +1,12 @@
-import React, { useCallback } from 'react';
-import { EmulatorPasteUriButton, QRCodeScanner } from './components';
+import React, { useState } from 'react';
 import {
-  BackButton,
-  Header,
-  HeaderHeight,
-} from '@rainbow-me/components/header';
+  QRCodeScanner,
+  RequestQRCode,
+  SWITCH_OPTIONS,
+  SWITCH_SELECTOR_TOP,
+  SWITCH_SELECTOR_HEIGHT,
+  ScannerScreenMode,
+} from './components';
 
 import {
   CenteredContainer,
@@ -12,54 +14,36 @@ import {
   SwitchSelector,
 } from '@cardstack/components';
 
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
-const SHEET_HEIGHT = 240;
+interface QRScannerContainerProps {
+  selectedScreen: string;
+  onSwitchScreen: (selectedScreen: string) => void;
+  children: React.ReactNode;
+}
 
-const SWITCH_OPTIONS = [
-  { label: 'Scan', value: 'scan' },
-  { label: 'Request', value: 'request' },
-];
-
-const QRScannerContainer = ({ children }: { children: React.ReactNode }) => {
-  const { navigate } = useNavigation();
-
-  const handlePressBackButton = useCallback(
-    () => navigate(Routes.WALLET_SCREEN),
-    [navigate]
-  );
-
+const QRScannerContainer = ({
+  children,
+  onSwitchScreen,
+  selectedScreen,
+}: QRScannerContainerProps) => {
   return (
-    <Container>
-      <Header
-        backgroundColor="transparent"
+    <Container flex={1}>
+      <SwitchSelector
+        options={SWITCH_OPTIONS}
+        width="60%"
+        left="20%"
+        height={SWITCH_SELECTOR_HEIGHT}
+        onPress={onSwitchScreen}
+        value={selectedScreen}
         position="absolute"
+        top={SWITCH_SELECTOR_TOP}
         zIndex={1}
-        width="100%"
-        justifyContent="center"
+      />
+      <CenteredContainer
+        flexDirection="column"
+        height="100%"
+        overflow="hidden"
+        backgroundColor="transparent"
       >
-        <SwitchSelector options={SWITCH_OPTIONS} width="60%" height={38} />
-        <Container position="absolute" left={0}>
-          <BackButton
-            color="teal"
-            direction="left"
-            onPress={handlePressBackButton}
-            testID="goToBalancesFromScanner"
-            throttle={undefined}
-            textChevron={undefined}
-          />
-        </Container>
-        <Container position="absolute" right={0}>
-          <EmulatorPasteUriButton />
-        </Container>
-      </Header>
-      <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
-        <Container
-          backgroundColor="buttonDisabledBackground"
-          position="absolute"
-          width="100%"
-          height="100%"
-        />
         {children}
       </CenteredContainer>
     </Container>
@@ -67,12 +51,17 @@ const QRScannerContainer = ({ children }: { children: React.ReactNode }) => {
 };
 
 const QRScannerScreen = () => {
+  const [selectedScreen, selectScreen] = useState<string>(
+    ScannerScreenMode.SCAN
+  );
+
   return (
-    <QRScannerContainer>
-      <QRCodeScanner
-        contentPositionBottom={SHEET_HEIGHT + HeaderHeight}
-        contentPositionTop={HeaderHeight}
-      />
+    <QRScannerContainer
+      selectedScreen={selectedScreen}
+      onSwitchScreen={selectScreen}
+    >
+      {selectedScreen === ScannerScreenMode.SCAN && <QRCodeScanner />}
+      {selectedScreen === ScannerScreenMode.REQUEST && <RequestQRCode />}
     </QRScannerContainer>
   );
 };

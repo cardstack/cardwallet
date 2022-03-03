@@ -18,14 +18,11 @@ const styles = StyleSheet.create({
   dimStyle: {
     flex: 1,
     width: '100%',
+    backgroundColor: 'transparent',
   },
 });
 
-export default function CameraDimmer({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function CameraDimmer({ children }: { children: React.ReactNode }) {
   const prev = (useReanimatedValue(0) as unknown) as Value<number>;
   const prevMem = (useReanimatedValue(0) as unknown) as Value<number>;
 

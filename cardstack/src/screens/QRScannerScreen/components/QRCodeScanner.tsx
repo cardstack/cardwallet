@@ -3,43 +3,36 @@ import React, { memo, useCallback } from 'react';
 import { InteractionManager, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
-import styled from 'styled-components';
 import PeopleIllustrationBackground from '../../../assets/people-ill-bg.png';
 import {
-  CameraDimmer,
   QRCodeScannerCrosshair,
   QRCodeScannerNeedsAuthorization,
+  strings,
+  CROSS_HAIR_TOP,
+  EmulatorPasteUriButton,
+  SWITCH_SELECTOR_TOP,
 } from './';
-import { CenteredContainer, Container, Text } from '@cardstack/components';
+import {
+  CenteredContainer,
+  Container,
+  Text,
+  Image,
+  Icon,
+} from '@cardstack/components';
 import { useBooleanState, useScanner } from '@rainbow-me/hooks';
-import { ImgixImage } from '@rainbow-me/images';
-import { position } from '@rainbow-me/styles';
-
-const EmulatorCameraFallback = styled(ImgixImage).attrs({
-  source: PeopleIllustrationBackground,
-})`
-  ${position.cover};
-  ${position.size('100%')};
-`;
+import { screenHeight, screenWidth } from '@cardstack/utils';
 
 const styles = StyleSheet.create({
   camera: {
     ...StyleSheet.absoluteFillObject,
     height: '100%',
-    backgroundColor: 'transparent',
+    width: '100%',
+    backgroundColor: '#777',
     zIndex: 1,
   },
 });
 
-interface QRCodeScannerProps {
-  contentPositionBottom: number;
-  contentPositionTop: number;
-}
-
-const QRCodeScanner = ({
-  contentPositionBottom,
-  contentPositionTop,
-}: QRCodeScannerProps) => {
+export const QRCodeScanner = memo(() => {
   const [error, showError] = useBooleanState();
   const { result: isEmulator } = useIsEmulator();
 
@@ -64,38 +57,91 @@ const QRCodeScanner = ({
   if (!cameraEnableState) return null;
 
   return (
-    <CameraDimmer>
-      <Container backgroundColor="transparent">
-        <CenteredContainer backgroundColor="transparent" height="100%">
-          {isEmulator ? (
-            <EmulatorCameraFallback />
+    <CenteredContainer
+      backgroundColor="black"
+      height="100%"
+      width="100%"
+      position="relative"
+    >
+      {isEmulator ? (
+        <>
+          <Image
+            source={PeopleIllustrationBackground}
+            backgroundColor="buttonDisabledBackground"
+            position="absolute"
+            height={screenHeight}
+            width={screenWidth}
+            alignSelf="center"
+          />
+        </>
+      ) : (
+        <RNCamera
+          captureAudio={false}
+          notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
+          onBarCodeRead={onScan}
+          onMountError={showError}
+          style={styles.camera}
+        />
+      )}
+      {isCameraAuthorized ? (
+        <CenteredContainer
+          position="absolute"
+          top={CROSS_HAIR_TOP}
+          width="100%"
+          zIndex={1}
+        >
+          {error ? (
+            <Text textAlign="center" fontSize={20} color="white">
+              {strings.cameraMountError}
+            </Text>
           ) : (
-            <RNCamera
-              captureAudio={false}
-              notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
-              onBarCodeRead={onScan}
-              onMountError={showError}
-              style={styles.camera}
-            />
+            <CenteredContainer>
+              <QRCodeScannerCrosshair isScanningEnabled={isScanningEnabled} />
+              <Text textAlign="center" fontSize={20} color="white">
+                {strings.scanQRCodeText}
+              </Text>
+              <Container
+                flexDirection="row"
+                width="100%"
+                height={100}
+                marginTop={6}
+              >
+                <Container
+                  flex={1}
+                  justifyContent="center"
+                  alignItems="center"
+                  borderRightWidth={1}
+                  borderRightColor="whiteTinyLightOpacity"
+                >
+                  <Icon name="pay-icon" />
+                  <Text
+                    fontSize={14}
+                    color="white"
+                    fontWeight="600"
+                    marginTop={2}
+                  >
+                    {strings.pay}
+                  </Text>
+                </Container>
+                <Container flex={1} justifyContent="center" alignItems="center">
+                  <Icon name="connect-icon" />
+                  <Text
+                    fontSize={14}
+                    color="white"
+                    fontWeight="600"
+                    marginTop={2}
+                  >
+                    {strings.connect}
+                  </Text>
+                </Container>
+              </Container>
+            </CenteredContainer>
           )}
         </CenteredContainer>
-        {isCameraAuthorized ? (
-          <CenteredContainer
-            bottom={contentPositionBottom}
-            position="absolute"
-            top={contentPositionTop}
-            width="100%"
-          >
-            {error ? (
-              <Text>Error mounting camera"</Text>
-            ) : (
-              <QRCodeScannerCrosshair isScanningEnabled={isScanningEnabled} />
-            )}
-          </CenteredContainer>
-        ) : null}
+      ) : null}
+      <Container position="absolute" right={0} top={SWITCH_SELECTOR_TOP + 10}>
+        <EmulatorPasteUriButton />
       </Container>
-    </CameraDimmer>
+    </CenteredContainer>
   );
-};
-
-export default memo(QRCodeScanner);
+});
