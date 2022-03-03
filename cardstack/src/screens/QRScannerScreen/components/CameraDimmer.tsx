@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import Animated, {
   and,
   block,
@@ -9,15 +10,16 @@ import Animated, {
   sub,
   Value,
 } from 'react-native-reanimated';
-import styled from 'styled-components';
 import { useMemoOne } from 'use-memo-one';
 import { scrollPosition } from '@rainbow-me/navigation/ScrollPagerWrapper';
 import { useReanimatedValue } from '@rainbow-me/components/list/MarqueeList';
 
-const Dim = styled(Animated.View)`
-  flex: 1;
-  width: 100%;
-`;
+const styles = StyleSheet.create({
+  dimStyle: {
+    flex: 1,
+    width: '100%',
+  },
+});
 
 export default function CameraDimmer({
   children,
@@ -47,5 +49,7 @@ export default function CameraDimmer({
     []
   );
 
-  return <Dim style={style}>{children}</Dim>;
+  return (
+    <Animated.View style={[style, styles.dimStyle]}>{children}</Animated.View>
+  );
 }
