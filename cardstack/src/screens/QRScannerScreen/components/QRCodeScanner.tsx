@@ -71,7 +71,6 @@ const QRCodeScanner = ({
             notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
             onBarCodeRead={onScan}
             onMountError={showError}
-            // pendingAuthorizationView={null}
             style={styles.camera}
           />
         )}
@@ -89,9 +88,7 @@ const QRCodeScanner = ({
             <QRCodeScannerCrosshair isScanningEnabled={isScanningEnabled} />
           )}
         </CenteredContainer>
-      ) : (
-        <QRCodeScannerNeedsAuthorization />
-      )}
+      ) : null}
     </Container>
   );
 };
