@@ -1,9 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  CameraDimmer,
-  EmulatorPasteUriButton,
-  QRCodeScanner,
-} from './components';
+import { EmulatorPasteUriButton, QRCodeScanner } from './components';
 import {
   BackButton,
   Header,
@@ -20,7 +16,12 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 const SHEET_HEIGHT = 240;
 
-const QRScannerScreen = () => {
+const SWITCH_OPTIONS = [
+  { label: 'Scan', value: 'scan' },
+  { label: 'Request', value: 'request' },
+];
+
+const QRScannerContainer = ({ children }: { children: React.ReactNode }) => {
   const { navigate } = useNavigation();
 
   const handlePressBackButton = useCallback(
@@ -37,14 +38,7 @@ const QRScannerScreen = () => {
         width="100%"
         justifyContent="center"
       >
-        <SwitchSelector
-          options={[
-            { label: 'Scan', value: 'scan' },
-            { label: 'Request', value: 'request' },
-          ]}
-          width="60%"
-          height={38}
-        />
+        <SwitchSelector options={SWITCH_OPTIONS} width="60%" height={38} />
         <Container position="absolute" left={0}>
           <BackButton
             color="teal"
@@ -61,19 +55,25 @@ const QRScannerScreen = () => {
       </Header>
       <CenteredContainer flexDirection="column" height="100%" overflow="hidden">
         <Container
-          backgroundColor="black"
+          backgroundColor="buttonDisabledBackground"
           position="absolute"
           width="100%"
           height="100%"
         />
-        <CameraDimmer>
-          <QRCodeScanner
-            contentPositionBottom={SHEET_HEIGHT + HeaderHeight}
-            contentPositionTop={HeaderHeight}
-          />
-        </CameraDimmer>
+        {children}
       </CenteredContainer>
     </Container>
+  );
+};
+
+const QRScannerScreen = () => {
+  return (
+    <QRScannerContainer>
+      <QRCodeScanner
+        contentPositionBottom={SHEET_HEIGHT + HeaderHeight}
+        contentPositionTop={HeaderHeight}
+      />
+    </QRScannerContainer>
   );
 };
 

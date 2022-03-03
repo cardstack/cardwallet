@@ -5,8 +5,11 @@ import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
 import styled from 'styled-components';
 import PeopleIllustrationBackground from '../../../assets/people-ill-bg.png';
-import QRCodeScannerCrosshair from './QRCodeScannerCrosshair';
-import QRCodeScannerNeedsAuthorization from './QRCodeScannerNeedsAuthorization';
+import {
+  CameraDimmer,
+  QRCodeScannerCrosshair,
+  QRCodeScannerNeedsAuthorization,
+} from './';
 import { CenteredContainer, Container, Text } from '@cardstack/components';
 import { useBooleanState, useScanner } from '@rainbow-me/hooks';
 import { ImgixImage } from '@rainbow-me/images';
@@ -61,35 +64,37 @@ const QRCodeScanner = ({
   if (!cameraEnableState) return null;
 
   return (
-    <Container backgroundColor="transparent">
-      <CenteredContainer backgroundColor="transparent" height="100%">
-        {isEmulator ? (
-          <EmulatorCameraFallback />
-        ) : (
-          <RNCamera
-            captureAudio={false}
-            notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
-            onBarCodeRead={onScan}
-            onMountError={showError}
-            style={styles.camera}
-          />
-        )}
-      </CenteredContainer>
-      {isCameraAuthorized ? (
-        <CenteredContainer
-          bottom={contentPositionBottom}
-          position="absolute"
-          top={contentPositionTop}
-          width="100%"
-        >
-          {error ? (
-            <Text>Error mounting camera"</Text>
+    <CameraDimmer>
+      <Container backgroundColor="transparent">
+        <CenteredContainer backgroundColor="transparent" height="100%">
+          {isEmulator ? (
+            <EmulatorCameraFallback />
           ) : (
-            <QRCodeScannerCrosshair isScanningEnabled={isScanningEnabled} />
+            <RNCamera
+              captureAudio={false}
+              notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
+              onBarCodeRead={onScan}
+              onMountError={showError}
+              style={styles.camera}
+            />
           )}
         </CenteredContainer>
-      ) : null}
-    </Container>
+        {isCameraAuthorized ? (
+          <CenteredContainer
+            bottom={contentPositionBottom}
+            position="absolute"
+            top={contentPositionTop}
+            width="100%"
+          >
+            {error ? (
+              <Text>Error mounting camera"</Text>
+            ) : (
+              <QRCodeScannerCrosshair isScanningEnabled={isScanningEnabled} />
+            )}
+          </CenteredContainer>
+        ) : null}
+      </Container>
+    </CameraDimmer>
   );
 };
 
