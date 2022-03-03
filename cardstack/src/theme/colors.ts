@@ -38,6 +38,8 @@ export const palette = {
   yellow: '#F9D849',
   darkPurple: '#272330',
   darkGrayOpacity: 'rgba(39, 35, 48, 0.75)',
+  mintDark: '#00E0A9',
+  blueGreyDark: '#00E0A9',
 };
 
 export const colors = {
@@ -89,6 +91,8 @@ export const colors = {
   error: palette.red,
   darkGrayOpacity: palette.darkGrayOpacity,
   whiteLightOpacity: palette.whiteLightOpacity,
+  mintDark: palette.mintDark,
+  blueGreyDark: palette.blueGreyDark,
 };
 
 export const avatarColor = [

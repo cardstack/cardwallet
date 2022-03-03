@@ -8,7 +8,6 @@ import ArrowCircledIcon from './svg/ArrowCircledIcon';
 import ArrowIcon from './svg/ArrowIcon';
 import AvatarIcon from './svg/AvatarIcon';
 import BackspaceIcon from './svg/BackspaceIcon';
-import CameraIcon from './svg/CameraIcon';
 import CaretIcon from './svg/CaretIcon';
 import CaretThinIcon from './svg/CaretThinIcon';
 import CheckmarkCircledIcon from './svg/CheckmarkCircledIcon';
@@ -71,7 +70,6 @@ const IconTypes = {
   arrowCircled: ArrowCircledIcon,
   avatar: AvatarIcon,
   backspace: BackspaceIcon,
-  camera: CameraIcon,
   caret: CaretIcon,
   caretThin: CaretThinIcon,
   checkmark: CheckmarkIcon,
