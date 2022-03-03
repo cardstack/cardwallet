@@ -4,11 +4,11 @@ import { FlexItem } from '../components/layout';
 import { NetworkToast } from '../components/toasts';
 import { useAccountSettings, useCoinListEdited } from '../hooks';
 import ProfileScreen from '../screens/ProfileScreen';
-import QRScannerScreen from '../screens/QRScannerScreen';
 import WalletScreen from '../screens/WalletScreen';
 import { deviceUtils } from '../utils';
 import ScrollPagerWrapper, { scrollPosition } from './ScrollPagerWrapper';
 import Routes from './routesNames';
+import { QRScannerScreen } from '@cardstack/screens';
 
 const Swipe = createMaterialTopTabNavigator();
 

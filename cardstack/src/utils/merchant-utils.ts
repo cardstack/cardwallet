@@ -103,7 +103,7 @@ export const updateMerchantSafeWithCustomization = async (
 export const shareRequestPaymentLink = (
   paymentRequestLink: string,
   merchantName: string,
-  amountWithSymbol: string
+  amountWithSymbol?: string
 ) => {
   // Refer to https://developer.apple.com/documentation/uikit/uiactivitytype
   const activityUiKitPath = 'com.apple.UIKit.activity';
@@ -113,7 +113,7 @@ export const shareRequestPaymentLink = (
     `${activityUiKitPath}.AddToReadingList`,
   ];
 
-  const title = `${merchantName} Requests ${amountWithSymbol}`;
+  const title = `${merchantName} Requests ${amountWithSymbol || 'Payment'}`;
   const message = paymentRequestLink;
 
   const shareConfig = {

@@ -33,6 +33,10 @@ export const customIcons = {
   mandello: require('./mandello').default,
   spend: require('./spend').default,
   wallet: require('./wallet').default,
+  'camera-icon': require('./camera').default,
+  'pay-icon': require('./pay-icon').default,
+  'connect-icon': require('./connect-icon').default,
+  share: require('./share').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;
