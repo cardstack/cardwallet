@@ -12,15 +12,16 @@ import { useWalletConnectConnections } from '@rainbow-me/hooks';
 const WalletConnectSessionsSection = () => {
   const {
     walletConnectorsByDappName,
-    walletConnectDisconnectAllByDappName,
+    walletConnectDisconnectAllByDappNameOrUrl,
   } = useWalletConnectConnections();
 
   const handleDisconnectSession = useCallback(
-    (sessionName: string) => {
+    (sessionName?: string) => {
       if (sessionName) {
         Alert.alert(`Would you like to disconnect from ${sessionName}?`, '', [
           {
-            onPress: () => walletConnectDisconnectAllByDappName(sessionName),
+            onPress: () =>
+              walletConnectDisconnectAllByDappNameOrUrl(sessionName),
             text: 'Disconnect',
           },
           {
@@ -30,11 +31,13 @@ const WalletConnectSessionsSection = () => {
         ]);
       }
     },
-    [walletConnectDisconnectAllByDappName]
+    [walletConnectDisconnectAllByDappNameOrUrl]
   );
 
   const renderItem = useCallback(
     ({ item }) => {
+      const title =
+        item.dappName || (item.dappUrl || '').replace('https://', '');
       return (
         <Container
           borderBottomColor="grayLightBackground"
@@ -55,7 +58,7 @@ const WalletConnectSessionsSection = () => {
             </CenteredContainer>
             <Container marginLeft={7}>
               <Text fontSize={16} fontWeight="600">
-                {item.dappName}
+                {title}
               </Text>
               <Text color="grayText" fontSize={14} fontWeight="600">
                 Connected
@@ -71,7 +74,9 @@ const WalletConnectSessionsSection = () => {
             <Button
               borderColor="buttonSecondaryBorder"
               height={50}
-              onPress={() => handleDisconnectSession(item.dappName)}
+              onPress={() =>
+                handleDisconnectSession(item.dappName || item.dappUrl)
+              }
               variant="smallPrimaryWhite"
               width={135}
             >
