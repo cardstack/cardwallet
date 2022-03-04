@@ -11,10 +11,7 @@ import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
-const SELECT_ICON_WIDTH = '13%';
-const EDITING_COIN_ROW_WIDTH = '87%';
-
-export interface MerchantSafeProps extends MerchantSafeType {
+interface MerchantSafeProps extends MerchantSafeType {
   networkName: string;
   nativeCurrency: string;
   currencyConversionRates: {
@@ -22,71 +19,39 @@ export interface MerchantSafeProps extends MerchantSafeType {
   };
   merchantInfo?: MerchantInformation;
   infoDID: string;
-  isSelected?: boolean;
-  setSelected?: () => void;
 }
 
-export const MerchantSafe = ({
-  merchantInfo,
-  isSelected = false,
-  setSelected,
-  ...props
-}: MerchantSafeProps) => {
+export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
 
-  const selectedIconName = isSelected ? 'check-circle' : 'circle';
-
   const onPress = useCallback(() => {
-    if (setSelected) {
-      setSelected();
-    } else {
-      const merchantData = { ...props, merchantInfo };
-      navigate(Routes.MERCHANT_SCREEN, { merchantSafe: merchantData });
-    }
-  }, [merchantInfo, setSelected, navigate, props]);
+    const merchantData = { ...props, merchantInfo };
+    navigate(Routes.MERCHANT_SCREEN, { merchantSafe: merchantData });
+  }, [merchantInfo, navigate, props]);
 
   return (
     <Container paddingHorizontal={4} marginBottom={4}>
       <CardPressable
+        backgroundColor="white"
+        borderRadius={10}
         overflow="hidden"
-        flexDirection="row"
-        alignItems="center"
         borderColor="buttonPrimaryBorder"
         testID="inventory-card"
         onPress={onPress}
       >
-        {!!setSelected && (
-          <>
-            <Container width={SELECT_ICON_WIDTH}>
-              <Icon
-                name={selectedIconName}
-                iconSize="medium"
-                iconFamily="MaterialCommunity"
-                color={isSelected ? 'teal' : null}
-              />
-            </Container>
-          </>
-        )}
-        <Container
-          overflow="hidden"
-          backgroundColor="white"
-          borderRadius={20}
-          width={setSelected ? EDITING_COIN_ROW_WIDTH : '100%'}
-        >
-          <SafeHeader
-            {...props}
-            backgroundColor={merchantInfo?.color}
+        <SafeHeader
+          {...props}
+          onPress={onPress}
+          backgroundColor={merchantInfo?.color}
+          textColor={merchantInfo?.textColor}
+        />
+        <Container paddingHorizontal={6}>
+          <MerchantInfo
+            color={merchantInfo?.color}
             textColor={merchantInfo?.textColor}
-            onPress={setSelected ? undefined : onPress}
+            name={merchantInfo?.name}
           />
-          <Container paddingHorizontal={6}>
-            <MerchantInfo
-              color={merchantInfo?.color}
-              textColor={merchantInfo?.textColor}
-              name={merchantInfo?.name}
-            />
-            <Bottom slug={merchantInfo?.slug} />
-          </Container>
+          <Bottom slug={merchantInfo?.slug} />
         </Container>
       </CardPressable>
     </Container>
@@ -131,7 +96,8 @@ export const MerchantInfo = ({
         >
           {name || ''}
         </Text>
-        <Text variant="subText">Business Account</Text>
+        {/* Note: Will be later used for a different term. */}
+        {/* <Text variant="subText">Profile</Text> */}
       </Container>
     </Container>
   );
@@ -148,17 +114,6 @@ const Bottom = ({ slug }: { slug?: string }) => {
           <Text weight="bold" fontSize={13}>
             {slug}
           </Text>
-        </Container>
-        <Container flexDirection="row" alignItems="center">
-          <Container flexDirection="row" marginRight={3}>
-            <Text weight="bold" fontSize={13}>
-              1{' '}
-            </Text>
-            <Text weight="regular" fontSize={13}>
-              manager
-            </Text>
-          </Container>
-          <Icon name="user-with-background" />
         </Container>
       </Container>
     </Container>

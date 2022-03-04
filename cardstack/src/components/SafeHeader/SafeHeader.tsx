@@ -61,34 +61,32 @@ export const SafeHeader = (props: SafeHeaderProps) => {
             {accountName ? accountName : getAddressPreview(address)}
           </Text>
         </Container>
-        {!!onPress && (
-          <Touchable
-            flex={0.8}
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="flex-end"
-            onPress={onPress}
+        <Touchable
+          flex={0.8}
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="flex-end"
+          onPress={onPress}
+        >
+          <Text
+            style={style.text}
+            weight="extraBold"
+            ellipsizeMode="tail"
+            size={small ? 'xs' : 'small'}
+            marginRight={rightText ? 0 : 1}
+            numberOfLines={1}
+            textTransform="uppercase"
           >
-            <Text
-              style={style.text}
-              weight="extraBold"
-              ellipsizeMode="tail"
-              size={small ? 'xs' : 'small'}
-              marginRight={rightText ? 0 : 1}
-              numberOfLines={1}
-              textTransform="uppercase"
-            >
-              {rightText || 'View'}
-            </Text>
-            {!rightText && (
-              <Icon
-                name="chevron-right"
-                color={style.text.color as ColorTypes}
-                iconSize="medium"
-              />
-            )}
-          </Touchable>
-        )}
+            {rightText || 'View'}
+          </Text>
+          {!rightText && (
+            <Icon
+              name="chevron-right"
+              color={style.text.color as ColorTypes}
+              iconSize="medium"
+            />
+          )}
+        </Touchable>
       </Container>
     </Container>
   );
