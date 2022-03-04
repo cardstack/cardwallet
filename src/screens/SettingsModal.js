@@ -8,6 +8,7 @@ import {
   NetworkSection,
   NotificationsSection,
   SettingsSection,
+  WalletConnectSessionsSection,
 } from '../components/settings-menu';
 import SettingsBackupView from '../components/settings-menu/BackupSection/SettingsBackupView';
 import ShowSecretView from '../components/settings-menu/BackupSection/ShowSecretView';
@@ -89,6 +90,11 @@ const SettingsPages = {
     component: NotificationsSection,
     key: 'NotificationsSection',
     title: 'Notifications',
+  },
+  walletconnect: {
+    component: WalletConnectSessionsSection,
+    key: 'WCSessionsSection',
+    title: 'WalletConnect Sessions',
   },
 };
 
@@ -199,6 +205,7 @@ export default function SettingsModal() {
             onPressLanguage={onPressSection(SettingsPages.language)}
             onPressNetwork={onPressSection(SettingsPages.network)}
             onPressNotifications={onPressSection(SettingsPages.notifications)}
+            onPressWCSessions={onPressSection(SettingsPages.walletconnect)}
           />
         )}
       </Stack.Screen>
