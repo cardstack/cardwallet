@@ -26,7 +26,7 @@ const HomeScreen = () => {
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <MainHeader title="ACTIVITY" />
-      <Container paddingTop={6}>
+      <Container>
         <TransactionList
           Header={renderPromoBanner}
           accountAddress={accountAddress}
