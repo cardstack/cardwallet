@@ -166,7 +166,11 @@ const PaymentRequestExpandedSheet = () => {
                 paddingBottom={4}
               />
             </>
-          ) : null}
+          ) : (
+            <Text weight="bold" textAlign="center" marginTop={3}>
+              {merchantInfo?.name || ''}
+            </Text>
+          )}
           <PaymentRequestConfirmation
             address={address}
             amountInNum={amountInNum}
