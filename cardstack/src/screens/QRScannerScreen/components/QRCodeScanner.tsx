@@ -11,6 +11,7 @@ import {
   CROSS_HAIR_TOP,
   EmulatorPasteUriButton,
   SWITCH_SELECTOR_TOP,
+  QRCodeOverlay,
 } from './';
 import {
   CenteredContainer,
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: '#777',
-    zIndex: 1,
+    zIndex: 0,
   },
 });
 
@@ -81,6 +82,7 @@ export const QRCodeScanner = memo(() => {
           style={styles.camera}
         />
       ) : null}
+      <QRCodeOverlay />
       {isCameraAuthorized ? (
         <CenteredContainer
           position="absolute"
@@ -137,7 +139,12 @@ export const QRCodeScanner = memo(() => {
           )}
         </CenteredContainer>
       ) : null}
-      <Container position="absolute" right={0} top={SWITCH_SELECTOR_TOP + 10}>
+      <Container
+        position="absolute"
+        right={0}
+        top={SWITCH_SELECTOR_TOP + 10}
+        zIndex={2}
+      >
         <EmulatorPasteUriButton />
       </Container>
     </CenteredContainer>

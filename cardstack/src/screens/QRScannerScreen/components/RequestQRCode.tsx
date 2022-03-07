@@ -84,7 +84,7 @@ export const RequestQRCode = () => {
   return (
     <Container
       paddingHorizontal={10}
-      paddingTop={isSmallPhone ? 20 : 30}
+      paddingTop={isSmallPhone ? 22 : 30}
       flex={1}
       justifyContent="center"
       alignItems="center"
