@@ -9,18 +9,17 @@ import {
   CenteredContainer,
   Container,
   SwitchSelector,
+  SwitchSelectorOption,
 } from '@cardstack/components';
 
 interface QRScannerContainerProps {
-  selectedScreen: string;
-  onSwitchScreen: (selectedScreen: string) => void;
+  onSwitchScreen: (selectedScreen: SwitchSelectorOption) => void;
   children: React.ReactNode;
 }
 
 export const QRScannerContainer = ({
   children,
   onSwitchScreen,
-  selectedScreen,
 }: QRScannerContainerProps) => {
   return (
     <Container flex={1}>
@@ -30,7 +29,6 @@ export const QRScannerContainer = ({
         left="20%"
         height={SWITCH_SELECTOR_HEIGHT}
         onPress={onSwitchScreen}
-        value={selectedScreen}
         position="absolute"
         top={SWITCH_SELECTOR_TOP}
         zIndex={1}
