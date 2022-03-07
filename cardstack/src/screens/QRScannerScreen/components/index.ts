@@ -5,3 +5,4 @@ export * from './QRCodeScannerNeedsAuthorization';
 export * from './RequestQRCode';
 export * from './QRScannerContainer';
 export * from './fixture';
+export * from './QRCodeOverlay';
