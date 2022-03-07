@@ -16,7 +16,7 @@ const WalletConnectSessionsSection = () => {
   } = useWalletConnectConnections();
 
   const handleDisconnectSession = useCallback(
-    (sessionName?: string) => {
+    (sessionName?: string) => () => {
       if (sessionName) {
         Alert.alert(`Would you like to disconnect from ${sessionName}?`, '', [
           {
@@ -36,8 +36,11 @@ const WalletConnectSessionsSection = () => {
 
   const renderItem = useCallback(
     ({ item }) => {
-      const title =
-        item.dappName || (item.dappUrl || '').replace('https://', '');
+      let title = item.dappName;
+      if (!title) {
+        title = (item.dappUrl || '').replace('https://', '');
+      }
+
       return (
         <Container
           borderBottomColor="grayLightBackground"
@@ -74,9 +77,7 @@ const WalletConnectSessionsSection = () => {
             <Button
               borderColor="buttonSecondaryBorder"
               height={50}
-              onPress={() =>
-                handleDisconnectSession(item.dappName || item.dappUrl)
-              }
+              onPress={handleDisconnectSession(item.dappName || item.dappUrl)}
               variant="smallPrimaryWhite"
               width={135}
             >
@@ -89,11 +90,13 @@ const WalletConnectSessionsSection = () => {
     [handleDisconnectSession]
   );
 
+  const keyExtractor = useCallback((item, index) => `${item.dappUrl}_${index}`, []);
+
   return (
     <Container paddingTop={4}>
       <FlatList
         data={walletConnectorsByDappName}
-        keyExtractor={(item, index) => `${item.dappUrl}_${index}`}
+        keyExtractor={keyExtractor}
         renderItem={renderItem}
       />
     </Container>
