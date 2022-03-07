@@ -14,6 +14,7 @@ import {
 import { ReactNode } from 'react';
 import {
   SafeAreaView as ReactNativeSafeAreaView,
+  StatusBar,
   ViewProps,
 } from 'react-native';
 
@@ -39,3 +40,7 @@ export const SafeAreaView = createRestyleComponent<SafeAreaViewProps, Theme>(
   [layout, spacing, position, border, backgroundColor],
   ReactNativeSafeAreaView
 );
+
+SafeAreaView.defaultProps = {
+  style: { paddingTop: StatusBar.currentHeight },
+};

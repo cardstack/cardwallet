@@ -5,12 +5,17 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   TouchableWithoutFeedback,
-  SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import { useTransferCardScreen } from './useTransferCardScreen';
 import { strings } from './strings';
-import { Button, Container, Icon, Input, Text } from '@cardstack/components';
+import {
+  Button,
+  Container,
+  Icon,
+  Input,
+  SafeAreaView,
+  Text,
+} from '@cardstack/components';
 import { Device, screenHeight } from '@cardstack/utils';
 import { colors } from '@cardstack/theme';
 import { useDimensions } from '@rainbow-me/hooks';
@@ -20,12 +25,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     backgroundColor: colors.backgroundDarkPurple,
-  },
-  safeArea: {
-    paddingTop: StatusBar.currentHeight,
-    flex: 1,
-    margin: 8,
-    alignItems: 'center',
   },
 });
 
@@ -56,7 +55,7 @@ const TransferCardScreen = () => {
         keyboardVerticalOffset={keyboardOffset}
         enabled={Device.isIOS}
       >
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView flex={1} margin={2} alignItems="center">
           <Icon
             flexDirection="row"
             name="x"
