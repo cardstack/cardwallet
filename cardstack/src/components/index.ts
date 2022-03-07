@@ -23,6 +23,7 @@ export * from './AssetList';
 export * from './QRCode';
 export * from './Skeleton';
 export * from './TokenBalance';
+export * from './MerchantContent';
 export * from './MerchantSafe';
 export * from './SafeHeader';
 export * from './NetworkBadge';
