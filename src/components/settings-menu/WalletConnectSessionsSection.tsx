@@ -36,10 +36,8 @@ const WalletConnectSessionsSection = () => {
 
   const renderItem = useCallback(
     ({ item }) => {
-      let title = item.dappName;
-      if (!title) {
-        title = (item.dappUrl || '').replace('https://', '');
-      }
+      const title =
+        item.dappName || (item.dappUrl || '').replace('https://', '');
 
       return (
         <Container
