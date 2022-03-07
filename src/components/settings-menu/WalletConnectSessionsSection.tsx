@@ -88,7 +88,10 @@ const WalletConnectSessionsSection = () => {
     [handleDisconnectSession]
   );
 
-  const keyExtractor = useCallback((item, index) => `${item.dappUrl}_${index}`, []);
+  const keyExtractor = useCallback(
+    (item, index) => `${item.dappUrl}_${index}`,
+    []
+  );
 
   return (
     <Container paddingTop={4}>
