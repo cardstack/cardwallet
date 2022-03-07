@@ -60,6 +60,7 @@ export default function SettingsSection({
   onPressIcloudBackup,
   onPressNetwork,
   onPressNotifications,
+  onPressWCSessions,
   onPressShowSecret,
 }) {
   const { wallets } = useWallets();
@@ -163,6 +164,14 @@ export default function SettingsSection({
           label="Notifications"
           onPress={onPressNotifications}
           testID="notifications-section"
+        >
+          <ListItemArrowGroup />
+        </ListItem>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="connect-icon" />}
+          label="WalletConnect Sessions"
+          onPress={onPressWCSessions}
+          testID="walletconnect-section"
         >
           <ListItemArrowGroup />
         </ListItem>
