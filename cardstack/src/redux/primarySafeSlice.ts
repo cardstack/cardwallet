@@ -33,7 +33,9 @@ const slice = createSlice({
         primary: MerchantSafeType;
       }>
     ) {
-      state[payload.network][payload.accountAddress].primary = payload.primary;
+      state[payload.network] = {
+        [payload.accountAddress]: { primary: payload.primary },
+      };
     },
   },
 });

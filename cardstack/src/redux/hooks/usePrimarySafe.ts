@@ -9,6 +9,10 @@ import { useAccountSettings } from '@rainbow-me/hooks';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { MerchantSafeType } from '@cardstack/types';
 
+const safesInitialState = {
+  merchantSafes: [],
+};
+
 export default function usePrimarySafe() {
   const dispatch = useDispatch();
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
@@ -16,13 +20,12 @@ export default function usePrimarySafe() {
 
   const primarySafe = useSelector(selectPrimarySafe(network, accountAddress));
 
-  const {
-    data: { merchantSafes },
-    error,
-  } = useGetSafesDataQuery({
+  const { data = safesInitialState, error } = useGetSafesDataQuery({
     address: accountAddress,
     nativeCurrency,
   });
+
+  const { merchantSafes } = data;
 
   const changePrimarySafe = useCallback(
     (merchant: MerchantSafeType) =>
