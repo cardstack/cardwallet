@@ -15,14 +15,12 @@ export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
   disabled?: boolean;
   headerRightText?: string;
-  notPressable?: boolean;
 }
 
 export const MerchantSafe = ({
   merchantInfo,
   disabled = false,
   headerRightText,
-  notPressable = false,
   ...props
 }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
@@ -50,7 +48,6 @@ export const MerchantSafe = ({
           textColor={merchantInfo?.textColor}
           rightText={headerRightText}
           disabled={disabled}
-          rightText={notPressable ? 'Profile' : undefined}
         />
         <Container paddingHorizontal={6}>
           <MerchantInfo
