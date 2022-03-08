@@ -1,19 +1,4 @@
 import React, { useMemo } from 'react';
-
-<<<<<<< HEAD
-import { Container, MainHeader, MerchantSafe } from '@cardstack/components';
-import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
-
-const ProfileScreen = () => {
-  const { primarySafe } = usePrimarySafe();
-
-  return (
-    <Container backgroundColor="backgroundDarkPurple" flex={1}>
-      <MainHeader title="PROFILE" />
-      <Container justifyContent="center" flex={1}>
-        {!!primarySafe && <MerchantSafe {...primarySafe} />}
-      </Container>
-=======
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { exampleMerchantData, strings } from './fixture';
 import {
@@ -23,11 +8,13 @@ import {
   Text,
   MerchantSafe,
 } from '@cardstack/components';
+import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 
 const ProfileScreen = () => {
-  // TODO: need to add primaryMerchant hook here and check if existing safe
+  const { primarySafe } = usePrimarySafe();
+
   const [
     nativeCurrency,
     currencyConversionRates,
@@ -75,11 +62,14 @@ const ProfileScreen = () => {
     </Container>
   );
 
+  const CreateProfile = () => <CreateProfileStepOne />;
+
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <MainHeader title={strings.title} />
-      <CreateProfileStepOne />
->>>>>>> 662433eec (Add CreateProfileStepOne component)
+      <Container justifyContent="center" flex={1}>
+        {primarySafe ? <MerchantSafe {...primarySafe} /> : <CreateProfile />}
+      </Container>
     </Container>
   );
 };
