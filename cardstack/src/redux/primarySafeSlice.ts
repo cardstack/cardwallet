@@ -11,12 +11,14 @@ interface AccountType {
 
 type SliceType = Record<Network, AccountType>;
 
-const initialState: SliceType = {
-  kovan: {},
-  mainnet: {},
-  sokol: {},
-  xdai: {},
-};
+const initialState: SliceType = Object.keys(Network).reduce(
+  (arr: any, key: string) => {
+    arr[key] = {};
+
+    return arr;
+  },
+  {}
+);
 
 const slice = createSlice({
   // Using a more generic slice name to avoid a migration in the future.

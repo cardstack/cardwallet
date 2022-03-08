@@ -10,7 +10,7 @@ const ProfileScreen = () => {
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <MainHeader title="PROFILE" />
       <Container justifyContent="center" flex={1}>
-        {primarySafe && <MerchantSafe {...primarySafe} />}
+        {!!primarySafe && <MerchantSafe {...primarySafe} />}
       </Container>
     </Container>
   );

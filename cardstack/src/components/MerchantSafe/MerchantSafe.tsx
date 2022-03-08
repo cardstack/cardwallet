@@ -12,13 +12,7 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
 export interface MerchantSafeProps extends MerchantSafeType {
-  networkName?: string;
-  nativeCurrency?: string;
-  currencyConversionRates?: {
-    [key: string]: number;
-  };
   merchantInfo?: MerchantInformation;
-  infoDID: string;
 }
 
 export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
