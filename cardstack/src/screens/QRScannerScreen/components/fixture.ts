@@ -10,6 +10,10 @@ export const strings = {
   requestAmountBtn: 'Request Amount',
   scanLabel: 'Scan',
   requestLabel: 'Request',
+  authorize: {
+    info: 'Scan to pay or connect',
+    cameraBtn: 'Enable camera access',
+  },
 };
 
 export const SWITCH_SELECTOR_TOP =
