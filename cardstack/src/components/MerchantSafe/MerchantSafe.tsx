@@ -28,11 +28,11 @@ export const MerchantSafe = ({
     navigate(Routes.MERCHANT_SCREEN, { merchantSafe: merchantData });
   }, [merchantInfo, navigate, props]);
 
-  const PressableComponent = notPressable ? Container : CardPressable;
+  const PressableContainer = notPressable ? Container : CardPressable;
 
   return (
     <Container paddingHorizontal={4} marginBottom={4} width="100%">
-      <PressableComponent
+      <PressableContainer
         backgroundColor="white"
         borderRadius={10}
         overflow="hidden"
@@ -55,7 +55,7 @@ export const MerchantSafe = ({
           />
           <Bottom slug={merchantInfo?.slug} />
         </Container>
-      </PressableComponent>
+      </PressableContainer>
     </Container>
   );
 };
