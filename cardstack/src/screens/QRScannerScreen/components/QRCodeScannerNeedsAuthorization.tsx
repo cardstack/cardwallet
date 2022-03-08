@@ -1,6 +1,12 @@
 import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
-import { Text, Icon, CenteredContainer, Button } from '@cardstack/components';
+import { strings } from './fixture';
+import {
+  Text,
+  Icon,
+  Button,
+  AbsoluteFullScreenContainer,
+} from '@cardstack/components';
 
 export function QRCodeScannerNeedsAuthorization() {
   const handlePressSettings = useCallback(() => {
@@ -10,39 +16,27 @@ export function QRCodeScannerNeedsAuthorization() {
   }, []);
 
   return (
-    <CenteredContainer
-      backgroundColor="black"
-      position="absolute"
-      flex={1}
-      padding={30}
+    <AbsoluteFullScreenContainer
+      backgroundColor="backgroundDarkPurple"
       justifyContent="center"
+      paddingVertical={4}
       alignItems="center"
+      zIndex={3}
     >
-      <Icon name="camera-icon" color="mintDark" size={43} />
+      <Icon name="camera-icon" color="teal" size={43} />
       <Text
         textAlign="center"
         color="white"
         fontSize={20}
         fontWeight="600"
-        marginBottom={30}
+        marginBottom={10}
         marginTop={5}
       >
-        Scan to pay or connect
+        {strings.authorize.info}
       </Text>
-      <Text
-        textAlign="center"
-        color="blueGreyDark"
-        size="medium"
-        fontWeight="600"
-        marginBottom={10}
-      >
-        Camera access needed to scan!
-      </Text>
-      <Button onPress={handlePressSettings} padding={5}>
-        <Text textAlign="center" color="black" fontWeight="600" fontSize={18}>
-          Enable camera access
-        </Text>
+      <Button onPress={handlePressSettings}>
+        <Text>{strings.authorize.cameraBtn}</Text>
       </Button>
-    </CenteredContainer>
+    </AbsoluteFullScreenContainer>
   );
 }
