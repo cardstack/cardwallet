@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
 
@@ -21,8 +21,8 @@ import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 const CHART_HEIGHT = 650;
 
 enum Tabs {
-  ASSETS = 'Assets',
-  ACTIVITIES = 'Activities',
+  ASSETS = 'Balance',
+  ACTIVITIES = 'History',
 }
 
 interface TabHeaderProps {
@@ -59,7 +59,7 @@ export default function AvailableBalancesExpandedState(
   return (
     <SlackSheet scrollEnabled>
       <Container paddingHorizontal={5} paddingTop={3}>
-        <Text size="medium">Account balances</Text>
+        <Text size="medium">Available Balance</Text>
         <Container flexDirection="row" justifyContent="space-between">
           <TabHeader
             selectedTab={selectedTab}
@@ -121,6 +121,11 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
     isLoadingTransactions,
   } = useMerchantTransactions(address, 'availableBalances');
 
+  const renderItem = useCallback(
+    ({ item }) => <TransactionItem includeBorder isFullWidth item={item} />,
+    []
+  );
+
   return (
     <Container paddingBottom={3} paddingHorizontal={5}>
       {isLoadingTransactions ? (
@@ -141,9 +146,7 @@ const Activities = (props: AvailableBalancesExpandedStateProps) => {
               tintColor="white"
             />
           }
-          renderItem={props => (
-            <TransactionItem {...props} includeBorder isFullWidth />
-          )}
+          renderItem={renderItem}
           renderSectionHeader={({ section: { title } }) => (
             <Container backgroundColor="white" paddingVertical={2} width="100%">
               <Text color="blueText" size="medium">

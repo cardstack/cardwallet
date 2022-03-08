@@ -25,7 +25,7 @@ export const useClaimAllRevenue = ({
   ] = useClaimRevenueMutation();
 
   const onClaimAllPress = useCallback(() => {
-    showLoadingOverlay({ title: 'Claiming Revenue' });
+    showLoadingOverlay({ title: 'Claiming' });
 
     claimRevenue({
       selectedWallet,

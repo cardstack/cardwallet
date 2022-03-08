@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { useTransferCardScreen } from './useTransferCardScreen';
 import { strings } from './strings';
-import { Button, Container, Icon, Input, Text } from '@cardstack/components';
+import {
+  Button,
+  Container,
+  Icon,
+  Input,
+  SafeAreaView,
+  Text,
+} from '@cardstack/components';
+import { Device, screenHeight } from '@cardstack/utils';
+import { colors } from '@cardstack/theme';
+import { useDimensions } from '@rainbow-me/hooks';
+
+const styles = StyleSheet.create({
+  keyboardAvoidView: {
+    flex: 1,
+    paddingHorizontal: 10,
+    backgroundColor: colors.backgroundDarkPurple,
+  },
+});
 
 const TransferCardScreen = () => {
   const {
@@ -13,51 +37,74 @@ const TransferCardScreen = () => {
     goBack,
   } = useTransferCardScreen();
 
+  const { isTinyPhone } = useDimensions();
+
+  const keyboardOffset = useMemo(() => {
+    const percentageMultiplier = isTinyPhone ? 0.1 : 0.25;
+    const screenSizePercentage = screenHeight * percentageMultiplier;
+    const negativeOffset = -screenSizePercentage;
+
+    return negativeOffset;
+  }, [isTinyPhone]);
+
   return (
-    <Container
-      backgroundColor="backgroundDarkPurple"
-      flex={1}
-      paddingTop={15}
-      paddingHorizontal={4}
-    >
-      <Icon
-        flexDirection="row"
-        name="x"
-        color="teal"
-        onPress={goBack}
-        iconSize="medium"
-        alignSelf="flex-end"
-      />
-      <Text color="white" weight="bold" textAlign="center" size="medium">
-        {strings.title}
-      </Text>
-      <Text color="blueText" size="body" padding={10} textAlign="center">
-        {strings.subtitle}
-      </Text>
-      <Container paddingVertical={5}>
-        <Input
-          paddingVertical={2}
-          placeholder={strings.inputPlaceholder}
-          color="white"
-          placeholderTextColor="gray"
-          borderBottomColor="teal"
-          borderBottomWidth={1}
-          onChangeText={onChangeText}
-          multiline
-        />
-      </Container>
-      <Button
-        marginVertical={5}
-        variant="primary"
-        onPress={onScanPress}
-        disabled
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Device.keyboardBehavior}
+        style={styles.keyboardAvoidView}
+        keyboardVerticalOffset={keyboardOffset}
+        enabled={Device.isIOS}
       >
-        {strings.scanQrBtn}
-      </Button>
-      <Button disabled={!isValidAddress} onPress={onTransferPress}>
-        {strings.transferBtn}
-      </Button>
-    </Container>
+        <SafeAreaView flex={1} margin={2} alignItems="center">
+          <Icon
+            flexDirection="row"
+            name="x"
+            color="teal"
+            onPress={goBack}
+            iconSize="medium"
+            alignSelf="flex-end"
+          />
+          <Container justifyContent="space-evenly" flexGrow={1}>
+            <Container justifyContent="space-between" flexGrow={0.3}>
+              <Text
+                color="white"
+                weight="bold"
+                textAlign="center"
+                size="medium"
+              >
+                {strings.title}
+              </Text>
+              <Text color="blueText" size="body" textAlign="center">
+                {strings.subtitle}
+              </Text>
+              <Input
+                paddingVertical={2}
+                placeholder={strings.inputPlaceholder}
+                color="white"
+                placeholderTextColor="gray"
+                borderBottomColor="teal"
+                borderBottomWidth={1}
+                onChangeText={onChangeText}
+                multiline
+              />
+            </Container>
+            <Container flexGrow={0.6}>
+              <Button
+                marginVertical={5}
+                variant="primary"
+                onPress={onScanPress}
+                disabled
+              >
+                {strings.scanQrBtn}
+              </Button>
+              <Button disabled={!isValidAddress} onPress={onTransferPress}>
+                {strings.transferBtn}
+              </Button>
+            </Container>
+          </Container>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 

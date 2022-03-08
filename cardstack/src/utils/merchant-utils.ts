@@ -22,8 +22,8 @@ import { getNativeBalanceFromOracle } from '@cardstack/services';
 import logger from 'logger';
 
 export const ClaimedStatus = {
-  CLAIMED_TEXT: `Claimed from \nAvailable Revenue`,
-  DEPOSITED_TEXT: `Deposited into \nAccount`,
+  CLAIMED_TEXT: `Amount\nClaimed`,
+  DEPOSITED_TEXT: `Claimed\nAmount`,
 };
 
 export enum ClaimStatuses {
@@ -103,7 +103,7 @@ export const updateMerchantSafeWithCustomization = async (
 export const shareRequestPaymentLink = (
   paymentRequestLink: string,
   merchantName: string,
-  amountWithSymbol: string
+  amountWithSymbol?: string
 ) => {
   // Refer to https://developer.apple.com/documentation/uikit/uiactivitytype
   const activityUiKitPath = 'com.apple.UIKit.activity';
@@ -113,8 +113,8 @@ export const shareRequestPaymentLink = (
     `${activityUiKitPath}.AddToReadingList`,
   ];
 
-  const title = `${merchantName} Requests ${amountWithSymbol}`;
-  const message = `${title} \nURL: ${paymentRequestLink}`;
+  const title = `${merchantName} Requests ${amountWithSymbol || 'Payment'}`;
+  const message = paymentRequestLink;
 
   const shareConfig = {
     options: Platform.select({
@@ -123,17 +123,14 @@ export const shareRequestPaymentLink = (
       },
       ios: {
         excludedActivityTypes,
-        subject: title,
+        subject: message,
       },
     }),
     content: Platform.select({
       android: {
-        title,
         message,
       },
       ios: {
-        title,
-        message,
         url: paymentRequestLink,
       },
       default: { message },
@@ -267,7 +264,7 @@ export const getClaimProps = (
     deposited: {
       text: ClaimedStatus.DEPOSITED_TEXT,
       sign: '+',
-      icon: 'arrow-down',
+      icon: 'plus',
     },
   };
 

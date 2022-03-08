@@ -15,9 +15,13 @@ export { default as ImportSeedSheet } from './sheets/ImportSeed/ImportSeedSheet'
 export { default as CollectibleSheet } from './sheets/Collectible/CollectibleSheet';
 export { default as PaymentReceivedSheet } from './sheets/PaymentReceived/PaymentReceivedSheet';
 export { default as UnclaimedRevenueSheet } from './sheets/UnclaimedRevenue/UnclaimedRevenueSheet';
+export { default as ConfirmClaimDestinySheet } from './sheets/ConfirmClaimDestinySheet/ConfirmClaimDestinySheet';
 export { default as WalletConnectApprovalSheet } from './sheets/WalletConnectApprovalSheet';
 export { default as WalletConnectRedirectSheet } from './sheets/WalletConnectRedirectSheet';
+export { default as PaymentConfirmationSheet } from './sheets/PaymentConfirmation/PaymentConfirmationSheet';
+export { default as MerchantTransactionSheet } from './sheets/MerchantTransaction/MerchantTransactionSheet';
 export { default as HomeScreen } from './HomeScreen/HomeScreen';
 export { default as WalletScreen } from './WalletScreen/WalletScreen';
 export { default as ProfileScreen } from './ProfileScreen/ProfileScreen';
 export { default as TransferCardScreen } from './TransferCardScreen/TransferCardScreen';
+export { default as QRScannerScreen } from './QRScannerScreen/QRScannerScreen';

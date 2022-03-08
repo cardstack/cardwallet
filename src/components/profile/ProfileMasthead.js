@@ -18,32 +18,15 @@ import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   useAccountProfile,
   useAccountSettings,
-  useClipboard,
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { abbreviations, showActionSheetWithOptions } from '@rainbow-me/utils';
+import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const ACCOUNT_CONTAINER = screenWidth * 0.85;
-const copyIconProps = {
-  color: 'teal',
-  marginRight: 2,
-  name: 'copy',
-  size: 18,
-};
-const qrCodeIconProps = {
-  marginRight: 2,
-  color: 'teal',
-  name: 'qr-code',
-  size: 18,
-};
 
-export default function ProfileMasthead({
-  addCashAvailable,
-  setCopiedText,
-  setCopyCount,
-}) {
+export default function ProfileMasthead({ addCashAvailable }) {
   const { wallets, selectedWallet, isDamaged } = useWallets();
   const dispatch = useDispatch();
   const { navigate } = useNavigation();
@@ -136,10 +119,6 @@ export default function ProfileMasthead({
     wallets,
   ]);
 
-  const handlePressScan = useCallback(() => {
-    navigate(Routes.QR_SCANNER_SCREEN);
-  }, [navigate]);
-
   const handlePress = useCallback(() => {
     if (isDamaged) {
       showWalletErrorAlert();
@@ -165,13 +144,6 @@ export default function ProfileMasthead({
   const handlePressChangeWallet = useCallback(() => {
     navigate(Routes.CHANGE_WALLET_SHEET);
   }, [navigate]);
-
-  const { setClipboard } = useClipboard();
-  const handlePressCopyAddress = () => {
-    setClipboard(accountAddress);
-    setCopiedText(abbreviations.formatAddressForDisplay(accountAddress));
-    setCopyCount(count => count + 1);
-  };
 
   return (
     <Container
@@ -213,27 +185,6 @@ export default function ProfileMasthead({
         {!isLayer1(network) && Device.supportsFiatOnRamp ? (
           <Button onPress={handlePress}>Buy Prepaid Card</Button>
         ) : null}
-      </Container>
-      <Container
-        flexDirection="row"
-        justifyContent="space-between"
-        padding={4}
-        width="100%"
-      >
-        <Button
-          iconProps={copyIconProps}
-          onPress={handlePressCopyAddress}
-          variant="smallBlue"
-        >
-          Copy Address
-        </Button>
-        <Button
-          iconProps={qrCodeIconProps}
-          onPress={handlePressScan}
-          variant="smallBlue"
-        >
-          Scan
-        </Button>
       </Container>
     </Container>
   );

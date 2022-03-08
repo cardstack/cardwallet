@@ -19,7 +19,7 @@ export const WalletConnectListItemHeight =
 
 export default function WalletConnectListItem({ dappIcon, dappName, dappUrl }) {
   const {
-    walletConnectDisconnectAllByDappName,
+    walletConnectDisconnectAllByDappNameOrUrl,
   } = useWalletConnectConnections();
 
   const { colors } = useTheme();
@@ -39,10 +39,10 @@ export default function WalletConnectListItem({ dappIcon, dappName, dappUrl }) {
   const handlePressActionSheet = useCallback(
     buttonIndex => {
       if (buttonIndex === 0) {
-        walletConnectDisconnectAllByDappName(dappName);
+        walletConnectDisconnectAllByDappNameOrUrl(dappName || dappUrl);
       }
     },
-    [dappName, walletConnectDisconnectAllByDappName]
+    [dappName, dappUrl, walletConnectDisconnectAllByDappNameOrUrl]
   );
 
   return (

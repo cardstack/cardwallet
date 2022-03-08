@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import { TokenType } from '@cardstack/types';
 import Routes from '@rainbow-me/routes';
-import { Container, Text, TokenBalance } from '@cardstack/components';
+import { Container, TokenBalance } from '@cardstack/components';
 import { useNavigation } from '@rainbow-me/navigation';
 
 interface BalancesProps {
@@ -49,14 +49,7 @@ export const BalanceSection = ({ tokens, navProps }: BalancesProps) => {
         paddingBottom={3}
         marginTop={7}
         flexDirection="row"
-      >
-        <Text size="medium" marginRight={2}>
-          Balances
-        </Text>
-        <Text size="medium" color="tealDark">
-          {tokens.length}
-        </Text>
-      </Container>
+      />
       {renderTokens}
     </ScrollView>
   );

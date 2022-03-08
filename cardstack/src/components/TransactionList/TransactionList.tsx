@@ -55,8 +55,7 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
       <Container
-        paddingVertical={2}
-        paddingHorizontal={5}
+        padding={4}
         width="100%"
         backgroundColor={
           isTabBarEnabled ? 'backgroundDarkPurple' : 'backgroundBlue'
@@ -77,7 +76,7 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
   useFocusEffect(onRefresh);
 
   const renderItem = useCallback(
-    (props: TransactionItemProps) => <TransactionItem {...props} />,
+    ({ item }: TransactionItemProps) => <TransactionItem item={item} />,
     []
   );
 

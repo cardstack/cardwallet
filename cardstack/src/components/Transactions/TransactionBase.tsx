@@ -219,7 +219,9 @@ export const TransactionRow = ({
             alignItems="flex-end"
           >
             {topText && <Text size="small">{topText}</Text>}
-            <Text weight="extraBold">{primaryText}</Text>
+            <Text weight="extraBold" fontSize={15}>
+              {primaryText}
+            </Text>
             {subText && <Text variant="subText">{subText}</Text>}
           </Container>
         </Container>

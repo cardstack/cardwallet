@@ -36,7 +36,7 @@ export const MerchantPrepaidCardIssuanceTransaction = ({
       }
       primaryText={`${item.balance.display}`}
       statusIconName="arrow-up"
-      statusText="Prepaid Card Issued"
+      statusText="Withdrawn"
       subText={item.native.display}
       transactionHash={item.transactionHash}
     />

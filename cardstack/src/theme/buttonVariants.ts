@@ -26,6 +26,14 @@ const tertiary = {
   },
 };
 
+const smallWhite = {
+  backgroundColor: 'transparent',
+  borderColor: 'buttonSecondaryBorder',
+  textStyle: {
+    color: 'black',
+  },
+};
+
 const small = {
   textStyle: {
     fontSize: 14,
@@ -165,6 +173,14 @@ export const buttonVariants = {
   smallWhite: {
     ...small,
     ...white,
+  },
+
+  smallPrimaryWhite: {
+    ...smallWhite,
+    textStyle: {
+      color: 'black',
+      fontSize: 15,
+    },
   },
 
   tinyDark: {

@@ -22,12 +22,11 @@ export const MerchantEarnedRevenueTransaction = ({
   const { navigate } = useNavigation();
 
   const onPressTransaction = useCallback(
-    (assetProps: TransactionBaseProps) =>
-      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
-        asset: { ...assetProps, symbol: item.token.symbol },
-        type: 'merchantTransaction',
+    (itemProps: TransactionBaseProps) =>
+      navigate(Routes.MERCHANT_TRANSACTION_SHEET, {
+        item: { ...item, ...itemProps },
       }),
-    [item.token.symbol, navigate]
+    [item, navigate]
   );
 
   return (
@@ -38,7 +37,7 @@ export const MerchantEarnedRevenueTransaction = ({
       }
       primaryText={`+ ${item.netEarned.display}`}
       statusIconName="plus"
-      statusText="Earned"
+      statusText="Received"
       subText={item.netEarnedNativeDisplay}
       transactionHash={item.transactionHash}
       onPressTransaction={onPressTransaction}

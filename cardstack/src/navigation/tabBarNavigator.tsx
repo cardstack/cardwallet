@@ -14,10 +14,14 @@ import {
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
 import { dismissAndroidKeyboardOnClose } from '.';
-import { HomeScreen, WalletScreen, ProfileScreen } from '@cardstack/screens';
+import {
+  HomeScreen,
+  WalletScreen,
+  ProfileScreen,
+  QRScannerScreen,
+} from '@cardstack/screens';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
-import QRScannerScreen from '@rainbow-me/screens/QRScannerScreen';
 import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { Device, screenHeight } from '@cardstack/utils';

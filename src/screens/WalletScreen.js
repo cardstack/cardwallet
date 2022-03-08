@@ -106,8 +106,8 @@ export default function WalletScreen() {
                 flex={0.5}
                 justifyContent="center"
               >
-                <Text color="white" weight="bold">
-                  ASSETS
+                <Text color="white" fontWeight="bold">
+                  WALLET
                 </Text>
               </Container>
               <CameraHeaderButton />

@@ -125,7 +125,7 @@ const PaymentRequestExpandedSheet = () => {
               <Container
                 flex={1}
                 flexDirection="row"
-                justifyContent="space-between"
+                justifyContent="flex-end"
                 marginTop={!editMode ? 9 : 15}
                 paddingHorizontal={5}
               >
@@ -166,7 +166,11 @@ const PaymentRequestExpandedSheet = () => {
                 paddingBottom={4}
               />
             </>
-          ) : null}
+          ) : (
+            <Text weight="bold" textAlign="center" marginTop={3}>
+              {merchantInfo?.name || ''}
+            </Text>
+          )}
           <PaymentRequestConfirmation
             address={address}
             amountInNum={amountInNum}

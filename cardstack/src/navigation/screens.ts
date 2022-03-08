@@ -25,9 +25,12 @@ import {
   PaymentReceivedSheet,
   PaymentRequestExpandedSheet,
   UnclaimedRevenueSheet,
+  ConfirmClaimDestinySheet,
   WalletConnectApprovalSheet,
   WalletConnectRedirectSheet,
   TransferCardScreen,
+  PaymentConfirmationSheet,
+  MerchantTransactionSheet,
 } from '@cardstack/screens';
 import {
   bottomSheetPreset,
@@ -130,6 +133,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: UnclaimedRevenueSheet,
     options: expandedPreset as StackNavigationOptions,
   },
+  CONFIRM_CLAIM_DESTINY_SHEET: {
+    component: ConfirmClaimDestinySheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
   WALLET_CONNECT_APPROVAL_SHEET: {
     component: WalletConnectApprovalSheet,
     options: (Device.isIOS
@@ -150,6 +157,14 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TRANSFER_CARD: {
     component: TransferCardScreen,
     options: { ...overlayPreset, gestureEnabled: false },
+  },
+  PAYMENT_CONFIRMATION_SHEET: {
+    component: PaymentConfirmationSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  MERCHANT_TRANSACTION_SHEET: {
+    component: MerchantTransactionSheet,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 

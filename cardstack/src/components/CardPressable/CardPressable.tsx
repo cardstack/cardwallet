@@ -39,7 +39,7 @@ type RestyleProps = ViewProps &
   BackgroundColorProps<Theme> &
   BorderProps<Theme>;
 
-interface CardPressableProps extends PressableProps {
+export interface CardPressableProps extends PressableProps {
   enableHapticFeedback?: boolean;
   hapticType?: HapticFeedbackTypes;
   children: ReactNode;

@@ -1,6 +1,8 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { useRoute } from '@react-navigation/core';
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 import {
   Button,
   CoinIcon,
@@ -22,12 +24,26 @@ interface Params {
   onClaimAllPress: () => void;
 }
 
+interface HeaderParams {
+  merchantSafe: MerchantSafeType;
+  onClaimPress: () => void;
+}
+
 const UnclaimedRevenueSheet = () => {
+  const { navigate } = useNavigation();
   const { params } = useRoute<RouteType<Params>>();
+
+  const openClaimWhereSheet = useCallback(
+    () =>
+      navigate(Routes.CONFIRM_CLAIM_DESTINY_SHEET, {
+        onClaimAllPress: params.onClaimAllPress,
+      }),
+    [navigate, params.onClaimAllPress]
+  );
 
   return (
     <Sheet
-      Header={<Header {...params} />}
+      Header={<Header onClaimPress={openClaimWhereSheet} {...params} />}
       scrollEnabled
       isFullScreen={Device.isIOS}
     >
@@ -38,7 +54,7 @@ const UnclaimedRevenueSheet = () => {
   );
 };
 
-const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
+const Header = ({ merchantSafe, onClaimPress }: HeaderParams) => {
   const { revenueBalances } = merchantSafe;
 
   const nativeAmount = revenueBalances[0].native.balance.amount;
@@ -55,19 +71,19 @@ const Header = ({ merchantSafe, onClaimAllPress }: Params) => {
 
   return (
     <Container paddingHorizontal={5} paddingVertical={3}>
-      <Text size="medium">Claim available revenue</Text>
+      <Text size="medium">Money Waiting</Text>
       <Container flexDirection="column" marginTop={5}>
         {renderTokens}
       </Container>
       <Button
         disabled={!hasClaimableAmount}
         marginTop={8}
-        onPress={onClaimAllPress}
+        onPress={onClaimPress}
       >
-        Claim All
+        Claim
       </Button>
       <HorizontalDivider />
-      <Text size="medium">Activities</Text>
+      <Text size="medium">History</Text>
     </Container>
   );
 };
@@ -85,12 +101,9 @@ const ActivitiesList = ({ address }: { address: string }) => {
   } = useMerchantTransactions(address, 'unclaimedRevenue');
 
   const renderItem = useCallback(props => {
-    const claimedProps = {
-      ...props,
-      item: { ...props.item, claimStatus: ClaimStatuses.CLAIMED },
-    };
+    const claimedProps = { ...props.item, claimStatus: ClaimStatuses.CLAIMED };
 
-    return <TransactionItem {...claimedProps} includeBorder isFullWidth />;
+    return <TransactionItem item={claimedProps} includeBorder isFullWidth />;
   }, []);
 
   const renderSectionHeader = useCallback(

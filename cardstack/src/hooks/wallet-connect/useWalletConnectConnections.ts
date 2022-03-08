@@ -5,7 +5,7 @@ import { createSelector } from 'reselect';
 import { IConnector } from '@walletconnect/types';
 import { sortList } from '../../helpers/sortList';
 import {
-  walletConnectDisconnectAllByDappName as rawWalletConnectDisconnectAllByDappName,
+  walletConnectDisconnectAllByDappNameOrUrl as rawWalletConnectDisconnectAllByDappNameOrUrl,
   walletConnectOnSessionRequest as rawWalletConnectOnSessionRequest,
 } from '../../../../src/redux/walletconnect';
 import { AppState } from '@rainbow-me/redux/store';
@@ -41,20 +41,21 @@ export default function useWalletConnectConnections() {
     walletConnectorsCount,
   } = useSelector(walletConnectSelector);
 
-  const walletConnectDisconnectAllByDappName = useCallback(
-    dappName => dispatch(rawWalletConnectDisconnectAllByDappName(dappName)),
+  const walletConnectDisconnectAllByDappNameOrUrl = useCallback(
+    dappName =>
+      dispatch(rawWalletConnectDisconnectAllByDappNameOrUrl(dappName)),
     [dispatch]
   );
 
   const walletConnectOnSessionRequest = useCallback(
-    (uri, callback) =>
+    (uri: string, callback?: () => void) =>
       dispatch(rawWalletConnectOnSessionRequest(uri, callback)),
     [dispatch]
   );
 
   return {
     sortedWalletConnectors,
-    walletConnectDisconnectAllByDappName,
+    walletConnectDisconnectAllByDappNameOrUrl,
     walletConnectOnSessionRequest,
     walletConnectorsByDappName,
     walletConnectorsCount,

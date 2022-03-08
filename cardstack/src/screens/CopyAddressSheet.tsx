@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useState } from 'react';
 import { useRoute } from '@react-navigation/core';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Pressable } from 'react-native';
 import {
   ToastPositionContainerHeight,
   CopyToast,
@@ -23,6 +23,8 @@ interface Params {
   address: string;
   disableCopying?: boolean;
 }
+
+const delayLongPressMs = 2500;
 
 const iconProps: IconProps = { name: 'copy' };
 
@@ -73,22 +75,27 @@ const CopyAddressSheet = () => {
           </Container>
         ) : null}
         <CenteredContainer padding={4}>
-          <Text
-            fontFamily="RobotoMono-Regular"
-            fontSize={18}
-            weight="bold"
-            textAlign="center"
+          <Pressable
+            onLongPress={handleCopiedText}
+            delayLongPress={delayLongPressMs}
           >
-            {address.slice(0, 6)}
             <Text
               fontFamily="RobotoMono-Regular"
               fontSize={18}
-              weight="regular"
+              weight="bold"
+              textAlign="center"
             >
-              {address.slice(6, -4)}
+              {address.slice(0, 6)}
+              <Text
+                fontFamily="RobotoMono-Regular"
+                fontSize={18}
+                weight="regular"
+              >
+                {address.slice(6, -4)}
+              </Text>
+              {address.slice(-4)}
             </Text>
-            {address.slice(-4)}
-          </Text>
+          </Pressable>
           <NetworkBadge marginTop={1} />
           {!disableCopying && (
             <Button

@@ -5,7 +5,7 @@ import {
   convertToSpend,
   convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
-import { getBlockTimestamp, mapPrepaidTxToNavigationParams } from './helpers';
+import { getBlockTimestamp } from './helpers';
 import usePayment from '@cardstack/redux/hooks/usePayment';
 import {
   handleAlertError,
@@ -119,18 +119,16 @@ const usePayMerchantRequest = ({
 
     // Wait goBack action to navigate
     InteractionManager.runAfterInteractions(() => {
-      navigate(
-        RainbowRoutes.EXPANDED_ASSET_SHEET,
-        mapPrepaidTxToNavigationParams({
-          merchantInfo: merchantInfoDID,
-          spendAmount,
-          nativeBalanceDisplay,
-          timestamp,
-          transactionHash: receipt.transactionHash,
-          prepaidCardAddress: receipt.from,
-          prepaidCardCustomization: selectedPrepaidCard?.cardCustomization,
-        })
-      );
+      navigate(RainbowRoutes.PAYMENT_CONFIRMATION_SHEET, {
+        merchantInfo: merchantInfoDID,
+        spendAmount,
+        nativeBalanceDisplay,
+        timestamp,
+        transactionHash: receipt.transactionHash,
+        merchantSafeAddress: merchantAddress,
+        address: selectedPrepaidCard?.address,
+        cardCustomization: selectedPrepaidCard?.cardCustomization,
+      });
     });
   }, [
     spendAmount,
@@ -140,6 +138,7 @@ const usePayMerchantRequest = ({
     dismissLoadingOverlay,
     navigate,
     merchantInfoDID,
+    merchantAddress,
     selectedPrepaidCard,
   ]);
 
