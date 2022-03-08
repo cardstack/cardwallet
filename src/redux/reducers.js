@@ -25,6 +25,7 @@ import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import collectibles from '@cardstack/redux/collectibles';
 import payment from '@cardstack/redux/payment';
+import primarySafe from '@cardstack/redux/primarySafeSlice';
 import requests from '@cardstack/redux/requests';
 
 export default {
@@ -55,4 +56,5 @@ export default {
   walletconnect,
   wallets,
   payment,
+  primarySafe,
 };

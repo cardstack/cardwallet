@@ -1,19 +1,37 @@
-import { configureStore } from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
+import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
+import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
 
 const enableReduxFlipper = true;
 
+const persistConfig = {
+  key: 'persist',
+  version: 1,
+  storage: AsyncStorage,
+  whitelist: [primarySafeSliceName],
+};
+
+const rootReducer = combineReducers({
+  ...reducers,
+  [safesApi.reducerPath]: safesApi.reducer,
+  [serviceStatusApi.reducerPath]: serviceStatusApi.reducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: {
-    ...reducers,
-    [safesApi.reducerPath]: safesApi.reducer,
-    [serviceStatusApi.reducerPath]: serviceStatusApi.reducer,
-  },
+  reducer: persistedReducer,
   middleware: getDefaultMiddleware => {
     const middlewares = getDefaultMiddleware({
+      // Note on redux-persist:
+      // If we eventually start to use serialization for redux, we need to ignore some actions
+      // from redux-persist `ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]`,
+      // reference: https://redux-toolkit.js.org/usage/usage-guide#use-with-redux-persist
       serializableCheck: false, // we are currently storing some non-serializable objects in the store including wallet connect objects. it would be nice to fix this.
       immutableCheck: false, // without disabling this, we get a max call stack exceeded when switching from mainnet to xdai. It is likely due to storing an object in redux that has a circular reference to itself.
     });
@@ -35,6 +53,8 @@ const store = configureStore({
 });
 
 setupListeners(store.dispatch);
+
+export const persistor = persistStore(store);
 
 export default store;
 

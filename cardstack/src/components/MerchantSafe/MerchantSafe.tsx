@@ -11,14 +11,8 @@ import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
-interface MerchantSafeProps extends MerchantSafeType {
-  networkName: string;
-  nativeCurrency: string;
-  currencyConversionRates: {
-    [key: string]: number;
-  };
+export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
-  infoDID: string;
 }
 
 export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
@@ -96,8 +90,6 @@ export const MerchantInfo = ({
         >
           {name || ''}
         </Text>
-        {/* Note: Will be later used for a different term. */}
-        {/* <Text variant="subText">Profile</Text> */}
       </Container>
     </Container>
   );

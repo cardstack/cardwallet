@@ -219,6 +219,7 @@
     "recyclerlistview": "3.0.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-flipper": "^2.0.1",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rn-async-storage-flipper": "^0.0.10",
