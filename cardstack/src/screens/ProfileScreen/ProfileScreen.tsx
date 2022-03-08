@@ -1,23 +1,17 @@
 import React from 'react';
 
-import {
-  CenteredContainer,
-  Container,
-  MainHeader,
-  MerchantSafe,
-  MerchantSafeProps,
-} from '@cardstack/components';
-import usePrimaryMerchant from '@cardstack/redux/hooks/usePrimaryMerchant';
+import { Container, MainHeader, MerchantSafe } from '@cardstack/components';
+import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 
 const ProfileScreen = () => {
-  const { primaryMerchant } = usePrimaryMerchant();
+  const { primarySafe } = usePrimarySafe();
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <MainHeader title="PROFILE" />
-      <CenteredContainer flex={1}>
-        <MerchantSafe {...(primaryMerchant as MerchantSafeProps)} />
-      </CenteredContainer>
+      <Container justifyContent="center" flex={1}>
+        {primarySafe && <MerchantSafe {...primarySafe} />}
+      </Container>
     </Container>
   );
 };

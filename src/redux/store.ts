@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
-import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
-import { name as merchantPath } from '@cardstack/redux/merchantSlice';
+import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
 
@@ -14,7 +13,7 @@ const persistConfig = {
   key: 'persist',
   version: 1,
   storage: AsyncStorage,
-  whitelist: [merchantPath],
+  whitelist: [primarySafeSliceName],
 };
 
 const rootReducer = combineReducers({
@@ -62,4 +61,3 @@ export default store;
 export type AppState = ReturnType<typeof store.getState>;
 export type AppGetState = typeof store.getState;
 export type AppDispatch = typeof store.dispatch;
-export const useTypedSelector: TypedUseSelectorHook<AppState> = useSelector;

@@ -12,9 +12,9 @@ import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
 export interface MerchantSafeProps extends MerchantSafeType {
-  networkName: string;
-  nativeCurrency: string;
-  currencyConversionRates: {
+  networkName?: string;
+  nativeCurrency?: string;
+  currencyConversionRates?: {
     [key: string]: number;
   };
   merchantInfo?: MerchantInformation;
@@ -96,8 +96,6 @@ export const MerchantInfo = ({
         >
           {name || ''}
         </Text>
-        {/* Note: Will be later used for a different term. */}
-        {/* <Text variant="subText">Profile</Text> */}
       </Container>
     </Container>
   );
