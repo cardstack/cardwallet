@@ -21,8 +21,8 @@ export const CROSS_HAIR_TOP =
   (deviceUtils.isSmallPhone ? 40 : 60);
 
 export enum ScannerScreenMode {
-  SCAN = 'SCAN',
-  REQUEST = 'REQUEST',
+  SCAN,
+  REQUEST,
 }
 
 export const SWITCH_OPTIONS = [
