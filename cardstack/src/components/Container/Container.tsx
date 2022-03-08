@@ -19,3 +19,12 @@ export const CenteredContainer = (
 ): React.ReactElement => (
   <Container alignItems="center" justifyContent="center" {...props} />
 );
+
+/**
+ * Renders a fullscreen container with  absolute positioning.
+ */
+export const AbsoluteFullScreenContainer = (
+  props: ContainerProps
+): React.ReactElement => (
+  <Container position="absolute" height="100%" width="100%" {...props} />
+);
