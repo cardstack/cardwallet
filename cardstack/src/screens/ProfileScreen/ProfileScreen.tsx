@@ -15,7 +15,6 @@ const ProfileScreen = () => {
   return (
     <Container backgroundColor="white" flex={1}>
       <MainHeader title={strings.title} />
-
       <Container justifyContent="center" flexGrow={1}>
         {primarySafe ? (
           <MerchantContent
