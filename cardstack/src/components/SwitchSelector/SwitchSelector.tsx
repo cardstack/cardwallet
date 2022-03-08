@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 
+import { StyleSheet } from 'react-native';
 import {
   Container,
   ContainerProps,
@@ -17,6 +18,10 @@ interface SwitchSelectorProps {
   initial?: number;
   onPress?: (value: SwitchSelectorOption) => void;
 }
+
+const styles = StyleSheet.create({
+  container: { paddingHorizontal: 1 },
+});
 
 export const SwitchSelector = ({
   initial = 0,
@@ -84,6 +89,7 @@ export const SwitchSelector = ({
       backgroundColor="darkGrayOpacity"
       alignItems="center"
       borderRadius={borderRadius}
+      style={styles.container}
       {...otherProps}
     >
       {renderOptions}
