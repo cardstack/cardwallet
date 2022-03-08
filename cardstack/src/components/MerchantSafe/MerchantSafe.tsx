@@ -13,9 +13,14 @@ import Routes from '@rainbow-me/routes';
 
 export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
+  notPressable?: boolean;
 }
 
-export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
+export const MerchantSafe = ({
+  merchantInfo,
+  notPressable = false,
+  ...props
+}: MerchantSafeProps) => {
   const { navigate } = useNavigation();
 
   const onPress = useCallback(() => {
@@ -23,21 +28,24 @@ export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
     navigate(Routes.MERCHANT_SCREEN, { merchantSafe: merchantData });
   }, [merchantInfo, navigate, props]);
 
+  const PressableComponent = notPressable ? Container : CardPressable;
+
   return (
-    <Container paddingHorizontal={4} marginBottom={4}>
-      <CardPressable
+    <Container paddingHorizontal={4} marginBottom={4} width="100%">
+      <PressableComponent
         backgroundColor="white"
         borderRadius={10}
         overflow="hidden"
         borderColor="buttonPrimaryBorder"
         testID="inventory-card"
-        onPress={onPress}
+        onPress={notPressable ? undefined : onPress}
       >
         <SafeHeader
           {...props}
           onPress={onPress}
           backgroundColor={merchantInfo?.color}
           textColor={merchantInfo?.textColor}
+          rightText={notPressable ? 'Profile' : undefined}
         />
         <Container paddingHorizontal={6}>
           <MerchantInfo
@@ -47,7 +55,7 @@ export const MerchantSafe = ({ merchantInfo, ...props }: MerchantSafeProps) => {
           />
           <Bottom slug={merchantInfo?.slug} />
         </Container>
-      </CardPressable>
+      </PressableComponent>
     </Container>
   );
 };
