@@ -28,7 +28,7 @@ export const useMerchantScreen = () => {
     }
   );
 
-  const { primarySafe, changePrimarySafe } = usePrimarySafe();
+  const { primarySafe, changePrimarySafe, safesCount } = usePrimarySafe();
 
   const { merchantSafe, isPrimarySafe } = useMemo(() => {
     const safe = updatedMerchantSafe || merchantSafeFallback;
@@ -45,6 +45,7 @@ export const useMerchantScreen = () => {
   return {
     isRefreshingBalances,
     merchantSafe,
+    safesCount,
     isPrimarySafe,
     changeToPrimarySafe,
   };

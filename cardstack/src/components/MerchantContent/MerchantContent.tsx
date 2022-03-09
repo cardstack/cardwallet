@@ -23,6 +23,7 @@ export interface MerchantContentProps {
   merchantSafe: MerchantSafeType;
   isRefreshingBalances: boolean;
   isPrimarySafe: boolean;
+  showSafePrimarySelection: boolean;
   changeToPrimarySafe?: () => void;
 }
 
@@ -32,6 +33,7 @@ export const MerchantContent = memo(
     isRefreshingBalances,
     isPrimarySafe,
     changeToPrimarySafe,
+    showSafePrimarySelection = false,
   }: MerchantContentProps) => {
     const { navigate } = useNavigation();
 
@@ -76,6 +78,7 @@ export const MerchantContent = memo(
           paddingHorizontal={HORIZONTAL_PADDING}
         >
           <MerchantHeader
+            showSafePrimarySelection={showSafePrimarySelection}
             isPrimarySafe={isPrimarySafe}
             changeToPrimarySafe={changeToPrimarySafe}
             merchantInfo={merchantSafe.merchantInfo}

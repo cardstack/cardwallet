@@ -8,12 +8,14 @@ interface MerchantHeaderProps {
   merchantInfo?: MerchantInformation;
   isPrimarySafe: boolean;
   changeToPrimarySafe?: () => void;
+  showSafePrimarySelection?: boolean;
 }
 
 export const MerchantHeader = ({
   merchantInfo,
   isPrimarySafe,
   changeToPrimarySafe,
+  showSafePrimarySelection = false,
 }: MerchantHeaderProps) => {
   return (
     <Container
@@ -50,22 +52,23 @@ export const MerchantHeader = ({
             {merchantInfo?.slug}
           </Text>
         )}
-        {isPrimarySafe ? (
-          <Text size="small" weight="bold" style={styles.primaryText}>
-            {strings.isPrimarySafeProfileLinkText}
-          </Text>
-        ) : (
-          <Pressable onPress={changeToPrimarySafe}>
-            <Text
-              textDecorationLine="underline"
-              size="small"
-              weight="bold"
-              style={styles.primaryText}
-            >
-              {strings.setToPrimaryProfileLinkText}
+        {showSafePrimarySelection &&
+          (isPrimarySafe ? (
+            <Text size="small" weight="bold" style={styles.primaryText}>
+              {strings.isPrimarySafeProfileLinkText}
             </Text>
-          </Pressable>
-        )}
+          ) : (
+            <Pressable onPress={changeToPrimarySafe}>
+              <Text
+                textDecorationLine="underline"
+                size="small"
+                weight="bold"
+                style={styles.primaryText}
+              >
+                {strings.setToPrimaryProfileLinkText}
+              </Text>
+            </Pressable>
+          ))}
       </Container>
     </Container>
   );

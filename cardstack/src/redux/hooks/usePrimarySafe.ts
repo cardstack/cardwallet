@@ -48,5 +48,6 @@ export default function usePrimarySafe() {
     merchantSafes,
     primarySafe,
     changePrimarySafe,
+    safesCount: merchantSafes?.length || 1,
   };
 }

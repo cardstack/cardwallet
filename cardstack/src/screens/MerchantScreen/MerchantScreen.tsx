@@ -8,6 +8,7 @@ const MerchantScreen = () => {
   const {
     isRefreshingBalances,
     merchantSafe,
+    safesCount,
     isPrimarySafe,
     changeToPrimarySafe,
   } = useMerchantScreen();
@@ -20,6 +21,7 @@ const MerchantScreen = () => {
         name={merchantSafe.merchantInfo?.name}
       />
       <MerchantContent
+        showSafePrimarySelection={safesCount > 1}
         isPrimarySafe={isPrimarySafe}
         changeToPrimarySafe={changeToPrimarySafe}
         merchantSafe={merchantSafe}

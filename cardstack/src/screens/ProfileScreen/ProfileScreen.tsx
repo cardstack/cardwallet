@@ -5,7 +5,7 @@ import { Container, MainHeader, MerchantContent } from '@cardstack/components';
 import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 
 const ProfileScreen = () => {
-  const { primarySafe, isFetching } = usePrimarySafe();
+  const { primarySafe, isFetching, safesCount } = usePrimarySafe();
 
   // TODO: add step indicator and other step screens
   const CreateProfile = () => (
@@ -21,6 +21,7 @@ const ProfileScreen = () => {
       <Container justifyContent="center" flexGrow={1}>
         {primarySafe ? (
           <MerchantContent
+            showSafePrimarySelection={safesCount > 1}
             isPrimarySafe={true}
             merchantSafe={primarySafe}
             isRefreshingBalances={isFetching}
