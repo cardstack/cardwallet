@@ -14,13 +14,13 @@ import Routes from '@rainbow-me/routes';
 export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
   notPressable?: boolean;
-  HeaderRightText?: string;
+  headerRightText?: string;
 }
 
 export const MerchantSafe = ({
   merchantInfo,
   notPressable = false,
-  HeaderRightText,
+  headerRightText,
   ...props
 }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
@@ -45,7 +45,8 @@ export const MerchantSafe = ({
           onPress={onPress}
           backgroundColor={merchantInfo?.color}
           textColor={merchantInfo?.textColor}
-          rightText={HeaderRightText}
+          rightText={headerRightText}
+          notPressable={notPressable}
         />
         <Container paddingHorizontal={6}>
           <MerchantInfo

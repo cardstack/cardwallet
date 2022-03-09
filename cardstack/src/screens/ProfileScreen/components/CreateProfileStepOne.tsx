@@ -40,7 +40,7 @@ export const CreateProfileStepOne = () => {
             {...exmapleMerchantExtraProps}
             {...exampleMerchantData}
             notPressable
-            HeaderRightText={strings.headerRightText}
+            headerRightText={strings.headerRightText}
           />
         </Container>
         <Button marginTop={5}>{strings.continueButton}</Button>

@@ -17,6 +17,7 @@ interface SafeHeaderProps {
   backgroundColor?: string;
   textColor?: string;
   accountName?: string;
+  notPressable?: boolean;
 }
 
 export const SafeHeader = (props: SafeHeaderProps) => {
@@ -28,6 +29,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
     backgroundColor,
     textColor,
     accountName,
+    notPressable,
   } = props;
 
   const style = useMemo(
@@ -67,6 +69,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
           alignItems="center"
           justifyContent="flex-end"
           onPress={onPress}
+          disabled={notPressable}
         >
           <Text
             style={style.text}
