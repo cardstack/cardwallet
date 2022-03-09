@@ -2,76 +2,20 @@ import {
   CARDWALLET_SCHEME,
   isValidMerchantPaymentUrl,
 } from '@cardstack/cardpay-sdk';
+import { useFocusEffect } from '@react-navigation/core';
 import lang from 'i18n-js';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  InteractionManager,
-  Linking,
-  Alert as NativeAlert,
-} from 'react-native';
-import { PERMISSIONS, request } from 'react-native-permissions';
+import { useCallback } from 'react';
+import { Linking } from 'react-native';
 import Url from 'url-parse';
 import { Alert } from '../components/alerts';
 import { useNavigation } from '../navigation/Navigation';
-import usePrevious from './usePrevious';
-import useWallets from './useWallets';
+import useBooleanState from './useBooleanState';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { Device } from '@cardstack/utils';
-import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import Routes from '@rainbow-me/routes';
 import { addressUtils, haptics } from '@rainbow-me/utils';
 import logger from 'logger';
-
-function useScannerState(enabled) {
-  const [isCameraAuthorized, setIsCameraAuthorized] = useState(true);
-  const [isScanningEnabled, setIsScanningEnabled] = useState(enabled);
-  const wasEnabled = usePrevious(enabled);
-
-  useEffect(() => {
-    setIsScanningEnabled(enabled);
-  }, [enabled]);
-
-  const disableScanning = useCallback(() => {
-    logger.log('📠🚫 Disabling QR Code Scanner');
-    setIsScanningEnabled(false);
-  }, []);
-
-  const enableScanning = useCallback(() => {
-    InteractionManager.runAfterInteractions(() => {
-      logger.log('📠✅ Enabling QR Code Scanner', enabled);
-      setIsScanningEnabled(enabled);
-    });
-  }, [enabled]);
-
-  useEffect(() => {
-    if (enabled && !wasEnabled && ios) {
-      request(PERMISSIONS.IOS.CAMERA).then(permission => {
-        const result = permission === 'granted';
-        if (isCameraAuthorized !== result) {
-          setIsCameraAuthorized(result);
-        }
-      });
-
-      if (!isScanningEnabled) {
-        enableScanning();
-      }
-    }
-  }, [
-    enabled,
-    enableScanning,
-    isCameraAuthorized,
-    isScanningEnabled,
-    wasEnabled,
-  ]);
-
-  return {
-    disableScanning,
-    enableScanning,
-    isCameraAuthorized,
-    isScanningEnabled,
-  };
-}
 
 // convert https:// to `${CARDWALLET_SCHEME}:/`
 const convertDeepLinkToCardWalletProtocol = deepLink => {
@@ -82,34 +26,27 @@ const convertDeepLinkToCardWalletProtocol = deepLink => {
   return deepLink;
 };
 
-export default function useScanner(enabled) {
+const useScanner = () => {
   const { navigate } = useNavigation();
-  const { isReadOnlyWallet } = useWallets();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
-  const enabledStateRef = useRef();
-  // save up-to-date enabled state to ref so can be used in callback function
-  enabledStateRef.current = enabled;
 
-  const {
-    disableScanning,
-    enableScanning,
-    isCameraAuthorized,
+  const [
     isScanningEnabled,
-  } = useScannerState(enabled);
+    enableScanning,
+    disableScanning,
+  ] = useBooleanState();
+
+  useFocusEffect(
+    useCallback(() => {
+      enableScanning();
+
+      return disableScanning;
+    }, [disableScanning, enableScanning])
+  );
 
   const handleScanAddress = useCallback(
     address => {
-      if (isReadOnlyWallet && !enableActionsOnReadOnlyWallet) {
-        NativeAlert.alert(`You need to import the account in order to do this`);
-        return null;
-      }
-
       haptics.notificationSuccess();
-
-      // First navigate to wallet screen
-      navigate(Routes.WALLET_SCREEN);
-
-      // And then navigate to Send sheet
       if (Device.isAndroid) {
         navigate(Routes.SEND_FLOW, {
           params: { address },
@@ -118,22 +55,19 @@ export default function useScanner(enabled) {
       } else {
         navigate(Routes.SEND_FLOW, { address });
       }
-
-      setTimeout(enableScanning, 1000);
     },
-    [enableScanning, isReadOnlyWallet, navigate]
+    [navigate]
   );
 
   const walletConnectOnSessionRequestCallback = useCallback(
     type => {
-      if (type === WCRedirectTypes.qrcodeInvalid && enabledStateRef.current) {
-        return navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
+      if (type === WCRedirectTypes.qrcodeInvalid) {
+        navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
           type,
         });
       }
-      setTimeout(enableScanning, 2000);
     },
-    [enableScanning, navigate]
+    [navigate]
   );
 
   const handleScanWalletConnect = useCallback(
@@ -146,20 +80,24 @@ export default function useScanner(enabled) {
         );
       } catch (e) {
         logger.log('walletConnectOnSessionRequest exception', e);
-        setTimeout(enableScanning, 2000);
       }
     },
-    [
-      enableScanning,
-      walletConnectOnSessionRequest,
-      walletConnectOnSessionRequestCallback,
-    ]
+    [walletConnectOnSessionRequest, walletConnectOnSessionRequestCallback]
   );
+
+  const handleScanPayMerchant = useCallback(deeplink => {
+    haptics.notificationSuccess();
+
+    const updatedDeepLink = convertDeepLinkToCardWalletProtocol(deeplink);
+
+    Linking.openURL(updatedDeepLink);
+  }, []);
 
   const handleScanInvalid = useCallback(
     qrCodeData => {
-      logger.error({ qrCodeData });
       haptics.notificationError();
+      logger.error({ qrCodeData });
+
       return Alert({
         callback: enableScanning,
         message: lang.t('wallet.unrecognized_qrcode'),
@@ -172,31 +110,46 @@ export default function useScanner(enabled) {
   const onScan = useCallback(
     async ({ data }) => {
       if (!data || !isScanningEnabled) return null;
-      disableScanning();
-      const deeplink = decodeURIComponent(data);
 
-      const address = await addressUtils.getEthereumAddressFromQRCodeData(data);
-      if (address) return handleScanAddress(address);
-      if (deeplink.startsWith('wc:')) return handleScanWalletConnect(data);
-      if (isValidMerchantPaymentUrl(deeplink)) {
-        const updatedDeepLink = convertDeepLinkToCardWalletProtocol(deeplink);
-        haptics.notificationSuccess();
-        return Linking.openURL(updatedDeepLink);
+      try {
+        disableScanning();
+        const deeplink = decodeURIComponent(data);
+
+        const address = await addressUtils.getEthereumAddressFromQRCodeData(
+          data
+        );
+
+        if (address) {
+          return handleScanAddress(address);
+        }
+        if (deeplink.startsWith('wc:')) {
+          return handleScanWalletConnect(data);
+        }
+        if (isValidMerchantPaymentUrl(deeplink)) {
+          return handleScanPayMerchant(deeplink);
+        }
+        return handleScanInvalid(data);
+      } finally {
+        !isScanningEnabled && enableScanning();
       }
-      return handleScanInvalid(data);
     },
     [
       isScanningEnabled,
       disableScanning,
+      handleScanInvalid,
       handleScanAddress,
       handleScanWalletConnect,
-      handleScanInvalid,
+      handleScanPayMerchant,
+      enableScanning,
     ]
   );
 
   return {
-    isCameraAuthorized,
-    isScanningEnabled,
     onScan,
+    enableScanning,
+    disableScanning,
+    isLoading: !isScanningEnabled,
   };
-}
+};
+
+export default useScanner;
