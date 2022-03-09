@@ -147,7 +147,7 @@ const TabBarFeatureContext = createContext<TabBarContextType>({
 });
 
 export const TabBarFeatureProvider: React.FC = ({ children }) => {
-  const [isTabBarEnabled, setIsTabBarEnabled] = useState(false);
+  const [isTabBarEnabled, setIsTabBarEnabled] = useState(__DEV__);
 
   const contextValues = useMemo(
     () => ({

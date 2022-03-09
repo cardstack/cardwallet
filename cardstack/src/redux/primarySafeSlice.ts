@@ -49,6 +49,7 @@ export const {
 
 export const selectPrimarySafe = (network: Network, accountAddress: string) => (
   state: AppState
-) => state.primarySafe?.[network]?.[accountAddress]?.primary;
+): MerchantSafeType | undefined =>
+  state.primarySafe?.[network]?.[accountAddress]?.primary;
 
 export default slice.reducer;

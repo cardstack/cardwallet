@@ -22,10 +22,17 @@ export enum ExpandedMerchantRoutes {
 export interface MerchantContentProps {
   merchantSafe: MerchantSafeType;
   isRefreshingBalances: boolean;
+  isPrimarySafe: boolean;
+  changeToPrimarySafe?: () => void;
 }
 
 export const MerchantContent = memo(
-  ({ merchantSafe, isRefreshingBalances }: MerchantContentProps) => {
+  ({
+    merchantSafe,
+    isRefreshingBalances,
+    isPrimarySafe,
+    changeToPrimarySafe,
+  }: MerchantContentProps) => {
     const { navigate } = useNavigation();
 
     const onClaimAllPress = useClaimAllRevenue({
@@ -68,25 +75,29 @@ export const MerchantContent = memo(
           contentContainerStyle={{ alignItems: 'center', paddingBottom: 260 }}
           paddingHorizontal={HORIZONTAL_PADDING}
         >
-          <MerchantHeader merchantInfo={merchantSafe.merchantInfo} />
+          <MerchantHeader
+            isPrimarySafe={isPrimarySafe}
+            changeToPrimarySafe={changeToPrimarySafe}
+            merchantInfo={merchantSafe.merchantInfo}
+          />
           <Button
             marginTop={2}
             marginBottom={4}
             onPress={goToMerchantPaymentRequest}
           >
-            Request Payment
+            {strings.requestPayment}
           </Button>
           <HorizontalDivider />
           <MerchantTokensList
-            title="Ready to Claim"
+            title={strings.readyToClaim}
             onPress={goToUnclaimedRevenue}
-            emptyText="No pending payments"
+            emptyText={strings.noPendingPayment}
             tokens={merchantSafe.revenueBalances}
           />
           <MerchantTokensList
-            title="Your Available Balance"
+            title={strings.availableBalance}
             onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
-            emptyText="No balance available"
+            emptyText={strings.noAvailableBalance}
             tokens={merchantSafe.tokens}
           />
         </ScrollView>
@@ -94,3 +105,11 @@ export const MerchantContent = memo(
     );
   }
 );
+
+const strings = {
+  requestPayment: 'Request Payment',
+  readyToClaim: 'Ready to Claim',
+  noPendingPayment: 'No pending payments',
+  availableBalance: 'Your Available Balance',
+  noAvailableBalance: 'No balance available',
+};
