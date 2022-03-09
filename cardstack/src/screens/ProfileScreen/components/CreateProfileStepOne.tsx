@@ -7,7 +7,7 @@ import { useAccountSettings } from '@rainbow-me/hooks';
 export const CreateProfileStepOne = () => {
   const { network } = useAccountSettings();
 
-  const exmapleMerchantExtraProps = useMemo(() => {
+  const exampleMerchantExtraProps = useMemo(() => {
     const networkName = getConstantByNetwork('name', network);
 
     return {
@@ -37,7 +37,7 @@ export const CreateProfileStepOne = () => {
             {strings.example}
           </Text>
           <MerchantSafe
-            {...exmapleMerchantExtraProps}
+            {...exampleMerchantExtraProps}
             {...exampleMerchantData}
             notPressable
             headerRightText={strings.headerRightText}
