@@ -2,18 +2,10 @@ import { HeaderHeight } from '@rainbow-me/components/header';
 import deviceUtils from '@rainbow-me/utils/deviceUtils';
 
 export const strings = {
-  cameraMountError: 'Error mounting camera',
-  scanQRCodeText: 'Scan a QR code to:',
-  pay: 'Pay',
-  connect: 'Connect',
   requestViaText: 'Or request via flow:',
   requestAmountBtn: 'Request Amount',
   scanLabel: 'Scan',
   requestLabel: 'Request',
-  authorize: {
-    info: 'Scan to pay or connect',
-    cameraBtn: 'Enable camera access',
-  },
 };
 
 export const SWITCH_SELECTOR_TOP =

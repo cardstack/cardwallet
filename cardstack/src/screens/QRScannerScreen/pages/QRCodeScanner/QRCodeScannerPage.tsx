@@ -3,23 +3,26 @@ import { ActivityIndicator, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
 import { useIsFocused } from '@react-navigation/core';
-import PeopleIllustrationBackground from '../../../assets/people-ill-bg.png';
+import PeopleIllustrationBackground from '../../../../assets/people-ill-bg.png';
 
-import { strings, QRCodeOverlay, QRCodeScannerNeedsAuthorization } from '.';
+import { useScanner } from './useScanner';
+
 import {
-  CenteredContainer,
+  CameraNotAuthorizedView,
+  QRCodeOverlay,
+  BottomIconsSection,
+} from './components';
+import { strings } from './strings';
+import {
   Container,
   Text,
-  Icon,
-  IconName,
-  ContainerProps,
   Image,
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
-import { useBooleanState, useScanner } from '@rainbow-me/hooks';
+import { useBooleanState } from '@rainbow-me/hooks';
 import { colors } from '@cardstack/theme';
 
-export const QRCodeScanner = memo(() => {
+const QRCodeScannerPage = () => {
   const [error, showError] = useBooleanState();
 
   const { result: isEmulator } = useIsEmulator();
@@ -44,7 +47,7 @@ export const QRCodeScanner = memo(() => {
         isFocused && (
           <RNCamera
             captureAudio={false}
-            notAuthorizedView={<QRCodeScannerNeedsAuthorization />}
+            notAuthorizedView={<CameraNotAuthorizedView />}
             onBarCodeRead={onScan}
             onMountError={showError}
             style={StyleSheet.absoluteFillObject}
@@ -85,32 +88,6 @@ export const QRCodeScanner = memo(() => {
       </AbsoluteFullScreenContainer>
     </AbsoluteFullScreenContainer>
   );
-});
+};
 
-const IconWrapper = ({
-  iconName,
-  text,
-  ...props
-}: {
-  iconName: IconName;
-  text: string;
-} & ContainerProps) => (
-  <CenteredContainer flex={1} {...props}>
-    <Icon name={iconName} size={20} />
-    <Text fontSize={14} color="white" weight="bold" marginTop={3}>
-      {text}
-    </Text>
-  </CenteredContainer>
-);
-
-const BottomIconsSection = (props: ContainerProps) => (
-  <Container flexDirection="row" {...props}>
-    <IconWrapper
-      iconName="pay-icon"
-      text={strings.pay}
-      borderRightWidth={1}
-      borderRightColor="whiteTinyLightOpacity"
-    />
-    <IconWrapper iconName="connect-icon" text={strings.connect} />
-  </Container>
-);
+export default memo(QRCodeScannerPage);

@@ -58,7 +58,6 @@ export { default as useResetAccountState } from './useResetAccountState';
 export { default as useRouteExistsInNavigationState } from './useRouteExistsInNavigationState';
 export { default as useSafeImageUri } from './useSafeImageUri';
 export { default as useSavingsAccount } from './useSavingsAccount';
-export { default as useScanner } from './useScanner';
 export { default as useSendableCollectibles } from './useSendableCollectibles';
 export { default as useSendFeedback } from './useSendFeedback';
 export { default as useSendSavingsAccount } from './useSendSavingsAccount';

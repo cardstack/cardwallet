@@ -1,32 +1,19 @@
-import {
-  CARDWALLET_SCHEME,
-  isValidMerchantPaymentUrl,
-} from '@cardstack/cardpay-sdk';
-import { useFocusEffect } from '@react-navigation/core';
+import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import lang from 'i18n-js';
 import { useCallback } from 'react';
 import { Linking } from 'react-native';
-import Url from 'url-parse';
-import { Alert } from '../components/alerts';
-import { useNavigation } from '../navigation/Navigation';
-import useBooleanState from './useBooleanState';
+
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
-import { Device } from '@cardstack/utils';
+import { convertDeepLinkToCardWalletProtocol, Device } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 import { addressUtils, haptics } from '@rainbow-me/utils';
 import logger from 'logger';
+import { useBooleanState } from '@rainbow-me/hooks';
+import { Alert } from '@rainbow-me/components/alerts';
 
-// convert https:// to `${CARDWALLET_SCHEME}:/`
-const convertDeepLinkToCardWalletProtocol = deepLink => {
-  let url = new Url(deepLink);
-  if (url.protocol === 'https:') {
-    return `${CARDWALLET_SCHEME}:/${url.pathname}${url.query || ''}`;
-  }
-  return deepLink;
-};
-
-const useScanner = () => {
+export const useScanner = () => {
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
 
@@ -47,6 +34,7 @@ const useScanner = () => {
   const handleScanAddress = useCallback(
     address => {
       haptics.notificationSuccess();
+
       if (Device.isAndroid) {
         navigate(Routes.SEND_FLOW, {
           params: { address },
@@ -60,7 +48,7 @@ const useScanner = () => {
   );
 
   const walletConnectOnSessionRequestCallback = useCallback(
-    type => {
+    (type: WCRedirectTypes) => {
       if (type === WCRedirectTypes.qrcodeInvalid) {
         navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
           type,
@@ -73,6 +61,7 @@ const useScanner = () => {
   const handleScanWalletConnect = useCallback(
     async qrCodeData => {
       haptics.notificationSuccess();
+
       try {
         walletConnectOnSessionRequest(
           qrCodeData,
@@ -122,12 +111,15 @@ const useScanner = () => {
         if (address) {
           return handleScanAddress(address);
         }
+
         if (deeplink.startsWith('wc:')) {
           return handleScanWalletConnect(data);
         }
+
         if (isValidMerchantPaymentUrl(deeplink)) {
           return handleScanPayMerchant(deeplink);
         }
+
         return handleScanInvalid(data);
       } finally {
         !isScanningEnabled && enableScanning();
@@ -146,10 +138,6 @@ const useScanner = () => {
 
   return {
     onScan,
-    enableScanning,
-    disableScanning,
     isLoading: !isScanningEnabled,
   };
 };
-
-export default useScanner;

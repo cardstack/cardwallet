@@ -9,6 +9,7 @@ import {
   walletConnectOnSessionRequest as rawWalletConnectOnSessionRequest,
 } from '../../../../src/redux/walletconnect';
 import { AppState } from '@rainbow-me/redux/store';
+import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 
 const formatDappData = (connections: Record<string, IConnector[]>) =>
   values(
@@ -48,7 +49,7 @@ export default function useWalletConnectConnections() {
   );
 
   const walletConnectOnSessionRequest = useCallback(
-    (uri: string, callback?: () => void) =>
+    (uri: string, callback?: (type: WCRedirectTypes) => void) =>
       dispatch(rawWalletConnectOnSessionRequest(uri, callback)),
     [dispatch]
   );
