@@ -8,10 +8,11 @@ import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWall
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { convertDeepLinkToCardWalletProtocol, Device } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
-import { addressUtils, haptics } from '@rainbow-me/utils';
 import logger from 'logger';
-import { useBooleanState } from '@rainbow-me/hooks';
 import { Alert } from '@rainbow-me/components/alerts';
+import useBooleanState from '@rainbow-me/hooks/useBooleanState';
+import { getEthereumAddressFromQRCodeData } from '@rainbow-me/utils/address';
+import haptics from '@rainbow-me/utils/haptics';
 
 export const useScanner = () => {
   const { navigate } = useNavigation();
@@ -87,7 +88,7 @@ export const useScanner = () => {
       haptics.notificationError();
       logger.error({ qrCodeData });
 
-      return Alert({
+      Alert({
         callback: enableScanning,
         message: strings.unrecognizedAlert.message,
         title: strings.unrecognizedAlert.title,
@@ -104,9 +105,7 @@ export const useScanner = () => {
         disableScanning();
         const deeplink = decodeURIComponent(data);
 
-        const address = await addressUtils.getEthereumAddressFromQRCodeData(
-          data
-        );
+        const address = await getEthereumAddressFromQRCodeData(data);
 
         if (address) {
           return handleScanAddress(address);
@@ -139,5 +138,6 @@ export const useScanner = () => {
   return {
     onScan,
     isLoading: !isScanningEnabled,
+    isScanningEnabled,
   };
 };
