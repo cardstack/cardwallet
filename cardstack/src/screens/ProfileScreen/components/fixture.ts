@@ -1,5 +1,6 @@
 export const strings = {
   title: 'Profile',
+  headerRightText: 'Profile',
   createProfile: 'Create a Profile',
   createProfileDesc: 'All users need a profile to send and receive payments.',
   continueButton: 'Continue',
