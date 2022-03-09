@@ -1,13 +1,23 @@
 import React from 'react';
 
 import { CreateProfileStepOne, strings } from './components';
-import { Container, MainHeader, MerchantSafe } from '@cardstack/components';
+import {
+  Container,
+  MainHeader,
+  MerchantSafe,
+  ScrollView,
+} from '@cardstack/components';
 import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 
 const ProfileScreen = () => {
   const { primarySafe } = usePrimarySafe();
 
-  const CreateProfile = () => <CreateProfileStepOne />;
+  // TODO: add step indicator and other step screens
+  const CreateProfile = () => (
+    <ScrollView>
+      <CreateProfileStepOne />
+    </ScrollView>
+  );
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
