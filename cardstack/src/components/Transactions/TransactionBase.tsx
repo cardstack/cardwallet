@@ -213,15 +213,14 @@ export const TransactionRow = ({
               </Container>
             </Container>
           </Container>
-          <Container
-            flexDirection="column"
-            marginLeft={3}
-            alignItems="flex-end"
-          >
+          <Container flexDirection="column" alignItems="flex-end" flex={1}>
             {topText && <Text size="small">{topText}</Text>}
-            <Text weight="extraBold" fontSize={15}>
-              {primaryText}
-            </Text>
+            <Container maxWidth="80%">
+              <Text weight="extraBold" fontSize={15} ellipsizeMode="tail">
+                {primaryText}
+              </Text>
+            </Container>
+
             {subText && <Text variant="subText">{subText}</Text>}
           </Container>
         </Container>
