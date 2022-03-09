@@ -18,32 +18,34 @@ export const CreateProfileStepOne = () => {
   }, [network]);
 
   return (
-    <Container width="100%" justifyContent="center">
-      <Container justifyContent="center" alignItems="center" paddingTop={10}>
-        <Text color="white" fontWeight="bold" fontSize={20} marginTop={5}>
+    <Container
+      flexGrow={1}
+      flexDirection="column"
+      justifyContent="space-between"
+      paddingVertical={8}
+      backgroundColor="black"
+    >
+      <Container>
+        <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
           {strings.createProfile}
         </Text>
         <Text color="grayText" marginTop={8} textAlign="center">
           {strings.createProfileDesc}
         </Text>
-        <Container width="100%" justifyContent="flex-start">
-          <Text
-            color="white"
-            marginTop={8}
-            textAlign="left"
-            paddingLeft={4}
-            marginBottom={1}
-          >
-            {strings.example}
-          </Text>
-          <MerchantSafe
-            {...exampleMerchantExtraProps}
-            {...exampleMerchantData}
-            notPressable
-            headerRightText={strings.headerRightText}
-          />
-        </Container>
-        <Button marginTop={5}>{strings.continueButton}</Button>
+      </Container>
+      <Container>
+        <Text color="white" textAlign="left" paddingLeft={4} marginBottom={1}>
+          {strings.example}
+        </Text>
+        <MerchantSafe
+          {...exampleMerchantExtraProps}
+          {...exampleMerchantData}
+          notPressable
+          headerRightText={strings.headerRightText}
+        />
+      </Container>
+      <Container alignItems="center">
+        <Button>{strings.continueButton}</Button>
       </Container>
     </Container>
   );
