@@ -4,22 +4,20 @@ import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
 import { useIsFocused } from '@react-navigation/core';
 import PeopleIllustrationBackground from '../../../../assets/people-ill-bg.png';
-
-import { useScanner } from './useScanner';
-
 import {
   CameraNotAuthorizedView,
   QRCodeOverlay,
   BottomIconsSection,
 } from './components';
 import { strings } from './strings';
+import { useScanner } from './useScanner';
 import {
   Container,
   Text,
   Image,
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
-import { useBooleanState } from '@rainbow-me/hooks';
+import { useBooleanState, useDimensions } from '@rainbow-me/hooks';
 import { colors } from '@cardstack/theme';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
@@ -30,13 +28,18 @@ const QRCodeScannerPage = () => {
 
   const { onScan, isLoading } = useScanner();
 
+  const { isSmallPhone } = useDimensions();
+
   const isFocused = useIsFocused();
 
   // TODO: Remove after adding the header
   // start-block
   const { isTabBarEnabled } = useTabBarFlag();
 
-  const flex = useMemo(() => (isTabBarEnabled ? 0.7 : 0.5), [isTabBarEnabled]);
+  const flex = useMemo(() => (isTabBarEnabled || isSmallPhone ? 0.7 : 0.5), [
+    isTabBarEnabled,
+    isSmallPhone,
+  ]);
   // end-block
 
   return (
