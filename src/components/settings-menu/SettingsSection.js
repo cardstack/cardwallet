@@ -168,7 +168,7 @@ export default function SettingsSection({
           <ListItemArrowGroup />
         </ListItem>
         <ListItem
-          icon={<Icon color="settingsTeal" name="connect-icon" />}
+          icon={<Icon color="settingsTeal" name="walletConnect" />}
           label="WalletConnect Sessions"
           onPress={onPressWCSessions}
           testID="walletconnect-section"

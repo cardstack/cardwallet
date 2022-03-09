@@ -37,6 +37,7 @@ export const customIcons = {
   'pay-icon': require('./pay-icon').default,
   'connect-icon': require('./connect-icon').default,
   share: require('./share').default,
+  walletConnect: require('./walletconnect').default,
 };
 
 export type CustomIconNames = keyof typeof customIcons;
