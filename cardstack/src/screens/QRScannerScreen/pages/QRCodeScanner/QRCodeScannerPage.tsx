@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
@@ -21,6 +21,7 @@ import {
 } from '@cardstack/components';
 import { useBooleanState } from '@rainbow-me/hooks';
 import { colors } from '@cardstack/theme';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 const QRCodeScannerPage = () => {
   const [error, showError] = useBooleanState();
@@ -30,6 +31,13 @@ const QRCodeScannerPage = () => {
   const { onScan, isLoading } = useScanner();
 
   const isFocused = useIsFocused();
+
+  // TODO: Remove after adding the header
+  // start-block
+  const { isTabBarEnabled } = useTabBarFlag();
+
+  const flex = useMemo(() => (isTabBarEnabled ? 0.7 : 0.5), [isTabBarEnabled]);
+  // end-block
 
   return (
     <AbsoluteFullScreenContainer
@@ -62,7 +70,7 @@ const QRCodeScannerPage = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Container flex={0.7} alignItems="center" justifyContent="center">
+        <Container flex={flex} alignItems="center" justifyContent="center">
           <Container flex={0.35} justifyContent="flex-end">
             {error ? (
               <Text textAlign="center" fontSize={20} color="white">

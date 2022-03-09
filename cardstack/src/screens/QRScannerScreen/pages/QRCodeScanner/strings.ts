@@ -9,4 +9,8 @@ export const strings = {
     info: 'Scan to pay or connect',
     cameraBtn: 'Enable camera access',
   },
+  unrecognizedAlert: {
+    title: 'Unrecognized QR Code',
+    message: 'Sorry, this QR code could not be recognized.',
+  },
 };

@@ -1,9 +1,9 @@
 import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
 import { useFocusEffect, useNavigation } from '@react-navigation/core';
-import lang from 'i18n-js';
 import { useCallback } from 'react';
 import { Linking } from 'react-native';
 
+import { strings } from './strings';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { convertDeepLinkToCardWalletProtocol, Device } from '@cardstack/utils';
@@ -89,8 +89,8 @@ export const useScanner = () => {
 
       return Alert({
         callback: enableScanning,
-        message: lang.t('wallet.unrecognized_qrcode'),
-        title: lang.t('wallet.unrecognized_qrcode_title'),
+        message: strings.unrecognizedAlert.message,
+        title: strings.unrecognizedAlert.title,
       });
     },
     [enableScanning]
