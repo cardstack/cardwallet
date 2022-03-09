@@ -88,11 +88,13 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
         isLoadingTransactions || isLoadingFallback.current ? (
           <TransactionListLoading />
         ) : (
-          <ListEmptyComponent
-            text={`You don't have any\ntransactions yet`}
-            textColor="blueText"
-            hasRoundBox
-          />
+          <Container paddingTop={4}>
+            <ListEmptyComponent
+              text={`You don't have any\ntransactions yet`}
+              textColor="blueText"
+              hasRoundBox
+            />
+          </Container>
         )
       }
       ListHeaderComponent={Header}
