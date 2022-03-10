@@ -13,7 +13,7 @@ export interface usePaymentLinkParams {
   amountInNum?: number;
   nativeCurrency?: string;
   amountWithSymbol?: string;
-  merchantInfo: MerchantInformation;
+  merchantInfo?: MerchantInformation;
 }
 
 export const usePaymentLinks = ({
@@ -58,7 +58,7 @@ export const usePaymentLinks = ({
     } catch (e) {
       logger.sentry('Payment Request Link share failed', e);
     }
-  }, [amountWithSymbol, merchantInfo.name, paymentRequestWebLink]);
+  }, [amountWithSymbol, merchantInfo, paymentRequestWebLink]);
 
   return {
     paymentRequestWebLink,

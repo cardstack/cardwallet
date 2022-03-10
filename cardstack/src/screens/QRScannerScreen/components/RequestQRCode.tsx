@@ -1,126 +1,140 @@
-import {
-  generateMerchantPaymentUrl,
-  getConstantByNetwork,
-} from '@cardstack/cardpay-sdk';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useNavigation } from '@react-navigation/core';
-import { strings, SWITCH_SELECTOR_TOP } from './';
-import { useAccountSettings, useDimensions } from '@rainbow-me/hooks';
+import { StyleSheet } from 'react-native';
+import { crosshair } from '../pages/QRCodeScanner/components';
+import { useDimensions } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
+  CenteredContainer,
   Container,
   Icon,
   StyledQRCode,
   Text,
 } from '@cardstack/components';
-import { shareRequestPaymentLink } from '@cardstack/utils';
+
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
+import { usePaymentLinks } from '@cardstack/hooks/merchant/usePaymentLinks';
 
-import logger from 'logger';
+const styles = StyleSheet.create({
+  container: { paddingTop: crosshair.position.y * 0.4 },
+});
 
-export const RequestQRCode = () => {
-  const { network } = useAccountSettings();
-  const { isSmallPhone } = useDimensions();
+const strings = {
+  requestViaText: 'Or request via flow:',
+  requestAmountBtn: 'Request Amount',
+};
+
+export const useRequestCodePage = () => {
   const { navigate } = useNavigation();
 
   const { primarySafe } = usePrimarySafe();
 
-  const { address: primaryMerchantAddress, merchantInfo: primaryMerchantInfo } =
-    primarySafe || {};
+  const { address: safeAddress, merchantInfo } = primarySafe || {};
 
-  const paymentRequestWebLink = useMemo(
-    () =>
-      primaryMerchantAddress
-        ? generateMerchantPaymentUrl({
-            domain: getConstantByNetwork('merchantUniLinkDomain', network),
-            merchantSafeID: primaryMerchantAddress,
-            network,
-          })
-        : '',
-    [network, primaryMerchantAddress]
-  );
-
-  const paymentRequestDeepLink = useMemo(
-    () =>
-      primaryMerchantAddress
-        ? generateMerchantPaymentUrl({
-            merchantSafeID: primaryMerchantAddress,
-            network,
-          })
-        : '',
-    [network, primaryMerchantAddress]
-  );
-
-  const handleShareLink = useCallback(async () => {
-    try {
-      await shareRequestPaymentLink(
-        paymentRequestWebLink,
-        primarySafe?.merchantInfo?.name || ''
-      );
-    } catch (e) {
-      logger.sentry('Payment Request Link share failed', e);
-    }
-  }, [paymentRequestWebLink, primarySafe]);
+  const { handleShareLink, paymentRequestDeepLink } = usePaymentLinks({
+    address: safeAddress || '',
+    merchantInfo,
+  });
 
   const goToMerchantPaymentRequest = useCallback(() => {
-    if (primaryMerchantAddress) {
+    if (primarySafe?.address) {
       navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
-        address: primaryMerchantAddress,
-        merchantInfo: primaryMerchantInfo,
+        address: primarySafe?.address,
+        merchantInfo,
       });
     }
-  }, [primaryMerchantAddress, navigate, primaryMerchantInfo]);
+  }, [primarySafe, navigate, merchantInfo]);
 
-  if (!primarySafe) {
-    logger.log('No primary merchant!');
+  return {
+    handleShareLink,
+    safeAddress,
+    paymentRequestDeepLink,
+    merchantInfo,
+    goToMerchantPaymentRequest,
+  };
+};
 
-    return null;
+export const RequestQRCode = () => {
+  const {
+    merchantInfo,
+    goToMerchantPaymentRequest,
+    paymentRequestDeepLink,
+    safeAddress,
+  } = useRequestCodePage();
+
+  const { isSmallPhone } = useDimensions();
+
+  const { isTabBarEnabled } = useTabBarFlag();
+
+  if (!safeAddress) {
+    // Temp placeholder for no merchant/profile
+    return (
+      <CenteredContainer
+        flex={1}
+        justifyContent="space-around"
+        paddingHorizontal={5}
+      >
+        <Container justifyContent="space-around" flex={0.3}>
+          <Text
+            fontSize={18}
+            color="white"
+            paddingHorizontal={6}
+            textAlign="center"
+          >
+            {isTabBarEnabled
+              ? `You don't have a profile yet.\n\nCreate one to start requesting payments`
+              : `Create an account at app.cardstack.com/cardpay to
+            request payments`}
+          </Text>
+          {isTabBarEnabled && (
+            <Button>
+              <Text>Create a profile</Text>
+            </Button>
+          )}
+        </Container>
+      </CenteredContainer>
+    );
   }
 
   return (
-    <Container
+    <CenteredContainer
       paddingHorizontal={10}
-      paddingTop={isSmallPhone ? 22 : 30}
       flex={1}
-      justifyContent="center"
-      alignItems="center"
-      backgroundColor="buttonDisabledBackground"
+      backgroundColor="backgroundDarkPurple"
+      style={styles.container}
     >
-      <StyledQRCode value={paymentRequestDeepLink} />
-      <Container
-        flex={1}
-        justifyContent="space-between"
-        flexDirection="column"
-        paddingTop={5}
-      >
-        <Container justifyContent="center" alignItems="center">
-          {primaryMerchantInfo?.name ? (
-            <Container marginBottom={4}>
-              <ContactAvatar
-                color={primaryMerchantInfo?.color}
-                size="xlarge"
-                value={primaryMerchantInfo?.name}
-                textColor="white"
-              />
-            </Container>
+      <Container flexShrink={1} justifyContent="flex-start">
+        <StyledQRCode value={paymentRequestDeepLink} />
+      </Container>
+      <Container flex={1} flexDirection="column">
+        <CenteredContainer flex={1}>
+          {merchantInfo?.name ? (
+            <ContactAvatar
+              color={merchantInfo?.color}
+              size={isSmallPhone ? 'large' : 'xxlarge'}
+              value={merchantInfo?.name}
+              textColor="white"
+            />
           ) : (
-            <Icon name="user-with-background" size={80} />
+            <Icon name="user-with-background" size={isSmallPhone ? 60 : 100} />
           )}
           <Text
+            paddingTop={1}
             fontWeight="bold"
             ellipsizeMode="tail"
             numberOfLines={1}
             fontSize={20}
             color="white"
           >
-            {primaryMerchantInfo?.name || ''}
+            {merchantInfo?.name || ''}
           </Text>
-        </Container>
-        <Container paddingBottom={isSmallPhone ? 10 : 20}>
+        </CenteredContainer>
+        <CenteredContainer flex={1}>
           <Text
-            fontSize={20}
+            fontSize={18}
             numberOfLines={1}
             color="white"
             textAlign="center"
@@ -130,21 +144,14 @@ export const RequestQRCode = () => {
           <Button
             variant="primaryWhite"
             borderColor="teal"
+            maxWidth="95%"
             marginTop={3}
             onPress={goToMerchantPaymentRequest}
           >
             {strings.requestAmountBtn}
           </Button>
-        </Container>
+        </CenteredContainer>
       </Container>
-      <Container
-        position="absolute"
-        right={40}
-        top={SWITCH_SELECTOR_TOP + 9}
-        zIndex={2}
-      >
-        <Icon name="share" size={20} onPress={handleShareLink} />
-      </Container>
-    </Container>
+    </CenteredContainer>
   );
 };
