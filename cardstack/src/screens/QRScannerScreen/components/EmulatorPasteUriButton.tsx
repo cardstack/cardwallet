@@ -26,8 +26,6 @@ export function EmulatorPasteUriButton() {
     <Icon
       color="teal"
       iconSize="medium"
-      marginBottom={2}
-      marginRight={8}
       name="link"
       onPress={handlePressPasteSessionUri}
     />

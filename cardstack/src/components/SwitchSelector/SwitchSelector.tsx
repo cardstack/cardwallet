@@ -27,7 +27,7 @@ export const SwitchSelector = ({
   initial = 0,
   options = [],
   borderRadius = 50,
-  height = 36,
+  height = 35,
   onPress,
   ...otherProps
 }: SwitchSelectorProps & ContainerProps) => {

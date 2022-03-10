@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
@@ -8,6 +8,8 @@ import {
   CameraNotAuthorizedView,
   QRCodeOverlay,
   BottomIconsSection,
+  crosshair,
+  CROSSHAIR_SIZE,
 } from './components';
 import { strings } from './strings';
 import { useScanner } from './useScanner';
@@ -17,9 +19,15 @@ import {
   Image,
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
-import { useBooleanState, useDimensions } from '@rainbow-me/hooks';
+import { useBooleanState } from '@rainbow-me/hooks';
 import { colors } from '@cardstack/theme';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
+
+const styles = StyleSheet.create({
+  loadingContainer: { paddingTop: CROSSHAIR_SIZE * 0.45 },
+  bottomSectionContainer: {
+    paddingTop: crosshair.position.y + CROSSHAIR_SIZE * 1.05,
+  },
+});
 
 const QRCodeScannerPage = () => {
   const [error, showError] = useBooleanState();
@@ -28,19 +36,7 @@ const QRCodeScannerPage = () => {
 
   const { onScan, isLoading } = useScanner();
 
-  const { isSmallPhone } = useDimensions();
-
   const isFocused = useIsFocused();
-
-  // TODO: Remove after adding the header
-  // start-block
-  const { isTabBarEnabled } = useTabBarFlag();
-
-  const flex = useMemo(() => (isTabBarEnabled || isSmallPhone ? 0.7 : 0.5), [
-    isTabBarEnabled,
-    isSmallPhone,
-  ]);
-  // end-block
 
   return (
     <AbsoluteFullScreenContainer
@@ -71,10 +67,10 @@ const QRCodeScannerPage = () => {
       <AbsoluteFullScreenContainer
         zIndex={1}
         alignItems="center"
-        justifyContent="center"
+        top={crosshair.position.y}
       >
-        <Container flex={flex} alignItems="center" justifyContent="center">
-          <Container flex={0.35} justifyContent="flex-end">
+        <Container style={styles.loadingContainer}>
+          <Container>
             {error ? (
               <Text textAlign="center" fontSize={20} color="white">
                 {strings.cameraMountError}
@@ -86,14 +82,20 @@ const QRCodeScannerPage = () => {
             )}
           </Container>
         </Container>
-        <Container flex={0.45} width="100%">
-          <Container justifyContent="space-between" flex={0.5}>
-            <Container flex={0.8}>
+      </AbsoluteFullScreenContainer>
+      <AbsoluteFullScreenContainer
+        zIndex={1}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Container flex={1} width="100%" style={styles.bottomSectionContainer}>
+          <Container justifyContent="space-between" flex={0.8}>
+            <Container flex={0.6}>
               <Text textAlign="center" fontSize={20} color="white">
                 {strings.scanQRCodeText}
               </Text>
             </Container>
-            <BottomIconsSection flex={1} />
+            <BottomIconsSection flex={0.6} />
           </Container>
         </Container>
       </AbsoluteFullScreenContainer>
