@@ -42,6 +42,7 @@ export const palette = {
   darkGrayOpacity: 'rgba(39, 35, 48, 0.75)',
   mintDark: '#00E0A9',
   blueGreyDark: '#00E0A9',
+  borderLightColor: '#d6d6d6',
 };
 
 export const colors = {
@@ -97,6 +98,7 @@ export const colors = {
   whiteTinyLightOpacity: palette.whiteTinyLightOpacity,
   mintDark: palette.mintDark,
   blueGreyDark: palette.blueGreyDark,
+  borderLightColor: palette.borderLightColor,
 };
 
 export const avatarColor = [
