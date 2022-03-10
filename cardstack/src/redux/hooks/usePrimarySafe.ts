@@ -20,7 +20,7 @@ export default function usePrimarySafe() {
 
   const primarySafe = useSelector(selectPrimarySafe(network, accountAddress));
 
-  const { data = safesInitialState, error } = useGetSafesDataQuery({
+  const { data = safesInitialState, error, isFetching } = useGetSafesDataQuery({
     address: accountAddress,
     nativeCurrency,
   });
@@ -44,8 +44,10 @@ export default function usePrimarySafe() {
 
   return {
     error,
+    isFetching,
     merchantSafes,
     primarySafe,
     changePrimarySafe,
+    safesCount: merchantSafes?.length || 1,
   };
 }
