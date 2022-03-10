@@ -84,12 +84,6 @@ export interface MerchantInformation {
   ownerAddress: string;
 }
 
-export interface PrimarySafeUpdateProps {
-  isPrimarySafe: boolean;
-  changeToPrimarySafe?: () => void;
-  showSafePrimarySelection?: boolean;
-}
-
 export interface PrepaidCardCreatedTransactionType {
   address: string;
   cardCustomization?: PrepaidCardCustomization;

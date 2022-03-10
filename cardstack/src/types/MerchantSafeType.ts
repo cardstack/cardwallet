@@ -10,3 +10,9 @@ export interface MerchantSafeType {
   merchantInfo?: MerchantInformation;
   infoDID: string;
 }
+
+export interface PrimarySafeUpdateProps {
+  isPrimarySafe: boolean;
+  changeToPrimarySafe?: () => void;
+  showSafePrimarySelection?: boolean;
+}
