@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import {
-  QRCodeScanner,
   QRScannerContainer,
   RequestQRCode,
   ScannerScreenMode,
 } from './components';
+import { QRCodeScannerPage } from './pages';
 import { SwitchSelectorOption } from '@cardstack/components';
 
 const QRScannerScreen = () => {
@@ -18,7 +18,7 @@ const QRScannerScreen = () => {
 
   return (
     <QRScannerContainer onSwitchScreen={onSwitchScreen}>
-      {selectedScreen === ScannerScreenMode.SCAN && <QRCodeScanner />}
+      {selectedScreen === ScannerScreenMode.SCAN && <QRCodeScannerPage />}
       {selectedScreen === ScannerScreenMode.REQUEST && <RequestQRCode />}
     </QRScannerContainer>
   );

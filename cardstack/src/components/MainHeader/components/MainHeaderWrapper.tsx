@@ -6,9 +6,10 @@ import { Device } from '@cardstack/utils';
 
 const MainHeaderWrapper: React.FC<ContainerProps> = ({
   children,
+  backgroundColor = 'backgroundBlue',
   ...props
 }) => (
-  <SafeAreaView backgroundColor="backgroundBlue">
+  <SafeAreaView backgroundColor={backgroundColor}>
     <Container
       flexDirection="row"
       justifyContent="space-between"

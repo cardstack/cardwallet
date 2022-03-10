@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Linking } from 'react-native';
-import { strings } from './fixture';
+import { strings } from '../strings';
 import {
   Text,
   Icon,
@@ -8,8 +8,9 @@ import {
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
 
-export function QRCodeScannerNeedsAuthorization() {
+const CameraNotAuthorizedView = () => {
   const handlePressSettings = useCallback(() => {
+    // TODO: Handle android
     Linking.canOpenURL('app-settings:').then(() =>
       Linking.openURL('app-settings:')
     );
@@ -39,4 +40,6 @@ export function QRCodeScannerNeedsAuthorization() {
       </Button>
     </AbsoluteFullScreenContainer>
   );
-}
+};
+
+export default memo(CameraNotAuthorizedView);
