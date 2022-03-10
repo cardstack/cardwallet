@@ -16,7 +16,7 @@ import {
   Text,
 } from '@cardstack/components';
 import { shareRequestPaymentLink } from '@cardstack/utils';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 
 import logger from 'logger';
 
@@ -25,12 +25,10 @@ export const RequestQRCode = () => {
   const { isSmallPhone } = useDimensions();
   const { navigate } = useNavigation();
 
-  // ToDo: Update after choosing primary merchant's done
-  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
-  const primaryMerchant = merchantSafes[0];
+  const { primarySafe } = usePrimarySafe();
 
   const { address: primaryMerchantAddress, merchantInfo: primaryMerchantInfo } =
-    primaryMerchant || {};
+    primarySafe || {};
 
   const paymentRequestWebLink = useMemo(
     () =>
@@ -59,12 +57,12 @@ export const RequestQRCode = () => {
     try {
       await shareRequestPaymentLink(
         paymentRequestWebLink,
-        primaryMerchant?.merchantInfo?.name || ''
+        primarySafe?.merchantInfo?.name || ''
       );
     } catch (e) {
       logger.sentry('Payment Request Link share failed', e);
     }
-  }, [paymentRequestWebLink, primaryMerchant]);
+  }, [paymentRequestWebLink, primarySafe]);
 
   const goToMerchantPaymentRequest = useCallback(() => {
     if (primaryMerchantAddress) {
@@ -75,7 +73,7 @@ export const RequestQRCode = () => {
     }
   }, [primaryMerchantAddress, navigate, primaryMerchantInfo]);
 
-  if (!primaryMerchant) {
+  if (!primarySafe) {
     logger.log('No primary merchant!');
 
     return null;
