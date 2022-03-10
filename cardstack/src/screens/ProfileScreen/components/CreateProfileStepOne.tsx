@@ -1,22 +1,8 @@
-import React, { useMemo } from 'react';
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import React from 'react';
 import { exampleMerchantData, strings } from './';
 import { Button, Container, Text, MerchantSafe } from '@cardstack/components';
-import { useAccountSettings } from '@rainbow-me/hooks';
 
 export const CreateProfileStepOne = () => {
-  const { network } = useAccountSettings();
-
-  const exampleMerchantExtraProps = useMemo(() => {
-    const networkName = getConstantByNetwork('name', network);
-
-    return {
-      nativeCurrency: '',
-      currencyConversionRates: [],
-      networkName,
-    };
-  }, [network]);
-
   return (
     <Container
       flexGrow={1}
@@ -37,7 +23,6 @@ export const CreateProfileStepOne = () => {
           {strings.example}
         </Text>
         <MerchantSafe
-          {...exampleMerchantExtraProps}
           {...exampleMerchantData}
           disabled
           headerRightText={strings.headerRightText}
