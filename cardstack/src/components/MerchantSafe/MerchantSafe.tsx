@@ -38,6 +38,7 @@ export const MerchantSafe = ({
         overflow="hidden"
         borderColor="buttonPrimaryBorder"
         testID="inventory-card"
+        onPress={onPress}
         disabled={disabled}
       >
         <SafeHeader
