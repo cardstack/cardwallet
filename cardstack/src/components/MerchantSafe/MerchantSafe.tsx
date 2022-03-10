@@ -13,13 +13,13 @@ import Routes from '@rainbow-me/routes';
 
 export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
-  notPressable?: boolean;
+  disabled?: boolean;
   headerRightText?: string;
 }
 
 export const MerchantSafe = ({
   merchantInfo,
-  notPressable = false,
+  disabled = false,
   headerRightText,
   ...props
 }: MerchantSafeProps) => {
@@ -38,7 +38,7 @@ export const MerchantSafe = ({
         overflow="hidden"
         borderColor="buttonPrimaryBorder"
         testID="inventory-card"
-        disabled={notPressable}
+        disabled={disabled}
       >
         <SafeHeader
           {...props}
@@ -46,7 +46,7 @@ export const MerchantSafe = ({
           backgroundColor={merchantInfo?.color}
           textColor={merchantInfo?.textColor}
           rightText={headerRightText}
-          notPressable={notPressable}
+          disabled={disabled}
         />
         <Container paddingHorizontal={6}>
           <MerchantInfo

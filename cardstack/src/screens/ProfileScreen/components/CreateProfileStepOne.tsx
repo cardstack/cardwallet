@@ -23,7 +23,6 @@ export const CreateProfileStepOne = () => {
       flexDirection="column"
       justifyContent="space-between"
       paddingVertical={8}
-      backgroundColor="black"
     >
       <Container>
         <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
@@ -40,7 +39,7 @@ export const CreateProfileStepOne = () => {
         <MerchantSafe
           {...exampleMerchantExtraProps}
           {...exampleMerchantData}
-          notPressable
+          disabled
           headerRightText={strings.headerRightText}
         />
       </Container>
