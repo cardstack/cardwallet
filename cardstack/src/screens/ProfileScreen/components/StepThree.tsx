@@ -16,15 +16,20 @@ export const StepThree = ({ setActiveStep, currentStep }: StepActionType) => {
     >
       <Container>
         <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
-          {strings.createProfile}
+          {strings.review}
         </Text>
-        <Text color="grayText" marginTop={8} textAlign="center">
-          {strings.createProfileDesc}
+        <Text
+          color="grayText"
+          marginTop={2}
+          textAlign="center"
+          paddingHorizontal={10}
+        >
+          {strings.reviewDescription}
         </Text>
       </Container>
       <Container>
         <Text color="white" textAlign="left" paddingLeft={4} marginBottom={1}>
-          {strings.example}
+          {strings.yourProfile}
         </Text>
         <MerchantSafe
           {...exampleMerchantData}
@@ -33,7 +38,7 @@ export const StepThree = ({ setActiveStep, currentStep }: StepActionType) => {
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={onPressContinue}>{strings.continueButton}</Button>
+        <Button onPress={onPressContinue}>{strings.create}</Button>
       </Container>
     </Container>
   );
