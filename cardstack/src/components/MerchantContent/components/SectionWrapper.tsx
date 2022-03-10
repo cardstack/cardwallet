@@ -1,4 +1,5 @@
 import React from 'react';
+import { strings } from '../strings';
 import { Container, Text, Touchable } from '@cardstack/components';
 
 interface SectionWrapperProps {
@@ -25,7 +26,7 @@ export const SectionWrapper = ({
   >
     {hasDetailsText && (
       <Container position="absolute" top={8} right={8}>
-        {!disabled && <Text size="xs">Details</Text>}
+        {!disabled && <Text size="xs">{strings.details}</Text>}
       </Container>
     )}
     {children}

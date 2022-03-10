@@ -1,4 +1,7 @@
 import React, { memo, useCallback } from 'react';
+import { StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
+import { strings } from './strings';
 import { useClaimAllRevenue } from '@cardstack/screens/sheets/UnclaimedRevenue/useClaimAllRevenue';
 import {
   Button,
@@ -9,10 +12,12 @@ import {
   MerchantTokensList,
 } from '@cardstack/components';
 import { MerchantSafeType } from '@cardstack/types';
-import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
 const HORIZONTAL_PADDING = 5;
+// For avoiding occlusing the network tag.
+// This needs to be removed once we're good with the new tab bar.
+const BOTTOM_PADDING = 260;
 
 export enum ExpandedMerchantRoutes {
   lifetimeEarnings = 'lifetimeEarnings',
@@ -74,7 +79,7 @@ export const MerchantContent = memo(
       <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
         <ScrollView
           width="100%"
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 260 }}
+          contentContainerStyle={styles.contentContainer}
           paddingHorizontal={HORIZONTAL_PADDING}
         >
           <MerchantHeader
@@ -109,10 +114,9 @@ export const MerchantContent = memo(
   }
 );
 
-const strings = {
-  requestPayment: 'Request Payment',
-  readyToClaim: 'Ready to Claim',
-  noPendingPayment: 'No pending payments',
-  availableBalance: 'Your Available Balance',
-  noAvailableBalance: 'No balance available',
-};
+const styles = StyleSheet.create({
+  contentContainer: {
+    alignItems: 'center',
+    paddingBottom: BOTTOM_PADDING,
+  },
+});

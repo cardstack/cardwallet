@@ -11,14 +11,11 @@ import { sortedByTokenBalanceAmount } from '@cardstack/utils';
 const isLastItem = (items: TokenType[], index: number): boolean =>
   items.length - 1 === index;
 
-type onPressProps = {
-  onPress: () => void;
-};
-
-interface MerchantTokensListProps extends onPressProps {
+interface MerchantTokensListProps {
   title: string;
   tokens: TokenType[];
   emptyText: string;
+  onPress: () => void;
 }
 
 export const MerchantTokensList = ({

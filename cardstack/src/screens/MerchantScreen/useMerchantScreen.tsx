@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from 'react';
+import { Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { strings } from './strings';
 import { MerchantSafeType } from '@cardstack/types';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { useGetSafesDataQuery } from '@cardstack/services';
@@ -38,9 +40,26 @@ export const useMerchantScreen = () => {
     };
   }, [primarySafe, updatedMerchantSafe, merchantSafeFallback]);
 
-  const changeToPrimarySafe = useCallback(() => {
-    changePrimarySafe(merchantSafe);
+  const changePrimaryConfirmation = useCallback(() => {
+    Alert.alert(
+      strings.confirmPrimaryChangeTitle,
+      strings.confirmPrimaryChange,
+      [
+        {
+          text: strings.confirm,
+          onPress: () => changePrimarySafe(merchantSafe),
+        },
+        {
+          text: strings.cancel,
+          style: 'cancel',
+        },
+      ]
+    );
   }, [merchantSafe, changePrimarySafe]);
+
+  const changeToPrimarySafe = useCallback(() => {
+    changePrimaryConfirmation();
+  }, [changePrimaryConfirmation]);
 
   return {
     isRefreshingBalances,
