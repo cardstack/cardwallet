@@ -1,5 +1,11 @@
 import React from 'react';
-import { CreateProfileStepOne, strings } from './components';
+import {
+  StepOne,
+  StepTwo,
+  StepThree,
+  ProgressSteps,
+  strings,
+} from './components';
 import { Container, MainHeader, MerchantContent } from '@cardstack/components';
 import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 
@@ -7,8 +13,12 @@ const ProfileScreen = () => {
   const { primarySafe, isFetching, safesCount } = usePrimarySafe();
 
   const CreateProfile = () => (
-    <Container flex={1}>
-      <CreateProfileStepOne />
+    <Container flex={1} paddingTop={7}>
+      <ProgressSteps>
+        <StepOne />
+        <StepTwo />
+        <StepThree />
+      </ProgressSteps>
     </Container>
   );
 
