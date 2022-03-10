@@ -77,7 +77,9 @@ export const PaymentRequestConfirmation = ({
   return (
     <>
       <Container paddingHorizontal={5} width="100%">
-        <StyledQRCode value={paymentRequestDeepLink} />
+        <Container alignItems="center" paddingTop={5}>
+          <StyledQRCode value={paymentRequestDeepLink} />
+        </Container>
         <Container
           backgroundColor="grayCardBackground"
           borderRadius={10}

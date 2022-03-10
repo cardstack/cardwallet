@@ -10,14 +10,16 @@ const fullScreenSizeProps = {
   width: '100%',
 };
 
-// CrossHair
-const CROSSHAIR_SIZE = screenWidth * 0.72;
+const aspectRatio = screenHeight / screenWidth;
 
-const crosshair = {
+// CrossHair
+export const CROSSHAIR_SIZE = screenWidth * 0.68;
+
+export const crosshair = {
   radius: CROSSHAIR_SIZE * 0.1,
   position: {
     x: halfScreen - CROSSHAIR_SIZE / 2,
-    y: screenHeight * 0.18,
+    y: screenHeight * aspectRatio * 0.085,
   },
   stroke: { color: colors.teal, width: 5 },
 };
