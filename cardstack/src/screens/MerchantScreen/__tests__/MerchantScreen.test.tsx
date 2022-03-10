@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, act } from '../../../test-utils';
+import { render } from '../../../test-utils';
 import MerchantScreen from '../MerchantScreen';
 import { useMerchantScreen } from '../useMerchantScreen';
 
