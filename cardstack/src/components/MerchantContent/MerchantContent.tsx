@@ -11,7 +11,7 @@ import {
   MerchantHeader,
   MerchantTokensList,
 } from '@cardstack/components';
-import { MerchantSafeType } from '@cardstack/types';
+import { MerchantSafeType, PrimarySafeUpdateProps } from '@cardstack/types';
 import Routes from '@rainbow-me/routes';
 
 const HORIZONTAL_PADDING = 5;
@@ -24,12 +24,9 @@ export enum ExpandedMerchantRoutes {
   availableBalances = 'availableBalances',
 }
 
-export interface MerchantContentProps {
+export interface MerchantContentProps extends PrimarySafeUpdateProps {
   merchantSafe: MerchantSafeType;
   isRefreshingBalances: boolean;
-  isPrimarySafe: boolean;
-  showSafePrimarySelection: boolean;
-  changeToPrimarySafe?: () => void;
 }
 
 export const MerchantContent = memo(
