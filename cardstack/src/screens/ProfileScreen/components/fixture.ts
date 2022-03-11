@@ -22,11 +22,10 @@ export const strings = {
 export const exampleMerchantData = {
   accumulatedSpendValue: '0',
   address: '0x45abXXXX2Bc2',
-  createdAt: 1646743110,
-  infoDID: 'did:cardstack:1mhzgxigmWAHJUxh8r1KPFZKe233e4864256d1b2',
+  infoDID: '',
   merchantInfo: {
     color: '#f53695',
-    did: 'did:cardstack:1mhzgxigmWAHJUxh8r1KPFZKe233e4864256d1b2',
+    did: '',
     name: 'Mandello',
     ownerAddress: '',
     slug: 'mandello',
