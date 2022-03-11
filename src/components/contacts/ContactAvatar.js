@@ -13,6 +13,10 @@ const sizeConfigs = () => ({
     dimensions: 80,
     textSize: 'biggest',
   },
+  hlarge: {
+    dimensions: 80,
+    textSize: 'larger',
+  },
   large: {
     dimensions: 65,
     textSize: 'bigger',

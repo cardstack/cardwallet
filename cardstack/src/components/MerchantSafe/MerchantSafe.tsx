@@ -20,7 +20,7 @@ export interface MerchantSafeProps extends MerchantSafeType {
 export const MerchantSafe = ({
   merchantInfo,
   disabled = false,
-  headerRightText,
+  headerRightText = 'merchant',
   ...props
 }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
@@ -43,6 +43,7 @@ export const MerchantSafe = ({
       >
         <SafeHeader
           {...props}
+          small
           onPress={onPress}
           backgroundColor={merchantInfo?.color}
           textColor={merchantInfo?.textColor}
@@ -53,7 +54,7 @@ export const MerchantSafe = ({
           <MerchantInfo
             color={merchantInfo?.color}
             textColor={merchantInfo?.textColor}
-            name={merchantInfo?.name}
+            name={merchantInfo?.slug}
           />
           <Bottom slug={merchantInfo?.slug} />
         </Container>
@@ -77,7 +78,7 @@ export const MerchantInfo = ({
         <Container marginBottom={4}>
           <ContactAvatar
             color={color}
-            size="xlarge"
+            size="hlarge"
             value={name}
             textColor={textColor}
           />
@@ -107,14 +108,11 @@ export const MerchantInfo = ({
 
 const Bottom = ({ slug }: { slug?: string }) => {
   return (
-    <Container paddingBottom={6}>
+    <Container paddingBottom={4}>
       <Container flexDirection="row" justifyContent="space-between">
         <Container>
-          <Text weight="regular" fontSize={11}>
-            Account ID
-          </Text>
           <Text weight="bold" fontSize={13}>
-            {slug}
+            ID: {slug}
           </Text>
         </Container>
       </Container>

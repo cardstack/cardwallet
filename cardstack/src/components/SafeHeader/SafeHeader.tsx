@@ -75,7 +75,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
             style={style.text}
             weight="extraBold"
             ellipsizeMode="tail"
-            size={small ? 'xs' : 'small'}
+            size={small ? 'xxs' : 'small'}
             marginRight={rightText ? 0 : 1}
             numberOfLines={1}
             textTransform="uppercase"
