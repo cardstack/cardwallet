@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { Container, Icon } from '@cardstack/components';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { Container, Icon, Touchable } from '@cardstack/components';
 import { ColorTypes } from '@cardstack/theme';
 
 interface StepIndicatorProps {
@@ -50,6 +50,24 @@ export const ProgressSteps = ({
     setCurrentStep(activeStep);
   }, [activeStep]);
 
+  const setActiveStep = useCallback(
+    (step: number) => {
+      if (step >= stepCount - 1) {
+        setCurrentStep(stepCount - 1);
+      }
+
+      if (step > -1 && step < stepCount - 1) {
+        setCurrentStep(step);
+      }
+    },
+    [stepCount]
+  );
+
+  const onPressStepIcon = useCallback(
+    (step: number) => () => setActiveStep(step),
+    [setActiveStep]
+  );
+
   const renderStepIcons = () =>
     Array(stepCount)
       .fill(null)
@@ -65,13 +83,15 @@ export const ProgressSteps = ({
 
         return (
           <>
-            <Container
+            <Touchable
               width={ProgressStepSizes.circleWidth}
               height={ProgressStepSizes.circleWidth}
               borderRadius={ProgressStepSizes.circleWidth / 2}
               justifyContent="center"
               alignItems="center"
               {...StepIconStyles[stepStatus]}
+              disabled={stepStatus !== StepStatus.COMPLETED}
+              onPress={onPressStepIcon(index)}
             >
               {stepStatus === StepStatus.COMPLETED ? (
                 <Icon
@@ -79,9 +99,10 @@ export const ProgressSteps = ({
                   iconSize="small"
                   name="check"
                   strokeWidth={2}
+                  height={14}
                 />
               ) : null}
-            </Container>
+            </Touchable>
             {!isLastStep ? (
               <Container
                 position="absolute"
@@ -103,18 +124,8 @@ export const ProgressSteps = ({
         );
       });
 
-  const setActiveStep = (step: number) => {
-    if (step >= stepCount - 1) {
-      setCurrentStep(stepCount - 1);
-    }
-
-    if (step > -1 && step < stepCount - 1) {
-      setCurrentStep(step);
-    }
-  };
-
   return (
-    <Container style={{ flex: 1 }}>
+    <Container style={{ flex: 1 }} paddingTop={7}>
       <Container
         position="relative"
         justifyContent="space-between"
