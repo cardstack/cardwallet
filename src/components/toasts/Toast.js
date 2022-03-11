@@ -45,19 +45,15 @@ export function ToastsContainer({ children }) {
 }
 
 export default function Toast({
-  children,
   distance = 60,
   targetTranslate = 0,
-  icon,
-  isVisible,
-  testID,
-  text,
-  textColor,
   ...props
 }) {
   const { colors } = useTheme();
   const { width: deviceWidth } = useDimensions();
   const insets = useSafeArea();
+
+  const { icon, isVisible, testID, text, textColor, children } = props;
 
   const animation = useSpringTransition(isVisible, springConfig);
 
