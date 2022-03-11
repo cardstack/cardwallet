@@ -1,6 +1,6 @@
 import { useContext, useCallback, useMemo } from 'react';
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
-import { ProfileFormContext } from './components';
+import { ProfileFormContext, strings } from './components';
 import { useAuthToken } from '@cardstack/hooks';
 import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
 
@@ -49,7 +49,7 @@ export const useProfileForm = () => {
     return {
       businessName: businessName.trim()
         ? undefined
-        : 'Business Name is required',
+        : strings.businessNameRequired,
       businessId: validateMerchantId(businessId),
     };
   }, [businessName, businessId]);

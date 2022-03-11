@@ -17,6 +17,9 @@ export const strings = {
     'Next you will confirm the creation of your profile. This will require a payment of $1.00USD.',
   yourProfile: 'Your Profile:',
   create: 'Create',
+  businessNameRequired: 'Business Name is required',
+  businessIdShouldBeUnique:
+    'This Business ID is already taken. Please choose another one',
 };
 
 export const exampleMerchantData = {
