@@ -14,6 +14,7 @@ import {
   removeLocal,
 } from '@rainbow-me/handlers/localstorage/common';
 import {
+  BusinessIDUniquenessResponse,
   CustodialWallet,
   Inventory,
   ReservationData,
@@ -414,6 +415,28 @@ export const getWyrePrice = async (
     return results?.data?.data;
   } catch (e) {
     logger.sentry('Error getting order details', e);
+  }
+};
+
+export const checkBusinessIdUniqueness = async (
+  businessId: string,
+  authToken: string
+): Promise<BusinessIDUniquenessResponse | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    const results = await hubApi.get(
+      `${hubURL}/api/merchant-infos/validate-slug/${businessId}`,
+      axiosConfig(authToken)
+    );
+
+    return results?.data as BusinessIDUniquenessResponse;
+  } catch (e: any) {
+    logger.sentry(
+      'Error while checking BusinessIdUniqueness from hub',
+      e?.response || e
+    );
   }
 };
 
