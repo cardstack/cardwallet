@@ -52,7 +52,7 @@ export const MerchantSafe = ({
           rightText={headerRightText}
           disabled={disabled}
         />
-        <Container paddingHorizontal={6}>
+        <Container paddingHorizontal={5}>
           <MerchantInfo
             color={merchantInfo?.color}
             textColor={merchantInfo?.textColor}
@@ -75,35 +75,32 @@ export const MerchantInfo = ({
   color?: string;
 }) => {
   return (
-    <Container flexDirection="column" paddingVertical={8} alignItems="center">
+    <Container
+      flexDirection="row"
+      paddingVertical={10}
+      alignItems="center"
+      justifyContent="flex-start"
+    >
       {name ? (
-        <Container marginBottom={4}>
-          <ContactAvatar
-            color={color}
-            size="hlarge"
-            value={name}
-            textColor={textColor}
-          />
-        </Container>
+        <ContactAvatar
+          color={color}
+          size="hlarge"
+          value={name}
+          textColor={textColor}
+        />
       ) : (
         <Icon name="user-with-background" size={80} />
       )}
 
-      <Container
-        flexDirection="column"
-        justifyContent="center"
-        width="85%"
-        alignItems="center"
+      <Text
+        weight="bold"
+        marginLeft={3}
+        ellipsizeMode="tail"
+        numberOfLines={1}
+        fontSize={20}
       >
-        <Text
-          weight="bold"
-          ellipsizeMode="tail"
-          numberOfLines={1}
-          fontSize={20}
-        >
-          {name || ''}
-        </Text>
-      </Container>
+        {name || ''}
+      </Text>
     </Container>
   );
 };
