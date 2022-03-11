@@ -5,7 +5,7 @@ import {
 import { useCallback, useMemo } from 'react';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { MerchantInformation } from '@cardstack/types';
-import { shareRequestPaymentLink } from '@cardstack/utils';
+import { isLayer2, shareRequestPaymentLink } from '@cardstack/utils';
 import logger from 'logger';
 
 export interface usePaymentLinkParams {
@@ -27,24 +27,28 @@ export const usePaymentLinks = ({
 
   const paymentRequestWebLink = useMemo(
     () =>
-      generateMerchantPaymentUrl({
-        domain: getConstantByNetwork('merchantUniLinkDomain', network),
-        merchantSafeID: address,
-        amount: amountInNum,
-        network,
-        currency: nativeCurrency,
-      }),
+      isLayer2(network)
+        ? generateMerchantPaymentUrl({
+            domain: getConstantByNetwork('merchantUniLinkDomain', network),
+            merchantSafeID: address,
+            amount: amountInNum,
+            network,
+            currency: nativeCurrency,
+          })
+        : '',
     [address, amountInNum, nativeCurrency, network]
   );
 
   const paymentRequestDeepLink = useMemo(
     () =>
-      generateMerchantPaymentUrl({
-        merchantSafeID: address,
-        amount: amountInNum,
-        network,
-        currency: nativeCurrency,
-      }),
+      isLayer2(network)
+        ? generateMerchantPaymentUrl({
+            merchantSafeID: address,
+            amount: amountInNum,
+            network,
+            currency: nativeCurrency,
+          })
+        : '',
     [address, amountInNum, nativeCurrency, network]
   );
 
