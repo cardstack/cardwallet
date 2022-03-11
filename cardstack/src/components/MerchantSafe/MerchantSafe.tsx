@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { strings } from './strings';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   CardPressable,
@@ -15,6 +16,7 @@ export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
   disabled?: boolean;
   headerRightText?: string;
+  isPrimary?: boolean;
 }
 
 export const MerchantSafe = ({
@@ -106,16 +108,27 @@ export const MerchantInfo = ({
   );
 };
 
-const Bottom = ({ slug }: { slug?: string }) => {
+const Bottom = ({
+  slug,
+  isPrimary = false,
+}: {
+  slug?: string;
+  isPrimary?: boolean;
+}) => {
   return (
-    <Container paddingBottom={4}>
-      <Container flexDirection="row" justifyContent="space-between">
-        <Container>
-          <Text weight="bold" fontSize={13}>
-            ID: {slug}
-          </Text>
-        </Container>
-      </Container>
+    <Container
+      paddingBottom={4}
+      flexDirection="row"
+      justifyContent="space-between"
+    >
+      <Text weight="bold" fontSize={13}>
+        ID: {slug}
+      </Text>
+      {isPrimary && (
+        <Text weight="bold" fontSize={13}>
+          {strings.primaryProfile}
+        </Text>
+      )}
     </Container>
   );
 };
