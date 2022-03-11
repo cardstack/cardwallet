@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
-import { useNavigation } from '@react-navigation/core';
+import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import { crosshair } from '../pages/QRCodeScanner/components';
+import { crosshair } from '../QRCodeScanner/components';
+import { useRequestCodePage } from './useRequestCodePage';
+import { strings } from './strings';
 import { useDimensions } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Button,
@@ -13,59 +13,29 @@ import {
   StyledQRCode,
   Text,
 } from '@cardstack/components';
-
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
-import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
-import { usePaymentLinks } from '@cardstack/hooks/merchant/usePaymentLinks';
 
 const styles = StyleSheet.create({
   container: { paddingTop: crosshair.position.y * 0.4 },
 });
 
-const strings = {
-  requestViaText: 'Or request via flow:',
-  requestAmountBtn: 'Request Amount',
-};
-
-export const useRequestCodePage = () => {
-  const { navigate } = useNavigation();
-
-  const { primarySafe } = usePrimarySafe();
-
-  const { address: safeAddress, merchantInfo } = primarySafe || {};
-
-  const { handleShareLink, paymentRequestDeepLink } = usePaymentLinks({
-    address: safeAddress || '',
-    merchantInfo,
-  });
-
-  const goToMerchantPaymentRequest = useCallback(() => {
-    if (primarySafe?.address) {
-      navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
-        address: primarySafe?.address,
-        merchantInfo,
-      });
-    }
-  }, [primarySafe, navigate, merchantInfo]);
-
-  return {
-    handleShareLink,
-    safeAddress,
-    paymentRequestDeepLink,
-    merchantInfo,
-    goToMerchantPaymentRequest,
-  };
-};
-
-export const RequestQRCode = () => {
+const RequestQRCodePage = () => {
   const {
     merchantInfo,
-    goToMerchantPaymentRequest,
+    onRequestAmountPress,
     paymentRequestDeepLink,
     safeAddress,
   } = useRequestCodePage();
 
   const { isSmallPhone } = useDimensions();
+
+  const iconSize = useMemo(
+    () => ({
+      avatar: isSmallPhone ? 'large' : 'xxlarge',
+      defaultIcon: isSmallPhone ? 60 : 100,
+    }),
+    [isSmallPhone]
+  );
 
   const { isTabBarEnabled } = useTabBarFlag();
 
@@ -114,12 +84,12 @@ export const RequestQRCode = () => {
           {merchantInfo?.name ? (
             <ContactAvatar
               color={merchantInfo?.color}
-              size={isSmallPhone ? 'large' : 'xxlarge'}
+              size={iconSize.avatar}
               value={merchantInfo?.name}
               textColor="white"
             />
           ) : (
-            <Icon name="user-with-background" size={isSmallPhone ? 60 : 100} />
+            <Icon name="user-with-background" size={iconSize.defaultIcon} />
           )}
           <Text
             paddingTop={1}
@@ -146,7 +116,7 @@ export const RequestQRCode = () => {
             borderColor="teal"
             maxWidth="95%"
             marginTop={3}
-            onPress={goToMerchantPaymentRequest}
+            onPress={onRequestAmountPress}
           >
             {strings.requestAmountBtn}
           </Button>
@@ -155,3 +125,5 @@ export const RequestQRCode = () => {
     </CenteredContainer>
   );
 };
+
+export default memo(RequestQRCodePage);
