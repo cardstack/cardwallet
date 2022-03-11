@@ -1,11 +1,25 @@
-import React, { useCallback } from 'react';
-import { exampleMerchantData, StepActionType, strings } from '.';
+import React, { useCallback, useMemo } from 'react';
+import { useProfileForm } from '../helper';
+import { exampleMerchantData, strings } from '.';
 import { Button, Container, Text, MerchantSafe } from '@cardstack/components';
 
-export const StepThree = ({ setActiveStep, currentStep }: StepActionType) => {
-  const onPressContinue = useCallback(() => {
-    setActiveStep?.((currentStep || 0) + 1);
-  }, [currentStep, setActiveStep]);
+export const StepThree = () => {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const onPressCreate = useCallback(() => {}, []);
+
+  const { businessColor, businessName, businessId } = useProfileForm();
+
+  const newMerchantInfo = useMemo(
+    () => ({
+      color: businessColor,
+      name: businessName,
+      did: '',
+      textColor: '#fff',
+      slug: businessId,
+      ownerAddress: '',
+    }),
+    [businessColor, businessId, businessName]
+  );
 
   return (
     <Container
@@ -33,12 +47,14 @@ export const StepThree = ({ setActiveStep, currentStep }: StepActionType) => {
         </Text>
         <MerchantSafe
           {...exampleMerchantData}
+          address=""
+          merchantInfo={newMerchantInfo}
           disabled
           headerRightText={strings.headerRightText}
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={onPressContinue}>{strings.create}</Button>
+        <Button onPress={onPressCreate}>{strings.create}</Button>
       </Container>
     </Container>
   );

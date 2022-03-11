@@ -1,18 +1,31 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useProfileForm } from '../helper';
 import { StepActionType, strings } from '.';
 import { Button, Container, Text, Input } from '@cardstack/components';
-import { avatarColor } from '@cardstack/theme';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
 export const StepTwo = ({ setActiveStep, currentStep }: StepActionType) => {
-  const { accountColor, accountName } = useAccountProfile();
+  const { accountName } = useAccountProfile();
+  const [isSubmitPressed, setIsSubmitPressed] = useState(false);
+
+  const {
+    businessColor,
+    businessName,
+    businessId,
+    onChangeBusinessName,
+    onChangeBusinessId,
+    isUniqueId,
+    errors,
+  } = useProfileForm();
 
   const onPressContinue = useCallback(() => {
-    setActiveStep?.((currentStep || 0) + 1);
-  }, [currentStep, setActiveStep]);
+    setIsSubmitPressed(true);
 
-  console.log({ accountColor });
+    if (isUniqueId && !errors?.businessId && !errors?.businessName) {
+      setActiveStep?.((currentStep || 0) + 1);
+    }
+  }, [currentStep, errors, isUniqueId, setActiveStep]);
 
   return (
     <Container
@@ -31,9 +44,9 @@ export const StepTwo = ({ setActiveStep, currentStep }: StepActionType) => {
       </Container>
       <Container justifyContent="center" alignItems="center">
         <ContactAvatar
-          color={accountColor}
+          color={businessColor}
           size="large"
-          value={accountName}
+          value={businessName || accountName}
           textColor="#fff"
         />
       </Container>
@@ -45,13 +58,22 @@ export const StepTwo = ({ setActiveStep, currentStep }: StepActionType) => {
           placeholder="Enter Business Name"
           textContentType="name"
           borderWidth={1}
-          borderColor="buttonSecondaryBorder"
+          borderColor={
+            errors?.businessName && isSubmitPressed
+              ? 'error'
+              : 'buttonSecondaryBorder'
+          }
           borderRadius={6}
           paddingVertical={3}
           paddingHorizontal={5}
           fontSize={16}
           fontWeight="bold"
           color="grayCardBackground"
+          value={businessName}
+          onChange={onChangeBusinessName}
+          autoFocus
+          spellCheck={false}
+          autoCorrect={false}
         />
         <Text
           marginTop={4}
@@ -63,16 +85,35 @@ export const StepTwo = ({ setActiveStep, currentStep }: StepActionType) => {
           {strings.uniqueId}
         </Text>
         <Input
+          autoCapitalize="none"
           placeholder="Enter Unique ID"
           textContentType="username"
           borderWidth={1}
-          borderColor="buttonSecondaryBorder"
+          borderColor={
+            (errors?.businessId || !isUniqueId) && isSubmitPressed
+              ? 'error'
+              : 'buttonSecondaryBorder'
+          }
           borderRadius={6}
           paddingVertical={3}
           paddingHorizontal={5}
           fontSize={16}
           fontWeight="bold"
           color="grayCardBackground"
+          value={businessId}
+          onChange={onChangeBusinessId}
+          iconProps={
+            isUniqueId
+              ? {
+                  name: 'check',
+                  color: 'greenColor',
+                  margin: 0,
+                  top: 14,
+                }
+              : undefined
+          }
+          spellCheck={false}
+          autoCorrect={false}
         />
         <Text size="xxs" color="grayText" textAlign="left" marginTop={1}>
           {strings.unqiueIdDescription}
@@ -86,6 +127,7 @@ export const StepTwo = ({ setActiveStep, currentStep }: StepActionType) => {
         >
           {strings.uniqueId}
         </Text>
+        {/* ToDo: update with color selector, used account color instead temporarily */}
         <Container flexDirection="row">
           <Container
             width={30}
@@ -100,12 +142,12 @@ export const StepTwo = ({ setActiveStep, currentStep }: StepActionType) => {
             <Container
               width={20}
               height={20}
-              style={{ backgroundColor: avatarColor[accountColor] }}
+              style={{ backgroundColor: businessColor }}
             />
           </Container>
           <Container marginLeft={2}>
             <Text color="white" size="body" fontWeight="600" lineHeight={30}>
-              {avatarColor[accountColor]}
+              {businessColor}
             </Text>
           </Container>
         </Container>

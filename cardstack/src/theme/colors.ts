@@ -43,6 +43,7 @@ export const palette = {
   mintDark: '#00E0A9',
   blueGreyDark: '#00E0A9',
   borderLightColor: '#d6d6d6',
+  greenColor: '#0eb500',
 };
 
 export const colors = {
@@ -99,6 +100,7 @@ export const colors = {
   mintDark: palette.mintDark,
   blueGreyDark: palette.blueGreyDark,
   borderLightColor: palette.borderLightColor,
+  greenColor: palette.greenColor,
 };
 
 export const avatarColor = [
