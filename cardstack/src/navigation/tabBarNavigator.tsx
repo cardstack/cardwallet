@@ -26,6 +26,7 @@ import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { Device, screenHeight } from '@cardstack/utils';
 import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
+import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 
 const Tab = createBottomTabNavigator();
@@ -103,11 +104,16 @@ const StackNavigator = () => {
 
   // TODO: Create a navigator for each flow and split auth/non-auth
 
-  // Remove last item aka LoadingOverlay, to avoid dupe
-  cardstackGlobalScreens.pop();
+  // Remove last item aka LoadingOverlay, to avoid dupe (on iOS)
+  Device.isIOS && cardstackGlobalScreens.pop();
 
   return (
-    <Stack.Navigator headerMode="none" initialRouteName={initialRoute}>
+    <Stack.Navigator
+      headerMode="none"
+      mode="modal"
+      screenOptions={{ gestureEnabled: true }}
+      initialRouteName={initialRoute}
+    >
       <Stack.Screen
         component={TabNavigator}
         name={RainbowRoutes.SWIPE_LAYOUT}
@@ -129,6 +135,12 @@ const StackNavigator = () => {
         listeners={dismissAndroidKeyboardOnClose}
         name={RainbowRoutes.EXPANDED_ASSET_SHEET_DRILL}
         options={sheetPreset as StackNavigationOptions}
+      />
+      <Stack.Screen
+        component={ModalScreen}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={RainbowRoutes.MODAL_SCREEN}
+        options={expandedPreset as StackNavigationOptions}
       />
     </Stack.Navigator>
   );
