@@ -25,6 +25,7 @@ const RequestQRCodePage = () => {
     onRequestAmountPress,
     paymentRequestDeepLink,
     safeAddress,
+    onCreateProfilePress,
   } = useRequestCodePage();
 
   const { isSmallPhone } = useDimensions();
@@ -51,16 +52,15 @@ const RequestQRCodePage = () => {
           <Text
             fontSize={18}
             color="white"
-            paddingHorizontal={6}
+            paddingHorizontal={4}
             textAlign="center"
           >
             {isTabBarEnabled
               ? `You don't have a profile yet.\n\nCreate one to start requesting payments`
-              : `Create an account at app.cardstack.com/cardpay to
-            request payments`}
+              : `Create an account at app.cardstack.com/cardpay to request payments`}
           </Text>
           {isTabBarEnabled && (
-            <Button>
+            <Button onPress={onCreateProfilePress}>
               <Text>Create a profile</Text>
             </Button>
           )}

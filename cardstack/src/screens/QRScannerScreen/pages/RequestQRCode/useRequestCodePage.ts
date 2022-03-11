@@ -25,11 +25,16 @@ export const useRequestCodePage = () => {
     }
   }, [primarySafe, navigate, merchantInfo]);
 
+  const onCreateProfilePress = useCallback(() => {
+    navigate(Routes.PROFILE_SCREEN);
+  }, [navigate]);
+
   return {
     handleShareLink,
     safeAddress,
     paymentRequestDeepLink,
     merchantInfo,
     onRequestAmountPress,
+    onCreateProfilePress,
   };
 };

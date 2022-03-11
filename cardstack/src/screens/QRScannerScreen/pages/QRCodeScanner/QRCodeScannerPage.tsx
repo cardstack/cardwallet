@@ -70,17 +70,17 @@ const QRCodeScannerPage = () => {
         top={crosshair.position.y}
       >
         <Container style={styles.loadingContainer}>
-          <Container>
-            {error ? (
-              <Text textAlign="center" fontSize={20} color="white">
-                {strings.cameraMountError}
-              </Text>
-            ) : (
-              isLoading && (
+          {error ? (
+            <Text textAlign="center" fontSize={20} color="white">
+              {strings.cameraMountError}
+            </Text>
+          ) : (
+            isLoading && (
+              <Container>
                 <ActivityIndicator size="large" color={colors.teal} />
-              )
-            )}
-          </Container>
+              </Container>
+            )
+          )}
         </Container>
       </AbsoluteFullScreenContainer>
       <AbsoluteFullScreenContainer
