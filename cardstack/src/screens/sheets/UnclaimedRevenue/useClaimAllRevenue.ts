@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { StackActions, useNavigation } from '@react-navigation/core';
 import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useLoadingOverlay } from '@cardstack/navigation';
@@ -17,7 +17,8 @@ export const useClaimAllRevenue = ({
   const { selectedWallet } = useWallets();
   const { accountAddress, network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-  const { goBack, canGoBack, navigate } = useNavigation();
+
+  const { navigate, dispatch: navDispatch } = useNavigation();
 
   const [
     claimRevenue,
@@ -52,16 +53,9 @@ export const useClaimAllRevenue = ({
     if (isSuccess && hasUpdated) {
       dismissLoadingOverlay();
 
-      goBack();
+      navDispatch(StackActions.pop(2));
     }
-  }, [
-    dismissLoadingOverlay,
-    isSuccess,
-    hasUpdated,
-    goBack,
-    canGoBack,
-    navigate,
-  ]);
+  }, [dismissLoadingOverlay, isSuccess, hasUpdated, navigate, navDispatch]);
 
   useEffect(() => {
     if (isError) {
