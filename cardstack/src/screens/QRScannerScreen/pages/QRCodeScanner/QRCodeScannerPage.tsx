@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
@@ -38,6 +38,22 @@ const QRCodeScannerPage = () => {
 
   const isFocused = useIsFocused();
 
+  const renderErrorOrLoading = useMemo(
+    () =>
+      error ? (
+        <Text textAlign="center" fontSize={20} color="white">
+          {strings.cameraMountError}
+        </Text>
+      ) : (
+        <ActivityIndicator
+          size="large"
+          color={colors.teal}
+          animating={isLoading && isFocused}
+        />
+      ),
+    [error, isFocused, isLoading]
+  );
+
   return (
     <AbsoluteFullScreenContainer
       zIndex={-1}
@@ -65,22 +81,12 @@ const QRCodeScannerPage = () => {
         <QRCodeOverlay />
       </AbsoluteFullScreenContainer>
       <AbsoluteFullScreenContainer
-        zIndex={1}
+        zIndex={0}
         alignItems="center"
         top={crosshair.position.y}
       >
-        <Container style={styles.loadingContainer}>
-          {error ? (
-            <Text textAlign="center" fontSize={20} color="white">
-              {strings.cameraMountError}
-            </Text>
-          ) : (
-            isLoading && (
-              <Container>
-                <ActivityIndicator size="large" color={colors.teal} />
-              </Container>
-            )
-          )}
+        <Container style={styles.loadingContainer} flex={1}>
+          {renderErrorOrLoading}
         </Container>
       </AbsoluteFullScreenContainer>
       <AbsoluteFullScreenContainer
