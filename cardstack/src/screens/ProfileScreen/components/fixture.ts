@@ -7,10 +7,10 @@ export const strings = {
   example: 'Example:',
   nameAndIdForProfile: 'Name and ID for Profile',
   profileSubText:
-    "Subtext content here and here's the \nsecond line for good measure.",
+    "Subtext content here and here's the \nsecond line for good measure.", // ToDo: update with proper text
   businessName: 'Name (or Business Name)',
   uniqueId: 'Unique ID',
-  unqiueIdDescription:
+  uniqueIdDescription:
     'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
   review: 'Review',
   reviewDescription:

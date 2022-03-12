@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Container, Icon, Touchable } from '@cardstack/components';
 import { ColorTypes } from '@cardstack/theme';
 
@@ -46,17 +46,11 @@ export const ProgressSteps = ({
   const [currentStep, setCurrentStep] = useState<number>(activeStep);
   const stepCount = useMemo(() => React.Children.count(children), [children]);
 
-  useEffect(() => {
-    setCurrentStep(activeStep);
-  }, [activeStep]);
-
   const setActiveStep = useCallback(
     (step: number) => {
       if (step >= stepCount - 1) {
         setCurrentStep(stepCount - 1);
-      }
-
-      if (step > -1 && step < stepCount - 1) {
+      } else if (step > -1 && step < stepCount - 1) {
         setCurrentStep(step);
       }
     },
@@ -136,12 +130,14 @@ export const ProgressSteps = ({
       >
         {renderStepIcons()}
       </Container>
-      {children[currentStep]
-        ? React.cloneElement(children[currentStep], {
-            setActiveStep,
-            currentStep,
-          })
-        : null}
+      <Container flexGrow={1} paddingTop={8} paddingBottom={6}>
+        {children[currentStep]
+          ? React.cloneElement(children[currentStep], {
+              setActiveStep,
+              currentStep,
+            })
+          : null}
+      </Container>
     </Container>
   );
 };
