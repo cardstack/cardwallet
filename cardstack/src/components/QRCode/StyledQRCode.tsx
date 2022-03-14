@@ -12,9 +12,10 @@ const PADDING = 85;
 
 type QRCodeParam = {
   value: string;
+  addLogo?: boolean;
 };
 
-export const StyledQRCode = memo(({ value }: QRCodeParam) => {
+export const StyledQRCode = memo(({ value, addLogo = true }: QRCodeParam) => {
   const { width } = useDimensions();
   const QRCodeSize = Math.round(width - PADDING * 2);
   const LogoSize = Math.round(QRCodeSize * 0.15);
@@ -31,7 +32,7 @@ export const StyledQRCode = memo(({ value }: QRCodeParam) => {
       <QRCode
         size={QRCodeSize}
         value={value}
-        logo={CardstackLogo}
+        logo={addLogo ? CardstackLogo : undefined}
         logoSize={LogoSize}
         logoBorderRadius={LogoSize / 3}
       />

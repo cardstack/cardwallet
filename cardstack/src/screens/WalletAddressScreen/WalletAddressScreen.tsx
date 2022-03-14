@@ -20,7 +20,7 @@ const WalletAddressScreen = () => {
   return (
     <>
       <Container flex={0.8} alignItems="center" paddingTop={10}>
-        <StyledQRCode value={accountAddress} />
+        <StyledQRCode value={accountAddress} addLogo={false} />
         <Container
           flex={0.3}
           alignItems="center"
