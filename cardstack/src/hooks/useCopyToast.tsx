@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
+import { useBooleanState } from './useBooleanState';
 import { Container, ContainerProps } from '@cardstack/components';
-import { useBooleanState, useClipboard, useTimeout } from '@rainbow-me/hooks';
+import { useClipboard, useTimeout } from '@rainbow-me/hooks';
 import { screenHeight } from '@cardstack/utils';
 import Toast from '@rainbow-me/components/toasts/Toast';
 
