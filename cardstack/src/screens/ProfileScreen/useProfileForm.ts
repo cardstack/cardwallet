@@ -11,7 +11,7 @@ type useProfileFormParams = {
 
 export const useProfileForm = (params?: useProfileFormParams) => {
   const { authToken, isLoading } = useAuthToken();
-  const { accountName } = useAccountProfile();
+  const { accountSymbol } = useAccountProfile();
 
   const {
     businessName: businessNameData,
@@ -82,7 +82,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const onSubmitForm = useCallback(() => {
     setIsSubmitPressed(true);
 
-    if (isUniqueId && !errors?.businessId && !errors?.businessName) {
+    if (isUniqueId && businessName.trim() && !validateMerchantId(businessId)) {
       onUpdateProfileForm({
         businessName,
         businessId,
@@ -93,7 +93,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     }
   }, [
     isUniqueId,
-    errors,
     onUpdateProfileForm,
     businessName,
     businessId,
@@ -102,8 +101,9 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   ]);
 
   const avatarName = useMemo(
-    () => businessName || accountName || exampleMerchantData.merchantInfo.name,
-    [accountName, businessName]
+    () =>
+      businessName || accountSymbol || exampleMerchantData.merchantInfo.name,
+    [accountSymbol, businessName]
   );
 
   return {
