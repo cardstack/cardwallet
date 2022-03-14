@@ -51,7 +51,7 @@ export const StepThree = ({ goToNextStep }: ProgressStepProps) => {
           headerRightText={strings.headerRightText}
         />
       </Container>
-      <Container alignItems="center" paddingTop={4}>
+      <Container alignItems="center">
         <Button onPress={goToNextStep}>{strings.create}</Button>
       </Container>
     </>

@@ -19,7 +19,7 @@ export const StepOne = ({ goToNextStep }: ProgressStepProps) => {
           {strings.createProfileDesc}
         </Text>
       </Container>
-      <Container paddingBottom={5}>
+      <Container>
         <Text color="white" textAlign="left" paddingLeft={4} marginVertical={2}>
           {strings.example}
         </Text>
@@ -29,7 +29,7 @@ export const StepOne = ({ goToNextStep }: ProgressStepProps) => {
           headerRightText={strings.headerRightText}
         />
       </Container>
-      <Container alignItems="center" paddingTop={4}>
+      <Container alignItems="center">
         <Button onPress={goToNextStep}>{strings.continueButton}</Button>
       </Container>
     </>
