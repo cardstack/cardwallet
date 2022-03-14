@@ -24,7 +24,7 @@ interface CustomScrollViewProps extends ScrollViewProps {
   keyboardEnabled?: boolean;
 }
 
-export const CustomScrollView = ({
+export const CustomScrollViewWrapper = ({
   children: childElements,
   keyboardEnabled,
 }: CustomScrollViewProps) =>

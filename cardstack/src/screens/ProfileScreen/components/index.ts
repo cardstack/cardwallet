@@ -1,4 +1,4 @@
-export * from './fixture';
+export * from './strings';
 export * from './ProfileFormContainer';
 export * from './CreateProfile';
 export * from './StepOne';

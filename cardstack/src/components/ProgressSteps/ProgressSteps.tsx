@@ -1,5 +1,10 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { CustomScrollView, StepIcon, ProgressStepSizes, StepStatus } from '.';
+import {
+  CustomScrollViewWrapper,
+  StepIcon,
+  ProgressStepSizes,
+  StepStatus,
+} from '.';
 import { Container } from '@cardstack/components';
 
 export interface ProgressStepsProps {
@@ -101,13 +106,13 @@ export const ProgressSteps = ({
       </Container>
       <Container flexGrow={1} paddingTop={4}>
         {ActiveStepComponent ? (
-          <CustomScrollView
+          <CustomScrollViewWrapper
             keyboardEnabled={!!ActiveStepComponent?.props?.keyboardEnabled}
           >
             {React.cloneElement(ActiveStepComponent, {
               goToNextStep,
             })}
-          </CustomScrollView>
+          </CustomScrollViewWrapper>
         ) : null}
       </Container>
     </Container>
