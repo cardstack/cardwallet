@@ -59,9 +59,6 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
         <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
           {strings.nameAndIdForProfile}
         </Text>
-        <Text color="grayText" marginTop={1} textAlign="center">
-          {strings.profileSubText}
-        </Text>
       </Container>
       <Container justifyContent="center" alignItems="center" marginTop={5}>
         <ContactAvatar

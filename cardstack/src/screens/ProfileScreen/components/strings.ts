@@ -6,8 +6,6 @@ export const strings = {
   continueButton: 'Continue',
   example: 'Example:',
   nameAndIdForProfile: 'Name and ID for Profile',
-  profileSubText:
-    "Subtext content here and here's the \nsecond line for good measure.", // ToDo: update with proper text
   businessName: 'Name (or Business Name)',
   uniqueId: 'Unique ID',
   uniqueIdDescription:
