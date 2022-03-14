@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
 
 // ToDo: need to define header height as a global const or hook to be consistent all over the places inside project
 const HeaderHeight = screenHeight * 0.07;
-const KeyboardOffset = Device.tabBarHeightSize + HeaderHeight;
+const TabBarHeightSize = screenHeight * 0.1;
+const KeyboardOffset = TabBarHeightSize + HeaderHeight;
 
 interface CustomScrollViewProps extends ScrollViewProps {
   keyboardEnabled?: boolean;

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useProfileForm } from '../helper';
+import { useProfileForm } from '../useProfileForm';
 import { exampleMerchantData, strings } from '.';
 import {
   Button,

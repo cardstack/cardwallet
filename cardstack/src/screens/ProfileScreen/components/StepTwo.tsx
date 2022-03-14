@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import { TextInput } from 'react-native';
-import { useProfileForm } from '../helper';
+import { useProfileForm } from '../useProfileForm';
 import { strings } from '.';
 import {
   Button,

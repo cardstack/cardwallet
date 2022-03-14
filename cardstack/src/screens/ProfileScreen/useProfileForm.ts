@@ -42,11 +42,12 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   );
 
   useEffect(() => {
-    if (businessId) {
+    if (businessId && authToken && !isLoading) {
+      // check unqiuness when get back to the screen again
       checkIdUniqueness(businessId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authToken, checkIdUniqueness, isLoading]);
 
   const onChangeBusinessName = useCallback(
     ({ nativeEvent: { text } }) => {
