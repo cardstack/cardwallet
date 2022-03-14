@@ -45,6 +45,10 @@ jest.mock('@rainbow-me/components/send/SendSheet', () => ({
   useSendAddressValidation: jest.fn(() => true),
 }));
 
+jest.mock('@rainbow-me/utils/haptics', () => ({
+  notificationSuccess: jest.fn(),
+}));
+
 describe('useTransferCardScreen', () => {
   const mockedTransferPrepaidCard = jest.fn();
 
@@ -156,5 +160,35 @@ describe('useTransferCardScreen', () => {
     });
 
     expect(mockedGoBack).toBeCalled();
+  });
+
+  it('should set renderScanPage to true onScanPress', async () => {
+    const { result } = renderHook(() => useTransferCardScreen());
+
+    act(() => {
+      result.current.onScanPress();
+    });
+
+    expect(result.current.renderScanPage).toBeTruthy();
+  });
+
+  it('should set renderScanPage to false on dismissScanPage', async () => {
+    const { result } = renderHook(() => useTransferCardScreen());
+
+    act(() => {
+      result.current.dismissScanPage();
+    });
+
+    expect(result.current.renderScanPage).toBeFalsy();
+  });
+
+  it('should set newOwner on ScanHandler read', async () => {
+    const { result } = renderHook(() => useTransferCardScreen());
+
+    act(() => {
+      result.current.onScanHandler(validAddress);
+    });
+
+    expect(result.current.newOwnerAddress).toBe(validAddress);
   });
 });
