@@ -1,53 +1,37 @@
-import React, { useCallback } from 'react';
-import { exampleMerchantData, StepActionType, strings } from '.';
+import React from 'react';
+import { exampleMerchantData, strings } from '.';
 import {
   Button,
   Container,
-  Text,
   MerchantSafe,
-  ScrollView,
+  ProgressStepProps,
+  Text,
 } from '@cardstack/components';
 
-export const StepOne = ({ goToNextStep }: StepActionType) => {
-  const onPressContinue = useCallback(() => {
-    goToNextStep?.();
-  }, [goToNextStep]);
-
+export const StepOne = ({ goToNextStep }: ProgressStepProps) => {
   return (
-    <Container
-      flex={1}
-      flexGrow={1}
-      flexDirection="column"
-      justifyContent="space-between"
-    >
-      <ScrollView flexGrow={1}>
-        <Container>
-          <Text
-            color="white"
-            fontWeight="bold"
-            fontSize={20}
-            textAlign="center"
-          >
-            {strings.createProfile}
-          </Text>
-          <Text color="grayText" marginTop={8} textAlign="center">
-            {strings.createProfileDesc}
-          </Text>
-        </Container>
-        <Container>
-          <Text color="white" textAlign="left" paddingLeft={4} marginBottom={1}>
-            {strings.example}
-          </Text>
-          <MerchantSafe
-            {...exampleMerchantData}
-            disabled
-            headerRightText={strings.headerRightText}
-          />
-        </Container>
-      </ScrollView>
-      <Container alignItems="center" paddingTop={4}>
-        <Button onPress={onPressContinue}>{strings.continueButton}</Button>
+    <>
+      <Container maxWidth={300} alignSelf="center">
+        <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
+          {strings.createProfile}
+        </Text>
+        <Text color="grayText" marginTop={10} textAlign="center">
+          {strings.createProfileDesc}
+        </Text>
       </Container>
-    </Container>
+      <Container paddingBottom={5}>
+        <Text color="white" textAlign="left" paddingLeft={4} marginVertical={2}>
+          {strings.example}
+        </Text>
+        <MerchantSafe
+          {...exampleMerchantData}
+          disabled
+          headerRightText={strings.headerRightText}
+        />
+      </Container>
+      <Container alignItems="center" paddingTop={4}>
+        <Button onPress={goToNextStep}>{strings.continueButton}</Button>
+      </Container>
+    </>
   );
 };

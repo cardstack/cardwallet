@@ -1,193 +1,150 @@
-import React, { useCallback, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet } from 'react-native';
+import React, { useRef, useCallback } from 'react';
+import { TextInput } from 'react-native';
 import { useProfileForm } from '../helper';
-import { StepActionType, strings, exampleMerchantData } from '.';
+import { strings } from '.';
 import {
   Button,
   Container,
-  Text,
+  IconName,
   Input,
-  ScrollView,
+  ProgressStepProps,
+  Text,
 } from '@cardstack/components';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { Device, screenHeight } from '@cardstack/utils';
-import { useAccountProfile } from '@rainbow-me/hooks';
+import { ColorTypes } from '@cardstack/theme';
 
-const styles = StyleSheet.create({
-  keyboardAvoidView: {
-    flex: 1,
-    flexGrow: 1,
-  },
-});
+const UniqueCheckIconProps = {
+  name: 'check' as IconName,
+  color: 'greenColor' as ColorTypes,
+  margin: 0,
+  top: 14,
+};
 
-export const StepTwo = ({ goToNextStep }: StepActionType) => {
-  const { accountName } = useAccountProfile();
-  const [isSubmitPressed, setIsSubmitPressed] = useState(false);
+const InputCommonProps = {
+  borderRadius: 6,
+  paddingVertical: 3,
+  paddingHorizontal: 5,
+  fontSize: 16,
+  borderWidth: 1,
+  fontWeight: 'bold' as any,
+  color: 'grayCardBackground' as ColorTypes,
+  spellCheck: false,
+  autoCorrect: false,
+  blurOnSubmit: false,
+};
 
-  const keyboardOffset = screenHeight * 0.1 + 16 + 40;
-
+export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
   const {
-    businessColor,
     businessName,
+    businessColor,
     businessId,
+    isUniqueId,
+    avatarName,
+    errors,
     onChangeBusinessName,
     onChangeBusinessId,
-    isUniqueId,
-    errors,
-  } = useProfileForm();
+    onSubmitForm,
+  } = useProfileForm({ onFormSubmitSuccess: goToNextStep });
 
-  const onPressContinue = useCallback(() => {
-    setIsSubmitPressed(true);
+  const businessIdRef = useRef<TextInput>(null);
 
-    if (isUniqueId && !errors?.businessId && !errors?.businessName) {
-      goToNextStep?.();
-    }
-  }, [errors, isUniqueId, goToNextStep]);
+  const onBusinessNameSubmitEditing = useCallback(
+    () => businessIdRef?.current?.focus && businessIdRef.current.focus(),
+    []
+  );
 
   return (
-    <KeyboardAvoidingView
-      behavior={Device.keyboardBehavior}
-      style={styles.keyboardAvoidView}
-      keyboardVerticalOffset={keyboardOffset}
-    >
-      <ScrollView flexGrow={1} contentContainerStyle={{ flexGrow: 1 }}>
-        <Container flexGrow={1} height="100%" justifyContent="space-between">
-          <Container>
-            <Text
-              color="white"
-              fontWeight="bold"
-              fontSize={20}
-              textAlign="center"
-            >
-              {strings.nameAndIdForProfile}
-            </Text>
-            <Text color="grayText" marginTop={1} textAlign="center">
-              {strings.profileSubText}
-            </Text>
-          </Container>
-          <Container justifyContent="center" alignItems="center" marginTop={5}>
-            <ContactAvatar
-              color={businessColor}
-              size="large"
-              value={
-                businessName ||
-                accountName ||
-                exampleMerchantData.merchantInfo.name
-              }
-              textColor="#fff"
+    <>
+      <Container>
+        <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
+          {strings.nameAndIdForProfile}
+        </Text>
+        <Text color="grayText" marginTop={1} textAlign="center">
+          {strings.profileSubText}
+        </Text>
+      </Container>
+      <Container justifyContent="center" alignItems="center" marginTop={5}>
+        <ContactAvatar
+          color={businessColor}
+          size="large"
+          value={avatarName}
+          textColor="#fff"
+        />
+      </Container>
+      <Container paddingHorizontal={5} marginTop={5}>
+        <Text color="white" size="xs" fontWeight="600" marginBottom={2}>
+          {strings.businessName}
+        </Text>
+        <Input
+          placeholder="Enter Business Name"
+          textContentType="name"
+          borderColor={errors?.businessName ? 'error' : 'buttonSecondaryBorder'}
+          value={businessName}
+          onChange={onChangeBusinessName}
+          onSubmitEditing={onBusinessNameSubmitEditing}
+          {...InputCommonProps}
+        />
+        <Text
+          marginTop={4}
+          color="white"
+          size="xs"
+          fontWeight="600"
+          marginBottom={2}
+        >
+          {strings.uniqueId}
+        </Text>
+        <Input
+          autoCapitalize="none"
+          placeholder="Enter Unique ID"
+          textContentType="username"
+          borderColor={errors?.businessId ? 'error' : 'buttonSecondaryBorder'}
+          value={businessId}
+          onChange={onChangeBusinessId}
+          onSubmitEditing={onSubmitForm}
+          iconProps={isUniqueId ? UniqueCheckIconProps : undefined}
+          {...InputCommonProps}
+          ref={businessIdRef}
+        />
+        <Text size="xxs" color="grayText" textAlign="left" marginTop={1}>
+          {strings.uniqueIdDescription}
+        </Text>
+        <Text
+          marginTop={6}
+          color="white"
+          size="xs"
+          fontWeight="600"
+          marginBottom={2}
+        >
+          {strings.uniqueId}
+        </Text>
+        {/* ToDo: update with color selector, used account color instead temporarily */}
+        <Container flexDirection="row">
+          <Container
+            width={30}
+            height={30}
+            borderRadius={4}
+            backgroundColor="white"
+            borderWidth={1}
+            borderColor="buttonSecondaryBorder"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Container
+              width={20}
+              height={20}
+              style={{ backgroundColor: businessColor }}
             />
           </Container>
-          <Container paddingHorizontal={5} marginTop={5}>
-            <Text color="white" size="xs" fontWeight="600" marginBottom={2}>
-              {strings.businessName}
+          <Container marginLeft={2}>
+            <Text color="white" size="body" fontWeight="600" lineHeight={30}>
+              {businessColor}
             </Text>
-            <Input
-              placeholder="Enter Business Name"
-              textContentType="name"
-              borderWidth={1}
-              borderColor={
-                errors?.businessName && isSubmitPressed
-                  ? 'error'
-                  : 'buttonSecondaryBorder'
-              }
-              borderRadius={6}
-              paddingVertical={3}
-              paddingHorizontal={5}
-              fontSize={16}
-              fontWeight="bold"
-              color="grayCardBackground"
-              value={businessName}
-              onChange={onChangeBusinessName}
-              spellCheck={false}
-              autoCorrect={false}
-            />
-            <Text
-              marginTop={4}
-              color="white"
-              size="xs"
-              fontWeight="600"
-              marginBottom={2}
-            >
-              {strings.uniqueId}
-            </Text>
-            <Input
-              autoCapitalize="none"
-              placeholder="Enter Unique ID"
-              textContentType="username"
-              borderWidth={1}
-              borderColor={
-                (errors?.businessId || !isUniqueId) && isSubmitPressed
-                  ? 'error'
-                  : 'buttonSecondaryBorder'
-              }
-              borderRadius={6}
-              paddingVertical={3}
-              paddingHorizontal={5}
-              fontSize={16}
-              fontWeight="bold"
-              color="grayCardBackground"
-              value={businessId}
-              onChange={onChangeBusinessId}
-              iconProps={
-                isUniqueId
-                  ? {
-                      name: 'check',
-                      color: 'greenColor',
-                      margin: 0,
-                      top: 14,
-                    }
-                  : undefined
-              }
-              spellCheck={false}
-              autoCorrect={false}
-            />
-            <Text size="xxs" color="grayText" textAlign="left" marginTop={1}>
-              {strings.uniqueIdDescription}
-            </Text>
-            <Text
-              marginTop={6}
-              color="white"
-              size="xs"
-              fontWeight="600"
-              marginBottom={2}
-            >
-              {strings.uniqueId}
-            </Text>
-            {/* ToDo: update with color selector, used account color instead temporarily */}
-            <Container flexDirection="row">
-              <Container
-                width={30}
-                height={30}
-                borderRadius={4}
-                backgroundColor="white"
-                borderWidth={1}
-                borderColor="buttonSecondaryBorder"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Container
-                  width={20}
-                  height={20}
-                  style={{ backgroundColor: businessColor }}
-                />
-              </Container>
-              <Container marginLeft={2}>
-                <Text
-                  color="white"
-                  size="body"
-                  fontWeight="600"
-                  lineHeight={30}
-                >
-                  {businessColor}
-                </Text>
-              </Container>
-            </Container>
           </Container>
         </Container>
-      </ScrollView>
-      <Container alignItems="center" paddingTop={4}>
-        <Button onPress={onPressContinue}>{strings.continueButton}</Button>
       </Container>
-    </KeyboardAvoidingView>
+      <Container alignItems="center" paddingTop={4}>
+        <Button onPress={onSubmitForm}>{strings.continueButton}</Button>
+      </Container>
+    </>
   );
 };
