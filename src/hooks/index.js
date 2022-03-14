@@ -19,7 +19,6 @@ export {
 } from './useBiometryType';
 export { default as useBlockPolling } from './useBlockPolling';
 export { default as useBuyPrepaidCard } from '@cardstack/hooks/prepaid-card/useBuyPrepaidCard';
-export { default as useBooleanState } from './useBooleanState';
 export { default as useClipboard } from './useClipboard';
 export { default as useCoinListEdited } from './useCoinListEdited';
 export { default as useCoinListEditOptions } from './useCoinListEditOptions';

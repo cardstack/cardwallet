@@ -10,7 +10,7 @@ import { convertDeepLinkToCardWalletProtocol, Device } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Alert } from '@rainbow-me/components/alerts';
-import useBooleanState from '@rainbow-me/hooks/useBooleanState';
+import { useBooleanState } from '@cardstack/hooks';
 import { getEthereumAddressFromQRCodeData } from '@rainbow-me/utils/address';
 import haptics from '@rainbow-me/utils/haptics';
 
@@ -114,7 +114,7 @@ export const useScanner = ({
         const address = await getEthereumAddressFromQRCodeData(data);
 
         if (address) {
-          return customScanAddressHandler?.(address)
+          return customScanAddressHandler
             ? customScanAddressHandler(address)
             : handleScanAddress(address);
         }

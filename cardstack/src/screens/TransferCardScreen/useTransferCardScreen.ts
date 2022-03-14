@@ -4,16 +4,12 @@ import { useNavigation, useRoute } from '@react-navigation/core';
 
 import { strings } from './strings';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
-import {
-  useAccountSettings,
-  useBooleanState,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 import { useTransferPrepaidCardMutation } from '@cardstack/services';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Alert } from '@rainbow-me/components/alerts';
-import { useMutationEffects } from '@cardstack/hooks';
+import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
 
 import { layoutEasingAnimation } from '@cardstack/utils';
 import haptics from '@rainbow-me/utils/haptics';

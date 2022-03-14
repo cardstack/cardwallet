@@ -19,8 +19,8 @@ import {
   Image,
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
-import { useBooleanState } from '@rainbow-me/hooks';
 import { colors } from '@cardstack/theme';
+import { useBooleanState } from '@cardstack/hooks';
 
 const styles = StyleSheet.create({
   loadingContainer: { paddingTop: CROSSHAIR_SIZE * 0.45 },
