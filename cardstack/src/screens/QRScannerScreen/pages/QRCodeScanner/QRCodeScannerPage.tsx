@@ -12,7 +12,7 @@ import {
   CROSSHAIR_SIZE,
 } from './components';
 import { strings } from './strings';
-import { useScanner } from './useScanner';
+import { useScanner, useScannerParams } from './useScanner';
 import {
   Container,
   Text,
@@ -29,12 +29,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const QRCodeScannerPage = () => {
+type QRCodeScannerProps = useScannerParams;
+
+const QRCodeScannerPage = (props: QRCodeScannerProps) => {
   const [error, showError] = useBooleanState();
 
   const { result: isEmulator } = useIsEmulator();
 
-  const { onScan, isLoading } = useScanner();
+  const { onScan, isLoading } = useScanner(props);
 
   const isFocused = useIsFocused();
 

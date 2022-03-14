@@ -14,7 +14,11 @@ import useBooleanState from '@rainbow-me/hooks/useBooleanState';
 import { getEthereumAddressFromQRCodeData } from '@rainbow-me/utils/address';
 import haptics from '@rainbow-me/utils/haptics';
 
-export const useScanner = () => {
+export interface useScannerParams {
+  customScanAddressHandler?: (address: string) => void;
+}
+
+export const useScanner = ({ customScanAddressHandler }: useScannerParams) => {
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
 
@@ -108,7 +112,9 @@ export const useScanner = () => {
         const address = await getEthereumAddressFromQRCodeData(data);
 
         if (address) {
-          return handleScanAddress(address);
+          return customScanAddressHandler?.(address)
+            ? customScanAddressHandler(address)
+            : handleScanAddress(address);
         }
 
         if (deeplink.startsWith('wc:')) {
