@@ -18,7 +18,9 @@ export interface useScannerParams {
   customScanAddressHandler?: (address: string) => void;
 }
 
-export const useScanner = ({ customScanAddressHandler }: useScannerParams) => {
+export const useScanner = ({
+  customScanAddressHandler,
+}: useScannerParams = {}) => {
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
 
@@ -134,6 +136,7 @@ export const useScanner = ({ customScanAddressHandler }: useScannerParams) => {
       isScanningEnabled,
       disableScanning,
       handleScanInvalid,
+      customScanAddressHandler,
       handleScanAddress,
       handleScanWalletConnect,
       handleScanPayMerchant,
