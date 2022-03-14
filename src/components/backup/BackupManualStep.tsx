@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import { Column } from '../layout';
 import { SecretDisplaySection } from '../secret-display';
-import { CopyToast, ToastPositionContainer } from '../toasts';
 import { Button, Container, Icon, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils/device';
 import walletTypes from '@rainbow-me/helpers/walletTypes';
@@ -36,8 +35,6 @@ export default function BackupManualStep() {
 
   const [type, setType] = useState(null);
   const [secretLoaded, setSecretLoaded] = useState(false);
-  const [copiedText, setCopiedText] = useState(undefined);
-  const [copyCount, setCopyCount] = useState(0);
 
   const onComplete = useCallback(() => {
     onManuallyBackupWalletId(walletId);
@@ -66,8 +63,6 @@ export default function BackupManualStep() {
         <SecretDisplaySection
           onSecretLoaded={setSecretLoaded}
           onWalletTypeIdentified={setType}
-          setCopiedText={setCopiedText}
-          setCopyCount={setCopyCount}
         />
       </Content>
       {secretLoaded && (
@@ -77,9 +72,6 @@ export default function BackupManualStep() {
           </Button>
         </Container>
       )}
-      <ToastPositionContainer>
-        <CopyToast copiedText={copiedText} copyCount={copyCount} />
-      </ToastPositionContainer>
     </Fragment>
   );
 }
