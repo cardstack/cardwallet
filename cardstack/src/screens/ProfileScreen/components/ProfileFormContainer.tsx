@@ -1,39 +1,29 @@
 import React, {
   createContext,
-  Dispatch,
-  SetStateAction,
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from 'react';
 
 import { avatarColor } from '@cardstack/theme';
 import { useAccountProfile } from '@rainbow-me/hooks';
 
-interface ProfileFormContextType {
+interface ProfileFormData {
   businessName: string;
   businessId: string;
   businessColor: string;
-  isUniqueId: boolean;
-  setBusinessName: Dispatch<SetStateAction<string>>;
-  setBusinessId: Dispatch<SetStateAction<string>>;
-  setBusinessColor: Dispatch<SetStateAction<string>>;
-  setIdUniqueness: Dispatch<SetStateAction<boolean>>;
+}
+interface ProfileFormContextType extends ProfileFormData {
+  onUpdateProfileForm: (data: ProfileFormData) => void;
 }
 
 export const ProfileFormContext = createContext<ProfileFormContextType>({
   businessName: '',
   businessId: '',
   businessColor: '',
-  isUniqueId: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setBusinessName: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setBusinessId: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setBusinessColor: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setIdUniqueness: () => {},
+  onUpdateProfileForm: (_: ProfileFormData) => {},
 });
 
 export const ProfileFormContainer = ({
@@ -44,7 +34,6 @@ export const ProfileFormContainer = ({
   const { accountColor } = useAccountProfile();
   const [businessName, setBusinessName] = useState<string>('');
   const [businessId, setBusinessId] = useState<string>('');
-  const [isUniqueId, setIdUniqueness] = useState<boolean>(false);
 
   const [businessColor, setBusinessColor] = useState<string>(
     avatarColor[accountColor]
@@ -59,18 +48,20 @@ export const ProfileFormContainer = ({
     }
   }, [accountColor, businessColor]);
 
+  const onUpdateProfileForm = useCallback((formData: ProfileFormData) => {
+    setBusinessName(formData.businessName);
+    setBusinessId(formData.businessId);
+    setBusinessColor(formData.businessColor);
+  }, []);
+
   const contextValues = useMemo(
     () => ({
       businessName,
-      setBusinessName,
       businessId,
-      setBusinessId,
       businessColor,
-      setBusinessColor,
-      isUniqueId,
-      setIdUniqueness,
+      onUpdateProfileForm,
     }),
-    [businessColor, businessId, businessName, isUniqueId]
+    [businessColor, businessId, businessName, onUpdateProfileForm]
   );
 
   return (

@@ -1,17 +1,12 @@
 import React from 'react';
-import {
-  StepOne,
-  StepTwo,
-  StepThree,
-  ProfileFormContainer,
-  ProgressSteps,
-} from './';
+import { StepOne, StepTwo, StepThree, ProfileFormContainer } from './';
+import { ProgressSteps } from '@cardstack/components';
 
 export const CreateProfile = () => (
   <ProfileFormContainer>
     <ProgressSteps>
       <StepOne />
-      <StepTwo />
+      <StepTwo keyboardEnabled />
       <StepThree />
     </ProgressSteps>
   </ProfileFormContainer>

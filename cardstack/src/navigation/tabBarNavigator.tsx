@@ -24,21 +24,17 @@ import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
-import { Device, screenHeight } from '@cardstack/utils';
+import { Device } from '@cardstack/utils';
 import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 
 const Tab = createBottomTabNavigator();
 
-const layouts = {
-  tabBarHeightSize: screenHeight * 0.1,
-};
-
 const tabBarOptions = {
   style: {
     backgroundColor: colors.backgroundBlue,
-    height: layouts.tabBarHeightSize,
+    height: Device.tabBarHeightSize,
     borderTopColor: Device.isIOS ? 'transparent' : colors.blackLightOpacity,
     shadowOffset: {
       width: 0,
