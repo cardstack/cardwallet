@@ -27,7 +27,7 @@ export const exampleMerchantData = {
   address: '0x45abXXXX2Bc2',
   infoDID: '',
   merchantInfo: {
-    color: '#f53695',
+    color: '#ff0000',
     did: '',
     name: 'Mandello',
     ownerAddress: '',
