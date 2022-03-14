@@ -38,6 +38,8 @@ const TransferCardScreen = () => {
     goBack,
     renderScanPage,
     dismissScanPage,
+    onScanHandler,
+    newOwnerAddress,
   } = useTransferCardScreen();
 
   const { isTinyPhone } = useDimensions();
@@ -53,7 +55,7 @@ const TransferCardScreen = () => {
   const scanPage = useMemo(
     () => (
       <Container flex={1} justifyContent="flex-end">
-        <QRCodeScannerPage />
+        <QRCodeScannerPage customScanAddressHandler={onScanHandler} />
         <Container flex={0.4} justifyContent="flex-start" alignItems="center">
           <Button variant="primary" onPress={dismissScanPage}>
             {strings.scanPage.btnLabel}
@@ -61,7 +63,7 @@ const TransferCardScreen = () => {
         </Container>
       </Container>
     ),
-    [dismissScanPage]
+    [dismissScanPage, onScanHandler]
   );
 
   return (
@@ -107,6 +109,7 @@ const TransferCardScreen = () => {
                     borderBottomWidth={1}
                     onChangeText={onChangeText}
                     multiline
+                    value={newOwnerAddress}
                   />
                 </Container>
                 <Container flexGrow={0.6}>

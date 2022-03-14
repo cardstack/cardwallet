@@ -16,6 +16,7 @@ import { Alert } from '@rainbow-me/components/alerts';
 import { useMutationEffects } from '@cardstack/hooks';
 
 import { layoutEasingAnimation } from '@cardstack/utils';
+import haptics from '@rainbow-me/utils/haptics';
 
 interface NavParams {
   prepaidCardAddress: string;
@@ -107,6 +108,16 @@ export const useTransferCardScreen = () => {
     transferPrepaidCard,
   ]);
 
+  const onScanHandler = useCallback(
+    (qrCodeAddress: string) => {
+      haptics.notificationSuccess();
+      setNewOwnerAddress(qrCodeAddress);
+
+      dismissScanPage();
+    },
+    [dismissScanPage]
+  );
+
   return {
     renderScanPage,
     isValidAddress,
@@ -115,5 +126,7 @@ export const useTransferCardScreen = () => {
     onScanPress: showScanPage,
     goBack,
     dismissScanPage,
+    onScanHandler,
+    newOwnerAddress,
   };
 };
