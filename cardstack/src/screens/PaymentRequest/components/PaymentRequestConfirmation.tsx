@@ -1,83 +1,42 @@
-import {
-  generateMerchantPaymentUrl,
-  getConstantByNetwork,
-} from '@cardstack/cardpay-sdk';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   CopyToast,
   ToastPositionContainerHeight,
 } from '@rainbow-me/components/toasts';
 import { Icon } from '@rainbow-me/components/icons';
-import { useAccountSettings, useClipboard } from '@rainbow-me/hooks';
+import { useClipboard } from '@rainbow-me/hooks';
 import { Button, Container, StyledQRCode, Text } from '@cardstack/components';
-import { MerchantInformation } from '@cardstack/types';
-import { shareRequestPaymentLink } from '@cardstack/utils';
-import logger from 'logger';
+import {
+  usePaymentLinkParams,
+  usePaymentLinks,
+} from '@cardstack/hooks/merchant/usePaymentLinks';
 
-interface PaymentRequestConfirmationProps {
-  address: string;
-  amountInNum: number;
-  nativeCurrency?: string;
-  amountWithSymbol: string;
-  merchantInfo: MerchantInformation;
-}
+type PaymentRequestConfirmationProps = usePaymentLinkParams;
 
-export const PaymentRequestConfirmation = ({
-  address,
-  amountInNum,
-  nativeCurrency,
-  amountWithSymbol,
-  merchantInfo,
-}: PaymentRequestConfirmationProps) => {
+export const PaymentRequestConfirmation = (
+  props: PaymentRequestConfirmationProps
+) => {
   const [copyCount, setCopyCount] = useState(0);
 
-  const { network } = useAccountSettings();
   const { setClipboard } = useClipboard();
 
-  const paymentRequestWebLink = useMemo(
-    () =>
-      generateMerchantPaymentUrl({
-        domain: getConstantByNetwork('merchantUniLinkDomain', network),
-        merchantSafeID: address,
-        amount: amountInNum,
-        network,
-        currency: nativeCurrency,
-      }),
-    [address, amountInNum, nativeCurrency, network]
-  );
-
-  const paymentRequestDeepLink = useMemo(
-    () =>
-      generateMerchantPaymentUrl({
-        merchantSafeID: address,
-        amount: amountInNum,
-        network,
-        currency: nativeCurrency,
-      }),
-    [address, amountInNum, nativeCurrency, network]
-  );
+  const {
+    paymentRequestWebLink,
+    paymentRequestDeepLink,
+    handleShareLink,
+  } = usePaymentLinks(props);
 
   const copyToClipboard = useCallback(() => {
     setClipboard(paymentRequestWebLink);
     setCopyCount(count => count + 1);
   }, [paymentRequestWebLink, setClipboard]);
 
-  const handleShareLink = useCallback(async () => {
-    try {
-      await shareRequestPaymentLink(
-        paymentRequestWebLink,
-        merchantInfo?.name || '',
-        amountWithSymbol
-      );
-    } catch (e) {
-      logger.sentry('Payment Request Link share failed', e);
-    }
-  }, [amountWithSymbol, merchantInfo.name, paymentRequestWebLink]);
-
   return (
     <>
       <Container paddingHorizontal={5} width="100%">
-        <StyledQRCode value={paymentRequestDeepLink} />
+        <Container alignItems="center" paddingTop={5}>
+          <StyledQRCode value={paymentRequestDeepLink} />
+        </Container>
         <Container
           backgroundColor="grayCardBackground"
           borderRadius={10}

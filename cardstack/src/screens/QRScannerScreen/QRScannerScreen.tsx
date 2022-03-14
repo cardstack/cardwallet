@@ -1,27 +1,49 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useMemo } from 'react';
+import { QRCodeScannerPage, RequestQRCodePage } from './pages';
+import { useRequestCodePage } from './pages/RequestQRCode/useRequestCodePage';
+import { useQRScannerScreen } from './useQRScannerScreen';
+import { EmulatorPasteUriButton } from './components/EmulatorPasteUriButton';
 import {
-  QRScannerContainer,
-  RequestQRCode,
-  ScannerScreenMode,
-} from './components';
-import { QRCodeScannerPage } from './pages';
-import { SwitchSelectorOption } from '@cardstack/components';
+  Container,
+  Icon,
+  MainHeader,
+  SwitchSelector,
+} from '@cardstack/components';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 const QRScannerScreen = () => {
-  const [selectedScreen, selectScreen] = useState<ScannerScreenMode>(
-    ScannerScreenMode.SCAN
+  const {
+    togglePage,
+    isScanSelected,
+    isEmulator,
+    pages,
+  } = useQRScannerScreen();
+
+  const { handleShareLink, safeAddress } = useRequestCodePage();
+
+  const { isTabBarEnabled } = useTabBarFlag();
+
+  const renderRightIcon = useMemo(
+    () =>
+      isEmulator && isScanSelected ? (
+        <EmulatorPasteUriButton />
+      ) : safeAddress ? (
+        <Icon name="share" size={24} onPress={handleShareLink} />
+      ) : undefined,
+    [handleShareLink, isEmulator, isScanSelected, safeAddress]
   );
 
-  const onSwitchScreen = useCallback((option: SwitchSelectorOption) => {
-    selectScreen(option.value);
-  }, []);
-
   return (
-    <QRScannerContainer onSwitchScreen={onSwitchScreen}>
-      {selectedScreen === ScannerScreenMode.SCAN && <QRCodeScannerPage />}
-      {selectedScreen === ScannerScreenMode.REQUEST && <RequestQRCode />}
-    </QRScannerContainer>
+    <Container flex={1} backgroundColor="backgroundDarkPurple">
+      <MainHeader
+        backgroundColor={!isTabBarEnabled ? 'transparent' : undefined}
+        rightIcon={renderRightIcon}
+      >
+        <SwitchSelector options={pages} flex={0.7} onPress={togglePage} />
+      </MainHeader>
+      {isScanSelected ? <QRCodeScannerPage /> : <RequestQRCodePage />}
+    </Container>
   );
 };
 
-export default QRScannerScreen;
+export default memo(QRScannerScreen);

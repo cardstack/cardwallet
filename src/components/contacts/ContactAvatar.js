@@ -9,6 +9,10 @@ import { Text } from '../text';
 import { borders } from '@rainbow-me/styles';
 
 const sizeConfigs = () => ({
+  xxlarge: {
+    dimensions: 100,
+    textSize: 'biggest',
+  },
   xlarge: {
     dimensions: 80,
     textSize: 'biggest',
