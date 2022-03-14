@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 import { BackButton, Header, HeaderButton } from '../components/header';
 import { Page } from '../components/layout';
 import { ProfileMasthead } from '../components/profile';
-import { CopyToast, ToastPositionContainer } from '../components/toasts';
 import { useAccountProfile, useAccountSettings } from '../hooks';
 import { useNavigation } from '../navigation/Navigation';
 import {
@@ -51,9 +50,6 @@ export default function ProfileScreen() {
 
   const addCashAvailable = network === networkTypes.mainnet;
 
-  const [copiedText, setCopiedText] = useState(undefined);
-  const [copyCount, setCopyCount] = useState(0);
-
   return (
     <ProfileScreenPage color={colors.backgroundBlue} testID="profile-screen">
       <Header marginVertical={2}>
@@ -86,15 +82,10 @@ export default function ProfileScreen() {
           <ProfileMasthead
             addCashAvailable={addCashAvailable}
             onChangeWallet={onChangeWallet}
-            setCopiedText={setCopiedText}
-            setCopyCount={setCopyCount}
           />
         }
         accountAddress={accountAddress}
       />
-      <ToastPositionContainer>
-        <CopyToast copiedText={copiedText} copyCount={copyCount} />
-      </ToastPositionContainer>
     </ProfileScreenPage>
   );
 }

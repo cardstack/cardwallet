@@ -1,15 +1,13 @@
 import React, { Fragment } from 'react';
 import Animated from 'react-native-reanimated';
 import { useSpringTransition } from 'react-native-redash/lib/module/v1';
-import { useSafeArea } from 'react-native-safe-area-context';
-import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { interpolate } from '../animations';
 import { Icon } from '../icons';
-import { RowWithMargins } from '../layout';
 import { TruncatedText } from '../text';
+import { Container } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
-import { padding, position, shadow } from '@rainbow-me/styles';
+import { shadow } from '@rainbow-me/styles';
 
 const springConfig = {
   damping: 14,
@@ -20,44 +18,15 @@ const springConfig = {
   stiffness: 121.6,
 };
 
-const Container = styled(RowWithMargins).attrs({
-  margin: 5,
-  self: 'center',
-})`
-  ${padding(9, 11, 11, 12)};
-  ${position.centered};
-  ${({ theme: { colors } }) => shadow.build(0, 6, 10, colors.shadow, 0.14)};
-  background-color: ${({ color }) => color};
-  border-radius: 24px;
-  bottom: ${({ insets }) => (insets.bottom || 40) + 3};
-  max-width: ${({ deviceWidth }) => deviceWidth - 38};
-  position: absolute;
-  z-index: 100;
-`;
-
-const ToastsWrapper = styled.View`
-  position: absolute;
-  bottom: ${({ insets }) => (insets.bottom || 40) + 3};
-`;
-
-export function ToastsContainer({ children }) {
-  return <ToastsWrapper>{children}</ToastsWrapper>;
-}
-
 export default function Toast({
-  children,
   distance = 60,
   targetTranslate = 0,
-  icon,
-  isVisible,
-  testID,
-  text,
-  textColor,
   ...props
 }) {
   const { colors } = useTheme();
-  const { width: deviceWidth } = useDimensions();
-  const insets = useSafeArea();
+  const { width: deviceWidth, height: deviceHeight } = useDimensions();
+
+  const { icon, isVisible, text, textColor, children } = props;
 
   const animation = useSpringTransition(isVisible, springConfig);
 
@@ -71,13 +40,28 @@ export default function Toast({
     outputRange: [distance, targetTranslate],
   });
 
+  const styles = useMemo(
+    () => [
+      shadow.build(0, 6, 10, colors.shadow, 0.14),
+      {
+        backgroundColor: colors.blackOpacity50,
+        maxWidth: deviceWidth * 0.9,
+        bottom: deviceHeight * 0.1,
+      },
+    ],
+    [colors.blackOpacity50, colors.shadow, deviceWidth, deviceHeight]
+  );
+
   return (
     <Animated.View style={{ opacity, transform: [{ translateY }] }}>
       <Container
-        color={colors.blackOpacity50}
-        deviceWidth={deviceWidth}
-        insets={insets}
-        testID={testID}
+        alignSelf="center"
+        borderRadius={25}
+        flexDirection="row"
+        padding={2}
+        position="absolute"
+        style={styles}
+        zIndex={10}
         {...props}
       >
         {children || (
@@ -85,6 +69,7 @@ export default function Toast({
             {icon && (
               <Icon
                 color={textColor || colors.whiteLabel}
+                marginRight={3}
                 marginTop={3}
                 name={icon}
               />

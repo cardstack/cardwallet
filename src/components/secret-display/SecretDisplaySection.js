@@ -8,8 +8,9 @@ import Spinner from '../Spinner';
 import { ColumnWithMargins } from '../layout';
 import SecretDisplayCard from './SecretDisplayCard';
 import { Button, Text } from '@cardstack/components';
+import { useCopyToast } from '@cardstack/hooks';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { useClipboard, useWallets } from '@rainbow-me/hooks';
+import { useWallets } from '@rainbow-me/hooks';
 import logger from 'logger';
 
 const LoadingSpinner = android ? Spinner : ActivityIndicator;
@@ -17,8 +18,6 @@ const LoadingSpinner = android ? Spinner : ActivityIndicator;
 export default function SecretDisplaySection({
   onSecretLoaded,
   onWalletTypeIdentified,
-  setCopyCount,
-  setCopiedText,
 }) {
   const { params } = useRoute();
   const { selectedWallet, wallets } = useWallets();
@@ -62,54 +61,55 @@ export default function SecretDisplaySection({
 
   const { colors } = useTheme();
 
-  const { setClipboard } = useClipboard();
-  const handlePressCopySeed = () => {
-    setClipboard(seed);
-    setCopiedText(seed);
-    setCopyCount(count => count + 1);
-  };
+  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+    dataToCopy: seed,
+    customCopyLabel: 'Secret Recovery Phrase',
+  });
 
   return (
-    <ColumnWithMargins
-      align="center"
-      justify="center"
-      margin={24}
-      paddingHorizontal={20}
-      width="100%"
-    >
-      {visible ? (
-        <Fragment>
-          {seed ? (
-            <Fragment>
-              <SecretDisplayCard seed={seed} type={type} />
-              <Button
-                iconProps={{
-                  name: 'copy',
-                }}
-                onPress={handlePressCopySeed}
-                variant="white"
-              >
-                Copy to clipboard
-              </Button>
-            </Fragment>
-          ) : (
-            <LoadingSpinner color={colors.blueGreyDark50} />
-          )}
-        </Fragment>
-      ) : (
-        <Fragment>
-          <Text textAlign="center">
-            {`You need to authenticate in order to access your recovery ${typeLabel}`}
-          </Text>
-          <Button
-            iconProps={{ name: 'face-id' }}
-            onPress={loadSeed}
-            variant="white"
-          >
-            Show Secret Recovery Phrase
-          </Button>
-        </Fragment>
-      )}
-    </ColumnWithMargins>
+    <>
+      <ColumnWithMargins
+        align="center"
+        justify="center"
+        margin={24}
+        paddingHorizontal={20}
+        width="100%"
+      >
+        {visible ? (
+          <Fragment>
+            {seed ? (
+              <Fragment>
+                <SecretDisplayCard seed={seed} type={type} />
+                <Button
+                  iconProps={{
+                    name: 'copy',
+                  }}
+                  onPress={copyToClipboard}
+                  variant="white"
+                >
+                  Copy to clipboard
+                </Button>
+              </Fragment>
+            ) : (
+              <LoadingSpinner color={colors.blueGreyDark50} />
+            )}
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Text textAlign="center">
+              {`You need to authenticate in order to access your recovery ${typeLabel}`}
+            </Text>
+            <Button
+              iconProps={{ name: 'face-id' }}
+              onPress={loadSeed}
+              variant="white"
+            >
+              Show Secret Recovery Phrase
+            </Button>
+          </Fragment>
+        )}
+      </ColumnWithMargins>
+      <CopyToastComponent />
+    </>
   );
 }

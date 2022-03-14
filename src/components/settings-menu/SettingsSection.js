@@ -62,6 +62,7 @@ export default function SettingsSection({
   onPressNotifications,
   onPressWCSessions,
   onPressShowSecret,
+  onPressMyWalletAddress,
 }) {
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
@@ -175,6 +176,14 @@ export default function SettingsSection({
         >
           <ListItemArrowGroup />
         </ListItem>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="camera-icon" />}
+          label="My Wallet Address"
+          onPress={onPressMyWalletAddress}
+        >
+          <ListItemArrowGroup />
+        </ListItem>
+
         <ListItem
           icon={<Icon color="settingsTeal" name="eye" />}
           label="View on Blockscout"

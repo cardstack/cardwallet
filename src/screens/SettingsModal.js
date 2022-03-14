@@ -18,6 +18,7 @@ import WalletTypes from '../helpers/walletTypes';
 import { useWallets } from '../hooks';
 import { Icon, Text, Touchable } from '@cardstack/components';
 import { slideLeftToRightPreset } from '@cardstack/navigation';
+import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
 import { palette } from '@cardstack/theme';
 import { useNavigation } from '@rainbow-me/navigation';
 
@@ -95,6 +96,11 @@ const SettingsPages = {
     component: WalletConnectSessionsSection,
     key: 'WCSessionsSection',
     title: 'WalletConnect Sessions',
+  },
+  myWalletAddress: {
+    component: WalletAddressScreen,
+    key: 'MyWalletAddressSection',
+    title: 'My Wallet Address',
   },
 };
 
@@ -203,6 +209,9 @@ export default function SettingsModal() {
             onPressCurrency={onPressSection(SettingsPages.currency)}
             onPressDev={onPressSection(SettingsPages.dev)}
             onPressLanguage={onPressSection(SettingsPages.language)}
+            onPressMyWalletAddress={onPressSection(
+              SettingsPages.myWalletAddress
+            )}
             onPressNetwork={onPressSection(SettingsPages.network)}
             onPressNotifications={onPressSection(SettingsPages.notifications)}
             onPressWCSessions={onPressSection(SettingsPages.walletconnect)}

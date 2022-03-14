@@ -1,10 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import { useRoute } from '@react-navigation/core';
 import { TouchableOpacity, Pressable } from 'react-native';
-import {
-  ToastPositionContainerHeight,
-  CopyToast,
-} from '../../../src/components/toasts';
+
 import {
   Container,
   Text,
@@ -15,9 +12,9 @@ import {
   CenteredContainer,
   IconProps,
 } from '@cardstack/components';
-import { useClipboard } from '@rainbow-me/hooks';
 import { abbreviations } from '@rainbow-me/utils';
 import { RouteType } from '@cardstack/navigation/types';
+import { useCopyToast } from '@cardstack/hooks';
 
 interface Params {
   address: string;
@@ -33,16 +30,12 @@ const CopyAddressSheet = () => {
     params: { address, disableCopying },
   } = useRoute<RouteType<Params>>();
 
-  const { setClipboard } = useClipboard();
-  const [copiedText, setCopiedText] = useState(undefined);
-  const [copyCount, setCopyCount] = useState(0);
   const [checked, setChecked] = useState(false);
 
-  const handleCopiedText = useCallback(() => {
-    setClipboard(address);
-    setCopiedText(abbreviations.formatAddressForDisplay(address));
-    setCopyCount(count => count + 1);
-  }, [address, setClipboard]);
+  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+    dataToCopy: address,
+    customCopyLabel: abbreviations.formatAddressForDisplay(address),
+  });
 
   const toogleCheckbox = useCallback(() => {
     setChecked(!checked);
@@ -76,7 +69,7 @@ const CopyAddressSheet = () => {
         ) : null}
         <CenteredContainer padding={4}>
           <Pressable
-            onLongPress={handleCopiedText}
+            onLongPress={copyToClipboard}
             delayLongPress={delayLongPressMs}
           >
             <Text
@@ -104,24 +97,14 @@ const CopyAddressSheet = () => {
               marginTop={4}
               variant={checked ? undefined : 'disabled'}
               maxWidth="70%"
-              onPress={handleCopiedText}
+              onPress={copyToClipboard}
             >
               Copy Address
             </Button>
           )}
         </CenteredContainer>
       </Container>
-      {copyCount > 0 ? (
-        <Container
-          zIndex={10}
-          position="absolute"
-          height={ToastPositionContainerHeight}
-          width="100%"
-          bottom={ToastPositionContainerHeight + 20}
-        >
-          <CopyToast copiedText={copiedText} copyCount={copyCount} />
-        </Container>
-      ) : null}
+      <CopyToastComponent />
     </>
   );
 };

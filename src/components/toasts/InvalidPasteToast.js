@@ -8,7 +8,7 @@ export default function InvalidPasteToast(props) {
   return (
     <Toast
       isVisible={isInvalidPaste}
-      text="􀉾 You can't paste that here"
+      text="You can't paste that here"
       {...props}
     />
   );
