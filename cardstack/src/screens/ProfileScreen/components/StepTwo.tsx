@@ -82,6 +82,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
           value={businessName}
           onChange={onChangeBusinessName}
           onSubmitEditing={onBusinessNameSubmitEditing}
+          returnKeyType="next"
           {...InputCommonProps}
         />
         <Text
@@ -102,8 +103,9 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
           onChange={onChangeBusinessId}
           onSubmitEditing={onSubmitForm}
           iconProps={isUniqueId ? UniqueCheckIconProps : undefined}
-          {...InputCommonProps}
           ref={businessIdRef}
+          returnKeyType="done"
+          {...InputCommonProps}
         />
         <Text size="xxs" color="grayText" textAlign="left" marginTop={1}>
           {strings.uniqueIdDescription}
