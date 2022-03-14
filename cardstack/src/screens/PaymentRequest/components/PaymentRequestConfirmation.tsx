@@ -1,35 +1,29 @@
-import React, { useCallback, useState } from 'react';
-import {
-  CopyToast,
-  ToastPositionContainerHeight,
-} from '@rainbow-me/components/toasts';
+import React from 'react';
+
 import { Icon } from '@rainbow-me/components/icons';
-import { useClipboard } from '@rainbow-me/hooks';
 import { Button, Container, StyledQRCode, Text } from '@cardstack/components';
 import {
   usePaymentLinkParams,
   usePaymentLinks,
 } from '@cardstack/hooks/merchant/usePaymentLinks';
 
+import { useCopyToast } from '@cardstack/hooks';
+
 type PaymentRequestConfirmationProps = usePaymentLinkParams;
 
 export const PaymentRequestConfirmation = (
   props: PaymentRequestConfirmationProps
 ) => {
-  const [copyCount, setCopyCount] = useState(0);
-
-  const { setClipboard } = useClipboard();
-
   const {
     paymentRequestWebLink,
     paymentRequestDeepLink,
     handleShareLink,
   } = usePaymentLinks(props);
 
-  const copyToClipboard = useCallback(() => {
-    setClipboard(paymentRequestWebLink);
-    setCopyCount(count => count + 1);
-  }, [paymentRequestWebLink, setClipboard]);
+  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+    dataToCopy: paymentRequestWebLink,
+    customCopyLabel: 'Payment Request Link',
+  });
 
   return (
     <>
@@ -82,17 +76,7 @@ export const PaymentRequestConfirmation = (
           </Container>
         </Container>
       </Container>
-      {copyCount > 0 ? (
-        <Container
-          zIndex={10}
-          position="absolute"
-          height={ToastPositionContainerHeight}
-          width="100%"
-          bottom={ToastPositionContainerHeight + 20}
-        >
-          <CopyToast copiedText="Payment Request Link" copyCount={copyCount} />
-        </Container>
-      ) : null}
+      <CopyToastComponent />
     </>
   );
 };
