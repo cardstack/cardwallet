@@ -15,6 +15,7 @@ const Device = {
   supportsNativeWyreIntegration: isIOS,
   supportsHapticFeedback: isIOS,
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
+  tabBarHeightSize: screenHeight * 0.1,
 };
 
 export { Device };

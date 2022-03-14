@@ -45,3 +45,4 @@ export * from './TabBarIcon';
 export * from './MainHeader';
 export * from './TextOptionRow';
 export * from './SwitchSelector';
+export * from './ProgressSteps';

@@ -1,14 +1,16 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { CustomScrollView } from '.';
 import { Container, Icon, Touchable } from '@cardstack/components';
 import { ColorTypes } from '@cardstack/theme';
 
-interface StepIndicatorProps {
+export interface ProgressStepsProps {
   activeStep?: number;
   children: React.ReactElement[];
 }
 
-export interface StepActionType {
+export interface ProgressStepProps {
   goToNextStep?: () => void;
+  keyboardEnabled?: boolean;
 }
 
 enum StepStatus {
@@ -19,7 +21,7 @@ enum StepStatus {
 
 const ProgressStepSizes = {
   width: 136,
-  circleWidth: 16,
+  circleSize: 16,
   circleBorderWidth: 5,
   circleDistance: 40,
 };
@@ -41,7 +43,7 @@ const StepIconStyles = {
 export const ProgressSteps = ({
   activeStep = 0,
   children,
-}: StepIndicatorProps) => {
+}: ProgressStepsProps) => {
   const [currentStep, setCurrentStep] = useState<number>(activeStep);
   const stepCount = useMemo(() => React.Children.count(children), [children]);
 
@@ -79,19 +81,29 @@ export const ProgressSteps = ({
           stepStatus = StepStatus.ACTIVE;
         }
 
+        const isCompletedStep = stepStatus === StepStatus.COMPLETED;
+
+        const currentStepRightSideDashLeftPosition =
+          (ProgressStepSizes.circleSize +
+            ProgressStepSizes.circleDistance +
+            4) *
+            index +
+          ProgressStepSizes.circleSize +
+          2;
+
         return (
           <>
             <Touchable
-              width={ProgressStepSizes.circleWidth}
-              height={ProgressStepSizes.circleWidth}
-              borderRadius={ProgressStepSizes.circleWidth / 2}
+              width={ProgressStepSizes.circleSize}
+              height={ProgressStepSizes.circleSize}
+              borderRadius={ProgressStepSizes.circleSize / 2}
               justifyContent="center"
               alignItems="center"
               {...StepIconStyles[stepStatus]}
-              disabled={stepStatus !== StepStatus.COMPLETED}
+              disabled={!isCompletedStep}
               onPress={onPressStepIcon(index)}
             >
-              {stepStatus === StepStatus.COMPLETED ? (
+              {isCompletedStep ? (
                 <Icon
                   color="black"
                   iconSize="small"
@@ -105,15 +117,8 @@ export const ProgressSteps = ({
             {!isLastStep ? (
               <Container
                 position="absolute"
-                top={ProgressStepSizes.circleWidth / 2}
-                left={
-                  (ProgressStepSizes.circleWidth +
-                    ProgressStepSizes.circleDistance +
-                    4) *
-                    index +
-                  ProgressStepSizes.circleWidth +
-                  2
-                }
+                top={ProgressStepSizes.circleSize / 2}
+                left={currentStepRightSideDashLeftPosition}
                 borderTopWidth={1}
                 borderTopColor="borderLightColor"
                 width={ProgressStepSizes.circleDistance}
@@ -123,24 +128,33 @@ export const ProgressSteps = ({
         );
       });
 
+  const ActiveStepComponent = useMemo(() => children[currentStep], [
+    children,
+    currentStep,
+  ]);
+
   return (
-    <Container style={{ flex: 1 }} paddingTop={7}>
+    <Container flex={1} paddingTop={7}>
       <Container
         position="relative"
+        flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
         alignSelf="center"
-        flexDirection="row"
         width={ProgressStepSizes.width}
       >
         {renderStepIcons()}
       </Container>
-      <Container flexGrow={1} paddingTop={8} paddingBottom={4}>
-        {children[currentStep]
-          ? React.cloneElement(children[currentStep], {
+      <Container flexGrow={1} paddingTop={4}>
+        {ActiveStepComponent ? (
+          <CustomScrollView
+            keyboardEnabled={!!ActiveStepComponent?.props?.keyboardEnabled}
+          >
+            {React.cloneElement(ActiveStepComponent, {
               goToNextStep,
-            })
-          : null}
+            })}
+          </CustomScrollView>
+        ) : null}
       </Container>
     </Container>
   );
