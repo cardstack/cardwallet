@@ -19,12 +19,12 @@ const WalletAddressScreen = () => {
 
   return (
     <>
-      <Container flex={0.8} alignItems="center" paddingTop={10}>
+      <Container flex={1} alignItems="center" paddingTop={10}>
         <StyledQRCode value={accountAddress} addLogo={false} />
         <Container
           flex={0.3}
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent="space-around"
           paddingTop={2}
         >
           <Text weight="bold">{getAddressPreview(accountAddress)}</Text>
