@@ -2,8 +2,9 @@ import React, {
   createContext,
   Dispatch,
   SetStateAction,
-  useState,
+  useEffect,
   useMemo,
+  useState,
 } from 'react';
 
 import { avatarColor } from '@cardstack/theme';
@@ -48,6 +49,15 @@ export const ProfileFormContainer = ({
   const [businessColor, setBusinessColor] = useState<string>(
     avatarColor[accountColor]
   );
+
+  useEffect(() => {
+    // ToDo: use default avatar colors before implement color picker
+    if (accountColor && !businessColor) {
+      setBusinessColor(avatarColor[accountColor]);
+    } else if (!accountColor && !businessColor) {
+      setBusinessColor(avatarColor[0]);
+    }
+  }, [accountColor, businessColor]);
 
   const contextValues = useMemo(
     () => ({

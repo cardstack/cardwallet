@@ -8,8 +8,7 @@ interface StepIndicatorProps {
 }
 
 export interface StepActionType {
-  setActiveStep?: (step: number) => void;
-  currentStep?: number;
+  goToNextStep?: () => void;
 }
 
 enum StepStatus {
@@ -57,6 +56,11 @@ export const ProgressSteps = ({
     [stepCount]
   );
 
+  const goToNextStep = useCallback(() => setActiveStep(currentStep + 1), [
+    currentStep,
+    setActiveStep,
+  ]);
+
   const onPressStepIcon = useCallback(
     (step: number) => () => setActiveStep(step),
     [setActiveStep]
@@ -97,6 +101,7 @@ export const ProgressSteps = ({
                 />
               ) : null}
             </Touchable>
+            {/* draw right side dashes except last step */}
             {!isLastStep ? (
               <Container
                 position="absolute"
@@ -130,11 +135,10 @@ export const ProgressSteps = ({
       >
         {renderStepIcons()}
       </Container>
-      <Container flexGrow={1} paddingTop={8} paddingBottom={6}>
+      <Container flexGrow={1} paddingTop={8} paddingBottom={4}>
         {children[currentStep]
           ? React.cloneElement(children[currentStep], {
-              setActiveStep,
-              currentStep,
+              goToNextStep,
             })
           : null}
       </Container>
