@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { CustomScrollView } from '.';
-import { Container, Icon, Touchable } from '@cardstack/components';
-import { ColorTypes } from '@cardstack/theme';
+import { CustomScrollView, StepIcon, ProgressStepSizes, StepStatus } from '.';
+import { Container } from '@cardstack/components';
 
 export interface ProgressStepsProps {
   activeStep?: number;
@@ -12,33 +11,6 @@ export interface ProgressStepProps {
   goToNextStep?: () => void;
   keyboardEnabled?: boolean;
 }
-
-enum StepStatus {
-  DEFAULT,
-  COMPLETED,
-  ACTIVE,
-}
-
-const ProgressStepSizes = {
-  width: 136,
-  circleSize: 16,
-  circleBorderWidth: 5,
-  circleDistance: 40,
-};
-
-const StepIconStyles = {
-  [StepStatus.DEFAULT]: {
-    backgroundColor: 'underlineGray' as ColorTypes,
-  },
-  [StepStatus.COMPLETED]: {
-    backgroundColor: 'teal' as ColorTypes,
-  },
-  [StepStatus.ACTIVE]: {
-    backgroundColor: 'transparent' as ColorTypes,
-    borderColor: 'teal' as ColorTypes,
-    borderWidth: ProgressStepSizes.circleBorderWidth,
-  },
-};
 
 export const ProgressSteps = ({
   activeStep = 0,
@@ -81,8 +53,6 @@ export const ProgressSteps = ({
           stepStatus = StepStatus.ACTIVE;
         }
 
-        const isCompletedStep = stepStatus === StepStatus.COMPLETED;
-
         const currentStepRightSideDashLeftPosition =
           (ProgressStepSizes.circleSize +
             ProgressStepSizes.circleDistance +
@@ -93,26 +63,10 @@ export const ProgressSteps = ({
 
         return (
           <>
-            <Touchable
-              width={ProgressStepSizes.circleSize}
-              height={ProgressStepSizes.circleSize}
-              borderRadius={ProgressStepSizes.circleSize / 2}
-              justifyContent="center"
-              alignItems="center"
-              {...StepIconStyles[stepStatus]}
-              disabled={!isCompletedStep}
+            <StepIcon
+              stepStatus={stepStatus}
               onPress={onPressStepIcon(index)}
-            >
-              {isCompletedStep ? (
-                <Icon
-                  color="black"
-                  iconSize="small"
-                  name="check"
-                  strokeWidth={2}
-                  height={14}
-                />
-              ) : null}
-            </Touchable>
+            />
             {/* draw right side dashes except last step */}
             {!isLastStep ? (
               <Container
