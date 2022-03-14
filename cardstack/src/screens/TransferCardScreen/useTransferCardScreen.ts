@@ -1,14 +1,21 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 
 import { useNavigation, useRoute } from '@react-navigation/core';
+
 import { strings } from './strings';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+import {
+  useAccountSettings,
+  useBooleanState,
+  useWallets,
+} from '@rainbow-me/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 import { useTransferPrepaidCardMutation } from '@cardstack/services';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Alert } from '@rainbow-me/components/alerts';
 import { useMutationEffects } from '@cardstack/hooks';
+
+import { layoutEasingAnimation } from '@cardstack/utils';
 
 interface NavParams {
   prepaidCardAddress: string;
@@ -29,6 +36,12 @@ export const useTransferCardScreen = () => {
   const { selectedWallet } = useWallets();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+
+  const [renderScanPage, showScanPage, dismissScanPage] = useBooleanState();
+
+  useLayoutEffect(() => {
+    layoutEasingAnimation();
+  }, [renderScanPage]);
 
   const onChangeText = useCallback(text => {
     setNewOwnerAddress(text);
@@ -94,15 +107,13 @@ export const useTransferCardScreen = () => {
     transferPrepaidCard,
   ]);
 
-  const onScanPress = useCallback(() => {
-    // TODO: handle scan qr code
-  }, []);
-
   return {
+    renderScanPage,
     isValidAddress,
     onChangeText,
     onTransferPress,
-    onScanPress,
+    onScanPress: showScanPage,
     goBack,
+    dismissScanPage,
   };
 };
