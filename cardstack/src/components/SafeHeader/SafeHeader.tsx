@@ -86,7 +86,7 @@ export const SafeHeader = (props: SafeHeaderProps) => {
             <Icon
               name="chevron-right"
               color={style.text.color as ColorTypes}
-              iconSize="medium"
+              iconSize={small ? 'small' : 'medium'}
             />
           )}
         </Touchable>

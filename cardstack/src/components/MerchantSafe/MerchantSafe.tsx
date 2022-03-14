@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { strings } from './strings';
+import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   CardPressable,
@@ -16,16 +17,16 @@ export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
   disabled?: boolean;
   headerRightText?: string;
-  isPrimary?: boolean;
 }
 
 export const MerchantSafe = ({
   merchantInfo,
   disabled = false,
-  headerRightText = 'merchant',
+  headerRightText,
   ...props
 }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
+  const { primarySafe } = usePrimarySafe();
 
   const onPress = useCallback(() => {
     const merchantData = { ...props, merchantInfo };
@@ -58,7 +59,10 @@ export const MerchantSafe = ({
             textColor={merchantInfo?.textColor}
             name={merchantInfo?.slug}
           />
-          <Bottom slug={merchantInfo?.slug} />
+          <Bottom
+            isPrimary={primarySafe?.address === props?.address}
+            slug={merchantInfo?.slug}
+          />
         </Container>
       </CardPressable>
     </Container>
@@ -84,7 +88,7 @@ export const MerchantInfo = ({
       {name ? (
         <ContactAvatar
           color={color}
-          size="hlarge"
+          size="xlarge"
           value={name}
           textColor={textColor}
         />
@@ -92,15 +96,17 @@ export const MerchantInfo = ({
         <Icon name="user-with-background" size={80} />
       )}
 
-      <Text
-        weight="bold"
-        marginLeft={3}
-        ellipsizeMode="tail"
-        numberOfLines={1}
-        fontSize={20}
-      >
-        {name || ''}
-      </Text>
+      <Container flex={1}>
+        <Text
+          weight="bold"
+          paddingHorizontal={3}
+          ellipsizeMode="tail"
+          numberOfLines={2}
+          fontSize={20}
+        >
+          {name || ''}
+        </Text>
+      </Container>
     </Container>
   );
 };
