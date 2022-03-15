@@ -19,6 +19,7 @@ export const MainRoutes = {
   WALLET_CONNECT_REDIRECT_SHEET: 'WalletConnectRedirectSheet',
   PAYMENT_CONFIRMATION_SHEET: 'PaymentConfirmationSheet',
   MERCHANT_TRANSACTION_SHEET: 'MerchantTransactionSheet',
+  CHOOSE_PREPAIDCARD_SHEET: 'ChoosePrepaidCardSheet',
   SETTINGS_MODAL: 'SettingModal',
   TRANSFER_CARD: 'TransferCardScreen',
 } as const;

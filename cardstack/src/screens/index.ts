@@ -25,3 +25,4 @@ export { default as WalletScreen } from './WalletScreen/WalletScreen';
 export { default as ProfileScreen } from './ProfileScreen/ProfileScreen';
 export { default as TransferCardScreen } from './TransferCardScreen/TransferCardScreen';
 export { default as QRScannerScreen } from './QRScannerScreen/QRScannerScreen';
+export { default as ChoosePrepaidCardSheet } from './ChoosePrepaidCardSheet';

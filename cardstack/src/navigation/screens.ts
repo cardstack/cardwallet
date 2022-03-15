@@ -31,6 +31,7 @@ import {
   TransferCardScreen,
   PaymentConfirmationSheet,
   MerchantTransactionSheet,
+  ChoosePrepaidCardSheet,
 } from '@cardstack/screens';
 import {
   bottomSheetPreset,
@@ -165,6 +166,11 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   MERCHANT_TRANSACTION_SHEET: {
     component: MerchantTransactionSheet,
     options: expandedPreset as StackNavigationOptions,
+  },
+  CHOOSE_PREPAIDCARD_SHEET: {
+    component: ChoosePrepaidCardSheet,
+    options: expandedPreset as StackNavigationOptions,
+    listeners: dismissAndroidKeyboardOnClose,
   },
 };
 
