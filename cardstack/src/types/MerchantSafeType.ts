@@ -16,3 +16,8 @@ export interface PrimarySafeUpdateProps {
   changeToPrimarySafe?: () => void;
   showSafePrimarySelection?: boolean;
 }
+
+export interface BusinessIDUniquenessResponse {
+  slugAvailable: boolean;
+  detail: string;
+}
