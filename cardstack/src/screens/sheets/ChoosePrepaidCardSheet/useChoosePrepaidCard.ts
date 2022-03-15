@@ -1,12 +1,8 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { ActivityIndicator, Alert } from 'react-native';
+import { strings } from './strings';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import {
-  CenteredContainer,
-  ChoosePrepaidCard,
-  SafeAreaView,
-} from '@cardstack/components';
 import { isLayer1 } from '@cardstack/utils';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { PrepaidCardType } from '@cardstack/types';
@@ -19,7 +15,7 @@ type ChoosePrepaidCardSheetRouteParams = {
   };
 };
 
-const ChoosePrepaidCardSheet = () => {
+export const useChoosePrepaidCard = () => {
   const {
     params: { spendAmount = 0, onConfirmChoosePrepaidCard },
   } = useRoute() as ChoosePrepaidCardSheetRouteParams;
@@ -49,8 +45,8 @@ const ChoosePrepaidCardSheet = () => {
   useEffect(() => {
     if (!isLoading && prepaidCards.length === 0) {
       Alert.alert(
-        'Ooops!',
-        `You don't own a Prepaid card!\nYou can create one at app.cardstack.com`
+        strings.noPrepaidCardErrorTitle,
+        strings.noPrepaidCardErrorMessage
       );
 
       goBack();
@@ -71,23 +67,12 @@ const ChoosePrepaidCardSheet = () => {
     }
   }, [selectedPrepaidCard, onConfirmChoosePrepaidCard, goBack]);
 
-  return (
-    <SafeAreaView flex={1} width="100%" backgroundColor="black">
-      {isLoading ? (
-        <CenteredContainer flex={1}>
-          <ActivityIndicator size="large" />
-        </CenteredContainer>
-      ) : (
-        <ChoosePrepaidCard
-          selectedCard={selectedPrepaidCard}
-          onConfirmSelectedCard={onConfirmSelectedCard}
-          prepaidCards={prepaidCards}
-          onSelectPrepaidCard={onSelectPrepaidCard}
-          spendAmount={spendAmount}
-        />
-      )}
-    </SafeAreaView>
-  );
+  return {
+    isLoading,
+    prepaidCards,
+    spendAmount,
+    selectedPrepaidCard,
+    onSelectPrepaidCard,
+    onConfirmSelectedCard,
+  };
 };
-
-export default memo(ChoosePrepaidCardSheet);
