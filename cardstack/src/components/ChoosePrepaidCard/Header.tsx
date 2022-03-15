@@ -13,7 +13,7 @@ export const Header = memo(
     onPressEditAmount,
   }: {
     nativeBalanceDisplay: string;
-    onPressEditAmount: () => void;
+    onPressEditAmount?: () => void;
   }) => (
     <Container
       alignItems="center"
@@ -34,15 +34,17 @@ export const Header = memo(
             {nativeBalanceDisplay}
           </Text>
         </Touchable>
-        <Touchable
-          position="absolute"
-          right={20}
-          paddingTop={1}
-          onPress={onPressEditAmount}
-          hitSlop={hitSlop.small}
-        >
-          <Text size="xxs">Edit Amount</Text>
-        </Touchable>
+        {onPressEditAmount ? (
+          <Touchable
+            position="absolute"
+            right={20}
+            paddingTop={1}
+            onPress={onPressEditAmount}
+            hitSlop={hitSlop.small}
+          >
+            <Text size="xxs">Edit Amount</Text>
+          </Touchable>
+        ) : null}
       </Container>
       <HorizontalDivider height={2} marginVertical={0} marginTop={1} />
     </Container>

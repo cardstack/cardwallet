@@ -17,7 +17,7 @@ export interface ChoosePrepaidCardProps {
   selectedCard?: PrepaidCardType;
   onSelectPrepaidCard: (prepaidCard: PrepaidCardType) => void;
   spendAmount: number;
-  onPressEditAmount: () => void;
+  onPressEditAmount?: () => void;
   onConfirmSelectedCard: () => void;
 }
 
