@@ -32,8 +32,11 @@ export const ProfileFormContainer = ({
   children: React.ReactNode;
 }) => {
   const { accountColor } = useAccountProfile();
-  const [businessName, setBusinessName] = useState<string>('');
-  const [businessId, setBusinessId] = useState<string>('');
+
+  const [businessNameAndId, setBusinessNameAndId] = useState<{
+    name: string;
+    id: string;
+  }>({ name: '', id: '' });
 
   const [businessColor, setBusinessColor] = useState<string>(
     avatarColor[accountColor]
@@ -49,19 +52,22 @@ export const ProfileFormContainer = ({
   }, [accountColor, businessColor]);
 
   const onUpdateProfileForm = useCallback((formData: ProfileFormData) => {
-    setBusinessName(formData.businessName);
-    setBusinessId(formData.businessId);
+    setBusinessNameAndId({
+      name: formData.businessName,
+      id: formData.businessId,
+    });
+
     setBusinessColor(formData.businessColor);
   }, []);
 
   const contextValues = useMemo(
     () => ({
-      businessName,
-      businessId,
+      businessName: businessNameAndId.name,
+      businessId: businessNameAndId.id,
       businessColor,
       onUpdateProfileForm,
     }),
-    [businessColor, businessId, businessName, onUpdateProfileForm]
+    [businessColor, businessNameAndId, onUpdateProfileForm]
   );
 
   return (
