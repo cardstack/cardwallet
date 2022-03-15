@@ -1,3 +1,3 @@
 export * from './ProgressSteps';
-export * from './CustomScrollViewWrapper';
+export * from './ScrollableStepWrapper';
 export * from './StepIcon';

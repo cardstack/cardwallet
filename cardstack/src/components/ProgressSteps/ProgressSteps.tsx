@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-  CustomScrollViewWrapper,
+  ScrollableStepWrapper,
   StepIcon,
   ProgressStepSizes,
   StepStatus,
@@ -106,13 +106,13 @@ export const ProgressSteps = ({
       </Container>
       <Container flexGrow={1} paddingTop={4}>
         {ActiveStepComponent ? (
-          <CustomScrollViewWrapper
+          <ScrollableStepWrapper
             keyboardEnabled={!!ActiveStepComponent?.props?.keyboardEnabled}
           >
             {React.cloneElement(ActiveStepComponent, {
               goToNextStep,
             })}
-          </CustomScrollViewWrapper>
+          </ScrollableStepWrapper>
         ) : null}
       </Container>
     </Container>
