@@ -10,10 +10,7 @@ import {
 
 const CameraNotAuthorizedView = () => {
   const handlePressSettings = useCallback(() => {
-    // TODO: Handle android
-    Linking.canOpenURL('app-settings:').then(() =>
-      Linking.openURL('app-settings:')
-    );
+    Linking.openSettings();
   }, []);
 
   return (
