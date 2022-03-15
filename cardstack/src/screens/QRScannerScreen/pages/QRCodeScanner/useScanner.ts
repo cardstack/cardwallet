@@ -10,11 +10,17 @@ import { convertDeepLinkToCardWalletProtocol, Device } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Alert } from '@rainbow-me/components/alerts';
-import useBooleanState from '@rainbow-me/hooks/useBooleanState';
+import { useBooleanState } from '@cardstack/hooks';
 import { getEthereumAddressFromQRCodeData } from '@rainbow-me/utils/address';
 import haptics from '@rainbow-me/utils/haptics';
 
-export const useScanner = () => {
+export interface useScannerParams {
+  customScanAddressHandler?: (address: string) => void;
+}
+
+export const useScanner = ({
+  customScanAddressHandler,
+}: useScannerParams = {}) => {
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
 
@@ -108,7 +114,9 @@ export const useScanner = () => {
         const address = await getEthereumAddressFromQRCodeData(data);
 
         if (address) {
-          return handleScanAddress(address);
+          return customScanAddressHandler
+            ? customScanAddressHandler(address)
+            : handleScanAddress(address);
         }
 
         if (deeplink.startsWith('wc:')) {
@@ -128,6 +136,7 @@ export const useScanner = () => {
       isScanningEnabled,
       disableScanning,
       handleScanInvalid,
+      customScanAddressHandler,
       handleScanAddress,
       handleScanWalletConnect,
       handleScanPayMerchant,

@@ -17,4 +17,5 @@ export const strings = {
       message: 'Something went wrong',
     },
   },
+  scanPage: { btnLabel: 'Return to transfer' },
 };

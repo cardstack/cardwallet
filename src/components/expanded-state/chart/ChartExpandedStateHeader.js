@@ -11,7 +11,8 @@ import {
   ChartPriceLabel,
 } from './chart-data-labels';
 import { CoinIcon, Text } from '@cardstack/components';
-import { useAccountSettings, useBooleanState } from '@rainbow-me/hooks';
+import { useBooleanState } from '@cardstack/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
 
 const { call, cond, onChange, useCode } = Animated;

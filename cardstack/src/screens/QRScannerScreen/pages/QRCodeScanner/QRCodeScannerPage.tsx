@@ -12,15 +12,15 @@ import {
   CROSSHAIR_SIZE,
 } from './components';
 import { strings } from './strings';
-import { useScanner } from './useScanner';
+import { useScanner, useScannerParams } from './useScanner';
 import {
   Container,
   Text,
   Image,
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
-import { useBooleanState } from '@rainbow-me/hooks';
 import { colors } from '@cardstack/theme';
+import { useBooleanState } from '@cardstack/hooks';
 
 const styles = StyleSheet.create({
   loadingContainer: { paddingTop: CROSSHAIR_SIZE * 0.45 },
@@ -29,12 +29,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const QRCodeScannerPage = () => {
+type QRCodeScannerProps = useScannerParams;
+
+const QRCodeScannerPage = (props: QRCodeScannerProps) => {
   const [error, showError] = useBooleanState();
 
   const { result: isEmulator } = useIsEmulator();
 
-  const { onScan, isLoading } = useScanner();
+  const { onScan, isLoading } = useScanner(props);
 
   const isFocused = useIsFocused();
 

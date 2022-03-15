@@ -14,6 +14,10 @@ jest.mock('@rainbow-me/hooks', () => ({
   }),
 }));
 
+jest.mock('../../QRScannerScreen/pages', () => ({
+  QRCodeScannerPage: () => <></>,
+}));
+
 describe('TransferCardScreen', () => {
   const onTransferPress = jest.fn();
   const onScanPress = jest.fn();
@@ -24,6 +28,7 @@ describe('TransferCardScreen', () => {
   ) =>
     (useTransferCardScreen as jest.Mock).mockImplementation(() => ({
       isValidAddress: true,
+      renderScanPage: false,
       onTransferPress,
       onScanPress,
       goBack,
@@ -44,19 +49,6 @@ describe('TransferCardScreen', () => {
     });
 
     expect(goBack).toBeCalledTimes(1);
-  });
-
-  it('should not call onScanPress', () => {
-    const { getByText } = render(<TransferCardScreen />);
-
-    const scanBtn = getByText(strings.scanQrBtn);
-
-    act(() => {
-      fireEvent.press(scanBtn);
-    });
-
-    expect(scanBtn).toBeDisabled();
-    expect(onScanPress).not.toBeCalled();
   });
 
   it('should disable transfer btn if address is not valid', () => {
@@ -89,5 +81,34 @@ describe('TransferCardScreen', () => {
     });
 
     expect(onTransferPress).toBeCalledTimes(1);
+  });
+
+  it('should render scan page if renderScanPage is true', () => {
+    mockUseTransferCardScreenHelper({ renderScanPage: true });
+
+    const { getByText } = render(<TransferCardScreen />);
+
+    const returnToTransferBtn = getByText(strings.scanPage.btnLabel);
+
+    expect(returnToTransferBtn).toBeTruthy();
+  });
+
+  it('should call dismiss when return button is pressed', () => {
+    const mockedDismissScanPage = jest.fn();
+
+    mockUseTransferCardScreenHelper({
+      dismissScanPage: mockedDismissScanPage,
+      renderScanPage: true,
+    });
+
+    const { getByText } = render(<TransferCardScreen />);
+
+    const returnToTransferBtn = getByText(strings.scanPage.btnLabel);
+
+    act(() => {
+      fireEvent.press(returnToTransferBtn);
+    });
+
+    expect(mockedDismissScanPage).toBeCalledTimes(1);
   });
 });

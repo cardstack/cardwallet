@@ -4,18 +4,20 @@ import { Alert } from 'react-native';
 
 import { NavigationContext } from '@react-navigation/core';
 import { useScanner } from '../useScanner';
+import Routes from '@rainbow-me/navigation/routesNames';
 
 const validAddress = '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13';
 
 jest.mock('logger');
 
+const mockNavigate = jest.fn();
 jest.mock('@react-navigation/core', () => {
   const actualNav = jest.requireActual('@react-navigation/core');
 
   return {
     ...actualNav,
     useNavigation: () => ({
-      navigate: jest.fn(),
+      navigate: mockNavigate,
     }),
   };
 });
@@ -55,7 +57,7 @@ describe('useScanner', () => {
   });
 
   it('should enable scanning if screen is Focused', async () => {
-    const { result } = renderHook(useScanner, {
+    const { result } = renderHook(() => useScanner(), {
       wrapper,
     });
 
@@ -63,7 +65,7 @@ describe('useScanner', () => {
   });
 
   it('should disable scanning if screen is NOT focused', async () => {
-    const { result } = renderHook(useScanner, {
+    const { result } = renderHook(() => useScanner(), {
       wrapper,
       initialProps: { isFocused: false },
     });
@@ -72,7 +74,7 @@ describe('useScanner', () => {
   });
 
   it('should disable scanning when onScan is called', async () => {
-    const { result } = renderHook(useScanner, {
+    const { result } = renderHook(() => useScanner(), {
       wrapper,
     });
 
@@ -86,7 +88,7 @@ describe('useScanner', () => {
   });
 
   it('should NOT disable scanning if data is empty', async () => {
-    const { result } = renderHook(useScanner, {
+    const { result } = renderHook(() => useScanner(), {
       wrapper,
     });
 
@@ -100,7 +102,7 @@ describe('useScanner', () => {
   });
 
   it('should show an alert when it does not recognize the scanned code', async () => {
-    const { result } = renderHook(useScanner, {
+    const { result } = renderHook(() => useScanner(), {
       wrapper,
     });
 
@@ -112,7 +114,7 @@ describe('useScanner', () => {
   });
 
   it('should enable scanning after Okay tap on unrecognized alert', async () => {
-    const { result } = renderHook(useScanner, {
+    const { result } = renderHook(() => useScanner(), {
       wrapper,
     });
 
@@ -131,5 +133,43 @@ describe('useScanner', () => {
     });
 
     expect(result.current.isScanningEnabled).toBeTruthy();
+  });
+
+  it('should call custom handler with valid address', async () => {
+    const customScanAddressHandler = jest.fn();
+
+    const { result } = renderHook(
+      () => useScanner({ customScanAddressHandler }),
+      {
+        wrapper,
+      }
+    );
+
+    expect(result.current.isScanningEnabled).toBeTruthy();
+
+    await act(async () => {
+      await result.current.onScan({ data: validAddress });
+    });
+
+    expect(customScanAddressHandler).toBeCalledWith(validAddress);
+    expect(mockNavigate).not.toBeCalledWith(Routes.SEND_FLOW, {
+      address: validAddress,
+    });
+  });
+
+  it('should call default handler with valid address', async () => {
+    const { result } = renderHook(() => useScanner(), {
+      wrapper,
+    });
+
+    expect(result.current.isScanningEnabled).toBeTruthy();
+
+    await act(async () => {
+      await result.current.onScan({ data: validAddress });
+    });
+
+    expect(mockNavigate).toBeCalledWith(Routes.SEND_FLOW, {
+      address: validAddress,
+    });
   });
 });
