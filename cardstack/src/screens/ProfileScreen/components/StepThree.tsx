@@ -1,16 +1,22 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { useNavigation } from '@react-navigation/core';
 import { useProfileForm } from '../useProfileForm';
 import { exampleMerchantData, strings } from '.';
-import {
-  Button,
-  Container,
-  MerchantSafe,
-  ProgressStepProps,
-  Text,
-} from '@cardstack/components';
+import { Button, Container, MerchantSafe, Text } from '@cardstack/components';
+import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import { PrepaidCardType } from '@cardstack/types';
 
-export const StepThree = ({ goToNextStep }: ProgressStepProps) => {
-  const { businessColor, businessName, businessId } = useProfileForm();
+export const StepThree = () => {
+  const {
+    businessColor,
+    businessName,
+    businessId,
+    selectedPrepaidCard,
+    setPrepaidCard,
+  } = useProfileForm();
+
+  const { navigate } = useNavigation();
+  const { showLoadingOverlay } = useLoadingOverlay();
 
   const newMerchantInfo = useMemo(
     () => ({
@@ -23,6 +29,21 @@ export const StepThree = ({ goToNextStep }: ProgressStepProps) => {
     }),
     [businessColor, businessId, businessName]
   );
+
+  const onPressCreate = useCallback(() => {
+    if (selectedPrepaidCard) {
+      console.log({ selectedPrepaidCard });
+      showLoadingOverlay({ title: 'Creating profile...' });
+    } else {
+      navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
+        spendAmount: 100,
+        onConfirmChoosePrepaidCard: (prepaidCard: PrepaidCardType) => {
+          console.log({ prepaidCard });
+          setPrepaidCard(prepaidCard);
+        },
+      });
+    }
+  }, [navigate, selectedPrepaidCard, setPrepaidCard, showLoadingOverlay]);
 
   return (
     <>
@@ -52,7 +73,9 @@ export const StepThree = ({ goToNextStep }: ProgressStepProps) => {
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={goToNextStep}>{strings.create}</Button>
+        <Button onPress={onPressCreate}>
+          {selectedPrepaidCard ? strings.create : strings.choosePrepaidCard}
+        </Button>
       </Container>
     </>
   );

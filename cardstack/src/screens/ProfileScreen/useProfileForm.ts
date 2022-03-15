@@ -4,6 +4,7 @@ import { ProfileFormContext, strings, exampleMerchantData } from './components';
 import { useAuthToken } from '@cardstack/hooks';
 import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
 import { useAccountProfile } from '@rainbow-me/hooks';
+import { PrepaidCardType } from '@cardstack/types';
 
 type useProfileFormParams = {
   onFormSubmitSuccess?: () => void;
@@ -23,6 +24,12 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [isUniqueId, setIdUniqueness] = useState<boolean>(false);
   const [businessName, setBusinessName] = useState<string>(businessNameData);
   const [businessId, setBusinessId] = useState<string>(businessIdData);
+
+  const [
+    selectedPrepaidCard,
+    setPrepaidCard,
+  ] = useState<PrepaidCardType | null>(null);
+
   // ToDo: update with custom color picker
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [businessColor, setBusinessColor] = useState<string>(businessColorData);
@@ -116,5 +123,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,
+    selectedPrepaidCard,
+    setPrepaidCard,
   };
 };
