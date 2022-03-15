@@ -66,7 +66,7 @@ export const StepThree = () => {
         </Text>
         <MerchantSafe
           {...exampleMerchantData}
-          address=""
+          address="" // No address here as didn't create profile yet, it's preview
           merchantInfo={newMerchantInfo}
           disabled
           headerRightText={strings.headerRightText}
