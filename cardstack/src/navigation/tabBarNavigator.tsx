@@ -27,6 +27,7 @@ import { colors } from '@cardstack/theme';
 import { Device, screenHeight } from '@cardstack/utils';
 import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
+import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 
 const Tab = createBottomTabNavigator();
@@ -140,6 +141,12 @@ const StackNavigator = () => {
         component={ModalScreen}
         listeners={dismissAndroidKeyboardOnClose}
         name={RainbowRoutes.MODAL_SCREEN}
+        options={expandedPreset as StackNavigationOptions}
+      />
+      <Stack.Screen
+        component={RestoreSheet}
+        listeners={dismissAndroidKeyboardOnClose}
+        name={RainbowRoutes.RESTORE_SHEET}
         options={expandedPreset as StackNavigationOptions}
       />
     </Stack.Navigator>

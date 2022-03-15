@@ -1,4 +1,6 @@
 import React, { useCallback } from 'react';
+import { strings } from './strings';
+import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   CardPressable,
@@ -24,6 +26,7 @@ export const MerchantSafe = ({
   ...props
 }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
+  const { primarySafe } = usePrimarySafe();
 
   const onPress = useCallback(() => {
     const merchantData = { ...props, merchantInfo };
@@ -43,19 +46,23 @@ export const MerchantSafe = ({
       >
         <SafeHeader
           {...props}
+          small
           onPress={onPress}
           backgroundColor={merchantInfo?.color}
           textColor={merchantInfo?.textColor}
           rightText={headerRightText}
           disabled={disabled}
         />
-        <Container paddingHorizontal={6}>
+        <Container paddingHorizontal={5}>
           <MerchantInfo
             color={merchantInfo?.color}
             textColor={merchantInfo?.textColor}
-            name={merchantInfo?.name}
+            name={merchantInfo?.slug}
           />
-          <Bottom slug={merchantInfo?.slug} />
+          <Bottom
+            isPrimary={primarySafe?.address === props?.address}
+            slug={merchantInfo?.slug}
+          />
         </Container>
       </CardPressable>
     </Container>
@@ -72,30 +79,29 @@ export const MerchantInfo = ({
   color?: string;
 }) => {
   return (
-    <Container flexDirection="column" paddingVertical={8} alignItems="center">
+    <Container
+      flexDirection="row"
+      paddingVertical={10}
+      alignItems="center"
+      justifyContent="flex-start"
+    >
       {name ? (
-        <Container marginBottom={4}>
-          <ContactAvatar
-            color={color}
-            size="xlarge"
-            value={name}
-            textColor={textColor}
-          />
-        </Container>
+        <ContactAvatar
+          color={color}
+          size="xlarge"
+          value={name}
+          textColor={textColor}
+        />
       ) : (
         <Icon name="user-with-background" size={80} />
       )}
 
-      <Container
-        flexDirection="column"
-        justifyContent="center"
-        width="85%"
-        alignItems="center"
-      >
+      <Container flex={1}>
         <Text
           weight="bold"
+          paddingHorizontal={3}
           ellipsizeMode="tail"
-          numberOfLines={1}
+          numberOfLines={2}
           fontSize={20}
         >
           {name || ''}
@@ -105,19 +111,27 @@ export const MerchantInfo = ({
   );
 };
 
-const Bottom = ({ slug }: { slug?: string }) => {
+const Bottom = ({
+  slug,
+  isPrimary = false,
+}: {
+  slug?: string;
+  isPrimary?: boolean;
+}) => {
   return (
-    <Container paddingBottom={6}>
-      <Container flexDirection="row" justifyContent="space-between">
-        <Container>
-          <Text weight="regular" fontSize={11}>
-            Account ID
-          </Text>
-          <Text weight="bold" fontSize={13}>
-            {slug}
-          </Text>
-        </Container>
-      </Container>
+    <Container
+      paddingBottom={4}
+      flexDirection="row"
+      justifyContent="space-between"
+    >
+      <Text weight="bold" fontSize={13}>
+        ID: {slug}
+      </Text>
+      {isPrimary && (
+        <Text weight="bold" fontSize={13}>
+          {strings.primaryProfile}
+        </Text>
+      )}
     </Container>
   );
 };
