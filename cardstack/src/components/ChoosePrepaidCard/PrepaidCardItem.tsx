@@ -29,7 +29,7 @@ interface PrepaidCardItemProps {
 
 // Android has a shadow issue,
 // the default opacity adds a weird shadow on press
-const activeOpacity = Device.isAndroid ? 0.85 : undefined;
+const activeOpacity = (Device || {}).isAndroid ? 0.85 : undefined; // added ( || {}) because Device is undefined in test only, works fine other than tests
 
 export const PrepaidCardItem = memo(
   ({
