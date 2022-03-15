@@ -32,7 +32,7 @@ describe('useProfileForm', () => {
     jest.clearAllMocks();
   });
 
-  it('should useProfileForm return empty businessName, avatarName with default,isUniqueId at initial render', async () => {
+  it('should return empty businessName, avatarName with default,isUniqueId at initial render', async () => {
     const { result } = renderHook(() => useProfileForm());
 
     expect(result.current.businessName).toBe('');
@@ -44,7 +44,7 @@ describe('useProfileForm', () => {
     expect(result.current.errors).toBe(undefined);
   });
 
-  it('should useProfileForm return error with empty businessName or businessId', () => {
+  it('should return error with empty businessName or businessId', () => {
     const { result } = renderHook(() => useProfileForm());
 
     act(() => {
@@ -60,7 +60,7 @@ describe('useProfileForm', () => {
     );
   });
 
-  it('should useProfileForm return updated values', () => {
+  it('should return updated values', () => {
     const { result } = renderHook(() => useProfileForm());
     const businessName = 'foo';
     const businessId = 'bar';
@@ -82,13 +82,13 @@ describe('useProfileForm', () => {
     expect(result.current?.businessId).toBe(businessId);
   });
 
-  it('should useProfileForm return errors undefined when not submitted yet', () => {
+  it('should return errors undefined when not submitted yet', () => {
     const { result } = renderHook(() => useProfileForm());
 
     expect(result.current?.errors).toBe(undefined);
   });
 
-  it('should useProfileForm return no error if unique id and valid businessName', async () => {
+  it('should return no error if unique id and valid businessName', async () => {
     (checkBusinessIdUniqueness as jest.Mock).mockImplementation(() => ({
       slugAvailable: true,
       detail: '',

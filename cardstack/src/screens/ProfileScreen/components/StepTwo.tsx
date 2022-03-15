@@ -73,7 +73,6 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
           {strings.businessName}
         </Text>
         <Input
-          placeholder="Enter Business Name"
           textContentType="name"
           borderColor={errors?.businessName ? 'error' : 'buttonSecondaryBorder'}
           value={businessName}
@@ -93,7 +92,6 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
         </Text>
         <Input
           autoCapitalize="none"
-          placeholder="Enter Unique ID"
           textContentType="username"
           borderColor={errors?.businessId ? 'error' : 'buttonSecondaryBorder'}
           value={businessId}
