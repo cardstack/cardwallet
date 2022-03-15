@@ -1,7 +1,7 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useMemo } from 'react';
-import { Linking, NativeModules, Share } from 'react-native';
+import { Linking, NativeModules } from 'react-native';
 
 import AppVersionStamp from '../AppVersionStamp';
 import { ColumnWithDividers } from '../layout';
@@ -89,12 +89,6 @@ export default function SettingsSection({
     }
   }, [onCloseModal]);
 
-  const onPressShare = useCallback(() => {
-    Share.share({
-      message: `Hello, I wanted to introduce you to Card Wallet. It makes crypto payments and loyalty rewards easy. Download it today at ${SettingsExternalURLs.cardstackHomepage}`,
-    });
-  }, []);
-
   const onPressDiscord = useCallback(() => {
     Linking.openURL(SettingsExternalURLs.discordInviteLink);
   }, []);
@@ -125,6 +119,21 @@ export default function SettingsSection({
   return (
     <ScrollView backgroundColor="white">
       <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="camera-icon" />}
+          label="My Wallet Address"
+          onPress={onPressMyWalletAddress}
+        >
+          <ListItemArrowGroup />
+        </ListItem>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="walletConnect" />}
+          label="WalletConnect Sessions"
+          onPress={onPressWCSessions}
+          testID="walletconnect-section"
+        >
+          <ListItemArrowGroup />
+        </ListItem>
         {canBeBackedUp && (
           <ListItem
             icon={<Icon color="settingsTeal" name="refresh" />}
@@ -143,14 +152,6 @@ export default function SettingsSection({
           </ListItem>
         )}
         <ListItem
-          icon={<Icon color="settingsTeal" name="dollar-sign" />}
-          label="Currency"
-          onPress={onPressCurrency}
-          testID="currency-section"
-        >
-          <ListItemArrowGroup>{nativeCurrency || ''}</ListItemArrowGroup>
-        </ListItem>
-        <ListItem
           icon={<Icon color="settingsTeal" name="cloud" />}
           label="Network"
           onPress={onPressNetwork}
@@ -161,6 +162,14 @@ export default function SettingsSection({
           </ListItemArrowGroup>
         </ListItem>
         <ListItem
+          icon={<Icon color="settingsTeal" name="dollar-sign" />}
+          label="Currency"
+          onPress={onPressCurrency}
+          testID="currency-section"
+        >
+          <ListItemArrowGroup>{nativeCurrency || ''}</ListItemArrowGroup>
+        </ListItem>
+        <ListItem
           icon={<Icon color="settingsTeal" name="bell" />}
           label="Notifications"
           onPress={onPressNotifications}
@@ -168,41 +177,18 @@ export default function SettingsSection({
         >
           <ListItemArrowGroup />
         </ListItem>
-        <ListItem
-          icon={<Icon color="settingsTeal" name="walletConnect" />}
-          label="WalletConnect Sessions"
-          onPress={onPressWCSessions}
-          testID="walletconnect-section"
-        >
-          <ListItemArrowGroup />
-        </ListItem>
-        <ListItem
-          icon={<Icon color="settingsTeal" name="camera-icon" />}
-          label="My Wallet Address"
-          onPress={onPressMyWalletAddress}
-        >
-          <ListItemArrowGroup />
-        </ListItem>
-
+      </ColumnWithDividers>
+      <ListFooter />
+      <ColumnWithDividers dividerRenderer={ListItemDivider}>
         <ListItem
           icon={<Icon color="settingsTeal" name="eye" />}
           label="View on Blockscout"
           onPress={onPressBlockscout}
           testID="blockscout-section"
         />
-      </ColumnWithDividers>
-      <ListFooter />
-      <ColumnWithDividers dividerRenderer={ListItemDivider}>
-        <ListItem
-          icon={<Icon name="cardstack" />}
-          label="Share"
-          onPress={onPressShare}
-          testID="share-section"
-          value={SettingsExternalURLs.cardstackHomepage}
-        />
         <ListItem
           icon={<Icon name="discord" />}
-          label="Discord"
+          label="Join Cardstack Discord"
           onPress={onPressDiscord}
           testID="discord-section"
           value={SettingsExternalURLs.cardstackHomepage}
