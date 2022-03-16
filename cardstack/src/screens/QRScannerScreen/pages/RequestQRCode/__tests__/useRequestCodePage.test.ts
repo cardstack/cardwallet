@@ -18,7 +18,9 @@ jest.mock('@cardstack/hooks/merchant/usePaymentLinks', () => ({
   }),
 }));
 
-jest.mock('@cardstack/redux/hooks/usePrimarySafe', () => jest.fn());
+jest.mock('@cardstack/redux/hooks/usePrimarySafe', () => ({
+  usePrimarySafe: jest.fn(),
+}));
 
 const primarySafeMock = {
   address: 'merchantAddress',
