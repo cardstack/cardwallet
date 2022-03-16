@@ -202,8 +202,8 @@ export const useAssetListData = () => {
 
   // order of sections in asset list
   const orderedSections = [
-    merchantSafesSection,
     prepaidCardSection,
+    merchantSafesSection,
     depotSection,
     otherTokensSection,
     collectiblesSection,
