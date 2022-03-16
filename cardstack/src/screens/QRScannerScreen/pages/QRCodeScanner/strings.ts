@@ -1,6 +1,6 @@
 export const strings = {
   cameraMountError: 'Error mounting camera',
-  scanQRCodeText: 'Scan a QR code to:',
+  scanQRCodeText: (network: string) => `Scan a ${network}\nQR code to:`,
   icons: {
     pay: 'Pay',
     connect: 'Connect',
