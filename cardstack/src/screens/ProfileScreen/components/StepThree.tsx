@@ -32,13 +32,11 @@ export const StepThree = () => {
 
   const onPressCreate = useCallback(() => {
     if (selectedPrepaidCard) {
-      console.log({ selectedPrepaidCard });
       showLoadingOverlay({ title: 'Creating profile...' });
     } else {
       navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
         spendAmount: 100,
         onConfirmChoosePrepaidCard: (prepaidCard: PrepaidCardType) => {
-          console.log({ prepaidCard });
           setPrepaidCard(prepaidCard);
         },
       });
