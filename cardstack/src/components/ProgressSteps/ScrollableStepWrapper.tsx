@@ -15,8 +15,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   bigScreenScrollViewContentStyle: {
-    flexGrow: 1,
-    justifyContent: 'space-between',
     paddingTop: 30,
     paddingBottom: 45,
   },
@@ -37,10 +35,6 @@ export const ScrollableStepWrapper = ({
 }: ScrollableStepWrapperProps) => {
   const { isSmallPhone } = useDimensions();
 
-  const contentContainerStyle = isSmallPhone
-    ? styles.smallScreenScrollViewContentStyle
-    : styles.bigScreenScrollViewContentStyle;
-
   return (
     <KeyboardAvoidingView
       behavior={Device.keyboardBehavior}
@@ -48,7 +42,12 @@ export const ScrollableStepWrapper = ({
       keyboardVerticalOffset={KeyboardOffset}
       enabled={keyboardEnabled}
     >
-      <ScrollView contentContainerStyle={contentContainerStyle}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.smallScreenScrollViewContentStyle,
+          !isSmallPhone && styles.bigScreenScrollViewContentStyle,
+        ]}
+      >
         {childElements}
       </ScrollView>
     </KeyboardAvoidingView>

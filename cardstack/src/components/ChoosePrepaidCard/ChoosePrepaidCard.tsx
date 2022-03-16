@@ -1,6 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { strings } from './strings';
 import { Header, PrepaidCardItem } from '.';
 import {
   Button,
@@ -134,7 +135,7 @@ export const ChoosePrepaidCard = memo(
                 !selectedCard || selectedCard.spendFaceValue < spendAmount
               }
             >
-              Select Card
+              {strings.selectCard}
             </Button>
           </Container>
         </Container>

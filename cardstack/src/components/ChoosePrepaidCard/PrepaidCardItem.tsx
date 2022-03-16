@@ -1,4 +1,5 @@
 import React, { memo, useCallback } from 'react';
+import { strings } from './strings';
 import {
   Container,
   NetworkBadge,
@@ -102,7 +103,7 @@ export const PrepaidCardItem = memo(
               <NetworkBadge text={`ON ${networkName.toUpperCase()}`} />
               {isInsufficientFund && (
                 <Text color="red" fontSize={10} weight="bold" paddingLeft={4}>
-                  INSUFFICIENT FUNDS
+                  {strings.insufficientFunds}
                 </Text>
               )}
             </Container>

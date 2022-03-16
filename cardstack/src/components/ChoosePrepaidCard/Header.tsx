@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { strings } from './strings';
 import {
   Container,
   HorizontalDivider,
@@ -23,10 +24,10 @@ export const Header = memo(
       borderTopRightRadius={20}
     >
       <Text marginTop={4} weight="bold" size="body">
-        Choose a Prepaid Card
+        {strings.chooseAPrepadCard}
       </Text>
       <Text variant="subText" weight="bold" marginTop={3} marginBottom={1}>
-        To Pay This Amount
+        {strings.payAmountDesc}
       </Text>
       <Container width="100%" alignItems="center">
         <Touchable onPress={onPressEditAmount}>
@@ -42,7 +43,7 @@ export const Header = memo(
             onPress={onPressEditAmount}
             hitSlop={hitSlop.small}
           >
-            <Text size="xxs">Edit Amount</Text>
+            <Text size="xxs">{strings.editAmount}</Text>
           </Touchable>
         ) : null}
       </Container>
