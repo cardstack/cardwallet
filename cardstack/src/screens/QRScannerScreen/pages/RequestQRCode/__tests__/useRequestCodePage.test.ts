@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 
 import { useRequestCodePage } from '../useRequestCodePage';
 import Routes from '@rainbow-me/routes';
-import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 const mockedNavigate = jest.fn();
 jest.mock('@react-navigation/core', () => ({
@@ -18,7 +18,9 @@ jest.mock('@cardstack/hooks/merchant/usePaymentLinks', () => ({
   }),
 }));
 
-jest.mock('@cardstack/redux/hooks/usePrimarySafe', () => jest.fn());
+jest.mock('@cardstack/redux/hooks/usePrimarySafe', () => ({
+  usePrimarySafe: jest.fn(),
+}));
 
 const primarySafeMock = {
   address: 'merchantAddress',

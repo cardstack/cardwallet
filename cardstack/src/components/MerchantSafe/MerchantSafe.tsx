@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { strings } from './strings';
-import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   CardPressable,
