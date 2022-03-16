@@ -57,7 +57,7 @@ export const MerchantSafe = ({
           <MerchantInfo
             color={merchantInfo?.color}
             textColor={merchantInfo?.textColor}
-            name={merchantInfo?.slug}
+            name={merchantInfo?.name}
           />
           <Bottom
             isPrimary={primarySafe?.address === props?.address}
