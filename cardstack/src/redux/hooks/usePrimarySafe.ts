@@ -13,7 +13,7 @@ const safesInitialState = {
   merchantSafes: [],
 };
 
-export default function usePrimarySafe() {
+export const usePrimarySafe = () => {
   const dispatch = useDispatch();
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
   const { accountAddress, network } = useAccountSettings();
@@ -37,10 +37,10 @@ export default function usePrimarySafe() {
 
   // Ensures primary will always be valid if theres at least one merchant safe.
   useEffect(() => {
-    if (merchantSafes?.length > 0 && !primarySafe) {
+    if (!isFetching && merchantSafes?.length > 0 && !primarySafe) {
       changePrimarySafe(merchantSafes[merchantSafes.length - 1]);
     }
-  }, [changePrimarySafe, primarySafe, merchantSafes]);
+  }, [changePrimarySafe, primarySafe, merchantSafes, isFetching]);
 
   return {
     error,
@@ -50,4 +50,4 @@ export default function usePrimarySafe() {
     changePrimarySafe,
     safesCount: merchantSafes?.length || 1,
   };
-}
+};

@@ -1,7 +1,7 @@
 import React from 'react';
 import { CreateProfile, strings } from './components';
 import { Container, MainHeader, MerchantContent } from '@cardstack/components';
-import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 const ProfileScreen = () => {
   const { primarySafe, isFetching, safesCount } = usePrimarySafe();

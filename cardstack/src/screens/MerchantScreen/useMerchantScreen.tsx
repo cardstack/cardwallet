@@ -6,7 +6,7 @@ import { MerchantSafeType } from '@cardstack/types';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { RouteType } from '@cardstack/navigation/types';
-import usePrimarySafe from '@cardstack/redux/hooks/usePrimarySafe';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { MerchantContentProps } from '@cardstack/components';
 
 export const useMerchantScreen = () => {
