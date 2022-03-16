@@ -6,6 +6,7 @@ import { useAccountSettings, useCoinListEdited } from '../hooks';
 import ProfileScreen from '../screens/ProfileScreen';
 import WalletScreen from '../screens/WalletScreen';
 import { deviceUtils } from '../utils';
+import Navigation from './Navigation';
 import ScrollPagerWrapper, { scrollPosition } from './ScrollPagerWrapper';
 import Routes from './routesNames';
 import { QRScannerScreen } from '@cardstack/screens';
@@ -19,6 +20,9 @@ const renderPager = props => <ScrollPagerWrapper {...props} />;
 export function SwipeNavigator() {
   const { isCoinListEdited } = useCoinListEdited();
   const { network } = useAccountSettings();
+
+  const isOnScanPage =
+    Navigation.getActiveRouteName() === Routes.QR_SCANNER_SCREEN;
 
   return (
     <FlexItem>
@@ -37,7 +41,7 @@ export function SwipeNavigator() {
           name={Routes.QR_SCANNER_SCREEN}
         />
       </Swipe.Navigator>
-      <NetworkToast network={network} />
+      {!isOnScanPage && <NetworkToast network={network} />}
     </FlexItem>
   );
 }
