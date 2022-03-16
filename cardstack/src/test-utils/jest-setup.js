@@ -8,6 +8,16 @@ import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/asy
 
 // GLOBAL LIBS MOCKS
 
+jest.mock('@shopify/restyle', () => {
+  const RealModule = jest.requireActual('@shopify/restyle');
+  const RN = jest.requireActual('react-native');
+  RealModule.createText = () => RN.Text;
+  RealModule.createBox = () => RN.View;
+  RealModule.createRestyleComponent = (f, c) => c || RN.View;
+
+  return RealModule;
+});
+
 jest.mock('redux-persist', () => {
   const real = jest.requireActual('redux-persist');
   return {

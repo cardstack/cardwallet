@@ -3,7 +3,28 @@ import { render } from '../../../test-utils';
 import MerchantScreen from '../MerchantScreen';
 import { useMerchantScreen } from '../useMerchantScreen';
 
-// import { strings } from '@cardstack/components/MerchantContent/strings';
+import { strings } from '@cardstack/components/MerchantContent/strings';
+
+const merchantSafeInfo = {
+  isRefreshingBalances: false,
+  merchantSafe: {
+    address: '0xAddress',
+    network: 'Gnosis',
+    infoDID: 'DID',
+    tokens: [],
+    revenueBalances: [],
+    merchantInfo: {
+      did: 'DID',
+      name: 'Safe Name',
+      slug: '0xSlug',
+      color: 'green',
+      textColor: 'black',
+      ownerAddress: '0xOwner',
+    },
+  },
+  safesCount: 2,
+  isPrimarySafe: false,
+};
 
 jest.mock('../useMerchantScreen', () => ({
   useMerchantScreen: jest.fn(),
@@ -50,24 +71,7 @@ describe('MerchantScreen', () => {
     overwriteProps?: Partial<ReturnType<typeof useMerchantScreen>>
   ) =>
     (useMerchantScreen as jest.Mock).mockImplementation(() => ({
-      isRefreshingBalances: false,
-      merchantSafe: {
-        address: '0xAddress',
-        network: 'Gnosis',
-        infoDID: 'DID',
-        tokens: [],
-        revenueBalances: [],
-        merchantInfo: {
-          did: 'DID',
-          name: 'Safe Name',
-          slug: '0xSlug',
-          color: 'green',
-          textColor: 'black',
-          ownerAddress: '0xOwner',
-        },
-      },
-      safesCount: 2,
-      isPrimarySafe: false,
+      ...merchantSafeInfo,
       changeToPrimarySafe,
       ...overwriteProps,
     }));
@@ -78,7 +82,39 @@ describe('MerchantScreen', () => {
 
   it('should contain header', () => {
     const { getByTestId } = render(<MerchantScreen />);
+
     const header = getByTestId('merchant-header');
+
     expect(header).toBeDefined();
+  });
+
+  it('should match merchant name', () => {
+    const { getByTestId } = render(<MerchantScreen />);
+
+    const name = getByTestId('merchant-name');
+
+    expect(name).toHaveTextContent(
+      merchantSafeInfo.merchantSafe.merchantInfo.name
+    );
+  });
+
+  it('should match merchant slug', () => {
+    const { getByTestId } = render(<MerchantScreen />);
+
+    const slug = getByTestId('merchant-slug');
+
+    expect(slug).toHaveTextContent(
+      merchantSafeInfo.merchantSafe.merchantInfo.slug
+    );
+  });
+
+  it('should state if primary', () => {
+    mockuseMerchantScreenHelper({ isPrimarySafe: true });
+
+    const { getByText } = render(<MerchantScreen />);
+
+    const primary = getByText(strings.isPrimarySafeProfileLinkText);
+
+    expect(primary).toBeDefined();
   });
 });

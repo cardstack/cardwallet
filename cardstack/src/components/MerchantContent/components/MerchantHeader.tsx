@@ -38,6 +38,7 @@ export const MerchantHeader = ({
 
     <Container flexDirection="column">
       <Text
+        testID="merchant-name"
         weight="extraBold"
         size="medium"
         ellipsizeMode="tail"
@@ -46,7 +47,7 @@ export const MerchantHeader = ({
         {merchantInfo?.name || ''}
       </Text>
       {!!merchantInfo?.slug && (
-        <Text size="small" numberOfLines={1}>
+        <Text testID="merchant-slug" size="small" numberOfLines={1}>
           {merchantInfo?.slug}
         </Text>
       )}
