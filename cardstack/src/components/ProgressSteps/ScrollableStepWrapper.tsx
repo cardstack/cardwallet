@@ -41,19 +41,16 @@ export const ScrollableStepWrapper = ({
     ? styles.smallScreenScrollViewContentStyle
     : styles.bigScreenScrollViewContentStyle;
 
-  return keyboardEnabled ? (
+  return (
     <KeyboardAvoidingView
       behavior={Device.keyboardBehavior}
       style={styles.keyboardAvoidView}
       keyboardVerticalOffset={KeyboardOffset}
+      enabled={keyboardEnabled}
     >
       <ScrollView contentContainerStyle={contentContainerStyle}>
         {childElements}
       </ScrollView>
     </KeyboardAvoidingView>
-  ) : (
-    <ScrollView flex={1} contentContainerStyle={contentContainerStyle}>
-      {childElements}
-    </ScrollView>
   );
 };
