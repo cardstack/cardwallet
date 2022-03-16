@@ -22,6 +22,9 @@ import {
 import { colors } from '@cardstack/theme';
 import { useBooleanState } from '@cardstack/hooks';
 
+import { useAccountSettings } from '@rainbow-me/hooks';
+import { networkInfo } from '@rainbow-me/helpers/networkInfo';
+
 const styles = StyleSheet.create({
   loadingContainer: { paddingTop: CROSSHAIR_SIZE * 0.45 },
   bottomSectionContainer: {
@@ -35,6 +38,8 @@ const QRCodeScannerPage = (props: QRCodeScannerProps) => {
   const [error, showError] = useBooleanState();
 
   const { result: isEmulator } = useIsEmulator();
+
+  const { network } = useAccountSettings();
 
   const { onScan, isLoading } = useScanner(props);
 
@@ -100,7 +105,7 @@ const QRCodeScannerPage = (props: QRCodeScannerProps) => {
           <Container justifyContent="space-between" flex={0.8}>
             <Container flex={0.6}>
               <Text textAlign="center" fontSize={20} color="white">
-                {strings.scanQRCodeText}
+                {strings.scanQRCodeText(networkInfo[network].name)}
               </Text>
             </Container>
             <BottomIconsSection flex={0.6} />
