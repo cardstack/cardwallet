@@ -1,17 +1,13 @@
 import React, { memo, useCallback } from 'react';
 import { strings } from './strings';
 import {
+  CardPressable,
   Container,
   NetworkBadge,
   Icon,
-  Touchable,
   Text,
 } from '@cardstack/components';
-import {
-  convertSpendForBalanceDisplay,
-  Device,
-  splitAddress,
-} from '@cardstack/utils';
+import { convertSpendForBalanceDisplay, splitAddress } from '@cardstack/utils';
 import { PrepaidCardType } from '@cardstack/types';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 
@@ -27,10 +23,6 @@ interface PrepaidCardItemProps {
   spendAmount: number;
   isLastItem: boolean;
 }
-
-// Android has a shadow issue,
-// the default opacity adds a weird shadow on press
-const activeOpacity = (Device || {}).isAndroid ? 0.85 : undefined; // added ( || {}) because Device is undefined in test only, works fine other than tests
 
 export const PrepaidCardItem = memo(
   ({
@@ -68,12 +60,11 @@ export const PrepaidCardItem = memo(
     }, [item, onPress]);
 
     return (
-      <Touchable
+      <CardPressable
         key={address}
         onPress={handleOnPress}
         width="100%"
         disabled={isInsufficientFund}
-        activeOpacity={activeOpacity}
       >
         <Container
           flexDirection="row"
@@ -135,7 +126,7 @@ export const PrepaidCardItem = memo(
             </Container>
           </Container>
         </Container>
-      </Touchable>
+      </CardPressable>
     );
   }
 );

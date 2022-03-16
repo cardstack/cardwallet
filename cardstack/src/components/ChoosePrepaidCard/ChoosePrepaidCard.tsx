@@ -123,7 +123,6 @@ export const ChoosePrepaidCard = memo(
           removeClippedSubviews
           horizontal={false}
           renderItem={renderItem}
-          scrollEventThrottle={16}
           contentContainerStyle={styles.listContainer}
         />
         <Container style={styles.footerContainer} {...shadowStyles}>
