@@ -26,9 +26,11 @@ export const ProgressSteps = ({
 
   const setActiveStep = useCallback(
     (step: number) => {
-      if (step >= stepCount - 1) {
-        setCurrentStep(stepCount - 1);
-      } else if (step > -1 && step < stepCount - 1) {
+      const lastStep = stepCount - 1;
+
+      if (step >= lastStep) {
+        setCurrentStep(lastStep);
+      } else if (step >= 0) {
         setCurrentStep(step);
       }
     },

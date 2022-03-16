@@ -49,6 +49,7 @@ const tabBarOptions = {
     elevation: 3,
   },
   showLabel: false,
+  keyboardHidesTabBar: true,
 };
 
 const TabNavigator = () => (
