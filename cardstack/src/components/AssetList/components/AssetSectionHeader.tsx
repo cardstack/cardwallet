@@ -25,17 +25,19 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
     data,
   } = section;
 
-  const isEmptyPrepaidCard =
-    type === PinnedHiddenSectionOption.PREPAID_CARDS && data.length === 0;
+  const isPrepaidCardSection = useMemo(
+    () => type === PinnedHiddenSectionOption.PREPAID_CARDS,
+    [type]
+  );
 
-  const renderNewCardButton = useMemo(
-    () =>
-      Device.supportsFiatOnRamp && (
-        <Button variant="tinyOpacity" onPress={onBuyCardPress}>
-          {strings.newCardLabel}
-        </Button>
-      ),
-    [onBuyCardPress]
+  const isEmptyPrepaidCard = useMemo(
+    () => isPrepaidCardSection && data.length === 0,
+    [data.length, isPrepaidCardSection]
+  );
+
+  const backgroundColor = useMemo(
+    () => (isTabBarEnabled ? 'backgroundDarkPurple' : 'backgroundBlue'),
+    [isTabBarEnabled]
   );
 
   return (
@@ -45,9 +47,7 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
         flexDirection="row"
         justifyContent="space-between"
         padding={4}
-        backgroundColor={
-          isTabBarEnabled ? 'backgroundDarkPurple' : 'backgroundBlue'
-        }
+        backgroundColor={backgroundColor}
       >
         <Container flexDirection="row">
           <Text color="white" size="medium">
@@ -70,11 +70,20 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
               {total}
             </Text>
           ) : null}
-          {isEmptyPrepaidCard
-            ? renderNewCardButton
-            : showContextMenu && <PinnedHiddenSectionMenu type={type} />}
+          {showContextMenu && <PinnedHiddenSectionMenu type={type} />}
         </Container>
       </Container>
+      {isPrepaidCardSection && (
+        <Container
+          paddingBottom={4}
+          alignItems="center"
+          backgroundColor={backgroundColor}
+        >
+          {Device.supportsFiatOnRamp && (
+            <Button onPress={onBuyCardPress}>{strings.buyCardLabel}</Button>
+          )}
+        </Container>
+      )}
       {isEmptyPrepaidCard && (
         <Container marginHorizontal={4} alignItems="center">
           <ListEmptyComponent
@@ -83,11 +92,6 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
             hasRoundBox
             textColor="blueText"
           />
-          {Device.supportsFiatOnRamp && (
-            <Button onPress={onBuyCardPress} marginTop={4}>
-              {strings.buyCardLabel}
-            </Button>
-          )}
         </Container>
       )}
     </>
