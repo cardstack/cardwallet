@@ -43,7 +43,6 @@ import { PinnedHiddenItemOptionProvider } from './hooks';
 
 import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { loadAddress } from './model/wallet';
-import { Navigation } from './navigation';
 import store, { persistor } from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import MaintenanceMode from './screens/MaintenanceMode';
@@ -223,9 +222,6 @@ class App extends Component {
     Logger.sentry(`App state change to ${nextAppState}`);
   };
 
-  handleNavigatorRef = navigatorRef =>
-    Navigation.setTopLevelNavigator(navigatorRef);
-
   render = () => (
     <MainThemeProvider>
       <RainbowContextWrapper>
@@ -241,7 +237,7 @@ class App extends Component {
                           <InitialRouteContext.Provider
                             value={this.state.initialRoute}
                           >
-                            <AppContainer ref={this.handleNavigatorRef} />
+                            <AppContainer />
                             <PortalConsumer />
                           </InitialRouteContext.Provider>
                         )}
