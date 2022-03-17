@@ -23,10 +23,9 @@ const merchantSafe = {
 };
 
 // Mock navigation
-const mock_navigate = jest.fn();
 jest.mock('@rainbow-me/navigation', () => ({
   useNavigation: () => ({
-    navigate: mock_navigate,
+    navigate: jest.fn(),
   }),
 }));
 
