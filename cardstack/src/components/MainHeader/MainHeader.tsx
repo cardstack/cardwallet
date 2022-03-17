@@ -1,5 +1,6 @@
 import React, { memo, ReactNode, useCallback } from 'react';
 
+import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ContainerProps } from '../Container';
 import {
@@ -38,8 +39,10 @@ const MainHeader = ({
   ]);
 
   const onRewardPress = useCallback(() => {
-    navigate(Routes.REWARDS_CENTER_SCREEN);
-  }, [navigate]);
+    isTabBarEnabled
+      ? navigate(Routes.REWARDS_CENTER_SCREEN)
+      : Alert.alert('Rewards coming soon...');
+  }, [isTabBarEnabled, navigate]);
 
   return (
     <MainHeaderWrapper {...containerProps}>
@@ -70,7 +73,7 @@ const MainHeader = ({
       ) : (
         children
       )}
-      {!rightIcon && isTabBarEnabled ? (
+      {!rightIcon ? (
         <Icon
           color="teal"
           iconSize="medium"
