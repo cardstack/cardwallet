@@ -1,6 +1,5 @@
 import React, { memo, ReactNode, useCallback } from 'react';
 
-import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ContainerProps } from '../Container';
 import {
@@ -12,6 +11,7 @@ import {
 import Routes from '@rainbow-me/navigation/routesNames';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 interface Props extends ContainerProps {
   title?: string;
@@ -31,6 +31,7 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
+  const { isTabBarEnabled } = useTabBarFlag();
 
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
@@ -69,7 +70,7 @@ const MainHeader = ({
       ) : (
         children
       )}
-      {!rightIcon ? (
+      {!rightIcon && isTabBarEnabled ? (
         <Icon
           color="teal"
           iconSize="medium"
