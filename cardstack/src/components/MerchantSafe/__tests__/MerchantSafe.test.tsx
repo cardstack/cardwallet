@@ -85,10 +85,10 @@ describe('MerchantSafe', () => {
       primarySafe: { ...merchantSafe, address: 'Not Primary' },
     });
 
-    const { findByText } = render(<MerchantSafe {...merchantSafe} />);
+    const { queryByText } = render(<MerchantSafe {...merchantSafe} />);
 
-    const primary = findByText(strings.primaryProfile);
+    const primary = queryByText(strings.primaryProfile);
 
-    expect(primary).toMatchObject({});
+    expect(primary).toBeNull();
   });
 });
