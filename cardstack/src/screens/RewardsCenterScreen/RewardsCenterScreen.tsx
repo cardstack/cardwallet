@@ -4,7 +4,8 @@ import { useRewardsCenterScreen } from './useRewardsCenterScreen';
 import { Container, Button } from '@cardstack/components';
 
 const RewardsCenterScreen = () => {
-  const { onRegisterPress, rewardsSafe } = useRewardsCenterScreen();
+  const { onRegisterPress, isRegistered } = useRewardsCenterScreen();
+
   return (
     <Container
       backgroundColor="white"
@@ -12,7 +13,7 @@ const RewardsCenterScreen = () => {
       justifyContent="center"
       flex={1}
     >
-      {rewardsSafe}
+      {isRegistered}
       <Button onPress={onRegisterPress}>{strings.buttonRegisterText}</Button>
     </Container>
   );
