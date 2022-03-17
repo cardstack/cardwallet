@@ -206,13 +206,30 @@ const iOSNavigatorPath = {
   },
 };
 
+const prefixes = [
+  'https://wallet.cardstack.com',
+  'https://wallet-staging.stack.cards',
+  'cardwallet://',
+];
+
 export const linking = {
-  prefixes: [
-    'https://wallet.cardstack.com',
-    'https://wallet-staging.stack.cards',
-    'cardwallet://',
-  ],
+  prefixes,
   config: {
     screens: Device.isIOS ? iOSNavigatorPath : sharedNavigatorPath,
+  },
+};
+
+export const tabLinking = {
+  prefixes,
+  config: {
+    initialRouteName: RainbowRoutes.SWIPE_LAYOUT,
+    screens: {
+      [RainbowRoutes.SWIPE_LAYOUT]: {
+        screens: {
+          initialRouteName: RainbowRoutes.WALLET_SCREEN,
+        },
+      },
+      [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
+    },
   },
 };
