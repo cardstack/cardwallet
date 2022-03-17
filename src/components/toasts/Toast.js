@@ -46,10 +46,10 @@ export default function Toast({
       {
         backgroundColor: colors.blackOpacity50,
         maxWidth: deviceWidth * 0.9,
-        bottom: deviceHeight * 0.1,
+        bottom: isVisible ? deviceHeight * 0.1 : -50,
       },
     ],
-    [colors.blackOpacity50, colors.shadow, deviceWidth, deviceHeight]
+    [colors.shadow, colors.blackOpacity50, deviceWidth, isVisible, deviceHeight]
   );
 
   return (
