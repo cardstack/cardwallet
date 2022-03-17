@@ -37,8 +37,8 @@ const MainHeader = ({
   ]);
 
   const onRewardPress = useCallback(() => {
-    Alert.alert('Rewards coming soon...');
-  }, []);
+    navigate(Routes.REWARDS_CENTER_SCREEN);
+  }, [navigate]);
 
   return (
     <MainHeaderWrapper {...containerProps}>
