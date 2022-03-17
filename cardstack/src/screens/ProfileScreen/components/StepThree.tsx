@@ -3,8 +3,9 @@ import { useNavigation } from '@react-navigation/core';
 import { useProfileForm } from '../useProfileForm';
 import { exampleMerchantData, strings } from '.';
 import { Button, Container, MerchantSafe, Text } from '@cardstack/components';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
-import { PrepaidCardType } from '@cardstack/types';
+import { MainRoutes } from '@cardstack/navigation';
+
+const CreateProfileFeeInSpend = 100;
 
 export const StepThree = () => {
   const {
@@ -16,7 +17,6 @@ export const StepThree = () => {
   } = useProfileForm();
 
   const { navigate } = useNavigation();
-  const { showLoadingOverlay } = useLoadingOverlay();
 
   const newMerchantInfo = useMemo(
     () => ({
@@ -32,16 +32,14 @@ export const StepThree = () => {
 
   const onPressCreate = useCallback(() => {
     if (selectedPrepaidCard) {
-      showLoadingOverlay({ title: 'Creating profile...' });
+      // ToDo: Navigate to confirmation sheet, need to redesign this as well
     } else {
       navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
-        spendAmount: 100,
-        onConfirmChoosePrepaidCard: (prepaidCard: PrepaidCardType) => {
-          setPrepaidCard(prepaidCard);
-        },
+        spendAmount: CreateProfileFeeInSpend,
+        onConfirmChoosePrepaidCard: setPrepaidCard,
       });
     }
-  }, [navigate, selectedPrepaidCard, setPrepaidCard, showLoadingOverlay]);
+  }, [navigate, selectedPrepaidCard, setPrepaidCard]);
 
   return (
     <>

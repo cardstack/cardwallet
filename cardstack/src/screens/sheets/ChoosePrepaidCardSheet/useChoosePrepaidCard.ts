@@ -6,31 +6,27 @@ import { useAccountSettings } from '@rainbow-me/hooks';
 import { isLayer1 } from '@cardstack/utils';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { PrepaidCardType } from '@cardstack/types';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 
-type ChoosePrepaidCardSheetRouteParams = {
-  params: {
-    spendAmount: number;
-    onConfirmChoosePrepaidCard: (selectedPrepaidCard: PrepaidCardType) => void;
-  };
+type RouteParams = {
+  spendAmount: number;
+  onConfirmChoosePrepaidCard: (selectedPrepaidCard: PrepaidCardType) => void;
 };
 
 export const useChoosePrepaidCard = () => {
   const {
     params: { spendAmount = 0, onConfirmChoosePrepaidCard },
-  } = useRoute() as ChoosePrepaidCardSheetRouteParams;
+  } = useRoute<RouteType<RouteParams>>();
 
   const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
   const { accountAddress, network, nativeCurrency } = useAccountSettings();
   const { goBack } = useNavigation();
 
-  const walletReady = useRainbowSelector(state => state.appState.walletReady);
-
   const { isLoading = true, prepaidCards } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
-      skip: isLayer1(network) || !accountAddress || !walletReady,
+      skip: isLayer1(network) || !accountAddress,
       selectFromResult: ({
         data,
         isLoading: isLoadingCards,
