@@ -12,6 +12,7 @@ import {
 import Routes from '@rainbow-me/navigation/routesNames';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 interface Props extends ContainerProps {
   title?: string;
@@ -31,14 +32,17 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
+  const { isTabBarEnabled } = useTabBarFlag();
 
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
   ]);
 
   const onRewardPress = useCallback(() => {
-    Alert.alert('Rewards coming soon...');
-  }, []);
+    isTabBarEnabled
+      ? navigate(Routes.REWARDS_CENTER_SCREEN)
+      : Alert.alert('Rewards coming soon...');
+  }, [isTabBarEnabled, navigate]);
 
   return (
     <MainHeaderWrapper {...containerProps}>

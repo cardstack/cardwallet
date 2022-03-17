@@ -22,6 +22,7 @@ export const MainRoutes = {
   CHOOSE_PREPAIDCARD_SHEET: 'ChoosePrepaidCardSheet',
   SETTINGS_MODAL: 'SettingModal',
   TRANSFER_CARD: 'TransferCardScreen',
+  REWARDS_CENTER_SCREEN: 'RewardsCenterScreen',
 } as const;
 
 export const GlobalRoutes = {
