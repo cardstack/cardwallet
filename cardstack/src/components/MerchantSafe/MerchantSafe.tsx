@@ -98,6 +98,7 @@ export const MerchantInfo = ({
 
       <Container flex={1}>
         <Text
+          testID="merchant-name"
           weight="bold"
           paddingHorizontal={3}
           ellipsizeMode="tail"
@@ -124,7 +125,7 @@ const Bottom = ({
       flexDirection="row"
       justifyContent="space-between"
     >
-      <Text weight="bold" fontSize={13}>
+      <Text testID="merchant-slug" weight="bold" fontSize={13}>
         ID: {slug}
       </Text>
       {isPrimary && (
