@@ -18,6 +18,7 @@ export const strings = {
   businessNameRequired: 'Business Name is required',
   businessIdShouldBeUnique:
     'This Business ID is already taken. Please choose another one',
+  choosePrepaidCard: 'Choose a Prepaid Card',
 };
 
 export const exampleMerchantData = {

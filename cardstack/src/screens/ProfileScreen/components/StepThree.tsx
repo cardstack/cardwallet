@@ -1,16 +1,22 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import { useNavigation } from '@react-navigation/core';
 import { useProfileForm } from '../useProfileForm';
 import { exampleMerchantData, strings } from '.';
-import {
-  Button,
-  Container,
-  MerchantSafe,
-  ProgressStepProps,
-  Text,
-} from '@cardstack/components';
+import { Button, Container, MerchantSafe, Text } from '@cardstack/components';
+import { MainRoutes } from '@cardstack/navigation';
 
-export const StepThree = ({ goToNextStep }: ProgressStepProps) => {
-  const { businessColor, businessName, businessId } = useProfileForm();
+const CreateProfileFeeInSpend = 100;
+
+export const StepThree = () => {
+  const {
+    businessColor,
+    businessName,
+    businessId,
+    selectedPrepaidCard,
+    setPrepaidCard,
+  } = useProfileForm();
+
+  const { navigate } = useNavigation();
 
   const newMerchantInfo = useMemo(
     () => ({
@@ -23,6 +29,17 @@ export const StepThree = ({ goToNextStep }: ProgressStepProps) => {
     }),
     [businessColor, businessId, businessName]
   );
+
+  const onPressCreate = useCallback(() => {
+    if (selectedPrepaidCard) {
+      // ToDo: Navigate to confirmation sheet, need to redesign this as well
+    } else {
+      navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
+        spendAmount: CreateProfileFeeInSpend,
+        onConfirmChoosePrepaidCard: setPrepaidCard,
+      });
+    }
+  }, [navigate, selectedPrepaidCard, setPrepaidCard]);
 
   return (
     <>
@@ -45,14 +62,16 @@ export const StepThree = ({ goToNextStep }: ProgressStepProps) => {
         </Text>
         <MerchantSafe
           {...exampleMerchantData}
-          address=""
+          address="" // No address here as didn't create profile yet, it's preview
           merchantInfo={newMerchantInfo}
           disabled
           headerRightText={strings.headerRightText}
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={goToNextStep}>{strings.create}</Button>
+        <Button onPress={onPressCreate}>
+          {selectedPrepaidCard ? strings.create : strings.choosePrepaidCard}
+        </Button>
       </Container>
     </>
   );

@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
-import ChoosePrepaidCard from './ChoosePrepaidCard';
 import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 import { AmountInNativeCurrency } from './components/AmountInNativeCurrency';
 import {
@@ -19,6 +18,7 @@ import {
   Button,
   TransactionConfirmationSheet,
   CenteredContainer,
+  ChoosePrepaidCard,
 } from '@cardstack/components';
 import { MerchantInformation } from '@cardstack/types';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
