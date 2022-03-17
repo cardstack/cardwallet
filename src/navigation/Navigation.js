@@ -10,7 +10,8 @@ import { Value } from 'react-native-reanimated';
 import { useCallbackOne } from 'use-memo-one';
 import { NATIVE_ROUTES } from '@rainbow-me/routes';
 
-let TopLevelNavigationRef = null;
+export const navigationRef = React.createRef();
+
 const transitionPosition = new Value(0);
 
 const poppingCounter = { isClosing: false, pendingActions: [] };
@@ -98,11 +99,11 @@ export function navigate(oldNavigate, ...args) {
 }
 
 function getActiveRoute() {
-  return TopLevelNavigationRef?.getCurrentRoute();
+  return navigationRef.current?.getCurrentRoute();
 }
 
 function getActiveOptions() {
-  return TopLevelNavigationRef?.getCurrentOptions();
+  return navigationRef.current?.getCurrentOptions();
 }
 
 /**
@@ -118,19 +119,12 @@ function getActiveRouteName(navigationState) {
  * @param  {Object} action      The navigation action to run.
  */
 function handleAction(name, params, replace = false) {
-  if (!TopLevelNavigationRef) return;
+  if (!navigationRef.current?.dispatch) return;
   const action = (replace ? StackActions.replace : CommonActions.navigate)(
     name,
     params
   );
-  TopLevelNavigationRef?.dispatch(action);
-}
-
-/**
- * Set Top Level Navigator
- */
-function setTopLevelNavigator(navigatorRef) {
-  TopLevelNavigationRef = navigatorRef;
+  navigationRef.current?.dispatch(action);
 }
 
 export default {
@@ -138,6 +132,5 @@ export default {
   getActiveRoute,
   getActiveRouteName,
   handleAction,
-  setTopLevelNavigator,
   transitionPosition,
 };
