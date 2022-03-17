@@ -11,9 +11,11 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
-import { dismissAndroidKeyboardOnClose } from '.';
+import { linking } from './screens';
+import { dismissAndroidKeyboardOnClose, tabLinking } from '.';
 import {
   HomeScreen,
   WalletScreen,
@@ -29,6 +31,8 @@ import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
+import { onNavigationStateChange } from '@rainbow-me/navigation/onNavigationStateChange';
+import { navigationRef } from '@rainbow-me/navigation/Navigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -177,9 +181,15 @@ export const TabBarFeatureProvider: React.FC = ({ children }) => {
   );
 
   return (
-    <TabBarFeatureContext.Provider value={contextValues}>
-      {isTabBarEnabled ? <StackNavigator /> : children}
-    </TabBarFeatureContext.Provider>
+    <NavigationContainer
+      linking={isTabBarEnabled ? tabLinking : linking}
+      onStateChange={onNavigationStateChange}
+      ref={navigationRef}
+    >
+      <TabBarFeatureContext.Provider value={contextValues}>
+        {isTabBarEnabled ? <StackNavigator /> : children}
+      </TabBarFeatureContext.Provider>
+    </NavigationContainer>
   );
 };
 
