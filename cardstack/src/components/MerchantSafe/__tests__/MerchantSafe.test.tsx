@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '../../../test-utils';
 import { MerchantSafe } from '../MerchantSafe';
 import { strings } from '../strings';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 const merchantSafe = {
   address: '0xAddress',
@@ -29,16 +30,32 @@ jest.mock('@rainbow-me/navigation', () => ({
   }),
 }));
 
+jest.mock('@rainbow-me/redux/hooks', () => ({
+  useRainbowSelector: jest.fn().mockImplementation(() => 'xdai'),
+}));
+
 jest.mock(
   '@rainbow-me/components/contacts/ContactAvatar',
   () => 'ContactAvatar'
 );
 
 jest.mock('@cardstack/redux/hooks/usePrimarySafe', () => ({
-  usePrimarySafe: () => merchantSafe,
+  usePrimarySafe: jest.fn(),
 }));
 
 describe('MerchantSafe', () => {
+  const mockUsePrimarySafeHelper = (
+    overwriteProps?: Partial<ReturnType<typeof usePrimarySafe>>
+  ) =>
+    (usePrimarySafe as jest.Mock).mockImplementation(() => ({
+      primarySafe: merchantSafe,
+      ...overwriteProps,
+    }));
+
+  beforeEach(() => {
+    mockUsePrimarySafeHelper();
+  });
+
   it('should match merchant name', () => {
     const { getByTestId } = render(<MerchantSafe {...merchantSafe} />);
 
@@ -61,5 +78,17 @@ describe('MerchantSafe', () => {
     const primary = getByText(strings.primaryProfile);
 
     expect(primary).toBeDefined();
+  });
+
+  it('should not say anything if not primary', () => {
+    mockUsePrimarySafeHelper({
+      primarySafe: { ...merchantSafe, address: 'Not Primary' },
+    });
+
+    const { findByText } = render(<MerchantSafe {...merchantSafe} />);
+
+    const primary = findByText(strings.primaryProfile);
+
+    expect(primary).toMatchObject({});
   });
 });
