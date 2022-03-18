@@ -175,6 +175,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   REWARDS_CENTER_SCREEN: {
     component: RewardsCenterScreen,
+    options: horizontalInterpolator,
   },
 };
 
