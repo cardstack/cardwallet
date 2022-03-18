@@ -14,8 +14,6 @@ interface Props extends ContainerProps {
   children?: ReactNode;
 }
 
-const SIDES_SIZE = 28;
-
 const NavigationStackHeader = ({
   title,
   children,
@@ -25,26 +23,26 @@ const NavigationStackHeader = ({
 
   return (
     <MainHeaderWrapper {...containerProps}>
-      <Icon
-        color="teal"
-        iconSize="medium"
-        name="chevron-left"
-        onPress={goBack}
-        size={SIDES_SIZE}
-      />
-      {!children ? (
-        <Container flex={1} alignItems="center" flexDirection="column">
-          {!!title && (
-            <Text color="white" size="body" weight="bold">
-              {title}
-            </Text>
-          )}
-        </Container>
-      ) : (
-        children
-      )}
+      <Container flex={1} alignItems="flex-start">
+        <Icon
+          color="teal"
+          iconSize="medium"
+          name="chevron-left"
+          onPress={goBack}
+          size={28}
+        />
+      </Container>
+      <Container flex={4} alignItems="center" flexDirection="column">
+        {!children
+          ? !!title && (
+              <Text color="white" size="body" weight="bold">
+                {title}
+              </Text>
+            )
+          : children}
+      </Container>
       {/* Right end spacing so title gets properly centered. */}
-      <Container width={SIDES_SIZE} />
+      <Container flex={1} />
     </MainHeaderWrapper>
   );
 };

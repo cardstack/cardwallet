@@ -5,8 +5,8 @@ import { RewardRow } from './RewardRow';
 import { Container, Button, Text } from '@cardstack/components';
 
 interface RegisterContentProps {
-  primaryText: string;
-  subText: string;
+  primaryText?: string;
+  subText?: string;
   onRegisterPress: () => void;
 }
 
@@ -15,7 +15,7 @@ export const RegisterContent = ({
   primaryText = '3,200 CARD.CPXD',
   subText = '$45.00 USD',
 }: RegisterContentProps) => (
-  <Container padding={5} alignItems="center">
+  <Container alignItems="center">
     <Text
       weight="bold"
       letterSpacing={1.1}
