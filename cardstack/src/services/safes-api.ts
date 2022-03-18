@@ -5,6 +5,7 @@ import { fetchSafes } from './gnosis-service';
 export enum CacheTags {
   SAFES = 'SAFES',
   PREPAID_CARDS = 'PREPAID_CARDS',
+  REWARDS_SAFE = 'REWARDS_SAFE',
 }
 
 export const safesApi = createApi({
