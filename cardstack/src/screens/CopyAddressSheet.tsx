@@ -15,13 +15,12 @@ import {
 import { abbreviations } from '@rainbow-me/utils';
 import { RouteType } from '@cardstack/navigation/types';
 import { useCopyToast } from '@cardstack/hooks';
+import { delayLongPressMs } from '@cardstack/constants';
 
 interface Params {
   address: string;
   disableCopying?: boolean;
 }
-
-const delayLongPressMs = 2500;
 
 const iconProps: IconProps = { name: 'copy' };
 

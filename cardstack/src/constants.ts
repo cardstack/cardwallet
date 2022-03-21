@@ -14,3 +14,5 @@ export const SettingsExternalURLs = {
   discordInviteLink: 'https://discord.gg/cardstack',
 };
 export const IPFS_HTTP_URL = 'https://ipfs.infura.io';
+
+export const delayLongPressMs = 800;
