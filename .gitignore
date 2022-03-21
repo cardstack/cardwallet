@@ -41,6 +41,10 @@ android/app/google-services.json
 android/app/google-play-credentials.json
 android/keystores/upload-keystore.jks
 
+# VSCode
+#
+.vscode/launch.json
+
 # node.js
 #
 node_modules/
