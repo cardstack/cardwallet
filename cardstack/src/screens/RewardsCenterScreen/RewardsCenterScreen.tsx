@@ -11,6 +11,7 @@ const RewardsCenterScreen = () => {
     onRegisterPress,
     isRegistered,
     hasRewardsAvailable,
+    mainPoolTokenInfo,
   } = useRewardsCenterScreen();
 
   return (
@@ -19,10 +20,17 @@ const RewardsCenterScreen = () => {
       <Container backgroundColor="white" flex={1}>
         <Image source={rewardBanner} style={styles.headerImage} />
         <Container padding={5}>
-          {!isRegistered && !hasRewardsAvailable && <NoRewardContent />}
-          {!isRegistered && hasRewardsAvailable && (
-            <RegisterContent onRegisterPress={onRegisterPress} />
-          )}
+          {!isRegistered &&
+            (hasRewardsAvailable && mainPoolTokenInfo ? (
+              <RegisterContent
+                onRegisterPress={onRegisterPress}
+                primaryText={mainPoolTokenInfo?.balance.display}
+                subText={mainPoolTokenInfo?.native.balance.display}
+                coinSymbol={mainPoolTokenInfo?.token.symbol}
+              />
+            ) : (
+              <NoRewardContent />
+            ))}
         </Container>
       </Container>
     </Container>
