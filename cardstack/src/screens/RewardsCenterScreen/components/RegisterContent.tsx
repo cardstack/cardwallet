@@ -1,7 +1,7 @@
 import React from 'react';
-import { Alert } from 'react-native';
 import { strings } from '../strings';
 import { RewardRow } from './RewardRow';
+import { NoRewardMessage } from './NoRewardMessage';
 import { Container, Button, Text, InfoBanner } from '@cardstack/components';
 
 interface RegisterContentProps {
@@ -25,20 +25,15 @@ export const RegisterContent = ({
     >
       {strings.register.title}
     </Text>
+    <NoRewardMessage paddingBottom={2} />
     <RewardRow
       coinSymbol="CARD"
       primaryText={primaryText}
       subText={subText}
       paddingBottom={5}
-    />
-    <RewardRow
-      coinSymbol="CARD"
-      primaryText={primaryText}
-      subText={subText}
-      paddingBottom={5}
-      onClaimPress={() => Alert.alert('Claim not available yet.')}
     />
     <Button onPress={onRegisterPress}>{strings.register.button}</Button>
+    <Container paddingBottom={5} />
     <InfoBanner
       title={strings.register.infobanner.title}
       message={strings.register.infobanner.message}
