@@ -17,6 +17,7 @@ export const useRewardsCenterScreen = () => {
   return {
     rewardSafes,
     isRegistered: !!rewardSafes?.length,
+    hasRewardsAvailable: false,
     onRegisterPress,
   };
 };

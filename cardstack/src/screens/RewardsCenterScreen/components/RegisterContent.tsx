@@ -1,19 +1,20 @@
 import React from 'react';
-import { Alert } from 'react-native';
 import { strings } from '../strings';
 import { RewardRow } from './RewardRow';
-import { Container, Button, Text } from '@cardstack/components';
+import { Container, Button, Text, InfoBanner } from '@cardstack/components';
 
 interface RegisterContentProps {
   primaryText?: string;
   subText?: string;
+  coinSymbol?: string;
   onRegisterPress: () => void;
 }
 
 export const RegisterContent = ({
   onRegisterPress,
-  primaryText = '3,200 CARD.CPXD',
-  subText = '$45.00 USD',
+  primaryText = 'X CARD.CPXD',
+  subText = '$Y USD',
+  coinSymbol = 'CARD',
 }: RegisterContentProps) => (
   <Container alignItems="center">
     <Text
@@ -26,18 +27,16 @@ export const RegisterContent = ({
       {strings.register.title}
     </Text>
     <RewardRow
-      coinSymbol="CARD"
+      coinSymbol={coinSymbol}
       primaryText={primaryText}
       subText={subText}
       paddingBottom={5}
-    />
-    <RewardRow
-      coinSymbol="CARD"
-      primaryText={primaryText}
-      subText={subText}
-      paddingBottom={5}
-      onClaimPress={() => Alert.alert('Claim not available yet.')}
     />
     <Button onPress={onRegisterPress}>{strings.register.button}</Button>
+    <Container paddingBottom={5} />
+    <InfoBanner
+      title={strings.register.infobanner.title}
+      message={strings.register.infobanner.message}
+    />
   </Container>
 );
