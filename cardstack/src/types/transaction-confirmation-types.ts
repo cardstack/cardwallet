@@ -49,7 +49,7 @@ export interface RegisterMerchantDecodedData {
   infoDID?: string;
   merchantInfo?: MerchantInformation;
   prepaidCard?: string;
-  isProfile?: boolean;
+  isProfileCreation?: boolean;
   type: TransactionConfirmationType.REGISTER_MERCHANT;
 }
 

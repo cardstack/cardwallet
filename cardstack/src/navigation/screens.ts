@@ -178,7 +178,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: RewardsCenterScreen,
     options: horizontalInterpolator,
   },
-  TRANSACTION_CONFIRM: {
+  TRANSACTION_CONFIRMATION_SHEET: {
     component: TransactionConfirmationSheet,
     options: expandedPreset as StackNavigationOptions,
   },

@@ -16,7 +16,7 @@ const ProfileScreen = () => {
         {primarySafe ? (
           <MerchantContent
             showSafePrimarySelection={safesCount > 1}
-            isPrimarySafe={true}
+            isPrimarySafe
             merchantSafe={primarySafe}
             isRefreshingBalances={isFetching}
           />

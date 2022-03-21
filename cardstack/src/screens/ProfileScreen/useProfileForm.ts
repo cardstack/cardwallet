@@ -10,13 +10,20 @@ import {
   createBusinessInfoDID,
 } from '@cardstack/services/hub-service';
 import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
-import { PrepaidCardType } from '@cardstack/types';
+import {
+  RegisterMerchantDecodedData,
+  PrepaidCardType,
+  TransactionConfirmationType,
+} from '@cardstack/types';
 import logger from 'logger';
 import {
   getAllWallets,
   getWalletByAddress,
   loadAddress,
 } from '@rainbow-me/model/wallet';
+import { useGetSafesDataQuery } from '@cardstack/services';
+import RainbowRoutes from '@rainbow-me/navigation/routesNames';
+import { colors } from '@cardstack/theme';
 
 const CreateProfileFeeInSpend = 100;
 
@@ -28,7 +35,14 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const { navigate } = useNavigation();
   const { authToken, isLoading } = useAuthToken();
   const { accountSymbol } = useAccountProfile();
-  const { network } = useAccountSettings();
+  const { accountAddress, network, nativeCurrency } = useAccountSettings();
+
+  const { refetch: refetchSafes, isFetching } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
+    {
+      skip: !accountAddress,
+    }
+  );
 
   const {
     businessName: businessNameData,
@@ -71,6 +85,10 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken, checkIdUniqueness, isLoading]);
+
+  useEffect(() => {
+    console.log('isFetching===', isFetching);
+  }, [isFetching]);
 
   const onChangeBusinessName = useCallback(
     ({ nativeEvent: { text } }) => {
@@ -164,7 +182,10 @@ export const useProfileForm = (params?: useProfileFormParams) => {
           did
         );
 
-        return newMerchant;
+        if (newMerchant?.merchantSafe?.address) {
+          await refetchSafes();
+          navigate(RainbowRoutes.PROFILE_SCREEN);
+        }
       } catch (e) {
         logger.sentry('Hub authenticate failed', e);
       }
@@ -176,6 +197,8 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     businessName,
     isLoading,
     network,
+    navigate,
+    refetchSafes,
     selectedPrepaidCard,
   ]);
 
@@ -184,7 +207,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
       color: businessColor,
       name: businessName,
       did: '',
-      textColor: '#fff',
+      textColor: colors.white,
       slug: businessId,
       ownerAddress: '',
     }),
@@ -193,12 +216,18 @@ export const useProfileForm = (params?: useProfileFormParams) => {
 
   const onPressCreate = useCallback(() => {
     if (selectedPrepaidCard) {
-      // ToDo: Navigate to confirmation sheet, need to redesign this as well
-      navigate(MainRoutes.TRANSACTION_CONFIRM, {
-        prepaidCard: selectedPrepaidCard.address,
+      // ToDo: Navigate to confirmation sheet, need to redesign this
+
+      const data: RegisterMerchantDecodedData = {
+        type: TransactionConfirmationType.REGISTER_MERCHANT,
         spendAmount: CreateProfileFeeInSpend,
-        currency: 'USD',
+        prepaidCard: selectedPrepaidCard.address,
         merchantInfo: newMerchantInfo,
+        isProfileCreation: true,
+      };
+
+      navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
+        data,
         onConfirm: createProfile,
       });
     } else {
