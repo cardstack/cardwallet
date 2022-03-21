@@ -4,7 +4,10 @@ export const strings = {
   },
   register: {
     title: 'You have unclaimed Rewards!',
-    noReward: 'You can register when you receive your next reward',
+    noRewards: {
+      title: 'You have NO unclaimed Rewards',
+      message: 'You can register when you receive your next reward',
+    },
     button: 'Register to Claim',
     infobanner: {
       title: 'Reward Accounts',

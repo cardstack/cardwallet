@@ -1,19 +1,20 @@
 import React from 'react';
 import { strings } from '../strings';
 import { RewardRow } from './RewardRow';
-import { NoRewardMessage } from './NoRewardMessage';
 import { Container, Button, Text, InfoBanner } from '@cardstack/components';
 
 interface RegisterContentProps {
   primaryText?: string;
   subText?: string;
+  coinSymbol?: string;
   onRegisterPress: () => void;
 }
 
 export const RegisterContent = ({
   onRegisterPress,
-  primaryText = '3,200 CARD.CPXD',
-  subText = '$45.00 USD',
+  primaryText = 'X CARD.CPXD',
+  subText = '$Y USD',
+  coinSymbol = 'CARD',
 }: RegisterContentProps) => (
   <Container alignItems="center">
     <Text
@@ -25,9 +26,8 @@ export const RegisterContent = ({
     >
       {strings.register.title}
     </Text>
-    <NoRewardMessage paddingBottom={2} />
     <RewardRow
-      coinSymbol="CARD"
+      coinSymbol={coinSymbol}
       primaryText={primaryText}
       subText={subText}
       paddingBottom={5}
