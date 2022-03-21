@@ -69,6 +69,8 @@ export const Button = ({
     props.variant
   );
 
+  console.log('::: textStyle bt', children, textStyle);
+
   const disabledTextStyle = useVariantValue(
     'buttonVariants',
     'disabledTextStyle',
@@ -115,7 +117,13 @@ export const Button = ({
               {...iconProps}
             />
           )}
-          <Text {...textStyle} {...disabledTextProps} allowFontScaling={false}>
+          <Text
+            {...textStyle}
+            {...disabledTextProps}
+            // Fixes text issue in buttons with set height prop
+            style={{ height: '100%' }}
+            allowFontScaling={false}
+          >
             {children}
           </Text>
         </Container>
