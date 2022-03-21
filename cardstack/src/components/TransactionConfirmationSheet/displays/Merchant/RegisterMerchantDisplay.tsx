@@ -14,9 +14,10 @@ interface RegisterMerchantDisplayProps
 }
 
 export const RegisterMerchantDisplay = ({
-  data: { infoDID, prepaidCard, spendAmount },
+  data: { infoDID, merchantInfo, prepaidCard, spendAmount },
 }: RegisterMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
+  const merchantInfoData = merchantInfoDID || merchantInfo;
 
   const {
     accountColor,
@@ -42,18 +43,20 @@ export const RegisterMerchantDisplay = ({
         showNetworkBadge
         address={accountAddress}
       />
-      {merchantInfoDID && (
+      {merchantInfoData ? (
         <TransactionListItem
           headerText="CREATE THIS BUSINESS ACCOUNT"
-          title={merchantInfoDID.name || 'Business Name'}
-          avatarInfo={merchantInfoDID}
-          address={merchantInfoDID.slug}
+          title={merchantInfoData.name || 'Business Name'}
+          avatarInfo={merchantInfoData}
+          address={merchantInfoData.slug}
         />
-      )}
-      <PrepaidCardTransactionSection
-        headerText="PAY WITH"
-        prepaidCardAddress={prepaidCard}
-      />
+      ) : null}
+      {prepaidCard ? (
+        <PrepaidCardTransactionSection
+          headerText="PAY WITH"
+          prepaidCardAddress={prepaidCard}
+        />
+      ) : null}
       <PayThisAmountSection
         headerText="PAY BUSINESS CREATION FEE"
         spendAmount={spendAmount}
