@@ -73,15 +73,13 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
           {showContextMenu && <PinnedHiddenSectionMenu type={type} />}
         </Container>
       </Container>
-      {isPrepaidCardSection && (
+      {isPrepaidCardSection && Device.supportsFiatOnRamp && (
         <Container
           paddingBottom={4}
           alignItems="center"
           backgroundColor={backgroundColor}
         >
-          {Device.supportsFiatOnRamp && (
-            <Button onPress={onBuyCardPress}>{strings.buyCardLabel}</Button>
-          )}
+          <Button onPress={onBuyCardPress}>{strings.buyCardLabel}</Button>
         </Container>
       )}
       {isEmptyPrepaidCard && (
