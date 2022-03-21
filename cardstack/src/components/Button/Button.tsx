@@ -69,8 +69,6 @@ export const Button = ({
     props.variant
   );
 
-  console.log('::: textStyle bt', children, textStyle);
-
   const disabledTextStyle = useVariantValue(
     'buttonVariants',
     'disabledTextStyle',
