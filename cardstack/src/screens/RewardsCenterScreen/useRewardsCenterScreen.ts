@@ -4,9 +4,15 @@ import {
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import { useAccountSettings } from '@rainbow-me/hooks';
+import { networkTypes } from '@rainbow-me/helpers/networkTypes';
+
+const rewardDefaultProgramId = {
+  [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
+  [networkTypes.xdai]: '',
+};
 
 export const useRewardsCenterScreen = () => {
-  const { accountAddress, nativeCurrency } = useAccountSettings();
+  const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
   const query = useMemo(
     () => ({
@@ -30,10 +36,6 @@ export const useRewardsCenterScreen = () => {
     data: { rewardPoolTokenBalances } = {},
   } = useGetRewardPoolTokenBalancesQuery(query.params, query.options);
 
-  const onRegisterPress = useCallback(() => {
-    //pass
-  }, []);
-
   const registeredPools = useMemo(
     () =>
       rewardSafes?.filter(safe =>
@@ -44,12 +46,25 @@ export const useRewardsCenterScreen = () => {
     [rewardPoolTokenBalances, rewardSafes]
   );
 
+  const isRegistered = useMemo(
+    () =>
+      rewardSafes?.some(
+        ({ rewardProgramId }) =>
+          rewardProgramId === rewardDefaultProgramId[network]
+      ),
+    [network, rewardSafes]
+  );
+
+  const onRegisterPress = useCallback(() => {
+    //pass
+  }, []);
+
   return {
     rewardSafes,
     registeredPools,
     rewardPoolTokenBalances,
-    isRegistered: !!rewardSafes?.length,
-    hasRewardsAvailable: false,
+    isRegistered,
     onRegisterPress,
+    hasRewardsAvailable: !!registeredPools?.length,
   };
 };
