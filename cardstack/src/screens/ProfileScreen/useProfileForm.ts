@@ -1,18 +1,34 @@
 import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { validateMerchantId } from '@cardstack/cardpay-sdk';
+import { validateMerchantId, getSDK } from '@cardstack/cardpay-sdk';
+import { useNavigation } from '@react-navigation/core';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
+import Web3Instance from '@cardstack/models/web3-instance';
 import { useAuthToken } from '@cardstack/hooks';
-import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
-import { useAccountProfile } from '@rainbow-me/hooks';
+import { MainRoutes } from '@cardstack/navigation';
+import {
+  checkBusinessIdUniqueness,
+  createBusinessInfoDID,
+} from '@cardstack/services/hub-service';
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 import { PrepaidCardType } from '@cardstack/types';
+import logger from 'logger';
+import {
+  getAllWallets,
+  getWalletByAddress,
+  loadAddress,
+} from '@rainbow-me/model/wallet';
+
+const CreateProfileFeeInSpend = 100;
 
 type useProfileFormParams = {
   onFormSubmitSuccess?: () => void;
 };
 
 export const useProfileForm = (params?: useProfileFormParams) => {
+  const { navigate } = useNavigation();
   const { authToken, isLoading } = useAuthToken();
   const { accountSymbol } = useAccountProfile();
+  const { network } = useAccountSettings();
 
   const {
     businessName: businessNameData,
@@ -113,6 +129,92 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     [accountSymbol, businessName]
   );
 
+  const createProfile = useCallback(async () => {
+    if (!isLoading && authToken && selectedPrepaidCard) {
+      const merchantInfoData = {
+        name: businessName,
+        slug: businessId,
+        color: businessColor,
+        'text-color': '#fff',
+      };
+
+      const did = await createBusinessInfoDID(merchantInfoData, authToken);
+
+      if (!did) {
+        return;
+      }
+
+      const address = (await loadAddress()) || '';
+
+      const allWallets = await getAllWallets();
+
+      const walletId =
+        getWalletByAddress({ walletAddress: address, allWallets })?.id || '';
+
+      const web3 = await Web3Instance.get({
+        walletId,
+        network,
+      });
+
+      const revenuePool = await getSDK('RevenuePool', web3);
+
+      try {
+        const newMerchant = await revenuePool.registerMerchant(
+          selectedPrepaidCard?.address,
+          did
+        );
+
+        return newMerchant;
+      } catch (e) {
+        logger.sentry('Hub authenticate failed', e);
+      }
+    }
+  }, [
+    authToken,
+    businessColor,
+    businessId,
+    businessName,
+    isLoading,
+    network,
+    selectedPrepaidCard,
+  ]);
+
+  const newMerchantInfo = useMemo(
+    () => ({
+      color: businessColor,
+      name: businessName,
+      did: '',
+      textColor: '#fff',
+      slug: businessId,
+      ownerAddress: '',
+    }),
+    [businessColor, businessId, businessName]
+  );
+
+  const onPressCreate = useCallback(() => {
+    if (selectedPrepaidCard) {
+      // ToDo: Navigate to confirmation sheet, need to redesign this as well
+      navigate(MainRoutes.TRANSACTION_CONFIRM, {
+        prepaidCard: selectedPrepaidCard.address,
+        spendAmount: CreateProfileFeeInSpend,
+        currency: 'USD',
+        merchantInfo: newMerchantInfo,
+        onConfirm: createProfile,
+      });
+    } else {
+      navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
+        spendAmount: CreateProfileFeeInSpend,
+        onConfirmChoosePrepaidCard: setPrepaidCard,
+      });
+    }
+  }, [
+    createProfile,
+    navigate,
+    newMerchantInfo,
+    selectedPrepaidCard,
+    setPrepaidCard,
+  ]);
+
   return {
     businessName,
     businessId,
@@ -125,5 +227,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     onSubmitForm,
     selectedPrepaidCard,
     setPrepaidCard,
+    onPressCreate,
+    newMerchantInfo,
   };
 };

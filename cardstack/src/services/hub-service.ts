@@ -20,6 +20,7 @@ import {
   ReservationData,
   OrderData,
   WyrePriceData,
+  CreateBusinessInfoDIDParams,
   NotificationsPreferenceDataType,
 } from '@cardstack/types';
 import logger from 'logger';
@@ -435,6 +436,34 @@ export const checkBusinessIdUniqueness = async (
   } catch (e: any) {
     logger.sentry(
       'Error while checking BusinessIdUniqueness from hub',
+      e?.response || e
+    );
+  }
+};
+
+export const createBusinessInfoDID = async (
+  merchantInfoData: CreateBusinessInfoDIDParams,
+  authToken: string
+): Promise<string | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    const results = await hubApi.post(
+      `${hubURL}/api/merchant-infos`,
+      JSON.stringify({
+        data: {
+          type: 'merchant-infos',
+          attributes: merchantInfoData,
+        },
+      }),
+      axiosConfig(authToken)
+    );
+
+    return results?.data?.data?.attributes?.did;
+  } catch (e: any) {
+    logger.sentry(
+      'Error while creating Merchant DID from hub',
       e?.response || e
     );
   }

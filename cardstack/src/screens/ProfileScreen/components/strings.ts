@@ -12,7 +12,7 @@ export const strings = {
     'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
   review: 'Review',
   reviewDescription:
-    'Next you will confirm the creation of your profile. This will require a payment of $1.00USD.',
+    'Next you will confirm the creation of your profile. This will require a payment of \n$1.00 USD.',
   yourProfile: 'Your Profile:',
   create: 'Create',
   businessNameRequired: 'Business Name is required',

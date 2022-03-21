@@ -1,45 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
-import { useNavigation } from '@react-navigation/core';
+import React from 'react';
+
 import { useProfileForm } from '../useProfileForm';
 import { exampleMerchantData, strings } from '.';
 import { Button, Container, MerchantSafe, Text } from '@cardstack/components';
-import { MainRoutes } from '@cardstack/navigation';
-
-const CreateProfileFeeInSpend = 100;
 
 export const StepThree = () => {
   const {
-    businessColor,
-    businessName,
-    businessId,
     selectedPrepaidCard,
-    setPrepaidCard,
+    newMerchantInfo,
+    onPressCreate,
   } = useProfileForm();
-
-  const { navigate } = useNavigation();
-
-  const newMerchantInfo = useMemo(
-    () => ({
-      color: businessColor,
-      name: businessName,
-      did: '',
-      textColor: '#fff',
-      slug: businessId,
-      ownerAddress: '',
-    }),
-    [businessColor, businessId, businessName]
-  );
-
-  const onPressCreate = useCallback(() => {
-    if (selectedPrepaidCard) {
-      // ToDo: Navigate to confirmation sheet, need to redesign this as well
-    } else {
-      navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
-        spendAmount: CreateProfileFeeInSpend,
-        onConfirmChoosePrepaidCard: setPrepaidCard,
-      });
-    }
-  }, [navigate, selectedPrepaidCard, setPrepaidCard]);
 
   return (
     <>
