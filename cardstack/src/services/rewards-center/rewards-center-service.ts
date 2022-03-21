@@ -1,10 +1,23 @@
-import { Safe } from '@cardstack/cardpay-sdk';
-import { updateSafeWithTokenPrices } from '../gnosis-service';
+import { getSDK, Safe, TokenInfo } from '@cardstack/cardpay-sdk';
+import {
+  addNativePriceToToken,
+  updateSafeWithTokenPrices,
+} from '../gnosis-service';
 import {
   RewardsSafeQueryParams,
   RewardsSafeType,
 } from './rewards-center-types';
 import { getSafesInstance } from '@cardstack/models';
+import Web3Instance from '@cardstack/models/web3-instance';
+import { SignedProviderParams } from '@cardstack/models/hd-provider';
+
+const getRewardsPoolInstance = async (signedParams?: SignedProviderParams) => {
+  const web3 = await Web3Instance.get(signedParams);
+
+  const rewardPoolInstance = await getSDK('RewardPool', web3);
+
+  return rewardPoolInstance;
+};
 
 // Queries
 
@@ -33,5 +46,36 @@ export const fetchRewardsSafe = async ({
 
   return {
     rewardSafes: extendedRewardSafes,
+  };
+};
+
+export const fetchRewardPoolTokenBalances = async ({
+  accountAddress,
+  nativeCurrency,
+}: RewardsSafeQueryParams) => {
+  const rewardPoolInstance = await getRewardsPoolInstance();
+
+  const rewardTokens = await rewardPoolInstance.rewardTokenBalances(
+    accountAddress
+  );
+
+  const rewardTokensWithPrice = await Promise.all(
+    rewardTokens?.map(
+      async ({ tokenSymbol: symbol, balance, tokenAddress }) => {
+        const tokenWithPrice = await addNativePriceToToken(
+          ({
+            token: { symbol },
+            balance,
+          } as unknown) as TokenInfo,
+          nativeCurrency
+        );
+
+        return { ...tokenWithPrice, tokenAddress };
+      }
+    )
+  );
+
+  return {
+    rewardPoolTokenBalances: rewardTokensWithPrice,
   };
 };

@@ -3,8 +3,12 @@ import { queryPromiseWrapper } from '../utils';
 import {
   RewardsSafeQueryParams,
   RewardsSafeQueryResult,
+  RewardsTokenBalancesResult,
 } from './rewards-center-types';
-import { fetchRewardsSafe } from './rewards-center-service';
+import {
+  fetchRewardPoolTokenBalances,
+  fetchRewardsSafe,
+} from './rewards-center-service';
 
 const rewardsApi = safesApi.injectEndpoints({
   endpoints: builder => ({
@@ -22,7 +26,23 @@ const rewardsApi = safesApi.injectEndpoints({
       },
       providesTags: [CacheTags.REWARDS_SAFE],
     }),
+    getRewardPoolTokenBalances: builder.query<
+      RewardsTokenBalancesResult,
+      RewardsSafeQueryParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          RewardsTokenBalancesResult,
+          RewardsSafeQueryParams
+        >(fetchRewardPoolTokenBalances, params, {
+          errorLogMessage: 'Error fetching reward pool token balances',
+        });
+      },
+    }),
   }),
 });
 
-export const { useGetRewardsSafeQuery } = rewardsApi;
+export const {
+  useGetRewardsSafeQuery,
+  useGetRewardPoolTokenBalancesQuery,
+} = rewardsApi;

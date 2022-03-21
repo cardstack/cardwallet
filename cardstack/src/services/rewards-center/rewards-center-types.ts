@@ -12,3 +12,7 @@ export type RewardsSafeType = Safe & { tokens: TokenType[] };
 export interface RewardsSafeQueryResult {
   rewardSafes: RewardsSafeType[];
 }
+
+export interface RewardsTokenBalancesResult {
+  rewardPoolTokenBalances: TokenType[];
+}
