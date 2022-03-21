@@ -1,4 +1,4 @@
-import { NativeCurrency, Safe } from '@cardstack/cardpay-sdk';
+import { NativeCurrency, RewardSafe } from '@cardstack/cardpay-sdk';
 import { TokenType } from '@cardstack/types';
 
 export interface RewardsSafeQueryParams {
@@ -6,13 +6,15 @@ export interface RewardsSafeQueryParams {
   nativeCurrency: NativeCurrency;
 }
 
-// TODO: add correct type after exporting RewardsSafe from sdk
-export type RewardsSafeType = Safe & { tokens: TokenType[] };
+export type RewardsSafeType = RewardSafe & { tokens: TokenType[] };
 
 export interface RewardsSafeQueryResult {
   rewardSafes: RewardsSafeType[];
 }
 
+interface TokenByProgramID extends TokenType {
+  rewardProgramId?: string;
+}
 export interface RewardsTokenBalancesResult {
-  rewardPoolTokenBalances: TokenType[];
+  rewardPoolTokenBalances: TokenByProgramID[];
 }

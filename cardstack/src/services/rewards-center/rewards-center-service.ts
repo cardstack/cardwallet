@@ -61,7 +61,12 @@ export const fetchRewardPoolTokenBalances = async ({
 
   const rewardTokensWithPrice = await Promise.all(
     rewardTokens?.map(
-      async ({ tokenSymbol: symbol, balance, tokenAddress }) => {
+      async ({
+        tokenSymbol: symbol,
+        balance,
+        tokenAddress,
+        rewardProgramId,
+      }) => {
         const tokenWithPrice = await addNativePriceToToken(
           ({
             token: { symbol },
@@ -70,7 +75,7 @@ export const fetchRewardPoolTokenBalances = async ({
           nativeCurrency
         );
 
-        return { ...tokenWithPrice, tokenAddress };
+        return { ...tokenWithPrice, tokenAddress, rewardProgramId };
       }
     )
   );
