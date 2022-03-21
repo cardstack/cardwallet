@@ -8,6 +8,7 @@ import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
+  //TBD
   [networkTypes.xdai]: '',
 };
 
@@ -27,12 +28,13 @@ export const useRewardsCenterScreen = () => {
     [accountAddress, nativeCurrency]
   );
 
-  const { data: { rewardSafes } = {} } = useGetRewardsSafeQuery(
-    query.params,
-    query.options
-  );
+  const {
+    isLoading: isLoadindSafes,
+    data: { rewardSafes } = {},
+  } = useGetRewardsSafeQuery(query.params, query.options);
 
   const {
+    isLoading: isLoadingTokens,
     data: { rewardPoolTokenBalances } = {},
   } = useGetRewardPoolTokenBalancesQuery(query.params, query.options);
 
@@ -55,6 +57,17 @@ export const useRewardsCenterScreen = () => {
     [network, rewardSafes]
   );
 
+  // Checks if available tokens matches default program and has amount
+  const mainPoolTokenInfo = useMemo(
+    () =>
+      rewardPoolTokenBalances?.find(
+        ({ rewardProgramId, balance: { amount } }) =>
+          Number(amount) > 0 &&
+          rewardProgramId === rewardDefaultProgramId[network]
+      ),
+    [network, rewardPoolTokenBalances]
+  );
+
   const onRegisterPress = useCallback(() => {
     //pass
   }, []);
@@ -65,6 +78,8 @@ export const useRewardsCenterScreen = () => {
     rewardPoolTokenBalances,
     isRegistered,
     onRegisterPress,
-    hasRewardsAvailable: !!registeredPools?.length,
+    hasRewardsAvailable: !!mainPoolTokenInfo,
+    mainPoolTokenInfo,
+    isLoading: isLoadindSafes || isLoadingTokens,
   };
 };
