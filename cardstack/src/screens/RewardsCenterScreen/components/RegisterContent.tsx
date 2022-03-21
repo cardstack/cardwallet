@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { strings } from '../strings';
 import { RewardRow } from './RewardRow';
-import { Container, Button, Text } from '@cardstack/components';
+import { Container, Button, Text, InfoBanner } from '@cardstack/components';
 
 interface RegisterContentProps {
   primaryText?: string;
@@ -39,5 +39,9 @@ export const RegisterContent = ({
       onClaimPress={() => Alert.alert('Claim not available yet.')}
     />
     <Button onPress={onRegisterPress}>{strings.register.button}</Button>
+    <InfoBanner
+      title={strings.register.infobanner.title}
+      message={strings.register.infobanner.message}
+    />
   </Container>
 );
