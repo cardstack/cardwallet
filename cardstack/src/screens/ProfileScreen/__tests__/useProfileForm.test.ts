@@ -7,6 +7,11 @@ import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
 
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountProfile: jest.fn(),
+  useAccountSettings: () => ({
+    accountAddress: '0x0000000000000000000',
+    nativeCurrency: 'USD',
+    network: 'sokol',
+  }),
 }));
 
 jest.mock('@cardstack/services/hub-service', () => ({
@@ -18,6 +23,19 @@ jest.mock('@cardstack/hooks/prepaid-card/useAuthToken', () => ({
     authToken: '123',
     isLoading: false,
   }),
+}));
+
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: jest.fn(() => ({
+    navigate: jest.fn(),
+  })),
+}));
+
+jest.mock('@cardstack/services', () => ({
+  useGetSafesDataQuery: jest.fn(() => ({
+    refetch: jest.fn(),
+    isFetching: false,
+  })),
 }));
 
 describe('useProfileForm', () => {

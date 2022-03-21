@@ -1,6 +1,6 @@
 import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { validateMerchantId, getSDK } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
 import Web3Instance from '@cardstack/models/web3-instance';
 import { useAuthToken } from '@cardstack/hooks';
@@ -37,7 +37,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const { accountSymbol } = useAccountProfile();
   const { accountAddress, network, nativeCurrency } = useAccountSettings();
 
-  const { refetch: refetchSafes, isFetching } = useGetSafesDataQuery(
+  const { refetch: refetchSafes } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
       skip: !accountAddress,
@@ -85,10 +85,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken, checkIdUniqueness, isLoading]);
-
-  useEffect(() => {
-    console.log('isFetching===', isFetching);
-  }, [isFetching]);
 
   const onChangeBusinessName = useCallback(
     ({ nativeEvent: { text } }) => {
