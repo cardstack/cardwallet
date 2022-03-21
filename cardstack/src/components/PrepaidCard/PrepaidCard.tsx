@@ -18,6 +18,7 @@ import {
   ScrollView,
 } from '@cardstack/components';
 import { Alert } from '@rainbow-me/components/alerts';
+import { delayLongPressMs } from '@cardstack/constants';
 
 export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
   networkName: string;
@@ -31,8 +32,6 @@ export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
 
 const SELECT_ICON_WIDTH = '13%';
 const EDITING_COIN_ROW_WIDTH = '87%';
-
-const delayLongPressMs = 2500;
 
 /**
  * A prepaid card component
