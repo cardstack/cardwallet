@@ -212,14 +212,12 @@ export const useProfileForm = (params?: useProfileFormParams) => {
 
   const onPressCreate = useCallback(() => {
     if (selectedPrepaidCard) {
-      // ToDo: Navigate to confirmation sheet, need to redesign this
-
+      // profile create confirmation screen params
       const data: RegisterMerchantDecodedData = {
         type: TransactionConfirmationType.REGISTER_MERCHANT,
         spendAmount: CreateProfileFeeInSpend,
         prepaidCard: selectedPrepaidCard.address,
         merchantInfo: newMerchantInfo,
-        isProfileCreation: true,
       };
 
       navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {

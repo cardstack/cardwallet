@@ -49,7 +49,6 @@ export interface RegisterMerchantDecodedData {
   infoDID?: string;
   merchantInfo?: MerchantInformation;
   prepaidCard?: string;
-  isProfileCreation?: boolean;
   type: TransactionConfirmationType.REGISTER_MERCHANT;
 }
 

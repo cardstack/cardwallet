@@ -1,11 +1,10 @@
-import React, { useMemo } from 'react';
-
+import React from 'react';
 import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
 import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
 import TransactionListItem from '../components/TransactionListItem';
+import { strings } from '../../strings';
 import { TransactionConfirmationDisplayProps } from '@cardstack/components';
 import { RegisterMerchantDecodedData } from '@cardstack/types';
-import { useAccountProfile } from '@rainbow-me/hooks';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 interface RegisterMerchantDisplayProps
@@ -14,59 +13,28 @@ interface RegisterMerchantDisplayProps
 }
 
 export const RegisterMerchantDisplay = ({
-  data: { infoDID, merchantInfo, prepaidCard, spendAmount, isProfileCreation },
+  data: { infoDID, merchantInfo, prepaidCard, spendAmount },
 }: RegisterMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
   const merchantInfoData = merchantInfoDID || merchantInfo;
 
-  const {
-    accountColor,
-    accountName,
-    accountSymbol,
-    accountAddress,
-  } = useAccountProfile();
-
-  const accountAvatarInfo = useMemo(
-    () => ({
-      color: accountColor,
-      name: accountSymbol || '?',
-    }),
-    [accountColor, accountSymbol]
-  );
-
   return (
     <>
-      <TransactionListItem
-        headerText="FROM"
-        title={accountName}
-        avatarInfo={accountAvatarInfo}
-        showNetworkBadge
-        address={accountAddress}
-      />
       {merchantInfoData ? (
         <TransactionListItem
-          headerText={
-            isProfileCreation
-              ? 'CREATE PROFILE'
-              : 'CREATE THIS BUSINESS ACCOUNT'
-          }
-          title={merchantInfoData.name || 'Business Name'}
+          headerText={strings.createProfile.create}
+          title={merchantInfoData.name || strings.createProfile.profileName}
           avatarInfo={merchantInfoData}
-          address={merchantInfoData.slug}
         />
       ) : null}
       {prepaidCard ? (
         <PrepaidCardTransactionSection
-          headerText="PAY WITH"
+          headerText={strings.createProfile.from}
           prepaidCardAddress={prepaidCard}
         />
       ) : null}
       <PayThisAmountSection
-        headerText={
-          isProfileCreation
-            ? 'PROFILE CREATION FEE'
-            : 'PAY BUSINESS CREATION FEE'
-        }
+        headerText={strings.createProfile.payThisAmount}
         spendAmount={spendAmount}
       />
     </>
