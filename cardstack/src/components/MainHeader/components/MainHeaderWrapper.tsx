@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 
 import { Container, SafeAreaView, ContainerProps } from '@cardstack/components';
 
-import { Device } from '@cardstack/utils';
+export const NAV_HEADER_HEIGHT = 54;
 
 const MainHeaderWrapper: React.FC<ContainerProps> = ({
   children,
@@ -14,8 +14,7 @@ const MainHeaderWrapper: React.FC<ContainerProps> = ({
       flexDirection="row"
       justifyContent="space-between"
       alignItems="center"
-      paddingTop={Device.isAndroid ? 3 : 0}
-      paddingBottom={2}
+      height={NAV_HEADER_HEIGHT}
       paddingHorizontal={5}
       {...props}
     >
