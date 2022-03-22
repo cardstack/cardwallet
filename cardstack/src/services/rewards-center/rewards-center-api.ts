@@ -1,6 +1,8 @@
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 import {
+  RewardsRegisterMutationParams,
+  RewardsRegisterMutationResult,
   RewardsSafeQueryParams,
   RewardsSafeQueryResult,
   RewardsTokenBalancesResult,
@@ -8,6 +10,7 @@ import {
 import {
   fetchRewardPoolTokenBalances,
   fetchRewardsSafe,
+  registerToRewardProgram,
 } from './rewards-center-service';
 
 const rewardsApi = safesApi.injectEndpoints({
@@ -38,6 +41,22 @@ const rewardsApi = safesApi.injectEndpoints({
           errorLogMessage: 'Error fetching reward pool token balances',
         });
       },
+      providesTags: [CacheTags.REWARDS_SAFE],
+    }),
+    registerToRewardProgram: builder.mutation<
+      RewardsRegisterMutationResult,
+      RewardsRegisterMutationParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          RewardsRegisterMutationResult,
+          RewardsRegisterMutationParams
+        >(registerToRewardProgram, params, {
+          errorLogMessage: 'Error while registering to reward program',
+          resetHdProvider: true,
+        });
+      },
+      invalidatesTags: [CacheTags.REWARDS_SAFE],
     }),
   }),
 });
@@ -45,4 +64,5 @@ const rewardsApi = safesApi.injectEndpoints({
 export const {
   useGetRewardsSafeQuery,
   useGetRewardPoolTokenBalancesQuery,
+  useRegisterToRewardProgramMutation,
 } = rewardsApi;
