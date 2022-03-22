@@ -27,12 +27,10 @@ export const RegisterMerchantDisplay = ({
           avatarInfo={merchantInfoData}
         />
       ) : null}
-      {prepaidCard ? (
-        <PrepaidCardTransactionSection
-          headerText={strings.createProfile.from}
-          prepaidCardAddress={prepaidCard}
-        />
-      ) : null}
+      <PrepaidCardTransactionSection
+        headerText={strings.createProfile.from}
+        prepaidCardAddress={prepaidCard}
+      />
       <PayThisAmountSection
         headerText={strings.createProfile.payThisAmount}
         spendAmount={spendAmount}

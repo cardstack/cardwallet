@@ -12,6 +12,7 @@ jest.mock('@rainbow-me/hooks', () => ({
     nativeCurrency: 'USD',
     network: 'sokol',
   }),
+  useWallets: () => ({ selectedWallet: { id: 'fooSelectedWallet' } }),
 }));
 
 jest.mock('@cardstack/services/hub-service', () => ({
@@ -36,6 +37,13 @@ jest.mock('@cardstack/services', () => ({
     refetch: jest.fn(),
     isFetching: false,
   })),
+  useCreateProfileMutation: jest.fn(() => [
+    jest.fn(),
+    {
+      isSuccess: true,
+      isError: false,
+    },
+  ]),
 }));
 
 describe('useProfileForm', () => {
