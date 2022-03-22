@@ -37,10 +37,6 @@ jest.mock('@cardstack/notification-handler', () => ({
 }));
 
 jest.mock('@cardstack/services', () => ({
-  useGetSafesDataQuery: jest.fn(() => ({
-    refetch: jest.fn(),
-    isFetching: false,
-  })),
   useCreateProfileMutation: jest.fn(() => [
     jest.fn(),
     {
