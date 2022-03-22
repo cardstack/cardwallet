@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { orderBy } from 'lodash';
 import { strings } from './strings';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { isLayer1 } from '@cardstack/utils';
@@ -32,7 +33,8 @@ export const useChoosePrepaidCard = () => {
         isLoading: isLoadingCards,
         isUninitialized,
       }) => ({
-        prepaidCards: data?.prepaidCards || [],
+        prepaidCards:
+          orderBy(data?.prepaidCards, 'spendFaceValue', 'desc') || [],
         isLoading: isLoadingCards || isUninitialized,
       }),
     }
