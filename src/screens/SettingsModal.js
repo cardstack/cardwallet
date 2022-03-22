@@ -2,6 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback, useEffect } from 'react';
 import { Animated, InteractionManager, View } from 'react-native';
+import { useSafeArea } from 'react-native-safe-area-context';
 import {
   CurrencySection,
   LanguageSection,
@@ -17,6 +18,7 @@ import DeveloperSettings from '../components/settings-menu/DeveloperSettings';
 import WalletTypes from '../helpers/walletTypes';
 import { useWallets } from '../hooks';
 import { Icon, Text, Touchable } from '@cardstack/components';
+import { NAV_HEADER_HEIGHT } from '@cardstack/components/MainHeader/components/MainHeaderWrapper';
 import { slideLeftToRightPreset } from '@cardstack/navigation';
 import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
 import { palette } from '@cardstack/theme';
@@ -187,10 +189,16 @@ export default function SettingsModal() {
     }
   }, [getRealRoute, navigate, params]);
 
+  const insets = useSafeArea();
+
   return (
     <Stack.Navigator
       screenOptions={{
         ...screenOptions,
+        headerStyle: {
+          ...screenOptions.headerStyle,
+          height: NAV_HEADER_HEIGHT + insets.top,
+        },
         headerRight: renderHeaderRight,
         headerLeft: HeaderBackBtnLeft,
       }}
