@@ -4,6 +4,7 @@ import {
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
 import {
+  RewardsRegisterMutationParams,
   RewardsSafeQueryParams,
   RewardsSafeType,
 } from './rewards-center-types';
@@ -83,4 +84,27 @@ export const fetchRewardPoolTokenBalances = async ({
   return {
     rewardPoolTokenBalances: rewardTokensWithPrice,
   };
+};
+
+// Mutations
+
+export const registerToRewardProgram = async ({
+  prepaidCardAddress,
+  rewardProgramId,
+  accountAddress,
+  walletId,
+  network,
+}: RewardsRegisterMutationParams) => {
+  const web3 = await Web3Instance.get({ walletId, network });
+
+  const rewardManager = await getSDK('RewardManager', web3);
+
+  const result = await rewardManager.registerRewardee(
+    prepaidCardAddress,
+    rewardProgramId,
+    undefined,
+    { from: accountAddress }
+  );
+
+  return result;
 };
