@@ -1,28 +1,30 @@
 import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { validateMerchantId, getSDK } from '@cardstack/cardpay-sdk';
+import { Alert } from 'react-native';
+import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
-import Web3Instance from '@cardstack/models/web3-instance';
 import { useAuthToken } from '@cardstack/hooks';
-import { MainRoutes } from '@cardstack/navigation';
+import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   checkBusinessIdUniqueness,
   createBusinessInfoDID,
 } from '@cardstack/services/hub-service';
-import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
+import {
+  useAccountProfile,
+  useAccountSettings,
+  useWallets,
+} from '@rainbow-me/hooks';
 import {
   RegisterMerchantDecodedData,
   PrepaidCardType,
   TransactionConfirmationType,
 } from '@cardstack/types';
-import logger from 'logger';
 import {
-  getAllWallets,
-  getWalletByAddress,
-  loadAddress,
-} from '@rainbow-me/model/wallet';
-import { useGetSafesDataQuery } from '@cardstack/services';
+  useGetSafesDataQuery,
+  useCreateProfileMutation,
+} from '@cardstack/services';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
+import { logger } from '@rainbow-me/utils';
 import { colors } from '@cardstack/theme';
 
 const CreateProfileFeeInSpend = 100;
@@ -36,13 +38,38 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const { authToken, isLoading } = useAuthToken();
   const { accountSymbol } = useAccountProfile();
   const { accountAddress, network, nativeCurrency } = useAccountSettings();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const { refetch: refetchSafes } = useGetSafesDataQuery(
+  const { refetch: refetchSafes, isFetching } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
       skip: !accountAddress,
     }
   );
+
+  const { selectedWallet } = useWallets();
+
+  const [
+    createProfile,
+    { isSuccess, isError, error },
+  ] = useCreateProfileMutation();
+
+  useEffect(() => {
+    if (isError) {
+      dismissLoadingOverlay();
+      logger.sentry('Error creating profile-', error);
+      Alert.alert(
+        'Could not create profile, please try again. If this problem persists please reach out to support@cardstack.com'
+      );
+    }
+  }, [dismissLoadingOverlay, error, isError]);
+
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      dismissLoadingOverlay();
+      navigate(RainbowRoutes.HOME_SCREEN);
+    }
+  }, [dismissLoadingOverlay, isSuccess, isFetching, navigate]);
 
   const {
     businessName: businessNameData,
@@ -143,8 +170,10 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     [accountSymbol, businessName]
   );
 
-  const createProfile = useCallback(async () => {
+  const onConfirmCreateProfile = useCallback(async () => {
     if (!isLoading && authToken && selectedPrepaidCard) {
+      showLoadingOverlay({ title: 'Creating Profile' });
+
       const merchantInfoData = {
         name: businessName,
         slug: businessId,
@@ -152,50 +181,36 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         'text-color': '#fff',
       };
 
-      const did = await createBusinessInfoDID(merchantInfoData, authToken);
+      const profileDID = await createBusinessInfoDID(
+        merchantInfoData,
+        authToken
+      );
 
-      if (!did) {
+      if (!profileDID) {
         return;
       }
 
-      const address = (await loadAddress()) || '';
-
-      const allWallets = await getAllWallets();
-
-      const walletId =
-        getWalletByAddress({ walletAddress: address, allWallets })?.id || '';
-
-      const web3 = await Web3Instance.get({
-        walletId,
+      await createProfile({
+        selectedWallet,
         network,
+        selectedPrepaidCardAddress: selectedPrepaidCard.address,
+        profileDID,
       });
 
-      const revenuePool = await getSDK('RevenuePool', web3);
-
-      try {
-        const newMerchant = await revenuePool.registerMerchant(
-          selectedPrepaidCard?.address,
-          did
-        );
-
-        if (newMerchant?.merchantSafe?.address) {
-          await refetchSafes();
-          navigate(RainbowRoutes.PROFILE_SCREEN);
-        }
-      } catch (e) {
-        logger.sentry('Hub authenticate failed', e);
-      }
+      refetchSafes();
     }
   }, [
-    authToken,
-    businessColor,
-    businessId,
-    businessName,
     isLoading,
-    network,
-    navigate,
-    refetchSafes,
+    authToken,
     selectedPrepaidCard,
+    businessName,
+    businessId,
+    businessColor,
+    createProfile,
+    selectedWallet,
+    network,
+    refetchSafes,
+    showLoadingOverlay,
   ]);
 
   const newMerchantInfo = useMemo(
@@ -222,7 +237,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
 
       navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
         data,
-        onConfirm: createProfile,
+        onConfirm: onConfirmCreateProfile,
       });
     } else {
       navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
@@ -231,7 +246,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
       });
     }
   }, [
-    createProfile,
+    onConfirmCreateProfile,
     navigate,
     newMerchantInfo,
     selectedPrepaidCard,

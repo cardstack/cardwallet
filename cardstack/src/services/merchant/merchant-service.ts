@@ -1,7 +1,10 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
-import { ClaimRevenueQueryParams } from './merchant-types';
+import {
+  ClaimRevenueQueryParams,
+  CreateProfileQueryParams,
+} from './merchant-types';
 import { TokenType } from '@cardstack/types';
 import Web3Instance from '@cardstack/models/web3-instance';
 
@@ -48,4 +51,25 @@ export const claimMerchantRevenue = async ({
   });
 
   await Promise.all(promises);
+};
+
+export const createProfile = async ({
+  selectedWallet,
+  network,
+  selectedPrepaidCardAddress,
+  profileDID,
+}: CreateProfileQueryParams) => {
+  const web3 = await Web3Instance.get({
+    walletId: selectedWallet.id,
+    network,
+  });
+
+  const revenuePool = await getSDK('RevenuePool', web3);
+
+  const newProfile = await revenuePool.registerMerchant(
+    selectedPrepaidCardAddress,
+    profileDID
+  );
+
+  return newProfile.merchantSafe;
 };
