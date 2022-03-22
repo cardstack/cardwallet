@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
-import { useAuthToken } from '@cardstack/hooks';
+import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   checkBusinessIdUniqueness,
@@ -19,10 +19,7 @@ import {
   PrepaidCardType,
   TransactionConfirmationType,
 } from '@cardstack/types';
-import {
-  useGetSafesDataQuery,
-  useCreateProfileMutation,
-} from '@cardstack/services';
+import { useCreateProfileMutation } from '@cardstack/services';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { logger } from '@rainbow-me/utils';
 import { colors } from '@cardstack/theme';
@@ -38,15 +35,8 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const { navigate } = useNavigation();
   const { authToken, isLoading } = useAuthToken();
   const { accountSymbol } = useAccountProfile();
-  const { accountAddress, network, nativeCurrency } = useAccountSettings();
+  const { network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  const { refetch: refetchSafes } = useGetSafesDataQuery(
-    { address: accountAddress, nativeCurrency },
-    {
-      skip: !accountAddress,
-    }
-  );
 
   const { selectedWallet } = useWallets();
 
@@ -55,28 +45,36 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     { isSuccess, isError, error },
   ] = useCreateProfileMutation();
 
-  useEffect(() => {
-    if (isError) {
-      dismissLoadingOverlay();
-      logger.sentry('Error creating profile - ', error);
-      Alert.alert(strings.createProfileErrorMessage);
-    }
-  }, [dismissLoadingOverlay, error, isError]);
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isSuccess,
+          callback: () => {
+            dismissLoadingOverlay();
+            displayLocalNotification({
+              notification: {
+                title: strings.profileCreated,
+                body: strings.profileCreatedMessage,
+              },
+              isManualNotification: true,
+            });
 
-  useEffect(() => {
-    if (isSuccess) {
-      dismissLoadingOverlay();
-      displayLocalNotification({
-        notification: {
-          title: strings.profileCreated,
-          body: strings.profileCreatedMessage,
+            navigate(RainbowRoutes.PROFILE_SCREEN);
+          },
         },
-        isManualNotification: true,
-      });
-
-      navigate(RainbowRoutes.PROFILE_SCREEN);
-    }
-  }, [dismissLoadingOverlay, isSuccess, navigate, network]);
+        error: {
+          status: isError,
+          callback: () => {
+            dismissLoadingOverlay();
+            logger.sentry('Error creating profile - ', error);
+            Alert.alert(strings.createProfileErrorMessage);
+          },
+        },
+      }),
+      [dismissLoadingOverlay, error, isError, isSuccess, navigate]
+    )
+  );
 
   const {
     businessName: businessNameData,
@@ -199,8 +197,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
           selectedPrepaidCardAddress: selectedPrepaidCard.address,
           profileDID,
         });
-
-        refetchSafes();
       }
     },
     [
@@ -212,7 +208,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
       createProfile,
       selectedWallet,
       network,
-      refetchSafes,
       showLoadingOverlay,
     ]
   );
