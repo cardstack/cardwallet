@@ -32,6 +32,10 @@ jest.mock('@react-navigation/native', () => ({
   })),
 }));
 
+jest.mock('@cardstack/notification-handler', () => ({
+  displayLocalNotification: jest.fn(),
+}));
+
 jest.mock('@cardstack/services', () => ({
   useGetSafesDataQuery: jest.fn(() => ({
     refetch: jest.fn(),
