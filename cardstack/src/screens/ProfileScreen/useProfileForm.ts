@@ -41,7 +41,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const { accountAddress, network, nativeCurrency } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const { refetch: refetchSafes, isFetching } = useGetSafesDataQuery(
+  const { refetch: refetchSafes } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
       skip: !accountAddress,
@@ -64,22 +64,19 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   }, [dismissLoadingOverlay, error, isError]);
 
   useEffect(() => {
-    if (isSuccess && !isFetching) {
+    if (isSuccess) {
       dismissLoadingOverlay();
       displayLocalNotification({
         notification: {
           title: strings.profileCreated,
           body: strings.profileCreatedMessage,
         },
-        data: {
-          notificationType: 'CreateProfile', // not important value, just for notification channelId
-          network,
-        },
+        isManualNotification: true,
       });
 
       navigate(RainbowRoutes.PROFILE_SCREEN);
     }
-  }, [dismissLoadingOverlay, isSuccess, isFetching, navigate, network]);
+  }, [dismissLoadingOverlay, isSuccess, navigate, network]);
 
   const {
     businessName: businessNameData,
