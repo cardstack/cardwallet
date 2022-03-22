@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { CreateProfile, strings } from './components';
 import { Container, MainHeader, MerchantContent } from '@cardstack/components';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 const ProfileScreen = () => {
   const { primarySafe, isFetching, safesCount } = usePrimarySafe();
+
+  const ProfileBody = useMemo(
+    () =>
+      primarySafe ? (
+        <MerchantContent
+          showSafePrimarySelection={safesCount > 1}
+          isPrimarySafe
+          merchantSafe={primarySafe}
+          isRefreshingBalances={isFetching}
+        />
+      ) : (
+        <CreateProfile />
+      ),
+    [primarySafe, isFetching, safesCount]
+  );
 
   return (
     <Container
@@ -13,15 +29,10 @@ const ProfileScreen = () => {
     >
       <MainHeader title={strings.title} />
       <Container justifyContent="center" flexGrow={1}>
-        {primarySafe ? (
-          <MerchantContent
-            showSafePrimarySelection={safesCount > 1}
-            isPrimarySafe
-            merchantSafe={primarySafe}
-            isRefreshingBalances={isFetching}
-          />
+        {!primarySafe && isFetching ? (
+          <ActivityIndicator size="large" color="white" />
         ) : (
-          <CreateProfile />
+          ProfileBody
         )}
       </Container>
     </Container>
