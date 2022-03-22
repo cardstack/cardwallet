@@ -71,12 +71,15 @@ export const useProfileForm = (params?: useProfileFormParams) => {
           title: strings.profileCreated,
           body: strings.profileCreatedMessage,
         },
-        data: {},
+        data: {
+          notificationType: 'CreateProfile', // not important value, just for notification channelId
+          network,
+        },
       });
 
-      navigate(RainbowRoutes.HOME_SCREEN);
+      navigate(RainbowRoutes.PROFILE_SCREEN);
     }
-  }, [dismissLoadingOverlay, isSuccess, isFetching, navigate]);
+  }, [dismissLoadingOverlay, isSuccess, isFetching, navigate, network]);
 
   const {
     businessName: businessNameData,
@@ -243,7 +246,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         onConfirm: onConfirmCreateProfile(prepaidCard),
       });
     },
-    [navigate, newMerchantInfo, onConfirmCreateProfile]
+    [newMerchantInfo, navigate, onConfirmCreateProfile]
   );
 
   const onPressCreate = useCallback(() => {
