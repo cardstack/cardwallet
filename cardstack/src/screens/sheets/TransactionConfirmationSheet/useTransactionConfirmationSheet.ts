@@ -7,11 +7,12 @@ import { useWorker } from '@cardstack/utils';
 interface Params {
   data: TransactionConfirmationData;
   onConfirm: () => Promise<void>;
+  onCancel?: () => void;
 }
 
 export const useTransactionConfirmationSheet = () => {
   const {
-    params: { data, onConfirm },
+    params: { data, onConfirm, onCancel },
   } = useRoute<RouteType<Params>>();
 
   const { goBack } = useNavigation();
@@ -23,13 +24,13 @@ export const useTransactionConfirmationSheet = () => {
     await onConfirm();
   }, []);
 
-  const onCancel = useCallback(() => {
+  const onCancelPressed = useCallback(() => {
     goBack();
   }, [goBack]);
 
   return {
     data,
-    onCancel,
+    onCancel: onCancel || onCancelPressed,
     loading: false,
     onConfirm: onConfirmCallback,
     onConfirmLoading,

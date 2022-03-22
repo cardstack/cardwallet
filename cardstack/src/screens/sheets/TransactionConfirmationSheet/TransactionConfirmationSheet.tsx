@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useTransactionConfirmationSheet } from './useTransactionConfirmationSheet';
 import {
   TransactionConfirmationSheet,
@@ -27,4 +27,4 @@ const TransactionConfirmation = () => {
   );
 };
 
-export default TransactionConfirmation;
+export default memo(TransactionConfirmation);

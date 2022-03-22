@@ -5,11 +5,7 @@ import { exampleMerchantData, strings } from '.';
 import { Button, Container, MerchantSafe, Text } from '@cardstack/components';
 
 export const StepThree = () => {
-  const {
-    selectedPrepaidCard,
-    newMerchantInfo,
-    onPressCreate,
-  } = useProfileForm();
+  const { newMerchantInfo, onPressCreate } = useProfileForm();
 
   return (
     <>
@@ -39,9 +35,7 @@ export const StepThree = () => {
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={onPressCreate}>
-          {selectedPrepaidCard ? strings.create : strings.choosePrepaidCard}
-        </Button>
+        <Button onPress={onPressCreate}>{strings.create}</Button>
       </Container>
     </>
   );

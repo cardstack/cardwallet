@@ -19,6 +19,10 @@ export const strings = {
   businessIdShouldBeUnique:
     'This Business ID is already taken. Please choose another one',
   choosePrepaidCard: 'Choose a Prepaid Card',
+  createProfileErrorMessage:
+    'Could not create profile, please try again. If this problem persists please reach out to support@cardstack.com',
+  profileCreated: 'Profile Created',
+  profileCreatedMessage: 'Your profile has been created successfully!',
 };
 
 export const exampleMerchantData = {

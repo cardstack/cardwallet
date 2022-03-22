@@ -26,6 +26,7 @@ import {
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { logger } from '@rainbow-me/utils';
 import { colors } from '@cardstack/theme';
+import { displayLocalNotification } from '@cardstack/notification-handler';
 
 const CreateProfileFeeInSpend = 100;
 
@@ -57,16 +58,22 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   useEffect(() => {
     if (isError) {
       dismissLoadingOverlay();
-      logger.sentry('Error creating profile-', error);
-      Alert.alert(
-        'Could not create profile, please try again. If this problem persists please reach out to support@cardstack.com'
-      );
+      logger.sentry('Error creating profile - ', error);
+      Alert.alert(strings.createProfileErrorMessage);
     }
   }, [dismissLoadingOverlay, error, isError]);
 
   useEffect(() => {
     if (isSuccess && !isFetching) {
       dismissLoadingOverlay();
+      displayLocalNotification({
+        notification: {
+          title: strings.profileCreated,
+          body: strings.profileCreatedMessage,
+        },
+        data: {},
+      });
+
       navigate(RainbowRoutes.HOME_SCREEN);
     }
   }, [dismissLoadingOverlay, isSuccess, isFetching, navigate]);
@@ -81,11 +88,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [isUniqueId, setIdUniqueness] = useState<boolean>(false);
   const [businessName, setBusinessName] = useState<string>(businessNameData);
   const [businessId, setBusinessId] = useState<string>(businessIdData);
-
-  const [
-    selectedPrepaidCard,
-    setPrepaidCard,
-  ] = useState<PrepaidCardType | null>(null);
 
   // ToDo: update with custom color picker
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -170,48 +172,50 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     [accountSymbol, businessName]
   );
 
-  const onConfirmCreateProfile = useCallback(async () => {
-    if (!isLoading && authToken && selectedPrepaidCard) {
-      showLoadingOverlay({ title: 'Creating Profile' });
+  const onConfirmCreateProfile = useCallback(
+    (selectedPrepaidCard: PrepaidCardType) => async () => {
+      if (!isLoading && authToken) {
+        showLoadingOverlay({ title: 'Creating Profile' });
 
-      const merchantInfoData = {
-        name: businessName,
-        slug: businessId,
-        color: businessColor,
-        'text-color': '#fff',
-      };
+        const merchantInfoData = {
+          name: businessName,
+          slug: businessId,
+          color: businessColor,
+          'text-color': '#fff',
+        };
 
-      const profileDID = await createBusinessInfoDID(
-        merchantInfoData,
-        authToken
-      );
+        const profileDID = await createBusinessInfoDID(
+          merchantInfoData,
+          authToken
+        );
 
-      if (!profileDID) {
-        return;
+        if (!profileDID) {
+          return;
+        }
+
+        await createProfile({
+          selectedWallet,
+          network,
+          selectedPrepaidCardAddress: selectedPrepaidCard.address,
+          profileDID,
+        });
+
+        refetchSafes();
       }
-
-      await createProfile({
-        selectedWallet,
-        network,
-        selectedPrepaidCardAddress: selectedPrepaidCard.address,
-        profileDID,
-      });
-
-      refetchSafes();
-    }
-  }, [
-    isLoading,
-    authToken,
-    selectedPrepaidCard,
-    businessName,
-    businessId,
-    businessColor,
-    createProfile,
-    selectedWallet,
-    network,
-    refetchSafes,
-    showLoadingOverlay,
-  ]);
+    },
+    [
+      isLoading,
+      authToken,
+      businessName,
+      businessId,
+      businessColor,
+      createProfile,
+      selectedWallet,
+      network,
+      refetchSafes,
+      showLoadingOverlay,
+    ]
+  );
 
   const newMerchantInfo = useMemo(
     () => ({
@@ -225,33 +229,29 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     [businessColor, businessId, businessName]
   );
 
-  const onPressCreate = useCallback(() => {
-    if (selectedPrepaidCard) {
-      // profile create confirmation screen params
+  const onConfirmChoosePrepaidCard = useCallback(
+    (prepaidCard: PrepaidCardType) => {
       const data: RegisterMerchantDecodedData = {
         type: TransactionConfirmationType.REGISTER_MERCHANT,
         spendAmount: CreateProfileFeeInSpend,
-        prepaidCard: selectedPrepaidCard.address,
+        prepaidCard: prepaidCard.address,
         merchantInfo: newMerchantInfo,
       };
 
       navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
         data,
-        onConfirm: onConfirmCreateProfile,
+        onConfirm: onConfirmCreateProfile(prepaidCard),
       });
-    } else {
-      navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
-        spendAmount: CreateProfileFeeInSpend,
-        onConfirmChoosePrepaidCard: setPrepaidCard,
-      });
-    }
-  }, [
-    onConfirmCreateProfile,
-    navigate,
-    newMerchantInfo,
-    selectedPrepaidCard,
-    setPrepaidCard,
-  ]);
+    },
+    [navigate, newMerchantInfo, onConfirmCreateProfile]
+  );
+
+  const onPressCreate = useCallback(() => {
+    navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
+      spendAmount: CreateProfileFeeInSpend,
+      onConfirmChoosePrepaidCard,
+    });
+  }, [navigate, onConfirmChoosePrepaidCard]);
 
   return {
     businessName,
@@ -263,8 +263,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,
-    selectedPrepaidCard,
-    setPrepaidCard,
     onPressCreate,
     newMerchantInfo,
   };
