@@ -19,7 +19,9 @@ export const useTransactionConfirmationSheet = () => {
   const {
     callback: onConfirmCallback,
     isLoading: onConfirmLoading,
-  } = useWorker(onConfirm, []);
+  } = useWorker(async () => {
+    await onConfirm();
+  }, []);
 
   const onCancel = useCallback(() => {
     goBack();
