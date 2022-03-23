@@ -44,7 +44,7 @@ const rewardsApi = safesApi.injectEndpoints({
           errorLogMessage: 'Error fetching reward pool token balances',
         });
       },
-      providesTags: [CacheTags.REWARDS_SAFE],
+      providesTags: [CacheTags.REWARDS_POOL],
     }),
     registerToRewardProgram: builder.mutation<
       RewardsRegisterMutationResult,
@@ -74,7 +74,7 @@ const rewardsApi = safesApi.injectEndpoints({
           resetHdProvider: true,
         });
       },
-      invalidatesTags: [CacheTags.REWARDS_SAFE],
+      invalidatesTags: [CacheTags.REWARDS_SAFE, CacheTags.REWARDS_POOL],
     }),
   }),
 });

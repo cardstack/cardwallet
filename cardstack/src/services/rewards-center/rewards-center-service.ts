@@ -133,16 +133,19 @@ export const claimRewards = async ({
   const validProofs = proofs.filter(proof => proof.isValid);
 
   const result = await Promise.all(
-    validProofs.map(({ leaf, proofArray }) =>
-      rewardPoolInstance.claim(
-        safeAddress,
-        leaf,
-        proofArray,
-        false,
-        undefined,
-        { from: accountAddress }
+    validProofs
+      // TODO: Remove slice once we are able to claim all available proofs
+      .slice(0, 1)
+      .map(({ leaf, proofArray }) =>
+        rewardPoolInstance.claim(
+          safeAddress,
+          leaf,
+          proofArray,
+          false,
+          undefined,
+          { from: accountAddress }
+        )
       )
-    )
   );
 
   return result;

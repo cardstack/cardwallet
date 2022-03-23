@@ -6,6 +6,7 @@ export enum CacheTags {
   SAFES = 'SAFES',
   PREPAID_CARDS = 'PREPAID_CARDS',
   REWARDS_SAFE = 'REWARDS_SAFE',
+  REWARDS_POOL = 'REWARDS_POOL',
 }
 
 export const safesApi = createApi({
