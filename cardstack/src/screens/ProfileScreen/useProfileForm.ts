@@ -54,8 +54,8 @@ export const useProfileForm = (params?: useProfileFormParams) => {
             dismissLoadingOverlay();
             displayLocalNotification({
               notification: {
-                title: strings.profileCreated,
-                body: strings.profileCreatedMessage,
+                title: strings.notification.profileCreated,
+                body: strings.notification.profileCreatedMessage,
               },
               isManualNotification: true,
             });
@@ -68,7 +68,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
           callback: () => {
             dismissLoadingOverlay();
             logger.sentry('Error creating profile - ', error);
-            Alert.alert(strings.createProfileErrorMessage);
+            Alert.alert(strings.validation.createProfileErrorMessage);
           },
         },
       }),
@@ -136,9 +136,9 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     return {
       businessName: businessName.trim()
         ? undefined
-        : strings.businessNameRequired,
+        : strings.validation.businessNameRequired,
       businessId: !isUniqueId
-        ? strings.businessIdShouldBeUnique
+        ? strings.validation.businessIdShouldBeUnique
         : validateMerchantId(businessId),
     };
   }, [isSubmitPressed, businessName, isUniqueId, businessId]);
@@ -173,7 +173,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const onConfirmCreateProfile = useCallback(
     (selectedPrepaidCard: PrepaidCardType) => async () => {
       if (!isLoading && authToken) {
-        showLoadingOverlay({ title: strings.creatingProfile });
+        showLoadingOverlay({ title: strings.notification.creatingProfile });
 
         const merchantInfoData = {
           name: businessName,
@@ -189,7 +189,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
 
         if (!profileDID) {
           dismissLoadingOverlay();
-          Alert.alert(strings.createProfileErrorMessage);
+          Alert.alert(strings.validation.createProfileErrorMessage);
 
           return;
         }

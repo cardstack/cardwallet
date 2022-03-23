@@ -57,7 +57,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
     <>
       <Container>
         <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
-          {strings.nameAndIdForProfile}
+          {strings.stepTwo.nameAndIdForProfile}
         </Text>
       </Container>
       <Container justifyContent="center" alignItems="center" marginTop={5}>
@@ -70,7 +70,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
       </Container>
       <Container paddingHorizontal={5} marginTop={5}>
         <Text color="white" size="xs" fontWeight="600" marginBottom={2}>
-          {strings.businessName}
+          {strings.stepTwo.businessName}
         </Text>
         <Input
           textContentType="name"
@@ -88,7 +88,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
           fontWeight="600"
           marginBottom={2}
         >
-          {strings.uniqueId}
+          {strings.stepTwo.uniqueId}
         </Text>
         <Input
           autoCapitalize="none"
@@ -103,7 +103,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
           {...InputCommonProps}
         />
         <Text size="xxs" color="grayText" textAlign="left" marginTop={1}>
-          {strings.uniqueIdDescription}
+          {strings.stepTwo.uniqueIdDescription}
         </Text>
         <Text
           marginTop={6}
@@ -112,7 +112,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
           fontWeight="600"
           marginBottom={2}
         >
-          {strings.uniqueId}
+          {strings.stepTwo.uniqueId}
         </Text>
         {/* ToDo: update with color selector, used account color instead temporarily */}
         <Container flexDirection="row">
@@ -140,7 +140,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
         </Container>
       </Container>
       <Container alignItems="center" paddingTop={4}>
-        <Button onPress={onSubmitForm}>{strings.continueButton}</Button>
+        <Button onPress={onSubmitForm}>{strings.stepTwo.continueButton}</Button>
       </Container>
     </>
   );

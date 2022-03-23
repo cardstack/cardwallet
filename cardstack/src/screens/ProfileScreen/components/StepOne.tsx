@@ -13,24 +13,24 @@ export const StepOne = ({ goToNextStep }: ProgressStepProps) => {
     <>
       <Container maxWidth={300} alignSelf="center">
         <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
-          {strings.createProfile}
+          {strings.stepOne.createProfile}
         </Text>
         <Text color="grayText" marginTop={10} textAlign="center">
-          {strings.createProfileDesc}
+          {strings.stepOne.createProfileDesc}
         </Text>
       </Container>
       <Container>
         <Text color="white" textAlign="left" paddingLeft={4} marginVertical={2}>
-          {strings.example}
+          {strings.stepOne.example}
         </Text>
         <MerchantSafe
           {...exampleMerchantData}
           disabled
-          headerRightText={strings.headerRightText}
+          headerRightText={strings.header.profile}
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={goToNextStep}>{strings.continueButton}</Button>
+        <Button onPress={goToNextStep}>{strings.stepOne.continueButton}</Button>
       </Container>
     </>
   );

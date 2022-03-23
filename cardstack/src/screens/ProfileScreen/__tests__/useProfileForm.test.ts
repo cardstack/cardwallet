@@ -78,11 +78,11 @@ describe('useProfileForm', () => {
     });
 
     expect(result.current.errors?.businessName).toBe(
-      strings.businessNameRequired
+      strings.validation.businessNameRequired
     );
 
     expect(result.current.errors?.businessId).toBe(
-      strings.businessIdShouldBeUnique
+      strings.validation.businessIdShouldBeUnique
     );
   });
 

@@ -11,7 +11,7 @@ export const StepThree = () => {
     <>
       <Container>
         <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
-          {strings.review}
+          {strings.stepThree.review}
         </Text>
         <Text
           color="grayText"
@@ -19,23 +19,23 @@ export const StepThree = () => {
           textAlign="center"
           paddingHorizontal={10}
         >
-          {strings.reviewDescription}
+          {strings.stepThree.reviewDescription}
         </Text>
       </Container>
       <Container paddingTop={2}>
         <Text color="white" textAlign="left" paddingLeft={4} marginBottom={1}>
-          {strings.yourProfile}
+          {strings.stepThree.yourProfile}
         </Text>
         <MerchantSafe
           {...exampleMerchantData}
           address="" // No address here as didn't create profile yet, it's preview
           merchantInfo={newMerchantInfo}
           disabled
-          headerRightText={strings.headerRightText}
+          headerRightText={strings.header.profile}
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={onPressCreate}>{strings.create}</Button>
+        <Button onPress={onPressCreate}>{strings.stepThree.create}</Button>
       </Container>
     </>
   );
