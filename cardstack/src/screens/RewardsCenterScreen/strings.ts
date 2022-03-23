@@ -18,5 +18,6 @@ export const strings = {
   },
   claim: {
     button: 'Claim',
+    loading: 'Claiming Reward',
   },
 };

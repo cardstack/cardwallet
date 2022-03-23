@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/core';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
 import { strings } from './strings';
 import {
+  useClaimRewardsMutation,
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
   useRegisterToRewardProgramMutation,
@@ -51,6 +53,11 @@ export const useRewardsCenterScreen = () => {
     { isSuccess: isRegistrationSuccess, isError: isRegistrationError },
   ] = useRegisterToRewardProgramMutation();
 
+  const [
+    claimRewards,
+    { isSuccess: isClaimSuccess, isError: isClaimError, error: claimError },
+  ] = useClaimRewardsMutation();
+
   const registeredPools = useMemo(
     () =>
       rewardSafes?.filter(safe =>
@@ -85,7 +92,7 @@ export const useRewardsCenterScreen = () => {
 
   const { selectedWallet } = useWallets();
 
-  const onRegisterEnd = useCallback(
+  const onMutationEndAlert = useCallback(
     ({ title, message }) => () => {
       dismissLoadingOverlay();
 
@@ -103,20 +110,20 @@ export const useRewardsCenterScreen = () => {
       () => ({
         success: {
           status: isRegistrationSuccess,
-          callback: onRegisterEnd({
+          callback: onMutationEndAlert({
             title: 'Success',
             message: 'Registration successful',
           }),
         },
         error: {
           status: isRegistrationError,
-          callback: onRegisterEnd({
+          callback: onMutationEndAlert({
             title: 'Error',
             message: 'Registration failed',
           }),
         },
       }),
-      [isRegistrationError, isRegistrationSuccess, onRegisterEnd]
+      [isRegistrationError, isRegistrationSuccess, onMutationEndAlert]
     )
   );
 
@@ -170,6 +177,57 @@ export const useRewardsCenterScreen = () => {
     });
   }, [navigate, onPrepaidCardSelection]);
 
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isClaimSuccess,
+          callback: onMutationEndAlert({
+            title: 'Success',
+            message: 'Rewards claimed successfully',
+          }),
+        },
+        error: {
+          status: isClaimError,
+          callback: onMutationEndAlert({
+            title: 'Error',
+            message: `Claiming failed - ${
+              (claimError as FetchBaseQueryError)?.data
+            }`,
+          }),
+        },
+      }),
+      [claimError, isClaimError, isClaimSuccess, onMutationEndAlert]
+    )
+  );
+
+  const onClaimPress = useCallback(
+    (tokenAddress, rewardProgramId) => () => {
+      const rewardSafeForProgram = rewardSafes?.find(
+        safe => safe.rewardProgramId === rewardProgramId
+      );
+
+      showLoadingOverlay({ title: strings.claim.loading });
+
+      claimRewards({
+        tokenAddress,
+        accountAddress,
+        network,
+        rewardProgramId,
+        walletId: selectedWallet.id,
+        safeAddress: rewardSafeForProgram?.address || '',
+      });
+    },
+    [
+      accountAddress,
+      claimRewards,
+      network,
+      rewardSafes,
+      selectedWallet.id,
+      showLoadingOverlay,
+    ]
+  );
+
   return {
     rewardSafes,
     registeredPools,
@@ -179,5 +237,6 @@ export const useRewardsCenterScreen = () => {
     hasRewardsAvailable: !!mainPoolTokenInfo,
     mainPoolTokenInfo,
     isLoading: isLoadindSafes || isLoadingTokens,
+    onClaimPress,
   };
 };
