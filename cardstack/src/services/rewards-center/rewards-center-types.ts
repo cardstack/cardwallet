@@ -21,17 +21,26 @@ export interface RewardsTokenBalancesResult {
   rewardPoolTokenBalances: TokenByProgramID[];
 }
 
-export interface RewardsRegisterMutationParams extends SignedProviderParams {
+interface RewardsPoolSignedBaseParams extends SignedProviderParams {
   accountAddress: string;
-  prepaidCardAddress: string;
   rewardProgramId: string;
+}
+export interface RewardsRegisterMutationParams
+  extends RewardsPoolSignedBaseParams {
+  prepaidCardAddress: string;
 }
 
 // Export type from sdk
-interface SuccessfulTransactionReceipt extends TransactionReceipt {
+export interface SuccessfulTransactionReceipt extends TransactionReceipt {
   status: true;
 }
 export interface RewardsRegisterMutationResult {
   rewardSafe: string;
   txReceipt: SuccessfulTransactionReceipt;
+}
+
+export interface RewardsClaimMutationParams
+  extends RewardsPoolSignedBaseParams {
+  safeAddress: string;
+  tokenAddress: string;
 }

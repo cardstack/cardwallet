@@ -1,13 +1,16 @@
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 import {
+  RewardsClaimMutationParams,
   RewardsRegisterMutationParams,
   RewardsRegisterMutationResult,
   RewardsSafeQueryParams,
   RewardsSafeQueryResult,
   RewardsTokenBalancesResult,
+  SuccessfulTransactionReceipt,
 } from './rewards-center-types';
 import {
+  claimRewards,
   fetchRewardPoolTokenBalances,
   fetchRewardsSafe,
   registerToRewardProgram,
@@ -58,6 +61,21 @@ const rewardsApi = safesApi.injectEndpoints({
       },
       invalidatesTags: [CacheTags.REWARDS_SAFE],
     }),
+    claimRewards: builder.mutation<
+      SuccessfulTransactionReceipt[],
+      RewardsClaimMutationParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          SuccessfulTransactionReceipt[],
+          RewardsClaimMutationParams
+        >(claimRewards, params, {
+          errorLogMessage: 'Error while claiming rewards',
+          resetHdProvider: true,
+        });
+      },
+      invalidatesTags: [CacheTags.REWARDS_SAFE],
+    }),
   }),
 });
 
@@ -65,4 +83,5 @@ export const {
   useGetRewardsSafeQuery,
   useGetRewardPoolTokenBalancesQuery,
   useRegisterToRewardProgramMutation,
+  useClaimRewardsMutation,
 } = rewardsApi;
