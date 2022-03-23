@@ -34,7 +34,7 @@ type useProfileFormParams = {
 export const useProfileForm = (params?: useProfileFormParams) => {
   const { navigate } = useNavigation();
   const { authToken, isLoading } = useAuthToken();
-  const { accountSymbol } = useAccountProfile();
+  const { accountSymbol, accountAddress } = useAccountProfile();
   const { network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -173,13 +173,13 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const onConfirmCreateProfile = useCallback(
     (selectedPrepaidCard: PrepaidCardType) => async () => {
       if (!isLoading && authToken) {
-        showLoadingOverlay({ title: 'Creating Profile' });
+        showLoadingOverlay({ title: strings.creatingProfile });
 
         const merchantInfoData = {
           name: businessName,
           slug: businessId,
           color: businessColor,
-          'text-color': '#fff',
+          'text-color': colors.white,
         };
 
         const profileDID = await createBusinessInfoDID(
@@ -188,27 +188,33 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         );
 
         if (!profileDID) {
+          dismissLoadingOverlay();
+          Alert.alert(strings.createProfileErrorMessage);
+
           return;
         }
 
-        await createProfile({
+        createProfile({
           selectedWallet,
           network,
           selectedPrepaidCardAddress: selectedPrepaidCard.address,
           profileDID,
+          accountAddress,
         });
       }
     },
     [
       isLoading,
+      accountAddress,
       authToken,
+      showLoadingOverlay,
       businessName,
       businessId,
       businessColor,
       createProfile,
       selectedWallet,
       network,
-      showLoadingOverlay,
+      dismissLoadingOverlay,
     ]
   );
 

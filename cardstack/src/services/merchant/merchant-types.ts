@@ -15,4 +15,5 @@ export interface CreateProfileQueryParams {
   network: Network;
   selectedPrepaidCardAddress: string;
   profileDID: string;
+  accountAddress: string;
 }

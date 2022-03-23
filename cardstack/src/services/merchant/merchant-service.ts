@@ -58,6 +58,7 @@ export const createProfile = async ({
   network,
   selectedPrepaidCardAddress,
   profileDID,
+  accountAddress,
 }: CreateProfileQueryParams) => {
   const web3 = await Web3Instance.get({
     walletId: selectedWallet.id,
@@ -68,7 +69,9 @@ export const createProfile = async ({
 
   const newProfile = await revenuePool.registerMerchant(
     selectedPrepaidCardAddress,
-    profileDID
+    profileDID,
+    undefined,
+    { from: accountAddress }
   );
 
   return newProfile.merchantSafe;

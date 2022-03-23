@@ -23,6 +23,7 @@ export const strings = {
     'Could not create profile, please try again. If this problem persists please reach out to support@cardstack.com',
   profileCreated: 'Profile Created',
   profileCreatedMessage: 'Your profile has been created successfully!',
+  creatingProfile: 'Creating Profile',
 };
 
 export const exampleMerchantData = {
