@@ -1,24 +1,40 @@
 export const strings = {
-  title: 'Profile',
-  headerRightText: 'Profile',
-  createProfile: 'Create a Profile',
-  createProfileDesc: 'All users need a profile to send and receive payments.',
-  continueButton: 'Continue',
-  example: 'Example:',
-  nameAndIdForProfile: 'Name and ID for Profile',
-  businessName: 'Name (or Business Name)',
-  uniqueId: 'Unique ID',
-  uniqueIdDescription:
-    'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
-  review: 'Review',
-  reviewDescription:
-    'Next you will confirm the creation of your profile. This will require a payment of $1.00USD.',
-  yourProfile: 'Your Profile:',
-  create: 'Create',
-  businessNameRequired: 'Business Name is required',
-  businessIdShouldBeUnique:
-    'This Business ID is already taken. Please choose another one',
-  choosePrepaidCard: 'Choose a Prepaid Card',
+  header: {
+    profile: 'Profile',
+  },
+  stepOne: {
+    createProfile: 'Create a Profile',
+    createProfileDesc: 'All users need a profile to send and receive payments.',
+    continueButton: 'Continue',
+    example: 'Example:',
+  },
+  stepTwo: {
+    nameAndIdForProfile: 'Name and ID for Profile',
+    businessName: 'Name (or Business Name)',
+    uniqueId: 'Unique ID',
+    uniqueIdDescription:
+      'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
+    continueButton: 'Continue',
+  },
+  stepThree: {
+    review: 'Review',
+    reviewDescription:
+      'Next you will confirm the creation of your profile. This will require a payment of \n$1.00 USD.',
+    yourProfile: 'Your Profile:',
+    create: 'Create',
+  },
+  validation: {
+    businessNameRequired: 'Business Name is required',
+    businessIdShouldBeUnique:
+      'This Business ID is already taken. Please choose another one',
+    createProfileErrorMessage:
+      'Could not create profile, please try again. If this problem persists please reach out to support@cardstack.com',
+  },
+  notification: {
+    profileCreated: 'Profile Created',
+    profileCreatedMessage: 'Your profile has been created successfully!',
+    creatingProfile: 'Creating Profile',
+  },
 };
 
 export const exampleMerchantData = {

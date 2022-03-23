@@ -1,4 +1,5 @@
 import { PrepaidCardCustomization } from './transaction-types';
+import { MerchantInformation } from './';
 
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
@@ -45,7 +46,8 @@ export interface IssuePrepaidCardDecodedData {
 
 export interface RegisterMerchantDecodedData {
   spendAmount: number;
-  infoDID: string;
+  infoDID?: string;
+  merchantInfo?: MerchantInformation;
   prepaidCard: string;
   type: TransactionConfirmationType.REGISTER_MERCHANT;
 }

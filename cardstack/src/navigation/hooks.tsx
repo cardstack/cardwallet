@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { InteractionManager } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { MainRoutes, GlobalRoutes } from './routes';
 import { MainScreens, GlobalScreens, ScreenNavigation } from './screens';
@@ -33,6 +34,12 @@ export const useDismissCurrentRoute = (routeName: string) => {
   const checkAndDismissCurrentRoute = useCallback(() => {
     if (Navigation.getActiveRouteName() === routeName) {
       goBack();
+      InteractionManager.runAfterInteractions(() => {
+        // this fixes a bug where the overlay dismiss didn't work on create profile, will investigate more
+        if (Navigation.getActiveRouteName() === routeName) {
+          goBack();
+        }
+      });
     }
   }, [goBack, routeName]);
 

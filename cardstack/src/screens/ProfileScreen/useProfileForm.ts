@@ -1,18 +1,80 @@
 import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { Alert } from 'react-native';
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
+import { useNavigation } from '@react-navigation/native';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
-import { useAuthToken } from '@cardstack/hooks';
-import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { PrepaidCardType } from '@cardstack/types';
+import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
+import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import {
+  checkBusinessIdUniqueness,
+  createBusinessInfoDID,
+} from '@cardstack/services/hub-service';
+import {
+  useAccountProfile,
+  useAccountSettings,
+  useWallets,
+} from '@rainbow-me/hooks';
+import {
+  RegisterMerchantDecodedData,
+  PrepaidCardType,
+  TransactionConfirmationType,
+} from '@cardstack/types';
+import { useCreateProfileMutation } from '@cardstack/services';
+import RainbowRoutes from '@rainbow-me/navigation/routesNames';
+import { logger } from '@rainbow-me/utils';
+import { colors } from '@cardstack/theme';
+import { displayLocalNotification } from '@cardstack/notification-handler';
+
+const CreateProfileFeeInSpend = 100;
 
 type useProfileFormParams = {
   onFormSubmitSuccess?: () => void;
 };
 
 export const useProfileForm = (params?: useProfileFormParams) => {
+  const { navigate } = useNavigation();
   const { authToken, isLoading } = useAuthToken();
-  const { accountSymbol } = useAccountProfile();
+  const { accountSymbol, accountAddress } = useAccountProfile();
+  const { network } = useAccountSettings();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+
+  const { selectedWallet } = useWallets();
+
+  const [
+    createProfile,
+    { isSuccess, isError, error },
+  ] = useCreateProfileMutation();
+
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isSuccess,
+          callback: () => {
+            dismissLoadingOverlay();
+            displayLocalNotification({
+              notification: {
+                title: strings.notification.profileCreated,
+                body: strings.notification.profileCreatedMessage,
+              },
+              isManualNotification: true,
+            });
+
+            navigate(RainbowRoutes.PROFILE_SCREEN);
+          },
+        },
+        error: {
+          status: isError,
+          callback: () => {
+            dismissLoadingOverlay();
+            logger.sentry('Error creating profile - ', error);
+            Alert.alert(strings.validation.createProfileErrorMessage);
+          },
+        },
+      }),
+      [dismissLoadingOverlay, error, isError, isSuccess, navigate]
+    )
+  );
 
   const {
     businessName: businessNameData,
@@ -24,11 +86,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [isUniqueId, setIdUniqueness] = useState<boolean>(false);
   const [businessName, setBusinessName] = useState<string>(businessNameData);
   const [businessId, setBusinessId] = useState<string>(businessIdData);
-
-  const [
-    selectedPrepaidCard,
-    setPrepaidCard,
-  ] = useState<PrepaidCardType | null>(null);
 
   // ToDo: update with custom color picker
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -79,9 +136,9 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     return {
       businessName: businessName.trim()
         ? undefined
-        : strings.businessNameRequired,
+        : strings.validation.businessNameRequired,
       businessId: !isUniqueId
-        ? strings.businessIdShouldBeUnique
+        ? strings.validation.businessIdShouldBeUnique
         : validateMerchantId(businessId),
     };
   }, [isSubmitPressed, businessName, isUniqueId, businessId]);
@@ -113,6 +170,90 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     [accountSymbol, businessName]
   );
 
+  const onConfirmCreateProfile = useCallback(
+    (selectedPrepaidCard: PrepaidCardType) => async () => {
+      if (!isLoading && authToken) {
+        showLoadingOverlay({ title: strings.notification.creatingProfile });
+
+        const merchantInfoData = {
+          name: businessName,
+          slug: businessId,
+          color: businessColor,
+          'text-color': colors.white,
+        };
+
+        const profileDID = await createBusinessInfoDID(
+          merchantInfoData,
+          authToken
+        );
+
+        if (!profileDID) {
+          dismissLoadingOverlay();
+          Alert.alert(strings.validation.createProfileErrorMessage);
+
+          return;
+        }
+
+        createProfile({
+          selectedWallet,
+          network,
+          selectedPrepaidCardAddress: selectedPrepaidCard.address,
+          profileDID,
+          accountAddress,
+        });
+      }
+    },
+    [
+      isLoading,
+      accountAddress,
+      authToken,
+      showLoadingOverlay,
+      businessName,
+      businessId,
+      businessColor,
+      createProfile,
+      selectedWallet,
+      network,
+      dismissLoadingOverlay,
+    ]
+  );
+
+  const newMerchantInfo = useMemo(
+    () => ({
+      color: businessColor,
+      name: businessName,
+      did: '',
+      textColor: colors.white,
+      slug: businessId,
+      ownerAddress: '',
+    }),
+    [businessColor, businessId, businessName]
+  );
+
+  const onConfirmChoosePrepaidCard = useCallback(
+    (prepaidCard: PrepaidCardType) => {
+      const data: RegisterMerchantDecodedData = {
+        type: TransactionConfirmationType.REGISTER_MERCHANT,
+        spendAmount: CreateProfileFeeInSpend,
+        prepaidCard: prepaidCard.address,
+        merchantInfo: newMerchantInfo,
+      };
+
+      navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
+        data,
+        onConfirm: onConfirmCreateProfile(prepaidCard),
+      });
+    },
+    [newMerchantInfo, navigate, onConfirmCreateProfile]
+  );
+
+  const onPressCreate = useCallback(() => {
+    navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
+      spendAmount: CreateProfileFeeInSpend,
+      onConfirmChoosePrepaidCard,
+    });
+  }, [navigate, onConfirmChoosePrepaidCard]);
+
   return {
     businessName,
     businessId,
@@ -123,7 +264,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,
-    selectedPrepaidCard,
-    setPrepaidCard,
+    onPressCreate,
+    newMerchantInfo,
   };
 };

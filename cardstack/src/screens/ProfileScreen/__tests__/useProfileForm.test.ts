@@ -7,6 +7,12 @@ import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
 
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountProfile: jest.fn(),
+  useAccountSettings: () => ({
+    accountAddress: '0x0000000000000000000',
+    nativeCurrency: 'USD',
+    network: 'sokol',
+  }),
+  useWallets: () => ({ selectedWallet: { id: 'fooSelectedWallet' } }),
 }));
 
 jest.mock('@cardstack/services/hub-service', () => ({
@@ -18,6 +24,26 @@ jest.mock('@cardstack/hooks/prepaid-card/useAuthToken', () => ({
     authToken: '123',
     isLoading: false,
   }),
+}));
+
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: jest.fn(() => ({
+    navigate: jest.fn(),
+  })),
+}));
+
+jest.mock('@cardstack/notification-handler', () => ({
+  displayLocalNotification: jest.fn(),
+}));
+
+jest.mock('@cardstack/services', () => ({
+  useCreateProfileMutation: jest.fn(() => [
+    jest.fn(),
+    {
+      isSuccess: true,
+      isError: false,
+    },
+  ]),
 }));
 
 describe('useProfileForm', () => {
@@ -52,11 +78,11 @@ describe('useProfileForm', () => {
     });
 
     expect(result.current.errors?.businessName).toBe(
-      strings.businessNameRequired
+      strings.validation.businessNameRequired
     );
 
     expect(result.current.errors?.businessId).toBe(
-      strings.businessIdShouldBeUnique
+      strings.validation.businessIdShouldBeUnique
     );
   });
 

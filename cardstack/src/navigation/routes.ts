@@ -23,6 +23,7 @@ export const MainRoutes = {
   SETTINGS_MODAL: 'SettingModal',
   TRANSFER_CARD: 'TransferCardScreen',
   REWARDS_CENTER_SCREEN: 'RewardsCenterScreen',
+  TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
 } as const;
 
 export const GlobalRoutes = {

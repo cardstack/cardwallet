@@ -48,8 +48,25 @@ export const useChoosePrepaidCard = () => {
       );
 
       goBack();
+
+      return;
     }
-  }, [goBack, prepaidCards.length, isLoading]);
+
+    // automatically select if only one prepaid card is available
+    if (
+      !isLoading &&
+      prepaidCards.length === 1 &&
+      prepaidCards[0].spendFaceValue > spendAmount
+    ) {
+      selectPrepaidCard(prepaidCards[0]);
+    }
+  }, [
+    goBack,
+    isLoading,
+    onConfirmChoosePrepaidCard,
+    prepaidCards,
+    spendAmount,
+  ]);
 
   const onSelectPrepaidCard = useCallback(
     (prepaidCardItem: PrepaidCardType) => {
@@ -61,9 +78,8 @@ export const useChoosePrepaidCard = () => {
   const onConfirmSelectedCard = useCallback(() => {
     if (selectedPrepaidCard) {
       onConfirmChoosePrepaidCard(selectedPrepaidCard);
-      goBack();
     }
-  }, [selectedPrepaidCard, onConfirmChoosePrepaidCard, goBack]);
+  }, [selectedPrepaidCard, onConfirmChoosePrepaidCard]);
 
   return {
     isLoading,

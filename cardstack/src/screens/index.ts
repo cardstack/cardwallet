@@ -27,3 +27,4 @@ export { default as TransferCardScreen } from './TransferCardScreen/TransferCard
 export { default as QRScannerScreen } from './QRScannerScreen/QRScannerScreen';
 export { default as ChoosePrepaidCardSheet } from './sheets/ChoosePrepaidCardSheet/ChoosePrepaidCardSheet';
 export { default as RewardsCenterScreen } from './RewardsCenterScreen/RewardsCenterScreen';
+export { default as TransactionConfirmationSheet } from './sheets/TransactionConfirmationSheet/TransactionConfirmationSheet';

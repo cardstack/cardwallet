@@ -29,7 +29,8 @@ interface LocalNotificationDataType {
 }
 interface LocalNotificationType {
   notification: { title?: string; body: string };
-  data: LocalNotificationDataType;
+  data?: LocalNotificationDataType;
+  isManualNotification?: boolean;
 }
 
 interface NotificationConfig {
@@ -84,13 +85,14 @@ export const displayLocalNotification = async (
     const {
       notification: { title, body },
       data,
+      isManualNotification,
     } = notificationData;
 
-    const { notificationType, network } = data;
+    const { notificationType, network } = data || {};
     const currentNetwork = await getNetwork();
 
     // show local notification in same network only
-    if (network === currentNetwork) {
+    if (network === currentNetwork || isManualNotification) {
       // update notification title when no title from hub side(mostly had no title)
       const notificationTitle =
         title ||
@@ -99,7 +101,7 @@ export const displayLocalNotification = async (
       // A channel is required on Android for displaying local notifications.
       // The default channel can't have custom 'importance'.
       const channelId = await notifee.createChannel({
-        id: notificationType,
+        id: isManualNotification ? 'ManualLocalNotification' : notificationType,
         name: notificationTitle,
         importance: AndroidImportance.HIGH,
       });

@@ -9,7 +9,7 @@ interface Props {
   headerText: string;
   title: string;
   showNetworkBadge?: boolean;
-  address: string;
+  address?: string;
   icon?: Element;
   avatarInfo?: {
     color?: string;
@@ -54,9 +54,11 @@ const TransactionListItem = ({
           <Container marginLeft={hasIcon ? 4 : textMarginLeftNoIcon}>
             <Text weight="extraBold">{title}</Text>
             {showNetworkBadge && <NetworkBadge marginTop={2} />}
-            <Container maxWidth={180} marginTop={1}>
-              <Text variant="subAddress">{address}</Text>
-            </Container>
+            {address ? (
+              <Container maxWidth={180} marginTop={1}>
+                <Text variant="subAddress">{address}</Text>
+              </Container>
+            ) : null}
             {footer}
           </Container>
         </Container>

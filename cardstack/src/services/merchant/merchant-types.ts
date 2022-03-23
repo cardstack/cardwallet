@@ -9,3 +9,11 @@ export interface ClaimRevenueQueryParams {
   merchantSafeAddress: string;
   revenueBalances: TokenType[];
 }
+
+export interface CreateProfileQueryParams {
+  selectedWallet: RainbowWallet;
+  network: Network;
+  selectedPrepaidCardAddress: string;
+  profileDID: string;
+  accountAddress: string;
+}
