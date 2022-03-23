@@ -55,14 +55,17 @@ const historyList = [
 ];
 
 enum Tabs {
-  BALANCE,
-  HISTORY,
+  BALANCE = 'BALANCE',
+  HISTORY = 'HISTORY',
 }
 
+const tabs = [
+  { title: strings.balance.title, key: Tabs.BALANCE },
+  { title: strings.history.title, key: Tabs.HISTORY },
+];
+
 export const ClaimContent = () => {
-  const { TabHeader, currentTab } = useTabHeader({
-    tabs: [{ title: strings.balance.title }, { title: strings.history.title }],
-  });
+  const { TabHeader, currentTab } = useTabHeader({ tabs });
 
   const renderClaimList = useCallback(
     () =>
@@ -117,7 +120,7 @@ export const ClaimContent = () => {
       </Container>
       <TabHeader />
       <Container padding={5}>
-        {currentTab === Tabs.BALANCE
+        {currentTab.key === Tabs.BALANCE
           ? renderBalanceList()
           : renderHistoryList()}
       </Container>

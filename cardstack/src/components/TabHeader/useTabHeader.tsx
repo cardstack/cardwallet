@@ -2,16 +2,17 @@ import React, { useState, useCallback } from 'react';
 import { TabHeaderButton } from '.';
 import { Container } from '@cardstack/components';
 
-export interface TabProps {
+export interface TabType {
   title: string;
+  key: string;
 }
 
-export interface TabsProps {
-  tabs: Array<TabProps>;
+export interface TabsArrayProps {
+  tabs: Array<TabType>;
 }
 
-export const useTabHeader = ({ tabs }: TabsProps) => {
-  const [currentTab, setCurrentTab] = useState(0);
+export const useTabHeader = ({ tabs }: TabsArrayProps) => {
+  const [currentTab, setCurrentTab] = useState<TabType>(tabs[0]);
 
   const tabHeaderComp = useCallback(
     () => (
@@ -21,11 +22,11 @@ export const useTabHeader = ({ tabs }: TabsProps) => {
           flexDirection="row"
           justifyContent="space-between"
         >
-          {tabs.map((tab, index) => (
+          {tabs.map(tab => (
             <TabHeaderButton
-              isSelected={index === currentTab}
+              isSelected={tab.key === currentTab.key}
               title={tab.title}
-              onPress={() => setCurrentTab(index)}
+              onPress={() => setCurrentTab(tab)}
             />
           ))}
         </Container>

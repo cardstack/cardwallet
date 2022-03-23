@@ -18,7 +18,7 @@ export const TabHeaderButton = ({
       justifyContent="center"
       onPress={onPress}
       paddingTop={5}
-      width="50%"
+      flex={1}
     >
       <Text
         color="black"
