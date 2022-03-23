@@ -181,7 +181,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TRANSACTION_CONFIRMATION_SHEET: {
     component: TransactionConfirmationSheet,
     options: expandedPreset as StackNavigationOptions,
-    listeners: dismissAndroidKeyboardOnClose,
   },
 };
 
