@@ -52,7 +52,7 @@ export const RewardRow = ({
         <Container paddingTop={4}>
           <Button
             variant="small"
-            height={39}
+            height={30}
             width="100%"
             onPress={onClaimPress}
           >
