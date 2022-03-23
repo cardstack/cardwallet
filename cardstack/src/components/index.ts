@@ -48,3 +48,4 @@ export * from './SwitchSelector';
 export * from './ProgressSteps';
 export * from './ChoosePrepaidCard';
 export * from './InfoBanner';
+export * from './TabHeader';

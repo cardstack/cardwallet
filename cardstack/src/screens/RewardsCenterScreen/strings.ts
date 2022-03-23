@@ -19,5 +19,12 @@ export const strings = {
   claim: {
     button: 'Claim',
     loading: 'Claiming Reward',
+    claimed: 'Claimed',
+  },
+  balance: {
+    title: 'Balance',
+  },
+  history: {
+    title: 'History',
   },
 };
