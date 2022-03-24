@@ -30,7 +30,7 @@ export const StepOne = ({ goToNextStep }: ProgressStepProps) => {
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={goToNextStep}>{strings.stepOne.continueButton}</Button>
+        <Button onPress={goToNextStep}>{strings.buttons.continue}</Button>
       </Container>
     </>
   );

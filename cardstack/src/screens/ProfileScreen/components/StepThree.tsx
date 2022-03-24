@@ -35,7 +35,7 @@ export const StepThree = () => {
         />
       </Container>
       <Container alignItems="center">
-        <Button onPress={onPressCreate}>{strings.stepThree.create}</Button>
+        <Button onPress={onPressCreate}>{strings.buttons.create}</Button>
       </Container>
     </>
   );
