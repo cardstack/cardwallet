@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import rewardBanner from '../../assets/rewards-banner.png';
 import { strings } from './strings';
 import { useRewardsCenterScreen } from './useRewardsCenterScreen';
-import { RegisterContent, NoRewardContent, RewardRow } from './components';
+import { RegisterContent, NoRewardContent, ClaimContent } from './components';
 import { Container, NavigationStackHeader, Image } from '@cardstack/components';
 
 const RewardsCenterScreen = () => {
@@ -20,8 +20,13 @@ const RewardsCenterScreen = () => {
       primaryText: mainPoolTokenInfo?.balance.display || '',
       subText: mainPoolTokenInfo?.native.balance.display || '',
       coinSymbol: mainPoolTokenInfo?.token.symbol || '',
+      onClaimPress: () =>
+        onClaimPress(
+          mainPoolTokenInfo?.tokenAddress,
+          mainPoolTokenInfo?.rewardProgramId
+        ),
     }),
-    [mainPoolTokenInfo]
+    [mainPoolTokenInfo, onClaimPress]
   );
 
   return (
@@ -29,7 +34,7 @@ const RewardsCenterScreen = () => {
       <NavigationStackHeader title={strings.navigation.title} />
       <Container backgroundColor="white" flex={1}>
         <Image source={rewardBanner} style={styles.headerImage} />
-        <Container padding={5}>
+        <Container>
           {!isRegistered &&
             (hasRewardsAvailable ? (
               <RegisterContent
@@ -39,13 +44,9 @@ const RewardsCenterScreen = () => {
             ) : (
               <NoRewardContent />
             ))}
-          {isRegistered && hasRewardsAvailable && (
-            <RewardRow
-              {...mainPoolRowProps}
-              onClaimPress={onClaimPress(
-                mainPoolTokenInfo?.tokenAddress,
-                mainPoolTokenInfo?.rewardProgramId
-              )}
+          {isRegistered && (
+            <ClaimContent
+              claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
             />
           )}
         </Container>

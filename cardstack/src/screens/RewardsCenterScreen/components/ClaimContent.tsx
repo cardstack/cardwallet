@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { strings } from '../strings';
 import {
   RewardsTitle,
@@ -28,7 +28,7 @@ const tabs = [
 ];
 
 export const ClaimContent = ({
-  claimList = [],
+  claimList,
   balanceList,
   historyList,
 }: ClaimContentProps) => {
@@ -36,28 +36,28 @@ export const ClaimContent = ({
 
   const renderClaimList = useCallback(
     () =>
-      claimList.map((item, index) => (
+      claimList?.map((item, index) => (
         <RewardRow
           coinSymbol={item.coinSymbol}
           primaryText={item.primaryText}
           subText={item.subText}
           paddingBottom={index + 1 < claimList.length ? 5 : 0}
-          onClaimPress={() => {
-            //pass
-          }}
+          onClaimPress={item.onClaimPress}
         />
       )),
+    [claimList]
+  );
+
+  const title = useMemo(
+    () =>
+      claimList ? strings.register.title : strings.register.noRewards.title,
     [claimList]
   );
 
   return (
     <ScrollView>
       <Container padding={5}>
-        <RewardsTitle
-          title={strings.register.title}
-          width="100%"
-          paddingBottom={5}
-        />
+        <RewardsTitle title={title} width="100%" paddingBottom={5} />
         {renderClaimList()}
       </Container>
       <TabHeader />
