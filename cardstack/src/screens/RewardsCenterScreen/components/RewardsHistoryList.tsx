@@ -3,13 +3,13 @@ import { SectionList } from 'react-native';
 import { RewardRow, RewardRowProps } from '.';
 import { Container, Text } from '@cardstack/components';
 
-interface RewardsHistoryListProps {
-  sections: [
-    {
-      title: string;
-      data: Array<RewardRowProps>;
-    }
-  ];
+export interface RewardsHistorySectionType {
+  title: string;
+  data: Array<RewardRowProps>;
+}
+
+export interface RewardsHistoryListProps {
+  sections: Array<RewardsHistorySectionType>;
 }
 
 export const RewardsHistoryList = ({ sections }: RewardsHistoryListProps) => {
