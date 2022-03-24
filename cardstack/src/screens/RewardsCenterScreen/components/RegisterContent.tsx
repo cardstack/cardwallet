@@ -1,7 +1,7 @@
 import React from 'react';
 import { strings } from '../strings';
-import { RewardRow } from './RewardRow';
-import { Container, Button, Text, InfoBanner } from '@cardstack/components';
+import { RewardRow, RewardsTitle } from '.';
+import { Container, Button, InfoBanner } from '@cardstack/components';
 
 interface RegisterContentProps {
   primaryText: string;
@@ -16,16 +16,8 @@ export const RegisterContent = ({
   subText,
   coinSymbol,
 }: RegisterContentProps) => (
-  <Container alignItems="center">
-    <Text
-      weight="bold"
-      letterSpacing={1.1}
-      textTransform="uppercase"
-      size="xxs"
-      paddingBottom={5}
-    >
-      {strings.register.title}
-    </Text>
+  <Container alignItems="center" padding={5}>
+    <RewardsTitle title={strings.register.title} paddingBottom={5} />
     <RewardRow
       coinSymbol={coinSymbol}
       primaryText={primaryText}

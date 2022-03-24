@@ -8,10 +8,11 @@ import {
   ContainerProps,
 } from '@cardstack/components';
 
-interface RewardRowProps extends ContainerProps {
+export interface RewardRowProps extends ContainerProps {
   coinSymbol: string;
   primaryText: string;
-  subText: string;
+  subText?: string;
+  claimed?: boolean;
   onClaimPress?: () => void;
 }
 
@@ -19,6 +20,7 @@ export const RewardRow = ({
   coinSymbol,
   primaryText,
   subText,
+  claimed = false,
   onClaimPress,
   ...props
 }: RewardRowProps) => (
@@ -37,15 +39,23 @@ export const RewardRow = ({
           alignItems="flex-start"
           flex={1}
         >
-          <Text weight="extraBold" fontSize={15} ellipsizeMode="tail">
-            {primaryText}
+          <Text fontSize={15}>
+            {claimed && strings.claim.claimed + ' '}
+            <Text weight="extraBold" fontSize={15} ellipsizeMode="tail">
+              {primaryText}
+            </Text>
           </Text>
           {subText && <Text variant="subText">{subText}</Text>}
         </Container>
       </Container>
       {!!onClaimPress && (
         <Container paddingTop={4}>
-          <Button width="100%" onPress={onClaimPress}>
+          <Button
+            variant="small"
+            height={30}
+            width="100%"
+            onPress={onClaimPress}
+          >
             {strings.claim.button}
           </Button>
         </Container>

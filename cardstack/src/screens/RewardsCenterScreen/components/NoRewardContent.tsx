@@ -1,5 +1,6 @@
 import React from 'react';
 import { strings } from '../strings';
+import { RewardsTitle } from '.';
 import {
   Container,
   ContainerProps,
@@ -8,16 +9,8 @@ import {
 } from '@cardstack/components';
 
 export const NoRewardContent = () => (
-  <Container alignItems="center">
-    <Text
-      weight="bold"
-      letterSpacing={1.1}
-      textTransform="uppercase"
-      size="xxs"
-      paddingBottom={5}
-    >
-      {strings.register.noRewards.title}
-    </Text>
+  <Container alignItems="center" padding={5}>
+    <RewardsTitle title={strings.register.noRewards.title} paddingBottom={5} />
     <NoRewardMessage paddingBottom={4} />
     <InfoBanner
       title={strings.register.infobanner.title}

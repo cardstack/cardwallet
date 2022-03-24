@@ -10,7 +10,7 @@ import {
   BorderProps,
   backgroundColor,
 } from '@shopify/restyle';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 import React, { ReactNode, useMemo } from 'react';
 
 import { Text } from '../Text';
@@ -49,6 +49,13 @@ const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
   [layout, spacing, border, VariantRestyleComponent, backgroundColor],
   AnimatedPressable
 );
+
+const styles = StyleSheet.create({
+  // Ensures button's title size integrity if button's height gets to be manually set.
+  title: {
+    height: '100%',
+  },
+});
 
 /**
  * A button with a simple press animation
@@ -115,7 +122,12 @@ export const Button = ({
               {...iconProps}
             />
           )}
-          <Text {...textStyle} {...disabledTextProps} allowFontScaling={false}>
+          <Text
+            {...textStyle}
+            {...disabledTextProps}
+            style={styles.title}
+            allowFontScaling={false}
+          >
             {children}
           </Text>
         </Container>
