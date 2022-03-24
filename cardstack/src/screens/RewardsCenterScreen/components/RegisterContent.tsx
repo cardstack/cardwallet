@@ -23,9 +23,6 @@ export const RegisterContent = ({
       primaryText={primaryText}
       subText={subText}
       paddingBottom={5}
-      onClaimPress={() => {
-        //pass
-      }}
     />
     <Button onPress={onRegisterPress}>{strings.register.button}</Button>
     <Container paddingBottom={5} />
