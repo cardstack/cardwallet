@@ -14,6 +14,7 @@ const RewardsCenterScreen = () => {
     mainPoolTokenInfo,
     onClaimPress,
     claimHistorySectionData,
+    tokensBalanceData,
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
@@ -49,6 +50,7 @@ const RewardsCenterScreen = () => {
             <ClaimContent
               claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
               historyList={claimHistorySectionData}
+              balanceList={tokensBalanceData}
             />
           )}
         </Container>

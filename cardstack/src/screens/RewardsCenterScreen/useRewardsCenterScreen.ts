@@ -17,6 +17,8 @@ import { Alert } from '@rainbow-me/components/alerts';
 import { useMutationEffects } from '@cardstack/hooks';
 import { RewardeeClaim, useGetRewardClaimsQuery } from '@cardstack/graphql';
 import { groupTransactionsByDate } from '@cardstack/utils';
+import { TokenType } from '@cardstack/types';
+import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
@@ -251,6 +253,23 @@ export const useRewardsCenterScreen = () => {
     [data]
   );
 
+  const tokensBalanceData = useMemo(
+    () => ({
+      // Get tokens from all rewardSafes
+      data: rewardSafes?.reduce(
+        (tokens: TokenType[], safe: RewardsSafeType) => {
+          const tokenWithBalance = safe.tokens?.filter(
+            ({ native: { balance } }) => !!balance.amount
+          );
+
+          return [...tokens, ...tokenWithBalance];
+        },
+        []
+      ),
+    }),
+    [rewardSafes]
+  );
+
   return {
     rewardSafes,
     registeredPools,
@@ -262,5 +281,6 @@ export const useRewardsCenterScreen = () => {
     isLoading: isLoadindSafes || isLoadingTokens,
     onClaimPress,
     claimHistorySectionData,
+    tokensBalanceData,
   };
 };
