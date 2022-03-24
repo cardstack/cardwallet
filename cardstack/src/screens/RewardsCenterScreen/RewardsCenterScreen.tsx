@@ -22,11 +22,10 @@ const RewardsCenterScreen = () => {
       primaryText: mainPoolTokenInfo?.balance.display || '',
       subText: mainPoolTokenInfo?.native.balance.display || '',
       coinSymbol: mainPoolTokenInfo?.token.symbol || '',
-      onClaimPress: () =>
-        onClaimPress(
-          mainPoolTokenInfo?.tokenAddress,
-          mainPoolTokenInfo?.rewardProgramId
-        ),
+      onClaimPress: onClaimPress(
+        mainPoolTokenInfo?.tokenAddress,
+        mainPoolTokenInfo?.rewardProgramId
+      ),
     }),
     [mainPoolTokenInfo, onClaimPress]
   );
