@@ -11,6 +11,7 @@ export const strings = {
     nameAndIdForProfile: 'Name and ID for Profile',
     businessName: 'Name (or Business Name)',
     uniqueId: 'Unique ID',
+    businessIdAvailable: 'This ID is available',
     uniqueIdDescription:
       'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
     required: 'required',

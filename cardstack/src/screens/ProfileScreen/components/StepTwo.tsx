@@ -5,6 +5,7 @@ import { strings } from '.';
 import {
   Button,
   Container,
+  ContainerProps,
   IconName,
   Input,
   ProgressStepProps,
@@ -49,10 +50,34 @@ const TextErrorProps = {
   marginTop: 1,
 };
 
-const TextLabelProps = {
-  color: 'white' as ColorTypes,
-  fontSize: 13,
-  fontWeight: '600' as any,
+interface InputLabelProps extends ContainerProps {
+  label: string;
+  required?: boolean;
+}
+
+export const InputLabel = ({
+  label,
+  required = false,
+  ...props
+}: InputLabelProps) => {
+  return (
+    <Container
+      justifyContent="space-between"
+      flexDirection="row"
+      marginTop={4}
+      marginBottom={1}
+      {...props}
+    >
+      <Text color="white" fontSize={13} fontWeight="600">
+        {required ? `${label}*` : label}
+      </Text>
+      {required && (
+        <Text color="white" size="xs">
+          {strings.stepTwo.required}
+        </Text>
+      )}
+    </Container>
+  );
 };
 
 export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
@@ -94,6 +119,11 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
 
   const validBusinessColor = getValidColorHexString(businessColor);
 
+  const hadError = useMemo(
+    () => Boolean(errors && (errors?.businessName || errors?.businessId)),
+    [errors]
+  );
+
   return (
     <>
       <Container justifyContent="center" alignItems="center">
@@ -104,16 +134,13 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
           textColor={colors.white}
         />
       </Container>
-      <Container>
+      <Container paddingTop={2}>
         <Text color="white" fontWeight="bold" fontSize={20} textAlign="center">
           {strings.stepTwo.nameAndIdForProfile}
         </Text>
       </Container>
-      <Container paddingHorizontal={5} marginTop={5}>
-        {/* ToDo: update with color selector, used account color instead temporarily */}
-        <Text {...TextLabelProps} marginBottom={1}>
-          {strings.stepTwo.iconColor}
-        </Text>
+      <Container paddingHorizontal={5} marginTop={4}>
+        <InputLabel label={strings.stepTwo.iconColor} marginTop={0} />
         <Container position="relative">
           <Input
             borderColor="buttonSecondaryBorder"
@@ -144,17 +171,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
             />
           </Container>
         </Container>
-        <Container
-          justifyContent="space-between"
-          flexDirection="row"
-          marginTop={4}
-          marginBottom={1}
-        >
-          <Text {...TextLabelProps}>{`${strings.stepTwo.businessName}*`}</Text>
-          <Text color="white" size="xs">
-            {strings.stepTwo.required}
-          </Text>
-        </Container>
+        <InputLabel label={strings.stepTwo.businessName} required />
         <Input
           textContentType="name"
           borderColor={errors?.businessName ? 'error' : 'buttonSecondaryBorder'}
@@ -167,17 +184,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
         {errors?.businessName ? (
           <Text {...TextErrorProps}>{errors.businessName}</Text>
         ) : null}
-        <Container
-          justifyContent="space-between"
-          flexDirection="row"
-          marginTop={4}
-          marginBottom={1}
-        >
-          <Text {...TextLabelProps}>{`${strings.stepTwo.uniqueId}*`}</Text>
-          <Text color="white" size="xs">
-            {strings.stepTwo.required}
-          </Text>
-        </Container>
+        <InputLabel label={strings.stepTwo.uniqueId} required />
         <Input
           autoCapitalize="none"
           textContentType="username"
@@ -193,14 +200,26 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
         {errors?.businessId ? (
           <Text {...TextErrorProps}>{errors.businessId}</Text>
         ) : (
-          <Text size="xxs" color="grayText" textAlign="left" marginTop={1}>
-            {strings.stepTwo.uniqueIdDescription}
-          </Text>
+          <>
+            {isUniqueId && (
+              <Text
+                size="xxs"
+                color="lightGreen"
+                textAlign="left"
+                marginTop={1}
+              >
+                {strings.stepTwo.businessIdAvailable}
+              </Text>
+            )}
+            <Text size="xxs" color="grayText" textAlign="left" marginTop={1}>
+              {strings.stepTwo.uniqueIdDescription}
+            </Text>
+          </>
         )}
       </Container>
       <Container alignItems="center" paddingTop={4}>
-        <Button onPress={onSubmitForm} disabled={!!errors}>
-          {errors
+        <Button onPress={onSubmitForm} disabled={hadError}>
+          {hadError
             ? strings.buttons.completeToContinue
             : strings.buttons.continue}
         </Button>

@@ -148,9 +148,9 @@ export const useProfileForm = (params?: useProfileFormParams) => {
       businessName: businessName.trim()
         ? undefined
         : strings.validation.businessNameRequired,
-      businessId: !isUniqueId
-        ? strings.validation.businessIdShouldBeUnique
-        : validateMerchantId(businessId),
+      businessId:
+        validateMerchantId(businessId) ||
+        (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique),
     };
   }, [isSubmitPressed, businessName, isUniqueId, businessId]);
 
