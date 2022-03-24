@@ -1,58 +1,13 @@
 import React, { useCallback } from 'react';
 import { strings } from '../strings';
-import { RewardsTitle, RewardRow } from '.';
+import { claimList, balanceList, historyList } from './__mock__';
+import {
+  RewardsTitle,
+  RewardRow,
+  RewardsBalanceList,
+  RewardsHistoryList,
+} from '.';
 import { ScrollView, Container, useTabHeader } from '@cardstack/components';
-
-const claimList = [
-  {
-    coinSymbol: 'CARD',
-    primaryText: '3,200 CARD.CPXD',
-    subText: '$45.00 USD',
-  },
-  {
-    coinSymbol: 'CARD',
-    primaryText: '1,600 CARD.CPXD',
-    subText: '$22.50 USD',
-  },
-];
-
-const balanceList = [
-  {
-    coinSymbol: 'CARD',
-    primaryText: '1,600 CARD.CPXD',
-  },
-  {
-    coinSymbol: 'CARD',
-    primaryText: '800 CARD.CPXD',
-  },
-  {
-    coinSymbol: 'CARD',
-    primaryText: '400 CARD.CPXD',
-  },
-  {
-    coinSymbol: 'CARD',
-    primaryText: '200 CARD.CPXD',
-  },
-  {
-    coinSymbol: 'CARD',
-    primaryText: '100 CARD.CPXD',
-  },
-];
-
-const historyList = [
-  {
-    coinSymbol: 'CARD',
-    primaryText: '200 CARD.CPXD',
-  },
-  {
-    coinSymbol: 'CARD',
-    primaryText: '100 CARD.CPXD',
-  },
-  {
-    coinSymbol: 'CARD',
-    primaryText: '50 CARD.CPXD',
-  },
-];
 
 enum Tabs {
   BALANCE = 'BALANCE',
@@ -83,31 +38,6 @@ export const ClaimContent = () => {
     []
   );
 
-  const renderBalanceList = useCallback(
-    () =>
-      balanceList.map(item => (
-        <RewardRow
-          coinSymbol={item.coinSymbol}
-          primaryText={item.primaryText}
-          paddingBottom={4}
-        />
-      )),
-    []
-  );
-
-  const renderHistoryList = useCallback(
-    () =>
-      historyList.map(item => (
-        <RewardRow
-          claimed
-          coinSymbol={item.coinSymbol}
-          primaryText={item.primaryText}
-          paddingBottom={4}
-        />
-      )),
-    []
-  );
-
   return (
     <ScrollView>
       <Container padding={5}>
@@ -120,9 +50,11 @@ export const ClaimContent = () => {
       </Container>
       <TabHeader />
       <Container padding={5}>
-        {currentTab.key === Tabs.BALANCE
-          ? renderBalanceList()
-          : renderHistoryList()}
+        {currentTab.key === Tabs.BALANCE ? (
+          <RewardsBalanceList data={balanceList} />
+        ) : (
+          <RewardsHistoryList sections={historyList} />
+        )}
       </Container>
     </ScrollView>
   );
