@@ -53,7 +53,7 @@ const tabBarOptions = {
     elevation: 3,
   },
   showLabel: false,
-  keyboardHidesTabBar: true,
+  keyboardHidesTabBar: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
 };
 
 const TabNavigator = () => (
