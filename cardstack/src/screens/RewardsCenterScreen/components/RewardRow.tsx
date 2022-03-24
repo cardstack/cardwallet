@@ -5,10 +5,11 @@ import {
   Button,
   Text,
   CoinIcon,
-  ContainerProps,
+  Touchable,
+  TouchableProps,
 } from '@cardstack/components';
 
-export interface RewardRowProps extends ContainerProps {
+export interface RewardRowProps extends Omit<TouchableProps, 'children'> {
   coinSymbol: string;
   primaryText: string;
   subText?: string;
@@ -22,9 +23,16 @@ export const RewardRow = ({
   subText,
   claimed = false,
   onClaimPress,
+  onPress,
   ...props
 }: RewardRowProps) => (
-  <Container flexDirection="column" width="100%" {...props}>
+  <Touchable
+    flexDirection="column"
+    width="100%"
+    disabled={!onPress}
+    onPress={onPress}
+    {...props}
+  >
     <Container
       padding={4}
       borderWidth={1}
@@ -61,5 +69,5 @@ export const RewardRow = ({
         </Container>
       )}
     </Container>
-  </Container>
+  </Touchable>
 );
