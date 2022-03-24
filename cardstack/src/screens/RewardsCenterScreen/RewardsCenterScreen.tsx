@@ -13,6 +13,7 @@ const RewardsCenterScreen = () => {
     hasRewardsAvailable,
     mainPoolTokenInfo,
     onClaimPress,
+    claimHistorySectionData,
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
@@ -34,7 +35,7 @@ const RewardsCenterScreen = () => {
       <NavigationStackHeader title={strings.navigation.title} />
       <Container backgroundColor="white" flex={1}>
         <Image source={rewardBanner} style={styles.headerImage} />
-        <Container>
+        <Container flex={1}>
           {!isRegistered &&
             (hasRewardsAvailable ? (
               <RegisterContent
@@ -47,6 +48,7 @@ const RewardsCenterScreen = () => {
           {isRegistered && (
             <ClaimContent
               claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
+              historyList={claimHistorySectionData}
             />
           )}
         </Container>

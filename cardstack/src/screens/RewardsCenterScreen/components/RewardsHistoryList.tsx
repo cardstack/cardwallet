@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react';
 import { SectionList } from 'react-native';
+import { fromWei } from '@cardstack/cardpay-sdk';
 import { strings } from '../strings';
-import { RewardRow, RewardRowProps } from '.';
+import { RewardRow } from '.';
 import { Container, Text, ListEmptyComponent } from '@cardstack/components';
+import { RewardeeClaim } from '@cardstack/graphql';
 
 export interface RewardsHistorySectionType {
   title: string;
-  data: Array<RewardRowProps>;
+  data: RewardeeClaim[];
 }
 
 export interface RewardsHistoryListProps {
@@ -17,11 +19,26 @@ export const RewardsHistoryList = ({
   sections = [],
 }: RewardsHistoryListProps) => {
   const renderSectionHeader = useCallback(
-    ({ section }) => <Text size="medium">{section.title}</Text>,
+    ({ section }) => (
+      <Container backgroundColor="white">
+        <Text size="medium">{section.title}</Text>
+      </Container>
+    ),
     []
   );
 
-  const renderItem = useCallback(({ item }) => <RewardRow {...item} />, []);
+  const renderItem = useCallback(({ item }: { item: RewardeeClaim }) => {
+    const amountInEth = fromWei(item.amount);
+    const symbol = item.token.symbol || '';
+
+    return (
+      <RewardRow
+        primaryText={`${amountInEth} ${symbol}`}
+        coinSymbol={symbol}
+        claimed
+      />
+    );
+  }, []);
 
   const spacing = useCallback(() => <Container paddingBottom={4} />, []);
 
