@@ -40,3 +40,32 @@ export const getSymbolCharacterFromAddress = (string?: string) => {
     ? characters[2]
     : characters[0];
 };
+
+export const getValidColorHexString = (color?: string) => {
+  if (!color) return '#000000';
+  let convertedColorString = color.toUpperCase().replace(/[^#0-9A-F]/gi, '');
+  const checkValidColorHexReg = /^#([0-9A-F]{3}){1,2}$/i;
+
+  // check if valid hex color
+  if (checkValidColorHexReg.test(convertedColorString)) {
+    return convertedColorString;
+  }
+
+  if (!convertedColorString.startsWith('#')) {
+    convertedColorString = `#${convertedColorString}`;
+  }
+
+  if (convertedColorString.length < 4) {
+    return `${convertedColorString}${Array(4 - convertedColorString.length)
+      .fill(0)
+      .join('')}`;
+  }
+
+  if (convertedColorString.length < 7) {
+    return `${convertedColorString}${Array(7 - convertedColorString.length)
+      .fill(0)
+      .join('')}`;
+  }
+
+  return convertedColorString.substring(0, 7);
+};
