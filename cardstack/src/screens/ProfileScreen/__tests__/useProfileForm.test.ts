@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { waitFor } from '@testing-library/react-native';
 import { exampleMerchantData, strings } from '../components';
 import { useProfileForm } from '../useProfileForm';
@@ -78,12 +79,10 @@ describe('useProfileForm', () => {
     });
 
     expect(result.current.errors?.businessName).toBe(
-      strings.validation.businessNameRequired
+      strings.validation.thisFieldIsRequied
     );
 
-    expect(result.current.errors?.businessId).toBe(
-      strings.validation.businessIdShouldBeUnique
-    );
+    expect(result.current.errors?.businessId).toBe(validateMerchantId(''));
   });
 
   it('should return updated values', () => {

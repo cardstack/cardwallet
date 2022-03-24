@@ -24,7 +24,7 @@ export const strings = {
     yourProfile: 'Your Profile:',
   },
   validation: {
-    businessNameRequired: 'Business Name is required',
+    thisFieldIsRequied: 'This field is required',
     businessIdShouldBeUnique:
       'This Business ID is already taken. Please choose another one',
     createProfileErrorMessage:

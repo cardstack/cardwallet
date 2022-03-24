@@ -147,7 +147,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     return {
       businessName: businessName.trim()
         ? undefined
-        : strings.validation.businessNameRequired,
+        : strings.validation.thisFieldIsRequied,
       businessId:
         validateMerchantId(businessId) ||
         (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique),
