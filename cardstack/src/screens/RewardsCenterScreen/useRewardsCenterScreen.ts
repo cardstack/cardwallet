@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/core';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
 import { groupBy } from 'lodash';
 import { strings } from './strings';
+import { TokensWithSafeAddress } from './components';
 import {
   useClaimRewardsMutation,
   useGetRewardPoolTokenBalancesQuery,
@@ -258,11 +259,12 @@ export const useRewardsCenterScreen = () => {
       // Get tokens from all rewardSafes
       data: rewardSafes?.reduce(
         (tokens: TokenType[], safe: RewardsSafeType) => {
-          const tokenWithBalance = safe.tokens?.filter(
-            ({ native: { balance } }) => !!balance.amount
-          );
+          const tokensWithAddress = safe.tokens?.map(token => ({
+            ...token,
+            safeAddress: safe.address,
+          }));
 
-          return [...tokens, ...tokenWithBalance];
+          return [...tokens, ...tokensWithAddress] as TokensWithSafeAddress;
         },
         []
       ),
