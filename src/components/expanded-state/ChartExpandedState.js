@@ -7,7 +7,6 @@ import {
   SendActionButton,
   SheetActionButtonRow,
   SheetDivider,
-  SlackSheet,
   SwapActionButton,
 } from '../sheet';
 import {
@@ -17,7 +16,7 @@ import {
   TokenInfoSection,
 } from '../token-info';
 import { Chart } from '../value-chart';
-import { Container } from '@cardstack/components';
+import { Container, Sheet } from '@cardstack/components';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
@@ -71,17 +70,11 @@ export default function ChartExpandedState(props) {
   if (duration.current === 0) {
     duration.current = 300;
   }
-  const ChartExpandedStateSheetHeight =
-    ios || showChart ? heightWithChart : heightWithoutChart;
 
   const hasNativeBalance = !!parseFloat(asset?.native?.balance?.amount);
 
   return (
-    <SlackSheet
-      additionalTopPadding={android}
-      contentHeight={ChartExpandedStateSheetHeight}
-      scrollEnabled={false}
-    >
+    <Sheet scrollEnabled={false}>
       <ChartPathProvider data={throttledData}>
         <Chart
           {...chartData}
@@ -132,6 +125,6 @@ export default function ChartExpandedState(props) {
           />
         </Container>
       )}
-    </SlackSheet>
+    </Sheet>
   );
 }
