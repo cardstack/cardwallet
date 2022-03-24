@@ -1,13 +1,21 @@
 import React, { useCallback } from 'react';
 import { strings } from '../strings';
-import { claimList, balanceList, historyList } from './__mock__';
 import {
   RewardsTitle,
   RewardRow,
+  RewardRowProps,
   RewardsBalanceList,
+  RewardsBalanceListProps,
   RewardsHistoryList,
+  RewardsHistoryListProps,
 } from '.';
 import { ScrollView, Container, useTabHeader } from '@cardstack/components';
+
+interface ClaimContentProps {
+  claimList?: Array<RewardRowProps>;
+  balanceList?: RewardsBalanceListProps;
+  historyList?: RewardsHistoryListProps;
+}
 
 enum Tabs {
   BALANCE = 'BALANCE',
@@ -19,7 +27,11 @@ const tabs = [
   { title: strings.history.title, key: Tabs.HISTORY },
 ];
 
-export const ClaimContent = () => {
+export const ClaimContent = ({
+  claimList = [],
+  balanceList,
+  historyList,
+}: ClaimContentProps) => {
   const { TabHeader, currentTab } = useTabHeader({ tabs });
 
   const renderClaimList = useCallback(
@@ -35,7 +47,7 @@ export const ClaimContent = () => {
           }}
         />
       )),
-    []
+    [claimList]
   );
 
   return (
@@ -51,9 +63,9 @@ export const ClaimContent = () => {
       <TabHeader />
       <Container padding={5}>
         {currentTab.key === Tabs.BALANCE ? (
-          <RewardsBalanceList data={balanceList} />
+          <RewardsBalanceList {...balanceList} />
         ) : (
-          <RewardsHistoryList sections={historyList} />
+          <RewardsHistoryList {...historyList} />
         )}
       </Container>
     </ScrollView>

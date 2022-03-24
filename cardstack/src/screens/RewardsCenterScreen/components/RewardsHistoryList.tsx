@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
 import { SectionList } from 'react-native';
+import { strings } from '../strings';
 import { RewardRow, RewardRowProps } from '.';
-import { Container, Text } from '@cardstack/components';
+import { Container, Text, ListEmptyComponent } from '@cardstack/components';
 
 export interface RewardsHistorySectionType {
   title: string;
@@ -9,10 +10,12 @@ export interface RewardsHistorySectionType {
 }
 
 export interface RewardsHistoryListProps {
-  sections: Array<RewardsHistorySectionType>;
+  sections?: Array<RewardsHistorySectionType>;
 }
 
-export const RewardsHistoryList = ({ sections }: RewardsHistoryListProps) => {
+export const RewardsHistoryList = ({
+  sections = [],
+}: RewardsHistoryListProps) => {
   const renderSectionHeader = useCallback(
     ({ section }) => <Text size="medium">{section.title}</Text>,
     []
@@ -29,6 +32,7 @@ export const RewardsHistoryList = ({ sections }: RewardsHistoryListProps) => {
       renderItem={renderItem}
       ItemSeparatorComponent={spacing}
       SectionSeparatorComponent={spacing}
+      ListEmptyComponent={<ListEmptyComponent text={strings.history.empty} />}
     />
   );
 };

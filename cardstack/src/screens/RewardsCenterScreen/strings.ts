@@ -23,8 +23,10 @@ export const strings = {
   },
   balance: {
     title: 'Balance',
+    empty: 'No Reward Balance',
   },
   history: {
     title: 'History',
+    empty: 'No Reward History',
   },
 };

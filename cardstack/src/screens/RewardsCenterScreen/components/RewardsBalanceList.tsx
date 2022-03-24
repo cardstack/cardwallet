@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
+import { strings } from '../strings';
 import { RewardRow, RewardRowProps } from '.';
-import { Container } from '@cardstack/components';
+import { Container, ListEmptyComponent } from '@cardstack/components';
 
-interface RewardsBalanceListProps {
-  data: Array<RewardRowProps>;
+export interface RewardsBalanceListProps {
+  data?: Array<RewardRowProps>;
 }
 
-export const RewardsBalanceList = ({ data }: RewardsBalanceListProps) => {
+export const RewardsBalanceList = ({ data = [] }: RewardsBalanceListProps) => {
   const renderItem = useCallback(({ item }) => <RewardRow {...item} />, []);
 
   const spacing = useCallback(() => <Container paddingBottom={4} />, []);
@@ -17,6 +18,7 @@ export const RewardsBalanceList = ({ data }: RewardsBalanceListProps) => {
       data={data}
       renderItem={renderItem}
       ItemSeparatorComponent={spacing}
+      ListEmptyComponent={<ListEmptyComponent text={strings.balance.empty} />}
     />
   );
 };
