@@ -4,6 +4,7 @@ import {
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
 import {
+  RewardsClaimMutationParams,
   RewardsRegisterMutationParams,
   RewardsSafeQueryParams,
   RewardsSafeType,
@@ -107,4 +108,44 @@ export const registerToRewardProgram = async ({
   );
 
   return result;
+};
+
+export const claimRewards = async ({
+  safeAddress,
+  tokenAddress,
+  rewardProgramId,
+  accountAddress,
+  walletId,
+  network,
+}: RewardsClaimMutationParams) => {
+  const rewardPoolInstance = await getRewardsPoolInstance({
+    walletId,
+    network,
+  });
+
+  const proofs = await rewardPoolInstance.getProofs(
+    accountAddress,
+    rewardProgramId,
+    tokenAddress,
+    false
+  );
+
+  const validProofs = proofs.filter(proof => proof.isValid);
+
+  const receipts = [];
+
+  for (const { leaf, proofArray } of validProofs) {
+    const receipt = await rewardPoolInstance.claim(
+      safeAddress,
+      leaf,
+      proofArray,
+      false,
+      undefined,
+      { from: accountAddress }
+    );
+
+    receipts.push(receipt);
+  }
+
+  return receipts;
 };

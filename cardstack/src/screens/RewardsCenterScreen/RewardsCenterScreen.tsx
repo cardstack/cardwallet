@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import rewardBanner from '../../assets/rewards-banner.png';
 import { strings } from './strings';
 import { useRewardsCenterScreen } from './useRewardsCenterScreen';
-import { RegisterContent, NoRewardContent } from './components';
+import { RegisterContent, NoRewardContent, RewardRow } from './components';
 import { Container, NavigationStackHeader, Image } from '@cardstack/components';
 
 const RewardsCenterScreen = () => {
@@ -12,7 +12,17 @@ const RewardsCenterScreen = () => {
     isRegistered,
     hasRewardsAvailable,
     mainPoolTokenInfo,
+    onClaimPress,
   } = useRewardsCenterScreen();
+
+  const mainPoolRowProps = useMemo(
+    () => ({
+      primaryText: mainPoolTokenInfo?.balance.display || '',
+      subText: mainPoolTokenInfo?.native.balance.display || '',
+      coinSymbol: mainPoolTokenInfo?.token.symbol || '',
+    }),
+    [mainPoolTokenInfo]
+  );
 
   return (
     <Container backgroundColor="white" flex={1}>
@@ -21,16 +31,23 @@ const RewardsCenterScreen = () => {
         <Image source={rewardBanner} style={styles.headerImage} />
         <Container padding={5}>
           {!isRegistered &&
-            (hasRewardsAvailable && mainPoolTokenInfo ? (
+            (hasRewardsAvailable ? (
               <RegisterContent
                 onRegisterPress={onRegisterPress}
-                primaryText={mainPoolTokenInfo?.balance.display}
-                subText={mainPoolTokenInfo?.native.balance.display}
-                coinSymbol={mainPoolTokenInfo?.token.symbol}
+                {...mainPoolRowProps}
               />
             ) : (
               <NoRewardContent />
             ))}
+          {isRegistered && hasRewardsAvailable && (
+            <RewardRow
+              {...mainPoolRowProps}
+              onClaimPress={onClaimPress(
+                mainPoolTokenInfo?.tokenAddress,
+                mainPoolTokenInfo?.rewardProgramId
+              )}
+            />
+          )}
         </Container>
       </Container>
     </Container>
