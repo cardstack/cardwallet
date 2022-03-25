@@ -127,22 +127,20 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     [setBusinessName]
   );
 
-  const onChangeBusinessColor = useCallback(
-    ({ nativeEvent: { text } }) => {
-      const validColor = (text || '').startsWith('#') ? text : `#${text}`;
-      setBusinessColor(validColor.replace(/[^#0-9a-fA-F]/gi, ''));
-    },
-    [setBusinessColor]
-  );
-
   const onSelectColor = useCallback(
     (color: string) => {
-      setBusinessColor(color);
+      const validColor = (color || '').startsWith('#') ? color : `#${color}`;
+
+      const upperCaseColor = validColor
+        .replace(/[^#0-9a-fA-F]/gi, '')
+        .toUpperCase();
+
+      setBusinessColor(upperCaseColor);
     },
     [setBusinessColor]
   );
 
-  const onBusinessColorFocus = useCallback(() => {
+  const onPressBusinessColor = useCallback(() => {
     navigate(GlobalRoutes.COLOR_PICKER_MODAL, {
       defaultColor: businessColor,
       onSelectColor,
@@ -292,8 +290,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     isUniqueId,
     avatarName,
     errors,
-    onChangeBusinessColor,
-    onBusinessColorFocus,
+    onPressBusinessColor,
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,

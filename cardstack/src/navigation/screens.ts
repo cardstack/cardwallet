@@ -206,6 +206,8 @@ export const GlobalScreens: Record<
     component: ColorPickerModal,
     options: {
       ...expandedPreset,
+      ignoreBottomOffset: true,
+      interactWithScrollView: false,
     } as StackNavigationOptions,
   },
 
