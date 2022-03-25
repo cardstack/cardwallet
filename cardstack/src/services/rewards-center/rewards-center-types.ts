@@ -8,7 +8,9 @@ export interface RewardsSafeQueryParams {
   nativeCurrency: NativeCurrency;
 }
 
-export type RewardsSafeType = RewardSafe & { tokens: TokenType[] };
+export type RewardsSafeType = Omit<RewardSafe, 'tokens'> & {
+  tokens: TokenType[];
+};
 
 export interface RewardsSafeQueryResult {
   rewardSafes: RewardsSafeType[];
