@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
-import { SlackSheet } from '../sheet';
 
 import {
   BalanceSection,
   Container,
   HorizontalDivider,
   ListEmptyComponent,
+  Sheet,
   Text,
   Touchable,
   TransactionItem,
@@ -57,7 +57,7 @@ export default function AvailableBalancesExpandedState(
   }, [setOptions]);
 
   return (
-    <SlackSheet scrollEnabled>
+    <Sheet isFullScreen scrollEnabled>
       <Container paddingHorizontal={5} paddingTop={3}>
         <Text size="medium">Available Balance</Text>
         <Container flexDirection="row" justifyContent="space-between">
@@ -79,7 +79,7 @@ export default function AvailableBalancesExpandedState(
       ) : (
         <Activities {...props} />
       )}
-    </SlackSheet>
+    </Sheet>
   );
 }
 

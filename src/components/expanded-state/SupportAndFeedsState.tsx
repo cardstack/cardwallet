@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { FlatList } from 'react-native';
-import { SlackSheet } from '../sheet';
-import { Container, Text } from '@cardstack/components';
+import { Container, Sheet, Text } from '@cardstack/components';
 import { supportedCountries } from '@rainbow-me/references/wyre';
 
 type Country = keyof typeof supportedCountries;
@@ -42,7 +41,7 @@ const SupportAndFeedsState = () => {
   // Workaround to avoid not dismiss modal
   return useMemo(
     () => (
-      <SlackSheet scrollEnabled>
+      <Sheet isFullScreen scrollEnabled>
         <Container marginBottom={12} padding={6}>
           <Text
             color="black"
@@ -73,7 +72,7 @@ const SupportAndFeedsState = () => {
             renderItem={renderItem}
           />
         </Container>
-      </SlackSheet>
+      </Sheet>
     ),
     [renderItem]
   );
