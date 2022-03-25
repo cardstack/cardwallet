@@ -5,8 +5,8 @@ import {
   Button,
   Text,
   CoinIcon,
-  Touchable,
   TouchableProps,
+  CardPressable,
 } from '@cardstack/components';
 
 export interface RewardRowProps extends Omit<TouchableProps, 'children'> {
@@ -26,7 +26,7 @@ export const RewardRow = ({
   onPress,
   ...props
 }: RewardRowProps) => (
-  <Touchable
+  <CardPressable
     flexDirection="column"
     width="100%"
     disabled={!onPress}
@@ -69,5 +69,5 @@ export const RewardRow = ({
         </Container>
       )}
     </Container>
-  </Touchable>
+  </CardPressable>
 );
