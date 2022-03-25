@@ -4,10 +4,7 @@ import { SectionIconTitle } from './components/SectionIconTitle';
 import { PrepaidCardTransactionSection } from './components/sections/PrepaidCardTransactionSection';
 import { PayThisAmountSection } from './components/sections/PayThisAmountSection';
 import {
-  Container,
   HorizontalDivider,
-  Icon,
-  Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
 import { RewardsRegisterData } from '@cardstack/types';
@@ -22,8 +19,9 @@ export const RewardsRegisterDisplay = ({
 }: RewardsRegisterDisplayProps) => (
   <>
     <SectionIconTitle
+      sectionHeaderText={strings.rewards.program.title}
       title={programName}
-      iconProps={{ name: 'cardstack', size: 15 }}
+      iconProps={{ name: 'rewards', size: 22, color: 'teal' }}
     />
     <HorizontalDivider />
     <PrepaidCardTransactionSection

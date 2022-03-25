@@ -1,6 +1,12 @@
 import React, { memo } from 'react';
 import { SectionHeaderText } from './SectionHeaderText';
-import { Container, Icon, IconProps, Text } from '@cardstack/components';
+import {
+  Container,
+  CenteredContainer,
+  Icon,
+  IconProps,
+  Text,
+} from '@cardstack/components';
 
 interface SectionIconTitleProps {
   title?: string;
@@ -14,12 +20,12 @@ export const SectionIconTitle = memo(
       {!!sectionHeaderText && (
         <SectionHeaderText>{sectionHeaderText}</SectionHeaderText>
       )}
-      <Container paddingHorizontal={3} marginTop={4}>
+      <Container paddingHorizontal={2} marginTop={4}>
         <Container flexDirection="row">
           {!!iconProps && (
-            <Container>
+            <CenteredContainer>
               <Icon {...iconProps} />
-            </Container>
+            </CenteredContainer>
           )}
           {!!title && (
             <Text marginLeft={4} weight="extraBold">

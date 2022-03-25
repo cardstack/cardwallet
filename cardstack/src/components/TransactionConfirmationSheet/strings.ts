@@ -7,6 +7,9 @@ export const strings = {
     profileName: 'Profile Name',
   },
   rewards: {
+    program: {
+      title: 'Register',
+    },
     prepaidcard: {
       title: 'Pay with',
     },
