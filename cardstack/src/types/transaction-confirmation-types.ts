@@ -1,6 +1,5 @@
 import { PrepaidCardCustomization } from './transaction-types';
 import { MerchantInformation } from './';
-import { RewardsRegisterSheet } from '@cardstack/screens';
 
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
