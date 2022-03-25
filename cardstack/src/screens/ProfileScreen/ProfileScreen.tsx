@@ -23,13 +23,16 @@ const ProfileScreen = () => {
   );
 
   return (
-    <Container backgroundColor="backgroundDarkPurple" flex={1}>
+    <Container
+      backgroundColor={primarySafe ? 'white' : 'backgroundDarkPurple'}
+      flex={1}
+    >
       <MainHeader title={strings.header.profile} />
       <Container justifyContent="center" flexGrow={1}>
         {!primarySafe && isFetching ? (
           <ActivityIndicator size="large" color="white" />
         ) : (
-          <CreateProfile />
+          ProfileBody
         )}
       </Container>
     </Container>
