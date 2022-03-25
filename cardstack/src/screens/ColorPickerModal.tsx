@@ -6,7 +6,7 @@ import { Button, Container, SheetHandle } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 
 type ColorPickerModalRouteType = RouteType<{
-  defaultColor: string;
+  defaultColor?: string;
   onSelectColor: (color: string) => void;
 }>;
 

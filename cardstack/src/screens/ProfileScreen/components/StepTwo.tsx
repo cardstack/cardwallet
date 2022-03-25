@@ -141,11 +141,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
       </Container>
       <Container paddingHorizontal={5} marginTop={4}>
         <InputLabel label={strings.stepTwo.iconColor} marginTop={0} />
-        <CardPressable
-          onPress={onPressBusinessColor}
-          borderRadius={6}
-          position="relative"
-        >
+        <CardPressable onPress={onPressBusinessColor} position="relative">
           <Text paddingLeft={10} {...InputCommonProps}>
             {businessColor}
           </Text>
