@@ -10,6 +10,7 @@ import { SplitPrepaidCardDisplay } from './PrepaidCard/SplitPrepaidCardDisplay';
 import { TransferPrepaidCardDisplay } from './PrepaidCard/TransferPrepaidCardDisplay';
 import { WithdrawalDisplay } from './WithdrawalDisplay';
 import { HubAuthenticationDisplay } from './HubAuthenticationDisplay';
+import { RewardsRegisterDisplay } from './RewardsRegisterDisplay';
 import { TransactionConfirmationType } from '@cardstack/types';
 import {
   CenteredContainer,
@@ -59,6 +60,10 @@ export const transactionTypeMap: Record<
   [TransactionConfirmationType.TRANSFER_PREPAID_CARD_2]: {
     title: 'Transfer Prepaid Card - Step 2/2',
     component: TransferPrepaidCardDisplay,
+  },
+  [TransactionConfirmationType.REWARDS_REGISTER]: {
+    title: 'Register Account',
+    component: RewardsRegisterDisplay,
   },
 };
 

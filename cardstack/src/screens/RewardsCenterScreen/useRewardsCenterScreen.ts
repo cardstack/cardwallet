@@ -1,10 +1,15 @@
 import { useCallback, useMemo } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, StackActions } from '@react-navigation/core';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
 import { groupBy } from 'lodash';
 import { strings } from './strings';
 import { TokensWithSafeAddress } from './components';
+import {
+  RewardsRegisterData,
+  TransactionConfirmationType,
+  TokenType,
+} from '@cardstack/types';
 import {
   useClaimRewardsMutation,
   useGetRewardPoolTokenBalancesQuery,
@@ -18,7 +23,6 @@ import { Alert } from '@rainbow-me/components/alerts';
 import { useMutationEffects } from '@cardstack/hooks';
 import { RewardeeClaim, useGetRewardClaimsQuery } from '@cardstack/graphql';
 import { groupTransactionsByDate } from '@cardstack/utils';
-import { TokenType } from '@cardstack/types';
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 
 const rewardDefaultProgramId = {
@@ -28,7 +32,7 @@ const rewardDefaultProgramId = {
 };
 
 export const useRewardsCenterScreen = () => {
-  const { navigate } = useNavigation();
+  const { navigate, dispatch: navDispatch } = useNavigation();
   const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
   const query = useMemo(
@@ -100,16 +104,25 @@ export const useRewardsCenterScreen = () => {
   const { selectedWallet } = useWallets();
 
   const onMutationEndAlert = useCallback(
-    ({ title, message }) => () => {
+    ({ title, message, shouldGoBack }) => () => {
       dismissLoadingOverlay();
 
       Alert({
         message,
         title,
-        buttons: [{ text: 'Okay' }],
+        buttons: [
+          {
+            text: 'Okay',
+            onPress: shouldGoBack
+              ? () => {
+                  navDispatch(StackActions.pop(2));
+                }
+              : undefined,
+          },
+        ],
       });
     },
-    [dismissLoadingOverlay]
+    [dismissLoadingOverlay, navDispatch]
   );
 
   useMutationEffects(
@@ -120,6 +133,7 @@ export const useRewardsCenterScreen = () => {
           callback: onMutationEndAlert({
             title: 'Success',
             message: 'Registration successful',
+            shouldGoBack: true,
           }),
         },
         error: {
@@ -157,23 +171,22 @@ export const useRewardsCenterScreen = () => {
 
   const onPrepaidCardSelection = useCallback(
     prepaidCard => {
-      // TODO: Replace with confirmation sheet
-      Alert({
-        buttons: [
-          { text: 'Cancel' },
-          {
-            text: 'Confirm',
-            onPress: onRegisterConfirmPress(
-              prepaidCard.address,
-              rewardDefaultProgramId[network]
-            ),
-          },
-        ],
-        title: 'Register Account',
-        message: `Cardstack Rewards\n(${rewardDefaultProgramId[network]})\nPrepaid Card:\n${prepaidCard.address}`,
+      const data: RewardsRegisterData = {
+        type: TransactionConfirmationType.REWARDS_REGISTER,
+        spendAmount: convertToSpend(0.01, 'USD', 1),
+        prepaidCard: prepaidCard.address,
+        programName: 'Cardstack Rewards',
+      };
+
+      navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
+        data,
+        onConfirm: onRegisterConfirmPress(
+          prepaidCard.address,
+          rewardDefaultProgramId[network]
+        ),
       });
     },
-    [network, onRegisterConfirmPress]
+    [navigate, network, onRegisterConfirmPress]
   );
 
   const onRegisterPress = useCallback(() => {
