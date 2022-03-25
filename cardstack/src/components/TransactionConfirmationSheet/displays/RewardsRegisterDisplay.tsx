@@ -15,11 +15,11 @@ interface RewardsRegisterDisplayProps
   data: RewardsRegisterData;
 }
 
-const rewardsIconProps = {
+const rewardsIconProps: IconProps = {
   name: 'rewards',
   size: 22,
   color: 'teal',
-} as IconProps;
+};
 
 export const RewardsRegisterDisplay = ({
   data: { programName, prepaidCard, spendAmount },
