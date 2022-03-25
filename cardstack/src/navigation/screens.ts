@@ -34,6 +34,7 @@ import {
   ChoosePrepaidCardSheet,
   RewardsCenterScreen,
   TransactionConfirmationSheet,
+  ColorPickerModal,
 } from '@cardstack/screens';
 import {
   bottomSheetPreset,
@@ -199,6 +200,12 @@ export const GlobalScreens: Record<
       ...expandedPreset,
       ignoreBottomOffset: true,
       interactWithScrollView: false,
+    } as StackNavigationOptions,
+  },
+  COLOR_PICKER_MODAL: {
+    component: ColorPickerModal,
+    options: {
+      ...expandedPreset,
     } as StackNavigationOptions,
   },
 

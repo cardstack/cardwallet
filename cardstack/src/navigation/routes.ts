@@ -29,5 +29,6 @@ export const MainRoutes = {
 export const GlobalRoutes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
+  COLOR_PICKER_MODAL: 'ColorPickerModal',
   LOADING_OVERLAY: 'LoadingOverlay',
 } as const;

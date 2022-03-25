@@ -4,7 +4,11 @@ import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
 import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import {
+  MainRoutes,
+  GlobalRoutes,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 import {
   checkBusinessIdUniqueness,
   createBusinessInfoDID,
@@ -130,6 +134,20 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     },
     [setBusinessColor]
   );
+
+  const onSelectColor = useCallback(
+    (color: string) => {
+      setBusinessColor(color);
+    },
+    [setBusinessColor]
+  );
+
+  const onBusinessColorFocus = useCallback(() => {
+    navigate(GlobalRoutes.COLOR_PICKER_MODAL, {
+      defaultColor: businessColor,
+      onSelectColor,
+    });
+  }, [businessColor, navigate, onSelectColor]);
 
   const onChangeBusinessId = useCallback(
     async ({ nativeEvent: { text } }) => {
@@ -275,6 +293,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     avatarName,
     errors,
     onChangeBusinessColor,
+    onBusinessColorFocus,
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,

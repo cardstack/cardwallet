@@ -89,6 +89,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
     avatarName,
     errors,
     onChangeBusinessColor,
+    onBusinessColorFocus,
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,
@@ -152,6 +153,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
             value={businessColor}
             onChange={onChangeBusinessColor}
             onSubmitEditing={onBusinessColorSubmitEditing}
+            onFocus={onBusinessColorFocus}
             returnKeyType="next"
             {...InputCommonProps}
             paddingLeft={13}
