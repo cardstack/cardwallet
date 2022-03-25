@@ -1,5 +1,6 @@
 import { PrepaidCardCustomization } from './transaction-types';
 import { MerchantInformation } from './';
+import { RewardsRegisterSheet } from '@cardstack/screens';
 
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
@@ -12,6 +13,7 @@ export enum TransactionConfirmationType {
   TRANSFER_PREPAID_CARD_2 = 'transferPrepaidCard2',
   CLAIM_REVENUE = 'claimRevenue',
   WITHDRAWAL = 'withdrawal',
+  REWARDS_REGISTER = 'rewardsRegister',
 }
 
 export interface Level1DecodedData {
@@ -50,6 +52,14 @@ export interface RegisterMerchantDecodedData {
   merchantInfo?: MerchantInformation;
   prepaidCard: string;
   type: TransactionConfirmationType.REGISTER_MERCHANT;
+}
+
+export interface RewardsRegisterData {
+  programName: string;
+  prepaidCard: string;
+  spendAmount: number;
+  network: string;
+  type: TransactionConfirmationType.REWARDS_REGISTER;
 }
 
 export interface PayMerchantDecodedData {
@@ -128,4 +138,5 @@ export type TransactionConfirmationData =
   | TransferPrepaidCard2DecodedData
   | ClaimRevenueDecodedData
   | WithdrawalDecodedData
-  | PayMerchantDecodedData;
+  | PayMerchantDecodedData
+  | RewardsRegisterData;

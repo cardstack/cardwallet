@@ -33,6 +33,7 @@ import {
   MerchantTransactionSheet,
   ChoosePrepaidCardSheet,
   RewardsCenterScreen,
+  RewardsRegisterSheet,
   TransactionConfirmationSheet,
 } from '@cardstack/screens';
 import {
@@ -177,6 +178,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   REWARDS_CENTER_SCREEN: {
     component: RewardsCenterScreen,
     options: horizontalInterpolator,
+  },
+  REWARDS_REGISTER_SHEET: {
+    component: RewardsRegisterSheet,
+    options: expandedPreset as StackNavigationOptions,
   },
   TRANSACTION_CONFIRMATION_SHEET: {
     component: TransactionConfirmationSheet,

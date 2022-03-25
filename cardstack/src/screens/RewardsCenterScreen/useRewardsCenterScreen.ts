@@ -6,6 +6,10 @@ import { groupBy } from 'lodash';
 import { strings } from './strings';
 import { TokensWithSafeAddress } from './components';
 import {
+  RewardsRegisterData,
+  TransactionConfirmationType,
+} from '@cardstack/types';
+import {
   useClaimRewardsMutation,
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
@@ -157,23 +161,23 @@ export const useRewardsCenterScreen = () => {
 
   const onPrepaidCardSelection = useCallback(
     prepaidCard => {
-      // TODO: Replace with confirmation sheet
-      Alert({
-        buttons: [
-          { text: 'Cancel' },
-          {
-            text: 'Confirm',
-            onPress: onRegisterConfirmPress(
-              prepaidCard.address,
-              rewardDefaultProgramId[network]
-            ),
-          },
-        ],
-        title: 'Register Account',
-        message: `Cardstack Rewards\n(${rewardDefaultProgramId[network]})\nPrepaid Card:\n${prepaidCard.address}`,
+      const data: RewardsRegisterData = {
+        type: TransactionConfirmationType.REWARDS_REGISTER,
+        spendAmount: convertToSpend(0.01, 'USD', 1),
+        prepaidCard: prepaidCard.address,
+        programName: 'Cardstack Rewards',
+        network: rewardDefaultProgramId[network],
+      };
+
+      navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
+        data,
+        onConfirm: onRegisterConfirmPress(
+          prepaidCard.address,
+          rewardDefaultProgramId[network]
+        ),
       });
     },
-    [network, onRegisterConfirmPress]
+    [navigate, network, onRegisterConfirmPress]
   );
 
   const onRegisterPress = useCallback(() => {
