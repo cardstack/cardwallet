@@ -3,7 +3,12 @@ import { StyleSheet } from 'react-native';
 import rewardBanner from '../../assets/rewards-banner.png';
 import { strings } from './strings';
 import { useRewardsCenterScreen } from './useRewardsCenterScreen';
-import { RegisterContent, NoRewardContent, ClaimContent } from './components';
+import {
+  RegisterContent,
+  NoRewardContent,
+  ClaimContent,
+  RewardLoadingSkeleton,
+} from './components';
 import { Container, NavigationStackHeader, Image } from '@cardstack/components';
 
 const RewardsCenterScreen = () => {
@@ -15,6 +20,7 @@ const RewardsCenterScreen = () => {
     onClaimPress,
     claimHistorySectionData,
     tokensBalanceData,
+    isLoading,
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
@@ -35,24 +41,28 @@ const RewardsCenterScreen = () => {
       <NavigationStackHeader title={strings.navigation.title} />
       <Container backgroundColor="white" flex={1}>
         <Image source={rewardBanner} style={styles.headerImage} />
-        <Container flex={1}>
-          {!isRegistered &&
-            (hasRewardsAvailable ? (
-              <RegisterContent
-                onRegisterPress={onRegisterPress}
-                {...mainPoolRowProps}
+        {isLoading ? (
+          <RewardLoadingSkeleton />
+        ) : (
+          <Container flex={1}>
+            {!isRegistered &&
+              (hasRewardsAvailable ? (
+                <RegisterContent
+                  onRegisterPress={onRegisterPress}
+                  {...mainPoolRowProps}
+                />
+              ) : (
+                <NoRewardContent />
+              ))}
+            {isRegistered && (
+              <ClaimContent
+                claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
+                historyList={claimHistorySectionData}
+                balanceList={tokensBalanceData}
               />
-            ) : (
-              <NoRewardContent />
-            ))}
-          {isRegistered && (
-            <ClaimContent
-              claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
-              historyList={claimHistorySectionData}
-              balanceList={tokensBalanceData}
-            />
-          )}
-        </Container>
+            )}
+          </Container>
+        )}
       </Container>
     </Container>
   );

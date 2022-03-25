@@ -5,3 +5,4 @@ export * from './RewardsTitle';
 export * from './ClaimContent';
 export * from './RewardsBalanceList';
 export * from './RewardsHistoryList';
+export { default as RewardLoadingSkeleton } from './RewardLoadingSkeleton';
