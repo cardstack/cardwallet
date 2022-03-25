@@ -86,15 +86,18 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [isUniqueId, setIdUniqueness] = useState<boolean>(false);
   const [businessName, setBusinessName] = useState<string>(businessNameData);
   const [businessId, setBusinessId] = useState<string>(businessIdData);
-
-  // ToDo: update with custom color picker
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [businessColor, setBusinessColor] = useState<string>(businessColorData);
   const [isSubmitPressed, setIsSubmitPressed] = useState(false);
 
   const checkIdUniqueness = useCallback(
     async (id: string) => {
       if (!isLoading && authToken && id) {
+        const validateErrorMessage = validateMerchantId(id);
+
+        if (validateErrorMessage) {
+          return;
+        }
+
         const uniquenessResult = await checkBusinessIdUniqueness(id, authToken);
 
         if (uniquenessResult?.slugAvailable) {
@@ -107,7 +110,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
 
   useEffect(() => {
     if (businessId && authToken && !isLoading) {
-      // check unqiuness when get back to the screen again
+      // check businessId unqiuness when get back to the create profile screen
       checkIdUniqueness(businessId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,6 +121,14 @@ export const useProfileForm = (params?: useProfileFormParams) => {
       setBusinessName(text);
     },
     [setBusinessName]
+  );
+
+  const onChangeBusinessColor = useCallback(
+    ({ nativeEvent: { text } }) => {
+      const validColor = (text || '').startsWith('#') ? text : `#${text}`;
+      setBusinessColor(validColor.replace(/[^#0-9a-fA-F]/gi, ''));
+    },
+    [setBusinessColor]
   );
 
   const onChangeBusinessId = useCallback(
@@ -133,13 +144,15 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const errors = useMemo(() => {
     if (!isSubmitPressed) return;
 
+    const businessIdValidateErrorMessage =
+      validateMerchantId(businessId) ||
+      (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique);
+
     return {
       businessName: businessName.trim()
         ? undefined
-        : strings.validation.businessNameRequired,
-      businessId: !isUniqueId
-        ? strings.validation.businessIdShouldBeUnique
-        : validateMerchantId(businessId),
+        : strings.validation.thisFieldIsRequied,
+      businessId: businessIdValidateErrorMessage,
     };
   }, [isSubmitPressed, businessName, isUniqueId, businessId]);
 
@@ -261,6 +274,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     isUniqueId,
     avatarName,
     errors,
+    onChangeBusinessColor,
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,

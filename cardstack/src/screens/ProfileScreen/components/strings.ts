@@ -5,26 +5,26 @@ export const strings = {
   stepOne: {
     createProfile: 'Create a Profile',
     createProfileDesc: 'All users need a profile to send and receive payments.',
-    continueButton: 'Continue',
     example: 'Example:',
   },
   stepTwo: {
     nameAndIdForProfile: 'Name and ID for Profile',
     businessName: 'Name (or Business Name)',
     uniqueId: 'Unique ID',
+    businessIdAvailable: 'This ID is available',
     uniqueIdDescription:
       'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
-    continueButton: 'Continue',
+    required: 'required',
+    iconColor: 'Icon Color',
   },
   stepThree: {
     review: 'Review',
     reviewDescription:
       'Next you will confirm the creation of your profile. This will require a payment of \n$1.00 USD.',
     yourProfile: 'Your Profile:',
-    create: 'Create',
   },
   validation: {
-    businessNameRequired: 'Business Name is required',
+    thisFieldIsRequied: 'This field is required',
     businessIdShouldBeUnique:
       'This Business ID is already taken. Please choose another one',
     createProfileErrorMessage:
@@ -34,6 +34,11 @@ export const strings = {
     profileCreated: 'Profile Created',
     profileCreatedMessage: 'Your profile has been created successfully!',
     creatingProfile: 'Creating Profile',
+  },
+  buttons: {
+    continue: 'Continue',
+    completeToContinue: 'Complete to Continue',
+    create: 'Create',
   },
 };
 

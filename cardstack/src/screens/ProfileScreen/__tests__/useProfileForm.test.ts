@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { waitFor } from '@testing-library/react-native';
 import { exampleMerchantData, strings } from '../components';
 import { useProfileForm } from '../useProfileForm';
@@ -72,18 +73,17 @@ describe('useProfileForm', () => {
 
   it('should return error with empty businessName or businessId', () => {
     const { result } = renderHook(() => useProfileForm());
+    const invalidMerchantIdAssertion = validateMerchantId('');
 
     act(() => {
       result.current.onSubmitForm();
     });
 
     expect(result.current.errors?.businessName).toBe(
-      strings.validation.businessNameRequired
+      strings.validation.thisFieldIsRequied
     );
 
-    expect(result.current.errors?.businessId).toBe(
-      strings.validation.businessIdShouldBeUnique
-    );
+    expect(result.current.errors?.businessId).toBe(invalidMerchantIdAssertion);
   });
 
   it('should return updated values', () => {
