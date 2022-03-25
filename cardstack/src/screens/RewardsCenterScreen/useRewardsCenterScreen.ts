@@ -8,6 +8,7 @@ import { TokensWithSafeAddress } from './components';
 import {
   RewardsRegisterData,
   TransactionConfirmationType,
+  TokenType,
 } from '@cardstack/types';
 import {
   useClaimRewardsMutation,
@@ -22,7 +23,6 @@ import { Alert } from '@rainbow-me/components/alerts';
 import { useMutationEffects } from '@cardstack/hooks';
 import { RewardeeClaim, useGetRewardClaimsQuery } from '@cardstack/graphql';
 import { groupTransactionsByDate } from '@cardstack/utils';
-import { TokenType } from '@cardstack/types';
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 
 const rewardDefaultProgramId = {
