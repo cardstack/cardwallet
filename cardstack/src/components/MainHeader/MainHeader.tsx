@@ -77,8 +77,8 @@ const MainHeader = ({
         <Icon
           color="teal"
           iconSize="medium"
-          size={22}
-          name="gift"
+          size={28}
+          name="rewards"
           onPress={onRewardPress}
         />
       ) : (
