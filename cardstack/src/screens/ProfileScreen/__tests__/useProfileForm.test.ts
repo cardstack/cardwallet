@@ -73,6 +73,7 @@ describe('useProfileForm', () => {
 
   it('should return error with empty businessName or businessId', () => {
     const { result } = renderHook(() => useProfileForm());
+    const invalidMerchantIdAssertion = validateMerchantId('');
 
     act(() => {
       result.current.onSubmitForm();
@@ -82,7 +83,7 @@ describe('useProfileForm', () => {
       strings.validation.thisFieldIsRequied
     );
 
-    expect(result.current.errors?.businessId).toBe(validateMerchantId(''));
+    expect(result.current.errors?.businessId).toBe(invalidMerchantIdAssertion);
   });
 
   it('should return updated values', () => {

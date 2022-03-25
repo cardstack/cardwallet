@@ -110,7 +110,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
 
   useEffect(() => {
     if (businessId && authToken && !isLoading) {
-      // check unqiuness when returned to create profile screen
+      // check businessId unqiuness when get back to the create profile screen
       checkIdUniqueness(businessId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -144,13 +144,15 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const errors = useMemo(() => {
     if (!isSubmitPressed) return;
 
+    const businessIdValidateErrorMessage =
+      validateMerchantId(businessId) ||
+      (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique);
+
     return {
       businessName: businessName.trim()
         ? undefined
         : strings.validation.thisFieldIsRequied,
-      businessId:
-        validateMerchantId(businessId) ||
-        (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique),
+      businessId: businessIdValidateErrorMessage,
     };
   }, [isSubmitPressed, businessName, isUniqueId, businessId]);
 

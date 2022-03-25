@@ -119,6 +119,11 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
 
   const validBusinessColor = getValidColorHexString(businessColor);
 
+  const businessColorStyle = useMemo(
+    () => ({ backgroundColor: validBusinessColor }),
+    [validBusinessColor]
+  );
+
   const hadError = useMemo(
     () => Boolean(errors && (errors?.businessName || errors?.businessId)),
     [errors]
@@ -164,11 +169,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
             left={10}
             top={10}
           >
-            <Container
-              width={20}
-              height={20}
-              style={{ backgroundColor: validBusinessColor }}
-            />
+            <Container width={20} height={20} style={businessColorStyle} />
           </Container>
         </Container>
         <InputLabel label={strings.stepTwo.businessName} required />
