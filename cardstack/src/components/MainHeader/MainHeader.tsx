@@ -1,6 +1,5 @@
 import React, { memo, ReactNode, useCallback } from 'react';
 
-import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ContainerProps } from '../Container';
 import {
@@ -12,7 +11,6 @@ import {
 import Routes from '@rainbow-me/navigation/routesNames';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 interface Props extends ContainerProps {
   title?: string;
@@ -32,17 +30,14 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
-  const { isTabBarEnabled } = useTabBarFlag();
 
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
   ]);
 
   const onRewardPress = useCallback(() => {
-    isTabBarEnabled
-      ? navigate(Routes.REWARDS_CENTER_SCREEN)
-      : Alert.alert('Rewards coming soon...');
-  }, [isTabBarEnabled, navigate]);
+    navigate(Routes.REWARDS_CENTER_SCREEN);
+  }, [navigate]);
 
   return (
     <MainHeaderWrapper {...containerProps}>
@@ -77,8 +72,8 @@ const MainHeader = ({
         <Icon
           color="teal"
           iconSize="medium"
-          size={22}
-          name="gift"
+          size={26}
+          name="rewards"
           onPress={onRewardPress}
         />
       ) : (
