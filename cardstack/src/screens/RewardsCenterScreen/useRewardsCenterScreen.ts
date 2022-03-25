@@ -176,7 +176,6 @@ export const useRewardsCenterScreen = () => {
         spendAmount: convertToSpend(0.01, 'USD', 1),
         prepaidCard: prepaidCard.address,
         programName: 'Cardstack Rewards',
-        network: rewardDefaultProgramId[network],
       };
 
       navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {

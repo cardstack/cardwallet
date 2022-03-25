@@ -57,7 +57,6 @@ export interface RewardsRegisterData {
   programName: string;
   prepaidCard: string;
   spendAmount: number;
-  network: string;
   type: TransactionConfirmationType.REWARDS_REGISTER;
 }
 
