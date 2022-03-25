@@ -28,7 +28,7 @@ import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-cent
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
   // TestID
-  [networkTypes.xdai]: '0xf1223b57D5832fc4229c767E9AD4A8FCfab8A6cA',
+  [networkTypes.xdai]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
 };
 
 export const useRewardsCenterScreen = () => {
