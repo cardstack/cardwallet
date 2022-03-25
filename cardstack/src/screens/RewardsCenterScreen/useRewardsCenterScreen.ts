@@ -46,6 +46,7 @@ export const useRewardsCenterScreen = () => {
 
   const {
     isLoading: isLoadindSafes,
+    isUninitialized,
     data: { rewardSafes } = {},
   } = useGetRewardsSafeQuery(query.params, query.options);
 
@@ -280,7 +281,7 @@ export const useRewardsCenterScreen = () => {
     onRegisterPress,
     hasRewardsAvailable: !!mainPoolTokenInfo,
     mainPoolTokenInfo,
-    isLoading: isLoadindSafes || isLoadingTokens,
+    isLoading: isLoadindSafes || isLoadingTokens || isUninitialized,
     onClaimPress,
     claimHistorySectionData,
     tokensBalanceData,
