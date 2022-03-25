@@ -1795,6 +1795,72 @@ export enum MerchantWithdrawOrderBy {
   TO = 'to'
 }
 
+export type MerkleRootSubmission = {
+  __typename?: 'MerkleRootSubmission';
+  id: Scalars['ID'];
+  rewardProgram: RewardProgram;
+  paymentCycle: Scalars['BigInt'];
+  timestamp: Scalars['BigInt'];
+  blockNumber: Scalars['BigInt'];
+};
+
+export type MerkleRootSubmissionFilter = {
+  id?: Maybe<Scalars['ID']>;
+  id_not?: Maybe<Scalars['ID']>;
+  id_gt?: Maybe<Scalars['ID']>;
+  id_lt?: Maybe<Scalars['ID']>;
+  id_gte?: Maybe<Scalars['ID']>;
+  id_lte?: Maybe<Scalars['ID']>;
+  id_in?: Maybe<Array<Scalars['ID']>>;
+  id_not_in?: Maybe<Array<Scalars['ID']>>;
+  rewardProgram?: Maybe<Scalars['String']>;
+  rewardProgram_not?: Maybe<Scalars['String']>;
+  rewardProgram_gt?: Maybe<Scalars['String']>;
+  rewardProgram_lt?: Maybe<Scalars['String']>;
+  rewardProgram_gte?: Maybe<Scalars['String']>;
+  rewardProgram_lte?: Maybe<Scalars['String']>;
+  rewardProgram_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_not_in?: Maybe<Array<Scalars['String']>>;
+  rewardProgram_contains?: Maybe<Scalars['String']>;
+  rewardProgram_not_contains?: Maybe<Scalars['String']>;
+  rewardProgram_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_starts_with?: Maybe<Scalars['String']>;
+  rewardProgram_ends_with?: Maybe<Scalars['String']>;
+  rewardProgram_not_ends_with?: Maybe<Scalars['String']>;
+  paymentCycle?: Maybe<Scalars['BigInt']>;
+  paymentCycle_not?: Maybe<Scalars['BigInt']>;
+  paymentCycle_gt?: Maybe<Scalars['BigInt']>;
+  paymentCycle_lt?: Maybe<Scalars['BigInt']>;
+  paymentCycle_gte?: Maybe<Scalars['BigInt']>;
+  paymentCycle_lte?: Maybe<Scalars['BigInt']>;
+  paymentCycle_in?: Maybe<Array<Scalars['BigInt']>>;
+  paymentCycle_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp?: Maybe<Scalars['BigInt']>;
+  timestamp_not?: Maybe<Scalars['BigInt']>;
+  timestamp_gt?: Maybe<Scalars['BigInt']>;
+  timestamp_lt?: Maybe<Scalars['BigInt']>;
+  timestamp_gte?: Maybe<Scalars['BigInt']>;
+  timestamp_lte?: Maybe<Scalars['BigInt']>;
+  timestamp_in?: Maybe<Array<Scalars['BigInt']>>;
+  timestamp_not_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber?: Maybe<Scalars['BigInt']>;
+  blockNumber_not?: Maybe<Scalars['BigInt']>;
+  blockNumber_gt?: Maybe<Scalars['BigInt']>;
+  blockNumber_lt?: Maybe<Scalars['BigInt']>;
+  blockNumber_gte?: Maybe<Scalars['BigInt']>;
+  blockNumber_lte?: Maybe<Scalars['BigInt']>;
+  blockNumber_in?: Maybe<Array<Scalars['BigInt']>>;
+  blockNumber_not_in?: Maybe<Array<Scalars['BigInt']>>;
+};
+
+export enum MerkleRootSubmissionOrderBy {
+  ID = 'id',
+  REWARDPROGRAM = 'rewardProgram',
+  PAYMENTCYCLE = 'paymentCycle',
+  TIMESTAMP = 'timestamp',
+  BLOCKNUMBER = 'blockNumber'
+}
+
 export enum OrderDirection {
   ASC = 'asc',
   DESC = 'desc'
@@ -3503,6 +3569,8 @@ export type Query = {
   rewardeeClaims: Array<RewardeeClaim>;
   rewardTokensAdd?: Maybe<RewardTokensAdd>;
   rewardTokensAdds: Array<RewardTokensAdd>;
+  merkleRootSubmission?: Maybe<MerkleRootSubmission>;
+  merkleRootSubmissions: Array<MerkleRootSubmission>;
   /** Access to subgraph metadata */
   _meta?: Maybe<Meta>;
 };
@@ -4408,6 +4476,24 @@ export type QueryRewardTokensAddsArgs = {
 };
 
 
+export type QueryMerkleRootSubmissionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+  subgraphError?: SubgraphErrorPolicy;
+};
+
+
+export type QueryMerkleRootSubmissionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerkleRootSubmissionOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerkleRootSubmissionFilter>;
+  block?: Maybe<BlockHeight>;
+  subgraphError?: SubgraphErrorPolicy;
+};
+
+
 export type QueryMetaArgs = {
   block?: Maybe<BlockHeight>;
 };
@@ -4491,6 +4577,7 @@ export type RewardProgram = {
   rewardSafes: Array<Maybe<RewardSafe>>;
   tokenAddEvents: Array<Maybe<RewardTokensAdd>>;
   rewardClaimEvents: Array<Maybe<RewardeeClaim>>;
+  merkleRoots: Array<Maybe<MerkleRootSubmission>>;
 };
 
 
@@ -4518,6 +4605,15 @@ export type RewardProgramRewardClaimEventsArgs = {
   orderBy?: Maybe<RewardeeClaimOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<RewardeeClaimFilter>;
+};
+
+
+export type RewardProgramMerkleRootsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerkleRootSubmissionOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerkleRootSubmissionFilter>;
 };
 
 export type RewardProgramRegistrationPayment = {
@@ -4654,7 +4750,8 @@ export enum RewardProgramOrderBy {
   ADMIN = 'admin',
   REWARDSAFES = 'rewardSafes',
   TOKENADDEVENTS = 'tokenAddEvents',
-  REWARDCLAIMEVENTS = 'rewardClaimEvents'
+  REWARDCLAIMEVENTS = 'rewardClaimEvents',
+  MERKLEROOTS = 'merkleRoots'
 }
 
 export type RewardSafe = {
@@ -5517,7 +5614,6 @@ export type SafeTransaction = {
   safe: Safe;
   to: Scalars['String'];
   value: Scalars['BigInt'];
-  data: Scalars['Bytes'];
   operation: Scalars['BigInt'];
   safeTxGas: Scalars['BigInt'];
   baseGas: Scalars['BigInt'];
@@ -5603,12 +5699,6 @@ export type SafeTransactionFilter = {
   value_lte?: Maybe<Scalars['BigInt']>;
   value_in?: Maybe<Array<Scalars['BigInt']>>;
   value_not_in?: Maybe<Array<Scalars['BigInt']>>;
-  data?: Maybe<Scalars['Bytes']>;
-  data_not?: Maybe<Scalars['Bytes']>;
-  data_in?: Maybe<Array<Scalars['Bytes']>>;
-  data_not_in?: Maybe<Array<Scalars['Bytes']>>;
-  data_contains?: Maybe<Scalars['Bytes']>;
-  data_not_contains?: Maybe<Scalars['Bytes']>;
   operation?: Maybe<Scalars['BigInt']>;
   operation_not?: Maybe<Scalars['BigInt']>;
   operation_gt?: Maybe<Scalars['BigInt']>;
@@ -5693,7 +5783,6 @@ export enum SafeTransactionOrderBy {
   SAFE = 'safe',
   TO = 'to',
   VALUE = 'value',
-  DATA = 'data',
   OPERATION = 'operation',
   SAFETXGAS = 'safeTxGas',
   BASEGAS = 'baseGas',
@@ -5931,6 +6020,8 @@ export type Subscription = {
   rewardeeClaims: Array<RewardeeClaim>;
   rewardTokensAdd?: Maybe<RewardTokensAdd>;
   rewardTokensAdds: Array<RewardTokensAdd>;
+  merkleRootSubmission?: Maybe<MerkleRootSubmission>;
+  merkleRootSubmissions: Array<MerkleRootSubmission>;
   /** Access to subgraph metadata */
   _meta?: Maybe<Meta>;
 };
@@ -6831,6 +6922,24 @@ export type SubscriptionRewardTokensAddsArgs = {
   orderBy?: Maybe<RewardTokensAddOrderBy>;
   orderDirection?: Maybe<OrderDirection>;
   where?: Maybe<RewardTokensAddFilter>;
+  block?: Maybe<BlockHeight>;
+  subgraphError?: SubgraphErrorPolicy;
+};
+
+
+export type SubscriptionMerkleRootSubmissionArgs = {
+  id: Scalars['ID'];
+  block?: Maybe<BlockHeight>;
+  subgraphError?: SubgraphErrorPolicy;
+};
+
+
+export type SubscriptionMerkleRootSubmissionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<MerkleRootSubmissionOrderBy>;
+  orderDirection?: Maybe<OrderDirection>;
+  where?: Maybe<MerkleRootSubmissionFilter>;
   block?: Maybe<BlockHeight>;
   subgraphError?: SubgraphErrorPolicy;
 };
@@ -8269,6 +8378,26 @@ export type GetLifetimeEarningsAccumulationsQuery = (
   )> }
 );
 
+export type GetRewardClaimsQueryVariables = Exact<{
+  rewardeeAddress: Scalars['String'];
+}>;
+
+
+export type GetRewardClaimsQuery = (
+  { __typename?: 'Query' }
+  & { rewardeeClaims: Array<(
+    { __typename?: 'RewardeeClaim' }
+    & Pick<RewardeeClaim, 'id' | 'amount' | 'timestamp'>
+    & { token: (
+      { __typename?: 'Token' }
+      & Pick<Token, 'id' | 'name' | 'symbol' | 'decimals'>
+    ), rewardSafe: (
+      { __typename?: 'RewardSafe' }
+      & Pick<RewardSafe, 'id'>
+    ) }
+  )> }
+);
+
 export const PrepaidCardPaymentFragmentDoc = gql`
     fragment PrepaidCardPayment on PrepaidCardPayment {
   id
@@ -8845,3 +8974,47 @@ export function useGetLifetimeEarningsAccumulationsLazyQuery(baseOptions?: Apoll
 export type GetLifetimeEarningsAccumulationsQueryHookResult = ReturnType<typeof useGetLifetimeEarningsAccumulationsQuery>;
 export type GetLifetimeEarningsAccumulationsLazyQueryHookResult = ReturnType<typeof useGetLifetimeEarningsAccumulationsLazyQuery>;
 export type GetLifetimeEarningsAccumulationsQueryResult = ApolloReactCommon.QueryResult<GetLifetimeEarningsAccumulationsQuery, GetLifetimeEarningsAccumulationsQueryVariables>;
+export const GetRewardClaimsDocument = gql`
+    query GetRewardClaims($rewardeeAddress: String!) {
+  rewardeeClaims(orderBy: timestamp, orderDirection: desc, where: {rewardee: $rewardeeAddress}) {
+    id
+    amount
+    timestamp
+    token {
+      id
+      name
+      symbol
+      decimals
+    }
+    rewardSafe {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRewardClaimsQuery__
+ *
+ * To run a query within a React component, call `useGetRewardClaimsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRewardClaimsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRewardClaimsQuery({
+ *   variables: {
+ *      rewardeeAddress: // value for 'rewardeeAddress'
+ *   },
+ * });
+ */
+export function useGetRewardClaimsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetRewardClaimsQuery, GetRewardClaimsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetRewardClaimsQuery, GetRewardClaimsQueryVariables>(GetRewardClaimsDocument, baseOptions);
+      }
+export function useGetRewardClaimsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetRewardClaimsQuery, GetRewardClaimsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetRewardClaimsQuery, GetRewardClaimsQueryVariables>(GetRewardClaimsDocument, baseOptions);
+        }
+export type GetRewardClaimsQueryHookResult = ReturnType<typeof useGetRewardClaimsQuery>;
+export type GetRewardClaimsLazyQueryHookResult = ReturnType<typeof useGetRewardClaimsLazyQuery>;
+export type GetRewardClaimsQueryResult = ApolloReactCommon.QueryResult<GetRewardClaimsQuery, GetRewardClaimsQueryVariables>;

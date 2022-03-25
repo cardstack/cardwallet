@@ -1,5 +1,5 @@
 schema:
-  - https://graph-staging.stack.cards/subgraphs/name/habdelra/cardpay-sokol
+  - https://graph.cardstack.com/subgraphs/name/habdelra/cardpay-xdai
 overwrite: true
 generates:
   cardstack/src/graphql/graphql-codegen.ts:

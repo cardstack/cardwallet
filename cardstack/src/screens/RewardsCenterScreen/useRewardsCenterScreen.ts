@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/core';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
+import { groupBy } from 'lodash';
 import { strings } from './strings';
 import {
   useClaimRewardsMutation,
@@ -14,6 +15,8 @@ import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import { Alert } from '@rainbow-me/components/alerts';
 import { useMutationEffects } from '@cardstack/hooks';
+import { RewardeeClaim, useGetRewardClaimsQuery } from '@cardstack/graphql';
+import { groupTransactionsByDate } from '@cardstack/utils';
 
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
@@ -228,6 +231,26 @@ export const useRewardsCenterScreen = () => {
     ]
   );
 
+  const { data } = useGetRewardClaimsQuery({
+    skip: !accountAddress,
+    variables: {
+      rewardeeAddress: accountAddress,
+    },
+    context: { network },
+  });
+
+  const claimHistorySectionData = useMemo(
+    () => ({
+      sections: Object.entries(
+        groupBy(data?.rewardeeClaims, groupTransactionsByDate)
+      ).map(([title, claims]) => ({
+        title,
+        data: claims as RewardeeClaim[],
+      })),
+    }),
+    [data]
+  );
+
   return {
     rewardSafes,
     registeredPools,
@@ -238,5 +261,6 @@ export const useRewardsCenterScreen = () => {
     mainPoolTokenInfo,
     isLoading: isLoadindSafes || isLoadingTokens,
     onClaimPress,
+    claimHistorySectionData,
   };
 };

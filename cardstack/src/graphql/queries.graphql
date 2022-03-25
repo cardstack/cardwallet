@@ -1,7 +1,16 @@
-query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+query GetAccountTransactionHistoryData(
+  $address: ID!
+  $skip: Int = 0
+  $pageSize: Int = 25
+) {
   account(id: $address) {
     id
-    transactions(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+    transactions(
+      first: $pageSize
+      skip: $skip
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
       timestamp
       transaction {
         ...Transaction
@@ -10,20 +19,39 @@ query GetAccountTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize:
   }
 }
 
-query GetDepotTransactionHistoryData($address: String!, $skip: Int = 0, $pageSize: Int = 25) {
-  eoatransactions(where: {safe: $address}, first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: asc) {
+query GetDepotTransactionHistoryData(
+  $address: String!
+  $skip: Int = 0
+  $pageSize: Int = 25
+) {
+  eoatransactions(
+    where: { safe: $address }
+    first: $pageSize
+    skip: $skip
+    orderBy: timestamp
+    orderDirection: asc
+  ) {
     transaction {
       ...Transaction
     }
   }
 }
 
-query GetMerchantTransactionHistoryData($address: ID!, $skip: Int = 0, $pageSize: Int = 25) {
+query GetMerchantTransactionHistoryData(
+  $address: ID!
+  $skip: Int = 0
+  $pageSize: Int = 25
+) {
   merchantSafe(id: $address) {
     id
     merchantRevenue {
       id
-      revenueEvents(first: $pageSize, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+      revenueEvents(
+        first: $pageSize
+        skip: $skip
+        orderBy: timestamp
+        orderDirection: desc
+      ) {
         ...MerchantRevenueEvent
       }
     }
@@ -54,12 +82,33 @@ query GetPrepaidCardHistoryData($address: ID!) {
 }
 
 query GetLifetimeEarningsAccumulations($address: ID!) {
-  merchantSafe (id: $address) {
+  merchantSafe(id: $address) {
     id
     spendAccumulations(orderBy: timestamp, orderDirection: asc) {
       timestamp
       amount
       historicSpendBalance
+    }
+  }
+}
+
+query GetRewardClaims($rewardeeAddress: String!) {
+  rewardeeClaims(
+    orderBy: timestamp
+    orderDirection: desc
+    where: { rewardee: $rewardeeAddress }
+  ) {
+    id
+    amount
+    timestamp
+    token {
+      id
+      name
+      symbol
+      decimals
+    }
+    rewardSafe {
+      id
     }
   }
 }
