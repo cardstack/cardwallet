@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, StackActions } from '@react-navigation/core';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
 import { groupBy } from 'lodash';
 import { strings } from './strings';
@@ -32,7 +32,7 @@ const rewardDefaultProgramId = {
 };
 
 export const useRewardsCenterScreen = () => {
-  const { navigate } = useNavigation();
+  const { navigate, dispatch: navDispatch } = useNavigation();
   const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
   const query = useMemo(
@@ -104,16 +104,25 @@ export const useRewardsCenterScreen = () => {
   const { selectedWallet } = useWallets();
 
   const onMutationEndAlert = useCallback(
-    ({ title, message }) => () => {
+    ({ title, message, shouldGoBack }) => () => {
       dismissLoadingOverlay();
 
       Alert({
         message,
         title,
-        buttons: [{ text: 'Okay' }],
+        buttons: [
+          {
+            text: 'Okay',
+            onPress: shouldGoBack
+              ? () => {
+                  navDispatch(StackActions.pop(2));
+                }
+              : undefined,
+          },
+        ],
       });
     },
-    [dismissLoadingOverlay]
+    [dismissLoadingOverlay, navDispatch]
   );
 
   useMutationEffects(
@@ -124,6 +133,7 @@ export const useRewardsCenterScreen = () => {
           callback: onMutationEndAlert({
             title: 'Success',
             message: 'Registration successful',
+            shouldGoBack: true,
           }),
         },
         error: {
