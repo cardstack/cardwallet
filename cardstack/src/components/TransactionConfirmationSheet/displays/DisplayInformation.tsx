@@ -1,6 +1,7 @@
 import React, { ElementType } from 'react';
 
 import { ActivityIndicator } from 'react-native';
+import { strings } from '../strings';
 import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
 import { GenericDisplay } from './GenericDisplay';
 import { IssuePrepaidCardDisplay } from './PrepaidCard/IssuePrepaidCardDisplay';
@@ -11,6 +12,7 @@ import { TransferPrepaidCardDisplay } from './PrepaidCard/TransferPrepaidCardDis
 import { WithdrawalDisplay } from './WithdrawalDisplay';
 import { HubAuthenticationDisplay } from './HubAuthenticationDisplay';
 import { RewardsRegisterDisplay } from './RewardsRegisterDisplay';
+import { RewardsClaimDisplay } from './RewardsClaimDisplay';
 import { TransactionConfirmationType } from '@cardstack/types';
 import {
   CenteredContainer,
@@ -64,6 +66,10 @@ export const transactionTypeMap: Record<
   [TransactionConfirmationType.REWARDS_REGISTER]: {
     title: 'Register Account',
     component: RewardsRegisterDisplay,
+  },
+  [TransactionConfirmationType.REWARDS_CLAIM]: {
+    title: strings.rewards.claim.title,
+    component: RewardsClaimDisplay,
   },
 };
 

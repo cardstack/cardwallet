@@ -17,6 +17,7 @@ export const strings = {
       title: 'Transaction gas cost',
     },
     claim: {
+      title: 'Claim Reward',
       header: {
         title: 'Claim this amount',
       },

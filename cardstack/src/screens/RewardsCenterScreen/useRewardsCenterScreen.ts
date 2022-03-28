@@ -7,6 +7,7 @@ import { strings } from './strings';
 import { TokensWithSafeAddress } from './components';
 import {
   RewardsRegisterData,
+  RewardsClaimData,
   TransactionConfirmationType,
   TokenType,
 } from '@cardstack/types';
@@ -227,15 +228,27 @@ export const useRewardsCenterScreen = () => {
         safe => safe.rewardProgramId === rewardProgramId
       );
 
-      showLoadingOverlay({ title: strings.claim.loading });
+      const data: RewardsClaimData = {
+        type: TransactionConfirmationType.REWARDS_CLAIM,
+        claimAmount: 10.0,
+        estGasAmount: 0.01,
+        estNetClaim: 9.99,
+      };
 
-      claimRewards({
-        tokenAddress,
-        accountAddress,
-        network,
-        rewardProgramId,
-        walletId: selectedWallet.id,
-        safeAddress: rewardSafeForProgram?.address || '',
+      navigate(MainRoutes.REWARDS_CLAIM_SHEET, {
+        data,
+        onConfirm: () => {
+          showLoadingOverlay({ title: strings.claim.loading });
+
+          claimRewards({
+            tokenAddress,
+            accountAddress,
+            network,
+            rewardProgramId,
+            walletId: selectedWallet.id,
+            safeAddress: rewardSafeForProgram?.address || '',
+          });
+        },
       });
     },
     [
@@ -245,6 +258,7 @@ export const useRewardsCenterScreen = () => {
       rewardSafes,
       selectedWallet.id,
       showLoadingOverlay,
+      navigate,
     ]
   );
 
