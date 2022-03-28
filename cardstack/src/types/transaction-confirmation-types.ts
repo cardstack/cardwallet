@@ -1,5 +1,5 @@
 import { PrepaidCardCustomization } from './transaction-types';
-import { MerchantInformation } from './';
+import { MerchantInformation, TokenType } from './';
 
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
@@ -61,10 +61,8 @@ export interface RewardsRegisterData {
   type: TransactionConfirmationType.REWARDS_REGISTER;
 }
 
-export interface RewardsClaimData {
-  claimAmount: number;
-  estGasAmount: number;
-  estNetClaim: number;
+export interface RewardsClaimData extends TokenType {
+  spendAmount: number;
   type: TransactionConfirmationType.REWARDS_CLAIM;
 }
 
