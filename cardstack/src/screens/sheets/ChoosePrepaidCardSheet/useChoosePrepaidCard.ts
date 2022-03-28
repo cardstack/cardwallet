@@ -12,11 +12,12 @@ import { RouteType } from '@cardstack/navigation/types';
 type RouteParams = {
   spendAmount: number;
   onConfirmChoosePrepaidCard: (selectedPrepaidCard: PrepaidCardType) => void;
+  payCostDesc?: string;
 };
 
 export const useChoosePrepaidCard = () => {
   const {
-    params: { spendAmount = 0, onConfirmChoosePrepaidCard },
+    params: { spendAmount = 0, onConfirmChoosePrepaidCard, payCostDesc },
   } = useRoute<RouteType<RouteParams>>();
 
   const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
@@ -88,5 +89,6 @@ export const useChoosePrepaidCard = () => {
     selectedPrepaidCard,
     onSelectPrepaidCard,
     onConfirmSelectedCard,
+    payCostDesc,
   };
 };

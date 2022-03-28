@@ -12,9 +12,11 @@ export const Header = memo(
   ({
     nativeBalanceDisplay,
     onPressEditAmount,
+    payCostDesc,
   }: {
     nativeBalanceDisplay: string;
     onPressEditAmount?: () => void;
+    payCostDesc?: string;
   }) => (
     <Container
       alignItems="center"
@@ -27,7 +29,7 @@ export const Header = memo(
         {strings.chooseAPrepadCard}
       </Text>
       <Text variant="subText" weight="bold" marginTop={3} marginBottom={1}>
-        {strings.payAmountDesc}
+        {payCostDesc || strings.payAmountDesc}
       </Text>
       <Container width="100%" alignItems="center">
         <Touchable onPress={onPressEditAmount}>

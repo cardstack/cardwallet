@@ -15,6 +15,7 @@ const ChoosePrepaidCardSheet = () => {
     selectedPrepaidCard,
     onSelectPrepaidCard,
     onConfirmSelectedCard,
+    payCostDesc,
   } = useChoosePrepaidCard();
 
   return (
@@ -30,6 +31,7 @@ const ChoosePrepaidCardSheet = () => {
           prepaidCards={prepaidCards}
           onSelectPrepaidCard={onSelectPrepaidCard}
           spendAmount={spendAmount}
+          payCostDesc={payCostDesc}
         />
       )}
     </SafeAreaView>

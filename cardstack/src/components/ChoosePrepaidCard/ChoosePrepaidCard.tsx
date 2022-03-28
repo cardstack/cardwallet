@@ -20,6 +20,7 @@ export interface ChoosePrepaidCardProps {
   spendAmount: number;
   onPressEditAmount?: () => void;
   onConfirmSelectedCard: () => void;
+  payCostDesc?: string;
 }
 
 const shadowStyles: ContainerProps = {
@@ -54,6 +55,7 @@ export const ChoosePrepaidCard = memo(
     onConfirmSelectedCard,
     spendAmount,
     onPressEditAmount,
+    payCostDesc,
   }: ChoosePrepaidCardProps) => {
     const [
       network,
@@ -117,6 +119,7 @@ export const ChoosePrepaidCard = memo(
         <Header
           nativeBalanceDisplay={nativeBalanceDisplay}
           onPressEditAmount={onPressEditAmount}
+          payCostDesc={payCostDesc}
         />
         <FlatList
           data={prepaidCards}
