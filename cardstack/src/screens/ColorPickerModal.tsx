@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, memo, useState } from 'react';
+import React, { useCallback, useEffect, memo, useState } from 'react';
 import ColorPicker from 'react-native-wheel-color-picker';
 import { Keyboard } from 'react-native';
 import { Button, Container, SheetHandle } from '@cardstack/components';
@@ -23,10 +23,10 @@ const ColorPickerModal = () => {
     Keyboard.dismiss();
   }, []);
 
-  const onSelect = () => {
+  const onSelect = useCallback(() => {
     onSelectColor(selectedColor);
     goBack();
-  };
+  }, [goBack, onSelectColor, selectedColor]);
 
   return (
     <Container flex={1} justifyContent="flex-end" alignItems="center">
