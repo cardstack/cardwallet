@@ -1,6 +1,6 @@
 export const strings = {
   navigation: {
-    title: 'Reward Redemption Center',
+    title: 'Reward Redemption',
   },
   register: {
     title: 'You have unclaimed Rewards!',
