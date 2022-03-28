@@ -11,7 +11,10 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 
 interface Params {
@@ -32,9 +35,11 @@ export const usePaymentMerchantUniversalLink = () => {
     params: { merchantAddress, amount = '0', network: qrCodeNetwork, currency },
   } = useRoute<RouteType<Params>>();
 
+  const [accountCurrency] = useNativeCurrencyAndConversionRates();
+
   const { goBack } = useNavigation();
 
-  const currencyName = currency || 'SPD';
+  const currencyName = currency || accountCurrency;
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
