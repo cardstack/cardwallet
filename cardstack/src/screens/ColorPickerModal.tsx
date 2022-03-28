@@ -2,7 +2,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, memo, useState } from 'react';
 import ColorPicker from 'react-native-wheel-color-picker';
 import { Keyboard } from 'react-native';
-import { Button, Container, SheetHandle } from '@cardstack/components';
+import { Button, Container, Sheet } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 
 type ColorPickerModalRouteType = RouteType<{
@@ -29,19 +29,8 @@ const ColorPickerModal = () => {
   }, [goBack, onSelectColor, selectedColor]);
 
   return (
-    <Container flex={1} justifyContent="flex-end" alignItems="center">
-      <Container
-        width="100%"
-        borderTopLeftRadius={20}
-        borderTopRightRadius={20}
-        height="50%"
-        overflow="scroll"
-        backgroundColor="white"
-        paddingHorizontal={5}
-      >
-        <Container width="100%" alignItems="center" padding={5}>
-          <SheetHandle />
-        </Container>
+    <Sheet scrollEnabled={false}>
+      <Container paddingHorizontal={5}>
         <ColorPicker
           color={selectedColor}
           onColorChangeComplete={setSelectedColor}
@@ -50,11 +39,11 @@ const ColorPickerModal = () => {
           noSnap={true}
           row={false}
         />
-        <Container alignItems="center" paddingVertical={8}>
+        <Container alignItems="center" marginTop={8}>
           <Button onPress={onSelect}>Select</Button>
         </Container>
       </Container>
-    </Container>
+    </Sheet>
   );
 };
 
