@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { strings } from '../strings';
 import { NetClaimAmountSection } from './components/sections/NetClaimAmountSection';
 import { SectionCoinHeader } from './components/SectionCoinHeader';
