@@ -35,6 +35,7 @@ import {
   RewardsCenterScreen,
   RewardsRegisterSheet,
   TransactionConfirmationSheet,
+  ColorPickerModal,
 } from '@cardstack/screens';
 import {
   bottomSheetPreset,
@@ -200,6 +201,14 @@ export const GlobalScreens: Record<
   },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,
+    options: {
+      ...expandedPreset,
+      ignoreBottomOffset: true,
+      interactWithScrollView: false,
+    } as StackNavigationOptions,
+  },
+  COLOR_PICKER_MODAL: {
+    component: ColorPickerModal,
     options: {
       ...expandedPreset,
       ignoreBottomOffset: true,

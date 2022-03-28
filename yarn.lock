@@ -17622,6 +17622,11 @@ react-native-dynamic@^1.0.0:
     "@types/react-native" ">=0.62.0"
     toolkit.ts "^0.0.2"
 
+react-native-elevation@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-elevation/-/react-native-elevation-1.0.0.tgz#2a091c688290ac9b08b5842d1a8e8a00fc84233e"
+  integrity sha512-BWIKcEYtzjRV6GpkX0Km5/w2E7fgIcywiQOT7JZTc5NSbv/YI9kpFinB9lRFsOoRVGmiqq/O3VfP/oH2clIiBA==
+
 react-native-extra-dimensions-android@1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.2.tgz#04e311bc27f66ec5b15e8a719abba462a2d71e58"
@@ -17964,6 +17969,13 @@ react-native-webview@^11.0.0:
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
+
+react-native-wheel-color-picker@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-wheel-color-picker/-/react-native-wheel-color-picker-1.2.0.tgz#56ba38fc57411edececb0fb6a8f049e91160b015"
+  integrity sha512-j4IcN7so9dZAkXyrPTTaPqCKsjkGBZkd5F7HqLo0OTRB1EZX3Ww5VMKsKjloxv6Omv193wGOhwfG20ec2KnxJQ==
+  dependencies:
+    react-native-elevation "^1.0.0"
 
 react-native@0.65.1:
   version "0.65.1"

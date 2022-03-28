@@ -4,6 +4,7 @@ import { useProfileForm } from '../useProfileForm';
 import { strings } from '.';
 import {
   Button,
+  CardPressable,
   Container,
   ContainerProps,
   IconName,
@@ -88,13 +89,12 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
     isUniqueId,
     avatarName,
     errors,
-    onChangeBusinessColor,
+    onPressBusinessColor,
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,
   } = useProfileForm({ onFormSubmitSuccess: goToNextStep });
 
-  const businessNameRef = useRef<TextInput>(null);
   const businessIdRef = useRef<TextInput>(null);
 
   const onBusinessNameSubmitEditing = useCallback(
@@ -102,16 +102,11 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
     []
   );
 
-  const onBusinessColorSubmitEditing = useCallback(
-    () => businessNameRef?.current?.focus && businessNameRef.current.focus(),
-    []
-  );
-
   const businessIdIconProps = useMemo(
     () =>
       isUniqueId
         ? UniqueCheckValidIconProps
-        : errors
+        : errors?.businessId === strings.validation.businessIdShouldBeUnique
         ? UniqueCheckInvalidIconProps
         : undefined,
     [isUniqueId, errors]
@@ -146,16 +141,10 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
       </Container>
       <Container paddingHorizontal={5} marginTop={4}>
         <InputLabel label={strings.stepTwo.iconColor} marginTop={0} />
-        <Container position="relative">
-          <Input
-            borderColor="buttonSecondaryBorder"
-            value={businessColor}
-            onChange={onChangeBusinessColor}
-            onSubmitEditing={onBusinessColorSubmitEditing}
-            returnKeyType="next"
-            {...InputCommonProps}
-            paddingLeft={13}
-          />
+        <CardPressable onPress={onPressBusinessColor} position="relative">
+          <Text paddingLeft={10} {...InputCommonProps}>
+            {businessColor}
+          </Text>
           <Container
             width={30}
             height={30}
@@ -166,12 +155,12 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
             justifyContent="center"
             alignItems="center"
             position="absolute"
-            left={10}
-            top={10}
+            left={4}
+            top={8}
           >
             <Container width={20} height={20} style={businessColorStyle} />
           </Container>
-        </Container>
+        </CardPressable>
         <InputLabel label={strings.stepTwo.businessName} required />
         <Input
           textContentType="name"

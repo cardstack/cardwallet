@@ -4,7 +4,11 @@ import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
 import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import {
+  MainRoutes,
+  GlobalRoutes,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 import {
   checkBusinessIdUniqueness,
   createBusinessInfoDID,
@@ -123,13 +127,25 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     [setBusinessName]
   );
 
-  const onChangeBusinessColor = useCallback(
-    ({ nativeEvent: { text } }) => {
-      const validColor = (text || '').startsWith('#') ? text : `#${text}`;
-      setBusinessColor(validColor.replace(/[^#0-9a-fA-F]/gi, ''));
+  const onSelectColor = useCallback(
+    (color: string) => {
+      const validColor = (color || '').startsWith('#') ? color : `#${color}`;
+
+      const upperCaseColor = validColor
+        .replace(/[^#0-9a-fA-F]/gi, '')
+        .toUpperCase();
+
+      setBusinessColor(upperCaseColor);
     },
     [setBusinessColor]
   );
+
+  const onPressBusinessColor = useCallback(() => {
+    navigate(GlobalRoutes.COLOR_PICKER_MODAL, {
+      defaultColor: businessColor,
+      onSelectColor,
+    });
+  }, [businessColor, navigate, onSelectColor]);
 
   const onChangeBusinessId = useCallback(
     async ({ nativeEvent: { text } }) => {
@@ -274,7 +290,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     isUniqueId,
     avatarName,
     errors,
-    onChangeBusinessColor,
+    onPressBusinessColor,
     onChangeBusinessName,
     onChangeBusinessId,
     onSubmitForm,
