@@ -106,7 +106,7 @@ export const StepTwo = ({ goToNextStep }: ProgressStepProps) => {
     () =>
       isUniqueId
         ? UniqueCheckValidIconProps
-        : errors
+        : errors?.businessId === strings.validation.businessIdShouldBeUnique
         ? UniqueCheckInvalidIconProps
         : undefined,
     [isUniqueId, errors]
