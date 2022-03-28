@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
 import { useNavigation, StackActions } from '@react-navigation/core';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
@@ -43,6 +43,7 @@ export const useRewardsCenterScreen = () => {
       },
       options: {
         skip: !accountAddress,
+        refetchOnMountOrArgChange: 30,
       },
     }),
     [accountAddress, nativeCurrency]
@@ -248,7 +249,7 @@ export const useRewardsCenterScreen = () => {
     ]
   );
 
-  const { data } = useGetRewardClaimsQuery({
+  const { data, refetch: refetchClaimHistory } = useGetRewardClaimsQuery({
     skip: !accountAddress,
     variables: {
       rewardeeAddress: accountAddress,
@@ -267,6 +268,12 @@ export const useRewardsCenterScreen = () => {
     }),
     [data]
   );
+
+  // Refetchs when rewardSafes or rewardPoolTokenBalances updates
+  useEffect(() => {
+    refetchClaimHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rewardSafes, rewardPoolTokenBalances]);
 
   const tokensBalanceData = useMemo(
     () => ({
