@@ -16,5 +16,16 @@ export const strings = {
     cost: {
       title: 'Transaction gas cost',
     },
+    claim: {
+      header: {
+        title: 'Claim this amount',
+      },
+      breakdownSection: {
+        title: 'Net Claim Amount',
+        reward: 'Reward Amount',
+        estGas: 'Est. Gas Amount',
+        estNet: 'Est. Net Claim',
+      },
+    },
   },
 };

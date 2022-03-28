@@ -13,6 +13,7 @@ export enum TransactionConfirmationType {
   CLAIM_REVENUE = 'claimRevenue',
   WITHDRAWAL = 'withdrawal',
   REWARDS_REGISTER = 'rewardsRegister',
+  REWARDS_CLAIM = 'rewardsClaim',
 }
 
 export interface Level1DecodedData {
@@ -58,6 +59,13 @@ export interface RewardsRegisterData {
   prepaidCard: string;
   spendAmount: number;
   type: TransactionConfirmationType.REWARDS_REGISTER;
+}
+
+export interface RewardsClaimData {
+  claimAmount: number;
+  estGasAmount: number;
+  estNetClaim: number;
+  type: TransactionConfirmationType.REWARDS_CLAIM;
 }
 
 export interface PayMerchantDecodedData {
@@ -137,4 +145,5 @@ export type TransactionConfirmationData =
   | ClaimRevenueDecodedData
   | WithdrawalDecodedData
   | PayMerchantDecodedData
-  | RewardsRegisterData;
+  | RewardsRegisterData
+  | RewardsClaimData;

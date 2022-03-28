@@ -24,6 +24,7 @@ export const MainRoutes = {
   TRANSFER_CARD: 'TransferCardScreen',
   REWARDS_CENTER_SCREEN: 'RewardsCenterScreen',
   REWARDS_REGISTER_SHEET: 'RewardsRegisterSheet',
+  REWARDS_CLAIM_SHEET: 'RewardsClaimSheet',
   TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
 } as const;
 
