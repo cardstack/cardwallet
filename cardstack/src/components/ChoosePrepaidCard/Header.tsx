@@ -28,7 +28,13 @@ export const Header = memo(
       <Text marginTop={4} weight="bold" size="body">
         {strings.chooseAPrepadCard}
       </Text>
-      <Text variant="subText" weight="bold" marginTop={3} marginBottom={1}>
+      <Text
+        fontSize={11}
+        fontWeight="600"
+        color="blueText"
+        marginTop={3}
+        marginBottom={1}
+      >
         {payCostDesc || strings.payAmountDesc}
       </Text>
       <Container width="100%" alignItems="center">
