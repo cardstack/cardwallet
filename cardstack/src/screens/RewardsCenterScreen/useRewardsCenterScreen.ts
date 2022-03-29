@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
 import { useNavigation, StackActions } from '@react-navigation/core';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/react';
 import { groupBy } from 'lodash';
 import { strings } from './strings';
 import { TokensWithSafeAddress } from './components';
@@ -24,6 +23,7 @@ import { useMutationEffects } from '@cardstack/hooks';
 import { RewardeeClaim, useGetRewardClaimsQuery } from '@cardstack/graphql';
 import { groupTransactionsByDate } from '@cardstack/utils';
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
+import { defaultErrorAlert } from '@cardstack/constants';
 
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
@@ -67,7 +67,7 @@ export const useRewardsCenterScreen = () => {
 
   const [
     claimRewards,
-    { isSuccess: isClaimSuccess, isError: isClaimError, error: claimError },
+    { isSuccess: isClaimSuccess, isError: isClaimError },
   ] = useClaimRewardsMutation();
 
   const registeredPools = useMemo(
@@ -139,10 +139,7 @@ export const useRewardsCenterScreen = () => {
         },
         error: {
           status: isRegistrationError,
-          callback: onMutationEndAlert({
-            title: 'Error',
-            message: 'Registration failed',
-          }),
+          callback: onMutationEndAlert(defaultErrorAlert),
         },
       }),
       [isRegistrationError, isRegistrationSuccess, onMutationEndAlert]
@@ -211,15 +208,10 @@ export const useRewardsCenterScreen = () => {
         },
         error: {
           status: isClaimError,
-          callback: onMutationEndAlert({
-            title: 'Error',
-            message: `Claiming failed - ${
-              (claimError as FetchBaseQueryError)?.data
-            }`,
-          }),
+          callback: onMutationEndAlert(defaultErrorAlert),
         },
       }),
-      [claimError, isClaimError, isClaimSuccess, onMutationEndAlert]
+      [isClaimError, isClaimSuccess, onMutationEndAlert]
     )
   );
 

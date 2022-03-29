@@ -16,3 +16,9 @@ export const SettingsExternalURLs = {
 export const IPFS_HTTP_URL = 'https://ipfs.infura.io';
 
 export const delayLongPressMs = 800;
+
+export const defaultErrorAlert = {
+  title: 'Error',
+  message:
+    'Please try again or contact support@cardstack.com if this error persists.',
+};
