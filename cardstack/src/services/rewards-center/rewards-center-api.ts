@@ -58,6 +58,7 @@ const rewardsApi = safesApi.injectEndpoints({
           params,
           {
             errorLogMessage: 'Error fetching rewardee register gas estimate',
+            timeout: 60000, // 1 min
           }
         );
       },

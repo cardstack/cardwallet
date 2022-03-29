@@ -16,6 +16,7 @@ export const strings = {
     },
     loading: 'Registering Account',
     payCostDescription: 'To pay transaction cost',
+    gasLoading: 'Getting estimated gas fee',
   },
   claim: {
     button: 'Claim',
