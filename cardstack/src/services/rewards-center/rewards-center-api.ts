@@ -1,6 +1,7 @@
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 import {
+  RegisterGasEstimateQueryParams,
   RewardsClaimMutationParams,
   RewardsRegisterMutationParams,
   RewardsRegisterMutationResult,
@@ -13,6 +14,7 @@ import {
   claimRewards,
   fetchRewardPoolTokenBalances,
   fetchRewardsSafe,
+  getRegisterGasEstimate,
   registerToRewardProgram,
 } from './rewards-center-service';
 
@@ -45,6 +47,20 @@ const rewardsApi = safesApi.injectEndpoints({
         });
       },
       providesTags: [CacheTags.REWARDS_POOL],
+    }),
+    getRegisterRewardeeGasEstimate: builder.query<
+      number,
+      RegisterGasEstimateQueryParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<number, RegisterGasEstimateQueryParams>(
+          getRegisterGasEstimate,
+          params,
+          {
+            errorLogMessage: 'Error fetching rewardee register gas estimate',
+          }
+        );
+      },
     }),
     registerToRewardProgram: builder.mutation<
       RewardsRegisterMutationResult,
@@ -84,4 +100,5 @@ export const {
   useGetRewardPoolTokenBalancesQuery,
   useRegisterToRewardProgramMutation,
   useClaimRewardsMutation,
+  useLazyGetRegisterRewardeeGasEstimateQuery,
 } = rewardsApi;

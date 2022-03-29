@@ -1,9 +1,12 @@
 import { getSDK, Safe, TokenInfo } from '@cardstack/cardpay-sdk';
+import BN from 'bn.js';
 import {
   addNativePriceToToken,
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
+import { convertTokenToSpend } from '../exchange-rate-service';
 import {
+  RegisterGasEstimateQueryParams,
   RewardsClaimMutationParams,
   RewardsRegisterMutationParams,
   RewardsSafeQueryParams,
@@ -19,6 +22,16 @@ const getRewardsPoolInstance = async (signedParams?: SignedProviderParams) => {
   const rewardPoolInstance = await getSDK('RewardPool', web3);
 
   return rewardPoolInstance;
+};
+
+const getRewardManagerInstance = async (
+  signedParams?: SignedProviderParams
+) => {
+  const web3 = await Web3Instance.get(signedParams);
+
+  const rewardManagerInstance = await getSDK('RewardManager', web3);
+
+  return rewardManagerInstance;
 };
 
 // Queries
@@ -87,6 +100,24 @@ export const fetchRewardPoolTokenBalances = async ({
   };
 };
 
+export const getRegisterGasEstimate = async ({
+  prepaidCardAddress,
+  rewardProgramId,
+}: RegisterGasEstimateQueryParams) => {
+  const rewardManager = await getRewardManagerInstance();
+
+  const { amount, gasToken } = await rewardManager.registerRewardeeGasEstimate(
+    prepaidCardAddress,
+    rewardProgramId
+  );
+
+  const amountString = new BN(amount).toString();
+
+  const gasEstimateInSpend = await convertTokenToSpend(gasToken, amountString);
+
+  return gasEstimateInSpend;
+};
+
 // Mutations
 
 export const registerToRewardProgram = async ({
@@ -96,9 +127,7 @@ export const registerToRewardProgram = async ({
   walletId,
   network,
 }: RewardsRegisterMutationParams) => {
-  const web3 = await Web3Instance.get({ walletId, network });
-
-  const rewardManager = await getSDK('RewardManager', web3);
+  const rewardManager = await getRewardManagerInstance({ walletId, network });
 
   const result = await rewardManager.registerRewardee(
     prepaidCardAddress,
