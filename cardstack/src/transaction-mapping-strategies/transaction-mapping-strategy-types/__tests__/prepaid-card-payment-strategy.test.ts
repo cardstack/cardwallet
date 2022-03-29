@@ -48,6 +48,7 @@ const result = {
     slug: 'nfty',
     textColor: '#ffffff',
   },
+  merchantSafeAddress: '0x9Ed84407e5ed5B7c0323E5653A06F4528357e3B5',
   nativeBalanceDisplay: '$1.00 USD',
   spendAmount: '100',
   timestamp: '1629411270',

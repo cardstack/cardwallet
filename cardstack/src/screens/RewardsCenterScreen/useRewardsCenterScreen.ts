@@ -195,6 +195,7 @@ export const useRewardsCenterScreen = () => {
       // Mocked estimated gas fee until we get from sdk
       spendAmount: convertToSpend(0.01, 'USD', 1),
       onConfirmChoosePrepaidCard: onPrepaidCardSelection,
+      payCostDesc: strings.register.payCostDescription.toUpperCase(),
     });
   }, [navigate, onPrepaidCardSelection]);
 

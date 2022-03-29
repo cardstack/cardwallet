@@ -15,6 +15,7 @@ export const strings = {
         'Before you can claim, you need to create and register a reward account.  This is an on-chain event and will cost you a small gas fee - you can use any existing prepaid card to pay the transaction fee.',
     },
     loading: 'Registering Account',
+    payCostDescription: 'To pay transaction cost',
   },
   claim: {
     button: 'Claim',
