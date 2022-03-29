@@ -57,12 +57,12 @@ export interface RegisterMerchantDecodedData {
 export interface RewardsRegisterData {
   programName: string;
   prepaidCard: string;
-  spendAmount: number;
+  estGasFee: number;
   type: TransactionConfirmationType.REWARDS_REGISTER;
 }
 
 export interface RewardsClaimData extends TokenType {
-  spendAmount: number;
+  estGasFee: number;
   type: TransactionConfirmationType.REWARDS_CLAIM;
 }
 
@@ -130,6 +130,12 @@ export interface ActionDispatcherDecodedData {
   requestedRate: number;
   actionName: ActionDispatcherActionName;
   actionData: string;
+}
+
+export interface TransactionConfirmationRouteParams {
+  data: TransactionConfirmationData;
+  onConfirm: () => Promise<void>;
+  onCancel: () => void;
 }
 
 export type TransactionConfirmationData =

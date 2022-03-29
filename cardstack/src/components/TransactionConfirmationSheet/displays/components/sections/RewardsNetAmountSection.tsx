@@ -4,16 +4,18 @@ import { SectionHeaderText } from '../SectionHeaderText';
 import { Container, Text } from '@cardstack/components';
 import { RewardsClaimData } from '@cardstack/types';
 
-interface NetClaimAmountSectionProps extends Partial<RewardsClaimData> {
+interface RewardsNetAmountSectionProps extends Partial<RewardsClaimData> {
   headerText: string;
 }
 
-export const NetClaimAmountSection = ({
+export const RewardsNetAmountSection = ({
   headerText,
   balance,
-  spendAmount,
+  estGasFee,
   token,
-}: NetClaimAmountSectionProps) => {
+}: RewardsNetAmountSectionProps) => {
+  const estimateNetClaim = Number(balance?.amount) - (estGasFee || 0);
+
   return (
     <Container>
       <SectionHeaderText>{headerText}</SectionHeaderText>
@@ -25,12 +27,12 @@ export const NetClaimAmountSection = ({
 
         <Text size="xxs">{strings.rewards.claim.breakdownSection.estGas}</Text>
         <Text size="body" weight="bold" paddingBottom={3}>
-          {spendAmount} {token?.symbol}
+          {estGasFee} {token?.symbol}
         </Text>
 
         <Text size="xxs">{strings.rewards.claim.breakdownSection.estNet}</Text>
         <Text size="body" weight="bold" paddingBottom={3}>
-          {Number(balance?.amount) - (spendAmount || 0)} {token?.symbol}
+          {estimateNetClaim} {token?.symbol}
         </Text>
       </Container>
     </Container>

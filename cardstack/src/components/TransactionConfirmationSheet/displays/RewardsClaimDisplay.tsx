@@ -1,6 +1,6 @@
 import React from 'react';
 import { strings } from '../strings';
-import { NetClaimAmountSection } from './components/sections/NetClaimAmountSection';
+import { RewardsNetAmountSection } from './components/sections/RewardsNetAmountSection';
 import { SectionCoinHeader } from './components/SectionCoinHeader';
 import {
   HorizontalDivider,
@@ -21,7 +21,7 @@ export const RewardsClaimDisplay = ({ data }: RewardsClaimDisplayProps) => (
       secondaryText={data.native.balance.display}
     />
     <HorizontalDivider />
-    <NetClaimAmountSection
+    <RewardsNetAmountSection
       headerText={strings.rewards.claim.breakdownSection.title}
       {...data}
     />

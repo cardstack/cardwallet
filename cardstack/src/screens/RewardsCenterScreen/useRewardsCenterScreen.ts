@@ -174,7 +174,7 @@ export const useRewardsCenterScreen = () => {
     prepaidCard => {
       const data: RewardsRegisterData = {
         type: TransactionConfirmationType.REWARDS_REGISTER,
-        spendAmount: convertToSpend(0.01, 'USD', 1),
+        estGasFee: convertToSpend(0.01, 'USD', 1),
         prepaidCard: prepaidCard.address,
         programName: 'Cardstack Rewards',
       };
@@ -233,7 +233,7 @@ export const useRewardsCenterScreen = () => {
       if (mainPoolTokenInfo) {
         const data: RewardsClaimData = {
           type: TransactionConfirmationType.REWARDS_CLAIM,
-          spendAmount: 0.01,
+          estGasFee: 0.01,
           ...mainPoolTokenInfo,
         };
 
@@ -251,9 +251,7 @@ export const useRewardsCenterScreen = () => {
               safeAddress: rewardSafeForProgram?.address || '',
             });
           },
-          onCancel: () => {
-            goBack();
-          },
+          onCancel: goBack,
         });
       }
     },
