@@ -269,7 +269,7 @@ export const addNativePriceToToken = async (
 
   const isAmountDust = nativeBalance < 0.01;
 
-  // Cecimal places formatting for residual crypto values.
+  // Decimal places formatting for residual crypto values.
   // Using "2" is a workaround to a exception happening in
   // handleSignificantDecimals function in SDK.
   const bufferValue = isAmountDust ? 2 : undefined;
