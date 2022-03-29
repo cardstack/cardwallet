@@ -17,20 +17,20 @@ import {
 } from '@cardstack/components';
 
 const networks = values(networkInfo);
+const defaultNetwork = INITIAL_STATE.network;
 
 const NetworkSection = () => {
   const { network, showTestnets } = useAccountSettings();
   const [selectedNetwork, setSelectedNetwork] = useState(network);
   const dispatch = useDispatch();
   const networkSelected = useMemo(() => networkInfo[network], [network]);
-  const defaultNetwork = INITIAL_STATE.network;
 
   // transform data for sectionList
   const sectionListItems = useMemo(() => {
     const filteredNetworks = networks.filter(item =>
       showTestnets ? true : !item.isTestnet
     );
-    // merge networks by layer and then sort by title
+    // merge networks by layer and then sort by layer title
     const sectionLists = filteredNetworks
       .reduce((result: RadioItemProps[], curr, currentIndex) => {
         result[curr.layer] =
@@ -58,7 +58,7 @@ const NetworkSection = () => {
       );
 
     return sectionLists;
-  }, [defaultNetwork, selectedNetwork, showTestnets]);
+  }, [selectedNetwork, showTestnets]);
 
   useEffect(() => {
     if (networkSelected.isTestnet !== showTestnets) {
