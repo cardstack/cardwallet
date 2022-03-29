@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Alert, AlertButton, InteractionManager } from 'react-native';
-import { MerchantSafe } from '@cardstack/cardpay-sdk';
+import { MerchantSafe, isSupportedCurrency } from '@cardstack/cardpay-sdk';
 import {
   PayMerchantDecodedData,
   TransactionConfirmationType,
@@ -39,7 +39,8 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const { goBack } = useNavigation();
 
-  const currencyName = currency || accountCurrency;
+  const currencyName =
+    currency && isSupportedCurrency(currency) ? currency : accountCurrency;
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
