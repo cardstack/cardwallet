@@ -29,7 +29,7 @@ export const networkInfo = {
     shortName: 'Mainnet',
     layer: 1,
     value: networkTypes.mainnet,
-    isTestnet: false,
+    isTestnet: true,
   },
   [`${networkTypes.kovan}`]: {
     disabled: false,
