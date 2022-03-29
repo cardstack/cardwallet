@@ -26,6 +26,9 @@ jest.mock('@rainbow-me/hooks', () => ({
 
 jest.mock('@rainbow-me/redux/hooks', () => ({
   useRainbowSelector: jest.fn(),
+  useNativeCurrencyAndConversionRates: jest
+    .fn()
+    .mockImplementation(() => ['USD', { USD: 1, EUR: 0.86 }]),
 }));
 
 jest.mock('@cardstack/models/safes-providers', () => ({
@@ -119,7 +122,7 @@ describe('usePaymentMerchantUniversalLink', () => {
 
     const { result } = renderHook(() => usePaymentMerchantUniversalLink());
 
-    expect(result.current.data.currency).toBe('SPD');
+    expect(result.current.data.currency).toBe('USD');
   });
 
   it('should call usePaymentMerchantUniversalLink and return amount 0 if no amount is provided in url', async () => {

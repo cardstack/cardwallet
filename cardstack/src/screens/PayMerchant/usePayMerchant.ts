@@ -169,7 +169,7 @@ export const usePayMerchant = () => {
   const {
     infoDID = '',
     amount: initialAmount,
-    currency: initialCurrency = NativeCurrency.SPD,
+    currency: initialCurrency,
     merchantSafe: merchantAddress,
     qrCodeNetwork,
   } = data;

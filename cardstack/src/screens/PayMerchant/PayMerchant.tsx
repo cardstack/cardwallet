@@ -61,7 +61,7 @@ const PayMerchant = memo(() => {
         inputValue={inputValue}
         setInputValue={setInputValue}
         isLoading={isLoadingMerchantInfo}
-        nativeCurrency={nativeCurrency || 'SPD'}
+        nativeCurrency={nativeCurrency}
       />
     );
   }
