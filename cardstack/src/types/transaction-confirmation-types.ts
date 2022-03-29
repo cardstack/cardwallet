@@ -57,7 +57,7 @@ export interface RegisterMerchantDecodedData {
 export interface RewardsRegisterData {
   programName: string;
   prepaidCard: string;
-  estGasFee: number;
+  spendAmount: number;
   type: TransactionConfirmationType.REWARDS_REGISTER;
 }
 

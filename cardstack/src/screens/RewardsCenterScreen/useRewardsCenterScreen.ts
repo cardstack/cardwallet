@@ -174,7 +174,7 @@ export const useRewardsCenterScreen = () => {
     prepaidCard => {
       const data: RewardsRegisterData = {
         type: TransactionConfirmationType.REWARDS_REGISTER,
-        estGasFee: convertToSpend(0.01, 'USD', 1),
+        spendAmount: convertToSpend(0.01, 'USD', 1),
         prepaidCard: prepaidCard.address,
         programName: 'Cardstack Rewards',
       };

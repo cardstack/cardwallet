@@ -22,7 +22,7 @@ const rewardsIconProps: IconProps = {
 };
 
 export const RewardsRegisterDisplay = ({
-  data: { programName, prepaidCard, estGasFee },
+  data: { programName, prepaidCard, spendAmount },
 }: RewardsRegisterDisplayProps) => (
   <>
     <SectionIconTitle
@@ -37,7 +37,7 @@ export const RewardsRegisterDisplay = ({
     />
     <PayThisAmountSection
       headerText={strings.rewards.cost.title}
-      spendAmount={estGasFee}
+      spendAmount={spendAmount}
     />
   </>
 );
