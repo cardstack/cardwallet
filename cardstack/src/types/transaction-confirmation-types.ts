@@ -1,5 +1,5 @@
 import { PrepaidCardCustomization } from './transaction-types';
-import { MerchantInformation } from './';
+import { MerchantInformation, TokenType } from './';
 
 export enum TransactionConfirmationType {
   GENERIC = 'generic',
@@ -13,6 +13,7 @@ export enum TransactionConfirmationType {
   CLAIM_REVENUE = 'claimRevenue',
   WITHDRAWAL = 'withdrawal',
   REWARDS_REGISTER = 'rewardsRegister',
+  REWARDS_CLAIM = 'rewardsClaim',
 }
 
 export interface Level1DecodedData {
@@ -58,6 +59,11 @@ export interface RewardsRegisterData {
   prepaidCard: string;
   spendAmount: number;
   type: TransactionConfirmationType.REWARDS_REGISTER;
+}
+
+export interface RewardsClaimData extends TokenType {
+  estGasFee: number;
+  type: TransactionConfirmationType.REWARDS_CLAIM;
 }
 
 export interface PayMerchantDecodedData {
@@ -126,6 +132,12 @@ export interface ActionDispatcherDecodedData {
   actionData: string;
 }
 
+export interface TransactionConfirmationRouteParams {
+  data: TransactionConfirmationData;
+  onConfirm: () => Promise<void>;
+  onCancel: () => void;
+}
+
 export type TransactionConfirmationData =
   | GenericDisplayData
   | HubAuthData
@@ -137,4 +149,5 @@ export type TransactionConfirmationData =
   | ClaimRevenueDecodedData
   | WithdrawalDecodedData
   | PayMerchantDecodedData
-  | RewardsRegisterData;
+  | RewardsRegisterData
+  | RewardsClaimData;

@@ -34,6 +34,7 @@ import {
   ChoosePrepaidCardSheet,
   RewardsCenterScreen,
   RewardsRegisterSheet,
+  RewardsClaimSheet,
   TransactionConfirmationSheet,
   ColorPickerModal,
 } from '@cardstack/screens';
@@ -182,6 +183,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   REWARDS_REGISTER_SHEET: {
     component: RewardsRegisterSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  REWARDS_CLAIM_SHEET: {
+    component: RewardsClaimSheet,
     options: expandedPreset as StackNavigationOptions,
   },
   TRANSACTION_CONFIRMATION_SHEET: {

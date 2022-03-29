@@ -6,6 +6,7 @@ import { strings } from './strings';
 import { TokensWithSafeAddress } from './components';
 import {
   RewardsRegisterData,
+  RewardsClaimData,
   TransactionConfirmationType,
   TokenType,
 } from '@cardstack/types';
@@ -32,7 +33,7 @@ const rewardDefaultProgramId = {
 };
 
 export const useRewardsCenterScreen = () => {
-  const { navigate, dispatch: navDispatch } = useNavigation();
+  const { navigate, goBack, dispatch: navDispatch } = useNavigation();
   const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
   const query = useMemo(
@@ -105,7 +106,7 @@ export const useRewardsCenterScreen = () => {
   const { selectedWallet } = useWallets();
 
   const onMutationEndAlert = useCallback(
-    ({ title, message, shouldGoBack }) => () => {
+    ({ title, message, popStackNavigation = 0 }) => () => {
       dismissLoadingOverlay();
 
       Alert({
@@ -114,9 +115,9 @@ export const useRewardsCenterScreen = () => {
         buttons: [
           {
             text: 'Okay',
-            onPress: shouldGoBack
+            onPress: popStackNavigation
               ? () => {
-                  navDispatch(StackActions.pop(2));
+                  navDispatch(StackActions.pop(popStackNavigation));
                 }
               : undefined,
           },
@@ -134,7 +135,7 @@ export const useRewardsCenterScreen = () => {
           callback: onMutationEndAlert({
             title: 'Success',
             message: 'Registration successful',
-            shouldGoBack: true,
+            popStackNavigation: 2,
           }),
         },
         error: {
@@ -204,6 +205,7 @@ export const useRewardsCenterScreen = () => {
           callback: onMutationEndAlert({
             title: 'Success',
             message: 'Rewards claimed successfully',
+            popStackNavigation: 1,
           }),
         },
         error: {
@@ -221,16 +223,31 @@ export const useRewardsCenterScreen = () => {
         safe => safe.rewardProgramId === rewardProgramId
       );
 
-      showLoadingOverlay({ title: strings.claim.loading });
+      // Cant assign undefined mainPoolTokenInfo to data.
+      if (mainPoolTokenInfo) {
+        const data: RewardsClaimData = {
+          type: TransactionConfirmationType.REWARDS_CLAIM,
+          estGasFee: 0.01,
+          ...mainPoolTokenInfo,
+        };
 
-      claimRewards({
-        tokenAddress,
-        accountAddress,
-        network,
-        rewardProgramId,
-        walletId: selectedWallet.id,
-        safeAddress: rewardSafeForProgram?.address || '',
-      });
+        navigate(MainRoutes.REWARDS_CLAIM_SHEET, {
+          data,
+          onConfirm: () => {
+            showLoadingOverlay({ title: strings.claim.loading });
+
+            claimRewards({
+              tokenAddress,
+              accountAddress,
+              network,
+              rewardProgramId,
+              walletId: selectedWallet.id,
+              safeAddress: rewardSafeForProgram?.address || '',
+            });
+          },
+          onCancel: goBack,
+        });
+      }
     },
     [
       accountAddress,
@@ -239,6 +256,9 @@ export const useRewardsCenterScreen = () => {
       rewardSafes,
       selectedWallet.id,
       showLoadingOverlay,
+      navigate,
+      goBack,
+      mainPoolTokenInfo,
     ]
   );
 

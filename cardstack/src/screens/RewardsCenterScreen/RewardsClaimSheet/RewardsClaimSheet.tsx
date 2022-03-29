@@ -7,7 +7,7 @@ import {
   SafeAreaView,
 } from '@cardstack/components';
 
-const RewardsRegisterSheet = () => {
+const RewardsClaimSheet = () => {
   const {
     params: { data, onConfirm, onCancel },
   } = useRoute<RouteType<TransactionConfirmationRouteParams>>();
@@ -24,4 +24,4 @@ const RewardsRegisterSheet = () => {
   );
 };
 
-export default memo(RewardsRegisterSheet);
+export default memo(RewardsClaimSheet);
