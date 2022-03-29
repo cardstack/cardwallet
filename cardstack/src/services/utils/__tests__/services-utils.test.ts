@@ -57,6 +57,33 @@ describe('service utils', () => {
       });
     });
 
+    it('it should return a timeout error', async () => {
+      const timeToResolve = 20;
+
+      const longerPromise = () =>
+        new Promise(resolve => setTimeout(resolve, timeToResolve));
+
+      const queryWrapperResult = await queryPromiseWrapper(
+        longerPromise,
+        undefined,
+        { timeout: timeToResolve / 2 }
+      );
+
+      expect(logger.sentry).toBeCalledWith(
+        'Error on queryPromiseWrapper',
+        'Request timeout'
+      );
+
+      expect(captureExceptionSpy).toBeCalledWith('Error');
+
+      expect(queryWrapperResult).toStrictEqual({
+        error: {
+          status: 408,
+          data: 'Request timeout',
+        },
+      });
+    });
+
     it('it should return a strutured custom error object given a failed promise and status error', async () => {
       const anyPromise = () => Promise.reject('Error');
 

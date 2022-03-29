@@ -19,7 +19,20 @@ interface Options {
   errorStatus?: number;
   errorLogMessage?: string;
   resetHdProvider?: boolean;
+  timeout?: number;
 }
+
+const timeout = {
+  id: 0,
+  defaultMs: 120000, // 2 min
+  error: 'Request timeout',
+  status: 408,
+};
+
+const timeoutRacer = (ms = timeout.defaultMs) =>
+  new Promise(
+    (_, reject) => (timeout.id = setTimeout(reject, ms, timeout.error))
+  );
 
 export const queryPromiseWrapper = async <TResult, TArgs>(
   promise: (args: TArgs) => Promise<TResult>,
@@ -27,7 +40,11 @@ export const queryPromiseWrapper = async <TResult, TArgs>(
   options?: Options
 ): Promise<QuerySuccess<TResult> | QueryError> => {
   try {
-    const result = await promise(args);
+    //@ts-expect-error ts doesn't know timeoutRacer will reject promise and has no result
+    const result: TResult = await Promise.race([
+      promise(args),
+      timeoutRacer(options?.timeout),
+    ]).finally(() => !!timeout.id && clearTimeout(timeout.id));
 
     return { data: result };
   } catch (error) {
@@ -38,7 +55,9 @@ export const queryPromiseWrapper = async <TResult, TArgs>(
 
     return {
       error: {
-        status: options?.errorStatus || 418,
+        status:
+          options?.errorStatus ||
+          (timeout.error === error ? timeout.status : 418),
         data: error,
       },
     };
