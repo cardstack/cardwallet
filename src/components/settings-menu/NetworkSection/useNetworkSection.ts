@@ -19,7 +19,7 @@ export const useNetworkSection = () => {
   // transform data for sectionList
   const sectionListItems = useMemo(() => {
     const filteredNetworks = networks.filter(item =>
-      isShowAllNetworks ? true : !item.isTestnet
+      isShowAllNetworks ? true : !item.hidden
     );
     // merge networks by layer and then sort by layer title
     const sectionLists = filteredNetworks
@@ -52,11 +52,11 @@ export const useNetworkSection = () => {
   }, [selectedNetwork, isShowAllNetworks]);
 
   useEffect(() => {
-    if (selectedNetworkInfo.isTestnet !== isShowAllNetworks) {
-      setShowAllNetworks(selectedNetworkInfo.isTestnet);
+    if (selectedNetworkInfo.hidden !== isShowAllNetworks) {
+      setShowAllNetworks(selectedNetworkInfo.hidden);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedNetworkInfo.isTestnet]);
+  }, [selectedNetworkInfo.hidden]);
 
   useEffect(() => {
     if (network) {
