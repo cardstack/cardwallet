@@ -103,11 +103,13 @@ export const Button = ({
     <AnimatedButton
       {...variantMergedStyles}
       {...props}
-      disabled={disabled || disablePress}
+      disabled={disabled || disablePress || loading}
       onPress={onPress}
     >
       {loading ? (
-        <ActivityIndicator testID="button-loading" />
+        <Container>
+          <ActivityIndicator testID="button-loading" />
+        </Container>
       ) : (
         <Container
           flexDirection={iconPosition === 'left' ? 'row' : 'row-reverse'}
