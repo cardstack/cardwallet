@@ -64,7 +64,10 @@ export const useRewardsCenterScreen = () => {
   const {
     isLoading: isLoadingTokens,
     data: { rewardPoolTokenBalances } = {},
-  } = useGetRewardPoolTokenBalancesQuery(query.params, query.options);
+  } = useGetRewardPoolTokenBalancesQuery(query.params, {
+    ...query.options,
+    pollingInterval: 5000, // 5 seconds
+  });
 
   const [
     registerToRewardProgram,
