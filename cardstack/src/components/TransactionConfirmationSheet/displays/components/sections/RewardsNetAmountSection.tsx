@@ -14,7 +14,7 @@ export const RewardsNetAmountSection = ({
   estGasFee,
   token,
 }: RewardsNetAmountSectionProps) => {
-  const estimateNetClaim = Number(balance?.amount) - (estGasFee || 0);
+  const estimateNetClaim = Number(balance?.amount) - Number(estGasFee);
 
   return (
     <Container>
