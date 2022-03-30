@@ -46,3 +46,8 @@ export interface RewardsClaimMutationParams
   safeAddress: string;
   tokenAddress: string;
 }
+
+export interface RegisterGasEstimateQueryParams {
+  prepaidCardAddress: string;
+  rewardProgramId: string;
+}

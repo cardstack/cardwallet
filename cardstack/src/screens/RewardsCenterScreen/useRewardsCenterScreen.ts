@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
 import { useNavigation, StackActions } from '@react-navigation/core';
 import { groupBy } from 'lodash';
@@ -14,6 +14,7 @@ import {
   useClaimRewardsMutation,
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
+  useLazyGetRegisterRewardeeGasEstimateQuery,
   useRegisterToRewardProgramMutation,
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
@@ -31,6 +32,8 @@ const rewardDefaultProgramId = {
   // TestID
   [networkTypes.xdai]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
 };
+
+const defaultGasEstimateInSpend = convertToSpend(0.07, 'USD', 1);
 
 export const useRewardsCenterScreen = () => {
   const { navigate, goBack, dispatch: navDispatch } = useNavigation();
@@ -168,30 +171,91 @@ export const useRewardsCenterScreen = () => {
     ]
   );
 
-  const onPrepaidCardSelection = useCallback(
-    prepaidCard => {
-      const data: RewardsRegisterData = {
-        type: TransactionConfirmationType.REWARDS_REGISTER,
-        spendAmount: convertToSpend(0.01, 'USD', 1),
-        prepaidCard: prepaidCard.address,
-        programName: 'Cardstack Rewards',
-      };
+  const [
+    getRegisterGasEstimate,
+    { data: registerEstimatedGas, isError: hasRegisterGasErrored },
+  ] = useLazyGetRegisterRewardeeGasEstimateQuery();
 
-      navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
-        data,
-        onConfirm: onRegisterConfirmPress(
-          prepaidCard.address,
-          rewardDefaultProgramId[network]
-        ),
+  const registerConfirmationData = useRef<RewardsRegisterData>({
+    type: TransactionConfirmationType.REWARDS_REGISTER,
+    programName: 'Cardstack Rewards',
+    prepaidCard: '',
+    spendAmount: defaultGasEstimateInSpend,
+  });
+
+  const updateRegisterConfirmationDataWith = useCallback(
+    (overwriteParams: Partial<RewardsRegisterData>) => {
+      registerConfirmationData.current = {
+        ...registerConfirmationData.current,
+        ...overwriteParams,
+      };
+    },
+    []
+  );
+
+  const onPrepaidCardSelection = useCallback(
+    async prepaidCard => {
+      showLoadingOverlay({
+        title: strings.register.gasLoading,
+      });
+
+      updateRegisterConfirmationDataWith({
+        prepaidCard: prepaidCard.address,
+      });
+
+      getRegisterGasEstimate({
+        prepaidCardAddress: prepaidCard.address,
+        rewardProgramId: rewardDefaultProgramId[network],
       });
     },
-    [navigate, network, onRegisterConfirmPress]
+    [
+      getRegisterGasEstimate,
+      network,
+      showLoadingOverlay,
+      updateRegisterConfirmationDataWith,
+    ]
   );
+
+  const navigateToRegisterTxConfirmation = useCallback(() => {
+    dismissLoadingOverlay();
+
+    // Update estimate if exists, otherwise use default value
+    if (registerEstimatedGas) {
+      updateRegisterConfirmationDataWith({
+        spendAmount: registerEstimatedGas,
+      });
+    }
+
+    navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
+      data: registerConfirmationData.current,
+      onConfirm: onRegisterConfirmPress(
+        registerConfirmationData.current.prepaidCard,
+        rewardDefaultProgramId[network]
+      ),
+    });
+  }, [
+    dismissLoadingOverlay,
+    navigate,
+    network,
+    onRegisterConfirmPress,
+    registerEstimatedGas,
+    updateRegisterConfirmationDataWith,
+  ]);
+
+  useEffect(() => {
+    // Navigate even if there's an error on gasEstimate, it uses default value
+    if (registerEstimatedGas || hasRegisterGasErrored) {
+      navigateToRegisterTxConfirmation();
+    }
+  }, [
+    hasRegisterGasErrored,
+    navigateToRegisterTxConfirmation,
+    registerEstimatedGas,
+  ]);
 
   const onRegisterPress = useCallback(() => {
     navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
-      // Mocked estimated gas fee until we get from sdk
-      spendAmount: convertToSpend(0.01, 'USD', 1),
+      spendAmount: defaultGasEstimateInSpend,
       onConfirmChoosePrepaidCard: onPrepaidCardSelection,
       payCostDesc: strings.register.payCostDescription.toUpperCase(),
     });

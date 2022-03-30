@@ -46,6 +46,13 @@ export const getCurrencyConversionsRates = async () => {
   return cachedCurrencyConversionRates;
 };
 
+const getLayerTwoOracleInstance = async () => {
+  const web3 = await Web3Instance.get();
+  const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
+
+  return layerTwoOracle;
+};
+
 // Token price to native currency
 export const getNativeBalanceFromOracle = async (props: {
   symbol?: string;
@@ -60,8 +67,7 @@ export const getNativeBalanceFromOracle = async (props: {
     return 0;
   }
 
-  const web3 = await Web3Instance.get();
-  const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
+  const layerTwoOracle = await getLayerTwoOracleInstance();
 
   const usdBalance = await layerTwoOracle.getUSDPrice(symbol, balance);
 
@@ -77,9 +83,17 @@ export const getNativeBalanceFromOracle = async (props: {
 };
 
 export const getUsdConverter = async (symbol: string) => {
-  const web3 = await Web3Instance.get();
-  const layerTwoOracle = await getSDK('LayerTwoOracle', web3);
+  const layerTwoOracle = await getLayerTwoOracleInstance();
+
   const converter = await layerTwoOracle.getUSDConverter(symbol);
 
   return converter;
+};
+
+export const convertTokenToSpend = async (token: string, amount: string) => {
+  const layerTwoOracle = await getLayerTwoOracleInstance();
+
+  const result = await layerTwoOracle.convertToSpend(token, amount);
+
+  return result;
 };

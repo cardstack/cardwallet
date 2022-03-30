@@ -38,11 +38,16 @@ export const Header = memo(
         {payCostDesc || strings.payAmountDesc}
       </Text>
       <Container width="100%" alignItems="center">
-        <Touchable onPress={onPressEditAmount}>
-          <Text weight="bold" size="body">
-            {nativeBalanceDisplay}
-          </Text>
-        </Touchable>
+        {
+          //Temp condition to hide amount until adapation
+          !payCostDesc && (
+            <Touchable onPress={onPressEditAmount}>
+              <Text weight="bold" size="body">
+                {nativeBalanceDisplay}
+              </Text>
+            </Touchable>
+          )
+        }
         {onPressEditAmount ? (
           <Touchable
             position="absolute"
