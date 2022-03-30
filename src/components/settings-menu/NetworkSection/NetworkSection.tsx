@@ -5,11 +5,11 @@ import { Button, Checkbox, Container, RadioList } from '@cardstack/components';
 
 const NetworkSection = () => {
   const {
-    isSelectedCurrentNetwork,
+    isCurrentNetworkSelected,
     isShowAllNetworks,
     sectionListItems,
     onNetworkChange,
-    updateNetwork,
+    onUpdateNetwork,
     onToggleShowAllNetworks,
   } = useNetworkSection();
 
@@ -25,8 +25,8 @@ const NetworkSection = () => {
       <RadioList items={sectionListItems} onChange={onNetworkChange} />
       <Container marginTop={5} paddingHorizontal={5}>
         <Button
-          disabled={isSelectedCurrentNetwork}
-          onPress={updateNetwork}
+          disabled={isCurrentNetworkSelected}
+          onPress={onUpdateNetwork}
           width="100%"
         >
           {strings.update}

@@ -73,7 +73,7 @@ export const useNetworkSection = () => {
     [setSelectedNetwork]
   );
 
-  const updateNetwork = useCallback(() => {
+  const onUpdateNetwork = useCallback(() => {
     dispatch(settingsUpdateNetwork(selectedNetwork));
   }, [dispatch, selectedNetwork]);
 
@@ -82,17 +82,17 @@ export const useNetworkSection = () => {
     []
   );
 
-  const isSelectedCurrentNetwork = useMemo(() => selectedNetwork === network, [
+  const isCurrentNetworkSelected = useMemo(() => selectedNetwork === network, [
     network,
     selectedNetwork,
   ]);
 
   return {
-    isSelectedCurrentNetwork,
+    isCurrentNetworkSelected,
     isShowAllNetworks,
     sectionListItems,
     onNetworkChange,
-    updateNetwork,
+    onUpdateNetwork,
     onToggleShowAllNetworks,
   };
 };
