@@ -49,7 +49,7 @@ export const useRewardsCenterScreen = () => {
       },
       options: {
         skip: !accountAddress,
-        refetchOnMountOrArgChange: 30,
+        refetchOnMountOrArgChange: true,
       },
     }),
     [accountAddress, nativeCurrency]
