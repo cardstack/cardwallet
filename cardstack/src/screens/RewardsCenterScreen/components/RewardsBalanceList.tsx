@@ -6,17 +6,25 @@ import { Container, ListEmptyComponent } from '@cardstack/components';
 import { TokenType } from '@cardstack/types';
 import Routes from '@rainbow-me/navigation/routesNames';
 import { useNavigation } from '@rainbow-me/navigation';
+import { Alert } from '@rainbow-me/components/alerts';
 
 export type TokensWithSafeAddress = Array<TokenType & { safeAddress: string }>;
 export interface RewardsBalanceListProps {
   data?: TokensWithSafeAddress;
 }
+const disableSendFlow = true;
 
 export const RewardsBalanceList = ({ data = [] }: RewardsBalanceListProps) => {
   const { navigate } = useNavigation();
 
   const onPress = useCallback(
     (token: TokenType, safeAddress) => () => {
+      if (disableSendFlow) {
+        Alert({ title: 'Sending is unavailable at this time.' });
+
+        return;
+      }
+
       navigate(Routes.EXPANDED_ASSET_SHEET, {
         asset: token,
         type: 'token',
