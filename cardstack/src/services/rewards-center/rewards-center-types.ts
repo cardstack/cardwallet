@@ -42,12 +42,23 @@ export interface RewardsRegisterMutationResult {
 }
 
 export interface RewardsClaimMutationParams
-  extends RewardsPoolSignedBaseParams {
+  extends RewardsPoolSignedBaseParams,
+    ValidProofsParams {
   safeAddress: string;
-  tokenAddress: string;
 }
 
 export interface RegisterGasEstimateQueryParams {
   prepaidCardAddress: string;
   rewardProgramId: string;
 }
+
+export interface ValidProofsParams {
+  accountAddress: string;
+  tokenAddress: string;
+  rewardProgramId: string;
+}
+
+export type RewardsClaimGasEstimateParams = Omit<
+  RewardsClaimMutationParams,
+  keyof SignedProviderParams
+>;
