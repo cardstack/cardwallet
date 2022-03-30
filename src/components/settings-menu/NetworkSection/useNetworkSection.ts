@@ -3,26 +3,23 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import networkInfo from '../../../helpers/networkInfo';
 import { useAccountSettings } from '../../../hooks';
-import {
-  INITIAL_STATE,
-  settingsUpdateNetwork,
-  toggleShowTestnets,
-} from '../../../redux/settings';
+import { INITIAL_STATE, settingsUpdateNetwork } from '../../../redux/settings';
 import { RadioItemProps } from '@cardstack/components';
 
 const networks = values(networkInfo);
 const defaultNetwork = INITIAL_STATE.network;
 
 export const useNetworkSection = () => {
-  const { network, showTestnets } = useAccountSettings();
-  const [selectedNetwork, setSelectedNetwork] = useState(network);
+  const { network } = useAccountSettings();
   const dispatch = useDispatch();
-  const networkSelected = useMemo(() => networkInfo[network], [network]);
+  const [selectedNetwork, setSelectedNetwork] = useState(network);
+  const [isShowAllNetworks, setShowAllNetworks] = useState<boolean>(false);
+  const selectedNetworkInfo = useMemo(() => networkInfo[network], [network]);
 
   // transform data for sectionList
   const sectionListItems = useMemo(() => {
     const filteredNetworks = networks.filter(item =>
-      showTestnets ? true : !item.isTestnet
+      isShowAllNetworks ? true : !item.isTestnet
     );
     // merge networks by layer and then sort by layer title
     const sectionLists = filteredNetworks
@@ -46,20 +43,20 @@ export const useNetworkSection = () => {
 
         return result;
       }, [])
-      .reduce((acc: RadioItemProps[], val) => acc.concat(val), [])
+      .flat()
       .sort((a: RadioItemProps, b: RadioItemProps) =>
         `${a.title}` < `${b.title}` ? 1 : -1
       );
 
     return sectionLists;
-  }, [selectedNetwork, showTestnets]);
+  }, [selectedNetwork, isShowAllNetworks]);
 
   useEffect(() => {
-    if (networkSelected.isTestnet !== showTestnets) {
-      dispatch(toggleShowTestnets());
+    if (selectedNetworkInfo.isTestnet !== isShowAllNetworks) {
+      setShowAllNetworks(selectedNetworkInfo.isTestnet);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [selectedNetworkInfo.isTestnet]);
 
   useEffect(() => {
     if (network) {
@@ -80,21 +77,22 @@ export const useNetworkSection = () => {
     dispatch(settingsUpdateNetwork(selectedNetwork));
   }, [dispatch, selectedNetwork]);
 
-  const onShowTestsPress = useCallback(() => dispatch(toggleShowTestnets()), [
-    dispatch,
-  ]);
+  const onToggleShowAllNetworks = useCallback(
+    () => setShowAllNetworks(isShowAll => !isShowAll),
+    []
+  );
 
-  const isSameNetwork = useMemo(() => selectedNetwork === network, [
+  const isSelectedCurrentNetwork = useMemo(() => selectedNetwork === network, [
     network,
     selectedNetwork,
   ]);
 
   return {
-    isSameNetwork,
-    showTestnets,
+    isSelectedCurrentNetwork,
+    isShowAllNetworks,
     sectionListItems,
     onNetworkChange,
     updateNetwork,
-    onShowTestsPress,
+    onToggleShowAllNetworks,
   };
 };

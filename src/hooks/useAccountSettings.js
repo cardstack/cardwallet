@@ -23,22 +23,13 @@ export default function useAccountSettings() {
   const { language } = useSelector(createLanguageSelector);
   const dispatch = useDispatch();
   const settingsData = useSelector(
-    ({
-      settings: {
-        accountAddress,
-        chainId,
-        nativeCurrency,
-        network,
-        showTestnets,
-      },
-    }) => ({
+    ({ settings: { accountAddress, chainId, nativeCurrency, network } }) => ({
       accountAddress,
       chainId,
       language,
       nativeCurrency,
       nativeCurrencySymbol: currencies[nativeCurrency].symbol,
       network,
-      showTestnets,
     })
   );
 
