@@ -13,13 +13,17 @@ export const useNetworkSection = () => {
   const { network } = useAccountSettings();
   const dispatch = useDispatch();
   const [selectedNetwork, setSelectedNetwork] = useState(network);
-  const [isShowAllNetworks, setShowAllNetworks] = useState<boolean>(false);
-  const selectedNetworkInfo = useMemo(() => networkInfo[network], [network]);
+  const selectedNetworkInfo = useMemo(() => networkInfo[selectedNetwork], [
+    selectedNetwork,
+  ]);
+  const [isShowAllNetworks, setShowAllNetworks] = useState<boolean>(
+    selectedNetworkInfo.hidden
+  );
 
   // transform data for sectionList
   const sectionListItems = useMemo(() => {
-    const filteredNetworks = networks.filter(item =>
-      isShowAllNetworks ? true : !item.hidden
+    const filteredNetworks = networks.filter(
+      item => isShowAllNetworks || !item.hidden
     );
     // merge networks by layer and then sort by layer title
     const sectionLists = filteredNetworks
@@ -52,17 +56,8 @@ export const useNetworkSection = () => {
   }, [selectedNetwork, isShowAllNetworks]);
 
   useEffect(() => {
-    if (selectedNetworkInfo.hidden !== isShowAllNetworks) {
-      setShowAllNetworks(selectedNetworkInfo.hidden);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setShowAllNetworks(selectedNetworkInfo.hidden);
   }, [selectedNetworkInfo.hidden]);
-
-  useEffect(() => {
-    if (network) {
-      setSelectedNetwork(network);
-    }
-  }, [network, setSelectedNetwork]);
 
   const onNetworkChange = useCallback(
     async selected => {
