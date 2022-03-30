@@ -49,3 +49,4 @@ export * from './ProgressSteps';
 export * from './ChoosePrepaidCard';
 export * from './InfoBanner';
 export * from './TabHeader';
+export { default as RewardsPromoBanner } from './RewardsPromoBanner/RewardsPromoBanner';

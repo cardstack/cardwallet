@@ -15,7 +15,7 @@ import {
   DiscordPromoBanner,
   useDiscordPromoBanner,
 } from '@cardstack/components/DiscordPromoBanner';
-import { Container, Text } from '@cardstack/components';
+import { Container, Text, RewardsPromoBanner } from '@cardstack/components';
 import logger from 'logger';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
@@ -50,13 +50,20 @@ export const AssetList = () => {
     refreshing,
   } = useAssetList({ sectionListRef });
 
-  const renderPromoBanner = useMemo(
-    () =>
-      showPromoBanner && !isTabBarEnabled ? (
-        <DiscordPromoBanner onPress={onDiscordPromoPress} />
-      ) : null,
-    [onDiscordPromoPress, showPromoBanner, isTabBarEnabled]
-  );
+  const renderPromoBanner = useMemo(() => {
+    if (isTabBarEnabled) {
+      return null;
+    }
+
+    return (
+      <>
+        <RewardsPromoBanner />
+        {showPromoBanner ? (
+          <DiscordPromoBanner onPress={onDiscordPromoPress} />
+        ) : null}
+      </>
+    );
+  }, [isTabBarEnabled, showPromoBanner, onDiscordPromoPress]);
 
   const renderSectionHeader = useCallback(
     ({ section }) => (
