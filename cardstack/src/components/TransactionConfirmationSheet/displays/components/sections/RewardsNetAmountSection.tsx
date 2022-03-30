@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { strings } from '../../../strings';
 import { SectionHeaderText } from '../SectionHeaderText';
 import { Container, Text } from '@cardstack/components';
@@ -14,7 +14,10 @@ export const RewardsNetAmountSection = ({
   estGasFee,
   token,
 }: RewardsNetAmountSectionProps) => {
-  const estimateNetClaim = Number(balance?.amount) - (estGasFee || 0);
+  const estimateNetClaim = useMemo(
+    () => (Number(balance?.amount) - Number(estGasFee)).toFixed(2),
+    [balance, estGasFee]
+  );
 
   return (
     <Container>

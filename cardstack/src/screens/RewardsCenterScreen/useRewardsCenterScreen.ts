@@ -21,11 +21,13 @@ import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import { Alert } from '@rainbow-me/components/alerts';
-import { useMutationEffects } from '@cardstack/hooks';
+import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
 import { RewardeeClaim, useGetRewardClaimsQuery } from '@cardstack/graphql';
 import { groupTransactionsByDate } from '@cardstack/utils';
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 import { defaultErrorAlert } from '@cardstack/constants';
+import { getClaimRewardsGasEstimate } from '@cardstack/services/rewards-center/rewards-center-service';
+import { queryPromiseWrapper } from '@cardstack/services/utils';
 
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
@@ -281,17 +283,42 @@ export const useRewardsCenterScreen = () => {
     )
   );
 
+  const [
+    isLoadingClaimGas,
+    startClaimGasLoading,
+    stopClaimGasLoading,
+  ] = useBooleanState();
+
   const onClaimPress = useCallback(
-    (tokenAddress, rewardProgramId) => () => {
+    (tokenAddress, rewardProgramId) => async () => {
+      startClaimGasLoading();
+
       const rewardSafeForProgram = rewardSafes?.find(
         safe => safe.rewardProgramId === rewardProgramId
       );
+
+      const partialClaimParams = {
+        tokenAddress,
+        accountAddress,
+        rewardProgramId,
+        safeAddress: rewardSafeForProgram?.address || '',
+      };
+
+      const {
+        data: estimatedClaimGas,
+      } = await queryPromiseWrapper(
+        getClaimRewardsGasEstimate,
+        partialClaimParams,
+        { errorLogMessage: 'Error fetching claim gas fee' }
+      );
+
+      stopClaimGasLoading();
 
       // Cant assign undefined mainPoolTokenInfo to data.
       if (mainPoolTokenInfo) {
         const data: RewardsClaimData = {
           type: TransactionConfirmationType.REWARDS_CLAIM,
-          estGasFee: 0.01,
+          estGasFee: estimatedClaimGas || '0.10',
           ...mainPoolTokenInfo,
         };
 
@@ -301,12 +328,10 @@ export const useRewardsCenterScreen = () => {
             showLoadingOverlay({ title: strings.claim.loading });
 
             claimRewards({
-              tokenAddress,
-              accountAddress,
+              ...partialClaimParams,
               network,
               rewardProgramId,
               walletId: selectedWallet.id,
-              safeAddress: rewardSafeForProgram?.address || '',
             });
           },
           onCancel: goBack,
@@ -314,15 +339,17 @@ export const useRewardsCenterScreen = () => {
       }
     },
     [
-      accountAddress,
-      claimRewards,
-      network,
+      startClaimGasLoading,
       rewardSafes,
-      selectedWallet.id,
-      showLoadingOverlay,
+      accountAddress,
+      stopClaimGasLoading,
+      mainPoolTokenInfo,
       navigate,
       goBack,
-      mainPoolTokenInfo,
+      showLoadingOverlay,
+      claimRewards,
+      network,
+      selectedWallet.id,
     ]
   );
 
@@ -382,5 +409,6 @@ export const useRewardsCenterScreen = () => {
     onClaimPress,
     claimHistorySectionData,
     tokensBalanceData,
+    isLoadingClaimGas,
   };
 };

@@ -1,4 +1,11 @@
-import { getSDK, Safe, TokenInfo } from '@cardstack/cardpay-sdk';
+import {
+  fromWei,
+  getSDK,
+  Proof,
+  Safe,
+  TokenInfo,
+  WithSymbol,
+} from '@cardstack/cardpay-sdk';
 import BN from 'bn.js';
 import {
   addNativePriceToToken,
@@ -7,10 +14,12 @@ import {
 import { convertTokenToSpend } from '../exchange-rate-service';
 import {
   RegisterGasEstimateQueryParams,
+  RewardsClaimGasEstimateParams,
   RewardsClaimMutationParams,
   RewardsRegisterMutationParams,
   RewardsSafeQueryParams,
   RewardsSafeType,
+  ValidProofsParams,
 } from './rewards-center-types';
 import { getSafesInstance } from '@cardstack/models';
 import Web3Instance from '@cardstack/models/web3-instance';
@@ -32,6 +41,33 @@ const getRewardManagerInstance = async (
   const rewardManagerInstance = await getSDK('RewardManager', web3);
 
   return rewardManagerInstance;
+};
+
+let cachedValidProofs: WithSymbol<Proof>[] | null = null;
+
+const getValidProofs = async ({
+  tokenAddress,
+  rewardProgramId,
+  accountAddress,
+}: ValidProofsParams) => {
+  if (cachedValidProofs) {
+    return cachedValidProofs;
+  }
+
+  const rewardPoolInstance = await getRewardsPoolInstance();
+
+  const proofs = await rewardPoolInstance.getProofs(
+    accountAddress,
+    rewardProgramId,
+    tokenAddress,
+    false
+  );
+
+  const validProofs = proofs.filter(({ isValid }) => isValid);
+
+  cachedValidProofs = validProofs;
+
+  return validProofs;
 };
 
 // Queries
@@ -118,6 +154,47 @@ export const getRegisterGasEstimate = async ({
   return gasEstimateInSpend;
 };
 
+export const getClaimRewardsGasEstimate = async ({
+  safeAddress,
+  tokenAddress,
+  rewardProgramId,
+  accountAddress,
+}: RewardsClaimGasEstimateParams) => {
+  const rewardPoolInstance = await getRewardsPoolInstance();
+
+  const validProofs = await getValidProofs({
+    accountAddress,
+    rewardProgramId,
+    tokenAddress,
+  });
+
+  const estimatedAmounts = await Promise.all(
+    validProofs?.map(async ({ leaf, proofArray }) => {
+      const { amount } = await rewardPoolInstance.claimGasEstimate(
+        safeAddress,
+        leaf,
+        proofArray,
+        false
+      );
+
+      return new BN(amount);
+    })
+  );
+
+  const totalEstimatedGas = estimatedAmounts.reduce(
+    (total, amount) => total.add(amount),
+    new BN(0)
+  );
+
+  const totalEstimatedGasInEth = fromWei(totalEstimatedGas.toString());
+
+  const formattedTotalEstimatedGas = parseFloat(totalEstimatedGasInEth).toFixed(
+    2
+  );
+
+  return formattedTotalEstimatedGas;
+};
+
 // Mutations
 
 export const registerToRewardProgram = async ({
@@ -152,17 +229,15 @@ export const claimRewards = async ({
     network,
   });
 
-  const proofs = await rewardPoolInstance.getProofs(
+  const validProofs = await getValidProofs({
     accountAddress,
     rewardProgramId,
     tokenAddress,
-    false
-  );
-
-  const validProofs = proofs.filter(proof => proof.isValid);
+  });
 
   const receipts = [];
 
+  // Needs to be sequential, promise.all won't work
   for (const { leaf, proofArray } of validProofs) {
     const receipt = await rewardPoolInstance.claim(
       safeAddress,
@@ -175,6 +250,8 @@ export const claimRewards = async ({
 
     receipts.push(receipt);
   }
+
+  cachedValidProofs = null;
 
   return receipts;
 };

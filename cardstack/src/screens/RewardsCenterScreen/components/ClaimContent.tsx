@@ -15,6 +15,7 @@ interface ClaimContentProps {
   claimList?: Array<RewardRowProps>;
   balanceList?: RewardsBalanceListProps;
   historyList?: RewardsHistoryListProps;
+  isLoadingClaimGas?: boolean;
 }
 
 enum Tabs {
@@ -31,6 +32,7 @@ export const ClaimContent = ({
   claimList,
   balanceList,
   historyList,
+  isLoadingClaimGas,
 }: ClaimContentProps) => {
   const { TabHeader, currentTab } = useTabHeader({ tabs });
 
@@ -43,9 +45,10 @@ export const ClaimContent = ({
           subText={item.subText}
           paddingBottom={index + 1 < claimList.length ? 5 : 0}
           onClaimPress={item.onClaimPress}
+          isLoading={isLoadingClaimGas}
         />
       )),
-    [claimList]
+    [claimList, isLoadingClaimGas]
   );
 
   const title = useMemo(
