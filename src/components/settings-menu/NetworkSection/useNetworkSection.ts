@@ -1,25 +1,19 @@
 import { toLower, values } from 'lodash';
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import networkInfo from '../../helpers/networkInfo';
-import { useAccountSettings } from '../../hooks';
+import networkInfo from '../../../helpers/networkInfo';
+import { useAccountSettings } from '../../../hooks';
 import {
   INITIAL_STATE,
   settingsUpdateNetwork,
   toggleShowTestnets,
-} from '../../redux/settings';
-import {
-  Button,
-  Checkbox,
-  Container,
-  RadioItemProps,
-  RadioList,
-} from '@cardstack/components';
+} from '../../../redux/settings';
+import { RadioItemProps } from '@cardstack/components';
 
 const networks = values(networkInfo);
 const defaultNetwork = INITIAL_STATE.network;
 
-const NetworkSection = () => {
+export const useNetworkSection = () => {
   const { network, showTestnets } = useAccountSettings();
   const [selectedNetwork, setSelectedNetwork] = useState(network);
   const dispatch = useDispatch();
@@ -90,27 +84,17 @@ const NetworkSection = () => {
     dispatch,
   ]);
 
-  return (
-    <Container backgroundColor="white" paddingVertical={4} width="100%">
-      <Container flexDirection="row" justifyContent="flex-end" padding={5}>
-        <Checkbox
-          isSelected={showTestnets}
-          label="Show all networks"
-          onPress={onShowTestsPress}
-        />
-      </Container>
-      <RadioList items={sectionListItems} onChange={onNetworkChange} />
-      <Container marginTop={5} paddingHorizontal={5}>
-        <Button
-          disabled={selectedNetwork === network}
-          onPress={updateNetwork}
-          width="100%"
-        >
-          Update
-        </Button>
-      </Container>
-    </Container>
-  );
-};
+  const isSameNetwork = useMemo(() => selectedNetwork === network, [
+    network,
+    selectedNetwork,
+  ]);
 
-export default memo(NetworkSection);
+  return {
+    isSameNetwork,
+    showTestnets,
+    sectionListItems,
+    onNetworkChange,
+    updateNetwork,
+    onShowTestsPress,
+  };
+};
