@@ -16,6 +16,7 @@ export const strings = {
       'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
     required: 'required',
     iconColor: 'Icon Color',
+    profileIdLengthError: 'Profile ID length must be at least 4 characters',
   },
   stepThree: {
     review: 'Review',

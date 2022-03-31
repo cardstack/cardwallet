@@ -93,10 +93,18 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [businessColor, setBusinessColor] = useState<string>(businessColorData);
   const [isSubmitPressed, setIsSubmitPressed] = useState(false);
 
+  const validateProfileId = useCallback((id: string) => {
+    if (id.length < 4) {
+      return strings.stepTwo.profileIdLengthError;
+    }
+
+    return validateMerchantId(id);
+  }, []);
+
   const checkIdUniqueness = useCallback(
     async (id: string) => {
       if (!isLoading && authToken && id) {
-        const validateErrorMessage = validateMerchantId(id);
+        const validateErrorMessage = validateProfileId(id);
 
         if (validateErrorMessage) {
           return;
@@ -109,7 +117,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         }
       }
     },
-    [authToken, isLoading]
+    [authToken, isLoading, validateProfileId]
   );
 
   useEffect(() => {
@@ -161,7 +169,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     if (!isSubmitPressed) return;
 
     const businessIdValidateErrorMessage =
-      validateMerchantId(businessId) ||
+      validateProfileId(businessId) ||
       (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique);
 
     return {
@@ -170,12 +178,18 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         : strings.validation.thisFieldIsRequied,
       businessId: businessIdValidateErrorMessage,
     };
-  }, [isSubmitPressed, businessName, isUniqueId, businessId]);
+  }, [
+    isSubmitPressed,
+    businessName,
+    isUniqueId,
+    businessId,
+    validateProfileId,
+  ]);
 
   const onSubmitForm = useCallback(() => {
     setIsSubmitPressed(true);
 
-    if (isUniqueId && businessName.trim() && !validateMerchantId(businessId)) {
+    if (isUniqueId && businessName.trim() && !validateProfileId(businessId)) {
       onUpdateProfileForm({
         businessName,
         businessId,
@@ -191,6 +205,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     businessId,
     businessColor,
     params,
+    validateProfileId,
   ]);
 
   const avatarName = useMemo(
