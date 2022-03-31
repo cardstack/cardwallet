@@ -34,6 +34,7 @@ import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { onNavigationStateChange } from '@rainbow-me/navigation/onNavigationStateChange';
 import { navigationRef } from '@rainbow-me/navigation/Navigation';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
+import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 
 const Tab = createBottomTabNavigator();
 
@@ -159,6 +160,11 @@ const StackNavigator = () => {
         component={PinAuthenticationScreen}
         name={RainbowRoutes.PIN_AUTHENTICATION_SCREEN}
         options={{ gestureEnabled: false }}
+      />
+      <Stack.Screen
+        component={ChangeWalletSheet}
+        name={RainbowRoutes.CHANGE_WALLET_SHEET}
+        options={expandedPreset as StackNavigationOptions}
       />
     </Stack.Navigator>
   );
