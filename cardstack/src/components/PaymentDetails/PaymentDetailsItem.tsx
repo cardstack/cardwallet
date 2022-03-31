@@ -1,5 +1,6 @@
 import { ResponsiveValue } from '@shopify/restyle';
 import React from 'react';
+import { strings } from './strings';
 import { Container, Text } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
 import { dateFormatter } from '@cardstack/utils';
@@ -37,7 +38,7 @@ export const PaymentDetailsItem = ({
             <Container flex={2} />
             <Container flex={8}>
               <Text color="blueText" size="smallest" weight="bold">
-                BUSINESS
+                {strings.business.toUpperCase()}
               </Text>
             </Container>
           </Container>
@@ -61,7 +62,7 @@ export const PaymentDetailsItem = ({
         <Container flex={8}>
           {isPrepaidCard && (
             <Text color={infoColor} size="smallest">
-              PREPAID CARD
+              {strings.prepaidCard.toUpperCase()}
             </Text>
           )}
           <Text color={infoColor} size="small">

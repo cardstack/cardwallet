@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { strings } from './strings';
 import {
   Container,
   HorizontalDivider,
@@ -28,9 +29,9 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
   const MerchantPaymentItemDetails = useMemo(
     () =>
       [
-        { description: 'REVENUE \nCOLLECTED', value: revenueCollected },
+        { description: strings.payment.toUpperCase(), value: revenueCollected },
         {
-          description: 'PROTOCOL FEE \n(0.5%)',
+          description: `${strings.protocolFee.toUpperCase()} \n(0.5%)`,
           value: protocolFee,
         },
       ].map((item: MerchantPaymentItemDetailProps, index: number) => (
@@ -52,7 +53,7 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
         {MerchantPaymentItemDetails}
         <HorizontalDivider />
         <MerchantPaymentItemDetail
-          description="NET EARNED"
+          description={strings.netReceived.toUpperCase()}
           subValue={netEarnedNativeDisplay}
           value={`+ ${netEarned.display}`}
           symbol={txRowProps.symbol}
