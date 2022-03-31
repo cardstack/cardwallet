@@ -9,14 +9,14 @@ const NetworkToast = () => {
   const isConnected = useInternetStatus();
   const { network } = useAccountSettings();
   const providerUrl = web3Provider?.connection?.url;
-  const { name, isTestnet } = networkInfo[network];
-  const [visible, setVisible] = useState(isTestnet);
+  const { name } = networkInfo[network];
+  const [visible, setVisible] = useState();
   const [networkName, setNetworkName] = useState(name);
 
   useEffect(() => {
     setVisible(isConnected);
     setNetworkName(networkInfo[network].shortName);
-  }, [name, network, providerUrl, isConnected, isTestnet, networkName]);
+  }, [name, network, providerUrl, isConnected, networkName]);
 
   const { colors } = useTheme();
 

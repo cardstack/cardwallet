@@ -9,7 +9,7 @@ export const networkInfo = {
     shortName: 'Gnosis',
     layer: 2,
     value: networkTypes.xdai,
-    isTestnet: false,
+    hidden: false,
   },
   [networkTypes.sokol]: {
     disabled: false,
@@ -19,7 +19,7 @@ export const networkInfo = {
     shortName: 'Sokol',
     layer: 2,
     value: networkTypes.sokol,
-    isTestnet: true,
+    hidden: true,
   },
   [`${networkTypes.mainnet}`]: {
     disabled: false,
@@ -29,7 +29,7 @@ export const networkInfo = {
     shortName: 'Mainnet',
     layer: 1,
     value: networkTypes.mainnet,
-    isTestnet: false,
+    hidden: true,
   },
   [`${networkTypes.kovan}`]: {
     disabled: false,
@@ -39,7 +39,7 @@ export const networkInfo = {
     shortName: 'Kovan',
     layer: 1,
     value: networkTypes.kovan,
-    isTestnet: true,
+    hidden: true,
   },
 };
 
