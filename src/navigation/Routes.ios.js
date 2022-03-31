@@ -1,7 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { omit } from 'lodash';
 import React, { useContext } from 'react';
-import { StatusBar } from 'react-native';
 
 import { InitialRouteContext } from '../context/initialRoute';
 import AddCashSheet from '../screens/AddCashSheet';
@@ -11,7 +9,6 @@ import ExpandedAssetSheet from '../screens/ExpandedAssetSheet';
 import ModalScreen from '../screens/ModalScreen';
 import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
-import SendSheetEOA from '../screens/SendSheetEOA';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
 import WithdrawModal from '../screens/WithdrawModal';
 import ExchangeModalNavigator from './ExchangeModalNavigator';
@@ -79,16 +76,6 @@ function NativeStackFallbackNavigator() {
         component={ModalScreen}
         name={Routes.MODAL_SCREEN}
         options={overlayExpandedPreset}
-      />
-      <Stack.Screen
-        component={SendSheetEOA}
-        name={Routes.SEND_SHEET}
-        options={{
-          ...omit(sheetPreset, 'gestureResponseDistance'),
-          onTransitionStart: () => {
-            StatusBar.setBarStyle('light-content');
-          },
-        }}
       />
       <Stack.Screen
         component={ModalScreen}

@@ -158,7 +158,7 @@ const StackNavigator = () => {
       <Stack.Screen
         component={PinAuthenticationScreen}
         name={RainbowRoutes.PIN_AUTHENTICATION_SCREEN}
-        options={{ ...sheetPreset, gestureEnabled: false }}
+        options={{ gestureEnabled: false }}
       />
     </Stack.Navigator>
   );

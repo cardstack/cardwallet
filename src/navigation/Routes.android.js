@@ -152,7 +152,7 @@ function MainOuterNavigator() {
       <OuterStack.Screen
         component={PinAuthenticationScreen}
         name={Routes.PIN_AUTHENTICATION_SCREEN}
-        options={{ ...sheetPreset, gestureEnabled: false }}
+        options={{ gestureEnabled: false }}
       />
       {cardstackGlobalScreens}
     </OuterStack.Navigator>
