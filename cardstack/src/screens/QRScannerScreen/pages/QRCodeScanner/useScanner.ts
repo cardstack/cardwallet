@@ -6,7 +6,7 @@ import { Linking } from 'react-native';
 import { strings } from './strings';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
-import { convertDeepLinkToCardWalletProtocol, Device } from '@cardstack/utils';
+import { convertDeepLinkToCardWalletProtocol } from '@cardstack/utils';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 import { Alert } from '@rainbow-me/components/alerts';
@@ -42,14 +42,7 @@ export const useScanner = ({
     address => {
       haptics.notificationSuccess();
 
-      if (Device.isAndroid) {
-        navigate(Routes.SEND_FLOW, {
-          params: { address },
-          screen: Routes.SEND_SHEET,
-        });
-      } else {
-        navigate(Routes.SEND_FLOW, { address });
-      }
+      navigate(Routes.SEND_FLOW_EOA, { address });
     },
     [navigate]
   );

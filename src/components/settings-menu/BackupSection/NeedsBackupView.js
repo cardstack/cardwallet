@@ -30,16 +30,14 @@ export default function NeedsBackupView() {
   }, [setParams, walletId, wallets]);
 
   const onCloudBackup = useCallback(() => {
-    navigate(ios ? Routes.BACKUP_SHEET : Routes.BACKUP_SCREEN, {
-      nativeScreen: true,
+    navigate(Routes.BACKUP_SHEET, {
       step: WalletBackupStepTypes.cloud,
       walletId,
     });
   }, [navigate, walletId]);
 
   const onManualBackup = useCallback(() => {
-    navigate(ios ? Routes.BACKUP_SHEET : Routes.BACKUP_SCREEN, {
-      nativeScreen: true,
+    navigate(Routes.BACKUP_SHEET, {
       step: WalletBackupStepTypes.manual,
       walletId,
     });

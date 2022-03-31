@@ -33,6 +33,7 @@ import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { onNavigationStateChange } from '@rainbow-me/navigation/onNavigationStateChange';
 import { navigationRef } from '@rainbow-me/navigation/Navigation';
+import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -153,6 +154,11 @@ const StackNavigator = () => {
         listeners={dismissAndroidKeyboardOnClose}
         name={RainbowRoutes.RESTORE_SHEET}
         options={expandedPreset as StackNavigationOptions}
+      />
+      <Stack.Screen
+        component={PinAuthenticationScreen}
+        name={RainbowRoutes.PIN_AUTHENTICATION_SCREEN}
+        options={{ gestureEnabled: false }}
       />
     </Stack.Navigator>
   );

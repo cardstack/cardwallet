@@ -1,10 +1,14 @@
 import { useRoute } from '@react-navigation/native';
-import React, { Fragment, useCallback, useState } from 'react';
-import styled from 'styled-components';
+import React, { Fragment, useCallback, useMemo, useState } from 'react';
 
-import { Column } from '../layout';
 import { SecretDisplaySection } from '../secret-display';
-import { Button, Container, Icon, Text } from '@cardstack/components';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  Icon,
+  Text,
+} from '@cardstack/components';
 import { Device } from '@cardstack/utils/device';
 import walletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -13,17 +17,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-
-const Content = styled(Column).attrs({
-  align: 'center',
-  justify: 'start',
-  isTallPhone: false,
-})`
-  flex-grow: 1;
-  flex-shrink: 0;
-  padding-top: ${({ isTallPhone }) =>
-    Device.isAndroid ? 30 : isTallPhone ? 65 : 15};
-`;
 
 export default function BackupManualStep() {
   const { isTallPhone } = useDimensions();
@@ -48,6 +41,13 @@ export default function BackupManualStep() {
     : 'These words are the keys to your account! Write them down or save them in your password manager.';
   const buttonText = `I've saved ${isPrivateKey ? 'my key' : 'these words'}`;
 
+  const style = useMemo(
+    () => ({
+      paddingTop: Device.isAndroid ? 30 : isTallPhone ? 65 : 15,
+    }),
+    [isTallPhone]
+  );
+
   return (
     <Fragment>
       <Container alignItems="center" marginTop={5} paddingHorizontal={10}>
@@ -59,14 +59,14 @@ export default function BackupManualStep() {
           {subText}
         </Text>
       </Container>
-      <Content isTallPhone={isTallPhone}>
+      <CenteredContainer justifyContent="flex-start" style={style}>
         <SecretDisplaySection
           onSecretLoaded={setSecretLoaded}
           onWalletTypeIdentified={setType}
         />
-      </Content>
+      </CenteredContainer>
       {secretLoaded && (
-        <Container paddingHorizontal={5} width="100%">
+        <Container flex={1} paddingHorizontal={5} width="100%">
           <Button marginTop={3} onPress={onComplete} width="100%">
             {buttonText}
           </Button>

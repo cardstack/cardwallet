@@ -40,8 +40,8 @@ export function onNavigationStateChange() {
       if (
         routeName === Routes.MAIN_EXCHANGE_SCREEN ||
         routeName === Routes.SAVINGS_WITHDRAW_MODAL ||
-        routeName === Routes.SEND_SHEET ||
-        routeName === Routes.SPEND_SHEET ||
+        routeName === Routes.SEND_FLOW_DEPOT ||
+        routeName === Routes.SEND_FLOW_EOA ||
         routeName === Routes.SWAP_DETAILS_SCREEN
       ) {
         AndroidKeyboardAdjust.setAdjustPan();

@@ -152,7 +152,7 @@ describe('useScanner', () => {
     });
 
     expect(customScanAddressHandler).toBeCalledWith(validAddress);
-    expect(mockNavigate).not.toBeCalledWith(Routes.SEND_FLOW, {
+    expect(mockNavigate).not.toBeCalledWith(Routes.SEND_FLOW_EOA, {
       address: validAddress,
     });
   });
@@ -168,7 +168,7 @@ describe('useScanner', () => {
       await result.current.onScan({ data: validAddress });
     });
 
-    expect(mockNavigate).toBeCalledWith(Routes.SEND_FLOW, {
+    expect(mockNavigate).toBeCalledWith(Routes.SEND_FLOW_EOA, {
       address: validAddress,
     });
   });
