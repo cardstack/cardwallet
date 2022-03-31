@@ -5,7 +5,6 @@ import { StatusBar } from 'react-native';
 
 import { InitialRouteContext } from '../context/initialRoute';
 import AddCashSheet from '../screens/AddCashSheet';
-import BackupSheet from '../screens/BackupSheet';
 import ChangeWalletSheet from '../screens/ChangeWalletSheet';
 import DepositModal from '../screens/DepositModal';
 import ExpandedAssetSheet from '../screens/ExpandedAssetSheet';
@@ -14,12 +13,10 @@ import RestoreSheet from '../screens/RestoreSheet';
 import SavingsSheet from '../screens/SavingsSheet';
 import SendSheetEOA from '../screens/SendSheetEOA';
 import SpeedUpAndCancelSheet from '../screens/SpeedUpAndCancelSheet';
-import SpendSheet from '../screens/SpendSheet';
 import WithdrawModal from '../screens/WithdrawModal';
 import ExchangeModalNavigator from './ExchangeModalNavigator';
 import { SwipeNavigator } from './SwipeNavigator';
 import {
-  backupSheetConfig,
   defaultScreenStackOptions,
   expandedAssetSheetConfig,
   nativeStackDefaultConfig,
@@ -94,16 +91,6 @@ function NativeStackFallbackNavigator() {
         }}
       />
       <Stack.Screen
-        component={SpendSheet}
-        name={Routes.SPEND_SHEET}
-        options={{
-          ...omit(sheetPreset, 'gestureResponseDistance'),
-          onTransitionStart: () => {
-            StatusBar.setBarStyle('light-content');
-          },
-        }}
-      />
-      <Stack.Screen
         component={ModalScreen}
         name={Routes.SUPPORTED_COUNTRIES_MODAL_SCREEN}
         options={overlayExpandedPreset}
@@ -165,11 +152,6 @@ function NativeStackNavigator() {
           springDamping: 1,
           transitionDuration: 0.25,
         }}
-      />
-      <NativeStack.Screen
-        component={BackupSheet}
-        name={Routes.BACKUP_SHEET}
-        {...backupSheetConfig}
       />
       <NativeStack.Screen
         component={ModalScreen}
