@@ -1,21 +1,17 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
+import { Pressable } from 'react-native';
 import { strings } from './strings';
+import { useWalletAddressScreen } from './useWalletAddressScreen';
 import { Container, StyledQRCode, Text, Button } from '@cardstack/components';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { getAddressPreview } from '@cardstack/utils';
-import { useCopyToast } from '@cardstack/hooks/useCopyToast';
 
 const WalletAddressScreen = () => {
-  const { accountAddress } = useAccountProfile();
-
-  const addressPreview = useMemo(() => getAddressPreview(accountAddress), [
+  const {
+    onAddressPress,
+    CopyToastComponent,
+    copyToClipboard,
+    addressPreview,
     accountAddress,
-  ]);
-
-  const { CopyToastComponent, copyToClipboard } = useCopyToast({
-    dataToCopy: accountAddress,
-    customCopyLabel: addressPreview,
-  });
+  } = useWalletAddressScreen();
 
   return (
     <>
@@ -27,7 +23,11 @@ const WalletAddressScreen = () => {
           justifyContent="space-around"
           paddingTop={2}
         >
-          <Text weight="bold">{getAddressPreview(accountAddress)}</Text>
+          <Pressable onPress={onAddressPress}>
+            <Text weight="bold" textDecorationLine="underline">
+              {addressPreview}
+            </Text>
+          </Pressable>
           <Button onPress={copyToClipboard}>{strings.copyAddressBtn}</Button>
         </Container>
       </Container>
