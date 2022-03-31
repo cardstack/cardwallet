@@ -313,8 +313,8 @@ export const sheetPresetWithSmallGestureResponseDistance = navigation => ({
 export const sheetPreset = ({ route }) => {
   const shouldUseNonTransparentOverlay =
     route.params?.type === 'token' ||
-    route.name === Routes.SEND_SHEET_NAVIGATOR ||
-    route.name === Routes.SPEND_SHEET_NAVIGATOR;
+    route.name === Routes.SEND_FLOW_EOA ||
+    route.name === Routes.SEND_FLOW_DEPOT;
 
   return {
     cardOverlayEnabled: true,

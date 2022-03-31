@@ -20,7 +20,7 @@ const SendFab = ({ disabled, isReadOnlyWallet, ...props }) => {
 
   const handlePress = useCallback(() => {
     if (!isReadOnlyWallet || enableActionsOnReadOnlyWallet) {
-      navigate(Routes.SEND_FLOW);
+      navigate(Routes.SEND_FLOW_EOA);
     } else {
       Alert.alert(`You need to import the account in order to do this`);
     }
