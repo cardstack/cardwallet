@@ -48,6 +48,7 @@ import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
 import SettingsModal from '@rainbow-me/screens/SettingsModal';
+import BackupSheet from '@rainbow-me/screens/BackupSheet';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -192,6 +193,11 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TRANSACTION_CONFIRMATION_SHEET: {
     component: TransactionConfirmationSheet,
     options: expandedPreset as StackNavigationOptions,
+  },
+  BACKUP_SHEET: {
+    component: BackupSheet,
+    options: bottomSheetPreset as StackNavigationOptions,
+    listeners: dismissAndroidKeyboardOnClose,
   },
 };
 

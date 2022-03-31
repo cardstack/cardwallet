@@ -26,6 +26,7 @@ export const MainRoutes = {
   REWARDS_REGISTER_SHEET: 'RewardsRegisterSheet',
   REWARDS_CLAIM_SHEET: 'RewardsClaimSheet',
   TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
+  BACKUP_SHEET: 'BackupSheet',
 } as const;
 
 export const GlobalRoutes = {

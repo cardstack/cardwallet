@@ -10,7 +10,6 @@ import {
   BackupManualStep,
   BackupSheetSection,
 } from '../components/backup';
-import { SlackSheet } from '../components/sheet';
 import { Container, Sheet } from '@cardstack/components';
 import { Device } from '@cardstack/utils/device';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
@@ -43,32 +42,15 @@ export default function BackupSheet() {
   );
 
   const handleNoLatestBackup = useCallback(() => {
-    if (android) {
-      goBack();
-      navigate(Routes.BACKUP_SCREEN, {
-        nativeScreen: true,
-        step: WalletBackupStepTypes.cloud,
-      });
-    } else {
-      setParams({ step: WalletBackupStepTypes.cloud });
-    }
-  }, [goBack, navigate, setParams]);
+    setParams({ step: WalletBackupStepTypes.cloud });
+  }, [setParams]);
 
   const handlePasswordNotFound = useCallback(() => {
-    if (android) {
-      goBack();
-      navigate(Routes.BACKUP_SCREEN, {
-        missingPassword: true,
-        nativeScreen: true,
-        step: WalletBackupStepTypes.cloud,
-      });
-    } else {
-      setParams({
-        missingPassword: true,
-        step: WalletBackupStepTypes.cloud,
-      });
-    }
-  }, [goBack, navigate, setParams]);
+    setParams({
+      missingPassword: true,
+      step: WalletBackupStepTypes.cloud,
+    });
+  }, [setParams]);
 
   const onSuccess = useCallback(() => {
     goBack();
@@ -106,16 +88,8 @@ export default function BackupSheet() {
   ]);
 
   const onManualBackup = useCallback(() => {
-    if (android) {
-      goBack();
-      navigate(Routes.BACKUP_SCREEN, {
-        nativeScreen: true,
-        step: WalletBackupStepTypes.manual,
-      });
-    } else {
-      setParams({ step: WalletBackupStepTypes.manual });
-    }
-  }, [goBack, navigate, setParams]);
+    setParams({ step: WalletBackupStepTypes.manual });
+  }, [setParams]);
 
   const onBackupNow = useCallback(async () => {
     goBack();
@@ -183,32 +157,24 @@ export default function BackupSheet() {
     step,
   ]);
 
+  const isFullScreenStep = useMemo(
+    () =>
+      [WalletBackupStepTypes.manual, WalletBackupStepTypes.cloud].includes(
+        step
+      ),
+    [step]
+  );
+
   return (
     <Container flex={1} testID="backup-sheet">
       <StatusBar barStyle="light-content" />
-      <PlataformSheet step={step}>{renderStep()}</PlataformSheet>
+      <Sheet
+        isFullScreen={isFullScreenStep}
+        overlayColor="transparent"
+        scrollEnabled={isFullScreenStep}
+      >
+        {renderStep()}
+      </Sheet>
     </Container>
   );
 }
-
-// Temp workaround until nav redesign
-const PlataformSheet = ({ children, step }) => {
-  const isFullScreenStep =
-    step === WalletBackupStepTypes.manual ||
-    step === WalletBackupStepTypes.cloud;
-
-  const bgColor =
-    step === WalletBackupStepTypes.cloud ? 'black' : 'transparent';
-
-  return Device.isAndroid ? (
-    <Sheet
-      isFullScreen={isFullScreenStep}
-      overlayColor={bgColor}
-      scrollEnabled={isFullScreenStep}
-    >
-      {children}
-    </Sheet>
-  ) : (
-    <SlackSheet flex={1}>{children}</SlackSheet>
-  );
-};

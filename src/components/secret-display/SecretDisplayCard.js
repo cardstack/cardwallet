@@ -10,7 +10,7 @@ import { fonts, padding } from '@rainbow-me/styles';
 
 const Content = styled(Centered)`
   ${padding(19, 30, 24)};
-  margin-bottom: 48px;
+  margin-bottom: 30px;
   border-radius: 25;
   overflow: hidden;
   z-index: 1;

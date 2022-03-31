@@ -1,6 +1,4 @@
 import { filter, find } from 'lodash';
-import { IS_TESTING } from 'react-native-dotenv';
-import { triggerOnSwipeLayout } from '../navigation/onNavigationStateChange';
 import { getKeychainIntegrityState } from './localstorage/globalSettings';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
@@ -51,26 +49,22 @@ export const runWalletBackupStatusChecks = () => {
   logger.log('wallet not backed up that is selected?', hasSelectedWallet);
 
   // if one of them is selected, show the default BackupSheet
-  if (selected && hasSelectedWallet && IS_TESTING !== 'true') {
+  if (selected && hasSelectedWallet) {
     logger.log('showing default BackupSheet');
     setTimeout(() => {
-      triggerOnSwipeLayout(() =>
-        Navigation.handleAction(Routes.BACKUP_SHEET, { single: true })
-      );
+      Navigation.handleAction(Routes.BACKUP_SHEET, { single: true });
     }, BACKUP_SHEET_DELAY_MS);
     return;
   }
 
   // otherwise, show the BackupSheet redirecting to the WalletSelectionList
-  IS_TESTING !== 'true' &&
-    setTimeout(() => {
-      logger.log('showing BackupSheet with existing_user step');
-      triggerOnSwipeLayout(() =>
-        Navigation.handleAction(Routes.BACKUP_SHEET, {
-          single: true,
-          step: WalletBackupStepTypes.existing_user,
-        })
-      );
-    }, BACKUP_SHEET_DELAY_MS);
+  setTimeout(() => {
+    logger.log('showing BackupSheet with existing_user step');
+
+    Navigation.handleAction(Routes.BACKUP_SHEET, {
+      single: true,
+      step: WalletBackupStepTypes.existing_user,
+    });
+  }, BACKUP_SHEET_DELAY_MS);
   return;
 };

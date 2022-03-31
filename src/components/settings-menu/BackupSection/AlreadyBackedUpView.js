@@ -69,26 +69,18 @@ export default function AlreadyBackedUpView() {
   }, [walletId, wallets]);
 
   const handleNoLatestBackup = useCallback(() => {
-    Navigation.handleAction(
-      android ? Routes.BACKUP_SCREEN : Routes.BACKUP_SHEET,
-      {
-        nativeScreen: android,
-        step: WalletBackupStepTypes.cloud,
-        walletId,
-      }
-    );
+    Navigation.handleAction(Routes.BACKUP_SHEET, {
+      step: WalletBackupStepTypes.cloud,
+      walletId,
+    });
   }, [walletId]);
 
   const handlePasswordNotFound = useCallback(() => {
-    Navigation.handleAction(
-      android ? Routes.BACKUP_SCREEN : Routes.BACKUP_SHEET,
-      {
-        missingPassword: true,
-        nativeScreen: android,
-        step: WalletBackupStepTypes.cloud,
-        walletId,
-      }
-    );
+    Navigation.handleAction(Routes.BACKUP_SHEET, {
+      missingPassword: true,
+      step: WalletBackupStepTypes.cloud,
+      walletId,
+    });
   }, [walletId]);
 
   const handleIcloudBackup = useCallback(() => {
