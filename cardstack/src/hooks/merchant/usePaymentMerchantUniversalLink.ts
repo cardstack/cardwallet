@@ -42,6 +42,8 @@ export const usePaymentMerchantUniversalLink = () => {
   const currencyName =
     currency && isSupportedCurrency(currency) ? currency : accountCurrency;
 
+  const validAmount = currency && isSupportedCurrency(currency) ? amount : '0';
+
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
@@ -118,11 +120,11 @@ export const usePaymentMerchantUniversalLink = () => {
       type: TransactionConfirmationType.PAY_MERCHANT,
       infoDID,
       qrCodeNetwork,
-      amount: parseFloat(amount),
+      amount: parseFloat(validAmount),
       merchantSafe: merchantAddress,
       currency: currencyName,
     }),
-    [infoDID, qrCodeNetwork, amount, merchantAddress, currencyName]
+    [infoDID, qrCodeNetwork, validAmount, merchantAddress, currencyName]
   );
 
   return {
