@@ -117,8 +117,12 @@ const StackNavigator = () => {
 
   return (
     <Stack.Navigator
+      // On Android we're having issues with navigation trying to focus
+      // unmounted inputs ocurring in crashes.
+      keyboardHandlingEnabled={Device.isIOS}
       headerMode="none"
       mode="modal"
+      // On Android, gestureEnabled defaults to false, but we want it.
       screenOptions={{ gestureEnabled: true }}
       initialRouteName={initialRoute}
     >
