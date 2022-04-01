@@ -4,42 +4,34 @@ import { strings } from '../strings';
 import { RewardRow } from '.';
 import { Container, ListEmptyComponent } from '@cardstack/components';
 import { TokenType } from '@cardstack/types';
-import Routes from '@rainbow-me/navigation/routesNames';
-import { useNavigation } from '@rainbow-me/navigation';
-import { Alert } from '@rainbow-me/components/alerts';
 
-export type TokensWithSafeAddress = Array<TokenType & { safeAddress: string }>;
+import { useNavigation } from '@rainbow-me/navigation';
+import { MainRoutes } from '@cardstack/navigation';
+
+export type TokenWithSafeAddress = TokenType & { safeAddress: string };
 export interface RewardsBalanceListProps {
-  data?: TokensWithSafeAddress;
+  data?: TokenWithSafeAddress[];
 }
-const disableSendFlow = true;
 
 export const RewardsBalanceList = ({ data = [] }: RewardsBalanceListProps) => {
   const { navigate } = useNavigation();
 
   const onPress = useCallback(
-    (token: TokenType, safeAddress) => () => {
-      if (disableSendFlow) {
-        Alert({ title: 'Sending is unavailable at this time.' });
-
-        return;
-      }
-
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: token,
-        type: 'token',
-        safeAddress,
+    tokenInfo => () => {
+      navigate(MainRoutes.REWARD_WITHDRAW_TO, {
+        tokenInfo,
       });
     },
     [navigate]
   );
 
   const renderItem = useCallback(
-    ({ item: { safeAddress, ...token } }) => (
+    ({ item }) => (
       <RewardRow
-        primaryText={token.balance.display}
-        coinSymbol={token.token.symbol}
-        onPress={onPress(token, safeAddress)}
+        isBalance
+        primaryText={item.balance.display}
+        coinSymbol={item.token.symbol}
+        onPress={onPress(item)}
       />
     ),
     [onPress]
