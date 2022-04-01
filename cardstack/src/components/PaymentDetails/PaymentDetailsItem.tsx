@@ -38,7 +38,7 @@ export const PaymentDetailsItem = ({
             <Container flex={2} />
             <Container flex={8}>
               <Text color="blueText" size="smallest" weight="bold">
-                {strings.business.toUpperCase()}
+                {strings.business}
               </Text>
             </Container>
           </Container>
@@ -62,7 +62,7 @@ export const PaymentDetailsItem = ({
         <Container flex={8}>
           {isPrepaidCard && (
             <Text color={infoColor} size="smallest">
-              {strings.prepaidCard.toUpperCase()}
+              {strings.prepaidCard}
             </Text>
           )}
           <Text color={infoColor} size="small">

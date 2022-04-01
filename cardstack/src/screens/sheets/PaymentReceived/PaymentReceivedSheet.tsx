@@ -99,17 +99,14 @@ const PaymentReceivedSheet = () => {
           <PaymentDetailsItem
             info={fromAddress}
             isPrepaidCard
-            title={strings.from.toUpperCase()}
+            title={strings.from}
           />
-          <PaymentDetailsItem
-            info={transactionHash}
-            title={strings.txnHash.toUpperCase()}
-          />
+          <PaymentDetailsItem info={transactionHash} title={strings.txnHash} />
           <PaymentDetailsItem
             info={timestamp}
             infoColor="black"
             isTimestamp
-            title={strings.localTitle.toUpperCase()}
+            title={strings.localTitle}
           />
         </Container>
         <BlockscoutButton network={network} transactionHash={transactionHash} />

@@ -29,9 +29,9 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
   const MerchantPaymentItemDetails = useMemo(
     () =>
       [
-        { description: strings.payment.toUpperCase(), value: revenueCollected },
+        { description: strings.payment, value: revenueCollected },
         {
-          description: `${strings.protocolFee.toUpperCase()} \n(0.5%)`,
+          description: strings.protocolFee,
           value: protocolFee,
         },
       ].map((item: MerchantPaymentItemDetailProps, index: number) => (
@@ -53,7 +53,7 @@ export const EarnedTransaction = (data: EarnedTransactionProps) => {
         {MerchantPaymentItemDetails}
         <HorizontalDivider />
         <MerchantPaymentItemDetail
-          description={strings.netReceived.toUpperCase()}
+          description={strings.netReceived}
           subValue={netEarnedNativeDisplay}
           value={`+ ${netEarned.display}`}
           symbol={txRowProps.symbol}

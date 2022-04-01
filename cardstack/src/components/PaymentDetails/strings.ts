@@ -1,7 +1,7 @@
 export const strings = {
-  business: 'Business',
-  prepaidCard: 'Prepaid Card',
-  payment: 'Payment',
-  netReceived: 'Net Received',
-  protocolFee: 'Protocol Fee',
+  business: 'BUSINESS',
+  prepaidCard: 'PREPAID CARD',
+  payment: 'PAYMENT',
+  netReceived: 'NET RECEIVED',
+  protocolFee: 'PROTOCOL FEE \n(0.5%)',
 };
