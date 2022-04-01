@@ -31,4 +31,7 @@ export const strings = {
     title: 'History',
     empty: 'No Reward History',
   },
+  withdraw: {
+    button: 'Withdraw',
+  },
 };
