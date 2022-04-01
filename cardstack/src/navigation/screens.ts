@@ -49,6 +49,10 @@ import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import { Device } from '@cardstack/utils';
 import SettingsModal from '@rainbow-me/screens/SettingsModal';
 import BackupSheet from '@rainbow-me/screens/BackupSheet';
+import {
+  RewardWithdrawConfirmationScreen,
+  RewardWithdrawToScreen,
+} from '@cardstack/screens/RewardsCenterScreen/flows';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -189,6 +193,14 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   REWARDS_CLAIM_SHEET: {
     component: RewardsClaimSheet,
     options: expandedPreset as StackNavigationOptions,
+  },
+  REWARD_WITHDRAW_TO: {
+    component: RewardWithdrawToScreen,
+    options: horizontalInterpolator,
+  },
+  REWARD_WITHDRAW_CONFIRMATION: {
+    component: RewardWithdrawConfirmationScreen,
+    options: horizontalInterpolator,
   },
   TRANSACTION_CONFIRMATION_SHEET: {
     component: TransactionConfirmationSheet,

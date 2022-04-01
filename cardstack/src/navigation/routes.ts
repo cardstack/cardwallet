@@ -25,6 +25,8 @@ export const MainRoutes = {
   REWARDS_CENTER_SCREEN: 'RewardsCenterScreen',
   REWARDS_REGISTER_SHEET: 'RewardsRegisterSheet',
   REWARDS_CLAIM_SHEET: 'RewardsClaimSheet',
+  REWARD_WITHDRAW_TO: 'RewardWithdrawToScreen',
+  REWARD_WITHDRAW_CONFIRMATION: 'RewardWithdrawConfirmationScreen',
   TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
   BACKUP_SHEET: 'BackupSheet',
 } as const;
