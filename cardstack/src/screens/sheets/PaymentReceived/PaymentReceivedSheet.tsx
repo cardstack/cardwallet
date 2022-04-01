@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useRoute } from '@react-navigation/core';
+import { strings } from './strings';
 import {
   BlockscoutButton,
   CoinIcon,
@@ -42,19 +43,22 @@ const PaymentReceivedSheet = () => {
 
   const network = useRainbowSelector(state => state.settings.network);
 
-  const rowProps = {
-    ...transaction,
-    CoinIcon: <CoinIcon size={30} symbol={token.symbol} />,
-    primaryText: `+ ${transactionData.netEarned.display}`,
-    subText: transactionData.netEarnedNativeDisplay,
-    symbol: token.symbol || undefined,
-  };
+  const rowProps = useMemo(
+    () => ({
+      ...transaction,
+      CoinIcon: <CoinIcon size={30} symbol={token.symbol} />,
+      primaryText: `+ ${transactionData.netEarned.display}`,
+      subText: transactionData.netEarnedNativeDisplay,
+      symbol: token.symbol || undefined,
+    }),
+    [token.symbol, transaction, transactionData]
+  );
 
   return (
     <Sheet isFullScreen scrollEnabled>
       <Container backgroundColor="white" marginBottom={16} padding={8}>
         <Text marginBottom={2} size="medium">
-          Payment Received
+          {strings.paymentReceived}
         </Text>
         <MerchantSectionCard
           customIcon={
@@ -92,13 +96,17 @@ const PaymentReceivedSheet = () => {
         >
           {Header}
           <EarnedTransaction {...transactionData} txRowProps={rowProps} />
-          <PaymentDetailsItem info={fromAddress} isPrepaidCard title="FROM" />
-          <PaymentDetailsItem info={transactionHash} title="TXN HASH" />
+          <PaymentDetailsItem
+            info={fromAddress}
+            isPrepaidCard
+            title={strings.from}
+          />
+          <PaymentDetailsItem info={transactionHash} title={strings.txnHash} />
           <PaymentDetailsItem
             info={timestamp}
             infoColor="black"
             isTimestamp
-            title="LOCAL TIME"
+            title={strings.localTitle}
           />
         </Container>
         <BlockscoutButton network={network} transactionHash={transactionHash} />
