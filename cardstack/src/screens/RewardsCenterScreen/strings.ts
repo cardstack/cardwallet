@@ -19,12 +19,8 @@ export const strings = {
     gasLoading: 'Getting estimated gas fee',
     gasInfoBanner: {
       title: 'Claiming Gas Fee',
-      message: {
-        intro:
-          'Claiming is an on chain transaction which requires a small blockchain gas fee: ',
-        gasEstimative: '~0.25 CARD.CPXD. ',
-        finalNote: 'This is paid from your claimable reward.',
-      },
+      message:
+        'Claiming is an on chain transaction which requires a small blockchain gas fee. This is paid from your claimable reward.',
     },
   },
   claim: {

@@ -70,15 +70,7 @@ export const ClaimContent = ({
         <InfoBanner
           paddingBottom={5}
           title={strings.register.gasInfoBanner.title}
-          message={
-            <Text size="xs">
-              {strings.register.gasInfoBanner.message.intro}
-              <Text size="xs" weight="bold">
-                {strings.register.gasInfoBanner.message.gasEstimative}
-              </Text>
-              {strings.register.gasInfoBanner.message.finalNote}
-            </Text>
-          }
+          message={strings.register.gasInfoBanner.message}
         />
         {renderClaimList()}
       </Container>
