@@ -20,6 +20,7 @@ import { useWallets } from '../hooks';
 import { Icon, Text, Touchable } from '@cardstack/components';
 import { NAV_HEADER_HEIGHT } from '@cardstack/components/MainHeader/components/MainHeaderWrapper';
 import { slideLeftToRightPreset } from '@cardstack/navigation';
+import DesignSystemScreen from '@cardstack/screens/Dev/DesignSystemScreen';
 import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
 import { palette } from '@cardstack/theme';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -78,6 +79,11 @@ const SettingsPages = {
     component: IS_DEV ? DeveloperSettings : null,
     key: 'DevSection',
     title: 'Dev',
+  },
+  designSystem: {
+    component: IS_DEV ? DesignSystemScreen : null,
+    key: 'DesignSystem',
+    title: 'Design System',
   },
   language: {
     component: LanguageSection,
@@ -215,6 +221,7 @@ export default function SettingsModal() {
             onCloseModal={goBack}
             onPressBackup={onPressSection(SettingsPages.backup)}
             onPressCurrency={onPressSection(SettingsPages.currency)}
+            onPressDS={onPressSection(SettingsPages.designSystem)}
             onPressDev={onPressSection(SettingsPages.dev)}
             onPressLanguage={onPressSection(SettingsPages.language)}
             onPressMyWalletAddress={onPressSection(

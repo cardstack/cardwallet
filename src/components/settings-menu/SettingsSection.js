@@ -63,6 +63,7 @@ export default function SettingsSection({
   onPressWCSessions,
   onPressShowSecret,
   onPressMyWalletAddress,
+  onPressDS,
 }) {
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
@@ -223,6 +224,12 @@ export default function SettingsSection({
             label="Developer Settings"
             onPress={onPressDev}
             testID="developer-section"
+          />
+          <ListFooter height={10} />
+          <ListItem
+            icon={<Icon color="black" name="archive" />}
+            label="Design System"
+            onPress={onPressDS}
           />
         </>
       )}
