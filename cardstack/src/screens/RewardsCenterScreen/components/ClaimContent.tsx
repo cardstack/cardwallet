@@ -14,7 +14,6 @@ import {
   Container,
   useTabHeader,
   InfoBanner,
-  Text,
 } from '@cardstack/components';
 
 interface ClaimContentProps {
