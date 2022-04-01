@@ -72,11 +72,11 @@ export const ClaimContent = ({
           title={strings.register.gasInfoBanner.title}
           message={
             <Text size="xs">
-              {strings.register.gasInfoBanner.message.part1}
+              {strings.register.gasInfoBanner.message.intro}
               <Text size="xs" weight="bold">
-                {strings.register.gasInfoBanner.message.part2}
+                {strings.register.gasInfoBanner.message.gasEstimative}
               </Text>
-              {strings.register.gasInfoBanner.message.part3}
+              {strings.register.gasInfoBanner.message.finalNote}
             </Text>
           }
         />

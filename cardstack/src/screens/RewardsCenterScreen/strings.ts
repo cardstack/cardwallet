@@ -20,10 +20,10 @@ export const strings = {
     gasInfoBanner: {
       title: 'Claiming Gas Fee',
       message: {
-        part1:
-          'Claiming is an on chain transaction which required a small blockchain gas fee: ',
-        part2: '~0.25 CARD.CPXD. ',
-        part3: 'This is paid from your claimable reward.',
+        intro:
+          'Claiming is an on chain transaction which requires a small blockchain gas fee: ',
+        gasEstimative: '~0.25 CARD.CPXD. ',
+        finalNote: 'This is paid from your claimable reward.',
       },
     },
   },
