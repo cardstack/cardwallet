@@ -39,10 +39,13 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const { goBack } = useNavigation();
 
-  const currencyName =
-    currency && isSupportedCurrency(currency) ? currency : accountCurrency;
-
-  const validAmount = currency && isSupportedCurrency(currency) ? amount : '0';
+  const { currencyName, validAmount } = useMemo(() => {
+    const isValidCurrency = currency && isSupportedCurrency(currency);
+    return {
+      currencyName: isValidCurrency ? currency : accountCurrency,
+      validAmount: isValidCurrency ? amount : '0',
+    };
+  }, [accountCurrency, amount, currency]);
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
