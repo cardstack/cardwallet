@@ -17,6 +17,11 @@ export const strings = {
     loading: 'Registering Account',
     payCostDescription: 'To pay transaction cost',
     gasLoading: 'Getting estimated gas fee',
+    gasInfoBanner: {
+      title: 'Claiming Gas Fee',
+      message:
+        'Claiming is an on chain transaction which requires a small blockchain gas fee. This is paid from your claimable reward.',
+    },
   },
   claim: {
     button: 'Claim',

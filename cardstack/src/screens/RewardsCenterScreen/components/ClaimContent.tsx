@@ -9,7 +9,12 @@ import {
   RewardsHistoryList,
   RewardsHistoryListProps,
 } from '.';
-import { ScrollView, Container, useTabHeader } from '@cardstack/components';
+import {
+  ScrollView,
+  Container,
+  useTabHeader,
+  InfoBanner,
+} from '@cardstack/components';
 
 interface ClaimContentProps {
   claimList?: Array<RewardRowProps>;
@@ -61,6 +66,11 @@ export const ClaimContent = ({
     <ScrollView>
       <Container padding={5}>
         <RewardsTitle title={title} width="100%" paddingBottom={5} />
+        <InfoBanner
+          paddingBottom={5}
+          title={strings.register.gasInfoBanner.title}
+          message={strings.register.gasInfoBanner.message}
+        />
         {renderClaimList()}
       </Container>
       <TabHeader />
