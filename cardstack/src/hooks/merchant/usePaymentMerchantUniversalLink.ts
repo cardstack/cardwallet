@@ -39,8 +39,13 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const { goBack } = useNavigation();
 
-  const currencyName =
-    currency && isSupportedCurrency(currency) ? currency : accountCurrency;
+  const { currencyName, validAmount } = useMemo(() => {
+    const isValidCurrency = currency && isSupportedCurrency(currency);
+    return {
+      currencyName: isValidCurrency ? currency : accountCurrency,
+      validAmount: isValidCurrency ? amount : '0',
+    };
+  }, [accountCurrency, amount, currency]);
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
@@ -118,11 +123,11 @@ export const usePaymentMerchantUniversalLink = () => {
       type: TransactionConfirmationType.PAY_MERCHANT,
       infoDID,
       qrCodeNetwork,
-      amount: parseFloat(amount),
+      amount: parseFloat(validAmount),
       merchantSafe: merchantAddress,
       currency: currencyName,
     }),
-    [infoDID, qrCodeNetwork, amount, merchantAddress, currencyName]
+    [infoDID, qrCodeNetwork, validAmount, merchantAddress, currencyName]
   );
 
   return {
