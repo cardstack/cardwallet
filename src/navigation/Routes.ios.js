@@ -15,7 +15,6 @@ import ExchangeModalNavigator from './ExchangeModalNavigator';
 import { SwipeNavigator } from './SwipeNavigator';
 import {
   defaultScreenStackOptions,
-  expandedAssetSheetConfig,
   nativeStackDefaultConfig,
   nativeStackDefaultConfigWithoutStatusBar,
   savingsSheetConfig,
@@ -24,6 +23,7 @@ import {
 import {
   bottomSheetPreset,
   exchangePreset,
+  expandedPreset,
   overlayExpandedPreset,
   sheetPreset,
 } from './effects';
@@ -87,6 +87,16 @@ function NativeStackFallbackNavigator() {
         name={Routes.EXCHANGE_MODAL}
         options={exchangePreset}
       />
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        name={Routes.EXPANDED_ASSET_SHEET}
+        options={expandedPreset}
+      />
+      <Stack.Screen
+        component={ExpandedAssetSheet}
+        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
+        options={expandedPreset}
+      />
     </Stack.Navigator>
   );
 }
@@ -104,16 +114,6 @@ function NativeStackNavigator() {
         component={ExchangeModalNavigator}
         name={Routes.EXCHANGE_MODAL}
         options={{ ...nativeStackDefaultConfig, interactWithScrollView: false }}
-      />
-      <NativeStack.Screen
-        component={ExpandedAssetSheet}
-        name={Routes.EXPANDED_ASSET_SHEET}
-        {...expandedAssetSheetConfig}
-      />
-      <NativeStack.Screen
-        component={ExpandedAssetSheet}
-        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
-        {...expandedAssetSheetConfig}
       />
       <NativeStack.Screen
         component={SpeedUpAndCancelSheet}
