@@ -3,7 +3,7 @@ import { convertToSpend } from '@cardstack/cardpay-sdk';
 import { useNavigation, StackActions } from '@react-navigation/core';
 import { groupBy } from 'lodash';
 import { strings } from './strings';
-import { TokensWithSafeAddress } from './components';
+import { TokenWithSafeAddress } from './components';
 import {
   RewardsRegisterData,
   RewardsClaimData,
@@ -389,7 +389,7 @@ export const useRewardsCenterScreen = () => {
             safeAddress: safe.address,
           }));
 
-          return [...tokens, ...tokensWithAddress] as TokensWithSafeAddress;
+          return [...tokens, ...tokensWithAddress] as TokenWithSafeAddress[];
         },
         []
       ),
