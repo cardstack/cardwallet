@@ -8,6 +8,7 @@ import {
   RewardsSafeQueryParams,
   RewardsSafeQueryResult,
   RewardsTokenBalancesResult,
+  RewardWithdrawParams,
   SuccessfulTransactionReceipt,
 } from './rewards-center-types';
 import {
@@ -16,6 +17,7 @@ import {
   fetchRewardsSafe,
   getRegisterGasEstimate,
   registerToRewardProgram,
+  withdrawFromRewardSafe,
 } from './rewards-center-service';
 
 const rewardsApi = safesApi.injectEndpoints({
@@ -93,6 +95,21 @@ const rewardsApi = safesApi.injectEndpoints({
       },
       invalidatesTags: [CacheTags.REWARDS_SAFE, CacheTags.REWARDS_POOL],
     }),
+    withdrawRewardBalance: builder.mutation<
+      SuccessfulTransactionReceipt,
+      RewardWithdrawParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          SuccessfulTransactionReceipt,
+          RewardWithdrawParams
+        >(withdrawFromRewardSafe, params, {
+          errorLogMessage: 'Error while withdrawing reward balance',
+          resetHdProvider: true,
+        });
+      },
+      invalidatesTags: [CacheTags.REWARDS_SAFE],
+    }),
   }),
 });
 
@@ -102,4 +119,5 @@ export const {
   useRegisterToRewardProgramMutation,
   useClaimRewardsMutation,
   useLazyGetRegisterRewardeeGasEstimateQuery,
+  useWithdrawRewardBalanceMutation,
 } = rewardsApi;

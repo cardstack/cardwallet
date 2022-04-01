@@ -62,3 +62,11 @@ export type RewardsClaimGasEstimateParams = Omit<
   RewardsClaimMutationParams,
   keyof SignedProviderParams
 >;
+
+export interface RewardWithdrawParams
+  extends Omit<RewardsPoolSignedBaseParams, 'rewardProgramId'> {
+  to: string;
+  from: string;
+  amountInEth: string;
+  tokenAddress: string;
+}
