@@ -94,11 +94,13 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [isSubmitPressed, setIsSubmitPressed] = useState(false);
 
   const validateProfileId = useCallback((id: string) => {
-    if (id.length < 4) {
-      return strings.stepTwo.profileIdLengthError;
+    const trimmedId = id.trim();
+
+    if (trimmedId && trimmedId.length < 4) {
+      return strings.validation.profileIdLengthError;
     }
 
-    return validateMerchantId(id);
+    return validateMerchantId(trimmedId);
   }, []);
 
   const checkIdUniqueness = useCallback(

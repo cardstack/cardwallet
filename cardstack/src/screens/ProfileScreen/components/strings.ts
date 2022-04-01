@@ -16,7 +16,6 @@ export const strings = {
       'This is a unique ID that will be used to identify your payment profile. Please note this ID cannot be changed once the profile is created and can be used as a contact address.',
     required: 'required',
     iconColor: 'Icon Color',
-    profileIdLengthError: 'Profile ID must be at least 4 characters',
   },
   stepThree: {
     review: 'Review',
@@ -30,6 +29,7 @@ export const strings = {
       'This Business ID is already taken. Please choose another one',
     createProfileErrorMessage:
       'Could not create profile, please try again. If this problem persists please reach out to support@cardstack.com',
+    profileIdLengthError: 'Profile ID must be at least 4 characters',
   },
   notification: {
     profileCreated: 'Profile Created',
