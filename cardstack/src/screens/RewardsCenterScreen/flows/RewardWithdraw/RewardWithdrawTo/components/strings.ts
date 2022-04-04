@@ -1,4 +1,4 @@
-export const strings: { [key: string]: string | any } = {
+export const strings: { [key: string]: any } = {
   merchant: 'Profile',
   depot: 'Depot',
   primary: 'Primary profile',
