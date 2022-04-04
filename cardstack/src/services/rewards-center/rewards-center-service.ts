@@ -19,6 +19,7 @@ import {
   RewardsRegisterMutationParams,
   RewardsSafeQueryParams,
   RewardsSafeType,
+  RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   ValidProofsParams,
 } from './rewards-center-types';
@@ -196,6 +197,24 @@ export const getClaimRewardsGasEstimate = async ({
   return formattedTotalEstimatedGas;
 };
 
+export const getWithdrawGasEstimate = async ({
+  from,
+  to,
+  tokenAddress,
+  amount,
+}: RewardWithdrawGasEstimateParams) => {
+  const rewardManager = await getRewardManagerInstance();
+
+  const gasEstimate = await rewardManager.withdrawGasEstimate(
+    from,
+    to,
+    tokenAddress,
+    amount
+  );
+
+  return gasEstimate.amount;
+};
+
 // Mutations
 
 export const registerToRewardProgram = async ({
@@ -261,7 +280,7 @@ export const withdrawFromRewardSafe = async ({
   from,
   to,
   tokenAddress,
-  amountInEth,
+  amount,
   accountAddress,
   walletId,
   network,
@@ -272,12 +291,10 @@ export const withdrawFromRewardSafe = async ({
     from,
     to,
     tokenAddress,
-    amountInEth,
+    amount,
     undefined,
     { from: accountAddress }
   );
-
-  console.log({ result });
 
   return result;
 };

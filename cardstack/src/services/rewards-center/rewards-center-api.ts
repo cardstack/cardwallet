@@ -1,3 +1,4 @@
+import BN from 'bn.js';
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 import {
@@ -8,6 +9,7 @@ import {
   RewardsSafeQueryParams,
   RewardsSafeQueryResult,
   RewardsTokenBalancesResult,
+  RewardWithdrawGasEstimateParams,
   RewardWithdrawParams,
   SuccessfulTransactionReceipt,
 } from './rewards-center-types';
@@ -16,6 +18,7 @@ import {
   fetchRewardPoolTokenBalances,
   fetchRewardsSafe,
   getRegisterGasEstimate,
+  getWithdrawGasEstimate,
   registerToRewardProgram,
   withdrawFromRewardSafe,
 } from './rewards-center-service';
@@ -61,6 +64,20 @@ const rewardsApi = safesApi.injectEndpoints({
           {
             errorLogMessage: 'Error fetching rewardee register gas estimate',
             timeout: 60000, // 1 min
+          }
+        );
+      },
+    }),
+    getRewardWithdrawGasEstimate: builder.query<
+      BN,
+      RewardWithdrawGasEstimateParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<BN, RewardWithdrawGasEstimateParams>(
+          getWithdrawGasEstimate,
+          params,
+          {
+            errorLogMessage: 'Error fetching reward withdraw gas estimate',
           }
         );
       },
@@ -120,4 +137,5 @@ export const {
   useClaimRewardsMutation,
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useWithdrawRewardBalanceMutation,
+  useGetRewardWithdrawGasEstimateQuery,
 } = rewardsApi;

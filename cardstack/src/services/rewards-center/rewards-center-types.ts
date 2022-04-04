@@ -63,10 +63,14 @@ export type RewardsClaimGasEstimateParams = Omit<
   keyof SignedProviderParams
 >;
 
-export interface RewardWithdrawParams
-  extends Omit<RewardsPoolSignedBaseParams, 'rewardProgramId'> {
+interface RewardWithdrawBaseParams {
   to: string;
   from: string;
-  amountInEth: string;
+  amount: string;
   tokenAddress: string;
 }
+export interface RewardWithdrawParams
+  extends RewardWithdrawBaseParams,
+    Omit<RewardsPoolSignedBaseParams, 'rewardProgramId'> {}
+
+export type RewardWithdrawGasEstimateParams = RewardWithdrawBaseParams;
