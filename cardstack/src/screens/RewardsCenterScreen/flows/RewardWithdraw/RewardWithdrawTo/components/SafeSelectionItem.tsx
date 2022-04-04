@@ -38,7 +38,7 @@ export const SafeSelectionItem = memo(
             <Text variant="body" weight="bold">
               {safe.merchantInfo?.name || safe.type}
             </Text>
-            <Text size="xs" color="secondaryText">
+            <Text size="xs" weight="semibold" color="secondaryText">
               {typeText}
             </Text>
             <Text size="xs" color="tertiaryText">

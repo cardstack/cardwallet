@@ -25,7 +25,6 @@ export const palette = {
   borderGray: '#E8E8E8',
   darkGray: '#423e4f',
   slateGray: '#5a586a',
-  battleshipGrey: '#6b6a80',
   skeletonGray: '#E1E1E8',
   grayBackground: '#F7F7F7',
   white: '#FFFFFF',
@@ -106,7 +105,7 @@ export const colors = {
   borderLightColor: palette.borderLightColor,
   greenColor: palette.greenColor,
   secondaryText: palette.slateGray,
-  tertiaryText: palette.battleshipGrey,
+  tertiaryText: palette.blueText,
 };
 
 export const avatarColor = [
