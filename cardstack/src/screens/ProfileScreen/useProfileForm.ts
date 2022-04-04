@@ -93,10 +93,20 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [businessColor, setBusinessColor] = useState<string>(businessColorData);
   const [isSubmitPressed, setIsSubmitPressed] = useState(false);
 
+  const localValidateMerchantId = useCallback((id: string) => {
+    const trimmedId = id.trim();
+
+    if (trimmedId && trimmedId.length < 4) {
+      return strings.validation.profileIdLengthError;
+    }
+
+    return validateMerchantId(trimmedId);
+  }, []);
+
   const checkIdUniqueness = useCallback(
     async (id: string) => {
       if (!isLoading && authToken && id) {
-        const validateErrorMessage = validateMerchantId(id);
+        const validateErrorMessage = localValidateMerchantId(id);
 
         if (validateErrorMessage) {
           return;
@@ -109,7 +119,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         }
       }
     },
-    [authToken, isLoading]
+    [authToken, isLoading, localValidateMerchantId]
   );
 
   useEffect(() => {
@@ -161,7 +171,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     if (!isSubmitPressed) return;
 
     const businessIdValidateErrorMessage =
-      validateMerchantId(businessId) ||
+      localValidateMerchantId(businessId) ||
       (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique);
 
     return {
@@ -170,12 +180,22 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         : strings.validation.thisFieldIsRequied,
       businessId: businessIdValidateErrorMessage,
     };
-  }, [isSubmitPressed, businessName, isUniqueId, businessId]);
+  }, [
+    isSubmitPressed,
+    businessName,
+    isUniqueId,
+    businessId,
+    localValidateMerchantId,
+  ]);
 
   const onSubmitForm = useCallback(() => {
     setIsSubmitPressed(true);
 
-    if (isUniqueId && businessName.trim() && !validateMerchantId(businessId)) {
+    if (
+      isUniqueId &&
+      businessName.trim() &&
+      !localValidateMerchantId(businessId)
+    ) {
       onUpdateProfileForm({
         businessName,
         businessId,
@@ -191,6 +211,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     businessId,
     businessColor,
     params,
+    localValidateMerchantId,
   ]);
 
   const avatarName = useMemo(

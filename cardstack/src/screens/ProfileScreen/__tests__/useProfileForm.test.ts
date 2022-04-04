@@ -114,6 +114,41 @@ describe('useProfileForm', () => {
     expect(result.current?.errors).toBe(undefined);
   });
 
+  it('should return error if profileId length is less than 4 characters', async () => {
+    (checkBusinessIdUniqueness as jest.Mock).mockImplementation(() => ({
+      slugAvailable: true,
+      detail: '',
+    }));
+
+    const { result } = renderHook(() => useProfileForm());
+    const businessName = 'foo';
+    const businessId = 'bar';
+
+    act(() => {
+      result.current.onChangeBusinessName({
+        nativeEvent: { text: businessName },
+      });
+    });
+
+    act(() => {
+      result.current.onChangeBusinessId({
+        nativeEvent: { text: businessId },
+      });
+    });
+
+    act(() => {
+      result.current.onSubmitForm();
+    });
+
+    expect(result.current?.businessId).toBe(businessId);
+
+    await waitFor(() => expect(result.current.errors).not.toEqual(undefined));
+
+    expect(result.current?.errors?.businessId).toBe(
+      strings.validation.profileIdLengthError
+    );
+  });
+
   it('should return no error if unique id and valid businessName', async () => {
     (checkBusinessIdUniqueness as jest.Mock).mockImplementation(() => ({
       slugAvailable: true,
@@ -121,7 +156,7 @@ describe('useProfileForm', () => {
     }));
 
     const { result } = renderHook(() => useProfileForm());
-    const businessId = 'bar';
+    const businessId = 'bar1';
 
     act(() => {
       result.current.onChangeBusinessId({

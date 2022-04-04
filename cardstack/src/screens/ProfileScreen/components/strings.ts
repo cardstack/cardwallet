@@ -29,6 +29,7 @@ export const strings = {
       'This Business ID is already taken. Please choose another one',
     createProfileErrorMessage:
       'Could not create profile, please try again. If this problem persists please reach out to support@cardstack.com',
+    profileIdLengthError: 'Profile ID must be at least 4 characters',
   },
   notification: {
     profileCreated: 'Profile Created',
