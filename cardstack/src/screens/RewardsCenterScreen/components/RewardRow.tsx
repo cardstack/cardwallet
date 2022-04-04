@@ -16,7 +16,7 @@ export interface RewardRowProps extends Omit<TouchableProps, 'children'> {
   claimed?: boolean;
   onClaimPress?: () => void;
   isLoading?: boolean;
-  isBalance?: boolean;
+  showWithdrawBtn?: boolean;
 }
 
 export const RewardRow = ({
@@ -27,7 +27,7 @@ export const RewardRow = ({
   onClaimPress,
   onPress,
   isLoading = false,
-  isBalance = false,
+  showWithdrawBtn = false,
   ...props
 }: RewardRowProps) => (
   <CardPressable
@@ -61,7 +61,7 @@ export const RewardRow = ({
         </Container>
         {
           // Press is disabled bc whole row is clickable
-          isBalance && (
+          showWithdrawBtn && (
             <Button variant="tiny" disablePress>
               {strings.withdraw.button}
             </Button>

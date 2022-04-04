@@ -26,14 +26,18 @@ export const RewardsBalanceList = ({ data = [] }: RewardsBalanceListProps) => {
   );
 
   const renderItem = useCallback(
-    ({ item }) => (
-      <RewardRow
-        isBalance
-        primaryText={item.balance.display}
-        coinSymbol={item.token.symbol}
-        onPress={onPress(item)}
-      />
-    ),
+    ({ item }: { item: TokenWithSafeAddress }) => {
+      const hasEnoughBalance = !!parseFloat(item.balance.amount);
+
+      return (
+        <RewardRow
+          showWithdrawBtn={hasEnoughBalance}
+          primaryText={item.balance.display}
+          coinSymbol={item.token.symbol}
+          onPress={hasEnoughBalance ? onPress(item) : undefined}
+        />
+      );
+    },
     [onPress]
   );
 
