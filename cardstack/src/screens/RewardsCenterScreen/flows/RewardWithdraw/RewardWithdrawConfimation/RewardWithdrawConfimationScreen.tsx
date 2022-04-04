@@ -10,7 +10,10 @@ import {
   Container,
   NavigationStackHeader,
   HorizontalDivider,
+  IconProps,
 } from '@cardstack/components';
+
+const iconProps: IconProps = { name: 'face-id' };
 
 const RewardWithdrawConfirmationScreen = () => {
   const {
@@ -71,7 +74,12 @@ const RewardWithdrawConfirmationScreen = () => {
           <Button onPress={onCancelPress} variant="smallWhite">
             Cancel
           </Button>
-          <Button onPress={onConfirmPress} variant="small">
+          <Button
+            onPress={onConfirmPress}
+            variant="small"
+            iconProps={iconProps}
+            disabled={isLoadingGasEstimate}
+          >
             Confirm
           </Button>
         </Container>

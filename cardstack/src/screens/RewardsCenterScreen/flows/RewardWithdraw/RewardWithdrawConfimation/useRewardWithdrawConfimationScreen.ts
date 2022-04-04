@@ -47,7 +47,6 @@ export const useRewardWithdrawConfimationScreen = () => {
   );
 
   // TODO: retry state for gas estimate failure
-  // TODO: handle not enough balance, crypto dust
   const {
     data: gasEstimate = new BN(0),
     isLoading: loadingGas,
