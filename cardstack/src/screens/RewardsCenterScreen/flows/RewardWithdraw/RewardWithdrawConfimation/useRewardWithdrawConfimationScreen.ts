@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/core';
 
 import { BN } from 'ethereumjs-util';
-import { fromWei } from '@cardstack/cardpay-sdk';
+import { formatCurrencyAmount, fromWei } from '@cardstack/cardpay-sdk';
 import { strings } from './strings';
 import { RouteType } from '@cardstack/navigation/types';
 
@@ -50,21 +50,26 @@ export const useRewardWithdrawConfimationScreen = () => {
   // TODO: handle not enough balance, crypto dust
   const {
     data: gasEstimate = new BN(0),
-    isLoading: isLoadingGasEstimate,
-  } = useGetRewardWithdrawGasEstimateQuery(withdrawBaseData);
+    isLoading: loadingGas,
+    isFetching: fetchingGas,
+  } = useGetRewardWithdrawGasEstimateQuery(withdrawBaseData, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const totalBalanceMinusGasInWei = useMemo(
     () => new BN(withdrawBaseData.amount).sub(gasEstimate).toString(),
     [gasEstimate, withdrawBaseData.amount]
   );
 
-  const estimatedNetClaim = useMemo(() => fromWei(totalBalanceMinusGasInWei), [
-    totalBalanceMinusGasInWei,
-  ]);
+  const estimatedNetClaim = useMemo(
+    () => formatCurrencyAmount(fromWei(totalBalanceMinusGasInWei), 2),
+    [totalBalanceMinusGasInWei]
+  );
 
-  const gasEstimateInEth = useMemo(() => fromWei(gasEstimate.toString()), [
-    gasEstimate,
-  ]);
+  const gasEstimateInEth = useMemo(
+    () => formatCurrencyAmount(fromWei(gasEstimate.toString()), 2),
+    [gasEstimate]
+  );
 
   const returnToRewardsCenter = useCallback(() => {
     navigate(MainRoutes.REWARDS_CENTER_SCREEN);
@@ -128,7 +133,7 @@ export const useRewardWithdrawConfimationScreen = () => {
     params,
     onCancelPress: returnToRewardsCenter,
     onConfirmPress,
-    isLoadingGasEstimate,
+    isLoadingGasEstimate: loadingGas || fetchingGas,
     gasEstimateInEth,
     estimatedNetClaim,
   };

@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from 'react';
-import { ActivityIndicator } from 'react-native';
 import { SafeSelectionItem } from '../components/SafeSelectionItem';
 import { strings } from './strings';
 import { useRewardWithdrawConfimationScreen } from './useRewardWithdrawConfimationScreen';
@@ -13,17 +12,17 @@ import {
   HorizontalDivider,
 } from '@cardstack/components';
 
-// TEMP: should return from hook.
-const isLoadingGasFee = false;
-
 const RewardWithdrawConfirmationScreen = () => {
   const {
     params: { tokenInfo, withdrawTo },
     onCancelPress,
     onConfirmPress,
+    isLoadingGasEstimate,
+    gasEstimateInEth,
+    estimatedNetClaim,
   } = useRewardWithdrawConfimationScreen();
 
-  const data = useMemo(
+  const amountData = useMemo(
     () => [
       {
         description: strings.net.amount,
@@ -31,14 +30,14 @@ const RewardWithdrawConfirmationScreen = () => {
       },
       {
         description: strings.net.estGas,
-        valueDisplay: '- Z CARD.CPXD',
+        valueDisplay: `-${gasEstimateInEth} ${tokenInfo.token.symbol}`,
       },
       {
         description: strings.net.estNet,
-        valueDisplay: 'XY CARD.CPXD',
+        valueDisplay: `${estimatedNetClaim} ${tokenInfo.token.symbol}`,
       },
     ],
-    [tokenInfo]
+    [tokenInfo, gasEstimateInEth, estimatedNetClaim]
   );
 
   return (
@@ -53,29 +52,26 @@ const RewardWithdrawConfirmationScreen = () => {
             secondaryText={tokenInfo.native.balance.display}
           />
           <HorizontalDivider />
-
-          <SectionHeaderText>{strings.withdrawTo.title}</SectionHeaderText>
+          <SectionHeaderText paddingBottom={4}>
+            {strings.withdrawTo.title}
+          </SectionHeaderText>
           <SafeSelectionItem safe={withdrawTo} />
           <HorizontalDivider />
-
-          {isLoadingGasFee ? (
-            <Container flex={0.5} justifyContent="center">
-              <ActivityIndicator />
-            </Container>
-          ) : (
-            <AmountSection title={strings.net.title} data={data} />
-          )}
+          <AmountSection
+            title={strings.net.title}
+            data={amountData}
+            showLoading={isLoadingGasEstimate}
+          />
         </Container>
-
-        <Container flexDirection="row" justifyContent="space-between">
+        <Container
+          flexDirection="row"
+          justifyContent="space-between"
+          paddingBottom={6}
+        >
           <Button onPress={onCancelPress} variant="smallWhite">
             Cancel
           </Button>
-          <Button
-            loading={isLoadingGasFee}
-            onPress={onConfirmPress}
-            variant="small"
-          >
+          <Button onPress={onConfirmPress} variant="small">
             Confirm
           </Button>
         </Container>
