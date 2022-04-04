@@ -1,10 +1,21 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/core';
 
+import { BN } from 'ethereumjs-util';
+import { fromWei } from '@cardstack/cardpay-sdk';
+import { strings } from './strings';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
-import { MainRoutes } from '@cardstack/navigation';
+import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import {
+  useGetRewardWithdrawGasEstimateQuery,
+  useWithdrawRewardBalanceMutation,
+} from '@cardstack/services/rewards-center/rewards-center-api';
+import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+import { useMutationEffects } from '@cardstack/hooks';
+import { Alert } from '@rainbow-me/components/alerts';
+import { defaultErrorAlert } from '@cardstack/constants';
 
 interface NavParams {
   tokenInfo: TokenWithSafeAddress;
@@ -14,20 +25,111 @@ interface NavParams {
 
 export const useRewardWithdrawConfimationScreen = () => {
   const { params } = useRoute<RouteType<NavParams>>();
-
   const { navigate } = useNavigation();
 
-  const onCancelPress = useCallback(() => {
+  const { accountAddress, network } = useAccountSettings();
+  const { selectedWallet } = useWallets();
+
+  const {
+    fromRewardSafe,
+    withdrawTo,
+    tokenInfo: { tokenAddress, balance },
+  } = params;
+
+  const withdrawBaseData = useMemo(
+    () => ({
+      from: fromRewardSafe,
+      to: withdrawTo.address,
+      tokenAddress,
+      amount: balance?.wei || '0',
+    }),
+    [balance, fromRewardSafe, tokenAddress, withdrawTo]
+  );
+
+  // TODO: retry state for gas estimate failure
+  // TODO: handle not enough balance, crypto dust
+  const {
+    data: gasEstimate = new BN(0),
+    isLoading: isLoadingGasEstimate,
+  } = useGetRewardWithdrawGasEstimateQuery(withdrawBaseData);
+
+  const totalBalanceMinusGasInWei = useMemo(
+    () => new BN(withdrawBaseData.amount).sub(gasEstimate).toString(),
+    [gasEstimate, withdrawBaseData.amount]
+  );
+
+  const estimatedNetClaim = useMemo(() => fromWei(totalBalanceMinusGasInWei), [
+    totalBalanceMinusGasInWei,
+  ]);
+
+  const gasEstimateInEth = useMemo(() => fromWei(gasEstimate.toString()), [
+    gasEstimate,
+  ]);
+
+  const returnToRewardsCenter = useCallback(() => {
     navigate(MainRoutes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
 
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+
+  const [
+    withdraw,
+    { isError: isWithdrawFailure, isSuccess: isWithdrawSuccessful },
+  ] = useWithdrawRewardBalanceMutation();
+
   const onConfirmPress = useCallback(() => {
-    //TODO
-  }, []);
+    showLoadingOverlay({ title: strings.loading });
+
+    withdraw({
+      ...withdrawBaseData,
+      walletId: selectedWallet.id,
+      accountAddress,
+      network,
+      amount: totalBalanceMinusGasInWei,
+    });
+  }, [
+    accountAddress,
+    network,
+    selectedWallet.id,
+    showLoadingOverlay,
+    totalBalanceMinusGasInWei,
+    withdraw,
+    withdrawBaseData,
+  ]);
+
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isWithdrawSuccessful,
+          callback: () => {
+            dismissLoadingOverlay();
+            returnToRewardsCenter();
+          },
+        },
+        error: {
+          status: isWithdrawFailure,
+          callback: () => {
+            dismissLoadingOverlay();
+            Alert(defaultErrorAlert);
+          },
+        },
+      }),
+      [
+        dismissLoadingOverlay,
+        isWithdrawFailure,
+        isWithdrawSuccessful,
+        returnToRewardsCenter,
+      ]
+    )
+  );
 
   return {
     params,
-    onCancelPress,
+    onCancelPress: returnToRewardsCenter,
     onConfirmPress,
+    isLoadingGasEstimate,
+    gasEstimateInEth,
+    estimatedNetClaim,
   };
 };
