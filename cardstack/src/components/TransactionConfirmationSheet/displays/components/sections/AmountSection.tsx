@@ -1,27 +1,43 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { SectionHeaderText } from '../SectionHeaderText';
-import { Container, Text } from '@cardstack/components';
+import { Container, Skeleton, Text } from '@cardstack/components';
 
 interface AmountSectionProps {
   title: string;
   data: Array<{
-    description: string | undefined;
-    valueDisplay: string | undefined;
+    description?: string;
+    valueDisplay?: string;
   }>;
+  showLoading?: boolean;
 }
 
-export const AmountSection = memo(({ title, data }: AmountSectionProps) => (
-  <Container>
-    <SectionHeaderText>{title}</SectionHeaderText>
-    <Container marginLeft={15} marginTop={2}>
-      {data.map(item => (
-        <>
-          <Text size="xxs">{item.description}</Text>
-          <Text size="body" weight="bold" paddingBottom={3}>
-            {item.valueDisplay}
-          </Text>
-        </>
-      ))}
-    </Container>
-  </Container>
-));
+export const AmountSection = memo(
+  ({ title, data, showLoading }: AmountSectionProps) => {
+    const renderItemOrLoad = useCallback(
+      item =>
+        showLoading ? (
+          <>
+            <Skeleton width="20%" height={10} light marginBottom={1} />
+            <Skeleton width="50%" height={30} light marginBottom={1} />
+          </>
+        ) : (
+          <>
+            <Text size="xxs">{item.description}</Text>
+            <Text size="body" weight="bold" paddingBottom={3}>
+              {item.valueDisplay}
+            </Text>
+          </>
+        ),
+      [showLoading]
+    );
+
+    return (
+      <>
+        <SectionHeaderText>{title}</SectionHeaderText>
+        <Container marginLeft={15} marginTop={2}>
+          {data.map(renderItemOrLoad)}
+        </Container>
+      </>
+    );
+  }
+);
