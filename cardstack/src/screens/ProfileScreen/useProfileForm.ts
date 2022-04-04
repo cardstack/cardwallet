@@ -93,7 +93,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const [businessColor, setBusinessColor] = useState<string>(businessColorData);
   const [isSubmitPressed, setIsSubmitPressed] = useState(false);
 
-  const validateProfileId = useCallback((id: string) => {
+  const localValidateMerchantId = useCallback((id: string) => {
     const trimmedId = id.trim();
 
     if (trimmedId && trimmedId.length < 4) {
@@ -106,7 +106,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const checkIdUniqueness = useCallback(
     async (id: string) => {
       if (!isLoading && authToken && id) {
-        const validateErrorMessage = validateProfileId(id);
+        const validateErrorMessage = localValidateMerchantId(id);
 
         if (validateErrorMessage) {
           return;
@@ -119,7 +119,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         }
       }
     },
-    [authToken, isLoading, validateProfileId]
+    [authToken, isLoading, localValidateMerchantId]
   );
 
   useEffect(() => {
@@ -171,7 +171,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     if (!isSubmitPressed) return;
 
     const businessIdValidateErrorMessage =
-      validateProfileId(businessId) ||
+      localValidateMerchantId(businessId) ||
       (isUniqueId ? undefined : strings.validation.businessIdShouldBeUnique);
 
     return {
@@ -185,13 +185,17 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     businessName,
     isUniqueId,
     businessId,
-    validateProfileId,
+    localValidateMerchantId,
   ]);
 
   const onSubmitForm = useCallback(() => {
     setIsSubmitPressed(true);
 
-    if (isUniqueId && businessName.trim() && !validateProfileId(businessId)) {
+    if (
+      isUniqueId &&
+      businessName.trim() &&
+      !localValidateMerchantId(businessId)
+    ) {
       onUpdateProfileForm({
         businessName,
         businessId,
@@ -207,7 +211,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     businessId,
     businessColor,
     params,
-    validateProfileId,
+    localValidateMerchantId,
   ]);
 
   const avatarName = useMemo(
