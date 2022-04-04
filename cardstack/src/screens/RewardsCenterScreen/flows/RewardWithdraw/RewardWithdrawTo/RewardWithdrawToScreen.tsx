@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { SafeSelectionList } from './components';
+import { SafeSelectionList } from '../components';
 import { strings } from './strings';
 import { useRewardWithdrawToScreen } from './useRewardWithdrawToScreen';
 import { Container, NavigationStackHeader } from '@cardstack/components';

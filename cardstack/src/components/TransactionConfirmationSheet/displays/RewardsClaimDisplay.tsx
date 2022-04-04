@@ -1,6 +1,6 @@
 import React from 'react';
 import { strings } from '../strings';
-import { RewardsNetAmountSection } from './components/sections/RewardsNetAmountSection';
+import { RewardsNetAmountSection } from './RewardsNetAmountSection';
 import { SectionCoinHeader } from './components/SectionCoinHeader';
 import {
   HorizontalDivider,
@@ -15,6 +15,7 @@ interface RewardsClaimDisplayProps extends TransactionConfirmationDisplayProps {
 export const RewardsClaimDisplay = ({ data }: RewardsClaimDisplayProps) => (
   <>
     <SectionCoinHeader
+      marginTop={8}
       title={strings.rewards.claim.title}
       symbol={data.token.symbol}
       primaryText={data.balance.display}

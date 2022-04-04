@@ -30,7 +30,7 @@ export const useRewardWithdrawToScreen = () => {
   );
 
   const onSafePress = useCallback(
-    safe => () => {
+    safe => {
       navigate(MainRoutes.REWARD_WITHDRAW_CONFIRMATION, {
         tokenInfo,
         fromRewardSafe: tokenInfo.safeAddress,

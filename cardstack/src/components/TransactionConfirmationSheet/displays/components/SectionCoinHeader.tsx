@@ -3,11 +3,12 @@ import { SectionHeaderText } from './SectionHeaderText';
 import {
   Container,
   CenteredContainer,
+  ContainerProps,
   Text,
   CoinIcon,
 } from '@cardstack/components';
 
-interface SectionIconTitleProps {
+interface SectionIconTitleProps extends ContainerProps {
   title: string;
   symbol: string;
   primaryText: string;
@@ -15,8 +16,14 @@ interface SectionIconTitleProps {
 }
 
 export const SectionCoinHeader = memo(
-  ({ title, symbol, primaryText, secondaryText }: SectionIconTitleProps) => (
-    <Container marginTop={8} width="100%">
+  ({
+    title,
+    symbol,
+    primaryText,
+    secondaryText,
+    ...rest
+  }: SectionIconTitleProps) => (
+    <Container width="100%" {...rest}>
       <SectionHeaderText>{title}</SectionHeaderText>
       <Container paddingHorizontal={2} marginTop={4}>
         <Container flexDirection="row">
