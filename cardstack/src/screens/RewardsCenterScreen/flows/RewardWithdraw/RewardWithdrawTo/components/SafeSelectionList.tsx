@@ -4,7 +4,11 @@ import { SafeSelectionItem } from './SafeSelectionItem';
 import { strings } from './strings';
 import { MerchantSafeType } from '@cardstack/types';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
-import { Container, InfoBanner } from '@cardstack/components';
+import {
+  Container,
+  HorizontalDivider,
+  InfoBanner,
+} from '@cardstack/components';
 
 interface SafeSelectionListProps {
   safes: MerchantSafeType[];
@@ -19,32 +23,25 @@ export const SafeSelectionList = ({
 
   const renderItem = useCallback(
     ({ item }) => (
-      <SafeSelectionItem
-        safe={item}
-        primary={item.address === primarySafe?.address}
-        onSafePress={onSafePress}
-      />
+      <>
+        <SafeSelectionItem
+          safe={item}
+          primary={item.address === primarySafe?.address}
+          onSafePress={onSafePress}
+        />
+        <HorizontalDivider />
+      </>
     ),
     [primarySafe, onSafePress]
-  );
-
-  const renderDivisor = useCallback(
-    () => <Container backgroundColor="borderGray" height={1} />,
-    []
   );
 
   const renderFooter = useCallback(
     () => (
       <Container>
-        {renderDivisor()}
-        <InfoBanner
-          paddingTop={5}
-          title={strings.note.title}
-          message={strings.note.message}
-        />
+        <InfoBanner title={strings.note.title} message={strings.note.message} />
       </Container>
     ),
-    [renderDivisor]
+    []
   );
 
   return (
@@ -53,7 +50,6 @@ export const SafeSelectionList = ({
       data={safes}
       keyExtractor={item => item.address}
       renderItem={renderItem}
-      ItemSeparatorComponent={renderDivisor}
       ListFooterComponent={renderFooter}
     />
   );
@@ -62,5 +58,6 @@ export const SafeSelectionList = ({
 const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
 });

@@ -29,7 +29,7 @@ export const SafeSelectionItem = memo(
     );
 
     return (
-      <CardPressable onPress={onSafePress(safe)} paddingVertical={8}>
+      <CardPressable onPress={onSafePress(safe)}>
         <Container flexDirection="row">
           <Container justifyContent="center" alignContent="center">
             <ContactAvatar {...avatarProps} />
@@ -38,10 +38,10 @@ export const SafeSelectionItem = memo(
             <Text variant="body" weight="bold">
               {safe.merchantInfo?.name || safe.type}
             </Text>
-            <Text size="xs" color="darkGrayText">
+            <Text size="xs" color="secondaryText">
               {typeText}
             </Text>
-            <Text size="xs" color="darkGrayText">
+            <Text size="xs" color="tertiaryText">
               {getAddressPreview(safe.address)}
             </Text>
           </Container>
