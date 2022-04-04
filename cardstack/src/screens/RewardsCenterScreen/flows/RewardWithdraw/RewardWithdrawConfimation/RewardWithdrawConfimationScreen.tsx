@@ -1,11 +1,14 @@
 import React, { memo } from 'react';
 import { strings } from './strings';
 import { useRewardWithdrawConfimationScreen } from './useRewardWithdrawConfimationScreen';
+import { SectionCoinHeader } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionCoinHeader';
+import { RewardsNetAmountSection } from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/RewardsNetAmountSection';
 import {
   Button,
   Container,
   NavigationStackHeader,
   Text,
+  HorizontalDivider,
 } from '@cardstack/components';
 
 const RewardWithdrawConfirmationScreen = () => {
@@ -18,6 +21,16 @@ const RewardWithdrawConfirmationScreen = () => {
   return (
     <Container backgroundColor="white" flex={1}>
       <NavigationStackHeader title={strings.headerTitle} />
+      <SectionCoinHeader
+        title={strings.withdraw.title}
+        symbol={tokenInfo.token.symbol}
+        primaryText={tokenInfo.balance.display}
+        secondaryText={tokenInfo.native.balance.display}
+      />
+      <HorizontalDivider />
+      {/* Selected Safe Display */}
+      <RewardsNetAmountSection headerText={strings.net.title} {...data} />
+
       <Container padding={4}>
         <Text>
           {tokenInfo.token.name} {tokenInfo.balance.display}
