@@ -35,7 +35,9 @@ export const InfoBanner = ({
           {title}
         </Text>
       </Container>
-      <Text size="xs">{message}</Text>
+      <Text size="xs" color="secondaryText">
+        {message}
+      </Text>
     </Container>
   </Container>
 );
