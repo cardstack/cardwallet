@@ -12,7 +12,7 @@ import {
 
 interface SafeSelectionListProps {
   safes: MerchantSafeType[];
-  onSafePress: (safe: MerchantSafeType) => () => void;
+  onSafePress: (safe: MerchantSafeType) => void;
 }
 
 export const SafeSelectionList = ({

@@ -3,6 +3,9 @@ export const strings = {
   withdraw: {
     title: 'WITHDRAW THIS AMOUNT',
   },
+  withdrawTo: {
+    title: 'WITHDRAW TO',
+  },
   net: {
     title: 'NET AMOUNT',
     amount: 'AMOUNT',
