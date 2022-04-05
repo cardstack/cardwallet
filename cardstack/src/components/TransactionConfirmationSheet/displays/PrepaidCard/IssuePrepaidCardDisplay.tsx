@@ -1,5 +1,6 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 import { SectionHeaderText } from '../components/SectionHeaderText';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
@@ -10,31 +11,35 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
-import { IssuePrepaidCardDecodedData } from '@cardstack/types';
 import {
-  getDepotTokenByAddress,
+  IssuePrepaidCardDecodedData,
+  DepotType,
+  MerchantSafeType,
+} from '@cardstack/types';
+import {
+  getSafeTokenByAddress,
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
 import { useAccountProfile } from '@rainbow-me/hooks';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { useGetSafesDataQuery } from '@cardstack/services';
 
 interface IssuePrepaidCardDisplayProps
   extends TransactionConfirmationDisplayProps {
   data: IssuePrepaidCardDecodedData;
 }
 
+export type IssuableSafeType = DepotType | MerchantSafeType;
+
 export const IssuePrepaidCardDisplay = (
   props: IssuePrepaidCardDisplayProps
 ) => {
-  const { message, data } = props;
+  const { data, message } = props;
 
   return (
     <>
-      <FromSection tokenAddress={message.to} />
+      <FromSection safeAddress={data.safeAddress} tokenAddress={message.to} />
       <HorizontalDivider />
       <LoadSection data={data} />
       <HorizontalDivider />
@@ -43,14 +48,39 @@ export const IssuePrepaidCardDisplay = (
   );
 };
 
-const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
-  const { accountColor, accountName, accountSymbol } = useAccountProfile();
+const FromSection = ({
+  safeAddress,
+  tokenAddress,
+}: {
+  safeAddress?: string;
+  tokenAddress: string;
+}) => {
+  const {
+    accountAddress,
+    accountColor,
+    accountName,
+    accountSymbol,
+  } = useAccountProfile();
 
-  const depots = useRainbowSelector(state => state.data.depots);
-  const depot = depots?.[0];
+  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
 
-  const token = getDepotTokenByAddress(depot, tokenAddress);
+  const { fromSafe, isLoadingSafe } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
+    {
+      selectFromResult: ({ data, isLoading, isUninitialized }) => ({
+        fromSafe: [
+          ...(data?.merchantSafes || []),
+          ...(data?.depots || []),
+        ].find(safe => safe && safe.address === safeAddress),
+        isLoadingSafe: isLoading || isUninitialized,
+      }),
+    }
+  );
 
+  const safeTypeText =
+    fromSafe?.merchantInfo?.name || fromSafe?.type.toUpperCase();
+
+  const token = getSafeTokenByAddress(fromSafe, tokenAddress);
   const tokenBalance = token ? token.balance.display : 'Insufficient Funds';
 
   return (
@@ -66,15 +96,23 @@ const FromSection = ({ tokenAddress }: { tokenAddress: string }) => {
           <Container marginLeft={4}>
             <Text weight="extraBold">{accountName}</Text>
             <NetworkBadge marginTop={2} />
-            {depot && (
+            {isLoadingSafe ? (
+              <Container
+                marginTop={2}
+                flexDirection="row"
+                justifyContent="flex-start"
+              >
+                <ActivityIndicator size="small" />
+              </Container>
+            ) : (
               <Container flexDirection="row" marginTop={2}>
                 <Container backgroundColor="black" width={2} height="100%" />
                 <Container marginLeft={4}>
                   <Text size="xxs" weight="bold">
-                    DEPOT
+                    {safeTypeText || ''}
                   </Text>
                   <Container maxWidth={180} marginTop={1}>
-                    <Text variant="subAddress">{depot.address}</Text>
+                    <Text variant="subAddress">{safeAddress}</Text>
                   </Container>
                   <Text fontSize={15} weight="extraBold">
                     {tokenBalance}

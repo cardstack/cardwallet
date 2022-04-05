@@ -1,3 +1,4 @@
+import { TokenType } from '.';
 export interface BalanceType {
   amount: string;
   display: string;
@@ -32,4 +33,9 @@ export interface AssetWithNativeType extends AssetType {
       display: string;
     };
   };
+}
+
+export interface AssetWithTokensType extends AssetType {
+  address: string;
+  tokens: Array<TokenType>;
 }

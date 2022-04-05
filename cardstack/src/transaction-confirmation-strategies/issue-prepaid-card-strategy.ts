@@ -48,6 +48,7 @@ export class IssuePrepaidCardStrategy extends BaseStrategyWithLevel1Data {
       ...this.level1Data,
       ...decodedPrepaidCardData,
       token: tokenData,
+      safeAddress: this.verifyingContract,
       type: TransactionConfirmationType.ISSUE_PREPAID_CARD,
     };
   }

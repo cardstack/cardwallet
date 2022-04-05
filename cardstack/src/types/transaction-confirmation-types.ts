@@ -44,6 +44,7 @@ export interface IssuePrepaidCardDecodedData {
   customizationDID: string;
   token: TokenData;
   type: TransactionConfirmationType.ISSUE_PREPAID_CARD;
+  safeAddress?: string;
 }
 
 export interface RegisterMerchantDecodedData {
