@@ -49,8 +49,16 @@ export const overlayPreset: StackNavigationOptions = {
   cardStyleInterpolator: forFade,
 };
 
+/**
+ * With keyboardHandlingEnabled disabled on Android Nav
+ * we may need to manually dismiss the keyboard, iOS handles automatically
+ * ref: https://github.com/react-navigation/react-navigation/issues/10080
+ *  */
+export const dismissKeyboardOnAndroid = () =>
+  Device.isAndroid && Keyboard.dismiss();
+
 export const dismissAndroidKeyboardOnClose: ScreenNavigation['listeners'] = {
   transitionStart: ({ data: { closing } }) => {
-    closing && Device.isAndroid && Keyboard.dismiss();
+    closing && dismissKeyboardOnAndroid();
   },
 };

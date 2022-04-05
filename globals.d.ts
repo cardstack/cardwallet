@@ -13,8 +13,4 @@ declare module 'react-native-keychain' {
   export function getAllInternetCredentials(): Promise<null | {
     results: rnKeychain.UserCredentials[];
   }>;
-
-  export function getAllInternetCredentialsKeys(): Promise<null | {
-    results: string[];
-  }>;
 }

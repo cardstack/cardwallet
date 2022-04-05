@@ -1,5 +1,6 @@
 import { useRoute } from '@react-navigation/core';
-import React, { useMemo } from 'react';
+import React, { memo } from 'react';
+import { strings } from './strings';
 import { Container, Sheet, Text, TextOptionRow } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 
@@ -12,37 +13,33 @@ const ConfirmClaimDestinySheet = () => {
     params: { onClaimAllPress },
   } = useRoute<RouteType<Params>>();
 
-  // Workaround to avoid not dismiss modal
-  return useMemo(
-    () => (
-      <Sheet
-        Header={
-          <Container paddingHorizontal={5} paddingVertical={3}>
-            <Text size="medium">How do you want to claim?</Text>
-          </Container>
-        }
-      >
-        <Container paddingHorizontal={5} paddingVertical={2}>
-          <TextOptionRow
-            description="Claim to your account balance."
-            onPress={onClaimAllPress}
-            title="Claim to Account"
-          />
-          <TextOptionRow
-            description="Refill or top up an existing prepaid card."
-            disabled
-            title="Refill Existing Prepaid Card"
-          />
-          <TextOptionRow
-            description="Create a new prepaid card with the balance to pay others with."
-            disabled
-            title="Create New Prepaid Card"
-          />
+  return (
+    <Sheet
+      Header={
+        <Container paddingHorizontal={5} paddingVertical={3}>
+          <Text size="medium">{strings.header}</Text>
         </Container>
-      </Sheet>
-    ),
-    [onClaimAllPress]
+      }
+    >
+      <Container paddingHorizontal={5} paddingVertical={2}>
+        <TextOptionRow
+          title={strings.claim.title}
+          description={strings.claim.description}
+          onPress={onClaimAllPress}
+        />
+        <TextOptionRow
+          title={strings.refill.title}
+          description={strings.refill.description}
+          disabled
+        />
+        <TextOptionRow
+          title={strings.create.title}
+          description={strings.create.description}
+          disabled
+        />
+      </Container>
+    </Sheet>
   );
 };
 
-export default ConfirmClaimDestinySheet;
+export default memo(ConfirmClaimDestinySheet);

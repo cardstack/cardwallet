@@ -12,6 +12,7 @@ import WalletTypes from '../helpers/walletTypes';
 import {
   allWalletsKey,
   iCloudKey,
+  pinKey,
   privateKeyKey,
   seedPhraseKey,
   selectedWalletKey,
@@ -83,6 +84,11 @@ async function extractSecretsForWallet(wallet: RainbowWallet) {
       item.username.indexOf(`_${privateKeyKey}`) !== -1 &&
       allowedPkeysKeys.indexOf(item.username) === -1
     ) {
+      return;
+    }
+
+    // Ignore pinKey
+    if (item.username === pinKey) {
       return;
     }
 
