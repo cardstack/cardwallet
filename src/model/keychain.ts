@@ -1,6 +1,5 @@
 import { delay } from '@cardstack/cardpay-sdk';
 import { captureException, captureMessage } from '@sentry/react-native';
-import { forEach, isNil } from 'lodash';
 import DeviceInfo from 'react-native-device-info';
 import {
   ACCESS_CONTROL,
@@ -8,7 +7,6 @@ import {
   AUTHENTICATION_TYPE,
   canImplyAuthentication,
   getAllInternetCredentials,
-  getAllInternetCredentialsKeys,
   getInternetCredentials,
   getSupportedBiometryType,
   hasInternetCredentials,
@@ -20,16 +18,6 @@ import {
 } from 'react-native-keychain';
 import { Device } from '@cardstack/utils/device';
 import logger from 'logger';
-
-interface AnonymousKey {
-  length: number;
-  nil: boolean;
-  type: string;
-}
-
-interface AnonymousKeyData {
-  [key: string]: AnonymousKey;
-}
 
 export async function saveString(
   key: string,
@@ -137,32 +125,6 @@ export async function loadAllKeys(): Promise<null | UserCredentials[]> {
     }
   } catch (err) {
     logger.sentry(`Keychain: failed to loadAllKeys error: ${err}`);
-    captureException(err);
-  }
-  return null;
-}
-
-export async function getAllKeysAnonymized(): Promise<null | AnonymousKeyData> {
-  const data: AnonymousKeyData = {};
-  const results = await loadAllKeys();
-  forEach(results, result => {
-    data[result?.username] = {
-      length: result?.password?.length,
-      nil: isNil(result?.password),
-      type: typeof result?.password,
-    };
-  });
-  return data;
-}
-
-export async function loadAllKeysOnly(): Promise<null | string[]> {
-  try {
-    const response = await getAllInternetCredentialsKeys();
-    if (response) {
-      return response.results;
-    }
-  } catch (err) {
-    logger.log(`Keychain: failed to loadAllKeys error: ${err}`);
     captureException(err);
   }
   return null;

@@ -36,7 +36,10 @@ import {
 } from '@rainbow-me/utils';
 import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import { useLoadingOverlay } from '@cardstack/navigation';
+import {
+  dismissKeyboardOnAndroid,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 
 const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();
@@ -97,6 +100,8 @@ const useImportSeedSheet = () => {
       Network.mainnet
     );
 
+    dismissKeyboardOnAndroid();
+
     try {
       setBusy(true);
 
@@ -110,6 +115,7 @@ const useImportSeedSheet = () => {
         (await mainnetProvider.lookupAddress?.(walletResult.address)) || null;
 
       setBusy(false);
+
       showWalletProfileModal(ens);
     } catch (error) {
       logger.log('Error looking up ENS for imported HD type wallet', error);
