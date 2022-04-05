@@ -17,7 +17,7 @@ import {
   MerchantSafeType,
 } from '@cardstack/types';
 import {
-  getDepotTokenByAddress,
+  getSafeTokenByAddress,
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
@@ -64,24 +64,23 @@ const FromSection = ({
 
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
 
-  const { fromSafes } = useGetSafesDataQuery(
+  const { fromSafe, isLoadingSafe } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
-      selectFromResult: ({ data }) => ({
-        fromSafes: [
+      selectFromResult: ({ data, isLoading, isUninitialized }) => ({
+        fromSafe: [
           ...(data?.merchantSafes || []),
           ...(data?.depots || []),
-        ].filter(safe => safe && safe.address === safeAddress),
+        ].find(safe => safe && safe.address === safeAddress),
+        isLoadingSafe: isLoading || isUninitialized,
       }),
     }
   );
 
-  const fromSafe = fromSafes?.[0];
-
   const safeTypeText =
     fromSafe?.type === 'depot' ? 'DEPOT' : fromSafe?.merchantInfo?.name;
 
-  const token = getDepotTokenByAddress(fromSafe, tokenAddress);
+  const token = getSafeTokenByAddress(fromSafe, tokenAddress);
   const tokenBalance = token ? token.balance.display : 'Insufficient Funds';
 
   return (
@@ -97,12 +96,20 @@ const FromSection = ({
           <Container marginLeft={4}>
             <Text weight="extraBold">{accountName}</Text>
             <NetworkBadge marginTop={2} />
-            {fromSafe ? (
+            {isLoadingSafe ? (
+              <Container
+                marginTop={2}
+                flexDirection="row"
+                justifyContent="flex-start"
+              >
+                <ActivityIndicator size="small" />
+              </Container>
+            ) : (
               <Container flexDirection="row" marginTop={2}>
                 <Container backgroundColor="black" width={2} height="100%" />
                 <Container marginLeft={4}>
                   <Text size="xxs" weight="bold">
-                    {safeTypeText}
+                    {safeTypeText || ''}
                   </Text>
                   <Container maxWidth={180} marginTop={1}>
                     <Text variant="subAddress">{safeAddress}</Text>
@@ -111,10 +118,6 @@ const FromSection = ({
                     {tokenBalance}
                   </Text>
                 </Container>
-              </Container>
-            ) : (
-              <Container marginTop={2}>
-                <ActivityIndicator size="small" />
               </Container>
             )}
           </Container>

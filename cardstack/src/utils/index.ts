@@ -10,6 +10,7 @@ export * from './device';
 export * from './sorting-utils';
 export * from './depot-utils';
 export * from './hooks-utilities';
+export * from './safe-utils';
 export * from './url-utils';
 export * from './wyre-utils';
 export * from './layouts';
