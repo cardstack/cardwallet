@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useContext } from 'react';
 import { Alert, ScrollView } from 'react-native';
-import { Restart } from 'react-native-restart';
+import RNRestart from 'react-native-restart';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
 import { RadioListItem } from '../radio-list';
@@ -48,7 +48,7 @@ const DeveloperSettings = () => {
     await deleteAllBackups();
 
     Alert.alert('Backups deleted succesfully');
-    Restart();
+    RNRestart.Restart();
   };
 
   return (
@@ -63,7 +63,7 @@ const DeveloperSettings = () => {
         onPress={wipeKeychain}
         testID="reset-keychain-section"
       />
-      <ListItem label="🔄 Restart app" onPress={Restart} />
+      <ListItem label="🔄 Restart app" onPress={() => RNRestart.Restart()} />
       <ListItem label="🗑️ Remove all backups" onPress={removeBackups} />
       <ListItem
         label="🤷 Restore default experimental config"
