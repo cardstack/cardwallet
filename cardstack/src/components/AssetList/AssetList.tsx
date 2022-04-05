@@ -11,10 +11,6 @@ import { strings } from './strings';
 import AssetSectionHeader from './components/AssetSectionHeader';
 import { useAssetList } from './useAssetList';
 import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';
-import {
-  DiscordPromoBanner,
-  useDiscordPromoBanner,
-} from '@cardstack/components/DiscordPromoBanner';
 import { Container, Text, RewardsPromoBanner } from '@cardstack/components';
 import logger from 'logger';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
@@ -35,11 +31,6 @@ export const AssetList = () => {
   const { isTabBarEnabled } = useTabBarFlag();
 
   const {
-    showPromoBanner,
-    onPress: onDiscordPromoPress,
-  } = useDiscordPromoBanner();
-
-  const {
     sections,
     isFetchingSafes,
     isLoading,
@@ -51,19 +42,8 @@ export const AssetList = () => {
   } = useAssetList({ sectionListRef });
 
   const renderPromoBanner = useMemo(() => {
-    if (isTabBarEnabled) {
-      return null;
-    }
-
-    return (
-      <>
-        <RewardsPromoBanner />
-        {showPromoBanner ? (
-          <DiscordPromoBanner onPress={onDiscordPromoPress} />
-        ) : null}
-      </>
-    );
-  }, [isTabBarEnabled, showPromoBanner, onDiscordPromoPress]);
+    return !isTabBarEnabled ? <RewardsPromoBanner /> : null;
+  }, [isTabBarEnabled]);
 
   const renderSectionHeader = useCallback(
     ({ section }) => (
