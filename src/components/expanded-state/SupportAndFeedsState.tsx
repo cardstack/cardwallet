@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { Container, Sheet, Text } from '@cardstack/components';
 import { supportedCountries } from '@rainbow-me/references/wyre';
@@ -38,43 +38,35 @@ const SupportAndFeedsState = () => {
     []
   );
 
-  // Workaround to avoid not dismiss modal
-  return useMemo(
-    () => (
-      <Sheet isFullScreen scrollEnabled>
-        <Container marginBottom={12} padding={6}>
-          <Text
-            color="black"
-            paddingBottom={12}
-            size="medium"
-            textAlign="center"
-            weight="bold"
-          >
-            {strings.header}
-          </Text>
-          <SectionHeaderText text={strings.activation.title} />
-          <Text>{strings.activation.faceValueList}</Text>
-          <Container paddingVertical={3}>
-            <TextBoldStart
-              info={strings.activation.limits.usa.info}
-              title={strings.activation.limits.usa.title}
-            />
-            <TextBoldStart
-              info={strings.activation.limits.international.info}
-              title={strings.activation.limits.international.title}
-            />
-          </Container>
-          <Text marginBottom={10}>{strings.activation.footerInfo}</Text>
-          <SectionHeaderText text={strings.supportedCountriesTitle} />
-          <FlatList
-            data={countriesKeys}
-            numColumns={2}
-            renderItem={renderItem}
+  return (
+    <Sheet isFullScreen scrollEnabled>
+      <Container marginBottom={12} padding={6}>
+        <Text
+          color="black"
+          paddingBottom={12}
+          size="medium"
+          textAlign="center"
+          weight="bold"
+        >
+          {strings.header}
+        </Text>
+        <SectionHeaderText text={strings.activation.title} />
+        <Text>{strings.activation.faceValueList}</Text>
+        <Container paddingVertical={3}>
+          <TextBoldStart
+            info={strings.activation.limits.usa.info}
+            title={strings.activation.limits.usa.title}
+          />
+          <TextBoldStart
+            info={strings.activation.limits.international.info}
+            title={strings.activation.limits.international.title}
           />
         </Container>
-      </Sheet>
-    ),
-    [renderItem]
+        <Text marginBottom={10}>{strings.activation.footerInfo}</Text>
+        <SectionHeaderText text={strings.supportedCountriesTitle} />
+        <FlatList data={countriesKeys} numColumns={2} renderItem={renderItem} />
+      </Container>
+    </Sheet>
   );
 };
 
@@ -93,4 +85,4 @@ const SectionHeaderText = ({ text }: { text: string }) => (
   </Text>
 );
 
-export default SupportAndFeedsState;
+export default memo(SupportAndFeedsState);
