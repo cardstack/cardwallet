@@ -125,7 +125,7 @@ const rewardsApi = safesApi.injectEndpoints({
           resetHdProvider: true,
         });
       },
-      invalidatesTags: [CacheTags.REWARDS_SAFE],
+      invalidatesTags: [CacheTags.REWARDS_SAFE, CacheTags.SAFES],
     }),
   }),
 });
