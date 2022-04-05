@@ -12,4 +12,5 @@ export const strings = {
     estGas: 'EST. GAS AMOUNT',
     estNet: 'EST. NET WITHDRAW',
   },
+  loading: 'Withdrawing reward funds',
 };

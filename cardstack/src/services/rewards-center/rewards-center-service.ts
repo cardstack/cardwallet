@@ -19,6 +19,8 @@ import {
   RewardsRegisterMutationParams,
   RewardsSafeQueryParams,
   RewardsSafeType,
+  RewardWithdrawGasEstimateParams,
+  RewardWithdrawParams,
   ValidProofsParams,
 } from './rewards-center-types';
 import { getSafesInstance } from '@cardstack/models';
@@ -195,6 +197,24 @@ export const getClaimRewardsGasEstimate = async ({
   return formattedTotalEstimatedGas;
 };
 
+export const getWithdrawGasEstimate = async ({
+  from,
+  to,
+  tokenAddress,
+  amount,
+}: RewardWithdrawGasEstimateParams) => {
+  const rewardManager = await getRewardManagerInstance();
+
+  const gasEstimate = await rewardManager.withdrawGasEstimate(
+    from,
+    to,
+    tokenAddress,
+    amount
+  );
+
+  return gasEstimate.amount;
+};
+
 // Mutations
 
 export const registerToRewardProgram = async ({
@@ -254,4 +274,27 @@ export const claimRewards = async ({
   cachedValidProofs = null;
 
   return receipts;
+};
+
+export const withdrawFromRewardSafe = async ({
+  from,
+  to,
+  tokenAddress,
+  amount,
+  accountAddress,
+  walletId,
+  network,
+}: RewardWithdrawParams) => {
+  const rewardManager = await getRewardManagerInstance({ walletId, network });
+
+  const result = await rewardManager.withdraw(
+    from,
+    to,
+    tokenAddress,
+    amount,
+    undefined,
+    { from: accountAddress }
+  );
+
+  return result;
 };

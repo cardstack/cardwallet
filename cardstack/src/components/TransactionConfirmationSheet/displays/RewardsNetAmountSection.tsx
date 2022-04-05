@@ -26,7 +26,7 @@ export const RewardsNetAmountSection = ({
       },
       {
         description: strings.rewards.claim.breakdownSection.estGas,
-        valueDisplay: `${estGasFee} ${token?.symbol}`,
+        valueDisplay: `-${estGasFee} ${token?.symbol}`,
       },
       {
         description: strings.rewards.claim.breakdownSection.estNet,

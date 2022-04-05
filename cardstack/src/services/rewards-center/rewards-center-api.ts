@@ -1,3 +1,4 @@
+import BN from 'bn.js';
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 import {
@@ -8,6 +9,8 @@ import {
   RewardsSafeQueryParams,
   RewardsSafeQueryResult,
   RewardsTokenBalancesResult,
+  RewardWithdrawGasEstimateParams,
+  RewardWithdrawParams,
   SuccessfulTransactionReceipt,
 } from './rewards-center-types';
 import {
@@ -15,7 +18,9 @@ import {
   fetchRewardPoolTokenBalances,
   fetchRewardsSafe,
   getRegisterGasEstimate,
+  getWithdrawGasEstimate,
   registerToRewardProgram,
+  withdrawFromRewardSafe,
 } from './rewards-center-service';
 
 const rewardsApi = safesApi.injectEndpoints({
@@ -63,6 +68,20 @@ const rewardsApi = safesApi.injectEndpoints({
         );
       },
     }),
+    getRewardWithdrawGasEstimate: builder.query<
+      BN,
+      RewardWithdrawGasEstimateParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<BN, RewardWithdrawGasEstimateParams>(
+          getWithdrawGasEstimate,
+          params,
+          {
+            errorLogMessage: 'Error fetching reward withdraw gas estimate',
+          }
+        );
+      },
+    }),
     registerToRewardProgram: builder.mutation<
       RewardsRegisterMutationResult,
       RewardsRegisterMutationParams
@@ -93,6 +112,21 @@ const rewardsApi = safesApi.injectEndpoints({
       },
       invalidatesTags: [CacheTags.REWARDS_SAFE, CacheTags.REWARDS_POOL],
     }),
+    withdrawRewardBalance: builder.mutation<
+      SuccessfulTransactionReceipt,
+      RewardWithdrawParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<
+          SuccessfulTransactionReceipt,
+          RewardWithdrawParams
+        >(withdrawFromRewardSafe, params, {
+          errorLogMessage: 'Error while withdrawing reward balance',
+          resetHdProvider: true,
+        });
+      },
+      invalidatesTags: [CacheTags.REWARDS_SAFE],
+    }),
   }),
 });
 
@@ -102,4 +136,6 @@ export const {
   useRegisterToRewardProgramMutation,
   useClaimRewardsMutation,
   useLazyGetRegisterRewardeeGasEstimateQuery,
+  useWithdrawRewardBalanceMutation,
+  useGetRewardWithdrawGasEstimateQuery,
 } = rewardsApi;

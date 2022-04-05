@@ -269,17 +269,14 @@ export const addNativePriceToToken = async (
 
   const isAmountDust = nativeBalance < 0.01;
 
-  // Decimal places formatting for residual crypto values.
-  // Using "2" is a workaround to a exception happening in
-  // handleSignificantDecimals function in SDK.
-  const bufferValue = isAmountDust ? 2 : undefined;
-
   const amount = isAmountDust ? 0 : nativeBalance;
+
+  const tokenBalance = isAmountDust ? 0 : balance;
 
   return {
     ...tokenInfo,
     balance: {
-      ...convertRawAmountToBalance(balance, { symbol, decimals }, bufferValue),
+      ...convertRawAmountToBalance(tokenBalance, { symbol, decimals }),
       wei: balance,
     },
     native: {
@@ -317,141 +314,4 @@ export const getRevenuePoolBalances = async (
   );
 
   return revenueTokensWithPrice;
-};
-
-export const getTokensWithPrice = async (
-  tokens: TokenInfo[],
-  nativeCurrency: string
-) =>
-  Promise.all(
-    tokens.map(async tokenItem => {
-      const {
-        balance,
-        token: { symbol },
-      } = tokenItem;
-
-      const nativeBalance = await getNativeBalanceFromOracle({
-        nativeCurrency,
-        balance,
-        symbol,
-      });
-
-      const isAmountDust = nativeBalance < 0.01;
-
-      //decimal places formatting for residual crypto values
-      const bufferValue = isAmountDust ? 0 : undefined;
-      return {
-        ...tokenItem,
-        balance: {
-          ...convertRawAmountToBalance(
-            tokenItem.balance,
-            tokenItem.token,
-            bufferValue
-          ),
-          wei: tokenItem.balance,
-        },
-        native: {
-          balance: {
-            amount: nativeBalance,
-            display: convertAmountToNativeDisplay(
-              nativeBalance,
-              nativeCurrency,
-              bufferValue
-            ),
-          },
-        },
-      };
-    })
-  );
-
-export const addGnosisTokenPrices = async (
-  payload: any,
-  network: string,
-  accountAddress: string,
-  nativeCurrency: string
-) => {
-  const { depots, merchantSafes, prepaidCards } = payload;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const web3 = await Web3Instance.get();
-
-  if (depots?.length || merchantSafes?.length || prepaidCards?.length) {
-    const revenuePool = await getSDK('RevenuePool', web3);
-
-    const [
-      depotsWithPrice,
-      prepaidCardsWithPrice,
-      merchantSafesWithPrice,
-    ] = await Promise.all([
-      await Promise.all(
-        depots.map(async (depot: any) => {
-          const tokensWithPrice = await getTokensWithPrice(
-            depot.tokens,
-            nativeCurrency
-          );
-
-          return {
-            ...depot,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-      await Promise.all(
-        prepaidCards.map(async (prepaidCard: any) => {
-          const tokensWithPrice = await getTokensWithPrice(
-            prepaidCard.tokens,
-            nativeCurrency
-          );
-
-          return {
-            ...prepaidCard,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-      await Promise.all(
-        merchantSafes.map(async (merchantSafe: any) => {
-          const revenueBalances = await revenuePool.balances(
-            merchantSafe.address
-          );
-
-          const [tokensWithPrice, revenueBalancesWithPrice] = await Promise.all(
-            [
-              getTokensWithPrice(merchantSafe.tokens, nativeCurrency),
-              getTokensWithPrice(
-                revenueBalances.map(
-                  revenueToken =>
-                    (({
-                      ...revenueToken,
-                      token: {
-                        symbol: revenueToken.tokenSymbol,
-                      },
-                    } as unknown) as TokenInfo)
-                ),
-                nativeCurrency
-              ),
-            ]
-          );
-
-          return {
-            ...merchantSafe,
-            revenueBalances: revenueBalancesWithPrice,
-            tokens: tokensWithPrice,
-          };
-        })
-      ),
-    ]);
-
-    return {
-      depots: depotsWithPrice,
-      prepaidCards: prepaidCardsWithPrice,
-      merchantSafes: merchantSafesWithPrice,
-    };
-  }
-
-  return {
-    depots: [],
-    prepaidCards: [],
-    merchantSafes: [],
-  };
 };

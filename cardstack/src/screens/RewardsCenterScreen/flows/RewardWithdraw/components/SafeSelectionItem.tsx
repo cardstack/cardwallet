@@ -1,5 +1,6 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
+import { DepotSafe } from '@cardstack/cardpay-sdk';
 import { strings } from './strings';
 import { getAddressPreview } from '@cardstack/utils';
 import {
@@ -13,10 +14,17 @@ import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { MerchantSafeType } from '@cardstack/types';
 import { palette } from '@cardstack/theme';
 
-interface SafeSelectionItemProps {
-  safe: MerchantSafeType;
+type OptionalUnion<T1, T2> = {
+  [P in keyof Omit<T1 & T2, keyof (T1 | T2)>]?: (T1 & T2)[P];
+} &
+  (T1 | T2);
+
+type MerchantOrDepotSafe = OptionalUnion<MerchantSafeType, DepotSafe>;
+
+export interface SafeSelectionItemProps {
+  safe: MerchantOrDepotSafe;
   primary?: boolean;
-  onSafePress?: (safe: MerchantSafeType) => void;
+  onSafePress?: (safe: MerchantOrDepotSafe) => void;
   detailIconName?: IconName;
 }
 
@@ -29,29 +37,35 @@ export const SafeSelectionItem = memo(
   }: SafeSelectionItemProps) => {
     const typeText = primary ? strings.primary : strings[safe.type];
 
-    const avatarProps = useMemo(
-      () => ({
-        color: safe.merchantInfo?.color || palette.redDark,
-        value: safe.merchantInfo?.name || safe.type,
-        textColor: safe.merchantInfo?.textColor || 'white',
-        size: 'large',
-        style: styles.avatar,
-      }),
+    const merchantInfoOrSafeType = useMemo(
+      () => safe?.merchantInfo?.name || strings[safe.type],
       [safe]
     );
 
+    const avatarProps = useMemo(
+      () => ({
+        color: safe?.merchantInfo?.color || palette.redDark,
+        value: merchantInfoOrSafeType,
+        textColor: safe?.merchantInfo?.textColor || 'white',
+        size: 'large',
+        style: styles.avatar,
+      }),
+      [merchantInfoOrSafeType, safe]
+    );
+
+    const onPress = useCallback(() => {
+      onSafePress?.(safe);
+    }, [onSafePress, safe]);
+
     return (
-      <CardPressable
-        onPress={() => onSafePress?.(safe)}
-        disabled={!onSafePress}
-      >
+      <CardPressable onPress={onPress} disabled={!onSafePress}>
         <Container flexDirection="row">
           <Container justifyContent="center" alignContent="center">
             <ContactAvatar {...avatarProps} />
           </Container>
           <Container flex={1} paddingHorizontal={3}>
             <Text variant="body" weight="bold">
-              {safe.merchantInfo?.name || safe.type}
+              {merchantInfoOrSafeType}
             </Text>
             <Text size="xs" weight="semibold" color="secondaryText">
               {typeText}

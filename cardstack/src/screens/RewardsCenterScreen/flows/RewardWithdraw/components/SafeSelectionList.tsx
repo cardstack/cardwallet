@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { SafeSelectionItem } from './SafeSelectionItem';
+import { SafeSelectionItem, SafeSelectionItemProps } from './SafeSelectionItem';
 import { strings } from './strings';
-import { MerchantSafeType } from '@cardstack/types';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import {
   Container,
@@ -10,9 +9,9 @@ import {
   InfoBanner,
 } from '@cardstack/components';
 
-interface SafeSelectionListProps {
-  safes: MerchantSafeType[];
-  onSafePress: (safe: MerchantSafeType) => void;
+interface SafeSelectionListProps
+  extends Pick<SafeSelectionItemProps, 'onSafePress'> {
+  safes: SafeSelectionItemProps['safe'][];
 }
 
 export const SafeSelectionList = ({
