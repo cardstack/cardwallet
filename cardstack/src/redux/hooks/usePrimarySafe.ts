@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
 import {
   changePrimarySafe as setPrimarySafeAccount,
   selectPrimarySafe,
@@ -63,12 +62,6 @@ export const usePrimarySafe = () => {
       }
     }
   }, [changePrimarySafe, primarySafe, merchantSafes, isFetching]);
-
-  const onRefresh = useCallback(() => {
-    refetch && refetch();
-  }, [refetch]);
-
-  useFocusEffect(onRefresh);
 
   return {
     error,

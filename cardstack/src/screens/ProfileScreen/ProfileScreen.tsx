@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { CreateProfile, strings } from './components';
 import { Container, MainHeader, MerchantContent } from '@cardstack/components';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
@@ -22,6 +23,12 @@ const ProfileScreen = () => {
       ),
     [primarySafe, isFetching, refetch, safesCount]
   );
+
+  const onRefresh = useCallback(() => {
+    refetch && refetch();
+  }, [refetch]);
+
+  useFocusEffect(onRefresh);
 
   return (
     <Container
