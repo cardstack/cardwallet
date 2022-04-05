@@ -8,6 +8,10 @@ import {
 } from '../../model/backup';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
+import {
+  dismissKeyboardOnAndroid,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import {
   cloudBackupPasswordMinLength,
@@ -16,11 +20,7 @@ import {
 import { removeWalletData } from '@rainbow-me/handlers/localstorage/removeWallet';
 import walletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
-import {
-  useAccountSettings,
-  useWalletManager,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountSettings, useWalletManager } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import { setWalletBackedUp, walletsLoadState } from '@rainbow-me/redux/wallets';
 import Routes from '@rainbow-me/routes';
@@ -34,7 +34,6 @@ export default function RestoreCloudStep({
   const selectedBackupName = backupSelected?.name;
   const dispatch = useDispatch();
   const { navigate, goBack, replace } = useNavigation();
-  const { setIsWalletLoading } = useWallets();
   const [validPassword, setValidPassword] = useState(false);
   const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [password, setPassword] = useState('');
@@ -79,9 +78,13 @@ export default function RestoreCloudStep({
     []
   );
 
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+
   const onSubmit = useCallback(async () => {
     try {
-      setIsWalletLoading(WalletLoadingStates.RESTORING_WALLET);
+      dismissKeyboardOnAndroid();
+
+      showLoadingOverlay({ title: WalletLoadingStates.RESTORING_WALLET });
       const success = await restoreCloudBackup(
         password,
         userData,
@@ -93,8 +96,6 @@ export default function RestoreCloudStep({
 
         // Get rid of the current wallet
         await removeWalletData(accountAddress);
-
-        goBack();
 
         InteractionManager.runAfterInteractions(async () => {
           const wallets = await dispatch(walletsLoadState());
@@ -127,28 +128,28 @@ export default function RestoreCloudStep({
           } else {
             replace(Routes.SWIPE_LAYOUT);
           }
-          setIsWalletLoading(null);
         });
       } else {
         setIncorrectPassword(true);
-        setIsWalletLoading(null);
+        dismissLoadingOverlay();
       }
     } catch (e) {
-      setIsWalletLoading(null);
+      dismissLoadingOverlay();
       Alert.alert('Error while restoring backup');
     }
   }, [
-    setIsWalletLoading,
-    password,
-    userData,
-    selectedBackupName,
     accountAddress,
-    goBack,
-    dispatch,
     changeSelectedWallet,
+    dismissLoadingOverlay,
+    dispatch,
     fromSettings,
+    goBack,
     navigate,
+    password,
     replace,
+    selectedBackupName,
+    showLoadingOverlay,
+    userData,
   ]);
 
   const onPasswordSubmit = useCallback(() => {
