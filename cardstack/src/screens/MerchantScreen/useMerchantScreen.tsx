@@ -8,13 +8,14 @@ import { useGetSafesDataQuery } from '@cardstack/services';
 import { RouteType } from '@cardstack/navigation/types';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { MerchantContentProps } from '@cardstack/components';
+import { isLayer1 } from '@cardstack/utils';
 
 export const useMerchantScreen = () => {
   const {
     params: { merchantSafe: merchantSafeFallback },
   } = useRoute<RouteType<MerchantContentProps>>();
 
-  const { accountAddress, nativeCurrency } = useAccountSettings();
+  const { accountAddress, nativeCurrency, network } = useAccountSettings();
 
   const {
     updatedMerchantSafe,
@@ -23,6 +24,7 @@ export const useMerchantScreen = () => {
   } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
+      skip: isLayer1(network) || !accountAddress,
       refetchOnMountOrArgChange: 60,
       selectFromResult: ({ data, isFetching }) => ({
         updatedMerchantSafe: data?.merchantSafes.find(

@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   changePrimarySafe as setPrimarySafeAccount,
   selectPrimarySafe,
@@ -8,6 +9,7 @@ import { useGetSafesDataQuery } from '@cardstack/services';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import { MerchantSafeType } from '@cardstack/types';
+import { isLayer1 } from '@cardstack/utils';
 
 const safesInitialState = {
   merchantSafes: [],
@@ -25,10 +27,15 @@ export const usePrimarySafe = () => {
     error,
     isFetching,
     refetch,
-  } = useGetSafesDataQuery({
-    address: accountAddress,
-    nativeCurrency,
-  });
+  } = useGetSafesDataQuery(
+    {
+      address: accountAddress,
+      nativeCurrency,
+    },
+    {
+      skip: isLayer1(network) || !accountAddress,
+    }
+  );
 
   const { merchantSafes } = data;
 
@@ -56,6 +63,12 @@ export const usePrimarySafe = () => {
       }
     }
   }, [changePrimarySafe, primarySafe, merchantSafes, isFetching]);
+
+  const onRefresh = useCallback(() => {
+    refetch && refetch();
+  }, [refetch]);
+
+  useFocusEffect(onRefresh);
 
   return {
     error,
