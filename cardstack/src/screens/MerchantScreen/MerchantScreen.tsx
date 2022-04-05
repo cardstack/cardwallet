@@ -7,6 +7,7 @@ import { Container, MerchantContent } from '@cardstack/components';
 const MerchantScreen = () => {
   const {
     isRefreshingBalances,
+    refetch,
     merchantSafe,
     safesCount,
     isPrimarySafe,
@@ -26,6 +27,7 @@ const MerchantScreen = () => {
         changeToPrimarySafe={changeToPrimarySafe}
         merchantSafe={merchantSafe}
         isRefreshingBalances={isRefreshingBalances}
+        refetch={refetch}
       />
     </Container>
   );

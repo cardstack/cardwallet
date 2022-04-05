@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { StyleSheet } from 'react-native';
+import { RefreshControl, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { strings } from './strings';
 import { useClaimAllRevenue } from '@cardstack/screens/sheets/UnclaimedRevenue/useClaimAllRevenue';
@@ -27,6 +27,7 @@ export enum ExpandedMerchantRoutes {
 export interface MerchantContentProps extends PrimarySafeUpdateProps {
   merchantSafe: MerchantSafeType;
   isRefreshingBalances: boolean;
+  refetch?: () => void;
 }
 
 export const MerchantContent = memo(
@@ -36,6 +37,7 @@ export const MerchantContent = memo(
     isPrimarySafe,
     changeToPrimarySafe,
     showSafePrimarySelection = false,
+    refetch,
   }: MerchantContentProps) => {
     const { navigate } = useNavigation();
 
@@ -78,6 +80,14 @@ export const MerchantContent = memo(
           width="100%"
           contentContainerStyle={styles.contentContainer}
           paddingHorizontal={HORIZONTAL_PADDING}
+          horizontal={false}
+          refreshControl={
+            <RefreshControl
+              tintColor="blueText"
+              refreshing={isRefreshingBalances}
+              onRefresh={refetch}
+            />
+          }
         >
           <MerchantHeader
             showSafePrimarySelection={showSafePrimarySelection}

@@ -16,7 +16,11 @@ export const useMerchantScreen = () => {
 
   const { accountAddress, nativeCurrency } = useAccountSettings();
 
-  const { updatedMerchantSafe, isRefreshingBalances } = useGetSafesDataQuery(
+  const {
+    updatedMerchantSafe,
+    isRefreshingBalances,
+    refetch,
+  } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
@@ -63,6 +67,7 @@ export const useMerchantScreen = () => {
 
   return {
     isRefreshingBalances,
+    refetch,
     merchantSafe,
     safesCount,
     isPrimarySafe,

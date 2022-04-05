@@ -5,7 +5,7 @@ import { Container, MainHeader, MerchantContent } from '@cardstack/components';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 const ProfileScreen = () => {
-  const { primarySafe, isFetching, safesCount } = usePrimarySafe();
+  const { primarySafe, isFetching, refetch, safesCount } = usePrimarySafe();
 
   const ProfileBody = useMemo(
     () =>
@@ -15,11 +15,12 @@ const ProfileScreen = () => {
           isPrimarySafe
           merchantSafe={primarySafe}
           isRefreshingBalances={isFetching}
+          refetch={refetch}
         />
       ) : (
         <CreateProfile />
       ),
-    [primarySafe, isFetching, safesCount]
+    [primarySafe, isFetching, refetch, safesCount]
   );
 
   return (

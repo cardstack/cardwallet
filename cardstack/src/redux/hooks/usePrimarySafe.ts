@@ -20,7 +20,12 @@ export const usePrimarySafe = () => {
 
   const primarySafe = useSelector(selectPrimarySafe(network, accountAddress));
 
-  const { data = safesInitialState, error, isFetching } = useGetSafesDataQuery({
+  const {
+    data = safesInitialState,
+    error,
+    isFetching,
+    refetch,
+  } = useGetSafesDataQuery({
     address: accountAddress,
     nativeCurrency,
   });
@@ -37,14 +42,25 @@ export const usePrimarySafe = () => {
 
   // Ensures primary will always be valid if theres at least one merchant safe.
   useEffect(() => {
-    if (!isFetching && merchantSafes?.length > 0 && !primarySafe) {
-      changePrimarySafe(merchantSafes[merchantSafes.length - 1]);
+    if (!isFetching && merchantSafes?.length > 0) {
+      if (primarySafe) {
+        const updatedPrimarySafe = merchantSafes.find(
+          (safe: MerchantSafeType) => safe.address === primarySafe.address
+        );
+
+        if (updatedPrimarySafe) {
+          changePrimarySafe(updatedPrimarySafe);
+        }
+      } else {
+        changePrimarySafe(merchantSafes[merchantSafes.length - 1]);
+      }
     }
   }, [changePrimarySafe, primarySafe, merchantSafes, isFetching]);
 
   return {
     error,
     isFetching,
+    refetch,
     merchantSafes,
     primarySafe,
     changePrimarySafe,
