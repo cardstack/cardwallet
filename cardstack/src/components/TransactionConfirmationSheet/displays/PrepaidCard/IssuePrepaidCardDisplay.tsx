@@ -78,7 +78,7 @@ const FromSection = ({
   );
 
   const safeTypeText =
-    fromSafe?.type === 'depot' ? 'DEPOT' : fromSafe?.merchantInfo?.name;
+    fromSafe?.merchantInfo?.name || fromSafe?.type.toUpperCase();
 
   const token = getSafeTokenByAddress(fromSafe, tokenAddress);
   const tokenBalance = token ? token.balance.display : 'Insufficient Funds';
