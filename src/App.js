@@ -123,7 +123,6 @@ class App extends Component {
 
     this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
-    this.onTokenRefreshListener = registerTokenRefreshListener();
 
     this.foregroundNotificationListener = messaging().onMessage(
       this.onRemoteNotification
@@ -172,6 +171,7 @@ class App extends Component {
     if (!prevProps.walletReady && this.props.walletReady) {
       // Everything we need to do after the wallet is ready goes here
       Logger.sentry('✅ Wallet ready!');
+      this.onTokenRefreshListener = registerTokenRefreshListener();
       runKeychainIntegrityChecks();
       runWalletBackupStatusChecks();
     }
