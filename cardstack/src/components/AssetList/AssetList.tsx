@@ -42,7 +42,7 @@ export const AssetList = () => {
   } = useAssetList({ sectionListRef });
 
   const renderPromoBanner = useMemo(() => {
-    const topPadding = isTabBarEnabled ? 4 : 0;
+    const topPadding = isTabBarEnabled ? 2 : 0;
     return <RewardsPromoBanner paddingTop={topPadding} />;
   }, [isTabBarEnabled]);
 
