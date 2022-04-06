@@ -286,3 +286,21 @@ export const tabLinking = {
     },
   },
 };
+
+export const navigationStateNewWallet = {
+  index: 0,
+  routes: [
+    {
+      name: RainbowRoutes.SWIPE_LAYOUT,
+      state: {
+        index: 0,
+        routes: [
+          {
+            name: RainbowRoutes.WALLET_SCREEN,
+            params: { initialized: true },
+          },
+        ],
+      },
+    },
+  ],
+};
