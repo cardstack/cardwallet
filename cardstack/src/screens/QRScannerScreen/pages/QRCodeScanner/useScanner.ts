@@ -1,6 +1,6 @@
 import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
 import { useFocusEffect, useNavigation } from '@react-navigation/core';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { Linking } from 'react-native';
 
 import { strings } from './strings';
@@ -13,7 +13,9 @@ import { Alert } from '@rainbow-me/components/alerts';
 import { useBooleanState } from '@cardstack/hooks';
 import { getEthereumAddressFromQRCodeData } from '@rainbow-me/utils/address';
 import haptics from '@rainbow-me/utils/haptics';
+import { useTimeout } from '@rainbow-me/hooks';
 
+const WC_SCAN_TIMEOUT = 2000; // 2s
 export interface useScannerParams {
   customScanAddressHandler?: (address: string) => void;
 }
@@ -23,6 +25,8 @@ export const useScanner = ({
 }: useScannerParams = {}) => {
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
+  const [startTimeout] = useTimeout();
+  const isWcScanEnabled = useRef(true);
 
   const [
     isScanningEnabled,
@@ -49,13 +53,26 @@ export const useScanner = ({
 
   const walletConnectOnSessionRequestCallback = useCallback(
     (type: WCRedirectTypes) => {
-      if (type === WCRedirectTypes.qrcodeInvalid) {
-        navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
-          type,
-        });
+      switch (type) {
+        case WCRedirectTypes.qrcodeInvalid:
+          navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
+            type,
+          });
+
+          break;
+        case WCRedirectTypes.connect:
+          navigate(Routes.HOME_SCREEN);
+          break;
       }
+
+      // WC QrCode becames invalid once its used,
+      // so this waits a bit b4 enabling the scan again
+      startTimeout(() => {
+        isWcScanEnabled.current = true;
+      }, WC_SCAN_TIMEOUT);
     },
-    [navigate]
+
+    [navigate, startTimeout]
   );
 
   const handleScanWalletConnect = useCallback(
@@ -98,7 +115,7 @@ export const useScanner = ({
 
   const onScan = useCallback(
     async ({ data }) => {
-      if (!data || !isScanningEnabled) return null;
+      if (!data || !isScanningEnabled || !isWcScanEnabled.current) return null;
 
       try {
         disableScanning();
@@ -113,6 +130,8 @@ export const useScanner = ({
         }
 
         if (deeplink.startsWith('wc:')) {
+          isWcScanEnabled.current = false;
+
           return handleScanWalletConnect(data);
         }
 

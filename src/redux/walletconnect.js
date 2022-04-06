@@ -31,7 +31,7 @@ import logger from 'logger';
 
 // -- Constants --------------------------------------- //
 
-const WC_REQUEST_TIMEOUT = 30000;
+const WC_REQUEST_TIMEOUT = 4000; // 4 seconds
 
 const WALLETCONNECT_ADD_REQUEST = 'walletconnect/WALLETCONNECT_ADD_REQUEST';
 const WALLETCONNECT_REMOVE_REQUEST =

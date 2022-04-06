@@ -28,6 +28,7 @@ export class PayMerchantStrategy extends BaseStrategyWithActionDispatcherData {
 
     return {
       amount: this.actionDispatcherData.spendAmount,
+      spendAmount: this.actionDispatcherData.spendAmount,
       merchantSafe,
       infoDID: safeData.infoDID,
       prepaidCard: this.verifyingContract,
