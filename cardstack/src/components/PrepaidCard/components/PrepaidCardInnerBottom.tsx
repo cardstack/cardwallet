@@ -31,7 +31,6 @@ interface VariantType {
 export type PrepaidCardInnerBottomProps = Pick<
   PrepaidCardProps,
   | 'spendFaceValue'
-  | 'reloadable'
   | 'nativeCurrency'
   | 'currencyConversionRates'
   | 'transferrable'
@@ -71,7 +70,6 @@ const styles = StyleSheet.create({
 
 const PrepaidCardInnerBottom = ({
   spendFaceValue,
-  reloadable,
   nativeCurrency,
   currencyConversionRates,
   transferrable,
@@ -124,9 +122,6 @@ const PrepaidCardInnerBottom = ({
         justifyContent="space-between"
       >
         <Container>
-          <Text variant={cardType[variant].textVariant}>
-            {reloadable ? 'RELOADABLE' : 'NON-RELOADABLE'}
-          </Text>
           <Text variant={cardType[variant].textVariant}>
             {transferrable ? 'TRANSFERRABLE' : 'NON-TRANSFERRABLE'}
           </Text>

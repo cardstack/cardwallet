@@ -138,7 +138,6 @@ const BuyPrepaidCard = () => {
                   currencyConversionRates={currencyConversionRates}
                   address="0xXXXX…XXXX"
                   spendFaceValue={card['face-value'] || 0}
-                  reloadable={card.reloadable}
                   transferrable={card.transferrable}
                   cardCustomization={
                     card.customizationDID

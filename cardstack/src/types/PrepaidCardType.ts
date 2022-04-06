@@ -7,7 +7,7 @@ export interface PrepaidCardType {
   spendFaceValue: number;
   tokens: TokenType[];
   type: string;
-  reloadable: boolean;
+  reloadable?: boolean;
   transferrable: boolean;
   cardCustomization?: PrepaidCardCustomization;
 }

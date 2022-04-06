@@ -30,7 +30,6 @@ const MediumPrepaidCard = ({
   address,
   networkName,
   spendFaceValue,
-  reloadable,
   nativeCurrency,
   currencyConversionRates,
   transferrable,
@@ -59,7 +58,6 @@ const MediumPrepaidCard = ({
       />
       <PrepaidCardInnerBottom
         spendFaceValue={spendFaceValue}
-        reloadable={reloadable}
         nativeCurrency={nativeCurrency}
         currencyConversionRates={currencyConversionRates}
         transferrable={transferrable}

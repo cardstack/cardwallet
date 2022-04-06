@@ -22,7 +22,6 @@ storiesOf('Prepaid Card', module).add('Default', () => {
           },
         ] as any
       }
-      reloadable
       type="prepaid-card"
       networkName="xDai Chain"
       nativeCurrency="USD"
