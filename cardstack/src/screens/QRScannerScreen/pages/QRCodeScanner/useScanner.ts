@@ -49,10 +49,16 @@ export const useScanner = ({
 
   const walletConnectOnSessionRequestCallback = useCallback(
     (type: WCRedirectTypes) => {
-      if (type === WCRedirectTypes.qrcodeInvalid) {
-        navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
-          type,
-        });
+      switch (type) {
+        case WCRedirectTypes.qrcodeInvalid:
+          navigate(Routes.WALLET_CONNECT_REDIRECT_SHEET, {
+            type,
+          });
+
+          break;
+        case WCRedirectTypes.connect:
+          navigate(Routes.HOME_SCREEN);
+          break;
       }
     },
     [navigate]
