@@ -34,13 +34,7 @@ const PrepaidCardItem = ({
   spendAmount,
   isLastItem,
 }: PrepaidCardItemProps) => {
-  const {
-    address,
-    spendFaceValue,
-    cardCustomization,
-    reloadable,
-    transferrable,
-  } = item;
+  const { address, spendFaceValue, cardCustomization, transferrable } = item;
 
   const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
     spendFaceValue.toString(),
@@ -117,7 +111,6 @@ const PrepaidCardItem = ({
               address={address}
               networkName={networkName}
               spendFaceValue={spendFaceValue}
-              reloadable={reloadable}
               nativeCurrency={nativeCurrency}
               currencyConversionRates={currencyConversionRates}
               transferrable={transferrable}
