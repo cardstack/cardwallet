@@ -28,6 +28,7 @@ const onScrollToIndexFailed = () => {
 
 export const AssetList = () => {
   const sectionListRef = createRef<SectionList>();
+  const { isTabBarEnabled } = useTabBarFlag();
 
   const {
     sections,
@@ -41,8 +42,9 @@ export const AssetList = () => {
   } = useAssetList({ sectionListRef });
 
   const renderPromoBanner = useMemo(() => {
-    return <RewardsPromoBanner />;
-  }, []);
+    const topPadding = isTabBarEnabled ? 4 : 0;
+    return <RewardsPromoBanner paddingTop={topPadding} />;
+  }, [isTabBarEnabled]);
 
   const renderSectionHeader = useCallback(
     ({ section }) => (

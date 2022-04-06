@@ -4,14 +4,14 @@ import { useNavigation } from '@react-navigation/core';
 import rewardsPromoBanner from '../../assets/promo-rewards.png';
 import { Button } from '../Button';
 import { CenteredContainer } from '../Container';
-import { Container, Image, Text } from '@cardstack/components';
+import { Container, ContainerProps, Image, Text } from '@cardstack/components';
 import Routes from '@rainbow-me/navigation/routesNames';
 
 const strings = {
   rewards: 'Rewards',
 };
 
-const RewardsPromoBanner = () => {
+const RewardsPromoBanner = ({ ...props }: ContainerProps) => {
   const { navigate } = useNavigation();
 
   const onPress = useCallback(() => {
@@ -19,7 +19,7 @@ const RewardsPromoBanner = () => {
   }, [navigate]);
 
   return (
-    <Container>
+    <Container {...props}>
       <Image
         alignSelf="center"
         overflow="hidden"
