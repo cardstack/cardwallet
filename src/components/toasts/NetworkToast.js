@@ -10,7 +10,7 @@ const NetworkToast = () => {
   const { network } = useAccountSettings();
   const providerUrl = web3Provider?.connection?.url;
   const { name } = networkInfo[network];
-  const [visible, setVisible] = useState();
+  const [visible, setVisible] = useState(true);
   const [networkName, setNetworkName] = useState(name);
 
   useEffect(() => {
