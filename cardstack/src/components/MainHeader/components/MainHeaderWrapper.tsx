@@ -12,7 +12,7 @@ const MainHeaderWrapper: React.FC<ContainerProps> = ({
 }) => {
   const insets = useSafeArea();
 
-  const containerStyle = useMemo(
+  const safeAreaStyle = useMemo(
     () => ({
       // Android uses StatusBar.currentHeight and iOS insets.top
       paddingTop: StatusBar.currentHeight || insets.top,
@@ -21,7 +21,7 @@ const MainHeaderWrapper: React.FC<ContainerProps> = ({
   );
 
   return (
-    <SafeAreaView backgroundColor={backgroundColor} style={containerStyle}>
+    <SafeAreaView backgroundColor={backgroundColor} style={safeAreaStyle}>
       <Container
         flexDirection="row"
         justifyContent="space-between"
