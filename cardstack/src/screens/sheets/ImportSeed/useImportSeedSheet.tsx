@@ -41,6 +41,7 @@ import {
   navigationStateNewWallet,
   useLoadingOverlay,
 } from '@cardstack/navigation';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();
@@ -161,13 +162,14 @@ const useImportFromProfileModal = (
   inputRef: RefObject<TextInput>,
   checkedWallet?: EthereumWalletFromSeed
 ) => {
-  const { navigate, reset } = useNavigation<
+  const { navigate, reset, replace } = useNavigation<
     StackNavigationProp<ParamListBase>
   >();
 
   const { wallets } = useWallets();
   const { importWallet } = useWalletManager();
 
+  const { isTabBarEnabled } = useTabBarFlag();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const handleImportAccountOnCloseModal = useCallback(
@@ -194,8 +196,15 @@ const useImportFromProfileModal = (
         InteractionManager.runAfterInteractions(async () => {
           // Fresh imported wallet
           if (isFreshWallet) {
-            // Resets to remove non-auth-routes
-            reset(navigationStateNewWallet);
+            if (!isTabBarEnabled) {
+              replace(Routes.SWIPE_LAYOUT, {
+                params: { initialized: true },
+                screen: Routes.WALLET_SCREEN,
+              });
+            } else {
+              // Resets to remove non-auth-routes
+              reset(navigationStateNewWallet);
+            }
           } else {
             // inner navigation
             navigate(Routes.WALLET_SCREEN, {
@@ -215,7 +224,9 @@ const useImportFromProfileModal = (
       dismissLoadingOverlay,
       importWallet,
       inputRef,
+      isTabBarEnabled,
       navigate,
+      replace,
       reset,
       seedPhrase,
       showLoadingOverlay,
