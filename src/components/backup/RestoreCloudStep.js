@@ -13,6 +13,7 @@ import {
   navigationStateNewWallet,
   useLoadingOverlay,
 } from '@cardstack/navigation';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 import { Device } from '@cardstack/utils/device';
 import {
   cloudBackupPasswordMinLength,
@@ -34,7 +35,7 @@ export default function RestoreCloudStep({
 }) {
   const selectedBackupName = backupSelected?.name;
   const dispatch = useDispatch();
-  const { navigate, goBack, reset } = useNavigation();
+  const { navigate, goBack, reset, replace } = useNavigation();
   const [validPassword, setValidPassword] = useState(false);
   const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [password, setPassword] = useState('');
@@ -78,6 +79,8 @@ export default function RestoreCloudStep({
     },
     []
   );
+
+  const { isTabBarEnabled } = useTabBarFlag();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -127,7 +130,11 @@ export default function RestoreCloudStep({
             navigate(Routes.WALLET_SCREEN);
             logger.log('initializing wallet');
           } else {
-            reset(navigationStateNewWallet);
+            if (!isTabBarEnabled) {
+              replace(Routes.SWIPE_LAYOUT);
+            } else {
+              reset(navigationStateNewWallet);
+            }
           }
         });
       } else {
@@ -145,8 +152,10 @@ export default function RestoreCloudStep({
     dispatch,
     fromSettings,
     goBack,
+    isTabBarEnabled,
     navigate,
     password,
+    replace,
     reset,
     selectedBackupName,
     showLoadingOverlay,
