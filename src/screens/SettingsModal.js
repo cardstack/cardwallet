@@ -2,7 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback, useEffect } from 'react';
 import { Animated, InteractionManager, View } from 'react-native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CurrencySection,
   LanguageSection,
@@ -195,7 +195,7 @@ export default function SettingsModal() {
     }
   }, [getRealRoute, navigate, params]);
 
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
 
   return (
     <Stack.Navigator

@@ -2,7 +2,7 @@ import { toLower } from 'lodash';
 import React, { useCallback, useMemo, useRef } from 'react';
 import DeviceInfo from 'react-native-device-info';
 import { FlatList } from 'react-native-gesture-handler';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components';
 import { FlyInAnimation } from '../animations';
 import { SwipeableContactRow } from '../contacts';
@@ -47,7 +47,7 @@ export default function SendContactList({
   removeContact,
 }) {
   const { navigate } = useNavigation();
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
   const keyboardHeight = useKeyboardHeight();
 
   const contactRefs = useRef({});

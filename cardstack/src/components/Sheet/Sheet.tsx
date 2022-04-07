@@ -1,5 +1,5 @@
 import React, { memo, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
 import { ScrollView } from '../ScrollView';
@@ -54,7 +54,7 @@ const Sheet = ({
   Header,
   Footer,
 }: SheetProps) => {
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
   const { goBack, setOptions } = useNavigation();
 
   const containerStyle = useMemo(

@@ -4,9 +4,11 @@ import React from 'react';
 import { View as RNView } from 'react-native';
 import '@testing-library/jest-native/extend-expect';
 import 'react-native-gesture-handler/jestSetup';
+import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
 // GLOBAL LIBS MOCKS
+jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
 jest.mock('redux-persist', () => {
   const real = jest.requireActual('redux-persist');
