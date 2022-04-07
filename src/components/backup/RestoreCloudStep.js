@@ -10,6 +10,7 @@ import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
 import {
   dismissKeyboardOnAndroid,
+  navigationStateNewWallet,
   useLoadingOverlay,
 } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
@@ -33,7 +34,7 @@ export default function RestoreCloudStep({
 }) {
   const selectedBackupName = backupSelected?.name;
   const dispatch = useDispatch();
-  const { navigate, goBack, replace } = useNavigation();
+  const { navigate, goBack, reset } = useNavigation();
   const [validPassword, setValidPassword] = useState(false);
   const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [password, setPassword] = useState('');
@@ -126,7 +127,7 @@ export default function RestoreCloudStep({
             navigate(Routes.WALLET_SCREEN);
             logger.log('initializing wallet');
           } else {
-            replace(Routes.SWIPE_LAYOUT);
+            reset(navigationStateNewWallet);
           }
         });
       } else {
@@ -146,7 +147,7 @@ export default function RestoreCloudStep({
     goBack,
     navigate,
     password,
-    replace,
+    reset,
     selectedBackupName,
     showLoadingOverlay,
     userData,

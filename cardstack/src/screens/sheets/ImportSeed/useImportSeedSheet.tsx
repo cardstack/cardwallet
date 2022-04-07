@@ -38,6 +38,7 @@ import logger from 'logger';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import {
   dismissKeyboardOnAndroid,
+  navigationStateNewWallet,
   useLoadingOverlay,
 } from '@cardstack/navigation';
 
@@ -160,7 +161,7 @@ const useImportFromProfileModal = (
   inputRef: RefObject<TextInput>,
   checkedWallet?: EthereumWalletFromSeed
 ) => {
-  const { navigate, replace } = useNavigation<
+  const { navigate, reset } = useNavigation<
     StackNavigationProp<ParamListBase>
   >();
 
@@ -193,12 +194,10 @@ const useImportFromProfileModal = (
         InteractionManager.runAfterInteractions(async () => {
           // Fresh imported wallet
           if (isFreshWallet) {
-            // Replaces bc no route exist yet
-            replace(Routes.SWIPE_LAYOUT, {
-              params: { initialized: true },
-              screen: Routes.WALLET_SCREEN,
-            });
+            // Resets to remove non-auth-routes
+            reset(navigationStateNewWallet);
           } else {
+            // inner navigation
             navigate(Routes.WALLET_SCREEN, {
               initialized: true,
             });
@@ -217,7 +216,7 @@ const useImportFromProfileModal = (
       importWallet,
       inputRef,
       navigate,
-      replace,
+      reset,
       seedPhrase,
       showLoadingOverlay,
       wallets,
