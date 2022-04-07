@@ -1,8 +1,9 @@
 import React, { useMemo, useCallback } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { CreateProfile, strings } from './components';
 import {
+  Button,
   Container,
   MainHeader,
   MerchantContent,
@@ -10,9 +11,12 @@ import {
 } from '@cardstack/components';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { Network } from '@rainbow-me/helpers/networkTypes';
+import { isLayer1 } from '@cardstack/utils';
+import Routes from '@rainbow-me/routes';
+import { SettingsPages } from '@rainbow-me/screens/SettingsModal';
 
 const ProfileScreen = () => {
+  const { navigate } = useNavigation();
   const { primarySafe, isFetching, refetch, safesCount } = usePrimarySafe();
   const { network } = useAccountSettings();
 
@@ -34,7 +38,11 @@ const ProfileScreen = () => {
     );
   }, [primarySafe, isFetching, safesCount, refetch]);
 
-  const isMainNet = useMemo(() => network === Network.mainnet, [network]);
+  const redirectToSwitchNetwork = useCallback(() => {
+    navigate(Routes.SETTINGS_MODAL, {
+      initialRoute: SettingsPages.network.key,
+    });
+  }, [navigate]);
 
   const onRefresh = useCallback(() => {
     refetch && refetch();
@@ -51,12 +59,22 @@ const ProfileScreen = () => {
       <Container
         justifyContent="center"
         flexGrow={1}
-        paddingHorizontal={isMainNet ? 5 : 0}
+        paddingHorizontal={isLayer1(network) ? 5 : 0}
       >
-        {isMainNet ? (
-          <Text color="white" fontSize={26}>
-            {strings.stepOne.switchToGnosisChain}
-          </Text>
+        {isLayer1(network) ? (
+          <>
+            <Text color="white" fontSize={24}>
+              {strings.stepOne.switchToGnosisChain}
+            </Text>
+            <Button
+              borderColor="buttonSecondaryBorder"
+              marginTop={10}
+              onPress={redirectToSwitchNetwork}
+              variant="primary"
+            >
+              {strings.stepOne.switchNetwork}
+            </Button>
+          </>
         ) : (
           ProfileBody
         )}

@@ -59,7 +59,7 @@ function cardStyleInterpolator({
   };
 }
 
-const SettingsPages = {
+export const SettingsPages = {
   backup: {
     component: View,
     key: 'BackupSection',
