@@ -12,11 +12,8 @@ import {
   BackgroundColorProps,
 } from '@shopify/restyle';
 import { ReactNode } from 'react';
-import {
-  SafeAreaView as ReactNativeSafeAreaView,
-  StatusBar,
-  ViewProps,
-} from 'react-native';
+import { SafeAreaView as RNSafeAreaContextView } from 'react-native-safe-area-context';
+import { StatusBar, ViewProps } from 'react-native';
 
 import { Theme } from '../../theme';
 
@@ -38,7 +35,7 @@ export const SafeAreaView = createRestyleComponent<SafeAreaViewProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   [layout, spacing, position, border, backgroundColor],
-  ReactNativeSafeAreaView
+  RNSafeAreaContextView
 );
 
 SafeAreaView.defaultProps = {

@@ -122,8 +122,9 @@ const StackNavigator = () => {
       // ref: https://github.com/react-navigation/react-navigation/issues/10080
       keyboardHandlingEnabled={Device.isIOS}
       headerMode="none"
+      // default mode 'card' cause flickers on Android when poping up a modal.
       mode="modal"
-      // On Android gestureEnabled defaults to false, but we want it.
+      // gestureEnabled defaults to false on Android
       screenOptions={{ gestureEnabled: true }}
       initialRouteName={initialRoute}
     >
