@@ -37,6 +37,7 @@ import {
   isValidMnemonic,
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
+import { isValidSeedPhrase } from '../helpers/validators';
 import { EthereumWalletType } from '../helpers/walletTypes';
 import { getRandomColor } from '../styles/colors';
 import { ethereumUtils } from '../utils';
@@ -984,19 +985,16 @@ export const loadSeedPhrase = async (
       );
     }
 
-    if (Device.isAndroid && seedPhrase) {
-      const hasBiometricsEnabled = await getSupportedBiometryType();
-      // Fallback to custom PIN
-      if (!hasBiometricsEnabled) {
-        try {
-          const userPIN = await authenticateWithPIN(promptMessage);
-          if (userPIN) {
-            const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
-            return decryptedSeed;
-          }
-        } catch (e) {
-          return null;
+    // Handles cases where seedPhrase was encrypted on saving (secured by PIN).
+    if (Device.isAndroid && seedPhrase && !isValidSeedPhrase(seedPhrase)) {
+      try {
+        const userPIN = await authenticateWithPIN(promptMessage);
+        if (userPIN) {
+          const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
+          return decryptedSeed;
         }
+      } catch (e) {
+        return null;
       }
     }
 
