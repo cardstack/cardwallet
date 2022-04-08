@@ -1,6 +1,6 @@
 import { times } from 'lodash';
 import React, { useMemo } from 'react';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components';
 import AddFundsInterstitial from '../AddFundsInterstitial';
 import { FabWrapperBottomPosition } from '../fab';
@@ -21,7 +21,7 @@ const EmptyAssetList = ({
   title,
   ...props
 }) => {
-  const { bottom: bottomInset } = useSafeArea();
+  const { bottom: bottomInset } = useSafeAreaInsets();
 
   const interstitialOffset = useMemo(() => {
     let offset = bottomInset + FabWrapperBottomPosition;

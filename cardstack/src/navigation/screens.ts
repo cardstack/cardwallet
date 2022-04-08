@@ -163,7 +163,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   ...LoadingOverlayComponent,
   SETTINGS_MODAL: {
     component: SettingsModal,
-    options: slideLeftToRightPreset,
+    options: { ...slideLeftToRightPreset, gestureEnabled: false },
   },
   TRANSFER_CARD: {
     component: TransferCardScreen,

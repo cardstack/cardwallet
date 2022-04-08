@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-
 import { Container, SafeAreaView, ContainerProps } from '@cardstack/components';
 
 export const NAV_HEADER_HEIGHT = 54;
@@ -9,7 +8,11 @@ const MainHeaderWrapper: React.FC<ContainerProps> = ({
   backgroundColor = 'backgroundBlue',
   ...props
 }) => (
-  <SafeAreaView backgroundColor={backgroundColor}>
+  <SafeAreaView
+    paddingBottom={0}
+    backgroundColor={backgroundColor}
+    edges={['top']}
+  >
     <Container
       flexDirection="row"
       justifyContent="space-between"

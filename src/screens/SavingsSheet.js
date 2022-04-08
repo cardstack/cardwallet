@@ -3,7 +3,7 @@ import { useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import { Alert, StatusBar } from 'react-native';
 import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components';
 import Divider from '../components/Divider';
 import { SavingsCoinRow } from '../components/coin-row';
@@ -47,7 +47,7 @@ const SavingsSheet = () => {
   const { height: deviceHeight } = useDimensions();
   const { navigate } = useNavigation();
   const { params } = useRoute();
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
   const { isReadOnlyWallet } = useWallets();
   const { nativeCurrency, nativeCurrencySymbol } = useAccountSettings();
   const cTokenBalance = params['cTokenBalance'];

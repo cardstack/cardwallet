@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList } from 'react-native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlexItem } from '../layout';
 import WalletConnectListItem, {
   WalletConnectListItemHeight,
@@ -17,7 +17,7 @@ const keyExtractor = item => item.dappUrl;
 const renderItem = ({ item }) => <WalletConnectListItem {...item} />;
 
 export default function WalletConnectList({ items = [], onLayout, ...props }) {
-  const insets = useSafeArea();
+  const insets = useSafeAreaInsets();
   const maxListItemsForDeviceSize = insets.bottom ? 4 : 3;
 
   return (
