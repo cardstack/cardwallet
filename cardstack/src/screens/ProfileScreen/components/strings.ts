@@ -6,6 +6,8 @@ export const strings = {
     createProfile: 'Create a Profile',
     createProfileDesc: 'All users need a profile to send and receive payments.',
     example: 'Example:',
+    switchToGnosisChain: 'Switch to Gnosis Chain to view your profile',
+    switchNetwork: 'Switch Network',
   },
   stepTwo: {
     nameAndIdForProfile: 'Name and ID for Profile',
