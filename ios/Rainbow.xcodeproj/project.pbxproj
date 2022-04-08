@@ -621,7 +621,6 @@
 				4EBC7DDB261F733D00B1BC69 /* Test Phase */,
 				829E247EDA0BBEF86C7E64E2 /* [CP-User] [RNFB] Core Configuration */,
 				BF24D3C3416DC0588DD8EE8E /* [CP] Embed Pods Frameworks */,
-				20C03CC273D84554BB975551 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -903,20 +902,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Rainbow/Pods-Rainbow-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		20C03CC273D84554BB975551 /* Upload Debug Symbols to Sentry */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			name = "Upload Debug Symbols to Sentry";
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
 /* End PBXShellScriptBuildPhase section */
 
