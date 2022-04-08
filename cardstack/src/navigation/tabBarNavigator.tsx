@@ -68,7 +68,7 @@ const TabNavigator = () => (
       name={RainbowRoutes.HOME_SCREEN}
       options={{
         tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="home" label="HOME" focused={focused} />
+          <TabBarIcon iconName="activity" label="ACTIVITY" focused={focused} />
         ),
       }}
     />
@@ -95,7 +95,7 @@ const TabNavigator = () => (
       name={RainbowRoutes.QR_SCANNER_SCREEN}
       options={{
         tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="dollar-sign" label="SCAN" focused={focused} />
+          <TabBarIcon iconName="qr-code" label="PAY" focused={focused} />
         ),
       }}
     />
