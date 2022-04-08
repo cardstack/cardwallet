@@ -549,9 +549,9 @@ PODS:
     - Yoga
   - RNScreens (2.9.0):
     - React
-  - RNSentry (2.0.2):
+  - RNSentry (3.4.0):
     - React-Core
-    - Sentry (= 6.0.9)
+    - Sentry (= 7.11.0)
   - RNStoreReview (0.1.5):
     - React
   - RNSVG (12.1.1):
@@ -566,9 +566,9 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
-  - Sentry (6.0.9):
-    - Sentry/Core (= 6.0.9)
-  - Sentry/Core (6.0.9)
+  - Sentry (7.11.0):
+    - Sentry/Core (= 7.11.0)
+  - Sentry/Core (7.11.0)
   - Shimmer (1.0.2)
   - SRSRadialGradient (1.0.7):
     - React
@@ -1009,14 +1009,14 @@ SPEC CHECKSUMS:
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: d29057cf85e771be4f0180ba1d00a7185e423a7d
   RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
-  RNSentry: 5ebc2926dbcbb9b77857ba6df0754a869037123d
+  RNSentry: ec3c033c13bcb65c79f19d54ca54c514d1832bb5
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNTextSize: 21c94a67819fbf2c358a219bf6d251e3be9e5f29
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   SDWebImage: a31ee8e90a97303529e03fb0c333eae0eacb88e9
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
-  Sentry: 388c9dc093b2fd3a264466a5c5b21e25959610a9
+  Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   SRSRadialGradient: 7f9c92f2b31576ab80f059378ef2817404cd0575
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0

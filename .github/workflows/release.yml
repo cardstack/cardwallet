@@ -68,6 +68,8 @@ jobs:
         run: yarn install-pods-fast
       - name: Sync google_services
         run: yarn contexts:sync:google_services
+      - name: Sync sentry_properties
+        run: yarn fastlane sync_sentry_properties
       - name: Select Xcode version
         run: sudo xcode-select -s '/Applications/Xcode_12.4.app/Contents/Developer'
       - name: Run fastlane (ios)

@@ -38,7 +38,7 @@ jobs:
         with:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Decrypt fastlane vars
-        run: bundle exec fastlane run decrypt_fastlane_vars
+        run: yarn fastlane run decrypt_fastlane_vars
       - uses: actions/cache@v2
         with:
           path: '**/node_modules'
@@ -65,9 +65,11 @@ jobs:
       - name: Sync app_vars
         run: yarn contexts:app:sync
       - name: Sync google_play_credentials
-        run: bundle exec fastlane sync_google_play_credentials
+        run: yarn fastlane sync_google_play_credentials
       - name: Sync android_keystore
-        run: bundle exec fastlane sync_android_keystore
+        run: yarn fastlane sync_android_keystore
+      - name: Sync sentry_properties
+        run: yarn fastlane sync_sentry_properties
       - name: Run fastlane (android)
         run: cd android && bundle install && bash -c 'set -a && source ../.env && set +a && bundle exec fastlane internal'
       - uses: actions/upload-artifact@v2

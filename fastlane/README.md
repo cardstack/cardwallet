@@ -95,6 +95,16 @@ Upload encrypted app push notification service key
 fastlane sync_apns_key
 ```
 Download encrypted app push notification service key
+### publish_sentry_properties
+```
+fastlane publish_sentry_properties
+```
+Upload encrypted sentry.properties
+### sync_sentry_properties
+```
+fastlane sync_sentry_properties
+```
+Download encrypted sentry.properties
 ### contexts_sync_all
 ```
 fastlane contexts_sync_all

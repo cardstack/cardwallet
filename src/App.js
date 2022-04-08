@@ -73,24 +73,10 @@ if (__DEV__) {
   (showNetworkRequests || showNetworkResponses) &&
     monitorNetwork(showNetworkRequests, showNetworkResponses);
 } else {
-  let sentryOptions = {
+  Sentry.init({
     dsn: SENTRY_ENDPOINT,
     enableAutoSessionTracking: true,
-    // environment: SENTRY_ENVIRONMENT,
-    release: `me.rainbow-${VersionNumber.appVersion}`,
-  };
-
-  if (android) {
-    const dist = VersionNumber.buildVersion;
-    // In order for sourcemaps to work on android,
-    // the release needs to be named with the following format
-    // me.rainbow@1.0+4
-    const releaseName = `me.rainbow@${VersionNumber.appVersion}+${dist}`;
-    sentryOptions.release = releaseName;
-    // and we also need to manually set the dist to the versionCode value
-    sentryOptions.dist = dist.toString();
-  }
-  Sentry.init(sentryOptions);
+  });
 }
 
 enableScreens();

@@ -201,6 +201,30 @@ lane :sync_apns_key do
     )
 end
 
+# iOS and android uses the same file
+desc "Upload encrypted sentry.properties"
+lane :publish_sentry_properties do
+  cryptex(
+      type: "import",
+      key: 'sentry.properties',
+      in: './android/sentry.properties'
+    )
+end
+
+desc "Download encrypted sentry.properties"
+lane :sync_sentry_properties do
+  cryptex(
+      type: "export",
+      key: 'sentry.properties',
+      out: './android/sentry.properties'
+    )
+  cryptex(
+      type: "export",
+      key: 'sentry.properties',
+      out: './ios/sentry.properties'
+  )
+end
+
 desc "Sync all contexts vars"
 lane :contexts_sync_all do
   sync_app_vars

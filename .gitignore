@@ -92,3 +92,6 @@ rainbow-scripts
 .jest
 
 *.p8
+
+# Sentry
+*/sentry.properties
