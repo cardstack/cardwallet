@@ -7,15 +7,12 @@ import ProfileScreen from '../screens/ProfileScreen';
 import WalletScreen from '../screens/WalletScreen';
 import { deviceUtils } from '../utils';
 import Navigation from './Navigation';
-import ScrollPagerWrapper, { scrollPosition } from './ScrollPagerWrapper';
 import Routes from './routesNames';
 import { QRScannerScreen } from '@cardstack/screens';
 
 const Swipe = createMaterialTopTabNavigator();
 
 const renderTabBar = () => null;
-
-const renderPager = props => <ScrollPagerWrapper {...props} />;
 
 export function SwipeNavigator() {
   const { isCoinListEdited } = useCoinListEdited();
@@ -29,8 +26,6 @@ export function SwipeNavigator() {
       <Swipe.Navigator
         initialLayout={deviceUtils.dimensions}
         initialRouteName={Routes.WALLET_SCREEN}
-        pager={renderPager}
-        position={scrollPosition}
         swipeEnabled={!isCoinListEdited}
         tabBar={renderTabBar}
       >
