@@ -17,6 +17,9 @@ export const PrepaidCardTransferTransaction = ({
   item,
   ...props
 }: PrepaidCardTransferTransactionProps) => {
+  const statusIconName =
+    item.statusText === 'Transferred' ? 'arrow-up' : 'arrow-down';
+
   return (
     <TransactionBase
       {...props}
@@ -27,7 +30,7 @@ export const PrepaidCardTransferTransaction = ({
           cardCustomization={item.cardCustomization}
         />
       }
-      statusIconName="arrow-up"
+      statusIconName={statusIconName}
       statusText={item.statusText}
       topText="Face value"
       primaryText={item.nativeBalanceDisplay}
