@@ -18,6 +18,8 @@ import balanceCheckerContractAbi from '../references/balances-checker-abi.json';
 import useAccountSettings from './useAccountSettings';
 import logger from 'logger';
 
+const DEFAULT_WALLETBALANCE = { hex: '0x00', type: 'BigNumber' };
+
 const useWalletBalances = wallets => {
   const { network } = useAccountSettings();
 
@@ -38,21 +40,30 @@ const useWalletBalances = wallets => {
         'balanceCheckerContractAddress',
         network
       );
-      const web3Provider = await getEtherWeb3Provider();
+      const web3Provider = await getEtherWeb3Provider(network, true);
       const balanceCheckerContract = new Contract(
         balanceCheckerContractAddress,
         balanceCheckerContractAbi,
         web3Provider
       );
 
-      const balances = await balanceCheckerContract.balances(
-        keys(walletBalances),
-        [ETH_ADDRESS]
-      );
+      let balances = [];
+      try {
+        balances = await balanceCheckerContract.balances(keys(walletBalances), [
+          ETH_ADDRESS,
+        ]);
+      } catch (e) {
+        logger.log('error getting balances', e);
+      }
+
       forEach(keys(walletBalances), (address, index) => {
-        const amountInETH = fromWei(balances[index].toString());
-        const formattedBalance = handleSignificantDecimals(amountInETH, 4);
-        walletBalances[address] = formattedBalance;
+        if (balances[index]) {
+          const amountInETH = fromWei(balances[index].toString());
+          const formattedBalance = handleSignificantDecimals(amountInETH, 4);
+          walletBalances[address] = formattedBalance;
+        } else {
+          walletBalances[address] = DEFAULT_WALLETBALANCE;
+        }
       });
       saveWalletBalances(walletBalances);
     } catch (e) {
