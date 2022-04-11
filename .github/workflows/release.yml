@@ -60,18 +60,16 @@ jobs:
         run: yarn patch-package
       - name: RN Nodeify
         run: yarn nodeify
-      - name: Build iOS
-        run: yarn build:ios
       - name: Bundle Install (ios)
         run: yarn install-bundle
       - name: Pod Install (ios)
-        run: yarn install-pods-fast
+        run: yarn install-pods-fast-no-flipper
       - name: Sync google_services
         run: yarn contexts:sync:google_services
       - name: Sync sentry_properties
         run: yarn fastlane sync_sentry_properties
       - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_12.4.app/Contents/Developer'
+        run: sudo xcode-select -s '/Applications/Xcode_13.2.1.app/Contents/Developer'
       - name: Run fastlane (ios)
         run: cd ios && bundle exec fastlane ${{ env.FASTLANE_STAGE }} build_number:${{ env.BUILD_NUMBER }}
         env:
