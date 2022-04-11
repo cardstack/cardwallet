@@ -8,7 +8,7 @@ import {
 import { SigningKey } from '@ethersproject/signing-key';
 import { Transaction } from '@ethersproject/transactions';
 import { Wallet } from '@ethersproject/wallet';
-import { captureException, captureMessage } from '@sentry/react-native';
+import { captureException } from '@sentry/react-native';
 import { generateMnemonic } from 'bip39';
 import { signTypedData_v4, signTypedDataLegacy } from 'eth-sig-util';
 import { isValidAddress, toBuffer, toChecksumAddress } from 'ethereumjs-util';
@@ -987,19 +987,25 @@ export const loadSeedPhrase = async (
       try {
         const userPIN = await authenticateWithPIN(promptMessage);
         if (userPIN) {
-          if (isValidSeedPhrase(seedPhrase)) return seedPhrase;
+          if (isValidSeedPhrase(seedPhrase)) {
+            logger.sentry('got seed succesfully on PIN input');
+            return seedPhrase;
+          }
 
           const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
+          logger.sentry('got decrypted seed succesfully');
           return decryptedSeed;
         }
-      } catch (e) {
+      } catch (error) {
+        logger.sentry('Error in loadSeedPhrase while asking PIN.');
+        captureException(error);
         return null;
       }
     }
-
+    logger.sentry('no seed returned');
     return null;
   } catch (error) {
-    logger.sentry('Error in loadSeedPhrase');
+    logger.sentry('Error in loadSeedPhrase.');
     captureException(error);
     return null;
   }
