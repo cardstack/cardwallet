@@ -976,20 +976,19 @@ export const loadSeedPhrase = async (
     const seedData = await getSeedPhrase(id, promptMessage);
 
     const seedPhrase = get(seedData, 'seedphrase', null);
+    const noPIN = !(await getExistingPIN());
 
-    if (seedPhrase) {
+    if (isValidSeedPhrase(seedPhrase) && noPIN) {
       logger.sentry('got seed succesfully');
-    } else {
-      captureMessage(
-        'Missing seed for account - (Key exists but value isnt valid)!'
-      );
+      return seedPhrase;
     }
 
-    // Handles cases where seedPhrase was encrypted on saving (secured by PIN).
-    if (Device.isAndroid && seedPhrase && !isValidSeedPhrase(seedPhrase)) {
+    if (Device.isAndroid && seedPhrase) {
       try {
         const userPIN = await authenticateWithPIN(promptMessage);
         if (userPIN) {
+          if (isValidSeedPhrase(seedPhrase)) return seedPhrase;
+
           const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
           return decryptedSeed;
         }
@@ -998,7 +997,7 @@ export const loadSeedPhrase = async (
       }
     }
 
-    return seedPhrase;
+    return null;
   } catch (error) {
     logger.sentry('Error in loadSeedPhrase');
     captureException(error);
