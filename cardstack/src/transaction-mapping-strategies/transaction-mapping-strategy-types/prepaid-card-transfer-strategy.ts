@@ -53,8 +53,11 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
     const isReceived =
       prepaidCardTransferTransaction.to.id === this.accountAddress;
 
-    const TransferText = isReceived ? 'Received' : 'Transferred';
-    const statusText = prepaidCardInventoryEvent ? 'Purchased' : TransferText;
+    const TransferStatusText = isReceived ? 'Received' : 'Transferred';
+
+    const statusText = prepaidCardInventoryEvent
+      ? 'Purchased'
+      : TransferStatusText;
 
     return {
       address: prepaidCardInventoryEvent
