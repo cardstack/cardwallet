@@ -37,7 +37,7 @@ import {
   isValidMnemonic,
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
-import { isValidSeedPhrase } from '../helpers/validators';
+import { isValidSeed } from '../helpers/validators';
 import { EthereumWalletType } from '../helpers/walletTypes';
 import { getRandomColor } from '../styles/colors';
 import { ethereumUtils } from '../utils';
@@ -360,19 +360,30 @@ const loadPrivateKey = async (): Promise<
     }
     const privateKey = get(privateKeyData, 'privateKey', null);
 
+    const noPIN = !(await getExistingPIN());
+
+    if (privateKey && isValidSeed(privateKey) && noPIN) {
+      logger.sentry('Got key succesfully');
+      return privateKey;
+    }
+
     if (Device.isAndroid && privateKey) {
       const hasBiometricsEnabled = await getSupportedBiometryType();
       // Fallback to custom PIN
       if (!hasBiometricsEnabled) {
         try {
           const userPIN = await authenticateWithPIN();
-
           if (userPIN) {
+            if (isValidSeed(privateKey)) {
+              logger.sentry('Got key succesfully with PIN');
+              return privateKey;
+            }
+
             const decryptedPrivateKey = await encryptor.decrypt(
               userPIN,
               privateKey
             );
-
+            logger.sentry('Got decruypted key succesfully');
             return decryptedPrivateKey;
           }
         } catch (e) {
@@ -380,8 +391,8 @@ const loadPrivateKey = async (): Promise<
         }
       }
     }
-
-    return privateKey;
+    logger.sentry('No key returned');
+    return null;
   } catch (error) {
     logger.sentry('Error in loadPrivateKey');
     captureException(error);
@@ -978,8 +989,8 @@ export const loadSeedPhrase = async (
     const seedPhrase = get(seedData, 'seedphrase', null);
     const noPIN = !(await getExistingPIN());
 
-    if (isValidSeedPhrase(seedPhrase) && noPIN) {
-      logger.sentry('got seed succesfully');
+    if (seedPhrase && isValidSeed(seedPhrase) && noPIN) {
+      logger.sentry('Got seed succesfully');
       return seedPhrase;
     }
 
@@ -987,13 +998,13 @@ export const loadSeedPhrase = async (
       try {
         const userPIN = await authenticateWithPIN(promptMessage);
         if (userPIN) {
-          if (isValidSeedPhrase(seedPhrase)) {
-            logger.sentry('got seed succesfully on PIN input');
+          if (isValidSeed(seedPhrase)) {
+            logger.sentry('Got seed succesfully on PIN input');
             return seedPhrase;
           }
 
           const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
-          logger.sentry('got decrypted seed succesfully');
+          logger.sentry('Got decrypted seed succesfully');
           return decryptedSeed;
         }
       } catch (error) {
@@ -1002,7 +1013,7 @@ export const loadSeedPhrase = async (
         return null;
       }
     }
-    logger.sentry('no seed returned');
+    logger.sentry('No seed returned');
     return null;
   } catch (error) {
     logger.sentry('Error in loadSeedPhrase.');
