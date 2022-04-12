@@ -383,7 +383,7 @@ const loadPrivateKey = async (): Promise<
               userPIN,
               privateKey
             );
-            logger.sentry('Got decruypted key succesfully');
+            logger.sentry('Got decrypted key successfully');
             return decryptedPrivateKey;
           }
         } catch (e) {
