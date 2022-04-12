@@ -8,7 +8,7 @@ import {
 import { SigningKey } from '@ethersproject/signing-key';
 import { Transaction } from '@ethersproject/transactions';
 import { Wallet } from '@ethersproject/wallet';
-import { captureException, captureMessage } from '@sentry/react-native';
+import { captureException } from '@sentry/react-native';
 import { generateMnemonic } from 'bip39';
 import { signTypedData_v4, signTypedDataLegacy } from 'eth-sig-util';
 import { isValidAddress, toBuffer, toChecksumAddress } from 'ethereumjs-util';
@@ -37,6 +37,7 @@ import {
   isValidMnemonic,
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
+import { isValidSeed } from '../helpers/validators';
 import { EthereumWalletType } from '../helpers/walletTypes';
 import { getRandomColor } from '../styles/colors';
 import { ethereumUtils } from '../utils';
@@ -359,19 +360,30 @@ const loadPrivateKey = async (): Promise<
     }
     const privateKey = get(privateKeyData, 'privateKey', null);
 
+    const noPIN = !(await getExistingPIN());
+
+    if (privateKey && isValidSeed(privateKey) && noPIN) {
+      logger.sentry('Got key succesfully');
+      return privateKey;
+    }
+
     if (Device.isAndroid && privateKey) {
       const hasBiometricsEnabled = await getSupportedBiometryType();
       // Fallback to custom PIN
       if (!hasBiometricsEnabled) {
         try {
           const userPIN = await authenticateWithPIN();
-
           if (userPIN) {
+            if (isValidSeed(privateKey)) {
+              logger.sentry('Got key succesfully with PIN');
+              return privateKey;
+            }
+
             const decryptedPrivateKey = await encryptor.decrypt(
               userPIN,
               privateKey
             );
-
+            logger.sentry('Got decrypted key successfully');
             return decryptedPrivateKey;
           }
         } catch (e) {
@@ -379,8 +391,8 @@ const loadPrivateKey = async (): Promise<
         }
       }
     }
-
-    return privateKey;
+    logger.sentry('No key returned');
+    return null;
   } catch (error) {
     logger.sentry('Error in loadPrivateKey');
     captureException(error);
@@ -975,34 +987,36 @@ export const loadSeedPhrase = async (
     const seedData = await getSeedPhrase(id, promptMessage);
 
     const seedPhrase = get(seedData, 'seedphrase', null);
+    const noPIN = !(await getExistingPIN());
 
-    if (seedPhrase) {
-      logger.sentry('got seed succesfully');
-    } else {
-      captureMessage(
-        'Missing seed for account - (Key exists but value isnt valid)!'
-      );
+    if (seedPhrase && isValidSeed(seedPhrase) && noPIN) {
+      logger.sentry('Got seed succesfully');
+      return seedPhrase;
     }
 
     if (Device.isAndroid && seedPhrase) {
-      const hasBiometricsEnabled = await getSupportedBiometryType();
-      // Fallback to custom PIN
-      if (!hasBiometricsEnabled) {
-        try {
-          const userPIN = await authenticateWithPIN(promptMessage);
-          if (userPIN) {
-            const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
-            return decryptedSeed;
+      try {
+        const userPIN = await authenticateWithPIN(promptMessage);
+        if (userPIN) {
+          if (isValidSeed(seedPhrase)) {
+            logger.sentry('Got seed succesfully on PIN input');
+            return seedPhrase;
           }
-        } catch (e) {
-          return null;
+
+          const decryptedSeed = await encryptor.decrypt(userPIN, seedPhrase);
+          logger.sentry('Got decrypted seed succesfully');
+          return decryptedSeed;
         }
+      } catch (error) {
+        logger.sentry('Error in loadSeedPhrase while asking PIN.');
+        captureException(error);
+        return null;
       }
     }
-
-    return seedPhrase;
+    logger.sentry('No seed returned');
+    return null;
   } catch (error) {
-    logger.sentry('Error in loadSeedPhrase');
+    logger.sentry('Error in loadSeedPhrase.');
     captureException(error);
     return null;
   }
