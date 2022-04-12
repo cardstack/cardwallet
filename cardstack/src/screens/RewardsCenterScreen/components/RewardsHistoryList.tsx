@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { SectionList } from 'react-native';
-import { fromWei } from '@cardstack/cardpay-sdk';
 import { strings } from '../strings';
 import { RewardRow } from '.';
 import { Container, Text, ListEmptyComponent } from '@cardstack/components';
 import { RewardeeClaim } from '@cardstack/graphql';
+import { fromWeiToFixedEth } from '@cardstack/utils';
 
 export interface RewardsHistorySectionType {
   title: string;
@@ -28,7 +28,7 @@ export const RewardsHistoryList = ({
   );
 
   const renderItem = useCallback(({ item }: { item: RewardeeClaim }) => {
-    const amountInEth = fromWei(item.amount);
+    const amountInEth = fromWeiToFixedEth(item.amount);
     const symbol = item.token.symbol || '';
 
     return (

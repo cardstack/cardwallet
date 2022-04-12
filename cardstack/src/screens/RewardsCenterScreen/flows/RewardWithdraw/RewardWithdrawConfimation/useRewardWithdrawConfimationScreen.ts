@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/core';
 
 import { BN } from 'ethereumjs-util';
-import { formatCurrencyAmount, fromWei } from '@cardstack/cardpay-sdk';
 import { strings } from './strings';
 import { RouteType } from '@cardstack/navigation/types';
 
@@ -16,6 +15,7 @@ import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { useMutationEffects } from '@cardstack/hooks';
 import { Alert } from '@rainbow-me/components/alerts';
 import { defaultErrorAlert } from '@cardstack/constants';
+import { fromWeiToFixedEth } from '@cardstack/utils';
 
 interface NavParams {
   tokenInfo: TokenWithSafeAddress;
@@ -61,12 +61,12 @@ export const useRewardWithdrawConfimationScreen = () => {
   );
 
   const estimatedNetClaim = useMemo(
-    () => formatCurrencyAmount(fromWei(totalBalanceMinusGasInWei), 2),
+    () => fromWeiToFixedEth(totalBalanceMinusGasInWei),
     [totalBalanceMinusGasInWei]
   );
 
   const gasEstimateInEth = useMemo(
-    () => formatCurrencyAmount(fromWei(gasEstimate.toString()), 2),
+    () => fromWeiToFixedEth(gasEstimate.toString()),
     [gasEstimate]
   );
 
