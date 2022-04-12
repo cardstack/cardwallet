@@ -44,6 +44,24 @@ const result = {
   type: 'prepaidCardTransfer',
 };
 
+const receivedResult = {
+  address: '0xcC91634e10345125E0234EF88cf422381D9E7483',
+  cardCustomization: {
+    background: '#C3FC33',
+    issuerName: 'Test Card',
+    patternColor: 'white',
+    patternUrl:
+      'https://app.cardstack.com/images/prepaid-card-customizations/pattern-1.svg',
+    textColor: 'black',
+  },
+  nativeBalanceDisplay: '$1.00 USD',
+  statusText: 'Received',
+  timestamp: '1634832515',
+  transactionHash:
+    '0x96390cbf6fcd88e2e54bed81a88fe41d5dce29e14b36537a730dfefd300d1e1a',
+  type: 'prepaidCardTransfer',
+};
+
 const purchasedResult = {
   address: '0xEdEeb0Ec367CF65Be7efA8340be05170028679aA',
   cardCustomization: {
@@ -125,6 +143,18 @@ describe('PrepaidCardTransferStrategy', () => {
 
     const value = await PrepaidCardTransfer.mapTransaction();
     expect(value).toEqual(purchasedResult);
+  });
+
+  it('returns the transfer received object', async () => {
+    const PrepaidCardTransfer = new PrepaidCardTransferStrategy({
+      ...contructorParams,
+      accountAddress: PREPAID_CARD_TRANSFER_MOCK.prepaidCardTransfers[0].to.id,
+      transaction: PREPAID_CARD_TRANSFER_MOCK as any,
+    });
+
+    const value = await PrepaidCardTransfer.mapTransaction();
+
+    expect(value).toEqual(receivedResult);
   });
 
   it('returns true with proper constructors', () => {
