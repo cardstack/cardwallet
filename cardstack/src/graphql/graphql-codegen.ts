@@ -8398,6 +8398,20 @@ export type GetRewardClaimsQuery = (
   )> }
 );
 
+export type GetTransactionsFromSafesQueryVariables = Exact<{
+  safeAddresses?: Maybe<Array<Scalars['String']> | Scalars['String']>;
+  relayAddress: Scalars['String'];
+}>;
+
+
+export type GetTransactionsFromSafesQuery = (
+  { __typename?: 'Query' }
+  & { tokenTransfers: Array<(
+    { __typename?: 'TokenTransfer' }
+    & TokenTransferFragment
+  )> }
+);
+
 export const PrepaidCardPaymentFragmentDoc = gql`
     fragment PrepaidCardPayment on PrepaidCardPayment {
   id
@@ -9018,3 +9032,37 @@ export function useGetRewardClaimsLazyQuery(baseOptions?: ApolloReactHooks.LazyQ
 export type GetRewardClaimsQueryHookResult = ReturnType<typeof useGetRewardClaimsQuery>;
 export type GetRewardClaimsLazyQueryHookResult = ReturnType<typeof useGetRewardClaimsLazyQuery>;
 export type GetRewardClaimsQueryResult = ApolloReactCommon.QueryResult<GetRewardClaimsQuery, GetRewardClaimsQueryVariables>;
+export const GetTransactionsFromSafesDocument = gql`
+    query GetTransactionsFromSafes($safeAddresses: [String!], $relayAddress: String!) {
+  tokenTransfers(where: {from_in: $safeAddresses, to_not: $relayAddress}) {
+    ...TokenTransfer
+  }
+}
+    ${TokenTransferFragmentDoc}`;
+
+/**
+ * __useGetTransactionsFromSafesQuery__
+ *
+ * To run a query within a React component, call `useGetTransactionsFromSafesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionsFromSafesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTransactionsFromSafesQuery({
+ *   variables: {
+ *      safeAddresses: // value for 'safeAddresses'
+ *      relayAddress: // value for 'relayAddress'
+ *   },
+ * });
+ */
+export function useGetTransactionsFromSafesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTransactionsFromSafesQuery, GetTransactionsFromSafesQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTransactionsFromSafesQuery, GetTransactionsFromSafesQueryVariables>(GetTransactionsFromSafesDocument, baseOptions);
+      }
+export function useGetTransactionsFromSafesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTransactionsFromSafesQuery, GetTransactionsFromSafesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTransactionsFromSafesQuery, GetTransactionsFromSafesQueryVariables>(GetTransactionsFromSafesDocument, baseOptions);
+        }
+export type GetTransactionsFromSafesQueryHookResult = ReturnType<typeof useGetTransactionsFromSafesQuery>;
+export type GetTransactionsFromSafesLazyQueryHookResult = ReturnType<typeof useGetTransactionsFromSafesLazyQuery>;
+export type GetTransactionsFromSafesQueryResult = ApolloReactCommon.QueryResult<GetTransactionsFromSafesQuery, GetTransactionsFromSafesQueryVariables>;

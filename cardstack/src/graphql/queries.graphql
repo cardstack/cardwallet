@@ -112,3 +112,15 @@ query GetRewardClaims($rewardeeAddress: String!) {
     }
   }
 }
+
+query GetTransactionsFromSafes(
+  $safeAddresses: [String!]
+  $relayAddress: String!
+) {
+  tokenTransfers(
+    # Excluding relay address to remove gas tx
+    where: { from_in: $safeAddresses, to_not: $relayAddress }
+  ) {
+    ...TokenTransfer
+  }
+}
