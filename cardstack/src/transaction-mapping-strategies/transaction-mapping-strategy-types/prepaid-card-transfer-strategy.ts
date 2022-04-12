@@ -50,6 +50,15 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       true
     );
 
+    const isReceived =
+      prepaidCardTransferTransaction.to.id === this.accountAddress;
+
+    const TransferStatusText = isReceived ? 'Received' : 'Transferred';
+
+    const statusText = prepaidCardInventoryEvent
+      ? 'Purchased'
+      : TransferStatusText;
+
     return {
       address: prepaidCardInventoryEvent
         ? prepaidCardInventoryEvent.inventoryProvisioned?.inventory.sku.issuer
@@ -61,7 +70,7 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
         : prepaidCardTransferTransaction.timestamp,
       nativeBalanceDisplay,
       transactionHash: this.transaction.id,
-      statusText: prepaidCardInventoryEvent ? 'Purchased' : 'Transferred',
+      statusText,
       type: TransactionTypes.PREPAID_CARD_TRANSFER,
     };
   }
