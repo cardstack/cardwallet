@@ -14,3 +14,8 @@ declare module 'react-native-keychain' {
     results: rnKeychain.UserCredentials[];
   }>;
 }
+
+type OptionalUnion<T1, T2> = {
+  [P in keyof Omit<T1 & T2, keyof (T1 | T2)>]?: (T1 & T2)[P];
+} &
+  (T1 | T2);

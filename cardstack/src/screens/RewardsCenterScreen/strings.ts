@@ -26,7 +26,6 @@ export const strings = {
   claim: {
     button: 'Claim',
     loading: 'Claiming Reward',
-    claimed: 'Claimed',
   },
   balance: {
     title: 'Balance',
@@ -38,5 +37,10 @@ export const strings = {
   },
   withdraw: {
     button: 'Withdraw',
+  },
+  transaction: {
+    withdrawn: 'Withdrawn',
+    claimed: 'Claimed',
+    none: '',
   },
 };

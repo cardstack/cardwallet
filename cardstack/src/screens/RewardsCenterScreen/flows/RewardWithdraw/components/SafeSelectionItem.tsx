@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import { DepotSafe } from '@cardstack/cardpay-sdk';
+import { OptionalUnion } from 'globals';
 import { strings } from './strings';
 import { getAddressPreview } from '@cardstack/utils';
 import {
@@ -13,11 +14,6 @@ import {
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { MerchantSafeType } from '@cardstack/types';
 import { palette } from '@cardstack/theme';
-
-type OptionalUnion<T1, T2> = {
-  [P in keyof Omit<T1 & T2, keyof (T1 | T2)>]?: (T1 & T2)[P];
-} &
-  (T1 | T2);
 
 type MerchantOrDepotSafe = OptionalUnion<MerchantSafeType, DepotSafe>;
 

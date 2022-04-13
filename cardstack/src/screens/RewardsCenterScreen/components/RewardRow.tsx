@@ -9,21 +9,23 @@ import {
   CardPressable,
 } from '@cardstack/components';
 
+type TxStatus = 'claimed' | 'withdrawn' | 'none';
+
 export interface RewardRowProps extends Omit<TouchableProps, 'children'> {
   coinSymbol: string;
   primaryText: string;
   subText?: string;
-  claimed?: boolean;
   onClaimPress?: () => void;
   isLoading?: boolean;
   showWithdrawBtn?: boolean;
+  txStatus?: TxStatus;
 }
 
 export const RewardRow = ({
   coinSymbol,
   primaryText,
   subText,
-  claimed = false,
+  txStatus = 'none',
   onClaimPress,
   onPress,
   isLoading = false,
@@ -52,7 +54,7 @@ export const RewardRow = ({
           flex={1}
         >
           <Text fontSize={15}>
-            {claimed && strings.claim.claimed + ' '}
+            {strings.transaction[txStatus] + ' '}
             <Text weight="extraBold" fontSize={15} ellipsizeMode="tail">
               {primaryText}
             </Text>

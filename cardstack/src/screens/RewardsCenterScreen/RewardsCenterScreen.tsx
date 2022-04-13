@@ -18,7 +18,7 @@ const RewardsCenterScreen = () => {
     hasRewardsAvailable,
     mainPoolTokenInfo,
     onClaimPress,
-    claimHistorySectionData,
+    historySectionData,
     tokensBalanceData,
     isLoading,
     isLoadingClaimGas,
@@ -58,7 +58,7 @@ const RewardsCenterScreen = () => {
             {isRegistered && (
               <ClaimContent
                 claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
-                historyList={claimHistorySectionData}
+                historyList={historySectionData}
                 balanceList={tokensBalanceData}
                 isLoadingClaimGas={isLoadingClaimGas}
               />

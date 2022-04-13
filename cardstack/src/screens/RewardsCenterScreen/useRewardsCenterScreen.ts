@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { convertToSpend } from '@cardstack/cardpay-sdk';
+import { convertToSpend, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { useNavigation, StackActions } from '@react-navigation/core';
 import { groupBy } from 'lodash';
 import { strings } from './strings';
-import { TokenWithSafeAddress } from './components';
+import { ClaimOrTokenWithdraw, TokenWithSafeAddress } from './components';
 import {
   RewardsRegisterData,
   RewardsClaimData,
@@ -22,8 +22,11 @@ import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import { Alert } from '@rainbow-me/components/alerts';
 import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
-import { RewardeeClaim, useGetRewardClaimsQuery } from '@cardstack/graphql';
-import { groupTransactionsByDate } from '@cardstack/utils';
+import {
+  useGetRewardClaimsQuery,
+  useGetTransactionsFromSafesQuery,
+} from '@cardstack/graphql';
+import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 import { defaultErrorAlert } from '@cardstack/constants';
 import { getClaimRewardsGasEstimate } from '@cardstack/services/rewards-center/rewards-center-service';
@@ -353,7 +356,10 @@ export const useRewardsCenterScreen = () => {
     ]
   );
 
-  const { data, refetch: refetchClaimHistory } = useGetRewardClaimsQuery({
+  const {
+    data: rewardClaims,
+    refetch: refetchClaimHistory,
+  } = useGetRewardClaimsQuery({
     skip: !accountAddress,
     variables: {
       rewardeeAddress: accountAddress,
@@ -361,21 +367,45 @@ export const useRewardsCenterScreen = () => {
     context: { network },
   });
 
-  const claimHistorySectionData = useMemo(
+  const rewardSafesAddresses = useMemo(
+    () => rewardSafes?.map(({ address }) => address),
+    [rewardSafes]
+  );
+
+  const {
+    data: rewardSafeWithdraws,
+    refetch: refetchWithdrawHistory,
+  } = useGetTransactionsFromSafesQuery({
+    skip: !rewardSafesAddresses,
+    variables: {
+      safeAddresses: rewardSafesAddresses,
+      relayAddress: getAddressByNetwork('relay', network),
+    },
+    context: { network },
+  });
+
+  const historySectionData = useMemo(
     () => ({
       sections: Object.entries(
-        groupBy(data?.rewardeeClaims, groupTransactionsByDate)
-      ).map(([title, claims]) => ({
+        groupBy(
+          [
+            ...(rewardClaims?.rewardeeClaims || []),
+            ...(rewardSafeWithdraws?.tokenTransfers || []),
+          ],
+          groupTransactionsByDate
+        )
+      ).map(([title, data]) => ({
         title,
-        data: claims as RewardeeClaim[],
+        data: data.sort(sortByTime) as ClaimOrTokenWithdraw[],
       })),
     }),
-    [data]
+    [rewardClaims, rewardSafeWithdraws]
   );
 
   // Refetchs when rewardSafes or rewardPoolTokenBalances updates
   useEffect(() => {
     refetchClaimHistory();
+    refetchWithdrawHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rewardSafes, rewardPoolTokenBalances]);
 
@@ -407,7 +437,7 @@ export const useRewardsCenterScreen = () => {
     mainPoolTokenInfo,
     isLoading: isLoadindSafes || isLoadingTokens || isUninitialized,
     onClaimPress,
-    claimHistorySectionData,
+    historySectionData,
     tokensBalanceData,
     isLoadingClaimGas,
   };

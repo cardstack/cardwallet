@@ -1,14 +1,16 @@
 import React, { useCallback } from 'react';
 import { SectionList } from 'react-native';
+import { OptionalUnion } from 'globals';
 import { strings } from '../strings';
 import { RewardRow } from '.';
-import { Container, Text, ListEmptyComponent } from '@cardstack/components';
-import { RewardeeClaim } from '@cardstack/graphql';
 import { fromWeiToFixedEth } from '@cardstack/utils';
+import { Container, Text, ListEmptyComponent } from '@cardstack/components';
+import { RewardeeClaim, TokenTransfer } from '@cardstack/graphql';
 
+export type ClaimOrTokenWithdraw = OptionalUnion<RewardeeClaim, TokenTransfer>;
 export interface RewardsHistorySectionType {
   title: string;
-  data: RewardeeClaim[];
+  data: ClaimOrTokenWithdraw[];
 }
 
 export interface RewardsHistoryListProps {
@@ -27,15 +29,18 @@ export const RewardsHistoryList = ({
     []
   );
 
-  const renderItem = useCallback(({ item }: { item: RewardeeClaim }) => {
+  const renderItem = useCallback(({ item }: { item: ClaimOrTokenWithdraw }) => {
     const amountInEth = fromWeiToFixedEth(item.amount);
     const symbol = item.token.symbol || '';
+
+    const txStatus =
+      item.__typename === 'RewardeeClaim' ? 'claimed' : 'withdrawn';
 
     return (
       <RewardRow
         primaryText={`${amountInEth} ${symbol}`}
         coinSymbol={symbol}
-        claimed
+        txStatus={txStatus}
       />
     );
   }, []);
