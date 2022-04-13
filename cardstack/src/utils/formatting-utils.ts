@@ -1,3 +1,4 @@
+import { formatCurrencyAmount, fromWei } from '@cardstack/cardpay-sdk';
 import GraphemeSplitter from 'grapheme-splitter';
 
 export const numberWithCommas = (number: string) =>
@@ -69,3 +70,6 @@ export const getValidColorHexString = (color?: string) => {
 
   return convertedColorString.substring(0, 7);
 };
+
+export const fromWeiToFixedEth = (amountInWei: string) =>
+  formatCurrencyAmount(fromWei(amountInWei), 2);
