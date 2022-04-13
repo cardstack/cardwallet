@@ -87,7 +87,7 @@ export const useSendSheetDepotScreen = () => {
 
   const [amountDetails, setAmountDetails] = useState(amountDetailsInitialState);
 
-  const [maxInputBalance, updateMaxInputBalance] = useState('');
+  const maxInputBalance = useRef('');
 
   const isValidAddress = useSendAddressValidation(recipient);
   const [isAuthorizing, setIsAuthorizing] = useState(false);
@@ -128,8 +128,6 @@ export const useSendSheetDepotScreen = () => {
           amountWei
         )) || '0';
 
-      console.log('::: gas', { gasEstimate, amountWei, selected });
-
       const nativeCurrencyGasFee = getNativeCurrencyAmount(gasEstimate) || 0;
       setGasEstimatedFee({
         amount: nativeCurrencyGasFee,
@@ -151,14 +149,7 @@ export const useSendSheetDepotScreen = () => {
 
       const maxBalanceEth = Web3.utils.fromWei(maxBalanceWei, 'ether');
 
-      console.log('::: max', {
-        balance: selected?.balance,
-        gasEstimate: Web3.utils.fromWei(gasEstimateWei, 'ether'),
-        maxBalanceEth,
-        maxBalanceWei,
-      });
-
-      updateMaxInputBalance(maxBalanceEth);
+      maxInputBalance.current = maxBalanceEth;
 
       const isSufficientBalance =
         Number(amountDetails.assetAmount) <= Number(maxBalanceEth);
@@ -214,7 +205,7 @@ export const useSendSheetDepotScreen = () => {
   const handleAmountDetails = useCallback(
     ({ assetAmount, nativeAmount }) => {
       const isSufficientBalance =
-        Number(assetAmount) <= Number(maxInputBalance);
+        Number(assetAmount) <= Number(maxInputBalance.current);
 
       setAmountDetails({
         assetAmount,
@@ -227,10 +218,6 @@ export const useSendSheetDepotScreen = () => {
 
   const updateAssetAmount = useCallback(
     async newAssetAmount => {
-      console.log(':::', {
-        newAssetAmount,
-      });
-
       const assetAmount: string = newAssetAmount.replace(/[^0-9.]/g, '');
       const hasAmount = !!assetAmount.length;
 
@@ -294,8 +281,9 @@ export const useSendSheetDepotScreen = () => {
   );
 
   const onMaxBalancePress = useCallback(async () => {
-    updateAssetAmount(maxInputBalance);
-  }, [updateAssetAmount, maxInputBalance]);
+    await getGasPriceEstimate();
+    updateAssetAmount(maxInputBalance.current);
+  }, [updateAssetAmount, maxInputBalance, getGasPriceEstimate]);
 
   const onChangeAssetAmount = useCallback(
     newAssetAmount => {
@@ -315,7 +303,7 @@ export const useSendSheetDepotScreen = () => {
       nativeDisplay: '',
     });
 
-    updateMaxInputBalance('');
+    maxInputBalance.current = '';
     usdConverter.current = undefined;
   }, []);
 
@@ -331,30 +319,11 @@ export const useSendSheetDepotScreen = () => {
 
       const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
 
-      const fullAmountGasEstimate =
-        (await safes?.sendTokensGasEstimate(
-          safeAddress,
-          selected?.address || '',
-          recipient || safeAddress, // Fallback to a valid recipient to get gasEstimation on first render
-          amountInWei
-        )) || '0';
-
-      // Gas estimate can change because of the amount selected to send.
-      // So, to keep the total value in bounds of balance, we need
-      // to subtract the difference of the new calculation from the previous one.
-      const gasDiff = new BN(gasEstimatedFee.amount).sub(
-        new BN(fullAmountGasEstimate)
-      );
-
-      const adjustedSendAmountInWei = new BN(amountInWei)
-        .add(gasDiff)
-        .toString();
-
       return safes?.sendTokens(
         safeAddress,
         selected?.address || '',
         recipient,
-        adjustedSendAmountInWei,
+        amountInWei,
         undefined,
         { from: accountAddress }
       );
@@ -367,7 +336,6 @@ export const useSendSheetDepotScreen = () => {
     safeAddress,
     selected,
     selectedWallet,
-    gasEstimatedFee.amount,
   ]);
 
   const canSubmit = useMemo(() => {
