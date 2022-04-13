@@ -1,5 +1,5 @@
 import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, InteractionManager } from 'react-native';
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
@@ -55,24 +55,28 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         success: {
           status: isSuccess,
           callback: () => {
-            dismissLoadingOverlay();
-            displayLocalNotification({
-              notification: {
-                title: strings.notification.profileCreated,
-                body: strings.notification.profileCreatedMessage,
-              },
-              isManualNotification: true,
-            });
+            InteractionManager.runAfterInteractions(() => {
+              dismissLoadingOverlay();
+              displayLocalNotification({
+                notification: {
+                  title: strings.notification.profileCreated,
+                  body: strings.notification.profileCreatedMessage,
+                },
+                isManualNotification: true,
+              });
 
-            navigate(RainbowRoutes.PROFILE_SCREEN);
+              navigate(RainbowRoutes.PROFILE_SCREEN);
+            });
           },
         },
         error: {
           status: isError,
           callback: () => {
-            dismissLoadingOverlay();
             logger.sentry('Error creating profile - ', error);
-            Alert.alert(strings.validation.createProfileErrorMessage);
+            InteractionManager.runAfterInteractions(() => {
+              dismissLoadingOverlay();
+              Alert.alert(strings.validation.createProfileErrorMessage);
+            });
           },
         },
       }),
