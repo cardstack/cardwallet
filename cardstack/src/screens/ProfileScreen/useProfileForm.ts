@@ -27,6 +27,7 @@ import { useCreateProfileMutation } from '@cardstack/services';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { logger } from '@rainbow-me/utils';
 import { colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
 import { displayLocalNotification } from '@cardstack/notification-handler';
 
 const CreateProfileFeeInSpend = 100;
@@ -71,6 +72,11 @@ export const useProfileForm = (params?: useProfileFormParams) => {
           status: isError,
           callback: () => {
             dismissLoadingOverlay();
+
+            if (Device.isAndroid) {
+              dismissLoadingOverlay();
+            }
+
             logger.sentry('Error creating profile - ', error);
             Alert.alert(strings.validation.createProfileErrorMessage);
           },
