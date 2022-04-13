@@ -394,10 +394,12 @@ export const useRewardsCenterScreen = () => {
           ],
           groupTransactionsByDate
         )
-      ).map(([title, data]) => ({
-        title,
-        data: data.sort(sortByTime) as ClaimOrTokenWithdraw[],
-      })),
+      )
+        .map(([title, data]) => ({
+          title,
+          data: data.sort(sortByTime) as ClaimOrTokenWithdraw[],
+        }))
+        .sort((a, b) => sortByTime(a.data[0], b.data[0])),
     }),
     [rewardClaims, rewardSafeWithdraws]
   );

@@ -201,7 +201,7 @@ export const getWithdrawGasEstimate = async ({
   from,
   to,
   tokenAddress,
-  amount,
+  amount = '0',
 }: RewardWithdrawGasEstimateParams) => {
   const rewardManager = await getRewardManagerInstance();
 
