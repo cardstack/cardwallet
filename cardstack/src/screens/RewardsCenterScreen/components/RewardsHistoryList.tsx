@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { SectionList } from 'react-native';
-import { fromWeiToFixedEth } from '@cardstack/utils';
 import { OptionalUnion } from 'globals';
 import { strings } from '../strings';
 import { RewardRow } from '.';
+import { fromWeiToFixedEth } from '@cardstack/utils';
 import { Container, Text, ListEmptyComponent } from '@cardstack/components';
 import { RewardeeClaim, TokenTransfer } from '@cardstack/graphql';
 
