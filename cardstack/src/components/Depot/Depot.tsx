@@ -11,7 +11,7 @@ import { DepotType } from '@cardstack/types';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
 
-interface DepotProps extends DepotType {
+interface DepotProps extends Omit<DepotType, 'type'> {
   networkName: string;
 }
 

@@ -2,6 +2,12 @@ import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { SectionHeaderText } from '../components/SectionHeaderText';
+import {
+  MerchantOrDepotSafe,
+  IssuePrepaidCardDecodedData,
+  DepotType,
+  MerchantSafeType,
+} from '@cardstack/types';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   Container,
@@ -11,11 +17,7 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
-import {
-  IssuePrepaidCardDecodedData,
-  DepotType,
-  MerchantSafeType,
-} from '@cardstack/types';
+
 import {
   getSafeTokenByAddress,
   convertSpendForBalanceDisplay,
@@ -48,6 +50,11 @@ export const IssuePrepaidCardDisplay = (
   );
 };
 
+interface SelectedResult {
+  fromSafe?: MerchantOrDepotSafe;
+  isLoadingSafe: boolean;
+}
+
 const FromSection = ({
   safeAddress,
   tokenAddress,
@@ -67,20 +74,24 @@ const FromSection = ({
   const { fromSafe, isLoadingSafe } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
-      selectFromResult: ({ data, isLoading, isUninitialized }) => ({
+      selectFromResult: ({
+        data,
+        isLoading,
+        isUninitialized,
+      }): SelectedResult => ({
         fromSafe: [
           ...(data?.merchantSafes || []),
           ...(data?.depots || []),
-        ].find(safe => safe && safe.address === safeAddress),
+        ].find(safe => safe?.address === safeAddress),
         isLoadingSafe: isLoading || isUninitialized,
       }),
     }
   );
 
   const safeTypeText =
-    fromSafe?.merchantInfo?.name || fromSafe?.type.toUpperCase();
+    fromSafe?.merchantInfo?.name || fromSafe?.type?.toUpperCase();
 
-  const token = getSafeTokenByAddress(fromSafe, tokenAddress);
+  const token = getSafeTokenByAddress(fromSafe?.tokens || [], tokenAddress);
   const tokenBalance = token ? token.balance.display : 'Insufficient Funds';
 
   return (

@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/core';
+import { MerchantOrDepotSafe } from '@cardstack/types';
 import { RouteType } from '@cardstack/navigation/types';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
@@ -7,6 +8,11 @@ import { useGetSafesDataQuery } from '@cardstack/services';
 
 import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
 import { MainRoutes } from '@cardstack/navigation';
+
+interface SafeResultType {
+  availableSafesToWithdraw: MerchantOrDepotSafe[];
+  isLoading: boolean;
+}
 
 export const useRewardWithdrawToScreen = () => {
   const {
@@ -17,14 +23,15 @@ export const useRewardWithdrawToScreen = () => {
 
   const { accountAddress, nativeCurrency } = useAccountSettings();
 
-  const { availableSafesToWithdraw } = useGetSafesDataQuery(
+  const { availableSafesToWithdraw = [], isLoading } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
-      selectFromResult: ({ data }) => ({
+      selectFromResult: ({ data, ...rest }): SafeResultType => ({
         availableSafesToWithdraw: [
-          ...data?.merchantSafes,
-          ...data?.depots,
+          ...(data?.merchantSafes || []),
+          ...(data?.depots || []),
         ].filter(Boolean),
+        ...rest,
       }),
     }
   );
@@ -43,5 +50,6 @@ export const useRewardWithdrawToScreen = () => {
   return {
     onSafePress,
     availableSafesToWithdraw,
+    isLoading,
   };
 };
