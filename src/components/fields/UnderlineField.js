@@ -118,7 +118,7 @@ const UnderlineField = (
           value={formattedValue}
         />
         <Container flexDirection="row">
-          {buttonText && isFocused && (
+          {!!onPressButton && buttonText && isFocused && (
             <Button onPress={handleButtonPress} variant="tiny">
               {buttonText}
             </Button>
