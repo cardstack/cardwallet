@@ -66,7 +66,7 @@ export type RewardsClaimGasEstimateParams = Omit<
 interface RewardWithdrawBaseParams {
   to: string;
   from: string;
-  amount: string;
+  amount?: string;
   tokenAddress: string;
 }
 export interface RewardWithdrawParams

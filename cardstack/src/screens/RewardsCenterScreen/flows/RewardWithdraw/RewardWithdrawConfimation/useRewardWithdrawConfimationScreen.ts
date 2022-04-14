@@ -89,14 +89,14 @@ export const useRewardWithdrawConfimationScreen = () => {
       walletId: selectedWallet.id,
       accountAddress,
       network,
-      amount: totalBalanceMinusGasInWei,
+      // When no amount is provided, the whole avaible balance is withdrawn
+      amount: undefined,
     });
   }, [
     accountAddress,
     network,
     selectedWallet.id,
     showLoadingOverlay,
-    totalBalanceMinusGasInWei,
     withdraw,
     withdrawBaseData,
   ]);
