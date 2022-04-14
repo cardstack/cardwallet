@@ -6,7 +6,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  BottomTabBarOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import {
   createStackNavigator,
   StackNavigationOptions,
@@ -39,18 +42,22 @@ import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 
 const Tab = createBottomTabNavigator();
 
-const tabBarOptions = (bottomInset = 0) => ({
+const tabBarOptions = (bottomInset = 0): BottomTabBarOptions => ({
   style: {
     backgroundColor: colors.backgroundBlue,
-    height: bottomInset + 70,
+    minHeight: 70,
     borderTopColor: Device.isIOS ? 'transparent' : colors.blackLightOpacity,
     shadowOffset: {
       width: 0,
-      height: -1,
+      height: 1,
     },
+
     shadowRadius: 5,
     shadowOpacity: 0.35,
     elevation: 9,
+  },
+  safeAreaInsets: {
+    bottom: bottomInset + 5,
   },
   showLabel: false,
   keyboardHidesTabBar: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
