@@ -11,6 +11,7 @@ import { MainRoutes } from '@cardstack/navigation';
 
 interface SafeResultType {
   availableSafesToWithdraw: MerchantOrDepotSafe[];
+  isLoading: boolean;
 }
 
 export const useRewardWithdrawToScreen = () => {
@@ -22,14 +23,15 @@ export const useRewardWithdrawToScreen = () => {
 
   const { accountAddress, nativeCurrency } = useAccountSettings();
 
-  const { availableSafesToWithdraw = [] } = useGetSafesDataQuery(
+  const { availableSafesToWithdraw = [], isLoading } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
     {
-      selectFromResult: ({ data }): SafeResultType => ({
+      selectFromResult: ({ data, ...rest }): SafeResultType => ({
         availableSafesToWithdraw: [
           ...(data?.merchantSafes || []),
           ...(data?.depots || []),
         ].filter(Boolean),
+        ...rest,
       }),
     }
   );
@@ -48,5 +50,6 @@ export const useRewardWithdrawToScreen = () => {
   return {
     onSafePress,
     availableSafesToWithdraw,
+    isLoading,
   };
 };

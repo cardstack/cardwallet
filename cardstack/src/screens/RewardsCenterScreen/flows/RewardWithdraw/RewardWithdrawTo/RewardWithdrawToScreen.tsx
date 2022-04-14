@@ -1,19 +1,34 @@
 import React, { memo } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { SafeSelectionList } from '../components';
 import { strings } from './strings';
 import { useRewardWithdrawToScreen } from './useRewardWithdrawToScreen';
-import { Container, NavigationStackHeader } from '@cardstack/components';
+import {
+  CenteredContainer,
+  Container,
+  NavigationStackHeader,
+} from '@cardstack/components';
 
 const RewardWithdrawToScreen = () => {
-  const { onSafePress, availableSafesToWithdraw } = useRewardWithdrawToScreen();
+  const {
+    onSafePress,
+    availableSafesToWithdraw,
+    isLoading,
+  } = useRewardWithdrawToScreen();
 
   return (
     <Container backgroundColor="white" flex={1}>
       <NavigationStackHeader title={strings.headerTitle} />
-      <SafeSelectionList
-        safes={availableSafesToWithdraw}
-        onSafePress={onSafePress}
-      />
+      {isLoading ? (
+        <CenteredContainer flex={1}>
+          <ActivityIndicator />
+        </CenteredContainer>
+      ) : (
+        <SafeSelectionList
+          safes={availableSafesToWithdraw}
+          onSafePress={onSafePress}
+        />
+      )}
     </Container>
   );
 };
