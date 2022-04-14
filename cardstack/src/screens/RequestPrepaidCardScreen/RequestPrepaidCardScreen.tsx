@@ -3,8 +3,10 @@ import { convertToSpend } from '@cardstack/cardpay-sdk';
 import { strings } from './strings';
 import { useRequestPrepaidCardScreen } from './useRequestPrepaidCardScreen';
 import {
+  Button,
   Container,
   InfoBanner,
+  Input,
   NavigationStackHeader,
   Text,
 } from '@cardstack/components';
@@ -16,8 +18,25 @@ const RequestPrepaidCardScreen = () => {
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <NavigationStackHeader title={strings.navigation.title} />
-      <Container paddingHorizontal={5} alignItems="center" flex={1}>
+      <Container
+        paddingHorizontal={5}
+        alignItems="center"
+        justifyContent="space-between"
+        flex={0.5}
+        width="100%"
+      >
         <CardPlaceholder />
+        <Container width="100%">
+          <Input
+            borderWidth={1}
+            borderColor="white"
+            borderRadius={6}
+            paddingVertical={3}
+            paddingHorizontal={5}
+            fontSize={16}
+          />
+        </Container>
+        <Button marginVertical={4}>{strings.button.submit}</Button>
         <InfoBanner
           title={strings.termsBanner.title}
           message={strings.termsBanner.message}

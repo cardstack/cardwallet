@@ -5,7 +5,10 @@ export const strings = {
   termsBanner: {
     title: 'Terms and Conditions',
     message:
-      'By using this service you agree to submit your email address and wallet address. You also agree to be sent an optional Cardstack Newsletter subscription confirmation email. Your email address is securely hashed in our database. For more details visit ',
-    link: 'https://support.cardstack.com',
+      'By clicking the “Submit” button, you are submitting your Card Wallet address and email address. You agree to receive a verification email and Cardstack newsletter opt-in request.\n\nFor more details visit',
+    link: 'https://support.cardstack.com/card-drop',
+  },
+  button: {
+    submit: 'Submit',
   },
 };
