@@ -2,9 +2,9 @@ import React from 'react';
 import { StepOne, StepTwo, StepThree, ProfileFormContainer } from './';
 import { ProgressSteps } from '@cardstack/components';
 
-export const CreateProfile = () => (
+export const CreateProfile = ({ isLoading }: { isLoading: boolean }) => (
   <ProfileFormContainer>
-    <ProgressSteps>
+    <ProgressSteps isLoading={isLoading}>
       <StepOne />
       <StepTwo keyboardEnabled />
       <StepThree />

@@ -10,15 +10,18 @@ import { Container } from '@cardstack/components';
 export interface ProgressStepsProps {
   activeStep?: number;
   children: React.ReactElement[];
+  isLoading?: boolean;
 }
 
 export interface ProgressStepProps {
   goToNextStep?: () => void;
   keyboardEnabled?: boolean;
+  isLoading?: boolean;
 }
 
 export const ProgressSteps = ({
   activeStep = 0,
+  isLoading,
   children,
 }: ProgressStepsProps) => {
   const [currentStep, setCurrentStep] = useState<number>(activeStep);
@@ -113,6 +116,7 @@ export const ProgressSteps = ({
           >
             {React.cloneElement(ActiveStepComponent, {
               goToNextStep,
+              isLoading,
             })}
           </ScrollableStepWrapper>
         ) : null}
