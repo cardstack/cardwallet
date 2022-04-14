@@ -1,5 +1,4 @@
 import React, { useMemo, useCallback } from 'react';
-import { ActivityIndicator } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { CreateProfile, strings } from './components';
 import {
@@ -20,23 +19,21 @@ const ProfileScreen = () => {
   const { primarySafe, isFetching, refetch, safesCount } = usePrimarySafe();
   const { network } = useAccountSettings();
 
-  const ProfileBody = useMemo(() => {
-    if (!primarySafe && isFetching) {
-      return <ActivityIndicator size="large" color="white" />;
-    }
-
-    return primarySafe ? (
-      <MerchantContent
-        showSafePrimarySelection={safesCount > 1}
-        isPrimarySafe
-        merchantSafe={primarySafe}
-        isRefreshingBalances={isFetching}
-        refetch={refetch}
-      />
-    ) : (
-      <CreateProfile />
-    );
-  }, [primarySafe, isFetching, safesCount, refetch]);
+  const ProfileBody = useMemo(
+    () =>
+      primarySafe ? (
+        <MerchantContent
+          showSafePrimarySelection={safesCount > 1}
+          isPrimarySafe
+          merchantSafe={primarySafe}
+          isRefreshingBalances={isFetching}
+          refetch={refetch}
+        />
+      ) : (
+        <CreateProfile isLoading={isFetching} />
+      ),
+    [primarySafe, isFetching, safesCount, refetch]
+  );
 
   const redirectToSwitchNetwork = useCallback(() => {
     navigate(Routes.SETTINGS_MODAL, {

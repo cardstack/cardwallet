@@ -1,4 +1,5 @@
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 import { exampleMerchantData, strings } from '.';
 import {
   Button,
@@ -8,7 +9,11 @@ import {
   Text,
 } from '@cardstack/components';
 
-export const StepOne = ({ goToNextStep }: ProgressStepProps) => {
+export const StepOne = ({ goToNextStep, isLoading }: ProgressStepProps) => {
+  if (isLoading) {
+    <ActivityIndicator size="large" color="white" />;
+  }
+
   return (
     <>
       <Container maxWidth={300} alignSelf="center">
