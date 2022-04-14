@@ -94,10 +94,12 @@ export const useTransactionSections = ({
 
         try {
           const merchantSafeAddresses = merchantSafes?.map(
-            safe => safe.address
+            (safe: { address: string }) => safe.address
           );
 
-          const prepaidCardAddresses = prepaidCards?.map(safe => safe.address);
+          const prepaidCardAddresses = prepaidCards?.map(
+            (safe: { address: string }) => safe.address
+          );
 
           const transactionMappingContext = new TransactionMappingContext({
             transactions: merchantSafeAddress

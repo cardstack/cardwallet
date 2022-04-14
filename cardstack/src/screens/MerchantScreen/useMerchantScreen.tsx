@@ -27,7 +27,7 @@ export const useMerchantScreen = () => {
       skip: isLayer1(network) || !accountAddress,
       refetchOnMountOrArgChange: 60,
       selectFromResult: ({ data, isFetching }) => ({
-        updatedMerchantSafe: data?.merchantSafes.find(
+        updatedMerchantSafe: data?.merchantSafes?.find(
           (safe: MerchantSafeType) =>
             safe.address === merchantSafeFallback.address
         ),

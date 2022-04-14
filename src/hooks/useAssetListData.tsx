@@ -160,13 +160,6 @@ const useCollectiblesSection = (): AssetListSectionItem<CollectibleType> => {
   };
 };
 
-const safesInitialState = {
-  prepaidCards: [],
-  depots: [],
-  merchantSafes: [],
-  timestamp: '',
-};
-
 export const useAssetListData = () => {
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
   const { network, accountAddress } = useAccountSettings();
@@ -176,16 +169,25 @@ export const useAssetListData = () => {
     isFetching: isFetchingSafes,
     isLoading,
     refetch: refetchSafes,
-    data = safesInitialState,
+    prepaidCards,
+    depots,
+    merchantSafes,
+    timestamp,
     isUninitialized,
   } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
+
     {
+      selectFromResult: ({ data, ...rest }) => ({
+        prepaidCards: data?.prepaidCards || [],
+        depots: data?.depots || [],
+        merchantSafes: data?.merchantSafes || [],
+        timestamp: data?.timestamp || '',
+        ...rest,
+      }),
       skip: isLayer1(network) || !accountAddress || !walletReady,
     }
   );
-
-  const { prepaidCards, depots, merchantSafes, timestamp } = data;
 
   const prepaidCardSection = usePrepaidCardSection(prepaidCards, timestamp);
   const depotSection = useDepotSection(depots, timestamp);

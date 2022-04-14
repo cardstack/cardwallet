@@ -1,8 +1,7 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import { DepotSafe } from '@cardstack/cardpay-sdk';
-import { OptionalUnion } from 'globals';
 import { strings } from './strings';
+import { MerchantOrDepotSafe } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import {
   CardPressable,
@@ -12,10 +11,7 @@ import {
   IconName,
 } from '@cardstack/components';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { MerchantSafeType } from '@cardstack/types';
 import { palette } from '@cardstack/theme';
-
-type MerchantOrDepotSafe = OptionalUnion<MerchantSafeType, DepotSafe>;
 
 export interface SafeSelectionItemProps {
   safe: MerchantOrDepotSafe;

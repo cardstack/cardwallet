@@ -1,11 +1,8 @@
-import { AssetWithTokensType } from '@cardstack/types';
+import { TokenType } from '@cardstack/types';
 
-export const getSafeTokenByAddress = (
-  asset: AssetWithTokensType,
-  address?: string
-) =>
-  address && asset
-    ? asset.tokens.find(
+export const getSafeTokenByAddress = (tokens: TokenType[], address?: string) =>
+  address
+    ? tokens?.find(
         t => t.tokenAddress?.toLowerCase() === address?.toLowerCase()
       )
     : undefined;

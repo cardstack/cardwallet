@@ -1,5 +1,4 @@
 import React from 'react';
-import { PrepaidCardSafe } from '@cardstack/cardpay-sdk';
 import MiniPrepaidCard from '../../../../PrepaidCard/MiniPrepaidCard';
 import TransactionListItem from '../TransactionListItem';
 import { Container, Text } from '@cardstack/components';
@@ -26,8 +25,8 @@ export const PrepaidCardTransactionSection = ({
     { address: accountAddress, nativeCurrency },
     {
       selectFromResult: ({ data }) => ({
-        prepaidCard: data?.prepaidCards.find(
-          (card: PrepaidCardSafe) => card.address === prepaidCardAddress
+        prepaidCard: data?.prepaidCards?.find(
+          card => card.address === prepaidCardAddress
         ),
       }),
     }
