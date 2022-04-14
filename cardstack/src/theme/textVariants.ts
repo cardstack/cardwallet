@@ -1,18 +1,17 @@
+import { fontFamilyVariants } from './fontFamilyVariants';
+
 const baseText = {
-  fontFamily: 'OpenSans-Regular',
   fontSize: 16,
   color: 'black',
 };
 
 export const textVariants = {
-  defaults: baseText,
-  body: baseText,
-  shadowRoboto: {
-    fontFamily: 'RobotoMono-Regular',
-    fontSize: 18,
-    textShadowColor: 'white',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 0,
+  defaults: { ...baseText, ...fontFamilyVariants.regular },
+  body: { ...baseText, ...fontFamilyVariants.regular },
+  tabBar: {
+    fontSize: 10,
+    letterSpacing: 0.1,
+    ...fontFamilyVariants.bold,
   },
   xsGrey: {
     color: 'grayText',
@@ -25,10 +24,6 @@ export const textVariants = {
   smallButton: {
     fontSize: 12,
   },
-  subHeader: {
-    color: 'blueText',
-    fontSize: 16,
-  },
   subText: {
     color: 'blueText',
     fontSize: 13,
@@ -36,13 +31,13 @@ export const textVariants = {
   subAddress: {
     color: 'blueText',
     fontSize: 14,
-    fontFamily: 'RobotoMono-Regular',
+    ...fontFamilyVariants.regular,
   },
   welcomeScreen: {
     color: 'white',
     fontSize: 24,
     fontWeight: '700',
-    fontFamily: 'OpenSans-Bold',
+    ...fontFamilyVariants.bold,
   },
   overGradient: {
     textShadowOffset: {

@@ -12,6 +12,7 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
 import { linking } from './screens';
@@ -26,7 +27,7 @@ import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
-import { Device, screenHeight } from '@cardstack/utils';
+import { Device } from '@cardstack/utils';
 import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
@@ -38,69 +39,74 @@ import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 
 const Tab = createBottomTabNavigator();
 
-const layouts = {
-  tabBarHeightSize: screenHeight * 0.1,
-};
-
-const tabBarOptions = {
+const tabBarOptions = (bottomInset = 0) => ({
   style: {
     backgroundColor: colors.backgroundBlue,
-    height: layouts.tabBarHeightSize,
+    height: bottomInset + 70,
     borderTopColor: Device.isIOS ? 'transparent' : colors.blackLightOpacity,
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: -1,
     },
-    shadowOpacity: 0.5,
-    elevation: 3,
+    shadowRadius: 5,
+    shadowOpacity: 0.35,
+    elevation: 9,
   },
   showLabel: false,
   keyboardHidesTabBar: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
-};
+});
 
-const TabNavigator = () => (
-  <Tab.Navigator
-    initialRouteName={RainbowRoutes.WALLET_SCREEN}
-    tabBarOptions={tabBarOptions}
-  >
-    <Tab.Screen
-      component={HomeScreen}
-      name={RainbowRoutes.HOME_SCREEN}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="activity" label="ACTIVITY" focused={focused} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      component={ProfileScreen}
-      name={RainbowRoutes.PROFILE_SCREEN}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="user" label="PROFILE" focused={focused} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      component={WalletScreen}
-      name={RainbowRoutes.WALLET_SCREEN}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="wallet" label="WALLET" focused={focused} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      component={QRScannerScreen}
-      name={RainbowRoutes.QR_SCANNER_SCREEN}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <TabBarIcon iconName="qr-code" label="PAY" focused={focused} />
-        ),
-      }}
-    />
-  </Tab.Navigator>
-);
+const TabNavigator = () => {
+  const { bottom } = useSafeAreaInsets();
+
+  return (
+    <Tab.Navigator
+      initialRouteName={RainbowRoutes.WALLET_SCREEN}
+      tabBarOptions={tabBarOptions(bottom)}
+    >
+      <Tab.Screen
+        component={HomeScreen}
+        name={RainbowRoutes.HOME_SCREEN}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon
+              iconName="activity"
+              label="ACTIVITY"
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        component={ProfileScreen}
+        name={RainbowRoutes.PROFILE_SCREEN}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon iconName="user" label="PROFILE" focused={focused} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        component={WalletScreen}
+        name={RainbowRoutes.WALLET_SCREEN}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon iconName="wallet" label="WALLET" focused={focused} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        component={QRScannerScreen}
+        name={RainbowRoutes.QR_SCANNER_SCREEN}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon iconName="qr-code" label="PAY" focused={focused} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const Stack = createStackNavigator();
 

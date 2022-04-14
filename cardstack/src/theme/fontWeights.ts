@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 
+// Note: Prefer to use textVariants instead.
 export const fontWeights = Platform.select({
   ios: {
     regular: '400',
