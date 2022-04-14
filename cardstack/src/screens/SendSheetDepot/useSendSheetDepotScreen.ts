@@ -403,7 +403,7 @@ export const useSendSheetDepotScreen = () => {
       onChangeAssetAmount,
       onChangeNativeAmount,
       onResetAssetSelection,
-      // onMaxBalancePress,
+      onMaxBalancePress: undefined,
       onSelectAsset: setSelected,
       allAssets: depotAssets,
       selectedGasPrice: gasEstimatedFee,

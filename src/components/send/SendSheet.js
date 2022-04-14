@@ -62,7 +62,7 @@ export default function SendSheet({
   selected,
   selectedGasPrice,
   type,
-  onMaxBalancePress = undefined,
+  onMaxBalancePress,
   fetchData = undefined,
   onPressTransactionSpeed = undefined,
   showNativeCurrencyField = true,
