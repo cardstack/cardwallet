@@ -22,7 +22,6 @@ export const safesApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   tagTypes: [...Object.values(CacheTags)],
   endpoints: builder => ({
-    // TODO: Add right return type
     getSafesData: builder.query<
       GetSafesQueryResult,
       { address: string; nativeCurrency: NativeCurrency }
