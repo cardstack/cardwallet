@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { CreateProfile, strings } from './components';
 import {
   Button,
@@ -40,12 +40,6 @@ const ProfileScreen = () => {
       initialRoute: SettingsPages.network.key,
     });
   }, [navigate]);
-
-  const onRefresh = useCallback(() => {
-    refetch && refetch();
-  }, [refetch]);
-
-  useFocusEffect(onRefresh);
 
   return (
     <Container
