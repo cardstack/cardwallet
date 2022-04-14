@@ -37,6 +37,7 @@ import {
   RewardsClaimSheet,
   TransactionConfirmationSheet,
   ColorPickerModal,
+  RequestPrepaidCardScreen,
 } from '@cardstack/screens';
 import {
   bottomSheetPreset,
@@ -210,6 +211,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: BackupSheet,
     options: bottomSheetPreset as StackNavigationOptions,
     listeners: dismissAndroidKeyboardOnClose,
+  },
+  REQUEST_PREPAID_CARD: {
+    component: RequestPrepaidCardScreen,
+    options: horizontalInterpolator,
   },
 };
 

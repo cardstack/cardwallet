@@ -29,6 +29,7 @@ export const MainRoutes = {
   REWARD_WITHDRAW_CONFIRMATION: 'RewardWithdrawConfirmationScreen',
   TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
   BACKUP_SHEET: 'BackupSheet',
+  REQUEST_PREPAID_CARD: 'RequestPrepaidCardScreen',
 } as const;
 
 export const GlobalRoutes = {

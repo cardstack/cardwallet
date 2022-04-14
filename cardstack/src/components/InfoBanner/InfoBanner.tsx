@@ -21,6 +21,7 @@ export const InfoBanner = ({
   message,
   iconName = 'info',
   iconColor = 'appleBlue',
+  children,
   ...rest
 }: Props) => (
   <Container width="100%" {...rest}>
@@ -38,6 +39,7 @@ export const InfoBanner = ({
       <Text size="xs" color="secondaryText">
         {message}
       </Text>
+      {children}
     </Container>
   </Container>
 );
