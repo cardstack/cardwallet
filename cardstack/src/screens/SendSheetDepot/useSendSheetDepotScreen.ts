@@ -280,9 +280,11 @@ export const useSendSheetDepotScreen = () => {
     [getNativeCurrencyAmount, handleAmountDetails, selected]
   );
 
-  const onMaxBalancePress = useCallback(async () => {
-    updateAssetAmount(maxInputBalance);
-  }, [updateAssetAmount, maxInputBalance]);
+  // NOTE: Button MAX is being temporarely removed until
+  // sending max balance functionaly is updated in the SDK.
+  // const onMaxBalancePress = useCallback(async () => {
+  //   updateAssetAmount(maxInputBalance);
+  // }, [updateAssetAmount, maxInputBalance]);
 
   const onChangeAssetAmount = useCallback(
     newAssetAmount => {
@@ -401,7 +403,7 @@ export const useSendSheetDepotScreen = () => {
       onChangeAssetAmount,
       onChangeNativeAmount,
       onResetAssetSelection,
-      onMaxBalancePress,
+      onMaxBalancePress: undefined,
       onSelectAsset: setSelected,
       allAssets: depotAssets,
       selectedGasPrice: gasEstimatedFee,
@@ -418,7 +420,7 @@ export const useSendSheetDepotScreen = () => {
       network,
       onChangeAssetAmount,
       onChangeNativeAmount,
-      onMaxBalancePress,
+      // onMaxBalancePress,
       onResetAssetSelection,
       onSendPress,
       recipient,
