@@ -29,7 +29,12 @@ const TabBarIcon = ({ focused, iconName, label }: TabBarIconProps) => {
   );
 
   return (
-    <Container flex={1} alignItems="center">
+    <Container
+      flex={1}
+      width="100%"
+      minWidth={layouts.tabIndicatorDash.width}
+      alignItems="center"
+    >
       <Container
         height={layouts.tabIndicatorDash.height}
         width={layouts.tabIndicatorDash.width}
@@ -41,12 +46,7 @@ const TabBarIcon = ({ focused, iconName, label }: TabBarIconProps) => {
         color={styles.iconLabelColor}
         size={layouts.iconSize}
       />
-      <Text
-        color={styles.iconLabelColor}
-        paddingTop={2}
-        weight="bold"
-        fontSize={10}
-      >
+      <Text variant="tabBar" color={styles.iconLabelColor} paddingTop={2}>
         {label}
       </Text>
     </Container>
