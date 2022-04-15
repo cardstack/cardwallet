@@ -6,7 +6,10 @@ import { MerchantSafeType } from '@cardstack/types';
 import { isLayer1 } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
 
 import {
   changePrimarySafe as setPrimarySafeAccount,
@@ -20,6 +23,8 @@ export const usePrimarySafe = () => {
 
   const primarySafeKey = useSelector(selectPrimarySafe(network, accountAddress))
     ?.address;
+
+  const walletReady = useRainbowSelector(state => state.appState.walletReady);
 
   const {
     merchantSafes = [],
@@ -38,8 +43,7 @@ export const usePrimarySafe = () => {
         merchantSafes: data?.merchantSafes,
         ...rest,
       }),
-      skip: isLayer1(network) || !accountAddress,
-      // refetchOnFocus: true,
+      skip: isLayer1(network) || !accountAddress || !walletReady,
     }
   );
 
