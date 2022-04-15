@@ -1,9 +1,10 @@
 import Chance from 'chance';
 import React from 'react';
 
-import { BalanceCoinRow } from '../BalanceCoinRow';
-import { render } from '../../test-utils';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
+import { render } from '../../test-utils';
+import { BalanceCoinRow } from '../BalanceCoinRow';
 const chance = new Chance();
 
 describe('BalanceCoinRow', () => {

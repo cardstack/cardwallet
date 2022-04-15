@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 
-import { useImportSeedSheet } from './useImportSeedSheet';
 import {
   Button,
   CenteredContainer,
@@ -9,13 +8,16 @@ import {
   Sheet,
   Text,
 } from '@cardstack/components';
+import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
-import { useKeyboardHeight, useMagicAutofocus } from '@rainbow-me/hooks';
+
 import {
   ToastPositionContainer,
   InvalidPasteToast,
 } from '@rainbow-me/components/toasts';
-import { colors } from '@cardstack/theme';
+import { useKeyboardHeight, useMagicAutofocus } from '@rainbow-me/hooks';
+
+import { useImportSeedSheet } from './useImportSeedSheet';
 
 const ImportSeedSheet = () => {
   const {

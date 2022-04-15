@@ -1,18 +1,10 @@
+import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import axios, { AxiosError } from 'axios';
 import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
-import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
-import {
-  getAllWallets,
-  getWalletByAddress,
-  loadAddress,
-} from '@rainbow-me/model/wallet';
-import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import {
-  getLocal,
-  saveLocal,
-  removeLocal,
-} from '@rainbow-me/handlers/localstorage/common';
+
+import { getFCMToken } from '@cardstack/models/firebase';
+import HDProvider from '@cardstack/models/hd-provider';
 import {
   BusinessIDUniquenessResponse,
   CustodialWallet,
@@ -23,10 +15,20 @@ import {
   CreateBusinessInfoDIDParams,
   NotificationsPreferenceDataType,
 } from '@cardstack/types';
-import logger from 'logger';
+
+import {
+  getLocal,
+  saveLocal,
+  removeLocal,
+} from '@rainbow-me/handlers/localstorage/common';
+import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import HDProvider from '@cardstack/models/hd-provider';
-import { getFCMToken } from '@cardstack/models/firebase';
+import {
+  getAllWallets,
+  getWalletByAddress,
+  loadAddress,
+} from '@rainbow-me/model/wallet';
+import logger from 'logger';
 
 const HUBAUTH_PROMPT_MESSAGE =
   'Please authenticate your ownership of this account with the Cardstack Hub server';

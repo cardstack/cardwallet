@@ -3,6 +3,7 @@ import {
   getMinimumVersion,
   getReviewFeature,
 } from '@cardstack/services/firebase-cloud-functions';
+
 import logger from 'logger';
 
 describe('Firebase cloud functions services', () => {

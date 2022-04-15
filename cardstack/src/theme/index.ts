@@ -1,11 +1,12 @@
 import { createTheme } from '@shopify/restyle';
-import { fontSizes } from './fontSizes';
-import { fontWeights } from './fontWeights';
+
+import { breakpoints } from './breakpoints';
 import { buttonVariants } from './buttonVariants';
 import { colors } from './colors';
-import { textVariants } from './textVariants';
+import { fontSizes } from './fontSizes';
+import { fontWeights } from './fontWeights';
 import { spacing } from './spacing';
-import { breakpoints } from './breakpoints';
+import { textVariants } from './textVariants';
 
 const theme = createTheme({
   breakpoints,

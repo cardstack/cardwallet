@@ -1,8 +1,11 @@
 import assert from 'assert';
+
+import { TransactionConfirmationType } from '@cardstack/types';
+
 import { TransferPrepaidCard2DecodedData } from '../types/transaction-confirmation-types';
+
 import { BaseStrategyWithActionDispatcherData } from './base-strategy';
 import { decodeParameters } from './decoding-utils';
-import { TransactionConfirmationType } from '@cardstack/types';
 
 export class TransferPrepaidCard2Strategy extends BaseStrategyWithActionDispatcherData {
   isApplicable(): boolean {

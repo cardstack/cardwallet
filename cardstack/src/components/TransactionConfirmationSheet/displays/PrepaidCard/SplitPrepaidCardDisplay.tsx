@@ -1,6 +1,6 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { SectionHeaderText } from '../components/SectionHeaderText';
+
 import {
   Container,
   HorizontalDivider,
@@ -14,10 +14,13 @@ import {
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
+
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
+
+import { SectionHeaderText } from '../components/SectionHeaderText';
 
 interface SplitPrepaidCardDisplayProps
   extends TransactionConfirmationDisplayProps {

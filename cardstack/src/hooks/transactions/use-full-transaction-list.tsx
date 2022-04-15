@@ -1,12 +1,16 @@
 import { NetworkStatus } from '@apollo/client';
-import { useRainbowSelector } from '../../../../src/redux/hooks';
-import { TRANSACTION_PAGE_SIZE } from '../../constants';
-import { useTransactionSections } from './use-transaction-sections';
+
 import { useGetAccountTransactionHistoryDataQuery } from '@cardstack/graphql';
 import { isLayer1, isLayer2 } from '@cardstack/utils';
+
 import { useAccountTransactions } from '@rainbow-me/hooks';
 import { Network } from '@rainbow-me/networkTypes';
 import logger from 'logger';
+
+import { useRainbowSelector } from '../../../../src/redux/hooks';
+import { TRANSACTION_PAGE_SIZE } from '../../constants';
+
+import { useTransactionSections } from './use-transaction-sections';
 
 const useLayer2Transactions = () => {
   const [accountAddress, network] = useRainbowSelector(state => [

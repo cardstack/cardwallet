@@ -1,6 +1,6 @@
-import React, { memo, useMemo } from 'react';
 import { useRoute } from '@react-navigation/core';
-import { strings } from './strings';
+import React, { memo, useMemo } from 'react';
+
 import {
   BlockscoutButton,
   CoinIcon,
@@ -15,10 +15,13 @@ import MerchantSectionCard, {
   USER_ICON_SIZE,
 } from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
 import { TransactionBaseProps } from '@cardstack/components/Transactions/TransactionBase';
+import { RouteType } from '@cardstack/navigation/types';
 import { MerchantEarnedSpendAndRevenueTransactionType } from '@cardstack/types';
 import { dateFormatter, getAddressPreview } from '@cardstack/utils';
+
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { RouteType } from '@cardstack/navigation/types';
+
+import { strings } from './strings';
 
 interface Params {
   transaction: TransactionBaseProps &

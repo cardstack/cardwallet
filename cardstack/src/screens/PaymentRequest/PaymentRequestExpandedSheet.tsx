@@ -1,12 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/core';
-import {
-  PaymentRequestConfirmation,
-  PaymentRequestFooter,
-  PaymentRequestHeader,
-} from './components';
-import { MinInvalidAmountText, useAmountConvertHelper } from './helper';
-import { useDimensions } from '@rainbow-me/hooks';
+import React, { useEffect, useState } from 'react';
+
 import {
   Button,
   Container,
@@ -16,14 +10,23 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
+import { RouteType } from '@cardstack/navigation/types';
 import { MerchantInformation } from '@cardstack/types';
 import { hitSlop } from '@cardstack/utils/layouts';
+
+import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import {
   usePaymentCurrencyAndConversionRates,
   useNativeCurrencyAndConversionRates,
 } from '@rainbow-me/redux/hooks';
-import { RouteType } from '@cardstack/navigation/types';
+
+import {
+  PaymentRequestConfirmation,
+  PaymentRequestFooter,
+  PaymentRequestHeader,
+} from './components';
+import { MinInvalidAmountText, useAmountConvertHelper } from './helper';
 
 const TOP_POSITION = 150;
 

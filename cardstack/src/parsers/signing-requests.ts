@@ -4,9 +4,12 @@ import {
   convertRawAmountToDecimalFormat,
   fromWei,
 } from '@cardstack/cardpay-sdk';
-import { get, isNil } from 'lodash';
-import BigNumber from 'bignumber.js';
 import { convertHexToUtf8 } from '@walletconnect/utils';
+import BigNumber from 'bignumber.js';
+import { get, isNil } from 'lodash';
+
+import { isHexString } from '@rainbow-me/handlers/web3';
+import { ethUnits } from '@rainbow-me/references';
 import smartContractMethods from '@rainbow-me/references/smartcontract-methods.json';
 import { ethereumUtils } from '@rainbow-me/utils';
 import {
@@ -16,8 +19,6 @@ import {
   SIGN_TRANSACTION,
   SIGN_TYPED_DATA,
 } from '@rainbow-me/utils/signingMethods';
-import { ethUnits } from '@rainbow-me/references';
-import { isHexString } from '@rainbow-me/handlers/web3';
 
 interface GetTransactionDisplayDetailsResult {
   request: {

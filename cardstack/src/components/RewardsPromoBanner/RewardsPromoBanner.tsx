@@ -1,11 +1,13 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { memo, useCallback } from 'react';
 
-import { useNavigation } from '@react-navigation/core';
+import { Container, ContainerProps, Image, Text } from '@cardstack/components';
+
+import Routes from '@rainbow-me/navigation/routesNames';
+
 import rewardsPromoBanner from '../../assets/promo-rewards.png';
 import { Button } from '../Button';
 import { CenteredContainer } from '../Container';
-import { Container, ContainerProps, Image, Text } from '@cardstack/components';
-import Routes from '@rainbow-me/navigation/routesNames';
 
 const strings = {
   rewards: 'Rewards',

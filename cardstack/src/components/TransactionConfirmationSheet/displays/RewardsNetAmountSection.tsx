@@ -1,7 +1,10 @@
 import React, { useMemo } from 'react';
-import { strings } from '../strings';
-import { AmountSection } from './components/sections/AmountSection';
+
 import { RewardsClaimData } from '@cardstack/types';
+
+import { strings } from '../strings';
+
+import { AmountSection } from './components/sections/AmountSection';
 
 interface RewardsNetAmountSectionProps extends Partial<RewardsClaimData> {
   headerText: string;

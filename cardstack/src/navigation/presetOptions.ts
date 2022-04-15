@@ -4,9 +4,11 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import { Keyboard } from 'react-native';
-import { ScreenNavigation } from './screens';
-import { Device } from '@cardstack/utils';
+
 import { colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
+
+import { ScreenNavigation } from './screens';
 
 export const horizontalInterpolator: StackNavigationOptions = {
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

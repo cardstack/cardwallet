@@ -1,5 +1,7 @@
 import { captureException } from '@sentry/minimal';
+
 import HDProvider from '@cardstack/models/hd-provider';
+
 import logger from 'logger';
 
 type QueryError = {

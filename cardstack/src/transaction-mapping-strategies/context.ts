@@ -1,26 +1,29 @@
 import { flatten } from 'lodash';
 
+import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
+
+import logger from 'logger';
+
 import {
   AdvancedTransactionFragment,
   TransactionTypes,
 } from '../types/transaction-types';
+
 import { BridgeToLayer1EventStrategy } from './transaction-mapping-strategy-types/bridge-to-layer1-strategy';
 import { BridgeToLayer2EventStrategy } from './transaction-mapping-strategy-types/bridge-to-layer2-strategy';
 import { ERC20TokenStrategy } from './transaction-mapping-strategy-types/erc20-token-strategy';
 import { MerchantClaimStrategy } from './transaction-mapping-strategy-types/merchant-claim-strategy';
 import { MerchantCreationStrategy } from './transaction-mapping-strategy-types/merchant-creation-strategy';
+import { MerchantDepositStrategy } from './transaction-mapping-strategy-types/merchant-deposit-strategy';
 import { MerchantEarnedRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 import { MerchantEarnedSpendAndRevenueStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-and-revenue-strategy';
-import { MerchantWithdrawStrategy } from './transaction-mapping-strategy-types/merchant-withdraw-strategy';
-import { MerchantDepositStrategy } from './transaction-mapping-strategy-types/merchant-deposit-strategy';
-import { MerchantPrepaidCardIssuanceStrategy } from './transaction-mapping-strategy-types/merchant-prepaid-card-issuance-strategy';
 import { MerchantEarnedSpendStrategy } from './transaction-mapping-strategy-types/merchant-earned-spend-strategy';
+import { MerchantPrepaidCardIssuanceStrategy } from './transaction-mapping-strategy-types/merchant-prepaid-card-issuance-strategy';
+import { MerchantWithdrawStrategy } from './transaction-mapping-strategy-types/merchant-withdraw-strategy';
 import { PrepaidCardCreationStrategy } from './transaction-mapping-strategy-types/prepaid-card-creation-strategy';
 import { PrepaidCardPaymentStrategy } from './transaction-mapping-strategy-types/prepaid-card-payment-strategy';
 import { PrepaidCardSplitStrategy } from './transaction-mapping-strategy-types/prepaid-card-split-strategy';
 import { PrepaidCardTransferStrategy } from './transaction-mapping-strategy-types/prepaid-card-transfer-strategy';
-import logger from 'logger';
-import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
 
 export type TransactionMappingStrategy =
   | typeof PrepaidCardSplitStrategy

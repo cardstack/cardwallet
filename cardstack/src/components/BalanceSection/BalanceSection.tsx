@@ -1,9 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import { ScrollView } from 'react-native';
-import { TokenType } from '@cardstack/types';
-import Routes from '@rainbow-me/routes';
+
 import { Container, TokenBalance } from '@cardstack/components';
+import { TokenType } from '@cardstack/types';
+
 import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 
 interface BalancesProps {
   tokens: TokenType[];

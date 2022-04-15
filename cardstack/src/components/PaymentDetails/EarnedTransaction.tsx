@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { strings } from './strings';
+
 import {
   Container,
   HorizontalDivider,
@@ -11,6 +11,8 @@ import {
   TransactionRowProps,
 } from '@cardstack/components/Transactions/TransactionBase';
 import { MerchantEarnedRevenueTransactionTypeTxn } from '@cardstack/types';
+
+import { strings } from './strings';
 
 interface EarnedTransactionProps
   extends MerchantEarnedRevenueTransactionTypeTxn {

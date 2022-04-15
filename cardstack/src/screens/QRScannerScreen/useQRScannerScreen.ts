@@ -1,8 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useIsEmulator } from 'react-native-device-info';
-import { strings } from './strings';
+
 import { SwitchSelectorOption } from '@cardstack/components';
 import { layoutEasingAnimation } from '@cardstack/utils';
+
+import { strings } from './strings';
 
 enum PageMode {
   SCAN,

@@ -1,4 +1,3 @@
-import { BaseStrategy } from '../base-strategy';
 import {
   PrepaidCardTransferTransactionType,
   TransactionTypes,
@@ -7,6 +6,8 @@ import {
   convertSpendForBalanceDisplay,
   fetchCardCustomizationFromDID,
 } from '@cardstack/utils';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class PrepaidCardTransferStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

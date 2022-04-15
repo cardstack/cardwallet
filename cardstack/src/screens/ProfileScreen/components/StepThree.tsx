@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { useProfileForm } from '../useProfileForm';
-import { exampleMerchantData, strings } from '.';
 import { Button, Container, MerchantSafe, Text } from '@cardstack/components';
+
+import { useProfileForm } from '../useProfileForm';
+
+import { exampleMerchantData, strings } from '.';
 
 export const StepThree = () => {
   const { newMerchantInfo, onPressCreate } = useProfileForm();

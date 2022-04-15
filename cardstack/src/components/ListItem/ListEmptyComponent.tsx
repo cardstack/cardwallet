@@ -1,7 +1,9 @@
 import React from 'react';
+
+import { ColorTypes } from '@cardstack/theme';
+
 import { CenteredContainer, ContainerProps } from '../Container';
 import { Text } from '../Text';
-import { ColorTypes } from '@cardstack/theme';
 
 interface ListEmptyComponentProps extends ContainerProps {
   text?: string;

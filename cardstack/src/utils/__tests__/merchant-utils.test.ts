@@ -1,4 +1,5 @@
 import { Share, Platform } from 'react-native';
+
 import {
   getMerchantClaimTransactionDetails,
   getMerchantEarnedTransactionDetails,

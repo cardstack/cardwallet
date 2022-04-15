@@ -1,21 +1,22 @@
-import { useCallback, useMemo } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/core';
-
 import { BN } from 'ethereumjs-util';
-import { strings } from './strings';
-import { RouteType } from '@cardstack/navigation/types';
+import { useCallback, useMemo } from 'react';
 
-import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
+import { defaultErrorAlert } from '@cardstack/constants';
+import { useMutationEffects } from '@cardstack/hooks';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import { RouteType } from '@cardstack/navigation/types';
+import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
 import {
   useGetRewardWithdrawGasEstimateQuery,
   useWithdrawRewardBalanceMutation,
 } from '@cardstack/services/rewards-center/rewards-center-api';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
-import { useMutationEffects } from '@cardstack/hooks';
-import { Alert } from '@rainbow-me/components/alerts';
-import { defaultErrorAlert } from '@cardstack/constants';
 import { fromWeiToFixedEth } from '@cardstack/utils';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+
+import { strings } from './strings';
 
 interface NavParams {
   tokenInfo: TokenWithSafeAddress;

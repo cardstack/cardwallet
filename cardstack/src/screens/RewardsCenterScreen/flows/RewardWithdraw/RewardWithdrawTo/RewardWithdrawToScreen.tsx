@@ -1,13 +1,16 @@
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { SafeSelectionList } from '../components';
-import { strings } from './strings';
-import { useRewardWithdrawToScreen } from './useRewardWithdrawToScreen';
+
 import {
   CenteredContainer,
   Container,
   NavigationStackHeader,
 } from '@cardstack/components';
+
+import { SafeSelectionList } from '../components';
+
+import { strings } from './strings';
+import { useRewardWithdrawToScreen } from './useRewardWithdrawToScreen';
 
 const RewardWithdrawToScreen = () => {
   const {

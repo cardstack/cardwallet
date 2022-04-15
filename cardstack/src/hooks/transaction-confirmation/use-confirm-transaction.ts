@@ -3,17 +3,13 @@ import { get, isNil, omit } from 'lodash';
 import { useState, useCallback } from 'react';
 import { greaterThan } from 'react-native-reanimated';
 import { useDispatch } from 'react-redux';
-import {
-  sendTransaction,
-  signTransaction,
-  signMessage,
-  signPersonalMessage,
-  signTypedDataMessage,
-} from '../../../../src/model/wallet';
-import { useRouteParams } from './use-route-params';
-import { useIsBalanceEnough } from './use-is-balance-enough';
-import { useCloseScreen } from './use-close-screen';
-import { useCancelTransaction } from './use-cancel-transaction';
+
+import { removeRequest } from '@cardstack/redux/requests';
+
+import { toHex, estimateGasWithPadding } from '@rainbow-me/handlers/web3';
+import { useGas } from '@rainbow-me/hooks';
+import { dataAddNewTransaction } from '@rainbow-me/redux/data';
+import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
 import {
   SEND_TRANSACTION,
   isMessageDisplayType,
@@ -24,11 +20,19 @@ import {
   SIGN_TYPED_DATA,
 } from '@rainbow-me/utils/signingMethods';
 import logger from 'logger';
-import { walletConnectSendStatus } from '@rainbow-me/redux/walletconnect';
-import { removeRequest } from '@cardstack/redux/requests';
-import { dataAddNewTransaction } from '@rainbow-me/redux/data';
-import { toHex, estimateGasWithPadding } from '@rainbow-me/handlers/web3';
-import { useGas } from '@rainbow-me/hooks';
+
+import {
+  sendTransaction,
+  signTransaction,
+  signMessage,
+  signPersonalMessage,
+  signTypedDataMessage,
+} from '../../../../src/model/wallet';
+
+import { useCancelTransaction } from './use-cancel-transaction';
+import { useCloseScreen } from './use-close-screen';
+import { useIsBalanceEnough } from './use-is-balance-enough';
+import { useRouteParams } from './use-route-params';
 
 export const useConfirmTransaction = () => {
   const {

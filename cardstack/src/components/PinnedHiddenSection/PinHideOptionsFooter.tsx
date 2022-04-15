@@ -1,9 +1,12 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { LayoutAnimation } from 'react-native';
-import { IconProps } from '../Icon';
+
 import { Button, Container } from '@cardstack/components';
-import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
 import { ENABLE_PIN_ITEMS } from '@cardstack/constants';
+
+import { usePinnedAndHiddenItemOptions } from '@rainbow-me/hooks';
+
+import { IconProps } from '../Icon';
 
 const layoutAnimation = () => {
   LayoutAnimation.configureNext(

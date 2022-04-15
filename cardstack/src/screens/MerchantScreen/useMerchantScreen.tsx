@@ -1,14 +1,17 @@
+import { useRoute } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 import { Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { strings } from './strings';
-import { MerchantSafeType } from '@cardstack/types';
-import { useAccountSettings } from '@rainbow-me/hooks';
-import { useGetSafesDataQuery } from '@cardstack/services';
+
+import { MerchantContentProps } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
-import { MerchantContentProps } from '@cardstack/components';
+import { useGetSafesDataQuery } from '@cardstack/services';
+import { MerchantSafeType } from '@cardstack/types';
 import { isLayer1 } from '@cardstack/utils';
+
+import { useAccountSettings } from '@rainbow-me/hooks';
+
+import { strings } from './strings';
 
 export const useMerchantScreen = () => {
   const {

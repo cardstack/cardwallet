@@ -1,7 +1,9 @@
 import React from 'react';
-import { useSendSheetDepotScreen } from './useSendSheetDepotScreen';
-import SendSheet from '@rainbow-me/components/send/SendSheet';
+
 import { SendSheetType } from '@rainbow-me/components/send';
+import SendSheet from '@rainbow-me/components/send/SendSheet';
+
+import { useSendSheetDepotScreen } from './useSendSheetDepotScreen';
 
 const SendSheetDepot = () => {
   const hookProps = useSendSheetDepotScreen();

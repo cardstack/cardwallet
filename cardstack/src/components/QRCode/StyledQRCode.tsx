@@ -1,12 +1,15 @@
 import React, { memo } from 'react';
-import CardstackLogo from '../../assets/cardstackColorLogo.png';
-import { CenteredContainer } from '../Container';
-import { useDimensions } from '@rainbow-me/hooks';
+
 import { QRCode } from '@cardstack/components';
 import {
   crosshair,
   CROSSHAIR_SIZE,
 } from '@cardstack/screens/QRScannerScreen/pages/QRCodeScanner/components';
+
+import { useDimensions } from '@rainbow-me/hooks';
+
+import CardstackLogo from '../../assets/cardstackColorLogo.png';
+import { CenteredContainer } from '../Container';
 
 const PADDING = 85;
 

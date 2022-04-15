@@ -12,11 +12,11 @@ import {
   BackgroundColorProps,
 } from '@shopify/restyle';
 import { ReactNode } from 'react';
+import { ViewProps } from 'react-native';
 import {
   SafeAreaView as RNSafeAreaContextView,
   SafeAreaViewProps,
 } from 'react-native-safe-area-context';
-import { ViewProps } from 'react-native';
 
 import { Theme } from '../../theme';
 

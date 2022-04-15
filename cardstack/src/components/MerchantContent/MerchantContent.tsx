@@ -1,8 +1,7 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { memo, useCallback } from 'react';
 import { RefreshControl, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
-import { strings } from './strings';
-import { useClaimAllRevenue } from '@cardstack/screens/sheets/UnclaimedRevenue/useClaimAllRevenue';
+
 import {
   Button,
   Container,
@@ -11,8 +10,12 @@ import {
   MerchantHeader,
   MerchantTokensList,
 } from '@cardstack/components';
+import { useClaimAllRevenue } from '@cardstack/screens/sheets/UnclaimedRevenue/useClaimAllRevenue';
 import { MerchantSafeType, PrimarySafeUpdateProps } from '@cardstack/types';
+
 import Routes from '@rainbow-me/routes';
+
+import { strings } from './strings';
 
 const HORIZONTAL_PADDING = 5;
 // For avoiding occlusing the network tag.

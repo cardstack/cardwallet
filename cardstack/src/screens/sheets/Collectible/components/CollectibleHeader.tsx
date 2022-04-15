@@ -1,7 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { Linking, Share } from 'react-native';
 import URL from 'url-parse';
-import logger from 'logger';
 
 import {
   AnimatedPressable,
@@ -10,9 +9,11 @@ import {
   Text,
 } from '@cardstack/components';
 import { CollectibleType } from '@cardstack/types';
+
+import { buildCollectibleName } from '@rainbow-me/helpers/assets';
 import NetworkTypes from '@rainbow-me/networkTypes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { buildCollectibleName } from '@rainbow-me/helpers/assets';
+import logger from 'logger';
 
 function viewMenuItemLabel(collectible: CollectibleType) {
   if (collectible.networkName === NetworkTypes.mainnet) {

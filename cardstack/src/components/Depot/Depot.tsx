@@ -1,6 +1,5 @@
 import React from 'react';
-import { HorizontalDivider } from '../HorizontalDivider';
-import { MoreItemsFooter } from '../MoreItemsFooter';
+
 import {
   CardPressable,
   Container,
@@ -8,8 +7,12 @@ import {
   TokenBalance,
 } from '@cardstack/components';
 import { DepotType } from '@cardstack/types';
+
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
+
+import { HorizontalDivider } from '../HorizontalDivider';
+import { MoreItemsFooter } from '../MoreItemsFooter';
 
 interface DepotProps extends Omit<DepotType, 'type'> {
   networkName: string;

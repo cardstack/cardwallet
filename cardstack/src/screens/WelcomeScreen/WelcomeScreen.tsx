@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
-import { useWelcomeScreen } from './hooks';
-import { strings } from './strings';
+
 import {
   Button,
   CenteredContainer,
@@ -8,7 +7,11 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
+
+import { useWelcomeScreen } from './hooks';
+import { strings } from './strings';
 
 const layouts = {
   iconSize: 100,

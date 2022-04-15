@@ -3,8 +3,9 @@ import React from 'react';
 
 import { Container } from '../Container';
 import { Text } from '../Text';
-import { customIcons } from './custom-icons';
+
 import { Icon, IconName } from './Icon';
+import { customIcons } from './custom-icons';
 
 storiesOf('Icon', module).add('Custom Icons', () => (
   <Container

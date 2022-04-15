@@ -1,8 +1,10 @@
 import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-core';
+
+import logger from 'logger';
+
 import HDProvider, { SignedProviderParams } from './hd-provider';
 import Web3WsProvider from './web3-provider';
-import logger from 'logger';
 
 const web3Instance: Web3 = new Web3();
 

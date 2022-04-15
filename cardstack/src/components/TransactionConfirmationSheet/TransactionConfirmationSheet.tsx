@@ -3,11 +3,6 @@ import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import URL from 'url-parse';
 
 import {
-  DisplayInformation,
-  transactionTypeMap,
-} from './displays/DisplayInformation';
-import { TransactionConfirmationData } from '@cardstack/types';
-import {
   Button,
   Container,
   HorizontalDivider,
@@ -17,7 +12,13 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
+import { TransactionConfirmationData } from '@cardstack/types';
 import { layoutEasingAnimation } from '@cardstack/utils';
+
+import {
+  DisplayInformation,
+  transactionTypeMap,
+} from './displays/DisplayInformation';
 
 export interface TransactionConfirmationDisplayProps {
   dappUrl?: string;

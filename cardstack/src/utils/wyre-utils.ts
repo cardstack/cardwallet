@@ -17,10 +17,12 @@ import {
   WYRE_SECRET_KEY_TEST,
 } from 'react-native-dotenv';
 import publicIP from 'react-native-public-ip';
-import logger from 'logger';
+
 import { isMainnet } from '@cardstack/utils/cardpay-utils';
+
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
+import logger from 'logger';
 
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
 

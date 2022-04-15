@@ -1,17 +1,21 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React, { memo, useCallback } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { strings } from './strings';
-import { Header, PrepaidCardItem } from '.';
+
 import {
   Button,
   Container,
   ContainerProps,
   HorizontalDivider,
 } from '@cardstack/components';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 import { PrepaidCardType } from '@cardstack/types';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
+import { strings } from './strings';
+
+import { Header, PrepaidCardItem } from '.';
 
 export interface ChoosePrepaidCardProps {
   prepaidCards: PrepaidCardType[];

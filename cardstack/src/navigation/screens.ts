@@ -1,13 +1,7 @@
+import { NavigationState, ScreenListeners } from '@react-navigation/core';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
-import { NavigationState, ScreenListeners } from '@react-navigation/core';
-import { MainRoutes, GlobalRoutes } from './routes';
-import {
-  dismissAndroidKeyboardOnClose,
-  horizontalInterpolator,
-  overlayPreset,
-  slideLeftToRightPreset,
-} from './presetOptions';
+
 import {
   BuyPrepaidCard,
   CurrencySelectionGlobalModal,
@@ -40,20 +34,29 @@ import {
   RequestPrepaidCardScreen,
 } from '@cardstack/screens';
 import {
+  RewardWithdrawConfirmationScreen,
+  RewardWithdrawToScreen,
+} from '@cardstack/screens/RewardsCenterScreen/flows';
+import { Device } from '@cardstack/utils';
+
+import {
   bottomSheetPreset,
   expandedPreset,
   sheetPreset,
   wcPromptPreset,
 } from '@rainbow-me/navigation/effects';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
-import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
-import { Device } from '@cardstack/utils';
-import SettingsModal from '@rainbow-me/screens/SettingsModal';
 import BackupSheet from '@rainbow-me/screens/BackupSheet';
+import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
+import SettingsModal from '@rainbow-me/screens/SettingsModal';
+
 import {
-  RewardWithdrawConfirmationScreen,
-  RewardWithdrawToScreen,
-} from '@cardstack/screens/RewardsCenterScreen/flows';
+  dismissAndroidKeyboardOnClose,
+  horizontalInterpolator,
+  overlayPreset,
+  slideLeftToRightPreset,
+} from './presetOptions';
+import { MainRoutes, GlobalRoutes } from './routes';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;

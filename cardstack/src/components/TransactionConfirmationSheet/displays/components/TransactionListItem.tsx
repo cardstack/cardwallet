@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
 
-import { SectionHeaderText } from './SectionHeaderText';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { NetworkBadge } from '@cardstack/components/NetworkBadge';
 import { Container, HorizontalDivider, Text } from '@cardstack/components';
+import { NetworkBadge } from '@cardstack/components/NetworkBadge';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
+
+import { SectionHeaderText } from './SectionHeaderText';
 
 interface Props {
   headerText: string;

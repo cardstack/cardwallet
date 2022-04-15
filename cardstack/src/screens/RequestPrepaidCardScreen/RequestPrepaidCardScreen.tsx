@@ -1,7 +1,6 @@
-import React, { memo } from 'react';
 import { convertToSpend } from '@cardstack/cardpay-sdk';
-import { strings } from './strings';
-import { useRequestPrepaidCardScreen } from './useRequestPrepaidCardScreen';
+import React, { memo } from 'react';
+
 import {
   Button,
   Container,
@@ -11,6 +10,9 @@ import {
   Text,
 } from '@cardstack/components';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+
+import { strings } from './strings';
+import { useRequestPrepaidCardScreen } from './useRequestPrepaidCardScreen';
 
 const RequestPrepaidCardScreen = () => {
   const { onSupportLinkPress } = useRequestPrepaidCardScreen();

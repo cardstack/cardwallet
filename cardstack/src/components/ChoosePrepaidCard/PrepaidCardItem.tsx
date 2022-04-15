@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { strings } from './strings';
+
 import {
   CardPressable,
   Container,
@@ -7,9 +7,11 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
-import { convertSpendForBalanceDisplay, splitAddress } from '@cardstack/utils';
-import { PrepaidCardType } from '@cardstack/types';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+import { PrepaidCardType } from '@cardstack/types';
+import { convertSpendForBalanceDisplay, splitAddress } from '@cardstack/utils';
+
+import { strings } from './strings';
 
 interface PrepaidCardItemProps {
   item: PrepaidCardType;

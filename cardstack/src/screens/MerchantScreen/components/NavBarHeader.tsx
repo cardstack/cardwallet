@@ -1,5 +1,6 @@
-import React, { memo, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/core';
+import React, { memo, useCallback } from 'react';
+
 import {
   CenteredContainer,
   Container,
@@ -9,6 +10,7 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { getAddressPreview } from '@cardstack/utils';
+
 import Routes from '@rainbow-me/routes';
 
 export const NavBarHeader = memo(

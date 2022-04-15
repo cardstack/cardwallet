@@ -1,12 +1,7 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
-import {
-  CardContent,
-  CardLoaderSkeleton,
-  Subtitle,
-  TopContent,
-} from './Components';
+
 import {
   Container,
   Icon,
@@ -14,12 +9,20 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
+import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+import { Inventory } from '@cardstack/types';
+
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { SlackSheet } from '@rainbow-me/components/sheet';
-import { Inventory } from '@cardstack/types';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
-import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 import Routes from '@rainbow-me/routes';
+
+import {
+  CardContent,
+  CardLoaderSkeleton,
+  Subtitle,
+  TopContent,
+} from './Components';
 
 const DEFAULT_CARD_CONFIG = {
   background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',

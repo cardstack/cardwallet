@@ -1,5 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
+
+import {
+  ScrollView,
+  Container,
+  useTabHeader,
+  InfoBanner,
+} from '@cardstack/components';
+
 import { strings } from '../strings';
+
 import {
   RewardsTitle,
   RewardRow,
@@ -9,12 +18,6 @@ import {
   RewardsHistoryList,
   RewardsHistoryListProps,
 } from '.';
-import {
-  ScrollView,
-  Container,
-  useTabHeader,
-  InfoBanner,
-} from '@cardstack/components';
 
 interface ClaimContentProps {
   claimList?: Array<RewardRowProps>;

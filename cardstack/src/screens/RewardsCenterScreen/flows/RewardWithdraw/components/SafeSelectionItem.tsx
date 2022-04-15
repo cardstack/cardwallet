@@ -1,8 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import { strings } from './strings';
-import { MerchantOrDepotSafe } from '@cardstack/types';
-import { getAddressPreview } from '@cardstack/utils';
+
 import {
   CardPressable,
   Container,
@@ -10,8 +8,13 @@ import {
   Icon,
   IconName,
 } from '@cardstack/components';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { palette } from '@cardstack/theme';
+import { MerchantOrDepotSafe } from '@cardstack/types';
+import { getAddressPreview } from '@cardstack/utils';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
+
+import { strings } from './strings';
 
 export interface SafeSelectionItemProps {
   safe: MerchantOrDepotSafe;

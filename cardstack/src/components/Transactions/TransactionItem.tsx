@@ -1,22 +1,23 @@
 import React, { memo } from 'react';
 
+import { TransactionType, TransactionTypes } from '@cardstack/types';
+
 import { DepotBridgedLayer1Transaction } from './DepotBridgedLayer1Transaction';
 import { DepotBridgedLayer2Transaction } from './DepotBridgedLayer2Transaction';
 import { ERC20Transaction } from './ERC20Transaction';
 import { MerchantClaimTransaction } from './Merchant/MerchantClaimTransaction';
-import { MerchantWithdrawTransaction } from './Merchant/MerchantWithdrawTransaction';
-import { MerchantDepositTransaction } from './Merchant/MerchantDepositTransaction';
 import { MerchantCreationTransaction } from './Merchant/MerchantCreationTransaction';
+import { MerchantDepositTransaction } from './Merchant/MerchantDepositTransaction';
 import { MerchantEarnedRevenueTransaction } from './Merchant/MerchantEarnedRevenueTransaction';
+import { MerchantEarnedSpendAndRevenueTransaction } from './Merchant/MerchantEarnedSpendAndRevenueTransaction';
+import { MerchantEarnedSpendTransaction } from './Merchant/MerchantEarnedSpendTransaction';
 import { MerchantPrepaidCardIssuanceTransaction } from './Merchant/MerchantPrepaidCardIssuanceTransaction';
+import { MerchantWithdrawTransaction } from './Merchant/MerchantWithdrawTransaction';
 import { PrepaidCardCreatedTransaction } from './PrepaidCard/PrepaidCardCreatedTransaction';
 import { PrepaidCardPaymentTransaction } from './PrepaidCard/PrepaidCardPaymentTransaction';
 import { PrepaidCardSplitTransaction } from './PrepaidCard/PrepaidCardSplitTransaction';
 import { PrepaidCardTransferTransaction } from './PrepaidCard/PrepaidCardTransferTransaction';
 import { TransactionBaseCustomizationProps } from './TransactionBase';
-import { MerchantEarnedSpendTransaction } from './Merchant/MerchantEarnedSpendTransaction';
-import { MerchantEarnedSpendAndRevenueTransaction } from './Merchant/MerchantEarnedSpendAndRevenueTransaction';
-import { TransactionType, TransactionTypes } from '@cardstack/types';
 
 export interface TransactionItemProps
   extends TransactionBaseCustomizationProps {

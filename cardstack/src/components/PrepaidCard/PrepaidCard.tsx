@@ -1,24 +1,27 @@
 import React, { useCallback, useState } from 'react';
 
-import { PrepaidCardCustomization, PrepaidCardType } from '../../types';
-import { CenteredContainer, ContainerProps } from '../Container';
-import { CustomizableBackground } from './components/CustomizableBackground';
-import PrepaidCardInnerTop from './components/PrepaidCardInnerTop';
-import PrepaidCardInnerBottom from './components/PrepaidCardInnerBottom';
-import Routes from '@rainbow-me/routes';
-import { useNavigation } from '@rainbow-me/navigation';
-import {
-  PinnedHiddenSectionOption,
-  usePinnedAndHiddenItemOptions,
-} from '@rainbow-me/hooks';
 import {
   CardPressable,
   Container,
   Icon,
   ScrollView,
 } from '@cardstack/components';
-import { Alert } from '@rainbow-me/components/alerts';
 import { delayLongPressMs } from '@cardstack/constants';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import {
+  PinnedHiddenSectionOption,
+  usePinnedAndHiddenItemOptions,
+} from '@rainbow-me/hooks';
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
+
+import { PrepaidCardCustomization, PrepaidCardType } from '../../types';
+import { CenteredContainer, ContainerProps } from '../Container';
+
+import { CustomizableBackground } from './components/CustomizableBackground';
+import PrepaidCardInnerBottom from './components/PrepaidCardInnerBottom';
+import PrepaidCardInnerTop from './components/PrepaidCardInnerTop';
 
 export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
   networkName: string;

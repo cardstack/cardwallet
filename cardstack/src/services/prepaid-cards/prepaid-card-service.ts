@@ -1,17 +1,21 @@
 import { getSDK, PrepaidCardSafe } from '@cardstack/cardpay-sdk';
+
+import { getSafesInstance } from '@cardstack/models';
+import { SignedProviderParams } from '@cardstack/models/hd-provider';
+import Web3Instance from '@cardstack/models/web3-instance';
+import { getSafeData } from '@cardstack/services';
+import { PrepaidCardType } from '@cardstack/types';
+import { fetchCardCustomizationFromDID } from '@cardstack/utils';
+
+import logger from 'logger';
+
 import { updateSafeWithTokenPrices } from '../gnosis-service';
+
 import {
   PrepaidCardPayMerchantQueryParams,
   PrepaidCardSafeQueryParams,
   PrepaidCardTransferQueryParams,
 } from './prepaid-card-types';
-import { getSafeData } from '@cardstack/services';
-import logger from 'logger';
-import { fetchCardCustomizationFromDID } from '@cardstack/utils';
-import { getSafesInstance } from '@cardstack/models';
-import { PrepaidCardType } from '@cardstack/types';
-import Web3Instance from '@cardstack/models/web3-instance';
-import { SignedProviderParams } from '@cardstack/models/hd-provider';
 
 export const addPrepaidCardCustomization = async (card: PrepaidCardSafe) => {
   try {

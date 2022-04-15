@@ -2,14 +2,16 @@ import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from '../base-strategy';
+
+import { TokenTransferFragment } from '@cardstack/graphql';
+import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   ERC20TransactionType,
   TransactionTypes,
   TransactionStatus,
 } from '@cardstack/types';
-import { fetchHistoricalPrice } from '@cardstack/services';
-import { TokenTransferFragment } from '@cardstack/graphql';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class ERC20TokenStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

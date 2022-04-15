@@ -1,10 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import { crosshair } from '../QRCodeScanner/components';
-import { useRequestCodePage } from './useRequestCodePage';
-import { strings } from './strings';
-import { useDimensions } from '@rainbow-me/hooks';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
+
 import {
   Button,
   CenteredContainer,
@@ -14,6 +10,14 @@ import {
   Text,
 } from '@cardstack/components';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
+import { useDimensions } from '@rainbow-me/hooks';
+
+import { crosshair } from '../QRCodeScanner/components';
+
+import { strings } from './strings';
+import { useRequestCodePage } from './useRequestCodePage';
 
 const styles = StyleSheet.create({
   container: { paddingTop: crosshair.position.y * 0.4 },

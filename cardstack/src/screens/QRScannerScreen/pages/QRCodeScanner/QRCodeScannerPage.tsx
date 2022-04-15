@@ -1,9 +1,23 @@
+import { useIsFocused } from '@react-navigation/core';
 import React, { memo, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { useIsEmulator } from 'react-native-device-info';
-import { useIsFocused } from '@react-navigation/core';
+
+import {
+  Container,
+  Text,
+  Image,
+  AbsoluteFullScreenContainer,
+} from '@cardstack/components';
+import { useBooleanState } from '@cardstack/hooks';
+import { colors } from '@cardstack/theme';
+
+import { networkInfo } from '@rainbow-me/helpers/networkInfo';
+import { useAccountSettings } from '@rainbow-me/hooks';
+
 import PeopleIllustrationBackground from '../../../../assets/people-ill-bg.png';
+
 import {
   CameraNotAuthorizedView,
   QRCodeOverlay,
@@ -13,17 +27,6 @@ import {
 } from './components';
 import { strings } from './strings';
 import { useScanner, useScannerParams } from './useScanner';
-import {
-  Container,
-  Text,
-  Image,
-  AbsoluteFullScreenContainer,
-} from '@cardstack/components';
-import { colors } from '@cardstack/theme';
-import { useBooleanState } from '@cardstack/hooks';
-
-import { useAccountSettings } from '@rainbow-me/hooks';
-import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 
 const styles = StyleSheet.create({
   loadingContainer: { paddingTop: CROSSHAIR_SIZE * 0.45 },

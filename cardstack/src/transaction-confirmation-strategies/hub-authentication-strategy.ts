@@ -1,5 +1,6 @@
-import { BaseStrategy } from './base-strategy';
 import { HubAuthData, TransactionConfirmationType } from '@cardstack/types';
+
+import { BaseStrategy } from './base-strategy';
 
 export class HubAuthenticationStrategy extends BaseStrategy {
   isApplicable(): boolean {

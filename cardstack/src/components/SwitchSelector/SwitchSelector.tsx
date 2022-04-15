@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
-
 import { StyleSheet } from 'react-native';
+
 import {
   Container,
   ContainerProps,

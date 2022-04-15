@@ -1,5 +1,5 @@
-import React, { memo, useCallback, useState } from 'react';
 import { useRoute } from '@react-navigation/core';
+import React, { memo, useCallback, useState } from 'react';
 import { TouchableOpacity, Pressable } from 'react-native';
 
 import {
@@ -12,10 +12,11 @@ import {
   CenteredContainer,
   IconProps,
 } from '@cardstack/components';
-import { abbreviations } from '@rainbow-me/utils';
-import { RouteType } from '@cardstack/navigation/types';
-import { useCopyToast } from '@cardstack/hooks';
 import { delayLongPressMs } from '@cardstack/constants';
+import { useCopyToast } from '@cardstack/hooks';
+import { RouteType } from '@cardstack/navigation/types';
+
+import { abbreviations } from '@rainbow-me/utils';
 
 interface Params {
   address: string;

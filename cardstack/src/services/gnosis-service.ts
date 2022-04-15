@@ -9,11 +9,15 @@ import {
   TokenInfo,
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
-import Web3 from 'web3';
-import { captureException } from '@sentry/react-native';
 import { AnyAction } from '@reduxjs/toolkit';
-import { addPrepaidCardCustomization } from './prepaid-cards/prepaid-card-service';
-import { getNativeBalanceFromOracle } from './exchange-rate-service';
+import { captureException } from '@sentry/react-native';
+import Web3 from 'web3';
+
+import { getSafesInstance } from '@cardstack/models/safes-providers';
+import Web3Instance from '@cardstack/models/web3-instance';
+import { MainRoutes } from '@cardstack/navigation/routes';
+import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
+
 import {
   getDepots,
   getMerchantSafes,
@@ -22,15 +26,14 @@ import {
   saveMerchantSafes,
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
-import logger from 'logger';
-import Web3Instance from '@cardstack/models/web3-instance';
-import { Navigation } from '@rainbow-me/navigation';
-import { MainRoutes } from '@cardstack/navigation/routes';
-import { getSafesInstance } from '@cardstack/models/safes-providers';
-import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { Navigation } from '@rainbow-me/navigation';
 import { dataLoadState } from '@rainbow-me/redux/data';
 import store from '@rainbow-me/redux/store';
+import logger from 'logger';
+
+import { getNativeBalanceFromOracle } from './exchange-rate-service';
+import { addPrepaidCardCustomization } from './prepaid-cards/prepaid-card-service';
 
 export const getSafeData = async (address: string) => {
   const safesInstance = await getSafesInstance();

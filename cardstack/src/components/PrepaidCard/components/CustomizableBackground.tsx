@@ -8,8 +8,10 @@ import SVG, {
   SvgXml,
   LinearGradient,
 } from 'react-native-svg';
+
 import { PrepaidCardCustomization } from '@cardstack/types';
 import { parseLinearGradient } from '@cardstack/utils';
+
 import { useDimensions } from '@rainbow-me/hooks';
 
 type CardVariants = 'normal' | 'small' | 'mini' | 'medium';

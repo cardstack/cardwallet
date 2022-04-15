@@ -1,11 +1,13 @@
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { useChoosePrepaidCard } from './useChoosePrepaidCard';
+
 import {
   CenteredContainer,
   ChoosePrepaidCard,
   SafeAreaView,
 } from '@cardstack/components';
+
+import { useChoosePrepaidCard } from './useChoosePrepaidCard';
 
 const ChoosePrepaidCardSheet = () => {
   const {

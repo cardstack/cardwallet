@@ -3,11 +3,13 @@ import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { ColorTypes, Theme } from '@cardstack/theme';
+
 import { Touchable, TouchableProps } from '../Touchable';
+
 import { CustomIconNames, customIcons } from './custom-icons';
 import { FeatherIconNames } from './feather-icon-names';
 import { MaterialCommunityIconNames } from './material-community-icon-names';
-import { ColorTypes, Theme } from '@cardstack/theme';
 
 const iconSizeToValue = {
   small: 15,

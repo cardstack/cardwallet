@@ -1,9 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 
-import { Container, HorizontalDivider, NetworkBadge, Text } from '../..';
-import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
-import { SectionHeaderText } from './components/SectionHeaderText';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import {
   useAccountProfile,
@@ -11,6 +8,11 @@ import {
   useWalletBalances,
   useWallets,
 } from '@rainbow-me/hooks';
+
+import { Container, HorizontalDivider, NetworkBadge, Text } from '../..';
+import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
+
+import { SectionHeaderText } from './components/SectionHeaderText';
 
 export const GenericDisplay = (props: TransactionConfirmationDisplayProps) => {
   return (

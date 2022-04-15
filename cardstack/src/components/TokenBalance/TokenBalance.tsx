@@ -1,6 +1,6 @@
 import { ResponsiveValue } from '@shopify/restyle';
 import React from 'react';
-import { Theme } from '@cardstack/theme';
+
 import {
   Container,
   ContainerProps,
@@ -8,6 +8,7 @@ import {
   Touchable,
   CoinIcon,
 } from '@cardstack/components';
+import { Theme } from '@cardstack/theme';
 
 export interface TokenBalanceProps extends ContainerProps {
   onPress?: () => void;

@@ -1,10 +1,12 @@
 import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 
-import CardWalletLogo from '../../../assets/cardstackLogo.png';
 import { Container, Image, Text } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
+
 import { shadow } from '@rainbow-me/styles';
+
+import CardWalletLogo from '../../../assets/cardstackLogo.png';
 
 const styles: StyleProp<ViewStyle> = Device.isIOS
   ? shadow.buildAsObject(0, -1, 2, 'rgba(0, 0, 0, 0.25)', 1)

@@ -1,19 +1,20 @@
 import { ParamListBase, useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
+
+import { useLoadingOverlay } from '@cardstack/navigation';
+import { Device } from '@cardstack/utils';
+
 import {
   fetchUserDataFromCloud,
   isCloudBackupAvailable,
   syncCloud,
 } from '@rainbow-me/handlers/cloudBackup';
-
-import { Device } from '@cardstack/utils';
+import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useHideSplashScreen, useWalletManager } from '@rainbow-me/hooks';
+import { ICloudBackupData } from '@rainbow-me/model/backup';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
-import { ICloudBackupData } from '@rainbow-me/model/backup';
-import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
-import { useLoadingOverlay } from '@cardstack/navigation';
 
 export const useWelcomeScreen = () => {
   const { navigate, replace } = useNavigation<

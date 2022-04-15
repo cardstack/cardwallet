@@ -1,8 +1,10 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { useNameOrPreviewFromAddress } from '../useNameOrPreviewFromAddress';
-import { updatedData } from '../../../helpers/__mocks__/dataMocks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
 import { useAccountProfile } from '@rainbow-me/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
+import { updatedData } from '../../../helpers/__mocks__/dataMocks';
+import { useNameOrPreviewFromAddress } from '../useNameOrPreviewFromAddress';
 
 jest.mock('logger');
 

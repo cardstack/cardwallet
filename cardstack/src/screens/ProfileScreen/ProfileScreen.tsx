@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { CreateProfile, strings } from './components';
+import React, { useMemo, useCallback } from 'react';
+
 import {
   Button,
   Container,
@@ -9,10 +9,13 @@ import {
   Text,
 } from '@cardstack/components';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
-import { useAccountSettings } from '@rainbow-me/hooks';
 import { isLayer1 } from '@cardstack/utils';
+
+import { useAccountSettings } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/routes';
 import { SettingsPages } from '@rainbow-me/screens/SettingsModal';
+
+import { CreateProfile, strings } from './components';
 
 const ProfileScreen = () => {
   const { navigate } = useNavigation();

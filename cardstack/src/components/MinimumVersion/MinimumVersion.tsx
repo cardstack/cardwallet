@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
-
 import { Linking, NativeModules } from 'react-native';
-import CardWalletLogo from '../../assets/cardstackLogo.png';
-import PeopleIllustrationBackground from '../../assets/people-ill-bg.png';
+
 import {
   Button,
   Container,
@@ -11,6 +9,9 @@ import {
   CenteredContainer,
 } from '@cardstack/components';
 import { Device, screenHeight, screenWidth } from '@cardstack/utils';
+
+import CardWalletLogo from '../../assets/cardstackLogo.png';
+import PeopleIllustrationBackground from '../../assets/people-ill-bg.png';
 
 const strings = {
   title: 'There is a new version of Card Wallet.',

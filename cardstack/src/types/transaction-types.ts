@@ -1,5 +1,3 @@
-import { BalanceType } from './AssetType';
-import { ClaimStatusTypes } from '@cardstack/utils';
 import {
   TransactionFragment,
   Maybe,
@@ -7,6 +5,9 @@ import {
   MerchantWithdrawFragment,
   MerchantPrepaidCardIssuance,
 } from '@cardstack/graphql';
+import { ClaimStatusTypes } from '@cardstack/utils';
+
+import { BalanceType } from './AssetType';
 
 export enum TransactionTypes {
   DEPOT_BRIDGED_LAYER_1 = 'depotBridgedLayer1',

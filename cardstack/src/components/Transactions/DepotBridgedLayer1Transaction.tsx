@@ -1,10 +1,12 @@
 import React from 'react';
+
+import { CoinIcon, SafeHeader } from '@cardstack/components';
+import { DepotBridgedLayer1TransactionType } from '@cardstack/types';
+
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
 } from './TransactionBase';
-import { CoinIcon, SafeHeader } from '@cardstack/components';
-import { DepotBridgedLayer1TransactionType } from '@cardstack/types';
 
 export interface DepotBridgedLayer1TransactionProps
   extends TransactionBaseCustomizationProps {

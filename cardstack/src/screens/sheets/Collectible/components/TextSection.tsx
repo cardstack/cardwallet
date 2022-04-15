@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+
 import { Container, Text } from '@cardstack/components';
 
 interface TextSectionProps {

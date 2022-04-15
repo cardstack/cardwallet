@@ -1,3 +1,5 @@
+import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { useRoute } from '@react-navigation/core';
 import {
   useState,
   useCallback,
@@ -7,10 +9,11 @@ import {
   RefObject,
 } from 'react';
 import { SectionList } from 'react-native';
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/core';
-import { AssetListRouteType } from './types';
+
+import { useGetServiceStatusQuery } from '@cardstack/services';
 import { isLayer1 } from '@cardstack/utils';
+
+import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   PinnedHiddenSectionOption,
   useAccountProfile,
@@ -19,11 +22,11 @@ import {
   useRefreshAccountData,
   useWallets,
 } from '@rainbow-me/hooks';
-import { useGetServiceStatusQuery } from '@cardstack/services';
-import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import Routes from '@rainbow-me/routes';
+
+import { AssetListRouteType } from './types';
 
 export const useAssetList = ({
   sectionListRef,

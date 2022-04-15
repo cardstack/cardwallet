@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /* global jest */
 /* eslint no-undef: "error" */
 import React from 'react';

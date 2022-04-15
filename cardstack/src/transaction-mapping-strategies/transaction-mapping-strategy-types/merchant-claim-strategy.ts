@@ -3,11 +3,13 @@ import {
   convertRawAmountToBalance,
   getAddress,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from '../base-strategy';
-import { MerchantClaimType, TransactionTypes } from '@cardstack/types';
-import { fetchHistoricalPrice } from '@cardstack/services';
-import { getMerchantClaimTransactionDetails } from '@cardstack/utils/merchant-utils';
+
 import Web3Instance from '@cardstack/models/web3-instance';
+import { fetchHistoricalPrice } from '@cardstack/services';
+import { MerchantClaimType, TransactionTypes } from '@cardstack/types';
+import { getMerchantClaimTransactionDetails } from '@cardstack/utils/merchant-utils';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class MerchantClaimStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

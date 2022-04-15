@@ -3,6 +3,7 @@ import {
   createRestyleFunction,
   ResponsiveValue,
 } from '@shopify/restyle';
+
 import { Theme } from '@cardstack/theme';
 
 export type CustomTextProps<Theme extends BaseTheme> = {

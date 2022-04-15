@@ -1,12 +1,14 @@
 import { ERC20ABI } from '@cardstack/cardpay-sdk';
-import { ActionDispatcherDecodedData } from './../types/transaction-confirmation-types';
+
+import Web3Instance from '@cardstack/models/web3-instance';
+import { getSafeData } from '@cardstack/services';
 import {
   Level1DecodedData,
   TokenData,
   TransactionConfirmationData,
 } from '@cardstack/types';
-import { getSafeData } from '@cardstack/services';
-import Web3Instance from '@cardstack/models/web3-instance';
+
+import { ActionDispatcherDecodedData } from './../types/transaction-confirmation-types';
 
 interface BaseStrategyParams {
   message: {

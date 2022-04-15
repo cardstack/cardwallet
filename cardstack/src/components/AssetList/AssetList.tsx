@@ -5,15 +5,19 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
-import { AssetListLoading } from './components/AssetListLoading';
-import { strings } from './strings';
-import AssetSectionHeader from './components/AssetSectionHeader';
-import { useAssetList } from './useAssetList';
-import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';
+
 import { Container, Text, RewardsPromoBanner } from '@cardstack/components';
-import logger from 'logger';
+import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
+
+import logger from 'logger';
+
+import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
+
+import { AssetListLoading } from './components/AssetListLoading';
+import AssetSectionHeader from './components/AssetSectionHeader';
+import { strings } from './strings';
+import { useAssetList } from './useAssetList';
 
 const styles = StyleSheet.create({
   contentContainer: {

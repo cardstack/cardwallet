@@ -1,8 +1,10 @@
-import { useCallback } from 'react';
 import { useNavigation } from '@react-navigation/core';
-import Routes from '@rainbow-me/routes';
-import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
+import { useCallback } from 'react';
+
 import { usePaymentLinks } from '@cardstack/hooks/merchant/usePaymentLinks';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
+
+import Routes from '@rainbow-me/routes';
 
 export const useRequestCodePage = () => {
   const { navigate } = useNavigation();

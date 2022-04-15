@@ -1,9 +1,11 @@
 import React from 'react';
-import { CustomizableBackground } from '../../PrepaidCard/components/CustomizableBackground';
+
 import { Container, NetworkBadge, Text } from '@cardstack/components';
+import { ColorTypes } from '@cardstack/theme';
 import { PrepaidCardCustomization } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
-import { ColorTypes } from '@cardstack/theme';
+
+import { CustomizableBackground } from '../../PrepaidCard/components/CustomizableBackground';
 
 export const PrepaidCardTransactionHeader = ({
   address,

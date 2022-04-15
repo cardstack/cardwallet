@@ -1,14 +1,11 @@
 import React, { useMemo } from 'react';
-
 import {
   Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { QRCodeScannerPage } from '../QRScannerScreen/pages';
-import { useTransferCardScreen } from './useTransferCardScreen';
-import { strings } from './strings';
+
 import {
   Button,
   Container,
@@ -17,9 +14,15 @@ import {
   SafeAreaView,
   Text,
 } from '@cardstack/components';
-import { Device, screenHeight } from '@cardstack/utils';
 import { colors } from '@cardstack/theme';
+import { Device, screenHeight } from '@cardstack/utils';
+
 import { useDimensions } from '@rainbow-me/hooks';
+
+import { QRCodeScannerPage } from '../QRScannerScreen/pages';
+
+import { strings } from './strings';
+import { useTransferCardScreen } from './useTransferCardScreen';
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {

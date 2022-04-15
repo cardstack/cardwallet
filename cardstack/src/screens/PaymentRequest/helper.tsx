@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   convertAmountToNativeDisplay,
   convertAmountAndPriceToNativeDisplay,
@@ -7,6 +6,8 @@ import {
   convertStringToNumber,
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
+import React from 'react';
+
 import { Text, TextProps } from '@cardstack/components';
 
 export const MIN_SPEND_AMOUNT = 50;

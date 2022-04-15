@@ -2,6 +2,7 @@ import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
 import { Container } from '../Container';
+
 import { OptionItem } from './OptionItem';
 
 storiesOf('Option Item', module).add('Default', () => (

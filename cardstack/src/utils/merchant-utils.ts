@@ -1,24 +1,26 @@
-import { Resolver } from 'did-resolver';
-import { getResolver } from '@cardstack/did-resolver';
-import { Share, Platform } from 'react-native';
 import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
   MerchantSafe,
   subtract,
 } from '@cardstack/cardpay-sdk';
+import { getResolver } from '@cardstack/did-resolver';
+import { Resolver } from 'did-resolver';
+import { Share, Platform } from 'react-native';
+
+import { IconName } from '@cardstack/components';
 import {
   MerchantClaimFragment,
   MerchantRevenueEventFragment,
   PrepaidCardPaymentFragment,
 } from '@cardstack/graphql';
+import { getNativeBalanceFromOracle } from '@cardstack/services';
 import {
   MerchantClaimTypeTxn,
   MerchantEarnedRevenueTransactionTypeTxn,
   MerchantInformation,
 } from '@cardstack/types';
-import { IconName } from '@cardstack/components';
-import { getNativeBalanceFromOracle } from '@cardstack/services';
+
 import logger from 'logger';
 
 export const ClaimedStatus = {

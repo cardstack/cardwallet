@@ -1,4 +1,5 @@
 import { BlockNumber } from 'web3-core';
+
 import Web3Instance from '@cardstack/models/web3-instance';
 
 import logger from 'logger';

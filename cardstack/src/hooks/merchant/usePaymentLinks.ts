@@ -3,9 +3,11 @@ import {
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
 import { useCallback, useMemo } from 'react';
-import { useAccountSettings } from '@rainbow-me/hooks';
+
 import { MerchantInformation } from '@cardstack/types';
 import { isLayer2, shareRequestPaymentLink } from '@cardstack/utils';
+
+import { useAccountSettings } from '@rainbow-me/hooks';
 import logger from 'logger';
 
 export interface usePaymentLinkParams {

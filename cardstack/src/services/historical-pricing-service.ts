@@ -1,7 +1,9 @@
 import { cryptoCurrencies } from '@cardstack/cardpay-sdk';
 import { CRYPTOCOMPARE_API_KEY } from 'react-native-dotenv';
-import logger from 'logger';
+
 import { removeCPXDTokenSuffix } from '@cardstack/utils';
+
+import logger from 'logger';
 
 const CryptoCompareAPIBaseURL = `https://min-api.cryptocompare.com/data/pricehistorical?&api_key=${CRYPTOCOMPARE_API_KEY}`;
 

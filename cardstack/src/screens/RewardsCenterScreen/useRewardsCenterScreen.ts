@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { convertToSpend, getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { useNavigation, StackActions } from '@react-navigation/core';
 import { groupBy } from 'lodash';
-import { strings } from './strings';
-import { ClaimOrTokenWithdraw, TokenWithSafeAddress } from './components';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+
+import { defaultErrorAlert } from '@cardstack/constants';
 import {
-  RewardsRegisterData,
-  RewardsClaimData,
-  TransactionConfirmationType,
-  TokenType,
-} from '@cardstack/types';
+  useGetRewardClaimsQuery,
+  useGetTransactionsFromSafesQuery,
+} from '@cardstack/graphql';
+import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
+import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   useClaimRewardsMutation,
   useGetRewardPoolTokenBalancesQuery,
@@ -17,20 +17,23 @@ import {
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useRegisterToRewardProgramMutation,
 } from '@cardstack/services/rewards-center/rewards-center-api';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
-import { networkTypes } from '@rainbow-me/helpers/networkTypes';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
-import { Alert } from '@rainbow-me/components/alerts';
-import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
-import {
-  useGetRewardClaimsQuery,
-  useGetTransactionsFromSafesQuery,
-} from '@cardstack/graphql';
-import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
-import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
-import { defaultErrorAlert } from '@cardstack/constants';
 import { getClaimRewardsGasEstimate } from '@cardstack/services/rewards-center/rewards-center-service';
+import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
 import { queryPromiseWrapper } from '@cardstack/services/utils';
+import {
+  RewardsRegisterData,
+  RewardsClaimData,
+  TransactionConfirmationType,
+  TokenType,
+} from '@cardstack/types';
+import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import { networkTypes } from '@rainbow-me/helpers/networkTypes';
+import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+
+import { ClaimOrTokenWithdraw, TokenWithSafeAddress } from './components';
+import { strings } from './strings';
 
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',

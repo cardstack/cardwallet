@@ -1,10 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { SafeSelectionItem } from '../components/SafeSelectionItem';
-import { strings } from './strings';
-import { useRewardWithdrawConfimationScreen } from './useRewardWithdrawConfimationScreen';
-import { SectionCoinHeader } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionCoinHeader';
-import { SectionHeaderText } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionHeaderText';
-import { AmountSection } from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/AmountSection';
+
 import {
   Button,
   Container,
@@ -12,6 +7,14 @@ import {
   HorizontalDivider,
   IconProps,
 } from '@cardstack/components';
+import { SectionCoinHeader } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionCoinHeader';
+import { SectionHeaderText } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionHeaderText';
+import { AmountSection } from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/AmountSection';
+
+import { SafeSelectionItem } from '../components/SafeSelectionItem';
+
+import { strings } from './strings';
+import { useRewardWithdrawConfimationScreen } from './useRewardWithdrawConfimationScreen';
 
 const iconProps: IconProps = { name: 'face-id' };
 

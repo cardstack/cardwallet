@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   createRestyleComponent,
   layout,
@@ -14,15 +13,15 @@ import {
   color,
   ColorProps,
 } from '@shopify/restyle';
-
+import React from 'react';
 import { TextInput, TextInputProps } from 'react-native';
 import TextInputMask, {
   TextInputMaskProps,
 } from 'react-native-text-input-mask';
 
 import { Theme } from '../../theme';
-import { Icon, IconProps } from '../Icon';
 import { Container } from '../Container';
+import { Icon, IconProps } from '../Icon';
 
 export type BaseInputProps = TextInputProps &
   LayoutProps<Theme> &

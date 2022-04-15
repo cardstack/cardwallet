@@ -1,9 +1,11 @@
 import React from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { Transition, Transitioning } from 'react-native-reanimated';
+
 import { CenteredContainer, Text } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
 import { colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
+
 import Spinner from '@rainbow-me/components/Spinner';
 import { neverRerender } from '@rainbow-me/utils';
 

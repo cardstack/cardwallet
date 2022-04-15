@@ -1,15 +1,17 @@
 import React from 'react';
 
-import { render } from '../../../test-utils';
-import { ERC20Transaction } from '../ERC20Transaction';
-import { useAccountProfile } from '@rainbow-me/hooks';
 import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import {
   ERC20TransactionType,
   TransactionStatus,
   TransactionTypes,
 } from '@cardstack/types';
+
+import { useAccountProfile } from '@rainbow-me/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
+import { render } from '../../../test-utils';
+import { ERC20Transaction } from '../ERC20Transaction';
 
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountProfile: jest.fn(),

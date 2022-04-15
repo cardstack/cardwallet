@@ -1,6 +1,8 @@
 import React from 'react';
-import { strings } from '../strings';
+
 import { Container, Text, Touchable } from '@cardstack/components';
+
+import { strings } from '../strings';
 
 interface SectionWrapperProps {
   children: JSX.Element;

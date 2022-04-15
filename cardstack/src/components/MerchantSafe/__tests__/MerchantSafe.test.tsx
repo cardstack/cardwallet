@@ -1,8 +1,10 @@
 import React from 'react';
+
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
+
 import { render } from '../../../test-utils';
 import { MerchantSafe } from '../MerchantSafe';
 import { strings } from '../strings';
-import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 const merchantSafe = {
   address: '0xAddress',

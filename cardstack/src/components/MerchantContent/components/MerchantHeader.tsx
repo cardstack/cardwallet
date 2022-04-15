@@ -1,9 +1,12 @@
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { strings } from '../strings';
+
 import { Container, Icon, Text } from '@cardstack/components';
 import { MerchantInformation, PrimarySafeUpdateProps } from '@cardstack/types';
+
 import { ContactAvatar } from '@rainbow-me/components/contacts';
+
+import { strings } from '../strings';
 
 interface MerchantHeaderProps extends PrimarySafeUpdateProps {
   merchantInfo?: MerchantInformation;

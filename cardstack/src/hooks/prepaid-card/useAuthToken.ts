@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { Network } from '@rainbow-me/networkTypes';
-import { useWorker } from '@cardstack/utils';
-import logger from 'logger';
-import { useAccountSettings } from '@rainbow-me/hooks';
+
 import { getHubAuthToken, getHubUrl } from '@cardstack/services/hub-service';
+import { useWorker } from '@cardstack/utils';
+
+import { useAccountSettings } from '@rainbow-me/hooks';
+import { Network } from '@rainbow-me/networkTypes';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import logger from 'logger';
 
 export const useAuthToken = (seedPhrase?: string) => {
   const [authToken, setAuthToken] = useState<string>('');

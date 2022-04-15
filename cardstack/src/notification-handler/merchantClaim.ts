@@ -1,16 +1,18 @@
 import { MerchantSafe, NativeCurrency } from '@cardstack/cardpay-sdk';
-import { Navigation } from '@rainbow-me/navigation';
+
 import { MainRoutes } from '@cardstack/navigation/routes';
-import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
-import store from '@rainbow-me/redux/store';
-import Logger from 'logger';
 import {
   getSafeData,
   getRevenuePoolBalances,
   updateSafeWithTokenPrices,
 } from '@cardstack/services';
 import { MerchantSafeType } from '@cardstack/types';
+import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
+
 import { getNativeCurrency } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { Navigation } from '@rainbow-me/navigation';
+import store from '@rainbow-me/redux/store';
+import Logger from 'logger';
 
 export type MerchantClaimNotificationBody = {
   merchantId: string;

@@ -3,8 +3,7 @@ import {
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { SectionHeaderText } from './components/SectionHeaderText';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
+
 import {
   Container,
   HorizontalDivider,
@@ -14,8 +13,12 @@ import {
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
 import { WithdrawalDecodedData } from '@cardstack/types';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+
+import { SectionHeaderText } from './components/SectionHeaderText';
 
 interface WithdrawalDisplayProps extends TransactionConfirmationDisplayProps {
   data: WithdrawalDecodedData;

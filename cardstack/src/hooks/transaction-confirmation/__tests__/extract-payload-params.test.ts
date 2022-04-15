@@ -1,5 +1,6 @@
-import { extractPayloadParams } from '../utils';
 import { TypedData } from '@rainbow-me/model/wallet';
+
+import { extractPayloadParams } from '../utils';
 
 describe('extractPayloadParams', () => {
   it('handles a cardstack-style payload', async () => {

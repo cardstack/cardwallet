@@ -1,13 +1,15 @@
 import React, { useCallback } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { SafeSelectionItem, SafeSelectionItemProps } from './SafeSelectionItem';
-import { strings } from './strings';
-import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
+
 import {
   Container,
   HorizontalDivider,
   InfoBanner,
 } from '@cardstack/components';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
+
+import { SafeSelectionItem, SafeSelectionItemProps } from './SafeSelectionItem';
+import { strings } from './strings';
 
 interface SafeSelectionListProps
   extends Pick<SafeSelectionItemProps, 'onSafePress'> {

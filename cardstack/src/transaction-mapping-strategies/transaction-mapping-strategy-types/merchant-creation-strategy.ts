@@ -1,8 +1,9 @@
-import { BaseStrategy } from '../base-strategy';
 import {
   MerchantCreationTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class MerchantCreationStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

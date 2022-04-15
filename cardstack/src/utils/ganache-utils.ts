@@ -1,4 +1,5 @@
 import { GANACHE_URL } from 'react-native-dotenv';
+
 import { etherWeb3SetHttpProvider } from '@rainbow-me/handlers/web3';
 // eslint-disable-next-line import/no-named-as-default
 import networkTypes from '@rainbow-me/networkTypes';

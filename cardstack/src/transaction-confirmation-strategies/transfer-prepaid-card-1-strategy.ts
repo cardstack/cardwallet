@@ -1,9 +1,13 @@
 import assert from 'assert';
+
 import Web3 from 'web3';
+
+import { TransactionConfirmationType } from '@cardstack/types';
+
 import { TransferPrepaidCard1DecodedData } from '../types/transaction-confirmation-types';
+
 import { BaseStrategy } from './base-strategy';
 import { decodeParameters } from './decoding-utils';
-import { TransactionConfirmationType } from '@cardstack/types';
 
 export class TransferPrepaidCard1Strategy extends BaseStrategy {
   isApplicable(): boolean {

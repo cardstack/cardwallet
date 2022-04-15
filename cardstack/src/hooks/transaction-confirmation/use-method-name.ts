@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Vibration, InteractionManager } from 'react-native';
 import { isEmulatorSync } from 'react-native-device-info';
-import { methodRegistryLookupAndParse } from '@rainbow-me/utils/methodRegistry';
+
 import { useGas } from '@rainbow-me/hooks';
+import { methodRegistryLookupAndParse } from '@rainbow-me/utils/methodRegistry';
 
 export const useMethodName = (
   isMessageRequest: boolean,

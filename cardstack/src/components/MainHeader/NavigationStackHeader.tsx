@@ -1,13 +1,14 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, ReactNode } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
-import { ContainerProps } from '../Container';
 import {
   Container,
   Icon,
   Text,
   MainHeaderWrapper,
 } from '@cardstack/components';
+
+import { ContainerProps } from '../Container';
 
 interface Props extends ContainerProps {
   title?: string;

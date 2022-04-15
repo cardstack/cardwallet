@@ -1,9 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
-import { useBooleanState } from './useBooleanState';
+
 import { Container, ContainerProps } from '@cardstack/components';
-import { useClipboard, useTimeout } from '@rainbow-me/hooks';
 import { screenHeight } from '@cardstack/utils';
+
 import Toast from '@rainbow-me/components/toasts/Toast';
+import { useClipboard, useTimeout } from '@rainbow-me/hooks';
+
+import { useBooleanState } from './useBooleanState';
 
 interface useCopyToastParams {
   customCopyLabel?: string;

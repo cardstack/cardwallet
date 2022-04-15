@@ -1,15 +1,18 @@
-import React, { memo, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import React, { memo, ReactNode, useCallback, useMemo, useRef } from 'react';
 import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
-import { ScrollView } from '../ScrollView';
-import { CenteredContainer } from '../Container';
-import { TouchableBackDrop } from './TouchableBackDrop';
-import { SheetHandle } from './SheetHandle';
-import { Container } from '@cardstack/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Container } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
+
 import { shadow } from '@rainbow-me/styles';
+
+import { CenteredContainer } from '../Container';
+import { ScrollView } from '../ScrollView';
+
+import { SheetHandle } from './SheetHandle';
+import { TouchableBackDrop } from './TouchableBackDrop';
 
 const styles = StyleSheet.create({
   wrapperBase: {

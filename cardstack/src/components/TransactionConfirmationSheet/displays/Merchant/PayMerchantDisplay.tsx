@@ -1,12 +1,5 @@
 import React from 'react';
-import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
-import {
-  PayThisAmountSection,
-  useSpendDisplay,
-} from '../components/sections/PayThisAmountSection';
-import TransactionListItem from '../components/TransactionListItem';
-import MerchantSectionCard from '../components/sections/MerchantSectionCard';
-import { PayMerchantDecodedData } from '@cardstack/types';
+
 import {
   Container,
   HorizontalDivider,
@@ -14,6 +7,15 @@ import {
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { PayMerchantDecodedData } from '@cardstack/types';
+
+import TransactionListItem from '../components/TransactionListItem';
+import MerchantSectionCard from '../components/sections/MerchantSectionCard';
+import {
+  PayThisAmountSection,
+  useSpendDisplay,
+} from '../components/sections/PayThisAmountSection';
+import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
 
 interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
   data: PayMerchantDecodedData;

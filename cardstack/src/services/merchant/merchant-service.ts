@@ -1,12 +1,14 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
-import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
+
+import Web3Instance from '@cardstack/models/web3-instance';
+import { TokenType } from '@cardstack/types';
+
 import {
   ClaimRevenueQueryParams,
   CreateProfileQueryParams,
 } from './merchant-types';
-import { TokenType } from '@cardstack/types';
-import Web3Instance from '@cardstack/models/web3-instance';
 
 // Mutations
 

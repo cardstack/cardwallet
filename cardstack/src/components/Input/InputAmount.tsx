@@ -1,6 +1,13 @@
+import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import React, { useCallback, memo } from 'react';
 import { Keyboard } from 'react-native';
-import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
+
+import { palette } from '@cardstack/theme/colors';
+
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
+import { removeLeadingZeros } from '@rainbow-me/utils';
+
 import {
   CenteredContainer,
   Container,
@@ -10,10 +17,6 @@ import {
   Icon,
   Touchable,
 } from './../index';
-import Routes from '@rainbow-me/routes';
-import { useNavigation } from '@rainbow-me/navigation';
-import { removeLeadingZeros } from '@rainbow-me/utils';
-import { palette } from '@cardstack/theme/colors';
 
 export enum CURRENCY_DISPLAY_MODE {
   NO_DISPLAY = 'NO_DISPLAY',

@@ -3,10 +3,11 @@ import {
   nativeCurrencies,
   NativeCurrency,
 } from '@cardstack/cardpay-sdk';
-
 import { FIXER_API_KEY } from 'react-native-dotenv';
-import { CurrencyConversionRates } from '@cardstack/types';
+
 import Web3Instance from '@cardstack/models/web3-instance';
+import { CurrencyConversionRates } from '@cardstack/types';
+
 import { logger } from '@rainbow-me/utils';
 
 // Currency conversions

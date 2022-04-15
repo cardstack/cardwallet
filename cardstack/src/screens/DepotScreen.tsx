@@ -8,7 +8,7 @@ import {
   SectionList,
   StatusBar,
 } from 'react-native';
-import { BackButton } from '../../../src/components/header';
+
 import {
   BalanceSection,
   CenteredContainer,
@@ -21,15 +21,18 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useDepotTransactions } from '@cardstack/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 import { colors } from '@cardstack/theme';
 import { DepotType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
+import { sectionStyle } from '@cardstack/utils/layouts';
+
 import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { sectionStyle } from '@cardstack/utils/layouts';
-import { RouteType } from '@cardstack/navigation/types';
+
+import { BackButton } from '../../../src/components/header';
 
 interface Params {
   depot: DepotType;

@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+
 import { screenHeight, screenWidth } from './dimension-utils';
 
 const isIOS = Platform.OS === 'ios';

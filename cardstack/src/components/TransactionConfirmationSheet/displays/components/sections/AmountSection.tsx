@@ -1,6 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { SectionHeaderText } from '../SectionHeaderText';
+
 import { Container, Skeleton, Text } from '@cardstack/components';
+
+import { SectionHeaderText } from '../SectionHeaderText';
 
 interface AmountSectionProps {
   title: string;

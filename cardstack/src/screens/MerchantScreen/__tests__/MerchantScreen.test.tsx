@@ -1,9 +1,10 @@
 import React from 'react';
+
+import { strings } from '@cardstack/components/MerchantContent/strings';
+
 import { render } from '../../../test-utils';
 import MerchantScreen from '../MerchantScreen';
 import { useMerchantScreen } from '../useMerchantScreen';
-
-import { strings } from '@cardstack/components/MerchantContent/strings';
 
 const merchantSafeInfo = {
   isRefreshingBalances: false,

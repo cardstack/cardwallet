@@ -1,14 +1,15 @@
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
 
-import PrepaidCardInnerTop, {
-  PrepaidCardInnerTopProps,
-} from './components/PrepaidCardInnerTop';
+import { Container } from '@cardstack/components';
+import { CustomizableBackground } from '@cardstack/components/PrepaidCard/components/CustomizableBackground';
+
 import PrepaidCardInnerBottom, {
   PrepaidCardInnerBottomProps,
 } from './components/PrepaidCardInnerBottom';
-import { Container } from '@cardstack/components';
-import { CustomizableBackground } from '@cardstack/components/PrepaidCard/components/CustomizableBackground';
+import PrepaidCardInnerTop, {
+  PrepaidCardInnerTopProps,
+} from './components/PrepaidCardInnerTop';
 
 const styles = StyleSheet.create({
   cardWrapper: {

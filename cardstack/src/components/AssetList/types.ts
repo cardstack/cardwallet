@@ -1,7 +1,6 @@
 import { BackgroundColorProps, ColorProps } from '@shopify/restyle';
-import { Theme } from '../../theme';
-import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
-import { Network } from '@rainbow-me/helpers/networkTypes';
+
+import { RouteType } from '@cardstack/navigation/types';
 import {
   AssetWithNativeType,
   CollectibleType,
@@ -9,7 +8,11 @@ import {
   MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
-import { RouteType } from '@cardstack/navigation/types';
+
+import { Network } from '@rainbow-me/helpers/networkTypes';
+import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
+
+import { Theme } from '../../theme';
 
 interface HeaderItem {
   title: string;

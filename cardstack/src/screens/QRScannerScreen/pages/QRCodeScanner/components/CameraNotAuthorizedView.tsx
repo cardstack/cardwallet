@@ -1,12 +1,14 @@
 import React, { memo, useCallback } from 'react';
 import { Linking } from 'react-native';
-import { strings } from '../strings';
+
 import {
   Text,
   Icon,
   Button,
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
+
+import { strings } from '../strings';
 
 const CameraNotAuthorizedView = () => {
   const handlePressSettings = useCallback(() => {

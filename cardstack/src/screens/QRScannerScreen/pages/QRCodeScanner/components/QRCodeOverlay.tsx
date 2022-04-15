@@ -1,7 +1,8 @@
 import React from 'react';
 import Svg, { Defs, ClipPath, Path, Rect, Mask } from 'react-native-svg';
-import { screenHeight, screenWidth } from '@cardstack/utils';
+
 import { colors } from '@cardstack/theme';
+import { screenHeight, screenWidth } from '@cardstack/utils';
 
 const halfScreen = screenWidth / 2;
 

@@ -1,11 +1,14 @@
 import React from 'react';
+
+import { Container, Text } from '@cardstack/components';
+import { useGetSafesDataQuery } from '@cardstack/services';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+
+import { useAccountSettings } from '@rainbow-me/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+
 import MiniPrepaidCard from '../../../../PrepaidCard/MiniPrepaidCard';
 import TransactionListItem from '../TransactionListItem';
-import { Container, Text } from '@cardstack/components';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
-import { useGetSafesDataQuery } from '@cardstack/services';
-import { useAccountSettings } from '@rainbow-me/hooks';
 
 export const PrepaidCardTransactionSection = ({
   headerText,

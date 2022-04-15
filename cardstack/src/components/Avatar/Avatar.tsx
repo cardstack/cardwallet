@@ -1,7 +1,9 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { Container, Text } from '../.';
+
 import { ColorTypes } from '@cardstack/theme';
+
+import { Container, Text } from '../.';
 
 /**
  * A Avatar component, used for something.

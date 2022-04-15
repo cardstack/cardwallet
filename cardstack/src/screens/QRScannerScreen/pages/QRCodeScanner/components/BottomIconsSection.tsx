@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 
-import { strings } from '../strings';
 import {
   CenteredContainer,
   Container,
@@ -9,6 +8,8 @@ import {
   IconName,
   ContainerProps,
 } from '@cardstack/components';
+
+import { strings } from '../strings';
 
 const IconWrapper = ({
   iconName,

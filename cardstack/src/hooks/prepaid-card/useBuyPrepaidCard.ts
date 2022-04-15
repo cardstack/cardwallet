@@ -1,21 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
-import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/core';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { InteractionManager } from 'react-native';
-import { Alert } from '@rainbow-me/components/alerts';
-import {
-  getOrderId,
-  getReferenceId,
-  getWalletOrderQuotation,
-  PaymentRequestStatusTypes,
-  reserveWyreOrder,
-  showApplePayRequest,
-} from '@cardstack/utils/wyre-utils';
-import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
-import logger from 'logger';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { useDispatch } from 'react-redux';
+
 import { useAuthToken } from '@cardstack/hooks';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import {
   getCustodialWallet,
   getHubUrl,
@@ -25,7 +15,7 @@ import {
   makeReservation,
   updateOrder,
 } from '@cardstack/services';
-import { fetchCardCustomizationFromDID, useWorker } from '@cardstack/utils';
+import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-cards/prepaid-card-service';
 import {
   PrepaidCardCustomization,
   CustodialWallet,
@@ -34,10 +24,22 @@ import {
   ReservationData,
   WyrePriceData,
 } from '@cardstack/types';
-import { addNewPrepaidCard } from '@rainbow-me/redux/data';
+import { fetchCardCustomizationFromDID, useWorker } from '@cardstack/utils';
+import {
+  getOrderId,
+  getReferenceId,
+  getWalletOrderQuotation,
+  PaymentRequestStatusTypes,
+  reserveWyreOrder,
+  showApplePayRequest,
+} from '@cardstack/utils/wyre-utils';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
 import Routes from '@rainbow-me/navigation/routesNames';
-import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-cards/prepaid-card-service';
-import { useLoadingOverlay } from '@cardstack/navigation';
+import { addNewPrepaidCard } from '@rainbow-me/redux/data';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import logger from 'logger';
 
 interface CardAttrs extends InventoryAttrs {
   customizationDID?: PrepaidCardCustomization | null;

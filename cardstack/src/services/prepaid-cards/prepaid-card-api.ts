@@ -1,17 +1,19 @@
 import { TransactionReceipt } from 'web3-eth';
+
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
+
+import {
+  fetchPrepaidCards,
+  payMerchant,
+  transferPrepaidCard,
+} from './prepaid-card-service';
 import {
   PrepaidCardPayMerchantQueryParams,
   PrepaidCardSafeQueryParams,
   PrepaidCardsQueryResult,
   PrepaidCardTransferQueryParams,
 } from './prepaid-card-types';
-import {
-  fetchPrepaidCards,
-  payMerchant,
-  transferPrepaidCard,
-} from './prepaid-card-service';
 
 const prepaidCardApi = safesApi.injectEndpoints({
   endpoints: builder => ({

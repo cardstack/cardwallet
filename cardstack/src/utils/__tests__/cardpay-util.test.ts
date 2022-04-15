@@ -8,6 +8,7 @@ import {
   isMainnet,
   parseLinearGradient,
 } from '@cardstack/utils/cardpay-utils';
+
 import { Network, networkTypes } from '@rainbow-me/helpers/networkTypes';
 
 it('parseLinearGradient with 2 stop linear gradient', () => {

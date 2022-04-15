@@ -1,4 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit';
+
 import { getNativeCurrency } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { AppDispatch } from '@rainbow-me/redux/store';
 import logger from 'logger';

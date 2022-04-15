@@ -1,7 +1,6 @@
 import React, { useRef, useCallback, useMemo } from 'react';
 import { TextInput } from 'react-native';
-import { useProfileForm } from '../useProfileForm';
-import { strings } from '.';
+
 import {
   Button,
   CardPressable,
@@ -12,9 +11,14 @@ import {
   ProgressStepProps,
   Text,
 } from '@cardstack/components';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { ColorTypes, colors } from '@cardstack/theme';
 import { getValidColorHexString } from '@cardstack/utils';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
+
+import { useProfileForm } from '../useProfileForm';
+
+import { strings } from '.';
 
 const UniqueCheckValidIconProps = {
   name: 'check' as IconName,

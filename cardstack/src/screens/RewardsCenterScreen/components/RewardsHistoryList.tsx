@@ -1,11 +1,14 @@
+import { OptionalUnion } from 'globals';
 import React, { useCallback } from 'react';
 import { SectionList } from 'react-native';
-import { OptionalUnion } from 'globals';
-import { strings } from '../strings';
-import { RewardRow } from '.';
-import { fromWeiToFixedEth } from '@cardstack/utils';
+
 import { Container, Text, ListEmptyComponent } from '@cardstack/components';
 import { RewardeeClaim, TokenTransfer } from '@cardstack/graphql';
+import { fromWeiToFixedEth } from '@cardstack/utils';
+
+import { strings } from '../strings';
+
+import { RewardRow } from '.';
 
 export type ClaimOrTokenWithdraw = OptionalUnion<RewardeeClaim, TokenTransfer>;
 export interface RewardsHistorySectionType {

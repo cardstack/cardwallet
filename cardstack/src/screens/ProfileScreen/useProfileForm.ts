@@ -1,33 +1,36 @@
-import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, InteractionManager } from 'react-native';
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
-import { ProfileFormContext, strings, exampleMerchantData } from './components';
+import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { Alert, InteractionManager } from 'react-native';
+
 import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
 import {
   MainRoutes,
   GlobalRoutes,
   useLoadingOverlay,
 } from '@cardstack/navigation';
+import { displayLocalNotification } from '@cardstack/notification-handler';
+import { useCreateProfileMutation } from '@cardstack/services';
 import {
   checkBusinessIdUniqueness,
   createBusinessInfoDID,
 } from '@cardstack/services/hub-service';
-import {
-  useAccountProfile,
-  useAccountSettings,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { colors } from '@cardstack/theme';
 import {
   RegisterMerchantDecodedData,
   PrepaidCardType,
   TransactionConfirmationType,
 } from '@cardstack/types';
-import { useCreateProfileMutation } from '@cardstack/services';
+
+import {
+  useAccountProfile,
+  useAccountSettings,
+  useWallets,
+} from '@rainbow-me/hooks';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { logger } from '@rainbow-me/utils';
-import { colors } from '@cardstack/theme';
-import { displayLocalNotification } from '@cardstack/notification-handler';
+
+import { ProfileFormContext, strings, exampleMerchantData } from './components';
 
 const CreateProfileFeeInSpend = 100;
 

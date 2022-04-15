@@ -2,16 +2,18 @@ import { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { useRouteParams } from './use-route-params';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
+
+import { useGas } from '@rainbow-me/hooks';
+import { useNavigation } from '@rainbow-me/navigation';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { walletConnectRemovePendingRedirect } from '@rainbow-me/redux/walletconnect';
 import {
   SEND_TRANSACTION,
   isMessageDisplayType,
 } from '@rainbow-me/utils/signingMethods';
-import { walletConnectRemovePendingRedirect } from '@rainbow-me/redux/walletconnect';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import { useGas } from '@rainbow-me/hooks';
+
+import { useRouteParams } from './use-route-params';
 
 export const useCloseScreen = () => {
   const dispatch = useDispatch();

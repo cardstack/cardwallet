@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { CoinIcon, Container, Text } from '@cardstack/components';
 
 export interface MerchantPaymentItemDetailProps {

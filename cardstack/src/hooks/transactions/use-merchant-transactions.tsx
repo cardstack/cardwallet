@@ -1,16 +1,20 @@
 import { NetworkStatus } from '@apollo/client';
-import { TRANSACTION_PAGE_SIZE } from '../../constants';
-import { useTransactionSections } from './use-transaction-sections';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
 import { useGetMerchantTransactionHistoryDataQuery } from '@cardstack/graphql';
+import { TransactionMappingStrategy } from '@cardstack/transaction-mapping-strategies/context';
 import { MerchantClaimStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-claim-strategy';
-import { MerchantWithdrawStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-withdraw-strategy';
 import { MerchantDepositStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-deposit-strategy';
-import { MerchantPrepaidCardIssuanceStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-prepaid-card-issuance-strategy';
 import { MerchantEarnedRevenueStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-revenue-strategy';
 import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
+import { MerchantPrepaidCardIssuanceStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-prepaid-card-issuance-strategy';
+import { MerchantWithdrawStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-withdraw-strategy';
+
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
-import { TransactionMappingStrategy } from '@cardstack/transaction-mapping-strategies/context';
+
+import { TRANSACTION_PAGE_SIZE } from '../../constants';
+
+import { useTransactionSections } from './use-transaction-sections';
 
 type MerchantTransactionTypes =
   | 'lifetimeEarnings'

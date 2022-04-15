@@ -1,7 +1,5 @@
 import React, { useCallback } from 'react';
-import { strings } from './strings';
-import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
+
 import {
   CardPressable,
   Container,
@@ -9,9 +7,14 @@ import {
   SafeHeader,
   Text,
 } from '@cardstack/components';
+import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
+
+import { strings } from './strings';
 
 export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;

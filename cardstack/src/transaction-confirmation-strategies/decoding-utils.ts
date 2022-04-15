@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+
 import logger from 'logger';
 
 export const safeDecodeParameters = <T>(

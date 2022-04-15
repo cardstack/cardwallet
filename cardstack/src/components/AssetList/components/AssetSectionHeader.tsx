@@ -1,16 +1,19 @@
 import React, { useMemo, memo } from 'react';
-import { AssetListSectionItem, SectionType } from '../types';
-import { strings } from '../strings';
+
 import {
   Button,
   Container,
   ListEmptyComponent,
   Text,
 } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
-import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
 import { PinnedHiddenSectionMenu } from '@cardstack/components/PinnedHiddenSection';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
+import { Device } from '@cardstack/utils';
+
+import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
+
+import { strings } from '../strings';
+import { AssetListSectionItem, SectionType } from '../types';
 
 interface AssetSectionProps {
   section: AssetListSectionItem<SectionType>;

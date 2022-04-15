@@ -1,10 +1,8 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { TransactionListLoading } from './TransactionListLoading';
-import { useFullTransactionList } from '@cardstack/hooks';
 import {
   Container,
   ListEmptyComponent,
@@ -12,7 +10,10 @@ import {
   TransactionItem,
   TransactionItemProps,
 } from '@cardstack/components';
+import { useFullTransactionList } from '@cardstack/hooks';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
+
+import { TransactionListLoading } from './TransactionListLoading';
 
 interface TransactionListProps {
   Header?: JSX.Element;

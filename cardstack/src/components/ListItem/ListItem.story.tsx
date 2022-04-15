@@ -1,8 +1,9 @@
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
-
 import { Alert } from 'react-native';
+
 import { Container } from '../Container';
+
 import { ListItem } from './ListItem';
 
 const actionOptions = ['1', '2'];

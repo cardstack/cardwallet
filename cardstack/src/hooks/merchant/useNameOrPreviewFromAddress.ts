@@ -1,6 +1,7 @@
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { useAccountProfile } from '@rainbow-me/hooks';
 import { getAddressPreview } from '@cardstack/utils';
+
+import { useAccountProfile } from '@rainbow-me/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 export const useNameOrPreviewFromAddress = (address: string) => {
   const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);

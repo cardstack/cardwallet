@@ -1,5 +1,5 @@
-import { PREPAID_CARD_PAYMENT_MOCK } from '@cardstack/utils/__mocks__/merchant-strategies';
 import { PrepaidCardPaymentStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-payment-strategy';
+import { PREPAID_CARD_PAYMENT_MOCK } from '@cardstack/utils/__mocks__/merchant-strategies';
 
 jest.mock('../../../utils', () => ({ deviceUtils: { isIOS14: false } }));
 

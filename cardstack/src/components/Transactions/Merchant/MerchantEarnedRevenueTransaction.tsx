@@ -1,14 +1,16 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useCallback } from 'react';
 
-import { useNavigation } from '@react-navigation/core';
+import { CoinIcon } from '@cardstack/components';
+import { MerchantEarnedRevenueTransactionType } from '@cardstack/types';
+
+import Routes from '@rainbow-me/routes';
+
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
   TransactionBaseProps,
 } from '../TransactionBase';
-import { CoinIcon } from '@cardstack/components';
-import { MerchantEarnedRevenueTransactionType } from '@cardstack/types';
-import Routes from '@rainbow-me/routes';
 
 export interface MerchantEarnRevenueTransactionProps
   extends TransactionBaseCustomizationProps {

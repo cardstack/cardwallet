@@ -1,11 +1,13 @@
 import React, { memo, useCallback } from 'react';
 import RNRestart from 'react-native-restart';
+
 import {
   SafeAreaView,
   Text,
   CenteredContainer,
   Button,
 } from '@cardstack/components';
+
 import logger from 'logger';
 
 const ErrorFallback = ({

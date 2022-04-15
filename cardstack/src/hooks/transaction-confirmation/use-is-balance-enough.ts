@@ -2,10 +2,12 @@ import { fromWei, greaterThanOrEqualTo } from '@cardstack/cardpay-sdk';
 import BigNumber from 'bignumber.js';
 import { get } from 'lodash';
 import { useState, useEffect } from 'react';
-import { useRouteParams } from './use-route-params';
-import { ethereumUtils } from '@rainbow-me/utils';
+
 import { useAccountAssets, useGas } from '@rainbow-me/hooks';
+import { ethereumUtils } from '@rainbow-me/utils';
 import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
+
+import { useRouteParams } from './use-route-params';
 
 export const useIsBalanceEnough = () => {
   const { allAssets } = useAccountAssets();

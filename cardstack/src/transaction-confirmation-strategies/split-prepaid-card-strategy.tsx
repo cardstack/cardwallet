@@ -1,10 +1,12 @@
 import assert from 'assert';
-import { BaseStrategyWithActionDispatcherData } from './base-strategy';
-import { decodeParameters } from './decoding-utils';
+
 import {
   SplitPrepaidCardDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
+
+import { BaseStrategyWithActionDispatcherData } from './base-strategy';
+import { decodeParameters } from './decoding-utils';
 
 export class SplitPrepaidCardStrategy extends BaseStrategyWithActionDispatcherData {
   isApplicable(): boolean {

@@ -1,10 +1,13 @@
 import React from 'react';
-import { CollectibleImage } from '../../../../src/components/collectible';
-import { CollectibleType } from '@cardstack/types';
+
 import { CardPressable, Container, Text } from '@cardstack/components';
+import { CollectibleType } from '@cardstack/types';
+
+import { buildCollectibleName } from '@rainbow-me/helpers/assets';
 import { useNavigation } from '@rainbow-me/navigation';
 import Routes from '@rainbow-me/routes';
-import { buildCollectibleName } from '@rainbow-me/helpers/assets';
+
+import { CollectibleImage } from '../../../../src/components/collectible';
 
 export const CollectibleRow = (collectible: CollectibleType) => {
   const { navigate } = useNavigation();

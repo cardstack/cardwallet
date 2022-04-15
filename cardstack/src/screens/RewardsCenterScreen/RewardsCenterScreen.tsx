@@ -1,15 +1,18 @@
 import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
+
+import { Container, NavigationStackHeader, Image } from '@cardstack/components';
+
 import rewardBanner from '../../assets/rewards-banner.png';
-import { strings } from './strings';
-import { useRewardsCenterScreen } from './useRewardsCenterScreen';
+
 import {
   RegisterContent,
   NoRewardContent,
   ClaimContent,
   RewardLoadingSkeleton,
 } from './components';
-import { Container, NavigationStackHeader, Image } from '@cardstack/components';
+import { strings } from './strings';
+import { useRewardsCenterScreen } from './useRewardsCenterScreen';
 
 const RewardsCenterScreen = () => {
   const {

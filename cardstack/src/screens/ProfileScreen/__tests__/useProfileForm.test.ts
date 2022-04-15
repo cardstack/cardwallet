@@ -1,10 +1,13 @@
-import { act, renderHook } from '@testing-library/react-hooks';
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
+
+import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
+
+import { useAccountProfile } from '@rainbow-me/hooks';
+
 import { exampleMerchantData, strings } from '../components';
 import { useProfileForm } from '../useProfileForm';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
 
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountProfile: jest.fn(),

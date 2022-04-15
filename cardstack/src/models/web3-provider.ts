@@ -2,6 +2,7 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-core';
+
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import logger from 'logger';

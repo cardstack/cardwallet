@@ -1,9 +1,11 @@
 import { endsWith } from 'lodash';
 import React, { memo, useMemo } from 'react';
+
 import { CenteredContainer } from '@cardstack/components';
 import { CollectibleType } from '@cardstack/types';
-import { CollectibleImage } from '@rainbow-me/components/collectible';
 import { screenWidth } from '@cardstack/utils';
+
+import { CollectibleImage } from '@rainbow-me/components/collectible';
 
 const minHeight = screenWidth * 0.9;
 

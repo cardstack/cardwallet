@@ -1,12 +1,16 @@
 import assert from 'assert';
+
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
-import { BaseStrategyWithLevel1Data } from './base-strategy';
-import { safeDecodeParameters } from './decoding-utils';
+
 import {
   IssuePrepaidCardDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
+
 import { logger } from '@rainbow-me/utils';
+
+import { BaseStrategyWithLevel1Data } from './base-strategy';
+import { safeDecodeParameters } from './decoding-utils';
 
 export class IssuePrepaidCardStrategy extends BaseStrategyWithLevel1Data {
   isApplicable(): boolean {

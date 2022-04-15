@@ -1,7 +1,9 @@
 import React, { memo, useMemo } from 'react';
+
+import { Text } from '@cardstack/components';
+
 import { CollapsibleBanner } from './CollapsibleBanner';
 import { useBusinessAccountBanner } from './useBusinessAccountBanner';
-import { Text } from '@cardstack/components';
 
 const openedHeaderText = 'To Create a Business Account';
 const closeForeverButtonText = "DON'T SHOW AGAIN";

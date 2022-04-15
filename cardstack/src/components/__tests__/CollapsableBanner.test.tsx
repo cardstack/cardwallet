@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { fireEvent, render, waitFor, act } from '../../test-utils';
 import {
   CollapsibleBanner,
   CollapsibleBannerProps,
 } from '@cardstack/components/CollapsibleBanner/CollapsibleBanner';
+
+import { fireEvent, render, waitFor, act } from '../../test-utils';
 
 jest.mock('react-native/Libraries/Components/Touchable/TouchableOpacity', () =>
   jest.fn(({ children }) => children)

@@ -2,7 +2,8 @@ import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from '../base-strategy';
+
+import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   PrepaidCardCreatedTransactionType,
   TransactionTypes,
@@ -11,7 +12,8 @@ import {
   convertSpendForBalanceDisplay,
   fetchCardCustomizationFromDID,
 } from '@cardstack/utils';
-import { fetchHistoricalPrice } from '@cardstack/services';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class PrepaidCardCreationStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

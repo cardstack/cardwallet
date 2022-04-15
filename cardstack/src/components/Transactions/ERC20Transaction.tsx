@@ -1,15 +1,18 @@
 import React from 'react';
-import { getDisplayDataByStatus } from './statusToDisplayData';
+
+import { CoinIcon, SafeHeader } from '@cardstack/components';
+import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
+import { colors, avatarColor } from '@cardstack/theme';
+import { ERC20TransactionType } from '@cardstack/types';
+
+import { useAccountProfile } from '@rainbow-me/hooks';
+
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
   TransactionRow,
 } from './TransactionBase';
-import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
-import { ERC20TransactionType } from '@cardstack/types';
-import { CoinIcon, SafeHeader } from '@cardstack/components';
-import { colors, avatarColor } from '@cardstack/theme';
-import { useAccountProfile } from '@rainbow-me/hooks';
+import { getDisplayDataByStatus } from './statusToDisplayData';
 
 export interface ERC20TransactionProps
   extends TransactionBaseCustomizationProps {
