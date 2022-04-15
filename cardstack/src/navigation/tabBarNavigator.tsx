@@ -67,6 +67,8 @@ const tabBarOptions = (bottomInset = 0): BottomTabBarOptions => ({
   keyboardHidesTabBar: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
 });
 
+const enableProfileTab = __DEV__;
+
 const TabNavigator = () => {
   const { bottom } = useSafeAreaInsets();
 
@@ -88,15 +90,17 @@ const TabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        component={ProfileScreen}
-        name={RainbowRoutes.PROFILE_SCREEN}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon iconName="user" label="PROFILE" focused={focused} />
-          ),
-        }}
-      />
+      {enableProfileTab && (
+        <Tab.Screen
+          component={ProfileScreen}
+          name={RainbowRoutes.PROFILE_SCREEN}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <TabBarIcon iconName="user" label="PROFILE" focused={focused} />
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
         component={WalletScreen}
         name={RainbowRoutes.WALLET_SCREEN}
