@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useGetSafesDataQuery } from '@cardstack/services';
@@ -18,13 +18,16 @@ export const usePrimarySafe = () => {
   const [nativeCurrency] = useNativeCurrencyAndConversionRates();
   const { accountAddress, network } = useAccountSettings();
 
-  const primarySafe = useSelector(selectPrimarySafe(network, accountAddress));
+  const primarySafeKey = useSelector(selectPrimarySafe(network, accountAddress))
+    ?.address;
 
   const {
     merchantSafes = [],
     error,
     isFetching,
     refetch,
+    isLoading,
+    isUninitialized,
   } = useGetSafesDataQuery(
     {
       address: accountAddress,
@@ -36,7 +39,13 @@ export const usePrimarySafe = () => {
         ...rest,
       }),
       skip: isLayer1(network) || !accountAddress,
+      // refetchOnFocus: true,
     }
+  );
+
+  const primarySafe = useMemo(
+    () => merchantSafes.find(({ address }) => address === primarySafeKey),
+    [merchantSafes, primarySafeKey]
   );
 
   const changePrimarySafe = useCallback(
@@ -49,18 +58,8 @@ export const usePrimarySafe = () => {
 
   // Ensures primary will always be valid if theres at least one merchant safe.
   useEffect(() => {
-    if (!isFetching && merchantSafes?.length > 0) {
-      if (primarySafe) {
-        const updatedPrimarySafe = merchantSafes.find(
-          (safe: MerchantSafeType) => safe.address === primarySafe.address
-        );
-
-        if (updatedPrimarySafe) {
-          changePrimarySafe(updatedPrimarySafe);
-        }
-      } else {
-        changePrimarySafe(merchantSafes[merchantSafes.length - 1]);
-      }
+    if (!isFetching && merchantSafes?.length > 0 && !primarySafe) {
+      changePrimarySafe(merchantSafes[merchantSafes.length - 1]);
     }
   }, [changePrimarySafe, primarySafe, merchantSafes, isFetching]);
 
@@ -71,6 +70,8 @@ export const usePrimarySafe = () => {
     merchantSafes,
     primarySafe,
     changePrimarySafe,
+    isLoading,
+    isUninitialized,
     safesCount: merchantSafes?.length || 1,
   };
 };
