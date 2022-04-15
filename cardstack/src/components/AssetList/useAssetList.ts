@@ -1,22 +1,15 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/core';
-import {
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  RefObject,
-} from 'react';
+import { useState, useCallback, useEffect, useMemo, RefObject } from 'react';
 import { SectionList } from 'react-native';
 
+import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import { useGetServiceStatusQuery } from '@cardstack/services';
 import { isLayer1 } from '@cardstack/utils';
 
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
   PinnedHiddenSectionOption,
-  useAccountProfile,
   useAccountSettings,
   useAssetListData,
   useRefreshAccountData,
@@ -44,21 +37,9 @@ export const useAssetList = ({
     isFetchingSafes,
   } = useAssetListData();
 
-  // Handle switch account
-  const prevAccount = useRef(null);
-
-  const { accountAddress } = useAccountProfile();
-
-  useEffect(() => {
-    if (accountAddress) {
-      prevAccount.current = accountAddress;
-    }
-  }, [accountAddress]);
-
-  // Account was switched so show loading skeleton
-  const isLoadingSafesDiffAccount = useMemo(
-    () => isFetchingSafes && prevAccount.current !== accountAddress,
-    [accountAddress, isFetchingSafes, prevAccount]
+  // Account changed, flag to load skeleton
+  const isLoadingSafesDiffAccount = useIsFetchingDataNewAccount(
+    isFetchingSafes
   );
 
   // Handle refresh
