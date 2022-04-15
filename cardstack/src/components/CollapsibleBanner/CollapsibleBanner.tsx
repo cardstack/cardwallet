@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { Animated, TouchableOpacity } from 'react-native';
 
+import { Container, Icon, Text, IconName } from '@cardstack/components';
+
 import downIcon from '../../assets/chevron-down.png';
 import { AnimatedContainer, AnimatedText } from '../Animated';
-import { Container, Icon, Text, IconName } from '@cardstack/components';
 
 const ANIMATION_DURATION = 150;
 const CLOSED_HEIGHT = 40;

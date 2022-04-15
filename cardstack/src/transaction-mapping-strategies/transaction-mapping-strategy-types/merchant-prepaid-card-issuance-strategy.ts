@@ -2,12 +2,14 @@ import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from '../base-strategy';
+
+import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   MerchantPrepaidCardIssuanceType,
   TransactionTypes,
 } from '@cardstack/types';
-import { fetchHistoricalPrice } from '@cardstack/services';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class MerchantPrepaidCardIssuanceStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

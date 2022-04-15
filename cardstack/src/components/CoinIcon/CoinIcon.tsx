@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactCoinIcon from 'react-coin-icon';
-import CUSTOM_COIN_ICONS from './CustomCoinIcons';
-import { CoinIconFallback } from './CoinIconFallback';
+
 import { CenteredContainer, Image } from '@cardstack/components';
+
+import { CoinIconFallback } from './CoinIconFallback';
+import CUSTOM_COIN_ICONS from './CustomCoinIcons';
 
 interface CoinIconProps {
   address?: string;

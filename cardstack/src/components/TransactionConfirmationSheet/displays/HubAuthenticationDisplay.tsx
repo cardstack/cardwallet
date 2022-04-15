@@ -1,8 +1,5 @@
 import React from 'react';
 
-import { SectionHeaderText } from './components/SectionHeaderText';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { useAccountProfile } from '@rainbow-me/hooks';
 import {
   CenteredContainer,
   Container,
@@ -11,6 +8,11 @@ import {
   NetworkBadge,
   Text,
 } from '@cardstack/components';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
+import { useAccountProfile } from '@rainbow-me/hooks';
+
+import { SectionHeaderText } from './components/SectionHeaderText';
 
 export const HubAuthenticationDisplay = () => {
   return (

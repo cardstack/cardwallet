@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
-import { ContainerProps } from '../Container';
 import { AnimatedContainer } from '../Animated';
+import { ContainerProps } from '../Container';
 
 const INITIAL_OPACITY = 0.25;
 const INITIAL_OPACITY_LIGHT = 1;

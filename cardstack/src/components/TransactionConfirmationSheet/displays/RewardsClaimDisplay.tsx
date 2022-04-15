@@ -1,12 +1,15 @@
 import React from 'react';
-import { strings } from '../strings';
-import { RewardsNetAmountSection } from './RewardsNetAmountSection';
-import { SectionCoinHeader } from './components/SectionCoinHeader';
+
 import {
   HorizontalDivider,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
 import { RewardsClaimData } from '@cardstack/types';
+
+import { strings } from '../strings';
+
+import { RewardsNetAmountSection } from './RewardsNetAmountSection';
+import { SectionCoinHeader } from './components/SectionCoinHeader';
 
 interface RewardsClaimDisplayProps extends TransactionConfirmationDisplayProps {
   data: RewardsClaimData;

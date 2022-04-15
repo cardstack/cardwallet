@@ -1,10 +1,12 @@
 import HDWalletProvider from 'parity-hdwallet-provider';
-import Web3WsProvider from './web3-provider';
-import Web3Instance from './web3-instance';
-import { loadSeedPhrase } from '@rainbow-me/model/wallet';
-import logger from 'logger';
-import { ethereumUtils } from '@rainbow-me/utils';
+
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { loadSeedPhrase } from '@rainbow-me/model/wallet';
+import { ethereumUtils } from '@rainbow-me/utils';
+import logger from 'logger';
+
+import Web3Instance from './web3-instance';
+import Web3WsProvider from './web3-provider';
 
 export interface SignedProviderParams {
   walletId: string;

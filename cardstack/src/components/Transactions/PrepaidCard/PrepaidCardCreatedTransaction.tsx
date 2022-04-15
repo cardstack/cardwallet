@@ -1,12 +1,15 @@
 import React from 'react';
+
+import { CoinIcon, Text, Container, Icon } from '@cardstack/components';
+import { PrepaidCardCreatedTransactionType } from '@cardstack/types';
+import { getAddressPreview } from '@cardstack/utils';
+
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
 } from '../TransactionBase';
+
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
-import { PrepaidCardCreatedTransactionType } from '@cardstack/types';
-import { getAddressPreview } from '@cardstack/utils';
-import { CoinIcon, Text, Container, Icon } from '@cardstack/components';
 
 interface PrepaidCardCreatedTransactionProps
   extends TransactionBaseCustomizationProps {

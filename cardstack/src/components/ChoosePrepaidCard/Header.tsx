@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { strings } from './strings';
+
 import {
   Container,
   HorizontalDivider,
@@ -7,6 +7,8 @@ import {
   Text,
 } from '@cardstack/components';
 import { hitSlop } from '@cardstack/utils/layouts';
+
+import { strings } from './strings';
 
 export const Header = memo(
   ({

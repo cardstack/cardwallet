@@ -1,8 +1,10 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 import { captureException } from '@sentry/minimal';
+
+import logger from 'logger';
+
 import { SignedProviderParams } from './hd-provider';
 import Web3Instance from './web3-instance';
-import logger from 'logger';
 
 export const getSafesInstance = async (
   signedProviderParams?: SignedProviderParams

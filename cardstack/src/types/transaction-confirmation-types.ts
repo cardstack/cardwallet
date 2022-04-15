@@ -1,4 +1,5 @@
 import { PrepaidCardCustomization } from './transaction-types';
+
 import { MerchantInformation, TokenType } from './';
 
 export enum TransactionConfirmationType {

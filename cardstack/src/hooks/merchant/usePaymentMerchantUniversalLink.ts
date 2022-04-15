@@ -1,21 +1,23 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Alert, AlertButton, InteractionManager } from 'react-native';
 import { MerchantSafe, isSupportedCurrency } from '@cardstack/cardpay-sdk';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useEffect, useMemo, useState } from 'react';
+import { Alert, AlertButton, InteractionManager } from 'react-native';
+
+import { RouteType } from '@cardstack/navigation/types';
+import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
 import {
   PayMerchantDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
 import { isLayer1, useWorker } from '@cardstack/utils';
-import { Network } from '@rainbow-me/helpers/networkTypes';
+
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
-import { RouteType } from '@cardstack/navigation/types';
 
 interface Params {
   merchantAddress: string;

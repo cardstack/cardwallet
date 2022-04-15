@@ -1,8 +1,7 @@
+import { useRoute } from '@react-navigation/core';
 import React, { memo, useCallback, useMemo } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
-import { useRoute } from '@react-navigation/core';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
+
 import {
   Button,
   CoinIcon,
@@ -15,9 +14,12 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
 import { ClaimStatuses, Device } from '@cardstack/utils';
-import { RouteType } from '@cardstack/navigation/types';
+
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
 
 interface Params {
   merchantSafe: MerchantSafeType;

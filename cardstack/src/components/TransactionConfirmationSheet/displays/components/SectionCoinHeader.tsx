@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { SectionHeaderText } from './SectionHeaderText';
+
 import {
   Container,
   CenteredContainer,
@@ -7,6 +7,8 @@ import {
   Text,
   CoinIcon,
 } from '@cardstack/components';
+
+import { SectionHeaderText } from './SectionHeaderText';
 
 interface SectionIconTitleProps extends ContainerProps {
   title: string;

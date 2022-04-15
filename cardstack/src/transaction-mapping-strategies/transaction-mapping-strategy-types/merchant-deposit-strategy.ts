@@ -2,9 +2,11 @@ import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from '../base-strategy';
-import { MerchantDepositType, TransactionTypes } from '@cardstack/types';
+
 import { fetchHistoricalPrice } from '@cardstack/services';
+import { MerchantDepositType, TransactionTypes } from '@cardstack/types';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class MerchantDepositStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

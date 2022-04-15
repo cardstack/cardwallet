@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react';
 import { nativeCurrencies } from '@cardstack/cardpay-sdk';
-import { RadioList } from '../';
+import React, { useCallback } from 'react';
+
 import usePayment from '@cardstack/redux/hooks/usePayment';
+
+import { RadioList } from '../';
 
 export const CurrencySelection = ({
   onChange,

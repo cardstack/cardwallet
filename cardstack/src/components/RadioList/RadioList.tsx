@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { SectionList } from 'react-native';
+
 import { Text, Container } from '../.';
+
 import { RadioListItem, RadioListItemProps } from './RadioListItem';
 
 export const RadioList = ({ items: sections, onChange }: RadioListProps) => {

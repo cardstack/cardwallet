@@ -1,6 +1,7 @@
-import { fetchGnosisSafes } from '../gnosis-service';
-import { safesData } from '../__mocks__/safesData';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
+
+import { safesData } from '../__mocks__/safesData';
+import { fetchGnosisSafes } from '../gnosis-service';
 
 jest.mock('@cardstack/models/safes-providers', () => ({
   getSafesInstance: jest.fn(),

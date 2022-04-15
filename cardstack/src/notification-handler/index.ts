@@ -1,10 +1,12 @@
 import notifee, { AndroidImportance } from '@notifee/react-native';
-import { merchantPrepaidCardPaymentReceivedHandler } from './merchantPrepaidCardPaymentReceived';
-import { merchantClaimHandler } from './merchantClaim';
-import logger from 'logger';
+
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { loadAddress } from '@rainbow-me/model/wallet';
+import logger from 'logger';
+
+import { merchantClaimHandler } from './merchantClaim';
+import { merchantPrepaidCardPaymentReceivedHandler } from './merchantPrepaidCardPaymentReceived';
 
 // add more notification types here
 export enum NotificationType {

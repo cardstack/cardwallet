@@ -5,6 +5,7 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+
 import { networkTypes } from '@rainbow-me/networkTypes';
 
 const xdaiLink = new HttpLink({

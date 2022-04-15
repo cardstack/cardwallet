@@ -1,13 +1,7 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import React, { memo } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { NativeCurrency } from '@cardstack/cardpay-sdk';
-import { usePayMerchant, PAY_STEP } from './usePayMerchant';
-import { AmountInNativeCurrency } from './components/AmountInNativeCurrency';
-import {
-  MinInvalidAmountText,
-  useAmountConvertHelper,
-} from '@cardstack/screens/PaymentRequest/helper';
-import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
+
 import {
   SafeAreaView,
   Container,
@@ -20,8 +14,17 @@ import {
   CenteredContainer,
   ChoosePrepaidCard,
 } from '@cardstack/components';
+import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
+import {
+  MinInvalidAmountText,
+  useAmountConvertHelper,
+} from '@cardstack/screens/PaymentRequest/helper';
 import { MerchantInformation } from '@cardstack/types';
+
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+
+import { AmountInNativeCurrency } from './components/AmountInNativeCurrency';
+import { usePayMerchant, PAY_STEP } from './usePayMerchant';
 
 const PayMerchant = memo(() => {
   const {

@@ -7,9 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { InteractionManager } from 'react-native';
-import { RouteType } from '@cardstack/navigation/types';
-import { Alert } from '@rainbow-me/components/alerts';
-import { RequestVendorLogoIcon } from '@rainbow-me/components/coin-icon';
+
 import {
   Button,
   CenteredContainer,
@@ -17,6 +15,10 @@ import {
   Sheet,
   Text,
 } from '@cardstack/components';
+import { RouteType } from '@cardstack/navigation/types';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import { RequestVendorLogoIcon } from '@rainbow-me/components/coin-icon';
 import {
   getDappHostname,
   isDappAuthenticated,

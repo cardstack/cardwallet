@@ -3,17 +3,19 @@ import { useFocusEffect, useNavigation } from '@react-navigation/core';
 import { useCallback, useRef } from 'react';
 import { Linking } from 'react-native';
 
-import { strings } from './strings';
+import { useBooleanState } from '@cardstack/hooks';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { convertDeepLinkToCardWalletProtocol } from '@cardstack/utils';
-import Routes from '@rainbow-me/routes';
-import logger from 'logger';
+
 import { Alert } from '@rainbow-me/components/alerts';
-import { useBooleanState } from '@cardstack/hooks';
+import { useTimeout } from '@rainbow-me/hooks';
+import Routes from '@rainbow-me/routes';
 import { getEthereumAddressFromQRCodeData } from '@rainbow-me/utils/address';
 import haptics from '@rainbow-me/utils/haptics';
-import { useTimeout } from '@rainbow-me/hooks';
+import logger from 'logger';
+
+import { strings } from './strings';
 
 const WC_SCAN_TIMEOUT = 2000; // 2s
 export interface useScannerParams {

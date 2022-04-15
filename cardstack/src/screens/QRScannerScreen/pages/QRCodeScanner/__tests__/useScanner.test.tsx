@@ -1,10 +1,11 @@
+import { NavigationContext } from '@react-navigation/core';
 import { act, renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 import { Alert } from 'react-native';
 
-import { NavigationContext } from '@react-navigation/core';
-import { useScanner } from '../useScanner';
 import Routes from '@rainbow-me/navigation/routesNames';
+
+import { useScanner } from '../useScanner';
 
 const validAddress = '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13';
 

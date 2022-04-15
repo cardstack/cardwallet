@@ -1,11 +1,14 @@
 import assert from 'assert';
+
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
-import { BaseStrategyWithLevel1Data } from './base-strategy';
+
+import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   TransactionConfirmationType,
   WithdrawalDecodedData,
 } from '@cardstack/types';
-import { fetchHistoricalPrice } from '@cardstack/services';
+
+import { BaseStrategyWithLevel1Data } from './base-strategy';
 
 export class WithdrawalStrategy extends BaseStrategyWithLevel1Data {
   isApplicable(): boolean {

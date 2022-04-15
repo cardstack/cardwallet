@@ -1,10 +1,12 @@
 import { MerchantSafe } from '@cardstack/cardpay-sdk';
-import { BaseStrategyWithActionDispatcherData } from './base-strategy';
-import { decodeParameters } from './decoding-utils';
+
 import {
   PayMerchantDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
+
+import { BaseStrategyWithActionDispatcherData } from './base-strategy';
+import { decodeParameters } from './decoding-utils';
 
 export class PayMerchantStrategy extends BaseStrategyWithActionDispatcherData {
   isApplicable(): boolean {

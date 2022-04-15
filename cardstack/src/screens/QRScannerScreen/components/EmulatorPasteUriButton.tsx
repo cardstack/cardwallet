@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react';
 import { useIsEmulator } from 'react-native-device-info';
-import { Prompt } from '@rainbow-me/components/alerts';
+
 import { Icon } from '@cardstack/components';
+
+import { Prompt } from '@rainbow-me/components/alerts';
 import { useWalletConnectConnections } from '@rainbow-me/hooks';
 
 export function EmulatorPasteUriButton() {

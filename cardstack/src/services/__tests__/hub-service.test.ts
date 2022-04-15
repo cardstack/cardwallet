@@ -1,11 +1,11 @@
 import axios from 'axios';
+
 import {
   getInventoryDataResponse,
   inventoryData,
   reservationData,
   wyrePriceData,
 } from '@cardstack/helpers/__mocks__/hubMocks';
-
 import {
   getInventories,
   getWyrePrice,

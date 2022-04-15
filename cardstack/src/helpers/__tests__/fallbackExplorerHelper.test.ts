@@ -1,7 +1,8 @@
-import { fetchedData, inputData, updatedData } from '../__mocks__/dataMocks';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
+
+import { fetchedData, inputData, updatedData } from '../__mocks__/dataMocks';
 
 const pricesOracle = {
   DOM: 4.5,

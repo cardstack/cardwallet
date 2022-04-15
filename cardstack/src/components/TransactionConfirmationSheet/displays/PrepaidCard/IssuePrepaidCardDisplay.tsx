@@ -1,14 +1,7 @@
 import { convertRawAmountToBalance } from '@cardstack/cardpay-sdk';
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
-import { SectionHeaderText } from '../components/SectionHeaderText';
-import {
-  MerchantOrDepotSafe,
-  IssuePrepaidCardDecodedData,
-  DepotType,
-  MerchantSafeType,
-} from '@cardstack/types';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
+
 import {
   Container,
   HorizontalDivider,
@@ -17,15 +10,24 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
-
+import { useGetSafesDataQuery } from '@cardstack/services';
+import {
+  MerchantOrDepotSafe,
+  IssuePrepaidCardDecodedData,
+  DepotType,
+  MerchantSafeType,
+} from '@cardstack/types';
 import {
   getSafeTokenByAddress,
   convertSpendForBalanceDisplay,
   getAddressPreview,
 } from '@cardstack/utils';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
-import { useGetSafesDataQuery } from '@cardstack/services';
+
+import { SectionHeaderText } from '../components/SectionHeaderText';
 
 interface IssuePrepaidCardDisplayProps
   extends TransactionConfirmationDisplayProps {

@@ -1,7 +1,9 @@
 import { isString } from 'lodash';
 import React from 'react';
-import { Text, TextProps } from './Text';
+
 import { emojis } from '@rainbow-me/references';
+
+import { Text, TextProps } from './Text';
 
 const emojisMap = new Map<string, string>();
 Object.entries(emojis).map(([emoji, { name }]) => {

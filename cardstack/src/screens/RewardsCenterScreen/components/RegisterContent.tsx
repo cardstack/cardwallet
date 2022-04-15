@@ -1,7 +1,10 @@
 import React from 'react';
-import { strings } from '../strings';
-import { RewardRow, RewardsTitle } from '.';
+
 import { Container, Button, InfoBanner } from '@cardstack/components';
+
+import { strings } from '../strings';
+
+import { RewardRow, RewardsTitle } from '.';
 
 interface RegisterContentProps {
   primaryText: string;

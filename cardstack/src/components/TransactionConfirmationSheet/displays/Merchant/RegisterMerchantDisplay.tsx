@@ -1,11 +1,13 @@
 import React from 'react';
-import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
-import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
-import TransactionListItem from '../components/TransactionListItem';
-import { strings } from '../../strings';
+
 import { TransactionConfirmationDisplayProps } from '@cardstack/components';
-import { RegisterMerchantDecodedData } from '@cardstack/types';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { RegisterMerchantDecodedData } from '@cardstack/types';
+
+import { strings } from '../../strings';
+import TransactionListItem from '../components/TransactionListItem';
+import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
+import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
 
 interface RegisterMerchantDisplayProps
   extends TransactionConfirmationDisplayProps {

@@ -1,16 +1,18 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, ReactNode, useCallback } from 'react';
 
-import { useNavigation } from '@react-navigation/native';
-import { ContainerProps } from '../Container';
 import {
   Container,
   Icon,
   Text,
   MainHeaderWrapper,
 } from '@cardstack/components';
-import Routes from '@rainbow-me/navigation/routesNames';
-import { useAccountSettings } from '@rainbow-me/hooks';
+
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
+import { useAccountSettings } from '@rainbow-me/hooks';
+import Routes from '@rainbow-me/navigation/routesNames';
+
+import { ContainerProps } from '../Container';
 
 interface Props extends ContainerProps {
   title?: string;

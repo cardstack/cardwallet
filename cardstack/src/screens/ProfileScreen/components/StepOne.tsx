@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
-import { exampleMerchantData, strings } from '.';
+
 import {
   Button,
   Container,
@@ -8,6 +8,8 @@ import {
   ProgressStepProps,
   Text,
 } from '@cardstack/components';
+
+import { exampleMerchantData, strings } from '.';
 
 export const StepOne = ({ goToNextStep, isLoading }: ProgressStepProps) => {
   if (isLoading) {

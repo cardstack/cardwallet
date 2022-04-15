@@ -1,7 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
-import { useMerchantInfoFromDID } from '../useMerchantInfoFromDID';
+
 import * as MerchantUtils from '@cardstack/utils/merchant-utils';
+
+import { useMerchantInfoFromDID } from '../useMerchantInfoFromDID';
 
 jest.mock('logger');
 

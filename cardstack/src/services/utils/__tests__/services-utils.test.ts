@@ -1,7 +1,10 @@
 import * as sentry from '@sentry/minimal';
-import { queryPromiseWrapper, filterIncident } from '../index';
+
 import { IncidentType } from '@cardstack/types';
+
 import logger from 'logger';
+
+import { queryPromiseWrapper, filterIncident } from '../index';
 
 describe('service utils', () => {
   describe('queryPromiseWrapper', () => {

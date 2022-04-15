@@ -1,6 +1,8 @@
 import React from 'react';
-import { ContainerProps } from '../Container';
+
 import { Touchable, Text } from '@cardstack/components';
+
+import { ContainerProps } from '../Container';
 
 interface FilterOptionProps {
   isSelected?: boolean;

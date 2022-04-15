@@ -1,9 +1,11 @@
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
-import { Container } from '../Container';
-import { ERC20Transaction } from './ERC20Transaction';
 import { TransactionStatus, TransactionTypes } from '@cardstack/types';
+
+import { Container } from '../Container';
+
+import { ERC20Transaction } from './ERC20Transaction';
 
 storiesOf('Transaction Coin Row', module).add('Default', () => {
   return (

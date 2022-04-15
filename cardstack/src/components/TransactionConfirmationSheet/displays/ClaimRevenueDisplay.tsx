@@ -4,8 +4,7 @@ import {
   getAddressByNetwork,
 } from '@cardstack/cardpay-sdk';
 import React from 'react';
-import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
-import { SectionHeaderText } from './components/SectionHeaderText';
+
 import {
   Container,
   HorizontalDivider,
@@ -14,10 +13,15 @@ import {
   Text,
 } from '@cardstack/components';
 import { ClaimRevenueDecodedData } from '@cardstack/types';
+
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
+
+import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
+
+import { SectionHeaderText } from './components/SectionHeaderText';
 
 interface ClaimRevenueDisplayProps extends TransactionConfirmationDisplayProps {
   data: ClaimRevenueDecodedData;

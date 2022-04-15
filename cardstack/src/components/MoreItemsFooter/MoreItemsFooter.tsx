@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Container, Text } from '@cardstack/components';
 
 interface MoreItemsFooterProps {

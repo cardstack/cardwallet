@@ -1,8 +1,10 @@
-import { useCallback, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/core';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { getAddressPreview } from '@cardstack/utils';
+import { useCallback, useMemo } from 'react';
+
 import { useCopyToast } from '@cardstack/hooks/useCopyToast';
+import { getAddressPreview } from '@cardstack/utils';
+
+import { useAccountProfile } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/navigation/routesNames';
 
 export const useWalletAddressScreen = () => {

@@ -10,15 +10,16 @@ import {
   BorderProps,
   backgroundColor,
 } from '@shopify/restyle';
-import { ActivityIndicator, StyleSheet } from 'react-native';
 import React, { ReactNode, useMemo } from 'react';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
-import { Text } from '../Text';
+import { Theme } from '@cardstack/theme';
+import { useVariantStyle, useVariantValue } from '@cardstack/utils';
+
+import { AnimatedPressable } from '../AnimatedPressable';
 import { Container } from '../Container';
 import { Icon, IconProps } from '../Icon';
-import { AnimatedPressable } from '../AnimatedPressable';
-import { useVariantStyle, useVariantValue } from '@cardstack/utils';
-import { Theme } from '@cardstack/theme';
+import { Text } from '../Text';
 
 type RestyleProps = VariantProps<Theme, 'buttonVariants'> &
   LayoutProps<Theme> &

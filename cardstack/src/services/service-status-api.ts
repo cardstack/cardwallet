@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { STATUS_API_BASE_URL } from 'react-native-dotenv';
-import { filterIncident } from './utils/filter-incident';
+
 import { IncidentType } from '@cardstack/types';
+
+import { filterIncident } from './utils/filter-incident';
 
 export enum ServiceStatusTags {
   SERVICE_STATUS = 'SERVICE_STATUS',

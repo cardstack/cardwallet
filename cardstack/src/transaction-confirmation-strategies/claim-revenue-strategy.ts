@@ -1,12 +1,15 @@
 import assert from 'assert';
+
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from './base-strategy';
-import { decodeParameters } from './decoding-utils';
+
 import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   ClaimRevenueDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
+
+import { BaseStrategy } from './base-strategy';
+import { decodeParameters } from './decoding-utils';
 
 export class ClaimRevenueStrategy extends BaseStrategy {
   isApplicable(): boolean {

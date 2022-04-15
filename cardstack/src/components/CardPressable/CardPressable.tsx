@@ -1,3 +1,10 @@
+import {
+  LayoutProps,
+  SpacingProps,
+  PositionProps,
+  BorderProps,
+  BackgroundColorProps,
+} from '@shopify/restyle';
 import React, { useCallback, useRef, useMemo, ReactNode } from 'react';
 import {
   Animated,
@@ -8,19 +15,13 @@ import {
   ViewStyle,
   GestureResponderEvent,
 } from 'react-native';
-
-import {
-  LayoutProps,
-  SpacingProps,
-  PositionProps,
-  BorderProps,
-  BackgroundColorProps,
-} from '@shopify/restyle';
 import ReactNativeHapticFeedback, {
   HapticFeedbackTypes,
 } from 'react-native-haptic-feedback';
-import { Theme } from '../../theme';
+
 import { Device } from '@cardstack/utils';
+
+import { Theme } from '../../theme';
 
 enum Animate {
   out = 1.0,

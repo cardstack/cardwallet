@@ -9,6 +9,7 @@ import {
 } from '@cardstack/components';
 import { BusinessAccountBanner } from '@cardstack/components/CollapsibleBanner';
 import { RouteType } from '@cardstack/navigation/types';
+
 import { useWalletManager } from '@rainbow-me/hooks';
 
 export const WalletScreen = () => {

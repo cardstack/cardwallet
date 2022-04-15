@@ -1,22 +1,24 @@
-import { useCallback, useEffect, useState } from 'react';
-import { groupBy } from 'lodash';
 import { NetworkStatus } from '@apollo/client';
+import { groupBy } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+
+import { TRANSACTION_PAGE_SIZE } from '@cardstack/constants';
 import {
   TransactionMappingContext,
   TransactionMappingStrategy,
 } from '@cardstack/transaction-mapping-strategies/context';
 import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
-import logger from 'logger';
-import {
   groupTransactionsByDate,
   merchantRevenueEventsToTransactions,
   sortByTime,
 } from '@cardstack/utils';
+
 import usePrevious from '@rainbow-me/hooks/usePrevious';
-import { TRANSACTION_PAGE_SIZE } from '@cardstack/constants';
+import {
+  useNativeCurrencyAndConversionRates,
+  useRainbowSelector,
+} from '@rainbow-me/redux/hooks';
+import logger from 'logger';
 
 interface UseTransactionSectionsProps {
   transactions: ({ transaction: any } | null | undefined)[] | undefined;

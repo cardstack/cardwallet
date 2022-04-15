@@ -13,7 +13,15 @@ import {
 } from 'react';
 import { InteractionManager, TextInput } from 'react-native';
 
+import {
+  dismissKeyboardOnAndroid,
+  navigationStateNewWallet,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
+import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 import { Device } from '@cardstack/utils';
+
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import {
   isValidSeedPhrase,
   isValidWallet,
@@ -26,7 +34,6 @@ import {
   useInvalidPaste,
   useWallets,
 } from '@rainbow-me/hooks';
-
 import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
 import Routes from '@rainbow-me/routes';
 import {
@@ -35,13 +42,6 @@ import {
   sanitizeSeedPhrase,
 } from '@rainbow-me/utils';
 import logger from 'logger';
-import { Network } from '@rainbow-me/helpers/networkTypes';
-import {
-  dismissKeyboardOnAndroid,
-  navigationStateNewWallet,
-  useLoadingOverlay,
-} from '@cardstack/navigation';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();

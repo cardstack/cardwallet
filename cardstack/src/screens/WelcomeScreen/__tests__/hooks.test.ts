@@ -1,8 +1,11 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useWelcomeScreen } from '../hooks';
-import * as cloudBackup from '@rainbow-me/handlers/cloudBackup';
+
 import { Device } from '@cardstack/utils/device';
+
+import * as cloudBackup from '@rainbow-me/handlers/cloudBackup';
 import Routes from '@rainbow-me/routes';
+
+import { useWelcomeScreen } from '../hooks';
 
 // Mock navigation
 const mockedNavigate = jest.fn();

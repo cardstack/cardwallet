@@ -4,34 +4,36 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
+import BN from 'bn.js';
 import { isEmpty, isString } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Web3 from 'web3';
-import BN from 'bn.js';
-import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
+
+import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
+import HDProvider from '@cardstack/models/hd-provider';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
-import { Alert } from '@rainbow-me/components/alerts';
-import Navigation, { useNavigation } from '@rainbow-me/navigation/Navigation';
+import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import { RouteType } from '@cardstack/navigation/types';
+import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
+import { DepotAsset, TokenType } from '@cardstack/types';
 import {
   reshapeDepotTokensToAssets,
   reshapeSingleDepotTokenToAsset,
 } from '@cardstack/utils/depot-utils';
+import { useWorker } from '@cardstack/utils/hooks-utilities';
+
+import { Alert } from '@rainbow-me/components/alerts';
+import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
 import {
   useAccountAssets,
   useAccountSettings,
   useMagicAutofocus,
   useWallets,
 } from '@rainbow-me/hooks';
+import Navigation, { useNavigation } from '@rainbow-me/navigation/Navigation';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
-import { DepotAsset, TokenType } from '@cardstack/types';
-import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
-import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
-import HDProvider from '@cardstack/models/hd-provider';
-import { useWorker } from '@cardstack/utils/hooks-utilities';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
-import { RouteType } from '@cardstack/navigation/types';
 
 interface Params {
   asset: TokenType;

@@ -1,3 +1,12 @@
+import {
+  BottomTabBarOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import React, {
   createContext,
   Dispatch,
@@ -6,39 +15,34 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  BottomTabBarOptions,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-import {
-  createStackNavigator,
-  StackNavigationOptions,
-} from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { InitialRouteContext } from '../../../src/context/initialRoute';
-import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
-import { linking } from './screens';
-import { dismissAndroidKeyboardOnClose, tabLinking } from '.';
+
+import { TabBarIcon } from '@cardstack/components';
 import {
   HomeScreen,
   WalletScreen,
   ProfileScreen,
   QRScannerScreen,
 } from '@cardstack/screens';
-import RainbowRoutes from '@rainbow-me/navigation/routesNames';
-
-import { TabBarIcon } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
-import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
-import ModalScreen from '@rainbow-me/screens/ModalScreen';
-import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
+
+import { navigationRef } from '@rainbow-me/navigation/Navigation';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
 import { onNavigationStateChange } from '@rainbow-me/navigation/onNavigationStateChange';
-import { navigationRef } from '@rainbow-me/navigation/Navigation';
-import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
+import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
+import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
+import ModalScreen from '@rainbow-me/screens/ModalScreen';
+import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
+import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
+
+import { InitialRouteContext } from '../../../src/context/initialRoute';
+
+import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
+import { linking } from './screens';
+
+import { dismissAndroidKeyboardOnClose, tabLinking } from '.';
 
 const Tab = createBottomTabNavigator();
 

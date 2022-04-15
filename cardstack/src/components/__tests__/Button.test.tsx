@@ -1,7 +1,9 @@
 import React from 'react';
+
+import { palette } from '@cardstack/theme';
+
 import { render } from '../../test-utils';
 import { Button } from '../Button/Button';
-import { palette } from '@cardstack/theme';
 
 describe('Button', () => {
   it('should render the children', () => {

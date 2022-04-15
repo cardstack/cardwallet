@@ -3,6 +3,7 @@ import React from 'react';
 import { Alert } from 'react-native';
 
 import { Container } from '../Container';
+
 import { Checkbox } from './Checkbox';
 
 storiesOf('Checkbox', module)

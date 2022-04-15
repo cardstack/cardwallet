@@ -1,8 +1,10 @@
 import { useRoute } from '@react-navigation/core';
 import React, { memo } from 'react';
-import { strings } from './strings';
+
 import { Container, Sheet, Text, TextOptionRow } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
+
+import { strings } from './strings';
 
 interface Params {
   onClaimAllPress: () => void;

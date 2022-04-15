@@ -1,27 +1,30 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { LayoutAnimation, InteractionManager } from 'react-native';
 import {
   NativeCurrency,
   convertToSpend,
   convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
-import { getBlockTimestamp } from './helpers';
-import usePayment from '@cardstack/redux/hooks/usePayment';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { LayoutAnimation, InteractionManager } from 'react-native';
+
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import {
   handleAlertError,
   usePaymentMerchantUniversalLink,
 } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
-import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { useLoadingOverlay } from '@cardstack/navigation';
+import usePayment from '@cardstack/redux/hooks/usePayment';
+import { usePayMerchantMutation } from '@cardstack/services';
 import { MerchantInformation, PrepaidCardType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+
+import { Network } from '@rainbow-me/helpers/networkTypes';
+import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
-import { usePayMerchantMutation } from '@cardstack/services';
-import { useLoadingOverlay } from '@cardstack/navigation';
-import { Network } from '@rainbow-me/helpers/networkTypes';
+
+import { getBlockTimestamp } from './helpers';
 
 export const PAY_STEP = {
   EDIT_AMOUNT: 'EDIT_AMOUNT',

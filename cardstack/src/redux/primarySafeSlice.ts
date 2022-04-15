@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppState } from '@rainbow-me/redux/store';
+
 import { MerchantSafeType } from '@cardstack/types';
+
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { AppState } from '@rainbow-me/redux/store';
 
 interface AccountType {
   [accountAddress: string]: {

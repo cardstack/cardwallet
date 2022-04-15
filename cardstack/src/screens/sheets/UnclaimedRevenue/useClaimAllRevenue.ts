@@ -1,9 +1,11 @@
 import { StackActions, useNavigation } from '@react-navigation/core';
 import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
+
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { useClaimRevenueMutation } from '@cardstack/services';
 import { MerchantSafeType } from '@cardstack/types';
+
 import { useAccountSettings, usePrevious, useWallets } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
 

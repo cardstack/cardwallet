@@ -2,8 +2,9 @@ import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 
-import { CollapsibleBanner } from './CollapsibleBanner';
 import { Container } from '@cardstack/components';
+
+import { CollapsibleBanner } from './CollapsibleBanner';
 
 storiesOf('System Notification', module).add('Default', () => {
   const closedText = text(

@@ -2,9 +2,10 @@ import { convertHexToString } from '@cardstack/cardpay-sdk';
 import { get, isEmpty } from 'lodash';
 import { useCallback, useEffect, useRef } from 'react';
 import { InteractionManager } from 'react-native';
-import logger from 'logger';
-import { useGas } from '@rainbow-me/hooks';
+
 import { estimateGas, toHex } from '@rainbow-me/handlers/web3';
+import { useGas } from '@rainbow-me/hooks';
+import logger from 'logger';
 
 export const useCalculateGas = (
   isMessageRequest: boolean,

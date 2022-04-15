@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+
 import {
   CenteredContainer,
   ContainerProps,

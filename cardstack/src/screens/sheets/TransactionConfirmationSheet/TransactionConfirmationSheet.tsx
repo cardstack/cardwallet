@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
-import { useTransactionConfirmationSheet } from './useTransactionConfirmationSheet';
+
 import {
   TransactionConfirmationSheet,
   SafeAreaView,
 } from '@cardstack/components';
+
+import { useTransactionConfirmationSheet } from './useTransactionConfirmationSheet';
 
 const TransactionConfirmation = () => {
   const {

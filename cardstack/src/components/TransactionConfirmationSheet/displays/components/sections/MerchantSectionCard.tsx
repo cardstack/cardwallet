@@ -1,7 +1,9 @@
 import React, { memo, ReactNode } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { MerchantInformation } from '@cardstack/types';
+
 import { Container, ContainerProps, Icon, Text } from '@cardstack/components';
+import { MerchantInformation } from '@cardstack/types';
+
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
 export const USER_ICON_SIZE = 80;

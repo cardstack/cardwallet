@@ -1,8 +1,11 @@
 import React from 'react';
-import { SectionHeaderText } from '../SectionHeaderText';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+
 import { Container, Text } from '@cardstack/components';
+import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+
+import { SectionHeaderText } from '../SectionHeaderText';
 
 export const useSpendDisplay = (
   spendAmount: string | number,

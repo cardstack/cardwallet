@@ -1,7 +1,9 @@
 import { captureException } from '@sentry/react-native';
 import React from 'react';
-import ErrorFallback from './ErrorFallback';
+
 import logger from 'logger';
+
+import ErrorFallback from './ErrorFallback';
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };

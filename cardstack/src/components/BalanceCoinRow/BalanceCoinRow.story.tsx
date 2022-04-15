@@ -1,6 +1,7 @@
 import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react-native';
 import React from 'react';
+
 import { BalanceCoinRow, Container } from '@cardstack/components';
 
 const exampleCoinItem = {

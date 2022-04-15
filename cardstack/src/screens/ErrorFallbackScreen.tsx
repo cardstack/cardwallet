@@ -1,9 +1,11 @@
-import React, { memo, useEffect } from 'react';
 import { useRoute } from '@react-navigation/core';
 import { captureException } from '@sentry/react-native';
+import React, { memo, useEffect } from 'react';
+
 import ErrorFallback from '@cardstack/components/ErrorBoundary/ErrorFallback';
-import logger from 'logger';
 import { RouteType } from '@cardstack/navigation/types';
+
+import logger from 'logger';
 
 const ErrorFallbackScreen = () => {
   const {

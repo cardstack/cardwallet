@@ -1,7 +1,8 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, memo, useState } from 'react';
-import ColorPicker from 'react-native-wheel-color-picker';
 import { Keyboard } from 'react-native';
+import ColorPicker from 'react-native-wheel-color-picker';
+
 import { Button, Container, Sheet } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 

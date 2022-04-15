@@ -2,13 +2,15 @@ import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from '../base-strategy';
+
+import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   MerchantEarnedRevenueTransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { fetchHistoricalPrice } from '@cardstack/services';
 import { getMerchantEarnedTransactionDetails } from '@cardstack/utils';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class MerchantEarnedRevenueStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { AssetWithNativeType } from '../../types';
 import {
   CardPressable,
   CenteredContainer,
@@ -9,6 +8,8 @@ import {
   NetworkBadge,
   TokenBalance,
 } from '@cardstack/components';
+
+import { AssetWithNativeType } from '../../types';
 
 interface BalanceCoinRowProps {
   item: AssetWithNativeType;

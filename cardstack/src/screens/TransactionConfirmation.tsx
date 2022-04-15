@@ -1,12 +1,14 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
-import { GasSpeedButton } from '../../../src/components/gas';
-import { useTransactionConfirmation } from '@cardstack/hooks';
+
 import {
   Container,
   TransactionConfirmationSheet,
   SafeAreaView,
 } from '@cardstack/components';
+import { useTransactionConfirmation } from '@cardstack/hooks';
+
+import { GasSpeedButton } from '../../../src/components/gas';
 
 const TransactionConfirmation = () => {
   const {

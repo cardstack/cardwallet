@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
 import { Pressable } from 'react-native';
+
+import { Container, StyledQRCode, Text, Button } from '@cardstack/components';
+
 import { strings } from './strings';
 import { useWalletAddressScreen } from './useWalletAddressScreen';
-import { Container, StyledQRCode, Text, Button } from '@cardstack/components';
 
 const WalletAddressScreen = () => {
   const {

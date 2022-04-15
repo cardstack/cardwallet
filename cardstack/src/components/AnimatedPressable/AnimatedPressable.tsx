@@ -10,6 +10,7 @@ import {
 import ReactNativeHapticFeedback, {
   HapticFeedbackTypes,
 } from 'react-native-haptic-feedback';
+
 import { Device } from '@cardstack/utils';
 
 enum Scale {

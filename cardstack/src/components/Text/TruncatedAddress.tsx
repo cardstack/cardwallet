@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
-import { Text, TextProps } from './Text';
+
 import { getAddressPreview } from '@cardstack/utils';
+
+import { Text, TextProps } from './Text';
 
 type TruncatedAddressProps = {
   address: string;

@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import { avatarColor } from '@cardstack/theme';
+
 import { useAccountProfile } from '@rainbow-me/hooks';
 
 interface ProfileFormData {

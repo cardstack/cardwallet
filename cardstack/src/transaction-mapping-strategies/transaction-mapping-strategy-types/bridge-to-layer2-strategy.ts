@@ -2,12 +2,14 @@ import {
   convertRawAmountToNativeDisplay,
   convertRawAmountToBalance,
 } from '@cardstack/cardpay-sdk';
-import { BaseStrategy } from '../base-strategy';
+
+import { fetchHistoricalPrice } from '@cardstack/services';
 import {
   DepotBridgedLayer2TransactionType,
   TransactionTypes,
 } from '@cardstack/types';
-import { fetchHistoricalPrice } from '@cardstack/services';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class BridgeToLayer2EventStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

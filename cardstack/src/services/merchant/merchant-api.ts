@@ -1,11 +1,13 @@
 import { MerchantSafe } from '@cardstack/cardpay-sdk';
+
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
+
+import { claimMerchantRevenue, createProfile } from './merchant-service';
 import {
   ClaimRevenueQueryParams,
   CreateProfileQueryParams,
 } from './merchant-types';
-import { claimMerchantRevenue, createProfile } from './merchant-service';
 
 const merchantApi = safesApi.injectEndpoints({
   endpoints: builder => ({

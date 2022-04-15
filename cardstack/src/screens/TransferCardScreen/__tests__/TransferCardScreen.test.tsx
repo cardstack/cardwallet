@@ -1,7 +1,8 @@
 import React from 'react';
+
 import { render, fireEvent, act } from '../../../../src/test-utils';
-import { strings } from '../strings';
 import TransferCardScreen from '../TransferCardScreen';
+import { strings } from '../strings';
 import { useTransferCardScreen } from '../useTransferCardScreen';
 
 jest.mock('../useTransferCardScreen', () => ({

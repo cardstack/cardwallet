@@ -1,9 +1,11 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
+
+import { Navigation } from '@rainbow-me/navigation';
+
 import { MainRoutes, GlobalRoutes } from './routes';
 import { MainScreens, GlobalScreens, ScreenNavigation } from './screens';
-import { Navigation } from '@rainbow-me/navigation';
 
 // Not a big fan of returning components inside hooks,
 // but react-navigation does not allow components other than Screen

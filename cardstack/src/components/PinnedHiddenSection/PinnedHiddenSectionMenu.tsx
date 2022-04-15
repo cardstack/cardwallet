@@ -1,11 +1,13 @@
 import React, { memo, useCallback } from 'react';
+
 import { Button, Icon, AnimatedPressable } from '@cardstack/components';
+import { layoutEasingAnimation } from '@cardstack/utils';
+
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { layoutEasingAnimation } from '@cardstack/utils';
 
 const actionSheetOptions = {
   Edit: { idx: 0 },

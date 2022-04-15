@@ -1,5 +1,6 @@
-import { TypedData } from '@rainbow-me/model/wallet';
 import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
+
+import { TypedData } from '@rainbow-me/model/wallet';
 
 interface EIP712TypedDataPayload {
   params: [string, TypedData | string];

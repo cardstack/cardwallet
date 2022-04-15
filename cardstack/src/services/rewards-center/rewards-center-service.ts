@@ -7,11 +7,17 @@ import {
   WithSymbol,
 } from '@cardstack/cardpay-sdk';
 import BN from 'bn.js';
+
+import { getSafesInstance } from '@cardstack/models';
+import { SignedProviderParams } from '@cardstack/models/hd-provider';
+import Web3Instance from '@cardstack/models/web3-instance';
+
+import { convertTokenToSpend } from '../exchange-rate-service';
 import {
   addNativePriceToToken,
   updateSafeWithTokenPrices,
 } from '../gnosis-service';
-import { convertTokenToSpend } from '../exchange-rate-service';
+
 import {
   RegisterGasEstimateQueryParams,
   RewardsClaimGasEstimateParams,
@@ -23,9 +29,6 @@ import {
   RewardWithdrawParams,
   ValidProofsParams,
 } from './rewards-center-types';
-import { getSafesInstance } from '@cardstack/models';
-import Web3Instance from '@cardstack/models/web3-instance';
-import { SignedProviderParams } from '@cardstack/models/hd-provider';
 
 const getRewardsPoolInstance = async (signedParams?: SignedProviderParams) => {
   const web3 = await Web3Instance.get(signedParams);

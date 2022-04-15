@@ -1,13 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { orderBy } from 'lodash';
-import { strings } from './strings';
-import { useAccountSettings } from '@rainbow-me/hooks';
-import { isLayer1 } from '@cardstack/utils';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert } from 'react-native';
+
+import { RouteType } from '@cardstack/navigation/types';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { PrepaidCardType } from '@cardstack/types';
-import { RouteType } from '@cardstack/navigation/types';
+import { isLayer1 } from '@cardstack/utils';
+
+import { useAccountSettings } from '@rainbow-me/hooks';
+
+import { strings } from './strings';
 
 type RouteParams = {
   spendAmount: number;

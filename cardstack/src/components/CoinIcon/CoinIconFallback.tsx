@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FallbackIcon } from 'react-coin-icon';
+
 import { CenteredContainer, Image } from '@cardstack/components';
+
 import { toChecksumAddress } from '@rainbow-me/handlers/web3';
 
 interface CoinIconFallbackProps {

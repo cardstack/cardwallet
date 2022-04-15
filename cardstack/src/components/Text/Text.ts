@@ -1,10 +1,11 @@
-import { TextProps as ReactNativeTextProps } from 'react-native';
 import {
   createRestyleComponent,
   createText,
   TextProps as ShopifyTextProps,
 } from '@shopify/restyle';
 import { ReactNode } from 'react';
+import { TextProps as ReactNativeTextProps } from 'react-native';
+
 import { Theme, CustomTextProps, customText } from '../../theme';
 
 /**

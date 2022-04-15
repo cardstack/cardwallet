@@ -1,14 +1,14 @@
-import React from 'react';
 import { currencies, NativeCurrency } from '@cardstack/cardpay-sdk';
+import { ResponsiveValue } from '@shopify/restyle';
+import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 
-import { ResponsiveValue } from '@shopify/restyle';
-import logo from '../../../assets/cardstackLogoTransparent.png';
-import { PrepaidCardProps } from '../PrepaidCard';
-
-import { getNativeBalanceFromSpend } from '@cardstack/utils';
 import { Container, Text } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
+import { getNativeBalanceFromSpend } from '@cardstack/utils';
+
+import logo from '../../../assets/cardstackLogoTransparent.png';
+import { PrepaidCardProps } from '../PrepaidCard';
 
 type CardVariants = 'normal' | 'medium';
 

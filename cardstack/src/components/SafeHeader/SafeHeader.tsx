@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+
 import {
   Container,
   Icon,
@@ -6,8 +7,8 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { getAddressPreview } from '@cardstack/utils';
 import { ColorTypes } from '@cardstack/theme';
+import { getAddressPreview } from '@cardstack/utils';
 
 interface SafeHeaderProps {
   address: string;

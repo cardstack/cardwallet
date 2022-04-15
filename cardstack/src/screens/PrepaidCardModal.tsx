@@ -1,7 +1,7 @@
 import { useRoute } from '@react-navigation/core';
 import React, { memo } from 'react';
 import { SectionList } from 'react-native';
-import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
+
 import {
   Container,
   ListEmptyComponent,
@@ -14,6 +14,8 @@ import {
 } from '@cardstack/components';
 import { usePrepaidCardTransactions } from '@cardstack/hooks';
 import { sectionStyle } from '@cardstack/utils/layouts';
+
+import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
 
 const PrepaidCardModal = () => {
   const {

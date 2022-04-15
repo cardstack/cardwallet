@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { TabHeaderButton } from '.';
+
 import { Container } from '@cardstack/components';
+
+import { TabHeaderButton } from '.';
 
 export interface TabType {
   title: string;

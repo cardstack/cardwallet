@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+
 import { Container, SafeAreaView, ContainerProps } from '@cardstack/components';
 
 export const NAV_HEADER_HEIGHT = 54;

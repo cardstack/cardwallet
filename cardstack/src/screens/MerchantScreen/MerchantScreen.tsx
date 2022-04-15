@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
 import { StatusBar } from 'react-native';
+
+import { Container, MerchantContent } from '@cardstack/components';
+
 import { NavBarHeader } from './components/NavBarHeader';
 import { useMerchantScreen } from './useMerchantScreen';
-import { Container, MerchantContent } from '@cardstack/components';
 
 const MerchantScreen = () => {
   const {

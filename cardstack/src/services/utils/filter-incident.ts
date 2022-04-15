@@ -1,4 +1,5 @@
 import { orderBy, filter, includes, indexOf } from 'lodash';
+
 import { IncidentType } from '@cardstack/types';
 
 const order = ['critical', 'major', 'minor', 'maintenance', 'none'];

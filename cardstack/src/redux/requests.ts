@@ -1,6 +1,8 @@
-import { filter, get, omit, values } from 'lodash';
 import { AnyAction } from '@reduxjs/toolkit';
+import { filter, get, omit, values } from 'lodash';
+
 import { getRequestDisplayDetails } from '@cardstack/parsers/signing-requests';
+
 import {
   getLocalRequests,
   removeLocalRequest,
@@ -10,8 +12,8 @@ import {
   dappLogoOverride,
   dappNameOverride,
 } from '@rainbow-me/helpers/dappNameHandler';
-import logger from 'logger';
 import { AppDispatch, AppGetState } from '@rainbow-me/redux/store';
+import logger from 'logger';
 
 // -- Constants --------------------------------------- //
 const REQUESTS_UPDATE_REQUESTS_TO_APPROVE =

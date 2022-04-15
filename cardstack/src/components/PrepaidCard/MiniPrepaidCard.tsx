@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
 import { StyleSheet } from 'react-native';
-import { CustomizableBackground } from './components/CustomizableBackground';
+
 import { Container } from '@cardstack/components';
 import { PrepaidCardCustomization } from '@cardstack/types';
+
+import { CustomizableBackground } from './components/CustomizableBackground';
 
 const styles = StyleSheet.create({
   cardWrapper: {

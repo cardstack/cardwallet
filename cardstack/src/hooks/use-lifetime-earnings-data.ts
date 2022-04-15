@@ -1,11 +1,14 @@
 import { groupBy } from 'lodash';
+
+import { useGetLifetimeEarningsAccumulationsQuery } from '@cardstack/graphql';
+
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
 import {
   getTimestamps,
   groupAccumulations,
   Units,
 } from './../utils/date-utils';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import { useGetLifetimeEarningsAccumulationsQuery } from '@cardstack/graphql';
 
 export enum ChartFilterOptions {
   DAY = '24H',

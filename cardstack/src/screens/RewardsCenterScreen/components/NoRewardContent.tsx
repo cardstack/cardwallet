@@ -1,12 +1,15 @@
 import React from 'react';
-import { strings } from '../strings';
-import { RewardsTitle } from '.';
+
 import {
   Container,
   ContainerProps,
   InfoBanner,
   Text,
 } from '@cardstack/components';
+
+import { strings } from '../strings';
+
+import { RewardsTitle } from '.';
 
 export const NoRewardContent = () => (
   <Container alignItems="center" padding={5}>

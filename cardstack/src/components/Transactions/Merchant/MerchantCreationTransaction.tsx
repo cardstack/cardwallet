@@ -1,11 +1,13 @@
 import React from 'react';
+
+import { Icon, SafeHeader } from '@cardstack/components';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { MerchantCreationTransactionType } from '@cardstack/types';
+
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
 } from '../TransactionBase';
-import { Icon, SafeHeader } from '@cardstack/components';
-import { MerchantCreationTransactionType } from '@cardstack/types';
-import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 interface MerchantCreationTransactionProps
   extends TransactionBaseCustomizationProps {

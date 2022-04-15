@@ -1,15 +1,18 @@
+import { IConnector } from '@walletconnect/types';
 import { groupBy, mapValues, values } from 'lodash';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { IConnector } from '@walletconnect/types';
-import { sortList } from '../../helpers/sortList';
+
+import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
+
+import { AppState } from '@rainbow-me/redux/store';
+
 import {
   walletConnectDisconnectAllByDappNameOrUrl as rawWalletConnectDisconnectAllByDappNameOrUrl,
   walletConnectOnSessionRequest as rawWalletConnectOnSessionRequest,
 } from '../../../../src/redux/walletconnect';
-import { AppState } from '@rainbow-me/redux/store';
-import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
+import { sortList } from '../../helpers/sortList';
 
 const formatDappData = (connections: Record<string, IConnector[]>) =>
   values(

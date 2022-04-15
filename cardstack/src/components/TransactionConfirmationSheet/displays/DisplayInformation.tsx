@@ -1,23 +1,25 @@
 import React, { ElementType } from 'react';
-
 import { ActivityIndicator } from 'react-native';
-import { strings } from '../strings';
-import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
-import { GenericDisplay } from './GenericDisplay';
-import { IssuePrepaidCardDisplay } from './PrepaidCard/IssuePrepaidCardDisplay';
-import { PayMerchantDisplay } from './Merchant/PayMerchantDisplay';
-import { RegisterMerchantDisplay } from './Merchant/RegisterMerchantDisplay';
-import { SplitPrepaidCardDisplay } from './PrepaidCard/SplitPrepaidCardDisplay';
-import { TransferPrepaidCardDisplay } from './PrepaidCard/TransferPrepaidCardDisplay';
-import { WithdrawalDisplay } from './WithdrawalDisplay';
-import { HubAuthenticationDisplay } from './HubAuthenticationDisplay';
-import { RewardsRegisterDisplay } from './RewardsRegisterDisplay';
-import { RewardsClaimDisplay } from './RewardsClaimDisplay';
-import { TransactionConfirmationType } from '@cardstack/types';
+
 import {
   CenteredContainer,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
+import { TransactionConfirmationType } from '@cardstack/types';
+
+import { strings } from '../strings';
+
+import { ClaimRevenueDisplay } from './ClaimRevenueDisplay';
+import { GenericDisplay } from './GenericDisplay';
+import { HubAuthenticationDisplay } from './HubAuthenticationDisplay';
+import { PayMerchantDisplay } from './Merchant/PayMerchantDisplay';
+import { RegisterMerchantDisplay } from './Merchant/RegisterMerchantDisplay';
+import { IssuePrepaidCardDisplay } from './PrepaidCard/IssuePrepaidCardDisplay';
+import { SplitPrepaidCardDisplay } from './PrepaidCard/SplitPrepaidCardDisplay';
+import { TransferPrepaidCardDisplay } from './PrepaidCard/TransferPrepaidCardDisplay';
+import { RewardsClaimDisplay } from './RewardsClaimDisplay';
+import { RewardsRegisterDisplay } from './RewardsRegisterDisplay';
+import { WithdrawalDisplay } from './WithdrawalDisplay';
 
 export const transactionTypeMap: Record<
   TransactionConfirmationType,

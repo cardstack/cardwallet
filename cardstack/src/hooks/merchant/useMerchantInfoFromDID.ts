@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+
 import { MerchantInformation } from '@cardstack/types';
-import { fetchMerchantInfoFromDID } from '@cardstack/utils/merchant-utils';
-import logger from 'logger';
 import { useWorker } from '@cardstack/utils/hooks-utilities';
+import { fetchMerchantInfoFromDID } from '@cardstack/utils/merchant-utils';
+
+import logger from 'logger';
 
 export const useMerchantInfoFromDID = (DID?: string) => {
   const [merchantInfoDID, setMerchantInfoDID] = useState<MerchantInformation>();

@@ -1,6 +1,6 @@
 import { ResponsiveValue, SafeVariants, useTheme } from '@shopify/restyle';
-
 import { Dimensions } from 'react-native';
+
 import { Theme, breakpoints } from '@cardstack/theme';
 
 /**

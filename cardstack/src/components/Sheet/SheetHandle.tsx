@@ -1,5 +1,6 @@
 import React from 'react';
 import { ViewProps } from 'react-native';
+
 import { Container } from '../Container';
 
 export const HandleHeight = 5;

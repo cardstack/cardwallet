@@ -1,10 +1,13 @@
 import { NetworkStatus } from '@apollo/client';
 
+import { useGetDepotTransactionHistoryDataQuery } from '@cardstack/graphql';
+
+import logger from 'logger';
+
 import { useRainbowSelector } from '../../../../src/redux/hooks';
 import { TRANSACTION_PAGE_SIZE } from '../../constants';
+
 import { useTransactionSections } from './use-transaction-sections';
-import logger from 'logger';
-import { useGetDepotTransactionHistoryDataQuery } from '@cardstack/graphql';
 
 export const useDepotTransactions = (safeAddress: string) => {
   const [network] = useRainbowSelector(state => [state.settings.network]);

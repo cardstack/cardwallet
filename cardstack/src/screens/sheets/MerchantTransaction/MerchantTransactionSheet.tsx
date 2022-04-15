@@ -1,6 +1,6 @@
-import React, { memo, useMemo } from 'react';
 import { useRoute } from '@react-navigation/core';
-import { strings } from './strings';
+import React, { memo, useMemo } from 'react';
+
 import {
   BlockscoutButton,
   Container,
@@ -14,9 +14,12 @@ import {
   Asset,
   TransactionRow,
 } from '@cardstack/components/Transactions/TransactionBase';
-import { MerchantClaimTypeTxn } from '@cardstack/types';
 import { RouteType } from '@cardstack/navigation/types';
+import { MerchantClaimTypeTxn } from '@cardstack/types';
+
 import { useAccountSettings } from '@rainbow-me/hooks';
+
+import { strings } from './strings';
 
 interface ClaimedTransactionProps extends MerchantClaimTypeTxn {
   txRowProps: Asset;

@@ -7,13 +7,14 @@ import {
   spendToUsd,
   convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
-
 import { getResolver } from '@cardstack/did-resolver';
 import { Resolver } from 'did-resolver';
+
 import {
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
 } from '@cardstack/types';
+
 import { Network } from '@rainbow-me/helpers/networkTypes';
 export const NATIVE_TOKEN_SYMBOLS = ['eth', 'spoa', 'xdai', 'keth'];
 

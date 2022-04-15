@@ -1,11 +1,12 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCallback, useEffect, useState } from 'react';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   SHOW_BUSINESS_ACCOUNT_BANNER_KEY,
   useWorker,
   isLayer2,
 } from '@cardstack/utils';
+
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 export const useBusinessAccountBanner = () => {

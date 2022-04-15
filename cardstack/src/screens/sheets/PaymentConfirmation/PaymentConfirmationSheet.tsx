@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
 import { useRoute } from '@react-navigation/core';
-import { strings } from './strings';
+import React, { memo } from 'react';
+
 import {
   BlockscoutButton,
   Container,
@@ -9,13 +9,16 @@ import {
   Sheet,
   Text,
 } from '@cardstack/components';
-import { dateFormatter } from '@cardstack/utils';
 import MerchantSectionCard from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/MerchantSectionCard';
-import { TransactionRow } from '@cardstack/components/Transactions/TransactionBase';
 import { PrepaidCardTransactionHeader } from '@cardstack/components/Transactions/PrepaidCard/PrepaidCardTransactionHeader';
+import { TransactionRow } from '@cardstack/components/Transactions/TransactionBase';
 import { RouteType } from '@cardstack/navigation/types';
 import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
+import { dateFormatter } from '@cardstack/utils';
+
 import { useAccountSettings } from '@rainbow-me/hooks';
+
+import { strings } from './strings';
 
 const PaymentConfirmationSheet = () => {
   const {

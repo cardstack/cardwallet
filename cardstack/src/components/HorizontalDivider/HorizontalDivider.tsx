@@ -1,6 +1,8 @@
 import React from 'react';
-import { ContainerProps } from '../Container';
+
 import { Container } from '@cardstack/components';
+
+import { ContainerProps } from '../Container';
 
 export const HorizontalDivider = (props: ContainerProps) => (
   <Container

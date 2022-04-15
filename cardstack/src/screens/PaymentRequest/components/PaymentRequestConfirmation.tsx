@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { Icon } from '@rainbow-me/components/icons';
 import { Button, Container, StyledQRCode, Text } from '@cardstack/components';
+import { useCopyToast } from '@cardstack/hooks';
 import {
   usePaymentLinkParams,
   usePaymentLinks,
 } from '@cardstack/hooks/merchant/usePaymentLinks';
 
-import { useCopyToast } from '@cardstack/hooks';
+import { Icon } from '@rainbow-me/components/icons';
 
 type PaymentRequestConfirmationProps = usePaymentLinkParams;
 

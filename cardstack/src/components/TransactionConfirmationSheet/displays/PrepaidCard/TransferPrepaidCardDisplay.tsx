@@ -1,6 +1,5 @@
 import React from 'react';
-import { SectionHeaderText } from '../components/SectionHeaderText';
-import { ContactAvatar } from '@rainbow-me/components/contacts';
+
 import {
   Container,
   HorizontalDivider,
@@ -14,11 +13,15 @@ import {
   TransferPrepaidCard2DecodedData,
 } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
+
+import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useAccountProfile } from '@rainbow-me/hooks';
 import {
   useNativeCurrencyAndConversionRates,
   useRainbowSelector,
 } from '@rainbow-me/redux/hooks';
+
+import { SectionHeaderText } from '../components/SectionHeaderText';
 
 type TransferDecodedDataType =
   | TransferPrepaidCard1DecodedData

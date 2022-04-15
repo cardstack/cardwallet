@@ -1,11 +1,12 @@
-import React, { memo } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { RouteType } from '@cardstack/navigation/types';
-import { TransactionConfirmationRouteParams } from '@cardstack/types';
+import React, { memo } from 'react';
+
 import {
   TransactionConfirmationSheet,
   SafeAreaView,
 } from '@cardstack/components';
+import { RouteType } from '@cardstack/navigation/types';
+import { TransactionConfirmationRouteParams } from '@cardstack/types';
 
 const RewardsRegisterSheet = () => {
   const {

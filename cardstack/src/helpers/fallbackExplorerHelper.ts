@@ -5,13 +5,14 @@ import {
   convertAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
 import { toLower } from 'lodash';
+
+import { getNativeBalanceFromOracle } from '@cardstack/services';
+import { getOnChainAssetBalance } from '@cardstack/services/assets';
+import { AssetType, AssetWithNativeType, BalanceType } from '@cardstack/types';
 import { isCPXDToken } from '@cardstack/utils/cardpay-utils';
 
-import { AssetType, AssetWithNativeType, BalanceType } from '@cardstack/types';
-import { Network } from '@rainbow-me/helpers/networkTypes';
-import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { toWei } from '@rainbow-me/handlers/web3';
-import { getOnChainAssetBalance } from '@cardstack/services/assets';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface Prices {
   [key: string]: {

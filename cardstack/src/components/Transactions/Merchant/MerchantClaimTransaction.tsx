@@ -1,17 +1,19 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useCallback } from 'react';
 
-import { useNavigation } from '@react-navigation/core';
+import { CoinIcon } from '@cardstack/components';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { MerchantClaimType } from '@cardstack/types';
+import { getClaimProps } from '@cardstack/utils';
+
+import Routes from '@rainbow-me/routes';
+
 import { SafeHeader } from '../../SafeHeader';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
   TransactionBaseProps,
 } from '../TransactionBase';
-import { MerchantClaimType } from '@cardstack/types';
-import { CoinIcon } from '@cardstack/components';
-import Routes from '@rainbow-me/routes';
-import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
-import { getClaimProps } from '@cardstack/utils';
 
 export interface MerchantClaimTransactionProps
   extends TransactionBaseCustomizationProps {

@@ -1,10 +1,12 @@
 import assert from 'assert';
-import { BaseStrategyWithActionDispatcherData } from './base-strategy';
-import { decodeParameters } from './decoding-utils';
+
 import {
   RegisterMerchantDecodedData,
   TransactionConfirmationType,
 } from '@cardstack/types';
+
+import { BaseStrategyWithActionDispatcherData } from './base-strategy';
+import { decodeParameters } from './decoding-utils';
 
 export class RegisterMerchantStrategy extends BaseStrategyWithActionDispatcherData {
   isApplicable(): boolean {

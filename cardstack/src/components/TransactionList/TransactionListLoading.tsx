@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { ContainerProps } from '../Container';
 import { Container, Skeleton } from '@cardstack/components';
+
+import { ContainerProps } from '../Container';
 
 const TransactionsSection = ({
   light,

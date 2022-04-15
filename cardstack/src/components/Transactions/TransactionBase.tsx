@@ -1,8 +1,7 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
-import { Icon, IconName, IconProps } from '../Icon';
-import { ContainerProps } from '../Container';
+
 import {
   CardPressable,
   Container,
@@ -10,9 +9,13 @@ import {
   Text,
 } from '@cardstack/components';
 import { isLayer1, normalizeTxHash, ClaimStatusTypes } from '@cardstack/utils';
+
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
-import { Network } from '@rainbow-me/helpers/networkTypes';
+
+import { ContainerProps } from '../Container';
+import { Icon, IconName, IconProps } from '../Icon';
 
 export interface TransactionBaseCustomizationProps {
   includeBorder?: boolean;

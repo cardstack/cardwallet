@@ -1,18 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
-import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
-import { useCalculateGas } from './use-calculate-gas';
-import { useCancelTransaction } from './use-cancel-transaction';
-import { useConfirmTransaction } from './use-confirm-transaction';
-import { extractPayloadParams, parseMessageRequestJson } from './utils';
-import { useMethodName } from './use-method-name';
-import { useRouteParams } from './use-route-params';
-import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
 import {
   TransactionConfirmationData,
   TransactionConfirmationType,
 } from '@cardstack/types';
+
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { logger } from '@rainbow-me/utils';
+import { isMessageDisplayType } from '@rainbow-me/utils/signingMethods';
+
+import { TransactionConfirmationContext } from '../../transaction-confirmation-strategies/context';
+
+import { useCalculateGas } from './use-calculate-gas';
+import { useCancelTransaction } from './use-cancel-transaction';
+import { useConfirmTransaction } from './use-confirm-transaction';
+import { useMethodName } from './use-method-name';
+import { useRouteParams } from './use-route-params';
+import { extractPayloadParams, parseMessageRequestJson } from './utils';
 
 export const useTransactionConfirmation = () => {
   const {

@@ -1,8 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { QRCodeScannerPage, RequestQRCodePage } from './pages';
-import { useRequestCodePage } from './pages/RequestQRCode/useRequestCodePage';
-import { useQRScannerScreen } from './useQRScannerScreen';
-import { EmulatorPasteUriButton } from './components/EmulatorPasteUriButton';
+
 import {
   Container,
   Icon,
@@ -10,6 +7,11 @@ import {
   SwitchSelector,
 } from '@cardstack/components';
 import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
+
+import { EmulatorPasteUriButton } from './components/EmulatorPasteUriButton';
+import { QRCodeScannerPage, RequestQRCodePage } from './pages';
+import { useRequestCodePage } from './pages/RequestQRCode/useRequestCodePage';
+import { useQRScannerScreen } from './useQRScannerScreen';
 
 const QRScannerScreen = () => {
   const {

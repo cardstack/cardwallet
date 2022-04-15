@@ -1,4 +1,3 @@
-import { BaseStrategy } from '../base-strategy';
 import {
   PrepaidCardPaymentTransactionType,
   TransactionTypes,
@@ -8,6 +7,8 @@ import {
   fetchCardCustomizationFromDID,
   fetchMerchantInfoFromDID,
 } from '@cardstack/utils';
+
+import { BaseStrategy } from '../base-strategy';
 
 export class PrepaidCardPaymentStrategy extends BaseStrategy {
   handlesTransaction(): boolean {

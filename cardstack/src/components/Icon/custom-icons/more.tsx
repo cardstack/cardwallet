@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { SvgProps, Circle, G } from 'react-native-svg';
+
 import theme from '@cardstack/theme';
 
 function SvgComponent(props: SvgProps) {

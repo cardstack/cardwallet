@@ -1,14 +1,17 @@
 import React from 'react';
-import { strings } from '../strings';
-import { SectionIconTitle } from './components/SectionIconTitle';
-import { PrepaidCardTransactionSection } from './components/sections/PrepaidCardTransactionSection';
-import { PayThisAmountSection } from './components/sections/PayThisAmountSection';
+
 import {
   HorizontalDivider,
   TransactionConfirmationDisplayProps,
   IconProps,
 } from '@cardstack/components';
 import { RewardsRegisterData } from '@cardstack/types';
+
+import { strings } from '../strings';
+
+import { SectionIconTitle } from './components/SectionIconTitle';
+import { PayThisAmountSection } from './components/sections/PayThisAmountSection';
+import { PrepaidCardTransactionSection } from './components/sections/PrepaidCardTransactionSection';
 
 interface RewardsRegisterDisplayProps
   extends TransactionConfirmationDisplayProps {

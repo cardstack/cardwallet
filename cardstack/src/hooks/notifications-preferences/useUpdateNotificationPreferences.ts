@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
-import { useAuthToken } from '@cardstack/hooks';
 
+import { useAuthToken } from '@cardstack/hooks';
 import {
   getNotificationsPreferences,
   setNotificationsPreferences,

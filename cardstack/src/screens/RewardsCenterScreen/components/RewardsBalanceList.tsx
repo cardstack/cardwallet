@@ -1,12 +1,15 @@
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
-import { strings } from '../strings';
-import { RewardRow } from '.';
+
 import { Container, ListEmptyComponent } from '@cardstack/components';
+import { MainRoutes } from '@cardstack/navigation';
 import { TokenType } from '@cardstack/types';
 
 import { useNavigation } from '@rainbow-me/navigation';
-import { MainRoutes } from '@cardstack/navigation';
+
+import { strings } from '../strings';
+
+import { RewardRow } from '.';
 
 export type TokenWithSafeAddress = TokenType & { safeAddress: string };
 export interface RewardsBalanceListProps {

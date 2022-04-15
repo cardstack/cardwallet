@@ -1,8 +1,11 @@
 import React from 'react';
-import { ContainerProps } from '../Container';
+
 import { Container, Text } from '@cardstack/components';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+
+import { ContainerProps } from '../Container';
 
 export const NetworkBadge = (props: ContainerProps & { text?: string }) => {
   const networkName = useRainbowSelector(state => state.settings.network);

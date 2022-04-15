@@ -1,14 +1,17 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useCallback } from 'react';
 
-import { useNavigation } from '@react-navigation/core';
+import { Icon } from '@cardstack/components';
+import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
+
+import Routes from '@rainbow-me/routes';
+
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
 } from '../TransactionBase';
+
 import { PrepaidCardTransactionHeader } from './PrepaidCardTransactionHeader';
-import { Icon } from '@cardstack/components';
-import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
-import Routes from '@rainbow-me/routes';
 
 interface PrepaidCardPaymentTransactionProps
   extends TransactionBaseCustomizationProps {

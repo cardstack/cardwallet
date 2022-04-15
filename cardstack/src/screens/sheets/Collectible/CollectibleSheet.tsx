@@ -1,18 +1,20 @@
+import { useRoute } from '@react-navigation/core';
 import React, { memo } from 'react';
 
-import { useRoute } from '@react-navigation/core';
+import { Container, HorizontalDivider, Sheet } from '@cardstack/components';
+import { RouteType } from '@cardstack/navigation/types';
+import { CollectibleType } from '@cardstack/types';
+
+import {
+  SendActionButton,
+  SheetActionButtonRow,
+} from '@rainbow-me/components/sheet';
+
 import {
   CollectibleHeader,
   CollectibleImageWrapper,
   TextSection,
 } from './components';
-import { Container, HorizontalDivider, Sheet } from '@cardstack/components';
-import { CollectibleType } from '@cardstack/types';
-import {
-  SendActionButton,
-  SheetActionButtonRow,
-} from '@rainbow-me/components/sheet';
-import { RouteType } from '@cardstack/navigation/types';
 
 interface Params {
   collectible: CollectibleType;

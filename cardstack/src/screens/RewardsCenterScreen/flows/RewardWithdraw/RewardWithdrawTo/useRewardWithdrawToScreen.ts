@@ -1,13 +1,13 @@
-import { useCallback } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/core';
-import { MerchantOrDepotSafe } from '@cardstack/types';
-import { RouteType } from '@cardstack/navigation/types';
-import { useAccountSettings } from '@rainbow-me/hooks';
+import { useCallback } from 'react';
 
-import { useGetSafesDataQuery } from '@cardstack/services';
-
-import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
 import { MainRoutes } from '@cardstack/navigation';
+import { RouteType } from '@cardstack/navigation/types';
+import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
+import { useGetSafesDataQuery } from '@cardstack/services';
+import { MerchantOrDepotSafe } from '@cardstack/types';
+
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 interface SafeResultType {
   availableSafesToWithdraw: MerchantOrDepotSafe[];

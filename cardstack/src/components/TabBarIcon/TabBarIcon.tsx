@@ -1,7 +1,8 @@
 import React, { memo, useMemo } from 'react';
+
 import { Text, Icon, IconName, Container } from '@cardstack/components';
-import { screenWidth } from '@cardstack/utils';
 import { ColorTypes } from '@cardstack/theme';
+import { screenWidth } from '@cardstack/utils';
 
 const layouts = {
   tabIndicatorDash: {

@@ -1,8 +1,10 @@
-import { renderHook } from '@testing-library/react-hooks';
 import { useRoute } from '@react-navigation/native';
+import { renderHook } from '@testing-library/react-hooks';
+
+import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
+
 import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { usePaymentMerchantUniversalLink } from '../usePaymentMerchantUniversalLink';
-import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
 
 const mockedDID = {
   did: 'did',

@@ -1,10 +1,13 @@
 import { ResponsiveValue } from '@shopify/restyle';
 import React from 'react';
-import { strings } from './strings';
+
 import { Container, Text } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
 import { dateFormatter } from '@cardstack/utils';
+
 import { ContactAvatar } from '@rainbow-me/components/contacts';
+
+import { strings } from './strings';
 
 export interface PaymentDetailsItemProps {
   title: string;

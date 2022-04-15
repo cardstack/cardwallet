@@ -1,6 +1,17 @@
 import BN from 'bn.js';
+
 import { CacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
+
+import {
+  claimRewards,
+  fetchRewardPoolTokenBalances,
+  fetchRewardsSafe,
+  getRegisterGasEstimate,
+  getWithdrawGasEstimate,
+  registerToRewardProgram,
+  withdrawFromRewardSafe,
+} from './rewards-center-service';
 import {
   RegisterGasEstimateQueryParams,
   RewardsClaimMutationParams,
@@ -13,15 +24,6 @@ import {
   RewardWithdrawParams,
   SuccessfulTransactionReceipt,
 } from './rewards-center-types';
-import {
-  claimRewards,
-  fetchRewardPoolTokenBalances,
-  fetchRewardsSafe,
-  getRegisterGasEstimate,
-  getWithdrawGasEstimate,
-  registerToRewardProgram,
-  withdrawFromRewardSafe,
-} from './rewards-center-service';
 
 const rewardsApi = safesApi.injectEndpoints({
   endpoints: builder => ({

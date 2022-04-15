@@ -1,13 +1,15 @@
 import React from 'react';
+
+import { CoinIcon } from '@cardstack/components';
+import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
+import { MerchantWithdrawType } from '@cardstack/types';
+
 import { SafeHeader } from '../../SafeHeader';
 import {
   TransactionBase,
   TransactionBaseCustomizationProps,
 } from '../TransactionBase';
-import { MerchantWithdrawType } from '@cardstack/types';
-import { useNameOrPreviewFromAddress } from '@cardstack/hooks/merchant/useNameOrPreviewFromAddress';
-import { CoinIcon } from '@cardstack/components';
-import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 
 export interface MerchantWithdrawTransactionProps
   extends TransactionBaseCustomizationProps {

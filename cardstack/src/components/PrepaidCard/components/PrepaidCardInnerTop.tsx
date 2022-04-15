@@ -1,13 +1,15 @@
 import React, { memo, useCallback } from 'react';
 
+import { Container, Text } from '@cardstack/components';
+import { ColorTypes } from '@cardstack/theme';
+import { getAddressPreview } from '@cardstack/utils';
+import { hitSlop } from '@cardstack/utils/layouts';
+
+import { useNavigation } from '@rainbow-me/navigation';
+import Routes from '@rainbow-me/routes';
+
 import { Touchable } from '../../Touchable';
 import { PrepaidCardProps } from '../PrepaidCard';
-import Routes from '@rainbow-me/routes';
-import { useNavigation } from '@rainbow-me/navigation';
-import { getAddressPreview } from '@cardstack/utils';
-import { ColorTypes } from '@cardstack/theme';
-import { Container, Text } from '@cardstack/components';
-import { hitSlop } from '@cardstack/utils/layouts';
 
 type CardVariants = 'normal' | 'medium';
 

@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useCallback } from 'react';
+
+import { Container } from '@cardstack/components';
+
 import {
   ScrollableStepWrapper,
   StepIcon,
   ProgressStepSizes,
   StepStatus,
 } from '.';
-import { Container } from '@cardstack/components';
 
 export interface ProgressStepsProps {
   activeStep?: number;

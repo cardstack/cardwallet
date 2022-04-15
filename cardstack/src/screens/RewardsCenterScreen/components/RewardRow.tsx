@@ -1,5 +1,5 @@
 import React from 'react';
-import { strings } from '../strings';
+
 import {
   Container,
   Button,
@@ -8,6 +8,8 @@ import {
   TouchableProps,
   CardPressable,
 } from '@cardstack/components';
+
+import { strings } from '../strings';
 
 type TxStatus = 'claimed' | 'withdrawn' | 'none';
 

@@ -1,7 +1,9 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { fetchSafes } from './gnosis-service';
+
 import { DepotType, MerchantSafeType, PrepaidCardType } from '@cardstack/types';
+
+import { fetchSafes } from './gnosis-service';
 
 export enum CacheTags {
   SAFES = 'SAFES',

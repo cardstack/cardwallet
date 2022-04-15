@@ -1,10 +1,12 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import axios, { AxiosResponse } from 'axios';
 import { isNil, pick } from 'lodash';
-import { NativeCurrency } from '@cardstack/cardpay-sdk';
-import logger from 'logger';
-import NetworkTypes, { Network } from '@rainbow-me/networkTypes';
+
 import { CollectibleType } from '@cardstack/types';
+
 import AssetTypes from '@rainbow-me/helpers/assetTypes';
+import NetworkTypes, { Network } from '@rainbow-me/networkTypes';
+import logger from 'logger';
 
 export const OPENSEA_LIMIT_PER_PAGE = 50;
 export const OPENSEA_LIMIT_TOTAL = 2000;

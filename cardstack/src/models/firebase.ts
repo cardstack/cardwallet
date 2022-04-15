@@ -3,16 +3,18 @@ import messaging, {
 } from '@react-native-firebase/messaging';
 import lang from 'i18n-js';
 import { requestNotifications } from 'react-native-permissions';
+
 import {
   registerFcmToken,
   unregisterFcmToken,
 } from '@cardstack/services/hub-service';
+
 import { Alert } from '@rainbow-me/components/alerts';
 import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 import { loadAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
-import { Network } from '@rainbow-me/helpers/networkTypes';
 
 const DEVICE_FCM_TOKEN_KEY = 'cardwalletFcmToken';
 type FCMTokenStorageType = {
