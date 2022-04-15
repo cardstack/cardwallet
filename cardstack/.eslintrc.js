@@ -39,5 +39,35 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 0,
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': ['error'],
+    'import/order': [
+      'error',
+      {
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: false,
+        },
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+        ],
+        pathGroups: [
+          {
+            pattern: '@cardstack/**',
+            group: 'external',
+            position: 'after',
+          },
+          {
+            pattern: '@/**',
+            group: 'external',
+            position: 'after',
+          },
+        ],
+        'newlines-between': 'always',
+      },
+    ],
   },
 };
