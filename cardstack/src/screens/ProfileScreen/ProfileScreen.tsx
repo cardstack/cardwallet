@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useMemo, useCallback } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import {
   Button,
@@ -8,6 +9,7 @@ import {
   MerchantContent,
   Text,
 } from '@cardstack/components';
+import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { isLayer1 } from '@cardstack/utils';
 
@@ -19,8 +21,19 @@ import { CreateProfile, strings } from './components';
 
 const ProfileScreen = () => {
   const { navigate } = useNavigation();
-  const { primarySafe, isFetching, refetch, safesCount } = usePrimarySafe();
+
+  const {
+    primarySafe,
+    isFetching,
+    refetch,
+    safesCount,
+    isLoading,
+    isUninitialized,
+  } = usePrimarySafe();
+
   const { network } = useAccountSettings();
+
+  const isRefreshingForNewAccount = useIsFetchingDataNewAccount(isFetching);
 
   const ProfileBody = useMemo(
     () =>
@@ -36,6 +49,11 @@ const ProfileScreen = () => {
         <CreateProfile isLoading={isFetching} />
       ),
     [primarySafe, isFetching, safesCount, refetch]
+  );
+
+  const showLoading = useMemo(
+    () => isLoading || isUninitialized || isRefreshingForNewAccount,
+    [isLoading, isRefreshingForNewAccount, isUninitialized]
   );
 
   const redirectToSwitchNetwork = useCallback(() => {
@@ -69,6 +87,8 @@ const ProfileScreen = () => {
               {strings.stepOne.switchNetwork}
             </Button>
           </>
+        ) : showLoading ? (
+          <ActivityIndicator size="large" />
         ) : (
           ProfileBody
         )}
