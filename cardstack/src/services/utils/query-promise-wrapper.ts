@@ -52,7 +52,7 @@ export const queryPromiseWrapper = async <TResult, TArgs>(
   } catch (error) {
     const message = options?.errorLogMessage || 'Error on queryPromiseWrapper';
 
-    logger.sentry(message, error);
+    logger.sentry(message, JSON.stringify(error));
     captureException(error);
 
     return {

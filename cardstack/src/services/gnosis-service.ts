@@ -131,8 +131,9 @@ export const fetchSafes = async (
 
     return { data };
   } catch (error) {
-    captureException(error);
     logger.sentry('Fetch GnosisSafes failed', error);
+
+    captureException(error);
 
     const errorResponse = {
       error: {
@@ -199,8 +200,9 @@ export const fetchGnosisSafes = async (address: string) => {
     };
   } catch (error) {
     Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
-    captureException(error);
+
     logger.sentry('Fetch GnosisSafes failed', error);
+    captureException(error);
   }
 };
 
