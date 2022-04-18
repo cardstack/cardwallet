@@ -14,6 +14,10 @@ describe('service utils', () => {
       logger.sentry = jest.fn();
     });
 
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('it should call a given promise with its params', async () => {
       const anyPromise = jest
         .fn()
@@ -47,7 +51,7 @@ describe('service utils', () => {
 
       expect(logger.sentry).toBeCalledWith(
         'Error on queryPromiseWrapper',
-        'Error'
+        JSON.stringify('Error')
       );
 
       expect(captureExceptionSpy).toBeCalledWith('Error');
@@ -74,10 +78,10 @@ describe('service utils', () => {
 
       expect(logger.sentry).toBeCalledWith(
         'Error on queryPromiseWrapper',
-        'Request timeout'
+        JSON.stringify('Request timeout')
       );
 
-      expect(captureExceptionSpy).toBeCalledWith('Error');
+      expect(captureExceptionSpy).toBeCalledWith('Request timeout');
 
       expect(queryWrapperResult).toStrictEqual({
         error: {
@@ -96,7 +100,11 @@ describe('service utils', () => {
         { errorStatus: 400, errorLogMessage: 'Error on anyPromise' }
       );
 
-      expect(logger.sentry).toBeCalledWith('Error on anyPromise', 'Error');
+      expect(logger.sentry).toBeCalledWith(
+        'Error on anyPromise',
+        JSON.stringify('Error')
+      );
+
       expect(captureExceptionSpy).toBeCalledWith('Error');
 
       expect(queryWrapperResult).toStrictEqual({
