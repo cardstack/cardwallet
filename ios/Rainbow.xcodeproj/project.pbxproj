@@ -7,13 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01032CB7BD5D47D8B87871E7 /* Karbon-Medium 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = 86C550D0394940909026C612 /* Karbon-Medium 2.otf */; };
-		01361B85D1CD438490C03DD1 /* Karbon-Semibold 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = E8BEED7E48F54FC781D67548 /* Karbon-Semibold 2.otf */; };
 		019BFA419A1C493998D767A0 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B5AA0CC94474E5C961A2B62 /* OpenSans-LightItalic.ttf */; };
-		02DAD40A70B744479FCF8BCA /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3B5E0F4CE84A57A47D4C9F /* Roboto-BoldItalic.ttf */; };
 		0EFAF3F629434EEE9EB3D1AB /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67DA6C572CB04D0CAD69AAE8 /* OpenSans-ExtraBold.ttf */; };
-		11FF2DE427EF438DBF86BE59 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25C02488F53047498CA6CBCF /* Roboto-Thin.ttf */; };
-		1395452CAD2B4450A893408A /* Karbon-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 21725A18577446E1B4997238 /* Karbon-MediumItalic.otf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -22,27 +17,10 @@
 		1539422D24C7CF9300E4A9D1 /* SettingsBundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1539422C24C7CF9300E4A9D1 /* SettingsBundleHelper.swift */; };
 		15E531D5242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E531D4242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift */; };
 		15E531DA242DAB7100797B89 /* NotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E531D9242DAB7100797B89 /* NotificationManager.m */; };
-		16A77FBBABCD460BA508773B /* Karbon-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = BBE49FEE61314BB19412207D /* Karbon-Regular.otf */; };
-		1DBB1F630EE74E138B036226 /* Karbon-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8448A19D5AF4C0DB31375DC /* Karbon-Medium.otf */; };
-		1F245F1F49E64A0897622B8B /* Karbon-Regular 3.otf in Resources */ = {isa = PBXBuildFile; fileRef = C4751C49DC5D43F4A72FA7C4 /* Karbon-Regular 3.otf */; };
-		20C08F8159B44BF4B82630AF /* Karbon-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 28B0C6F8FA0F4632B1C5B8FD /* Karbon-Light.otf */; };
-		2235897B7C054EDC8FABC22D /* RobotoMono-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 377B36F88EA44BC18FC6AE3F /* RobotoMono-LightItalic.ttf */; };
 		24979E8920F84250007EB0DA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24979E7720F84004007EB0DA /* GoogleService-Info.plist */; };
-		29C8EACB0BD445E98A76426F /* KarbonSlabStencil-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1C57F319A21945DC9FDBFC91 /* KarbonSlabStencil-Regular.otf */; };
-		2B8735ACF65F4B8D894ACD30 /* RobotoMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1B5CE90B1FF944D8BB8CD73E /* RobotoMono-Bold.ttf */; };
 		2BE0026A9A624831826E8B6A /* RobotoMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 009215AA8FF64348B2A73F5E /* RobotoMono-Regular.ttf */; };
 		2EB90C38D49A4C09AB167D36 /* OpenSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 361BED8238264C8586D6FE03 /* OpenSans-BoldItalic.ttf */; };
-		381CF732858F4E7DA275DF44 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 851320E36FC9440292F0003B /* Roboto-MediumItalic.ttf */; };
-		390E2A1A36724894BF8A5A3E /* Karbon-Bold 4.otf in Resources */ = {isa = PBXBuildFile; fileRef = 66635EA640D846739A1D91FD /* Karbon-Bold 4.otf */; };
-		3921F2AC40DC4A81AFC4BC80 /* RobotoMono-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33F3EA3D6B054311BBF95674 /* RobotoMono-ExtraLightItalic.ttf */; };
-		39D6A4AD3E3B478B9BF06C8F /* Karbon-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 82E69B4F005C40CBB714A0F3 /* Karbon-LightItalic.otf */; };
-		3AE62BD1B54A4C50A4BF8731 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2709FA042F05445ABC082CBD /* Roboto-BlackItalic.ttf */; };
 		3C109692EB3643688A68E778 /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C771B5C4107C418D981341FE /* OpenSans-Italic.ttf */; };
-		3D13271D27C74682ABD3E935 /* Karbon-Regular 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = F49BB56FB93E44ADA35A03E0 /* Karbon-Regular 2.otf */; };
-		4AD7F577CCA5423782BAF17C /* Karbon-Bold 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3229569961164F299B5C7EAE /* Karbon-Bold 2.otf */; };
-		4B1A7201EE54411485B5C796 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1636A2E4BB014C94A7BF355F /* Roboto-Black.ttf */; };
-		4F3992B997474CDBA55CC4B4 /* RobotoMono-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 69B1922CA1E74860ACB64E9F /* RobotoMono-Light.ttf */; };
-		52E74BFFC7BC4E0DAC59459C /* Karbon-Light 2.otf in Resources */ = {isa = PBXBuildFile; fileRef = 69D76FA87B8C46D99C5BC6D1 /* Karbon-Light 2.otf */; };
 		6630540924A38A1900E5B030 /* RainbowText.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630540824A38A1900E5B030 /* RainbowText.m */; };
 		6635730624939991006ACFA6 /* SafeStoreReview.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635730524939991006ACFA6 /* SafeStoreReview.m */; };
 		6655FFB425BB2B0700642961 /* ThemeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655FFB325BB2B0700642961 /* ThemeModule.m */; };
@@ -51,55 +29,26 @@
 		66A1FEB624AB641100C3F539 /* RNCMScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A1FEB324AB641100C3F539 /* RNCMScreen.m */; };
 		66A1FEBC24ACBBE600C3F539 /* RNCMPortal.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A1FEBB24ACBBE600C3F539 /* RNCMPortal.m */; };
 		66A28EB024CAF1B500410A88 /* TestFlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A28EAF24CAF1B500410A88 /* TestFlight.m */; };
-		6B6EBAAFB0E54851ABBE32B5 /* Karbon-Regular 4.otf in Resources */ = {isa = PBXBuildFile; fileRef = CCC94EE55A674CBBBEE86417 /* Karbon-Regular 4.otf */; };
-		6BFF0B0C84E94C548FBD6C7C /* RobotoMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEB96DEC8E3B406C81F3D687 /* RobotoMono-Italic.ttf */; };
 		7287CE1EC33B4913AEE1F4B6 /* SFMono-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 668A9E253DAF444A90ECB997 /* SFMono-Medium.otf */; };
-		75C8917BD4FE44AFA2299D27 /* Karbon-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = E94665EF41D34F1C81B39B3C /* Karbon-Semibold.otf */; };
-		7E1EBB8F4907406BAE285E19 /* Karbon-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2AC117C6CFE3429C8BE06AEC /* Karbon-BoldItalic.otf */; };
-		7F0C286B498D4510BFC5595F /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD7A7D2583F9495698AD88C5 /* Roboto-ThinItalic.ttf */; };
-		8261FA04BB0F4DCEA55E17B4 /* Karbon-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E843CB7D246E4902B613D717 /* Karbon-RegularItalic.otf */; };
-		9785D7539F40457A9F03007D /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EBF5570607AA46F782096602 /* Roboto-Light.ttf */; };
 		9B05FBFFF18BFF7F55A2BF48 /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6AC983DAF4881C0B599D58 /* libPods-Rainbow.a */; };
-		9D58FB03990844D8AFD76668 /* KarbonSlabStencil-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = A97DFBEFCE8D4103A33F3C59 /* KarbonSlabStencil-Bold.otf */; };
 		9EE7A81B54D644FE90F32B5D /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D66612AA98046D893194DDE /* OpenSans-Regular.ttf */; };
 		A39A1DD0C9844C7E83998733 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC680628EF2A4CD18F0FD471 /* OpenSans-Light.ttf */; };
 		A4277D9F23CBD1910042BAF4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4277D9E23CBD1910042BAF4 /* Extensions.swift */; };
 		A4277DA323CFE85F0042BAF4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4277DA223CFE85F0042BAF4 /* Theme.swift */; };
 		A4D04BA923D12F99008C1DEC /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D04BA823D12F99008C1DEC /* Button.swift */; };
 		A4D04BAC23D12FD5008C1DEC /* ButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D04BAB23D12FD5008C1DEC /* ButtonManager.m */; };
-		A5995A61ADC8482593780859 /* RobotoMono-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4F82C5D139E4939B95ED76B /* RobotoMono-SemiBold.ttf */; };
 		AA6228EF24272F510078BDAA /* SF-Pro-Rounded-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA6228EB24272B200078BDAA /* SF-Pro-Rounded-Bold.otf */; };
 		AA6228F024272F510078BDAA /* SF-Pro-Rounded-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA6228EC24272B200078BDAA /* SF-Pro-Rounded-Heavy.otf */; };
 		AA6228F124272F510078BDAA /* SF-Pro-Rounded-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA6228ED24272B200078BDAA /* SF-Pro-Rounded-Medium.otf */; };
 		AA6228F224272F510078BDAA /* SF-Pro-Rounded-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA6228EE24272B200078BDAA /* SF-Pro-Rounded-Regular.otf */; };
 		AA6228F324272F510078BDAA /* SF-Pro-Rounded-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA6228EA24272B200078BDAA /* SF-Pro-Rounded-Semibold.otf */; };
-		AB701D5973904391BAA016EB /* Karbon-Regular 5.otf in Resources */ = {isa = PBXBuildFile; fileRef = BD742E7C5F2041929BEF8CC7 /* Karbon-Regular 5.otf */; };
-		B09BEC74E5554DE3B7099890 /* RobotoMono-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 79DA932A83F24DE8834D0D29 /* RobotoMono-SemiBoldItalic.ttf */; };
 		B7A3E82A4C4449F4A18EB5C2 /* SFMono-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 95F2888C850F40C8A26E083B /* SFMono-Regular.otf */; };
-		B7F89B1AD68D45A1991463E2 /* Karbon-HairlineItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 654961CDF3744AEFBF763A92 /* Karbon-HairlineItalic.otf */; };
 		B9228E638CCB4EF7B7CBFDFF /* OpenSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9058985CB724444CB23BCE60 /* OpenSans-ExtraBoldItalic.ttf */; };
 		C04D10F025AFC8C1003BEF7A /* Extras.json in Resources */ = {isa = PBXBuildFile; fileRef = C04D10EF25AFC8C1003BEF7A /* Extras.json */; };
-		C0D25E695AF545C4826AF0F5 /* RobotoMono-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAF66A33ED2E4E73A01A7EA1 /* RobotoMono-MediumItalic.ttf */; };
-		C0DB6757A6804FC0AD68744F /* RobotoMono-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2570FCFB652A493787CB3CBD /* RobotoMono-ExtraLight.ttf */; };
 		C185E9DB63A649B09B0C005E /* OpenSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09679E4D9CAD4F83BA18473F /* OpenSans-SemiBoldItalic.ttf */; };
-		C24B957691804C0AA74A2FD7 /* Karbon-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 066F62BA80B3495F978116BD /* Karbon-Thin.otf */; };
-		C3D2FF6EF6A443A3ACF5695B /* Karbon-Bold 3.otf in Resources */ = {isa = PBXBuildFile; fileRef = D6C9AB8BDCED4AA3B6F2307A /* Karbon-Bold 3.otf */; };
 		C72F456C99A646399192517D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 98AED33BAB4247CEBEF8464D /* libz.tbd */; };
-		C94F9BD322054F9D98997C2A /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 46534D8099D04335A68233C0 /* Roboto-Regular.ttf */; };
-		D26A79A962AF474F9D8A6A68 /* Karbon-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 875249FC1319430FA49666EA /* Karbon-Bold.otf */; };
-		D8A36AAB86B949919EF25039 /* RobotoMono-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A29DF52467464FFBA1E9F347 /* RobotoMono-ThinItalic.ttf */; };
 		D8CC7D300E4F44CBB0849967 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F6CD7D3EDCC481486A0A459 /* OpenSans-Bold.ttf */; };
-		DA8193AC37FD40A7A4AF443B /* Karbon-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = D05F6AE363E54E9588AA2AA0 /* Karbon-ThinItalic.otf */; };
-		E060FEE0F2B84DDA910A2C43 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 200724F9D2D14895AFCB9C1B /* Roboto-LightItalic.ttf */; };
 		E08425439FAA46D1804E1DEA /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50C01F230C7949DA8CD5DC73 /* OpenSans-SemiBold.ttf */; };
-		E21BF3E4E109427B8A178328 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A941015D5E754AED874CE796 /* Roboto-Medium.ttf */; };
-		E2CB54DCDAB14C97A5B6BD59 /* Karbon-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 782EDD99F9B749FCBC6E32B1 /* Karbon-SemiboldItalic.otf */; };
-		ECB27D15201C4C2E8081D7F6 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DF1E79467D474B3E8E8AD0DF /* Roboto-Italic.ttf */; };
-		EFBB82F6FCF240EBA544BFFB /* Karbon-Hairline.otf in Resources */ = {isa = PBXBuildFile; fileRef = BF18560DA99F4DB584054092 /* Karbon-Hairline.otf */; };
-		F808F9C60013433CA7EACD8D /* RobotoMono-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33608FF0889740AD84C648DC /* RobotoMono-Thin.ttf */; };
-		FB7BFB556B6143988520C342 /* RobotoMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6AF0E1269B254B038CB51E53 /* RobotoMono-BoldItalic.ttf */; };
-		FD5F8784C7A54C8892A5DDB3 /* RobotoMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E822716DEEC4A55BD74BD9E /* RobotoMono-Medium.ttf */; };
-		FE3CA493A270426C88C9DE2D /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C3D1B6FE09774107AB3B067E /* Roboto-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -596,58 +545,7 @@
 				9EE7A81B54D644FE90F32B5D /* OpenSans-Regular.ttf in Resources */,
 				E08425439FAA46D1804E1DEA /* OpenSans-SemiBold.ttf in Resources */,
 				C185E9DB63A649B09B0C005E /* OpenSans-SemiBoldItalic.ttf in Resources */,
-				4B1A7201EE54411485B5C796 /* Roboto-Black.ttf in Resources */,
-				3AE62BD1B54A4C50A4BF8731 /* Roboto-BlackItalic.ttf in Resources */,
-				FE3CA493A270426C88C9DE2D /* Roboto-Bold.ttf in Resources */,
-				02DAD40A70B744479FCF8BCA /* Roboto-BoldItalic.ttf in Resources */,
-				ECB27D15201C4C2E8081D7F6 /* Roboto-Italic.ttf in Resources */,
-				9785D7539F40457A9F03007D /* Roboto-Light.ttf in Resources */,
-				E060FEE0F2B84DDA910A2C43 /* Roboto-LightItalic.ttf in Resources */,
-				E21BF3E4E109427B8A178328 /* Roboto-Medium.ttf in Resources */,
-				381CF732858F4E7DA275DF44 /* Roboto-MediumItalic.ttf in Resources */,
-				C94F9BD322054F9D98997C2A /* Roboto-Regular.ttf in Resources */,
-				11FF2DE427EF438DBF86BE59 /* Roboto-Thin.ttf in Resources */,
-				7F0C286B498D4510BFC5595F /* Roboto-ThinItalic.ttf in Resources */,
-				2B8735ACF65F4B8D894ACD30 /* RobotoMono-Bold.ttf in Resources */,
-				FB7BFB556B6143988520C342 /* RobotoMono-BoldItalic.ttf in Resources */,
-				C0DB6757A6804FC0AD68744F /* RobotoMono-ExtraLight.ttf in Resources */,
-				3921F2AC40DC4A81AFC4BC80 /* RobotoMono-ExtraLightItalic.ttf in Resources */,
-				6BFF0B0C84E94C548FBD6C7C /* RobotoMono-Italic.ttf in Resources */,
-				4F3992B997474CDBA55CC4B4 /* RobotoMono-Light.ttf in Resources */,
-				2235897B7C054EDC8FABC22D /* RobotoMono-LightItalic.ttf in Resources */,
-				FD5F8784C7A54C8892A5DDB3 /* RobotoMono-Medium.ttf in Resources */,
-				C0D25E695AF545C4826AF0F5 /* RobotoMono-MediumItalic.ttf in Resources */,
 				2BE0026A9A624831826E8B6A /* RobotoMono-Regular.ttf in Resources */,
-				A5995A61ADC8482593780859 /* RobotoMono-SemiBold.ttf in Resources */,
-				B09BEC74E5554DE3B7099890 /* RobotoMono-SemiBoldItalic.ttf in Resources */,
-				F808F9C60013433CA7EACD8D /* RobotoMono-Thin.ttf in Resources */,
-				D8A36AAB86B949919EF25039 /* RobotoMono-ThinItalic.ttf in Resources */,
-				4AD7F577CCA5423782BAF17C /* Karbon-Bold 2.otf in Resources */,
-				C3D2FF6EF6A443A3ACF5695B /* Karbon-Bold 3.otf in Resources */,
-				390E2A1A36724894BF8A5A3E /* Karbon-Bold 4.otf in Resources */,
-				D26A79A962AF474F9D8A6A68 /* Karbon-Bold.otf in Resources */,
-				7E1EBB8F4907406BAE285E19 /* Karbon-BoldItalic.otf in Resources */,
-				EFBB82F6FCF240EBA544BFFB /* Karbon-Hairline.otf in Resources */,
-				B7F89B1AD68D45A1991463E2 /* Karbon-HairlineItalic.otf in Resources */,
-				52E74BFFC7BC4E0DAC59459C /* Karbon-Light 2.otf in Resources */,
-				20C08F8159B44BF4B82630AF /* Karbon-Light.otf in Resources */,
-				39D6A4AD3E3B478B9BF06C8F /* Karbon-LightItalic.otf in Resources */,
-				01032CB7BD5D47D8B87871E7 /* Karbon-Medium 2.otf in Resources */,
-				1DBB1F630EE74E138B036226 /* Karbon-Medium.otf in Resources */,
-				1395452CAD2B4450A893408A /* Karbon-MediumItalic.otf in Resources */,
-				3D13271D27C74682ABD3E935 /* Karbon-Regular 2.otf in Resources */,
-				1F245F1F49E64A0897622B8B /* Karbon-Regular 3.otf in Resources */,
-				6B6EBAAFB0E54851ABBE32B5 /* Karbon-Regular 4.otf in Resources */,
-				AB701D5973904391BAA016EB /* Karbon-Regular 5.otf in Resources */,
-				16A77FBBABCD460BA508773B /* Karbon-Regular.otf in Resources */,
-				8261FA04BB0F4DCEA55E17B4 /* Karbon-RegularItalic.otf in Resources */,
-				01361B85D1CD438490C03DD1 /* Karbon-Semibold 2.otf in Resources */,
-				75C8917BD4FE44AFA2299D27 /* Karbon-Semibold.otf in Resources */,
-				E2CB54DCDAB14C97A5B6BD59 /* Karbon-SemiboldItalic.otf in Resources */,
-				C24B957691804C0AA74A2FD7 /* Karbon-Thin.otf in Resources */,
-				DA8193AC37FD40A7A4AF443B /* Karbon-ThinItalic.otf in Resources */,
-				9D58FB03990844D8AFD76668 /* KarbonSlabStencil-Bold.otf in Resources */,
-				29C8EACB0BD445E98A76426F /* KarbonSlabStencil-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
