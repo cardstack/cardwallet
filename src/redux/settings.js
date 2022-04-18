@@ -59,6 +59,10 @@ export const settingsLoadNetwork = () => async dispatch => {
     const network = await getNetwork();
     const chainId = ethereumUtils.getChainIdFromNetwork(network);
     await etherWeb3SetHttpProvider(network);
+
+    // Creates tag on Sentry labeling the current network.
+    logger.setTag('network', network);
+
     dispatch({
       payload: { chainId, network },
       type: SETTINGS_UPDATE_NETWORK_SUCCESS,
@@ -92,6 +96,8 @@ export const settingsUpdateNetwork = network => async dispatch => {
   try {
     await saveNetwork(network);
     await resetAccountState(dispatch);
+    // Creates tag on Sentry labeling the current network.
+    logger.setTag('network', network);
     RNRestart.Restart(); // restart app so it reloads with updated network
   } catch (error) {
     logger.log('Error updating network settings', error);
