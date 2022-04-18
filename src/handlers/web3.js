@@ -54,19 +54,15 @@ export const etherWeb3SetHttpProvider = async network => {
  * @param {String} network
  */
 
-export const getEtherWeb3Provider = async (
-  network = undefined,
-  forceWeb3ProviderReconnect = false
-) => {
+export const getEtherWeb3Provider = async (network = undefined) => {
   let wsConnected = web3Provider.provider?.connected;
 
   // check websocket state and reconnect if disconnected
-  while (!wsConnected || forceWeb3ProviderReconnect) {
+  while (!wsConnected) {
     const currentNetwork = network || (await getNetwork());
     await etherWeb3SetHttpProvider(currentNetwork);
     wsConnected = web3Provider.provider?.connected;
     logger.log('ws restarted', wsConnected, currentNetwork);
-    forceWeb3ProviderReconnect = false;
   }
 
   return web3Provider;
