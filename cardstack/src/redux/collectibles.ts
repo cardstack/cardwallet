@@ -171,6 +171,8 @@ const fetchNFTsViaOpenSea = () => (
       }
     } catch (error) {
       dispatch({ type: COLLECTIBLES_FETCH_FAILURE });
+
+      logger.sentry('COLLECTIBLES_FETCH_FAILURE');
       captureException(error);
     }
   };

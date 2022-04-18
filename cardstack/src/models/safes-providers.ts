@@ -15,7 +15,7 @@ export const getSafesInstance = async (
 
     return safes;
   } catch (e) {
-    captureException(e);
     logger.sentry('Unable to get safeInstance', e);
+    captureException(e);
   }
 };

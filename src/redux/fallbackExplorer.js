@@ -67,7 +67,7 @@ const isValidAddress = address => address && address.substr(0, 2) === '0x';
 const fetchCoingeckoIds = async (network, coingeckoCoins) => {
   const idsMap = {};
   if (isLayer1(network)) {
-    coingeckoCoins.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
+    coingeckoCoins?.forEach(({ id, platforms: { ethereum: tokenAddress } }) => {
       const address = tokenAddress && toLower(tokenAddress);
       if (address && isValidAddress(address)) {
         idsMap[address] = id;
@@ -83,7 +83,7 @@ const fetchCoingeckoIds = async (network, coingeckoCoins) => {
     const honeyswapTokens = data.tokens;
 
     honeyswapTokens.forEach(({ address: tokenAddress, symbol }) => {
-      const coingeckoToken = coingeckoCoins.find(
+      const coingeckoToken = coingeckoCoins?.find(
         token => toLower(token.symbol) === toLower(symbol)
       );
       const address = tokenAddress && toLower(tokenAddress);
