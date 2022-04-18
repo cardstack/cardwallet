@@ -46,7 +46,7 @@ const BasicInput = createRestyleComponent<BaseInputProps, Theme>(
   TextInput
 );
 
-export interface InputProps {
+export interface InputProps extends BaseInputProps {
   border?: boolean;
   iconProps?: IconProps | null;
 }
@@ -54,39 +54,37 @@ export interface InputProps {
 /**
  * This is our primitive Input component with restyle props applied
  */
-export const Input = React.forwardRef(
-  (props: InputProps & BaseInputProps, ref) => (
-    <Container>
-      <BasicInput
-        {...(props.border
-          ? {
-              borderType: 'solid',
-              borderWidth: 1,
-              borderColor: 'buttonSecondaryBorder',
-              borderRadius: 100,
-              paddingHorizontal: 5,
-              paddingVertical: 3,
-            }
-          : {})}
-        fontFamily="OpenSans-Regular"
-        fontSize={16}
-        textContentType="none"
-        ref={ref}
-        color="black"
-        {...props}
+export const Input = React.forwardRef((props: InputProps, ref) => (
+  <Container>
+    <BasicInput
+      {...(props.border
+        ? {
+            borderType: 'solid',
+            borderWidth: 1,
+            borderColor: 'buttonSecondaryBorder',
+            borderRadius: 100,
+            paddingHorizontal: 5,
+            paddingVertical: 3,
+          }
+        : {})}
+      fontFamily="OpenSans-Regular"
+      fontSize={16}
+      textContentType="none"
+      ref={ref}
+      color="black"
+      {...props}
+    />
+    {props.iconProps && (
+      <Icon
+        position="absolute"
+        iconSize="medium"
+        right={20}
+        top={20}
+        {...props.iconProps}
       />
-      {props.iconProps && (
-        <Icon
-          position="absolute"
-          iconSize="medium"
-          right={20}
-          top={20}
-          {...props.iconProps}
-        />
-      )}
-    </Container>
-  )
-);
+    )}
+  </Container>
+));
 
 export const InputMask = createRestyleComponent<BaseInputMaskProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
