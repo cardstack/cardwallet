@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { memo, ReactNode } from 'react';
+import React, { memo, ReactNode, useCallback } from 'react';
+import { Keyboard } from 'react-native';
 
 import {
   Container,
@@ -22,6 +23,11 @@ const NavigationStackHeader = ({
 }: Props) => {
   const { goBack } = useNavigation();
 
+  const onBackPress = useCallback(() => {
+    Keyboard.dismiss();
+    goBack();
+  }, [goBack]);
+
   return (
     <MainHeaderWrapper {...containerProps}>
       <Container flex={1} alignItems="flex-start">
@@ -29,7 +35,7 @@ const NavigationStackHeader = ({
           color="teal"
           iconSize="medium"
           name="chevron-left"
-          onPress={goBack}
+          onPress={onBackPress}
           size={28}
         />
       </Container>
