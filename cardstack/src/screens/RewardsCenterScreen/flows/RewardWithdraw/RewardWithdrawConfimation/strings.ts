@@ -13,4 +13,8 @@ export const strings = {
     estNet: 'EST. NET WITHDRAW',
   },
   loading: 'Withdrawing reward funds',
+  buttons: {
+    submit: 'Confirm',
+    cancel: 'Cancel',
+  },
 };

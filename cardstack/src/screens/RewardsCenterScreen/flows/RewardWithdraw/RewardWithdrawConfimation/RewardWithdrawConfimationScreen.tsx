@@ -5,18 +5,16 @@ import {
   Container,
   NavigationStackHeader,
   HorizontalDivider,
-  IconProps,
 } from '@cardstack/components';
 import { SectionCoinHeader } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionCoinHeader';
 import { SectionHeaderText } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionHeaderText';
 import { AmountSection } from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/AmountSection';
+import { useBiometricIconProps } from '@cardstack/hooks/useBiometricIconProps';
 
 import { SafeSelectionItem } from '../components/SafeSelectionItem';
 
 import { strings } from './strings';
 import { useRewardWithdrawConfimationScreen } from './useRewardWithdrawConfimationScreen';
-
-const iconProps: IconProps = { name: 'face-id' };
 
 const RewardWithdrawConfirmationScreen = () => {
   const {
@@ -27,6 +25,8 @@ const RewardWithdrawConfirmationScreen = () => {
     gasEstimateInEth,
     estimatedNetClaim,
   } = useRewardWithdrawConfimationScreen();
+
+  const iconProps = useBiometricIconProps();
 
   const amountData = useMemo(
     () => [
@@ -75,7 +75,7 @@ const RewardWithdrawConfirmationScreen = () => {
           paddingBottom={6}
         >
           <Button onPress={onCancelPress} variant="smallWhite">
-            Cancel
+            {strings.buttons.cancel}
           </Button>
           <Button
             onPress={onConfirmPress}
@@ -83,7 +83,7 @@ const RewardWithdrawConfirmationScreen = () => {
             iconProps={iconProps}
             disabled={isLoadingGasEstimate}
           >
-            Confirm
+            {strings.buttons.submit}
           </Button>
         </Container>
       </Container>
