@@ -1,4 +1,5 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
+import { Animated } from 'react-native';
 
 import { Container } from '../Container';
 import { IconProps } from '../Icon';
@@ -42,6 +43,14 @@ const borderColorMap: Record<InputVariants, InputProps['borderColor']> = {
   default: 'teal',
 };
 
+const AnimatedText = Animated.createAnimatedComponent(Text);
+
+const animConfig = {
+  duration: 200,
+  showError: 1,
+  hideError: 0,
+};
+
 interface FormInput extends InputProps {
   label: string;
   error?: string;
@@ -56,9 +65,26 @@ const FormInput = ({
   isValid,
   ...inputProps
 }: FormInput) => {
+  const errorAnimation = useRef(new Animated.Value(0)).current;
+
   const variantType = useMemo(
     () => (error ? 'error' : isValid ? 'valid' : 'default'),
     [error, isValid]
+  );
+
+  useEffect(() => {
+    Animated.timing(errorAnimation, {
+      duration: animConfig.duration,
+      toValue: error ? animConfig.showError : animConfig.hideError,
+      useNativeDriver: true,
+    }).start();
+  }, [error, errorAnimation]);
+
+  const animatedOpacity = useMemo(
+    () => ({
+      opacity: errorAnimation,
+    }),
+    [errorAnimation]
   );
 
   return (
@@ -81,11 +107,20 @@ const FormInput = ({
           {...inputProps}
           borderColor={borderColorMap[variantType]}
           iconProps={iconPropsMap[variantType]}
+          paddingRight={iconPropsMap[variantType] ? 8 : 5}
         />
       </Container>
-      <Text fontSize={12} color="errorLight" weight="bold" paddingTop={1}>
-        {error}
-      </Text>
+      <Container height={20}>
+        <AnimatedText
+          fontSize={12}
+          color="errorLight"
+          weight="bold"
+          paddingTop={1}
+          style={animatedOpacity}
+        >
+          {error}
+        </AnimatedText>
+      </Container>
     </Container>
   );
 };
