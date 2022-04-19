@@ -117,18 +117,6 @@
 		<string>OpenSans-Regular.ttf</string>
 		<string>OpenSans-SemiBold.ttf</string>
 		<string>OpenSans-SemiBoldItalic.ttf</string>
-		<string>Roboto-Black.ttf</string>
-		<string>Roboto-BlackItalic.ttf</string>
-		<string>Roboto-Bold.ttf</string>
-		<string>Roboto-BoldItalic.ttf</string>
-		<string>Roboto-Italic.ttf</string>
-		<string>Roboto-Light.ttf</string>
-		<string>Roboto-LightItalic.ttf</string>
-		<string>Roboto-Medium.ttf</string>
-		<string>Roboto-MediumItalic.ttf</string>
-		<string>Roboto-Regular.ttf</string>
-		<string>Roboto-Thin.ttf</string>
-		<string>Roboto-ThinItalic.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -145,46 +133,7 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>RobotoMono-Bold.ttf</string>
-		<string>RobotoMono-BoldItalic.ttf</string>
-		<string>RobotoMono-ExtraLight.ttf</string>
-		<string>RobotoMono-ExtraLightItalic.ttf</string>
-		<string>RobotoMono-Italic.ttf</string>
-		<string>RobotoMono-Light.ttf</string>
-		<string>RobotoMono-LightItalic.ttf</string>
-		<string>RobotoMono-Medium.ttf</string>
-		<string>RobotoMono-MediumItalic.ttf</string>
 		<string>RobotoMono-Regular.ttf</string>
-		<string>RobotoMono-SemiBold.ttf</string>
-		<string>RobotoMono-SemiBoldItalic.ttf</string>
-		<string>RobotoMono-Thin.ttf</string>
-		<string>RobotoMono-ThinItalic.ttf</string>
-		<string>Karbon-Bold 2.otf</string>
-		<string>Karbon-Bold 3.otf</string>
-		<string>Karbon-Bold 4.otf</string>
-		<string>Karbon-Bold.otf</string>
-		<string>Karbon-BoldItalic.otf</string>
-		<string>Karbon-Hairline.otf</string>
-		<string>Karbon-HairlineItalic.otf</string>
-		<string>Karbon-Light 2.otf</string>
-		<string>Karbon-Light.otf</string>
-		<string>Karbon-LightItalic.otf</string>
-		<string>Karbon-Medium 2.otf</string>
-		<string>Karbon-Medium.otf</string>
-		<string>Karbon-MediumItalic.otf</string>
-		<string>Karbon-Regular 2.otf</string>
-		<string>Karbon-Regular 3.otf</string>
-		<string>Karbon-Regular 4.otf</string>
-		<string>Karbon-Regular 5.otf</string>
-		<string>Karbon-Regular.otf</string>
-		<string>Karbon-RegularItalic.otf</string>
-		<string>Karbon-Semibold 2.otf</string>
-		<string>Karbon-Semibold.otf</string>
-		<string>Karbon-SemiboldItalic.otf</string>
-		<string>Karbon-Thin.otf</string>
-		<string>Karbon-ThinItalic.otf</string>
-		<string>KarbonSlabStencil-Bold.otf</string>
-		<string>KarbonSlabStencil-Regular.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
