@@ -6,7 +6,7 @@ const SvgComponent = (props: SvgProps) => (
     <G data-name="icon V2" transform="translate(-.2 -3.2)">
       <Rect
         data-name="Rectangle 2869"
-        width={19.25}
+        width={18.5}
         height={14}
         rx={3}
         transform="translate(1 4)"
