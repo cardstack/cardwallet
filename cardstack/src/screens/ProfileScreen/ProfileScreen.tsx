@@ -48,7 +48,7 @@ const ProfileScreen = () => {
       ) : (
         <CreateProfile isLoading={isFetching} />
       ),
-    [primarySafe, isFetching, safesCount, refetch]
+    [primarySafe, safesCount, isFetching, refetch]
   );
 
   const showLoading = useMemo(
@@ -64,7 +64,9 @@ const ProfileScreen = () => {
 
   return (
     <Container
-      backgroundColor={primarySafe ? 'white' : 'backgroundDarkPurple'}
+      backgroundColor={
+        primarySafe && !showLoading ? 'white' : 'backgroundDarkPurple'
+      }
       flex={1}
     >
       <MainHeader title={strings.header.profile} />
