@@ -1,4 +1,3 @@
-import { convertToSpend } from '@cardstack/cardpay-sdk';
 import React, { memo } from 'react';
 import { Keyboard, Pressable } from 'react-native';
 
@@ -6,12 +5,14 @@ import {
   Button,
   Container,
   FormInput,
+  Image,
   InfoBanner,
   NavigationStackHeader,
   ScrollView,
   Text,
 } from '@cardstack/components';
-import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+
+import CardDropImage from '../../assets/email-drop-card.png';
 
 import { strings } from './strings';
 import { useRequestPrepaidCardScreen } from './useRequestPrepaidCardScreen';
@@ -30,7 +31,7 @@ const RequestPrepaidCardScreen = () => {
       <NavigationStackHeader title={strings.navigation.title} />
       <ScrollView paddingHorizontal={5} showsVerticalScrollIndicator={false}>
         <Pressable onPress={Keyboard.dismiss}>
-          <CardPlaceholder />
+          <Image alignSelf="center" marginVertical={5} source={CardDropImage} />
           <FormInput
             autoFocus
             isRequired
@@ -73,31 +74,3 @@ const RequestPrepaidCardScreen = () => {
 };
 
 export default memo(RequestPrepaidCardScreen);
-
-// TODO: Replace with correct design
-const CardPlaceholder = memo(() => (
-  <Container
-    width="70%"
-    justifyContent="center"
-    paddingVertical={5}
-    alignSelf="center"
-  >
-    <MediumPrepaidCard
-      networkName="Gnosis Chain"
-      nativeCurrency="USD"
-      //@ts-expect-error no currency needed
-      currencyConversionRates=""
-      address="0xXXXX…XXXX"
-      spendFaceValue={convertToSpend(2, 'USD', 1)}
-      transferrable={false}
-      cardCustomization={{
-        background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
-        issuerName: 'Cardstack',
-        patternColor: 'white',
-        patternUrl:
-          'https://app.cardstack.com/images/prepaid-card-customizations/pattern-5.svg',
-        textColor: 'black',
-      }}
-    />
-  </Container>
-));
