@@ -11,4 +11,8 @@ export const strings = {
   button: {
     submit: 'Submit',
   },
+  input: {
+    label: 'Email address',
+    error: 'The email address is incorrect.',
+  },
 };
