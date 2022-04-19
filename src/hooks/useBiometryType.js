@@ -45,7 +45,7 @@ const mapBiometryTypeToIconName = {
   [BiometryTypes.Fingerprint]: 'thumbprint',
   [BiometryTypes.passcode]: 'lock',
   [BiometryTypes.TouchID]: 'thumbprint',
-  [BiometryTypes.none]: null,
+  [BiometryTypes.none]: 'lock',
 };
 
 export const useBiometryIconName = () => {
