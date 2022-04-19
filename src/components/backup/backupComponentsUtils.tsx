@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { TextInputProps } from 'react-native';
 import {
-  BaseInputProps,
   Button,
   IconName,
   IconProps,
@@ -11,9 +10,7 @@ import {
 import { cloudBackupPasswordMinLength } from '@rainbow-me/handlers/cloudBackup';
 import { useBiometryIconName } from '@rainbow-me/hooks';
 
-export const backupPasswordInputProps: Partial<
-  TextInputProps & InputProps & BaseInputProps
-> = {
+export const backupPasswordInputProps: Partial<TextInputProps & InputProps> = {
   autoCompleteType: 'password',
   blurOnSubmit: false,
   border: true,
