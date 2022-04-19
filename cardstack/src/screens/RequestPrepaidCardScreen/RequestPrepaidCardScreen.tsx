@@ -1,20 +1,24 @@
-import { convertToSpend } from '@cardstack/cardpay-sdk';
-import React, { memo } from 'react';
+import { useNavigation } from '@react-navigation/core';
+import React, { memo, useMemo } from 'react';
 import { Keyboard, Pressable } from 'react-native';
 
 import {
   Button,
   Container,
   FormInput,
+  Image,
   InfoBanner,
   NavigationStackHeader,
   ScrollView,
   Text,
 } from '@cardstack/components';
-import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+
+import CardDropImage from '../../assets/email-drop-card.png';
 
 import { strings } from './strings';
 import { useRequestPrepaidCardScreen } from './useRequestPrepaidCardScreen';
+
+const flex = { flex: 1 };
 
 const RequestPrepaidCardScreen = () => {
   const {
@@ -23,49 +27,80 @@ const RequestPrepaidCardScreen = () => {
     onChangeText,
     canSubmit,
     inputHasError,
+    hasRequested,
   } = useRequestPrepaidCardScreen();
+
+  const { goBack } = useNavigation();
+
+  const renderRequestedState = useMemo(
+    () => (
+      <Container flexGrow={0.1} alignItems="center" justifyContent="flex-end">
+        <Text color="white" fontWeight="bold">
+          {strings.requested.title}
+        </Text>
+        <Text color="grayText" paddingTop={1}>
+          {strings.requested.subtitle}
+        </Text>
+        <Button marginVertical={10} onPress={goBack}>
+          {strings.button.return}
+        </Button>
+      </Container>
+    ),
+    [goBack]
+  );
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <NavigationStackHeader title={strings.navigation.title} />
-      <ScrollView paddingHorizontal={5} showsVerticalScrollIndicator={false}>
-        <Pressable onPress={Keyboard.dismiss}>
-          <CardPlaceholder />
-          <FormInput
-            autoFocus
-            isRequired
-            isValid={canSubmit}
-            autoCorrect={false}
-            label={strings.input.label}
-            error={inputHasError ? strings.input.error : undefined}
-            onSubmitEditing={onSubmitPress}
-            onChangeText={onChangeText}
-            autoCompleteType="email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            returnKeyType="send"
-          />
-          <Button
-            marginVertical={4}
-            variant={!canSubmit ? 'disabledBlack' : undefined}
-            onPress={onSubmitPress}
-          >
-            {strings.button.submit}
-          </Button>
-          <InfoBanner
-            marginVertical={4}
-            title={strings.termsBanner.title}
-            message={strings.termsBanner.message}
-          >
-            <Text
-              textDecorationLine="underline"
-              color="blueOcean"
-              size="xs"
-              onPress={onSupportLinkPress}
-            >
-              {strings.termsBanner.link}
-            </Text>
-          </InfoBanner>
+      <ScrollView
+        paddingHorizontal={5}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={!hasRequested}
+        contentContainerStyle={flex}
+      >
+        <Pressable onPress={Keyboard.dismiss} style={flex}>
+          <Image alignSelf="center" marginVertical={7} source={CardDropImage} />
+          {hasRequested ? (
+            renderRequestedState
+          ) : (
+            <>
+              <FormInput
+                autoFocus
+                isRequired
+                isValid={canSubmit}
+                autoCorrect={false}
+                label={strings.input.label}
+                error={inputHasError ? strings.input.error : undefined}
+                onSubmitEditing={onSubmitPress}
+                onChangeText={onChangeText}
+                autoCompleteType="email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="send"
+              />
+              <Button
+                marginVertical={4}
+                variant={!canSubmit ? 'disabledBlack' : undefined}
+                onPress={onSubmitPress}
+              >
+                {strings.button.submit}
+              </Button>
+              <InfoBanner
+                marginVertical={4}
+                title={strings.termsBanner.title}
+                message={strings.termsBanner.message}
+              >
+                <Text
+                  textDecorationLine="underline"
+                  color="blueOcean"
+                  size="xs"
+                  onPress={onSupportLinkPress}
+                >
+                  {strings.termsBanner.link}
+                </Text>
+              </InfoBanner>
+            </>
+          )}
         </Pressable>
       </ScrollView>
     </Container>
@@ -73,31 +108,3 @@ const RequestPrepaidCardScreen = () => {
 };
 
 export default memo(RequestPrepaidCardScreen);
-
-// TODO: Replace with correct design
-const CardPlaceholder = memo(() => (
-  <Container
-    width="70%"
-    justifyContent="center"
-    paddingVertical={5}
-    alignSelf="center"
-  >
-    <MediumPrepaidCard
-      networkName="Gnosis Chain"
-      nativeCurrency="USD"
-      //@ts-expect-error no currency needed
-      currencyConversionRates=""
-      address="0xXXXX…XXXX"
-      spendFaceValue={convertToSpend(2, 'USD', 1)}
-      transferrable={false}
-      cardCustomization={{
-        background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
-        issuerName: 'Cardstack',
-        patternColor: 'white',
-        patternUrl:
-          'https://app.cardstack.com/images/prepaid-card-customizations/pattern-5.svg',
-        textColor: 'black',
-      }}
-    />
-  </Container>
-));

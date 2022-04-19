@@ -36,5 +36,6 @@ export const useRequestPrepaidCardScreen = () => {
     onChangeText,
     canSubmit,
     inputHasError,
+    hasRequested: false,
   };
 };
