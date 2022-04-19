@@ -1,13 +1,10 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import React from 'react';
 
+import { useGetAssetBalance } from '@cardstack/hooks';
+
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import {
-  useAccountProfile,
-  useAccountSettings,
-  useWalletBalances,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 
 import { Container, HorizontalDivider, NetworkBadge, Text } from '../..';
 import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
@@ -33,9 +30,18 @@ const FromSection = () => {
   } = useAccountProfile();
 
   const { network } = useAccountSettings();
-  const { wallets } = useWallets();
-  const balances = useWalletBalances(wallets) as any;
   const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
+
+  const balance = useGetAssetBalance({
+    asset: {
+      decimals: 18,
+      symbol: nativeTokenSymbol,
+      address: '',
+      name: '',
+    },
+    accountAddress,
+    network,
+  });
 
   return (
     <Container marginTop={8} width="100%">
@@ -57,7 +63,7 @@ const FromSection = () => {
                   BALANCE
                 </Text>
                 <Text fontSize={15} weight="extraBold">
-                  {`${balances[accountAddress]} ${nativeTokenSymbol}`}
+                  {balance.display}
                 </Text>
               </Container>
             </Container>

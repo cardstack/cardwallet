@@ -1,5 +1,4 @@
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { removeFirstEmojiFromString } from '../../helpers/emojiHandler';
@@ -29,7 +28,6 @@ const WITHOUT_WATCHING_LABEL = screenWidth * 0.65;
 export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
   const {
     address,
-    balance,
     color: accountColor,
     ens,
     image: accountImage,
@@ -39,22 +37,11 @@ export default function AddressRow({ data, editMode, onPress, onEditWallet }) {
     walletId,
   } = data;
   const { network } = useAccountSettings();
-  const nativeTokenSymbol = getConstantByNetwork('nativeTokenSymbol', network);
 
-  let accountSubLabel;
-
-  if (isLayer2(network)) {
-    accountSubLabel = getAddressPreview(address);
-  } else {
-    let balanceAmount;
-    if (balance === '0.00') {
-      balanceAmount = `0`;
-    } else {
-      balanceAmount = `${balance || 0}`;
-    }
-
-    accountSubLabel = `${balanceAmount} ${nativeTokenSymbol}`;
-  }
+  const accountSubLabel = useMemo(
+    () => (isLayer2(network) ? getAddressPreview(address) : ''),
+    [address, network]
+  );
 
   let cleanedUpLabel = null;
   if (label) {
