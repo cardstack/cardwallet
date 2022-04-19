@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import { useNavigation } from '@react-navigation/core';
+import React, { memo, useMemo } from 'react';
 import { Keyboard, Pressable } from 'react-native';
 
 import {
@@ -17,6 +18,8 @@ import CardDropImage from '../../assets/email-drop-card.png';
 import { strings } from './strings';
 import { useRequestPrepaidCardScreen } from './useRequestPrepaidCardScreen';
 
+const flex = { flex: 1 };
+
 const RequestPrepaidCardScreen = () => {
   const {
     onSupportLinkPress,
@@ -24,49 +27,80 @@ const RequestPrepaidCardScreen = () => {
     onChangeText,
     canSubmit,
     inputHasError,
+    hasRequested,
   } = useRequestPrepaidCardScreen();
+
+  const { goBack } = useNavigation();
+
+  const renderRequestedState = useMemo(
+    () => (
+      <Container flexGrow={0.1} alignItems="center" justifyContent="flex-end">
+        <Text color="white" fontWeight="bold">
+          {strings.requested.title}
+        </Text>
+        <Text color="grayText" paddingTop={1}>
+          {strings.requested.subtitle}
+        </Text>
+        <Button marginVertical={10} onPress={goBack}>
+          {strings.button.return}
+        </Button>
+      </Container>
+    ),
+    [goBack]
+  );
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <NavigationStackHeader title={strings.navigation.title} />
-      <ScrollView paddingHorizontal={5} showsVerticalScrollIndicator={false}>
-        <Pressable onPress={Keyboard.dismiss}>
-          <Image alignSelf="center" marginVertical={5} source={CardDropImage} />
-          <FormInput
-            autoFocus
-            isRequired
-            isValid={canSubmit}
-            autoCorrect={false}
-            label={strings.input.label}
-            error={inputHasError ? strings.input.error : undefined}
-            onSubmitEditing={onSubmitPress}
-            onChangeText={onChangeText}
-            autoCompleteType="email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            returnKeyType="send"
-          />
-          <Button
-            marginVertical={4}
-            variant={!canSubmit ? 'disabledBlack' : undefined}
-            onPress={onSubmitPress}
-          >
-            {strings.button.submit}
-          </Button>
-          <InfoBanner
-            marginVertical={4}
-            title={strings.termsBanner.title}
-            message={strings.termsBanner.message}
-          >
-            <Text
-              textDecorationLine="underline"
-              color="blueOcean"
-              size="xs"
-              onPress={onSupportLinkPress}
-            >
-              {strings.termsBanner.link}
-            </Text>
-          </InfoBanner>
+      <ScrollView
+        paddingHorizontal={5}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={!hasRequested}
+        contentContainerStyle={flex}
+      >
+        <Pressable onPress={Keyboard.dismiss} style={flex}>
+          <Image alignSelf="center" marginVertical={7} source={CardDropImage} />
+          {hasRequested ? (
+            renderRequestedState
+          ) : (
+            <>
+              <FormInput
+                autoFocus
+                isRequired
+                isValid={canSubmit}
+                autoCorrect={false}
+                label={strings.input.label}
+                error={inputHasError ? strings.input.error : undefined}
+                onSubmitEditing={onSubmitPress}
+                onChangeText={onChangeText}
+                autoCompleteType="email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="send"
+              />
+              <Button
+                marginVertical={4}
+                variant={!canSubmit ? 'disabledBlack' : undefined}
+                onPress={onSubmitPress}
+              >
+                {strings.button.submit}
+              </Button>
+              <InfoBanner
+                marginVertical={4}
+                title={strings.termsBanner.title}
+                message={strings.termsBanner.message}
+              >
+                <Text
+                  textDecorationLine="underline"
+                  color="blueOcean"
+                  size="xs"
+                  onPress={onSupportLinkPress}
+                >
+                  {strings.termsBanner.link}
+                </Text>
+              </InfoBanner>
+            </>
+          )}
         </Pressable>
       </ScrollView>
     </Container>

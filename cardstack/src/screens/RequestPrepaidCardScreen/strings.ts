@@ -10,9 +10,14 @@ export const strings = {
   },
   button: {
     submit: 'Submit',
+    return: 'Return to Wallet',
   },
   input: {
     label: 'Email address',
     error: 'The email address is incorrect.',
+  },
+  requested: {
+    title: 'Request Submitted',
+    subtitle: 'Check your inbox to verify this request.',
   },
 };
