@@ -1,4 +1,4 @@
-import { addBreadcrumb } from '@sentry/react-native';
+import { addBreadcrumb, setTag } from '@sentry/react-native';
 
 const addInfoBreadcrumb = message =>
   addBreadcrumb({
@@ -24,4 +24,5 @@ export default {
   addDataBreadcrumb,
   addInfoBreadcrumb,
   addNavBreadcrumb,
+  setTag,
 };

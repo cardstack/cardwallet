@@ -52,6 +52,7 @@ const Logger = {
       console.warn(...args);
     }
   },
+  setTag: sentryUtils.setTag,
 };
 
 const safelyStringifyWithFormat = data => {
