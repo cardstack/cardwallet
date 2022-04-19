@@ -59,7 +59,7 @@ const TransferCardScreen = () => {
     () => (
       <Container flex={1} justifyContent="flex-end">
         <QRCodeScannerPage customScanAddressHandler={onScanHandler} />
-        <Container flex={0.4} justifyContent="flex-start" alignItems="center">
+        <Container flex={0.35} justifyContent="flex-start" alignItems="center">
           <Button variant="primary" onPress={dismissScanPage}>
             {strings.scanPage.btnLabel}
           </Button>
