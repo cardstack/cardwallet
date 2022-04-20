@@ -1,11 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
-import { Linking } from 'react-native';
 
-import { SettingsExternalURLs } from '@cardstack/constants';
+import { SHOW_CTA_BANNER_KEY } from '@cardstack/utils';
 
 import { useCtaBanner } from '../useCtaBanner';
+
+const TEST_KEY = 'TEST_KEY';
 
 describe('useCtaBanner', () => {
   beforeEach(() => {
@@ -15,52 +16,40 @@ describe('useCtaBanner', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  it('should have showPromoBanner true as default', async () => {
-    const { result } = renderHook(() => useCtaBanner());
+  it('should have showBanner true as default', async () => {
+    const { result } = renderHook(() => useCtaBanner(TEST_KEY));
 
-    await waitFor(() => expect(result.current.showPromoBanner).toEqual(true));
+    await waitFor(() => expect(result.current.showBanner).toEqual(true));
   });
 
   it('should try to get storage item on initial render', async () => {
-    renderHook(() => useCtaBanner());
+    renderHook(() => useCtaBanner(TEST_KEY));
 
     const getItemSpy = jest.spyOn(AsyncStorage, 'getItem');
 
     await waitFor(() => expect(getItemSpy).toBeCalledTimes(1));
 
-    expect(getItemSpy).toBeCalledWith('showPromoBannerKey');
+    expect(getItemSpy).toBeCalledWith(SHOW_CTA_BANNER_KEY + TEST_KEY);
   });
 
-  it('should have showPromoBanner as false if its stored in asyncStorage', async () => {
+  it('should have showBanner as false if its stored in asyncStorage', async () => {
     AsyncStorage.getItem = jest.fn().mockResolvedValue('false');
 
-    const { result } = renderHook(() => useCtaBanner());
+    const { result } = renderHook(() => useCtaBanner(TEST_KEY));
 
-    await waitFor(() => expect(result.current.showPromoBanner).toEqual(false));
+    await waitFor(() => expect(result.current.showBanner).toEqual(false));
   });
 
-  it('should set showPromoBanner to false onPress', async () => {
+  it('should set showBanner to false on dismissBanner', async () => {
     const setItemSpy = jest.spyOn(AsyncStorage, 'setItem');
 
-    const { result } = renderHook(() => useCtaBanner());
+    const { result } = renderHook(() => useCtaBanner(TEST_KEY));
 
-    act(() => result.current.onPress());
+    act(() => result.current.dismissBanner());
 
     await waitFor(() => expect(setItemSpy).toBeCalledTimes(1));
 
-    expect(setItemSpy).toBeCalledWith('showPromoBannerKey', 'false');
-    expect(result.current.showPromoBanner).toEqual(false);
-  });
-
-  it('should open discord URL onPress', async () => {
-    const openURLSpy = jest.spyOn(Linking, 'openURL');
-
-    const { result } = renderHook(() => useCtaBanner());
-
-    act(() => result.current.onPress());
-
-    await waitFor(() => expect(result.current.showPromoBanner).toEqual(false));
-
-    expect(openURLSpy).toBeCalledWith(SettingsExternalURLs.discordInviteLink);
+    expect(setItemSpy).toBeCalledWith(SHOW_CTA_BANNER_KEY + TEST_KEY, 'false');
+    expect(result.current.showBanner).toEqual(false);
   });
 });
