@@ -3,7 +3,7 @@ import Svg, { SvgProps, G, Rect, Path } from 'react-native-svg';
 
 const SvgComponent = (props: SvgProps) => (
   <Svg width={20.85} height={15.6} {...props}>
-    <G data-name="icon V2" transform="translate(-.2 -3.2)">
+    <G data-name="icon V2">
       <Rect
         data-name="Rectangle 2869"
         width={18.5}
@@ -11,7 +11,7 @@ const SvgComponent = (props: SvgProps) => (
         rx={3}
         transform="translate(1 4)"
         fill="none"
-        stroke={props.color || '#afafb7'}
+        stroke={props.color || '#6c6cfd'}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={1.6}

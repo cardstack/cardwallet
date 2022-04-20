@@ -16,7 +16,7 @@ interface CtaBannerProps extends ContainerProps {
   title: string;
   description: string;
   ctaButtonTitle: string;
-  ctaButtonIconName: IconName;
+  ctaButtonIconName?: IconName;
   onCtaPressed: () => void;
   onDismissPressed?: () => void;
 }
@@ -46,12 +46,10 @@ export const CtaBanner = memo(
         </Text>
         {!!onCtaPressed && (
           <Button
-            iconProps={{ name: 'wallet' }}
+            iconProps={ctaButtonIconName && { name: ctaButtonIconName }}
             iconPosition="right"
             onPress={onCtaPressed}
-            // variant="small"
-            // height={30}
-            // width={224}
+            variant="short"
           >
             <Text fontSize={13} fontWeight="600">
               {ctaButtonTitle}

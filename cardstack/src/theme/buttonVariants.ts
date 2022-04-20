@@ -1,5 +1,7 @@
 import { screenWidth } from '../utils/dimension-utils';
 
+import { fontFamilyVariants } from './fontFamilyVariants';
+
 const primary = {
   backgroundColor: 'transparent',
   borderColor: 'borderBlue',
@@ -47,6 +49,16 @@ const extraSmall = {
   textStyle: {
     variant: 'smallButton',
   },
+};
+
+const short = {
+  textStyle: {
+    fontSize: 13,
+    ...fontFamilyVariants.semiBold,
+  },
+  paddingHorizontal: 6,
+  height: 30,
+  width: undefined,
 };
 
 const tiny = {
@@ -157,6 +169,7 @@ export const buttonVariants = {
     },
   },
   small,
+  short,
   white,
   smallBlue: {
     ...small,
