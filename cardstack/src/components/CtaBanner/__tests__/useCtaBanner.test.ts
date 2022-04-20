@@ -2,9 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
 
+import { useCtaBanner } from '@cardstack/components';
 import { SHOW_CTA_BANNER_KEY } from '@cardstack/utils';
-
-import { useCtaBanner } from '../useCtaBanner';
 
 const TEST_KEY = 'TEST_KEY';
 

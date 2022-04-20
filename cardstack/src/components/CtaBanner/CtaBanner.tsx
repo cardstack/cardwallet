@@ -1,4 +1,3 @@
-// import { useNavigation } from '@react-navigation/core';
 import React, { memo } from 'react';
 
 import {
@@ -17,7 +16,7 @@ interface CtaBannerProps extends ContainerProps {
   description: string;
   ctaButtonTitle: string;
   ctaButtonIconName?: IconName;
-  onCtaPressed: () => void;
+  onPress: () => void;
   onDismissPressed?: () => void;
 }
 
@@ -27,7 +26,7 @@ export const CtaBanner = memo(
     description,
     ctaButtonTitle,
     ctaButtonIconName,
-    onCtaPressed,
+    onPress,
     onDismissPressed,
     ...rest
   }: CtaBannerProps) => (
@@ -44,12 +43,13 @@ export const CtaBanner = memo(
         >
           {description}
         </Text>
-        {!!onCtaPressed && (
+        {!!onPress && (
           <Button
             iconProps={ctaButtonIconName && { name: ctaButtonIconName }}
             iconPosition="right"
-            onPress={onCtaPressed}
+            onPress={onPress}
             variant="short"
+            testID="cta-onpress"
           >
             <Text fontSize={13} fontWeight="600">
               {ctaButtonTitle}
@@ -57,13 +57,13 @@ export const CtaBanner = memo(
           </Button>
         )}
       </CenteredContainer>
-
       {!!onDismissPressed && (
         <Touchable
           onPress={onDismissPressed}
           position="absolute"
           right={0}
           padding={4}
+          testID="cta-dismiss"
         >
           <Icon name="x" color="bannerText" size={16} />
         </Touchable>

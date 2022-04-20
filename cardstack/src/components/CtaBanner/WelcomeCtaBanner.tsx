@@ -1,5 +1,7 @@
-import React from 'react';
-import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
+import React, { useCallback } from 'react';
+
+import Routes from '@rainbow-me/navigation/routesNames';
 
 import { strings } from './strings';
 
@@ -9,6 +11,12 @@ const WELCOME_BANNER_KEY = 'WELCOME_BANNER_KEY';
 
 export const WelcomeCtaBanner = () => {
   const { showBanner, dismissBanner } = useCtaBanner(WELCOME_BANNER_KEY);
+  const { navigate } = useNavigation();
+
+  const onPress = useCallback(() => {
+    navigate(Routes.REQUEST_PREPAID_CARD);
+  }, [navigate]);
+
   if (!showBanner) return null;
 
   return (
@@ -17,7 +25,7 @@ export const WelcomeCtaBanner = () => {
       description={strings.welcome.description}
       ctaButtonTitle={strings.welcome.ctaButtonTitle}
       ctaButtonIconName="wallet"
-      onCtaPressed={() => Alert.alert('🚧 Under development')}
+      onPress={onPress}
       onDismissPressed={dismissBanner}
     />
   );

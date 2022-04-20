@@ -45,7 +45,7 @@ export const AssetList = () => {
     refreshing,
   } = useAssetList({ sectionListRef });
 
-  const renderCtaBanners = useMemo(() => {
+  const renderPromoBanner = useMemo(() => {
     const topPadding = isTabBarEnabled ? 2 : 0;
     return <RewardsPromoBanner paddingTop={topPadding} />;
   }, [isTabBarEnabled]);
@@ -98,7 +98,7 @@ export const AssetList = () => {
   return (
     <>
       <SectionList
-        ListHeaderComponent={renderCtaBanners}
+        ListHeaderComponent={renderPromoBanner}
         onScrollToIndexFailed={onScrollToIndexFailed}
         ref={sectionListRef}
         refreshControl={

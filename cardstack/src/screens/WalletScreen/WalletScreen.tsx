@@ -29,7 +29,7 @@ export const WalletScreen = () => {
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1} height="100%">
       <MainHeader title="WALLET" />
-      <WelcomeCtaBanner />
+      {__DEV__ && <WelcomeCtaBanner />}
       <ServiceStatusNotice />
       <BusinessAccountBanner />
       <AssetList />
