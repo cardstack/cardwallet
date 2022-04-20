@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
 
+import { useBooleanState } from '@cardstack/hooks';
 import { Device } from '@cardstack/utils/device';
 
 import { Container } from '../Container';
@@ -19,14 +20,15 @@ const baseInputProps: InputProps = {
   selectionColor: 'teal',
 };
 
-type InputVariants = 'valid' | 'error' | 'default';
+type InputIconVariants = 'valid' | 'error' | 'none';
+type InputBorderColorVariants = 'focused' | 'error' | 'unfocused';
 
 const baseIconProps: Partial<IconProps> = {
   top: Device.isIOS ? 12 : 13,
   right: 10,
 };
 
-const iconPropsMap: Record<InputVariants, IconProps | undefined> = {
+const iconPropsMap: Record<InputIconVariants, IconProps | undefined> = {
   valid: {
     ...baseIconProps,
     name: 'check',
@@ -37,13 +39,16 @@ const iconPropsMap: Record<InputVariants, IconProps | undefined> = {
     name: 'x',
     color: 'error',
   },
-  default: undefined,
+  none: undefined,
 };
 
-const borderColorMap: Record<InputVariants, InputProps['borderColor']> = {
-  valid: 'buttonSecondaryBorder',
+const borderColorMap: Record<
+  InputBorderColorVariants,
+  InputProps['borderColor']
+> = {
+  focused: 'teal',
   error: 'error',
-  default: 'teal',
+  unfocused: 'buttonSecondaryBorder',
 };
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -69,10 +74,16 @@ const FormInput = ({
   ...inputProps
 }: FormInput) => {
   const errorAnimation = useRef(new Animated.Value(0)).current;
+  const [isFocused, setFocus, setBlur] = useBooleanState();
 
-  const variantType = useMemo(
-    () => (error ? 'error' : isValid ? 'valid' : 'default'),
+  const iconType = useMemo(
+    () => (error ? 'error' : isValid ? 'valid' : 'none'),
     [error, isValid]
+  );
+
+  const borderType = useMemo(
+    () => (error ? 'error' : isFocused ? 'focused' : 'unfocused'),
+    [error, isFocused]
   );
 
   useEffect(() => {
@@ -108,9 +119,11 @@ const FormInput = ({
         <Input
           {...baseInputProps}
           {...inputProps}
-          borderColor={borderColorMap[variantType]}
-          iconProps={iconPropsMap[variantType]}
-          paddingRight={iconPropsMap[variantType] ? 8 : 5}
+          borderColor={borderColorMap[borderType]}
+          iconProps={iconPropsMap[iconType]}
+          paddingRight={iconPropsMap[iconType] ? 8 : 5}
+          onFocus={setFocus}
+          onBlur={setBlur}
         />
       </Container>
       <Container height={20}>
