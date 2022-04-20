@@ -6,6 +6,7 @@ import {
   Container,
   MainHeader,
   ServiceStatusNotice,
+  WelcomeCtaBanner,
 } from '@cardstack/components';
 import { BusinessAccountBanner } from '@cardstack/components/CollapsibleBanner';
 import { RouteType } from '@cardstack/navigation/types';
@@ -28,6 +29,7 @@ export const WalletScreen = () => {
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1} height="100%">
       <MainHeader title="WALLET" />
+      {__DEV__ && <WelcomeCtaBanner />}
       <ServiceStatusNotice />
       <BusinessAccountBanner />
       <AssetList />
