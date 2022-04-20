@@ -69,7 +69,6 @@ const RequestPrepaidCardScreen = () => {
           ) : (
             <>
               <FormInput
-                autoFocus
                 isRequired
                 isValid={canSubmit}
                 autoCorrect={false}
