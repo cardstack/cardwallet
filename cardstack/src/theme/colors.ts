@@ -106,6 +106,7 @@ export const colors = {
   greenColor: palette.greenColor,
   secondaryText: palette.slateGray,
   tertiaryText: palette.blueText,
+  bannerText: palette.white,
 };
 
 export const avatarColor = [

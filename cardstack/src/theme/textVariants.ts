@@ -47,4 +47,14 @@ export const textVariants = {
     textShadowColor: 'white',
     textShadowRadius: 0,
   },
+  bannerTitle: {
+    fontSize: 16,
+    letterSpacing: 0.4,
+    ...fontFamilyVariants.bold,
+  },
+  bannerDescription: {
+    fontSize: 13,
+    letterSpacing: 0.33,
+    ...fontFamilyVariants.regular,
+  },
 };
