@@ -1,11 +1,14 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
 
+import { Device } from '@cardstack/utils/device';
+
 import { Container } from '../Container';
 import { IconProps } from '../Icon';
 import { Text } from '../Text';
 
 import { Input, InputProps } from './Input';
+import { strings } from './strings';
 
 const baseInputProps: InputProps = {
   borderWidth: 1,
@@ -19,7 +22,7 @@ const baseInputProps: InputProps = {
 type InputVariants = 'valid' | 'error' | 'default';
 
 const baseIconProps: Partial<IconProps> = {
-  top: 12,
+  top: Device.isIOS ? 12 : 13,
   right: 10,
 };
 
@@ -98,7 +101,7 @@ const FormInput = ({
           {label}
         </Text>
         <Text color="borderGray" fontSize={12}>
-          {isRequired ? 'required' : ''}
+          {isRequired ? strings.required : ''}
         </Text>
       </Container>
       <Container backgroundColor="black">
