@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-core';
+
+import { isLayer1 } from '@cardstack/utils';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -14,7 +16,15 @@ const Web3WsProvider = {
     if (provider === null || network || !provider?.connected) {
       const currentNetwork = await getNetwork();
 
-      const node = getConstantByNetwork('rpcWssNode', currentNetwork);
+      const hubConfig = new HubConfig(
+        getConstantByNetwork('hubUrl', currentNetwork)
+      );
+
+      const hubConfigResponse = await hubConfig.getConfig();
+
+      const node = isLayer1(currentNetwork)
+        ? hubConfigResponse.web3.layer1RpcNodeWssUrl
+        : hubConfigResponse.web3.layer2RpcNodeWssUrl;
 
       provider = new Web3.providers.WebsocketProvider(node, {
         timeout: 30000,
