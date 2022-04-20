@@ -7,6 +7,7 @@ import {
   greaterThan,
   handleSignificantDecimals,
   multiply,
+  HubConfig,
 } from '@cardstack/cardpay-sdk';
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -284,11 +285,17 @@ export const getTxDetails = async transaction => {
 };
 
 export const resolveUnstoppableDomain = async domain => {
+  const hubConfig = new HubConfig(
+    getConstantByNetwork('hubUrl', NetworkTypes.mainnet)
+  );
+
+  const hubConfigResponse = await hubConfig.getConfig();
+
   const resolution = new UnstoppableResolution({
     blockchain: {
       cns: {
         network: 'mainnet',
-        url: getConstantByNetwork('rpcNode', NetworkTypes.mainnet),
+        url: hubConfigResponse.web3.layer1RpcNodeHttpsUrl,
       },
     },
   });
