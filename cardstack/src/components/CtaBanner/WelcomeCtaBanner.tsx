@@ -17,8 +17,8 @@ export const WelcomeCtaBanner = () => {
       description={strings.welcome.description}
       ctaButtonTitle={strings.welcome.ctaButtonTitle}
       ctaButtonIconName="wallet"
-      onCtaPressed={() => Alert.alert('Welcome')}
-      onDismissPressed={() => Alert.alert('Should dismiss')}
+      onCtaPressed={() => Alert.alert('🚧 Under development')}
+      onDismissPressed={dismissBanner}
     />
   );
 };
