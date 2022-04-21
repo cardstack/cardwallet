@@ -101,16 +101,18 @@ export const ProgressSteps = ({
 
   return (
     <Container flex={1} paddingTop={7}>
-      <Container
-        position="relative"
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-        alignSelf="center"
-        width={ProgressStepSizes.width}
-      >
-        {renderStepIcons()}
-      </Container>
+      {!isLoading && (
+        <Container
+          position="relative"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          alignSelf="center"
+          width={ProgressStepSizes.width}
+        >
+          {renderStepIcons()}
+        </Container>
+      )}
       <Container flexGrow={1} paddingTop={4}>
         {ActiveStepComponent ? (
           <ScrollableStepWrapper

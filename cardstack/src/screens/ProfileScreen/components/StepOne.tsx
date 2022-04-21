@@ -13,7 +13,7 @@ import { exampleMerchantData, strings } from '.';
 
 export const StepOne = ({ goToNextStep, isLoading }: ProgressStepProps) => {
   if (isLoading) {
-    <ActivityIndicator size="large" color="white" />;
+    return <ActivityIndicator size="large" color="white" />;
   }
 
   return (

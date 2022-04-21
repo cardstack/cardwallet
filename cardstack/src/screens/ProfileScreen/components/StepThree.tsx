@@ -1,13 +1,24 @@
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 
-import { Button, Container, MerchantSafe, Text } from '@cardstack/components';
+import {
+  Button,
+  Container,
+  MerchantSafe,
+  ProgressStepProps,
+  Text,
+} from '@cardstack/components';
 
 import { useProfileForm } from '../useProfileForm';
 
 import { exampleMerchantData, strings } from '.';
 
-export const StepThree = () => {
+export const StepThree = ({ isLoading }: ProgressStepProps) => {
   const { newMerchantInfo, onPressCreate } = useProfileForm();
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="white" />;
+  }
 
   return (
     <>
