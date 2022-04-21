@@ -47,26 +47,34 @@ const TransferCardScreen = () => {
 
   const { isTinyPhone } = useDimensions();
 
-  const keyboardOffset = useMemo(() => {
+  const { keyboardOffset, buttonPercentage } = useMemo(() => {
     const percentageMultiplier = isTinyPhone ? 0.1 : 0.25;
     const screenSizePercentage = screenHeight * percentageMultiplier;
     const negativeOffset = -screenSizePercentage;
+    const buttonContainerPercentage = isTinyPhone ? 0.35 : 0.4;
 
-    return negativeOffset;
+    return {
+      keyboardOffset: negativeOffset,
+      buttonPercentage: buttonContainerPercentage,
+    };
   }, [isTinyPhone]);
 
   const scanPage = useMemo(
     () => (
       <Container flex={1} justifyContent="flex-end">
         <QRCodeScannerPage customScanAddressHandler={onScanHandler} />
-        <Container flex={0.4} justifyContent="flex-start" alignItems="center">
+        <Container
+          flex={buttonPercentage}
+          justifyContent="flex-start"
+          alignItems="center"
+        >
           <Button variant="primary" onPress={dismissScanPage}>
             {strings.scanPage.btnLabel}
           </Button>
         </Container>
       </Container>
     ),
-    [dismissScanPage, onScanHandler]
+    [dismissScanPage, onScanHandler, buttonPercentage]
   );
 
   return (
