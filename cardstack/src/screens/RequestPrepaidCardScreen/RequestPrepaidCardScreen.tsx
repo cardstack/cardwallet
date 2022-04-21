@@ -30,6 +30,7 @@ const RequestPrepaidCardScreen = () => {
     inputHasError,
     hasRequested,
     isAuthenticated,
+    email,
   } = useRequestPrepaidCardScreen();
 
   const { goBack } = useNavigation();
@@ -74,12 +75,12 @@ const RequestPrepaidCardScreen = () => {
                 autoCorrect={false}
                 label={strings.input.label}
                 error={inputHasError ? strings.input.error : undefined}
-                onSubmitEditing={onSubmitPress}
                 onChangeText={onChangeText}
                 autoCompleteType="email"
                 keyboardType="email-address"
                 autoCapitalize="none"
-                returnKeyType="send"
+                returnKeyType="done"
+                value={email}
               />
               <Button
                 marginVertical={4}

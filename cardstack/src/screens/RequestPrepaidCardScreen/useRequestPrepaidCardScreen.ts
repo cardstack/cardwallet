@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Linking } from 'react-native';
 
 import { isEmailPartial, isEmailValid } from '@cardstack/utils/validators';
@@ -6,13 +6,12 @@ import { isEmailPartial, isEmailValid } from '@cardstack/utils/validators';
 import { strings } from './strings';
 
 export const useRequestPrepaidCardScreen = () => {
-  const email = useRef('');
-
+  const [email, setEmail] = useState('');
   const [inputHasError, setHasError] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
 
   const onChangeText = useCallback(text => {
-    email.current = text;
+    setEmail(text);
 
     setHasError(!isEmailPartial(text));
     setCanSubmit(isEmailValid(text));
@@ -38,5 +37,6 @@ export const useRequestPrepaidCardScreen = () => {
     inputHasError,
     hasRequested: false,
     isAuthenticated: false,
+    email,
   };
 };
