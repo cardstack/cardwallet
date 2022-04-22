@@ -63,13 +63,17 @@ const hubTokenStorageKey = (network: string): string => {
   return `${HUBTOKEN_KEY}-${network}`;
 };
 
-const loadHubAuthToken = async (
-  tokenStorageKey: string,
-  walletAddress: string
+export const loadHubAuthToken = async (
+  walletAddress: string,
+  network: Network
 ): Promise<string | null> => {
   const {
     data: { authToken },
-  } = ((await getLocal(tokenStorageKey, undefined, walletAddress)) || {
+  } = ((await getLocal(
+    hubTokenStorageKey(network),
+    undefined,
+    walletAddress
+  )) || {
     data: { authToken: null },
   }) as any;
 
@@ -102,10 +106,7 @@ export const getHubAuthToken = async (
   const address = walletAddress || (await loadAddress()) || '';
 
   // Validate if authToken isn't already saved and use it.
-  const savedAuthToken = await loadHubAuthToken(
-    hubTokenStorageKey(network),
-    address
-  );
+  const savedAuthToken = await loadHubAuthToken(address, network);
 
   if (savedAuthToken) {
     return savedAuthToken;
