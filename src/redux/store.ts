@@ -4,6 +4,7 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
+import { hubApi } from '@cardstack/services/hub/hub-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
 
@@ -19,6 +20,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   ...reducers,
   [safesApi.reducerPath]: safesApi.reducer,
+  [hubApi.reducerPath]: hubApi.reducer,
   [serviceStatusApi.reducerPath]: serviceStatusApi.reducer,
 });
 
@@ -35,8 +37,9 @@ const store = configureStore({
       serializableCheck: false, // we are currently storing some non-serializable objects in the store including wallet connect objects. it would be nice to fix this.
       immutableCheck: false, // without disabling this, we get a max call stack exceeded when switching from mainnet to xdai. It is likely due to storing an object in redux that has a circular reference to itself.
     });
-    middlewares.push(safesApi.middleware);
-    middlewares.push(serviceStatusApi.middleware);
+    middlewares.push(
+      ...[safesApi.middleware, serviceStatusApi.middleware, hubApi.middleware]
+    );
 
     if (__DEV__) {
       if (enableReduxFlipper) {
