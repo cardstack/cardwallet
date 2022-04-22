@@ -134,11 +134,10 @@ export const setIsWalletLoading = val => dispatch => {
   });
 };
 
-export const setWalletBackedUp = (
-  walletId,
-  method,
-  backupFile = null
-) => async (dispatch, getState) => {
+export const setWalletBackedUp = (walletId, method, backupFile = '') => async (
+  dispatch,
+  getState
+) => {
   const { wallets, selected } = getState().wallets;
   const newWallets = { ...wallets };
   newWallets[walletId] = {

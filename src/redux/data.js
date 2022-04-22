@@ -443,7 +443,7 @@ export const assetPricesChanged = message => (dispatch, getState) => {
 
 export const dataAddNewTransaction = (
   txDetails,
-  accountAddressToUpdate = null,
+  accountAddressToUpdate = '',
   disableTxnWatcher = false
 ) => async (dispatch, getState) => {
   const { transactions } = getState().data;

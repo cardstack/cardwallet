@@ -58,7 +58,7 @@ const Whitespace = styled.View`
 
 export default function SlackSheet({
   additionalTopPadding = false,
-  backgroundColor = undefined,
+  backgroundColor = '',
   borderRadius = 30,
   contentHeight = undefined,
   deferredHeight = false,

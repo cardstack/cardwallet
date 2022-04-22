@@ -85,6 +85,7 @@ const unlock = async (
       contractAddress,
       gasLimit,
       gasPrice,
+      //@ts-expect-error js function doesn't know walletType
       wallet
     );
     approval = result?.approval;
