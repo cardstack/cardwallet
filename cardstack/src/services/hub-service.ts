@@ -274,24 +274,6 @@ export const setNotificationsPreferences = async (
   }
 };
 
-export const getCustodialWallet = async (
-  hubURL: string,
-  authToken: string
-): Promise<CustodialWallet | undefined> => {
-  try {
-    const results = await axios.get(
-      `${hubURL}/api/custodial-wallet`,
-      axiosConfig(authToken)
-    );
-
-    if (results.data?.data) {
-      return await results.data?.data;
-    }
-  } catch (e) {
-    logger.sentry('Error while getting custodial wallet', e);
-  }
-};
-
 export const getInventories = async (
   hubURL: string,
   authToken: string,
