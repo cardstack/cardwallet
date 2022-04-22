@@ -1,6 +1,7 @@
 import {
   normalizeTxHash,
   fromWeiToFixedEth,
+  transformObjKeysToCamelCase,
 } from '@cardstack/utils/formatting-utils';
 
 describe('formatting utils', () => {
@@ -36,5 +37,34 @@ describe('formatting utils', () => {
         expect(fromWeiToFixedEth(wei)).toEqual(formatted);
       }
     );
+  });
+
+  describe('transformObjKeysToCamelCase', () => {
+    it('should return object with camelCase keys', () => {
+      const kebabObj = {
+        'first-attr': 'foo',
+        'second-attr': 'bar',
+      };
+
+      const camelCaseObjResult = {
+        firstAttr: 'foo',
+        secondAttr: 'bar',
+      };
+
+      const result = transformObjKeysToCamelCase(kebabObj);
+
+      expect(result).toStrictEqual(camelCaseObjResult);
+    });
+
+    it('should return same object if there is no case difference', () => {
+      const obj = {
+        first: 'foo',
+        second: 'bar',
+      };
+
+      const result = transformObjKeysToCamelCase(obj);
+
+      expect(result).toStrictEqual(obj);
+    });
   });
 });

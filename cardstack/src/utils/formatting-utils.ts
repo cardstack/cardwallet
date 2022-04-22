@@ -1,5 +1,7 @@
 import { formatCurrencyAmount, fromWei } from '@cardstack/cardpay-sdk';
+import { KebabToCamelCaseKeys } from 'globals';
 import GraphemeSplitter from 'grapheme-splitter';
+import _ from 'lodash';
 
 export const numberWithCommas = (number: string) =>
   number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -73,3 +75,8 @@ export const getValidColorHexString = (color?: string) => {
 
 export const fromWeiToFixedEth = (amountInWei: string) =>
   formatCurrencyAmount(fromWei(amountInWei), 2);
+
+export const transformObjKeysToCamelCase = <ObjType>(obj: ObjType) =>
+  Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [_.camelCase(key), value])
+  ) as KebabToCamelCaseKeys<ObjType>;
