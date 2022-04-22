@@ -7,7 +7,6 @@ import { getFCMToken } from '@cardstack/models/firebase';
 import HDProvider from '@cardstack/models/hd-provider';
 import {
   BusinessIDUniquenessResponse,
-  CustodialWallet,
   Inventory,
   ReservationData,
   OrderData,

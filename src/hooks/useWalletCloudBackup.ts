@@ -114,7 +114,7 @@ export default function useWalletCloudBackup() {
       // We have the password and we need to add it to an existing backup
       logger.log('password fetched correctly');
 
-      let updatedBackupFile = null;
+      let updatedBackupFile: string | null = null;
       try {
         if (!latestBackup) {
           logger.log(`backing up to ${cloudPlatform}`, wallets[walletId]);

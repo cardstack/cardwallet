@@ -117,7 +117,7 @@ export async function addWalletToCloudBackup(
   password: BackupPassword,
   wallet: RainbowWallet,
   filename: string
-): Promise<boolean> {
+) {
   const backup = await getDataFromCloud(password, filename);
   assert(backup, 'No backup found');
   const now = Date.now();
@@ -135,7 +135,8 @@ export async function addWalletToCloudBackup(
     password,
     filename
   );
-  return !!savedFilename;
+
+  return savedFilename;
 }
 
 export function findLatestBackUp(wallets: AllRainbowWallets): string | null {
