@@ -11,7 +11,7 @@ import { Network } from '@rainbow-me/helpers/networkTypes';
 import { AppState } from '@rainbow-me/redux/store';
 import logger from 'logger';
 
-import { getHubAuthToken } from '../hub-service';
+import { getHubAuthToken, removeHubAuthToken } from '../hub-service';
 
 // Helpers
 
@@ -37,14 +37,24 @@ export const fetchHubBaseQuery: BaseQueryFn<
             headers.set('Content-Type', 'application/vnd.api+json');
             headers.set('Accept', 'application/vnd.api+json');
           }
-        } catch (error) {
-          logger.sentry('Error getting hub token', error);
+        } catch (e) {
+          logger.sentry('Error getting hub token', e);
         }
       }
 
       return headers;
     },
   })(args, api, extraOptions);
+
+  const { error } = result;
+
+  if (error) {
+    logger.sentry('Error on hubApi', error);
+
+    if (error?.status === 401) {
+      removeHubAuthToken(network);
+    }
+  }
 
   return result;
 };
