@@ -8,7 +8,6 @@ import {
   ServiceStatusNotice,
   WelcomeCtaBanner,
 } from '@cardstack/components';
-import { BusinessAccountBanner } from '@cardstack/components/CollapsibleBanner';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { useWalletManager } from '@rainbow-me/hooks';
@@ -31,7 +30,6 @@ export const WalletScreen = () => {
       <MainHeader title="WALLET" />
       {__DEV__ && <WelcomeCtaBanner />}
       <ServiceStatusNotice />
-      <BusinessAccountBanner />
       <AssetList />
     </Container>
   );

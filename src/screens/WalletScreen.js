@@ -23,7 +23,6 @@ import {
 } from '../hooks';
 import {
   AssetList,
-  BusinessAccountBanner,
   Container,
   ServiceStatusNotice,
   Text,
@@ -114,7 +113,6 @@ export default function WalletScreen() {
             </Container>
           </Header>
           <ServiceStatusNotice />
-          <BusinessAccountBanner />
         </HeaderOpacityToggler>
         <AssetList />
       </FabWrapper>
