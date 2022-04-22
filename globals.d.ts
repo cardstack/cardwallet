@@ -19,3 +19,13 @@ type OptionalUnion<T1, T2> = {
   [P in keyof Omit<T1 & T2, keyof (T1 | T2)>]?: (T1 & T2)[P];
 } &
   (T1 | T2);
+
+type KebabToCamelCase<
+  DashType
+> = DashType extends `${infer First}-${infer Rest}`
+  ? `${First}${KebabToCamelCase<Capitalize<Rest>>}`
+  : DashType;
+
+type KebabToCamelCaseKeys<T> = {
+  [K in keyof T as K extends string ? KebabToCamelCase<K> : K]: T[K];
+};
