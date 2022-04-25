@@ -31,6 +31,7 @@ const RequestPrepaidCardScreen = () => {
     hasRequested,
     isAuthenticated,
     email,
+    isLoading,
   } = useRequestPrepaidCardScreen();
 
   const { goBack } = useNavigation();
@@ -81,12 +82,15 @@ const RequestPrepaidCardScreen = () => {
                 autoCapitalize="none"
                 returnKeyType="done"
                 value={email}
+                editable={!isLoading}
               />
               <Button
                 marginVertical={4}
                 variant={!canSubmit ? 'disabledBlack' : undefined}
                 onPress={onSubmitPress}
                 iconProps={!isAuthenticated ? iconProps : undefined}
+                disablePress={isLoading}
+                loading={isLoading}
               >
                 {strings.button.submit}
               </Button>
