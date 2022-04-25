@@ -40,7 +40,7 @@ export const useWelcomeCtaBanner = () => {
 
   // Addresses that have already claimed a prepaidcard don't see the banner.
   const hasClaimed = useMemo(() => {
-    return data?.data?.attributes?.claimed || false;
+    return data?.claimed || false;
   }, [data]);
 
   const onPress = useCallback(() => {

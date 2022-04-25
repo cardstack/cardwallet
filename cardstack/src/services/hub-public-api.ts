@@ -25,6 +25,9 @@ export const hubPublicApi = createApi({
     getEoaClaimed: builder.query<any, EoaClaimedParams>({
       query: ({ eoa }) => `/api/email-card-drop-requests?eoa=${eoa}`,
       providesTags: [HubPublicCacheTags.HUB_EOA_CLAIMED],
+      transformResponse: (response: any) => {
+        return response?.data?.attributes;
+      },
     }),
   }),
 });
