@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import { useAuthToken } from '@cardstack/hooks';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import {
-  getCustodialWallet,
   getHubUrl,
   getInventories,
   getOrder,
@@ -15,10 +14,10 @@ import {
   makeReservation,
   updateOrder,
 } from '@cardstack/services';
+import { useGetCustodialWalletQuery } from '@cardstack/services/hub/hub-api';
 import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-cards/prepaid-card-service';
 import {
   PrepaidCardCustomization,
-  CustodialWallet,
   Inventory,
   InventoryAttrs,
   ReservationData,
@@ -102,11 +101,6 @@ export default function useBuyPrepaidCard() {
   >();
 
   const [isPurchaseInProgress, setIsPurchaseInProgress] = useState(false);
-
-  const [
-    custodialWalletData,
-    setCustodialWalletData,
-  ] = useState<CustodialWallet>();
 
   const updatePrepaidCardsState = useCallback(
     async (address: string) => {
@@ -237,16 +231,7 @@ export default function useBuyPrepaidCard() {
     }
   }, [inventoryError]);
 
-  useEffect(() => {
-    if (authToken) {
-      const getCustodialWalletData = async () => {
-        const data = await getCustodialWallet(hubURL, authToken);
-        setCustodialWalletData(data);
-      };
-
-      getCustodialWalletData();
-    }
-  }, [authToken, hubURL]);
+  const { data: custodialWalletData } = useGetCustodialWalletQuery();
 
   const onSelectCard = useCallback(
     async (item, index) => {
@@ -430,7 +415,7 @@ export default function useBuyPrepaidCard() {
     try {
       wyreOrderIdData = await onPurchase({
         value: amount.toString(),
-        depositAddress: custodialWalletData?.attributes['deposit-address'],
+        depositAddress: custodialWalletData?.depositAddress,
         sourceCurrency: nativeCurrency || card?.['source-currency'],
         destCurrency: card?.['dest-currency'] || 'DAI',
       });
@@ -446,8 +431,7 @@ export default function useBuyPrepaidCard() {
       });
     }
 
-    const wyreWalletId =
-      custodialWalletData?.attributes['wyre-wallet-id'] || '';
+    const wyreWalletId = custodialWalletData?.wyreWalletId || '';
 
     try {
       if (wyreOrderIdData) {
@@ -493,7 +477,7 @@ export default function useBuyPrepaidCard() {
     authToken,
     sku,
     onPurchase,
-    custodialWalletData?.attributes,
+    custodialWalletData,
   ]);
 
   return {

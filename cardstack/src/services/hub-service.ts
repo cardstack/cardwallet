@@ -7,7 +7,6 @@ import { getFCMToken } from '@cardstack/models/firebase';
 import HDProvider from '@cardstack/models/hd-provider';
 import {
   BusinessIDUniquenessResponse,
-  CustodialWallet,
   Inventory,
   ReservationData,
   OrderData,
@@ -63,13 +62,17 @@ const hubTokenStorageKey = (network: string): string => {
   return `${HUBTOKEN_KEY}-${network}`;
 };
 
-const loadHubAuthToken = async (
-  tokenStorageKey: string,
-  walletAddress: string
+export const loadHubAuthToken = async (
+  walletAddress: string,
+  network: Network
 ): Promise<string | null> => {
   const {
     data: { authToken },
-  } = ((await getLocal(tokenStorageKey, undefined, walletAddress)) || {
+  } = ((await getLocal(
+    hubTokenStorageKey(network),
+    undefined,
+    walletAddress
+  )) || {
     data: { authToken: null },
   }) as any;
 
@@ -91,6 +94,9 @@ const storeHubAuthToken = async (
   );
 };
 
+export const removeHubAuthToken = (network: Network) =>
+  removeLocal(hubTokenStorageKey(network));
+
 export const getHubAuthToken = async (
   hubURL: string,
   network: Network,
@@ -102,10 +108,7 @@ export const getHubAuthToken = async (
   const address = walletAddress || (await loadAddress()) || '';
 
   // Validate if authToken isn't already saved and use it.
-  const savedAuthToken = await loadHubAuthToken(
-    hubTokenStorageKey(network),
-    address
-  );
+  const savedAuthToken = await loadHubAuthToken(address, network);
 
   if (savedAuthToken) {
     return savedAuthToken;
@@ -270,24 +273,6 @@ export const setNotificationsPreferences = async (
       'Error while saving notifications preferences on hub',
       e?.response || e
     );
-  }
-};
-
-export const getCustodialWallet = async (
-  hubURL: string,
-  authToken: string
-): Promise<CustodialWallet | undefined> => {
-  try {
-    const results = await axios.get(
-      `${hubURL}/api/custodial-wallet`,
-      axiosConfig(authToken)
-    );
-
-    if (results.data?.data) {
-      return await results.data?.data;
-    }
-  } catch (e) {
-    logger.sentry('Error while getting custodial wallet', e);
   }
 };
 
