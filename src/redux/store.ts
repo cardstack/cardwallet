@@ -4,8 +4,8 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
-import { hubPublicApi } from '@cardstack/services/hub-public-api';
 import { hubApi } from '@cardstack/services/hub/hub-api';
+import { hubPublicApi } from '@cardstack/services/hub/hub-public-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
 

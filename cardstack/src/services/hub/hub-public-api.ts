@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { HUB_URL } from 'react-native-dotenv';
+import { createApi } from '@reduxjs/toolkit/query/react';
+
+import { fetchHubBaseQuery } from './hub-service';
 
 export enum HubPublicCacheTags {
   HUB_EOA_CLAIMED = 'HUB_EOA_CLAIMED',
@@ -11,15 +12,7 @@ interface EoaClaimedParams {
 
 export const hubPublicApi = createApi({
   reducerPath: 'hubPublicApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: HUB_URL,
-    prepareHeaders: headers => {
-      headers.set('Accept', 'application/vnd.api+json');
-      headers.set('Content-Type', 'application/vnd.api+json');
-
-      return headers;
-    },
-  }),
+  baseQuery: fetchHubBaseQuery,
   tagTypes: [...Object.values(HubPublicCacheTags)],
   endpoints: builder => ({
     getEoaClaimed: builder.query<any, EoaClaimedParams>({

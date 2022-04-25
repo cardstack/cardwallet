@@ -3,7 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { CustodialWallet } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
-import { fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
+import { fetchHubAuthenticatedQuery, hubBodyBuilder } from './hub-service';
 import {
   GetCustodialWalletQueryResult,
   RequestCardDropQueryParams,
@@ -16,7 +16,7 @@ const routes = {
 
 export const hubApi = createApi({
   reducerPath: 'hubApi',
-  baseQuery: fetchHubBaseQuery,
+  baseQuery: fetchHubAuthenticatedQuery,
   endpoints: builder => ({
     getCustodialWallet: builder.query<GetCustodialWalletQueryResult, void>({
       query: () => routes.custodialWallet,
