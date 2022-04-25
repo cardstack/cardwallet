@@ -26,7 +26,7 @@ export const hubPublicApi = createApi({
       query: ({ eoa }) => `/api/email-card-drop-requests?eoa=${eoa}`,
       providesTags: [HubPublicCacheTags.HUB_EOA_CLAIMED],
       transformResponse: (response: any) => {
-        return response?.data?.attributes;
+        return response?.data?.attributes?.claimed;
       },
     }),
   }),

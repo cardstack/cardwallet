@@ -14,7 +14,7 @@ export const useWelcomeCtaBanner = () => {
   const { wallets, selectedWallet } = useWallets();
   const { accountAddress } = useAccountSettings();
 
-  const { data } = useGetEoaClaimedQuery({
+  const { data: claimedResponse } = useGetEoaClaimedQuery({
     eoa: accountAddress,
   });
 
@@ -23,6 +23,10 @@ export const useWelcomeCtaBanner = () => {
   );
 
   const { navigate } = useNavigation();
+
+  const onPress = useCallback(() => {
+    navigate(Routes.REQUEST_PREPAID_CARD);
+  }, [navigate]);
 
   // We only consider an address for the drop if its the first address of an EOA.
   // Derivated addresses are not elegible.
@@ -39,13 +43,7 @@ export const useWelcomeCtaBanner = () => {
   }, [wallets, selectedWallet, accountAddress]);
 
   // Addresses that have already claimed a prepaidcard don't see the banner.
-  const hasClaimed = useMemo(() => {
-    return data?.claimed || false;
-  }, [data]);
-
-  const onPress = useCallback(() => {
-    navigate(Routes.REQUEST_PREPAID_CARD);
-  }, [navigate]);
+  const hasClaimed = useMemo(() => claimedResponse ?? true, [claimedResponse]);
 
   return {
     showBanner:
