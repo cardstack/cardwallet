@@ -21,8 +21,8 @@ export const fetchHubBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError,
-  BaseQueryExtraOptions // extraOptions
-> = async (args, api, extraOptions) => {
+  BaseQueryExtraOptions
+> = async (args, api, extraOptions = { authenticate: true }) => {
   const network = await getNetwork();
   const hubUrl = network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
 
@@ -55,7 +55,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
   const { error } = result;
 
   if (error) {
-    logger.sentry('Error on hubApi', error);
+    logger.sentry('Error on hubApi', JSON.stringify(error));
 
     if (error?.status === 401) {
       removeHubAuthToken(network);
