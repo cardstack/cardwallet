@@ -1,6 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import axios, { AxiosResponse } from 'axios';
 import { isNil, pick } from 'lodash';
+import { OPENSEA_API_KEY } from 'react-native-dotenv';
 
 import { CollectibleType } from '@cardstack/types';
 
@@ -14,6 +15,7 @@ export const OPENSEA_LIMIT_TOTAL = 2000;
 const api = axios.create({
   headers: {
     Accept: 'application/json',
+    'X-API-KEY': OPENSEA_API_KEY,
   },
   timeout: 20000, // 20 secs
 });
