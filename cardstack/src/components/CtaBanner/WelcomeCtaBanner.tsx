@@ -1,21 +1,12 @@
-import { useNavigation } from '@react-navigation/core';
-import React, { useCallback } from 'react';
-
-import Routes from '@rainbow-me/navigation/routesNames';
+import React from 'react';
 
 import { strings } from './strings';
+import { useWelcomeCtaBanner } from './useWelcomeCtaBanner';
 
-import { CtaBanner, useCtaBanner } from '.';
-
-const WELCOME_BANNER_KEY = 'WELCOME_BANNER_KEY';
+import { CtaBanner } from '.';
 
 export const WelcomeCtaBanner = () => {
-  const { showBanner, dismissBanner } = useCtaBanner(WELCOME_BANNER_KEY);
-  const { navigate } = useNavigation();
-
-  const onPress = useCallback(() => {
-    navigate(Routes.REQUEST_PREPAID_CARD);
-  }, [navigate]);
+  const { showBanner, dismissBanner, onPress } = useWelcomeCtaBanner();
 
   if (!showBanner) return null;
 

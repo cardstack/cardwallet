@@ -13,32 +13,38 @@ import logger from 'logger';
 
 import { getHubAuthToken, removeHubAuthToken } from '../hub-service';
 
+import { BaseQueryExtraOptions } from './hub-types';
+
 // Helpers
 
 export const fetchHubBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
+  FetchBaseQueryError,
+  BaseQueryExtraOptions
+> = async (args, api, extraOptions = { authenticate: true }) => {
   const network = await getNetwork();
   const hubUrl = network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
 
   const result = await fetchBaseQuery({
     baseUrl: `${hubUrl}/api`,
     prepareHeaders: async (headers, { getState }) => {
-      const walletAddress = (getState() as AppState).settings.accountAddress;
+      headers.set('Content-Type', 'application/vnd.api+json');
+      headers.set('Accept', 'application/vnd.api+json');
 
-      if (walletAddress && network) {
-        try {
-          const token = await getHubAuthToken(hubUrl, network, walletAddress);
+      if (extraOptions.authenticate) {
+        const walletAddress = (getState() as AppState).settings.accountAddress;
 
-          if (token) {
-            headers.set('Authorization', `Bearer ${token}`);
-            headers.set('Content-Type', 'application/vnd.api+json');
-            headers.set('Accept', 'application/vnd.api+json');
+        if (walletAddress && network) {
+          try {
+            const token = await getHubAuthToken(hubUrl, network, walletAddress);
+
+            if (token) {
+              headers.set('Authorization', `Bearer ${token}`);
+            }
+          } catch (e) {
+            logger.sentry('Error getting hub token', e);
           }
-        } catch (e) {
-          logger.sentry('Error getting hub token', e);
         }
       }
 
@@ -49,7 +55,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
   const { error } = result;
 
   if (error) {
-    logger.sentry('Error on hubApi', error);
+    logger.sentry('Error on hubApi', JSON.stringify(error));
 
     if (error?.status === 401) {
       removeHubAuthToken(network);

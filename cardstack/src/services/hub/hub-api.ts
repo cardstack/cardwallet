@@ -7,6 +7,8 @@ import { fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
 import {
   GetCustodialWalletQueryResult,
   RequestCardDropQueryParams,
+  GetEoaClaimedQueryParams,
+  GetEoaClaimedResultType,
 } from './hub-types';
 
 const routes = {
@@ -37,10 +39,21 @@ export const hubApi = createApi({
         }),
       }),
     }),
+    getEoaClaimed: builder.query<
+      GetEoaClaimedResultType,
+      GetEoaClaimedQueryParams
+    >({
+      query: ({ eoa }) => `${routes.emailDrop}?eoa=${eoa}`,
+      extraOptions: { authenticate: false },
+      transformResponse: (response: {
+        data: { attributes: { claimed: GetEoaClaimedResultType } };
+      }) => response?.data?.attributes?.claimed,
+    }),
   }),
 });
 
 export const {
   useGetCustodialWalletQuery,
+  useGetEoaClaimedQuery,
   useRequestEmailCardDropMutation,
 } = hubApi;
