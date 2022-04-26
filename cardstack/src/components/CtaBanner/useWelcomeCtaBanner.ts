@@ -15,9 +15,12 @@ export const useWelcomeCtaBanner = () => {
   const { wallets, selectedWallet } = useWallets();
   const { accountAddress, network } = useAccountSettings();
 
-  const { data: claimedResponse = true } = useGetEoaClaimedQuery({
-    eoa: accountAddress,
-  });
+  const { data: claimedResponse = true } = useGetEoaClaimedQuery(
+    {
+      eoa: accountAddress,
+    },
+    { skip: !accountAddress }
+  );
 
   const { showBanner: showBannerUserDecision, dismissBanner } = useCtaBanner(
     WELCOME_BANNER_KEY
