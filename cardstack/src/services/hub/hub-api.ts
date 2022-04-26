@@ -15,7 +15,7 @@ const routes = {
   custodialWallet: '/api/custodial-wallet',
   emailDrop: '/email-card-drop-requests',
   emailCardDropRequest: ({ eoa }: EoaClaimedArg) =>
-    `/api/email-card-drop-requests?eoa=${eoa}`,
+    `/email-card-drop-requests?eoa=${eoa}`,
 };
 
 export const hubApi = createApi({
