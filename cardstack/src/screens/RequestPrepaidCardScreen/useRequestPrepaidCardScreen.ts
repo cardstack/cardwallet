@@ -3,10 +3,14 @@ import { Linking } from 'react-native';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects } from '@cardstack/hooks';
-import { useRequestEmailCardDropMutation } from '@cardstack/services/hub/hub-api';
+import {
+  useCheckHubAuthQuery,
+  useRequestEmailCardDropMutation,
+} from '@cardstack/services/hub/hub-api';
 import { isEmailPartial, isEmailValid } from '@cardstack/utils/validators';
 
 import { Alert } from '@rainbow-me/components/alerts';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
 
@@ -14,6 +18,16 @@ export const useRequestPrepaidCardScreen = () => {
   const [email, setEmail] = useState('');
   const [inputHasError, setHasError] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
+
+  const { accountAddress, network } = useAccountSettings();
+
+  const { data: isAuthenticated = false } = useCheckHubAuthQuery(
+    {
+      accountAddress,
+      network,
+    },
+    { skip: !accountAddress, refetchOnFocus: true }
+  );
 
   const [
     requestCardDrop,
@@ -60,7 +74,7 @@ export const useRequestPrepaidCardScreen = () => {
     canSubmit,
     inputHasError,
     hasRequested: false || isSuccess,
-    isAuthenticated: false,
+    isAuthenticated,
     email,
     isLoading,
   };

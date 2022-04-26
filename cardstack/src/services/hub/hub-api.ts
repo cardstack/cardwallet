@@ -3,12 +3,15 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { CustodialWallet } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
-import { fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
+import { queryPromiseWrapper } from '../utils';
+
+import { checkHubAuth, fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
 import {
   GetCustodialWalletQueryResult,
   RequestCardDropQueryParams,
   GetEoaClaimedQueryParams,
   GetEoaClaimedResultType,
+  CheckHubAuthQueryParams,
 } from './hub-types';
 
 const routes = {
@@ -49,6 +52,17 @@ export const hubApi = createApi({
         data: { attributes: { claimed: GetEoaClaimedResultType } };
       }) => response?.data?.attributes?.claimed,
     }),
+    checkHubAuth: builder.query<boolean, CheckHubAuthQueryParams>({
+      async queryFn(params) {
+        return queryPromiseWrapper<boolean, CheckHubAuthQueryParams>(
+          checkHubAuth,
+          params,
+          {
+            errorLogMessage: 'Error checking hub auth',
+          }
+        );
+      },
+    }),
   }),
 });
 
@@ -56,4 +70,5 @@ export const {
   useGetCustodialWalletQuery,
   useGetEoaClaimedQuery,
   useRequestEmailCardDropMutation,
+  useCheckHubAuthQuery,
 } = hubApi;
