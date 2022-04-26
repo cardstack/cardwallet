@@ -87,7 +87,9 @@ export const checkHubAuth = async ({
 }: CheckHubAuthQueryParams) => {
   const authToken = await loadHubAuthToken(accountAddress, network);
 
-  if (!authToken) return;
+  if (!authToken) {
+    return false;
+  }
 
   const web3 = Web3Instance.get();
   const hubUrl = getHubUrl(network);
