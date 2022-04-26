@@ -13,51 +13,38 @@ import logger from 'logger';
 
 import { getHubAuthToken, removeHubAuthToken } from '../hub-service';
 
+import { BaseQueryExtraOptions } from './hub-types';
+
 // Helpers
 
 export const fetchHubBaseQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
-  FetchBaseQueryError
+  FetchBaseQueryError,
+  BaseQueryExtraOptions // extraOptions
 > = async (args, api, extraOptions) => {
   const network = await getNetwork();
   const hubUrl = network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
 
-  return await fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: async headers => {
-      headers.set('Content-Type', 'application/vnd.api+json');
-      headers.set('Accept', 'application/vnd.api+json');
-
-      return headers;
-    },
-  })(args, api, extraOptions);
-};
-
-export const fetchHubAuthenticatedQuery: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
-  const network = await getNetwork();
-  const baseUrl = network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
-
   const result = await fetchBaseQuery({
     baseUrl: `${hubUrl}/api`,
     prepareHeaders: async (headers, { getState }) => {
-      const walletAddress = (getState() as AppState).settings.accountAddress;
+      headers.set('Content-Type', 'application/vnd.api+json');
+      headers.set('Accept', 'application/vnd.api+json');
 
-      if (walletAddress && network) {
-        try {
-          const token = await getHubAuthToken(hubUrl, network, walletAddress);
+      if (extraOptions.authenticate) {
+        const walletAddress = (getState() as AppState).settings.accountAddress;
 
-          if (token) {
-            headers.set('Authorization', `Bearer ${token}`);
-            headers.set('Content-Type', 'application/vnd.api+json');
-            headers.set('Accept', 'application/vnd.api+json');
+        if (walletAddress && network) {
+          try {
+            const token = await getHubAuthToken(hubUrl, network, walletAddress);
+
+            if (token) {
+              headers.set('Authorization', `Bearer ${token}`);
+            }
+          } catch (e) {
+            logger.sentry('Error getting hub token', e);
           }
-        } catch (e) {
-          logger.sentry('Error getting hub token', e);
         }
       }
 

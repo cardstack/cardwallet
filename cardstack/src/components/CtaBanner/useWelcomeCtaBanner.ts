@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/core';
 import { useCallback, useMemo } from 'react';
 
 import { useGetEoaClaimedQuery } from '@cardstack/services';
+import { isLayer2 } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/navigation/routesNames';
@@ -12,9 +13,9 @@ const WELCOME_BANNER_KEY = 'WELCOME_BANNER_KEY';
 
 export const useWelcomeCtaBanner = () => {
   const { wallets, selectedWallet } = useWallets();
-  const { accountAddress } = useAccountSettings();
+  const { accountAddress, network } = useAccountSettings();
 
-  const { data: claimedResponse } = useGetEoaClaimedQuery({
+  const { data: claimedResponse = true } = useGetEoaClaimedQuery({
     eoa: accountAddress,
   });
 
@@ -42,12 +43,17 @@ export const useWelcomeCtaBanner = () => {
     return currentWalletAddress?.index === 0 || false;
   }, [wallets, selectedWallet, accountAddress]);
 
-  // Addresses that have already claimed a prepaidcard don't see the banner.
-  const hasClaimed = useMemo(() => claimedResponse ?? true, [claimedResponse]);
+  const showBanner = useMemo(
+    () =>
+      isLayer2(network) &&
+      showBannerUserDecision &&
+      isFirstAddressForCurrentWallet &&
+      !claimedResponse,
+    [showBannerUserDecision, isFirstAddressForCurrentWallet, claimedResponse]
+  );
 
   return {
-    showBanner:
-      showBannerUserDecision && isFirstAddressForCurrentWallet && !hasClaimed,
+    showBanner,
     dismissBanner,
     onPress,
   };

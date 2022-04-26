@@ -1,26 +1,22 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { fetchHubBaseQuery } from './hub-service';
+import { EoaClaimedArg, EoaClaimedResultType } from './hub-types';
 
-export enum HubPublicCacheTags {
-  HUB_EOA_CLAIMED = 'HUB_EOA_CLAIMED',
-}
-
-interface EoaClaimedParams {
-  eoa: string;
-}
+const routes = {
+  emailCardDropRequest: ({ eoa }: EoaClaimedArg) =>
+    `/api/email-card-drop-requests?eoa=${eoa}`,
+};
 
 export const hubPublicApi = createApi({
   reducerPath: 'hubPublicApi',
   baseQuery: fetchHubBaseQuery,
-  tagTypes: [...Object.values(HubPublicCacheTags)],
   endpoints: builder => ({
-    getEoaClaimed: builder.query<any, EoaClaimedParams>({
-      query: ({ eoa }) => `/api/email-card-drop-requests?eoa=${eoa}`,
-      providesTags: [HubPublicCacheTags.HUB_EOA_CLAIMED],
-      transformResponse: (response: any) => {
-        return response?.data?.attributes?.claimed;
-      },
+    getEoaClaimed: builder.query<EoaClaimedResultType, EoaClaimedArg>({
+      query: routes.emailCardDropRequest,
+      transformResponse: (response: {
+        data: { attributes: { claimed: EoaClaimedResultType } };
+      }) => response?.data.attributes.claimed,
     }),
   }),
 });
