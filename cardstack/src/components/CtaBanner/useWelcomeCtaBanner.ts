@@ -49,7 +49,12 @@ export const useWelcomeCtaBanner = () => {
       showBannerUserDecision &&
       isFirstAddressForCurrentWallet &&
       !claimedResponse,
-    [showBannerUserDecision, isFirstAddressForCurrentWallet, claimedResponse]
+    [
+      showBannerUserDecision,
+      isFirstAddressForCurrentWallet,
+      claimedResponse,
+      network,
+    ]
   );
 
   return {

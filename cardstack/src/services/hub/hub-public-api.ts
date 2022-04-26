@@ -16,7 +16,7 @@ export const hubPublicApi = createApi({
       query: routes.emailCardDropRequest,
       transformResponse: (response: {
         data: { attributes: { claimed: EoaClaimedResultType } };
-      }) => response?.data.attributes.claimed,
+      }) => response?.data?.attributes?.claimed,
     }),
   }),
 });
