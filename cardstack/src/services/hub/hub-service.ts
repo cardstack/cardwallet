@@ -21,16 +21,16 @@ export const fetchHubBaseQuery: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   const network = await getNetwork();
-  const baseUrl = network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
+  const hubUrl = network === Network.xdai ? HUB_URL : HUB_URL_STAGING;
 
   const result = await fetchBaseQuery({
-    baseUrl,
+    baseUrl: `${hubUrl}/api`,
     prepareHeaders: async (headers, { getState }) => {
       const walletAddress = (getState() as AppState).settings.accountAddress;
 
       if (walletAddress && network) {
         try {
-          const token = await getHubAuthToken(baseUrl, network, walletAddress);
+          const token = await getHubAuthToken(hubUrl, network, walletAddress);
 
           if (token) {
             headers.set('Authorization', `Bearer ${token}`);
@@ -58,3 +58,11 @@ export const fetchHubBaseQuery: BaseQueryFn<
 
   return result;
 };
+
+export const hubBodyBuilder = <Attrs>(path: string, attributes: Attrs) =>
+  JSON.stringify({
+    data: {
+      type: path.replace('/', ''),
+      attributes,
+    },
+  });
