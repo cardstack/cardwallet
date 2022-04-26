@@ -7,11 +7,15 @@ import { fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
 import {
   GetCustodialWalletQueryResult,
   RequestCardDropQueryParams,
+  EoaClaimedArg,
+  EoaClaimedResultType,
 } from './hub-types';
 
 const routes = {
-  custodialWallet: '/custodial-wallet',
+  custodialWallet: '/api/custodial-wallet',
   emailDrop: '/email-card-drop-requests',
+  emailCardDropRequest: ({ eoa }: EoaClaimedArg) =>
+    `/api/email-card-drop-requests?eoa=${eoa}`,
 };
 
 export const hubApi = createApi({
@@ -32,16 +36,25 @@ export const hubApi = createApi({
     requestEmailCardDrop: builder.mutation<void, RequestCardDropQueryParams>({
       query: ({ email }) => ({
         url: routes.emailDrop,
+        extraOptions: { authenticate: true },
         method: 'POST',
         body: hubBodyBuilder(routes.emailDrop, {
           email,
         }),
       }),
     }),
+    getEoaClaimed: builder.query<EoaClaimedResultType, EoaClaimedArg>({
+      query: routes.emailCardDropRequest,
+      extraOptions: { authenticate: false },
+      transformResponse: (response: {
+        data: { attributes: { claimed: EoaClaimedResultType } };
+      }) => response?.data?.attributes?.claimed,
+    }),
   }),
 });
 
 export const {
   useGetCustodialWalletQuery,
+  useGetEoaClaimedQuery,
   useRequestEmailCardDropMutation,
 } = hubApi;

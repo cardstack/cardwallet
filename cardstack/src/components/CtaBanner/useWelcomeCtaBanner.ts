@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core';
 import { useCallback, useMemo } from 'react';
 
-import { useGetEoaClaimedQuery } from '@cardstack/services';
+import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
 import { isLayer2 } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';

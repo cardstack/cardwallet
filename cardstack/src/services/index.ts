@@ -9,4 +9,3 @@ export * from './service-status-api';
 export * from './merchant/merchant-api';
 export * from './prepaid-cards/prepaid-card-api';
 export * from './opensea-api';
-export * from './hub/hub-public-api';

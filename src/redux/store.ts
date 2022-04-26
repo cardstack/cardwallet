@@ -5,7 +5,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
 import { hubApi } from '@cardstack/services/hub/hub-api';
-import { hubPublicApi } from '@cardstack/services/hub/hub-public-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
 
@@ -23,7 +22,6 @@ const rootReducer = combineReducers({
   [safesApi.reducerPath]: safesApi.reducer,
   [hubApi.reducerPath]: hubApi.reducer,
   [serviceStatusApi.reducerPath]: serviceStatusApi.reducer,
-  [hubPublicApi.reducerPath]: hubPublicApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -40,12 +38,7 @@ const store = configureStore({
       immutableCheck: false, // without disabling this, we get a max call stack exceeded when switching from mainnet to xdai. It is likely due to storing an object in redux that has a circular reference to itself.
     });
     middlewares.push(
-      ...[
-        safesApi.middleware,
-        serviceStatusApi.middleware,
-        hubApi.middleware,
-        hubPublicApi.middleware,
-      ]
+      ...[safesApi.middleware, serviceStatusApi.middleware, hubApi.middleware]
     );
 
     if (__DEV__) {
