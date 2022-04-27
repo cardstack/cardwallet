@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import React, { memo, useCallback, useState } from 'react';
-import { TouchableOpacity, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 
 import {
   Container,
