@@ -2,11 +2,18 @@ export const strings = {
   navigation: {
     title: 'Request Prepaid Card',
   },
+  termsCheckbox:
+    "Yes, I'd like a free prepaid card and to receive the email newsletter.",
   termsBanner: {
-    title: 'Terms and Conditions',
+    title: 'GDPR & Marketing Permissions',
     message:
-      'By clicking the “Submit” button, you are submitting your Card Wallet address and email address. You agree to receive a verification email and Cardstack newsletter opt-in request.\n\nFor more details visit',
-    link: 'https://support.cardstack.com/card-drop',
+      'Please let us know if you would like to receive our email newsletter with updates about the Cardstack Project.\n\nYou can unsubscribe at any time by clicking the link in the footer of our emails or by contacting us at contact@cardstack.com. For information about our privacy practices, please visit our website.',
+    messageNote:
+      'We use Mailchimp as our marketing platform. By clicking below to subscribe, you acknowledge that your information will be transferred to Mailchimp for processing.',
+    link: {
+      text: "Learn more about Mailchimp's privacy practices here.",
+      url: 'https://support.cardstack.com/card-drop',
+    },
   },
   button: {
     submit: 'Submit',
