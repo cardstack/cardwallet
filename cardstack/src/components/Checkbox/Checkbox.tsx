@@ -15,6 +15,8 @@ interface CheckboxProps {
   children?: ReactNode;
 }
 
+const CHECKBOX_SIZE = 22;
+
 export const Checkbox = ({
   label,
   onPress,
@@ -53,9 +55,9 @@ export const Checkbox = ({
         borderColor={disabled ? 'transparent' : 'black'}
         borderRadius={5}
         borderWidth={1}
-        height={22}
+        height={CHECKBOX_SIZE}
         justifyContent="center"
-        width={22}
+        width={CHECKBOX_SIZE}
       >
         {selected && (
           <Icon
