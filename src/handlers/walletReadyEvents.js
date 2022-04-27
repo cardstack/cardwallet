@@ -24,19 +24,14 @@ export const runWalletBackupStatusChecks = () => {
   const state = store.getState();
   const { selected, wallets } = state.wallets;
 
-  // count how many visible, non-imported and non-readonly wallets are not backed up
-  const rainbowWalletsNotBackedUp = filter(wallets, wallet => {
-    const hasVisibleAccount = find(
-      wallet.addresses,
-      account => account.visible
-    );
-    return (
+  // count how many non-imported and non-readonly wallets are not backed up
+  const rainbowWalletsNotBackedUp = filter(
+    wallets,
+    wallet =>
       !wallet.imported &&
-      hasVisibleAccount &&
       wallet.type !== WalletTypes.readOnly &&
       !wallet.backedUp
-    );
-  });
+  );
 
   if (!rainbowWalletsNotBackedUp.length) return;
 

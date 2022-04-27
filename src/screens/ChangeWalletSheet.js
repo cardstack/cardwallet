@@ -48,7 +48,7 @@ const getWalletRowCount = wallets => {
   if (wallets) {
     Object.keys(wallets).forEach(key => {
       // Addresses
-      count += wallets[key].addresses.filter(account => account.visible).length;
+      count += wallets[key].addresses.length;
     });
   }
   return count;
