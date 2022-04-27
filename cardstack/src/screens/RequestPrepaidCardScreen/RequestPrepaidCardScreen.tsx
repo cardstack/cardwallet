@@ -87,7 +87,7 @@ const RequestPrepaidCardScreen = () => {
                 editable={!isLoading}
               />
               <Checkbox onPress={onTermsAcceptToggle} checkboxPosition="left">
-                <Text variant="checkboxLabel" marginRight={6} color="white">
+                <Text size="xs" marginRight={6} color="white">
                   {strings.termsCheckbox}
                 </Text>
               </Checkbox>
@@ -106,10 +106,10 @@ const RequestPrepaidCardScreen = () => {
                 title={strings.termsBanner.title}
                 message={strings.termsBanner.message}
               >
-                <Text variant="bannerSmallNote" paddingTop={3}>
+                <Text size="xxs" color="secondaryText" paddingTop={3}>
                   {strings.termsBanner.messageNote}{' '}
                   <Text
-                    variant="bannerSmallNote"
+                    size="xxs"
                     textDecorationLine="underline"
                     color="blueOcean"
                     onPress={onSupportLinkPress}

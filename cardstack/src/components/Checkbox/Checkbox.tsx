@@ -1,11 +1,11 @@
 import React, { useCallback, useState, useEffect, ReactNode } from 'react';
 
-import { Touchable, Container, ContainerProps, Text, Icon } from '../.';
+import { Touchable, Container, Text, Icon } from '../.';
 import { IconProps } from '../Icon';
 
 type CheckboxPositionType = 'left' | 'right';
 
-interface CheckboxProps extends ContainerProps {
+interface CheckboxProps {
   onPress?: () => void;
   label?: string;
   isDisabled?: boolean;
@@ -22,7 +22,6 @@ export const Checkbox = ({
   isSelected = false,
   checkboxPosition = 'right',
   children,
-  ...rest
 }: CheckboxProps) => {
   const [selected, setSelected] = useState(isSelected);
   const [disabled] = useState(isDisabled);
@@ -47,7 +46,6 @@ export const Checkbox = ({
       alignItems="center"
       onPress={handleCall}
       disabled={disabled}
-      {...rest}
     >
       <Container
         alignItems="center"

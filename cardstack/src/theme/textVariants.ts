@@ -57,12 +57,4 @@ export const textVariants = {
     letterSpacing: 0.33,
     ...fontFamilyVariants.regular,
   },
-  bannerSmallNote: {
-    fontSize: 10,
-    color: 'secondaryText',
-  },
-  checkboxLabel: {
-    fontSize: 13,
-    ...fontFamilyVariants.regular,
-  },
 };
