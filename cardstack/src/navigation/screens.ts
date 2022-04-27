@@ -312,3 +312,12 @@ export const navigationStateNewWallet = {
     },
   ],
 };
+
+export const navigationStateInit = {
+  index: 0,
+  routes: [
+    {
+      name: RainbowRoutes.WELCOME_SCREEN,
+    },
+  ],
+};
