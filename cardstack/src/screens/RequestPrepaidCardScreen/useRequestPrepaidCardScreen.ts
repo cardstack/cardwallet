@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { Linking } from 'react-native';
 
 import { defaultErrorAlert } from '@cardstack/constants';
@@ -17,6 +17,8 @@ import { strings } from './strings';
 export const useRequestPrepaidCardScreen = () => {
   const [email, setEmail] = useState('');
   const [inputHasError, setHasError] = useState(false);
+  const [inputValid, setInputValid] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
 
   const { accountAddress, network } = useAccountSettings();
@@ -46,12 +48,20 @@ export const useRequestPrepaidCardScreen = () => {
     )
   );
 
+  useEffect(() => {
+    setCanSubmit(inputValid && termsAccepted);
+  }, [inputValid, termsAccepted]);
+
   const onChangeText = useCallback(text => {
     setEmail(text);
 
     setHasError(!isEmailPartial(text));
-    setCanSubmit(isEmailValid(text));
+    setInputValid(isEmailValid(text));
   }, []);
+
+  const onTermsAcceptToggle = useCallback(() => {
+    setTermsAccepted(!termsAccepted);
+  }, [termsAccepted]);
 
   const onSubmitPress = useCallback(() => {
     if (!canSubmit) {
@@ -64,15 +74,17 @@ export const useRequestPrepaidCardScreen = () => {
   }, [canSubmit, email, requestCardDrop]);
 
   const onSupportLinkPress = useCallback(() => {
-    Linking.openURL(strings.termsBanner.link);
+    Linking.openURL(strings.termsBanner.link.url);
   }, []);
 
   return {
     onSupportLinkPress,
     onSubmitPress,
     onChangeText,
-    canSubmit,
+    onTermsAcceptToggle,
+    inputValid,
     inputHasError,
+    canSubmit,
     hasRequested: false || isSuccess,
     isAuthenticated,
     email,

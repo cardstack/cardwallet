@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/core';
 import React, { memo, useCallback, useState } from 'react';
-import { TouchableOpacity, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 
 import {
   Container,
@@ -54,16 +54,22 @@ const CopyAddressSheet = () => {
         <SheetHandle />
         {!disableCopying ? (
           <Container flexDirection="row" marginBottom={4} paddingTop={5}>
-            <Container flex={1} justifyContent="center">
-              <Checkbox isSelected={checked} onPress={toogleCheckbox} />
-            </Container>
-            <Container flex={4}>
-              <TouchableOpacity onPress={toogleCheckbox}>
-                <Text fontFamily="OpenSans-Regular" fontSize={14} color="red">
+            <Container flex={1} paddingHorizontal={5} justifyContent="center">
+              <Checkbox
+                checkboxPosition="left"
+                isSelected={checked}
+                onPress={toogleCheckbox}
+              >
+                <Text
+                  marginRight={6}
+                  fontFamily="OpenSans-Regular"
+                  fontSize={14}
+                  color="red"
+                >
                   I acknowledge that I can only send DAI.CPXD and CARD.CPXD to
                   this address. All other funds may be lost.
                 </Text>
-              </TouchableOpacity>
+              </Checkbox>
             </Container>
           </Container>
         ) : null}

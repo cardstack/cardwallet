@@ -5,6 +5,7 @@ import { Keyboard, Pressable } from 'react-native';
 import {
   Button,
   Container,
+  Checkbox,
   FormInput,
   Image,
   InfoBanner,
@@ -26,12 +27,14 @@ const RequestPrepaidCardScreen = () => {
     onSupportLinkPress,
     onSubmitPress,
     onChangeText,
-    canSubmit,
+    inputValid,
     inputHasError,
+    canSubmit,
     hasRequested,
     isAuthenticated,
     email,
     isLoading,
+    onTermsAcceptToggle,
   } = useRequestPrepaidCardScreen();
 
   const { goBack } = useNavigation();
@@ -62,7 +65,6 @@ const RequestPrepaidCardScreen = () => {
         paddingHorizontal={5}
         showsVerticalScrollIndicator={false}
         scrollEnabled={!hasRequested}
-        contentContainerStyle={flex}
       >
         <Pressable onPress={Keyboard.dismiss} style={flex}>
           <Image alignSelf="center" marginVertical={7} source={CardDropImage} />
@@ -72,7 +74,7 @@ const RequestPrepaidCardScreen = () => {
             <>
               <FormInput
                 isRequired
-                isValid={canSubmit}
+                isValid={inputValid}
                 autoCorrect={false}
                 label={strings.input.label}
                 error={inputHasError ? strings.input.error : undefined}
@@ -84,6 +86,11 @@ const RequestPrepaidCardScreen = () => {
                 value={email}
                 editable={!isLoading}
               />
+              <Checkbox onPress={onTermsAcceptToggle} checkboxPosition="left">
+                <Text size="xs" marginRight={6} color="white">
+                  {strings.termsCheckbox}
+                </Text>
+              </Checkbox>
               <Button
                 marginVertical={4}
                 variant={!canSubmit ? 'disabledBlack' : undefined}
@@ -99,13 +106,16 @@ const RequestPrepaidCardScreen = () => {
                 title={strings.termsBanner.title}
                 message={strings.termsBanner.message}
               >
-                <Text
-                  textDecorationLine="underline"
-                  color="blueOcean"
-                  size="xs"
-                  onPress={onSupportLinkPress}
-                >
-                  {strings.termsBanner.link}
+                <Text size="xxs" color="secondaryText" paddingTop={3}>
+                  {strings.termsBanner.messageNote}{' '}
+                  <Text
+                    size="xxs"
+                    textDecorationLine="underline"
+                    color="blueOcean"
+                    onPress={onSupportLinkPress}
+                  >
+                    {strings.termsBanner.link.text}
+                  </Text>
                 </Text>
               </InfoBanner>
             </>
