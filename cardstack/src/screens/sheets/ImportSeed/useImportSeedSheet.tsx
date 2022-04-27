@@ -195,9 +195,12 @@ const useImportFromProfileModal = (
           checkedWallet,
         });
 
-        dismissLoadingOverlay();
         // Early return to not dismiss the sheet on error
-        if (!wallet) return;
+        if (!wallet) {
+          dismissLoadingOverlay();
+
+          return;
+        }
 
         InteractionManager.runAfterInteractions(async () => {
           // Fresh imported wallet
@@ -244,7 +247,6 @@ const useImportFromProfileModal = (
     name => {
       navigate(Routes.MODAL_SCREEN, {
         actionType: 'Import',
-        additionalPadding: true,
         asset: [],
         isNewProfile: true,
         onCloseModal: handleImportAccountOnCloseModal,
