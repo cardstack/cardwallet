@@ -730,6 +730,9 @@ export const createOrImportWallet = async ({
     await saveAllWallets(allWallets);
     logger.sentry('[createWallet] - saveAllWallets');
 
+    await saveAddress(walletAddress);
+    logger.sentry('[createWallet] - saveAddress');
+
     if (walletResult && walletAddress) {
       // bip39 are derived from mnemioc
       const createdWallet =
@@ -959,7 +962,14 @@ export const generateAccount = async (
 };
 
 export const cleanUpWalletKeys = async (): Promise<boolean> => {
-  const keys = [addressKey, allWalletsKey, pinKey, selectedWalletKey];
+  const keys = [
+    addressKey,
+    allWalletsKey,
+    pinKey,
+    selectedWalletKey,
+    seedPhraseKey,
+    privateKeyKey,
+  ];
 
   try {
     await Promise.all(
