@@ -52,7 +52,8 @@ export const queryPromiseWrapper = async <TResult, TArgs>(
   } catch (error) {
     const message = options?.errorLogMessage || 'Error on queryPromiseWrapper';
 
-    logger.sentry(message, JSON.stringify(error));
+    logger.sentry(message, { error, args });
+
     captureException(error);
 
     return {
