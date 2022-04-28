@@ -76,6 +76,10 @@ if (__DEV__) {
   Sentry.init({
     dsn: SENTRY_ENDPOINT,
     enableAutoSessionTracking: true,
+    // Allowed number of char on breadcrumbs
+    maxValueLength: 8000,
+    maxBreadcrumbs: 100,
+    normalizeDepth: 10,
   });
 }
 
