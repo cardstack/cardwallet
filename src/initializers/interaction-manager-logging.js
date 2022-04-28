@@ -1,5 +1,4 @@
 import { InteractionManager } from 'react-native';
-import logger from 'logger';
 
 if (!InteractionManager._shimmed) {
   const oldCreateInteractionHandle = InteractionManager.createInteractionHandle;
@@ -11,7 +10,6 @@ if (!InteractionManager._shimmed) {
     if (finishAutomatically) {
       setTimeout(() => {
         InteractionManager.clearInteractionHandle(handle);
-        logger.sentry(`Interaction finished automatically`);
       }, 3000);
     }
     return handle;
