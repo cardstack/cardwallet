@@ -330,7 +330,18 @@ export const useSendSheetDepotScreen = () => {
         undefined,
         { from: accountAddress }
       );
-    } catch (e) {}
+    } catch (error) {
+      logger.sentry('Error sending tokens', {
+        error,
+        args: {
+          safeAddress,
+          recipient,
+          amountInWei: Web3.utils.toWei(amountDetails.assetAmount),
+          accountAddress,
+          token: selected?.address,
+        },
+      });
+    }
   }, [
     accountAddress,
     amountDetails.assetAmount,

@@ -315,7 +315,7 @@ export const useRewardsCenterScreen = () => {
       } = await queryPromiseWrapper(
         getClaimRewardsGasEstimate,
         partialClaimParams,
-        { errorLogMessage: 'Error fetching claim gas fee' }
+        { errorLogMessage: 'Error fetching reward claim gas fee' }
       );
 
       stopClaimGasLoading();
