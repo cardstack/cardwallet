@@ -46,7 +46,7 @@ const findNewAssetsToWatch = () => async (dispatch, getState) => {
     dispatch
   );
   if (newAssets.length > 0) {
-    logger.log('😬 Found new assets!', newAssets);
+    logger.log('😬 Found new assets!');
 
     const updateAssets = uniqBy(
       [...assets, ...newAssets],
@@ -287,7 +287,7 @@ const fetchAssetCharts = async (coingeckoIds, nativeCurrency) => {
     logger.log(`Error trying to fetch ${coingeckoIds} charts`, e);
   }
 };
-
+const skipPoller = true;
 export const fetchAssetsBalancesAndPrices = async () => {
   logger.log('😬 FallbackExplorer fetchAssetsBalancesAndPrices');
 
@@ -367,6 +367,8 @@ export const fetchAssetsBalancesAndPrices = async () => {
   } catch (e) {
     logger.log('😬 FallbackExplorer updating assets error', e);
   }
+
+  if (skipPoller) return;
 
   let fallbackExplorerAssetsHandle = null;
   if (isMainnet(network)) {
