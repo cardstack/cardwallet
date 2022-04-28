@@ -46,13 +46,13 @@ describe('service utils', () => {
 
       const queryWrapperResult = await queryPromiseWrapper(
         anyPromise,
-        undefined
+        'myParam'
       );
 
-      expect(logger.sentry).toBeCalledWith(
-        'Error on queryPromiseWrapper',
-        JSON.stringify('Error')
-      );
+      expect(logger.sentry).toBeCalledWith('Error on queryPromiseWrapper', {
+        args: 'myParam',
+        error: 'Error',
+      });
 
       expect(captureExceptionSpy).toBeCalledWith('Error');
 
@@ -76,10 +76,10 @@ describe('service utils', () => {
         { timeout: timeToResolve / 2 }
       );
 
-      expect(logger.sentry).toBeCalledWith(
-        'Error on queryPromiseWrapper',
-        JSON.stringify('Request timeout')
-      );
+      expect(logger.sentry).toBeCalledWith('Error on queryPromiseWrapper', {
+        args: undefined,
+        error: 'Request timeout',
+      });
 
       expect(captureExceptionSpy).toBeCalledWith('Request timeout');
 
@@ -100,10 +100,10 @@ describe('service utils', () => {
         { errorStatus: 400, errorLogMessage: 'Error on anyPromise' }
       );
 
-      expect(logger.sentry).toBeCalledWith(
-        'Error on anyPromise',
-        JSON.stringify('Error')
-      );
+      expect(logger.sentry).toBeCalledWith('Error on anyPromise', {
+        args: undefined,
+        error: 'Error',
+      });
 
       expect(captureExceptionSpy).toBeCalledWith('Error');
 
