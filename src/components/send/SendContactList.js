@@ -68,7 +68,6 @@ export default function SendContactList({
   const handleEditContact = useCallback(
     ({ address, color, nickname }) => {
       navigate(Routes.MODAL_SCREEN, {
-        additionalPadding: true,
         address,
         color,
         contact: { address, color, nickname },

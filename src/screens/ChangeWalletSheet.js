@@ -31,7 +31,7 @@ import {
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
-import { useLoadingOverlay } from '@cardstack/navigation';
+import { navigationStateInit, useLoadingOverlay } from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
@@ -48,7 +48,7 @@ const getWalletRowCount = wallets => {
   if (wallets) {
     Object.keys(wallets).forEach(key => {
       // Addresses
-      count += wallets[key].addresses.filter(account => account.visible).length;
+      count += wallets[key].addresses.length;
     });
   }
   return count;
@@ -59,7 +59,7 @@ export default function ChangeWalletSheet() {
   const [editMode, setEditMode] = useState(false);
   const { colors } = useTheme();
 
-  const { goBack, navigate, replace } = useNavigation();
+  const { goBack, navigate, reset } = useNavigation();
   const dispatch = useDispatch();
   const { accountAddress } = useAccountSettings();
   const {
@@ -133,32 +133,29 @@ export default function ChangeWalletSheet() {
   const deleteWallet = useCallback(
     async (walletId, address) => {
       try {
-        const newWallets = {
+        const allWallets = {
           ...wallets,
           [walletId]: {
             ...wallets[walletId],
-            addresses: wallets[walletId].addresses.map(account =>
-              toLower(account.address) === toLower(address)
-                ? { ...account, visible: false }
-                : account
+            addresses: wallets[walletId].addresses.filter(
+              account => toLower(account.address) !== toLower(address)
             ),
           },
         };
-        // If there are no visible wallets
-        // then delete the wallet
-        const hasVisibleAddresses = newWallets[walletId].addresses.some(
-          account => account.visible
-        );
+
+        const { [walletId]: currentWallet, ...otherWallets } = allWallets;
+
+        // If there are no accounts left on wallet
+        // remove the wallet
+        const isCurrentWalletEmpty = !currentWallet.addresses.length;
+
+        const updatedWallets = isCurrentWalletEmpty ? otherWallets : allWallets;
 
         // unregister in hub and remove fcm for this account from asyncStorage
         await removeFCMToken(address);
-        if (!hasVisibleAddresses) {
-          delete newWallets[walletId];
-          await dispatch(walletsUpdate(newWallets));
-        } else {
-          await dispatch(walletsUpdate(newWallets));
-        }
         await removeWalletData(address);
+
+        await dispatch(walletsUpdate(updatedWallets));
       } catch (e) {
         logger.sentry('Error deleting account', e);
       }
@@ -217,24 +214,7 @@ export default function ChangeWalletSheet() {
 
   const onEditWallet = useCallback(
     (walletId, address, label) => {
-      // If there's more than 1 account
-      // it's deletable
-      let isLastAvailableWallet = false;
-      for (let i = 0; i < Object.keys(wallets).length; i++) {
-        const key = Object.keys(wallets)[i];
-        const someWallet = wallets[key];
-        const otherAccount = someWallet.addresses.find(
-          account => account.visible && account.address !== address
-        );
-        if (otherAccount) {
-          isLastAvailableWallet = true;
-          break;
-        }
-      }
-
-      const buttons = ['Edit Account'];
-      buttons.push('Delete Account');
-      buttons.push('Cancel');
+      const buttons = ['Edit Account', 'Delete Account', 'Cancel'];
 
       showActionSheetWithOptions(
         {
@@ -262,32 +242,46 @@ export default function ChangeWalletSheet() {
                     title: WalletLoadingStates.DELETING_WALLET,
                   });
 
+                  const otherAccounts = Object.keys(wallets).reduce(
+                    (acc, walletKey) => {
+                      const account = wallets[walletKey].addresses.find(
+                        account => account.address !== address
+                      );
+                      if (account) {
+                        acc.push({ ...account, walletKey });
+                      }
+                      return acc;
+                    },
+                    []
+                  );
+
                   await deleteWallet(walletId, address);
+
                   ReactNativeHapticFeedback.trigger('notificationSuccess');
 
-                  if (!isLastAvailableWallet) {
+                  const isLastAvailableWallet = !otherAccounts.length;
+
+                  if (isLastAvailableWallet) {
                     await cleanUpWalletKeys();
+
                     dismissLoadingOverlay();
 
                     // Dismiss change wallet
                     goBack();
-                    replace(Routes.WELCOME_SCREEN);
+
+                    reset(navigationStateInit);
                   } else {
                     // If we're deleting the selected wallet
                     // we need to switch to another one
                     if (address === currentAddress) {
-                      for (let i = 0; i < Object.keys(wallets).length; i++) {
-                        const key = Object.keys(wallets)[i];
-                        const someWallet = wallets[key];
-                        const found = someWallet.addresses.find(
-                          account =>
-                            account.visible && account.address !== address
-                        );
+                      const eligibleAccount = otherAccounts[0];
 
-                        if (found) {
-                          await onChangeAccount(key, found.address, true);
-                          break;
-                        }
+                      if (eligibleAccount) {
+                        await onChangeAccount(
+                          eligibleAccount.walletKey,
+                          eligibleAccount.address,
+                          true
+                        );
                       }
                     }
                   }
@@ -307,7 +301,7 @@ export default function ChangeWalletSheet() {
       goBack,
       onChangeAccount,
       renameWallet,
-      replace,
+      reset,
       showLoadingOverlay,
       wallets,
     ]

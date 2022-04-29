@@ -61,9 +61,9 @@ const WalletSelectionView = () => {
         .filter(key => wallets[key].type !== WalletTypes.readOnly)
         .map(key => {
           const wallet = wallets[key];
-          const visibleAccounts = wallet.addresses.filter(a => a.visible);
-          const account = visibleAccounts[0];
-          const totalAccounts = visibleAccounts.length;
+          const accounts = wallet.addresses;
+          const account = accounts[0];
+          const totalAccounts = accounts.length;
           const { color, label, address } = account;
           if (wallet.backupType === WalletBackupTypes.cloud) {
             cloudBackedUpWallets += 1;

@@ -1,6 +1,6 @@
 import { captureException, captureMessage } from '@sentry/react-native';
 import { toChecksumAddress } from 'ethereumjs-util';
-import { filter, flatMap, get, isEmpty, keys, map, values } from 'lodash';
+import { flatMap, get, isEmpty, keys, map, values } from 'lodash';
 import { backupUserDataIntoCloud } from '../handlers/cloudBackup';
 import { saveKeychainIntegrityState } from '../handlers/localstorage/globalSettings';
 import {
@@ -79,16 +79,16 @@ export const walletsLoadState = () => async (dispatch, getState) => {
       );
     }
 
-    const selectedAddress = selectedWallet.addresses.find(a => {
-      return a.visible && a.address === addressFromKeychain;
-    });
+    const selectedAddress = selectedWallet.addresses.find(
+      account => account.address === addressFromKeychain
+    );
 
     if (!selectedAddress) {
-      const account = selectedWallet.addresses.find(a => a.visible);
+      const account = selectedWallet.addresses[0];
       await dispatch(settingsUpdateAccountAddress(account.address));
       await saveAddress(account.address);
       logger.sentry(
-        'Selected the first visible address because there was not selected one'
+        'Selected the first address because there was not selected one'
       );
     }
 
@@ -189,7 +189,6 @@ export const createAccountForWallet = (id, color, name) => async (
     color,
     index: newIndex,
     label: name,
-    visible: true,
   });
 
   // Save all the wallets
@@ -214,8 +213,8 @@ export const fetchWalletNames = () => async (dispatch, getState) => {
   // Fetch ENS names
   await Promise.all(
     flatMap(values(wallets), wallet => {
-      const visibleAccounts = filter(wallet.addresses, 'visible');
-      return map(visibleAccounts, async account => {
+      const accounts = wallet.addresses;
+      return map(accounts, async account => {
         try {
           const web3Provider = await getEtherWeb3Provider();
           const ens = await web3Provider.lookupAddress(account.address);

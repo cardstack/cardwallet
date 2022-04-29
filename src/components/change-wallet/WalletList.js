@@ -93,16 +93,16 @@ export default function WalletList({
     const sortedKeys = Object.keys(allWallets).sort();
     sortedKeys.forEach(key => {
       const wallet = allWallets[key];
-      const filteredAccounts = wallet.addresses.filter(
-        account => !!account.visible
-      );
-      filteredAccounts.forEach(account => {
+
+      const accounts = wallet.addresses;
+
+      accounts.forEach(account => {
         const row = {
           ...account,
           editMode,
           height: rowHeight,
           id: account.address,
-          isOnlyAddress: filteredAccounts.length === 1,
+          isOnlyAddress: accounts.length === 1,
           isReadOnly: wallet.type === WalletTypes.readOnly,
           isSelected:
             accountAddress === account.address &&

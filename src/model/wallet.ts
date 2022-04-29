@@ -109,7 +109,6 @@ interface RainbowAccount {
   address: EthereumAddress;
   avatar: null | string;
   color: number;
-  visible: boolean;
 }
 
 export interface RainbowWallet {
@@ -449,7 +448,7 @@ export const getWalletByAddress = ({
         someWallet.addresses,
         account =>
           toChecksumAddress(account.address) ===
-            toChecksumAddress(walletAddress) && account.visible
+          toChecksumAddress(walletAddress)
       )
   );
 
@@ -526,7 +525,7 @@ const addAccountsWithTxHistory = async (
     let label = '';
 
     if (discoveredAccount && discoveredWalletId) {
-      if (discoveredAccount.visible) {
+      if (discoveredAccount) {
         color = discoveredAccount.color;
         label = discoveredAccount.label ?? '';
       }
@@ -560,7 +559,6 @@ const addAccountsWithTxHistory = async (
         color,
         index,
         label,
-        visible: true,
       });
       index++;
     } else {
@@ -680,7 +678,6 @@ export const createOrImportWallet = async ({
       color: color ?? getRandomColor(),
       index: 0,
       label: name || '',
-      visible: true,
     });
 
     // For HDWallet we check to add derived accounts
@@ -729,6 +726,9 @@ export const createOrImportWallet = async ({
 
     await saveAllWallets(allWallets);
     logger.sentry('[createWallet] - saveAllWallets');
+
+    await saveAddress(walletAddress);
+    logger.sentry('[createWallet] - saveAddress');
 
     if (walletResult && walletAddress) {
       // bip39 are derived from mnemioc
@@ -959,7 +959,14 @@ export const generateAccount = async (
 };
 
 export const cleanUpWalletKeys = async (): Promise<boolean> => {
-  const keys = [addressKey, allWalletsKey, pinKey, selectedWalletKey];
+  const keys = [
+    addressKey,
+    allWalletsKey,
+    pinKey,
+    selectedWalletKey,
+    seedPhraseKey,
+    privateKeyKey,
+  ];
 
   try {
     await Promise.all(

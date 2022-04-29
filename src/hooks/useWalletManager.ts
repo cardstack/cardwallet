@@ -31,6 +31,10 @@ import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/account
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
 
+interface initializeWalleOptions {
+  skipDismissOverlay?: boolean;
+}
+
 export default function useWalletManager() {
   const dispatch = useDispatch();
 
@@ -44,7 +48,7 @@ export default function useWalletManager() {
   const { dismissLoadingOverlay } = useLoadingOverlay();
 
   const initializeWallet = useCallback(
-    async (seedPhrase?: string) => {
+    async (seedPhrase?: string, options?: initializeWalleOptions) => {
       try {
         logger.sentry('Start wallet init');
 
@@ -68,6 +72,7 @@ export default function useWalletManager() {
         const walletAddress = await loadAddress();
 
         if (isNil(walletAddress)) {
+          logger.sentry('[initializeWallet] - walletAddress null');
           dispatch(appStateUpdate({ walletReady: true }));
           return null;
         }
@@ -92,7 +97,7 @@ export default function useWalletManager() {
 
         return null;
       } finally {
-        dismissLoadingOverlay();
+        if (!options?.skipDismissOverlay) dismissLoadingOverlay();
         dispatch(appStateUpdate({ walletReady: true }));
       }
     },
@@ -136,7 +141,7 @@ export default function useWalletManager() {
       try {
         const wallet = await createOrImportWallet(params);
 
-        await initializeWallet(params.seed);
+        await initializeWallet(params.seed, { skipDismissOverlay: true });
 
         return wallet;
       } catch (e) {
