@@ -4,11 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { findLatestBackUp } from '../model/backup';
 import { setIsWalletLoading as rawSetIsWalletLoading } from '../redux/wallets';
+import { useAccountSettings } from '.';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
+import { Account } from '@rainbow-me/model/wallet';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { AppState } from '@rainbow-me/redux/store';
 import logger from 'logger';
 
 const walletSelector = createSelector(
-  ({ wallets: { isWalletLoading, selected = {}, walletNames, wallets } }) => ({
+  ({
+    wallets: { isWalletLoading, selected = {}, walletNames, wallets },
+  }: AppState) => ({
     isWalletLoading,
     selectedWallet: selected,
     walletNames,
@@ -33,7 +39,9 @@ export default function useWallets() {
     wallets,
   } = useSelector(walletSelector);
 
-  const walletReady = useSelector(state => state.appState.walletReady);
+  const walletReady = useRainbowSelector(state => state.appState.walletReady);
+
+  const { accountAddress } = useAccountSettings();
 
   const setIsWalletLoading = useCallback(
     isLoading => dispatch(rawSetIsWalletLoading(isLoading)),
@@ -56,14 +64,33 @@ export default function useWallets() {
     return isInvalidWallet;
   }, [selectedWallet, walletReady, wallets]);
 
+  const selectedAccount = useMemo(
+    () =>
+      selectedWallet?.addresses?.find(
+        (account: Account) => account.address === accountAddress
+      ),
+    [accountAddress, selectedWallet.addresses]
+  );
+
+  const signerParams = useMemo(
+    () => ({
+      walletId: selectedWallet?.id,
+      accountIndex: selectedAccount?.index,
+    }),
+    [selectedAccount, selectedWallet]
+  );
+
   return {
     isDamaged,
     isReadOnlyWallet: selectedWallet.type === WalletTypes.readOnly,
     isWalletLoading,
     latestBackup,
-    selectedWallet,
     setIsWalletLoading,
     walletNames,
     wallets,
+    selectedAccount,
+    selectedWallet,
+    signerParams,
+    accountAddress,
   };
 }
