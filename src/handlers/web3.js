@@ -169,7 +169,7 @@ export const estimateTransferNFTGas = async (
       params.id
     );
     if (!addPadding) {
-      return contractEstGas.toString();
+      return contractEstGas.toFixed();
     }
 
     return addPaddingToGasEstimate(contractEstGas, paddingFactor, provider);
@@ -245,7 +245,7 @@ export const estimateGasWithPadding = async (
  */
 export const toWei = ether => {
   const result = parseEther(ether);
-  return result.toString();
+  return result.toFixed();
 };
 
 /**
