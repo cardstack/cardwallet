@@ -6,7 +6,6 @@ import {
   joinSignature,
 } from '@ethersproject/bytes';
 import { SigningKey } from '@ethersproject/signing-key';
-import { Transaction } from '@ethersproject/transactions';
 import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
 import { generateMnemonic } from 'bip39';
@@ -184,7 +183,7 @@ export const loadWallet = async (): Promise<null | Wallet> => {
 export const sendTransaction = async ({
   transaction,
   existingWallet,
-}: TransactionRequestParam): Promise<null | Transaction> => {
+}: TransactionRequestParam) => {
   try {
     logger.sentry('about to send transaction', transaction);
     const wallet = existingWallet || (await loadWallet());

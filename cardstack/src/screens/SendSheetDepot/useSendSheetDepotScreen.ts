@@ -10,7 +10,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Web3 from 'web3';
 
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
-import HDProvider from '@cardstack/models/hd-provider';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
