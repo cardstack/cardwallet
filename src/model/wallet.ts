@@ -525,10 +525,9 @@ const addAccountsWithTxHistory = async (
     let label = '';
 
     if (discoveredAccount && discoveredWalletId) {
-      if (discoveredAccount) {
-        color = discoveredAccount.color;
-        label = discoveredAccount.label ?? '';
-      }
+      color = discoveredAccount.color;
+      label = discoveredAccount.label ?? '';
+
       delete allWallets?.[discoveredWalletId];
     }
 
