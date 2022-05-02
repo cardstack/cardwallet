@@ -41,7 +41,7 @@ export const claimMerchantRevenue = async ({
 
     const claimAmount = new BigNumber(Web3.utils.toWei(token.balance.amount))
       .minus(new BigNumber(gasEstimate))
-      .toString();
+      .toFixed();
 
     await revenuePool.claim(
       merchantSafeAddress,
