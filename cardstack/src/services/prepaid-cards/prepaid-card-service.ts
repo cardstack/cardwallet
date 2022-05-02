@@ -59,7 +59,6 @@ export const getPrepaidCardByAddress = async (
 const getPrepaidCardInstance = async (signedParams?: EthersSignerParams) => {
   const [web3, signer] = await getWeb3ProviderWithEthSigner(signedParams);
 
-  console.log({ web3, signer });
   const prepaidCardInstance = await getSDK('PrepaidCard', web3, signer);
 
   return prepaidCardInstance;
