@@ -103,7 +103,7 @@ export interface EthereumWalletFromSeed {
   address: EthereumAddress;
 }
 
-interface RainbowAccount {
+export interface Account {
   index: number;
   label: string;
   address: EthereumAddress;
@@ -112,7 +112,7 @@ interface RainbowAccount {
 }
 
 export interface RainbowWallet {
-  addresses: RainbowAccount[];
+  addresses: Account[];
   color: number;
   id: string;
   imported: boolean;
@@ -478,7 +478,7 @@ const addAccountsWithTxHistory = async (
   root: EthereumHDKey,
   allWallets: AllRainbowWallets,
   userPIN: string,
-  addresses: RainbowAccount[]
+  addresses: Account[]
 ) => {
   logger.sentry('[createWallet] - isHDWallet && isImported');
   let index = 1;
@@ -502,7 +502,7 @@ const addAccountsWithTxHistory = async (
       captureException(error);
     }
 
-    let discoveredAccount: RainbowAccount | undefined;
+    let discoveredAccount: Account | undefined;
     let discoveredWalletId: RainbowWallet['id'] | undefined;
     forEach(allWallets, someWallet => {
       const existingAccount = find(
@@ -512,7 +512,7 @@ const addAccountsWithTxHistory = async (
           toChecksumAddress(nextWallet.address)
       );
       if (existingAccount) {
-        discoveredAccount = existingAccount as RainbowAccount;
+        discoveredAccount = existingAccount as Account;
         discoveredWalletId = someWallet.id;
         return true;
       }
@@ -586,7 +586,7 @@ export const createOrImportWallet = async ({
   }
   const walletSeed = seed || generateMnemonic();
 
-  const addresses: RainbowAccount[] = [];
+  const addresses: Account[] = [];
 
   try {
     // Wallet can be checked while importing,

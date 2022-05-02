@@ -12,7 +12,7 @@ import { useCtaBanner } from '.';
 const WELCOME_BANNER_KEY = 'WELCOME_BANNER_KEY';
 
 export const useWelcomeCtaBanner = () => {
-  const { wallets, selectedWallet } = useWallets();
+  const { selectedAccount } = useWallets();
   const { accountAddress, network } = useAccountSettings();
 
   const { data: claimedResponse = true } = useGetEoaClaimedQuery(
@@ -34,17 +34,10 @@ export const useWelcomeCtaBanner = () => {
 
   // We only consider an address for the drop if its the first address of an EOA.
   // Derivated addresses are not elegible.
-  const isFirstAddressForCurrentWallet = useMemo(() => {
-    if (!wallets?.[selectedWallet?.id]) return false;
-
-    const { addresses } = wallets[selectedWallet.id];
-
-    const currentWalletAddress = addresses.find(
-      (account: any) => account.address === accountAddress
-    );
-
-    return currentWalletAddress?.index === 0 || false;
-  }, [wallets, selectedWallet, accountAddress]);
+  const isFirstAddressForCurrentWallet = useMemo(
+    () => selectedAccount?.index === 0 || false,
+    [selectedAccount]
+  );
 
   const showBanner = useMemo(
     () =>
