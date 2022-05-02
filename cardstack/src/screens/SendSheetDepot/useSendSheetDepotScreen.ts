@@ -311,14 +311,11 @@ export const useSendSheetDepotScreen = () => {
   }, []);
 
   // Send tokens
-  const { selectedWallet } = useWallets();
+  const { signerParams } = useWallets();
 
   const sendTokenFromDepot = useCallback(async () => {
     try {
-      const safes = await getSafesInstance({
-        walletId: selectedWallet.id,
-        network,
-      });
+      const safes = await getSafesInstance(signerParams);
 
       const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
 
@@ -345,11 +342,10 @@ export const useSendSheetDepotScreen = () => {
   }, [
     accountAddress,
     amountDetails.assetAmount,
-    network,
     recipient,
     safeAddress,
     selected,
-    selectedWallet,
+    signerParams,
   ]);
 
   const canSubmit = useMemo(() => {
@@ -368,9 +364,6 @@ export const useSendSheetDepotScreen = () => {
 
     try {
       await sendTokenFromDepot();
-
-      // resets signed provider and web3 instance to kill poller
-      await HDProvider.reset();
 
       navigate(Routes.WALLET_SCREEN, { forceRefreshOnce: true });
     } catch (error) {

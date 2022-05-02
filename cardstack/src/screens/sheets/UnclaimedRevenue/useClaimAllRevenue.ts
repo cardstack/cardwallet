@@ -6,7 +6,7 @@ import { useLoadingOverlay } from '@cardstack/navigation';
 import { useClaimRevenueMutation } from '@cardstack/services';
 import { MerchantSafeType } from '@cardstack/types';
 
-import { useAccountSettings, usePrevious, useWallets } from '@rainbow-me/hooks';
+import { usePrevious, useWallets } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
 
 export const useClaimAllRevenue = ({
@@ -16,8 +16,7 @@ export const useClaimAllRevenue = ({
   merchantSafe: MerchantSafeType;
   isRefreshingBalances: boolean;
 }) => {
-  const { selectedWallet } = useWallets();
-  const { accountAddress, network } = useAccountSettings();
+  const { signerParams, accountAddress } = useWallets();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const { navigate, dispatch: navDispatch } = useNavigation();
@@ -31,20 +30,18 @@ export const useClaimAllRevenue = ({
     showLoadingOverlay({ title: 'Claiming' });
 
     claimRevenue({
-      selectedWallet,
+      signerParams,
       revenueBalances: merchantSafe.revenueBalances,
       accountAddress,
       merchantSafeAddress: merchantSafe.address,
-      network,
     });
   }, [
     accountAddress,
     claimRevenue,
     merchantSafe.address,
     merchantSafe.revenueBalances,
-    network,
-    selectedWallet,
     showLoadingOverlay,
+    signerParams,
   ]);
 
   // isRefreshing may be false when isSuccess is truthy on the first time

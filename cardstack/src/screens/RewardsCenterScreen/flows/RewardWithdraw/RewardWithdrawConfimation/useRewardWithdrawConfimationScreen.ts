@@ -14,7 +14,7 @@ import {
 import { fromWeiToFixedEth } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+import { useWallets } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
 
@@ -28,8 +28,7 @@ export const useRewardWithdrawConfimationScreen = () => {
   const { params } = useRoute<RouteType<NavParams>>();
   const { navigate } = useNavigation();
 
-  const { accountAddress, network } = useAccountSettings();
-  const { selectedWallet } = useWallets();
+  const { signerParams, accountAddress } = useWallets();
 
   const {
     fromRewardSafe,
@@ -87,17 +86,15 @@ export const useRewardWithdrawConfimationScreen = () => {
 
     withdraw({
       ...withdrawBaseData,
-      walletId: selectedWallet.id,
+      signerParams,
       accountAddress,
-      network,
       // When no amount is provided, the whole avaible balance is withdrawn
       amount: undefined,
     });
   }, [
     accountAddress,
-    network,
-    selectedWallet.id,
     showLoadingOverlay,
+    signerParams,
     withdraw,
     withdrawBaseData,
   ]);

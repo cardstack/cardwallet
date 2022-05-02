@@ -9,8 +9,10 @@ import {
 import BN from 'bn.js';
 
 import { getSafesInstance } from '@cardstack/models';
-import { SignedProviderParams } from '@cardstack/models/hd-provider';
-import Web3Instance from '@cardstack/models/web3-instance';
+import {
+  EthersSignerParams,
+  getWeb3ProviderWithEthSigner,
+} from '@cardstack/models/ethers-wallet';
 
 import { convertTokenToSpend } from '../exchange-rate-service';
 import {
@@ -30,20 +32,18 @@ import {
   ValidProofsParams,
 } from './rewards-center-types';
 
-const getRewardsPoolInstance = async (signedParams?: SignedProviderParams) => {
-  const web3 = await Web3Instance.get(signedParams);
+const getRewardsPoolInstance = async (signedParams?: EthersSignerParams) => {
+  const [web3, signer] = await getWeb3ProviderWithEthSigner(signedParams);
 
-  const rewardPoolInstance = await getSDK('RewardPool', web3);
+  const rewardPoolInstance = await getSDK('RewardPool', web3, signer);
 
   return rewardPoolInstance;
 };
 
-const getRewardManagerInstance = async (
-  signedParams?: SignedProviderParams
-) => {
-  const web3 = await Web3Instance.get(signedParams);
+const getRewardManagerInstance = async (signedParams?: EthersSignerParams) => {
+  const [web3, signer] = await getWeb3ProviderWithEthSigner(signedParams);
 
-  const rewardManagerInstance = await getSDK('RewardManager', web3);
+  const rewardManagerInstance = await getSDK('RewardManager', web3, signer);
 
   return rewardManagerInstance;
 };
@@ -224,10 +224,9 @@ export const registerToRewardProgram = async ({
   prepaidCardAddress,
   rewardProgramId,
   accountAddress,
-  walletId,
-  network,
+  signerParams,
 }: RewardsRegisterMutationParams) => {
-  const rewardManager = await getRewardManagerInstance({ walletId, network });
+  const rewardManager = await getRewardManagerInstance(signerParams);
 
   const result = await rewardManager.registerRewardee(
     prepaidCardAddress,
@@ -244,13 +243,9 @@ export const claimRewards = async ({
   tokenAddress,
   rewardProgramId,
   accountAddress,
-  walletId,
-  network,
+  signerParams,
 }: RewardsClaimMutationParams) => {
-  const rewardPoolInstance = await getRewardsPoolInstance({
-    walletId,
-    network,
-  });
+  const rewardPoolInstance = await getRewardsPoolInstance(signerParams);
 
   const validProofs = await getValidProofs({
     accountAddress,
@@ -285,10 +280,9 @@ export const withdrawFromRewardSafe = async ({
   tokenAddress,
   amount,
   accountAddress,
-  walletId,
-  network,
+  signerParams,
 }: RewardWithdrawParams) => {
-  const rewardManager = await getRewardManagerInstance({ walletId, network });
+  const rewardManager = await getRewardManagerInstance(signerParams);
 
   const result = await rewardManager.withdraw(
     from,

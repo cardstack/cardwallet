@@ -1,8 +1,10 @@
 import { getSDK, PrepaidCardSafe } from '@cardstack/cardpay-sdk';
 
 import { getSafesInstance } from '@cardstack/models';
-import { SignedProviderParams } from '@cardstack/models/hd-provider';
-import Web3Instance from '@cardstack/models/web3-instance';
+import {
+  EthersSignerParams,
+  getWeb3ProviderWithEthSigner,
+} from '@cardstack/models/ethers-wallet';
 import { getSafeData } from '@cardstack/services';
 import { PrepaidCardType } from '@cardstack/types';
 import { fetchCardCustomizationFromDID } from '@cardstack/utils';
@@ -54,10 +56,11 @@ export const getPrepaidCardByAddress = async (
   }
 };
 
-const getPrepaidCardInstance = async (signedParams?: SignedProviderParams) => {
-  const web3 = await Web3Instance.get(signedParams);
+const getPrepaidCardInstance = async (signedParams?: EthersSignerParams) => {
+  const [web3, signer] = await getWeb3ProviderWithEthSigner(signedParams);
 
-  const prepaidCardInstance = await getSDK('PrepaidCard', web3);
+  console.log({ web3, signer });
+  const prepaidCardInstance = await getSDK('PrepaidCard', web3, signer);
 
   return prepaidCardInstance;
 };
@@ -97,16 +100,12 @@ export const fetchPrepaidCards = async ({
 // Mutations
 
 export const transferPrepaidCard = async ({
+  signerParams,
   prepaidCardAddress,
   newOwner,
-  walletId,
-  network,
   accountAddress,
 }: PrepaidCardTransferQueryParams) => {
-  const prepaidCardInstance = await getPrepaidCardInstance({
-    walletId,
-    network,
-  });
+  const prepaidCardInstance = await getPrepaidCardInstance(signerParams);
 
   const transfer = await prepaidCardInstance.transfer(
     prepaidCardAddress,
@@ -119,17 +118,13 @@ export const transferPrepaidCard = async ({
 };
 
 export const payMerchant = async ({
+  signerParams,
   prepaidCardAddress,
   merchantAddress,
-  walletId,
-  network,
   accountAddress,
   spendAmount,
 }: PrepaidCardPayMerchantQueryParams) => {
-  const prepaidCardInstance = await getPrepaidCardInstance({
-    walletId,
-    network,
-  });
+  const prepaidCardInstance = await getPrepaidCardInstance(signerParams);
 
   const receipt = await prepaidCardInstance.payMerchant(
     merchantAddress,

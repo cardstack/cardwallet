@@ -94,7 +94,7 @@ const rewardsApi = safesApi.injectEndpoints({
           RewardsRegisterMutationParams
         >(registerToRewardProgram, params, {
           errorLogMessage: 'Error while registering to reward program',
-          resetHdProvider: true,
+          resetHdProvider: false,
         });
       },
       invalidatesTags: [CacheTags.REWARDS_SAFE],
@@ -109,7 +109,7 @@ const rewardsApi = safesApi.injectEndpoints({
           RewardsClaimMutationParams
         >(claimRewards, params, {
           errorLogMessage: 'Error while claiming rewards',
-          resetHdProvider: true,
+          resetHdProvider: false,
         });
       },
       invalidatesTags: [CacheTags.REWARDS_SAFE, CacheTags.REWARDS_POOL],
@@ -124,7 +124,7 @@ const rewardsApi = safesApi.injectEndpoints({
           RewardWithdrawParams
         >(withdrawFromRewardSafe, params, {
           errorLogMessage: 'Error while withdrawing reward balance',
-          resetHdProvider: true,
+          resetHdProvider: false,
         });
       },
       invalidatesTags: [CacheTags.REWARDS_SAFE, CacheTags.SAFES],

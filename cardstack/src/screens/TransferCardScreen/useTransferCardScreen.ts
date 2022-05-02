@@ -9,7 +9,7 @@ import { layoutEasingAnimation } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+import { useWallets } from '@rainbow-me/hooks';
 import haptics from '@rainbow-me/utils/haptics';
 
 import { strings } from './strings';
@@ -29,8 +29,7 @@ export const useTransferCardScreen = () => {
 
   const isValidAddress = useSendAddressValidation(newOwnerAddress);
 
-  const { accountAddress, network } = useAccountSettings();
-  const { selectedWallet } = useWallets();
+  const { signerParams, accountAddress } = useWallets();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -89,18 +88,16 @@ export const useTransferCardScreen = () => {
 
     transferPrepaidCard({
       accountAddress,
-      network,
       prepaidCardAddress,
       newOwner: newOwnerAddress,
-      walletId: selectedWallet.id,
+      signerParams,
     });
   }, [
     accountAddress,
-    network,
     newOwnerAddress,
     prepaidCardAddress,
-    selectedWallet.id,
     showLoadingOverlay,
+    signerParams,
     transferPrepaidCard,
   ]);
 

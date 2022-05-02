@@ -3,15 +3,16 @@ import { captureException } from '@sentry/minimal';
 
 import logger from 'logger';
 
-import { SignedProviderParams } from './hd-provider';
-import Web3Instance from './web3-instance';
+import {
+  EthersSignerParams,
+  getWeb3ProviderWithEthSigner,
+} from './ethers-wallet';
 
-export const getSafesInstance = async (
-  signedProviderParams?: SignedProviderParams
-) => {
+export const getSafesInstance = async (signerParams?: EthersSignerParams) => {
   try {
-    const web3 = await Web3Instance.get(signedProviderParams);
-    const safes = await getSDK('Safes', web3);
+    const [web3, signer] = await getWeb3ProviderWithEthSigner(signerParams);
+
+    const safes = await getSDK('Safes', web3, signer);
 
     return safes;
   } catch (e) {
