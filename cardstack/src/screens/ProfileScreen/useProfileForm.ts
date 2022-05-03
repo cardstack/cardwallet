@@ -22,11 +22,7 @@ import {
   TransactionConfirmationType,
 } from '@cardstack/types';
 
-import {
-  useAccountProfile,
-  useAccountSettings,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountProfile, useWallets } from '@rainbow-me/hooks';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { logger } from '@rainbow-me/utils';
 
@@ -42,10 +38,9 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const { navigate } = useNavigation();
   const { authToken, isLoading } = useAuthToken();
   const { accountSymbol, accountAddress } = useAccountProfile();
-  const { network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const { selectedWallet } = useWallets();
+  const { signerParams } = useWallets();
 
   const [
     createProfile,
@@ -252,8 +247,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         }
 
         createProfile({
-          selectedWallet,
-          network,
+          signerParams,
           selectedPrepaidCardAddress: selectedPrepaidCard.address,
           profileDID,
           accountAddress,
@@ -262,15 +256,14 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     },
     [
       isLoading,
-      accountAddress,
       authToken,
       showLoadingOverlay,
       businessName,
       businessId,
       businessColor,
       createProfile,
-      selectedWallet,
-      network,
+      signerParams,
+      accountAddress,
       dismissLoadingOverlay,
     ]
   );

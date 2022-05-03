@@ -114,7 +114,7 @@ export const useRewardsCenterScreen = () => {
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const { selectedWallet } = useWallets();
+  const { signerParams } = useWallets();
 
   const onMutationEndAlert = useCallback(
     ({ title, message, popStackNavigation = 0 }) => () => {
@@ -165,18 +165,11 @@ export const useRewardsCenterScreen = () => {
       registerToRewardProgram({
         prepaidCardAddress,
         accountAddress,
-        network,
         rewardProgramId,
-        walletId: selectedWallet.id,
+        signerParams,
       });
     },
-    [
-      accountAddress,
-      network,
-      registerToRewardProgram,
-      selectedWallet.id,
-      showLoadingOverlay,
-    ]
+    [accountAddress, registerToRewardProgram, showLoadingOverlay, signerParams]
   );
 
   const [
@@ -335,9 +328,8 @@ export const useRewardsCenterScreen = () => {
 
             claimRewards({
               ...partialClaimParams,
-              network,
+              signerParams,
               rewardProgramId,
-              walletId: selectedWallet.id,
             });
           },
           onCancel: goBack,
@@ -354,8 +346,7 @@ export const useRewardsCenterScreen = () => {
       goBack,
       showLoadingOverlay,
       claimRewards,
-      network,
-      selectedWallet.id,
+      signerParams,
     ]
   );
 

@@ -18,7 +18,7 @@ const merchantApi = safesApi.injectEndpoints({
           params,
           {
             errorLogMessage: 'Error claiming merchant revenue',
-            resetHdProvider: true,
+            resetHdProvider: false,
           }
         );
       },
@@ -31,7 +31,7 @@ const merchantApi = safesApi.injectEndpoints({
           params,
           {
             errorLogMessage: 'Error creating profile',
-            resetHdProvider: true,
+            resetHdProvider: false,
           }
         );
       },

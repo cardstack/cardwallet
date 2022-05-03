@@ -49,7 +49,7 @@ export const fetchHistoricalPrice = async (
 
     return price;
   } catch (e) {
-    logger.sentry(`fetchHistoricalPrice failed ---`, e);
+    logger.sentry(`fetchHistoricalPrice failed ---` + e);
 
     return 0;
   }
