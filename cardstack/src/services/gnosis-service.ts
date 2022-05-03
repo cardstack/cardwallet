@@ -259,7 +259,7 @@ export const updateSafeWithTokenPrices = async (
 
 export const addNativePriceToToken = async (
   tokenInfo: TokenInfo,
-  nativeCurrency: string
+  nativeCurrency: NativeCurrency
 ) => {
   const {
     balance,

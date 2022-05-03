@@ -65,7 +65,7 @@ export const hubApi = createApi({
         );
       },
     }),
-    getExchangeRates: builder.query<Record<NativeCurrency, string>, void>({
+    getExchangeRates: builder.query<Record<NativeCurrency, number>, void>({
       query: () => routes.exchangeRates,
       extraOptions: { authenticate: false },
       transformResponse: ({
@@ -84,4 +84,5 @@ export const {
   useGetEoaClaimedQuery,
   useRequestEmailCardDropMutation,
   useCheckHubAuthQuery,
+  useGetExchangeRatesQuery,
 } = hubApi;

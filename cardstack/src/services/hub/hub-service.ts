@@ -103,18 +103,12 @@ export const checkHubAuth = async ({
 
 // External Queries
 
-export const getExchangeRates = async () => {
+export const getExchangeRatesQuery = () => {
   const query = store.dispatch(
     hubApi.endpoints.getExchangeRates.initiate(undefined, {
       forceRefetch: 60, // 1 minute
     })
   );
 
-  const { data, error } = await query;
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  return query;
 };
