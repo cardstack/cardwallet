@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { CustodialWallet } from '@cardstack/types';
@@ -17,6 +18,7 @@ import {
 const routes = {
   custodialWallet: '/custodial-wallet',
   emailDrop: '/email-card-drop-requests',
+  exchangeRates: '/exchange-rates',
 };
 
 export const hubApi = createApi({
@@ -61,6 +63,17 @@ export const hubApi = createApi({
             errorLogMessage: 'Error checking hub auth',
           }
         );
+      },
+    }),
+    getExchangeRates: builder.query<Record<NativeCurrency, string>, void>({
+      query: () => routes.exchangeRates,
+      extraOptions: { authenticate: false },
+      transformResponse: ({
+        data: {
+          attributes: { rates },
+        },
+      }) => {
+        return { ...rates, SPD: 100 };
       },
     }),
   }),
