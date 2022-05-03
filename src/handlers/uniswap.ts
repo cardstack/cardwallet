@@ -221,7 +221,7 @@ const getExecutionDetails = (
   inputCurrency: Asset,
   outputCurrency: Asset,
   trade: Trade,
-  providerOrSigner: Provider | Signer,
+  providerOrSigner: Provider | Signer | undefined,
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips, optional
   deadline: number = DEFAULT_DEADLINE_FROM_NOW // in seconds from now, optional
 ): {
@@ -343,7 +343,7 @@ const getContractExecutionDetails = ({
   chainId: ChainId;
   inputCurrency: Asset;
   outputCurrency: Asset;
-  providerOrSigner: Provider | Signer;
+  providerOrSigner: Provider | Signer | undefined;
   tradeDetails: Trade;
 }) => {
   const { methodArguments, methodNames, value } = getExecutionDetails(

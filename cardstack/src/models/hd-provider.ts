@@ -8,6 +8,7 @@ import logger from 'logger';
 import Web3Instance from './web3-instance';
 import Web3WsProvider from './web3-provider';
 
+// TODO: Remove HDProvider once ethers signer proves to be better
 export interface SignedProviderParams {
   walletId: string;
   network: Network;

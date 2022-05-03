@@ -17,8 +17,7 @@ import { usePayMerchantMutation } from '@cardstack/services';
 import { MerchantInformation, PrepaidCardType } from '@cardstack/types';
 import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
-import { Network } from '@rainbow-me/helpers/networkTypes';
-import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
+import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
@@ -49,7 +48,6 @@ interface PayMerchantRequestParams {
   merchantInfoDID?: MerchantInformation;
   selectedPrepaidCard?: PrepaidCardType;
   merchantAddress: string;
-  qrCodeNetwork: string;
 }
 
 const usePayMerchantRequest = ({
@@ -57,12 +55,10 @@ const usePayMerchantRequest = ({
   merchantInfoDID,
   selectedPrepaidCard,
   merchantAddress,
-  qrCodeNetwork,
 }: PayMerchantRequestParams) => {
   const { navigate } = useNavigation();
 
-  const { accountAddress } = useAccountSettings();
-  const { selectedWallet } = useWallets();
+  const { signerParams, accountAddress } = useWallets();
 
   const [
     payMerchant,
@@ -83,21 +79,19 @@ const usePayMerchantRequest = ({
     });
 
     payMerchant({
-      walletId: selectedWallet.id,
-      network: qrCodeNetwork as Network,
+      signerParams,
       merchantAddress,
       prepaidCardAddress: selectedPrepaidCard?.address || '',
       spendAmount,
       accountAddress,
     });
   }, [
-    spendAmount,
-    selectedPrepaidCard,
     showLoadingOverlay,
     payMerchant,
-    selectedWallet,
-    qrCodeNetwork,
+    signerParams,
     merchantAddress,
+    selectedPrepaidCard,
+    spendAmount,
     accountAddress,
   ]);
 
@@ -174,7 +168,6 @@ export const usePayMerchant = () => {
     amount: initialAmount,
     currency: initialCurrency,
     merchantSafe: merchantAddress,
-    qrCodeNetwork,
   } = data;
 
   const {
@@ -270,7 +263,6 @@ export const usePayMerchant = () => {
     selectedPrepaidCard,
     merchantAddress,
     merchantInfoDID,
-    qrCodeNetwork,
   });
 
   const onConfirm = useCallback(() => {

@@ -1,6 +1,6 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
 
-import Web3Instance from '@cardstack/models/web3-instance';
+import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { TokenType } from '@cardstack/types';
 
 import {
@@ -11,18 +11,14 @@ import {
 // Mutations
 
 export const claimMerchantRevenue = async ({
-  selectedWallet,
-  network,
+  signerParams,
   accountAddress,
   revenueBalances,
   merchantSafeAddress,
 }: ClaimRevenueQueryParams) => {
-  const web3 = await Web3Instance.get({
-    walletId: selectedWallet.id,
-    network,
-  });
+  const [web3, signer] = await getWeb3ProviderWithEthSigner(signerParams);
 
-  const revenuePool = await getSDK('RevenuePool', web3);
+  const revenuePool = await getSDK('RevenuePool', web3, signer);
 
   const promises = revenueBalances.map(async (token: TokenType) => {
     await revenuePool.claim(
@@ -38,18 +34,14 @@ export const claimMerchantRevenue = async ({
 };
 
 export const createProfile = async ({
-  selectedWallet,
-  network,
+  signerParams,
   selectedPrepaidCardAddress,
   profileDID,
   accountAddress,
 }: CreateProfileQueryParams) => {
-  const web3 = await Web3Instance.get({
-    walletId: selectedWallet.id,
-    network,
-  });
+  const [web3, signer] = await getWeb3ProviderWithEthSigner(signerParams);
 
-  const revenuePool = await getSDK('RevenuePool', web3);
+  const revenuePool = await getSDK('RevenuePool', web3, signer);
 
   const newProfile = await revenuePool.registerMerchant(
     selectedPrepaidCardAddress,
