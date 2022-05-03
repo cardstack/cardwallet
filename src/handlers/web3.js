@@ -15,9 +15,9 @@ import { isHexString as isEthersHexString } from '@ethersproject/bytes';
 import { Contract } from '@ethersproject/contracts';
 import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
 import { Web3Provider } from '@ethersproject/providers';
-import { parseEther } from '@ethersproject/units';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
 import { get, startsWith } from 'lodash';
+import Web3 from 'web3';
 
 import AssetTypes from '../helpers/assetTypes';
 import NetworkTypes from '../helpers/networkTypes';
@@ -239,16 +239,6 @@ export const estimateGasWithPadding = async (
 };
 
 /**
- * @desc convert from ether to wei
- * @param  {String} value in ether
- * @return {String} value in wei
- */
-export const toWei = ether => {
-  const result = parseEther(ether);
-  return result.toFixed();
-};
-
-/**
  * @desc get transaction info
  * @param {String} hash
  * @return {Promise}
@@ -271,7 +261,9 @@ export const getTransactionCount = address =>
 export const getTxDetails = async transaction => {
   const { to } = transaction;
   const data = transaction.data ? transaction.data : '0x';
-  const value = transaction.amount ? toHex(toWei(transaction.amount)) : '0x00';
+  const value = transaction.amount
+    ? toHex(Web3.utils.toWei(transaction.amount))
+    : '0x00';
   const gasLimit = toHex(transaction.gasLimit) || undefined;
   const gasPrice = toHex(transaction.gasPrice) || undefined;
   const tx = {

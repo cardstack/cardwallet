@@ -25,7 +25,7 @@ export const StyledQRCode = memo(({ value, addLogo = true }: QRCodeParam) => {
 
   return (
     <CenteredContainer
-      backgroundColor="white"
+      backgroundColor="grayCardBackground"
       borderRadius={crosshair.radius}
       borderWidth={1}
       borderColor="borderGray"
