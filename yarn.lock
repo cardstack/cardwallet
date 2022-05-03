@@ -1612,10 +1612,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cardstack/cardpay-sdk@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-1.0.1.tgz#c0782e0f6c8d864b3c1b6e4f9330abf2c1b1352a"
-  integrity sha512-HfTf07s5kO2O6fAdv9mlnEU5TL2KOPNkJH1bce9HN8Ht7gnJv60XXLWRSa+fjN/b69H4y3yusjwGOoulhrm2kQ==
+"@cardstack/cardpay-sdk@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-1.0.2.tgz#d99af986cd0afefc8c25dbab2e267db2bd26dca4"
+  integrity sha512-EwITuq5560V2kAgYX6opDGkxbfAcAh21uWhL0ortSR5RfuB0rXQo+nUMR9EmLtDwaoy9TF3KtQqiOfJQcWpLyw==
   dependencies:
     "@truffle/hdwallet-provider" "^1.5.0"
     "@trufflesuite/web3-provider-engine" "^15.0.13-1"
@@ -1642,10 +1642,10 @@
     web3-provider-engine "^16.0.1"
     web3-utils "1.5.2"
 
-"@cardstack/did-resolver@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-1.0.1.tgz#98615cea58d79bf56a63cde15c314227fc0bcc1c"
-  integrity sha512-rE0itJYyxW3lh/OwMxvI4Np722820q7yQi7mQwEwQT5Spv05RXNWar+faRn3Vxx/ObmAGi5rADlW265ukBa5og==
+"@cardstack/did-resolver@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-1.0.2.tgz#eb00947d02513082fa3b8116ac07ab48c84c46a1"
+  integrity sha512-8MONszsiXDCjLCFcEN1y2z0UsAEaKDEyngjtjHPviP4jIhLu+OcohSvKqQGBei5hIHnJ4wkL/Lt/bi3YTsQMtg==
   dependencies:
     "@types/node" "^16.0.0"
     "@types/uuid" "^8.3.0"
@@ -2534,7 +2534,7 @@
   resolved "https://registry.yarnpkg.com/@ethersproject/shims/-/shims-5.0.10.tgz#3b3952b2c0a2f4ee579697d5a1db7da1bd223945"
   integrity sha512-lHL/2UehHUaRGXX7+iEuLsFlHatB0M4/4uwiKLma3LZ4gxUOQoIMSLiWqhmZcnTTvm8LS/TTKm40sv+8M4fU7Q==
 
-"@ethersproject/signing-key@5.6.0", "@ethersproject/signing-key@^5.6.0":
+"@ethersproject/signing-key@5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/signing-key/-/signing-key-5.6.0.tgz#4f02e3fb09e22b71e2e1d6dc4bcb5dafa69ce042"
   integrity sha512-S+njkhowmLeUu/r7ir8n78OUKx63kBdMCPssePS89So1TH4hZqnWFsThEd/GiXYp9qMxVrydf7KdM9MTGPFukA==
@@ -2586,6 +2586,18 @@
     "@ethersproject/properties" "^5.1.0"
     bn.js "^4.4.0"
     elliptic "6.5.4"
+
+"@ethersproject/signing-key@^5.6.0":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@ethersproject/signing-key/-/signing-key-5.6.1.tgz#31b0a531520616254eb0465b9443e49515c4d457"
+  integrity sha512-XvqQ20DH0D+bS3qlrrgh+axRMth5kD1xuvqUQUTeezxUTXBOeR6hWz2/C6FBEu39FRytyybIWrYf7YLSAKr1LQ==
+  dependencies:
+    "@ethersproject/bytes" "^5.6.0"
+    "@ethersproject/logger" "^5.6.0"
+    "@ethersproject/properties" "^5.6.0"
+    bn.js "^4.11.9"
+    elliptic "6.5.4"
+    hash.js "1.1.7"
 
 "@ethersproject/solidity@5.6.0":
   version "5.6.0"
