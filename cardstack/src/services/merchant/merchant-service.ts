@@ -1,6 +1,4 @@
 import { getSDK } from '@cardstack/cardpay-sdk';
-import BigNumber from 'bignumber.js';
-import Web3 from 'web3';
 
 import Web3Instance from '@cardstack/models/web3-instance';
 import { TokenType } from '@cardstack/types';
