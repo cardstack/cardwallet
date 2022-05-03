@@ -9,7 +9,7 @@ import {
 import Web3Instance from '@cardstack/models/web3-instance';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { AppState } from '@rainbow-me/redux/store';
+import store, { AppState } from '@rainbow-me/redux/store';
 import logger from 'logger';
 
 import {
@@ -19,6 +19,7 @@ import {
   getHubUrl,
 } from '../hub-service';
 
+import { hubApi } from './hub-api';
 import { BaseQueryExtraOptions, CheckHubAuthQueryParams } from './hub-types';
 
 // Helpers
@@ -98,4 +99,22 @@ export const checkHubAuth = async ({
   const isAuthenticated = await hubAuthInstance.checkValidAuth(authToken);
 
   return isAuthenticated;
+};
+
+// External Queries
+
+export const getExchangeRates = async () => {
+  const query = store.dispatch(
+    hubApi.endpoints.getExchangeRates.initiate(undefined, {
+      forceRefetch: 60, // 1 minute
+    })
+  );
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
 };
