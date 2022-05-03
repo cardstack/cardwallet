@@ -5,13 +5,13 @@ import {
   convertAmountToNativeDisplay,
 } from '@cardstack/cardpay-sdk';
 import { toLower } from 'lodash';
+import Web3 from 'web3';
 
 import { getNativeBalanceFromOracle } from '@cardstack/services';
 import { getOnChainAssetBalance } from '@cardstack/services/assets';
 import { AssetType, AssetWithNativeType, BalanceType } from '@cardstack/types';
 import { isCPXDToken } from '@cardstack/utils/cardpay-utils';
 
-import { toWei } from '@rainbow-me/handlers/web3';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface Prices {
@@ -105,7 +105,7 @@ export const addPriceByCoingeckoIdOrOracle = async ({
     try {
       const priceUnit = await getNativeBalanceFromOracle({
         ...tokenInfo,
-        balance: toWei('1'),
+        balance: Web3.utils.toWei('1'),
       });
 
       const priceFromOracle = {
