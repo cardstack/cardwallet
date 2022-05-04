@@ -98,7 +98,6 @@ export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
 
 // -- Actions ---------------------------------------- //
 export const dataLoadState = () => async (dispatch, getState) => {
-  console.log(':::dataLoadState');
   const { accountAddress, network } = getState().settings;
   try {
     const assetPricesFromUniswap = await getAssetPricesFromUniswap(
@@ -157,7 +156,6 @@ export const dataResetState = () => (dispatch, getState) => {
 };
 
 export const dataUpdateAssets = assets => (dispatch, getState) => {
-  console.log(':::dataUpdateAssets');
   const { accountAddress, network } = getState().settings;
   if (assets.length) {
     saveAssets(assets, accountAddress, network);
@@ -254,7 +252,6 @@ export const addressAssetsReceived = (
   change = false,
   removed = false
 ) => async (dispatch, getState) => {
-  console.log(':::addressAssetsReceived');
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
