@@ -33,7 +33,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import Navigation, { useNavigation } from '@rainbow-me/navigation/Navigation';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 
@@ -96,20 +95,15 @@ export const useSendSheetDepotScreen = () => {
   const isValidAddress = useSendAddressValidation(recipient);
   const [isAuthorizing, setIsAuthorizing] = useState(false);
 
-  const { accountAddress, network } = useAccountSettings();
-
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const { accountAddress, network, nativeCurrency } = useAccountSettings();
 
   const getNativeCurrencyAmount = useCallback(
-    (amount: string) => {
+    async (amount: string) => {
       const usdConvertedAmount = usdConverter.current?.(amount) || 0;
 
-      return currencyConversionRates[nativeCurrency] * usdConvertedAmount;
+      return await getValueInNativeCurrency(usdConvertedAmount, nativeCurrency);
     },
-    [currencyConversionRates, nativeCurrency]
+    [nativeCurrency]
   );
 
   // Gas Estimates
@@ -132,7 +126,9 @@ export const useSendSheetDepotScreen = () => {
           amountWei
         )) || '0';
 
-      const nativeCurrencyGasFee = getNativeCurrencyAmount(gasEstimate) || 0;
+      const nativeCurrencyGasFee =
+        (await getNativeCurrencyAmount(gasEstimate)) || 0;
+
       setGasEstimatedFee({
         amount: nativeCurrencyGasFee,
         nativeDisplay: `${Web3.utils.fromWei(gasEstimate)} ${
