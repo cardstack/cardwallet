@@ -26,9 +26,8 @@ import useResetAccountState from './useResetAccountState';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
-import { getCurrencyConversionsRates } from '@cardstack/services';
+
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
-import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
 
 interface initializeWalleOptions {
@@ -62,11 +61,6 @@ export default function useWalletManager() {
         // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
         await loadCoingeckoCoins();
 
-        // TODO: move to rtk query
-        const conversionsRates = await getCurrencyConversionsRates();
-
-        await dispatch(setCurrencyConversionRates(conversionsRates));
-
         await dispatch(walletsLoadState());
 
         const walletAddress = await loadAddress();
@@ -76,7 +70,6 @@ export default function useWalletManager() {
           dispatch(appStateUpdate({ walletReady: true }));
           return null;
         }
-
         await dispatch(settingsUpdateAccountAddress(walletAddress));
 
         await loadGlobalData();
