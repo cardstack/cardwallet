@@ -19,12 +19,6 @@ import AssetSectionHeader from './components/AssetSectionHeader';
 import { strings } from './strings';
 import { useAssetList } from './useAssetList';
 
-const styles = StyleSheet.create({
-  contentContainer: {
-    paddingBottom: 180,
-  },
-});
-
 // We need to pass this prop if the section to scrollTo is not on viewport
 const onScrollToIndexFailed = () => {
   logger.log('onScrollToIndexFailed');
@@ -112,7 +106,6 @@ export const AssetList = () => {
         renderItem={renderItem}
         renderSectionFooter={renderSectionFooter}
         renderSectionHeader={renderSectionHeader}
-        contentContainerStyle={styles.contentContainer}
       />
       <PinHideOptionsFooter />
     </>

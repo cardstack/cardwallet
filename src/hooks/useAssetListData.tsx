@@ -1,5 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { orderBy } from 'lodash';
+import { useEffect } from 'react';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
 import {
@@ -197,10 +198,12 @@ export const useAssetListData = () => {
 
   const isUninitializedOnLayer2 = !isLayer1(network) && isUninitialized;
 
-  const isLoadingSafes = isLoading || isUninitializedOnLayer2;
+  const isLoadingRainbowAssets = useRainbowSelector(
+    state => state.data.isLoadingAssets
+  );
 
   const isLoadingAssets =
-    useRainbowSelector(state => state.data.isLoadingAssets) || isLoadingSafes;
+    isLoadingRainbowAssets || isUninitializedOnLayer2 || isLoading;
 
   // order of sections in asset list
   const orderedSections = [

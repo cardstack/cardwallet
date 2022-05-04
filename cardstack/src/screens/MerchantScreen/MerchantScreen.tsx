@@ -17,7 +17,7 @@ const MerchantScreen = () => {
   } = useMerchantScreen();
 
   return (
-    <Container top={0} width="100%" backgroundColor="white">
+    <Container flex={1} width="100%" backgroundColor="white">
       <StatusBar barStyle="light-content" />
       <NavBarHeader
         address={merchantSafe.address}

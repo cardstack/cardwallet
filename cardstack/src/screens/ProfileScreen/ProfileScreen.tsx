@@ -72,7 +72,7 @@ const ProfileScreen = () => {
       <MainHeader title={strings.header.profile} />
       <Container
         justifyContent="center"
-        flexGrow={1}
+        flex={1}
         paddingHorizontal={isLayer1(network) ? 5 : 0}
       >
         {isLayer1(network) ? (

@@ -698,7 +698,6 @@ export default (state = INITIAL_STATE, action) => {
         break;
       case DATA_UPDATE_ASSETS:
         draft.assets = action.payload;
-        draft.isLoadingAssets = false;
         break;
       case DATA_UPDATE_GNOSIS_DATA:
         draft.depots = action.payload.depots;
@@ -733,7 +732,7 @@ export default (state = INITIAL_STATE, action) => {
         draft.isLoadingAssets = false;
         break;
       case DATA_LOAD_ASSETS_FAILURE:
-        draft.isLoadingAssets = true;
+        draft.isLoadingAssets = false;
         break;
       case DATA_ADD_NEW_TRANSACTION_SUCCESS:
         draft.transactions = action.payload;

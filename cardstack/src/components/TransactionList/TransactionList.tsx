@@ -41,18 +41,6 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
 
   const { isTabBarEnabled } = useTabBarFlag();
 
-  // TODO: Remove condition after tab is official
-  // useBottomTabBarHeight throws error if it's not inside tabNav
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const tabBarHeight = isTabBarEnabled ? useBottomTabBarHeight() : 0;
-
-  const contentContainerStyle = useMemo(
-    () => ({
-      paddingBottom: 40 + tabBarHeight,
-    }),
-    [tabBarHeight]
-  );
-
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
       <Container
@@ -102,7 +90,6 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
       ListFooterComponent={
         isFetchingMore ? <ActivityIndicator color="white" /> : null
       }
-      contentContainerStyle={contentContainerStyle}
       renderItem={renderItem}
       sections={sections}
       renderSectionHeader={renderSectionHeader}
