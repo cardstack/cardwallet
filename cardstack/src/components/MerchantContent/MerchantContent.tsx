@@ -111,12 +111,6 @@ export const MerchantContent = memo(
             emptyText={strings.noAvailableBalance}
             tokens={merchantSafe.tokens}
           />
-          <MerchantTokensList
-            title={strings.availableBalance}
-            onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
-            emptyText={strings.noAvailableBalance}
-            tokens={merchantSafe.tokens}
-          />
           <Container paddingBottom={4} />
         </ScrollView>
       </Container>
