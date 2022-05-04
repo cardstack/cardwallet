@@ -1,14 +1,14 @@
-import { currencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import { ResponsiveValue } from '@shopify/restyle';
-import React from 'react';
+import React, { memo } from 'react';
 import { Image, StyleSheet } from 'react-native';
 
 import { Container, Text } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
-import { getNativeBalanceFromSpend } from '@cardstack/utils';
 
 import logo from '../../../assets/cardstackLogoTransparent.png';
 import { PrepaidCardProps } from '../PrepaidCard';
+
+import { strings } from './strings';
 
 type CardVariants = 'normal' | 'medium';
 
@@ -30,11 +30,12 @@ interface VariantType {
 
 export type PrepaidCardInnerBottomProps = Pick<
   PrepaidCardProps,
-  | 'spendFaceValue'
-  | 'nativeCurrency'
-  | 'currencyConversionRates'
-  | 'transferrable'
-> & { variant?: CardVariants };
+  'transferrable'
+> & {
+  variant?: CardVariants;
+  nativeCurrencyInfo: { symbol: string; currency: string };
+  nativeBalance: string;
+};
 
 const cardType: Record<CardVariants, VariantType> = {
   normal: {
@@ -69,69 +70,58 @@ const styles = StyleSheet.create({
 });
 
 const PrepaidCardInnerBottom = ({
-  spendFaceValue,
-  nativeCurrency,
-  currencyConversionRates,
   transferrable,
   variant = 'normal',
-}: PrepaidCardInnerBottomProps) => {
-  const nativeBalance = getNativeBalanceFromSpend(
-    spendFaceValue,
-    nativeCurrency,
-    currencyConversionRates
-  );
-
-  const nativeCurrencyInfo = currencies[nativeCurrency as NativeCurrency];
-
-  return (
+  nativeCurrencyInfo,
+  nativeBalance,
+}: PrepaidCardInnerBottomProps) => (
+  <Container
+    paddingHorizontal={6}
+    paddingVertical={4}
+    paddingTop={cardType[variant].paddingTop}
+  >
     <Container
-      paddingHorizontal={6}
-      paddingVertical={4}
-      paddingTop={cardType[variant].paddingTop}
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems="center"
     >
-      <Container
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Container>
+      <Container>
+        <Text
+          fontSize={cardType[variant].balanceFontSize}
+          color="spendableBalance"
+        >
+          {strings.spendableBalance}
+        </Text>
+        <Container flexDirection="row" alignItems="flex-end">
+          <Text fontSize={cardType[variant].tokenFontSize} weight="extraBold">
+            {nativeBalance.replace(nativeCurrencyInfo.currency, '')}
+          </Text>
           <Text
-            fontSize={cardType[variant].balanceFontSize}
-            color="spendableBalance"
+            fontSize={cardType[variant].currencyFontSize}
+            weight="bold"
+            letterSpacing={0}
+            style={styles.currencySufix}
           >
-            Spendable Balance
+            {` ${nativeCurrencyInfo.currency}`}
           </Text>
-          <Container flexDirection="row" alignItems="flex-end">
-            <Text fontSize={cardType[variant].tokenFontSize} weight="extraBold">
-              {`${nativeCurrencyInfo.symbol}${nativeBalance.toFixed(2)}`}
-            </Text>
-            <Text
-              fontSize={cardType[variant].currencyFontSize}
-              weight="bold"
-              letterSpacing={0}
-              style={styles.currencySufix}
-            >
-              {` ${nativeCurrencyInfo.currency}`}
-            </Text>
-          </Container>
-        </Container>
-      </Container>
-      <Container
-        flexDirection="row"
-        alignItems="flex-end"
-        justifyContent="space-between"
-      >
-        <Container>
-          <Text variant={cardType[variant].textVariant}>
-            {transferrable ? 'TRANSFERRABLE' : 'NON-TRANSFERRABLE'}
-          </Text>
-        </Container>
-        <Container {...cardType[variant].iconSize}>
-          <Image source={logo} style={styles.logo} />
         </Container>
       </Container>
     </Container>
-  );
-};
+    <Container
+      flexDirection="row"
+      alignItems="flex-end"
+      justifyContent="space-between"
+    >
+      <Container>
+        <Text variant={cardType[variant].textVariant}>
+          {strings.transfer[`${transferrable}`]}
+        </Text>
+      </Container>
+      <Container {...cardType[variant].iconSize}>
+        <Image source={logo} style={styles.logo} />
+      </Container>
+    </Container>
+  </Container>
+);
 
-export default PrepaidCardInnerBottom;
+export default memo(PrepaidCardInnerBottom);

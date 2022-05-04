@@ -24,8 +24,6 @@ storiesOf('Prepaid Card', module).add('Default', () => {
       }
       type="prepaid-card"
       networkName="xDai Chain"
-      nativeCurrency="USD"
-      currencyConversionRates={{}}
       transferrable={false}
       cardCustomization={{
         issuerName: 'PrepaidCardTest1',

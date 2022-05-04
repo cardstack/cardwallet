@@ -48,6 +48,7 @@ interface PayMerchantRequestParams {
   merchantInfoDID?: MerchantInformation;
   selectedPrepaidCard?: PrepaidCardType;
   merchantAddress: string;
+  nativeCurrency: NativeCurrency;
 }
 
 const usePayMerchantRequest = ({
@@ -55,6 +56,7 @@ const usePayMerchantRequest = ({
   merchantInfoDID,
   selectedPrepaidCard,
   merchantAddress,
+  nativeCurrency,
 }: PayMerchantRequestParams) => {
   const { navigate } = useNavigation();
 
@@ -66,11 +68,6 @@ const usePayMerchantRequest = ({
   ] = usePayMerchantMutation();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  const [
-    accountCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
 
   const payMerchantRequest = useCallback(() => {
     showLoadingOverlay({
@@ -100,11 +97,9 @@ const usePayMerchantRequest = ({
       return;
     }
 
-    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-      String(spendAmount),
-      accountCurrency,
-      currencyConversionRates,
-      true
+    const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
+      spendAmount,
+      nativeCurrency
     );
 
     const timestamp = await getBlockTimestamp(receipt.blockNumber);
@@ -129,8 +124,7 @@ const usePayMerchantRequest = ({
     });
   }, [
     spendAmount,
-    accountCurrency,
-    currencyConversionRates,
+    nativeCurrency,
     receipt,
     dismissLoadingOverlay,
     navigate,
@@ -263,6 +257,7 @@ export const usePayMerchant = () => {
     selectedPrepaidCard,
     merchantAddress,
     merchantInfoDID,
+    nativeCurrency: accountCurrency,
   });
 
   const onConfirm = useCallback(() => {

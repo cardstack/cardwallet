@@ -1,5 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 
 import {
@@ -8,10 +8,10 @@ import {
   ContainerProps,
   HorizontalDivider,
 } from '@cardstack/components';
+import { useSpendToNativeDisplay } from '@cardstack/hooks/currencies/useSpendDisplay';
 import { PrepaidCardType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
 
@@ -61,49 +61,32 @@ export const ChoosePrepaidCard = memo(
     onPressEditAmount,
     payCostDesc,
   }: ChoosePrepaidCardProps) => {
-    const [
+    const { nativeBalanceDisplay } = useSpendToNativeDisplay({ spendAmount });
+
+    const { network, nativeCurrencyInfo } = useAccountSettings();
+
+    const networkName = useMemo(() => getConstantByNetwork('name', network), [
       network,
-      nativeCurrency,
-      currencyConversionRates,
-    ] = useRainbowSelector<[string, string, { [key: string]: number }]>(
-      state => [
-        state.settings.network,
-        state.settings.nativeCurrency,
-        state.currencyConversion.rates,
-      ]
-    );
+    ]);
 
-    const networkName = getConstantByNetwork('name', network);
-
-    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-      spendAmount,
-      nativeCurrency,
-      currencyConversionRates
-    );
-
-    const onSelect = useCallback(
-      (item: PrepaidCardType) => {
-        onSelectPrepaidCard(item);
-      },
-      [onSelectPrepaidCard]
-    );
+    const onSelect = useCallback(onSelectPrepaidCard, [onSelectPrepaidCard]);
 
     const renderItem = useCallback(
       ({ item, index }: { item: PrepaidCardType; index: number }) => (
         <PrepaidCardItem
-          item={item}
+          item={{
+            ...item,
+            nativeCurrencyInfo,
+          }}
           onPress={onSelect}
           selectedAddress={selectedCard?.address}
           networkName={networkName}
-          nativeCurrency={nativeCurrency}
-          currencyConversionRates={currencyConversionRates}
           spendAmount={spendAmount}
           isLastItem={index === prepaidCards.length - 1}
         />
       ),
       [
-        currencyConversionRates,
-        nativeCurrency,
+        nativeCurrencyInfo,
         networkName,
         onSelect,
         prepaidCards.length,

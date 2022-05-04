@@ -6,6 +6,7 @@ jest.mock('../../../services', () => ({
   ...mockServices,
   fetchHistoricalPrice: jest.fn().mockReturnValue(Promise.resolve(0)),
   getNativeBalanceFromOracle: jest.fn().mockReturnValue(0.0000974),
+  getSpendValueInNativeCurrency: (v: any) => v / 100,
 }));
 
 describe('MerchantEarnedSpendAndRevenueStrategy', () => {

@@ -24,7 +24,6 @@ export const useSpendToNativeDisplay = ({
     setNativeDisplay(response);
   }, [spendAmount, nativeCurrency]);
 
-  console.log({ nativeDisplay });
   useEffect(() => {
     getSpendDisplay();
   }, [getSpendDisplay]);

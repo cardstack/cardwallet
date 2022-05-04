@@ -1,3 +1,5 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
+
 import { MerchantEarnedSpendStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/merchant-earned-spend-strategy';
 import { MERCHANT_EARNED_SPEND_MOCK_DATA } from '@cardstack/utils/__mocks__/merchant-strategies';
 
@@ -6,6 +8,7 @@ jest.mock('../../../services', () => ({
   ...mockServices,
   fetchHistoricalPrice: jest.fn().mockReturnValue(Promise.resolve(0)),
   getNativeBalanceFromOracle: jest.fn().mockReturnValue(0.0000974),
+  getSpendValueInNativeCurrency: (v: any) => v / 100,
 }));
 
 describe('MerchantEarnedSpendStrategy', () => {
@@ -38,7 +41,7 @@ describe('MerchantEarnedSpendStrategy', () => {
       '0x9Ed84407e5ed5B7c0323E5653A06F4528357e3B5',
       '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
     ],
-    nativeCurrency: 'USD',
+    nativeCurrency: NativeCurrency.USD,
     prepaidCardAddresses: ['0x35Ae15dCEB6930756A59EfcC2169d2b834CdD371'],
     transaction: MERCHANT_EARNED_SPEND_MOCK_DATA,
   };

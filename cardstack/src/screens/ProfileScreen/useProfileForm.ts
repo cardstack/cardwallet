@@ -37,7 +37,7 @@ type useProfileFormParams = {
 export const useProfileForm = (params?: useProfileFormParams) => {
   const { navigate } = useNavigation();
   const { authToken, isLoading } = useAuthToken();
-  const { accountSymbol, accountAddress } = useAccountProfile();
+  const { accountSymbol, accountAddress = '' } = useAccountProfile();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const { signerParams } = useWallets();
