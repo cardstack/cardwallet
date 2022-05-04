@@ -34,11 +34,9 @@ export class PrepaidCardCreationStrategy extends BaseStrategy {
       return null;
     }
 
-    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
       prepaidCardCreationTransaction.spendAmount,
-      this.nativeCurrency,
-      this.currencyConversionRates,
-      true
+      this.nativeCurrency
     );
 
     let cardCustomization;

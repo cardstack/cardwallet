@@ -39,11 +39,9 @@ export class PrepaidCardSplitStrategy extends BaseStrategy {
 
     const spendAmount = prepaidCardSplitTransaction.faceValues[0] || 0;
 
-    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
       spendAmount,
-      this.nativeCurrency,
-      this.currencyConversionRates,
-      true
+      this.nativeCurrency
     );
 
     return {
