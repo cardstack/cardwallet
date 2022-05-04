@@ -39,7 +39,6 @@ jest.mock('@cardstack/models/safes-providers', () => ({
 
 jest.mock('@cardstack/services', () => ({
   getSafeData: jest.fn(),
-  syncPrepaidCardFaceValue: jest.fn(),
   useGetSafesDataQuery: jest.fn(),
 }));
 
