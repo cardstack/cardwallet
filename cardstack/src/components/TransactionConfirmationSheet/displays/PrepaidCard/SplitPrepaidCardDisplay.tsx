@@ -9,16 +9,9 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
+import { usePrepaidCard, useSpendToNativeDisplay } from '@cardstack/hooks';
 import { SplitPrepaidCardDecodedData } from '@cardstack/types';
-import {
-  convertSpendForBalanceDisplay,
-  getAddressPreview,
-} from '@cardstack/utils';
-
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { getAddressPreview } from '@cardstack/utils';
 
 import { SectionHeaderText } from '../components/SectionHeaderText';
 
@@ -44,22 +37,8 @@ export const SplitPrepaidCardDisplay = (
 };
 
 const FromSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
-  const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
-
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
-  const prepaidCard = prepaidCards.find(
-    card => card.address === data.prepaidCard
-  );
-
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    prepaidCard?.spendFaceValue || 0,
-    nativeCurrency,
-    currencyConversionRates,
-    true
+  const { prepaidCard, nativeBalanceDisplay } = usePrepaidCard(
+    data.prepaidCard
   );
 
   return (
@@ -90,11 +69,6 @@ const FromSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 };
 
 const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
   const issuingTokenTotal = data.issuingTokenAmounts.reduce<number>(
     (total, amount) => total + Number(amount),
     0
@@ -107,12 +81,9 @@ const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 
   const tokenDisplay = convertRawAmountToBalance(issuingTokenTotal, data.token);
 
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    spendAmountTotal,
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({
+    spendAmount: spendAmountTotal,
+  });
 
   return (
     <Container>
@@ -128,24 +99,13 @@ const DeductSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
 };
 
 const DistributeSection = ({ data }: { data: SplitPrepaidCardDecodedData }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const zeroSpendDisplay = useSpendToNativeDisplay({
+    spendAmount: 0,
+  });
 
-  const zeroSpendDisplay = convertSpendForBalanceDisplay(
-    '0',
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
-
-  const spendDisplay = convertSpendForBalanceDisplay(
-    data.spendAmounts[0],
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
+  const spendDisplay = useSpendToNativeDisplay({
+    spendAmount: data.spendAmounts[0],
+  });
 
   return (
     <Container width="100%">

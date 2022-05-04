@@ -42,8 +42,8 @@ const BuyPrepaidCard = () => {
     isInventoryLoading,
     inventoryData,
     network,
-    nativeCurrency,
-    currencyConversionRates,
+    nativeCurrencyInfo,
+    nativeBalance,
   } = useBuyPrepaidCard();
 
   const { navigate } = useNavigation();
@@ -137,10 +137,9 @@ const BuyPrepaidCard = () => {
               <Container paddingHorizontal={10}>
                 <MediumPrepaidCard
                   networkName={network}
-                  nativeCurrency={nativeCurrency}
-                  currencyConversionRates={currencyConversionRates}
                   address="0xXXXX…XXXX"
-                  spendFaceValue={card['face-value'] || 0}
+                  nativeCurrencyInfo={nativeCurrencyInfo}
+                  nativeBalance={nativeBalance}
                   transferrable={card.transferrable}
                   cardCustomization={
                     card.customizationDID

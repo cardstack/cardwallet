@@ -15,15 +15,15 @@ import {
   ChartFilterOptions,
   useLifetimeEarningsData,
   useMerchantTransactions,
+  useSpendToNativeDisplay,
 } from '@cardstack/hooks';
 import { palette } from '@cardstack/theme';
 import { MerchantSafeType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay, screenHeight } from '@cardstack/utils';
+import { screenHeight } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useDimensions } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const CHART_HEIGHT = screenHeight * 0.25;
 const HEIGHT = screenHeight * 0.85;
@@ -64,15 +64,9 @@ const ChartSection = ({ merchantSafe }: { merchantSafe: MerchantSafeType }) => {
 
   const { data } = useLifetimeEarningsData(address, selectedFilterOption);
 
-  const [nativeCurrency, currencyConversionRates] = useRainbowSelector<
-    [string, { [key: string]: number }]
-  >(state => [state.settings.nativeCurrency, state.currencyConversion.rates]);
-
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    accumulatedSpendValue,
-    nativeCurrency,
-    currencyConversionRates
-  );
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({
+    spendAmount: accumulatedSpendValue,
+  });
 
   return (
     <>

@@ -1,11 +1,7 @@
 import React from 'react';
 
 import { Container, Text } from '@cardstack/components';
-import { useGetSafesDataQuery } from '@cardstack/services';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
-
-import { useAccountSettings } from '@rainbow-me/hooks';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { usePrepaidCard } from '@cardstack/hooks';
 
 import MiniPrepaidCard from '../../../../PrepaidCard/MiniPrepaidCard';
 import TransactionListItem from '../TransactionListItem';
@@ -17,29 +13,8 @@ export const PrepaidCardTransactionSection = ({
   headerText: string;
   prepaidCardAddress: string;
 }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
-  const { accountAddress } = useAccountSettings();
-
-  const { prepaidCard } = useGetSafesDataQuery(
-    { address: accountAddress, nativeCurrency },
-    {
-      selectFromResult: ({ data }) => ({
-        prepaidCard: data?.prepaidCards?.find(
-          card => card.address === prepaidCardAddress
-        ),
-      }),
-    }
-  );
-
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    String(prepaidCard?.spendFaceValue || 0),
-    nativeCurrency,
-    currencyConversionRates,
-    true
+  const { prepaidCard, nativeBalanceDisplay } = usePrepaidCard(
+    prepaidCardAddress
   );
 
   return (

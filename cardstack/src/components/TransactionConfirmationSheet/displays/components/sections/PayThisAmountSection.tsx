@@ -1,30 +1,9 @@
 import React from 'react';
 
 import { Container, Text } from '@cardstack/components';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
-
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { useSpendToNativeDisplay } from '@cardstack/hooks/currencies/useSpendDisplay';
 
 import { SectionHeaderText } from '../SectionHeaderText';
-
-export const useSpendDisplay = (
-  spendAmount: string | number,
-  includeSuffix = true
-) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
-  const spendDisplay = convertSpendForBalanceDisplay(
-    String(spendAmount),
-    nativeCurrency,
-    currencyConversionRates,
-    includeSuffix
-  );
-
-  return spendDisplay;
-};
 
 export const PayThisAmountSection = ({
   headerText,
@@ -33,7 +12,9 @@ export const PayThisAmountSection = ({
   headerText: string;
   spendAmount: string | number;
 }) => {
-  const { nativeBalanceDisplay } = useSpendDisplay(spendAmount);
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({
+    spendAmount,
+  });
 
   return (
     <Container>
