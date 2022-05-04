@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import { renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
@@ -6,8 +7,7 @@ import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import { reshapeSingleDepotTokenToAsset } from '@cardstack/utils';
 
-import { useAccountAssets } from '@rainbow-me/hooks';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { useAccountAssets, useAccountSettings } from '@rainbow-me/hooks';
 
 import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { useSendSheetDepotScreen } from '../useSendSheetDepotScreen';
@@ -23,22 +23,16 @@ jest.mock('@react-navigation/native', () => ({
 
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountAssets: jest.fn(),
-  useAccountSettings: () => ({
+  useAccountSettings: jest.fn().mockImplementation(() => ({
     accountAddress: '0x0000000000000000000',
     nativeCurrency: 'USD',
     network: 'sokol',
-  }),
+  })),
   useMagicAutofocus: () => ({
     handleFocus: jest.fn(),
     triggerFocus: jest.fn(),
   }),
   useWallets: () => ({ selectedWallet: 'fooSelectedWallet' }),
-}));
-
-jest.mock('@rainbow-me/redux/hooks', () => ({
-  useNativeCurrencyAndConversionRates: jest
-    .fn()
-    .mockImplementation(() => ['USD', { USD: 1, EUR: 0.86 }]),
 }));
 
 jest.mock('@rainbow-me/components/send/SendSheet', () => ({
@@ -49,9 +43,22 @@ jest.mock('@cardstack/models/safes-providers', () => ({
   getSafesInstance: jest.fn(),
 }));
 
-jest.mock('@cardstack/services/exchange-rate-service', () => ({
-  getUsdConverter: jest.fn(),
+jest.mock('@cardstack/services/hub/hub-service', () => ({
+  getExchangeRatesQuery: jest
+    .fn()
+    .mockResolvedValue({ data: { USD: 1, EUR: 0.86 } }),
 }));
+
+jest.mock('../../../services/exchange-rate-service.ts', () => {
+  const actualExchange = jest.requireActual(
+    '../../../services/exchange-rate-service.ts'
+  );
+
+  return {
+    ...actualExchange,
+    getUsdConverter: jest.fn(),
+  };
+});
 
 jest.mock('@cardstack/models/hd-provider', () => ({
   get: jest.fn(),
@@ -155,11 +162,12 @@ describe('useSendSheetDepotScreen', () => {
 
   it('should update estimated gas fee with native currency amount', async () => {
     const currencyConversionRate = { EUR: 0.86 };
-    const nativeCurrency = 'EUR';
 
-    (useNativeCurrencyAndConversionRates as jest.Mock).mockImplementation(
-      () => [nativeCurrency, currencyConversionRate]
-    );
+    (useAccountSettings as jest.Mock).mockImplementation(() => ({
+      accountAddress: '0x0000000000000000000',
+      nativeCurrency: NativeCurrency.EUR,
+      network: 'sokol',
+    }));
 
     const weiGasEstimate = '12041962649411652';
     const usdGasEstimate = 0.00020291;
