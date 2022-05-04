@@ -1,10 +1,5 @@
 import React, { useCallback, createRef, useMemo } from 'react';
-import {
-  RefreshControl,
-  SectionList,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
+import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import { Container, Text, RewardsPromoBanner } from '@cardstack/components';
 import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';

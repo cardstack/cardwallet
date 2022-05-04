@@ -1,6 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { orderBy } from 'lodash';
-import { useEffect } from 'react';
 import { BalanceCoinRowWrapper } from '../components/coin-row';
 import useAccountSettings from './useAccountSettings';
 import {
