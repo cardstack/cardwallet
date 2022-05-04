@@ -103,10 +103,14 @@ export const checkHubAuth = async ({
 
 // External Queries
 
+const cacheExpiration = {
+  tenMinutes: 60 * 10,
+};
+
 export const getExchangeRatesQuery = () => {
   const query = store.dispatch(
     hubApi.endpoints.getExchangeRates.initiate(undefined, {
-      forceRefetch: 60, // 1 minute
+      forceRefetch: cacheExpiration.tenMinutes,
     })
   );
 
