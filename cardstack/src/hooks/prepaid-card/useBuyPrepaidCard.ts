@@ -10,6 +10,7 @@ import {
   getHubUrl,
   getInventories,
   getOrder,
+  getValueInNativeCurrency,
   getWyrePrice,
   makeReservation,
   updateOrder,
@@ -394,9 +395,10 @@ export default function useBuyPrepaidCard() {
   const handlePurchase = useCallback(async () => {
     setIsPurchaseInProgress(true);
 
-    const amount =
-      (card?.['source-currency-price'] || 0) *
-      currencyConversionRates[nativeCurrency];
+    const amount = await getValueInNativeCurrency(
+      card?.['source-currency-price'] || 0,
+      nativeCurrency
+    );
 
     let reservation: ReservationData | undefined;
     let wyreOrderIdData;

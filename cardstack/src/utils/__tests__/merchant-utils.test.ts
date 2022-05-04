@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { Share, Platform } from 'react-native';
 
 import {
@@ -79,7 +80,7 @@ describe('Merchant utils', () => {
       expect(
         await getMerchantClaimTransactionDetails(
           MERCHANT_CLAIM_MOCK_DATA,
-          'USD',
+          NativeCurrency.USD,
           '0xD7182E380b7dFa33C186358De7E1E5d0950fCAE7'
         )
       ).toStrictEqual({
@@ -96,7 +97,7 @@ describe('Merchant utils', () => {
       expect(
         await getMerchantEarnedTransactionDetails(
           MERCHANT_EARNED_MOCK_DATA,
-          'USD',
+          NativeCurrency.USD,
           'DAI'
         )
       ).toStrictEqual({

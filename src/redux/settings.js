@@ -25,6 +25,7 @@ import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { paymentChangeCurrency } from '@cardstack/redux/payment';
 import { requestsResetState } from '@cardstack/redux/requests';
+import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
 import logger from 'logger';
 // -- Constants ------------------------------------------------------------- //
 
@@ -41,6 +42,9 @@ const SETTINGS_UPDATE_NETWORK_SUCCESS =
 export const settingsLoadState = () => async (dispatch, getState) => {
   try {
     const nativeCurrency = await getNativeCurrency();
+
+    await getExchangeRatesQuery();
+
     const paymentCurrency = getState().payment.currency;
     dispatch({
       payload: nativeCurrency,

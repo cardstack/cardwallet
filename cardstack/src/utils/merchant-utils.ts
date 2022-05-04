@@ -2,6 +2,7 @@ import {
   convertAmountToNativeDisplay,
   convertRawAmountToBalance,
   MerchantSafe,
+  NativeCurrency,
   subtract,
 } from '@cardstack/cardpay-sdk';
 import { getResolver } from '@cardstack/did-resolver';
@@ -144,7 +145,7 @@ export const shareRequestPaymentLink = (
 
 export async function getMerchantClaimTransactionDetails(
   merchantClaimTransaction: MerchantClaimFragment,
-  nativeCurrency = 'USD',
+  nativeCurrency: NativeCurrency = NativeCurrency.USD,
   address?: string
 ): Promise<MerchantClaimTypeTxn> {
   const transactions = merchantClaimTransaction.transaction?.tokenTransfers;
@@ -197,7 +198,7 @@ export async function getMerchantClaimTransactionDetails(
 
 export async function getMerchantEarnedTransactionDetails(
   prepaidCardPaymentTransaction: PrepaidCardPaymentFragment,
-  nativeCurrency = 'USD',
+  nativeCurrency: NativeCurrency = NativeCurrency.USD,
   symbol: string
 ): Promise<MerchantEarnedRevenueTransactionTypeTxn> {
   const feeCollectedRaw =

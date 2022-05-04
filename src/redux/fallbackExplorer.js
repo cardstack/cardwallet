@@ -12,7 +12,7 @@ import {
   UPDATE_BALANCE_AND_PRICE_FREQUENCY,
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
-import { getCurrencyConversionsRates } from '@cardstack/services';
+import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
 import { isLayer1, isMainnet } from '@cardstack/utils';
 import { setCurrencyConversionRates } from '@rainbow-me/redux/currencyConversion';
 import logger from 'logger';
@@ -398,6 +398,11 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
   const { latestTxBlockNumber, assets } = getState().fallbackExplorer;
   const coingeckoCoins = getState().coingecko.coins;
+
+  const { data: conversionsRates } = await getExchangeRatesQuery();
+
+  await dispatch(setCurrencyConversionRates(conversionsRates));
+
   // If mainnet, we need to get all the info
   // 1 - Coingecko ids
   // 2 - All tokens list
@@ -417,10 +422,6 @@ export const fallbackExplorerInit = () => async (dispatch, getState) => {
       type: FALLBACK_EXPLORER_SET_ASSETS,
     });
   }
-
-  const conversionsRates = await getCurrencyConversionsRates();
-
-  await dispatch(setCurrencyConversionRates(conversionsRates));
 
   return fetchAssetsBalancesAndPrices();
 };

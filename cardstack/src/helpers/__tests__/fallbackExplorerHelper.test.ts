@@ -1,3 +1,5 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
+
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -53,7 +55,7 @@ describe('Fallback Explorer Helpers', () => {
       chartData,
       formattedNativeCurrency: 'usd',
       network: Network.sokol,
-      nativeCurrency: 'USD',
+      nativeCurrency: NativeCurrency.USD,
       accountAddress: '0x000000',
     });
 

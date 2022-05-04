@@ -3,6 +3,7 @@
 import {
   convertAmountAndPriceToNativeDisplay,
   convertAmountToNativeDisplay,
+  NativeCurrency,
 } from '@cardstack/cardpay-sdk';
 import { toLower } from 'lodash';
 import Web3 from 'web3';
@@ -45,7 +46,7 @@ type AssetWithBalance = { asset: AssetType & BalanceObject };
 interface ReduceAssetsParams extends ReduceWithPriceChartBaseParams {
   assets: AssetWithBalance[];
   network: Network;
-  nativeCurrency: string;
+  nativeCurrency: NativeCurrency;
   accountAddress: string;
 }
 
@@ -170,7 +171,7 @@ export const reduceAssetsWithPriceChartAndBalances = async ({
   formattedNativeCurrency,
   chartData,
   network,
-  nativeCurrency = '',
+  nativeCurrency = NativeCurrency.USD,
   accountAddress,
 }: ReduceAssetsParams) =>
   assets.reduce(async (updatedAssets, { asset }) => {
