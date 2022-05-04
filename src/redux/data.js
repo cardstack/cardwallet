@@ -77,7 +77,6 @@ const DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION =
   'data/DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION';
 const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
-const DATA_LOAD_ASSETS_REQUEST = 'data/DATA_LOAD_ASSETS_REQUEST';
 const DATA_LOAD_ASSETS_SUCCESS = 'data/DATA_LOAD_ASSETS_SUCCESS';
 const DATA_LOAD_ASSETS_FAILURE = 'data/DATA_LOAD_ASSETS_FAILURE';
 
@@ -99,6 +98,7 @@ export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
 
 // -- Actions ---------------------------------------- //
 export const dataLoadState = () => async (dispatch, getState) => {
+  console.log(':::dataLoadState');
   const { accountAddress, network } = getState().settings;
   try {
     const assetPricesFromUniswap = await getAssetPricesFromUniswap(
@@ -112,7 +112,6 @@ export const dataLoadState = () => async (dispatch, getState) => {
     // eslint-disable-next-line no-empty
   } catch (error) {}
   try {
-    dispatch({ type: DATA_LOAD_ASSETS_REQUEST });
     const [
       assets,
       { prepaidCards },
@@ -158,6 +157,7 @@ export const dataResetState = () => (dispatch, getState) => {
 };
 
 export const dataUpdateAssets = assets => (dispatch, getState) => {
+  console.log(':::dataUpdateAssets');
   const { accountAddress, network } = getState().settings;
   if (assets.length) {
     saveAssets(assets, accountAddress, network);
@@ -254,6 +254,7 @@ export const addressAssetsReceived = (
   change = false,
   removed = false
 ) => async (dispatch, getState) => {
+  console.log(':::addressAssetsReceived');
   const isValidMeta = dispatch(checkMeta(message));
   if (!isValidMeta) return;
 
@@ -698,6 +699,7 @@ export default (state = INITIAL_STATE, action) => {
         break;
       case DATA_UPDATE_ASSETS:
         draft.assets = action.payload;
+        draft.isLoadingAssets = false;
         break;
       case DATA_UPDATE_GNOSIS_DATA:
         draft.depots = action.payload.depots;
@@ -717,9 +719,6 @@ export default (state = INITIAL_STATE, action) => {
         break;
       case DATA_LOAD_TRANSACTIONS_FAILURE:
         draft.isLoadingTransactions = false;
-        break;
-      case DATA_LOAD_ASSETS_REQUEST:
-        draft.isLoadingAssets = true;
         break;
       case DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS:
         draft.assetPricesFromUniswap = action.payload;
