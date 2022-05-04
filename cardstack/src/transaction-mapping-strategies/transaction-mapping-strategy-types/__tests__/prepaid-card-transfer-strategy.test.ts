@@ -16,7 +16,6 @@ jest.mock('@rainbow-me/references', () => ({
 jest.mock('@cardstack/utils', () => ({
   convertSpendForBalanceDisplay: jest.fn().mockReturnValue({
     nativeBalanceDisplay: '$1.00 USD',
-    tokenBalanceDisplay: '§100 SPEND',
   }),
   fetchCardCustomizationFromDID: jest.fn().mockReturnValue({
     background: '#C3FC33',

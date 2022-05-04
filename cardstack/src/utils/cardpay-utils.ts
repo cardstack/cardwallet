@@ -4,12 +4,12 @@ import {
   convertAmountToNativeDisplay,
   getConstantByNetwork,
   NativeCurrency,
-  spendToUsd,
   convertStringToNumber,
 } from '@cardstack/cardpay-sdk';
 import { getResolver } from '@cardstack/did-resolver';
 import { Resolver } from 'did-resolver';
 
+import { getSpendValueInNativeCurrency } from '@cardstack/services';
 import {
   PrepaidCardCustomization,
   PrepaidLinearGradientInfo,
@@ -46,40 +46,13 @@ export const isLayer2 = (network: Network) =>
 
 export const isMainnet = (network: Network) => MAINNETS.includes(network);
 
-export const getNativeBalanceFromSpend = (
-  spendAmount: number,
-  nativeCurrency: string,
-  currencyConversionRates: { [key: string]: number }
-): number => {
-  const usdBalance = spendToUsd(spendAmount) || 0;
-  const currencyConversionRate = currencyConversionRates?.[nativeCurrency];
-
-  if (nativeCurrency === NativeCurrency.USD) {
-    return usdBalance;
-  } else if (currencyConversionRate) {
-    return usdBalance * currencyConversionRate;
-  }
-
-  return 0;
-};
-
-export const convertSpendForBalanceDisplay = (
-  accumulatedSpendValue: string | number,
-  nativeCurrency: string,
-  currencyConversionRates: {
-    [key: string]: number;
-  },
-  includeSuffix?: boolean
+export const convertSpendForBalanceDisplay = async (
+  spendValue: string | number,
+  nativeCurrency: NativeCurrency
 ) => {
-  const nativeBalance = getNativeBalanceFromSpend(
-    convertStringToNumber(accumulatedSpendValue),
-    nativeCurrency,
-    currencyConversionRates
-  );
-
-  const spendWithCommas = String(accumulatedSpendValue).replace(
-    /\B(?=(\d{3})+(?!\d))/g,
-    ','
+  const nativeBalance = await getSpendValueInNativeCurrency(
+    convertStringToNumber(spendValue),
+    nativeCurrency
   );
 
   const nativeBalanceDisplay = convertAmountToNativeDisplay(
@@ -88,7 +61,6 @@ export const convertSpendForBalanceDisplay = (
   );
 
   return {
-    tokenBalanceDisplay: `§${spendWithCommas}${includeSuffix ? ' SPEND' : ''}`,
     nativeBalanceDisplay,
   };
 };
