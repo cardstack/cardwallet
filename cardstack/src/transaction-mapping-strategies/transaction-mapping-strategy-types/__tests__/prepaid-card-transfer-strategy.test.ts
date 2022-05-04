@@ -1,3 +1,5 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
+
 import { PrepaidCardTransferStrategy } from '@cardstack/transaction-mapping-strategies/transaction-mapping-strategy-types/prepaid-card-transfer-strategy';
 import {
   PREPAID_CARD_TRANSFER_MOCK,
@@ -109,7 +111,7 @@ describe('PrepaidCardTransferStrategy', () => {
       '0x9Ed84407e5ed5B7c0323E5653A06F4528357e3B5',
       '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
     ],
-    nativeCurrency: 'USD',
+    nativeCurrency: NativeCurrency.USD,
     prepaidCardAddresses: ['0x35Ae15dCEB6930756A59EfcC2169d2b834CdD371'],
     transaction: PREPAID_CARD_TRANSFER_MOCK,
   };

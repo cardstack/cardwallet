@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { flatten } from 'lodash';
 
 import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
@@ -44,7 +45,7 @@ export type TransactionMappingStrategy =
 interface TransactionData {
   transactions: (AdvancedTransactionFragment | undefined)[];
   accountAddress: string;
-  nativeCurrency: string;
+  nativeCurrency: NativeCurrency;
   currencyConversionRates: CurrencyConversionRates;
   transactionStrategies?: TransactionMappingStrategy[];
   depotAddress: string;

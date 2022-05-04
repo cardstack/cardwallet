@@ -13,10 +13,7 @@ import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
-import {
-  getValueInNativeCurrency,
-  getUsdConverter,
-} from '@cardstack/services/exchange-rate-service';
+import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
 import { DepotAsset, TokenType } from '@cardstack/types';
 import {
   reshapeDepotTokensToAssets,
@@ -33,6 +30,7 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import Navigation, { useNavigation } from '@rainbow-me/navigation/Navigation';
+import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 
@@ -95,15 +93,20 @@ export const useSendSheetDepotScreen = () => {
   const isValidAddress = useSendAddressValidation(recipient);
   const [isAuthorizing, setIsAuthorizing] = useState(false);
 
-  const { accountAddress, network, nativeCurrency } = useAccountSettings();
+  const { accountAddress, network } = useAccountSettings();
+
+  const [
+    nativeCurrency,
+    currencyConversionRates,
+  ] = useNativeCurrencyAndConversionRates();
 
   const getNativeCurrencyAmount = useCallback(
-    async (amount: string) => {
+    (amount: string) => {
       const usdConvertedAmount = usdConverter.current?.(amount) || 0;
 
-      return await getValueInNativeCurrency(usdConvertedAmount, nativeCurrency);
+      return currencyConversionRates[nativeCurrency] * usdConvertedAmount;
     },
-    [nativeCurrency]
+    [currencyConversionRates, nativeCurrency]
   );
 
   // Gas Estimates
@@ -126,9 +129,7 @@ export const useSendSheetDepotScreen = () => {
           amountWei
         )) || '0';
 
-      const nativeCurrencyGasFee =
-        (await getNativeCurrencyAmount(gasEstimate)) || 0;
-
+      const nativeCurrencyGasFee = getNativeCurrencyAmount(gasEstimate) || 0;
       setGasEstimatedFee({
         amount: nativeCurrencyGasFee,
         nativeDisplay: `${Web3.utils.fromWei(gasEstimate)} ${
