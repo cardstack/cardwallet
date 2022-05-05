@@ -6,10 +6,7 @@ import { MerchantSafeType } from '@cardstack/types';
 import { isLayer1 } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 import {
   changePrimarySafe as setPrimarySafeAccount,
@@ -18,8 +15,7 @@ import {
 
 export const usePrimarySafe = () => {
   const dispatch = useDispatch();
-  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
-  const { accountAddress, network } = useAccountSettings();
+  const { accountAddress, network, nativeCurrency } = useAccountSettings();
 
   const primarySafeKey = useSelector(selectPrimarySafe(network, accountAddress))
     ?.address;

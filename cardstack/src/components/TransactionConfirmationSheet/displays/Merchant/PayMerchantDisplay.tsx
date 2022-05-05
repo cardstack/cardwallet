@@ -6,15 +6,13 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
+import { useSpendToNativeDisplay } from '@cardstack/hooks/currencies/useSpendDisplay';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import { PayMerchantDecodedData } from '@cardstack/types';
 
 import TransactionListItem from '../components/TransactionListItem';
 import MerchantSectionCard from '../components/sections/MerchantSectionCard';
-import {
-  PayThisAmountSection,
-  useSpendDisplay,
-} from '../components/sections/PayThisAmountSection';
+import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
 import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
 
 interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
@@ -22,10 +20,10 @@ interface PayMerchantDisplayProps extends TransactionConfirmationDisplayProps {
 }
 
 export const PayMerchantDisplay = ({
-  data: { infoDID = '', spendAmount, prepaidCard = '', merchantSafe },
+  data: { infoDID = '', spendAmount = 0, prepaidCard = '', merchantSafe },
 }: PayMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
-  const spendDisplay = useSpendDisplay(spendAmount || 0, false);
+  const spendDisplay = useSpendToNativeDisplay({ spendAmount });
 
   return (
     <>
@@ -44,7 +42,7 @@ export const PayMerchantDisplay = ({
       />
       <PayThisAmountSection
         headerText="PAY THIS AMOUNT"
-        spendAmount={spendAmount || 0}
+        spendAmount={spendAmount}
       />
       <HorizontalDivider />
       <TransactionListItem

@@ -26,10 +26,6 @@ export type AssetListSectionItem<ComponentProps> = {
   Component: (
     props: ComponentProps & {
       networkName: string;
-      nativeCurrency: string;
-      currencyConversionRates: {
-        [key: string]: number;
-      };
     }
   ) => JSX.Element | null;
   header: HeaderItem;
@@ -50,10 +46,6 @@ export interface AssetListProps
   isEmpty: boolean;
   loading: boolean;
   network: Network;
-  nativeCurrency: string;
-  currencyConversionRates: {
-    [key: string]: number;
-  };
   sections: Array<
     | AssetListSectionItem<PrepaidCardType>
     | AssetListSectionItem<DepotType>

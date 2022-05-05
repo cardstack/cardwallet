@@ -43,10 +43,9 @@ export class MerchantEarnedSpendAndRevenueStrategy extends BaseStrategy {
       this.nativeCurrency
     );
 
-    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
       prepaidCardPaymentTransaction.spendAmount,
-      this.nativeCurrency,
-      this.currencyConversionRates
+      this.nativeCurrency
     );
 
     const nativeBalance = convertRawAmountToNativeDisplay(

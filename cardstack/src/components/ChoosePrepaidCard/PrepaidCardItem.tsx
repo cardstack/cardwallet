@@ -8,20 +8,19 @@ import {
   Text,
 } from '@cardstack/components';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+import { useSpendToNativeDisplay } from '@cardstack/hooks';
 import { PrepaidCardType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay, splitAddress } from '@cardstack/utils';
+import { splitAddress } from '@cardstack/utils';
+
+import { PrepaidCardInnerBottomProps } from '../PrepaidCard/components/PrepaidCardInnerBottom';
 
 import { strings } from './strings';
 
 interface PrepaidCardItemProps {
-  item: PrepaidCardType;
+  item: PrepaidCardType & Omit<PrepaidCardInnerBottomProps, 'nativeBalance'>;
   onPress: (item: PrepaidCardType) => void;
   selectedAddress?: string;
   networkName: string;
-  nativeCurrency: string;
-  currencyConversionRates: {
-    [key: string]: number;
-  };
   spendAmount: number;
   isLastItem: boolean;
 }
@@ -31,21 +30,22 @@ const PrepaidCardItem = ({
   onPress,
   selectedAddress,
   networkName,
-  nativeCurrency,
-  currencyConversionRates,
   spendAmount,
   isLastItem,
 }: PrepaidCardItemProps) => {
-  const { address, spendFaceValue, cardCustomization, transferrable } = item;
-
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    spendFaceValue.toString(),
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
+  const {
+    address,
+    spendFaceValue,
+    cardCustomization,
+    transferrable,
+    nativeCurrencyInfo,
+  } = item;
 
   const { twoLinesAddress } = splitAddress(address);
+
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({
+    spendAmount: spendFaceValue,
+  });
 
   const isInsufficientFund = spendFaceValue < spendAmount;
   const isSelected = selectedAddress === address;
@@ -112,9 +112,8 @@ const PrepaidCardItem = ({
               cardCustomization={cardCustomization}
               address={address}
               networkName={networkName}
-              spendFaceValue={spendFaceValue}
-              nativeCurrency={nativeCurrency}
-              currencyConversionRates={currencyConversionRates}
+              nativeBalance={nativeBalanceDisplay}
+              nativeCurrencyInfo={nativeCurrencyInfo}
               transferrable={transferrable}
             />
           </Container>

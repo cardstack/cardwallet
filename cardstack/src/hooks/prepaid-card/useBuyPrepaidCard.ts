@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { useAuthToken } from '@cardstack/hooks';
+import { useAuthToken, useSpendToNativeDisplay } from '@cardstack/hooks';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import {
   getHubUrl,
@@ -38,7 +38,6 @@ import { Alert } from '@rainbow-me/components/alerts';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
 import Routes from '@rainbow-me/navigation/routesNames';
 import { addNewPrepaidCard } from '@rainbow-me/redux/data';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
 interface CardAttrs extends InventoryAttrs {
@@ -75,17 +74,18 @@ export default function useBuyPrepaidCard() {
   const { goBack, navigate } = useNavigation();
   const dispatch = useDispatch();
 
-  const { accountAddress, network } = useAccountSettings();
+  const {
+    accountAddress,
+    network,
+    nativeCurrencyInfo,
+    nativeCurrency,
+  } = useAccountSettings();
+
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const hubURL = useMemo(() => getHubUrl(network), [network]);
 
   const { authToken } = useAuthToken();
-
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
 
   const [order, setOrder] = useState<string>('');
   const [card, setCard] = useState<CardAttrs>();
@@ -215,7 +215,7 @@ export default function useBuyPrepaidCard() {
         setInventoryData(formattedData);
       }
     }
-  }, [authToken, currencyConversionRates, hubURL, nativeCurrency, network]);
+  }, [authToken, hubURL, nativeCurrency, network]);
 
   useEffect(() => {
     if (authToken) {
@@ -474,13 +474,16 @@ export default function useBuyPrepaidCard() {
   }, [
     card,
     nativeCurrency,
-    currencyConversionRates,
     hubURL,
     authToken,
     sku,
     onPurchase,
     custodialWalletData,
   ]);
+
+  const { nativeBalanceDisplay: nativeBalance } = useSpendToNativeDisplay({
+    spendAmount: card?.['face-value'] || 0,
+  });
 
   return {
     onPurchase,
@@ -495,7 +498,7 @@ export default function useBuyPrepaidCard() {
     isInventoryLoading,
     inventoryData,
     network,
-    nativeCurrency,
-    currencyConversionRates,
+    nativeBalance,
+    nativeCurrencyInfo,
   };
 }

@@ -1,4 +1,5 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
+import { ChainId } from '@uniswap/sdk';
 import { useSelector } from 'react-redux';
 import {
   AssetType,
@@ -8,6 +9,7 @@ import {
   MerchantSafeType,
   PrepaidCardType,
 } from '@cardstack/types';
+import { Network } from '@rainbow-me/helpers/networkTypes';
 
 interface ReduxState {
   data: {
@@ -21,7 +23,8 @@ interface ReduxState {
   settings: {
     accountAddress: string;
     nativeCurrency: NativeCurrency;
-    network: string;
+    network: Network;
+    chainId: ChainId;
   };
   collectibles: {
     fetchingCollectibles: boolean;

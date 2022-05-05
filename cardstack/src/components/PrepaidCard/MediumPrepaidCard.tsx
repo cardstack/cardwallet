@@ -30,9 +30,8 @@ const MediumPrepaidCard = ({
   cardCustomization,
   address,
   networkName,
-  spendFaceValue,
-  nativeCurrency,
-  currencyConversionRates,
+  nativeBalance,
+  nativeCurrencyInfo,
   transferrable,
 }: Omit<
   PrepaidCardInnerTopProps & PrepaidCardInnerBottomProps,
@@ -58,9 +57,8 @@ const MediumPrepaidCard = ({
         disabled
       />
       <PrepaidCardInnerBottom
-        spendFaceValue={spendFaceValue}
-        nativeCurrency={nativeCurrency}
-        currencyConversionRates={currencyConversionRates}
+        nativeBalance={nativeBalance}
+        nativeCurrencyInfo={nativeCurrencyInfo}
         transferrable={transferrable}
         variant="medium"
       />

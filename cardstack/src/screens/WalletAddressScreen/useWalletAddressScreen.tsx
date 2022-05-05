@@ -4,11 +4,11 @@ import { useCallback, useMemo } from 'react';
 import { useCopyToast } from '@cardstack/hooks/useCopyToast';
 import { getAddressPreview } from '@cardstack/utils';
 
-import { useAccountProfile } from '@rainbow-me/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 import Routes from '@rainbow-me/navigation/routesNames';
 
 export const useWalletAddressScreen = () => {
-  const { accountAddress } = useAccountProfile();
+  const { accountAddress } = useAccountSettings();
   const { navigate } = useNavigation();
 
   const addressPreview = useMemo(() => getAddressPreview(accountAddress), [

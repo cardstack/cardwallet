@@ -1,16 +1,11 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 
-import {
-  AdvancedTransactionFragment,
-  TransactionType,
-  CurrencyConversionRates,
-} from '@cardstack/types';
+import { AdvancedTransactionFragment, TransactionType } from '@cardstack/types';
 
 interface BaseStrategyParams {
   transaction: AdvancedTransactionFragment;
   accountAddress: string;
   nativeCurrency: NativeCurrency;
-  currencyConversionRates: CurrencyConversionRates;
   merchantSafeAddresses: string[];
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
@@ -27,7 +22,6 @@ export abstract class BaseStrategy implements BaseStrategyParams {
   transaction: AdvancedTransactionFragment;
   accountAddress: string;
   nativeCurrency: NativeCurrency;
-  currencyConversionRates: CurrencyConversionRates;
   merchantSafeAddresses: string[];
   prepaidCardAddresses: string[];
   merchantSafeAddress?: string;
@@ -38,7 +32,6 @@ export abstract class BaseStrategy implements BaseStrategyParams {
     transaction,
     accountAddress,
     nativeCurrency,
-    currencyConversionRates,
     merchantSafeAddresses,
     prepaidCardAddresses,
     merchantSafeAddress,
@@ -48,7 +41,6 @@ export abstract class BaseStrategy implements BaseStrategyParams {
     this.transaction = transaction;
     this.accountAddress = accountAddress;
     this.nativeCurrency = nativeCurrency;
-    this.currencyConversionRates = currencyConversionRates;
     this.merchantSafeAddresses = merchantSafeAddresses;
     this.prepaidCardAddresses = prepaidCardAddresses;
     this.merchantSafeAddress = merchantSafeAddress;

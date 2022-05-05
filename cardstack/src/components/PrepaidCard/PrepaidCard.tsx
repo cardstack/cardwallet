@@ -7,10 +7,12 @@ import {
   ScrollView,
 } from '@cardstack/components';
 import { delayLongPressMs } from '@cardstack/constants';
+import { useSpendToNativeDisplay } from '@cardstack/hooks';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import {
   PinnedHiddenSectionOption,
+  useAccountSettings,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
@@ -25,10 +27,6 @@ import PrepaidCardInnerTop from './components/PrepaidCardInnerTop';
 
 export interface PrepaidCardProps extends PrepaidCardType, ContainerProps {
   networkName: string;
-  nativeCurrency: string;
-  currencyConversionRates: {
-    [key: string]: number;
-  };
   disabled?: boolean;
   cardCustomization?: PrepaidCardCustomization;
 }
@@ -44,6 +42,8 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const Wrapper = isScrollable ? ScrollView : Container;
   const { networkName, ...prepaidCard } = props;
   const { navigate } = useNavigation();
+
+  const { nativeCurrencyInfo } = useAccountSettings();
 
   const {
     editing,
@@ -63,6 +63,10 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
   const iconName = isHidden ? 'eye-off' : 'pin';
   const iconFamily = isHidden ? 'Feather' : 'MaterialCommunity';
   const editingIconName = isSelected ? 'check-circle' : 'circle';
+
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({
+    spendAmount: prepaidCard.spendFaceValue,
+  });
 
   const onPress = useCallback(() => {
     if (!isEditing) {
@@ -170,7 +174,11 @@ export const PrepaidCard = (props: PrepaidCardProps) => {
             cardCustomization={prepaidCard.cardCustomization}
             networkName={networkName}
           />
-          <PrepaidCardInnerBottom {...props} />
+          <PrepaidCardInnerBottom
+            {...props}
+            nativeCurrencyInfo={nativeCurrencyInfo}
+            nativeBalance={nativeBalanceDisplay}
+          />
         </Container>
         {isEditing && isHidden && (
           <Container

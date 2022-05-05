@@ -10,6 +10,7 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
+import { useSpendToNativeDisplay } from '@cardstack/hooks';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import {
   MerchantOrDepotSafe,
@@ -17,15 +18,10 @@ import {
   DepotType,
   MerchantSafeType,
 } from '@cardstack/types';
-import {
-  getSafeTokenByAddress,
-  convertSpendForBalanceDisplay,
-  getAddressPreview,
-} from '@cardstack/utils';
+import { getSafeTokenByAddress, getAddressPreview } from '@cardstack/utils';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 
 import { SectionHeaderText } from '../components/SectionHeaderText';
 
@@ -64,14 +60,9 @@ const FromSection = ({
   safeAddress?: string;
   tokenAddress: string;
 }) => {
-  const {
-    accountAddress,
-    accountColor,
-    accountName,
-    accountSymbol,
-  } = useAccountProfile();
+  const { accountColor, accountName, accountSymbol } = useAccountProfile();
 
-  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
+  const { accountAddress, nativeCurrency } = useAccountSettings();
 
   const { fromSafe, isLoadingSafe } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
@@ -141,22 +132,14 @@ const FromSection = ({
 };
 
 const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
   const tokenDisplay = convertRawAmountToBalance(
     data.issuingTokenAmounts[0],
     data.token
   );
 
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    data.spendAmounts[0],
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({
+    spendAmount: data.spendAmounts[0],
+  });
 
   return (
     <Container>
@@ -172,17 +155,9 @@ const LoadSection = ({ data }: { data: IssuePrepaidCardDecodedData }) => {
 };
 
 const ToSection = () => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    '0',
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({
+    spendAmount: 0,
+  });
 
   return (
     <Container width="100%">

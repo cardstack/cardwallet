@@ -1,14 +1,12 @@
 import React from 'react';
 
 import { Container, Text } from '@cardstack/components';
-import { useGetSafesDataQuery } from '@cardstack/services';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
-
-import { useAccountSettings } from '@rainbow-me/hooks';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { usePrepaidCard } from '@cardstack/hooks';
 
 import MiniPrepaidCard from '../../../../PrepaidCard/MiniPrepaidCard';
 import TransactionListItem from '../TransactionListItem';
+
+import PrepaidCardSectionSkeleton from './PrepaidCardSectionSkeleton';
 
 export const PrepaidCardTransactionSection = ({
   headerText,
@@ -17,30 +15,13 @@ export const PrepaidCardTransactionSection = ({
   headerText: string;
   prepaidCardAddress: string;
 }) => {
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
-  const { accountAddress } = useAccountSettings();
-
-  const { prepaidCard } = useGetSafesDataQuery(
-    { address: accountAddress, nativeCurrency },
-    {
-      selectFromResult: ({ data }) => ({
-        prepaidCard: data?.prepaidCards?.find(
-          card => card.address === prepaidCardAddress
-        ),
-      }),
-    }
+  const { prepaidCard, nativeBalanceDisplay, isLoading } = usePrepaidCard(
+    prepaidCardAddress
   );
 
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    String(prepaidCard?.spendFaceValue || 0),
-    nativeCurrency,
-    currencyConversionRates,
-    true
-  );
+  if (isLoading) {
+    return <PrepaidCardSectionSkeleton headerText={headerText} />;
+  }
 
   return (
     <TransactionListItem

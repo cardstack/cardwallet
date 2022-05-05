@@ -49,11 +49,9 @@ export class PrepaidCardPaymentStrategy extends BaseStrategy {
       } catch (error) {}
     }
 
-    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
       prepaidCardPaymentTransaction.spendAmount,
-      this.nativeCurrency,
-      this.currencyConversionRates,
-      true
+      this.nativeCurrency
     );
 
     return {

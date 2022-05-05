@@ -41,14 +41,12 @@ export class PrepaidCardTransferStrategy extends BaseStrategy {
       } catch (error) {}
     }
 
-    const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+    const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
       prepaidCardInventoryEvent
         ? prepaidCardInventoryEvent.inventoryProvisioned?.inventory.sku
             .faceValue
         : prepaidCardTransferTransaction.prepaidCard.creation?.spendAmount, // faceValue when transfer happen
-      this.nativeCurrency,
-      this.currencyConversionRates,
-      true
+      this.nativeCurrency
     );
 
     const isReceived =

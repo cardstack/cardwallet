@@ -1,4 +1,4 @@
-import { getSDK, NativeCurrency } from '@cardstack/cardpay-sdk';
+import { getSDK, NativeCurrency, spendToUsd } from '@cardstack/cardpay-sdk';
 
 import Web3Instance from '@cardstack/models/web3-instance';
 
@@ -23,7 +23,16 @@ export const getValueInNativeCurrency = async (
 
   const { data: rates } = await getExchangeRatesQuery();
 
-  return rates?.[nativeCurrency] ?? 0 * value;
+  return (rates?.[nativeCurrency] ?? 0) * value;
+};
+
+export const getSpendValueInNativeCurrency = async (
+  spendAmount: number,
+  nativeCurrency: NativeCurrency
+) => {
+  const usdBalance = spendToUsd(spendAmount) || 0;
+
+  return await getValueInNativeCurrency(usdBalance, nativeCurrency);
 };
 
 // Token price to native currency

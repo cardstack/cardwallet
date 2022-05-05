@@ -8,18 +8,15 @@ import {
   Text,
   TransactionConfirmationDisplayProps,
 } from '@cardstack/components';
+import { usePrepaidCard } from '@cardstack/hooks';
 import {
   TransferPrepaidCard1DecodedData,
   TransferPrepaidCard2DecodedData,
 } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useAccountProfile } from '@rainbow-me/hooks';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 import { SectionHeaderText } from '../components/SectionHeaderText';
 
@@ -88,22 +85,8 @@ const FromSection = () => {
 };
 
 const TransferSection = ({ data }: { data: TransferDecodedDataType }) => {
-  const prepaidCards = useRainbowSelector(state => state.data.prepaidCards);
-
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
-  const prepaidCard = prepaidCards.find(
-    card => card.address === data.prepaidCard
-  );
-
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
-    prepaidCard?.spendFaceValue || 0,
-    nativeCurrency,
-    currencyConversionRates,
-    true
+  const { prepaidCard, nativeBalanceDisplay } = usePrepaidCard(
+    data.prepaidCard
   );
 
   return (

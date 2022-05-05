@@ -29,9 +29,9 @@ export const AssetList = () => {
     isLoading,
     goToBuyPrepaidCard,
     onRefresh,
-    componentItemExtraProps,
     showAddFundsInterstitial,
     refreshing,
+    networkName,
   } = useAssetList({ sectionListRef });
 
   const renderPromoBanner = useMemo(() => {
@@ -51,9 +51,9 @@ export const AssetList = () => {
 
   const renderItem = useCallback(
     ({ item, section: { Component } }) => (
-      <Component {...item} {...componentItemExtraProps} />
+      <Component {...item} networkName={networkName} />
     ),
-    [componentItemExtraProps]
+    [networkName]
   );
 
   const renderSectionFooter = useCallback(

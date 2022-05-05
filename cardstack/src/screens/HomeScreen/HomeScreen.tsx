@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Container, MainHeader, TransactionList } from '@cardstack/components';
 
-import { useAccountProfile } from '@rainbow-me/hooks';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 const HomeScreen = () => {
-  const { accountAddress } = useAccountProfile();
+  const { accountAddress } = useAccountSettings();
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>

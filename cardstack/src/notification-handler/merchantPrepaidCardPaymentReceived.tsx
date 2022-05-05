@@ -54,16 +54,11 @@ export const mapMerchantPaymentTxToNavigationParams = async (
 
   const { nativeCurrency } = store.getState().settings;
 
-  const {
-    rates: currencyConversionRates,
-  } = store.getState().currencyConversion;
-
   const symbol = issuingToken.symbol || '';
 
-  const { nativeBalanceDisplay } = convertSpendForBalanceDisplay(
+  const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
     spendAmount,
-    nativeCurrency,
-    currencyConversionRates
+    nativeCurrency
   );
 
   const earnedTransactionDetails = await getMerchantEarnedTransactionDetails(
