@@ -1,7 +1,6 @@
 export * from './Avatar';
 export * from './Button';
 export * from './Container';
-export * from './CurrencySelection';
 export * from './Text';
 export * from './Depot';
 export * from './PrepaidCard';
