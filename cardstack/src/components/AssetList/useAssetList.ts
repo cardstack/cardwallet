@@ -16,7 +16,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
 import Routes from '@rainbow-me/routes';
 
 import { AssetListRouteType } from './types';
@@ -103,22 +102,11 @@ export const useAssetList = ({
   }, [isDamaged, navigate]);
 
   // Extra component props
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
-
   const { network } = useAccountSettings();
 
-  const componentItemExtraProps = useMemo(() => {
-    const networkName = getConstantByNetwork('name', network);
-
-    return {
-      nativeCurrency,
-      currencyConversionRates,
-      networkName,
-    };
-  }, [currencyConversionRates, nativeCurrency, network]);
+  const networkName = useMemo(() => getConstantByNetwork('name', network), [
+    network,
+  ]);
 
   return {
     isLoading: isLoadingAssets || isLoadingSafesDiffAccount,
@@ -128,7 +116,7 @@ export const useAssetList = ({
     isEmpty,
     goToBuyPrepaidCard,
     onRefresh,
-    componentItemExtraProps,
     showAddFundsInterstitial: isEmpty && isLayer1(network),
+    networkName,
   };
 };

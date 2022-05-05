@@ -13,11 +13,9 @@ import {
   sortByTime,
 } from '@cardstack/utils';
 
+import { useAccountSettings } from '@rainbow-me/hooks';
 import usePrevious from '@rainbow-me/hooks/usePrevious';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
 interface UseTransactionSectionsProps {
@@ -55,10 +53,7 @@ export const useTransactionSections = ({
 
   const depot = depots?.[0];
 
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const { nativeCurrency } = useAccountSettings();
 
   const accountAddress = useRainbowSelector(
     state => state.settings.accountAddress
@@ -109,7 +104,6 @@ export const useTransactionSections = ({
               : transactions.map((t: any) => t?.transaction),
             accountAddress: accountAddress,
             nativeCurrency,
-            currencyConversionRates,
             transactionStrategies,
             depotAddress: depot?.address,
             merchantSafeAddresses,
@@ -150,7 +144,6 @@ export const useTransactionSections = ({
 
     setSectionsData();
   }, [
-    currencyConversionRates,
     nativeCurrency,
     accountAddress,
     transactions,

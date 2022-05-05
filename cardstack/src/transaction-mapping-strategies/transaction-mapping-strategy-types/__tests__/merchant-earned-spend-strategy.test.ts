@@ -14,21 +14,6 @@ jest.mock('../../../services', () => ({
 describe('MerchantEarnedSpendStrategy', () => {
   const contructorParams = {
     accountAddress: '0x64Fbf34FaC77696112F1Abaa69D28211214d76c7',
-    currencyConversionRates: {
-      AUD: 1.362445,
-      CAD: 1.262345,
-      CNY: 6.432498,
-      EUR: 0.846102,
-      GBP: 0.72197,
-      INR: 73.445498,
-      JPY: 109.350353,
-      KRW: 1166.819664,
-      NZD: 1.402265,
-      RUB: 72.280298,
-      TRY: 8.429594,
-      USD: 1,
-      ZAR: 14.41804,
-    },
     depotAddress: '0xF48c7B663DFCa76E1954bC44f7Fc006e2e04b09C',
     merchantSafeAddress: '0xcba12315cc838375F0e1E9a9f5b2aFE0196B07B6',
     merchantSafeAddresses: [

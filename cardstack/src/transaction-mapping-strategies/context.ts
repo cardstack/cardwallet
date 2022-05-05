@@ -1,7 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { flatten } from 'lodash';
 
-import { CurrencyConversionRates, TransactionType } from '@cardstack/types';
+import { TransactionType } from '@cardstack/types';
 
 import logger from 'logger';
 
@@ -46,7 +46,6 @@ interface TransactionData {
   transactions: (AdvancedTransactionFragment | undefined)[];
   accountAddress: string;
   nativeCurrency: NativeCurrency;
-  currencyConversionRates: CurrencyConversionRates;
   transactionStrategies?: TransactionMappingStrategy[];
   depotAddress: string;
   merchantSafeAddresses: string[];
@@ -97,8 +96,6 @@ export class TransactionMappingContext {
             transaction,
             accountAddress: this.transactionData.accountAddress,
             nativeCurrency: this.transactionData.nativeCurrency,
-            currencyConversionRates: this.transactionData
-              .currencyConversionRates,
             depotAddress: this.transactionData.depotAddress,
             merchantSafeAddresses: this.transactionData.merchantSafeAddresses,
             prepaidCardAddresses: this.transactionData.prepaidCardAddresses,
