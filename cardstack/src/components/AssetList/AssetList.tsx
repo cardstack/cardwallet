@@ -1,10 +1,5 @@
 import React, { useCallback, createRef, useMemo } from 'react';
-import {
-  RefreshControl,
-  SectionList,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
+import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import { Container, Text, RewardsPromoBanner } from '@cardstack/components';
 import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';
@@ -18,12 +13,6 @@ import { AssetListLoading } from './components/AssetListLoading';
 import AssetSectionHeader from './components/AssetSectionHeader';
 import { strings } from './strings';
 import { useAssetList } from './useAssetList';
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    paddingBottom: 180,
-  },
-});
 
 // We need to pass this prop if the section to scrollTo is not on viewport
 const onScrollToIndexFailed = () => {
@@ -112,7 +101,6 @@ export const AssetList = () => {
         renderItem={renderItem}
         renderSectionFooter={renderSectionFooter}
         renderSectionHeader={renderSectionHeader}
-        contentContainerStyle={styles.contentContainer}
       />
       <PinHideOptionsFooter />
     </>

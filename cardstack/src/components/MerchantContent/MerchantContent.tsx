@@ -17,11 +17,6 @@ import Routes from '@rainbow-me/routes';
 
 import { strings } from './strings';
 
-const HORIZONTAL_PADDING = 5;
-// For avoiding occlusing the network tag.
-// This needs to be removed once we're good with the new tab bar.
-const BOTTOM_PADDING = 260;
-
 export enum ExpandedMerchantRoutes {
   lifetimeEarnings = 'lifetimeEarnings',
   availableBalances = 'availableBalances',
@@ -78,12 +73,10 @@ export const MerchantContent = memo(
     );
 
     return (
-      <Container height="100%" justifyContent="flex-end" paddingBottom={4}>
+      <Container flex={1} justifyContent="flex-end">
         <ScrollView
-          width="100%"
+          flex={1}
           contentContainerStyle={styles.contentContainer}
-          paddingHorizontal={HORIZONTAL_PADDING}
-          horizontal={false}
           refreshControl={
             <RefreshControl
               tintColor="blueText"
@@ -118,6 +111,7 @@ export const MerchantContent = memo(
             emptyText={strings.noAvailableBalance}
             tokens={merchantSafe.tokens}
           />
+          <Container paddingBottom={4} />
         </ScrollView>
       </Container>
     );
@@ -127,6 +121,6 @@ export const MerchantContent = memo(
 const styles = StyleSheet.create({
   contentContainer: {
     alignItems: 'center',
-    paddingBottom: BOTTOM_PADDING,
+    paddingHorizontal: 16,
   },
 });

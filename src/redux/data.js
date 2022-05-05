@@ -77,7 +77,6 @@ const DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION =
   'data/DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION';
 const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
-const DATA_LOAD_ASSETS_REQUEST = 'data/DATA_LOAD_ASSETS_REQUEST';
 const DATA_LOAD_ASSETS_SUCCESS = 'data/DATA_LOAD_ASSETS_SUCCESS';
 const DATA_LOAD_ASSETS_FAILURE = 'data/DATA_LOAD_ASSETS_FAILURE';
 
@@ -112,7 +111,6 @@ export const dataLoadState = () => async (dispatch, getState) => {
     // eslint-disable-next-line no-empty
   } catch (error) {}
   try {
-    dispatch({ type: DATA_LOAD_ASSETS_REQUEST });
     const [
       assets,
       { prepaidCards },
@@ -719,9 +717,6 @@ export default (state = INITIAL_STATE, action) => {
       case DATA_LOAD_TRANSACTIONS_FAILURE:
         draft.isLoadingTransactions = false;
         break;
-      case DATA_LOAD_ASSETS_REQUEST:
-        draft.isLoadingAssets = true;
-        break;
       case DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS:
         draft.assetPricesFromUniswap = action.payload;
         break;
@@ -733,7 +728,7 @@ export default (state = INITIAL_STATE, action) => {
         draft.isLoadingAssets = false;
         break;
       case DATA_LOAD_ASSETS_FAILURE:
-        draft.isLoadingAssets = true;
+        draft.isLoadingAssets = false;
         break;
       case DATA_ADD_NEW_TRANSACTION_SUCCESS:
         draft.transactions = action.payload;

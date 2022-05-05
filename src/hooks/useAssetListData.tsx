@@ -197,10 +197,12 @@ export const useAssetListData = () => {
 
   const isUninitializedOnLayer2 = !isLayer1(network) && isUninitialized;
 
-  const isLoadingSafes = isLoading || isUninitializedOnLayer2;
+  const isLoadingRainbowAssets = useRainbowSelector(
+    state => state.data.isLoadingAssets
+  );
 
   const isLoadingAssets =
-    useRainbowSelector(state => state.data.isLoadingAssets) || isLoadingSafes;
+    isLoadingRainbowAssets || isUninitializedOnLayer2 || isLoading;
 
   // order of sections in asset list
   const orderedSections = [

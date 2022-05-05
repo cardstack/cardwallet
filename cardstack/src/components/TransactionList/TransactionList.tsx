@@ -1,6 +1,5 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import {
@@ -40,18 +39,6 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
   }, [isLoadingTransactions]);
 
   const { isTabBarEnabled } = useTabBarFlag();
-
-  // TODO: Remove condition after tab is official
-  // useBottomTabBarHeight throws error if it's not inside tabNav
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const tabBarHeight = isTabBarEnabled ? useBottomTabBarHeight() : 0;
-
-  const contentContainerStyle = useMemo(
-    () => ({
-      paddingBottom: 40 + tabBarHeight,
-    }),
-    [tabBarHeight]
-  );
 
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
@@ -102,7 +89,6 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
       ListFooterComponent={
         isFetchingMore ? <ActivityIndicator color="white" /> : null
       }
-      contentContainerStyle={contentContainerStyle}
       renderItem={renderItem}
       sections={sections}
       renderSectionHeader={renderSectionHeader}
