@@ -1,34 +1,27 @@
 import { useRoute } from '@react-navigation/core';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 
 import {
   Button,
+  CenteredContainer,
   Container,
   CURRENCY_DISPLAY_MODE,
   InputAmount,
   Sheet,
   Text,
   Touchable,
+  useInputAmountHelper,
 } from '@cardstack/components';
+import { useBooleanState } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 import { MerchantInformation } from '@cardstack/types';
 import { hitSlop } from '@cardstack/utils/layouts';
-
-import { useDimensions } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import {
-  usePaymentCurrencyAndConversionRates,
-  useNativeCurrencyAndConversionRates,
-} from '@rainbow-me/redux/hooks';
 
 import {
   PaymentRequestConfirmation,
   PaymentRequestFooter,
   PaymentRequestHeader,
 } from './components';
-import { MinInvalidAmountText, useAmountConvertHelper } from './helper';
-
-const TOP_POSITION = 150;
 
 interface Params {
   address: string;
@@ -40,86 +33,62 @@ const PaymentRequestExpandedSheet = () => {
     params: { address, merchantInfo },
   } = useRoute<RouteType<Params>>();
 
-  const { setOptions } = useNavigation();
-  const { height: deviceHeight, isTallPhone } = useDimensions();
-  const [inputValue, setInputValue] = useState<string>();
-  const [editMode, setEditMode] = useState<boolean>(true);
-
-  const [
-    nativeCurrency,
-    currencyConversionRates,
-  ] = usePaymentCurrencyAndConversionRates();
-
-  const [accountNativeCurrency] = useNativeCurrencyAndConversionRates();
-
-  const onSkip = () => {
-    setInputValue('');
-    setEditMode(false);
-  };
-
-  useEffect(() => {
-    setOptions({
-      longFormHeight: isTallPhone ? deviceHeight - TOP_POSITION : deviceHeight,
-    });
-  }, [setOptions, deviceHeight, isTallPhone]);
+  const [editMode, enableEdit, disableEdit] = useBooleanState(true);
 
   const {
     amountInNum,
     amountWithSymbol,
     isInvalid,
     canSubmit,
-  } = useAmountConvertHelper(
+    paymentCurrency,
+    setPaymentCurrency,
     inputValue,
-    nativeCurrency,
-    accountNativeCurrency,
-    currencyConversionRates
-  );
+    setInputValue,
+  } = useInputAmountHelper();
 
-  const EditFooter = () => (
-    <Container padding={5}>
-      <Button
-        disabled={!canSubmit}
-        onPress={() => setEditMode(false)}
-        variant={!inputValue ? 'disabledBlack' : undefined}
-      >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
-      <Container alignItems="center" justifyContent="center" marginTop={4}>
-        <Touchable hitSlop={hitSlop.small} onPress={onSkip}>
-          <Text color="blackEerie" weight="bold" size="xs">
-            Skip Amount
-          </Text>
-        </Touchable>
-      </Container>
-    </Container>
-  );
+  const onSkip = useCallback(() => {
+    setInputValue('');
+    disableEdit();
+  }, [disableEdit, setInputValue]);
 
   return (
     <Sheet
       isFullScreen
       scrollEnabled={!editMode}
       Header={<PaymentRequestHeader />}
-      Footer={editMode ? <EditFooter /> : <PaymentRequestFooter />}
+      Footer={!editMode ? <PaymentRequestFooter /> : undefined}
     >
       {editMode ? (
-        <Container paddingHorizontal={5}>
+        <Container
+          paddingHorizontal={5}
+          justifyContent="space-between"
+          flex={1}
+        >
           <InputAmount
             borderBottomColor="black"
             borderBottomWidth={1}
             currencyDisplayMode={CURRENCY_DISPLAY_MODE.LABEL}
-            flex={1}
             inputValue={inputValue}
             marginBottom={2}
             marginTop={8}
-            nativeCurrency={nativeCurrency}
+            onCurrencyChange={setPaymentCurrency}
+            selectedCurrency={paymentCurrency}
             paddingBottom={1}
             setInputValue={setInputValue}
             isInvalid={isInvalid}
           />
-          {isInvalid ? (
-            <MinInvalidAmountText
-              nativeCurrency={nativeCurrency}
-              currencyConversionRates={currencyConversionRates}
-            />
-          ) : null}
+          <CenteredContainer>
+            <Button
+              disabled={!canSubmit}
+              onPress={disableEdit}
+              variant={isInvalid ? 'disabledBlack' : undefined}
+            >{`${!inputValue ? 'Enter' : 'Confirm'} Amount`}</Button>
+            <Touchable hitSlop={hitSlop.small} onPress={onSkip} paddingTop={2}>
+              <Text color="blackEerie" weight="bold" size="xs">
+                Skip Amount
+              </Text>
+            </Touchable>
+          </CenteredContainer>
         </Container>
       ) : (
         <>
@@ -153,7 +122,7 @@ const PaymentRequestExpandedSheet = () => {
                     borderWidth={1}
                     height={30}
                     hitSlop={hitSlop.small}
-                    onPress={() => setEditMode(true)}
+                    onPress={enableEdit}
                     paddingHorizontal={4}
                   >
                     <Text fontSize={11} weight="bold" lineHeight={26}>
@@ -177,7 +146,7 @@ const PaymentRequestExpandedSheet = () => {
           <PaymentRequestConfirmation
             address={address}
             amountInNum={amountInNum}
-            nativeCurrency={nativeCurrency}
+            paymentCurrency={paymentCurrency}
             amountWithSymbol={amountWithSymbol}
             merchantInfo={merchantInfo}
           />
@@ -187,4 +156,4 @@ const PaymentRequestExpandedSheet = () => {
   );
 };
 
-export default PaymentRequestExpandedSheet;
+export default memo(PaymentRequestExpandedSheet);

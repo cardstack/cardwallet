@@ -13,7 +13,7 @@ import logger from 'logger';
 export interface usePaymentLinkParams {
   address: string;
   amountInNum?: number;
-  nativeCurrency?: string;
+  paymentCurrency?: string;
   amountWithSymbol?: string;
   merchantInfo?: MerchantInformation;
 }
@@ -21,7 +21,7 @@ export interface usePaymentLinkParams {
 export const usePaymentLinks = ({
   address,
   amountInNum,
-  nativeCurrency,
+  paymentCurrency,
   amountWithSymbol,
   merchantInfo,
 }: usePaymentLinkParams) => {
@@ -35,10 +35,10 @@ export const usePaymentLinks = ({
             merchantSafeID: address,
             amount: amountInNum,
             network,
-            currency: nativeCurrency,
+            currency: paymentCurrency,
           })
         : '',
-    [address, amountInNum, nativeCurrency, network]
+    [address, amountInNum, paymentCurrency, network]
   );
 
   const paymentRequestDeepLink = useMemo(
@@ -48,10 +48,10 @@ export const usePaymentLinks = ({
             merchantSafeID: address,
             amount: amountInNum,
             network,
-            currency: nativeCurrency,
+            currency: paymentCurrency,
           })
         : '',
-    [address, amountInNum, nativeCurrency, network]
+    [address, amountInNum, paymentCurrency, network]
   );
 
   const handleShareLink = useCallback(async () => {
