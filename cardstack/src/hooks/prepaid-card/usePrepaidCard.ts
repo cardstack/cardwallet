@@ -7,11 +7,12 @@ import { useSpendToNativeDisplay } from '../currencies/useSpendDisplay';
 export const usePrepaidCard = (address: string) => {
   const { accountAddress, nativeCurrency } = useAccountSettings();
 
-  const { prepaidCard } = useGetPrepaidCardsQuery(
+  const { prepaidCard, isLoading } = useGetPrepaidCardsQuery(
     { accountAddress, nativeCurrency },
     {
-      selectFromResult: ({ data }) => ({
+      selectFromResult: ({ data, ...rest }) => ({
         prepaidCard: data?.prepaidCards?.find(card => card.address === address),
+        ...rest,
       }),
     }
   );
@@ -23,5 +24,6 @@ export const usePrepaidCard = (address: string) => {
   return {
     nativeBalanceDisplay,
     prepaidCard,
+    isLoading,
   };
 };

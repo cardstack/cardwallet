@@ -6,6 +6,8 @@ import { usePrepaidCard } from '@cardstack/hooks';
 import MiniPrepaidCard from '../../../../PrepaidCard/MiniPrepaidCard';
 import TransactionListItem from '../TransactionListItem';
 
+import PrepaidCardSectionSkeleton from './PrepaidCardSectionSkeleton';
+
 export const PrepaidCardTransactionSection = ({
   headerText,
   prepaidCardAddress,
@@ -13,9 +15,13 @@ export const PrepaidCardTransactionSection = ({
   headerText: string;
   prepaidCardAddress: string;
 }) => {
-  const { prepaidCard, nativeBalanceDisplay } = usePrepaidCard(
+  const { prepaidCard, nativeBalanceDisplay, isLoading } = usePrepaidCard(
     prepaidCardAddress
   );
+
+  if (isLoading) {
+    return <PrepaidCardSectionSkeleton headerText={headerText} />;
+  }
 
   return (
     <TransactionListItem
