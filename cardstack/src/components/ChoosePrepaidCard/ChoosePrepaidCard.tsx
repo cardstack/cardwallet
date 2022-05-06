@@ -69,8 +69,6 @@ export const ChoosePrepaidCard = memo(
       network,
     ]);
 
-    const onSelect = useCallback(onSelectPrepaidCard, [onSelectPrepaidCard]);
-
     const renderItem = useCallback(
       ({ item, index }: { item: PrepaidCardType; index: number }) => (
         <PrepaidCardItem
@@ -78,7 +76,7 @@ export const ChoosePrepaidCard = memo(
             ...item,
             nativeCurrencyInfo,
           }}
-          onPress={onSelect}
+          onPress={onSelectPrepaidCard}
           selectedAddress={selectedCard?.address}
           networkName={networkName}
           spendAmount={spendAmount}
@@ -88,7 +86,7 @@ export const ChoosePrepaidCard = memo(
       [
         nativeCurrencyInfo,
         networkName,
-        onSelect,
+        onSelectPrepaidCard,
         prepaidCards.length,
         selectedCard,
         spendAmount,

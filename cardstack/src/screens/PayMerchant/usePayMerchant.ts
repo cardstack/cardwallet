@@ -1,27 +1,22 @@
-import {
-  NativeCurrency,
-  convertToSpend,
-  convertStringToNumber,
-} from '@cardstack/cardpay-sdk';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { LayoutAnimation, InteractionManager } from 'react-native';
 
+import { useInputAmountHelper } from '@cardstack/components';
+import { defaultErrorAlert } from '@cardstack/constants';
+import { useMutationEffects, useSpendToNativeDisplay } from '@cardstack/hooks';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
 import {
   handleAlertError,
   usePaymentMerchantUniversalLink,
 } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
 import { useLoadingOverlay } from '@cardstack/navigation';
-import usePayment from '@cardstack/redux/hooks/usePayment';
 import { usePayMerchantMutation } from '@cardstack/services';
 import { MerchantInformation, PrepaidCardType } from '@cardstack/types';
-import { convertSpendForBalanceDisplay } from '@cardstack/utils';
 
+import { Alert } from '@rainbow-me/components/alerts';
 import { useWallets } from '@rainbow-me/hooks';
 import { useNavigation } from '@rainbow-me/navigation';
 import RainbowRoutes from '@rainbow-me/navigation/routesNames';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
-import logger from 'logger';
 
 import { getBlockTimestamp } from './helpers';
 
@@ -48,7 +43,6 @@ interface PayMerchantRequestParams {
   merchantInfoDID?: MerchantInformation;
   selectedPrepaidCard?: PrepaidCardType;
   merchantAddress: string;
-  nativeCurrency: NativeCurrency;
 }
 
 const usePayMerchantRequest = ({
@@ -56,7 +50,6 @@ const usePayMerchantRequest = ({
   merchantInfoDID,
   selectedPrepaidCard,
   merchantAddress,
-  nativeCurrency,
 }: PayMerchantRequestParams) => {
   const { navigate } = useNavigation();
 
@@ -64,10 +57,12 @@ const usePayMerchantRequest = ({
 
   const [
     payMerchant,
-    { data: receipt, isSuccess, isLoading: isLoadingTx, isError, error },
+    { data: receipt, isSuccess, isLoading: isLoadingTx, isError },
   ] = usePayMerchantMutation();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+
+  const { nativeBalanceDisplay } = useSpendToNativeDisplay({ spendAmount });
 
   const payMerchantRequest = useCallback(() => {
     showLoadingOverlay({
@@ -97,11 +92,6 @@ const usePayMerchantRequest = ({
       return;
     }
 
-    const { nativeBalanceDisplay } = await convertSpendForBalanceDisplay(
-      spendAmount,
-      nativeCurrency
-    );
-
     const timestamp = await getBlockTimestamp(receipt.blockNumber);
 
     dismissLoadingOverlay();
@@ -113,7 +103,6 @@ const usePayMerchantRequest = ({
     InteractionManager.runAfterInteractions(() => {
       navigate(RainbowRoutes.PAYMENT_CONFIRMATION_SHEET, {
         merchantInfo: merchantInfoDID,
-        spendAmount,
         nativeBalanceDisplay,
         timestamp,
         transactionHash: receipt.transactionHash,
@@ -123,141 +112,131 @@ const usePayMerchantRequest = ({
       });
     });
   }, [
-    spendAmount,
-    nativeCurrency,
     receipt,
     dismissLoadingOverlay,
     navigate,
     merchantInfoDID,
+    nativeBalanceDisplay,
     merchantAddress,
     selectedPrepaidCard,
   ]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      onPayMerchantSuccess();
-    }
-  }, [isSuccess, onPayMerchantSuccess]);
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isSuccess,
+          callback: onPayMerchantSuccess,
+        },
+        error: {
+          status: isError,
+          callback: () => {
+            dismissLoadingOverlay();
 
-  useEffect(() => {
-    if (isError) {
-      dismissLoadingOverlay();
-
-      handleAlertError(
-        'Something unexpected happened! Please try again. If this error persists please contact support@cardstack.com'
-      );
-
-      logger.sentry('Pay Merchant failed!', error);
-    }
-  }, [dismissLoadingOverlay, error, isError]);
+            Alert(defaultErrorAlert);
+          },
+        },
+      }),
+      [dismissLoadingOverlay, isError, isSuccess, onPayMerchantSuccess]
+    )
+  );
 
   return { payMerchantRequest, isLoadingPayment: isLoadingTx };
 };
 
 export const usePayMerchant = () => {
-  const { prepaidCards, isLoading, data } = usePaymentMerchantUniversalLink();
+  const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
+  const [payStep, setPayStep] = useState<Step>();
+
+  const {
+    prepaidCards,
+    isLoading,
+    data: initialTxSheetData,
+  } = usePaymentMerchantUniversalLink();
 
   const {
     infoDID = '',
     amount: initialAmount,
-    currency: initialCurrency,
+    currency: paymentLinkCurrency,
     merchantSafe: merchantAddress,
-  } = data;
+  } = initialTxSheetData;
 
   const {
-    paymentChangeCurrency,
-    currency: nativeCurrency = initialCurrency,
-  } = usePayment();
+    isInvalid,
+    canSubmit,
+    paymentCurrency,
+    setPaymentCurrency,
+    inputValue,
+    setInputValue,
+    spendAmount,
+  } = useInputAmountHelper();
 
-  // Initialize input amount's currency with the currency in merchant payment request link
+  // Initialize default values from deeplink
   useEffect(() => {
-    if (initialCurrency) {
-      paymentChangeCurrency(initialCurrency);
+    paymentLinkCurrency && setPaymentCurrency(paymentLinkCurrency);
+
+    setInputValue(initialAmount);
+  }, [initialAmount, paymentLinkCurrency, setInputValue, setPaymentCurrency]);
+
+  const firstCardInfo = useMemo(() => {
+    const card = prepaidCards[0];
+
+    const hasEnoughBalance =
+      spendAmount && (card?.spendFaceValue || 0) > spendAmount;
+
+    return {
+      card,
+      hasEnoughBalance,
+    };
+  }, [prepaidCards, spendAmount]);
+
+  // Auto select card if it has balance
+  useEffect(() => {
+    const noCardSelected = !selectedPrepaidCard?.address;
+
+    if (noCardSelected && firstCardInfo.hasEnoughBalance) {
+      selectPrepaidCard(firstCardInfo.card);
     }
-  }, [initialCurrency, paymentChangeCurrency]);
-
-  const [selectedPrepaidCard, selectPrepaidCard] = useState<PrepaidCardType>();
-
-  const [inputValue, setInputValue] = useState<string | undefined>(
-    `${initialAmount ? initialAmount.toString() : 0}`
-  );
-
-  const hasMultipleCards = prepaidCards.length > 1;
-
-  const initialStep = hasMultipleCards
-    ? PAY_STEP.CHOOSE_PREPAID_CARD
-    : PAY_STEP.EDIT_AMOUNT;
-
-  const nextStep = hasMultipleCards
-    ? PAY_STEP.CHOOSE_PREPAID_CARD
-    : PAY_STEP.CONFIRMATION;
-
-  const [payStep, setPayStep] = useState<Step>(initialStep);
+  }, [firstCardInfo, selectedPrepaidCard]);
 
   const {
     merchantInfoDID,
     isLoading: isLoadingMerchantInfo,
   } = useMerchantInfoFromDID(infoDID);
 
-  const [
-    accountCurrency,
-    currencyConversionRates,
-  ] = useNativeCurrencyAndConversionRates();
+  const getPayStep = useMemo(() => {
+    const hasMultipleCards = prepaidCards.length > 1;
 
-  const spendAmount = useMemo(
-    () =>
-      convertToSpend(
-        convertStringToNumber(inputValue || '0'),
-        nativeCurrency,
-        currencyConversionRates[nativeCurrency]
-      ),
-    [currencyConversionRates, inputValue, nativeCurrency]
-  );
+    const hasEnoughBalance =
+      (selectedPrepaidCard?.spendFaceValue || 0) > spendAmount;
 
-  const sortedPrepaidCards: PrepaidCardType[] = useMemo(
-    () =>
-      [...(prepaidCards || [])].sort(
-        (a: PrepaidCardType, b: PrepaidCardType) =>
-          b.spendFaceValue - a.spendFaceValue
-      ),
-    [prepaidCards]
-  );
+    const shouldChooseCard =
+      hasMultipleCards || (!hasEnoughBalance && spendAmount);
 
-  // Updating in case first render selected is undefined
+    const canGoToConfirmation =
+      hasEnoughBalance && selectedPrepaidCard && spendAmount;
+
+    return shouldChooseCard
+      ? PAY_STEP.CHOOSE_PREPAID_CARD
+      : canGoToConfirmation
+      ? PAY_STEP.CONFIRMATION
+      : PAY_STEP.EDIT_AMOUNT;
+  }, [prepaidCards.length, selectedPrepaidCard, spendAmount]);
+
+  // Update initial step state after checking selectedPrepaidcard
+  // If first card doesn't have balance we update anyways, bc it probably
+  // means it has a single card with no sufficient funds
   useEffect(() => {
-    const firstPrepaidCard = sortedPrepaidCards[0];
-    const noCardSelected = !selectedPrepaidCard?.address;
-
-    const firstCardHasEnoughBalance =
-      (firstPrepaidCard?.spendFaceValue || 0) > spendAmount;
-
-    if (noCardSelected && firstCardHasEnoughBalance) {
-      selectPrepaidCard(firstPrepaidCard);
+    if (!payStep && (selectedPrepaidCard || !firstCardInfo.hasEnoughBalance)) {
+      setPayStep(getPayStep);
     }
-  }, [sortedPrepaidCards, selectedPrepaidCard, spendAmount]);
-
-  useEffect(() => {
-    // Go to choose prepaid card step if have multiple prepaid cards and has amount in deeplink
-    if (hasMultipleCards && initialAmount) {
-      setPayStep(PAY_STEP.CHOOSE_PREPAID_CARD);
-    }
-  }, [hasMultipleCards, initialAmount]);
-
-  // Updating amount when nav param change
-  useEffect(() => {
-    if (initialAmount) {
-      setInputValue(initialAmount.toString());
-    } else {
-      setPayStep(PAY_STEP.EDIT_AMOUNT);
-    }
-  }, [initialAmount]);
+  }, [firstCardInfo, getPayStep, payStep, selectedPrepaidCard]);
 
   const { payMerchantRequest, isLoadingPayment } = usePayMerchantRequest({
     spendAmount,
     selectedPrepaidCard,
     merchantAddress,
     merchantInfoDID,
-    nativeCurrency: accountCurrency,
   });
 
   const onConfirm = useCallback(() => {
@@ -273,13 +252,6 @@ export const usePayMerchant = () => {
     payMerchantRequest();
   }, [spendAmount, selectedPrepaidCard, payMerchantRequest]);
 
-  const onSelectPrepaidCard = useCallback(
-    (prepaidCardItem: PrepaidCardType) => {
-      selectPrepaidCard(prepaidCardItem);
-    },
-    []
-  );
-
   const onStepChange = useCallback(
     (step: Step) => () => {
       layoutAnimation();
@@ -288,43 +260,45 @@ export const usePayMerchant = () => {
     []
   );
 
-  const onCancelConfirmation = useCallback(onStepChange(initialStep), [
-    onStepChange,
-  ]);
+  const onCancelConfirmation = useCallback(
+    onStepChange(PAY_STEP.CHOOSE_PREPAID_CARD),
+    [onStepChange]
+  );
 
-  const onAmountNext = useCallback(onStepChange(nextStep), [onStepChange]);
+  const onAmountNext = useCallback(onStepChange(getPayStep), [
+    onStepChange,
+    getPayStep,
+  ]);
 
   const txSheetData = useMemo(
     () => ({
-      ...data,
+      ...initialTxSheetData,
       spendAmount,
-      currency:
-        nativeCurrency === NativeCurrency.SPD
-          ? accountCurrency
-          : nativeCurrency,
       prepaidCard: selectedPrepaidCard?.address,
     }),
-    [accountCurrency, data, nativeCurrency, selectedPrepaidCard, spendAmount]
+    [initialTxSheetData, selectedPrepaidCard, spendAmount]
   );
 
   return {
     merchantInfoDID,
     inputValue,
-    nativeCurrency,
     selectedPrepaidCard,
     spendAmount,
     payStep,
     txSheetData,
-    prepaidCards: sortedPrepaidCards,
+    prepaidCards,
     isLoading,
     onConfirmLoading: isLoadingPayment,
-    hasMultipleCards,
     onConfirm,
     onStepChange,
-    onSelectPrepaidCard,
+    onSelectPrepaidCard: selectPrepaidCard,
     setInputValue,
     onCancelConfirmation,
     onAmountNext,
     isLoadingMerchantInfo,
+    isInvalid,
+    canSubmit,
+    paymentCurrency,
+    setPaymentCurrency,
   };
 };
