@@ -210,8 +210,10 @@ export const usePayMerchant = () => {
     const hasEnoughBalance =
       (selectedPrepaidCard?.spendFaceValue || 0) > spendAmount;
 
+    // if it has amount from deep link, or a valid amount to pay set
+    // with multiple cards or with none card with enough balance
     const shouldChooseCard =
-      hasMultipleCards || (!hasEnoughBalance && spendAmount);
+      (initialAmount || spendAmount) && (hasMultipleCards || !hasEnoughBalance);
 
     const canGoToConfirmation =
       hasEnoughBalance && selectedPrepaidCard && spendAmount;
@@ -221,16 +223,20 @@ export const usePayMerchant = () => {
       : canGoToConfirmation
       ? PAY_STEP.CONFIRMATION
       : PAY_STEP.EDIT_AMOUNT;
-  }, [prepaidCards.length, selectedPrepaidCard, spendAmount]);
+  }, [initialAmount, prepaidCards.length, selectedPrepaidCard, spendAmount]);
 
   // Update initial step state after checking selectedPrepaidcard
   // If first card doesn't have balance we update anyways, bc it probably
   // means it has a single card with no sufficient funds
   useEffect(() => {
-    if (!payStep && (selectedPrepaidCard || !firstCardInfo.hasEnoughBalance)) {
+    if (
+      !payStep &&
+      !isLoading &&
+      (selectedPrepaidCard || !firstCardInfo.hasEnoughBalance)
+    ) {
       setPayStep(getPayStep);
     }
-  }, [firstCardInfo, getPayStep, payStep, selectedPrepaidCard]);
+  }, [firstCardInfo, getPayStep, isLoading, payStep, selectedPrepaidCard]);
 
   const { payMerchantRequest, isLoadingPayment } = usePayMerchantRequest({
     spendAmount,

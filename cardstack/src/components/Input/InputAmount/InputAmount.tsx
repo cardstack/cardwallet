@@ -170,16 +170,18 @@ export const InputAmount = memo(
             </Touchable>
           </CenteredContainer>
         </Container>
-        <Text
-          textAlign="center"
-          textTransform="uppercase"
-          fontSize={12}
-          weight="bold"
-          color="red"
-          marginTop={1}
-        >
-          {isInvalid ? `minimum ${minimumAmountDisplay}` : ''}
-        </Text>
+        <Container height={20}>
+          <Text
+            textAlign="center"
+            textTransform="uppercase"
+            fontSize={12}
+            weight="bold"
+            color="red"
+            marginTop={1}
+          >
+            {isInvalid ? `minimum ${minimumAmountDisplay}` : ''}
+          </Text>
+        </Container>
       </Container>
     );
   }
