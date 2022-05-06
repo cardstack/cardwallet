@@ -28,13 +28,8 @@ export const hubApi = createApi({
   endpoints: builder => ({
     getCustodialWallet: builder.query<GetCustodialWalletQueryResult, void>({
       query: () => routes.custodialWallet,
-      transformResponse: (response: { data: CustodialWallet }) => {
-        const attributes = transformObjKeysToCamelCase(
-          response?.data?.attributes
-        );
-
-        return attributes;
-      },
+      transformResponse: (response: { data: CustodialWallet }) =>
+        transformObjKeysToCamelCase(response?.data?.attributes),
     }),
     requestEmailCardDrop: builder.mutation<void, RequestCardDropQueryParams>({
       query: ({ email }) => ({
@@ -53,15 +48,7 @@ export const hubApi = createApi({
       extraOptions: { authenticate: false },
       transformResponse: (response: {
         data: { attributes: EoaClaimedAttrsType };
-      }) => {
-        const attributes = transformObjKeysToCamelCase(
-          response?.data?.attributes
-        );
-
-        console.log(':::', attributes);
-
-        return attributes;
-      },
+      }) => transformObjKeysToCamelCase(response?.data?.attributes),
     }),
     checkHubAuth: builder.query<boolean, CheckHubAuthQueryParams>({
       async queryFn(params) {
