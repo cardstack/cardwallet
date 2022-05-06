@@ -12,6 +12,7 @@ import { FeatherIconNames } from './feather-icon-names';
 import { MaterialCommunityIconNames } from './material-community-icon-names';
 
 const iconSizeToValue = {
+  tiny: 12,
   small: 15,
   medium: 22,
   large: 30,

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useMemo } from 'react';
 
 import { Container, Touchable, Icon, Text } from '@cardstack/components';
 import { ColorTypes } from '@cardstack/theme';
@@ -34,7 +34,6 @@ export interface NoticeProps {
   description: string;
   onPress?: () => void;
   type?: NoticeType;
-  icon?: React.ReactNode;
 }
 
 export const Notice = ({
@@ -42,11 +41,30 @@ export const Notice = ({
   description,
   onPress,
   type = 'warning',
-  icon,
 }: NoticeProps) => {
   useLayoutEffect(() => {
     layoutEasingAnimation();
   }, [isVisible]);
+
+  const iconComponent = useMemo(
+    () =>
+      onPress ? (
+        <Container
+          borderRadius={20}
+          padding={1}
+          backgroundColor={noticeColorConfig[type].iconColor}
+        >
+          <Icon
+            iconSize="tiny"
+            name="external-link"
+            color={noticeColorConfig[type].backgroundColor}
+          />
+        </Container>
+      ) : (
+        <Icon size={20} name="info" color={noticeColorConfig[type].iconColor} />
+      ),
+    [onPress, type]
+  );
 
   return (
     <>
@@ -55,30 +73,30 @@ export const Notice = ({
           <Container
             alignItems="center"
             flexDirection="row"
-            justifyContent="flex-start"
             paddingVertical={1}
             paddingHorizontal={2}
-            marginHorizontal={4}
-            marginVertical={2}
-            borderRadius={10}
+            borderRadius={20}
             testID="notice-container"
             backgroundColor={noticeColorConfig[type].backgroundColor}
           >
-            {icon || (
+            {iconComponent}
+            <Container flex={1}>
+              <Text
+                variant="semibold"
+                size="xs"
+                paddingHorizontal={1}
+                color={noticeColorConfig[type].textColor}
+              >
+                {description}
+              </Text>
+            </Container>
+            {!!onPress && (
               <Icon
                 iconSize="medium"
-                name="info"
+                name="chevron-right"
                 color={noticeColorConfig[type].iconColor}
               />
             )}
-            <Container margin={1} />
-            <Text
-              weight="bold"
-              marginRight={8}
-              color={noticeColorConfig[type].textColor}
-            >
-              {description}
-            </Text>
           </Container>
         </Touchable>
       )}
