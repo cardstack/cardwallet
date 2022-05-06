@@ -31,11 +31,6 @@ interface ReduxState {
     loadingCollectibles: boolean;
     collectibles: CollectibleType[];
   };
-  currencyConversion: {
-    rates: {
-      [key: string]: number;
-    };
-  };
   walletconnect: {
     pendingRedirect: boolean;
   };
@@ -51,15 +46,3 @@ export const useRainbowSelector = <TSelected = unknown>(
   selector: (_state: ReduxState) => TSelected,
   equalityFn?: (_left: TSelected, _right: TSelected) => boolean
 ): TSelected => useSelector(selector, equalityFn);
-
-export const useNativeCurrencyAndConversionRates = () =>
-  useRainbowSelector<[NativeCurrency, { [key: string]: number }]>(state => [
-    state.settings.nativeCurrency,
-    state.currencyConversion.rates,
-  ]);
-
-export const usePaymentCurrencyAndConversionRates = () =>
-  useRainbowSelector<[NativeCurrency, { [key: string]: number }]>(state => [
-    state.payment.currency,
-    state.currencyConversion.rates,
-  ]);

@@ -2,7 +2,6 @@ import addCash from './addCash';
 import charts from './charts';
 import coingecko from './coingecko';
 import contacts from './contacts';
-import currencyConversion from './currencyConversion';
 import data from './data';
 import editOptions from './editOptions';
 import explorer from './explorer';
@@ -24,7 +23,6 @@ import walletconnect from './walletconnect';
 import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import collectibles from '@cardstack/redux/collectibles';
-import payment from '@cardstack/redux/payment';
 import primarySafe from '@cardstack/redux/primarySafeSlice';
 import requests from '@cardstack/redux/requests';
 
@@ -35,7 +33,6 @@ export default {
   charts,
   collectibles, // responsible for extracting collectibles (NFTs) from the assets state and fetching additional metadata for display
   contacts,
-  currencyConversion,
   data,
   editOptions,
   explorer,
@@ -55,6 +52,5 @@ export default {
   uniswapLiquidity,
   walletconnect,
   wallets,
-  payment,
   primarySafe,
 };

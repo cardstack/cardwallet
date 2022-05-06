@@ -15,8 +15,7 @@ import {
 import { WithdrawalDecodedData } from '@cardstack/types';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { useAccountProfile } from '@rainbow-me/hooks';
-import { useNativeCurrencyAndConversionRates } from '@rainbow-me/redux/hooks';
+import { useAccountProfile, useAccountSettings } from '@rainbow-me/hooks';
 
 import { SectionHeaderText } from './components/SectionHeaderText';
 
@@ -76,7 +75,7 @@ const FromSection = ({ data }: { data: WithdrawalDecodedData }) => {
 };
 
 const WithdrawSection = ({ data }: { data: WithdrawalDecodedData }) => {
-  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
+  const { nativeCurrency } = useAccountSettings();
 
   const tokenDisplay = convertRawAmountToBalance(data.amount, data.token);
 

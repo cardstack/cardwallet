@@ -23,7 +23,6 @@ import { uniswapResetState } from './uniswap';
 import { uniswapLiquidityResetState } from './uniswapLiquidity';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
-import { paymentChangeCurrency } from '@cardstack/redux/payment';
 import { requestsResetState } from '@cardstack/redux/requests';
 import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
 import logger from 'logger';
@@ -39,20 +38,16 @@ const SETTINGS_UPDATE_NETWORK_SUCCESS =
   'settings/SETTINGS_UPDATE_NETWORK_SUCCESS';
 
 // -- Actions --------------------------------------------------------------- //
-export const settingsLoadState = () => async (dispatch, getState) => {
+export const settingsLoadState = () => async dispatch => {
   try {
     const nativeCurrency = await getNativeCurrency();
 
     await getExchangeRatesQuery();
 
-    const paymentCurrency = getState().payment.currency;
     dispatch({
       payload: nativeCurrency,
       type: SETTINGS_UPDATE_NATIVE_CURRENCY_SUCCESS,
     });
-    if (!paymentCurrency) {
-      dispatch(paymentChangeCurrency(nativeCurrency));
-    }
   } catch (error) {
     logger.log('Error loading native currency', error);
   }
@@ -131,7 +126,6 @@ export const settingsChangeNativeCurrency = nativeCurrency => async dispatch => 
     });
     dispatch(fallbackExplorerInit());
     saveNativeCurrency(nativeCurrency);
-    dispatch(paymentChangeCurrency(nativeCurrency));
   } catch (error) {
     logger.log('Error changing native currency', error);
   }
