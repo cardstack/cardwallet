@@ -10,8 +10,9 @@ import { checkHubAuth, fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
 import {
   GetCustodialWalletQueryResult,
   RequestCardDropQueryParams,
+  EoaClaimedAttrsType,
   GetEoaClaimedQueryParams,
-  GetEoaClaimedResultType,
+  GetEoaClaimedQueryResult,
   CheckHubAuthQueryParams,
 } from './hub-types';
 
@@ -45,14 +46,22 @@ export const hubApi = createApi({
       }),
     }),
     getEoaClaimed: builder.query<
-      GetEoaClaimedResultType,
+      GetEoaClaimedQueryResult,
       GetEoaClaimedQueryParams
     >({
       query: ({ eoa }) => `${routes.emailDrop}?eoa=${eoa}`,
       extraOptions: { authenticate: false },
       transformResponse: (response: {
-        data: { attributes: { claimed: GetEoaClaimedResultType } };
-      }) => response?.data?.attributes?.claimed,
+        data: { attributes: EoaClaimedAttrsType };
+      }) => {
+        const attributes = transformObjKeysToCamelCase(
+          response?.data?.attributes
+        );
+
+        console.log(':::', attributes);
+
+        return attributes;
+      },
     }),
     checkHubAuth: builder.query<boolean, CheckHubAuthQueryParams>({
       async queryFn(params) {

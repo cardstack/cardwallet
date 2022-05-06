@@ -15,7 +15,7 @@ export const useWelcomeCtaBanner = () => {
   const { selectedAccount } = useWallets();
   const { accountAddress, network } = useAccountSettings();
 
-  const { data: claimedResponse = true } = useGetEoaClaimedQuery(
+  const { data: emailDropGetData } = useGetEoaClaimedQuery(
     {
       eoa: accountAddress,
     },
@@ -44,12 +44,13 @@ export const useWelcomeCtaBanner = () => {
       isLayer2(network) &&
       showBannerUserDecision &&
       isFirstAddressForCurrentWallet &&
-      !claimedResponse,
+      !emailDropGetData?.claimed &&
+      !emailDropGetData?.rateLimited,
     [
       showBannerUserDecision,
       isFirstAddressForCurrentWallet,
-      claimedResponse,
       network,
+      emailDropGetData,
     ]
   );
 

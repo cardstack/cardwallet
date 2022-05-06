@@ -19,7 +19,14 @@ export interface GetEoaClaimedQueryParams {
   eoa: string;
 }
 
-export type GetEoaClaimedResultType = boolean;
+export type EoaClaimedAttrsType = {
+  timestamp: string;
+  claimed: boolean;
+  'owner-address': string;
+  'rate-limited': boolean;
+};
+
+export type GetEoaClaimedQueryResult = KebabToCamelCaseKeys<EoaClaimedAttrsType>;
 
 export interface CheckHubAuthQueryParams {
   accountAddress: string;
