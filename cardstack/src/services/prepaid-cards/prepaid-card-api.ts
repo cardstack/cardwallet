@@ -44,7 +44,7 @@ const prepaidCardApi = safesApi.injectEndpoints({
           resetHdProvider: false,
         });
       },
-      invalidatesTags: [CacheTags.SAFES],
+      invalidatesTags: [CacheTags.SAFES, CacheTags.PREPAID_CARDS],
     }),
     transferPrepaidCard: builder.mutation<
       TransactionReceipt,
@@ -59,7 +59,7 @@ const prepaidCardApi = safesApi.injectEndpoints({
           resetHdProvider: false,
         });
       },
-      invalidatesTags: [CacheTags.SAFES],
+      invalidatesTags: [CacheTags.SAFES, CacheTags.PREPAID_CARDS],
     }),
   }),
 });
