@@ -59,5 +59,6 @@ export const useInputAmountHelper = () => {
     setPaymentCurrency,
     inputValue,
     setInputValue,
+    spendAmount,
   };
 };

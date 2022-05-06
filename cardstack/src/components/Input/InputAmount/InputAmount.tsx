@@ -1,6 +1,12 @@
 import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/core';
-import React, { useCallback, memo, useMemo } from 'react';
+import React, {
+  useCallback,
+  memo,
+  useMemo,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import { Keyboard } from 'react-native';
 
 import { useSpendToNativeDisplay } from '@cardstack/hooks';
@@ -34,9 +40,9 @@ const textShadowOffset = {
 
 const INPUT_MASK = '[099999999999999999].[999999999999999999]';
 
-type InputAmountProps = {
+export type InputAmountProps = {
   inputValue: string | undefined;
-  setInputValue: (_val: string | undefined) => void;
+  setInputValue: Dispatch<SetStateAction<string | undefined>>;
   onCurrencyChange: (currency: NativeCurrency) => void;
   selectedCurrency: NativeCurrency;
   currencyDisplayMode?: CURRENCY_DISPLAY_MODE;
@@ -164,16 +170,16 @@ export const InputAmount = memo(
             </Touchable>
           </CenteredContainer>
         </Container>
-        {isInvalid && (
-          <Text
-            textAlign="center"
-            textTransform="uppercase"
-            fontSize={12}
-            weight="bold"
-            color="red"
-            marginTop={1}
-          >{`minimum ${minimumAmountDisplay}`}</Text>
-        )}
+        <Text
+          textAlign="center"
+          textTransform="uppercase"
+          fontSize={12}
+          weight="bold"
+          color="red"
+          marginTop={1}
+        >
+          {isInvalid ? `minimum ${minimumAmountDisplay}` : ''}
+        </Text>
       </Container>
     );
   }
