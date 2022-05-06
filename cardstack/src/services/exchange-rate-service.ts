@@ -23,7 +23,9 @@ export const getValueInNativeCurrency = async (
 
   const { data: rates } = await getExchangeRatesQuery();
 
-  return (rates?.[nativeCurrency] ?? 0) * value;
+  const convertedAmount = (rates?.[nativeCurrency] ?? 0) * value;
+
+  return parseFloat(convertedAmount.toFixed(2));
 };
 
 export const getSpendValueInNativeCurrency = async (
