@@ -14,30 +14,10 @@ export const ServiceStatusNotice = () => {
   return (
     <Container marginHorizontal={4} marginVertical={2}>
       <Notice
-        isVisible={true}
+        isVisible={!!data}
         description={data?.name || 'Information available.'}
-        type="info"
-        onPress={handleOnPress}
-      />
-      <Container paddingTop={2} />
-      <Notice
-        isVisible={true}
-        description={data?.name || 'Warning reported.'}
         type="warning"
         onPress={handleOnPress}
-      />
-      <Container paddingTop={2} />
-      <Notice
-        isVisible={true}
-        description={data?.name || 'Incident reported.'}
-        type="error"
-        onPress={handleOnPress}
-      />
-      <Container paddingTop={2} />
-      <Notice
-        isVisible={true}
-        description={data?.name || 'Incident reported.'}
-        type="info"
       />
     </Container>
   );

@@ -50,7 +50,7 @@ export const Notice = ({
     () =>
       onPress ? (
         <Container
-          borderRadius={20}
+          borderRadius={10}
           padding={1}
           backgroundColor={noticeColorConfig[type].iconColor}
         >
@@ -75,7 +75,7 @@ export const Notice = ({
             flexDirection="row"
             paddingVertical={1}
             paddingHorizontal={2}
-            borderRadius={20}
+            borderRadius={15}
             testID="notice-container"
             backgroundColor={noticeColorConfig[type].backgroundColor}
           >
