@@ -4,10 +4,16 @@ import React from 'react';
 import { render } from '../../../test-utils';
 import { CURRENCY_DISPLAY_MODE, InputAmount } from '../InputAmount/InputAmount';
 
-jest.mock('@rainbow-me/navigation/', () => ({
+jest.mock('@react-navigation/core', () => ({
   useNavigation: jest.fn(() => ({
     navigate: jest.fn(),
   })),
+}));
+
+jest.mock('@rainbow-me/hooks', () => ({
+  useAccountSettings: () => ({
+    nativeCurrency: 'USD',
+  }),
 }));
 
 describe('InputAmount', () => {

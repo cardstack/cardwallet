@@ -1,7 +1,7 @@
 import { useRoute } from '@react-navigation/native';
 import { renderHook } from '@testing-library/react-hooks';
 
-import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
+import { getSafeData, useGetPrepaidCardsQuery } from '@cardstack/services';
 
 import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { usePaymentMerchantUniversalLink } from '../usePaymentMerchantUniversalLink';
@@ -23,14 +23,11 @@ jest.mock('@react-navigation/native', () => ({
 jest.mock('@rainbow-me/hooks', () => ({
   useWallets: () => ({ selectedWallet: 'fooSelectedWallet' }),
   useAssetListData: () => ({ isLoadingAssets: false }),
-  useAccountSettings: () => ({ accountAddress: 'foo' }),
+  useAccountSettings: () => ({ accountAddress: 'foo', nativeCurrency: 'USD' }),
 }));
 
 jest.mock('@rainbow-me/redux/hooks', () => ({
   useRainbowSelector: jest.fn(),
-  useNativeCurrencyAndConversionRates: jest
-    .fn()
-    .mockImplementation(() => ['USD', { USD: 1, EUR: 0.86 }]),
 }));
 
 jest.mock('@cardstack/models/safes-providers', () => ({
@@ -39,7 +36,7 @@ jest.mock('@cardstack/models/safes-providers', () => ({
 
 jest.mock('@cardstack/services', () => ({
   getSafeData: jest.fn(),
-  useGetSafesDataQuery: jest.fn(),
+  useGetPrepaidCardsQuery: jest.fn(),
 }));
 
 jest.mock('@cardstack/utils', () => ({
@@ -66,17 +63,13 @@ jest.mock('@cardstack/models/hd-provider', () => ({
   }),
 }));
 
-jest.mock('@rainbow-me/redux/fallbackExplorer', () => ({
-  fetchAssetsBalancesAndPrices: () => jest.fn(),
-}));
-
 describe('usePaymentMerchantUniversalLink', () => {
   beforeEach(() => {
     (getSafeData as jest.Mock).mockImplementation(() => ({
       infoDID: mockedDID,
     }));
 
-    (useGetSafesDataQuery as jest.Mock).mockImplementation(() => ({
+    (useGetPrepaidCardsQuery as jest.Mock).mockImplementation(() => ({
       prepaidCards: updatedData.updatedPrepaidCards,
       isLoadingCards: false,
     }));
@@ -91,8 +84,8 @@ describe('usePaymentMerchantUniversalLink', () => {
       params: {
         merchantAddress: '0x7bAeEbbd7Fd1f41f3DA69A08f8E053C8CCBb592b',
         network: 'sokol',
-        amount: 100,
-        currency: 'SPD',
+        amount: 1,
+        currency: 'USD',
       },
     }));
 
@@ -105,19 +98,19 @@ describe('usePaymentMerchantUniversalLink', () => {
     expect(result.current.data).toStrictEqual({
       type: 'payMerchant',
       infoDID: undefined,
-      amount: 100,
+      amount: 1,
       merchantSafe: '0x7bAeEbbd7Fd1f41f3DA69A08f8E053C8CCBb592b',
-      currency: 'SPD',
+      currency: 'USD',
       qrCodeNetwork: 'sokol',
     });
   });
 
-  it('should call usePaymentMerchantUniversalLink and return SPD if no currency specified in url', async () => {
+  it('should call usePaymentMerchantUniversalLink and return nativeCurrency if no currency specified in url', async () => {
     (useRoute as jest.Mock).mockImplementation(() => ({
       params: {
         merchantAddress: '0x7bAeEbbd7Fd1f41f3DA69A08f8E053C8CCBb592b',
         network: 'sokol',
-        amount: 100,
+        amount: 1,
       },
     }));
 
@@ -126,7 +119,7 @@ describe('usePaymentMerchantUniversalLink', () => {
     expect(result.current.data.currency).toBe('USD');
   });
 
-  it('should call usePaymentMerchantUniversalLink and return amount 0 if no amount is provided in url', async () => {
+  it('should call usePaymentMerchantUniversalLink and return no amount if no amount is provided in url', async () => {
     (useRoute as jest.Mock).mockImplementation(() => ({
       params: {
         merchantAddress: '0x7bAeEbbd7Fd1f41f3DA69A08f8E053C8CCBb592b',
@@ -136,18 +129,6 @@ describe('usePaymentMerchantUniversalLink', () => {
 
     const { result } = renderHook(() => usePaymentMerchantUniversalLink());
 
-    expect(result.current.data.amount).toBe(0);
-  });
-
-  it('should call usePaymentMerchantUniversalLink and return network sokol if no network is provided in url', async () => {
-    (useRoute as jest.Mock).mockImplementation(() => ({
-      params: {
-        merchantAddress: '0x7bAeEbbd7Fd1f41f3DA69A08f8E053C8CCBb592b',
-      },
-    }));
-
-    const { result } = renderHook(() => usePaymentMerchantUniversalLink());
-
-    expect(result.current.data.amount).toBe(0);
+    expect(result.current.data.amount).toBe('');
   });
 });
