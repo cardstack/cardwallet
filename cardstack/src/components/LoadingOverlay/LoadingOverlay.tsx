@@ -12,6 +12,8 @@ import { neverRerender } from '@rainbow-me/utils';
 const styles = StyleSheet.create({
   overlayWrapper: {
     flex: 1,
+    // Note: Workaround for android gesture transparency issue.
+    backgroundColor: '#00000001',
     justifyContent: 'center',
     alignItems: 'center',
   },

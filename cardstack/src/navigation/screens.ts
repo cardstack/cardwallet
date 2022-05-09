@@ -74,7 +74,6 @@ const nativeStackiOSLoadingConfig = {
   transitionDuration: 0,
   onWillDismiss: null,
   dismissable: false,
-  gesturedEnabled: false,
 };
 
 // Shareable component,
