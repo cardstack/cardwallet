@@ -29,7 +29,7 @@ export class PayMerchantStrategy extends BaseStrategyWithActionDispatcherData {
     const safeData = (await this.getSafeData(merchantSafe)) as MerchantSafe;
 
     return {
-      amount: this.actionDispatcherData.spendAmount,
+      amount: this.actionDispatcherData.spendAmount.toString(),
       spendAmount: this.actionDispatcherData.spendAmount,
       merchantSafe,
       infoDID: safeData.infoDID,

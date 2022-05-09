@@ -2,6 +2,7 @@ import {
   convertRawAmountToBalance,
   convertRawAmountToNativeDisplay,
   getAddressByNetwork,
+  NativeCurrency,
 } from '@cardstack/cardpay-sdk';
 import React from 'react';
 
@@ -14,10 +15,8 @@ import {
 } from '@cardstack/components';
 import { ClaimRevenueDecodedData } from '@cardstack/types';
 
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { Network } from '@rainbow-me/helpers/networkTypes';
+import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { TransactionConfirmationDisplayProps } from '../TransactionConfirmationSheet';
 
@@ -28,19 +27,19 @@ interface ClaimRevenueDisplayProps extends TransactionConfirmationDisplayProps {
 }
 
 export const ClaimRevenueDisplay = (props: ClaimRevenueDisplayProps) => {
+  const { network, nativeCurrency } = useAccountSettings();
   return (
     <>
-      <FromSection />
+      <FromSection network={network} />
       <HorizontalDivider />
-      <ClaimSection data={props.data} />
+      <ClaimSection data={{ ...props.data, nativeCurrency }} />
       <HorizontalDivider />
       <ToSection merchantSafe={props.data.merchantSafe} />
     </>
   );
 };
 
-const FromSection = () => {
-  const network = useRainbowSelector(state => state.settings.network);
+const FromSection = ({ network }: { network: Network }) => {
   const revenuePool = getAddressByNetwork('revenuePool', network);
 
   return (
@@ -60,16 +59,18 @@ const FromSection = () => {
   );
 };
 
-const ClaimSection = ({ data }: { data: ClaimRevenueDecodedData }) => {
-  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
-
+const ClaimSection = ({
+  data,
+}: {
+  data: ClaimRevenueDecodedData & { nativeCurrency: NativeCurrency };
+}) => {
   const tokenDisplay = convertRawAmountToBalance(data.amount, data.token);
 
   const nativeDisplay = convertRawAmountToNativeDisplay(
     data.amount,
     data.token.decimals,
     data.price,
-    nativeCurrency
+    data.nativeCurrency
   );
 
   return (

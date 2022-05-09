@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useEffect, useState } from 'react';
 
 import { convertSpendForBalanceDisplay, useWorker } from '@cardstack/utils';
@@ -6,11 +7,13 @@ import { useAccountSettings } from '@rainbow-me/hooks';
 
 export const useSpendToNativeDisplay = ({
   spendAmount,
+  customNativeCurrency,
 }: {
   spendAmount: string | number;
+  customNativeCurrency?: NativeCurrency;
 }) => {
   const [nativeDisplay, setNativeDisplay] = useState({
-    nativeBalanceDisplay: '',
+    nativeBalanceDisplay: '-----',
   });
 
   const { nativeCurrency } = useAccountSettings();
@@ -18,11 +21,11 @@ export const useSpendToNativeDisplay = ({
   const { callback: getSpendDisplay } = useWorker(async () => {
     const response = await convertSpendForBalanceDisplay(
       spendAmount,
-      nativeCurrency
+      customNativeCurrency || nativeCurrency
     );
 
     setNativeDisplay(response);
-  }, [spendAmount, nativeCurrency]);
+  }, [spendAmount, customNativeCurrency, nativeCurrency]);
 
   useEffect(() => {
     getSpendDisplay();

@@ -13,7 +13,8 @@ const getLayerTwoOracleInstance = async () => {
 
 export const getValueInNativeCurrency = async (
   value: number,
-  nativeCurrency: NativeCurrency
+  nativeCurrency: NativeCurrency,
+  truncate = true
 ) => {
   const isNativeCurrencyUSD = nativeCurrency === NativeCurrency.USD;
 
@@ -23,7 +24,9 @@ export const getValueInNativeCurrency = async (
 
   const { data: rates } = await getExchangeRatesQuery();
 
-  return (rates?.[nativeCurrency] ?? 0) * value;
+  const convertedAmount = (rates?.[nativeCurrency] ?? 0) * value;
+
+  return truncate ? parseFloat(convertedAmount.toFixed(2)) : convertedAmount;
 };
 
 export const getSpendValueInNativeCurrency = async (

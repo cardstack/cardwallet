@@ -1,3 +1,4 @@
 export * from './Input';
-export * from './InputAmount';
+export * from './InputAmount/InputAmount';
+export * from './InputAmount/useInputAmountHelper';
 export { default as FormInput } from './FormInput';

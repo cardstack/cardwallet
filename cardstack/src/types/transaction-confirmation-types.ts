@@ -1,3 +1,5 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
+
 import { PrepaidCardCustomization } from './transaction-types';
 
 import { MerchantInformation, TokenType } from './';
@@ -69,13 +71,13 @@ export interface RewardsClaimData extends TokenType {
 }
 
 export interface PayMerchantDecodedData {
-  amount: number;
+  amount: string;
   spendAmount?: number;
   merchantSafe: string;
   prepaidCard?: string;
   prepaidCardCustomization?: PrepaidCardCustomization;
   infoDID?: string;
-  currency?: string;
+  currency?: NativeCurrency;
   type: TransactionConfirmationType.PAY_MERCHANT;
 }
 

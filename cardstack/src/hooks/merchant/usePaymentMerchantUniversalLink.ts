@@ -1,10 +1,15 @@
-import { MerchantSafe, isSupportedCurrency } from '@cardstack/cardpay-sdk';
+import {
+  MerchantSafe,
+  isSupportedCurrency,
+  NativeCurrency,
+} from '@cardstack/cardpay-sdk';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { orderBy } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { Alert, AlertButton, InteractionManager } from 'react-native';
 
 import { RouteType } from '@cardstack/navigation/types';
-import { getSafeData, useGetSafesDataQuery } from '@cardstack/services';
+import { getSafeData, useGetPrepaidCardsQuery } from '@cardstack/services';
 import {
   PayMerchantDecodedData,
   TransactionConfirmationType,
@@ -14,10 +19,7 @@ import { isLayer1, useWorker } from '@cardstack/utils';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface Params {
   merchantAddress: string;
@@ -34,24 +36,8 @@ export const handleAlertError = (
 
 export const usePaymentMerchantUniversalLink = () => {
   const {
-    params: { merchantAddress, amount = '0', network: qrCodeNetwork, currency },
+    params: { merchantAddress, amount = '', network: qrCodeNetwork, currency },
   } = useRoute<RouteType<Params>>();
-
-  const [accountCurrency] = useNativeCurrencyAndConversionRates();
-
-  const { goBack } = useNavigation();
-
-  const { currencyName, validAmount } = useMemo(() => {
-    const isValidCurrency = currency && isSupportedCurrency(currency);
-    return {
-      currencyName: isValidCurrency ? currency : accountCurrency,
-      validAmount: isValidCurrency ? amount : '0',
-    };
-  }, [accountCurrency, amount, currency]);
-
-  const [infoDID, setInfoDID] = useState<string | undefined>();
-
-  const walletReady = useRainbowSelector(state => state.appState.walletReady);
 
   const {
     accountAddress,
@@ -59,8 +45,24 @@ export const usePaymentMerchantUniversalLink = () => {
     nativeCurrency,
   } = useAccountSettings();
 
-  const { isLoading = true, prepaidCards } = useGetSafesDataQuery(
-    { address: accountAddress, nativeCurrency },
+  const { goBack } = useNavigation();
+
+  const { currencyName, validAmount } = useMemo(() => {
+    const isValidCurrency = currency && isSupportedCurrency(currency);
+    return {
+      currencyName: (isValidCurrency
+        ? currency
+        : nativeCurrency) as NativeCurrency,
+      validAmount: isValidCurrency ? amount : '',
+    };
+  }, [amount, currency, nativeCurrency]);
+
+  const [infoDID, setInfoDID] = useState<string | undefined>();
+
+  const walletReady = useRainbowSelector(state => state.appState.walletReady);
+
+  const { isLoading = true, prepaidCards } = useGetPrepaidCardsQuery(
+    { accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
       skip: isLayer1(accountNetwork) || !accountAddress || !walletReady,
@@ -69,7 +71,8 @@ export const usePaymentMerchantUniversalLink = () => {
         isLoading: isLoadingCards,
         isUninitialized,
       }) => ({
-        prepaidCards: data?.prepaidCards || [],
+        prepaidCards:
+          orderBy(data?.prepaidCards, 'spendFaceValue', 'desc') || [],
         isLoading: isLoadingCards || isUninitialized,
       }),
     }
@@ -125,7 +128,7 @@ export const usePaymentMerchantUniversalLink = () => {
       type: TransactionConfirmationType.PAY_MERCHANT,
       infoDID,
       qrCodeNetwork,
-      amount: parseFloat(validAmount),
+      amount: validAmount,
       merchantSafe: merchantAddress,
       currency: currencyName,
     }),

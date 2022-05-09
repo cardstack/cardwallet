@@ -2,12 +2,18 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import React from 'react';
 
 import { render } from '../../../test-utils';
-import { InputAmount, CURRENCY_DISPLAY_MODE } from '../InputAmount';
+import { CURRENCY_DISPLAY_MODE, InputAmount } from '../InputAmount/InputAmount';
 
-jest.mock('@rainbow-me/navigation/', () => ({
+jest.mock('@react-navigation/core', () => ({
   useNavigation: jest.fn(() => ({
     navigate: jest.fn(),
   })),
+}));
+
+jest.mock('@rainbow-me/hooks', () => ({
+  useAccountSettings: () => ({
+    nativeCurrency: 'USD',
+  }),
 }));
 
 describe('InputAmount', () => {
@@ -18,7 +24,8 @@ describe('InputAmount', () => {
 
     const props = {
       currencyDisplayMode: CURRENCY_DISPLAY_MODE.NO_DISPLAY,
-      nativeCurrency: nativeCurrency,
+      selectedCurrency: nativeCurrency,
+      onCurrencyChange: jest.fn(),
       inputValue,
       setInputValue,
     };

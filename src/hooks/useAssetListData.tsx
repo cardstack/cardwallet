@@ -25,10 +25,7 @@ import {
 } from '@cardstack/types';
 import { isLayer1 } from '@cardstack/utils';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
-import {
-  useNativeCurrencyAndConversionRates,
-  useRainbowSelector,
-} from '@rainbow-me/redux/hooks';
+import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const usePrepaidCardSection = (
   prepaidCards: PrepaidCardType[],
@@ -161,8 +158,7 @@ const useCollectiblesSection = (): AssetListSectionItem<CollectibleType> => {
 };
 
 export const useAssetListData = () => {
-  const [nativeCurrency] = useNativeCurrencyAndConversionRates();
-  const { network, accountAddress } = useAccountSettings();
+  const { network, accountAddress, nativeCurrency } = useAccountSettings();
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
 
   const {

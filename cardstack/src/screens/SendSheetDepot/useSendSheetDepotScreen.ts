@@ -101,7 +101,11 @@ export const useSendSheetDepotScreen = () => {
     async (amount: string) => {
       const usdConvertedAmount = usdConverter.current?.(amount) || 0;
 
-      return await getValueInNativeCurrency(usdConvertedAmount, nativeCurrency);
+      return await getValueInNativeCurrency(
+        usdConvertedAmount,
+        nativeCurrency,
+        false
+      );
     },
     [nativeCurrency]
   );
