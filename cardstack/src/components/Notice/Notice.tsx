@@ -25,7 +25,7 @@ const noticeColorConfig: Record<NoticeType, NoticeStyle> = {
   error: {
     iconColor: 'black',
     backgroundColor: 'error',
-    textColor: 'white',
+    textColor: 'black',
   },
 };
 
