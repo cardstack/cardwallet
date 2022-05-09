@@ -64,36 +64,14 @@ export interface ScreenNavigation {
   listeners?: ScreenListeners<NavigationState, StackNavigationEventMap>;
 }
 
-// Native iOS custom option, should be removed after deleting NativeStack
-const nativeStackiOSLoadingConfig = {
-  customStack: true,
-  onAppear: null,
-  allowsDragToDismiss: false,
-  allowsTapToDismiss: false,
-  onTouchTop: null,
-  transitionDuration: 0,
-  onWillDismiss: null,
-  dismissable: false,
-  gesturedEnabled: false,
-};
-
-// Shareable component,
-// for now android/ios needs on MainStack
-// and iOS only on GlobalStack
-// the navigator looks for the nearest route
-const LoadingOverlayComponent = {
+export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   LOADING_OVERLAY: {
     component: LoadingOverlayScreen,
     options: {
       ...overlayPreset,
       gestureEnabled: false,
-
-      ...(Device.isIOS ? nativeStackiOSLoadingConfig : {}),
     } as StackNavigationOptions,
   },
-};
-
-export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   DEPOT_SCREEN: { component: DepotScreen, options: horizontalInterpolator },
   MERCHANT_SCREEN: {
     component: MerchantScreen,
@@ -164,7 +142,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
       ? bottomSheetPreset
       : wcPromptPreset) as StackNavigationOptions,
   },
-  ...LoadingOverlayComponent,
   SETTINGS_MODAL: {
     component: SettingsModal,
     options: { ...slideLeftToRightPreset, gestureEnabled: false },
@@ -246,9 +223,6 @@ export const GlobalScreens: Record<
       interactWithScrollView: false,
     } as StackNavigationOptions,
   },
-
-  // Needs to be the last item of the object, until we move to a single navigator
-  ...(Device.isIOS ? LoadingOverlayComponent : {}),
 };
 
 // TODO: Merge paths once, navigation redesign happens
