@@ -57,4 +57,8 @@ export const textVariants = {
     letterSpacing: 0.33,
     ...fontFamilyVariants.regular,
   },
+  semibold: {
+    letterSpacing: 0.13,
+    ...fontFamilyVariants.semiBold,
+  },
 };

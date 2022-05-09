@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
 
-import { Notice } from '@cardstack/components';
+import { Container, Notice } from '@cardstack/components';
 import { useGetServiceStatusQuery } from '@cardstack/services';
 
 export const ServiceStatusNotice = () => {
@@ -12,11 +12,13 @@ export const ServiceStatusNotice = () => {
   }, []);
 
   return (
-    <Notice
-      isVisible={!!data}
-      description={data?.name || 'Incident reported.'}
-      type="warning"
-      onPress={handleOnPress}
-    />
+    <Container marginHorizontal={4} marginVertical={2}>
+      <Notice
+        isVisible={!!data}
+        description={data?.name || 'Information available.'}
+        type="warning"
+        onPress={handleOnPress}
+      />
+    </Container>
   );
 };
