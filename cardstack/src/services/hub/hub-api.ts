@@ -63,14 +63,7 @@ export const hubApi = createApi({
     }),
     getExchangeRates: builder.query<Record<NativeCurrency, number>, void>({
       query: () => routes.exchangeRates,
-      extraOptions: { authenticate: false },
-      transformResponse: ({
-        data: {
-          attributes: { rates },
-        },
-      }) => {
-        return { ...rates, SPD: 100 };
-      },
+      transformResponse: ({ data }) => data.attributes.rates,
     }),
   }),
 });
