@@ -1,7 +1,9 @@
-import { Interface } from '@ethersproject/abi';
 import { ChainId, Token, WETH } from '@uniswap/sdk';
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json';
+
+import { utils as ethersUtils } from 'ethers';
 import { filter, flatMap, keyBy, map, toLower } from 'lodash';
+
 import { DAI_ADDRESS, USDC_ADDRESS } from '../addresses';
 import RAINBOW_TOKEN_LIST_DATA from './rainbow-token-list.json';
 import MULTICALL_ABI from './uniswap-multicall-abi.json';
@@ -82,7 +84,7 @@ const UNISWAP_V2_BASES = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
 };
 
-const PAIR_INTERFACE = new Interface(IUniswapV2PairABI);
+const PAIR_INTERFACE = new ethersUtils.Interface(IUniswapV2PairABI);
 const PAIR_GET_RESERVES_FRAGMENT = PAIR_INTERFACE.getFunction('getReserves');
 const PAIR_GET_RESERVES_CALL_DATA: string = PAIR_INTERFACE.encodeFunctionData(
   PAIR_GET_RESERVES_FRAGMENT

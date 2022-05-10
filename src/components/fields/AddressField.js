@@ -1,6 +1,6 @@
+import { utils as ethersUtils } from 'ethers';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { isHexString } from '../../handlers/web3';
 import { checkIsValidAddressOrDomain } from '../../helpers/validators';
 import { Row } from '../layout';
 import { Container, Input, Text, Touchable } from '@cardstack/components';
@@ -9,7 +9,7 @@ import { useClipboard } from '@rainbow-me/hooks';
 import { abbreviations, addressUtils } from '@rainbow-me/utils';
 
 const formatValue = value =>
-  isHexString(value) && value.length === addressUtils.maxLength
+  ethersUtils.isHexString(value) && value.length === addressUtils.maxLength
     ? abbreviations.address(value, 4, 10)
     : value;
 

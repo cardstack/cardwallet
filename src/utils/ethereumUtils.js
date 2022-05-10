@@ -5,9 +5,9 @@ import {
   isZero,
   subtract,
 } from '@cardstack/cardpay-sdk';
-import { Wallet } from '@ethersproject/wallet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { captureException } from '@sentry/react-native';
+
 import { mnemonicToSeed } from 'bip39';
 import {
   addHexPrefix,
@@ -15,6 +15,7 @@ import {
   toChecksumAddress,
 } from 'ethereumjs-util';
 import { hdkey } from 'ethereumjs-wallet';
+import { Wallet } from 'ethers';
 import {
   find,
   get,
@@ -27,13 +28,14 @@ import {
 import { Linking, NativeModules } from 'react-native';
 import { ETHERSCAN_API_KEY } from 'react-native-dotenv';
 import URL from 'url-parse';
+
 import { isNativeToken, normalizeTxHash } from '@cardstack/utils';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
-
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { DEFAULT_HD_PATH, WalletLibraryType } from '@rainbow-me/model/wallet';
 import store from '@rainbow-me/redux/store';
 import { chains } from '@rainbow-me/references';
+
 import logger from 'logger';
 
 const { RNBip39 } = NativeModules;

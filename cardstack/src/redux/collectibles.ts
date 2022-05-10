@@ -1,7 +1,7 @@
 import assert from 'assert';
 
-import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
+import { Contract } from 'ethers';
 import { concat, isEmpty, without } from 'lodash';
 import { AnyAction } from 'redux';
 

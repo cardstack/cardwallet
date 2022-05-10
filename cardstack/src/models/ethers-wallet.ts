@@ -1,5 +1,4 @@
-import { HDNode } from '@ethersproject/hdnode';
-import { Wallet } from '@ethersproject/wallet';
+import { utils, Wallet } from 'ethers';
 
 import { DEFAULT_HD_PATH, loadSeedPhrase } from '@rainbow-me/model/wallet';
 import logger from 'logger';
@@ -35,7 +34,7 @@ export const getEthersWallet = async (params?: EthersSignerParams) => {
       (await loadSeedPhrase(walletId, keychainAcessAskPrompt)) ||
       '';
 
-    const hdNode = HDNode.fromMnemonic(seed);
+    const hdNode = utils.HDNode.fromMnemonic(seed);
 
     const derivedNode = hdNode.derivePath(`${DEFAULT_HD_PATH}/${accountIndex}`);
 

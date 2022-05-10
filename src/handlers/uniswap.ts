@@ -3,11 +3,6 @@ import {
   convertAmountToRawAmount,
   convertNumberToString,
 } from '@cardstack/cardpay-sdk';
-import { Provider } from '@ethersproject/abstract-provider';
-import { Signer } from '@ethersproject/abstract-signer';
-import { BigNumber } from '@ethersproject/bignumber';
-import { Contract } from '@ethersproject/contracts';
-import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
 import {
   ChainId,
@@ -20,6 +15,8 @@ import {
   TradeType,
   WETH,
 } from '@uniswap/sdk';
+
+import { BigNumber, Contract, providers, Signer, Wallet } from 'ethers';
 import {
   filter,
   get,
@@ -29,11 +26,13 @@ import {
   mapValues,
   toLower,
 } from 'lodash';
+
 import { uniswapClient } from '../apollo/client';
 import { UNISWAP_ALL_TOKENS } from '../apollo/queries';
 import { loadWallet } from '../model/wallet';
 import { ETH_ADDRESS_SYMBOL } from '../references/addresses';
 import { getEtherWeb3Provider, toHex } from './web3';
+
 import {
   Asset,
   RawUniswapSubgraphAsset,
@@ -221,7 +220,7 @@ const getExecutionDetails = (
   inputCurrency: Asset,
   outputCurrency: Asset,
   trade: Trade,
-  providerOrSigner: Provider | Signer | undefined,
+  providerOrSigner: providers.Provider | Signer | undefined,
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips, optional
   deadline: number = DEFAULT_DEADLINE_FROM_NOW // in seconds from now, optional
 ): {
@@ -343,7 +342,7 @@ const getContractExecutionDetails = ({
   chainId: ChainId;
   inputCurrency: Asset;
   outputCurrency: Asset;
-  providerOrSigner: Provider | Signer | undefined;
+  providerOrSigner: providers.Provider | Signer | undefined;
   tradeDetails: Trade;
 }) => {
   const { methodArguments, methodNames, value } = getExecutionDetails(

@@ -1,5 +1,5 @@
-import { FunctionFragment, Interface } from '@ethersproject/abi';
 import { ChainId } from '@uniswap/sdk';
+import { utils as ethersUtils } from 'ethers';
 import { map } from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -30,8 +30,8 @@ const LOADING_CALL_STATE = {
 
 export default function useMulticall(
   calls: Call[],
-  contractInterface: Interface,
-  fragment: FunctionFragment
+  contractInterface: ethersUtils.Interface,
+  fragment: ethersUtils.FunctionFragment
 ) {
   const { chainId, results } = useSelector(
     ({ multicall: { results }, settings: { chainId } }: AppState) => ({

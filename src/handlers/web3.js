@@ -9,13 +9,9 @@ import {
   HubConfig,
   multiply,
 } from '@cardstack/cardpay-sdk';
-import { getAddress } from '@ethersproject/address';
-import { BigNumber } from '@ethersproject/bignumber';
-import { isHexString as isEthersHexString } from '@ethersproject/bytes';
-import { Contract } from '@ethersproject/contracts';
-import { isValidMnemonic as ethersIsValidMnemonic } from '@ethersproject/hdnode';
-import { Web3Provider } from '@ethersproject/providers';
 import UnstoppableResolution from '@unstoppabledomains/resolution';
+
+import { BigNumber, Contract, utils as ethersUtils, providers } from 'ethers';
 import { get, startsWith } from 'lodash';
 import Web3 from 'web3';
 
@@ -31,7 +27,7 @@ import { erc721ABI, ethUnits } from '@rainbow-me/references';
 import logger from 'logger';
 
 /**
- * @desc web3 http instance - to be used with ethersproject contracts
+ * @desc web3 http instance - to be used with ethers contracts
  */
 export let web3Provider;
 
@@ -42,7 +38,9 @@ export let web3Provider;
 
 export const etherWeb3SetHttpProvider = async network => {
   try {
-    web3Provider = new Web3Provider(await Web3WsProvider.get(network));
+    web3Provider = new providers.Web3Provider(
+      await Web3WsProvider.get(network)
+    );
   } catch (error) {
     logger.error('provider error', error);
   }
@@ -80,31 +78,17 @@ export const getTransactionReceipt = txHash =>
     params: [txHash],
   });
 
-/**
- * @desc check if hex string
- * @param {String} value
- * @return {Boolean}
- */
-export const isHexString = value => isEthersHexString(value);
-
 export const toHex = value => BigNumber.from(value).toHexString();
 
 export const isHexStringIgnorePrefix = value => {
   if (!value) return false;
   const trimmedValue = value.trim();
   const updatedValue = addHexPrefix(trimmedValue);
-  return isHexString(updatedValue);
+  return ethersUtils.isHexString(updatedValue);
 };
 
 export const addHexPrefix = value =>
   startsWith(value, '0x') ? value : `0x${value}`;
-
-/**
- * @desc is valid mnemonic
- * @param {String} value
- * @return {Boolean}
- */
-export const isValidMnemonic = value => ethersIsValidMnemonic(value);
 
 /**
  * @desc convert to checksum address
@@ -113,7 +97,7 @@ export const isValidMnemonic = value => ethersIsValidMnemonic(value);
  */
 export const toChecksumAddress = address => {
   try {
-    return getAddress(address);
+    return ethersUtils.getAddress(address);
   } catch (error) {
     return null;
   }
@@ -302,7 +286,7 @@ export const resolveUnstoppableDomain = async domain => {
 };
 
 const resolveNameOrAddress = async nameOrAddress => {
-  if (!isHexString(nameOrAddress)) {
+  if (!ethersUtils.isHexString(nameOrAddress)) {
     if (/^([\w-]+\.)+(crypto)$/.test(nameOrAddress)) {
       return resolveUnstoppableDomain(nameOrAddress);
     }

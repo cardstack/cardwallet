@@ -1,8 +1,8 @@
 import { isValidAddress } from 'ethereumjs-util';
+import { utils as ethersUtils } from 'ethers';
 import {
   getEtherWeb3Provider,
   isHexStringIgnorePrefix,
-  isValidMnemonic,
   resolveUnstoppableDomain,
 } from '@rainbow-me/handlers/web3';
 import { sanitizeSeedPhrase } from '@rainbow-me/utils/formatters';
@@ -67,7 +67,7 @@ export const isValidSeedPhrase = seedPhrase => {
   const sanitizedSeedPhrase = sanitizeSeedPhrase(seedPhrase);
   return (
     sanitizedSeedPhrase.split(' ').length >= 12 &&
-    isValidMnemonic(sanitizedSeedPhrase)
+    ethersUtils.isValidMnemonic(sanitizedSeedPhrase)
   );
 };
 
