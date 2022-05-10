@@ -1,6 +1,7 @@
-import { MaxUint256 } from '@ethersproject/constants';
-import { Contract } from '@ethersproject/contracts';
 import { captureException } from '@sentry/react-native';
+
+import { constants, Contract } from 'ethers';
+
 import { getEtherWeb3Provider, toHex } from '../handlers/web3';
 import { loadWallet } from '../model/wallet';
 import { ethUnits } from '../references';
@@ -9,9 +10,13 @@ import logger from 'logger';
 
 const estimateApproveWithExchange = async (owner, spender, exchange) => {
   try {
-    const gasLimit = await exchange.estimateGas.approve(spender, MaxUint256, {
-      from: owner,
-    });
+    const gasLimit = await exchange.estimateGas.approve(
+      spender,
+      constants.MaxUint256,
+      {
+        from: owner,
+      }
+    );
     return gasLimit ? gasLimit.toString() : ethUnits.basic_approval;
   } catch (error) {
     logger.sentry('error estimateApproveWithExchange');
@@ -37,7 +42,7 @@ const approve = async (
   const walletToUse = wallet || (await loadWallet());
   if (!walletToUse) return null;
   const exchange = new Contract(tokenAddress, erc20ABI, walletToUse);
-  const approval = await exchange.approve(spender, MaxUint256, {
+  const approval = await exchange.approve(spender, constants.MaxUint256, {
     gasLimit: toHex(gasLimit) || undefined,
     gasPrice: toHex(gasPrice) || undefined,
   });

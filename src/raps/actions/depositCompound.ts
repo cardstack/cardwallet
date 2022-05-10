@@ -1,7 +1,6 @@
 import { convertAmountToRawAmount, isZero } from '@cardstack/cardpay-sdk';
-import { Contract } from '@ethersproject/contracts';
-import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
+import { Contract, Wallet } from 'ethers';
 import { get } from 'lodash';
 import { DepositActionParameters, Rap, RapActionParameters } from '../common';
 import { Asset } from '@rainbow-me/entities';

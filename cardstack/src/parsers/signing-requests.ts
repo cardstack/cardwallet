@@ -6,9 +6,9 @@ import {
 } from '@cardstack/cardpay-sdk';
 import { convertHexToUtf8 } from '@walletconnect/utils';
 import BigNumber from 'bignumber.js';
+import { utils } from 'ethers';
 import { get, isNil } from 'lodash';
 
-import { isHexString } from '@rainbow-me/handlers/web3';
 import { ethUnits } from '@rainbow-me/references';
 import smartContractMethods from '@rainbow-me/references/smartcontract-methods.json';
 import { ethereumUtils } from '@rainbow-me/utils';
@@ -213,7 +213,7 @@ export const getRequestDisplayDetails = (
     let message = get(payload, 'params[0]');
 
     try {
-      if (isHexString(message)) {
+      if (utils.isHexString(message)) {
         message = convertHexToUtf8(message);
       }
     } catch (error) {

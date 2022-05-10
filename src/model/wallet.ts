@@ -1,12 +1,3 @@
-import { TransactionRequest } from '@ethersproject/abstract-provider';
-import {
-  arrayify,
-  BytesLike,
-  Hexable,
-  joinSignature,
-} from '@ethersproject/bytes';
-import { SigningKey } from '@ethersproject/signing-key';
-import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
 import { generateMnemonic } from 'bip39';
 import { signTypedData_v4, signTypedDataLegacy } from 'eth-sig-util';
@@ -15,6 +6,8 @@ import {
   hdkey as EthereumHDKey,
   default as LibWallet,
 } from 'ethereumjs-wallet';
+
+import { ethers } from 'ethers';
 import lang from 'i18n-js';
 import { find, findKey, forEach, get, isEmpty } from 'lodash';
 import { Alert } from 'react-native';
@@ -31,9 +24,7 @@ import {
 import {
   addHexPrefix,
   getEtherWeb3Provider,
-  isHexString,
   isHexStringIgnorePrefix,
-  isValidMnemonic,
 } from '../handlers/web3';
 import showWalletErrorAlert from '../helpers/support';
 import { isValidSeed } from '../helpers/validators';
@@ -65,8 +56,8 @@ type EthereumWalletSeed =
   | EthereumSeed;
 
 interface TransactionRequestParam {
-  transaction: TransactionRequest;
-  existingWallet?: Wallet;
+  transaction: ethers.providers.TransactionRequest;
+  existingWallet?: ethers.Wallet;
 }
 
 interface MessageTypeProperty {
@@ -165,14 +156,14 @@ export const publicAccessControlOptions = {
   accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
 };
 
-export const loadWallet = async (): Promise<null | Wallet> => {
+export const loadWallet = async (): Promise<null | ethers.Wallet> => {
   const privateKey = await loadPrivateKey();
   if (privateKey === -1 || privateKey === -2) {
     return null;
   }
   if (privateKey) {
     const web3Provider = await getEtherWeb3Provider();
-    return new Wallet(privateKey, web3Provider);
+    return new ethers.Wallet(privateKey, web3Provider);
   }
   if (Device.isIOS) {
     showWalletErrorAlert();
@@ -235,16 +226,18 @@ export const signTransaction = async ({
 };
 
 export const signMessage = async (
-  message: BytesLike | Hexable | number
+  message: ethers.utils.BytesLike | ethers.utils.Hexable | number
 ): Promise<null | string> => {
   try {
     logger.sentry('about to sign message', message);
     const wallet = await loadWallet();
     try {
       if (!wallet) return null;
-      const signingKey = new SigningKey(wallet.privateKey);
-      const sigParams = await signingKey.signDigest(arrayify(message));
-      return joinSignature(sigParams);
+      const signingKey = new ethers.utils.SigningKey(wallet.privateKey);
+      const sigParams = await signingKey.signDigest(
+        ethers.utils.arrayify(message)
+      );
+      return ethers.utils.joinSignature(sigParams);
     } catch (error) {
       Alert.alert(lang.t('wallet.transaction.alert.failed_sign_message'));
       logger.sentry('Failed to SIGN message, alerted user');
@@ -268,8 +261,8 @@ export const signPersonalMessage = async (
     try {
       if (!wallet) return null;
       return wallet.signMessage(
-        typeof message === 'string' && isHexString(message)
-          ? arrayify(message)
+        typeof message === 'string' && ethers.utils.isHexString(message)
+          ? ethers.utils.arrayify(message)
           : message
       );
     } catch (error) {
@@ -416,7 +409,7 @@ export const identifyWalletType = (
   }
 
   // 12 or 24 words seed phrase
-  if (isValidMnemonic(walletSeed)) {
+  if (ethers.utils.isValidMnemonic(walletSeed)) {
     return EthereumWalletType.mnemonic;
   }
 
@@ -488,7 +481,7 @@ const addAccountsWithTxHistory = async (
   while (lookup) {
     const child = root.deriveChild(index);
     const walletObj = child.getWallet();
-    const nextWallet = new Wallet(
+    const nextWallet = new ethers.Wallet(
       addHexPrefix(walletObj.getPrivateKey().toString('hex'))
     );
     let hasTxHistory = false;
@@ -731,7 +724,9 @@ export const createOrImportWallet = async ({
     if (walletResult && walletAddress) {
       // bip39 are derived from mnemioc
       const createdWallet =
-        walletType === WalletLibraryType.bip39 ? new Wallet(privateKey) : null;
+        walletType === WalletLibraryType.bip39
+          ? new ethers.Wallet(privateKey)
+          : null;
 
       return createdWallet;
     }
@@ -883,7 +878,7 @@ export const getAllWallets = async (): Promise<
 export const generateAccount = async (
   id: RainbowWallet['id'],
   index: number
-): Promise<null | Wallet> => {
+): Promise<null | ethers.Wallet> => {
   try {
     let userPIN = null;
     if (Device.isAndroid) {
@@ -930,7 +925,7 @@ export const generateAccount = async (
       ethereumJSWallet.getPrivateKey().toString('hex')
     );
 
-    const newAccount = new Wallet(walletPkey);
+    const newAccount = new ethers.Wallet(walletPkey);
     // Android users without biometrics need to secure their keys with a PIN
     if (userPIN) {
       try {
@@ -1021,7 +1016,7 @@ export const loadSeedPhrase = async (
     logger.sentry('No seed returned');
     return null;
   } catch (error) {
-    logger.sentry('Error in loadSeedPhrase.');
+    logger.sentry('Error in loadSeedPhrase.', error);
     captureException(error);
     return null;
   }

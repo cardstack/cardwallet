@@ -4,12 +4,14 @@ import {
   greaterThan,
   isZero,
 } from '@cardstack/cardpay-sdk';
-import { TransactionReceipt } from '@ethersproject/abstract-provider';
-import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
+
+import { providers, Wallet } from 'ethers';
 import { find, get, toLower } from 'lodash';
+
 import { dataAddNewTransaction } from '../../redux/data';
 import { Rap, RapActionParameters, SwapActionParameters } from '../common';
+
 import { Asset } from '@rainbow-me/entities';
 import {
   estimateSwapGasLimit,
@@ -25,6 +27,7 @@ import {
   TRANSFER_EVENT_TOPIC_LENGTH,
 } from '@rainbow-me/references';
 import { ethereumUtils, gasUtils } from '@rainbow-me/utils';
+
 import logger from 'logger';
 
 const NOOP = () => undefined;
@@ -38,7 +41,7 @@ export const isValidSwapInput = ({
 }) => !!inputCurrency && !!outputCurrency;
 
 const findSwapOutputAmount = (
-  receipt: TransactionReceipt,
+  receipt: providers.TransactionReceipt,
   accountAddress: string
 ): string | null => {
   const { logs } = receipt;

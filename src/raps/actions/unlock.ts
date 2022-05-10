@@ -3,10 +3,11 @@ import {
   greaterThan,
   isZero,
 } from '@cardstack/cardpay-sdk';
-import { MaxUint256 } from '@ethersproject/constants';
-import { Wallet } from '@ethersproject/wallet';
 import { captureException } from '@sentry/react-native';
+
+import { constants, Wallet } from 'ethers';
 import { get, isNull, toLower } from 'lodash';
+
 import { alwaysRequireApprove } from '../../config/debug';
 import { Rap, RapActionParameters, UnlockActionParameters } from '../common';
 import { Asset } from '@rainbow-me/entities';
@@ -100,7 +101,7 @@ const unlock = async (
   );
 
   // Cache the approved value
-  AllowancesCache.cache[cacheKey] = MaxUint256.toString();
+  AllowancesCache.cache[cacheKey] = constants.MaxUint256.toString();
 
   // update rap for hash
   currentRap.actions[index].transaction.hash = approval.hash;

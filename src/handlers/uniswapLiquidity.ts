@@ -5,10 +5,10 @@ import {
   fromWei,
   multiply,
 } from '@cardstack/cardpay-sdk';
-import { Contract } from '@ethersproject/contracts';
 import { ChainId, WETH } from '@uniswap/sdk';
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json';
 import contractMap from 'eth-contract-metadata';
+import { Contract } from 'ethers';
 import { compact, get, keyBy, map, partition, toLower } from 'lodash';
 import { getEtherWeb3Provider } from './web3';
 import { Asset, ParsedAddressAsset } from '@rainbow-me/entities';

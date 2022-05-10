@@ -1,7 +1,7 @@
 import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
-import { JsonRpcProvider } from '@ethersproject/providers';
 import { ParamListBase, useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { providers } from 'ethers';
 import { keys } from 'lodash';
 import {
   RefObject,
@@ -103,7 +103,7 @@ const useImportSeedSheet = () => {
     const hubConfigResponse = await hubConfig.getConfig();
 
     // Just use mainnet provider for lookup
-    const mainnetProvider = new JsonRpcProvider(
+    const mainnetProvider = new providers.JsonRpcProvider(
       hubConfigResponse.web3.layer1RpcNodeHttpsUrl,
       Network.mainnet
     );

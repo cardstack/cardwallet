@@ -1,10 +1,12 @@
-import { BigNumber } from '@ethersproject/bignumber';
-import { Contract } from '@ethersproject/contracts';
 import { ChainId } from '@uniswap/sdk';
+
+import { BigNumber, Contract } from 'ethers';
 import { chunk, forEach, get, keys, map } from 'lodash';
+
 import { web3Provider } from '../handlers/web3';
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../references/uniswap';
 import { AppDispatch, AppGetState } from './store';
+
 import logger from 'logger';
 
 // -- Constants ------------------------------------------------------------- //

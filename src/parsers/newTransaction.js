@@ -2,7 +2,7 @@ import {
   convertAmountAndPriceToNativeDisplay,
   convertAmountToBalanceDisplay,
 } from '@cardstack/cardpay-sdk';
-import { isHexString } from '@ethersproject/bytes';
+import { utils as ethersUtils } from 'ethers';
 import { get, isNil, pick } from 'lodash';
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
 import { getDescription, getTitle } from './transactions';
@@ -42,7 +42,7 @@ export const parseNewTransaction = async (
   const hash = txDetails.hash ? `${txDetails.hash}-0` : null;
   // Convert nonces from hex to int (some dapps use hex!)
   const nonce = !isNil(tx.nonce)
-    ? isHexString(tx.nonce)
+    ? ethersUtils.isHexString(tx.nonce)
       ? parseInt(tx.nonce, 16)
       : tx.nonce
     : '';
