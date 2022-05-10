@@ -94,8 +94,8 @@ const storeHubAuthToken = async (
   );
 };
 
-export const removeHubAuthToken = (network: Network) =>
-  removeLocal(hubTokenStorageKey(network));
+export const removeHubAuthToken = (address: string, network: Network) =>
+  removeLocal(hubTokenStorageKey(network), address);
 
 export const getHubAuthToken = async (
   hubURL: string,

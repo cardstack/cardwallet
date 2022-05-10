@@ -64,8 +64,10 @@ export const fetchHubBaseQuery: BaseQueryFn<
   if (error) {
     logger.sentry('Error on hubApi', JSON.stringify(error));
 
-    if (error?.status === 401) {
-      removeHubAuthToken(network);
+    if (error?.status === 401 || error?.status === 403) {
+      const walletAddress = store.getState().settings.accountAddress;
+
+      removeHubAuthToken(walletAddress, network);
     }
   }
 

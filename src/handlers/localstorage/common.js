@@ -67,11 +67,11 @@ export const getLocal = async (key = '', version = defaultVersion, id = '') => {
  * @param  {String}  [key='']
  * @return {Object}
  */
-export const removeLocal = (key = '') => {
+export const removeLocal = (key = '', id = '') => {
   try {
-    storage.remove({ key });
+    storage.remove({ key, ...(id ? { id } : {}) });
   } catch (error) {
-    logger.log('Storage: error removing local with key', key);
+    logger.log('Storage: error removing local with key', key, error);
   }
 };
 
