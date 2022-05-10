@@ -28,9 +28,8 @@ const CurrencySelectionGlobalModal = () => {
   );
 
   const items = useMemo(() => {
-    const currencyListItems = Object.values(nativeCurrencies)
-      .filter(({ currency }) => currency !== NativeCurrency.SPD)
-      .map(({ currency, label, ...item }, index) => ({
+    const currencyListItems = Object.values(nativeCurrencies).map(
+      ({ currency, label, ...item }, index) => ({
         ...item,
         disabled: false,
         label: `${label} (${currency})`,
@@ -38,7 +37,8 @@ const CurrencySelectionGlobalModal = () => {
         index: index,
         value: currency,
         selected: currency === selectedCurrency,
-      }));
+      })
+    );
 
     return [{ data: currencyListItems }];
   }, [selectedCurrency]);

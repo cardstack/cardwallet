@@ -1,4 +1,4 @@
-import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
+import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import { isNil } from 'lodash';
 import React, { useCallback } from 'react';
 import { CoinIcon } from '../coin-icon';
@@ -6,14 +6,14 @@ import { RadioList, RadioListItem } from '../radio-list';
 import { Emoji } from '../text';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
-const currencyListItems = Object.values(nativeCurrencies)
-  .filter(({ currency }) => currency !== NativeCurrency.SPD)
-  .map(({ currency, ...item }) => ({
+const currencyListItems = Object.values(nativeCurrencies).map(
+  ({ currency, ...item }) => ({
     ...item,
     currency,
     key: currency,
     value: currency,
-  }));
+  })
+);
 
 const renderCurrencyIcon = (currency, emojiName) => {
   if (!currency) return null;
