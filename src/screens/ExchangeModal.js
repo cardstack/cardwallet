@@ -25,6 +25,7 @@ import { GasSpeedButton } from '../components/gas';
 import { KeyboardFixedOpenLayout } from '../components/layout';
 import { dismissingScreenListener } from '../initializers/screen-dismissal';
 import { CenteredContainer, Container } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import ExchangeModalTypes from '@rainbow-me/helpers/exchangeModalTypes';
 import isKeyboardOpen from '@rainbow-me/helpers/isKeyboardOpen';
 import {
@@ -47,7 +48,6 @@ import { executeRap } from '@rainbow-me/raps';
 import { multicallClearState } from '@rainbow-me/redux/multicall';
 import { swapClearState } from '@rainbow-me/redux/swap';
 import { ethUnits } from '@rainbow-me/references';
-import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 import { backgroundTask, isNewValueForPath } from '@rainbow-me/utils';
 import logger from 'logger';

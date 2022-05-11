@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 
 import {
@@ -9,9 +9,8 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
-
-import Routes from '@rainbow-me/routes';
 
 export const NavBarHeader = memo(
   ({ address, name }: { address: string; name?: string }) => {

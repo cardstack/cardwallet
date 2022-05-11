@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
@@ -18,7 +19,6 @@ import {
 } from '../hooks';
 import { deviceUtils } from '../utils';
 import { CenteredContainer, Container } from '@cardstack/components';
-import { useNavigation } from '@rainbow-me/navigation';
 
 const deviceHeight = deviceUtils.dimensions.height;
 const statusBarHeight = getStatusBarHeight(true);

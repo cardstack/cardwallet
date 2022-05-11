@@ -1,5 +1,5 @@
 import { nativeCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, {
   useCallback,
   memo,
@@ -10,9 +10,9 @@ import React, {
 import { Keyboard } from 'react-native';
 
 import { useSpendToNativeDisplay } from '@cardstack/hooks';
+import { Routes } from '@cardstack/navigation';
 import { palette } from '@cardstack/theme/colors';
 
-import Routes from '@rainbow-me/routes';
 import { removeLeadingZeros } from '@rainbow-me/utils';
 
 import {

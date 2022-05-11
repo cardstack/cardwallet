@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { BN } from 'ethereumjs-util';
 import { useCallback, useMemo } from 'react';
 

@@ -1,9 +1,9 @@
-import { NavigationContext } from '@react-navigation/core';
+import { NavigationContext } from '@react-navigation/native';
 import { act, renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 import { Alert } from 'react-native';
 
-import Routes from '@rainbow-me/navigation/routesNames';
+import { Routes } from '@cardstack/navigation';
 
 import { useScanner } from '../useScanner';
 
@@ -12,8 +12,8 @@ const validAddress = '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13';
 jest.mock('logger');
 
 const mockNavigate = jest.fn();
-jest.mock('@react-navigation/core', () => {
-  const actualNav = jest.requireActual('@react-navigation/core');
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
 
   return {
     ...actualNav,

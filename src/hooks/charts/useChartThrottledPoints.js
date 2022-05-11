@@ -1,10 +1,9 @@
+import { useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { palette } from '@cardstack/theme';
 import { monotoneCubicInterpolation } from '@rainbow-me/animated-charts';
 import { useChartData, useChartDataLabels } from '@rainbow-me/hooks';
-
-import { useNavigation } from '@rainbow-me/navigation';
 
 import { ModalContext } from 'react-native-cool-modals/NativeStackView';
 

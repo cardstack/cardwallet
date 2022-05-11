@@ -3,9 +3,9 @@ import React, { memo } from 'react';
 import { useNavigation } from '../navigation/Navigation';
 import { Button, Container, Text } from '@cardstack/components';
 
+import { Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
 
 const AddFundsInterstitial = () => {
   const { navigate } = useNavigation();

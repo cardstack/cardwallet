@@ -21,7 +21,7 @@ import { Centered } from '../layout';
 import { Br, Emoji, Text } from '../text';
 import NeedHelpButton from './NeedHelpButton';
 import SupportButton from './SupportButton';
-import Routes from '@rainbow-me/routes';
+import { Routes } from '@cardstack/navigation';
 import { position } from '@rainbow-me/styles';
 
 const StatusMessageText = styled(Text).attrs({

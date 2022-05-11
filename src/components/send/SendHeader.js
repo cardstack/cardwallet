@@ -8,8 +8,8 @@ import { AddContactButton, PasteAddressButton } from '../buttons';
 import { AddressField } from '../fields';
 import { Row } from '../layout';
 import { Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { useClipboard, useDimensions } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 

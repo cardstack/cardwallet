@@ -3,7 +3,7 @@ import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import colors from '../context/currentColors';
 import { lightModeThemeColors } from '../styles/colors';
 import { deviceUtils } from '../utils';
-import Routes from '@rainbow-me/routes';
+import { Routes } from '@cardstack/navigation';
 
 const statusBarHeight = getStatusBarHeight(true);
 export const sheetVerticalOffset = statusBarHeight;

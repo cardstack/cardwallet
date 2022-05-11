@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { ScrollView } from 'react-native';
 import styled from 'styled-components';
@@ -16,7 +17,6 @@ import { Device } from '@cardstack/utils/device';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useManageCloudBackups, useWallets } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
 import { padding } from '@rainbow-me/styles';
 
 const Footer = styled(Centered)`

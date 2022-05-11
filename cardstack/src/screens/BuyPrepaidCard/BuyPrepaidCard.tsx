@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 
@@ -10,12 +10,12 @@ import {
   Touchable,
 } from '@cardstack/components';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+import { Routes } from '@cardstack/navigation';
 import { Inventory } from '@cardstack/types';
 
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { SlackSheet } from '@rainbow-me/components/sheet';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
 
 import {
   CardContent,

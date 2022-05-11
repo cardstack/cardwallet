@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 import { Centered, Column, ColumnWithMargins } from '../components/layout';
@@ -14,9 +14,8 @@ import { useDimensions, useShakeAnimation } from '../hooks';
 import { useBlockBackButton } from '../hooks/useBlockBackButton';
 import { useNavigation } from '../navigation/Navigation';
 import { CenteredContainer, Icon, Text } from '@cardstack/components';
-import { useDismissCurrentRoute } from '@cardstack/navigation';
+import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
-import Routes from '@rainbow-me/navigation/routesNames';
 import { padding } from '@rainbow-me/styles';
 
 const layouts = {

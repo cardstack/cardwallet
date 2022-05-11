@@ -1,13 +1,13 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 
 import { AssetWithNativeType } from '../../../cardstack/src/types';
-import Routes from '../../navigation/routesNames';
 import { BalanceCoinRow } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import {
   PinnedHiddenSectionOption,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
 
 const BalanceCoinWrapper = (item: AssetWithNativeType) => {
   const { navigate } = useNavigation();

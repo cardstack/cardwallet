@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react';
 
 import SheetActionButton from './SheetActionButton';
+import { Routes } from '@cardstack/navigation';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import { useExpandedStateNavigation, useWallets } from '@rainbow-me/hooks';
-
-import Routes from '@rainbow-me/routes';
 
 export default function BuyActionButton({ color: givenColor, ...props }) {
   const { colors } = useTheme();

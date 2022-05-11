@@ -6,7 +6,7 @@ import { useNavigation } from '../../navigation/Navigation';
 import { BackButton } from '../header';
 import { Centered } from '../layout';
 import { TruncatedText } from '../text';
-import Routes from '@rainbow-me/routes';
+import { Routes } from '@cardstack/navigation';
 import { borders, padding } from '@rainbow-me/styles';
 
 const BackButtonWrapper = styled(Centered)`

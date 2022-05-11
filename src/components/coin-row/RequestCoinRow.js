@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { addHours, differenceInMinutes, isPast } from 'date-fns';
 import React, {
   useCallback,
@@ -15,9 +16,8 @@ import { RowWithMargins } from '../layout';
 import { Emoji, Text } from '../text';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
+import { Routes } from '@cardstack/navigation';
 import { removeRequest } from '@cardstack/redux/requests';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 const getPercentageOfTimeElapsed = (startDate, endDate) => {
   const originalDifference = differenceInMinutes(endDate, startDate);

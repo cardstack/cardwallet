@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -28,7 +28,7 @@ import {
   Text,
 } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
-import { useNavigation } from '@rainbow-me/navigation';
+
 import { position } from '@rainbow-me/styles';
 
 const HeaderOpacityToggler = styled(OpacityToggler).attrs(({ isVisible }) => ({

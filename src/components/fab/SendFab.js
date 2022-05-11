@@ -6,8 +6,8 @@ import { lightModeThemeColors } from '../../styles/colors';
 import { magicMemo } from '../../utils';
 import { Icon } from '../icons';
 import FloatingActionButton from './FloatingActionButton';
+import { Routes } from '@cardstack/navigation';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
-import Routes from '@rainbow-me/routes';
 
 const FabShadow = [
   [0, 10, 30, lightModeThemeColors.shadow, 0.8],

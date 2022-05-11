@@ -11,7 +11,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
-import Routes from '@rainbow-me/routes';
+import { Routes } from '@cardstack/navigation';
 
 const AddCashFooter = ({ disabled, onDisabledPress, onSubmit, ...props }) => {
   const { isTallPhone, isTinyPhone } = useDimensions();

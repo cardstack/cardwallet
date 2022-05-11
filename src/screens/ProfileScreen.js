@@ -12,9 +12,9 @@ import {
   Text,
   TransactionList,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
 import networkTypes from '@rainbow-me/helpers/networkTypes';
-import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 
 const ProfileScreenPage = styled(Page)`

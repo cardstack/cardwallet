@@ -1,11 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 
 import { CardPressable, Container, Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { CollectibleType } from '@cardstack/types';
 
 import { buildCollectibleName } from '@rainbow-me/helpers/assets';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 import { CollectibleImage } from '../../../../src/components/collectible';
 

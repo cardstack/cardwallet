@@ -31,7 +31,11 @@ import {
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
-import { navigationStateInit, useLoadingOverlay } from '@cardstack/navigation';
+import {
+  navigationStateInit,
+  Routes,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
@@ -39,7 +43,7 @@ import {
   useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
+
 import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 

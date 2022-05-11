@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -14,7 +15,7 @@ import {
   Text,
   TruncatedAddress,
 } from '@cardstack/components';
-import { useDismissCurrentRoute } from '@cardstack/navigation';
+import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 import theme from '@cardstack/theme';
 import {
   removeFirstEmojiFromString,
@@ -22,8 +23,6 @@ import {
 } from '@rainbow-me/helpers/emojiHandler';
 import { useAccountProfile, useBiometryIconName } from '@rainbow-me/hooks';
 
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 
 const Spacer = styled.View`

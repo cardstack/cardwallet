@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import BigNumber from 'bignumber.js';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { IS_TESTING } from 'react-native-dotenv';
@@ -13,14 +14,13 @@ import { Centered, Row } from '../layout';
 import APYPill from './APYPill';
 import SavingsListRowAnimatedNumber from './SavingsListRowAnimatedNumber';
 import SavingsListRowEmptyState from './SavingsListRowEmptyState';
+import { Routes } from '@cardstack/navigation';
 import {
   calculateAPY,
   calculateCompoundInterestInDays,
   formatSavingsAmount,
 } from '@rainbow-me/helpers/savings';
 import { useDimensions } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import { padding, position } from '@rainbow-me/styles';
 import { magicMemo } from '@rainbow-me/utils';
 import ShadowStack from 'react-native-shadow-stack';

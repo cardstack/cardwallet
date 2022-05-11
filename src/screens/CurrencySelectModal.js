@@ -23,6 +23,7 @@ import {
 import { Column, KeyboardFixedOpenLayout } from '../components/layout';
 import { Modal } from '../components/modal';
 import { Container } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { addHexPrefix } from '@rainbow-me/handlers/web3';
 import CurrencySelectionTypes from '@rainbow-me/helpers/currencySelectionTypes';
 import tokenSectionTypes from '@rainbow-me/helpers/tokenSectionTypes';
@@ -36,7 +37,6 @@ import {
 } from '@rainbow-me/hooks';
 import { delayNext } from '@rainbow-me/hooks/useMagicAutofocus';
 import { useNavigation } from '@rainbow-me/navigation/Navigation';
-import Routes from '@rainbow-me/routes';
 import { position } from '@rainbow-me/styles';
 import { filterList } from '@rainbow-me/utils';
 

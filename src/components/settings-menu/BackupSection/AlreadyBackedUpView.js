@@ -11,6 +11,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
@@ -22,7 +23,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import { Navigation, useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 
 const WalletBackupStatus = {

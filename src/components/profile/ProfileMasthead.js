@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { toLower } from 'lodash';
 import React, { useCallback } from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -12,6 +13,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { Device, isLayer1, screenWidth } from '@cardstack/utils';
 
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
@@ -20,8 +22,6 @@ import {
   useAccountSettings,
   useWallets,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const ACCOUNT_CONTAINER = screenWidth * 0.85;

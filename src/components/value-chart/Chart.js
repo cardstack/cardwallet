@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { invert } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Linking } from 'react-native';
@@ -19,7 +20,6 @@ import { Button, CenteredContainer, Text } from '@cardstack/components';
 import { ChartDot, ChartPath, useChartData } from '@rainbow-me/animated-charts';
 import ChartTypes from '@rainbow-me/helpers/chartTypes';
 import { ImgixImage } from '@rainbow-me/images';
-import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
 export const { width: WIDTH } = Dimensions.get('window');

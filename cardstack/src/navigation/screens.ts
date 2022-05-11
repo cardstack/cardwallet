@@ -1,4 +1,4 @@
-import { NavigationState, ScreenListeners } from '@react-navigation/core';
+import { NavigationState, ScreenListeners } from '@react-navigation/native';
 import { StackNavigationOptions } from '@react-navigation/stack';
 import { StackNavigationEventMap } from '@react-navigation/stack/lib/typescript/src/types';
 
@@ -45,7 +45,6 @@ import {
   sheetPreset,
   wcPromptPreset,
 } from '@rainbow-me/navigation/effects';
-import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import BackupSheet from '@rainbow-me/screens/BackupSheet';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import SettingsModal from '@rainbow-me/screens/SettingsModal';
@@ -56,7 +55,7 @@ import {
   overlayPreset,
   slideLeftToRightPreset,
 } from './presetOptions';
-import { MainRoutes } from './routes';
+import { MainRoutes, Routes } from './routes';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -219,11 +218,11 @@ const prefixes = [
 export const linking = {
   prefixes,
   config: {
-    initialRouteName: RainbowRoutes.SWIPE_LAYOUT,
+    initialRouteName: Routes.TAB_NAVIGATOR,
     screens: {
-      [RainbowRoutes.SWIPE_LAYOUT]: {
+      [Routes.TAB_NAVIGATOR]: {
         screens: {
-          initialRouteName: RainbowRoutes.WALLET_SCREEN,
+          initialRouteName: Routes.WALLET_SCREEN,
         },
       },
       [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
@@ -235,12 +234,12 @@ export const navigationStateNewWallet = {
   index: 0,
   routes: [
     {
-      name: RainbowRoutes.SWIPE_LAYOUT,
+      name: Routes.TAB_NAVIGATOR,
       state: {
         index: 0,
         routes: [
           {
-            name: RainbowRoutes.WALLET_SCREEN,
+            name: Routes.WALLET_SCREEN,
             params: { initialized: true },
           },
         ],
@@ -253,7 +252,7 @@ export const navigationStateInit = {
   index: 0,
   routes: [
     {
-      name: RainbowRoutes.WELCOME_SCREEN,
+      name: Routes.WELCOME_SCREEN,
     },
   ],
 };

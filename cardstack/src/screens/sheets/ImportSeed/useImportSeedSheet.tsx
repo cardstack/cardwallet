@@ -1,5 +1,5 @@
 import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
-import { ParamListBase, useNavigation } from '@react-navigation/core';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { providers } from 'ethers';
 import { keys } from 'lodash';
@@ -17,6 +17,7 @@ import {
   dismissKeyboardOnAndroid,
   navigationStateNewWallet,
   useLoadingOverlay,
+  Routes,
 } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 
@@ -34,7 +35,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
-import Routes from '@rainbow-me/routes';
 import {
   deviceUtils,
   ethereumUtils,

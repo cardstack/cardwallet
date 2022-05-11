@@ -1,5 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/native';
 import { isEmpty } from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { Clock } from 'react-native-reanimated';

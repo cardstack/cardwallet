@@ -14,6 +14,7 @@ import usePrevious from './usePrevious';
 import useSwapInputOutputTokens from './useSwapInputOutputTokens';
 import useUniswapAssetsInWallet from './useUniswapAssetsInWallet';
 import useUniswapCalls from './useUniswapCalls';
+import { Routes } from '@cardstack/navigation';
 import CurrencySelectionTypes from '@rainbow-me/helpers/currencySelectionTypes';
 import {
   multicallAddListeners,
@@ -23,7 +24,6 @@ import {
   updateSwapInputCurrency,
   updateSwapOutputCurrency,
 } from '@rainbow-me/redux/swap';
-import Routes from '@rainbow-me/routes';
 import { ethereumUtils, isNewValueForPath } from '@rainbow-me/utils';
 import logger from 'logger';
 

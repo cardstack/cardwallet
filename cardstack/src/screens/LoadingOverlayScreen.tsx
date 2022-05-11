@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/native';
 import React from 'react';
 
 import { LoadingOverlay } from '@cardstack/components';

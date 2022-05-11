@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -11,6 +12,7 @@ import { Button, Container, Icon, Input, Text } from '@cardstack/components';
 import {
   dismissKeyboardOnAndroid,
   navigationStateNewWallet,
+  Routes,
   useLoadingOverlay,
 } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
@@ -22,9 +24,8 @@ import { removeWalletData } from '@rainbow-me/handlers/localstorage/removeWallet
 import walletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useAccountSettings, useWalletManager } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
 import { setWalletBackedUp, walletsLoadState } from '@rainbow-me/redux/wallets';
-import Routes from '@rainbow-me/routes';
+
 import logger from 'logger';
 
 export default function RestoreCloudStep({
@@ -34,7 +35,7 @@ export default function RestoreCloudStep({
 }) {
   const selectedBackupName = backupSelected?.name;
   const dispatch = useDispatch();
-  const { navigate, goBack, reset, replace } = useNavigation();
+  const { navigate, goBack, reset } = useNavigation();
   const [validPassword, setValidPassword] = useState(false);
   const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [password, setPassword] = useState('');

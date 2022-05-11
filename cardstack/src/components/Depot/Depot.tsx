@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 
 import {
@@ -6,10 +7,8 @@ import {
   SafeHeader,
   TokenBalance,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { DepotType } from '@cardstack/types';
-
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 import { HorizontalDivider } from '../HorizontalDivider';
 import { MoreItemsFooter } from '../MoreItemsFooter';

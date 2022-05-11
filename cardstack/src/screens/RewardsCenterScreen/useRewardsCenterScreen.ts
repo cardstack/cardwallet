@@ -1,5 +1,5 @@
 import { convertToSpend, getAddressByNetwork } from '@cardstack/cardpay-sdk';
-import { useNavigation, StackActions } from '@react-navigation/core';
+import { useNavigation, StackActions } from '@react-navigation/native';
 import { groupBy } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 

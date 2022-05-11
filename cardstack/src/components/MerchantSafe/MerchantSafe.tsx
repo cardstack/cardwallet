@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 
 import {
@@ -7,12 +8,11 @@ import {
   SafeHeader,
   Text,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 import { strings } from './strings';
 

@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { useNavigation } from '../../navigation/Navigation';
 import HeaderButton from './HeaderButton';
 import { Container, Icon, Text } from '@cardstack/components';
-import Routes from '@rainbow-me/routes';
+import { Routes } from '@cardstack/navigation';
 
 export default function CameraHeaderButton() {
   const { navigate } = useNavigation();

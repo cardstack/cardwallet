@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { BackupFile } from 'react-native-cloud-fs';
 import { useDispatch } from 'react-redux';
 import useWallets from './useWallets';
+import { Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import {
   deleteAllBackups,
@@ -13,7 +14,6 @@ import walletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import { useNavigation } from '@rainbow-me/navigation/Navigation';
 import { AppDispatch } from '@rainbow-me/redux/store';
 import { walletsUpdate } from '@rainbow-me/redux/wallets';
-import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 const { cloudPlatform } = Device;

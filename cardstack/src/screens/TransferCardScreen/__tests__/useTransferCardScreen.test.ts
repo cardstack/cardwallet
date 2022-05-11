@@ -19,7 +19,7 @@ const signerParams = {
 
 // Mock navigation
 const mockedGoBack = jest.fn();
-jest.mock('@react-navigation/core', () => ({
+jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     goBack: mockedGoBack,
   }),

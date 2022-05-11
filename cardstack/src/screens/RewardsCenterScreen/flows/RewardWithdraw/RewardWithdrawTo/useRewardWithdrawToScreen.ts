@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback } from 'react';
 
 import { MainRoutes } from '@cardstack/navigation';

@@ -11,7 +11,7 @@ import Web3 from 'web3';
 
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import { MainRoutes, useLoadingOverlay, Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import {
   getUsdConverter,
@@ -33,7 +33,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import Navigation, { useNavigation } from '@rainbow-me/navigation/Navigation';
-import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 
 interface Params {
