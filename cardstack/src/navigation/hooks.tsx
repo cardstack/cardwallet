@@ -1,10 +1,11 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/core';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 
-import Navigation from './Navigation';
-import { MainRoutes, Routes } from './routes';
+import { Navigation } from '@rainbow-me/navigation';
+
+import { MainRoutes } from './routes';
 import { MainScreens, ScreenNavigation } from './screens';
 
 // Not a big fan of returning components inside hooks,

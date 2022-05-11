@@ -20,6 +20,7 @@ import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
+import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
@@ -30,7 +31,7 @@ import { InitialRouteContext } from '../../../src/context/initialRoute';
 
 import { useCardstackMainScreens } from './hooks';
 
-import { dismissAndroidKeyboardOnClose, Routes } from '.';
+import { dismissAndroidKeyboardOnClose } from '.';
 
 const Tab = createBottomTabNavigator();
 
@@ -130,6 +131,7 @@ export const StackNavigator = () => {
     >
       <Stack.Screen component={TabNavigator} name={Routes.TAB_NAVIGATOR} />
       {cardstackMainScreens}
+
       {
         // Temp rainbow components until migration
       }
