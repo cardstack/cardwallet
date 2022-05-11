@@ -1,6 +1,6 @@
 import { MerchantSafe, NativeCurrency } from '@cardstack/cardpay-sdk';
 
-import { Routes } from '@cardstack/navigation';
+import { Navigation, Routes } from '@cardstack/navigation';
 import {
   getSafeData,
   getRevenuePoolBalances,

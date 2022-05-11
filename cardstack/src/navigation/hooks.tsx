@@ -3,8 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 
-import { Navigation } from '@rainbow-me/navigation';
-
+import Navigation from './Navigation';
 import { MainRoutes, Routes } from './routes';
 import { MainScreens, ScreenNavigation } from './screens';
 

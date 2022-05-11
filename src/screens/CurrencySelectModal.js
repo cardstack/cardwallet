@@ -40,7 +40,6 @@ import {
   useUniswapAssetsInWallet,
 } from '@rainbow-me/hooks';
 import { delayNext } from '@rainbow-me/hooks/useMagicAutofocus';
-import { useNavigation } from '@rainbow-me/navigation/Navigation';
 import { position } from '@rainbow-me/styles';
 import { filterList } from '@rainbow-me/utils';
 
