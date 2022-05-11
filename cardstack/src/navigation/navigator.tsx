@@ -3,8 +3,7 @@ import React, { memo } from 'react';
 
 import { onNavigationStateChange } from '@cardstack/navigation/onNavigationStateChange';
 
-import { navigationRef } from '@rainbow-me/navigation/Navigation';
-
+import { navigationRef } from './Navigation';
 import { linking } from './screens';
 import { StackNavigator } from './tabBarNavigator';
 
