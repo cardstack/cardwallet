@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 import { Alert } from 'react-native';
 
-import { Routes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation';
 
 import { useScanner } from '../useScanner';
 

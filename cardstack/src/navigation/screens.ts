@@ -55,7 +55,7 @@ import {
   overlayPreset,
   slideLeftToRightPreset,
 } from './presetOptions';
-import { MainRoutes } from './routes';
+import { MainRoutes, Routes } from './routes';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -218,7 +218,7 @@ const prefixes = [
 export const linking = {
   prefixes,
   config: {
-    initialRouteName: RainbowRoutes.SWIPE_LAYOUT,
+    initialRouteName: Routes.TAB_NAVIGATOR,
     screens: {
       [Routes.TAB_NAVIGATOR]: {
         screens: {

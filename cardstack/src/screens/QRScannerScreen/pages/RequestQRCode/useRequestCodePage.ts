@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 
 import { usePaymentLinks } from '@cardstack/hooks/merchant/usePaymentLinks';
-import { Routes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 export const useRequestCodePage = () => {

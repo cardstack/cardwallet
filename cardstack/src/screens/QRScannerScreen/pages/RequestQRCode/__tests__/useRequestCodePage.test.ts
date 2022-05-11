@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { Routes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 
 import { useRequestCodePage } from '../useRequestCodePage';

@@ -5,7 +5,7 @@ import { Linking } from 'react-native';
 
 import { useBooleanState } from '@cardstack/hooks';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
-import { Routes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { convertDeepLinkToCardWalletProtocol } from '@cardstack/utils';
 

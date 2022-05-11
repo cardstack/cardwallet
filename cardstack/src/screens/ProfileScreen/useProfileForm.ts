@@ -4,8 +4,7 @@ import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, InteractionManager } from 'react-native';
 
 import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
-import { useLoadingOverlay } from '@cardstack/navigation';
-import { Routes } from '@cardstack/navigation/routes';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { displayLocalNotification } from '@cardstack/notification-handler';
 import { useCreateProfileMutation } from '@cardstack/services';
 import {

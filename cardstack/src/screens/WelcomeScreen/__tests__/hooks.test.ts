@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { Routes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 
 import * as cloudBackup from '@rainbow-me/handlers/cloudBackup';

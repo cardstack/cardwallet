@@ -2,8 +2,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useLoadingOverlay } from '@cardstack/navigation';
-import { Routes } from '@cardstack/navigation/routes';
+import { useLoadingOverlay, Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 
 import {
