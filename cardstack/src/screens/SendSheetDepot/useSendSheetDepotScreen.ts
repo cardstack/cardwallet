@@ -2,7 +2,7 @@ import {
   convertAmountFromNativeValue,
   formatInputDecimals,
 } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/native';
+import Navigation, { useRoute, useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import BN from 'bn.js';
 import { isEmpty, isString } from 'lodash';
@@ -32,7 +32,6 @@ import {
   useMagicAutofocus,
   useWallets,
 } from '@rainbow-me/hooks';
-import Navigation, { useNavigation } from '@rainbow-me/navigation/Navigation';
 import logger from 'logger';
 
 interface Params {

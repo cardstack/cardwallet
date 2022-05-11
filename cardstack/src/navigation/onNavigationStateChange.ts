@@ -1,10 +1,10 @@
 import { Navigation } from '@rainbow-me/navigation';
 import { sentryUtils } from '@rainbow-me/utils';
 
-let memRouteName: string;
+let memRouteName: string | undefined;
 
 export function onNavigationStateChange() {
-  const { name: routeName } = Navigation.getActiveRoute();
+  const routeName = Navigation.getActiveRouteName();
 
   const prevRouteName = memRouteName;
   memRouteName = routeName;
