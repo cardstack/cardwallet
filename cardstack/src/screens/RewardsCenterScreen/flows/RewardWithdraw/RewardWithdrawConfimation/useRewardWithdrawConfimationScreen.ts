@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects } from '@cardstack/hooks';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
 import {
@@ -71,7 +71,7 @@ export const useRewardWithdrawConfimationScreen = () => {
   );
 
   const returnToRewardsCenter = useCallback(() => {
-    navigate(MainRoutes.REWARDS_CENTER_SCREEN);
+    navigate(Routes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();

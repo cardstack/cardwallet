@@ -2,7 +2,7 @@ import {
   convertAmountFromNativeValue,
   formatInputDecimals,
 } from '@cardstack/cardpay-sdk';
-import Navigation, { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import BN from 'bn.js';
 import { isEmpty, isString } from 'lodash';
@@ -11,7 +11,7 @@ import Web3 from 'web3';
 
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
-import { MainRoutes, useLoadingOverlay, Routes } from '@cardstack/navigation';
+import { useLoadingOverlay, Routes, Navigation } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import {
   getUsdConverter,
@@ -193,7 +193,7 @@ export const useSendSheetDepotScreen = () => {
   useEffect(() => {
     if (getConverterError) {
       captureException(getConverterError);
-      Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
+      Navigation.handleAction(Routes.ERROR_FALLBACK_SCREEN, {}, true);
     }
   }, [getConverterError]);
 

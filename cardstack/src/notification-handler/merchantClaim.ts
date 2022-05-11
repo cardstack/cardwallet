@@ -1,6 +1,6 @@
 import { MerchantSafe, NativeCurrency } from '@cardstack/cardpay-sdk';
 
-import { MainRoutes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation';
 import {
   getSafeData,
   getRevenuePoolBalances,
@@ -30,7 +30,7 @@ export const merchantClaimHandler = async (
     );
 
     if (merchantData) {
-      Navigation.handleAction(MainRoutes.MERCHANT_SCREEN, {
+      Navigation.handleAction(Routes.MERCHANT_SCREEN, {
         merchantSafe: merchantData,
       });
 
@@ -52,7 +52,7 @@ export const merchantClaimHandler = async (
         nativeCurrency
       );
 
-      Navigation.handleAction(MainRoutes.MERCHANT_SCREEN, {
+      Navigation.handleAction(Routes.MERCHANT_SCREEN, {
         merchantSafe: { ...extendedMerchantSafe, revenueBalances },
       });
     }

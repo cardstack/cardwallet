@@ -15,7 +15,7 @@ import Web3 from 'web3';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
-import { MainRoutes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation/routes';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import {
@@ -199,7 +199,7 @@ export const fetchGnosisSafes = async (address: string) => {
       prepaidCards: extendedPrepaidCards,
     };
   } catch (error) {
-    Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
+    Navigation.handleAction(Routes.ERROR_FALLBACK_SCREEN, {}, true);
 
     logger.sentry('Fetch GnosisSafes failed', error);
     captureException(error);

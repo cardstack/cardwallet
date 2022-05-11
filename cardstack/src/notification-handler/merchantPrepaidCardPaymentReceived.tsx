@@ -3,7 +3,7 @@ import { InteractionManager } from 'react-native';
 
 import { SafeHeader } from '@cardstack/components';
 import { PrepaidCardPayment } from '@cardstack/graphql';
-import { MainRoutes } from '@cardstack/navigation/routes';
+import { Routes } from '@cardstack/navigation';
 import {
   convertSpendForBalanceDisplay,
   getMerchantEarnedTransactionDetails,
@@ -25,7 +25,7 @@ export const merchantPrepaidCardPaymentReceivedHandler = async (
   try {
     const transaction = await mapMerchantPaymentTxToNavigationParams(data);
     InteractionManager.runAfterInteractions(async () => {
-      Navigation.handleAction(MainRoutes.PAYMENT_RECEIVED_SHEET, {
+      Navigation.handleAction(Routes.PAYMENT_RECEIVED_SHEET, {
         transaction,
       });
     });

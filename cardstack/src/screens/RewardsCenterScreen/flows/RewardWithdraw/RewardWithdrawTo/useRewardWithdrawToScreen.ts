@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-import { MainRoutes } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { TokenWithSafeAddress } from '@cardstack/screens/RewardsCenterScreen/components';
 import { useGetSafesDataQuery } from '@cardstack/services';
@@ -38,7 +38,7 @@ export const useRewardWithdrawToScreen = () => {
 
   const onSafePress = useCallback(
     safe => {
-      navigate(MainRoutes.REWARD_WITHDRAW_CONFIRMATION, {
+      navigate(Routes.REWARD_WITHDRAW_CONFIRMATION, {
         tokenInfo,
         fromRewardSafe: tokenInfo.safeAddress,
         withdrawTo: safe,

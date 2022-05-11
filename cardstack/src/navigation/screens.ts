@@ -225,7 +225,7 @@ export const linking = {
           initialRouteName: Routes.WALLET_SCREEN,
         },
       },
-      [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
+      [Routes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
     },
   },
 };

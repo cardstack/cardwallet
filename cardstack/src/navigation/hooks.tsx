@@ -5,7 +5,7 @@ import { InteractionManager } from 'react-native';
 
 import { Navigation } from '@rainbow-me/navigation';
 
-import { MainRoutes } from './routes';
+import { MainRoutes, Routes } from './routes';
 import { MainScreens, ScreenNavigation } from './screens';
 
 // Not a big fan of returning components inside hooks,
@@ -59,13 +59,11 @@ interface ShowOverlayParams {
 export const useLoadingOverlay = () => {
   const { navigate } = useNavigation();
 
-  const dismissLoadingOverlay = useDismissCurrentRoute(
-    MainRoutes.LOADING_OVERLAY
-  );
+  const dismissLoadingOverlay = useDismissCurrentRoute(Routes.LOADING_OVERLAY);
 
   const showLoadingOverlay = useCallback(
     ({ title, subTitle }: ShowOverlayParams = defaulLoadingtMessage) => {
-      navigate(MainRoutes.LOADING_OVERLAY, {
+      navigate(Routes.LOADING_OVERLAY, {
         title,
         subTitle,
       });

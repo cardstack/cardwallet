@@ -9,7 +9,7 @@ import {
   useGetTransactionsFromSafesQuery,
 } from '@cardstack/graphql';
 import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
-import { MainRoutes, useLoadingOverlay } from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   useClaimRewardsMutation,
   useGetRewardPoolTokenBalancesQuery,
@@ -231,7 +231,7 @@ export const useRewardsCenterScreen = () => {
       });
     }
 
-    navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
+    navigate(Routes.TRANSACTION_CONFIRMATION_SHEET, {
       data: registerConfirmationData.current,
       onConfirm: onRegisterConfirmPress(
         registerConfirmationData.current.prepaidCard,
@@ -259,7 +259,7 @@ export const useRewardsCenterScreen = () => {
   ]);
 
   const onRegisterPress = useCallback(() => {
-    navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
+    navigate(Routes.CHOOSE_PREPAIDCARD_SHEET, {
       spendAmount: defaultGasEstimateInSpend,
       onConfirmChoosePrepaidCard: onPrepaidCardSelection,
       payCostDesc: strings.register.payCostDescription.toUpperCase(),
@@ -325,7 +325,7 @@ export const useRewardsCenterScreen = () => {
           ...mainPoolTokenInfo,
         };
 
-        navigate(MainRoutes.REWARDS_CLAIM_SHEET, {
+        navigate(Routes.REWARDS_CLAIM_SHEET, {
           data,
           onConfirm: () => {
             showLoadingOverlay({ title: strings.claim.loading });

@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 
 import { Container, ListEmptyComponent } from '@cardstack/components';
-import { MainRoutes } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation';
 import { TokenType } from '@cardstack/types';
 
 import { strings } from '../strings';
@@ -20,7 +20,7 @@ export const RewardsBalanceList = ({ data = [] }: RewardsBalanceListProps) => {
 
   const onPress = useCallback(
     tokenInfo => () => {
-      navigate(MainRoutes.REWARD_WITHDRAW_TO, {
+      navigate(Routes.REWARD_WITHDRAW_TO, {
         tokenInfo,
       });
     },
