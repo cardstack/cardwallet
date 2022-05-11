@@ -26,7 +26,11 @@ import {
   TransactionConfirmationType,
   TokenType,
 } from '@cardstack/types';
-import { groupTransactionsByDate, sortByTime } from '@cardstack/utils';
+import {
+  groupTransactionsByDate,
+  isLayer1,
+  sortByTime,
+} from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
@@ -54,11 +58,11 @@ export const useRewardsCenterScreen = () => {
         nativeCurrency,
       },
       options: {
-        skip: !accountAddress,
+        skip: !accountAddress || isLayer1(network),
         refetchOnMountOrArgChange: true,
       },
     }),
-    [accountAddress, nativeCurrency]
+    [accountAddress, nativeCurrency, network]
   );
 
   const {
@@ -370,10 +374,12 @@ export const useRewardsCenterScreen = () => {
     data: rewardSafeWithdraws,
     refetch: refetchWithdrawHistory,
   } = useGetTransactionsFromSafesQuery({
-    skip: !rewardSafesAddresses,
+    skip: !rewardSafesAddresses || isLayer1(network),
     variables: {
       safeAddresses: rewardSafesAddresses,
-      relayAddress: getAddressByNetwork('relay', network),
+      relayAddress: !isLayer1(network)
+        ? getAddressByNetwork('relay', network)
+        : '',
     },
     context: { network },
   });
@@ -431,7 +437,10 @@ export const useRewardsCenterScreen = () => {
     onRegisterPress,
     hasRewardsAvailable: !!mainPoolTokenInfo,
     mainPoolTokenInfo,
-    isLoading: isLoadindSafes || isLoadingTokens || isUninitialized,
+    isLoading:
+      isLoadindSafes ||
+      isLoadingTokens ||
+      (isUninitialized && !isLayer1(network)),
     onClaimPress,
     historySectionData,
     tokensBalanceData,
