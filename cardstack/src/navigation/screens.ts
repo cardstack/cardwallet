@@ -56,7 +56,7 @@ import {
   overlayPreset,
   slideLeftToRightPreset,
 } from './presetOptions';
-import { MainRoutes, GlobalRoutes } from './routes';
+import { MainRoutes } from './routes';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -196,48 +196,17 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: RequestPrepaidCardScreen,
     options: horizontalInterpolator,
   },
-};
-
-// @ts-expect-error it alows undefined for temp solution on loadingOverlay, will be removed on nav redesign
-export const GlobalScreens: Record<
-  keyof typeof GlobalRoutes,
-  ScreenNavigation
-> = {
   CONFIRM_REQUEST: {
     component: TransactionConfirmation,
     options: { gestureEnabled: false },
   },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,
-    options: {
-      ...expandedPreset,
-      ignoreBottomOffset: true,
-      interactWithScrollView: false,
-    } as StackNavigationOptions,
+    options: expandedPreset as StackNavigationOptions,
   },
   COLOR_PICKER_MODAL: {
     component: ColorPickerModal,
-    options: {
-      ...expandedPreset,
-      ignoreBottomOffset: true,
-      interactWithScrollView: false,
-    } as StackNavigationOptions,
-  },
-};
-
-// TODO: Merge paths once, navigation redesign happens
-const sharedNavigatorPath = {
-  [RainbowRoutes.MAIN_NAVIGATOR]: {
-    initialRouteName: RainbowRoutes.SWIPE_LAYOUT,
-    screens: {
-      [MainRoutes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
-    },
-  },
-};
-
-const iOSNavigatorPath = {
-  [RainbowRoutes.STACK]: {
-    screens: sharedNavigatorPath,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 
@@ -248,13 +217,6 @@ const prefixes = [
 ];
 
 export const linking = {
-  prefixes,
-  config: {
-    screens: Device.isIOS ? iOSNavigatorPath : sharedNavigatorPath,
-  },
-};
-
-export const tabLinking = {
   prefixes,
   config: {
     initialRouteName: RainbowRoutes.SWIPE_LAYOUT,

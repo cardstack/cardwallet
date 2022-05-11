@@ -1,14 +1,21 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React, { memo } from 'react';
 
-// @ts-expect-error ts doesn't know about Platform-specific extensions
-import PlatformNavigator from '@rainbow-me/navigation/Routes';
+import { onNavigationStateChange } from '@cardstack/navigation/onNavigationStateChange';
 
-import { TabBarFeatureProvider } from './tabBarNavigator';
+import { navigationRef } from '@rainbow-me/navigation/Navigation';
+
+import { linking } from './screens';
+import { StackNavigator } from './tabBarNavigator';
 
 const AppContainer = () => (
-  <TabBarFeatureProvider>
-    <PlatformNavigator />
-  </TabBarFeatureProvider>
+  <NavigationContainer
+    linking={linking}
+    onStateChange={onNavigationStateChange}
+    ref={navigationRef}
+  >
+    <StackNavigator />
+  </NavigationContainer>
 );
 
 AppContainer.displayName = 'AppContainer';

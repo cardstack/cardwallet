@@ -43,9 +43,6 @@ import AssetTypes from '@rainbow-me/helpers/assetTypes';
 import DirectionTypes from '@rainbow-me/helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
 import TransactionTypes from '@rainbow-me/helpers/transactionTypes';
-import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { Navigation } from '@rainbow-me/navigation';
-import { triggerOnSwipeLayout } from '@rainbow-me/navigation/onNavigationStateChange';
 import networkTypes from '@rainbow-me/networkTypes';
 import {
   getTitle,
@@ -56,11 +53,8 @@ import {
   parseTransactions,
 } from '@rainbow-me/parsers';
 import { shitcoins } from '@rainbow-me/references';
-import Routes from '@rainbow-me/routes';
 import { ethereumUtils, isLowerCaseMatch } from '@rainbow-me/utils';
 import logger from 'logger';
-
-const BACKUP_SHEET_DELAY_MS = 3000;
 
 let pendingTransactionsHandle = null;
 const TXN_WATCHER_MAX_TRIES = 60;
@@ -207,7 +201,6 @@ export const transactionsReceived = (message, appended = false) => async (
   const { accountAddress, nativeCurrency, network } = getState().settings;
   const { purchaseTransactions } = getState().addCash;
   const { transactions } = getState().data;
-  const { selected } = getState().wallets;
 
   const { parsedTransactions, potentialNftTransaction } = parseTransactions(
     transactionData,
@@ -229,21 +222,6 @@ export const transactionsReceived = (message, appended = false) => async (
   });
   dispatch(updatePurchases(parsedTransactions));
   saveLocalTransactions(parsedTransactions, accountAddress, network);
-
-  if (appended && parsedTransactions.length) {
-    if (
-      selected &&
-      !selected.backedUp &&
-      !selected.imported &&
-      selected.type !== WalletTypes.readOnly
-    ) {
-      setTimeout(() => {
-        triggerOnSwipeLayout(() =>
-          Navigation.handleAction(Routes.BACKUP_SHEET, { single: true })
-        );
-      }, BACKUP_SHEET_DELAY_MS);
-    }
-  }
 };
 
 export const addressAssetsReceived = (

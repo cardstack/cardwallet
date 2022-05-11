@@ -30,11 +30,7 @@ export const MainRoutes = {
   TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
   BACKUP_SHEET: 'BackupSheet',
   REQUEST_PREPAID_CARD: 'RequestPrepaidCardScreen',
-} as const;
-
-export const GlobalRoutes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
   COLOR_PICKER_MODAL: 'ColorPickerModal',
-  LOADING_OVERLAY: 'LoadingOverlay',
 } as const;
