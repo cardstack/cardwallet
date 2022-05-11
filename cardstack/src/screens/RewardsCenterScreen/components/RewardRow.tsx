@@ -56,7 +56,7 @@ export const RewardRow = ({
           flex={1}
         >
           <Text fontSize={15}>
-            {strings.transaction[txStatus] + ' '}
+            {strings.transaction[txStatus]}
             <Text weight="extraBold" fontSize={15} ellipsizeMode="tail">
               {primaryText}
             </Text>
