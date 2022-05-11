@@ -1,6 +1,6 @@
 import { MerchantSafe, NativeCurrency } from '@cardstack/cardpay-sdk';
 
-import { Routes } from '@cardstack/navigation';
+import { Navigation, Routes } from '@cardstack/navigation';
 import {
   getSafeData,
   getRevenuePoolBalances,
@@ -10,7 +10,6 @@ import { MerchantSafeType } from '@cardstack/types';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import { getNativeCurrency } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { Navigation } from '@rainbow-me/navigation';
 import store from '@rainbow-me/redux/store';
 import Logger from 'logger';
 

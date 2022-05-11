@@ -12,7 +12,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import styled from 'styled-components';
 import Spinner from '../../assets/chartSpinner.png';
-import { nativeStackConfig } from '../../navigation/nativeStackConfig';
 import { ChartExpandedStateHeader } from '../expanded-state/chart';
 import { Column } from '../layout';
 import Labels from './ExtremeLabels';
@@ -118,7 +117,6 @@ export default function ChartWrapper({
           cancelAnimation(progress);
           cancelAnimation(spinnerRotation);
           cancelAnimation(spinnerScale);
-          nativeStackConfig.screenOptions.onWillDismiss();
         },
       }),
     [setOptions, progress, spinnerRotation, spinnerScale]

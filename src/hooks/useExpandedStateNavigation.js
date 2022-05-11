@@ -1,8 +1,7 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 import { Alert, InteractionManager } from 'react-native';
 import AssetInputTypes from '../helpers/assetInputTypes';
-import { useNavigation } from '../navigation/Navigation';
 import useAsset from './useAsset';
 import useWallets from './useWallets';
 

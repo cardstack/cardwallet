@@ -1,8 +1,8 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { Alert } from 'react-native';
 import styled from 'styled-components';
 import { calculateAPY } from '../../helpers/savings';
-import { useNavigation } from '../../navigation/Navigation';
 import { magicMemo } from '../../utils';
 import Divider from '../Divider';
 import { CoinIcon } from '../coin-icon';

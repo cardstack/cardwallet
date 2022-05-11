@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { createElement } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components';
@@ -10,7 +10,6 @@ import {
   WalletProfileState,
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
-import { useNavigation } from '../navigation/Navigation';
 import { CopyAddressSheet } from '@cardstack/screens';
 import { padding, position } from '@rainbow-me/styles';
 

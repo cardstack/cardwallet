@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client';
+import { useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { get, toLower } from 'lodash';
 import React, {
@@ -21,7 +22,6 @@ import WalletLoadingStates from '../helpers/walletLoadingStates';
 import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
 import { cleanUpWalletKeys } from '../model/wallet';
-import { useNavigation } from '../navigation/Navigation';
 import {
   createAccountForWallet,
   walletsLoadState,

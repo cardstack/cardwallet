@@ -6,7 +6,6 @@ import { SectionList } from 'react-native';
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { useGetServiceStatusQuery } from '@cardstack/services';
-import { isLayer1 } from '@cardstack/utils';
 
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {

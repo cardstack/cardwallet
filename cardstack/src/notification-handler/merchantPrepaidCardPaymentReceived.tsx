@@ -3,14 +3,13 @@ import { InteractionManager } from 'react-native';
 
 import { SafeHeader } from '@cardstack/components';
 import { PrepaidCardPayment } from '@cardstack/graphql';
-import { Routes } from '@cardstack/navigation';
+import { Navigation, Routes } from '@cardstack/navigation';
 import {
   convertSpendForBalanceDisplay,
   getMerchantEarnedTransactionDetails,
 } from '@cardstack/utils';
 import { fetchMerchantInfoFromDID } from '@cardstack/utils/merchant-utils';
 
-import { Navigation } from '@rainbow-me/navigation';
 import store from '@rainbow-me/redux/store';
 import Logger from 'logger';
 

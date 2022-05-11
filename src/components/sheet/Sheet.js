@@ -1,9 +1,9 @@
+import { useNavigation } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../context/ThemeContext';
 import { useDimensions } from '../../hooks';
-import { useNavigation } from '../../navigation/Navigation';
 
 import TouchableBackdrop from '../TouchableBackdrop';
 import { Centered, Column } from '../layout';

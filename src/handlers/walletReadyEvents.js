@@ -1,9 +1,8 @@
 import { filter, find } from 'lodash';
 import { getKeychainIntegrityState } from './localstorage/globalSettings';
-import { Routes } from '@cardstack/navigation';
+import { Navigation, Routes } from '@cardstack/navigation';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
-import { Navigation } from '@rainbow-me/navigation';
 
 import store from '@rainbow-me/redux/store';
 import { checkKeychainIntegrity } from '@rainbow-me/redux/wallets';
