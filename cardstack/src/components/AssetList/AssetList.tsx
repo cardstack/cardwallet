@@ -6,8 +6,6 @@ import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection'
 
 import logger from 'logger';
 
-import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
-
 import { AssetListLoading } from './components/AssetListLoading';
 import AssetSectionHeader from './components/AssetSectionHeader';
 import { strings } from './strings';
@@ -27,7 +25,6 @@ export const AssetList = () => {
     isLoading,
     goToBuyPrepaidCard,
     onRefresh,
-    showAddFundsInterstitial,
     refreshing,
     networkName,
   } = useAssetList({ sectionListRef });
@@ -71,10 +68,6 @@ export const AssetList = () => {
 
   if (isLoading) {
     return <AssetListLoading />;
-  }
-
-  if (showAddFundsInterstitial) {
-    return <AddFundsInterstitial />;
   }
 
   return (

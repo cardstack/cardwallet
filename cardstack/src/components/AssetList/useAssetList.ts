@@ -115,7 +115,6 @@ export const useAssetList = ({
     isEmpty,
     goToBuyPrepaidCard,
     onRefresh,
-    showAddFundsInterstitial: isEmpty && isLayer1(network),
     networkName,
   };
 };
