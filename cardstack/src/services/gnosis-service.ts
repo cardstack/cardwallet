@@ -15,7 +15,6 @@ import Web3 from 'web3';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
-import { Navigation } from '@cardstack/navigation';
 import { Routes } from '@cardstack/navigation/routes';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 

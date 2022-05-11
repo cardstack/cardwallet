@@ -3,7 +3,7 @@ import { InteractionManager } from 'react-native';
 
 import { SafeHeader } from '@cardstack/components';
 import { PrepaidCardPayment } from '@cardstack/graphql';
-import { Navigation, Routes } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation';
 import {
   convertSpendForBalanceDisplay,
   getMerchantEarnedTransactionDetails,

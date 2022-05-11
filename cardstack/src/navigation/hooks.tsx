@@ -5,7 +5,7 @@ import { InteractionManager } from 'react-native';
 
 import { Navigation } from '@rainbow-me/navigation';
 
-import { MainRoutes } from './routes';
+import { MainRoutes, Routes } from './routes';
 import { MainScreens, ScreenNavigation } from './screens';
 
 // Not a big fan of returning components inside hooks,
