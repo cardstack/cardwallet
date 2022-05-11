@@ -261,10 +261,6 @@ jest.mock('@cardstack/navigation/screens', () => ({
   default: jest.fn(),
 }));
 
-jest.mock('@cardstack/navigation/tabBarNavigator', () => ({
-  useTabBarFlag: jest.fn(),
-}));
-
 // Mock to avoid not checksum address console.warn
 jest.mock('@uniswap/sdk', () => ({
   ...jest.requireActual('@uniswap/sdk'),

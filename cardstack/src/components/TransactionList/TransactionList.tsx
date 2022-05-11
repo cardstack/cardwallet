@@ -10,7 +10,6 @@ import {
   TransactionItemProps,
 } from '@cardstack/components';
 import { useFullTransactionList } from '@cardstack/hooks';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 import { TransactionListLoading } from './TransactionListLoading';
 
@@ -38,23 +37,19 @@ export const TransactionList = memo(({ Header }: TransactionListProps) => {
     }
   }, [isLoadingTransactions]);
 
-  const { isTabBarEnabled } = useTabBarFlag();
-
   const renderSectionHeader = useCallback(
     ({ section: { title } }: { section: { title: string } }) => (
       <Container
         padding={4}
         width="100%"
-        backgroundColor={
-          isTabBarEnabled ? 'backgroundDarkPurple' : 'backgroundBlue'
-        }
+        backgroundColor="backgroundDarkPurple"
       >
         <Text size="medium" color="white">
           {title}
         </Text>
       </Container>
     ),
-    [isTabBarEnabled]
+    []
   );
 
   const onRefresh = useCallback(() => {

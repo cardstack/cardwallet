@@ -6,7 +6,6 @@ import {
   MainHeader,
   SwitchSelector,
 } from '@cardstack/components';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 import { EmulatorPasteUriButton } from './components/EmulatorPasteUriButton';
 import { QRCodeScannerPage, RequestQRCodePage } from './pages';
@@ -23,8 +22,6 @@ const QRScannerScreen = () => {
 
   const { handleShareLink, safeAddress } = useRequestCodePage();
 
-  const { isTabBarEnabled } = useTabBarFlag();
-
   const renderRightIcon = useMemo(
     () =>
       isEmulator && isScanSelected ? (
@@ -37,10 +34,7 @@ const QRScannerScreen = () => {
 
   return (
     <Container flex={1} backgroundColor="backgroundDarkPurple">
-      <MainHeader
-        backgroundColor={!isTabBarEnabled ? 'transparent' : undefined}
-        rightIcon={renderRightIcon}
-      >
+      <MainHeader rightIcon={renderRightIcon}>
         <SwitchSelector options={pages} flex={0.7} onPress={togglePage} />
       </MainHeader>
       {isScanSelected ? <QRCodeScannerPage /> : <RequestQRCodePage />}
