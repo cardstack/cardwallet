@@ -7,7 +7,7 @@ import { get } from 'lodash';
 import React from 'react';
 import { Value } from 'react-native-reanimated';
 
-import { Routes } from '@cardstack/navigation';
+import { Routes } from './routes';
 
 export const navigationRef = React.createRef<NavigationContainerRef>();
 

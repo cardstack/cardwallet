@@ -1,6 +1,6 @@
 import { sentryUtils } from '@rainbow-me/utils';
 
-import { Navigation } from '.';
+import Navigation from './Navigation';
 
 let memRouteName: string | undefined;
 
