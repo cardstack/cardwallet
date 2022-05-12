@@ -39,8 +39,8 @@ export const strings = {
     button: 'Withdraw',
   },
   transaction: {
-    withdrawn: 'Withdrawn',
-    claimed: 'Claimed',
+    withdrawn: 'Withdrawn ',
+    claimed: 'Claimed ',
     none: '',
   },
 };
