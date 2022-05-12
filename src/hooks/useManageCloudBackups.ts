@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { BackupFile } from 'react-native-cloud-fs';
 import { useDispatch } from 'react-redux';
 import useWallets from './useWallets';
-import { Routes } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils/device';
 import {
   deleteAllBackups,

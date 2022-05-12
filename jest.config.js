@@ -26,11 +26,11 @@ module.exports = {
     '<rootDir>/cardstack/**/*.test.tsx',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*)',
+    'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*|@react-navigation)',
   ],
   moduleNameMapper: {
-    ...pathsToModuleNameMapper(compilerOptions.paths),
-    '^.+.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
-      'jest-transform-stub',
+    ...pathsToModuleNameMapper(compilerOptions.paths, {
+      prefix: '<rootDir>/',
+    }),
   },
 };
