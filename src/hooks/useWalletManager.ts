@@ -9,6 +9,7 @@ import {
   loadAddress,
 } from '../model/wallet';
 import {
+  resetAccountState,
   settingsLoadNetwork,
   settingsUpdateAccountAddress,
 } from '../redux/settings';
@@ -22,7 +23,6 @@ import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
-import useResetAccountState from './useResetAccountState';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
@@ -37,7 +37,6 @@ interface initializeWalleOptions {
 export default function useWalletManager() {
   const dispatch = useDispatch();
 
-  const resetAccountState = useResetAccountState();
   const loadAccountData = useLoadAccountData();
   const loadCoingeckoCoins = useLoadCoingeckoCoins();
   const loadGlobalData = useLoadGlobalData();
@@ -51,7 +50,7 @@ export default function useWalletManager() {
       try {
         logger.sentry('Start wallet init');
 
-        await resetAccountState();
+        await dispatch(resetAccountState());
         logger.sentry('resetAccountState ran ok');
 
         await dispatch(settingsLoadNetwork());
@@ -95,7 +94,6 @@ export default function useWalletManager() {
       }
     },
     [
-      resetAccountState,
       dispatch,
       loadCoingeckoCoins,
       network,

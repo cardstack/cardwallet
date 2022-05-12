@@ -1,12 +1,9 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { addCashLoadState } from '../redux/addCash';
 import { dataLoadState } from '../redux/data';
 import { coinListLoadState } from '../redux/editOptions';
 import { openStateSettingsLoadState } from '../redux/openStateSettings';
-import { uniswapLoadState } from '../redux/uniswap';
-import { uniswapLiquidityLoadState } from '../redux/uniswapLiquidity';
 import { walletConnectLoadState } from '../redux/walletconnect';
 import { promiseUtils } from '../utils';
 import { collectiblesLoadState } from '@cardstack/redux/collectibles';
@@ -34,10 +31,8 @@ export default function useLoadAccountData() {
       }
       const p3 = dispatch(requestsLoadState());
       const p4 = dispatch(walletConnectLoadState());
-      const p5 = dispatch(uniswapLoadState());
-      const p6 = dispatch(addCashLoadState());
-      const p7 = dispatch(uniswapLiquidityLoadState());
-      promises.push(p3, p4, p5, p6, p7);
+
+      promises.push(p3, p4);
 
       return promiseUtils.PromiseAllWithFails(promises);
     },

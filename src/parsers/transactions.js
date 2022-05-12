@@ -10,9 +10,7 @@ import {
   findIndex,
   flatten,
   get,
-  includes,
   isEmpty,
-  map,
   orderBy,
   partition,
   pick,
@@ -31,7 +29,7 @@ import DirectionTypes from '../helpers/transactionDirectionTypes';
 import TransactionStatusTypes from '../helpers/transactionStatusTypes';
 import TransactionTypes from '../helpers/transactionTypes';
 import { savingsAssetsList } from '../references';
-import { ethereumUtils, getTokenMetadata } from '../utils';
+import { getTokenMetadata } from '../utils';
 
 const LAST_TXN_HASH_BUFFER = 20;
 
@@ -55,27 +53,15 @@ export const parseTransactions = (
   accountAddress,
   nativeCurrency,
   existingTransactions,
-  purchaseTransactions,
   network,
   appended = false
 ) => {
-  const purchaseTransactionHashes = map(purchaseTransactions, txn =>
-    ethereumUtils.getHash(txn)
-  );
   const data = appended
     ? transactionData
     : dataFromLastTxHash(transactionData, existingTransactions);
 
   const parsedNewTransactions = flatten(
-    data.map(txn =>
-      parseTransaction(
-        txn,
-        accountAddress,
-        nativeCurrency,
-        purchaseTransactionHashes,
-        network
-      )
-    )
+    data.map(txn => parseTransaction(txn, nativeCurrency, network))
   );
 
   const [pendingTransactions, remainingTransactions] = partition(
@@ -147,13 +133,7 @@ const transformTradeRefund = internalTransactions => {
   return compact([updatedOut, txnIn]);
 };
 
-const parseTransaction = (
-  txn,
-  accountAddress,
-  nativeCurrency,
-  purchaseTransactions,
-  network
-) => {
+const parseTransaction = (txn, nativeCurrency, network) => {
   const transaction = pick(txn, [
     'hash',
     'nonce',
@@ -263,10 +243,6 @@ const parseTransaction = (
       priceUnit,
       nativeCurrency
     );
-
-    if (includes(purchaseTransactions, toLower(transaction.hash))) {
-      transaction.type = TransactionTypes.purchase;
-    }
 
     const status = getTransactionLabel({
       direction: internalTxn.direction || txn.direction,

@@ -31,44 +31,6 @@ export const TRANSFER_EVENT_TOPIC_LENGTH = 3;
 export const TRANSFER_EVENT_KECCAK =
   '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 
-export const AddCashCurrencies = {
-  kovan: {
-    DAI: '0xc4375b7de8af5a38a93548eb8453a498222c4ff2',
-    ETH: 'eth',
-  },
-  mainnet: {
-    DAI: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    ETH: 'eth',
-  },
-};
-
-export const AddCashCurrencyInfo = {
-  kovan: {
-    '0xc4375b7de8af5a38a93548eb8453a498222c4ff2': {
-      decimals: 18,
-      name: 'Dai',
-      symbol: 'DAI',
-    },
-    'eth': {
-      decimals: 18,
-      name: 'Ethereum',
-      symbol: 'ETH',
-    },
-  },
-  mainnet: {
-    '0x6b175474e89094c44da98b954eedeac495271d0f': {
-      decimals: 18,
-      name: 'Dai',
-      symbol: 'DAI',
-    },
-    'eth': {
-      decimals: 18,
-      name: 'Ethereum',
-      symbol: 'ETH',
-    },
-  },
-};
-
 export const DefaultUniswapFavorites = {
   mainnet: ['eth', DAI_ADDRESS, WBTC_ADDRESS],
   rinkeby: [

@@ -24,7 +24,6 @@ import {
   UNISWAP_PRICES_QUERY,
 } from '../apollo/queries';
 import { getTransactionReceipt } from '../handlers/web3';
-import { addCashUpdatePurchases } from './addCashData';
 import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import {
@@ -199,7 +198,6 @@ export const transactionsReceived = (message, appended = false) => async (
   }
 
   const { accountAddress, nativeCurrency, network } = getState().settings;
-  const { purchaseTransactions } = getState().addCash;
   const { transactions } = getState().data;
 
   const { parsedTransactions, potentialNftTransaction } = parseTransactions(
@@ -207,7 +205,6 @@ export const transactionsReceived = (message, appended = false) => async (
     accountAddress,
     nativeCurrency,
     transactions,
-    purchaseTransactions,
     network,
     appended
   );
@@ -220,7 +217,6 @@ export const transactionsReceived = (message, appended = false) => async (
     payload: parsedTransactions,
     type: DATA_UPDATE_TRANSACTIONS,
   });
-  dispatch(updatePurchases(parsedTransactions));
   saveLocalTransactions(parsedTransactions, accountAddress, network);
 };
 
@@ -536,7 +532,6 @@ export const dataWatchPendingTransactions = (cb = null) => async (
   );
 
   if (txStatusesDidChange) {
-    dispatch(updatePurchases(updatedTransactions));
     const { accountAddress, network } = getState().settings;
     dispatch({
       payload: updatedTransactions,
@@ -574,16 +569,6 @@ export const dataUpdateTransaction = (txHash, txObj, watch, cb) => (
       watchPendingTransactions(accountAddress, TXN_WATCHER_MAX_TRIES, cb)
     );
   }
-};
-
-const updatePurchases = updatedTransactions => dispatch => {
-  const confirmedPurchases = filter(updatedTransactions, txn => {
-    return (
-      txn.type === TransactionTypes.purchase &&
-      txn.status !== TransactionStatusTypes.purchasing
-    );
-  });
-  dispatch(addCashUpdatePurchases(confirmedPurchases));
 };
 
 const watchPendingTransactions = (

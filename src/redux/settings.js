@@ -11,7 +11,6 @@ import networkTypes from '../helpers/networkTypes';
 import { updateLanguage } from '../languages';
 
 import { ethereumUtils, promiseUtils } from '../utils';
-import { addCashClearState } from './addCash';
 import { dataResetState } from './data';
 import { explorerClearState } from './explorer';
 import {
@@ -19,8 +18,6 @@ import {
   fallbackExplorerInit,
 } from './fallbackExplorer';
 import { resetOpenStateSettings } from './openStateSettings';
-import { uniswapResetState } from './uniswap';
-import { uniswapLiquidityResetState } from './uniswapLiquidity';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
@@ -79,22 +76,19 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
   dispatch(walletConnectUpdateSessions());
 };
 
-export const resetAccountState = async dispatch => {
+export const resetAccountState = () => async dispatch => {
   const p0 = dispatch(explorerClearState());
   const p1 = dispatch(dataResetState());
   const p2 = dispatch(collectiblesResetState());
   const p3 = dispatch(resetOpenStateSettings());
   const p4 = dispatch(requestsResetState());
-  const p5 = dispatch(uniswapResetState());
-  const p6 = dispatch(uniswapLiquidityResetState());
-  const p7 = dispatch(addCashClearState());
-  await promiseUtils.PromiseAllWithFails([p0, p1, p2, p3, p4, p5, p6, p7]);
+  await promiseUtils.PromiseAllWithFails([p0, p1, p2, p3, p4]);
 };
 
 export const settingsUpdateNetwork = network => async dispatch => {
   try {
     await saveNetwork(network);
-    await resetAccountState(dispatch);
+    await dispatch(resetAccountState());
     // Creates tag on Sentry labeling the current network.
     logger.setTag('network', network);
     RNRestart.Restart(); // restart app so it reloads with updated network

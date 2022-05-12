@@ -1,4 +1,3 @@
-import addCash from './addCash';
 import charts from './charts';
 import coingecko from './coingecko';
 import contacts from './contacts';
@@ -27,7 +26,6 @@ import primarySafe from '@cardstack/redux/primarySafeSlice';
 import requests from '@cardstack/redux/requests';
 
 export default {
-  addCash,
   appState,
   coingecko,
   charts,
