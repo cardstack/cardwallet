@@ -129,9 +129,6 @@ const StackNavigator = () => {
 
   // TODO: Create a navigator for each flow and split auth/non-auth
 
-  // Remove last item aka LoadingOverlay, to avoid dupe (on iOS)
-  Device.isIOS && cardstackGlobalScreens.pop();
-
   return (
     <Stack.Navigator
       // On Android theres an issue with navigation trying to focus
