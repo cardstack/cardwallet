@@ -15,6 +15,7 @@ import {
   useAccountSettings,
   useContacts,
   useDimensions,
+  useInvalidPaste,
 } from '@rainbow-me/hooks';
 
 export const useShowAssetFlags = (isValidAddress, selected) => ({
@@ -76,6 +77,7 @@ export default function SendSheet({
     isValidAddress,
     selected
   );
+  const { isInvalidPaste, onInvalidPaste } = useInvalidPaste();
 
   const showEmptyState = !isValidAddress;
 
@@ -95,6 +97,7 @@ export default function SendSheet({
         isValidAddress={isValidAddress}
         onChangeAddressInput={onChangeInput}
         onFocus={handleFocus}
+        onInvalidPaste={onInvalidPaste}
         onPressPaste={setRecipient}
         onRefocusInput={triggerFocus}
         recipient={recipient}
@@ -106,6 +109,7 @@ export default function SendSheet({
         <SendContactList
           contacts={filteredContacts}
           currentInput={currentInput}
+          isInvalidPaste={isInvalidPaste}
           onPressContact={setRecipient}
           removeContact={onRemoveContact}
         />

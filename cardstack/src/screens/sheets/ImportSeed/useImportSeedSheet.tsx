@@ -46,7 +46,7 @@ const useImportSeedSheet = () => {
   const { accountAddress } = useAccountSettings();
 
   const { getClipboard, hasClipboardData, clipboard } = useClipboard();
-  const { onInvalidPaste } = useInvalidPaste();
+  const { onInvalidPaste, isInvalidPaste } = useInvalidPaste();
 
   const [busy, setBusy] = useState(false);
   const [seedPhrase, setSeedPhrase] = useState('');
@@ -156,6 +156,7 @@ const useImportSeedSheet = () => {
     isSecretValid,
     handlePressPasteButton,
     isClipboardValidSecret,
+    isInvalidPaste,
   };
 };
 

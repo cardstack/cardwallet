@@ -29,6 +29,7 @@ const ImportSeedSheet = () => {
     isSecretValid,
     handlePressPasteButton,
     isClipboardValidSecret,
+    isInvalidPaste,
   } = useImportSeedSheet();
 
   const { handleFocus } = useMagicAutofocus(inputRef);
@@ -88,7 +89,7 @@ const ImportSeedSheet = () => {
         </Container>
       </Sheet>
       <ToastPositionContainer bottom={keyboardHeight}>
-        <InvalidPasteToast />
+        <InvalidPasteToast isInvalidPaste={isInvalidPaste} />
       </ToastPositionContainer>
     </>
   );
