@@ -7,7 +7,6 @@ import {
   SendActionButton,
   SheetActionButtonRow,
   SheetDivider,
-  SwapActionButton,
 } from '../sheet';
 import {
   TokenInfoBalanceValue,
@@ -18,7 +17,6 @@ import {
 import { Chart } from '../value-chart';
 import { Container, Sheet } from '@cardstack/components';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
-import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
 export default function ChartExpandedState(props) {
   const currentAsset = props.asset;
@@ -44,12 +42,6 @@ export default function ChartExpandedState(props) {
   });
 
   const { network } = useAccountSettings();
-  /* disable for beta */
-  const showSwapButton = false;
-  // const { uniswapAssetsInWallet } = useUniswapAssetsInWallet();
-  // const showSwapButton = isLayer1(network)
-  //   ? find(uniswapAssetsInWallet, ['uniqueId', asset.uniqueId])
-  //   : false;
 
   const nativeTokenAddress = getConstantByNetwork(
     'nativeTokenAddress',
@@ -107,14 +99,11 @@ export default function ChartExpandedState(props) {
           paddingTop={2}
           width="100%"
         >
-          {showSwapButton && (
-            <SwapActionButton color={color} inputType={AssetInputTypes.in} />
-          )}
           <SendActionButton
             asset={currentAsset}
             color={color}
             safeAddress={props.safeAddress}
-            small={showSwapButton} //reenable once swap functionality is fixed
+            small={false} //reenable once swap functionality is fixed
           />
         </Container>
       )}
