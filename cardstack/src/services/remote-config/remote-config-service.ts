@@ -2,7 +2,7 @@ import remoteConfig from '@react-native-firebase/remote-config';
 
 import remoteConfigDefaults from './remote_config_defaults.json';
 
-const CACHE_INTERVAL_MILLIS = __DEV__ ? 60000 : 3600000; // 3600000ms == 1 hr.
+const CACHE_INTERVAL_MILLIS = __DEV__ ? 60000 : 21600000; // 21600000ms == 6hrs.
 
 export enum ConfigKey {
   requiredMinimumVersion = 'requiredMinimumVersion',
