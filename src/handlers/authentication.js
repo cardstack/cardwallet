@@ -4,7 +4,7 @@ import AesEncryptor from '../handlers/aesEncryption';
 import * as keychain from '../model/keychain';
 import { Navigation } from '../navigation';
 import { pinKey } from '../utils/keychainConstants';
-import Routes from '@rainbow-me/routes';
+import { Routes } from '@cardstack/navigation';
 import logger from 'logger';
 
 const encryptor = new AesEncryptor();

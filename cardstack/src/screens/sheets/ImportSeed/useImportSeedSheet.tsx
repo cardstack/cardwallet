@@ -1,5 +1,5 @@
 import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
-import { ParamListBase, useNavigation } from '@react-navigation/core';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { providers } from 'ethers';
 import { keys } from 'lodash';
@@ -17,8 +17,8 @@ import {
   dismissKeyboardOnAndroid,
   navigationStateNewWallet,
   useLoadingOverlay,
+  Routes,
 } from '@cardstack/navigation';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 import { Device } from '@cardstack/utils';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -35,7 +35,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
-import Routes from '@rainbow-me/routes';
 import {
   deviceUtils,
   ethereumUtils,
@@ -168,14 +167,13 @@ const useImportFromProfileModal = (
   inputRef: RefObject<TextInput>,
   checkedWallet?: EthereumWalletFromSeed
 ) => {
-  const { navigate, reset, replace } = useNavigation<
+  const { navigate, reset } = useNavigation<
     StackNavigationProp<ParamListBase>
   >();
 
   const { wallets } = useWallets();
   const { importWallet } = useWalletManager();
 
-  const { isTabBarEnabled } = useTabBarFlag();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const handleImportAccountOnCloseModal = useCallback(
@@ -205,15 +203,8 @@ const useImportFromProfileModal = (
         InteractionManager.runAfterInteractions(async () => {
           // Fresh imported wallet
           if (isFreshWallet) {
-            if (!isTabBarEnabled) {
-              replace(Routes.SWIPE_LAYOUT, {
-                params: { initialized: true },
-                screen: Routes.WALLET_SCREEN,
-              });
-            } else {
-              // Resets to remove non-auth-routes
-              reset(navigationStateNewWallet);
-            }
+            // Resets to remove non-auth-routes
+            reset(navigationStateNewWallet);
           } else {
             // inner navigation
             navigate(Routes.WALLET_SCREEN, {
@@ -233,9 +224,7 @@ const useImportFromProfileModal = (
       dismissLoadingOverlay,
       importWallet,
       inputRef,
-      isTabBarEnabled,
       navigate,
-      replace,
       reset,
       seedPhrase,
       showLoadingOverlay,

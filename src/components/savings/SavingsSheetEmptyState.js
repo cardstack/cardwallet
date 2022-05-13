@@ -1,17 +1,17 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { Alert } from 'react-native';
 import styled from 'styled-components';
 import { calculateAPY } from '../../helpers/savings';
-import { useNavigation } from '../../navigation/Navigation';
 import { magicMemo } from '../../utils';
 import Divider from '../Divider';
 import { CoinIcon } from '../coin-icon';
 import { Centered, ColumnWithMargins } from '../layout';
 import { SheetActionButton } from '../sheet';
 import { Br, GradientText, Text } from '../text';
+import { Routes } from '@cardstack/navigation';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import { DAI_ADDRESS } from '@rainbow-me/references/addresses';
-import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 
 const APYHeadingText = styled(Text).attrs(({ theme: { colors } }) => ({

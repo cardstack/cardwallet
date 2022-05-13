@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
 
 import {
@@ -8,6 +9,7 @@ import {
 } from '@cardstack/components';
 import { delayLongPressMs } from '@cardstack/constants';
 import { useSpendToNativeDisplay } from '@cardstack/hooks';
+import { Routes } from '@cardstack/navigation';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import {
@@ -15,8 +17,6 @@ import {
   useAccountSettings,
   usePinnedAndHiddenItemOptions,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 import { PrepaidCardCustomization, PrepaidCardType } from '../../types';
 import { CenteredContainer, ContainerProps } from '../Container';

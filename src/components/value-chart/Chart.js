@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { invert } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Linking } from 'react-native';
@@ -11,7 +12,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import styled from 'styled-components';
 import Spinner from '../../assets/chartSpinner.png';
-import { nativeStackConfig } from '../../navigation/nativeStackConfig';
 import { ChartExpandedStateHeader } from '../expanded-state/chart';
 import { Column } from '../layout';
 import Labels from './ExtremeLabels';
@@ -19,7 +19,6 @@ import { Button, CenteredContainer, Text } from '@cardstack/components';
 import { ChartDot, ChartPath, useChartData } from '@rainbow-me/animated-charts';
 import ChartTypes from '@rainbow-me/helpers/chartTypes';
 import { ImgixImage } from '@rainbow-me/images';
-import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
 export const { width: WIDTH } = Dimensions.get('window');
@@ -118,7 +117,6 @@ export default function ChartWrapper({
           cancelAnimation(progress);
           cancelAnimation(spinnerRotation);
           cancelAnimation(spinnerScale);
-          nativeStackConfig.screenOptions.onWillDismiss();
         },
       }),
     [setOptions, progress, spinnerRotation, spinnerScale]

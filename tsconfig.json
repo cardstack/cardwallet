@@ -38,7 +38,6 @@
       "@rainbow-me/redux/*": ["src/redux/*"],
       "@rainbow-me/references": ["src/references"],
       "@rainbow-me/references/*": ["src/references/*"],
-      "@rainbow-me/routes": ["src/navigation/routesNames"],
       "@rainbow-me/screens": ["src/screens"],
       "@rainbow-me/screens/*": ["src/screens/*"],
       "@rainbow-me/styles": ["src/styles"],

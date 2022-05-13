@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/native';
 import React, { memo } from 'react';
 import { SectionList } from 'react-native';
 

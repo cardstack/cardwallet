@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback, useEffect } from 'react';
 import { Animated, InteractionManager, View } from 'react-native';
@@ -23,7 +23,6 @@ import { slideLeftToRightPreset } from '@cardstack/navigation';
 import DesignSystemScreen from '@cardstack/screens/Dev/DesignSystemScreen';
 import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
 import { palette } from '@cardstack/theme';
-import { useNavigation } from '@rainbow-me/navigation';
 
 function cardStyleInterpolator({
   current,

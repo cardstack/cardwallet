@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { forEach } from 'lodash';
 import React, { useCallback } from 'react';
 import { InteractionManager, StatusBar } from 'react-native';
@@ -6,12 +6,11 @@ import RestoreCloudStep from '../components/backup/RestoreCloudStep';
 import RestoreSheetFirstStep from '../components/backup/RestoreSheetFirstStep';
 
 import { Sheet } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { Device, layoutEasingAnimation } from '@cardstack/utils';
 import { fetchUserDataFromCloud } from '@rainbow-me/handlers/cloudBackup';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 export default function RestoreSheet() {
   const { goBack, navigate, setParams } = useNavigation();

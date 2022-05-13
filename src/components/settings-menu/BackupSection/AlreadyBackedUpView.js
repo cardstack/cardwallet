@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { DelayedAlert } from '../../alerts';
@@ -11,6 +11,7 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+import { Navigation, Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
@@ -21,8 +22,6 @@ import {
   useWalletCloudBackup,
   useWallets,
 } from '@rainbow-me/hooks';
-import { Navigation, useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 
 const WalletBackupStatus = {

@@ -53,12 +53,21 @@ jest.mock('react-native-reanimated', () => {
   return Reanimated;
 });
 
-jest.mock('@react-navigation/material-top-tabs', () => ({
-  createMaterialTopTabNavigator: jest.fn(),
-}));
-
 jest.mock('@react-navigation/bottom-tabs', () => ({
   useBottomTabBarHeight: jest.fn(),
+}));
+
+export const mockUseNavigation = {
+  navigate: jest.fn(),
+  replace: jest.fn(),
+  reset: jest.fn(),
+  goBack: jest.fn(),
+};
+
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  useNavigation: mockUseNavigation,
+  useRoute: jest.fn(),
 }));
 
 jest.mock('react-redux', () => ({
@@ -149,10 +158,6 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
 
 jest.mock('@rainbow-me/references', () => ({
   shitcoins: 'JSON-MOCK-RETURN',
-}));
-
-jest.mock('@rainbow-me/navigation/', () => ({
-  ExchangeModalNavigator: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/react-native-payments', () => ({
@@ -259,10 +264,6 @@ jest.mock('@cardstack/navigation', () => ({
 
 jest.mock('@cardstack/navigation/screens', () => ({
   default: jest.fn(),
-}));
-
-jest.mock('@cardstack/navigation/tabBarNavigator', () => ({
-  useTabBarFlag: jest.fn(),
 }));
 
 // Mock to avoid not checksum address console.warn

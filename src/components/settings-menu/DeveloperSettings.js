@@ -1,19 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext } from 'react';
 import { Alert, ScrollView } from 'react-native';
 import RNRestart from 'react-native-restart';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
 import { RadioListItem } from '../radio-list';
+import { Routes } from '@cardstack/navigation';
 import { deleteAllBackups } from '@rainbow-me/handlers/cloudBackup';
 import { RainbowContext } from '@rainbow-me/helpers/RainbowContext';
 import { useWallets } from '@rainbow-me/hooks';
 import { wipeKeychain } from '@rainbow-me/model/keychain';
-import { useNavigation } from '@rainbow-me/navigation/Navigation';
 import { clearImageMetadataCache } from '@rainbow-me/redux/imageMetadata';
 import store from '@rainbow-me/redux/store';
 import { walletsUpdate } from '@rainbow-me/redux/wallets';
-import Routes from '@rainbow-me/routes';
 
 const DeveloperSettings = () => {
   const { navigate } = useNavigation();

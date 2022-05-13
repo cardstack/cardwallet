@@ -1,11 +1,11 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 
-import { Navigation } from '@rainbow-me/navigation';
-
-import { MainRoutes, GlobalRoutes } from './routes';
-import { MainScreens, GlobalScreens, ScreenNavigation } from './screens';
+import Navigation from './Navigation';
+import { MainRoutes, Routes } from './routes';
+import { MainScreens, ScreenNavigation } from './screens';
 
 // Not a big fan of returning components inside hooks,
 // but react-navigation does not allow components other than Screen
@@ -13,7 +13,7 @@ import { MainScreens, GlobalScreens, ScreenNavigation } from './screens';
 const getScreens = (
   routes: Record<string, string>,
   screens: Record<string, ScreenNavigation>,
-  Stack: any
+  Stack: ReturnType<typeof createStackNavigator>
 ) =>
   Object.entries(screens).map(([name, props]) => (
     <Stack.Screen
@@ -23,11 +23,9 @@ const getScreens = (
     />
   ));
 
-export const useCardstackMainScreens = (Stack: any) =>
-  getScreens(MainRoutes, MainScreens, Stack);
-
-export const useCardstackGlobalScreens = (Stack: any) =>
-  getScreens(GlobalRoutes, GlobalScreens, Stack);
+export const useCardstackMainScreens = (
+  Stack: ReturnType<typeof createStackNavigator>
+) => getScreens(MainRoutes, MainScreens, Stack);
 
 // Once we merge the routes, we can type it better
 export const useDismissCurrentRoute = (routeName: string) => {
@@ -60,13 +58,11 @@ interface ShowOverlayParams {
 export const useLoadingOverlay = () => {
   const { navigate } = useNavigation();
 
-  const dismissLoadingOverlay = useDismissCurrentRoute(
-    MainRoutes.LOADING_OVERLAY
-  );
+  const dismissLoadingOverlay = useDismissCurrentRoute(Routes.LOADING_OVERLAY);
 
   const showLoadingOverlay = useCallback(
     ({ title, subTitle }: ShowOverlayParams = defaulLoadingtMessage) => {
-      navigate(MainRoutes.LOADING_OVERLAY, {
+      navigate(Routes.LOADING_OVERLAY, {
         title,
         subTitle,
       });

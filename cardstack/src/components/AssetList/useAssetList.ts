@@ -1,11 +1,11 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useState, useCallback, useEffect, useMemo, RefObject } from 'react';
 import { SectionList } from 'react-native';
 
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
+import { Routes } from '@cardstack/navigation';
 import { useGetServiceStatusQuery } from '@cardstack/services';
-import { isLayer1 } from '@cardstack/utils';
 
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
@@ -15,8 +15,6 @@ import {
   useRefreshAccountData,
   useWallets,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 import { AssetListRouteType } from './types';
 
@@ -116,7 +114,6 @@ export const useAssetList = ({
     isEmpty,
     goToBuyPrepaidCard,
     onRefresh,
-    showAddFundsInterstitial: isEmpty && isLayer1(network),
     networkName,
   };
 };

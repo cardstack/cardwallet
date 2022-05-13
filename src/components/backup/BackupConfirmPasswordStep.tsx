@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { saveBackupPassword } from '../../model/backup';
@@ -9,6 +9,7 @@ import {
   backupPasswordInputProps,
 } from './backupComponentsUtils';
 import { Container, Icon, Input, Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import { isCloudBackupPasswordValid } from '@rainbow-me/handlers/cloudBackup';
 import {
@@ -16,8 +17,7 @@ import {
   useWalletCloudBackup,
   useWallets,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
+
 import logger from 'logger';
 
 const { cloudPlatform } = Device;

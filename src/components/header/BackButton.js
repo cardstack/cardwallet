@@ -1,6 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { useNavigation } from '../../navigation/Navigation';
 import Text from '../text/Text';
 import HeaderButton from './HeaderButton';
 import { Container, Icon } from '@cardstack/components';

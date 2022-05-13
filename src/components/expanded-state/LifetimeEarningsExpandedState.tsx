@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 import { SlackSheet } from '../sheet';
@@ -23,7 +24,6 @@ import { screenHeight } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 import { ChartPath } from '@rainbow-me/animated-charts';
 import { useDimensions } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
 
 const CHART_HEIGHT = screenHeight * 0.25;
 const HEIGHT = screenHeight * 0.85;

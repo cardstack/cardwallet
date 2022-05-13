@@ -1,9 +1,8 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 
 import { Container, ContainerProps, Image, Text } from '@cardstack/components';
-
-import Routes from '@rainbow-me/navigation/routesNames';
+import { Routes } from '@cardstack/navigation';
 
 import rewardsPromoBanner from '../../assets/promo-rewards.png';
 import { Button } from '../Button';

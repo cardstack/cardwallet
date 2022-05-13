@@ -1,13 +1,12 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
+import { Routes } from '@cardstack/navigation/routes';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
-
-import Routes from '@rainbow-me/routes';
 
 import { useRequestCodePage } from '../useRequestCodePage';
 
 const mockedNavigate = jest.fn();
-jest.mock('@react-navigation/core', () => ({
+jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: mockedNavigate,
   }),

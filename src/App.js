@@ -50,7 +50,7 @@ import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
-import { AppContainer } from '@cardstack/navigation';
+import { AppContainer, Routes } from '@cardstack/navigation';
 import {
   displayLocalNotification,
   notificationHandler,
@@ -60,7 +60,6 @@ import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 import PortalConsumer from '@rainbow-me/components/PortalConsumer';
-import Routes from '@rainbow-me/routes';
 import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
 
@@ -178,7 +177,7 @@ class App extends Component {
   identifyFlow = async () => {
     const address = await loadAddress();
     if (address) {
-      this.setState({ initialRoute: Routes.SWIPE_LAYOUT });
+      this.setState({ initialRoute: Routes.TAB_NAVIGATOR });
     } else {
       this.setState({ initialRoute: Routes.WELCOME_SCREEN });
     }

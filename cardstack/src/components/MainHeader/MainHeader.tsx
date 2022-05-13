@@ -7,10 +7,10 @@ import {
   Text,
   MainHeaderWrapper,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/navigation/routesNames';
 
 import { ContainerProps } from '../Container';
 

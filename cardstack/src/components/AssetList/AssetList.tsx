@@ -1,13 +1,10 @@
-import React, { useCallback, createRef, useMemo } from 'react';
+import React, { useCallback, createRef } from 'react';
 import { RefreshControl, SectionList, ActivityIndicator } from 'react-native';
 
 import { Container, Text, RewardsPromoBanner } from '@cardstack/components';
 import { PinHideOptionsFooter } from '@cardstack/components/PinnedHiddenSection';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 import logger from 'logger';
-
-import AddFundsInterstitial from '../../../../src/components/AddFundsInterstitial';
 
 import { AssetListLoading } from './components/AssetListLoading';
 import AssetSectionHeader from './components/AssetSectionHeader';
@@ -21,7 +18,6 @@ const onScrollToIndexFailed = () => {
 
 export const AssetList = () => {
   const sectionListRef = createRef<SectionList>();
-  const { isTabBarEnabled } = useTabBarFlag();
 
   const {
     sections,
@@ -29,15 +25,9 @@ export const AssetList = () => {
     isLoading,
     goToBuyPrepaidCard,
     onRefresh,
-    showAddFundsInterstitial,
     refreshing,
     networkName,
   } = useAssetList({ sectionListRef });
-
-  const renderPromoBanner = useMemo(() => {
-    const topPadding = isTabBarEnabled ? 2 : 0;
-    return <RewardsPromoBanner paddingTop={topPadding} />;
-  }, [isTabBarEnabled]);
 
   const renderSectionHeader = useCallback(
     ({ section }) => (
@@ -80,14 +70,10 @@ export const AssetList = () => {
     return <AssetListLoading />;
   }
 
-  if (showAddFundsInterstitial) {
-    return <AddFundsInterstitial />;
-  }
-
   return (
     <>
       <SectionList
-        ListHeaderComponent={renderPromoBanner}
+        ListHeaderComponent={<RewardsPromoBanner paddingTop={2} />}
         onScrollToIndexFailed={onScrollToIndexFailed}
         ref={sectionListRef}
         refreshControl={

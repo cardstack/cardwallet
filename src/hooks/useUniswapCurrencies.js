@@ -1,12 +1,11 @@
 /* eslint-disable no-use-before-define */
 import { multiply } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { find, get, isEmpty } from 'lodash';
 import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { useNavigation } from '../navigation/Navigation';
 import useAccountAssets from './useAccountAssets';
 import useAccountSettings from './useAccountSettings';
 import { delayNext } from './useMagicAutofocus';
@@ -14,6 +13,7 @@ import usePrevious from './usePrevious';
 import useSwapInputOutputTokens from './useSwapInputOutputTokens';
 import useUniswapAssetsInWallet from './useUniswapAssetsInWallet';
 import useUniswapCalls from './useUniswapCalls';
+import { Routes } from '@cardstack/navigation';
 import CurrencySelectionTypes from '@rainbow-me/helpers/currencySelectionTypes';
 import {
   multicallAddListeners,
@@ -23,7 +23,6 @@ import {
   updateSwapInputCurrency,
   updateSwapOutputCurrency,
 } from '@rainbow-me/redux/swap';
-import Routes from '@rainbow-me/routes';
 import { ethereumUtils, isNewValueForPath } from '@rainbow-me/utils';
 import logger from 'logger';
 

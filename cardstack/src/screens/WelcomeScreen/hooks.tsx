@@ -1,8 +1,9 @@
-import { ParamListBase, useNavigation } from '@react-navigation/core';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useLoadingOverlay } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils';
 
 import {
@@ -13,7 +14,6 @@ import {
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useHideSplashScreen, useWalletManager } from '@rainbow-me/hooks';
 import { ICloudBackupData } from '@rainbow-me/model/backup';
-import Routes from '@rainbow-me/routes';
 import logger from 'logger';
 
 export const useWelcomeScreen = () => {
@@ -59,7 +59,7 @@ export const useWelcomeScreen = () => {
   }, []);
 
   const onCreateWallet = useCallback(async () => {
-    replace(Routes.SWIPE_LAYOUT);
+    replace(Routes.TAB_NAVIGATOR);
 
     showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
 

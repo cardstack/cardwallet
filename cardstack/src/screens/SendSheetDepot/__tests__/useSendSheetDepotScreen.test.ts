@@ -13,12 +13,10 @@ import { updatedData } from '../../../helpers/__mocks__/dataMocks';
 import { useSendSheetDepotScreen } from '../useSendSheetDepotScreen';
 
 jest.mock('@cardstack/utils/device', () => ({ Device: { isAndroid: false } }));
-jest.mock('@rainbow-me/navigation/Navigation', () => ({
-  useNavigation: () => ({ navigate: jest.fn() }),
-}));
 
 jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
+  useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
 jest.mock('@rainbow-me/hooks', () => ({

@@ -4,11 +4,8 @@ import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, InteractionManager } from 'react-native';
 
 import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
-import {
-  MainRoutes,
-  GlobalRoutes,
-  useLoadingOverlay,
-} from '@cardstack/navigation';
+import { useLoadingOverlay } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation/routes';
 import { displayLocalNotification } from '@cardstack/notification-handler';
 import { useCreateProfileMutation } from '@cardstack/services';
 import {
@@ -23,7 +20,6 @@ import {
 } from '@cardstack/types';
 
 import { useAccountProfile, useWallets } from '@rainbow-me/hooks';
-import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import { logger } from '@rainbow-me/utils';
 
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
@@ -63,7 +59,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
                 isManualNotification: true,
               });
 
-              navigate(RainbowRoutes.PROFILE_SCREEN);
+              navigate(Routes.PROFILE_SCREEN);
             });
           },
         },
@@ -153,7 +149,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   );
 
   const onPressBusinessColor = useCallback(() => {
-    navigate(GlobalRoutes.COLOR_PICKER_MODAL, {
+    navigate(Routes.COLOR_PICKER_MODAL, {
       defaultColor: businessColor,
       onSelectColor,
     });
@@ -289,7 +285,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         merchantInfo: newMerchantInfo,
       };
 
-      navigate(MainRoutes.TRANSACTION_CONFIRMATION_SHEET, {
+      navigate(Routes.TRANSACTION_CONFIRMATION_SHEET, {
         data,
         onConfirm: onConfirmCreateProfile(prepaidCard),
       });
@@ -298,7 +294,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   );
 
   const onPressCreate = useCallback(() => {
-    navigate(MainRoutes.CHOOSE_PREPAIDCARD_SHEET, {
+    navigate(Routes.CHOOSE_PREPAIDCARD_SHEET, {
       spendAmount: CreateProfileFeeInSpend,
       onConfirmChoosePrepaidCard,
     });

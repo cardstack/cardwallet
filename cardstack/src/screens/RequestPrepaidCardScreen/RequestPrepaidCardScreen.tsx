@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useMemo } from 'react';
 import { Keyboard, Pressable } from 'react-native';
 

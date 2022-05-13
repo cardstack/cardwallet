@@ -1,10 +1,9 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 
 import { Icon } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { PrepaidCardPaymentTransactionType } from '@cardstack/types';
-
-import Routes from '@rainbow-me/routes';
 
 import {
   TransactionBase,

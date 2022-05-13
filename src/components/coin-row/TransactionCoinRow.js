@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { compact, get, toLower } from 'lodash';
 import React, { useCallback } from 'react';
 import { css } from 'styled-components';
@@ -12,6 +13,7 @@ import BottomRowText from './BottomRowText';
 import CoinName from './CoinName';
 import CoinRow from './CoinRow';
 import TransactionStatusBadge from './TransactionStatusBadge';
+import { Routes } from '@cardstack/navigation';
 import TransactionActions from '@rainbow-me/helpers/transactionActions';
 import TransactionStatusTypes from '@rainbow-me/helpers/transactionStatusTypes';
 import TransactionTypes from '@rainbow-me/helpers/transactionTypes';
@@ -24,8 +26,6 @@ import {
   isUnstoppableAddressFormat,
 } from '@rainbow-me/helpers/validators';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import {
   abbreviations,
   ethereumUtils,

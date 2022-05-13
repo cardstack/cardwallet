@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { LayoutAnimation, InteractionManager } from 'react-native';
 
@@ -9,14 +10,12 @@ import {
   handleAlertError,
   usePaymentMerchantUniversalLink,
 } from '@cardstack/hooks/merchant/usePaymentMerchantUniversalLink';
-import { useLoadingOverlay } from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { usePayMerchantMutation } from '@cardstack/services';
 import { MerchantInformation, PrepaidCardType } from '@cardstack/types';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useWallets } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 
 import { getBlockTimestamp } from './helpers';
 
@@ -97,11 +96,11 @@ const usePayMerchantRequest = ({
     dismissLoadingOverlay();
 
     // Navigate to Transaction screen
-    navigate(RainbowRoutes.HOME_SCREEN);
+    navigate(Routes.HOME_SCREEN);
 
     // Wait goBack action to navigate
     InteractionManager.runAfterInteractions(() => {
-      navigate(RainbowRoutes.PAYMENT_CONFIRMATION_SHEET, {
+      navigate(Routes.PAYMENT_CONFIRMATION_SHEET, {
         merchantInfo: merchantInfoDID,
         nativeBalanceDisplay,
         timestamp,
