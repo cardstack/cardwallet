@@ -12,12 +12,10 @@ import { updateLanguage } from '../languages';
 
 import { ethereumUtils, promiseUtils } from '../utils';
 import { dataResetState } from './data';
-import { explorerClearState } from './explorer';
 import {
   fallbackExplorerClearState,
   fallbackExplorerInit,
 } from './fallbackExplorer';
-import { resetOpenStateSettings } from './openStateSettings';
 import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
@@ -77,12 +75,10 @@ export const settingsUpdateAccountAddress = accountAddress => async dispatch => 
 };
 
 export const resetAccountState = () => async dispatch => {
-  const p0 = dispatch(explorerClearState());
   const p1 = dispatch(dataResetState());
   const p2 = dispatch(collectiblesResetState());
-  const p3 = dispatch(resetOpenStateSettings());
-  const p4 = dispatch(requestsResetState());
-  await promiseUtils.PromiseAllWithFails([p0, p1, p2, p3, p4]);
+  const p3 = dispatch(requestsResetState());
+  await promiseUtils.PromiseAllWithFails([p1, p2, p3]);
 };
 
 export const settingsUpdateNetwork = network => async dispatch => {

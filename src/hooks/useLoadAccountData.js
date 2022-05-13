@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 
 import { dataLoadState } from '../redux/data';
 import { coinListLoadState } from '../redux/editOptions';
-import { openStateSettingsLoadState } from '../redux/openStateSettings';
 import { walletConnectLoadState } from '../redux/walletconnect';
 import { promiseUtils } from '../utils';
 import { collectiblesLoadState } from '@cardstack/redux/collectibles';
@@ -17,7 +16,6 @@ export default function useLoadAccountData() {
   const loadAccountData = useCallback(
     async network => {
       logger.sentry('Load wallet account data');
-      await dispatch(openStateSettingsLoadState());
       await dispatch(coinListLoadState());
       if (isLayer1(network)) {
         // Update data state on wallet initializion for layer1.

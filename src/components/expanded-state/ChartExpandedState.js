@@ -103,7 +103,7 @@ export default function ChartExpandedState(props) {
             asset={currentAsset}
             color={color}
             safeAddress={props.safeAddress}
-            small={false} //reenable once swap functionality is fixed
+            small={false}
           />
         </Container>
       )}

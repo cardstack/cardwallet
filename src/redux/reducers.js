@@ -3,13 +3,11 @@ import coingecko from './coingecko';
 import contacts from './contacts';
 import data from './data';
 import editOptions from './editOptions';
-import explorer from './explorer';
 import fallbackExplorer from './fallbackExplorer';
 import gas from './gas';
 import imageMetadata from './imageMetadata';
 import keyboardHeight from './keyboardHeight';
-import multicall from './multicall';
-import openStateSettings, {
+import {
   openSavingsReducer,
   openSmallBalancesReducer,
 } from './openStateSettings';
@@ -33,15 +31,12 @@ export default {
   contacts,
   data,
   editOptions,
-  explorer,
   fallbackExplorer,
   gas,
   imageMetadata,
   keyboardHeight,
-  multicall,
   openSavings: openSavingsReducer,
   openSmallBalances: openSmallBalancesReducer,
-  openStateSettings,
   raps,
   requests,
   settings,
