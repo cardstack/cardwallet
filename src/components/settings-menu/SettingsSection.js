@@ -13,7 +13,7 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
-import { ConfigKey, getConfigBoolean } from '@cardstack/services';
+import { ConfigKey, getConfigBoolean } from '@cardstack/services/remote-config';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {

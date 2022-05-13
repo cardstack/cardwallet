@@ -50,4 +50,3 @@ export * from './InfoBanner';
 export * from './TabHeader';
 export * from './CtaBanner';
 export { default as RewardsPromoBanner } from './RewardsPromoBanner/RewardsPromoBanner';
-export * from './AppRequirementsCheck';

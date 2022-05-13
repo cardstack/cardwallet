@@ -2,7 +2,7 @@ import remoteConfig from '@react-native-firebase/remote-config';
 import { useEffect, useCallback } from 'react';
 
 import { useBooleanState } from '@cardstack/hooks';
-import { fetchRemoteConfigs } from '@cardstack/services';
+import { fetchRemoteConfigs } from '@cardstack/services/remote-config';
 
 import logger from 'logger';
 

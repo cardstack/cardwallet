@@ -42,10 +42,9 @@ import { PinnedHiddenItemOptionProvider, useHideSplashScreen } from './hooks';
 import { loadAddress } from './model/wallet';
 import store, { persistor } from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
-import { AppRequirementsCheck } from '@cardstack/components';
+import { AppRequirementsCheck } from '@cardstack/components/AppRequirementsCheck';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
-// import { useInitRemoteConfigs } from '@cardstack/hooks';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
 import { AppContainer } from '@cardstack/navigation';
 import {
