@@ -1,11 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
 import { debounce } from 'lodash';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { palette } from '@cardstack/theme';
 import { monotoneCubicInterpolation } from '@rainbow-me/animated-charts';
 import { useChartData, useChartDataLabels } from '@rainbow-me/hooks';
-
-import { ModalContext } from 'react-native-cool-modals/NativeStackView';
 
 const traverseData = (prev, data) => {
   if (!data || data.length === 0) {
@@ -29,36 +26,7 @@ const traverseData = (prev, data) => {
   };
 };
 
-function useJumpingForm(isLong, heightWithChart, heightWithoutChart) {
-  const { setOptions } = useNavigation();
-
-  const { jumpToShort, jumpToLong } = useContext(ModalContext) || {};
-
-  useEffect(() => {
-    if (!isLong) {
-      setOptions({
-        longFormHeight: heightWithoutChart,
-      });
-    } else {
-      setOptions({
-        longFormHeight: heightWithChart,
-      });
-    }
-  }, [
-    heightWithChart,
-    heightWithoutChart,
-    isLong,
-    setOptions,
-    jumpToShort,
-    jumpToLong,
-  ]);
-}
-
-export default function useChartThrottledPoints({
-  asset,
-  heightWithChart,
-  heightWithoutChart,
-}) {
+export default function useChartThrottledPoints({ asset }) {
   const color = palette.tealDark;
 
   const [isFetchingInitially, setIsFetchingInitially] = useState(true);
@@ -96,8 +64,6 @@ export default function useChartThrottledPoints({
       (fetchingCharts && !isFetchingInitially),
     [fetchingCharts, isFetchingInitially, throttledPoints]
   );
-
-  useJumpingForm(showChart, heightWithChart, heightWithoutChart);
 
   const [throttledData, setThrottledData] = useState({
     nativePoints: throttledPoints.nativePoints,

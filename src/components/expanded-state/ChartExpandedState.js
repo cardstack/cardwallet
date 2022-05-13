@@ -20,11 +20,6 @@ import { Container, Sheet } from '@cardstack/components';
 import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import AssetInputTypes from '@rainbow-me/helpers/assetInputTypes';
 
-const heightWithoutChart = 309;
-const heightWithChart = heightWithoutChart + 310;
-
-export const initialChartExpandedStateSheetHeight = heightWithChart;
-
 export default function ChartExpandedState(props) {
   const currentAsset = props.asset;
 
@@ -46,8 +41,6 @@ export default function ChartExpandedState(props) {
     throttledData,
   } = useChartThrottledPoints({
     asset,
-    heightWithChart,
-    heightWithoutChart,
   });
 
   const { network } = useAccountSettings();
