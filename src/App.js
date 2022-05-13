@@ -37,7 +37,7 @@ import {
   runWalletBackupStatusChecks,
 } from './handlers/walletReadyEvents';
 import RainbowContextWrapper from './helpers/RainbowContext';
-import { PinnedHiddenItemOptionProvider, useHideSplashScreen } from './hooks';
+import { PinnedHiddenItemOptionProvider } from './hooks';
 
 import { loadAddress } from './model/wallet';
 import store, { persistor } from './redux/store';
@@ -218,7 +218,6 @@ class App extends Component {
                   <PersistGate loading={null} persistor={persistor}>
                     <FlexItem>
                       <AppRequirementsCheck>
-                        <HideSplashScreen />
                         {this.state.initialRoute && (
                           <InitialRouteContext.Provider
                             value={this.state.initialRoute}
@@ -240,16 +239,6 @@ class App extends Component {
     </MainThemeProvider>
   );
 }
-
-const HideSplashScreen = () => {
-  const hideSplashScreen = useHideSplashScreen();
-
-  useEffect(() => {
-    hideSplashScreen?.();
-  }, [hideSplashScreen]);
-
-  return null;
-};
 
 const AppWithRedux = connect(
   ({ appState: { walletReady } }) => ({ walletReady }),

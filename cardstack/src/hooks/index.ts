@@ -10,4 +10,4 @@ export * from './useIsFetchingDataNewAccount';
 export * from './useGetAssetBalance';
 export * from './prepaid-card/usePrepaidCard';
 export * from './currencies/useSpendDisplay';
-export * from './remote-configs/useRemoteConfigs';
+export * from './remote-configs/useLoadRemoteConfigs';
