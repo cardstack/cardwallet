@@ -13,7 +13,7 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
-import { getReviewFeature } from '@cardstack/services';
+import { ConfigKey, getConfigBoolean } from '@cardstack/services';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -112,8 +112,8 @@ export default function SettingsSection({
     [wallets]
   );
 
-  const setReviewFeature = async () => {
-    const { reviewActive } = await getReviewFeature();
+  const setReviewFeature = () => {
+    const { reviewActive } = getConfigBoolean(ConfigKey.appReviewFeature);
     setReviewEnabled(reviewActive);
   };
 

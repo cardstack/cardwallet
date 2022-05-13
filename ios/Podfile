@@ -5,6 +5,9 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 # Prevent Cocoapods from collecting stats, which adds time to each pod installation
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+# Toggle this to true for the no-ad-tracking Analytics subspec. Useful at minimum for Kids category apps.
+# See: https://firebase.google.com/support/release-notes/ios#analytics - requires firebase-ios-sdk 7.11.0+
+$RNFirebaseAnalyticsWithoutAdIdSupport = true # toggle this to true for the no-ad-tracking Analytics subspec
 
 target 'Rainbow' do
   # Pods for Rainbow

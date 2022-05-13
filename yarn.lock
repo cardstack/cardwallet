@@ -1612,7 +1612,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cardstack/cardpay-sdk@^1.0.3":
+"@cardstack/cardpay-sdk@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@cardstack/cardpay-sdk/-/cardpay-sdk-1.0.3.tgz#5c8a6db6db6c3d99efffd379c80603d0dfada44e"
   integrity sha512-zOfT4VmBQZ+cz4O86PGxD3frWswcdWn2IxUu6tVLFUNfCI7hOIyDi6n2xbsXM7NEBTyjnqk3z6KU/Xb8cdX0lw==
@@ -1642,7 +1642,7 @@
     web3-provider-engine "^16.0.1"
     web3-utils "1.5.2"
 
-"@cardstack/did-resolver@^1.0.3":
+"@cardstack/did-resolver@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@cardstack/did-resolver/-/did-resolver-1.0.3.tgz#4551c7926dc2f7151847a3c71cd712d34544e84f"
   integrity sha512-GBTPVyKheLEl3dxpspzPLk+GuTFBd25UyAAi7E6WkPE594B1PIdmtwNSI0LABxQeRa6wLy4vTeuIr7GjnFIYTQ==
@@ -3776,6 +3776,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-6.1.0.tgz#a7dd574bc5b20ecad1e6ae6494abffa2e0a4949e"
   integrity sha512-SrO+EJYR1FhGqCoKSkvddIKB0waySXapW4inW2IQgpjBYCdCTJyKFLlvZHTVg/3N0vodR4WBGdKraECl9aVS5Q==
 
+"@react-native-firebase/analytics@^14.9.3":
+  version "14.9.3"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-14.9.3.tgz#f558325dfd0529666cdc03b89507998248dee14f"
+  integrity sha512-KAL2ss7TF6eWV/wTfQNeuAr3AVNpUmuYNqC+PwDRtAJUcfiwwCc+gcsXp8UzA7ELC+JWLO4kDc+1LkdFr7p81g==
+
 "@react-native-firebase/app@^12.1.0":
   version "12.8.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-12.8.0.tgz#d9716529add20ed70e8a712dba4ce153e469fa7e"
@@ -3789,6 +3794,11 @@
   version "12.8.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-12.8.0.tgz#f601541be15e67678d6e44ff0a4f3fd9183142bb"
   integrity sha512-Lc6qxhSP7w7XHSPy9CKbIuRVqCk//G3dbMFr9Jq5jmRgbT4pr6tlsZVjMVU1Yx5OBJm8beB3RPWKjZhAsRxy7Q==
+
+"@react-native-firebase/remote-config@^14.9.3":
+  version "14.9.3"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-14.9.3.tgz#e2f5717ab040422ea54015405373843dac8a63da"
+  integrity sha512-Opynaqki18A7OyWofMRyOsr42v7dotpU6qoDczsxPqnnsPKxYohHsMtbKHTOcEL6qa2B24z49PaNzf1loLdiaw==
 
 "@react-native/assets@1.0.0":
   version "1.0.0"

@@ -3,10 +3,9 @@ import notifee, { EventType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
 import { ThemeProvider } from '@shopify/restyle';
-import compareVersions from 'compare-versions';
 import { get } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import {
   AppRegistry,
   AppState,
@@ -19,7 +18,6 @@ import {
 import { SENTRY_ENDPOINT } from 'react-native-dotenv';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
-import VersionNumber from 'react-native-version-number';
 import { connect, Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { name as appName } from '../app.json';
@@ -39,16 +37,15 @@ import {
   runWalletBackupStatusChecks,
 } from './handlers/walletReadyEvents';
 import RainbowContextWrapper from './helpers/RainbowContext';
-import { PinnedHiddenItemOptionProvider } from './hooks';
+import { PinnedHiddenItemOptionProvider, useHideSplashScreen } from './hooks';
 
-import useHideSplashScreen from './hooks/useHideSplashScreen';
 import { loadAddress } from './model/wallet';
 import store, { persistor } from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
-import MaintenanceMode from './screens/MaintenanceMode';
+import { AppRequirementsCheck } from '@cardstack/components';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
-import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
+// import { useInitRemoteConfigs } from '@cardstack/hooks';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
 import { AppContainer } from '@cardstack/navigation';
 import {
@@ -56,7 +53,6 @@ import {
   notificationHandler,
 } from '@cardstack/notification-handler';
 import { requestsForTopic } from '@cardstack/redux/requests';
-import { getMaintenanceStatus, getMinimumVersion } from '@cardstack/services';
 import theme from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 import PortalConsumer from '@rainbow-me/components/PortalConsumer';
@@ -222,7 +218,8 @@ class App extends Component {
                 <Provider store={store}>
                   <PersistGate loading={null} persistor={persistor}>
                     <FlexItem>
-                      <CheckSystemReqs>
+                      <AppRequirementsCheck>
+                        <HideSplashScreen />
                         {this.state.initialRoute && (
                           <InitialRouteContext.Provider
                             value={this.state.initialRoute}
@@ -231,7 +228,7 @@ class App extends Component {
                             <PortalConsumer />
                           </InitialRouteContext.Provider>
                         )}
-                      </CheckSystemReqs>
+                      </AppRequirementsCheck>
                       <OfflineToast />
                     </FlexItem>
                   </PersistGate>
@@ -245,53 +242,14 @@ class App extends Component {
   );
 }
 
-const CheckSystemReqs = ({ children }) => {
+const HideSplashScreen = () => {
   const hideSplashScreen = useHideSplashScreen();
-  const appVersion = VersionNumber.appVersion;
-  const [ready, setReady] = useState(false);
-  const [minimumVersion, setMinimumVersion] = useState(null);
-  const [maintenanceStatus, setMaintenanceStatus] = useState(null);
-  const hasMaintenanceStatus = Boolean(maintenanceStatus);
-  const hasMinimumVersion = Boolean(minimumVersion);
-
-  async function getReqs() {
-    const [maintenanceStatusResponse, minVersionResponse] = await Promise.all([
-      getMaintenanceStatus(),
-      getMinimumVersion(),
-    ]);
-
-    setMaintenanceStatus(maintenanceStatusResponse);
-    setMinimumVersion(minVersionResponse.minVersion);
-  }
 
   useEffect(() => {
-    getReqs();
-  }, []);
+    hideSplashScreen?.();
+  }, [hideSplashScreen]);
 
-  useEffect(() => {
-    if (hasMaintenanceStatus && hasMinimumVersion) {
-      setReady(true);
-      hideSplashScreen();
-    }
-  }, [hasMaintenanceStatus, hasMinimumVersion, hideSplashScreen]);
-
-  if (ready) {
-    if (maintenanceStatus.maintenanceActive) {
-      return <MaintenanceMode message={maintenanceStatus.maintenanceMessage} />;
-    }
-
-    const forceUpdate = Boolean(
-      parseInt(compareVersions(minimumVersion, appVersion)) > 0
-    );
-
-    if (forceUpdate) {
-      return <MinimumVersion />;
-    }
-  }
-
-  hideSplashScreen();
-
-  return children;
+  return null;
 };
 
 const AppWithRedux = connect(
