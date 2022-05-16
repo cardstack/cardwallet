@@ -217,7 +217,6 @@ export default function SettingsModal() {
       >
         {() => (
           <SettingsSection
-            onCloseModal={goBack}
             onPressBackup={onPressSection(SettingsPages.backup)}
             onPressCurrency={onPressSection(SettingsPages.currency)}
             onPressDS={onPressSection(SettingsPages.designSystem)}

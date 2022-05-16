@@ -21,6 +21,8 @@ jest.mock('redux-persist', () => {
   };
 });
 
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
 jest.mock('react-native-flipper');
 
 jest.mock('react-native-background-timer', () => ({

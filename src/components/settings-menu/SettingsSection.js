@@ -1,7 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useMemo } from 'react';
-import { Linking, NativeModules } from 'react-native';
+import { Linking } from 'react-native';
 
 import AppVersionStamp from '../AppVersionStamp';
 import { ColumnWithDividers } from '../layout';
@@ -13,7 +12,6 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
-import { getReviewFeature } from '@cardstack/services';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -21,12 +19,6 @@ import {
   useSendFeedback,
   useWallets,
 } from '@rainbow-me/hooks';
-import {
-  AppleReviewAddress,
-  REVIEW_DONE_KEY,
-} from '@rainbow-me/utils/reviewAlert';
-
-const { RainbowRequestReview, RNReview } = NativeModules;
 
 const checkAllWallets = wallets => {
   if (!wallets) return false;
@@ -53,7 +45,6 @@ const checkAllWallets = wallets => {
 };
 
 export default function SettingsSection({
-  onCloseModal,
   onPressDev,
   onPressBackup,
   onPressCurrency,
@@ -69,26 +60,6 @@ export default function SettingsSection({
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
   const onSendFeedback = useSendFeedback();
-
-  const [isReviewEnabled, setReviewEnabled] = useState(false);
-
-  useEffect(() => {
-    setReviewFeature();
-  }, []);
-
-  const onPressReview = useCallback(async () => {
-    if (ios) {
-      onCloseModal();
-      RainbowRequestReview.requestReview(handled => {
-        if (!handled) {
-          AsyncStorage.setItem(REVIEW_DONE_KEY, 'true');
-          Linking.openURL(AppleReviewAddress);
-        }
-      });
-    } else {
-      RNReview.show();
-    }
-  }, [onCloseModal]);
 
   const onPressDiscord = useCallback(() => {
     Linking.openURL(SettingsExternalURLs.discordInviteLink);
@@ -111,11 +82,6 @@ export default function SettingsSection({
     () => checkAllWallets(wallets),
     [wallets]
   );
-
-  const setReviewFeature = async () => {
-    const { reviewActive } = await getReviewFeature();
-    setReviewEnabled(reviewActive);
-  };
 
   return (
     <ScrollView backgroundColor="white">
@@ -207,14 +173,6 @@ export default function SettingsSection({
           onPress={onSendFeedback}
           testID="feedback-section"
         />
-        {isReviewEnabled && (
-          <ListItem
-            icon={<Icon color="settingsTeal" name="star" />}
-            label="Review"
-            onPress={onPressReview}
-            testID="review-section"
-          />
-        )}
       </ColumnWithDividers>
       {IS_DEV && (
         <>
