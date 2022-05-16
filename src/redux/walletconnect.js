@@ -19,10 +19,9 @@ import {
 import { sendRpcCall } from '../handlers/web3';
 import { dappLogoOverride, dappNameOverride } from '../helpers/dappNameHandler';
 import WalletTypes from '../helpers/walletTypes';
-import { Navigation } from '../navigation';
 import { isSigningMethod } from '../utils/signingMethods';
 import { getFCMToken } from '@cardstack/models/firebase';
-import { Routes } from '@cardstack/navigation';
+import { Navigation, Routes } from '@cardstack/navigation';
 import { addRequestToApprove } from '@cardstack/redux/requests';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { baseCloudFunctionsUrl } from '@cardstack/services';

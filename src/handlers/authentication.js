@@ -2,9 +2,8 @@ import { captureException } from '@sentry/react-native';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import AesEncryptor from '../handlers/aesEncryption';
 import * as keychain from '../model/keychain';
-import { Navigation } from '../navigation';
 import { pinKey } from '../utils/keychainConstants';
-import { Routes } from '@cardstack/navigation';
+import { Navigation, Routes } from '@cardstack/navigation';
 import logger from 'logger';
 
 const encryptor = new AesEncryptor();
