@@ -1,5 +1,4 @@
 import { getAccountLocal, saveAccountLocal } from './common';
-import { NATIVE_TOKEN_SYMBOLS } from '@cardstack/utils';
 
 const assetPricesFromUniswapVersion = '0.1.0';
 const assetsVersion = '0.2.1';
@@ -20,30 +19,20 @@ const PREPAID_CARDS = 'prepaidCards';
 const DEPOTS = 'depots';
 const MERCHANT_SAFES = 'merchantSafes';
 const ACCOUNT_CHARTS = 'accountCharts';
-const OPEN_FAMILIES = 'openFamilies';
 const PURCHASE_TRANSACTIONS = 'purchaseTransactions';
-const SMALL_BALANCE_TOGGLE = 'smallBalanceToggle';
 const SAVINGS = 'savings';
-const SAVINGS_TOGGLE = 'savingsToggle';
 const TRANSACTIONS = 'transactions';
 const COLLECTIBLES = 'collectibles';
-const PINNED_COINS = 'pinnedCoins';
-const HIDDEN_COINS = 'hiddenCoins';
 
 export const accountLocalKeys = [
   ACCOUNT_INFO,
   ASSET_PRICES_FROM_UNISWAP,
   ASSETS,
   ACCOUNT_CHARTS,
-  OPEN_FAMILIES,
   PURCHASE_TRANSACTIONS,
-  SMALL_BALANCE_TOGGLE,
   SAVINGS,
-  SAVINGS_TOGGLE,
   TRANSACTIONS,
   COLLECTIBLES,
-  PINNED_COINS,
-  HIDDEN_COINS,
   DEPOTS,
   MERCHANT_SAFES,
   PREPAID_CARDS,
@@ -362,69 +351,6 @@ export const saveCollectibles = (collectibles, accountAddress, network) =>
   );
 
 /**
- * @desc get open small balances
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getSmallBalanceToggle = (accountAddress, network) =>
-  getAccountLocal(SMALL_BALANCE_TOGGLE, accountAddress, network, false);
-
-/**
- * @desc save small balance toggle
- * @param  {String}   [address]
- * @param  {Boolean}    [small balance toggle]
- * @param  {String}   [network]
- */
-export const saveSmallBalanceToggle = (
-  openSmallBalances,
-  accountAddress,
-  network
-) =>
-  saveAccountLocal(
-    SMALL_BALANCE_TOGGLE,
-    openSmallBalances,
-    accountAddress,
-    network
-  );
-
-/**
- * @desc get open savings
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getSavingsToggle = (accountAddress, network) =>
-  getAccountLocal(SAVINGS_TOGGLE, accountAddress, network, false);
-
-/**
- * @desc save small balance toggle
- * @param  {String}   [address]
- * @param  {Boolean}    [small balance toggle]
- * @param  {String}   [network]
- */
-export const saveSavingsToggle = (isOpen, accountAddress, network) =>
-  saveAccountLocal(SAVINGS_TOGGLE, isOpen, accountAddress, network);
-
-/**
- * @desc get open families
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getOpenFamilies = (accountAddress, network) =>
-  getAccountLocal(OPEN_FAMILIES, accountAddress, network, {});
-
-/**
- * @desc save open families
- * @param  {String}   [address]
- * @param  {Object}    [open families]
- * @param  {String}   [network]
- */
-export const saveOpenFamilies = (openFamilies, accountAddress, network) =>
-  saveAccountLocal(OPEN_FAMILIES, openFamilies, accountAddress, network);
-
-/**
  * @desc get profile info
  * @param  {String}   [address]
  * @param  {String}   [network]
@@ -441,39 +367,3 @@ export const getAccountInfo = (accountAddress, network) =>
  */
 export const saveAccountInfo = (profileInfo, accountAddress, network) =>
   saveAccountLocal(ACCOUNT_INFO, profileInfo, accountAddress, network);
-
-/**
- * @desc get pinned coins
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Array}
- */
-export const getPinnedCoins = (accountAddress, network) =>
-  getAccountLocal(PINNED_COINS, accountAddress, network, NATIVE_TOKEN_SYMBOLS);
-
-/**
- * @desc save pinned coins
- * @param  {Array}    [pinned coins]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
-export const savePinnedCoins = (pinnedCoins, accountAddress, network) =>
-  saveAccountLocal(PINNED_COINS, pinnedCoins, accountAddress, network);
-
-/**
- * @desc get hidden coins
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Array}
- */
-export const getHiddenCoins = (accountAddress, network) =>
-  getAccountLocal(HIDDEN_COINS, accountAddress, network, []);
-
-/**
- * @desc save hidden coins
- * @param  {Array}    [hidden coins]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
-export const saveHiddenCoins = (hiddenCoins, accountAddress, network) =>
-  saveAccountLocal(HIDDEN_COINS, hiddenCoins, accountAddress, network);

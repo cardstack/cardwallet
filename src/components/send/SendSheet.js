@@ -49,8 +49,6 @@ export default function SendSheet({
   nativeCurrency,
   network,
   onSelectAsset,
-  hiddenCoins = [],
-  pinnedCoins = [],
   savings = [],
   sendableCollectibles = [],
   amountDetails,
@@ -119,11 +117,9 @@ export default function SendSheet({
           allAssets={allAssets}
           collectibles={sendableCollectibles}
           fetchData={fetchData}
-          hiddenCoins={hiddenCoins}
           nativeCurrency={nativeCurrency}
           network={network}
           onSelectAsset={onSelectAsset}
-          pinnedCoins={pinnedCoins}
           savings={savings}
         />
       )}

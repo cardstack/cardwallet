@@ -54,46 +54,14 @@ export default class SendAssetList extends React.Component {
   constructor(props) {
     super(props);
 
-    const {
-      allAssets,
-      hiddenCoins,
-      nativeCurrency,
-      network,
-      pinnedCoins,
-      savings,
-      collectibles,
-    } = props;
+    const { allAssets, nativeCurrency, network, savings, collectibles } = props;
 
-    const { assets } = buildCoinsList(
-      allAssets,
-      nativeCurrency,
-      true,
-      pinnedCoins,
-      hiddenCoins
-    );
-    let smallBalances = [];
+    const { assets } = buildCoinsList(allAssets, nativeCurrency, true);
     let shitcoins = [];
-
-    if (assets[assets.length - 1].smallBalancesContainer) {
-      smallBalances = assets.pop();
-      shitcoins = smallBalances.assets;
-    }
-
-    if (assets[assets.length - 1].coinDivider) {
-      assets.pop(); // removes not needed coin divider
-    }
 
     const visibleAssetsLength = assets.length;
 
     this.data = assets;
-
-    if (smallBalances.assets.length > 0) {
-      //check for placeholder ETH & remove
-      smallBalances.assets = smallBalances.assets.filter(
-        asset => !asset?.isPlaceholder
-      );
-      this.data.push(smallBalances);
-    }
 
     if (savings && savings.length > 0 && network === networkTypes.mainnet) {
       this.data = this.data.concat([{ data: savings, name: 'Savings' }]);

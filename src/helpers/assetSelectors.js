@@ -1,4 +1,4 @@
-import { filter, get, groupBy, isEmpty, isNil, map, toNumber } from 'lodash';
+import { get, groupBy, isEmpty, isNil, map, toNumber } from 'lodash';
 import { createSelector } from 'reselect';
 import { sortList } from '@cardstack/helpers/sortList';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
@@ -10,14 +10,12 @@ const assetPricesFromUniswapSelector = state =>
 const assetsSelector = state => state.data.assets;
 const isLoadingAssetsSelector = state => state.data.isLoadingAssets;
 const nativeCurrencySelector = state => state.settings.nativeCurrency;
-const hiddenCoinsSelector = state => state.editOptions.hiddenCoins;
 
 const sortAssetsByNativeAmount = (
   originalAssets,
   assetPricesFromUniswap,
   isLoadingAssets,
-  nativeCurrency,
-  hiddenCoins
+  nativeCurrency
 ) => {
   let updatedAssets = originalAssets;
   if (!isEmpty(assetPricesFromUniswap)) {
@@ -68,15 +66,10 @@ const sortAssetsByNativeAmount = (
   );
   const sortedShitcoins = sortList(noValue, 'name', 'asc');
   const allAssets = sortedAssets.concat(sortedShitcoins);
-  const allAssetsWithoutHidden = filter(
-    allAssets,
-    asset => hiddenCoins && !hiddenCoins.includes(asset.uniqueId)
-  );
 
   return {
     allAssets,
     allAssetsCount: allAssets.length,
-    allAssetsWithoutHidden,
     assetPricesFromUniswap,
     assets: sortedAssets,
     assetsCount: sortedAssets.length,
@@ -98,7 +91,6 @@ export const sortAssetsByNativeAmountSelector = createSelector(
     assetPricesFromUniswapSelector,
     isLoadingAssetsSelector,
     nativeCurrencySelector,
-    hiddenCoinsSelector,
   ],
   sortAssetsByNativeAmount
 );

@@ -16,8 +16,6 @@ import {
 import store from '@rainbow-me/redux/store';
 import { ETH_ICON_URL } from '@rainbow-me/references';
 
-const COINS_TO_SHOW = 5;
-
 export const buildAssetUniqueIdentifier = item => {
   const balance = get(item, 'balance.amount', '');
   const nativePrice = get(item, 'native.price.display', '');
@@ -29,7 +27,6 @@ export const buildAssetUniqueIdentifier = item => {
 const addNativeTokenPlaceholder = (
   assets,
   includePlaceholder,
-  pinnedCoins,
   nativeCurrency
 ) => {
   const network = store.getState().settings.network;
@@ -58,7 +55,7 @@ const addNativeTokenPlaceholder = (
       decimals: 18,
       icon_url: ETH_ICON_URL,
       isCoin: true,
-      isPinned: pinnedCoins.includes(nativeTokenAddress),
+      isPinned: false,
       isPlaceholder: true,
       isSmall: false,
       name: nativeTokenName,
@@ -100,81 +97,21 @@ const getTotal = assets =>
 export const buildCoinsList = (
   assetsOriginal,
   nativeCurrency,
-  isCoinListEdited,
-  pinnedCoins,
-  hiddenCoins,
   includePlaceholder = false
 ) => {
-  let standardAssets = [],
-    pinnedAssets = [],
-    smallAssets = [],
-    hiddenAssets = [];
-
   const assets = addNativeTokenPlaceholder(
     assetsOriginal,
     includePlaceholder,
-    pinnedCoins,
     nativeCurrency
   );
 
-  // separate into standard, pinned, small balances, hidden assets
-  forEach(assets, asset => {
-    if (hiddenCoins && hiddenCoins.includes(asset.uniqueId)) {
-      hiddenAssets.push({
-        isCoin: true,
-        isHidden: true,
-        isSmall: true,
-        ...asset,
-      });
-    } else if (pinnedCoins.includes(asset.uniqueId)) {
-      pinnedAssets.push({
-        isCoin: true,
-        isPinned: true,
-        isSmall: false,
-        ...asset,
-      });
-    } else {
-      standardAssets.push({ isCoin: true, isSmall: false, ...asset });
-    }
-  });
+  const allAssets = assets.map(asset => ({
+    isCoin: true,
+    isSmall: false,
+    ...asset,
+  }));
 
-  // decide which assets to show above or below the coin divider
-  const nonHidden = concat(pinnedAssets, standardAssets);
-  const dividerIndex = Math.max(pinnedAssets.length, COINS_TO_SHOW);
-
-  let assetsAboveDivider = slice(nonHidden, 0, dividerIndex);
-  let assetsBelowDivider = [];
-
-  if (isEmpty(assetsAboveDivider)) {
-    assetsAboveDivider = slice(smallAssets, 0, COINS_TO_SHOW);
-    assetsBelowDivider = slice(smallAssets, COINS_TO_SHOW);
-  } else {
-    const remainderBelowDivider = slice(nonHidden, dividerIndex);
-    assetsBelowDivider = concat(remainderBelowDivider, smallAssets);
-  }
-
-  // calculate small balance and overall totals
-  const smallBalancesValue = getTotal(assetsBelowDivider);
-  const bigBalancesValue = getTotal(assetsAboveDivider);
-  const totalBalancesValue = add(bigBalancesValue, smallBalancesValue);
-
-  // include hidden assets if in edit mode
-  if (isCoinListEdited) {
-    assetsBelowDivider = concat(assetsBelowDivider, hiddenAssets);
-  }
-
-  const allAssets = assetsAboveDivider;
-
-  if (assetsBelowDivider.length > 0 || isCoinListEdited) {
-    allAssets.push({
-      coinDivider: true,
-      value: smallBalancesValue,
-    });
-    allAssets.push({
-      assets: assetsBelowDivider,
-      smallBalancesContainer: true,
-    });
-  }
+  const totalBalancesValue = getTotal(allAssets);
 
   return { assets: allAssets, totalBalancesValue };
 };
