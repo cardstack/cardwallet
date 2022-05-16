@@ -1,16 +1,16 @@
 import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
-import { useFocusEffect, useNavigation } from '@react-navigation/core';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCallback, useRef } from 'react';
 import { Linking } from 'react-native';
 
 import { useBooleanState } from '@cardstack/hooks';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
+import { Routes } from '@cardstack/navigation/routes';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 import { convertDeepLinkToCardWalletProtocol } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useTimeout } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
 import { getEthereumAddressFromQRCodeData } from '@rainbow-me/utils/address';
 import haptics from '@rainbow-me/utils/haptics';
 import logger from 'logger';

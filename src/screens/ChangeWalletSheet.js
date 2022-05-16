@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client';
+import { useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { get, toLower } from 'lodash';
 import React, {
@@ -21,7 +22,6 @@ import WalletLoadingStates from '../helpers/walletLoadingStates';
 import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
 import { cleanUpWalletKeys } from '../model/wallet';
-import { useNavigation } from '../navigation/Navigation';
 import {
   createAccountForWallet,
   walletsLoadState,
@@ -31,7 +31,11 @@ import {
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
-import { navigationStateInit, useLoadingOverlay } from '@cardstack/navigation';
+import {
+  navigationStateInit,
+  Routes,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
@@ -39,7 +43,7 @@ import {
   useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
+
 import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 

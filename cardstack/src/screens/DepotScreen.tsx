@@ -1,5 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -21,15 +21,14 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useDepotTransactions } from '@cardstack/hooks';
+import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { colors } from '@cardstack/theme';
 import { DepotType } from '@cardstack/types';
 import { getAddressPreview } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 
-import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
-import Routes from '@rainbow-me/routes';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
 import { BackButton } from '../../../src/components/header';

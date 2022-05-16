@@ -1,9 +1,9 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useRef, useState } from 'react';
 import { Keyboard } from 'react-native';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
 import { useAccountSettings, useContacts } from '../../hooks';
-import { useNavigation } from '../../navigation/Navigation';
 import { magicMemo } from '../../utils';
 import Divider from '../Divider';
 import { ButtonPressAnimation } from '../animations';

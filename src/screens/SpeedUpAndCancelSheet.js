@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { BigNumber } from 'bignumber.js';
 import { get, isEmpty, keys } from 'lodash';
@@ -32,7 +32,7 @@ import {
   useKeyboardHeight,
 } from '@rainbow-me/hooks';
 import { loadWallet, sendTransaction } from '@rainbow-me/model/wallet';
-import { useNavigation } from '@rainbow-me/navigation';
+
 import { getTitle, gweiToWei, weiToGwei } from '@rainbow-me/parsers';
 import { executeRap } from '@rainbow-me/raps';
 

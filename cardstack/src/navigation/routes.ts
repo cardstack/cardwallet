@@ -30,11 +30,27 @@ export const MainRoutes = {
   TRANSACTION_CONFIRMATION_SHEET: 'TransactionConfirmationScreen',
   BACKUP_SHEET: 'BackupSheet',
   REQUEST_PREPAID_CARD: 'RequestPrepaidCardScreen',
-} as const;
-
-export const GlobalRoutes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
   COLOR_PICKER_MODAL: 'ColorPickerModal',
-  LOADING_OVERLAY: 'LoadingOverlay',
 } as const;
+
+const OuterRoutes = {
+  TAB_NAVIGATOR: 'TabNavigator',
+  HOME_SCREEN: 'HomeScreen',
+  PROFILE_SCREEN: 'ProfileScreen',
+  WALLET_SCREEN: 'WalletScreen',
+  QR_SCANNER_SCREEN: 'QRScannerScreen',
+
+  // Non-migrated routes
+  CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
+  EXPANDED_ASSET_SHEET: 'ExpandedAssetSheet',
+  EXPANDED_ASSET_SHEET_DRILL: 'ExpandedAssetSheetDrill',
+  MODAL_SCREEN: 'ModalScreen',
+  PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
+  RESTORE_SHEET: 'RestoreSheet',
+  SETTINGS_MODAL: 'SettingsModal',
+  SUPPORTED_COUNTRIES_MODAL_SCREEN: 'SupportedCountriesModalScreen',
+} as const;
+
+export const Routes = { ...OuterRoutes, ...MainRoutes } as const;

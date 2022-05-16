@@ -1,11 +1,11 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 
+import { Routes } from '@cardstack/navigation';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
 import { isLayer2 } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/navigation/routesNames';
 
 import { useCtaBanner } from '.';
 

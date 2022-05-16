@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/native';
 
 export const useRouteParams = () => {
   const { params: routeParams } = useRoute();

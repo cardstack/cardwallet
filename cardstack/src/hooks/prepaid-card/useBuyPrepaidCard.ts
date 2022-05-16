@@ -1,11 +1,11 @@
 import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { useAuthToken, useSpendToNativeDisplay } from '@cardstack/hooks';
-import { useLoadingOverlay } from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   getHubUrl,
   getInventories,
@@ -36,7 +36,6 @@ import {
 
 import { Alert } from '@rainbow-me/components/alerts';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
-import Routes from '@rainbow-me/navigation/routesNames';
 import { addNewPrepaidCard } from '@rainbow-me/redux/data';
 import logger from 'logger';
 

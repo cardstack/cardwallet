@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { captureMessage } from '@sentry/react-native';
 import lang from 'i18n-js';
 import React, {
@@ -19,6 +19,7 @@ import {
   backupPasswordInputProps,
 } from './backupComponentsUtils';
 import { Container, Icon, IconProps, Input, Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { isCloudBackupPasswordValid } from '@rainbow-me/handlers/cloudBackup';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
@@ -27,8 +28,7 @@ import {
   useWalletCloudBackup,
   useWallets,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
+
 import logger from 'logger';
 
 export default function BackupCloudStep() {

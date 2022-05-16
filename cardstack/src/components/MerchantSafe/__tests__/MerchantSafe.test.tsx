@@ -25,7 +25,7 @@ const merchantSafe = {
 };
 
 // Mock navigation
-jest.mock('@rainbow-me/navigation', () => ({
+jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: jest.fn(),
   }),

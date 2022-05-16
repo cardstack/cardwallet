@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import React, {
   useCallback,
   useEffect,
@@ -23,7 +23,6 @@ import {
   getDappHostname,
   isDappAuthenticated,
 } from '@rainbow-me/helpers/dappNameHandler';
-import { useNavigation } from '@rainbow-me/navigation';
 import { ethereumUtils } from '@rainbow-me/utils';
 
 interface Params {

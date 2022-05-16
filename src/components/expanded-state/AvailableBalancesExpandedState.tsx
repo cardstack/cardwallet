@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 
@@ -15,7 +16,6 @@ import {
 import { useMerchantTransactions } from '@cardstack/hooks';
 import { MerchantSafeType } from '@cardstack/types';
 import { sectionStyle } from '@cardstack/utils';
-import { useNavigation } from '@rainbow-me/navigation';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 const CHART_HEIGHT = 650;

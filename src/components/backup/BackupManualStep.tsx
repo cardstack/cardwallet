@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useMemo, useState } from 'react';
 
 import { SecretDisplaySection } from '../secret-display';
@@ -16,7 +16,6 @@ import {
   useWalletManualBackup,
   useWallets,
 } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
 
 export default function BackupManualStep() {
   const { isTallPhone } = useDimensions();

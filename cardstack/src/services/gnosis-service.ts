@@ -15,7 +15,8 @@ import Web3 from 'web3';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import Web3Instance from '@cardstack/models/web3-instance';
-import { MainRoutes } from '@cardstack/navigation/routes';
+import { Navigation } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation/routes';
 import { updateMerchantSafeWithCustomization } from '@cardstack/utils';
 
 import {
@@ -27,7 +28,6 @@ import {
   savePrepaidCards,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { Navigation } from '@rainbow-me/navigation';
 import { dataLoadState } from '@rainbow-me/redux/data';
 import store from '@rainbow-me/redux/store';
 import logger from 'logger';
@@ -199,7 +199,7 @@ export const fetchGnosisSafes = async (address: string) => {
       prepaidCards: extendedPrepaidCards,
     };
   } catch (error) {
-    Navigation.handleAction(MainRoutes.ERROR_FALLBACK_SCREEN, {}, true);
+    Navigation.handleAction(Routes.ERROR_FALLBACK_SCREEN, {}, true);
 
     logger.sentry('Fetch GnosisSafes failed', error);
     captureException(error);

@@ -1,13 +1,13 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { Centered, Column } from '../../layout';
 import { Button, Container, Icon, Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import { useWallets } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
+
 import { padding } from '@rainbow-me/styles';
 
 const Content = styled(Centered).attrs({

@@ -1,16 +1,16 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
+import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils/device';
 
 import * as cloudBackup from '@rainbow-me/handlers/cloudBackup';
-import Routes from '@rainbow-me/routes';
 
 import { useWelcomeScreen } from '../hooks';
 
 // Mock navigation
 const mockedNavigate = jest.fn();
 const mockedReplace = jest.fn();
-jest.mock('@react-navigation/core', () => ({
+jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: mockedNavigate,
     replace: mockedReplace,
@@ -105,7 +105,7 @@ describe('useWelcomeScreen', () => {
       result.current.onCreateWallet();
     });
 
-    expect(mockedReplace).toBeCalledWith(Routes.SWIPE_LAYOUT);
+    expect(mockedReplace).toBeCalledWith(Routes.TAB_NAVIGATOR);
     expect(mockedShowOverlay).toBeCalledWith({
       title: 'Creating account...',
     });

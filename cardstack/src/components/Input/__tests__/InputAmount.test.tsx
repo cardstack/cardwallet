@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from '../../../test-utils';
 import { CURRENCY_DISPLAY_MODE, InputAmount } from '../InputAmount/InputAmount';
 
-jest.mock('@react-navigation/core', () => ({
+jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(() => ({
     navigate: jest.fn(),
   })),

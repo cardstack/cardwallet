@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import React, { memo, useEffect } from 'react';
 

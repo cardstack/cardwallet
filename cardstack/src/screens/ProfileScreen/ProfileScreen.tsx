@@ -10,11 +10,11 @@ import {
   Text,
 } from '@cardstack/components';
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
+import { Routes } from '@cardstack/navigation';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { isLayer1 } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
 import { SettingsPages } from '@rainbow-me/screens/SettingsModal';
 
 import { CreateProfile, strings } from './components';

@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback, useState } from 'react';
 import { Pressable } from 'react-native';
 

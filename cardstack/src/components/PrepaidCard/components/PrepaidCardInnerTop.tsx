@@ -1,12 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 
 import { Container, Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { ColorTypes } from '@cardstack/theme';
 import { getAddressPreview } from '@cardstack/utils';
 import { hitSlop } from '@cardstack/utils/layouts';
-
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 
 import { Touchable } from '../../Touchable';
 import { PrepaidCardProps } from '../PrepaidCard';

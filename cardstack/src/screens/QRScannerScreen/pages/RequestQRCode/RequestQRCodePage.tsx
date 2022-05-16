@@ -9,7 +9,6 @@ import {
   StyledQRCode,
   Text,
 } from '@cardstack/components';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useDimensions } from '@rainbow-me/hooks';
@@ -42,8 +41,6 @@ const RequestQRCodePage = () => {
     [isSmallPhone]
   );
 
-  const { isTabBarEnabled } = useTabBarFlag();
-
   if (!safeAddress) {
     // Temp placeholder for no merchant/profile
     return (
@@ -59,15 +56,12 @@ const RequestQRCodePage = () => {
             paddingHorizontal={4}
             textAlign="center"
           >
-            {isTabBarEnabled
-              ? `You don't have a profile yet.\n\nCreate one to start requesting payments`
-              : `Create an account at app.cardstack.com/cardpay to request payments`}
+            {strings.emptyProfile.message}
           </Text>
-          {isTabBarEnabled && (
-            <Button onPress={onCreateProfilePress}>
-              <Text>Create a profile</Text>
-            </Button>
-          )}
+
+          <Button onPress={onCreateProfilePress}>
+            <Text> {strings.emptyProfile.btn}</Text>
+          </Button>
         </Container>
       </CenteredContainer>
     );

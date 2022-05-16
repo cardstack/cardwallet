@@ -3,14 +3,13 @@ import { InteractionManager } from 'react-native';
 
 import { SafeHeader } from '@cardstack/components';
 import { PrepaidCardPayment } from '@cardstack/graphql';
-import { MainRoutes } from '@cardstack/navigation/routes';
+import { Navigation, Routes } from '@cardstack/navigation';
 import {
   convertSpendForBalanceDisplay,
   getMerchantEarnedTransactionDetails,
 } from '@cardstack/utils';
 import { fetchMerchantInfoFromDID } from '@cardstack/utils/merchant-utils';
 
-import { Navigation } from '@rainbow-me/navigation';
 import store from '@rainbow-me/redux/store';
 import Logger from 'logger';
 
@@ -25,7 +24,7 @@ export const merchantPrepaidCardPaymentReceivedHandler = async (
   try {
     const transaction = await mapMerchantPaymentTxToNavigationParams(data);
     InteractionManager.runAfterInteractions(async () => {
-      Navigation.handleAction(MainRoutes.PAYMENT_RECEIVED_SHEET, {
+      Navigation.handleAction(Routes.PAYMENT_RECEIVED_SHEET, {
         transaction,
       });
     });

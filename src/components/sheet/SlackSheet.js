@@ -1,4 +1,5 @@
 // FIXME unify with iOS
+import { useNavigation } from '@react-navigation/native';
 import React, { Fragment, useEffect, useMemo, useRef } from 'react';
 import {
   KeyboardAvoidingView,
@@ -16,7 +17,6 @@ import SheetHandleFixedToTop, {
 } from './SheetHandleFixedToTop';
 import { Container } from '@cardstack/components';
 import { useDimensions } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
 import { position } from '@rainbow-me/styles';
 
 const { event } = Animated;

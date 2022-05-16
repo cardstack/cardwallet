@@ -1,12 +1,11 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 
 import { CoinIcon } from '@cardstack/components';
 import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInfoFromDID';
+import { Routes } from '@cardstack/navigation';
 import { MerchantClaimType } from '@cardstack/types';
 import { getClaimProps } from '@cardstack/utils';
-
-import Routes from '@rainbow-me/routes';
 
 import { SafeHeader } from '../../SafeHeader';
 import {

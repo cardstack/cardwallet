@@ -1,4 +1,4 @@
-import { StackActions, useNavigation } from '@react-navigation/core';
+import { StackActions, useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect } from 'react';
 import { Alert } from 'react-native';
 

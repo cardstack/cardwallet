@@ -8,7 +8,7 @@ jest.mock('@cardstack/models/safes-providers', () => ({
 }));
 
 const mockHandleAction = jest.fn();
-jest.mock('@rainbow-me/navigation/Navigation', () => ({
+jest.mock('@cardstack/navigation/Navigation', () => ({
   default: () => ({ handleAction: mockHandleAction }),
 }));
 

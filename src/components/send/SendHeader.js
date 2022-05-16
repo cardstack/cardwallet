@@ -1,15 +1,15 @@
+import { useNavigation } from '@react-navigation/native';
 import { get, isEmpty, isNumber, toLower } from 'lodash';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
-import { useNavigation } from '../../navigation/Navigation';
 import Divider from '../Divider';
 import { AddContactButton, PasteAddressButton } from '../buttons';
 import { AddressField } from '../fields';
 import { Row } from '../layout';
 import { Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { useClipboard, useDimensions } from '@rainbow-me/hooks';
-import Routes from '@rainbow-me/routes';
 import { padding } from '@rainbow-me/styles';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 

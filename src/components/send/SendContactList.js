@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { toLower } from 'lodash';
 import React, { useCallback, useMemo, useRef } from 'react';
 import DeviceInfo from 'react-native-device-info';
@@ -9,9 +10,8 @@ import { SwipeableContactRow } from '../contacts';
 import { SheetHandleFixedToTopHeight } from '../sheet';
 import { InvalidPasteToast, ToastPositionContainer } from '../toasts';
 import SendEmptyState from './SendEmptyState';
+import { Routes } from '@cardstack/navigation';
 import { useKeyboardHeight } from '@rainbow-me/hooks';
-import { useNavigation } from '@rainbow-me/navigation';
-import Routes from '@rainbow-me/routes';
 import { filterList } from '@rainbow-me/utils';
 
 const KeyboardArea = styled.View`

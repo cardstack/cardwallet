@@ -3,7 +3,7 @@ import {
   convertAmountFromNativeValue,
   formatInputDecimals,
 } from '@cardstack/cardpay-sdk';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { captureEvent, captureException } from '@sentry/react-native';
 import { get, isEmpty, isString } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -17,9 +17,8 @@ import SendSheet, {
 import { createSignableTransaction, estimateGasLimit } from '../handlers/web3';
 import AssetTypes from '../helpers/assetTypes';
 import { sendTransaction } from '../model/wallet';
-import { useNavigation } from '../navigation/Navigation';
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
-import { useLoadingOverlay } from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { isLayer2, isNativeToken } from '@cardstack/utils';
 import { Alert } from '@rainbow-me/components/alerts';
 import {
@@ -37,7 +36,7 @@ import {
   useUpdateAssetOnchainBalance,
 } from '@rainbow-me/hooks';
 import { ETH_ADDRESS_SYMBOL } from '@rainbow-me/references/addresses';
-import Routes from '@rainbow-me/routes';
+
 import { gasUtils } from '@rainbow-me/utils';
 import logger from 'logger';
 

@@ -1,6 +1,9 @@
-import { useIsFocused, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, { useEffect, useMemo } from 'react';
-import { useNavigation } from '../../navigation/Navigation';
 import { swapDetailsTransitionPosition } from '../../navigation/effects';
 import TouchableBackdrop from '../TouchableBackdrop';
 import { FloatingEmojisTapper } from '../floating-emojis';

@@ -7,7 +7,6 @@ import {
   Text,
 } from '@cardstack/components';
 import { PinnedHiddenSectionMenu } from '@cardstack/components/PinnedHiddenSection';
-import { useTabBarFlag } from '@cardstack/navigation/tabBarNavigator';
 import { Device } from '@cardstack/utils';
 
 import { PinnedHiddenSectionOption } from '@rainbow-me/hooks';
@@ -21,8 +20,6 @@ interface AssetSectionProps {
 }
 
 const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
-  const { isTabBarEnabled } = useTabBarFlag();
-
   const {
     header: { type, title, count, showContextMenu, total },
     data,
@@ -38,11 +35,6 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
     [data.length, isPrepaidCardSection]
   );
 
-  const backgroundColor = useMemo(
-    () => (isTabBarEnabled ? 'backgroundDarkPurple' : 'backgroundBlue'),
-    [isTabBarEnabled]
-  );
-
   return (
     <>
       <Container
@@ -50,7 +42,7 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
         flexDirection="row"
         justifyContent="space-between"
         padding={4}
-        backgroundColor={backgroundColor}
+        backgroundColor="backgroundDarkPurple"
       >
         <Container flexDirection="row">
           <Text color="white" size="medium">
@@ -80,7 +72,7 @@ const AssetSectionHeader = ({ section, onBuyCardPress }: AssetSectionProps) => {
         <Container
           paddingBottom={4}
           alignItems="center"
-          backgroundColor={backgroundColor}
+          backgroundColor="backgroundDarkPurple"
         >
           <Button onPress={onBuyCardPress}>{strings.buyCardLabel}</Button>
         </Container>

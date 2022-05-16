@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useExpandedStateNavigation } from '../../../hooks';
 import { Button } from '@cardstack/components';
-import Routes from '@rainbow-me/routes';
+import { Routes } from '@cardstack/navigation';
 
 export default function SwapActionButton({ inputType }) {
   const navigate = useExpandedStateNavigation(inputType);

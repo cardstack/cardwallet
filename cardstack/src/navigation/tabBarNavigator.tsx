@@ -2,19 +2,11 @@ import {
   BottomTabBarOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useContext } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TabBarIcon } from '@cardstack/components';
@@ -27,10 +19,7 @@ import {
 import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
-import { navigationRef } from '@rainbow-me/navigation/Navigation';
 import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
-import { onNavigationStateChange } from '@rainbow-me/navigation/onNavigationStateChange';
-import RainbowRoutes from '@rainbow-me/navigation/routesNames';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
@@ -39,10 +28,9 @@ import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 
 import { InitialRouteContext } from '../../../src/context/initialRoute';
 
-import { useCardstackGlobalScreens, useCardstackMainScreens } from './hooks';
-import { linking } from './screens';
+import { useCardstackMainScreens } from './hooks';
 
-import { dismissAndroidKeyboardOnClose, tabLinking } from '.';
+import { dismissAndroidKeyboardOnClose, Routes } from '.';
 
 const Tab = createBottomTabNavigator();
 
@@ -72,12 +60,12 @@ const TabNavigator = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName={RainbowRoutes.WALLET_SCREEN}
+      initialRouteName={Routes.WALLET_SCREEN}
       tabBarOptions={tabBarOptions(bottom)}
     >
       <Tab.Screen
         component={HomeScreen}
-        name={RainbowRoutes.HOME_SCREEN}
+        name={Routes.HOME_SCREEN}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabBarIcon
@@ -90,7 +78,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         component={ProfileScreen}
-        name={RainbowRoutes.PROFILE_SCREEN}
+        name={Routes.PROFILE_SCREEN}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabBarIcon iconName="user" label="PROFILE" focused={focused} />
@@ -99,7 +87,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         component={WalletScreen}
-        name={RainbowRoutes.WALLET_SCREEN}
+        name={Routes.WALLET_SCREEN}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabBarIcon iconName="wallet" label="WALLET" focused={focused} />
@@ -108,7 +96,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         component={QRScannerScreen}
-        name={RainbowRoutes.QR_SCANNER_SCREEN}
+        name={Routes.QR_SCANNER_SCREEN}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabBarIcon iconName="qr-code" label="PAY" focused={focused} />
@@ -121,16 +109,12 @@ const TabNavigator = () => {
 
 const Stack = createStackNavigator();
 
-const StackNavigator = () => {
+export const StackNavigator = () => {
   const initialRoute = useContext(InitialRouteContext) || '';
 
   const cardstackMainScreens = useCardstackMainScreens(Stack);
-  const cardstackGlobalScreens = useCardstackGlobalScreens(Stack);
 
   // TODO: Create a navigator for each flow and split auth/non-auth
-
-  // Remove last item aka LoadingOverlay, to avoid dupe (on iOS)
-  Device.isIOS && cardstackGlobalScreens.pop();
 
   return (
     <Stack.Navigator
@@ -144,88 +128,45 @@ const StackNavigator = () => {
       screenOptions={{ gestureEnabled: true }}
       initialRouteName={initialRoute}
     >
-      <Stack.Screen
-        component={TabNavigator}
-        name={RainbowRoutes.SWIPE_LAYOUT}
-      />
+      <Stack.Screen component={TabNavigator} name={Routes.TAB_NAVIGATOR} />
       {cardstackMainScreens}
-      {cardstackGlobalScreens}
-
       {
         // Temp rainbow components until migration
       }
       <Stack.Screen
         component={ExpandedAssetSheet}
         listeners={dismissAndroidKeyboardOnClose}
-        name={RainbowRoutes.EXPANDED_ASSET_SHEET}
+        name={Routes.EXPANDED_ASSET_SHEET}
         options={expandedPreset as StackNavigationOptions}
       />
       <Stack.Screen
         component={ExpandedAssetSheet}
         listeners={dismissAndroidKeyboardOnClose}
-        name={RainbowRoutes.EXPANDED_ASSET_SHEET_DRILL}
+        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
         options={sheetPreset as StackNavigationOptions}
       />
       <Stack.Screen
         component={ModalScreen}
         listeners={dismissAndroidKeyboardOnClose}
-        name={RainbowRoutes.MODAL_SCREEN}
+        name={Routes.MODAL_SCREEN}
         options={expandedPreset as StackNavigationOptions}
       />
       <Stack.Screen
         component={RestoreSheet}
         listeners={dismissAndroidKeyboardOnClose}
-        name={RainbowRoutes.RESTORE_SHEET}
+        name={Routes.RESTORE_SHEET}
         options={expandedPreset as StackNavigationOptions}
       />
       <Stack.Screen
         component={PinAuthenticationScreen}
-        name={RainbowRoutes.PIN_AUTHENTICATION_SCREEN}
+        name={Routes.PIN_AUTHENTICATION_SCREEN}
         options={{ gestureEnabled: false }}
       />
       <Stack.Screen
         component={ChangeWalletSheet}
-        name={RainbowRoutes.CHANGE_WALLET_SHEET}
+        name={Routes.CHANGE_WALLET_SHEET}
         options={expandedPreset as StackNavigationOptions}
       />
     </Stack.Navigator>
   );
 };
-
-// Temp feature flag context
-interface TabBarContextType {
-  isTabBarEnabled: boolean;
-  setIsTabBarEnabled: Dispatch<SetStateAction<boolean>>;
-}
-
-const TabBarFeatureContext = createContext<TabBarContextType>({
-  isTabBarEnabled: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setIsTabBarEnabled: () => {},
-});
-
-export const TabBarFeatureProvider: React.FC = ({ children }) => {
-  const [isTabBarEnabled, setIsTabBarEnabled] = useState(true);
-
-  const contextValues = useMemo(
-    () => ({
-      isTabBarEnabled,
-      setIsTabBarEnabled,
-    }),
-    [isTabBarEnabled]
-  );
-
-  return (
-    <NavigationContainer
-      linking={isTabBarEnabled ? tabLinking : linking}
-      onStateChange={onNavigationStateChange}
-      ref={navigationRef}
-    >
-      <TabBarFeatureContext.Provider value={contextValues}>
-        {isTabBarEnabled ? <StackNavigator /> : children}
-      </TabBarFeatureContext.Provider>
-    </NavigationContainer>
-  );
-};
-
-export const useTabBarFlag = () => useContext(TabBarFeatureContext);
