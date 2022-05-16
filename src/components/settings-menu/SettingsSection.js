@@ -1,7 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useMemo } from 'react';
-import { Linking, NativeModules } from 'react-native';
+import { Linking } from 'react-native';
 
 import AppVersionStamp from '../AppVersionStamp';
 import { ColumnWithDividers } from '../layout';
@@ -20,12 +19,6 @@ import {
   useSendFeedback,
   useWallets,
 } from '@rainbow-me/hooks';
-import {
-  AppleReviewAddress,
-  REVIEW_DONE_KEY,
-} from '@rainbow-me/utils/reviewAlert';
-
-const { RainbowRequestReview, RNReview } = NativeModules;
 
 const checkAllWallets = wallets => {
   if (!wallets) return false;
@@ -52,7 +45,6 @@ const checkAllWallets = wallets => {
 };
 
 export default function SettingsSection({
-  onCloseModal,
   onPressDev,
   onPressBackup,
   onPressCurrency,
@@ -68,20 +60,6 @@ export default function SettingsSection({
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
   const onSendFeedback = useSendFeedback();
-
-  const onPressReview = useCallback(async () => {
-    if (ios) {
-      onCloseModal();
-      RainbowRequestReview.requestReview(handled => {
-        if (!handled) {
-          AsyncStorage.setItem(REVIEW_DONE_KEY, 'true');
-          Linking.openURL(AppleReviewAddress);
-        }
-      });
-    } else {
-      RNReview.show();
-    }
-  }, [onCloseModal]);
 
   const onPressDiscord = useCallback(() => {
     Linking.openURL(SettingsExternalURLs.discordInviteLink);
@@ -194,12 +172,6 @@ export default function SettingsSection({
           label={ios ? 'Support' : 'Feedback & Bug Reports'}
           onPress={onSendFeedback}
           testID="feedback-section"
-        />
-        <ListItem
-          icon={<Icon color="settingsTeal" name="star" />}
-          label="Review"
-          onPress={onPressReview}
-          testID="review-section"
         />
       </ColumnWithDividers>
       {IS_DEV && (
