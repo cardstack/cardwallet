@@ -3,16 +3,7 @@ import {
   convertAmountToNativeDisplay,
   getConstantByNetwork,
 } from '@cardstack/cardpay-sdk';
-import {
-  compact,
-  concat,
-  find,
-  forEach,
-  get,
-  isEmpty,
-  reduce,
-  slice,
-} from 'lodash';
+import { compact, concat, find, get, reduce } from 'lodash';
 import store from '@rainbow-me/redux/store';
 import { ETH_ICON_URL } from '@rainbow-me/references';
 
