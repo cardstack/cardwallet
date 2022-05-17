@@ -71,6 +71,8 @@ export const Notice = ({
       {isVisible && (
         <Touchable onPress={onPress} testID="notice-pressable">
           <Container
+            marginHorizontal={4}
+            marginVertical={2}
             alignItems="center"
             flexDirection="row"
             paddingVertical={1}
