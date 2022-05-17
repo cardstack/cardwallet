@@ -19,6 +19,11 @@ export const loadRemoteConfigs = async () => {
   await remoteConfig().fetchAndActivate();
 };
 
+export const forceFetch = async () => {
+  await remoteConfig().fetch(0);
+  await remoteConfig().activate();
+};
+
 export const getRemoteConfigAsBoolean = (key: ConfigKey) =>
   remoteConfig().getValue(key).asBoolean();
 
