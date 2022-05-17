@@ -13,6 +13,7 @@ import {
 } from 'react';
 import { InteractionManager, TextInput } from 'react-native';
 
+import { useInvalidPaste } from '@cardstack/hooks';
 import {
   dismissKeyboardOnAndroid,
   navigationStateNewWallet,
@@ -31,7 +32,6 @@ import {
   useAccountSettings,
   useClipboard,
   useWalletManager,
-  useInvalidPaste,
   useWallets,
 } from '@rainbow-me/hooks';
 import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';

@@ -32,7 +32,6 @@ export { default as useWalletManager } from './useWalletManager';
 export { default as useInteraction } from './useInteraction';
 export { default as useInternetStatus } from './useInternetStatus';
 export { default as useInterval } from './useInterval';
-export { default as useInvalidPaste } from './useInvalidPaste';
 export { default as useIsMounted } from './useIsMounted';
 export { default as useIsWalletEthZero } from './useIsWalletEthZero';
 export { default as useKeyboardHeight } from './useKeyboardHeight';

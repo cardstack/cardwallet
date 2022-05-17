@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from 'react';
-import useTimeout from './useTimeout';
+
 import { useBooleanState } from '@cardstack/hooks';
+
+import { useTimeout } from '@rainbow-me/hooks';
 
 export default function useInvalidPaste() {
   const [startTimeout, stopTimeout] = useTimeout();

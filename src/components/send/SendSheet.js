@@ -11,11 +11,11 @@ import {
   SendTransactionSpeed,
 } from '.';
 import { Sheet } from '@cardstack/components';
+import { useInvalidPaste } from '@cardstack/hooks';
 import {
   useAccountSettings,
   useContacts,
   useDimensions,
-  useInvalidPaste,
 } from '@rainbow-me/hooks';
 
 export const useShowAssetFlags = (isValidAddress, selected) => ({
