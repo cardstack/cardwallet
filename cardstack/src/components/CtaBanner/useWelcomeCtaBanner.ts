@@ -66,8 +66,6 @@ export const useWelcomeCtaBanner = () => {
     ]
   );
 
-  console.log(':::', { featurePrepaidCardDrop, showBanner });
-
   return {
     showBanner,
     dismissBanner,
