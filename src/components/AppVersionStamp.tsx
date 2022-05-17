@@ -21,6 +21,10 @@ const AppVersionStamp = () => {
   const { ToastComponent, setToast } = useToast();
 
   const handleVersionPress = useCallback(async () => {
+    // Temporarely only allowing to switch to beta on DEV.
+    // We'll need a PIN validation before moving to prod.
+    if (!__DEV__) return;
+
     numberOfTaps.current++;
 
     if (numberOfTaps.current === parseInt(VERSION_TAP_COUNT)) {

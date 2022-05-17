@@ -8,6 +8,7 @@ export enum ConfigKey {
   requiredMinimumVersion = 'requiredMinimumVersion',
   maintenanceActive = 'maintenanceActive',
   maintenanceMessage = 'maintenanceMessage',
+  featurePrepaidCardDrop = 'featurePrepaidCardDrop',
 }
 
 export const loadRemoteConfigs = async () => {
