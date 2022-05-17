@@ -52,7 +52,7 @@ const getOnChainTokenBalance = async ({
   }
 };
 
-export const getOnChainNativeTokenBalance = async ({
+const getOnChainNativeTokenBalance = async ({
   asset: { decimals, symbol },
   accountAddress,
 }: GetAssetBalanceParams) => {

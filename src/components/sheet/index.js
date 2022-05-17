@@ -14,6 +14,5 @@ export {
   SendActionButton,
   SheetActionButton,
   SheetActionButtonRow,
-  SwapActionButton,
   WithdrawActionButton,
 } from './sheet-action-buttons';

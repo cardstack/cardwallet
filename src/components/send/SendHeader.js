@@ -37,6 +37,7 @@ export default function SendHeader({
   recipientFieldRef,
   removeContact,
   showAssetList,
+  onInvalidPaste,
 }) {
   const { setClipboard } = useClipboard();
   const { isSmallPhone } = useDimensions();
@@ -133,7 +134,12 @@ export default function SendHeader({
             }
           />
         )}
-        {!isValidAddress && <PasteAddressButton onPress={onPressPaste} />}
+        {!isValidAddress && (
+          <PasteAddressButton
+            onInvalidPaste={onInvalidPaste}
+            onPress={onPressPaste}
+          />
+        )}
       </AddressInputContainer>
       <Divider color={colors.rowDivider} flex={0} inset={false} />
     </Fragment>

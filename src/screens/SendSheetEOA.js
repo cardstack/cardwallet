@@ -24,7 +24,6 @@ import { Alert } from '@rainbow-me/components/alerts';
 import {
   useAccountAssets,
   useAccountSettings,
-  useCoinListEditOptions,
   useGas,
   useMagicAutofocus,
   useMaxInputBalance,
@@ -70,7 +69,6 @@ const useSendSheetScreen = () => {
   const { sendableCollectibles } = useSendableCollectibles();
   const savings = useSendSavingsAccount();
   const fetchData = useRefreshAccountData();
-  const { hiddenCoins, pinnedCoins } = useCoinListEditOptions();
 
   const [amountDetails, setAmountDetails] = useState({
     assetAmount: '',
@@ -445,11 +443,9 @@ const useSendSheetScreen = () => {
     recipientFieldRef,
     allAssets,
     fetchData,
-    hiddenCoins,
     nativeCurrency,
     network,
     onSelectAsset,
-    pinnedCoins,
     savings,
     sendableCollectibles,
     amountDetails,

@@ -11,6 +11,7 @@ import {
   SendTransactionSpeed,
 } from '.';
 import { Sheet } from '@cardstack/components';
+import { useInvalidPaste } from '@cardstack/hooks';
 import {
   useAccountSettings,
   useContacts,
@@ -48,8 +49,6 @@ export default function SendSheet({
   nativeCurrency,
   network,
   onSelectAsset,
-  hiddenCoins = [],
-  pinnedCoins = [],
   savings = [],
   sendableCollectibles = [],
   amountDetails,
@@ -76,6 +75,7 @@ export default function SendSheet({
     isValidAddress,
     selected
   );
+  const { isInvalidPaste, onInvalidPaste } = useInvalidPaste();
 
   const showEmptyState = !isValidAddress;
 
@@ -95,6 +95,7 @@ export default function SendSheet({
         isValidAddress={isValidAddress}
         onChangeAddressInput={onChangeInput}
         onFocus={handleFocus}
+        onInvalidPaste={onInvalidPaste}
         onPressPaste={setRecipient}
         onRefocusInput={triggerFocus}
         recipient={recipient}
@@ -106,6 +107,7 @@ export default function SendSheet({
         <SendContactList
           contacts={filteredContacts}
           currentInput={currentInput}
+          isInvalidPaste={isInvalidPaste}
           onPressContact={setRecipient}
           removeContact={onRemoveContact}
         />
@@ -115,11 +117,9 @@ export default function SendSheet({
           allAssets={allAssets}
           collectibles={sendableCollectibles}
           fetchData={fetchData}
-          hiddenCoins={hiddenCoins}
           nativeCurrency={nativeCurrency}
           network={network}
           onSelectAsset={onSelectAsset}
-          pinnedCoins={pinnedCoins}
           savings={savings}
         />
       )}

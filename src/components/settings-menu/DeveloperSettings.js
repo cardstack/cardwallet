@@ -1,14 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Alert, ScrollView } from 'react-native';
 import RNRestart from 'react-native-restart';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
-import { RadioListItem } from '../radio-list';
 import { Routes } from '@cardstack/navigation';
 import { deleteAllBackups } from '@rainbow-me/handlers/cloudBackup';
-import { RainbowContext } from '@rainbow-me/helpers/RainbowContext';
 import { useWallets } from '@rainbow-me/hooks';
 import { wipeKeychain } from '@rainbow-me/model/keychain';
 import { clearImageMetadataCache } from '@rainbow-me/redux/imageMetadata';
@@ -17,15 +15,7 @@ import { walletsUpdate } from '@rainbow-me/redux/wallets';
 
 const DeveloperSettings = () => {
   const { navigate } = useNavigation();
-  const { config, setConfig } = useContext(RainbowContext);
   const { wallets } = useWallets();
-
-  const onNetworkChange = useCallback(
-    value => {
-      setConfig({ ...config, [value]: !config[value] });
-    },
-    [config, setConfig]
-  );
 
   const connectToGanache = useCallback(async () => {
     GanacheUtils.connect(() => {
@@ -75,17 +65,6 @@ const DeveloperSettings = () => {
         testID="ganache-section"
       />
       <ListFooter />
-
-      {Object.keys(config)
-        .sort()
-        .map(key => (
-          <RadioListItem
-            key={key}
-            label={key}
-            onPress={() => onNetworkChange(key)}
-            selected={!!config[key]}
-          />
-        ))}
     </ScrollView>
   );
 };

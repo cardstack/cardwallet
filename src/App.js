@@ -36,7 +36,6 @@ import {
   runKeychainIntegrityChecks,
   runWalletBackupStatusChecks,
 } from './handlers/walletReadyEvents';
-import RainbowContextWrapper from './helpers/RainbowContext';
 import { PinnedHiddenItemOptionProvider } from './hooks';
 
 import { loadAddress } from './model/wallet';
@@ -208,33 +207,31 @@ class App extends Component {
 
   render = () => (
     <MainThemeProvider>
-      <RainbowContextWrapper>
-        <Portal>
-          <SafeAreaProvider>
-            <PinnedHiddenItemOptionProvider>
-              <ApolloProvider client={apolloClient}>
-                <Provider store={store}>
-                  <PersistGate loading={null} persistor={persistor}>
-                    <FlexItem>
-                      <AppRequirementsCheck>
-                        {this.state.initialRoute && (
-                          <InitialRouteContext.Provider
-                            value={this.state.initialRoute}
-                          >
-                            <AppContainer />
-                            <PortalConsumer />
-                          </InitialRouteContext.Provider>
-                        )}
-                      </AppRequirementsCheck>
-                      <OfflineToast />
-                    </FlexItem>
-                  </PersistGate>
-                </Provider>
-              </ApolloProvider>
-            </PinnedHiddenItemOptionProvider>
-          </SafeAreaProvider>
-        </Portal>
-      </RainbowContextWrapper>
+      <Portal>
+        <SafeAreaProvider>
+          <PinnedHiddenItemOptionProvider>
+            <ApolloProvider client={apolloClient}>
+              <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                  <FlexItem>
+                    <AppRequirementsCheck>
+                      {this.state.initialRoute && (
+                        <InitialRouteContext.Provider
+                          value={this.state.initialRoute}
+                        >
+                          <AppContainer />
+                          <PortalConsumer />
+                        </InitialRouteContext.Provider>
+                      )}
+                    </AppRequirementsCheck>
+                    <OfflineToast />
+                  </FlexItem>
+                </PersistGate>
+              </Provider>
+            </ApolloProvider>
+          </PinnedHiddenItemOptionProvider>
+        </SafeAreaProvider>
+      </Portal>
     </MainThemeProvider>
   );
 }

@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Container } from '@cardstack/components';
 import { checkIsValidAddressOrDomain } from '@rainbow-me/helpers/validators';
-import { useClipboard, useInvalidPaste } from '@rainbow-me/hooks';
+import { useClipboard } from '@rainbow-me/hooks';
 import { deviceUtils } from '@rainbow-me/utils';
 
-export default function PasteAddressButton({ onPress }) {
+export default function PasteAddressButton({ onPress, onInvalidPaste }) {
   const [isValid, setIsValid] = useState(false);
-  const { onInvalidPaste } = useInvalidPaste();
   const {
     clipboard,
     enablePaste,

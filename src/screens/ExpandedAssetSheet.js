@@ -5,7 +5,6 @@ import {
   AvailableBalancesExpandedState,
   ChartExpandedState,
   LifetimeEarningsExpandedState,
-  LiquidityPoolExpandedState,
   SupportAndFeedsState,
 } from '../components/expanded-state';
 import { useAsset } from '../hooks';
@@ -13,7 +12,6 @@ import { ExpandedMerchantRoutes } from '@cardstack/components';
 
 const ScreenTypes = {
   token: ChartExpandedState,
-  uniswap: LiquidityPoolExpandedState,
   [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
   [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
   supportAndFees: SupportAndFeedsState,

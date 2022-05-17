@@ -45,6 +45,7 @@ export default function SendContactList({
   currentInput,
   onPressContact,
   removeContact,
+  isInvalidPaste,
 }) {
   const { navigate } = useNavigation();
   const insets = useSafeAreaInsets();
@@ -117,7 +118,7 @@ export default function SendContactList({
             : keyboardHeight - SheetHandleFixedToTopHeight * 1.5
         }
       >
-        <InvalidPasteToast />
+        <InvalidPasteToast isInvalidPaste={isInvalidPaste} />
       </ToastPositionContainer>
       {ios && <KeyboardArea insets={insets} keyboardHeight={keyboardHeight} />}
     </FlyInAnimation>
