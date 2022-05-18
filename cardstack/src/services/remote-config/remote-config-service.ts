@@ -8,6 +8,7 @@ export enum ConfigKey {
   requiredMinimumVersion = 'requiredMinimumVersion',
   maintenanceActive = 'maintenanceActive',
   maintenanceMessage = 'maintenanceMessage',
+  featurePrepaidCardDrop = 'featurePrepaidCardDrop',
 }
 
 export const loadRemoteConfigs = async () => {
@@ -17,6 +18,11 @@ export const loadRemoteConfigs = async () => {
 
   await remoteConfig().setDefaults(remoteConfigDefaults);
   await remoteConfig().fetchAndActivate();
+};
+
+export const forceFetch = async () => {
+  await remoteConfig().fetch(0);
+  await remoteConfig().activate();
 };
 
 export const getRemoteConfigAsBoolean = (key: ConfigKey) =>
