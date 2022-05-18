@@ -41,6 +41,7 @@ export const palette = {
   appleBlue: '#0E76FD',
   yellow: '#F9D849',
   darkPurple: '#272330',
+  darkerPurpleShade: '#1C1A21',
   darkGrayOpacity: 'rgba(39, 35, 48, 0.75)',
   mintDark: '#00E0A9',
   blueGreyDark: '#00E0A9',
@@ -50,6 +51,7 @@ export const palette = {
 
 export const colors = {
   backgroundDarkPurple: palette.darkPurple,
+  backgroundDarkerPurple: palette.darkerPurpleShade,
   backgroundGray: palette.grayBackground,
   backgroundLightGray: palette.grayBackgroundLight,
   backgroundBlue: palette.blueDark,
