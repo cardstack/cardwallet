@@ -29,4 +29,8 @@ export const strings = {
       },
     },
   },
+  buttons: {
+    submit: 'Confirm',
+    cancel: 'Cancel',
+  },
 };

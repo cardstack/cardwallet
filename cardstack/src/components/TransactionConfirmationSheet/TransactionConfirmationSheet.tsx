@@ -12,6 +12,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
+import { useBiometricIconProps } from '@cardstack/hooks/useBiometricIconProps';
 import { TransactionConfirmationData } from '@cardstack/types';
 import { layoutEasingAnimation } from '@cardstack/utils';
 
@@ -19,6 +20,7 @@ import {
   DisplayInformation,
   transactionTypeMap,
 } from './displays/DisplayInformation';
+import { strings } from './strings';
 
 export interface TransactionConfirmationDisplayProps {
   dappUrl?: string;
@@ -124,6 +126,8 @@ const SheetFooter = ({
   onCancel,
   onConfirmLoading = false,
 }: TransactionConfirmationDisplayProps) => {
+  const iconProps = useBiometricIconProps();
+
   return (
     <Container
       width="100%"
@@ -141,15 +145,15 @@ const SheetFooter = ({
         justifyContent="space-between"
       >
         <Button variant="smallWhite" onPress={onCancel}>
-          Cancel
+          {strings.buttons.cancel}
         </Button>
         <Button
           loading={onConfirmLoading}
           variant="small"
           onPress={onConfirm}
-          iconProps={{ name: 'face-id' }}
+          iconProps={iconProps}
         >
-          Confirm
+          {strings.buttons.submit}
         </Button>
       </Container>
     </Container>
