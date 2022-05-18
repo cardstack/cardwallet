@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useClipboard } from '@rainbow-me/hooks';
 
-import { useToast } from './useToast';
+import { useBottomToast } from './useBottomToast';
 
 interface useCopyToastParams {
   customCopyLabel?: string;
@@ -15,14 +15,14 @@ export const useCopyToast = ({
 }: useCopyToastParams) => {
   const { setClipboard, clipboard } = useClipboard();
 
-  const { ToastComponent, showToast } = useToast({
-    label: `Copied "${customCopyLabel || clipboard}" to clipboard`,
-  });
+  const { ToastComponent, showToast } = useBottomToast();
 
   const copyToClipboard = useCallback(() => {
     setClipboard(dataToCopy);
-    showToast();
-  }, [dataToCopy, showToast, setClipboard]);
+    showToast({
+      label: `Copied "${customCopyLabel || clipboard}" to clipboard`,
+    });
+  }, [clipboard, customCopyLabel, dataToCopy, showToast, setClipboard]);
 
   return {
     CopyToastComponent: ToastComponent,

@@ -4,7 +4,7 @@ import { VERSION_TAP_COUNT } from 'react-native-dotenv';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Text } from '@cardstack/components';
-import { useToast } from '@cardstack/hooks';
+import { useBottomToast } from '@cardstack/hooks';
 import {
   setUserAccessType,
   UserAccessType,
@@ -18,7 +18,7 @@ import logger from 'logger';
 const AppVersionStamp = () => {
   const appVersion = useAppVersion();
   const numberOfTaps = useRef(0);
-  const { ToastComponent, setToast } = useToast();
+  const { ToastComponent, showToast } = useBottomToast();
 
   const handleVersionPress = useCallback(async () => {
     // Temporarely only allowing to switch to beta on DEV.
@@ -32,12 +32,12 @@ const AppVersionStamp = () => {
       try {
         await setUserAccessType(UserAccessType.BETA);
         await forceFetch();
-        setToast({ label: `User now part of ${UserAccessType.BETA} access.` });
+        showToast({ label: `User now part of ${UserAccessType.BETA} access.` });
       } catch (error) {
         logger.error('Error while trying to set user property.', error);
       }
     }
-  }, [setToast]);
+  }, [showToast]);
 
   return (
     <>
