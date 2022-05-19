@@ -1,10 +1,17 @@
-import React, { memo, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 
-import { Container, Input, InputProps } from '@cardstack/components';
+import {
+  Container,
+  Input,
+  InputProps,
+  Text,
+  Touchable,
+} from '@cardstack/components';
+import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 
-import CharCell, { cellLayout } from './CharCell';
-import { PinLayoutVariant } from './types';
+import CharCell, { cellLayout, CharCellProps } from './CharCell';
+import { strings } from './strings';
 
 const DEFAULT_PIN_LENGTH = 6;
 const PIN_LENGTH = new Array(DEFAULT_PIN_LENGTH).fill('');
@@ -18,8 +25,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface PinInputProps extends InputProps {
-  variant: PinLayoutVariant;
+interface PinInputProps extends InputProps, Pick<CharCellProps, 'variant'> {
   value: string;
 }
 
@@ -27,10 +33,15 @@ const PinInput = ({
   variant,
   value = '',
   onChangeText,
-  secureTextEntry = true,
   ...inputProps
 }: PinInputProps) => {
+  const [isPinHidden, setIsPinHidden] = useState(true);
+
   const inputRef = useRef<TextInput>();
+
+  const togglePinVisibility = useCallback(() => {
+    setIsPinHidden(!isPinHidden);
+  }, [isPinHidden]);
 
   const renderCells = useMemo(
     () =>
@@ -38,21 +49,30 @@ const PinInput = ({
         <CharCell
           index={index}
           inputValue={value}
-          secureText={secureTextEntry}
+          secureText={isPinHidden}
           variant={variant}
         />
       )),
-    [secureTextEntry, value, variant]
+    [isPinHidden, value, variant]
   );
 
   return (
     <Container width="85%">
+      <Touchable alignSelf="flex-end">
+        <Text
+          color={colorStyleVariants.textColor[variant]}
+          paddingBottom={2}
+          size="small"
+          onPress={togglePinVisibility}
+        >
+          {isPinHidden ? strings.show : strings.hide}
+        </Text>
+      </Touchable>
       <Container justifyContent="space-between" flexDirection="row">
         {renderCells}
       </Container>
       <Input
         autoFocus
-        secureTextEntry
         caretHidden
         contextMenuHidden
         ref={inputRef}
