@@ -32,6 +32,7 @@ import {
   TransactionConfirmationSheet,
   ColorPickerModal,
   RequestPrepaidCardScreen,
+  PinScreen,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -206,6 +207,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   COLOR_PICKER_MODAL: {
     component: ColorPickerModal,
     options: expandedPreset as StackNavigationOptions,
+  },
+  PIN_SCREEN: {
+    component: PinScreen,
+    options: horizontalInterpolator,
   },
 };
 

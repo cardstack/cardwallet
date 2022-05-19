@@ -33,6 +33,7 @@ export const MainRoutes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
   COLOR_PICKER_MODAL: 'ColorPickerModal',
+  PIN_SCREEN: 'PinScreen',
 } as const;
 
 const OuterRoutes = {
