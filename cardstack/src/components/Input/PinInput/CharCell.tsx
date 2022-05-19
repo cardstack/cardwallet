@@ -1,26 +1,16 @@
 import React, { memo, useMemo } from 'react';
 
 import { CenteredContainer, Text } from '@cardstack/components';
-import { ColorTypes } from '@cardstack/theme';
+import {
+  colorStyleVariants,
+  ThemeVariant,
+} from '@cardstack/theme/colorStyleVariants';
 
-import { PinLayoutVariant } from './types';
-
-type ColorVariant = Record<PinLayoutVariant, ColorTypes>;
-
-type StyleProps = 'backgroundColor' | 'borderColor' | 'textColor';
-
-const cellStyle: Record<StyleProps, ColorVariant> = {
+const cellStyle: typeof colorStyleVariants = {
+  ...colorStyleVariants,
   backgroundColor: {
     light: 'grayLightBackground',
     dark: 'backgroundDarkerPurple',
-  },
-  borderColor: {
-    light: 'buttonDarkBackground',
-    dark: 'secondaryText',
-  },
-  textColor: {
-    light: 'black',
-    dark: 'white',
   },
 };
 
@@ -32,10 +22,10 @@ export const cellLayout = {
   radius: 8,
 };
 
-interface CharCellProps {
+export interface CharCellProps {
   index: number;
   inputValue: string;
-  variant: PinLayoutVariant;
+  variant: ThemeVariant;
   secureText?: boolean;
 }
 
