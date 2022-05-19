@@ -8,6 +8,7 @@ import {
   PinInput,
   Text,
 } from '@cardstack/components';
+import { BiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import { Device } from '@cardstack/utils';
 
@@ -112,9 +113,6 @@ const PinScreen = () => {
           value={inputPin}
           onChangeText={setInputPin}
         />
-        {
-          // SwitchPlaceholder
-        }
         {showBiometricSwitcher && (
           <Container
             justifyContent="flex-end"
@@ -122,7 +120,7 @@ const PinScreen = () => {
             width="100%"
             alignItems="center"
           >
-            <Container height={50} backgroundColor="red" width="50%" />
+            <BiometricSwitch variant={variant} />
           </Container>
         )}
       </Container>
