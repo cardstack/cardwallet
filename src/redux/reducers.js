@@ -14,6 +14,7 @@ import uniswapLiquidity from './uniswapLiquidity';
 import walletconnect from './walletconnect';
 import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
+import biometryToggle from '@cardstack/redux/biometryToggleSlice';
 import collectibles from '@cardstack/redux/collectibles';
 import primarySafe from '@cardstack/redux/primarySafeSlice';
 import requests from '@cardstack/redux/requests';
@@ -38,4 +39,5 @@ export default {
   walletconnect,
   wallets,
   primarySafe,
+  biometryToggle,
 };

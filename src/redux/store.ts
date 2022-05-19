@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
+import { biometryToogleSliceName } from '@cardstack/redux/biometryToggleSlice';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
 import { hubApi } from '@cardstack/services/hub/hub-api';
 import { safesApi } from '@cardstack/services/safes-api';
@@ -14,7 +15,7 @@ const persistConfig = {
   key: 'persist',
   version: 1,
   storage: AsyncStorage,
-  whitelist: [primarySafeSliceName],
+  whitelist: [primarySafeSliceName, biometryToogleSliceName],
 };
 
 const rootReducer = combineReducers({
