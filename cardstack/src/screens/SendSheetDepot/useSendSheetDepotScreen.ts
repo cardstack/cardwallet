@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Web3 from 'web3';
 
 import { SEND_TRANSACTION_ERROR_MESSAGE } from '@cardstack/constants';
+import { useBooleanState } from '@cardstack/hooks';
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { useLoadingOverlay, Routes, Navigation } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
@@ -67,6 +68,9 @@ export const useSendSheetDepotScreen = () => {
   const [selected, setSelected] = useState<DepotAsset | undefined>(
     reshapedAsset
   );
+
+  // Controls is user wants to send full balance.
+  const [isMaxEnabled, enableMax, disableMax] = useBooleanState();
 
   // If there's safeAddress, for now it means it's from a merchant,
   // so we only show one asset in the assets list, which is the one
@@ -246,6 +250,9 @@ export const useSendSheetDepotScreen = () => {
   const onChangeNativeAmount = useCallback(
     async newNativeAmount => {
       if (!isString(newNativeAmount)) return;
+
+      disableMax();
+
       const nativeAmount = newNativeAmount.replace(/[^0-9.]/g, '');
 
       if (!nativeAmount.length) {
@@ -279,22 +286,22 @@ export const useSendSheetDepotScreen = () => {
         logger.error('Failed to use usdConverter', e);
       }
     },
-    [getNativeCurrencyAmount, handleAmountDetails, selected]
+    [getNativeCurrencyAmount, handleAmountDetails, selected, disableMax]
   );
 
-  // NOTE: Button MAX is being temporarely removed until
-  // sending max balance functionaly is updated in the SDK.
-  // const onMaxBalancePress = useCallback(async () => {
-  //   updateAssetAmount(maxInputBalance);
-  // }, [updateAssetAmount, maxInputBalance]);
+  const onMaxBalancePress = useCallback(async () => {
+    enableMax();
+    updateAssetAmount(maxInputBalance);
+  }, [updateAssetAmount, maxInputBalance, enableMax]);
 
   const onChangeAssetAmount = useCallback(
     newAssetAmount => {
       if (isString(newAssetAmount)) {
+        disableMax();
         updateAssetAmount(newAssetAmount);
       }
     },
-    [updateAssetAmount]
+    [updateAssetAmount, disableMax]
   );
 
   // Reset all values
@@ -317,7 +324,11 @@ export const useSendSheetDepotScreen = () => {
     try {
       const safes = await getSafesInstance(signerParams);
 
-      const amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
+      let amountInWei;
+
+      if (!isMaxEnabled) {
+        amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
+      }
 
       return safes?.sendTokens(
         safeAddress,
@@ -409,7 +420,7 @@ export const useSendSheetDepotScreen = () => {
       onChangeAssetAmount,
       onChangeNativeAmount,
       onResetAssetSelection,
-      onMaxBalancePress: undefined,
+      onMaxBalancePress,
       onSelectAsset: setSelected,
       allAssets: depotAssets,
       selectedGasPrice: gasEstimatedFee,
@@ -426,7 +437,7 @@ export const useSendSheetDepotScreen = () => {
       network,
       onChangeAssetAmount,
       onChangeNativeAmount,
-      // onMaxBalancePress,
+      onMaxBalancePress,
       onResetAssetSelection,
       onSendPress,
       recipient,
