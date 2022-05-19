@@ -3,15 +3,22 @@ import { SectionList } from 'react-native';
 
 import {
   Button,
+  BiometricSwitch,
   CenteredContainer,
   Container,
   Text,
 } from '@cardstack/components';
 import { buttonVariants } from '@cardstack/theme';
 
+const themes = ['light', 'dark'];
+
 // Not worrying about perfomance and typing as this is a developer feature
 const DesignSystemScreen = () => {
   const sections = [
+    {
+      title: 'Biometric Switch',
+      data: themes,
+    },
     {
       title: 'Buttons',
       data: Object.keys(buttonVariants),
@@ -24,6 +31,12 @@ const DesignSystemScreen = () => {
         return (
           <CenteredContainer padding={2} backgroundColor="overlayGray">
             <Button variant={item}>{item}</Button>
+          </CenteredContainer>
+        );
+      case 'Biometric Switch':
+        return (
+          <CenteredContainer padding={2} backgroundColor="overlayGray">
+            <BiometricSwitch variant={item} />
           </CenteredContainer>
         );
     }

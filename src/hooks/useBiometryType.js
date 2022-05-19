@@ -48,8 +48,30 @@ const mapBiometryTypeToIconName = {
   [BiometryTypes.none]: 'lock',
 };
 
+const biometryLabels = {
+  FaceID: 'Face ID',
+  TouchID: 'Touch ID',
+  PIN: 'PIN',
+  None: null,
+};
+
+const mapBiometryTypeToLabelName = {
+  [BiometryTypes.Face]: biometryLabels.FaceID,
+  [BiometryTypes.FaceID]: biometryLabels.FaceID,
+  [BiometryTypes.Fingerprint]: biometryLabels.TouchID,
+  [BiometryTypes.TouchID]: biometryLabels.TouchID,
+  [BiometryTypes.passcode]: biometryLabels.PIN,
+  [BiometryTypes.none]: biometryLabels.None,
+};
+
 export const useBiometryIconName = () => {
   const biometryType = useBiometryType();
 
   return mapBiometryTypeToIconName[biometryType];
+};
+
+export const useBiometryLabel = () => {
+  const biometryType = useBiometryType();
+
+  return mapBiometryTypeToLabelName[biometryType];
 };
