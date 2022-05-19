@@ -32,3 +32,4 @@ export { default as RewardsRegisterSheet } from './RewardsCenterScreen/RewardsRe
 export { default as RewardsClaimSheet } from './RewardsCenterScreen/RewardsClaimSheet/RewardsClaimSheet';
 export { default as TransactionConfirmationSheet } from './sheets/TransactionConfirmationSheet/TransactionConfirmationSheet';
 export { default as RequestPrepaidCardScreen } from './RequestPrepaidCardScreen/RequestPrepaidCardScreen';
+export { default as PinScreen } from './PinScreen/PinScreen';
