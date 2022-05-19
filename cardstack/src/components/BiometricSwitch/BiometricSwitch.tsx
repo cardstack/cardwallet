@@ -2,11 +2,23 @@ import React from 'react';
 import { Switch } from 'react-native';
 
 import { Container, Text, Icon } from '@cardstack/components';
+import { ColorTypes } from '@cardstack/theme';
 
 import { strings } from './strings';
 import { useBiometricSwitch } from './useBiometricSwitch';
 
-export const BiometricSwitch = () => {
+type ThemeType = 'light' | 'dark';
+
+const colorVariant: Record<ThemeType, ColorTypes> = {
+  light: 'black',
+  dark: 'white',
+};
+
+interface BiometricSwitchProps {
+  variant: ThemeType;
+}
+
+export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
   const {
     iconProps,
     biometryLabel,
@@ -19,10 +31,15 @@ export const BiometricSwitch = () => {
 
   return (
     <Container flexDirection="row" alignItems="center">
-      <Text variant="semibold" marginRight={2}>
+      <Text color={colorVariant[variant]} variant="semibold" marginRight={2}>
         {strings.switchLabel} {biometryLabel}
       </Text>
-      <Icon color="black" iconSize="medium" {...iconProps} />
+      <Icon
+        color={colorVariant[variant]}
+        iconSize="medium"
+        marginRight={1}
+        {...iconProps}
+      />
       <Switch onValueChange={toggleBiometrySwitch} value={isBiometryEnabled} />
     </Container>
   );

@@ -36,7 +36,7 @@ const DesignSystemScreen = () => {
       case 'Biometric Switch':
         return (
           <CenteredContainer padding={2} backgroundColor="overlayGray">
-            <BiometricSwitch />
+            <BiometricSwitch variant={item} />
           </CenteredContainer>
         );
     }
