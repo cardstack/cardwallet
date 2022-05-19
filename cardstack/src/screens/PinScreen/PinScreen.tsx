@@ -103,6 +103,7 @@ const PinScreen = () => {
                 name={feedbackProps.iconName}
                 size={20}
                 paddingLeft={2}
+                backgroundColor="white"
                 color={feedbackProps.color}
               />
             </Container>
