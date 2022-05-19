@@ -23,11 +23,12 @@ export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
     iconProps,
     biometryLabel,
     isBiometryEnabled,
+    biometryAvailable,
     toggleBiometrySwitch,
   } = useBiometricSwitch();
 
-  // iconProps can only be undefined if biometry isn't ready or isn't available.
-  if (!iconProps) return null;
+  // iconProps is undefined until biometry is ready.
+  if (!biometryAvailable || !iconProps) return null;
 
   return (
     <Container flexDirection="row" alignItems="center">

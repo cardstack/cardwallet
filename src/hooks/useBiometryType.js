@@ -52,7 +52,7 @@ const biometryLabels = {
   FaceID: 'Face ID',
   TouchID: 'Touch ID',
   PIN: 'PIN',
-  None: '',
+  None: null,
 };
 
 const mapBiometryTypeToLabelName = {

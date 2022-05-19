@@ -25,5 +25,6 @@ export const useBiometricSwitch = () => {
     biometryLabel,
     isBiometryEnabled,
     toggleBiometrySwitch,
+    biometryAvailable: !!biometryLabel,
   };
 };

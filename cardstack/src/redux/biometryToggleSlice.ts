@@ -11,7 +11,7 @@ const initialState: SliceType = {
 };
 
 const slice = createSlice({
-  name: 'biometryToogle',
+  name: 'biometryToggle',
   initialState,
   reducers: {
     toggleBiometry(state) {
@@ -21,7 +21,7 @@ const slice = createSlice({
 });
 
 export const {
-  name: biometryToogleSliceName,
+  name: biometryToggleSliceName,
   actions: { toggleBiometry },
 } = slice;
 
