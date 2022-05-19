@@ -27,4 +27,9 @@ export const strings = {
     title: 'Request Submitted',
     subtitle: 'Check your inbox to verify this request.',
   },
+  customError: {
+    title: 'Error',
+    message:
+      'Complimentary prepaid cards are not available at this time. Please try back later.',
+  },
 };

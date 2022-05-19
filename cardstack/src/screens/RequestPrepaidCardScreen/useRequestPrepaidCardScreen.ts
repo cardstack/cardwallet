@@ -1,3 +1,4 @@
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { Linking } from 'react-native';
 
@@ -33,18 +34,24 @@ export const useRequestPrepaidCardScreen = () => {
 
   const [
     requestCardDrop,
-    { isError, isSuccess, isLoading },
+    { isError, isSuccess, isLoading, error },
   ] = useRequestEmailCardDropMutation();
+
+  const errorMessage = useMemo(() => {
+    const { status } = error as FetchBaseQueryError;
+
+    return status === 503 ? strings.customError : defaultErrorAlert;
+  }, [error]);
 
   useMutationEffects(
     useMemo(
       () => ({
         error: {
           status: isError,
-          callback: () => Alert(defaultErrorAlert),
+          callback: () => Alert(errorMessage),
         },
       }),
-      [isError]
+      [isError, errorMessage]
     )
   );
 
