@@ -14,11 +14,13 @@ import { ContainerProps } from '../Container';
 interface Props extends ContainerProps {
   title?: string;
   children?: ReactNode;
+  canGoBack?: boolean;
 }
 
 const NavigationStackHeader = ({
   title,
   children,
+  canGoBack = true,
   ...containerProps
 }: Props) => {
   const { goBack } = useNavigation();
@@ -31,13 +33,15 @@ const NavigationStackHeader = ({
   return (
     <MainHeaderWrapper {...containerProps}>
       <Container flex={1} alignItems="flex-start">
-        <Icon
-          color="teal"
-          iconSize="medium"
-          name="chevron-left"
-          onPress={onBackPress}
-          size={28}
-        />
+        {canGoBack && (
+          <Icon
+            color="teal"
+            iconSize="medium"
+            name="chevron-left"
+            onPress={onBackPress}
+            size={28}
+          />
+        )}
       </Container>
       <Container flex={4} alignItems="center" flexDirection="column">
         {!children
