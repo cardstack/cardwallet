@@ -3,10 +3,7 @@ import { useCallback, useMemo } from 'react';
 
 import { Routes } from '@cardstack/navigation';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
-import {
-  ConfigKey,
-  getRemoteConfigAsBoolean,
-} from '@cardstack/services/remote-config';
+import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer2 } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
@@ -43,22 +40,15 @@ export const useWelcomeCtaBanner = () => {
     [selectedAccount]
   );
 
-  // Card Drop banner is only visible if feature FLAG is enabled for current user.
-  // Since theres no hook dependency for this call we can't memoize it.
-  const featurePrepaidCardDrop = getRemoteConfigAsBoolean(
-    ConfigKey.featurePrepaidCardDrop
-  );
-
   const showBanner = useMemo(
     () =>
       isLayer2(network) &&
-      featurePrepaidCardDrop &&
+      remoteFlags().featurePrepaidCardDrop &&
       showBannerUserDecision &&
       isFirstAddressForCurrentWallet &&
       !emailDropGetData?.claimed &&
       !emailDropGetData?.rateLimited,
     [
-      featurePrepaidCardDrop,
       showBannerUserDecision,
       isFirstAddressForCurrentWallet,
       network,

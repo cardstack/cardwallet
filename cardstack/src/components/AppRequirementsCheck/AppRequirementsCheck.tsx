@@ -4,11 +4,7 @@ import VersionNumber from 'react-native-version-number';
 
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { useLoadRemoteConfigs } from '@cardstack/hooks';
-import {
-  ConfigKey,
-  getRemoteConfigAsBoolean,
-  getRemoteConfigAsString,
-} from '@cardstack/services/remote-config';
+import { remoteFlags } from '@cardstack/services/remote-config';
 
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 import MaintenanceMode from '@rainbow-me/screens/MaintenanceMode';
@@ -22,30 +18,18 @@ export const AppRequirementsCheck = ({ children }: Props) => {
   const { isReady } = useLoadRemoteConfigs();
   const hideSplashScreen = useHideSplashScreen();
 
-  const maintenanceActive = useMemo(
-    () => isReady && getRemoteConfigAsBoolean(ConfigKey.maintenanceActive),
-    [isReady]
-  );
-
-  const maintenanceMessage = useMemo(
-    () => isReady && getRemoteConfigAsString(ConfigKey.maintenanceMessage),
-    [isReady]
-  );
-
   const forceUpdate = useMemo(() => {
     if (!isReady) return false;
 
     const appVersion = VersionNumber.appVersion;
 
-    const minVersion = getRemoteConfigAsString(
-      ConfigKey.requiredMinimumVersion
-    );
+    const minVersion = remoteFlags().requiredMinimumVersion;
 
     return compareVersions(minVersion, appVersion) > 0;
   }, [isReady]);
 
-  if (maintenanceActive) {
-    return <MaintenanceMode message={maintenanceMessage} />;
+  if (isReady && remoteFlags().maintenanceActive) {
+    return <MaintenanceMode message={remoteFlags().maintenanceMessage} />;
   }
 
   if (forceUpdate) {
