@@ -56,7 +56,7 @@ const axiosConfig = (authToken: string) => {
   };
 };
 
-export const hubApi = axios.create(axiosConfig(''));
+const hubApi = axios.create(axiosConfig(''));
 
 const hubTokenStorageKey = (network: string): string => {
   return `${HUBTOKEN_KEY}-${network}`;

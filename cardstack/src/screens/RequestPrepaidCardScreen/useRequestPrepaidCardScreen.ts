@@ -6,7 +6,7 @@ import { useMutationEffects } from '@cardstack/hooks';
 import {
   useCheckHubAuthQuery,
   useRequestEmailCardDropMutation,
-} from '@cardstack/services/hub/hub-api';
+} from '@cardstack/services';
 import { isEmailPartial, isEmailValid } from '@cardstack/utils/validators';
 
 import { Alert } from '@rainbow-me/components/alerts';
