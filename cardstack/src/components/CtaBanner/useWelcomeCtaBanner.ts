@@ -44,9 +44,9 @@ export const useWelcomeCtaBanner = () => {
   );
 
   // Card Drop banner is only visible if feature FLAG is enabled for current user.
-  const featurePrepaidCardDrop = useMemo(
-    () => getRemoteConfigAsBoolean(ConfigKey.featurePrepaidCardDrop),
-    []
+  // Since theres no hook dependency for this call we can't memoize it.
+  const featurePrepaidCardDrop = getRemoteConfigAsBoolean(
+    ConfigKey.featurePrepaidCardDrop
   );
 
   const showBanner = useMemo(
