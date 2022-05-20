@@ -1,7 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import React from 'react';
 
-import { render } from '../../../test-utils';
+import { render, waitFor } from '../../../test-utils';
 import { CURRENCY_DISPLAY_MODE, InputAmount } from '../InputAmount/InputAmount';
 
 jest.mock('@react-navigation/native', () => ({
@@ -17,7 +17,7 @@ jest.mock('@rainbow-me/hooks', () => ({
 }));
 
 describe('InputAmount', () => {
-  it('should render the children', () => {
+  it('should render the children', async () => {
     const inputValue = '42';
     const setInputValue = jest.fn();
     const nativeCurrency = NativeCurrency.USD;
@@ -32,7 +32,9 @@ describe('InputAmount', () => {
 
     const { getByDisplayValue, getByText } = render(<InputAmount {...props} />);
 
-    getByDisplayValue(inputValue);
-    getByText(nativeCurrency);
+    await waitFor(() => {
+      getByDisplayValue(inputValue);
+      getByText(nativeCurrency);
+    });
   });
 });

@@ -1,4 +1,3 @@
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { Linking } from 'react-native';
 
@@ -7,7 +6,7 @@ import { useMutationEffects } from '@cardstack/hooks';
 import {
   useCheckHubAuthQuery,
   useRequestEmailCardDropMutation,
-} from '@cardstack/services/hub/hub-api';
+} from '@cardstack/services';
 import { isEmailPartial, isEmailValid } from '@cardstack/utils/validators';
 
 import { Alert } from '@rainbow-me/components/alerts';
@@ -38,9 +37,9 @@ export const useRequestPrepaidCardScreen = () => {
   ] = useRequestEmailCardDropMutation();
 
   const errorMessage = useMemo(() => {
-    const { status } = error as FetchBaseQueryError;
+    const is503 = error && 'status' in error && error.status === 503;
 
-    return status === 503 ? strings.customError : defaultErrorAlert;
+    return is503 ? strings.customError : defaultErrorAlert;
   }, [error]);
 
   useMutationEffects(
