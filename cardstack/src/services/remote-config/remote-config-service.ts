@@ -1,15 +1,12 @@
 import remoteConfig from '@react-native-firebase/remote-config';
 
-import remoteConfigDefaults from './remote_config_defaults.json';
+import { remoteConfigDefaults } from './remoteConfigDefaults';
 
 const CACHE_INTERVAL_MILLIS = __DEV__ ? 60000 : 21600000; // 21600000ms == 6hrs.
 
-export enum ConfigKey {
-  requiredMinimumVersion = 'requiredMinimumVersion',
-  maintenanceActive = 'maintenanceActive',
-  maintenanceMessage = 'maintenanceMessage',
-  featurePrepaidCardDrop = 'featurePrepaidCardDrop',
-}
+type RemoteConfigValues = typeof remoteConfigDefaults;
+
+type ConfigKey = keyof RemoteConfigValues;
 
 export const loadRemoteConfigs = async () => {
   await remoteConfig().setConfigSettings({
@@ -25,8 +22,15 @@ export const forceFetch = async () => {
   await remoteConfig().activate();
 };
 
-export const getRemoteConfigAsBoolean = (key: ConfigKey) =>
+const getRemoteConfigAsBoolean = (key: ConfigKey) =>
   remoteConfig().getValue(key).asBoolean();
 
-export const getRemoteConfigAsString = (key: ConfigKey) =>
+const getRemoteConfigAsString = (key: ConfigKey) =>
   remoteConfig().getValue(key).asString();
+
+export const remoteFlags = (): { [K in ConfigKey]: RemoteConfigValues[K] } => ({
+  requiredMinimumVersion: getRemoteConfigAsString('requiredMinimumVersion'),
+  maintenanceActive: getRemoteConfigAsBoolean('maintenanceActive'),
+  maintenanceMessage: getRemoteConfigAsString('maintenanceMessage'),
+  featurePrepaidCardDrop: getRemoteConfigAsBoolean('featurePrepaidCardDrop'),
+});
