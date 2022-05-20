@@ -321,10 +321,10 @@ export const useSendSheetDepotScreen = () => {
   const { signerParams } = useWallets();
 
   const sendTokenFromDepot = useCallback(async () => {
+    let amountInWei;
+
     try {
       const safes = await getSafesInstance(signerParams);
-
-      let amountInWei;
 
       if (!isMaxEnabled) {
         amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
@@ -344,7 +344,7 @@ export const useSendSheetDepotScreen = () => {
         args: {
           safeAddress,
           recipient,
-          amountInWei: Web3.utils.toWei(amountDetails.assetAmount),
+          amountInWei,
           accountAddress,
           token: selected?.address,
         },
@@ -357,6 +357,7 @@ export const useSendSheetDepotScreen = () => {
     safeAddress,
     selected,
     signerParams,
+    isMaxEnabled,
   ]);
 
   const canSubmit = useMemo(() => {
