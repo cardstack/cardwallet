@@ -69,8 +69,11 @@ export const useSendSheetDepotScreen = () => {
     reshapedAsset
   );
 
-  // Controls is user wants to send full balance.
-  const [isMaxEnabled, enableMax, disableMax] = useBooleanState();
+  const [
+    sendFullBalance,
+    enableFullBalanceSend,
+    disableFullBalanceSend,
+  ] = useBooleanState();
 
   // If there's safeAddress, for now it means it's from a merchant,
   // so we only show one asset in the assets list, which is the one
@@ -251,7 +254,7 @@ export const useSendSheetDepotScreen = () => {
     async newNativeAmount => {
       if (!isString(newNativeAmount)) return;
 
-      disableMax();
+      disableFullBalanceSend();
 
       const nativeAmount = newNativeAmount.replace(/[^0-9.]/g, '');
 
@@ -286,22 +289,27 @@ export const useSendSheetDepotScreen = () => {
         logger.error('Failed to use usdConverter', e);
       }
     },
-    [getNativeCurrencyAmount, handleAmountDetails, selected, disableMax]
+    [
+      getNativeCurrencyAmount,
+      handleAmountDetails,
+      selected,
+      disableFullBalanceSend,
+    ]
   );
 
   const onMaxBalancePress = useCallback(async () => {
-    enableMax();
+    enableFullBalanceSend();
     updateAssetAmount(maxInputBalance);
-  }, [updateAssetAmount, maxInputBalance, enableMax]);
+  }, [updateAssetAmount, maxInputBalance, enableFullBalanceSend]);
 
   const onChangeAssetAmount = useCallback(
     newAssetAmount => {
       if (isString(newAssetAmount)) {
-        disableMax();
+        disableFullBalanceSend();
         updateAssetAmount(newAssetAmount);
       }
     },
-    [updateAssetAmount, disableMax]
+    [updateAssetAmount, disableFullBalanceSend]
   );
 
   // Reset all values
@@ -321,14 +329,13 @@ export const useSendSheetDepotScreen = () => {
   const { signerParams } = useWallets();
 
   const sendTokenFromDepot = useCallback(async () => {
-    let amountInWei;
-
     try {
       const safes = await getSafesInstance(signerParams);
 
-      if (!isMaxEnabled) {
-        amountInWei = Web3.utils.toWei(amountDetails.assetAmount);
-      }
+      const customAmount = Web3.utils.toWei(amountDetails.assetAmount);
+      const fullAmount = undefined; // When no amount is passed, the whole available balance is send;
+
+      const amountInWei = sendFullBalance ? fullAmount : customAmount;
 
       return safes?.sendTokens(
         safeAddress,
@@ -344,7 +351,8 @@ export const useSendSheetDepotScreen = () => {
         args: {
           safeAddress,
           recipient,
-          amountInWei,
+          sendFullBalance,
+          customAmount: Web3.utils.toWei(amountDetails.assetAmount),
           accountAddress,
           token: selected?.address,
         },
@@ -357,7 +365,7 @@ export const useSendSheetDepotScreen = () => {
     safeAddress,
     selected,
     signerParams,
-    isMaxEnabled,
+    sendFullBalance,
   ]);
 
   const canSubmit = useMemo(() => {
