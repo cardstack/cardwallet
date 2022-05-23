@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 import { SectionList } from 'react-native';
 
@@ -8,13 +9,20 @@ import {
   Container,
   Text,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { buttonVariants } from '@cardstack/theme';
 
 const themes = ['light', 'dark'];
 
 // Not worrying about perfomance and typing as this is a developer feature
 const DesignSystemScreen = () => {
+  const { navigate } = useNavigation();
+
   const sections = [
+    {
+      title: 'Template Screens',
+      data: [Routes.PIN_SCREEN, Routes.UNLOCK_SCREEN],
+    },
     {
       title: 'Biometric Switch',
       data: themes,
@@ -25,22 +33,31 @@ const DesignSystemScreen = () => {
     },
   ];
 
-  const renderItem = useCallback(({ item, section: { title } }) => {
-    switch (title) {
-      case 'Buttons':
-        return (
-          <CenteredContainer padding={2} backgroundColor="overlayGray">
-            <Button variant={item}>{item}</Button>
-          </CenteredContainer>
-        );
-      case 'Biometric Switch':
-        return (
-          <CenteredContainer padding={2} backgroundColor="overlayGray">
-            <BiometricSwitch variant={item} />
-          </CenteredContainer>
-        );
-    }
-  }, []);
+  const renderItem = useCallback(
+    ({ item, section: { title } }) => {
+      switch (title) {
+        case 'Buttons':
+          return (
+            <CenteredContainer padding={2} backgroundColor="overlayGray">
+              <Button variant={item}>{item}</Button>
+            </CenteredContainer>
+          );
+        case 'Biometric Switch':
+          return (
+            <CenteredContainer padding={2} backgroundColor="overlayGray">
+              <BiometricSwitch variant={item} />
+            </CenteredContainer>
+          );
+        case 'Template Screens':
+          return (
+            <CenteredContainer padding={2} backgroundColor="overlayGray">
+              <Button onPress={() => navigate(item)}>{item}</Button>
+            </CenteredContainer>
+          );
+      }
+    },
+    [navigate]
+  );
 
   return (
     <SectionList
