@@ -1,6 +1,6 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
@@ -19,10 +19,24 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({ navigate: jest.fn() }),
 }));
 
+const mockedShowOverlay = jest.fn();
+const mockedDismissOverlay = jest.fn();
+jest.mock('@cardstack/navigation', () => ({
+  useLoadingOverlay: () => ({
+    showLoadingOverlay: mockedShowOverlay,
+    dismissLoadingOverlay: mockedDismissOverlay,
+  }),
+  Routes: {
+    WALLET_SCREEN: 'WalletScreen',
+  },
+}));
+
+const mockAccountAddress = '0x0000000000000000000';
+
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountAssets: jest.fn(),
   useAccountSettings: jest.fn().mockImplementation(() => ({
-    accountAddress: '0x0000000000000000000',
+    accountAddress: mockAccountAddress,
     nativeCurrency: 'USD',
     network: 'sokol',
   })),
@@ -63,6 +77,26 @@ jest.mock('@cardstack/models/hd-provider', () => ({
   reset: jest.fn(),
 }));
 
+// Gas Converter mocking
+const weiGasEstimate = '12041962649411652';
+const usdGasEstimate = 0.00020291;
+
+const mockSendTokens = jest.fn();
+
+const mockSendTokensGasEstimate = jest.fn().mockResolvedValue(weiGasEstimate);
+const mockConverter = jest.fn(() => usdGasEstimate);
+
+const mockConverterHelper = () => {
+  (getSafesInstance as jest.Mock).mockResolvedValue({
+    sendTokensGasEstimate: mockSendTokensGasEstimate,
+    sendTokens: mockSendTokens,
+  });
+
+  (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
+};
+
+const mainDepot = updatedData.updatedDepots[0];
+
 describe('useSendSheetDepotScreen', () => {
   beforeEach(() => {
     (useAccountAssets as jest.Mock).mockImplementation(() => ({
@@ -71,9 +105,11 @@ describe('useSendSheetDepotScreen', () => {
 
     (useRoute as jest.Mock).mockImplementation(() => ({
       params: {
-        asset: updatedData.updatedDepots[0].tokens[0],
+        asset: mainDepot.tokens[0],
       },
     }));
+
+    mockConverterHelper();
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -92,25 +128,8 @@ describe('useSendSheetDepotScreen', () => {
       depots: [],
     }));
 
-    const weiGasEstimate = '12041962649411652';
-    const usdGasEstimate = 0.00020291;
-
-    const mockSendTokensGasEstimate = jest
-      .fn()
-      .mockResolvedValue(weiGasEstimate);
-
-    (getSafesInstance as jest.Mock).mockResolvedValue({
-      sendTokensGasEstimate: mockSendTokensGasEstimate,
-    });
-
-    const mockConverter = jest.fn(() => usdGasEstimate);
-
-    (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
-
     const expectedAssets = [
-      reshapeSingleDepotTokenToAsset(
-        updatedData.updatedDepots[0].tokens[0] as any
-      ),
+      reshapeSingleDepotTokenToAsset(mainDepot.tokens[0] as any),
     ];
 
     const { result } = renderHook(() => useSendSheetDepotScreen());
@@ -121,25 +140,10 @@ describe('useSendSheetDepotScreen', () => {
   });
 
   it('should update gas fee and usdConverter initial render', async () => {
-    const weiGasEstimate = '12041962649411652';
-    const usdGasEstimate = 0.00020291;
-
     const selectedGasPrice = {
       amount: usdGasEstimate,
       nativeDisplay: '0.012041962649411652 CARD',
     };
-
-    const mockSendTokensGasEstimate = jest
-      .fn()
-      .mockResolvedValue(weiGasEstimate);
-
-    (getSafesInstance as jest.Mock).mockResolvedValue({
-      sendTokensGasEstimate: mockSendTokensGasEstimate,
-    });
-
-    const mockConverter = jest.fn(() => usdGasEstimate);
-
-    (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
 
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
@@ -162,13 +166,11 @@ describe('useSendSheetDepotScreen', () => {
     const currencyConversionRate = { EUR: 0.86 };
 
     (useAccountSettings as jest.Mock).mockImplementation(() => ({
-      accountAddress: '0x0000000000000000000',
+      accountAddress: mockAccountAddress,
       nativeCurrency: NativeCurrency.EUR,
       network: 'sokol',
     }));
 
-    const weiGasEstimate = '12041962649411652';
-    const usdGasEstimate = 0.00020291;
     const eurGasEstimate = usdGasEstimate * currencyConversionRate.EUR;
 
     const SelectedGasPrice = {
@@ -176,22 +178,49 @@ describe('useSendSheetDepotScreen', () => {
       nativeDisplay: '0.012041962649411652 CARD',
     };
 
-    const mockSendTokensGasEstimate = jest
-      .fn()
-      .mockResolvedValue(weiGasEstimate);
-
-    (getSafesInstance as jest.Mock).mockResolvedValue({
-      sendTokensGasEstimate: mockSendTokensGasEstimate,
-    });
-
-    const mockConverter = jest.fn(() => usdGasEstimate);
-
-    (getUsdConverter as jest.Mock).mockResolvedValue(mockConverter);
-
     const { result } = renderHook(() => useSendSheetDepotScreen());
 
     await waitFor(() =>
       expect(result.current.selectedGasPrice).toEqual(SelectedGasPrice)
+    );
+  });
+
+  it('should call sendTokens without an amount if onMaxBalance is pressed', async () => {
+    const recipient = '0x888';
+
+    const selectedTokenAddress = mainDepot.tokens[0].tokenAddress;
+
+    const safeAddress = mainDepot.address;
+
+    const { result } = renderHook(() => useSendSheetDepotScreen());
+
+    // wait gas
+
+    await waitFor(() =>
+      expect(result.current.selectedGasPrice.amount).toBeTruthy()
+    );
+
+    await act(async () => {
+      await result.current.setRecipient(recipient);
+      await result.current.onMaxBalancePress();
+    });
+
+    // wait amount to be updated
+    await waitFor(() =>
+      expect(result.current.amountDetails.assetAmount).toBeTruthy()
+    );
+
+    await act(async () => {
+      await result.current.onSendPress();
+    });
+
+    expect(mockSendTokens).toBeCalledWith(
+      safeAddress,
+      selectedTokenAddress || '',
+      recipient,
+      undefined,
+      undefined,
+      { from: mockAccountAddress }
     );
   });
 });
