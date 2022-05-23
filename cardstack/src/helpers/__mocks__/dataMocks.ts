@@ -413,6 +413,7 @@ const updatedDepots = [
         balance: {
           amount: '0.97659490137056214',
           display: '0.977 CARD',
+          wei: '976594901370562140',
         },
         token: {
           name: 'CARD Token Kovan.CPXD',
