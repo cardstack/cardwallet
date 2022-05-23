@@ -83,6 +83,10 @@ export default function SettingsSection({
     [wallets]
   );
 
+  const onPressChangePin = useCallback(() => {
+    console.log('Go to Change Pin screen');
+  }, []);
+
   return (
     <ScrollView backgroundColor="white">
       <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
@@ -144,6 +148,16 @@ export default function SettingsSection({
         >
           <ListItemArrowGroup />
         </ListItem>
+        {__DEV__ && (
+          <ListItem
+            icon={<Icon color="settingsTeal" name="lock" />}
+            label="Change Pin"
+            onPress={onPressChangePin}
+            testID="changePin-section"
+          >
+            <ListItemArrowGroup />
+          </ListItem>
+        )}
       </ColumnWithDividers>
       <ListFooter />
       <ColumnWithDividers dividerRenderer={ListItemDivider}>
@@ -174,7 +188,7 @@ export default function SettingsSection({
           testID="feedback-section"
         />
       </ColumnWithDividers>
-      {IS_DEV && (
+      {__DEV__ && (
         <>
           <ListFooter height={10} />
           <ListItem
