@@ -13,7 +13,7 @@ import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import CharCell, { cellLayout, CharCellProps } from './CharCell';
 import { strings } from './strings';
 
-const DEFAULT_PIN_LENGTH = 6;
+export const DEFAULT_PIN_LENGTH = 6;
 const PIN_LENGTH = new Array(DEFAULT_PIN_LENGTH).fill('');
 
 const styles = StyleSheet.create({

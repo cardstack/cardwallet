@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { StatusBar, NativeModules } from 'react-native';
 
 import {
@@ -13,12 +13,7 @@ import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import { Device } from '@cardstack/utils';
 
 import { strings } from './strings';
-
-// To be replaced with states
-const variant = 'light';
-const showFeedback = false;
-const showBiometricSwitcher = true;
-const isValidPin = true;
+import { usePinScreen } from './usePinScreen';
 
 const feedbackStatusProps = {
   success: {
@@ -34,7 +29,15 @@ const feedbackStatusProps = {
 };
 
 const PinScreen = () => {
-  const [inputPin, setInputPin] = useState('');
+  const {
+    canGoBack,
+    showBiometricSwitcher,
+    isValidPin,
+    variant,
+    setInputPin,
+    inputPin,
+    flow,
+  } = usePinScreen();
 
   useEffect(() => {
     Device.isAndroid && NativeModules?.AndroidKeyboardAdjust.setAdjustPan();
@@ -43,12 +46,12 @@ const PinScreen = () => {
   const feedbackProps = useMemo(
     () =>
       isValidPin ? feedbackStatusProps.success : feedbackStatusProps.error,
-    []
+    [isValidPin]
   );
 
   const statusBarStyle = useMemo(
     () => (variant === 'light' ? 'dark-content' : 'light-content'),
-    []
+    [variant]
   );
 
   return (
@@ -58,29 +61,29 @@ const PinScreen = () => {
     >
       <StatusBar barStyle={statusBarStyle} />
       <NavigationStackHeader
-        canGoBack={false}
+        canGoBack={canGoBack}
         backgroundColor={colorStyleVariants.backgroundColor[variant]}
       />
-      <Container flex={0.75} alignItems="center">
+      <Container flex={0.7} alignItems="center" justifyContent="center">
         <Container
-          flex={0.3}
+          flex={0.2}
           width="70%"
           alignItems="center"
-          justifyContent="flex-end"
+          justifyContent="flex-start"
         >
           <Text
             fontSize={22}
             weight="bold"
             color={colorStyleVariants.textColor[variant]}
           >
-            {strings.flow.create.title}
+            {strings.flow?.[flow]?.title}
           </Text>
           <Text
             fontSize={16}
             color={colorStyleVariants.secondaryTextColor[variant]}
             textAlign="center"
           >
-            {strings.flow.create.subtitle}
+            {strings.flow?.[flow]?.subtitle}
           </Text>
         </Container>
         <Container
@@ -89,7 +92,7 @@ const PinScreen = () => {
           width="100%"
           alignItems="center"
         >
-          {showFeedback && (
+          {isValidPin !== null && (
             <Container flexDirection="row">
               <Text
                 fontSize={14}
@@ -103,7 +106,7 @@ const PinScreen = () => {
                 name={feedbackProps.iconName}
                 size={20}
                 paddingLeft={2}
-                backgroundColor="white"
+                backgroundColor={colorStyleVariants.backgroundColor[variant]}
                 color={feedbackProps.color}
               />
             </Container>
@@ -117,7 +120,7 @@ const PinScreen = () => {
         {showBiometricSwitcher && (
           <Container
             justifyContent="flex-end"
-            flex={Device.isIOS ? 0.3 : 0.4}
+            flex={Device.isIOS ? 0.25 : 0.4}
             width="100%"
             alignItems="center"
           >
