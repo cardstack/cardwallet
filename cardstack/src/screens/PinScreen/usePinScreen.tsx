@@ -6,7 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
-import { Routes } from '@cardstack/navigation';
+import { Routes } from '@cardstack/navigation/routes';
 import { RouteType } from '@cardstack/navigation/types';
 import { ThemeVariant } from '@cardstack/theme/colorStyleVariants';
 
