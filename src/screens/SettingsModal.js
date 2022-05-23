@@ -75,12 +75,12 @@ export const SettingsPages = {
     title: 'Settings',
   },
   dev: {
-    component: IS_DEV ? DeveloperSettings : null,
+    component: __DEV__ ? DeveloperSettings : null,
     key: 'DevSection',
     title: 'Dev',
   },
   designSystem: {
-    component: IS_DEV ? DesignSystemScreen : null,
+    component: __DEV__ ? DesignSystemScreen : null,
     key: 'DesignSystem',
     title: 'Design System',
   },
