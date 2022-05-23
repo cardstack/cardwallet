@@ -194,27 +194,4 @@ describe('useSendSheetDepotScreen', () => {
       expect(result.current.selectedGasPrice).toEqual(SelectedGasPrice)
     );
   });
-
-  // it('should enable max balance state if tap on max button', () => {});
-
-  it('should sendTokens with undefined amount if max enabled', () => {
-    (useAccountSettings as jest.Mock).mockImplementation(() => ({
-      accountAddress: '0x0000000000000000000',
-    }));
-
-    const mockSendTokens = jest.fn();
-
-    (getSafesInstance as jest.Mock).mockResolvedValue({
-      sendTokens: mockSendTokens,
-    });
-
-    expect(mockSendTokens).toBeCalledWith(
-      safeAddress,
-      selected?.address || '',
-      recipient,
-      undefined,
-      undefined,
-      { from: accountAddress }
-    );
-  });
 });
