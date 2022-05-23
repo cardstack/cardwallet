@@ -2,7 +2,6 @@ import * as rnKeychain from 'react-native-keychain';
 
 // @ts-ignore
 declare let __DEV__: boolean;
-declare let IS_DEV: boolean;
 declare let akd: boolean;
 
 /* Rainbow uses a rn-keychain patch with these two custom methods
