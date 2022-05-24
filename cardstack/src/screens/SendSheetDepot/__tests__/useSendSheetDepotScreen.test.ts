@@ -2,6 +2,7 @@ import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { useRoute } from '@react-navigation/native';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
+import Web3 from 'web3';
 
 import { getSafesInstance } from '@cardstack/models/safes-providers';
 import { getUsdConverter } from '@cardstack/services/exchange-rate-service';
@@ -219,6 +220,48 @@ describe('useSendSheetDepotScreen', () => {
       selectedTokenAddress || '',
       recipient,
       undefined,
+      undefined,
+      { from: mockAccountAddress }
+    );
+  });
+
+  it('should call sendTokens with user defined amount after value update, cancelling previously pressed onMaxBalance', async () => {
+    const recipient = '0x888';
+
+    const selectedTokenAddress = mainDepot.tokens[0].tokenAddress;
+
+    const safeAddress = mainDepot.address;
+
+    const updatedAssetAmount = '0.5';
+
+    const { result } = renderHook(() => useSendSheetDepotScreen());
+
+    // wait gas
+
+    await waitFor(() =>
+      expect(result.current.selectedGasPrice.amount).toBeTruthy()
+    );
+
+    await act(async () => {
+      await result.current.setRecipient(recipient);
+      await result.current.onMaxBalancePress();
+      await result.current.onChangeAssetAmount(updatedAssetAmount);
+    });
+
+    // wait amount to be updated
+    await waitFor(() =>
+      expect(result.current.amountDetails.assetAmount).toBeTruthy()
+    );
+
+    await act(async () => {
+      await result.current.onSendPress();
+    });
+
+    expect(mockSendTokens).toBeCalledWith(
+      safeAddress,
+      selectedTokenAddress || '',
+      recipient,
+      Web3.utils.toWei(updatedAssetAmount),
       undefined,
       { from: mockAccountAddress }
     );
