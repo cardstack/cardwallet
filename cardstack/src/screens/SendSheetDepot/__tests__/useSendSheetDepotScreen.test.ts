@@ -266,47 +266,4 @@ describe('useSendSheetDepotScreen', () => {
       { from: mockAccountAddress }
     );
   });
-
-  it('should call sendTokens with user defined native amount', async () => {
-    const recipient = '0x888';
-
-    const selectedTokenAddress = mainDepot.tokens[0].tokenAddress;
-
-    const safeAddress = mainDepot.address;
-
-    const updatedNativeAmount = '0.0001';
-    const updatedCard = '0.49282933';
-
-    const { result } = renderHook(() => useSendSheetDepotScreen());
-
-    // wait gas
-
-    await waitFor(() =>
-      expect(result.current.selectedGasPrice.amount).toBeTruthy()
-    );
-
-    await act(async () => {
-      await result.current.setRecipient(recipient);
-      await result.current.onMaxBalancePress();
-      await result.current.onChangeNativeAmount(updatedNativeAmount);
-    });
-
-    // wait amount to be updated
-    await waitFor(() =>
-      expect(result.current.amountDetails.assetAmount).toBeTruthy()
-    );
-
-    await act(async () => {
-      await result.current.onSendPress();
-    });
-
-    expect(mockSendTokens).toBeCalledWith(
-      safeAddress,
-      selectedTokenAddress || '',
-      recipient,
-      Web3.utils.toWei(updatedCard),
-      undefined,
-      { from: mockAccountAddress }
-    );
-  });
 });
