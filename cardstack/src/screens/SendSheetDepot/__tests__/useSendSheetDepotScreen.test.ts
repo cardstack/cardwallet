@@ -267,7 +267,7 @@ describe('useSendSheetDepotScreen', () => {
     );
   });
 
-  it.only('should call sendTokens with user defined native amount', async () => {
+  it('should call sendTokens with user defined native amount', async () => {
     const recipient = '0x888';
 
     const selectedTokenAddress = mainDepot.tokens[0].tokenAddress;
