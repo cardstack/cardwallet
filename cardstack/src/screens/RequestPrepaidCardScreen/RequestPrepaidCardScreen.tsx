@@ -96,7 +96,7 @@ const RequestPrepaidCardScreen = () => {
                 variant={!canSubmit ? 'disabledBlack' : undefined}
                 onPress={onSubmitPress}
                 iconProps={!isAuthenticated ? iconProps : undefined}
-                disablePress={isLoading}
+                disablePress={isLoading || !canSubmit}
                 loading={isLoading}
               >
                 {strings.button.submit}
