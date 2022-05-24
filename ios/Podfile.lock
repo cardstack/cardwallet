@@ -384,8 +384,6 @@ PODS:
     - React-Core
   - react-native-background-timer (2.4.1):
     - React-Core
-  - react-native-blur (0.8.0):
-    - React
   - react-native-camera (3.44.3):
     - React-Core
     - react-native-camera/RCT (= 3.44.3)
@@ -422,8 +420,6 @@ PODS:
   - react-native-udp (4.1.3):
     - CocoaAsyncSocket
     - React-Core
-  - react-native-version-number (0.3.6):
-    - React
   - react-native-webview (11.2.3):
     - React-Core
   - React-perflogger (0.65.1)
@@ -493,9 +489,6 @@ PODS:
   - ReactNativeDarkMode (0.2.2):
     - React
   - ReactNativePayments (1.1.5):
-    - React
-  - reactnativeslackbottomsheet (0.5.0):
-    - PanModal
     - React
   - RNCAsyncStorage (1.15.14):
     - React-Core
@@ -673,7 +666,6 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-aes-crypto (from `../node_modules/react-native-aes-crypto`)
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
-  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-cloud-fs (from `../node_modules/react-native-cloud-fs`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
@@ -686,7 +678,6 @@ DEPENDENCIES:
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-text-input-mask (from `../node_modules/react-native-text-input-mask`)
   - react-native-udp (from `../node_modules/react-native-udp`)
-  - react-native-version-number (from `../node_modules/react-native-version-number`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -702,7 +693,6 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeDarkMode (from `../node_modules/react-native-dark-mode`)
   - "ReactNativePayments (from `../node_modules/@rainbow-me/react-native-payments/lib/ios`)"
-  - reactnativeslackbottomsheet (from `../node_modules/react-native-slack-bottom-sheet`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
@@ -828,8 +818,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-crypto"
   react-native-background-timer:
     :path: "../node_modules/react-native-background-timer"
-  react-native-blur:
-    :path: "../node_modules/@react-native-community/blur"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
   react-native-cloud-fs:
@@ -854,8 +842,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-text-input-mask"
   react-native-udp:
     :path: "../node_modules/react-native-udp"
-  react-native-version-number:
-    :path: "../node_modules/react-native-version-number"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-perflogger:
@@ -886,8 +872,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-dark-mode"
   ReactNativePayments:
     :path: "../node_modules/@rainbow-me/react-native-payments/lib/ios"
-  reactnativeslackbottomsheet:
-    :path: "../node_modules/react-native-slack-bottom-sheet"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
@@ -1013,7 +997,6 @@ SPEC CHECKSUMS:
   React-jsinspector: 41e58e5b8e3e0bf061fdf725b03f2144014a8fb0
   react-native-aes-crypto: d7e87fd02cee7285983c00957a34063dfc4c94b3
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
-  react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
   react-native-cloud-fs: 1e883ec82ff418d320c128f61971dd971b128ca0
   react-native-flipper: 09951517bad4cd226698d108dd38fe1d9db0096e
@@ -1026,7 +1009,6 @@ SPEC CHECKSUMS:
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-text-input-mask: 07227297075f9653315f43b0424d596423a01736
   react-native-udp: f0fbf5386c45af5523dc143a86afe2cbf29f764e
-  react-native-version-number: b415bbec6a13f2df62bf978e85bc0d699462f37f
   react-native-webview: 6520e3e7b4933de76b95ef542c8d7115cf45b68e
   React-perflogger: fd28ee1f2b5b150b00043f0301d96bd417fdc339
   React-RCTActionSheet: 7f3fa0855c346aa5d7c60f9ced16e067db6d29fa
@@ -1042,7 +1024,6 @@ SPEC CHECKSUMS:
   ReactCommon: eafed38eec7b591c31751bfa7494801618460459
   ReactNativeDarkMode: 0178ffca3b10f6a7c9f49d6f9810232b328fa949
   ReactNativePayments: 40a266450628c05db440fe219b631210e4358a49
-  reactnativeslackbottomsheet: d44b4c59c1e69c045983044d2f361d256d3ddb98
   RNCAsyncStorage: ea6b5c280997b2b32a587793163b1f10e580c4f7
   RNCClipboard: 48eaf27bea3de7c9a265529725434268d47a2ee9
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f

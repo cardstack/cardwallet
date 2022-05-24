@@ -147,10 +147,6 @@ jest.mock('react-native-splash-screen', () => ({
   SplashScreen: jest.fn(),
 }));
 
-jest.mock('react-native-version-number', () => ({
-  VersionNumber: jest.fn(),
-}));
-
 jest.mock('@reduxjs/toolkit/query/react', () => ({
   ...jest.requireActual('@reduxjs/toolkit/query/react'),
   fetchBaseQuery: jest.fn(),
