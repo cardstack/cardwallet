@@ -103,6 +103,7 @@
     "ethereumjs-wallet": "^1.0.1",
     "ethers": "^5.6.4",
     "events": "^1.1.1",
+    "expo": "^45.0.0",
     "global": "^4.3.2",
     "grapheme-splitter": "^1.0.4",
     "graphql-tag": "^2.10.3",
@@ -217,7 +218,8 @@
     "vm-browserify": "0.0.4",
     "web3": "1.5.2",
     "web3-core": "^1.5.2",
-    "zxcvbn": "^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "punycode": "^1.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
