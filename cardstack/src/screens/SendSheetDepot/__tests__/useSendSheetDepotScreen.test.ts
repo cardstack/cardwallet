@@ -296,8 +296,6 @@ describe('useSendSheetDepotScreen', () => {
       expect(result.current.amountDetails.assetAmount).toBeTruthy()
     );
 
-    console.log('::: ', result.current.amountDetails);
-
     await act(async () => {
       await result.current.onSendPress();
     });
