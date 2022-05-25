@@ -4,15 +4,13 @@ import { createElement } from 'react';
 import {
   AvailableBalancesExpandedState,
   ChartExpandedState,
-  LifetimeEarningsExpandedState,
 } from '../components/expanded-state';
 import { useAsset } from '../hooks';
 import { ExpandedMerchantRoutes } from '@cardstack/components';
 
 const ScreenTypes = {
   token: ChartExpandedState,
-  [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
-  [ExpandedMerchantRoutes.availableBalances]: LifetimeEarningsExpandedState,
+  [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
 };
 
 export default function ExpandedAssetSheet(props) {
