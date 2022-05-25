@@ -5,6 +5,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   Button,
@@ -48,6 +49,7 @@ const feedbackStatusProps = {
 };
 
 const UnlockScreen = () => {
+  const insets = useSafeAreaInsets();
   const { biometryAvailable } = useBiometricSwitch();
   const appVersion = useAppVersion();
   const [inputPin, setInputPin] = useState('');
@@ -66,6 +68,10 @@ const UnlockScreen = () => {
     () => (variant === 'dark' ? 'light-content' : 'dark-content'),
     []
   );
+
+  const biometryBottomPaddingStyle = useMemo(() => ({
+    paddingBottom: insets.bottom + 16,
+  }));
 
   return (
     <>
@@ -109,7 +115,7 @@ const UnlockScreen = () => {
                   </Container>
                 )}
                 {biometryAvailable && (
-                  <Container paddingVertical={8}>
+                  <Container paddingTop={8} style={biometryBottomPaddingStyle}>
                     <BiometricSwitch variant={variant} />
                   </Container>
                 )}

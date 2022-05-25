@@ -10,7 +10,6 @@ import {
   Text,
 } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
-import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { buttonVariants } from '@cardstack/theme';
 
 const themes = ['light', 'dark'];
@@ -22,17 +21,7 @@ const DesignSystemScreen = () => {
   const sections = [
     {
       title: 'Template Screens',
-      data: [
-        {
-          screen: Routes.PIN_SCREEN,
-          params: {
-            flow: PinFlow.new,
-            variant: 'light',
-            canGoBack: true,
-          },
-        },
-        { screen: Routes.UNLOCK_SCREEN },
-      ],
+      data: [Routes.UNLOCK_SCREEN],
     },
     {
       title: 'Biometric Switch',
@@ -62,9 +51,7 @@ const DesignSystemScreen = () => {
         case 'Template Screens':
           return (
             <CenteredContainer padding={2} backgroundColor="overlayGray">
-              <Button onPress={() => navigate(item.screen, item.params)}>
-                {item.screen}
-              </Button>
+              <Button onPress={() => navigate(item)}>{item}</Button>
             </CenteredContainer>
           );
       }
