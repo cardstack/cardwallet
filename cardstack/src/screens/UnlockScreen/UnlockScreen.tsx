@@ -69,9 +69,12 @@ const UnlockScreen = () => {
     []
   );
 
-  const biometryBottomPaddingStyle = useMemo(() => ({
-    paddingBottom: insets.bottom + 16,
-  }));
+  const biometryBottomPaddingStyle = useMemo(
+    () => ({
+      paddingBottom: insets.bottom + 16,
+    }),
+    [insets]
+  );
 
   return (
     <>
