@@ -27,7 +27,7 @@ const WelcomeScreen = () => {
 
   return (
     <CenteredContainer backgroundColor="black" flex={1} paddingBottom={10}>
-      <CardwalletLogo />
+      <CardwalletLogo flex={1.5} justifyContent="flex-end" />
       <CenteredContainer flex={1}>
         <Container height={layouts.mobileIconWrapper}>
           <Icon name="phone-pc" size={CARDWALLET_ICON_SIZE} />
