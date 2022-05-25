@@ -70,14 +70,20 @@ export const useRequestPrepaidCardScreen = () => {
   }, [termsAccepted]);
 
   const onSubmitPress = useCallback(() => {
-    if (!canSubmit) {
+    // error message should only be triggered with email validation
+    if (!inputValid) {
       setHasError(true);
 
       return;
     }
 
+    // handles the validation combo of email + checkbox
+    if (!canSubmit) {
+      return;
+    }
+
     requestCardDrop({ email });
-  }, [canSubmit, email, requestCardDrop]);
+  }, [canSubmit, inputValid, email, requestCardDrop]);
 
   const onSupportLinkPress = useCallback(() => {
     Linking.openURL(strings.termsBanner.link.url);
