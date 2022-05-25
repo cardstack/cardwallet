@@ -5,7 +5,6 @@ import {
   AvailableBalancesExpandedState,
   ChartExpandedState,
   LifetimeEarningsExpandedState,
-  SupportAndFeedsState,
 } from '../components/expanded-state';
 import { useAsset } from '../hooks';
 import { ExpandedMerchantRoutes } from '@cardstack/components';
@@ -13,8 +12,7 @@ import { ExpandedMerchantRoutes } from '@cardstack/components';
 const ScreenTypes = {
   token: ChartExpandedState,
   [ExpandedMerchantRoutes.lifetimeEarnings]: LifetimeEarningsExpandedState,
-  [ExpandedMerchantRoutes.availableBalances]: AvailableBalancesExpandedState,
-  supportAndFees: SupportAndFeedsState,
+  [ExpandedMerchantRoutes.availableBalances]: LifetimeEarningsExpandedState,
 };
 
 export default function ExpandedAssetSheet(props) {

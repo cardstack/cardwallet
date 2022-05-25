@@ -4,4 +4,3 @@ export { default as SupportedCountriesExpandedState } from './SupportedCountries
 export { default as WalletProfileState } from './WalletProfileState';
 export { default as LifetimeEarningsExpandedState } from './LifetimeEarningsExpandedState';
 export { default as AvailableBalancesExpandedState } from './AvailableBalancesExpandedState';
-export { default as SupportAndFeedsState } from './SupportAndFeedsState';

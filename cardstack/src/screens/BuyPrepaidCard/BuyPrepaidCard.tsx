@@ -64,13 +64,9 @@ const BuyPrepaidCard = () => {
     [isInventoryLoading, onSelectCard]
   );
 
-  const onPressSupport = useCallback(
-    () =>
-      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
-        type: 'supportAndFees',
-      }),
-    [navigate]
-  );
+  const onPressSupport = useCallback(() => navigate(Routes.SUPPORT_AND_FEES), [
+    navigate,
+  ]);
 
   const isDisabled =
     card?.quantity === 0 ||

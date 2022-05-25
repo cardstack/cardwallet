@@ -35,6 +35,7 @@ export const MainRoutes = {
   COLOR_PICKER_MODAL: 'ColorPickerModal',
   PIN_SCREEN: 'PinScreen',
   UNLOCK_SCREEN: 'UnlockScreen',
+  SUPPORT_AND_FEES: 'SupportAndFees',
 } as const;
 
 const OuterRoutes = {

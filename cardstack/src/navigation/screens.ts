@@ -34,6 +34,7 @@ import {
   RequestPrepaidCardScreen,
   PinScreen,
   UnlockScreen,
+  SupportAndFeedsSheet,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -216,6 +217,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   UNLOCK_SCREEN: {
     component: UnlockScreen,
     options: horizontalInterpolator,
+  },
+  SUPPORT_AND_FEES: {
+    component: SupportAndFeedsSheet,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 
