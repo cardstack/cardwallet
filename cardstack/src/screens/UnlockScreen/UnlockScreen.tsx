@@ -32,7 +32,6 @@ const variant = 'dark';
 const pinError = true;
 
 const UnlockScreen = () => {
-  const insets = useSafeAreaInsets();
   const { isSmallPhone } = useDimensions();
   const { biometryAvailable } = useBiometricSwitch();
   const appVersion = useAppVersion();
@@ -50,11 +49,8 @@ const UnlockScreen = () => {
   const biometryBottomPaddingStyle = useMemo(
     () => ({
       paddingTop: isSmallPhone ? 4 : 8,
-      style: {
-        paddingBottom: insets.bottom * 2,
-      },
     }),
-    [insets, isSmallPhone]
+    [isSmallPhone]
   );
 
   return (
@@ -70,8 +66,8 @@ const UnlockScreen = () => {
               <CardwalletLogo />
             </Container>
             <Container
-              flex={0.65}
-              justifyContent="flex-end"
+              flex={0.2}
+              justifyContent="space-evenly"
               width="100%"
               alignItems="center"
             >
@@ -95,35 +91,31 @@ const UnlockScreen = () => {
                     </Text>
                   </Container>
                 )}
-                {biometryAvailable && (
-                  <Container {...biometryBottomPaddingStyle}>
-                    <BiometricSwitch variant={variant} />
-                  </Container>
-                )}
               </Container>
-              <Button marginVertical={6}>{strings.login.button}</Button>
-              <Container
-                width="80%"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Text
-                  paddingBottom={6}
-                  textAlign="center"
-                  color="grayText"
-                  size="xs"
-                >
-                  {strings.login.eraseMessage}
+            </Container>
+            <Container
+              flex={0.45}
+              width="80%"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              {biometryAvailable && (
+                <Container {...biometryBottomPaddingStyle}>
+                  <BiometricSwitch variant={variant} />
+                </Container>
+              )}
+              <Button>{strings.login.button}</Button>
+              <Text textAlign="center" color="grayText" size="xs">
+                {strings.login.eraseMessage}
+              </Text>
+              <Touchable paddingBottom={4} onPress={console.log}>
+                <Text color="teal" size="xs">
+                  {strings.login.eraseLink}
                 </Text>
-                <Touchable onPress={console.log}>
-                  <Text paddingBottom={6} color="teal" size="xs">
-                    {strings.login.eraseLink}
-                  </Text>
-                </Touchable>
-                <Text paddingBottom={4} color="grayText" size="xs">
-                  Version {appVersion}
-                </Text>
-              </Container>
+              </Touchable>
+              <Text paddingBottom={4} color="grayText" size="xs">
+                Version {appVersion}
+              </Text>
             </Container>
           </Container>
         </TouchableWithoutFeedback>
