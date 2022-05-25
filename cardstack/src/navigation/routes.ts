@@ -36,6 +36,7 @@ export const MainRoutes = {
   PIN_SCREEN: 'PinScreen',
   UNLOCK_SCREEN: 'UnlockScreen',
   SUPPORT_AND_FEES: 'SupportAndFees',
+  AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
 } as const;
 
 const OuterRoutes = {

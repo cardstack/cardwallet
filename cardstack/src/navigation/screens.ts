@@ -35,6 +35,7 @@ import {
   PinScreen,
   UnlockScreen,
   SupportAndFeedsSheet,
+  AvailableBalanceSheet,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -223,6 +224,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   SUPPORT_AND_FEES: {
     component: SupportAndFeedsSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  AVAILABLE_BALANCE_SHEET: {
+    component: AvailableBalanceSheet,
     options: expandedPreset as StackNavigationOptions,
   },
 };
