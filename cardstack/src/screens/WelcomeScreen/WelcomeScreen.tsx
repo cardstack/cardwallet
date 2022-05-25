@@ -7,6 +7,10 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+import {
+  CardwalletLogo,
+  CARDWALLET_ICON_SIZE,
+} from '@cardstack/components/CardwalletLogo';
 
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
 
@@ -23,18 +27,10 @@ const WelcomeScreen = () => {
 
   return (
     <CenteredContainer backgroundColor="black" flex={1} paddingBottom={10}>
-      <CenteredContainer flex={1.5} justifyContent="flex-end">
-        <Icon name="cardstack" size={layouts.iconSize} />
-        <Text marginTop={6} variant="welcomeScreen">
-          {strings.title}
-        </Text>
-        <Text color="white" fontSize={14} weight="bold">
-          {strings.subtitle}
-        </Text>
-      </CenteredContainer>
+      <CardwalletLogo />
       <CenteredContainer flex={1}>
         <Container height={layouts.mobileIconWrapper}>
-          <Icon name="phone-pc" size={layouts.iconSize} />
+          <Icon name="phone-pc" size={CARDWALLET_ICON_SIZE} />
         </Container>
         <Text
           color="buttonSecondaryBorder"

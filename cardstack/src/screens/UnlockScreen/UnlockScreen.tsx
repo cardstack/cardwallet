@@ -15,18 +15,16 @@ import {
   SafeAreaView,
   Text,
   Touchable,
-  Image,
 } from '@cardstack/components';
 import {
   BiometricSwitch,
   useBiometricSwitch,
 } from '@cardstack/components/BiometricSwitch';
+import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import { Device } from '@cardstack/utils';
 
 import { useAppVersion, useDimensions } from '@rainbow-me/hooks';
-
-import cardwalletLogo from '../../assets/cardwalletLogoIntro.png';
 
 import { strings } from './strings';
 
@@ -83,19 +81,14 @@ const UnlockScreen = () => {
   return (
     <>
       <StatusBar barStyle={statusBarStyle} />
-      <NavigationStackHeader
-        canGoBack={true}
-        backgroundColor={colorStyleVariants.backgroundColor[variant]}
-      />
       <SafeAreaView
         backgroundColor={colorStyleVariants.backgroundColor[variant]}
         flex={1}
-        edges={['bottom']}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Container flex={1} alignItems="center">
             <Container flex={0.3} alignItems="center" justifyContent="center">
-              <Image source={cardwalletLogo} />
+              <CardwalletLogo />
             </Container>
             <Container
               flex={0.7}
