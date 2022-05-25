@@ -24,7 +24,7 @@ import {
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import { Device } from '@cardstack/utils';
 
-import { useAppVersion } from '@rainbow-me/hooks';
+import { useAppVersion, useDimensions } from '@rainbow-me/hooks';
 
 import cardwalletLogo from '../../assets/cardwalletLogoIntro.png';
 
@@ -50,6 +50,7 @@ const feedbackStatusProps = {
 
 const UnlockScreen = () => {
   const insets = useSafeAreaInsets();
+  const { isSmallPhone } = useDimensions();
   const { biometryAvailable } = useBiometricSwitch();
   const appVersion = useAppVersion();
   const [inputPin, setInputPin] = useState('');
@@ -71,9 +72,12 @@ const UnlockScreen = () => {
 
   const biometryBottomPaddingStyle = useMemo(
     () => ({
-      paddingBottom: insets.bottom + 16,
+      paddingTop: isSmallPhone ? 4 : 8,
+      style: {
+        paddingBottom: insets.bottom * 2,
+      },
     }),
-    [insets]
+    [insets, isSmallPhone]
   );
 
   return (
@@ -86,6 +90,7 @@ const UnlockScreen = () => {
       <SafeAreaView
         backgroundColor={colorStyleVariants.backgroundColor[variant]}
         flex={1}
+        edges={['bottom']}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Container flex={1} alignItems="center">
@@ -118,7 +123,7 @@ const UnlockScreen = () => {
                   </Container>
                 )}
                 {biometryAvailable && (
-                  <Container paddingTop={8} style={biometryBottomPaddingStyle}>
+                  <Container {...biometryBottomPaddingStyle}>
                     <BiometricSwitch variant={variant} />
                   </Container>
                 )}
