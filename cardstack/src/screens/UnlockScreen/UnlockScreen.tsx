@@ -1,13 +1,19 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
-import { StatusBar, NativeModules, KeyboardAvoidingView } from 'react-native';
+import {
+  StatusBar,
+  NativeModules,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 import {
   Button,
   Container,
-  Icon,
   NavigationStackHeader,
   PinInput,
+  SafeAreaView,
   Text,
+  Touchable,
   Image,
 } from '@cardstack/components';
 import {
@@ -16,6 +22,8 @@ import {
 } from '@cardstack/components/BiometricSwitch';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import { Device } from '@cardstack/utils';
+
+import { useAppVersion } from '@rainbow-me/hooks';
 
 import cardwalletLogo from '../../assets/cardwalletLogoIntro.png';
 
@@ -41,6 +49,7 @@ const feedbackStatusProps = {
 
 const UnlockScreen = () => {
   const { biometryAvailable } = useBiometricSwitch();
+  const appVersion = useAppVersion();
   const [inputPin, setInputPin] = useState('');
 
   useEffect(() => {
@@ -59,69 +68,80 @@ const UnlockScreen = () => {
   );
 
   return (
-    <Container
-      backgroundColor={colorStyleVariants.backgroundColor[variant]}
-      flex={1}
-    >
+    <>
       <StatusBar barStyle={statusBarStyle} />
       <NavigationStackHeader
         canGoBack={true}
         backgroundColor={colorStyleVariants.backgroundColor[variant]}
       />
-      <Container flex={1} alignItems="center">
-        <Container flex={0.35} alignItems="center" justifyContent="center">
-          <Image source={cardwalletLogo} />
-        </Container>
-        <Container
-          justifyContent="center"
-          flex={0.55}
-          width="100%"
-          alignItems="center"
-        >
-          <PinInput
-            variant={variant}
-            value={inputPin}
-            onChangeText={setInputPin}
-          />
-          {showFeedback && (
-            <Container width="85%">
-              <Text
-                fontSize={11}
-                weight="semibold"
-                color="error"
-                textAlign="left"
-              >
-                {feedbackProps.label}
-              </Text>
+      <SafeAreaView
+        backgroundColor={colorStyleVariants.backgroundColor[variant]}
+        flex={1}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Container flex={1} alignItems="center">
+            <Container flex={0.3} alignItems="center" justifyContent="center">
+              <Image source={cardwalletLogo} />
             </Container>
-          )}
-          {biometryAvailable && (
             <Container
+              flex={0.7}
               justifyContent="flex-end"
-              flex={Device.isIOS ? 0.3 : 0.4}
               width="100%"
               alignItems="center"
             >
-              <BiometricSwitch variant={variant} />
+              <Container width="100%" alignItems="center">
+                <PinInput
+                  autoFocus={false}
+                  variant={variant}
+                  value={inputPin}
+                  onChangeText={setInputPin}
+                />
+                {showFeedback && (
+                  <Container width="85%" paddingVertical={1}>
+                    <Text
+                      fontSize={11}
+                      weight="semibold"
+                      color="error"
+                      textAlign="left"
+                    >
+                      {feedbackProps.label}
+                    </Text>
+                  </Container>
+                )}
+                {biometryAvailable && (
+                  <Container paddingVertical={8}>
+                    <BiometricSwitch variant={variant} />
+                  </Container>
+                )}
+              </Container>
+              <Button marginVertical={6}>{strings.login.button}</Button>
+              <Container
+                width="80%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text
+                  paddingBottom={6}
+                  textAlign="center"
+                  color="grayText"
+                  size="xs"
+                >
+                  {strings.login.eraseMessage}
+                </Text>
+                <Touchable onPress={console.log}>
+                  <Text paddingBottom={6} color="teal" size="xs">
+                    {strings.login.eraseLink}
+                  </Text>
+                </Touchable>
+                <Text paddingBottom={4} color="grayText" size="xs">
+                  Version {appVersion}
+                </Text>
+              </Container>
             </Container>
-          )}
-          <Button marginVertical={6}>{strings.login.button}</Button>
-          <Container width="80%" justifyContent="center" alignItems="center">
-            <Text
-              paddingBottom={6}
-              textAlign="center"
-              color="grayText"
-              size="xs"
-            >
-              {strings.login.eraseMessage}
-            </Text>
-            <Text paddingBottom={6} color="teal" size="xs">
-              {strings.login.eraseLink}
-            </Text>
           </Container>
-        </Container>
-      </Container>
-    </Container>
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
+    </>
   );
 };
 
