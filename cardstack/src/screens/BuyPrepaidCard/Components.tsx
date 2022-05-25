@@ -11,7 +11,7 @@ import {
 
 export const TopContent = () => {
   return (
-    <Container marginTop={4}>
+    <Container marginTop={4} marginBottom={6}>
       <Text fontSize={26} color="white">
         Buy a{' '}
         <Text fontSize={26} color="teal">
@@ -92,7 +92,7 @@ export const Subtitle = ({ text }: { text: string }) => {
       fontSize={13}
       color="underlineGray"
       weight="bold"
-      marginBottom={5}
+      marginBottom={2}
       letterSpacing={0.4}
     >
       {text}

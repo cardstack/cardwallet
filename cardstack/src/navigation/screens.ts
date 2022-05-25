@@ -88,7 +88,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: PrepaidCardModal,
     options: expandedPreset as StackNavigationOptions,
   },
-  BUY_PREPAID_CARD: { component: BuyPrepaidCard },
+  BUY_PREPAID_CARD: {
+    component: BuyPrepaidCard,
+    options: expandedPreset as StackNavigationOptions,
+  },
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
     options: sheetPreset as StackNavigationOptions,
