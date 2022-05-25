@@ -432,7 +432,7 @@ PODS:
   - react-native-text-input-mask (2.0.0):
     - React
     - RNInputMask
-  - react-native-udp (4.1.3):
+  - react-native-udp (4.1.5):
     - CocoaAsyncSocket
     - React-Core
   - react-native-webview (11.2.3):
@@ -501,8 +501,6 @@ PODS:
     - React-cxxreact (= 0.65.1)
     - React-jsi (= 0.65.1)
     - React-perflogger (= 0.65.1)
-  - ReactNativeDarkMode (0.2.2):
-    - React
   - ReactNativePayments (1.1.5):
     - React
   - RNCAsyncStorage (1.15.14):
@@ -618,8 +616,6 @@ PODS:
   - Sentry/Core (7.11.0)
   - Shimmer (1.0.2)
   - SocketRocket (0.6.0)
-  - SRSRadialGradient (1.0.7):
-    - React
   - TcpSockets (4.0.0):
     - CocoaAsyncSocket
     - React
@@ -713,7 +709,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - ReactNativeDarkMode (from `../node_modules/react-native-dark-mode`)
   - "ReactNativePayments (from `../node_modules/@rainbow-me/react-native-payments/lib/ios`)"
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
@@ -744,7 +739,6 @@ DEPENDENCIES:
   - RNTextSize (from `../node_modules/react-native-text-size`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Shimmer
-  - SRSRadialGradient (from `../node_modules/react-native-radial-gradient/ios`)
   - TcpSockets (from `../node_modules/react-native-tcp`)
   - ToolTipMenu (from `../node_modules/react-native-tooltip`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -904,8 +898,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  ReactNativeDarkMode:
-    :path: "../node_modules/react-native-dark-mode"
   ReactNativePayments:
     :path: "../node_modules/@rainbow-me/react-native-payments/lib/ios"
   RNCAsyncStorage:
@@ -964,8 +956,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-text-size"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
-  SRSRadialGradient:
-    :path: "../node_modules/react-native-radial-gradient/ios"
   TcpSockets:
     :path: "../node_modules/react-native-tcp"
   ToolTipMenu:
@@ -1051,7 +1041,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: f98b0b16d1546d208fc293b4661e3f81a895afd9
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-text-input-mask: 07227297075f9653315f43b0424d596423a01736
-  react-native-udp: f0fbf5386c45af5523dc143a86afe2cbf29f764e
+  react-native-udp: 8864b1211857e9d8224ae5cbaf8580970fb99de1
   react-native-webview: 6520e3e7b4933de76b95ef542c8d7115cf45b68e
   React-perflogger: fd28ee1f2b5b150b00043f0301d96bd417fdc339
   React-RCTActionSheet: 7f3fa0855c346aa5d7c60f9ced16e067db6d29fa
@@ -1065,7 +1055,6 @@ SPEC CHECKSUMS:
   React-RCTVibration: 92d41c2442e5328cc4d342cd7f78e5876b68bae5
   React-runtimeexecutor: 85187f19dd9c47a7c102f9994f9d14e4dc2110de
   ReactCommon: eafed38eec7b591c31751bfa7494801618460459
-  ReactNativeDarkMode: 0178ffca3b10f6a7c9f49d6f9810232b328fa949
   ReactNativePayments: 40a266450628c05db440fe219b631210e4358a49
   RNCAsyncStorage: ea6b5c280997b2b32a587793163b1f10e580c4f7
   RNCClipboard: 48eaf27bea3de7c9a265529725434268d47a2ee9
@@ -1100,7 +1089,6 @@ SPEC CHECKSUMS:
   Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
   Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  SRSRadialGradient: 7f9c92f2b31576ab80f059378ef2817404cd0575
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
   ToolTipMenu: 8ac61aded0fbc4acfe7e84a7d0c9479d15a9a382

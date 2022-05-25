@@ -6264,7 +6264,7 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native@*", "@types/react-native@>=0.62.0":
+"@types/react-native@*":
   version "0.63.49"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.63.49.tgz#b9a4781a0543763f0079c3ef2ba2148a4509b32e"
   integrity sha512-ivTn2n9xsmlwSO1GygkwEMjkrSDqPAJVhbhsl3EffGtG6zWPaJ+AJVImPoBZN1VY8GItGPPlLGEb0i6LGb83VA==
@@ -13536,11 +13536,6 @@ hoek@2.x.x, hoek@5.0.3, hoek@6.x.x:
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-5.0.3.tgz#b71d40d943d0a95da01956b547f83c4a5b4a34ac"
   integrity sha512-Bmr56pxML1c9kU+NS51SMFkiVQAb+9uFfXwyqR2tn4w2FPvmPt65eZ9aCcEfRXd9G74HkZnILC6p967pED4aiw==
 
-hoist-non-react-statics@^2.3.1:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
-  integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
-
 hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
@@ -19433,7 +19428,7 @@ react-color@^2.17.0:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
-react-devtools-core@4.19.1, react-devtools-core@4.19.2, react-devtools-core@^4.6.0:
+react-devtools-core@4.19.1, react-devtools-core@4.24.6, react-devtools-core@^4.6.0:
   version "4.19.1"
   resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.19.1.tgz#bc37c2ef2f48f28c6af4c7292be9dca1b63deace"
   integrity sha512-2wJiGffPWK0KggBjVwnTaAk+Z3MSxKInHmdzPTrBh1mAarexsa93Kw+WMX88+XjN+TtYgAiLe9xeTqcO5FfJTw==
@@ -19441,16 +19436,16 @@ react-devtools-core@4.19.1, react-devtools-core@4.19.2, react-devtools-core@^4.6
     shell-quote "^1.6.1"
     ws "^7"
 
-react-devtools@^4.19.1:
-  version "4.19.2"
-  resolved "https://registry.yarnpkg.com/react-devtools/-/react-devtools-4.19.2.tgz#e2a6532defe016418a5cdf865ee1c02784c83fc3"
-  integrity sha512-bDfVZiujfM8R6qqW5nIIp+U7DA9HFLzRdRIrYz4CtR62haDn6naN9RDcNfIpOEzzh+gB+vAYQ2x82vkMT0yX3g==
+react-devtools@^4.24.3:
+  version "4.24.6"
+  resolved "https://registry.yarnpkg.com/react-devtools/-/react-devtools-4.24.6.tgz#081307787c64a016dd5f14081271ffefcde4c490"
+  integrity sha512-NMaxMjWlGr3DhBM1kLS6XgGjGEULvDk8+cNOQ5HYPKBoyxiJt/VmqfiA1NCvp+mZRIirArvBw+/TNijGDxrmOg==
   dependencies:
     cross-spawn "^5.0.1"
     electron "^11.1.0"
     ip "^1.1.4"
     minimist "^1.2.3"
-    react-devtools-core "4.19.2"
+    react-devtools-core "4.24.6"
     update-notifier "^2.1.0"
 
 react-error-boundary@^3.1.0:
@@ -19547,9 +19542,9 @@ react-native-circular-progress@^1.3.4:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-cloud-fs@cardstack/react-native-cloud-fs#auth-error-handling:
+react-native-cloud-fs@cardstack/react-native-cloud-fs#auth-error-gradle-update:
   version "2.4.0"
-  resolved "https://codeload.github.com/cardstack/react-native-cloud-fs/tar.gz/8110f87ef9c295ea4306a23de42299b7d9153955"
+  resolved "https://codeload.github.com/cardstack/react-native-cloud-fs/tar.gz/70a49904854e337e5c2e5ad3b5139c72f9ffef7e"
 
 react-native-codegen@^0.0.7:
   version "0.0.7"
@@ -19588,24 +19583,10 @@ react-native-dotenv@^2.4.2:
   dependencies:
     dotenv "^8.0.0"
 
-react-native-dynamic@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-dynamic/-/react-native-dynamic-1.0.0.tgz#d971618fd278cf66acb0add46536aa7a68fd8d4f"
-  integrity sha512-CMP97GREQ74tpwhKFdUiMpvybzO+dp13Y70rCyu6qzTouOde9vlpDHlxa++o0EA6kXucEW28x3GN0rvZ/1bjrA==
-  dependencies:
-    "@types/react" "*"
-    "@types/react-native" ">=0.62.0"
-    toolkit.ts "^0.0.2"
-
 react-native-elevation@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-elevation/-/react-native-elevation-1.0.0.tgz#2a091c688290ac9b08b5842d1a8e8a00fc84233e"
   integrity sha512-BWIKcEYtzjRV6GpkX0Km5/w2E7fgIcywiQOT7JZTc5NSbv/YI9kpFinB9lRFsOoRVGmiqq/O3VfP/oH2clIiBA==
-
-react-native-extra-dimensions-android@1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.2.tgz#04e311bc27f66ec5b15e8a719abba462a2d71e58"
-  integrity sha512-jaUocof8h0aeH+jQWz7uPLMO143EzaptRuPhNCTqCCfVU4Szi+RmDpF17mOLSgruTyJXF7sOBTYrJZj8dDwOHw==
 
 react-native-fast-image@^8.1.5:
   version "8.3.2"
@@ -19791,12 +19772,6 @@ react-native-safe-area-context@^4.2.4:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.2.4.tgz#4df42819759c4d3c74252c8678c2772cfa2271a6"
   integrity sha512-OOX+W2G4YYufvryonn6Kw6YnyT8ZThkxPHZBD04NLHaZmicUaaDVII/PZ3M5fD1o5N62+T+8K4bCS5Un2ggvkA==
 
-react-native-safe-area-view@mikedemarais/react-native-safe-area-view:
-  version "0.11.0"
-  resolved "https://codeload.github.com/mikedemarais/react-native-safe-area-view/tar.gz/a543897214519c700fab160a03388cef5a70ec3c"
-  dependencies:
-    hoist-non-react-statics "^2.3.1"
-
 react-native-safe-modules@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-native-safe-modules/-/react-native-safe-modules-1.0.3.tgz#f5f29bb9d09d17581193843d4173ad3054f74890"
@@ -19860,11 +19835,6 @@ react-native-swipe-gestures@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
-
-react-native-tab-view@^2.14.2:
-  version "2.15.2"
-  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.15.2.tgz#4bc7832d33a119306614efee667509672a7ee64e"
-  integrity sha512-2hxLkBnZtEKFDyfvNO5EUywhy3f/EiLOBO8SWqKj4BMBTO0QwnybaPE5MVF00Fhz+VA4+h/iI40Dkrrtq70dGg==
 
 react-native-tcp@aprock/react-native-tcp#ec3841f36c7a1e715a7594fdf5fcfa4a2b102a85:
   version "4.0.0"
@@ -19996,7 +19966,7 @@ react-popper@^2.2.4:
     react-fast-compare "^3.0.1"
     warning "^4.0.2"
 
-react-primitives@^0.8.0, react-primitives@^0.8.1:
+react-primitives@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/react-primitives/-/react-primitives-0.8.1.tgz#50ae6eb29ab3fe81848510ab7c34adefeb59330e"
   integrity sha512-7L0jG9pOp70f+TtDiw9YXCPmBRCfUD+PPWhS7LBuiPSBV6hEAY8UQWX4zt06ueHoHivakmyk6y1Lbm2jXVl09A==
@@ -22560,11 +22530,6 @@ toidentifier@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
-
-toolkit.ts@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/toolkit.ts/-/toolkit.ts-0.0.2.tgz#91bde730e5e6ad1a22146cdaf83f4a52721cf3b2"
-  integrity sha512-yJJTVbCwiD6AfFgReewJCGJuODmyZUeL1sDjnxp33t0UBxnezgQrLbz/F9++RC28CTlk5u5pVji4TbeondYEkw==
 
 tough-cookie@^2.3.3, tough-cookie@~2.5.0:
   version "2.5.0"

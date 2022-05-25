@@ -127,10 +127,6 @@ jest.mock('react-native-text-size', () => ({
   TextSize: jest.fn(),
 }));
 
-jest.mock('react-native-safe-area-view', () => ({
-  SafeAreaView: jest.fn(),
-}));
-
 jest.mock('react-native-action-sheet', () => ({
   ActionSheet: jest.fn(),
 }));
