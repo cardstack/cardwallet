@@ -108,7 +108,7 @@ const UnlockScreen = () => {
               <Text textAlign="center" color="grayText" size="xs">
                 {strings.login.eraseMessage}
               </Text>
-              <Touchable paddingBottom={4} onPress={console.log}>
+              <Touchable paddingBottom={4}>
                 <Text color="teal" size="xs">
                   {strings.login.eraseLink}
                 </Text>
