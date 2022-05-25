@@ -2,7 +2,6 @@ import { convertAmountToNativeDisplay } from '@cardstack/cardpay-sdk';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import { Alert, StatusBar } from 'react-native';
-import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components';
 import Divider from '../components/Divider';
@@ -34,7 +33,7 @@ import {
 import { position } from '@rainbow-me/styles';
 
 export const SavingsSheetEmptyHeight = 313;
-export const SavingsSheetHeight = android ? 424 - getSoftMenuBarHeight() : 352;
+export const SavingsSheetHeight = android ? 400 : 352;
 
 const Container = styled(Centered).attrs({ direction: 'column' })`
   ${position.cover};

@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { IS_TESTING } from 'react-native-dotenv';
 import LinearGradient from 'react-native-linear-gradient';
-import RadialGradient from 'react-native-radial-gradient';
 import { lightModeThemeColors } from '../../styles/colors';
 import { Centered } from '../layout';
 
@@ -38,15 +36,6 @@ const linearGradientProps = {
   start: { x: 0, y: 0 },
 };
 
-const radialGradientProps = {
-  ...gradientProps,
-  center: [0, 1],
-  colors: [
-    lightModeThemeColors.alpha(gradientColors[0], 0.1),
-    lightModeThemeColors.alpha(gradientColors[1], 0.08),
-  ],
-};
-
 const textProps = {
   end: { x: 1, y: 1 },
   start: { x: 0, y: 0 },
@@ -62,20 +51,12 @@ const TextComponent = ios ? GradientText : Text;
 function APYPill({ small, value }) {
   return (
     <Centered style={small ? sx.containerSmall : sx.container}>
-      {IS_TESTING === 'true' ? null : small ? (
-        <RadialGradient
-          {...radialGradientProps}
-          borderRadius={21}
-          radius={81}
-        />
-      ) : (
-        <LinearGradient
-          {...linearGradientProps}
-          borderRadius={17}
-          colors={gradientColors}
-          opacity={0.1}
-        />
-      )}
+      <LinearGradient
+        {...linearGradientProps}
+        borderRadius={17}
+        colors={gradientColors}
+        opacity={0.1}
+      />
       <TextComponent
         {...textProps}
         align="center"
