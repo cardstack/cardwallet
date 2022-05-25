@@ -26,11 +26,13 @@ const styles = StyleSheet.create({
 });
 
 interface PinInputProps extends InputProps, Pick<CharCellProps, 'variant'> {
+  title?: string;
   value: string;
 }
 
 const PinInput = ({
   variant,
+  title,
   value = '',
   onChangeText,
   ...inputProps
@@ -58,16 +60,27 @@ const PinInput = ({
 
   return (
     <Container width="85%">
-      <Touchable alignSelf="flex-end">
-        <Text
-          color={colorStyleVariants.textColor[variant]}
-          paddingBottom={2}
-          size="small"
-          onPress={togglePinVisibility}
-        >
-          {isPinHidden ? strings.show : strings.hide}
-        </Text>
-      </Touchable>
+      <Container flexDirection="row" justifyContent="space-between">
+        {title && (
+          <Text
+            color={colorStyleVariants.textColor[variant]}
+            paddingBottom={2}
+            size="small"
+          >
+            {title}
+          </Text>
+        )}
+        <Touchable>
+          <Text
+            color={colorStyleVariants.textColor[variant]}
+            paddingBottom={2}
+            size="small"
+            onPress={togglePinVisibility}
+          >
+            {isPinHidden ? strings.show : strings.hide}
+          </Text>
+        </Touchable>
+      </Container>
       <Container justifyContent="space-between" flexDirection="row">
         {renderCells}
       </Container>

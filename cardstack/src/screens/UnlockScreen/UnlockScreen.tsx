@@ -30,21 +30,7 @@ import { strings } from './strings';
 
 // To be replaced with states
 const variant = 'dark';
-const showFeedback = true;
-const isValidPin = false;
-
-const feedbackStatusProps = {
-  success: {
-    color: undefined, // uses default icon color
-    iconName: 'check-circle' as const,
-    label: strings.feedback.success,
-  },
-  error: {
-    color: 'red' as const,
-    iconName: 'error' as const,
-    label: strings.feedback.error,
-  },
-};
+const pinError = true;
 
 const UnlockScreen = () => {
   const insets = useSafeAreaInsets();
@@ -56,12 +42,6 @@ const UnlockScreen = () => {
   useEffect(() => {
     Device.isAndroid && NativeModules?.AndroidKeyboardAdjust.setAdjustPan();
   }, []);
-
-  const feedbackProps = useMemo(
-    () =>
-      isValidPin ? feedbackStatusProps.success : feedbackStatusProps.error,
-    []
-  );
 
   const statusBarStyle = useMemo(
     () => (variant === 'dark' ? 'light-content' : 'dark-content'),
@@ -87,23 +67,24 @@ const UnlockScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Container flex={1} alignItems="center">
-            <Container flex={0.3} alignItems="center" justifyContent="center">
+            <Container flex={0.35} alignItems="center" justifyContent="center">
               <CardwalletLogo />
             </Container>
             <Container
-              flex={0.7}
+              flex={0.65}
               justifyContent="flex-end"
               width="100%"
               alignItems="center"
             >
               <Container width="100%" alignItems="center">
                 <PinInput
+                  title={strings.pin.title}
                   autoFocus={false}
                   variant={variant}
                   value={inputPin}
                   onChangeText={setInputPin}
                 />
-                {showFeedback && (
+                {pinError && (
                   <Container width="85%" paddingVertical={1}>
                     <Text
                       fontSize={11}
@@ -111,7 +92,7 @@ const UnlockScreen = () => {
                       color="error"
                       textAlign="left"
                     >
-                      {feedbackProps.label}
+                      {strings.pin.error}
                     </Text>
                   </Container>
                 )}
