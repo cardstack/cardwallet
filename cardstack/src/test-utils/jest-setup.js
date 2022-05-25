@@ -102,10 +102,6 @@ jest.mock('@apollo/client', () => ({
   InMemoryCache: jest.fn(),
 }));
 
-jest.mock('react-native-android-keyboard-adjust', () => ({
-  AndroidKeyboardAdjust: jest.fn(),
-}));
-
 jest.mock('@react-native-firebase/messaging', () => ({
   messaging: jest.fn(),
 }));
@@ -187,10 +183,6 @@ jest.mock('@rainbow-me/redux/uniswap', () => ({
 jest.mock('@rainbow-me/utils', () => ({
   magicMemo: jest.fn(),
   neverRerender: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/utils/safeAreaInsetValues', () => ({
-  default: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/hooks/charts/useChartThrottledPoints', () => ({

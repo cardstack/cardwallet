@@ -5998,11 +5998,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/events@*":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
-  integrity sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
-
 "@types/fs-extra@^9.0.11":
   version "9.0.13"
   resolved "https://registry.npmjs.org/@types/fs-extra/-/fs-extra-9.0.13.tgz#7594fbae04fe7f1918ce8b3d213f74ff44ac1f45"
@@ -19526,11 +19521,6 @@ react-native-aes-crypto@brunobar79/react-native-aes#65c49f7e70266615b2999eaa7db6
   version "2.0.2"
   resolved "https://codeload.github.com/brunobar79/react-native-aes/tar.gz/65c49f7e70266615b2999eaa7db654d3fe4f2e3b"
 
-react-native-android-keyboard-adjust@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-android-keyboard-adjust/-/react-native-android-keyboard-adjust-1.2.0.tgz#7988b1258482c08548ce972401b2ae03a674fcb4"
-  integrity sha512-Q280bmf0zXnzLbHU9DcVoKZSKihd0s3hltz2kIUCJ5Q9EhLVR/pjgZ3Bwd1VgrHxQPnduHXdCp0432msklRMow==
-
 react-native-animatable@1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.3.tgz#a13a4af8258e3bb14d0a9d839917e9bb9274ec8a"
@@ -19585,17 +19575,6 @@ react-native-crypto@^2.2.0:
     pbkdf2 "3.0.8"
     public-encrypt "^4.0.0"
     randomfill "^1.0.3"
-
-react-native-dark-mode@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-dark-mode/-/react-native-dark-mode-0.2.2.tgz#4faa335e36330bfca832ba8b3d2bd84c7b880381"
-  integrity sha512-2vhWOOimU7DRKYjCU/pdv0+JpnGKURq5+c7bre093Jtzk57HtlJfd+ViibbC9Y8zh0viIOyKtfL5mYhVhZ6Crw==
-  dependencies:
-    "@types/events" "*"
-    "@types/react" "*"
-    "@types/react-native" "*"
-    events "^3.0.0"
-    toolkit.ts "^0.0.2"
 
 react-native-device-info@5.3.1:
   version "5.3.1"
@@ -19691,10 +19670,9 @@ react-native-iphone-x-helper@^1.3.0:
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
   integrity sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg==
 
-react-native-keyboard-area@^1.0.5:
+react-native-keyboard-area@thomasgazzoni/react-native-keyboard-area#749746a18f84d8567620efacf3ad9f4a07f8fb74:
   version "1.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-area/-/react-native-keyboard-area-1.0.5.tgz#50e89d9b5a14c535090ea2aac89db6f7dc0bba33"
-  integrity sha512-SQ19htGc1IxjWHgy/PwVSmciAT+y/RNod5Mdot1EQUc+4CDekEevSZEVjbmIBeHnFZwKN33q6QCnr2+hOvkM4A==
+  resolved "https://codeload.github.com/thomasgazzoni/react-native-keyboard-area/tar.gz/749746a18f84d8567620efacf3ad9f4a07f8fb74"
   dependencies:
     "@types/react-native" "0.62.16"
 
@@ -19775,10 +19753,6 @@ react-native-qrcode-svg@^6.1.2:
   dependencies:
     prop-types "^15.7.2"
     qrcode "^1.5.0"
-
-react-native-radial-gradient@rainbow-me/react-native-radial-gradient#d0cf5e6dd3cd069c499d4169f418b98f28a747fe:
-  version "1.0.7"
-  resolved "https://codeload.github.com/rainbow-me/react-native-radial-gradient/tar.gz/d0cf5e6dd3cd069c499d4169f418b98f28a747fe"
 
 react-native-randombytes@^3.5.3:
   version "3.5.3"
@@ -19920,10 +19894,10 @@ react-native-tooltips@brunobar79/react-native-tooltips#3b79e544378c112aaa608037f
   version "1.0.2"
   resolved "https://codeload.github.com/brunobar79/react-native-tooltips/tar.gz/3b79e544378c112aaa608037f8155ce174cd9249"
 
-react-native-udp@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-4.1.3.tgz#7b4bb86b890b93676ad3261edb63ecae237588cd"
-  integrity sha512-earOd1Geim9jl/rfoS605YLOzgK1+wgJn4y3WlsJNKTC+cpIPDLN7Cwpx55SmBgQ9C9r+G7NVD8m1quhQhwNYg==
+react-native-udp@4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-4.1.5.tgz#bd164fa6280fd61c3b19f89e0aff2d2d058c262b"
+  integrity sha512-+4Jt0sbuq7lozbiUY6YtEE7KQIcp/xEnTsU44YaIUHE84wKP5STDBe0Vac6sKDdn/gKVV44RUBobzXnOLKcqFA==
   dependencies:
     buffer "^5.6.0"
     events "^3.1.0"

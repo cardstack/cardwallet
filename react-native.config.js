@@ -10,5 +10,10 @@ module.exports = {
         ios: null,
       },
     },
+    '@rainbow-me/react-native-payments': {
+      platforms: {
+        android: null,
+      },
+    },
   },
 };
