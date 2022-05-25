@@ -10,7 +10,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
   Container,
-  NavigationStackHeader,
   PinInput,
   SafeAreaView,
   Text,
