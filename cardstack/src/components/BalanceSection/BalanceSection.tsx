@@ -8,21 +8,22 @@ import { TokenType } from '@cardstack/types';
 
 interface BalancesProps {
   tokens: TokenType[];
-  navProps: any;
+  safeAddress: string;
 }
 
-export const BalanceSection = ({ tokens, navProps }: BalancesProps) => {
+export const BalanceSection = ({ tokens, safeAddress }: BalancesProps) => {
   const { navigate } = useNavigation();
 
   const onPress = useCallback(
     (token: TokenType) => () => {
-      navigate(Routes.EXPANDED_ASSET_SHEET_DRILL, {
-        asset: token,
-        type: 'token',
-        ...navProps,
-      });
+      const asset = {
+        ...token,
+        ...token.token,
+      };
+
+      navigate(Routes.TOKEN_WITH_CHART_SHEET, { asset, safeAddress });
     },
-    [navProps, navigate]
+    [navigate, safeAddress]
   );
 
   const renderTokens = useMemo(

@@ -62,7 +62,7 @@ export default function AvailableBalanceSheets() {
       </Container>
       <HorizontalDivider marginVertical={0} />
       {selectedTab === Tabs.ASSETS ? (
-        <BalanceSection navProps={{ safeAddress }} tokens={tokensData} />
+        <BalanceSection tokens={tokensData} safeAddress={safeAddress} />
       ) : (
         <Activities address={safeAddress} />
       )}

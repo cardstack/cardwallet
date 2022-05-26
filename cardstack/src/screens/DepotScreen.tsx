@@ -143,10 +143,7 @@ export default function DepotScreen() {
             position="absolute"
             zIndex={selectedTab === Tabs.BALANCES ? 1 : 0}
           >
-            <BalanceSection
-              navProps={{ safeAddress: address }}
-              tokens={tokens}
-            />
+            <BalanceSection tokens={tokens} safeAddress={address} />
           </Container>
           <Container
             flex={1}

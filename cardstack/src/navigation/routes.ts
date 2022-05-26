@@ -37,6 +37,7 @@ export const MainRoutes = {
   UNLOCK_SCREEN: 'UnlockScreen',
   SUPPORT_AND_FEES: 'SupportAndFees',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
+  TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
 } as const;
 
 const OuterRoutes = {
@@ -48,8 +49,6 @@ const OuterRoutes = {
 
   // Non-migrated routes
   CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
-  EXPANDED_ASSET_SHEET: 'ExpandedAssetSheet',
-  EXPANDED_ASSET_SHEET_DRILL: 'ExpandedAssetSheetDrill',
   MODAL_SCREEN: 'ModalScreen',
   PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
   RESTORE_SHEET: 'RestoreSheet',

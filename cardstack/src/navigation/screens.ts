@@ -36,6 +36,7 @@ import {
   UnlockScreen,
   SupportAndFeedsSheet,
   AvailableBalanceSheet,
+  TokenWithChartSheet,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -228,6 +229,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   AVAILABLE_BALANCE_SHEET: {
     component: AvailableBalanceSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  TOKEN_WITH_CHART_SHEET: {
+    component: TokenWithChartSheet,
     options: expandedPreset as StackNavigationOptions,
   },
 };

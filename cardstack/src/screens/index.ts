@@ -36,3 +36,4 @@ export { default as PinScreen } from './PinScreen/PinScreen';
 export { default as UnlockScreen } from './UnlockScreen/UnlockScreen';
 export { default as SupportAndFeedsSheet } from './sheets/SupportAndFeedsSheet/SupportAndFeedsSheet';
 export { default as AvailableBalanceSheet } from './sheets/AvailableBalanceSheet/AvailableBalanceSheet';
+export { default as TokenWithChartSheet } from './sheets/TokenWithChartSheet/TokenWithChartSheet';
