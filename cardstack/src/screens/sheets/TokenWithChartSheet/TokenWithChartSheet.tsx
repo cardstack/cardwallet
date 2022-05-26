@@ -1,32 +1,30 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { useRoute } from '@react-navigation/native';
 import React, { useRef } from 'react';
 
-import { useAccountSettings, useChartThrottledPoints } from '../../hooks';
+import { Container, Sheet } from '@cardstack/components';
+import { RouteType } from '@cardstack/navigation/types';
+import { AssetWithNativeType } from '@cardstack/types';
+
+import { ChartPathProvider } from '@rainbow-me/animated-charts';
 import {
   BuyActionButton,
   SendActionButton,
   SheetActionButtonRow,
-  SheetDivider,
-} from '../sheet';
-import {
-  TokenInfoBalanceValue,
-  TokenInfoItem,
-  TokenInfoRow,
-  TokenInfoSection,
-} from '../token-info';
-import { Chart } from '../value-chart';
-import { Container, Sheet } from '@cardstack/components';
-import { ChartPathProvider } from '@rainbow-me/animated-charts';
+} from '@rainbow-me/components/sheet';
+import { Chart } from '@rainbow-me/components/value-chart';
+import { useAccountSettings, useChartThrottledPoints } from '@rainbow-me/hooks';
 
-export default function ChartExpandedState(props) {
-  const currentAsset = props.asset;
+import AmountWithCoin from './components/AmountWithCoin';
+import NativeAmount from './components/NativeAmount';
+import { strings } from './strings';
 
-  const asset = props.asset?.token
-    ? {
-        ...props.asset,
-        ...props.asset.token,
-      }
-    : currentAsset;
+export default function TokenWithChartSheet() {
+  const { params } = useRoute<
+    RouteType<{ asset: AssetWithNativeType; safeAddress?: string }>
+  >();
+
+  const { asset, safeAddress } = params;
 
   const {
     chart,
@@ -47,8 +45,9 @@ export default function ChartExpandedState(props) {
     'nativeTokenAddress',
     network
   );
+
   const needsEth =
-    asset.address === nativeTokenAddress && asset.balance.amount === '0';
+    asset.address === nativeTokenAddress && asset.balance?.amount === '0';
 
   const duration = useRef(0);
 
@@ -56,7 +55,7 @@ export default function ChartExpandedState(props) {
     duration.current = 300;
   }
 
-  const hasNativeBalance = !!parseFloat(asset?.native?.balance?.amount);
+  const hasNativeBalance = !!parseFloat(asset.native?.balance.amount);
 
   return (
     <Sheet scrollEnabled={false}>
@@ -69,24 +68,24 @@ export default function ChartExpandedState(props) {
           chartType={chartType}
           color={color}
           fetchingCharts={fetchingCharts}
+          isPool={false}
           nativePoints={chart}
           showChart={showChart}
           throttledData={throttledData}
         />
       </ChartPathProvider>
-      <SheetDivider />
-      <TokenInfoSection>
-        <TokenInfoRow>
-          <TokenInfoItem asset={asset} title="Balance">
-            <TokenInfoBalanceValue />
-          </TokenInfoItem>
-          {hasNativeBalance && (
-            <TokenInfoItem align="right" title="Value" weight="bold">
-              {`${asset?.native?.balance.display}`}
-            </TokenInfoItem>
-          )}
-        </TokenInfoRow>
-      </TokenInfoSection>
+      <Container
+        alignItems="center"
+        flexDirection="row"
+        justifyContent="space-between"
+        marginVertical={2}
+        paddingHorizontal={5}
+      >
+        <AmountWithCoin title={strings.balance} asset={asset} />
+        {hasNativeBalance && (
+          <NativeAmount title={strings.value} asset={asset} />
+        )}
+      </Container>
       {needsEth ? (
         <SheetActionButtonRow>
           <BuyActionButton color={color} fullWidth />
@@ -100,9 +99,8 @@ export default function ChartExpandedState(props) {
           width="100%"
         >
           <SendActionButton
-            asset={currentAsset}
-            color={color}
-            safeAddress={props.safeAddress}
+            asset={asset}
+            safeAddress={safeAddress}
             small={false}
           />
         </Container>
