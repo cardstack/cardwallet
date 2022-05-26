@@ -4,7 +4,6 @@ import Animated, { useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { useCallbackOne } from 'use-memo-one';
 
-import { Column, ColumnWithMargins, Row, RowWithMargins } from '../../layout';
 import {
   ChartDateLabel,
   ChartPercentChangeLabel,
@@ -12,6 +11,12 @@ import {
 } from './chart-data-labels';
 import { CoinIcon, Text } from '@cardstack/components';
 import { useBooleanState } from '@cardstack/hooks';
+import {
+  Column,
+  ColumnWithMargins,
+  Row,
+  RowWithMargins,
+} from '@rainbow-me/components/layout';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { padding } from '@rainbow-me/styles';
 

@@ -2,9 +2,11 @@ import { nativeCurrencies } from '@cardstack/cardpay-sdk';
 import { get } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { formatNative } from '../expanded-state/chart/chart-data-labels/ChartPriceLabel';
-import { Text } from '../text';
+
+import { formatNative } from './chart-data-labels/ChartPriceLabel';
+
 import { useChartData } from '@rainbow-me/animated-charts';
+import { Text } from '@rainbow-me/components/text';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { fonts } from '@rainbow-me/styles';
 

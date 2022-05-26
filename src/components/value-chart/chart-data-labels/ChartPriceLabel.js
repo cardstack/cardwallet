@@ -3,9 +3,11 @@ import { get } from 'lodash';
 import React from 'react';
 import { PixelRatio, Text } from 'react-native';
 import styled from 'styled-components';
-import { Row } from '../../../layout';
+
 import ChartHeaderTitle from './ChartHeaderTitle';
+
 import { ChartYLabel } from '@rainbow-me/animated-charts';
+import { Row } from '@rainbow-me/components/layout';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import { fonts, fontWithWidth } from '@rainbow-me/styles';
 
