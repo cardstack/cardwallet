@@ -4,6 +4,7 @@ import {
   Button,
   CenteredContainer,
   Container,
+  SafeAreaView,
   Icon,
   Text,
 } from '@cardstack/components';
@@ -27,11 +28,16 @@ const WelcomeScreen = () => {
   ]);
 
   return (
-    <CenteredContainer backgroundColor="black" flex={1} paddingBottom={10}>
-      <CenteredContainer flex={1.5} justifyContent="flex-end">
+    <SafeAreaView
+      backgroundColor="black"
+      flex={1}
+      alignItems="center"
+      paddingBottom={4}
+    >
+      <CenteredContainer flex={1} justifyContent="flex-end">
         <CardwalletLogo size={logoSize} />
       </CenteredContainer>
-      <CenteredContainer flex={1}>
+      <CenteredContainer flex={0.5}>
         <Container height={MID_IMAGE_WRAPPER}>
           <Icon name="phone-pc" size={MID_IMAGE_SIZE} />
         </Container>
@@ -44,18 +50,16 @@ const WelcomeScreen = () => {
           {strings.midtitle}
         </Text>
       </CenteredContainer>
-      <CenteredContainer
-        flex={0.5}
-        justifyContent="space-around"
-        marginBottom={2}
-      >
-        <Button onPress={onCreateWallet}>{strings.newAccBtn}</Button>
+      <CenteredContainer flex={0.5} justifyContent="flex-end" paddingBottom={6}>
+        <Button marginBottom={4} onPress={onCreateWallet}>
+          {strings.newAccBtn}
+        </Button>
         <Button onPress={onAddExistingWallet} variant="primaryWhite">
           {strings.existingAccBtn}
         </Button>
       </CenteredContainer>
       <AppVersionStamp />
-    </CenteredContainer>
+    </SafeAreaView>
   );
 };
 
