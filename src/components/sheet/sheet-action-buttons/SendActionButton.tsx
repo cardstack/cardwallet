@@ -18,8 +18,8 @@ export default function SendActionButton({
   const navigate = useExpandedStateNavigation();
 
   const handlePress = useCallback(() => {
-    const isDepot = !!asset?.tokenAddress;
-    const route = isDepot ? Routes.SEND_FLOW_DEPOT : Routes.SEND_FLOW_EOA;
+    const isSafe = !!asset?.tokenAddress;
+    const route = isSafe ? Routes.SEND_FLOW_DEPOT : Routes.SEND_FLOW_EOA;
 
     navigate(route, (params: any) => ({ ...params, asset, safeAddress }));
   }, [asset, safeAddress, navigate]);
