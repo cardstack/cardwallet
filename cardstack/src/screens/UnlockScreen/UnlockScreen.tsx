@@ -45,12 +45,13 @@ const UnlockScreen = () => {
     []
   );
 
-  const biometryBottomPaddingStyle = useMemo(
-    () => ({
-      paddingTop: isSmallPhone ? 4 : 8,
-    }),
-    [isSmallPhone]
-  );
+  const logoSize = useMemo(() => (isSmallPhone ? 'medium' : 'big'), [
+    isSmallPhone,
+  ]);
+
+  const logoContaineFlex = useMemo(() => (isSmallPhone ? 1.5 : 2), [
+    isSmallPhone,
+  ]);
 
   return (
     <>
@@ -61,12 +62,16 @@ const UnlockScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Container flex={1} alignItems="center">
-            <Container flex={0.35} alignItems="center" justifyContent="center">
-              <CardwalletLogo />
+            <Container
+              flex={logoContaineFlex}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <CardwalletLogo size={logoSize} />
             </Container>
             <Container
-              flex={0.2}
-              justifyContent="space-evenly"
+              flex={1}
+              justifyContent="space-between"
               width="100%"
               alignItems="center"
             >
@@ -79,7 +84,7 @@ const UnlockScreen = () => {
                   onChangeText={setInputPin}
                 />
                 {pinError && (
-                  <Container width="85%" paddingVertical={1}>
+                  <Container width="85%" paddingTop={1}>
                     <Text
                       fontSize={11}
                       weight="semibold"
@@ -91,18 +96,18 @@ const UnlockScreen = () => {
                   </Container>
                 )}
               </Container>
-            </Container>
-            <Container
-              flex={0.45}
-              width="80%"
-              justifyContent="space-between"
-              alignItems="center"
-            >
               {biometryAvailable && (
-                <Container {...biometryBottomPaddingStyle}>
+                <Container>
                   <BiometricSwitch variant={variant} />
                 </Container>
               )}
+            </Container>
+            <Container
+              flex={1}
+              width="80%"
+              justifyContent="space-around"
+              alignItems="center"
+            >
               <Button>{strings.login.button}</Button>
               <Text textAlign="center" color="grayText" size="xs">
                 {strings.login.eraseMessage}
@@ -112,6 +117,8 @@ const UnlockScreen = () => {
                   {strings.login.eraseLink}
                 </Text>
               </Touchable>
+            </Container>
+            <Container flex={0.3} justifyContent="center">
               <Text paddingBottom={4} color="grayText" size="xs">
                 Version {appVersion}
               </Text>
