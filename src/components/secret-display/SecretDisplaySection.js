@@ -2,9 +2,8 @@ import { useRoute } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 
+import { ActivityIndicator } from 'react-native';
 import { identifyWalletType, loadSeedPhrase } from '../../model/wallet';
-import ActivityIndicator from '../ActivityIndicator';
-import Spinner from '../Spinner';
 import { ColumnWithMargins } from '../layout';
 import SecretDisplayCard from './SecretDisplayCard';
 import { Button, Text } from '@cardstack/components';
@@ -13,8 +12,6 @@ import { useBiometricIconProps } from '@cardstack/hooks/useBiometricIconProps';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useWallets } from '@rainbow-me/hooks';
 import logger from 'logger';
-
-const LoadingSpinner = android ? Spinner : ActivityIndicator;
 
 export default function SecretDisplaySection({
   onSecretLoaded,
@@ -94,7 +91,7 @@ export default function SecretDisplaySection({
                 </Button>
               </Fragment>
             ) : (
-              <LoadingSpinner color={colors.blueGreyDark50} />
+              <ActivityIndicator color={colors.blueGreyDark50} size="large" />
             )}
           </Fragment>
         ) : (

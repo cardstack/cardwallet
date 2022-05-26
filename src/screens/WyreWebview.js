@@ -1,9 +1,8 @@
 import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'react-native';
+import { ActivityIndicator, StatusBar } from 'react-native';
 import { WebView } from 'react-native-webview';
 import styled from 'styled-components';
-import Spinner from '../components/Spinner';
 import { Centered, FlexItem } from '../components/layout';
 import { reserveWyreOrder } from '../handlers/wyre';
 import { useAccountSettings } from '../hooks';
@@ -59,7 +58,7 @@ export default function WyreWebview() {
         />
       ) : (
         <Centered flex={1}>
-          <Spinner color={colors.appleBlue} size={30} />
+          <ActivityIndicator color={colors.appleBlue} />
         </Centered>
       )}
     </Container>

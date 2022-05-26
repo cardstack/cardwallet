@@ -1,31 +1,16 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
-import { Transition, Transitioning } from 'react-native-reanimated';
 
 import { CenteredContainer, Text } from '@cardstack/components';
 import { colors } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
-
-import Spinner from '@rainbow-me/components/Spinner';
-import { neverRerender } from '@rainbow-me/utils';
 
 const styles = StyleSheet.create({
   overlayWrapper: {
     flex: 1,
     // Note: Workaround for android gesture transparency issue.
     backgroundColor: '#00000001',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
-
-const transition = (
-  <Transition.Sequence>
-    <Transition.Out durationMs={500} interpolation="easeOut" type="fade" />
-    <Transition.Change durationMs={500} interpolation="easeOut" />
-    <Transition.In durationMs={500} interpolation="easeOut" type="fade" />
-  </Transition.Sequence>
-);
 
 const OverlyStyle = {
   shadowOffset: {
@@ -42,37 +27,29 @@ const OverlyStyle = {
   borderRadius: 20,
 };
 
-export const LoadingOverlay = neverRerender(
-  ({ title, subTitle }: { title: string; subTitle: string }) => {
-    return (
-      <Transitioning.View transition={transition} style={styles.overlayWrapper}>
-        <CenteredContainer
-          backgroundColor="white"
-          borderColor="whiteOverlay"
-          shadowColor="overlay"
-          {...OverlyStyle}
-        >
-          {Device.isAndroid ? (
-            <Spinner
-              color={colors.blueText}
-              duration={undefined}
-              size={undefined}
-            />
-          ) : (
-            <ActivityIndicator color={colors.blueText} />
-          )}
-          {title ? (
-            <Text color="black" marginTop={5} fontSize={18} weight="bold">
-              {title}
-            </Text>
-          ) : null}
-          {subTitle ? (
-            <Text color="blueText" marginTop={1} size="body" textAlign="center">
-              {subTitle}
-            </Text>
-          ) : null}
-        </CenteredContainer>
-      </Transitioning.View>
-    );
-  }
+const LoadingOverlay = ({
+  title,
+  subTitle,
+}: {
+  title: string;
+  subTitle?: string;
+}) => (
+  <CenteredContainer style={styles.overlayWrapper}>
+    <CenteredContainer
+      backgroundColor="white"
+      borderColor="whiteOverlay"
+      shadowColor="overlay"
+      {...OverlyStyle}
+    >
+      <ActivityIndicator color={colors.blueText} />
+      <Text color="black" marginTop={5} fontSize={18} weight="bold">
+        {title}
+      </Text>
+      <Text color="blueText" marginTop={1} size="body" textAlign="center">
+        {subTitle}
+      </Text>
+    </CenteredContainer>
+  </CenteredContainer>
 );
+
+export default memo(LoadingOverlay);
