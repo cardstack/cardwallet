@@ -34,6 +34,7 @@ export const MainRoutes = {
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
   COLOR_PICKER_MODAL: 'ColorPickerModal',
   PIN_SCREEN: 'PinScreen',
+  UNLOCK_SCREEN: 'UnlockScreen',
 } as const;
 
 const OuterRoutes = {

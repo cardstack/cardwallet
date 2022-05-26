@@ -35,7 +35,6 @@ export const textVariants = {
   },
   welcomeScreen: {
     color: 'white',
-    fontSize: 24,
     fontWeight: '700',
     ...fontFamilyVariants.bold,
   },

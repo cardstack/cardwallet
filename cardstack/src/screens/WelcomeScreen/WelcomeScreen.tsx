@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import {
   Button,
@@ -7,34 +7,33 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
+import { useDimensions } from '@rainbow-me/hooks';
 
 import { useWelcomeScreen } from './hooks';
 import { strings } from './strings';
 
-const layouts = {
-  iconSize: 100,
-  mobileIconWrapper: 85,
-};
+const MID_IMAGE_SIZE = 100;
+const MID_IMAGE_WRAPPER = 85;
 
 const WelcomeScreen = () => {
   const { onCreateWallet, onAddExistingWallet } = useWelcomeScreen();
+  const { isSmallPhone } = useDimensions();
+
+  const logoSize = useMemo(() => (isSmallPhone ? 'medium' : 'big'), [
+    isSmallPhone,
+  ]);
 
   return (
     <CenteredContainer backgroundColor="black" flex={1} paddingBottom={10}>
       <CenteredContainer flex={1.5} justifyContent="flex-end">
-        <Icon name="cardstack" size={layouts.iconSize} />
-        <Text marginTop={6} variant="welcomeScreen">
-          {strings.title}
-        </Text>
-        <Text color="white" fontSize={14} weight="bold">
-          {strings.subtitle}
-        </Text>
+        <CardwalletLogo size={logoSize} />
       </CenteredContainer>
       <CenteredContainer flex={1}>
-        <Container height={layouts.mobileIconWrapper}>
-          <Icon name="phone-pc" size={layouts.iconSize} />
+        <Container height={MID_IMAGE_WRAPPER}>
+          <Icon name="phone-pc" size={MID_IMAGE_SIZE} />
         </Container>
         <Text
           color="buttonSecondaryBorder"

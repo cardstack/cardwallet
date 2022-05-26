@@ -33,6 +33,7 @@ import {
   ColorPickerModal,
   RequestPrepaidCardScreen,
   PinScreen,
+  UnlockScreen,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -210,6 +211,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   PIN_SCREEN: {
     component: PinScreen,
+    options: horizontalInterpolator,
+  },
+  UNLOCK_SCREEN: {
+    component: UnlockScreen,
     options: horizontalInterpolator,
   },
 };
