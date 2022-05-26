@@ -75,8 +75,6 @@ RCT_EXPORT_METHOD(hideAnimated) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   
-  // Developer support; define whether internal support has been declared for this build.
-  NSLog(@"⚙️ Rainbow internals are %@.", RAINBOW_INTERNALS_ENABLED ? @"enabled" : @"disabled");
   
   #if DEBUG
   #ifdef FB_SONARKIT_ENABLED
