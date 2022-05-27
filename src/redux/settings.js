@@ -81,10 +81,9 @@ export const resetAccountState = () => async dispatch => {
   await promiseUtils.PromiseAllWithFails([p1, p2, p3]);
 };
 
-export const settingsUpdateNetwork = network => async dispatch => {
+export const settingsUpdateNetwork = network => async () => {
   try {
     await saveNetwork(network);
-    await dispatch(resetAccountState());
     // Creates tag on Sentry labeling the current network.
     logger.setTag('network', network);
     RNRestart.Restart(); // restart app so it reloads with updated network
