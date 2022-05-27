@@ -1,11 +1,9 @@
 import { getAccountLocal, saveAccountLocal } from './common';
 
-const assetPricesFromUniswapVersion = '0.1.0';
 const assetsVersion = '0.2.1';
 const prepaidCardsVersion = '0.2.0';
 const depotVersion = '0.2.0';
 const merchantSafeVersion = '0.2.0';
-const purchaseTransactionsVersion = '0.1.0';
 const savingsVersion = '0.2.0';
 const transactionsVersion = '0.2.6';
 const collectiblesVersion = '0.2.4';
@@ -13,7 +11,6 @@ const accountEmptyVersion = '0.1.0';
 
 const ACCOUNT_INFO = 'accountInfo';
 const ACCOUNT_EMPTY = 'accountEmpty';
-const ASSET_PRICES_FROM_UNISWAP = 'assetPricesFromUniswap';
 const ASSETS = 'assets';
 const PREPAID_CARDS = 'prepaidCards';
 const DEPOTS = 'depots';
@@ -26,7 +23,6 @@ const COLLECTIBLES = 'collectibles';
 
 export const accountLocalKeys = [
   ACCOUNT_INFO,
-  ASSET_PRICES_FROM_UNISWAP,
   ASSETS,
   ACCOUNT_CHARTS,
   PURCHASE_TRANSACTIONS,
@@ -204,98 +200,6 @@ export const saveMerchantSafes = (
     merchantSafeVersion
   );
 
-/**
- * @desc get asset prices from Uniswap
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getAssetPricesFromUniswap = (accountAddress, network) =>
-  getAccountLocal(
-    ASSET_PRICES_FROM_UNISWAP,
-    accountAddress,
-    network,
-    [],
-    assetPricesFromUniswapVersion
-  );
-
-/**
- * @desc save asset prices from Uniswap
- * @param  {String}   [address]
- * @param  {Array}    [assets]
- * @param  {String}   [network]
- */
-export const saveAssetPricesFromUniswap = (
-  assetPrices,
-  accountAddress,
-  network
-) =>
-  saveAccountLocal(
-    ASSET_PRICES_FROM_UNISWAP,
-    assetPrices,
-    accountAddress,
-    network,
-    assetPricesFromUniswapVersion
-  );
-
-/**
- * @desc get purchase transactions
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getPurchaseTransactions = (accountAddress, network) =>
-  getAccountLocal(
-    PURCHASE_TRANSACTIONS,
-    accountAddress,
-    network,
-    [],
-    purchaseTransactionsVersion
-  );
-
-/**
- * @desc save purchase transactions
- * @param  {String}   [address]
- * @param  {Array}   [purchaseTransactions]
- * @param  {String}   [network]
- */
-export const savePurchaseTransactions = (
-  purchaseTransactions,
-  accountAddress,
-  network
-) =>
-  saveAccountLocal(
-    PURCHASE_TRANSACTIONS,
-    purchaseTransactions,
-    accountAddress,
-    network,
-    purchaseTransactionsVersion
-  );
-
-/**
- * @desc get charts
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
-export const getAccountCharts = (accountAddress, network) =>
-  getAccountLocal(ACCOUNT_CHARTS, accountAddress, network, {});
-
-/**
- * @desc save charts data
- * @param  {Object}   [charts]
- * @param  {String}   [address]
- * @param  {String}   [network]
- */
-export const saveAccountCharts = (charts, accountAddress, network) =>
-  saveAccountLocal(ACCOUNT_CHARTS, charts, accountAddress, network);
-
-/**
- * @desc get transactions
- * @param  {String}   [address]
- * @param  {String}   [network]
- * @return {Object}
- */
 export const getLocalTransactions = (accountAddress, network) =>
   getAccountLocal(
     TRANSACTIONS,

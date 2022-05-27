@@ -1,48 +1,20 @@
-import { get, groupBy, isEmpty, isNil, map, toNumber } from 'lodash';
+import { groupBy, isEmpty, isNil, toNumber } from 'lodash';
 import { createSelector } from 'reselect';
 import { sortList } from '@cardstack/helpers/sortList';
 import { parseAssetsNativeWithTotals } from '@rainbow-me/parsers';
 
 const EMPTY_ARRAY = [];
 
-const assetPricesFromUniswapSelector = state =>
-  state.data.assetPricesFromUniswap;
 const assetsSelector = state => state.data.assets;
 const isLoadingAssetsSelector = state => state.data.isLoadingAssets;
 const nativeCurrencySelector = state => state.settings.nativeCurrency;
 
 const sortAssetsByNativeAmount = (
   originalAssets,
-  assetPricesFromUniswap,
   isLoadingAssets,
   nativeCurrency
 ) => {
-  let updatedAssets = originalAssets;
-  if (!isEmpty(assetPricesFromUniswap)) {
-    updatedAssets = map(originalAssets, asset => {
-      if (isNil(asset.price)) {
-        const assetPrice = get(
-          assetPricesFromUniswap,
-          `[${asset.address}].price`
-        );
-        const relativePriceChange = get(
-          assetPricesFromUniswap,
-          `[${asset.address}].relativePriceChange`
-        );
-        if (assetPrice) {
-          return {
-            ...asset,
-            price: {
-              relative_change_24h: relativePriceChange,
-              value: assetPrice,
-            },
-          };
-        }
-      }
-      return asset;
-    });
-  }
-  let assetsNativePrices = updatedAssets;
+  let assetsNativePrices = originalAssets;
   let total = null;
   if (!isEmpty(assetsNativePrices)) {
     const parsedAssets = parseAssetsNativeWithTotals(
@@ -70,7 +42,6 @@ const sortAssetsByNativeAmount = (
   return {
     allAssets,
     allAssetsCount: allAssets.length,
-    assetPricesFromUniswap,
     assets: sortedAssets,
     assetsCount: sortedAssets.length,
     assetsTotal: total,
@@ -86,11 +57,6 @@ const groupAssetsByMarketValue = assets =>
   groupBy(assets, ({ native }) => (isNil(native) ? 'noValue' : 'hasValue'));
 
 export const sortAssetsByNativeAmountSelector = createSelector(
-  [
-    assetsSelector,
-    assetPricesFromUniswapSelector,
-    isLoadingAssetsSelector,
-    nativeCurrencySelector,
-  ],
+  [assetsSelector, isLoadingAssetsSelector, nativeCurrencySelector],
   sortAssetsByNativeAmount
 );
