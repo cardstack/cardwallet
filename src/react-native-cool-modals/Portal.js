@@ -5,12 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  Platform,
-  requireNativeComponent,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 const NativePortalContext = createContext();
 
@@ -18,8 +13,7 @@ export function usePortal() {
   return useContext(NativePortalContext);
 }
 
-const NativePortal =
-  Platform.OS === 'ios' ? requireNativeComponent('WindowPortal') : View;
+const NativePortal = View;
 
 const Wrapper = Platform.OS === 'ios' ? ({ children }) => children : View;
 

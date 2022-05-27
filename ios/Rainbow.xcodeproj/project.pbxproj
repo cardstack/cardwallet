@@ -8,13 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		019BFA419A1C493998D767A0 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B5AA0CC94474E5C961A2B62 /* OpenSans-LightItalic.ttf */; };
+		05E458FA4E5282B49AE6E543 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EEBA1735DF8F1F9E4B0871 /* ExpoModulesProvider.swift */; };
 		0EFAF3F629434EEE9EB3D1AB /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67DA6C572CB04D0CAD69AAE8 /* OpenSans-ExtraBold.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1539422824C7C7E200E4A9D1 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1539422724C7C7E100E4A9D1 /* Settings.bundle */; };
-		1539422D24C7CF9300E4A9D1 /* SettingsBundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1539422C24C7CF9300E4A9D1 /* SettingsBundleHelper.swift */; };
 		15E531D5242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E531D4242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift */; };
 		15E531DA242DAB7100797B89 /* NotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E531D9242DAB7100797B89 /* NotificationManager.m */; };
 		24979E8920F84250007EB0DA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 24979E7720F84004007EB0DA /* GoogleService-Info.plist */; };
@@ -24,10 +23,6 @@
 		6630540924A38A1900E5B030 /* RainbowText.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630540824A38A1900E5B030 /* RainbowText.m */; };
 		6635730624939991006ACFA6 /* SafeStoreReview.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635730524939991006ACFA6 /* SafeStoreReview.m */; };
 		6655FFB425BB2B0700642961 /* ThemeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655FFB325BB2B0700642961 /* ThemeModule.m */; };
-		66A1FEB424AB641100C3F539 /* RNCMScreenStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A1FEB024AB641100C3F539 /* RNCMScreenStack.m */; };
-		66A1FEB524AB641100C3F539 /* UIViewController+slack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A1FEB124AB641100C3F539 /* UIViewController+slack.swift */; };
-		66A1FEB624AB641100C3F539 /* RNCMScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A1FEB324AB641100C3F539 /* RNCMScreen.m */; };
-		66A1FEBC24ACBBE600C3F539 /* RNCMPortal.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A1FEBB24ACBBE600C3F539 /* RNCMPortal.m */; };
 		66A28EB024CAF1B500410A88 /* TestFlight.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A28EAF24CAF1B500410A88 /* TestFlight.m */; };
 		7287CE1EC33B4913AEE1F4B6 /* SFMono-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 668A9E253DAF444A90ECB997 /* SFMono-Medium.otf */; };
 		9B05FBFFF18BFF7F55A2BF48 /* libPods-Rainbow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B6AC983DAF4881C0B599D58 /* libPods-Rainbow.a */; };
@@ -65,14 +60,13 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Rainbow/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Rainbow/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Rainbow/main.m; sourceTree = "<group>"; };
-		1539422724C7C7E100E4A9D1 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		1539422C24C7CF9300E4A9D1 /* SettingsBundleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBundleHelper.swift; sourceTree = "<group>"; };
 		157155032418733F009B698B /* RainbowRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RainbowRelease.entitlements; path = Rainbow/RainbowRelease.entitlements; sourceTree = "<group>"; };
 		157155042418734C009B698B /* RainbowDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RainbowDebug.entitlements; path = Rainbow/RainbowDebug.entitlements; sourceTree = "<group>"; };
 		15E531D4242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewWithPersistentAnimations.swift; sourceTree = "<group>"; };
 		15E531D8242DAB7100797B89 /* NotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationManager.h; sourceTree = "<group>"; };
 		15E531D9242DAB7100797B89 /* NotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationManager.m; sourceTree = "<group>"; };
 		1636A2E4BB014C94A7BF355F /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../cardstack/src/assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
+		19EEBA1735DF8F1F9E4B0871 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Rainbow/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		1B5CE90B1FF944D8BB8CD73E /* RobotoMono-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Bold.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Bold.ttf"; sourceTree = "<group>"; };
 		1C57F319A21945DC9FDBFC91 /* KarbonSlabStencil-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "KarbonSlabStencil-Regular.otf"; path = "../cardstack/src/assets/fonts/KarbonSlabStencil-Regular.otf"; sourceTree = "<group>"; };
 		200724F9D2D14895AFCB9C1B /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../cardstack/src/assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -108,12 +102,6 @@
 		668A9E253DAF444A90ECB997 /* SFMono-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFMono-Medium.otf"; path = "../src/assets/fonts/SFMono-Medium.otf"; sourceTree = "<group>"; };
 		668ADB2C25A4E3A40050859D /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = "<group>"; };
 		668ADB2E25A4E3A40050859D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		66A1FEAF24AB641100C3F539 /* RNCMScreenStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNCMScreenStack.h; path = "../src/react-native-cool-modals/ios/RNCMScreenStack.h"; sourceTree = "<group>"; };
-		66A1FEB024AB641100C3F539 /* RNCMScreenStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNCMScreenStack.m; path = "../src/react-native-cool-modals/ios/RNCMScreenStack.m"; sourceTree = "<group>"; };
-		66A1FEB124AB641100C3F539 /* UIViewController+slack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+slack.swift"; path = "../src/react-native-cool-modals/ios/UIViewController+slack.swift"; sourceTree = "<group>"; };
-		66A1FEB224AB641100C3F539 /* RNCMScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNCMScreen.h; path = "../src/react-native-cool-modals/ios/RNCMScreen.h"; sourceTree = "<group>"; };
-		66A1FEB324AB641100C3F539 /* RNCMScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNCMScreen.m; path = "../src/react-native-cool-modals/ios/RNCMScreen.m"; sourceTree = "<group>"; };
-		66A1FEBB24ACBBE600C3F539 /* RNCMPortal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNCMPortal.m; path = "../src/react-native-cool-modals/ios/RNCMPortal.m"; sourceTree = "<group>"; };
 		66A28EAF24CAF1B500410A88 /* TestFlight.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestFlight.m; sourceTree = "<group>"; };
 		67DA6C572CB04D0CAD69AAE8 /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBold.ttf"; path = "../cardstack/src/assets/fonts/OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		69B1922CA1E74860ACB64E9F /* RobotoMono-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RobotoMono-Light.ttf"; path = "../cardstack/src/assets/fonts/RobotoMono-Light.ttf"; sourceTree = "<group>"; };
@@ -218,8 +206,6 @@
 		13B07FAE1A68108700A75B9A /* Rainbow */ = {
 			isa = PBXGroup;
 			children = (
-				1539422B24C7CF7B00E4A9D1 /* Settings */,
-				66A1FEAE24AB63D600C3F539 /* RNCoolModals */,
 				15E531D7242DAB3500797B89 /* NSNotifications */,
 				15E531D6242B28F800797B89 /* Animations */,
 				157155042418734C009B698B /* RainbowDebug.entitlements */,
@@ -236,20 +222,11 @@
 				A4277D9E23CBD1910042BAF4 /* Extensions.swift */,
 				A4277DA223CFE85F0042BAF4 /* Theme.swift */,
 				6635730524939991006ACFA6 /* SafeStoreReview.m */,
-				1539422724C7C7E100E4A9D1 /* Settings.bundle */,
 				66A28EAF24CAF1B500410A88 /* TestFlight.m */,
 				C04D10EF25AFC8C1003BEF7A /* Extras.json */,
 				6655FFB325BB2B0700642961 /* ThemeModule.m */,
 			);
 			name = Rainbow;
-			sourceTree = "<group>";
-		};
-		1539422B24C7CF7B00E4A9D1 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				1539422C24C7CF9300E4A9D1 /* SettingsBundleHelper.swift */,
-			);
-			name = Settings;
 			sourceTree = "<group>";
 		};
 		15E531D6242B28F800797B89 /* Animations */ = {
@@ -268,6 +245,14 @@
 				15E531D9242DAB7100797B89 /* NotificationManager.m */,
 			);
 			name = NSNotifications;
+			sourceTree = "<group>";
+		};
+		231B1A3D5CEA1A7277E90641 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				94A0983A8625670724A908DF /* Rainbow */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -293,19 +278,6 @@
 			path = "Rainbow Stickers";
 			sourceTree = "<group>";
 		};
-		66A1FEAE24AB63D600C3F539 /* RNCoolModals */ = {
-			isa = PBXGroup;
-			children = (
-				66A1FEBB24ACBBE600C3F539 /* RNCMPortal.m */,
-				66A1FEB224AB641100C3F539 /* RNCMScreen.h */,
-				66A1FEB324AB641100C3F539 /* RNCMScreen.m */,
-				66A1FEAF24AB641100C3F539 /* RNCMScreenStack.h */,
-				66A1FEB024AB641100C3F539 /* RNCMScreenStack.m */,
-				66A1FEB124AB641100C3F539 /* UIViewController+slack.swift */,
-			);
-			name = RNCoolModals;
-			sourceTree = "<group>";
-		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -324,6 +296,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				DCAC1D8CC45E468FBB7E1395 /* Resources */,
 				F1DE2B999CBEC82BE64A3739 /* Pods */,
+				231B1A3D5CEA1A7277E90641 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -336,6 +309,14 @@
 				13B07F961A680F5B00A75B9A /* Rainbow.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		94A0983A8625670724A908DF /* Rainbow */ = {
+			isa = PBXGroup;
+			children = (
+				19EEBA1735DF8F1F9E4B0871 /* ExpoModulesProvider.swift */,
+			);
+			name = Rainbow;
 			sourceTree = "<group>";
 		};
 		A4D04BA723D12F27008C1DEC /* Button */ = {
@@ -526,7 +507,6 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				24979E8920F84250007EB0DA /* GoogleService-Info.plist in Resources */,
-				1539422824C7C7E200E4A9D1 /* Settings.bundle in Resources */,
 				7287CE1EC33B4913AEE1F4B6 /* SFMono-Medium.otf in Resources */,
 				B7A3E82A4C4449F4A18EB5C2 /* SFMono-Regular.otf in Resources */,
 				C04D10F025AFC8C1003BEF7A /* Extras.json in Resources */,
@@ -628,6 +608,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Rainbow/Pods-Rainbow-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/QBImagePicker.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -650,6 +631,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -688,17 +670,13 @@
 				6635730624939991006ACFA6 /* SafeStoreReview.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				15E531DA242DAB7100797B89 /* NotificationManager.m in Sources */,
-				66A1FEB524AB641100C3F539 /* UIViewController+slack.swift in Sources */,
-				66A1FEB424AB641100C3F539 /* RNCMScreenStack.m in Sources */,
 				A4277DA323CFE85F0042BAF4 /* Theme.swift in Sources */,
 				15E531D5242B28EF00797B89 /* UIImageViewWithPersistentAnimations.swift in Sources */,
 				A4277D9F23CBD1910042BAF4 /* Extensions.swift in Sources */,
 				A4D04BAC23D12FD5008C1DEC /* ButtonManager.m in Sources */,
 				6655FFB425BB2B0700642961 /* ThemeModule.m in Sources */,
-				1539422D24C7CF9300E4A9D1 /* SettingsBundleHelper.swift in Sources */,
-				66A1FEB624AB641100C3F539 /* RNCMScreen.m in Sources */,
 				A4D04BA923D12F99008C1DEC /* Button.swift in Sources */,
-				66A1FEBC24ACBBE600C3F539 /* RNCMPortal.m in Sources */,
+				05E458FA4E5282B49AE6E543 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,7 +740,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS/**",
 				);
 				INFOPLIST_FILE = Rainbow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES;
 				MARKETING_VERSION = 1.1.3;
@@ -775,6 +753,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
@@ -817,7 +796,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS/**",
 				);
 				INFOPLIST_FILE = Rainbow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES;
 				MARKETING_VERSION = 1.1.3;
@@ -830,6 +809,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
@@ -870,7 +850,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -907,7 +887,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = Rainbow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES;
 				MARKETING_VERSION = 1.1.3;
@@ -920,6 +900,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
@@ -961,7 +942,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -998,7 +979,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = Rainbow/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES;
 				MARKETING_VERSION = 1.1.3;
@@ -1011,6 +992,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cardstack.cardpay;
 				PRODUCT_NAME = Rainbow;
 				PROVISIONING_PROFILE = "";
@@ -1056,7 +1038,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1092,7 +1074,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

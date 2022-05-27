@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { View } from 'react-primitives';
+import { View } from 'react-native';
 import {
   DataProvider,
   LayoutProvider,

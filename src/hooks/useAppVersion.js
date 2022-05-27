@@ -1,5 +1,5 @@
-import VersionNumber from 'react-native-version-number';
+import DeviceInfo from 'react-native-device-info';
 
 export default function useAppVersion() {
-  return `${VersionNumber.appVersion} (${VersionNumber.buildVersion})`;
+  return `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`;
 }

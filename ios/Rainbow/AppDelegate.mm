@@ -7,7 +7,6 @@
 
 #import "Firebase.h"
 #import "AppDelegate.h"
-#import "Rainbow-Swift.h"
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
@@ -91,8 +90,8 @@ RCT_EXPORT_METHOD(hideAnimated) {
   center.delegate = self;
 
   // React Native - Defaults
-  self.bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:self.bridge
+  RCTBridge *bridge = [self.reactDelegate createBridgeWithDelegate:self launchOptions:launchOptions];
+  RCTRootView *rootView = [self.reactDelegate createRootViewWithBridge:bridge
                                                    moduleName:@"Rainbow"
                                             initialProperties:nil];
 
@@ -103,7 +102,7 @@ RCT_EXPORT_METHOD(hideAnimated) {
   }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
+  UIViewController *rootViewController = [self.reactDelegate createRootViewController];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
@@ -120,6 +119,7 @@ RCT_EXPORT_METHOD(hideAnimated) {
 
   // Splashscreen - react-native-splash-screen
   [RNSplashScreen showSplash:@"LaunchScreen" inRootView:rootView];
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
   return YES;
 }
 
@@ -176,11 +176,6 @@ RCT_EXPORT_METHOD(hideAnimated) {
 
 
 - (void)applicationDidBecomeActive:(UIApplication *)application{
-  BOOL action = [SettingsBundleHelper checkAndExecuteSettings];
-  if(action){
-    [SentrySDK captureMessage:@"Keychain Wiped!"];
-    RCTTriggerReloadCommandListeners(@"keychain wiped");
-  }
   // delete the badge
   [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
   // delete the notifications

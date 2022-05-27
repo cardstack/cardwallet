@@ -1,6 +1,6 @@
 import compareVersions from 'compare-versions';
 import React, { ReactNode, useMemo } from 'react';
-import VersionNumber from 'react-native-version-number';
+import DeviceInfo from 'react-native-device-info';
 
 import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { useLoadRemoteConfigs } from '@cardstack/hooks';
@@ -21,7 +21,7 @@ export const AppRequirementsCheck = ({ children }: Props) => {
   const forceUpdate = useMemo(() => {
     if (!isReady) return false;
 
-    const appVersion = VersionNumber.appVersion;
+    const appVersion = DeviceInfo.getVersion();
 
     const minVersion = remoteFlags().requiredMinimumVersion;
 

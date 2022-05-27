@@ -102,10 +102,6 @@ jest.mock('@apollo/client', () => ({
   InMemoryCache: jest.fn(),
 }));
 
-jest.mock('react-native-android-keyboard-adjust', () => ({
-  AndroidKeyboardAdjust: jest.fn(),
-}));
-
 jest.mock('@react-native-firebase/messaging', () => ({
   messaging: jest.fn(),
 }));
@@ -131,10 +127,6 @@ jest.mock('react-native-text-size', () => ({
   TextSize: jest.fn(),
 }));
 
-jest.mock('react-native-safe-area-view', () => ({
-  SafeAreaView: jest.fn(),
-}));
-
 jest.mock('react-native-action-sheet', () => ({
   ActionSheet: jest.fn(),
 }));
@@ -145,10 +137,6 @@ jest.mock('react-native-permissions', () => ({
 
 jest.mock('react-native-splash-screen', () => ({
   SplashScreen: jest.fn(),
-}));
-
-jest.mock('react-native-version-number', () => ({
-  VersionNumber: jest.fn(),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -191,10 +179,6 @@ jest.mock('@rainbow-me/redux/uniswap', () => ({
 jest.mock('@rainbow-me/utils', () => ({
   magicMemo: jest.fn(),
   neverRerender: jest.fn(),
-}));
-
-jest.mock('@rainbow-me/utils/safeAreaInsetValues', () => ({
-  default: jest.fn(),
 }));
 
 jest.mock('@rainbow-me/hooks/charts/useChartThrottledPoints', () => ({

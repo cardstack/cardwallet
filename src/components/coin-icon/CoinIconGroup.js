@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View } from 'react-primitives';
+import { View } from 'react-native';
 import { Column, Row } from '../layout';
 import { CoinIcon } from '@cardstack/components';
 

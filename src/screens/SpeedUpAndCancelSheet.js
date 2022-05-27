@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Divider from '../components/Divider';
@@ -43,7 +44,7 @@ import { rapsAddOrUpdate } from '@rainbow-me/redux/raps';
 import store from '@rainbow-me/redux/store';
 import { ethUnits } from '@rainbow-me/references';
 import { position } from '@rainbow-me/styles';
-import { deviceUtils, safeAreaInsetValues } from '@rainbow-me/utils';
+import { deviceUtils } from '@rainbow-me/utils';
 
 import logger from 'logger';
 
@@ -121,6 +122,7 @@ export default function SpeedUpAndCancelSheet() {
   const dispatch = useDispatch();
   const { height: deviceHeight } = useDimensions();
   const keyboardHeight = useKeyboardHeight();
+  const safeAreaInsets = useSafeAreaInsets();
   const {
     gasPrices,
     updateGasPriceOption,
@@ -391,16 +393,16 @@ export default function SpeedUpAndCancelSheet() {
   useEffect(() => {
     if (keyboardVisible) {
       offset.value = withSpring(
-        -keyboardHeight + safeAreaInsetValues.bottom - (android ? 50 : 10),
+        -keyboardHeight + safeAreaInsets.bottom - (android ? 50 : 10),
         springConfig
       );
     } else {
       offset.value = withSpring(0, springConfig);
     }
-  }, [keyboardHeight, keyboardVisible, offset]);
+  }, [keyboardHeight, keyboardVisible, offset, safeAreaInsets.bottom]);
   const sheetHeight = ios
-    ? (type === CANCEL_TX ? 491 : 442) + safeAreaInsetValues.bottom
-    : 850 + safeAreaInsetValues.bottom;
+    ? (type === CANCEL_TX ? 491 : 442) + safeAreaInsets.bottom
+    : 850 + safeAreaInsets.bottom;
 
   const marginTop = android
     ? deviceHeight - sheetHeight + (type === CANCEL_TX ? 290 : 340)
