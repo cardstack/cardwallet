@@ -36,7 +36,6 @@ export { default as useIsMounted } from './useIsMounted';
 export { default as useIsWalletEthZero } from './useIsWalletEthZero';
 export { default as useKeyboardHeight } from './useKeyboardHeight';
 export { default as useLoadAccountData } from './useLoadAccountData';
-export { default as useLoadCoingeckoCoins } from './useLoadCoingeckoCoins';
 export { default as useLoadGlobalData } from './useLoadGlobalData';
 export { default as useMagicAutofocus } from './useMagicAutofocus';
 export { default as useManageCloudBackups } from './useManageCloudBackups';

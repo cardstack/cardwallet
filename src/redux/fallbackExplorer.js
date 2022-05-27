@@ -13,6 +13,7 @@ import {
 } from '@cardstack/constants';
 import { reduceAssetsWithPriceChartAndBalances } from '@cardstack/helpers/fallbackExplorerHelper';
 import { isLayer1, isMainnet } from '@cardstack/utils';
+import coingeckoIdsFallback from '@rainbow-me/references/coingecko/ids.json';
 import logger from 'logger';
 
 // -- Constants --------------------------------------- //
@@ -95,15 +96,31 @@ const fetchCoingeckoIds = async (network, coingeckoCoins) => {
   return idsMap;
 };
 
-const findAssetsToWatch = async (
-  address,
-  latestTxBlockNumber,
-  dispatch,
-  coingeckoCoins
-) => {
+const coingeckoCoinsCache = { current: null };
+
+const fetchCoingeckoCoins = async () => {
+  try {
+    const request = await fetch(
+      'https://api.coingecko.com/api/v3/coins/list?include_platform=true&asset_platform_id=ethereum'
+    );
+    const coingeckoCoins = await request.json();
+
+    return coingeckoCoins;
+  } catch (error) {
+    return coingeckoIdsFallback;
+  }
+};
+const findAssetsToWatch = async (address, latestTxBlockNumber, dispatch) => {
   // 1 - Discover the list of tokens for the address
   const network = store.getState().settings.network;
-  const coingeckoIds = await fetchCoingeckoIds(network, coingeckoCoins);
+
+  coingeckoCoinsCache.current =
+    coingeckoCoinsCache.current || (await fetchCoingeckoCoins());
+
+  const coingeckoIds = await fetchCoingeckoIds(
+    network,
+    coingeckoCoinsCache.current
+  );
 
   const tokensInWallet = await discoverTokens(
     coingeckoIds,
@@ -395,18 +412,15 @@ export const fetchAssetsBalancesAndPrices = async () => {
 export const fallbackExplorerInit = () => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
   const { latestTxBlockNumber, assets } = getState().fallbackExplorer;
-  const coingeckoCoins = getState().coingecko.coins;
 
   // If mainnet, we need to get all the info
-  // 1 - Coingecko ids
-  // 2 - All tokens list
-  // 3 - Etherscan token transfer transactions
+  // 1 - All tokens list
+  // 2 - Etherscan token transfer transactions
   if (isMainnet(network)) {
     const newAssets = await findAssetsToWatch(
       accountAddress,
       latestTxBlockNumber,
-      dispatch,
-      coingeckoCoins
+      dispatch
     );
 
     await dispatch({

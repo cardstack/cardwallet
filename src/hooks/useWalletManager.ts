@@ -21,7 +21,6 @@ import {
 import useAccountSettings from './useAccountSettings';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
-import useLoadCoingeckoCoins from './useLoadCoingeckoCoins';
 import useLoadGlobalData from './useLoadGlobalData';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { useLoadingOverlay } from '@cardstack/navigation';
@@ -38,7 +37,6 @@ export default function useWalletManager() {
   const dispatch = useDispatch();
 
   const loadAccountData = useLoadAccountData();
-  const loadCoingeckoCoins = useLoadCoingeckoCoins();
   const loadGlobalData = useLoadGlobalData();
   const initializeAccountData = useInitializeAccountData();
 
@@ -56,9 +54,6 @@ export default function useWalletManager() {
         await dispatch(settingsLoadNetwork());
 
         logger.sentry('done loading network');
-
-        // TODO: move to fallbackExplorer, shouldn't be related with initializating a wallet
-        await loadCoingeckoCoins();
 
         await dispatch(walletsLoadState());
 
@@ -95,7 +90,6 @@ export default function useWalletManager() {
     },
     [
       dispatch,
-      loadCoingeckoCoins,
       network,
       initializeAccountData,
       loadGlobalData,
