@@ -16,6 +16,7 @@ function loadStories() {
   require('../src/components/RadioList/RadioList.story');
   require('../src/components/Sheet/Sheet.story');
   require('../src/components/Touchable/Touchable.story');
+  require('../src/components/Transactions/TransactionCoinRow.story');
 }
 
 const stories = [
@@ -31,6 +32,7 @@ const stories = [
   '../src/components/RadioList/RadioList.story',
   '../src/components/Sheet/Sheet.story',
   '../src/components/Touchable/Touchable.story',
+  '../src/components/Transactions/TransactionCoinRow.story',
 ];
 
 module.exports = {
