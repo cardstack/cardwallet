@@ -1,5 +1,4 @@
-import { divide, isZero } from '@cardstack/cardpay-sdk';
-import { getUnixTime, subDays } from 'date-fns';
+import { isZero } from '@cardstack/cardpay-sdk';
 import produce from 'immer';
 import {
   concat,
@@ -7,34 +6,23 @@ import {
   get,
   isEmpty,
   isNil,
-  keyBy,
   map,
-  mapKeys,
   mapValues,
   partition,
-  property,
   remove,
   toLower,
   uniqBy,
   values,
 } from 'lodash';
-import { uniswapClient } from '../apollo/client';
-import {
-  UNISWAP_24HOUR_PRICE_QUERY,
-  UNISWAP_PRICES_QUERY,
-} from '../apollo/queries';
 import { getTransactionReceipt } from '../handlers/web3';
-import { uniswapUpdateLiquidityTokens } from './uniswapLiquidity';
 import { collectiblesRefreshState } from '@cardstack/redux/collectibles';
 import {
-  getAssetPricesFromUniswap,
   getAssets,
   getDepots,
   getLocalTransactions,
   getMerchantSafes,
   getPrepaidCards,
   saveAccountEmptyState,
-  saveAssetPricesFromUniswap,
   saveAssets,
   saveLocalTransactions,
 } from '@rainbow-me/handlers/localstorage/accountLocal';
@@ -61,20 +49,13 @@ const TXN_WATCHER_POLL_INTERVAL = 5000; // 5 seconds
 
 // -- Constants --------------------------------------- //
 
-const DATA_UPDATE_ASSET_PRICES_FROM_UNISWAP =
-  'data/DATA_UPDATE_ASSET_PRICES_FROM_UNISWAP';
 const DATA_UPDATE_ASSETS = 'data/DATA_UPDATE_ASSETS';
 const DATA_UPDATE_GENERIC_ASSETS = 'data/DATA_UPDATE_GENERIC_ASSETS';
 const DATA_UPDATE_TRANSACTIONS = 'data/DATA_UPDATE_TRANSACTIONS';
-const DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION =
-  'data/DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION';
 const DATA_UPDATE_GNOSIS_DATA = 'data/DATA_UPDATE_GNOSIS_DATA';
 
 const DATA_LOAD_ASSETS_SUCCESS = 'data/DATA_LOAD_ASSETS_SUCCESS';
 const DATA_LOAD_ASSETS_FAILURE = 'data/DATA_LOAD_ASSETS_FAILURE';
-
-const DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS =
-  'data/DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS';
 
 const DATA_LOAD_TRANSACTIONS_REQUEST = 'data/DATA_LOAD_TRANSACTIONS_REQUEST';
 const DATA_LOAD_TRANSACTIONS_SUCCESS = 'data/DATA_LOAD_TRANSACTIONS_SUCCESS';
@@ -83,7 +64,6 @@ const DATA_LOAD_TRANSACTIONS_FAILURE = 'data/DATA_LOAD_TRANSACTIONS_FAILURE';
 const DATA_ADD_NEW_TRANSACTION_SUCCESS =
   'data/DATA_ADD_NEW_TRANSACTION_SUCCESS';
 
-const DATA_ADD_NEW_SUBSCRIBER = 'data/DATA_ADD_NEW_SUBSCRIBER';
 const DATA_UPDATE_REFETCH_SAVINGS = 'data/DATA_UPDATE_REFETCH_SAVINGS';
 
 const DATA_CLEAR_STATE = 'data/DATA_CLEAR_STATE';
@@ -92,17 +72,6 @@ export const DATA_UPDATE_PREPAIDCARDS = 'data/DATA_UPDATE_PREPAIDCARDS';
 // -- Actions ---------------------------------------- //
 export const dataLoadState = () => async (dispatch, getState) => {
   const { accountAddress, network } = getState().settings;
-  try {
-    const assetPricesFromUniswap = await getAssetPricesFromUniswap(
-      accountAddress,
-      network
-    );
-    dispatch({
-      payload: assetPricesFromUniswap,
-      type: DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS,
-    });
-    // eslint-disable-next-line no-empty
-  } catch (error) {}
   try {
     const [
       assets,
@@ -139,11 +108,7 @@ export const dataLoadState = () => async (dispatch, getState) => {
   }
 };
 
-export const dataResetState = () => (dispatch, getState) => {
-  const { uniswapPricesSubscription } = getState().data;
-  uniswapPricesSubscription &&
-    uniswapPricesSubscription.unsubscribe &&
-    uniswapPricesSubscription.unsubscribe();
+export const dataResetState = () => dispatch => {
   pendingTransactionsHandle && clearTimeout(pendingTransactionsHandle);
   dispatch({ type: DATA_CLEAR_STATE });
 };
@@ -255,17 +220,6 @@ export const addressAssetsReceived = (
 
   let parsedAssets = parseAccountAssets(assets);
 
-  // remove LP tokens
-  const liquidityTokens = remove(
-    parsedAssets,
-    asset =>
-      asset?.type === AssetTypes.uniswap || asset?.type === AssetTypes.uniswapV2
-  );
-
-  dispatch(
-    uniswapUpdateLiquidityTokens(liquidityTokens, append || change || removed)
-  );
-
   if (append || change || removed) {
     const { assets: existingAssets } = getState().data;
     parsedAssets = uniqBy(
@@ -289,99 +243,6 @@ export const addressAssetsReceived = (
   });
   saveAssets(parsedAssets, accountAddress, network);
   dispatch(collectiblesRefreshState());
-
-  if (!change) {
-    const missingPriceAssetAddresses = map(
-      filter(parsedAssets, asset => isNil(asset.price)),
-      property('address')
-    );
-    dispatch(subscribeToMissingPrices(missingPriceAssetAddresses));
-  }
-};
-
-const subscribeToMissingPrices = addresses => (dispatch, getState) => {
-  const { accountAddress, network } = getState().settings;
-  const { uniswapPricesQuery } = getState().data;
-  if (uniswapPricesQuery) {
-    uniswapPricesQuery.refetch({ addresses });
-  } else {
-    const newQuery = uniswapClient.watchQuery({
-      fetchPolicy: 'network-only',
-      pollInterval: 15000, // 15 seconds
-      query: UNISWAP_PRICES_QUERY,
-      variables: {
-        addresses,
-      },
-    });
-
-    const newSubscription = newQuery.subscribe({
-      next: async ({ data }) => {
-        if (data && data.tokens) {
-          const nativePriceOfEth = ethereumUtils.getEthPriceUnit();
-          const tokenAddresses = map(data.tokens, property('id'));
-
-          const yesterday = getUnixTime(subDays(new Date(), 1));
-          const historicalPriceCalls = map(tokenAddresses, address =>
-            get24HourPrice(address, yesterday)
-          );
-          const historicalPriceResults = await Promise.all(
-            historicalPriceCalls
-          );
-          const mappedHistoricalData = keyBy(historicalPriceResults, 'id');
-          const missingHistoricalPrices = mapValues(
-            mappedHistoricalData,
-            value => value.priceUSD
-          );
-
-          const mappedPricingData = keyBy(data.tokens, 'id');
-          const missingPrices = mapValues(mappedPricingData, token =>
-            divide(nativePriceOfEth, token.derivedETH)
-          );
-          const missingPriceInfo = mapValues(
-            missingPrices,
-            (currentPrice, key) => {
-              const historicalPrice = get(missingHistoricalPrices, `[${key}]`);
-              const tokenAddress = get(mappedPricingData, `[${key}].id`);
-              const relativePriceChange = historicalPrice
-                ? ((currentPrice - historicalPrice) / currentPrice) * 100
-                : 0;
-              return {
-                price: currentPrice,
-                relativePriceChange,
-                tokenAddress,
-              };
-            }
-          );
-          const tokenPricingInfo = mapKeys(missingPriceInfo, 'tokenAddress');
-
-          saveAssetPricesFromUniswap(tokenPricingInfo, accountAddress, network);
-          dispatch({
-            payload: tokenPricingInfo,
-            type: DATA_UPDATE_ASSET_PRICES_FROM_UNISWAP,
-          });
-        }
-      },
-    });
-    dispatch({
-      payload: {
-        uniswapPricesQuery: newQuery,
-        uniswapPricesSubscription: newSubscription,
-      },
-      type: DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION,
-    });
-  }
-};
-
-const get24HourPrice = async (address, yesterday) => {
-  const result = await uniswapClient.query({
-    query: UNISWAP_24HOUR_PRICE_QUERY,
-    variables: {
-      address,
-      fetchPolicy: 'network-only',
-      timestamp: yesterday,
-    },
-  });
-  return get(result, 'data.tokenDayDatas[0]');
 };
 
 export const assetPricesReceived = message => dispatch => {
@@ -593,17 +454,6 @@ const watchPendingTransactions = (
   }
 };
 
-export const addNewSubscriber = (subscriber, type) => (dispatch, getState) => {
-  const { subscribers } = getState().data;
-  const newSubscribers = { ...subscribers };
-  newSubscribers[type] = concat(newSubscribers[type], subscriber);
-
-  dispatch({
-    payload: newSubscribers,
-    type: DATA_ADD_NEW_SUBSCRIBER,
-  });
-};
-
 export const updateRefetchSavings = fetch => dispatch =>
   dispatch({
     payload: fetch,
@@ -622,7 +472,6 @@ export const addNewPrepaidCard = newPrepaidCard => (dispatch, getState) => {
 
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
-  assetPricesFromUniswap: {},
   assets: [], // for account-specific assets
   depots: [],
   merchantSafes: [],
@@ -631,28 +480,14 @@ const INITIAL_STATE = {
   isLoadingAssets: true,
   isLoadingTransactions: true,
   shouldRefetchSavings: false,
-  subscribers: {
-    appended: [],
-    received: [],
-  },
   transactions: [],
-  uniswapPricesQuery: null,
-  uniswapPricesSubscription: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
   return produce(state, draft => {
     switch (action.type) {
-      case DATA_UPDATE_UNISWAP_PRICES_SUBSCRIPTION:
-        draft.uniswapPricesQuery = action.payload.uniswapPricesQuery;
-        draft.uniswapPricesSubscription =
-          action.payload.uniswapPricesSubscription;
-        break;
       case DATA_UPDATE_REFETCH_SAVINGS:
         draft.shouldRefetchSavings = action.payload;
-        break;
-      case DATA_UPDATE_ASSET_PRICES_FROM_UNISWAP:
-        draft.assetPricesFromUniswap = action.payload;
         break;
       case DATA_UPDATE_GENERIC_ASSETS:
         draft.genericAssets = action.payload;
@@ -680,9 +515,6 @@ export default (state = INITIAL_STATE, action) => {
       case DATA_LOAD_TRANSACTIONS_FAILURE:
         draft.isLoadingTransactions = false;
         break;
-      case DATA_LOAD_ASSET_PRICES_FROM_UNISWAP_SUCCESS:
-        draft.assetPricesFromUniswap = action.payload;
-        break;
       case DATA_LOAD_ASSETS_SUCCESS:
         draft.assets = action.payload.assets;
         draft.depots = action.payload.depots;
@@ -695,9 +527,6 @@ export default (state = INITIAL_STATE, action) => {
         break;
       case DATA_ADD_NEW_TRANSACTION_SUCCESS:
         draft.transactions = action.payload;
-        break;
-      case DATA_ADD_NEW_SUBSCRIBER:
-        draft.subscribers = action.payload;
         break;
       case DATA_UPDATE_PREPAIDCARDS:
         draft.prepaidCards = action.payload.prepaidCards;

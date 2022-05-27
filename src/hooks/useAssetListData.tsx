@@ -159,7 +159,6 @@ const useCollectiblesSection = (): AssetListSectionItem<CollectibleType> => {
 
 export const useAssetListData = () => {
   const { network, accountAddress, nativeCurrency } = useAccountSettings();
-  const walletReady = useRainbowSelector(state => state.appState.walletReady);
 
   const {
     isFetching: isFetchingSafes,
@@ -181,7 +180,7 @@ export const useAssetListData = () => {
         timestamp: data?.timestamp || '',
         ...rest,
       }),
-      skip: isLayer1(network) || !accountAddress || !walletReady,
+      skip: isLayer1(network) || !accountAddress,
     }
   );
 

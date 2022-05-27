@@ -19,7 +19,6 @@ import { isLayer1, useWorker } from '@cardstack/utils';
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
 interface Params {
   merchantAddress: string;
@@ -59,13 +58,11 @@ export const usePaymentMerchantUniversalLink = () => {
 
   const [infoDID, setInfoDID] = useState<string | undefined>();
 
-  const walletReady = useRainbowSelector(state => state.appState.walletReady);
-
   const { isLoading = true, prepaidCards } = useGetPrepaidCardsQuery(
     { accountAddress, nativeCurrency },
     {
       refetchOnMountOrArgChange: 60,
-      skip: isLayer1(accountNetwork) || !accountAddress || !walletReady,
+      skip: isLayer1(accountNetwork) || !accountAddress,
       selectFromResult: ({
         data,
         isLoading: isLoadingCards,

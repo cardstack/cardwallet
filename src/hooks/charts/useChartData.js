@@ -1,8 +1,6 @@
 import { isEmpty } from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useMemo, useState } from 'react';
 
-import { chartsUpdateChartType, DEFAULT_CHART_TYPE } from '../../redux/charts';
 import { daysFromTheFirstTx } from '../../utils/ethereumUtils';
 import useAsset from '../useAsset';
 
@@ -13,7 +11,6 @@ const formatChartData = chart => {
 
 export default function useChartData(asset) {
   const [daysFromFirstTx, setDaysFromFirstTx] = useState(1000);
-  const dispatch = useDispatch();
   const { price: priceObject } = useAsset(asset);
 
   const { value: price } = priceObject || {};
@@ -32,14 +29,6 @@ export default function useChartData(asset) {
     }
   }, [asset]);
 
-  const updateChartType = useCallback(
-    type => dispatch(chartsUpdateChartType(type)),
-    [dispatch]
-  );
-
-  // Reset chart timeframe on unmount.
-  useEffect(() => () => updateChartType(DEFAULT_CHART_TYPE), [updateChartType]);
-
   // add current price at the very end
   const filteredData = useMemo(() => {
     const now = Date.now();
@@ -55,6 +44,5 @@ export default function useChartData(asset) {
     fetchingCharts,
     showMonth: daysFromFirstTx > 7,
     showYear: daysFromFirstTx > 30,
-    updateChartType,
   };
 }
