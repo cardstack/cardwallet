@@ -5,10 +5,12 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import styled from 'styled-components';
-import { RowWithMargins } from '../../../layout';
+
 import ChartChangeDirectionArrow from './ChartChangeDirectionArrow';
 import { useRatio } from './useRatio';
+
 import { useChartData } from '@rainbow-me/animated-charts';
+import { RowWithMargins } from '@rainbow-me/components/layout';
 import { fonts, fontWithWidth } from '@rainbow-me/styles';
 
 Animated.addWhitelistedNativeProps({ color: true });

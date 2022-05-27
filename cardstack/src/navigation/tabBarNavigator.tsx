@@ -19,9 +19,8 @@ import {
 import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
-import { expandedPreset, sheetPreset } from '@rainbow-me/navigation/effects';
+import { expandedPreset } from '@rainbow-me/navigation/effects';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
-import ExpandedAssetSheet from '@rainbow-me/screens/ExpandedAssetSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
 import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
@@ -133,18 +132,6 @@ export const StackNavigator = () => {
       {
         // Temp rainbow components until migration
       }
-      <Stack.Screen
-        component={ExpandedAssetSheet}
-        listeners={dismissAndroidKeyboardOnClose}
-        name={Routes.EXPANDED_ASSET_SHEET}
-        options={expandedPreset as StackNavigationOptions}
-      />
-      <Stack.Screen
-        component={ExpandedAssetSheet}
-        listeners={dismissAndroidKeyboardOnClose}
-        name={Routes.EXPANDED_ASSET_SHEET_DRILL}
-        options={sheetPreset as StackNavigationOptions}
-      />
       <Stack.Screen
         component={ModalScreen}
         listeners={dismissAndroidKeyboardOnClose}

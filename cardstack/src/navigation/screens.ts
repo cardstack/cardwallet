@@ -34,6 +34,9 @@ import {
   RequestPrepaidCardScreen,
   PinScreen,
   UnlockScreen,
+  SupportAndFeesSheet,
+  AvailableBalanceSheet,
+  TokenWithChartSheet,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -87,7 +90,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: PrepaidCardModal,
     options: expandedPreset as StackNavigationOptions,
   },
-  BUY_PREPAID_CARD: { component: BuyPrepaidCard },
+  BUY_PREPAID_CARD: {
+    component: BuyPrepaidCard,
+    options: expandedPreset as StackNavigationOptions,
+  },
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
     options: sheetPreset as StackNavigationOptions,
@@ -216,6 +222,18 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   UNLOCK_SCREEN: {
     component: UnlockScreen,
     options: horizontalInterpolator,
+  },
+  SUPPORT_AND_FEES: {
+    component: SupportAndFeesSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  AVAILABLE_BALANCE_SHEET: {
+    component: AvailableBalanceSheet,
+    options: expandedPreset as StackNavigationOptions,
+  },
+  TOKEN_WITH_CHART_SHEET: {
+    component: TokenWithChartSheet,
+    options: expandedPreset as StackNavigationOptions,
   },
 };
 

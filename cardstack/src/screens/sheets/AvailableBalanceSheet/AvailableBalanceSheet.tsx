@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, RefreshControl, SectionList } from 'react-native';
 
 import {
@@ -14,11 +14,11 @@ import {
   TransactionListLoading,
 } from '@cardstack/components';
 import { useMerchantTransactions } from '@cardstack/hooks';
+import { RouteType } from '@cardstack/navigation/types';
 import { MerchantSafeType } from '@cardstack/types';
 import { sectionStyle } from '@cardstack/utils';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 
-const CHART_HEIGHT = 650;
+import { strings } from './strings';
 
 enum Tabs {
   ASSETS = 'Balance',
@@ -31,35 +31,22 @@ interface TabHeaderProps {
   tab: Tabs;
 }
 
-interface AvailableBalancesExpandedStateProps {
-  asset: MerchantSafeType;
+interface AvailableBalanceParams {
+  merchantSafe: MerchantSafeType;
 }
 
-export default function AvailableBalancesExpandedState(
-  props: AvailableBalancesExpandedStateProps
-) {
-  const { setOptions } = useNavigation();
+export default function AvailableBalanceSheets() {
+  const { params } = useRoute<RouteType<AvailableBalanceParams>>();
   const [selectedTab, setSelectedTab] = useState<Tabs>(Tabs.ASSETS);
-  const merchantSafes = useRainbowSelector(state => state.data.merchantSafes);
 
-  const merchantSafe = merchantSafes.find(
-    safe => safe.address === props.asset.address
-  ) as MerchantSafeType;
+  const { address: safeAddress } = params.merchantSafe;
 
-  const { address: safeAddress } = props.asset;
-
-  const tokensData = merchantSafe?.tokens;
-
-  useEffect(() => {
-    setOptions({
-      longFormHeight: CHART_HEIGHT,
-    });
-  }, [setOptions]);
+  const tokensData = params.merchantSafe?.tokens;
 
   return (
     <Sheet isFullScreen scrollEnabled>
       <Container paddingHorizontal={5} paddingTop={3}>
-        <Text size="medium">Available Balance</Text>
+        <Text size="medium">{strings.title}</Text>
         <Container flexDirection="row" justifyContent="space-between">
           <TabHeader
             selectedTab={selectedTab}
@@ -75,9 +62,9 @@ export default function AvailableBalancesExpandedState(
       </Container>
       <HorizontalDivider marginVertical={0} />
       {selectedTab === Tabs.ASSETS ? (
-        <BalanceSection navProps={{ safeAddress }} tokens={tokensData} />
+        <BalanceSection tokens={tokensData} safeAddress={safeAddress} />
       ) : (
-        <Activities {...props} />
+        <Activities address={safeAddress} />
       )}
     </Sheet>
   );
@@ -110,8 +97,7 @@ const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
   );
 };
 
-const Activities = (props: AvailableBalancesExpandedStateProps) => {
-  const { address } = props.asset;
+const Activities = ({ address }: Pick<MerchantSafeType, 'address'>) => {
   const {
     sections,
     isFetchingMore,

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TruncatedText } from '../../../text';
+import { TruncatedText } from '@rainbow-me/components/text';
 
 const ChartHeaderSubtitle = styled(TruncatedText).attrs(
   ({

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TruncatedText } from '../../../text';
+import { TruncatedText } from '@rainbow-me/components/text';
 
 const ChartHeaderTitle = styled(TruncatedText).attrs({
   letterSpacing: 'roundedTight',

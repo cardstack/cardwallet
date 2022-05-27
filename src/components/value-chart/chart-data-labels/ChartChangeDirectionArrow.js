@@ -5,8 +5,9 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated';
 import styled from 'styled-components';
-import { Icon } from '../../../icons';
+
 import { useRatio } from './useRatio';
+import { Icon } from '@rainbow-me/components/icons';
 
 const AnimatedMaskedView = Animated.createAnimatedComponent(MaskedView);
 

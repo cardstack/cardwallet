@@ -12,8 +12,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import styled from 'styled-components';
 import Spinner from '../../assets/chartSpinner.png';
-import { ChartExpandedStateHeader } from '../expanded-state/chart';
 import { Column } from '../layout';
+import ChartExpandedStateHeader from './ChartExpandedStateHeader';
 import Labels from './ExtremeLabels';
 import { Button, CenteredContainer, Text } from '@cardstack/components';
 import { ChartDot, ChartPath, useChartData } from '@rainbow-me/animated-charts';

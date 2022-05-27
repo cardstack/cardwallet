@@ -1,32 +1,16 @@
 import React, { memo, useCallback } from 'react';
 import { FlatList } from 'react-native';
+
 import { Container, Sheet, Text } from '@cardstack/components';
+
 import { supportedCountries } from '@rainbow-me/references/wyre';
+
+import { strings } from './strings';
 
 type Country = keyof typeof supportedCountries;
 const countriesKeys = Object.keys(supportedCountries);
 
-const strings = {
-  header: `Support & Fees`,
-  activation: {
-    title: 'Activation Fee',
-    faceValueList: `- 2.9% of Facevalue + $.30 ($5 min) USA\n- 3.9% of Facevalue + $.30 ($5 min) International`,
-    limits: {
-      usa: {
-        title: 'USA: ',
-        info: '$500 per week max, $5000 per year max',
-      },
-      international: {
-        title: 'International: ',
-        info: '$1,000 per week  max equivalent, $7,500 yearly max equivalent',
-      },
-    },
-    footerInfo: `Buy Prepaid Card is not available in NY & TX\nWyre currently only supports Visa or Mastercard\n\nApple Cash Cards are not supported at this time`,
-  },
-  supportedCountriesTitle: 'Supported Countries',
-};
-
-const SupportAndFeedsState = () => {
+const SupportAndFeesSheet = () => {
   const renderItem = useCallback(
     ({ item: country }) => (
       <Container flex={1} marginBottom={2}>
@@ -85,4 +69,4 @@ const SectionHeaderText = ({ text }: { text: string }) => (
   </Text>
 );
 
-export default memo(SupportAndFeedsState);
+export default memo(SupportAndFeesSheet);

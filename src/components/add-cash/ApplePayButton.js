@@ -19,7 +19,7 @@ const ApplePayButtonDimensions = {
 
 const ApplePayButton = ({ disabled, onDisabledPress, onSubmit }) => {
   const handlePress = useCallback(
-    () => (disabled ? onDisabledPress() : onSubmit()),
+    () => (disabled ? onDisabledPress?.() : onSubmit()),
     [disabled, onDisabledPress, onSubmit]
   );
 
@@ -61,7 +61,7 @@ const ApplePayButton = ({ disabled, onDisabledPress, onSubmit }) => {
 
 ApplePayButton.propTypes = {
   disabled: PropTypes.bool,
-  onDisabledPress: PropTypes.func.isRequired,
+  onDisabledPress: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
 };
 

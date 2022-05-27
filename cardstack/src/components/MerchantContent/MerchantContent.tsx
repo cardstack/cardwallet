@@ -16,11 +16,6 @@ import { MerchantSafeType, PrimarySafeUpdateProps } from '@cardstack/types';
 
 import { strings } from './strings';
 
-export enum ExpandedMerchantRoutes {
-  lifetimeEarnings = 'lifetimeEarnings',
-  availableBalances = 'availableBalances',
-}
-
 export interface MerchantContentProps extends PrimarySafeUpdateProps {
   merchantSafe: MerchantSafeType;
   isRefreshingBalances: boolean;
@@ -43,16 +38,6 @@ export const MerchantContent = memo(
       isRefreshingBalances,
     });
 
-    const onPressGoTo = useCallback(
-      (type: ExpandedMerchantRoutes) => () => {
-        navigate(Routes.EXPANDED_ASSET_SHEET, {
-          asset: merchantSafe,
-          type,
-        });
-      },
-      [merchantSafe, navigate]
-    );
-
     const goToMerchantPaymentRequest = useCallback(
       () =>
         navigate(Routes.MERCHANT_PAYMENT_REQUEST_SHEET, {
@@ -69,6 +54,14 @@ export const MerchantContent = memo(
           onClaimAllPress,
         }),
       [onClaimAllPress, merchantSafe, navigate]
+    );
+
+    const goToAvailableBalance = useCallback(
+      () =>
+        navigate(Routes.AVAILABLE_BALANCE_SHEET, {
+          merchantSafe,
+        }),
+      [merchantSafe, navigate]
     );
 
     return (
@@ -106,7 +99,7 @@ export const MerchantContent = memo(
           />
           <MerchantTokensList
             title={strings.availableBalance}
-            onPress={onPressGoTo(ExpandedMerchantRoutes.availableBalances)}
+            onPress={goToAvailableBalance}
             emptyText={strings.noAvailableBalance}
             tokens={merchantSafe.tokens}
           />

@@ -39,10 +39,7 @@ const BalanceCoinWrapper = (item: AssetWithNativeType) => {
         select(item.address);
       }
     } else {
-      navigate(Routes.EXPANDED_ASSET_SHEET, {
-        asset: item,
-        type: 'token',
-      });
+      navigate(Routes.TOKEN_WITH_CHART_SHEET, { asset: item });
     }
   };
 
