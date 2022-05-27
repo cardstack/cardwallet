@@ -34,6 +34,6 @@ export { default as TransactionConfirmationSheet } from './sheets/TransactionCon
 export { default as RequestPrepaidCardScreen } from './RequestPrepaidCardScreen/RequestPrepaidCardScreen';
 export { default as PinScreen } from './PinScreen/PinScreen';
 export { default as UnlockScreen } from './UnlockScreen/UnlockScreen';
-export { default as SupportAndFeedsSheet } from './sheets/SupportAndFeedsSheet/SupportAndFeedsSheet';
+export { default as SupportAndFeesSheet } from './sheets/SupportAndFeesSheet/SupportAndFeesSheet';
 export { default as AvailableBalanceSheet } from './sheets/AvailableBalanceSheet/AvailableBalanceSheet';
 export { default as TokenWithChartSheet } from './sheets/TokenWithChartSheet/TokenWithChartSheet';

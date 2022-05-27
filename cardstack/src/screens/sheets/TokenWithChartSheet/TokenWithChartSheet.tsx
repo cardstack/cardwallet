@@ -19,10 +19,13 @@ import AmountWithCoin from './components/AmountWithCoin';
 import NativeAmount from './components/NativeAmount';
 import { strings } from './strings';
 
+type RouteParams = {
+  asset: AssetWithNativeType;
+  safeAddress?: string;
+};
+
 export default function TokenWithChartSheet() {
-  const { params } = useRoute<
-    RouteType<{ asset: AssetWithNativeType; safeAddress?: string }>
-  >();
+  const { params } = useRoute<RouteType<RouteParams>>();
 
   const { asset, safeAddress } = params;
 

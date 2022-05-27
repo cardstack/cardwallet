@@ -17,6 +17,7 @@ import {
   Subtitle,
   TopContent,
 } from './Components';
+import { strings } from './strings';
 
 const DEFAULT_CARD_CONFIG = {
   background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
@@ -67,6 +68,9 @@ const BuyPrepaidCard = () => {
     inventoryData?.length === 0 ||
     inventoryData?.filter(item => item?.isSelected).length === 0;
 
+  // necessary to avoid rendering issues with the skeleton
+  const keyExtractor = useCallback((item, index) => index.toString(), []);
+
   const renderFooter = useMemo(
     () => (
       <Container paddingHorizontal={2} justifyContent="center">
@@ -74,7 +78,6 @@ const BuyPrepaidCard = () => {
           <ApplePayButton
             disabled={isPurchaseInProgress}
             onSubmit={handlePurchase}
-            onDisabledPress={() => console.log('onDisablePress')}
           />
         )}
         <Touchable width="100%" onPress={onPressSupport}>
@@ -86,7 +89,7 @@ const BuyPrepaidCard = () => {
             justifyContent="center"
           >
             <Text color="white" marginRight={1}>
-              Works with most debit cards
+              {strings.footer}
             </Text>
             <Icon name="info" size={15} />
           </Container>
@@ -105,21 +108,21 @@ const BuyPrepaidCard = () => {
     >
       <Container backgroundColor="backgroundBlue" paddingHorizontal={5}>
         <TopContent />
-        <Subtitle text="CHOOSE AMOUNT" />
+        <Subtitle text={strings.subtitle} />
         <FlatList
           data={inventoryData}
           renderItem={renderItem}
           numColumns={2}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={keyExtractor}
         />
       </Container>
       {card ? (
         <Container marginBottom={16} padding={4}>
-          <Subtitle text="PREVIEW" />
+          <Subtitle text={strings.previewCard} />
           <Container paddingHorizontal={10}>
             <MediumPrepaidCard
               networkName={network}
-              address="0xXXXX…XXXX"
+              address={strings.customCardAddress}
               nativeCurrencyInfo={nativeCurrencyInfo}
               nativeBalance={nativeBalance}
               transferrable={card.transferrable}

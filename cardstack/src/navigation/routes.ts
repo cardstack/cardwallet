@@ -35,7 +35,7 @@ export const MainRoutes = {
   COLOR_PICKER_MODAL: 'ColorPickerModal',
   PIN_SCREEN: 'PinScreen',
   UNLOCK_SCREEN: 'UnlockScreen',
-  SUPPORT_AND_FEES: 'SupportAndFees',
+  SUPPORT_AND_FEES: 'SupportAndFeesSheet',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
   TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
 } as const;

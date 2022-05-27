@@ -34,7 +34,7 @@ import {
   RequestPrepaidCardScreen,
   PinScreen,
   UnlockScreen,
-  SupportAndFeedsSheet,
+  SupportAndFeesSheet,
   AvailableBalanceSheet,
   TokenWithChartSheet,
 } from '@cardstack/screens';
@@ -224,7 +224,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     options: horizontalInterpolator,
   },
   SUPPORT_AND_FEES: {
-    component: SupportAndFeedsSheet,
+    component: SupportAndFeesSheet,
     options: expandedPreset as StackNavigationOptions,
   },
   AVAILABLE_BALANCE_SHEET: {

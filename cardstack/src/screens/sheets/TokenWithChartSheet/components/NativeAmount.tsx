@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { Container, Text } from '@cardstack/components';
 
-import { AmountRow } from '../types';
+import { AmountRowProps } from '../types';
 
-export default function NativeAmount({ title, asset }: AmountRow) {
+const NativeAmount = ({ title, asset }: AmountRowProps) => {
   return (
     <Container>
       <Text color="grayText" fontSize={13} marginBottom={1} textAlign="right">
@@ -15,4 +15,6 @@ export default function NativeAmount({ title, asset }: AmountRow) {
       </Text>
     </Container>
   );
-}
+};
+
+export default memo(NativeAmount);

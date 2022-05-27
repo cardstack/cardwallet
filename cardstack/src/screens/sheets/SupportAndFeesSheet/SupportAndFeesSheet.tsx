@@ -10,7 +10,7 @@ import { strings } from './strings';
 type Country = keyof typeof supportedCountries;
 const countriesKeys = Object.keys(supportedCountries);
 
-const SupportAndFeedsSheet = () => {
+const SupportAndFeesSheet = () => {
   const renderItem = useCallback(
     ({ item: country }) => (
       <Container flex={1} marginBottom={2}>
@@ -69,4 +69,4 @@ const SectionHeaderText = ({ text }: { text: string }) => (
   </Text>
 );
 
-export default memo(SupportAndFeedsSheet);
+export default memo(SupportAndFeesSheet);

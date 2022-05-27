@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { Container, CoinIcon, Text } from '@cardstack/components';
 
-import { AmountRow } from '../types';
+import { AmountRowProps } from '../types';
 
-export default function AmountWithCoin({ title, asset }: AmountRow) {
+const AmountWithCoin = ({ title, asset }: AmountRowProps) => {
   return (
     <Container>
       <Text color="grayText" fontSize={13} marginBottom={1}>
@@ -18,4 +18,6 @@ export default function AmountWithCoin({ title, asset }: AmountRow) {
       </Container>
     </Container>
   );
-}
+};
+
+export default memo(AmountWithCoin);
