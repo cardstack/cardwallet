@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const OverlyStyle = {
+const overlayStyle = {
   shadowOffset: {
     width: 0,
     height: 15,
@@ -39,7 +39,7 @@ const LoadingOverlay = ({
       backgroundColor="white"
       borderColor="whiteOverlay"
       shadowColor="overlay"
-      {...OverlyStyle}
+      {...overlayStyle}
     >
       <ActivityIndicator color={colors.blueText} />
       <Text color="black" marginTop={5} fontSize={18} weight="bold">
