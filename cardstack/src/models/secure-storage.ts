@@ -45,13 +45,11 @@ const getSeedKey = (walletId: string) => `${keys.SEED}_${walletId}`;
 const saveSeedPhrase = async (seed: string, walletId: string) => {
   try {
     const pin = await getPin();
-    console.log({ pin });
 
     if (pin) {
       const encryptedSeed = await encryptor.encrypt(pin, seed);
 
       if (encryptedSeed) {
-        console.log({ encryptedSeed });
         const seedKey = getSeedKey(walletId);
 
         await SecureStore.setItemAsync(seedKey, encryptedSeed);
