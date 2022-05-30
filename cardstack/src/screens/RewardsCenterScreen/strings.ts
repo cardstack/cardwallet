@@ -26,6 +26,10 @@ export const strings = {
   claim: {
     button: 'Claim',
     loading: 'Claiming Reward',
+    sucessAlert: {
+      title: 'Success',
+      message: 'Rewards claimed successfully',
+    },
   },
   balance: {
     title: 'Balance',

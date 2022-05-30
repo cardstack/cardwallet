@@ -17,7 +17,7 @@ export interface RewardsSafeQueryResult {
   rewardSafes: RewardsSafeType[];
 }
 
-interface TokenByProgramID extends TokenType {
+export interface TokenByProgramID extends TokenType {
   rewardProgramId?: string;
 }
 export interface RewardsTokenBalancesResult {
