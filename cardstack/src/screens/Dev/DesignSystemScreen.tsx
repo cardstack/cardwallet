@@ -51,7 +51,12 @@ const DesignSystemScreen = () => {
         case 'Template Screens':
           return (
             <CenteredContainer padding={2} backgroundColor="overlayGray">
-              <Button onPress={() => navigate(item)}>{item}</Button>
+              <Button
+                small
+                onPress={() => navigate(item, { variant: themes[0] })}
+              >
+                {item}
+              </Button>
             </CenteredContainer>
           );
       }

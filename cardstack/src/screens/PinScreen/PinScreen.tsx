@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useMemo } from 'react';
-import { StatusBar, NativeModules } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { StatusBar } from 'react-native';
 
 import {
   Container,
@@ -38,10 +38,6 @@ const PinScreen = () => {
     inputPin,
     flow,
   } = usePinScreen();
-
-  useEffect(() => {
-    Device.isAndroid && NativeModules?.AndroidKeyboardAdjust.setAdjustPan();
-  }, []);
 
   const feedbackProps = useMemo(
     () =>
