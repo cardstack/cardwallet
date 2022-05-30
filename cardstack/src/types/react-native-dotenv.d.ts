@@ -21,4 +21,5 @@ declare module 'react-native-dotenv' {
   export const STATUS_API_BASE_URL: string;
   export const VERSION_TAP_COUNT: string;
   export const OPENSEA_API_KEY: string;
+  export const SECURE_STORE_KEY: string;
 }
