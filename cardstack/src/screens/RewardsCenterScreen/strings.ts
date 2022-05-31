@@ -47,4 +47,5 @@ export const strings = {
     claimed: 'Claimed ',
     none: '',
   },
+  defaultAlertBtn: 'Okay',
 };

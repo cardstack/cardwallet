@@ -258,36 +258,11 @@ export const useRewardsCenterScreen = () => {
     });
   }, [navigate, onPrepaidCardSelection]);
 
-  const {
-    onClaimPress,
-    isLoadingClaimGas,
-    isClaimSuccess,
-    isClaimError,
-  } = useRewardsClaim({
+  const { onClaimPress, isLoadingClaimGas } = useRewardsClaim({
     accountAddress,
     mainPoolTokenInfo,
     rewardSafes,
   });
-
-  useMutationEffects(
-    useMemo(
-      () => ({
-        success: {
-          status: isClaimSuccess,
-          callback: onMutationEndAlert({
-            title: strings.claim.sucessAlert.title,
-            message: strings.claim.sucessAlert.message,
-            popStackNavigation: 1,
-          }),
-        },
-        error: {
-          status: isClaimError,
-          callback: onMutationEndAlert(defaultErrorAlert),
-        },
-      }),
-      [isClaimError, isClaimSuccess, onMutationEndAlert]
-    )
-  );
 
   const {
     data: rewardClaims,

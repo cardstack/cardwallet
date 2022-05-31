@@ -1,7 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
-import { useCallback } from 'react';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { useCallback, useMemo } from 'react';
 
-import { useBooleanState } from '@cardstack/hooks';
+import { defaultErrorAlert } from '@cardstack/constants';
+import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { useClaimRewardsMutation } from '@cardstack/services/rewards-center/rewards-center-api';
 import { getClaimRewardsGasEstimate } from '@cardstack/services/rewards-center/rewards-center-service';
@@ -15,6 +16,7 @@ import {
   TransactionConfirmationType,
 } from '@cardstack/types';
 
+import { Alert } from '@rainbow-me/components/alerts';
 import { useWallets } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
@@ -25,12 +27,18 @@ interface useRewardClaimsProps {
   rewardSafes?: RewardsSafeType[];
 }
 
+interface onClaimCallbackProps {
+  title: string;
+  message: string;
+  popStackNavigation?: number;
+}
+
 const useRewardsClaim = ({
   rewardSafes,
   accountAddress,
   mainPoolTokenInfo,
 }: useRewardClaimsProps) => {
-  const { navigate, goBack } = useNavigation();
+  const { navigate, goBack, dispatch: navDispatch } = useNavigation();
 
   const [
     isLoadingClaimGas,
@@ -38,7 +46,7 @@ const useRewardsClaim = ({
     stopClaimGasLoading,
   ] = useBooleanState();
 
-  const { showLoadingOverlay } = useLoadingOverlay();
+  const { dismissLoadingOverlay, showLoadingOverlay } = useLoadingOverlay();
 
   const { signerParams } = useWallets();
 
@@ -109,7 +117,48 @@ const useRewardsClaim = ({
     ]
   );
 
-  return { onClaimPress, isLoadingClaimGas, isClaimSuccess, isClaimError };
+  const onClaimCallback = useCallback(
+    ({ title, message, popStackNavigation }: onClaimCallbackProps) => () => {
+      dismissLoadingOverlay();
+
+      Alert({
+        message,
+        title,
+        buttons: [
+          {
+            text: strings.defaultAlertBtn,
+            onPress: popStackNavigation
+              ? () => {
+                  navDispatch(StackActions.pop(popStackNavigation));
+                }
+              : undefined,
+          },
+        ],
+      });
+    },
+    [dismissLoadingOverlay, navDispatch]
+  );
+
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isClaimSuccess,
+          callback: onClaimCallback({
+            ...strings.claim.sucessAlert,
+            popStackNavigation: 1,
+          }),
+        },
+        error: {
+          status: isClaimError,
+          callback: onClaimCallback(defaultErrorAlert),
+        },
+      }),
+      [isClaimError, isClaimSuccess, onClaimCallback]
+    )
+  );
+
+  return { onClaimPress, isLoadingClaimGas };
 };
 
 export default useRewardsClaim;
