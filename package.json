@@ -31,7 +31,7 @@
     "postinstall": "./scripts/postinstall.sh",
     "start": "yarn prestorybook && react-native start",
     "start:clean": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-map-* && react-native start -- --reset-cache",
-    "test": "jest --coverage",
+    "test": "APP_ENV=test jest --coverage",
     "ci": "yarn lint && yarn ts-check",
     "android-reverse-ports": "adb reverse tcp:8097 tcp:8097 && adb reverse tcp:8081 tcp:8081",
     "update-token-list": "./scripts/update-token-list.sh",
@@ -104,6 +104,7 @@
     "ethers": "^5.6.4",
     "events": "^1.1.1",
     "expo": "^45.0.0",
+    "expo-secure-store": "~11.2.0",
     "global": "^4.3.2",
     "grapheme-splitter": "^1.0.4",
     "graphql-tag": "^2.10.3",
@@ -114,6 +115,7 @@
     "imgix-core-js": "^2.3.2",
     "immer": "^8.0.1",
     "inherits": "^2.0.3",
+    "jest-expo": "^45.0.1",
     "lint-staged": "^10.0.7",
     "lodash": "^4.17.19",
     "lottie-ios": "^3.2.3",
@@ -127,6 +129,7 @@
     "patch-package": "^6.2.0",
     "path-browserify": "0.0.0",
     "prop-types": "^15.7.2",
+    "punycode": "^1.2.4",
     "querystring-es3": "^0.2.1",
     "rainbow-token-list": "rainbow-me/token-lists#092bd84fac3b2032b94f05a1a49899252e5eb923",
     "react": "17.0.2",
@@ -210,8 +213,7 @@
     "vm-browserify": "0.0.4",
     "web3": "1.5.2",
     "web3-core": "^1.5.2",
-    "zxcvbn": "^4.4.2",
-    "punycode": "^1.2.4"
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
