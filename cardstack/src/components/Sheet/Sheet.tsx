@@ -1,11 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { memo, ReactNode, useCallback, useMemo, useRef } from 'react';
-import {
-  KeyboardAvoidingView,
-  KeyboardAvoidingViewProps,
-  StatusBar,
-  StyleSheet,
-} from 'react-native';
+import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Container } from '@cardstack/components';

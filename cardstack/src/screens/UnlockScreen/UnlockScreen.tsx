@@ -1,10 +1,5 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
-import {
-  StatusBar,
-  NativeModules,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import React, { memo, useMemo, useState } from 'react';
+import { StatusBar, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 import {
   Button,
