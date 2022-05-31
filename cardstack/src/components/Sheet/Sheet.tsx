@@ -1,6 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { memo, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  KeyboardAvoidingViewProps,
+  StatusBar,
+  StyleSheet,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Container } from '@cardstack/components';
@@ -41,6 +46,7 @@ export interface SheetProps {
   shadowEnabled?: boolean;
   overlayColor?: string;
   cardBackgroundColor?: string;
+  keyboardBehavior?: 'height' | 'position' | 'padding';
   Header?: JSX.Element;
   Footer?: JSX.Element;
 }
@@ -54,6 +60,7 @@ const Sheet = ({
   shadowEnabled = false,
   overlayColor = 'transparent',
   cardBackgroundColor = 'white',
+  keyboardBehavior = Device.keyboardBehavior,
   Header,
   Footer,
 }: SheetProps) => {
@@ -143,10 +150,7 @@ const Sheet = ({
   return (
     <Container flex={1} justifyContent="flex-end" style={containerStyle}>
       <TouchableBackDrop onPress={goBack} />
-      <KeyboardAvoidingView
-        behavior={Device.keyboardBehavior}
-        style={wrapperStyle}
-      >
+      <KeyboardAvoidingView behavior={keyboardBehavior} style={wrapperStyle}>
         <CenteredContainer paddingVertical={4}>
           {!hideHandle && <SheetHandle />}
         </CenteredContainer>
