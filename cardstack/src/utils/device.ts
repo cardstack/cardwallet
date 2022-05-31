@@ -11,7 +11,7 @@ const Device = {
   screenHeight,
   screenWidth,
   cloudPlatform: isIOS ? 'iCloud' : 'Google Drive',
-  keyboardBehavior: isIOS ? ('padding' as const) : undefined,
+  keyboardBehavior: 'padding' as const,
   supportsFiatOnRamp: isIOS,
   supportsNativeWyreIntegration: isIOS,
   supportsHapticFeedback: isIOS,

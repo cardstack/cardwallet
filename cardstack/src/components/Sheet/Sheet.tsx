@@ -41,6 +41,7 @@ export interface SheetProps {
   shadowEnabled?: boolean;
   overlayColor?: string;
   cardBackgroundColor?: string;
+  keyboardBehavior?: 'height' | 'position' | 'padding';
   Header?: JSX.Element;
   Footer?: JSX.Element;
 }
@@ -54,6 +55,7 @@ const Sheet = ({
   shadowEnabled = false,
   overlayColor = 'transparent',
   cardBackgroundColor = 'white',
+  keyboardBehavior = Device.keyboardBehavior,
   Header,
   Footer,
 }: SheetProps) => {
@@ -143,10 +145,7 @@ const Sheet = ({
   return (
     <Container flex={1} justifyContent="flex-end" style={containerStyle}>
       <TouchableBackDrop onPress={goBack} />
-      <KeyboardAvoidingView
-        behavior={Device.keyboardBehavior}
-        style={wrapperStyle}
-      >
+      <KeyboardAvoidingView behavior={keyboardBehavior} style={wrapperStyle}>
         <CenteredContainer paddingVertical={4}>
           {!hideHandle && <SheetHandle />}
         </CenteredContainer>

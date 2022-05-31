@@ -21,7 +21,7 @@ const DesignSystemScreen = () => {
   const sections = [
     {
       title: 'Template Screens',
-      data: [Routes.UNLOCK_SCREEN],
+      data: [Routes.UNLOCK_SCREEN, Routes.PIN_SCREEN],
     },
     {
       title: 'Biometric Switch',
@@ -51,7 +51,15 @@ const DesignSystemScreen = () => {
         case 'Template Screens':
           return (
             <CenteredContainer padding={2} backgroundColor="overlayGray">
-              <Button onPress={() => navigate(item)}>{item}</Button>
+              <Button
+                onPress={() =>
+                  navigate(item, {
+                    flow: 'confirm',
+                  })
+                }
+              >
+                {item}
+              </Button>
             </CenteredContainer>
           );
       }
