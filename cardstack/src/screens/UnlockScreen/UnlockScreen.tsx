@@ -20,7 +20,6 @@ import {
 } from '@cardstack/components/BiometricSwitch';
 import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
-import { Device } from '@cardstack/utils';
 
 import { useAppVersion, useDimensions } from '@rainbow-me/hooks';
 
@@ -35,10 +34,6 @@ const UnlockScreen = () => {
   const { biometryAvailable } = useBiometricSwitch();
   const appVersion = useAppVersion();
   const [inputPin, setInputPin] = useState('');
-
-  useEffect(() => {
-    Device.isAndroid && NativeModules?.AndroidKeyboardAdjust.setAdjustPan();
-  }, []);
 
   const statusBarStyle = useMemo(
     () => (variant === 'dark' ? 'light-content' : 'dark-content'),
