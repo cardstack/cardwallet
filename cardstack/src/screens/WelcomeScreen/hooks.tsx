@@ -2,7 +2,10 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useLoadingOverlay } from '@cardstack/navigation';
+import {
+  navigationStateNewWallet,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils';
 
@@ -17,7 +20,7 @@ import { ICloudBackupData } from '@rainbow-me/model/backup';
 import logger from 'logger';
 
 export const useWelcomeScreen = () => {
-  const { navigate, replace } = useNavigation<
+  const { navigate, reset } = useNavigation<
     StackNavigationProp<ParamListBase>
   >();
 
@@ -59,12 +62,16 @@ export const useWelcomeScreen = () => {
   }, []);
 
   const onCreateWallet = useCallback(async () => {
-    replace(Routes.TAB_NAVIGATOR);
+    createNewWallet({
+      onSuccess: () => {
+        reset(navigationStateNewWallet);
 
-    showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
-
-    createNewWallet();
-  }, [replace, createNewWallet, showLoadingOverlay]);
+        showLoadingOverlay({
+          title: walletLoadingStates.CREATING_WALLET,
+        });
+      },
+    });
+  }, [reset, createNewWallet, showLoadingOverlay]);
 
   const onAddExistingWallet = useCallback(() => {
     navigate(Routes.RESTORE_SHEET, {

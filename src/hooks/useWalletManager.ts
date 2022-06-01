@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { isNil } from 'lodash';
 import { useCallback } from 'react';
@@ -23,14 +24,20 @@ import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
-import { useLoadingOverlay } from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 
+import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import logger from 'logger';
 
 interface initializeWalleOptions {
   skipDismissOverlay?: boolean;
+}
+
+interface CreateWalletParams
+  extends Pick<CreateImportParams, 'color' | 'name'> {
+  onSuccess?: () => void;
 }
 
 export default function useWalletManager() {
@@ -42,6 +49,8 @@ export default function useWalletManager() {
 
   const { network } = useAccountSettings();
   const { dismissLoadingOverlay } = useLoadingOverlay();
+
+  const { navigate } = useNavigation();
 
   const initializeWallet = useCallback(
     async (seedPhrase?: string, options?: initializeWalleOptions) => {
@@ -98,27 +107,44 @@ export default function useWalletManager() {
     ]
   );
 
-  const createNewWallet = useCallback(
-    async ({
-      color,
-      name,
-    }: Pick<CreateImportParams, 'color' | 'name'> = {}) => {
-      try {
-        const wallet = await createOrImportWallet({ color, name });
-
-        const walletAddress = wallet?.address;
-
-        await saveAccountEmptyState(
-          true,
-          walletAddress?.toLowerCase(),
-          network
-        );
-        await initializeWallet();
-      } catch (e) {
-        logger.sentry('Error creating new wallet', e);
-      }
+  const createWalletPin = useCallback(
+    onSuccess => {
+      navigate(Routes.PIN_SCREEN, {
+        flow: PinFlow.create,
+        variant: 'dark',
+        canGoBack: true,
+        dismissOnSuccess: false,
+        onSuccess,
+      });
     },
-    [initializeWallet, network]
+    [navigate]
+  );
+
+  const createNewWallet = useCallback(
+    async ({ color, name, onSuccess }: CreateWalletParams = {}) =>
+      createWalletPin(async (pin: string) => {
+        try {
+          const wallet = await createOrImportWallet({
+            color,
+            name,
+            pin,
+          });
+
+          const walletAddress = wallet?.address;
+
+          await saveAccountEmptyState(
+            true,
+            walletAddress?.toLowerCase(),
+            network
+          );
+
+          onSuccess?.();
+          initializeWallet();
+        } catch (e) {
+          logger.sentry('Error creating new wallet', e);
+        }
+      }),
+    [createWalletPin, initializeWallet, network]
   );
 
   const importWallet = useCallback(
