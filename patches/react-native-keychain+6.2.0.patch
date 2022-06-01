@@ -94,6 +94,24 @@ index 98e45fe..01e9b76 100644
 +
 +
  @end
+diff --git a/node_modules/react-native-keychain/android/src/main/AndroidManifest.xml b/node_modules/react-native-keychain/android/src/main/AndroidManifest.xml
+index 54446d4..b468ea2 100644
+--- a/node_modules/react-native-keychain/android/src/main/AndroidManifest.xml
++++ b/node_modules/react-native-keychain/android/src/main/AndroidManifest.xml
+@@ -6,13 +6,4 @@
+   <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+   <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+ 
+-  <application>
+-    <!--suppress AndroidDomInspection -->
+-    <activity
+-      android:name="androidx.biometric.DeviceCredentialHandlerActivity"
+-      android:exported="true"
+-      android:theme="@style/DeviceCredentialHandlerTheme"
+-      />
+-  </application>
+-
+ </manifest>
 diff --git a/node_modules/react-native-keychain/android/src/main/java/com/oblador/keychain/KeychainModule.java b/node_modules/react-native-keychain/android/src/main/java/com/oblador/keychain/KeychainModule.java
 index d4ded69..8503993 100644
 --- a/node_modules/react-native-keychain/android/src/main/java/com/oblador/keychain/KeychainModule.java

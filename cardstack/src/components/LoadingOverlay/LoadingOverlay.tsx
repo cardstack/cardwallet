@@ -45,9 +45,11 @@ const LoadingOverlay = ({
       <Text color="black" marginTop={5} fontSize={18} weight="bold">
         {title}
       </Text>
-      <Text color="blueText" marginTop={1} size="body" textAlign="center">
-        {subTitle}
-      </Text>
+      {!!subTitle && (
+        <Text color="blueText" marginTop={1} size="body" textAlign="center">
+          {subTitle}
+        </Text>
+      )}
     </CenteredContainer>
   </CenteredContainer>
 );
