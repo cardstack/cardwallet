@@ -9,11 +9,11 @@ import { useWelcomeScreen } from '../hooks';
 
 // Mock navigation
 const mockedNavigate = jest.fn();
-const mockedReplace = jest.fn();
+const mockedReset = jest.fn();
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: mockedNavigate,
-    replace: mockedReplace,
+    reset: mockedReset,
   }),
 }));
 
@@ -98,18 +98,15 @@ describe('useWelcomeScreen', () => {
     });
   });
 
-  it('should replace the current screen with WalletScreen on onCreateWallet press', async () => {
+  it('should call createNewWallet function with right params onCreateWallet press', async () => {
     const { result } = renderHook(() => useWelcomeScreen());
 
     act(() => {
       result.current.onCreateWallet();
     });
 
-    expect(mockedReplace).toBeCalledWith(Routes.TAB_NAVIGATOR);
-    expect(mockedShowOverlay).toBeCalledWith({
-      title: 'Creating account...',
+    expect(mockedCreateWallet).toBeCalledWith({
+      isFromWelcomeFlow: true,
     });
-
-    expect(mockedCreateWallet).toBeCalled();
   });
 });

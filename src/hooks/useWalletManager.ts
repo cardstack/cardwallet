@@ -24,11 +24,16 @@ import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
-import { Routes, useLoadingOverlay } from '@cardstack/navigation';
+import {
+  navigationStateNewWallet,
+  Routes,
+  useLoadingOverlay,
+} from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
+import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
 
 interface initializeWalleOptions {
@@ -37,7 +42,7 @@ interface initializeWalleOptions {
 
 interface CreateWalletParams
   extends Pick<CreateImportParams, 'color' | 'name'> {
-  onSuccess?: () => void;
+  isFromWelcomeFlow?: boolean;
 }
 
 export default function useWalletManager() {
@@ -48,9 +53,9 @@ export default function useWalletManager() {
   const initializeAccountData = useInitializeAccountData();
 
   const { network } = useAccountSettings();
-  const { dismissLoadingOverlay } = useLoadingOverlay();
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const { navigate } = useNavigation();
+  const { navigate, reset } = useNavigation();
 
   const initializeWallet = useCallback(
     async (seedPhrase?: string, options?: initializeWalleOptions) => {
@@ -121,7 +126,7 @@ export default function useWalletManager() {
   );
 
   const createNewWallet = useCallback(
-    async ({ color, name, onSuccess }: CreateWalletParams = {}) =>
+    async ({ color, name, isFromWelcomeFlow }: CreateWalletParams = {}) =>
       createWalletPin(async (pin: string) => {
         try {
           const wallet = await createOrImportWallet({
@@ -138,13 +143,20 @@ export default function useWalletManager() {
             network
           );
 
-          onSuccess?.();
+          if (isFromWelcomeFlow) {
+            reset(navigationStateNewWallet);
+
+            showLoadingOverlay({
+              title: walletLoadingStates.CREATING_WALLET,
+            });
+          }
+
           initializeWallet();
         } catch (e) {
           logger.sentry('Error creating new wallet', e);
         }
       }),
-    [createWalletPin, initializeWallet, network]
+    [createWalletPin, initializeWallet, network, reset, showLoadingOverlay]
   );
 
   const importWallet = useCallback(
