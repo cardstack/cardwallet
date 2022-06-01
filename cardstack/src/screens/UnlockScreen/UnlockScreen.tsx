@@ -74,7 +74,7 @@ const UnlockScreen = () => {
                   value={inputPin}
                   onChangeText={setInputPin}
                 />
-                {!pinInvalid && (
+                {!!pinInvalid && (
                   <Container width="85%" paddingTop={1}>
                     <Text
                       fontSize={11}
