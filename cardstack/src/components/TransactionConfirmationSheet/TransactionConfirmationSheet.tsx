@@ -32,6 +32,7 @@ export interface TransactionConfirmationDisplayProps {
   onCancel: () => void;
   onConfirm: () => void;
   onConfirmLoading?: boolean;
+  disabledConfirmButton?: boolean;
 }
 
 export const TransactionConfirmationSheet = (
@@ -125,6 +126,7 @@ const SheetFooter = ({
   onConfirm,
   onCancel,
   onConfirmLoading = false,
+  disabledConfirmButton,
 }: TransactionConfirmationDisplayProps) => {
   const iconProps = useBiometricIconProps();
 
@@ -152,6 +154,7 @@ const SheetFooter = ({
           variant="small"
           onPress={onConfirm}
           iconProps={iconProps}
+          disabled={disabledConfirmButton}
         >
           {strings.buttons.submit}
         </Button>

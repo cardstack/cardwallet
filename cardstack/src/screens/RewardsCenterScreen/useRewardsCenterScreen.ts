@@ -8,21 +8,17 @@ import {
   useGetRewardClaimsQuery,
   useGetTransactionsFromSafesQuery,
 } from '@cardstack/graphql';
-import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
+import { useMutationEffects } from '@cardstack/hooks';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import {
-  useClaimRewardsMutation,
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useRegisterToRewardProgramMutation,
 } from '@cardstack/services/rewards-center/rewards-center-api';
-import { getClaimRewardsGasEstimate } from '@cardstack/services/rewards-center/rewards-center-service';
 import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-center-types';
-import { queryPromiseWrapper } from '@cardstack/services/utils';
 import {
   RewardsRegisterData,
   TransactionConfirmationType,
   TokenType,
-  RewardsClaimData,
 } from '@cardstack/types';
 import {
   groupTransactionsByDate,
@@ -40,7 +36,7 @@ import useRewardsDataFetch from './useRewardsDataFetch';
 const defaultGasEstimateInSpend = convertToSpend(0.07, 'USD', 1);
 
 export const useRewardsCenterScreen = () => {
-  const { navigate, goBack, dispatch: navDispatch } = useNavigation();
+  const { navigate, dispatch: navDispatch } = useNavigation();
   const { accountAddress, network } = useAccountSettings();
 
   const {
@@ -55,11 +51,6 @@ export const useRewardsCenterScreen = () => {
     registerToRewardProgram,
     { isSuccess: isRegistrationSuccess, isError: isRegistrationError },
   ] = useRegisterToRewardProgramMutation();
-
-  const [
-    claimRewards,
-    { isSuccess: isClaimSuccess, isError: isClaimError },
-  ] = useClaimRewardsMutation();
 
   const registeredPools = useMemo(
     () =>
@@ -229,94 +220,6 @@ export const useRewardsCenterScreen = () => {
     });
   }, [navigate, onPrepaidCardSelection]);
 
-  useMutationEffects(
-    useMemo(
-      () => ({
-        success: {
-          status: isClaimSuccess,
-          callback: onMutationEndAlert({
-            title: 'Success',
-            message: 'Rewards claimed successfully',
-            popStackNavigation: 1,
-          }),
-        },
-        error: {
-          status: isClaimError,
-          callback: onMutationEndAlert(defaultErrorAlert),
-        },
-      }),
-      [isClaimError, isClaimSuccess, onMutationEndAlert]
-    )
-  );
-
-  const [
-    isLoadingClaimGas,
-    startClaimGasLoading,
-    stopClaimGasLoading,
-  ] = useBooleanState();
-
-  const onClaimPress = useCallback(
-    (tokenAddress, rewardProgramId) => async () => {
-      startClaimGasLoading();
-
-      const rewardSafeForProgram = rewardSafes?.find(
-        safe => safe.rewardProgramId === rewardProgramId
-      );
-
-      const partialClaimParams = {
-        tokenAddress,
-        accountAddress,
-        rewardProgramId,
-        safeAddress: rewardSafeForProgram?.address || '',
-      };
-
-      const {
-        data: estimatedClaimGas,
-      } = await queryPromiseWrapper(
-        getClaimRewardsGasEstimate,
-        partialClaimParams,
-        { errorLogMessage: 'Error fetching reward claim gas fee' }
-      );
-
-      stopClaimGasLoading();
-
-      // Cant assign undefined mainPoolTokenInfo to data.
-      if (mainPoolTokenInfo) {
-        const data: RewardsClaimData = {
-          type: TransactionConfirmationType.REWARDS_CLAIM,
-          estGasFee: estimatedClaimGas || '0.10',
-          ...mainPoolTokenInfo,
-        };
-
-        navigate(Routes.REWARDS_CLAIM_SHEET, {
-          data,
-          onConfirm: () => {
-            showLoadingOverlay({ title: strings.claim.loading });
-
-            claimRewards({
-              ...partialClaimParams,
-              signerParams,
-              rewardProgramId,
-            });
-          },
-          onCancel: goBack,
-        });
-      }
-    },
-    [
-      startClaimGasLoading,
-      rewardSafes,
-      accountAddress,
-      stopClaimGasLoading,
-      mainPoolTokenInfo,
-      navigate,
-      goBack,
-      showLoadingOverlay,
-      claimRewards,
-      signerParams,
-    ]
-  );
-
   const {
     data: rewardClaims,
     refetch: refetchClaimHistory,
@@ -401,9 +304,7 @@ export const useRewardsCenterScreen = () => {
     hasRewardsAvailable: !!mainPoolTokenInfo,
     mainPoolTokenInfo,
     isLoading,
-    onClaimPress,
     historySectionData,
     tokensBalanceData,
-    isLoadingClaimGas,
   };
 };

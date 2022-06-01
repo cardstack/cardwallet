@@ -20,11 +20,9 @@ const RewardsCenterScreen = () => {
     isRegistered,
     hasRewardsAvailable,
     mainPoolTokenInfo,
-    onClaimPress,
     historySectionData,
     tokensBalanceData,
     isLoading,
-    isLoadingClaimGas,
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
@@ -32,12 +30,8 @@ const RewardsCenterScreen = () => {
       primaryText: mainPoolTokenInfo?.balance.display || '',
       subText: mainPoolTokenInfo?.native.balance.display || '',
       coinSymbol: mainPoolTokenInfo?.token.symbol || '',
-      onClaimPress: onClaimPress(
-        mainPoolTokenInfo?.tokenAddress,
-        mainPoolTokenInfo?.rewardProgramId
-      ),
     }),
-    [mainPoolTokenInfo, onClaimPress]
+    [mainPoolTokenInfo]
   );
 
   return (
@@ -63,7 +57,6 @@ const RewardsCenterScreen = () => {
                 claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
                 historyList={historySectionData}
                 balanceList={tokensBalanceData}
-                isLoadingClaimGas={isLoadingClaimGas}
               />
             )}
           </Container>

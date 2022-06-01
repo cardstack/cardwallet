@@ -15,6 +15,7 @@ export const RewardsNetAmountSection = ({
   balance,
   estGasFee,
   token,
+  loadingGasEstimate,
 }: RewardsNetAmountSectionProps) => {
   const estimateNetClaim = useMemo(
     () => (Number(balance?.amount) - Number(estGasFee)).toFixed(2),
@@ -39,5 +40,11 @@ export const RewardsNetAmountSection = ({
     [balance, estGasFee, token, estimateNetClaim]
   );
 
-  return <AmountSection title={headerText} data={data} />;
+  return (
+    <AmountSection
+      title={headerText}
+      data={data}
+      showLoading={loadingGasEstimate}
+    />
+  );
 };
