@@ -7,11 +7,14 @@ import logger from 'logger';
 const keys = {
   AUTH_PIN: `${SECURE_STORE_KEY}_AUTH_PIN`,
   SEED: `${SECURE_STORE_KEY}_SEED`,
+  PKEY: `${SECURE_STORE_KEY}_PKEY`,
 } as const;
 
 type KeysType = typeof keys;
 
 type Keys = KeysType[keyof KeysType];
+
+const trimSecureKey = (key: Keys) => key.replace(`${SECURE_STORE_KEY}_`, '');
 
 const getSecureValue = async (
   key: Keys,
@@ -22,13 +25,46 @@ const getSecureValue = async (
 
     return result;
   } catch (e) {
-    const secureKey = key.replace(`${SECURE_STORE_KEY}_`, '');
+    const secureKey = trimSecureKey(key);
 
     logger.sentry(`No value for key: ${secureKey}`, e);
 
     return null;
   }
 };
+
+const getEncryptedItemByKey = async (key: Keys) => {
+  try {
+    const pin = (await getPin()) || '';
+    const encryptedValue = await getSecureValue(key);
+
+    if (encryptedValue) {
+      const item = await encryptor.decrypt(pin, encryptedValue);
+
+      return item;
+    }
+  } catch (e) {
+    const secureKey = trimSecureKey(key);
+    logger.sentry(`Error getting ${secureKey} encrypted item`, e);
+
+    return null;
+  }
+};
+
+const setEncryptedItem = async (item: string, key: Keys, password: string) => {
+  try {
+    const encryptedItem = await encryptor.encrypt(password, item);
+
+    if (encryptedItem) {
+      await SecureStore.setItemAsync(key, encryptedItem);
+    }
+  } catch (e) {
+    const secureKey = trimSecureKey(key);
+    logger.sentry(`Error saving ${secureKey} encrypted item`, e);
+  }
+};
+
+const buildKeyWithId = (key: Keys, id: string) => `${key}_${id}`;
 
 // PIN
 const savePin = (pin: string) => SecureStore.setItemAsync(keys.AUTH_PIN, pin);
@@ -40,53 +76,61 @@ const deletePin = () => SecureStore.deleteItemAsync(keys.AUTH_PIN);
 const encryptor = new AesEncryptor();
 
 // SEED
-const getSeedKey = (walletId: string) => `${keys.SEED}_${walletId}`;
+const saveSeedPhrase = async (seed: string, walletId: string, pin: string) => {
+  const seedKey = buildKeyWithId(keys.SEED, walletId);
 
-const saveSeedPhrase = async (seed: string, walletId: string) => {
-  try {
-    const pin = await getPin();
-
-    if (pin) {
-      const encryptedSeed = await encryptor.encrypt(pin, seed);
-
-      if (encryptedSeed) {
-        const seedKey = getSeedKey(walletId);
-
-        await SecureStore.setItemAsync(seedKey, encryptedSeed);
-      }
-    }
-  } catch (e) {
-    logger.sentry('Error saving seed', e);
-  }
+  await setEncryptedItem(seed, seedKey as Keys, pin);
 };
 
-const getSeedPhrase = async (walletId: string, pin: string) => {
-  const seedKey = getSeedKey(walletId);
+const getSeedPhrase = async (walletId: string) => {
+  const seedKey = buildKeyWithId(keys.SEED, walletId);
 
-  try {
-    const encryptedSeed = await getSecureValue(seedKey as Keys);
+  const seedPhrase = await getEncryptedItemByKey(seedKey as Keys);
 
-    if (encryptedSeed) {
-      const seed = await encryptor.decrypt(pin, encryptedSeed);
-
-      return seed;
-    }
-  } catch (e) {
-    logger.sentry('Error retrieving seed', e);
-  }
+  return seedPhrase;
 };
 
 const deleteSeedPhrase = async (walletId: string) => {
-  const seedKey = getSeedKey(walletId);
+  const seedKey = buildKeyWithId(keys.SEED, walletId);
 
   await SecureStore.deleteItemAsync(seedKey);
+};
+
+// PRIVATE_KEY
+const savePrivateKey = async (privateKey: string, walletAddress: string) => {
+  try {
+    const pin = (await getPin()) || '';
+
+    const pKey = buildKeyWithId(keys.PKEY, walletAddress);
+
+    await setEncryptedItem(privateKey, pKey as Keys, pin);
+  } catch (e) {
+    logger.sentry('Error saving provate key', e);
+  }
+};
+
+const getPrivateKey = async (walletAddress: string) => {
+  const pKey = buildKeyWithId(keys.PKEY, walletAddress);
+
+  const privateKey = await getEncryptedItemByKey(pKey as Keys);
+
+  return privateKey;
+};
+
+const deletePrivateKey = async (walletAddress: string) => {
+  const pKey = buildKeyWithId(keys.PKEY, walletAddress);
+
+  await SecureStore.deleteItemAsync(pKey);
 };
 
 export {
   savePin,
   getPin,
   deletePin,
-  deleteSeedPhrase,
   getSeedPhrase,
   saveSeedPhrase,
+  deleteSeedPhrase,
+  savePrivateKey,
+  getPrivateKey,
+  deletePrivateKey,
 };
