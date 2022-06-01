@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Switch } from 'react-native';
 
 import { Container, Text, Icon } from '@cardstack/components';
+import { colors } from '@cardstack/theme';
 import {
   colorStyleVariants,
   ThemeVariant,
 } from '@cardstack/theme/colorStyleVariants';
+import { Device } from '@cardstack/utils';
 
 import { strings } from './strings';
 import { useBiometricSwitch } from './useBiometricSwitch';
@@ -13,6 +15,11 @@ import { useBiometricSwitch } from './useBiometricSwitch';
 interface BiometricSwitchProps {
   variant: ThemeVariant;
 }
+
+const androidSwitchLightConfig = {
+  false: colors.backgroundLightGray,
+  true: '', // empty to use default value
+};
 
 export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
   const {
@@ -22,6 +29,14 @@ export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
     biometryAvailable,
     toggleBiometrySwitch,
   } = useBiometricSwitch();
+
+  const trackColor = useMemo(
+    () =>
+      Device.isAndroid && variant === 'light'
+        ? androidSwitchLightConfig
+        : undefined,
+    [variant]
+  );
 
   // iconProps is undefined until biometry is ready.
   if (!biometryAvailable || !iconProps) return null;
@@ -41,7 +56,11 @@ export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
         marginRight={2}
         {...iconProps}
       />
-      <Switch onValueChange={toggleBiometrySwitch} value={isBiometryEnabled} />
+      <Switch
+        onValueChange={toggleBiometrySwitch}
+        value={isBiometryEnabled}
+        trackColor={trackColor}
+      />
     </Container>
   );
 };

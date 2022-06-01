@@ -17,7 +17,7 @@ module.exports = {
   ],
   coverageDirectory: '.coverage',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  preset: 'react-native',
+  preset: 'jest-expo',
   setupFilesAfterEnv: ['<rootDir>/cardstack/src/test-utils/jest-setup.js'],
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
@@ -26,7 +26,7 @@ module.exports = {
     '<rootDir>/cardstack/**/*.test.tsx',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?react-native|react-native|@react-native|@cardstack|@sentry/.*|@react-navigation)',
+    'node_modules/(?!((jest-)?react-native|@sentry|@cardstack|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)',
   ],
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths, {
