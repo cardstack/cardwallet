@@ -12,8 +12,6 @@ import { useBooleanState, useMutationEffects } from '@cardstack/hooks';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   useClaimRewardsMutation,
-  useGetRewardPoolTokenBalancesQuery,
-  useGetRewardsSafeQuery,
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useRegisterToRewardProgramMutation,
 } from '@cardstack/services/rewards-center/rewards-center-api';
@@ -22,9 +20,9 @@ import { RewardsSafeType } from '@cardstack/services/rewards-center/rewards-cent
 import { queryPromiseWrapper } from '@cardstack/services/utils';
 import {
   RewardsRegisterData,
-  RewardsClaimData,
   TransactionConfirmationType,
   TokenType,
+  RewardsClaimData,
 } from '@cardstack/types';
 import {
   groupTransactionsByDate,
@@ -33,48 +31,25 @@ import {
 } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
-import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings, useWallets } from '@rainbow-me/hooks';
 
 import { ClaimOrTokenWithdraw, TokenWithSafeAddress } from './components';
 import { strings } from './strings';
-
-const rewardDefaultProgramId = {
-  [networkTypes.sokol]: '0x5E4E148baae93424B969a0Ea67FF54c315248BbA',
-  // TestID
-  [networkTypes.xdai]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
-};
+import useRewardsDataFetch from './useRewardsDataFetch';
 
 const defaultGasEstimateInSpend = convertToSpend(0.07, 'USD', 1);
 
 export const useRewardsCenterScreen = () => {
   const { navigate, goBack, dispatch: navDispatch } = useNavigation();
-  const { accountAddress, nativeCurrency, network } = useAccountSettings();
-
-  const query = useMemo(
-    () => ({
-      params: {
-        accountAddress,
-        nativeCurrency,
-      },
-      options: {
-        skip: !accountAddress || isLayer1(network),
-        refetchOnMountOrArgChange: true,
-      },
-    }),
-    [accountAddress, nativeCurrency, network]
-  );
+  const { accountAddress, network } = useAccountSettings();
 
   const {
-    isLoading: isLoadindSafes,
-    isUninitialized,
-    data: { rewardSafes } = {},
-  } = useGetRewardsSafeQuery(query.params, query.options);
-
-  const {
-    isLoading: isLoadingTokens,
-    data: { rewardPoolTokenBalances } = {},
-  } = useGetRewardPoolTokenBalancesQuery(query.params, query.options);
+    rewardSafes,
+    rewardPoolTokenBalances,
+    defaultRewardProgramId,
+    isLoading,
+    mainPoolTokenInfo,
+  } = useRewardsDataFetch();
 
   const [
     registerToRewardProgram,
@@ -99,21 +74,9 @@ export const useRewardsCenterScreen = () => {
   const isRegistered = useMemo(
     () =>
       rewardSafes?.some(
-        ({ rewardProgramId }) =>
-          rewardProgramId === rewardDefaultProgramId[network]
+        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
       ),
-    [network, rewardSafes]
-  );
-
-  // Checks if available tokens matches default program and has amount
-  const mainPoolTokenInfo = useMemo(
-    () =>
-      rewardPoolTokenBalances?.find(
-        ({ rewardProgramId, balance: { amount } }) =>
-          Number(amount) > 0 &&
-          rewardProgramId === rewardDefaultProgramId[network]
-      ),
-    [network, rewardPoolTokenBalances]
+    [rewardSafes, defaultRewardProgramId]
   );
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
@@ -210,14 +173,14 @@ export const useRewardsCenterScreen = () => {
 
       getRegisterGasEstimate({
         prepaidCardAddress: prepaidCard.address,
-        rewardProgramId: rewardDefaultProgramId[network],
+        rewardProgramId: defaultRewardProgramId,
       });
     },
     [
       getRegisterGasEstimate,
-      network,
       showLoadingOverlay,
       updateRegisterConfirmationDataWith,
+      defaultRewardProgramId,
     ]
   );
 
@@ -235,16 +198,16 @@ export const useRewardsCenterScreen = () => {
       data: registerConfirmationData.current,
       onConfirm: onRegisterConfirmPress(
         registerConfirmationData.current.prepaidCard,
-        rewardDefaultProgramId[network]
+        defaultRewardProgramId
       ),
     });
   }, [
     dismissLoadingOverlay,
     navigate,
-    network,
     onRegisterConfirmPress,
     registerEstimatedGas,
     updateRegisterConfirmationDataWith,
+    defaultRewardProgramId,
   ]);
 
   useEffect(() => {
@@ -437,10 +400,7 @@ export const useRewardsCenterScreen = () => {
     onRegisterPress,
     hasRewardsAvailable: !!mainPoolTokenInfo,
     mainPoolTokenInfo,
-    isLoading:
-      isLoadindSafes ||
-      isLoadingTokens ||
-      (isUninitialized && !isLayer1(network)),
+    isLoading,
     onClaimPress,
     historySectionData,
     tokensBalanceData,
