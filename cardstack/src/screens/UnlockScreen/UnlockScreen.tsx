@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo } from 'react';
 import { StatusBar, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 import {
@@ -9,30 +9,31 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import {
-  BiometricSwitch,
-  useBiometricSwitch,
-} from '@cardstack/components/BiometricSwitch';
+import { BiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 
-import { useAppVersion, useDimensions } from '@rainbow-me/hooks';
+import { useDimensions } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
-
-// To be replaced with states
-const variant = 'dark';
-const pinError = true;
+import { useUnlockScreen } from './useUnlockScreen';
 
 const UnlockScreen = () => {
+  const {
+    biometryAvailable,
+    appVersion,
+    variant,
+    inputPin,
+    setInputPin,
+    pinInvalid,
+    onResetWalletPress,
+  } = useUnlockScreen();
+
   const { isSmallPhone } = useDimensions();
-  const { biometryAvailable } = useBiometricSwitch();
-  const appVersion = useAppVersion();
-  const [inputPin, setInputPin] = useState('');
 
   const statusBarStyle = useMemo(
     () => (variant === 'dark' ? 'light-content' : 'dark-content'),
-    []
+    [variant]
   );
 
   const logoSize = useMemo(() => (isSmallPhone ? 'medium' : 'big'), [
@@ -57,7 +58,7 @@ const UnlockScreen = () => {
               alignItems="center"
               justifyContent="center"
             >
-              <CardwalletLogo size={logoSize} />
+              <CardwalletLogo variant={variant} size={logoSize} />
             </Container>
             <Container
               flex={1}
@@ -73,7 +74,7 @@ const UnlockScreen = () => {
                   value={inputPin}
                   onChangeText={setInputPin}
                 />
-                {pinError && (
+                {!!pinInvalid && (
                   <Container width="85%" paddingTop={1}>
                     <Text
                       fontSize={11}
@@ -102,7 +103,7 @@ const UnlockScreen = () => {
               <Text textAlign="center" color="grayText" size="xs">
                 {strings.login.eraseMessage}
               </Text>
-              <Touchable paddingBottom={4}>
+              <Touchable onPress={onResetWalletPress} paddingBottom={4}>
                 <Text color="teal" size="xs">
                   {strings.login.eraseLink}
                 </Text>
