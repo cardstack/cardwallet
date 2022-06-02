@@ -126,7 +126,6 @@ const rewardsApi = safesApi.injectEndpoints({
           params,
           {
             errorLogMessage: 'Error fetching reward claim gas fee',
-            timeout: 60000, // 1 min
           }
         );
       },
