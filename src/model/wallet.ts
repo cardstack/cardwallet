@@ -563,6 +563,7 @@ export interface CreateImportParams {
   color?: number;
   name?: string;
   checkedWallet?: EthereumWalletFromSeed;
+  pin?: string;
 }
 
 export const createOrImportWallet = async ({
@@ -570,12 +571,17 @@ export const createOrImportWallet = async ({
   color,
   name,
   checkedWallet,
+  pin,
 }: CreateImportParams = {}) => {
   const isImported = !!seed;
   logger.sentry('Creating wallet, isImported?', isImported);
   if (!seed) {
     logger.sentry('Generating a new seed phrase');
   }
+
+  // TODO: migrate wallet to use pin on new acc
+  if (!pin && !isImported) return;
+
   const walletSeed = seed || generateMnemonic();
 
   const addresses: Account[] = [];

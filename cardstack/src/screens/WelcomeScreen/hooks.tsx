@@ -2,7 +2,6 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useLoadingOverlay } from '@cardstack/navigation';
 import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils';
 
@@ -11,23 +10,18 @@ import {
   isCloudBackupAvailable,
   syncCloud,
 } from '@rainbow-me/handlers/cloudBackup';
-import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useHideSplashScreen, useWalletManager } from '@rainbow-me/hooks';
 import { ICloudBackupData } from '@rainbow-me/model/backup';
 import logger from 'logger';
 
 export const useWelcomeScreen = () => {
-  const { navigate, replace } = useNavigation<
-    StackNavigationProp<ParamListBase>
-  >();
+  const { navigate } = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [userData, setUserData] = useState<ICloudBackupData | null>(null);
 
   const hideSplashScreen = useHideSplashScreen();
 
   const { createNewWallet } = useWalletManager();
-
-  const { showLoadingOverlay } = useLoadingOverlay();
 
   useEffect(() => {
     const checkCloudBackupOnInit = async () => {
@@ -58,13 +52,11 @@ export const useWelcomeScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onCreateWallet = useCallback(async () => {
-    replace(Routes.TAB_NAVIGATOR);
-
-    showLoadingOverlay({ title: walletLoadingStates.CREATING_WALLET });
-
-    createNewWallet();
-  }, [replace, createNewWallet, showLoadingOverlay]);
+  const onCreateWallet = useCallback(() => {
+    createNewWallet({
+      isFromWelcomeFlow: true,
+    });
+  }, [createNewWallet]);
 
   const onAddExistingWallet = useCallback(() => {
     navigate(Routes.RESTORE_SHEET, {

@@ -3,16 +3,17 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
+import { savePin } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation/routes';
 import { RouteType } from '@cardstack/navigation/types';
 import { ThemeVariant } from '@cardstack/theme/colorStyleVariants';
 
-import { PinFlow } from './types';
+import logger from 'logger';
 
-const successDelayDismiss = 1500;
+import { PinFlow } from './types';
 
 const initialFLows = [PinFlow.create, PinFlow.new];
 
@@ -24,6 +25,7 @@ interface NavParams {
   initialPin?: string;
   onSuccess?: (pin: string) => void;
   customSubtitle?: string;
+  dismissOnSuccess?: string;
 }
 
 export const usePinScreen = () => {
@@ -49,9 +51,9 @@ export const usePinScreen = () => {
     if (initialFLows.includes(flow)) {
       navDispatch(
         StackActions.push(Routes.PIN_SCREEN, {
+          ...params,
           flow: PinFlow.confirm,
           initialPin: inputPin,
-          variant,
           canGoBack: true,
         })
       );
@@ -62,20 +64,26 @@ export const usePinScreen = () => {
     } else {
       setIsValidPin(null);
     }
-  }, [navDispatch, flow, inputPin, variant, initialPin]);
+  }, [navDispatch, flow, inputPin, variant, initialPin, params]);
+
+  const onValidPin = useCallback(async () => {
+    try {
+      await savePin(inputPin);
+      await params?.onSuccess?.(inputPin);
+    } catch (e) {
+      logger.sentry('Error while saving PIN', e);
+    }
+
+    if (params.dismissOnSuccess) {
+      navDispatch(StackActions.popToTop());
+    }
+  }, [inputPin, navDispatch, params]);
 
   useEffect(() => {
     if (isValidPin) {
-      // Probably gonna need to extract to async func
-      // If so, sending a dimiss callback might be better
-      // then using setTimeout
-      params?.onSuccess?.(inputPin);
-
-      setTimeout(() => {
-        navDispatch(StackActions.popToTop());
-      }, successDelayDismiss);
+      onValidPin();
     }
-  }, [navDispatch, isValidPin, params, inputPin]);
+  }, [navDispatch, isValidPin, params, inputPin, onValidPin]);
 
   return {
     canGoBack,

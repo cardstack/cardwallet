@@ -53,7 +53,6 @@ describe('usePinScreen', () => {
       StackActions.push(Routes.PIN_SCREEN, {
         flow: PinFlow.confirm,
         initialPin: PIN,
-        variant: 'dark',
         canGoBack: true,
       })
     );
@@ -144,7 +143,39 @@ describe('usePinScreen', () => {
     expect(result.current.isValidPin).toStrictEqual(true);
   });
 
-  it('should call onSuccess cb and popToTop when PIN is valid on confirm flow', async () => {
+  it('should call onSuccess cb and popToTop when PIN is valid on confirm flow and dismissOnSuccess is true', async () => {
+    const onSuccess = jest.fn();
+
+    mockRouteParamsHelper({
+      flow: PinFlow.confirm,
+      canGoBack: true,
+      initialPin: PIN,
+      dismissOnSuccess: true,
+      onSuccess,
+    });
+
+    const { result } = renderHook(() => usePinScreen());
+
+    act(() => {
+      result.current.setInputPin(PIN);
+    });
+
+    await waitFor(() => {
+      expect(result.current.inputPin).toBeTruthy();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isValidPin).toBeTruthy();
+    });
+
+    expect(onSuccess).toBeCalledWith(PIN);
+
+    jest.runAllTimers();
+
+    expect(mockNavDispatch).toBeCalledWith(StackActions.popToTop());
+  });
+
+  it('should call onSuccess cb and not popToTop when PIN is valid on confirm flow and dismissOnSuccess is false', async () => {
     const onSuccess = jest.fn();
 
     mockRouteParamsHelper({
@@ -172,6 +203,6 @@ describe('usePinScreen', () => {
 
     jest.runAllTimers();
 
-    expect(mockNavDispatch).toBeCalledWith(StackActions.popToTop());
+    expect(mockNavDispatch).not.toBeCalledWith(StackActions.popToTop());
   });
 });
