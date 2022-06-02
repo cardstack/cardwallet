@@ -61,7 +61,9 @@ const useRewardsClaim = () => {
     data: estimatedGasClaim,
     isLoading: loadingEstimatedGasClaim,
     isFetching: fetchingEstimatedGasClaim,
-  } = useGetClaimRewardsGasEstimateQuery(partialClaimParams);
+  } = useGetClaimRewardsGasEstimateQuery(partialClaimParams, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const screenData = useMemo(
     () => ({
