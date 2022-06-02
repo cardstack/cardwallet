@@ -55,11 +55,16 @@ const useRewardsDataFetch = () => {
     [rewardPoolTokenBalances, defaultRewardProgramId]
   );
 
-  return {
-    isLoading:
+  const isLoading = useMemo(
+    () =>
       isLoadingSafes ||
       isLoadingTokens ||
       (isUninitialized && !isLayer1(network)),
+    [isLoadingSafes, isLoadingTokens, isUninitialized, network]
+  );
+
+  return {
+    isLoading,
     rewardSafes,
     rewardPoolTokenBalances,
     mainPoolTokenInfo,
