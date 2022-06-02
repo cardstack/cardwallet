@@ -7,6 +7,7 @@ import {
   claimRewards,
   fetchRewardPoolTokenBalances,
   fetchRewardsSafe,
+  getClaimRewardsGasEstimate,
   getRegisterGasEstimate,
   getWithdrawGasEstimate,
   registerToRewardProgram,
@@ -14,6 +15,7 @@ import {
 } from './rewards-center-service';
 import {
   RegisterGasEstimateQueryParams,
+  RewardsClaimGasEstimateParams,
   RewardsClaimMutationParams,
   RewardsRegisterMutationParams,
   RewardsRegisterMutationResult,
@@ -114,6 +116,20 @@ const rewardsApi = safesApi.injectEndpoints({
       },
       invalidatesTags: [CacheTags.REWARDS_SAFE, CacheTags.REWARDS_POOL],
     }),
+    getClaimRewardsGasEstimate: builder.query<
+      string,
+      RewardsClaimGasEstimateParams
+    >({
+      async queryFn(params) {
+        return queryPromiseWrapper<string, RewardsClaimGasEstimateParams>(
+          getClaimRewardsGasEstimate,
+          params,
+          {
+            errorLogMessage: 'Error fetching reward claim gas fee',
+          }
+        );
+      },
+    }),
     withdrawRewardBalance: builder.mutation<
       SuccessfulTransactionReceipt,
       RewardWithdrawParams
@@ -140,4 +156,5 @@ export const {
   useLazyGetRegisterRewardeeGasEstimateQuery,
   useWithdrawRewardBalanceMutation,
   useGetRewardWithdrawGasEstimateQuery,
+  useGetClaimRewardsGasEstimateQuery,
 } = rewardsApi;
