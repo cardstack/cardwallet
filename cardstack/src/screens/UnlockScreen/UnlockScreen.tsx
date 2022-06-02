@@ -1,8 +1,7 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { StatusBar, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 import {
-  Button,
   Container,
   PinInput,
   SafeAreaView,
@@ -13,55 +12,35 @@ import { BiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 
-import { useDimensions } from '@rainbow-me/hooks';
+import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
 
 import { strings } from './strings';
 import { useUnlockScreen } from './useUnlockScreen';
 
+const variant = 'dark';
+
 const UnlockScreen = () => {
   const {
-    biometryAvailable,
-    appVersion,
-    variant,
     inputPin,
     setInputPin,
     pinInvalid,
     onResetWalletPress,
   } = useUnlockScreen();
 
-  const { isSmallPhone } = useDimensions();
-
-  const statusBarStyle = useMemo(
-    () => (variant === 'dark' ? 'light-content' : 'dark-content'),
-    [variant]
-  );
-
-  const logoSize = useMemo(() => (isSmallPhone ? 'medium' : 'big'), [
-    isSmallPhone,
-  ]);
-
-  const logoContaineFlex = useMemo(() => (isSmallPhone ? 1.5 : 2), [
-    isSmallPhone,
-  ]);
-
   return (
     <>
-      <StatusBar barStyle={statusBarStyle} />
+      <StatusBar barStyle="light-content" />
       <SafeAreaView
         backgroundColor={colorStyleVariants.backgroundColor[variant]}
         flex={1}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Container flex={1} alignItems="center">
-            <Container
-              flex={logoContaineFlex}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <CardwalletLogo variant={variant} size={logoSize} />
+            <Container flex={1.5} alignItems="center" justifyContent="center">
+              <CardwalletLogo variant={variant} proportionalSize />
             </Container>
             <Container
-              flex={1}
+              flex={0.9}
               justifyContent="space-between"
               width="100%"
               alignItems="center"
@@ -87,32 +66,35 @@ const UnlockScreen = () => {
                   </Container>
                 )}
               </Container>
-              {biometryAvailable && (
-                <Container>
-                  <BiometricSwitch variant={variant} />
-                </Container>
-              )}
+              <Container paddingBottom={1}>
+                <BiometricSwitch variant={variant} />
+              </Container>
             </Container>
             <Container
               flex={1}
+              paddingTop={4}
               width="80%"
-              justifyContent="space-around"
+              justifyContent="flex-end"
               alignItems="center"
             >
-              <Button>{strings.login.button}</Button>
-              <Text textAlign="center" color="grayText" size="xs">
-                {strings.login.eraseMessage}
-              </Text>
-              <Touchable onPress={onResetWalletPress} paddingBottom={4}>
-                <Text color="teal" size="xs">
-                  {strings.login.eraseLink}
+              <Container flex={1} justifyContent="flex-end" alignItems="center">
+                <Text
+                  textAlign="center"
+                  color="grayText"
+                  size="xs"
+                  paddingBottom={5}
+                >
+                  {strings.login.eraseMessage}
                 </Text>
-              </Touchable>
+                <Touchable onPress={onResetWalletPress}>
+                  <Text color="teal" size="xs">
+                    {strings.login.eraseLink}
+                  </Text>
+                </Touchable>
+              </Container>
             </Container>
-            <Container flex={0.3} justifyContent="center">
-              <Text paddingBottom={4} color="grayText" size="xs">
-                Version {appVersion}
-              </Text>
+            <Container flex={0.2} justifyContent="flex-end" paddingBottom={1}>
+              <AppVersionStamp />
             </Container>
           </Container>
         </TouchableWithoutFeedback>

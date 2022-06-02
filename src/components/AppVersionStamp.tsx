@@ -42,7 +42,7 @@ const AppVersionStamp = () => {
   return (
     <>
       <TouchableWithoutFeedback onPress={handleVersionPress}>
-        <Text color="grayText" size="small" weight="bold">
+        <Text color="grayText" size="xs">
           Version {appVersion}
         </Text>
       </TouchableWithoutFeedback>
