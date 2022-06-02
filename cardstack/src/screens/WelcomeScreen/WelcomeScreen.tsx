@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 
 import {
   Button,
@@ -11,7 +11,6 @@ import {
 import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
-import { useDimensions } from '@rainbow-me/hooks';
 
 import { useWelcomeScreen } from './hooks';
 import { strings } from './strings';
@@ -21,11 +20,6 @@ const MID_IMAGE_WRAPPER = 85;
 
 const WelcomeScreen = () => {
   const { onCreateWallet, onAddExistingWallet } = useWelcomeScreen();
-  const { isSmallPhone } = useDimensions();
-
-  const logoSize = useMemo(() => (isSmallPhone ? 'medium' : 'big'), [
-    isSmallPhone,
-  ]);
 
   return (
     <SafeAreaView
@@ -35,7 +29,7 @@ const WelcomeScreen = () => {
       paddingBottom={4}
     >
       <CenteredContainer flex={1} justifyContent="flex-end">
-        <CardwalletLogo size={logoSize} />
+        <CardwalletLogo proportionalSize />
       </CenteredContainer>
       <CenteredContainer flex={0.5}>
         <Container height={MID_IMAGE_WRAPPER}>
