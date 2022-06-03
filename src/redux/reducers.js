@@ -10,6 +10,7 @@ import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import biometryToggle from '@cardstack/redux/biometryToggleSlice';
 import collectibles from '@cardstack/redux/collectibles';
+import localAuthentication from '@cardstack/redux/localAuthenticationSlice';
 import primarySafe from '@cardstack/redux/primarySafeSlice';
 import requests from '@cardstack/redux/requests';
 
@@ -28,4 +29,5 @@ export default {
   wallets,
   primarySafe,
   biometryToggle,
+  localAuthentication,
 };

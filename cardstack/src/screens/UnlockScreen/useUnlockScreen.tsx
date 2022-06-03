@@ -6,6 +6,7 @@ import RNRestart from 'react-native-restart';
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { useBooleanState } from '@cardstack/hooks';
+import { useLocalAuth } from '@cardstack/hooks/useLocalAuth';
 import { getPin, deletePin } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation/routes';
 import { RouteType } from '@cardstack/navigation/types';
@@ -23,26 +24,31 @@ interface NavParams {
 export const useUnlockScreen = () => {
   const { navigate } = useNavigation();
   const { params } = useRoute<RouteType<NavParams>>();
-  const { biometryAvailable } = useBiometricSwitch();
+  const { biometryAvailable, isBiometryEnabled } = useBiometricSwitch();
+  const { isAuthenticated, authenticate } = useLocalAuth();
   const appVersion = useAppVersion();
   const [inputPin, setInputPin] = useState('');
   const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
   const { variant = 'dark' } = params;
 
+  const accessAuthorized = useCallback(() => {
+    setPinValid();
+    navigate(Routes.WALLET_SCREEN);
+  }, [navigate, setPinValid]);
+
   const validatePin = useCallback(
     async (input: string) => {
       const savedPin = await getPin();
 
       if (savedPin === input) {
-        setPinValid();
-        navigate(Routes.WALLET_SCREEN);
+        accessAuthorized();
       } else {
         setPinInvalid();
         setInputPin('');
       }
     },
-    [navigate, setPinInvalid, setPinValid]
+    [accessAuthorized, setPinInvalid]
   );
 
   const onResetWalletPress = useCallback(() => {
@@ -69,6 +75,18 @@ export const useUnlockScreen = () => {
 
     validatePin(inputPin);
   }, [inputPin, validatePin]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      accessAuthorized();
+
+      return;
+    }
+
+    if (isBiometryEnabled) {
+      authenticate();
+    }
+  }, [accessAuthorized, authenticate, isBiometryEnabled, isAuthenticated]);
 
   return {
     biometryAvailable,
