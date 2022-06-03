@@ -65,3 +65,13 @@ export const useAuthActions = () => {
     resetHasWallet,
   };
 };
+
+export const useAuthSelectorAndActions = () => {
+  const selector = useAuthSelector();
+  const actions = useAuthActions();
+
+  return {
+    ...selector,
+    ...actions,
+  };
+};
