@@ -1,4 +1,4 @@
-import { StackActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 
 import { defaultErrorAlert } from '@cardstack/constants';
@@ -22,11 +22,11 @@ import useRewardsDataFetch from '../useRewardsDataFetch';
 interface onClaimCallbackProps {
   title: string;
   message: string;
-  popStackNavigation?: number;
+  dismiss?: boolean;
 }
 
 const useRewardsClaim = () => {
-  const { goBack, dispatch } = useNavigation();
+  const { goBack } = useNavigation();
   const { signerParams, accountAddress } = useWallets();
 
   const {
@@ -96,8 +96,8 @@ const useRewardsClaim = () => {
     defaultRewardProgramId,
   ]);
 
-  const onClaimCallback = useCallback(
-    ({ title, message, popStackNavigation }: onClaimCallbackProps) => () => {
+  const onClaimFulfilledAlert = useCallback(
+    ({ title, message, dismiss }: onClaimCallbackProps) => () => {
       dismissLoadingOverlay();
 
       Alert({
@@ -106,16 +106,12 @@ const useRewardsClaim = () => {
         buttons: [
           {
             text: strings.defaultAlertBtn,
-            onPress: popStackNavigation
-              ? () => {
-                  dispatch(StackActions.pop(popStackNavigation));
-                }
-              : undefined,
+            onPress: dismiss ? goBack : undefined,
           },
         ],
       });
     },
-    [dismissLoadingOverlay, dispatch]
+    [dismissLoadingOverlay, goBack]
   );
 
   useMutationEffects(
@@ -123,17 +119,17 @@ const useRewardsClaim = () => {
       () => ({
         success: {
           status: isClaimSuccess,
-          callback: onClaimCallback({
+          callback: onClaimFulfilledAlert({
             ...strings.claim.sucessAlert,
-            popStackNavigation: 1,
+            dismiss: true,
           }),
         },
         error: {
           status: isClaimError,
-          callback: onClaimCallback(defaultErrorAlert),
+          callback: onClaimFulfilledAlert(defaultErrorAlert),
         },
       }),
-      [isClaimError, isClaimSuccess, onClaimCallback]
+      [isClaimError, isClaimSuccess, onClaimFulfilledAlert]
     )
   );
 

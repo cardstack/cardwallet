@@ -46,10 +46,9 @@ export const ClaimContent = ({
 
   const { navigate } = useNavigation();
 
-  const onClaimPress = useCallback(
-    item => () => navigate(Routes.REWARDS_CLAIM_SHEET, item),
-    [navigate]
-  );
+  const onClaimPress = useCallback(() => navigate(Routes.REWARDS_CLAIM_SHEET), [
+    navigate,
+  ]);
 
   const renderClaimList = useCallback(
     () =>
@@ -59,7 +58,7 @@ export const ClaimContent = ({
           primaryText={item.primaryText}
           subText={item.subText}
           paddingBottom={index + 1 < claimList.length ? 5 : 0}
-          onClaimPress={onClaimPress(item)}
+          onClaimPress={onClaimPress}
         />
       )),
     [claimList, onClaimPress]

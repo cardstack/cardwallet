@@ -14,7 +14,7 @@ import { mockMainPoolTokenInfo, mockRewardSafeForProgram } from './mocks';
 const mockedShowOverlay = jest.fn();
 const mockedDismissOverlay = jest.fn();
 const accountAddress = '0x0000000000000000000';
-const mockedDispatch = jest.fn();
+const mockedGoBack = jest.fn();
 const rewardSafes = mockRewardSafeForProgram;
 const mainPoolTokenInfo = mockMainPoolTokenInfo;
 const defaultRewardProgramId = '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185';
@@ -26,7 +26,7 @@ const signerParams = {
 
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
-    dispatch: mockedDispatch,
+    goBack: mockedGoBack,
   }),
 }));
 
