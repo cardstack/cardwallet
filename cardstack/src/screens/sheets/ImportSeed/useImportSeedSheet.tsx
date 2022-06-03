@@ -2,7 +2,6 @@ import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import { keys } from 'lodash';
 import {
   RefObject,
   useCallback,
@@ -11,15 +10,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import { InteractionManager, TextInput } from 'react-native';
+import { TextInput } from 'react-native';
 
 import { useInvalidPaste } from '@cardstack/hooks';
-import {
-  dismissKeyboardOnAndroid,
-  navigationStateNewWallet,
-  useLoadingOverlay,
-  Routes,
-} from '@cardstack/navigation';
+import { dismissKeyboardOnAndroid, Routes } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -27,12 +21,10 @@ import {
   isValidSeedPhrase,
   isValidWallet,
 } from '@rainbow-me/helpers/validators';
-import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import {
   useAccountSettings,
   useClipboard,
   useWalletManager,
-  useWallets,
 } from '@rainbow-me/hooks';
 import { EthereumWalletFromSeed } from '@rainbow-me/model/wallet';
 import {
@@ -168,69 +160,26 @@ const useImportFromProfileModal = (
   inputRef: RefObject<TextInput>,
   checkedWallet?: EthereumWalletFromSeed
 ) => {
-  const { navigate, reset } = useNavigation<
-    StackNavigationProp<ParamListBase>
-  >();
+  const { navigate } = useNavigation<StackNavigationProp<ParamListBase>>();
 
-  const { wallets } = useWallets();
   const { importWallet } = useWalletManager();
-
-  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const handleImportAccountOnCloseModal = useCallback(
     async ({ name = null, color = null }) => {
-      showLoadingOverlay({ title: walletLoadingStates.IMPORTING_WALLET });
-
       const seed = sanitizeSeedPhrase(seedPhrase);
 
-      const previousWalletCount = keys(wallets).length;
-      const isFreshWallet = previousWalletCount === 0;
-
       try {
-        const wallet = await importWallet({
+        await importWallet({
           seed,
           color,
           name: name || '',
           checkedWallet,
         });
-
-        // Early return to not dismiss the sheet on error
-        if (!wallet) {
-          dismissLoadingOverlay();
-
-          return;
-        }
-
-        InteractionManager.runAfterInteractions(async () => {
-          // Fresh imported wallet
-          if (isFreshWallet) {
-            // Resets to remove non-auth-routes
-            reset(navigationStateNewWallet);
-          } else {
-            // inner navigation
-            navigate(Routes.WALLET_SCREEN, {
-              initialized: true,
-            });
-          }
-        });
       } catch (error) {
         logger.error('error importing seed phrase: ', error);
-        setTimeout(() => {
-          inputRef.current?.focus();
-        }, 100);
       }
     },
-    [
-      checkedWallet,
-      dismissLoadingOverlay,
-      importWallet,
-      inputRef,
-      navigate,
-      reset,
-      seedPhrase,
-      showLoadingOverlay,
-      wallets,
-    ]
+    [checkedWallet, importWallet, seedPhrase]
   );
 
   const showWalletProfileModal = useCallback(
