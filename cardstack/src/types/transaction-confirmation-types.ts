@@ -68,6 +68,7 @@ export interface RewardsRegisterData {
 export interface RewardsClaimData extends TokenType {
   estGasFee: string;
   type: TransactionConfirmationType.REWARDS_CLAIM;
+  loadingGasEstimate?: boolean;
 }
 
 export interface PayMerchantDecodedData {

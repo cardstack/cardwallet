@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 
 import {
@@ -6,6 +7,7 @@ import {
   useTabHeader,
   InfoBanner,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 
 import { strings } from '../strings';
 
@@ -23,7 +25,6 @@ interface ClaimContentProps {
   claimList?: Array<RewardRowProps>;
   balanceList?: RewardsBalanceListProps;
   historyList?: RewardsHistoryListProps;
-  isLoadingClaimGas?: boolean;
 }
 
 enum Tabs {
@@ -40,9 +41,14 @@ export const ClaimContent = ({
   claimList,
   balanceList,
   historyList,
-  isLoadingClaimGas,
 }: ClaimContentProps) => {
   const { TabHeader, currentTab } = useTabHeader({ tabs });
+
+  const { navigate } = useNavigation();
+
+  const onClaimPress = useCallback(() => navigate(Routes.REWARDS_CLAIM_SHEET), [
+    navigate,
+  ]);
 
   const renderClaimList = useCallback(
     () =>
@@ -52,11 +58,10 @@ export const ClaimContent = ({
           primaryText={item.primaryText}
           subText={item.subText}
           paddingBottom={index + 1 < claimList.length ? 5 : 0}
-          onClaimPress={item.onClaimPress}
-          isLoading={isLoadingClaimGas}
+          onClaimPress={onClaimPress}
         />
       )),
-    [claimList, isLoadingClaimGas]
+    [claimList, onClaimPress]
   );
 
   const title = useMemo(
