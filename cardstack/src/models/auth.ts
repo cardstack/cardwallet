@@ -1,6 +1,6 @@
 import { getPin } from './secure-storage';
 
-const authenticate = async (pin?: string, isBiometricAuthValid?: string) => {
+const authenticate = async (pin?: string, isBiometricAuthValid?: boolean) => {
   const storedPin = await getPin();
 
   if (!storedPin) {
