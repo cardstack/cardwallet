@@ -42,6 +42,7 @@ import { loadAddress } from './model/wallet';
 import store, { persistor } from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import { AppRequirementsCheck } from '@cardstack/components/AppRequirementsCheck';
+import { AppStateUpdate } from '@cardstack/components/AppStateUpdate';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
@@ -225,6 +226,7 @@ class App extends Component {
                       )}
                     </AppRequirementsCheck>
                     <OfflineToast />
+                    <AppStateUpdate />
                   </FlexItem>
                 </PersistGate>
               </Provider>
