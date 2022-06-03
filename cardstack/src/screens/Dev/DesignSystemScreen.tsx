@@ -9,7 +9,6 @@ import {
   Container,
   Text,
 } from '@cardstack/components';
-import { Routes } from '@cardstack/navigation';
 import { buttonVariants } from '@cardstack/theme';
 
 const themes = ['light', 'dark'];
@@ -21,7 +20,7 @@ const DesignSystemScreen = () => {
   const sections = [
     {
       title: 'Template Screens',
-      data: [Routes.UNLOCK_SCREEN, Routes.PIN_SCREEN],
+      data: [],
     },
     {
       title: 'Biometric Switch',

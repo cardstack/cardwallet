@@ -45,7 +45,6 @@ export const useWelcomeScreen = () => {
     };
 
     checkCloudBackupOnInit();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCreateWallet = useCallback(() => {
