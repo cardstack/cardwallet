@@ -8,7 +8,7 @@ import store from '@rainbow-me/redux/store';
 import { checkKeychainIntegrity } from '@rainbow-me/redux/wallets';
 import logger from 'logger';
 
-const BACKUP_SHEET_DELAY_MS = 3000;
+const BACKUP_SHEET_DELAY_MS = 4000;
 
 export const runKeychainIntegrityChecks = () => {
   setTimeout(async () => {
@@ -41,6 +41,10 @@ export const runWalletBackupStatusChecks = () => {
   );
 
   logger.log('wallet not backed up that is selected?', hasSelectedWallet);
+
+  if (Navigation.getActiveRouteName() !== Routes.WALLET_SCREEN) {
+    return;
+  }
 
   // if one of them is selected, show the default BackupSheet
   if (selected && hasSelectedWallet) {

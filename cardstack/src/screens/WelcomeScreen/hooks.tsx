@@ -10,7 +10,7 @@ import {
   isCloudBackupAvailable,
   syncCloud,
 } from '@rainbow-me/handlers/cloudBackup';
-import { useHideSplashScreen, useWalletManager } from '@rainbow-me/hooks';
+import { useWalletManager } from '@rainbow-me/hooks';
 import { ICloudBackupData } from '@rainbow-me/model/backup';
 import logger from 'logger';
 
@@ -18,8 +18,6 @@ export const useWelcomeScreen = () => {
   const { navigate } = useNavigation<StackNavigationProp<ParamListBase>>();
 
   const [userData, setUserData] = useState<ICloudBackupData | null>(null);
-
-  const hideSplashScreen = useHideSplashScreen();
 
   const { createNewWallet } = useWalletManager();
 
@@ -43,8 +41,6 @@ export const useWelcomeScreen = () => {
         }
       } catch (e) {
         logger.log('error getting userData', e);
-      } finally {
-        hideSplashScreen();
       }
     };
 

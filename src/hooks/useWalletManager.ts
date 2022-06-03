@@ -31,6 +31,7 @@ import {
 } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 
+import { useAuthActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
@@ -56,6 +57,8 @@ export default function useWalletManager() {
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const { navigate, reset } = useNavigation();
+
+  const { setHasWallet } = useAuthActions();
 
   const initializeWallet = useCallback(
     async (seedPhrase?: string, options?: initializeWalleOptions) => {
@@ -129,6 +132,12 @@ export default function useWalletManager() {
     async ({ color, name, isFromWelcomeFlow }: CreateWalletParams = {}) =>
       createWalletPin(async (pin: string) => {
         try {
+          if (isFromWelcomeFlow) {
+            showLoadingOverlay({
+              title: walletLoadingStates.CREATING_WALLET,
+            });
+          }
+
           const wallet = await createOrImportWallet({
             color,
             name,
@@ -143,20 +152,24 @@ export default function useWalletManager() {
             network
           );
 
-          if (isFromWelcomeFlow) {
-            reset(navigationStateNewWallet);
+          await initializeWallet(undefined, { skipDismissOverlay: true });
 
-            showLoadingOverlay({
-              title: walletLoadingStates.CREATING_WALLET,
-            });
-          }
+          setHasWallet();
 
-          initializeWallet();
+          // TODO: remove on react-nav 6
+          reset(navigationStateNewWallet);
         } catch (e) {
           logger.sentry('Error creating new wallet', e);
         }
       }),
-    [createWalletPin, initializeWallet, network, reset, showLoadingOverlay]
+    [
+      createWalletPin,
+      initializeWallet,
+      network,
+      reset,
+      setHasWallet,
+      showLoadingOverlay,
+    ]
   );
 
   const importWallet = useCallback(
@@ -166,6 +179,8 @@ export default function useWalletManager() {
 
         await initializeWallet(params.seed, { skipDismissOverlay: true });
 
+        setHasWallet();
+
         return wallet;
       } catch (e) {
         logger.sentry('Error while importing wallet', e);
@@ -173,7 +188,7 @@ export default function useWalletManager() {
         Alert.alert('Something went wrong while importing. Please try again!');
       }
     },
-    [initializeWallet]
+    [initializeWallet, setHasWallet]
   );
 
   const changeSelectedWallet = useCallback(

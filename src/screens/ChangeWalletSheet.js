@@ -21,7 +21,6 @@ import showWalletErrorAlert from '../helpers/support';
 import WalletLoadingStates from '../helpers/walletLoadingStates';
 import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
-import { cleanUpWalletKeys } from '../model/wallet';
 import {
   createAccountForWallet,
   walletsLoadState,
@@ -31,11 +30,8 @@ import {
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
-import {
-  navigationStateInit,
-  Routes,
-  useLoadingOverlay,
-} from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
+import { useAuthActions } from '@cardstack/redux/authSlice';
 import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
@@ -44,6 +40,7 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 
+import { wipeKeychain } from '@rainbow-me/model/keychain';
 import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 
@@ -63,7 +60,7 @@ export default function ChangeWalletSheet() {
   const [editMode, setEditMode] = useState(false);
   const { colors } = useTheme();
 
-  const { goBack, navigate, reset } = useNavigation();
+  const { goBack, navigate } = useNavigation();
   const dispatch = useDispatch();
   const { accountAddress } = useAccountSettings();
   const {
@@ -78,6 +75,8 @@ export default function ChangeWalletSheet() {
   const [currentSelectedWallet, setCurrentSelectedWallet] = useState(
     selectedWallet
   );
+
+  const { resetHasWallet } = useAuthActions();
 
   const apolloClient = useApolloClient();
 
@@ -266,14 +265,13 @@ export default function ChangeWalletSheet() {
                   const isLastAvailableWallet = !otherAccounts.length;
 
                   if (isLastAvailableWallet) {
-                    await cleanUpWalletKeys();
+                    await wipeKeychain();
 
                     dismissLoadingOverlay();
 
-                    // Dismiss change wallet
-                    goBack();
+                    resetHasWallet();
 
-                    reset(navigationStateInit);
+                    return;
                   } else {
                     // If we're deleting the selected wallet
                     // we need to switch to another one
@@ -302,10 +300,9 @@ export default function ChangeWalletSheet() {
       currentAddress,
       deleteWallet,
       dismissLoadingOverlay,
-      goBack,
       onChangeAccount,
       renameWallet,
-      reset,
+      resetHasWallet,
       showLoadingOverlay,
       wallets,
     ]

@@ -16,6 +16,7 @@ import {
   setInternetCredentials,
   UserCredentials,
 } from 'react-native-keychain';
+import { deletePin } from '@cardstack/models/secure-storage';
 import { Device } from '@cardstack/utils/device';
 import logger from 'logger';
 
@@ -146,10 +147,12 @@ export async function hasKey(key: string): Promise<boolean | Result> {
 export async function wipeKeychain(): Promise<void> {
   try {
     const results = await loadAllKeys();
+
     if (results) {
       await Promise.all(
         results?.map(result => resetInternetCredentials(result.username))
       );
+      await deletePin();
       logger.log('keychain wiped!');
     }
   } catch (e) {
