@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
+import { authSlice } from '@cardstack/redux/authSlice';
 import { biometryToggleSliceName } from '@cardstack/redux/biometryToggleSlice';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
 import { hubApi } from '@cardstack/services/hub/hub-api';
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   [safesApi.reducerPath]: safesApi.reducer,
   [hubApi.reducerPath]: hubApi.reducer,
   [serviceStatusApi.reducerPath]: serviceStatusApi.reducer,
+  [authSlice.name]: authSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

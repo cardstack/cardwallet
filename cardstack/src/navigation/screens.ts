@@ -7,14 +7,11 @@ import {
   CurrencySelectionGlobalModal,
   DepotScreen,
   ErrorFallbackScreen,
-  LoadingOverlayScreen,
-  ImportSeedSheet,
   MerchantScreen,
   PayMerchant,
   PrepaidCardModal,
   SendSheetDepot,
   TransactionConfirmation,
-  WelcomeScreen,
   CollectibleSheet,
   PaymentReceivedSheet,
   PaymentRequestExpandedSheet,
@@ -32,8 +29,6 @@ import {
   TransactionConfirmationSheet,
   ColorPickerModal,
   RequestPrepaidCardScreen,
-  PinScreen,
-  UnlockScreen,
   SupportAndFeesSheet,
   AvailableBalanceSheet,
   TokenWithChartSheet,
@@ -60,7 +55,7 @@ import {
   overlayPreset,
   slideLeftToRightPreset,
 } from './presetOptions';
-import { MainRoutes, Routes } from './routes';
+import { MainRoutes, NonAuthRoutes, Routes } from './routes';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -69,13 +64,6 @@ export interface ScreenNavigation {
 }
 
 export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
-  LOADING_OVERLAY: {
-    component: LoadingOverlayScreen,
-    options: {
-      ...overlayPreset,
-      gestureEnabled: false,
-    } as StackNavigationOptions,
-  },
   DEPOT_SCREEN: { component: DepotScreen, options: horizontalInterpolator },
   MERCHANT_SCREEN: {
     component: MerchantScreen,
@@ -113,17 +101,9 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: ErrorFallbackScreen,
     options: { ...overlayPreset, gestureEnabled: false },
   },
-  WELCOME_SCREEN: {
-    component: WelcomeScreen,
-  },
   COLLECTIBLE_SHEET: {
     component: CollectibleSheet,
     options: expandedPreset as StackNavigationOptions,
-  },
-  IMPORT_SEED_SHEET: {
-    component: ImportSeedSheet,
-    options: bottomSheetPreset as StackNavigationOptions,
-    listeners: dismissAndroidKeyboardOnClose,
   },
   PAYMENT_RECEIVED_SHEET: {
     component: PaymentReceivedSheet,
@@ -215,14 +195,6 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
     component: ColorPickerModal,
     options: expandedPreset as StackNavigationOptions,
   },
-  PIN_SCREEN: {
-    component: PinScreen,
-    options: horizontalInterpolator,
-  },
-  UNLOCK_SCREEN: {
-    component: UnlockScreen,
-    options: horizontalInterpolator,
-  },
   SUPPORT_AND_FEES: {
     component: SupportAndFeesSheet,
     options: expandedPreset as StackNavigationOptions,
@@ -280,7 +252,7 @@ export const navigationStateInit = {
   index: 0,
   routes: [
     {
-      name: Routes.WELCOME_SCREEN,
+      name: NonAuthRoutes.WELCOME_SCREEN,
     },
   ],
 };

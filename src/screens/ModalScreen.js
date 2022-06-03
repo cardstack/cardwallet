@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import TouchableBackdrop from '../components/TouchableBackdrop';
 import {
   ContactProfileState,
-  SupportedCountriesExpandedState,
   WalletProfileState,
 } from '../components/expanded-state';
 import { Centered } from '../components/layout';
@@ -14,7 +13,6 @@ import { padding, position } from '@rainbow-me/styles';
 
 const ModalTypes = {
   contact_profile: ContactProfileState,
-  supported_countries: SupportedCountriesExpandedState,
   wallet_profile: WalletProfileState,
   copy_address: CopyAddressSheet,
 };

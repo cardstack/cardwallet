@@ -29,14 +29,16 @@ export const AppRequirementsCheck = ({ children }: Props) => {
   }, [isReady]);
 
   if (isReady && remoteFlags().maintenanceActive) {
+    hideSplashScreen();
+
     return <MaintenanceMode message={remoteFlags().maintenanceMessage} />;
   }
 
   if (forceUpdate) {
+    hideSplashScreen();
+
     return <MinimumVersion />;
   }
-
-  if (isReady) hideSplashScreen?.();
 
   return children;
 };

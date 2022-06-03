@@ -29,7 +29,6 @@ import {
   showNetworkResponses,
 } from './config/debug';
 import { MainThemeProvider } from './context/ThemeContext';
-import { InitialRouteContext } from './context/initialRoute';
 import monitorNetwork from './debugging/network';
 import handleDeepLink from './handlers/deeplinks';
 import {
@@ -50,6 +49,7 @@ import {
   displayLocalNotification,
   notificationHandler,
 } from '@cardstack/notification-handler';
+import { authSlice } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
 import theme from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
@@ -195,6 +195,12 @@ class App extends Component {
   };
 
   handleAppStateChange = async nextAppState => {
+    const disabledStates = ['background', 'inactive'];
+
+    if (disabledStates.includes(this.state.appState)) {
+      store.dispatch(authSlice.actions.setUserUnauthorized());
+    }
+
     // Restore WC connectors when going from BG => FG
     if (this.state.appState === 'background' && nextAppState === 'active') {
       store.dispatch(walletConnectLoadState());
@@ -215,14 +221,8 @@ class App extends Component {
                 <PersistGate loading={null} persistor={persistor}>
                   <FlexItem>
                     <AppRequirementsCheck>
-                      {this.state.initialRoute && (
-                        <InitialRouteContext.Provider
-                          value={this.state.initialRoute}
-                        >
-                          <AppContainer />
-                          <PortalConsumer />
-                        </InitialRouteContext.Provider>
-                      )}
+                      <AppContainer />
+                      <PortalConsumer />
                     </AppRequirementsCheck>
                     <OfflineToast />
                   </FlexItem>

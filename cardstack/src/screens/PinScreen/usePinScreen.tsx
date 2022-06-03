@@ -9,6 +9,7 @@ import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInpu
 import { savePin } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation/routes';
 import { RouteType } from '@cardstack/navigation/types';
+import { useAuthActions } from '@cardstack/redux/authSlice';
 import { ThemeVariant } from '@cardstack/theme/colorStyleVariants';
 
 import logger from 'logger';
@@ -34,6 +35,8 @@ export const usePinScreen = () => {
 
   const [inputPin, setInputPin] = useState('');
   const [isValidPin, setIsValidPin] = useState<null | boolean>(null);
+
+  const { setUserAuthorized } = useAuthActions();
 
   const {
     flow = PinFlow.create,
@@ -69,6 +72,8 @@ export const usePinScreen = () => {
   const onValidPin = useCallback(async () => {
     try {
       await savePin(inputPin);
+      setUserAuthorized();
+
       await params?.onSuccess?.(inputPin);
     } catch (e) {
       logger.sentry('Error while saving PIN', e);
@@ -77,7 +82,7 @@ export const usePinScreen = () => {
     if (params.dismissOnSuccess) {
       navDispatch(StackActions.popToTop());
     }
-  }, [inputPin, navDispatch, params]);
+  }, [inputPin, navDispatch, params, setUserAuthorized]);
 
   useEffect(() => {
     if (isValidPin) {

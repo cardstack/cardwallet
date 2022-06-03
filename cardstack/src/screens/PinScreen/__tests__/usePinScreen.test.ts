@@ -16,6 +16,13 @@ jest.mock('@react-navigation/native', () => ({
   StackActions: { push: jest.fn(), popToTop: jest.fn() },
 }));
 
+const mockSetAuthorized = jest.fn();
+
+jest.mock('@cardstack/redux/authSlice', () => ({
+  useAuthActions: () => ({ setUserAuthorized: mockSetAuthorized }),
+  authSlice: { name: 'authSlice', reducer: null },
+}));
+
 const PIN = '111111';
 
 const mockRouteParamsHelper = (overwrite: any = {}) => {
@@ -141,6 +148,8 @@ describe('usePinScreen', () => {
     });
 
     expect(result.current.isValidPin).toStrictEqual(true);
+
+    expect(mockSetAuthorized).toBeCalled();
   });
 
   it('should call onSuccess cb and popToTop when PIN is valid on confirm flow and dismissOnSuccess is true', async () => {

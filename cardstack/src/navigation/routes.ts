@@ -8,10 +8,7 @@ export const MainRoutes = {
   SEND_FLOW_EOA: 'SendFlowEOA',
   PAY_MERCHANT: 'PayMerchant',
   ERROR_FALLBACK_SCREEN: 'ErrorFallbackScreen',
-  LOADING_OVERLAY: 'LoadingOverlay',
-  WELCOME_SCREEN: 'WelcomeScreen',
   COLLECTIBLE_SHEET: 'CollectibleSheet',
-  IMPORT_SEED_SHEET: 'ImportSeedSheet',
   PAYMENT_RECEIVED_SHEET: 'PaymentReceivedSheet',
   UNCLAIMED_REVENUE_SHEET: 'UnclaimedRevenueSheet',
   CONFIRM_CLAIM_DESTINY_SHEET: 'ConfirmClaimDestinySheet',
@@ -33,27 +30,42 @@ export const MainRoutes = {
   CONFIRM_REQUEST: 'ConfirmRequest',
   CURRENCY_SELECTION_MODAL: 'CurrencySelectionModal',
   COLOR_PICKER_MODAL: 'ColorPickerModal',
-  PIN_SCREEN: 'PinScreen',
-  UNLOCK_SCREEN: 'UnlockScreen',
   SUPPORT_AND_FEES: 'SupportAndFeesSheet',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
   TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
 } as const;
 
-const OuterRoutes = {
+const TabRoutes = {
   TAB_NAVIGATOR: 'TabNavigator',
   HOME_SCREEN: 'HomeScreen',
   PROFILE_SCREEN: 'ProfileScreen',
   WALLET_SCREEN: 'WalletScreen',
   QR_SCANNER_SCREEN: 'QRScannerScreen',
-
-  // Non-migrated routes
-  CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
-  MODAL_SCREEN: 'ModalScreen',
-  PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
-  RESTORE_SHEET: 'RestoreSheet',
-  SETTINGS_MODAL: 'SettingsModal',
-  SUPPORTED_COUNTRIES_MODAL_SCREEN: 'SupportedCountriesModalScreen',
 } as const;
 
-export const Routes = { ...OuterRoutes, ...MainRoutes } as const;
+const NonMigratedRoutes = {
+  CHANGE_WALLET_SHEET: 'ChangeWalletSheet',
+  PIN_AUTHENTICATION_SCREEN: 'PinAuthenticationScreen',
+  SETTINGS_MODAL: 'SettingsModal',
+} as const;
+
+const SharedRoutes = {
+  PIN_SCREEN: 'PinScreen',
+  LOADING_OVERLAY: 'LoadingOverlay',
+  IMPORT_SEED_SHEET: 'ImportSeedSheet',
+  // non-migrated
+  RESTORE_SHEET: 'RestoreSheet',
+  MODAL_SCREEN: 'ModalScreen',
+} as const;
+
+export const NonAuthRoutes = {
+  UNLOCK_SCREEN: 'UnlockScreen',
+  WELCOME_SCREEN: 'WelcomeScreen',
+} as const;
+
+export const Routes = {
+  ...SharedRoutes,
+  ...NonMigratedRoutes,
+  ...TabRoutes,
+  ...MainRoutes,
+} as const;

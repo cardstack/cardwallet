@@ -1,48 +1,47 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
 import RNRestart from 'react-native-restart';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { useBooleanState } from '@cardstack/hooks';
-import { getPin, deletePin } from '@cardstack/models/secure-storage';
-import { Routes } from '@cardstack/navigation/routes';
-import { RouteType } from '@cardstack/navigation/types';
-import { ThemeVariant } from '@cardstack/theme/colorStyleVariants';
+import { getPin } from '@cardstack/models/secure-storage';
+import { useAuthActions } from '@cardstack/redux/authSlice';
+import { useWorker } from '@cardstack/utils';
 
-import { useAppVersion } from '@rainbow-me/hooks';
 import { wipeKeychain } from '@rainbow-me/model/keychain';
 
 import { strings } from './strings';
 
-interface NavParams {
-  variant: ThemeVariant;
-}
-
 export const useUnlockScreen = () => {
-  const { navigate } = useNavigation();
-  const { params } = useRoute<RouteType<NavParams>>();
+  const storedPin = useRef<string | null>(null);
+
   const { biometryAvailable } = useBiometricSwitch();
-  const appVersion = useAppVersion();
   const [inputPin, setInputPin] = useState('');
   const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
-  const { variant = 'dark' } = params;
+  const { setUserAuthorized } = useAuthActions();
+
+  // Fetch on init so login it's faster
+  const { callback: getStoredPin } = useWorker(async () => {
+    storedPin.current = await getPin();
+  }, []);
+
+  useEffect(() => {
+    getStoredPin();
+  }, [getStoredPin]);
 
   const validatePin = useCallback(
     async (input: string) => {
-      const savedPin = await getPin();
-
-      if (savedPin === input) {
+      if (storedPin.current === input) {
         setPinValid();
-        navigate(Routes.WALLET_SCREEN);
+        setUserAuthorized();
       } else {
         setPinInvalid();
         setInputPin('');
       }
     },
-    [navigate, setPinInvalid, setPinValid]
+    [setPinInvalid, setPinValid, setUserAuthorized]
   );
 
   const onResetWalletPress = useCallback(() => {
@@ -51,7 +50,6 @@ export const useUnlockScreen = () => {
         text: strings.reset.delete,
         onPress: async () => {
           await wipeKeychain();
-          await deletePin();
           RNRestart.Restart();
         },
       },
@@ -72,8 +70,6 @@ export const useUnlockScreen = () => {
 
   return {
     biometryAvailable,
-    appVersion,
-    variant,
     inputPin,
     setInputPin,
     pinInvalid,
