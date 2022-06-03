@@ -6,30 +6,46 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TabBarIcon } from '@cardstack/components';
+import { getPin } from '@cardstack/models/secure-storage';
+import { useAuthActions, useAuthSelector } from '@cardstack/redux/authSlice';
 import {
   HomeScreen,
   WalletScreen,
   ProfileScreen,
   QRScannerScreen,
+  WelcomeScreen,
+  UnlockScreen,
+  PinScreen,
+  LoadingOverlayScreen,
+  ImportSeedSheet,
 } from '@cardstack/screens';
 import { colors } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
+import { Device, useWorker } from '@cardstack/utils';
 
-import { expandedPreset } from '@rainbow-me/navigation/effects';
+import { useHideSplashScreen } from '@rainbow-me/hooks';
+import { loadAddress } from '@rainbow-me/model/wallet';
+import {
+  bottomSheetPreset,
+  expandedPreset,
+} from '@rainbow-me/navigation/effects';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
 import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 
-import { InitialRouteContext } from '../../../src/context/initialRoute';
-
 import { useCardstackMainScreens } from './hooks';
 
-import { dismissAndroidKeyboardOnClose, Routes } from '.';
+import {
+  dismissAndroidKeyboardOnClose,
+  horizontalInterpolator,
+  NonAuthRoutes,
+  overlayPreset,
+  Routes,
+} from '.';
 
 const Tab = createBottomTabNavigator();
 
@@ -108,12 +124,71 @@ const TabNavigator = () => {
 
 const Stack = createStackNavigator();
 
-export const StackNavigator = () => {
-  const initialRoute = useContext(InitialRouteContext) || '';
+const SharedScreens = (
+  <>
+    <Stack.Screen
+      component={PinScreen}
+      name={Routes.PIN_SCREEN}
+      options={horizontalInterpolator}
+    />
+    <Stack.Screen
+      component={LoadingOverlayScreen}
+      name={Routes.LOADING_OVERLAY}
+      options={{ ...overlayPreset, gestureEnabled: false }}
+    />
+    <Stack.Screen
+      component={ImportSeedSheet}
+      name={Routes.IMPORT_SEED_SHEET}
+      options={bottomSheetPreset as StackNavigationOptions}
+      listeners={dismissAndroidKeyboardOnClose}
+    />
 
+    <Stack.Screen
+      component={ModalScreen}
+      name={Routes.MODAL_SCREEN}
+      options={expandedPreset as StackNavigationOptions}
+      listeners={dismissAndroidKeyboardOnClose}
+    />
+    <Stack.Screen
+      component={RestoreSheet}
+      name={Routes.RESTORE_SHEET}
+      options={expandedPreset as StackNavigationOptions}
+      listeners={dismissAndroidKeyboardOnClose}
+    />
+  </>
+);
+
+const useNavigationAuth = () => {
+  const hideSplashScreen = useHideSplashScreen();
+
+  const { setHasWallet } = useAuthActions();
+  const { isAuthorized, hasWallet } = useAuthSelector();
+
+  // Temp condition, to only block app if user hasPin
+  const [hasPin, setHasPin] = useState(false);
+
+  const { callback: loadAuthInfo } = useWorker(async () => {
+    const [address, storedPin] = await Promise.all([loadAddress(), getPin()]);
+
+    address && setHasWallet();
+    setHasPin(!!storedPin);
+
+    setTimeout(hideSplashScreen, 500);
+  }, []);
+
+  useEffect(() => {
+    if (!hasWallet || !hasPin) {
+      loadAuthInfo();
+    }
+  }, [loadAuthInfo, hasWallet, hasPin]);
+
+  return { hasWallet, isAuthorized, hasPin };
+};
+
+export const StackNavigator = () => {
   const cardstackMainScreens = useCardstackMainScreens(Stack);
 
-  // TODO: Create a navigator for each flow and split auth/non-auth
+  const { hasWallet, isAuthorized, hasPin } = useNavigationAuth();
 
   return (
     <Stack.Navigator
@@ -125,35 +200,43 @@ export const StackNavigator = () => {
       mode="modal"
       // On Android gestureEnabled defaults to false, but we want it.
       screenOptions={{ gestureEnabled: true }}
-      initialRouteName={initialRoute}
     >
-      <Stack.Screen component={TabNavigator} name={Routes.TAB_NAVIGATOR} />
-      {cardstackMainScreens}
-      {
-        // Temp rainbow components until migration
-      }
-      <Stack.Screen
-        component={ModalScreen}
-        listeners={dismissAndroidKeyboardOnClose}
-        name={Routes.MODAL_SCREEN}
-        options={expandedPreset as StackNavigationOptions}
-      />
-      <Stack.Screen
-        component={RestoreSheet}
-        listeners={dismissAndroidKeyboardOnClose}
-        name={Routes.RESTORE_SHEET}
-        options={expandedPreset as StackNavigationOptions}
-      />
-      <Stack.Screen
-        component={PinAuthenticationScreen}
-        name={Routes.PIN_AUTHENTICATION_SCREEN}
-        options={{ gestureEnabled: false }}
-      />
-      <Stack.Screen
-        component={ChangeWalletSheet}
-        name={Routes.CHANGE_WALLET_SHEET}
-        options={expandedPreset as StackNavigationOptions}
-      />
+      {!hasWallet ? (
+        <>
+          <Stack.Screen
+            component={WelcomeScreen}
+            name={NonAuthRoutes.WELCOME_SCREEN}
+          />
+          {SharedScreens}
+        </>
+      ) : !isAuthorized && hasPin ? (
+        <>
+          <Stack.Screen
+            component={UnlockScreen}
+            name={NonAuthRoutes.UNLOCK_SCREEN}
+          />
+          {SharedScreens}
+        </>
+      ) : (
+        <>
+          <Stack.Screen component={TabNavigator} name={Routes.TAB_NAVIGATOR} />
+          {cardstackMainScreens}
+          {SharedScreens}
+          {
+            // Temp rainbow components until migration
+          }
+          <Stack.Screen
+            component={PinAuthenticationScreen}
+            name={Routes.PIN_AUTHENTICATION_SCREEN}
+            options={{ gestureEnabled: false }}
+          />
+          <Stack.Screen
+            component={ChangeWalletSheet}
+            name={Routes.CHANGE_WALLET_SHEET}
+            options={expandedPreset as StackNavigationOptions}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };
