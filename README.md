@@ -19,6 +19,30 @@ For Android:
 
 If you are new to React Native, this is a helpful introduction: https://facebook.github.io/react-native/docs/getting-started.html
 
+## Note on M1 Macs
+
+Use [brew](brew.sh) to install cocoapods, ruby and fastlane. Brew has packages already built for M1:
+
+```
+# Brew install
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Set brew in your PATH (look at instructions at the end of install logs in 'Next Steps'). Then install cocoapods and ruby.
+
+```
+brew install cocoapods
+brew reinstall ruby
+brew install fastlane
+```
+
+For ruby, you also need to add the installed version to your path. Check where brew installed it first and change the version in the following:
+
+```
+# example
+echo 'export PATH="/opt/homebrew/Cellar/ruby/3.1.2/bin:$PATH"' >> ~/.zshrc
+```
+
 ## How to run the project on iOS
 
 1. Clone the GitHub repository to your machine.
@@ -28,6 +52,8 @@ If you are new to React Native, this is a helpful introduction: https://facebook
 3. Run `yarn setup` to get all of the packages required.
 
 4. Run `yarn install-bundle`.
+
+> On M1, use `yarn install-pods:m1` instead.
 
 5. Install required Pods by running `yarn install-pods`.
 
@@ -58,6 +84,8 @@ Follow steps 1 through 4 from the iOS steps above, then:
 ### Commands
 
 #### Syncing
+
+> On M1, run fastlane directly instead, eg. `fast contexts:app:sync`
 
 - `yarn contexts:app:sync`
   - Syncs app vars from context repo (corresponds to `.env` file)
