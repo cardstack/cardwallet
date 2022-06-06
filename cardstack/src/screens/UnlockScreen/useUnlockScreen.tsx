@@ -22,7 +22,7 @@ export const useUnlockScreen = () => {
 
   const { setUserAuthorized } = useAuthActions();
 
-  // Fetch on init so login it's faster
+  // Fetch on init so login is faster
   const { callback: getStoredPin } = useWorker(async () => {
     storedPin.current = await getPin();
   }, []);

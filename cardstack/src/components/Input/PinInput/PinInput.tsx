@@ -60,8 +60,11 @@ const PinInput = ({
 
   return (
     <Container width="85%">
-      <Container flexDirection="row" justifyContent="space-between">
-        {title && (
+      <Container
+        flexDirection="row"
+        justifyContent={title ? 'space-between' : 'flex-end'}
+      >
+        {!!title && (
           <Text
             color={colorStyleVariants.textColor[variant]}
             paddingBottom={2}

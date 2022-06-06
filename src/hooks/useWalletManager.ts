@@ -31,15 +31,11 @@ import {
 } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 
-import { useAuthActions } from '@cardstack/redux/authSlice';
+import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
-
-interface initializeWalleOptions {
-  skipDismissOverlay?: boolean;
-}
 
 interface CreateWalletParams
   extends Pick<CreateImportParams, 'color' | 'name'> {
@@ -58,10 +54,10 @@ export default function useWalletManager() {
 
   const { navigate, reset } = useNavigation();
 
-  const { setHasWallet } = useAuthActions();
+  const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
   const initializeWallet = useCallback(
-    async (seedPhrase?: string, options?: initializeWalleOptions) => {
+    async (seedPhrase?: string) => {
       try {
         logger.sentry('Start wallet init');
 
@@ -101,18 +97,10 @@ export default function useWalletManager() {
 
         return null;
       } finally {
-        if (!options?.skipDismissOverlay) dismissLoadingOverlay();
         dispatch(appStateUpdate({ walletReady: true }));
       }
     },
-    [
-      dispatch,
-      network,
-      initializeAccountData,
-      loadGlobalData,
-      loadAccountData,
-      dismissLoadingOverlay,
-    ]
+    [dispatch, network, initializeAccountData, loadGlobalData, loadAccountData]
   );
 
   const createWalletPin = useCallback(
@@ -126,6 +114,23 @@ export default function useWalletManager() {
       });
     },
     [navigate]
+  );
+
+  const initWalletResetNavState = useCallback(
+    async (seedPhrase?: string, isInnerNavigation: boolean = false) => {
+      await initializeWallet(seedPhrase);
+
+      setHasWallet();
+
+      if (isInnerNavigation) {
+        navigate(Routes.WALLET_SCREEN, { initialized: true });
+        return;
+      }
+
+      // TODO: remove on react-nav 6
+      reset(navigationStateNewWallet);
+    },
+    [initializeWallet, navigate, reset, setHasWallet]
   );
 
   const createNewWallet = useCallback(
@@ -152,43 +157,52 @@ export default function useWalletManager() {
             network
           );
 
-          await initializeWallet(undefined, { skipDismissOverlay: true });
-
-          setHasWallet();
-
-          // TODO: remove on react-nav 6
-          reset(navigationStateNewWallet);
+          initWalletResetNavState();
         } catch (e) {
           logger.sentry('Error creating new wallet', e);
         }
       }),
-    [
-      createWalletPin,
-      initializeWallet,
-      network,
-      reset,
-      setHasWallet,
-      showLoadingOverlay,
-    ]
+    [createWalletPin, initWalletResetNavState, network, showLoadingOverlay]
   );
 
   const importWallet = useCallback(
     async (params: CreateImportParams) => {
-      try {
-        const wallet = await createOrImportWallet(params);
+      const walletImport = async () => {
+        try {
+          showLoadingOverlay({ title: walletLoadingStates.IMPORTING_WALLET });
 
-        await initializeWallet(params.seed, { skipDismissOverlay: true });
+          const wallet = await createOrImportWallet(params);
 
-        setHasWallet();
+          if (wallet) {
+            initWalletResetNavState(params.seed, hasWallet);
+          } else {
+            dismissLoadingOverlay();
+          }
+        } catch (e) {
+          navigate(Routes.IMPORT_SEED_SHEET);
 
-        return wallet;
-      } catch (e) {
-        logger.sentry('Error while importing wallet', e);
+          logger.sentry('Error while importing wallet', e);
 
-        Alert.alert('Something went wrong while importing. Please try again!');
+          Alert.alert(
+            'Something went wrong while importing. Please try again!'
+          );
+        }
+      };
+
+      if (hasWallet) {
+        return walletImport();
       }
+
+      createWalletPin(walletImport);
     },
-    [initializeWallet, setHasWallet]
+    [
+      createWalletPin,
+      dismissLoadingOverlay,
+      hasWallet,
+      initWalletResetNavState,
+      navigate,
+      showLoadingOverlay,
+    ]
   );
 
   const changeSelectedWallet = useCallback(

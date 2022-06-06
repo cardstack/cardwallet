@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TabBarIcon } from '@cardstack/components';
 import { getPin } from '@cardstack/models/secure-storage';
-import { useAuthActions, useAuthSelector } from '@cardstack/redux/authSlice';
+import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import {
   HomeScreen,
   WalletScreen,
@@ -161,8 +161,7 @@ const SharedScreens = (
 const useNavigationAuth = () => {
   const hideSplashScreen = useHideSplashScreen();
 
-  const { setHasWallet } = useAuthActions();
-  const { isAuthorized, hasWallet } = useAuthSelector();
+  const { isAuthorized, hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
   // Temp condition, to only block app if user hasPin
   const [hasPin, setHasPin] = useState(false);
