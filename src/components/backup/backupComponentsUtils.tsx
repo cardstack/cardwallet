@@ -8,7 +8,7 @@ import {
   Text,
 } from '@cardstack/components';
 import { cloudBackupPasswordMinLength } from '@rainbow-me/handlers/cloudBackup';
-import { useBiometryIconName } from '@rainbow-me/hooks';
+import { useBiometryType } from '@rainbow-me/hooks';
 
 export const backupPasswordInputProps: Partial<TextInputProps & InputProps> = {
   autoCompleteType: 'password',
@@ -32,18 +32,18 @@ export const BackupPasswordButtonFooter = ({
   onButtonPress,
   isValidPassword,
 }: BackupButtonFooterProps) => {
-  const biometryIconName = useBiometryIconName();
+  const { iconName } = useBiometryType();
 
   const biometryIconProps: IconProps | undefined = useMemo(
     () =>
-      biometryIconName
+      iconName
         ? {
             iconSize: 'medium',
             marginRight: 3,
-            name: biometryIconName as IconName,
+            name: iconName as IconName,
           }
         : undefined,
-    [biometryIconName]
+    [iconName]
   );
 
   return isValidPassword ? (

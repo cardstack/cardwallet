@@ -21,7 +21,7 @@ import {
   removeFirstEmojiFromString,
   returnStringFirstEmoji,
 } from '@rainbow-me/helpers/emojiHandler';
-import { useAccountProfile, useBiometryIconName } from '@rainbow-me/hooks';
+import { useAccountProfile, useBiometryType } from '@rainbow-me/hooks';
 
 import { padding } from '@rainbow-me/styles';
 
@@ -106,7 +106,7 @@ export default function WalletProfileState({
     inputRef,
   ]);
 
-  const biometryType = useBiometryIconName();
+  const { iconName } = useBiometryType();
 
   return (
     <WalletProfileModal>
@@ -161,7 +161,7 @@ export default function WalletProfileState({
               iconProps={{
                 color: 'settingsTeal',
                 visible: actionType === 'Create',
-                name: biometryType,
+                name: iconName,
               }}
               justifyContent="center"
               testID="wallet-info-submit-button"

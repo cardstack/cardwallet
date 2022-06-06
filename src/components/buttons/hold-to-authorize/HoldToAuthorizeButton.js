@@ -10,7 +10,7 @@ import { EasingNode, timing, Value } from 'react-native-reanimated';
 
 import { useTheme } from '../../../context/ThemeContext';
 import BiometryTypes from '../../../helpers/biometryTypes';
-import { useBiometryIconName, useBiometryType } from '../../../hooks';
+import { useBiometryType } from '../../../hooks';
 import { haptics } from '../../../utils';
 import { Button, Container } from '@cardstack/components';
 
@@ -154,8 +154,7 @@ class HoldToAuthorizeButton extends PureComponent {
 }
 
 const HoldToAuthorizeButtonWithBiometrics = ({ label, testID, ...props }) => {
-  const biometryType = useBiometryType();
-  const biometryIconName = useBiometryIconName();
+  const { biometryType, iconName } = useBiometryType();
   const { colors } = useTheme();
   const enableLongPress =
     biometryType === BiometryTypes.FaceID ||
@@ -164,7 +163,7 @@ const HoldToAuthorizeButtonWithBiometrics = ({ label, testID, ...props }) => {
   return (
     <HoldToAuthorizeButton
       {...props}
-      biometryIconName={biometryIconName}
+      biometryIconName={iconName}
       biometryType={biometryType}
       colors={colors}
       enableLongPress={enableLongPress}
