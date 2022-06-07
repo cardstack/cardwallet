@@ -4,9 +4,11 @@ import RNRestart from 'react-native-restart';
 
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { useBooleanState } from '@cardstack/hooks';
+import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
 import { useWorker } from '@cardstack/utils';
+import { authenticate } from '@cardstack/models/biometric-auth';
 
 import { wipeKeychain } from '@rainbow-me/model/keychain';
 
@@ -14,13 +16,13 @@ import { strings } from './strings';
 
 export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
-
   const [inputPin, setInputPin] = useState('');
   const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
   const { setUserAuthorized } = useAuthActions();
+  const { biometryAvailable } = useBiometry();
 
-  // Fetch on init so login is faster
+  // Fetch on init so login it's faster
   const { callback: getStoredPin } = useWorker(async () => {
     storedPin.current = await getPin();
   }, []);
@@ -41,6 +43,13 @@ export const useUnlockScreen = () => {
     },
     [setPinInvalid, setPinValid, setUserAuthorized]
   );
+
+  const authenticateBiometrically = useCallback(async () => {
+    if (await authenticate()) {
+      setPinValid();
+      setUserAuthorized();
+    }
+  }, [setPinValid, setUserAuthorized]);
 
   const onResetWalletPress = useCallback(() => {
     Alert.alert(strings.reset.title, strings.reset.message, [
@@ -65,6 +74,12 @@ export const useUnlockScreen = () => {
 
     validatePin(inputPin);
   }, [inputPin, validatePin]);
+
+  useEffect(() => {
+    if (biometryAvailable) {
+      authenticateBiometrically();
+    }
+  }, [biometryAvailable]);
 
   return {
     inputPin,
