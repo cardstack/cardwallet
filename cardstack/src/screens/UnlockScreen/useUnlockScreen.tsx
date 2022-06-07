@@ -2,7 +2,6 @@ import { useCallback, useState, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
 import RNRestart from 'react-native-restart';
 
-import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { useBooleanState } from '@cardstack/hooks';
 import { getPin } from '@cardstack/models/secure-storage';
@@ -16,7 +15,6 @@ import { strings } from './strings';
 export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
 
-  const { biometryAvailable } = useBiometricSwitch();
   const [inputPin, setInputPin] = useState('');
   const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
@@ -69,7 +67,6 @@ export const useUnlockScreen = () => {
   }, [inputPin, validatePin]);
 
   return {
-    biometryAvailable,
     inputPin,
     setInputPin,
     pinInvalid,

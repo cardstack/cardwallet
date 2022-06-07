@@ -12,7 +12,6 @@ export { default as useAnimatedListener } from './useAnimatedListener';
 export { default as useAppState } from './useAppState';
 export { default as useAppVersion } from './useAppVersion';
 export { default as useAsset } from './useAsset';
-export { default as useBiometryType } from './useBiometryType';
 export { default as useBuyPrepaidCard } from '@cardstack/hooks/prepaid-card/useBuyPrepaidCard';
 export { default as useClipboard } from './useClipboard';
 export { default as useColorForAsset } from './useColorForAsset';

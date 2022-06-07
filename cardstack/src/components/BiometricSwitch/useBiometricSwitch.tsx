@@ -1,17 +1,14 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useBiometricIconProps } from '@cardstack/hooks/useBiometricIconProps';
+import { useBiometry } from '@cardstack/hooks/useBiometry';
 import {
   toggleBiometry,
   selectBiometryEnabled,
 } from '@cardstack/redux/biometryToggleSlice';
 
-import useBiometryType from '@rainbow-me/hooks/useBiometryType';
-
 export const useBiometricSwitch = () => {
-  const iconProps = useBiometricIconProps();
-  const { label } = useBiometryType();
+  const { biometryAvailable, biometryLabel, biometryIconProps } = useBiometry();
 
   const dispatch = useDispatch();
   const isBiometryEnabled = useSelector(selectBiometryEnabled());
@@ -21,10 +18,10 @@ export const useBiometricSwitch = () => {
   ]);
 
   return {
-    iconProps,
-    label,
+    biometryIconProps,
+    biometryLabel,
     isBiometryEnabled,
     toggleBiometrySwitch,
-    biometryAvailable: !!label,
+    biometryAvailable,
   };
 };

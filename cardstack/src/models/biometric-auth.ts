@@ -3,14 +3,14 @@ import { SecurityLevel, AuthenticationType } from 'expo-local-authentication';
 
 import logger from 'logger';
 
-enum SecurityType {
-  NONE = 0,
-  PIN = 1,
-  FINGERPRINT = 2,
-  FACE = 3,
+export enum SecurityType {
+  NONE = 1,
+  PIN = 2,
+  FINGERPRINT = 3,
+  FACE = 4,
 }
 
-const authenticate = async (
+export const authenticate = async (
   options?: LocalAuthentication.LocalAuthenticationOptions
 ): Promise<boolean> => {
   try {
@@ -24,34 +24,29 @@ const authenticate = async (
   }
 };
 
-const getSecurityType = async (): Promise<SecurityType> => {
+export const getSecurityType = async (): Promise<SecurityType> => {
   const securityLevel = await LocalAuthentication.getEnrolledLevelAsync();
   const authType = await LocalAuthentication.supportedAuthenticationTypesAsync();
 
-  console.log(':::', { securityLevel, authType });
-
-  if (securityLevel === SecurityLevel.NONE) {
-    return SecurityType.NONE;
-  }
-
-  if (securityLevel === SecurityLevel.SECRET) {
-    return SecurityType.PIN;
-  }
-
   if (securityLevel === SecurityLevel.BIOMETRIC) {
-    if (authType.includes(AuthenticationType.FINGERPRINT)) {
-      return SecurityType.FINGERPRINT;
-    }
-
+    // For biometry, first check for Face id or Iris.
     if (
       authType.includes(AuthenticationType.FACIAL_RECOGNITION) ||
       authType.includes(AuthenticationType.IRIS)
     ) {
       return SecurityType.FACE;
     }
+
+    // Then check for fingerprint.
+    if (authType.includes(AuthenticationType.FINGERPRINT)) {
+      return SecurityType.FINGERPRINT;
+    }
   }
 
+  if (securityLevel === SecurityLevel.SECRET) {
+    return SecurityType.PIN;
+  }
+
+  // SecurityLevel.NONE
   return SecurityType.NONE;
 };
-
-export { authenticate, getSecurityType, SecurityType };

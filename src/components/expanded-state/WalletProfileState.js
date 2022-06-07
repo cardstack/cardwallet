@@ -15,13 +15,14 @@ import {
   Text,
   TruncatedAddress,
 } from '@cardstack/components';
+import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 import theme from '@cardstack/theme';
 import {
   removeFirstEmojiFromString,
   returnStringFirstEmoji,
 } from '@rainbow-me/helpers/emojiHandler';
-import { useAccountProfile, useBiometryType } from '@rainbow-me/hooks';
+import { useAccountProfile } from '@rainbow-me/hooks';
 
 import { padding } from '@rainbow-me/styles';
 
@@ -106,7 +107,7 @@ export default function WalletProfileState({
     inputRef,
   ]);
 
-  const { iconName } = useBiometryType();
+  const { biometryIconProps } = useBiometry();
 
   return (
     <WalletProfileModal>
@@ -159,9 +160,9 @@ export default function WalletProfileState({
           {isNewProfile ? (
             <OptionItem
               iconProps={{
+                ...biometryIconProps,
                 color: 'settingsTeal',
                 visible: actionType === 'Create',
-                name: iconName,
               }}
               justifyContent="center"
               testID="wallet-info-submit-button"
