@@ -5,10 +5,10 @@ import RNRestart from 'react-native-restart';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { useBooleanState } from '@cardstack/hooks';
 import { useBiometry } from '@cardstack/hooks/useBiometry';
+import { authenticate } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
 import { useWorker } from '@cardstack/utils';
-import { authenticate } from '@cardstack/models/biometric-auth';
 
 import { wipeKeychain } from '@rainbow-me/model/keychain';
 
@@ -79,7 +79,7 @@ export const useUnlockScreen = () => {
     if (biometryAvailable) {
       authenticateBiometrically();
     }
-  }, [biometryAvailable]);
+  }, [authenticateBiometrically, biometryAvailable]);
 
   return {
     inputPin,
