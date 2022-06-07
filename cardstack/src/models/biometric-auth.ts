@@ -10,7 +10,7 @@ export enum SecurityType {
   FACE = 4,
 }
 
-export const authenticate = async (
+export const biometricAuthentication = async (
   options?: LocalAuthentication.LocalAuthenticationOptions
 ): Promise<boolean> => {
   try {

@@ -59,6 +59,12 @@ import { Portal } from 'react-native-cool-modals/Portal';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
 
+const APP_STATE_CONST = {
+  active: 'active',
+  background: 'background',
+  inactive: 'inactive',
+};
+
 StatusBar.pushStackEntry({ animated: true, barStyle: 'light-content' });
 
 if (__DEV__) {
@@ -195,14 +201,17 @@ class App extends Component {
   };
 
   handleAppStateChange = async nextAppState => {
-    const disabledStates = ['background', 'inactive'];
+    const disabledStates = [APP_STATE_CONST.background];
 
     if (disabledStates.includes(this.state.appState)) {
       store.dispatch(authSlice.actions.setUserUnauthorized());
     }
 
     // Restore WC connectors when going from BG => FG
-    if (this.state.appState === 'background' && nextAppState === 'active') {
+    if (
+      this.state.appState === APP_STATE_CONST.background &&
+      nextAppState === APP_STATE_CONST.active
+    ) {
       store.dispatch(walletConnectLoadState());
     }
 

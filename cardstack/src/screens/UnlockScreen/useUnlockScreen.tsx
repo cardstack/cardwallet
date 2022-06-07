@@ -2,10 +2,10 @@ import { useCallback, useState, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
 import RNRestart from 'react-native-restart';
 
+import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { useBooleanState } from '@cardstack/hooks';
-import { useBiometry } from '@cardstack/hooks/useBiometry';
-import { authenticate } from '@cardstack/models/biometric-auth';
+import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
 import { useWorker } from '@cardstack/utils';
@@ -17,12 +17,19 @@ import { strings } from './strings';
 export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
   const [inputPin, setInputPin] = useState('');
+
   const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
-  const { setUserAuthorized } = useAuthActions();
-  const { biometryAvailable } = useBiometry();
+  const [
+    retryBiometricAuth,
+    setRetryBiometricAuth,
+    setResetRetryBiometricAuth,
+  ] = useBooleanState();
 
-  // Fetch on init so login it's faster
+  const { setUserAuthorized } = useAuthActions();
+  const { isBiometryEnabled } = useBiometricSwitch();
+
+  // Fetch on init so login it faster
   const { callback: getStoredPin } = useWorker(async () => {
     storedPin.current = await getPin();
   }, []);
@@ -45,11 +52,20 @@ export const useUnlockScreen = () => {
   );
 
   const authenticateBiometrically = useCallback(async () => {
-    if (await authenticate()) {
+    setResetRetryBiometricAuth();
+
+    if (await biometricAuthentication()) {
       setPinValid();
       setUserAuthorized();
+    } else {
+      setRetryBiometricAuth();
     }
-  }, [setPinValid, setUserAuthorized]);
+  }, [
+    setPinValid,
+    setUserAuthorized,
+    setRetryBiometricAuth,
+    setResetRetryBiometricAuth,
+  ]);
 
   const onResetWalletPress = useCallback(() => {
     Alert.alert(strings.reset.title, strings.reset.message, [
@@ -76,15 +92,17 @@ export const useUnlockScreen = () => {
   }, [inputPin, validatePin]);
 
   useEffect(() => {
-    if (biometryAvailable) {
+    if (isBiometryEnabled) {
       authenticateBiometrically();
     }
-  }, [authenticateBiometrically, biometryAvailable]);
+  }, [authenticateBiometrically, isBiometryEnabled]);
 
   return {
     inputPin,
     setInputPin,
     pinInvalid,
+    retryBiometricAuth,
     onResetWalletPress,
+    authenticateBiometrically,
   };
 };
