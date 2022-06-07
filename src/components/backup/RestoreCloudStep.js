@@ -1,7 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, InteractionManager } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { Alert } from 'react-native';
 import {
   fetchBackupPassword,
   restoreCloudBackup,
@@ -11,8 +9,6 @@ import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
 import {
   dismissKeyboardOnAndroid,
-  navigationStateNewWallet,
-  Routes,
   useLoadingOverlay,
 } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
@@ -21,12 +17,8 @@ import {
   isCloudBackupPasswordValid,
 } from '@rainbow-me/handlers/cloudBackup';
 import { removeWalletData } from '@rainbow-me/handlers/localstorage/removeWallet';
-import walletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useAccountSettings, useWalletManager } from '@rainbow-me/hooks';
-import { setWalletBackedUp, walletsLoadState } from '@rainbow-me/redux/wallets';
-
-import logger from 'logger';
 
 export default function RestoreCloudStep({
   userData,
@@ -34,15 +26,13 @@ export default function RestoreCloudStep({
   fromSettings,
 }) {
   const selectedBackupName = backupSelected?.name;
-  const dispatch = useDispatch();
-  const { navigate, goBack, reset } = useNavigation();
   const [validPassword, setValidPassword] = useState(false);
   const [incorrectPassword, setIncorrectPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('Restore from backup');
   const passwordRef = useRef();
   const { accountAddress } = useAccountSettings();
-  const { changeSelectedWallet } = useWalletManager();
+  const { initWalletResetNavState } = useWalletManager();
 
   useEffect(() => {
     const fetchPasswordIfPossible = async () => {
@@ -92,45 +82,17 @@ export default function RestoreCloudStep({
         userData,
         selectedBackupName
       );
+
       if (success) {
         // Store it in the keychain in case it was missing
         await saveBackupPassword(password);
 
-        // Get rid of the current wallet
-        await removeWalletData(accountAddress);
+        if (accountAddress) {
+          // Get rid of the current wallet
+          await removeWalletData(accountAddress);
+        }
 
-        InteractionManager.runAfterInteractions(async () => {
-          const wallets = await dispatch(walletsLoadState());
-          if (!userData && selectedBackupName) {
-            goBack();
-            logger.log('updating backup state of wallets');
-            await Promise.all(
-              Object.keys(wallets).map(walletId => {
-                logger.log('updating backup state of wallet', walletId);
-                logger.log('selectedBackupName', selectedBackupName);
-                // Mark the wallet as backed up
-                return dispatch(
-                  setWalletBackedUp(
-                    walletId,
-                    walletBackupTypes.cloud,
-                    selectedBackupName
-                  )
-                );
-              })
-            );
-            logger.log('done updating backup state');
-          }
-          const firstWallet = wallets[Object.keys(wallets)[0]];
-          const firstAddress = firstWallet.addresses[0].address;
-          await changeSelectedWallet(firstWallet, firstAddress);
-          if (fromSettings) {
-            logger.log('navigating to wallet');
-            navigate(Routes.WALLET_SCREEN);
-            logger.log('initializing wallet');
-          } else {
-            reset(navigationStateNewWallet);
-          }
-        });
+        await initWalletResetNavState(undefined, fromSettings);
       } else {
         setIncorrectPassword(true);
         dismissLoadingOverlay();
@@ -141,14 +103,10 @@ export default function RestoreCloudStep({
     }
   }, [
     accountAddress,
-    changeSelectedWallet,
     dismissLoadingOverlay,
-    dispatch,
     fromSettings,
-    goBack,
-    navigate,
+    initWalletResetNavState,
     password,
-    reset,
     selectedBackupName,
     showLoadingOverlay,
     userData,

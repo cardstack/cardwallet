@@ -149,6 +149,7 @@ export function findLatestBackUp(wallets: AllRainbowWallets): string | null {
       wallet.backedUp &&
       wallet.backupDate &&
       wallet.backupFile &&
+      typeof wallet.backupFile === 'string' &&
       wallet.backupType === WalletBackupTypes.cloud
     ) {
       // If there is one, let's grab the latest backup
@@ -197,6 +198,7 @@ export async function restoreCloudBackup(
           (wallet.backedUp &&
             wallet.backupDate &&
             wallet.backupFile &&
+            typeof wallet.backupFile === 'string' &&
             wallet.backupType === WalletBackupTypes.cloud) ||
           wallet.type === WalletTypes.readOnly
         ) {
