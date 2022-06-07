@@ -25,6 +25,7 @@ const UnlockScreen = () => {
     inputPin,
     setInputPin,
     pinInvalid,
+    isBiometryEnabled,
     retryBiometricAuth,
     onResetWalletPress,
     authenticateBiometrically,
@@ -80,7 +81,7 @@ const UnlockScreen = () => {
               justifyContent="flex-end"
               alignItems="center"
             >
-              {retryBiometricAuth && (
+              {isBiometryEnabled && retryBiometricAuth && (
                 <Button onPress={authenticateBiometrically}>
                   {strings.login.button}
                 </Button>

@@ -101,6 +101,7 @@ export const useUnlockScreen = () => {
     inputPin,
     setInputPin,
     pinInvalid,
+    isBiometryEnabled,
     retryBiometricAuth,
     onResetWalletPress,
     authenticateBiometrically,
