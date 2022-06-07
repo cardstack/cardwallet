@@ -29,7 +29,7 @@ import useRewardsDataFetch from '../useRewardsDataFetch';
 const defaultGasEstimateInSpend = convertToSpend(0.07, 'USD', 1);
 
 interface RouteParams {
-  prepaidCard?: PrepaidCardType;
+  prepaidCard: PrepaidCardType;
 }
 
 const useRewardsRegister = () => {
@@ -115,7 +115,9 @@ const useRewardsRegister = () => {
           {
             text: strings.defaultAlertBtn,
             onPress: popStackNavigation
-              ? dispatch(StackActions.pop(popStackNavigation))
+              ? () => {
+                  dispatch(StackActions.pop(popStackNavigation));
+                }
               : undefined,
           },
         ],
