@@ -1,25 +1,28 @@
-import { useRoute } from '@react-navigation/native';
 import React, { memo } from 'react';
 
 import {
   TransactionConfirmationSheet,
   SafeAreaView,
 } from '@cardstack/components';
-import { RouteType } from '@cardstack/navigation/types';
-import { TransactionConfirmationRouteParams } from '@cardstack/types';
+
+import useRewardsRegister from './useRewardsRegister';
 
 const RewardsRegisterSheet = () => {
   const {
-    params: { data, onConfirm, onCancel },
-  } = useRoute<RouteType<TransactionConfirmationRouteParams>>();
+    data,
+    onConfirmRegisterPress,
+    goBack,
+    registerEstimatedGasLoading,
+  } = useRewardsRegister();
 
   return (
     <SafeAreaView backgroundColor="black" flex={1} width="100%">
       <TransactionConfirmationSheet
         data={data}
-        onCancel={onCancel}
-        onConfirm={onConfirm}
+        onCancel={goBack}
+        onConfirm={onConfirmRegisterPress}
         loading={false}
+        disabledConfirmButton={registerEstimatedGasLoading}
       />
     </SafeAreaView>
   );

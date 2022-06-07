@@ -16,7 +16,6 @@ import { useRewardsCenterScreen } from './useRewardsCenterScreen';
 
 const RewardsCenterScreen = () => {
   const {
-    onRegisterPress,
     isRegistered,
     hasRewardsAvailable,
     mainPoolTokenInfo,
@@ -45,10 +44,7 @@ const RewardsCenterScreen = () => {
           <Container flex={1}>
             {!isRegistered &&
               (hasRewardsAvailable ? (
-                <RegisterContent
-                  onRegisterPress={onRegisterPress}
-                  {...mainPoolRowProps}
-                />
+                <RegisterContent {...mainPoolRowProps} />
               ) : (
                 <NoRewardContent />
               ))}

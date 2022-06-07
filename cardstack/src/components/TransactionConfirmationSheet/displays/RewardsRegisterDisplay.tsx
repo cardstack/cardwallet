@@ -25,6 +25,7 @@ const rewardsIconProps: IconProps = {
 };
 
 export const RewardsRegisterDisplay = ({
+  disabledConfirmButton: isGasFeeLoading,
   data: { programName, prepaidCard, spendAmount },
 }: RewardsRegisterDisplayProps) => (
   <>
@@ -41,6 +42,7 @@ export const RewardsRegisterDisplay = ({
     <PayThisAmountSection
       headerText={strings.rewards.cost.title}
       spendAmount={spendAmount}
+      isGasFeeLoading={isGasFeeLoading}
     />
   </>
 );

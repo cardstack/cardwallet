@@ -22,6 +22,10 @@ export const strings = {
       message:
         'Claiming is an on chain transaction which requires a small blockchain gas fee. This is paid from your claimable reward.',
     },
+    successAlert: {
+      title: 'Success',
+      message: 'Registration successful',
+    },
   },
   claim: {
     button: 'Claim',
@@ -48,4 +52,5 @@ export const strings = {
     none: '',
   },
   defaultAlertBtn: 'Okay',
+  defaultProgramName: 'Cardstack Rewards',
 };
