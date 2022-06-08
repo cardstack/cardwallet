@@ -1,10 +1,11 @@
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import { Alert } from 'react-native';
 import RNRestart from 'react-native-restart';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { useBooleanState } from '@cardstack/hooks';
+import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
 import { useWorker } from '@cardstack/utils';
@@ -15,12 +16,18 @@ import { strings } from './strings';
 
 export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
-
-  const { biometryAvailable } = useBiometricSwitch();
   const [inputPin, setInputPin] = useState('');
+
   const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
+  const [
+    retryBiometricAuth,
+    setRetryBiometricAuth,
+    resetRetryBiometricAuth,
+  ] = useBooleanState();
+
   const { setUserAuthorized } = useAuthActions();
+  const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
 
   // Fetch on init so login is faster
   const { callback: getStoredPin } = useWorker(async () => {
@@ -43,6 +50,22 @@ export const useUnlockScreen = () => {
     },
     [setPinInvalid, setPinValid, setUserAuthorized]
   );
+
+  const authenticateBiometrically = useCallback(async () => {
+    resetRetryBiometricAuth();
+
+    if (await biometricAuthentication()) {
+      setPinValid();
+      setUserAuthorized();
+    } else {
+      setRetryBiometricAuth();
+    }
+  }, [
+    setPinValid,
+    setUserAuthorized,
+    setRetryBiometricAuth,
+    resetRetryBiometricAuth,
+  ]);
 
   const onResetWalletPress = useCallback(() => {
     Alert.alert(strings.reset.title, strings.reset.message, [
@@ -68,11 +91,25 @@ export const useUnlockScreen = () => {
     validatePin(inputPin);
   }, [inputPin, validatePin]);
 
+  useEffect(() => {
+    if (isBiometryEnabled) {
+      authenticateBiometrically();
+    }
+  }, [authenticateBiometrically, isBiometryEnabled]);
+
+  const retryBiometricLabel = useMemo(
+    () => `Try ${biometryLabel || 'device authentication'} again`,
+    [biometryLabel]
+  );
+
   return {
-    biometryAvailable,
     inputPin,
     setInputPin,
     pinInvalid,
+    isBiometryEnabled,
+    retryBiometricAuth,
     onResetWalletPress,
+    retryBiometricLabel,
+    authenticateBiometrically,
   };
 };

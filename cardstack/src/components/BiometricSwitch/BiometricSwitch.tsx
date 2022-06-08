@@ -23,7 +23,7 @@ const androidSwitchLightConfig = {
 
 export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
   const {
-    iconProps,
+    biometryIconProps,
     biometryLabel,
     isBiometryEnabled,
     biometryAvailable,
@@ -39,7 +39,7 @@ export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
   );
 
   // iconProps is undefined until biometry is ready.
-  if (!biometryAvailable || !iconProps) return null;
+  if (!biometryAvailable || !biometryIconProps) return null;
 
   return (
     <Container flexDirection="row" alignItems="center">
@@ -54,7 +54,7 @@ export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
         color={colorStyleVariants.textColor[variant]}
         iconSize="medium"
         marginRight={2}
-        {...iconProps}
+        {...biometryIconProps}
       />
       <Switch
         onValueChange={toggleBiometrySwitch}

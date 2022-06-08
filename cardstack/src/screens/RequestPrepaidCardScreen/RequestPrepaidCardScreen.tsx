@@ -13,7 +13,7 @@ import {
   ScrollView,
   Text,
 } from '@cardstack/components';
-import { useBiometricIconProps } from '@cardstack/hooks/useBiometricIconProps';
+import { useBiometry } from '@cardstack/hooks/useBiometry';
 
 import CardDropImage from '../../assets/email-drop-card.png';
 
@@ -39,7 +39,7 @@ const RequestPrepaidCardScreen = () => {
 
   const { goBack } = useNavigation();
 
-  const iconProps = useBiometricIconProps();
+  const { biometryIconProps } = useBiometry();
 
   const renderRequestedState = useMemo(
     () => (
@@ -95,7 +95,7 @@ const RequestPrepaidCardScreen = () => {
                 marginVertical={4}
                 variant={!canSubmit ? 'disabledBlack' : undefined}
                 onPress={onSubmitPress}
-                iconProps={!isAuthenticated ? iconProps : undefined}
+                iconProps={!isAuthenticated ? biometryIconProps : undefined}
                 disablePress={isLoading}
                 loading={isLoading}
               >

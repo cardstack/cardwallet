@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import usePrevious from './usePrevious';
 
-const AppStateTypes = {
-  active: 'active',
-  background: 'background',
-  inactive: 'inactive',
-};
+import { AppStateType } from '@cardstack/types';
 
 export default function useAppState() {
   const [appState, setAppState] = useState(AppState.currentState);
@@ -24,8 +20,8 @@ export default function useAppState() {
   return {
     appState,
     justBecameActive:
-      appState === AppStateTypes.active &&
+      appState === AppStateType.active &&
       prevAppState &&
-      prevAppState !== AppStateTypes.active,
+      prevAppState !== AppStateType.active,
   };
 }

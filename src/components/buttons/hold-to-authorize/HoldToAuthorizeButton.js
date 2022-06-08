@@ -9,10 +9,10 @@ import {
 import { EasingNode, timing, Value } from 'react-native-reanimated';
 
 import { useTheme } from '../../../context/ThemeContext';
-import BiometryTypes from '../../../helpers/biometryTypes';
-import { useBiometryIconName, useBiometryType } from '../../../hooks';
 import { haptics } from '../../../utils';
+
 import { Button, Container } from '@cardstack/components';
+import { useBiometry } from '@cardstack/hooks/useBiometry';
 
 const { ACTIVE, END } = State;
 
@@ -29,7 +29,6 @@ const animate = (value, { duration = buttonScaleDurationMs, toValue }) =>
 class HoldToAuthorizeButton extends PureComponent {
   static propTypes = {
     backgroundColor: PropTypes.string,
-    biometryType: PropTypes.string,
     children: PropTypes.any,
     disabled: PropTypes.bool,
     disabledBackgroundColor: PropTypes.string,
@@ -106,7 +105,7 @@ class HoldToAuthorizeButton extends PureComponent {
 
   render() {
     const {
-      biometryIconName,
+      biometryIconProps,
       disabled,
       enableLongPress,
       hideBiometricIcon,
@@ -132,7 +131,7 @@ class HoldToAuthorizeButton extends PureComponent {
               disablePress={disabled}
               iconProps={
                 !android && !disabled && !hideBiometricIcon
-                  ? { name: biometryIconName, color: 'black' }
+                  ? { ...biometryIconProps, color: 'black' }
                   : {
                       name: 'error',
                       color: 'white',
@@ -154,21 +153,16 @@ class HoldToAuthorizeButton extends PureComponent {
 }
 
 const HoldToAuthorizeButtonWithBiometrics = ({ label, testID, ...props }) => {
-  const biometryType = useBiometryType();
-  const biometryIconName = useBiometryIconName();
+  const { biometryIconProps, longPressToConfirm } = useBiometry();
   const { colors } = useTheme();
-  const enableLongPress =
-    biometryType === BiometryTypes.FaceID ||
-    biometryType === BiometryTypes.Face ||
-    biometryType === BiometryTypes.none;
+
   return (
     <HoldToAuthorizeButton
       {...props}
-      biometryIconName={biometryIconName}
-      biometryType={biometryType}
+      biometryIconProps={biometryIconProps}
       colors={colors}
-      enableLongPress={enableLongPress}
-      label={enableLongPress ? label : label.replace('Hold', 'Tap')}
+      enableLongPress={longPressToConfirm}
+      label={longPressToConfirm ? label : label.replace('Hold', 'Tap')}
       testID={testID}
     />
   );

@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { StatusBar, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 import {
+  Button,
   Container,
   PinInput,
   SafeAreaView,
@@ -22,9 +23,13 @@ const variant = 'dark';
 const UnlockScreen = () => {
   const {
     inputPin,
-    setInputPin,
     pinInvalid,
+    setInputPin,
+    isBiometryEnabled,
+    retryBiometricAuth,
     onResetWalletPress,
+    retryBiometricLabel,
+    authenticateBiometrically,
   } = useUnlockScreen();
 
   return (
@@ -77,6 +82,11 @@ const UnlockScreen = () => {
               justifyContent="flex-end"
               alignItems="center"
             >
+              {isBiometryEnabled && retryBiometricAuth && (
+                <Button onPress={authenticateBiometrically}>
+                  {retryBiometricLabel}
+                </Button>
+              )}
               <Container flex={1} justifyContent="flex-end" alignItems="center">
                 <Text
                   textAlign="center"

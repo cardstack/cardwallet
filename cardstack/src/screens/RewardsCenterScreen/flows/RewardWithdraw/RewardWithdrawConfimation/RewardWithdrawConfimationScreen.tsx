@@ -9,7 +9,7 @@ import {
 import { SectionCoinHeader } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionCoinHeader';
 import { SectionHeaderText } from '@cardstack/components/TransactionConfirmationSheet/displays/components/SectionHeaderText';
 import { AmountSection } from '@cardstack/components/TransactionConfirmationSheet/displays/components/sections/AmountSection';
-import { useBiometricIconProps } from '@cardstack/hooks/useBiometricIconProps';
+import { useBiometry } from '@cardstack/hooks/useBiometry';
 
 import { SafeSelectionItem } from '../components/SafeSelectionItem';
 
@@ -26,7 +26,7 @@ const RewardWithdrawConfirmationScreen = () => {
     estimatedNetClaim,
   } = useRewardWithdrawConfimationScreen();
 
-  const iconProps = useBiometricIconProps();
+  const { biometryIconProps } = useBiometry();
 
   const amountData = useMemo(
     () => [
@@ -80,7 +80,7 @@ const RewardWithdrawConfirmationScreen = () => {
           <Button
             onPress={onConfirmPress}
             variant="small"
-            iconProps={iconProps}
+            iconProps={biometryIconProps}
             disabled={isLoadingGasEstimate}
           >
             {strings.buttons.submit}

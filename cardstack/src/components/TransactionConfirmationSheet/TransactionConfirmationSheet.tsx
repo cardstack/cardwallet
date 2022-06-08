@@ -12,7 +12,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { useBiometricIconProps } from '@cardstack/hooks/useBiometricIconProps';
+import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { TransactionConfirmationData } from '@cardstack/types';
 import { layoutEasingAnimation } from '@cardstack/utils';
 
@@ -128,7 +128,7 @@ const SheetFooter = ({
   onConfirmLoading = false,
   disabledConfirmButton,
 }: TransactionConfirmationDisplayProps) => {
-  const iconProps = useBiometricIconProps();
+  const { biometryIconProps } = useBiometry();
 
   return (
     <Container
@@ -153,7 +153,7 @@ const SheetFooter = ({
           loading={onConfirmLoading}
           variant="small"
           onPress={onConfirm}
-          iconProps={iconProps}
+          iconProps={biometryIconProps}
           disabled={disabledConfirmButton}
         >
           {strings.buttons.submit}

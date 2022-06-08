@@ -52,6 +52,7 @@ import {
 import { authSlice } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
 import theme from '@cardstack/theme';
+import { AppStateType } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 import PortalConsumer from '@rainbow-me/components/PortalConsumer';
 import Logger from 'logger';
@@ -195,14 +196,17 @@ class App extends Component {
   };
 
   handleAppStateChange = async nextAppState => {
-    const disabledStates = ['background', 'inactive'];
+    const disabledStates = [AppStateType.background];
 
     if (disabledStates.includes(this.state.appState)) {
       store.dispatch(authSlice.actions.setUserUnauthorized());
     }
 
     // Restore WC connectors when going from BG => FG
-    if (this.state.appState === 'background' && nextAppState === 'active') {
+    if (
+      this.state.appState === AppStateType.background &&
+      nextAppState === AppStateType.active
+    ) {
       store.dispatch(walletConnectLoadState());
     }
 
