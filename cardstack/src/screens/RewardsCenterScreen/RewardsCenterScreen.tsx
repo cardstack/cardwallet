@@ -19,8 +19,6 @@ const RewardsCenterScreen = () => {
     isRegistered,
     hasRewardsAvailable,
     mainPoolTokenInfo,
-    historySectionData,
-    tokensBalanceData,
     isLoading,
   } = useRewardsCenterScreen();
 
@@ -51,8 +49,6 @@ const RewardsCenterScreen = () => {
             {isRegistered && (
               <ClaimContent
                 claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
-                historyList={historySectionData}
-                balanceList={tokensBalanceData}
               />
             )}
           </Container>

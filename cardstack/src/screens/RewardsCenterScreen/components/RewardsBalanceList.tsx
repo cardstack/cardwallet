@@ -7,16 +7,15 @@ import { Routes } from '@cardstack/navigation';
 import { TokenType } from '@cardstack/types';
 
 import { strings } from '../strings';
+import useRewardsBalanceHistory from '../useRewardsBalanceHistory';
 
 import { RewardRow } from '.';
 
 export type TokenWithSafeAddress = TokenType & { safeAddress: string };
-export interface RewardsBalanceListProps {
-  data?: TokenWithSafeAddress[];
-}
 
-export const RewardsBalanceList = ({ data = [] }: RewardsBalanceListProps) => {
+export const RewardsBalanceList = () => {
   const { navigate } = useNavigation();
+  const { tokensBalanceData } = useRewardsBalanceHistory();
 
   const onPress = useCallback(
     tokenInfo => () => {
@@ -47,7 +46,7 @@ export const RewardsBalanceList = ({ data = [] }: RewardsBalanceListProps) => {
 
   return (
     <FlatList
-      data={data}
+      data={tokensBalanceData || []}
       renderItem={renderItem}
       ItemSeparatorComponent={spacing}
       ListEmptyComponent={<ListEmptyComponent text={strings.balance.empty} />}

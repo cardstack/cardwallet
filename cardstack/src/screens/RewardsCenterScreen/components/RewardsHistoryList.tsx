@@ -7,22 +7,15 @@ import { RewardeeClaim, TokenTransfer } from '@cardstack/graphql';
 import { fromWeiToFixedEth } from '@cardstack/utils';
 
 import { strings } from '../strings';
+import useRewardsBalanceHistory from '../useRewardsBalanceHistory';
 
 import { RewardRow } from '.';
 
 export type ClaimOrTokenWithdraw = OptionalUnion<RewardeeClaim, TokenTransfer>;
-export interface RewardsHistorySectionType {
-  title: string;
-  data: ClaimOrTokenWithdraw[];
-}
 
-export interface RewardsHistoryListProps {
-  sections?: Array<RewardsHistorySectionType>;
-}
+export const RewardsHistoryList = () => {
+  const { historySectionData } = useRewardsBalanceHistory();
 
-export const RewardsHistoryList = ({
-  sections = [],
-}: RewardsHistoryListProps) => {
   const renderSectionHeader = useCallback(
     ({ section }) => (
       <Container backgroundColor="white">
@@ -53,7 +46,7 @@ export const RewardsHistoryList = ({
   return (
     <SectionList
       renderSectionHeader={renderSectionHeader}
-      sections={sections}
+      sections={historySectionData || []}
       renderItem={renderItem}
       ItemSeparatorComponent={spacing}
       SectionSeparatorComponent={spacing}
