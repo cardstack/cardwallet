@@ -80,7 +80,7 @@ const useRewardsRegister = () => {
     navigate(Routes.CHOOSE_PREPAIDCARD_SHEET, {
       spendAmount: defaultGasEstimateInSpend,
       onConfirmChoosePrepaidCard: onPrepaidCardSelection,
-      payCostDesc: strings.register.payCostDescription.toUpperCase(),
+      payCostDesc: strings.register.payCostDescription,
     });
   }, [navigate, onPrepaidCardSelection]);
 
