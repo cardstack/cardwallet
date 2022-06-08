@@ -42,6 +42,7 @@ export interface IconProps extends Omit<TouchableProps, 'children'> {
   stroke?: ColorTypes | null;
   strokeWidth?: number;
   visible?: boolean;
+  pathFillColor?: ColorTypes | null;
 }
 
 export const Icon = ({
@@ -52,6 +53,7 @@ export const Icon = ({
   color,
   stroke,
   onPress,
+  pathFillColor,
   ...props
 }: IconProps) => {
   const theme = useTheme<Theme>();
@@ -62,6 +64,9 @@ export const Icon = ({
   const strokeWithDefault = stroke ? theme.colors[stroke] : null;
 
   const sizeWithDefault = size || iconSizeToValue[iconSize];
+
+  const pathFillColorWithDefault =
+    (pathFillColor && theme.colors[pathFillColor]) || pathFillColor;
 
   if (isCustomIcon) {
     const CustomIcon = customIcons[name as CustomIconNames];
@@ -81,6 +86,7 @@ export const Icon = ({
           stroke={strokeWithDefault}
           width={sizeWithDefault}
           height={sizeWithDefault}
+          pathFillColor={pathFillColorWithDefault}
         />
       </Touchable>
     );
