@@ -5,10 +5,13 @@ import { act } from 'react-test-renderer';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { inputData } from '@cardstack/helpers/__mocks__/dataMocks';
+import { Routes } from '@cardstack/navigation/routes';
 import { useGetPrepaidCardsQuery } from '@cardstack/services';
 import { useRegisterToRewardProgramMutation } from '@cardstack/services/rewards-center/rewards-center-api';
 
-import useRewardsRegister from '../RewardsRegisterSheet/useRewardsRegister';
+import useRewardsRegister, {
+  defaultGasEstimateInSpend,
+} from '../RewardsRegisterSheet/useRewardsRegister';
 import { strings } from '../strings';
 import useRewardsDataFetch from '../useRewardsDataFetch';
 
@@ -24,11 +27,12 @@ const signerParams = {
 
 const mockedGoBack = jest.fn();
 const mockNavDispatch = jest.fn();
+const mockNavigate = jest.fn();
 
 jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
   useNavigation: () => ({
-    navigate: jest.fn(),
+    navigate: mockNavigate,
     goBack: mockedGoBack,
     dispatch: mockNavDispatch,
   }),
@@ -40,6 +44,9 @@ jest.mock('@cardstack/navigation', () => ({
     showLoadingOverlay: mockedShowOverlay,
     dismissLoadingOverlay: mockedDismissOverlay,
   }),
+  Routes: {
+    CHOOSE_PREPAIDCARD_SHEET: 'ChoosePrepaidCardSheet',
+  },
 }));
 
 jest.mock('@rainbow-me/hooks', () => ({
@@ -204,5 +211,19 @@ describe('useRewardsRegister', () => {
     renderHook(() => useRewardsRegister());
 
     expect(mockedGetRegisterRewardeeGasEstimate).not.toBeCalled();
+  });
+
+  it('should redirect to prepaid card selection route with the correct params when calling onRegisterPress()', () => {
+    const { result } = renderHook(() => useRewardsRegister());
+
+    act(() => {
+      result.current.onRegisterPress();
+    });
+
+    expect(mockNavigate).toBeCalledWith(Routes.CHOOSE_PREPAIDCARD_SHEET, {
+      spendAmount: defaultGasEstimateInSpend,
+      onConfirmChoosePrepaidCard: expect.any(Function),
+      payCostDesc: strings.register.payCostDescription,
+    });
   });
 });
