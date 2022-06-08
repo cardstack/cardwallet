@@ -221,5 +221,6 @@ export default function useWalletManager() {
     createNewWallet,
     importWallet,
     changeSelectedWallet,
+    initWalletResetNavState,
   };
 }
