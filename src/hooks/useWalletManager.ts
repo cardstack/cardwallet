@@ -24,6 +24,7 @@ import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
+import { getPin } from '@cardstack/models/secure-storage';
 import {
   navigationStateNewWallet,
   Routes,
@@ -33,6 +34,7 @@ import { appStateUpdate } from '@cardstack/redux/appState';
 
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
+
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import logger from 'logger';
@@ -56,10 +58,33 @@ export default function useWalletManager() {
 
   const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
+  const createWalletPin = useCallback(
+    (overwriteParams = {}) => {
+      navigate(Routes.PIN_SCREEN, {
+        flow: PinFlow.create,
+        variant: 'dark',
+        canGoBack: true,
+        dismissOnSuccess: false,
+        ...overwriteParams,
+      });
+    },
+    [navigate]
+  );
+
   const initializeWallet = useCallback(
     async (seedPhrase?: string) => {
       try {
         logger.sentry('Start wallet init');
+
+        const noPin = !(await getPin());
+
+        if (noPin) {
+          // TODO: handle secrets migration
+          createWalletPin({
+            canGoBack: false,
+            dismissOnSuccess: true,
+          });
+        }
 
         await dispatch(resetAccountState());
         logger.sentry('resetAccountState ran ok');
@@ -100,20 +125,14 @@ export default function useWalletManager() {
         dispatch(appStateUpdate({ walletReady: true }));
       }
     },
-    [dispatch, network, initializeAccountData, loadGlobalData, loadAccountData]
-  );
-
-  const createWalletPin = useCallback(
-    onSuccess => {
-      navigate(Routes.PIN_SCREEN, {
-        flow: PinFlow.create,
-        variant: 'dark',
-        canGoBack: true,
-        dismissOnSuccess: false,
-        onSuccess,
-      });
-    },
-    [navigate]
+    [
+      dispatch,
+      loadGlobalData,
+      loadAccountData,
+      network,
+      initializeAccountData,
+      createWalletPin,
+    ]
   );
 
   const initWalletResetNavState = useCallback(
@@ -135,32 +154,34 @@ export default function useWalletManager() {
 
   const createNewWallet = useCallback(
     async ({ color, name, isFromWelcomeFlow }: CreateWalletParams = {}) =>
-      createWalletPin(async (pin: string) => {
-        try {
-          if (isFromWelcomeFlow) {
-            showLoadingOverlay({
-              title: walletLoadingStates.CREATING_WALLET,
+      createWalletPin({
+        onSucess: async (pin: string) => {
+          try {
+            if (isFromWelcomeFlow) {
+              showLoadingOverlay({
+                title: walletLoadingStates.CREATING_WALLET,
+              });
+            }
+
+            const wallet = await createOrImportWallet({
+              color,
+              name,
+              pin,
             });
+
+            const walletAddress = wallet?.address;
+
+            await saveAccountEmptyState(
+              true,
+              walletAddress?.toLowerCase(),
+              network
+            );
+
+            initWalletResetNavState();
+          } catch (e) {
+            logger.sentry('Error creating new wallet', e);
           }
-
-          const wallet = await createOrImportWallet({
-            color,
-            name,
-            pin,
-          });
-
-          const walletAddress = wallet?.address;
-
-          await saveAccountEmptyState(
-            true,
-            walletAddress?.toLowerCase(),
-            network
-          );
-
-          initWalletResetNavState();
-        } catch (e) {
-          logger.sentry('Error creating new wallet', e);
-        }
+        },
       }),
     [createWalletPin, initWalletResetNavState, network, showLoadingOverlay]
   );
@@ -193,7 +214,7 @@ export default function useWalletManager() {
         return walletImport();
       }
 
-      createWalletPin(walletImport);
+      createWalletPin({ onSucess: walletImport });
     },
     [
       createWalletPin,
