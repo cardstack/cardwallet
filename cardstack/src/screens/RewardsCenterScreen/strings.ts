@@ -30,7 +30,7 @@ export const strings = {
   claim: {
     button: 'Claim',
     loading: 'Claiming Reward',
-    sucessAlert: {
+    successAlert: {
       title: 'Success',
       message: 'Rewards claimed successfully',
     },

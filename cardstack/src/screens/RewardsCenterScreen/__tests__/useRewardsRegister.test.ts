@@ -130,7 +130,7 @@ describe('useRewardsRegister', () => {
     });
   });
 
-  it('on successful register, Alert should show Okay button', () => {
+  it('should show Okay button with onPress action on Alert after successful registration', () => {
     const { result } = renderHook(() => useRewardsRegister());
 
     act(() => {
@@ -156,7 +156,7 @@ describe('useRewardsRegister', () => {
     expect(mockedDismissOverlay).toBeCalled();
   });
 
-  it('on unsuccesful claim, Alert should not have an OKay button', () => {
+  it('should show Okay button with NO onPress action on Alert after unsuccesful registration', () => {
     mockRegisterToRewardProgram({
       isSuccess: false,
       isError: true,
