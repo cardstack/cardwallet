@@ -8,11 +8,11 @@ import { SectionHeaderText } from '../SectionHeaderText';
 export const PayThisAmountSection = ({
   headerText,
   spendAmount,
-  isGasFeeLoading,
+  isLoading,
 }: {
   headerText: string;
   spendAmount: string | number;
-  isGasFeeLoading?: boolean;
+  isLoading?: boolean;
 }) => {
   const { nativeBalanceDisplay } = useSpendToNativeDisplay({
     spendAmount,
@@ -22,7 +22,7 @@ export const PayThisAmountSection = ({
     <Container>
       <SectionHeaderText>{headerText}</SectionHeaderText>
       <Container marginLeft={12} marginTop={2}>
-        {isGasFeeLoading ? (
+        {isLoading ? (
           <Skeleton width="40%" height={50} light />
         ) : (
           <Text size="large" weight="extraBold">
