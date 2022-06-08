@@ -30,7 +30,7 @@ interface NavParams {
 }
 
 export const usePinScreen = () => {
-  const { dispatch: navDispatch } = useNavigation();
+  const { dispatch: navDispatch, setOptions } = useNavigation();
   const { params } = useRoute<RouteType<NavParams>>();
 
   const [inputPin, setInputPin] = useState('');
@@ -45,6 +45,10 @@ export const usePinScreen = () => {
     showBiometricSwitcher = true,
     initialPin = '',
   } = params;
+
+  useEffect(() => {
+    setOptions({ gestureEnabled: canGoBack });
+  }, [canGoBack, setOptions]);
 
   useEffect(() => {
     if (inputPin.length < DEFAULT_PIN_LENGTH) {
