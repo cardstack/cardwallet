@@ -6,7 +6,7 @@ import {
   createStackNavigator,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TabBarIcon } from '@cardstack/components';
@@ -159,6 +159,7 @@ const SharedScreens = (
 );
 
 const useNavigationAuth = () => {
+  const isFirstMount = useRef(true);
   const hideSplashScreen = useHideSplashScreen();
 
   const { isAuthorized, hasWallet, setHasWallet } = useAuthSelectorAndActions();
@@ -172,14 +173,15 @@ const useNavigationAuth = () => {
     address && setHasWallet();
     setHasPin(!!storedPin);
 
-    setTimeout(hideSplashScreen, 500);
+    if (isFirstMount.current) {
+      setTimeout(hideSplashScreen, 500);
+      isFirstMount.current = false;
+    }
   }, []);
 
   useEffect(() => {
-    if (!hasWallet || !hasPin) {
-      loadAuthInfo();
-    }
-  }, [loadAuthInfo, hasWallet, hasPin]);
+    loadAuthInfo();
+  }, [loadAuthInfo, isAuthorized]);
 
   return { hasWallet, isAuthorized, hasPin };
 };
