@@ -23,11 +23,12 @@ const variant = 'dark';
 const UnlockScreen = () => {
   const {
     inputPin,
-    setInputPin,
     pinInvalid,
+    setInputPin,
     isBiometryEnabled,
     retryBiometricAuth,
     onResetWalletPress,
+    retryBiometricLabel,
     authenticateBiometrically,
   } = useUnlockScreen();
 
@@ -83,7 +84,7 @@ const UnlockScreen = () => {
             >
               {isBiometryEnabled && retryBiometricAuth && (
                 <Button onPress={authenticateBiometrically}>
-                  {strings.login.button}
+                  {retryBiometricLabel}
                 </Button>
               )}
               <Container flex={1} justifyContent="flex-end" alignItems="center">

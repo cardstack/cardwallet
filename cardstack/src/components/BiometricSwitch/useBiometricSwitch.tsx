@@ -18,8 +18,8 @@ export const useBiometricSwitch = () => {
   ]);
 
   return {
-    biometryIconProps,
     biometryLabel,
+    biometryIconProps,
     isBiometryEnabled,
     toggleBiometrySwitch,
     biometryAvailable,

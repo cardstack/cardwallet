@@ -52,18 +52,13 @@ import {
 import { authSlice } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
 import theme from '@cardstack/theme';
+import { AppStateType } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 import PortalConsumer from '@rainbow-me/components/PortalConsumer';
 import Logger from 'logger';
 import { Portal } from 'react-native-cool-modals/Portal';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
-
-const APP_STATE_CONST = {
-  active: 'active',
-  background: 'background',
-  inactive: 'inactive',
-};
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'light-content' });
 
@@ -201,7 +196,7 @@ class App extends Component {
   };
 
   handleAppStateChange = async nextAppState => {
-    const disabledStates = [APP_STATE_CONST.background];
+    const disabledStates = [AppStateType.background];
 
     if (disabledStates.includes(this.state.appState)) {
       store.dispatch(authSlice.actions.setUserUnauthorized());
@@ -209,8 +204,8 @@ class App extends Component {
 
     // Restore WC connectors when going from BG => FG
     if (
-      this.state.appState === APP_STATE_CONST.background &&
-      nextAppState === APP_STATE_CONST.active
+      this.state.appState === AppStateType.background &&
+      nextAppState === AppStateType.active
     ) {
       store.dispatch(walletConnectLoadState());
     }

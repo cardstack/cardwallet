@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import { Alert } from 'react-native';
 import RNRestart from 'react-native-restart';
 
@@ -23,13 +23,13 @@ export const useUnlockScreen = () => {
   const [
     retryBiometricAuth,
     setRetryBiometricAuth,
-    setResetRetryBiometricAuth,
+    resetRetryBiometricAuth,
   ] = useBooleanState();
 
   const { setUserAuthorized } = useAuthActions();
-  const { isBiometryEnabled } = useBiometricSwitch();
+  const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
 
-  // Fetch on init so login it faster
+  // Fetch on init so login is faster
   const { callback: getStoredPin } = useWorker(async () => {
     storedPin.current = await getPin();
   }, []);
@@ -52,7 +52,7 @@ export const useUnlockScreen = () => {
   );
 
   const authenticateBiometrically = useCallback(async () => {
-    setResetRetryBiometricAuth();
+    resetRetryBiometricAuth();
 
     if (await biometricAuthentication()) {
       setPinValid();
@@ -64,7 +64,7 @@ export const useUnlockScreen = () => {
     setPinValid,
     setUserAuthorized,
     setRetryBiometricAuth,
-    setResetRetryBiometricAuth,
+    resetRetryBiometricAuth,
   ]);
 
   const onResetWalletPress = useCallback(() => {
@@ -97,6 +97,11 @@ export const useUnlockScreen = () => {
     }
   }, [authenticateBiometrically, isBiometryEnabled]);
 
+  const retryBiometricLabel = useMemo(
+    () => `Try ${biometryLabel || 'device authentication'} again`,
+    [biometryLabel]
+  );
+
   return {
     inputPin,
     setInputPin,
@@ -104,6 +109,7 @@ export const useUnlockScreen = () => {
     isBiometryEnabled,
     retryBiometricAuth,
     onResetWalletPress,
+    retryBiometricLabel,
     authenticateBiometrically,
   };
 };

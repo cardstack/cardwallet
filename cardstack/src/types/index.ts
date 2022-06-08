@@ -12,3 +12,4 @@ export * from './NoticeType';
 export * from './IncidentType';
 export * from './NotificationsPreferenceDataType';
 export * from './safes';
+export * from './AppStateType';

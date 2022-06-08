@@ -4,7 +4,6 @@ export const strings = {
     error: 'Incorrect PIN Code',
   },
   login: {
-    button: 'Try device authentication again',
     eraseMessage:
       "Can't login? You can ERASE your current wallet and setup a new one",
     eraseLink: 'Reset Wallet',
