@@ -186,4 +186,23 @@ describe('useRewardsRegister', () => {
 
     expect(mockedDismissOverlay).toBeCalled();
   });
+
+  it('should call getRegisterRewardeeGasEstimate when the route params has prepaid card info', () => {
+    renderHook(() => useRewardsRegister());
+
+    expect(mockedGetRegisterRewardeeGasEstimate).toBeCalledWith({
+      prepaidCardAddress: inputData.prepaidCards[0].address,
+      rewardProgramId: defaultRewardProgramId,
+    });
+  });
+
+  it(`should NOT call getRegisterRewardeeGasEstimate when there's no prepaid card info in the route params`, () => {
+    (useRoute as jest.Mock).mockReturnValue({
+      params: {},
+    });
+
+    renderHook(() => useRewardsRegister());
+
+    expect(mockedGetRegisterRewardeeGasEstimate).not.toBeCalled();
+  });
 });
