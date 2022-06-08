@@ -26,7 +26,7 @@ import { useWallets } from '@rainbow-me/hooks';
 import { strings } from '../strings';
 import useRewardsDataFetch from '../useRewardsDataFetch';
 
-const defaultGasEstimateInSpend = convertToSpend(0.07, 'USD', 1);
+const defaultGasEstimateInSpend = convertToSpend(0.05, 'USD', 1);
 
 interface RouteParams {
   prepaidCard: PrepaidCardType;
