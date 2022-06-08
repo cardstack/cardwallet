@@ -1,23 +1,19 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 
 import { Container, ContainerProps, Image, Text } from '@cardstack/components';
-import { Routes } from '@cardstack/navigation';
 
-import rewardsPromoBanner from '../../assets/promo-rewards.png';
 import { Button } from '../Button';
 import { CenteredContainer } from '../Container';
 
-const strings = {
-  rewards: 'Rewards',
-};
+import useRewardsPromoBanner from './useRewardsPromoBanner';
 
 const RewardsPromoBanner = ({ ...props }: ContainerProps) => {
-  const { navigate } = useNavigation();
-
-  const onPress = useCallback(() => {
-    navigate(Routes.REWARDS_CENTER_SCREEN);
-  }, [navigate]);
+  const {
+    onPress,
+    bannerSource,
+    buttonLabel,
+    buttonIcon,
+  } = useRewardsPromoBanner();
 
   return (
     <Container {...props}>
@@ -26,12 +22,18 @@ const RewardsPromoBanner = ({ ...props }: ContainerProps) => {
         overflow="hidden"
         borderRadius={10}
         maxWidth="90%"
-        source={rewardsPromoBanner}
+        source={bannerSource}
       />
       <CenteredContainer position="absolute" bottom="15%" left={0} right={0}>
-        <Button onPress={onPress} variant="small" height={30}>
+        <Button
+          onPress={onPress}
+          variant="small"
+          height={30}
+          iconProps={buttonIcon}
+          iconPosition="right"
+        >
           <Text fontSize={13} fontWeight="600">
-            {strings.rewards}
+            {buttonLabel}
           </Text>
         </Button>
       </CenteredContainer>
