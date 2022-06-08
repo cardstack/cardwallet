@@ -15,18 +15,22 @@ export const strings = {
         'Before you can claim, you need to create and register a reward account.  This is an on-chain event and will cost you a small gas fee - you can use any existing prepaid card to pay the transaction fee.',
     },
     loading: 'Registering Account',
-    payCostDescription: 'To pay transaction cost',
+    payCostDescription: 'TO PAY TRANSACTION COST',
     gasLoading: 'Getting estimated gas fee',
     gasInfoBanner: {
       title: 'Claiming Gas Fee',
       message:
         'Claiming is an on chain transaction which requires a small blockchain gas fee. This is paid from your claimable reward.',
     },
+    successAlert: {
+      title: 'Success',
+      message: 'Registration successful',
+    },
   },
   claim: {
     button: 'Claim',
     loading: 'Claiming Reward',
-    sucessAlert: {
+    successAlert: {
       title: 'Success',
       message: 'Rewards claimed successfully',
     },
@@ -48,4 +52,5 @@ export const strings = {
     none: '',
   },
   defaultAlertBtn: 'Okay',
+  defaultProgramName: 'Cardstack Rewards',
 };

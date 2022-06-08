@@ -120,7 +120,7 @@ const useRewardsClaim = () => {
         success: {
           status: isClaimSuccess,
           callback: onClaimFulfilledAlert({
-            ...strings.claim.sucessAlert,
+            ...strings.claim.successAlert,
             dismiss: true,
           }),
         },

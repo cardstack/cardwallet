@@ -109,7 +109,7 @@ describe('useRewardsClaim', () => {
     });
   });
 
-  it('on successful claim, Alert should show Okay button', () => {
+  it('shoul show Okay button with an onPress action on Alert after successful claim', () => {
     const { result } = renderHook(() => useRewardsClaim());
 
     act(() => {
@@ -121,8 +121,8 @@ describe('useRewardsClaim', () => {
     });
 
     expect(spyAlert).toBeCalledWith(
-      strings.claim.sucessAlert.title,
-      strings.claim.sucessAlert.message,
+      strings.claim.successAlert.title,
+      strings.claim.successAlert.message,
       [
         {
           text: strings.defaultAlertBtn,
@@ -135,7 +135,7 @@ describe('useRewardsClaim', () => {
     expect(mockedDismissOverlay).toBeCalled();
   });
 
-  it('on unsuccesful claim, Alert should not have an OKay button', () => {
+  it('should show Okay button with NO onPress action on Alert after unsuccesful claim', () => {
     mockClaimRewards({
       isSuccess: false,
       isError: true,
