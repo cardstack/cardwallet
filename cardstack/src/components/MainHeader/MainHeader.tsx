@@ -8,11 +8,13 @@ import {
   MainHeaderWrapper,
 } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
+import useRewardsDataFetch from '@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch';
 
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { ContainerProps } from '../Container';
+import { Touchable } from '../Touchable';
 
 interface Props extends ContainerProps {
   title?: string;
@@ -32,6 +34,7 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
+  const { rewardPoolTokenBalances } = useRewardsDataFetch();
 
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
@@ -40,6 +43,8 @@ const MainHeader = ({
   const onRewardPress = useCallback(() => {
     navigate(Routes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
+
+  const hasRewardsClaim = rewardPoolTokenBalances?.length;
 
   return (
     <MainHeaderWrapper {...containerProps}>
@@ -71,13 +76,19 @@ const MainHeader = ({
         children
       )}
       {!rightIcon ? (
-        <Icon
-          color="teal"
-          iconSize="medium"
-          size={26}
-          name="rewards"
+        <Touchable
+          flexDirection="row"
+          alignItems="center"
+          alignContent="center"
           onPress={onRewardPress}
-        />
+        >
+          <Icon color="teal" iconSize="medium" size={26} name="rewards" />
+          {!!hasRewardsClaim && (
+            <Text color="teal" fontSize={16} weight="bold" marginLeft={2}>
+              {hasRewardsClaim}
+            </Text>
+          )}
+        </Touchable>
       ) : (
         rightIcon
       )}
