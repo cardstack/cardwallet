@@ -8,6 +8,9 @@ import {
   CreateImportParams,
   createOrImportWallet,
   loadAddress,
+  loadSeedPhrase,
+  migrateSecretsWithNewPin,
+  RainbowWallet,
 } from '../model/wallet';
 import {
   resetAccountState,
@@ -37,6 +40,7 @@ import { PinFlow } from '@cardstack/screens/PinScreen/types';
 
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
+
 import logger from 'logger';
 
 interface CreateWalletParams
@@ -71,20 +75,42 @@ export default function useWalletManager() {
     [navigate]
   );
 
+  const migrateWalletIfNeeded = useCallback(
+    async (selectedWallet: RainbowWallet) => {
+      try {
+        const hasPin = !!(await getPin());
+
+        if (hasPin) {
+          return;
+        }
+
+        const seedPhrase = await loadSeedPhrase(
+          selectedWallet.id,
+          'Authenticate to migrate secrets'
+        );
+
+        if (!seedPhrase) {
+          //TODO: handle no seed case, reset wallet maybe ?
+          return;
+        }
+
+        createWalletPin({
+          canGoBack: false,
+          onSuccess: (pin: string) =>
+            migrateSecretsWithNewPin(selectedWallet, seedPhrase, pin),
+          dismissOnSuccess: true,
+        });
+      } catch (e) {
+        logger.sentry('Error migrating wallet');
+      }
+    },
+    [createWalletPin]
+  );
+
   const initializeWallet = useCallback(
     async (seedPhrase?: string) => {
       try {
         logger.sentry('Start wallet init');
-
-        const noPin = !(await getPin());
-
-        if (noPin) {
-          // TODO: handle secrets migration
-          createWalletPin({
-            canGoBack: false,
-            dismissOnSuccess: true,
-          });
-        }
 
         await dispatch(resetAccountState());
         logger.sentry('resetAccountState ran ok');
@@ -93,7 +119,13 @@ export default function useWalletManager() {
 
         logger.sentry('done loading network');
 
-        await dispatch(walletsLoadState());
+        const { selectedWallet } = ((await dispatch(
+          walletsLoadState()
+        )) as unknown) as {
+          selectedWallet: RainbowWallet;
+        };
+
+        await migrateWalletIfNeeded(selectedWallet);
 
         const walletAddress = await loadAddress();
 
@@ -127,11 +159,11 @@ export default function useWalletManager() {
     },
     [
       dispatch,
+      migrateWalletIfNeeded,
       loadGlobalData,
       loadAccountData,
       network,
       initializeAccountData,
-      createWalletPin,
     ]
   );
 

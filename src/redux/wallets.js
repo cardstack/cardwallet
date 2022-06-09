@@ -104,7 +104,7 @@ export const walletsLoadState = () => async (dispatch, getState) => {
     });
 
     dispatch(fetchWalletNames());
-    return wallets;
+    return { wallets, selectedWallet };
   } catch (error) {
     logger.sentry('Exception during walletsLoadState');
     captureException(error);

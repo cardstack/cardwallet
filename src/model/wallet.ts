@@ -40,6 +40,11 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
+import { getEthersWallet } from '@cardstack/models/ethers-wallet';
+import {
+  savePrivateKey,
+  saveSeedPhrase,
+} from '@cardstack/models/secure-storage';
 import { Device } from '@cardstack/utils/device';
 
 import logger from 'logger';
@@ -460,8 +465,8 @@ const saveSeedAndPrivateKey = ({
   walletAddress,
   id,
 }: SaveSeedAndPrivateKeyParams) => {
-  const saveSeed = saveSeedPhrase(walletSeed, id);
-  const savePkey = savePrivateKey(walletAddress, privateKey);
+  const saveSeed = DEPRECATED_saveSeedPhrase(walletSeed, id);
+  const savePkey = DEPRECATED_savePrivateKey(walletAddress, privateKey);
 
   return Promise.all([saveSeed, savePkey]);
 };
@@ -532,13 +537,16 @@ const addAccountsWithTxHistory = async (
           nextWallet.privateKey
         );
         if (encryptedPkey) {
-          await savePrivateKey(nextWallet.address, encryptedPkey);
+          await DEPRECATED_savePrivateKey(nextWallet.address, encryptedPkey);
         } else {
           logger.sentry('Error encrypting privateKey to save it');
           return null;
         }
       } else {
-        await savePrivateKey(nextWallet.address, nextWallet.privateKey);
+        await DEPRECATED_savePrivateKey(
+          nextWallet.address,
+          nextWallet.privateKey
+        );
       }
       logger.sentry(
         `[createWallet] - saved private key for next wallet ${index}`
@@ -744,7 +752,7 @@ export const createOrImportWallet = async ({
   }
 };
 
-export const savePrivateKey = async (
+export const DEPRECATED_savePrivateKey = async (
   address: EthereumAddress,
   privateKey: null | EthereumPrivateKey
 ) => {
@@ -785,7 +793,7 @@ export const getPrivateKey = async (
   }
 };
 
-export const saveSeedPhrase = async (
+export const DEPRECATED_saveSeedPhrase = async (
   seedphrase: EthereumWalletSeed,
   keychain_id: RainbowWallet['id']
 ): Promise<void> => {
@@ -937,7 +945,7 @@ export const generateAccount = async (
       try {
         const encryptedPkey = await encryptor.encrypt(userPIN, walletPkey);
         if (encryptedPkey) {
-          await savePrivateKey(walletAddress, encryptedPkey);
+          await DEPRECATED_savePrivateKey(walletAddress, encryptedPkey);
         } else {
           logger.sentry('Error encrypting pkey to save it');
           return null;
@@ -946,7 +954,7 @@ export const generateAccount = async (
         return null;
       }
     } else {
-      await savePrivateKey(walletAddress, walletPkey);
+      await DEPRECATED_savePrivateKey(walletAddress, walletPkey);
     }
 
     return newAccount;
@@ -1025,5 +1033,46 @@ export const loadSeedPhrase = async (
     logger.sentry('Error in loadSeedPhrase.', error);
     captureException(error);
     return null;
+  }
+};
+
+export const migrateSecretsWithNewPin = async (
+  selectedWallet: RainbowWallet,
+  seedPhrase: string,
+  pin: string
+) => {
+  const keysToRemove = [pinKey, `${selectedWallet.id}_${seedPhraseKey}`];
+
+  const migrateExistingPrivateKeys = () =>
+    selectedWallet.addresses.map(async account => {
+      const derivedAccount = await getEthersWallet({
+        seedPhrase,
+        walletId: selectedWallet.id,
+        accountIndex: account.index,
+      });
+
+      const privateKey = derivedAccount?.privateKey;
+
+      if (privateKey) {
+        await savePrivateKey(privateKey, account.address);
+
+        keysToRemove.push(`${account.address}_${privateKeyKey}`);
+      }
+    });
+
+  try {
+    if (isValidSeed(seedPhrase)) {
+      await saveSeedPhrase(seedPhrase, selectedWallet.id, pin);
+      logger.sentry('[Migration]: Seed success');
+
+      await Promise.all(migrateExistingPrivateKeys());
+      logger.sentry('[Migration]: PrivateKey success');
+
+      await keysToRemove.map(keychain.remove);
+      logger.sentry('[Migration]: Cleanup success');
+    }
+  } catch (e) {
+    logger.sentry('Error migrating secrets', e);
+    captureException(e);
   }
 };
