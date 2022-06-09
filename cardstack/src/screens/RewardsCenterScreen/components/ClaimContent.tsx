@@ -16,15 +16,11 @@ import {
   RewardRow,
   RewardRowProps,
   RewardsBalanceList,
-  RewardsBalanceListProps,
   RewardsHistoryList,
-  RewardsHistoryListProps,
 } from '.';
 
 interface ClaimContentProps {
   claimList?: Array<RewardRowProps>;
-  balanceList?: RewardsBalanceListProps;
-  historyList?: RewardsHistoryListProps;
 }
 
 enum Tabs {
@@ -37,11 +33,7 @@ const tabs = [
   { title: strings.history.title, key: Tabs.HISTORY },
 ];
 
-export const ClaimContent = ({
-  claimList,
-  balanceList,
-  historyList,
-}: ClaimContentProps) => {
+export const ClaimContent = ({ claimList }: ClaimContentProps) => {
   const { TabHeader, currentTab } = useTabHeader({ tabs });
 
   const { navigate } = useNavigation();
@@ -84,9 +76,9 @@ export const ClaimContent = ({
       <TabHeader />
       <Container padding={5}>
         {currentTab.key === Tabs.BALANCE ? (
-          <RewardsBalanceList {...balanceList} />
+          <RewardsBalanceList />
         ) : (
-          <RewardsHistoryList {...historyList} />
+          <RewardsHistoryList />
         )}
       </Container>
     </ScrollView>
