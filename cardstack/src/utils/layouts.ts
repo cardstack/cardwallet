@@ -5,13 +5,18 @@ export const sectionStyle = StyleSheet.create({
   sectionList: { width: '100%' },
 });
 
+const SMALL = 5;
+const MEDIUM = 15;
+
+const hitSlopBuilder = (size: number) =>
+  ['top', 'bottom', 'left', 'right'].reduce(
+    (acc, value) => ({ ...acc, [value]: size }),
+    {}
+  );
+
 export const hitSlop = {
-  small: {
-    top: 5,
-    bottom: 5,
-    left: 5,
-    right: 5,
-  },
+  small: hitSlopBuilder(SMALL),
+  medium: hitSlopBuilder(MEDIUM),
 };
 
 export const layoutEasingAnimation = () => {
