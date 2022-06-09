@@ -86,7 +86,7 @@ const useRewardsBalanceHistory = () => {
     [rewardSafes]
   );
 
-  // Refetchs when rewardSafes or rewardPoolTokenBalances updates
+  // Refetches when rewardSafes or rewardPoolTokenBalances updates
   useEffect(() => {
     refetchClaimHistory();
     refetchWithdrawHistory();
