@@ -5,6 +5,7 @@ import { SectionList } from 'react-native';
 
 import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
+import useRewardsDataFetch from '@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch';
 import { useGetServiceStatusQuery } from '@cardstack/services';
 
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
@@ -25,6 +26,11 @@ export const useAssetList = ({
 }) => {
   const { navigate, setParams } = useNavigation();
   const { params } = useRoute<AssetListRouteType>();
+
+  const {
+    mainPoolTokenInfo,
+    isLoading: rewardsFetchLoading,
+  } = useRewardsDataFetch();
 
   const {
     sections,
@@ -107,7 +113,8 @@ export const useAssetList = ({
   ]);
 
   return {
-    isLoading: isLoadingAssets || isLoadingSafesDiffAccount,
+    isLoading:
+      isLoadingAssets || isLoadingSafesDiffAccount || rewardsFetchLoading,
     isFetchingSafes,
     refreshing,
     sections,
@@ -115,5 +122,6 @@ export const useAssetList = ({
     goToBuyPrepaidCard,
     onRefresh,
     networkName,
+    mainPoolTokenInfo,
   };
 };

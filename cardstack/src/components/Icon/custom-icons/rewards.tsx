@@ -1,17 +1,13 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
-interface RewardsIconProps extends SvgProps {
-  pathFillColor: string;
-}
-
-const SvgComponent = (props: RewardsIconProps) => (
+const SvgComponent = (props: SvgProps) => (
   <Svg width={30} height={21.672} viewBox="0 0 25 21.672" {...props}>
     <Path
       data-name="Union 52"
       d="M3.824 15.288A3.829 3.829 0 0 1 0 11.464V8.921a1.274 1.274 0 1 1 2.548 0v2.543a1.276 1.276 0 0 0 1.276 1.278h14.013a1.275 1.275 0 0 0 1.272-1.278v-7.64a1.277 1.277 0 0 0-1.272-1.276h-3.186a1.274 1.274 0 1 1 0-2.548h3.186a3.83 3.83 0 0 1 3.82 3.824v7.64a3.828 3.828 0 0 1-3.82 3.824z"
       transform="translate(3.342 5.152)"
-      fill={props.pathFillColor || '#37eb77'}
+      fill="#37eb77"
     />
     <Path
       data-name="Path 8700"

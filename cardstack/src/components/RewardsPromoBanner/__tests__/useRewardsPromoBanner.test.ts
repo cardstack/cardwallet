@@ -1,72 +1,64 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 
-import { mockMainPoolTokenInfo } from '@cardstack/screens/RewardsCenterScreen/__tests__/mocks';
-import useRewardsDataFetch from '@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch';
+import { Routes } from '@cardstack/navigation';
 
 import useRewardsPromoBanner from '../useRewardsPromoBanner';
 
-// Mock navigation
+const mockNavigate = jest.fn();
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
-    navigate: jest.fn(),
+    navigate: mockNavigate,
   }),
 }));
 
-jest.mock('@rainbow-me/hooks', () => ({
-  useAccountSettings: () => ({
-    accountAddress: '0x0000000000000000000',
-    nativeCurrency: 'USD',
-    network: 'sokol',
-  }),
+jest.mock('@cardstack/navigation', () => ({
+  Routes: {
+    REWARDS_CENTER_SCREEN: 'RewardsCenterScreen',
+  },
 }));
-
-jest.mock('@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch', () =>
-  jest.fn()
-);
 
 describe('RewardsPromoBanner', () => {
+  it(`should have a title saying "You have unclaimed rewards waiting!" if the user has rewards to claim`, () => {
+    const hasRewardsProps = true;
+
+    const { result } = renderHook(() => useRewardsPromoBanner(hasRewardsProps));
+
+    expect(result.current.title).toBe('You have unclaimed rewards waiting!');
+  });
+
   it(`should have a button with the label 'Get Started' if the user has rewards to claim`, () => {
-    (useRewardsDataFetch as jest.Mock).mockImplementation(() => ({
-      mainPoolTokenInfo: mockMainPoolTokenInfo,
-    }));
+    const hasRewardsProps = true;
 
-    const { result } = renderHook(() => useRewardsPromoBanner());
+    const { result } = renderHook(() => useRewardsPromoBanner(hasRewardsProps));
 
-    expect(result.current.buttonLabel).toBe('Get Started');
+    expect(result.current.btnLabel).toBe('Get Started');
+  });
+
+  it(`should have a title saying "Check your rewards eligibility" if the user has rewards to claim`, () => {
+    const hasRewardsProps = false;
+
+    const { result } = renderHook(() => useRewardsPromoBanner(hasRewardsProps));
+
+    expect(result.current.title).toBe('Check your rewards eligibility');
   });
 
   it(`should have a button with the label 'Rewards' if the user doesn't have rewards to claim`, () => {
-    (useRewardsDataFetch as jest.Mock).mockImplementation(() => ({
-      mainPoolTokenInfo: undefined,
-    }));
+    const hasRewardsProps = false;
 
-    const { result } = renderHook(() => useRewardsPromoBanner());
+    const { result } = renderHook(() => useRewardsPromoBanner(hasRewardsProps));
 
-    expect(result.current.buttonLabel).toBe('Rewards');
+    expect(result.current.btnLabel).toBe('Rewards');
   });
 
-  it(`should show an icon inside the button if the user has rewards to claim`, () => {
-    (useRewardsDataFetch as jest.Mock).mockImplementation(() => ({
-      mainPoolTokenInfo: mockMainPoolTokenInfo,
-    }));
+  it('should redirect to Rewards Center route when tapping the banner button', () => {
+    const hasRewardsProps = true;
 
-    const { result } = renderHook(() => useRewardsPromoBanner());
+    const { result } = renderHook(() => useRewardsPromoBanner(hasRewardsProps));
 
-    expect(result.current.buttonIcon).toEqual({
-      name: 'rewards',
-      size: 22,
-      color: 'black',
-      pathFillColor: 'black',
+    act(() => {
+      result.current.onPress();
     });
-  });
 
-  it(`should NOT show an icon inside the button if the user doesn't have rewards to claim`, () => {
-    (useRewardsDataFetch as jest.Mock).mockImplementation(() => ({
-      mainPoolTokenInfo: undefined,
-    }));
-
-    const { result } = renderHook(() => useRewardsPromoBanner());
-
-    expect(result.current.buttonIcon).toBe(undefined);
+    expect(mockNavigate).toBeCalledWith(Routes.REWARDS_CENTER_SCREEN);
   });
 });
