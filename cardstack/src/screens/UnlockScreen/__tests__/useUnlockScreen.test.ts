@@ -62,7 +62,7 @@ describe('useUnlockScreen', () => {
     jest.clearAllMocks();
   });
 
-  it('should authorized be called when inputed PIN match stored one', async () => {
+  it('should call setAuthorized when inputed PIN matches stored one', async () => {
     const { result } = renderHook(() => useUnlockScreen());
 
     // We need to wait getPin be resolved so storedPin.current is valid.
@@ -77,7 +77,7 @@ describe('useUnlockScreen', () => {
     expect(mockSetAuthorized).toBeCalledTimes(1);
   });
 
-  it('should PIN be invalid and authorized not be called when inputed PIN doest match stored one', async () => {
+  it('should not call setAuthorized if inputed PIN does not match stored one and set PIN as invalid', async () => {
     const wrongPIN = '222222';
 
     const { result } = renderHook(() => useUnlockScreen());
@@ -90,7 +90,7 @@ describe('useUnlockScreen', () => {
 
     expect(result.current.inputPin).toMatch('');
     expect(result.current.pinInvalid).toBeTruthy();
-    expect(mockSetAuthorized).toBeCalledTimes(0);
+    expect(mockSetAuthorized).not.toBeCalled();
   });
 
   it('should authorize if biometry check is successful', async () => {

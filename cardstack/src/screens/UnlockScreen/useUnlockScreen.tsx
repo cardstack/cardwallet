@@ -4,6 +4,7 @@ import RNRestart from 'react-native-restart';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
+import { useBooleanState } from '@cardstack/hooks';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
@@ -17,11 +18,13 @@ export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
   const [inputPin, setInputPin] = useState('');
 
-  const [pinInvalid, setPinInvalid] = useState<boolean | null>(null);
+  const [pinInvalid, setPinInvalid, setPinValid] = useBooleanState();
 
-  const [retryBiometricAuth, setRetryBiometricAuth] = useState<boolean | null>(
-    null
-  );
+  const [
+    retryBiometricAuth,
+    setRetryBiometricAuth,
+    resetRetryBiometricAuth,
+  ] = useBooleanState();
 
   const { setUserAuthorized } = useAuthActions();
   const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
@@ -39,31 +42,31 @@ export const useUnlockScreen = () => {
   const validatePin = useCallback(
     async (input: string) => {
       if (storedPin.current === input) {
-        setPinInvalid(false);
+        setPinValid();
         setUserAuthorized();
       } else {
-        setPinInvalid(true);
+        setPinInvalid();
         setInputPin('');
       }
     },
-    [setPinInvalid, setUserAuthorized]
+    [setPinInvalid, setPinValid, setUserAuthorized]
   );
 
   const authenticateBiometrically = useCallback(async () => {
-    setRetryBiometricAuth(false);
+    resetRetryBiometricAuth();
 
-    const result = await biometricAuthentication();
-
-    console.log('::: biometricAuthentication', result);
-
-    if (result) {
-      setPinInvalid(false);
+    if (await biometricAuthentication()) {
+      setPinValid();
       setUserAuthorized();
     } else {
-      console.log('::: setRetryBiometricAuth');
-      setRetryBiometricAuth(true);
+      setRetryBiometricAuth();
     }
-  }, [setUserAuthorized, setRetryBiometricAuth]);
+  }, [
+    setPinValid,
+    setUserAuthorized,
+    setRetryBiometricAuth,
+    resetRetryBiometricAuth,
+  ]);
 
   const onResetWalletPress = useCallback(() => {
     Alert.alert(strings.reset.title, strings.reset.message, [
