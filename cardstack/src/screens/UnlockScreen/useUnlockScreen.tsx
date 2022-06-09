@@ -29,14 +29,15 @@ export const useUnlockScreen = () => {
   const { setUserAuthorized } = useAuthActions();
   const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
 
+  const retryBiometricLabel = useMemo(
+    () => `Try ${biometryLabel || 'device authentication'} again`,
+    [biometryLabel]
+  );
+
   // Fetch on init so login is faster
   const { callback: getStoredPin } = useWorker(async () => {
     storedPin.current = await getPin();
   }, []);
-
-  useEffect(() => {
-    getStoredPin();
-  }, [getStoredPin]);
 
   const validatePin = useCallback(
     async (input: string) => {
@@ -84,6 +85,10 @@ export const useUnlockScreen = () => {
   }, []);
 
   useEffect(() => {
+    getStoredPin();
+  }, [getStoredPin]);
+
+  useEffect(() => {
     if (inputPin.length < DEFAULT_PIN_LENGTH) {
       return;
     }
@@ -96,11 +101,6 @@ export const useUnlockScreen = () => {
       authenticateBiometrically();
     }
   }, [authenticateBiometrically, isBiometryEnabled]);
-
-  const retryBiometricLabel = useMemo(
-    () => `Try ${biometryLabel || 'device authentication'} again`,
-    [biometryLabel]
-  );
 
   return {
     inputPin,
