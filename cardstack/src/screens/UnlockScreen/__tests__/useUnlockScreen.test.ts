@@ -93,8 +93,6 @@ describe('useUnlockScreen', () => {
     expect(mockSetAuthorized).toBeCalledTimes(0);
   });
 
-  it('should automatically call auth check if biometry toggle enabled', () => {});
-
   it('should authorize if biometry check is successful', async () => {
     mockBiometryAvailableHelper(true);
     mockAuthAuthorizedHelper(true);
