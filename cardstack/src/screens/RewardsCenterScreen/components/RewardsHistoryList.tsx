@@ -46,7 +46,7 @@ export const RewardsHistoryList = () => {
   return (
     <SectionList
       renderSectionHeader={renderSectionHeader}
-      sections={historySectionData || []}
+      sections={historySectionData}
       renderItem={renderItem}
       ItemSeparatorComponent={spacing}
       SectionSeparatorComponent={spacing}

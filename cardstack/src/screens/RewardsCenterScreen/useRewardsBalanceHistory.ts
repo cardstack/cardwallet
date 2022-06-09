@@ -68,21 +68,21 @@ const useRewardsBalanceHistory = () => {
           title,
           data: data.sort(sortByTime) as ClaimOrTokenWithdraw[],
         }))
-        .sort((a, b) => sortByTime(a.data[0], b.data[0])),
+        .sort((a, b) => sortByTime(a.data[0], b.data[0])) || [],
     [rewardClaims, rewardSafeWithdraws]
   );
 
   // Get tokens from all rewardSafes
   const tokensBalanceData = useMemo(
     () =>
-      rewardSafes?.reduce((tokens: TokenType[], safe: RewardsSafeType) => {
+      (rewardSafes?.reduce((tokens: TokenType[], safe: RewardsSafeType) => {
         const tokensWithAddress = safe.tokens?.map(token => ({
           ...token,
           safeAddress: safe.address,
         }));
 
         return [...tokens, ...tokensWithAddress];
-      }, []) as TokenWithSafeAddress[],
+      }, []) as TokenWithSafeAddress[]) || [],
     [rewardSafes]
   );
 

@@ -46,7 +46,7 @@ export const RewardsBalanceList = () => {
 
   return (
     <FlatList
-      data={tokensBalanceData || []}
+      data={tokensBalanceData}
       renderItem={renderItem}
       ItemSeparatorComponent={spacing}
       ListEmptyComponent={<ListEmptyComponent text={strings.balance.empty} />}
