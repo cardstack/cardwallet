@@ -8,19 +8,15 @@ export const sectionStyle = StyleSheet.create({
 const SMALL = 5;
 const MEDIUM = 15;
 
+const hitSlopBuilder = (size: number) =>
+  ['top', 'bottom', 'left', 'right'].reduce(
+    (acc, value) => ({ ...acc, [value]: size }),
+    {}
+  );
+
 export const hitSlop = {
-  small: {
-    top: SMALL,
-    bottom: SMALL,
-    left: SMALL,
-    right: SMALL,
-  },
-  medium: {
-    top: MEDIUM,
-    bottom: MEDIUM,
-    left: MEDIUM,
-    right: MEDIUM,
-  },
+  small: hitSlopBuilder(SMALL),
+  medium: hitSlopBuilder(MEDIUM),
 };
 
 export const layoutEasingAnimation = () => {
