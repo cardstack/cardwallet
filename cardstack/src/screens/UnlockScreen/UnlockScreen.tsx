@@ -12,6 +12,7 @@ import {
 import { BiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
+import { hitSlop } from '@cardstack/utils/layouts';
 
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
 
@@ -96,7 +97,10 @@ const UnlockScreen = () => {
                 >
                   {strings.login.eraseMessage}
                 </Text>
-                <Touchable onPress={onResetWalletPress}>
+                <Touchable
+                  hitSlop={hitSlop.medium}
+                  onPress={onResetWalletPress}
+                >
                   <Text color="teal" size="xs">
                     {strings.login.eraseLink}
                   </Text>
