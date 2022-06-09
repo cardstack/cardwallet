@@ -18,7 +18,7 @@ import { PinFlow } from './types';
 
 const initialFLows = [PinFlow.create, PinFlow.new];
 
-interface NavParams {
+export interface PinScreenNavParams {
   flow: PinFlow;
   variant: ThemeVariant;
   showBiometricSwitcher?: boolean;
@@ -26,12 +26,12 @@ interface NavParams {
   initialPin?: string;
   onSuccess?: (pin: string) => void;
   customSubtitle?: string;
-  dismissOnSuccess?: string;
+  dismissOnSuccess?: boolean;
 }
 
 export const usePinScreen = () => {
   const { dispatch: navDispatch, setOptions } = useNavigation();
-  const { params } = useRoute<RouteType<NavParams>>();
+  const { params } = useRoute<RouteType<PinScreenNavParams>>();
 
   const [inputPin, setInputPin] = useState('');
   const [isValidPin, setIsValidPin] = useState<null | boolean>(null);
@@ -75,10 +75,13 @@ export const usePinScreen = () => {
 
   const onValidPin = useCallback(async () => {
     try {
+      console.log('onValidPin-here1');
       await savePin(inputPin);
       setUserAuthorized();
 
+      console.log('onValidPin-here', { succe: params.onSuccess?.('') });
       await params?.onSuccess?.(inputPin);
+      console.log('onValidPin-succee');
     } catch (e) {
       logger.sentry('Error while saving PIN', e);
     }

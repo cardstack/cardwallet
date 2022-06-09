@@ -38,6 +38,7 @@ import { appStateUpdate } from '@cardstack/redux/appState';
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 
+import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
@@ -63,7 +64,7 @@ export default function useWalletManager() {
   const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
   const createWalletPin = useCallback(
-    (overwriteParams = {}) => {
+    (overwriteParams: Partial<PinScreenNavParams> = {}) => {
       navigate(Routes.PIN_SCREEN, {
         flow: PinFlow.create,
         variant: 'dark',
@@ -96,9 +97,9 @@ export default function useWalletManager() {
 
         createWalletPin({
           canGoBack: false,
+          dismissOnSuccess: true,
           onSuccess: (pin: string) =>
             migrateSecretsWithNewPin(selectedWallet, seedPhrase, pin),
-          dismissOnSuccess: true,
         });
       } catch (e) {
         logger.sentry('Error migrating wallet');
@@ -187,7 +188,7 @@ export default function useWalletManager() {
   const createNewWallet = useCallback(
     async ({ color, name, isFromWelcomeFlow }: CreateWalletParams = {}) =>
       createWalletPin({
-        onSucess: async (pin: string) => {
+        onSuccess: async (pin: string) => {
           try {
             if (isFromWelcomeFlow) {
               showLoadingOverlay({
@@ -246,7 +247,7 @@ export default function useWalletManager() {
         return walletImport();
       }
 
-      createWalletPin({ onSucess: walletImport });
+      createWalletPin({ onSuccess: walletImport });
     },
     [
       createWalletPin,
