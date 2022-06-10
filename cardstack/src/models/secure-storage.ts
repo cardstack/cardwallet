@@ -51,15 +51,17 @@ const getEncryptedItemByKey = async (key: Keys) => {
   }
 };
 
-const setEncryptedItem = async (item: string, key: Keys, password: string) => {
+const setEncryptedItem = async (item: string, key: Keys, pin: string) => {
+  const secureKey = trimSecureKey(key);
+
   try {
-    const encryptedItem = await encryptor.encrypt(password, item);
+    const encryptedItem = await encryptor.encrypt(pin, item);
 
     if (encryptedItem) {
       await SecureStore.setItemAsync(key, encryptedItem);
+      logger.sentry(`Saved ${secureKey} encrypted item`);
     }
   } catch (e) {
-    const secureKey = trimSecureKey(key);
     logger.sentry(`Error saving ${secureKey} encrypted item`, e);
   }
 };

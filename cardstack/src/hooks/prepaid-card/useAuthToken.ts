@@ -8,7 +8,7 @@ import { Network } from '@rainbow-me/networkTypes';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
-export const useAuthToken = (seedPhrase?: string) => {
+export const useAuthToken = () => {
   const [authToken, setAuthToken] = useState<string>('');
   const { accountAddress } = useAccountSettings();
 
@@ -22,8 +22,7 @@ export const useAuthToken = (seedPhrase?: string) => {
     const authTokenValue = await getHubAuthToken(
       hubURLString,
       network,
-      accountAddress,
-      seedPhrase
+      accountAddress
     );
 
     setAuthToken(authTokenValue || '');

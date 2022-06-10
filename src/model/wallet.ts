@@ -675,8 +675,6 @@ export const setSelectedWallet = async (
 
 export const getSelectedWallet = async (): Promise<null | RainbowSelectedWalletData> => {
   try {
-    console.log('getSelectedWallet');
-
     const selectedWalletData = await keychain.loadObject(selectedWalletKey);
     if (selectedWalletData) {
       return selectedWalletData as RainbowSelectedWalletData;
@@ -702,7 +700,6 @@ export const getAllWallets = async (): Promise<
   AllRainbowWallets | undefined
 > => {
   try {
-    console.log('getAllWallets');
     const allWallets = (await keychain.loadObject(
       allWalletsKey
     )) as AllRainbowWalletsData;
