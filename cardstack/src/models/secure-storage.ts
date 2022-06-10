@@ -34,17 +34,23 @@ const getSecureValue = async (
 };
 
 const getEncryptedItemByKey = async (key: Keys) => {
+  const secureKey = trimSecureKey(key);
+
   try {
     const pin = (await getPin()) || '';
     const encryptedValue = await getSecureValue(key);
 
     if (encryptedValue) {
-      const item = await encryptor.decrypt(pin, encryptedValue);
+      const parsedValue = JSON.parse(encryptedValue);
+
+      const item = await encryptor.decrypt(pin, parsedValue);
+      logger.sentry(`Got ${secureKey} encrypted item`);
 
       return item;
     }
+
+    logger.sentry(`${secureKey} item returned empty`);
   } catch (e) {
-    const secureKey = trimSecureKey(key);
     logger.sentry(`Error getting ${secureKey} encrypted item`, e);
 
     return null;
@@ -58,7 +64,9 @@ const setEncryptedItem = async (item: string, key: Keys, pin: string) => {
     const encryptedItem = await encryptor.encrypt(pin, item);
 
     if (encryptedItem) {
-      await SecureStore.setItemAsync(key, encryptedItem);
+      const encryptedItemString = JSON.stringify(encryptedItem);
+
+      await SecureStore.setItemAsync(key, encryptedItemString);
       logger.sentry(`Saved ${secureKey} encrypted item`);
     }
   } catch (e) {
