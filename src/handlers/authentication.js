@@ -1,14 +1,12 @@
-import { captureException } from '@sentry/react-native';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import AesEncryptor from '../handlers/aesEncryption';
 import * as keychain from '../model/keychain';
 import { pinKey } from '../utils/keychainConstants';
 import { Navigation, Routes } from '@cardstack/navigation';
-import logger from 'logger';
 
 const encryptor = new AesEncryptor();
 
-export async function getExistingPIN() {
+export async function DEPRECATED_getExistingPIN() {
   try {
     const encryptedPin = await keychain.loadString(pinKey);
     // The user has a PIN already, we need to decrypt it
@@ -24,38 +22,16 @@ export async function getExistingPIN() {
   return null;
 }
 
-export async function savePIN(pin) {
-  try {
-    const encryptedPin = await encryptor.encrypt(CARDWALLET_MASTER_KEY, pin);
-    if (encryptedPin) {
-      await keychain.saveString(pinKey, encryptedPin);
-    }
-  } catch (e) {
-    logger.sentry('Error saving pin');
-    captureException(e);
-  }
-}
-
-export async function authenticateWithPIN(promptMessage) {
+export async function DEPRECATED_authenticateWithPIN(promptMessage) {
   let validPin;
   try {
-    validPin = await getExistingPIN();
+    validPin = await DEPRECATED_getExistingPIN();
     // eslint-disable-next-line no-empty
   } catch (e) {}
   return new Promise((resolve, reject) => {
     return Navigation.handleAction(Routes.PIN_AUTHENTICATION_SCREEN, {
-      onCancel: () => reject(),
-      onSuccess: async pin => {
-        // If we didn't have a PIN we need to encrypt it and store it
-        if (!validPin) {
-          try {
-            await savePIN(pin);
-          } catch (e) {
-            reject();
-          }
-        }
-        resolve(pin);
-      },
+      onCancel: reject,
+      onSuccess: resolve,
       validPin,
       promptMessage,
     });
