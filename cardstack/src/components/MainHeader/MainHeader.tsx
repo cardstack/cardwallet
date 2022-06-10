@@ -44,7 +44,7 @@ const MainHeader = ({
     navigate(Routes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
 
-  const hasRewardsClaim = rewardPoolTokenBalances?.length;
+  const availableRewards = rewardPoolTokenBalances?.length;
 
   return (
     <MainHeaderWrapper {...containerProps}>
@@ -78,15 +78,16 @@ const MainHeader = ({
       {!rightIcon ? (
         <Touchable
           flexDirection="row"
-          alignItems="center"
-          alignContent="center"
+          alignItems="flex-end"
           onPress={onRewardPress}
         >
           <Icon color="teal" iconSize="medium" size={26} name="rewards" />
-          {!!hasRewardsClaim && (
-            <Text color="teal" fontSize={16} weight="bold" marginLeft={2}>
-              {hasRewardsClaim}
-            </Text>
+          {!!availableRewards && (
+            <Container>
+              <Text color="teal" fontSize={18} weight="bold" marginLeft={2}>
+                {availableRewards}
+              </Text>
+            </Container>
           )}
         </Touchable>
       ) : (
