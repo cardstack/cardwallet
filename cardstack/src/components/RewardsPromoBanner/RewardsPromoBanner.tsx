@@ -1,26 +1,27 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 
 import { Container, ContainerProps, Image, Text } from '@cardstack/components';
-import { Routes } from '@cardstack/navigation';
 
-import rewardsPromoBanner from '../../assets/promo-rewards.png';
+import rewardsPromoBanner from '../../assets/rewards-promo.png';
 import { Button } from '../Button';
 import { CenteredContainer } from '../Container';
 
-const strings = {
-  rewards: 'Rewards',
-};
+import useRewardsPromoBanner from './useRewardsPromoBanner';
 
-const RewardsPromoBanner = ({ ...props }: ContainerProps) => {
-  const { navigate } = useNavigation();
+interface RewardsPromoBannerProps extends ContainerProps {
+  hasUnclaimedRewards: boolean;
+}
 
-  const onPress = useCallback(() => {
-    navigate(Routes.REWARDS_CENTER_SCREEN);
-  }, [navigate]);
+const RewardsPromoBanner = ({
+  hasUnclaimedRewards,
+  ...containerProps
+}: RewardsPromoBannerProps) => {
+  const { onPress, title, btnLabel } = useRewardsPromoBanner(
+    hasUnclaimedRewards
+  );
 
   return (
-    <Container {...props}>
+    <Container {...containerProps}>
       <Image
         alignSelf="center"
         overflow="hidden"
@@ -29,9 +30,22 @@ const RewardsPromoBanner = ({ ...props }: ContainerProps) => {
         source={rewardsPromoBanner}
       />
       <CenteredContainer position="absolute" bottom="15%" left={0} right={0}>
+        <CenteredContainer maxWidth="50%">
+          <Text
+            fontSize={12}
+            fontWeight="700"
+            letterSpacing={1.2}
+            color="white"
+            marginBottom={4}
+            textTransform="uppercase"
+            textAlign="center"
+          >
+            {title}
+          </Text>
+        </CenteredContainer>
         <Button onPress={onPress} variant="small" height={30}>
           <Text fontSize={13} fontWeight="600">
-            {strings.rewards}
+            {btnLabel}
           </Text>
         </Button>
       </CenteredContainer>
