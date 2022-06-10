@@ -745,12 +745,13 @@ export const generateAccount = async (
 
 export const loadSeedPhrase = async (
   id: RainbowWallet['id'],
-  promptMessage?: string | AuthenticationPrompt
+  promptMessage?: string | AuthenticationPrompt,
+  forceOldSeed: boolean = false
 ): Promise<null | EthereumWalletSeed> => {
   try {
     const newPin = !!(await getPin());
 
-    if (newPin) {
+    if (newPin && !forceOldSeed) {
       const seed = await getSeedPhrase(id);
       return seed;
     }
@@ -817,12 +818,16 @@ export const migrateSecretsWithNewPin = async (
     });
 
   try {
+    const forceOldSeed = true;
+
     const seedPhrase = await loadSeedPhrase(
       selectedWallet.id,
-      'Authenticate to migrate secrets'
+      'Authenticate to migrate secrets',
+      forceOldSeed
     );
 
     if (seedPhrase && isValidSeed(seedPhrase)) {
+      logger.sentry('[Migration]: Start');
       await saveSeedPhrase(seedPhrase, selectedWallet.id, pin);
       logger.sentry('[Migration]: Seed success');
 
