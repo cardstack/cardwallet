@@ -11,7 +11,7 @@ export const strings = {
     messageNote:
       'We use Mailchimp as our marketing platform. By clicking below to subscribe, you acknowledge that your information will be transferred to Mailchimp for processing.',
     link: {
-      text: "Learn more about Mailchimp's privacy practices here.",
+      text: 'Learn more.',
       url: 'https://mailchimp.com/legal/terms/',
     },
   },
