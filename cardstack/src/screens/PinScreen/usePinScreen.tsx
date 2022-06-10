@@ -75,13 +75,10 @@ export const usePinScreen = () => {
 
   const onValidPin = useCallback(async () => {
     try {
-      console.log('onValidPin-here1');
       await savePin(inputPin);
       setUserAuthorized();
 
-      console.log('onValidPin-here', { succe: params.onSuccess?.('') });
       await params?.onSuccess?.(inputPin);
-      console.log('onValidPin-succee');
     } catch (e) {
       logger.sentry('Error while saving PIN', e);
     }

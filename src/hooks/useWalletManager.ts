@@ -1,26 +1,23 @@
+import { delay } from '@cardstack/cardpay-sdk';
+import Clipboard from '@react-native-community/clipboard';
 import { useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
-import { isNil } from 'lodash';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import {
   CreateImportParams,
   createOrImportWallet,
-  loadAddress,
   loadSeedPhrase,
   migrateSecretsWithNewPin,
   RainbowWallet,
 } from '../model/wallet';
-import {
-  resetAccountState,
-  settingsLoadNetwork,
-  settingsUpdateAccountAddress,
-} from '../redux/settings';
+import { resetAccountState, settingsLoadNetwork } from '../redux/settings';
 import {
   addressSetSelected,
   walletsLoadState,
   walletsSetSelected,
+  walletsUpdate,
 } from '../redux/wallets';
 import useAccountSettings from './useAccountSettings';
 import useInitializeAccountData from './useInitializeAccountData';
@@ -47,6 +44,11 @@ import logger from 'logger';
 interface CreateWalletParams
   extends Pick<CreateImportParams, 'color' | 'name'> {
   isFromWelcomeFlow?: boolean;
+}
+
+interface WalletsState {
+  selectedWallet: RainbowWallet;
+  wallets: RainbowWallet[];
 }
 
 export default function useWalletManager() {
@@ -77,100 +79,120 @@ export default function useWalletManager() {
   );
 
   const migrateWalletIfNeeded = useCallback(
-    async (selectedWallet: RainbowWallet) => {
-      try {
-        const hasPin = !!(await getPin());
+    async ({ selectedWallet, wallets }: WalletsState) =>
+      new Promise<void>(async resolve => {
+        try {
+          const hasPin = !!(await getPin());
 
-        if (hasPin) {
-          return;
+          if (hasPin) {
+            resolve();
+            return;
+          }
+
+          createWalletPin({
+            canGoBack: false,
+            dismissOnSuccess: true,
+            onSuccess: async (pin: string) => {
+              try {
+                showLoadingOverlay({
+                  title: walletLoadingStates.MIGRATING_SECRETS,
+                });
+
+                await migrateSecretsWithNewPin(selectedWallet, pin);
+                // Makes only one wallet available
+                dispatch(
+                  walletsUpdate({
+                    [selectedWallet.id]: selectedWallet,
+                  })
+                );
+                resolve();
+              } finally {
+                dismissLoadingOverlay();
+              }
+            },
+          });
+
+          // TODO: move to it's own context
+          // Handle edge case when user has multiple wallets
+          if (Object.keys(wallets).length > 1) {
+            const seeds: Record<'seed', string>[] = [];
+
+            // Needs to be sequential
+            for (const walletId of Object.keys(wallets)) {
+              const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
+              // keychain needs a delay in order to retrieve all values
+              await delay(1000);
+              seeds.push({ seed });
+            }
+
+            //TODO: replace with screen
+            Alert.alert(
+              'Multiple wallets',
+              `Looks like you have more than one wallet, cardstack from now on supports only single wallet,
+             before continuing make sure to backup locally your seeds, only the current wallet will remain available`,
+              [
+                {
+                  text: 'Copy all seeds to clipboard',
+                  onPress: () => {
+                    Clipboard.setString(JSON.stringify(seeds));
+                  },
+                },
+              ]
+            );
+          }
+        } catch (e) {
+          logger.sentry('Error migrating wallet');
         }
-
-        const seedPhrase = await loadSeedPhrase(
-          selectedWallet.id,
-          'Authenticate to migrate secrets'
-        );
-
-        if (!seedPhrase) {
-          //TODO: handle no seed case, reset wallet maybe ?
-          return;
-        }
-
-        createWalletPin({
-          canGoBack: false,
-          dismissOnSuccess: true,
-          onSuccess: (pin: string) =>
-            migrateSecretsWithNewPin(selectedWallet, seedPhrase, pin),
-        });
-      } catch (e) {
-        logger.sentry('Error migrating wallet');
-      }
-    },
-    [createWalletPin]
+      }),
+    [createWalletPin, dismissLoadingOverlay, dispatch, showLoadingOverlay]
   );
 
-  const initializeWallet = useCallback(
-    async (seedPhrase?: string) => {
-      try {
-        logger.sentry('Start wallet init');
+  const initializeWallet = useCallback(async () => {
+    try {
+      logger.sentry('Start wallet init');
 
-        await dispatch(resetAccountState());
-        logger.sentry('resetAccountState ran ok');
+      await dispatch(resetAccountState());
+      logger.sentry('resetAccountState ran ok');
 
-        await dispatch(settingsLoadNetwork());
+      await dispatch(settingsLoadNetwork());
 
-        logger.sentry('done loading network');
+      logger.sentry('done loading network');
 
-        const { selectedWallet } = ((await dispatch(
-          walletsLoadState()
-        )) as unknown) as {
-          selectedWallet: RainbowWallet;
-        };
+      const walletsState = ((await dispatch(
+        walletsLoadState()
+      )) as unknown) as WalletsState;
 
-        await migrateWalletIfNeeded(selectedWallet);
+      await migrateWalletIfNeeded(walletsState);
 
-        const walletAddress = await loadAddress();
+      await loadGlobalData();
+      logger.sentry('loaded global data...');
+      await loadAccountData(network);
+      logger.sentry('loaded account data', network);
 
-        if (isNil(walletAddress)) {
-          logger.sentry('[initializeWallet] - walletAddress null');
-          dispatch(appStateUpdate({ walletReady: true }));
-          return null;
-        }
-        await dispatch(settingsUpdateAccountAddress(walletAddress));
+      await initializeAccountData();
 
-        await loadGlobalData();
-        logger.sentry('loaded global data...');
-        await loadAccountData(network);
-        logger.sentry('loaded account data', network);
+      await checkPushPermissionAndRegisterToken();
+      dispatch(appStateUpdate({ walletReady: true }));
+    } catch (error) {
+      logger.sentry('Error while initializing wallet', error);
+      captureException(error);
 
-        await initializeAccountData();
-
-        await checkPushPermissionAndRegisterToken(walletAddress, seedPhrase);
-
-        dispatch(appStateUpdate({ walletReady: true }));
-
-        return walletAddress;
-      } catch (error) {
-        logger.sentry('Error while initializing wallet', error);
-        captureException(error);
-
-        return null;
-      } finally {
-        dispatch(appStateUpdate({ walletReady: true }));
-      }
-    },
-    [
-      dispatch,
-      migrateWalletIfNeeded,
-      loadGlobalData,
-      loadAccountData,
-      network,
-      initializeAccountData,
-    ]
-  );
+      return null;
+    } finally {
+      dispatch(appStateUpdate({ walletReady: true }));
+    }
+  }, [
+    dispatch,
+    migrateWalletIfNeeded,
+    loadGlobalData,
+    loadAccountData,
+    network,
+    initializeAccountData,
+  ]);
 
   const initWalletResetNavState = useCallback(
-    async (seedPhrase?: string, isInnerNavigation: boolean = false) => {
-      await initializeWallet(seedPhrase);
+    async (isInnerNavigation: boolean = false) => {
+      await initializeWallet();
 
       setHasWallet();
 
@@ -228,7 +250,7 @@ export default function useWalletManager() {
           const wallet = await createOrImportWallet(params);
 
           if (wallet) {
-            initWalletResetNavState(params.seed, hasWallet);
+            initWalletResetNavState(hasWallet);
           } else {
             dismissLoadingOverlay();
           }
