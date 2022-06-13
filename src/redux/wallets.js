@@ -236,6 +236,7 @@ export const fetchWalletNames = () => async (dispatch, getState) => {
   saveWalletNames(updatedWalletNames);
 };
 
+// TODO: check secureStorage keys
 export const checkKeychainIntegrity = () => async (dispatch, getState) => {
   try {
     let healthyKeychain = true;
