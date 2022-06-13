@@ -101,7 +101,6 @@ export const getHubAuthToken = async (
   hubURL: string,
   network: Network,
   walletAddress?: string,
-  seedPhrase?: string,
   keychainAcessAskPrompt: string = hubAuthPromptMessages.default
 ): Promise<string | null> => {
   // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
@@ -124,7 +123,6 @@ export const getHubAuthToken = async (
     const hdProvider = await HDProvider.get({
       walletId,
       network,
-      seedPhrase,
       keychainAcessAskPrompt,
     });
 
@@ -146,9 +144,7 @@ export const getHubAuthToken = async (
 };
 
 export const registerFcmToken = async (
-  fcmToken: string,
-  walletAddress?: string,
-  seedPhrase?: string
+  fcmToken: string
 ): Promise<{ success: boolean } | undefined> => {
   try {
     const network: Network = await getNetwork();
@@ -157,8 +153,7 @@ export const registerFcmToken = async (
     const authToken = await getHubAuthToken(
       hubURL,
       network,
-      walletAddress,
-      seedPhrase,
+      undefined,
       hubAuthPromptMessages.notifications.register
     );
 
@@ -188,9 +183,7 @@ export const registerFcmToken = async (
 };
 
 export const unregisterFcmToken = async (
-  fcmToken: string,
-  walletAddress?: string,
-  seedPhrase?: string
+  fcmToken: string
 ): Promise<{ success: boolean } | undefined> => {
   try {
     const network: Network = await getNetwork();
@@ -199,8 +192,7 @@ export const unregisterFcmToken = async (
     const authToken = await getHubAuthToken(
       hubURL,
       network,
-      walletAddress,
-      seedPhrase,
+      undefined,
       hubAuthPromptMessages.notifications.unregister
     );
 

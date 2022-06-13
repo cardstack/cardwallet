@@ -233,20 +233,22 @@ export default function WalletList({
                 color: editMode ? 'grayText' : 'black',
                 fontSize: 14,
               }}
-              title="Create a new account"
+              title="Create derivated account"
             />
-            <OptionItem
-              borderIcon
-              disabled={editMode}
-              iconProps={{ name: 'download', size: 22, color: 'tealDark' }}
-              marginTop={3}
-              onPress={onPressImportSeedPhrase}
-              textProps={{
-                color: editMode ? 'grayText' : 'black',
-                fontSize: 14,
-              }}
-              title="Add an existing account"
-            />
+            {__DEV__ && (
+              <OptionItem
+                borderIcon
+                disabled={editMode}
+                iconProps={{ name: 'download', size: 22, color: 'tealDark' }}
+                marginTop={3}
+                onPress={onPressImportSeedPhrase}
+                textProps={{
+                  color: editMode ? 'grayText' : 'black',
+                  fontSize: 14,
+                }}
+                title="Add an existing account"
+              />
+            )}
           </Container>
         </>
       ) : (

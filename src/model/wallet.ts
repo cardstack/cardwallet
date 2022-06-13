@@ -11,15 +11,11 @@ import { ethers } from 'ethers';
 import lang from 'i18n-js';
 import { find, findKey, forEach, get, isEmpty } from 'lodash';
 import { Alert } from 'react-native';
-import {
-  ACCESSIBLE,
-  AuthenticationPrompt,
-  getSupportedBiometryType,
-} from 'react-native-keychain';
+import { ACCESSIBLE, AuthenticationPrompt } from 'react-native-keychain';
 import AesEncryptor from '../handlers/aesEncryption';
 import {
-  authenticateWithPIN,
-  getExistingPIN,
+  DEPRECATED_authenticateWithPIN,
+  DEPRECATED_getExistingPIN,
 } from '../handlers/authentication';
 import {
   addHexPrefix,
@@ -40,6 +36,15 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
+import { getEthersWallet } from '@cardstack/models/ethers-wallet';
+
+import {
+  getPin,
+  getPrivateKey,
+  getSeedPhrase,
+  savePrivateKey,
+  saveSeedPhrase,
+} from '@cardstack/models/secure-storage';
 import { Device } from '@cardstack/utils/device';
 
 import logger from 'logger';
@@ -129,10 +134,6 @@ interface RainbowSelectedWalletData {
   wallet: RainbowWallet;
 }
 
-interface PrivateKeyData {
-  privateKey: EthereumPrivateKey;
-  version: string;
-}
 interface SeedPhraseData {
   seedphrase: EthereumPrivateKey;
   version: string;
@@ -143,24 +144,21 @@ export enum WalletLibraryType {
   bip39 = 'bip39',
 }
 
-const privateKeyVersion = 1.0;
-const seedPhraseVersion = 1.0;
 const selectedWalletVersion = 1.0;
 export const allWalletsVersion = 1.0;
 
 export const DEFAULT_HD_PATH = `m/44'/60'/0'/0`;
 export const DEFAULT_WALLET_NAME = 'My Wallet';
 
-const authenticationPrompt = lang.t('wallet.authenticate.please');
+const authenticationPrompt = 'Please authenticate';
+
 export const publicAccessControlOptions = {
   accessible: ACCESSIBLE.ALWAYS_THIS_DEVICE_ONLY,
 };
 
 export const loadWallet = async (): Promise<null | ethers.Wallet> => {
   const privateKey = await loadPrivateKey();
-  if (privateKey === -1 || privateKey === -2) {
-    return null;
-  }
+
   if (privateKey) {
     const web3Provider = await getEtherWeb3Provider();
     return new ethers.Wallet(privateKey, web3Provider);
@@ -336,54 +334,15 @@ export const signTypedDataMessage = async (
 export const loadAddress = (): Promise<null | EthereumAddress> =>
   keychain.loadString(addressKey) as Promise<string | null>;
 
-const loadPrivateKey = async (): Promise<
-  null | EthereumPrivateKey | -1 | -2
-> => {
+export const loadPrivateKey = async () => {
   try {
     const address = await loadAddress();
     if (!address) {
       return null;
     }
+    const privateKey = await getPrivateKey(address);
 
-    const privateKeyData = await getPrivateKey(address);
-    if (privateKeyData === -1) {
-      return privateKeyData;
-    }
-    const privateKey = get(privateKeyData, 'privateKey', null);
-
-    const noPIN = !(await getExistingPIN());
-
-    if (privateKey && isValidSeed(privateKey) && noPIN) {
-      logger.sentry('Got key succesfully');
-      return privateKey;
-    }
-
-    if (Device.isAndroid && privateKey) {
-      const hasBiometricsEnabled = await getSupportedBiometryType();
-      // Fallback to custom PIN
-      if (!hasBiometricsEnabled) {
-        try {
-          const userPIN = await authenticateWithPIN();
-          if (userPIN) {
-            if (isValidSeed(privateKey)) {
-              logger.sentry('Got key succesfully with PIN');
-              return privateKey;
-            }
-
-            const decryptedPrivateKey = await encryptor.decrypt(
-              userPIN,
-              privateKey
-            );
-            logger.sentry('Got decrypted key successfully');
-            return decryptedPrivateKey;
-          }
-        } catch (e) {
-          return null;
-        }
-      }
-    }
-    logger.sentry('No key returned');
-    return null;
+    return privateKey;
   } catch (error) {
     logger.sentry('Error in loadPrivateKey');
     captureException(error);
@@ -447,29 +406,9 @@ export const getWalletByAddress = ({
   return wallet;
 };
 
-interface SaveSeedAndPrivateKeyParams {
-  walletSeed: string;
-  privateKey: string;
-  walletAddress: string;
-  id: string;
-}
-
-const saveSeedAndPrivateKey = ({
-  walletSeed,
-  privateKey,
-  walletAddress,
-  id,
-}: SaveSeedAndPrivateKeyParams) => {
-  const saveSeed = saveSeedPhrase(walletSeed, id);
-  const savePkey = savePrivateKey(walletAddress, privateKey);
-
-  return Promise.all([saveSeed, savePkey]);
-};
-
 const addAccountsWithTxHistory = async (
   root: EthereumHDKey,
   allWallets: AllRainbowWallets,
-  userPIN: string,
   addresses: Account[]
 ) => {
   logger.sentry('[createWallet] - isHDWallet && isImported');
@@ -524,22 +463,8 @@ const addAccountsWithTxHistory = async (
     }
 
     if (hasTxHistory) {
-      // Save private key
-      if (userPIN) {
-        // Encrypt with the PIN
-        const encryptedPkey = await encryptor.encrypt(
-          userPIN,
-          nextWallet.privateKey
-        );
-        if (encryptedPkey) {
-          await savePrivateKey(nextWallet.address, encryptedPkey);
-        } else {
-          logger.sentry('Error encrypting privateKey to save it');
-          return null;
-        }
-      } else {
-        await savePrivateKey(nextWallet.address, nextWallet.privateKey);
-      }
+      await savePrivateKey(nextWallet.privateKey, nextWallet.address);
+
       logger.sentry(
         `[createWallet] - saved private key for next wallet ${index}`
       );
@@ -570,8 +495,8 @@ export const createOrImportWallet = async ({
   seed,
   color,
   name,
-  checkedWallet,
   pin,
+  checkedWallet,
 }: CreateImportParams = {}) => {
   const isImported = !!seed;
   logger.sentry('Creating wallet, isImported?', isImported);
@@ -579,8 +504,7 @@ export const createOrImportWallet = async ({
     logger.sentry('Generating a new seed phrase');
   }
 
-  // TODO: migrate wallet to use pin on new acc
-  if (!pin && !isImported) return;
+  if (!pin) return;
 
   const walletSeed = seed || generateMnemonic();
 
@@ -618,55 +542,18 @@ export const createOrImportWallet = async ({
       return null;
     }
 
-    const id = `wallet_${Date.now()}`;
-    logger.sentry('[createWallet] - wallet ID', { id });
-
-    // Android users without biometrics need to secure their keys with a PIN.
-    let userPIN = null;
-    if (Device.isAndroid) {
-      const hasBiometricsEnabled = await getSupportedBiometryType();
-      // Fallback to custom PIN
-      if (!hasBiometricsEnabled) {
-        try {
-          userPIN = await getExistingPIN();
-          if (!userPIN) {
-            userPIN = await authenticateWithPIN();
-          }
-        } catch (e) {
-          return null;
-        }
-      }
-    }
+    const walletId = `wallet_${Date.now()}`;
+    logger.sentry('[createWallet] - wallet ID', { walletId });
 
     // No need to check if its's HD wallet, bc only HD is allowed
     const privateKey = addHexPrefix(
       (walletResult as LibWallet).getPrivateKey().toString('hex')
     );
 
-    const seedAndPrivateKeyParams = {
-      walletSeed,
-      privateKey,
-      walletAddress,
-      id,
-    };
+    const saveSeed = saveSeedPhrase(walletSeed, walletId, pin);
+    const savePkey = savePrivateKey(privateKey, walletAddress);
 
-    if (userPIN) {
-      const [encryptedSeed, encryptedPkey] = await Promise.all([
-        encryptor.encrypt(userPIN, walletSeed),
-        encryptor.encrypt(userPIN, privateKey),
-      ]);
-
-      if (encryptedSeed && encryptedPkey) {
-        seedAndPrivateKeyParams.walletSeed = encryptedSeed;
-        seedAndPrivateKeyParams.privateKey = encryptedPkey;
-      } else {
-        logger.sentry('Error encrypting seed and privateKey to save it');
-        return null;
-      }
-    }
-    logger.sentry('[createWallet] - saved seed and private key');
-
-    await saveSeedAndPrivateKey(seedAndPrivateKeyParams);
+    await Promise.all([saveSeed, savePkey]);
 
     // Adds an account
     addresses.push({
@@ -679,7 +566,7 @@ export const createOrImportWallet = async ({
 
     // For HDWallet we check to add derived accounts
     if (root && isImported) {
-      await addAccountsWithTxHistory(root, allWallets, userPIN, addresses);
+      await addAccountsWithTxHistory(root, allWallets, addresses);
     }
 
     // if imported and we have only one account, we name the wallet too.
@@ -707,18 +594,18 @@ export const createOrImportWallet = async ({
       }
     }
 
-    allWallets[id] = {
+    allWallets[walletId] = {
       addresses,
       backedUp: false,
       color: color || 0,
-      id,
+      id: walletId,
       imported: isImported,
       name: walletName,
       primary,
       type,
     };
 
-    await setSelectedWallet(allWallets[id]);
+    await setSelectedWallet(allWallets[walletId]);
     logger.sentry('[createWallet] - setSelectedWallet');
 
     await saveAllWallets(allWallets);
@@ -744,64 +631,8 @@ export const createOrImportWallet = async ({
   }
 };
 
-export const savePrivateKey = async (
-  address: EthereumAddress,
-  privateKey: null | EthereumPrivateKey
-) => {
-  const privateAccessControlOptions = await keychain.getPrivateAccessControlOptions();
-
-  const key = `${address}_${privateKeyKey}`;
-  const val = {
-    address,
-    privateKey,
-    version: privateKeyVersion,
-  };
-
-  await keychain.saveObject(key, val, privateAccessControlOptions);
-};
-
-export const getPrivateKey = async (
-  address: EthereumAddress
-): Promise<null | PrivateKeyData | -1> => {
-  try {
-    const key = `${address}_${privateKeyKey}`;
-    const pkey = (await keychain.loadObject(key, {
-      authenticationPrompt,
-    })) as PrivateKeyData | -2;
-
-    if (pkey === -2) {
-      Alert.alert(
-        'Error',
-        'Your current authentication method (Face Recognition) is not secure enough, please go to "Settings > Biometrics & Security" and enable an alternative biometric method like Fingerprint or Iris.'
-      );
-      return null;
-    }
-
-    return pkey || null;
-  } catch (error) {
-    logger.sentry('Error in getPrivateKey');
-    captureException(error);
-    return null;
-  }
-};
-
-export const saveSeedPhrase = async (
-  seedphrase: EthereumWalletSeed,
-  keychain_id: RainbowWallet['id']
-): Promise<void> => {
-  const privateAccessControlOptions = await keychain.getPrivateAccessControlOptions();
-  const key = `${keychain_id}_${seedPhraseKey}`;
-  const val = {
-    id: keychain_id,
-    seedphrase,
-    version: seedPhraseVersion,
-  };
-
-  return keychain.saveObject(key, val, privateAccessControlOptions);
-};
-
 // use only inside wallet model
-const getSeedPhrase = async (
+const DEPRECATED_getSeedPhrase = async (
   id: RainbowWallet['id'],
   promptMessage?: string | AuthenticationPrompt
 ): Promise<null | SeedPhraseData> => {
@@ -821,7 +652,7 @@ const getSeedPhrase = async (
 
     return seedPhraseData || null;
   } catch (error) {
-    logger.sentry('Error in getSeedPhrase');
+    logger.sentry('Error in DEPRECATED_getSeedPhrase');
     captureException(error);
     return null;
   }
@@ -886,37 +717,7 @@ export const generateAccount = async (
   index: number
 ): Promise<null | ethers.Wallet> => {
   try {
-    let userPIN = null;
-    if (Device.isAndroid) {
-      const hasBiometricsEnabled = await getSupportedBiometryType();
-      // Fallback to custom PIN
-      if (!hasBiometricsEnabled) {
-        try {
-          userPIN = await authenticateWithPIN();
-        } catch (e) {
-          return null;
-        }
-      }
-    }
-
-    const seedData = await getSeedPhrase(id);
-    let seedphrase = seedData?.seedphrase;
-
-    if (userPIN) {
-      try {
-        const decryptedSeedPhrase = await encryptor.decrypt(
-          userPIN,
-          seedphrase
-        );
-        if (decryptedSeedPhrase) {
-          seedphrase = decryptedSeedPhrase;
-        } else {
-          throw new Error(`Can't access seed phrase to create new accounts`);
-        }
-      } catch (e) {
-        return null;
-      }
-    }
+    const seedphrase = await loadSeedPhrase(id);
 
     const {
       wallet: ethereumJSWallet,
@@ -932,22 +733,7 @@ export const generateAccount = async (
     );
 
     const newAccount = new ethers.Wallet(walletPkey);
-    // Android users without biometrics need to secure their keys with a PIN
-    if (userPIN) {
-      try {
-        const encryptedPkey = await encryptor.encrypt(userPIN, walletPkey);
-        if (encryptedPkey) {
-          await savePrivateKey(walletAddress, encryptedPkey);
-        } else {
-          logger.sentry('Error encrypting pkey to save it');
-          return null;
-        }
-      } catch (e) {
-        return null;
-      }
-    } else {
-      await savePrivateKey(walletAddress, walletPkey);
-    }
+    await savePrivateKey(walletPkey, walletAddress);
 
     return newAccount;
   } catch (error) {
@@ -957,43 +743,23 @@ export const generateAccount = async (
   }
 };
 
-export const cleanUpWalletKeys = async (): Promise<boolean> => {
-  const keys = [
-    addressKey,
-    allWalletsKey,
-    pinKey,
-    selectedWalletKey,
-    seedPhraseKey,
-    privateKeyKey,
-  ];
-
-  try {
-    await Promise.all(
-      keys.map(key => {
-        try {
-          keychain.remove(key);
-        } catch (e) {
-          // key might not exists
-          logger.log('failure to delete key', key);
-        }
-        return true;
-      })
-    );
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
 export const loadSeedPhrase = async (
   id: RainbowWallet['id'],
-  promptMessage?: string | AuthenticationPrompt
+  promptMessage?: string | AuthenticationPrompt,
+  forceOldSeed: boolean = false
 ): Promise<null | EthereumWalletSeed> => {
   try {
-    const seedData = await getSeedPhrase(id, promptMessage);
+    const newPin = !!(await getPin());
+
+    if (newPin && !forceOldSeed) {
+      const seed = await getSeedPhrase(id);
+      return seed;
+    }
+
+    const seedData = await DEPRECATED_getSeedPhrase(id, promptMessage);
 
     const seedPhrase = get(seedData, 'seedphrase', null);
-    const noPIN = !(await getExistingPIN());
+    const noPIN = !(await DEPRECATED_getExistingPIN());
 
     if (seedPhrase && isValidSeed(seedPhrase) && noPIN) {
       logger.sentry('Got seed succesfully');
@@ -1002,7 +768,7 @@ export const loadSeedPhrase = async (
 
     if (Device.isAndroid && seedPhrase) {
       try {
-        const userPIN = await authenticateWithPIN(promptMessage);
+        const userPIN = await DEPRECATED_authenticateWithPIN(promptMessage);
         if (userPIN) {
           if (isValidSeed(seedPhrase)) {
             logger.sentry('Got seed succesfully on PIN input');
@@ -1025,5 +791,54 @@ export const loadSeedPhrase = async (
     logger.sentry('Error in loadSeedPhrase.', error);
     captureException(error);
     return null;
+  }
+};
+
+export const migrateSecretsWithNewPin = async (
+  selectedWallet: RainbowWallet,
+  pin: string
+) => {
+  const keysToRemove = [pinKey, `${selectedWallet.id}_${seedPhraseKey}`];
+
+  const migrateExistingAccountsPrivateKeys = (seedPhrase: string) =>
+    selectedWallet.addresses.map(async account => {
+      const derivedAccount = await getEthersWallet({
+        seedPhrase,
+        walletId: selectedWallet.id,
+        accountIndex: account.index,
+      });
+
+      const privateKey = derivedAccount?.privateKey;
+
+      if (privateKey) {
+        await savePrivateKey(privateKey, account.address);
+
+        keysToRemove.push(`${account.address}_${privateKeyKey}`);
+      }
+    });
+
+  try {
+    const forceOldSeed = true;
+
+    const seedPhrase = await loadSeedPhrase(
+      selectedWallet.id,
+      'Authenticate to migrate secrets',
+      forceOldSeed
+    );
+
+    if (seedPhrase && isValidSeed(seedPhrase)) {
+      logger.sentry('[Migration]: Start');
+      await saveSeedPhrase(seedPhrase, selectedWallet.id, pin);
+      logger.sentry('[Migration]: Seed success');
+
+      await Promise.all(migrateExistingAccountsPrivateKeys(seedPhrase));
+      logger.sentry('[Migration]: PrivateKey success');
+
+      await keysToRemove.map(keychain.remove);
+      logger.sentry('[Migration]: Cleanup success');
+    }
+  } catch (e) {
+    logger.sentry('Error migrating secrets', e);
+    captureException(e);
   }
 };

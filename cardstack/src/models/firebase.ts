@@ -54,7 +54,7 @@ export const removeFCMToken = async (address: string) => {
       addressesByNetwork[network] &&
       addressesByNetwork[network].includes(address)
     ) {
-      const unregisterResponse = await unregisterFcmToken(fcmToken, address);
+      const unregisterResponse = await unregisterFcmToken(fcmToken);
 
       logger.sentry('UnregisterFcmToken response ---', unregisterResponse);
 
@@ -102,11 +102,10 @@ export const isFCMTokenStored = async (
 
 // check if token is registered in hub with checking stored in asyncStorage associated with wallet address
 // and if not stored, register to hub, then update asyncStorage)
-export const saveFCMToken = async (
-  walletAddress: string,
-  seedPhrase?: string
-) => {
+export const saveFCMToken = async () => {
   try {
+    const walletAddress = (await loadAddress()) || '';
+
     const {
       isTokenStored,
       addressesByNetwork,
@@ -116,11 +115,7 @@ export const saveFCMToken = async (
     if (!isTokenStored) {
       const newFcmToken = await messaging().getToken();
 
-      const registeredRespose = await registerFcmToken(
-        newFcmToken,
-        walletAddress,
-        seedPhrase
-      );
+      const registeredRespose = await registerFcmToken(newFcmToken);
 
       if (registeredRespose?.success) {
         const network: Network = await getNetwork();
@@ -169,10 +164,7 @@ export const requestPermission = () =>
       .catch(e => reject(e));
   });
 
-export const checkPushPermissionAndRegisterToken = async (
-  walletAddress: string,
-  seedPhrase?: string
-) => {
+export const checkPushPermissionAndRegisterToken = async () => {
   return new Promise(async resolve => {
     let permissionStatus = null;
 
@@ -195,7 +187,7 @@ export const checkPushPermissionAndRegisterToken = async (
             onPress: async () => {
               try {
                 await requestPermission();
-                await saveFCMToken(walletAddress, seedPhrase);
+                await saveFCMToken();
               } catch (error) {
                 logger.sentry('User rejected push notifications permissions');
               } finally {
@@ -216,7 +208,7 @@ export const checkPushPermissionAndRegisterToken = async (
         title: lang.t('wallet.push_notifications.please_enable_title'),
       });
     } else {
-      await saveFCMToken(walletAddress, seedPhrase);
+      await saveFCMToken();
       resolve(true);
     }
   });
@@ -227,10 +219,7 @@ export const registerTokenRefreshListener = () =>
     try {
       const walletAddress = (await loadAddress()) || '';
 
-      const tokenRegisterResponse = await registerFcmToken(
-        fcmToken,
-        walletAddress
-      );
+      const tokenRegisterResponse = await registerFcmToken(fcmToken);
 
       if (tokenRegisterResponse?.success) {
         const network = await getNetwork();

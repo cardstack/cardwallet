@@ -18,7 +18,7 @@ import { PinFlow } from './types';
 
 const initialFLows = [PinFlow.create, PinFlow.new];
 
-interface NavParams {
+export interface PinScreenNavParams {
   flow: PinFlow;
   variant: ThemeVariant;
   showBiometricSwitcher?: boolean;
@@ -26,12 +26,12 @@ interface NavParams {
   initialPin?: string;
   onSuccess?: (pin: string) => void;
   customSubtitle?: string;
-  dismissOnSuccess?: string;
+  dismissOnSuccess?: boolean;
 }
 
 export const usePinScreen = () => {
-  const { dispatch: navDispatch } = useNavigation();
-  const { params } = useRoute<RouteType<NavParams>>();
+  const { dispatch: navDispatch, setOptions } = useNavigation();
+  const { params } = useRoute<RouteType<PinScreenNavParams>>();
 
   const [inputPin, setInputPin] = useState('');
   const [isValidPin, setIsValidPin] = useState<null | boolean>(null);
@@ -45,6 +45,10 @@ export const usePinScreen = () => {
     showBiometricSwitcher = true,
     initialPin = '',
   } = params;
+
+  useEffect(() => {
+    setOptions({ gestureEnabled: canGoBack });
+  }, [canGoBack, setOptions]);
 
   useEffect(() => {
     if (inputPin.length < DEFAULT_PIN_LENGTH) {

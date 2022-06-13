@@ -9,9 +9,12 @@ import { PinFlow } from '../types';
 import { usePinScreen } from '../usePinScreen';
 
 const mockNavDispatch = jest.fn();
-
+const mockNavSetOptions = jest.fn();
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({ dispatch: mockNavDispatch }),
+  useNavigation: () => ({
+    dispatch: mockNavDispatch,
+    setOptions: mockNavSetOptions,
+  }),
   useRoute: jest.fn(),
   StackActions: { push: jest.fn(), popToTop: jest.fn() },
 }));

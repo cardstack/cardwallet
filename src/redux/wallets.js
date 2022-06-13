@@ -74,6 +74,7 @@ export const walletsLoadState = () => async (dispatch, getState) => {
     // Recover from broken state (account address not in selected wallet)
     if (!addressFromKeychain) {
       addressFromKeychain = await loadAddress();
+      await dispatch(settingsUpdateAccountAddress(addressFromKeychain));
       logger.sentry(
         'addressFromKeychain wasnt set on settings so it is being loaded from loadAddress'
       );
@@ -104,7 +105,7 @@ export const walletsLoadState = () => async (dispatch, getState) => {
     });
 
     dispatch(fetchWalletNames());
-    return wallets;
+    return { wallets, selectedWallet };
   } catch (error) {
     logger.sentry('Exception during walletsLoadState');
     captureException(error);
