@@ -504,7 +504,10 @@ export const createOrImportWallet = async ({
     logger.sentry('Generating a new seed phrase');
   }
 
-  if (!pin) return;
+  if (!pin) {
+    logger.sentry('No pin, exiting wallet creation');
+    return;
+  }
 
   const walletSeed = seed || generateMnemonic();
 

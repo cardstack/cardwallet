@@ -60,6 +60,8 @@ import { Portal } from 'react-native-cool-modals/Portal';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
 
+const skipKeychainCheck = true;
+
 StatusBar.pushStackEntry({ animated: true, barStyle: 'light-content' });
 
 if (__DEV__) {
@@ -156,7 +158,10 @@ class App extends Component {
       // Everything we need to do after the wallet is ready goes here
       Logger.sentry('✅ Wallet ready!');
       this.onTokenRefreshListener = registerTokenRefreshListener();
-      runKeychainIntegrityChecks();
+      if (!skipKeychainCheck) {
+        runKeychainIntegrityChecks();
+      }
+
       runWalletBackupStatusChecks();
     }
   }
