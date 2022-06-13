@@ -1,13 +1,9 @@
 import { captureException, captureMessage } from '@sentry/react-native';
 import { toChecksumAddress } from 'ethereumjs-util';
-import { flatMap, get, isEmpty, keys, map, values } from 'lodash';
+import { get, isEmpty, keys } from 'lodash';
 import { backupUserDataIntoCloud } from '../handlers/cloudBackup';
 import { saveKeychainIntegrityState } from '../handlers/localstorage/globalSettings';
-import {
-  getWalletNames,
-  saveWalletNames,
-} from '../handlers/localstorage/walletNames';
-import { getEtherWeb3Provider } from '../handlers/web3';
+import { getWalletNames } from '../handlers/localstorage/walletNames';
 import WalletBackupTypes from '../helpers/walletBackupTypes';
 import WalletTypes from '../helpers/walletTypes';
 import { hasKey } from '../model/keychain';
@@ -104,7 +100,6 @@ export const walletsLoadState = () => async (dispatch, getState) => {
       type: WALLETS_LOAD,
     });
 
-    dispatch(fetchWalletNames());
     return { wallets, selectedWallet };
   } catch (error) {
     logger.sentry('Exception during walletsLoadState');
@@ -196,6 +191,8 @@ export const createAccountForWallet = (id, color, name) => async (
   saveAllWallets(newWallets);
   // Set the address selected (KEYCHAIN)
   await saveAddress(account.address);
+
+  await dispatch(settingsUpdateAccountAddress(account.address));
   // Set the wallet selected (KEYCHAIN)
   await setSelectedWallet(newWallets[id]);
 
@@ -205,35 +202,6 @@ export const createAccountForWallet = (id, color, name) => async (
   });
 
   return newWallets;
-};
-
-export const fetchWalletNames = () => async (dispatch, getState) => {
-  const { wallets } = getState().wallets;
-  const updatedWalletNames = {};
-
-  // Fetch ENS names
-  await Promise.all(
-    flatMap(values(wallets), wallet => {
-      const accounts = wallet.addresses;
-      return map(accounts, async account => {
-        try {
-          const web3Provider = await getEtherWeb3Provider();
-          const ens = await web3Provider.lookupAddress(account.address);
-          if (ens && ens !== account.address) {
-            updatedWalletNames[account.address] = ens;
-          }
-          // eslint-disable-next-line no-empty
-        } catch (error) {}
-        return account;
-      });
-    })
-  );
-
-  dispatch({
-    payload: updatedWalletNames,
-    type: WALLETS_UPDATE_NAMES,
-  });
-  saveWalletNames(updatedWalletNames);
 };
 
 // TODO: check secureStorage keys
