@@ -243,11 +243,11 @@ export default function useWalletManager() {
 
   const importWallet = useCallback(
     async (params: CreateImportParams) => {
-      const walletImport = async () => {
+      const walletImport = async (pin?: string) => {
         try {
           showLoadingOverlay({ title: walletLoadingStates.IMPORTING_WALLET });
 
-          const wallet = await createOrImportWallet(params);
+          const wallet = await createOrImportWallet({ ...params, pin });
 
           if (wallet) {
             initWalletResetNavState(hasWallet);
