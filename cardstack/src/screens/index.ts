@@ -37,3 +37,4 @@ export { default as UnlockScreen } from './UnlockScreen/UnlockScreen';
 export { default as SupportAndFeesSheet } from './sheets/SupportAndFeesSheet/SupportAndFeesSheet';
 export { default as AvailableBalanceSheet } from './sheets/AvailableBalanceSheet/AvailableBalanceSheet';
 export { default as TokenWithChartSheet } from './sheets/TokenWithChartSheet/TokenWithChartSheet';
+export { default as SeedPhraseBackup } from './SeedPhraseBackup/SeedPhraseBackup';
