@@ -32,6 +32,7 @@ import {
   SupportAndFeesSheet,
   AvailableBalanceSheet,
   TokenWithChartSheet,
+  SeedPhraseBackup,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -206,6 +207,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TOKEN_WITH_CHART_SHEET: {
     component: TokenWithChartSheet,
     options: expandedPreset as StackNavigationOptions,
+  },
+  SEED_PHRASE_BACKUP: {
+    component: SeedPhraseBackup,
+    options: horizontalInterpolator,
   },
 };
 

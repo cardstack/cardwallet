@@ -6,7 +6,7 @@ import { useBottomToast } from './useBottomToast';
 
 interface useCopyToastParams {
   customCopyLabel?: string;
-  dataToCopy: string;
+  dataToCopy?: string;
 }
 
 export const useCopyToast = ({
@@ -17,12 +17,15 @@ export const useCopyToast = ({
 
   const { ToastComponent, showToast } = useBottomToast();
 
-  const copyToClipboard = useCallback(() => {
-    setClipboard(dataToCopy);
-    showToast({
-      label: `Copied "${customCopyLabel || clipboard}" to clipboard`,
-    });
-  }, [clipboard, customCopyLabel, dataToCopy, showToast, setClipboard]);
+  const copyToClipboard = useCallback(
+    (copy?: string) => {
+      setClipboard(dataToCopy || copy);
+      showToast({
+        label: `Copied "${customCopyLabel || copy || clipboard}" to clipboard`,
+      });
+    },
+    [clipboard, customCopyLabel, dataToCopy, showToast, setClipboard]
+  );
 
   return {
     CopyToastComponent: ToastComponent,

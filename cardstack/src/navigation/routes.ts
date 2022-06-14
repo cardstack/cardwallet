@@ -33,6 +33,7 @@ export const MainRoutes = {
   SUPPORT_AND_FEES: 'SupportAndFeesSheet',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
   TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
+  SEED_PHRASE_BACKUP: 'SeedPhraseBackup',
 } as const;
 
 const TabRoutes = {
