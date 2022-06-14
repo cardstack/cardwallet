@@ -24,7 +24,6 @@ import { getFCMToken } from '@cardstack/models/firebase';
 import { Navigation, Routes } from '@cardstack/navigation';
 import { addRequestToApprove } from '@cardstack/redux/requests';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
-import { baseCloudFunctionsUrl } from '@cardstack/services';
 import { enableActionsOnReadOnlyWallet } from '@rainbow-me/config/debug';
 import logger from 'logger';
 
@@ -47,6 +46,9 @@ const WALLETCONNECT_SET_PENDING_REDIRECT =
   'walletconnect/WALLETCONNECT_SET_PENDING_REDIRECT';
 const WALLETCONNECT_REMOVE_PENDING_REDIRECT =
   'walletconnect/WALLETCONNECT_REMOVE_PENDING_REDIRECT';
+
+const baseCloudFunctionsUrl =
+  'https://us-central1-card-pay-3e9be.cloudfunctions.net';
 
 // -- Actions ---------------------------------------- //
 const getNativeOptions = async () => {
