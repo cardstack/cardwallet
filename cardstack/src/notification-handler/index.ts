@@ -1,4 +1,5 @@
 import notifee, { AndroidImportance } from '@notifee/react-native';
+import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -19,11 +20,6 @@ interface NotificationDataType {
   transactionInformation?: string;
   network?: Network;
   ownerAddress?: string;
-}
-
-interface NotificationInfoType {
-  data?: NotificationDataType;
-  body: string;
 }
 
 interface LocalNotificationDataType {
@@ -63,18 +59,36 @@ const notificationConfig: Record<NotificationType, NotificationConfig> = {
   },
 };
 
-export const notificationHandler = async ({ data }: NotificationInfoType) => {
+export const notificationHandler = async (
+  message: FirebaseMessagingTypes.RemoteMessage | null
+) => {
+  if (!message?.data) {
+    return;
+  }
+
+  const { data } = message;
+
   if (data?.notificationType && data.network && data.ownerAddress) {
     const currentNetwork = await getNetwork();
     const address = await loadAddress();
-    const { notificationType, network, ownerAddress } = data;
 
-    // handle notification in same network only
-    if (currentNetwork === network) {
-      if (address === ownerAddress) {
-        notificationConfig?.[notificationType]?.handler(data);
-      } else {
-        // if different EOA with notification address, switch account to correct one and then handle notification
+    const isNotificationTypeValid = Object.values(NotificationType).includes(
+      data?.notificationType as NotificationType
+    );
+
+    // Checks if notificationType is a valid value, then casts the type
+    if (isNotificationTypeValid) {
+      const typedData = (data as unknown) as NotificationDataType;
+
+      const { notificationType, network, ownerAddress } = typedData;
+
+      // handle notification in same network only
+      if (currentNetwork === network) {
+        if (address === ownerAddress) {
+          notificationConfig?.[notificationType]?.handler(typedData);
+        } else {
+          // if different EOA with notification address, switch account to correct one and then handle notification
+        }
       }
     }
   }
