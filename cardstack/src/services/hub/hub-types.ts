@@ -3,7 +3,6 @@ import { KebabToCamelCaseKeys } from 'globals';
 import { CustodialWalletAttrs } from '@cardstack/types';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import { string } from 'prop-types';
 
 // Note on baseQuery extraOptions, it works only with optional properties.
 export interface BaseQueryExtraOptions {

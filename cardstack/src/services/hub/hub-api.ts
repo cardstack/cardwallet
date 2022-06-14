@@ -15,7 +15,6 @@ import {
   GetEoaClaimedQueryResult,
   CheckHubAuthQueryParams,
   RegisterFCMTokenQueryParams,
-  RegisterFCMTokenQueryResult,
 } from './hub-types';
 
 const routes = {
