@@ -221,7 +221,7 @@ export const registerTokenRefreshListener = () =>
 
       const { data } = await registerFcmToken(fcmToken);
 
-      if (data?.success) {
+      if (data) {
         const network = await getNetwork();
         saveLocal(DEVICE_FCM_TOKEN_KEY, {
           data: { fcmToken, [network]: [walletAddress] },
