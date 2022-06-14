@@ -3,6 +3,7 @@ import { KebabToCamelCaseKeys } from 'globals';
 import { CustodialWalletAttrs } from '@cardstack/types';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
+import { string } from 'prop-types';
 
 // Note on baseQuery extraOptions, it works only with optional properties.
 export interface BaseQueryExtraOptions {
@@ -35,8 +36,4 @@ export interface CheckHubAuthQueryParams {
 
 export interface RegisterFCMTokenQueryParams {
   fcmToken: string;
-}
-
-export interface RegisterFCMTokenQueryResult {
-  success: boolean;
 }

@@ -68,10 +68,7 @@ export const hubApi = createApi({
       query: () => routes.exchangeRates,
       transformResponse: ({ data }) => data.attributes.rates,
     }),
-    registerFcmToken: builder.query<
-      RegisterFCMTokenQueryResult,
-      RegisterFCMTokenQueryParams
-    >({
+    registerFcmToken: builder.query<string, RegisterFCMTokenQueryParams>({
       query: ({ fcmToken }) => ({
         url: routes.registerFCMToken,
         method: 'POST',
@@ -79,9 +76,8 @@ export const hubApi = createApi({
           'push-client-id': fcmToken,
         }),
       }),
-      transformResponse: (response: any) => ({ success: !!response.data }),
     }),
-    unregisterFcmToken: builder.mutation<void, RegisterFCMTokenQueryParams>({
+    unregisterFcmToken: builder.mutation<string, RegisterFCMTokenQueryParams>({
       query: ({ fcmToken }) => ({
         url: `${routes.registerFCMToken}/${fcmToken}`,
         method: 'DELETE',

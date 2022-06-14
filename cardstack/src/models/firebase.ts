@@ -56,9 +56,9 @@ export const removeFCMToken = async (address: string) => {
     ) {
       const response = await unregisterFcmToken(fcmToken);
 
-      logger.sentry('UnregisterFcmToken response ---', response);
-
       if ('data' in response) {
+        logger.sentry('Unregistering FCM Token', response);
+
         // remove address from AsyncStorage for all networks
         for (const networkName in addressesByNetwork) {
           addressesByNetwork[networkName as Network] = addressesByNetwork[
@@ -115,9 +115,9 @@ export const saveFCMToken = async () => {
     if (!isTokenStored) {
       const newFcmToken = await messaging().getToken();
 
-      const { data } = await registerFcmToken(newFcmToken);
+      const { error } = await registerFcmToken(newFcmToken);
 
-      if (data?.success) {
+      if (!error) {
         const network: Network = await getNetwork();
 
         // if newFcmToken is same as old stored one, then add wallet address to asyncStorage,
