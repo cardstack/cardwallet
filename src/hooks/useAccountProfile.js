@@ -1,5 +1,4 @@
-import { get, toUpper } from 'lodash';
-import networkTypes from '../helpers/networkTypes';
+import { toUpper } from 'lodash';
 import useAccountSettings from './useAccountSettings';
 import useWallets from './useWallets';
 import {
@@ -8,12 +7,9 @@ import {
 } from '@cardstack/utils';
 
 export default function useAccountProfile() {
-  const wallets = useWallets();
-  const { selectedWallet, walletNames } = wallets;
+  const { selectedWallet } = useWallets();
 
-  const { network } = useAccountSettings();
-  const settings = useAccountSettings();
-  const { accountAddress } = settings;
+  const { accountAddress } = useAccountSettings();
 
   if (!selectedWallet) {
     return {};
@@ -27,8 +23,6 @@ export default function useAccountProfile() {
     return {};
   }
 
-  const accountENS = get(walletNames, `${accountAddress}`);
-
   const selectedAccount = selectedWallet.addresses.find(
     account => account.address === accountAddress
   );
@@ -37,31 +31,17 @@ export default function useAccountProfile() {
     return {};
   }
 
-  const { label, color, address, image } = selectedAccount;
+  const { label, color, image } = selectedAccount;
 
-  const accountAddressPreview =
-    label === accountENS
-      ? getAddressPreview(accountAddress)
-      : label || getAddressPreview(accountAddress);
-  const accountName =
-    network === networkTypes.mainnet
-      ? label || accountENS || getAddressPreview(accountAddress)
-      : accountAddressPreview;
+  const accountAddressPreview = getAddressPreview(accountAddress);
 
-  const accountSymbol = getSymbolCharacterFromAddress(
-    network === networkTypes.mainnet
-      ? label || toUpper(accountENS) || address
-      : toUpper(accountName)
-  );
-  const accountColor = color;
-  const accountImage = image;
+  const accountName = label || accountAddressPreview;
 
   return {
     accountAddress,
-    accountColor,
-    accountENS,
-    accountImage,
     accountName,
-    accountSymbol,
+    accountColor: color,
+    accountImage: image,
+    accountSymbol: getSymbolCharacterFromAddress(toUpper(accountName)),
   };
 }

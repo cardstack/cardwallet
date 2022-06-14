@@ -12,7 +12,11 @@ import {
   migrateSecretsWithNewPin,
   RainbowWallet,
 } from '../model/wallet';
-import { resetAccountState, settingsLoadNetwork } from '../redux/settings';
+import {
+  resetAccountState,
+  settingsLoadNetwork,
+  settingsUpdateAccountAddress,
+} from '../redux/settings';
 import {
   addressSetSelected,
   walletsLoadState,
@@ -285,7 +289,8 @@ export default function useWalletManager() {
     async (wallet, address) => {
       const p1 = dispatch(walletsSetSelected(wallet));
       const p2 = dispatch(addressSetSelected(address));
-      await Promise.all([p1, p2]);
+      const p3 = dispatch(settingsUpdateAccountAddress(address));
+      await Promise.all([p1, p2, p3]);
 
       await initializeWallet();
     },

@@ -37,14 +37,13 @@ import {
 } from './handlers/walletReadyEvents';
 import { PinnedHiddenItemOptionProvider } from './hooks';
 
-import { loadAddress } from './model/wallet';
 import store, { persistor } from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import { AppRequirementsCheck } from '@cardstack/components/AppRequirementsCheck';
 import ErrorBoundary from '@cardstack/components/ErrorBoundary/ErrorBoundary';
 import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
-import { AppContainer, Routes } from '@cardstack/navigation';
+import { AppContainer } from '@cardstack/navigation';
 import {
   displayLocalNotification,
   notificationHandler,
@@ -92,7 +91,7 @@ class App extends Component {
     requestsForTopic: PropTypes.func,
   };
 
-  state = { appState: AppState.currentState, initialRoute: null };
+  state = { appState: AppState.currentState };
 
   async componentDidMount() {
     if (__DEV__) {
@@ -107,7 +106,6 @@ class App extends Component {
       Logger.sentry(`Test flight usage - ${isTestFlight}`);
     }
 
-    this.identifyFlow();
     AppState.addEventListener('change', this.handleAppStateChange);
 
     this.foregroundNotificationListener = messaging().onMessage(
@@ -173,15 +171,6 @@ class App extends Component {
     this.foregroundNotificationListener?.();
     this.backgroundNotificationListener?.();
   }
-
-  identifyFlow = async () => {
-    const address = await loadAddress();
-    if (address) {
-      this.setState({ initialRoute: Routes.TAB_NAVIGATOR });
-    } else {
-      this.setState({ initialRoute: Routes.WELCOME_SCREEN });
-    }
-  };
 
   onRemoteNotification = notification => {
     const topic = get(notification, 'topic');

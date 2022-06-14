@@ -14,7 +14,7 @@ let provider: WebsocketProvider | null = null;
 const Web3WsProvider = {
   get: async (network?: Network) => {
     if (provider === null || network || !provider?.connected) {
-      const currentNetwork = await getNetwork();
+      const currentNetwork = network || (await getNetwork());
 
       const hubConfig = new HubConfig(
         getConstantByNetwork('hubUrl', currentNetwork)
@@ -40,6 +40,10 @@ const Web3WsProvider = {
           maxReceivedFrameSize: 100000000,
           maxReceivedMessageSize: 100000000,
         },
+      });
+
+      provider?.on('connect', () => {
+        logger.sentry('WS socket connected');
       });
 
       //@ts-ignore it's wrongly typed bc it says it doesn't have param, but it does

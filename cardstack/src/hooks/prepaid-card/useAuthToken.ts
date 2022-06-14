@@ -4,17 +4,11 @@ import { getHubAuthToken, getHubUrl } from '@cardstack/services/hub-service';
 import { useWorker } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
-import { Network } from '@rainbow-me/networkTypes';
-import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import logger from 'logger';
 
 export const useAuthToken = () => {
   const [authToken, setAuthToken] = useState<string>('');
-  const { accountAddress } = useAccountSettings();
-
-  const network = useRainbowSelector(
-    state => state.settings.network
-  ) as Network;
+  const { accountAddress, network } = useAccountSettings();
 
   const { callback: getAuthToken, error, isLoading } = useWorker(async () => {
     const hubURLString = getHubUrl(network);
