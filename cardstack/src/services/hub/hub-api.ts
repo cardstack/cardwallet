@@ -14,12 +14,15 @@ import {
   GetEoaClaimedQueryParams,
   GetEoaClaimedQueryResult,
   CheckHubAuthQueryParams,
+  RegisterFCMTokenQueryParams,
+  RegisterFCMTokenQueryResult,
 } from './hub-types';
 
 const routes = {
   custodialWallet: '/custodial-wallet',
   emailDrop: '/email-card-drop-requests',
   exchangeRates: '/exchange-rates',
+  registerFCMToken: '/push-notification-registrations',
 };
 
 export const hubApi = createApi({
@@ -65,6 +68,26 @@ export const hubApi = createApi({
       query: () => routes.exchangeRates,
       transformResponse: ({ data }) => data.attributes.rates,
     }),
+    registerFcmToken: builder.query<
+      RegisterFCMTokenQueryResult,
+      RegisterFCMTokenQueryParams
+    >({
+      query: ({ fcmToken }) => ({
+        url: routes.registerFCMToken,
+        method: 'POST',
+        body: hubBodyBuilder('push-notification-registration', {
+          'push-client-id': fcmToken,
+        }),
+      }),
+      transformResponse: (response: any) => ({ success: !!response.data }),
+    }),
+    unregisterFcmToken: builder.mutation<void, RegisterFCMTokenQueryParams>({
+      query: ({ fcmToken }) => ({
+        url: `${routes.registerFCMToken}/${fcmToken}`,
+        method: 'DELETE',
+        responseHandler: response => response.text(),
+      }),
+    }),
   }),
 });
 
@@ -74,4 +97,6 @@ export const {
   useRequestEmailCardDropMutation,
   useCheckHubAuthQuery,
   useGetExchangeRatesQuery,
+  useRegisterFcmTokenQuery,
+  useUnregisterFcmTokenMutation,
 } = hubApi;

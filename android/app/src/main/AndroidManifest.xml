@@ -46,5 +46,8 @@
             <data android:host="wallet.cardstack.com" />
         </intent-filter>
       </activity>
+
+      <activity android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
+        android:exported="true"/>
     </application>
 </manifest>

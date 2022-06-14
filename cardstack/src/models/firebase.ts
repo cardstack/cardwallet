@@ -7,7 +7,7 @@ import { requestNotifications } from 'react-native-permissions';
 import {
   registerFcmToken,
   unregisterFcmToken,
-} from '@cardstack/services/hub-service';
+} from '@cardstack/services/hub/hub-service';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { getLocal, saveLocal } from '@rainbow-me/handlers/localstorage/common';
@@ -54,11 +54,11 @@ export const removeFCMToken = async (address: string) => {
       addressesByNetwork[network] &&
       addressesByNetwork[network].includes(address)
     ) {
-      const unregisterResponse = await unregisterFcmToken(fcmToken);
+      const response = await unregisterFcmToken(fcmToken);
 
-      logger.sentry('UnregisterFcmToken response ---', unregisterResponse);
+      logger.sentry('UnregisterFcmToken response ---', response);
 
-      if (unregisterResponse?.success) {
+      if ('data' in response) {
         // remove address from AsyncStorage for all networks
         for (const networkName in addressesByNetwork) {
           addressesByNetwork[networkName as Network] = addressesByNetwork[
@@ -115,9 +115,9 @@ export const saveFCMToken = async () => {
     if (!isTokenStored) {
       const newFcmToken = await messaging().getToken();
 
-      const registeredRespose = await registerFcmToken(newFcmToken);
+      const { data } = await registerFcmToken(newFcmToken);
 
-      if (registeredRespose?.success) {
+      if (data?.success) {
         const network: Network = await getNetwork();
 
         // if newFcmToken is same as old stored one, then add wallet address to asyncStorage,
@@ -219,9 +219,9 @@ export const registerTokenRefreshListener = () =>
     try {
       const walletAddress = (await loadAddress()) || '';
 
-      const tokenRegisterResponse = await registerFcmToken(fcmToken);
+      const { data } = await registerFcmToken(fcmToken);
 
-      if (tokenRegisterResponse?.success) {
+      if (data?.success) {
         const network = await getNetwork();
         saveLocal(DEVICE_FCM_TOKEN_KEY, {
           data: { fcmToken, [network]: [walletAddress] },
