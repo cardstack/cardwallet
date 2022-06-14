@@ -29,17 +29,22 @@ export const fetchHubBaseQuery: BaseQueryFn<
   unknown,
   FetchBaseQueryError,
   BaseQueryExtraOptions
-> = async (args, api, extraOptions = { authenticate: true }) => {
+> = async (args, api, extraOptions) => {
+  const extraOptionsOverwrite = {
+    authenticate: true,
+    ...extraOptions,
+  };
+
   const network = await getNetwork();
   const hubUrl = getHubUrl(network);
 
-  const result = await fetchBaseQuery({
+  const baseQuery = fetchBaseQuery({
     baseUrl: `${hubUrl}/api`,
     prepareHeaders: async (headers, { getState }) => {
       headers.set('Content-Type', 'application/vnd.api+json');
       headers.set('Accept', 'application/vnd.api+json');
 
-      if (extraOptions.authenticate) {
+      if (extraOptionsOverwrite.authenticate) {
         const walletAddress = (getState() as AppState).settings.accountAddress;
 
         if (walletAddress && network) {
@@ -57,7 +62,9 @@ export const fetchHubBaseQuery: BaseQueryFn<
 
       return headers;
     },
-  })(args, api, extraOptions);
+  });
+
+  let result = await baseQuery(args, api, extraOptions);
 
   const { error } = result;
 
@@ -68,6 +75,9 @@ export const fetchHubBaseQuery: BaseQueryFn<
       const walletAddress = store.getState().settings.accountAddress;
 
       removeHubAuthToken(walletAddress, network);
+
+      // Retry query, it will try to pull new token.
+      result = await baseQuery(args, api, extraOptions);
     }
   }
 
@@ -118,3 +128,9 @@ export const getExchangeRatesQuery = () => {
 
   return query;
 };
+
+export const registerFcmToken = (fcmToken: string) =>
+  store.dispatch(hubApi.endpoints.registerFcmToken.initiate({ fcmToken }));
+
+export const unregisterFcmToken = (fcmToken: string) =>
+  store.dispatch(hubApi.endpoints.unregisterFcmToken.initiate({ fcmToken }));

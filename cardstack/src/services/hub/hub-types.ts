@@ -32,3 +32,7 @@ export interface CheckHubAuthQueryParams {
   accountAddress: string;
   network: Network;
 }
+
+export interface RegisterFCMTokenQueryParams {
+  fcmToken: string;
+}
