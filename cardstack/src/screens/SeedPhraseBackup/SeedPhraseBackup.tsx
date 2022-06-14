@@ -14,10 +14,8 @@ import {
   SafeAreaView,
   Text,
 } from '@cardstack/components';
-import { useBottomToast } from '@cardstack/hooks';
+import { useCopyToast } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
-
-import { useClipboard } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
 
@@ -27,23 +25,12 @@ interface SeedPhraseBackupParams {
 
 const SeedPhraseBackup = () => {
   const { params } = useRoute<RouteType<SeedPhraseBackupParams>>();
-  const { setClipboard } = useClipboard();
-  const { ToastComponent, showToast } = useBottomToast();
 
-  const copySeedPhrase = useCallback(
-    (item: string) => () => {
-      setClipboard(item);
-
-      showToast({
-        label: `Copied to clipboard`,
-      });
-    },
-    [setClipboard, showToast]
-  );
+  const { CopyToastComponent, copyToClipboard } = useCopyToast({});
 
   const renderSeedPhrases = useCallback(
     ({ item }) => (
-      <TouchableOpacity onPress={copySeedPhrase(item)}>
+      <TouchableOpacity onPress={() => copyToClipboard(item)}>
         <CenteredContainer
           borderWidth={1}
           borderColor="teal"
@@ -57,14 +44,12 @@ const SeedPhraseBackup = () => {
         </CenteredContainer>
       </TouchableOpacity>
     ),
-    [copySeedPhrase]
+    [copyToClipboard]
   );
 
   const onPress = useCallback(() => {
-    showToast({
-      label: `Go Back`,
-    });
-  }, [showToast]);
+    // TODO: go to create pin flow
+  }, []);
 
   return (
     <SafeAreaView
@@ -90,7 +75,7 @@ const SeedPhraseBackup = () => {
       </Container>
       <Button onPress={onPress}>{strings.button}</Button>
 
-      <ToastComponent />
+      <CopyToastComponent />
     </SafeAreaView>
   );
 };

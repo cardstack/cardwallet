@@ -75,7 +75,7 @@ const CopyAddressSheet = () => {
         ) : null}
         <CenteredContainer padding={4}>
           <Pressable
-            onLongPress={copyToClipboard}
+            onLongPress={copyToClipboard as any}
             delayLongPress={delayLongPressMs}
           >
             <Text
