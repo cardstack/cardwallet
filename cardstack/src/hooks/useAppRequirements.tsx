@@ -1,19 +1,13 @@
 import compareVersions from 'compare-versions';
-import React, { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import DeviceInfo from 'react-native-device-info';
 
-import { MinimumVersion } from '@cardstack/components/MinimumVersion';
 import { useLoadRemoteConfigs } from '@cardstack/hooks';
 import { remoteFlags } from '@cardstack/services/remote-config';
 
 import { useHideSplashScreen } from '@rainbow-me/hooks';
-import MaintenanceMode from '@rainbow-me/screens/MaintenanceMode';
 
-interface Props {
-  children: ReactNode;
-}
-
-export const AppRequirementsCheck = ({ children }: Props) => {
+export const useAppRequirements = () => {
   // Starts remote config fetcher.
   const { isReady } = useLoadRemoteConfigs();
   const hideSplashScreen = useHideSplashScreen();
@@ -28,17 +22,17 @@ export const AppRequirementsCheck = ({ children }: Props) => {
     return compareVersions(minVersion, appVersion) > 0;
   }, [isReady]);
 
-  if (isReady && remoteFlags().maintenanceActive) {
-    hideSplashScreen();
+  const maintenanceMode = remoteFlags().maintenanceActive;
 
-    return <MaintenanceMode message={remoteFlags().maintenanceMessage} />;
+  if (forceUpdate || maintenanceMode) {
+    hideSplashScreen();
   }
 
-  if (forceUpdate) {
-    hideSplashScreen();
-
-    return <MinimumVersion />;
-  }
-
-  return children;
+  return {
+    forceUpdate,
+    maintenance: {
+      active: maintenanceMode,
+      message: remoteFlags().maintenanceMessage,
+    },
+  };
 };

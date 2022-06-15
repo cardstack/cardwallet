@@ -13,3 +13,4 @@ export * from './prepaid-card/usePrepaidCard';
 export * from './currencies/useSpendDisplay';
 export * from './remote-configs/useLoadRemoteConfigs';
 export { default as useInvalidPaste } from './useInvalidPaste';
+export * from './useAppRequirements';
