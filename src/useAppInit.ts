@@ -33,7 +33,11 @@ export const useAppInit = () => {
   const appRequiments = useAppRequirements();
 
   const { justBecameActive, movedToBackground } = useAppState();
-  const { setUserUnauthorized, isAuthorized } = useAuthSelectorAndActions();
+  const {
+    setUserUnauthorized,
+    isAuthorized,
+    hasWallet,
+  } = useAuthSelectorAndActions();
 
   useDevSetup();
   useNotificationSetup();
@@ -84,10 +88,10 @@ export const useAppInit = () => {
   }, [setUserUnauthorized, movedToBackground]);
 
   useEffect(() => {
-    if (!isAuthorized) {
+    if (!isAuthorized && hasWallet) {
       Navigation.handleAction(Routes.UNLOCK_SCREEN);
     }
-  });
+  }, [hasWallet, isAuthorized]);
 
   useEffect(() => {
     if (justBecameActive) {
