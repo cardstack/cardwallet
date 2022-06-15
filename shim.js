@@ -4,7 +4,6 @@ import { enableES5 } from 'immer';
 import { Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import './src/initializers/conversion-globals';
-import './src/initializers/screen-dismissal';
 import './src/initializers/shim-renamimated-module-proxy';
 // shimming for reanimated need to happen before setting up globals
 import './src/initializers/setup-globals';
