@@ -852,8 +852,6 @@ export const migrateSecretsWithNewPin = async (
 export const resetWallet = async () => {
   const allWallets = await getAllWallets();
 
-  console.log('allWallets', allWallets);
-
   // clearing secure storage and keychain
   if (allWallets) {
     await wipeSecureStorage(allWallets);
