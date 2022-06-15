@@ -31,7 +31,6 @@ import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
-import { useAuthActions } from '@cardstack/redux/authSlice';
 import { getAddressPreview } from '@cardstack/utils';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import {
@@ -40,7 +39,7 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 
-import { wipeKeychain } from '@rainbow-me/model/keychain';
+import { resetWallet } from '@rainbow-me/model/wallet';
 import { deviceUtils, showActionSheetWithOptions } from '@rainbow-me/utils';
 import logger from 'logger';
 
@@ -75,8 +74,6 @@ export default function ChangeWalletSheet() {
   const [currentSelectedWallet, setCurrentSelectedWallet] = useState(
     selectedWallet
   );
-
-  const { resetHasWallet } = useAuthActions();
 
   const apolloClient = useApolloClient();
 
@@ -265,11 +262,9 @@ export default function ChangeWalletSheet() {
                   const isLastAvailableWallet = !otherAccounts.length;
 
                   if (isLastAvailableWallet) {
-                    await wipeKeychain();
+                    await resetWallet();
 
                     dismissLoadingOverlay();
-
-                    resetHasWallet();
 
                     return;
                   } else {
@@ -302,7 +297,6 @@ export default function ChangeWalletSheet() {
       dismissLoadingOverlay,
       onChangeAccount,
       renameWallet,
-      resetHasWallet,
       showLoadingOverlay,
       wallets,
     ]

@@ -10,7 +10,7 @@ import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
 import { useWorker } from '@cardstack/utils';
 
-import { wipeKeychain } from '@rainbow-me/model/keychain';
+import { resetWallet } from '@rainbow-me/model/wallet';
 
 import { strings } from './strings';
 
@@ -73,7 +73,7 @@ export const useUnlockScreen = () => {
       {
         text: strings.reset.delete,
         onPress: async () => {
-          await wipeKeychain();
+          await resetWallet();
           RNRestart.Restart();
         },
       },
