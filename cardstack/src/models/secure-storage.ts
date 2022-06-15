@@ -2,6 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import { SECURE_STORE_KEY } from 'react-native-dotenv';
 
 import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
+import { AllRainbowWallets } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 const keys = {
@@ -131,6 +132,19 @@ const deletePrivateKey = async (walletAddress: string) => {
   const pKey = buildKeyWithId(keys.PKEY, walletAddress);
 
   await SecureStore.deleteItemAsync(pKey);
+const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
+  for (const walletId of Object.keys(wallets)) {
+    const walletAddresses = wallets[walletId].addresses;
+
+    // loop through addresses to pass all .address to deletePrivateKey
+    for (const account of walletAddresses) {
+      await deleteSeedPhrase(walletId);
+      await deletePrivateKey(account.address);
+      await deletePin();
+    }
+  }
+
+  return;
 };
 
 export {

@@ -44,9 +44,12 @@ import {
   getSeedPhrase,
   savePrivateKey,
   saveSeedPhrase,
+  wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
+import { authSlice } from '@cardstack/redux/authSlice';
 import { Device } from '@cardstack/utils/device';
 
+import store from '@rainbow-me/redux/store';
 import logger from 'logger';
 const encryptor = new AesEncryptor();
 
@@ -843,5 +846,21 @@ export const migrateSecretsWithNewPin = async (
   } catch (e) {
     logger.sentry('Error migrating secrets', e);
     captureException(e);
+  }
+};
+
+export const resetWallet = async () => {
+  const allWallets = await getAllWallets();
+
+  console.log('allWallets', allWallets);
+
+  // clearing secure storage and keychain
+  if (allWallets) {
+    await wipeSecureStorage(allWallets);
+    await keychain.wipeKeychain();
+
+    logger.log('Wallet reset done!');
+
+    store.dispatch(authSlice.actions.resetHasWallet());
   }
 };
