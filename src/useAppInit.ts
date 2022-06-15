@@ -50,11 +50,11 @@ export const useAppInit = () => {
 
     handleWcDeepLink();
 
-    const unsubscribe = Linking.addEventListener('url', ({ url }) => {
+    const subscription = Linking.addEventListener('url', ({ url }) => {
       handleDeepLink(url);
     });
 
-    return unsubscribe;
+    return subscription.remove();
   }, []);
 
   useEffect(() => {
