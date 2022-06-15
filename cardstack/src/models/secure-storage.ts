@@ -82,7 +82,10 @@ const savePin = (pin: string) => SecureStore.setItemAsync(keys.AUTH_PIN, pin);
 
 const getPin = () => getSecureValue(keys.AUTH_PIN);
 
-const deletePin = () => SecureStore.deleteItemAsync(keys.AUTH_PIN);
+const deletePin = () =>
+  SecureStore.deleteItemAsync(keys.AUTH_PIN).then(() =>
+    logger.log('Deleted PIN')
+  );
 
 const encryptor = new AesEncryptor();
 
@@ -104,7 +107,9 @@ const getSeedPhrase = async (walletId: string) => {
 const deleteSeedPhrase = async (walletId: string) => {
   const seedKey = buildKeyWithId(keys.SEED, walletId);
 
-  await SecureStore.deleteItemAsync(seedKey);
+  await SecureStore.deleteItemAsync(seedKey).then(() =>
+    logger.log('Deleted seed phrase')
+  );
 };
 
 // PRIVATE_KEY
@@ -131,7 +136,11 @@ const getPrivateKey = async (walletAddress: string) => {
 const deletePrivateKey = async (walletAddress: string) => {
   const pKey = buildKeyWithId(keys.PKEY, walletAddress);
 
-  await SecureStore.deleteItemAsync(pKey);
+  await SecureStore.deleteItemAsync(pKey).then(() =>
+    logger.log('Deleted private key')
+  );
+};
+
 const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
   for (const walletId of Object.keys(wallets)) {
     const walletAddresses = wallets[walletId].addresses;
@@ -157,4 +166,5 @@ export {
   savePrivateKey,
   getPrivateKey,
   deletePrivateKey,
+  wipeSecureStorage,
 };
