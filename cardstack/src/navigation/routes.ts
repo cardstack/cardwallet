@@ -60,11 +60,11 @@ const SharedRoutes = {
 } as const;
 
 export const NonAuthRoutes = {
-  UNLOCK_SCREEN: 'UnlockScreen',
   WELCOME_SCREEN: 'WelcomeScreen',
 } as const;
 
 export const Routes = {
+  UNLOCK_SCREEN: 'UnlockScreen',
   ...SharedRoutes,
   ...NonMigratedRoutes,
   ...TabRoutes,

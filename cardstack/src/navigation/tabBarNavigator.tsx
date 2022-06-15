@@ -164,8 +164,7 @@ const useNavigationAuth = () => {
 
   const { isAuthorized, hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
-  // Temp condition, to only block app if user hasPin
-  const [hasPin, setHasPin] = useState(false);
+  const [hasPin, setHasPin] = useState(true);
 
   const { callback: loadAuthInfo } = useWorker(async () => {
     const [address, storedPin] = await Promise.all([loadAddress(), getPin()]);
@@ -180,8 +179,10 @@ const useNavigationAuth = () => {
   }, []);
 
   useEffect(() => {
-    loadAuthInfo();
-  }, [loadAuthInfo, isAuthorized]);
+    if (!hasPin || isFirstMount.current) {
+      loadAuthInfo();
+    }
+  }, [loadAuthInfo, hasPin, isAuthorized]);
 
   return { hasWallet, isAuthorized, hasPin };
 };
@@ -210,16 +211,15 @@ export const StackNavigator = () => {
           />
           {SharedScreens}
         </>
-      ) : !isAuthorized && hasPin ? (
-        <>
-          <Stack.Screen
-            component={UnlockScreen}
-            name={NonAuthRoutes.UNLOCK_SCREEN}
-          />
-          {SharedScreens}
-        </>
       ) : (
         <>
+          {hasPin && !isAuthorized && (
+            <Stack.Screen
+              component={UnlockScreen}
+              name={Routes.UNLOCK_SCREEN}
+              options={{ gestureEnabled: false }}
+            />
+          )}
           <Stack.Screen component={TabNavigator} name={Routes.TAB_NAVIGATOR} />
           {cardstackMainScreens}
           {SharedScreens}

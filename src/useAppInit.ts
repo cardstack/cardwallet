@@ -1,6 +1,5 @@
 import notifee, { EventType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
-import { get } from 'lodash';
 import { useCallback, useEffect } from 'react';
 import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -16,10 +15,12 @@ import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
 import { useAppRequirements } from '@cardstack/hooks';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
+import { Navigation, Routes } from '@cardstack/navigation';
 import {
   displayLocalNotification,
   notificationHandler,
 } from '@cardstack/notification-handler';
+import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
 import Logger from 'logger';
 
@@ -31,7 +32,8 @@ export const useAppInit = () => {
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
   const appRequiments = useAppRequirements();
 
-  const { justBecameActive } = useAppState();
+  const { justBecameActive, movedToBackground } = useAppState();
+  const { setUserUnauthorized, isAuthorized } = useAuthSelectorAndActions();
 
   useDevSetup();
   useNotificationSetup();
@@ -54,7 +56,7 @@ export const useAppInit = () => {
       handleDeepLink(url);
     });
 
-    return subscription.remove();
+    return subscription.remove;
   }, []);
 
   useEffect(() => {
@@ -67,11 +69,25 @@ export const useAppInit = () => {
         runKeychainIntegrityChecks();
       }
 
-      runWalletBackupStatusChecks();
+      if (isAuthorized) {
+        runWalletBackupStatusChecks();
+      }
 
       return unsubscribe;
     }
-  }, [walletReady]);
+  }, [isAuthorized, walletReady]);
+
+  useEffect(() => {
+    if (movedToBackground) {
+      setUserUnauthorized();
+    }
+  }, [setUserUnauthorized, movedToBackground]);
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      Navigation.handleAction(Routes.UNLOCK_SCREEN);
+    }
+  });
 
   useEffect(() => {
     if (justBecameActive) {
@@ -98,7 +114,7 @@ const useNotificationSetup = () => {
 
   const onRemoteNotification = useCallback(
     notification => {
-      const topic = get(notification, 'topic');
+      const topic = notification?.topic;
       if (topic) {
         setTimeout(() => {
           const requests = dispatch(requestsForTopic(topic));
