@@ -1,5 +1,6 @@
 import notifee, { EventType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import { useFlipper } from '@react-navigation/devtools';
 import { useCallback, useEffect } from 'react';
 import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -16,6 +17,7 @@ import { walletConnectLoadState } from './redux/walletconnect';
 import { useAppRequirements } from '@cardstack/hooks';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
 import { Navigation, Routes } from '@cardstack/navigation';
+import { navigationRef } from '@cardstack/navigation/Navigation';
 import {
   displayLocalNotification,
   notificationHandler,
@@ -111,6 +113,8 @@ const useDevSetup = () => {
       RNAsyncStorageFlipper(AsyncStorage);
     }
   }, []);
+
+  useFlipper(navigationRef);
 };
 
 const useNotificationSetup = () => {
