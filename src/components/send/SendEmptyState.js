@@ -64,7 +64,7 @@ const SendEmptyState = () => {
       backgroundColor={colors.white}
       flex={1}
       justify="space-between"
-      paddingBottom={sheetVerticalOffset + 19}
+      paddingBottom={50}
     >
       <Transitioning.View ref={ref} transition={transition}>
         {icon}
