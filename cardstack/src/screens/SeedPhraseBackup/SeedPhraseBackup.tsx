@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import {
   FlatList,
@@ -18,13 +18,13 @@ import { useCopyToast } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { strings } from './strings';
-
-interface SeedPhraseBackupParams {
-  seedPhrases: string[];
-}
+import { SeedPhraseBackupFlow, SeedPhraseBackupParams } from './types';
 
 const SeedPhraseBackup = () => {
+  const { goBack } = useNavigation();
+
   const { params } = useRoute<RouteType<SeedPhraseBackupParams>>();
+  const { seedPhrases, onSuccess, flow = SeedPhraseBackupFlow.backup } = params;
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
 
@@ -48,8 +48,9 @@ const SeedPhraseBackup = () => {
   );
 
   const onPress = useCallback(() => {
-    // TODO: go to create pin flow
-  }, []);
+    onSuccess?.();
+    goBack();
+  }, [goBack, onSuccess]);
 
   return (
     <SafeAreaView
@@ -61,19 +62,19 @@ const SeedPhraseBackup = () => {
       <StatusBar barStyle="light-content" />
       <Container paddingVertical={4} paddingHorizontal={4}>
         <Text fontSize={24} marginTop={8} color="white">
-          {strings.title}
+          {strings[flow].title}
         </Text>
         <Text fontSize={16} marginTop={4} marginBottom={4} color="white">
-          {strings.subtitle}
+          {strings[flow].subtitle}
         </Text>
         <FlatList
-          data={params?.seedPhrases || []}
+          data={seedPhrases || []}
           renderItem={renderSeedPhrases}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         />
       </Container>
-      <Button onPress={onPress}>{strings.button}</Button>
+      <Button onPress={onPress}>{strings[flow].button}</Button>
 
       <CopyToastComponent />
     </SafeAreaView>

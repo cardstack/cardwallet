@@ -1,5 +1,4 @@
 import { delay } from '@cardstack/cardpay-sdk';
-import Clipboard from '@react-native-community/clipboard';
 import { useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
@@ -38,8 +37,8 @@ import { appStateUpdate } from '@cardstack/redux/appState';
 
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
-
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
+import { SeedPhraseBackupFlow } from '@cardstack/screens/SeedPhraseBackup/types';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
@@ -82,8 +81,38 @@ export default function useWalletManager() {
     [navigate]
   );
 
-  const migrateWalletIfNeeded = useCallback(
+  const multipleSeedsBackupIfNeeded = useCallback(
     async ({ selectedWallet, wallets }: WalletsState) =>
+      new Promise<void>(async resolve => {
+        if (Object.keys(wallets).length <= 1) {
+          resolve();
+          return;
+        }
+
+        const seeds: string[] = [];
+
+        // Needs to be sequential
+        for (const walletId of Object.keys(wallets)) {
+          const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
+          // keychain needs a delay in order to retrieve all values
+          await delay(1000);
+          seeds.push(seed);
+        }
+
+        navigate(Routes.SEED_PHRASE_BACKUP, {
+          flow: SeedPhraseBackupFlow.singlewallet,
+          selectedWallet: selectedWallet,
+          seedPhrases: seeds,
+          onSuccess: async () => {
+            resolve();
+          },
+        });
+      }),
+    [navigate]
+  );
+
+  const migrateWalletIfNeeded = useCallback(
+    async ({ selectedWallet }: WalletsState) =>
       new Promise<void>(async resolve => {
         try {
           const hasPin = !!(await getPin());
@@ -118,32 +147,32 @@ export default function useWalletManager() {
 
           // TODO: move to it's own context
           // Handle edge case when user has multiple wallets
-          if (Object.keys(wallets).length > 1) {
-            const seeds: Record<'seed', string>[] = [];
+          // if (Object.keys(wallets).length > 1) {
+          //   const seeds: Record<'seed', string>[] = [];
 
-            // Needs to be sequential
-            for (const walletId of Object.keys(wallets)) {
-              const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
-              // keychain needs a delay in order to retrieve all values
-              await delay(1000);
-              seeds.push({ seed });
-            }
+          //   // Needs to be sequential
+          //   for (const walletId of Object.keys(wallets)) {
+          //     const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
+          //     // keychain needs a delay in order to retrieve all values
+          //     await delay(1000);
+          //     seeds.push({ seed });
+          //   }
 
-            //TODO: replace with screen
-            Alert.alert(
-              'Multiple wallets',
-              `Looks like you have more than one wallet, cardstack from now on supports only single wallet,
-             before continuing make sure to backup locally your seeds, only the current wallet will remain available`,
-              [
-                {
-                  text: 'Copy all seeds to clipboard',
-                  onPress: () => {
-                    Clipboard.setString(JSON.stringify(seeds));
-                  },
-                },
-              ]
-            );
-          }
+          //TODO: replace with screen
+          // Alert.alert(
+          //   'Multiple wallets',
+          //   `Looks like you have more than one wallet, cardstack from now on supports only single wallet,
+          //  before continuing make sure to backup locally your seeds, only the current wallet will remain available`,
+          //   [
+          //     {
+          //       text: 'Copy all seeds to clipboard',
+          //       onPress: () => {
+          //         Clipboard.setString(JSON.stringify(seeds));
+          //       },
+          //     },
+          //   ]
+          // );
+          // }
         } catch (e) {
           logger.sentry('Error migrating wallet');
         }
@@ -166,6 +195,8 @@ export default function useWalletManager() {
         walletsLoadState()
       )) as unknown) as WalletsState;
 
+      await multipleSeedsBackupIfNeeded(walletsState);
+
       await migrateWalletIfNeeded(walletsState);
 
       await loadGlobalData();
@@ -187,6 +218,7 @@ export default function useWalletManager() {
     }
   }, [
     dispatch,
+    multipleSeedsBackupIfNeeded,
     migrateWalletIfNeeded,
     loadGlobalData,
     loadAccountData,
