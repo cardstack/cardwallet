@@ -41,6 +41,31 @@ const forSlideLeftToRight = ({
   };
 };
 
+const sheetStyleInterpolator = (targetOpacity: number) => ({
+  current: { progress: current },
+  layouts: { screen },
+}: StackCardInterpolationProps) => {
+  const backgroundOpacity = current.interpolate({
+    inputRange: [-1, 0, 0.975, 2],
+    outputRange: [0, 0, targetOpacity, targetOpacity],
+  });
+
+  const translateY = current.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: [screen.height, 0, -screen.height / 3],
+  });
+
+  return {
+    cardStyle: {
+      transform: [{ translateY }],
+    },
+    overlayStyle: {
+      backgroundColor: 'black',
+      opacity: backgroundOpacity,
+    },
+  };
+};
+
 export const slideLeftToRightPreset: StackNavigationOptions = {
   cardStyleInterpolator: forSlideLeftToRight,
 };
@@ -50,6 +75,46 @@ export const overlayPreset: StackNavigationOptions = {
   cardStyle: { backgroundColor: colors.overlay },
   cardStyleInterpolator: forFade,
 };
+
+const sheetBackgroundOpacity = {
+  full: 1,
+  half: 0.5,
+} as const;
+
+interface SheetPresetOptions {
+  bounce?: boolean;
+  backgroundOpacity?: 'full' | 'half';
+}
+
+export const sheetPreset = ({
+  bounce = true,
+  backgroundOpacity = 'full',
+}: SheetPresetOptions = {}): StackNavigationOptions => ({
+  cardOverlayEnabled: true,
+  cardShadowEnabled: true,
+  cardStyle: { backgroundColor: 'transparent' },
+  cardStyleInterpolator: sheetStyleInterpolator(
+    sheetBackgroundOpacity[backgroundOpacity]
+  ),
+  gestureDirection: 'vertical',
+  gestureResponseDistance: Device.screenHeight,
+  transitionSpec: {
+    close: {
+      animation: 'spring',
+      config: {
+        bounciness: 0,
+        speed: 14,
+      },
+    },
+    open: {
+      animation: 'spring',
+      config: {
+        bounciness: bounce ? 6 : 0,
+        speed: 25,
+      },
+    },
+  },
+});
 
 /**
  * With keyboardHandlingEnabled disabled on Android Nav

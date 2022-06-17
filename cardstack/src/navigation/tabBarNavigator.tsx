@@ -27,10 +27,6 @@ import { Device, useWorker } from '@cardstack/utils';
 
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 import { loadAddress } from '@rainbow-me/model/wallet';
-import {
-  bottomSheetPreset,
-  expandedPreset,
-} from '@rainbow-me/navigation/effects';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
@@ -44,6 +40,7 @@ import {
   NonAuthRoutes,
   overlayPreset,
   Routes,
+  sheetPreset,
 } from '.';
 
 const Tab = createBottomTabNavigator();
@@ -58,12 +55,10 @@ const tabBarOptions: BottomTabNavigationOptions = {
       width: 0,
       height: 1,
     },
-
     shadowRadius: 5,
     shadowOpacity: 0.35,
     elevation: 9,
   },
-
   tabBarShowLabel: false,
   tabBarHideOnKeyboard: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
 };
@@ -72,7 +67,7 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName={Routes.WALLET_SCREEN}
-      options={tabBarOptions}
+      screenOptions={tabBarOptions}
     >
       <Tab.Screen
         component={HomeScreen}
@@ -135,20 +130,20 @@ const SharedScreens = (
     <Stack.Screen
       component={ImportSeedSheet}
       name={Routes.IMPORT_SEED_SHEET}
-      options={bottomSheetPreset as StackNavigationOptions}
+      options={sheetPreset({ bounce: false, backgroundOpacity: 'half' })}
       listeners={dismissAndroidKeyboardOnClose}
     />
 
     <Stack.Screen
       component={ModalScreen}
       name={Routes.MODAL_SCREEN}
-      options={expandedPreset as StackNavigationOptions}
+      options={sheetPreset({ backgroundOpacity: 'half' })}
       listeners={dismissAndroidKeyboardOnClose}
     />
     <Stack.Screen
       component={RestoreSheet}
       name={Routes.RESTORE_SHEET}
-      options={expandedPreset as StackNavigationOptions}
+      options={sheetPreset({ backgroundOpacity: 'half' })}
       listeners={dismissAndroidKeyboardOnClose}
     />
   </>
@@ -190,7 +185,7 @@ const stackScreenOptios: StackNavigationOptions = {
   // unmounted inputs ocurring in crashes, disabling keyboard handling avoids it:
   // ref: https://github.com/react-navigation/react-navigation/issues/10080
   keyboardHandlingEnabled: Device.isIOS,
-  presentation: 'modal',
+  presentation: 'transparentModal',
   headerShown: false,
 };
 
@@ -232,7 +227,7 @@ export const StackNavigator = () => {
           <Stack.Screen
             component={ChangeWalletSheet}
             name={Routes.CHANGE_WALLET_SHEET}
-            options={expandedPreset as StackNavigationOptions}
+            options={sheetPreset({ backgroundOpacity: 'half' })}
           />
         </>
       )}

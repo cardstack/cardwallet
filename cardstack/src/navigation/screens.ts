@@ -39,10 +39,6 @@ import {
   RewardWithdrawToScreen,
 } from '@cardstack/screens/RewardsCenterScreen/flows';
 
-import {
-  bottomSheetPreset,
-  expandedPreset,
-} from '@rainbow-me/navigation/effects';
 import BackupSheet from '@rainbow-me/screens/BackupSheet';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
 import SettingsModal from '@rainbow-me/screens/SettingsModal';
@@ -51,6 +47,7 @@ import {
   dismissAndroidKeyboardOnClose,
   horizontalInterpolator,
   overlayPreset,
+  sheetPreset,
   slideLeftToRightPreset,
 } from './presetOptions';
 import { MainRoutes, NonAuthRoutes, Routes } from './routes';
@@ -69,30 +66,30 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   MERCHANT_PAYMENT_REQUEST_SHEET: {
     component: PaymentRequestExpandedSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
     listeners: dismissAndroidKeyboardOnClose,
   },
   PREPAID_CARD_MODAL: {
     component: PrepaidCardModal,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   BUY_PREPAID_CARD: {
     component: BuyPrepaidCard,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
     listeners: dismissAndroidKeyboardOnClose,
   },
   SEND_FLOW_EOA: {
     component: SendSheetEOA,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
     listeners: dismissAndroidKeyboardOnClose,
   },
   PAY_MERCHANT: {
     component: PayMerchant,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
     listeners: dismissAndroidKeyboardOnClose,
   },
   ERROR_FALLBACK_SCREEN: {
@@ -101,27 +98,27 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   COLLECTIBLE_SHEET: {
     component: CollectibleSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   PAYMENT_RECEIVED_SHEET: {
     component: PaymentReceivedSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   UNCLAIMED_REVENUE_SHEET: {
     component: UnclaimedRevenueSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   CONFIRM_CLAIM_DESTINY_SHEET: {
     component: ConfirmClaimDestinySheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset({ backgroundOpacity: 'half' }),
   },
   WALLET_CONNECT_APPROVAL_SHEET: {
     component: WalletConnectApprovalSheet,
-    options: bottomSheetPreset as StackNavigationOptions,
+    options: sheetPreset({ bounce: false, backgroundOpacity: 'half' }),
   },
   WALLET_CONNECT_REDIRECT_SHEET: {
     component: WalletConnectRedirectSheet,
-    options: bottomSheetPreset as StackNavigationOptions,
+    options: sheetPreset({ bounce: false, backgroundOpacity: 'half' }),
   },
   SETTINGS_MODAL: {
     component: SettingsModal,
@@ -133,15 +130,15 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   PAYMENT_CONFIRMATION_SHEET: {
     component: PaymentConfirmationSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   MERCHANT_TRANSACTION_SHEET: {
     component: MerchantTransactionSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   CHOOSE_PREPAIDCARD_SHEET: {
     component: ChoosePrepaidCardSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
     listeners: dismissAndroidKeyboardOnClose,
   },
   REWARDS_CENTER_SCREEN: {
@@ -150,11 +147,11 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   REWARDS_REGISTER_SHEET: {
     component: RewardsRegisterSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   REWARDS_CLAIM_SHEET: {
     component: RewardsClaimSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   REWARD_WITHDRAW_TO: {
     component: RewardWithdrawToScreen,
@@ -166,11 +163,11 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   TRANSACTION_CONFIRMATION_SHEET: {
     component: TransactionConfirmationSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   BACKUP_SHEET: {
     component: BackupSheet,
-    options: bottomSheetPreset as StackNavigationOptions,
+    options: sheetPreset({ bounce: false, backgroundOpacity: 'half' }),
     listeners: dismissAndroidKeyboardOnClose,
   },
   REQUEST_PREPAID_CARD: {
@@ -179,27 +176,27 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   CONFIRM_REQUEST: {
     component: TransactionConfirmation,
-    options: { gestureEnabled: false },
+    options: { ...sheetPreset(), gestureEnabled: false },
   },
   CURRENCY_SELECTION_MODAL: {
     component: CurrencySelectionGlobalModal,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset({ backgroundOpacity: 'half' }),
   },
   COLOR_PICKER_MODAL: {
     component: ColorPickerModal,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset({ backgroundOpacity: 'half' }),
   },
   SUPPORT_AND_FEES: {
     component: SupportAndFeesSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   AVAILABLE_BALANCE_SHEET: {
     component: AvailableBalanceSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset(),
   },
   TOKEN_WITH_CHART_SHEET: {
     component: TokenWithChartSheet,
-    options: expandedPreset as StackNavigationOptions,
+    options: sheetPreset({ backgroundOpacity: 'half' }),
   },
   SEED_PHRASE_BACKUP: {
     component: SeedPhraseBackup,
