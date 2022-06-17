@@ -187,22 +187,24 @@ const useNavigationAuth = () => {
   return { hasWallet, isAuthorized, hasPin };
 };
 
+const stackScreenOptios: StackNavigationOptions = {
+  // On Android gestureEnabled defaults to false, but we want it.
+  gestureEnabled: true,
+  // On Android theres an issue with navigation trying to focus
+  // unmounted inputs ocurring in crashes, disabling keyboard handling avoids it:
+  // ref: https://github.com/react-navigation/react-navigation/issues/10080
+  keyboardHandlingEnabled: Device.isIOS,
+  presentation: 'modal',
+  headerShown: false,
+};
+
 export const StackNavigator = () => {
   const cardstackMainScreens = useCardstackMainScreens(Stack);
 
   const { hasWallet, isAuthorized, hasPin } = useNavigationAuth();
 
   return (
-    <Stack.Navigator
-      // On Android theres an issue with navigation trying to focus
-      // unmounted inputs ocurring in crashes, disabling keyboard handling avoids it:
-      // ref: https://github.com/react-navigation/react-navigation/issues/10080
-      keyboardHandlingEnabled={Device.isIOS}
-      headerMode="none"
-      mode="modal"
-      // On Android gestureEnabled defaults to false, but we want it.
-      screenOptions={{ gestureEnabled: true }}
-    >
+    <Stack.Navigator screenOptions={stackScreenOptios}>
       {!hasWallet ? (
         <>
           <Stack.Screen

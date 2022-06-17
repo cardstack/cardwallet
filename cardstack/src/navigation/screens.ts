@@ -38,13 +38,10 @@ import {
   RewardWithdrawConfirmationScreen,
   RewardWithdrawToScreen,
 } from '@cardstack/screens/RewardsCenterScreen/flows';
-import { Device } from '@cardstack/utils';
 
 import {
   bottomSheetPreset,
   expandedPreset,
-  sheetPreset,
-  wcPromptPreset,
 } from '@rainbow-me/navigation/effects';
 import BackupSheet from '@rainbow-me/screens/BackupSheet';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
@@ -85,12 +82,12 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   SEND_FLOW_DEPOT: {
     component: SendSheetDepot,
-    options: sheetPreset as StackNavigationOptions,
+    options: expandedPreset as StackNavigationOptions,
     listeners: dismissAndroidKeyboardOnClose,
   },
   SEND_FLOW_EOA: {
     component: SendSheetEOA,
-    options: sheetPreset as StackNavigationOptions,
+    options: expandedPreset as StackNavigationOptions,
     listeners: dismissAndroidKeyboardOnClose,
   },
   PAY_MERCHANT: {
@@ -120,15 +117,11 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   WALLET_CONNECT_APPROVAL_SHEET: {
     component: WalletConnectApprovalSheet,
-    options: (Device.isIOS
-      ? expandedPreset
-      : wcPromptPreset) as StackNavigationOptions,
+    options: bottomSheetPreset as StackNavigationOptions,
   },
   WALLET_CONNECT_REDIRECT_SHEET: {
     component: WalletConnectRedirectSheet,
-    options: (Device.isIOS
-      ? bottomSheetPreset
-      : wcPromptPreset) as StackNavigationOptions,
+    options: bottomSheetPreset as StackNavigationOptions,
   },
   SETTINGS_MODAL: {
     component: SettingsModal,

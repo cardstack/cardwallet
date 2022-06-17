@@ -118,7 +118,8 @@ const Sheet = ({
 
       if (prevVerticalDistance.current !== verticalDistance) {
         setOptions({
-          gestureResponseDistance: { vertical: verticalDistance },
+          gestureResponseDistance: verticalDistance,
+          gestureDirection: 'vertical',
         });
 
         prevVerticalDistance.current = verticalDistance;
