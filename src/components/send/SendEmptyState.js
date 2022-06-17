@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { View } from 'react-native';
 import { Transition, Transitioning } from 'react-native-reanimated';
-import { sheetVerticalOffset } from '../../navigation/effects';
 import { Icon } from '../icons';
 import { Centered } from '../layout';
 

@@ -1,5 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { memo, ReactNode, useCallback, useMemo, useRef } from 'react';
+import React, {
+  memo,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -61,6 +68,15 @@ const Sheet = ({
 }: SheetProps) => {
   const insets = useSafeAreaInsets();
   const { goBack, setOptions } = useNavigation();
+
+  useEffect(() => {
+    if (isFullScreen && !scrollEnabled) {
+      setOptions({
+        gestureResponseDistance: Device.screenHeight,
+        gestureDirection: 'vertical',
+      });
+    }
+  }, [isFullScreen, scrollEnabled, setOptions]);
 
   const containerStyle = useMemo(
     () => ({

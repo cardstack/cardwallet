@@ -97,7 +97,10 @@ export const sheetPreset = ({
     sheetBackgroundOpacity[backgroundOpacity]
   ),
   gestureDirection: 'vertical',
-  gestureResponseDistance: Device.screenHeight,
+  gestureResponseDistance:
+    backgroundOpacity === 'full'
+      ? Device.screenHeight * 0.3
+      : Device.screenHeight,
   transitionSpec: {
     close: {
       animation: 'spring',
