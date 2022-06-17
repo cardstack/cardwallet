@@ -17,6 +17,8 @@ import {
 import { useCopyToast } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 
+import { useBlockBackButton } from '@rainbow-me/hooks/useBlockBackButton';
+
 import { strings } from './strings';
 import { SeedPhraseBackupFlow, SeedPhraseBackupParams } from './types';
 
@@ -25,6 +27,7 @@ const SeedPhraseBackup = () => {
 
   const { params } = useRoute<RouteType<SeedPhraseBackupParams>>();
   const { seedPhrases, onSuccess, flow = SeedPhraseBackupFlow.backup } = params;
+  useBlockBackButton(flow === SeedPhraseBackupFlow.singlewallet);
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
 

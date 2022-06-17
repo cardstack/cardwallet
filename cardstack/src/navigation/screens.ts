@@ -210,7 +210,10 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   SEED_PHRASE_BACKUP: {
     component: SeedPhraseBackup,
-    options: horizontalInterpolator,
+    options: {
+      ...bottomSheetPreset,
+      gestureEnabled: false,
+    } as StackNavigationOptions,
   },
 };
 
