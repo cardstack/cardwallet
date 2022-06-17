@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import {
   FlatList,
@@ -20,16 +20,15 @@ import { RouteType } from '@cardstack/navigation/types';
 import { useBlockBackButton } from '@rainbow-me/hooks/useBlockBackButton';
 
 import { strings } from './strings';
-import { SeedPhraseBackupFlow, SeedPhraseBackupParams } from './types';
+import { SeedPhraseBackupParams } from './types';
 
 const SeedPhraseBackup = () => {
-  const { goBack } = useNavigation();
-
   const { params } = useRoute<RouteType<SeedPhraseBackupParams>>();
-  const { seedPhrases, onSuccess, flow = SeedPhraseBackupFlow.backup } = params;
-  useBlockBackButton(flow === SeedPhraseBackupFlow.singlewallet);
+  const { seedPhrases = [], onSuccess } = params;
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
+
+  useBlockBackButton();
 
   const renderSeedPhrases = useCallback(
     ({ item }) => (
@@ -50,11 +49,6 @@ const SeedPhraseBackup = () => {
     [copyToClipboard]
   );
 
-  const onPress = useCallback(() => {
-    onSuccess?.();
-    goBack();
-  }, [goBack, onSuccess]);
-
   return (
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
@@ -65,19 +59,24 @@ const SeedPhraseBackup = () => {
       <StatusBar barStyle="light-content" />
       <Container paddingVertical={4} paddingHorizontal={4}>
         <Text fontSize={24} marginTop={8} color="white">
-          {strings[flow].title}
+          {strings.title}
         </Text>
         <Text fontSize={16} marginTop={4} marginBottom={4} color="white">
-          {strings[flow].subtitle}
+          {strings.message}
         </Text>
+        {seedPhrases.length > 1 && (
+          <Text fontSize={16} marginTop={4} marginBottom={4} color="white">
+            {strings.multipleWallets}
+          </Text>
+        )}
         <FlatList
-          data={seedPhrases || []}
+          data={seedPhrases}
           renderItem={renderSeedPhrases}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         />
       </Container>
-      <Button onPress={onPress}>{strings[flow].button}</Button>
+      <Button onPress={onSuccess}>{strings.button}</Button>
 
       <CopyToastComponent />
     </SafeAreaView>

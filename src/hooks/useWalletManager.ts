@@ -38,7 +38,6 @@ import { appStateUpdate } from '@cardstack/redux/appState';
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
-import { SeedPhraseBackupFlow } from '@cardstack/screens/SeedPhraseBackup/types';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
@@ -81,8 +80,8 @@ export default function useWalletManager() {
     [navigate]
   );
 
-  const multipleSeedsBackupIfNeeded = useCallback(
-    async ({ selectedWallet, wallets }: WalletsState) =>
+  const presentSeedPhraseBackup = useCallback(
+    async (wallets: RainbowWallet[]) =>
       new Promise<void>(async resolve => {
         if (Object.keys(wallets).length <= 1) {
           resolve();
@@ -100,8 +99,6 @@ export default function useWalletManager() {
         }
 
         navigate(Routes.SEED_PHRASE_BACKUP, {
-          flow: SeedPhraseBackupFlow.singlewallet,
-          selectedWallet: selectedWallet,
           seedPhrases: seeds,
           onSuccess: async () => {
             resolve();
@@ -112,7 +109,7 @@ export default function useWalletManager() {
   );
 
   const migrateWalletIfNeeded = useCallback(
-    async ({ selectedWallet }: WalletsState) =>
+    async ({ selectedWallet, wallets }: WalletsState) =>
       new Promise<void>(async resolve => {
         try {
           const hasPin = !!(await getPin());
@@ -121,6 +118,8 @@ export default function useWalletManager() {
             resolve();
             return;
           }
+
+          await presentSeedPhraseBackup(wallets);
 
           createWalletPin({
             canGoBack: false,
@@ -148,7 +147,13 @@ export default function useWalletManager() {
           logger.sentry('Error migrating wallet');
         }
       }),
-    [createWalletPin, dismissLoadingOverlay, dispatch, showLoadingOverlay]
+    [
+      createWalletPin,
+      dismissLoadingOverlay,
+      dispatch,
+      showLoadingOverlay,
+      presentSeedPhraseBackup,
+    ]
   );
 
   const initializeWallet = useCallback(async () => {
@@ -165,8 +170,6 @@ export default function useWalletManager() {
       const walletsState = ((await dispatch(
         walletsLoadState()
       )) as unknown) as WalletsState;
-
-      await multipleSeedsBackupIfNeeded(walletsState);
 
       await migrateWalletIfNeeded(walletsState);
 
@@ -189,7 +192,6 @@ export default function useWalletManager() {
     }
   }, [
     dispatch,
-    multipleSeedsBackupIfNeeded,
     migrateWalletIfNeeded,
     loadGlobalData,
     loadAccountData,
