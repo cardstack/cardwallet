@@ -78,14 +78,16 @@ const setEncryptedItem = async (item: string, key: Keys, pin: string) => {
 const buildKeyWithId = (key: Keys, id: string) => `${key}_${id}`;
 
 // PIN
-const savePin = (pin: string) => SecureStore.setItemAsync(keys.AUTH_PIN, pin);
+const savePin = async (pin: string) =>
+  await SecureStore.setItemAsync(keys.AUTH_PIN, pin);
 
-const getPin = () => getSecureValue(keys.AUTH_PIN);
+const getPin = async () => await getSecureValue(keys.AUTH_PIN);
 
-const deletePin = () =>
-  SecureStore.deleteItemAsync(keys.AUTH_PIN).then(() =>
-    logger.log('Deleted PIN')
-  );
+const deletePin = async () => {
+  await SecureStore.deleteItemAsync(keys.AUTH_PIN);
+
+  logger.log('Deleted PIN');
+};
 
 const encryptor = new AesEncryptor();
 
@@ -107,9 +109,9 @@ const getSeedPhrase = async (walletId: string) => {
 const deleteSeedPhrase = async (walletId: string) => {
   const seedKey = buildKeyWithId(keys.SEED, walletId);
 
-  await SecureStore.deleteItemAsync(seedKey).then(() =>
-    logger.log('Deleted seed phrase')
-  );
+  await SecureStore.deleteItemAsync(seedKey);
+
+  logger.log('Deleted seed phrase');
 };
 
 // PRIVATE_KEY
@@ -136,9 +138,9 @@ const getPrivateKey = async (walletAddress: string) => {
 const deletePrivateKey = async (walletAddress: string) => {
   const pKey = buildKeyWithId(keys.PKEY, walletAddress);
 
-  await SecureStore.deleteItemAsync(pKey).then(() =>
-    logger.log('Deleted private key')
-  );
+  await SecureStore.deleteItemAsync(pKey);
+
+  logger.log('Deleted private key');
 };
 
 const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
