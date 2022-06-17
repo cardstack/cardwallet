@@ -3,13 +3,14 @@ import {
   NavigationContainerRef,
   StackActions,
 } from '@react-navigation/native';
+import { RouteNames, StackParamsList } from 'globals';
 import { get } from 'lodash';
 import React from 'react';
 import { Value } from 'react-native-reanimated';
 
-import { Routes } from './routes';
-
-export const navigationRef = React.createRef<NavigationContainerRef>();
+export const navigationRef = React.createRef<
+  NavigationContainerRef<StackParamsList>
+>();
 
 const transitionPosition = new Value(0);
 
@@ -22,15 +23,12 @@ const getActiveRouteName = () => {
   return get(route, 'name');
 };
 
-type RoutesType = typeof Routes;
-type RouteKeys = keyof RoutesType;
-
 /**
  * Handle a navigation action or queue the action if navigation actions have been paused.
  * @param  {Object} action      The navigation action to run.
  */
 function handleAction(
-  name: RoutesType[RouteKeys],
+  name: RouteNames,
   params: Record<string, unknown> = {},
   replace = false
 ) {

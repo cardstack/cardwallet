@@ -1,4 +1,5 @@
 import * as rnKeychain from 'react-native-keychain';
+import { Routes } from '@cardstack/navigation';
 
 // @ts-ignore
 declare let __DEV__: boolean;
@@ -28,3 +29,17 @@ type KebabToCamelCase<
 type KebabToCamelCaseKeys<T> = {
   [K in keyof T as K extends string ? KebabToCamelCase<K> : K]: T[K];
 };
+
+// TODO: add correct navigation types
+type RoutesType = typeof Routes;
+type RouteKeys = keyof RoutesType;
+
+export type RouteNames = RoutesType[RouteKeys];
+
+export type StackParamsList = Record<RouteNames, any>;
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends StackParamsList {}
+  }
+}
