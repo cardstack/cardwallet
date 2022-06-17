@@ -156,7 +156,7 @@ const CustomAmountBody = memo(
 );
 
 const PayMerchantScreen = () => (
-  <SafeAreaView flex={1} width="100%" backgroundColor="black">
+  <SafeAreaView flex={1} width="100%">
     <PayMerchant />
   </SafeAreaView>
 );
