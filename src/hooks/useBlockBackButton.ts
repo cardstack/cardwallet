@@ -12,13 +12,13 @@ interface LocalNativeModule {
 
 const { RNBackHandler } = NativeModules as LocalNativeModule;
 
-export function useBlockBackButton(blockBackButton = true) {
+export function useBlockBackButton() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    RNBackHandler?.setBlockBackButton(blockBackButton);
+    RNBackHandler?.setBlockBackButton(true);
     return () => RNBackHandler?.setBlockBackButton(false);
-  }, [blockBackButton]);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', e => {
