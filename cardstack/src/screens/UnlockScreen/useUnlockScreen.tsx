@@ -1,6 +1,5 @@
 import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import { Alert } from 'react-native';
-import RNRestart from 'react-native-restart';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
@@ -10,7 +9,7 @@ import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
 import { useWorker } from '@cardstack/utils';
 
-import { wipeKeychain } from '@rainbow-me/model/keychain';
+import { resetWallet } from '@rainbow-me/model/wallet';
 
 import { strings } from './strings';
 
@@ -72,10 +71,7 @@ export const useUnlockScreen = () => {
     Alert.alert(strings.reset.title, strings.reset.message, [
       {
         text: strings.reset.delete,
-        onPress: async () => {
-          await wipeKeychain();
-          RNRestart.Restart();
-        },
+        onPress: resetWallet,
       },
       {
         text: strings.reset.cancel,

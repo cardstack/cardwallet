@@ -8,7 +8,7 @@ import { ListFooter, ListItem } from '../list';
 import { Routes } from '@cardstack/navigation';
 import { deleteAllBackups } from '@rainbow-me/handlers/cloudBackup';
 import { useWallets } from '@rainbow-me/hooks';
-import { wipeKeychain } from '@rainbow-me/model/keychain';
+import { resetWallet } from '@rainbow-me/model/wallet';
 import { clearImageMetadataCache } from '@rainbow-me/redux/imageMetadata';
 import store from '@rainbow-me/redux/store';
 import { walletsUpdate } from '@rainbow-me/redux/wallets';
@@ -49,8 +49,8 @@ const DeveloperSettings = () => {
         onPress={clearImageMetadataCache}
       />
       <ListItem
-        label="💣 Reset Keychain"
-        onPress={wipeKeychain}
+        label="💣 Reset Wallet"
+        onPress={resetWallet}
         testID="reset-keychain-section"
       />
       <ListItem label="🔄 Restart app" onPress={() => RNRestart.Restart()} />

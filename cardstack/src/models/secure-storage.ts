@@ -2,6 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import { SECURE_STORE_KEY } from 'react-native-dotenv';
 
 import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
+import { AllRainbowWallets } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 const keys = {
@@ -77,11 +78,16 @@ const setEncryptedItem = async (item: string, key: Keys, pin: string) => {
 const buildKeyWithId = (key: Keys, id: string) => `${key}_${id}`;
 
 // PIN
-const savePin = (pin: string) => SecureStore.setItemAsync(keys.AUTH_PIN, pin);
+const savePin = async (pin: string) =>
+  await SecureStore.setItemAsync(keys.AUTH_PIN, pin);
 
-const getPin = () => getSecureValue(keys.AUTH_PIN);
+const getPin = async () => await getSecureValue(keys.AUTH_PIN);
 
-const deletePin = () => SecureStore.deleteItemAsync(keys.AUTH_PIN);
+const deletePin = async () => {
+  await SecureStore.deleteItemAsync(keys.AUTH_PIN);
+
+  logger.log('Deleted PIN');
+};
 
 const encryptor = new AesEncryptor();
 
@@ -104,6 +110,8 @@ const deleteSeedPhrase = async (walletId: string) => {
   const seedKey = buildKeyWithId(keys.SEED, walletId);
 
   await SecureStore.deleteItemAsync(seedKey);
+
+  logger.log('Deleted seed phrase');
 };
 
 // PRIVATE_KEY
@@ -131,6 +139,27 @@ const deletePrivateKey = async (walletAddress: string) => {
   const pKey = buildKeyWithId(keys.PKEY, walletAddress);
 
   await SecureStore.deleteItemAsync(pKey);
+
+  logger.log('Deleted private key');
+};
+
+const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
+  // these deletions need to be sequential, otherwise they break
+  try {
+    for (const walletId of Object.keys(wallets)) {
+      const walletAddresses = wallets[walletId].addresses;
+
+      await deleteSeedPhrase(walletId);
+      await deletePin();
+
+      // loop through addresses to pass all .address to deletePrivateKey
+      for (const account of walletAddresses) {
+        await deletePrivateKey(account.address);
+      }
+    }
+  } catch (error) {
+    logger.sentry('Error wiping secure storage', error);
+  }
 };
 
 export {
@@ -143,4 +172,5 @@ export {
   savePrivateKey,
   getPrivateKey,
   deletePrivateKey,
+  wipeSecureStorage,
 };
