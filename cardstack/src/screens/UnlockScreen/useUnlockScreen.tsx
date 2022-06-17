@@ -1,6 +1,5 @@
 import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import { Alert } from 'react-native';
-import RNRestart from 'react-native-restart';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
@@ -72,10 +71,7 @@ export const useUnlockScreen = () => {
     Alert.alert(strings.reset.title, strings.reset.message, [
       {
         text: strings.reset.delete,
-        onPress: async () => {
-          await resetWallet();
-          RNRestart.Restart();
-        },
+        onPress: resetWallet,
       },
       {
         text: strings.reset.cancel,
