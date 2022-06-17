@@ -49,7 +49,7 @@ const DeveloperSettings = () => {
         onPress={clearImageMetadataCache}
       />
       <ListItem
-        label="💣 Reset Keychain"
+        label="💣 Reset Wallet"
         onPress={resetWallet}
         testID="reset-keychain-section"
       />
