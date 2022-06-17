@@ -15,6 +15,7 @@ import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import { hitSlop } from '@cardstack/utils/layouts';
 
 import AppVersionStamp from '@rainbow-me/components/AppVersionStamp';
+import { useBlockBackButton } from '@rainbow-me/hooks/useBlockBackButton';
 
 import { strings } from './strings';
 import { useUnlockScreen } from './useUnlockScreen';
@@ -32,6 +33,8 @@ const UnlockScreen = () => {
     retryBiometricLabel,
     authenticateBiometrically,
   } = useUnlockScreen();
+
+  useBlockBackButton();
 
   return (
     <>

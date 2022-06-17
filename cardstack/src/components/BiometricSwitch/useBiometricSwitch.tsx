@@ -13,9 +13,9 @@ export const useBiometricSwitch = () => {
   const dispatch = useDispatch();
   const isBiometryEnabled = useSelector(selectBiometryEnabled());
 
-  const toggleBiometrySwitch = useCallback(() => dispatch(toggleBiometry()), [
-    dispatch,
-  ]);
+  const toggleBiometrySwitch = useCallback(() => {
+    dispatch(toggleBiometry());
+  }, [dispatch]);
 
   return {
     biometryLabel,

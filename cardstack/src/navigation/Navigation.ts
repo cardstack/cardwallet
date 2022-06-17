@@ -31,7 +31,7 @@ type RouteKeys = keyof RoutesType;
  */
 function handleAction(
   name: RoutesType[RouteKeys],
-  params: any,
+  params: Record<string, unknown> = {},
   replace = false
 ) {
   if (!navigationRef.current?.dispatch) return;

@@ -8,8 +8,6 @@ import store from '@rainbow-me/redux/store';
 import { checkKeychainIntegrity } from '@rainbow-me/redux/wallets';
 import logger from 'logger';
 
-const BACKUP_SHEET_DELAY_MS = 4000;
-
 export const runKeychainIntegrityChecks = () => {
   setTimeout(async () => {
     const keychainIntegrityState = await getKeychainIntegrityState();
@@ -49,20 +47,20 @@ export const runWalletBackupStatusChecks = () => {
   // if one of them is selected, show the default BackupSheet
   if (selected && hasSelectedWallet) {
     logger.log('showing default BackupSheet');
-    setTimeout(() => {
-      Navigation.handleAction(Routes.BACKUP_SHEET, { single: true });
-    }, BACKUP_SHEET_DELAY_MS);
+
+    Navigation.handleAction(Routes.BACKUP_SHEET, { single: true });
+
     return;
   }
 
   // otherwise, show the BackupSheet redirecting to the WalletSelectionList
-  setTimeout(() => {
-    logger.log('showing BackupSheet with existing_user step');
 
-    Navigation.handleAction(Routes.BACKUP_SHEET, {
-      single: true,
-      step: WalletBackupStepTypes.existing_user,
-    });
-  }, BACKUP_SHEET_DELAY_MS);
+  logger.log('showing BackupSheet with existing_user step');
+
+  Navigation.handleAction(Routes.BACKUP_SHEET, {
+    single: true,
+    step: WalletBackupStepTypes.existing_user,
+  });
+
   return;
 };
