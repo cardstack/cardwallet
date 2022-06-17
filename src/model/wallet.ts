@@ -850,15 +850,19 @@ export const migrateSecretsWithNewPin = async (
 };
 
 export const resetWallet = async () => {
-  const allWallets = await getAllWallets();
+  try {
+    const allWallets = await getAllWallets();
 
-  // clearing secure storage and keychain
-  if (allWallets) {
-    await wipeSecureStorage(allWallets);
-    await keychain.wipeKeychain();
+    // clearing secure storage and keychain
+    if (allWallets) {
+      await wipeSecureStorage(allWallets);
+      await keychain.wipeKeychain();
 
-    logger.log('Wallet reset done!');
+      logger.log('Wallet reset done!');
 
-    store.dispatch(authSlice.actions.resetHasWallet());
+      store.dispatch(authSlice.actions.resetHasWallet());
+    }
+  } catch (error) {
+    logger.sentry('Error resetting the wallet', error);
   }
 };
