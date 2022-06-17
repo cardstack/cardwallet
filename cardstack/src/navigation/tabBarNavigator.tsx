@@ -1,5 +1,5 @@
 import {
-  BottomTabBarOptions,
+  BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {
@@ -7,7 +7,6 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TabBarIcon } from '@cardstack/components';
 import { getPin } from '@cardstack/models/secure-storage';
@@ -49,8 +48,9 @@ import {
 
 const Tab = createBottomTabNavigator();
 
-const tabBarOptions = (bottomInset = 0): BottomTabBarOptions => ({
-  style: {
+const tabBarOptions: BottomTabNavigationOptions = {
+  headerShown: false,
+  tabBarStyle: {
     backgroundColor: colors.backgroundBlue,
     minHeight: 70,
     borderTopColor: Device.isIOS ? 'transparent' : colors.blackLightOpacity,
@@ -63,20 +63,16 @@ const tabBarOptions = (bottomInset = 0): BottomTabBarOptions => ({
     shadowOpacity: 0.35,
     elevation: 9,
   },
-  safeAreaInsets: {
-    bottom: bottomInset + 5,
-  },
-  showLabel: false,
-  keyboardHidesTabBar: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
-});
+
+  tabBarShowLabel: false,
+  tabBarHideOnKeyboard: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
+};
 
 const TabNavigator = () => {
-  const { bottom } = useSafeAreaInsets();
-
   return (
     <Tab.Navigator
       initialRouteName={Routes.WALLET_SCREEN}
-      tabBarOptions={tabBarOptions(bottom)}
+      options={tabBarOptions}
     >
       <Tab.Screen
         component={HomeScreen}
