@@ -80,33 +80,19 @@ export default function useWalletManager() {
     [navigate]
   );
 
-  const presentSeedPhraseBackup = useCallback(
-    async (wallets: RainbowWallet[]) =>
-      new Promise<void>(async resolve => {
-        if (Object.keys(wallets).length <= 1) {
-          resolve();
-          return;
-        }
+  const loadAllSeedPhrases = useCallback(async (wallets: RainbowWallet[]) => {
+    const seeds = [];
 
-        const seeds: string[] = [];
+    // Needs to be sequential
+    for (const walletId of Object.keys(wallets)) {
+      const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
+      // keychain needs a delay in order to retrieve all values
+      await delay(1000);
+      seeds.push(seed);
+    }
 
-        // Needs to be sequential
-        for (const walletId of Object.keys(wallets)) {
-          const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
-          // keychain needs a delay in order to retrieve all values
-          await delay(1000);
-          seeds.push(seed);
-        }
-
-        navigate(Routes.SEED_PHRASE_BACKUP, {
-          seedPhrases: seeds,
-          onSuccess: async () => {
-            resolve();
-          },
-        });
-      }),
-    [navigate]
-  );
+    return seeds;
+  }, []);
 
   const migrateWalletIfNeeded = useCallback(
     async ({ selectedWallet, wallets }: WalletsState) =>
@@ -114,33 +100,37 @@ export default function useWalletManager() {
         try {
           const hasPin = !!(await getPin());
 
-          if (hasPin) {
+          if (hasPin || Object.keys(wallets).length < 1) {
             resolve();
             return;
           }
 
-          await presentSeedPhraseBackup(wallets);
+          const seedPhrases = await loadAllSeedPhrases(wallets);
 
-          createWalletPin({
-            canGoBack: false,
-            dismissOnSuccess: true,
-            onSuccess: async (pin: string) => {
-              try {
-                showLoadingOverlay({
-                  title: walletLoadingStates.MIGRATING_SECRETS,
-                });
+          navigate(Routes.SEED_PHRASE_BACKUP, {
+            seedPhrases,
+            onSuccess: async () => {
+              createWalletPin({
+                dismissOnSuccess: true,
+                onSuccess: async (pin: string) => {
+                  try {
+                    showLoadingOverlay({
+                      title: walletLoadingStates.MIGRATING_SECRETS,
+                    });
 
-                await migrateSecretsWithNewPin(selectedWallet, pin);
-                // Makes only one wallet available
-                dispatch(
-                  walletsUpdate({
-                    [selectedWallet.id]: selectedWallet,
-                  })
-                );
-                resolve();
-              } finally {
-                dismissLoadingOverlay();
-              }
+                    await migrateSecretsWithNewPin(selectedWallet, pin);
+                    // Makes only one wallet available
+                    dispatch(
+                      walletsUpdate({
+                        [selectedWallet.id]: selectedWallet,
+                      })
+                    );
+                    resolve();
+                  } finally {
+                    dismissLoadingOverlay();
+                  }
+                },
+              });
             },
           });
         } catch (e) {
@@ -151,8 +141,9 @@ export default function useWalletManager() {
       createWalletPin,
       dismissLoadingOverlay,
       dispatch,
+      navigate,
       showLoadingOverlay,
-      presentSeedPhraseBackup,
+      loadAllSeedPhrases,
     ]
   );
 
