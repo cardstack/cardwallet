@@ -144,35 +144,6 @@ export default function useWalletManager() {
               }
             },
           });
-
-          // TODO: move to it's own context
-          // Handle edge case when user has multiple wallets
-          // if (Object.keys(wallets).length > 1) {
-          //   const seeds: Record<'seed', string>[] = [];
-
-          //   // Needs to be sequential
-          //   for (const walletId of Object.keys(wallets)) {
-          //     const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
-          //     // keychain needs a delay in order to retrieve all values
-          //     await delay(1000);
-          //     seeds.push({ seed });
-          //   }
-
-          //TODO: replace with screen
-          // Alert.alert(
-          //   'Multiple wallets',
-          //   `Looks like you have more than one wallet, cardstack from now on supports only single wallet,
-          //  before continuing make sure to backup locally your seeds, only the current wallet will remain available`,
-          //   [
-          //     {
-          //       text: 'Copy all seeds to clipboard',
-          //       onPress: () => {
-          //         Clipboard.setString(JSON.stringify(seeds));
-          //       },
-          //     },
-          //   ]
-          // );
-          // }
         } catch (e) {
           logger.sentry('Error migrating wallet');
         }
