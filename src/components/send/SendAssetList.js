@@ -59,9 +59,14 @@ export default class SendAssetList extends React.Component {
     const { assets } = buildCoinsList(allAssets, nativeCurrency, true);
     let shitcoins = [];
 
-    const visibleAssetsLength = assets.length;
+    // assets with no balance shouldn't be visible
+    const assetsWithBalance = assets.filter(
+      asset => parseFloat(asset.balance.amount) > 0
+    );
 
-    this.data = assets;
+    const visibleAssetsLength = assetsWithBalance.length;
+
+    this.data = assetsWithBalance;
 
     if (savings && savings.length > 0 && network === networkTypes.mainnet) {
       this.data = this.data.concat([{ data: savings, name: 'Savings' }]);
