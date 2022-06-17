@@ -144,18 +144,22 @@ const deletePrivateKey = async (walletAddress: string) => {
 };
 
 const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
-  for (const walletId of Object.keys(wallets)) {
-    const walletAddresses = wallets[walletId].addresses;
+  // these deletions need to be sequential, otherwise they break
+  try {
+    for (const walletId of Object.keys(wallets)) {
+      const walletAddresses = wallets[walletId].addresses;
 
-    // loop through addresses to pass all .address to deletePrivateKey
-    for (const account of walletAddresses) {
       await deleteSeedPhrase(walletId);
-      await deletePrivateKey(account.address);
       await deletePin();
-    }
-  }
 
-  return;
+      // loop through addresses to pass all .address to deletePrivateKey
+      for (const account of walletAddresses) {
+        await deletePrivateKey(account.address);
+      }
+    }
+  } catch (error) {
+    logger.sentry('Error wiping secure storage', error);
+  }
 };
 
 export {
