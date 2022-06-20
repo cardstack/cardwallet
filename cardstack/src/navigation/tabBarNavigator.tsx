@@ -213,7 +213,13 @@ export const StackNavigator = () => {
               options={{ gestureEnabled: false }}
             />
           )}
-          <Stack.Screen component={TabNavigator} name={Routes.TAB_NAVIGATOR} />
+          <Stack.Screen
+            component={TabNavigator}
+            name={Routes.TAB_NAVIGATOR}
+            //TabNavigator can't have transparentModal as default presentation
+            //it presents a white overlay on the screen on Android
+            options={{ presentation: 'modal' }}
+          />
           {cardstackMainScreens}
           {SharedScreens}
           {
