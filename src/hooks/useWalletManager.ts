@@ -1,5 +1,4 @@
 import { delay } from '@cardstack/cardpay-sdk';
-import Clipboard from '@react-native-community/clipboard';
 import { useNavigation } from '@react-navigation/native';
 import { captureException } from '@sentry/react-native';
 import { useCallback } from 'react';
@@ -38,7 +37,6 @@ import { appStateUpdate } from '@cardstack/redux/appState';
 
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
-
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
@@ -82,6 +80,20 @@ export default function useWalletManager() {
     [navigate]
   );
 
+  const loadAllSeedPhrases = useCallback(async (wallets: RainbowWallet[]) => {
+    const seeds = [];
+
+    // Needs to be sequential
+    for (const walletId of Object.keys(wallets)) {
+      const seed = (await loadSeedPhrase(walletId)) || '';
+      // keychain needs a delay in order to retrieve all values
+      await delay(1000);
+      seeds.push(seed);
+    }
+
+    return seeds;
+  }, []);
+
   const migrateWalletIfNeeded = useCallback(
     async ({ selectedWallet, wallets }: WalletsState) =>
       new Promise<void>(async resolve => {
@@ -93,62 +105,46 @@ export default function useWalletManager() {
             return;
           }
 
-          createWalletPin({
-            canGoBack: false,
-            dismissOnSuccess: true,
-            onSuccess: async (pin: string) => {
-              try {
-                showLoadingOverlay({
-                  title: walletLoadingStates.MIGRATING_SECRETS,
-                });
+          const seedPhrases = await loadAllSeedPhrases(wallets);
 
-                await migrateSecretsWithNewPin(selectedWallet, pin);
-                // Makes only one wallet available
-                dispatch(
-                  walletsUpdate({
-                    [selectedWallet.id]: selectedWallet,
-                  })
-                );
-                resolve();
-              } finally {
-                dismissLoadingOverlay();
-              }
+          navigate(Routes.SEED_PHRASE_BACKUP, {
+            seedPhrases,
+            onSuccess: async () => {
+              createWalletPin({
+                dismissOnSuccess: true,
+                onSuccess: async (pin: string) => {
+                  try {
+                    showLoadingOverlay({
+                      title: walletLoadingStates.MIGRATING_SECRETS,
+                    });
+
+                    await migrateSecretsWithNewPin(selectedWallet, pin);
+                    // Makes only one wallet available
+                    dispatch(
+                      walletsUpdate({
+                        [selectedWallet.id]: selectedWallet,
+                      })
+                    );
+                    resolve();
+                  } finally {
+                    dismissLoadingOverlay();
+                  }
+                },
+              });
             },
           });
-
-          // TODO: move to it's own context
-          // Handle edge case when user has multiple wallets
-          if (Object.keys(wallets).length > 1) {
-            const seeds: Record<'seed', string>[] = [];
-
-            // Needs to be sequential
-            for (const walletId of Object.keys(wallets)) {
-              const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
-              // keychain needs a delay in order to retrieve all values
-              await delay(1000);
-              seeds.push({ seed });
-            }
-
-            //TODO: replace with screen
-            Alert.alert(
-              'Multiple wallets',
-              `Looks like you have more than one wallet, cardstack from now on supports only single wallet,
-             before continuing make sure to backup locally your seeds, only the current wallet will remain available`,
-              [
-                {
-                  text: 'Copy all seeds to clipboard',
-                  onPress: () => {
-                    Clipboard.setString(JSON.stringify(seeds));
-                  },
-                },
-              ]
-            );
-          }
         } catch (e) {
           logger.sentry('Error migrating wallet');
         }
       }),
-    [createWalletPin, dismissLoadingOverlay, dispatch, showLoadingOverlay]
+    [
+      createWalletPin,
+      dismissLoadingOverlay,
+      dispatch,
+      navigate,
+      showLoadingOverlay,
+      loadAllSeedPhrases,
+    ]
   );
 
   const initializeWallet = useCallback(async () => {

@@ -17,16 +17,18 @@ import {
 import { useCopyToast } from '@cardstack/hooks';
 import { RouteType } from '@cardstack/navigation/types';
 
-import { strings } from './strings';
+import { useBlockBackButton } from '@rainbow-me/hooks/useBlockBackButton';
 
-interface SeedPhraseBackupParams {
-  seedPhrases: string[];
-}
+import { strings } from './strings';
+import { SeedPhraseBackupParams } from './types';
 
 const SeedPhraseBackup = () => {
   const { params } = useRoute<RouteType<SeedPhraseBackupParams>>();
+  const { seedPhrases = [], onSuccess } = params;
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
+
+  useBlockBackButton();
 
   const renderSeedPhrases = useCallback(
     ({ item }) => (
@@ -47,10 +49,6 @@ const SeedPhraseBackup = () => {
     [copyToClipboard]
   );
 
-  const onPress = useCallback(() => {
-    // TODO: go to create pin flow
-  }, []);
-
   return (
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
@@ -64,16 +62,21 @@ const SeedPhraseBackup = () => {
           {strings.title}
         </Text>
         <Text fontSize={16} marginTop={4} marginBottom={4} color="white">
-          {strings.subtitle}
+          {strings.message}
         </Text>
+        {seedPhrases.length > 1 && (
+          <Text fontSize={16} marginTop={4} marginBottom={4} color="white">
+            {strings.multipleWallets}
+          </Text>
+        )}
         <FlatList
-          data={params?.seedPhrases || []}
+          data={seedPhrases}
           renderItem={renderSeedPhrases}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         />
       </Container>
-      <Button onPress={onPress}>{strings.button}</Button>
+      <Button onPress={onSuccess}>{strings.button}</Button>
 
       <CopyToastComponent />
     </SafeAreaView>
