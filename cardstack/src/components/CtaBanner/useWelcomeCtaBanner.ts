@@ -17,7 +17,7 @@ export const useWelcomeCtaBanner = () => {
   const { accountAddress, network } = useAccountSettings();
 
   const {
-    data: emailDropGetData = { claimed: true, rateLimited: true },
+    data: emailDropGetData = { showBanner: false },
   } = useGetEoaClaimedQuery(
     {
       eoa: accountAddress,
@@ -48,8 +48,7 @@ export const useWelcomeCtaBanner = () => {
       remoteFlags().featurePrepaidCardDrop &&
       showBannerUserDecision &&
       isFirstAddressForCurrentWallet &&
-      !emailDropGetData?.claimed &&
-      !emailDropGetData?.rateLimited,
+      emailDropGetData?.showBanner,
     [
       showBannerUserDecision,
       isFirstAddressForCurrentWallet,

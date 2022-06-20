@@ -21,9 +21,8 @@ export interface GetEoaClaimedQueryParams {
 
 export type EoaClaimedAttrsType = {
   timestamp: string;
-  claimed: boolean;
   'owner-address': string;
-  'rate-limited': boolean;
+  'show-banner': boolean;
 };
 
 export type GetEoaClaimedQueryResult = KebabToCamelCaseKeys<EoaClaimedAttrsType>;
