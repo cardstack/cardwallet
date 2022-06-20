@@ -85,7 +85,7 @@ export default function useWalletManager() {
 
     // Needs to be sequential
     for (const walletId of Object.keys(wallets)) {
-      const seed = (await loadSeedPhrase(walletId, 'migration')) || '';
+      const seed = (await loadSeedPhrase(walletId)) || '';
       // keychain needs a delay in order to retrieve all values
       await delay(1000);
       seeds.push(seed);
@@ -100,7 +100,7 @@ export default function useWalletManager() {
         try {
           const hasPin = !!(await getPin());
 
-          if (hasPin || Object.keys(wallets).length < 1) {
+          if (hasPin) {
             resolve();
             return;
           }
