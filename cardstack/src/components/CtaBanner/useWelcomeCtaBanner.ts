@@ -17,7 +17,7 @@ export const useWelcomeCtaBanner = () => {
   const { accountAddress, network } = useAccountSettings();
 
   const {
-    data: emailDropGetData = { showBanner: true },
+    data: emailDropGetData = { showBanner: false },
   } = useGetEoaClaimedQuery(
     {
       eoa: accountAddress,
