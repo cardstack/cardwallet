@@ -8,7 +8,6 @@ import { ColumnWithMargins } from '../layout';
 import SecretDisplayCard from './SecretDisplayCard';
 import { Button, Text } from '@cardstack/components';
 import { useCopyToast } from '@cardstack/hooks';
-import { useBiometry } from '@cardstack/hooks/useBiometry';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { useWallets } from '@rainbow-me/hooks';
 import logger from 'logger';
@@ -64,8 +63,6 @@ export default function SecretDisplaySection({
     customCopyLabel: 'Secret Recovery Phrase',
   });
 
-  const { biometryIconProps } = useBiometry();
-
   return (
     <>
       <ColumnWithMargins
@@ -99,11 +96,7 @@ export default function SecretDisplaySection({
             <Text textAlign="center">
               {`You need to authenticate in order to access your recovery ${typeLabel}`}
             </Text>
-            <Button
-              iconProps={biometryIconProps}
-              onPress={loadSeed}
-              variant="white"
-            >
+            <Button onPress={loadSeed} variant="white">
               Show Secret Recovery Phrase
             </Button>
           </Fragment>

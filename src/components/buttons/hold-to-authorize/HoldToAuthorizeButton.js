@@ -32,7 +32,6 @@ class HoldToAuthorizeButton extends PureComponent {
     children: PropTypes.any,
     disabled: PropTypes.bool,
     disabledBackgroundColor: PropTypes.string,
-    hideBiometricIcon: PropTypes.bool,
     hideInnerBorder: PropTypes.bool,
     isAuthorizing: PropTypes.bool,
     label: PropTypes.string,
@@ -105,10 +104,8 @@ class HoldToAuthorizeButton extends PureComponent {
 
   render() {
     const {
-      biometryIconProps,
       disabled,
       enableLongPress,
-      hideBiometricIcon,
       label,
       style,
       testID,
@@ -130,12 +127,12 @@ class HoldToAuthorizeButton extends PureComponent {
             <Button
               disablePress={disabled}
               iconProps={
-                !android && !disabled && !hideBiometricIcon
-                  ? { ...biometryIconProps, color: 'black' }
-                  : {
+                disabled
+                  ? {
                       name: 'error',
                       color: 'white',
                     }
+                  : undefined
               }
               loading={android && (isAuthorizing || this.props.isAuthorizing)}
               style={{ width: '100%' }}
@@ -153,13 +150,12 @@ class HoldToAuthorizeButton extends PureComponent {
 }
 
 const HoldToAuthorizeButtonWithBiometrics = ({ label, testID, ...props }) => {
-  const { biometryIconProps, longPressToConfirm } = useBiometry();
+  const { longPressToConfirm } = useBiometry();
   const { colors } = useTheme();
 
   return (
     <HoldToAuthorizeButton
       {...props}
-      biometryIconProps={biometryIconProps}
       colors={colors}
       enableLongPress={longPressToConfirm}
       label={longPressToConfirm ? label : label.replace('Hold', 'Tap')}
