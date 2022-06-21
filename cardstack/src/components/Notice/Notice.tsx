@@ -1,9 +1,8 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { Container, Touchable, Icon, Text } from '@cardstack/components';
 import { ColorTypes } from '@cardstack/theme';
 import { NoticeType } from '@cardstack/types';
-import { layoutEasingAnimation } from '@cardstack/utils';
 
 interface NoticeStyle {
   iconColor: ColorTypes;

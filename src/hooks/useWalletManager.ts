@@ -29,11 +29,7 @@ import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { getPin } from '@cardstack/models/secure-storage';
-import {
-  navigationStateNewWallet,
-  Routes,
-  useLoadingOverlay,
-} from '@cardstack/navigation';
+import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
@@ -65,7 +61,7 @@ export default function useWalletManager() {
   const { network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
-  const { navigate, reset } = useNavigation();
+  const { navigate } = useNavigation();
 
   const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
@@ -204,11 +200,8 @@ export default function useWalletManager() {
         navigate(Routes.WALLET_SCREEN, { initialized: true });
         return;
       }
-
-      // TODO: remove on react-nav 6
-      reset(navigationStateNewWallet);
     },
-    [initializeWallet, navigate, reset, setHasWallet]
+    [initializeWallet, navigate, setHasWallet]
   );
 
   const createNewWallet = useCallback(

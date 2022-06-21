@@ -50,7 +50,7 @@ import {
   sheetPreset,
   slideLeftToRightPreset,
 } from './presetOptions';
-import { MainRoutes, NonAuthRoutes, Routes } from './routes';
+import { MainRoutes, Routes } from './routes';
 
 export interface ScreenNavigation {
   component: React.ComponentType<any>;
@@ -223,31 +223,4 @@ export const linking = {
       [Routes.PAY_MERCHANT]: 'pay/:network/:merchantAddress',
     },
   },
-};
-
-export const navigationStateNewWallet = {
-  index: 0,
-  routes: [
-    {
-      name: Routes.TAB_NAVIGATOR,
-      state: {
-        index: 0,
-        routes: [
-          {
-            name: Routes.WALLET_SCREEN,
-            params: { initialized: true },
-          },
-        ],
-      },
-    },
-  ],
-};
-
-export const navigationStateInit = {
-  index: 0,
-  routes: [
-    {
-      name: NonAuthRoutes.WELCOME_SCREEN,
-    },
-  ],
 };

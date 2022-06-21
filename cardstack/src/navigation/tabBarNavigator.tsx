@@ -115,8 +115,8 @@ const TabNavigator = () => {
 
 const Stack = createStackNavigator();
 
-const SharedScreens = (
-  <>
+const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
+  <Stack.Group navigationKey={navigationKey}>
     <Stack.Screen
       component={PinScreen}
       name={Routes.PIN_SCREEN}
@@ -146,7 +146,7 @@ const SharedScreens = (
       options={sheetPreset({ backgroundOpacity: 'half' })}
       listeners={dismissAndroidKeyboardOnClose}
     />
-  </>
+  </Stack.Group>
 );
 
 const useNavigationAuth = () => {
@@ -197,13 +197,10 @@ export const StackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={stackScreenOptios}>
       {!hasWallet ? (
-        <>
-          <Stack.Screen
-            component={WelcomeScreen}
-            name={NonAuthRoutes.WELCOME_SCREEN}
-          />
-          {SharedScreens}
-        </>
+        <Stack.Screen
+          component={WelcomeScreen}
+          name={NonAuthRoutes.WELCOME_SCREEN}
+        />
       ) : (
         <>
           {hasPin && !isAuthorized && (
@@ -216,12 +213,9 @@ export const StackNavigator = () => {
           <Stack.Screen
             component={TabNavigator}
             name={Routes.TAB_NAVIGATOR}
-            //TabNavigator can't have transparentModal as default presentation
-            //it presents a white overlay on the screen on Android
-            options={{ presentation: 'modal' }}
+            options={{ gestureEnabled: false }}
           />
           {cardstackMainScreens}
-          {SharedScreens}
           {
             // Temp rainbow components until migration
           }
@@ -237,6 +231,7 @@ export const StackNavigator = () => {
           />
         </>
       )}
+      {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
     </Stack.Navigator>
   );
 };
