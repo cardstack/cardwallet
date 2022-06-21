@@ -42,10 +42,6 @@ export const Notice = ({
   onPress,
   type = 'warning',
 }: NoticeProps) => {
-  useLayoutEffect(() => {
-    layoutEasingAnimation();
-  }, [isVisible]);
-
   const iconComponent = useMemo(
     () =>
       onPress ? (
