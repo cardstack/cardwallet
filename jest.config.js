@@ -18,7 +18,10 @@ module.exports = {
   coverageDirectory: '.coverage',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   preset: 'jest-expo',
-  setupFilesAfterEnv: ['<rootDir>/cardstack/src/test-utils/jest-setup.js'],
+  setupFilesAfterEnv: [
+    '<rootDir>/cardstack/src/test-utils/jest-setup.js',
+    './node_modules/react-native-gesture-handler/jestSetup.js',
+  ],
   testMatch: [
     '<rootDir>/cardstack/**/*.test.ts',
     '<rootDir>/cardstack/**/*.test.js',
