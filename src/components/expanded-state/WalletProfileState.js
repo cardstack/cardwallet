@@ -15,7 +15,6 @@ import {
   Text,
   TruncatedAddress,
 } from '@cardstack/components';
-import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 import theme from '@cardstack/theme';
 import {
@@ -107,8 +106,6 @@ export default function WalletProfileState({
     inputRef,
   ]);
 
-  const { biometryIconProps } = useBiometry();
-
   return (
     <WalletProfileModal>
       <Container
@@ -159,11 +156,6 @@ export default function WalletProfileState({
         <ButtonPressAnimation onPress={handleSubmit}>
           {isNewProfile ? (
             <OptionItem
-              iconProps={{
-                ...biometryIconProps,
-                color: 'settingsTeal',
-                visible: actionType === 'Create',
-              }}
               justifyContent="center"
               testID="wallet-info-submit-button"
               textProps={{ color: 'settingsTeal' }}

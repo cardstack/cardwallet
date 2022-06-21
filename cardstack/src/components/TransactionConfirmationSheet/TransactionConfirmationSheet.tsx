@@ -12,7 +12,6 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { TransactionConfirmationData } from '@cardstack/types';
 import { layoutEasingAnimation } from '@cardstack/utils';
 
@@ -127,41 +126,36 @@ const SheetFooter = ({
   onCancel,
   onConfirmLoading = false,
   disabledConfirmButton,
-}: TransactionConfirmationDisplayProps) => {
-  const { biometryIconProps } = useBiometry();
-
-  return (
+}: TransactionConfirmationDisplayProps) => (
+  <Container
+    width="100%"
+    bottom={0}
+    paddingBottom={5}
+    borderBottomLeftRadius={20}
+    borderBottomRightRadius={20}
+    position="absolute"
+    backgroundColor="white"
+  >
+    <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
     <Container
-      width="100%"
-      bottom={0}
-      paddingBottom={5}
-      borderBottomLeftRadius={20}
-      borderBottomRightRadius={20}
-      position="absolute"
-      backgroundColor="white"
+      paddingHorizontal={5}
+      flexDirection="row"
+      justifyContent="space-between"
     >
-      <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
-      <Container
-        paddingHorizontal={5}
-        flexDirection="row"
-        justifyContent="space-between"
+      <Button variant="smallWhite" onPress={onCancel}>
+        {strings.buttons.cancel}
+      </Button>
+      <Button
+        loading={onConfirmLoading}
+        variant="small"
+        onPress={onConfirm}
+        disabled={disabledConfirmButton}
       >
-        <Button variant="smallWhite" onPress={onCancel}>
-          {strings.buttons.cancel}
-        </Button>
-        <Button
-          loading={onConfirmLoading}
-          variant="small"
-          onPress={onConfirm}
-          iconProps={biometryIconProps}
-          disabled={disabledConfirmButton}
-        >
-          {strings.buttons.submit}
-        </Button>
-      </Container>
+        {strings.buttons.submit}
+      </Button>
     </Container>
-  );
-};
+  </Container>
+);
 
 const InformationIcon = ({
   isOpen,

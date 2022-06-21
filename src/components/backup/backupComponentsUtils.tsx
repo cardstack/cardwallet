@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { TextInputProps } from 'react-native';
-import { Button, IconProps, InputProps, Text } from '@cardstack/components';
-import { useBiometry } from '@cardstack/hooks/useBiometry';
+import { Button, InputProps, Text } from '@cardstack/components';
 import { cloudBackupPasswordMinLength } from '@rainbow-me/handlers/cloudBackup';
 
 export const backupPasswordInputProps: Partial<TextInputProps & InputProps> = {
@@ -26,24 +25,8 @@ export const BackupPasswordButtonFooter = ({
   onButtonPress,
   isValidPassword,
 }: BackupButtonFooterProps) => {
-  const { biometryIconProps } = useBiometry();
-
-  const updatedIconProps: IconProps | undefined = useMemo(
-    () =>
-      biometryIconProps
-        ? {
-            ...biometryIconProps,
-            iconSize: 'medium',
-            marginRight: 3,
-          }
-        : undefined,
-    [biometryIconProps]
-  );
-
   return isValidPassword ? (
-    <Button iconProps={updatedIconProps} onPress={onButtonPress}>
-      {buttonLabel}
-    </Button>
+    <Button onPress={onButtonPress}>{buttonLabel}</Button>
   ) : (
     <Text variant="subText">Minimum 8 characters</Text>
   );
