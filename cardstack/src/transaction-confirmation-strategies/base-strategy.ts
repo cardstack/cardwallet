@@ -1,4 +1,4 @@
-import { ERC20ABI } from '@cardstack/cardpay-sdk';
+import { ERC20ABI, NativeCurrency } from '@cardstack/cardpay-sdk';
 
 import Web3Instance from '@cardstack/models/web3-instance';
 import { getSafeData } from '@cardstack/services';
@@ -18,7 +18,7 @@ interface BaseStrategyParams {
   verifyingContract?: string;
   primaryType: string | number;
   network: string;
-  nativeCurrency: string;
+  nativeCurrency: string | NativeCurrency;
 }
 
 export abstract class BaseStrategy {

@@ -15,6 +15,7 @@ import {
   GetEoaClaimedQueryResult,
   CheckHubAuthQueryParams,
   RegisterFCMTokenQueryParams,
+  GetExchangeRatesQueryParams,
 } from './hub-types';
 
 const routes = {
@@ -63,8 +64,14 @@ export const hubApi = createApi({
         );
       },
     }),
-    getExchangeRates: builder.query<Record<NativeCurrency, number>, void>({
-      query: () => routes.exchangeRates,
+    getExchangeRates: builder.query<
+      Record<NativeCurrency | string, number>,
+      GetExchangeRatesQueryParams | undefined
+    >({
+      query: params => ({
+        url: routes.exchangeRates,
+        params,
+      }),
       transformResponse: ({ data }) => data.attributes.rates,
     }),
     registerFcmToken: builder.query<string, RegisterFCMTokenQueryParams>({
