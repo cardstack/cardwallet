@@ -194,12 +194,6 @@ android {
 
     }
 
-    dexOptions {
-        preDexLibraries true
-        javaMaxHeapSize "2g" // Use gig increments depending on needs
-        incremental true
-    }
-
     splits {
         abi {
             reset()

@@ -154,7 +154,7 @@
     "react-native-fast-image": "^8.1.5",
     "react-native-flipper": "^0.146.1",
     "react-native-fs": "^2.16.6",
-    "react-native-gesture-handler": "^1.10.3",
+    "react-native-gesture-handler": "^2.4.2",
     "react-native-get-random-values": "^1.5.0",
     "react-native-haptic-feedback": "^1.8.2",
     "react-native-image-crop-picker": "^0.32.2",
@@ -304,7 +304,8 @@
     "**/@hapi/hoek": "8.5.1",
     "**/@typescript-eslint/eslint-plugin": "4.31.0",
     "**/@typescript-eslint/parser": "4.31.0",
-    "**/react-devtools-core": "4.19.1"
+    "**/react-devtools-core": "4.19.1",
+    "**/@types/hammerjs": "^2.0.38"
   },
   "detox": {
     "configurations": {
