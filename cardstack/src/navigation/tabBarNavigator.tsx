@@ -60,7 +60,6 @@ const tabBarOptions: BottomTabNavigationOptions = {
     elevation: 9,
   },
   tabBarShowLabel: false,
-  tabBarHideOnKeyboard: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
 };
 
 const TabNavigator = () => {
@@ -178,7 +177,7 @@ const useNavigationAuth = () => {
   return { hasWallet, isAuthorized, hasPin };
 };
 
-const stackScreenOptios: StackNavigationOptions = {
+const stackScreenOptions: StackNavigationOptions = {
   // On Android gestureEnabled defaults to false, but we want it.
   gestureEnabled: true,
   // On Android theres an issue with navigation trying to focus
@@ -195,7 +194,7 @@ export const StackNavigator = () => {
   const { hasWallet, isAuthorized, hasPin } = useNavigationAuth();
 
   return (
-    <Stack.Navigator screenOptions={stackScreenOptios}>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
       {!hasWallet ? (
         <Stack.Screen
           component={WelcomeScreen}
