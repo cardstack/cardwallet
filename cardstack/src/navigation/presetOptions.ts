@@ -42,17 +42,18 @@ const forSlideLeftToRight = ({
 };
 
 const sheetStyleInterpolator = (targetOpacity: number) => ({
-  current: { progress: current },
+  current: { progress },
   layouts: { screen },
 }: StackCardInterpolationProps) => {
-  const backgroundOpacity = current.interpolate({
+  const backgroundOpacity = progress.interpolate({
     inputRange: [-1, 0, 0.975, 2],
     outputRange: [0, 0, targetOpacity, targetOpacity],
   });
 
-  const translateY = current.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: [screen.height, 0, -screen.height / 3],
+  const translateY = progress.interpolate({
+    extrapolate: 'clamp',
+    inputRange: [0, 1],
+    outputRange: [screen.height, 0],
   });
 
   return {

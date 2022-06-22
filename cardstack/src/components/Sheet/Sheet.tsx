@@ -1,13 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
-import React, {
-  memo,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { memo, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { KeyboardAvoidingView, StatusBar, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Container } from '@cardstack/components';
@@ -16,7 +10,6 @@ import { Device } from '@cardstack/utils';
 import { shadow } from '@rainbow-me/styles';
 
 import { CenteredContainer } from '../Container';
-import { ScrollView } from '../ScrollView';
 
 import { SheetHandle } from './SheetHandle';
 import { TouchableBackDrop } from './TouchableBackDrop';
@@ -70,7 +63,7 @@ const Sheet = ({
   const { goBack, setOptions } = useNavigation();
 
   useEffect(() => {
-    if (isFullScreen && !scrollEnabled) {
+    if (isFullScreen && !scrollEnabled && Device.isIOS) {
       setOptions({
         gestureResponseDistance: Device.screenHeight,
         gestureDirection: 'vertical',
@@ -114,42 +107,8 @@ const Sheet = ({
     };
   }, [insets, scrollEnabled]);
 
-  const prevVerticalDistance = useRef(0);
-
-  const onScroll = useCallback(
-    ({ nativeEvent: { contentOffset } }) => {
-      if (Device.isIOS) {
-        return;
-      }
-
-      const hasScrollUp = contentOffset.y <= Device.scrollSheetOffset;
-
-      const fullVerticalDistance = Device.screenHeight;
-      // Distance for gesture from top set to 30% of screen height
-      const smallVerticalDistance = fullVerticalDistance * 0.3;
-
-      const verticalDistance = hasScrollUp
-        ? fullVerticalDistance
-        : smallVerticalDistance;
-
-      if (prevVerticalDistance.current !== verticalDistance) {
-        setOptions({
-          gestureResponseDistance: verticalDistance,
-          gestureDirection: 'vertical',
-        });
-
-        prevVerticalDistance.current = verticalDistance;
-      }
-    },
-    [setOptions]
-  );
-
   const onMomentumScrollBegin = useCallback(
     ({ nativeEvent: { contentOffset } }) => {
-      if (Device.isAndroid) {
-        return;
-      }
-
       const hasOverScrolledToTop = contentOffset.y <= Device.scrollSheetOffset;
 
       if (hasOverScrolledToTop) {
@@ -170,7 +129,6 @@ const Sheet = ({
         <ScrollView
           onMomentumScrollBegin={onMomentumScrollBegin}
           overScrollMode="always"
-          onScroll={onScroll}
           contentContainerStyle={contentContainerStyle}
           directionalLockEnabled
           keyboardShouldPersistTaps="always"

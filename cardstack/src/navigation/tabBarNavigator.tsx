@@ -130,7 +130,7 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
     <Stack.Screen
       component={ImportSeedSheet}
       name={Routes.IMPORT_SEED_SHEET}
-      options={sheetPreset({ bounce: false, backgroundOpacity: 'half' })}
+      options={sheetPreset({ bounce: false })}
       listeners={dismissAndroidKeyboardOnClose}
     />
 
