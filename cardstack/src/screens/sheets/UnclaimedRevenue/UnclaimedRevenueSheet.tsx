@@ -17,7 +17,7 @@ import { useMerchantTransactions } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { MerchantSafeType, TokenType } from '@cardstack/types';
-import { ClaimStatuses, Device } from '@cardstack/utils';
+import { ClaimStatuses } from '@cardstack/utils';
 
 interface Params {
   merchantSafe: MerchantSafeType;
@@ -45,7 +45,7 @@ const UnclaimedRevenueSheet = () => {
     <Sheet
       Header={<Header onClaimPress={openClaimWhereSheet} {...params} />}
       scrollEnabled
-      isFullScreen={Device.isIOS}
+      isFullScreen
     >
       <Container paddingHorizontal={5}>
         <ActivitiesList address={params.merchantSafe.address} />
