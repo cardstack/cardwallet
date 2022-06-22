@@ -3,5 +3,6 @@ export const strings = {
   payAmountDesc: 'To Pay This Amount',
   editAmount: 'Edit Amount',
   insufficientFunds: 'INSUFFICIENT FUNDS',
-  selectCard: 'Select Card',
+  continue: 'Continue',
+  cancel: 'Cancel',
 };

@@ -1,13 +1,9 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback, useMemo } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 
-import {
-  Button,
-  Container,
-  ContainerProps,
-  HorizontalDivider,
-} from '@cardstack/components';
+import { Button, Container, HorizontalDivider } from '@cardstack/components';
 import { useSpendToNativeDisplay } from '@cardstack/hooks/currencies/useSpendDisplay';
 import { PrepaidCardType } from '@cardstack/types';
 
@@ -27,27 +23,7 @@ export interface ChoosePrepaidCardProps {
   payCostDesc?: string;
 }
 
-const shadowStyles: ContainerProps = {
-  shadowColor: 'black',
-  shadowOffset: {
-    height: 5,
-    width: 0,
-  },
-  shadowRadius: 2,
-  shadowOpacity: 0.1,
-};
-
 const styles = StyleSheet.create({
-  footerContainer: {
-    width: '100%',
-    bottom: 0,
-    paddingBottom: 10,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    position: 'absolute',
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
   listContainer: { paddingBottom: 75 },
 });
 
@@ -61,6 +37,8 @@ export const ChoosePrepaidCard = memo(
     onPressEditAmount,
     payCostDesc,
   }: ChoosePrepaidCardProps) => {
+    const { goBack } = useNavigation();
+
     const { nativeBalanceDisplay } = useSpendToNativeDisplay({ spendAmount });
 
     const { network, nativeCurrencyInfo } = useAccountSettings();
@@ -113,16 +91,30 @@ export const ChoosePrepaidCard = memo(
           renderItem={renderItem}
           contentContainerStyle={styles.listContainer}
         />
-        <Container style={styles.footerContainer} {...shadowStyles}>
+        <Container
+          width="100%"
+          paddingBottom={5}
+          borderBottomLeftRadius={20}
+          borderBottomRightRadius={20}
+          backgroundColor="white"
+        >
           <HorizontalDivider height={2} marginBottom={4} marginVertical={0} />
-          <Container>
+          <Container
+            paddingHorizontal={5}
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <Button variant="smallWhite" onPress={goBack}>
+              {strings.cancel}
+            </Button>
             <Button
+              variant="small"
               onPress={onConfirmSelectedCard}
               disabled={
                 !selectedCard || selectedCard.spendFaceValue < spendAmount
               }
             >
-              {strings.selectCard}
+              {strings.continue}
             </Button>
           </Container>
         </Container>

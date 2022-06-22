@@ -54,7 +54,7 @@ const PaymentRequestExpandedSheet = () => {
   return (
     <Sheet
       isFullScreen
-      scrollEnabled={!editMode}
+      scrollEnabled
       Header={<PaymentRequestHeader />}
       Footer={!editMode ? <PaymentRequestFooter /> : undefined}
     >

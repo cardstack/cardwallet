@@ -89,7 +89,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   PAY_MERCHANT: {
     component: PayMerchant,
-    options: sheetPreset(),
+    options: { ...sheetPreset(), gestureEnabled: false },
     listeners: dismissAndroidKeyboardOnClose,
   },
   ERROR_FALLBACK_SCREEN: {
@@ -138,7 +138,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   CHOOSE_PREPAIDCARD_SHEET: {
     component: ChoosePrepaidCardSheet,
-    options: sheetPreset(),
+    options: { ...sheetPreset(), gestureEnabled: false },
     listeners: dismissAndroidKeyboardOnClose,
   },
   REWARDS_CENTER_SCREEN: {
