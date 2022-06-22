@@ -55,13 +55,6 @@ const useImportSeedSheet = () => {
     checkedWallet
   );
 
-  useEffect(() => {
-    Device.isAndroid &&
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 500);
-  }, []);
-
   const handleSetSeedPhrase = useCallback(
     text => {
       if (busy) return null;

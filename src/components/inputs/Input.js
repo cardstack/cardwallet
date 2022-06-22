@@ -2,6 +2,7 @@ import React from 'react';
 import { TextInput as TextInputPrimitive } from 'react-native';
 import styled from 'styled-components';
 import { useTheme } from '../../context/ThemeContext';
+import { Device } from '@cardstack/utils';
 import { buildTextStyles } from '@rainbow-me/styles';
 
 const TextInput = styled(TextInputPrimitive)`
@@ -39,6 +40,7 @@ const Input = (
       allowFontScaling={allowFontScaling}
       autoCapitalize={autoCapitalize}
       autoCorrect={autoCorrect}
+      autoFocus={Device.enableAutoFocus}
       keyboardAppearance={isDarkMode ? 'dark' : keyboardAppearance}
       keyboardType={keyboardType}
       placeholderTextColor={placeholderTextColor || defaultPlaceholderTextColor}
