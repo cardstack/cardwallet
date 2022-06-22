@@ -108,9 +108,6 @@ const ContactProfileState = ({ address, color: colorProp, contact }) => {
       <CenteredContainer marginVertical={5}>
         <ButtonPressAnimation onPress={handleAddContact}>
           <OptionItem
-            iconProps={{
-              visible: false,
-            }}
             justifyContent="center"
             testID="wallet-info-submit-button"
             textProps={{ color: 'settingsTeal' }}

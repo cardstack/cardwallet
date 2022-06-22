@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Container, CenteredContainer, ContainerProps } from '../Container';
 import { Icon, IconProps } from '../Icon';
@@ -26,41 +26,37 @@ export const OptionItem = ({
   horizontalSpacing = 2,
   disabled,
   ...props
-}: OptionItemProps) => {
-  const [iconVisible] = useState(iconProps.visible ?? true);
-
-  return (
-    <Touchable
-      alignItems="center"
-      disabled={disabled || !onPress}
-      flexDirection="row"
-      onPress={onPress}
-      testID="option-item"
-      {...props}
-    >
-      {iconVisible && (
-        <CenteredContainer
-          borderColor="borderGray"
-          borderRadius={100}
-          borderWidth={borderIcon ? 1 : 0}
-          height={40}
-          marginRight={horizontalSpacing}
-          width={40}
-          testID="option-item-icon-wrapper"
-        >
-          <Icon color="settingsTeal" {...iconProps} />
-        </CenteredContainer>
-      )}
-      <Container flexShrink={1}>
-        <Text weight="bold" {...textProps}>
-          {title}
+}: OptionItemProps) => (
+  <Touchable
+    alignItems="center"
+    disabled={disabled || !onPress}
+    flexDirection="row"
+    onPress={onPress}
+    testID="option-item"
+    {...props}
+  >
+    {iconProps && (
+      <CenteredContainer
+        borderColor="borderGray"
+        borderRadius={100}
+        borderWidth={borderIcon ? 1 : 0}
+        height={40}
+        marginRight={horizontalSpacing}
+        width={40}
+        testID="option-item-icon-wrapper"
+      >
+        <Icon color="settingsTeal" {...iconProps} />
+      </CenteredContainer>
+    )}
+    <Container flexShrink={1}>
+      <Text weight="bold" {...textProps}>
+        {title}
+      </Text>
+      {subText && (
+        <Text variant="subText" marginTop={1}>
+          {subText}
         </Text>
-        {subText && (
-          <Text variant="subText" marginTop={1}>
-            {subText}
-          </Text>
-        )}
-      </Container>
-    </Touchable>
-  );
-};
+      )}
+    </Container>
+  </Touchable>
+);
