@@ -6,7 +6,6 @@ import {
   Container,
   CURRENCY_DISPLAY_MODE,
   InputAmount,
-  SheetHandle,
   Text,
   Button,
   TransactionConfirmationSheet,
@@ -122,7 +121,6 @@ const CustomAmountBody = memo(
       backgroundColor="white"
       paddingTop={3}
     >
-      <SheetHandle />
       <Container flex={1} flexDirection="column" width="100%">
         <Container padding={5} flex={1}>
           <MerchantSectionCard
@@ -156,7 +154,7 @@ const CustomAmountBody = memo(
 );
 
 const PayMerchantScreen = () => (
-  <SafeAreaView flex={1} width="100%" backgroundColor="black">
+  <SafeAreaView flex={1} width="100%">
     <PayMerchant />
   </SafeAreaView>
 );

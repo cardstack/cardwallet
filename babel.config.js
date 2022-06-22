@@ -25,7 +25,6 @@ module.exports = function (api) {
     'date-fns',
     'graphql-tag',
     ['lodash', { id: ['lodash', 'recompact'] }],
-    'react-native-reanimated/plugin',
     [
       'module:react-native-dotenv',
       {
@@ -38,6 +37,8 @@ module.exports = function (api) {
         envName: 'APP_ENV',
       },
     ],
+    // Reanimated plugin has to be listed last.
+    'react-native-reanimated/plugin',
   ];
 
   const presets = ['module:metro-react-native-babel-preset'];
@@ -46,7 +47,6 @@ module.exports = function (api) {
     env: {
       development: {
         plugins: [
-          ...plugins,
           [
             'transform-remove-console',
             { exclude: ['disableYellowBox', 'error', 'info', 'log'] },
@@ -57,15 +57,16 @@ module.exports = function (api) {
               extensions: ['.svg'],
             },
           ],
+          ...plugins,
         ],
         presets: presets,
       },
       production: {
         plugins: [
-          ...plugins,
           '@babel/plugin-transform-runtime',
           '@babel/plugin-transform-react-inline-elements',
           ['transform-remove-console', { exclude: ['error'] }],
+          ...plugins,
         ],
         presets: presets,
       },

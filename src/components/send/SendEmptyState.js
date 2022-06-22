@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { View } from 'react-native';
 import { Transition, Transitioning } from 'react-native-reanimated';
-import { sheetVerticalOffset } from '../../navigation/effects';
 import { Icon } from '../icons';
 import { Centered } from '../layout';
 
@@ -64,7 +63,7 @@ const SendEmptyState = () => {
       backgroundColor={colors.white}
       flex={1}
       justify="space-between"
-      paddingBottom={sheetVerticalOffset + 19}
+      paddingBottom={50}
     >
       <Transitioning.View ref={ref} transition={transition}>
         {icon}

@@ -27,13 +27,7 @@ const PrepaidCardModal = () => {
   );
 
   return (
-    <SafeAreaView
-      backgroundColor="black"
-      flex={1}
-      width="100%"
-      alignItems="center"
-      paddingTop={1}
-    >
+    <SafeAreaView flex={1} width="100%" alignItems="center" paddingTop={1}>
       <SheetHandle color="buttonDarkBackground" opacity={1} />
       <PrepaidCard
         {...prepaidCardProps}

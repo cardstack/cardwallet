@@ -1,5 +1,5 @@
 import {
-  BottomTabBarOptions,
+  BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {
@@ -7,7 +7,6 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { TabBarIcon } from '@cardstack/components';
 import { getPin } from '@cardstack/models/secure-storage';
@@ -28,10 +27,6 @@ import { Device, useWorker } from '@cardstack/utils';
 
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 import { loadAddress } from '@rainbow-me/model/wallet';
-import {
-  bottomSheetPreset,
-  expandedPreset,
-} from '@rainbow-me/navigation/effects';
 import ChangeWalletSheet from '@rainbow-me/screens/ChangeWalletSheet';
 import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
@@ -45,12 +40,14 @@ import {
   NonAuthRoutes,
   overlayPreset,
   Routes,
+  sheetPreset,
 } from '.';
 
 const Tab = createBottomTabNavigator();
 
-const tabBarOptions = (bottomInset = 0): BottomTabBarOptions => ({
-  style: {
+const tabBarOptions: BottomTabNavigationOptions = {
+  headerShown: false,
+  tabBarStyle: {
     backgroundColor: colors.backgroundBlue,
     minHeight: 70,
     borderTopColor: Device.isIOS ? 'transparent' : colors.blackLightOpacity,
@@ -58,25 +55,18 @@ const tabBarOptions = (bottomInset = 0): BottomTabBarOptions => ({
       width: 0,
       height: 1,
     },
-
     shadowRadius: 5,
     shadowOpacity: 0.35,
     elevation: 9,
   },
-  safeAreaInsets: {
-    bottom: bottomInset + 5,
-  },
-  showLabel: false,
-  keyboardHidesTabBar: Device.isAndroid, // fix for TabBar shows above Android keyboard, but this option makes iOS flickering when keyboard toggles
-});
+  tabBarShowLabel: false,
+};
 
 const TabNavigator = () => {
-  const { bottom } = useSafeAreaInsets();
-
   return (
     <Tab.Navigator
       initialRouteName={Routes.WALLET_SCREEN}
-      tabBarOptions={tabBarOptions(bottom)}
+      screenOptions={tabBarOptions}
     >
       <Tab.Screen
         component={HomeScreen}
@@ -124,8 +114,8 @@ const TabNavigator = () => {
 
 const Stack = createStackNavigator();
 
-const SharedScreens = (
-  <>
+const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
+  <Stack.Group navigationKey={navigationKey}>
     <Stack.Screen
       component={PinScreen}
       name={Routes.PIN_SCREEN}
@@ -139,23 +129,23 @@ const SharedScreens = (
     <Stack.Screen
       component={ImportSeedSheet}
       name={Routes.IMPORT_SEED_SHEET}
-      options={bottomSheetPreset as StackNavigationOptions}
+      options={sheetPreset({ bounce: false })}
       listeners={dismissAndroidKeyboardOnClose}
     />
 
     <Stack.Screen
       component={ModalScreen}
       name={Routes.MODAL_SCREEN}
-      options={expandedPreset as StackNavigationOptions}
+      options={sheetPreset({ backgroundOpacity: 'half' })}
       listeners={dismissAndroidKeyboardOnClose}
     />
     <Stack.Screen
       component={RestoreSheet}
       name={Routes.RESTORE_SHEET}
-      options={expandedPreset as StackNavigationOptions}
+      options={sheetPreset({ backgroundOpacity: 'half' })}
       listeners={dismissAndroidKeyboardOnClose}
     />
-  </>
+  </Stack.Group>
 );
 
 const useNavigationAuth = () => {
@@ -187,30 +177,29 @@ const useNavigationAuth = () => {
   return { hasWallet, isAuthorized, hasPin };
 };
 
+const stackScreenOptions: StackNavigationOptions = {
+  // On Android gestureEnabled defaults to false, but we want it.
+  gestureEnabled: true,
+  // On Android theres an issue with navigation trying to focus
+  // unmounted inputs ocurring in crashes, disabling keyboard handling avoids it:
+  // ref: https://github.com/react-navigation/react-navigation/issues/10080
+  keyboardHandlingEnabled: Device.isIOS,
+  presentation: 'transparentModal',
+  headerShown: false,
+};
+
 export const StackNavigator = () => {
   const cardstackMainScreens = useCardstackMainScreens(Stack);
 
   const { hasWallet, isAuthorized, hasPin } = useNavigationAuth();
 
   return (
-    <Stack.Navigator
-      // On Android theres an issue with navigation trying to focus
-      // unmounted inputs ocurring in crashes, disabling keyboard handling avoids it:
-      // ref: https://github.com/react-navigation/react-navigation/issues/10080
-      keyboardHandlingEnabled={Device.isIOS}
-      headerMode="none"
-      mode="modal"
-      // On Android gestureEnabled defaults to false, but we want it.
-      screenOptions={{ gestureEnabled: true }}
-    >
+    <Stack.Navigator screenOptions={stackScreenOptions}>
       {!hasWallet ? (
-        <>
-          <Stack.Screen
-            component={WelcomeScreen}
-            name={NonAuthRoutes.WELCOME_SCREEN}
-          />
-          {SharedScreens}
-        </>
+        <Stack.Screen
+          component={WelcomeScreen}
+          name={NonAuthRoutes.WELCOME_SCREEN}
+        />
       ) : (
         <>
           {hasPin && !isAuthorized && (
@@ -220,9 +209,12 @@ export const StackNavigator = () => {
               options={{ gestureEnabled: false }}
             />
           )}
-          <Stack.Screen component={TabNavigator} name={Routes.TAB_NAVIGATOR} />
+          <Stack.Screen
+            component={TabNavigator}
+            name={Routes.TAB_NAVIGATOR}
+            options={{ gestureEnabled: false }}
+          />
           {cardstackMainScreens}
-          {SharedScreens}
           {
             // Temp rainbow components until migration
           }
@@ -234,10 +226,11 @@ export const StackNavigator = () => {
           <Stack.Screen
             component={ChangeWalletSheet}
             name={Routes.CHANGE_WALLET_SHEET}
-            options={expandedPreset as StackNavigationOptions}
+            options={sheetPreset({ backgroundOpacity: 'half' })}
           />
         </>
       )}
+      {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
     </Stack.Navigator>
   );
 };

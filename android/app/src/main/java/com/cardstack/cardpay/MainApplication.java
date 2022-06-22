@@ -17,7 +17,6 @@ import com.cardstack.cardpay.NativeModules.RNBip39.RNBip39Package;
 import com.cardstack.cardpay.NativeModules.RNBackHandler.RNBackHandlerPackage;
 import com.cardstack.cardpay.NativeModules.RNReview.RNReviewPackage;
 import com.cardstack.cardpay.NativeModules.RNTextAnimatorPackage.RNTextAnimatorPackage;
-import com.cardstack.cardpay.NativeModules.RNZoomableButton.RNZoomableButtonPackage;
 
 import com.facebook.react.bridge.JSIModulePackage;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
@@ -43,7 +42,6 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNReviewPackage());
           packages.add(new RNBackHandlerPackage());
           packages.add(new RNTextAnimatorPackage());
-          packages.add(new RNZoomableButtonPackage());
           return packages;
         }
 

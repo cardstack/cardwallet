@@ -9,6 +9,8 @@ import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
 // GLOBAL LIBS MOCKS
+global.__reanimatedWorkletInit = jest.fn();
+
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext);
 
 jest.mock('redux-persist', () => {

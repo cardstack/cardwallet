@@ -21,9 +21,9 @@ const ChoosePrepaidCardSheet = () => {
   } = useChoosePrepaidCard();
 
   return (
-    <SafeAreaView flex={1} width="100%" backgroundColor="black">
+    <SafeAreaView flex={1} width="100%">
       {isLoading ? (
-        <CenteredContainer flex={1}>
+        <CenteredContainer flex={1} backgroundColor="black">
           <ActivityIndicator size="large" />
         </CenteredContainer>
       ) : (

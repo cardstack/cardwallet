@@ -411,7 +411,7 @@ PODS:
     - React-Core
   - react-native-cloud-fs (2.4.0):
     - React
-  - react-native-flipper (0.144.0):
+  - react-native-flipper (0.146.1):
     - React-Core
   - react-native-get-random-values (1.5.0):
     - React
@@ -423,7 +423,7 @@ PODS:
     - React
   - react-native-restart (0.0.20):
     - React-Core
-  - react-native-safe-area-context (4.2.4):
+  - react-native-safe-area-context (4.3.1):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -536,7 +536,7 @@ PODS:
     - RNFBApp
   - RNFS (2.16.6):
     - React
-  - RNGestureHandler (1.10.3):
+  - RNGestureHandler (2.4.2):
     - React-Core
   - RNImageCropPicker (0.32.3):
     - React-Core
@@ -594,8 +594,9 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (2.9.0):
-    - React
+  - RNScreens (3.13.1):
+    - React-Core
+    - React-RCTImage
   - RNSentry (3.4.0):
     - React-Core
     - Sentry (= 7.11.0)
@@ -1025,13 +1026,13 @@ SPEC CHECKSUMS:
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
   react-native-cloud-fs: 1e883ec82ff418d320c128f61971dd971b128ca0
-  react-native-flipper: 09951517bad4cd226698d108dd38fe1d9db0096e
+  react-native-flipper: 4bfe0a324e663f1ae2f76ad0da75673de6895efe
   react-native-get-random-values: 1404bd5cc0ab0e287f75ee1c489555688fc65f89
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-netinfo: 5a001e406317eaaf1e4846906650e107dadcaa72
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-restart: a01029aadfe8e71f9e8205fdb17da2f0a4472d50
-  react-native-safe-area-context: f98b0b16d1546d208fc293b4661e3f81a895afd9
+  react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-text-input-mask: 07227297075f9653315f43b0424d596423a01736
   react-native-udp: 8864b1211857e9d8224ae5cbaf8580970fb99de1
@@ -1060,7 +1061,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 1fddc92e06f35dfecf42b3e51b80dc1a8f8d62ee
   RNFBRemoteConfig: e2ab6deecf08a4f7d41274425163ddfdc6ae268a
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
-  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
+  RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
   RNImageCropPicker: 54e5ea3d0e298ed51e1441a2fa0a0e7c90ee256d
   RNInputMask: 815461ebdf396beb62cf58916c35cf6930adb991
   RNKeyboard: ceec456427493b286539f40442620881b5840dff
@@ -1071,7 +1072,7 @@ SPEC CHECKSUMS:
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
   RNReactNativeHapticFeedback: 653a8c126a0f5e88ce15ffe280b3ff37e1fbb285
   RNReanimated: d29057cf85e771be4f0180ba1d00a7185e423a7d
-  RNScreens: c526239bbe0e957b988dacc8d75ac94ec9cb19da
+  RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSentry: ec3c033c13bcb65c79f19d54ca54c514d1832bb5
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f

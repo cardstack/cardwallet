@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo, useRef } from 'react';
-import { processColor, requireNativeComponent, View } from 'react-native';
+import { processColor, View } from 'react-native';
 import { createNativeWrapper } from 'react-native-gesture-handler';
 import { PureNativeButton } from 'react-native-gesture-handler/src/components/GestureButtons';
 import Animated, {
@@ -12,10 +12,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { normalizeTransformOrigin } from './NativeButton';
-
-const ZoomableRawButton = requireNativeComponent('RNZoomableButton');
-
-const ZoomableButton = createNativeWrapper(ZoomableRawButton);
 
 const AnimatedRawButton = createNativeWrapper(
   Animated.createAnimatedComponent(PureNativeButton),
@@ -174,74 +170,6 @@ const ScaleButton = ({
   );
 };
 
-const SimpleScaleButton = ({
-  backgroundColor,
-  borderRadius,
-  scaleTo,
-  children,
-  onPress,
-  onLongPress,
-  contentContainerStyle,
-  minLongPressDuration,
-  overflowMargin,
-  wrapperStyle,
-  duration,
-  transformOrigin,
-  skipTopMargin,
-}) => {
-  const onNativePress = ({ nativeEvent: { type } }) => {
-    if (type === 'longPress') {
-      onLongPress?.();
-    } else {
-      onPress();
-    }
-  };
-
-  return (
-    <View
-      style={[
-        {
-          backgroundColor,
-          borderRadius,
-          overflow: 'visible',
-        },
-        wrapperStyle,
-      ]}
-    >
-      <View
-        style={{
-          margin: -overflowMargin,
-          marginTop: skipTopMargin ? -OVERFLOW_MARGIN : -overflowMargin,
-        }}
-      >
-        <ZoomableButton
-          duration={duration}
-          hitSlop={-overflowMargin}
-          minLongPressDuration={minLongPressDuration}
-          onPress={onNativePress}
-          rippleColor={processColor('transparent')}
-          scaleTo={scaleTo}
-          style={{ overflow: 'visible' }}
-          transformOrigin={transformOrigin}
-        >
-          <View style={{ backgroundColor: 'transparent' }}>
-            <View
-              style={{
-                padding: overflowMargin,
-                paddingTop: skipTopMargin ? OVERFLOW_MARGIN : overflowMargin,
-              }}
-            >
-              <Animated.View style={contentContainerStyle}>
-                {children}
-              </Animated.View>
-            </View>
-          </View>
-        </ZoomableButton>
-      </View>
-    </View>
-  );
-};
-
 export default function ButtonPressAnimation({
   // eslint-disable-next-line no-unused-vars
   activeOpacity = 1, // TODO
@@ -261,7 +189,6 @@ export default function ButtonPressAnimation({
   overflowMargin = OVERFLOW_MARGIN,
   hitSlop,
   wrapperStyle,
-  reanimatedButton,
   transformOrigin,
   skipTopMargin,
 }) {
@@ -274,10 +201,8 @@ export default function ButtonPressAnimation({
     return <View style={[style, { overflow: 'visible' }]}>{children}</View>;
   }
 
-  const Button = reanimatedButton ? ScaleButton : SimpleScaleButton;
-
   return (
-    <Button
+    <ScaleButton
       backgroundColor={backgroundColor}
       borderRadius={borderRadius}
       contentContainerStyle={contentContainerStyle}
@@ -297,6 +222,6 @@ export default function ButtonPressAnimation({
       <View pointerEvents="box-only" style={[style, { overflow: 'visible' }]}>
         {children}
       </View>
-    </Button>
+    </ScaleButton>
   );
 }
