@@ -2,19 +2,11 @@ import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import {
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { useInvalidPaste } from '@cardstack/hooks';
 import { dismissKeyboardOnAndroid, Routes } from '@cardstack/navigation';
-import { Device } from '@cardstack/utils';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
 import {
