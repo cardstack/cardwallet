@@ -1,8 +1,7 @@
-import { useIsFocused } from '@react-navigation/native';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera } from 'expo-camera';
 import React, { memo, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
-import { RNCamera } from 'react-native-camera';
-import { useIsEmulator } from 'react-native-device-info';
 
 import {
   Container,
@@ -10,11 +9,9 @@ import {
   Image,
   AbsoluteFullScreenContainer,
 } from '@cardstack/components';
-import { useBooleanState } from '@cardstack/hooks';
 import { colors } from '@cardstack/theme';
 
 import { networkInfo } from '@rainbow-me/helpers/networkInfo';
-import { useAccountSettings } from '@rainbow-me/hooks';
 
 import PeopleIllustrationBackground from '../../../../assets/people-ill-bg.png';
 
@@ -26,7 +23,8 @@ import {
   CROSSHAIR_SIZE,
 } from './components';
 import { strings } from './strings';
-import { useScanner, useScannerParams } from './useScanner';
+import { useQRCodeScannerPage } from './useQRCodeScannerPage';
+import { useScannerParams } from './useScanner';
 
 const styles = StyleSheet.create({
   loadingContainer: { paddingTop: CROSSHAIR_SIZE * 0.45 },
@@ -38,15 +36,17 @@ const styles = StyleSheet.create({
 type QRCodeScannerProps = useScannerParams;
 
 const QRCodeScannerPage = (props: QRCodeScannerProps) => {
-  const [error, showError] = useBooleanState();
-
-  const { result: isEmulator } = useIsEmulator();
-
-  const { network } = useAccountSettings();
-
-  const { onScan, isLoading } = useScanner(props);
-
-  const isFocused = useIsFocused();
+  const {
+    isCameraAllowed,
+    error,
+    isLoading,
+    showError,
+    isEmulator,
+    network,
+    onScan,
+    isFocused,
+    enableCameraPressed,
+  } = useQRCodeScannerPage(props);
 
   const renderErrorOrLoading = useMemo(
     () =>
@@ -76,16 +76,16 @@ const QRCodeScannerPage = (props: QRCodeScannerProps) => {
           alignSelf="center"
           zIndex={1}
         />
+      ) : isFocused && isCameraAllowed ? (
+        <Camera
+          barCodeScannerSettings={[BarCodeScanner.Constants.BarCodeType.qr]}
+          onBarCodeScanned={onScan}
+          onMountError={showError}
+          style={StyleSheet.absoluteFillObject}
+          ratio="16:9"
+        />
       ) : (
-        isFocused && (
-          <RNCamera
-            captureAudio={false}
-            notAuthorizedView={<CameraNotAuthorizedView />}
-            onBarCodeRead={onScan}
-            onMountError={showError}
-            style={StyleSheet.absoluteFillObject}
-          />
-        )
+        <CameraNotAuthorizedView enableCameraPressed={enableCameraPressed} />
       )}
       <AbsoluteFullScreenContainer zIndex={1}>
         <QRCodeOverlay />

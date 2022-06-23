@@ -24,9 +24,12 @@ import {
 } from '@cardstack/notification-handler';
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
+import { Device } from '@cardstack/utils';
+
 import Logger from 'logger';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
+const UNAUTHORIZE_DELAY = 5000;
 
 const skipKeychainCheck = true;
 
@@ -45,6 +48,7 @@ export const useAppInit = () => {
   useNotificationSetup();
 
   const initialDeepLink = useRef<string | null>(null);
+  const unauthorizeDelay = useRef<number | null>(null);
 
   useEffect(() => {
     const handleWcDeepLink = async () => {
@@ -97,9 +101,29 @@ export const useAppInit = () => {
   }, [isAuthorized, walletReady]);
 
   useEffect(() => {
-    if (movedToBackground) {
-      setUserUnauthorized();
+    // Resuming state, we check if we should unauthorize already.
+    if (!movedToBackground && unauthorizeDelay.current) {
+      if (Date.now() - unauthorizeDelay.current > UNAUTHORIZE_DELAY) {
+        setUserUnauthorized();
+      }
+
+      unauthorizeDelay.current = null;
+      return;
     }
+
+    // We'll only delay the unauthorization on android and in these specific screens.
+    if (
+      Device.isAndroid &&
+      (Navigation.getActiveRouteName() === Routes.QR_SCANNER_SCREEN ||
+        Navigation.getActiveRouteName() === Routes.PAY_MERCHANT)
+    ) {
+      unauthorizeDelay.current = Date.now();
+
+      return;
+    }
+
+    // Otherwise, unauthorize right away.
+    setUserUnauthorized();
   }, [setUserUnauthorized, movedToBackground]);
 
   useEffect(() => {

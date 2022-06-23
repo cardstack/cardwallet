@@ -106,6 +106,8 @@
     "ethers": "^5.6.4",
     "events": "^1.1.1",
     "expo": "^45.0.0",
+    "expo-barcode-scanner": "~11.3.0",
+    "expo-camera": "~12.2.0",
     "expo-local-authentication": "~12.2.0",
     "expo-secure-store": "~11.2.0",
     "global": "^4.3.2",

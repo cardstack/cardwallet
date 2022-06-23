@@ -1,5 +1,4 @@
-import React, { memo, useCallback } from 'react';
-import { Linking } from 'react-native';
+import React, { memo } from 'react';
 
 import {
   Text,
@@ -10,11 +9,11 @@ import {
 
 import { strings } from '../strings';
 
-const CameraNotAuthorizedView = () => {
-  const handlePressSettings = useCallback(() => {
-    Linking.openSettings();
-  }, []);
+interface Props {
+  enableCameraPressed: () => void;
+}
 
+const CameraNotAuthorizedView = ({ enableCameraPressed }: Props) => {
   return (
     <AbsoluteFullScreenContainer
       backgroundColor="backgroundDarkPurple"
@@ -34,7 +33,7 @@ const CameraNotAuthorizedView = () => {
       >
         {strings.authorize.info}
       </Text>
-      <Button onPress={handlePressSettings}>
+      <Button onPress={enableCameraPressed}>
         <Text>{strings.authorize.cameraBtn}</Text>
       </Button>
     </AbsoluteFullScreenContainer>
