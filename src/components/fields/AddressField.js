@@ -57,6 +57,8 @@ const AddressField = (
     []
   );
 
+  const onPress = useCallback(() => ref?.current?.focus(), [ref]);
+
   return (
     <Row flex={1}>
       <Input
@@ -83,7 +85,7 @@ const AddressField = (
       />
       {!inputValue && (
         <Container position="absolute" zIndex={1} {...androidProps}>
-          <Touchable onPress={ref?.current?.focus}>
+          <Touchable onPress={onPress}>
             <Text color="grayText" fontSize={15} weight="bold">
               Enter Address (0x...) or ENS
             </Text>

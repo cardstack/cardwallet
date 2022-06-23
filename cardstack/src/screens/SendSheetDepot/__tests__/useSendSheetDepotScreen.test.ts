@@ -41,10 +41,6 @@ jest.mock('@rainbow-me/hooks', () => ({
     nativeCurrency: 'USD',
     network: 'sokol',
   })),
-  useMagicAutofocus: () => ({
-    handleFocus: jest.fn(),
-    triggerFocus: jest.fn(),
-  }),
   useWallets: () => ({ selectedWallet: 'fooSelectedWallet' }),
 }));
 

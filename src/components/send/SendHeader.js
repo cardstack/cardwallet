@@ -30,9 +30,7 @@ export default function SendHeader({
   contacts,
   isValidAddress,
   onChangeAddressInput,
-  onFocus,
   onPressPaste,
-  onRefocusInput,
   recipient,
   recipientFieldRef,
   removeContact,
@@ -59,10 +57,9 @@ export default function SendHeader({
       address: recipient,
       color,
       contact: isEmpty(contact.address) ? false : contact,
-      onRefocusInput,
       type: 'contact_profile',
     });
-  }, [colors, contact, navigate, onRefocusInput, recipient]);
+  }, [colors, contact, navigate, recipient]);
 
   const handleOpenContactActionSheet = useCallback(async () => {
     return showActionSheetWithOptions(
@@ -95,17 +92,9 @@ export default function SendHeader({
         } else if (buttonIndex === 2) {
           setClipboard(recipient);
         }
-
-        onRefocusInput();
       }
     );
-  }, [
-    handleNavigateToContact,
-    onRefocusInput,
-    recipient,
-    removeContact,
-    setClipboard,
-  ]);
+  }, [handleNavigateToContact, recipient, removeContact, setClipboard]);
 
   const isPreExistingContact = (contact?.nickname?.length || 0) > 0;
 
@@ -120,7 +109,6 @@ export default function SendHeader({
           autoFocus={!showAssetList}
           name={contact.nickname}
           onChange={onChangeAddressInput}
-          onFocus={onFocus}
           ref={recipientFieldRef}
           testID="send-asset-form-field"
         />
