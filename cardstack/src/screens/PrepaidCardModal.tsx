@@ -1,18 +1,21 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { memo } from 'react';
 import { SectionList } from 'react-native';
 
 import {
   Container,
+  Icon,
   ListEmptyComponent,
   PrepaidCard,
   PrepaidCardProps,
   SafeAreaView,
   SheetHandle,
   Text,
+  Touchable,
   TransactionItem,
 } from '@cardstack/components';
 import { usePrepaidCardTransactions } from '@cardstack/hooks';
+import { Device } from '@cardstack/utils';
 import { sectionStyle } from '@cardstack/utils/layouts';
 
 import { TransactionListLoading } from '../components/TransactionList/TransactionListLoading';
@@ -26,9 +29,18 @@ const PrepaidCardModal = () => {
     prepaidCardProps.address
   );
 
+  const { goBack } = useNavigation();
+
   return (
     <SafeAreaView flex={1} width="100%" alignItems="center" paddingTop={1}>
-      <SheetHandle color="buttonDarkBackground" opacity={1} />
+      {/* TODO NAVIGATION: remove this workaround after handling gestures manually */}
+      {Device.isAndroid ? (
+        <Touchable onPress={goBack} alignSelf="flex-start">
+          <Icon name="chevron-left" color="teal" size={30} />
+        </Touchable>
+      ) : (
+        <SheetHandle color="buttonDarkBackground" opacity={1} />
+      )}
       <PrepaidCard
         {...prepaidCardProps}
         disabled

@@ -38,6 +38,7 @@ import {
   RewardWithdrawConfirmationScreen,
   RewardWithdrawToScreen,
 } from '@cardstack/screens/RewardsCenterScreen/flows';
+import { Device } from '@cardstack/utils';
 
 import BackupSheet from '@rainbow-me/screens/BackupSheet';
 import SendSheetEOA from '@rainbow-me/screens/SendSheetEOA';
@@ -71,7 +72,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   PREPAID_CARD_MODAL: {
     component: PrepaidCardModal,
-    options: sheetPreset(),
+    options: { ...sheetPreset(), gestureEnabled: Device.isIOS },
   },
   BUY_PREPAID_CARD: {
     component: BuyPrepaidCard,
