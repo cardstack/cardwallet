@@ -11,12 +11,11 @@ import {
 // Mutations
 
 export const claimMerchantRevenue = async ({
-  signerParams,
   accountAddress,
   revenueBalances,
   merchantSafeAddress,
 }: ClaimRevenueQueryParams) => {
-  const [web3, signer] = await getWeb3ProviderWithEthSigner(signerParams);
+  const [web3, signer] = await getWeb3ProviderWithEthSigner({ accountAddress });
 
   const revenuePool = await getSDK('RevenuePool', web3, signer);
 
@@ -34,12 +33,11 @@ export const claimMerchantRevenue = async ({
 };
 
 export const createProfile = async ({
-  signerParams,
   selectedPrepaidCardAddress,
   profileDID,
   accountAddress,
 }: CreateProfileQueryParams) => {
-  const [web3, signer] = await getWeb3ProviderWithEthSigner(signerParams);
+  const [web3, signer] = await getWeb3ProviderWithEthSigner({ accountAddress });
 
   const revenuePool = await getSDK('RevenuePool', web3, signer);
 

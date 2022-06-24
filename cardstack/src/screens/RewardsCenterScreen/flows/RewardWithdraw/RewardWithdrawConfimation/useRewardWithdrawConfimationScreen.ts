@@ -28,7 +28,7 @@ export const useRewardWithdrawConfimationScreen = () => {
   const { params } = useRoute<RouteType<NavParams>>();
   const { navigate } = useNavigation();
 
-  const { signerParams, accountAddress } = useWallets();
+  const { accountAddress } = useWallets();
 
   const {
     fromRewardSafe,
@@ -86,18 +86,11 @@ export const useRewardWithdrawConfimationScreen = () => {
 
     withdraw({
       ...withdrawBaseData,
-      signerParams,
       accountAddress,
       // When no amount is provided, the whole avaible balance is withdrawn
       amount: undefined,
     });
-  }, [
-    accountAddress,
-    showLoadingOverlay,
-    signerParams,
-    withdraw,
-    withdrawBaseData,
-  ]);
+  }, [accountAddress, showLoadingOverlay, withdraw, withdrawBaseData]);
 
   useMutationEffects(
     useMemo(

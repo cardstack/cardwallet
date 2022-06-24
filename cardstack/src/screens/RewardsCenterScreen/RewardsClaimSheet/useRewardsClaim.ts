@@ -27,7 +27,7 @@ interface onClaimCallbackProps {
 
 const useRewardsClaim = () => {
   const { goBack } = useNavigation();
-  const { signerParams, accountAddress } = useWallets();
+  const { accountAddress } = useWallets();
 
   const {
     rewardSafes,
@@ -85,14 +85,12 @@ const useRewardsClaim = () => {
 
     claimRewards({
       ...partialClaimParams,
-      signerParams,
       rewardProgramId: defaultRewardProgramId,
     });
   }, [
     showLoadingOverlay,
     claimRewards,
     partialClaimParams,
-    signerParams,
     defaultRewardProgramId,
   ]);
 

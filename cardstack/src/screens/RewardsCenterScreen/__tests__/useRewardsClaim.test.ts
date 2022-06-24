@@ -19,11 +19,6 @@ const rewardSafes = mockRewardSafeForProgram;
 const mainPoolTokenInfo = mockMainPoolTokenInfo;
 const defaultRewardProgramId = '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185';
 
-const signerParams = {
-  walletId: '123',
-  accountIndex: 1,
-};
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     goBack: mockedGoBack,
@@ -39,7 +34,6 @@ jest.mock('@cardstack/navigation', () => ({
 
 jest.mock('@rainbow-me/hooks', () => ({
   useWallets: () => ({
-    signerParams,
     accountAddress,
   }),
 }));
@@ -105,7 +99,6 @@ describe('useRewardsClaim', () => {
       rewardProgramId: defaultRewardProgramId,
       tokenAddress: mockMainPoolTokenInfo.tokenAddress,
       safeAddress: mockRewardSafeForProgram[0].address,
-      signerParams,
     });
   });
 

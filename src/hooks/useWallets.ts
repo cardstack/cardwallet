@@ -5,7 +5,6 @@ import { createSelector } from 'reselect';
 import { findLatestBackUp } from '../model/backup';
 import { setIsWalletLoading as rawSetIsWalletLoading } from '../redux/wallets';
 import { useAccountSettings } from '.';
-import { EthersSignerParams } from '@cardstack/models/ethers-wallet';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { Account } from '@rainbow-me/model/wallet';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -73,14 +72,6 @@ export default function useWallets() {
     [accountAddress, selectedWallet.addresses]
   );
 
-  const signerParams: EthersSignerParams = useMemo(
-    () => ({
-      walletId: selectedWallet?.id,
-      accountIndex: selectedAccount?.index,
-    }),
-    [selectedAccount, selectedWallet]
-  );
-
   return {
     isDamaged,
     isReadOnlyWallet: selectedWallet.type === WalletTypes.readOnly,
@@ -91,7 +82,6 @@ export default function useWallets() {
     wallets,
     selectedAccount,
     selectedWallet,
-    signerParams,
-    accountAddress: accountAddress as string,
+    accountAddress,
   };
 }

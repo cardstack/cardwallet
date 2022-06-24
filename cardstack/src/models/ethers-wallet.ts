@@ -1,22 +1,28 @@
 import { utils, Wallet } from 'ethers';
 
-import { DEFAULT_HD_PATH, loadSeedPhrase } from '@rainbow-me/model/wallet';
+import {
+  DEFAULT_HD_PATH,
+  loadPrivateKey,
+  loadSeedPhrase,
+} from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 import Web3Instance from './web3-instance';
 
-export interface EthersSignerParams {
+export interface EthersSignerWithSeedParams {
   accountIndex: number;
   walletId: string;
   seedPhrase?: string;
   keychainAcessAskPrompt?: string;
 }
 
-export interface SignerParamsBase {
-  signerParams: EthersSignerParams;
+export interface EthersSignerParams {
+  accountAddress?: string;
 }
 
-export const getEthersWallet = async (params?: EthersSignerParams) => {
+export const getEthersWalletWithSeed = async (
+  params?: EthersSignerWithSeedParams
+) => {
   if (!params) {
     return;
   }
@@ -44,5 +50,15 @@ export const getEthersWallet = async (params?: EthersSignerParams) => {
   }
 };
 
+const getEthersWallet = async (accountAddress?: string) => {
+  try {
+    const privateKey = await loadPrivateKey(accountAddress);
+
+    return new Wallet(privateKey);
+  } catch (e) {
+    logger.sentry('Error getting ethersWallet' + e);
+  }
+};
+
 export const getWeb3ProviderWithEthSigner = (params?: EthersSignerParams) =>
-  Promise.all([Web3Instance.get(), getEthersWallet(params)]);
+  Promise.all([Web3Instance.get(), getEthersWallet(params?.accountAddress)]);

@@ -20,11 +20,6 @@ const mockedDismissOverlay = jest.fn();
 const accountAddress = '0x0000000000000000000';
 const defaultRewardProgramId = '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185';
 
-const signerParams = {
-  walletId: '123',
-  accountIndex: 1,
-};
-
 const mockedGoBack = jest.fn();
 const mockNavDispatch = jest.fn();
 const mockNavigate = jest.fn();
@@ -51,7 +46,6 @@ jest.mock('@cardstack/navigation', () => ({
 
 jest.mock('@rainbow-me/hooks', () => ({
   useWallets: () => ({
-    signerParams,
     accountAddress,
   }),
 }));
@@ -131,7 +125,6 @@ describe('useRewardsRegister', () => {
 
     expect(mockedRegisterToRewardProgram).toBeCalledWith({
       accountAddress,
-      signerParams,
       prepaidCardAddress: inputData.prepaidCards[0].address,
       rewardProgramId: defaultRewardProgramId,
     });

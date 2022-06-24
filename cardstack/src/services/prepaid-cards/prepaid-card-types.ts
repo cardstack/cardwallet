@@ -1,9 +1,9 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 
-import { SignerParamsBase } from '@cardstack/models/ethers-wallet';
+import { EthersSignerParams } from '@cardstack/models/ethers-wallet';
 import { PrepaidCardType } from '@cardstack/types';
 
-interface SignedPrepaidCardBaseParams extends SignerParamsBase {
+interface SignedPrepaidCardBaseParams extends EthersSignerParams {
   accountAddress: string;
   prepaidCardAddress: string;
 }

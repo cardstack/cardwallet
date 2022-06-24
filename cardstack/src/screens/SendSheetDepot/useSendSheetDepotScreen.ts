@@ -324,11 +324,10 @@ export const useSendSheetDepotScreen = () => {
   }, []);
 
   // Send tokens
-  const { signerParams } = useWallets();
 
   const sendTokenFromDepot = useCallback(async () => {
     try {
-      const safes = await getSafesInstance(signerParams);
+      const safes = await getSafesInstance({ accountAddress });
 
       const customAmount = Web3.utils.toWei(amountDetails.assetAmount);
       const fullAmount = undefined; // When no amount is passed, the whole available balance is send;
@@ -362,7 +361,6 @@ export const useSendSheetDepotScreen = () => {
     recipient,
     safeAddress,
     selected,
-    signerParams,
     sendFullBalance,
   ]);
 

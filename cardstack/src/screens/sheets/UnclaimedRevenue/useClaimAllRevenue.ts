@@ -16,7 +16,7 @@ export const useClaimAllRevenue = ({
   merchantSafe: MerchantSafeType;
   isRefreshingBalances: boolean;
 }) => {
-  const { signerParams, accountAddress } = useWallets();
+  const { accountAddress } = useWallets();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const { navigate, dispatch: navDispatch } = useNavigation();
@@ -30,7 +30,6 @@ export const useClaimAllRevenue = ({
     showLoadingOverlay({ title: 'Claiming' });
 
     claimRevenue({
-      signerParams,
       revenueBalances: merchantSafe.revenueBalances,
       accountAddress,
       merchantSafeAddress: merchantSafe.address,
@@ -41,7 +40,6 @@ export const useClaimAllRevenue = ({
     merchantSafe.address,
     merchantSafe.revenueBalances,
     showLoadingOverlay,
-    signerParams,
   ]);
 
   // isRefreshing may be false when isSuccess is truthy on the first time

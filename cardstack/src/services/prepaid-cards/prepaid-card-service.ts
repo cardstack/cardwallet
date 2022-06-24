@@ -99,12 +99,11 @@ export const fetchPrepaidCards = async ({
 // Mutations
 
 export const transferPrepaidCard = async ({
-  signerParams,
   prepaidCardAddress,
   newOwner,
   accountAddress,
 }: PrepaidCardTransferQueryParams) => {
-  const prepaidCardInstance = await getPrepaidCardInstance(signerParams);
+  const prepaidCardInstance = await getPrepaidCardInstance({ accountAddress });
 
   const transfer = await prepaidCardInstance.transfer(
     prepaidCardAddress,
@@ -117,13 +116,12 @@ export const transferPrepaidCard = async ({
 };
 
 export const payMerchant = async ({
-  signerParams,
   prepaidCardAddress,
   merchantAddress,
   accountAddress,
   spendAmount,
 }: PrepaidCardPayMerchantQueryParams) => {
-  const prepaidCardInstance = await getPrepaidCardInstance(signerParams);
+  const prepaidCardInstance = await getPrepaidCardInstance({ accountAddress });
 
   const receipt = await prepaidCardInstance.payMerchant(
     merchantAddress,

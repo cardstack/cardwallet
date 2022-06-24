@@ -36,7 +36,7 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
-import { getEthersWallet } from '@cardstack/models/ethers-wallet';
+import { getEthersWalletWithSeed } from '@cardstack/models/ethers-wallet';
 
 import {
   getPin,
@@ -337,9 +337,9 @@ export const signTypedDataMessage = async (
 export const loadAddress = (): Promise<null | EthereumAddress> =>
   keychain.loadString(addressKey) as Promise<string | null>;
 
-export const loadPrivateKey = async () => {
+export const loadPrivateKey = async (accAddress?: string) => {
   try {
-    const address = await loadAddress();
+    const address = accAddress || (await loadAddress());
     if (!address) {
       return null;
     }
@@ -808,7 +808,7 @@ export const migrateSecretsWithNewPin = async (
 
   const migrateExistingAccountsPrivateKeys = (seedPhrase: string) =>
     selectedWallet.addresses.map(async account => {
-      const derivedAccount = await getEthersWallet({
+      const derivedAccount = await getEthersWalletWithSeed({
         seedPhrase,
         walletId: selectedWallet.id,
         accountIndex: account.index,
