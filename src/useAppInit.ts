@@ -1,7 +1,7 @@
 import notifee, { EventType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import { useFlipper } from '@react-navigation/devtools';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 import handleDeepLink from './handlers/deeplinks';
@@ -44,11 +44,16 @@ export const useAppInit = () => {
   useDevSetup();
   useNotificationSetup();
 
+  const initialDeepLink = useRef<string | null>(null);
+
   useEffect(() => {
     const handleWcDeepLink = async () => {
       try {
         const initialUrl = await Linking.getInitialURL();
+
         if (initialUrl) {
+          initialDeepLink.current = initialUrl;
+
           handleDeepLink(initialUrl);
         }
       } catch (e) {
@@ -64,6 +69,14 @@ export const useAppInit = () => {
 
     return subscription.remove;
   }, []);
+
+  useEffect(() => {
+    if (initialDeepLink.current && isAuthorized) {
+      Linking.openURL(initialDeepLink.current);
+
+      initialDeepLink.current = null;
+    }
+  }, [isAuthorized]);
 
   useEffect(() => {
     if (walletReady) {
