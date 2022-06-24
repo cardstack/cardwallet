@@ -23,7 +23,6 @@ import { Routes } from '@cardstack/navigation';
 import { isCloudBackupPasswordValid } from '@rainbow-me/handlers/cloudBackup';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
 import {
-  // useMagicAutofocus,
   useRouteExistsInNavigationState,
   useWalletCloudBackup,
   useWallets,
@@ -32,7 +31,6 @@ import {
 import logger from 'logger';
 
 export default function BackupCloudStep() {
-  // const currentlyFocusedInput = useRef();
   const { goBack } = useNavigation();
   const { params } = useRoute();
   const walletCloudBackup = useWalletCloudBackup();
@@ -62,31 +60,6 @@ export default function BackupCloudStep() {
   const walletId = (params as any)?.walletId || selectedWallet.id;
   const passwordRef = useRef<any>();
   const confirmPasswordRef = useRef<any>();
-
-  useEffect(() => {
-    setTimeout(() => {
-      passwordRef.current?.focus();
-    }, 1);
-  }, []);
-
-  // const { handleFocus } = useMagicAutofocus(passwordRef);
-
-  // const onPasswordFocus = useCallback(
-  //   target => {
-  //     handleFocus(target);
-  //     setPasswordFocused(true);
-  //     currentlyFocusedInput.current = passwordRef.current;
-  //   },
-  //   [handleFocus]
-  // );
-
-  // const onConfirmPasswordFocus = useCallback(
-  //   target => {
-  //     handleFocus(target);
-  //     currentlyFocusedInput.current = confirmPasswordRef.current;
-  //   },
-  //   [handleFocus]
-  // );
 
   const onPasswordBlur = useCallback(() => {
     setPasswordFocused(false);
@@ -201,7 +174,6 @@ export default function BackupCloudStep() {
               iconProps={passwordFieldIconProps}
               onBlur={onPasswordBlur}
               onChange={onPasswordChange}
-              // onFocus={onPasswordFocus}
               onSubmitEditing={onPasswordSubmit}
               placeholder="Enter password"
               ref={passwordRef}
@@ -213,7 +185,6 @@ export default function BackupCloudStep() {
               {...backupPasswordInputProps}
               iconProps={confirmPasswordFieldIconProps}
               onChange={onConfirmPasswordChange}
-              // onFocus={onConfirmPasswordFocus}
               onSubmitEditing={onConfirmPasswordSubmit}
               placeholder="Confirm password"
               ref={confirmPasswordRef}
