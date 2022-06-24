@@ -41,7 +41,6 @@ const prepaidCardApi = safesApi.injectEndpoints({
           PrepaidCardPayMerchantQueryParams
         >(payMerchant, params, {
           errorLogMessage: 'Error while paying merchant',
-          resetHdProvider: false,
         });
       },
       invalidatesTags: [CacheTags.SAFES, CacheTags.PREPAID_CARDS],
@@ -56,7 +55,6 @@ const prepaidCardApi = safesApi.injectEndpoints({
           PrepaidCardTransferQueryParams
         >(transferPrepaidCard, params, {
           errorLogMessage: 'Error while transferring prepaid card',
-          resetHdProvider: false,
         });
       },
       invalidatesTags: [CacheTags.SAFES, CacheTags.PREPAID_CARDS],

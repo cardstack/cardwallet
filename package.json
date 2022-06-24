@@ -127,7 +127,6 @@
     "match-sorter": "^4.0.2",
     "mnemonist": "^0.38.1",
     "node-fetch": "^2.6.1",
-    "parity-hdwallet-provider": "^1.3.0-fork.2",
     "parse-ms": "^2.1.0",
     "patch-package": "^6.2.0",
     "path-browserify": "0.0.0",
