@@ -12,6 +12,7 @@ export const backupPasswordInputProps: Partial<TextInputProps & InputProps> = {
   secureTextEntry: true,
   selectTextOnFocus: true,
   textContentType: 'password',
+  paddingVertical: 2,
 };
 
 interface BackupButtonFooterProps {

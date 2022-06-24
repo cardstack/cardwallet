@@ -31,7 +31,6 @@ export { default as useIsWalletEthZero } from './useIsWalletEthZero';
 export { default as useKeyboardHeight } from './useKeyboardHeight';
 export { default as useLoadAccountData } from './useLoadAccountData';
 export { default as useLoadGlobalData } from './useLoadGlobalData';
-export { default as useMagicAutofocus } from './useMagicAutofocus';
 export { default as useManageCloudBackups } from './useManageCloudBackups';
 export { default as useMaxInputBalance } from './useMaxInputBalance';
 export { default as usePrevious } from './usePrevious';
