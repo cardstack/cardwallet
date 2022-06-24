@@ -30,7 +30,6 @@ import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet'
 import {
   useAccountAssets,
   useAccountSettings,
-  useMagicAutofocus,
   useWallets,
 } from '@rainbow-me/hooks';
 import logger from 'logger';
@@ -91,7 +90,6 @@ export const useSendSheetDepotScreen = () => {
   // Inputs
   const recipientFieldRef = useRef();
   const [recipient, setRecipient] = useState('');
-  const { handleFocus, triggerFocus } = useMagicAutofocus(recipientFieldRef);
 
   const [amountDetails, setAmountDetails] = useState(amountDetailsInitialState);
 
@@ -422,9 +420,7 @@ export const useSendSheetDepotScreen = () => {
       selected,
       amountDetails,
       isAuthorizing,
-      handleFocus,
       setRecipient,
-      triggerFocus,
       onSendPress,
       onChangeAssetAmount,
       onChangeNativeAmount,
@@ -439,7 +435,6 @@ export const useSendSheetDepotScreen = () => {
       amountDetails,
       depotAssets,
       gasEstimatedFee,
-      handleFocus,
       isAuthorizing,
       isValidAddress,
       nativeCurrency,
@@ -451,7 +446,6 @@ export const useSendSheetDepotScreen = () => {
       onSendPress,
       recipient,
       selected,
-      triggerFocus,
     ]
   );
 };

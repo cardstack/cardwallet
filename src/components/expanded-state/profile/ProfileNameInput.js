@@ -2,13 +2,11 @@ import React, { Fragment, useCallback, useEffect, useRef } from 'react';
 
 import { PlaceholderText } from '../../text';
 import { Input } from '@cardstack/components';
-import { useMagicAutofocus } from '@rainbow-me/hooks';
 
 function ProfileNameInput(
   { onChange, placeholder, testID, value, ...props },
   ref
 ) {
-  const { handleFocus } = useMagicAutofocus(ref);
   const placeholderRef = useRef(null);
 
   const handleChange = useCallback(
@@ -39,7 +37,6 @@ function ProfileNameInput(
         autoFocus
         fontSize={20}
         onChange={handleChange}
-        onFocus={handleFocus}
         ref={ref}
         returnKeyType="done"
         spellCheck={false}

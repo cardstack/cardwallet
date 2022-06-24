@@ -15,7 +15,7 @@ import {
   ToastPositionContainer,
   InvalidPasteToast,
 } from '@rainbow-me/components/toasts';
-import { useKeyboardHeight, useMagicAutofocus } from '@rainbow-me/hooks';
+import { useKeyboardHeight } from '@rainbow-me/hooks';
 
 import { useImportSeedSheet } from './useImportSeedSheet';
 
@@ -32,7 +32,6 @@ const ImportSeedSheet = () => {
     isInvalidPaste,
   } = useImportSeedSheet();
 
-  const { handleFocus } = useMagicAutofocus(inputRef);
   const keyboardHeight = useKeyboardHeight();
 
   return (
@@ -54,7 +53,6 @@ const ImportSeedSheet = () => {
               multiline
               numberOfLines={3}
               onChangeText={handleSetSeedPhrase}
-              onFocus={handleFocus}
               onSubmitEditing={handlePressImportButton}
               placeholder="Enter seed phrase or secret recovery phrase"
               placeholderTextColor={colors.grayText}

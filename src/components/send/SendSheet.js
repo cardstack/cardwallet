@@ -40,9 +40,7 @@ export const useSendAddressValidation = recipient => {
 
 export default function SendSheet({
   isValidAddress,
-  handleFocus,
   setRecipient,
-  triggerFocus,
   recipient,
   recipientFieldRef,
   allAssets,
@@ -94,10 +92,8 @@ export default function SendSheet({
         contacts={contacts}
         isValidAddress={isValidAddress}
         onChangeAddressInput={onChangeInput}
-        onFocus={handleFocus}
         onInvalidPaste={onInvalidPaste}
         onPressPaste={setRecipient}
-        onRefocusInput={triggerFocus}
         recipient={recipient}
         recipientFieldRef={recipientFieldRef}
         removeContact={onRemoveContact}
@@ -142,7 +138,6 @@ export default function SendSheet({
           nativeCurrency={nativeCurrency}
           onChangeAssetAmount={onChangeAssetAmount}
           onChangeNativeAmount={onChangeNativeAmount}
-          onFocus={handleFocus}
           onResetAssetSelection={onResetAssetSelection}
           selected={selected}
           sendMaxBalance={onMaxBalancePress}

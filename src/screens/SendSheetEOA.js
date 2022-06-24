@@ -25,7 +25,6 @@ import {
   useAccountAssets,
   useAccountSettings,
   useGas,
-  useMagicAutofocus,
   useMaxInputBalance,
   usePrevious,
   useRefreshAccountData,
@@ -88,14 +87,6 @@ const useSendSheetScreen = () => {
   const { showAssetList, showAssetForm } = useShowAssetFlags(
     isValidAddress,
     selected
-  );
-
-  const { handleFocus, triggerFocus } = useMagicAutofocus(
-    recipientFieldRef,
-    useCallback(
-      lastFocusedRef => (showAssetList ? null : lastFocusedRef.current),
-      [showAssetList]
-    )
   );
 
   useEffect(() => {
@@ -436,9 +427,7 @@ const useSendSheetScreen = () => {
 
   return {
     isValidAddress,
-    handleFocus,
     setRecipient,
-    triggerFocus,
     recipient,
     recipientFieldRef,
     allAssets,
