@@ -27,8 +27,8 @@ export const useAppState = () => {
   );
 
   const movedToBackground = useMemo(
-    () => prevAppState === AppStateType.background,
-    [prevAppState]
+    () => appState === AppStateType.background,
+    [appState]
   );
 
   return {
