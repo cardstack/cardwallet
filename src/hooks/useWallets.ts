@@ -83,5 +83,6 @@ export default function useWallets() {
     selectedAccount,
     selectedWallet,
     accountAddress,
+    walletReady,
   };
 }
