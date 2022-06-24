@@ -18,12 +18,12 @@ export const useQRCodeScannerPage = (props: useScannerParams) => {
   const { network } = useAccountSettings();
   const isFocused = useIsFocused();
 
-  const requestPersmission = useCallback(async () => {
+  const requestPermission = useCallback(async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
     status === 'granted' && setCameraAllowed();
   }, [setCameraAllowed]);
 
-  const enableCameraPressed = useCallback(async () => {
+  const onEnableCameraPress = useCallback(async () => {
     const {
       status: prevStatus,
       canAskAgain,
@@ -35,15 +35,17 @@ export const useQRCodeScannerPage = (props: useScannerParams) => {
       return;
     }
 
-    requestPersmission();
-  }, [requestPersmission]);
+    requestPermission();
+  }, [requestPermission]);
 
   useEffect(() => {
-    if (isFocused) requestPersmission();
-  }, [requestPersmission, isFocused]);
+    if (isFocused && !isCameraAllowed) {
+      requestPermission();
+    }
+  }, [requestPermission, isFocused, isCameraAllowed]);
 
   return {
-    enableCameraPressed,
+    onEnableCameraPress,
     isCameraAllowed,
     isEmulator,
     isLoading,

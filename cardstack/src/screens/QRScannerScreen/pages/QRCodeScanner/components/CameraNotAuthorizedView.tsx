@@ -10,10 +10,10 @@ import {
 import { strings } from '../strings';
 
 interface Props {
-  enableCameraPressed: () => void;
+  onEnableCameraPress: () => void;
 }
 
-const CameraNotAuthorizedView = ({ enableCameraPressed }: Props) => {
+const CameraNotAuthorizedView = ({ onEnableCameraPress }: Props) => {
   return (
     <AbsoluteFullScreenContainer
       backgroundColor="backgroundDarkPurple"
@@ -33,7 +33,7 @@ const CameraNotAuthorizedView = ({ enableCameraPressed }: Props) => {
       >
         {strings.authorize.info}
       </Text>
-      <Button onPress={enableCameraPressed}>
+      <Button onPress={onEnableCameraPress}>
         <Text>{strings.authorize.cameraBtn}</Text>
       </Button>
     </AbsoluteFullScreenContainer>

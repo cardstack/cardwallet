@@ -45,7 +45,7 @@ const QRCodeScannerPage = (props: QRCodeScannerProps) => {
     network,
     onScan,
     isFocused,
-    enableCameraPressed,
+    onEnableCameraPress,
   } = useQRCodeScannerPage(props);
 
   const renderErrorOrLoading = useMemo(
@@ -85,7 +85,7 @@ const QRCodeScannerPage = (props: QRCodeScannerProps) => {
           ratio="16:9"
         />
       ) : (
-        <CameraNotAuthorizedView enableCameraPressed={enableCameraPressed} />
+        <CameraNotAuthorizedView onEnableCameraPress={onEnableCameraPress} />
       )}
       <AbsoluteFullScreenContainer zIndex={1}>
         <QRCodeOverlay />
