@@ -49,7 +49,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
 
         if (walletAddress && network) {
           try {
-            const token = await getHubAuthToken(hubUrl, network, walletAddress);
+            const token = await getHubAuthToken(network, walletAddress);
 
             if (token) {
               headers.set('Authorization', `Bearer ${token}`);
