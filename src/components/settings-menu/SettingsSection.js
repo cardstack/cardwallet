@@ -19,8 +19,8 @@ import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useAccountSettings,
   useSendFeedback,
-  useWallets,
   useWalletManager,
+  useWallets,
 } from '@rainbow-me/hooks';
 
 const checkAllWallets = wallets => {
