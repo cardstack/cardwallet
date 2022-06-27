@@ -14,13 +14,13 @@ import {
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
 import { Routes } from '@cardstack/navigation';
-import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useAccountSettings,
   useSendFeedback,
   useWallets,
+  useWalletManager,
 } from '@rainbow-me/hooks';
 
 const checkAllWallets = wallets => {
@@ -62,6 +62,7 @@ export default function SettingsSection({
   const { navigate } = useNavigation();
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
+  const { updateWalletPIN } = useWalletManager();
 
   const onSendFeedback = useSendFeedback();
 
@@ -86,14 +87,6 @@ export default function SettingsSection({
     () => checkAllWallets(wallets),
     [wallets]
   );
-
-  const onPressChangePin = useCallback(() => {
-    navigate(Routes.PIN_SCREEN, {
-      flow: PinFlow.new,
-      variant: 'light',
-      canGoBack: true,
-    });
-  }, [navigate]);
 
   const onPressSeedPhraseBackup = useCallback(() => {
     navigate(Routes.SEED_PHRASE_BACKUP);
@@ -165,7 +158,7 @@ export default function SettingsSection({
             <ListItem
               icon={<Icon color="settingsTeal" name="lock" />}
               label="Change Pin"
-              onPress={onPressChangePin}
+              onPress={updateWalletPIN}
               testID="changePin-section"
             >
               <ListItemArrowGroup />

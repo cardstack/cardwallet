@@ -26,6 +26,7 @@ import useAccountSettings from './useAccountSettings';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
+import useWallets from './useWallets';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { getPin } from '@cardstack/models/secure-storage';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
@@ -63,6 +64,8 @@ export default function useWalletManager() {
 
   const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
+  const { selectedWallet } = useWallets();
+
   const createWalletPin = useCallback(
     (overwriteParams: Partial<PinScreenNavParams> = {}) => {
       navigate(Routes.PIN_SCREEN, {
@@ -75,6 +78,18 @@ export default function useWalletManager() {
     },
     [navigate]
   );
+
+  const updateWalletPIN = useCallback(async () => {
+    navigate(Routes.PIN_SCREEN, {
+      flow: PinFlow.new,
+      variant: 'light',
+      canGoBack: true,
+      dismissOnSuccess: true,
+      onSuccess: async (pin: string) => {
+        await migrateSecretsWithNewPin(selectedWallet, pin);
+      },
+    });
+  }, [navigate, selectedWallet]);
 
   const loadAllSeedPhrases = useCallback(async (wallets: RainbowWallet[]) => {
     const seeds = [];
@@ -292,5 +307,6 @@ export default function useWalletManager() {
     importWallet,
     changeSelectedWallet,
     initWalletResetNavState,
+    updateWalletPIN,
   };
 }
