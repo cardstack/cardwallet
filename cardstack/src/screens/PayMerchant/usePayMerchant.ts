@@ -52,7 +52,7 @@ const usePayMerchantRequest = ({
 }: PayMerchantRequestParams) => {
   const { navigate } = useNavigation();
 
-  const { signerParams, accountAddress } = useWallets();
+  const { accountAddress } = useWallets();
 
   const [
     payMerchant,
@@ -70,7 +70,6 @@ const usePayMerchantRequest = ({
     });
 
     payMerchant({
-      signerParams,
       merchantAddress,
       prepaidCardAddress: selectedPrepaidCard?.address || '',
       spendAmount,
@@ -79,7 +78,6 @@ const usePayMerchantRequest = ({
   }, [
     showLoadingOverlay,
     payMerchant,
-    signerParams,
     merchantAddress,
     selectedPrepaidCard,
     spendAmount,

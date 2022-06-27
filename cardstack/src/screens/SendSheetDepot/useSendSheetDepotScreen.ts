@@ -27,11 +27,7 @@ import { useWorker } from '@cardstack/utils/hooks-utilities';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useSendAddressValidation } from '@rainbow-me/components/send/SendSheet';
-import {
-  useAccountAssets,
-  useAccountSettings,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useAccountAssets, useAccountSettings } from '@rainbow-me/hooks';
 import logger from 'logger';
 
 interface Params {
@@ -324,11 +320,10 @@ export const useSendSheetDepotScreen = () => {
   }, []);
 
   // Send tokens
-  const { signerParams } = useWallets();
 
   const sendTokenFromDepot = useCallback(async () => {
     try {
-      const safes = await getSafesInstance(signerParams);
+      const safes = await getSafesInstance({ accountAddress });
 
       const customAmount = Web3.utils.toWei(amountDetails.assetAmount);
       const fullAmount = undefined; // When no amount is passed, the whole available balance is send;
@@ -362,7 +357,6 @@ export const useSendSheetDepotScreen = () => {
     recipient,
     safeAddress,
     selected,
-    signerParams,
     sendFullBalance,
   ]);
 

@@ -12,11 +12,6 @@ const validAddress = '0x2f58630CA445Ab1a6DE2Bb9892AA2e1d60876C13';
 const prepaidCardAddress = '0x4ba1A50Aecba077Acdf4625BF9aDB3Fe964eEA17';
 const accountAddress = '0x0000000000000000000000000000000000000000';
 
-const signerParams = {
-  walletId: '123',
-  accountIndex: 1,
-};
-
 // Mock navigation
 const mockedGoBack = jest.fn();
 jest.mock('@react-navigation/native', () => ({
@@ -31,7 +26,6 @@ jest.mock('@react-navigation/native', () => ({
 jest.mock('@rainbow-me/hooks', () => ({
   useWallets: () => ({
     accountAddress,
-    signerParams,
   }),
 }));
 
@@ -98,7 +92,6 @@ describe('useTransferCardScreen', () => {
 
     expect(mockedTransferPrepaidCard).toBeCalledWith({
       accountAddress,
-      signerParams,
       prepaidCardAddress,
       newOwner: validAddress,
     });

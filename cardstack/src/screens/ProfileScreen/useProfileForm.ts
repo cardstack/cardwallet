@@ -19,7 +19,7 @@ import {
   TransactionConfirmationType,
 } from '@cardstack/types';
 
-import { useAccountProfile, useWallets } from '@rainbow-me/hooks';
+import { useAccountProfile } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
 
 import { ProfileFormContext, strings, exampleMerchantData } from './components';
@@ -35,8 +35,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   const { authToken, isLoading } = useAuthToken();
   const { accountSymbol, accountAddress = '' } = useAccountProfile();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  const { signerParams } = useWallets();
 
   const [
     createProfile,
@@ -243,7 +241,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
         }
 
         createProfile({
-          signerParams,
           selectedPrepaidCardAddress: selectedPrepaidCard.address,
           profileDID,
           accountAddress,
@@ -258,7 +255,6 @@ export const useProfileForm = (params?: useProfileFormParams) => {
       businessId,
       businessColor,
       createProfile,
-      signerParams,
       accountAddress,
       dismissLoadingOverlay,
     ]

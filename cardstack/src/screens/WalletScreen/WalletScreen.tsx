@@ -10,20 +10,22 @@ import {
 } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 
-import { useWalletManager } from '@rainbow-me/hooks';
+import { useWalletManager, useWallets } from '@rainbow-me/hooks';
 
 export const WalletScreen = () => {
   const { params } = useRoute<RouteType<{ initialized?: boolean }>>();
   const { initializeWallet } = useWalletManager();
 
+  const { walletReady } = useWallets();
+
   const initialized = useRef(!!params?.initialized);
 
   useEffect(() => {
-    if (!initialized.current) {
+    if (!initialized.current && !walletReady) {
       initializeWallet();
       initialized.current = true;
     }
-  }, [initializeWallet]);
+  }, [initializeWallet, walletReady]);
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1} height="100%">

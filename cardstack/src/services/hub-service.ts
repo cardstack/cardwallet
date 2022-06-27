@@ -1,10 +1,9 @@
 import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
 import axios, { AxiosError } from 'axios';
 import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
-import Web3 from 'web3';
 
+import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
-import HDProvider from '@cardstack/models/hd-provider';
 import {
   BusinessIDUniquenessResponse,
   Inventory,
@@ -22,23 +21,8 @@ import {
 } from '@rainbow-me/handlers/localstorage/common';
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import {
-  getAllWallets,
-  getWalletByAddress,
-  loadAddress,
-} from '@rainbow-me/model/wallet';
+import { loadAddress } from '@rainbow-me/model/wallet';
 import logger from 'logger';
-
-const HUBAUTH_PROMPT_MESSAGE =
-  'Please authenticate your ownership of this account with the Cardstack Hub server';
-
-const hubAuthPromptMessages = {
-  notifications: {
-    register: `${HUBAUTH_PROMPT_MESSAGE} to enable notifications`,
-    unregister: `${HUBAUTH_PROMPT_MESSAGE} to unregister`,
-  },
-  default: HUBAUTH_PROMPT_MESSAGE,
-};
 
 const HUBTOKEN_KEY = 'hubToken';
 
@@ -98,10 +82,8 @@ export const removeHubAuthToken = (address: string, network: Network) =>
   removeLocal(hubTokenStorageKey(network), address);
 
 export const getHubAuthToken = async (
-  hubURL: string,
   network: Network,
-  walletAddress?: string,
-  keychainAcessAskPrompt: string = hubAuthPromptMessages.default
+  walletAddress?: string
 ): Promise<string | null> => {
   // load wallet address when not provided as an argument(this keychain access does not require passcode/biometric auth)
   const address = walletAddress || (await loadAddress()) || '';
@@ -113,22 +95,13 @@ export const getHubAuthToken = async (
     return savedAuthToken;
   }
 
-  const allWallets = await getAllWallets();
-
-  // get wallet id through allWallets using wallet address
-  const walletId =
-    getWalletByAddress({ walletAddress: address, allWallets })?.id || '';
-
   try {
-    const hdProvider = await HDProvider.get({
-      walletId,
-      network,
-      keychainAcessAskPrompt,
+    const [web3, signer] = await getWeb3ProviderWithEthSigner({
+      accountAddress: address,
     });
 
-    // didn't use Web3Instance.get and created new web3 instance to avoid conflicts with asset loading, etc that uses web3 instance
-    const web3 = new Web3(hdProvider);
-    const authAPI = await getSDK('HubAuth', web3, hubURL);
+    const authAPI = await getSDK('HubAuth', web3, undefined, signer);
+
     const authToken = await authAPI.authenticate({ from: address });
 
     await storeHubAuthToken(hubTokenStorageKey(network), authToken, address);
@@ -138,8 +111,6 @@ export const getHubAuthToken = async (
     logger.sentry('Hub authenticate failed', e);
 
     return null;
-  } finally {
-    await HDProvider.reset();
   }
 };
 

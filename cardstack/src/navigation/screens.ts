@@ -135,7 +135,7 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   },
   MERCHANT_TRANSACTION_SHEET: {
     component: MerchantTransactionSheet,
-    options: sheetPreset(),
+    options: sheetPreset({ backgroundOpacity: 'half' }),
   },
   CHOOSE_PREPAIDCARD_SHEET: {
     component: ChoosePrepaidCardSheet,

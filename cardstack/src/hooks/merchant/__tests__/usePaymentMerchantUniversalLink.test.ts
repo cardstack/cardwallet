@@ -57,12 +57,6 @@ jest.mock('@cardstack/models/web3-instance', () => ({
   }),
 }));
 
-jest.mock('@cardstack/models/hd-provider', () => ({
-  HDProvider: () => ({
-    reset: jest.fn(),
-  }),
-}));
-
 describe('usePaymentMerchantUniversalLink', () => {
   beforeEach(() => {
     (getSafeData as jest.Mock).mockImplementation(() => ({

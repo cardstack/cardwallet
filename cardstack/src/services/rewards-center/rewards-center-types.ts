@@ -1,7 +1,7 @@
 import { NativeCurrency, RewardSafe } from '@cardstack/cardpay-sdk';
 import { TransactionReceipt } from 'web3-core';
 
-import { SignerParamsBase } from '@cardstack/models/ethers-wallet';
+import { EthersSignerParams } from '@cardstack/models/ethers-wallet';
 import { TokenType } from '@cardstack/types';
 
 export interface RewardsSafeQueryParams {
@@ -24,7 +24,7 @@ export interface RewardsTokenBalancesResult {
   rewardPoolTokenBalances: TokenByProgramID[];
 }
 
-interface RewardsPoolSignedBaseParams extends SignerParamsBase {
+interface RewardsPoolSignedBaseParams extends EthersSignerParams {
   accountAddress: string;
   rewardProgramId: string;
 }
@@ -59,11 +59,7 @@ export interface ValidProofsParams {
   rewardProgramId: string;
 }
 
-export type RewardsClaimGasEstimateParams = Omit<
-  RewardsClaimMutationParams,
-  keyof SignerParamsBase
->;
-
+export type RewardsClaimGasEstimateParams = RewardsClaimMutationParams;
 interface RewardWithdrawBaseParams {
   to: string;
   from: string;

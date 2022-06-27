@@ -36,7 +36,7 @@ const useRewardsRegister = () => {
   const { params } = useRoute<RouteType<RouteParams>>();
   const { navigate, dispatch, goBack } = useNavigation();
   const { defaultRewardProgramId } = useRewardsDataFetch();
-  const { signerParams, accountAddress } = useWallets();
+  const { accountAddress } = useWallets();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -90,7 +90,7 @@ const useRewardsRegister = () => {
     if (registerConfirmationData.prepaidCard) {
       registerToRewardProgram({
         accountAddress,
-        signerParams,
+
         prepaidCardAddress: registerConfirmationData.prepaidCard,
         rewardProgramId: defaultRewardProgramId,
       });
@@ -101,7 +101,6 @@ const useRewardsRegister = () => {
     registerToRewardProgram,
     defaultRewardProgramId,
     accountAddress,
-    signerParams,
   ]);
 
   const onRegisterFulfilledAlert = useCallback(

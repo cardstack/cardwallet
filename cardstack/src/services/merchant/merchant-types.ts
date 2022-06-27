@@ -1,13 +1,13 @@
-import { SignerParamsBase } from '@cardstack/models/ethers-wallet';
+import { EthersSignerParams } from '@cardstack/models/ethers-wallet';
 import { TokenType } from '@cardstack/types';
 
-export interface ClaimRevenueQueryParams extends SignerParamsBase {
+export interface ClaimRevenueQueryParams extends EthersSignerParams {
   accountAddress: string;
   merchantSafeAddress: string;
   revenueBalances: TokenType[];
 }
 
-export interface CreateProfileQueryParams extends SignerParamsBase {
+export interface CreateProfileQueryParams extends EthersSignerParams {
   selectedPrepaidCardAddress: string;
   profileDID: string;
   accountAddress: string;

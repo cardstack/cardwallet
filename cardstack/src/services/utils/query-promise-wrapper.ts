@@ -1,7 +1,5 @@
 import { captureException } from '@sentry/minimal';
 
-import HDProvider from '@cardstack/models/hd-provider';
-
 import logger from 'logger';
 
 type QueryError = {
@@ -20,7 +18,6 @@ type QuerySuccess<TResult> = {
 interface Options {
   errorStatus?: number;
   errorLogMessage?: string;
-  resetHdProvider?: boolean;
   timeout?: number;
 }
 
@@ -64,7 +61,5 @@ export const queryPromiseWrapper = async <TResult, TArgs>(
         data: error,
       },
     };
-  } finally {
-    options?.resetHdProvider && (await HDProvider.reset());
   }
 };

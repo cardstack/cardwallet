@@ -224,9 +224,8 @@ export const registerToRewardProgram = async ({
   prepaidCardAddress,
   rewardProgramId,
   accountAddress,
-  signerParams,
 }: RewardsRegisterMutationParams) => {
-  const rewardManager = await getRewardManagerInstance(signerParams);
+  const rewardManager = await getRewardManagerInstance({ accountAddress });
 
   const result = await rewardManager.registerRewardee(
     prepaidCardAddress,
@@ -243,9 +242,8 @@ export const claimRewards = async ({
   tokenAddress,
   rewardProgramId,
   accountAddress,
-  signerParams,
 }: RewardsClaimMutationParams) => {
-  const rewardPoolInstance = await getRewardsPoolInstance(signerParams);
+  const rewardPoolInstance = await getRewardsPoolInstance({ accountAddress });
 
   const validProofs = await getValidProofs({
     accountAddress,
@@ -280,9 +278,8 @@ export const withdrawFromRewardSafe = async ({
   tokenAddress,
   amount,
   accountAddress,
-  signerParams,
 }: RewardWithdrawParams) => {
-  const rewardManager = await getRewardManagerInstance(signerParams);
+  const rewardManager = await getRewardManagerInstance({ accountAddress });
 
   const result = await rewardManager.withdraw(
     from,

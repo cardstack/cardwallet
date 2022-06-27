@@ -69,11 +69,6 @@ jest.mock('../../../services/exchange-rate-service.ts', () => {
   };
 });
 
-jest.mock('@cardstack/models/hd-provider', () => ({
-  get: jest.fn(),
-  reset: jest.fn(),
-}));
-
 // Gas Converter mocking
 const weiGasEstimate = '12041962649411652';
 const usdGasEstimate = 0.00020291;

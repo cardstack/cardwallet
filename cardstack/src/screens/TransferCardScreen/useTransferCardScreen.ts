@@ -29,7 +29,7 @@ export const useTransferCardScreen = () => {
 
   const isValidAddress = useSendAddressValidation(newOwnerAddress);
 
-  const { signerParams, accountAddress } = useWallets();
+  const { accountAddress } = useWallets();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -90,14 +90,13 @@ export const useTransferCardScreen = () => {
       accountAddress,
       prepaidCardAddress,
       newOwner: newOwnerAddress,
-      signerParams,
     });
   }, [
     accountAddress,
     newOwnerAddress,
     prepaidCardAddress,
     showLoadingOverlay,
-    signerParams,
+
     transferPrepaidCard,
   ]);
 
