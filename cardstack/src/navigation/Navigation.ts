@@ -6,13 +6,10 @@ import {
 import { RouteNames, StackParamsList } from 'globals';
 import { get } from 'lodash';
 import React from 'react';
-import { Value } from 'react-native-reanimated';
 
 export const navigationRef = React.createRef<
   NavigationContainerRef<StackParamsList>
 >();
-
-const transitionPosition = new Value(0);
 
 const getActiveRoute = () => navigationRef.current?.getCurrentRoute();
 
@@ -47,5 +44,4 @@ export default {
   getActiveRoute,
   getActiveRouteName,
   handleAction,
-  transitionPosition,
 };
