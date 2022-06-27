@@ -19,8 +19,6 @@ import TextInputMask, {
   TextInputMaskProps,
 } from 'react-native-text-input-mask';
 
-import { Device } from '@cardstack/utils';
-
 import { Theme } from '../../theme';
 import { Container } from '../Container';
 import { Icon, IconProps } from '../Icon';
@@ -75,7 +73,6 @@ export const Input = React.forwardRef((props: InputProps, ref) => (
       ref={ref}
       color="black"
       {...props}
-      autoFocus={Device.enableAutoFocus}
     />
     {props.iconProps && (
       <Icon

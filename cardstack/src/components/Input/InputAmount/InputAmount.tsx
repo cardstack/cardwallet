@@ -12,7 +12,6 @@ import { Keyboard } from 'react-native';
 import { useSpendToNativeDisplay } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { palette } from '@cardstack/theme/colors';
-import { Device } from '@cardstack/utils';
 
 import { removeLeadingZeros } from '@rainbow-me/utils';
 
@@ -134,7 +133,7 @@ export const InputAmount = memo(
                 alignSelf="stretch"
                 autoCapitalize="none"
                 autoCorrect={false}
-                autoFocus={Device.enableAutoFocus}
+                autoFocus
                 color={isInvalid ? 'red' : 'black'}
                 fontSize={30}
                 fontWeight="bold"
