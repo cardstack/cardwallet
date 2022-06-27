@@ -20,7 +20,11 @@ import {
 } from '../hub-service';
 
 import { hubApi } from './hub-api';
-import { BaseQueryExtraOptions, CheckHubAuthQueryParams } from './hub-types';
+import {
+  BaseQueryExtraOptions,
+  CheckHubAuthQueryParams,
+  GetExchangeRatesQueryParams,
+} from './hub-types';
 
 // Helpers
 
@@ -119,9 +123,9 @@ const cacheExpiration = {
   tenMinutes: 60 * 10,
 };
 
-export const getExchangeRatesQuery = () => {
+export const getExchangeRatesQuery = (params?: GetExchangeRatesQueryParams) => {
   const query = store.dispatch(
-    hubApi.endpoints.getExchangeRates.initiate(undefined, {
+    hubApi.endpoints.getExchangeRates.initiate(params, {
       forceRefetch: cacheExpiration.tenMinutes,
     })
   );

@@ -1,3 +1,4 @@
+import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { KebabToCamelCaseKeys } from 'globals';
 
 import { CustodialWalletAttrs } from '@cardstack/types';
@@ -34,4 +35,11 @@ export interface CheckHubAuthQueryParams {
 
 export interface RegisterFCMTokenQueryParams {
   fcmToken: string;
+}
+
+export interface GetExchangeRatesQueryParams {
+  from?: NativeCurrency | string;
+  to?: NativeCurrency | string;
+  date?: string | number;
+  e?: 'kucoin' | string;
 }

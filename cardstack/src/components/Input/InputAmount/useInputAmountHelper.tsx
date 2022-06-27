@@ -30,7 +30,7 @@ export const useInputAmountHelper = () => {
     [amountInNum, paymentCurrency]
   );
 
-  const { data: rates } = useGetExchangeRatesQuery();
+  const { data: rates } = useGetExchangeRatesQuery({});
 
   const spendAmount = useMemo(() => {
     const isCurrencyUSD = paymentCurrency === NativeCurrency.USD;

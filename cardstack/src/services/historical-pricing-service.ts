@@ -1,21 +1,23 @@
-import { cryptoCurrencies } from '@cardstack/cardpay-sdk';
-import { CRYPTOCOMPARE_API_KEY } from 'react-native-dotenv';
+import { cryptoCurrencies, NativeCurrency } from '@cardstack/cardpay-sdk';
+import { format } from 'date-fns';
 
+import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
 import { removeCPXDTokenSuffix } from '@cardstack/utils';
 
 import logger from 'logger';
 
-const CryptoCompareAPIBaseURL = `https://min-api.cryptocompare.com/data/pricehistorical?&api_key=${CRYPTOCOMPARE_API_KEY}`;
-
 export const fetchHistoricalPrice = async (
   symbol: string,
-  timestamp: string | number,
-  nativeCurrency: string
+  timestamp: number,
+  nativeCurrency: NativeCurrency | string
 ): Promise<number> => {
   try {
     if (!symbol) {
       return 0;
     }
+
+    // date needs to be formatted as yyyy-MM-dd
+    const formattedDate = format(timestamp, 'yyyy-MM-dd');
 
     // For cpxd tokens we chop off .CPXD in order to get mainnet's historical price
     const tokenSymbol = removeCPXDTokenSuffix(symbol);
@@ -23,29 +25,39 @@ export const fetchHistoricalPrice = async (
     // cryptocompare does not support CARD price history correctly,
     // so uses kucoin exchange to get CARD price in USDT(kucoin supports only USDT) and convert it to native currency
     if (tokenSymbol === cryptoCurrencies.CARD.currency) {
-      const usdtPriceData = await (
-        await fetch(
-          `${CryptoCompareAPIBaseURL}&fsym=${tokenSymbol}&tsyms=USDT&ts=${timestamp}&e=kucoin`
-        )
-      ).json();
+      const { data: kucoinRate } = await getExchangeRatesQuery({
+        from: tokenSymbol,
+        to: 'USDT',
+        date: formattedDate,
+        e: 'kucoin',
+      });
 
-      const usdtPrice = usdtPriceData.CARD.USDT;
+      const usdtPrice = kucoinRate?.USDT;
 
-      const nativeCurrencyPriceForUSDT = await fetchHistoricalPrice(
-        'USDT',
-        timestamp,
-        nativeCurrency
-      );
+      const { data: USDTRate } = await getExchangeRatesQuery({
+        from: 'USDT',
+        to: tokenSymbol,
+        date: formattedDate,
+      });
 
-      return usdtPrice * nativeCurrencyPriceForUSDT;
+      const nativeCurrencyPriceForUSDT = USDTRate?.[tokenSymbol];
+
+      if (usdtPrice && nativeCurrencyPriceForUSDT) {
+        return usdtPrice * nativeCurrencyPriceForUSDT;
+      } else {
+        return 0;
+      }
     }
 
-    const response = await fetch(
-      `${CryptoCompareAPIBaseURL}&fsym=${tokenSymbol}&tsyms=${nativeCurrency}&ts=${timestamp}`
-    );
+    const defaultParams = {
+      from: tokenSymbol,
+      to: nativeCurrency,
+      date: formattedDate,
+    };
 
-    const data = await response.json();
-    const price = data[tokenSymbol][nativeCurrency];
+    const { data: rates } = await getExchangeRatesQuery(defaultParams);
+
+    const price = rates?.[nativeCurrency] ?? 0;
 
     return price;
   } catch (e) {
