@@ -1,5 +1,4 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { Linking } from 'react-native';
 
@@ -13,13 +12,12 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
-import { Routes } from '@cardstack/navigation';
-import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useAccountSettings,
   useSendFeedback,
+  useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
 
@@ -59,9 +57,9 @@ export default function SettingsSection({
   onPressMyWalletAddress,
   onPressDS,
 }) {
-  const { navigate } = useNavigation();
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
+  const { updateWalletPIN } = useWalletManager();
 
   const onSendFeedback = useSendFeedback();
 
@@ -86,18 +84,6 @@ export default function SettingsSection({
     () => checkAllWallets(wallets),
     [wallets]
   );
-
-  const onPressChangePin = useCallback(() => {
-    navigate(Routes.PIN_SCREEN, {
-      flow: PinFlow.new,
-      variant: 'light',
-      canGoBack: true,
-    });
-  }, [navigate]);
-
-  const onPressSeedPhraseBackup = useCallback(() => {
-    navigate(Routes.SEED_PHRASE_BACKUP);
-  }, [navigate]);
 
   return (
     <ScrollView backgroundColor="white">
@@ -160,25 +146,14 @@ export default function SettingsSection({
         >
           <ListItemArrowGroup />
         </ListItem>
-        {__DEV__ && (
-          <>
-            <ListItem
-              icon={<Icon color="settingsTeal" name="lock" />}
-              label="Change Pin"
-              onPress={onPressChangePin}
-              testID="changePin-section"
-            >
-              <ListItemArrowGroup />
-            </ListItem>
-            <ListItem
-              icon={<Icon color="settingsTeal" name="warning" />}
-              label="Seed Phrase Backup"
-              onPress={onPressSeedPhraseBackup}
-            >
-              <ListItemArrowGroup />
-            </ListItem>
-          </>
-        )}
+        <ListItem
+          icon={<Icon color="settingsTeal" name="lock" />}
+          label="Change Pin"
+          onPress={updateWalletPIN}
+          testID="changePin-section"
+        >
+          <ListItemArrowGroup />
+        </ListItem>
       </ColumnWithDividers>
       <ListFooter />
       <ColumnWithDividers dividerRenderer={ListItemDivider}>

@@ -115,9 +115,13 @@ const deleteSeedPhrase = async (walletId: string) => {
 };
 
 // PRIVATE_KEY
-const savePrivateKey = async (privateKey: string, walletAddress: string) => {
+const savePrivateKey = async (
+  privateKey: string,
+  walletAddress: string,
+  newPin?: string
+) => {
   try {
-    const pin = (await getPin()) || '';
+    const pin = newPin || (await getPin()) || '';
 
     const pKey = buildKeyWithId(keys.PKEY, walletAddress);
 
@@ -162,6 +166,29 @@ const wipeSecureStorage = async (wallets: AllRainbowWallets) => {
   }
 };
 
+const updateSecureStorePin = async (
+  wallets: AllRainbowWallets,
+  newPin: string
+) => {
+  try {
+    for (const walletId of Object.keys(wallets)) {
+      const walletAddresses = wallets[walletId].addresses;
+
+      const seedPhrase = await getSeedPhrase(walletId);
+      await saveSeedPhrase(seedPhrase, walletId, newPin);
+
+      for (const account of walletAddresses) {
+        const privateKey = await getPrivateKey(account.address);
+        await savePrivateKey(privateKey, account.address, newPin);
+      }
+    }
+
+    await savePin(newPin);
+  } catch (error) {
+    logger.sentry('Error updating secure store PIN', error);
+  }
+};
+
 export {
   savePin,
   getPin,
@@ -173,4 +200,5 @@ export {
   getPrivateKey,
   deletePrivateKey,
   wipeSecureStorage,
+  updateSecureStorePin,
 };
