@@ -88,10 +88,6 @@ export default function SettingsSection({
     [wallets]
   );
 
-  const onPressSeedPhraseBackup = useCallback(() => {
-    navigate(Routes.SEED_PHRASE_BACKUP);
-  }, [navigate]);
-
   return (
     <ScrollView backgroundColor="white">
       <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
@@ -153,25 +149,14 @@ export default function SettingsSection({
         >
           <ListItemArrowGroup />
         </ListItem>
-        {__DEV__ && (
-          <>
-            <ListItem
-              icon={<Icon color="settingsTeal" name="lock" />}
-              label="Change Pin"
-              onPress={updateWalletPIN}
-              testID="changePin-section"
-            >
-              <ListItemArrowGroup />
-            </ListItem>
-            <ListItem
-              icon={<Icon color="settingsTeal" name="warning" />}
-              label="Seed Phrase Backup"
-              onPress={onPressSeedPhraseBackup}
-            >
-              <ListItemArrowGroup />
-            </ListItem>
-          </>
-        )}
+        <ListItem
+          icon={<Icon color="settingsTeal" name="lock" />}
+          label="Change Pin"
+          onPress={updateWalletPIN}
+          testID="changePin-section"
+        >
+          <ListItemArrowGroup />
+        </ListItem>
       </ColumnWithDividers>
       <ListFooter />
       <ColumnWithDividers dividerRenderer={ListItemDivider}>
