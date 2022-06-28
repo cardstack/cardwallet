@@ -38,8 +38,8 @@ export interface RegisterFCMTokenQueryParams {
 }
 
 export interface GetExchangeRatesQueryParams {
-  from?: NativeCurrency | string;
-  to?: NativeCurrency | string;
-  date?: string | number;
+  from: NativeCurrency | string;
+  to: NativeCurrency | string;
+  date: string | number;
   e?: 'kucoin' | string;
 }
