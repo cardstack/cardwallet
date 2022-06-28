@@ -1,5 +1,4 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { Linking } from 'react-native';
 
@@ -13,7 +12,6 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
-import { Routes } from '@cardstack/navigation';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -59,7 +57,6 @@ export default function SettingsSection({
   onPressMyWalletAddress,
   onPressDS,
 }) {
-  const { navigate } = useNavigation();
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
   const { updateWalletPIN } = useWalletManager();
