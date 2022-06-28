@@ -44,6 +44,7 @@ import {
   getSeedPhrase,
   savePrivateKey,
   saveSeedPhrase,
+  updateSecureStorePin,
   wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
 import { authSlice } from '@cardstack/redux/authSlice';
@@ -845,6 +846,21 @@ export const migrateSecretsWithNewPin = async (
     }
   } catch (e) {
     logger.sentry('Error migrating secrets', e);
+    captureException(e);
+  }
+};
+
+export const updateWalletWithNewPIN = async (newPin: string) => {
+  try {
+    const allWallets = await getAllWallets();
+
+    if (allWallets) {
+      await updateSecureStorePin(allWallets, newPin);
+
+      logger.log('Pin updated.');
+    }
+  } catch (e) {
+    logger.sentry('Error updating PIN', e);
     captureException(e);
   }
 };

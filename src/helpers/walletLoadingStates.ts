@@ -7,5 +7,4 @@ export default {
   RESTORING_WALLET: 'Restoring...',
   SWITCHING_ACCOUNT: 'Switching account...',
   MIGRATING_SECRETS: 'Migrating secrets...',
-  UPDATING_PIN: 'Updating PIN...',
 };
