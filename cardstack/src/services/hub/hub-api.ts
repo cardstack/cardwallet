@@ -66,9 +66,9 @@ export const hubApi = createApi({
     }),
     getExchangeRates: builder.query<
       Record<NativeCurrency | string, number>,
-      GetExchangeRatesQueryParams | undefined
+      GetExchangeRatesQueryParams | void
     >({
-      query: params => ({
+      query: (params?: GetExchangeRatesQueryParams) => ({
         url: routes.exchangeRates,
         params,
       }),

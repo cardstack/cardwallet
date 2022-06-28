@@ -16,44 +16,41 @@ export const fetchHistoricalPrice = async (
       return 0;
     }
 
+    // timestamp can be any when coming from GraphQL.
+    // forcing it to number solves this issue.
     // date needs to be formatted as yyyy-MM-dd
-    const formattedDate = format(timestamp, 'yyyy-MM-dd');
+    const formattedDate = format(Number(timestamp), 'yyyy-MM-dd');
 
     // For cpxd tokens we chop off .CPXD in order to get mainnet's historical price
     const tokenSymbol = removeCPXDTokenSuffix(symbol);
-
-    // cryptocompare does not support CARD price history correctly,
-    // so uses kucoin exchange to get CARD price in USDT(kucoin supports only USDT) and convert it to native currency
-    if (tokenSymbol === cryptoCurrencies.CARD.currency) {
-      const { data: kucoinRate } = await getExchangeRatesQuery({
-        from: tokenSymbol,
-        to: 'USDT',
-        date: formattedDate,
-        e: 'kucoin',
-      });
-
-      const usdtPrice = kucoinRate?.USDT;
-
-      const { data: USDTRate } = await getExchangeRatesQuery({
-        from: 'USDT',
-        to: tokenSymbol,
-        date: formattedDate,
-      });
-
-      const nativeCurrencyPriceForUSDT = USDTRate?.[tokenSymbol];
-
-      if (usdtPrice && nativeCurrencyPriceForUSDT) {
-        return usdtPrice * nativeCurrencyPriceForUSDT;
-      } else {
-        return 0;
-      }
-    }
 
     const defaultParams = {
       from: tokenSymbol,
       to: nativeCurrency,
       date: formattedDate,
     };
+
+    // cryptocompare does not support CARD price history correctly,
+    // so uses kucoin exchange to get CARD price in USDT(kucoin supports only USDT) and convert it to native currency
+    if (tokenSymbol === cryptoCurrencies.CARD.currency) {
+      const { data: kucoinRate } = await getExchangeRatesQuery({
+        ...defaultParams,
+        to: 'USDT',
+        e: 'kucoin',
+      });
+
+      const usdtPrice = kucoinRate?.USDT || 0;
+
+      const { data: USDTRate } = await getExchangeRatesQuery({
+        ...defaultParams,
+        from: 'USDT',
+        to: tokenSymbol,
+      });
+
+      const nativeCurrencyPriceForUSDT = USDTRate?.[tokenSymbol] || 0;
+
+      return usdtPrice * nativeCurrencyPriceForUSDT;
+    }
 
     const { data: rates } = await getExchangeRatesQuery(defaultParams);
 
