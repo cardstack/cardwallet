@@ -27,6 +27,7 @@ export interface PinScreenNavParams {
   onSuccess?: (pin: string) => void;
   customSubtitle?: string;
   dismissOnSuccess?: boolean;
+  savePinOnSuccess?: boolean;
 }
 
 export const usePinScreen = () => {
@@ -44,6 +45,7 @@ export const usePinScreen = () => {
     variant = 'dark',
     showBiometricSwitcher = true,
     initialPin = '',
+    savePinOnSuccess = true,
   } = params;
 
   useEffect(() => {
@@ -75,8 +77,10 @@ export const usePinScreen = () => {
 
   const onValidPin = useCallback(async () => {
     try {
-      await savePin(inputPin);
-      setUserAuthorized();
+      if (savePinOnSuccess) {
+        await savePin(inputPin);
+        setUserAuthorized();
+      }
 
       await params?.onSuccess?.(inputPin);
     } catch (e) {
@@ -86,7 +90,7 @@ export const usePinScreen = () => {
     if (params.dismissOnSuccess) {
       navDispatch(StackActions.popToTop());
     }
-  }, [inputPin, navDispatch, params, setUserAuthorized]);
+  }, [inputPin, navDispatch, savePinOnSuccess, params, setUserAuthorized]);
 
   useEffect(() => {
     if (isValidPin) {

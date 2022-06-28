@@ -83,6 +83,7 @@ export default function useWalletManager() {
       variant: 'light',
       canGoBack: true,
       dismissOnSuccess: true,
+      savePinOnSuccess: false,
       onSuccess: async (pin: string) => {
         await updateWalletWithNewPIN(pin);
       },
