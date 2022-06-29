@@ -20,7 +20,7 @@ import { resetWallet } from '@rainbow-me/model/wallet';
 
 import { strings } from './strings';
 
-const MAX_WRONG_ATTEMPTS = 4;
+export const MAX_WRONG_ATTEMPTS = 5;
 
 export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
@@ -53,7 +53,7 @@ export const useUnlockScreen = () => {
   }, []);
 
   const validatePin = useCallback(
-    async (input: string) => {
+    (input: string) => {
       if (storedPin.current === input) {
         attemptsCount.current = 0;
         setPinValid();
@@ -107,7 +107,7 @@ export const useUnlockScreen = () => {
 
     if (
       !nextAttemptDate.current &&
-      attemptsCount.current > MAX_WRONG_ATTEMPTS
+      attemptsCount.current >= MAX_WRONG_ATTEMPTS
     ) {
       nextAttemptDate.current = now + 10 ** attemptsCount.current;
 
@@ -169,5 +169,8 @@ export const useUnlockScreen = () => {
     onResetWalletPress,
     retryBiometricLabel,
     authenticateBiometrically,
+    // Exported for tests purposes
+    nextAttemptDate,
+    attemptsCount,
   };
 };
