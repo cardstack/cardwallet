@@ -50,7 +50,10 @@ import {
 import { authSlice } from '@cardstack/redux/authSlice';
 import { Device } from '@cardstack/utils/device';
 
-import { deletePinAuthAttemptsData } from '@rainbow-me/handlers/localstorage/globalSettings';
+import {
+  deleteKeychainIntegrityState,
+  deletePinAuthAttemptsData,
+} from '@rainbow-me/handlers/localstorage/globalSettings';
 import store from '@rainbow-me/redux/store';
 import logger from 'logger';
 const encryptor = new AesEncryptor();
@@ -874,6 +877,9 @@ export const resetWallet = async () => {
     if (allWallets) {
       await wipeSecureStorage(allWallets);
       await keychain.wipeKeychain();
+
+      // resets Keychain Integrity Check
+      deleteKeychainIntegrityState();
 
       await deletePinAuthAttemptsData();
 
