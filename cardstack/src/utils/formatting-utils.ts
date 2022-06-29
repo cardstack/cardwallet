@@ -80,3 +80,6 @@ export const transformObjKeysToCamelCase = <ObjType>(obj: ObjType) =>
   Object.fromEntries(
     Object.entries(obj).map(([key, value]) => [_.camelCase(key), value])
   ) as KebabToCamelCaseKeys<ObjType>;
+
+export const addLeftZero = (value: string | number | undefined) =>
+  value ? ('0' + value).slice(-2) : '00';

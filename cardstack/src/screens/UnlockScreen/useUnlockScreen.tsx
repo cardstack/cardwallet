@@ -1,3 +1,4 @@
+import { intervalToDuration } from 'date-fns';
 import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import { Alert } from 'react-native';
 
@@ -7,11 +8,19 @@ import { useBooleanState } from '@cardstack/hooks';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
-import { useWorker } from '@cardstack/utils';
+import { addLeftZero, useWorker } from '@cardstack/utils';
 
+import {
+  getPinAuthAttempts,
+  getPinAuthNextDateAttempt,
+  savePinAuthAttempts,
+  savePinAuthNextDateAttempt,
+} from '@rainbow-me/handlers/localstorage/globalSettings';
 import { resetWallet } from '@rainbow-me/model/wallet';
 
 import { strings } from './strings';
+
+const MAX_WRONG_ATTEMPTS = 4;
 
 export const useUnlockScreen = () => {
   const storedPin = useRef<string | null>(null);
@@ -28,25 +37,34 @@ export const useUnlockScreen = () => {
   const { setUserAuthorized } = useAuthActions();
   const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
 
+  const attemptsCount = useRef(0);
+  const nextAttemptDate = useRef<number | null>(null);
+
   const retryBiometricLabel = useMemo(
     () => `Try ${biometryLabel || 'device authentication'} again`,
     [biometryLabel]
   );
 
   // Fetch on init so login is faster
-  const { callback: getStoredPin } = useWorker(async () => {
+  const { callback: setInitialData } = useWorker(async () => {
     storedPin.current = await getPin();
+    attemptsCount.current = await getPinAuthAttempts();
+    nextAttemptDate.current = await getPinAuthNextDateAttempt();
   }, []);
 
   const validatePin = useCallback(
     async (input: string) => {
       if (storedPin.current === input) {
+        attemptsCount.current = 0;
         setPinValid();
         setUserAuthorized();
       } else {
+        attemptsCount.current++;
         setPinInvalid();
         setInputPin('');
       }
+
+      savePinAuthAttempts(attemptsCount.current);
     },
     [setPinInvalid, setPinValid, setUserAuthorized]
   );
@@ -81,16 +99,60 @@ export const useUnlockScreen = () => {
   }, []);
 
   useEffect(() => {
-    getStoredPin();
-  }, [getStoredPin]);
+    setInitialData();
+  }, [setInitialData]);
+
+  const checkUserTemporaryBlock = useCallback(() => {
+    const now = Date.now();
+
+    if (
+      !nextAttemptDate.current &&
+      attemptsCount.current > MAX_WRONG_ATTEMPTS
+    ) {
+      nextAttemptDate.current = now + 10 ** attemptsCount.current;
+
+      savePinAuthNextDateAttempt(nextAttemptDate.current);
+    }
+
+    if (nextAttemptDate.current && now <= nextAttemptDate.current) {
+      const { hours, minutes, seconds } = intervalToDuration({
+        start: now,
+        end: nextAttemptDate.current,
+      });
+
+      const H = addLeftZero(hours);
+      const M = addLeftZero(minutes);
+      const S = addLeftZero(seconds);
+
+      // TODO: replace with counter
+      Alert.alert(
+        'Temporary block',
+        `Too many attempts!\nPlease wait ${H}:${M}:${S} to try again.`
+      );
+
+      return true;
+    }
+
+    nextAttemptDate.current = null;
+
+    savePinAuthNextDateAttempt(nextAttemptDate.current);
+
+    return false;
+  }, []);
 
   useEffect(() => {
     if (inputPin.length < DEFAULT_PIN_LENGTH) {
       return;
     }
 
+    const isUserBlocked = checkUserTemporaryBlock();
+
+    if (isUserBlocked) {
+      return;
+    }
+
     validatePin(inputPin);
-  }, [inputPin, validatePin]);
+  }, [checkUserTemporaryBlock, inputPin, validatePin]);
 
   useEffect(() => {
     if (isBiometryEnabled) {
