@@ -155,6 +155,7 @@
     "react-native-gesture-handler": "^2.4.2",
     "react-native-get-random-values": "^1.5.0",
     "react-native-haptic-feedback": "^1.8.2",
+    "react-native-iap": "^8.2.1",
     "react-native-image-crop-picker": "^0.32.2",
     "react-native-indicators": "0.17.0",
     "react-native-iphone-x-helper": "^1.2.1",

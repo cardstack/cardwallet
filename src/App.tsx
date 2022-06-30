@@ -4,6 +4,7 @@ import { ThemeProvider } from '@shopify/restyle';
 import React from 'react';
 import { AppRegistry, LogBox, StatusBar, UIManager } from 'react-native';
 import { SENTRY_ENDPOINT } from 'react-native-dotenv';
+import { withIAPContext } from 'react-native-iap';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import { Provider } from 'react-redux';
@@ -96,4 +97,4 @@ const AppWithStore = () => (
   </ThemeProvider>
 );
 
-AppRegistry.registerComponent(appName, () => AppWithStore);
+AppRegistry.registerComponent(appName, () => withIAPContext(AppWithStore));

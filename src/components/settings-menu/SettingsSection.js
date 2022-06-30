@@ -56,6 +56,7 @@ export default function SettingsSection({
   onPressShowSecret,
   onPressMyWalletAddress,
   onPressDS,
+  onPressIAP,
 }) {
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
@@ -198,6 +199,11 @@ export default function SettingsSection({
             icon={<Icon color="black" name="archive" />}
             label="Design System"
             onPress={onPressDS}
+          />
+          <ListItem
+            icon={<Icon color="black" name="shopping-cart" />}
+            label="Profile Purchase"
+            onPress={onPressIAP}
           />
         </>
       )}
