@@ -1,16 +1,24 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { waitFor } from '@testing-library/react-native';
+import { waitFor, act } from '@testing-library/react-native';
 import { Alert } from 'react-native';
-import { act } from 'react-test-renderer';
 
 import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 
+import {
+  getPinAuthAttempts,
+  getPinAuthNextDateAttempt,
+  savePinAuthAttempts,
+  savePinAuthNextDateAttempt,
+} from '@rainbow-me/handlers/localstorage/globalSettings';
+
 import { strings } from '../strings';
-import { useUnlockScreen } from '../useUnlockScreen';
+import { MAX_WRONG_ATTEMPTS, useUnlockScreen } from '../useUnlockScreen';
 
 const PIN = '111111';
+
+const oneMinuteinMs = 60000;
 
 jest.mock('@cardstack/models/secure-storage', () => ({
   getPin: jest.fn(),
@@ -31,7 +39,22 @@ jest.mock('@cardstack/hooks/useBiometry', () => ({
   useBiometry: jest.fn(),
 }));
 
+const mockStorage = {
+  attempts: 0,
+  nextDate: null,
+};
+
+jest.mock('@rainbow-me/handlers/localstorage/globalSettings', () => ({
+  getPinAuthAttempts: jest.fn(),
+  getPinAuthNextDateAttempt: jest.fn(),
+  savePinAuthAttempts: jest.fn(),
+  savePinAuthNextDateAttempt: jest.fn(),
+}));
+
 jest.useFakeTimers();
+jest.setTimeout(30000);
+
+const DateNow = Date.now;
 
 describe('useUnlockScreen', () => {
   const spyAlert = jest.spyOn(Alert, 'alert');
@@ -51,6 +74,26 @@ describe('useUnlockScreen', () => {
   const mockGetPinHelper = () => {
     (getPin as jest.Mock).mockImplementation(() => Promise.resolve(PIN));
   };
+
+  beforeAll(() => {
+    (savePinAuthAttempts as jest.Mock).mockImplementation((value = 0) => {
+      mockStorage.attempts = value;
+    });
+
+    (savePinAuthNextDateAttempt as jest.Mock).mockImplementation(
+      (value = null) => {
+        mockStorage.nextDate = value;
+      }
+    );
+
+    (getPinAuthNextDateAttempt as jest.Mock).mockImplementation(() =>
+      Promise.resolve(mockStorage.nextDate)
+    );
+
+    (getPinAuthAttempts as jest.Mock).mockImplementation(() =>
+      Promise.resolve(mockStorage.attempts)
+    );
+  });
 
   beforeEach(() => {
     mockBiometryAvailableHelper();
@@ -91,6 +134,7 @@ describe('useUnlockScreen', () => {
     expect(result.current.inputPin).toMatch('');
     expect(result.current.pinInvalid).toBeTruthy();
     expect(mockSetAuthorized).not.toBeCalled();
+    expect(savePinAuthAttempts).toBeCalledWith(1);
   });
 
   it('should authorize if biometry check is successful', async () => {
@@ -136,5 +180,204 @@ describe('useUnlockScreen', () => {
         { text: strings.reset.cancel, style: 'cancel' },
       ]
     );
+  });
+
+  describe('Exponential backoff', () => {
+    const clearMockedStorage = () => {
+      mockStorage.attempts = 0;
+      mockStorage.nextDate = null;
+    };
+
+    afterEach(() => {
+      global.Date.now = DateNow;
+    });
+
+    // These suites are dependent on each other, so running it with it.only might fail
+    beforeAll(() => {
+      clearMockedStorage();
+    });
+
+    it('should set attemptsCount to 1 on first invalid Pin', async () => {
+      const wrongPIN = '222222';
+
+      const {
+        result: {
+          current: { setInputPin, attemptsCount, nextAttemptDate },
+        },
+      } = renderHook(() => useUnlockScreen());
+
+      await waitFor(() => expect(getPin).toHaveBeenCalled());
+
+      act(() => {
+        setInputPin(wrongPIN);
+      });
+
+      expect(savePinAuthAttempts).toBeCalledWith(1);
+      expect(attemptsCount.current).toBe(1);
+      expect(nextAttemptDate.current).toBeNull();
+    });
+
+    it('should set attemptsCount to MAX_WRONG_ATTEMPTS', async () => {
+      const wrongPIN = '333333';
+
+      const {
+        result: {
+          current: { setInputPin, attemptsCount, nextAttemptDate, inputPin },
+        },
+      } = renderHook(() => useUnlockScreen());
+
+      await act(async () => {
+        await waitFor(() => expect(getPin).toHaveReturned());
+        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
+        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
+      });
+
+      for (let i = 2; i <= MAX_WRONG_ATTEMPTS; i++) {
+        await act(() => {
+          setInputPin(wrongPIN);
+        });
+
+        expect(savePinAuthAttempts).toBeCalledWith(i);
+        expect(attemptsCount.current).toEqual(i);
+      }
+
+      expect(attemptsCount.current).toEqual(MAX_WRONG_ATTEMPTS);
+      expect(nextAttemptDate.current).toBeNull();
+      expect(inputPin).toBe('');
+      expect(savePinAuthNextDateAttempt).toHaveBeenLastCalledWith(null);
+    });
+
+    it('should block the user if wrong attempts are greater than MAX_WRONG_ATTEMPTS', async () => {
+      const wrongPIN = '444444';
+
+      const {
+        result: {
+          current: { setInputPin, nextAttemptDate },
+        },
+      } = renderHook(() => useUnlockScreen());
+
+      await act(async () => {
+        await waitFor(() => expect(getPin).toHaveReturned());
+        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
+        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
+      });
+
+      act(() => {
+        setInputPin(wrongPIN);
+      });
+
+      expect(nextAttemptDate.current).toBeTruthy();
+
+      expect(savePinAuthNextDateAttempt).toHaveBeenLastCalledWith(
+        nextAttemptDate.current
+      );
+
+      // savePinAuthAttempts is only called inside validatePin,
+      // so not calling it, means validatePin was not called
+      expect(savePinAuthAttempts).not.toBeCalled();
+
+      expect(spyAlert).toBeCalledWith(
+        'Temporary block',
+        'Too many attempts!\nPlease wait 00:01:40 to try again.'
+      );
+    });
+
+    it('should update the amount of time on the alert when user tries again and still blocked', async () => {
+      const wrongPIN = '555555';
+
+      const {
+        result: {
+          current: { setInputPin, inputPin },
+        },
+      } = renderHook(() => useUnlockScreen());
+
+      await act(async () => {
+        await waitFor(() => expect(getPin).toHaveReturned());
+        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
+        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
+      });
+
+      act(() => {
+        setInputPin(wrongPIN);
+      });
+
+      global.Date.now = jest.fn(() => DateNow() + oneMinuteinMs);
+
+      act(() => {
+        setInputPin(PIN);
+      });
+
+      await waitFor(() => expect(inputPin).toBe(''));
+
+      expect(spyAlert).toBeCalledWith(
+        'Temporary block',
+        'Too many attempts!\nPlease wait 00:00:39 to try again.'
+      );
+    });
+
+    it('should increase the amount of time on the alert if users enters wrong Pin again', async () => {
+      const wrongPIN = '666666';
+
+      const {
+        result: {
+          current: { setInputPin, attemptsCount },
+        },
+      } = renderHook(() => useUnlockScreen());
+
+      await act(async () => {
+        await waitFor(() => expect(getPin).toHaveReturned());
+        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
+        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
+      });
+
+      global.Date.now = jest.fn(() => DateNow() + oneMinuteinMs * 2);
+
+      act(() => {
+        setInputPin(wrongPIN);
+      });
+
+      await waitFor(() => expect(attemptsCount.current).toBe(6));
+
+      act(() => {
+        setInputPin(wrongPIN);
+      });
+
+      console.log('countFInal', attemptsCount.current);
+
+      expect(spyAlert).toBeCalledWith(
+        'Temporary block',
+        'Too many attempts!\nPlease wait 00:16:40 to try again.'
+      );
+    });
+
+    it('should have valid pin once blocking time has ended and pin is correct', async () => {
+      const {
+        result: {
+          current: { setInputPin, attemptsCount, pinInvalid, nextAttemptDate },
+        },
+      } = renderHook(() => useUnlockScreen());
+
+      await act(async () => {
+        await waitFor(() => expect(getPin).toHaveReturned());
+        await waitFor(() => expect(getPinAuthAttempts).toHaveReturned());
+        await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
+      });
+
+      global.Date.now = jest.fn(() => DateNow() + oneMinuteinMs * 60);
+
+      act(() => {
+        setInputPin(PIN);
+      });
+
+      expect(nextAttemptDate.current).toBeNull();
+      expect(savePinAuthNextDateAttempt).toBeCalledWith(null);
+
+      await waitFor(() => expect(pinInvalid).toEqual(false));
+
+      expect(mockSetAuthorized).toBeCalledTimes(1);
+
+      expect(attemptsCount.current).toEqual(0);
+      expect(savePinAuthAttempts).toBeCalledWith(0);
+    });
   });
 });
