@@ -22,6 +22,7 @@ import { NAV_HEADER_HEIGHT } from '@cardstack/components/MainHeader/components/M
 import { slideLeftToRightPreset } from '@cardstack/navigation';
 import DesignSystemScreen from '@cardstack/screens/Dev/DesignSystemScreen';
 import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
+import ProfilePurchaseScreen from '@cardstack/screens/ProfilePurchaseScreen/ProfilePurchaseScreen';
 import { palette } from '@cardstack/theme';
 
 function cardStyleInterpolator({
@@ -108,6 +109,11 @@ export const SettingsPages = {
     component: WalletAddressScreen,
     key: 'MyWalletAddressSection',
     title: 'My Wallet Address',
+  },
+  iap: {
+    component: ProfilePurchaseScreen,
+    key: 'ProfilePurchaseScreen',
+    title: 'Profile Purchase',
   },
 };
 
@@ -228,6 +234,7 @@ export default function SettingsModal() {
             onPressNetwork={onPressSection(SettingsPages.network)}
             onPressNotifications={onPressSection(SettingsPages.notifications)}
             onPressWCSessions={onPressSection(SettingsPages.walletconnect)}
+            onPressIAP={onPressSection(SettingsPages.iap)}
           />
         )}
       </Stack.Screen>
