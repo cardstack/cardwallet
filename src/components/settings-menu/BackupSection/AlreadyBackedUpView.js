@@ -154,19 +154,21 @@ export default function AlreadyBackedUpView() {
       </Content>
       {walletStatus !== WalletBackupStatus.CLOUD_BACKUP ? (
         <Footer>
-          <ButtonPressAnimation onPress={handleIcloudBackup}>
-            <CenteredContainer flexDirection="row">
-              <Icon
-                color="settingsTeal"
-                iconSize="medium"
-                marginRight={2}
-                name="download-cloud"
-              />
-              <Text color="settingsTeal" weight="bold">
-                Back up to {cloudPlatform}
-              </Text>
-            </CenteredContainer>
-          </ButtonPressAnimation>
+          {Device.enableBackup && (
+            <ButtonPressAnimation onPress={handleIcloudBackup}>
+              <CenteredContainer flexDirection="row">
+                <Icon
+                  color="settingsTeal"
+                  iconSize="medium"
+                  marginRight={2}
+                  name="download-cloud"
+                />
+                <Text color="settingsTeal" weight="bold">
+                  Back up to {cloudPlatform}
+                </Text>
+              </CenteredContainer>
+            </ButtonPressAnimation>
+          )}
         </Footer>
       ) : !hasMultipleWallets ? (
         <Footer>
