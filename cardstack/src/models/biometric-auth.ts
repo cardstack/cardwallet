@@ -1,6 +1,8 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import { SecurityLevel, AuthenticationType } from 'expo-local-authentication';
 
+import { Device } from '@cardstack/utils';
+
 import logger from 'logger';
 
 export enum SecurityType {
@@ -8,6 +10,7 @@ export enum SecurityType {
   PIN = 2,
   FINGERPRINT = 3,
   FACE = 4,
+  BIOMETRIC = 5,
 }
 
 export const biometricAuthentication = async (
@@ -29,6 +32,16 @@ export const getSecurityType = async (): Promise<SecurityType> => {
   const authType = await LocalAuthentication.supportedAuthenticationTypesAsync();
 
   if (securityLevel === SecurityLevel.BIOMETRIC) {
+    // Special case for Android where both Fingerprint and Face ID are possible,
+    // but we can't know for sure which the user has enabled in their settings.
+    if (
+      Device.isAndroid &&
+      authType.includes(AuthenticationType.FACIAL_RECOGNITION) &&
+      authType.includes(AuthenticationType.FINGERPRINT)
+    ) {
+      return SecurityType.BIOMETRIC;
+    }
+
     // For biometry, first check for Face id or Iris.
     if (
       authType.includes(AuthenticationType.FACIAL_RECOGNITION) ||

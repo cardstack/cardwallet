@@ -9,6 +9,7 @@ import {
 import { useAppState, usePrevious } from '@rainbow-me/hooks';
 
 const securityTypeToIcon = {
+  [SecurityType.BIOMETRIC]: 'lock',
   [SecurityType.FACE]: 'face-id',
   [SecurityType.FINGERPRINT]: 'thumbprint',
   [SecurityType.PIN]: 'lock',
@@ -16,6 +17,7 @@ const securityTypeToIcon = {
 };
 
 const securityTypeToLabel = {
+  [SecurityType.BIOMETRIC]: 'biometry',
   [SecurityType.FACE]: 'Face ID',
   [SecurityType.FINGERPRINT]: 'Touch ID',
   [SecurityType.PIN]: 'PIN',
@@ -53,11 +55,13 @@ export const useBiometry = () => {
     const biometryAvailable =
       !!biometryType &&
       (biometryType === SecurityType.FACE ||
-        biometryType === SecurityType.FINGERPRINT);
+        biometryType === SecurityType.FINGERPRINT ||
+        biometryType === SecurityType.BIOMETRIC);
 
     // Transactions require longpress when biometry is not available or
     // when using Face ID to minimize user errors.
     const longPressToConfirm =
+      biometryType === SecurityType.BIOMETRIC ||
       biometryType === SecurityType.FACE ||
       biometryType === SecurityType.NONE ||
       !biometryAvailable;
