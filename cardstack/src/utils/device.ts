@@ -17,6 +17,7 @@ const Device = {
   supportsHapticFeedback: isIOS,
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
   tabBarHeightSize: screenHeight * 0.1,
+  enableBackup: false,
 };
 
 export { Device };

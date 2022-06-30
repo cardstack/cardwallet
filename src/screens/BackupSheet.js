@@ -100,6 +100,21 @@ export default function BackupSheet() {
   }, [goBack, navigate]);
 
   const renderStep = useCallback(() => {
+    // TODO: Remove whole if block to re-enable
+    if (!Device.enableBackup && step !== WalletBackupStepTypes.manual) {
+      return (
+        <BackupSheetSection
+          descriptionText={`Don't lose your account! Save your seed in a secure place`}
+          onPrimaryAction={onManualBackup}
+          onSecondaryAction={goBack}
+          primaryLabel="Back up manually"
+          secondaryLabel="Not now"
+          titleText="Back up your account"
+          type="Default"
+        />
+      );
+    }
+
     switch (step) {
       case WalletBackupStepTypes.existing_user:
         return (

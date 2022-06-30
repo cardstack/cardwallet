@@ -67,9 +67,11 @@ export default function NeedsBackupView() {
           </Text>
         </Column>
         <Container width="100%">
-          <Button marginBottom={5} onPress={onCloudBackup} width="100%">
-            {`Back up to ${Device.cloudPlatform}`}
-          </Button>
+          {Device.enableBackup && (
+            <Button marginBottom={5} onPress={onCloudBackup} width="100%">
+              {`Back up to ${Device.cloudPlatform}`}
+            </Button>
+          )}
           <Button onPress={onManualBackup} variant="secondary" width="100%">
             Back up manually
           </Button>
