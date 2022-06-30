@@ -16,13 +16,10 @@ import {
   saveAllWallets,
   setSelectedWallet,
 } from '../model/wallet';
-import { settingsUpdateAccountAddress } from '../redux/settings';
 import { logger } from '../utils';
-import {
-  addressKey,
-  privateKeyKey,
-  seedPhraseKey,
-} from '../utils/keychainConstants';
+import { addressKey } from '../utils/keychainConstants';
+import { settingsUpdateAccountAddress } from './settings';
+import { getPrivateKey, getSeedPhrase } from '@cardstack/models/secure-storage';
 
 // -- Constants --------------------------------------- //
 const WALLETS_ADDED_ACCOUNT = 'wallets/WALLETS_ADDED_ACCOUNT';
@@ -204,20 +201,20 @@ export const createAccountForWallet = (id, color, name) => async (
   return newWallets;
 };
 
-// TODO: check secureStorage keys
 export const checkKeychainIntegrity = () => async (dispatch, getState) => {
   try {
     let healthyKeychain = true;
     logger.sentry('[KeychainIntegrityCheck]: starting checks');
 
+    // check rainbowAddressKey
     const hasAddress = await hasKey(addressKey);
-    if (hasAddress) {
-      logger.sentry('[KeychainIntegrityCheck]: address is ok');
-    } else {
+    if (!hasAddress) {
       healthyKeychain = false;
       logger.sentry(
         `[KeychainIntegrityCheck]: address is missing: ${hasAddress}`
       );
+    } else {
+      logger.sentry('[KeychainIntegrityCheck]: address is ok');
     }
 
     const { wallets, selected } = getState().wallets;
@@ -236,25 +233,30 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
     }
 
     const nonReadOnlyWalletKeys = keys(wallets).filter(
-      key => wallets[key].type !== WalletTypes.readOnly
+      walletId => wallets[walletId].type !== WalletTypes.readOnly
     );
 
-    for (const key of nonReadOnlyWalletKeys) {
+    for (const walletId of nonReadOnlyWalletKeys) {
       let healthyWallet = true;
-      logger.sentry(`[KeychainIntegrityCheck]: checking wallet ${key}`);
-      const wallet = wallets[key];
+
+      const wallet = wallets[walletId];
+
+      logger.sentry(`[KeychainIntegrityCheck]: checking wallet ${walletId}`);
       logger.sentry(`[KeychainIntegrityCheck]: Wallet data`, wallet);
-      const seedKeyFound = await hasKey(`${key}_${seedPhraseKey}`);
-      if (!seedKeyFound) {
+
+      const seedPhrase = await getSeedPhrase(walletId);
+
+      if (!seedPhrase) {
         healthyWallet = false;
-        logger.sentry('[KeychainIntegrityCheck]: seed key is missing');
+        logger.sentry('[KeychainIntegrityCheck]: seed phrase is missing');
       } else {
-        logger.sentry('[KeychainIntegrityCheck]: seed key is present');
+        logger.sentry('[KeychainIntegrityCheck]: seed phrase is present');
       }
 
       for (const account of wallet.addresses) {
-        const pkeyFound = await hasKey(`${account.address}_${privateKeyKey}`);
-        if (!pkeyFound) {
+        const pKey = await getPrivateKey(account.address);
+
+        if (!pKey) {
           healthyWallet = false;
           logger.sentry(
             `[KeychainIntegrityCheck]: pkey is missing for address: ${account.address}`
@@ -266,13 +268,6 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
         }
       }
 
-      // Handle race condition:
-      // A wallet is NOT damaged if:
-      // - it's not imported
-      if (!wallet.imported) {
-        healthyWallet = true;
-      }
-
       if (!healthyWallet) {
         logger.sentry(
           '[KeychainIntegrityCheck]: declaring wallet unhealthy...'
@@ -280,6 +275,7 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
         healthyKeychain = false;
         wallet.damaged = true;
         await dispatch(walletsUpdate(wallets));
+
         // Update selected wallet if needed
         if (wallet.id === selected.id) {
           logger.sentry(
@@ -290,9 +286,11 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
         logger.sentry('[KeychainIntegrityCheck]: done updating wallets');
       }
     }
+
     if (!healthyKeychain) {
       captureMessage('Keychain Integrity is not OK');
     }
+
     logger.sentry('[KeychainIntegrityCheck]: check completed');
     await saveKeychainIntegrityState('done');
   } catch (e) {

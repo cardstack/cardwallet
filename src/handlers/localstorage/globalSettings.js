@@ -18,6 +18,9 @@ export const getKeychainIntegrityState = () =>
 export const saveKeychainIntegrityState = state =>
   saveGlobal(KEYCHAIN_INTEGRITY_STATE, state);
 
+export const deleteKeychainIntegrityState = () =>
+  removeLocal(KEYCHAIN_INTEGRITY_STATE);
+
 export const getAuthTimelock = () => getGlobal(AUTH_TIMELOCK, null);
 
 export const saveAuthTimelock = ts => saveGlobal(AUTH_TIMELOCK, ts);

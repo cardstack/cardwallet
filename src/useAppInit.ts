@@ -31,8 +31,6 @@ import Logger from 'logger';
 const WALLETCONNECT_SYNC_DELAY = 500;
 const ANDROID_UNAUTHORIZE_DELAY = 5000;
 
-const skipKeychainCheck = true;
-
 export const useAppInit = () => {
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
   const appRequiments = useAppRequirements();
@@ -88,9 +86,7 @@ export const useAppInit = () => {
 
       const unsubscribe = registerTokenRefreshListener();
 
-      if (!skipKeychainCheck) {
-        runKeychainIntegrityChecks();
-      }
+      runKeychainIntegrityChecks();
 
       if (isAuthorized) {
         runWalletBackupStatusChecks();
