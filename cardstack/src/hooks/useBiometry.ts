@@ -17,7 +17,7 @@ const securityTypeToIcon = {
 };
 
 const securityTypeToLabel = {
-  [SecurityType.BIOMETRIC]: 'biometry',
+  [SecurityType.BIOMETRIC]: 'biometrics',
   [SecurityType.FACE]: 'Face ID',
   [SecurityType.FINGERPRINT]: 'Touch ID',
   [SecurityType.PIN]: 'PIN',
