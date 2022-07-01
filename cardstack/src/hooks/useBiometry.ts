@@ -38,6 +38,7 @@ export const useBiometry = () => {
   }, [prevBiometricType]);
 
   useEffect(() => {
+    // We need to check again for biometry type on app becoming active in case a user changes their settings.
     if (!biometryType || justBecameActive) {
       getBiometryType();
     }
@@ -58,19 +59,10 @@ export const useBiometry = () => {
         biometryType === SecurityType.FINGERPRINT ||
         biometryType === SecurityType.BIOMETRIC);
 
-    // Transactions require longpress when biometry is not available or
-    // when using Face ID to minimize user errors.
-    const longPressToConfirm =
-      biometryType === SecurityType.BIOMETRIC ||
-      biometryType === SecurityType.FACE ||
-      biometryType === SecurityType.NONE ||
-      !biometryAvailable;
-
     return {
       biometryLabel,
       biometryAvailable,
       biometryIconProps,
-      longPressToConfirm,
     };
   }, [biometryType]);
 

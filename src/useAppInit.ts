@@ -35,7 +35,7 @@ export const useAppInit = () => {
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
   const appRequiments = useAppRequirements();
 
-  const { justBecameActive, movedToBackground } = useAppState();
+  const { justBecameActive, isInBackground } = useAppState();
   const {
     setUserUnauthorized,
     isAuthorized,
@@ -99,7 +99,7 @@ export const useAppInit = () => {
   useEffect(() => {
     const currentDate = Date.now();
 
-    if (movedToBackground) {
+    if (isInBackground) {
       const tempAuthorizedRoutes: string[] = [
         Routes.QR_SCANNER_SCREEN,
         Routes.PAY_MERCHANT,
@@ -126,7 +126,7 @@ export const useAppInit = () => {
         setUserUnauthorized();
       }
     }
-  }, [setUserUnauthorized, movedToBackground]);
+  }, [setUserUnauthorized, isInBackground]);
 
   useEffect(() => {
     if (!isAuthorized && hasWallet) {

@@ -16,6 +16,7 @@ import {
   savePinAuthAttempts,
   savePinAuthNextDateAttempt,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { useAppState } from '@rainbow-me/hooks';
 import { resetWallet } from '@rainbow-me/model/wallet';
 
 import { strings } from './strings';
@@ -36,6 +37,8 @@ export const useUnlockScreen = () => {
 
   const { setUserAuthorized } = useAuthActions();
   const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
+
+  const { isActive } = useAppState();
 
   const attemptsCount = useRef(0);
   const nextAttemptDate = useRef<number | null>(null);
@@ -155,10 +158,10 @@ export const useUnlockScreen = () => {
   }, [checkUserTemporaryBlock, inputPin, validatePin]);
 
   useEffect(() => {
-    if (isBiometryEnabled) {
+    if (isBiometryEnabled && isActive) {
       authenticateBiometrically();
     }
-  }, [authenticateBiometrically, isBiometryEnabled]);
+  }, [authenticateBiometrically, isBiometryEnabled, isActive]);
 
   return {
     inputPin,

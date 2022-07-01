@@ -17,7 +17,9 @@ export const biometricAuthentication = async (
   options?: LocalAuthentication.LocalAuthenticationOptions
 ): Promise<boolean> => {
   try {
+    console.log('::: biometricAuthentication');
     const response = await LocalAuthentication.authenticateAsync(options);
+    console.log('::: biometricAuthentication response', response);
 
     return response.success;
   } catch (error) {
