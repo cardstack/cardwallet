@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { requestPurchase, useIAP, Product } from 'react-native-iap';
 
+import logger from 'logger';
+
 // TODO: Product ID will be fetched from hub.
 const skus = ['0001', '1'];
 
@@ -17,6 +19,7 @@ export const usePurchaseProfile = () => {
   } = useIAP();
 
   useEffect(() => {
+    logger.log('💰 Loading IAPs');
     getProducts(skus);
   }, [getProducts]);
 
