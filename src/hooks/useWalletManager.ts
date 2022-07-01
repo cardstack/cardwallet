@@ -91,19 +91,23 @@ export default function useWalletManager() {
     });
   }, [navigate]);
 
-  const loadAllSeedPhrases = useCallback(async (wallets: RainbowWallet[]) => {
-    const seeds = [];
+  const loadAllSeedPhrases = useCallback(
+    async (wallets: RainbowWallet[], forceOldSeed: boolean = true) => {
+      const seeds = [];
 
-    // Needs to be sequential
-    for (const walletId of Object.keys(wallets)) {
-      const seed = (await loadSeedPhrase(walletId)) || '';
-      // keychain needs a delay in order to retrieve all values
-      await delay(1000);
-      seeds.push(seed);
-    }
+      // Needs to be sequential
+      for (const walletId of Object.keys(wallets)) {
+        const seed =
+          (await loadSeedPhrase(walletId, undefined, forceOldSeed)) || '';
+        // keychain needs a delay in order to retrieve all values
+        await delay(1000);
+        seeds.push(seed);
+      }
 
-    return seeds;
-  }, []);
+      return seeds;
+    },
+    []
+  );
 
   const migrateWalletIfNeeded = useCallback(
     async ({ selectedWallet, wallets }: WalletsState) =>
