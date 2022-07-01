@@ -26,6 +26,7 @@ export const useAppState = () => {
     [appState, prevAppState]
   );
 
+  // Will update to true once the app is resumed from a backgroud state.
   const movedFromBackground = useMemo(
     () => prevAppState === AppStateType.background,
     [prevAppState]
