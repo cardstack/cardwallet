@@ -39,6 +39,10 @@ jest.mock('@cardstack/hooks/useBiometry', () => ({
   useBiometry: jest.fn(),
 }));
 
+jest.mock('@rainbow-me/hooks', () => ({
+  useAppState: () => ({ isActive: true }),
+}));
+
 const mockStorage = {
   attempts: 0,
   nextDate: null,
