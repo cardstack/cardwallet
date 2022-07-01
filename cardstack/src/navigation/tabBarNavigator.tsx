@@ -174,7 +174,7 @@ const useNavigationAuth = () => {
     }
   }, [loadAuthInfo, hasPin, isAuthorized]);
 
-  return { hasWallet, isAuthorized, hasPin };
+  return { hasWallet, isAuthorized, hasPin, isFirstMount };
 };
 
 const stackScreenOptions: StackNavigationOptions = {
@@ -191,11 +191,14 @@ const stackScreenOptions: StackNavigationOptions = {
 export const StackNavigator = () => {
   const cardstackMainScreens = useCardstackMainScreens(Stack);
 
-  const { hasWallet, isAuthorized, hasPin } = useNavigationAuth();
+  const { hasWallet, isAuthorized, hasPin, isFirstMount } = useNavigationAuth();
+
+  // firstMount is checked to avoid showing welcome screen when user restarts the app
+  const showWelcomeScreen = !hasWallet && !isFirstMount.current;
 
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
-      {!hasWallet ? (
+      {showWelcomeScreen ? (
         <Stack.Screen
           component={WelcomeScreen}
           name={NonAuthRoutes.WELCOME_SCREEN}
