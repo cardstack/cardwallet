@@ -28,7 +28,7 @@ import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
-import { getPin } from '@cardstack/models/secure-storage';
+import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 
@@ -36,6 +36,7 @@ import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
+import { isValidSeed } from '@rainbow-me/helpers/validators';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
 import logger from 'logger';
@@ -109,12 +110,15 @@ export default function useWalletManager() {
       new Promise<void>(async resolve => {
         try {
           const hasPin = !!(await getPin());
+          const seed = await getSeedPhrase(selectedWallet.id);
 
-          if (hasPin) {
+          const hasSeed = isValidSeed(seed);
+
+          if (hasPin && hasSeed) {
             resolve();
             return;
           }
-
+          // No seed, we retry the migration, bc something probably went wrong
           const seedPhrases = await loadAllSeedPhrases(wallets);
 
           navigate(Routes.SEED_PHRASE_BACKUP, {
