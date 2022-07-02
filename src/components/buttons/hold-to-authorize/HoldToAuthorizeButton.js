@@ -12,7 +12,6 @@ import { useTheme } from '../../../context/ThemeContext';
 import { haptics } from '../../../utils';
 
 import { Button, Container } from '@cardstack/components';
-import { useBiometry } from '@cardstack/hooks/useBiometry';
 
 const { ACTIVE, END } = State;
 
@@ -149,19 +148,10 @@ class HoldToAuthorizeButton extends PureComponent {
   }
 }
 
-const HoldToAuthorizeButtonWithBiometrics = ({ label, testID, ...props }) => {
-  const { longPressToConfirm } = useBiometry();
+const HoldToAuthorizeButtonWithBiometrics = props => {
   const { colors } = useTheme();
 
-  return (
-    <HoldToAuthorizeButton
-      {...props}
-      colors={colors}
-      enableLongPress={longPressToConfirm}
-      label={longPressToConfirm ? label : label.replace('Hold', 'Tap')}
-      testID={testID}
-    />
-  );
+  return <HoldToAuthorizeButton {...props} colors={colors} enableLongPress />;
 };
 
 export default React.memo(HoldToAuthorizeButtonWithBiometrics);
