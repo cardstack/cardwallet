@@ -847,6 +847,9 @@ export const migrateSecretsWithNewPin = async (
 
       await keysToRemove.map(keychain.remove);
       logger.sentry('[Migration]: Cleanup success');
+
+      await deleteKeychainIntegrityState();
+      logger.sentry('[Migration]: Reseting keychain integrity');
     }
   } catch (e) {
     logger.sentry('Error migrating secrets', e);
