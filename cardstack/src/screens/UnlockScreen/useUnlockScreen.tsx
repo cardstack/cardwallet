@@ -75,6 +75,8 @@ export const useUnlockScreen = () => {
   const authenticateBiometrically = useCallback(async () => {
     resetRetryBiometricAuth();
 
+    console.log('::: authenticateBiometrically');
+
     if (await biometricAuthentication()) {
       setPinValid();
       setUserAuthorized();
@@ -158,6 +160,8 @@ export const useUnlockScreen = () => {
   }, [checkUserTemporaryBlock, inputPin, validatePin]);
 
   useEffect(() => {
+    console.log('::: isBiometryEnabled', { isBiometryEnabled, isActive });
+
     if (isBiometryEnabled && isActive) {
       authenticateBiometrically();
     }
