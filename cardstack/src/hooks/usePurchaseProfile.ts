@@ -4,7 +4,7 @@ import { requestPurchase, useIAP, Product } from 'react-native-iap';
 import logger from 'logger';
 
 // TODO: Product ID will be fetched from hub.
-const skus = ['0001', '1'];
+const skus = ['0001'];
 
 export const usePurchaseProfile = () => {
   const {
@@ -18,10 +18,20 @@ export const usePurchaseProfile = () => {
     getAvailablePurchases,
   } = useIAP();
 
-  useEffect(() => {
-    logger.log('💰 Loading IAPs');
-    getProducts(skus);
+  const fetchProducts = useCallback(async () => {
+    logger.log('💰 Loading Products available for purchase.');
+
+    try {
+      const response = await getProducts(skus);
+      console.log('::: getProducts response', response);
+    } catch (error) {
+      logger.sentry('Could not fetch Products.', error);
+    }
   }, [getProducts]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   useEffect(() => {
     if (currentPurchase) {
