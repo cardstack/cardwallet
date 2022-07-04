@@ -14,7 +14,7 @@
 #import <React/RCTAppSetupUtils.h>
 #import <React/RCTReloadCommand.h>
 #import <Sentry/Sentry.h>
-#import "RNSplashScreen.h"
+#import "RNBootSplash.h"
 
 #if DEBUG
 #ifdef FB_SONARKIT_ENABLED
@@ -37,23 +37,6 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 #endif
 
-@interface RainbowSplashScreenManager : NSObject <RCTBridgeModule>
-@end
-
-@implementation RainbowSplashScreenManager
-
-- (dispatch_queue_t)methodQueue {
-  return dispatch_get_main_queue();
-}
-
-RCT_EXPORT_MODULE(RainbowSplashScreen);
-
-RCT_EXPORT_METHOD(hideAnimated) {
-  [((AppDelegate*) UIApplication.sharedApplication.delegate) hideSplashScreenAnimated];
-}
-
-@end
-
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -72,24 +55,6 @@ RCT_EXPORT_METHOD(hideAnimated) {
 #endif
 
 @implementation AppDelegate
-- (void)hideSplashScreenAnimated {
-  UIView* subview = self.window.rootViewController.view.subviews.lastObject;
-  UIView* rainbowIcon = subview.subviews.firstObject;
-  if (![rainbowIcon isKindOfClass:UIImageView.class]) {
-    return;
-  }
-  [UIView animateWithDuration:0.1
-                        delay:0.0
-                      options:UIViewAnimationOptionCurveEaseIn
-  animations:^{
-      rainbowIcon.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0.0000000001, 0.0000000001);
-      subview.alpha = 0.0;
-  } completion:^(BOOL finished) {
-      rainbowIcon.hidden = YES;
-      [RNSplashScreen hide];
-  }];
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   RCTAppSetupPrepareApp(application);
@@ -130,6 +95,8 @@ RCT_EXPORT_METHOD(hideAnimated) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
+  [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
+
   [[NSNotificationCenter defaultCenter] addObserver:self
   selector:@selector(handleRapInProgress:)
       name:@"rapInProgress"
@@ -140,8 +107,6 @@ RCT_EXPORT_METHOD(hideAnimated) {
       name:@"rapCompleted"
     object:nil];
 
-  // Splashscreen - react-native-splash-screen
-  [RNSplashScreen showSplash:@"LaunchScreen" inRootView:rootView];
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   return YES;
 }

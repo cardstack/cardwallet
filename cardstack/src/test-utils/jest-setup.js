@@ -138,8 +138,10 @@ jest.mock('react-native-permissions', () => ({
   requestNotifications: jest.fn(),
 }));
 
-jest.mock('react-native-splash-screen', () => ({
-  SplashScreen: jest.fn(),
+jest.mock('react-native-bootsplash', () => ({
+  hide: jest.fn().mockResolvedValueOnce(),
+  show: jest.fn().mockResolvedValueOnce(),
+  getVisibilityStatus: jest.fn().mockResolvedValue('hidden'),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({

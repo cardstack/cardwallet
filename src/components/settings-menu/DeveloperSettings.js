@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { Alert, ScrollView } from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
 import RNRestart from 'react-native-restart';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
@@ -53,7 +54,13 @@ const DeveloperSettings = () => {
         onPress={resetWallet}
         testID="reset-keychain-section"
       />
-      <ListItem label="🔄 Restart app" onPress={() => RNRestart.Restart()} />
+      <ListItem
+        label="🔄 Restart app"
+        onPress={() => {
+          RNRestart.Restart();
+          RNBootSplash.show();
+        }}
+      />
       <ListItem label="🗑️ Remove all backups" onPress={removeBackups} />
       <ListItem
         label="🤷 Restore default experimental config"

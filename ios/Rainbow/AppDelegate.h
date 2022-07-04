@@ -16,8 +16,6 @@
 
 @interface AppDelegate : EXAppDelegateWrapper <UIApplicationDelegate, RCTBridgeDelegate, UNUserNotificationCenterDelegate, FIRMessagingDelegate>
 
-- (void)hideSplashScreenAnimated;
-
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic) BOOL isRapRunning;
 

@@ -1,4 +1,5 @@
 import React, { memo, useCallback } from 'react';
+import RNBootSplash from 'react-native-bootsplash';
 import RNRestart from 'react-native-restart';
 
 import {
@@ -18,6 +19,7 @@ const ErrorFallback = ({
   const handleOnPress = useCallback(() => {
     logger.sentry('Restart app on error', message);
     RNRestart.Restart();
+    RNBootSplash.show();
   }, [message]);
 
   return (

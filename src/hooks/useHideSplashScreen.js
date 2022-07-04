@@ -1,16 +1,11 @@
 import { useCallback } from 'react';
-import { InteractionManager, NativeModules, StatusBar } from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
-
-const { RainbowSplashScreen } = NativeModules;
+import { InteractionManager, StatusBar } from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
 
 export default function useHideSplashScreen() {
   return useCallback(() => {
-    if (RainbowSplashScreen && RainbowSplashScreen.hideAnimated) {
-      RainbowSplashScreen.hideAnimated();
-    } else {
-      SplashScreen.hide();
-    }
+    RNBootSplash.hide({ fade: true });
+
     if (android) {
       StatusBar.setBackgroundColor('transparent', false);
       StatusBar.setTranslucent(true);
