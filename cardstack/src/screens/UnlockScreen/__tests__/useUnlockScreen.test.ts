@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { waitFor, act } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 
+import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
@@ -12,6 +13,7 @@ import {
   savePinAuthAttempts,
   savePinAuthNextDateAttempt,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
+import { useAppState } from '@rainbow-me/hooks';
 
 import { strings } from '../strings';
 import { MAX_WRONG_ATTEMPTS, useUnlockScreen } from '../useUnlockScreen';
@@ -39,8 +41,12 @@ jest.mock('@cardstack/hooks/useBiometry', () => ({
   useBiometry: jest.fn(),
 }));
 
+jest.mock('@cardstack/components/BiometricSwitch', () => ({
+  useBiometricSwitch: jest.fn(),
+}));
+
 jest.mock('@rainbow-me/hooks', () => ({
-  useAppState: () => ({ isActive: true }),
+  useAppState: jest.fn(),
 }));
 
 const mockStorage = {
@@ -67,6 +73,10 @@ describe('useUnlockScreen', () => {
     (useBiometry as jest.Mock).mockImplementation(() => ({
       biometryAvailable: available,
     }));
+
+    (useBiometricSwitch as jest.Mock).mockImplementation(() => ({
+      isBiometryEnabled: available,
+    }));
   };
 
   const mockAuthAuthorizedHelper = (authorized = false) => {
@@ -77,6 +87,12 @@ describe('useUnlockScreen', () => {
 
   const mockGetPinHelper = () => {
     (getPin as jest.Mock).mockImplementation(() => Promise.resolve(PIN));
+  };
+
+  const mockUseAppState = (isActive = true) => {
+    (useAppState as jest.Mock).mockImplementation(() => ({
+      isActive,
+    }));
   };
 
   beforeAll(() => {
@@ -103,6 +119,7 @@ describe('useUnlockScreen', () => {
     mockBiometryAvailableHelper();
     mockAuthAuthorizedHelper();
     mockGetPinHelper();
+    mockUseAppState();
   });
 
   afterEach(() => {
@@ -145,11 +162,7 @@ describe('useUnlockScreen', () => {
     mockBiometryAvailableHelper(true);
     mockAuthAuthorizedHelper(true);
 
-    const { result } = renderHook(() => useUnlockScreen());
-
-    act(() => {
-      result.current.authenticateBiometrically();
-    });
+    renderHook(() => useUnlockScreen());
 
     await waitFor(() => expect(mockSetAuthorized).toBeCalledTimes(1));
   });
@@ -382,6 +395,27 @@ describe('useUnlockScreen', () => {
 
       expect(attemptsCount.current).toEqual(0);
       expect(savePinAuthAttempts).toBeCalledWith(0);
+    });
+
+    it('should trigger authenticateBiometrically with initial app state', async () => {
+      mockBiometryAvailableHelper(true);
+
+      renderHook(() => useUnlockScreen());
+
+      await waitFor(() => expect(mockSetAuthorized).not.toBeCalled());
+    });
+
+    it('should not call authenticateBiometrically when app goes to background mode', async () => {
+      mockBiometryAvailableHelper(true);
+
+      const { rerender } = renderHook(() => useUnlockScreen());
+
+      // Update app state to isActive false.
+      mockUseAppState(false);
+
+      rerender();
+
+      await waitFor(() => expect(mockSetAuthorized).not.toBeCalled());
     });
   });
 });
