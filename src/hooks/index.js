@@ -55,4 +55,3 @@ export { default as useWalletsWithBalancesAndNames } from './useWalletsWithBalan
 export { default as useAccountEmptyState } from './useAccountEmptyState';
 export * from './useAssetListData';
 export * from './usePinnedAndHiddenItemOptions';
-export * from './useAppState';

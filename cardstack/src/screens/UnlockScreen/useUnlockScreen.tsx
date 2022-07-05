@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
-import { useBooleanState } from '@cardstack/hooks';
+import { useBooleanState, useAppState } from '@cardstack/hooks';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
@@ -16,7 +16,6 @@ import {
   savePinAuthAttempts,
   savePinAuthNextDateAttempt,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { useAppState } from '@rainbow-me/hooks';
 import { resetWallet } from '@rainbow-me/model/wallet';
 
 import { strings } from './strings';

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import usePrevious from './usePrevious';
 
 import { AppStateType } from '@cardstack/types';
+
+import usePrevious from '@rainbow-me/hooks/usePrevious';
 
 export const useAppState = () => {
   const [appState, setAppState] = useState(AppState.currentState);

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import { waitFor, act } from '@testing-library/react-native';
 import { AppState } from 'react-native';
 
-import { useAppState } from '../../../../src/hooks/useAppState';
+import { useAppState } from '../useAppState';
 
 const FIRST_OPEN = {
   appState: 'active',

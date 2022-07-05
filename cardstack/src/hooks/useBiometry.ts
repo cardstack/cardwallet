@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState, useMemo } from 'react';
 
 import { IconProps, IconName } from '@cardstack/components';
+import { useAppState } from '@cardstack/hooks/useAppState';
 import {
   getSecurityType,
   SecurityType,
 } from '@cardstack/models/biometric-auth';
 
-import { useAppState, usePrevious } from '@rainbow-me/hooks';
+import { usePrevious } from '@rainbow-me/hooks';
 
 const securityTypeToIcon = {
   [SecurityType.BIOMETRIC]: 'lock',

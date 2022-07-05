@@ -9,12 +9,11 @@ import {
   runKeychainIntegrityChecks,
   runWalletBackupStatusChecks,
 } from './handlers/walletReadyEvents';
-import { useAppState } from './hooks';
 
 import { useRainbowSelector } from './redux/hooks';
 import store from './redux/store';
 import { walletConnectLoadState } from './redux/walletconnect';
-import { useAppRequirements } from '@cardstack/hooks';
+import { useAppRequirements, useAppState } from '@cardstack/hooks';
 import { registerTokenRefreshListener } from '@cardstack/models/firebase';
 import { Navigation, Routes } from '@cardstack/navigation';
 import { navigationRef } from '@cardstack/navigation/Navigation';
