@@ -29,49 +29,49 @@ const SECOND_OPEN = {
 };
 
 describe('useAppState', () => {
+  const appStateSpy = jest.spyOn(AppState, 'addEventListener');
+
+  const mockAppState = (state: 'active' | 'background') =>
+    appStateSpy.mock.calls[0][1](state);
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should match values for first open state', async () => {
     const { result } = renderHook(() => useAppState());
-    const appStateSpy = jest.spyOn(AppState, 'addEventListener');
 
     await act(async () => {
-      await appStateSpy.mock.calls[0][1]('active');
+      await mockAppState('active');
     });
 
     await waitFor(() => {
       expect(result.current).toEqual(FIRST_OPEN);
     });
-
-    appStateSpy.mockClear();
   });
 
   it('should match values for background if state changes to background', async () => {
     const { result } = renderHook(() => useAppState());
-    const appStateSpy = jest.spyOn(AppState, 'addEventListener');
 
     await act(async () => {
-      await appStateSpy.mock.calls[0][1]('background');
+      await mockAppState('background');
     });
 
     await waitFor(() => {
       expect(result.current).toEqual(BACKGROUND);
     });
-
-    appStateSpy.mockClear();
   });
 
   it('should match values for second open if state changes from background to active', async () => {
     const { result } = renderHook(() => useAppState());
-    const appStateSpy = jest.spyOn(AppState, 'addEventListener');
 
     await act(async () => {
-      await appStateSpy.mock.calls[0][1]('background');
-      await appStateSpy.mock.calls[0][1]('active');
+      await mockAppState('background');
+      await mockAppState('active');
     });
 
     await waitFor(() => {
       expect(result.current).toEqual(SECOND_OPEN);
     });
-
-    appStateSpy.mockClear();
   });
 });
