@@ -1,4 +1,3 @@
-import RNRestart from 'react-native-restart';
 import {
   getNativeCurrency,
   getNetwork,
@@ -20,6 +19,7 @@ import { walletConnectUpdateSessions } from './walletconnect';
 import { collectiblesResetState } from '@cardstack/redux/collectibles';
 import { requestsResetState } from '@cardstack/redux/requests';
 import { getExchangeRatesQuery } from '@cardstack/services/hub/hub-service';
+import { restartApp } from '@cardstack/utils';
 import logger from 'logger';
 // -- Constants ------------------------------------------------------------- //
 
@@ -86,7 +86,7 @@ export const settingsUpdateNetwork = network => async () => {
     await saveNetwork(network);
     // Creates tag on Sentry labeling the current network.
     logger.setTag('network', network);
-    RNRestart.Restart(); // restart app so it reloads with updated network
+    restartApp(); // restart app so it reloads with updated network
   } catch (error) {
     logger.log('Error updating network settings', error);
   }

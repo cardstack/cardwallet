@@ -14,3 +14,4 @@ export * from './safe-utils';
 export * from './url-utils';
 export * from './wyre-utils';
 export * from './layouts';
+export * from './restartApp';

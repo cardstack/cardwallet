@@ -2,11 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { Alert, ScrollView } from 'react-native';
-import RNBootSplash from 'react-native-bootsplash';
-import RNRestart from 'react-native-restart';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
 import { Routes } from '@cardstack/navigation';
+import { restartApp } from '@cardstack/utils';
 import { deleteAllBackups } from '@rainbow-me/handlers/cloudBackup';
 import { useWallets } from '@rainbow-me/hooks';
 import { resetWallet } from '@rainbow-me/model/wallet';
@@ -39,7 +38,7 @@ const DeveloperSettings = () => {
     await deleteAllBackups();
 
     Alert.alert('Backups deleted succesfully');
-    RNRestart.Restart();
+    restartApp();
   };
 
   return (
@@ -54,13 +53,7 @@ const DeveloperSettings = () => {
         onPress={resetWallet}
         testID="reset-keychain-section"
       />
-      <ListItem
-        label="🔄 Restart app"
-        onPress={() => {
-          RNRestart.Restart();
-          RNBootSplash.show();
-        }}
-      />
+      <ListItem label="🔄 Restart app" onPress={restartApp} />
       <ListItem label="🗑️ Remove all backups" onPress={removeBackups} />
       <ListItem
         label="🤷 Restore default experimental config"
