@@ -1,6 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { memo, useCallback } from 'react';
-import { SectionList } from 'react-native';
+import React, { memo, useState, useCallback } from 'react';
+import { Alert, SectionList } from 'react-native';
 
 import {
   Button,
@@ -11,16 +10,18 @@ import {
 } from '@cardstack/components';
 import { buttonVariants } from '@cardstack/theme';
 
+import { HoldToAuthorizeButton } from '@rainbow-me/components/buttons';
+
 const themes = ['light', 'dark'];
 
 // Not worrying about perfomance and typing as this is a developer feature
 const DesignSystemScreen = () => {
-  const { navigate } = useNavigation();
+  const [loading, setLoading] = useState(false);
 
   const sections = [
     {
-      title: 'Template Screens',
-      data: [],
+      title: 'Hold to confirm Button',
+      data: ['1'],
     },
     {
       title: 'Biometric Switch',
@@ -32,52 +33,60 @@ const DesignSystemScreen = () => {
     },
   ];
 
+  const longPress = () => {
+    setLoading(true);
+    Alert.alert('long press');
+  };
+
   const renderItem = useCallback(
     ({ item, section: { title } }) => {
       switch (title) {
         case 'Buttons':
           return (
-            <CenteredContainer padding={2} backgroundColor="overlayGray">
+            <CenteredContainer padding={2}>
               <Button variant={item}>{item}</Button>
+            </CenteredContainer>
+          );
+        case 'Hold to confirm Button':
+          return (
+            <CenteredContainer padding={2}>
+              <HoldToAuthorizeButton label="Hold to action" isAuthorizing />
+              <Container padding={1} />
+              <HoldToAuthorizeButton
+                label="Hold to action"
+                onPress={() => Alert.alert('long press')}
+              />
+              <Container padding={1} />
+              <Button loading={loading} onLongPress={longPress}>
+                Hold to action
+              </Button>
             </CenteredContainer>
           );
         case 'Biometric Switch':
           return (
-            <CenteredContainer padding={2} backgroundColor="overlayGray">
+            <CenteredContainer padding={2}>
               <BiometricSwitch variant={item} />
-            </CenteredContainer>
-          );
-        case 'Template Screens':
-          return (
-            <CenteredContainer padding={2} backgroundColor="overlayGray">
-              <Button
-                onPress={() =>
-                  navigate(item, {
-                    flow: 'confirm',
-                  })
-                }
-              >
-                {item}
-              </Button>
             </CenteredContainer>
           );
       }
     },
-    [navigate]
+    [loading]
   );
 
   return (
-    <SectionList
-      renderItem={renderItem as any}
-      sections={sections}
-      renderSectionHeader={item => (
-        <Container padding={4} backgroundColor="black">
-          <Text color="white" fontSize={20}>
-            {item.section.title}
-          </Text>
-        </Container>
-      )}
-    />
+    <Container backgroundColor="overlayGray">
+      <SectionList
+        renderItem={renderItem as any}
+        sections={sections}
+        renderSectionHeader={item => (
+          <Container padding={4} backgroundColor="black">
+            <Text color="white" fontSize={18}>
+              {item.section.title}
+            </Text>
+          </Container>
+        )}
+      />
+    </Container>
   );
 };
 

@@ -33,6 +33,7 @@ interface ButtonProps extends RestyleProps {
   iconPosition?: IconPosition;
   small?: boolean;
   onPress?: () => void;
+  onLongPress?: () => void;
   loading?: boolean;
   disablePress?: boolean;
   testID?: string;
@@ -69,6 +70,7 @@ export const Button = ({
   iconPosition = 'left',
   loading,
   onPress,
+  onLongPress,
   ...props
 }: ButtonProps) => {
   const textStyle = useVariantValue(
@@ -106,6 +108,7 @@ export const Button = ({
       {...props}
       disabled={disabled || disablePress || loading}
       onPress={onPress}
+      onLongPress={onLongPress}
     >
       {loading ? (
         <Container>
