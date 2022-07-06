@@ -2,7 +2,7 @@
   "name": "Cardwallet",
   "private": true,
   "scripts": {
-    "setup": "yarn install && yarn postinstall",
+    "setup": "yarn install && yarn postinstall && husky install",
     "check-env": "./scripts/check-env.sh",
     "build:ios": "node node_modules/react-native/local-cli/cli.js bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
     "android": "react-native run-android",
@@ -38,8 +38,7 @@
     "reset:cache": "yarn start --reset-cache",
     "rebuild": "yarn setup && yarn install-bundle && yarn install-pods && yarn build:ios && yarn start",
     "rebuild:m1": "yarn setup && yarn install-bundle && yarn install-pods:m1 && yarn build:ios && yarn start:clean",
-    "codegen": "graphql-codegen",
-    "prepare": "husky install"
+    "codegen": "graphql-codegen"
   },
   "husky": {
     "hooks": {
@@ -113,7 +112,6 @@
     "grapheme-splitter": "^1.0.4",
     "graphql-tag": "^2.10.3",
     "https-browserify": "0.0.1",
-    "husky": "^2.4.0",
     "i18n-js": "^3.8.0",
     "i18next": "^17.0.3",
     "imgix-core-js": "^2.3.2",
