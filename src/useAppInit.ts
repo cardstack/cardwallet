@@ -32,7 +32,7 @@ export const useAppInit = () => {
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
   const appRequiments = useAppRequirements();
 
-  const { justBecameActive } = useAppState();
+  const { justBecameActive, movedFromBackground } = useAppState();
 
   const {
     setUserUnauthorized,
@@ -98,14 +98,19 @@ export const useAppInit = () => {
     const isNotAlreadyLocked =
       Navigation.getActiveRouteName() !== Routes.UNLOCK_SCREEN;
 
+    // We can't use justBecameActive it loops iOS biometrics active->inactive->active
     if (
-      justBecameActive &&
+      movedFromBackground &&
       isNotAlreadyLocked &&
       !isAuthenticatingWithBiometrics
     ) {
       setUserUnauthorized();
     }
-  }, [isAuthenticatingWithBiometrics, justBecameActive, setUserUnauthorized]);
+  }, [
+    isAuthenticatingWithBiometrics,
+    movedFromBackground,
+    setUserUnauthorized,
+  ]);
 
   useEffect(() => {
     if (!isAuthorized && hasWallet) {
