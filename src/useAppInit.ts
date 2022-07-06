@@ -23,29 +23,28 @@ import {
 } from '@cardstack/notification-handler';
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
-import { Device } from '@cardstack/utils';
 
 import Logger from 'logger';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
-const ANDROID_UNAUTHORIZE_DELAY = 5000;
 
 export const useAppInit = () => {
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
   const appRequiments = useAppRequirements();
 
-  const { justBecameActive, isInBackground } = useAppState();
+  const { justBecameActive } = useAppState();
+
   const {
     setUserUnauthorized,
     isAuthorized,
     hasWallet,
+    isAuthenticatingWithBiometrics,
   } = useAuthSelectorAndActions();
 
   useDevSetup();
   useNotificationSetup();
 
   const initialDeepLink = useRef<string | null>(null);
-  const androidLastAuthorizedDate = useRef<number | null>(null);
 
   useEffect(() => {
     const handleWcDeepLink = async () => {
@@ -96,36 +95,17 @@ export const useAppInit = () => {
   }, [isAuthorized, walletReady]);
 
   useEffect(() => {
-    const currentDate = Date.now();
+    const isNotAlreadyLocked =
+      Navigation.getActiveRouteName() !== Routes.UNLOCK_SCREEN;
 
-    if (isInBackground) {
-      const tempAuthorizedRoutes: string[] = [
-        Routes.QR_SCANNER_SCREEN,
-        Routes.PAY_MERCHANT,
-      ];
-
-      const isOnDelayedRoute = tempAuthorizedRoutes.includes(
-        Navigation.getActiveRouteName() || ''
-      );
-
-      if (Device.isAndroid && isOnDelayedRoute) {
-        androidLastAuthorizedDate.current = currentDate;
-        return;
-      }
-
-      androidLastAuthorizedDate.current = null;
+    if (
+      justBecameActive &&
+      isNotAlreadyLocked &&
+      !isAuthenticatingWithBiometrics
+    ) {
       setUserUnauthorized();
-    } else if (androidLastAuthorizedDate.current) {
-      // When returning to active
-      if (
-        currentDate - androidLastAuthorizedDate.current >
-        ANDROID_UNAUTHORIZE_DELAY
-      ) {
-        androidLastAuthorizedDate.current = null;
-        setUserUnauthorized();
-      }
     }
-  }, [setUserUnauthorized, isInBackground]);
+  }, [isAuthenticatingWithBiometrics, justBecameActive, setUserUnauthorized]);
 
   useEffect(() => {
     if (!isAuthorized && hasWallet) {
