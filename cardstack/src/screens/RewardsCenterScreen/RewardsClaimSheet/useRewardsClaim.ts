@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects } from '@cardstack/hooks';
@@ -35,6 +35,10 @@ const useRewardsClaim = () => {
     mainPoolTokenInfo,
   } = useRewardsDataFetch();
 
+  // flag to avoid rerendering the screen after the claim happened
+  const isClaiming = useRef(false);
+  const mainPoolTokenRef = useRef(mainPoolTokenInfo);
+
   const { dismissLoadingOverlay, showLoadingOverlay } = useLoadingOverlay();
 
   const [
@@ -50,10 +54,10 @@ const useRewardsClaim = () => {
     [rewardSafes, defaultRewardProgramId]
   );
 
-  const partialClaimParams = {
+  const claimParams = {
     accountAddress,
     rewardProgramId: defaultRewardProgramId,
-    tokenAddress: mainPoolTokenInfo?.tokenAddress || '',
+    tokenAddress: mainPoolTokenRef.current?.tokenAddress || '',
     safeAddress: rewardSafeForProgram?.address || '',
   };
 
@@ -61,8 +65,9 @@ const useRewardsClaim = () => {
     data: estimatedGasClaim,
     isLoading: loadingEstimatedGasClaim,
     isFetching: fetchingEstimatedGasClaim,
-  } = useGetClaimRewardsGasEstimateQuery(partialClaimParams, {
+  } = useGetClaimRewardsGasEstimateQuery(claimParams, {
     refetchOnMountOrArgChange: true,
+    skip: isClaiming.current,
   });
 
   const screenData = useMemo(
@@ -70,11 +75,11 @@ const useRewardsClaim = () => {
       loadingGasEstimate: loadingEstimatedGasClaim || fetchingEstimatedGasClaim,
       type: TransactionConfirmationType.REWARDS_CLAIM,
       estGasFee: estimatedGasClaim || '0.10',
-      ...mainPoolTokenInfo,
+      ...mainPoolTokenRef.current,
     }),
     [
       estimatedGasClaim,
-      mainPoolTokenInfo,
+      mainPoolTokenRef,
       loadingEstimatedGasClaim,
       fetchingEstimatedGasClaim,
     ]
@@ -83,16 +88,9 @@ const useRewardsClaim = () => {
   const onConfirm = useCallback(() => {
     showLoadingOverlay({ title: strings.claim.loading });
 
-    claimRewards({
-      ...partialClaimParams,
-      rewardProgramId: defaultRewardProgramId,
-    });
-  }, [
-    showLoadingOverlay,
-    claimRewards,
-    partialClaimParams,
-    defaultRewardProgramId,
-  ]);
+    isClaiming.current = true;
+    claimRewards(claimParams);
+  }, [showLoadingOverlay, claimRewards, claimParams]);
 
   const onClaimFulfilledAlert = useCallback(
     ({ title, message, dismiss }: onClaimCallbackProps) => () => {
