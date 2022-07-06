@@ -10,8 +10,6 @@ import {
 } from '@cardstack/components';
 import { buttonVariants } from '@cardstack/theme';
 
-import { HoldToAuthorizeButton } from '@rainbow-me/components/buttons';
-
 const themes = ['light', 'dark'];
 
 // Not worrying about perfomance and typing as this is a developer feature
@@ -50,15 +48,8 @@ const DesignSystemScreen = () => {
         case 'Hold to confirm Button':
           return (
             <CenteredContainer padding={2}>
-              <HoldToAuthorizeButton label="Hold to action" isAuthorizing />
-              <Container padding={1} />
-              <HoldToAuthorizeButton
-                label="Hold to action"
-                onPress={() => Alert.alert('long press')}
-              />
-              <Container padding={1} />
               <Button loading={loading} onLongPress={longPress}>
-                Hold to action
+                Hold for action
               </Button>
             </CenteredContainer>
           );

@@ -1,7 +1,9 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { HoldToAuthorizeButton } from '../buttons';
+
+import { Button } from '@cardstack/components';
+
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const SendButton = ({
@@ -32,14 +34,15 @@ const SendButton = ({
   }
 
   return (
-    <HoldToAuthorizeButton
+    <Button
       {...props}
       disabled={disabled}
-      isAuthorizing={isAuthorizing}
-      label={label}
-      onPress={onPress}
+      loading={isAuthorizing}
+      onLongPress={onPress}
       testID={testID}
-    />
+    >
+      {label}
+    </Button>
   );
 };
 
