@@ -39,17 +39,11 @@ export const useAppState = () => {
 
   const isActive = useMemo(() => appState === AppStateType.active, [appState]);
 
-  const isActiveWithoutUpdate = useMemo(
-    () => AppState.currentState === AppStateType.active,
-    []
-  );
-
   return {
     appState,
     justBecameActive,
     movedFromBackground,
     isInBackground,
     isActive,
-    isActiveWithoutUpdate,
   };
 };

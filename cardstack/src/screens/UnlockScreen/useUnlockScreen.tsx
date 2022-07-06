@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
-import { useBooleanState, useAppState } from '@cardstack/hooks';
+import { useBooleanState } from '@cardstack/hooks';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
@@ -42,8 +42,6 @@ export const useUnlockScreen = () => {
   } = useAuthActions();
 
   const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
-
-  const { isActiveWithoutUpdate } = useAppState();
 
   const attemptsCount = useRef(0);
   const nextAttemptDate = useRef<number | null>(null);
@@ -177,10 +175,10 @@ export const useUnlockScreen = () => {
   }, [checkUserTemporaryBlock, inputPin, validatePin]);
 
   useEffect(() => {
-    if (isBiometryEnabled && isActiveWithoutUpdate) {
+    if (isBiometryEnabled) {
       authenticateBiometrically();
     }
-  }, [authenticateBiometrically, isBiometryEnabled, isActiveWithoutUpdate]);
+  }, [authenticateBiometrically, isBiometryEnabled]);
 
   return {
     inputPin,
