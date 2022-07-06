@@ -3,6 +3,7 @@ import { waitFor, act } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
+import { useAppState } from '@cardstack/hooks/useAppState';
 import { useBiometry } from '@cardstack/hooks/useBiometry';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
@@ -13,7 +14,6 @@ import {
   savePinAuthAttempts,
   savePinAuthNextDateAttempt,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
-import { useAppState } from '@rainbow-me/hooks';
 
 import { strings } from '../strings';
 import { MAX_WRONG_ATTEMPTS, useUnlockScreen } from '../useUnlockScreen';
@@ -45,7 +45,7 @@ jest.mock('@cardstack/components/BiometricSwitch', () => ({
   useBiometricSwitch: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/hooks', () => ({
+jest.mock('@cardstack/hooks/useAppState', () => ({
   useAppState: jest.fn(),
 }));
 

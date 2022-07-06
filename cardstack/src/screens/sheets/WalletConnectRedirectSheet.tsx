@@ -2,9 +2,8 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 
 import { CenteredContainer, Sheet, Text } from '@cardstack/components';
+import { useAppState } from '@cardstack/hooks/useAppState';
 import { RouteType } from '@cardstack/navigation/types';
-
-import { useAppState } from '@rainbow-me/hooks';
 
 export enum WCRedirectTypes {
   connect = 'connect',
