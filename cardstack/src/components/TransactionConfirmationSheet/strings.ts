@@ -30,7 +30,7 @@ export const strings = {
     },
   },
   buttons: {
-    submit: 'Confirm',
+    submit: 'Hold to Confirm',
     cancel: 'Cancel',
   },
 };

@@ -14,7 +14,7 @@ export const strings = {
   },
   loading: 'Withdrawing reward funds',
   buttons: {
-    submit: 'Confirm',
+    submit: 'Hold to Confirm',
     cancel: 'Cancel',
   },
 };

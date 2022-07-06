@@ -148,7 +148,7 @@ const SheetFooter = ({
       <Button
         loading={onConfirmLoading}
         variant="small"
-        onPress={onConfirm}
+        onLongPress={onConfirm}
         disabled={disabledConfirmButton}
       >
         {strings.buttons.submit}
