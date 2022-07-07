@@ -9,10 +9,11 @@ import Animated, {
   withDecay,
   withSpring,
 } from 'react-native-reanimated';
-import RNRestart from 'react-native-restart';
 import styled from 'styled-components';
 import { ButtonPressAnimation } from '../animations';
 import { Icon } from '../icons';
+
+import { restartApp } from '@cardstack/utils';
 
 const Button = styled(ButtonPressAnimation)`
   border-radius: 35;
@@ -35,7 +36,7 @@ const Wrapper = styled(Animated.View)`
 
 export default function DevButton({
   color: givenColor,
-  onPress = () => RNRestart.Restart(),
+  onPress = restartApp,
   children = <Icon color="white" name="warning" size="lmedium" />,
   initialDisplacement = 100,
 }) {

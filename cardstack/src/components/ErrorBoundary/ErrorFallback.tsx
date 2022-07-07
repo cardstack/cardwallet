@@ -1,5 +1,4 @@
 import React, { memo, useCallback } from 'react';
-import RNRestart from 'react-native-restart';
 
 import {
   SafeAreaView,
@@ -7,6 +6,7 @@ import {
   CenteredContainer,
   Button,
 } from '@cardstack/components';
+import { restartApp } from '@cardstack/utils';
 
 import logger from 'logger';
 
@@ -17,7 +17,7 @@ const ErrorFallback = ({
 }) => {
   const handleOnPress = useCallback(() => {
     logger.sentry('Restart app on error', message);
-    RNRestart.Restart();
+    restartApp();
   }, [message]);
 
   return (
