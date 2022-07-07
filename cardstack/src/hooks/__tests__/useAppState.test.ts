@@ -31,8 +31,9 @@ const SECOND_OPEN = {
 describe('useAppState', () => {
   const appStateSpy = jest.spyOn(AppState, 'addEventListener');
 
-  const mockAppState = (state: 'active' | 'background') =>
+  const mockAppState = (state: 'active' | 'background') => {
     appStateSpy.mock.calls[0][1](state);
+  };
 
   afterEach(() => {
     jest.clearAllMocks();

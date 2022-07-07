@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 
 import { useBiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
-import { useBooleanState, useAppState } from '@cardstack/hooks';
+import { useBooleanState } from '@cardstack/hooks';
 import { biometricAuthentication } from '@cardstack/models/biometric-auth';
 import { getPin } from '@cardstack/models/secure-storage';
 import { useAuthActions } from '@cardstack/redux/authSlice';
@@ -17,6 +17,7 @@ import {
   savePinAuthNextDateAttempt,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
 import { resetWallet } from '@rainbow-me/model/wallet';
+import logger from 'logger';
 
 import { strings } from './strings';
 
@@ -34,10 +35,13 @@ export const useUnlockScreen = () => {
     resetRetryBiometricAuth,
   ] = useBooleanState();
 
-  const { setUserAuthorized } = useAuthActions();
-  const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
+  const {
+    setUserAuthorized,
+    authWithBiometricsStarted,
+    authWithBiometricsFinished,
+  } = useAuthActions();
 
-  const { isActive } = useAppState();
+  const { isBiometryEnabled, biometryLabel } = useBiometricSwitch();
 
   const attemptsCount = useRef(0);
   const nextAttemptDate = useRef<number | null>(null);
@@ -72,19 +76,33 @@ export const useUnlockScreen = () => {
   );
 
   const authenticateBiometrically = useCallback(async () => {
+    authWithBiometricsStarted();
+    logger.sentry('[Auth-Bio]: Started');
     resetRetryBiometricAuth();
 
-    if (await biometricAuthentication()) {
-      setPinValid();
-      setUserAuthorized();
-    } else {
-      setRetryBiometricAuth();
+    try {
+      const isBiometricAuthorized = await biometricAuthentication();
+
+      if (isBiometricAuthorized) {
+        setPinValid();
+        setUserAuthorized();
+      } else {
+        setRetryBiometricAuth();
+      }
+    } catch (e) {
+      logger.sentry('[Auth-Bio]: Failed to authenticate with biometrics', e);
+    } finally {
+      // Avoids auth loop on Android
+      setTimeout(authWithBiometricsFinished, 500);
+      logger.sentry('[Auth-Bio]: Finished');
     }
   }, [
+    authWithBiometricsStarted,
+    resetRetryBiometricAuth,
+    authWithBiometricsFinished,
     setPinValid,
     setUserAuthorized,
     setRetryBiometricAuth,
-    resetRetryBiometricAuth,
   ]);
 
   const onResetWalletPress = useCallback(() => {
@@ -157,10 +175,10 @@ export const useUnlockScreen = () => {
   }, [checkUserTemporaryBlock, inputPin, validatePin]);
 
   useEffect(() => {
-    if (isBiometryEnabled && isActive) {
+    if (isBiometryEnabled) {
       authenticateBiometrically();
     }
-  }, [authenticateBiometrically, isBiometryEnabled, isActive]);
+  }, [authenticateBiometrically, isBiometryEnabled]);
 
   return {
     inputPin,
