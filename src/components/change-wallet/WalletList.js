@@ -233,7 +233,7 @@ export default function WalletList({
                 color: editMode ? 'grayText' : 'black',
                 fontSize: 14,
               }}
-              title="Create derivated account"
+              title="Create derived account"
             />
             {__DEV__ && (
               <OptionItem

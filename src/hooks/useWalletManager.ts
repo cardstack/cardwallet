@@ -41,11 +41,6 @@ import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 
 import logger from 'logger';
 
-interface CreateWalletParams
-  extends Pick<CreateImportParams, 'color' | 'name'> {
-  isFromWelcomeFlow?: boolean;
-}
-
 interface WalletsState {
   selectedWallet: RainbowWallet;
   wallets: RainbowWallet[];
@@ -223,19 +218,15 @@ export default function useWalletManager() {
   );
 
   const createNewWallet = useCallback(
-    async ({ color, name, isFromWelcomeFlow }: CreateWalletParams = {}) =>
+    async () =>
       createWalletPin({
         onSuccess: async (pin: string) => {
           try {
-            if (isFromWelcomeFlow) {
-              showLoadingOverlay({
-                title: walletLoadingStates.CREATING_WALLET,
-              });
-            }
+            showLoadingOverlay({
+              title: walletLoadingStates.CREATING_WALLET,
+            });
 
             const wallet = await createOrImportWallet({
-              color,
-              name,
               pin,
             });
 

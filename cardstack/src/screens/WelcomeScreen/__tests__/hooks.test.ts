@@ -105,8 +105,6 @@ describe('useWelcomeScreen', () => {
       result.current.onCreateWallet();
     });
 
-    expect(mockedCreateWallet).toBeCalledWith({
-      isFromWelcomeFlow: true,
-    });
+    expect(mockedCreateWallet).toBeCalledTimes(1);
   });
 });

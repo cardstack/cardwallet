@@ -48,9 +48,7 @@ export const useWelcomeScreen = () => {
   }, []);
 
   const onCreateWallet = useCallback(() => {
-    createNewWallet({
-      isFromWelcomeFlow: true,
-    });
+    createNewWallet();
   }, [createNewWallet]);
 
   const onAddExistingWallet = useCallback(() => {
