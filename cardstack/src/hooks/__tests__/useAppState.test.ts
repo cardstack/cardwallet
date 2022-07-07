@@ -10,7 +10,6 @@ const FIRST_OPEN = {
   movedFromBackground: false,
   isInBackground: false,
   isActive: true,
-  isActiveWithoutUpdate: true,
 };
 
 const BACKGROUND = {
@@ -19,7 +18,6 @@ const BACKGROUND = {
   movedFromBackground: false,
   isInBackground: true,
   isActive: false,
-  isActiveWithoutUpdate: false,
 };
 
 const SECOND_OPEN = {
@@ -28,7 +26,6 @@ const SECOND_OPEN = {
   movedFromBackground: true,
   isInBackground: false,
   isActive: true,
-  isActiveWithoutUpdate: true,
 };
 
 describe('useAppState', () => {
@@ -39,13 +36,10 @@ describe('useAppState', () => {
   };
 
   afterEach(() => {
-    AppState.currentState = undefined as any;
     jest.clearAllMocks();
   });
 
   it('should match values for first open state', async () => {
-    AppState.currentState = 'active';
-
     const { result } = renderHook(() => useAppState());
 
     await act(async () => {
@@ -70,7 +64,6 @@ describe('useAppState', () => {
   });
 
   it('should match values for second open if state changes from background to active', async () => {
-    AppState.currentState = 'active';
     const { result } = renderHook(() => useAppState());
 
     await act(async () => {

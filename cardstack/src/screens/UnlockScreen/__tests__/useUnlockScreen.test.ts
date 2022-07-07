@@ -163,8 +163,9 @@ describe('useUnlockScreen', () => {
     mockAuthAuthorizedHelper(true);
 
     renderHook(() => useUnlockScreen());
-
-    await waitFor(() => expect(mockSetAuthorized).toBeCalledTimes(1));
+    act(async () => {
+      await waitFor(() => expect(mockSetAuthorized).toBeCalledTimes(1));
+    });
   });
 
   it('should not authorize if biometry check fails and retry should become available', async () => {
@@ -176,9 +177,11 @@ describe('useUnlockScreen', () => {
       result.current.authenticateBiometrically();
     });
 
-    await waitFor(() => {
-      expect(result.current.retryBiometricAuth).toBeTruthy();
-      expect(mockSetAuthorized).toBeCalledTimes(0);
+    act(async () => {
+      await waitFor(() => {
+        expect(result.current.retryBiometricAuth).toBeTruthy();
+        expect(mockSetAuthorized).toBeCalledTimes(0);
+      });
     });
   });
 
@@ -229,7 +232,8 @@ describe('useUnlockScreen', () => {
         setInputPin(wrongPIN);
       });
 
-      expect(savePinAuthAttempts).toBeCalledWith(1);
+      await waitFor(() => expect(savePinAuthAttempts).toBeCalledWith(1));
+
       expect(attemptsCount.current).toBe(1);
       expect(nextAttemptDate.current).toBeNull();
     });
@@ -250,15 +254,18 @@ describe('useUnlockScreen', () => {
       });
 
       for (let i = 2; i <= MAX_WRONG_ATTEMPTS; i++) {
-        await act(() => {
+        act(() => {
           setInputPin(wrongPIN);
         });
 
-        expect(savePinAuthAttempts).toBeCalledWith(i);
+        await waitFor(() => expect(savePinAuthAttempts).toBeCalledWith(i));
         expect(attemptsCount.current).toEqual(i);
       }
 
-      expect(attemptsCount.current).toEqual(MAX_WRONG_ATTEMPTS);
+      await waitFor(() =>
+        expect(attemptsCount.current).toEqual(MAX_WRONG_ATTEMPTS)
+      );
+
       expect(nextAttemptDate.current).toBeNull();
       expect(inputPin).toBe('');
       expect(savePinAuthNextDateAttempt).toHaveBeenLastCalledWith(null);
@@ -283,7 +290,7 @@ describe('useUnlockScreen', () => {
         setInputPin(wrongPIN);
       });
 
-      expect(nextAttemptDate.current).toBeTruthy();
+      await waitFor(() => expect(nextAttemptDate.current).toBeTruthy());
 
       expect(savePinAuthNextDateAttempt).toHaveBeenLastCalledWith(
         nextAttemptDate.current
@@ -336,6 +343,7 @@ describe('useUnlockScreen', () => {
       const wrongPIN = '666666';
 
       const {
+        rerender,
         result: {
           current: { setInputPin, attemptsCount },
         },
@@ -347,7 +355,7 @@ describe('useUnlockScreen', () => {
         await waitFor(() => expect(getPinAuthNextDateAttempt).toHaveReturned());
       });
 
-      global.Date.now = jest.fn(() => DateNow() + oneMinuteinMs * 2);
+      global.Date.now = jest.fn(() => DateNow() + oneMinuteinMs * 3);
 
       act(() => {
         setInputPin(wrongPIN);
@@ -359,7 +367,7 @@ describe('useUnlockScreen', () => {
         setInputPin(wrongPIN);
       });
 
-      console.log('countFInal', attemptsCount.current);
+      rerender();
 
       expect(spyAlert).toBeCalledWith(
         'Temporary block',
@@ -386,8 +394,11 @@ describe('useUnlockScreen', () => {
         setInputPin(PIN);
       });
 
+      await waitFor(() =>
+        expect(savePinAuthNextDateAttempt).toBeCalledWith(null)
+      );
+
       expect(nextAttemptDate.current).toBeNull();
-      expect(savePinAuthNextDateAttempt).toBeCalledWith(null);
 
       await waitFor(() => expect(pinInvalid).toEqual(false));
 
@@ -395,27 +406,6 @@ describe('useUnlockScreen', () => {
 
       expect(attemptsCount.current).toEqual(0);
       expect(savePinAuthAttempts).toBeCalledWith(0);
-    });
-
-    it('should trigger authenticateBiometrically with initial app state', async () => {
-      mockBiometryAvailableHelper(true);
-
-      renderHook(() => useUnlockScreen());
-
-      await waitFor(() => expect(mockSetAuthorized).not.toBeCalled());
-    });
-
-    it('should not call authenticateBiometrically when app goes to background mode', async () => {
-      mockBiometryAvailableHelper(true);
-
-      const { rerender } = renderHook(() => useUnlockScreen());
-
-      // Update app state to isActive false.
-      mockUseAppState(false);
-
-      rerender();
-
-      await waitFor(() => expect(mockSetAuthorized).not.toBeCalled());
     });
   });
 });
