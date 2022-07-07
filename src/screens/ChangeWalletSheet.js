@@ -15,11 +15,8 @@ import { useDispatch } from 'react-redux';
 
 import Divider from '../components/Divider';
 import WalletList from '../components/change-wallet/WalletList';
-import { backupUserDataIntoCloud } from '../handlers/cloudBackup';
 import { removeWalletData } from '../handlers/localstorage/removeWallet';
-import showWalletErrorAlert from '../helpers/support';
 import WalletLoadingStates from '../helpers/walletLoadingStates';
-import WalletTypes from '../helpers/walletTypes';
 import { useWalletsWithBalancesAndNames } from '../hooks/useWalletsWithBalancesAndNames';
 import {
   createAccountForWallet,
@@ -32,7 +29,7 @@ import { Container, Sheet, Text, Touchable } from '@cardstack/components';
 import { removeFCMToken } from '@cardstack/models/firebase';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
-import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
+import { Alert } from '@rainbow-me/components/alerts';
 import {
   useAccountSettings,
   useWalletManager,
@@ -62,11 +59,7 @@ export default function ChangeWalletSheet() {
   const { goBack, navigate } = useNavigation();
   const dispatch = useDispatch();
   const { accountAddress } = useAccountSettings();
-  const {
-    changeSelectedWallet,
-    createNewWallet,
-    initializeWallet,
-  } = useWalletManager();
+  const { changeSelectedWallet, initializeWallet } = useWalletManager();
   const walletsWithBalancesAndNames = useWalletsWithBalancesAndNames();
   const creatingWallet = useRef();
 
@@ -319,83 +312,33 @@ export default function ChangeWalletSheet() {
             isNewProfile: true,
             onCloseModal: async args => {
               if (args) {
+                if (isDamaged) {
+                  Alert({
+                    message: `Your wallet might be damaged.\nTo add new account please reset your wallet and re-import it using your seed phrase.`,
+                    title: 'An error ocurred',
+                  });
+
+                  creatingWallet.current = false;
+
+                  return;
+                }
+
                 showLoadingOverlay({
                   title: WalletLoadingStates.CREATING_WALLET,
                 });
 
                 const name = get(args, 'name', '');
                 const color = get(args, 'color', getRandomColor());
-                // Check if the selected wallet is the primary
-                let primaryWalletKey = selectedWallet.primary
-                  ? selectedWallet.id
-                  : null;
-
-                // If it's not, then find it
-                !primaryWalletKey &&
-                  Object.keys(wallets).some(key => {
-                    const wallet = wallets[key];
-                    if (
-                      wallet.type === WalletTypes.mnemonic &&
-                      wallet.primary
-                    ) {
-                      primaryWalletKey = key;
-                      return true;
-                    }
-                    return false;
-                  });
-
-                // If there's no primary wallet at all,
-                // we fallback to an imported one with a seed phrase
-                !primaryWalletKey &&
-                  Object.keys(wallets).some(key => {
-                    const wallet = wallets[key];
-                    if (
-                      wallet.type === WalletTypes.mnemonic &&
-                      wallet.imported
-                    ) {
-                      primaryWalletKey = key;
-                      return true;
-                    }
-                    return false;
-                  });
 
                 try {
-                  // If we found it and it's not damaged use it to create the new account
-                  if (primaryWalletKey && !wallets[primaryWalletKey].damaged) {
-                    const newWallets = await dispatch(
-                      createAccountForWallet(primaryWalletKey, color, name)
-                    );
-                    await initializeWallet();
-                    // If this wallet was previously backed up to the cloud
-                    // We need to update userData backup so it can be restored too
-                    if (
-                      wallets[primaryWalletKey].backedUp &&
-                      wallets[primaryWalletKey].backupType ===
-                        WalletBackupTypes.cloud
-                    ) {
-                      try {
-                        await backupUserDataIntoCloud({ wallets: newWallets });
-                      } catch (e) {
-                        logger.sentry(
-                          'Updating wallet userdata failed after new account creation'
-                        );
-                        captureException(e);
-                        throw e;
-                      }
-                    }
+                  await dispatch(
+                    createAccountForWallet(selectedWallet.id, color, name)
+                  );
 
-                    // If doesn't exist, we need to create a new wallet
-                  } else {
-                    await createNewWallet({ color, name });
-                  }
+                  await initializeWallet();
                 } catch (e) {
                   logger.sentry('Error while trying to add account');
                   captureException(e);
-                  if (isDamaged) {
-                    setTimeout(() => {
-                      showWalletErrorAlert();
-                    }, 1000);
-                  }
                 }
               }
               creatingWallet.current = false;
@@ -415,7 +358,6 @@ export default function ChangeWalletSheet() {
       logger.log('Error while trying to add account', e);
     }
   }, [
-    createNewWallet,
     dismissLoadingOverlay,
     dispatch,
     goBack,
@@ -423,9 +365,7 @@ export default function ChangeWalletSheet() {
     isDamaged,
     navigate,
     selectedWallet.id,
-    selectedWallet.primary,
     showLoadingOverlay,
-    wallets,
   ]);
 
   const onPressImportSeedPhrase = useCallback(() => {

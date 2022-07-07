@@ -36,7 +36,7 @@ export const useWelcomeCtaBanner = () => {
   }, [navigate]);
 
   // We only consider an address for the drop if its the first address of an EOA.
-  // Derivated addresses are not elegible.
+  // Derived addresses are not elegible.
   const isFirstAddressForCurrentWallet = useMemo(
     () => selectedAccount?.index === 0 || false,
     [selectedAccount]

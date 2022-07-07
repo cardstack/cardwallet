@@ -187,7 +187,7 @@ export default function WalletList({
       switch (item.rowType) {
         case RowTypes.ADDRESS:
           return (
-            <Container height={item.height}>
+            <Container>
               <AddressRow
                 data={item}
                 editMode={editMode}
@@ -222,7 +222,7 @@ export default function WalletList({
             scrollEnabled={scrollEnabled}
           />
           {showDividers && <WalletListDivider />}
-          <Container marginBottom={5} marginLeft={5}>
+          <Container justifyContent="flex-end" marginBottom={1} marginLeft={5}>
             <OptionItem
               borderIcon
               disabled={editMode}
@@ -233,7 +233,7 @@ export default function WalletList({
                 color: editMode ? 'grayText' : 'black',
                 fontSize: 14,
               }}
-              title="Create derivated account"
+              title="Create derived account"
             />
             {__DEV__ && (
               <OptionItem
