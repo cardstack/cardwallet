@@ -33,7 +33,6 @@ export const MainRoutes = {
   SUPPORT_AND_FEES: 'SupportAndFeesSheet',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
   TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
-  SEED_PHRASE_BACKUP: 'SeedPhraseBackup',
 } as const;
 
 const TabRoutes = {
@@ -54,6 +53,7 @@ const SharedRoutes = {
   PIN_SCREEN: 'PinScreen',
   LOADING_OVERLAY: 'LoadingOverlay',
   IMPORT_SEED_SHEET: 'ImportSeedSheet',
+  SEED_PHRASE_BACKUP: 'SeedPhraseBackup',
   // non-migrated
   RESTORE_SHEET: 'RestoreSheet',
   MODAL_SCREEN: 'ModalScreen',
