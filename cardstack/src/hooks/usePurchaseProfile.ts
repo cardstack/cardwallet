@@ -23,21 +23,34 @@ export const usePurchaseProfile = () => {
 
     try {
       const response = await getProducts(skus);
-      console.log('::: getProducts response', response);
+      logger.log('💰 Products response', response);
     } catch (error) {
-      logger.sentry('Could not fetch Products.', error);
+      logger.sentry('Error fetching products:', error);
     }
   }, [getProducts]);
+
+  const fetchAvailablePurchases = useCallback(async () => {
+    try {
+      const response = await getAvailablePurchases();
+      logger.log('💰 Available Purchases response', response);
+    } catch (error) {
+      logger.sentry('Error fetching available purchases:', error);
+    }
+  }, [getAvailablePurchases]);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
   useEffect(() => {
+    fetchAvailablePurchases();
+  }, [fetchAvailablePurchases]);
+
+  useEffect(() => {
     if (currentPurchase) {
       // todo here we'll validate currentPurchase.transactionReceipt in the HUB.
       // if valid, we need to finish the transaction, otherwise it may reverse.
-      console.log('::: purchase successful');
+      console.log(':::💰 Purchase successful');
       console.log(currentPurchase.transactionReceipt);
       finishTransaction(currentPurchase);
     }
@@ -52,6 +65,7 @@ export const usePurchaseProfile = () => {
   return {
     iapAvailable,
     products,
+    availablePurchases,
     purchaseProduct,
     finishTransaction,
     currentPurchase,
