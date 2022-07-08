@@ -11,6 +11,7 @@ import ReactNativeHapticFeedback, {
   HapticFeedbackTypes,
 } from 'react-native-haptic-feedback';
 
+import { delayLongPressMs } from '@cardstack/constants';
 import { Device } from '@cardstack/utils';
 
 enum Scale {
@@ -71,15 +72,28 @@ const AnimatedPressable = ({
     [animatedValue]
   );
 
+  const emitHapticFeedback = useCallback(() => {
+    if (enableHapticFeedback && Device.supportsHapticFeedback) {
+      ReactNativeHapticFeedback?.trigger(hapticType);
+    }
+  }, [enableHapticFeedback, hapticType]);
+
   const handleOnPress = useCallback(
     (e: GestureResponderEvent) => {
-      if (enableHapticFeedback && Device.supportsHapticFeedback) {
-        ReactNativeHapticFeedback?.trigger(hapticType);
-      }
+      emitHapticFeedback();
 
       props?.onPress?.(e);
     },
-    [enableHapticFeedback, hapticType, props]
+    [emitHapticFeedback, props]
+  );
+
+  const handleLongPress = useCallback(
+    (e: GestureResponderEvent) => {
+      emitHapticFeedback();
+
+      props?.onLongPress?.(e);
+    },
+    [emitHapticFeedback, props]
   );
 
   return (
@@ -89,6 +103,8 @@ const AnimatedPressable = ({
         onPressIn={onPressAnimate(Scale.shrink)}
         onPressOut={onPressAnimate(Scale.grow)}
         onPress={handleOnPress}
+        onLongPress={handleLongPress}
+        delayLongPress={delayLongPressMs}
         testID="animated-pressable"
       >
         {children}
