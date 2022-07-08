@@ -75,7 +75,7 @@ const RewardWithdrawConfirmationScreen = () => {
             {strings.buttons.cancel}
           </Button>
           <Button
-            onLongPress={onConfirmPress}
+            onPress={onConfirmPress}
             variant="small"
             disabled={isLoadingGasEstimate}
           >
