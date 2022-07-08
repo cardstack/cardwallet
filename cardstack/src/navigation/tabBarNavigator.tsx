@@ -22,6 +22,7 @@ import {
   LoadingOverlayScreen,
   ImportSeedSheet,
   SeedPhraseBackup,
+  ProfileSlugScreen,
 } from '@cardstack/screens';
 import { colors } from '@cardstack/theme';
 import { Device, useWorker } from '@cardstack/utils';
@@ -154,6 +155,16 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
   </Stack.Group>
 );
 
+const OnboardingScreens = () => (
+  <Stack.Group navigationKey="onboarding">
+    <Stack.Screen
+      component={ProfileSlugScreen}
+      name={Routes.PROFILE_SLUG_SCREEN}
+      options={horizontalInterpolator}
+    />
+  </Stack.Group>
+);
+
 const useNavigationAuth = () => {
   const isFirstMount = useRef(true);
   const hideSplashScreen = useHideSplashScreen();
@@ -237,6 +248,7 @@ export const StackNavigator = () => {
         </>
       )}
       {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
+      {OnboardingScreens()}
     </Stack.Navigator>
   );
 };
