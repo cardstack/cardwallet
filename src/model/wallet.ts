@@ -47,14 +47,13 @@ import {
   updateSecureStorePin,
   wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
-import { authSlice } from '@cardstack/redux/authSlice';
+import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
 
 import {
   deleteKeychainIntegrityState,
   deletePinAuthAttemptsData,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
-import store from '@rainbow-me/redux/store';
 import logger from 'logger';
 const encryptor = new AesEncryptor();
 
@@ -888,7 +887,7 @@ export const resetWallet = async () => {
 
       logger.log('Wallet reset done!');
 
-      store.dispatch(authSlice.actions.resetHasWallet());
+      restartApp();
     }
   } catch (error) {
     logger.sentry('Error resetting the wallet', error);

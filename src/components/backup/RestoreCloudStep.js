@@ -12,6 +12,7 @@ import {
   cloudBackupPasswordMinLength,
   isCloudBackupPasswordValid,
 } from '@rainbow-me/handlers/cloudBackup';
+import { isValidSeed } from '@rainbow-me/helpers/validators';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useWalletManager } from '@rainbow-me/hooks';
 import logger from 'logger';
@@ -66,7 +67,12 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
         selectedBackupName
       );
 
-      await importWallet({ seed: restoredSeed });
+      if (isValidSeed(restoredSeed)) {
+        await importWallet({ seed: restoredSeed });
+        return;
+      }
+
+      logger.sentry('Error while restoring backup, invalid seed');
     } catch (e) {
       setIncorrectPassword(true);
 

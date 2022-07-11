@@ -117,7 +117,7 @@ async function findAndParseOldSeed(
   backedUpData?: BackedUpData,
   walletId?: string
 ) {
-  if (!backedUpData || walletId) {
+  if (!backedUpData || !walletId) {
     logger.sentry('no backupData or walletId found');
 
     return;
