@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setWalletBackedUp } from '../redux/wallets';
 import useWallets from './useWallets';
 import { backupWalletToCloud } from '@cardstack/models/backup';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import {
   CLOUD_BACKUP_ERRORS,
@@ -38,7 +39,9 @@ function getUserError(e: Error) {
 
 export default function useWalletCloudBackup() {
   const dispatch = useDispatch();
-  const { latestBackup, setIsWalletLoading, wallets } = useWallets();
+  const { latestBackup, wallets } = useWallets();
+
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const walletCloudBackup = useCallback(
     async ({
@@ -83,7 +86,7 @@ export default function useWalletCloudBackup() {
         return;
       }
 
-      setIsWalletLoading(walletLoadingStates.BACKING_UP_WALLET);
+      showLoadingOverlay({ title: walletLoadingStates.BACKING_UP_WALLET });
 
       let updatedBackupFile: string | null = null;
       try {
@@ -113,6 +116,8 @@ export default function useWalletCloudBackup() {
           )
         );
         logger.log('backup saved everywhere!');
+        dismissLoadingOverlay();
+
         onSuccess?.();
       } catch (e) {
         logger.sentry('error while trying to save wallet backup state');
@@ -120,10 +125,12 @@ export default function useWalletCloudBackup() {
         const userError = getUserError(
           new Error(CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED)
         );
+        dismissLoadingOverlay();
+
         onError?.(userError);
       }
     },
-    [dispatch, latestBackup, setIsWalletLoading, wallets]
+    [dismissLoadingOverlay, dispatch, latestBackup, showLoadingOverlay, wallets]
   );
 
   return walletCloudBackup;
