@@ -60,7 +60,7 @@ const NotificationsSection = () => {
         paddingHorizontal={6}
         paddingVertical={2}
       >
-        {[...Array(2)].map((v, i) => (
+        {[...Array(3)].map((v, i) => (
           <Skeleton
             height={40}
             key={`${i}`}

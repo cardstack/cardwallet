@@ -10,6 +10,7 @@ import { NotificationsPreferenceDataType } from '@cardstack/types';
 export enum NotificationsOptionsStrings {
   'merchant_claim' = 'Merchant Claim',
   'customer_payment' = 'New Payment Received',
+  'prepaid_card_drop' = 'Prepaid Card Drop',
 }
 
 export const useUpdateNotificationPreferences = () => {
