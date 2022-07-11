@@ -1,19 +1,16 @@
 import assert from 'assert';
+
 import { captureException } from '@sentry/react-native';
 import { forEach, startsWith } from 'lodash';
+
+import { getSeedPhrase } from '@cardstack/models/secure-storage';
+
 import {
   encryptAndSaveDataToCloud,
   getDataFromCloud,
-} from '../handlers/cloudBackup';
-import WalletBackupTypes from '../helpers/walletBackupTypes';
-
-import {
-  AllRainbowWallets,
-  createOrImportWallet,
-  RainbowWallet,
-} from './wallet';
-
-import { getSeedPhrase } from '@cardstack/models/secure-storage';
+} from '@rainbow-me/handlers/cloudBackup';
+import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
+import { AllRainbowWallets, RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
 interface BackedUpData {
@@ -57,6 +54,7 @@ export async function backupWalletToCloud(
   };
 
   logger.log('calling encryptAndSaveDataToCloud');
+
   return encryptAndSaveDataToCloud(data, password, `backup_${now}.json`);
 }
 
@@ -107,7 +105,7 @@ export async function restoreCloudBackup(
         data.seedPhrase ||
         (await findAndParseOldSeed(data.secrets, firstEligibleWallet?.id));
 
-      await createOrImportWallet({ seed });
+      return seed;
     }
   } catch (e) {
     logger.sentry('Error while restoring back up');
@@ -121,6 +119,7 @@ async function findAndParseOldSeed(
 ) {
   if (!backedUpData || walletId) {
     logger.sentry('no backupData or walletId found');
+
     return;
   }
 
@@ -130,13 +129,14 @@ async function findAndParseOldSeed(
 
   if (!backupKey) {
     logger.sentry('no backupKeyfound');
+
     return;
   }
 
   try {
     const valueStr = backedUpData[backupKey];
 
-    assert(typeof valueStr == 'string', 'Seed is not a string');
+    assert(typeof valueStr === 'string', 'Seed is not a string');
 
     const { seedphrase } = JSON.parse(valueStr);
 

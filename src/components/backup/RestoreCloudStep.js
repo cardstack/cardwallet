@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
-import { restoreCloudBackup } from '../../../cardstack/src/models/backup';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import { Button, Container, Icon, Input, Text } from '@cardstack/components';
+import { restoreCloudBackup } from '@cardstack/models/backup';
 import {
   dismissKeyboardOnAndroid,
   useLoadingOverlay,
@@ -13,6 +13,7 @@ import {
   isCloudBackupPasswordValid,
 } from '@rainbow-me/handlers/cloudBackup';
 import WalletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
+import { useWalletManager } from '@rainbow-me/hooks';
 import logger from 'logger';
 
 export default function RestoreCloudStep({ userData, backupSelected }) {
@@ -22,6 +23,8 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('Restore from backup');
   const passwordRef = useRef();
+
+  const { importWallet } = useWalletManager();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -57,7 +60,13 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
 
       showLoadingOverlay({ title: WalletLoadingStates.RESTORING_WALLET });
 
-      await restoreCloudBackup(password, userData, selectedBackupName);
+      const restoredSeed = await restoreCloudBackup(
+        password,
+        userData,
+        selectedBackupName
+      );
+
+      await importWallet({ seed: restoredSeed });
     } catch (e) {
       setIncorrectPassword(true);
 
@@ -68,6 +77,7 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
     }
   }, [
     dismissLoadingOverlay,
+    importWallet,
     password,
     selectedBackupName,
     showLoadingOverlay,
