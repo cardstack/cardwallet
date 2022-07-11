@@ -84,9 +84,8 @@ export const useAppInit = () => {
 
       const unsubscribe = registerTokenRefreshListener();
 
-      runKeychainIntegrityChecks();
-
       if (isAuthorized) {
+        runKeychainIntegrityChecks();
         runWalletBackupStatusChecks();
       }
 
