@@ -1,11 +1,11 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { getEmailCardDropClaimed } from '@cardstack/models/card-drop-banner';
 import { Routes } from '@cardstack/navigation';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
 import { remoteFlags } from '@cardstack/services/remote-config';
-import { isLayer2, PREPAID_CARD_CLAIMED_KEY } from '@cardstack/utils';
+import { isLayer2 } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
@@ -13,6 +13,7 @@ import { logger } from '@rainbow-me/utils';
 import { useCtaBanner } from '.';
 
 const WELCOME_BANNER_KEY = 'WELCOME_BANNER_KEY';
+const EMAIL_POLLING_INTERVAL = 5000;
 
 export const useWelcomeCtaBanner = () => {
   const { selectedAccount } = useWallets();
@@ -23,7 +24,7 @@ export const useWelcomeCtaBanner = () => {
     { eoa: accountAddress },
     {
       skip: !accountAddress,
-      pollingInterval: hasClaimed ? undefined : 5000,
+      pollingInterval: hasClaimed ? undefined : EMAIL_POLLING_INTERVAL,
     }
   );
 
@@ -61,26 +62,30 @@ export const useWelcomeCtaBanner = () => {
 
   const handleClaimStatus = useCallback(async () => {
     try {
-      if (emailDropGetData?.claimed) {
-        await AsyncStorage.setItem(PREPAID_CARD_CLAIMED_KEY, accountAddress);
-        setHasClaimed(true);
+      const claimedKey = await getEmailCardDropClaimed();
+
+      // user didn't request to claim so there's nothing to do here
+      if (!claimedKey) {
+        return;
+      }
+
+      // starts polling to get new status after user requested a card
+      if (claimedKey && !emailDropGetData?.claimed) {
+        setHasClaimed(false);
 
         return;
       }
 
-      const claimedKey = await AsyncStorage.getItem(PREPAID_CARD_CLAIMED_KEY);
+      // status changed to claimed: true, disables polling
+      if (claimedKey && emailDropGetData?.claimed) {
+        setHasClaimed(true);
 
-      if (
-        !claimedKey ||
-        claimedKey !== accountAddress ||
-        !emailDropGetData?.claimed
-      ) {
-        setHasClaimed(false);
+        return;
       }
     } catch (error) {
-      logger.log('[Async Storage] Error getting key', error);
+      logger.log('Error getting claimed status', error);
     }
-  }, [accountAddress, emailDropGetData]);
+  }, [emailDropGetData]);
 
   // handles/enables polling only if banner is visible
   useEffect(() => {
