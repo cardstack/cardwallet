@@ -13,12 +13,13 @@ import { ColorTypes } from '@cardstack/theme';
 
 const InputCommonProps = {
   borderRadius: 6,
+  width: '100%',
   paddingVertical: 3,
   paddingHorizontal: 5,
   fontSize: 16,
   borderWidth: 1,
   fontWeight: 'bold' as any,
-  color: 'grayCardBackground' as ColorTypes,
+  color: 'black' as ColorTypes,
   spellCheck: false,
   autoCorrect: false,
   blurOnSubmit: false,
@@ -42,7 +43,11 @@ const ProfilePurchaseScreen = () => {
           textContentType="name"
           borderColor="buttonSecondaryBorder"
           value={profile?.slug}
-          onChange={updateProfileInfo}
+          onChange={e =>
+            updateProfileInfo({
+              slug: e.nativeEvent.text,
+            })
+          }
           returnKeyType="next"
           {...InputCommonProps}
         />
