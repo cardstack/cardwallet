@@ -1,10 +1,21 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { requestPurchase, useIAP, Product } from 'react-native-iap';
+
+import { useProfilePurchasesQuery } from '@cardstack/services';
+import { CreateBusinessInfoDIDParams } from '@cardstack/types';
 
 import logger from 'logger';
 
 // TODO: Product ID will be fetched from hub.
 const skus = ['0001'];
+
+const provider = 'apple';
+
+const defaultMerchantInfo = {
+  name: '',
+  color: '000000',
+  'text-color': 'ffffff',
+};
 
 export const usePurchaseProfile = () => {
   const {
@@ -17,6 +28,28 @@ export const usePurchaseProfile = () => {
     finishTransaction,
     getAvailablePurchases,
   } = useIAP();
+
+  const [iapReceipt, setIapReceipt] = useState<string>('');
+
+  const [profile, setProfileInfo] = useState<CreateBusinessInfoDIDParams>();
+
+  const { data } = useProfilePurchasesQuery(
+    { iapReceipt, merchantDID: profile, provider },
+    { skip: !iapReceipt || !profile }
+  );
+
+  const updateProfileInfo = useCallback(
+    (values: Partial<CreateBusinessInfoDIDParams>) => {
+      setProfileInfo({ ...profile, ...values });
+    },
+    [profile, setProfileInfo]
+  );
+
+  const purchaseProduct = useCallback((product: Product) => {
+    if (product.type === 'iap') {
+      requestPurchase(product.productId);
+    }
+  }, []);
 
   const fetchProducts = useCallback(async () => {
     logger.log('💰 Loading Products available for purchase.');
@@ -40,11 +73,10 @@ export const usePurchaseProfile = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
-
-  useEffect(() => {
     fetchAvailablePurchases();
-  }, [fetchAvailablePurchases]);
+
+    if (data) console.log('::: Profile Purchases Query Response', { data });
+  }, [fetchProducts, fetchAvailablePurchases, data]);
 
   useEffect(() => {
     if (currentPurchase) {
@@ -52,15 +84,11 @@ export const usePurchaseProfile = () => {
       // if valid, we need to finish the transaction, otherwise it may reverse.
       console.log(':::💰 Purchase successful');
       console.log(currentPurchase.transactionReceipt);
+
+      setIapReceipt(currentPurchase.transactionReceipt);
       finishTransaction(currentPurchase);
     }
   }, [currentPurchase, finishTransaction]);
-
-  const purchaseProduct = useCallback((product: Product) => {
-    if (product.type === 'iap') {
-      requestPurchase(product.productId);
-    }
-  }, []);
 
   return {
     iapAvailable,
@@ -70,5 +98,7 @@ export const usePurchaseProfile = () => {
     finishTransaction,
     currentPurchase,
     currentPurchaseError,
+    profile,
+    updateProfileInfo,
   };
 };

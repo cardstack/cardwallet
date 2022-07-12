@@ -27,4 +27,5 @@ export interface CreateBusinessInfoDIDParams {
   slug: string;
   color: string;
   'text-color': string;
+  'owner-address'?: string;
 }

@@ -6,7 +6,12 @@ import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
 import { queryPromiseWrapper } from '../utils';
 
-import { checkHubAuth, fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
+import {
+  checkHubAuth,
+  fetchHubBaseQuery,
+  hubBodyBuilder,
+  hubProfilePurchaseBody,
+} from './hub-service';
 import {
   GetCustodialWalletQueryResult,
   RequestCardDropQueryParams,
@@ -16,6 +21,7 @@ import {
   CheckHubAuthQueryParams,
   RegisterFCMTokenQueryParams,
   GetExchangeRatesQueryParams,
+  PostProfilePurchaseQueryParams,
 } from './hub-types';
 
 const routes = {
@@ -23,6 +29,7 @@ const routes = {
   emailDrop: '/email-card-drop-requests',
   exchangeRates: '/exchange-rates',
   registerFCMToken: '/push-notification-registrations',
+  profilePurchases: '/profile-purchases',
 };
 
 export const hubApi = createApi({
@@ -90,6 +97,13 @@ export const hubApi = createApi({
         responseHandler: response => response.text(),
       }),
     }),
+    profilePurchases: builder.query<string, PostProfilePurchaseQueryParams>({
+      query: params => ({
+        url: routes.profilePurchases,
+        method: 'POST',
+        body: hubProfilePurchaseBody(routes.profilePurchases, params),
+      }),
+    }),
   }),
 });
 
@@ -101,4 +115,5 @@ export const {
   useGetExchangeRatesQuery,
   useRegisterFcmTokenQuery,
   useUnregisterFcmTokenMutation,
+  useProfilePurchasesQuery,
 } = hubApi;
