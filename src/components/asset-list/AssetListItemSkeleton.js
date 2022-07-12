@@ -13,7 +13,9 @@ import { deviceUtils } from '../../utils';
 import { interpolate } from '../animations';
 import { CoinRowHeight } from '../coin-row';
 import { ColumnWithMargins, Row, RowWithMargins } from '../layout';
+import { colors } from '@cardstack/theme';
 import { padding, position } from '@rainbow-me/styles';
+import { lightModeThemeColors } from '@rainbow-me/styles/colors';
 
 const { block, cond, set, startClock, stopClock } = Animated;
 
@@ -28,7 +30,7 @@ const Container = styled.View`
 
 const FakeAvatar = styled.View`
   ${position.size(40)};
-  background-color: ${({ theme: { colors } }) => colors.skeleton};
+  background-color: ${lightModeThemeColors.skeleton};
   border-radius: 20;
 `;
 
@@ -42,7 +44,7 @@ const FakeRow = styled(Row).attrs({
 })(Row);
 
 const FakeText = styled.View`
-  background-color: ${({ theme: { colors } }) => colors.skeleton};
+  background-color: ${lightModeThemeColors.skeleton};
   border-radius: 5;
   height: 10;
 `;
@@ -54,7 +56,7 @@ const Wrapper = styled(RowWithMargins).attrs({
 })`
   ${padding(9, 19, 10, 19)};
   ${position.size('100%')};
-  background-color: ${({ theme: { colors } }) => colors.transparent};
+  background-color: ${colors.transparent};
 `;
 
 class AssetListItemSkeleton extends PureComponent {
@@ -135,7 +137,7 @@ class AssetListItemSkeleton extends PureComponent {
   }
 
   render() {
-    const { descendingOpacity, index, colors } = this.props;
+    const { descendingOpacity, index } = this.props;
 
     const skeletonElement = (
       <Wrapper index={index}>

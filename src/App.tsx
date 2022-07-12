@@ -15,6 +15,7 @@ import {
   showNetworkRequests,
   showNetworkResponses,
 } from './config/debug';
+import { MainThemeProvider } from './context/ThemeContext';
 import monitorNetwork from './debugging/network';
 import { PinnedHiddenItemOptionProvider } from './hooks';
 
@@ -65,12 +66,14 @@ const App = () => {
   }
 
   return (
-    <SafeAreaProvider>
-      <PinnedHiddenItemOptionProvider>
-        <AppContainer />
-        <OfflineToast />
-      </PinnedHiddenItemOptionProvider>
-    </SafeAreaProvider>
+    <MainThemeProvider>
+      <SafeAreaProvider>
+        <PinnedHiddenItemOptionProvider>
+          <AppContainer />
+          <OfflineToast />
+        </PinnedHiddenItemOptionProvider>
+      </SafeAreaProvider>
+    </MainThemeProvider>
   );
 };
 
