@@ -11,7 +11,6 @@ import React, {
 
 import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { saveBackupPassword } from '../../model/backup';
 import { DelayedAlert } from '../alerts';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import {
@@ -27,8 +26,6 @@ import {
   useWalletCloudBackup,
   useWallets,
 } from '@rainbow-me/hooks';
-
-import logger from 'logger';
 
 export default function BackupCloudStep() {
   const { goBack } = useNavigation();
@@ -102,15 +99,13 @@ export default function BackupCloudStep() {
   );
 
   const onSuccess = useCallback(async () => {
-    logger.log('BackupCloudStep:: saving backup password');
-    await saveBackupPassword(password);
     if (!isSettingsRoute) {
       DelayedAlert({ title: lang.t('cloud.backup_success') }, 1000);
     }
     // This means the user set a new password
     // and it was the first account backed up
     goBack();
-  }, [goBack, isSettingsRoute, password]);
+  }, [goBack, isSettingsRoute]);
 
   const onConfirmBackup = useCallback(async () => {
     await walletCloudBackup({

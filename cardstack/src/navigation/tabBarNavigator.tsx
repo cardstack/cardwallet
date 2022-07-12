@@ -21,6 +21,7 @@ import {
   PinScreen,
   LoadingOverlayScreen,
   ImportSeedSheet,
+  SeedPhraseBackup,
 } from '@cardstack/screens';
 import { colors } from '@cardstack/theme';
 import { Device, useWorker } from '@cardstack/utils';
@@ -125,6 +126,11 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
       component={LoadingOverlayScreen}
       name={Routes.LOADING_OVERLAY}
       options={{ ...overlayPreset, gestureEnabled: false }}
+    />
+    <Stack.Screen
+      component={SeedPhraseBackup}
+      name={Routes.SEED_PHRASE_BACKUP}
+      options={{ ...horizontalInterpolator, gestureEnabled: false }}
     />
     <Stack.Screen
       component={ImportSeedSheet}

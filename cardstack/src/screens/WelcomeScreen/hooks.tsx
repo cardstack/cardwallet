@@ -2,6 +2,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
+import { ICloudBackupData } from '@cardstack/models/backup';
 import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils';
 
@@ -11,7 +12,6 @@ import {
   syncCloud,
 } from '@rainbow-me/handlers/cloudBackup';
 import { useWalletManager } from '@rainbow-me/hooks';
-import { ICloudBackupData } from '@rainbow-me/model/backup';
 import logger from 'logger';
 
 export const useWelcomeScreen = () => {
