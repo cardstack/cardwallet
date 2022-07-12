@@ -10,7 +10,6 @@ import Animated, {
   Value,
 } from 'react-native-reanimated';
 import styled from 'styled-components';
-import { withThemeContext } from '../../context/ThemeContext';
 import { deviceUtils } from '../../utils';
 import { interpolate } from '../animations';
 import { CoinRowHeight } from '../coin-row';
@@ -173,4 +172,4 @@ class AssetListItemSkeleton extends PureComponent {
   }
 }
 
-export default withThemeContext(AssetListItemSkeleton);
+export default AssetListItemSkeleton;
