@@ -1,4 +1,3 @@
-import MaskedView from '@react-native-community/masked-view';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { View } from 'react-native';
@@ -136,7 +135,7 @@ class AssetListItemSkeleton extends PureComponent {
   }
 
   render() {
-    const { animated, descendingOpacity, index, colors } = this.props;
+    const { descendingOpacity, index, colors } = this.props;
 
     const skeletonElement = (
       <Wrapper index={index}>
@@ -160,13 +159,7 @@ class AssetListItemSkeleton extends PureComponent {
 
     return (
       <Container descendingOpacity={descendingOpacity} index={index}>
-        {animated && ios ? (
-          <MaskedView maskElement={skeletonElement}>
-            {this.renderShimmer()}
-          </MaskedView>
-        ) : (
-          skeletonElement
-        )}
+        {skeletonElement}
       </Container>
     );
   }
