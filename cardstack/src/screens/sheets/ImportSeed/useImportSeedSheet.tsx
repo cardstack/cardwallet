@@ -2,7 +2,7 @@ import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { useInvalidPaste } from '@cardstack/hooks';
@@ -43,7 +43,6 @@ const useImportSeedSheet = () => {
 
   const { showWalletProfileModal } = useImportFromProfileModal(
     seedPhrase,
-    inputRef,
     checkedWallet
   );
 
@@ -142,7 +141,6 @@ export { useImportSeedSheet };
 // Scoped helper hook
 const useImportFromProfileModal = (
   seedPhrase: string,
-  inputRef: RefObject<TextInput>,
   checkedWallet?: EthereumWalletFromSeed
 ) => {
   const { navigate } = useNavigation<StackNavigationProp<ParamListBase>>();

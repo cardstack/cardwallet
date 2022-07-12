@@ -26,7 +26,6 @@ const WALLETS_ADDED_ACCOUNT = 'wallets/WALLETS_ADDED_ACCOUNT';
 const WALLETS_LOAD = 'wallets/ALL_WALLETS_LOAD';
 const WALLETS_UPDATE = 'wallets/ALL_WALLETS_UPDATE';
 const WALLETS_UPDATE_NAMES = 'wallets/WALLETS_UPDATE_NAMES';
-const WALLETS_SET_IS_LOADING = 'wallets/WALLETS_SET_IS_LOADING';
 const WALLETS_SET_SELECTED = 'wallets/SET_SELECTED';
 
 // -- Actions ---------------------------------------- //
@@ -120,13 +119,6 @@ export const walletsSetSelected = wallet => async dispatch => {
   });
 };
 
-export const setIsWalletLoading = val => dispatch => {
-  dispatch({
-    payload: val,
-    type: WALLETS_SET_IS_LOADING,
-  });
-};
-
 export const setWalletBackedUp = (walletId, method, backupFile = '') => async (
   dispatch,
   getState
@@ -145,11 +137,6 @@ export const setWalletBackedUp = (walletId, method, backupFile = '') => async (
   if (selected.id === walletId) {
     await dispatch(walletsSetSelected(newWallets[walletId]));
   }
-
-  // Reset the loading state 1 second later
-  setTimeout(() => {
-    dispatch(setIsWalletLoading(null));
-  }, 1000);
 
   if (method === WalletBackupTypes.cloud) {
     try {
@@ -301,7 +288,6 @@ export const checkKeychainIntegrity = () => async (dispatch, getState) => {
 
 // -- Reducer ----------------------------------------- //
 const INITIAL_STATE = {
-  isWalletLoading: null,
   selected: undefined,
   walletNames: {},
   wallets: null,
@@ -309,8 +295,6 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case WALLETS_SET_IS_LOADING:
-      return { ...state, isWalletLoading: action.payload };
     case WALLETS_SET_SELECTED:
       return { ...state, selected: action.payload };
     case WALLETS_UPDATE:
