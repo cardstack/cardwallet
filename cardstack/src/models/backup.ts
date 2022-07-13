@@ -119,7 +119,7 @@ export async function restoreCloudBackup(
   }
 }
 
-async function findAndParseOldSeed(
+export async function findAndParseOldSeed(
   backedUpData?: BackedUpData,
   walletId?: string
 ) {
@@ -134,7 +134,7 @@ async function findAndParseOldSeed(
   );
 
   if (!backupKey) {
-    logger.sentry('no backupKeyfound');
+    logger.sentry('no backupKey found');
 
     return;
   }

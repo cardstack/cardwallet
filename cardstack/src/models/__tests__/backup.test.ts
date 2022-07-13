@@ -7,9 +7,14 @@ import logger from 'logger';
 
 import {
   backupWalletToCloud,
+  findAndParseOldSeed,
   findLatestBackUp,
   restoreCloudBackup,
 } from '../backup';
+
+jest.mock('@sentry/react-native', () => ({
+  captureException: () => jest.fn(),
+}));
 
 const oldDate = '1657724368709';
 const latestDate = '1657732642021';
@@ -184,6 +189,49 @@ describe('backup', () => {
       const seed = await restoreCloudBackup(password, userData);
 
       expect(seed).toBe(mockedSeed);
+    });
+
+    describe('findAndParseOldSeed', () => {
+      it('should return undefined if no wallet or data exists', async () => {
+        const oldSeed = await findAndParseOldSeed(undefined);
+
+        expect(logger.sentry).toBeCalledWith('no backupData or walletId found');
+
+        expect(oldSeed).toBeUndefined();
+      });
+
+      it('should return undefined if no backup key is found ', async () => {
+        const oldSeed = await findAndParseOldSeed(
+          {
+            wallet_12121212_key: `{}`,
+          },
+          'wallet_13131313'
+        );
+
+        expect(logger.sentry).toBeCalledWith('no backupKey found');
+
+        expect(oldSeed).toBeUndefined();
+      });
+
+      it('should log and capture exception if parsing json fails', async () => {
+        const jsonError = new SyntaxError(
+          'Unexpected token o in JSON at position 1'
+        );
+
+        const oldSeed = await findAndParseOldSeed(
+          {
+            wallet_12121212_key: 'not a json',
+          },
+          'wallet_12121212'
+        );
+
+        expect(logger.sentry).toBeCalledWith(
+          'error in findAndParseOldSeed',
+          jsonError
+        );
+
+        expect(oldSeed).toBeUndefined();
+      });
     });
   });
 });
