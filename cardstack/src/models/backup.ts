@@ -80,14 +80,14 @@ export function findLatestBackUp(wallets: AllRainbowWallets) {
 export async function restoreCloudBackup(
   password: string,
   userData: BackupUserData | null,
-  backupSelected: string | null
+  backupSelected?: string
 ) {
   try {
     const filename =
       backupSelected || (userData && findLatestBackUp(userData?.wallets));
 
     if (!filename) {
-      return false;
+      return;
     }
 
     const data = await getDataFromCloud(password, filename);
@@ -96,17 +96,23 @@ export async function restoreCloudBackup(
       throw new Error('Invalid password');
     }
 
-    if (userData) {
-      const firstEligibleWallet = Object.values(userData.wallets).find(
-        isBackedUpWallet
+    const { seedPhrase, secrets } = data;
+
+    // Handles old backup structure
+    if (!seedPhrase && userData) {
+      const latestBackedUpWallet = Object.values(userData.wallets).find(
+        wallet => wallet.backupFile === filename
       );
 
-      const seed =
-        data.seedPhrase ||
-        (await findAndParseOldSeed(data.secrets, firstEligibleWallet?.id));
+      const oldSeedPhrase = await findAndParseOldSeed(
+        secrets,
+        latestBackedUpWallet?.id
+      );
 
-      return seed;
+      return oldSeedPhrase;
     }
+
+    return seedPhrase;
   } catch (e) {
     logger.sentry('Error while restoring back up');
     captureException(e);
@@ -142,7 +148,7 @@ async function findAndParseOldSeed(
 
     return seedphrase;
   } catch (e) {
-    logger.sentry('error in findAndParseOldSeed');
+    logger.sentry('error in findAndParseOldSeed', e);
     captureException(e);
   }
 }
