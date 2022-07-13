@@ -28,7 +28,7 @@ export default function BackupConfirmPasswordStep() {
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('Confirm Backup');
   const passwordRef = useRef<any>();
-  const { selectedWallet, setIsWalletLoading } = useWallets();
+  const { selectedWallet } = useWallets();
   const walletId = (params as any)?.walletId || selectedWallet.id;
 
   const isSettingsRoute = useRouteExistsInNavigationState(
@@ -52,14 +52,10 @@ export default function BackupConfirmPasswordStep() {
     []
   );
 
-  const onError = useCallback(
-    msg => {
-      passwordRef.current?.focus();
-      setIsWalletLoading(null);
-      DelayedAlert({ title: msg }, 500);
-    },
-    [setIsWalletLoading]
-  );
+  const onError = useCallback(msg => {
+    passwordRef.current?.focus();
+    DelayedAlert({ title: msg }, 500);
+  }, []);
 
   const onSuccess = useCallback(async () => {
     if (!isSettingsRoute) {

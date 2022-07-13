@@ -28,8 +28,6 @@ import { apolloClient } from '@cardstack/graphql/apollo-client';
 import { AppContainer } from '@cardstack/navigation';
 import theme from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
-import PortalConsumer from '@rainbow-me/components/PortalConsumer';
-import { Portal } from 'react-native-cool-modals/Portal';
 
 StatusBar.pushStackEntry({ animated: true, barStyle: 'light-content' });
 
@@ -69,15 +67,12 @@ const App = () => {
 
   return (
     <MainThemeProvider>
-      <Portal>
-        <SafeAreaProvider>
-          <PinnedHiddenItemOptionProvider>
-            <AppContainer />
-            <PortalConsumer />
-            <OfflineToast />
-          </PinnedHiddenItemOptionProvider>
-        </SafeAreaProvider>
-      </Portal>
+      <SafeAreaProvider>
+        <PinnedHiddenItemOptionProvider>
+          <AppContainer />
+          <OfflineToast />
+        </PinnedHiddenItemOptionProvider>
+      </SafeAreaProvider>
     </MainThemeProvider>
   );
 };

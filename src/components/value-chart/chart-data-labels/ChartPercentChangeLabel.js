@@ -6,9 +6,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import styled from 'styled-components';
 
-import ChartChangeDirectionArrow from './ChartChangeDirectionArrow';
 import { useRatio } from './useRatio';
 
+import { colors } from '@cardstack/theme';
 import { useChartData } from '@rainbow-me/animated-charts';
 import { RowWithMargins } from '@rainbow-me/components/layout';
 import { fonts, fontWithWidth } from '@rainbow-me/styles';
@@ -19,7 +19,7 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const PercentLabel = styled(AnimatedTextInput)`
   ${fontWithWidth(fonts.weight.bold)};
-  background-color: ${({ theme: { colors } }) => colors.transparent};
+  background-color: ${colors.transparent};
   font-size: ${fonts.size.big};
   font-variant: tabular-nums;
   letter-spacing: ${fonts.letterSpacing.roundedTightest};
@@ -47,7 +47,7 @@ export default function ChartPercentChangeLabel() {
             return '';
           }
           return (
-            (android ? '' : value > 0 ? '↑' : value < 0 ? '↓' : '') +
+            (value > 0 ? '↑' : value < 0 ? '↓' : '') +
             ' ' +
             Math.abs(value).toFixed(2) +
             '%'
@@ -67,7 +67,7 @@ export default function ChartPercentChangeLabel() {
               ((originalY.value || lastValue.value) / firstValue.value) * 100 -
               100;
             return (
-              (android ? '' : value > 0 ? '↑' : value < 0 ? '↓' : '') +
+              (value > 0 ? '↑' : value < 0 ? '↓' : '') +
               ' ' +
               Math.abs(value).toFixed(2) +
               '%'
@@ -89,7 +89,6 @@ export default function ChartPercentChangeLabel() {
 
   return (
     <RowWithMargins align="center" margin={4}>
-      {android ? <ChartChangeDirectionArrow /> : null}
       <PercentLabel
         alignSelf="flex-end"
         animatedProps={textProps}
