@@ -100,20 +100,20 @@ export const hubBodyBuilder = <Attrs>(path: string, attributes: Attrs) =>
 export const hubProfilePurchaseBody = (
   path: string,
   params: PostProfilePurchaseQueryParams
-): string =>
-  JSON.stringify({
+): string => {
+  const body = {
     data: {
       type: path.replace('/', ''),
       attributes: {
-        'iap-receipt-id': params.iapReceipt,
+        receipt: params.iapReceipt,
         provider: params.provider,
       },
-      relationships: {
-        'merchant-info': {
-          data: {
-            type: 'merchant-infos',
-            lid: '1', // local-id, only there so BE can match relationships
-          },
+    },
+    relationships: {
+      'merchant-info': {
+        data: {
+          type: 'merchant-infos',
+          lid: '1', // local-id, only there so BE can match relationships
         },
       },
     },
@@ -124,7 +124,12 @@ export const hubProfilePurchaseBody = (
         attributes: params.merchantDID,
       },
     ],
-  });
+  };
+
+  console.log('::: hub request body', JSON.stringify(body, null, 2));
+
+  return JSON.stringify(body);
+};
 
 // Queries
 
@@ -168,3 +173,9 @@ export const registerFcmToken = (fcmToken: string) =>
 
 export const unregisterFcmToken = (fcmToken: string) =>
   store.dispatch(hubApi.endpoints.unregisterFcmToken.initiate({ fcmToken }));
+
+// Profile purchase and creation Queries
+
+export const profilePurchaseHubQuery = (
+  params: PostProfilePurchaseQueryParams
+) => store.dispatch(hubApi.endpoints.profilePurchases.initiate(params));
