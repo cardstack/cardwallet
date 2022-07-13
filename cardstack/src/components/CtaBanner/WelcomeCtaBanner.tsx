@@ -6,7 +6,7 @@ import { useWelcomeCtaBanner } from './useWelcomeCtaBanner';
 import { CtaBanner } from '.';
 
 export const WelcomeCtaBanner = () => {
-  const { showBanner, dismissBanner, onPress } = useWelcomeCtaBanner();
+  const { showBanner, onDismissBannerPress, onPress } = useWelcomeCtaBanner();
 
   if (!showBanner) return null;
 
@@ -17,7 +17,7 @@ export const WelcomeCtaBanner = () => {
       ctaButtonTitle={strings.welcome.ctaButtonTitle}
       ctaButtonIconName="wallet"
       onPress={onPress}
-      onDismissPressed={dismissBanner}
+      onDismissPressed={onDismissBannerPress}
     />
   );
 };

@@ -1,8 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Routes } from '@cardstack/navigation';
-import { useWelcomeBannerSelector } from '@cardstack/redux/welcomeBanner';
+import {
+  dismissBanner,
+  useWelcomeBannerSelector,
+} from '@cardstack/redux/welcomeBanner';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
 import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer2 } from '@cardstack/utils';
@@ -10,16 +14,14 @@ import { isLayer2 } from '@cardstack/utils';
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
 
-import { useCtaBanner } from '.';
-
-const WELCOME_BANNER_KEY = 'WELCOME_BANNER_KEY';
 const EMAIL_POLLING_INTERVAL = 5000;
 
 export const useWelcomeCtaBanner = () => {
   const { selectedAccount } = useWallets();
   const { accountAddress, network } = useAccountSettings();
   const [triggerPolling, setTriggerPolling] = useState(false);
-  const { requestedCardDrop } = useWelcomeBannerSelector();
+  const { requestedCardDrop, dismissedByUser } = useWelcomeBannerSelector();
+  const dispatch = useDispatch();
 
   const { data: emailDropGetData } = useGetEoaClaimedQuery(
     { eoa: accountAddress },
@@ -27,10 +29,6 @@ export const useWelcomeCtaBanner = () => {
       skip: !accountAddress,
       pollingInterval: triggerPolling ? EMAIL_POLLING_INTERVAL : undefined,
     }
-  );
-
-  const { showBanner: showBannerUserDecision, dismissBanner } = useCtaBanner(
-    WELCOME_BANNER_KEY
   );
 
   const { navigate } = useNavigation();
@@ -50,15 +48,10 @@ export const useWelcomeCtaBanner = () => {
     () =>
       isLayer2(network) &&
       remoteFlags().featurePrepaidCardDrop &&
-      showBannerUserDecision &&
+      dismissedByUser &&
       isFirstAddressForCurrentWallet &&
       (emailDropGetData?.showBanner ?? false),
-    [
-      showBannerUserDecision,
-      isFirstAddressForCurrentWallet,
-      network,
-      emailDropGetData,
-    ]
+    [dismissedByUser, isFirstAddressForCurrentWallet, network, emailDropGetData]
   );
 
   const handleClaimStatus = useCallback(async () => {
@@ -93,9 +86,13 @@ export const useWelcomeCtaBanner = () => {
     }
   }, [handleClaimStatus, showBanner]);
 
+  const onDismissBannerPress = useCallback(() => dispatch(dismissBanner()), [
+    dispatch,
+  ]);
+
   return {
     showBanner,
-    dismissBanner,
+    onDismissBannerPress,
     onPress,
   };
 };
