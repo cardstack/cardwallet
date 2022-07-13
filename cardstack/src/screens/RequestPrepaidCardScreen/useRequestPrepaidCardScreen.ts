@@ -1,24 +1,24 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { Linking } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects } from '@cardstack/hooks';
-import { setEmailCardDropClaimed } from '@cardstack/models/card-drop-banner';
+import { setRequestedCardDrop } from '@cardstack/redux/welcomeBanner';
 import { useRequestEmailCardDropMutation } from '@cardstack/services';
 import { isEmailPartial, isEmailValid } from '@cardstack/utils/validators';
 
 import { Alert } from '@rainbow-me/components/alerts';
-import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { strings } from './strings';
 
 export const useRequestPrepaidCardScreen = () => {
-  const { accountAddress } = useAccountSettings();
   const [email, setEmail] = useState('');
   const [inputHasError, setHasError] = useState(false);
   const [inputValid, setInputValid] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
+  const dispatch = useDispatch();
 
   const [
     requestCardDrop,
@@ -40,10 +40,10 @@ export const useRequestPrepaidCardScreen = () => {
         },
         success: {
           status: isSuccess,
-          callback: () => setEmailCardDropClaimed(accountAddress),
+          callback: () => dispatch(setRequestedCardDrop()),
         },
       }),
-      [isError, errorMessage, isSuccess, accountAddress]
+      [isError, errorMessage, isSuccess, dispatch]
     )
   );
 

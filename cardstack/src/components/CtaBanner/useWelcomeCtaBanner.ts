@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { getEmailCardDropClaimed } from '@cardstack/models/card-drop-banner';
 import { Routes } from '@cardstack/navigation';
+import { useWelcomeBannerSelector } from '@cardstack/redux/welcomeBanner';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
 import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer2 } from '@cardstack/utils';
@@ -18,13 +18,14 @@ const EMAIL_POLLING_INTERVAL = 5000;
 export const useWelcomeCtaBanner = () => {
   const { selectedAccount } = useWallets();
   const { accountAddress, network } = useAccountSettings();
-  const [hasClaimed, setHasClaimed] = useState(true);
+  const [triggerPolling, setTriggerPolling] = useState(false);
+  const { requestedCardDrop } = useWelcomeBannerSelector();
 
   const { data: emailDropGetData } = useGetEoaClaimedQuery(
     { eoa: accountAddress },
     {
       skip: !accountAddress,
-      pollingInterval: hasClaimed ? undefined : EMAIL_POLLING_INTERVAL,
+      pollingInterval: triggerPolling ? EMAIL_POLLING_INTERVAL : undefined,
     }
   );
 
@@ -62,30 +63,28 @@ export const useWelcomeCtaBanner = () => {
 
   const handleClaimStatus = useCallback(async () => {
     try {
-      const claimedKey = await getEmailCardDropClaimed();
-
       // user didn't request to claim so there's nothing to do here
-      if (!claimedKey) {
+      if (!requestedCardDrop) {
         return;
       }
 
       // starts polling to get new status after user requested a card
-      if (claimedKey && !emailDropGetData?.claimed) {
-        setHasClaimed(false);
+      if (requestedCardDrop && !emailDropGetData?.claimed) {
+        setTriggerPolling(true);
 
         return;
       }
 
       // status changed to claimed: true, disables polling
-      if (claimedKey && emailDropGetData?.claimed) {
-        setHasClaimed(true);
+      if (requestedCardDrop && emailDropGetData?.claimed) {
+        setTriggerPolling(false);
 
         return;
       }
     } catch (error) {
       logger.log('Error getting claimed status', error);
     }
-  }, [emailDropGetData]);
+  }, [requestedCardDrop, emailDropGetData]);
 
   // handles/enables polling only if banner is visible
   useEffect(() => {
