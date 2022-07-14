@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { memo } from 'react';
 
-import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
+import { useAuthSelector } from '@cardstack/redux/authSlice';
 
 import { navigationRef } from './Navigation';
 import { onNavigationStateChange } from './onNavigationStateChange';
@@ -9,13 +9,13 @@ import { linking } from './screens';
 import { StackNavigator } from './tabBarNavigator';
 
 const AppContainer = () => {
-  const { isAuthorized } = useAuthSelectorAndActions();
+  const { isAuthorized } = useAuthSelector();
 
-  const hasLinking = isAuthorized ? linking : undefined;
+  const enableLinking = isAuthorized ? linking : undefined;
 
   return (
     <NavigationContainer
-      linking={hasLinking}
+      linking={enableLinking}
       onStateChange={onNavigationStateChange}
       ref={navigationRef}
     >
