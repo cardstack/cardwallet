@@ -11,6 +11,7 @@ import {
 } from '@cardstack/components';
 import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { ColorTypes } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
 
 const InputCommonProps = {
   borderRadius: 6,
@@ -67,28 +68,22 @@ const ProfilePurchaseScreen = () => {
             returnKeyType="next"
             {...InputCommonProps}
           />
+          <Text>Color:</Text>
           <CardPressable onPress={onPressBusinessColor} position="relative">
-            <Text paddingLeft={10} {...InputCommonProps}>
-              {profile?.color}
-            </Text>
             <Container
-              width={30}
-              height={30}
-              borderRadius={4}
-              backgroundColor="white"
+              borderRadius={6}
               borderWidth={1}
               borderColor="buttonSecondaryBorder"
               justifyContent="center"
               alignItems="center"
-              position="absolute"
-              left={4}
-              top={8}
+              style={{ backgroundColor: profile?.color }}
             >
-              <Container
-                width={20}
-                height={20}
-                style={{ backgroundColor: profile?.color }}
-              />
+              <Text
+                paddingVertical={4}
+                style={{ color: profile?.['text-color'] }}
+              >
+                {profile?.color}
+              </Text>
             </Container>
           </CardPressable>
         </Container>
@@ -106,7 +101,9 @@ const ProfilePurchaseScreen = () => {
           backgroundColor="grayBackground"
           marginBottom={4}
         />
-        <Button onPress={() => fakeTestPurchase()}>Fake call purchase</Button>
+        {Device.isAndroid && (
+          <Button onPress={() => fakeTestPurchase()}>Fake call purchase</Button>
+        )}
       </CenteredContainer>
     </>
   );
