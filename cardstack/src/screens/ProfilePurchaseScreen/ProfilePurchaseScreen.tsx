@@ -69,7 +69,7 @@ const ProfilePurchaseScreen = () => {
             {...InputCommonProps}
           />
           <Text>Color:</Text>
-          <CardPressable onPress={onPressBusinessColor} position="relative">
+          <CardPressable onPress={onPressBusinessColor}>
             <Container
               borderRadius={6}
               borderWidth={1}
