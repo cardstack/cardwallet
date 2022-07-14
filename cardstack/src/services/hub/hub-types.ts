@@ -24,6 +24,7 @@ export type EoaClaimedAttrsType = {
   timestamp: string;
   'owner-address': string;
   'show-banner': boolean;
+  claimed: boolean;
 };
 
 export type GetEoaClaimedQueryResult = KebabToCamelCaseKeys<EoaClaimedAttrsType>;

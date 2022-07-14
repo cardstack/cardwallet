@@ -12,6 +12,7 @@ import biometryToggle from '@cardstack/redux/biometryToggleSlice';
 import collectibles from '@cardstack/redux/collectibles';
 import primarySafe from '@cardstack/redux/primarySafeSlice';
 import requests from '@cardstack/redux/requests';
+import welcomeBanner from '@cardstack/redux/welcomeBanner';
 
 export default {
   appState,
@@ -28,4 +29,5 @@ export default {
   wallets,
   primarySafe,
   biometryToggle,
+  welcomeBanner,
 };
