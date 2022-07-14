@@ -48,7 +48,7 @@ export const useWelcomeCtaBanner = () => {
     () =>
       isLayer2(network) &&
       remoteFlags().featurePrepaidCardDrop &&
-      dismissedByUser &&
+      !dismissedByUser &&
       isFirstAddressForCurrentWallet &&
       (emailDropGetData?.showBanner ?? false),
     [dismissedByUser, isFirstAddressForCurrentWallet, network, emailDropGetData]

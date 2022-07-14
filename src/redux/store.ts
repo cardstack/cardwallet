@@ -6,6 +6,7 @@ import reducers from './reducers';
 import { authSlice } from '@cardstack/redux/authSlice';
 import { biometryToggleSliceName } from '@cardstack/redux/biometryToggleSlice';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
+import { welcomeBannerSliceName } from '@cardstack/redux/welcomeBanner';
 import { hubApi } from '@cardstack/services/hub/hub-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
@@ -16,7 +17,11 @@ const persistConfig = {
   key: 'persist',
   version: 1,
   storage: AsyncStorage,
-  whitelist: [primarySafeSliceName, biometryToggleSliceName],
+  whitelist: [
+    primarySafeSliceName,
+    biometryToggleSliceName,
+    welcomeBannerSliceName,
+  ],
 };
 
 const rootReducer = combineReducers({
