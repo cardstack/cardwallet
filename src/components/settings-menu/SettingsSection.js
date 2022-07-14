@@ -202,7 +202,7 @@ export default function SettingsSection({
           />
           <ListItem
             icon={<Icon color="black" name="shopping-cart" />}
-            label="Profile Purchase"
+            label="Profile Purchase Test-Drive"
             onPress={onPressIAP}
           />
         </>
