@@ -46,15 +46,19 @@ export const useAppInit = () => {
 
   const initialDeepLink = useRef<string | null>(null);
 
+  const openDeepLink = useCallback((url: string) => {
+    initialDeepLink.current = url;
+
+    handleDeepLink(url);
+  }, []);
+
   useEffect(() => {
     const handleWcDeepLink = async () => {
       try {
         const initialUrl = await Linking.getInitialURL();
 
         if (initialUrl) {
-          initialDeepLink.current = initialUrl;
-
-          handleDeepLink(initialUrl);
+          openDeepLink(initialUrl);
         }
       } catch (e) {
         Logger.sentry('Error opening deeplink', e);
@@ -64,13 +68,11 @@ export const useAppInit = () => {
     handleWcDeepLink();
 
     const subscription = Linking.addEventListener('url', ({ url }) => {
-      // handles the deeplink after user dismissed auth
-      initialDeepLink.current = url;
-      handleDeepLink(url);
+      openDeepLink(url);
     });
 
     return subscription.remove;
-  }, []);
+  }, [openDeepLink]);
 
   useEffect(() => {
     if (initialDeepLink.current && isAuthorized) {
