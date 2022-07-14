@@ -64,6 +64,8 @@ export const useAppInit = () => {
     handleWcDeepLink();
 
     const subscription = Linking.addEventListener('url', ({ url }) => {
+      // handles the deeplink after user dismissed auth
+      initialDeepLink.current = url;
       handleDeepLink(url);
     });
 
