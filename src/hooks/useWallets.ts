@@ -1,10 +1,9 @@
 import { isEmpty } from 'lodash';
-import { useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { findLatestBackUp } from '../model/backup';
-import { setIsWalletLoading as rawSetIsWalletLoading } from '../redux/wallets';
 import { useAccountSettings } from '.';
+import { findLatestBackUp } from '@cardstack/models/backup';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import { Account } from '@rainbow-me/model/wallet';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
@@ -12,16 +11,12 @@ import { AppState } from '@rainbow-me/redux/store';
 import logger from 'logger';
 
 const walletSelector = createSelector(
-  ({
-    wallets: { isWalletLoading, selected = {}, walletNames, wallets },
-  }: AppState) => ({
-    isWalletLoading,
+  ({ wallets: { selected = {}, walletNames, wallets } }: AppState) => ({
     selectedWallet: selected,
     walletNames,
     wallets,
   }),
-  ({ isWalletLoading, selectedWallet, walletNames, wallets }) => ({
-    isWalletLoading,
+  ({ selectedWallet, walletNames, wallets }) => ({
     latestBackup: findLatestBackUp(wallets) || false,
     selectedWallet,
     walletNames,
@@ -30,23 +25,13 @@ const walletSelector = createSelector(
 );
 
 export default function useWallets() {
-  const dispatch = useDispatch();
-  const {
-    isWalletLoading,
-    latestBackup,
-    selectedWallet,
-    walletNames,
-    wallets,
-  } = useSelector(walletSelector);
+  const { latestBackup, selectedWallet, walletNames, wallets } = useSelector(
+    walletSelector
+  );
 
   const walletReady = useRainbowSelector(state => state.appState.walletReady);
 
   const { accountAddress } = useAccountSettings();
-
-  const setIsWalletLoading = useCallback(
-    isLoading => dispatch(rawSetIsWalletLoading(isLoading)),
-    [dispatch]
-  );
 
   const isDamaged: boolean = useMemo(() => {
     if (!walletReady) return;
@@ -75,9 +60,7 @@ export default function useWallets() {
   return {
     isDamaged,
     isReadOnlyWallet: selectedWallet.type === WalletTypes.readOnly,
-    isWalletLoading,
     latestBackup,
-    setIsWalletLoading,
     walletNames,
     wallets,
     selectedAccount,

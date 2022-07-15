@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { colors } from '@cardstack/theme';
 
 const ListFooterHeight = 27;
 
 const Spacer = styled.View`
-  background-color: ${({ theme: { colors } }) => colors.transparent};
+  background-color: ${colors.transparent};
   height: ${({ height }) => height || ListFooterHeight};
   width: 100%;
 `;

@@ -5,8 +5,8 @@ import RNCloudFs, { ListFilesResult } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
-import { ICloudBackupData } from '../model/backup';
 import { logger } from '../utils';
+import { ICloudBackupData } from '@cardstack/models/backup';
 import { Device } from '@cardstack/utils/device';
 
 const REMOTE_BACKUP_WALLET_DIR: string = 'cardstack.com/wallet-backups';

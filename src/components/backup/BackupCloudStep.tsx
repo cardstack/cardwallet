@@ -11,7 +11,6 @@ import React, {
 
 import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { saveBackupPassword } from '../../model/backup';
 import { DelayedAlert } from '../alerts';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import {
@@ -28,18 +27,11 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 
-import logger from 'logger';
-
 export default function BackupCloudStep() {
   const { goBack } = useNavigation();
   const { params } = useRoute();
   const walletCloudBackup = useWalletCloudBackup();
-  const {
-    selectedWallet,
-    setIsWalletLoading,
-    isDamaged,
-    isWalletLoading,
-  } = useWallets();
+  const { selectedWallet, isDamaged } = useWallets();
   const [validPassword, setValidPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(true);
   const [password, setPassword] = useState('');
@@ -95,22 +87,19 @@ export default function BackupCloudStep() {
   const onError = useCallback(
     msg => {
       setTimeout(onPasswordSubmit, 1000);
-      setIsWalletLoading(null);
       DelayedAlert({ title: msg }, 500);
     },
-    [onPasswordSubmit, setIsWalletLoading]
+    [onPasswordSubmit]
   );
 
   const onSuccess = useCallback(async () => {
-    logger.log('BackupCloudStep:: saving backup password');
-    await saveBackupPassword(password);
     if (!isSettingsRoute) {
       DelayedAlert({ title: lang.t('cloud.backup_success') }, 1000);
     }
     // This means the user set a new password
     // and it was the first account backed up
     goBack();
-  }, [goBack, isSettingsRoute, password]);
+  }, [goBack, isSettingsRoute]);
 
   const onConfirmBackup = useCallback(async () => {
     await walletCloudBackup({
@@ -146,53 +135,51 @@ export default function BackupCloudStep() {
   );
 
   return (
-    !isWalletLoading && (
-      <BackupSheetKeyboardLayout
-        footer={
-          <BackupPasswordButtonFooter
-            buttonLabel="Confirm"
-            isValidPassword={validPassword}
-            onButtonPress={onConfirmBackup}
+    <BackupSheetKeyboardLayout
+      footer={
+        <BackupPasswordButtonFooter
+          buttonLabel="Confirm"
+          isValidPassword={validPassword}
+          onButtonPress={onConfirmBackup}
+        />
+      }
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Container alignItems="center" padding={9}>
+          <Icon color="settingsTeal" iconSize="xl" name="lock" />
+          <Text fontSize={20} margin={3}>
+            Choose a password
+          </Text>
+          <Text color="blueText" textAlign="center">
+            Be careful with your password. If you lose it, it cannot be
+            recovered.
+          </Text>
+        </Container>
+        <Container margin={5}>
+          <Input
+            {...backupPasswordInputProps}
+            autoFocus
+            iconProps={passwordFieldIconProps}
+            onBlur={onPasswordBlur}
+            onChange={onPasswordChange}
+            onSubmitEditing={onPasswordSubmit}
+            placeholder="Enter password"
+            ref={passwordRef}
+            returnKeyType="next"
+            textContentType="newPassword"
+            value={password}
           />
-        }
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Container alignItems="center" padding={9}>
-            <Icon color="settingsTeal" iconSize="xl" name="lock" />
-            <Text fontSize={20} margin={3}>
-              Choose a password
-            </Text>
-            <Text color="blueText" textAlign="center">
-              Be careful with your password. If you lose it, it cannot be
-              recovered.
-            </Text>
-          </Container>
-          <Container margin={5}>
-            <Input
-              {...backupPasswordInputProps}
-              autoFocus
-              iconProps={passwordFieldIconProps}
-              onBlur={onPasswordBlur}
-              onChange={onPasswordChange}
-              onSubmitEditing={onPasswordSubmit}
-              placeholder="Enter password"
-              ref={passwordRef}
-              returnKeyType="next"
-              textContentType="newPassword"
-              value={password}
-            />
-            <Input
-              {...backupPasswordInputProps}
-              iconProps={confirmPasswordFieldIconProps}
-              onChange={onConfirmPasswordChange}
-              onSubmitEditing={onConfirmPasswordSubmit}
-              placeholder="Confirm password"
-              ref={confirmPasswordRef}
-              value={confirmPassword}
-            />
-          </Container>
-        </TouchableWithoutFeedback>
-      </BackupSheetKeyboardLayout>
-    )
+          <Input
+            {...backupPasswordInputProps}
+            iconProps={confirmPasswordFieldIconProps}
+            onChange={onConfirmPasswordChange}
+            onSubmitEditing={onConfirmPasswordSubmit}
+            placeholder="Confirm password"
+            ref={confirmPasswordRef}
+            value={confirmPassword}
+          />
+        </Container>
+      </TouchableWithoutFeedback>
+    </BackupSheetKeyboardLayout>
   );
 }

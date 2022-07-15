@@ -32,9 +32,14 @@ const routes = {
   profilePurchases: '/profile-purchases',
 };
 
+enum CacheTag {
+  EOA_CLAIM = 'EOA_CLAIM',
+}
+
 export const hubApi = createApi({
   reducerPath: 'hubApi',
   baseQuery: fetchHubBaseQuery,
+  tagTypes: [...Object.values(CacheTag)],
   endpoints: builder => ({
     getCustodialWallet: builder.query<GetCustodialWalletQueryResult, void>({
       query: () => routes.custodialWallet,
@@ -49,6 +54,7 @@ export const hubApi = createApi({
           email,
         }),
       }),
+      invalidatesTags: [CacheTag.EOA_CLAIM],
     }),
     getEoaClaimed: builder.query<
       GetEoaClaimedQueryResult,
@@ -59,6 +65,7 @@ export const hubApi = createApi({
       transformResponse: (response: {
         data: { attributes: EoaClaimedAttrsType };
       }) => transformObjKeysToCamelCase(response?.data?.attributes),
+      providesTags: [CacheTag.EOA_CLAIM],
     }),
     checkHubAuth: builder.query<boolean, CheckHubAuthQueryParams>({
       async queryFn(params) {

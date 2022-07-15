@@ -4,6 +4,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { useCallback, useEffect, useState } from 'react';
+import { Keyboard } from 'react-native';
 
 import { DEFAULT_PIN_LENGTH } from '@cardstack/components/Input/PinInput/PinInput';
 import { savePin } from '@cardstack/models/secure-storage';
@@ -69,7 +70,13 @@ export const usePinScreen = () => {
     }
 
     if (flow === PinFlow.confirm) {
-      setIsValidPin(initialPin === inputPin);
+      const isPinEqual = initialPin === inputPin;
+
+      setIsValidPin(isPinEqual);
+
+      if (isPinEqual) {
+        Keyboard.dismiss();
+      }
     } else {
       setIsValidPin(null);
     }

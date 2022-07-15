@@ -1,32 +1,34 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Routes } from '@cardstack/navigation';
+import {
+  dismissBanner,
+  useWelcomeBannerSelector,
+} from '@cardstack/redux/welcomeBanner';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
 import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer2 } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
+import { logger } from '@rainbow-me/utils';
 
-import { useCtaBanner } from '.';
-
-const WELCOME_BANNER_KEY = 'WELCOME_BANNER_KEY';
+const EMAIL_POLLING_INTERVAL = 5000;
 
 export const useWelcomeCtaBanner = () => {
   const { selectedAccount } = useWallets();
   const { accountAddress, network } = useAccountSettings();
+  const [triggerPolling, setTriggerPolling] = useState(false);
+  const { requestedCardDrop, dismissedByUser } = useWelcomeBannerSelector();
+  const dispatch = useDispatch();
 
-  const {
-    data: emailDropGetData = { showBanner: false },
-  } = useGetEoaClaimedQuery(
+  const { data: emailDropGetData } = useGetEoaClaimedQuery(
+    { eoa: accountAddress },
     {
-      eoa: accountAddress,
-    },
-    { skip: !accountAddress }
-  );
-
-  const { showBanner: showBannerUserDecision, dismissBanner } = useCtaBanner(
-    WELCOME_BANNER_KEY
+      skip: !accountAddress,
+      pollingInterval: triggerPolling ? EMAIL_POLLING_INTERVAL : undefined,
+    }
   );
 
   const { navigate } = useNavigation();
@@ -46,20 +48,51 @@ export const useWelcomeCtaBanner = () => {
     () =>
       isLayer2(network) &&
       remoteFlags().featurePrepaidCardDrop &&
-      showBannerUserDecision &&
+      !dismissedByUser &&
       isFirstAddressForCurrentWallet &&
-      emailDropGetData?.showBanner,
-    [
-      showBannerUserDecision,
-      isFirstAddressForCurrentWallet,
-      network,
-      emailDropGetData,
-    ]
+      (emailDropGetData?.showBanner ?? false),
+    [dismissedByUser, isFirstAddressForCurrentWallet, network, emailDropGetData]
   );
+
+  const handleClaimStatus = useCallback(async () => {
+    try {
+      // user didn't request to claim so there's nothing to do here
+      if (!requestedCardDrop) {
+        return;
+      }
+
+      // starts polling to get new status after user requested a card
+      if (requestedCardDrop && !emailDropGetData?.claimed) {
+        setTriggerPolling(true);
+
+        return;
+      }
+
+      // status changed to claimed: true, disables polling
+      if (requestedCardDrop && emailDropGetData?.claimed) {
+        setTriggerPolling(false);
+
+        return;
+      }
+    } catch (error) {
+      logger.log('Error getting claimed status', error);
+    }
+  }, [requestedCardDrop, emailDropGetData]);
+
+  // handles/enables polling only if banner is visible
+  useEffect(() => {
+    if (showBanner) {
+      handleClaimStatus();
+    }
+  }, [handleClaimStatus, showBanner]);
+
+  const onDismissBannerPress = useCallback(() => dispatch(dismissBanner()), [
+    dispatch,
+  ]);
 
   return {
     showBanner,
-    dismissBanner,
+    onDismissBannerPress,
     onPress,
   };
 };

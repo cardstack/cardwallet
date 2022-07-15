@@ -1,17 +1,12 @@
-import assert from 'assert';
-import { delay } from '@cardstack/cardpay-sdk';
 import { captureException } from '@sentry/react-native';
 import { values } from 'lodash';
 import { useCallback } from 'react';
 import { Alert, Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
-import {
-  addWalletToCloudBackup,
-  backupWalletToCloud,
-  fetchBackupPassword,
-} from '../model/backup';
 import { setWalletBackedUp } from '../redux/wallets';
 import useWallets from './useWallets';
+import { backupWalletToCloud } from '@cardstack/models/backup';
+import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import {
   CLOUD_BACKUP_ERRORS,
@@ -44,7 +39,9 @@ function getUserError(e: Error) {
 
 export default function useWalletCloudBackup() {
   const dispatch = useDispatch();
-  const { latestBackup, setIsWalletLoading, wallets } = useWallets();
+  const { latestBackup, wallets } = useWallets();
+
+  const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   const walletCloudBackup = useCallback(
     async ({
@@ -84,56 +81,20 @@ export default function useWalletCloudBackup() {
         return;
       }
 
-      let fetchedPassword = password;
-      let wasPasswordFetched = false;
-      if (latestBackup && !password) {
-        // We have a backup but don't have the password, try fetching password
-        setIsWalletLoading(walletLoadingStates.FETCHING_PASSWORD);
-        // We want to make it clear why are we requesting faceID twice
-        // So we delayed it to make sure the user can read before seeing the auth prompt
-        await delay(1500);
-        fetchedPassword = await fetchBackupPassword();
-        setIsWalletLoading(null);
-        await delay(300);
-        wasPasswordFetched = true;
-      }
-
-      // If we still can't get the password, handle password not found
-      if (!fetchedPassword) {
+      if (!password) {
         handlePasswordNotFound?.();
         return;
       }
 
-      setIsWalletLoading(walletLoadingStates.BACKING_UP_WALLET);
-      // We want to make it clear why are we requesting faceID twice
-      // So we delayed it to make sure the user can read before seeing the auth prompt
-      if (wasPasswordFetched) {
-        await delay(1500);
-      }
-
-      // We have the password and we need to add it to an existing backup
-      logger.log('password fetched correctly');
+      showLoadingOverlay({ title: walletLoadingStates.BACKING_UP_WALLET });
 
       let updatedBackupFile: string | null = null;
       try {
-        if (!latestBackup) {
-          logger.log(`backing up to ${cloudPlatform}`, wallets[walletId]);
-          updatedBackupFile = await backupWalletToCloud(
-            fetchedPassword,
-            wallets[walletId]
-          );
-        } else {
-          assert(typeof latestBackup === 'string');
-          logger.log(
-            `adding wallet to ${cloudPlatform} backup`,
-            wallets[walletId]
-          );
-          updatedBackupFile = await addWalletToCloudBackup(
-            fetchedPassword,
-            wallets[walletId],
-            latestBackup
-          );
-        }
+        logger.log(`backing up to ${cloudPlatform}`, wallets[walletId]);
+        updatedBackupFile = await backupWalletToCloud(
+          password,
+          wallets[walletId]
+        );
       } catch (e) {
         const userError = getUserError(e);
         onError?.(userError);
@@ -155,6 +116,8 @@ export default function useWalletCloudBackup() {
           )
         );
         logger.log('backup saved everywhere!');
+        dismissLoadingOverlay();
+
         onSuccess?.();
       } catch (e) {
         logger.sentry('error while trying to save wallet backup state');
@@ -162,10 +125,12 @@ export default function useWalletCloudBackup() {
         const userError = getUserError(
           new Error(CLOUD_BACKUP_ERRORS.WALLET_BACKUP_STATUS_UPDATE_FAILED)
         );
+        dismissLoadingOverlay();
+
         onError?.(userError);
       }
     },
-    [dispatch, latestBackup, setIsWalletLoading, wallets]
+    [dismissLoadingOverlay, dispatch, latestBackup, showLoadingOverlay, wallets]
   );
 
   return walletCloudBackup;

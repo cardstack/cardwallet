@@ -1,7 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { saveBackupPassword } from '../../model/backup';
 import { DelayedAlert } from '../alerts';
 import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import {
@@ -18,8 +17,6 @@ import {
   useWallets,
 } from '@rainbow-me/hooks';
 
-import logger from 'logger';
-
 const { cloudPlatform } = Device;
 
 export default function BackupConfirmPasswordStep() {
@@ -31,7 +28,7 @@ export default function BackupConfirmPasswordStep() {
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState('Confirm Backup');
   const passwordRef = useRef<any>();
-  const { selectedWallet, setIsWalletLoading } = useWallets();
+  const { selectedWallet } = useWallets();
   const walletId = (params as any)?.walletId || selectedWallet.id;
 
   const isSettingsRoute = useRouteExistsInNavigationState(
@@ -55,18 +52,12 @@ export default function BackupConfirmPasswordStep() {
     []
   );
 
-  const onError = useCallback(
-    msg => {
-      passwordRef.current?.focus();
-      setIsWalletLoading(null);
-      DelayedAlert({ title: msg }, 500);
-    },
-    [setIsWalletLoading]
-  );
+  const onError = useCallback(msg => {
+    passwordRef.current?.focus();
+    DelayedAlert({ title: msg }, 500);
+  }, []);
 
   const onSuccess = useCallback(async () => {
-    logger.log('BackupConfirmPasswordStep:: saving backup password');
-    await saveBackupPassword(password);
     if (!isSettingsRoute) {
       DelayedAlert({ title: lang.t('cloud.backup_success') }, 1000);
     }
@@ -74,7 +65,7 @@ export default function BackupConfirmPasswordStep() {
     // and at least an other account already backed up
 
     goBack();
-  }, [goBack, isSettingsRoute, password]);
+  }, [goBack, isSettingsRoute]);
 
   const onSubmit = useCallback(async () => {
     if (!validPassword) return;

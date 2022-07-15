@@ -5,10 +5,11 @@ import styled from 'styled-components';
 
 import { Column } from '../layout';
 import { Container } from '@cardstack/components';
+import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils/device';
 
 const KeyboardSizeView = styled(KeyboardArea)`
-  background-color: ${({ theme: { colors } }) => colors.transparent};
+  background-color: ${colors.transparent};
 `;
 
 interface BackupSheetKeyboardLayoutProps {

@@ -9,6 +9,10 @@ import { useRequestPrepaidCardScreen } from '../useRequestPrepaidCardScreen';
 
 const validEmail = 'test@test.com';
 
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(),
+}));
+
 jest.mock('@rainbow-me/hooks', () => ({
   useAccountSettings: () => ({
     accountAddress: '0x0000000000000000000',
@@ -43,8 +47,8 @@ describe('useRequestPrepaidCardScreen', () => {
     (useRequestEmailCardDropMutation as jest.Mock).mockImplementation(() => [
       mockedRequestCardDrop.mockResolvedValue(Promise.resolve()),
       {
-        isSuccess: true,
-        isError: false,
+        isSuccess: false,
+        isError: true,
         error: {
           status: 400,
           message: '',

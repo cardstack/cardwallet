@@ -1,8 +1,10 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { Linking } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects } from '@cardstack/hooks';
+import { setRequestedCardDrop } from '@cardstack/redux/welcomeBanner';
 import { useRequestEmailCardDropMutation } from '@cardstack/services';
 import { isEmailPartial, isEmailValid } from '@cardstack/utils/validators';
 
@@ -16,6 +18,7 @@ export const useRequestPrepaidCardScreen = () => {
   const [inputValid, setInputValid] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
+  const dispatch = useDispatch();
 
   const [
     requestCardDrop,
@@ -35,8 +38,12 @@ export const useRequestPrepaidCardScreen = () => {
           status: isError,
           callback: () => Alert(errorMessage),
         },
+        success: {
+          status: isSuccess,
+          callback: () => dispatch(setRequestedCardDrop()),
+        },
       }),
-      [isError, errorMessage]
+      [isError, errorMessage, isSuccess, dispatch]
     )
   );
 
