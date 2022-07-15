@@ -47,8 +47,10 @@ export interface GetExchangeRatesQueryParams {
   e?: 'kucoin' | string;
 }
 
+export type IAPProviderType = 'apple' | 'google';
+
 export interface PostProfilePurchaseQueryParams {
   iapReceipt: string;
-  provider: 'apple' | 'google';
+  provider: IAPProviderType;
   merchantDID?: CreateBusinessInfoDIDParams;
 }

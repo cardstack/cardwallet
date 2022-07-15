@@ -3,7 +3,7 @@ import { requestPurchase, useIAP, Product, Purchase } from 'react-native-iap';
 
 import { useProfilePurchasesMutation } from '@cardstack/services';
 import { CreateBusinessInfoDIDParams } from '@cardstack/types';
-import { Device } from '@cardstack/utils';
+import { Device, useWorker } from '@cardstack/utils';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
 import logger from 'logger';
@@ -22,8 +22,6 @@ const testProfileAttributes = <CreateBusinessInfoDIDParams>{
   color: '#000000',
   'text-color': '#ffffff',
 };
-
-const PROVIDER = Device.isIOS ? 'apple' : 'google';
 
 export const usePurchaseProfile = () => {
   const { accountAddress = '' } = useAccountProfile();
@@ -49,7 +47,7 @@ export const usePurchaseProfile = () => {
 
   const [
     updateProfilePurchases,
-    { data, error },
+    { data, error, isLoading: isProcessingReceipt },
   ] = useProfilePurchasesMutation();
 
   // TODO: Remove this
@@ -66,15 +64,13 @@ export const usePurchaseProfile = () => {
   /**
    * Asks stores for available product descriptions.
    */
-  const fetchProducts = useCallback(async () => {
-    logger.log('[IAP] Loading Products available for purchase.');
-
-    try {
-      const response = await getProducts(testSKUs);
-      logger.log('[IAP] Products response', response);
-    } catch (e) {
-      logger.sentry('Error fetching products:', e);
-    }
+  const {
+    callback: fetchProducts,
+    isLoading: isLoadingProducts,
+    error: fetchProductsError,
+  } = useWorker(async () => {
+    const response = await getProducts(testSKUs);
+    logger.log('[IAP] Products response', response);
   }, [getProducts]);
 
   /**
@@ -83,13 +79,12 @@ export const usePurchaseProfile = () => {
    * TODO: Handle this response in case the user has completed a
    * purchase but for some reason still doen't has the profile.
    */
-  const fetchAvailablePurchases = useCallback(async () => {
-    try {
-      const response = await getAvailablePurchases();
-      logger.log('[IAP] Available Purchases response', response);
-    } catch (e) {
-      logger.sentry('Error fetching available purchases:', e);
-    }
+  const {
+    callback: fetchAvailablePurchases,
+    error: fetchPurchasesError,
+  } = useWorker(async () => {
+    const response = await getAvailablePurchases();
+    logger.log('[IAP] Available Purchases response', response);
   }, [getAvailablePurchases]);
 
   /**
@@ -99,7 +94,7 @@ export const usePurchaseProfile = () => {
     async (purchase: Purchase) => {
       await updateProfilePurchases({
         iapReceipt: purchase.transactionReceipt,
-        provider: PROVIDER,
+        provider: Device.iapProvider,
         merchantDID: profileAttributes,
       });
 
@@ -141,6 +136,20 @@ export const usePurchaseProfile = () => {
   }, [data, error]);
 
   /**
+   * Showing fetching errors.
+   * TODO: Handle fetching errors and show it somehow to users.
+   */
+  useEffect(() => {
+    if (fetchProductsError) {
+      logger.sentry('Error fetching products:', fetchProductsError);
+    }
+
+    if (fetchPurchasesError) {
+      logger.sentry('Error fetching available purchases:', fetchPurchasesError);
+    }
+  }, [fetchProductsError, fetchPurchasesError]);
+
+  /**
    * Fetches IAPs descriptions and succesfull purchases.
    */
   useEffect(() => {
@@ -149,6 +158,8 @@ export const usePurchaseProfile = () => {
   }, [fetchProducts, fetchAvailablePurchases]);
 
   return {
+    isLoadingProducts,
+    isProcessingReceipt,
     products,
     iapAvailable,
     currentPurchase,
