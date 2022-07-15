@@ -20,8 +20,6 @@ const ProfilePurchaseScreen = () => {
     isProcessingReceipt,
   } = usePurchaseProfile();
 
-  console.log({ isProcessingReceipt });
-
   return (
     <>
       <StatusBar barStyle="light-content" />
