@@ -49,7 +49,7 @@ const usePrepaidCardSection = (
       title: 'Prepaid Cards',
       count,
       type: PinnedHiddenSectionOption.PREPAID_CARDS,
-      showContextMenu: !!count,
+      showContextMenu: !!prepaidCards.length,
     },
     data: prepaidCards,
     timestamp,
