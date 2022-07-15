@@ -4,6 +4,7 @@ import { KebabToCamelCaseKeys } from 'globals';
 import {
   CustodialWalletAttrs,
   CreateBusinessInfoDIDParams,
+  IAPProviderType,
 } from '@cardstack/types';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
@@ -46,8 +47,6 @@ export interface GetExchangeRatesQueryParams {
   date: string | number;
   e?: 'kucoin' | string;
 }
-
-export type IAPProviderType = 'apple' | 'google';
 
 export interface PostProfilePurchaseQueryParams {
   iapReceipt: string;
