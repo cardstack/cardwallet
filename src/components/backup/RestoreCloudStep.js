@@ -61,14 +61,15 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
 
       showLoadingOverlay({ title: WalletLoadingStates.RESTORING_WALLET });
 
-      const restoredSeed = await restoreCloudBackup(
+      // restoreCloudBackup needs to return both seed and filename
+      const { restoredSeed, filename } = await restoreCloudBackup(
         password,
         userData,
         selectedBackupName
       );
 
       if (isValidSeed(restoredSeed)) {
-        await importWallet({ seed: restoredSeed });
+        await importWallet({ seed: restoredSeed, backupFilename: filename });
         return;
       }
 
