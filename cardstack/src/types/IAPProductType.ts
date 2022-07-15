@@ -1,1 +1,4 @@
-export type IAPProviderType = 'apple' | 'google';
+export enum IAPProviderType {
+  apple = 'apple',
+  google = 'google',
+}

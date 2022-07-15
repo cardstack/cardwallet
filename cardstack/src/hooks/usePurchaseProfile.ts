@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { requestPurchase, useIAP, Product, Purchase } from 'react-native-iap';
 
 import { useProfilePurchasesMutation } from '@cardstack/services';
-import { CreateBusinessInfoDIDParams } from '@cardstack/types';
+import { CreateBusinessInfoDIDParams, IAPProviderType } from '@cardstack/types';
 import { Device, useWorker } from '@cardstack/utils';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
@@ -56,7 +56,7 @@ export const usePurchaseProfile = () => {
 
     await updateProfilePurchases({
       iapReceipt: testReceipt,
-      provider: 'apple', // Test receipt is from an Apple purchase.
+      provider: IAPProviderType.apple, // Test receipt is from an Apple purchase.
       merchantDID: profileAttributes,
     });
   }, [updateProfilePurchases, profileAttributes]);

@@ -20,7 +20,7 @@ const Device = {
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
   tabBarHeightSize: screenHeight * 0.1,
   enableBackup: true,
-  iapProvider: (isIOS ? 'apple' : 'google') as IAPProviderType,
+  iapProvider: isIOS ? IAPProviderType.apple : IAPProviderType.google,
 };
 
 export { Device };
