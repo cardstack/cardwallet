@@ -150,6 +150,7 @@
     "react-native-gesture-handler": "^2.4.2",
     "react-native-get-random-values": "^1.5.0",
     "react-native-haptic-feedback": "^1.8.2",
+    "react-native-iap": "^8.2.1",
     "react-native-image-crop-picker": "^0.32.2",
     "react-native-indicators": "0.17.0",
     "react-native-iphone-x-helper": "^1.2.1",
@@ -230,6 +231,7 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/react-native": "8.0.0",
     "@types/chance": "^1.1.1",
+    "@types/chroma-js": "^2.1.4",
     "@types/jest": "^26.0.9",
     "@types/react-native-actionsheet": "^2.4.2",
     "@types/react-native-dotenv": "^0.2.0",
@@ -262,6 +264,7 @@
     "eslint-plugin-echobind": "^0.2.0",
     "ganache-cli": "6.12.2",
     "graphql": "^15.3.0",
+    "husky": "^8.0.0",
     "jest": "^26.6.3",
     "jest-circus": "^26.1.0",
     "jest-transform-stub": "^2.0.0",
@@ -277,8 +280,7 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "stylelint-react-native": "^2.4.0",
     "ts-jest": "^26.5.5",
-    "typescript": "4.5.5",
-    "husky": "^8.0.0"
+    "typescript": "4.5.5"
   },
   "resolutions": {
     "**/tunnel-agent": "0.6.0",

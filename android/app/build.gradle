@@ -182,6 +182,8 @@ android {
         versionCode getVersionCode
         versionName "1.1.5"
         missingDimensionStrategy 'react-native-camera', 'general'
+        // react-native-iap: only connect to Google Play (skips Amazon Store)
+        missingDimensionStrategy 'store', 'play'
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
         multiDexEnabled true

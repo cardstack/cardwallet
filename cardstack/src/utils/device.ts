@@ -1,5 +1,7 @@
 import { Platform } from 'react-native';
 
+import { IAPProviderType } from '@cardstack/types';
+
 import { screenHeight, screenWidth } from './dimension-utils';
 
 const isIOS = Platform.OS === 'ios';
@@ -18,6 +20,7 @@ const Device = {
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
   tabBarHeightSize: screenHeight * 0.1,
   enableBackup: true,
+  iapProvider: isIOS ? IAPProviderType.apple : IAPProviderType.google,
 };
 
 export { Device };

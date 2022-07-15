@@ -24,6 +24,7 @@ import {
   BaseQueryExtraOptions,
   CheckHubAuthQueryParams,
   GetExchangeRatesQueryParams,
+  PostProfilePurchaseQueryParams,
 } from './hub-types';
 
 // Helpers
@@ -95,6 +96,38 @@ export const hubBodyBuilder = <Attrs>(path: string, attributes: Attrs) =>
       attributes,
     },
   });
+
+export const hubProfilePurchaseBody = (
+  path: string,
+  params: PostProfilePurchaseQueryParams
+): string => {
+  const body = {
+    data: {
+      type: path.replace('/', ''),
+      attributes: {
+        receipt: params.iapReceipt,
+        provider: params.provider,
+      },
+    },
+    relationships: {
+      'merchant-info': {
+        data: {
+          type: 'merchant-infos',
+          lid: '1', // local-id, only there so BE can match relationships
+        },
+      },
+    },
+    included: [
+      {
+        type: 'merchant-infos',
+        lid: '1',
+        attributes: params.merchantDID,
+      },
+    ],
+  };
+
+  return JSON.stringify(body);
+};
 
 // Queries
 

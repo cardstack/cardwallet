@@ -1,7 +1,8 @@
 import { ResponsiveValue, SafeVariants, useTheme } from '@shopify/restyle';
+import chroma from 'chroma-js';
 import { Dimensions } from 'react-native';
 
-import { Theme, breakpoints } from '@cardstack/theme';
+import { Theme, breakpoints, colors } from '@cardstack/theme';
 
 /**
  * Gets the variant value while taking into account responsive values
@@ -80,3 +81,10 @@ export const useVariantStyle = <T extends keyof SafeVariants<Theme>>(
     mergedStyles: { ...defaultStyles, ...variantStyles },
   };
 };
+
+/**
+ * Calculates using chroma API if a text should be white or black
+ * if placed above a background color.
+ */
+export const contrastingTextColor = (color: string) =>
+  chroma(color).luminance() > 0.5 ? colors.black : colors.white;
