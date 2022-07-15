@@ -97,7 +97,7 @@ export const hubApi = createApi({
         responseHandler: response => response.text(),
       }),
     }),
-    profilePurchases: builder.query<string, PostProfilePurchaseQueryParams>({
+    profilePurchases: builder.mutation<string, PostProfilePurchaseQueryParams>({
       query: params => ({
         url: routes.profilePurchases,
         method: 'POST',
@@ -115,5 +115,5 @@ export const {
   useGetExchangeRatesQuery,
   useRegisterFcmTokenQuery,
   useUnregisterFcmTokenMutation,
-  useProfilePurchasesQuery,
+  useProfilePurchasesMutation,
 } = hubApi;

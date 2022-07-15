@@ -126,8 +126,6 @@ export const hubProfilePurchaseBody = (
     ],
   };
 
-  console.log('::: hub request body', JSON.stringify(body, null, 2));
-
   return JSON.stringify(body);
 };
 
@@ -173,9 +171,3 @@ export const registerFcmToken = (fcmToken: string) =>
 
 export const unregisterFcmToken = (fcmToken: string) =>
   store.dispatch(hubApi.endpoints.unregisterFcmToken.initiate({ fcmToken }));
-
-// Profile purchase and creation Queries
-
-export const profilePurchaseHubQuery = (
-  params: PostProfilePurchaseQueryParams
-) => store.dispatch(hubApi.endpoints.profilePurchases.initiate(params));

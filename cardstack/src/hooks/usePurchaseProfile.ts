@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { requestPurchase, useIAP, Product, Purchase } from 'react-native-iap';
 
-import { profilePurchaseHubQuery } from '@cardstack/services/hub/hub-service';
+import { useProfilePurchasesMutation } from '@cardstack/services';
 import { Device } from '@cardstack/utils';
 
 import logger from 'logger';
@@ -35,20 +35,19 @@ export const usePurchaseProfile = () => {
     getAvailablePurchases,
   } = useIAP();
 
-  // ** TEST CALL WITH STATIC RECEIPT **
-  // Receipt and associated data needs to be deleted from Hub's DB to retry this.
+  const [
+    updateProfilePurchases,
+    { data, error },
+  ] = useProfilePurchasesMutation();
+
+  // TODO: remove this
   const fakeTestPurchase = useCallback(async () => {
-    const { data, error } = await profilePurchaseHubQuery({
+    await updateProfilePurchases({
       iapReceipt: testReceipt,
       provider: 'apple',
       merchantDID: profileAttributes,
     });
-
-    console.log('::: 💰 Hub profilePurchaseHubQuery results', {
-      data,
-      error: JSON.stringify(error, null, 2),
-    });
-  }, [profileAttributes]);
+  }, [updateProfilePurchases, profileAttributes]);
 
   /**
    * Asks stores for available product descriptions.
@@ -84,22 +83,16 @@ export const usePurchaseProfile = () => {
    */
   const validateReceiptCreateProfile = useCallback(
     async (purchase: Purchase) => {
-      const { data, error } = await profilePurchaseHubQuery({
+      await updateProfilePurchases({
         iapReceipt: purchase.transactionReceipt,
         provider: PROVIDER,
         merchantDID: profileAttributes,
       });
 
-      // Todo: Create pooling for querying until task finishes successfully.
-      console.log('::: 💰 profilePurchaseHubQuery results', {
-        data,
-        error: JSON.stringify(error, null, 2),
-      });
-
       // Valid purchases need to be finalized, otherwise they may reverse.
       finishTransaction(purchase);
     },
-    [profileAttributes, finishTransaction]
+    [updateProfilePurchases, profileAttributes, finishTransaction]
   );
 
   /**
@@ -123,6 +116,16 @@ export const usePurchaseProfile = () => {
     }
   }, [currentPurchase, validateReceiptCreateProfile]);
 
+  useEffect(() => {
+    if (data || error) {
+      // Todo: Create pooling for querying until task finishes successfully.
+      console.log('::: 💰 HUB Profile Purchase Mutation response', {
+        data,
+        error: JSON.stringify(error, null, 2),
+      });
+    }
+  }, [data, error]);
+
   /**
    * Fetches IAPs descriptions and succesfull purchases.
    */
@@ -137,11 +140,11 @@ export const usePurchaseProfile = () => {
     iapAvailable,
     currentPurchase,
     purchaseProduct,
-    fakeTestPurchase,
     finishTransaction,
     updateProfileInfo,
     availablePurchases,
     onPressBusinessColor,
     currentPurchaseError,
+    fakeTestPurchase,
   };
 };
