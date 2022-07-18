@@ -68,6 +68,7 @@ const password = '12345678';
 
 describe('backup', () => {
   const mockedSeed = 'foo bar foo';
+  const mockedBackupFile = 'latestBackupFile.json';
 
   const encryptAndSaveDataToCloud = jest
     .spyOn(cloudBackup, 'encryptAndSaveDataToCloud')
@@ -169,7 +170,10 @@ describe('backup', () => {
 
       const seed = await restoreCloudBackup(password, userData);
 
-      expect(seed).toBe(mockedSeed);
+      expect(seed).toEqual({
+        filename: mockedBackupFile,
+        restoredSeed: mockedSeed,
+      });
     });
 
     it('should return restored seed for old backup format', async () => {
@@ -188,7 +192,10 @@ describe('backup', () => {
 
       const seed = await restoreCloudBackup(password, userData);
 
-      expect(seed).toBe(mockedSeed);
+      expect(seed).toEqual({
+        filename: mockedBackupFile,
+        restoredSeed: mockedSeed,
+      });
     });
 
     describe('findAndParseOldSeed', () => {
