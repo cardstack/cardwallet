@@ -50,11 +50,14 @@ import {
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
 
+import { backupUserDataIntoCloud } from '@rainbow-me/handlers/cloudBackup';
 import {
   deleteKeychainIntegrityState,
   deletePinAuthAttemptsData,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
+import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import logger from 'logger';
+
 const encryptor = new AesEncryptor();
 
 type EthereumAddress = string;
@@ -496,6 +499,7 @@ export interface CreateImportParams {
   name?: string;
   checkedWallet?: EthereumWalletFromSeed;
   pin?: string;
+  backupFilename?: string;
 }
 
 export const createOrImportWallet = async ({
@@ -504,6 +508,7 @@ export const createOrImportWallet = async ({
   name,
   pin,
   checkedWallet,
+  backupFilename,
 }: CreateImportParams = {}) => {
   const isImported = !!seed;
   logger.sentry('Creating wallet, isImported?', isImported);
@@ -604,9 +609,13 @@ export const createOrImportWallet = async ({
       }
     }
 
+    const isBackup = !!backupFilename;
+
     allWallets[walletId] = {
       addresses,
-      backedUp: false,
+      backedUp: isBackup,
+      backupType: isBackup ? WalletBackupTypes.cloud : undefined,
+      backupFile: backupFilename,
       color: color || 0,
       id: walletId,
       imported: isImported,
@@ -624,6 +633,16 @@ export const createOrImportWallet = async ({
     await saveAddress(walletAddress);
     logger.sentry('[createWallet] - saveAddress');
 
+    // updates the cloud backup in case the user is importing a wallet from the backup
+    if (isBackup) {
+      try {
+        await backupUserDataIntoCloud({ wallets: allWallets });
+      } catch (e) {
+        logger.sentry('[createWallet] backupUserDataIntoCloud failed');
+        captureException(e);
+      }
+    }
+
     if (walletResult && walletAddress) {
       // bip39 are derived from mnemioc
       const createdWallet =
@@ -633,6 +652,7 @@ export const createOrImportWallet = async ({
 
       return createdWallet;
     }
+
     return null;
   } catch (error) {
     logger.sentry('Error in createWallet', error);

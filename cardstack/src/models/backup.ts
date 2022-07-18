@@ -109,10 +109,10 @@ export async function restoreCloudBackup(
         latestBackedUpWallet?.id
       );
 
-      return oldSeedPhrase;
+      return { restoredSeed: oldSeedPhrase, filename };
     }
 
-    return seedPhrase;
+    return { restoredSeed: seedPhrase, filename };
   } catch (e) {
     logger.sentry('Error while restoring back up');
     captureException(e);
