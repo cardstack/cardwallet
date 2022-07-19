@@ -17,6 +17,12 @@ const Device = {
   supportsHapticFeedback: isIOS,
   scrollSheetOffset: isIOS ? -(screenHeight * 0.2) : 1,
   tabBarHeightSize: screenHeight * 0.1,
+  keyboardEventWillShow: isIOS
+    ? ('keyboardWillShow' as const)
+    : ('keyboardDidShow' as const),
+  keyboardEventWillHide: isIOS
+    ? ('keyboardWillHide' as const)
+    : ('keyboardDidHide' as const),
   enableBackup: true,
 };
 
