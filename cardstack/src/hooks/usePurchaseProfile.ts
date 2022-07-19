@@ -168,5 +168,6 @@ export const usePurchaseProfile = () => {
     availablePurchases,
     currentPurchaseError,
     fakeTestPurchase,
+    profileAttributes,
   };
 };
