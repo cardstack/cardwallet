@@ -8,16 +8,20 @@ import {
   Text,
   TextProps,
 } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 import { fontFamilyVariants, colors } from '@cardstack/theme';
 
 const styles = StyleSheet.create({
   input: {
-    top: 0.5, // Input comp. renders inner text slightly above Text comp.
     color: colors.teal,
-    minWidth: '32%',
-    fontSize: 24,
+    // Input's font on android is rendering a lot smaller, not sure why.
+    minWidth: Device.isAndroid ? '40%' : '32%',
+    fontSize: Device.isAndroid ? 32 : 24,
+    padding: 0, // Clears phantom padding on android. Keep it consistent on ios.
+    left: 0,
+    ...fontFamilyVariants.bold,
   },
-  textFont: {
+  suffix: {
     fontSize: 24,
     ...fontFamilyVariants.bold,
   },
@@ -40,25 +44,31 @@ const SuffixedInput = forwardRef(
     }: SuffixedInputProps,
     ref
   ) => (
-    <Container flexDirection="row" flexWrap="wrap">
+    <Container
+      width="100%"
+      flexDirection="row"
+      flexWrap="wrap"
+      justifyContent="flex-start"
+      alignItems="center"
+    >
       <Input
         ref={ref}
+        style={styles.input}
+        placeholderTextColor={colors.secondaryText}
+        paddingRight={1}
         autoFocus
-        autoCapitalize="none"
         multiline={false}
         spellCheck={false}
         autoCorrect={false}
         maxLength={maxLength}
-        style={[styles.input, styles.textFont]}
+        autoCapitalize="none"
         placeholder="username"
         textContentType="username"
-        underlineColorAndroid="transparent"
         keyboardType="twitter"
-        paddingRight={1}
-        placeholderTextColor={colors.secondaryText}
+        underlineColorAndroid="transparent"
         {...props}
       />
-      <Text style={styles.textFont} color="white" {...suffixTextProps}>
+      <Text style={styles.suffix} color="white" {...suffixTextProps}>
         {suffixText}
       </Text>
     </Container>
