@@ -34,7 +34,7 @@ enum Animation {
 
 const layouts = {
   defaultPadding: 5,
-  keyboardVerticalOffset: Device.isIOS ? 15 : 110,
+  keyboardVerticalOffset: Device.isIOS ? 15 : 95,
 };
 
 const styles = StyleSheet.create({
