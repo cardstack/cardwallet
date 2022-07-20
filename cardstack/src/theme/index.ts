@@ -26,6 +26,7 @@ export * from './breakpoints';
 export * from './fontSizes';
 export * from './fontWeights';
 export * from './customFunctions';
+export * from './fontFamilyVariants';
 
 export type Theme = typeof theme;
 export default theme;
