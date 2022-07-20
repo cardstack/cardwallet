@@ -8,8 +8,8 @@ import {
   Text,
   TextProps,
 } from '@cardstack/components';
-import { Device } from '@cardstack/utils';
 import { fontFamilyVariants, colors } from '@cardstack/theme';
+import { Device } from '@cardstack/utils';
 
 const styles = StyleSheet.create({
   input: {
