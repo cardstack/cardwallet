@@ -4,7 +4,9 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   ScaleTransform,
+  StyleSheet,
   TranslateYTransform,
+  useWindowDimensions,
 } from 'react-native';
 
 import {
@@ -15,21 +17,54 @@ import {
   SafeAreaView,
   Text,
 } from '@cardstack/components';
-import { colors } from '@cardstack/theme';
-import { Device, screenHeight, screenWidth } from '@cardstack/utils';
+import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
+import { fontFamilyVariants } from '@cardstack/theme/fontFamilyVariants';
+import { Device } from '@cardstack/utils';
+
+import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
 
 import ProfilePhonePreview from './components/ProfilePhonePreview';
 import { strings } from './strings';
+import { useProfileNameScreen } from './useProfileNameScreen';
 
 enum Animation {
   keyboardOpening = 1,
   keyboardClosing = 0,
 }
 
-const aspectRatio = screenHeight / screenWidth;
+const layouts = {
+  defaultPadding: 5,
+  keyboardVerticalOffset: Device.isIOS ? 15 : 110,
+};
+
+const styles = StyleSheet.create({
+  avoidViewContent: {
+    backgroundColor: colors.backgroundDarkPurple,
+    flexGrow: 1,
+    justifyContent: 'space-around',
+  },
+  avoidViewContainer: {
+    backgroundColor: colors.backgroundDarkPurple,
+    flex: 0.4,
+  },
+  floatingFooter: {
+    // Overrides parent container padding, to hide phone image
+    marginHorizontal: -layouts.defaultPadding * SPACING_MULTIPLIER,
+  },
+});
 
 export const ProfileNameScreen = () => {
+  const {
+    profileUrl,
+    profileName,
+    onSkipPress,
+    onContinuePress,
+    onChangeText,
+  } = useProfileNameScreen();
+
   const animated = useRef(new Animated.Value(0)).current;
+
+  const { height, width } = useWindowDimensions();
 
   const animatePhoneOnKeyboardEvent = useCallback(
     (toValue: Animation) => () => {
@@ -59,34 +94,71 @@ export const ProfileNameScreen = () => {
     };
   }, [animatePhoneOnKeyboardEvent]);
 
-  const transform = useMemo(() => {
-    const transformArray: Animated.WithAnimatedArray<
+  const phonePreviewStyles = useMemo(() => {
+    const {
+      width: baseDeviceWidth,
+      height: baseDeviceHeight,
+    } = deviceDimensions.iphoneX;
+
+    const constraints = {
+      baseWidth: 230,
+      baseHeight: 258,
+      scaling: { iOS: 1.55, android: 1.8 },
+    };
+
+    const phonePrevWidth = Math.round(
+      (width / baseDeviceWidth) * constraints.baseWidth
+    );
+
+    const phonePrevHeight = Math.round(
+      (height / baseDeviceHeight) * constraints.baseHeight
+    );
+
+    const phonePrevAspectRatio = phonePrevHeight / phonePrevWidth;
+
+    const scaleTo = Device.isIOS
+      ? constraints.scaling.iOS
+      : phonePrevAspectRatio * constraints.scaling.android;
+
+    const transform: Animated.WithAnimatedArray<
       ScaleTransform | TranslateYTransform
     > = [
       {
         scale: animated.interpolate({
-          inputRange: [0, 1],
-          outputRange: [1, Device.isIOS ? 1.3 : 1.4],
+          inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
+          outputRange: [1, scaleTo],
         }),
       },
     ];
 
     if (Device.isIOS) {
-      transformArray.push({
+      const translateYTo = -(phonePrevAspectRatio * 65);
+
+      transform.push({
         translateY: animated.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -screenHeight * 0.091],
+          inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
+          outputRange: [0, translateYTo],
         }),
       });
     }
 
-    return transformArray;
-  }, [animated]);
+    return {
+      width: phonePrevWidth,
+      height: phonePrevHeight,
+      alignItems: 'center' as const,
+      shadowColor: 'black',
+      shadowRadius: 30,
+      shadowOpacity: 1,
+      transform,
+    };
+  }, [animated, height, width]);
 
-  const opacity = useMemo(
+  const animatedHeaderStyles = useMemo(
     () => ({
+      flex: 0.4,
+      justifyContent: 'space-between' as const,
       opacity: animated.interpolate({
-        inputRange: [0, 1],
+        inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
         outputRange: [1, 0],
       }),
     }),
@@ -97,24 +169,21 @@ export const ProfileNameScreen = () => {
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
       flex={1}
-      paddingHorizontal={5}
+      paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <Container flex={0.1} alignItems="flex-end" paddingVertical={2}>
-        <Text fontSize={13} color="teal" fontFamily="OpenSans-Bold">
+      <Container flex={0.15} alignItems="flex-end" paddingVertical={2}>
+        <Text
+          fontSize={13}
+          color="teal"
+          onPress={onSkipPress}
+          fontWeight="bold"
+        >
           {strings.btns.skip}
         </Text>
       </Container>
-      <Animated.View
-        style={[
-          {
-            justifyContent: 'space-between',
-            flex: 0.45,
-          },
-          opacity,
-        ]}
-      >
-        <Text fontSize={24} color="white" fontFamily="OpenSans-Light">
+      <Animated.View style={animatedHeaderStyles}>
+        <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
           {strings.header}
         </Text>
         <CenteredContainer>
@@ -126,48 +195,54 @@ export const ProfileNameScreen = () => {
           </Button>
         </CenteredContainer>
       </Animated.View>
-      <Container flex={1} alignItems="center" justifyContent="flex-start">
-        <Animated.View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            transform,
-          }}
-        >
-          <ProfilePhonePreview profileUrl="mandello.card.yxz" />
+      <Container
+        flex={0.65}
+        alignItems="center"
+        justifyContent="flex-end"
+        paddingBottom={2}
+      >
+        <Animated.View style={phonePreviewStyles}>
+          <ProfilePhonePreview
+            profileUrl={profileUrl}
+            profileName={profileName || strings.input.placeholder}
+          />
         </Animated.View>
       </Container>
       <KeyboardAvoidingView
         behavior="position"
-        keyboardVerticalOffset={Device.isIOS ? -12 : -100}
+        style={styles.avoidViewContainer}
+        contentContainerStyle={styles.avoidViewContent}
+        keyboardVerticalOffset={-layouts.keyboardVerticalOffset}
       >
         <Container
+          flex={1}
+          paddingTop={2}
           backgroundColor="backgroundDarkPurple"
-          style={{
-            paddingTop: screenHeight * 0.01 * aspectRatio,
-            marginHorizontal: -(5 * 4),
-          }}
-          paddingHorizontal={5}
+          justifyContent="space-around"
+          style={styles.floatingFooter}
+          paddingHorizontal={layouts.defaultPadding}
         >
           <Input
             color="teal"
             width="100%"
             fontSize={24}
-            fontFamily="OpenSans-Regular"
             fontWeight="bold"
             placeholder={strings.input.placeholder}
             placeholderTextColor={colors.secondaryText}
             paddingBottom={4}
+            onChangeText={onChangeText}
           />
-          <Container width="80%" paddingBottom={10}>
-            <Text fontSize={12} color="grayText" fontFamily="OpenSans-Regular">
+          <Container width="80%" flex={1}>
+            <Text fontSize={12} color="grayText">
               {strings.input.description}
             </Text>
           </Container>
         </Container>
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
-        <Button> {strings.btns.continue}</Button>
+        <Button disabled={!profileName} onPress={onContinuePress}>
+          {strings.btns.continue}
+        </Button>
       </CenteredContainer>
     </SafeAreaView>
   );

@@ -1,6 +1,6 @@
 import { useWindowDimensions } from 'react-native';
 
-const deviceDimensions = {
+export const deviceDimensions = {
   iphone6: {
     height: 667,
     width: 375,
