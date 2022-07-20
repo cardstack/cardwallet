@@ -2,8 +2,6 @@ import { renderHook } from '@testing-library/react-hooks';
 import { act } from '@testing-library/react-native';
 import { useIAP, Product, Purchase } from 'react-native-iap';
 
-// import { CreateBusinessInfoDIDParams } from '@cardstack/types';
-
 import { useAccountProfile } from '@rainbow-me/hooks';
 import logger from 'logger';
 
@@ -35,7 +33,6 @@ jest.mock('@rainbow-me/hooks', () => ({
 
 jest.mock('react-native-iap', () => ({
   useIAP: jest.fn(),
-  // requestPurchase: mockedRequestPurchase,
 }));
 
 describe('usePurchaseProfile', () => {
