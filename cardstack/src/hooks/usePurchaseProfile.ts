@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { requestPurchase, useIAP, Product, Purchase } from 'react-native-iap';
+import { useIAP, Product, Purchase } from 'react-native-iap';
 
 import { useProfilePurchasesMutation } from '@cardstack/services';
 import { CreateBusinessInfoDIDParams, IAPProviderType } from '@cardstack/types';
@@ -43,6 +43,7 @@ export const usePurchaseProfile = () => {
     getProducts,
     finishTransaction,
     getAvailablePurchases,
+    requestPurchase,
   } = useIAP();
 
   const [
@@ -107,11 +108,18 @@ export const usePurchaseProfile = () => {
   /**
    * Asks IAP service to start a purchase of a IAP Product.
    */
-  const purchaseProduct = useCallback(async (product: Product) => {
-    if (product.type === 'iap') {
-      requestPurchase(product.productId);
-    }
-  }, []);
+  const purchaseProduct = useCallback(
+    async (product: Product) => {
+      if (product.type === 'iap') {
+        try {
+          requestPurchase(product.productId);
+        } catch (e) {
+          logger.sentry('Error purchasing product', e);
+        }
+      }
+    },
+    [requestPurchase]
+  );
 
   /**
    * Handler for after a purchase occur.
@@ -168,5 +176,6 @@ export const usePurchaseProfile = () => {
     availablePurchases,
     currentPurchaseError,
     fakeTestPurchase,
+    profileAttributes,
   };
 };
