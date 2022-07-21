@@ -8,6 +8,7 @@ import {
   Container,
   Text,
 } from '@cardstack/components';
+import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 import { buttonVariants } from '@cardstack/theme';
 
 const themes = ['light', 'dark'];
@@ -17,6 +18,10 @@ const DesignSystemScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const sections = [
+    {
+      title: 'Input',
+      data: ['slug'],
+    },
     {
       title: 'Hold to confirm Button',
       data: ['1'],
@@ -39,6 +44,12 @@ const DesignSystemScreen = () => {
   const renderItem = useCallback(
     ({ item, section: { title } }) => {
       switch (title) {
+        case 'Input':
+          return (
+            <Container padding={2}>
+              <SuffixedInput suffixText=".card.xyz" />
+            </Container>
+          );
         case 'Buttons':
           return (
             <CenteredContainer padding={2}>
@@ -65,7 +76,7 @@ const DesignSystemScreen = () => {
   );
 
   return (
-    <Container backgroundColor="overlayGray">
+    <Container backgroundColor="backgroundDarkPurple">
       <SectionList
         renderItem={renderItem as any}
         sections={sections}
