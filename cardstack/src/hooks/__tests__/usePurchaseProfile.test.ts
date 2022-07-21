@@ -2,8 +2,6 @@ import { renderHook } from '@testing-library/react-hooks';
 import { act } from '@testing-library/react-native';
 import { useIAP, Product, Purchase } from 'react-native-iap';
 
-import { useProfilePurchasesMutation } from '@cardstack/services';
-
 import { useAccountProfile } from '@rainbow-me/hooks';
 import logger from 'logger';
 
