@@ -3,22 +3,18 @@ import { StyleSheet, TextInput, TextInputProps } from 'react-native';
 
 import { Container, Text, TextProps } from '@cardstack/components';
 import { fontFamilyVariants, colors } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
 
 import { strings } from './strings';
 
 const styles = StyleSheet.create({
   input: {
     color: colors.teal,
-    // Input's font on android is rendering a lot smaller, not sure why.
-    minWidth: Device.isAndroid ? '40%' : '32%',
-    fontSize: Device.isAndroid ? 32 : 24,
+    minWidth: '34%',
     padding: 0, // Clears phantom padding on android. Keep it consistent on ios.
     left: 0,
     paddingRight: 4,
-    ...fontFamilyVariants.bold,
   },
-  suffix: {
+  textStyle: {
     fontSize: 24,
     ...fontFamilyVariants.bold,
   },
@@ -45,7 +41,7 @@ const SuffixedInput = ({
     alignItems="center"
   >
     <TextInput
-      style={styles.input}
+      style={[styles.input, styles.textStyle]}
       placeholderTextColor={colors.secondaryText}
       autoFocus
       multiline={false}
@@ -57,7 +53,7 @@ const SuffixedInput = ({
       textContentType="username"
       underlineColorAndroid="transparent"
     />
-    <Text style={styles.suffix} color="white" {...suffixTextProps}>
+    <Text style={styles.textStyle} color="white" {...suffixTextProps}>
       {suffixText}
     </Text>
   </Container>
