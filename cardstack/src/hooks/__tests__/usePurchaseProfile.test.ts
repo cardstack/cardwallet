@@ -2,6 +2,8 @@ import { renderHook } from '@testing-library/react-hooks';
 import { act } from '@testing-library/react-native';
 import { useIAP, Product, Purchase } from 'react-native-iap';
 
+import { useProfilePurchasesMutation } from '@cardstack/services';
+
 import { useAccountProfile } from '@rainbow-me/hooks';
 import logger from 'logger';
 
@@ -35,10 +37,35 @@ jest.mock('react-native-iap', () => ({
   useIAP: jest.fn(),
 }));
 
+jest.mock('@cardstack/services', () => ({
+  useProfilePurchasesMutation: jest.fn(() => [
+    jest.fn(),
+    {
+      isSuccess: true,
+      isError: false,
+    },
+  ]),
+  hubApi: jest.fn(),
+}));
+
 describe('usePurchaseProfile', () => {
   const mockedGetProducts = jest.fn();
   const mockedGetPurchases = jest.fn();
   const mockedRequestPurchase = jest.fn();
+  const mockedFinishTransaction = jest.fn();
+
+  const mockUseIAP = (currentPurchase: Purchase | null = null) => {
+    (useIAP as jest.Mock).mockImplementation(() => ({
+      getProducts: mockedGetProducts.mockResolvedValue(mockProduct),
+      getAvailablePurchases: mockedGetPurchases.mockResolvedValue(
+        currentPurchase
+      ),
+      requestPurchase: mockedRequestPurchase.mockResolvedValue(null),
+      finishTransaction: mockedFinishTransaction.mockResolvedValue(null),
+      products: [mockProduct],
+      currentPurchase: currentPurchase,
+    }));
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -52,12 +79,7 @@ describe('usePurchaseProfile', () => {
       () => mockAccountProfile
     );
 
-    (useIAP as jest.Mock).mockImplementation(() => ({
-      getProducts: mockedGetProducts.mockResolvedValue(mockProduct),
-      getAvailablePurchases: mockedGetPurchases.mockResolvedValue(mockPurchase),
-      requestPurchase: mockedRequestPurchase.mockResolvedValue(null),
-      products: [mockProduct],
-    }));
+    mockUseIAP();
   });
 
   it('should render usePurchaseProfile hook', async () => {
@@ -96,7 +118,7 @@ describe('usePurchaseProfile', () => {
     });
   });
 
-  it('should log a response from getProducts call', async () => {
+  it('should log product from getProducts call', async () => {
     const { waitFor } = renderHook(() => usePurchaseProfile());
 
     await waitFor(() => {
@@ -105,7 +127,21 @@ describe('usePurchaseProfile', () => {
     });
   });
 
-  it('should log a response from getAvailablePurchases call', async () => {
+  it('should log null purchase from getAvailablePurchases call for default mock', async () => {
+    const { waitFor } = renderHook(() => usePurchaseProfile());
+
+    await waitFor(() => {
+      expect(mockedGetPurchases).toHaveReturned();
+      expect(logger.log).toBeCalledWith(
+        '[IAP] Available Purchases response',
+        null
+      );
+    });
+  });
+
+  it('should log mock purchase from getAvailablePurchases call', async () => {
+    mockUseIAP(mockPurchase);
+
     const { waitFor } = renderHook(() => usePurchaseProfile());
 
     await waitFor(() => {
@@ -114,6 +150,17 @@ describe('usePurchaseProfile', () => {
         '[IAP] Available Purchases response',
         mockPurchase
       );
+    });
+  });
+
+  it('should have currentPurchase set to mockPurchase', async () => {
+    mockUseIAP(mockPurchase);
+
+    const { result, waitFor } = renderHook(() => usePurchaseProfile());
+
+    await waitFor(() => {
+      expect(mockedGetPurchases).toHaveReturned();
+      expect(result.current.currentPurchase).toMatchObject(mockPurchase);
     });
   });
 
@@ -148,6 +195,16 @@ describe('usePurchaseProfile', () => {
         'Error fetching available purchases:',
         'MOCK_ERROR'
       );
+    });
+  });
+
+  it('should call validateReceiptCreateProfile to finish the IAP transaction after a successful purchase', async () => {
+    mockUseIAP(mockPurchase);
+
+    const { waitFor } = renderHook(() => usePurchaseProfile());
+
+    await waitFor(() => {
+      expect(mockedFinishTransaction).toBeCalled();
     });
   });
 });
