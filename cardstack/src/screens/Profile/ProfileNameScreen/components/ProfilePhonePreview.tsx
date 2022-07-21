@@ -1,35 +1,21 @@
 import * as React from 'react';
 import { ImageSourcePropType } from 'react-native';
-import Svg, {
-  Defs,
-  ClipPath,
-  Rect,
-  Image,
-  G,
-  Path,
-  Text,
-  TSpan,
-} from 'react-native-svg';
+import Svg, { Rect, Image, G, Path, Text, TSpan } from 'react-native-svg';
 
 import QRCodePreview from './QRCodePreview';
 
 interface Props {
   profileUrl: string;
-  profileName?: string;
+  profileName: string;
   profileColor?: string;
 }
 
 const ProfilePhonePreview = ({
-  profileName = 'Profile Name',
+  profileName,
   profileUrl = 'mandello123.card.xyz',
   profileColor = '#0089f9',
 }: Props) => (
   <Svg width="100%" height="100%" viewBox="0 0 431 520">
-    <Defs>
-      <ClipPath id="a">
-        <Rect width="100%" height="56%" x={35} />
-      </ClipPath>
-    </Defs>
     <G data-name="Group 14578" transform="translate(-35 0)">
       <Rect
         data-name="Background"
