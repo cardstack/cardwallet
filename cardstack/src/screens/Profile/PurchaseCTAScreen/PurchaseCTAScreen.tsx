@@ -91,7 +91,11 @@ const PurchaseCTAScreen = () => {
           <BenefitsItem iconName="house" copy={strings.benefits.cardProfile} />
           <BenefitsItem iconName="rewards" copy={strings.benefits.rewards} />
         </Container>
-        <Image source={profilePreview} style={styles.iapPreview} />
+        <Image
+          source={profilePreview}
+          style={styles.iapPreview}
+          resizeMode="contain"
+        />
         <Button onPress={onPressBuy}>
           {strings.button}
           {LOCALIZED_PRICE}
