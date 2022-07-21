@@ -46,9 +46,9 @@ const DesignSystemScreen = () => {
       switch (title) {
         case 'Input':
           return (
-            <CenteredContainer padding={2}>
+            <Container padding={2}>
               <SuffixedInput suffixText=".card.xyz" />
-            </CenteredContainer>
+            </Container>
           );
         case 'Buttons':
           return (

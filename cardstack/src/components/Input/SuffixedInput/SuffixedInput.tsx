@@ -1,15 +1,11 @@
-import React, { memo, forwardRef } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { memo } from 'react';
+import { StyleSheet, TextInput, TextInputProps } from 'react-native';
 
-import {
-  Container,
-  Input,
-  InputProps,
-  Text,
-  TextProps,
-} from '@cardstack/components';
+import { Container, Text, TextProps } from '@cardstack/components';
 import { fontFamilyVariants, colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
+
+import { strings } from './strings';
 
 const styles = StyleSheet.create({
   input: {
@@ -19,6 +15,7 @@ const styles = StyleSheet.create({
     fontSize: Device.isAndroid ? 32 : 24,
     padding: 0, // Clears phantom padding on android. Keep it consistent on ios.
     left: 0,
+    paddingRight: 4,
     ...fontFamilyVariants.bold,
   },
   suffix: {
@@ -27,52 +24,43 @@ const styles = StyleSheet.create({
   },
 });
 
-interface SuffixedInputProps extends InputProps {
+interface SuffixedInputProps extends TextInputProps {
   suffixText?: string;
   suffixTextProps?: TextProps;
 }
 
 const DEFAULT_MAX_LENGTH = 25;
 
-const SuffixedInput = forwardRef(
-  (
-    {
-      suffixText,
-      suffixTextProps,
-      maxLength = DEFAULT_MAX_LENGTH,
-      ...props
-    }: SuffixedInputProps,
-    ref
-  ) => (
-    <Container
-      width="100%"
-      flexDirection="row"
-      flexWrap="wrap"
-      justifyContent="flex-start"
-      alignItems="center"
-    >
-      <Input
-        ref={ref}
-        style={styles.input}
-        placeholderTextColor={colors.secondaryText}
-        paddingRight={1}
-        autoFocus
-        multiline={false}
-        spellCheck={false}
-        autoCorrect={false}
-        maxLength={maxLength}
-        autoCapitalize="none"
-        placeholder="username"
-        textContentType="username"
-        keyboardType="twitter"
-        underlineColorAndroid="transparent"
-        {...props}
-      />
-      <Text style={styles.suffix} color="white" {...suffixTextProps}>
-        {suffixText}
-      </Text>
-    </Container>
-  )
+const SuffixedInput = ({
+  suffixText,
+  suffixTextProps,
+  maxLength = DEFAULT_MAX_LENGTH,
+  placeholder = strings.defaultPlaceholder,
+}: SuffixedInputProps) => (
+  <Container
+    width="100%"
+    flexDirection="row"
+    flexWrap="wrap"
+    justifyContent="flex-start"
+    alignItems="center"
+  >
+    <TextInput
+      style={styles.input}
+      placeholderTextColor={colors.secondaryText}
+      autoFocus
+      multiline={false}
+      spellCheck={false}
+      autoCorrect={false}
+      maxLength={maxLength}
+      autoCapitalize="none"
+      placeholder={placeholder}
+      textContentType="username"
+      underlineColorAndroid="transparent"
+    />
+    <Text style={styles.suffix} color="white" {...suffixTextProps}>
+      {suffixText}
+    </Text>
+  </Container>
 );
 
 export default memo(SuffixedInput);
