@@ -9,7 +9,7 @@ import { strings } from './strings';
 const styles = StyleSheet.create({
   input: {
     color: colors.teal,
-    minWidth: '34%',
+    minWidth: '36%',
     padding: 0, // Clears phantom padding on android. Keep it consistent on ios.
     left: 0,
     paddingRight: 4,
@@ -52,8 +52,14 @@ const SuffixedInput = ({
       placeholder={placeholder}
       textContentType="username"
       underlineColorAndroid="transparent"
+      allowFontScaling={false}
     />
-    <Text style={styles.textStyle} color="white" {...suffixTextProps}>
+    <Text
+      style={styles.textStyle}
+      allowFontScaling={false}
+      color="white"
+      {...suffixTextProps}
+    >
       {suffixText}
     </Text>
   </Container>
