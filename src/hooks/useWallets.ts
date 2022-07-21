@@ -17,7 +17,7 @@ const walletSelector = createSelector(
     wallets,
   }),
   ({ selectedWallet, walletNames, wallets }) => ({
-    latestBackup: findLatestBackUp(wallets) || false,
+    latestBackup: findLatestBackUp(wallets)?.backupFile || false,
     selectedWallet,
     walletNames,
     wallets,
