@@ -17,8 +17,11 @@ import {
   SafeAreaView,
   Text,
 } from '@cardstack/components';
-import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
-import { fontFamilyVariants } from '@cardstack/theme/fontFamilyVariants';
+import {
+  colors,
+  SPACING_MULTIPLIER,
+  fontFamilyVariants,
+} from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';

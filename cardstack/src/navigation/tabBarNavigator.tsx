@@ -155,15 +155,15 @@ const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
   </Stack.Group>
 );
 
-const OnboardingScreens = () => (
-  <Stack.Group navigationKey="onboarding">
-    <Stack.Screen
-      component={ProfileSlugScreen}
-      name={Routes.PROFILE_SLUG_SCREEN}
-      options={horizontalInterpolator}
-    />
-  </Stack.Group>
-);
+// const OnboardingScreens = () => (
+//   <Stack.Group navigationKey="onboarding">
+//     <Stack.Screen
+//       component={ProfileSlugScreen}
+//       name={Routes.PROFILE_SLUG_SCREEN}
+//       options={horizontalInterpolator}
+//     />
+//   </Stack.Group>
+// );
 
 const useNavigationAuth = () => {
   const isFirstMount = useRef(true);
@@ -219,7 +219,12 @@ export const StackNavigator = () => {
         />
       ) : (
         <>
-          {hasPin && !isAuthorized && (
+          <Stack.Screen
+            component={ProfileSlugScreen}
+            name={Routes.PROFILE_SLUG_SCREEN}
+            options={horizontalInterpolator}
+          />
+          {/* {hasPin && !isAuthorized && (
             <Stack.Screen
               component={UnlockScreen}
               name={Routes.UNLOCK_SCREEN}
@@ -244,11 +249,11 @@ export const StackNavigator = () => {
             component={ChangeWalletSheet}
             name={Routes.CHANGE_WALLET_SHEET}
             options={sheetPreset({ backgroundOpacity: 'half' })}
-          />
+          />*/}
         </>
       )}
       {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
-      {OnboardingScreens()}
+      {/* {OnboardingScreens()} */}
     </Stack.Navigator>
   );
 };

@@ -38,4 +38,4 @@ export { default as SupportAndFeesSheet } from './sheets/SupportAndFeesSheet/Sup
 export { default as AvailableBalanceSheet } from './sheets/AvailableBalanceSheet/AvailableBalanceSheet';
 export { default as TokenWithChartSheet } from './sheets/TokenWithChartSheet/TokenWithChartSheet';
 export { default as SeedPhraseBackup } from './SeedPhraseBackup/SeedPhraseBackup';
-export * from './OnboardingFlow';
+export * from './Profile';
