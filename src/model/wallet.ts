@@ -55,7 +55,6 @@ import {
   deleteKeychainIntegrityState,
   deletePinAuthAttemptsData,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
-import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import logger from 'logger';
 
 const encryptor = new AesEncryptor();
@@ -499,7 +498,7 @@ export interface CreateImportParams {
   name?: string;
   checkedWallet?: EthereumWalletFromSeed;
   pin?: string;
-  backupFilename?: string;
+  backedUpWallet?: RainbowWallet;
 }
 
 export const createOrImportWallet = async ({
@@ -508,10 +507,12 @@ export const createOrImportWallet = async ({
   name,
   pin,
   checkedWallet,
-  backupFilename,
+  backedUpWallet,
 }: CreateImportParams = {}) => {
   const isImported = !!seed;
-  logger.sentry('Creating wallet, isImported?', isImported);
+  const isBackedUp = !!backedUpWallet;
+
+  logger.sentry('[createWallet], isImported?', isImported);
   if (!seed) {
     logger.sentry('Generating a new seed phrase');
   }
@@ -609,16 +610,16 @@ export const createOrImportWallet = async ({
       }
     }
 
-    const isBackup = !!backupFilename;
+    logger.sentry('[createWallet], isBackedUp?', isBackedUp);
 
     allWallets[walletId] = {
+      ...backedUpWallet,
       addresses,
-      backedUp: isBackup,
-      backupType: isBackup ? WalletBackupTypes.cloud : undefined,
-      backupFile: backupFilename,
+      backedUp: isBackedUp,
       color: color || 0,
       id: walletId,
       imported: isImported,
+      damaged: false,
       name: walletName,
       primary,
       type,
@@ -634,7 +635,7 @@ export const createOrImportWallet = async ({
     logger.sentry('[createWallet] - saveAddress');
 
     // updates the cloud backup in case the user is importing a wallet from the backup
-    if (isBackup) {
+    if (isBackedUp) {
       try {
         await backupUserDataIntoCloud({ wallets: allWallets });
       } catch (e) {

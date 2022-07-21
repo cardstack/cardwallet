@@ -68,7 +68,6 @@ const password = '12345678';
 
 describe('backup', () => {
   const mockedSeed = 'foo bar foo';
-  const mockedBackupFile = 'latestBackupFile.json';
 
   const encryptAndSaveDataToCloud = jest
     .spyOn(cloudBackup, 'encryptAndSaveDataToCloud')
@@ -112,7 +111,7 @@ describe('backup', () => {
 
   describe('findLatestBackUp', () => {
     it('should return the latest valid cloud backup filename', async () => {
-      const filemame = findLatestBackUp(wallets);
+      const filemame = findLatestBackUp(wallets)?.backupFile;
 
       expect(filemame).toBe('latestBackupFile.json');
     });
@@ -120,7 +119,7 @@ describe('backup', () => {
     it('should return undefined if no wallet is marked as backed up', async () => {
       const filemame = findLatestBackUp({
         wallet_12121212: { ...wallets.wallet_12121212, backedUp: false },
-      });
+      })?.backupFile;
 
       expect(filemame).toBeUndefined();
     });
@@ -171,7 +170,7 @@ describe('backup', () => {
       const seed = await restoreCloudBackup(password, userData);
 
       expect(seed).toEqual({
-        filename: mockedBackupFile,
+        backedUpWallet: wallets.wallet_13131313,
         restoredSeed: mockedSeed,
       });
     });
@@ -193,7 +192,7 @@ describe('backup', () => {
       const seed = await restoreCloudBackup(password, userData);
 
       expect(seed).toEqual({
-        filename: mockedBackupFile,
+        backedUpWallet: wallets.wallet_13131313,
         restoredSeed: mockedSeed,
       });
     });

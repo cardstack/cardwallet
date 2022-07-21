@@ -62,18 +62,25 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
       showLoadingOverlay({ title: WalletLoadingStates.RESTORING_WALLET });
 
       // restoreCloudBackup needs to return both seed and filename
-      const { restoredSeed, filename } = await restoreCloudBackup(
+      const restoredInfo = await restoreCloudBackup(
         password,
         userData,
         selectedBackupName
       );
 
-      if (isValidSeed(restoredSeed)) {
-        await importWallet({ seed: restoredSeed, backupFilename: filename });
-        return;
-      }
+      if (restoredInfo) {
+        const { restoredSeed, backedUpWallet } = restoredInfo;
 
-      logger.sentry('Error while restoring backup, invalid seed');
+        if (isValidSeed(restoredSeed)) {
+          await importWallet({
+            seed: restoredSeed,
+            backedUpWallet,
+          });
+          return;
+        }
+
+        logger.sentry('Error while restoring backup, invalid seed');
+      }
     } catch (e) {
       setIncorrectPassword(true);
 

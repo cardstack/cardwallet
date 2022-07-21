@@ -60,7 +60,7 @@ export async function backupWalletToCloud(
 
 export function findLatestBackUp(wallets: AllRainbowWallets) {
   let latestBackup: string | undefined;
-  let filename: string | undefined;
+  let backedWallet: RainbowWallet | undefined;
 
   forEach(wallets, wallet => {
     // Check if there's a wallet backed up
@@ -68,13 +68,13 @@ export function findLatestBackUp(wallets: AllRainbowWallets) {
       // If there is one, let's grab the latest backup
       // @ts-expect-error isBackupWallet checks undefined values
       if (!latestBackup || wallet?.backupDate > latestBackup) {
-        filename = wallet.backupFile;
         latestBackup = wallet.backupDate;
+        backedWallet = wallet;
       }
     }
   });
 
-  return filename;
+  return backedWallet;
 }
 
 export async function restoreCloudBackup(
@@ -83,8 +83,9 @@ export async function restoreCloudBackup(
   backupSelected?: string
 ) {
   try {
-    const filename =
-      backupSelected || (userData && findLatestBackUp(userData?.wallets));
+    const backedUpWallet = userData && findLatestBackUp(userData?.wallets);
+
+    const filename = backupSelected || backedUpWallet?.backupFile;
 
     if (!filename) {
       return;
@@ -109,10 +110,10 @@ export async function restoreCloudBackup(
         latestBackedUpWallet?.id
       );
 
-      return { restoredSeed: oldSeedPhrase, filename };
+      return { restoredSeed: oldSeedPhrase, backedUpWallet };
     }
 
-    return { restoredSeed: seedPhrase, filename };
+    return { restoredSeed: seedPhrase, backedUpWallet };
   } catch (e) {
     logger.sentry('Error while restoring back up');
     captureException(e);
