@@ -43,7 +43,7 @@ const PurchaseCTAScreen = () => {
           marginRight={5}
           marginLeft={4}
         />
-        <Text color="white" fontSize={14} fontFamily="OpenSans-Regular">
+        <Text color="white" fontSize={14}>
           {copy}
         </Text>
       </Container>
@@ -69,7 +69,7 @@ const PurchaseCTAScreen = () => {
           <Icon name="chevron-left" color="teal" size={30} />
         </Touchable>
         <Touchable onPress={onPressSkip}>
-          <Text fontSize={13} color="teal" fontFamily="OpenSans-Semibold">
+          <Text fontSize={13} color="teal" weight="semibold">
             {strings.skip}
           </Text>
         </Touchable>
@@ -105,7 +105,7 @@ const PurchaseCTAScreen = () => {
         />
         <Button onPress={onPressBuy}>{buttonLabel}</Button>
         <Touchable onPress={onPressChargeExplanation} alignSelf="center">
-          <Text color="white" fontSize={16} fontFamily="OpenSans-Semibold">
+          <Text color="white" fontSize={16} weight="semibold">
             {strings.whyCharge}
           </Text>
         </Touchable>
