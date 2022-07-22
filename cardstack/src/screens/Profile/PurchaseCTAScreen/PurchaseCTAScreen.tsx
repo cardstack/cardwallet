@@ -17,6 +17,7 @@ import profilePreview from '../../../assets/profile-preview.png';
 import { strings } from './strings';
 import { usePurchaseCTAScreen } from './usePurchaseCTAScreen';
 
+// TODO: replace this with the value from usePurchase hook
 const LOCALIZED_PRICE = '$0.99';
 
 interface BenefitsItem {
@@ -49,6 +50,8 @@ const PurchaseCTAScreen = () => {
     ),
     []
   );
+
+  const buttonLabel = `${strings.button} ${LOCALIZED_PRICE}`;
 
   return (
     <SafeAreaView
@@ -100,10 +103,7 @@ const PurchaseCTAScreen = () => {
           style={styles.iapPreview}
           resizeMode="contain"
         />
-        <Button onPress={onPressBuy}>
-          {strings.button}
-          {LOCALIZED_PRICE}
-        </Button>
+        <Button onPress={onPressBuy}>{buttonLabel}</Button>
         <Touchable onPress={onPressChargeExplanation} alignSelf="center">
           <Text color="white" fontSize={16} fontFamily="OpenSans-Semibold">
             {strings.whyCharge}

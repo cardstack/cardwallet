@@ -6,6 +6,6 @@ export const strings = {
     cardProfile: 'Setup a profile page on card.xyz',
     rewards: 'Earn Rewards in the Card Ecosystem',
   },
-  button: 'Buy for ',
+  button: 'Buy for',
   whyCharge: 'Why is there a charge?',
 };
