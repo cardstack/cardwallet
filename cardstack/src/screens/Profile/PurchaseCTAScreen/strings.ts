@@ -1,4 +1,4 @@
-const strings = {
+export const strings = {
   skip: 'Skip',
   title: 'Purchase a CardSpace\nProfile to do the following:',
   benefits: {
@@ -9,5 +9,3 @@ const strings = {
   button: 'Buy for ',
   whyCharge: 'Why is there a charge?',
 };
-
-export default strings;

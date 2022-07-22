@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-const usePurchaseCTAScreen = () => {
+export const usePurchaseCTAScreen = () => {
   const { goBack } = useNavigation();
 
   // TODO: change this
@@ -21,5 +21,3 @@ const usePurchaseCTAScreen = () => {
 
   return { goBack, onPressChargeExplanation, onPressBuy, onPressSkip };
 };
-
-export default usePurchaseCTAScreen;

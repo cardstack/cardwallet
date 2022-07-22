@@ -14,8 +14,8 @@ import {
 
 import profilePreview from '../../../assets/profile-preview.png';
 
-import strings from './strings';
-import usePurchaseCTAScreen from './usePurchaseCTAScreen';
+import { strings } from './strings';
+import { usePurchaseCTAScreen } from './usePurchaseCTAScreen';
 
 const LOCALIZED_PRICE = '$0.99';
 
