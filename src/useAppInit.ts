@@ -4,7 +4,7 @@ import { useFlipper } from '@react-navigation/devtools';
 import { useCallback, useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
-import handleDeepLink from './handlers/deeplinks';
+import handleWcDeepLink from './handlers/deeplinks';
 import {
   runKeychainIntegrityChecks,
   runWalletBackupStatusChecks,
@@ -24,7 +24,7 @@ import {
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { requestsForTopic } from '@cardstack/redux/requests';
 
-import Logger from 'logger';
+import logger from 'logger';
 
 const WALLETCONNECT_SYNC_DELAY = 500;
 
@@ -44,47 +44,57 @@ export const useAppInit = () => {
   useDevSetup();
   useNotificationSetup();
 
-  const initialDeepLink = useRef<string | null>(null);
+  const deepLink = useRef<{ url: string | null; handled: boolean }>({
+    url: null,
+    handled: false,
+  });
 
-  const openDeepLink = useCallback((url: string) => {
-    initialDeepLink.current = url;
+  const handleDeepLink = useCallback((url: string) => {
+    deepLink.current = { url, handled: false };
 
-    handleDeepLink(url);
+    handleWcDeepLink(url);
   }, []);
 
   useEffect(() => {
-    const handleWcDeepLink = async () => {
+    const handleInitialLink = async () => {
       try {
         const initialUrl = await Linking.getInitialURL();
 
         if (initialUrl) {
-          openDeepLink(initialUrl);
+          handleDeepLink(initialUrl);
         }
       } catch (e) {
-        Logger.sentry('Error opening deeplink', e);
+        logger.sentry('Error opening initial deeplink', e);
       }
     };
 
-    handleWcDeepLink();
+    handleInitialLink();
 
     const subscription = Linking.addEventListener('url', ({ url }) => {
-      openDeepLink(url);
+      // Check to avoid reopening same link when `openURL` is triggered
+      if (deepLink.current.handled && deepLink.current.url === url) {
+        return;
+      }
+
+      handleDeepLink(url);
     });
 
     return subscription.remove;
-  }, [openDeepLink]);
+  }, [handleDeepLink]);
 
   useEffect(() => {
-    if (initialDeepLink.current && isAuthorized) {
-      Linking.openURL(initialDeepLink.current);
+    const { url, handled } = deepLink.current;
 
-      initialDeepLink.current = null;
+    if (url && !handled && isAuthorized) {
+      Linking.openURL(url);
+
+      deepLink.current = { url, handled: true };
     }
   }, [isAuthorized]);
 
   useEffect(() => {
     if (walletReady) {
-      Logger.sentry('✅ Wallet ready!');
+      logger.sentry('✅ Wallet ready!');
 
       const unsubscribe = registerTokenRefreshListener();
 
