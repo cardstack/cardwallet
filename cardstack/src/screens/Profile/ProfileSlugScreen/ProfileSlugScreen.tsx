@@ -4,20 +4,31 @@ import {
   Container,
   Text,
   SafeAreaView,
-  NavigationStackHeader,
+  Touchable,
+  Icon,
+  Button,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 import { fontFamilyVariants } from '@cardstack/theme';
 
+import UsernameValidFeedback from './components/UsernameValidFeedback';
 import { strings } from './strings';
 import { useProfileSlugScreen } from './useProfileSlugScreen';
 
 const layouts = {
   defaultPadding: 5,
+  titleTextSize: 24,
+  smallTextSize: 12,
 };
 
 const ProfileSlugScreen = () => {
-  const { username, onUsernameChange } = useProfileSlugScreen();
+  const {
+    username,
+    onUsernameChange,
+    invalidUsernameMessage,
+    onGoBackPressed,
+    onSkipPressed,
+  } = useProfileSlugScreen();
 
   return (
     <SafeAreaView
@@ -25,28 +36,52 @@ const ProfileSlugScreen = () => {
       flex={1}
       paddingHorizontal={layouts.defaultPadding}
     >
-      <NavigationStackHeader
-        canGoBack={true}
-        backgroundColor="backgroundDarkPurple"
-      />
-      <Container flex={0.15} alignItems="flex-end" paddingVertical={2}>
-        <Text fontSize={13} color="teal" fontWeight="bold">
-          skip
-        </Text>
+      <Container
+        alignItems="center"
+        justifyContent="space-between"
+        flexDirection="row"
+        flex={0.15}
+      >
+        <Touchable onPress={onGoBackPressed}>
+          <Icon name="chevron-left" color="teal" size={30} />
+        </Touchable>
+        <Touchable onPress={onSkipPressed}>
+          <Text fontSize={13} color="teal" fontFamily="OpenSans-Semibold">
+            {strings.buttons.skip}
+          </Text>
+        </Touchable>
       </Container>
       <Container flex={1}>
-        <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
-          {strings.header}
-        </Text>
-        <SuffixedInput suffixText={strings.input.domainSuffix} />
-        <Container width="80%">
-          <Text fontSize={12} color="white">
-            {strings.input.valid}
+        <Container width="90%" paddingBottom={4}>
+          <Text
+            fontSize={layouts.titleTextSize}
+            color="white"
+            {...fontFamilyVariants.light}
+          >
+            {strings.header}
           </Text>
-          <Text fontSize={12} color="grayText">
+        </Container>
+
+        <Container paddingBottom={1}>
+          <SuffixedInput
+            value={username}
+            onChangeText={onUsernameChange}
+            suffixText={strings.input.domainSuffix}
+          />
+        </Container>
+        <Container width="100%">
+          <UsernameValidFeedback
+            invalidUsernameMessage={invalidUsernameMessage}
+          />
+          <Text fontSize={layouts.smallTextSize} color="grayText">
             {strings.input.description}
           </Text>
         </Container>
+      </Container>
+      <Container flex={0.2}>
+        <Button disabled={!!invalidUsernameMessage}>
+          {strings.buttons.continue}
+        </Button>
       </Container>
     </SafeAreaView>
   );
