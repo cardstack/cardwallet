@@ -1,5 +1,3 @@
-import { ONE } from '@uniswap/sdk/dist/constants';
-
 export const MainRoutes = {
   DEPOT_SCREEN: 'DepotScreen',
   MERCHANT_SCREEN: 'MerchantScreen',
@@ -61,10 +59,6 @@ const SharedRoutes = {
   MODAL_SCREEN: 'ModalScreen',
 } as const;
 
-const OnboardingRoutes = {
-  PROFILE_SLUG_SCREEN: 'ProfileSlugScreen',
-};
-
 export const NonAuthRoutes = {
   WELCOME_SCREEN: 'WelcomeScreen',
 } as const;
@@ -72,7 +66,6 @@ export const NonAuthRoutes = {
 export const Routes = {
   UNLOCK_SCREEN: 'UnlockScreen',
   ...SharedRoutes,
-  ...OnboardingRoutes,
   ...NonMigratedRoutes,
   ...TabRoutes,
   ...MainRoutes,

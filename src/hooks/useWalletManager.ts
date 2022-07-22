@@ -33,7 +33,6 @@ import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
 
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
-import { useOnboarding } from '@cardstack/screens/OnboardingFlow/useOnboarding';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
@@ -56,8 +55,6 @@ export default function useWalletManager() {
 
   const { network } = useAccountSettings();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  const { showOnboarding } = useOnboarding();
 
   const { navigate } = useNavigation();
 
@@ -212,15 +209,12 @@ export default function useWalletManager() {
 
       setHasWallet();
 
-      // Show Onboarding if it's due.
-      if (showOnboarding()) return;
-
       if (isInnerNavigation) {
         navigate(Routes.WALLET_SCREEN, { initialized: true });
         return;
       }
     },
-    [initializeWallet, navigate, setHasWallet, showOnboarding]
+    [initializeWallet, navigate, setHasWallet]
   );
 
   const createNewWallet = useCallback(
