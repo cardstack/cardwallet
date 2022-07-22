@@ -8,7 +8,7 @@ import {
 import { decodeNestedURI } from '@cardstack/utils';
 import logger from 'logger';
 
-export default function handleDeepLink(url) {
+export default function handleWcDeepLink(url) {
   if (!url || typeof url !== 'string') return;
   const urlObj = new URL(url);
   if (urlObj.protocol === 'https:' || urlObj.protocol === 'cardwallet:') {
@@ -27,7 +27,7 @@ export default function handleDeepLink(url) {
         break;
       }
       default:
-        logger.log('unknown deeplink');
+        logger.log('no wc deeplink');
     }
   } else if (urlObj.protocol === 'wc:') {
     // Handle direct WC deeplink (wc:xxxx)
