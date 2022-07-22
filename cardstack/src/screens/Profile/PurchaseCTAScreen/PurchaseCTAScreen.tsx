@@ -54,8 +54,7 @@ const PurchaseCTAScreen = () => {
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
       flex={1}
-      paddingLeft={3}
-      paddingRight={5}
+      paddingHorizontal={5}
     >
       <Container
         alignItems="center"
@@ -77,15 +76,20 @@ const PurchaseCTAScreen = () => {
         flexDirection="column"
         justifyContent="space-between"
         paddingBottom={3}
-        paddingLeft={2}
       >
-        <Text color="white" fontSize={24} fontFamily="OpenSans-Light">
+        <Text
+          color="white"
+          fontSize={24}
+          fontFamily="OpenSans-Light"
+          paddingLeft={2}
+        >
           {strings.title}
         </Text>
         <Container
           flexDirection="column"
           justifyContent="space-between"
           flex={0.25}
+          paddingLeft={2}
         >
           <BenefitsItem iconName="pay" copy={strings.benefits.payments} />
           <BenefitsItem iconName="house" copy={strings.benefits.cardProfile} />
