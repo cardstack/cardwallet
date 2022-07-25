@@ -9,17 +9,10 @@ import {
   Button,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
-import { fontFamilyVariants } from '@cardstack/theme';
 
 import UsernameValidFeedback from './components/UsernameValidFeedback';
 import { strings } from './strings';
 import { useProfileSlugScreen } from './useProfileSlugScreen';
-
-const layouts = {
-  defaultPadding: 5,
-  titleTextSize: 24,
-  smallTextSize: 12,
-};
 
 const ProfileSlugScreen = () => {
   const {
@@ -28,13 +21,14 @@ const ProfileSlugScreen = () => {
     invalidUsernameMessage,
     onGoBackPressed,
     onSkipPressed,
+    onContinuePress,
   } = useProfileSlugScreen();
 
   return (
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
       flex={1}
-      paddingHorizontal={layouts.defaultPadding}
+      paddingHorizontal={5}
     >
       <Container
         alignItems="center"
@@ -43,23 +37,17 @@ const ProfileSlugScreen = () => {
         flex={0.15}
       >
         <Touchable onPress={onGoBackPressed}>
-          <Icon name="chevron-left" color="teal" size={30} />
+          <Icon name="chevron-left" color="teal" size={30} left={-6} />
         </Touchable>
         <Touchable onPress={onSkipPressed}>
-          <Text fontSize={13} color="teal" fontFamily="OpenSans-Semibold">
+          <Text fontSize={13} color="teal" variant="semibold">
             {strings.buttons.skip}
           </Text>
         </Touchable>
       </Container>
       <Container flex={1}>
         <Container width="90%" paddingBottom={4}>
-          <Text
-            fontSize={layouts.titleTextSize}
-            color="white"
-            {...fontFamilyVariants.light}
-          >
-            {strings.header}
-          </Text>
+          <Text variant="pageHeader">{strings.header}</Text>
         </Container>
 
         <Container paddingBottom={1}>
@@ -70,16 +58,14 @@ const ProfileSlugScreen = () => {
           />
         </Container>
         <Container width="100%">
-          <UsernameValidFeedback
-            invalidUsernameMessage={invalidUsernameMessage}
-          />
-          <Text fontSize={layouts.smallTextSize} color="grayText">
+          <UsernameValidFeedback invalidMessage={invalidUsernameMessage} />
+          <Text variant="pageDescriptionSmall">
             {strings.input.description}
           </Text>
         </Container>
       </Container>
       <Container flex={0.2}>
-        <Button disabled={!!invalidUsernameMessage}>
+        <Button onPress={onContinuePress} disabled={!!invalidUsernameMessage}>
           {strings.buttons.continue}
         </Button>
       </Container>

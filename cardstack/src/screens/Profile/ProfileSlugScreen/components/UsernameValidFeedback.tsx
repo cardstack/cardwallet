@@ -6,7 +6,8 @@ import { ColorTypes } from '@cardstack/theme';
 import { strings } from '../strings';
 
 interface UsernameValidFeedbackProps {
-  invalidUsernameMessage: string | null;
+  invalidMessage?: string;
+  validMessage?: string;
 }
 
 interface UsernameFeedbackType {
@@ -19,23 +20,25 @@ const layouts = {
   smallTextSize: 12,
 };
 
+// TODO: Add animation on show/hide
 const UsernameValidFeedback = ({
-  invalidUsernameMessage,
+  invalidMessage,
+  validMessage,
 }: UsernameValidFeedbackProps) => {
   const attr: UsernameFeedbackType = useMemo(
     () =>
-      !invalidUsernameMessage
+      !invalidMessage
         ? {
             iconName: 'check',
             iconColor: 'lightGreen',
-            description: strings.input.valid,
+            description: validMessage || strings.input.valid,
           }
         : {
             iconName: 'x',
             iconColor: 'red',
-            description: invalidUsernameMessage,
+            description: invalidMessage,
           },
-    [invalidUsernameMessage]
+    [invalidMessage, validMessage]
   );
 
   return (

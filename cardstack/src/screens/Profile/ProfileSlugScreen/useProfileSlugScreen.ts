@@ -3,13 +3,19 @@ import { useState, useCallback } from 'react';
 export const useProfileSlugScreen = () => {
   const [username, setUsername] = useState<string>('');
 
-  const [invalidUsernameMessage] = useState<string | null>('Already taken');
+  const [invalidUsernameMessage] = useState<string | undefined>(
+    'Already taken'
+  );
 
   const onGoBackPressed = useCallback(() => {
     // TODO
   }, []);
 
   const onSkipPressed = useCallback(() => {
+    // TODO
+  }, []);
+
+  const onContinuePress = useCallback(() => {
     // TODO
   }, []);
 
@@ -23,6 +29,7 @@ export const useProfileSlugScreen = () => {
     onUsernameChange,
     onGoBackPressed,
     onSkipPressed,
+    onContinuePress,
     invalidUsernameMessage,
   };
 };
