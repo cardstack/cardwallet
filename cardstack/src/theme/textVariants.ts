@@ -60,4 +60,13 @@ export const textVariants = {
     letterSpacing: 0.13,
     ...fontFamilyVariants.semiBold,
   },
+  pageHeader: {
+    color: 'white',
+    fontSize: 24,
+    ...fontFamilyVariants.light,
+  },
+  pageDescriptionSmall: {
+    color: 'grayText',
+    fontSize: 12,
+  },
 };

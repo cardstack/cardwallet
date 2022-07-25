@@ -9,7 +9,7 @@ import { strings } from './strings';
 const styles = StyleSheet.create({
   input: {
     color: colors.teal,
-    minWidth: '36%',
+    minWidth: 125, // More consistent than a percentage.
     padding: 0, // Clears phantom padding on android. Keep it consistent on ios.
     left: 0,
     paddingRight: 4,
