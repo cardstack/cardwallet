@@ -2,7 +2,7 @@ import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
 
-import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
+import { checkBusinessIdUniqueness } from '@cardstack/services/hub/hub-service';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
 
