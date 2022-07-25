@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Text,
   Touchable,
+  ProfileHeader,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
@@ -28,7 +29,6 @@ interface BenefitsItem {
 const PurchaseCTAScreen = () => {
   const {
     onPressSkip,
-    goBack,
     onPressChargeExplanation,
     onPressBuy,
   } = usePurchaseCTAScreen();
@@ -59,40 +59,20 @@ const PurchaseCTAScreen = () => {
       flex={1}
       paddingHorizontal={5}
     >
-      <Container
-        alignItems="center"
-        justifyContent="space-between"
-        flexDirection="row"
-        flex={0.1}
-      >
-        <Touchable onPress={goBack}>
-          <Icon name="chevron-left" color="teal" size={30} />
-        </Touchable>
-        <Touchable onPress={onPressSkip}>
-          <Text fontSize={13} color="teal" weight="semibold">
-            {strings.skip}
-          </Text>
-        </Touchable>
-      </Container>
+      <ProfileHeader onSkipPress={onPressSkip} />
       <Container
         flex={1}
         flexDirection="column"
         justifyContent="space-between"
         paddingBottom={3}
       >
-        <Text
-          color="white"
-          fontSize={24}
-          fontFamily="OpenSans-Light"
-          paddingLeft={2}
-        >
+        <Text color="white" fontSize={24} fontFamily="OpenSans-Light">
           {strings.title}
         </Text>
         <Container
           flexDirection="column"
           justifyContent="space-between"
           flex={0.25}
-          paddingLeft={2}
         >
           <BenefitsItem iconName="pay" copy={strings.benefits.payments} />
           <BenefitsItem iconName="house" copy={strings.benefits.cardProfile} />
