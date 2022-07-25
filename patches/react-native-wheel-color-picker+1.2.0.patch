@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-wheel-color-picker/ColorPicker.js b/node_modules/react-native-wheel-color-picker/ColorPicker.js
+index fd72231..0f4bd10 100644
+--- a/node_modules/react-native-wheel-color-picker/ColorPicker.js
++++ b/node_modules/react-native-wheel-color-picker/ColorPicker.js
+@@ -599,7 +599,7 @@ module.exports = class ColorPicker extends Component {
+ 		return (
+ 			<View style={[ss.root,row?{flexDirection:'row'}:{},style]}>
+ 				{ swatches && !swatchesLast && <View style={[ss.swatches,swatchStyle,swatchFirstStyle]} key={'SW'}>{ this.swatches }</View> }
+-				{ !swatchesOnly && <View style={[ss.wheel]} key={'$1'} onLayout={this.onSquareLayout}>
++				{ !swatchesOnly && <View style={[ss.wheel, this.props.wheelStyle]} key={'$1'} onLayout={this.onSquareLayout}>
+ 					{ this.wheelWidth>0 && <View style={[{padding:thumbSize/2,width:this.wheelWidth,height:this.wheelWidth}]}>
+ 						<View style={[ss.wheelWrap]}>
+ 							<Image style={ss.wheelImg} source={srcWheel} />
