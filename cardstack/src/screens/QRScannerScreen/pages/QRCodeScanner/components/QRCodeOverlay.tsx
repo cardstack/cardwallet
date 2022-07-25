@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { Defs, ClipPath, Path, Rect, Mask } from 'react-native-svg';
 
 import { colors } from '@cardstack/theme';
-import { screenHeight, screenWidth } from '@cardstack/utils';
+import { screenHeight, screenWidth, aspectRatio } from '@cardstack/utils';
 
 const halfScreen = screenWidth / 2;
 
@@ -10,8 +10,6 @@ const fullScreenSizeProps = {
   height: '100%',
   width: '100%',
 };
-
-const aspectRatio = screenHeight / screenWidth;
 
 // CrossHair
 export const CROSSHAIR_SIZE = screenWidth * 0.68;
