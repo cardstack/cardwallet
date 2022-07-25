@@ -17,9 +17,13 @@ import {
   Input,
   SafeAreaView,
   Text,
+  Touchable,
 } from '@cardstack/components';
-import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
-import { fontFamilyVariants } from '@cardstack/theme/fontFamilyVariants';
+import {
+  colors,
+  SPACING_MULTIPLIER,
+  fontFamilyVariants,
+} from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
@@ -36,6 +40,10 @@ enum Animation {
 const layouts = {
   defaultPadding: 5,
   keyboardVerticalOffset: Device.isIOS ? 15 : 95,
+  dot: {
+    size: 24,
+    radius: 50,
+  },
 };
 
 const styles = StyleSheet.create({
@@ -173,6 +181,10 @@ export const ProfileNameScreen = () => {
     [animated]
   );
 
+  const colorDotStyle = useMemo(() => ({ backgroundColor: profile.color }), [
+    profile.color,
+  ]);
+
   return (
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
@@ -198,14 +210,27 @@ export const ProfileNameScreen = () => {
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
           </Text>
-          <Button
-            variant="smallTertiary"
-            height={40}
-            width={110}
+          <Touchable
+            borderColor="borderBlue"
+            borderWidth={1}
+            borderRadius={20}
+            padding={2}
             onPress={onPressEditColor}
           >
-            Placeholder
-          </Button>
+            <Container flexDirection="row" justifyContent="space-between">
+              <Container
+                borderRadius={layouts.dot.radius}
+                height={layouts.dot.size}
+                width={layouts.dot.size}
+                style={colorDotStyle}
+                borderColor="white"
+                borderWidth={2}
+              />
+              <Text paddingLeft={3} fontSize={18} color="grayText">
+                {profile.color}
+              </Text>
+            </Container>
+          </Touchable>
         </CenteredContainer>
       </Animated.View>
       <Container

@@ -14,7 +14,7 @@ export const useProfileNameScreen = () => {
   const { navigate } = useNavigation();
 
   const [profileName, setProfileName] = useState('');
-  const [profileColor, setProfileColor] = useState('#0089f9');
+  const [profileColor, setProfileColor] = useState('#0089F9');
 
   const profileUrl = params?.profileUrl || 'mandello.card.yxz'; // Temp url
 
