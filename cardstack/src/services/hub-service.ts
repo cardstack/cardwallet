@@ -5,6 +5,7 @@ import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
 import {
+  BusinessIDUniquenessResponse,
   Inventory,
   ReservationData,
   OrderData,
@@ -292,6 +293,29 @@ export const getWyrePrice = async (
     return results?.data?.data;
   } catch (e) {
     logger.sentry('Error getting order details', e);
+  }
+};
+
+// TODO: Remove once useProfileForm is not in use anymore.
+export const DEPRECATED_checkBusinessIdUniqueness = async (
+  businessId: string,
+  authToken: string
+): Promise<BusinessIDUniquenessResponse | undefined> => {
+  try {
+    const network: Network = await getNetwork();
+    const hubURL = getHubUrl(network);
+
+    const results = await hubApi.get(
+      `${hubURL}/api/merchant-infos/validate-slug/${businessId}`,
+      axiosConfig(authToken)
+    );
+
+    return results?.data as BusinessIDUniquenessResponse;
+  } catch (e: any) {
+    logger.sentry(
+      'Error while checking BusinessIdUniqueness from hub',
+      e?.response || e
+    );
   }
 };
 
