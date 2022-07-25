@@ -171,3 +171,7 @@ export const registerFcmToken = (fcmToken: string) =>
 
 export const unregisterFcmToken = (fcmToken: string) =>
   store.dispatch(hubApi.endpoints.unregisterFcmToken.initiate({ fcmToken }));
+
+// TODO: Remove once useProfileForm discontinued.
+export const checkBusinessIdUniqueness = (slug: string) =>
+  store.dispatch(hubApi.endpoints.merchantInfoValidateSlug.initiate({ slug }));

@@ -17,7 +17,9 @@ const ProfileSlugScreen = () => {
   const {
     username,
     onUsernameChange,
-    invalidUsernameMessage,
+    isUsernameValid,
+    showMessage,
+    message,
     onContinuePress,
   } = useProfileSlugScreen();
 
@@ -42,14 +44,21 @@ const ProfileSlugScreen = () => {
           />
         </Container>
         <Container width="100%">
-          <UsernameValidFeedback invalidMessage={invalidUsernameMessage} />
+          <UsernameValidFeedback
+            isValid={isUsernameValid}
+            message={message}
+            isVisible={showMessage}
+          />
           <Text variant="pageDescriptionSmall">
             {strings.input.description}
           </Text>
         </Container>
       </Container>
       <Container flex={0.2}>
-        <Button onPress={onContinuePress} disabled={!!invalidUsernameMessage}>
+        <Button
+          onPress={onContinuePress}
+          disabled={!(isUsernameValid && showMessage)}
+        >
           {strings.buttons.continue}
         </Button>
       </Container>

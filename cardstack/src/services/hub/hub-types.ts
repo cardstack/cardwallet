@@ -54,3 +54,7 @@ export interface PostProfilePurchaseQueryParams {
   provider: IAPProviderType;
   merchantDID?: CreateBusinessInfoDIDParams;
 }
+
+export interface GetMerchantInfoValidateSlugParams {
+  slug: string;
+}

@@ -8,10 +8,8 @@ import { useLoadingOverlay } from '@cardstack/navigation';
 import { Routes } from '@cardstack/navigation/routes';
 import { displayLocalNotification } from '@cardstack/notification-handler';
 import { useCreateProfileMutation } from '@cardstack/services';
-import {
-  checkBusinessIdUniqueness,
-  createBusinessInfoDID,
-} from '@cardstack/services/hub-service';
+import { createBusinessInfoDID } from '@cardstack/services/hub-service';
+import { checkBusinessIdUniqueness } from '@cardstack/services/hub/hub-service';
 import { colors } from '@cardstack/theme';
 import {
   RegisterMerchantDecodedData,
@@ -108,9 +106,9 @@ export const useProfileForm = (params?: useProfileFormParams) => {
           return;
         }
 
-        const uniquenessResult = await checkBusinessIdUniqueness(id, authToken);
+        const { data } = await checkBusinessIdUniqueness(id);
 
-        if (uniquenessResult?.slugAvailable) {
+        if (data?.slugAvailable) {
           setIdUniqueness(true);
         }
       }

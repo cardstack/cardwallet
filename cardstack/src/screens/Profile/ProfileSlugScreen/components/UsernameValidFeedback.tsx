@@ -1,13 +1,15 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useLayoutEffect } from 'react';
 
 import { Container, Text, Icon, IconName } from '@cardstack/components';
 import { ColorTypes } from '@cardstack/theme';
+import { layoutEasingAnimation } from '@cardstack/utils';
 
 import { strings } from '../strings';
 
 interface UsernameValidFeedbackProps {
-  invalidMessage?: string;
-  validMessage?: string;
+  message?: string;
+  isValid?: boolean;
+  isVisible?: boolean;
 }
 
 interface UsernameFeedbackType {
@@ -16,38 +18,42 @@ interface UsernameFeedbackType {
   description: string;
 }
 
-const layouts = {
-  smallTextSize: 12,
-};
-
-// TODO: Add animation on show/hide
 const UsernameValidFeedback = ({
-  invalidMessage,
-  validMessage,
+  message,
+  isValid,
+  isVisible = true,
 }: UsernameValidFeedbackProps) => {
   const attr: UsernameFeedbackType = useMemo(
     () =>
-      !invalidMessage
+      isValid
         ? {
             iconName: 'check',
             iconColor: 'lightGreen',
-            description: validMessage || strings.input.valid,
+            description: message || strings.input.valid,
           }
         : {
             iconName: 'x',
             iconColor: 'red',
-            description: invalidMessage,
+            description: message || strings.input.invalid,
           },
-    [invalidMessage, validMessage]
+    [message, isValid]
   );
 
+  useLayoutEffect(() => {
+    layoutEasingAnimation();
+  }, [isVisible]);
+
   return (
-    <Container flexDirection="row" alignItems="center" paddingBottom={3}>
-      <Icon name={attr.iconName} color={attr.iconColor} size={14} />
-      <Text fontSize={layouts.smallTextSize} color="white" paddingLeft={1}>
-        {attr.description}
-      </Text>
-    </Container>
+    <>
+      {isVisible && (
+        <Container flexDirection="row" alignItems="center" paddingBottom={3}>
+          <Icon name={attr.iconName} color={attr.iconColor} size={14} />
+          <Text fontSize={12} color="white" paddingLeft={1}>
+            {attr.description}
+          </Text>
+        </Container>
+      )}
+    </>
   );
 };
 

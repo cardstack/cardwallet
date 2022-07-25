@@ -1,7 +1,10 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { CustodialWallet } from '@cardstack/types';
+import {
+  CustodialWallet,
+  BusinessIDUniquenessResponse,
+} from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
 import { queryPromiseWrapper } from '../utils';
@@ -22,6 +25,7 @@ import {
   RegisterFCMTokenQueryParams,
   GetExchangeRatesQueryParams,
   PostProfilePurchaseQueryParams,
+  GetMerchantInfoValidateSlugParams,
 } from './hub-types';
 
 const routes = {
@@ -30,6 +34,7 @@ const routes = {
   exchangeRates: '/exchange-rates',
   registerFCMToken: '/push-notification-registrations',
   profilePurchases: '/profile-purchases',
+  merchantInfoValidateSlug: '/merchant-infos/validate-slug',
 };
 
 enum CacheTag {
@@ -111,6 +116,12 @@ export const hubApi = createApi({
         body: hubProfilePurchaseBody(routes.profilePurchases, params),
       }),
     }),
+    merchantInfoValidateSlug: builder.query<
+      BusinessIDUniquenessResponse,
+      GetMerchantInfoValidateSlugParams
+    >({
+      query: ({ slug }) => `${routes.merchantInfoValidateSlug}/${slug}`,
+    }),
   }),
 });
 
@@ -123,4 +134,5 @@ export const {
   useRegisterFcmTokenQuery,
   useUnregisterFcmTokenMutation,
   useProfilePurchasesMutation,
+  useMerchantInfoValidateSlugQuery,
 } = hubApi;

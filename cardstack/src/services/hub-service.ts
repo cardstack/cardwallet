@@ -296,28 +296,6 @@ export const getWyrePrice = async (
   }
 };
 
-export const checkBusinessIdUniqueness = async (
-  businessId: string,
-  authToken: string
-): Promise<BusinessIDUniquenessResponse | undefined> => {
-  try {
-    const network: Network = await getNetwork();
-    const hubURL = getHubUrl(network);
-
-    const results = await hubApi.get(
-      `${hubURL}/api/merchant-infos/validate-slug/${businessId}`,
-      axiosConfig(authToken)
-    );
-
-    return results?.data as BusinessIDUniquenessResponse;
-  } catch (e: any) {
-    logger.sentry(
-      'Error while checking BusinessIdUniqueness from hub',
-      e?.response || e
-    );
-  }
-};
-
 export const createBusinessInfoDID = async (
   merchantInfoData: CreateBusinessInfoDIDParams,
   authToken: string
