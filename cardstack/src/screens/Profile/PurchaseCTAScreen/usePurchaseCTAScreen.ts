@@ -1,9 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 
 export const usePurchaseCTAScreen = () => {
-  const { goBack } = useNavigation();
-
   // TODO: change this
   const onPressSkip = useCallback(() => {
     console.log('Go wherever skips needs to go');
@@ -19,5 +16,5 @@ export const usePurchaseCTAScreen = () => {
     console.log('Start IAP process');
   }, []);
 
-  return { goBack, onPressChargeExplanation, onPressBuy, onPressSkip };
+  return { onPressChargeExplanation, onPressBuy, onPressSkip };
 };

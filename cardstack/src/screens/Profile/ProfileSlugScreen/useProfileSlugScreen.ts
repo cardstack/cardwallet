@@ -11,10 +11,6 @@ export const useProfileSlugScreen = () => {
     // TODO
   }, []);
 
-  const onSkipPressed = useCallback(() => {
-    // TODO
-  }, []);
-
   const onContinuePress = useCallback(() => {
     // TODO
   }, []);
@@ -28,7 +24,6 @@ export const useProfileSlugScreen = () => {
     username,
     onUsernameChange,
     onGoBackPressed,
-    onSkipPressed,
     onContinuePress,
     invalidUsernameMessage,
   };

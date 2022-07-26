@@ -4,9 +4,8 @@ import {
   Container,
   Text,
   SafeAreaView,
-  Touchable,
-  Icon,
   Button,
+  InPageHeader,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 
@@ -19,8 +18,6 @@ const ProfileSlugScreen = () => {
     username,
     onUsernameChange,
     invalidUsernameMessage,
-    onGoBackPressed,
-    onSkipPressed,
     onContinuePress,
   } = useProfileSlugScreen();
 
@@ -29,23 +26,10 @@ const ProfileSlugScreen = () => {
       backgroundColor="backgroundDarkPurple"
       flex={1}
       paddingHorizontal={5}
+      justifyContent="space-between"
     >
-      <Container
-        alignItems="center"
-        justifyContent="space-between"
-        flexDirection="row"
-        flex={0.15}
-      >
-        <Touchable onPress={onGoBackPressed}>
-          <Icon name="chevron-left" color="teal" size={30} left={-6} />
-        </Touchable>
-        <Touchable onPress={onSkipPressed}>
-          <Text fontSize={13} color="teal" variant="semibold">
-            {strings.buttons.skip}
-          </Text>
-        </Touchable>
-      </Container>
-      <Container flex={1}>
+      <InPageHeader showSkipButton={false} />
+      <Container flex={0.8}>
         <Container width="90%" paddingBottom={4}>
           <Text variant="pageHeader">{strings.header}</Text>
         </Container>
