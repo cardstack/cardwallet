@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 
 import Navigation from './Navigation';
 import { MainRoutes, Routes } from './routes';
 import { MainScreens, ScreenNavigation } from './screens';
+import { StackType } from './types';
 
 // Not a big fan of returning components inside hooks,
 // but react-navigation does not allow components other than Screen
@@ -13,7 +13,7 @@ import { MainScreens, ScreenNavigation } from './screens';
 const getScreens = (
   routes: Record<string, string>,
   screens: Record<string, ScreenNavigation>,
-  Stack: ReturnType<typeof createStackNavigator>
+  Stack: StackType
 ) =>
   Object.entries(screens).map(([name, props]) => (
     <Stack.Screen
@@ -23,9 +23,8 @@ const getScreens = (
     />
   ));
 
-export const useCardstackMainScreens = (
-  Stack: ReturnType<typeof createStackNavigator>
-) => getScreens(MainRoutes, MainScreens, Stack);
+export const useCardstackMainScreens = (Stack: StackType) =>
+  getScreens(MainRoutes, MainScreens, Stack);
 
 // Once we merge the routes, we can type it better
 export const useDismissCurrentRoute = (routeName: string) => {
