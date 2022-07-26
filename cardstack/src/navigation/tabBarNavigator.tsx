@@ -40,6 +40,7 @@ import {
   horizontalInterpolator,
   NonAuthRoutes,
   overlayPreset,
+  ProfileNavigation,
   Routes,
   sheetPreset,
 } from '.';
@@ -237,6 +238,7 @@ export const StackNavigator = () => {
         </>
       )}
       {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
+      {ProfileNavigation({ Stack })}
     </Stack.Navigator>
   );
 };
