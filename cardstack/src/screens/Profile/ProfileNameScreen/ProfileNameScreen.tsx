@@ -14,6 +14,7 @@ import {
   Button,
   CenteredContainer,
   Container,
+  InPageHeader,
   Input,
   SafeAreaView,
   Text,
@@ -171,6 +172,7 @@ export const ProfileNameScreen = () => {
 
   const animatedHeaderStyles = useMemo(
     () => ({
+      paddingTop: 10,
       flex: 0.4,
       justifyContent: 'space-between' as const,
       opacity: animated.interpolate({
@@ -192,16 +194,7 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <Container flex={0.15} alignItems="flex-end" paddingVertical={2}>
-        <Text
-          fontSize={13}
-          color="teal"
-          onPress={onSkipPress}
-          fontWeight="bold"
-        >
-          {strings.btns.skip}
-        </Text>
-      </Container>
+      <InPageHeader onSkipPress={onSkipPress} showLeftIcon={false} />
       <Animated.View style={animatedHeaderStyles}>
         <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
           {strings.header}
