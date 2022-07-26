@@ -44,7 +44,7 @@ const InPageHeader = ({
       )}
       {showSkipButton && (
         <Touchable onPress={onSkipPress || goBack}>
-          <Text fontSize={13} color="teal" weight="semibold">
+          <Text fontSize={13} color="teal" variant="semibold">
             Skip
           </Text>
         </Touchable>
