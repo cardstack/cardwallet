@@ -10,7 +10,7 @@ import {
   SafeAreaView,
   Text,
   Touchable,
-  ProfileHeader,
+  InPageHeader,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
@@ -59,7 +59,7 @@ const PurchaseCTAScreen = () => {
       flex={1}
       paddingHorizontal={5}
     >
-      <ProfileHeader onSkipPress={onPressSkip} />
+      <InPageHeader onSkipPress={onPressSkip} />
       <Container
         flex={1}
         flexDirection="column"

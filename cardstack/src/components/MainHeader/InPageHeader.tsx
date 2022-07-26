@@ -17,7 +17,7 @@ interface Props extends ContainerProps {
   onSkipPress?: () => void;
 }
 
-const ProfileHeader = ({
+const InPageHeader = ({
   leftIconProps,
   showLeftIcon = true,
   showSkipButton = true,
@@ -53,4 +53,4 @@ const ProfileHeader = ({
   );
 };
 
-export default ProfileHeader;
+export default InPageHeader;

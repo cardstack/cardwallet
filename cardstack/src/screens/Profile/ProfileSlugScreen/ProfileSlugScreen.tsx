@@ -5,7 +5,7 @@ import {
   Text,
   SafeAreaView,
   Button,
-  ProfileHeader,
+  InPageHeader,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 
@@ -28,7 +28,7 @@ const ProfileSlugScreen = () => {
       paddingHorizontal={5}
       justifyContent="space-between"
     >
-      <ProfileHeader showSkipButton={false} />
+      <InPageHeader showSkipButton={false} />
       <Container flex={0.8}>
         <Container width="90%" paddingBottom={4}>
           <Text variant="pageHeader">{strings.header}</Text>
