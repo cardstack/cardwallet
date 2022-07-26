@@ -33,6 +33,10 @@ export const MainRoutes = {
   SUPPORT_AND_FEES: 'SupportAndFeesSheet',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
   TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
+  PROFILE_SLUG: 'ProfileSlug',
+  PROFILE_PURCHASE_CTA: 'ProfilePurchaseCTA',
+  PROFILE_NAME: 'ProfileName',
+  PROFILE_CHARGE_EXPLANATION: 'ProfileChargeExplanation',
 } as const;
 
 const TabRoutes = {
