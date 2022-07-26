@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native';
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   Animated,
@@ -16,6 +17,7 @@ import {
   Input,
   SafeAreaView,
   Text,
+  Touchable,
 } from '@cardstack/components';
 import {
   colors,
@@ -38,6 +40,10 @@ enum Animation {
 const layouts = {
   defaultPadding: 5,
   keyboardVerticalOffset: Device.isIOS ? 15 : 95,
+  dot: {
+    size: 24,
+    radius: 50,
+  },
 };
 
 const styles = StyleSheet.create({
@@ -58,26 +64,33 @@ const styles = StyleSheet.create({
 
 export const ProfileNameScreen = () => {
   const {
-    profileUrl,
-    profileName,
+    profile,
     onSkipPress,
     onContinuePress,
     onChangeText,
+    onPressEditColor,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
 
   const { height, width } = useWindowDimensions();
 
+  const isFocused = useIsFocused();
+
   const animatePhoneOnKeyboardEvent = useCallback(
     (toValue: Animation) => () => {
+      // avoid animating on background of color picker
+      if (!isFocused) {
+        return;
+      }
+
       Animated.timing(animated, {
         toValue,
         duration: 250,
         useNativeDriver: true,
       }).start();
     },
-    [animated]
+    [animated, isFocused]
   );
 
   useEffect(() => {
@@ -168,6 +181,10 @@ export const ProfileNameScreen = () => {
     [animated]
   );
 
+  const colorDotStyle = useMemo(() => ({ backgroundColor: profile.color }), [
+    profile.color,
+  ]);
+
   return (
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
@@ -193,9 +210,27 @@ export const ProfileNameScreen = () => {
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
           </Text>
-          <Button variant="smallTertiary" height={40} width={110}>
-            Placeholder
-          </Button>
+          <Touchable
+            borderColor="borderBlue"
+            borderWidth={1}
+            borderRadius={20}
+            padding={2}
+            onPress={onPressEditColor}
+          >
+            <Container flexDirection="row" justifyContent="space-between">
+              <Container
+                borderRadius={layouts.dot.radius}
+                height={layouts.dot.size}
+                width={layouts.dot.size}
+                style={colorDotStyle}
+                borderColor="white"
+                borderWidth={2}
+              />
+              <Text paddingLeft={3} fontSize={18} color="grayText">
+                {profile.color}
+              </Text>
+            </Container>
+          </Touchable>
         </CenteredContainer>
       </Animated.View>
       <Container
@@ -206,12 +241,15 @@ export const ProfileNameScreen = () => {
       >
         <Animated.View style={phonePreviewStyles}>
           <ProfilePhonePreview
-            profileUrl={profileUrl}
-            profileName={profileName || strings.input.placeholder}
+            url={profile.slug}
+            name={profile.name || strings.input.placeholder}
+            color={profile.color}
+            textColor={profile['text-color']}
           />
         </Animated.View>
       </Container>
       <KeyboardAvoidingView
+        enabled={isFocused}
         behavior="position"
         style={styles.avoidViewContainer}
         contentContainerStyle={styles.avoidViewContent}
@@ -243,7 +281,7 @@ export const ProfileNameScreen = () => {
         </Container>
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
-        <Button disabled={!profileName} onPress={onContinuePress}>
+        <Button disabled={!profile.name} onPress={onContinuePress}>
           {strings.btns.continue}
         </Button>
       </CenteredContainer>

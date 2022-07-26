@@ -2,18 +2,22 @@ import * as React from 'react';
 import { ImageSourcePropType } from 'react-native';
 import Svg, { Rect, Image, G, Path, Text, TSpan } from 'react-native-svg';
 
+import { contrastingTextColor } from '@cardstack/utils';
+
 import QRCodePreview from './QRCodePreview';
 
 interface Props {
-  profileUrl: string;
-  profileName: string;
-  profileColor?: string;
+  url: string;
+  name: string;
+  color?: string;
+  textColor?: string;
 }
 
 const ProfilePhonePreview = ({
-  profileName,
-  profileUrl = 'mandello123.card.xyz',
-  profileColor = '#0089f9',
+  name,
+  url = 'mandello123.card.xyz',
+  color = '#0089f9',
+  textColor = contrastingTextColor(color),
 }: Props) => (
   <Svg width="100%" height="100%" viewBox="0 0 431 520">
     <G data-name="Group 14578" transform="translate(-35 0)">
@@ -28,7 +32,7 @@ const ProfilePhonePreview = ({
       <Path
         data-name="Mobile - Color platter"
         d="M90 226h323a25 25 0 0 1 25 25v619H65V251a25 25 0 0 1 25-25Z"
-        fill={profileColor}
+        fill={color}
       />
       <G data-name="Mask Group" transform="translate(-255 -266)">
         <G fill="#fff">
@@ -39,7 +43,9 @@ const ProfilePhonePreview = ({
             fontSize={13}
             letterSpacing=".015em"
           >
-            <TSpan textAnchor="middle">{profileUrl}</TSpan>
+            <TSpan textAnchor="middle" fill={textColor}>
+              {url}
+            </TSpan>
           </Text>
           <Text
             fontWeight={700}
@@ -47,8 +53,9 @@ const ProfilePhonePreview = ({
             transform="translate(507 539)"
             fontSize={24}
             letterSpacing="-.025em"
+            fill={textColor}
           >
-            <TSpan textAnchor="middle">{profileName}</TSpan>
+            <TSpan textAnchor="middle">{name}</TSpan>
           </Text>
         </G>
         <G data-name="QR module" transform="translate(339 601)">
@@ -172,7 +179,7 @@ const ProfilePhonePreview = ({
                   fontFamily="Helvetica"
                 >
                   <TSpan textAnchor="middle" fill="black">
-                    {profileUrl}
+                    {url}
                   </TSpan>
                 </Text>
               </G>
