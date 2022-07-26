@@ -23,7 +23,7 @@ const DesignSystemScreen = () => {
       data: ['slug'],
     },
     {
-      title: 'Buttom States',
+      title: 'Button States',
       data: ['longPress', 'loading', 'blocked'],
     },
     {
@@ -75,7 +75,7 @@ const DesignSystemScreen = () => {
             </CenteredContainer>
           );
 
-        case 'Buttom States':
+        case 'Button States':
           return (
             <CenteredContainer padding={2}>
               {renderButtonStates(item)}
