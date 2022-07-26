@@ -23,8 +23,8 @@ const DesignSystemScreen = () => {
       data: ['slug'],
     },
     {
-      title: 'Hold to confirm Button',
-      data: ['1'],
+      title: 'Buttom States',
+      data: ['longPress', 'loading', 'blocked'],
     },
     {
       title: 'Biometric Switch',
@@ -41,6 +41,24 @@ const DesignSystemScreen = () => {
     Alert.alert('long press');
   };
 
+  const renderButtonStates = useCallback(
+    item => {
+      switch (item) {
+        case 'longPress':
+          return (
+            <Button loading={loading} onLongPress={longPress}>
+              Hold for action
+            </Button>
+          );
+        case 'loading':
+          return <Button loading>{item}</Button>;
+        case 'blocked':
+          return <Button blocked>{item}</Button>;
+      }
+    },
+    [loading]
+  );
+
   const renderItem = useCallback(
     ({ item, section: { title } }) => {
       switch (title) {
@@ -56,12 +74,11 @@ const DesignSystemScreen = () => {
               <Button variant={item}>{item}</Button>
             </CenteredContainer>
           );
-        case 'Hold to confirm Button':
+
+        case 'Buttom States':
           return (
             <CenteredContainer padding={2}>
-              <Button loading={loading} onLongPress={longPress}>
-                Hold for action
-              </Button>
+              {renderButtonStates(item)}
             </CenteredContainer>
           );
         case 'Biometric Switch':
@@ -72,7 +89,7 @@ const DesignSystemScreen = () => {
           );
       }
     },
-    [loading]
+    [renderButtonStates]
   );
 
   return (
