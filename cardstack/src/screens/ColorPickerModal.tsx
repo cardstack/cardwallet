@@ -12,7 +12,7 @@ import {
   Touchable,
 } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
-import { aspectRatio, screenHeight } from '@cardstack/utils';
+import { aspectRatio, hitSlop, screenHeight } from '@cardstack/utils';
 
 const COLOR_LENGTH = 7;
 
@@ -87,7 +87,7 @@ const ColorPickerModal = () => {
         borderRadius={layouts.dot.radius}
         flex={0.4}
       >
-        <Touchable onPress={onSelect}>
+        <Touchable onPress={onSelect} hitSlop={hitSlop.small}>
           <Text fontSize={14} textAlign="right" fontWeight="bold">
             Done
           </Text>
