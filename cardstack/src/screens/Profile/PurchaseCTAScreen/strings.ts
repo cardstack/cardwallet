@@ -1,5 +1,4 @@
 export const strings = {
-  skip: 'Skip',
   title: 'Purchase a CardSpace\nProfile to do the following:',
   benefits: {
     payments: 'Accept payments from customers',
