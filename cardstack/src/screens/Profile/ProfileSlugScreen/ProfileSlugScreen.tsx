@@ -18,7 +18,7 @@ const ProfileSlugScreen = () => {
     username,
     onUsernameChange,
     isUsernameValid,
-    showMessage,
+    showValidationMessage,
     message,
     onContinuePress,
   } = useProfileSlugScreen();
@@ -45,7 +45,7 @@ const ProfileSlugScreen = () => {
         </Container>
         <Container width="100%">
           <ValidationMessage
-            isVisible={showMessage}
+            isVisible={showValidationMessage}
             isValid={isUsernameValid}
             message={message}
           />
@@ -57,7 +57,7 @@ const ProfileSlugScreen = () => {
       <Container flex={0.2}>
         <Button
           onPress={onContinuePress}
-          disabled={!(isUsernameValid && showMessage)}
+          disabled={!(isUsernameValid && showValidationMessage)}
         >
           {strings.buttons.continue}
         </Button>

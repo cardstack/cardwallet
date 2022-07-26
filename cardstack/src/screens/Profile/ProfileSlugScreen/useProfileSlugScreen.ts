@@ -1,5 +1,5 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
 
@@ -9,6 +9,7 @@ export const useProfileSlugScreen = () => {
   const [username, setUsername] = useState('');
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [message, setMessage] = useState('');
+  const showValidationMessage = useRef(false);
 
   const [validateSlugHub, { data, error }] = useLazyValidateProfileSlugQuery();
 
@@ -22,17 +23,15 @@ export const useProfileSlugScreen = () => {
 
   const onUsernameChange = useCallback(
     async text => {
-      setUsername(text.trim());
+      const trimmed = text.trim();
+      setUsername(trimmed);
+      showValidationMessage.current = trimmed.length >= MIN_USERNAME_LENGTH;
     },
     [setUsername]
   );
 
-  const showMessage = useMemo(() => username.length >= MIN_USERNAME_LENGTH, [
-    username,
-  ]);
-
   useEffect(() => {
-    if (username.length >= MIN_USERNAME_LENGTH) {
+    if (showValidationMessage.current) {
       const sdkIDValidationError = validateMerchantId(username);
 
       if (sdkIDValidationError) {
@@ -64,6 +63,6 @@ export const useProfileSlugScreen = () => {
     onContinuePress,
     isUsernameValid,
     message,
-    showMessage,
+    showValidationMessage: showValidationMessage.current,
   };
 };
