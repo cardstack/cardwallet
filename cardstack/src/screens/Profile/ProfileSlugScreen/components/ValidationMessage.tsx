@@ -6,7 +6,7 @@ import { layoutEasingAnimation } from '@cardstack/utils';
 
 import { strings } from '../strings';
 
-interface UsernameValidFeedbackProps {
+interface ValidationMessageProps {
   message?: string;
   isValid?: boolean;
   isVisible?: boolean;
@@ -18,11 +18,11 @@ interface UsernameFeedbackType {
   description: string;
 }
 
-const UsernameValidFeedback = ({
+const ValidationMessage = ({
   message,
   isValid,
   isVisible = true,
-}: UsernameValidFeedbackProps) => {
+}: ValidationMessageProps) => {
   const attr: UsernameFeedbackType = useMemo(
     () =>
       isValid
@@ -57,4 +57,4 @@ const UsernameValidFeedback = ({
   );
 };
 
-export default memo(UsernameValidFeedback);
+export default memo(ValidationMessage);

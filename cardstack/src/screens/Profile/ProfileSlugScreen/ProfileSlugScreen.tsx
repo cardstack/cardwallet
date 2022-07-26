@@ -9,7 +9,7 @@ import {
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 
-import UsernameValidFeedback from './components/UsernameValidFeedback';
+import ValidationMessage from './components/ValidationMessage';
 import { strings } from './strings';
 import { useProfileSlugScreen } from './useProfileSlugScreen';
 
@@ -44,10 +44,10 @@ const ProfileSlugScreen = () => {
           />
         </Container>
         <Container width="100%">
-          <UsernameValidFeedback
+          <ValidationMessage
+            isVisible={showMessage}
             isValid={isUsernameValid}
             message={message}
-            isVisible={showMessage}
           />
           <Text variant="pageDescriptionSmall">
             {strings.input.description}

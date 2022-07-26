@@ -55,6 +55,6 @@ export interface PostProfilePurchaseQueryParams {
   merchantDID?: CreateBusinessInfoDIDParams;
 }
 
-export interface GetMerchantInfoValidateSlugParams {
+export interface GetValidateProfileSlugParams {
   slug: string;
 }

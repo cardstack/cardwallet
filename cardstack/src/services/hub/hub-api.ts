@@ -25,7 +25,7 @@ import {
   RegisterFCMTokenQueryParams,
   GetExchangeRatesQueryParams,
   PostProfilePurchaseQueryParams,
-  GetMerchantInfoValidateSlugParams,
+  GetValidateProfileSlugParams,
 } from './hub-types';
 
 const routes = {
@@ -34,7 +34,7 @@ const routes = {
   exchangeRates: '/exchange-rates',
   registerFCMToken: '/push-notification-registrations',
   profilePurchases: '/profile-purchases',
-  merchantInfoValidateSlug: '/merchant-infos/validate-slug',
+  validateProfileSlug: '/merchant-infos/validate-slug',
 };
 
 enum CacheTag {
@@ -116,11 +116,11 @@ export const hubApi = createApi({
         body: hubProfilePurchaseBody(routes.profilePurchases, params),
       }),
     }),
-    merchantInfoValidateSlug: builder.query<
+    validateProfileSlug: builder.query<
       BusinessIDUniquenessResponse,
-      GetMerchantInfoValidateSlugParams
+      GetValidateProfileSlugParams
     >({
-      query: ({ slug }) => `${routes.merchantInfoValidateSlug}/${slug}`,
+      query: ({ slug }) => `${routes.validateProfileSlug}/${slug}`,
     }),
   }),
 });
@@ -134,5 +134,5 @@ export const {
   useRegisterFcmTokenQuery,
   useUnregisterFcmTokenMutation,
   useProfilePurchasesMutation,
-  useMerchantInfoValidateSlugQuery,
+  useLazyValidateProfileSlugQuery,
 } = hubApi;

@@ -1,22 +1,16 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 
-import { useMerchantInfoValidateSlugQuery } from '@cardstack/services';
+import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
 
 const MIN_USERNAME_LENGTH = 4;
 
 export const useProfileSlugScreen = () => {
   const [username, setUsername] = useState('');
-  const [validateUsername, setValidateUsername] = useState('');
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [message, setMessage] = useState('');
 
-  const { data, error } = useMerchantInfoValidateSlugQuery(
-    { slug: validateUsername },
-    {
-      skip: validateUsername === '',
-    }
-  );
+  const [validateSlugHub, { data, error }] = useLazyValidateProfileSlugQuery();
 
   const onGoBackPressed = useCallback(() => {
     // TODO
@@ -48,14 +42,18 @@ export const useProfileSlugScreen = () => {
         return;
       }
 
-      setValidateUsername(username);
+      validateSlugHub({ slug: username });
     }
-  }, [username]);
+  }, [username, validateSlugHub]);
 
   useEffect(() => {
     if (data) {
       setIsUsernameValid(data.slugAvailable);
       setMessage(data.detail);
+    } else if (error) {
+      // API connection error, can't know correct invalid message so we'll use the default.
+      setIsUsernameValid(false);
+      setMessage('');
     }
   }, [data, error]);
 
