@@ -172,7 +172,6 @@ export const ProfileNameScreen = () => {
 
   const animatedHeaderStyles = useMemo(
     () => ({
-      paddingTop: 10,
       flex: 0.4,
       justifyContent: 'space-between' as const,
       opacity: animated.interpolate({
@@ -194,8 +193,8 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <InPageHeader onSkipPress={onSkipPress} showLeftIcon={false} />
       <Animated.View style={animatedHeaderStyles}>
+        <InPageHeader onSkipPress={onSkipPress} showLeftIcon={false} />
         <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
           {strings.header}
         </Text>
