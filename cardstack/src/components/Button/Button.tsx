@@ -9,6 +9,7 @@ import {
   border,
   BorderProps,
   backgroundColor,
+  opacity,
 } from '@shopify/restyle';
 import React, { ReactNode, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
@@ -35,6 +36,7 @@ interface ButtonProps extends RestyleProps {
   onPress?: () => void;
   onLongPress?: () => void;
   loading?: boolean;
+  blocked?: boolean;
   disablePress?: boolean;
   testID?: string;
 }
@@ -48,7 +50,7 @@ const VariantRestyleComponent = createVariant({
 const AnimatedButton = createRestyleComponent<ButtonProps, Theme>(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  [layout, spacing, border, VariantRestyleComponent, backgroundColor],
+  [layout, spacing, border, opacity, VariantRestyleComponent, backgroundColor],
   AnimatedPressable
 );
 
@@ -69,6 +71,7 @@ export const Button = ({
   disablePress = false,
   iconPosition = 'left',
   loading,
+  blocked,
   onPress,
   onLongPress,
   ...props
@@ -96,8 +99,9 @@ export const Button = ({
     () => ({
       ...mergedStyles,
       ...(disabled ? { ...disabledVariantStyles } : {}),
+      opacity: blocked ? 0.35 : 1.0,
     }),
-    [disabled, disabledVariantStyles, mergedStyles]
+    [disabled, blocked, disabledVariantStyles, mergedStyles]
   );
 
   const disabledTextProps = disabled ? disabledTextStyle : {};
@@ -106,7 +110,7 @@ export const Button = ({
     <AnimatedButton
       {...variantMergedStyles}
       {...props}
-      disabled={disabled || disablePress || loading}
+      disabled={disabled || disablePress || loading || blocked}
       onPress={onPress}
       onLongPress={onLongPress}
     >
