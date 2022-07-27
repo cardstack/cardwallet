@@ -4,8 +4,6 @@ import { Container, Text, Icon, IconName } from '@cardstack/components';
 import { ColorTypes } from '@cardstack/theme';
 import { layoutEasingAnimation } from '@cardstack/utils';
 
-import { strings } from '../strings';
-
 interface ValidationMessageProps {
   message?: string;
   isValid?: boolean;
@@ -19,7 +17,7 @@ interface UsernameFeedbackType {
 }
 
 const ValidationMessage = ({
-  message,
+  message = '',
   isValid,
   isVisible = true,
 }: ValidationMessageProps) => {
@@ -29,12 +27,12 @@ const ValidationMessage = ({
         ? {
             iconName: 'check',
             iconColor: 'lightGreen',
-            description: message || strings.input.valid,
+            description: message,
           }
         : {
             iconName: 'x',
             iconColor: 'red',
-            description: message || strings.input.invalid,
+            description: message,
           },
     [message, isValid]
   );

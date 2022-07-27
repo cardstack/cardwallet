@@ -1,17 +1,22 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
 
-const MIN_USERNAME_LENGTH = 4;
+import { strings, MIN_USERNAME_LENGTH } from './strings';
 
 export const useProfileSlugScreen = () => {
-  const [username, setUsername] = useState('');
-  const [isUsernameValid, setIsUsernameValid] = useState(false);
-  const [message, setMessage] = useState('');
-  const showValidationMessage = useRef(false);
+  const [slug, setSlug] = useState('');
 
-  const [validateSlugHub, { data, error }] = useLazyValidateProfileSlugQuery();
+  const [slugValidation, setSlugValidation] = useState({
+    slugAvailable: false,
+    detail: '',
+  });
+
+  const [
+    validateSlugHub,
+    { data: hubValidation, error },
+  ] = useLazyValidateProfileSlugQuery();
 
   const onGoBackPressed = useCallback(() => {
     // TODO
@@ -21,48 +26,52 @@ export const useProfileSlugScreen = () => {
     // TODO
   }, []);
 
-  const onUsernameChange = useCallback(
-    async text => {
-      const trimmed = text.trim();
-      setUsername(trimmed);
-      showValidationMessage.current = trimmed.length >= MIN_USERNAME_LENGTH;
-    },
-    [setUsername]
-  );
+  const onSlugChange = useCallback(
+    text => {
+      const trimmedSlug = text.trim();
 
-  useEffect(() => {
-    if (showValidationMessage.current) {
-      const sdkIDValidationError = validateMerchantId(username);
+      setSlug(trimmedSlug);
 
-      if (sdkIDValidationError) {
-        setIsUsernameValid(false);
-        setMessage(sdkIDValidationError);
+      const sdkIDValidationError = validateMerchantId(trimmedSlug);
+
+      const minimumLengthError =
+        trimmedSlug.length < MIN_USERNAME_LENGTH
+          ? strings.errors.minLength
+          : '';
+
+      const localValidationError = sdkIDValidationError || minimumLengthError;
+
+      if (localValidationError) {
+        setSlugValidation({
+          slugAvailable: false,
+          detail: localValidationError,
+        });
 
         return;
       }
 
-      validateSlugHub({ slug: username });
-    }
-  }, [username, validateSlugHub]);
+      validateSlugHub({ slug: trimmedSlug });
+    },
+    [validateSlugHub]
+  );
 
   useEffect(() => {
-    if (data) {
-      setIsUsernameValid(data.slugAvailable);
-      setMessage(data.detail);
+    if (hubValidation) {
+      setSlugValidation(hubValidation);
     } else if (error) {
       // API connection error, can't know correct invalid message so we'll use the default.
-      setIsUsernameValid(false);
-      setMessage('');
+      setSlugValidation({
+        slugAvailable: false,
+        detail: strings.errors.noApiResponse,
+      });
     }
-  }, [data, error]);
+  }, [hubValidation, error]);
 
   return {
-    username,
-    onUsernameChange,
+    slug,
+    onSlugChange,
     onGoBackPressed,
     onContinuePress,
-    isUsernameValid,
-    message,
-    showValidationMessage: showValidationMessage.current,
+    slugValidation,
   };
 };
