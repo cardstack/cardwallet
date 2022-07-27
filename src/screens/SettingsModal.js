@@ -227,7 +227,6 @@ export default function SettingsModal() {
             onPressCurrency={onPressSection(SettingsPages.currency)}
             onPressDS={onPressSection(SettingsPages.designSystem)}
             onPressDev={onPressSection(SettingsPages.dev)}
-            onPressIAP={onPressSection(SettingsPages.iap)}
             onPressLanguage={onPressSection(SettingsPages.language)}
             onPressMyWalletAddress={onPressSection(
               SettingsPages.myWalletAddress
