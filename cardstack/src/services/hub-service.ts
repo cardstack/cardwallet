@@ -10,7 +10,6 @@ import {
   ReservationData,
   OrderData,
   WyrePriceData,
-  CreateBusinessInfoDIDParams,
   NotificationsPreferenceDataType,
 } from '@cardstack/types';
 
@@ -293,57 +292,6 @@ export const getWyrePrice = async (
     return results?.data?.data;
   } catch (e) {
     logger.sentry('Error getting order details', e);
-  }
-};
-
-// TODO: Remove once useProfileForm is not in use anymore.
-export const DEPRECATED_checkBusinessIdUniqueness = async (
-  businessId: string,
-  authToken: string
-): Promise<BusinessIDUniquenessResponse | undefined> => {
-  try {
-    const network: Network = await getNetwork();
-    const hubURL = getHubUrl(network);
-
-    const results = await hubApi.get(
-      `${hubURL}/api/merchant-infos/validate-slug/${businessId}`,
-      axiosConfig(authToken)
-    );
-
-    return results?.data as BusinessIDUniquenessResponse;
-  } catch (e: any) {
-    logger.sentry(
-      'Error while checking BusinessIdUniqueness from hub',
-      e?.response || e
-    );
-  }
-};
-
-export const createBusinessInfoDID = async (
-  merchantInfoData: CreateBusinessInfoDIDParams,
-  authToken: string
-): Promise<string | undefined> => {
-  try {
-    const network: Network = await getNetwork();
-    const hubURL = getHubUrl(network);
-
-    const results = await hubApi.post(
-      `${hubURL}/api/merchant-infos`,
-      JSON.stringify({
-        data: {
-          type: 'merchant-infos',
-          attributes: merchantInfoData,
-        },
-      }),
-      axiosConfig(authToken)
-    );
-
-    return results?.data?.data?.attributes?.did;
-  } catch (e: any) {
-    logger.sentry(
-      'Error while creating Merchant DID from hub',
-      e?.response || e
-    );
   }
 };
 

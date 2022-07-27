@@ -124,7 +124,8 @@ export const hubApi = createApi({
       BusinessIDUniquenessResponse,
       GetValidateProfileSlugParams
     >({
-      query: ({ slug }) => `${routes.profileInfo.validateSlug}/${slug}`,
+      query: ({ slug }) =>
+        `${routes.profileInfo.root}${routes.profileInfo.validateSlug}/${slug}`,
     }),
     createProfileInfo: builder.mutation<string, CreateProfileInfoParams>({
       query: params => ({
@@ -132,6 +133,7 @@ export const hubApi = createApi({
         method: 'POST',
         body: hubBodyBuilder(routes.profileInfo.root, params),
       }),
+      transformResponse: ({ data }) => data?.attributes?.did,
     }),
   }),
 });

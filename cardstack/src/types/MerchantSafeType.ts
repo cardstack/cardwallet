@@ -21,11 +21,3 @@ export interface BusinessIDUniquenessResponse {
   slugAvailable: boolean;
   detail: string;
 }
-
-export interface CreateBusinessInfoDIDParams {
-  name: string;
-  slug: string;
-  color: string;
-  'text-color': string;
-  'owner-address'?: string;
-}

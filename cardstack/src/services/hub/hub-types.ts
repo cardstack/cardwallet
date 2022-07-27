@@ -1,11 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { KebabToCamelCaseKeys } from 'globals';
 
-import {
-  CustodialWalletAttrs,
-  CreateBusinessInfoDIDParams,
-  IAPProviderType,
-} from '@cardstack/types';
+import { CustodialWalletAttrs, IAPProviderType } from '@cardstack/types';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
 

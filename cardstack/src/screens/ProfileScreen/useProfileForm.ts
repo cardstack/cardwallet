@@ -1,17 +1,24 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
-import { useContext, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from 'react';
 import { Alert, InteractionManager } from 'react-native';
 
-import { useAuthToken, useMutationEffects } from '@cardstack/hooks';
+import { useMutationEffects } from '@cardstack/hooks';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Routes } from '@cardstack/navigation/routes';
 import { displayLocalNotification } from '@cardstack/notification-handler';
-import { useCreateProfileMutation } from '@cardstack/services';
 import {
-  DEPRECATED_checkBusinessIdUniqueness,
-  createBusinessInfoDID,
-} from '@cardstack/services/hub-service';
+  useCreateProfileInfoMutation,
+  useCreateProfileMutation,
+  useLazyValidateProfileSlugQuery,
+} from '@cardstack/services';
 import { colors } from '@cardstack/theme';
 import {
   RegisterMerchantDecodedData,
@@ -32,9 +39,9 @@ type useProfileFormParams = {
 
 export const useProfileForm = (params?: useProfileFormParams) => {
   const { navigate } = useNavigation();
-  const { authToken, isLoading } = useAuthToken();
   const { accountSymbol, accountAddress = '' } = useAccountProfile();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
+  const selectedPrepaidCard = useRef('');
 
   const [
     createProfile,
@@ -76,6 +83,49 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     )
   );
 
+  const [
+    createProfileInfo,
+    {
+      isSuccess: isProfileInfoSuccess,
+      isError: isProfileInfoSuccessError,
+      data: profileDID,
+    },
+  ] = useCreateProfileInfoMutation();
+
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isProfileInfoSuccess,
+          callback: () => {
+            if (profileDID) {
+              createProfile({
+                selectedPrepaidCardAddress: selectedPrepaidCard.current,
+                profileDID,
+                accountAddress,
+              });
+            }
+          },
+        },
+        error: {
+          status: isProfileInfoSuccessError,
+          callback: () => {
+            dismissLoadingOverlay();
+            Alert.alert(strings.validation.createProfileErrorMessage);
+          },
+        },
+      }),
+      [
+        accountAddress,
+        createProfile,
+        dismissLoadingOverlay,
+        isProfileInfoSuccess,
+        isProfileInfoSuccessError,
+        profileDID,
+      ]
+    )
+  );
+
   const {
     businessName: businessNameData,
     businessId: businessIdData,
@@ -99,35 +149,35 @@ export const useProfileForm = (params?: useProfileFormParams) => {
     return validateMerchantId(trimmedId);
   }, []);
 
+  const [
+    validateSlugHub,
+    { data: hubValidation },
+  ] = useLazyValidateProfileSlugQuery();
+
   const checkIdUniqueness = useCallback(
-    async (id: string) => {
-      if (!isLoading && authToken && id) {
-        const validateErrorMessage = localValidateMerchantId(id);
+    (id: string) => {
+      const validateErrorMessage = localValidateMerchantId(id);
 
-        if (validateErrorMessage) {
-          return;
-        }
-
-        const uniquenessResult = await DEPRECATED_checkBusinessIdUniqueness(
-          id,
-          authToken
-        );
-
-        if (uniquenessResult?.slugAvailable) {
-          setIdUniqueness(true);
-        }
+      if (validateErrorMessage) {
+        return;
       }
+
+      validateSlugHub({ slug: id });
     },
-    [authToken, isLoading, localValidateMerchantId]
+    [localValidateMerchantId, validateSlugHub]
   );
 
   useEffect(() => {
-    if (businessId && authToken && !isLoading) {
+    setIdUniqueness(hubValidation?.slugAvailable ?? false);
+  }, [hubValidation]);
+
+  useEffect(() => {
+    if (businessId) {
       // check businessId unqiuness when get back to the create profile screen
       checkIdUniqueness(businessId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authToken, checkIdUniqueness, isLoading]);
+  }, [checkIdUniqueness]);
 
   const onChangeBusinessName = useCallback(
     ({ nativeEvent: { text } }) => {
@@ -161,7 +211,7 @@ export const useProfileForm = (params?: useProfileFormParams) => {
       setBusinessId(text);
       setIdUniqueness(false);
 
-      await checkIdUniqueness(text);
+      checkIdUniqueness(text);
     },
     [checkIdUniqueness]
   );
@@ -220,46 +270,24 @@ export const useProfileForm = (params?: useProfileFormParams) => {
   );
 
   const onConfirmCreateProfile = useCallback(
-    (selectedPrepaidCard: PrepaidCardType) => async () => {
-      if (!isLoading && authToken) {
-        showLoadingOverlay({ title: strings.notification.creatingProfile });
+    (selectedCard: PrepaidCardType) => () => {
+      showLoadingOverlay({ title: strings.notification.creatingProfile });
 
-        const merchantInfoData = {
-          name: businessName,
-          slug: businessId,
-          color: businessColor,
-          'text-color': colors.white,
-        };
+      selectedPrepaidCard.current = selectedCard.address;
 
-        const profileDID = await createBusinessInfoDID(
-          merchantInfoData,
-          authToken
-        );
-
-        if (!profileDID) {
-          dismissLoadingOverlay();
-          Alert.alert(strings.validation.createProfileErrorMessage);
-
-          return;
-        }
-
-        createProfile({
-          selectedPrepaidCardAddress: selectedPrepaidCard.address,
-          profileDID,
-          accountAddress,
-        });
-      }
+      createProfileInfo({
+        name: businessName,
+        slug: businessId,
+        color: businessColor,
+        'text-color': colors.white,
+      });
     },
     [
-      isLoading,
-      authToken,
       showLoadingOverlay,
+      createProfileInfo,
       businessName,
       businessId,
       businessColor,
-      createProfile,
-      accountAddress,
-      dismissLoadingOverlay,
     ]
   );
 
