@@ -4,6 +4,7 @@ import {
   ProfileNameScreen,
   ProfileSlugScreen,
   ProfilePurchaseCTA,
+  ProfileChargeExplanationScreen,
 } from '@cardstack/screens';
 
 import { StackType } from './types';
@@ -19,10 +20,7 @@ export const ProfileScreenGroup = ({ Stack }: { Stack: StackType }) => (
       name={Routes.PROFILE_PURCHASE_CTA}
     />
     <Stack.Screen
-      component={() => {
-        // TODO replace this with the correct screen
-        return null;
-      }}
+      component={ProfileChargeExplanationScreen}
       name={Routes.PROFILE_CHARGE_EXPLANATION}
     />
   </Stack.Group>
