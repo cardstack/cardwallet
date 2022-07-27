@@ -5,7 +5,6 @@ import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
 import {
-  BusinessIDUniquenessResponse,
   Inventory,
   ReservationData,
   OrderData,

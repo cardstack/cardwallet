@@ -1,10 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import {
-  CustodialWallet,
-  BusinessIDUniquenessResponse,
-} from '@cardstack/types';
+import { CustodialWallet, ProfileIDUniquenessResponse } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
 import { queryPromiseWrapper } from '../utils';
@@ -121,7 +118,7 @@ export const hubApi = createApi({
       }),
     }),
     validateProfileSlug: builder.query<
-      BusinessIDUniquenessResponse,
+      ProfileIDUniquenessResponse,
       GetValidateProfileSlugParams
     >({
       query: ({ slug }) =>

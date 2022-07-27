@@ -17,7 +17,7 @@ export interface PrimarySafeUpdateProps {
   showSafePrimarySelection?: boolean;
 }
 
-export interface BusinessIDUniquenessResponse {
+export interface ProfileIDUniquenessResponse {
   slugAvailable: boolean;
   detail: string;
 }
