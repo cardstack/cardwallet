@@ -6,18 +6,18 @@ import {
   SafeAreaView,
   Button,
   InPageHeader,
+  ValidationMessage,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 
-import UsernameValidFeedback from './components/UsernameValidFeedback';
 import { strings } from './strings';
 import { useProfileSlugScreen } from './useProfileSlugScreen';
 
 const ProfileSlugScreen = () => {
   const {
-    username,
-    onUsernameChange,
-    invalidUsernameMessage,
+    slug,
+    onSlugChange,
+    slugValidation: { slugAvailable, detail: slugFeedback },
     onContinuePress,
   } = useProfileSlugScreen();
 
@@ -36,20 +36,24 @@ const ProfileSlugScreen = () => {
 
         <Container paddingBottom={1}>
           <SuffixedInput
-            value={username}
-            onChangeText={onUsernameChange}
+            value={slug}
+            onChangeText={onSlugChange}
             suffixText={strings.input.domainSuffix}
           />
         </Container>
         <Container width="100%">
-          <UsernameValidFeedback invalidMessage={invalidUsernameMessage} />
+          <ValidationMessage
+            isVisible={!!slugFeedback}
+            isValid={slugAvailable}
+            message={slugFeedback}
+          />
           <Text variant="pageDescriptionSmall">
             {strings.input.description}
           </Text>
         </Container>
       </Container>
       <Container flex={0.2}>
-        <Button onPress={onContinuePress} disabled={!!invalidUsernameMessage}>
+        <Button onPress={onContinuePress} blocked={!slugAvailable}>
           {strings.buttons.continue}
         </Button>
       </Container>

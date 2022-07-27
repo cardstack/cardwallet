@@ -32,6 +32,8 @@ const SuffixedInput = ({
   suffixTextProps,
   maxLength = DEFAULT_MAX_LENGTH,
   placeholder = strings.defaultPlaceholder,
+  onChangeText,
+  value,
 }: SuffixedInputProps) => (
   <Container
     width="100%"
@@ -53,6 +55,8 @@ const SuffixedInput = ({
       textContentType="username"
       underlineColorAndroid="transparent"
       allowFontScaling={false}
+      onChangeText={onChangeText}
+      value={value}
     />
     <Text
       style={styles.textStyle}

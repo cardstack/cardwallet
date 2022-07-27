@@ -296,7 +296,8 @@ export const getWyrePrice = async (
   }
 };
 
-export const checkBusinessIdUniqueness = async (
+// TODO: Remove once useProfileForm is not in use anymore.
+export const DEPRECATED_checkBusinessIdUniqueness = async (
   businessId: string,
   authToken: string
 ): Promise<BusinessIDUniquenessResponse | undefined> => {

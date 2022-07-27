@@ -9,7 +9,7 @@ import { Routes } from '@cardstack/navigation/routes';
 import { displayLocalNotification } from '@cardstack/notification-handler';
 import { useCreateProfileMutation } from '@cardstack/services';
 import {
-  checkBusinessIdUniqueness,
+  DEPRECATED_checkBusinessIdUniqueness,
   createBusinessInfoDID,
 } from '@cardstack/services/hub-service';
 import { colors } from '@cardstack/theme';
@@ -108,7 +108,10 @@ export const useProfileForm = (params?: useProfileFormParams) => {
           return;
         }
 
-        const uniquenessResult = await checkBusinessIdUniqueness(id, authToken);
+        const uniquenessResult = await DEPRECATED_checkBusinessIdUniqueness(
+          id,
+          authToken
+        );
 
         if (uniquenessResult?.slugAvailable) {
           setIdUniqueness(true);

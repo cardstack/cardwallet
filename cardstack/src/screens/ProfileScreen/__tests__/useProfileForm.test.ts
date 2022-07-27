@@ -2,7 +2,7 @@ import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
 
-import { checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
+import { DEPRECATED_checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
 
@@ -20,7 +20,9 @@ jest.mock('@rainbow-me/hooks', () => ({
 }));
 
 jest.mock('@cardstack/services/hub-service', () => ({
-  checkBusinessIdUniqueness: jest.fn(() => ({ slugAvailable: false })),
+  DEPRECATED_checkBusinessIdUniqueness: jest.fn(() => ({
+    slugAvailable: false,
+  })),
 }));
 
 jest.mock('@cardstack/hooks/prepaid-card/useAuthToken', () => ({
@@ -118,10 +120,12 @@ describe('useProfileForm', () => {
   });
 
   it('should return error if profileId length is less than 4 characters', async () => {
-    (checkBusinessIdUniqueness as jest.Mock).mockImplementation(() => ({
-      slugAvailable: true,
-      detail: '',
-    }));
+    (DEPRECATED_checkBusinessIdUniqueness as jest.Mock).mockImplementation(
+      () => ({
+        slugAvailable: true,
+        detail: '',
+      })
+    );
 
     const { result } = renderHook(() => useProfileForm());
     const businessName = 'foo';
@@ -153,10 +157,12 @@ describe('useProfileForm', () => {
   });
 
   it('should return no error if unique id and valid businessName', async () => {
-    (checkBusinessIdUniqueness as jest.Mock).mockImplementation(() => ({
-      slugAvailable: true,
-      detail: '',
-    }));
+    (DEPRECATED_checkBusinessIdUniqueness as jest.Mock).mockImplementation(
+      () => ({
+        slugAvailable: true,
+        detail: '',
+      })
+    );
 
     const { result } = renderHook(() => useProfileForm());
     const businessId = 'bar1';
