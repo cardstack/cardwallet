@@ -1,15 +1,19 @@
+import { useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 
+import { Routes } from '@cardstack/navigation';
+
 export const usePurchaseCTAScreen = () => {
+  const { navigate } = useNavigation();
+
   // TODO: change this
   const onPressSkip = useCallback(() => {
     console.log('Go wherever skips needs to go');
   }, []);
 
-  // TODO: change this when doing CS-4080
   const onPressChargeExplanation = useCallback(() => {
-    console.log('Go to charge explanation screen');
-  }, []);
+    navigate(Routes.PROFILE_CHARGE_EXPLANATION);
+  }, [navigate]);
 
   // TODO: change this when IAP is working
   const onPressBuy = useCallback(() => {
