@@ -26,6 +26,7 @@ import {
   GetExchangeRatesQueryParams,
   PostProfilePurchaseQueryParams,
   GetValidateProfileSlugParams,
+  CreateProfileInfoParams,
 } from './hub-types';
 
 const routes = {
@@ -34,7 +35,10 @@ const routes = {
   exchangeRates: '/exchange-rates',
   registerFCMToken: '/push-notification-registrations',
   profilePurchases: '/profile-purchases',
-  validateProfileSlug: '/merchant-infos/validate-slug',
+  profileInfo: {
+    root: '/merchant-infos',
+    validateSlug: '/validate-slug',
+  },
 };
 
 enum CacheTag {
@@ -120,7 +124,14 @@ export const hubApi = createApi({
       BusinessIDUniquenessResponse,
       GetValidateProfileSlugParams
     >({
-      query: ({ slug }) => `${routes.validateProfileSlug}/${slug}`,
+      query: ({ slug }) => `${routes.profileInfo.validateSlug}/${slug}`,
+    }),
+    createProfileInfo: builder.mutation<string, CreateProfileInfoParams>({
+      query: params => ({
+        url: routes.profileInfo.root,
+        method: 'POST',
+        body: hubBodyBuilder(routes.profileInfo.root, params),
+      }),
     }),
   }),
 });
@@ -135,4 +146,5 @@ export const {
   useUnregisterFcmTokenMutation,
   useProfilePurchasesMutation,
   useLazyValidateProfileSlugQuery,
+  useCreateProfileInfoMutation,
 } = hubApi;

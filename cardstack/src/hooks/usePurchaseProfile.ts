@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useIAP, Product, Purchase } from 'react-native-iap';
 
 import { useProfilePurchasesMutation } from '@cardstack/services';
-import { CreateBusinessInfoDIDParams, IAPProviderType } from '@cardstack/types';
+import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
+import { IAPProviderType } from '@cardstack/types';
 import { Device, useWorker } from '@cardstack/utils';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
@@ -16,7 +17,7 @@ const testReceipt =
 
 const randomID = Math.floor(Math.random() * 100);
 
-const testProfileAttributes = <CreateBusinessInfoDIDParams>{
+const testProfileAttributes = <CreateProfileInfoParams>{
   name: `Test Profile ${randomID}`,
   slug: `testprofile${randomID}`,
   color: '#000000',
@@ -26,7 +27,7 @@ const testProfileAttributes = <CreateBusinessInfoDIDParams>{
 export const usePurchaseProfile = () => {
   const { accountAddress = '' } = useAccountProfile();
 
-  const profileAttributes = useMemo<CreateBusinessInfoDIDParams>(
+  const profileAttributes = useMemo<CreateProfileInfoParams>(
     () => ({
       ...testProfileAttributes,
       'owner-address': accountAddress,
@@ -58,7 +59,7 @@ export const usePurchaseProfile = () => {
     await updateProfilePurchases({
       iapReceipt: testReceipt,
       provider: IAPProviderType.apple, // Test receipt is from an Apple purchase.
-      merchantDID: profileAttributes,
+      profileDID: profileAttributes,
     });
   }, [updateProfilePurchases, profileAttributes]);
 
@@ -96,7 +97,7 @@ export const usePurchaseProfile = () => {
       await updateProfilePurchases({
         iapReceipt: purchase.transactionReceipt,
         provider: Device.iapProvider,
-        merchantDID: profileAttributes,
+        profileDID: profileAttributes,
       });
 
       // Valid purchases need to be finalized, otherwise they may reverse.

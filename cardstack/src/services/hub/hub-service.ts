@@ -121,7 +121,7 @@ export const hubProfilePurchaseBody = (
       {
         type: 'merchant-infos',
         lid: '1',
-        attributes: params.merchantDID,
+        attributes: params.profileDID,
       },
     ],
   };
