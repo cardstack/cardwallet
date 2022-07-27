@@ -53,7 +53,7 @@ const ProfileSlugScreen = () => {
         </Container>
       </Container>
       <Container flex={0.2}>
-        <Button onPress={onContinuePress} disabled={!slugAvailable}>
+        <Button onPress={onContinuePress} blocked={!slugAvailable}>
           {strings.buttons.continue}
         </Button>
       </Container>
