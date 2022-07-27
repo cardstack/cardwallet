@@ -14,6 +14,7 @@ import {
   Button,
   CenteredContainer,
   Container,
+  InPageHeader,
   Input,
   SafeAreaView,
   Text,
@@ -192,17 +193,8 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <Container flex={0.15} alignItems="flex-end" paddingVertical={2}>
-        <Text
-          fontSize={13}
-          color="teal"
-          onPress={onSkipPress}
-          fontWeight="bold"
-        >
-          {strings.btns.skip}
-        </Text>
-      </Container>
       <Animated.View style={animatedHeaderStyles}>
+        <InPageHeader onSkipPress={onSkipPress} showLeftIcon={false} />
         <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
           {strings.header}
         </Text>

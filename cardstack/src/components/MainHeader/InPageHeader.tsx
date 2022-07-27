@@ -29,8 +29,8 @@ const InPageHeader = ({
     <Container
       flexDirection="row"
       alignItems="center"
+      minHeight="5%"
       justifyContent={showLeftIcon ? 'space-between' : 'flex-end'}
-      flex={0.1}
     >
       {showLeftIcon && (
         <Icon
@@ -44,7 +44,7 @@ const InPageHeader = ({
       )}
       {showSkipButton && (
         <Touchable onPress={onSkipPress || goBack}>
-          <Text fontSize={13} color="teal" weight="semibold">
+          <Text fontSize={13} color="teal" variant="semibold">
             Skip
           </Text>
         </Touchable>
