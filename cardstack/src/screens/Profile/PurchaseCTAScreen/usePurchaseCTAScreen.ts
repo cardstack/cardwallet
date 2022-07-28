@@ -20,14 +20,14 @@ export const usePurchaseCTAScreen = () => {
 
   const { purchaseProfile, profileProduct } = usePurchaseProfile(profile);
 
-  const onPressChargeExplanation = useCallback(() => {
-    navigate(Routes.PROFILE_CHARGE_EXPLANATION);
-  }, [navigate]);
-
   const localizedValue = useMemo(
     () => profileProduct?.localizedPrice || defaultPrice,
     [profileProduct]
   );
+
+  const onPressChargeExplanation = useCallback(() => {
+    navigate(Routes.PROFILE_CHARGE_EXPLANATION, { localizedValue });
+  }, [localizedValue, navigate]);
 
   return {
     onPressChargeExplanation,
