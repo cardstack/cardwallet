@@ -20,11 +20,8 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import {
-  colors,
-  SPACING_MULTIPLIER,
-  fontFamilyVariants,
-} from '@cardstack/theme';
+import { cardSpaceDomain } from '@cardstack/constants';
+import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
@@ -66,7 +63,6 @@ const styles = StyleSheet.create({
 export const ProfileNameScreen = () => {
   const {
     profile,
-    onSkipPress,
     onContinuePress,
     onChangeText,
     onPressEditColor,
@@ -193,11 +189,9 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
+      <InPageHeader skipAmount={2} />
       <Animated.View style={animatedHeaderStyles}>
-        <InPageHeader onSkipPress={onSkipPress} showLeftIcon={false} />
-        <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
-          {strings.header}
-        </Text>
+        <Text variant="pageHeader">{strings.header}</Text>
         <CenteredContainer>
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
@@ -233,7 +227,7 @@ export const ProfileNameScreen = () => {
       >
         <Animated.View style={phonePreviewStyles}>
           <ProfilePhonePreview
-            url={profile.slug}
+            url={`${profile.slug}${cardSpaceDomain}`}
             name={profile.name || strings.input.placeholder}
             color={profile.color}
             textColor={profile['text-color']}
@@ -273,7 +267,7 @@ export const ProfileNameScreen = () => {
         </Container>
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
-        <Button disabled={!profile.name} onPress={onContinuePress}>
+        <Button blocked={!profile.name} onPress={onContinuePress}>
           {strings.btns.continue}
         </Button>
       </CenteredContainer>

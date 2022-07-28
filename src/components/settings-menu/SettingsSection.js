@@ -1,4 +1,5 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { Linking } from 'react-native';
 
@@ -12,6 +13,7 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
+import { Routes } from '@cardstack/navigation';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
@@ -56,7 +58,6 @@ export default function SettingsSection({
   onPressShowSecret,
   onPressMyWalletAddress,
   onPressDS,
-  onPressIAP,
 }) {
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
@@ -85,6 +86,12 @@ export default function SettingsSection({
     () => checkAllWallets(wallets),
     [wallets]
   );
+
+  const { navigate } = useNavigation();
+
+  const onPressIAP = useCallback(() => {
+    navigate(Routes.PROFILE_SLUG);
+  }, [navigate]);
 
   return (
     <ScrollView backgroundColor="white">
@@ -200,13 +207,13 @@ export default function SettingsSection({
             label="Design System"
             onPress={onPressDS}
           />
-          <ListItem
-            icon={<Icon color="black" name="shopping-cart" />}
-            label="Profile Purchase Test-Drive"
-            onPress={onPressIAP}
-          />
         </>
       )}
+      <ListItem
+        icon={<Icon color="black" name="shopping-cart" />}
+        label="Profile Purchase Test-Drive"
+        onPress={onPressIAP}
+      />
       <CenteredContainer flex={1} paddingBottom={8} paddingTop={2}>
         <AppVersionStamp />
       </CenteredContainer>

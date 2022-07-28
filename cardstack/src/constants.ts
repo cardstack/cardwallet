@@ -22,3 +22,6 @@ export const defaultErrorAlert = {
   message:
     'Please try again or contact support@cardstack.com if this error persists.',
 };
+
+export const cardSpaceSuffix = 'card.xyz';
+export const cardSpaceDomain = `.${cardSpaceSuffix}`;

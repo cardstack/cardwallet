@@ -24,6 +24,7 @@ import {
   PostProfilePurchaseQueryParams,
   GetValidateProfileSlugParams,
   CreateProfileInfoParams,
+  PostProfilePurchaseQueryResult,
 } from './hub-types';
 
 const routes = {
@@ -110,7 +111,10 @@ export const hubApi = createApi({
         responseHandler: response => response.text(),
       }),
     }),
-    profilePurchases: builder.mutation<string, PostProfilePurchaseQueryParams>({
+    profilePurchases: builder.mutation<
+      PostProfilePurchaseQueryResult,
+      PostProfilePurchaseQueryParams
+    >({
       query: params => ({
         url: routes.profilePurchases,
         method: 'POST',

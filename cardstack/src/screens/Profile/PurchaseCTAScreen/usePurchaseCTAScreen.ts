@@ -1,24 +1,37 @@
-import { useNavigation } from '@react-navigation/native';
-import { useCallback } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useCallback, useMemo } from 'react';
 
+import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
+import { RouteType } from '@cardstack/navigation/types';
+import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
+
+const defaultPrice = '$0.99';
+interface NavParams {
+  profile: CreateProfileInfoParams;
+}
 
 export const usePurchaseCTAScreen = () => {
   const { navigate } = useNavigation();
 
-  // TODO: change this
-  const onPressSkip = useCallback(() => {
-    console.log('Go wherever skips needs to go');
-  }, []);
+  const {
+    params: { profile },
+  } = useRoute<RouteType<NavParams>>();
+
+  const { purchaseProfile, profileProduct } = usePurchaseProfile(profile);
+
+  const localizedValue = useMemo(
+    () => profileProduct?.localizedPrice || defaultPrice,
+    [profileProduct]
+  );
 
   const onPressChargeExplanation = useCallback(() => {
-    navigate(Routes.PROFILE_CHARGE_EXPLANATION);
-  }, [navigate]);
+    navigate(Routes.PROFILE_CHARGE_EXPLANATION, { localizedValue });
+  }, [localizedValue, navigate]);
 
-  // TODO: change this when IAP is working
-  const onPressBuy = useCallback(() => {
-    console.log('Start IAP process');
-  }, []);
-
-  return { onPressChargeExplanation, onPressBuy, onPressSkip };
+  return {
+    onPressChargeExplanation,
+    onPressBuy: purchaseProfile,
+    localizedValue,
+  };
 };

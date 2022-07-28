@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import React, { useCallback } from 'react';
 
 import {
   Container,
@@ -14,22 +14,26 @@ interface Props extends ContainerProps {
   leftIconProps?: IconProps;
   showLeftIcon?: boolean;
   showSkipButton?: boolean;
-  onSkipPress?: () => void;
+  skipAmount?: number;
 }
 
 const InPageHeader = ({
   leftIconProps,
   showLeftIcon = true,
   showSkipButton = true,
-  onSkipPress,
+  skipAmount = 1,
 }: Props) => {
-  const { goBack } = useNavigation();
+  const { goBack, dispatch: navDispatch } = useNavigation();
+
+  const onSkipPress = useCallback(() => {
+    navDispatch(StackActions.pop(skipAmount));
+  }, [navDispatch, skipAmount]);
 
   return (
     <Container
       flexDirection="row"
       alignItems="center"
-      minHeight="5%"
+      minHeight="8%"
       justifyContent={showLeftIcon ? 'space-between' : 'flex-end'}
     >
       {showLeftIcon && (
@@ -43,7 +47,7 @@ const InPageHeader = ({
         />
       )}
       {showSkipButton && (
-        <Touchable onPress={onSkipPress || goBack}>
+        <Touchable onPress={onSkipPress}>
           <Text fontSize={13} color="teal" variant="semibold">
             Skip
           </Text>

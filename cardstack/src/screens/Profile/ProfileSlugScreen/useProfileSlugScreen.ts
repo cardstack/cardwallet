@@ -1,11 +1,18 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
+import { useNavigation } from '@react-navigation/native';
 import { useState, useCallback, useEffect } from 'react';
 
+import { useInitIAPProducts } from '@cardstack/hooks/usePurchaseProfile';
+import { Routes } from '@cardstack/navigation';
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
 
 import { strings, MIN_USERNAME_LENGTH } from './strings';
 
 export const useProfileSlugScreen = () => {
+  useInitIAPProducts();
+
+  const { navigate } = useNavigation();
+
   const [slug, setSlug] = useState('');
 
   const [slugValidation, setSlugValidation] = useState({
@@ -23,8 +30,8 @@ export const useProfileSlugScreen = () => {
   }, []);
 
   const onContinuePress = useCallback(() => {
-    // TODO
-  }, []);
+    navigate(Routes.PROFILE_NAME, { slug });
+  }, [navigate, slug]);
 
   const onSlugChange = useCallback(
     text => {

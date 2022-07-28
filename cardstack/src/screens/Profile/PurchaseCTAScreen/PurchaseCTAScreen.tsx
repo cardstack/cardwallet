@@ -18,9 +18,6 @@ import profilePreview from '../../../assets/profile-preview.png';
 import { strings } from './strings';
 import { usePurchaseCTAScreen } from './usePurchaseCTAScreen';
 
-// TODO: replace this with the value from usePurchase hook
-const LOCALIZED_PRICE = '$0.99';
-
 interface BenefitsItem {
   iconName: IconName;
   copy: string;
@@ -28,9 +25,9 @@ interface BenefitsItem {
 
 const PurchaseCTAScreen = () => {
   const {
-    onPressSkip,
     onPressChargeExplanation,
     onPressBuy,
+    localizedValue,
   } = usePurchaseCTAScreen();
 
   const BenefitsItem = useCallback(
@@ -51,7 +48,7 @@ const PurchaseCTAScreen = () => {
     []
   );
 
-  const buttonLabel = `${strings.button} ${LOCALIZED_PRICE}`;
+  const buttonLabel = `${strings.button} ${localizedValue}`;
 
   return (
     <SafeAreaView
@@ -59,7 +56,7 @@ const PurchaseCTAScreen = () => {
       flex={1}
       paddingHorizontal={5}
     >
-      <InPageHeader onSkipPress={onPressSkip} />
+      <InPageHeader skipAmount={3} />
       <Container
         flex={1}
         flexDirection="column"
