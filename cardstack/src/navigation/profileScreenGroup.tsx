@@ -9,10 +9,16 @@ import {
 
 import { StackType } from './types';
 
-import { horizontalInterpolator, Routes } from '.';
+import { horizontalNonStackingInterpolator, Routes } from '.';
 
 export const ProfileScreenGroup = ({ Stack }: { Stack: StackType }) => (
-  <Stack.Group screenOptions={horizontalInterpolator}>
+  <Stack.Group
+    screenOptions={{
+      ...horizontalNonStackingInterpolator,
+      presentation: 'card',
+      detachPreviousScreen: false,
+    }}
+  >
     <Stack.Screen component={ProfileNameScreen} name={Routes.PROFILE_NAME} />
     <Stack.Screen component={ProfileSlugScreen} name={Routes.PROFILE_SLUG} />
     <Stack.Screen

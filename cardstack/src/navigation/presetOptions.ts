@@ -3,7 +3,7 @@ import {
   StackCardInterpolationProps,
   StackNavigationOptions,
 } from '@react-navigation/stack';
-import { Keyboard } from 'react-native';
+import { Animated, Keyboard } from 'react-native';
 
 import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
@@ -13,6 +13,38 @@ import { ScreenNavigation } from './screens';
 export const horizontalInterpolator: StackNavigationOptions = {
   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
   gestureDirection: 'horizontal',
+};
+
+export const horizontalNonStackingInterpolator: StackNavigationOptions = {
+  cardStyleInterpolator: ({ current, next, inverted, layouts: { screen } }) => {
+    const translateFocused = Animated.multiply(
+      current.progress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [screen.width, 0],
+      }),
+      inverted
+    );
+
+    const translateUnfocused = next
+      ? Animated.multiply(
+          next.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, -screen.width],
+          }),
+          inverted
+        )
+      : 0;
+
+    return {
+      cardStyle: {
+        transform: [
+          {
+            translateX: Animated.add(translateFocused, translateUnfocused),
+          },
+        ],
+      },
+    };
+  },
 };
 
 const forFade = ({ current }: StackCardInterpolationProps) => ({
