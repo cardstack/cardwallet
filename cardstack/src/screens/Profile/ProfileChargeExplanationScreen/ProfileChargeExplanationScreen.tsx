@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import {
   Container,
@@ -35,4 +35,4 @@ const ProfileChargeExplanationScreen = () => (
   </SafeAreaView>
 );
 
-export default ProfileChargeExplanationScreen;
+export default memo(ProfileChargeExplanationScreen);
