@@ -120,7 +120,7 @@ describe('usePurchaseProfile', () => {
       expect(mockValidateReceipt).toBeCalledWith({
         iapReceipt: mockPurchase.transactionReceipt,
         provider: 'apple',
-        merchantDID: profile,
+        profileInfo: profile,
       });
     });
   });

@@ -91,7 +91,7 @@ export default function SettingsSection({
 
   const onPressIAP = useCallback(() => {
     navigate(Routes.PROFILE_SLUG);
-  }, []);
+  }, [navigate]);
 
   return (
     <ScrollView backgroundColor="white">

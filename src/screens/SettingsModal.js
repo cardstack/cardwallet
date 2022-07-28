@@ -21,7 +21,6 @@ import { Icon, Text, Touchable } from '@cardstack/components';
 import { NAV_HEADER_HEIGHT } from '@cardstack/components/MainHeader/components/MainHeaderWrapper';
 import { slideLeftToRightPreset } from '@cardstack/navigation';
 import DesignSystemScreen from '@cardstack/screens/Dev/DesignSystemScreen';
-import ProfilePurchaseScreen from '@cardstack/screens/ProfilePurchaseScreen/ProfilePurchaseScreen';
 import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
 import { palette } from '@cardstack/theme';
 
@@ -109,11 +108,6 @@ export const SettingsPages = {
     component: WalletAddressScreen,
     key: 'MyWalletAddressSection',
     title: 'My Wallet Address',
-  },
-  iap: {
-    component: ProfilePurchaseScreen,
-    key: 'ProfilePurchaseScreen',
-    title: 'Profile Purchase',
   },
 };
 

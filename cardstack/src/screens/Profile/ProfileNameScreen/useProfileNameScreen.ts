@@ -7,7 +7,7 @@ import { useState, useCallback, useMemo } from 'react';
 
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
-import { CreateBusinessInfoDIDParams } from '@cardstack/types';
+import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { contrastingTextColor } from '@cardstack/utils';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
@@ -27,7 +27,7 @@ export const useProfileNameScreen = () => {
   const [profileName, setProfileName] = useState('');
   const [profileColor, setProfileColor] = useState('#0089F9');
 
-  const profile: CreateBusinessInfoDIDParams = useMemo(
+  const profile: CreateProfileInfoParams = useMemo(
     () => ({
       slug,
       name: profileName,

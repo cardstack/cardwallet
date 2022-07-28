@@ -5,7 +5,7 @@ import { useIAP } from 'react-native-iap';
 import { defaultErrorAlert } from '@cardstack/constants';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { useProfilePurchasesMutation } from '@cardstack/services';
-import { CreateProfileInfoParams } from '@cardstack/types';
+import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { Device } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
@@ -134,7 +134,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
       validateReceiptCreateProfile({
         iapReceipt: currentPurchase.transactionReceipt,
         provider: Device.iapProvider,
-        profileDID: profile,
+        profileInfo: profile,
       });
     }
   }, [

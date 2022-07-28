@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
-import { CreateProfileInfoParams } from '@cardstack/types';
+import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 
 const defaultPrice = '$0.99';
 interface NavParams {

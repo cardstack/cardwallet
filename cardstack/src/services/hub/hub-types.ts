@@ -56,7 +56,7 @@ export interface CreateProfileInfoParams {
 export interface PostProfilePurchaseQueryParams {
   iapReceipt: string;
   provider: IAPProviderType;
-  profileDID?: CreateProfileInfoParams;
+  profileInfo?: CreateProfileInfoParams;
 }
 
 export interface GetValidateProfileSlugParams {
@@ -66,7 +66,7 @@ export interface GetValidateProfileSlugParams {
 export interface PostProfilePurchaseQueryResult {
   id: string;
   type: 'merchant-infos';
-  attributes: CreateBusinessInfoDIDParams & { did: string };
+  attributes: CreateProfileInfoParams & { did: string };
   included: [
     {
       id: string;
