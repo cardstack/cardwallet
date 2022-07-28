@@ -62,3 +62,18 @@ export interface PostProfilePurchaseQueryParams {
 export interface GetValidateProfileSlugParams {
   slug: string;
 }
+
+export interface PostProfilePurchaseQueryResult {
+  id: string;
+  type: 'merchant-infos';
+  attributes: CreateBusinessInfoDIDParams & { did: string };
+  included: [
+    {
+      id: string;
+      type: 'job-tickets';
+      attributes: {
+        state: string;
+      };
+    }
+  ];
+}
