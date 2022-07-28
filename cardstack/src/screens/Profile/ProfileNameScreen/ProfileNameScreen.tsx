@@ -20,11 +20,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import {
-  colors,
-  SPACING_MULTIPLIER,
-  fontFamilyVariants,
-} from '@cardstack/theme';
+import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
@@ -193,11 +189,9 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
+      <InPageHeader />
       <Animated.View style={animatedHeaderStyles}>
-        <InPageHeader onSkipPress={onSkipPress} />
-        <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
-          {strings.header}
-        </Text>
+        <Text variant="pageHeader">{strings.header}</Text>
         <CenteredContainer>
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
@@ -273,7 +267,7 @@ export const ProfileNameScreen = () => {
         </Container>
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
-        <Button disabled={!profile.name} onPress={onContinuePress}>
+        <Button blocked={!profile.name} onPress={onContinuePress}>
           {strings.btns.continue}
         </Button>
       </CenteredContainer>

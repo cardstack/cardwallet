@@ -52,7 +52,7 @@ const ProfileSlugScreen = () => {
           </Text>
         </Container>
       </Container>
-      <Container flex={0.2}>
+      <Container flex={0.2} justifyContent="flex-end" paddingBottom={5}>
         <Button onPress={onContinuePress} blocked={!slugAvailable}>
           {strings.buttons.continue}
         </Button>
