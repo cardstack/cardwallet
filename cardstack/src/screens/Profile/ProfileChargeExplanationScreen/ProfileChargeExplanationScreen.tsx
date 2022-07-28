@@ -2,12 +2,15 @@ import React, { memo } from 'react';
 
 import {
   Container,
+  IconProps,
   InPageHeader,
   SafeAreaView,
   Text,
 } from '@cardstack/components';
 
 import { strings } from './strings';
+
+const leftIconProps: IconProps = { name: 'x', left: -6 };
 
 // TODO: replace this with the value from usePurchase hook
 const LOCALIZED_PRICE = '$0.99 USD';
@@ -19,10 +22,7 @@ const ProfileChargeExplanationScreen = () => (
     paddingHorizontal={5}
     justifyContent="space-between"
   >
-    <InPageHeader
-      showSkipButton={false}
-      leftIconProps={{ name: 'x', left: -6 }}
-    />
+    <InPageHeader showSkipButton={false} leftIconProps={leftIconProps} />
 
     <Container flex={0.95}>
       <Text color="white" variant="pageHeader" paddingBottom={5}>
