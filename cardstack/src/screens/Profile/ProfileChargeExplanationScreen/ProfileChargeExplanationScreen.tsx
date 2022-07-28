@@ -9,6 +9,9 @@ import {
 
 import { strings } from './strings';
 
+// TODO: replace this with the value from usePurchase hook
+const LOCALIZED_PRICE = '$0.99 USD';
+
 const ProfileChargeExplanationScreen = () => (
   <SafeAreaView
     backgroundColor="backgroundDarkPurple"
@@ -26,7 +29,7 @@ const ProfileChargeExplanationScreen = () => (
         {strings.title}
       </Text>
       <Text color="grayText" letterSpacing={0.4}>
-        {strings.description}
+        {strings.description(LOCALIZED_PRICE)}
       </Text>
     </Container>
   </SafeAreaView>
