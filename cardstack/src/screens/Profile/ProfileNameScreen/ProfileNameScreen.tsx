@@ -194,7 +194,7 @@ export const ProfileNameScreen = () => {
       justifyContent="space-between"
     >
       <Animated.View style={animatedHeaderStyles}>
-        <InPageHeader onSkipPress={onSkipPress} showLeftIcon={false} />
+        <InPageHeader onSkipPress={onSkipPress} />
         <Text fontSize={24} color="white" {...fontFamilyVariants.light}>
           {strings.header}
         </Text>
@@ -233,7 +233,7 @@ export const ProfileNameScreen = () => {
       >
         <Animated.View style={phonePreviewStyles}>
           <ProfilePhonePreview
-            url={profile.slug}
+            url={`${profile.slug}.card.xyz`}
             name={profile.name || strings.input.placeholder}
             color={profile.color}
             textColor={profile['text-color']}

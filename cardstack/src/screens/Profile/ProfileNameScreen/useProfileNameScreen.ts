@@ -1,31 +1,41 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { useState, useCallback, useMemo } from 'react';
 
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
+import { CreateBusinessInfoDIDParams } from '@cardstack/types';
 import { contrastingTextColor } from '@cardstack/utils';
 
+import { useAccountProfile } from '@rainbow-me/hooks';
+
 interface NavParams {
-  profileUrl: string;
+  slug: string;
 }
 
 export const useProfileNameScreen = () => {
-  const { params } = useRoute<RouteType<NavParams>>();
-  const { navigate } = useNavigation();
+  const {
+    params: { slug },
+  } = useRoute<RouteType<NavParams>>();
+
+  const { navigate, dispatch: navDispatch } = useNavigation();
+  const { accountAddress } = useAccountProfile();
 
   const [profileName, setProfileName] = useState('');
   const [profileColor, setProfileColor] = useState('#0089F9');
 
-  const profileUrl = params?.profileUrl || 'mandello.card.yxz'; // Temp url
-
-  const profile = useMemo(
+  const profile: CreateBusinessInfoDIDParams = useMemo(
     () => ({
+      slug,
       name: profileName,
-      slug: profileUrl,
       color: profileColor,
       'text-color': contrastingTextColor(profileColor),
+      'owner-address': accountAddress,
     }),
-    [profileColor, profileName, profileUrl]
+    [accountAddress, profileColor, profileName, slug]
   );
 
   const onChangeText = useCallback(text => {
@@ -40,13 +50,12 @@ export const useProfileNameScreen = () => {
   }, [navigate, profileColor]);
 
   const onContinuePress = useCallback(() => {
-    // TDB
-    console.log({ profileName });
-  }, [profileName]);
+    navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
+  }, [navigate, profile]);
 
   const onSkipPress = useCallback(() => {
-    // TDB
-  }, []);
+    navDispatch(StackActions.pop(2));
+  }, [navDispatch]);
 
   return {
     onSkipPress,
