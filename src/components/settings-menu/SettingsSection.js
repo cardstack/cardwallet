@@ -207,13 +207,13 @@ export default function SettingsSection({
             label="Design System"
             onPress={onPressDS}
           />
-          <ListItem
-            icon={<Icon color="black" name="shopping-cart" />}
-            label="Profile Purchase Test-Drive"
-            onPress={onPressIAP}
-          />
         </>
       )}
+      <ListItem
+        icon={<Icon color="black" name="shopping-cart" />}
+        label="Profile Purchase Test-Drive"
+        onPress={onPressIAP}
+      />
       <CenteredContainer flex={1} paddingBottom={8} paddingTop={2}>
         <AppVersionStamp />
       </CenteredContainer>
