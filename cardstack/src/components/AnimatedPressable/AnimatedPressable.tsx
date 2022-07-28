@@ -4,8 +4,8 @@ import {
   PressableProps,
   Animated,
   ViewStyle,
-  StyleSheet,
   GestureResponderEvent,
+  Easing,
 } from 'react-native';
 import ReactNativeHapticFeedback, {
   HapticFeedbackTypes,
@@ -14,23 +14,15 @@ import ReactNativeHapticFeedback, {
 import { delayLongPressMs } from '@cardstack/constants';
 import { Device } from '@cardstack/utils';
 
-enum Scale {
-  grow = 0,
-  shrink = 1,
+enum Opacity {
+  fadeIn = 0,
+  fadeOut = 1,
 }
 
-const scaleRatio = {
+const opacityRange = {
   full: 1,
-  decreased: 0.9,
+  decreased: 0.7,
 };
-
-const styles = StyleSheet.create({
-  centeredContainer: {
-    flexShrink: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 interface AnimatedPressableProps extends PressableProps {
   enableHapticFeedback?: boolean;
@@ -43,14 +35,14 @@ const AnimatedPressable = ({
   hapticType = 'selection',
   ...props
 }: AnimatedPressableProps) => {
-  const animatedValue = useRef(new Animated.Value(Scale.grow)).current;
+  const animatedValue = useRef(new Animated.Value(Opacity.fadeOut)).current;
 
   const onPressAnimate = useCallback(
-    (toValue: Scale) => () => {
-      Animated.spring(animatedValue, {
+    (toValue: Opacity) => () => {
+      Animated.timing(animatedValue, {
         toValue,
-        bounciness: 3,
-        speed: 100,
+        duration: 100,
+        easing: Easing.inOut(Easing.quad),
         useNativeDriver: true,
       }).start();
     },
@@ -59,15 +51,10 @@ const AnimatedPressable = ({
 
   const animatedStyle: Animated.WithAnimatedObject<ViewStyle> = useMemo(
     () => ({
-      ...styles,
-      transform: [
-        {
-          scale: animatedValue.interpolate({
-            inputRange: [Scale.grow, Scale.shrink],
-            outputRange: [scaleRatio.full, scaleRatio.decreased],
-          }),
-        },
-      ],
+      opacity: animatedValue.interpolate({
+        inputRange: [Opacity.fadeIn, Opacity.fadeOut],
+        outputRange: [opacityRange.decreased, opacityRange.full],
+      }),
     }),
     [animatedValue]
   );
@@ -100,8 +87,8 @@ const AnimatedPressable = ({
     <Animated.View style={animatedStyle} pointerEvents="box-none">
       <Pressable
         {...props}
-        onPressIn={onPressAnimate(Scale.shrink)}
-        onPressOut={onPressAnimate(Scale.grow)}
+        onPressIn={onPressAnimate(Opacity.fadeIn)}
+        onPressOut={onPressAnimate(Opacity.fadeOut)}
         onPress={handleOnPress}
         onLongPress={handleLongPress}
         delayLongPress={delayLongPressMs}
