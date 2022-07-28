@@ -2,8 +2,6 @@ import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { act, renderHook } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/react-native';
 
-import { DEPRECATED_checkBusinessIdUniqueness } from '@cardstack/services/hub-service';
-
 import { useAccountProfile } from '@rainbow-me/hooks';
 
 import { exampleMerchantData, strings } from '../components';
@@ -17,19 +15,6 @@ jest.mock('@rainbow-me/hooks', () => ({
     network: 'sokol',
   }),
   useWallets: () => ({ selectedWallet: { id: 'fooSelectedWallet' } }),
-}));
-
-jest.mock('@cardstack/services/hub-service', () => ({
-  DEPRECATED_checkBusinessIdUniqueness: jest.fn(() => ({
-    slugAvailable: false,
-  })),
-}));
-
-jest.mock('@cardstack/hooks/prepaid-card/useAuthToken', () => ({
-  useAuthToken: () => ({
-    authToken: '123',
-    isLoading: false,
-  }),
 }));
 
 jest.mock('@react-navigation/native', () => ({
@@ -50,6 +35,22 @@ jest.mock('@cardstack/services', () => ({
       isError: false,
     },
   ]),
+  useCreateProfileInfoMutation: jest.fn(() => [
+    jest.fn(),
+    {
+      isSuccess: true,
+      isError: false,
+      data: 'did',
+    },
+  ]),
+  useLazyValidateProfileSlugQuery: jest.fn(() => [
+    jest.fn(),
+    {
+      isSuccess: true,
+      isError: false,
+      data: { slugAvailable: true, detail: '' },
+    },
+  ]),
 }));
 
 describe('useProfileForm', () => {
@@ -68,7 +69,6 @@ describe('useProfileForm', () => {
     const { result } = renderHook(() => useProfileForm());
 
     expect(result.current.businessName).toBe('');
-    expect(result.current.isUniqueId).toBe(false);
     expect(result.current.avatarName).toBe(
       exampleMerchantData.merchantInfo.name
     );
@@ -120,13 +120,6 @@ describe('useProfileForm', () => {
   });
 
   it('should return error if profileId length is less than 4 characters', async () => {
-    (DEPRECATED_checkBusinessIdUniqueness as jest.Mock).mockImplementation(
-      () => ({
-        slugAvailable: true,
-        detail: '',
-      })
-    );
-
     const { result } = renderHook(() => useProfileForm());
     const businessName = 'foo';
     const businessId = 'bar';
@@ -157,13 +150,6 @@ describe('useProfileForm', () => {
   });
 
   it('should return no error if unique id and valid businessName', async () => {
-    (DEPRECATED_checkBusinessIdUniqueness as jest.Mock).mockImplementation(
-      () => ({
-        slugAvailable: true,
-        detail: '',
-      })
-    );
-
     const { result } = renderHook(() => useProfileForm());
     const businessId = 'bar1';
 

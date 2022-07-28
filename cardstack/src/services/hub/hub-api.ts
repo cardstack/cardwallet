@@ -1,10 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import {
-  CustodialWallet,
-  BusinessIDUniquenessResponse,
-} from '@cardstack/types';
+import { CustodialWallet, ProfileIDUniquenessResponse } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
 import { queryPromiseWrapper } from '../utils';
@@ -26,6 +23,7 @@ import {
   GetExchangeRatesQueryParams,
   PostProfilePurchaseQueryParams,
   GetValidateProfileSlugParams,
+  CreateProfileInfoParams,
 } from './hub-types';
 
 const routes = {
@@ -34,7 +32,10 @@ const routes = {
   exchangeRates: '/exchange-rates',
   registerFCMToken: '/push-notification-registrations',
   profilePurchases: '/profile-purchases',
-  validateProfileSlug: '/merchant-infos/validate-slug',
+  profileInfo: {
+    root: '/merchant-infos',
+    validateSlug: '/validate-slug',
+  },
 };
 
 enum CacheTag {
@@ -117,10 +118,19 @@ export const hubApi = createApi({
       }),
     }),
     validateProfileSlug: builder.query<
-      BusinessIDUniquenessResponse,
+      ProfileIDUniquenessResponse,
       GetValidateProfileSlugParams
     >({
-      query: ({ slug }) => `${routes.validateProfileSlug}/${slug}`,
+      query: ({ slug }) =>
+        `${routes.profileInfo.root}${routes.profileInfo.validateSlug}/${slug}`,
+    }),
+    createProfileInfo: builder.mutation<string, CreateProfileInfoParams>({
+      query: params => ({
+        url: routes.profileInfo.root,
+        method: 'POST',
+        body: hubBodyBuilder(routes.profileInfo.root, params),
+      }),
+      transformResponse: ({ data }) => data?.attributes?.did,
     }),
   }),
 });
@@ -135,4 +145,5 @@ export const {
   useUnregisterFcmTokenMutation,
   useProfilePurchasesMutation,
   useLazyValidateProfileSlugQuery,
+  useCreateProfileInfoMutation,
 } = hubApi;

@@ -1,11 +1,7 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { KebabToCamelCaseKeys } from 'globals';
 
-import {
-  CustodialWalletAttrs,
-  CreateBusinessInfoDIDParams,
-  IAPProviderType,
-} from '@cardstack/types';
+import { CustodialWalletAttrs, IAPProviderType } from '@cardstack/types';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
@@ -49,10 +45,18 @@ export interface GetExchangeRatesQueryParams {
   e?: 'kucoin' | string;
 }
 
+export interface CreateProfileInfoParams {
+  name: string;
+  slug: string;
+  color: string;
+  'text-color': string;
+  'owner-address'?: string;
+}
+
 export interface PostProfilePurchaseQueryParams {
   iapReceipt: string;
   provider: IAPProviderType;
-  merchantDID?: CreateBusinessInfoDIDParams;
+  profileDID?: CreateProfileInfoParams;
 }
 
 export interface GetValidateProfileSlugParams {
