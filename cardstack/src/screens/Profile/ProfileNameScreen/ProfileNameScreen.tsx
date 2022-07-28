@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
 export const ProfileNameScreen = () => {
   const {
     profile,
-    onSkipPress,
     onContinuePress,
     onChangeText,
     onPressEditColor,
@@ -189,7 +188,7 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <InPageHeader />
+      <InPageHeader skipAmount={2} />
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header}</Text>
         <CenteredContainer>

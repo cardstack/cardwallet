@@ -59,7 +59,7 @@ const PurchaseCTAScreen = () => {
       flex={1}
       paddingHorizontal={5}
     >
-      <InPageHeader onSkipPress={onPressSkip} />
+      <InPageHeader skipAmount={3} />
       <Container
         flex={1}
         flexDirection="column"
