@@ -9,6 +9,7 @@ import {
   Text,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
+import { cardSpaceDomain } from '@cardstack/constants';
 import { buttonVariants } from '@cardstack/theme';
 
 const themes = ['light', 'dark'];
@@ -65,7 +66,7 @@ const DesignSystemScreen = () => {
         case 'Input':
           return (
             <Container padding={2}>
-              <SuffixedInput suffixText=".card.xyz" />
+              <SuffixedInput suffixText={cardSpaceDomain} />
             </Container>
           );
         case 'Buttons':

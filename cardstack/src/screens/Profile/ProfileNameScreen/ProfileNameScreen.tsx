@@ -20,6 +20,7 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
+import { cardSpaceDomain } from '@cardstack/constants';
 import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
@@ -226,7 +227,7 @@ export const ProfileNameScreen = () => {
       >
         <Animated.View style={phonePreviewStyles}>
           <ProfilePhonePreview
-            url={`${profile.slug}.card.xyz`}
+            url={`${profile.slug}${cardSpaceDomain}`}
             name={profile.name || strings.input.placeholder}
             color={profile.color}
             textColor={profile['text-color']}
