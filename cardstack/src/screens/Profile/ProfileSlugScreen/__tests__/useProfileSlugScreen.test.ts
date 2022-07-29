@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
-import { BusinessIDUniquenessResponse } from '@cardstack/types';
+import { ProfileIDUniquenessResponse } from '@cardstack/types';
 
 import { strings } from '../strings';
 import { useProfileSlugScreen } from '../useProfileSlugScreen';
@@ -12,7 +12,7 @@ jest.mock('@cardstack/services', () => ({
 
 describe('useProfileSlugScreen', () => {
   const mockLazyValidateProfileSlugQuery = (
-    expectedResponse?: Partial<BusinessIDUniquenessResponse>,
+    expectedResponse?: Partial<ProfileIDUniquenessResponse>,
     error?: any
   ) => {
     (useLazyValidateProfileSlugQuery as jest.Mock).mockImplementation(() => [
