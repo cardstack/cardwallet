@@ -13,11 +13,11 @@ jest.mock('@cardstack/services', () => ({
 describe('useProfileSlugScreen', () => {
   const mockLazyValidateProfileSlugQuery = (
     expectedResponse?: Partial<BusinessIDUniquenessResponse>,
-    success?: any
+    error?: any
   ) => {
     (useLazyValidateProfileSlugQuery as jest.Mock).mockImplementation(() => [
       jest.fn(),
-      { data: expectedResponse, error: success },
+      { data: expectedResponse, error },
     ]);
   };
 
