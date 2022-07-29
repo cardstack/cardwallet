@@ -1,18 +1,39 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+import { Product, Purchase, useIAP } from 'react-native-iap';
 
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
-import { BusinessIDUniquenessResponse } from '@cardstack/types';
+import { ProfileIDUniquenessResponse } from '@cardstack/types';
 
 import { strings } from '../strings';
 import { useProfileSlugScreen } from '../useProfileSlugScreen';
+
+const mockProduct: Product = {
+  type: 'iap',
+  productId: '0001',
+  title: 'Mock',
+  description: 'Mock',
+  price: '0.99',
+  currency: 'USD',
+  localizedPrice: '0.99',
+};
+
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: jest.fn(() => ({
+    navigate: jest.fn(),
+  })),
+}));
 
 jest.mock('@cardstack/services', () => ({
   useLazyValidateProfileSlugQuery: jest.fn(),
 }));
 
+jest.mock('react-native-iap', () => ({
+  useIAP: jest.fn(),
+}));
+
 describe('useProfileSlugScreen', () => {
   const mockLazyValidateProfileSlugQuery = (
-    expectedResponse?: Partial<BusinessIDUniquenessResponse>,
+    expectedResponse?: Partial<ProfileIDUniquenessResponse>,
     error?: any
   ) => {
     (useLazyValidateProfileSlugQuery as jest.Mock).mockImplementation(() => [
@@ -21,11 +42,27 @@ describe('useProfileSlugScreen', () => {
     ]);
   };
 
+  const mockedGetProducts = jest.fn();
+  const mockedRequestPurchase = jest.fn();
+  const mockedFinishTransaction = jest.fn();
+
+  const mockUseIAP = (currentPurchase: Purchase | null = null) => {
+    (useIAP as jest.Mock).mockImplementation(() => ({
+      getProducts: mockedGetProducts.mockResolvedValue(mockProduct),
+      requestPurchase: mockedRequestPurchase.mockResolvedValue(null),
+      finishTransaction: mockedFinishTransaction.mockResolvedValue(null),
+      products: [mockProduct],
+      currentPurchase: currentPurchase,
+    }));
+  };
+
   beforeEach(() => {
     mockLazyValidateProfileSlugQuery({
       slugAvailable: false,
       detail: '',
     });
+
+    mockUseIAP();
   });
 
   afterEach(() => {
