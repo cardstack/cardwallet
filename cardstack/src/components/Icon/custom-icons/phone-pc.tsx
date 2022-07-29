@@ -69,11 +69,7 @@ function SvgComponent(props: SvgProps) {
             />
           </G>
         </G>
-        <G
-          id="prefix__Card_Wallet_app_icon_FINAL"
-          data-name="Card Wallet app icon FINAL"
-          transform="translate(128.674 480.029)"
-        >
+        <G transform="translate(128.674 480.029)">
           <Path
             id="prefix__Path_1"
             data-name="Path 1"

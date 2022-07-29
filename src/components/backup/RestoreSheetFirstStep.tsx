@@ -6,6 +6,7 @@ import {
   OptionItemProps,
   Text,
 } from '@cardstack/components';
+import { appName } from '@cardstack/constants';
 import { Device } from '@cardstack/utils/device';
 
 interface RestoreSheetFirstStepProps {
@@ -68,7 +69,7 @@ export default function RestoreSheetFirstStep({
         <CloudOptionItem
           onPress={onCloudRestore}
           subText={`Connect to ${Device.cloudPlatform} to restore`}
-          title="Have a Card Wallet backup?"
+          title={`Have a ${appName} backup?`}
         />
       )}
       {Device.isAndroid && isFetchingBackups && (

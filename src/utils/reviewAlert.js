@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert, Linking, NativeModules } from 'react-native';
+import { appName } from '@cardstack/constants';
 const { RainbowRequestReview } = NativeModules;
 
 export const AppleReviewAddress =
@@ -29,7 +30,7 @@ export default async function maybeReviewAlert() {
   AsyncStorage.setItem(REVIEW_ASKED_KEY, Date.now().toString());
 
   Alert.alert(
-    `Are you enjoying Card Wallet? 🥰`,
+    `Are you enjoying ${appName}? 🥰`,
     'Leave a review on the App Store!',
     [
       {

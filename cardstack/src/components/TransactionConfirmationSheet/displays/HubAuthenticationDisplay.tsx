@@ -8,6 +8,7 @@ import {
   NetworkBadge,
   Text,
 } from '@cardstack/components';
+import { appName } from '@cardstack/constants';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useAccountProfile } from '@rainbow-me/hooks';
@@ -76,7 +77,7 @@ const AuthenticateSection = () => {
           <Text fontSize={15} textAlign="center">
             I am signing this message to prove to Cardstack Hub that I am the
             owner of this address, so I can store and update information using
-            the Card Wallet
+            the {appName}
           </Text>
         </Container>
       </CenteredContainer>

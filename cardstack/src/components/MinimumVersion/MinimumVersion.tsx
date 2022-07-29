@@ -8,13 +8,14 @@ import {
   Text,
   CenteredContainer,
 } from '@cardstack/components';
+import { appName } from '@cardstack/constants';
 import { Device, screenHeight, screenWidth } from '@cardstack/utils';
 
 import CardWalletLogo from '../../assets/cardstackLogo.png';
 import PeopleIllustrationBackground from '../../assets/people-ill-bg.png';
 
 const strings = {
-  title: 'There is a new version of Card Wallet.',
+  title: `There is a new version of ${appName}.`,
   subtitle: 'Update now for the best experience.',
   button: 'Update',
 };

@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import Mailer from 'react-native-mail';
 import { Alert } from '../components/alerts';
 import useAppVersion from './useAppVersion';
-import { SUPPORT_EMAIL_ADDRESS } from '@cardstack/constants';
+import { appName, SUPPORT_EMAIL_ADDRESS } from '@cardstack/constants';
 
 const setClipboardToFeedbackEmail = () =>
   Clipboard.setString(SUPPORT_EMAIL_ADDRESS);
@@ -34,7 +34,7 @@ const handleMailError = debounce(
 function feedbackEmailOptions(appVersion) {
   return {
     recipients: [SUPPORT_EMAIL_ADDRESS],
-    subject: `Card Wallet Feedback - ${ios ? 'iOS' : 'Android'} ${appVersion}`,
+    subject: `${appName} Feedback - ${ios ? 'iOS' : 'Android'} ${appVersion}`,
   };
 }
 

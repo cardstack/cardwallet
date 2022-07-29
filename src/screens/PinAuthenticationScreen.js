@@ -13,6 +13,7 @@ import {
 import { useDimensions, useShakeAnimation } from '../hooks';
 import { useBlockBackButton } from '../hooks/useBlockBackButton';
 import { CenteredContainer, Icon, Text } from '@cardstack/components';
+import { appName } from '@cardstack/constants';
 import { Routes, useDismissCurrentRoute } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
 import { padding } from '@rainbow-me/styles';
@@ -213,8 +214,13 @@ const PinAuthenticationScreen = () => {
         >
           <CenteredContainer>
             <Icon name="cardstack" size={layouts.iconSize} />
-            <Text fontSize={18} marginTop={6} variant="welcomeScreen">
-              CARD WALLET
+            <Text
+              fontSize={18}
+              marginTop={6}
+              textTransform="uppercase"
+              variant="welcomeScreen"
+            >
+              {appName}
             </Text>
           </CenteredContainer>
           <SheetTitle color="white">{titleMap[actionType]}</SheetTitle>

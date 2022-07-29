@@ -1,9 +1,11 @@
+import { appName } from '@cardstack/constants';
+
 import { PinFlow } from './types';
 
 const flow: Record<PinFlow, { title: string; subtitle: string }> = {
   [PinFlow.create]: {
     title: 'Create PIN',
-    subtitle: 'Please create your PIN for your new Card Wallet',
+    subtitle: `Please create your PIN for your new ${appName}`,
   },
   [PinFlow.confirm]: {
     title: 'Confirm PIN',
@@ -15,7 +17,7 @@ const flow: Record<PinFlow, { title: string; subtitle: string }> = {
   },
   [PinFlow.new]: {
     title: 'Enter new PIN',
-    subtitle: 'Please enter yout new PIN for your Card Wallet',
+    subtitle: `Please enter yout new PIN for your ${appName}`,
   },
 };
 

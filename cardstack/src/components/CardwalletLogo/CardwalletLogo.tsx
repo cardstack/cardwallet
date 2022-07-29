@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from 'react';
 
 import { CenteredContainer, Icon, Text } from '@cardstack/components';
+import { appName } from '@cardstack/constants';
 import {
   colorStyleVariants,
   ThemeVariant,
@@ -18,19 +19,11 @@ interface Props {
 
 export const DEFAULT_CARDWALLET_ICON_SIZE = 100;
 
-const strings = {
-  title: 'CARD WALLET',
-  subtitle: 'by Cardstack',
-};
-
 const sizes = {
   big: {
     iconSize: DEFAULT_CARDWALLET_ICON_SIZE,
     title: {
       fontSize: 24,
-    },
-    subtitle: {
-      fontSize: 14,
     },
   },
   medium: {
@@ -64,14 +57,7 @@ export const CardwalletLogo = memo(
           variant="welcomeScreen"
           {...sizes[logoSize].title}
         >
-          {strings.title}
-        </Text>
-        <Text
-          color={colorStyleVariants.textColor[variant]}
-          weight="bold"
-          {...sizes[logoSize].subtitle}
-        >
-          {strings.subtitle}
+          {appName}
         </Text>
       </CenteredContainer>
     );

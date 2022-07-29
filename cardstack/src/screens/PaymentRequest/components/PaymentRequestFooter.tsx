@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 
 import { Container, Image, Text } from '@cardstack/components';
+import { appName } from '@cardstack/constants';
 import { Device } from '@cardstack/utils';
 
 import { shadow } from '@rainbow-me/styles';
@@ -31,7 +32,7 @@ export const PaymentRequestFooter = () => (
       <Text marginTop={1} size="xs" textAlign="center">
         Recipient must have the{'\n'}
         <Text weight="bold" size="xs">
-          Card Wallet mobile app
+          {appName} mobile app
         </Text>{' '}
         installed.
       </Text>
