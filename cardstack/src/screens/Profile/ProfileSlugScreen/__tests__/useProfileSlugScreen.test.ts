@@ -17,6 +17,12 @@ const mockProduct: Product = {
   localizedPrice: '0.99',
 };
 
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: jest.fn(() => ({
+    navigate: jest.fn(),
+  })),
+}));
+
 jest.mock('@cardstack/services', () => ({
   useLazyValidateProfileSlugQuery: jest.fn(),
 }));
