@@ -19,8 +19,8 @@ export const ProfileScreenGroup = ({ Stack }: { Stack: StackType }) => (
       detachPreviousScreen: false,
     }}
   >
-    <Stack.Screen component={ProfileNameScreen} name={Routes.PROFILE_NAME} />
     <Stack.Screen component={ProfileSlugScreen} name={Routes.PROFILE_SLUG} />
+    <Stack.Screen component={ProfileNameScreen} name={Routes.PROFILE_NAME} />
     <Stack.Screen
       component={ProfilePurchaseCTA}
       name={Routes.PROFILE_PURCHASE_CTA}

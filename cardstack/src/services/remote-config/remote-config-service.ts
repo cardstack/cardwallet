@@ -33,4 +33,7 @@ export const remoteFlags = (): { [K in ConfigKey]: RemoteConfigValues[K] } => ({
   maintenanceActive: getRemoteConfigAsBoolean('maintenanceActive'),
   maintenanceMessage: getRemoteConfigAsString('maintenanceMessage'),
   featurePrepaidCardDrop: getRemoteConfigAsBoolean('featurePrepaidCardDrop'),
+  featureProfilePurchaseOnboarding: getRemoteConfigAsBoolean(
+    'featureProfilePurchaseOnboarding'
+  ),
 });

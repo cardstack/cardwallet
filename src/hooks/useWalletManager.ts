@@ -27,14 +27,15 @@ import useAccountSettings from './useAccountSettings';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
+import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { appStateUpdate } from '@cardstack/redux/appState';
-
 import { useAuthSelectorAndActions } from '@cardstack/redux/authSlice';
 import { PinFlow } from '@cardstack/screens/PinScreen/types';
 import { PinScreenNavParams } from '@cardstack/screens/PinScreen/usePinScreen';
+
 import { saveAccountEmptyState } from '@rainbow-me/handlers/localstorage/accountLocal';
 import { isValidSeed } from '@rainbow-me/helpers/validators';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
@@ -59,6 +60,8 @@ export default function useWalletManager() {
   const { navigate } = useNavigation();
 
   const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
+
+  const { shouldPresentOnboarding } = useShowOnboarding();
 
   const createWalletPin = useCallback(
     (overwriteParams: Partial<PinScreenNavParams> = {}) => {
@@ -209,12 +212,17 @@ export default function useWalletManager() {
 
       setHasWallet();
 
+      if (shouldPresentOnboarding()) {
+        navigate(Routes.PROFILE_SLUG);
+        return;
+      }
+
       if (isInnerNavigation) {
         navigate(Routes.WALLET_SCREEN, { initialized: true });
         return;
       }
     },
-    [initializeWallet, navigate, setHasWallet]
+    [initializeWallet, navigate, setHasWallet, shouldPresentOnboarding]
   );
 
   const createNewWallet = useCallback(
