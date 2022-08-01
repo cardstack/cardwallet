@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { Routes } from '@cardstack/navigation';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
@@ -9,22 +9,21 @@ export const useShowOnboarding = () => {
   const { navigate } = useNavigation();
   const { primarySafe, isFetching } = usePrimarySafe();
 
-  const isOnboardingNeeded = useMemo(
-    () =>
+  const showOnboardingIfNeeded = useCallback(() => {
+    if (
       !isFetching &&
       !primarySafe &&
-      remoteFlags().featureProfilePurchaseOnboarding,
-    [isFetching, primarySafe]
-  );
-
-  const showOnboarding = useCallback(() => {
-    if (isOnboardingNeeded) {
+      remoteFlags().featureProfilePurchaseOnboarding
+    ) {
       navigate(Routes.PROFILE_SLUG);
+
+      return true;
     }
-  }, [isOnboardingNeeded, navigate]);
+
+    return false;
+  }, [navigate, isFetching, primarySafe]);
 
   return {
-    isOnboardingNeeded,
-    showOnboarding,
+    showOnboardingIfNeeded,
   };
 };
