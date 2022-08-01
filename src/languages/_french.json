@@ -253,13 +253,13 @@
         "create_wallet": "Créez un portefeuille",
         "instructions": "Veuillez ne pas stocker dans votre portefeuille plus que vous n'êtes prêt à perdre.",
         "warning": "Ceci est une version alpha de l'application.",
-        "welcome": "Bienvenue sur Card Wallet"
+        "welcome": "Bienvenue sur Cardstack Wallet"
       },
       "feedback": {
         "cancel": "Non merci",
         "choice": "Souhaitez-vous copier manuellement l'adresse email de feedback dans votre presse papier ?",
         "copy_email_address": "Copier adresse email",
-        "email_subject": "📱 Feedback pour l'alpha du wallet Card Wallet",
+        "email_subject": "📱 Feedback pour l'alpha du wallet Cardstack Wallet",
         "error": "Erreur lors du chargement de votre client mail",
         "send": "Envoyer feedback"
       },

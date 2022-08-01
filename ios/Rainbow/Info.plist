@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -59,33 +59,33 @@
 		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to scan QR codes</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Used to sign transactions and access wallet keys</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Card Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.me.rainbow</key>

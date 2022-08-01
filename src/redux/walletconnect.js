@@ -20,6 +20,7 @@ import { sendRpcCall } from '../handlers/web3';
 import { dappLogoOverride, dappNameOverride } from '../helpers/dappNameHandler';
 import WalletTypes from '../helpers/walletTypes';
 import { isSigningMethod } from '../utils/signingMethods';
+import { appName } from '@cardstack/constants';
 import { getFCMToken } from '@cardstack/models/firebase';
 import { Navigation, Routes } from '@cardstack/navigation';
 import { addRequestToApprove } from '@cardstack/redux/requests';
@@ -57,7 +58,7 @@ const getNativeOptions = async () => {
 
   const nativeOptions = {
     clientMeta: {
-      description: 'Card Wallet makes exploring xDai fun and accessible',
+      description: `${appName} makes exploring xDai fun and accessible`,
       icons: [
         'https://assets.coingecko.com/coins/images/3247/small/cardstack.png?1547037769',
       ],

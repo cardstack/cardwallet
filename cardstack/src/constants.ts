@@ -25,3 +25,4 @@ export const defaultErrorAlert = {
 
 export const cardSpaceSuffix = 'card.xyz';
 export const cardSpaceDomain = `.${cardSpaceSuffix}`;
+export const appName = 'Cardstack Wallet';
