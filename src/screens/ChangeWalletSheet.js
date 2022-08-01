@@ -366,8 +366,6 @@ export default function ChangeWalletSheet() {
     navigate,
     selectedWallet.id,
     showLoadingOverlay,
-    isOnboardingNeeded,
-    showOnboarding,
   ]);
 
   const onPressImportSeedPhrase = useCallback(() => {
