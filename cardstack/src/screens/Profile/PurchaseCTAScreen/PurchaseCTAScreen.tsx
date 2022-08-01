@@ -28,6 +28,8 @@ const PurchaseCTAScreen = () => {
     onPressChargeExplanation,
     onPressBuy,
     localizedValue,
+    onPressPrepaidCards,
+    showPrepaidCardOption,
   } = usePurchaseCTAScreen();
 
   const BenefitsItem = useCallback(
@@ -48,7 +50,7 @@ const PurchaseCTAScreen = () => {
     []
   );
 
-  const buttonLabel = `${strings.button} ${localizedValue}`;
+  const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
     <SafeAreaView
@@ -80,7 +82,16 @@ const PurchaseCTAScreen = () => {
           style={styles.iapPreview}
           resizeMode="contain"
         />
-        <Button onPress={onPressBuy}>{buttonLabel}</Button>
+        <Button onPress={onPressBuy}>{purchaseBtnLabel}</Button>
+        {showPrepaidCardOption && (
+          <Button
+            onPress={onPressPrepaidCards}
+            variant="primaryWhite"
+            borderColor="teal"
+          >
+            {strings.button.prepaidCard}
+          </Button>
+        )}
         <Touchable onPress={onPressChargeExplanation} alignSelf="center">
           <Text color="white" fontSize={16} weight="semibold">
             {strings.whyCharge}

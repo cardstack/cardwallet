@@ -7,6 +7,9 @@ export const strings = {
     cardProfile: `Setup a profile page on ${cardSpaceSuffix}`,
     rewards: 'Earn Rewards in the Card Ecosystem',
   },
-  button: 'Buy for',
+  button: {
+    purchase: 'Buy for',
+    prepaidCard: 'Buy with Prepaid Cards',
+  },
   whyCharge: 'Why is there a charge?',
 };
