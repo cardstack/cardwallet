@@ -61,7 +61,7 @@ export default function useWalletManager() {
 
   const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
 
-  const { showOnboardingIfNeeded } = useShowOnboarding();
+  const { shouldPresentOnboarding } = useShowOnboarding();
 
   const createWalletPin = useCallback(
     (overwriteParams: Partial<PinScreenNavParams> = {}) => {
@@ -212,7 +212,8 @@ export default function useWalletManager() {
 
       setHasWallet();
 
-      if (showOnboardingIfNeeded()) {
+      if (shouldPresentOnboarding()) {
+        navigate(Routes.PROFILE_SLUG);
         return;
       }
 
@@ -221,7 +222,7 @@ export default function useWalletManager() {
         return;
       }
     },
-    [initializeWallet, navigate, setHasWallet, showOnboardingIfNeeded]
+    [initializeWallet, navigate, setHasWallet, shouldPresentOnboarding]
   );
 
   const createNewWallet = useCallback(
