@@ -4,4 +4,5 @@ export const remoteConfigDefaults = {
   maintenanceMessage:
     'Card Wallet is going through scheduled maintenance, please try again later.',
   featurePrepaidCardDrop: false,
+  featureProfilePurchaseOnboarding: false,
 };

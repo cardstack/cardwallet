@@ -26,7 +26,6 @@ import {
 } from '../redux/wallets';
 import { getRandomColor } from '../styles/colors';
 import { Container, Sheet, Text, Touchable } from '@cardstack/components';
-import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { removeFCMToken } from '@cardstack/models/firebase';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import { getAddressPreview } from '@cardstack/utils';
@@ -74,8 +73,6 @@ export default function ChangeWalletSheet() {
   const walletRowCount = useMemo(() => getWalletRowCount(wallets), [wallets]);
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  const { isOnboardingNeeded, showOnboarding } = useShowOnboarding();
 
   const deviceHeight = deviceUtils.dimensions.height;
   const footerHeight = 160;
@@ -347,11 +344,6 @@ export default function ChangeWalletSheet() {
               creatingWallet.current = false;
 
               dismissLoadingOverlay();
-
-              if (isOnboardingNeeded) {
-                showOnboarding();
-                return;
-              }
             },
             profile: {
               color: null,
