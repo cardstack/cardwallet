@@ -46,7 +46,7 @@ const ProfileScreen = () => {
           refetch={refetch}
         />
       ) : (
-        <CreateProfile isLoading={isFetching} />
+        <CreateProfile />
       ),
     [primarySafe, safesCount, isFetching, refetch]
   );
