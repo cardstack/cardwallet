@@ -62,6 +62,10 @@
 	<string>Used to scan QR codes</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Used to sign transactions and access wallet keys</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Used to change avatar picture</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to change avatar picture</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.me.rainbow</key>
