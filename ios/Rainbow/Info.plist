@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>Cardstack Wallet</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -58,34 +58,10 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to scan QR codes</string>
-	<key>NSContactsUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Used to sign transactions and access wallet keys</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSMotionUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.me.rainbow</key>
