@@ -28,7 +28,7 @@ const ProfileSlugScreen = () => {
       paddingHorizontal={5}
       justifyContent="space-between"
     >
-      <InPageHeader showSkipButton={false} />
+      <InPageHeader showLeftIcon={false} />
       <Container flex={0.8}>
         <Container width="90%" paddingBottom={4}>
           <Text variant="pageHeader">{strings.header}</Text>
