@@ -6,6 +6,11 @@ import { Routes } from '@cardstack/navigation';
 
 import { strings, exampleMerchantData } from './';
 
+const merchantContainerProps = {
+  paddingHorizontal: undefined,
+  flex: 0.1,
+};
+
 export const CreateProfile = () => {
   const { navigate } = useNavigation();
 
@@ -33,19 +38,15 @@ export const CreateProfile = () => {
             {strings.createProfileDesc}
           </Text>
         </Container>
-        <Container flex={1}>
-          <Text
-            color="white"
-            textAlign="left"
-            paddingLeft={4}
-            paddingBottom={4}
-          >
+        <Container flex={1} paddingHorizontal={4}>
+          <Text color="white" textAlign="left" paddingBottom={4}>
             {strings.example}
           </Text>
           <MerchantSafe
             {...exampleMerchantData}
             disabled
             headerRightText={strings.header.profile}
+            containerProps={merchantContainerProps}
           />
         </Container>
       </Container>
