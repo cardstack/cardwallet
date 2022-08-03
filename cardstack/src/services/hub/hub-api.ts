@@ -36,6 +36,7 @@ const routes = {
   profileInfo: {
     root: '/merchant-infos',
     validateSlug: '/validate-slug',
+    jobTicket: '/job-tickets',
   },
 };
 
@@ -136,6 +137,12 @@ export const hubApi = createApi({
       }),
       transformResponse: ({ data }) => data?.attributes?.did,
     }),
+    createProfileJob: builder.query<string, { jobTicketId: string }>({
+      query: ({ jobTicketId }) =>
+        `${routes.profileInfo.jobTicket}/${jobTicketId}`,
+      transformResponse: ({ data }) =>
+        data?.attributes?.state === 'success' ? data.id : undefined,
+    }),
   }),
 });
 
@@ -150,4 +157,5 @@ export const {
   useProfilePurchasesMutation,
   useLazyValidateProfileSlugQuery,
   useCreateProfileInfoMutation,
+  useLazyCreateProfileJobQuery,
 } = hubApi;
