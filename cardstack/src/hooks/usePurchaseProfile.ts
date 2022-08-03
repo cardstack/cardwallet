@@ -95,7 +95,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
   const profileProduct = useMemo(
     () =>
       products.find(
-        prod => prod.productId === skus.profile && prod.type === 'iap'
+        prod => prod.productId === skus.profile && prod.type === Device.iapType
       ),
     [products]
   );

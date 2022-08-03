@@ -19,7 +19,7 @@ import { Alert } from '@rainbow-me/components/alerts';
 import { useAccountSettings } from '@rainbow-me/hooks';
 import logger from 'logger';
 
-import { useMutationEffects } from '..';
+import { useMutationEffects } from '../useMutationEffects';
 
 const strings = {
   loading: 'Creating profile',
