@@ -45,6 +45,14 @@ jest.mock('@cardstack/services', () => ({
   hubApi: jest.fn(),
 }));
 
+jest.mock('@cardstack/hooks/useProfileJobAwait', () => ({
+  useProfileJobAwait: jest.fn(() => ({
+    handleAwaitForProfileCreation: jest.fn(),
+    profileSafeId: undefined,
+    error: undefined,
+  })),
+}));
+
 const profile = {
   slug: 'test',
   name: 'Test test',
