@@ -27,10 +27,10 @@ export const CreateProfile = () => {
             fontSize={20}
             textAlign="center"
           >
-            {strings.stepOne.createProfile}
+            {strings.createProfile}
           </Text>
           <Text color="grayText" textAlign="center">
-            {strings.stepOne.createProfileDesc}
+            {strings.createProfileDesc}
           </Text>
         </Container>
         <Container flex={1}>
@@ -40,7 +40,7 @@ export const CreateProfile = () => {
             paddingLeft={4}
             paddingBottom={4}
           >
-            {strings.stepOne.example}
+            {strings.example}
           </Text>
           <MerchantSafe
             {...exampleMerchantData}

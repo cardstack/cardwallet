@@ -77,7 +77,7 @@ export interface PrepaidCardCustomization {
 }
 
 export interface MerchantInformation {
-  did: string;
+  did?: string;
   name: string;
   slug: string;
   color: string;
