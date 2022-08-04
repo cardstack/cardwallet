@@ -27,6 +27,7 @@ const Device = {
     : ('keyboardDidHide' as const),
   enableBackup: true,
   iapProvider: isIOS ? IAPProviderType.apple : IAPProviderType.google,
+  iapType: isIOS ? 'iap' : 'inapp',
 };
 
 export { Device };

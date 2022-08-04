@@ -14,18 +14,22 @@ import { MerchantInformation, MerchantSafeType } from '@cardstack/types';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
+import { ContainerProps } from '../Container';
+
 import { strings } from './strings';
 
 export interface MerchantSafeProps extends MerchantSafeType {
   merchantInfo?: MerchantInformation;
   disabled?: boolean;
   headerRightText?: string;
+  containerProps?: ContainerProps;
 }
 
 export const MerchantSafe = ({
   merchantInfo,
   disabled = false,
   headerRightText,
+  containerProps,
   ...props
 }: MerchantSafeProps) => {
   const { navigate } = useNavigation();
@@ -37,7 +41,12 @@ export const MerchantSafe = ({
   }, [merchantInfo, navigate, props]);
 
   return (
-    <Container paddingHorizontal={4} marginBottom={4} width="100%">
+    <Container
+      paddingHorizontal={4}
+      marginBottom={4}
+      width="100%"
+      {...containerProps}
+    >
       <CardPressable
         backgroundColor="white"
         borderRadius={10}

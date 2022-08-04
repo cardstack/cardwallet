@@ -1,13 +1,16 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 
+import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
 import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
+import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer1 } from '@cardstack/utils';
 
+import { Alert } from '@rainbow-me/components/alerts';
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const defaultPrice = '$0.99';
@@ -37,6 +40,8 @@ export const usePurchaseCTAScreen = () => {
 
   const { purchaseProfile, profileProduct } = usePurchaseProfile(profile);
 
+  const { purchaseWithPrepaidCard } = useCreateProfile(profile);
+
   const localizedValue = useMemo(
     () => profileProduct?.localizedPrice || defaultPrice,
     [profileProduct]
@@ -46,14 +51,20 @@ export const usePurchaseCTAScreen = () => {
     navigate(Routes.PROFILE_CHARGE_EXPLANATION, { localizedValue });
   }, [localizedValue, navigate]);
 
-  const onPressPrepaidCards = useCallback(() => {
-    // TBD
-  }, []);
+  const onPressBuy = useCallback(() => {
+    if (remoteFlags().featureProfilePurchaseOnboarding) {
+      purchaseProfile();
+
+      return;
+    }
+
+    Alert({ title: 'Oops!', message: 'This feature is currently unavailable' });
+  }, [purchaseProfile]);
 
   return {
     onPressChargeExplanation,
-    onPressBuy: purchaseProfile,
-    onPressPrepaidCards,
+    onPressBuy,
+    onPressPrepaidCards: purchaseWithPrepaidCard,
     showPrepaidCardOption,
     localizedValue,
   };

@@ -46,14 +46,24 @@ const ProfileScreen = () => {
           refetch={refetch}
         />
       ) : (
-        <CreateProfile isLoading={isFetching} />
+        <CreateProfile />
       ),
     [primarySafe, safesCount, isFetching, refetch]
   );
 
   const showLoading = useMemo(
-    () => isLoading || isUninitialized || isRefreshingForNewAccount,
-    [isLoading, isRefreshingForNewAccount, isUninitialized]
+    () =>
+      isLoading ||
+      isUninitialized ||
+      isRefreshingForNewAccount ||
+      (isFetching && !primarySafe),
+    [
+      isFetching,
+      isLoading,
+      isRefreshingForNewAccount,
+      isUninitialized,
+      primarySafe,
+    ]
   );
 
   const redirectToSwitchNetwork = useCallback(() => {
@@ -78,7 +88,7 @@ const ProfileScreen = () => {
         {isLayer1(network) ? (
           <>
             <Text color="white" fontSize={24}>
-              {strings.stepOne.switchToGnosisChain}
+              {strings.switchToGnosisChain}
             </Text>
             <Button
               borderColor="buttonSecondaryBorder"
@@ -86,7 +96,7 @@ const ProfileScreen = () => {
               onPress={redirectToSwitchNetwork}
               variant="primary"
             >
-              {strings.stepOne.switchNetwork}
+              {strings.switchNetwork}
             </Button>
           </>
         ) : showLoading ? (
