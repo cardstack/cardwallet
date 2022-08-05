@@ -5,30 +5,43 @@ import { useLazyCreateProfileJobQuery } from '@cardstack/services';
 const JOB_POLLING_INTERVAL = 5000;
 
 export const useProfileJobAwait = () => {
-  const [triggerPolling, setTriggerPolling] = useState(false);
+  const [pollingState, setPollingState] = useState({
+    shouldStartPolling: false,
+    isSafesRefreshNeeded: false,
+  });
 
   const [
     jobQuery,
     { data: profileSafeId, error },
   ] = useLazyCreateProfileJobQuery({
-    pollingInterval: triggerPolling ? JOB_POLLING_INTERVAL : undefined,
+    pollingInterval: pollingState.shouldStartPolling
+      ? JOB_POLLING_INTERVAL
+      : undefined,
   });
 
   const handleAwaitForProfileCreation = useCallback(
-    async jobTicketId => {
-      setTriggerPolling(true);
-      jobQuery({ jobTicketId });
+    (accountAddress: string) => {
+      setPollingState({
+        shouldStartPolling: true,
+        isSafesRefreshNeeded: false,
+      });
+
+      jobQuery({ eoa: accountAddress });
     },
-    [jobQuery, setTriggerPolling]
+    [setPollingState, jobQuery]
   );
 
   useEffect(() => {
     if (profileSafeId || error) {
-      setTriggerPolling(false);
+      setPollingState({
+        shouldStartPolling: false,
+        isSafesRefreshNeeded: true,
+      });
     }
   }, [profileSafeId, error]);
 
   return {
+    ...pollingState,
     handleAwaitForProfileCreation,
     profileSafeId,
     error,

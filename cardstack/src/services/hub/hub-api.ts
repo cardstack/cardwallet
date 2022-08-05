@@ -4,6 +4,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { CustodialWallet, ProfileIDUniquenessResponse } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
+import { CacheTags as SafeCacheTags } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 
 import {
@@ -47,7 +48,7 @@ enum CacheTag {
 export const hubApi = createApi({
   reducerPath: 'hubApi',
   baseQuery: fetchHubBaseQuery,
-  tagTypes: [...Object.values(CacheTag)],
+  tagTypes: [...Object.values(CacheTag), ...Object.values(SafeCacheTags)],
   endpoints: builder => ({
     getCustodialWallet: builder.query<GetCustodialWalletQueryResult, void>({
       query: () => routes.custodialWallet,
@@ -137,11 +138,21 @@ export const hubApi = createApi({
       }),
       transformResponse: ({ data }) => data?.attributes?.did,
     }),
-    createProfileJob: builder.query<string, { jobTicketId: string }>({
-      query: ({ jobTicketId }) =>
-        `${routes.profileInfo.jobTicket}/${jobTicketId}`,
+    createProfileJob: builder.query<string, { eoa: string }>({
+      query: ({ eoa }) => `${routes.profileInfo.jobTicket}?eoa=${eoa}`,
       transformResponse: ({ data }) =>
-        data?.attributes?.state === 'success' ? data.id : undefined,
+        data.find((job: any) => job.attributes?.state === 'success'),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data: profileId } = await queryFulfilled;
+
+        if (profileId) {
+          // TODO: Investigate cache invalidation configurations.
+          // This only invalidates cached results but doesn't automatically
+          // makes a new query, as it should per documented here:
+          // https://redux-toolkit.js.org/rtk-query/usage/automated-refetching
+          dispatch(hubApi.util.invalidateTags([SafeCacheTags.SAFES]));
+        }
+      },
     }),
   }),
 });
