@@ -3,6 +3,7 @@ import {
   convertToSpend,
   convertStringToNumber,
   NativeCurrency,
+  spendToUsd,
 } from '@cardstack/cardpay-sdk';
 import { useMemo, useState } from 'react';
 
@@ -32,18 +33,22 @@ export const useInputAmountHelper = () => {
 
   const { data: rates } = useGetExchangeRatesQuery();
 
-  const spendAmount = useMemo(() => {
-    const isCurrencyUSD = paymentCurrency === NativeCurrency.USD;
-    const usdRate = isCurrencyUSD ? 1 : rates?.[paymentCurrency] || 0;
+  const isCurrencyUSD = paymentCurrency === NativeCurrency.USD;
+  const usdRate = isCurrencyUSD ? 1 : rates?.[paymentCurrency] || 0;
 
-    return convertToSpend(amountInNum, paymentCurrency, usdRate);
-  }, [amountInNum, paymentCurrency, rates]);
+  const spendAmount = useMemo(
+    () => convertToSpend(amountInNum, paymentCurrency, usdRate),
+    [amountInNum, paymentCurrency, usdRate]
+  );
 
   // input amount should be more than MIN_SPEND_AMOUNT (50)
-  const isInvalid = useMemo(
-    () => amountInNum > 0 && spendAmount < MIN_SPEND_AMOUNT,
-    [amountInNum, spendAmount]
-  );
+  const isInvalid = useMemo(() => {
+    const minSpendAmountToUSD = spendToUsd(MIN_SPEND_AMOUNT) || 0;
+
+    const minNativeCurrencyAmount = usdRate * minSpendAmountToUSD;
+
+    return amountInNum > 0 && amountInNum < minNativeCurrencyAmount;
+  }, [amountInNum, usdRate]);
 
   const canSubmit = useMemo(() => Boolean(amountInNum && !isInvalid), [
     amountInNum,
