@@ -19,7 +19,7 @@ export const fetchHistoricalPrice = async (
     // timestamp can be any when coming from GraphQL.
     // forcing it to number solves this issue.
     // date needs to be formatted as yyyy-MM-dd
-    const formattedDate = format(Number(timestamp), 'yyyy-MM-dd');
+    const formattedDate = format(Number(timestamp) * 1000, 'yyyy-MM-dd');
 
     // For cpxd tokens we chop off .CPXD in order to get mainnet's historical price
     const tokenSymbol = removeCPXDTokenSuffix(symbol);
