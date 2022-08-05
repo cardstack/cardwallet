@@ -40,7 +40,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
 
   const [
     validateReceiptCreateProfile,
-    { data, error, isSuccess, isError },
+    { error, isSuccess, isError },
   ] = useProfilePurchasesMutation();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
