@@ -200,7 +200,7 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <InPageHeader skipAmount={2} />
+      <InPageHeader skipAmount={2} showSkipButton={!isEditing} />
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{pageTitle}</Text>
         <CenteredContainer>
