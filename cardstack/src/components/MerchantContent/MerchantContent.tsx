@@ -4,7 +4,6 @@ import { RefreshControl, StyleSheet } from 'react-native';
 
 import {
   Button,
-  Container,
   HorizontalDivider,
   ScrollView,
   MerchantHeader,
@@ -65,54 +64,47 @@ export const MerchantContent = memo(
     );
 
     return (
-      <Container flex={1} justifyContent="flex-end">
-        <ScrollView
-          flex={1}
-          contentContainerStyle={styles.contentContainer}
-          refreshControl={
-            <RefreshControl
-              tintColor="blueText"
-              refreshing={isRefreshingBalances}
-              onRefresh={refetch}
-            />
-          }
-        >
-          <MerchantHeader
-            showSafePrimarySelection={showSafePrimarySelection}
-            isPrimarySafe={isPrimarySafe}
-            changeToPrimarySafe={changeToPrimarySafe}
-            merchantInfo={merchantSafe.merchantInfo}
+      <ScrollView
+        paddingHorizontal={5}
+        contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl
+            tintColor="blueText"
+            refreshing={isRefreshingBalances}
+            onRefresh={refetch}
           />
-          <Button
-            marginTop={2}
-            marginBottom={4}
-            onPress={goToMerchantPaymentRequest}
-          >
-            {strings.requestPayment}
-          </Button>
-          <HorizontalDivider />
-          <MerchantTokensList
-            title={strings.readyToClaim}
-            onPress={goToUnclaimedRevenue}
-            emptyText={strings.noPendingPayment}
-            tokens={merchantSafe.revenueBalances}
-          />
-          <MerchantTokensList
-            title={strings.availableBalance}
-            onPress={goToAvailableBalance}
-            emptyText={strings.noAvailableBalance}
-            tokens={merchantSafe.tokens}
-          />
-          <Container paddingBottom={4} />
-        </ScrollView>
-      </Container>
+        }
+      >
+        <MerchantHeader
+          showSafePrimarySelection={showSafePrimarySelection}
+          isPrimarySafe={isPrimarySafe}
+          changeToPrimarySafe={changeToPrimarySafe}
+          merchantInfo={merchantSafe.merchantInfo}
+        />
+        <Button marginBottom={15} onPress={goToMerchantPaymentRequest}>
+          {strings.requestPayment}
+        </Button>
+        <HorizontalDivider />
+        <MerchantTokensList
+          title={strings.readyToClaim}
+          onPress={goToUnclaimedRevenue}
+          emptyText={strings.noPendingPayment}
+          tokens={merchantSafe.revenueBalances}
+        />
+        <MerchantTokensList
+          title={strings.availableBalance}
+          onPress={goToAvailableBalance}
+          emptyText={strings.noAvailableBalance}
+          tokens={merchantSafe.tokens}
+        />
+      </ScrollView>
     );
   }
 );
 
 const styles = StyleSheet.create({
   contentContainer: {
-    alignItems: 'center',
-    paddingHorizontal: 16,
+    flexGrow: 1,
+    paddingBottom: 20,
   },
 });

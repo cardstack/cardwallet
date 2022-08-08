@@ -7,4 +7,5 @@ export const strings = {
   isPrimarySafeProfileLinkText: 'Primary Profile',
   setToPrimaryProfileLinkText: 'Set as Primary Profile',
   details: 'Details',
+  edit: 'Edit',
 };

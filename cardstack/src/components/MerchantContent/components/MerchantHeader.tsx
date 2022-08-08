@@ -1,9 +1,12 @@
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { Container, Icon, Text } from '@cardstack/components';
+import { Button, Container, Icon, Text } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { MerchantInformation, PrimarySafeUpdateProps } from '@cardstack/types';
 
+import { Alert } from '@rainbow-me/components/alerts';
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 
 import { strings } from '../strings';
@@ -17,63 +20,85 @@ export const MerchantHeader = ({
   isPrimarySafe,
   changeToPrimarySafe,
   showSafePrimarySelection = false,
-}: MerchantHeaderProps) => (
-  <Container
-    width="100%"
-    flexDirection="row"
-    alignItems="center"
-    justifyContent="center"
-    padding={15}
-    testID="merchant-header"
-  >
-    {merchantInfo ? (
-      <Container marginRight={2}>
-        <ContactAvatar
-          color={merchantInfo?.color}
-          size="xlarge"
-          value={merchantInfo?.name}
-          textColor={merchantInfo?.textColor}
-        />
-      </Container>
-    ) : (
-      <Icon name="user-with-background" size={80} />
-    )}
+}: MerchantHeaderProps) => {
+  const { navigate } = useNavigation();
 
-    <Container flexDirection="column">
-      <Text
-        testID="merchant-name"
-        weight="extraBold"
-        size="medium"
-        ellipsizeMode="tail"
-        numberOfLines={1}
-      >
-        {merchantInfo?.name || ''}
-      </Text>
-      {!!merchantInfo?.slug && (
-        <Text testID="merchant-slug" size="small" numberOfLines={1}>
-          {merchantInfo?.slug}
-        </Text>
-      )}
-      {showSafePrimarySelection &&
-        (isPrimarySafe ? (
-          <Text size="small" weight="bold" style={styles.primaryText}>
-            {strings.isPrimarySafeProfileLinkText}
-          </Text>
+  const onEditPress = useCallback(() => {
+    if (!__DEV__) {
+      Alert({ title: 'Coming soon' });
+
+      return;
+    }
+
+    navigate(Routes.PROFILE_NAME, { ...merchantInfo });
+  }, [merchantInfo, navigate]);
+
+  return (
+    <Container
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+      paddingVertical={12}
+    >
+      <Container flex={1.4}>
+        {merchantInfo ? (
+          <ContactAvatar
+            color={merchantInfo?.color}
+            size="xlarge"
+            value={merchantInfo?.name}
+            textColor={merchantInfo?.textColor}
+          />
         ) : (
-          <Pressable onPress={changeToPrimarySafe}>
-            <Text
-              textDecorationLine="underline"
-              size="small"
-              weight="bold"
-              style={styles.primaryText}
-            >
-              {strings.setToPrimaryProfileLinkText}
+          <Icon name="user-with-background" size={80} />
+        )}
+      </Container>
+      <Container flexDirection="column" flex={3}>
+        <Text
+          testID="merchant-name"
+          weight="extraBold"
+          size="medium"
+          ellipsizeMode="tail"
+          numberOfLines={1}
+        >
+          {merchantInfo?.name || ''}
+        </Text>
+        {!!merchantInfo?.slug && (
+          <Text testID="merchant-slug" size="small" numberOfLines={1}>
+            {merchantInfo?.slug}
+          </Text>
+        )}
+        {showSafePrimarySelection &&
+          (isPrimarySafe ? (
+            <Text size="small" weight="bold" style={styles.primaryText}>
+              {strings.isPrimarySafeProfileLinkText}
             </Text>
-          </Pressable>
-        ))}
+          ) : (
+            <Pressable onPress={changeToPrimarySafe}>
+              <Text
+                textDecorationLine="underline"
+                size="small"
+                weight="bold"
+                style={styles.primaryText}
+              >
+                {strings.setToPrimaryProfileLinkText}
+              </Text>
+            </Pressable>
+          ))}
+      </Container>
+      <Container flex={1}>
+        <Button
+          variant="smallPrimaryWhite"
+          width="100%"
+          height={38}
+          borderColor="black"
+          onPress={onEditPress}
+        >
+          {strings.edit}
+        </Button>
+      </Container>
     </Container>
-  </Container>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   primaryText: {
