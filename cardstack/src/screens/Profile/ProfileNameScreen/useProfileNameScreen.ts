@@ -8,24 +8,28 @@ import { useState, useCallback, useMemo } from 'react';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
+import { MerchantInformation } from '@cardstack/types';
 import { contrastingTextColor } from '@cardstack/utils';
 
 import { useAccountProfile } from '@rainbow-me/hooks';
 
-interface NavParams {
+interface NavParams extends Partial<MerchantInformation> {
   slug: string;
 }
 
 export const useProfileNameScreen = () => {
-  const {
-    params: { slug },
-  } = useRoute<RouteType<NavParams>>();
+  const { params } = useRoute<RouteType<NavParams>>();
+
+  const { slug, ...currentProfile } = params;
 
   const { navigate, dispatch: navDispatch } = useNavigation();
   const { accountAddress } = useAccountProfile();
 
-  const [profileName, setProfileName] = useState('');
-  const [profileColor, setProfileColor] = useState('#0089F9');
+  const [profileName, setProfileName] = useState(currentProfile.name || '');
+
+  const [profileColor, setProfileColor] = useState(
+    currentProfile.color || '#0089F9'
+  );
 
   const profile: CreateProfileInfoParams = useMemo(
     () => ({
