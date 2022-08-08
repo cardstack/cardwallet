@@ -38,6 +38,7 @@ export const MerchantHeader = ({
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
+      testID="merchant-header"
       paddingVertical={12}
     >
       <Container flex={1.4}>
