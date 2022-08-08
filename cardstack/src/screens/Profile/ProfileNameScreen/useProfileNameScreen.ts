@@ -67,5 +67,6 @@ export const useProfileNameScreen = () => {
     onChangeText,
     onPressEditColor,
     profile,
+    isEditing: currentProfile,
   };
 };

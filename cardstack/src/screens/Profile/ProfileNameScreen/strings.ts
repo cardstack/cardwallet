@@ -1,7 +1,7 @@
 export const strings = {
   header: {
     create: 'Congrats! Choose a name\nfor your profile page',
-    update: 'Choose a new name and color for your profile',
+    update: 'Choose a new name and\ncolor for your profile page',
   },
   btns: {
     skip: 'Skip',

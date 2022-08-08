@@ -66,6 +66,7 @@ export const ProfileNameScreen = () => {
     onContinuePress,
     onChangeText,
     onPressEditColor,
+    isEditing,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
@@ -182,6 +183,16 @@ export const ProfileNameScreen = () => {
     profile.color,
   ]);
 
+  const pageTitle = useMemo(
+    () => (isEditing ? strings.header.update : strings.header.create),
+    [isEditing]
+  );
+
+  const btnLabel = useMemo(
+    () => (isEditing ? strings.btns.save : strings.btns.continue),
+    [isEditing]
+  );
+
   return (
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
@@ -191,7 +202,7 @@ export const ProfileNameScreen = () => {
     >
       <InPageHeader skipAmount={2} />
       <Animated.View style={animatedHeaderStyles}>
-        <Text variant="pageHeader">{strings.header.create}</Text>
+        <Text variant="pageHeader">{pageTitle}</Text>
         <CenteredContainer>
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
@@ -258,6 +269,7 @@ export const ProfileNameScreen = () => {
             placeholderTextColor={colors.secondaryText}
             paddingBottom={4}
             onChangeText={onChangeText}
+            value={profile.name}
           />
           <Container width="80%" flex={1}>
             <Text fontSize={12} color="grayText">
@@ -268,7 +280,7 @@ export const ProfileNameScreen = () => {
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
         <Button blocked={!profile.name} onPress={onContinuePress}>
-          {strings.btns.continue}
+          {btnLabel}
         </Button>
       </CenteredContainer>
     </SafeAreaView>
