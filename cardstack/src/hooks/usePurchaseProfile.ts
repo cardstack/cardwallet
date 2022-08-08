@@ -40,7 +40,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
 
   const [
     validateReceiptCreateProfile,
-    { error, isSuccess, isError },
+    { data: profileJobInfo, error, isSuccess, isError },
   ] = useProfilePurchasesMutation();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
@@ -64,8 +64,8 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
                   {
                     text: 'Okay',
                     onPress: () =>
-                      navigate(Routes.WALLET_SCREEN, {
-                        shouldAwaitForProfile: true,
+                      navigate(Routes.PROFILE_SCREEN, {
+                        profileCreationJobID: profileJobInfo?.included[0]?.id,
                       }),
                   },
                 ],
@@ -90,6 +90,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
         isError,
         isSuccess,
         navigate,
+        profileJobInfo,
       ]
     )
   );

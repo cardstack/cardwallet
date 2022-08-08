@@ -62,5 +62,4 @@ export interface AssetListProps
 export type AssetListRouteType = RouteType<{
   scrollToPrepaidCardsSection?: boolean;
   forceRefreshOnce?: boolean;
-  shouldAwaitForProfile?: boolean;
 }>;

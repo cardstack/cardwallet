@@ -7,6 +7,7 @@ export const strings = {
   example: 'Example:',
   switchToGnosisChain: 'Switch to Gnosis Chain to view your profile',
   switchNetwork: 'Switch Network',
+  ongoingProfileCreation: 'Creating your profile\nThis could take up to 1min',
   buttons: {
     continue: 'Continue',
   },

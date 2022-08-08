@@ -3,10 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useState, useCallback, useEffect, useMemo, RefObject } from 'react';
 import { SectionList } from 'react-native';
 
-import {
-  useIsFetchingDataNewAccount,
-  useProfileJobAwait,
-} from '@cardstack/hooks';
+import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import useRewardsDataFetch from '@cardstack/screens/RewardsCenterScreen/useRewardsDataFetch';
 import { useGetServiceStatusQuery } from '@cardstack/services';
@@ -109,33 +106,11 @@ export const useAssetList = ({
   }, [isDamaged, navigate]);
 
   // Extra component props
-  const { network, accountAddress } = useAccountSettings();
+  const { network } = useAccountSettings();
 
   const networkName = useMemo(() => getConstantByNetwork('name', network), [
     network,
   ]);
-
-  // Profile creation job takes time to complete, this hook keeps pooling until the profile is ready.
-  const {
-    isSafesRefreshNeeded,
-    handleAwaitForProfileCreation,
-  } = useProfileJobAwait();
-
-  // shouldAwaitForProfile will be set if screen was open from profile creation flow.
-  useEffect(() => {
-    if (params?.shouldAwaitForProfile && accountAddress) {
-      handleAwaitForProfileCreation(accountAddress);
-      setParams({ shouldAwaitForProfile: false });
-    }
-  }, [accountAddress, handleAwaitForProfileCreation, params, setParams]);
-
-  // When the new profile is done, we need to refresh the safes list.
-  useEffect(() => {
-    if (isSafesRefreshNeeded) {
-      // Once pooling is done, we need to refresh safes.
-      refetchSafes();
-    }
-  }, [refetchSafes, isSafesRefreshNeeded]);
 
   return {
     isLoading:

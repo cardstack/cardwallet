@@ -26,6 +26,7 @@ import {
   GetValidateProfileSlugParams,
   CreateProfileInfoParams,
   PostProfilePurchaseQueryResult,
+  JobTicketResult,
 } from './hub-types';
 
 const routes = {
@@ -138,21 +139,13 @@ export const hubApi = createApi({
       }),
       transformResponse: ({ data }) => data?.attributes?.did,
     }),
-    createProfileJob: builder.query<string, { eoa: string }>({
-      query: ({ eoa }) => `${routes.profileInfo.jobTicket}?eoa=${eoa}`,
-      transformResponse: ({ data }) =>
-        data.find((job: any) => job.attributes?.state === 'success'),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const { data: profileId } = await queryFulfilled;
-
-        if (profileId) {
-          // TODO: Investigate cache invalidation configurations.
-          // This only invalidates cached results but doesn't automatically
-          // makes a new query, as it should per documented here:
-          // https://redux-toolkit.js.org/rtk-query/usage/automated-refetching
-          dispatch(hubApi.util.invalidateTags([SafeCacheTags.SAFES]));
-        }
-      },
+    getProfileJobStatus: builder.query<
+      JobTicketResult,
+      { jobTicketID: string }
+    >({
+      query: ({ jobTicketID }) =>
+        `${routes.profileInfo.jobTicket}/${jobTicketID}`,
+      transformResponse: ({ data }) => data,
     }),
   }),
 });
@@ -168,5 +161,5 @@ export const {
   useProfilePurchasesMutation,
   useLazyValidateProfileSlugQuery,
   useCreateProfileInfoMutation,
-  useLazyCreateProfileJobQuery,
+  useGetProfileJobStatusQuery,
 } = hubApi;

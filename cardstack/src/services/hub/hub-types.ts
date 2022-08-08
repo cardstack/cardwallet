@@ -77,3 +77,17 @@ export interface PostProfilePurchaseQueryResult {
     }
   ];
 }
+
+interface JobTicketType {
+  id: string;
+  type: string;
+  attributes: {
+    'job-type': string;
+    state: string;
+    result: {
+      id: string;
+    };
+  };
+}
+
+export type JobTicketResult = KebabToCamelCaseKeys<JobTicketType>;
