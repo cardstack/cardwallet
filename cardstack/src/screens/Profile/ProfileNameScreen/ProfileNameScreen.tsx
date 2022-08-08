@@ -191,7 +191,7 @@ export const ProfileNameScreen = () => {
     >
       <InPageHeader skipAmount={2} />
       <Animated.View style={animatedHeaderStyles}>
-        <Text variant="pageHeader">{strings.header}</Text>
+        <Text variant="pageHeader">{strings.header.create}</Text>
         <CenteredContainer>
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
