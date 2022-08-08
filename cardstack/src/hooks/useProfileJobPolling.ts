@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useGetProfileJobStatusQuery } from '@cardstack/services';
 
@@ -18,6 +18,11 @@ export const useProfileJobPolling = (jobID?: string) => {
     }
   );
 
+  const isCreatingProfile = useMemo(
+    () => data?.attributes?.state === 'pending',
+    [data]
+  );
+
   useEffect(() => {
     if (jobID) {
       startPolling();
@@ -33,5 +38,6 @@ export const useProfileJobPolling = (jobID?: string) => {
   return {
     data,
     error,
+    isCreatingProfile,
   };
 };

@@ -30,7 +30,9 @@ export const useProfileScreen = () => {
   } = usePrimarySafe();
 
   // Profile creation job takes time to complete, this hook keeps pooling until the profile is ready.
-  const { data, error } = useProfileJobPolling(params?.profileCreationJobID);
+  const { data, error, isCreatingProfile } = useProfileJobPolling(
+    params?.profileCreationJobID
+  );
 
   const { network } = useAccountSettings();
 
@@ -41,6 +43,7 @@ export const useProfileScreen = () => {
       isLoading ||
       isUninitialized ||
       isRefreshingForNewAccount ||
+      isCreatingProfile ||
       (isFetching && !primarySafe),
     [
       isFetching,
@@ -48,6 +51,7 @@ export const useProfileScreen = () => {
       isRefreshingForNewAccount,
       isUninitialized,
       primarySafe,
+      isCreatingProfile,
     ]
   );
 
@@ -56,11 +60,6 @@ export const useProfileScreen = () => {
       initialRoute: SettingsPages.network.key,
     });
   }, [navigate]);
-
-  const showCreatingProfile = useMemo(
-    () => data?.attributes?.state === 'pending',
-    [data]
-  );
 
   // When the new profile is done, we need to refresh the safes list.
   useEffect(() => {
@@ -73,7 +72,7 @@ export const useProfileScreen = () => {
   return {
     primarySafe,
     showLoading,
-    showCreatingProfile,
+    isCreatingProfile,
     error,
     safesCount,
     network,

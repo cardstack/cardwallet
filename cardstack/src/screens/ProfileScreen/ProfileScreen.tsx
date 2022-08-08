@@ -19,7 +19,7 @@ const ProfileScreen = () => {
     // error: safeCreationError,
     primarySafe,
     showLoading,
-    showCreatingProfile,
+    isCreatingProfile,
     safesCount,
     isFetching,
     network,
@@ -70,21 +70,21 @@ const ProfileScreen = () => {
               {strings.switchNetwork}
             </Button>
           </>
-        ) : showCreatingProfile ? (
+        ) : showLoading ? (
           <>
-            <Text
-              variant="semibold"
-              color="white"
-              textAlign="center"
-              fontSize={16}
-              paddingBottom={4}
-            >
-              {strings.ongoingProfileCreation}
-            </Text>
+            {isCreatingProfile && (
+              <Text
+                variant="semibold"
+                color="white"
+                textAlign="center"
+                fontSize={16}
+                paddingBottom={4}
+              >
+                {strings.ongoingProfileCreation}
+              </Text>
+            )}
             <ActivityIndicator size="large" />
           </>
-        ) : showLoading ? (
-          <ActivityIndicator size="large" />
         ) : (
           ProfileBody
         )}
