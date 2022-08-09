@@ -185,7 +185,7 @@ export const ProfileNameScreen = () => {
   ]);
 
   const pageTitle = useMemo(
-    () => (isEditing ? strings.header.update : strings.header.create),
+    () => (!isEditing ? strings.header.update : strings.header.create),
     [isEditing]
   );
 

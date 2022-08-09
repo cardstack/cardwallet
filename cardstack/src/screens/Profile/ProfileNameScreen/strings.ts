@@ -1,6 +1,6 @@
 export const strings = {
   header: {
-    create: 'Congrats! Choose a name\nfor your profile page',
+    create: 'Choose a name for\nyour profile page',
     update: 'Choose a new name and\ncolor for your profile page',
   },
   btns: {
