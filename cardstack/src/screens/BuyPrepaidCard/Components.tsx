@@ -40,12 +40,10 @@ export const CardContent = ({
   onPress,
   amount,
   isSelected,
-  faceValue,
   quantity,
 }: {
   onPress: () => void;
   amount: number;
-  faceValue: number;
   isSelected: boolean;
   quantity: number;
 }) => {
@@ -55,7 +53,6 @@ export const CardContent = ({
   const borderColor = isSelected ? 'buttonPrimaryBorder' : 'borderBlue';
   const variant = isSelected ? 'squareSelected' : 'square';
   const titleColor = isSelected ? 'black' : 'white';
-  const subtitleColor = isSelected ? 'black' : 'buttonSecondaryBorder';
 
   return (
     <CenteredContainer {...styles.cardContainer}>
@@ -65,22 +62,24 @@ export const CardContent = ({
         onPress={onPress}
         disablePress={isSoldOut}
       >
-        <Text
-          color={isSoldOut ? 'blueText' : titleColor}
-          fontSize={28}
-          textAlign="center"
-        >
-          $ {amount}
-        </Text>
-        <Text
-          color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
-          fontSize={14}
-          textAlign="center"
-          weight="regular"
-        >
-          {`\n`}
-          {isSoldOut ? 'SOLD OUT' : `${faceValue} SPEND`}
-        </Text>
+        <Container flexDirection="column">
+          <Text
+            color={isSoldOut ? 'blueText' : titleColor}
+            fontSize={28}
+            textAlign="center"
+          >
+            $ {amount}
+          </Text>
+          {isSoldOut && (
+            <Text
+              color="buttonSecondaryBorder"
+              fontSize={14}
+              textAlign="center"
+            >
+              SOLD OUT
+            </Text>
+          )}
+        </Container>
       </Button>
     </CenteredContainer>
   );
