@@ -66,7 +66,7 @@ export const ProfileNameScreen = () => {
     onContinuePress,
     onChangeText,
     onPressEditColor,
-    isEditing,
+    isUpdating,
     isBlocked,
   } = useProfileNameScreen();
 
@@ -184,15 +184,7 @@ export const ProfileNameScreen = () => {
     profile.color,
   ]);
 
-  const pageTitle = useMemo(
-    () => (!isEditing ? strings.header.update : strings.header.create),
-    [isEditing]
-  );
-
-  const btnLabel = useMemo(
-    () => (isEditing ? strings.btns.save : strings.btns.continue),
-    [isEditing]
-  );
+  const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
   return (
     <SafeAreaView
@@ -201,9 +193,9 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <InPageHeader skipAmount={2} showSkipButton={!isEditing} />
+      <InPageHeader skipAmount={2} showSkipButton={!isUpdating} />
       <Animated.View style={animatedHeaderStyles}>
-        <Text variant="pageHeader">{pageTitle}</Text>
+        <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
@@ -281,7 +273,7 @@ export const ProfileNameScreen = () => {
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
         <Button blocked={isBlocked} onPress={onContinuePress}>
-          {btnLabel}
+          {strings.btns[flow]}
         </Button>
       </CenteredContainer>
     </SafeAreaView>

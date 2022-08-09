@@ -16,3 +16,4 @@ export { default as useInvalidPaste } from './useInvalidPaste';
 export * from './useAppRequirements';
 export * from './useAppState';
 export * from './useProfileJobPolling';
+export * from './profile/useProfileUpdate';

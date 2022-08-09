@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { useLoadingOverlay } from '@cardstack/navigation';
+import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import logger from 'logger';
@@ -13,16 +14,20 @@ const strings = {
   loading: 'Updating your profile',
 };
 
-export const useProfileEdit = () => {
+export const useProfileUpdate = () => {
   const { goBack } = useNavigation();
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
   // TODO: update this with the correct mutation after hub is done
-  const updateProfile = useCallback(() => {
-    showLoadingOverlay({ title: strings.loading });
+  const updateProfile = useCallback(
+    (profile: CreateProfileInfoParams) => {
+      showLoadingOverlay({ title: strings.loading });
+      console.log('profile', profile);
 
-    // TODO: call mutation
-  }, [showLoadingOverlay]);
+      // TODO: call mutations
+    },
+    [showLoadingOverlay]
+  );
 
   useMutationEffects(
     useMemo(

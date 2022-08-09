@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { useState, useCallback, useMemo } from 'react';
 
-import { useProfileEdit } from '@cardstack/hooks/profile/useProfileEdit';
+import { useProfileUpdate } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
@@ -19,7 +19,7 @@ interface NavParams extends Partial<MerchantInformation> {
 }
 
 export const useProfileNameScreen = () => {
-  const { updateProfile } = useProfileEdit();
+  const { updateProfile } = useProfileUpdate();
   const { params } = useRoute<RouteType<NavParams>>();
 
   const { slug, ...currentProfile } = params;
@@ -71,8 +71,8 @@ export const useProfileNameScreen = () => {
       return;
     }
 
-    // edit flow
-    updateProfile();
+    // update flow
+    updateProfile(profile);
   }, [navigate, profile, currentProfile, updateProfile]);
 
   const onSkipPress = useCallback(() => {
@@ -85,7 +85,7 @@ export const useProfileNameScreen = () => {
     onChangeText,
     onPressEditColor,
     profile,
-    isEditing: currentProfile,
+    isUpdating: currentProfile,
     isBlocked,
   };
 };

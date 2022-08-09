@@ -4,9 +4,8 @@ export const strings = {
     update: 'Choose a new name and\ncolor for your profile page',
   },
   btns: {
-    skip: 'Skip',
-    continue: 'Continue',
-    save: 'Save',
+    create: 'Continue',
+    update: 'Save',
   },
   editColor: 'Edit Color',
   input: {
