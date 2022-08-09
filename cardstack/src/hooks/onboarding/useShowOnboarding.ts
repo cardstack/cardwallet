@@ -16,7 +16,10 @@ export const useShowOnboarding = () => {
   // so it will not update the memo value.
   const shouldPresentOnboarding = useCallback(() => {
     return (
-      !(isLoading && isFetching && primarySafe && isUninitialized) &&
+      !isLoading &&
+      !isFetching &&
+      !primarySafe &&
+      !isUninitialized &&
       remoteFlags().featureProfilePurchaseOnboarding
     );
   }, [isLoading, isFetching, primarySafe, isUninitialized]);
