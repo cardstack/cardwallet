@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/native';
 import { useState, useCallback, useMemo } from 'react';
 
+import { useProfileEdit } from '@cardstack/hooks/profile/useProfileEdit';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
@@ -18,6 +19,7 @@ interface NavParams extends Partial<MerchantInformation> {
 }
 
 export const useProfileNameScreen = () => {
+  const { updateProfile } = useProfileEdit();
   const { params } = useRoute<RouteType<NavParams>>();
 
   const { slug, ...currentProfile } = params;
@@ -62,8 +64,16 @@ export const useProfileNameScreen = () => {
   );
 
   const onContinuePress = useCallback(() => {
-    navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
-  }, [navigate, profile]);
+    // creation flow
+    if (!currentProfile) {
+      navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
+
+      return;
+    }
+
+    // edit flow
+    updateProfile();
+  }, [navigate, profile, currentProfile, updateProfile]);
 
   const onSkipPress = useCallback(() => {
     navDispatch(StackActions.pop(2));
