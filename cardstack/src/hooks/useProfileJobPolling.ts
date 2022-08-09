@@ -6,10 +6,24 @@ import { useBooleanState } from './useBooleanState';
 
 const JOB_POLLING_INTERVAL = 5000;
 
-export const useProfileJobPolling = (jobID?: string) => {
+interface ProfileJobPollingProps {
+  jobID?: string;
+  onJobCompletedCallback: (
+    error?: FetchBaseQueryError | SerializedError | undefined
+  ) => void;
+}
+
+/**
+ * useProfileJobPolling
+ * Profile creation job takes time to complete.
+ * This hook keeps pooling until the profile is ready.
+ */
+export const useProfileJobPolling = ({
+  jobID,
+  onJobCompletedCallback,
+}: ProfileJobPollingProps) => {
   const [polling, startPolling, stopPolling] = useBooleanState();
 
-  // Profile creation job takes time to complete, this hook keeps pooling until the profile is ready.
   const { data, error } = useGetProfileJobStatusQuery(
     { jobTicketID: jobID || '' },
     {
@@ -36,8 +50,6 @@ export const useProfileJobPolling = (jobID?: string) => {
   }, [data, error, stopPolling]);
 
   return {
-    data,
-    error,
     isCreatingProfile,
   };
 };

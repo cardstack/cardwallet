@@ -40,7 +40,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
 
   const [
     validateReceiptCreateProfile,
-    { data: profileJobInfo, error, isSuccess, isError },
+    { data: profileJobId, error, isSuccess, isError },
   ] = useProfilePurchasesMutation();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
@@ -57,18 +57,8 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
 
               setTimeout(dismissLoadingOverlay, 1000);
 
-              Alert({
-                title: 'Success',
-                message: 'Your profile will appear shortly',
-                buttons: [
-                  {
-                    text: 'Okay',
-                    onPress: () =>
-                      navigate(Routes.PROFILE_SCREEN, {
-                        profileCreationJobID: profileJobInfo?.included[0]?.id,
-                      }),
-                  },
-                ],
+              navigate(Routes.PROFILE_SCREEN, {
+                profileCreationJobID: profileJobId,
               });
             }
           },
@@ -90,7 +80,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
         isError,
         isSuccess,
         navigate,
-        profileJobInfo,
+        profileJobId,
       ]
     )
   );

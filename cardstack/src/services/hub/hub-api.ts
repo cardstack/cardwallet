@@ -4,7 +4,6 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { CustodialWallet, ProfileIDUniquenessResponse } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
-import { CacheTags as SafeCacheTags } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 
 import {
@@ -49,7 +48,7 @@ enum CacheTag {
 export const hubApi = createApi({
   reducerPath: 'hubApi',
   baseQuery: fetchHubBaseQuery,
-  tagTypes: [...Object.values(CacheTag), ...Object.values(SafeCacheTags)],
+  tagTypes: [...Object.values(CacheTag)],
   endpoints: builder => ({
     getCustodialWallet: builder.query<GetCustodialWalletQueryResult, void>({
       query: () => routes.custodialWallet,
@@ -114,15 +113,14 @@ export const hubApi = createApi({
         responseHandler: response => response.text(),
       }),
     }),
-    profilePurchases: builder.mutation<
-      PostProfilePurchaseQueryResult,
-      PostProfilePurchaseQueryParams
-    >({
+    profilePurchases: builder.mutation<string, PostProfilePurchaseQueryParams>({
       query: params => ({
         url: routes.profilePurchases,
         method: 'POST',
         body: hubProfilePurchaseBody(routes.profilePurchases, params),
       }),
+      transformResponse: (result: PostProfilePurchaseQueryResult) =>
+        result?.included?.[0].id,
     }),
     validateProfileSlug: builder.query<
       ProfileIDUniquenessResponse,

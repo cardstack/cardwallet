@@ -15,8 +15,6 @@ import { useProfileScreen } from './useProfileScreen';
 
 const ProfileScreen = () => {
   const {
-    // Todo: handle retry on error.
-    // error: safeCreationError,
     primarySafe,
     showLoading,
     isCreatingProfile,

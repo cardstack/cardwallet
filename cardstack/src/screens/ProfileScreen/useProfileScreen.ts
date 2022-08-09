@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import {
   useIsFetchingDataNewAccount,
@@ -29,10 +29,20 @@ export const useProfileScreen = () => {
     isUninitialized,
   } = usePrimarySafe();
 
-  // Profile creation job takes time to complete, this hook keeps pooling until the profile is ready.
-  const { data, error, isCreatingProfile } = useProfileJobPolling(
-    params?.profileCreationJobID
+  // When the new profile is done, we need to refresh the safes list.
+  const onJobCompletedCallback = useCallback(
+    error => {
+      if (!error) {
+        refetch();
+      }
+    },
+    [refetch]
   );
+
+  const { isCreatingProfile } = useProfileJobPolling({
+    jobID: params?.profileCreationJobID,
+    onJobCompletedCallback,
+  });
 
   const { network } = useAccountSettings();
 
@@ -61,19 +71,10 @@ export const useProfileScreen = () => {
     });
   }, [navigate]);
 
-  // When the new profile is done, we need to refresh the safes list.
-  useEffect(() => {
-    if (data?.attributes?.state === 'success') {
-      // Once pooling is done, we need to refresh safes.
-      refetch();
-    }
-  }, [data, refetch]);
-
   return {
     primarySafe,
     showLoading,
     isCreatingProfile,
-    error,
     safesCount,
     network,
     isFetching,
