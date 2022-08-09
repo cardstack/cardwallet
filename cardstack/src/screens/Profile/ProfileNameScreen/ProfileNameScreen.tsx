@@ -67,6 +67,7 @@ export const ProfileNameScreen = () => {
     onChangeText,
     onPressEditColor,
     isEditing,
+    isBlocked,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
@@ -279,7 +280,7 @@ export const ProfileNameScreen = () => {
         </Container>
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
-        <Button blocked={!profile.name} onPress={onContinuePress}>
+        <Button blocked={isBlocked} onPress={onContinuePress}>
           {btnLabel}
         </Button>
       </CenteredContainer>

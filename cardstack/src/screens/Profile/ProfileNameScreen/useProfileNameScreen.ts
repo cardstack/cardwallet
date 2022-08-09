@@ -53,6 +53,14 @@ export const useProfileNameScreen = () => {
     });
   }, [navigate, profileColor]);
 
+  const isBlocked = useMemo(
+    () =>
+      !profile.name ||
+      (currentProfile.name === profile.name &&
+        currentProfile.color === profile.color),
+    [profile, currentProfile]
+  );
+
   const onContinuePress = useCallback(() => {
     navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
   }, [navigate, profile]);
@@ -68,5 +76,6 @@ export const useProfileNameScreen = () => {
     onPressEditColor,
     profile,
     isEditing: currentProfile,
+    isBlocked,
   };
 };
