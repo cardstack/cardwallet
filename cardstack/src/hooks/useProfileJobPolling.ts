@@ -1,3 +1,5 @@
+import { SerializedError } from '@reduxjs/toolkit';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { useEffect, useMemo } from 'react';
 
 import { useGetProfileJobStatusQuery } from '@cardstack/services';
@@ -9,7 +11,7 @@ const JOB_POLLING_INTERVAL = 5000;
 interface ProfileJobPollingProps {
   jobID?: string;
   onJobCompletedCallback: (
-    error?: FetchBaseQueryError | SerializedError | undefined
+    error?: FetchBaseQueryError | SerializedError
   ) => void;
 }
 
