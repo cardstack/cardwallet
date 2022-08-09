@@ -149,6 +149,11 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
       currentPurchaseError &&
       currentPurchaseError?.code !== 'E_USER_CANCELLED'
     ) {
+      logger.sentry(
+        'Purchase failed with error: ',
+        JSON.stringify(currentPurchaseError)
+      );
+
       Alert(defaultErrorAlert);
     }
   }, [currentPurchaseError]);
