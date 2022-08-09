@@ -53,7 +53,6 @@ export const CardContent = ({
   const borderColor = isSelected ? 'buttonPrimaryBorder' : 'borderBlue';
   const variant = isSelected ? 'squareSelected' : 'square';
   const titleColor = isSelected ? 'black' : 'white';
-  const subtitleColor = isSelected ? 'black' : 'buttonSecondaryBorder';
 
   return (
     <CenteredContainer {...styles.cardContainer}>
@@ -63,24 +62,24 @@ export const CardContent = ({
         onPress={onPress}
         disablePress={isSoldOut}
       >
-        <Text
-          color={isSoldOut ? 'blueText' : titleColor}
-          fontSize={28}
-          textAlign="center"
-        >
-          $ {amount}
-        </Text>
-        {isSoldOut && (
+        <Container flexDirection="column">
           <Text
-            color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
-            fontSize={14}
+            color={isSoldOut ? 'blueText' : titleColor}
+            fontSize={28}
             textAlign="center"
-            weight="regular"
           >
-            {`\n`}
-            SOLD OUT
+            $ {amount}
           </Text>
-        )}
+          {isSoldOut && (
+            <Text
+              color="buttonSecondaryBorder"
+              fontSize={14}
+              textAlign="center"
+            >
+              SOLD OUT
+            </Text>
+          )}
+        </Container>
       </Button>
     </CenteredContainer>
   );
