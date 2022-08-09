@@ -52,7 +52,6 @@ const BuyPrepaidCard = () => {
           onPress={() => onSelectCard(item, index)}
           isSelected={item?.isSelected}
           amount={item?.amount}
-          faceValue={item?.attributes?.['face-value']}
           quantity={item.attributes?.quantity}
         />
       ),

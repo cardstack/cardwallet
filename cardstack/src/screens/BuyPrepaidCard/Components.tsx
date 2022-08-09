@@ -40,12 +40,10 @@ export const CardContent = ({
   onPress,
   amount,
   isSelected,
-  faceValue,
   quantity,
 }: {
   onPress: () => void;
   amount: number;
-  faceValue: number;
   isSelected: boolean;
   quantity: number;
 }) => {
@@ -72,15 +70,17 @@ export const CardContent = ({
         >
           $ {amount}
         </Text>
-        <Text
-          color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
-          fontSize={14}
-          textAlign="center"
-          weight="regular"
-        >
-          {`\n`}
-          {isSoldOut ? 'SOLD OUT' : `${faceValue} SPEND`}
-        </Text>
+        {isSoldOut && (
+          <Text
+            color={isSoldOut ? 'buttonSecondaryBorder' : subtitleColor}
+            fontSize={14}
+            textAlign="center"
+            weight="regular"
+          >
+            {`\n`}
+            SOLD OUT
+          </Text>
+        )}
       </Button>
     </CenteredContainer>
   );
