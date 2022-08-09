@@ -46,8 +46,9 @@ export const useProfileJobPolling = ({
   useEffect(() => {
     if (data?.attributes?.state === 'success' || error) {
       stopPolling();
+      onJobCompletedCallback(error);
     }
-  }, [data, error, stopPolling]);
+  }, [data, error, stopPolling, onJobCompletedCallback]);
 
   return {
     isCreatingProfile,
