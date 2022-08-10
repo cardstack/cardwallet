@@ -1,6 +1,6 @@
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import { useGetProfileJobStatusQuery } from '@cardstack/services';
 
@@ -34,11 +34,6 @@ export const useProfileJobPolling = ({
     }
   );
 
-  const isCreatingProfile = useMemo(
-    () => data?.attributes?.state === 'pending',
-    [data]
-  );
-
   useEffect(() => {
     if (jobID) {
       startPolling();
@@ -53,6 +48,6 @@ export const useProfileJobPolling = ({
   }, [data, error, stopPolling, onJobCompletedCallback]);
 
   return {
-    isCreatingProfile,
+    isCreatingProfile: polling,
   };
 };
