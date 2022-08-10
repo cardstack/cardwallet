@@ -52,10 +52,15 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
           status: isSuccess,
           callback: () => {
             if (currentPurchase) {
-              // Valid purchases need to be finalized, otherwise they may reverse.
-              finishTransaction(currentPurchase);
-
-              setTimeout(dismissLoadingOverlay, 1000);
+              try {
+                // Valid purchases need to be finalized, otherwise they may reverse.
+                finishTransaction(currentPurchase, Device.iap.isConsumable);
+              } catch (err) {
+                logger.sentry('Error finishing tx', {
+                  err,
+                  receipt: currentPurchase.transactionReceipt,
+                });
+              }
 
               navigate(Routes.PROFILE_SCREEN, {
                 profileCreationJobID: profileJobId,
@@ -88,7 +93,7 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
   const profileProduct = useMemo(
     () =>
       products.find(
-        prod => prod.productId === skus.profile && prod.type === Device.iapType
+        prod => prod.productId === skus.profile && prod.type === Device.iap.type
       ),
     [products]
   );
@@ -117,25 +122,20 @@ export const usePurchaseProfile = (profile: CreateProfileInfoParams) => {
    * Handler for after a purchase occur.
    */
   useEffect(() => {
-    if (currentPurchase) {
-      showLoadingOverlay({ title: 'Creating profile' });
+    const iapReceipt = currentPurchase?.[Device.iap.receiptKey];
 
+    if (iapReceipt) {
       logger.sentry('[IAP] Purchase successful');
       /**
        * Hub call that validates the receipt and creates the defined profile.
        */
       validateReceiptCreateProfile({
-        iapReceipt: currentPurchase.transactionReceipt,
-        provider: Device.iapProvider,
+        iapReceipt,
+        provider: Device.iap.provider,
         profileInfo: profile,
       });
     }
-  }, [
-    currentPurchase,
-    profile,
-    showLoadingOverlay,
-    validateReceiptCreateProfile,
-  ]);
+  }, [currentPurchase, profile, validateReceiptCreateProfile]);
 
   useEffect(() => {
     if (
