@@ -21,22 +21,22 @@ interface ProfileJobPollingProps {
  * This hook keeps pooling until the profile is ready.
  */
 export const useProfileJobPolling = ({
-  jobID,
+  jobID = '',
   onJobCompletedCallback,
 }: ProfileJobPollingProps) => {
-  const [polling, startPolling, stopPolling] = useBooleanState();
+  const [polling, startPolling, stopPolling] = useBooleanState(!!jobID);
 
   const { data, error } = useGetProfileJobStatusQuery(
-    { jobTicketID: jobID || '' },
+    { jobTicketID: jobID },
     {
-      pollingInterval: polling ? JOB_POLLING_INTERVAL : undefined,
-      skip: !jobID,
+      pollingInterval: JOB_POLLING_INTERVAL,
+      skip: !jobID || !polling,
     }
   );
 
   const isCreatingProfile = useMemo(
-    () => data?.attributes?.state === 'pending',
-    [data]
+    () => data?.attributes['job-type'] === 'create-profile' && polling,
+    [data, polling]
   );
 
   useEffect(() => {

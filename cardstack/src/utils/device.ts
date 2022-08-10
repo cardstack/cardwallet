@@ -26,8 +26,14 @@ const Device = {
     ? ('keyboardWillHide' as const)
     : ('keyboardDidHide' as const),
   enableBackup: true,
-  iapProvider: isIOS ? IAPProviderType.apple : IAPProviderType.google,
-  iapType: isIOS ? 'iap' : 'inapp',
+  iap: {
+    provider: isIOS ? IAPProviderType.apple : IAPProviderType.google,
+    type: isIOS ? ('iap' as const) : ('inapp' as const),
+    receiptKey: isIOS
+      ? ('transactionReceipt' as const)
+      : ('purchaseToken' as const),
+    isConsumable: true,
+  },
 };
 
 export { Device };
