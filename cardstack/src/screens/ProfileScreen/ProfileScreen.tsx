@@ -1,5 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { ActivityIndicator } from 'react-native';
 
 import {
@@ -9,31 +8,22 @@ import {
   MerchantContent,
   Text,
 } from '@cardstack/components';
-import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
-import { Routes } from '@cardstack/navigation';
-import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { isLayer1 } from '@cardstack/utils';
 
-import { useAccountSettings } from '@rainbow-me/hooks';
-import { SettingsPages } from '@rainbow-me/screens/SettingsModal';
-
 import { CreateProfile, strings } from './components';
+import { useProfileScreen } from './useProfileScreen';
 
 const ProfileScreen = () => {
-  const { navigate } = useNavigation();
-
   const {
     primarySafe,
-    isFetching,
-    refetch,
+    showLoading,
+    isCreatingProfile,
     safesCount,
-    isLoading,
-    isUninitialized,
-  } = usePrimarySafe();
-
-  const { network } = useAccountSettings();
-
-  const isRefreshingForNewAccount = useIsFetchingDataNewAccount(isFetching);
+    isFetching,
+    network,
+    refetch,
+    redirectToSwitchNetwork,
+  } = useProfileScreen();
 
   const ProfileBody = useMemo(
     () =>
@@ -50,27 +40,6 @@ const ProfileScreen = () => {
       ),
     [primarySafe, safesCount, isFetching, refetch]
   );
-
-  const showLoading = useMemo(
-    () =>
-      isLoading ||
-      isUninitialized ||
-      isRefreshingForNewAccount ||
-      (isFetching && !primarySafe),
-    [
-      isFetching,
-      isLoading,
-      isRefreshingForNewAccount,
-      isUninitialized,
-      primarySafe,
-    ]
-  );
-
-  const redirectToSwitchNetwork = useCallback(() => {
-    navigate(Routes.SETTINGS_MODAL, {
-      initialRoute: SettingsPages.network.key,
-    });
-  }, [navigate]);
 
   return (
     <Container
@@ -100,7 +69,20 @@ const ProfileScreen = () => {
             </Button>
           </>
         ) : showLoading ? (
-          <ActivityIndicator size="large" />
+          <>
+            {isCreatingProfile && (
+              <Text
+                variant="semibold"
+                color="white"
+                textAlign="center"
+                fontSize={16}
+                paddingBottom={4}
+              >
+                {strings.ongoingProfileCreation}
+              </Text>
+            )}
+            <ActivityIndicator size="large" />
+          </>
         ) : (
           ProfileBody
         )}

@@ -25,6 +25,7 @@ import {
   GetValidateProfileSlugParams,
   CreateProfileInfoParams,
   PostProfilePurchaseQueryResult,
+  JobTicketResult,
 } from './hub-types';
 
 const routes = {
@@ -36,6 +37,7 @@ const routes = {
   profileInfo: {
     root: '/merchant-infos',
     validateSlug: '/validate-slug',
+    jobTicket: '/job-tickets',
   },
 };
 
@@ -111,15 +113,14 @@ export const hubApi = createApi({
         responseHandler: response => response.text(),
       }),
     }),
-    profilePurchases: builder.mutation<
-      PostProfilePurchaseQueryResult,
-      PostProfilePurchaseQueryParams
-    >({
+    profilePurchases: builder.mutation<string, PostProfilePurchaseQueryParams>({
       query: params => ({
         url: routes.profilePurchases,
         method: 'POST',
         body: hubProfilePurchaseBody(routes.profilePurchases, params),
       }),
+      transformResponse: (result: PostProfilePurchaseQueryResult) =>
+        result?.included?.[0].id,
     }),
     validateProfileSlug: builder.query<
       ProfileIDUniquenessResponse,
@@ -136,6 +137,14 @@ export const hubApi = createApi({
       }),
       transformResponse: ({ data }) => data?.attributes?.did,
     }),
+    getProfileJobStatus: builder.query<
+      JobTicketResult,
+      { jobTicketID: string }
+    >({
+      query: ({ jobTicketID }) =>
+        `${routes.profileInfo.jobTicket}/${jobTicketID}`,
+      transformResponse: ({ data }) => data,
+    }),
   }),
 });
 
@@ -150,4 +159,5 @@ export const {
   useProfilePurchasesMutation,
   useLazyValidateProfileSlugQuery,
   useCreateProfileInfoMutation,
+  useGetProfileJobStatusQuery,
 } = hubApi;

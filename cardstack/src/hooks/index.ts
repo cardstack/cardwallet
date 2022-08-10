@@ -15,3 +15,4 @@ export * from './remote-configs/useLoadRemoteConfigs';
 export { default as useInvalidPaste } from './useInvalidPaste';
 export * from './useAppRequirements';
 export * from './useAppState';
+export * from './useProfileJobPolling';
