@@ -1,30 +1,26 @@
-import { useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect, useRef } from 'react';
 
+import { Routes } from '@cardstack/navigation/routes';
+import { useAuthSelector } from '@cardstack/redux/authSlice';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
-import { remoteFlags } from '@cardstack/services/remote-config';
 
 export const useShowOnboarding = () => {
-  const {
-    primarySafe,
-    isFetching,
-    isLoading,
-    isUninitialized,
-  } = usePrimarySafe();
+  const { primarySafe, hasFetchedProfile } = usePrimarySafe();
 
-  // Using a callback instead of memo to pull the feature flag value on call.
-  // That is because the flag is stateles and does not causes react's side-effects,
-  // so it will not update the memo value.
-  const shouldPresentOnboarding = useCallback(() => {
-    return (
-      !isLoading &&
-      !isFetching &&
-      !primarySafe &&
-      !isUninitialized &&
-      remoteFlags().featureProfilePurchaseOnboarding
-    );
-  }, [isLoading, isFetching, primarySafe, isUninitialized]);
+  const { navigate } = useNavigation();
 
-  return {
-    shouldPresentOnboarding,
-  };
+  const { hasWallet } = useAuthSelector();
+
+  // TODO: Maybe persist the skip
+  const isOnboarding = useRef(false);
+
+  useEffect(() => {
+    const noProfile = hasFetchedProfile && !primarySafe;
+
+    if (hasWallet && noProfile && !isOnboarding.current) {
+      navigate(Routes.PROFILE_SLUG);
+      isOnboarding.current = true;
+    }
+  }, [hasFetchedProfile, hasWallet, navigate, primarySafe]);
 };

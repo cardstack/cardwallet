@@ -27,7 +27,7 @@ import useAccountSettings from './useAccountSettings';
 import useInitializeAccountData from './useInitializeAccountData';
 import useLoadAccountData from './useLoadAccountData';
 import useLoadGlobalData from './useLoadGlobalData';
-import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
+
 import { checkPushPermissionAndRegisterToken } from '@cardstack/models/firebase';
 import { getPin, getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
@@ -60,8 +60,6 @@ export default function useWalletManager() {
   const { navigate } = useNavigation();
 
   const { hasWallet, setHasWallet } = useAuthSelectorAndActions();
-
-  const { shouldPresentOnboarding } = useShowOnboarding();
 
   const createWalletPin = useCallback(
     (overwriteParams: Partial<PinScreenNavParams> = {}) => {
@@ -212,17 +210,12 @@ export default function useWalletManager() {
 
       setHasWallet();
 
-      if (shouldPresentOnboarding()) {
-        navigate(Routes.PROFILE_SLUG);
-        return;
-      }
-
       if (isInnerNavigation) {
         navigate(Routes.WALLET_SCREEN, { initialized: true });
         return;
       }
     },
-    [initializeWallet, navigate, setHasWallet, shouldPresentOnboarding]
+    [initializeWallet, navigate, setHasWallet]
   );
 
   const createNewWallet = useCallback(

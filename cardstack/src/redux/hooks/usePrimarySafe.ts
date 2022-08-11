@@ -26,6 +26,7 @@ export const usePrimarySafe = () => {
     refetch,
     isLoading,
     isUninitialized,
+    isSuccess,
   } = useGetSafesDataQuery(
     {
       address: accountAddress,
@@ -69,6 +70,7 @@ export const usePrimarySafe = () => {
     changePrimarySafe,
     isLoading,
     isUninitialized,
+    hasFetchedProfile: isSuccess,
     safesCount: merchantSafes?.length || 1,
   };
 };
