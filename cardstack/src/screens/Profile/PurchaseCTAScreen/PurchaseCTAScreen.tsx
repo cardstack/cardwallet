@@ -12,6 +12,7 @@ import {
   Touchable,
   InPageHeader,
 } from '@cardstack/components';
+import { useDebounce } from '@cardstack/hooks/useDebounce';
 
 import profilePreview from '../../../assets/profile-preview.png';
 
@@ -31,6 +32,8 @@ const PurchaseCTAScreen = () => {
     onPressPrepaidCards,
     showPrepaidCardOption,
   } = usePurchaseCTAScreen();
+
+  const { debounce } = useDebounce();
 
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
@@ -82,7 +85,7 @@ const PurchaseCTAScreen = () => {
           style={styles.iapPreview}
           resizeMode="contain"
         />
-        <Button onPress={onPressBuy}>{purchaseBtnLabel}</Button>
+        <Button onPress={() => debounce(onPressBuy)}>{purchaseBtnLabel}</Button>
         {showPrepaidCardOption && (
           <Button
             onPress={onPressPrepaidCards}
