@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/native';
 import { useState, useCallback, useMemo } from 'react';
 
+import { useProfileUpdate } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
@@ -18,6 +19,7 @@ interface NavParams extends Partial<MerchantInformation> {
 }
 
 export const useProfileNameScreen = () => {
+  const { updateProfile } = useProfileUpdate();
   const { params } = useRoute<RouteType<NavParams>>();
 
   const { slug, ...currentProfile } = params;
@@ -53,9 +55,25 @@ export const useProfileNameScreen = () => {
     });
   }, [navigate, profileColor]);
 
+  const isBlocked = useMemo(
+    () =>
+      !profile.name ||
+      (currentProfile.name === profile.name &&
+        currentProfile.color === profile.color),
+    [profile, currentProfile]
+  );
+
   const onContinuePress = useCallback(() => {
-    navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
-  }, [navigate, profile]);
+    // creation flow
+    if (!currentProfile) {
+      navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
+
+      return;
+    }
+
+    // update flow
+    updateProfile(profile);
+  }, [navigate, profile, currentProfile, updateProfile]);
 
   const onSkipPress = useCallback(() => {
     navDispatch(StackActions.pop(2));
@@ -67,5 +85,7 @@ export const useProfileNameScreen = () => {
     onChangeText,
     onPressEditColor,
     profile,
+    isUpdating: currentProfile,
+    isBlocked,
   };
 };

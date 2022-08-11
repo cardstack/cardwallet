@@ -66,6 +66,8 @@ export const ProfileNameScreen = () => {
     onContinuePress,
     onChangeText,
     onPressEditColor,
+    isUpdating,
+    isBlocked,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
@@ -182,6 +184,8 @@ export const ProfileNameScreen = () => {
     profile.color,
   ]);
 
+  const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
+
   return (
     <SafeAreaView
       backgroundColor="backgroundDarkPurple"
@@ -189,9 +193,9 @@ export const ProfileNameScreen = () => {
       paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
     >
-      <InPageHeader skipAmount={2} />
+      <InPageHeader skipAmount={2} showSkipButton={!isUpdating} />
       <Animated.View style={animatedHeaderStyles}>
-        <Text variant="pageHeader">{strings.header}</Text>
+        <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>
           <Text fontSize={12} color="grayText" paddingBottom={2}>
             {strings.editColor}
@@ -258,6 +262,7 @@ export const ProfileNameScreen = () => {
             placeholderTextColor={colors.secondaryText}
             paddingBottom={4}
             onChangeText={onChangeText}
+            value={profile.name}
           />
           <Container width="80%" flex={1}>
             <Text fontSize={12} color="grayText">
@@ -267,8 +272,8 @@ export const ProfileNameScreen = () => {
         </Container>
       </KeyboardAvoidingView>
       <CenteredContainer flex={0.2} paddingBottom={2}>
-        <Button blocked={!profile.name} onPress={onContinuePress}>
-          {strings.btns.continue}
+        <Button blocked={isBlocked} onPress={onContinuePress}>
+          {strings.btns[flow]}
         </Button>
       </CenteredContainer>
     </SafeAreaView>

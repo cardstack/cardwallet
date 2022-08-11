@@ -1,8 +1,11 @@
 export const strings = {
-  header: 'Congrats! Choose a name\nfor your profile page',
+  header: {
+    create: 'Choose a name for\nyour profile page',
+    update: 'Choose a new name and\ncolor for your profile page',
+  },
   btns: {
-    skip: 'Skip',
-    continue: 'Continue',
+    create: 'Continue',
+    update: 'Save',
   },
   editColor: 'Edit Color',
   input: {
