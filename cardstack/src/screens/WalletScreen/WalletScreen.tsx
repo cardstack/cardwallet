@@ -8,6 +8,7 @@ import {
   ServiceStatusNotice,
   WelcomeCtaBanner,
 } from '@cardstack/components';
+import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { useWalletManager, useWallets } from '@rainbow-me/hooks';
@@ -19,6 +20,8 @@ export const WalletScreen = () => {
   const { walletReady } = useWallets();
 
   const initialized = useRef(!!params?.initialized);
+
+  useShowOnboarding();
 
   useEffect(() => {
     if (!initialized.current && !walletReady) {
