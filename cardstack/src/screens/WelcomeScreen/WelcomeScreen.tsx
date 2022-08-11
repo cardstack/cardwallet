@@ -29,7 +29,7 @@ const WelcomeScreen = () => {
       paddingBottom={4}
     >
       <CenteredContainer flex={1} justifyContent="flex-end">
-        <CardwalletLogo proportionalSize />
+        <CardwalletLogo />
       </CenteredContainer>
       <CenteredContainer flex={0.5}>
         <Container height={MID_IMAGE_WRAPPER}>

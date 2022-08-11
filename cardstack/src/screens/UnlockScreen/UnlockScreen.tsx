@@ -46,7 +46,7 @@ const UnlockScreen = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Container flex={1} alignItems="center">
             <Container flex={1.5} alignItems="center" justifyContent="center">
-              <CardwalletLogo variant={variant} proportionalSize />
+              <CardwalletLogo />
             </Container>
             <Container
               flex={0.9}
