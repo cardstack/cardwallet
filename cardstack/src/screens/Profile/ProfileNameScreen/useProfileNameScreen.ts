@@ -65,7 +65,7 @@ export const useProfileNameScreen = () => {
 
   const onContinuePress = useCallback(() => {
     // creation flow
-    if (!currentProfile) {
+    if (!currentProfile.name) {
       navigate(Routes.PROFILE_PURCHASE_CTA, { profile });
 
       return;
@@ -85,7 +85,7 @@ export const useProfileNameScreen = () => {
     onChangeText,
     onPressEditColor,
     profile,
-    isUpdating: currentProfile,
+    isUpdating: !!currentProfile.name,
     isBlocked,
   };
 };
