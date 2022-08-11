@@ -69,4 +69,11 @@ export const textVariants = {
     color: 'grayText',
     fontSize: 12,
   },
+  floatingTag: {
+    fontSize: 9,
+    letterSpacing: 0.9,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    ...fontFamilyVariants.bold,
+  },
 };

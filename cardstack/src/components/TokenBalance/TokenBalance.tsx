@@ -7,8 +7,13 @@ import {
   Text,
   Touchable,
   CoinIcon,
+  FloatingTag,
 } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
+
+const strings = {
+  staking: 'Staking',
+};
 
 export interface TokenBalanceProps extends ContainerProps {
   onPress?: () => void;
@@ -49,6 +54,8 @@ export const TokenBalance = (props: TokenBalanceProps) => {
   const borderProps = includeBorder ? borderStyle : {};
   const Wrapper = onPress ? Touchable : Container;
 
+  const isCardCPXD = tokenSymbol === 'CARD.CPXD';
+
   return (
     <Wrapper onPress={onPress} {...borderProps} {...containerProps}>
       <Container
@@ -57,7 +64,12 @@ export const TokenBalance = (props: TokenBalanceProps) => {
         alignItems="center"
         marginBottom={isLastItemIfList ? 0 : 4}
       >
-        <Container>
+        <Container
+          flexDirection="row"
+          justifyContent="space-between"
+          width="100%"
+          alignItems="flex-end"
+        >
           <Container flexDirection="row" alignItems="center">
             {Icon ? (
               Icon
@@ -79,6 +91,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
               <Text variant="subText">{nativeBalance}</Text>
             </Container>
           </Container>
+          {isCardCPXD && <FloatingTag copy={strings.staking} />}
         </Container>
       </Container>
     </Wrapper>
