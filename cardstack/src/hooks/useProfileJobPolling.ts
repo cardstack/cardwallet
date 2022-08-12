@@ -34,11 +34,6 @@ export const useProfileJobPolling = ({
     }
   );
 
-  const isCreatingProfile = useMemo(
-    () => data?.attributes['job-type'] === 'create-profile' && polling,
-    [data, polling]
-  );
-
   useEffect(() => {
     if (jobID) {
       startPolling();
@@ -53,6 +48,6 @@ export const useProfileJobPolling = ({
   }, [data, error, stopPolling, onJobCompletedCallback]);
 
   return {
-    isCreatingProfile,
+    isCreatingProfile: polling,
   };
 };
