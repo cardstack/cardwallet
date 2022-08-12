@@ -7,6 +7,7 @@ import {
 } from '@reduxjs/toolkit/query/react';
 
 import Web3Instance from '@cardstack/models/web3-instance';
+import { MerchantSafeType } from '@cardstack/types';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
 import store, { AppState } from '@rainbow-me/redux/store';
@@ -18,6 +19,7 @@ import {
   loadHubAuthToken,
   getHubUrl,
 } from '../hub-service';
+import { safesApi } from '../safes-api';
 
 import { hubApi } from './hub-api';
 import {
@@ -25,6 +27,7 @@ import {
   CheckHubAuthQueryParams,
   GetExchangeRatesQueryParams,
   PostProfilePurchaseQueryParams,
+  UpdateProfileInfoParams,
 } from './hub-types';
 
 // Helpers
@@ -127,6 +130,43 @@ export const hubProfilePurchaseBody = (
   };
 
   return JSON.stringify(body);
+};
+
+// Optimistic path profile info
+export const patchProfileInfo = (newInfo: UpdateProfileInfoParams) => {
+  const { accountAddress: address, nativeCurrency } = store.getState().settings;
+
+  // Helper scoped function
+  const findAndUpdateProfileInfo = (
+    safes: MerchantSafeType[],
+    { name, color, id, ...info }: UpdateProfileInfoParams
+  ) =>
+    safes.map(safe => {
+      const { merchantInfo } = safe;
+
+      return merchantInfo?.id === id
+        ? {
+            ...safe,
+            merchantInfo: {
+              ...merchantInfo,
+              name,
+              color,
+              textColor: info['text-color'],
+            },
+          }
+        : safe;
+    });
+
+  return store.dispatch(
+    safesApi.util.updateQueryData(
+      'getSafesData',
+      { address, nativeCurrency }, // Params matching query cache
+      ({ merchantSafes = [], ...otherSafes }) => ({
+        ...otherSafes,
+        merchantSafes: findAndUpdateProfileInfo(merchantSafes, newInfo),
+      })
+    )
+  );
 };
 
 // Queries
