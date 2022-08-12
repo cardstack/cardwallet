@@ -1,6 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 
+import { useBooleanState } from '@cardstack/hooks';
 import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
 import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
@@ -51,19 +52,31 @@ export const usePurchaseCTAScreen = () => {
     navigate(Routes.PROFILE_CHARGE_EXPLANATION, { localizedValue });
   }, [localizedValue, navigate]);
 
-  const onPressBuy = useCallback(() => {
-    if (remoteFlags().featureProfilePurchaseOnboarding) {
-      purchaseProfile();
+  const [
+    inPurchaseOngoing,
+    setPurchaseStart,
+    setPurchaseEnd,
+  ] = useBooleanState();
 
-      return;
+  const onPressBuy = useCallback(async () => {
+    setPurchaseStart();
+
+    if (remoteFlags().featureProfilePurchaseOnboarding) {
+      await purchaseProfile();
+    } else {
+      Alert({
+        title: 'Oops!',
+        message: 'This feature is currently unavailable',
+      });
     }
 
-    Alert({ title: 'Oops!', message: 'This feature is currently unavailable' });
-  }, [purchaseProfile]);
+    setPurchaseEnd();
+  }, [purchaseProfile, setPurchaseStart, setPurchaseEnd]);
 
   return {
     onPressChargeExplanation,
     onPressBuy,
+    inPurchaseOngoing,
     onPressPrepaidCards: purchaseWithPrepaidCard,
     showPrepaidCardOption,
     localizedValue,
