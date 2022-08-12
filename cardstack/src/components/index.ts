@@ -52,3 +52,4 @@ export * from './CtaBanner';
 export { default as RewardsPromoBanner } from './RewardsPromoBanner/RewardsPromoBanner';
 export * from './BiometricSwitch';
 export * from './ValidationMessage';
+export * from './FloatingTag';
