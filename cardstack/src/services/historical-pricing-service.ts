@@ -44,10 +44,9 @@ export const fetchHistoricalPrice = async (
       const { data: USDTRate } = await getExchangeRatesQuery({
         ...defaultParams,
         from: 'USDT',
-        to: tokenSymbol,
       });
 
-      const nativeCurrencyPriceForUSDT = USDTRate?.[tokenSymbol] || 0;
+      const nativeCurrencyPriceForUSDT = USDTRate?.[nativeCurrency] || 0;
 
       return usdtPrice * nativeCurrencyPriceForUSDT;
     }
