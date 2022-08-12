@@ -19,7 +19,6 @@ interface NavParams extends Partial<MerchantInformation> {
 }
 
 export const useProfileNameScreen = () => {
-  const { updateProfile } = useProfileUpdate();
   const { params } = useRoute<RouteType<NavParams>>();
 
   const { slug, ...currentProfile } = params;
@@ -32,6 +31,8 @@ export const useProfileNameScreen = () => {
   const [profileColor, setProfileColor] = useState(
     currentProfile.color || '#0089F9'
   );
+
+  const { updateProfile } = useProfileUpdate();
 
   const profile: CreateProfileInfoParams = useMemo(
     () => ({
@@ -72,7 +73,7 @@ export const useProfileNameScreen = () => {
     }
 
     // update flow
-    updateProfile(profile);
+    updateProfile({ ...profile, id: currentProfile.id || '' });
   }, [navigate, profile, currentProfile, updateProfile]);
 
   const onSkipPress = useCallback(() => {
