@@ -1,6 +1,6 @@
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import { useGetProfileJobStatusQuery } from '@cardstack/services';
 
