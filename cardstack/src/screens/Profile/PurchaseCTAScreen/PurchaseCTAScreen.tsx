@@ -27,6 +27,7 @@ const PurchaseCTAScreen = () => {
   const {
     onPressChargeExplanation,
     onPressBuy,
+    inPurchaseOngoing,
     localizedValue,
     onPressPrepaidCards,
     showPrepaidCardOption,
@@ -82,17 +83,24 @@ const PurchaseCTAScreen = () => {
           style={styles.iapPreview}
           resizeMode="contain"
         />
-        <Button onPress={onPressBuy}>{purchaseBtnLabel}</Button>
+        <Button onPress={onPressBuy} blocked={inPurchaseOngoing}>
+          {purchaseBtnLabel}
+        </Button>
         {showPrepaidCardOption && (
           <Button
             onPress={onPressPrepaidCards}
             variant="primaryWhite"
             borderColor="teal"
+            blocked={inPurchaseOngoing}
           >
             {strings.button.prepaidCard}
           </Button>
         )}
-        <Touchable onPress={onPressChargeExplanation} alignSelf="center">
+        <Touchable
+          onPress={onPressChargeExplanation}
+          alignSelf="center"
+          disabled={inPurchaseOngoing}
+        >
           <Text color="white" fontSize={16} weight="semibold">
             {strings.whyCharge}
           </Text>
