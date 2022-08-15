@@ -9,15 +9,22 @@ import React, {
   useState,
 } from 'react';
 
-import { Keyboard } from 'react-native';
+import { Keyboard, StatusBar } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { DelayedAlert } from '../alerts';
-import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
+import { Column } from '../layout';
 import {
   BackupPasswordButtonFooter,
   backupPasswordInputProps,
 } from './backupComponentsUtils';
-import { Container, Icon, IconProps, Input, Text } from '@cardstack/components';
+import {
+  CenteredContainer,
+  Container,
+  Icon,
+  IconProps,
+  Input,
+  Text,
+} from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { isCloudBackupPasswordValid } from '@rainbow-me/handlers/cloudBackup';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
@@ -135,15 +142,8 @@ export default function BackupCloudStep() {
   );
 
   return (
-    <BackupSheetKeyboardLayout
-      footer={
-        <BackupPasswordButtonFooter
-          buttonLabel="Confirm"
-          isValidPassword={validPassword}
-          onButtonPress={onConfirmBackup}
-        />
-      }
-    >
+    <Column>
+      <StatusBar barStyle="light-content" />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Container alignItems="center" padding={9}>
           <Icon color="settingsTeal" iconSize="xl" name="lock" />
@@ -179,7 +179,14 @@ export default function BackupCloudStep() {
             value={confirmPassword}
           />
         </Container>
+        <CenteredContainer>
+          <BackupPasswordButtonFooter
+            buttonLabel="Confirm"
+            isValidPassword={validPassword}
+            onButtonPress={onConfirmBackup}
+          />
+        </CenteredContainer>
       </TouchableWithoutFeedback>
-    </BackupSheetKeyboardLayout>
+    </Column>
   );
 }

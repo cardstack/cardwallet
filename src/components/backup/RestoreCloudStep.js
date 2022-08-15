@@ -1,7 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert } from 'react-native';
-import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
-import { Button, Container, Icon, Input, Text } from '@cardstack/components';
+import { Alert, StatusBar } from 'react-native';
+import { Column } from '../layout';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  Icon,
+  Input,
+  Text,
+} from '@cardstack/components';
 import { restoreCloudBackup } from '@cardstack/models/backup';
 import {
   dismissKeyboardOnAndroid,
@@ -103,28 +110,8 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
   }, [onSubmit, validPassword]);
 
   return (
-    <BackupSheetKeyboardLayout
-      footer={
-        <Container>
-          <Button
-            disabled={!validPassword}
-            iconProps={
-              !incorrectPassword
-                ? {
-                    iconSize: 'large',
-                    stroke: validPassword ? 'black' : undefined,
-                    marginRight: 3,
-                    name: 'refresh',
-                  }
-                : null
-            }
-            onPress={onPasswordSubmit}
-          >
-            {label}
-          </Button>
-        </Container>
-      }
-    >
+    <Column>
+      <StatusBar barStyle="light-content" />
       <Container
         alignItems="center"
         marginVertical={{
@@ -160,6 +147,24 @@ export default function RestoreCloudStep({ userData, backupSelected }) {
           value={password}
         />
       </Container>
-    </BackupSheetKeyboardLayout>
+      <CenteredContainer>
+        <Button
+          disabled={!validPassword}
+          iconProps={
+            !incorrectPassword
+              ? {
+                  iconSize: 'large',
+                  stroke: validPassword ? 'black' : undefined,
+                  marginRight: 3,
+                  name: 'refresh',
+                }
+              : null
+          }
+          onPress={onPasswordSubmit}
+        >
+          {label}
+        </Button>
+      </CenteredContainer>
+    </Column>
   );
 }
