@@ -1,16 +1,9 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
-import { KeyboardArea } from 'react-native-keyboard-area';
-import styled from 'styled-components';
+import { KeyboardAvoidingView, StatusBar } from 'react-native';
 
 import { Column } from '../layout';
 import { Container } from '@cardstack/components';
-import { colors } from '@cardstack/theme';
 import { Device } from '@cardstack/utils/device';
-
-const KeyboardSizeView = styled(KeyboardArea)`
-  background-color: ${colors.transparent};
-`;
 
 interface BackupSheetKeyboardLayoutProps {
   children: React.ReactNode;
@@ -29,9 +22,9 @@ export default function BackupSheetKeyboardLayout({
         {footer}
       </Container>
       {Device.isAndroid ? (
-        <KeyboardSizeView>
+        <KeyboardAvoidingView>
           <Container />
-        </KeyboardSizeView>
+        </KeyboardAvoidingView>
       ) : null}
     </Column>
   );

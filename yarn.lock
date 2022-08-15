@@ -6716,13 +6716,6 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.62.16":
-  version "0.62.16"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.62.16.tgz#17b05b37482c70126055172e57f5eb110cff7087"
-  integrity sha512-0f5MF4zzqZpZpDmwTmGS0Pd206k2K3rsVjaz0/iuBPZkpWC9r8+/A6WvTTJXgfP2mhRUcMfAqEY0iyz7Xk75qw==
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-native@0.65.1":
   version "0.65.1"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.65.1.tgz#7342158e10ea5088c225bb669dd4ef15aad0a2f7"
@@ -20135,12 +20128,6 @@ react-native-iphone-x-helper@^1.2.1:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.0.tgz#84fd13e6b89cc3aa4daa80ec514bf15cb724d86d"
   integrity sha512-+/bcZWFeZt0xSS/+3CHM5K7qPL4vDO/3ARLIowzFpUPGZiPsv9+NET+XNqqseRYwFJwYMmtX+Q4TZKxAVy09ew==
-
-react-native-keyboard-area@thomasgazzoni/react-native-keyboard-area#749746a18f84d8567620efacf3ad9f4a07f8fb74:
-  version "1.0.5"
-  resolved "https://codeload.github.com/thomasgazzoni/react-native-keyboard-area/tar.gz/749746a18f84d8567620efacf3ad9f4a07f8fb74"
-  dependencies:
-    "@types/react-native" "0.62.16"
 
 react-native-keychain@6.2.0:
   version "6.2.0"
