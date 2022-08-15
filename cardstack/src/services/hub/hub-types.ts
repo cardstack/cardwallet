@@ -53,6 +53,8 @@ export interface CreateProfileInfoParams {
   'owner-address'?: string;
 }
 
+export type UpdateProfileInfoParams = CreateProfileInfoParams & { id: string };
+
 export interface PostProfilePurchaseQueryParams {
   iapReceipt: string;
   provider: IAPProviderType;

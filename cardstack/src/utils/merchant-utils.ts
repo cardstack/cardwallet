@@ -69,13 +69,14 @@ export const fetchMerchantInfoFromDID = async (
   }
 
   const {
-    data: { attributes },
+    data: { attributes, id },
   } = await (await fetch(alsoKnownAs)).json();
 
   if (attributes) {
     const { name, slug, color } = attributes;
 
     return {
+      id,
       name,
       slug,
       color,

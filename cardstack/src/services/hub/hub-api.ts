@@ -11,6 +11,7 @@ import {
   fetchHubBaseQuery,
   hubBodyBuilder,
   hubProfilePurchaseBody,
+  patchProfileInfo,
 } from './hub-service';
 import {
   GetCustodialWalletQueryResult,
@@ -26,6 +27,7 @@ import {
   CreateProfileInfoParams,
   PostProfilePurchaseQueryResult,
   JobTicketResult,
+  UpdateProfileInfoParams,
 } from './hub-types';
 
 const routes = {
@@ -35,7 +37,7 @@ const routes = {
   registerFCMToken: '/push-notification-registrations',
   profilePurchases: '/profile-purchases',
   profileInfo: {
-    root: '/merchant-infos',
+    root: '/profiles',
     validateSlug: '/validate-slug',
     jobTicket: '/job-tickets',
   },
@@ -137,6 +139,18 @@ export const hubApi = createApi({
       }),
       transformResponse: ({ data }) => data?.attributes?.did,
     }),
+    updateProfileInfo: builder.mutation<string, UpdateProfileInfoParams>({
+      query: params => ({
+        url: `${routes.profileInfo.root}/${params.id}`,
+        method: 'PATCH',
+        body: hubBodyBuilder(routes.profileInfo.root, params),
+      }),
+      async onQueryStarted(params, { queryFulfilled }) {
+        const updatedResult = patchProfileInfo(params);
+
+        queryFulfilled.catch(updatedResult.undo);
+      },
+    }),
     getProfileJobStatus: builder.query<
       JobTicketResult,
       { jobTicketID: string }
@@ -160,4 +174,5 @@ export const {
   useLazyValidateProfileSlugQuery,
   useCreateProfileInfoMutation,
   useGetProfileJobStatusQuery,
+  useUpdateProfileInfoMutation,
 } = hubApi;
