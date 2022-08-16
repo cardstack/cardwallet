@@ -1,9 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import lang from 'i18n-js';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StatusBar } from 'react-native';
 import { DelayedAlert } from '../alerts';
-import { Column } from '../layout';
 import {
   BackupPasswordButtonFooter,
   backupPasswordInputProps,
@@ -91,8 +89,7 @@ export default function BackupConfirmPasswordStep() {
     walletId,
   ]);
   return (
-    <Column>
-      <StatusBar barStyle="light-content" />
+    <>
       <Container flex={1}>
         <Container alignItems="center" padding={9}>
           <Icon color="settingsTeal" iconSize="xl" name="lock" />
@@ -122,6 +119,6 @@ export default function BackupConfirmPasswordStep() {
           onButtonPress={onSubmit}
         />
       </CenteredContainer>
-    </Column>
+    </>
   );
 }
