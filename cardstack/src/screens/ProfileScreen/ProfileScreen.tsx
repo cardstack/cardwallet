@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { ActivityIndicator, Alert } from 'react-native';
 
 import {
@@ -16,7 +16,7 @@ import { CreateProfile, CreateProfileError, strings } from './components';
 import { useProfileScreen } from './useProfileScreen';
 
 // Todo: Extract errors from job-ticket api call.
-const error = 'Error message';
+const isError = true;
 
 const ProfileScreen = () => {
   const {
@@ -32,87 +32,79 @@ const ProfileScreen = () => {
 
   const onSendSupport = useSendFeedback();
 
-  const ProfileError = useMemo(
-    () => (
-      <CreateProfileError
-        onPressRetry={() => Alert.alert('Not available yet')}
-        onPressSupport={onSendSupport}
-        errorMessage={error}
-      />
-    ),
-    [onSendSupport]
-  );
-
-  const ProfileLoading = useMemo(
-    () => (
-      <>
-        {isCreatingProfile && (
-          <Text
-            variant="semibold"
-            color="white"
-            textAlign="center"
-            fontSize={16}
-            paddingBottom={4}
-          >
-            {strings.ongoingProfileCreation}
+  const ProfileContent = () => {
+    if (isLayer1(network)) {
+      return (
+        <>
+          <Text color="white" fontSize={24}>
+            {strings.switchToGnosisChain}
           </Text>
-        )}
-        <ActivityIndicator size="large" />
-      </>
-    ),
-    [isCreatingProfile]
-  );
+          <Button
+            borderColor="buttonSecondaryBorder"
+            marginTop={10}
+            onPress={redirectToSwitchNetwork}
+            variant="primary"
+          >
+            {strings.switchNetwork}
+          </Button>
+        </>
+      );
+    }
 
-  const ProfileBody = useMemo(
-    () =>
-      primarySafe ? (
-        <MerchantContent
-          showSafePrimarySelection={safesCount > 1}
-          isPrimarySafe
-          merchantSafe={primarySafe}
-          isRefreshingBalances={isFetching}
-          refetch={refetch}
+    if (isError) {
+      return (
+        <CreateProfileError
+          onPressRetry={() => Alert.alert('Not available yet')}
+          onPressSupport={onSendSupport}
         />
-      ) : (
-        <CreateProfile />
-      ),
-    [primarySafe, safesCount, isFetching, refetch]
-  );
+      );
+    }
+
+    if (showLoading) {
+      return (
+        <>
+          {isCreatingProfile && (
+            <Text
+              variant="semibold"
+              color="white"
+              textAlign="center"
+              fontSize={16}
+              paddingBottom={4}
+            >
+              {strings.ongoingProfileCreation}
+            </Text>
+          )}
+          <ActivityIndicator size="large" />
+        </>
+      );
+    }
+
+    if (primarySafe) {
+      return (
+        <Container backgroundColor="white">
+          <MerchantContent
+            showSafePrimarySelection={safesCount > 1}
+            isPrimarySafe
+            merchantSafe={primarySafe}
+            isRefreshingBalances={isFetching}
+            refetch={refetch}
+          />
+        </Container>
+      );
+    }
+
+    return <CreateProfile />;
+  };
 
   return (
-    <Container
-      backgroundColor={
-        primarySafe && !showLoading && !error ? 'white' : 'backgroundDarkPurple'
-      }
-      flex={1}
-    >
+    <Container backgroundColor="backgroundDarkPurple" flex={1}>
       <MainHeader title={strings.header.profile} />
       <Container
         justifyContent="center"
         flex={1}
         paddingHorizontal={isLayer1(network) ? 5 : 0}
       >
-        {isLayer1(network) ? (
-          <>
-            <Text color="white" fontSize={24}>
-              {strings.switchToGnosisChain}
-            </Text>
-            <Button
-              borderColor="buttonSecondaryBorder"
-              marginTop={10}
-              onPress={redirectToSwitchNetwork}
-              variant="primary"
-            >
-              {strings.switchNetwork}
-            </Button>
-          </>
-        ) : error ? (
-          ProfileError
-        ) : showLoading ? (
-          ProfileLoading
-        ) : (
-          ProfileBody
-        )}
+        <ProfileContent />
       </Container>
     </Container>
   );
