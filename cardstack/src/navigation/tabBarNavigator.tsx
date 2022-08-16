@@ -2,10 +2,7 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import {
-  createStackNavigator,
-  StackNavigationOptions,
-} from '@react-navigation/stack';
+import { StackNavigationOptions } from '@react-navigation/stack';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { TabBarIcon } from '@cardstack/components';
@@ -33,6 +30,7 @@ import ModalScreen from '@rainbow-me/screens/ModalScreen';
 import PinAuthenticationScreen from '@rainbow-me/screens/PinAuthenticationScreen';
 import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 
+import { createCustomStackNavigator } from './customNavigator';
 import { useCardstackMainScreens } from './hooks';
 
 import {
@@ -114,7 +112,7 @@ const TabNavigator = () => {
   );
 };
 
-const Stack = createStackNavigator();
+const Stack = createCustomStackNavigator();
 
 const SharedScreens = ({ navigationKey }: { navigationKey: string }) => (
   <Stack.Group navigationKey={navigationKey}>
