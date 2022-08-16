@@ -44,7 +44,6 @@ export * from './TabBarIcon';
 export * from './MainHeader';
 export * from './TextOptionRow';
 export * from './SwitchSelector';
-export * from './ProgressSteps';
 export * from './ChoosePrepaidCard';
 export * from './InfoBanner';
 export * from './TabHeader';
