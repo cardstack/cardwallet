@@ -34,7 +34,10 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
-  const { rewardPoolTokenBalances } = useRewardsDataFetch();
+  const { hasRewardsAvailable } = useRewardsDataFetch();
+
+  // this should use the rewards pool length in the future as more rewards programs are added
+  const rewardsQuantity = 1;
 
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
@@ -43,8 +46,6 @@ const MainHeader = ({
   const onRewardPress = useCallback(() => {
     navigate(Routes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
-
-  const availableRewards = rewardPoolTokenBalances?.length;
 
   return (
     <MainHeaderWrapper {...containerProps}>
@@ -82,10 +83,10 @@ const MainHeader = ({
           onPress={onRewardPress}
         >
           <Icon color="teal" iconSize="medium" size={26} name="rewards" />
-          {!!availableRewards && (
+          {hasRewardsAvailable && (
             <Container>
               <Text color="teal" fontSize={18} weight="bold" marginLeft={2}>
-                {availableRewards}
+                {rewardsQuantity}
               </Text>
             </Container>
           )}

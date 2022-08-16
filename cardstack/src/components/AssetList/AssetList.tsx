@@ -27,7 +27,7 @@ export const AssetList = () => {
     onRefresh,
     refreshing,
     networkName,
-    mainPoolTokenInfo,
+    hasRewardsAvailable,
   } = useAssetList({ sectionListRef });
 
   const renderSectionHeader = useCallback(
@@ -76,7 +76,7 @@ export const AssetList = () => {
       <SectionList
         ListHeaderComponent={
           <RewardsPromoBanner
-            hasUnclaimedRewards={!!mainPoolTokenInfo}
+            hasUnclaimedRewards={hasRewardsAvailable}
             paddingTop={2}
           />
         }

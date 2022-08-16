@@ -63,12 +63,19 @@ const useRewardsDataFetch = () => {
     [isLoadingSafes, isLoadingTokens, isUninitialized, network]
   );
 
+  /**
+   * For now, the available rewards are the ones inside the Cardstack pool
+   * In the future, this will change once we add more reward programs
+   */
+  const hasRewardsAvailable = !!mainPoolTokenInfo;
+
   return {
     isLoading,
     rewardSafes,
     rewardPoolTokenBalances,
     mainPoolTokenInfo,
     defaultRewardProgramId,
+    hasRewardsAvailable,
   };
 };
 
