@@ -34,7 +34,7 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
-  const { rewardPoolTokenBalances } = useRewardsDataFetch();
+  const { mainPoolTokenInfo } = useRewardsDataFetch();
 
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
@@ -44,7 +44,7 @@ const MainHeader = ({
     navigate(Routes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
 
-  const availableRewards = rewardPoolTokenBalances?.length;
+  const availableRewards = !!mainPoolTokenInfo;
 
   return (
     <MainHeaderWrapper {...containerProps}>
