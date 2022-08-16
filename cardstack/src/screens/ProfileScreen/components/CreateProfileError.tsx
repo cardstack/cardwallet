@@ -47,12 +47,7 @@ export const CreateProfileError = ({
       )}
     </Container>
     <Container>
-      <Button
-        paddingHorizontal={4}
-        marginBottom={6}
-        alignSelf="center"
-        onPress={onPressRetry}
-      >
+      <Button marginBottom={6} alignSelf="center" onPress={onPressRetry}>
         {strings.buttons.retry}
       </Button>
       <Touchable onPress={onPressSupport} alignSelf="center">
