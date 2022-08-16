@@ -1,6 +1,6 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useInitIAPProducts } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
@@ -20,6 +20,8 @@ export const useProfileSlugScreen = () => {
     slugAvailable: false,
     detail: '',
   });
+
+  const isPartialValid = useRef(false);
 
   const [
     validateSlugHub,
@@ -45,6 +47,7 @@ export const useProfileSlugScreen = () => {
       const localValidationError = sdkIDValidationError || minimumLengthError;
 
       if (localValidationError) {
+        isPartialValid.current = false;
         setSlugValidation({
           slugAvailable: false,
           detail: localValidationError,
@@ -53,13 +56,14 @@ export const useProfileSlugScreen = () => {
         return;
       }
 
+      isPartialValid.current = true;
       validateSlugHub({ slug: trimmedSlug });
     },
     [validateSlugHub]
   );
 
   useEffect(() => {
-    if (hubValidation && matchMinLength(slug, MIN_SLUG_LENGTH)) {
+    if (hubValidation && isPartialValid.current) {
       setSlugValidation(hubValidation);
     } else if (error) {
       // API connection error, can't know correct invalid message so we'll use the default.
