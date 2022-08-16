@@ -11,7 +11,7 @@ export const strings = {
   profileError: {
     title: 'Profile creation failed',
     message:
-      'There was a problem with creating your profile. Please wait a couple of minutes and try again by tapping the Retry buttom bellow. If your problem persist, please get in touch with our team by tapping on Contact Support.',
+      'There was a problem with creating your profile. Please wait a couple of minutes and try again by tapping the Retry button bellow. If your problem persist, please get in touch with our team by tapping on Contact Support.',
   },
   buttons: {
     continue: 'Continue',
