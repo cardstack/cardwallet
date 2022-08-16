@@ -2,7 +2,6 @@ import networkTypes from '../../helpers/networkTypes';
 import { getGlobal, removeLocal, saveGlobal } from './common';
 
 const IMAGE_METADATA = 'imageMetadata';
-const KEYBOARD_HEIGHT = 'keyboardHeight';
 const LANGUAGE = 'language';
 const NATIVE_CURRENCY = 'nativeCurrency';
 const NETWORK = 'network';
@@ -37,10 +36,6 @@ export const saveLanguage = language => saveGlobal(LANGUAGE, language);
 export const getNetwork = () => getGlobal(NETWORK, networkTypes.xdai);
 
 export const saveNetwork = network => saveGlobal(NETWORK, network);
-
-export const getKeyboardHeight = () => getGlobal(KEYBOARD_HEIGHT, null);
-
-export const setKeyboardHeight = height => saveGlobal(KEYBOARD_HEIGHT, height);
 
 export const getNativeCurrency = () => getGlobal(NATIVE_CURRENCY, 'USD');
 

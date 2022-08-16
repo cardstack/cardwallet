@@ -15,7 +15,6 @@ import {
   ToastPositionContainer,
   InvalidPasteToast,
 } from '@rainbow-me/components/toasts';
-import { useKeyboardHeight } from '@rainbow-me/hooks';
 
 import { useImportSeedSheet } from './useImportSeedSheet';
 
@@ -31,8 +30,6 @@ const ImportSeedSheet = () => {
     isClipboardValidSecret,
     isInvalidPaste,
   } = useImportSeedSheet();
-
-  const keyboardHeight = useKeyboardHeight();
 
   return (
     <>
@@ -85,10 +82,10 @@ const ImportSeedSheet = () => {
             )}
           </Container>
         </Container>
+        <ToastPositionContainer>
+          <InvalidPasteToast isInvalidPaste={isInvalidPaste} />
+        </ToastPositionContainer>
       </Sheet>
-      <ToastPositionContainer bottom={keyboardHeight}>
-        <InvalidPasteToast isInvalidPaste={isInvalidPaste} />
-      </ToastPositionContainer>
     </>
   );
 };
