@@ -16,7 +16,7 @@ import { CreateProfile, CreateProfileError, strings } from './components';
 import { useProfileScreen } from './useProfileScreen';
 
 // Todo: Extract errors from job-ticket api call.
-const isError = true;
+const isError = false;
 
 const ProfileScreen = () => {
   const {
