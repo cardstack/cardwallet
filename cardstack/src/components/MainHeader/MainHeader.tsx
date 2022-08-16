@@ -36,6 +36,9 @@ const MainHeader = ({
   const { network } = useAccountSettings();
   const { hasRewardsAvailable } = useRewardsDataFetch();
 
+  // this should use the rewards pool length in the future as more rewards programs are added
+  const rewardsQuantity = 1;
+
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
   ]);
@@ -83,7 +86,7 @@ const MainHeader = ({
           {hasRewardsAvailable && (
             <Container>
               <Text color="teal" fontSize={18} weight="bold" marginLeft={2}>
-                1
+                {rewardsQuantity}
               </Text>
             </Container>
           )}
