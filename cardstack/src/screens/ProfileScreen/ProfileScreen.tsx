@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Alert } from 'react-native';
 
 import {
   Button,
@@ -10,8 +10,13 @@ import {
 } from '@cardstack/components';
 import { isLayer1 } from '@cardstack/utils';
 
-import { CreateProfile, strings } from './components';
+import { useSendFeedback } from '@rainbow-me/hooks';
+
+import { CreateProfile, CreateProfileError, strings } from './components';
 import { useProfileScreen } from './useProfileScreen';
+
+// Todo: Extract errors from job-ticket api call.
+const error = 'Error message';
 
 const ProfileScreen = () => {
   const {
@@ -24,6 +29,39 @@ const ProfileScreen = () => {
     refetch,
     redirectToSwitchNetwork,
   } = useProfileScreen();
+
+  const onSendSupport = useSendFeedback();
+
+  const ProfileError = useMemo(
+    () => (
+      <CreateProfileError
+        onPressRetry={() => Alert.alert('Not available yet')}
+        onPressSupport={onSendSupport}
+        errorMessage={error}
+      />
+    ),
+    [onSendSupport]
+  );
+
+  const ProfileLoading = useMemo(
+    () => (
+      <>
+        {isCreatingProfile && (
+          <Text
+            variant="semibold"
+            color="white"
+            textAlign="center"
+            fontSize={16}
+            paddingBottom={4}
+          >
+            {strings.ongoingProfileCreation}
+          </Text>
+        )}
+        <ActivityIndicator size="large" />
+      </>
+    ),
+    [isCreatingProfile]
+  );
 
   const ProfileBody = useMemo(
     () =>
@@ -44,7 +82,7 @@ const ProfileScreen = () => {
   return (
     <Container
       backgroundColor={
-        primarySafe && !showLoading ? 'white' : 'backgroundDarkPurple'
+        primarySafe && !showLoading && !error ? 'white' : 'backgroundDarkPurple'
       }
       flex={1}
     >
@@ -68,21 +106,10 @@ const ProfileScreen = () => {
               {strings.switchNetwork}
             </Button>
           </>
+        ) : error ? (
+          ProfileError
         ) : showLoading ? (
-          <>
-            {isCreatingProfile && (
-              <Text
-                variant="semibold"
-                color="white"
-                textAlign="center"
-                fontSize={16}
-                paddingBottom={4}
-              >
-                {strings.ongoingProfileCreation}
-              </Text>
-            )}
-            <ActivityIndicator size="large" />
-          </>
+          ProfileLoading
         ) : (
           ProfileBody
         )}
