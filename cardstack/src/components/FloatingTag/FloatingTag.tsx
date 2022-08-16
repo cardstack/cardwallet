@@ -4,8 +4,6 @@ import React from 'react';
 import { Text, CenteredContainer } from '@cardstack/components';
 import { Theme } from '@cardstack/theme';
 
-// import { ColorTypes } from '@cardstack/theme';
-
 interface FloatingTagProps {
   theme?: {
     backgroundColor: ResponsiveValue<keyof Theme['colors'], Theme>;
