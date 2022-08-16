@@ -34,7 +34,7 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
-  const { mainPoolTokenInfo } = useRewardsDataFetch();
+  const { hasRewardsAvailable } = useRewardsDataFetch();
 
   const onMenuPress = useCallback(() => navigate(Routes.SETTINGS_MODAL), [
     navigate,
@@ -43,8 +43,6 @@ const MainHeader = ({
   const onRewardPress = useCallback(() => {
     navigate(Routes.REWARDS_CENTER_SCREEN);
   }, [navigate]);
-
-  const availableRewards = !!mainPoolTokenInfo;
 
   return (
     <MainHeaderWrapper {...containerProps}>
@@ -82,10 +80,10 @@ const MainHeader = ({
           onPress={onRewardPress}
         >
           <Icon color="teal" iconSize="medium" size={26} name="rewards" />
-          {!!availableRewards && (
+          {hasRewardsAvailable && (
             <Container>
               <Text color="teal" fontSize={18} weight="bold" marginLeft={2}>
-                {availableRewards}
+                1
               </Text>
             </Container>
           )}
