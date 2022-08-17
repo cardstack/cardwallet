@@ -1,5 +1,5 @@
-import React from 'react';
-import { ActivityIndicator, Alert } from 'react-native';
+import React, { useMemo } from 'react';
+import { ActivityIndicator } from 'react-native';
 
 import {
   Button,
@@ -15,14 +15,14 @@ import { useSendFeedback } from '@rainbow-me/hooks';
 import { CreateProfile, CreateProfileError, strings } from './components';
 import { useProfileScreen } from './useProfileScreen';
 
-// Todo: Extract errors from job-ticket api call.
-const isError = false;
-
 const ProfileScreen = () => {
   const {
     primarySafe,
     showLoading,
     isCreatingProfile,
+    isCreateProfileError,
+    retryCurrentCreateProfile,
+    isConnectionError,
     safesCount,
     isFetching,
     network,
@@ -31,6 +31,18 @@ const ProfileScreen = () => {
   } = useProfileScreen();
 
   const onSendSupport = useSendFeedback();
+
+  const error = useMemo(() => {
+    if (isCreateProfileError) {
+      return strings.profileError;
+    }
+
+    if (isConnectionError) {
+      return strings.connectionError;
+    }
+
+    return undefined;
+  }, [isCreateProfileError, isConnectionError]);
 
   const ProfileContent = () => {
     if (isLayer1(network)) {
@@ -51,11 +63,12 @@ const ProfileScreen = () => {
       );
     }
 
-    if (isError) {
+    if (error) {
       return (
         <CreateProfileError
-          onPressRetry={() => Alert.alert('Not available yet')}
+          onPressRetry={retryCurrentCreateProfile}
           onPressSupport={onSendSupport}
+          error={error}
         />
       );
     }
