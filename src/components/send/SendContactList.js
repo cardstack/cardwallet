@@ -1,23 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import { toLower } from 'lodash';
 import React, { useCallback, useMemo, useRef } from 'react';
-import DeviceInfo from 'react-native-device-info';
 import { FlatList } from 'react-native-gesture-handler';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components';
 import { FlyInAnimation } from '../animations';
 import { SwipeableContactRow } from '../contacts';
-import { SheetHandleFixedToTopHeight } from '../sheet';
 import { InvalidPasteToast, ToastPositionContainer } from '../toasts';
 import SendEmptyState from './SendEmptyState';
 import { Routes } from '@cardstack/navigation';
-import { useKeyboardHeight } from '@rainbow-me/hooks';
 import { filterList } from '@rainbow-me/utils';
-
-const KeyboardArea = styled.View`
-  height: ${({ insets, keyboardHeight }) =>
-    DeviceInfo.hasNotch() ? keyboardHeight : keyboardHeight - insets.top};
-`;
 
 const rowHeight = 62;
 const getItemLayout = (data, index) => ({
@@ -48,8 +39,6 @@ export default function SendContactList({
   isInvalidPaste,
 }) {
   const { navigate } = useNavigation();
-  const insets = useSafeAreaInsets();
-  const keyboardHeight = useKeyboardHeight();
 
   const contactRefs = useRef({});
   const touchedContact = useRef(undefined);
@@ -111,16 +100,9 @@ export default function SendContactList({
           testID="send-contact-list"
         />
       )}
-      <ToastPositionContainer
-        bottom={
-          DeviceInfo.hasNotch()
-            ? keyboardHeight - SheetHandleFixedToTopHeight
-            : keyboardHeight - SheetHandleFixedToTopHeight * 1.5
-        }
-      >
+      <ToastPositionContainer>
         <InvalidPasteToast isInvalidPaste={isInvalidPaste} />
       </ToastPositionContainer>
-      {ios && <KeyboardArea insets={insets} keyboardHeight={keyboardHeight} />}
     </FlyInAnimation>
   );
 }

@@ -3,7 +3,6 @@ import data from './data';
 import fallbackExplorer from './fallbackExplorer';
 import gas from './gas';
 import imageMetadata from './imageMetadata';
-import keyboardHeight from './keyboardHeight';
 import settings from './settings';
 import walletconnect from './walletconnect';
 import wallets from './wallets';
@@ -22,7 +21,6 @@ export default {
   fallbackExplorer,
   gas,
   imageMetadata,
-  keyboardHeight,
   requests,
   settings,
   walletconnect,

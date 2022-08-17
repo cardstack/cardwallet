@@ -12,12 +12,18 @@ import React, {
 import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { DelayedAlert } from '../alerts';
-import BackupSheetKeyboardLayout from './BackupSheetKeyboardLayout';
 import {
   BackupPasswordButtonFooter,
   backupPasswordInputProps,
 } from './backupComponentsUtils';
-import { Container, Icon, IconProps, Input, Text } from '@cardstack/components';
+import {
+  CenteredContainer,
+  Container,
+  Icon,
+  IconProps,
+  Input,
+  Text,
+} from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { isCloudBackupPasswordValid } from '@rainbow-me/handlers/cloudBackup';
 import showWalletErrorAlert from '@rainbow-me/helpers/support';
@@ -135,51 +141,47 @@ export default function BackupCloudStep() {
   );
 
   return (
-    <BackupSheetKeyboardLayout
-      footer={
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Container alignItems="center" padding={9}>
+        <Icon color="settingsTeal" iconSize="xl" name="lock" />
+        <Text fontSize={20} margin={3}>
+          Choose a password
+        </Text>
+        <Text color="blueText" textAlign="center">
+          Be careful with your password. If you lose it, it cannot be recovered.
+        </Text>
+      </Container>
+      <Container margin={5}>
+        <Input
+          {...backupPasswordInputProps}
+          autoFocus
+          iconProps={passwordFieldIconProps}
+          onBlur={onPasswordBlur}
+          onChange={onPasswordChange}
+          onSubmitEditing={onPasswordSubmit}
+          placeholder="Enter password"
+          ref={passwordRef}
+          returnKeyType="next"
+          textContentType="newPassword"
+          value={password}
+        />
+        <Input
+          {...backupPasswordInputProps}
+          iconProps={confirmPasswordFieldIconProps}
+          onChange={onConfirmPasswordChange}
+          onSubmitEditing={onConfirmPasswordSubmit}
+          placeholder="Confirm password"
+          ref={confirmPasswordRef}
+          value={confirmPassword}
+        />
+      </Container>
+      <CenteredContainer>
         <BackupPasswordButtonFooter
           buttonLabel="Confirm"
           isValidPassword={validPassword}
           onButtonPress={onConfirmBackup}
         />
-      }
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <Container alignItems="center" padding={9}>
-          <Icon color="settingsTeal" iconSize="xl" name="lock" />
-          <Text fontSize={20} margin={3}>
-            Choose a password
-          </Text>
-          <Text color="blueText" textAlign="center">
-            Be careful with your password. If you lose it, it cannot be
-            recovered.
-          </Text>
-        </Container>
-        <Container margin={5}>
-          <Input
-            {...backupPasswordInputProps}
-            autoFocus
-            iconProps={passwordFieldIconProps}
-            onBlur={onPasswordBlur}
-            onChange={onPasswordChange}
-            onSubmitEditing={onPasswordSubmit}
-            placeholder="Enter password"
-            ref={passwordRef}
-            returnKeyType="next"
-            textContentType="newPassword"
-            value={password}
-          />
-          <Input
-            {...backupPasswordInputProps}
-            iconProps={confirmPasswordFieldIconProps}
-            onChange={onConfirmPasswordChange}
-            onSubmitEditing={onConfirmPasswordSubmit}
-            placeholder="Confirm password"
-            ref={confirmPasswordRef}
-            value={confirmPassword}
-          />
-        </Container>
-      </TouchableWithoutFeedback>
-    </BackupSheetKeyboardLayout>
+      </CenteredContainer>
+    </TouchableWithoutFeedback>
   );
 }
