@@ -8,8 +8,15 @@ export const strings = {
   switchToGnosisChain: 'Switch to Gnosis Chain to view your profile',
   switchNetwork: 'Switch Network',
   ongoingProfileCreation: 'Creating your profile\nThis could take up to 1min',
+  profileError: {
+    title: 'Profile creation failed',
+    message:
+      'There was a problem creating your profile. Please wait a few minutes and then try again. If this problem persists, please get in touch with our support team.',
+  },
   buttons: {
     continue: 'Continue',
+    retry: 'Retry',
+    support: 'Contact Support',
   },
 };
 
