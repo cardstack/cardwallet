@@ -43,7 +43,7 @@ function handleAction(
   navigationRef.current?.dispatch(action);
 }
 
-const parseUrlToNavigationPath = (url: string) =>
+export const parseUrlToNavigationPath = (url: string) =>
   url.replace(new RegExp(linking.prefixes.join('|'), 'gi'), '');
 
 const linkTo = (url: string) => {
