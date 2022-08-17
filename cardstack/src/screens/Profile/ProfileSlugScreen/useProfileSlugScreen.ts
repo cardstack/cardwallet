@@ -1,12 +1,13 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useInitIAPProducts } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
+import { matchMinLength } from '@cardstack/utils/validators';
 
-import { strings, MIN_USERNAME_LENGTH } from './strings';
+import { strings, MIN_SLUG_LENGTH } from './strings';
 
 export const useProfileSlugScreen = () => {
   useInitIAPProducts();
@@ -20,14 +21,12 @@ export const useProfileSlugScreen = () => {
     detail: '',
   });
 
+  const isPartialValid = useRef(false);
+
   const [
     validateSlugHub,
-    { data: hubValidation, error },
+    { data: hubValidation, error, isLoading, isFetching },
   ] = useLazyValidateProfileSlugQuery();
-
-  const onGoBackPressed = useCallback(() => {
-    // TODO
-  }, []);
 
   const onContinuePress = useCallback(() => {
     navigate(Routes.PROFILE_NAME, { slug });
@@ -41,14 +40,14 @@ export const useProfileSlugScreen = () => {
 
       const sdkIDValidationError = validateMerchantId(trimmedSlug);
 
-      const minimumLengthError =
-        trimmedSlug.length < MIN_USERNAME_LENGTH
-          ? strings.errors.minLength
-          : '';
+      const minimumLengthError = !matchMinLength(trimmedSlug, MIN_SLUG_LENGTH)
+        ? strings.errors.minLength
+        : '';
 
       const localValidationError = sdkIDValidationError || minimumLengthError;
 
       if (localValidationError) {
+        isPartialValid.current = false;
         setSlugValidation({
           slugAvailable: false,
           detail: localValidationError,
@@ -57,13 +56,14 @@ export const useProfileSlugScreen = () => {
         return;
       }
 
+      isPartialValid.current = true;
       validateSlugHub({ slug: trimmedSlug });
     },
     [validateSlugHub]
   );
 
   useEffect(() => {
-    if (hubValidation) {
+    if (hubValidation && isPartialValid.current) {
       setSlugValidation(hubValidation);
     } else if (error) {
       // API connection error, can't know correct invalid message so we'll use the default.
@@ -72,13 +72,18 @@ export const useProfileSlugScreen = () => {
         detail: strings.errors.noApiResponse,
       });
     }
-  }, [hubValidation, error]);
+  }, [hubValidation, error, slug]);
+
+  const canContinue = useMemo(
+    () => slugValidation.slugAvailable && !(isLoading || isFetching),
+    [isFetching, isLoading, slugValidation.slugAvailable]
+  );
 
   return {
     slug,
     onSlugChange,
-    onGoBackPressed,
     onContinuePress,
     slugValidation,
+    canContinue,
   };
 };

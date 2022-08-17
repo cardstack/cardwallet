@@ -18,6 +18,7 @@ const ProfileSlugScreen = () => {
     slug,
     onSlugChange,
     slugValidation: { slugAvailable, detail: slugFeedback },
+    canContinue,
     onContinuePress,
   } = useProfileSlugScreen();
 
@@ -53,7 +54,7 @@ const ProfileSlugScreen = () => {
         </Container>
       </Container>
       <Container flex={0.2} justifyContent="flex-end" paddingBottom={5}>
-        <Button onPress={onContinuePress} blocked={!slugAvailable}>
+        <Button onPress={onContinuePress} blocked={!canContinue}>
           {strings.buttons.continue}
         </Button>
       </Container>

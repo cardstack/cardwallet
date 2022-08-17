@@ -44,3 +44,6 @@ export const isEmailPartial = (email: string): boolean => {
 
   return result[0] === email;
 };
+
+export const matchMinLength = (text: string, minLength: number): boolean =>
+  text.length >= minLength;

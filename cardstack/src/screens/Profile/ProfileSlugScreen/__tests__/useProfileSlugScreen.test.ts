@@ -34,11 +34,12 @@ jest.mock('react-native-iap', () => ({
 describe('useProfileSlugScreen', () => {
   const mockLazyValidateProfileSlugQuery = (
     expectedResponse?: Partial<ProfileIDUniquenessResponse>,
-    error?: any
+    error?: any,
+    loadingInfo = { isLoading: false, isFetching: false }
   ) => {
     (useLazyValidateProfileSlugQuery as jest.Mock).mockImplementation(() => [
       jest.fn(),
-      { data: expectedResponse, error },
+      { data: expectedResponse, error, ...loadingInfo },
     ]);
   };
 
@@ -69,7 +70,7 @@ describe('useProfileSlugScreen', () => {
     jest.clearAllMocks();
   });
 
-  it('should return valid assertion for good slug', async () => {
+  it('should return valid assertion for good slug', () => {
     mockLazyValidateProfileSlugQuery({
       slugAvailable: true,
     });
@@ -81,7 +82,7 @@ describe('useProfileSlugScreen', () => {
     expect(result.current.slugValidation.slugAvailable).toBeTruthy();
   });
 
-  it('should return a invalid assertion for already in use slugs', async () => {
+  it('should return a invalid assertion for already in use slugs', () => {
     mockLazyValidateProfileSlugQuery({
       slugAvailable: false,
     });
@@ -93,7 +94,7 @@ describe('useProfileSlugScreen', () => {
     expect(result.current.slugValidation.slugAvailable).toBeFalsy();
   });
 
-  it('should return noApiResponse when request errors out', async () => {
+  it('should return noApiResponse when request errors out', () => {
     mockLazyValidateProfileSlugQuery(undefined, {});
 
     const { result } = renderHook(() => useProfileSlugScreen());
@@ -106,7 +107,7 @@ describe('useProfileSlugScreen', () => {
     });
   });
 
-  it('should return an invalid assertion for slugs too short', async () => {
+  it('should return an invalid assertion for slugs too short', () => {
     const { result } = renderHook(() => useProfileSlugScreen());
 
     act(() => result.current.onSlugChange('slu'));
@@ -117,7 +118,7 @@ describe('useProfileSlugScreen', () => {
     });
   });
 
-  it('should return an invalid assertion for bad slugs', async () => {
+  it('should return an invalid assertion for bad slugs', () => {
     const { result } = renderHook(() => useProfileSlugScreen());
 
     act(() => result.current.onSlugChange('b@dslug'));
@@ -129,7 +130,7 @@ describe('useProfileSlugScreen', () => {
     });
   });
 
-  it('should return an invalid assertion for slugs with Uppercase letters', async () => {
+  it('should return an invalid assertion for slugs with Uppercase letters', () => {
     const { result } = renderHook(() => useProfileSlugScreen());
 
     act(() => result.current.onSlugChange('Badslug'));
@@ -141,11 +142,59 @@ describe('useProfileSlugScreen', () => {
     });
   });
 
-  it('should trim spaces from input', async () => {
+  it('should trim spaces from input', () => {
     const { result } = renderHook(() => useProfileSlugScreen());
 
     act(() => result.current.onSlugChange(' slug '));
 
     expect(result.current.slug).toMatch('slug');
+  });
+
+  it('should block continue while hub validation is loading', () => {
+    mockLazyValidateProfileSlugQuery(
+      {
+        slugAvailable: true,
+      },
+      undefined,
+      { isLoading: true, isFetching: false }
+    );
+
+    const { result } = renderHook(() => useProfileSlugScreen());
+
+    act(() => result.current.onSlugChange('validslug'));
+
+    expect(result.current.canContinue).toBe(false);
+  });
+
+  it('should block continue while hub validation is fetching', () => {
+    mockLazyValidateProfileSlugQuery(
+      {
+        slugAvailable: true,
+      },
+      undefined,
+      { isLoading: false, isFetching: true }
+    );
+
+    const { result } = renderHook(() => useProfileSlugScreen());
+
+    act(() => result.current.onSlugChange('validslug'));
+
+    expect(result.current.canContinue).toBe(false);
+  });
+
+  it('should unblock continue once hubValidation has returned', () => {
+    mockLazyValidateProfileSlugQuery(
+      {
+        slugAvailable: true,
+      },
+      undefined,
+      { isLoading: false, isFetching: false }
+    );
+
+    const { result } = renderHook(() => useProfileSlugScreen());
+
+    act(() => result.current.onSlugChange('validslug'));
+
+    expect(result.current.canContinue).toBe(true);
   });
 });
