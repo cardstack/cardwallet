@@ -10,7 +10,7 @@ import {
 
 import { strings } from './';
 
-interface Error {
+interface ErrorInfoType {
   title: string;
   message: string;
 }
@@ -18,7 +18,7 @@ interface Error {
 interface CreateProfileErrorProps {
   onPressRetry: () => void;
   onPressSupport: () => void;
-  error?: Error;
+  error: ErrorInfoType;
 }
 
 export const CreateProfileError = ({
