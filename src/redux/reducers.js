@@ -9,6 +9,7 @@ import wallets from './wallets';
 import appState from '@cardstack/redux/appState';
 import biometryToggle from '@cardstack/redux/biometryToggleSlice';
 import collectibles from '@cardstack/redux/collectibles';
+import persistedFlags from '@cardstack/redux/persistedFlagsSlice';
 import primarySafe from '@cardstack/redux/primarySafeSlice';
 import requests from '@cardstack/redux/requests';
 import welcomeBanner from '@cardstack/redux/welcomeBanner';
@@ -28,4 +29,5 @@ export default {
   primarySafe,
   biometryToggle,
   welcomeBanner,
+  persistedFlags,
 };
