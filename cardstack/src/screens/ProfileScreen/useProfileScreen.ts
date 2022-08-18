@@ -39,7 +39,12 @@ export const useProfileScreen = () => {
     [refetch]
   );
 
-  const { isCreatingProfile } = useProfileJobPolling({
+  const {
+    isConnectionError,
+    isCreatingProfile,
+    isCreateProfileError,
+    retryCurrentCreateProfile,
+  } = useProfileJobPolling({
     jobID: params?.profileCreationJobID,
     onJobCompletedCallback,
   });
@@ -80,5 +85,8 @@ export const useProfileScreen = () => {
     isFetching,
     refetch,
     redirectToSwitchNetwork,
+    isConnectionError,
+    isCreateProfileError,
+    retryCurrentCreateProfile,
   };
 };

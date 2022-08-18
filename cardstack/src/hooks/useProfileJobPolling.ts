@@ -1,8 +1,11 @@
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
-import { useGetProfileJobStatusQuery } from '@cardstack/services';
+import {
+  useGetProfileJobStatusQuery,
+  usePostProfileJobRetryMutation,
+} from '@cardstack/services';
 
 import { useBooleanState } from './useBooleanState';
 
@@ -47,7 +50,28 @@ export const useProfileJobPolling = ({
     }
   }, [data, error, stopPolling, onJobCompletedCallback]);
 
+  // Handling profile creation job "failed" state.
+  // API connection errors need to be handled separetedly, or we risk retrying an ongoing job.
+  const isCreateProfileError = useMemo(
+    () => data?.attributes?.state === 'failed',
+    [data]
+  );
+
+  const [retryJobID] = usePostProfileJobRetryMutation();
+
+  const retryCurrentCreateProfile = useCallback(() => {
+    if (isCreateProfileError) {
+      retryJobID({ jobTicketID: jobID });
+    }
+
+    // Resume polling, either after a job is restarted or a connection error has occorred.
+    startPolling();
+  }, [retryJobID, jobID, isCreateProfileError, startPolling]);
+
   return {
+    isConnectionError: error,
     isCreatingProfile: polling,
+    isCreateProfileError,
+    retryCurrentCreateProfile,
   };
 };

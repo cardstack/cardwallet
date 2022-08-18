@@ -13,6 +13,11 @@ export const strings = {
     message:
       'There was a problem creating your profile. Please wait a few minutes and then try again. If this problem persists, please get in touch with our support team.',
   },
+  connectionError: {
+    title: 'Connection failed',
+    message:
+      'There was a problem connecting to the profile issuer. Please wait a few minutes and then try again. If this problem persists, please get in touch with our support team.',
+  },
   buttons: {
     continue: 'Continue',
     retry: 'Retry',

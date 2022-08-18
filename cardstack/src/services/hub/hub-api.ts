@@ -159,6 +159,12 @@ export const hubApi = createApi({
         `${routes.profileInfo.jobTicket}/${jobTicketID}`,
       transformResponse: ({ data }) => data,
     }),
+    postProfileJobRetry: builder.mutation<unknown, { jobTicketID: string }>({
+      query: ({ jobTicketID }) => ({
+        url: `${routes.profileInfo.jobTicket}/${jobTicketID}/retry`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -174,5 +180,6 @@ export const {
   useLazyValidateProfileSlugQuery,
   useCreateProfileInfoMutation,
   useGetProfileJobStatusQuery,
+  usePostProfileJobRetryMutation,
   useUpdateProfileInfoMutation,
 } = hubApi;
