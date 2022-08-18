@@ -94,7 +94,7 @@ const ProfileScreen = () => {
 
     if (primarySafe) {
       return (
-        <Container backgroundColor="white">
+        <Container backgroundColor="white" flex={1}>
           <MerchantContent
             showSafePrimarySelection={safesCount > 1}
             isPrimarySafe
