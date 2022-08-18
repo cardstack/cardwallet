@@ -559,8 +559,6 @@ PODS:
     - React-RCTImage
     - TOCropViewController
   - RNInputMask (4.1.0)
-  - RNKeyboard (1.0.5):
-    - React
   - RNKeychain (6.2.0):
     - React
   - RNLocalize (2.1.5):
@@ -737,7 +735,6 @@ DEPENDENCIES:
   - RNIap (from `../node_modules/react-native-iap`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNInputMask (from `../node_modules/react-native-text-input-mask/ios/InputMask`)
-  - RNKeyboard (from `../node_modules/react-native-keyboard-area`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
@@ -942,8 +939,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-crop-picker"
   RNInputMask:
     :path: "../node_modules/react-native-text-input-mask/ios/InputMask"
-  RNKeyboard:
-    :path: "../node_modules/react-native-keyboard-area"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNLocalize:
@@ -1011,7 +1006,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: d9d9ade67cbecf6ac10730304bf5607266dd2541
   FlipperKit: 11d724824ee4dbe7ee77ecafd99968890f6c5bf6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 5337263514dd6f09803962437687240c5dc39aa4
+  glog: 476ee3e89abb49e07f822b48323c51c57124b572
   GoogleAppMeasurement: 4c19f031220c72464d460c9daa1fb5d1acce958e
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
@@ -1080,7 +1075,6 @@ SPEC CHECKSUMS:
   RNIap: 7b833f386ecee6e4ab3a5303332274bd6844e4d9
   RNImageCropPicker: 54e5ea3d0e298ed51e1441a2fa0a0e7c90ee256d
   RNInputMask: 815461ebdf396beb62cf58916c35cf6930adb991
-  RNKeyboard: ceec456427493b286539f40442620881b5840dff
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
   RNLocalize: 74b82db20cc3895ccc25af992c644879bcec2815
   RNNotifee: ed6c0b5ffc0b021507fe196a1c4cfd1fe002410c
