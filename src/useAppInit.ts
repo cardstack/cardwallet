@@ -86,7 +86,7 @@ export const useAppInit = () => {
     const { url, handled } = deepLink.current;
 
     if (url && !handled && isAuthorized) {
-      Linking.openURL(url);
+      Navigation.linkTo(url);
 
       deepLink.current = { url, handled: true };
     }

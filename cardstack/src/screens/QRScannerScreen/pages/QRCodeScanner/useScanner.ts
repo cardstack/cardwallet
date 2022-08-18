@@ -1,13 +1,16 @@
 import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useLinkTo,
+  useNavigation,
+} from '@react-navigation/native';
 import { useCallback, useRef } from 'react';
-import { Linking } from 'react-native';
 
 import { useBooleanState } from '@cardstack/hooks';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
+import { parseUrlToNavigationPath } from '@cardstack/navigation/Navigation';
 import { Routes } from '@cardstack/navigation/routes';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
-import { convertDeepLinkToCardWalletProtocol } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import { useTimeout } from '@rainbow-me/hooks';
@@ -28,6 +31,7 @@ export const useScanner = ({
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
   const [startTimeout] = useTimeout();
+  const linkTo = useLinkTo();
   const isWcScanEnabled = useRef(true);
 
   const [
@@ -93,13 +97,16 @@ export const useScanner = ({
     [walletConnectOnSessionRequest, walletConnectOnSessionRequestCallback]
   );
 
-  const handleScanPayMerchant = useCallback(deeplink => {
-    haptics.notificationSuccess();
+  const handleScanPayMerchant = useCallback(
+    deeplink => {
+      haptics.notificationSuccess();
 
-    const updatedDeepLink = convertDeepLinkToCardWalletProtocol(deeplink);
+      const parsedLink = parseUrlToNavigationPath(deeplink);
 
-    Linking.openURL(updatedDeepLink);
-  }, []);
+      linkTo(parsedLink);
+    },
+    [linkTo]
+  );
 
   const handleScanInvalid = useCallback(
     qrCodeData => {
