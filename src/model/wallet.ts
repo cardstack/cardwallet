@@ -47,6 +47,7 @@ import {
   updateSecureStorePin,
   wipeSecureStorage,
 } from '@cardstack/models/secure-storage';
+import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
 
@@ -55,6 +56,7 @@ import {
   deleteKeychainIntegrityState,
   deletePinAuthAttemptsData,
 } from '@rainbow-me/handlers/localstorage/globalSettings';
+import store from '@rainbow-me/redux/store';
 import logger from 'logger';
 
 const encryptor = new AesEncryptor();
@@ -905,6 +907,9 @@ export const resetWallet = async () => {
       deleteKeychainIntegrityState();
 
       await deletePinAuthAttemptsData();
+
+      // clear profile creation skip
+      store.dispatch(skipProfileCreation(false));
 
       logger.log('Wallet reset done!');
 

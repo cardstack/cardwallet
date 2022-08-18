@@ -1,5 +1,6 @@
 import { StackActions, useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   Container,
@@ -9,6 +10,7 @@ import {
   ContainerProps,
   IconProps,
 } from '@cardstack/components';
+import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 
 interface Props extends ContainerProps {
   leftIconProps?: IconProps;
@@ -24,10 +26,12 @@ const InPageHeader = ({
   skipAmount = 1,
 }: Props) => {
   const { goBack, dispatch: navDispatch } = useNavigation();
+  const dispatch = useDispatch();
 
   const onSkipPress = useCallback(() => {
+    dispatch(skipProfileCreation(true));
     navDispatch(StackActions.pop(skipAmount));
-  }, [navDispatch, skipAmount]);
+  }, [navDispatch, skipAmount, dispatch]);
 
   return (
     <Container
