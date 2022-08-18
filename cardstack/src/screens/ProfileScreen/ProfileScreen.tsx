@@ -44,7 +44,7 @@ const ProfileScreen = () => {
     return undefined;
   }, [isCreateProfileError, isConnectionError]);
 
-  const ProfileContent = () => {
+  const renderProfileContent = useMemo(() => {
     if (isLayer1(network)) {
       return (
         <>
@@ -107,7 +107,19 @@ const ProfileScreen = () => {
     }
 
     return <CreateProfile />;
-  };
+  }, [
+    error,
+    isCreatingProfile,
+    isFetching,
+    network,
+    onSendSupport,
+    primarySafe,
+    redirectToSwitchNetwork,
+    refetch,
+    retryCurrentCreateProfile,
+    safesCount,
+    showLoading,
+  ]);
 
   return (
     <Container backgroundColor="backgroundDarkPurple" flex={1}>
@@ -117,7 +129,7 @@ const ProfileScreen = () => {
         flex={1}
         paddingHorizontal={isLayer1(network) ? 5 : 0}
       >
-        <ProfileContent />
+        {renderProfileContent}
       </Container>
     </Container>
   );
