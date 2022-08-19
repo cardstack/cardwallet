@@ -31,8 +31,8 @@ jest.mock('@cardstack/redux/persistedFlagsSlice', () => ({
 
 const mockPrimarySafeHelper = (overwriteParams?: any) =>
   (usePrimarySafe as jest.Mock).mockImplementation(() => ({
-    primarySafe: undefined,
-    hasFetchedProfile: false,
+    hasProfile: false,
+    isLoadingOnInit: true,
     ...overwriteParams,
   }));
 
@@ -43,8 +43,8 @@ describe('useShowOnboarding', () => {
 
   it('should navigate to profile flow when profile has been fetched and no profile is found', () => {
     mockPrimarySafeHelper({
-      hasFetchedProfile: true,
-      primarySafe: undefined,
+      hasProfile: false,
+      isLoadingOnInit: false,
     });
 
     renderHook(useShowOnboarding);
@@ -54,8 +54,8 @@ describe('useShowOnboarding', () => {
 
   it('should NOT navigate to profile flow when user has already accessed the onboarding', () => {
     mockPrimarySafeHelper({
-      hasFetchedProfile: true,
-      primarySafe: undefined,
+      hasProfile: false,
+      isLoadingOnInit: false,
     });
 
     // First render
@@ -69,7 +69,7 @@ describe('useShowOnboarding', () => {
   });
 
   it('should NOT navigate to profile flow when profile hasnt been fetched', () => {
-    mockPrimarySafeHelper();
+    mockPrimarySafeHelper({ hasProfile: false, isLoadingOnInit: true });
 
     renderHook(useShowOnboarding);
 
@@ -78,8 +78,8 @@ describe('useShowOnboarding', () => {
 
   it('should NOT navigate to profile flow when profile has been fetched and it exists', () => {
     mockPrimarySafeHelper({
-      hasFetchedProfile: true,
-      primarySafe: { slug: '1223' },
+      hasProfile: true,
+      isLoadingOnInit: false,
     });
 
     renderHook(useShowOnboarding);
@@ -93,8 +93,8 @@ describe('useShowOnboarding', () => {
     });
 
     mockPrimarySafeHelper({
-      hasFetchedProfile: true,
-      primarySafe: undefined,
+      hasProfile: false,
+      isLoadingOnInit: false,
     });
 
     renderHook(useShowOnboarding);

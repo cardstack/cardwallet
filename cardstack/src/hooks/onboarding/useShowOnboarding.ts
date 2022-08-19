@@ -7,7 +7,7 @@ import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
 import { usePersistedFlagsSelector } from '@cardstack/redux/persistedFlagsSlice';
 
 export const useShowOnboarding = () => {
-  const { primarySafe, hasFetchedProfile } = usePrimarySafe();
+  const { hasProfile, isLoadingOnInit: isLoadingSafes } = usePrimarySafe();
   const { hasSkippedProfileCreation } = usePersistedFlagsSelector();
 
   const { navigate } = useNavigation();
@@ -15,7 +15,7 @@ export const useShowOnboarding = () => {
   const { hasWallet } = useAuthSelector();
 
   useEffect(() => {
-    const noProfile = hasFetchedProfile && !primarySafe;
+    const noProfile = !isLoadingSafes && !hasProfile;
 
     const shouldShowProfileCreationFlow =
       hasWallet && noProfile && !hasSkippedProfileCreation;
@@ -24,10 +24,10 @@ export const useShowOnboarding = () => {
       navigate(Routes.PROFILE_SLUG);
     }
   }, [
-    hasFetchedProfile,
-    hasWallet,
-    navigate,
-    primarySafe,
+    hasProfile,
     hasSkippedProfileCreation,
+    hasWallet,
+    isLoadingSafes,
+    navigate,
   ]);
 };
