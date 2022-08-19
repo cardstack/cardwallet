@@ -115,4 +115,17 @@ describe('useProfileJobPolling', () => {
 
     expect(result.current.isCreatingProfile).toBeTruthy();
   });
+
+  it('should return isConnectionError on connection error', () => {
+    const { result, rerender } = renderHook(() =>
+      useProfileJobPolling(mockJobParams)
+    );
+
+    mockUseGetProfileJobStatusQuery(undefined, 'CON_ERROR');
+    rerender();
+
+    expect(result.current.isCreatingProfile).toBeFalsy();
+    expect(result.current.isCreateProfileError).toBeFalsy();
+    expect(result.current.isConnectionError).toMatch('CON_ERROR');
+  });
 });
