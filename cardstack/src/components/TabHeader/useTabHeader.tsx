@@ -6,14 +6,15 @@ import { TabHeaderButton } from '.';
 
 export interface TabType {
   title: string;
-  key: string;
+  key: string | number;
 }
 
 export interface TabsArrayProps {
   tabs: Array<TabType>;
+  lightMode?: boolean;
 }
 
-export const useTabHeader = ({ tabs }: TabsArrayProps) => {
+export const useTabHeader = ({ tabs, lightMode = true }: TabsArrayProps) => {
   const [currentTab, setCurrentTab] = useState<TabType>(tabs[0]);
 
   const tabHeaderComp = useCallback(
@@ -26,16 +27,23 @@ export const useTabHeader = ({ tabs }: TabsArrayProps) => {
         >
           {tabs.map(tab => (
             <TabHeaderButton
+              color={lightMode ? 'black' : 'white'}
               isSelected={tab.key === currentTab.key}
               title={tab.title}
               onPress={() => setCurrentTab(tab)}
             />
           ))}
         </Container>
-        <Container backgroundColor="borderLightColor" height={1} width="100%" />
+        {lightMode && (
+          <Container
+            backgroundColor="borderLightColor"
+            height={1}
+            width="100%"
+          />
+        )}
       </>
     ),
-    [tabs, currentTab]
+    [tabs, lightMode, currentTab.key]
   );
 
   return {
