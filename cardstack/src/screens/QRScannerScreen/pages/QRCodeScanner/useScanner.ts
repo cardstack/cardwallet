@@ -1,14 +1,10 @@
 import { isValidMerchantPaymentUrl } from '@cardstack/cardpay-sdk';
-import {
-  useFocusEffect,
-  useLinkTo,
-  useNavigation,
-} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCallback, useRef } from 'react';
 
 import { useBooleanState } from '@cardstack/hooks';
 import useWalletConnectConnections from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
-import { parseUrlToNavigationPath } from '@cardstack/navigation/Navigation';
+import Navigation from '@cardstack/navigation/Navigation';
 import { Routes } from '@cardstack/navigation/routes';
 import { WCRedirectTypes } from '@cardstack/screens/sheets/WalletConnectRedirectSheet';
 
@@ -31,7 +27,7 @@ export const useScanner = ({
   const { navigate } = useNavigation();
   const { walletConnectOnSessionRequest } = useWalletConnectConnections();
   const [startTimeout] = useTimeout();
-  const linkTo = useLinkTo();
+
   const isWcScanEnabled = useRef(true);
 
   const [
@@ -97,16 +93,11 @@ export const useScanner = ({
     [walletConnectOnSessionRequest, walletConnectOnSessionRequestCallback]
   );
 
-  const handleScanPayMerchant = useCallback(
-    deeplink => {
-      haptics.notificationSuccess();
+  const handleScanPayMerchant = useCallback(deeplink => {
+    haptics.notificationSuccess();
 
-      const parsedLink = parseUrlToNavigationPath(deeplink);
-
-      linkTo(parsedLink);
-    },
-    [linkTo]
-  );
+    Navigation.linkTo(deeplink);
+  }, []);
 
   const handleScanInvalid = useCallback(
     qrCodeData => {
