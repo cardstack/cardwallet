@@ -61,25 +61,13 @@ const PinScreen = () => {
         backgroundColor={colorStyleVariants.backgroundColor[variant]}
       />
       <Container flex={0.7} alignItems="center" justifyContent="center">
-        <Container
-          flex={0.2}
-          width="70%"
-          alignItems="center"
-          justifyContent="flex-start"
-        >
+        <Container flex={0.2} width="85%">
           <Text
             fontSize={22}
-            weight="bold"
+            variant="pageHeader"
             color={colorStyleVariants.textColor[variant]}
           >
-            {strings.flow?.[flow]?.title}
-          </Text>
-          <Text
-            fontSize={16}
-            color={colorStyleVariants.secondaryTextColor[variant]}
-            textAlign="center"
-          >
-            {strings.flow?.[flow]?.subtitle}
+            {strings.flow?.[flow]}
           </Text>
         </Container>
         <Container
