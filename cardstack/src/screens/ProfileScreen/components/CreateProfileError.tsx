@@ -24,10 +24,7 @@ interface CreateProfileErrorProps {
 export const CreateProfileError = ({
   onPressRetry,
   onPressSupport,
-  error = {
-    title: strings.profileError.title,
-    message: strings.profileError.message,
-  },
+  error = strings.profileError,
 }: CreateProfileErrorProps) => (
   <Container flex={1} justifyContent="space-between" paddingVertical={10}>
     <Container flex={1} paddingHorizontal={5}>

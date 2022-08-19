@@ -2,6 +2,7 @@ import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { useCallback, useEffect, useMemo } from 'react';
 
+import { useMutationEffects } from '@cardstack/hooks';
 import {
   useGetProfileJobStatusQuery,
   usePostProfileJobRetryMutation,
@@ -37,6 +38,8 @@ export const useProfileJobPolling = ({
     }
   );
 
+  const jobState = useMemo(() => data?.attributes?.state, [data]);
+
   useEffect(() => {
     if (jobID) {
       startPolling();
@@ -44,34 +47,42 @@ export const useProfileJobPolling = ({
   }, [jobID, startPolling]);
 
   useEffect(() => {
-    if (data?.attributes?.state === 'success' || error) {
+    if (jobState === 'success' || error) {
       stopPolling();
       onJobCompletedCallback(error);
     }
-  }, [data, error, stopPolling, onJobCompletedCallback]);
+
+    if (jobState === 'failed') {
+      stopPolling();
+    }
+  }, [jobState, error, stopPolling, onJobCompletedCallback]);
 
   // Handling profile creation job "failed" state.
   // API connection errors need to be handled separetedly, or we risk retrying an ongoing job.
-  const isCreateProfileError = useMemo(
-    () => data?.attributes?.state === 'failed',
-    [data]
+  const [retryJobID, { isSuccess }] = usePostProfileJobRetryMutation();
+
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isSuccess,
+          callback: startPolling,
+        },
+      }),
+      [startPolling, isSuccess]
+    )
   );
 
-  const [retryJobID] = usePostProfileJobRetryMutation();
-
   const retryCurrentCreateProfile = useCallback(() => {
-    if (isCreateProfileError) {
+    if (jobState === 'failed') {
       retryJobID({ jobTicketID: jobID });
     }
-
-    // Resume polling, either after a job is restarted or a connection error has occorred.
-    startPolling();
-  }, [retryJobID, jobID, isCreateProfileError, startPolling]);
+  }, [retryJobID, jobID, jobState]);
 
   return {
     isConnectionError: error,
     isCreatingProfile: polling,
-    isCreateProfileError,
+    isCreateProfileError: jobState === 'failed',
     retryCurrentCreateProfile,
   };
 };
