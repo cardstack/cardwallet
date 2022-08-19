@@ -1,24 +1,26 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   Linking,
   RefreshControl,
   SectionList,
-  StatusBar,
 } from 'react-native';
 
 import {
+  AbsoluteFullScreenContainer,
   BalanceSection,
   CenteredContainer,
   Container,
   Icon,
   ListEmptyComponent,
+  SafeAreaView,
   Text,
   Touchable,
   TransactionItem,
   TransactionListLoading,
+  useTabHeader,
 } from '@cardstack/components';
 import { useDepotTransactions } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
@@ -31,28 +33,56 @@ import { sectionStyle } from '@cardstack/utils/layouts';
 import { useRainbowSelector } from '@rainbow-me/redux/hooks';
 import { showActionSheetWithOptions } from '@rainbow-me/utils';
 
-import { BackButton } from '../../../src/components/header';
-
 interface Params {
   depot: DepotType;
 }
 
 enum Tabs {
-  BALANCES = 'Balances',
-  ACTIVITIES = 'Activities',
+  BALANCES = 0,
+  ACTIVITIES = 1,
 }
+
+const tabs = [
+  { title: 'Balances', key: Tabs.BALANCES },
+  { title: 'Activities', key: Tabs.ACTIVITIES },
+];
 
 export default function DepotScreen() {
   const { goBack, navigate } = useNavigation();
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
-  const [selectedTab, setSelectedTab] = useState(Tabs.BALANCES);
+
+  const { TabHeader, currentTab } = useTabHeader({ tabs, lightMode: false });
 
   const {
     params: { depot },
   } = useRoute<RouteType<Params>>();
 
+  const hasRenderedActivitiesOnce = useRef(false);
+
   const { address, tokens } = depot;
+
+  useEffect(() => {
+    if (
+      !hasRenderedActivitiesOnce.current &&
+      currentTab.key === Tabs.ACTIVITIES
+    ) {
+      hasRenderedActivitiesOnce.current = true;
+    }
+  }, [currentTab]);
+
+  // Tab uses zIndex stack style to "cache" view
+  const getTabStackOrder = useCallback(
+    (tab: Tabs) => (currentTab.key === tab ? tab : -1),
+    [currentTab.key]
+  );
+
+  // Wait for activities to be requested at least once before rendering
+  const shouldRenderActivities = useMemo(
+    () =>
+      hasRenderedActivitiesOnce.current || currentTab.key === Tabs.ACTIVITIES,
+    [currentTab.key]
+  );
 
   const onPressMore = () => {
     showActionSheetWithOptions(
@@ -76,130 +106,70 @@ export default function DepotScreen() {
   };
 
   return (
-    <Container top={0} width="100%" backgroundColor="white">
-      <StatusBar barStyle="light-content" />
-      <Container height="100%" justifyContent="flex-end">
-        <Container paddingTop={14} backgroundColor="black">
-          <Container paddingTop={1}>
-            <CenteredContainer flexDirection="row">
-              <Container left={0} position="absolute">
-                <BackButton
-                  color="teal"
-                  direction="left"
-                  onPress={goBack}
-                  testID="goToBalancesFromScanner"
-                  throttle={false}
-                  textChevron={false}
-                />
-              </Container>
-              <Container alignItems="center">
-                <Text color="white" weight="bold">
-                  Depot
-                </Text>
-                <Touchable onPress={onPressInformation}>
-                  <Container flexDirection="row" alignItems="center">
-                    <Text
-                      fontFamily="RobotoMono-Regular"
-                      color="white"
-                      size="xs"
-                      marginRight={2}
-                    >
-                      {getAddressPreview(address)}
-                    </Text>
-                    <Icon name="info" size={15} />
-                  </Container>
-                </Touchable>
-              </Container>
-              <Container right={20} position="absolute">
-                <Touchable onPress={onPressMore}>
-                  <Icon name="more-horizontal" color="teal" />
-                </Touchable>
-              </Container>
-            </CenteredContainer>
+    <SafeAreaView backgroundColor="black" edges={['top']} flex={1}>
+      <Container
+        paddingHorizontal={5}
+        flex={0.14}
+        justifyContent="space-between"
+      >
+        <CenteredContainer
+          paddingTop={1}
+          flexDirection="row"
+          justifyContent="space-between"
+        >
+          <Icon
+            color="teal"
+            iconSize="medium"
+            name="chevron-left"
+            onPress={goBack}
+            size={35}
+            left={-10}
+          />
+          <Container alignItems="center">
+            <Text color="white" weight="bold" textAlign="center">
+              Depot
+            </Text>
+            <Touchable
+              onPress={onPressInformation}
+              flexDirection="row"
+              alignItems="center"
+            >
+              <Text
+                fontFamily="RobotoMono-Regular"
+                color="white"
+                size="xs"
+                marginRight={2}
+              >
+                {getAddressPreview(address)}
+              </Text>
+              <Icon name="info" size={15} />
+            </Touchable>
           </Container>
-          <Container
-            flexDirection="row"
-            style={{ paddingHorizontal: '10%' }}
-            justifyContent="space-between"
-          >
-            <TabHeader
-              tab={Tabs.BALANCES}
-              selectedTab={selectedTab}
-              setSelectedTab={setSelectedTab}
-            />
-            <TabHeader
-              tab={Tabs.ACTIVITIES}
-              selectedTab={selectedTab}
-              setSelectedTab={setSelectedTab}
-            />
-          </Container>
-        </Container>
-        <Container flex={1} width="100%">
-          <Container
-            flex={1}
-            width="100%"
-            height="100%"
-            backgroundColor="white"
-            position="absolute"
-            zIndex={selectedTab === Tabs.BALANCES ? 1 : 0}
-          >
-            <BalanceSection tokens={tokens} safeAddress={address} />
-          </Container>
-          <Container
-            flex={1}
-            width="100%"
-            height="100%"
-            backgroundColor="white"
-            position="absolute"
-            zIndex={selectedTab === Tabs.ACTIVITIES ? 1 : 0}
-          >
-            <Activities />
-          </Container>
+          <Icon name="more-horizontal" color="teal" onPress={onPressMore} />
+        </CenteredContainer>
+        <TabHeader />
+      </Container>
+      <Container flex={1} width="100%" backgroundColor="white">
+        <AbsoluteFullScreenContainer
+          flex={1}
+          backgroundColor="white"
+          zIndex={getTabStackOrder(Tabs.BALANCES)}
+        >
+          <BalanceSection tokens={tokens} safeAddress={address} />
+        </AbsoluteFullScreenContainer>
+        <Container
+          flex={1}
+          backgroundColor="white"
+          zIndex={getTabStackOrder(Tabs.ACTIVITIES)}
+        >
+          {shouldRenderActivities && <Activities depotAddress={address} />}
         </Container>
       </Container>
-    </Container>
+    </SafeAreaView>
   );
 }
 
-interface TabHeaderProps {
-  setSelectedTab: (tab: Tabs) => void;
-  selectedTab: Tabs;
-  tab: Tabs;
-}
-
-const TabHeader = ({ tab, selectedTab, setSelectedTab }: TabHeaderProps) => {
-  const isSelected = selectedTab === tab;
-  return (
-    <Touchable
-      alignItems="center"
-      justifyContent="center"
-      width="40%"
-      paddingTop={5}
-      onPress={() => setSelectedTab(tab)}
-    >
-      <Text
-        color="white"
-        marginBottom={3}
-        weight={isSelected ? 'bold' : 'regular'}
-      >
-        {tab}
-      </Text>
-      <Container
-        backgroundColor={isSelected ? 'teal' : 'transparent'}
-        height={4}
-        width="100%"
-      />
-    </Touchable>
-  );
-};
-
-const Activities = () => {
-  const {
-    params: { depot },
-  } = useRoute<RouteType<Params>>();
-
-  const { address } = depot;
-
+const Activities = React.memo(({ depotAddress }: { depotAddress: string }) => {
   const {
     sections,
     isFetchingMore,
@@ -207,43 +177,45 @@ const Activities = () => {
     refetchLoading,
     refetch,
     isLoadingTransactions,
-  } = useDepotTransactions(address);
+  } = useDepotTransactions(depotAddress);
 
   return (
     <Container marginTop={7} flexDirection="column" width="100%">
-      {isLoadingTransactions ? (
-        <TransactionListLoading light />
-      ) : (
-        <SectionList
-          ListEmptyComponent={<ListEmptyComponent text="No transactions" />}
-          ListFooterComponent={
-            isFetchingMore ? <ActivityIndicator color="white" /> : null
-          }
-          contentContainerStyle={sectionStyle.contentContainerStyle}
-          renderItem={props => <TransactionItem {...props} includeBorder />}
-          sections={sections}
-          renderSectionHeader={({ section: { title } }) => (
-            <Container
-              paddingVertical={2}
-              paddingHorizontal={5}
-              width="100%"
-              backgroundColor="white"
-            >
-              <Text size="medium">{title}</Text>
-            </Container>
-          )}
-          refreshControl={
-            <RefreshControl
-              tintColor={colors.borderBlue}
-              refreshing={refetchLoading}
-              onRefresh={refetch}
-            />
-          }
-          onEndReached={onEndReached}
-          onEndReachedThreshold={1}
-          style={sectionStyle.sectionList}
-        />
-      )}
+      <SectionList
+        ListEmptyComponent={
+          isLoadingTransactions ? (
+            <TransactionListLoading light />
+          ) : (
+            <ListEmptyComponent text="No transactions" />
+          )
+        }
+        ListFooterComponent={
+          isFetchingMore ? <ActivityIndicator color="white" /> : null
+        }
+        contentContainerStyle={sectionStyle.contentContainerStyle}
+        renderItem={props => <TransactionItem {...props} includeBorder />}
+        sections={sections}
+        renderSectionHeader={({ section: { title } }) => (
+          <Container
+            paddingVertical={2}
+            paddingHorizontal={5}
+            width="100%"
+            backgroundColor="white"
+          >
+            <Text size="medium">{title}</Text>
+          </Container>
+        )}
+        refreshControl={
+          <RefreshControl
+            tintColor={colors.borderBlue}
+            refreshing={refetchLoading}
+            onRefresh={refetch}
+          />
+        }
+        onEndReached={onEndReached}
+        onEndReachedThreshold={1}
+        style={sectionStyle.sectionList}
+      />
     </Container>
   );
-};
+});
