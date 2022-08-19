@@ -5,6 +5,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import reducers from './reducers';
 import { authSlice } from '@cardstack/redux/authSlice';
 import { biometryToggleSliceName } from '@cardstack/redux/biometryToggleSlice';
+import { persistedFlagsName } from '@cardstack/redux/persistedFlagsSlice';
 import { primarySafeSliceName } from '@cardstack/redux/primarySafeSlice';
 import { welcomeBannerSliceName } from '@cardstack/redux/welcomeBanner';
 import { hubApi } from '@cardstack/services/hub/hub-api';
@@ -21,6 +22,7 @@ const persistConfig = {
     primarySafeSliceName,
     biometryToggleSliceName,
     welcomeBannerSliceName,
+    persistedFlagsName,
   ],
 };
 

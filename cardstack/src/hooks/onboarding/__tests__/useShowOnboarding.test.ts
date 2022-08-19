@@ -4,6 +4,7 @@ import { useShowOnboarding } from '@cardstack/hooks/onboarding/useShowOnboarding
 import { Routes } from '@cardstack/navigation/routes';
 import { useAuthSelector } from '@cardstack/redux/authSlice';
 import { usePrimarySafe } from '@cardstack/redux/hooks/usePrimarySafe';
+import { usePersistedFlagsSelector } from '@cardstack/redux/persistedFlagsSlice';
 
 jest.mock('@cardstack/redux/hooks/usePrimarySafe', () => ({
   usePrimarySafe: jest.fn(),
@@ -19,6 +20,12 @@ jest.mock('@react-navigation/native', () => ({
 jest.mock('@cardstack/redux/authSlice', () => ({
   useAuthSelector: jest.fn().mockReturnValue({
     hasWallet: true,
+  }),
+}));
+
+jest.mock('@cardstack/redux/persistedFlagsSlice', () => ({
+  usePersistedFlagsSelector: jest.fn().mockReturnValue({
+    hasSkippedProfileCreation: false,
   }),
 }));
 
@@ -88,6 +95,16 @@ describe('useShowOnboarding', () => {
     mockPrimarySafeHelper({
       hasFetchedProfile: true,
       primarySafe: undefined,
+    });
+
+    renderHook(useShowOnboarding);
+
+    expect(mockedNavigate).not.toBeCalled();
+  });
+
+  it('should NOT navigate to profile creation flow if "Skip" was pressed', () => {
+    (usePersistedFlagsSelector as jest.Mock).mockReturnValueOnce({
+      hasSkippedProfileCreation: true,
     });
 
     renderHook(useShowOnboarding);
