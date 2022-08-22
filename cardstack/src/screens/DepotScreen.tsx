@@ -108,22 +108,16 @@ export default function DepotScreen() {
   return (
     <SafeAreaView backgroundColor="black" edges={['top']} flex={1}>
       <Container
+        paddingTop={5}
         paddingHorizontal={5}
-        flex={0.14}
         justifyContent="space-between"
       >
-        <CenteredContainer
-          paddingTop={1}
-          flexDirection="row"
-          justifyContent="space-between"
-        >
+        <CenteredContainer flexDirection="row" justifyContent="space-between">
           <Icon
             color="teal"
             iconSize="medium"
-            name="chevron-left"
+            name="chevron-left-no-box"
             onPress={goBack}
-            size={35}
-            left={-10}
           />
           <Container alignItems="center">
             <Text color="white" weight="bold" textAlign="center">
@@ -147,8 +141,8 @@ export default function DepotScreen() {
           </Container>
           <Icon name="more-horizontal" color="teal" onPress={onPressMore} />
         </CenteredContainer>
-        <TabHeader />
       </Container>
+      <TabHeader />
       <Container flex={1} width="100%" backgroundColor="white">
         <AbsoluteFullScreenContainer
           flex={1}
