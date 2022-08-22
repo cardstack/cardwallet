@@ -4,8 +4,9 @@ import { StatusBar } from 'react-native';
 import {
   Container,
   Icon,
-  NavigationStackHeader,
+  InPageHeader,
   PinInput,
+  SafeAreaView,
   Text,
 } from '@cardstack/components';
 import { BiometricSwitch } from '@cardstack/components/BiometricSwitch';
@@ -51,17 +52,16 @@ const PinScreen = () => {
   );
 
   return (
-    <Container
+    <SafeAreaView
       backgroundColor={colorStyleVariants.backgroundColor[variant]}
       flex={1}
+      paddingHorizontal={5}
     >
       <StatusBar barStyle={statusBarStyle} />
-      <NavigationStackHeader
-        canGoBack={canGoBack}
-        backgroundColor={colorStyleVariants.backgroundColor[variant]}
-      />
-      <Container flex={0.7} alignItems="center" justifyContent="center">
-        <Container flex={0.2} width="85%">
+      <InPageHeader showSkipButton={false} showLeftIcon={canGoBack} />
+
+      <Container flex={1} alignItems="center">
+        <Container flex={0.15} width="85%" alignSelf="flex-start">
           <Text
             fontSize={22}
             variant="pageHeader"
@@ -104,7 +104,7 @@ const PinScreen = () => {
         {showBiometricSwitcher && (
           <Container
             justifyContent="flex-end"
-            flex={Device.isIOS ? 0.25 : 0.4}
+            flex={Device.isIOS ? 0.15 : 0.25}
             width="100%"
             alignItems="center"
           >
@@ -112,7 +112,7 @@ const PinScreen = () => {
           </Container>
         )}
       </Container>
-    </Container>
+    </SafeAreaView>
   );
 };
 
