@@ -49,7 +49,7 @@ describe('useProfileJobPolling', () => {
     mockUsePostProfileJobRetryMutation();
   });
 
-  it('should start hook waiting when jobID not provided', () => {
+  it('should do nothing if jobID is not provided', () => {
     const { result } = renderHook(() =>
       useProfileJobPolling({ ...mockJobParams, jobID: undefined })
     );
@@ -74,7 +74,7 @@ describe('useProfileJobPolling', () => {
     expect(result.current.isCreatingProfile).toBeFalsy();
   });
 
-  it('should return profile error flag on job has failed', () => {
+  it('should return profile error flag once job has failed', () => {
     const { result, rerender } = renderHook(() =>
       useProfileJobPolling(mockJobParams)
     );
@@ -97,7 +97,9 @@ describe('useProfileJobPolling', () => {
       result.current.retryCurrentCreateProfile();
     });
 
-    expect(mockJobRetryMutation).toBeCalled();
+    expect(mockJobRetryMutation).toBeCalledWith({
+      jobTicketID: mockJobParams.jobID,
+    });
   });
 
   it('should resume polling once retry call is successful', () => {
