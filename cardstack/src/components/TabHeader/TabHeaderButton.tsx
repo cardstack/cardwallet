@@ -1,17 +1,20 @@
 import React from 'react';
 
 import { Container, Touchable, Text } from '@cardstack/components';
+import { ColorTypes } from '@cardstack/theme';
 
 export interface TabHeaderProps {
   title: string;
   isSelected?: boolean;
   onPress: () => void;
+  color?: ColorTypes;
 }
 
 export const TabHeaderButton = ({
   title,
   isSelected = false,
   onPress,
+  color = 'black',
 }: TabHeaderProps) => {
   return (
     <Touchable
@@ -22,7 +25,7 @@ export const TabHeaderButton = ({
       flex={1}
     >
       <Text
-        color="black"
+        color={color}
         marginBottom={3}
         opacity={isSelected ? 1 : 0.5}
         weight={isSelected ? 'bold' : 'regular'}
@@ -30,7 +33,7 @@ export const TabHeaderButton = ({
         {title}
       </Text>
       <Container
-        backgroundColor={isSelected ? 'buttonPrimaryBorder' : 'white'}
+        backgroundColor={isSelected ? 'buttonPrimaryBorder' : undefined}
         height={3}
         width="100%"
       />
