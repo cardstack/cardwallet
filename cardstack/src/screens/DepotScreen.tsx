@@ -176,6 +176,7 @@ const Activities = React.memo(({ depotAddress }: { depotAddress: string }) => {
   return (
     <Container marginTop={7} flexDirection="column" width="100%">
       <SectionList
+        stickySectionHeadersEnabled
         ListEmptyComponent={
           isLoadingTransactions ? (
             <TransactionListLoading light />
