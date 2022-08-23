@@ -60,27 +60,24 @@ const PinScreen = () => {
         canGoBack={canGoBack}
         backgroundColor={colorStyleVariants.backgroundColor[variant]}
       />
-      <Container flex={0.7} alignItems="center" justifyContent="center">
-        <Container
-          flex={0.2}
-          width="70%"
-          alignItems="center"
-          justifyContent="flex-start"
-        >
-          <Text
-            fontSize={22}
-            weight="bold"
-            color={colorStyleVariants.textColor[variant]}
-          >
-            {strings.flow?.[flow]?.title}
-          </Text>
-          <Text
-            fontSize={16}
-            color={colorStyleVariants.secondaryTextColor[variant]}
-            textAlign="center"
-          >
-            {strings.flow?.[flow]?.subtitle}
-          </Text>
+
+      <Container flex={0.7} alignItems="center">
+        <Container flex={0.35} width="85%">
+          <Container flex={1} width="80%">
+            <Text
+              variant="pageHeader"
+              color={colorStyleVariants.textColor[variant]}
+              paddingBottom={2}
+            >
+              {strings.flow?.[flow].title}
+            </Text>
+            <Text
+              fontSize={16}
+              color={colorStyleVariants.secondaryTextColor[variant]}
+            >
+              {strings.flow?.[flow]?.subtitle}
+            </Text>
+          </Container>
         </Container>
         <Container
           justifyContent="center"
@@ -116,7 +113,7 @@ const PinScreen = () => {
         {showBiometricSwitcher && (
           <Container
             justifyContent="flex-end"
-            flex={Device.isIOS ? 0.25 : 0.4}
+            flex={Device.isIOS ? 0.3 : 0.4}
             width="100%"
             alignItems="center"
           >

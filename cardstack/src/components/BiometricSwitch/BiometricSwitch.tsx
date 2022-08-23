@@ -48,7 +48,7 @@ export const BiometricSwitch = ({ variant }: BiometricSwitchProps) => {
         variant="semibold"
         marginRight={2}
       >
-        {strings.switchLabel} {biometryLabel}
+        {strings.switchLabel(biometryLabel)}
       </Text>
       <Icon
         color={colorStyleVariants.textColor[variant]}

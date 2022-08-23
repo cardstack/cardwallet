@@ -1,3 +1,4 @@
 export const strings = {
-  switchLabel: 'Use',
+  switchLabel: (biometryLabel: string | null) =>
+    `Use ${biometryLabel} to log in`,
 };
