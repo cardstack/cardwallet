@@ -1,6 +1,10 @@
 import React, { useState, useCallback } from 'react';
 
 import { Container } from '@cardstack/components';
+import {
+  colorStyleVariants,
+  ThemeVariant,
+} from '@cardstack/theme/colorStyleVariants';
 
 import { TabHeaderButton } from '.';
 
@@ -11,10 +15,10 @@ export interface TabType {
 
 export interface TabsArrayProps {
   tabs: Array<TabType>;
-  lightMode?: boolean;
+  variant?: ThemeVariant;
 }
 
-export const useTabHeader = ({ tabs, lightMode = true }: TabsArrayProps) => {
+export const useTabHeader = ({ tabs, variant = 'light' }: TabsArrayProps) => {
   const [currentTab, setCurrentTab] = useState<TabType>(tabs[0]);
 
   const tabHeaderComp = useCallback(
@@ -27,14 +31,14 @@ export const useTabHeader = ({ tabs, lightMode = true }: TabsArrayProps) => {
         >
           {tabs.map(tab => (
             <TabHeaderButton
-              color={lightMode ? 'black' : 'white'}
+              color={colorStyleVariants.textColor[variant]}
               isSelected={tab.key === currentTab.key}
               title={tab.title}
               onPress={() => setCurrentTab(tab)}
             />
           ))}
         </Container>
-        {lightMode && (
+        {variant === 'light' && (
           <Container
             backgroundColor="borderLightColor"
             height={1}
@@ -43,7 +47,7 @@ export const useTabHeader = ({ tabs, lightMode = true }: TabsArrayProps) => {
         )}
       </>
     ),
-    [tabs, lightMode, currentTab.key]
+    [tabs, variant, currentTab.key]
   );
 
   return {

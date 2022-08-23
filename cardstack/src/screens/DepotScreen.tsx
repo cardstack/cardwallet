@@ -52,7 +52,7 @@ export default function DepotScreen() {
   const network = useRainbowSelector(state => state.settings.network);
   const blockExplorer = getConstantByNetwork('blockExplorer', network);
 
-  const { TabHeader, currentTab } = useTabHeader({ tabs, lightMode: false });
+  const { TabHeader, currentTab } = useTabHeader({ tabs, variant: 'dark' });
 
   const {
     params: { depot },
