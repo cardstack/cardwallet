@@ -4,9 +4,8 @@ import { StatusBar } from 'react-native';
 import {
   Container,
   Icon,
-  InPageHeader,
+  NavigationStackHeader,
   PinInput,
-  SafeAreaView,
   Text,
 } from '@cardstack/components';
 import { BiometricSwitch } from '@cardstack/components/BiometricSwitch';
@@ -52,23 +51,33 @@ const PinScreen = () => {
   );
 
   return (
-    <SafeAreaView
+    <Container
       backgroundColor={colorStyleVariants.backgroundColor[variant]}
       flex={1}
-      paddingHorizontal={5}
     >
       <StatusBar barStyle={statusBarStyle} />
-      <InPageHeader showSkipButton={false} showLeftIcon={canGoBack} />
+      <NavigationStackHeader
+        canGoBack={canGoBack}
+        backgroundColor={colorStyleVariants.backgroundColor[variant]}
+      />
 
-      <Container flex={1} alignItems="center">
-        <Container flex={0.15} width="85%" alignSelf="flex-start">
-          <Text
-            fontSize={22}
-            variant="pageHeader"
-            color={colorStyleVariants.textColor[variant]}
-          >
-            {strings.flow?.[flow]}
-          </Text>
+      <Container flex={0.7} alignItems="center">
+        <Container flex={0.35} width="85%">
+          <Container flex={1} width="80%">
+            <Text
+              variant="pageHeader"
+              color={colorStyleVariants.textColor[variant]}
+              paddingBottom={2}
+            >
+              {strings.flow?.[flow].title}
+            </Text>
+            <Text
+              fontSize={16}
+              color={colorStyleVariants.secondaryTextColor[variant]}
+            >
+              {strings.flow?.[flow]?.subtitle}
+            </Text>
+          </Container>
         </Container>
         <Container
           justifyContent="center"
@@ -104,7 +113,7 @@ const PinScreen = () => {
         {showBiometricSwitcher && (
           <Container
             justifyContent="flex-end"
-            flex={Device.isIOS ? 0.15 : 0.25}
+            flex={Device.isIOS ? 0.3 : 0.4}
             width="100%"
             alignItems="center"
           >
@@ -112,7 +121,7 @@ const PinScreen = () => {
           </Container>
         )}
       </Container>
-    </SafeAreaView>
+    </Container>
   );
 };
 
