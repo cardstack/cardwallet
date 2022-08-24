@@ -26,8 +26,8 @@ import {
   GetValidateProfileSlugParams,
   CreateProfileInfoParams,
   PostProfilePurchaseQueryResult,
-  JobTicketResult,
   UpdateProfileInfoParams,
+  JobTicketTypeResult,
 } from './hub-types';
 
 const routes = {
@@ -152,7 +152,7 @@ export const hubApi = createApi({
       },
     }),
     getProfileJobStatus: builder.query<
-      JobTicketResult,
+      JobTicketTypeResult,
       { jobTicketID: string }
     >({
       query: ({ jobTicketID }) =>
@@ -164,6 +164,18 @@ export const hubApi = createApi({
         url: `${routes.profileInfo.jobTicket}/${jobTicketID}/retry`,
         method: 'POST',
       }),
+    }),
+    getProfileUnfulfilledJob: builder.query<string | undefined, void>({
+      query: () => `${routes.profileInfo.jobTicket}`,
+      transformResponse: ({ data }: { data: JobTicketTypeResult[] }) => {
+        const unfulfilledJob = data.find(
+          ({ attributes }) =>
+            attributes['job-type'] === 'create-profile' &&
+            attributes.state !== 'success'
+        );
+
+        return unfulfilledJob?.id;
+      },
     }),
   }),
 });
@@ -182,4 +194,5 @@ export const {
   useGetProfileJobStatusQuery,
   usePostProfileJobRetryMutation,
   useUpdateProfileInfoMutation,
+  useGetProfileUnfulfilledJobQuery,
 } = hubApi;

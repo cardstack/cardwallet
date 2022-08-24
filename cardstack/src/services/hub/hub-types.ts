@@ -82,16 +82,14 @@ export interface PostProfilePurchaseQueryResult {
 
 type JobStateType = 'pending' | 'success' | 'failed' | undefined;
 
-interface JobTicketType {
+export interface JobTicketTypeResult {
   id: string;
   type: string;
   attributes: {
-    'job-type': string;
+    'job-type': string | 'create-profile';
     state: JobStateType;
     result: {
       id: string;
     };
   };
 }
-
-export type JobTicketResult = KebabToCamelCaseKeys<JobTicketType>;
