@@ -11,7 +11,6 @@ import { useAccountSettings } from '@rainbow-me/hooks';
 
 const rewardDefaultProgramId = {
   [networkTypes.sokol]: '0x0885ce31D73b63b0Fcb1158bf37eCeaD8Ff0fC72',
-  // TestID
   [networkTypes.xdai]: '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185',
 };
 
