@@ -63,6 +63,7 @@ const getValidProofs = async ({
 
   const proofs = await rewardPoolInstance.getProofs(
     accountAddress,
+    undefined,
     rewardProgramId,
     tokenAddress,
     false
