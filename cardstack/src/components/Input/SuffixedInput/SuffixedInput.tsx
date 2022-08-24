@@ -57,6 +57,7 @@ const SuffixedInput = ({
       allowFontScaling={false}
       onChangeText={onChangeText}
       value={value}
+      returnKeyType="done"
     />
     <Text
       style={styles.textStyle}
