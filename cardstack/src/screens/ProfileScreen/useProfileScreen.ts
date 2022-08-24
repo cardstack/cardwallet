@@ -31,16 +31,6 @@ export const useProfileScreen = () => {
     hasProfile,
   } = usePrimarySafe();
 
-  // When the new profile is done, we need to refresh the safes list.
-  const onJobCompletedCallback = useCallback(
-    error => {
-      if (!error) {
-        refetch();
-      }
-    },
-    [refetch]
-  );
-
   const {
     data: pendingJobId,
     isLoading: isLoadingProfileJobs,
@@ -55,7 +45,6 @@ export const useProfileScreen = () => {
     retryCurrentCreateProfile,
   } = useProfileJobPolling({
     jobID: params?.profileCreationJobID || pendingJobId,
-    onJobCompletedCallback,
   });
 
   const { network } = useAccountSettings();

@@ -4,6 +4,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { CustodialWallet, ProfileIDUniquenessResponse } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
+import { CacheTags as SafesCacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 
 import {
@@ -28,6 +29,7 @@ import {
   PostProfilePurchaseQueryResult,
   UpdateProfileInfoParams,
   JobTicketTypeResult,
+  JobStateType,
 } from './hub-types';
 
 const routes = {
@@ -151,13 +153,20 @@ export const hubApi = createApi({
         queryFulfilled.catch(updatedResult.undo);
       },
     }),
-    getProfileJobStatus: builder.query<
-      JobTicketTypeResult,
-      { jobTicketID: string }
-    >({
+    getProfileJobStatus: builder.query<JobStateType, { jobTicketID: string }>({
       query: ({ jobTicketID }) =>
         `${routes.profileInfo.jobTicket}/${jobTicketID}`,
-      transformResponse: ({ data }) => data,
+      transformResponse: ({ data }: { data: JobTicketTypeResult }) =>
+        data.attributes?.state,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data: status } = await queryFulfilled;
+
+          if (status === 'success') {
+            dispatch(safesApi.util.invalidateTags([SafesCacheTags.SAFES]));
+          }
+        } catch {}
+      },
     }),
     postProfileJobRetry: builder.mutation<unknown, { jobTicketID: string }>({
       query: ({ jobTicketID }) => ({

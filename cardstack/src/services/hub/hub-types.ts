@@ -80,7 +80,7 @@ export interface PostProfilePurchaseQueryResult {
   ];
 }
 
-type JobStateType = 'pending' | 'success' | 'failed' | undefined;
+export type JobStateType = 'pending' | 'success' | 'failed';
 
 export interface JobTicketTypeResult {
   id: string;
