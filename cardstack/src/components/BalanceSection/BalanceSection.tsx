@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native';
 import { Container, TokenBalance } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { TokenType } from '@cardstack/types';
+import { isBridgedCardToken } from '@cardstack/utils';
 
 interface BalancesProps {
   tokens: TokenType[];
@@ -35,7 +36,7 @@ export const BalanceSection = ({
     () =>
       tokens.map(token => (
         <TokenBalance
-          isOnDepot={isDepot}
+          isStaking={isBridgedCardToken(token.token.symbol) && isDepot}
           key={token.tokenAddress}
           address={token.tokenAddress}
           includeBorder
