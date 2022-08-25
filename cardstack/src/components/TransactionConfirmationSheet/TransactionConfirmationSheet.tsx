@@ -124,6 +124,7 @@ const Header = ({
 const SheetFooter = ({
   onConfirm,
   onCancel,
+  loading,
   onConfirmLoading = false,
   disabledConfirmButton,
 }: TransactionConfirmationDisplayProps) => (
@@ -146,7 +147,7 @@ const SheetFooter = ({
         {strings.buttons.cancel}
       </Button>
       <Button
-        loading={onConfirmLoading}
+        loading={onConfirmLoading || loading}
         variant="small"
         onPress={onConfirm}
         disabled={disabledConfirmButton}
