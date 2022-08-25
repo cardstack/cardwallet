@@ -1,14 +1,12 @@
 import { NativeCurrency } from '@cardstack/cardpay-sdk';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { CustodialWallet } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
 import { queryPromiseWrapper } from '../utils';
 
 import { checkHubAuth, fetchHubBaseQuery, hubBodyBuilder } from './hub-service';
 import {
-  GetCustodialWalletQueryResult,
   RequestCardDropQueryParams,
   EoaClaimedAttrsType,
   GetEoaClaimedQueryParams,
@@ -19,7 +17,6 @@ import {
 } from './hub-types';
 
 const routes = {
-  custodialWallet: '/custodial-wallet',
   emailDrop: '/email-card-drop-requests',
   exchangeRates: '/exchange-rates',
   registerFCMToken: '/push-notification-registrations',
@@ -34,11 +31,6 @@ export const hubApi = createApi({
   baseQuery: fetchHubBaseQuery,
   tagTypes: [...Object.values(CacheTag)],
   endpoints: builder => ({
-    getCustodialWallet: builder.query<GetCustodialWalletQueryResult, void>({
-      query: () => routes.custodialWallet,
-      transformResponse: (response: { data: CustodialWallet }) =>
-        transformObjKeysToCamelCase(response?.data?.attributes),
-    }),
     requestEmailCardDrop: builder.mutation<void, RequestCardDropQueryParams>({
       query: ({ email }) => ({
         url: routes.emailDrop,
@@ -101,7 +93,6 @@ export const hubApi = createApi({
 });
 
 export const {
-  useGetCustodialWalletQuery,
   useGetEoaClaimedQuery,
   useRequestEmailCardDropMutation,
   useCheckHubAuthQuery,

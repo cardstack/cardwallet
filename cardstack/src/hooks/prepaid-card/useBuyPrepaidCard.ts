@@ -14,8 +14,8 @@ import {
   getWyrePrice,
   makeReservation,
   updateOrder,
+  useGetCustodialWalletQuery,
 } from '@cardstack/services';
-import { useGetCustodialWalletQuery } from '@cardstack/services/hub/hub-api';
 import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-cards/prepaid-card-service';
 import {
   PrepaidCardCustomization,
@@ -390,7 +390,6 @@ export default function useBuyPrepaidCard() {
     [accountAddress, network]
   );
 
-  /* eslint-disable react-hooks/exhaustive-deps */
   const handlePurchase = useCallback(async () => {
     setIsPurchaseInProgress(true);
 
@@ -473,11 +472,12 @@ export default function useBuyPrepaidCard() {
   }, [
     card,
     nativeCurrency,
+    custodialWalletData,
     hubURL,
     authToken,
     sku,
     onPurchase,
-    custodialWalletData,
+    showLoadingOverlay,
   ]);
 
   const { nativeBalanceDisplay: nativeBalance } = useSpendToNativeDisplay({
