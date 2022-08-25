@@ -108,13 +108,17 @@ export const fetchRewardsSafe = async ({
 
 export const fetchRewardPoolTokenBalances = async ({
   accountAddress,
+  safeAddress,
   nativeCurrency,
 }: RewardsSafeQueryParams) => {
   const rewardPoolInstance = await getRewardsPoolInstance();
 
-  const rewardTokens = await rewardPoolInstance.rewardTokenBalances(
-    accountAddress
-  );
+  const rewardTokens = safeAddress
+    ? await rewardPoolInstance.rewardTokenBalancesWithoutDust(
+        accountAddress,
+        safeAddress
+      )
+    : await rewardPoolInstance.rewardTokenBalances(accountAddress);
 
   const rewardTokensWithPrice = await Promise.all(
     rewardTokens?.map(
@@ -129,7 +133,8 @@ export const fetchRewardPoolTokenBalances = async ({
             token: { symbol },
             balance,
           } as unknown) as TokenInfo,
-          nativeCurrency
+          nativeCurrency,
+          true
         );
 
         return { ...tokenWithPrice, tokenAddress, rewardProgramId };
@@ -193,6 +198,31 @@ export const getClaimRewardsGasEstimate = async ({
   );
 
   const totalEstimatedGasInEth = fromWei(totalEstimatedGas.toString());
+
+  const formattedTotalEstimatedGas = parseFloat(totalEstimatedGasInEth).toFixed(
+    2
+  );
+
+  return formattedTotalEstimatedGas;
+};
+
+export const getClaimAllRewardsGasEstimate = async ({
+  safeAddress,
+  tokenAddress,
+  rewardProgramId,
+  accountAddress,
+}: RewardsClaimGasEstimateParams) => {
+  console.log(accountAddress);
+  const rewardPoolInstance = await getRewardsPoolInstance();
+
+  const totalEstimatedGas = await rewardPoolInstance.claimAllGasEstimate(
+    safeAddress,
+    rewardProgramId,
+    tokenAddress
+  );
+  const totalEstimatedGasInEth = fromWei(
+    totalEstimatedGas[0].amount.toString()
+  );
 
   const formattedTotalEstimatedGas = parseFloat(totalEstimatedGasInEth).toFixed(
     2
@@ -270,6 +300,25 @@ export const claimRewards = async ({
 
   cachedValidProofs = null;
 
+  return receipts;
+};
+
+export const claimAllRewards = async ({
+  safeAddress,
+  tokenAddress,
+  rewardProgramId,
+  accountAddress,
+}: RewardsClaimMutationParams) => {
+  const rewardPoolInstance = await getRewardsPoolInstance({ accountAddress });
+  const receipts = await rewardPoolInstance.claimAll(
+    safeAddress,
+    rewardProgramId,
+    tokenAddress,
+    undefined,
+    {
+      from: accountAddress,
+    }
+  );
   return receipts;
 };
 
