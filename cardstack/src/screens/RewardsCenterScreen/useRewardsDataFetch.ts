@@ -4,11 +4,9 @@ import {
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
-
 import { isLayer1 } from '@cardstack/utils';
 
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
-
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const rewardDefaultProgramId = {
