@@ -5,6 +5,12 @@ import { CustodialWalletAttrs, IAPProviderType } from '@cardstack/types';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
+export interface HubBaseResponse<Attrs> {
+  id: string;
+  type: string;
+  attributes: Attrs;
+}
+
 // Note on baseQuery extraOptions, it works only with optional properties.
 export interface BaseQueryExtraOptions {
   authenticate?: boolean;
@@ -65,10 +71,8 @@ export interface GetValidateProfileSlugParams {
   slug: string;
 }
 
-export interface PostProfilePurchaseQueryResult {
-  id: string;
-  type: 'merchant-infos';
-  attributes: CreateProfileInfoParams & { did: string };
+export interface PostProfilePurchaseQueryResult
+  extends HubBaseResponse<CreateProfileInfoParams & { did: string }> {
   included: [
     {
       id: string;
@@ -82,14 +86,10 @@ export interface PostProfilePurchaseQueryResult {
 
 export type JobStateType = 'pending' | 'success' | 'failed';
 
-export interface JobTicketTypeResult {
-  id: string;
-  type: string;
-  attributes: {
-    'job-type': string | 'create-profile';
-    state: JobStateType;
-    result: {
-      id: string;
-    };
+export type JobTicketTypeResult = HubBaseResponse<{
+  'job-type': string | 'create-profile';
+  state: JobStateType;
+  result: {
+    id: string;
   };
-}
+}>;

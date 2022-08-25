@@ -1,21 +1,11 @@
+import { KebabToCamelCase, KebabToCamelCaseKeys } from 'globals';
+
+import { HubBaseResponse } from '@cardstack/services/hub/hub-types';
+
 export interface CustodialWalletAttrs {
   'wyre-wallet-id': string;
   'user-address': string;
   'deposit-address': string;
-}
-
-export interface CustodialWallet {
-  id: string;
-  type: string;
-  attributes: CustodialWalletAttrs;
-}
-
-export interface Inventory {
-  id: string;
-  type: string;
-  isSelected: boolean;
-  amount: number;
-  attributes: InventoryAttrs;
 }
 
 export interface InventoryAttrs {
@@ -29,12 +19,6 @@ export interface InventoryAttrs {
   quantity: number;
   reloadable: boolean;
   transferrable: boolean;
-}
-
-export interface ReservationData {
-  id: string;
-  type: string;
-  attributes: ReservationAttrs;
 }
 
 export interface ReservationAttrs {
@@ -51,22 +35,24 @@ export interface OrderAttrs {
   status: string;
 }
 
-export interface OrderData {
-  id: string;
-  type: string;
-  attributes: OrderAttrs;
-  prepaidCardAddress?: string;
-}
-
-export interface WyrePriceData {
-  id: string;
-  type: string;
-  attributes: WyrePriceAttrs;
-}
-
 export interface WyrePriceAttrs {
   'source-currency': string;
   'dest-currency': string;
   'source-currency-price': number;
   'includes-fee': boolean;
+}
+
+export type CustodialWallet = HubBaseResponse<CustodialWalletAttrs>;
+
+export type Inventory = HubBaseResponse<InventoryAttrs>;
+
+export type InventoryWithPrice = KebabToCamelCaseKeys<InventoryAttrs> &
+  KebabToCamelCaseKeys<WyrePriceAttrs>;
+
+export type ReservationData = HubBaseResponse<ReservationAttrs>;
+
+export type WyrePriceData = HubBaseResponse<WyrePriceAttrs>;
+
+export interface OrderData extends HubBaseResponse<OrderAttrs> {
+  prepaidCardAddress?: string;
 }
