@@ -10,6 +10,7 @@ export const useRewardsCenterScreen = () => {
     isLoading,
     mainPoolTokenInfo,
     hasRewardsAvailable,
+    canClaimAll,
   } = useRewardsDataFetch();
 
   const registeredPools = useMemo(
@@ -38,5 +39,6 @@ export const useRewardsCenterScreen = () => {
     hasRewardsAvailable,
     mainPoolTokenInfo,
     isLoading,
+    canClaimAll,
   };
 };
