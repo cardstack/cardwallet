@@ -4,6 +4,7 @@ import {
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
+
 import { isLayer1 } from '@cardstack/utils';
 
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
@@ -44,22 +45,54 @@ const useRewardsDataFetch = () => {
     data: { rewardPoolTokenBalances } = {},
   } = useGetRewardPoolTokenBalancesQuery(query.params, query.options);
 
+  const dustQuery = useMemo(
+    () => ({
+      params: {
+        accountAddress,
+        safeAddress: rewardSafes ? rewardSafes[0].address : undefined,
+        nativeCurrency,
+      },
+      options: {
+        skip: !accountAddress || isLayer1(network),
+        refetchOnMountOrArgChange: true,
+      },
+    }),
+    [accountAddress, rewardSafes, nativeCurrency, network]
+  );
+  const {
+    isLoading: isLoadingTokensWithoutDust,
+    data: { rewardPoolTokenBalances: rewardPoolTokenBalancesWithoutDust } = {},
+  } = useGetRewardPoolTokenBalancesQuery(dustQuery.params, dustQuery.options);
+
   // Checks if available tokens matches default program and has amount
   const mainPoolTokenInfo = useMemo(
     () =>
       rewardPoolTokenBalances?.find(
-        ({ rewardProgramId, balance: { amount } }) =>
-          Number(amount) > 0 && rewardProgramId === defaultRewardProgramId
+        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
       ),
     [rewardPoolTokenBalances, defaultRewardProgramId]
   );
 
+  const claimSheetTokenInfo = useMemo(
+    () =>
+      rewardPoolTokenBalancesWithoutDust?.find(
+        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+      ),
+    [rewardPoolTokenBalancesWithoutDust, defaultRewardProgramId, rewardSafes]
+  );
   const isLoading = useMemo(
     () =>
       isLoadingSafes ||
       isLoadingTokens ||
+      isLoadingTokensWithoutDust ||
       (isUninitialized && !isLayer1(network)),
-    [isLoadingSafes, isLoadingTokens, isUninitialized, network]
+    [
+      isLoadingSafes,
+      isLoadingTokens,
+      isLoadingTokensWithoutDust,
+      isUninitialized,
+      network,
+    ]
   );
 
   /**
@@ -68,13 +101,17 @@ const useRewardsDataFetch = () => {
    */
   const hasRewardsAvailable = !!mainPoolTokenInfo;
 
+  const canClaimAll = !!claimSheetTokenInfo;
+
   return {
     isLoading,
     rewardSafes,
     rewardPoolTokenBalances,
     mainPoolTokenInfo,
+    claimSheetTokenInfo,
     defaultRewardProgramId,
     hasRewardsAvailable,
+    canClaimAll,
   };
 };
 
