@@ -5,8 +5,8 @@ import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects } from '@cardstack/hooks';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import {
-  useClaimRewardsMutation,
-  useGetClaimRewardsGasEstimateQuery,
+  useClaimAllRewardsMutation,
+  useGetClaimAllRewardsGasEstimateQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import {
   RewardsClaimData,
@@ -32,19 +32,19 @@ const useRewardsClaim = () => {
   const {
     rewardSafes,
     defaultRewardProgramId,
-    mainPoolTokenInfo,
+    claimSheetTokenInfo,
   } = useRewardsDataFetch();
 
   // flag to avoid rerendering the screen after the claim happened
   const isClaiming = useRef(false);
-  const mainPoolTokenRef = useRef(mainPoolTokenInfo);
+  const mainPoolTokenRef = useRef(claimSheetTokenInfo);
 
   const { dismissLoadingOverlay, showLoadingOverlay } = useLoadingOverlay();
 
   const [
-    claimRewards,
+    claimAllRewards,
     { isSuccess: isClaimSuccess, isError: isClaimError },
-  ] = useClaimRewardsMutation();
+  ] = useClaimAllRewardsMutation();
 
   const rewardSafeForProgram = useMemo(
     () =>
@@ -65,7 +65,7 @@ const useRewardsClaim = () => {
     data: estimatedGasClaim,
     isLoading: loadingEstimatedGasClaim,
     isFetching: fetchingEstimatedGasClaim,
-  } = useGetClaimRewardsGasEstimateQuery(claimParams, {
+  } = useGetClaimAllRewardsGasEstimateQuery(claimParams, {
     refetchOnMountOrArgChange: true,
     skip: isClaiming.current,
   });
@@ -89,8 +89,8 @@ const useRewardsClaim = () => {
     showLoadingOverlay({ title: strings.claim.loading });
 
     isClaiming.current = true;
-    claimRewards(claimParams);
-  }, [showLoadingOverlay, claimRewards, claimParams]);
+    claimAllRewards(claimParams);
+  }, [showLoadingOverlay, claimAllRewards, claimParams]);
 
   const onClaimFulfilledAlert = useCallback(
     ({ title, message, dismiss }: onClaimCallbackProps) => () => {
