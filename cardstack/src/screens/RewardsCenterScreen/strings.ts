@@ -20,7 +20,7 @@ export const strings = {
     gasInfoBanner: {
       title: 'Claiming Gas Fee',
       message:
-        'Claiming is an on chain transaction which requires a small blockchain gas fee. This is paid from your claimable reward.',
+        'Claiming is an on chain transaction which requires a small blockchain gas fee. This is paid from your claimable reward. If the reward is insufficient to pay for gas, it is possible to see a reward with no claim button.',
     },
     successAlert: {
       title: 'Success',
