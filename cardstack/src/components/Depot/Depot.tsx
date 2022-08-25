@@ -51,6 +51,7 @@ const Bottom = ({ tokens }: DepotProps) => {
       {firstThreeTokens.map((item, index) => (
         <Container key={`token-balance-${index}`}>
           <TokenBalance
+            isOnDepot
             address={item.tokenAddress}
             tokenSymbol={item.token.symbol}
             tokenBalance={item.balance.display}

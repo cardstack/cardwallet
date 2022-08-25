@@ -149,7 +149,7 @@ export default function DepotScreen() {
           backgroundColor="white"
           zIndex={getTabStackOrder(Tabs.BALANCES)}
         >
-          <BalanceSection tokens={tokens} safeAddress={address} />
+          <BalanceSection isDepot tokens={tokens} safeAddress={address} />
         </AbsoluteFullScreenContainer>
         <Container
           flex={1}

@@ -26,6 +26,7 @@ export interface TokenBalanceProps extends ContainerProps {
   includeBorder?: boolean;
   isLastItemIfList?: boolean;
   size?: number;
+  isOnDepot?: boolean;
 }
 
 const borderStyle = {
@@ -48,6 +49,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
     includeBorder,
     isLastItemIfList = true,
     size = 40,
+    isOnDepot = false,
     ...containerProps
   } = props;
 
@@ -91,7 +93,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
               <Text variant="subText">{nativeBalance}</Text>
             </Container>
           </Container>
-          {isCardCPXD && <FloatingTag copy={strings.staking} />}
+          {isOnDepot && isCardCPXD && <FloatingTag copy={strings.staking} />}
         </Container>
       </Container>
     </Wrapper>
