@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-
 import {
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
@@ -59,6 +58,7 @@ const useRewardsDataFetch = () => {
     }),
     [accountAddress, rewardSafes, nativeCurrency, network]
   );
+
   const {
     isLoading: isLoadingTokensWithoutDust,
     data: { rewardPoolTokenBalances: rewardPoolTokenBalancesWithoutDust } = {},
@@ -78,8 +78,9 @@ const useRewardsDataFetch = () => {
       rewardPoolTokenBalancesWithoutDust?.find(
         ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
       ),
-    [rewardPoolTokenBalancesWithoutDust, defaultRewardProgramId, rewardSafes]
+    [rewardPoolTokenBalancesWithoutDust, defaultRewardProgramId]
   );
+
   const isLoading = useMemo(
     () =>
       isLoadingSafes ||

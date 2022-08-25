@@ -20,7 +20,7 @@ const RewardsCenterScreen = () => {
     hasRewardsAvailable,
     mainPoolTokenInfo,
     isLoading,
-    canClaimAll
+    canClaimAll,
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
@@ -29,9 +29,8 @@ const RewardsCenterScreen = () => {
       subText: mainPoolTokenInfo?.native.balance.display || '',
       coinSymbol: mainPoolTokenInfo?.token.symbol || '',
       showClaimBtn: canClaimAll,
-      
     }),
-    [mainPoolTokenInfo]
+    [mainPoolTokenInfo, canClaimAll]
   );
 
   return (

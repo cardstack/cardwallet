@@ -220,6 +220,7 @@ export const getClaimAllRewardsGasEstimate = async ({
     rewardProgramId,
     tokenAddress
   );
+
   const totalEstimatedGasInEth = fromWei(
     totalEstimatedGas[0].amount.toString()
   );
@@ -310,6 +311,7 @@ export const claimAllRewards = async ({
   accountAddress,
 }: RewardsClaimMutationParams) => {
   const rewardPoolInstance = await getRewardsPoolInstance({ accountAddress });
+
   const receipts = await rewardPoolInstance.claimAll(
     safeAddress,
     rewardProgramId,
@@ -319,6 +321,7 @@ export const claimAllRewards = async ({
       from: accountAddress,
     }
   );
+
   return receipts;
 };
 
