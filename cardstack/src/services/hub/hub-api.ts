@@ -4,6 +4,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { CustodialWallet, ProfileIDUniquenessResponse } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
+import { CacheTags as SafesCacheTags, safesApi } from '../safes-api';
 import { queryPromiseWrapper } from '../utils';
 
 import {
@@ -26,8 +27,9 @@ import {
   GetValidateProfileSlugParams,
   CreateProfileInfoParams,
   PostProfilePurchaseQueryResult,
-  JobTicketResult,
   UpdateProfileInfoParams,
+  JobTicketTypeResult,
+  JobStateType,
 } from './hub-types';
 
 const routes = {
@@ -151,19 +153,38 @@ export const hubApi = createApi({
         queryFulfilled.catch(updatedResult.undo);
       },
     }),
-    getProfileJobStatus: builder.query<
-      JobTicketResult,
-      { jobTicketID: string }
-    >({
+    getProfileJobStatus: builder.query<JobStateType, { jobTicketID: string }>({
       query: ({ jobTicketID }) =>
         `${routes.profileInfo.jobTicket}/${jobTicketID}`,
-      transformResponse: ({ data }) => data,
+      transformResponse: ({ data }: { data: JobTicketTypeResult }) =>
+        data.attributes?.state,
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data: status } = await queryFulfilled;
+
+          if (status === 'success') {
+            dispatch(safesApi.util.invalidateTags([SafesCacheTags.SAFES]));
+          }
+        } catch {}
+      },
     }),
     postProfileJobRetry: builder.mutation<unknown, { jobTicketID: string }>({
       query: ({ jobTicketID }) => ({
         url: `${routes.profileInfo.jobTicket}/${jobTicketID}/retry`,
         method: 'POST',
       }),
+    }),
+    getProfileUnfulfilledJob: builder.query<string | undefined, void>({
+      query: () => `${routes.profileInfo.jobTicket}`,
+      transformResponse: ({ data }: { data: JobTicketTypeResult[] }) => {
+        const unfulfilledJob = data.find(
+          ({ attributes }) =>
+            attributes['job-type'] === 'create-profile' &&
+            attributes.state !== 'success'
+        );
+
+        return unfulfilledJob?.id;
+      },
     }),
   }),
 });
@@ -182,4 +203,5 @@ export const {
   useGetProfileJobStatusQuery,
   usePostProfileJobRetryMutation,
   useUpdateProfileInfoMutation,
+  useGetProfileUnfulfilledJobQuery,
 } = hubApi;

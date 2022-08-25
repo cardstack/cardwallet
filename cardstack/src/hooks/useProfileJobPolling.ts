@@ -1,5 +1,3 @@
-import { SerializedError } from '@reduxjs/toolkit';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { useCallback, useEffect, useMemo } from 'react';
 
 import { useMutationEffects } from '@cardstack/hooks';
@@ -14,9 +12,6 @@ const JOB_POLLING_INTERVAL = 5000;
 
 interface ProfileJobPollingProps {
   jobID?: string;
-  onJobCompletedCallback: (
-    error?: FetchBaseQueryError | SerializedError
-  ) => void;
 }
 
 /**
@@ -26,11 +21,10 @@ interface ProfileJobPollingProps {
  */
 export const useProfileJobPolling = ({
   jobID = '',
-  onJobCompletedCallback,
 }: ProfileJobPollingProps) => {
   const [polling, startPolling, stopPolling] = useBooleanState(!!jobID);
 
-  const { data, error } = useGetProfileJobStatusQuery(
+  const { data: jobState = 'pending', error } = useGetProfileJobStatusQuery(
     { jobTicketID: jobID },
     {
       pollingInterval: JOB_POLLING_INTERVAL,
@@ -38,7 +32,7 @@ export const useProfileJobPolling = ({
     }
   );
 
-  const jobState = useMemo(() => data?.attributes?.state, [data]);
+  const isFailedJob = useMemo(() => jobState === 'failed', [jobState]);
 
   useEffect(() => {
     if (jobID) {
@@ -47,15 +41,10 @@ export const useProfileJobPolling = ({
   }, [jobID, startPolling]);
 
   useEffect(() => {
-    if (jobState === 'success' || error) {
-      stopPolling();
-      onJobCompletedCallback(error);
-    }
-
-    if (jobState === 'failed') {
+    if (jobState !== 'pending' || error) {
       stopPolling();
     }
-  }, [jobState, error, stopPolling, onJobCompletedCallback]);
+  }, [jobState, error, stopPolling]);
 
   // Handling profile creation job "failed" state.
   // API connection errors need to be handled separetedly, or we risk retrying an ongoing job.
@@ -74,15 +63,15 @@ export const useProfileJobPolling = ({
   );
 
   const retryCurrentCreateProfile = useCallback(() => {
-    if (jobState === 'failed') {
+    if (isFailedJob) {
       retryJobID({ jobTicketID: jobID });
     }
-  }, [retryJobID, jobID, jobState]);
+  }, [isFailedJob, retryJobID, jobID]);
 
   return {
     isConnectionError: error,
     isCreatingProfile: polling,
-    isCreateProfileError: jobState === 'failed',
+    isCreateProfileError: isFailedJob,
     retryCurrentCreateProfile,
   };
 };

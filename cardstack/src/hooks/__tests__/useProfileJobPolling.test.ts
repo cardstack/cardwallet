@@ -13,7 +13,7 @@ jest.mock('@cardstack/services', () => ({
   usePostProfileJobRetryMutation: jest.fn(),
 }));
 
-const mockJobParams = { jobID: 'ANY', onJobCompletedCallback: jest.fn() };
+const mockJobParams = { jobID: 'ANY' };
 
 const mockJobRetryMutation = jest.fn();
 
@@ -23,11 +23,7 @@ describe('useProfileJobPolling', () => {
     error?: any
   ) => {
     (useGetProfileJobStatusQuery as jest.Mock).mockImplementation(() => ({
-      data: {
-        attributes: {
-          state,
-        },
-      },
+      data: state,
       error,
     }));
   };
