@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+
 import {
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
@@ -7,6 +8,7 @@ import {
 import { isLayer1 } from '@cardstack/utils';
 
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
+
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 const rewardDefaultProgramId = {
