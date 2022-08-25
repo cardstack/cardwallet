@@ -9,6 +9,7 @@ import {
 } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { DepotType } from '@cardstack/types';
+import { isBridgedCardToken } from '@cardstack/utils';
 
 import { HorizontalDivider } from '../HorizontalDivider';
 import { MoreItemsFooter } from '../MoreItemsFooter';
@@ -51,6 +52,7 @@ const Bottom = ({ tokens }: DepotProps) => {
       {firstThreeTokens.map((item, index) => (
         <Container key={`token-balance-${index}`}>
           <TokenBalance
+            isStaking={isBridgedCardToken(item.token.symbol)}
             address={item.tokenAddress}
             tokenSymbol={item.token.symbol}
             tokenBalance={item.balance.display}

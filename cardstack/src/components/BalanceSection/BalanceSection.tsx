@@ -5,13 +5,19 @@ import { ScrollView } from 'react-native';
 import { Container, TokenBalance } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 import { TokenType } from '@cardstack/types';
+import { isBridgedCardToken } from '@cardstack/utils';
 
 interface BalancesProps {
   tokens: TokenType[];
   safeAddress: string;
+  isDepot?: boolean;
 }
 
-export const BalanceSection = ({ tokens, safeAddress }: BalancesProps) => {
+export const BalanceSection = ({
+  tokens,
+  safeAddress,
+  isDepot = false,
+}: BalancesProps) => {
   const { navigate } = useNavigation();
 
   const onPress = useCallback(
@@ -30,6 +36,7 @@ export const BalanceSection = ({ tokens, safeAddress }: BalancesProps) => {
     () =>
       tokens.map(token => (
         <TokenBalance
+          isStaking={isBridgedCardToken(token.token.symbol) && isDepot}
           key={token.tokenAddress}
           address={token.tokenAddress}
           includeBorder
@@ -41,7 +48,7 @@ export const BalanceSection = ({ tokens, safeAddress }: BalancesProps) => {
           zIndex={1}
         />
       )),
-    [onPress, tokens]
+    [onPress, tokens, isDepot]
   );
 
   return (

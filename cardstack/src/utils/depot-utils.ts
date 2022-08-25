@@ -18,3 +18,6 @@ export const reshapeDepotTokensToAssets = (depot: DepotType) =>
 
     return tokens;
   }, []);
+
+export const isBridgedCardToken = (tokenSymbol: string) =>
+  tokenSymbol === 'CARD.CPXD';

@@ -26,6 +26,7 @@ export interface TokenBalanceProps extends ContainerProps {
   includeBorder?: boolean;
   isLastItemIfList?: boolean;
   size?: number;
+  isStaking?: boolean;
 }
 
 const borderStyle = {
@@ -48,13 +49,12 @@ export const TokenBalance = (props: TokenBalanceProps) => {
     includeBorder,
     isLastItemIfList = true,
     size = 40,
+    isStaking = false,
     ...containerProps
   } = props;
 
   const borderProps = includeBorder ? borderStyle : {};
   const Wrapper = onPress ? Touchable : Container;
-
-  const isCardCPXD = tokenSymbol === 'CARD.CPXD';
 
   return (
     <Wrapper onPress={onPress} {...borderProps} {...containerProps}>
@@ -91,7 +91,7 @@ export const TokenBalance = (props: TokenBalanceProps) => {
               <Text variant="subText">{nativeBalance}</Text>
             </Container>
           </Container>
-          {isCardCPXD && <FloatingTag copy={strings.staking} />}
+          {isStaking && <FloatingTag copy={strings.staking} />}
         </Container>
       </Container>
     </Wrapper>
