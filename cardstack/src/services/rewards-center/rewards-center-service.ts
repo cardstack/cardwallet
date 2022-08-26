@@ -210,9 +210,7 @@ export const getClaimAllRewardsGasEstimate = async ({
   safeAddress,
   tokenAddress,
   rewardProgramId,
-  accountAddress,
 }: RewardsClaimGasEstimateParams) => {
-  console.log(accountAddress);
   const rewardPoolInstance = await getRewardsPoolInstance();
 
   const totalEstimatedGas = await rewardPoolInstance.claimAllGasEstimate(
