@@ -59,10 +59,11 @@ const RequestQRCodePage = () => {
         justifyContent="space-around"
         paddingHorizontal={5}
       >
-        <Container justifyContent="space-around" flex={0.3}>
+        <Container justifyContent="space-between" flex={0.3}>
           <Text
             fontSize={18}
             color="white"
+            paddingBottom={3}
             paddingHorizontal={4}
             textAlign="center"
           >
