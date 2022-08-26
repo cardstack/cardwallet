@@ -79,7 +79,8 @@ const useRewardsDataFetch = () => {
     const balances = rewardPoolTokenBalances?.find(
       ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
     );
-    if (!!balances) {
+
+    if (balances) {
       return {
         ...balances,
         isClaimable: !!claimableBalanceToken && !!claimableBalanceToken.balance,
