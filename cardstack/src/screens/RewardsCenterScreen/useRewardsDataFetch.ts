@@ -46,25 +46,16 @@ const useRewardsDataFetch = () => {
     data: { rewardPoolTokenBalances } = {},
   } = useGetRewardPoolTokenBalancesQuery(query.params, query.options);
 
-  const dustQuery = useMemo(
-    () => ({
-      params: {
-        accountAddress,
-        safeAddress: rewardSafes ? rewardSafes[0].address : undefined,
-        nativeCurrency,
-      },
-      options: {
-        skip: !accountAddress || isLayer1(network),
-        refetchOnMountOrArgChange: true,
-      },
-    }),
-    [accountAddress, rewardSafes, nativeCurrency, network]
-  );
-
   const {
     isLoading: isLoadingTokensWithoutDust,
     data: { rewardPoolTokenBalances: rewardPoolTokenBalancesWithoutDust } = {},
-  } = useGetRewardPoolTokenBalancesQuery(dustQuery.params, dustQuery.options);
+  } = useGetRewardPoolTokenBalancesQuery(
+    {
+      ...query.params,
+      safeAddress: rewardSafes ? rewardSafes[0].address : undefined,
+    },
+    query.options
+  );
 
   const claimableBalanceToken = useMemo(
     () =>
