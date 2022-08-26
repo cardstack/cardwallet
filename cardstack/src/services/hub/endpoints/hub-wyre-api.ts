@@ -20,8 +20,8 @@ type BaseQueryReturn<T> = QueryReturnValue<{ data?: T }, FetchBaseQueryError>;
 
 const routes = {
   custodialWallet: '/custodial-wallet',
-  wyrePrices: 'wyre-prices',
-  inventories: 'inventories',
+  wyrePrices: '/wyre-prices',
+  inventories: '/inventories',
 };
 
 export const hubWyre = hubApi.injectEndpoints({

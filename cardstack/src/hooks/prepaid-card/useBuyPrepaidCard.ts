@@ -219,6 +219,7 @@ export default function useBuyPrepaidCard() {
           return orderId;
         } else {
           applePayResponse.complete(PaymentRequestStatusTypes.FAIL);
+          dismissLoadingOverlay();
 
           logger.sentry(
             'Error getting order id',

@@ -1,4 +1,4 @@
-import { KebabToCamelCase, KebabToCamelCaseKeys } from 'globals';
+import { KebabToCamelCaseKeys } from 'globals';
 
 import { HubBaseResponse } from '@cardstack/services/hub/hub-types';
 
