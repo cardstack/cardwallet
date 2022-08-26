@@ -64,9 +64,9 @@ export const hubWyre = hubApi.injectEndpoints({
                   ...transformObjKeysToCamelCase(skuPrice.attributes),
                 });
               }
-
-              return inventoryWithPrice;
             }
+
+            return inventoryWithPrice;
           },
           [] as InventoryWithPrice[]
         );
