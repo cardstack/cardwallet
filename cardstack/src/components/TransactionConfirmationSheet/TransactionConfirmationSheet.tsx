@@ -147,10 +147,10 @@ const SheetFooter = ({
         {strings.buttons.cancel}
       </Button>
       <Button
-        loading={onConfirmLoading || loading}
+        loading={onConfirmLoading}
         variant="small"
         onPress={onConfirm}
-        disabled={disabledConfirmButton}
+        disabled={disabledConfirmButton || loading}
       >
         {strings.buttons.submit}
       </Button>
