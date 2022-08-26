@@ -27,7 +27,7 @@ const RewardsCenterScreen = () => {
       primaryText: fullBalanceToken?.balance.display || '',
       subText: fullBalanceToken?.native.balance.display || '',
       coinSymbol: fullBalanceToken?.token.symbol || '',
-      showClaimBtn: fullBalanceToken?.isClaimable,
+      isClaimable: !!fullBalanceToken?.isClaimable,
     }),
     [fullBalanceToken]
   );
