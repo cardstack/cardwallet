@@ -215,13 +215,11 @@ export const getClaimAllRewardsGasEstimate = async ({
 
   const totalEstimatedGas = await rewardPoolInstance.claimAllGasEstimate(
     safeAddress,
-    rewardProgramId,
-    tokenAddress
+    tokenAddress,
+    rewardProgramId
   );
 
-  const totalEstimatedGasInEth = fromWei(
-    totalEstimatedGas[0].amount.toString()
-  );
+  const totalEstimatedGasInEth = fromWei(totalEstimatedGas.amount.toString());
 
   const formattedTotalEstimatedGas = parseFloat(totalEstimatedGasInEth).toFixed(
     2
