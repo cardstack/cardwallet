@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { Pressable } from 'react-native';
 
 import { Button, Container, StyledQRCode, Text } from '@cardstack/components';
 import { useCopyToast } from '@cardstack/hooks';
@@ -25,11 +26,17 @@ export const PaymentRequestConfirmation = (
     customCopyLabel: 'Payment Request Link',
   });
 
+  const handleLongPressQRCode = useCallback(() => copyToClipboard(), [
+    copyToClipboard,
+  ]);
+
   return (
     <>
       <Container paddingHorizontal={5} width="100%">
         <Container alignItems="center" paddingTop={5}>
-          <StyledQRCode value={paymentRequestDeepLink} />
+          <Pressable onLongPress={handleLongPressQRCode}>
+            <StyledQRCode value={paymentRequestDeepLink} />
+          </Pressable>
         </Container>
         <Container
           backgroundColor="grayCardBackground"
