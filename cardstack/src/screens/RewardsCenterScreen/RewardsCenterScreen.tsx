@@ -18,19 +18,18 @@ const RewardsCenterScreen = () => {
   const {
     isRegistered,
     hasRewardsAvailable,
-    mainPoolTokenInfo,
+    fullBalanceToken,
     isLoading,
-    canClaimAll,
   } = useRewardsCenterScreen();
 
   const mainPoolRowProps = useMemo(
     () => ({
-      primaryText: mainPoolTokenInfo?.balance.display || '',
-      subText: mainPoolTokenInfo?.native.balance.display || '',
-      coinSymbol: mainPoolTokenInfo?.token.symbol || '',
-      showClaimBtn: canClaimAll,
+      primaryText: fullBalanceToken?.balance.display || '',
+      subText: fullBalanceToken?.native.balance.display || '',
+      coinSymbol: fullBalanceToken?.token.symbol || '',
+      showClaimBtn: fullBalanceToken?.isClaimable,
     }),
-    [mainPoolTokenInfo, canClaimAll]
+    [fullBalanceToken]
   );
 
   return (

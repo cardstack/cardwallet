@@ -17,8 +17,11 @@ export type RewardsSafeType = Omit<RewardSafe, 'tokens'> & {
 export interface RewardsSafeQueryResult {
   rewardSafes: RewardsSafeType[];
 }
+export interface FullBalanceToken extends TokenByProgramID {
+  isClaimable: boolean;
+}
 
-interface TokenByProgramID extends TokenType {
+export interface TokenByProgramID extends TokenType {
   rewardProgramId?: string;
 }
 export interface RewardsTokenBalancesResult {

@@ -25,7 +25,7 @@ export const mockRewardSafeForProgram = [
   },
 ];
 
-export const mockMainPoolTokenInfo = {
+export const mockfullBalanceToken = {
   balance: {
     amount: '52.479664130149567042',
     display: '52.48 CARD.CPXD',
@@ -37,7 +37,7 @@ export const mockMainPoolTokenInfo = {
   tokenAddress: '0x52031d287Bb58E26A379A7Fec2c84acB54f54fe3',
 };
 
-export const mockClaimSheetTokenInfo = {
+export const mockclaimableBalanceToken = {
   balance: {
     amount: '52.479664130149567042',
     display: '52.48 CARD.CPXD',

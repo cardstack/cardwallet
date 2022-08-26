@@ -10,8 +10,8 @@ import { strings } from '../strings';
 import useRewardsDataFetch from '../useRewardsDataFetch';
 
 import {
-  mockClaimSheetTokenInfo,
-  mockMainPoolTokenInfo,
+  mockclaimableBalanceToken,
+  mockfullBalanceToken,
   mockRewardSafeForProgram,
 } from './mocks';
 
@@ -20,8 +20,8 @@ const mockedDismissOverlay = jest.fn();
 const accountAddress = '0x0000000000000000000';
 const mockedGoBack = jest.fn();
 const rewardSafes = mockRewardSafeForProgram;
-const mainPoolTokenInfo = mockMainPoolTokenInfo;
-const claimSheetTokenInfo = mockClaimSheetTokenInfo;
+const fullBalanceToken = mockfullBalanceToken;
+const claimableBalanceToken = mockclaimableBalanceToken;
 const defaultRewardProgramId = '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185';
 
 jest.mock('@react-navigation/native', () => ({
@@ -61,8 +61,8 @@ describe('useRewardsClaim', () => {
     (useRewardsDataFetch as jest.Mock).mockImplementation(() => ({
       rewardSafes,
       defaultRewardProgramId,
-      mainPoolTokenInfo,
-      claimSheetTokenInfo,
+      fullBalanceToken,
+      claimableBalanceToken,
       ...overwriteProps,
     }));
 
@@ -103,7 +103,7 @@ describe('useRewardsClaim', () => {
     expect(mockedClaimRewards).toBeCalledWith({
       accountAddress,
       rewardProgramId: defaultRewardProgramId,
-      tokenAddress: mockClaimSheetTokenInfo.tokenAddress,
+      tokenAddress: mockclaimableBalanceToken.tokenAddress,
       safeAddress: mockRewardSafeForProgram[0].address,
     });
   });

@@ -32,12 +32,12 @@ const useRewardsClaim = () => {
   const {
     rewardSafes,
     defaultRewardProgramId,
-    claimSheetTokenInfo,
+    claimableBalanceToken,
   } = useRewardsDataFetch();
 
   // flag to avoid rerendering the screen after the claim happened
   const isClaiming = useRef(false);
-  const mainPoolTokenRef = useRef(claimSheetTokenInfo);
+  const claimableBalanceTokenRef = useRef(claimableBalanceToken);
 
   const { dismissLoadingOverlay, showLoadingOverlay } = useLoadingOverlay();
 
@@ -57,7 +57,7 @@ const useRewardsClaim = () => {
   const claimParams = {
     accountAddress,
     rewardProgramId: defaultRewardProgramId,
-    tokenAddress: mainPoolTokenRef.current?.tokenAddress || '',
+    tokenAddress: claimableBalanceTokenRef.current?.tokenAddress || '',
     safeAddress: rewardSafeForProgram?.address || '',
   };
 
@@ -75,11 +75,11 @@ const useRewardsClaim = () => {
       loadingGasEstimate: loadingEstimatedGasClaim || fetchingEstimatedGasClaim,
       type: TransactionConfirmationType.REWARDS_CLAIM,
       estGasFee: estimatedGasClaim || '0.10',
-      ...mainPoolTokenRef.current,
+      ...claimableBalanceTokenRef.current,
     }),
     [
       estimatedGasClaim,
-      mainPoolTokenRef,
+      claimableBalanceTokenRef,
       loadingEstimatedGasClaim,
       fetchingEstimatedGasClaim,
     ]
@@ -131,7 +131,7 @@ const useRewardsClaim = () => {
 
   return {
     onConfirm,
-    data: screenData as RewardsClaimData, // type casting bc mainPoolTokenInfo type has undefined
+    data: screenData as RewardsClaimData, // type casting bc fullBalanceToken type has undefined
     onCancel: goBack,
   };
 };

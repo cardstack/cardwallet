@@ -4,6 +4,8 @@ import {
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
+import { FullBalanceToken } from '@cardstack/services/rewards-center/rewards-center-types';
+``;
 import { isLayer1 } from '@cardstack/utils';
 
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
@@ -64,22 +66,26 @@ const useRewardsDataFetch = () => {
     data: { rewardPoolTokenBalances: rewardPoolTokenBalancesWithoutDust } = {},
   } = useGetRewardPoolTokenBalancesQuery(dustQuery.params, dustQuery.options);
 
-  // Checks if available tokens matches default program
-  const mainPoolTokenInfo = useMemo(
-    () =>
-      rewardPoolTokenBalances?.find(
-        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
-      ),
-    [rewardPoolTokenBalances, defaultRewardProgramId]
-  );
-
-  const claimSheetTokenInfo = useMemo(
+  const claimableBalanceToken = useMemo(
     () =>
       rewardPoolTokenBalancesWithoutDust?.find(
         ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
       ),
     [rewardPoolTokenBalancesWithoutDust, defaultRewardProgramId]
   );
+
+  // Checks if available tokens matches default program
+  const fullBalanceToken: FullBalanceToken | undefined = useMemo(() => {
+    const balances = rewardPoolTokenBalances?.find(
+      ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+    );
+    if (!!balances) {
+      return {
+        ...balances,
+        isClaimable: !!claimableBalanceToken && !!claimableBalanceToken.balance,
+      };
+    }
+  }, [rewardPoolTokenBalances, claimableBalanceToken, defaultRewardProgramId]);
 
   const isLoading = useMemo(
     () =>
@@ -100,19 +106,16 @@ const useRewardsDataFetch = () => {
    * For now, the available rewards are the ones inside the Cardstack pool
    * In the future, this will change once we add more reward programs
    */
-  const hasRewardsAvailable = !!mainPoolTokenInfo;
-
-  const canClaimAll = !!claimSheetTokenInfo;
+  const hasRewardsAvailable = !!fullBalanceToken;
 
   return {
     isLoading,
     rewardSafes,
     rewardPoolTokenBalances,
-    mainPoolTokenInfo,
-    claimSheetTokenInfo,
+    fullBalanceToken,
     defaultRewardProgramId,
     hasRewardsAvailable,
-    canClaimAll,
+    claimableBalanceToken,
   };
 };
 
