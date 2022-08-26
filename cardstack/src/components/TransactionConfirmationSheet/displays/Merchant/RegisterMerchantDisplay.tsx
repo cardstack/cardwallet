@@ -5,6 +5,7 @@ import { useMerchantInfoFromDID } from '@cardstack/hooks/merchant/useMerchantInf
 import { RegisterMerchantDecodedData } from '@cardstack/types';
 
 import { strings } from '../../strings';
+import { ProfileSectionSkeleton } from '../components/ProfileSectionSkeleton';
 import TransactionListItem from '../components/TransactionListItem';
 import { PayThisAmountSection } from '../components/sections/PayThisAmountSection';
 import { PrepaidCardTransactionSection } from '../components/sections/PrepaidCardTransactionSection';
@@ -15,6 +16,7 @@ interface RegisterMerchantDisplayProps
 }
 
 export const RegisterMerchantDisplay = ({
+  disabledConfirmButton: isLoading,
   data: { infoDID, merchantInfo, prepaidCard, spendAmount },
 }: RegisterMerchantDisplayProps) => {
   const { merchantInfoDID } = useMerchantInfoFromDID(infoDID);
@@ -28,7 +30,9 @@ export const RegisterMerchantDisplay = ({
           title={merchantInfoData.name || strings.createProfile.profileName}
           avatarInfo={merchantInfoData}
         />
-      ) : null}
+      ) : (
+        <ProfileSectionSkeleton headerText={strings.createProfile.create} />
+      )}
       <PrepaidCardTransactionSection
         headerText={strings.createProfile.from}
         prepaidCardAddress={prepaidCard}
@@ -36,6 +40,7 @@ export const RegisterMerchantDisplay = ({
       <PayThisAmountSection
         headerText={strings.createProfile.payThisAmount}
         spendAmount={spendAmount}
+        isLoading={isLoading}
       />
     </>
   );

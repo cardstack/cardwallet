@@ -1,18 +1,25 @@
-import { useGetPrepaidCardsQuery } from '@cardstack/services';
+import { useGetSafesDataQuery } from '@cardstack/services';
+import { isLayer1 } from '@cardstack/utils';
 
 import { useAccountSettings } from '@rainbow-me/hooks';
 
 import { useSpendToNativeDisplay } from '../currencies/useSpendDisplay';
 
 export const usePrepaidCard = (address: string) => {
-  const { accountAddress, nativeCurrency } = useAccountSettings();
+  const { accountAddress, network, nativeCurrency } = useAccountSettings();
 
-  const { prepaidCard, isLoading } = useGetPrepaidCardsQuery(
-    { accountAddress, nativeCurrency },
+  const { isLoading = true, prepaidCard } = useGetSafesDataQuery(
+    { address: accountAddress, nativeCurrency },
     {
-      selectFromResult: ({ data, ...rest }) => ({
+      refetchOnMountOrArgChange: 60,
+      skip: isLayer1(network) || !accountAddress,
+      selectFromResult: ({
+        data,
+        isLoading: isLoadingCards,
+        isUninitialized,
+      }) => ({
         prepaidCard: data?.prepaidCards?.find(card => card.address === address),
-        ...rest,
+        isLoading: isLoadingCards || isUninitialized,
       }),
     }
   );
