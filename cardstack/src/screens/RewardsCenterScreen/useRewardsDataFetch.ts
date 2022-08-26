@@ -64,7 +64,7 @@ const useRewardsDataFetch = () => {
     data: { rewardPoolTokenBalances: rewardPoolTokenBalancesWithoutDust } = {},
   } = useGetRewardPoolTokenBalancesQuery(dustQuery.params, dustQuery.options);
 
-  // Checks if available tokens matches default program and has amount
+  // Checks if available tokens matches default program
   const mainPoolTokenInfo = useMemo(
     () =>
       rewardPoolTokenBalances?.find(
