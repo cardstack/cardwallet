@@ -273,11 +273,11 @@ export const addNativePriceToToken = async (
     symbol,
   });
 
-  const isAmountDust = nativeBalance < 0.01;
+  const isAmountDust = !acceptDust && nativeBalance < 0.01;
 
-  const amount = acceptDust ? nativeBalance : isAmountDust ? 0 : nativeBalance;
+  const amount = isAmountDust ? 0 : nativeBalance;
 
-  const tokenBalance = acceptDust ? balance : isAmountDust ? 0 : balance;
+  const tokenBalance = isAmountDust ? 0 : balance;
 
   return {
     ...tokenInfo,
