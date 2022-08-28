@@ -52,10 +52,9 @@ const useRewardsDataFetch = () => {
   } = useGetRewardPoolTokenBalancesQuery(
     {
       ...query.params,
-      safeAddress:
-        rewardSafes && rewardSafes.length > 0
-          ? rewardSafes[0].address
-          : undefined,
+      safeAddress: rewardSafes?.find(
+        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+      )?.address,
     },
     query.options
   );
