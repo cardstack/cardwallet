@@ -27,7 +27,7 @@ export const AssetList = () => {
     onRefresh,
     refreshing,
     networkName,
-    hasRewardsAvailable,
+    hasClaimableRewards,
   } = useAssetList({ sectionListRef });
 
   const renderSectionHeader = useCallback(
@@ -76,7 +76,7 @@ export const AssetList = () => {
       <SectionList
         ListHeaderComponent={
           <RewardsPromoBanner
-            hasUnclaimedRewards={hasRewardsAvailable}
+            hasUnclaimedRewards={hasClaimableRewards}
             paddingTop={2}
           />
         }

@@ -5,7 +5,6 @@ import {
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import { FullBalanceToken } from '@cardstack/services/rewards-center/rewards-center-types';
-``;
 import { findByRewardProgramId, isLayer1 } from '@cardstack/utils';
 
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
@@ -71,6 +70,11 @@ const useRewardsDataFetch = () => {
     [rewardPoolTokenBalancesWithoutDust, defaultRewardProgramId]
   );
 
+  const hasClaimableRewards = useMemo(
+    () => !!Number(claimableBalanceToken?.balance.amount),
+    [claimableBalanceToken]
+  );
+
   // Checks if available tokens matches default program
   const fullBalanceToken: FullBalanceToken | undefined = useMemo(() => {
     const balances = findByRewardProgramId(
@@ -85,6 +89,15 @@ const useRewardsDataFetch = () => {
       };
     }
   }, [rewardPoolTokenBalances, claimableBalanceToken, defaultRewardProgramId]);
+
+  /**
+   * For now, the available rewards are the ones inside the Cardstack pool
+   * In the future, this will change once we add more reward programs
+   */
+
+  const hasRewards = useMemo(() => !!Number(fullBalanceToken?.balance.amount), [
+    fullBalanceToken,
+  ]);
 
   const isLoading = useMemo(
     () =>
@@ -101,19 +114,14 @@ const useRewardsDataFetch = () => {
     ]
   );
 
-  /**
-   * For now, the available rewards are the ones inside the Cardstack pool
-   * In the future, this will change once we add more reward programs
-   */
-  const hasRewardsAvailable = !!fullBalanceToken;
-
   return {
     isLoading,
     rewardSafes,
     rewardPoolTokenBalances,
     fullBalanceToken,
     defaultRewardProgramId,
-    hasRewardsAvailable,
+    hasRewards,
+    hasClaimableRewards,
     claimableBalanceToken,
     rewardSafeForProgram,
   };
