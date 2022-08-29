@@ -12,7 +12,11 @@ export const useRequestCodePage = () => {
 
   const { address: safeAddress, merchantInfo } = primarySafe || {};
 
-  const { handleShareLink, paymentRequestDeepLink } = usePaymentLinks({
+  const {
+    handleShareLink,
+    paymentRequestDeepLink,
+    paymentRequestWebLink,
+  } = usePaymentLinks({
     address: safeAddress || '',
     merchantInfo,
   });
@@ -34,6 +38,7 @@ export const useRequestCodePage = () => {
     handleShareLink,
     safeAddress,
     paymentRequestDeepLink,
+    paymentRequestWebLink,
     merchantInfo,
     onRequestAmountPress,
     onCreateProfilePress,

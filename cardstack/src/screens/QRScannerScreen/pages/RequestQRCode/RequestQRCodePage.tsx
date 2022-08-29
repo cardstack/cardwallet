@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import {
   Button,
@@ -28,6 +28,7 @@ const RequestQRCodePage = () => {
     merchantInfo,
     onRequestAmountPress,
     paymentRequestDeepLink,
+    paymentRequestWebLink,
     safeAddress,
     onCreateProfilePress,
   } = useRequestCodePage();
@@ -43,7 +44,7 @@ const RequestQRCodePage = () => {
   );
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({
-    dataToCopy: paymentRequestDeepLink,
+    dataToCopy: paymentRequestWebLink,
     customCopyLabel: 'QRCode',
   });
 
@@ -87,9 +88,10 @@ const RequestQRCodePage = () => {
         style={styles.container}
       >
         <Container flexShrink={1} justifyContent="flex-start">
-          <Pressable onLongPress={handleLongPressQRCode}>
-            <StyledQRCode value={paymentRequestDeepLink} />
-          </Pressable>
+          <StyledQRCode
+            value={paymentRequestDeepLink}
+            onLongPress={handleLongPressQRCode}
+          />
         </Container>
         <Container flex={1} flexDirection="column">
           <CenteredContainer flex={1}>
@@ -134,8 +136,8 @@ const RequestQRCodePage = () => {
             </Button>
           </CenteredContainer>
         </Container>
+        <CopyToastComponent />
       </CenteredContainer>
-      <CopyToastComponent />
     </>
   );
 };
