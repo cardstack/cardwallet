@@ -50,7 +50,7 @@ export const ClaimContent = ({ claimList }: ClaimContentProps) => {
           primaryText={item.primaryText}
           subText={item.subText}
           paddingBottom={index + 1 < claimList.length ? 5 : 0}
-          onClaimPress={onClaimPress}
+          onClaimPress={item.isClaimable ? onClaimPress : undefined}
         />
       )),
     [claimList, onClaimPress]

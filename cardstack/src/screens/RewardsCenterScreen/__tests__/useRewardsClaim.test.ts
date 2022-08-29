@@ -3,20 +3,25 @@ import { Alert } from 'react-native';
 import { act } from 'react-test-renderer';
 
 import { defaultErrorAlert } from '@cardstack/constants';
-import { useClaimRewardsMutation } from '@cardstack/services/rewards-center/rewards-center-api';
+import { useClaimAllRewardsMutation } from '@cardstack/services/rewards-center/rewards-center-api';
 
 import useRewardsClaim from '../RewardsClaimSheet/useRewardsClaim';
 import { strings } from '../strings';
 import useRewardsDataFetch from '../useRewardsDataFetch';
 
-import { mockMainPoolTokenInfo, mockRewardSafeForProgram } from './mocks';
+import {
+  mockclaimableBalanceToken,
+  mockfullBalanceToken,
+  mockRewardSafeForProgram,
+} from './mocks';
 
 const mockedShowOverlay = jest.fn();
 const mockedDismissOverlay = jest.fn();
 const accountAddress = '0x0000000000000000000';
 const mockedGoBack = jest.fn();
 const rewardSafes = mockRewardSafeForProgram;
-const mainPoolTokenInfo = mockMainPoolTokenInfo;
+const fullBalanceToken = mockfullBalanceToken;
+const claimableBalanceToken = mockclaimableBalanceToken;
 const defaultRewardProgramId = '0x979C9F171fb6e9BC501Aa7eEd71ca8dC27cF1185';
 
 jest.mock('@react-navigation/native', () => ({
@@ -39,8 +44,8 @@ jest.mock('@rainbow-me/hooks', () => ({
 }));
 
 jest.mock('@cardstack/services/rewards-center/rewards-center-api', () => ({
-  useClaimRewardsMutation: jest.fn(),
-  useGetClaimRewardsGasEstimateQuery: jest.fn().mockResolvedValue('0.20'),
+  useClaimAllRewardsMutation: jest.fn(),
+  useGetClaimAllRewardsGasEstimateQuery: jest.fn().mockResolvedValue('0.20'),
 }));
 
 jest.mock('../useRewardsDataFetch', () => jest.fn());
@@ -56,7 +61,8 @@ describe('useRewardsClaim', () => {
     (useRewardsDataFetch as jest.Mock).mockImplementation(() => ({
       rewardSafes,
       defaultRewardProgramId,
-      mainPoolTokenInfo,
+      fullBalanceToken,
+      claimableBalanceToken,
       ...overwriteProps,
     }));
 
@@ -64,7 +70,7 @@ describe('useRewardsClaim', () => {
     isSuccess: boolean;
     isError: boolean;
   }) => {
-    (useClaimRewardsMutation as jest.Mock).mockImplementation(() => [
+    (useClaimAllRewardsMutation as jest.Mock).mockImplementation(() => [
       mockedClaimRewards.mockResolvedValue(Promise.resolve()),
       {
         isSuccess: true,
@@ -97,12 +103,12 @@ describe('useRewardsClaim', () => {
     expect(mockedClaimRewards).toBeCalledWith({
       accountAddress,
       rewardProgramId: defaultRewardProgramId,
-      tokenAddress: mockMainPoolTokenInfo.tokenAddress,
+      tokenAddress: mockclaimableBalanceToken.tokenAddress,
       safeAddress: mockRewardSafeForProgram[0].address,
     });
   });
 
-  it('shoul show Okay button with an onPress action on Alert after successful claim', () => {
+  it('should show Okay button with an onPress action on Alert after successful claim', () => {
     const { result } = renderHook(() => useRewardsClaim());
 
     act(() => {

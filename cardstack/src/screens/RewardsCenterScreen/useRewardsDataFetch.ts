@@ -4,6 +4,8 @@ import {
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
+import { FullBalanceToken } from '@cardstack/services/rewards-center/rewards-center-types';
+``;
 import { isLayer1 } from '@cardstack/utils';
 
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
@@ -44,37 +46,70 @@ const useRewardsDataFetch = () => {
     data: { rewardPoolTokenBalances } = {},
   } = useGetRewardPoolTokenBalancesQuery(query.params, query.options);
 
-  // Checks if available tokens matches default program and has amount
-  const mainPoolTokenInfo = useMemo(
-    () =>
-      rewardPoolTokenBalances?.find(
-        ({ rewardProgramId, balance: { amount } }) =>
-          Number(amount) > 0 && rewardProgramId === defaultRewardProgramId
-      ),
-    [rewardPoolTokenBalances, defaultRewardProgramId]
+  const {
+    isLoading: isLoadingTokensWithoutDust,
+    data: { rewardPoolTokenBalances: rewardPoolTokenBalancesWithoutDust } = {},
+  } = useGetRewardPoolTokenBalancesQuery(
+    {
+      ...query.params,
+      safeAddress: rewardSafes?.find(
+        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+      )?.address,
+    },
+    query.options
   );
+
+  const claimableBalanceToken = useMemo(
+    () =>
+      rewardPoolTokenBalancesWithoutDust?.find(
+        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+      ),
+    [rewardPoolTokenBalancesWithoutDust, defaultRewardProgramId]
+  );
+
+  // Checks if available tokens matches default program
+  const fullBalanceToken: FullBalanceToken | undefined = useMemo(() => {
+    const balances = rewardPoolTokenBalances?.find(
+      ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+    );
+
+    if (balances) {
+      return {
+        ...balances,
+        isClaimable: !!claimableBalanceToken && !!claimableBalanceToken.balance,
+      };
+    }
+  }, [rewardPoolTokenBalances, claimableBalanceToken, defaultRewardProgramId]);
 
   const isLoading = useMemo(
     () =>
       isLoadingSafes ||
       isLoadingTokens ||
+      isLoadingTokensWithoutDust ||
       (isUninitialized && !isLayer1(network)),
-    [isLoadingSafes, isLoadingTokens, isUninitialized, network]
+    [
+      isLoadingSafes,
+      isLoadingTokens,
+      isLoadingTokensWithoutDust,
+      isUninitialized,
+      network,
+    ]
   );
 
   /**
    * For now, the available rewards are the ones inside the Cardstack pool
    * In the future, this will change once we add more reward programs
    */
-  const hasRewardsAvailable = !!mainPoolTokenInfo;
+  const hasRewardsAvailable = !!fullBalanceToken;
 
   return {
     isLoading,
     rewardSafes,
     rewardPoolTokenBalances,
-    mainPoolTokenInfo,
+    fullBalanceToken,
     defaultRewardProgramId,
     hasRewardsAvailable,
+    claimableBalanceToken,
   };
 };
 

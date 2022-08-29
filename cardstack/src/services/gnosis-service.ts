@@ -259,7 +259,8 @@ export const updateSafeWithTokenPrices = async (
 
 export const addNativePriceToToken = async (
   tokenInfo: TokenInfo,
-  nativeCurrency: NativeCurrency
+  nativeCurrency: NativeCurrency,
+  acceptDust = false
 ) => {
   const {
     balance,
@@ -272,7 +273,7 @@ export const addNativePriceToToken = async (
     symbol,
   });
 
-  const isAmountDust = nativeBalance < 0.01;
+  const isAmountDust = !acceptDust && nativeBalance < 0.01;
 
   const amount = isAmountDust ? 0 : nativeBalance;
 

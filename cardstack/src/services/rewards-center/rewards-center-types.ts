@@ -6,6 +6,7 @@ import { TokenType } from '@cardstack/types';
 
 export interface RewardsSafeQueryParams {
   accountAddress: string;
+  safeAddress?: string;
   nativeCurrency: NativeCurrency;
 }
 
@@ -16,14 +17,16 @@ export type RewardsSafeType = Omit<RewardSafe, 'tokens'> & {
 export interface RewardsSafeQueryResult {
   rewardSafes: RewardsSafeType[];
 }
+export interface FullBalanceToken extends TokenByProgramID {
+  isClaimable: boolean;
+}
 
-interface TokenByProgramID extends TokenType {
+export interface TokenByProgramID extends TokenType {
   rewardProgramId?: string;
 }
 export interface RewardsTokenBalancesResult {
   rewardPoolTokenBalances: TokenByProgramID[];
 }
-
 interface RewardsPoolSignedBaseParams extends EthersSignerParams {
   accountAddress: string;
   rewardProgramId: string;

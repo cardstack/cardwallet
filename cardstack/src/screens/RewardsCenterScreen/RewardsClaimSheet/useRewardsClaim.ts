@@ -5,8 +5,8 @@ import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects } from '@cardstack/hooks';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import {
-  useClaimRewardsMutation,
-  useGetClaimRewardsGasEstimateQuery,
+  useClaimAllRewardsMutation,
+  useGetClaimAllRewardsGasEstimateQuery,
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import {
   RewardsClaimData,
@@ -32,19 +32,19 @@ const useRewardsClaim = () => {
   const {
     rewardSafes,
     defaultRewardProgramId,
-    mainPoolTokenInfo,
+    claimableBalanceToken,
   } = useRewardsDataFetch();
 
   // flag to avoid rerendering the screen after the claim happened
   const isClaiming = useRef(false);
-  const mainPoolTokenRef = useRef(mainPoolTokenInfo);
+  const claimableBalanceTokenRef = useRef(claimableBalanceToken);
 
   const { dismissLoadingOverlay, showLoadingOverlay } = useLoadingOverlay();
 
   const [
-    claimRewards,
+    claimAllRewards,
     { isSuccess: isClaimSuccess, isError: isClaimError },
-  ] = useClaimRewardsMutation();
+  ] = useClaimAllRewardsMutation();
 
   const rewardSafeForProgram = useMemo(
     () =>
@@ -57,7 +57,7 @@ const useRewardsClaim = () => {
   const claimParams = {
     accountAddress,
     rewardProgramId: defaultRewardProgramId,
-    tokenAddress: mainPoolTokenRef.current?.tokenAddress || '',
+    tokenAddress: claimableBalanceTokenRef.current?.tokenAddress || '',
     safeAddress: rewardSafeForProgram?.address || '',
   };
 
@@ -65,7 +65,7 @@ const useRewardsClaim = () => {
     data: estimatedGasClaim,
     isLoading: loadingEstimatedGasClaim,
     isFetching: fetchingEstimatedGasClaim,
-  } = useGetClaimRewardsGasEstimateQuery(claimParams, {
+  } = useGetClaimAllRewardsGasEstimateQuery(claimParams, {
     refetchOnMountOrArgChange: true,
     skip: isClaiming.current,
   });
@@ -75,11 +75,11 @@ const useRewardsClaim = () => {
       loadingGasEstimate: loadingEstimatedGasClaim || fetchingEstimatedGasClaim,
       type: TransactionConfirmationType.REWARDS_CLAIM,
       estGasFee: estimatedGasClaim || '0.10',
-      ...mainPoolTokenRef.current,
+      ...claimableBalanceTokenRef.current,
     }),
     [
       estimatedGasClaim,
-      mainPoolTokenRef,
+      claimableBalanceTokenRef,
       loadingEstimatedGasClaim,
       fetchingEstimatedGasClaim,
     ]
@@ -89,8 +89,8 @@ const useRewardsClaim = () => {
     showLoadingOverlay({ title: strings.claim.loading });
 
     isClaiming.current = true;
-    claimRewards(claimParams);
-  }, [showLoadingOverlay, claimRewards, claimParams]);
+    claimAllRewards(claimParams);
+  }, [showLoadingOverlay, claimAllRewards, claimParams]);
 
   const onClaimFulfilledAlert = useCallback(
     ({ title, message, dismiss }: onClaimCallbackProps) => () => {
@@ -131,7 +131,7 @@ const useRewardsClaim = () => {
 
   return {
     onConfirm,
-    data: screenData as RewardsClaimData, // type casting bc mainPoolTokenInfo type has undefined
+    data: screenData as RewardsClaimData, // type casting bc fullBalanceToken type has undefined
     onCancel: goBack,
   };
 };

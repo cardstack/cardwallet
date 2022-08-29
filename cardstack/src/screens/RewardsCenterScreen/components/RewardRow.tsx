@@ -16,6 +16,7 @@ type TxStatus = 'claimed' | 'withdrawn' | 'none';
 export interface RewardRowProps extends Omit<TouchableProps, 'children'> {
   coinSymbol: string;
   primaryText: string;
+  isClaimable?: boolean;
   subText?: string;
   onClaimPress?: () => void;
   isLoading?: boolean;
