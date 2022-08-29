@@ -22,7 +22,7 @@ export interface FullBalanceToken extends TokenByProgramID {
 }
 
 export interface TokenByProgramID extends TokenType {
-  rewardProgramId?: string;
+  rewardProgramId: string;
 }
 export interface RewardsTokenBalancesResult {
   rewardPoolTokenBalances: TokenByProgramID[];

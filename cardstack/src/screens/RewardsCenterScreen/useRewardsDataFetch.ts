@@ -6,7 +6,7 @@ import {
 } from '@cardstack/services/rewards-center/rewards-center-api';
 import { FullBalanceToken } from '@cardstack/services/rewards-center/rewards-center-types';
 ``;
-import { isLayer1 } from '@cardstack/utils';
+import { findByRewardProgramId, isLayer1 } from '@cardstack/utils';
 
 import { networkTypes } from '@rainbow-me/helpers/networkTypes';
 import { useAccountSettings } from '@rainbow-me/hooks';
@@ -41,6 +41,11 @@ const useRewardsDataFetch = () => {
     data: { rewardSafes } = {},
   } = useGetRewardsSafeQuery(query.params, query.options);
 
+  const rewardSafeForProgram = useMemo(
+    () => findByRewardProgramId(rewardSafes, defaultRewardProgramId),
+    [rewardSafes, defaultRewardProgramId]
+  );
+
   const {
     isLoading: isLoadingTokens,
     data: { rewardPoolTokenBalances } = {},
@@ -52,31 +57,31 @@ const useRewardsDataFetch = () => {
   } = useGetRewardPoolTokenBalancesQuery(
     {
       ...query.params,
-      safeAddress: rewardSafes?.find(
-        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
-      )?.address,
+      safeAddress: rewardSafeForProgram?.address,
     },
     query.options
   );
 
   const claimableBalanceToken = useMemo(
     () =>
-      rewardPoolTokenBalancesWithoutDust?.find(
-        ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+      findByRewardProgramId(
+        rewardPoolTokenBalancesWithoutDust,
+        defaultRewardProgramId
       ),
     [rewardPoolTokenBalancesWithoutDust, defaultRewardProgramId]
   );
 
   // Checks if available tokens matches default program
   const fullBalanceToken: FullBalanceToken | undefined = useMemo(() => {
-    const balances = rewardPoolTokenBalances?.find(
-      ({ rewardProgramId }) => rewardProgramId === defaultRewardProgramId
+    const balances = findByRewardProgramId(
+      rewardPoolTokenBalances,
+      defaultRewardProgramId
     );
 
     if (balances) {
       return {
         ...balances,
-        isClaimable: !!claimableBalanceToken && !!claimableBalanceToken.balance,
+        isClaimable: !!claimableBalanceToken?.balance,
       };
     }
   }, [rewardPoolTokenBalances, claimableBalanceToken, defaultRewardProgramId]);
@@ -110,6 +115,7 @@ const useRewardsDataFetch = () => {
     defaultRewardProgramId,
     hasRewardsAvailable,
     claimableBalanceToken,
+    rewardSafeForProgram,
   };
 };
 
