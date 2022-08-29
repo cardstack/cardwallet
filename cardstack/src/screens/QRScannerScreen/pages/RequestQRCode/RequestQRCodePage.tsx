@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import {
@@ -9,6 +9,7 @@ import {
   StyledQRCode,
   Text,
 } from '@cardstack/components';
+import { useCopyToast } from '@cardstack/hooks';
 
 import { ContactAvatar } from '@rainbow-me/components/contacts';
 import { useDimensions } from '@rainbow-me/hooks';
@@ -27,6 +28,7 @@ const RequestQRCodePage = () => {
     merchantInfo,
     onRequestAmountPress,
     paymentRequestDeepLink,
+    paymentRequestWebLink,
     safeAddress,
     onCreateProfilePress,
   } = useRequestCodePage();
@@ -41,6 +43,15 @@ const RequestQRCodePage = () => {
     [isSmallPhone]
   );
 
+  const { CopyToastComponent, copyToClipboard } = useCopyToast({
+    dataToCopy: paymentRequestWebLink,
+    customCopyLabel: 'QRCode',
+  });
+
+  const handleLongPressQRCode = useCallback(() => copyToClipboard(), [
+    copyToClipboard,
+  ]);
+
   if (!safeAddress) {
     // Temp placeholder for no merchant/profile
     return (
@@ -49,10 +60,11 @@ const RequestQRCodePage = () => {
         justifyContent="space-around"
         paddingHorizontal={5}
       >
-        <Container justifyContent="space-around" flex={0.3}>
+        <Container justifyContent="space-between" flex={0.3}>
           <Text
             fontSize={18}
             color="white"
+            paddingBottom={3}
             paddingHorizontal={4}
             textAlign="center"
           >
@@ -68,59 +80,65 @@ const RequestQRCodePage = () => {
   }
 
   return (
-    <CenteredContainer
-      paddingHorizontal={10}
-      flex={1}
-      backgroundColor="backgroundDarkPurple"
-      style={styles.container}
-    >
-      <Container flexShrink={1} justifyContent="flex-start">
-        <StyledQRCode value={paymentRequestDeepLink} />
-      </Container>
-      <Container flex={1} flexDirection="column">
-        <CenteredContainer flex={1}>
-          {merchantInfo?.name ? (
-            <ContactAvatar
-              color={merchantInfo?.color}
-              size={iconSize.avatar}
-              value={merchantInfo?.name}
-              textColor="white"
-            />
-          ) : (
-            <Icon name="user-with-background" size={iconSize.defaultIcon} />
-          )}
-          <Text
-            paddingTop={1}
-            fontWeight="bold"
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            fontSize={20}
-            color="white"
-          >
-            {merchantInfo?.name || ''}
-          </Text>
-        </CenteredContainer>
-        <CenteredContainer flex={1}>
-          <Text
-            fontSize={18}
-            numberOfLines={1}
-            color="white"
-            textAlign="center"
-          >
-            {strings.requestViaText}
-          </Text>
-          <Button
-            variant="primaryWhite"
-            borderColor="teal"
-            maxWidth="95%"
-            marginTop={3}
-            onPress={onRequestAmountPress}
-          >
-            {strings.requestAmountBtn}
-          </Button>
-        </CenteredContainer>
-      </Container>
-    </CenteredContainer>
+    <>
+      <CenteredContainer
+        paddingHorizontal={10}
+        flex={1}
+        backgroundColor="backgroundDarkPurple"
+        style={styles.container}
+      >
+        <Container flexShrink={1} justifyContent="flex-start">
+          <StyledQRCode
+            value={paymentRequestDeepLink}
+            onLongPress={handleLongPressQRCode}
+          />
+        </Container>
+        <Container flex={1} flexDirection="column">
+          <CenteredContainer flex={1}>
+            {merchantInfo?.name ? (
+              <ContactAvatar
+                color={merchantInfo?.color}
+                size={iconSize.avatar}
+                value={merchantInfo?.name}
+                textColor="white"
+              />
+            ) : (
+              <Icon name="user-with-background" size={iconSize.defaultIcon} />
+            )}
+            <Text
+              paddingTop={1}
+              fontWeight="bold"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              fontSize={20}
+              color="white"
+            >
+              {merchantInfo?.name || ''}
+            </Text>
+          </CenteredContainer>
+          <CenteredContainer flex={1}>
+            <Text
+              fontSize={18}
+              numberOfLines={1}
+              color="white"
+              textAlign="center"
+            >
+              {strings.requestViaText}
+            </Text>
+            <Button
+              variant="primaryWhite"
+              borderColor="teal"
+              maxWidth="95%"
+              marginTop={3}
+              onPress={onRequestAmountPress}
+            >
+              {strings.requestAmountBtn}
+            </Button>
+          </CenteredContainer>
+        </Container>
+        <CopyToastComponent />
+      </CenteredContainer>
+    </>
   );
 };
 
