@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { useIsFetchingDataNewAccount } from '@cardstack/hooks';
 import {
   useGetRewardPoolTokenBalancesQuery,
   useGetRewardsSafeQuery,
@@ -36,9 +37,12 @@ const useRewardsDataFetch = () => {
 
   const {
     isLoading: isLoadingSafes,
+    isFetching,
     isUninitialized,
     data: { rewardSafes } = {},
   } = useGetRewardsSafeQuery(query.params, query.options);
+
+  const isRefreshingForNewAccount = useIsFetchingDataNewAccount(isFetching);
 
   const rewardSafeForProgram = useMemo(
     () => findByRewardProgramId(rewardSafes, defaultRewardProgramId),
@@ -58,7 +62,15 @@ const useRewardsDataFetch = () => {
       ...query.params,
       safeAddress: rewardSafeForProgram?.address,
     },
-    query.options
+    {
+      skip:
+        query.options.skip ||
+        isRefreshingForNewAccount ||
+        isLoadingSafes ||
+        isUninitialized ||
+        !rewardSafeForProgram,
+      refetchOnMountOrArgChange: true,
+    }
   );
 
   const claimableBalanceToken = useMemo(

@@ -60,6 +60,7 @@ describe('useRewardsClaim', () => {
   ) =>
     (useRewardsDataFetch as jest.Mock).mockImplementation(() => ({
       rewardSafes,
+      rewardSafeForProgram: rewardSafes[0],
       defaultRewardProgramId,
       fullBalanceToken,
       claimableBalanceToken,
