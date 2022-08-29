@@ -6,7 +6,7 @@ import { Container, Icon, Sheet, Text, Touchable } from '@cardstack/components';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 import { Routes } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
-import { Inventory } from '@cardstack/types';
+import { InventoryWithPrice } from '@cardstack/types';
 
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
@@ -20,20 +20,18 @@ import {
 import { strings } from './strings';
 
 const DEFAULT_CARD_CONFIG = {
-  background: 'linear-gradient(139.27deg, #00ebe5 34%, #c3fc33 70%)',
-  issuerName: 'Cardstack',
-  patternColor: 'white',
-  patternUrl:
-    'https://app.cardstack.com/images/prepaid-card-customizations/pattern-5.svg',
-  textColor: 'black',
+  background: '#0069F9',
+  issuerName: 'Wyre',
+  patternColor: 'black',
+  patternUrl: null,
+  textColor: 'white',
 };
 
 const BuyPrepaidCard = () => {
   const {
     onSelectCard,
-    card,
+    selectedCard,
     handlePurchase,
-    isPurchaseInProgress,
     isInventoryLoading,
     inventoryData,
     network,
@@ -44,28 +42,23 @@ const BuyPrepaidCard = () => {
   const { navigate } = useNavigation();
 
   const renderItem = useCallback(
-    ({ item, index }: { item: Inventory; index: number }) =>
-      isInventoryLoading || !item.attributes ? (
+    ({ item }: { item: InventoryWithPrice }) =>
+      isInventoryLoading || !item.sku ? (
         <CardLoaderSkeleton />
       ) : (
         <CardContent
-          onPress={() => onSelectCard(item, index)}
-          isSelected={item?.isSelected}
-          amount={item?.amount}
-          quantity={item.attributes?.quantity}
+          onPress={() => onSelectCard(item)}
+          isSelected={selectedCard?.sku === item.sku}
+          amount={item?.sourceCurrencyPrice}
+          quantity={item?.quantity}
         />
       ),
-    [isInventoryLoading, onSelectCard]
+    [isInventoryLoading, onSelectCard, selectedCard]
   );
 
   const onPressSupport = useCallback(() => navigate(Routes.SUPPORT_AND_FEES), [
     navigate,
   ]);
-
-  const isDisabled =
-    card?.quantity === 0 ||
-    inventoryData?.length === 0 ||
-    inventoryData?.filter(item => item?.isSelected).length === 0;
 
   // necessary to avoid rendering issues with the skeleton
   const keyExtractor = useCallback((item, index) => index.toString(), []);
@@ -73,12 +66,7 @@ const BuyPrepaidCard = () => {
   const renderFooter = useMemo(
     () => (
       <Container paddingHorizontal={2} justifyContent="center">
-        {isDisabled ? null : (
-          <ApplePayButton
-            disabled={isPurchaseInProgress}
-            onSubmit={handlePurchase}
-          />
-        )}
+        {!!selectedCard && <ApplePayButton onSubmit={handlePurchase} />}
         <Touchable width="100%" onPress={onPressSupport}>
           <Container
             alignItems="center"
@@ -95,7 +83,7 @@ const BuyPrepaidCard = () => {
         </Touchable>
       </Container>
     ),
-    [isDisabled, isPurchaseInProgress, handlePurchase, onPressSupport]
+    [selectedCard, handlePurchase, onPressSupport]
   );
 
   return (
@@ -115,7 +103,7 @@ const BuyPrepaidCard = () => {
           keyExtractor={keyExtractor}
         />
       </Container>
-      {card ? (
+      {selectedCard ? (
         <Container marginBottom={16} padding={4}>
           <Subtitle text={strings.previewCard} />
           <Container paddingHorizontal={10}>
@@ -124,12 +112,8 @@ const BuyPrepaidCard = () => {
               address={strings.customCardAddress}
               nativeCurrencyInfo={nativeCurrencyInfo}
               nativeBalance={nativeBalance}
-              transferrable={card.transferrable}
-              cardCustomization={
-                card.customizationDID
-                  ? card.customizationDID
-                  : DEFAULT_CARD_CONFIG
-              }
+              transferrable={selectedCard.transferrable}
+              cardCustomization={DEFAULT_CARD_CONFIG}
             />
           </Container>
         </Container>

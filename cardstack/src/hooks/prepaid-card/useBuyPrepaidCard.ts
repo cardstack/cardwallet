@@ -1,4 +1,3 @@
-import { getAddressByNetwork } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { InteractionManager } from 'react-native';
@@ -8,23 +7,14 @@ import { useAuthToken, useSpendToNativeDisplay } from '@cardstack/hooks';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   getHubUrl,
-  getInventories,
   getOrder,
   getValueInNativeCurrency,
-  getWyrePrice,
   makeReservation,
   updateOrder,
+  useGetCustodialWalletQuery,
+  useGetProductsQuery,
 } from '@cardstack/services';
-import { useGetCustodialWalletQuery } from '@cardstack/services/hub/hub-api';
-import { getPrepaidCardByAddress } from '@cardstack/services/prepaid-cards/prepaid-card-service';
-import {
-  PrepaidCardCustomization,
-  Inventory,
-  InventoryAttrs,
-  ReservationData,
-  WyrePriceData,
-} from '@cardstack/types';
-import { fetchCardCustomizationFromDID, useWorker } from '@cardstack/utils';
+import { ReservationData, InventoryWithPrice } from '@cardstack/types';
 import {
   getOrderId,
   getReferenceId,
@@ -36,38 +26,11 @@ import {
 
 import { Alert } from '@rainbow-me/components/alerts';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
-import { addNewPrepaidCard } from '@rainbow-me/redux/data';
 import logger from 'logger';
 
-interface CardAttrs extends InventoryAttrs {
-  customizationDID?: PrepaidCardCustomization | null;
-  'source-currency'?: string;
-  'dest-currency'?: string;
-  'source-currency-price'?: number;
-  'includes-fee'?: boolean;
-}
+type CardProduct = InventoryWithPrice;
 
-export interface Card {
-  id: string;
-  type: string;
-  isSelected: boolean;
-  amount: number;
-  attributes: CardAttrs;
-}
-
-const emptyInventory = {
-  id: '',
-  type: '',
-  isSelected: false,
-  amount: 0,
-  attributes: undefined,
-};
-
-const inventoryInitialState = Array(4).fill(emptyInventory);
-
-const hasSku = (inventory: Inventory, price: WyrePriceData[]): boolean =>
-  price.filter(priceItem => priceItem?.id === inventory?.attributes?.sku)
-    .length > 0;
+const inventoryInitialState = Array(4).fill({});
 
 export default function useBuyPrepaidCard() {
   const { goBack, navigate } = useNavigation();
@@ -86,36 +49,15 @@ export default function useBuyPrepaidCard() {
 
   const { authToken } = useAuthToken();
 
-  const [order, setOrder] = useState<string>('');
-  const [card, setCard] = useState<CardAttrs>();
+  const [selectedCard, setSelectedCard] = useState<CardProduct>();
 
-  const [inventoryData, setInventoryData] = useState<Inventory[] | undefined>(
-    inventoryInitialState
-  );
-
-  const [sku, setSku] = useState<string>('');
   const [wyreOrderId, setWyreOrderId] = useState<string>('');
 
-  const [wyrePriceData, setWyrePriceData] = useState<
-    WyrePriceData[] | undefined
-  >();
-
-  const [isPurchaseInProgress, setIsPurchaseInProgress] = useState(false);
-
-  const updatePrepaidCardsState = useCallback(
-    async (address: string) => {
-      try {
-        const newPrepaidCard = await getPrepaidCardByAddress(address);
-
-        if (newPrepaidCard) {
-          await dispatch(addNewPrepaidCard(newPrepaidCard));
-        }
-      } catch (e) {
-        logger.sentry('Error updating card on state');
-      }
-    },
-    [dispatch]
-  );
+  const {
+    data: inventoryData = inventoryInitialState,
+    isLoading,
+    isUninitialized,
+  } = useGetProductsQuery(network, { refetchOnMountOrArgChange: true });
 
   const onSuccessAlertPress = useCallback(() => {
     goBack();
@@ -137,28 +79,24 @@ export default function useBuyPrepaidCard() {
       if (wyreOrderId) {
         const orderData = await getOrder(hubURL, authToken, wyreOrderId);
 
-        if (!orderData || currentTime - startTime > 60000) {
+        const status = orderData?.attributes.status;
+
+        if (!orderData || currentTime - startTime > 60000 * 1.5) {
           dismissLoadingOverlay();
           clearInterval(orderStatusPolling);
 
           Alert({
-            title: 'Error',
-            message: `Something went wrong! Please try again. \nOrder Id: ${wyreOrderId}`,
+            title: 'Timeout',
+            message: `We couldn't confirm the card delivery, refresh the app after a couple of minutes, if your prepaid card doesn't appear, try again.\nOrder Id: ${wyreOrderId}\nStatus: ${status}`,
           });
 
           return;
         }
 
-        const status = orderData?.attributes.status;
-        const prepaidCardAddress = orderData?.prepaidCardAddress;
-
         if (status === 'complete') {
           clearInterval(orderStatusPolling);
 
-          if (prepaidCardAddress) {
-            await updatePrepaidCardsState(prepaidCardAddress);
-          }
-
+          // TODO invalidate safes tag once status is true
           dismissLoadingOverlay();
 
           Alert({
@@ -184,99 +122,10 @@ export default function useBuyPrepaidCard() {
     hubURL,
     navigate,
     onSuccessAlertPress,
-    updatePrepaidCardsState,
     wyreOrderId,
   ]);
 
-  const {
-    isLoading: isInventoryLoading,
-    setIsLoading: setIsInventoryLoading,
-    callback: getInventoryData,
-    error: inventoryError,
-  } = useWorker(async () => {
-    const issuerAddress = getAddressByNetwork('wyreIssuer', network);
-
-    const inventoryItems = await getInventories(
-      hubURL,
-      authToken,
-      issuerAddress
-    );
-
-    if (inventoryItems) {
-      const priceData = await getWyrePrice(hubURL, authToken);
-      setWyrePriceData(priceData);
-
-      if (priceData) {
-        const formattedData = inventoryItems.filter(inventoryItem =>
-          hasSku(inventoryItem, priceData)
-        );
-
-        setInventoryData(formattedData);
-      }
-    }
-  }, [authToken, hubURL, nativeCurrency, network]);
-
-  useEffect(() => {
-    if (authToken) {
-      getInventoryData();
-    }
-  }, [authToken, getInventoryData]);
-
-  useEffect(() => {
-    if (inventoryError) {
-      Alert({
-        buttons: [{ text: 'Okay' }],
-        message: 'Error loading inventory',
-      });
-    }
-  }, [inventoryError]);
-
   const { data: custodialWalletData } = useGetCustodialWalletQuery();
-
-  const onSelectCard = useCallback(
-    async (item, index) => {
-      const modifiedCards =
-        inventoryData !== undefined
-          ? inventoryData.map((cardItem: Card) => {
-              return { ...cardItem, isSelected: false };
-            })
-          : [];
-
-      modifiedCards[index].isSelected = true;
-
-      const priceAttributes = wyrePriceData?.find(
-        priceDataItem =>
-          priceDataItem.id === modifiedCards[index].attributes.sku
-      );
-
-      const customizationDID = modifiedCards[index].attributes[
-        'customization-DID'
-      ]
-        ? await fetchCardCustomizationFromDID(
-            modifiedCards[index].attributes['customization-DID']
-          )
-        : null;
-
-      const formattedCard = modifiedCards
-        .filter((cardItem: Card) => cardItem.isSelected)
-        .map((carditem: Card) => {
-          return {
-            ...carditem,
-          };
-        })[0].attributes;
-
-      setInventoryData(modifiedCards);
-
-      setCard({
-        ...formattedCard,
-        ...priceAttributes?.attributes,
-        customizationDID,
-      });
-
-      setSku(modifiedCards[index].attributes.sku);
-    },
-    [inventoryData, wyrePriceData]
-  );
 
   const onPurchase = useCallback(
     async ({ value, depositAddress, sourceCurrency, destCurrency }) => {
@@ -343,8 +192,6 @@ export default function useBuyPrepaidCard() {
 
       const applePayResponse = await showApplePayRequest(
         referenceInfo,
-        depositAddress,
-        destCurrency,
         sourceAmountWithFees,
         purchaseFee,
         value,
@@ -367,12 +214,12 @@ export default function useBuyPrepaidCard() {
         );
 
         if (orderId) {
-          setOrder(orderId);
           applePayResponse.complete(PaymentRequestStatusTypes.SUCCESS);
 
           return orderId;
         } else {
           applePayResponse.complete(PaymentRequestStatusTypes.FAIL);
+          dismissLoadingOverlay();
 
           logger.sentry(
             'Error getting order id',
@@ -385,17 +232,21 @@ export default function useBuyPrepaidCard() {
             reservationId
           );
         }
+      } else {
+        dismissLoadingOverlay();
       }
     },
-    [accountAddress, network]
+    [accountAddress, dismissLoadingOverlay, network]
   );
 
-  /* eslint-disable react-hooks/exhaustive-deps */
   const handlePurchase = useCallback(async () => {
-    setIsPurchaseInProgress(true);
+    showLoadingOverlay({
+      title: 'Requesting Apple Pay',
+      subTitle: 'Payment sheet will pop-up shortly',
+    });
 
     const amount = await getValueInNativeCurrency(
-      card?.['source-currency-price'] || 0,
+      selectedCard?.sourceCurrencyPrice || 0,
       nativeCurrency
     );
 
@@ -403,7 +254,11 @@ export default function useBuyPrepaidCard() {
     let wyreOrderIdData;
 
     try {
-      reservation = await makeReservation(hubURL, authToken, sku);
+      reservation = await makeReservation(
+        hubURL,
+        authToken,
+        selectedCard?.sku || ''
+      );
     } catch (e) {
       logger.sentry('Error while make reservation', e);
 
@@ -411,20 +266,24 @@ export default function useBuyPrepaidCard() {
         buttons: [{ text: 'Okay' }],
         message: 'Error while make reservation',
       });
+
+      dismissLoadingOverlay();
     }
 
     try {
       wyreOrderIdData = await onPurchase({
         value: amount.toString(),
         depositAddress: custodialWalletData?.depositAddress,
-        sourceCurrency: nativeCurrency || card?.['source-currency'],
-        destCurrency: card?.['dest-currency'] || 'DAI',
+        sourceCurrency: nativeCurrency || selectedCard?.sourceCurrency,
+        destCurrency: selectedCard?.destCurrency || 'DAI',
       });
     } catch (error) {
       logger.sentry('Error while make reservation', {
         error,
         reservationData: reservation,
       });
+
+      dismissLoadingOverlay();
 
       Alert({
         buttons: [{ text: 'Okay' }],
@@ -456,6 +315,8 @@ export default function useBuyPrepaidCard() {
         }
       }
     } catch (error) {
+      dismissLoadingOverlay();
+
       logger.sentry('Error updating order', {
         error,
         reservationData: reservation,
@@ -468,33 +329,28 @@ export default function useBuyPrepaidCard() {
         message: `Purchase not completed \nReservation Id: ${reservation?.id}`,
       });
     }
-
-    setIsPurchaseInProgress(false);
   }, [
-    card,
+    showLoadingOverlay,
+    selectedCard,
     nativeCurrency,
+    custodialWalletData,
     hubURL,
     authToken,
-    sku,
+    dismissLoadingOverlay,
     onPurchase,
-    custodialWalletData,
   ]);
 
   const { nativeBalanceDisplay: nativeBalance } = useSpendToNativeDisplay({
-    spendAmount: card?.['face-value'] || 0,
+    spendAmount: selectedCard?.faceValue || 0,
   });
 
   return {
     onPurchase,
-    order,
     hubURL,
-    onSelectCard,
-    card,
-    setCard,
+    onSelectCard: setSelectedCard,
+    selectedCard,
     handlePurchase,
-    isPurchaseInProgress,
-    setIsInventoryLoading,
-    isInventoryLoading,
+    isInventoryLoading: isLoading || isUninitialized,
     inventoryData,
     network,
     nativeBalance,

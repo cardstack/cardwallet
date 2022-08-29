@@ -91,8 +91,6 @@ export const getReferenceId = (accountAddress: string) => {
 
 export const showApplePayRequest = async (
   referenceInfo: { referenceId: string },
-  accountAddress: string,
-  destCurrency: string,
   sourceAmountWithFees: number,
   purchaseFee: string,
   sourceAmount: string,
@@ -124,7 +122,6 @@ export const showApplePayRequest = async (
 
   const paymentDetails = getWyrePaymentDetails(
     fixedSourceAmount,
-    destCurrency,
     networkFee,
     purchaseFee,
     sourceAmountWithFees,
@@ -331,7 +328,6 @@ export const getOrderId = async (
 
 const getWyrePaymentDetails = (
   sourceAmount: string,
-  destCurrency: string,
   networkFee: string,
   purchaseFee: string,
   totalAmount: number,

@@ -1,14 +1,12 @@
-import { fromWei, getSDK } from '@cardstack/cardpay-sdk';
+import { getSDK } from '@cardstack/cardpay-sdk';
 import axios, { AxiosError } from 'axios';
 import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 
 import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
 import {
-  Inventory,
   ReservationData,
   OrderData,
-  WyrePriceData,
   NotificationsPreferenceDataType,
 } from '@cardstack/types';
 
@@ -164,38 +162,6 @@ export const setNotificationsPreferences = async (
   }
 };
 
-export const getInventories = async (
-  hubURL: string,
-  authToken: string,
-  issuerAddress: string
-): Promise<Inventory[] | undefined> => {
-  try {
-    const results = await axios.get(
-      `${hubURL}/api/inventories`,
-      axiosConfig(authToken)
-    );
-
-    if (results?.data?.data) {
-      const inventory = results?.data?.data;
-
-      return inventory
-        .filter((item: Inventory) => item.attributes.issuer === issuerAddress)
-        .sort((a: Inventory, b: Inventory) => {
-          return a.attributes['face-value'] - b.attributes['face-value'];
-        })
-        .map((item: Inventory) => {
-          return {
-            ...item,
-            isSelected: false,
-            amount: fromWei(item?.attributes['ask-price']),
-          };
-        });
-    }
-  } catch (e) {
-    logger.sentry('Error while fetching inventories', e);
-  }
-};
-
 export const makeReservation = async (
   hubURL: string,
   authToken: string,
@@ -274,22 +240,6 @@ export const getOrder = async (
 
     return { ...results?.data?.data, prepaidCardAddress };
   } catch (e: any) {
-    logger.sentry('Error getting order details', e);
-  }
-};
-
-export const getWyrePrice = async (
-  hubURL: string,
-  authToken: string
-): Promise<WyrePriceData[] | undefined> => {
-  try {
-    const results = await axios.get(
-      `${hubURL}/api/wyre-prices`,
-      axiosConfig(authToken)
-    );
-
-    return results?.data?.data;
-  } catch (e) {
     logger.sentry('Error getting order details', e);
   }
 };
