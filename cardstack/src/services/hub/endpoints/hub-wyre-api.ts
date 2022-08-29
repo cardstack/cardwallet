@@ -7,6 +7,7 @@ import {
   CustodialWallet,
   Inventory,
   InventoryWithPrice,
+  ReservationData,
   WyrePriceData,
 } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
@@ -14,6 +15,7 @@ import { transformObjKeysToCamelCase } from '@cardstack/utils';
 import { Network } from '@rainbow-me/helpers/networkTypes';
 
 import { hubApi } from '../hub-api';
+import { hubBodyBuilder } from '../hub-service';
 import { GetCustodialWalletQueryResult } from '../hub-types';
 
 type BaseQueryReturn<T> = QueryReturnValue<{ data?: T }, FetchBaseQueryError>;
@@ -22,6 +24,7 @@ const routes = {
   custodialWallet: '/custodial-wallet',
   wyrePrices: '/wyre-prices',
   inventories: '/inventories',
+  reservations: '/reservations',
 };
 
 export const hubWyre = hubApi.injectEndpoints({
@@ -76,7 +79,18 @@ export const hubWyre = hubApi.injectEndpoints({
         return { data: orderedProducts };
       },
     }),
+    makeReservation: builder.mutation<ReservationData, { sku: string }>({
+      query: params => ({
+        url: routes.reservations,
+        method: 'POST',
+        body: hubBodyBuilder(routes.reservations, params),
+      }),
+    }),
   }),
 });
 
-export const { useGetCustodialWalletQuery, useGetProductsQuery } = hubWyre;
+export const {
+  useGetCustodialWalletQuery,
+  useGetProductsQuery,
+  useMakeReservationMutation,
+} = hubWyre;

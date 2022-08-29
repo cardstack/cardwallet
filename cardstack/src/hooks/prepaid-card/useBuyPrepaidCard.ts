@@ -9,12 +9,12 @@ import {
   getHubUrl,
   getOrder,
   getValueInNativeCurrency,
-  makeReservation,
   updateOrder,
   useGetCustodialWalletQuery,
   useGetProductsQuery,
+  useMakeReservationMutation,
 } from '@cardstack/services';
-import { ReservationData, InventoryWithPrice } from '@cardstack/types';
+import { InventoryWithPrice } from '@cardstack/types';
 import {
   getOrderId,
   getReferenceId,
@@ -58,6 +58,11 @@ export default function useBuyPrepaidCard() {
     isLoading,
     isUninitialized,
   } = useGetProductsQuery(network, { refetchOnMountOrArgChange: true });
+
+  const [
+    makeReservation,
+    { data: hubReservation },
+  ] = useMakeReservationMutation();
 
   const onSuccessAlertPress = useCallback(() => {
     goBack();
@@ -250,25 +255,9 @@ export default function useBuyPrepaidCard() {
       nativeCurrency
     );
 
-    let reservation: ReservationData | undefined;
     let wyreOrderIdData;
 
-    try {
-      reservation = await makeReservation(
-        hubURL,
-        authToken,
-        selectedCard?.sku || ''
-      );
-    } catch (e) {
-      logger.sentry('Error while make reservation', e);
-
-      Alert({
-        buttons: [{ text: 'Okay' }],
-        message: 'Error while make reservation',
-      });
-
-      dismissLoadingOverlay();
-    }
+    makeReservation({ sku: selectedCard?.sku || '' });
 
     try {
       wyreOrderIdData = await onPurchase({
@@ -278,16 +267,8 @@ export default function useBuyPrepaidCard() {
         destCurrency: selectedCard?.destCurrency || 'DAI',
       });
     } catch (error) {
-      logger.sentry('Error while make reservation', {
+      logger.sentry('Error while make wyre reservation', {
         error,
-        reservationData: reservation,
-      });
-
-      dismissLoadingOverlay();
-
-      Alert({
-        buttons: [{ text: 'Okay' }],
-        message: `Purchase not completed \nReservation Id: ${reservation?.id}`,
       });
     }
 
@@ -300,7 +281,7 @@ export default function useBuyPrepaidCard() {
           subTitle: 'This may take up to a minute.',
         });
 
-        const reservationId = reservation?.id || '';
+        const reservationId = hubReservation?.id || '';
 
         const orderData = await updateOrder(
           hubURL,
@@ -319,25 +300,27 @@ export default function useBuyPrepaidCard() {
 
       logger.sentry('Error updating order', {
         error,
-        reservationData: reservation,
+        reservationData: hubReservation,
         wyreWalletId,
         wyreOrderIdData,
       });
 
       Alert({
         buttons: [{ text: 'Okay' }],
-        message: `Purchase not completed \nReservation Id: ${reservation?.id}`,
+        message: `Purchase not completed \nReservation Id: ${hubReservation?.id}`,
       });
     }
   }, [
     showLoadingOverlay,
     selectedCard,
     nativeCurrency,
+    makeReservation,
     custodialWalletData,
+    onPurchase,
+    hubReservation,
     hubURL,
     authToken,
     dismissLoadingOverlay,
-    onPurchase,
   ]);
 
   const { nativeBalanceDisplay: nativeBalance } = useSpendToNativeDisplay({
