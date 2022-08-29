@@ -17,7 +17,7 @@ import { useRewardsCenterScreen } from './useRewardsCenterScreen';
 const RewardsCenterScreen = () => {
   const {
     isRegistered,
-    hasRewardsAvailable,
+    hasRewards,
     fullBalanceToken,
     isLoading,
   } = useRewardsCenterScreen();
@@ -42,14 +42,14 @@ const RewardsCenterScreen = () => {
         ) : (
           <Container flex={1}>
             {!isRegistered &&
-              (hasRewardsAvailable ? (
+              (hasRewards ? (
                 <RegisterContent {...mainPoolRowProps} />
               ) : (
                 <NoRewardContent />
               ))}
             {isRegistered && (
               <ClaimContent
-                claimList={hasRewardsAvailable ? [mainPoolRowProps] : undefined}
+                claimList={hasRewards ? [mainPoolRowProps] : undefined}
               />
             )}
           </Container>

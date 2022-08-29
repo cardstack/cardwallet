@@ -28,7 +28,7 @@ export const useAssetList = ({
   const { params } = useRoute<AssetListRouteType>();
 
   const {
-    hasRewardsAvailable,
+    hasClaimableRewards,
     isLoading: rewardsFetchLoading,
   } = useRewardsDataFetch();
 
@@ -122,6 +122,6 @@ export const useAssetList = ({
     goToBuyPrepaidCard,
     onRefresh,
     networkName,
-    hasRewardsAvailable,
+    hasClaimableRewards,
   };
 };

@@ -6,3 +6,8 @@ export const getSafeTokenByAddress = (tokens: TokenType[], address?: string) =>
         t => t.tokenAddress?.toLowerCase() === address?.toLowerCase()
       )
     : undefined;
+
+export const findByRewardProgramId = <T extends { rewardProgramId: string }>(
+  array: Array<T> | undefined,
+  rewardId: string
+) => array?.find(({ rewardProgramId }) => rewardProgramId === rewardId);

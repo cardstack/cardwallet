@@ -34,7 +34,7 @@ const MainHeader = ({
 }: Props) => {
   const { navigate } = useNavigation();
   const { network } = useAccountSettings();
-  const { hasRewardsAvailable } = useRewardsDataFetch();
+  const { hasClaimableRewards } = useRewardsDataFetch();
 
   // this should use the rewards pool length in the future as more rewards programs are added
   const rewardsQuantity = 1;
@@ -83,7 +83,7 @@ const MainHeader = ({
           onPress={onRewardPress}
         >
           <Icon color="teal" iconSize="medium" size={26} name="rewards" />
-          {hasRewardsAvailable && (
+          {hasClaimableRewards && (
             <Container>
               <Text color="teal" fontSize={18} weight="bold" marginLeft={2}>
                 {rewardsQuantity}

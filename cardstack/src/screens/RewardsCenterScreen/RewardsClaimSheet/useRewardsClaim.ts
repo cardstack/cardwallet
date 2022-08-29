@@ -30,7 +30,7 @@ const useRewardsClaim = () => {
   const { accountAddress } = useWallets();
 
   const {
-    rewardSafes,
+    rewardSafeForProgram,
     defaultRewardProgramId,
     claimableBalanceToken,
   } = useRewardsDataFetch();
@@ -45,14 +45,6 @@ const useRewardsClaim = () => {
     claimAllRewards,
     { isSuccess: isClaimSuccess, isError: isClaimError },
   ] = useClaimAllRewardsMutation();
-
-  const rewardSafeForProgram = useMemo(
-    () =>
-      rewardSafes?.find(
-        safe => safe.rewardProgramId === defaultRewardProgramId
-      ),
-    [rewardSafes, defaultRewardProgramId]
-  );
 
   const claimParams = {
     accountAddress,
