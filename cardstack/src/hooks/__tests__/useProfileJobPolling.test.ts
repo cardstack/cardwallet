@@ -124,6 +124,6 @@ describe('useProfileJobPolling', () => {
 
     expect(result.current.isCreatingProfile).toBeFalsy();
     expect(result.current.isCreateProfileError).toBeFalsy();
-    expect(result.current.isConnectionError).toMatch('CON_ERROR');
+    expect(result.current.connectionError).toMatch('CON_ERROR');
   });
 });
