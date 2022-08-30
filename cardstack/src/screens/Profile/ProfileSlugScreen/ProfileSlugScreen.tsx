@@ -7,8 +7,8 @@ import {
   Button,
   InPageHeader,
   ValidationMessage,
+  SuffixedInput,
 } from '@cardstack/components';
-import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 
 import { strings } from './strings';
 import { useProfileSlugScreen } from './useProfileSlugScreen';
