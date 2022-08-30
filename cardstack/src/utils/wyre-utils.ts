@@ -46,14 +46,6 @@ const getAuthHeaders = (network: Network, url: string, data: string) => {
   };
 };
 
-export const PaymentRequestStatusTypes: Record<
-  string,
-  RainbowPayments.PaymentComplete
-> = {
-  FAIL: 'fail',
-  SUCCESS: 'success',
-};
-
 const getBaseUrl = (network: Network) =>
   isMainnet(network) ? WYRE_ENDPOINT : WYRE_ENDPOINT_TEST;
 
@@ -83,11 +75,6 @@ class WyreException extends Error {
     this.name = name;
   }
 }
-
-export const getReferenceId = (accountAddress: string) => {
-  const lowered = toLower(accountAddress);
-  return lowered.substr(-12);
-};
 
 export const showApplePayRequest = async (
   referenceInfo: { referenceId: string },
@@ -205,14 +192,14 @@ export const getWalletOrderQuotation = async (
 export const reserveWyreOrder = async (
   amount: string,
   destCurrency: string,
-  accountAddress: string,
+  depositAddress: string,
   network: Network,
   paymentMethod = null,
   sourceCurrency: string
 ) => {
   const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
 
-  const dest = `ethereum:${accountAddress}`;
+  const dest = `ethereum:${depositAddress}`;
 
   const data = {
     amount,
@@ -254,7 +241,7 @@ export const getOrderId = async (
   referenceInfo: { referenceId: string },
   paymentResponse: any,
   amount: string,
-  accountAddress: string,
+  depositAddress: string,
   destCurrency: string,
   network: Network,
   reservationId: string,
@@ -266,7 +253,7 @@ export const getOrderId = async (
     referenceInfo,
     paymentResponse,
     amount,
-    accountAddress,
+    depositAddress,
     destCurrency,
     network,
     reservationId,
@@ -362,17 +349,9 @@ const getWyrePaymentDetails = (
   };
 };
 
-interface Payment {
-  details: {
-    billingContact: any;
-    paymentData: string;
-    paymentMethod: any;
-    shippingContact: {
-      emailAddress: string;
-      phoneNumber: string;
-    };
-    transactionIdentifier: string;
-  };
+interface Payment extends RainbowPayments.PaymentResponse {
+  details: RainbowPayments.PaymentResponse['details'] &
+    RainbowPayments.PaymentDetailsIOS;
 }
 
 const createPayload = (
@@ -390,7 +369,7 @@ const createPayload = (
 
   const {
     details: {
-      billingContact: billingInfo,
+      billingContact,
       paymentData,
       paymentMethod,
       shippingContact: shippingInfo,
@@ -398,12 +377,12 @@ const createPayload = (
     },
   } = paymentResponse;
 
-  const billingContact = getAddressDetails({ addressInfo: billingInfo });
+  const billingInfo = getAddressDetails(billingContact);
 
   const shippingContact = {
-    ...billingContact,
-    emailAddress: shippingInfo.emailAddress,
-    phoneNumber: shippingInfo.phoneNumber,
+    ...billingInfo,
+    emailAddress: shippingInfo?.emailAddress,
+    phoneNumber: shippingInfo?.phoneNumber,
   };
 
   const partnerId = isMainnet(network) ? WYRE_ACCOUNT_ID : WYRE_ACCOUNT_ID_TEST;
@@ -437,27 +416,10 @@ const createPayload = (
   };
 };
 
-interface AddressDetails {
-  addressInfo: {
-    name: {
-      familyName: string;
-      givenName: string;
-    };
-    postalAddress: {
-      state: string;
-      country: string;
-      ISOCountryCode: string;
-      city: string;
-      postalCode: string;
-      subAdministrativeArea: string;
-      subLocality: string;
-      street: string;
-    };
-  };
-}
+const getAddressDetails = (billing?: RainbowPayments.BillingContactIOS) => {
+  if (!billing) return;
 
-const getAddressDetails = ({ addressInfo }: AddressDetails) => {
-  const { name, postalAddress: address } = addressInfo;
+  const { name, postalAddress: address } = billing;
   const addressLines = split(address.street, '\n');
   return {
     addressLines,
@@ -471,4 +433,96 @@ const getAddressDetails = ({ addressInfo }: AddressDetails) => {
     subAdministrativeArea: address.subAdministrativeArea,
     subLocality: address.subLocality,
   };
+};
+
+interface CreateOrderParams {
+  amount: string;
+  depositAddress: string;
+  sourceCurrency: string;
+  destCurrency: string;
+  network: Network;
+}
+
+export const createWyreOrderWithApplePay = async (
+  params: CreateOrderParams
+) => {
+  try {
+    const {
+      amount,
+      depositAddress,
+      sourceCurrency,
+      destCurrency,
+      network,
+    } = params;
+
+    const reserveOrder = reserveWyreOrder(
+      amount,
+      destCurrency,
+      depositAddress,
+      network,
+      null,
+      sourceCurrency
+    );
+
+    const getQuotation = getWalletOrderQuotation(
+      amount,
+      destCurrency,
+      depositAddress,
+      network,
+      sourceCurrency
+    );
+
+    const [{ reservation: reservationId }, quotation] = await Promise.all([
+      reserveOrder,
+      getQuotation,
+    ]);
+
+    if (!reservationId || !quotation) {
+      logger.sentry('No quotation or reservationId', {
+        reservationId,
+        quotation,
+      });
+
+      return;
+    }
+
+    const { sourceAmountWithFees, purchaseFee } = quotation;
+
+    const referenceInfo = { referenceId: toLower(depositAddress) };
+
+    const applePayResponse = await showApplePayRequest(
+      referenceInfo,
+      sourceAmountWithFees,
+      purchaseFee,
+      amount,
+      network,
+      sourceCurrency
+    );
+
+    if (!applePayResponse) {
+      logger.sentry('No applePay response');
+
+      return;
+    }
+
+    const { orderId } = await getOrderId(
+      referenceInfo,
+      applePayResponse,
+      sourceAmountWithFees,
+      depositAddress,
+      destCurrency,
+      network,
+      reservationId,
+      sourceCurrency
+    );
+
+    applePayResponse.complete(orderId ? 'success' : 'fail');
+
+    return orderId;
+  } catch (error) {
+    logger.sentry('CreateWyreOrderWithApplePay failed', {
+      error,
+      params,
+    });
+  }
 };

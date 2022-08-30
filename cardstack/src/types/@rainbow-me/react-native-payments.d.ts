@@ -105,9 +105,26 @@ declare namespace RainbowPayments {
   // https://www.w3.org/TR/payment-request/#paymentcomplete-enum
   export type PaymentComplete = 'fail' | 'success' | 'unknown';
 
+  export interface BillingContactIOS {
+    name: {
+      familyName: string;
+      givenName: string;
+    };
+    postalAddress: {
+      state: string;
+      country: string;
+      ISOCountryCode: string;
+      city: string;
+      postalCode: string;
+      subAdministrativeArea: string;
+      subLocality: string;
+      street: string;
+    };
+  }
+
   export interface PaymentDetailsIOS {
     paymentData: Record<string, 'unknown'>;
-    billingContact?: Record<string, 'unknown'>;
+    billingContact?: BillingContactIOS;
     shippingContact?: Record<string, 'unknown'>;
     paymentToken?: string;
     transactionIdentifier: string;

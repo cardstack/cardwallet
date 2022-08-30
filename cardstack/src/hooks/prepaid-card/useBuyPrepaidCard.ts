@@ -15,14 +15,7 @@ import {
   useMakeReservationMutation,
 } from '@cardstack/services';
 import { InventoryWithPrice } from '@cardstack/types';
-import {
-  getOrderId,
-  getReferenceId,
-  getWalletOrderQuotation,
-  PaymentRequestStatusTypes,
-  reserveWyreOrder,
-  showApplePayRequest,
-} from '@cardstack/utils/wyre-utils';
+import { createWyreOrderWithApplePay } from '@cardstack/utils/wyre-utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
@@ -36,12 +29,7 @@ export default function useBuyPrepaidCard() {
   const { goBack, navigate } = useNavigation();
   const dispatch = useDispatch();
 
-  const {
-    accountAddress,
-    network,
-    nativeCurrencyInfo,
-    nativeCurrency,
-  } = useAccountSettings();
+  const { network, nativeCurrencyInfo, nativeCurrency } = useAccountSettings();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
 
@@ -132,118 +120,6 @@ export default function useBuyPrepaidCard() {
 
   const { data: custodialWalletData } = useGetCustodialWalletQuery();
 
-  const onPurchase = useCallback(
-    async ({ value, depositAddress, sourceCurrency, destCurrency }) => {
-      const referenceInfo = {
-        referenceId: getReferenceId(accountAddress),
-      };
-
-      const { reservation: reservationId } = await reserveWyreOrder(
-        value,
-        destCurrency,
-        depositAddress,
-        network,
-        null,
-        sourceCurrency
-      );
-
-      if (!reservationId) {
-        logger.sentry('Error while making reservation on Wyre', {
-          value,
-          destCurrency,
-          depositAddress,
-          network,
-          sourceCurrency,
-        });
-
-        Alert({
-          buttons: [{ text: 'Okay' }],
-          message:
-            'We were unable to reserve your purchase order. Please try again later.',
-          title: `Something went wrong!`,
-        });
-
-        return;
-      }
-
-      const quotation = await getWalletOrderQuotation(
-        value,
-        destCurrency,
-        depositAddress,
-        network,
-        sourceCurrency
-      );
-
-      if (!quotation) {
-        logger.sentry('Error while getting quotation on Wyre', {
-          value,
-          destCurrency,
-          depositAddress,
-          network,
-          sourceCurrency,
-        });
-
-        Alert({
-          buttons: [{ text: 'Okay' }],
-          message:
-            'We were unable to get a quote on your purchase order. Please try again later.',
-          title: `Something went wrong!`,
-        });
-
-        return;
-      }
-
-      const { sourceAmountWithFees, purchaseFee } = quotation;
-
-      const applePayResponse = await showApplePayRequest(
-        referenceInfo,
-        sourceAmountWithFees,
-        purchaseFee,
-        value,
-        network,
-        sourceCurrency
-      );
-
-      if (applePayResponse) {
-        logger.log('[buy prepaid card] - get order id');
-
-        const { orderId } = await getOrderId(
-          referenceInfo,
-          applePayResponse,
-          sourceAmountWithFees,
-          depositAddress,
-          destCurrency,
-          network,
-          reservationId,
-          sourceCurrency
-        );
-
-        if (orderId) {
-          applePayResponse.complete(PaymentRequestStatusTypes.SUCCESS);
-
-          return orderId;
-        } else {
-          applePayResponse.complete(PaymentRequestStatusTypes.FAIL);
-          dismissLoadingOverlay();
-
-          logger.sentry(
-            'Error getting order id',
-            referenceInfo,
-            applePayResponse,
-            sourceAmountWithFees,
-            depositAddress,
-            destCurrency,
-            network,
-            reservationId
-          );
-        }
-      } else {
-        dismissLoadingOverlay();
-      }
-    },
-    [accountAddress, dismissLoadingOverlay, network]
-  );
-
   const handlePurchase = useCallback(async () => {
     showLoadingOverlay({
       title: 'Requesting Apple Pay',
@@ -255,21 +131,20 @@ export default function useBuyPrepaidCard() {
       nativeCurrency
     );
 
-    let wyreOrderIdData;
-
     makeReservation({ sku: selectedCard?.sku || '' });
 
-    try {
-      wyreOrderIdData = await onPurchase({
-        value: amount.toString(),
-        depositAddress: custodialWalletData?.depositAddress,
-        sourceCurrency: nativeCurrency || selectedCard?.sourceCurrency,
-        destCurrency: selectedCard?.destCurrency || 'DAI',
-      });
-    } catch (error) {
-      logger.sentry('Error while make wyre reservation', {
-        error,
-      });
+    const wyreOrderIdData = await createWyreOrderWithApplePay({
+      amount: amount.toString(),
+      depositAddress: custodialWalletData?.depositAddress || '',
+      sourceCurrency: nativeCurrency || selectedCard?.sourceCurrency,
+      destCurrency: selectedCard?.destCurrency || 'DAI',
+      network,
+    });
+
+    if (!wyreOrderIdData) {
+      dismissLoadingOverlay();
+
+      return;
     }
 
     const wyreWalletId = custodialWalletData?.wyreWalletId || '';
@@ -316,11 +191,11 @@ export default function useBuyPrepaidCard() {
     nativeCurrency,
     makeReservation,
     custodialWalletData,
-    onPurchase,
+    network,
+    dismissLoadingOverlay,
     hubReservation,
     hubURL,
     authToken,
-    dismissLoadingOverlay,
   ]);
 
   const { nativeBalanceDisplay: nativeBalance } = useSpendToNativeDisplay({
@@ -328,7 +203,6 @@ export default function useBuyPrepaidCard() {
   });
 
   return {
-    onPurchase,
     hubURL,
     onSelectCard: setSelectedCard,
     selectedCard,
