@@ -124,6 +124,12 @@ describe('useProfileJobPolling', () => {
 
     expect(result.current.isCreatingProfile).toBeFalsy();
     expect(result.current.isCreateProfileError).toBeFalsy();
-    expect(result.current.connectionError).toBe({ message: 'CON_ERROR' });
+    expect(result.current.connectionError).toStrictEqual({
+      error: {
+        message: 'CON_ERROR',
+      },
+      errorMessage: 'CON_ERROR',
+      type: 'parsingError',
+    });
   });
 });
