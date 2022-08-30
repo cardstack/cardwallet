@@ -1,9 +1,11 @@
 import { validateMerchantId } from '@cardstack/cardpay-sdk';
-import { useNavigation } from '@react-navigation/native';
+import { StackActions, useNavigation } from '@react-navigation/native';
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useInitIAPProducts } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
+import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
 import { matchMinLength } from '@cardstack/utils/validators';
 
@@ -12,7 +14,8 @@ import { strings, MIN_SLUG_LENGTH } from './strings';
 export const useProfileSlugScreen = () => {
   useInitIAPProducts();
 
-  const { navigate } = useNavigation();
+  const { navigate, dispatch: navDispatch } = useNavigation();
+  const dispatch = useDispatch();
 
   const [slug, setSlug] = useState('');
 
@@ -79,11 +82,17 @@ export const useProfileSlugScreen = () => {
     [isFetching, isLoading, slugValidation.slugAvailable]
   );
 
+  const onSkipPress = useCallback(() => {
+    dispatch(skipProfileCreation(true));
+    navDispatch(StackActions.pop(1));
+  }, [navDispatch, dispatch]);
+
   return {
     slug,
     onSlugChange,
     onContinuePress,
     slugValidation,
     canContinue,
+    onSkipPress,
   };
 };
