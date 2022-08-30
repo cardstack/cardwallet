@@ -516,6 +516,8 @@ export const createWyreOrderWithApplePay = async (
       sourceCurrency
     );
 
+    logger.sentry('orderId', orderId);
+
     applePayResponse.complete(orderId ? 'success' : 'fail');
 
     return orderId;

@@ -10,6 +10,7 @@ import {
   OrderQueryResult,
   ReservationQueryResult,
   WyrePriceQueryResult,
+  OrderStatus,
 } from '@cardstack/types';
 import { transformObjKeysToCamelCase } from '@cardstack/utils';
 
@@ -36,7 +37,7 @@ export const hubWyre = hubApi.injectEndpoints({
       transformResponse: (response: { data: CustodialWallet }) =>
         transformObjKeysToCamelCase(response?.data?.attributes),
     }),
-    getProducts: builder.query<GetProductsQueryResult[], Network>({
+    getProducts: builder.query<GetProductsQueryResult, Network>({
       async queryFn(network, _queryApi, _extraOptions, fetchWithBQ) {
         const prices = (await fetchWithBQ(
           routes.wyrePrices
@@ -73,7 +74,7 @@ export const hubWyre = hubApi.injectEndpoints({
 
             return inventoryWithPrice;
           },
-          [] as GetProductsQueryResult[]
+          [] as GetProductsQueryResult
         );
 
         const orderedProducts = orderBy(products, 'sourceCurrencyPrice', 'asc');
@@ -115,6 +116,13 @@ export const hubWyre = hubApi.injectEndpoints({
       transformResponse: (response: { data: OrderQueryResult }) =>
         response.data,
     }),
+    getOrderStatus: builder.query<OrderStatus, { orderId: string }>({
+      query: ({ orderId }) => ({
+        url: `${routes.orders}/${orderId}`,
+      }),
+      transformResponse: (response: { data: OrderQueryResult }) =>
+        response.data?.attributes?.status,
+    }),
   }),
 });
 
@@ -123,4 +131,5 @@ export const {
   useGetProductsQuery,
   useMakeReservationMutation,
   useUpdateOrderMutation,
+  useGetOrderStatusQuery,
 } = hubWyre;

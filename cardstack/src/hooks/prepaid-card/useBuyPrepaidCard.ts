@@ -1,19 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { InteractionManager } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useCallback, useMemo, useState } from 'react';
 
-import {
-  useAuthToken,
-  useMutationEffects,
-  useSpendToNativeDisplay,
-} from '@cardstack/hooks';
+import { defaultErrorAlert } from '@cardstack/constants';
+import { useMutationEffects, useSpendToNativeDisplay } from '@cardstack/hooks';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import {
-  getHubUrl,
-  getOrder,
   getValueInNativeCurrency,
   useGetCustodialWalletQuery,
+  useGetOrderStatusQuery,
   useGetProductsQuery,
   useMakeReservationMutation,
   useUpdateOrderMutation,
@@ -25,21 +19,16 @@ import { Alert } from '@rainbow-me/components/alerts';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
 import logger from 'logger';
 
-type CardProduct = GetProductsQueryResult;
+export type CardProduct = GetProductsQueryResult[0];
 
 const inventoryInitialState = Array(4).fill({});
 
 export default function useBuyPrepaidCard() {
   const { goBack, navigate } = useNavigation();
-  const dispatch = useDispatch();
 
   const { network, nativeCurrencyInfo, nativeCurrency } = useAccountSettings();
 
   const { showLoadingOverlay, dismissLoadingOverlay } = useLoadingOverlay();
-
-  const hubURL = useMemo(() => getHubUrl(network), [network]);
-
-  const { authToken } = useAuthToken();
 
   const [selectedCard, setSelectedCard] = useState<CardProduct>();
 
@@ -60,73 +49,79 @@ export default function useBuyPrepaidCard() {
     },
   ] = useMakeReservationMutation();
 
-  const [updateHubOrder, { data: order }] = useUpdateOrderMutation();
+  const [
+    updateHubOrder,
+    { data: order, isError: isUpdateOrderError },
+  ] = useUpdateOrderMutation();
+
+  const {
+    data: orderStatus,
+    isError: isGetOrderError,
+  } = useGetOrderStatusQuery(
+    {
+      orderId: order?.id || '',
+    },
+    {
+      skip: !order?.id,
+      pollingInterval: 5000,
+    }
+  );
 
   const onSuccessAlertPress = useCallback(() => {
     goBack();
 
-    InteractionManager.runAfterInteractions(() => {
-      navigate(Routes.WALLET_SCREEN, {
-        scrollToPrepaidCardsSection: true,
-        forceRefreshOnce: true,
-      });
+    navigate(Routes.WALLET_SCREEN, {
+      scrollToPrepaidCardsSection: true,
+      forceRefreshOnce: true,
     });
   }, [goBack, navigate]);
 
-  useEffect(() => {
-    const startTime = new Date().getTime();
+  // orderPolling
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: orderStatus === 'complete',
+          callback: () => {
+            dismissLoadingOverlay();
 
-    const orderStatusPolling = setInterval(async () => {
-      const currentTime = new Date().getTime();
+            Alert({
+              buttons: [
+                {
+                  text: 'Okay',
+                  onPress: onSuccessAlertPress,
+                },
+              ],
+              title: 'Success',
+              message: 'Your Prepaid Card has arrived!',
+            });
+          },
+        },
+        error: {
+          status:
+            isGetOrderError ||
+            isUpdateOrderError ||
+            orderStatus === 'error-provisioning',
+          callback: () => {
+            dismissLoadingOverlay();
 
-      if (order) {
-        const orderData = await getOrder(hubURL, authToken, order?.id);
-
-        const status = orderData?.attributes.status;
-
-        if (!orderData || currentTime - startTime > 60000 * 1.5) {
-          dismissLoadingOverlay();
-          clearInterval(orderStatusPolling);
-
-          Alert({
-            title: 'Timeout',
-            message: `We couldn't confirm the card delivery, refresh the app after a couple of minutes, if your prepaid card doesn't appear, try again.\nOrder Id: ${wyreOrderId}\nStatus: ${status}`,
-          });
-
-          return;
-        }
-
-        if (status === 'complete') {
-          clearInterval(orderStatusPolling);
-
-          // TODO invalidate safes tag once status is true
-          dismissLoadingOverlay();
-
-          Alert({
-            buttons: [
-              {
-                text: 'Okay',
-                onPress: onSuccessAlertPress,
-              },
-            ],
-            title: 'Success',
-            message: 'Your Prepaid Card has arrived!',
-          });
-        }
-      }
-    }, 1000);
-
-    return () => clearInterval(orderStatusPolling);
-  }, [
-    authToken,
-    dismissLoadingOverlay,
-    dispatch,
-    goBack,
-    hubURL,
-    navigate,
-    onSuccessAlertPress,
-    order,
-  ]);
+            Alert({
+              title: 'Something went wrong',
+              message: `${defaultErrorAlert.message}\nOrder:${order?.id}\nStatus:${orderStatus} `,
+            });
+          },
+        },
+      }),
+      [
+        dismissLoadingOverlay,
+        isGetOrderError,
+        isUpdateOrderError,
+        onSuccessAlertPress,
+        order,
+        orderStatus,
+      ]
+    )
+  );
 
   const triggerWyrePurchase = useCallback(async () => {
     if (!custodialWalletData || !hubReservation) return;
@@ -176,6 +171,15 @@ export default function useBuyPrepaidCard() {
     updateHubOrder,
   ]);
 
+  const handlePurchase = useCallback(async () => {
+    showLoadingOverlay({
+      title: 'Requesting Apple Pay',
+      subTitle: 'Payment sheet will pop-up shortly',
+    });
+
+    makeHubReservation({ sku: selectedCard?.sku || '' });
+  }, [showLoadingOverlay, makeHubReservation, selectedCard]);
+
   // makeHubReservation
   useMutationEffects(
     useMemo(
@@ -187,22 +191,23 @@ export default function useBuyPrepaidCard() {
         error: {
           status: isReservationError,
           callback: () => {
-            //ALert?
+            dismissLoadingOverlay();
+
+            Alert({
+              title: 'Reservation Error',
+              message: defaultErrorAlert.message,
+            });
           },
         },
       }),
-      [isReservationError, isReservationSuccess, triggerWyrePurchase]
+      [
+        dismissLoadingOverlay,
+        isReservationError,
+        isReservationSuccess,
+        triggerWyrePurchase,
+      ]
     )
   );
-
-  const handlePurchase = useCallback(async () => {
-    showLoadingOverlay({
-      title: 'Requesting Apple Pay',
-      subTitle: 'Payment sheet will pop-up shortly',
-    });
-
-    makeHubReservation({ sku: selectedCard?.sku || '' });
-  }, [showLoadingOverlay, makeHubReservation, selectedCard]);
 
   const { nativeBalanceDisplay: nativeBalance } = useSpendToNativeDisplay({
     spendAmount: selectedCard?.faceValue || 0,
