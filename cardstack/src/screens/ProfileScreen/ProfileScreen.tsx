@@ -38,7 +38,7 @@ const ProfileScreen = () => {
     }
 
     if (connectionError) {
-      return strings.connectionError.message(connectionError.errorMessage);
+      return strings.connectionError(connectionError.errorMessage);
     }
 
     return undefined;
