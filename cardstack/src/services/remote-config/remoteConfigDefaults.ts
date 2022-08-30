@@ -6,4 +6,5 @@ export const remoteConfigDefaults = {
   maintenanceMessage: `${appName} is going through scheduled maintenance, please try again later.`,
   featurePrepaidCardDrop: false,
   featureProfilePurchaseOnboarding: false,
+  betaAccessGranted: false,
 };

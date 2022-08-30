@@ -9,7 +9,7 @@ import {
   setUserAccessType,
   UserAccessType,
 } from '@cardstack/services/analytics';
-import { forceFetch } from '@cardstack/services/remote-config';
+import { forceFetch, remoteFlags } from '@cardstack/services/remote-config';
 
 import { useAppVersion } from '@rainbow-me/hooks';
 
@@ -21,18 +21,23 @@ const AppVersionStamp = () => {
   const { ToastComponent, showToast } = useBottomToast();
 
   const handleVersionPress = useCallback(async () => {
-    // Temporarely only allowing to switch to beta on DEV.
-    // We'll need a PIN validation before moving to prod.
-    if (!__DEV__) return;
-
     numberOfTaps.current++;
 
     if (numberOfTaps.current === parseInt(VERSION_TAP_COUNT)) {
       numberOfTaps.current = 0;
       try {
-        await setUserAccessType(UserAccessType.BETA);
+        if (remoteFlags().betaAccessGranted) {
+          await setUserAccessType(null);
+          showToast({
+            label: `Removed from ${UserAccessType.BETA} access.`,
+          });
+        } else {
+          await setUserAccessType(UserAccessType.BETA);
+          showToast({
+            label: `You are now part of ${UserAccessType.BETA} access.`,
+          });
+        }
         await forceFetch();
-        showToast({ label: `User now part of ${UserAccessType.BETA} access.` });
       } catch (error) {
         logger.error('Error while trying to set user property.', error);
       }

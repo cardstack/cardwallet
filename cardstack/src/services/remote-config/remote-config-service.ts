@@ -36,4 +36,5 @@ export const remoteFlags = (): { [K in ConfigKey]: RemoteConfigValues[K] } => ({
   featureProfilePurchaseOnboarding: getRemoteConfigAsBoolean(
     'featureProfilePurchaseOnboarding'
   ),
+  betaAccessGranted: getRemoteConfigAsBoolean('betaAccessGranted'),
 });
