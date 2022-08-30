@@ -15,8 +15,8 @@ export const strings = {
   },
   connectionError: {
     title: 'Connection failed',
-    message:
-      'There was a problem connecting to the profile issuer. Please wait a few minutes and then try again. If this problem persists, please get in touch with our support team.',
+    message: (errorMessage: string) =>
+      `There was a problem connecting to the profile issuer. Please wait a few minutes and then try again. If this problem persists, please get in touch with our support team.\nError message: ${errorMessage}`,
   },
   buttons: {
     continue: 'Continue',

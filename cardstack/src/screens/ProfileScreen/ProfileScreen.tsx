@@ -22,7 +22,7 @@ const ProfileScreen = () => {
     isCreatingProfile,
     isCreateProfileError,
     retryCurrentCreateProfile,
-    isConnectionError,
+    connectionError,
     safesCount,
     isFetching,
     network,
@@ -37,12 +37,12 @@ const ProfileScreen = () => {
       return strings.profileError;
     }
 
-    if (isConnectionError) {
-      return strings.connectionError;
+    if (connectionError) {
+      return strings.connectionError.message(connectionError.errorMessage);
     }
 
     return undefined;
-  }, [isCreateProfileError, isConnectionError]);
+  }, [isCreateProfileError, connectionError]);
 
   const renderProfileContent = useMemo(() => {
     if (isLayer1(network)) {

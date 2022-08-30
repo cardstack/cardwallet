@@ -5,6 +5,7 @@ import {
   useGetProfileJobStatusQuery,
   usePostProfileJobRetryMutation,
 } from '@cardstack/services';
+import { parseRTKConnectionError } from '@cardstack/services/utils';
 
 import { useBooleanState } from './useBooleanState';
 
@@ -69,7 +70,7 @@ export const useProfileJobPolling = ({
   }, [isFailedJob, retryJobID, jobID]);
 
   return {
-    isConnectionError: error,
+    connectionError: parseRTKConnectionError(error),
     isCreatingProfile: polling,
     isCreateProfileError: isFailedJob,
     retryCurrentCreateProfile,

@@ -39,7 +39,7 @@ export const useProfileScreen = () => {
   });
 
   const {
-    isConnectionError,
+    connectionError,
     isCreatingProfile,
     isCreateProfileError,
     retryCurrentCreateProfile,
@@ -85,7 +85,7 @@ export const useProfileScreen = () => {
     isFetching,
     refetch,
     redirectToSwitchNetwork,
-    isConnectionError,
+    connectionError,
     isCreateProfileError,
     retryCurrentCreateProfile,
   };
