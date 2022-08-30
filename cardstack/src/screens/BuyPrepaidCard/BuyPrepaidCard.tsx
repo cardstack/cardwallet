@@ -6,7 +6,7 @@ import { Container, Icon, Sheet, Text, Touchable } from '@cardstack/components';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 import { Routes } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
-import { InventoryWithPrice } from '@cardstack/types';
+import { GetProductsQueryResult } from '@cardstack/types';
 
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
@@ -42,7 +42,7 @@ const BuyPrepaidCard = () => {
   const { navigate } = useNavigation();
 
   const renderItem = useCallback(
-    ({ item }: { item: InventoryWithPrice }) =>
+    ({ item }: { item: GetProductsQueryResult }) =>
       isInventoryLoading || !item.sku ? (
         <CardLoaderSkeleton />
       ) : (

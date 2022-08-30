@@ -46,13 +46,13 @@ export type CustodialWallet = HubBaseResponse<CustodialWalletAttrs>;
 
 export type Inventory = HubBaseResponse<InventoryAttrs>;
 
-export type InventoryWithPrice = KebabToCamelCaseKeys<InventoryAttrs> &
+export type GetProductsQueryResult = KebabToCamelCaseKeys<InventoryAttrs> &
   KebabToCamelCaseKeys<WyrePriceAttrs>;
 
-export type ReservationData = HubBaseResponse<ReservationAttrs>;
+export type ReservationQueryResult = HubBaseResponse<ReservationAttrs>;
 
-export type WyrePriceData = HubBaseResponse<WyrePriceAttrs>;
+export type WyrePriceQueryResult = HubBaseResponse<WyrePriceAttrs>;
 
-export interface OrderData extends HubBaseResponse<OrderAttrs> {
+export interface OrderQueryResult extends HubBaseResponse<OrderAttrs> {
   prepaidCardAddress?: string;
 }

@@ -77,7 +77,7 @@ export const fetchHubBaseQuery: BaseQueryFn<
   const { error } = result;
 
   if (error) {
-    logger.sentry('Error on hubApi', JSON.stringify(error));
+    logger.sentry('Error on hubApi', JSON.stringify(error), args);
 
     if (error?.status === 401 || error?.status === 403) {
       const walletAddress = store.getState().settings.accountAddress;

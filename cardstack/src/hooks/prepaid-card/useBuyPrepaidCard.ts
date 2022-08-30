@@ -3,25 +3,29 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import { useDispatch } from 'react-redux';
 
-import { useAuthToken, useSpendToNativeDisplay } from '@cardstack/hooks';
+import {
+  useAuthToken,
+  useMutationEffects,
+  useSpendToNativeDisplay,
+} from '@cardstack/hooks';
 import { Routes, useLoadingOverlay } from '@cardstack/navigation';
 import {
   getHubUrl,
   getOrder,
   getValueInNativeCurrency,
-  updateOrder,
   useGetCustodialWalletQuery,
   useGetProductsQuery,
   useMakeReservationMutation,
+  useUpdateOrderMutation,
 } from '@cardstack/services';
-import { InventoryWithPrice } from '@cardstack/types';
+import { GetProductsQueryResult } from '@cardstack/types';
 import { createWyreOrderWithApplePay } from '@cardstack/utils/wyre-utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
 import logger from 'logger';
 
-type CardProduct = InventoryWithPrice;
+type CardProduct = GetProductsQueryResult;
 
 const inventoryInitialState = Array(4).fill({});
 
@@ -39,18 +43,24 @@ export default function useBuyPrepaidCard() {
 
   const [selectedCard, setSelectedCard] = useState<CardProduct>();
 
-  const [wyreOrderId, setWyreOrderId] = useState<string>('');
-
   const {
     data: inventoryData = inventoryInitialState,
     isLoading,
     isUninitialized,
   } = useGetProductsQuery(network, { refetchOnMountOrArgChange: true });
 
+  const { data: custodialWalletData } = useGetCustodialWalletQuery();
+
   const [
-    makeReservation,
-    { data: hubReservation },
+    makeHubReservation,
+    {
+      data: hubReservation,
+      isSuccess: isReservationSuccess,
+      isError: isReservationError,
+    },
   ] = useMakeReservationMutation();
+
+  const [updateHubOrder, { data: order }] = useUpdateOrderMutation();
 
   const onSuccessAlertPress = useCallback(() => {
     goBack();
@@ -69,8 +79,8 @@ export default function useBuyPrepaidCard() {
     const orderStatusPolling = setInterval(async () => {
       const currentTime = new Date().getTime();
 
-      if (wyreOrderId) {
-        const orderData = await getOrder(hubURL, authToken, wyreOrderId);
+      if (order) {
+        const orderData = await getOrder(hubURL, authToken, order?.id);
 
         const status = orderData?.attributes.status;
 
@@ -115,10 +125,75 @@ export default function useBuyPrepaidCard() {
     hubURL,
     navigate,
     onSuccessAlertPress,
-    wyreOrderId,
+    order,
   ]);
 
-  const { data: custodialWalletData } = useGetCustodialWalletQuery();
+  const triggerWyrePurchase = useCallback(async () => {
+    if (!custodialWalletData || !hubReservation) return;
+
+    try {
+      const amount = await getValueInNativeCurrency(
+        selectedCard?.sourceCurrencyPrice || 0,
+        nativeCurrency
+      );
+
+      const wyreOrderId = await createWyreOrderWithApplePay({
+        amount: amount.toString(),
+        depositAddress: custodialWalletData.depositAddress,
+        sourceCurrency: nativeCurrency || selectedCard?.sourceCurrency,
+        destCurrency: selectedCard?.destCurrency || 'DAI',
+        network,
+      });
+
+      if (!wyreOrderId) {
+        dismissLoadingOverlay();
+
+        return;
+      }
+
+      showLoadingOverlay({
+        title: 'Purchasing Prepaid Card',
+        subTitle: 'This may take up to a minute.',
+      });
+
+      updateHubOrder({
+        wyreOrderId,
+        walletId: custodialWalletData.wyreWalletId,
+        reservationId: hubReservation.id,
+      });
+    } catch (error) {
+      logger.sentry('Error purchasing prepaid card', error);
+      dismissLoadingOverlay();
+    }
+  }, [
+    custodialWalletData,
+    dismissLoadingOverlay,
+    hubReservation,
+    nativeCurrency,
+    network,
+    selectedCard,
+    showLoadingOverlay,
+    updateHubOrder,
+  ]);
+
+  // makeHubReservation
+  useMutationEffects(
+    useMemo(
+      () => ({
+        success: {
+          status: isReservationSuccess,
+          callback: triggerWyrePurchase,
+        },
+        error: {
+          status: isReservationError,
+          callback: () => {
+            //ALert?
+          },
+        },
+      }),
+      [isReservationError, isReservationSuccess, triggerWyrePurchase]
+    )
+  );
 
   const handlePurchase = useCallback(async () => {
     showLoadingOverlay({
@@ -126,84 +201,14 @@ export default function useBuyPrepaidCard() {
       subTitle: 'Payment sheet will pop-up shortly',
     });
 
-    const amount = await getValueInNativeCurrency(
-      selectedCard?.sourceCurrencyPrice || 0,
-      nativeCurrency
-    );
-
-    makeReservation({ sku: selectedCard?.sku || '' });
-
-    const wyreOrderIdData = await createWyreOrderWithApplePay({
-      amount: amount.toString(),
-      depositAddress: custodialWalletData?.depositAddress || '',
-      sourceCurrency: nativeCurrency || selectedCard?.sourceCurrency,
-      destCurrency: selectedCard?.destCurrency || 'DAI',
-      network,
-    });
-
-    if (!wyreOrderIdData) {
-      dismissLoadingOverlay();
-
-      return;
-    }
-
-    const wyreWalletId = custodialWalletData?.wyreWalletId || '';
-
-    try {
-      if (wyreOrderIdData) {
-        showLoadingOverlay({
-          title: 'Purchasing Prepaid Card',
-          subTitle: 'This may take up to a minute.',
-        });
-
-        const reservationId = hubReservation?.id || '';
-
-        const orderData = await updateOrder(
-          hubURL,
-          authToken,
-          wyreOrderIdData,
-          wyreWalletId,
-          reservationId
-        );
-
-        if (orderData) {
-          setWyreOrderId(wyreOrderIdData);
-        }
-      }
-    } catch (error) {
-      dismissLoadingOverlay();
-
-      logger.sentry('Error updating order', {
-        error,
-        reservationData: hubReservation,
-        wyreWalletId,
-        wyreOrderIdData,
-      });
-
-      Alert({
-        buttons: [{ text: 'Okay' }],
-        message: `Purchase not completed \nReservation Id: ${hubReservation?.id}`,
-      });
-    }
-  }, [
-    showLoadingOverlay,
-    selectedCard,
-    nativeCurrency,
-    makeReservation,
-    custodialWalletData,
-    network,
-    dismissLoadingOverlay,
-    hubReservation,
-    hubURL,
-    authToken,
-  ]);
+    makeHubReservation({ sku: selectedCard?.sku || '' });
+  }, [showLoadingOverlay, makeHubReservation, selectedCard]);
 
   const { nativeBalanceDisplay: nativeBalance } = useSpendToNativeDisplay({
     spendAmount: selectedCard?.faceValue || 0,
   });
 
   return {
-    hubURL,
     onSelectCard: setSelectedCard,
     selectedCard,
     handlePurchase,

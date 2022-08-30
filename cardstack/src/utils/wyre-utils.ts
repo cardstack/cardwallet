@@ -377,10 +377,10 @@ const createPayload = (
     },
   } = paymentResponse;
 
-  const billingInfo = getAddressDetails(billingContact);
+  const updatedBillingContact = getAddressDetails(billingContact);
 
   const shippingContact = {
-    ...billingInfo,
+    ...updatedBillingContact,
     emailAddress: shippingInfo?.emailAddress,
     phoneNumber: shippingInfo?.phoneNumber,
   };
@@ -401,7 +401,7 @@ const createPayload = (
         ipAddress: ip,
       },
       paymentObject: {
-        billingContact,
+        billingContact: updatedBillingContact,
         shippingContact,
         token: {
           paymentData,

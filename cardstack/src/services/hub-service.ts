@@ -5,8 +5,8 @@ import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
 import {
-  ReservationData,
-  OrderData,
+  ReservationQueryResult,
+  OrderQueryResult,
   NotificationsPreferenceDataType,
 } from '@cardstack/types';
 
@@ -166,7 +166,7 @@ export const makeReservation = async (
   hubURL: string,
   authToken: string,
   sku: string
-): Promise<ReservationData | undefined> => {
+): Promise<ReservationQueryResult | undefined> => {
   try {
     const results = await axios.post(
       `${hubURL}/api/reservations`,
@@ -195,7 +195,7 @@ export const updateOrder = async (
   wyreOrderId: string,
   wyreWalletID: string,
   reservationId: string
-): Promise<OrderData | undefined> => {
+): Promise<OrderQueryResult | undefined> => {
   try {
     const results = await axios.post(
       `${hubURL}/api/orders`,
@@ -228,7 +228,7 @@ export const getOrder = async (
   hubURL: string,
   authToken: string,
   orderId: string
-): Promise<OrderData | undefined> => {
+): Promise<OrderQueryResult | undefined> => {
   try {
     const results = await axios.get(
       `${hubURL}/api/orders/${orderId}`,
