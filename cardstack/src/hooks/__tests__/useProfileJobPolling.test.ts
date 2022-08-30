@@ -119,11 +119,11 @@ describe('useProfileJobPolling', () => {
       useProfileJobPolling(mockJobParams)
     );
 
-    mockUseGetProfileJobStatusQuery(undefined, 'CON_ERROR');
+    mockUseGetProfileJobStatusQuery(undefined, { message: 'CON_ERROR' });
     rerender();
 
     expect(result.current.isCreatingProfile).toBeFalsy();
     expect(result.current.isCreateProfileError).toBeFalsy();
-    expect(result.current.connectionError).toMatch('CON_ERROR');
+    expect(result.current.connectionError).toBe({ message: 'CON_ERROR' });
   });
 });
