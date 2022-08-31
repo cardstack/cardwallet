@@ -9,14 +9,14 @@ import {
   TranslateYTransform,
   useWindowDimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   Button,
   CenteredContainer,
   Container,
-  InPageHeader,
   Input,
-  SafeAreaView,
+  NavigationStackHeader,
   Text,
   Touchable,
 } from '@cardstack/components';
@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
   },
   avoidViewContainer: {
     backgroundColor: colors.backgroundDarkPurple,
-    flex: 0.4,
+    flex: 0.35,
+    paddingHorizontal: layouts.defaultPadding * SPACING_MULTIPLIER,
   },
   floatingFooter: {
     // Overrides parent container padding, to hide phone image
@@ -68,6 +69,7 @@ export const ProfileNameScreen = () => {
     onPressEditColor,
     isUpdating,
     isBlocked,
+    onSkipPress,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
@@ -176,6 +178,7 @@ export const ProfileNameScreen = () => {
         inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
         outputRange: [1, 0],
       }),
+      paddingHorizontal: layouts.defaultPadding * SPACING_MULTIPLIER,
     }),
     [animated]
   );
@@ -186,14 +189,28 @@ export const ProfileNameScreen = () => {
 
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
+  // handles SafeAreaView bottom spacing for consistency
+  const { bottom } = useSafeAreaInsets();
+
+  const containerStyles = useMemo(
+    () => ({
+      paddingBottom: bottom,
+    }),
+    [bottom]
+  );
+
   return (
-    <SafeAreaView
+    <Container
       backgroundColor="backgroundDarkPurple"
       flex={1}
-      paddingHorizontal={layouts.defaultPadding}
       justifyContent="space-between"
+      style={containerStyles}
     >
-      <InPageHeader skipAmount={2} showSkipButton={!isUpdating} />
+      <NavigationStackHeader
+        onSkipPress={!isUpdating ? onSkipPress : undefined}
+        backgroundColor="backgroundDarkPurple"
+        leftIconProps={{ iconSize: 'small' }}
+      />
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>
@@ -228,6 +245,7 @@ export const ProfileNameScreen = () => {
         alignItems="center"
         justifyContent="flex-end"
         paddingBottom={2}
+        paddingHorizontal={layouts.defaultPadding}
       >
         <Animated.View style={phonePreviewStyles}>
           <ProfilePhonePreview
@@ -277,7 +295,7 @@ export const ProfileNameScreen = () => {
           {strings.btns[flow]}
         </Button>
       </CenteredContainer>
-    </SafeAreaView>
+    </Container>
   );
 };
 
