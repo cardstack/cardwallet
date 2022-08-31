@@ -4,11 +4,7 @@ import { HUB_URL, HUB_URL_STAGING } from 'react-native-dotenv';
 
 import { getWeb3ProviderWithEthSigner } from '@cardstack/models/ethers-wallet';
 import { getFCMToken } from '@cardstack/models/firebase';
-import {
-  ReservationQueryResult,
-  OrderQueryResult,
-  NotificationsPreferenceDataType,
-} from '@cardstack/types';
+import { NotificationsPreferenceDataType } from '@cardstack/types';
 
 import {
   getLocal,
@@ -159,88 +155,6 @@ export const setNotificationsPreferences = async (
       'Error while saving notifications preferences on hub',
       e?.response || e
     );
-  }
-};
-
-export const makeReservation = async (
-  hubURL: string,
-  authToken: string,
-  sku: string
-): Promise<ReservationQueryResult | undefined> => {
-  try {
-    const results = await axios.post(
-      `${hubURL}/api/reservations`,
-      JSON.stringify({
-        data: {
-          type: 'reservations',
-          attributes: {
-            sku,
-          },
-        },
-      }),
-      axiosConfig(authToken)
-    );
-
-    if (results.data?.data) {
-      return results.data?.data;
-    }
-  } catch (e: any) {
-    logger.sentry('Error while making reservation', e?.response?.error || e);
-  }
-};
-
-export const updateOrder = async (
-  hubURL: string,
-  authToken: string,
-  wyreOrderId: string,
-  wyreWalletID: string,
-  reservationId: string
-): Promise<OrderQueryResult | undefined> => {
-  try {
-    const results = await axios.post(
-      `${hubURL}/api/orders`,
-      JSON.stringify({
-        data: {
-          type: 'orders',
-          attributes: {
-            'order-id': wyreOrderId,
-            'wallet-id': wyreWalletID,
-          },
-          relationships: {
-            reservation: {
-              data: { type: 'reservations', id: reservationId },
-            },
-          },
-        },
-      }),
-      axiosConfig(authToken)
-    );
-
-    if (results.data?.data) {
-      return results.data?.data;
-    }
-  } catch (e: any) {
-    logger.sentry('Error updating order', e?.response || e);
-  }
-};
-
-export const getOrder = async (
-  hubURL: string,
-  authToken: string,
-  orderId: string
-): Promise<OrderQueryResult | undefined> => {
-  try {
-    const results = await axios.get(
-      `${hubURL}/api/orders/${orderId}`,
-      axiosConfig(authToken)
-    );
-
-    const prepaidCardAddress =
-      results?.data?.included?.[0].attributes?.['prepaid-card-address'] || null;
-
-    return { ...results?.data?.data, prepaidCardAddress };
-  } catch (e: any) {
-    logger.sentry('Error getting order details', e);
   }
 };
 
