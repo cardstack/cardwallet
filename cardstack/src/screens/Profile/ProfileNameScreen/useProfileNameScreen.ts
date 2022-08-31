@@ -4,10 +4,12 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { useState, useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useProfileUpdate } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
+import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { MerchantInformation } from '@cardstack/types';
 import { contrastingTextColor } from '@cardstack/utils';
@@ -20,6 +22,7 @@ interface NavParams extends Partial<MerchantInformation> {
 
 export const useProfileNameScreen = () => {
   const { params } = useRoute<RouteType<NavParams>>();
+  const dispatch = useDispatch();
 
   const { slug, ...currentProfile } = params;
 
@@ -77,8 +80,9 @@ export const useProfileNameScreen = () => {
   }, [navigate, profile, currentProfile, updateProfile]);
 
   const onSkipPress = useCallback(() => {
+    dispatch(skipProfileCreation(true));
     navDispatch(StackActions.pop(2));
-  }, [navDispatch]);
+  }, [navDispatch, dispatch]);
 
   return {
     onSkipPress,
