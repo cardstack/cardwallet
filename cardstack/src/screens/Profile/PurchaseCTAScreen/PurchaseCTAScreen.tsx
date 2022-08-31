@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   Button,
@@ -7,10 +8,9 @@ import {
   Icon,
   IconName,
   Image,
-  SafeAreaView,
   Text,
   Touchable,
-  InPageHeader,
+  NavigationStackHeader,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
@@ -31,6 +31,7 @@ const PurchaseCTAScreen = () => {
     localizedValue,
     onPressPrepaidCards,
     showPrepaidCardOption,
+    onSkipPress,
   } = usePurchaseCTAScreen();
 
   const BenefitsItem = useCallback(
@@ -53,18 +54,33 @@ const PurchaseCTAScreen = () => {
 
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
+  // handles SafeAreaView bottom spacing for consistency
+  const { bottom } = useSafeAreaInsets();
+
+  const containerStyles = useMemo(
+    () => ({
+      paddingBottom: bottom,
+    }),
+    [bottom]
+  );
+
   return (
-    <SafeAreaView
-      backgroundColor="backgroundDarkPurple"
+    <Container
       flex={1}
-      paddingHorizontal={5}
+      style={containerStyles}
+      backgroundColor="backgroundDarkPurple"
     >
-      <InPageHeader skipAmount={3} />
+      <NavigationStackHeader
+        onSkipPress={onSkipPress}
+        backgroundColor="backgroundDarkPurple"
+        leftIconProps={{ iconSize: 'small' }}
+      />
       <Container
         flex={1}
         flexDirection="column"
         justifyContent="space-between"
         paddingBottom={3}
+        paddingHorizontal={5}
       >
         <Text color="white" fontSize={24} fontFamily="OpenSans-Light">
           {strings.title}
@@ -106,7 +122,7 @@ const PurchaseCTAScreen = () => {
           </Text>
         </Touchable>
       </Container>
-    </SafeAreaView>
+    </Container>
   );
 };
 
