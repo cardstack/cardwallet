@@ -47,6 +47,7 @@ export const palette = {
   blueGreyDark: '#00E0A9',
   borderLightColor: '#d6d6d6',
   greenColor: '#0eb500',
+  orange: '#ffa700',
 };
 
 export const colors = {
@@ -109,6 +110,7 @@ export const colors = {
   secondaryText: palette.slateGray,
   tertiaryText: palette.blueText,
   bannerText: palette.white,
+  orange: palette.orange,
 };
 
 export const avatarColor = [
