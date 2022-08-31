@@ -206,7 +206,7 @@ export const reserveWyreOrder = async (
     dest,
     destCurrency,
     referrerAccountId: partnerId,
-    sourceCurrency: sourceCurrency,
+    sourceCurrency,
     paymentMethod,
   };
 

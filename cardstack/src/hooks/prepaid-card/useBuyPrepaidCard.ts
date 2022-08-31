@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { defaultErrorAlert } from '@cardstack/constants';
 import { useMutationEffects, useSpendToNativeDisplay } from '@cardstack/hooks';
@@ -16,6 +16,7 @@ import { GetProductsQueryResult } from '@cardstack/types';
 import { createWyreOrderWithApplePay } from '@cardstack/utils/wyre-utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
+import { useTimeout } from '@rainbow-me/hooks';
 import useAccountSettings from '@rainbow-me/hooks/useAccountSettings';
 import logger from 'logger';
 
@@ -24,7 +25,7 @@ export type CardProduct = GetProductsQueryResult[0];
 const inventoryInitialState = Array(4).fill({});
 
 export default function useBuyPrepaidCard() {
-  const { goBack, navigate } = useNavigation();
+  const { navigate } = useNavigation();
 
   const { network, nativeCurrencyInfo, nativeCurrency } = useAccountSettings();
 
@@ -36,9 +37,13 @@ export default function useBuyPrepaidCard() {
     data: inventoryData = inventoryInitialState,
     isLoading,
     isUninitialized,
+    isFetching,
   } = useGetProductsQuery(network, { refetchOnMountOrArgChange: true });
 
-  const { data: custodialWalletData } = useGetCustodialWalletQuery();
+  const {
+    data: custodialWalletData,
+    isLoading: isCustodialWalletLoading,
+  } = useGetCustodialWalletQuery();
 
   const [
     makeHubReservation,
@@ -68,13 +73,43 @@ export default function useBuyPrepaidCard() {
   );
 
   const onSuccessAlertPress = useCallback(() => {
-    goBack();
-
     navigate(Routes.WALLET_SCREEN, {
       scrollToPrepaidCardsSection: true,
       forceRefreshOnce: true,
     });
-  }, [goBack, navigate]);
+  }, [navigate]);
+
+  // Handle local exiting polling, TODO: Replace with job polling
+  const [startTimeout] = useTimeout();
+
+  const hasStartedTimeout = useRef(false);
+
+  useEffect(() => {
+    if (orderStatus && !hasStartedTimeout.current) {
+      hasStartedTimeout.current = true;
+
+      startTimeout(() => {
+        dismissLoadingOverlay();
+
+        Alert({
+          buttons: [
+            {
+              text: 'Okay',
+              onPress: onSuccessAlertPress,
+            },
+          ],
+          title: 'Timeout',
+          message: `We couldn't confirm the card delivery, refresh the app after a couple of minutes to check if your PrepaidCard has arrived.\n${defaultErrorAlert.message}\nOrder Id: ${order?.id}\nStatus: ${orderStatus}`,
+        });
+      }, 60000);
+    }
+  }, [
+    dismissLoadingOverlay,
+    onSuccessAlertPress,
+    order,
+    orderStatus,
+    startTimeout,
+  ]);
 
   // orderPolling
   useMutationEffects(
@@ -213,11 +248,17 @@ export default function useBuyPrepaidCard() {
     spendAmount: selectedCard?.faceValue || 0,
   });
 
+  const isInventoryLoading = useMemo(
+    () =>
+      isLoading || isUninitialized || isCustodialWalletLoading || isFetching,
+    [isCustodialWalletLoading, isFetching, isLoading, isUninitialized]
+  );
+
   return {
     onSelectCard: setSelectedCard,
     selectedCard,
     handlePurchase,
-    isInventoryLoading: isLoading || isUninitialized,
+    isInventoryLoading,
     inventoryData,
     network,
     nativeBalance,
