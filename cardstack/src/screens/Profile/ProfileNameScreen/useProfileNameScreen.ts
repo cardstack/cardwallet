@@ -1,15 +1,9 @@
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useState, useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { useProfileUpdate } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
-import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { MerchantInformation } from '@cardstack/types';
 import { contrastingTextColor } from '@cardstack/utils';
@@ -22,11 +16,10 @@ interface NavParams extends Partial<MerchantInformation> {
 
 export const useProfileNameScreen = () => {
   const { params } = useRoute<RouteType<NavParams>>();
-  const dispatch = useDispatch();
 
   const { slug, ...currentProfile } = params;
 
-  const { navigate, dispatch: navDispatch } = useNavigation();
+  const { navigate } = useNavigation();
   const { accountAddress } = useAccountProfile();
 
   const [profileName, setProfileName] = useState(currentProfile.name || '');
@@ -79,13 +72,7 @@ export const useProfileNameScreen = () => {
     updateProfile({ ...profile, id: currentProfile.id || '' });
   }, [navigate, profile, currentProfile, updateProfile]);
 
-  const onSkipPress = useCallback(() => {
-    dispatch(skipProfileCreation(true));
-    navDispatch(StackActions.pop(2));
-  }, [navDispatch, dispatch]);
-
   return {
-    onSkipPress,
     onContinuePress,
     onChangeText,
     onPressEditColor,

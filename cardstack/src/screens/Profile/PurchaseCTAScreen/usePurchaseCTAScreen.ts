@@ -1,17 +1,11 @@
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { useBooleanState } from '@cardstack/hooks';
 import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
 import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
-import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { remoteFlags } from '@cardstack/services/remote-config';
@@ -26,8 +20,7 @@ interface NavParams {
 }
 
 export const usePurchaseCTAScreen = () => {
-  const { navigate, dispatch: navDispatch } = useNavigation();
-  const dispatch = useDispatch();
+  const { navigate } = useNavigation();
 
   const { network, accountAddress, nativeCurrency } = useAccountSettings();
 
@@ -80,11 +73,6 @@ export const usePurchaseCTAScreen = () => {
     setPurchaseEnd();
   }, [purchaseProfile, setPurchaseStart, setPurchaseEnd]);
 
-  const onSkipPress = useCallback(() => {
-    dispatch(skipProfileCreation(true));
-    navDispatch(StackActions.pop(3));
-  }, [navDispatch, dispatch]);
-
   return {
     onPressChargeExplanation,
     onPressBuy,
@@ -92,6 +80,5 @@ export const usePurchaseCTAScreen = () => {
     onPressPrepaidCards: purchaseWithPrepaidCard,
     showPrepaidCardOption,
     localizedValue,
-    onSkipPress,
   };
 };

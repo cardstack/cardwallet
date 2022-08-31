@@ -9,7 +9,6 @@ import {
   TranslateYTransform,
   useWindowDimensions,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   Button,
@@ -25,6 +24,8 @@ import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
+
+import { useProfileScreensHelper } from '../helpers';
 
 import ProfilePhonePreview from './components/ProfilePhonePreview';
 import { strings } from './strings';
@@ -69,7 +70,6 @@ export const ProfileNameScreen = () => {
     onPressEditColor,
     isUpdating,
     isBlocked,
-    onSkipPress,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
@@ -189,15 +189,10 @@ export const ProfileNameScreen = () => {
 
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
-  // handles SafeAreaView bottom spacing for consistency
-  const { bottom } = useSafeAreaInsets();
-
-  const containerStyles = useMemo(
-    () => ({
-      paddingBottom: bottom,
-    }),
-    [bottom]
-  );
+  const {
+    containerStyles,
+    onSkipPress: handleSkipPress,
+  } = useProfileScreensHelper();
 
   return (
     <Container
@@ -207,7 +202,7 @@ export const ProfileNameScreen = () => {
       style={containerStyles}
     >
       <NavigationStackHeader
-        onSkipPress={!isUpdating ? onSkipPress : undefined}
+        onSkipPress={!isUpdating ? handleSkipPress(2) : undefined}
         backgroundColor="backgroundDarkPurple"
         leftIconProps={{ iconSize: 'small' }}
       />
