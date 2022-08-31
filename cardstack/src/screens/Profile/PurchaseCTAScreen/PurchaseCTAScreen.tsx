@@ -1,6 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   Button,
@@ -14,6 +13,7 @@ import {
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
+import { useProfileScreensHelper } from '../helpers';
 
 import { strings } from './strings';
 import { usePurchaseCTAScreen } from './usePurchaseCTAScreen';
@@ -31,8 +31,9 @@ const PurchaseCTAScreen = () => {
     localizedValue,
     onPressPrepaidCards,
     showPrepaidCardOption,
-    onSkipPress,
   } = usePurchaseCTAScreen();
+
+  const { containerStyles, onSkipPress } = useProfileScreensHelper();
 
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
@@ -54,16 +55,6 @@ const PurchaseCTAScreen = () => {
 
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
-  // handles SafeAreaView bottom spacing for consistency
-  const { bottom } = useSafeAreaInsets();
-
-  const containerStyles = useMemo(
-    () => ({
-      paddingBottom: bottom,
-    }),
-    [bottom]
-  );
-
   return (
     <Container
       flex={1}
@@ -71,7 +62,7 @@ const PurchaseCTAScreen = () => {
       backgroundColor="backgroundDarkPurple"
     >
       <NavigationStackHeader
-        onSkipPress={onSkipPress}
+        onSkipPress={onSkipPress(3)}
         backgroundColor="backgroundDarkPurple"
         leftIconProps={{ iconSize: 'small' }}
       />

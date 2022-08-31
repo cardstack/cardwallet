@@ -1,5 +1,4 @@
-import React, { memo, useMemo } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { memo } from 'react';
 
 import {
   Container,
@@ -9,6 +8,8 @@ import {
   NavigationStackHeader,
   SuffixedInput,
 } from '@cardstack/components';
+
+import { useProfileScreensHelper } from '../helpers';
 
 import { strings } from './strings';
 import { useProfileSlugScreen } from './useProfileSlugScreen';
@@ -20,18 +21,9 @@ const ProfileSlugScreen = () => {
     slugValidation: { slugAvailable, detail: slugFeedback },
     canContinue,
     onContinuePress,
-    onSkipPress,
   } = useProfileSlugScreen();
 
-  // handles SafeAreaView bottom spacing for consistency
-  const { bottom } = useSafeAreaInsets();
-
-  const containerStyles = useMemo(
-    () => ({
-      paddingBottom: bottom,
-    }),
-    [bottom]
-  );
+  const { containerStyles, onSkipPress } = useProfileScreensHelper();
 
   return (
     <Container
@@ -41,7 +33,7 @@ const ProfileSlugScreen = () => {
     >
       <NavigationStackHeader
         canGoBack={false}
-        onSkipPress={onSkipPress}
+        onSkipPress={onSkipPress(1)}
         backgroundColor="backgroundDarkPurple"
         leftIconProps={{ iconSize: 'small' }}
       />
