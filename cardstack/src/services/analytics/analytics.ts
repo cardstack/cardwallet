@@ -4,5 +4,10 @@ export enum UserAccessType {
   BETA = 'BETA',
 }
 
-export const setUserAccessType = async (userAccessType: UserAccessType) =>
-  analytics().setUserProperty('user_access_type', userAccessType);
+/**
+ * setUserAccessType: Sets or clears access type to current analytics user.
+ * @param userAccessType user type (BETA) or null to clear property for user.
+ */
+export const setUserAccessType = async (
+  userAccessType: UserAccessType | null
+) => analytics().setUserProperty('user_access_type', userAccessType);
