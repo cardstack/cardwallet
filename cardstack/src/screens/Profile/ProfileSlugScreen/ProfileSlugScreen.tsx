@@ -35,7 +35,6 @@ const ProfileSlugScreen = () => {
         canGoBack={false}
         onSkipPress={onSkipPress(1)}
         backgroundColor="backgroundDarkPurple"
-        leftIconProps={{ iconSize: 'small' }}
       />
       <Container paddingHorizontal={5} flex={1} justifyContent="space-between">
         <Container flex={0.8}>
