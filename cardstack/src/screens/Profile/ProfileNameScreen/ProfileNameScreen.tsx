@@ -204,7 +204,6 @@ export const ProfileNameScreen = () => {
       <NavigationStackHeader
         onSkipPress={!isUpdating ? handleSkipPress(2) : undefined}
         backgroundColor="backgroundDarkPurple"
-        leftIconProps={{ iconSize: 'small' }}
       />
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>

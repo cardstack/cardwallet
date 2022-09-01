@@ -64,7 +64,6 @@ const PurchaseCTAScreen = () => {
       <NavigationStackHeader
         onSkipPress={onSkipPress(3)}
         backgroundColor="backgroundDarkPurple"
-        leftIconProps={{ iconSize: 'small' }}
       />
       <Container
         flex={1}
