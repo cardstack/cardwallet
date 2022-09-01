@@ -237,7 +237,7 @@ export const reserveWyreOrder = async (
   }
 };
 
-export const getOrderId = async (
+export const createOrder = async (
   referenceInfo: { referenceId: string },
   paymentResponse: any,
   amount: string,
@@ -505,7 +505,7 @@ export const createWyreOrderWithApplePay = async (
       return;
     }
 
-    const { orderId } = await getOrderId(
+    const { orderId } = await createOrder(
       referenceInfo,
       applePayResponse,
       sourceAmountWithFees,

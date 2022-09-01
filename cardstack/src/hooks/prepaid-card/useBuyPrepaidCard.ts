@@ -23,6 +23,7 @@ import logger from 'logger';
 export type CardProduct = GetProductsQueryResult[0];
 
 const inventoryInitialState = Array(4).fill({});
+const timeout = 60000 * 1.5;
 
 export default function useBuyPrepaidCard() {
   const { navigate } = useNavigation();
@@ -101,7 +102,7 @@ export default function useBuyPrepaidCard() {
           title: 'Timeout',
           message: `We couldn't confirm the card delivery, refresh the app after a couple of minutes to check if your PrepaidCard has arrived.\n${defaultErrorAlert.message}\nOrder Id: ${order?.id}\nStatus: ${orderStatus}`,
         });
-      }, 60000);
+      }, timeout);
     }
   }, [
     dismissLoadingOverlay,
