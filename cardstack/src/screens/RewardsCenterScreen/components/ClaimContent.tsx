@@ -63,7 +63,7 @@ export const ClaimContent = ({ claimList }: ClaimContentProps) => {
   );
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Container padding={5}>
         <RewardsTitle title={title} width="100%" paddingBottom={5} />
         <InfoBanner
