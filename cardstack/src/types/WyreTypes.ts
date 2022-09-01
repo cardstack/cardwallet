@@ -28,11 +28,19 @@ export interface ReservationAttrs {
   'prepaid-card-address': null;
 }
 
+export type OrderStatus =
+  | 'waiting-for-order'
+  | 'received-order'
+  | 'waiting-for-reservation'
+  | 'provisioning'
+  | 'error-provisioning'
+  | 'complete';
+
 export interface OrderAttrs {
   'order-id': string;
   'user-address': string;
   'wallet-id': string;
-  status: string;
+  status: OrderStatus;
 }
 
 export interface WyrePriceAttrs {
@@ -46,13 +54,12 @@ export type CustodialWallet = HubBaseResponse<CustodialWalletAttrs>;
 
 export type Inventory = HubBaseResponse<InventoryAttrs>;
 
-export type InventoryWithPrice = KebabToCamelCaseKeys<InventoryAttrs> &
-  KebabToCamelCaseKeys<WyrePriceAttrs>;
+export type GetProductsQueryResult = Array<
+  KebabToCamelCaseKeys<InventoryAttrs> & KebabToCamelCaseKeys<WyrePriceAttrs>
+>;
 
-export type ReservationData = HubBaseResponse<ReservationAttrs>;
+export type ReservationQueryResult = HubBaseResponse<ReservationAttrs>;
 
-export type WyrePriceData = HubBaseResponse<WyrePriceAttrs>;
+export type WyrePriceQueryResult = HubBaseResponse<WyrePriceAttrs>;
 
-export interface OrderData extends HubBaseResponse<OrderAttrs> {
-  prepaidCardAddress?: string;
-}
+export type OrderQueryResult = HubBaseResponse<OrderAttrs>;

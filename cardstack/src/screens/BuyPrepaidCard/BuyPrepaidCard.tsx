@@ -4,9 +4,9 @@ import { FlatList } from 'react-native';
 
 import { Container, Icon, Sheet, Text, Touchable } from '@cardstack/components';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
+import { CardProduct } from '@cardstack/hooks/prepaid-card/useBuyPrepaidCard';
 import { Routes } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
-import { InventoryWithPrice } from '@cardstack/types';
 
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
 import { useBuyPrepaidCard } from '@rainbow-me/hooks';
@@ -42,7 +42,7 @@ const BuyPrepaidCard = () => {
   const { navigate } = useNavigation();
 
   const renderItem = useCallback(
-    ({ item }: { item: InventoryWithPrice }) =>
+    ({ item }: { item: CardProduct }) =>
       isInventoryLoading || !item.sku ? (
         <CardLoaderSkeleton />
       ) : (
