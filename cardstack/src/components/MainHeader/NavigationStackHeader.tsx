@@ -64,7 +64,7 @@ const NavigationStackHeader = ({
       <Container flex={1} alignItems="flex-end">
         {!!onSkipPress && (
           <Touchable onPress={onSkipPress} hitSlop={hitSlop.medium}>
-            <Text fontSize={13} color="teal" variant="semibold">
+            <Text fontSize={14} color="teal" variant="semibold">
               Skip
             </Text>
           </Touchable>
