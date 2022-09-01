@@ -11,7 +11,7 @@ import { RouteType } from '@cardstack/navigation/types';
 
 import { strings } from './strings';
 
-const leftIconProps: IconProps = { name: 'x', iconSize: 'medium' };
+const leftIconProps: IconProps = { name: 'x' };
 
 interface NavParams {
   localizedValue: string;
