@@ -1,11 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
 import { FlatList } from 'react-native';
 
 import { Container, Icon, Sheet, Text, Touchable } from '@cardstack/components';
 import MediumPrepaidCard from '@cardstack/components/PrepaidCard/MediumPrepaidCard';
 import { CardProduct } from '@cardstack/hooks/prepaid-card/useBuyPrepaidCard';
-import { Routes } from '@cardstack/navigation';
 import { colors } from '@cardstack/theme';
 
 import ApplePayButton from '@rainbow-me/components/add-cash/ApplePayButton';
@@ -37,9 +35,8 @@ const BuyPrepaidCard = () => {
     network,
     nativeCurrencyInfo,
     nativeBalance,
+    onPressSupport,
   } = useBuyPrepaidCard();
-
-  const { navigate } = useNavigation();
 
   const renderItem = useCallback(
     ({ item }: { item: CardProduct }) =>
@@ -56,12 +53,8 @@ const BuyPrepaidCard = () => {
     [isInventoryLoading, onSelectCard, selectedCard]
   );
 
-  const onPressSupport = useCallback(() => navigate(Routes.SUPPORT_AND_FEES), [
-    navigate,
-  ]);
-
   // necessary to avoid rendering issues with the skeleton
-  const keyExtractor = useCallback((item, index) => index.toString(), []);
+  const keyExtractor = useCallback((_, index) => index.toString(), []);
 
   const renderFooter = useMemo(
     () => (

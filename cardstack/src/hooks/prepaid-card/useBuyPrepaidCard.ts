@@ -12,6 +12,7 @@ import {
   useMakeReservationMutation,
   useUpdateOrderMutation,
 } from '@cardstack/services';
+import { useGetWyreSupportedCountriesQuery } from '@cardstack/services/wyre-api';
 import { GetProductsQueryResult } from '@cardstack/types';
 import { createWyreOrderWithApplePay } from '@cardstack/utils/wyre-utils';
 
@@ -24,6 +25,7 @@ export type CardProduct = GetProductsQueryResult[0];
 
 const inventoryInitialState = Array(4).fill({});
 const timeout = 60000 * 1.5;
+const pollingInterval = 5000;
 
 export default function useBuyPrepaidCard() {
   const { navigate } = useNavigation();
@@ -69,8 +71,18 @@ export default function useBuyPrepaidCard() {
     },
     {
       skip: !order?.id,
-      pollingInterval: 5000,
+      pollingInterval,
     }
+  );
+
+  const {
+    data: supportedCountries = {},
+    isLoading: isLoadingCountries,
+  } = useGetWyreSupportedCountriesQuery();
+
+  const onPressSupport = useCallback(
+    () => navigate(Routes.SUPPORT_AND_FEES, { supportedCountries }),
+    [navigate, supportedCountries]
   );
 
   const onSuccessAlertPress = useCallback(() => {
@@ -100,7 +112,8 @@ export default function useBuyPrepaidCard() {
             },
           ],
           title: 'Timeout',
-          message: `We couldn't confirm the card delivery, refresh the app after a couple of minutes to check if your PrepaidCard has arrived.\n${defaultErrorAlert.message}\nOrder Id: ${order?.id}\nStatus: ${orderStatus}`,
+          message: `We couldn't confirm the card delivery, refresh the app after a couple of minutes to check if your PrepaidCard has arrived.
+          ${defaultErrorAlert.message}\nOrder Id: ${order?.id}\nStatus: ${orderStatus}`,
         });
       }, timeout);
     }
@@ -174,6 +187,7 @@ export default function useBuyPrepaidCard() {
         sourceCurrency: nativeCurrency || selectedCard?.sourceCurrency,
         destCurrency: selectedCard?.destCurrency || 'DAI',
         network,
+        supportedCountries,
       });
 
       if (!wyreOrderId) {
@@ -204,6 +218,7 @@ export default function useBuyPrepaidCard() {
     network,
     selectedCard,
     showLoadingOverlay,
+    supportedCountries,
     updateHubOrder,
   ]);
 
@@ -251,8 +266,18 @@ export default function useBuyPrepaidCard() {
 
   const isInventoryLoading = useMemo(
     () =>
-      isLoading || isUninitialized || isCustodialWalletLoading || isFetching,
-    [isCustodialWalletLoading, isFetching, isLoading, isUninitialized]
+      isLoading ||
+      isUninitialized ||
+      isCustodialWalletLoading ||
+      isFetching ||
+      isLoadingCountries,
+    [
+      isCustodialWalletLoading,
+      isFetching,
+      isLoading,
+      isLoadingCountries,
+      isUninitialized,
+    ]
   );
 
   return {
@@ -264,5 +289,6 @@ export default function useBuyPrepaidCard() {
     network,
     nativeBalance,
     nativeCurrencyInfo,
+    onPressSupport,
   };
 }
