@@ -5,11 +5,9 @@ import {
   Text,
   Button,
   ValidationMessage,
-  NavigationStackHeader,
   SuffixedInput,
+  OnboardingPage,
 } from '@cardstack/components';
-
-import { useProfileScreensHelper } from '../helpers';
 
 import { strings } from './strings';
 import { useProfileSlugScreen } from './useProfileSlugScreen';
@@ -23,20 +21,9 @@ const ProfileSlugScreen = () => {
     onContinuePress,
   } = useProfileSlugScreen();
 
-  const { containerStyles, onSkipPress } = useProfileScreensHelper();
-
   return (
-    <Container
-      flex={1}
-      style={containerStyles}
-      backgroundColor="backgroundDarkPurple"
-    >
-      <NavigationStackHeader
-        canGoBack={false}
-        onSkipPress={onSkipPress(1)}
-        backgroundColor="backgroundDarkPurple"
-      />
-      <Container paddingHorizontal={5} flex={1} justifyContent="space-between">
+    <OnboardingPage flow="backup">
+      <Container flex={1} justifyContent="space-between">
         <Container flex={0.8}>
           <Container width="90%" paddingBottom={4}>
             <Text variant="pageHeader">{strings.header}</Text>
@@ -66,7 +53,7 @@ const ProfileSlugScreen = () => {
           </Button>
         </Container>
       </Container>
-    </Container>
+    </OnboardingPage>
   );
 };
 

@@ -1,5 +1,13 @@
-import React, { memo, PropsWithChildren, ReactNode, useMemo } from 'react';
+import { useNavigation, StackActions } from '@react-navigation/native';
+import React, {
+  memo,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 
 import {
   Container,
@@ -7,19 +15,26 @@ import {
   IconProps,
   NavigationStackHeader,
 } from '@cardstack/components';
+import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
+
+import { OnboardingFlows } from './types';
 
 interface OnboardingPageProps {
+  flow: OnboardingFlows;
   footer?: ReactNode;
   canGoBack?: boolean;
-  onSkipPress: () => void;
+  customSkipPress?: () => void;
+  skipAmount?: number;
   leftIconProps?: Omit<IconProps, 'name'> & {
     name?: IconName;
   };
 }
 
 const OnboardingPage = ({
+  flow,
   canGoBack,
-  onSkipPress,
+  customSkipPress,
+  skipAmount = 1,
   children,
   footer,
   leftIconProps,
@@ -34,6 +49,23 @@ const OnboardingPage = ({
     [bottom]
   );
 
+  const { dispatch: navDispatch } = useNavigation();
+  const dispatch = useDispatch();
+
+  const handleSkipPress = useCallback(() => {
+    if (customSkipPress) {
+      customSkipPress();
+
+      return;
+    }
+
+    if (flow === 'profile-creation') {
+      dispatch(skipProfileCreation(true));
+    }
+
+    navDispatch(StackActions.pop(skipAmount));
+  }, [navDispatch, customSkipPress, skipAmount, flow, dispatch]);
+
   return (
     <Container
       backgroundColor="backgroundDarkPurple"
@@ -44,7 +76,7 @@ const OnboardingPage = ({
     >
       <NavigationStackHeader
         canGoBack={canGoBack}
-        onSkipPress={onSkipPress}
+        onSkipPress={handleSkipPress}
         backgroundColor="backgroundDarkPurple"
         marginBottom={4}
         leftIconProps={leftIconProps}
