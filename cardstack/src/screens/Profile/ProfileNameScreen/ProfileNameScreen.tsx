@@ -18,14 +18,13 @@ import {
   NavigationStackHeader,
   Text,
   Touchable,
+  useOnboardingPage,
 } from '@cardstack/components';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
 import { Device } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
-
-import { useProfileScreensHelper } from '../helpers';
 
 import ProfilePhonePreview from './components/ProfilePhonePreview';
 import { strings } from './strings';
@@ -189,10 +188,10 @@ export const ProfileNameScreen = () => {
 
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
-  const {
-    containerStyles,
-    onSkipPress: handleSkipPress,
-  } = useProfileScreensHelper();
+  const { containerStyles, handleSkipPress } = useOnboardingPage({
+    flow: 'profile-creation',
+    skipAmount: 2,
+  });
 
   return (
     <Container
@@ -202,7 +201,7 @@ export const ProfileNameScreen = () => {
       style={containerStyles}
     >
       <NavigationStackHeader
-        onSkipPress={!isUpdating ? handleSkipPress(2) : undefined}
+        onSkipPress={!isUpdating ? handleSkipPress : undefined}
         backgroundColor="backgroundDarkPurple"
       />
       <Animated.View style={animatedHeaderStyles}>

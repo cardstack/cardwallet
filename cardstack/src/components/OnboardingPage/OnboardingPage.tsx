@@ -1,34 +1,8 @@
-import { useNavigation, StackActions } from '@react-navigation/native';
-import React, {
-  memo,
-  PropsWithChildren,
-  ReactNode,
-  useCallback,
-  useMemo,
-} from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
+import React, { memo, PropsWithChildren } from 'react';
 
-import {
-  Container,
-  IconName,
-  IconProps,
-  NavigationStackHeader,
-} from '@cardstack/components';
-import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
+import { Container, NavigationStackHeader } from '@cardstack/components';
 
-import { OnboardingFlows } from './types';
-
-interface OnboardingPageProps {
-  flow: OnboardingFlows;
-  footer?: ReactNode;
-  canGoBack?: boolean;
-  customSkipPress?: () => void;
-  skipAmount?: number;
-  leftIconProps?: Omit<IconProps, 'name'> & {
-    name?: IconName;
-  };
-}
+import useOnboardingPage, { OnboardingPageProps } from './useOnboardingPage';
 
 const OnboardingPage = ({
   flow,
@@ -39,32 +13,11 @@ const OnboardingPage = ({
   footer,
   leftIconProps,
 }: PropsWithChildren<OnboardingPageProps>) => {
-  // handles SafeAreaView bottom spacing for consistency
-  const { bottom } = useSafeAreaInsets();
-
-  const containerStyles = useMemo(
-    () => ({
-      paddingBottom: bottom,
-    }),
-    [bottom]
-  );
-
-  const { dispatch: navDispatch } = useNavigation();
-  const dispatch = useDispatch();
-
-  const handleSkipPress = useCallback(() => {
-    if (customSkipPress) {
-      customSkipPress();
-
-      return;
-    }
-
-    if (flow === 'profile-creation') {
-      dispatch(skipProfileCreation(true));
-    }
-
-    navDispatch(StackActions.pop(skipAmount));
-  }, [navDispatch, customSkipPress, skipAmount, flow, dispatch]);
+  const { containerStyles, handleSkipPress } = useOnboardingPage({
+    customSkipPress,
+    flow,
+    skipAmount,
+  });
 
   return (
     <Container
