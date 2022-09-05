@@ -9,11 +9,10 @@ import {
   Image,
   Text,
   Touchable,
-  NavigationStackHeader,
+  OnboardingPage,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
-import { useProfileScreensHelper } from '../helpers';
 
 import { strings } from './strings';
 import { usePurchaseCTAScreen } from './usePurchaseCTAScreen';
@@ -32,8 +31,6 @@ const PurchaseCTAScreen = () => {
     onPressPrepaidCards,
     showPrepaidCardOption,
   } = usePurchaseCTAScreen();
-
-  const { containerStyles, onSkipPress } = useProfileScreensHelper();
 
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
@@ -56,21 +53,12 @@ const PurchaseCTAScreen = () => {
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
-    <Container
-      flex={1}
-      style={containerStyles}
-      backgroundColor="backgroundDarkPurple"
-    >
-      <NavigationStackHeader
-        onSkipPress={onSkipPress(3)}
-        backgroundColor="backgroundDarkPurple"
-      />
+    <OnboardingPage flow="profile-creation" skipAmount={3}>
       <Container
         flex={1}
         flexDirection="column"
         justifyContent="space-between"
         paddingBottom={3}
-        paddingHorizontal={5}
       >
         <Text color="white" fontSize={24} fontFamily="OpenSans-Light">
           {strings.title}
@@ -112,7 +100,7 @@ const PurchaseCTAScreen = () => {
           </Text>
         </Touchable>
       </Container>
-    </Container>
+    </OnboardingPage>
   );
 };
 
