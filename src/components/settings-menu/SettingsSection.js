@@ -19,7 +19,6 @@ import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useAccountSettings,
   useSendFeedback,
-  useWalletManager,
   useWallets,
 } from '@rainbow-me/hooks';
 
@@ -58,10 +57,10 @@ export default function SettingsSection({
   onPressShowSecret,
   onPressMyWalletAddress,
   onPressDS,
+  onPressSecurity,
 }) {
   const { wallets } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
-  const { updateWalletPIN } = useWalletManager();
 
   const onSendFeedback = useSendFeedback();
 
@@ -156,9 +155,8 @@ export default function SettingsSection({
         </ListItem>
         <ListItem
           icon={<Icon color="settingsTeal" name="lock" />}
-          label="Change Pin"
-          onPress={updateWalletPIN}
-          testID="changePin-section"
+          label="Security"
+          onPress={onPressSecurity}
         >
           <ListItemArrowGroup />
         </ListItem>

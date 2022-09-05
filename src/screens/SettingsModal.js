@@ -20,6 +20,7 @@ import { useWallets } from '../hooks';
 import { Icon, Text, Touchable } from '@cardstack/components';
 import { NAV_HEADER_HEIGHT } from '@cardstack/components/MainHeader/components/MainHeaderWrapper';
 import { slideLeftToRightPreset } from '@cardstack/navigation';
+import { SecurityScreen } from '@cardstack/screens';
 import DesignSystemScreen from '@cardstack/screens/Dev/DesignSystemScreen';
 import WalletAddressScreen from '@cardstack/screens/WalletAddressScreen/WalletAddressScreen';
 import { palette } from '@cardstack/theme';
@@ -108,6 +109,11 @@ export const SettingsPages = {
     component: WalletAddressScreen,
     key: 'MyWalletAddressSection',
     title: 'My Wallet Address',
+  },
+  security: {
+    component: SecurityScreen,
+    key: 'security',
+    title: 'Security',
   },
 };
 
@@ -227,6 +233,7 @@ export default function SettingsModal() {
             )}
             onPressNetwork={onPressSection(SettingsPages.network)}
             onPressNotifications={onPressSection(SettingsPages.notifications)}
+            onPressSecurity={onPressSection(SettingsPages.security)}
             onPressWCSessions={onPressSection(SettingsPages.walletconnect)}
           />
         )}
