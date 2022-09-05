@@ -22,7 +22,7 @@ const ProfileSlugScreen = () => {
   } = useProfileSlugScreen();
 
   return (
-    <OnboardingPage flow="backup">
+    <OnboardingPage flow="backup" canGoBack={false}>
       <Container flex={1} justifyContent="space-between">
         <Container flex={0.8}>
           <Container width="90%" paddingBottom={4}>
