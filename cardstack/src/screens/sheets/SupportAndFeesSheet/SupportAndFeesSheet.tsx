@@ -1,25 +1,27 @@
+import { useRoute } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 import { FlatList } from 'react-native';
 
 import { Container, Sheet, Text } from '@cardstack/components';
-
-import { supportedCountries } from '@rainbow-me/references/wyre';
+import { RouteType } from '@cardstack/navigation/types';
+import { SupportedCountries } from '@cardstack/services/wyre-api';
 
 import { strings } from './strings';
 
-type Country = keyof typeof supportedCountries;
-const countriesKeys = Object.keys(supportedCountries);
+type NavParams = { supportedCountries: SupportedCountries };
 
 const SupportAndFeesSheet = () => {
+  const {
+    params: { supportedCountries },
+  } = useRoute<RouteType<NavParams>>();
+
   const renderItem = useCallback(
-    ({ item: country }) => (
+    ({ item: country }: { item: string }) => (
       <Container flex={1} marginBottom={2}>
-        <Text>
-          {`${supportedCountries[country as Country].name} (${country})`}
-        </Text>
+        <Text>{`${supportedCountries[country].name} (${country})`}</Text>
       </Container>
     ),
-    []
+    [supportedCountries]
   );
 
   return (
@@ -48,7 +50,11 @@ const SupportAndFeesSheet = () => {
         </Container>
         <Text marginBottom={10}>{strings.activation.footerInfo}</Text>
         <SectionHeaderText text={strings.supportedCountriesTitle} />
-        <FlatList data={countriesKeys} numColumns={2} renderItem={renderItem} />
+        <FlatList
+          data={Object.keys(supportedCountries)}
+          numColumns={2}
+          renderItem={renderItem}
+        />
       </Container>
     </Sheet>
   );

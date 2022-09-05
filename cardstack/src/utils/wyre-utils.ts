@@ -18,10 +18,10 @@ import {
 } from 'react-native-dotenv';
 import publicIP from 'react-native-public-ip';
 
+import { SupportedCountries } from '@cardstack/services/wyre-api';
 import { isMainnet } from '@cardstack/utils/cardpay-utils';
 
 import { Network } from '@rainbow-me/helpers/networkTypes';
-import { WYRE_SUPPORTED_COUNTRIES_ISO } from '@rainbow-me/references/wyre';
 import logger from 'logger';
 
 const PAYMENT_PROCESSOR_COUNTRY_CODE = 'US';
@@ -82,7 +82,8 @@ export const showApplePayRequest = async (
   purchaseFee: string,
   sourceAmount: string,
   network: Network,
-  sourceCurrency: string
+  sourceCurrency: string,
+  supportedCountries: SupportedCountries
 ) => {
   const feeAmount = subtract(sourceAmountWithFees, sourceAmount);
 
@@ -94,13 +95,12 @@ export const showApplePayRequest = async (
     : MERCHANT_ID_TEST;
 
   const methodData = [
-    // TODO: keep track of supported countries
     {
       data: {
         countryCode: PAYMENT_PROCESSOR_COUNTRY_CODE,
         currencyCode: sourceCurrency,
         merchantIdentifier,
-        supportedCountries: WYRE_SUPPORTED_COUNTRIES_ISO,
+        supportedCountries: Object.keys(supportedCountries),
         supportedNetworks: ['visa', 'mastercard', 'discover'],
       },
       supportedMethods: ['apple-pay'],
@@ -134,9 +134,7 @@ export const showApplePayRequest = async (
   try {
     return await paymentRequest.show();
   } catch (error) {
-    logger.sentry(
-      `Apple Pay - Show payment request catch - ${referenceInfo.referenceId}`
-    );
+    logger.sentry(`Apple Pay - Show payment request catch - ${error}`);
 
     captureException(error);
 
@@ -441,6 +439,7 @@ interface CreateOrderParams {
   sourceCurrency: string;
   destCurrency: string;
   network: Network;
+  supportedCountries: SupportedCountries;
 }
 
 export const createWyreOrderWithApplePay = async (
@@ -453,6 +452,7 @@ export const createWyreOrderWithApplePay = async (
       sourceCurrency,
       destCurrency,
       network,
+      supportedCountries,
     } = params;
 
     const reserveOrder = reserveWyreOrder(
@@ -496,7 +496,8 @@ export const createWyreOrderWithApplePay = async (
       purchaseFee,
       amount,
       network,
-      sourceCurrency
+      sourceCurrency,
+      supportedCountries
     );
 
     if (!applePayResponse) {

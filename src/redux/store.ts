@@ -11,6 +11,7 @@ import { welcomeBannerSliceName } from '@cardstack/redux/welcomeBanner';
 import { hubApi } from '@cardstack/services/hub/hub-api';
 import { safesApi } from '@cardstack/services/safes-api';
 import { serviceStatusApi } from '@cardstack/services/service-status-api';
+import { wyreApi } from '@cardstack/services/wyre-api';
 
 const enableReduxFlipper = true;
 
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   [safesApi.reducerPath]: safesApi.reducer,
   [hubApi.reducerPath]: hubApi.reducer,
   [serviceStatusApi.reducerPath]: serviceStatusApi.reducer,
+  [wyreApi.reducerPath]: wyreApi.reducer,
   [authSlice.name]: authSlice.reducer,
 });
 
