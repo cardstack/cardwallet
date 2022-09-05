@@ -139,6 +139,14 @@ const square = {
   },
 };
 
+const red = {
+  backgroundColor: 'red',
+  borderColor: 'red',
+  textStyle: {
+    color: 'white',
+  },
+};
+
 export const buttonVariants = {
   defaults: {
     alignItems: 'center',
@@ -234,6 +242,7 @@ export const buttonVariants = {
   },
   disabled,
   disabledBlack,
+  red,
 };
 
 export type ButtonVariants = keyof typeof buttonVariants;
