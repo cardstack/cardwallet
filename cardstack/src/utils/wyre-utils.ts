@@ -3,7 +3,7 @@ import { PaymentRequest } from '@rainbow-me/react-native-payments';
 import { captureException } from '@sentry/react-native';
 import axios from 'axios';
 import cryptoJS from 'crypto-js';
-import { get, join, split, toLower, values } from 'lodash';
+import { join, split, toLower, values } from 'lodash';
 import {
   MERCHANT_ID,
   MERCHANT_ID_TEST,
@@ -18,6 +18,7 @@ import {
 } from 'react-native-dotenv';
 import publicIP from 'react-native-public-ip';
 
+import { Navigation, Routes } from '@cardstack/navigation';
 import { SupportedCountries } from '@cardstack/services/wyre-api';
 import { isMainnet } from '@cardstack/utils/cardpay-utils';
 
@@ -275,8 +276,9 @@ export const createOrder = async (
     );
 
     if (response.status >= 200 && response.status < 300) {
-      const orderId = get(response, 'data.id', null);
-      return { orderId };
+      const { authenticationUrl, id: orderId } = response.data;
+
+      return { orderId, authenticationUrl };
     }
 
     logger.sentry('WYRE - getOrderId response - was not 200', response.data);
@@ -506,7 +508,7 @@ export const createWyreOrderWithApplePay = async (
       return;
     }
 
-    const { orderId } = await createOrder(
+    const { orderId, authenticationUrl } = await createOrder(
       referenceInfo,
       applePayResponse,
       sourceAmountWithFees,
@@ -518,8 +520,16 @@ export const createWyreOrderWithApplePay = async (
     );
 
     logger.sentry('orderId', orderId);
-
     applePayResponse.complete(orderId ? 'success' : 'fail');
+
+    if (authenticationUrl && __DEV__) {
+      await new Promise<void>(async resolve => {
+        Navigation.handleAction(Routes.WYRE_AUTH_WIDGET, {
+          authenticationUrl,
+          onSuccess: resolve,
+        });
+      });
+    }
 
     return orderId;
   } catch (error) {
