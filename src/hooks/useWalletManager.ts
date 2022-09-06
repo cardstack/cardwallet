@@ -10,7 +10,6 @@ import {
   loadSeedPhrase,
   migrateSecretsWithNewPin,
   RainbowWallet,
-  updateWalletWithNewPIN,
 } from '../model/wallet';
 import {
   resetAccountState,
@@ -73,19 +72,6 @@ export default function useWalletManager() {
     },
     [navigate]
   );
-
-  const updateWalletPIN = useCallback(async () => {
-    navigate(Routes.PIN_SCREEN, {
-      flow: PinFlow.new,
-      variant: 'light',
-      canGoBack: true,
-      dismissOnSuccess: true,
-      savePinOnSuccess: false,
-      onSuccess: async (pin: string) => {
-        await updateWalletWithNewPIN(pin);
-      },
-    });
-  }, [navigate]);
 
   const loadAllSeedPhrases = useCallback(
     async (wallets: RainbowWallet[], forceOldSeed: boolean = true) => {
@@ -306,6 +292,5 @@ export default function useWalletManager() {
     importWallet,
     changeSelectedWallet,
     initWalletResetNavState,
-    updateWalletPIN,
   };
 }

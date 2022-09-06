@@ -9,7 +9,6 @@ import {
   Text,
   Touchable,
 } from '@cardstack/components';
-import { BiometricSwitch } from '@cardstack/components/BiometricSwitch';
 import { CardwalletLogo } from '@cardstack/components/CardwalletLogo';
 import { colorStyleVariants } from '@cardstack/theme/colorStyleVariants';
 import { hitSlop } from '@cardstack/utils/layouts';
@@ -74,9 +73,6 @@ const UnlockScreen = () => {
                     </Text>
                   </Container>
                 )}
-              </Container>
-              <Container paddingBottom={1}>
-                <BiometricSwitch variant={variant} />
               </Container>
             </Container>
             <Container
