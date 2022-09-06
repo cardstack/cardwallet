@@ -40,3 +40,4 @@ export { default as TokenWithChartSheet } from './sheets/TokenWithChartSheet/Tok
 export { default as SeedPhraseBackup } from './SeedPhraseBackup/SeedPhraseBackup';
 export { default as SecurityScreen } from './SecurityScreen/SecurityScreen';
 export * from './Profile';
+export { default as WyreAuthenticationWidget } from './WyreAuthenticationWidget';
