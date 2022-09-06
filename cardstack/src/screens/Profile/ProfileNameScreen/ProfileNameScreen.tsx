@@ -15,14 +15,13 @@ import {
   CenteredContainer,
   Container,
   Input,
-  NavigationStackHeader,
   Text,
   Touchable,
-  useOnboardingPage,
 } from '@cardstack/components';
+import { OnboardingPage } from '@cardstack/components/OnboardingPage';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
+import { Device, screenHeight } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
 
@@ -37,7 +36,7 @@ enum Animation {
 
 const layouts = {
   defaultPadding: 5,
-  keyboardVerticalOffset: Device.isIOS ? 15 : 95,
+  keyboardVerticalOffset: Device.isIOS ? screenHeight * 0.12 : -95,
   dot: {
     size: 24,
     radius: 50,
@@ -52,8 +51,7 @@ const styles = StyleSheet.create({
   },
   avoidViewContainer: {
     backgroundColor: colors.backgroundDarkPurple,
-    flex: 0.35,
-    paddingHorizontal: layouts.defaultPadding * SPACING_MULTIPLIER,
+    flex: 0.4,
   },
   floatingFooter: {
     // Overrides parent container padding, to hide phone image
@@ -177,7 +175,6 @@ export const ProfileNameScreen = () => {
         inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
         outputRange: [1, 0],
       }),
-      paddingHorizontal: layouts.defaultPadding * SPACING_MULTIPLIER,
     }),
     [animated]
   );
@@ -188,22 +185,8 @@ export const ProfileNameScreen = () => {
 
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
-  const { containerStyles, handleSkipPress } = useOnboardingPage({
-    flow: 'profile-creation',
-    skipAmount: 2,
-  });
-
   return (
-    <Container
-      backgroundColor="backgroundDarkPurple"
-      flex={1}
-      justifyContent="space-between"
-      style={containerStyles}
-    >
-      <NavigationStackHeader
-        onSkipPress={!isUpdating ? handleSkipPress : undefined}
-        backgroundColor="backgroundDarkPurple"
-      />
+    <OnboardingPage flow="backup">
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>
@@ -238,7 +221,6 @@ export const ProfileNameScreen = () => {
         alignItems="center"
         justifyContent="flex-end"
         paddingBottom={2}
-        paddingHorizontal={layouts.defaultPadding}
       >
         <Animated.View style={phonePreviewStyles}>
           <ProfilePhonePreview
@@ -254,7 +236,7 @@ export const ProfileNameScreen = () => {
         behavior="position"
         style={styles.avoidViewContainer}
         contentContainerStyle={styles.avoidViewContent}
-        keyboardVerticalOffset={-layouts.keyboardVerticalOffset}
+        keyboardVerticalOffset={layouts.keyboardVerticalOffset}
       >
         <Container
           flex={1}
@@ -288,7 +270,7 @@ export const ProfileNameScreen = () => {
           {strings.btns[flow]}
         </Button>
       </CenteredContainer>
-    </Container>
+    </OnboardingPage>
   );
 };
 
