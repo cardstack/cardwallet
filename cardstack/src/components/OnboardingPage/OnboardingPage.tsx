@@ -8,7 +8,6 @@ const OnboardingPage = ({
   flow,
   canGoBack,
   customSkipPress,
-  skipAmount = 1,
   children,
   footer,
   leftIconProps,
@@ -16,7 +15,6 @@ const OnboardingPage = ({
   const { containerStyles, handleSkipPress } = useOnboardingPage({
     customSkipPress,
     flow,
-    skipAmount,
   });
 
   return (

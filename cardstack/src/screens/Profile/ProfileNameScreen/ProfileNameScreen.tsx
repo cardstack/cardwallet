@@ -190,7 +190,6 @@ export const ProfileNameScreen = () => {
 
   const { containerStyles, handleSkipPress } = useOnboardingPage({
     flow: 'profile-creation',
-    skipAmount: 2,
   });
 
   return (

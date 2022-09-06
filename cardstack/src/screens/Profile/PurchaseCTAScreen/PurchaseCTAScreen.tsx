@@ -53,7 +53,7 @@ const PurchaseCTAScreen = () => {
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
-    <OnboardingPage flow="profile-creation" skipAmount={3}>
+    <OnboardingPage flow="profile-creation">
       <Container
         flex={1}
         flexDirection="column"

@@ -13,17 +13,15 @@ export interface OnboardingPageProps {
   footer?: ReactNode;
   canGoBack?: boolean;
   customSkipPress?: () => void;
-  skipAmount?: number;
   leftIconProps?: Omit<IconProps, 'name'> & {
     name?: IconName;
   };
 }
 
 const useOnboardingPage = ({
-  skipAmount,
   flow,
   customSkipPress,
-}: Pick<OnboardingPageProps, 'skipAmount' | 'flow' | 'customSkipPress'>) => {
+}: Pick<OnboardingPageProps, 'flow' | 'customSkipPress'>) => {
   // handles SafeAreaView bottom spacing for consistency
   const { bottom } = useSafeAreaInsets();
 
@@ -48,8 +46,8 @@ const useOnboardingPage = ({
       dispatch(skipProfileCreation(true));
     }
 
-    navDispatch(StackActions.pop(skipAmount));
-  }, [navDispatch, customSkipPress, skipAmount, flow, dispatch]);
+    navDispatch(StackActions.popToTop());
+  }, [navDispatch, customSkipPress, flow, dispatch]);
 
   return {
     containerStyles,
