@@ -7,4 +7,5 @@ export const remoteConfigDefaults = {
   featurePrepaidCardDrop: false,
   featureProfilePurchaseOnboarding: false,
   betaAccessGranted: false,
+  useHttpSokolNode: true,
 };

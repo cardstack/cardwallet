@@ -37,4 +37,5 @@ export const remoteFlags = (): { [K in ConfigKey]: RemoteConfigValues[K] } => ({
     'featureProfilePurchaseOnboarding'
   ),
   betaAccessGranted: getRemoteConfigAsBoolean('betaAccessGranted'),
+  useHttpSokolNode: getRemoteConfigAsBoolean('useHttpSokolNode'),
 });
