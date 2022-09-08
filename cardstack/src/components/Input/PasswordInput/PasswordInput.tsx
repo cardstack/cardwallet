@@ -11,6 +11,8 @@ import {
 import { palette } from '@cardstack/theme';
 import { hitSlop } from '@cardstack/utils';
 
+import { usePasswordInput } from './usePasswordInput';
+
 const baseInputProps: InputProps = {
   paddingHorizontal: 5,
   paddingVertical: 3,
@@ -19,6 +21,12 @@ const baseInputProps: InputProps = {
 };
 
 const PasswordInput = () => {
+  const {
+    togglePasswordVisibility,
+    iconName,
+    isPasswordVisible,
+  } = usePasswordInput();
+
   return (
     <Container width="100%">
       <Container
@@ -33,18 +41,19 @@ const PasswordInput = () => {
           <Input
             placeholder="Enter password"
             placeholderTextColor={palette.blueText}
-            secureTextEntry={true}
+            secureTextEntry={!isPasswordVisible}
             autoCapitalize="none"
             {...baseInputProps}
           />
         </Container>
         <Touchable
+          onPress={togglePasswordVisibility}
           flex={0.15}
           hitSlop={hitSlop.small}
           alignItems="center"
           justifyContent="center"
         >
-          <Icon name="eye" color="teal" iconSize="small" />
+          <Icon name={iconName} color="teal" iconSize="small" />
         </Touchable>
       </Container>
       <Container flexDirection="row" alignItems="center">
