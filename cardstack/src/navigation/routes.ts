@@ -33,7 +33,7 @@ export const MainRoutes = {
   SUPPORT_AND_FEES: 'SupportAndFeesSheet',
   AVAILABLE_BALANCE_SHEET: 'AvailableBalanceSheet',
   TOKEN_WITH_CHART_SHEET: 'TokenWithChartSheet',
-  WYRE_AUTH_WIDGET: 'WyreAuthentiationWidget',
+  WYRE_AUTH_WIDGET: 'WyreAuthenticationWidget',
 } as const;
 
 const TabRoutes = {
