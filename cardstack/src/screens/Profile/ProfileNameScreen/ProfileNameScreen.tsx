@@ -67,6 +67,7 @@ export const ProfileNameScreen = () => {
     onPressEditColor,
     isUpdating,
     isBlocked,
+    triggerSkipProfileCreation,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
@@ -186,7 +187,10 @@ export const ProfileNameScreen = () => {
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
   return (
-    <PageWithStackHeader>
+    <PageWithStackHeader
+      showSkip
+      skipPressCallback={triggerSkipProfileCreation}
+    >
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>

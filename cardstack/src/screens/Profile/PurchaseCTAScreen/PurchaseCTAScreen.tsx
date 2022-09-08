@@ -30,6 +30,7 @@ const PurchaseCTAScreen = () => {
     localizedValue,
     onPressPrepaidCards,
     showPrepaidCardOption,
+    triggerSkipProfileCreation,
   } = usePurchaseCTAScreen();
 
   const BenefitsItem = useCallback(
@@ -53,7 +54,10 @@ const PurchaseCTAScreen = () => {
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
-    <PageWithStackHeader flow="profile-creation">
+    <PageWithStackHeader
+      showSkip
+      skipPressCallback={triggerSkipProfileCreation}
+    >
       <Container
         flex={1}
         flexDirection="column"

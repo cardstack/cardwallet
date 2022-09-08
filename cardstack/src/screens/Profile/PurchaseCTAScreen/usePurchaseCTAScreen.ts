@@ -6,6 +6,7 @@ import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
 import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
+import { usePersistedFlags } from '@cardstack/redux/hooks/usePersistedFlags';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { remoteFlags } from '@cardstack/services/remote-config';
@@ -73,6 +74,8 @@ export const usePurchaseCTAScreen = () => {
     setPurchaseEnd();
   }, [purchaseProfile, setPurchaseStart, setPurchaseEnd]);
 
+  const { triggerSkipProfileCreation } = usePersistedFlags();
+
   return {
     onPressChargeExplanation,
     onPressBuy,
@@ -80,5 +83,6 @@ export const usePurchaseCTAScreen = () => {
     onPressPrepaidCards: purchaseWithPrepaidCard,
     showPrepaidCardOption,
     localizedValue,
+    triggerSkipProfileCreation,
   };
 };

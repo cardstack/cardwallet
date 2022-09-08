@@ -23,7 +23,7 @@ const ProfileChargeExplanationScreen = () => {
   } = useRoute<RouteType<NavParams>>();
 
   return (
-    <PageWithStackHeader flow="profile-creation" leftIconProps={leftIconProps}>
+    <PageWithStackHeader showSkip={false} leftIconProps={leftIconProps}>
       <Container flex={1} backgroundColor="backgroundDarkPurple">
         <Text color="white" variant="pageHeader" paddingBottom={5}>
           {strings.title}

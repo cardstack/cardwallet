@@ -19,12 +19,14 @@ const ProfileSlugScreen = () => {
     slugValidation: { slugAvailable, detail: slugFeedback },
     canContinue,
     onContinuePress,
+    triggerSkipProfileCreation,
   } = useProfileSlugScreen();
 
   return (
     <PageWithStackHeader
       canGoBack={false}
       showSkip
+      skipPressCallback={triggerSkipProfileCreation}
     >
       <Container flex={1} justifyContent="space-between">
         <Container flex={0.8}>

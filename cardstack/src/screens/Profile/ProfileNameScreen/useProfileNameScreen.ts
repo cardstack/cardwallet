@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useProfileUpdate } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
+import { usePersistedFlags } from '@cardstack/redux/hooks/usePersistedFlags';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { MerchantInformation } from '@cardstack/types';
 import { contrastingTextColor } from '@cardstack/utils';
@@ -72,6 +73,8 @@ export const useProfileNameScreen = () => {
     updateProfile({ ...profile, id: currentProfile.id || '' });
   }, [navigate, profile, currentProfile, updateProfile]);
 
+  const { triggerSkipProfileCreation } = usePersistedFlags();
+
   return {
     onContinuePress,
     onChangeText,
@@ -79,5 +82,6 @@ export const useProfileNameScreen = () => {
     profile,
     isUpdating: !!currentProfile.name,
     isBlocked,
+    triggerSkipProfileCreation,
   };
 };

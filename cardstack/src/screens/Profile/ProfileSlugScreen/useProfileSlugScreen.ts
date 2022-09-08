@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useInitIAPProducts } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
+import { usePersistedFlags } from '@cardstack/redux/hooks/usePersistedFlags';
 import { useLazyValidateProfileSlugQuery } from '@cardstack/services';
 import { matchMinLength } from '@cardstack/utils/validators';
 
@@ -79,11 +80,14 @@ export const useProfileSlugScreen = () => {
     [isFetching, isLoading, slugValidation.slugAvailable]
   );
 
+  const { triggerSkipProfileCreation } = usePersistedFlags();
+
   return {
     slug,
     onSlugChange,
     onContinuePress,
     slugValidation,
     canContinue,
+    triggerSkipProfileCreation,
   };
 };
