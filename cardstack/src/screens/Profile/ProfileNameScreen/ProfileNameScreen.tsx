@@ -36,7 +36,7 @@ enum Animation {
 
 const layouts = {
   defaultPadding: 5,
-  keyboardVerticalOffset: Device.isIOS ? screenHeight * 0.12 : -95,
+  keyboardVerticalOffset: Device.isIOS ? screenHeight * 0.12 : -55,
   dot: {
     size: 24,
     radius: 50,
@@ -117,7 +117,7 @@ export const ProfileNameScreen = () => {
     const constraints = {
       baseWidth: 230,
       baseHeight: 258,
-      scaling: { iOS: 1.55, android: 1.8 },
+      scaling: { iOS: 1.55, android: 1.5 },
     };
 
     const phonePrevWidth = Math.round(
@@ -145,16 +145,16 @@ export const ProfileNameScreen = () => {
       },
     ];
 
-    if (Device.isIOS) {
-      const translateYTo = -(phonePrevAspectRatio * 65);
+    const translateYTo = Device.isIOS
+      ? -(phonePrevAspectRatio * 65)
+      : -(phonePrevAspectRatio * 32);
 
-      transform.push({
-        translateY: animated.interpolate({
-          inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
-          outputRange: [0, translateYTo],
-        }),
-      });
-    }
+    transform.push({
+      translateY: animated.interpolate({
+        inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
+        outputRange: [0, translateYTo],
+      }),
+    });
 
     return {
       width: phonePrevWidth,
