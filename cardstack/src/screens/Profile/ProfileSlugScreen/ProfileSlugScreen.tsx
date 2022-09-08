@@ -6,7 +6,7 @@ import {
   Button,
   ValidationMessage,
   SuffixedInput,
-  OnboardingPage,
+  PageWithStackHeader,
 } from '@cardstack/components';
 
 import { strings } from './strings';
@@ -22,7 +22,7 @@ const ProfileSlugScreen = () => {
   } = useProfileSlugScreen();
 
   return (
-    <OnboardingPage flow="backup" canGoBack={false}>
+    <PageWithStackHeader flow="backup" canGoBack={false}>
       <Container flex={1} justifyContent="space-between">
         <Container flex={0.8}>
           <Container width="90%" paddingBottom={4}>
@@ -53,7 +53,7 @@ const ProfileSlugScreen = () => {
           </Button>
         </Container>
       </Container>
-    </OnboardingPage>
+    </PageWithStackHeader>
   );
 };
 

@@ -54,4 +54,4 @@ export * from './ValidationMessage';
 export * from './FloatingTag';
 export { default as SuffixedInput } from './Input/SuffixedInput/SuffixedInput';
 export * from './BackupStatus';
-export * from './OnboardingPage';
+export * from './PageWithStackHeader';

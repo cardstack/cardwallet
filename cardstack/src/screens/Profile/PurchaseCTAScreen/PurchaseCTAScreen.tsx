@@ -9,7 +9,7 @@ import {
   Image,
   Text,
   Touchable,
-  OnboardingPage,
+  PageWithStackHeader,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
@@ -53,7 +53,7 @@ const PurchaseCTAScreen = () => {
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
-    <OnboardingPage flow="profile-creation">
+    <PageWithStackHeader flow="profile-creation">
       <Container
         flex={1}
         flexDirection="column"
@@ -100,7 +100,7 @@ const PurchaseCTAScreen = () => {
           </Text>
         </Touchable>
       </Container>
-    </OnboardingPage>
+    </PageWithStackHeader>
   );
 };
 

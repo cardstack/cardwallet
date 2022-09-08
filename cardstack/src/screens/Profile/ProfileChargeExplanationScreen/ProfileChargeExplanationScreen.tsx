@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import {
   Container,
   IconProps,
-  OnboardingPage,
+  PageWithStackHeader,
   Text,
 } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
@@ -23,7 +23,7 @@ const ProfileChargeExplanationScreen = () => {
   } = useRoute<RouteType<NavParams>>();
 
   return (
-    <OnboardingPage flow="profile-creation" leftIconProps={leftIconProps}>
+    <PageWithStackHeader flow="profile-creation" leftIconProps={leftIconProps}>
       <Container flex={1} backgroundColor="backgroundDarkPurple">
         <Text color="white" variant="pageHeader" paddingBottom={5}>
           {strings.title}
@@ -32,7 +32,7 @@ const ProfileChargeExplanationScreen = () => {
           {strings.description(localizedValue)}
         </Text>
       </Container>
-    </OnboardingPage>
+    </PageWithStackHeader>
   );
 };
 

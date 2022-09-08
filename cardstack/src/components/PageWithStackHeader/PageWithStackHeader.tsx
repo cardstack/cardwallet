@@ -2,17 +2,19 @@ import React, { memo, PropsWithChildren } from 'react';
 
 import { Container, NavigationStackHeader } from '@cardstack/components';
 
-import useOnboardingPage, { OnboardingPageProps } from './useOnboardingPage';
+import usePageWithStackHeader, {
+  PageWithStackHeaderProps,
+} from './usePageWithStackHeader';
 
-const OnboardingPage = ({
+const PageWithStackHeader = ({
   flow,
   canGoBack,
   customSkipPress,
   children,
   footer,
   leftIconProps,
-}: PropsWithChildren<OnboardingPageProps>) => {
-  const { containerStyles, handleSkipPress } = useOnboardingPage({
+}: PropsWithChildren<PageWithStackHeaderProps>) => {
+  const { containerStyles, handleSkipPress } = usePageWithStackHeader({
     customSkipPress,
     flow,
   });
@@ -39,4 +41,4 @@ const OnboardingPage = ({
   );
 };
 
-export default memo(OnboardingPage);
+export default memo(PageWithStackHeader);

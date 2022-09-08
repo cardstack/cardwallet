@@ -17,8 +17,8 @@ import {
   Input,
   Text,
   Touchable,
+  PageWithStackHeader,
 } from '@cardstack/components';
-import { OnboardingPage } from '@cardstack/components/OnboardingPage';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
 import { Device, screenHeight } from '@cardstack/utils';
@@ -186,7 +186,7 @@ export const ProfileNameScreen = () => {
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
   return (
-    <OnboardingPage flow="backup">
+    <PageWithStackHeader flow="backup">
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>
@@ -270,7 +270,7 @@ export const ProfileNameScreen = () => {
           {strings.btns[flow]}
         </Button>
       </CenteredContainer>
-    </OnboardingPage>
+    </PageWithStackHeader>
   );
 };
 

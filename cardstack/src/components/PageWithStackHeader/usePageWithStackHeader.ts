@@ -8,20 +8,25 @@ import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 
 import { OnboardingFlows } from './types';
 
-export interface OnboardingPageProps {
+export interface PageWithStackHeaderProps {
   flow: OnboardingFlows;
   footer?: ReactNode;
   canGoBack?: boolean;
   customSkipPress?: () => void;
+  skipAmount?: number;
   leftIconProps?: Omit<IconProps, 'name'> & {
     name?: IconName;
   };
 }
 
-const useOnboardingPage = ({
+const usePageWithStackHeader = ({
+  skipAmount,
   flow,
   customSkipPress,
-}: Pick<OnboardingPageProps, 'flow' | 'customSkipPress'>) => {
+}: Pick<
+  PageWithStackHeaderProps,
+  'skipAmount' | 'flow' | 'customSkipPress'
+>) => {
   // handles SafeAreaView bottom spacing for consistency
   const { bottom } = useSafeAreaInsets();
 
@@ -46,8 +51,8 @@ const useOnboardingPage = ({
       dispatch(skipProfileCreation(true));
     }
 
-    navDispatch(StackActions.popToTop());
-  }, [navDispatch, customSkipPress, flow, dispatch]);
+    navDispatch(StackActions.pop(skipAmount));
+  }, [navDispatch, customSkipPress, skipAmount, flow, dispatch]);
 
   return {
     containerStyles,
@@ -55,4 +60,4 @@ const useOnboardingPage = ({
   };
 };
 
-export default useOnboardingPage;
+export default usePageWithStackHeader;
