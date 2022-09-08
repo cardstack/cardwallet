@@ -186,7 +186,7 @@ export const ProfileNameScreen = () => {
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
   return (
-    <PageWithStackHeader flow="backup">
+    <PageWithStackHeader>
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>

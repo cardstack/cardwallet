@@ -1,23 +1,57 @@
-import React, { memo, PropsWithChildren } from 'react';
+import { useNavigation, StackActions } from '@react-navigation/native';
+import React, {
+  memo,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Container, NavigationStackHeader } from '@cardstack/components';
+import {
+  Container,
+  IconName,
+  IconProps,
+  NavigationStackHeader,
+} from '@cardstack/components';
 
-import usePageWithStackHeader, {
-  PageWithStackHeaderProps,
-} from './usePageWithStackHeader';
+interface PageWithStackHeaderProps {
+  canGoBack?: boolean;
+  showSkip?: boolean;
+  skipPressCallback?: () => void;
+  footer?: ReactNode;
+  leftIconProps?: Omit<IconProps, 'name'> & {
+    name?: IconName;
+  };
+}
 
 const PageWithStackHeader = ({
-  flow,
   canGoBack,
-  customSkipPress,
+  showSkip = false,
+  skipPressCallback,
   children,
   footer,
   leftIconProps,
 }: PropsWithChildren<PageWithStackHeaderProps>) => {
-  const { containerStyles, handleSkipPress } = usePageWithStackHeader({
-    customSkipPress,
-    flow,
-  });
+  const { dispatch: navDispatch } = useNavigation();
+
+  // handles SafeAreaView bottom spacing for consistency
+  const { bottom } = useSafeAreaInsets();
+
+  const containerStyles = useMemo(
+    () => ({
+      paddingBottom: bottom,
+    }),
+    [bottom]
+  );
+
+  const handleSkipPress = useCallback(() => {
+    navDispatch(StackActions.popToTop());
+
+    if (skipPressCallback) {
+      skipPressCallback();
+    }
+  }, [navDispatch, skipPressCallback]);
 
   return (
     <Container
@@ -29,7 +63,7 @@ const PageWithStackHeader = ({
     >
       <NavigationStackHeader
         canGoBack={canGoBack}
-        onSkipPress={handleSkipPress}
+        onSkipPress={showSkip ? handleSkipPress : undefined}
         backgroundColor="backgroundDarkPurple"
         marginBottom={4}
         leftIconProps={leftIconProps}

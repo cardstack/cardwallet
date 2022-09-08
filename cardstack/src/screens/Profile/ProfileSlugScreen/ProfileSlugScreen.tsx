@@ -22,7 +22,10 @@ const ProfileSlugScreen = () => {
   } = useProfileSlugScreen();
 
   return (
-    <PageWithStackHeader flow="backup" canGoBack={false}>
+    <PageWithStackHeader
+      canGoBack={false}
+      showSkip
+    >
       <Container flex={1} justifyContent="space-between">
         <Container flex={0.8}>
           <Container width="90%" paddingBottom={4}>
