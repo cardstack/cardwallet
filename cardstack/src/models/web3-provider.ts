@@ -3,6 +3,7 @@ import { getConstantByNetwork, HubConfig } from '@cardstack/cardpay-sdk';
 import Web3 from 'web3';
 import { WebsocketProvider } from 'web3-core';
 
+import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer1 } from '@cardstack/utils';
 
 import { getNetwork } from '@rainbow-me/handlers/localstorage/globalSettings';
@@ -20,11 +21,18 @@ const Web3WsProvider = {
         getConstantByNetwork('hubUrl', currentNetwork)
       );
 
+      const shouldUseSokolHttpNode =
+        currentNetwork === Network.sokol && remoteFlags().useHttpSokolNode;
+
       const hubConfigResponse = await hubConfig.getConfig();
 
-      const node = isLayer1(currentNetwork)
+      const wssPath = isLayer1(currentNetwork)
         ? hubConfigResponse.web3.layer1RpcNodeWssUrl
         : hubConfigResponse.web3.layer2RpcNodeWssUrl;
+
+      const node = shouldUseSokolHttpNode
+        ? hubConfigResponse.web3.layer2RpcNodeHttpsUrl
+        : wssPath;
 
       provider = new Web3.providers.WebsocketProvider(node, {
         timeout: 30000,
