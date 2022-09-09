@@ -27,7 +27,7 @@ interface PageWithStackHeaderProps {
 
 const PageWithStackHeader = ({
   canGoBack,
-  showSkip = false,
+  showSkip = true,
   skipPressCallback,
   children,
   footer,

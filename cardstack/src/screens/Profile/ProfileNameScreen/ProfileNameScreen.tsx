@@ -187,10 +187,7 @@ export const ProfileNameScreen = () => {
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
   return (
-    <PageWithStackHeader
-      showSkip
-      skipPressCallback={triggerSkipProfileCreation}
-    >
+    <PageWithStackHeader skipPressCallback={triggerSkipProfileCreation}>
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>

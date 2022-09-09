@@ -25,7 +25,6 @@ const ProfileSlugScreen = () => {
   return (
     <PageWithStackHeader
       canGoBack={false}
-      showSkip
       skipPressCallback={triggerSkipProfileCreation}
     >
       <Container flex={1} justifyContent="space-between">

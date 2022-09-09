@@ -54,10 +54,7 @@ const PurchaseCTAScreen = () => {
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
-    <PageWithStackHeader
-      showSkip
-      skipPressCallback={triggerSkipProfileCreation}
-    >
+    <PageWithStackHeader skipPressCallback={triggerSkipProfileCreation}>
       <Container
         flex={1}
         flexDirection="column"
