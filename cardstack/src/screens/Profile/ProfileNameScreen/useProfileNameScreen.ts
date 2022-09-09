@@ -1,13 +1,10 @@
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useState, useCallback, useMemo } from 'react';
 
 import { useProfileUpdate } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
+import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
 import { MerchantInformation } from '@cardstack/types';
 import { contrastingTextColor } from '@cardstack/utils';
@@ -23,7 +20,7 @@ export const useProfileNameScreen = () => {
 
   const { slug, ...currentProfile } = params;
 
-  const { navigate, dispatch: navDispatch } = useNavigation();
+  const { navigate } = useNavigation();
   const { accountAddress } = useAccountProfile();
 
   const [profileName, setProfileName] = useState(currentProfile.name || '');
@@ -76,17 +73,15 @@ export const useProfileNameScreen = () => {
     updateProfile({ ...profile, id: currentProfile.id || '' });
   }, [navigate, profile, currentProfile, updateProfile]);
 
-  const onSkipPress = useCallback(() => {
-    navDispatch(StackActions.pop(2));
-  }, [navDispatch]);
+  const { triggerSkipProfileCreation } = usePersistedFlagsActions();
 
   return {
-    onSkipPress,
     onContinuePress,
     onChangeText,
     onPressEditColor,
     profile,
     isUpdating: !!currentProfile.name,
     isBlocked,
+    triggerSkipProfileCreation,
   };
 };

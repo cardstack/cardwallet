@@ -14,15 +14,14 @@ import {
   Button,
   CenteredContainer,
   Container,
-  InPageHeader,
   Input,
-  SafeAreaView,
   Text,
   Touchable,
+  PageWithStackHeader,
 } from '@cardstack/components';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
-import { Device } from '@cardstack/utils';
+import { Device, screenHeight } from '@cardstack/utils';
 
 import { deviceDimensions } from '@rainbow-me/hooks/useDimensions';
 
@@ -37,7 +36,7 @@ enum Animation {
 
 const layouts = {
   defaultPadding: 5,
-  keyboardVerticalOffset: Device.isIOS ? 15 : 95,
+  keyboardVerticalOffset: Device.isIOS ? screenHeight * 0.12 : -55,
   dot: {
     size: 24,
     radius: 50,
@@ -68,6 +67,7 @@ export const ProfileNameScreen = () => {
     onPressEditColor,
     isUpdating,
     isBlocked,
+    triggerSkipProfileCreation,
   } = useProfileNameScreen();
 
   const animated = useRef(new Animated.Value(0)).current;
@@ -118,7 +118,7 @@ export const ProfileNameScreen = () => {
     const constraints = {
       baseWidth: 230,
       baseHeight: 258,
-      scaling: { iOS: 1.55, android: 1.8 },
+      scaling: { iOS: 1.55, android: 1.5 },
     };
 
     const phonePrevWidth = Math.round(
@@ -135,6 +135,10 @@ export const ProfileNameScreen = () => {
       ? constraints.scaling.iOS
       : phonePrevAspectRatio * constraints.scaling.android;
 
+    const translateYTo = Device.isIOS
+      ? -(phonePrevAspectRatio * 65)
+      : -(phonePrevAspectRatio * 32);
+
     const transform: Animated.WithAnimatedArray<
       ScaleTransform | TranslateYTransform
     > = [
@@ -143,19 +147,12 @@ export const ProfileNameScreen = () => {
           inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
           outputRange: [1, scaleTo],
         }),
-      },
-    ];
-
-    if (Device.isIOS) {
-      const translateYTo = -(phonePrevAspectRatio * 65);
-
-      transform.push({
         translateY: animated.interpolate({
           inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
           outputRange: [0, translateYTo],
         }),
-      });
-    }
+      },
+    ];
 
     return {
       width: phonePrevWidth,
@@ -187,13 +184,10 @@ export const ProfileNameScreen = () => {
   const flow = useMemo(() => (isUpdating ? 'update' : 'create'), [isUpdating]);
 
   return (
-    <SafeAreaView
-      backgroundColor="backgroundDarkPurple"
-      flex={1}
-      paddingHorizontal={layouts.defaultPadding}
-      justifyContent="space-between"
+    <PageWithStackHeader
+      showSkip={!isUpdating}
+      skipPressCallback={triggerSkipProfileCreation}
     >
-      <InPageHeader skipAmount={2} showSkipButton={!isUpdating} />
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
         <CenteredContainer>
@@ -243,7 +237,7 @@ export const ProfileNameScreen = () => {
         behavior="position"
         style={styles.avoidViewContainer}
         contentContainerStyle={styles.avoidViewContent}
-        keyboardVerticalOffset={-layouts.keyboardVerticalOffset}
+        keyboardVerticalOffset={layouts.keyboardVerticalOffset}
       >
         <Container
           flex={1}
@@ -277,7 +271,7 @@ export const ProfileNameScreen = () => {
           {strings.btns[flow]}
         </Button>
       </CenteredContainer>
-    </SafeAreaView>
+    </PageWithStackHeader>
   );
 };
 

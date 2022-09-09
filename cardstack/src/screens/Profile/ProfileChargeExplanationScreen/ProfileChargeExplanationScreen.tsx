@@ -4,15 +4,14 @@ import React, { memo } from 'react';
 import {
   Container,
   IconProps,
-  InPageHeader,
-  SafeAreaView,
+  PageWithStackHeader,
   Text,
 } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { strings } from './strings';
 
-const leftIconProps: IconProps = { name: 'x', left: -6 };
+const leftIconProps: IconProps = { name: 'x' };
 
 interface NavParams {
   localizedValue: string;
@@ -24,15 +23,8 @@ const ProfileChargeExplanationScreen = () => {
   } = useRoute<RouteType<NavParams>>();
 
   return (
-    <SafeAreaView
-      backgroundColor="backgroundDarkPurple"
-      flex={1}
-      paddingHorizontal={5}
-      justifyContent="space-between"
-    >
-      <InPageHeader showSkipButton={false} leftIconProps={leftIconProps} />
-
-      <Container flex={0.95}>
+    <PageWithStackHeader showSkip={false} leftIconProps={leftIconProps}>
+      <Container flex={1} backgroundColor="backgroundDarkPurple">
         <Text color="white" variant="pageHeader" paddingBottom={5}>
           {strings.title}
         </Text>
@@ -40,7 +32,7 @@ const ProfileChargeExplanationScreen = () => {
           {strings.description(localizedValue)}
         </Text>
       </Container>
-    </SafeAreaView>
+    </PageWithStackHeader>
   );
 };
 

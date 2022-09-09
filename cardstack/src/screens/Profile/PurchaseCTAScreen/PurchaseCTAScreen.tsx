@@ -7,10 +7,9 @@ import {
   Icon,
   IconName,
   Image,
-  SafeAreaView,
   Text,
   Touchable,
-  InPageHeader,
+  PageWithStackHeader,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
@@ -31,6 +30,7 @@ const PurchaseCTAScreen = () => {
     localizedValue,
     onPressPrepaidCards,
     showPrepaidCardOption,
+    triggerSkipProfileCreation,
   } = usePurchaseCTAScreen();
 
   const BenefitsItem = useCallback(
@@ -54,12 +54,7 @@ const PurchaseCTAScreen = () => {
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
-    <SafeAreaView
-      backgroundColor="backgroundDarkPurple"
-      flex={1}
-      paddingHorizontal={5}
-    >
-      <InPageHeader skipAmount={3} />
+    <PageWithStackHeader skipPressCallback={triggerSkipProfileCreation}>
       <Container
         flex={1}
         flexDirection="column"
@@ -106,7 +101,7 @@ const PurchaseCTAScreen = () => {
           </Text>
         </Touchable>
       </Container>
-    </SafeAreaView>
+    </PageWithStackHeader>
   );
 };
 

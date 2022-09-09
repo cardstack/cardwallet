@@ -9,11 +9,7 @@ const MainHeaderWrapper: React.FC<ContainerProps> = ({
   backgroundColor = 'backgroundBlue',
   ...props
 }) => (
-  <SafeAreaView
-    paddingBottom={0}
-    backgroundColor={backgroundColor}
-    edges={['top']}
-  >
+  <SafeAreaView backgroundColor={backgroundColor} edges={['top']}>
     <Container
       flexDirection="row"
       justifyContent="space-between"

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { AppState } from '@rainbow-me/redux/store';
 
@@ -30,6 +31,18 @@ export const usePersistedFlagsSelector = () => {
   const persistedFlags = useSelector((state: AppState) => state.persistedFlags);
 
   return persistedFlags;
+};
+
+export const usePersistedFlagsActions = () => {
+  const dispatch = useDispatch();
+
+  const triggerSkipProfileCreation = useCallback(() => {
+    dispatch(skipProfileCreation(true));
+  }, [dispatch]);
+
+  return {
+    triggerSkipProfileCreation,
+  };
 };
 
 export default slice.reducer;
