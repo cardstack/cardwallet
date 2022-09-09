@@ -1,5 +1,9 @@
 import { emails } from '../__mocks__/emails';
-import { isEmailPartial, isEmailValid } from '../validators';
+import {
+  isEmailPartial,
+  isEmailValid,
+  hasAtLeastOneDigit,
+} from '../validators';
 
 const { valids, invalids, partialValids } = emails;
 
@@ -38,5 +42,19 @@ describe('Email validator', () => {
 
         expect({ input, result }).toEqual({ input, result: false });
       });
+  });
+
+  it('should return true for a text with at least one digit', () => {
+    const text = 'test123abc123';
+    const expected = hasAtLeastOneDigit(text);
+
+    expect(expected).toBe(true);
+  });
+
+  it('should return false for a text with at least one digit', () => {
+    const text = 'test';
+    const expected = hasAtLeastOneDigit(text);
+
+    expect(expected).toBe(false);
   });
 });

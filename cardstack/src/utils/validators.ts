@@ -47,3 +47,5 @@ export const isEmailPartial = (email: string): boolean => {
 
 export const matchMinLength = (text: string, minLength: number): boolean =>
   text.length >= minLength;
+
+export const hasAtLeastOneDigit = (text: string): boolean => /\d/.test(text);
