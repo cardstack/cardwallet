@@ -67,7 +67,7 @@ const PageWithStackHeader = ({
         backgroundColor="backgroundDarkPurple"
         marginBottom={4}
         leftIconProps={leftIconProps}
-        paddingHorizontal={0}
+        paddingHorizontal={0} // reset MainHeaderWrapper's default padding
       />
       <Container flex={1}>{children}</Container>
       {!!footer && <Container flex={0.3}>{footer}</Container>}
