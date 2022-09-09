@@ -32,6 +32,7 @@ import {
   SupportAndFeesSheet,
   AvailableBalanceSheet,
   TokenWithChartSheet,
+  WyreAuthenticationWidget,
 } from '@cardstack/screens';
 import {
   RewardWithdrawConfirmationScreen,
@@ -197,6 +198,9 @@ export const MainScreens: Record<keyof typeof MainRoutes, ScreenNavigation> = {
   TOKEN_WITH_CHART_SHEET: {
     component: TokenWithChartSheet,
     options: sheetPreset({ backgroundOpacity: 'half' }),
+  },
+  WYRE_AUTH_WIDGET: {
+    component: WyreAuthenticationWidget,
   },
 };
 
