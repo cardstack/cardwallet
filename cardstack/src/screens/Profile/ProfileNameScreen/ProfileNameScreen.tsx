@@ -135,6 +135,10 @@ export const ProfileNameScreen = () => {
       ? constraints.scaling.iOS
       : phonePrevAspectRatio * constraints.scaling.android;
 
+    const translateYTo = Device.isIOS
+      ? -(phonePrevAspectRatio * 65)
+      : -(phonePrevAspectRatio * 32);
+
     const transform: Animated.WithAnimatedArray<
       ScaleTransform | TranslateYTransform
     > = [
@@ -143,19 +147,12 @@ export const ProfileNameScreen = () => {
           inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
           outputRange: [1, scaleTo],
         }),
+        translateY: animated.interpolate({
+          inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
+          outputRange: [0, translateYTo],
+        }),
       },
     ];
-
-    const translateYTo = Device.isIOS
-      ? -(phonePrevAspectRatio * 65)
-      : -(phonePrevAspectRatio * 32);
-
-    transform.push({
-      translateY: animated.interpolate({
-        inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
-        outputRange: [0, translateYTo],
-      }),
-    });
 
     return {
       width: phonePrevWidth,
