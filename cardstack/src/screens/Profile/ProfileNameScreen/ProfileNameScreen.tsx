@@ -1,9 +1,17 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Animated,
   Keyboard,
   KeyboardAvoidingView,
+  KeyboardAvoidingViewProps,
   ScaleTransform,
   StyleSheet,
   TranslateYTransform,
@@ -34,9 +42,13 @@ enum Animation {
   keyboardClosing = 0,
 }
 
+const keyboardBehavior: KeyboardAvoidingViewProps['behavior'] = Device.isIOS
+  ? 'position'
+  : 'padding';
+
 const layouts = {
   defaultPadding: 5,
-  keyboardVerticalOffset: Device.isIOS ? screenHeight * 0.12 : -55,
+  keyboardVerticalOffset: Device.isIOS ? screenHeight * 0.12 : undefined,
   dot: {
     size: 24,
     radius: 50,
@@ -76,12 +88,16 @@ export const ProfileNameScreen = () => {
 
   const isFocused = useIsFocused();
 
+  const [isKeyboardOpen, setKeyboardOpen] = useState(false);
+
   const animatePhoneOnKeyboardEvent = useCallback(
     (toValue: Animation) => () => {
       // avoid animating on background of color picker
       if (!isFocused) {
         return;
       }
+
+      setKeyboardOpen(!!toValue);
 
       Animated.timing(animated, {
         toValue,
@@ -118,7 +134,7 @@ export const ProfileNameScreen = () => {
     const constraints = {
       baseWidth: 230,
       baseHeight: 258,
-      scaling: { iOS: 1.55, android: 1.5 },
+      scaling: { iOS: 1.55, android: 1.8 },
     };
 
     const phonePrevWidth = Math.round(
@@ -137,16 +153,19 @@ export const ProfileNameScreen = () => {
 
     const translateYTo = Device.isIOS
       ? -(phonePrevAspectRatio * 65)
-      : -(phonePrevAspectRatio * 32);
+      : phonePrevAspectRatio * 40;
 
-    const transform: Animated.WithAnimatedArray<
-      ScaleTransform | TranslateYTransform
-    > = [
+    const transform: [
+      Animated.WithAnimatedObject<ScaleTransform>,
+      Animated.WithAnimatedObject<TranslateYTransform>
+    ] = [
       {
         scale: animated.interpolate({
           inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
           outputRange: [1, scaleTo],
         }),
+      },
+      {
         translateY: animated.interpolate({
           inputRange: [Animation.keyboardClosing, Animation.keyboardOpening],
           outputRange: [0, translateYTo],
@@ -177,6 +196,20 @@ export const ProfileNameScreen = () => {
     [animated]
   );
 
+  // hide header on Android to avoid overflow on statusBar
+  const androidOpenKeyboardStyles = useMemo(
+    () =>
+      Device.isAndroid && isKeyboardOpen
+        ? {
+            header: { opacity: 0 },
+            avoidingView: {
+              flex: 0.5,
+            },
+          }
+        : undefined,
+    [isKeyboardOpen]
+  );
+
   const colorDotStyle = useMemo(() => ({ backgroundColor: profile.color }), [
     profile.color,
   ]);
@@ -187,6 +220,7 @@ export const ProfileNameScreen = () => {
     <PageWithStackHeader
       showSkip={!isUpdating}
       skipPressCallback={triggerSkipProfileCreation}
+      headerContainerProps={androidOpenKeyboardStyles?.header}
     >
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
@@ -234,8 +268,11 @@ export const ProfileNameScreen = () => {
       </Container>
       <KeyboardAvoidingView
         enabled={isFocused}
-        behavior="position"
-        style={styles.avoidViewContainer}
+        behavior={keyboardBehavior}
+        style={[
+          styles.avoidViewContainer,
+          androidOpenKeyboardStyles?.avoidingView,
+        ]}
         contentContainerStyle={styles.avoidViewContent}
         keyboardVerticalOffset={layouts.keyboardVerticalOffset}
       >

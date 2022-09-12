@@ -15,6 +15,8 @@ import {
   NavigationStackHeader,
 } from '@cardstack/components';
 
+import { ContainerProps } from '../Container';
+
 interface PageWithStackHeaderProps {
   canGoBack?: boolean;
   showSkip?: boolean;
@@ -23,6 +25,7 @@ interface PageWithStackHeaderProps {
   leftIconProps?: Omit<IconProps, 'name'> & {
     name?: IconName;
   };
+  headerContainerProps?: ContainerProps;
 }
 
 const PageWithStackHeader = ({
@@ -32,6 +35,7 @@ const PageWithStackHeader = ({
   children,
   footer,
   leftIconProps,
+  headerContainerProps,
 }: PropsWithChildren<PageWithStackHeaderProps>) => {
   const { dispatch: navDispatch } = useNavigation();
 
@@ -68,6 +72,7 @@ const PageWithStackHeader = ({
         marginBottom={4}
         leftIconProps={leftIconProps}
         paddingHorizontal={0} // reset MainHeaderWrapper's default padding
+        {...headerContainerProps}
       />
       <Container flex={1}>{children}</Container>
       {!!footer && <Container flex={0.3}>{footer}</Container>}
