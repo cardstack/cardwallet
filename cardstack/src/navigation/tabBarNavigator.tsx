@@ -32,13 +32,13 @@ import RestoreSheet from '@rainbow-me/screens/RestoreSheet';
 
 import { createCustomStackNavigator } from './customNavigator';
 import { useCardstackMainScreens } from './hooks';
+import { ProfileScreenGroup, BackupScreenGroup } from './screenGroups';
 
 import {
   dismissAndroidKeyboardOnClose,
   horizontalInterpolator,
   NonAuthRoutes,
   overlayPreset,
-  ProfileScreenGroup,
   Routes,
   sheetPreset,
 } from '.';
@@ -237,6 +237,7 @@ export const StackNavigator = () => {
       )}
       {SharedScreens({ navigationKey: !hasWallet ? 'non-auth' : 'auth' })}
       {ProfileScreenGroup({ Stack })}
+      {BackupScreenGroup({ Stack })}
     </Stack.Navigator>
   );
 };
