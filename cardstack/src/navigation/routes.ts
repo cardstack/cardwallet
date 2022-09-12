@@ -71,6 +71,10 @@ const ProfileRoutes = {
   PROFILE_CHARGE_EXPLANATION: 'ProfileChargeExplanation',
 };
 
+const BackupRoutes = {
+  BACKUP_EXPLANATION: 'BackupExplanation',
+};
+
 export const Routes = {
   UNLOCK_SCREEN: 'UnlockScreen',
   ...SharedRoutes,
@@ -78,4 +82,5 @@ export const Routes = {
   ...TabRoutes,
   ...MainRoutes,
   ...ProfileRoutes,
+  ...BackupRoutes,
 } as const;
