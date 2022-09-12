@@ -59,14 +59,13 @@ const PasswordInput = ({
       >
         <Container flex={1}>
           <Input
-            placeholder="Enter password"
+            {...baseInputProps}
+            {...inputProps}
             placeholderTextColor={palette.blueText}
             secureTextEntry={!isPasswordVisible}
             autoCapitalize="none"
             onChangeText={onChangeText}
             value={password}
-            {...baseInputProps}
-            {...inputProps}
           />
         </Container>
         <Touchable
