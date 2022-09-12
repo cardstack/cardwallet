@@ -51,7 +51,7 @@ describe('Email validator', () => {
     expect(expected).toBe(true);
   });
 
-  it('should return false for a text with at least one digit', () => {
+  it('should return false for a text without at least one digit', () => {
     const text = 'test';
     const expected = hasAtLeastOneDigit(text);
 
