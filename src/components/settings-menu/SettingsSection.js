@@ -92,6 +92,10 @@ export default function SettingsSection({
     navigate(Routes.PROFILE_SLUG);
   }, [navigate]);
 
+  const onPressNewBackup = useCallback(() => {
+    navigate(Routes.BACKUP_EXPLANATION);
+  }, [navigate]);
+
   return (
     <ScrollView backgroundColor="white">
       <ColumnWithDividers dividerRenderer={ListItemDivider} marginTop={7}>
@@ -209,6 +213,11 @@ export default function SettingsSection({
             icon={<Icon color="black" name="shopping-cart" />}
             label="Profile Purchase Test-Drive"
             onPress={onPressIAP}
+          />
+          <ListItem
+            icon={<Icon color="black" name="upload-cloud" />}
+            label="New Backup Flow"
+            onPress={onPressNewBackup}
           />
         </>
       )}
