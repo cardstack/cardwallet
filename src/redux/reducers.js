@@ -11,6 +11,7 @@ import biometryToggle from '@cardstack/redux/biometryToggleSlice';
 import collectibles from '@cardstack/redux/collectibles';
 import persistedFlags from '@cardstack/redux/persistedFlagsSlice';
 import primarySafe from '@cardstack/redux/primarySafeSlice';
+import remoteConfigSlice from '@cardstack/redux/remoteConfigSlice';
 import requests from '@cardstack/redux/requests';
 import welcomeBanner from '@cardstack/redux/welcomeBanner';
 
@@ -30,4 +31,5 @@ export default {
   biometryToggle,
   welcomeBanner,
   persistedFlags,
+  remoteConfigSlice,
 };

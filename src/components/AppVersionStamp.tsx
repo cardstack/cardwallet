@@ -4,12 +4,11 @@ import { VERSION_TAP_COUNT } from 'react-native-dotenv';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Text } from '@cardstack/components';
-import { useBottomToast } from '@cardstack/hooks';
+import { useBottomToast, useRemoteConfigs } from '@cardstack/hooks';
 import {
   setUserAccessType,
   UserAccessType,
 } from '@cardstack/services/analytics';
-import { forceFetch, remoteFlags } from '@cardstack/services/remote-config';
 
 import { useAppVersion } from '@rainbow-me/hooks';
 
@@ -19,6 +18,7 @@ const AppVersionStamp = () => {
   const appVersion = useAppVersion();
   const numberOfTaps = useRef(0);
   const { ToastComponent, showToast } = useBottomToast();
+  const { configs, fetchRemoteConfigs } = useRemoteConfigs();
 
   const handleVersionPress = useCallback(async () => {
     numberOfTaps.current++;
@@ -26,7 +26,7 @@ const AppVersionStamp = () => {
     if (numberOfTaps.current === parseInt(VERSION_TAP_COUNT)) {
       numberOfTaps.current = 0;
       try {
-        if (remoteFlags().betaAccessGranted) {
+        if (configs.betaAccessGranted) {
           await setUserAccessType(null);
           showToast({
             label: `Removed from ${UserAccessType.BETA} access.`,
@@ -37,12 +37,12 @@ const AppVersionStamp = () => {
             label: `You are now part of ${UserAccessType.BETA} access.`,
           });
         }
-        await forceFetch();
+        await fetchRemoteConfigs();
       } catch (error) {
         logger.error('Error while trying to set user property.', error);
       }
     }
-  }, [showToast]);
+  }, [configs, fetchRemoteConfigs, showToast]);
 
   return (
     <>
