@@ -3,6 +3,7 @@ import React, { memo, useMemo } from 'react';
 import {
   BaseInputProps,
   Container,
+  ContainerProps,
   Icon,
   Input,
   InputProps,
@@ -26,10 +27,12 @@ interface Props extends BaseInputProps {
     rule: (value: string) => boolean;
     message: string;
   };
+  containerProps?: ContainerProps;
 }
 
 const PasswordInput = ({
   validation,
+  containerProps,
   ...inputProps
 }: Props) => {
   const {
@@ -45,7 +48,7 @@ const PasswordInput = ({
   const isValid = useMemo(() => rule(password), [password, rule]);
 
   return (
-    <Container width="100%">
+    <Container width="100%" {...containerProps}>
       <Container
         backgroundColor="black"
         borderRadius={6}
