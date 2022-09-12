@@ -1,6 +1,7 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import {
+  BaseInputProps,
   Container,
   Icon,
   Input,
@@ -20,12 +21,28 @@ const baseInputProps: InputProps = {
   selectionColor: 'teal',
 };
 
-const PasswordInput = () => {
+interface Props extends BaseInputProps {
+  validation: {
+    rule: (value: string) => boolean;
+    message: string;
+  };
+}
+
+const PasswordInput = ({
+  validation,
+  ...inputProps
+}: Props) => {
   const {
     togglePasswordVisibility,
     iconName,
     isPasswordVisible,
+    onChangeText,
+    password,
   } = usePasswordInput();
+
+  const { rule, message } = validation;
+
+  const isValid = useMemo(() => rule(password), [password, rule]);
 
   return (
     <Container width="100%">
@@ -43,7 +60,10 @@ const PasswordInput = () => {
             placeholderTextColor={palette.blueText}
             secureTextEntry={!isPasswordVisible}
             autoCapitalize="none"
+            onChangeText={onChangeText}
+            value={password}
             {...baseInputProps}
+            {...inputProps}
           />
         </Container>
         <Touchable
@@ -57,9 +77,13 @@ const PasswordInput = () => {
         </Touchable>
       </Container>
       <Container flexDirection="row" alignItems="center">
-        <Icon name="check" color="lightGreen" size={14} />
-        <Text fontSize={12} color="white" paddingLeft={1}>
-          At least 8 characters, with at least 1 number
+        {isValid && <Icon name="check" color="lightGreen" size={14} />}
+        <Text
+          fontSize={12}
+          color={isValid ? 'white' : 'blueText'}
+          paddingLeft={1}
+        >
+          {message}
         </Text>
       </Container>
     </Container>
