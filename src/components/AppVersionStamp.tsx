@@ -14,7 +14,7 @@ import { useAppVersion } from '@rainbow-me/hooks';
 
 import logger from 'logger';
 
-const AppVersionStamp = () => {
+const AppVersionStamp = ({ showBetaUserDisclaimer = false }) => {
   const appVersion = useAppVersion();
   const numberOfTaps = useRef(0);
   const { ToastComponent, showToast } = useBottomToast();
@@ -47,9 +47,15 @@ const AppVersionStamp = () => {
   return (
     <>
       <TouchableWithoutFeedback onPress={handleVersionPress}>
-        <Text color="grayText" size="xs">
+        <Text color="grayText" size="xs" textAlign="center">
           Version {appVersion}
         </Text>
+        {showBetaUserDisclaimer && configs.betaAccessGranted && (
+          <Text color="grayText" padding={6} size="xs" textAlign="center">
+            Disclaimer: BETA features may contain unknown bugs, use them at you
+            own discretion.
+          </Text>
+        )}
       </TouchableWithoutFeedback>
       <ToastComponent />
     </>

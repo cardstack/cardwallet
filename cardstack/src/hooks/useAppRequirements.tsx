@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 import DeviceInfo from 'react-native-device-info';
 
 import { useRemoteConfigs } from '@cardstack/hooks';
-import { remoteFlags } from '@cardstack/services/remote-config';
 
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 
@@ -22,7 +21,7 @@ export const useAppRequirements = () => {
     return compareVersions(minVersion, appVersion) > 0;
   }, [isReady, configs]);
 
-  const maintenanceMode = remoteFlags().maintenanceActive;
+  const maintenanceMode = configs.maintenanceActive;
 
   if (forceUpdate || maintenanceMode) {
     hideSplashScreen();
@@ -32,7 +31,7 @@ export const useAppRequirements = () => {
     forceUpdate,
     maintenance: {
       active: maintenanceMode,
-      message: remoteFlags().maintenanceMessage,
+      message: configs.maintenanceMessage,
     },
   };
 };

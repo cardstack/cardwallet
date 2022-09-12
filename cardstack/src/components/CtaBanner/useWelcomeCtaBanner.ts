@@ -2,13 +2,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { useRemoteConfigs } from '@cardstack/hooks';
 import { Routes } from '@cardstack/navigation';
 import {
   dismissBanner,
   useWelcomeBannerSelector,
 } from '@cardstack/redux/welcomeBanner';
 import { useGetEoaClaimedQuery } from '@cardstack/services/hub/hub-api';
-import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer2 } from '@cardstack/utils';
 
 import { useWallets, useAccountSettings } from '@rainbow-me/hooks';
@@ -21,6 +21,7 @@ export const useWelcomeCtaBanner = () => {
   const { accountAddress, network } = useAccountSettings();
   const [triggerPolling, setTriggerPolling] = useState(false);
   const { requestedCardDrop, dismissedByUser } = useWelcomeBannerSelector();
+  const { configs } = useRemoteConfigs();
   const dispatch = useDispatch();
 
   const { data: emailDropGetData } = useGetEoaClaimedQuery(
@@ -47,11 +48,17 @@ export const useWelcomeCtaBanner = () => {
   const showBanner = useMemo(
     () =>
       isLayer2(network) &&
-      remoteFlags().featurePrepaidCardDrop &&
+      configs.featurePrepaidCardDrop &&
       !dismissedByUser &&
       isFirstAddressForCurrentWallet &&
       (emailDropGetData?.showBanner ?? false),
-    [dismissedByUser, isFirstAddressForCurrentWallet, network, emailDropGetData]
+    [
+      configs,
+      dismissedByUser,
+      isFirstAddressForCurrentWallet,
+      network,
+      emailDropGetData,
+    ]
   );
 
   const handleClaimStatus = useCallback(async () => {
