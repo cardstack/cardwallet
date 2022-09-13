@@ -2,14 +2,13 @@ import compareVersions from 'compare-versions';
 import { useMemo } from 'react';
 import DeviceInfo from 'react-native-device-info';
 
-import { useLoadRemoteConfigs } from '@cardstack/hooks';
-import { remoteFlags } from '@cardstack/services/remote-config';
+import { useRemoteConfigs } from '@cardstack/hooks';
 
 import { useHideSplashScreen } from '@rainbow-me/hooks';
 
 export const useAppRequirements = () => {
   // Starts remote config fetcher.
-  const { isReady } = useLoadRemoteConfigs();
+  const { isReady, configs } = useRemoteConfigs();
   const hideSplashScreen = useHideSplashScreen();
 
   const forceUpdate = useMemo(() => {
@@ -17,12 +16,12 @@ export const useAppRequirements = () => {
 
     const appVersion = DeviceInfo.getVersion();
 
-    const minVersion = remoteFlags().requiredMinimumVersion;
+    const minVersion = configs.requiredMinimumVersion;
 
     return compareVersions(minVersion, appVersion) > 0;
-  }, [isReady]);
+  }, [isReady, configs]);
 
-  const maintenanceMode = remoteFlags().maintenanceActive;
+  const maintenanceMode = configs.maintenanceActive;
 
   if (forceUpdate || maintenanceMode) {
     hideSplashScreen();
@@ -32,7 +31,7 @@ export const useAppRequirements = () => {
     forceUpdate,
     maintenance: {
       active: maintenanceMode,
-      message: remoteFlags().maintenanceMessage,
+      message: configs.maintenanceMessage,
     },
   };
 };

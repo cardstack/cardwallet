@@ -11,7 +11,7 @@ export * from './useIsFetchingDataNewAccount';
 export * from './useGetAssetBalance';
 export * from './prepaid-card/usePrepaidCard';
 export * from './currencies/useSpendDisplay';
-export * from './remote-configs/useLoadRemoteConfigs';
+export * from './remote-configs/useRemoteConfigs';
 export { default as useInvalidPaste } from './useInvalidPaste';
 export * from './useAppRequirements';
 export * from './useAppState';

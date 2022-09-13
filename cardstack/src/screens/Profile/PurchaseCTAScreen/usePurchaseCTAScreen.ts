@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback, useMemo } from 'react';
 
-import { useBooleanState } from '@cardstack/hooks';
+import { useBooleanState, useRemoteConfigs } from '@cardstack/hooks';
 import { useCreateProfile } from '@cardstack/hooks/merchant/useCreateProfile';
 import { usePurchaseProfile } from '@cardstack/hooks/usePurchaseProfile';
 import { Routes } from '@cardstack/navigation';
@@ -9,7 +9,6 @@ import { RouteType } from '@cardstack/navigation/types';
 import { usePersistedFlagsActions } from '@cardstack/redux/persistedFlagsSlice';
 import { useGetSafesDataQuery } from '@cardstack/services';
 import { CreateProfileInfoParams } from '@cardstack/services/hub/hub-types';
-import { remoteFlags } from '@cardstack/services/remote-config';
 import { isLayer1 } from '@cardstack/utils';
 
 import { Alert } from '@rainbow-me/components/alerts';
@@ -24,6 +23,8 @@ export const usePurchaseCTAScreen = () => {
   const { navigate } = useNavigation();
 
   const { network, accountAddress, nativeCurrency } = useAccountSettings();
+
+  const { configs } = useRemoteConfigs();
 
   const { hasPrepaidCards: showPrepaidCardOption } = useGetSafesDataQuery(
     { address: accountAddress, nativeCurrency },
@@ -62,7 +63,7 @@ export const usePurchaseCTAScreen = () => {
   const onPressBuy = useCallback(async () => {
     setPurchaseStart();
 
-    if (remoteFlags().featureProfilePurchaseOnboarding) {
+    if (configs.featureProfilePurchaseOnboarding) {
       await purchaseProfile();
     } else {
       Alert({
@@ -72,7 +73,7 @@ export const usePurchaseCTAScreen = () => {
     }
 
     setPurchaseEnd();
-  }, [purchaseProfile, setPurchaseStart, setPurchaseEnd]);
+  }, [configs, purchaseProfile, setPurchaseStart, setPurchaseEnd]);
 
   const { triggerSkipProfileCreation } = usePersistedFlagsActions();
 

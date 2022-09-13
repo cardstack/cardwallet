@@ -106,7 +106,13 @@ const UnlockScreen = () => {
                 </Touchable>
               </Container>
             </Container>
-            <Container flex={0.2} justifyContent="flex-end" paddingBottom={1}>
+            <Container
+              flex={0.2}
+              width="100%"
+              justifyContent="flex-end"
+              alignItems="center"
+              paddingBottom={1}
+            >
               <AppVersionStamp />
             </Container>
           </Container>

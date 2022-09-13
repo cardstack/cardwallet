@@ -213,7 +213,7 @@ export default function SettingsSection({
         </>
       )}
       <CenteredContainer flex={1} paddingBottom={8} paddingTop={2}>
-        <AppVersionStamp />
+        <AppVersionStamp showBetaUserDisclaimer />
       </CenteredContainer>
     </ScrollView>
   );

@@ -4,7 +4,7 @@ import { remoteConfigDefaults } from './remoteConfigDefaults';
 
 const CACHE_INTERVAL_MILLIS = __DEV__ ? 60000 : 21600000; // 21600000ms == 6hrs.
 
-type RemoteConfigValues = typeof remoteConfigDefaults;
+export type RemoteConfigValues = typeof remoteConfigDefaults;
 
 type ConfigKey = keyof RemoteConfigValues;
 
@@ -15,11 +15,15 @@ export const loadRemoteConfigs = async () => {
 
   await remoteConfig().setDefaults(remoteConfigDefaults);
   await remoteConfig().fetchAndActivate();
+
+  return remoteFlags();
 };
 
 export const forceFetch = async () => {
   await remoteConfig().fetch(0);
   await remoteConfig().activate();
+
+  return remoteFlags();
 };
 
 const getRemoteConfigAsBoolean = (key: ConfigKey) =>
