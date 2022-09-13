@@ -110,6 +110,7 @@ export const colors = {
   tertiaryText: palette.blueText,
   bannerText: palette.white,
   orange: palette.orange,
+  darkBoxBackground: palette.blueDarkest,
 };
 
 export const avatarColor = [

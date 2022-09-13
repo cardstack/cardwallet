@@ -7,6 +7,7 @@ import {
   CenteredContainer,
   Container,
   Text,
+  SeedPhraseTable,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 import { cardSpaceDomain } from '@cardstack/constants';
@@ -19,6 +20,10 @@ const DesignSystemScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const sections = [
+    {
+      title: 'Seed Phrase',
+      data: ['view', 'edit'],
+    },
     {
       title: 'Input',
       data: ['slug'],
@@ -63,6 +68,15 @@ const DesignSystemScreen = () => {
   const renderItem = useCallback(
     ({ item, section: { title } }) => {
       switch (title) {
+        case 'Seed Phrase':
+          return (
+            <Container padding={2}>
+              <SeedPhraseTable
+                seedPhrase="bright sell trunk jalopy donut enemy car invest poem"
+                mode={item}
+              />
+            </Container>
+          );
         case 'Input':
           return (
             <Container padding={2}>
@@ -94,7 +108,7 @@ const DesignSystemScreen = () => {
   );
 
   return (
-    <Container backgroundColor="backgroundDarkPurple">
+    <Container width="100%" backgroundColor="backgroundDarkPurple">
       <SectionList
         renderItem={renderItem as any}
         sections={sections}
