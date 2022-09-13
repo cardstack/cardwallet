@@ -1,27 +1,19 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import { IconName } from '@cardstack/components';
+interface PasswordInputProps {
+  validation: (text: string) => boolean;
+}
 
-export const usePasswordInput = () => {
+export const usePasswordInput = ({ validation }: PasswordInputProps) => {
   const [password, setPassword] = useState('');
-  const [isPasswordVisible, setPasswordVisible] = useState(false);
 
-  const togglePasswordVisibility = useCallback(() => {
-    setPasswordVisible(!isPasswordVisible);
-  }, [isPasswordVisible]);
-
-  const iconName: IconName = useMemo(
-    () => (isPasswordVisible ? 'eye-off' : 'eye'),
-    [isPasswordVisible]
-  );
+  const isValid = useMemo(() => validation(password), [validation, password]);
 
   const onChangeText = useCallback((value: string) => setPassword(value), []);
 
   return {
-    togglePasswordVisibility,
-    iconName,
-    isPasswordVisible,
     password,
     onChangeText,
+    isValid,
   };
 };

@@ -1,19 +1,18 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 
 import {
-  BaseInputProps,
   Container,
   ContainerProps,
   Icon,
+  IconName,
   Input,
   InputProps,
   Text,
   Touchable,
+  BaseInputProps,
 } from '@cardstack/components';
 import { palette } from '@cardstack/theme';
 import { hitSlop } from '@cardstack/utils';
-
-import { usePasswordInput } from './usePasswordInput';
 
 const baseInputProps: InputProps = {
   paddingHorizontal: 5,
@@ -22,30 +21,31 @@ const baseInputProps: InputProps = {
   selectionColor: 'teal',
 };
 
-interface Props extends BaseInputProps {
-  validation: {
-    rule: (value: string) => boolean;
-    message: string;
-  };
+interface PasswordInputProps extends BaseInputProps {
+  value?: string;
   containerProps?: ContainerProps;
+  isValid: boolean;
+  validationMessage: string;
 }
 
 const PasswordInput = ({
-  validation,
   containerProps,
+  onChangeText,
+  value = '',
+  isValid,
+  validationMessage,
   ...inputProps
-}: Props) => {
-  const {
-    togglePasswordVisibility,
-    iconName,
-    isPasswordVisible,
-    onChangeText,
-    password,
-  } = usePasswordInput();
+}: PasswordInputProps) => {
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
 
-  const { rule, message } = validation;
+  const togglePasswordVisibility = useCallback(() => {
+    setPasswordVisible(!isPasswordVisible);
+  }, [isPasswordVisible]);
 
-  const isValid = useMemo(() => rule(password), [password, rule]);
+  const iconName: IconName = useMemo(
+    () => (isPasswordVisible ? 'eye-off' : 'eye'),
+    [isPasswordVisible]
+  );
 
   return (
     <Container width="100%" {...containerProps}>
@@ -65,7 +65,7 @@ const PasswordInput = ({
             secureTextEntry={!isPasswordVisible}
             autoCapitalize="none"
             onChangeText={onChangeText}
-            value={password}
+            value={value}
           />
         </Container>
         <Touchable
@@ -85,7 +85,7 @@ const PasswordInput = ({
           color={isValid ? 'white' : 'blueText'}
           paddingLeft={1}
         >
-          {message}
+          {validationMessage}
         </Text>
       </Container>
     </Container>
