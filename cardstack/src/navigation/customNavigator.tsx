@@ -17,7 +17,7 @@ import React from 'react';
 
 import store from '@rainbow-me/redux/store';
 
-import { Routes } from '.';
+import { NonAuthRoutes, Routes } from '.';
 
 const SecureStackRouter = (stackOptions: StackRouterOptions) => {
   const router = StackRouter(stackOptions);
@@ -33,11 +33,15 @@ const SecureStackRouter = (stackOptions: StackRouterOptions) => {
 
     const nextRoute = nextState?.routes[nextState.index || 0].name;
 
+    const isOnNonAuthFlow = currentState.routes.some(
+      route => route.name === NonAuthRoutes.WELCOME_SCREEN
+    );
+
     const willLock = nextRoute === Routes.UNLOCK_SCREEN;
 
-    const preventNavigation = !isAuthorized && !willLock;
+    const allowNavigation = isAuthorized || isOnNonAuthFlow || willLock;
 
-    return preventNavigation ? currentState : nextState;
+    return allowNavigation ? nextState : currentState;
   };
 
   return router;
