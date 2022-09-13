@@ -15,6 +15,8 @@ import {
 } from '@react-navigation/stack/lib/typescript/src/types';
 import React from 'react';
 
+import store from '@rainbow-me/redux/store';
+
 import { Routes } from '.';
 
 const SecureStackRouter = (stackOptions: StackRouterOptions) => {
@@ -24,13 +26,16 @@ const SecureStackRouter = (stackOptions: StackRouterOptions) => {
 
   // Replaces stateForAction to avoid new routes when app is locked
   router.getStateForAction = (currentState, action, options) => {
-    const currentRoute = currentState.routes[currentState.index].name;
-    const isLocked = currentRoute === Routes.UNLOCK_SCREEN;
-    // Get next state to check whether it's a new screen or not, handles push/navigate
-    const nextState = defaultGetStateForAction(currentState, action, options);
-    const screenBeingPushed = (nextState?.index || 0) > currentState.index;
+    const { isAuthorized } = store.getState().authSlice;
 
-    const preventNavigation = screenBeingPushed && isLocked;
+    // Get next state to check new screen
+    const nextState = defaultGetStateForAction(currentState, action, options);
+
+    const nextRoute = nextState?.routes[nextState.index || 0].name;
+
+    const willLock = nextRoute === Routes.UNLOCK_SCREEN;
+
+    const preventNavigation = !isAuthorized && !willLock;
 
     return preventNavigation ? currentState : nextState;
   };
