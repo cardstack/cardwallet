@@ -129,7 +129,10 @@ export const useAppInit = () => {
     if (!isAuthorized && hasWallet) {
       Navigation.handleAction(Routes.UNLOCK_SCREEN);
     }
-  }, [hasWallet, isAuthorized]);
+    // movedFromBackground is used to re-run this effect
+    // in case the other deps are still the same and
+    // navigation wasn't triggered
+  }, [hasWallet, isAuthorized, movedFromBackground]);
 
   useEffect(() => {
     if (justBecameActive) {

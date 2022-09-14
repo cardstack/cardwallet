@@ -15,7 +15,9 @@ import {
 } from '@react-navigation/stack/lib/typescript/src/types';
 import React from 'react';
 
-import { Routes } from '.';
+import store from '@rainbow-me/redux/store';
+
+import { NonAuthRoutes, Routes } from '.';
 
 const SecureStackRouter = (stackOptions: StackRouterOptions) => {
   const router = StackRouter(stackOptions);
@@ -24,15 +26,22 @@ const SecureStackRouter = (stackOptions: StackRouterOptions) => {
 
   // Replaces stateForAction to avoid new routes when app is locked
   router.getStateForAction = (currentState, action, options) => {
-    const currentRoute = currentState.routes[currentState.index].name;
-    const isLocked = currentRoute === Routes.UNLOCK_SCREEN;
-    // Get next state to check whether it's a new screen or not, handles push/navigate
+    const { isAuthorized } = store.getState().authSlice;
+
+    // Get next state to check new screen
     const nextState = defaultGetStateForAction(currentState, action, options);
-    const screenBeingPushed = (nextState?.index || 0) > currentState.index;
 
-    const preventNavigation = screenBeingPushed && isLocked;
+    const nextRoute = nextState?.routes[nextState.index || 0].name;
 
-    return preventNavigation ? currentState : nextState;
+    const isOnNonAuthFlow = currentState.routes.some(
+      route => route.name === NonAuthRoutes.WELCOME_SCREEN
+    );
+
+    const willLock = nextRoute === Routes.UNLOCK_SCREEN;
+
+    const allowNavigation = isAuthorized || isOnNonAuthFlow || willLock;
+
+    return allowNavigation ? nextState : currentState;
   };
 
   return router;
