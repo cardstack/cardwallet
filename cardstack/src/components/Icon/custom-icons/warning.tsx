@@ -20,7 +20,7 @@ function SvgComponent({ fill = '#ffa700', stroke = '#fff' }: SvgProps) {
       <Path
         data-name="Path 382"
         d="M13.139 13.342h-2.343l-.49-6.924h3.327zm-2.871 3.288a1.61 1.61 0 01.432-1.22 1.752 1.752 0 011.258-.413 1.7 1.7 0 011.234.423 1.606 1.606 0 01.441 1.21 1.606 1.606 0 01-.442 1.2 1.672 1.672 0 01-1.229.437 1.722 1.722 0 01-1.252-.437 1.6 1.6 0 01-.442-1.2z"
-        fill={stroke} // using stroke as fill-color to enable two-color component
+        fill={stroke ?? '#fff'} // using stroke as fill-color to enable two-color component
       />
       <Circle
         data-name="Ellipse 43"
