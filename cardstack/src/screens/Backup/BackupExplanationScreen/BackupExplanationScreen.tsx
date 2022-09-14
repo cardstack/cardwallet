@@ -6,9 +6,9 @@ import {
   Container,
   PageWithStackHeader,
   Text,
-  Touchable,
 } from '@cardstack/components';
-import { hitSlop } from '@cardstack/utils';
+
+import { ButtonLink } from '../components/ButtonLink';
 
 import { strings } from './strings';
 
@@ -27,15 +27,9 @@ const BackupExplanationScreen = () => {
     () => (
       <Container flex={1} alignItems="center">
         <Button onPress={handleBackupOnPress}>{strings.primaryBtn}</Button>
-        <Touchable
-          onPress={handleLaterOnPress}
-          paddingVertical={5}
-          hitSlop={hitSlop.medium}
-        >
-          <Text color="white" fontSize={16} weight="semibold">
-            {strings.secondaryBtn}
-          </Text>
-        </Touchable>
+        <ButtonLink onPress={handleLaterOnPress}>
+          {strings.secondaryBtn}
+        </ButtonLink>
       </Container>
     ),
     [handleBackupOnPress, handleLaterOnPress]
