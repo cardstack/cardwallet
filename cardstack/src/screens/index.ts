@@ -41,3 +41,4 @@ export { default as SeedPhraseBackup } from './SeedPhraseBackup/SeedPhraseBackup
 export { default as SecurityScreen } from './SecurityScreen/SecurityScreen';
 export * from './Profile';
 export { default as WyreAuthenticationWidget } from './WyreAuthenticationWidget';
+export * from './Backup';

@@ -1,15 +1,17 @@
 import React from 'react';
 
 import {
+  horizontalNonStackingInterpolator,
+  Routes,
+} from '@cardstack/navigation';
+import {
   ProfileNameScreen,
   ProfileSlugScreen,
   ProfilePurchaseCTA,
   ProfileChargeExplanationScreen,
 } from '@cardstack/screens';
 
-import { StackType } from './types';
-
-import { horizontalNonStackingInterpolator, Routes } from '.';
+import { StackType } from '../types';
 
 export const ProfileScreenGroup = ({ Stack }: { Stack: StackType }) => (
   <Stack.Group
