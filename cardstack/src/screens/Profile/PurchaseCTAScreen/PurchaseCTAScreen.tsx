@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import {
@@ -33,6 +33,47 @@ const PurchaseCTAScreen = () => {
     triggerSkipProfileCreation,
   } = usePurchaseCTAScreen();
 
+  const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
+
+  const FooterComponent = useMemo(
+    () => (
+      <>
+        <Button onPress={onPressBuy} blocked={inPurchaseOngoing}>
+          {purchaseBtnLabel}
+        </Button>
+        {showPrepaidCardOption && (
+          <Button
+            onPress={onPressPrepaidCards}
+            variant="primaryWhite"
+            borderColor="teal"
+            blocked={inPurchaseOngoing}
+            marginTop={5}
+          >
+            {strings.button.prepaidCard}
+          </Button>
+        )}
+        <Touchable
+          onPress={onPressChargeExplanation}
+          alignSelf="center"
+          disabled={inPurchaseOngoing}
+          paddingVertical={5}
+        >
+          <Text color="white" fontSize={16} weight="semibold">
+            {strings.whyCharge}
+          </Text>
+        </Touchable>
+      </>
+    ),
+    [
+      inPurchaseOngoing,
+      purchaseBtnLabel,
+      showPrepaidCardOption,
+      onPressChargeExplanation,
+      onPressBuy,
+      onPressPrepaidCards,
+    ]
+  );
+
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
       <Container alignItems="center" flexDirection="row">
@@ -51,10 +92,11 @@ const PurchaseCTAScreen = () => {
     []
   );
 
-  const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
-
   return (
-    <PageWithStackHeader skipPressCallback={triggerSkipProfileCreation}>
+    <PageWithStackHeader
+      skipPressCallback={triggerSkipProfileCreation}
+      footer={FooterComponent}
+    >
       <Container
         flex={1}
         flexDirection="column"
@@ -78,28 +120,6 @@ const PurchaseCTAScreen = () => {
           style={styles.iapPreview}
           resizeMode="contain"
         />
-        <Button onPress={onPressBuy} blocked={inPurchaseOngoing}>
-          {purchaseBtnLabel}
-        </Button>
-        {showPrepaidCardOption && (
-          <Button
-            onPress={onPressPrepaidCards}
-            variant="primaryWhite"
-            borderColor="teal"
-            blocked={inPurchaseOngoing}
-          >
-            {strings.button.prepaidCard}
-          </Button>
-        )}
-        <Touchable
-          onPress={onPressChargeExplanation}
-          alignSelf="center"
-          disabled={inPurchaseOngoing}
-        >
-          <Text color="white" fontSize={16} weight="semibold">
-            {strings.whyCharge}
-          </Text>
-        </Touchable>
       </Container>
     </PageWithStackHeader>
   );

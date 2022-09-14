@@ -221,6 +221,11 @@ export const ProfileNameScreen = () => {
       showSkip={!isUpdating}
       skipPressCallback={triggerSkipProfileCreation}
       headerContainerProps={androidOpenKeyboardStyles?.header}
+      footer={
+        <Button blocked={isBlocked} onPress={onContinuePress}>
+          {strings.btns[flow]}
+        </Button>
+      }
     >
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
@@ -303,11 +308,6 @@ export const ProfileNameScreen = () => {
           </Container>
         </Container>
       </KeyboardAvoidingView>
-      <CenteredContainer flex={0.2} paddingBottom={2}>
-        <Button blocked={isBlocked} onPress={onContinuePress}>
-          {strings.btns[flow]}
-        </Button>
-      </CenteredContainer>
     </PageWithStackHeader>
   );
 };

@@ -75,7 +75,11 @@ const PageWithStackHeader = ({
         {...headerContainerProps}
       />
       <Container flex={1}>{children}</Container>
-      {!!footer && <Container flex={0.3}>{footer}</Container>}
+      {!!footer && (
+        <Container justifyContent="flex-end" paddingTop={2} paddingBottom={5}>
+          {footer}
+        </Container>
+      )}
     </Container>
   );
 };

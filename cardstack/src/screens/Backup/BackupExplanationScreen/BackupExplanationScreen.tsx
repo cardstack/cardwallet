@@ -3,6 +3,7 @@ import React, { memo, useCallback, useMemo } from 'react';
 
 import {
   Button,
+  CenteredContainer,
   Container,
   PageWithStackHeader,
   Text,
@@ -25,7 +26,7 @@ const BackupExplanationScreen = () => {
 
   const FooterComponent = useMemo(
     () => (
-      <Container flex={1} alignItems="center">
+      <CenteredContainer>
         <Button onPress={handleBackupOnPress}>{strings.primaryBtn}</Button>
         <ButtonLink onPress={handleLaterOnPress}>
           {strings.secondaryBtn}

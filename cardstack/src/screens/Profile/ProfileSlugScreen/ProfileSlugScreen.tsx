@@ -26,6 +26,11 @@ const ProfileSlugScreen = () => {
     <PageWithStackHeader
       canGoBack={false}
       skipPressCallback={triggerSkipProfileCreation}
+      footer={
+        <Button onPress={onContinuePress} blocked={!canContinue}>
+          {strings.buttons.continue}
+        </Button>
+      }
     >
       <Container flex={1} justifyContent="space-between">
         <Container flex={0.8}>
@@ -50,11 +55,6 @@ const ProfileSlugScreen = () => {
               {strings.input.description}
             </Text>
           </Container>
-        </Container>
-        <Container flex={0.2} justifyContent="flex-end" paddingBottom={5}>
-          <Button onPress={onContinuePress} blocked={!canContinue}>
-            {strings.buttons.continue}
-          </Button>
         </Container>
       </Container>
     </PageWithStackHeader>
