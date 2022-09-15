@@ -21,10 +21,6 @@ const DesignSystemScreen = () => {
 
   const sections = [
     {
-      title: 'Seed Phrase',
-      data: ['view', 'edit'],
-    },
-    {
       title: 'Input',
       data: ['slug'],
     },
@@ -39,6 +35,10 @@ const DesignSystemScreen = () => {
     {
       title: 'Buttons',
       data: Object.keys(buttonVariants),
+    },
+    {
+      title: 'Seed Phrase',
+      data: ['view', 'edit', 'error'],
     },
   ];
 
@@ -65,17 +65,36 @@ const DesignSystemScreen = () => {
     [loading]
   );
 
+  const renderSeedPhraseStates = useCallback(item => {
+    switch (item) {
+      case 'edit':
+        return (
+          <SeedPhraseTable seedPhrase="bright sell trunk jalopy donut enemy car invest" />
+        );
+      case 'error':
+        return (
+          <SeedPhraseTable
+            seedPhrase="bright sell trunk jalopy donut enemy car invest donut enemy car invest"
+            showAsError
+          />
+        );
+      case 'view':
+        return (
+          <SeedPhraseTable
+            seedPhrase="bright sell trunk jalopy donut enemy car invest donut enemy car invest"
+            hideOnOpen
+            allowCopy
+          />
+        );
+    }
+  }, []);
+
   const renderItem = useCallback(
     ({ item, section: { title } }) => {
       switch (title) {
         case 'Seed Phrase':
           return (
-            <Container padding={2}>
-              <SeedPhraseTable
-                seedPhrase="bright sell trunk jalopy donut enemy car invest poem"
-                mode={item}
-              />
-            </Container>
+            <Container padding={2}>{renderSeedPhraseStates(item)}</Container>
           );
         case 'Input':
           return (
