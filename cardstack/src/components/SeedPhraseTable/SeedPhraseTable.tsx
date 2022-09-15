@@ -145,7 +145,7 @@ export const SeedPhraseTable = ({
           <Button
             iconProps={{ name: 'copy', color: 'white' }}
             marginBottom={7}
-            variant="primaryWhite"
+            variant="linkWhite"
             onPress={() => copyToClipboard(seedPhrase)}
           >
             {strings.copyToClipboard}

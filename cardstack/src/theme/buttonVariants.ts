@@ -176,6 +176,13 @@ export const buttonVariants = {
       color: 'white',
     },
   },
+  linkWhite: {
+    ...primary,
+    textStyle: {
+      color: 'white',
+    },
+    borderWidth: 0,
+  },
   small,
   short,
   white,
