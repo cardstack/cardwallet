@@ -12,6 +12,11 @@ import { useBooleanState, useCopyToast } from '@cardstack/hooks';
 import { Device } from '@cardstack/utils/device';
 
 import { strings } from './strings';
+import {
+  filledArrayFromSeedPhraseString,
+  splitSeedPhraseArrayInTwoColunms,
+} from './utils';
+('./utils');
 
 interface SeedPhraseTableProps {
   seedPhrase: string;
@@ -25,6 +30,15 @@ const animConfig = {
   blurred: 1,
   visible: 0,
 };
+
+// BlurView is crashing and spilling a dark opacity on Android for an unknown reason.
+// TODO: Investigate fix for crash and spillage on Android.
+const BlurViewWrapper = (props: BlurViewProps) =>
+  Device.isIOS ? (
+    <BlurView {...props} />
+  ) : (
+    <Container style={props.style} backgroundColor="darkBoxBackground" />
+  );
 
 const WordItem = memo(
   ({
@@ -68,15 +82,6 @@ const WordItem = memo(
   )
 );
 
-// BlurView is crashing and spilling a dark opacity on Android for an unknown reason.
-// TODO: Investigate fix for crash and spillage on Android.
-const BlurViewWrapper = (props: BlurViewProps) =>
-  Device.isIOS ? (
-    <BlurView {...props} />
-  ) : (
-    <Container style={props.style} backgroundColor="darkBoxBackground" />
-  );
-
 export const SeedPhraseTable = ({
   seedPhrase,
   hideOnOpen = false,
@@ -91,17 +96,13 @@ export const SeedPhraseTable = ({
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
 
-  const wordsColumns = useMemo(() => {
-    const words = seedPhrase?.split(' ') || [];
-    const filler = new Array(12 - words.length).fill('');
-
-    const filledArray = [...words, ...filler].map((word, index) => ({
-      word,
-      index,
-    }));
-
-    return [filledArray.slice(0, 6), filledArray.slice(6)];
-  }, [seedPhrase]);
+  const wordsColumns = useMemo(
+    () =>
+      splitSeedPhraseArrayInTwoColunms(
+        filledArrayFromSeedPhraseString(seedPhrase)
+      ),
+    [seedPhrase]
+  );
 
   const animatedOpacity = useMemo(
     () => ({
