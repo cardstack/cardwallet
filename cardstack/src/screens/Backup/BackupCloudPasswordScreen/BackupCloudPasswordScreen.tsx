@@ -1,5 +1,5 @@
 import { eq } from 'lodash';
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import {
   Button,
@@ -18,7 +18,7 @@ import {
 
 import { strings } from './strings';
 
-export const BackupCloudPasswordScreen = () => {
+const BackupCloudPasswordScreen = () => {
   const { onChangeText, isValid, password } = usePasswordInput({
     validation: (text: string) =>
       hasAtLeastOneDigit(text) && matchMinLength(text, 8),
@@ -84,3 +84,5 @@ export const BackupCloudPasswordScreen = () => {
     </PageWithStackHeader>
   );
 };
+
+export default memo(BackupCloudPasswordScreen);

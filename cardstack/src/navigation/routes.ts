@@ -73,6 +73,7 @@ const ProfileRoutes = {
 
 const BackupRoutes = {
   BACKUP_EXPLANATION: 'BackupExplanation',
+  BACKUP_CLOUD_PASSWORD: 'BackupCloudPassword',
 };
 
 export const Routes = {
