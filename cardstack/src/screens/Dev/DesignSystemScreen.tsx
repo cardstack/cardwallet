@@ -21,6 +21,10 @@ const DesignSystemScreen = () => {
 
   const sections = [
     {
+      title: 'Seed Phrase',
+      data: ['view', 'edit', 'error'],
+    },
+    {
       title: 'Input',
       data: ['slug'],
     },
@@ -35,10 +39,6 @@ const DesignSystemScreen = () => {
     {
       title: 'Buttons',
       data: Object.keys(buttonVariants),
-    },
-    {
-      title: 'Seed Phrase',
-      data: ['view', 'edit', 'error'],
     },
   ];
 

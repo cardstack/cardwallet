@@ -1,5 +1,5 @@
-import { BlurView } from '@react-native-community/blur';
-import React, { useMemo, useRef, useEffect, memo } from 'react';
+import { BlurView, BlurViewProps } from '@react-native-community/blur';
+import React, { useMemo, useRef, memo, useCallback } from 'react';
 import { StyleSheet, Animated } from 'react-native';
 
 import {
@@ -9,8 +9,10 @@ import {
   Text,
 } from '@cardstack/components';
 import { useBooleanState, useCopyToast } from '@cardstack/hooks';
+import { Device } from '@cardstack/utils/device';
 
 import { strings } from './strings';
+import { backgroundColor } from '@shopify/restyle';
 
 interface SeedPhraseTableProps {
   seedPhrase: string;
@@ -67,6 +69,15 @@ const WordItem = memo(
   )
 );
 
+// BlurView is crashing and spilling a dark opacity on Android for an unknown reason.
+// TODO: Investigate fix for crash and spillage on Android.
+const BlurViewWrapper = (props: BlurViewProps) =>
+  Device.isIOS ? (
+    <BlurView {...props} />
+  ) : (
+    <Container style={props.style} backgroundColor="darkBoxBackground" />
+  );
+
 export const SeedPhraseTable = ({
   seedPhrase,
   hideOnOpen = false,
@@ -76,7 +87,7 @@ export const SeedPhraseTable = ({
   const [phraseVisible, showPhrase] = useBooleanState(!hideOnOpen);
 
   const blurAnimation = useRef(
-    new Animated.Value(phraseVisible ? animConfig.visible : animConfig.blurred)
+    new Animated.Value(!hideOnOpen ? animConfig.visible : animConfig.blurred)
   ).current;
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
@@ -100,13 +111,13 @@ export const SeedPhraseTable = ({
     [blurAnimation]
   );
 
-  useEffect(() => {
+  const hideOverlay = useCallback(() => {
     Animated.timing(blurAnimation, {
       duration: animConfig.duration,
-      toValue: phraseVisible ? animConfig.visible : animConfig.blurred,
+      toValue: animConfig.visible,
       useNativeDriver: true,
-    }).start();
-  }, [phraseVisible, blurAnimation]);
+    }).start(() => showPhrase());
+  }, [blurAnimation, showPhrase]);
 
   return (
     <Container
@@ -143,19 +154,19 @@ export const SeedPhraseTable = ({
         </CenteredContainer>
       )}
 
-      <>
+      {!phraseVisible && (
         <Animated.View style={[styles.blurView, animatedOpacity]}>
-          <BlurView
+          <BlurViewWrapper
             style={styles.blurView}
             reducedTransparencyFallbackColor="darkBoxBackground"
           />
           <CenteredContainer width="100%" height="100%">
-            <Button variant="tinyOpacity" onPress={showPhrase}>
+            <Button variant="tinyOpacity" onPress={hideOverlay}>
               {strings.tapToReveal}
             </Button>
           </CenteredContainer>
         </Animated.View>
-      </>
+      )}
     </Container>
   );
 };
