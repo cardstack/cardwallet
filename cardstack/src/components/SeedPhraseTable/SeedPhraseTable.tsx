@@ -1,4 +1,6 @@
-import React, { useMemo, memo } from 'react';
+import { BlurView } from '@react-native-community/blur';
+import React, { useMemo, useRef, useEffect, memo } from 'react';
+import { StyleSheet, Animated } from 'react-native';
 
 import {
   Button,
@@ -16,6 +18,12 @@ interface SeedPhraseTableProps {
   allowCopy?: boolean;
   showAsError?: boolean;
 }
+
+const animConfig = {
+  duration: 250,
+  blurred: 1,
+  visible: 0,
+};
 
 const WordItem = memo(
   ({
@@ -67,6 +75,10 @@ export const SeedPhraseTable = ({
 }: SeedPhraseTableProps) => {
   const [phraseVisible, showPhrase] = useBooleanState(!hideOnOpen);
 
+  const blurAnimation = useRef(
+    new Animated.Value(phraseVisible ? animConfig.visible : animConfig.blurred)
+  ).current;
+
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
 
   const wordsColumns = useMemo(() => {
@@ -81,8 +93,28 @@ export const SeedPhraseTable = ({
     return [filledArray.slice(0, 6), filledArray.slice(6)];
   }, [seedPhrase]);
 
+  const animatedOpacity = useMemo(
+    () => ({
+      opacity: blurAnimation,
+    }),
+    [blurAnimation]
+  );
+
+  useEffect(() => {
+    Animated.timing(blurAnimation, {
+      duration: animConfig.duration,
+      toValue: phraseVisible ? animConfig.visible : animConfig.blurred,
+      useNativeDriver: true,
+    }).start();
+  }, [phraseVisible, blurAnimation]);
+
   return (
-    <Container backgroundColor="darkBoxBackground" borderRadius={20}>
+    <Container
+      backgroundColor="darkBoxBackground"
+      borderRadius={20}
+      borderColor="darkBoxBackground"
+      borderWidth={1}
+    >
       <Container flexDirection="row" justifyContent="space-between" padding={8}>
         {wordsColumns.map(column => (
           <Container width="50%" height={250} justifyContent="space-between">
@@ -96,6 +128,7 @@ export const SeedPhraseTable = ({
           </Container>
         ))}
       </Container>
+
       {allowCopy && (
         <CenteredContainer>
           <Button
@@ -109,21 +142,29 @@ export const SeedPhraseTable = ({
           <CopyToastComponent />
         </CenteredContainer>
       )}
-      {hideOnOpen && !phraseVisible && (
-        <Container
-          width="100%"
-          height="100%"
-          borderRadius={20}
-          backgroundColor="darkBoxBackground"
-          position="absolute"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button variant="tinyOpacity" onPress={showPhrase}>
-            {strings.tapToReveal}
-          </Button>
-        </Container>
-      )}
+
+      <>
+        <Animated.View style={[styles.blurView, animatedOpacity]}>
+          <BlurView
+            style={styles.blurView}
+            reducedTransparencyFallbackColor="darkBoxBackground"
+          />
+          <CenteredContainer width="100%" height="100%">
+            <Button variant="tinyOpacity" onPress={showPhrase}>
+              {strings.tapToReveal}
+            </Button>
+          </CenteredContainer>
+        </Animated.View>
+      </>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  blurView: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+  },
+});

@@ -123,7 +123,7 @@ const DesignSystemScreen = () => {
           );
       }
     },
-    [renderButtonStates]
+    [renderButtonStates, renderSeedPhraseStates]
   );
 
   return (
