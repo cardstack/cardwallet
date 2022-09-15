@@ -12,7 +12,6 @@ import { useBooleanState, useCopyToast } from '@cardstack/hooks';
 import { Device } from '@cardstack/utils/device';
 
 import { strings } from './strings';
-import { backgroundColor } from '@shopify/restyle';
 
 interface SeedPhraseTableProps {
   seedPhrase: string;
