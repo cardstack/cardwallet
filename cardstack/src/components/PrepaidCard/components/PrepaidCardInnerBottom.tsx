@@ -86,10 +86,7 @@ const PrepaidCardInnerBottom = ({
       alignItems="center"
     >
       <Container>
-        <Text
-          fontSize={cardType[variant].balanceFontSize}
-          color="spendableBalance"
-        >
+        <Text fontSize={cardType[variant].balanceFontSize} color="blueDarkest">
           {strings.spendableBalance}
         </Text>
         <Container flexDirection="row" alignItems="flex-end">

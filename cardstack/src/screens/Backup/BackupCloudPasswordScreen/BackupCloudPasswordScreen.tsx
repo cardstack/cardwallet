@@ -76,7 +76,7 @@ const BackupCloudPasswordScreen = () => {
       <PageWithStackHeaderFooter>
         <Container
           borderTopWidth={1}
-          borderTopColor="networkBadge"
+          borderTopColor="blueDarkest"
           paddingVertical={3}
         >
           <Checkbox onPress={() => undefined} checkboxPosition="left">

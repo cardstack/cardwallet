@@ -82,7 +82,7 @@ const CollectibleHeader = ({ collectible }: CollectibleHeaderProps) => {
             style={{ paddingVertical: 1 }}
           >
             <Text
-              color="networkBadge"
+              color="blueDarkest"
               fontSize={9}
               numberOfLines={1}
               weight="bold"
