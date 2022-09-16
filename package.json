@@ -53,7 +53,6 @@
     "@rainbow-me/react-native-animated-number": "^0.0.2",
     "@rainbow-me/react-native-payments": "1.1.5",
     "@react-native-async-storage/async-storage": "^1.15.14",
-    "@react-native-community/blur": "^4.2.0",
     "@react-native-community/clipboard": "git+https://github.com/gnardini/clipboard#01d1c13",
     "@react-native-community/netinfo": "^6.1.0",
     "@react-native-firebase/analytics": "^14.9.3",

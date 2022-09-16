@@ -130,6 +130,7 @@ export const SeedPhraseTable = ({
           <Image
             source={allowCopy ? blurredImageWithCopyButton : blurredImage}
             style={[styles.blurContainer, styles.imageBlurView]}
+            resizeMode="stretch"
           />
           <CenteredContainer width="100%" height="100%">
             <Button variant="tinyOpacityWhite" onPress={hideOverlay}>
