@@ -1,5 +1,5 @@
 import { eq } from 'lodash';
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 
 import {
   Button,
@@ -42,6 +42,10 @@ const BackupCloudPasswordScreen = () => {
     validation: (text: string) => matchMinLength(text, 1) && eq(password, text),
   });
 
+  const onCheckboxPress = useCallback(() => {
+    // TBD
+  }, []);
+
   return (
     <PageWithStackHeader showSkip={false}>
       <ScrollView
@@ -79,7 +83,7 @@ const BackupCloudPasswordScreen = () => {
           borderTopColor="blueDarkest"
           paddingVertical={3}
         >
-          <Checkbox onPress={() => undefined} checkboxPosition="left">
+          <Checkbox onPress={onCheckboxPress} checkboxPosition="left">
             <Text size="xs" marginRight={6} color="white">
               {strings.terms}
             </Text>
