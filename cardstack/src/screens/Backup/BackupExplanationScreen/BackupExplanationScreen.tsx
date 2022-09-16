@@ -1,5 +1,5 @@
 import { StackActions, useNavigation } from '@react-navigation/native';
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 
 import {
   Button,
@@ -25,18 +25,6 @@ const BackupExplanationScreen = () => {
     navDispatch(StackActions.popToTop());
   }, [navDispatch]);
 
-  const FooterContent = useMemo(
-    () => (
-      <CenteredContainer>
-        <Button onPress={handleBackupOnPress}>{strings.primaryBtn}</Button>
-        <ButtonLink onPress={handleLaterOnPress}>
-          {strings.secondaryBtn}
-        </ButtonLink>
-      </CenteredContainer>
-    ),
-    [handleBackupOnPress, handleLaterOnPress]
-  );
-
   return (
     <PageWithStackHeader canGoBack={false}>
       <Container flex={1} width="90%">
@@ -47,7 +35,14 @@ const BackupExplanationScreen = () => {
           {strings.description}
         </Text>
       </Container>
-      <PageWithStackHeaderFooter>{FooterContent}</PageWithStackHeaderFooter>
+      <PageWithStackHeaderFooter>
+        <CenteredContainer>
+          <Button onPress={handleBackupOnPress}>{strings.primaryBtn}</Button>
+          <ButtonLink onPress={handleLaterOnPress}>
+            {strings.secondaryBtn}
+          </ButtonLink>
+        </CenteredContainer>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };

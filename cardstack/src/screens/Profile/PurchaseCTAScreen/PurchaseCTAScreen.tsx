@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
 import {
@@ -35,45 +35,6 @@ const PurchaseCTAScreen = () => {
   } = usePurchaseCTAScreen();
 
   const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
-
-  const FooterComponent = useMemo(
-    () => (
-      <>
-        <Button onPress={onPressBuy} blocked={inPurchaseOngoing}>
-          {purchaseBtnLabel}
-        </Button>
-        {showPrepaidCardOption && (
-          <Button
-            onPress={onPressPrepaidCards}
-            variant="primaryWhite"
-            borderColor="teal"
-            blocked={inPurchaseOngoing}
-            marginTop={5}
-          >
-            {strings.button.prepaidCard}
-          </Button>
-        )}
-        <Touchable
-          onPress={onPressChargeExplanation}
-          alignSelf="center"
-          disabled={inPurchaseOngoing}
-          paddingVertical={5}
-        >
-          <Text color="white" fontSize={16} weight="semibold">
-            {strings.whyCharge}
-          </Text>
-        </Touchable>
-      </>
-    ),
-    [
-      inPurchaseOngoing,
-      purchaseBtnLabel,
-      showPrepaidCardOption,
-      onPressChargeExplanation,
-      onPressBuy,
-      onPressPrepaidCards,
-    ]
-  );
 
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
@@ -119,7 +80,33 @@ const PurchaseCTAScreen = () => {
           resizeMode="contain"
         />
       </Container>
-      <PageWithStackHeaderFooter>{FooterComponent}</PageWithStackHeaderFooter>
+
+      <PageWithStackHeaderFooter>
+        <Button onPress={onPressBuy} blocked={inPurchaseOngoing}>
+          {purchaseBtnLabel}
+        </Button>
+        {showPrepaidCardOption && (
+          <Button
+            onPress={onPressPrepaidCards}
+            variant="primaryWhite"
+            borderColor="teal"
+            blocked={inPurchaseOngoing}
+            marginTop={5}
+          >
+            {strings.button.prepaidCard}
+          </Button>
+        )}
+        <Touchable
+          onPress={onPressChargeExplanation}
+          alignSelf="center"
+          disabled={inPurchaseOngoing}
+          paddingVertical={5}
+        >
+          <Text color="white" fontSize={16} weight="semibold">
+            {strings.whyCharge}
+          </Text>
+        </Touchable>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };
