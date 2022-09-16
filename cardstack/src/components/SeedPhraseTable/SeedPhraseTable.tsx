@@ -1,4 +1,3 @@
-import { BlurView, BlurViewProps } from '@react-native-community/blur';
 import React, { useMemo, useRef, useCallback } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
@@ -7,9 +6,10 @@ import {
   CenteredContainer,
   Container,
   IconProps,
+  Image,
 } from '@cardstack/components';
 import { useBooleanState, useCopyToast } from '@cardstack/hooks';
-import { Device } from '@cardstack/utils/device';
+import { colors } from '@cardstack/theme';
 
 import WordItem from './components/WordItem';
 import { strings } from './strings';
@@ -33,14 +33,8 @@ const animConfig = {
 
 const copyIconProps: IconProps = { name: 'copy', color: 'white' };
 
-// BlurView is crashing and spilling a dark opacity on Android for an unknown reason.
-// TODO: Investigate fix for crash and spillage on Android.
-const BlurViewWrapper = (props: BlurViewProps) =>
-  Device.isIOS ? (
-    <BlurView {...props} />
-  ) : (
-    <Container style={props.style} backgroundColor="darkBoxBackground" />
-  );
+const blurredImage = require('../../assets/seed-phrase-blur/blurredPhrase.png');
+const blurredImageWithCopyButton = require('../../assets/seed-phrase-blur/blurredPhraseWithCopyButton.png');
 
 export const SeedPhraseTable = ({
   seedPhrase,
@@ -86,9 +80,14 @@ export const SeedPhraseTable = ({
 
   const WordsTable = useMemo(
     () => (
-      <Container flexDirection="row" justifyContent="space-between" padding={8}>
+      <Container
+        flexDirection="row"
+        justifyContent="space-between"
+        padding={8}
+        paddingBottom={6}
+      >
         {wordColumns.map((column, columnIndex) => (
-          <Container width="50%" height={250} justifyContent="space-between">
+          <Container width="50%" height={258} justifyContent="space-between">
             {column.map((word, lineIndex) => (
               <WordItem
                 word={word}
@@ -116,7 +115,7 @@ export const SeedPhraseTable = ({
         <CenteredContainer>
           <Button
             iconProps={copyIconProps}
-            marginBottom={7}
+            marginBottom={4}
             variant="linkWhite"
             onPress={copySeedPhrase}
           >
@@ -127,10 +126,10 @@ export const SeedPhraseTable = ({
       )}
 
       {!phraseVisible && (
-        <Animated.View style={[styles.blurView, animatedOpacity]}>
-          <BlurViewWrapper
-            style={styles.blurView}
-            reducedTransparencyFallbackColor="darkBoxBackground"
+        <Animated.View style={[styles.blurContainer, animatedOpacity]}>
+          <Image
+            source={allowCopy ? blurredImageWithCopyButton : blurredImage}
+            style={[styles.blurContainer, styles.imageBlurView]}
           />
           <CenteredContainer width="100%" height="100%">
             <Button variant="tinyOpacityWhite" onPress={hideOverlay}>
@@ -144,10 +143,14 @@ export const SeedPhraseTable = ({
 };
 
 const styles = StyleSheet.create({
-  blurView: {
+  blurContainer: {
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
+  imageBlurView: {
     borderRadius: 20,
+    borderColor: colors.whiteTinyLightOpacity,
+    borderWidth: StyleSheet.hairlineWidth,
   },
 });

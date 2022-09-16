@@ -21,12 +21,12 @@ const DesignSystemScreen = () => {
 
   const sections = [
     {
-      title: 'Seed Phrase',
-      data: ['view', 'edit', 'error'],
-    },
-    {
       title: 'Input',
       data: ['slug'],
+    },
+    {
+      title: 'Seed Phrase',
+      data: ['view', 'edit', 'editBlur', 'error'],
     },
     {
       title: 'Button States',
@@ -70,6 +70,13 @@ const DesignSystemScreen = () => {
       case 'edit':
         return (
           <SeedPhraseTable seedPhrase="bright sell trunk jalopy donut enemy car invest" />
+        );
+      case 'editBlur':
+        return (
+          <SeedPhraseTable
+            seedPhrase="bright sell trunk jalopy donut enemy car invest"
+            hideOnOpen
+          />
         );
       case 'error':
         return (
