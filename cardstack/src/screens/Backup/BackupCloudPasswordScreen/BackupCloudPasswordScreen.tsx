@@ -1,11 +1,12 @@
 import { eq } from 'lodash';
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 
 import {
   Button,
   Checkbox,
   Container,
   PageWithStackHeader,
+  PageWithStackHeaderFooter,
   PasswordInput,
   ScrollView,
   Text,
@@ -32,26 +33,8 @@ const BackupCloudPasswordScreen = () => {
     validation: (text: string) => matchMinLength(text, 1) && eq(password, text),
   });
 
-  const footer = useMemo(
-    () => (
-      <Container
-        borderTopWidth={1}
-        borderTopColor="networkBadge"
-        paddingVertical={3}
-      >
-        <Checkbox onPress={() => undefined} checkboxPosition="left">
-          <Text size="xs" marginRight={6} color="white">
-            {strings.terms}
-          </Text>
-        </Checkbox>
-        <Button marginTop={4}>{strings.btn}</Button>
-      </Container>
-    ),
-    []
-  );
-
   return (
-    <PageWithStackHeader showSkip={false} footer={footer}>
+    <PageWithStackHeader showSkip={false}>
       <ScrollView
         flex={1}
         contentContainerStyle={{ paddingBottom: 50 }}
@@ -81,6 +64,20 @@ const BackupCloudPasswordScreen = () => {
           />
         </Container>
       </ScrollView>
+      <PageWithStackHeaderFooter>
+        <Container
+          borderTopWidth={1}
+          borderTopColor="networkBadge"
+          paddingVertical={3}
+        >
+          <Checkbox onPress={() => undefined} checkboxPosition="left">
+            <Text size="xs" marginRight={6} color="white">
+              {strings.terms}
+            </Text>
+          </Checkbox>
+          <Button marginTop={4}>{strings.btn}</Button>
+        </Container>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };
