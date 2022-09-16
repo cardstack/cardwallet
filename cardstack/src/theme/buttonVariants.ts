@@ -236,6 +236,14 @@ export const buttonVariants = {
   },
   tiny,
   tinyOpacity,
+  tinyOpacityWhite: {
+    ...tinyOpacity,
+    textStyle: {
+      color: 'white',
+      fontSize: 12,
+      paddingHorizontal: 4,
+    },
+  },
   invalid,
   disabledInvalid,
   square,

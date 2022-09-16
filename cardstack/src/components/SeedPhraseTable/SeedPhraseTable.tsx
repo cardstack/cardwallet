@@ -1,22 +1,17 @@
 import { BlurView, BlurViewProps } from '@react-native-community/blur';
-import React, { useMemo, useRef, memo, useCallback } from 'react';
-import { StyleSheet, Animated } from 'react-native';
+import React, { useMemo, useRef, useCallback } from 'react';
+import { Animated, StyleSheet } from 'react-native';
 
-import {
-  Button,
-  CenteredContainer,
-  Container,
-  Text,
-} from '@cardstack/components';
+import { Button, CenteredContainer, Container } from '@cardstack/components';
 import { useBooleanState, useCopyToast } from '@cardstack/hooks';
 import { Device } from '@cardstack/utils/device';
 
+import WordItem from './components/WordItem';
 import { strings } from './strings';
 import {
   filledArrayFromSeedPhraseString,
   splitSeedPhraseArrayInTwoColunms,
 } from './utils';
-('./utils');
 
 interface SeedPhraseTableProps {
   seedPhrase: string;
@@ -40,48 +35,6 @@ const BlurViewWrapper = (props: BlurViewProps) =>
     <Container style={props.style} backgroundColor="darkBoxBackground" />
   );
 
-const WordItem = memo(
-  ({
-    word,
-    index,
-    showAsError,
-  }: {
-    word: string;
-    index: number;
-    showAsError: boolean;
-  }) => (
-    <Container flexDirection="row" alignItems="flex-end">
-      <Container width={30}>
-        <Text
-          textAlign="right"
-          variant="semibold"
-          size="body"
-          color="white"
-          paddingRight={2}
-        >
-          {index + 1}
-        </Text>
-      </Container>
-      {word ? (
-        <Text
-          variant="semibold"
-          size="body"
-          color={showAsError ? 'invalid' : 'teal'}
-        >
-          {word}
-        </Text>
-      ) : (
-        <Container
-          backgroundColor={showAsError ? 'invalid' : 'teal'}
-          width={97}
-          height={1}
-          marginBottom={1}
-        />
-      )}
-    </Container>
-  )
-);
-
 export const SeedPhraseTable = ({
   seedPhrase,
   hideOnOpen = false,
@@ -96,7 +49,7 @@ export const SeedPhraseTable = ({
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
 
-  const wordsColumns = useMemo(
+  const words = useMemo(
     () =>
       splitSeedPhraseArrayInTwoColunms(
         filledArrayFromSeedPhraseString(seedPhrase)
@@ -119,26 +72,41 @@ export const SeedPhraseTable = ({
     }).start(() => showPhrase());
   }, [blurAnimation, showPhrase]);
 
-  return (
-    <Container
-      backgroundColor="darkBoxBackground"
-      borderRadius={20}
-      borderColor="darkBoxBackground"
-      borderWidth={1}
-    >
+  const copySeedPhrase = useCallback(() => copyToClipboard(seedPhrase), [
+    copyToClipboard,
+    seedPhrase,
+  ]);
+
+  const renderWordItem = useCallback(
+    ({ word, index }: { word: string; index: number }) => (
+      <WordItem word={word} index={index} showAsError={showAsError} />
+    ),
+    [showAsError]
+  );
+
+  const WordsColumns = useMemo(
+    () => (
       <Container flexDirection="row" justifyContent="space-between" padding={8}>
-        {wordsColumns.map(column => (
+        {words.map((column, j) => (
           <Container width="50%" height={250} justifyContent="space-between">
-            {column.map(item => (
-              <WordItem
-                word={item.word}
-                index={item.index}
-                showAsError={showAsError}
-              />
-            ))}
+            {column.map((word, i) =>
+              renderWordItem({ word, index: i + j * column.length })
+            )}
           </Container>
         ))}
       </Container>
+    ),
+    [words, renderWordItem]
+  );
+
+  return (
+    <Container
+      backgroundColor="darkBoxBackground"
+      borderColor="darkBoxBackground"
+      borderWidth={1}
+      borderRadius={20}
+    >
+      {WordsColumns}
 
       {allowCopy && (
         <CenteredContainer>
@@ -146,7 +114,7 @@ export const SeedPhraseTable = ({
             iconProps={{ name: 'copy', color: 'white' }}
             marginBottom={7}
             variant="linkWhite"
-            onPress={() => copyToClipboard(seedPhrase)}
+            onPress={copySeedPhrase}
           >
             {strings.copyToClipboard}
           </Button>
@@ -161,7 +129,7 @@ export const SeedPhraseTable = ({
             reducedTransparencyFallbackColor="darkBoxBackground"
           />
           <CenteredContainer width="100%" height="100%">
-            <Button variant="tinyOpacity" onPress={hideOverlay}>
+            <Button variant="tinyOpacityWhite" onPress={hideOverlay}>
               {strings.tapToReveal}
             </Button>
           </CenteredContainer>
