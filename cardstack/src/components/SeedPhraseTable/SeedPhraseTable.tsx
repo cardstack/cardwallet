@@ -2,7 +2,12 @@ import { BlurView, BlurViewProps } from '@react-native-community/blur';
 import React, { useMemo, useRef, useCallback } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 
-import { Button, CenteredContainer, Container } from '@cardstack/components';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  IconProps,
+} from '@cardstack/components';
 import { useBooleanState, useCopyToast } from '@cardstack/hooks';
 import { Device } from '@cardstack/utils/device';
 
@@ -25,6 +30,8 @@ const animConfig = {
   blurred: 1,
   visible: 0,
 };
+
+const copyIconProps: IconProps = { name: 'copy', color: 'white' };
 
 // BlurView is crashing and spilling a dark opacity on Android for an unknown reason.
 // TODO: Investigate fix for crash and spillage on Android.
@@ -111,7 +118,7 @@ export const SeedPhraseTable = ({
       {allowCopy && (
         <CenteredContainer>
           <Button
-            iconProps={{ name: 'copy', color: 'white' }}
+            iconProps={copyIconProps}
             marginBottom={7}
             variant="linkWhite"
             onPress={copySeedPhrase}
