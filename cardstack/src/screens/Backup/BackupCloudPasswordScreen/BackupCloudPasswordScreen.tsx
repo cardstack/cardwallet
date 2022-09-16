@@ -19,6 +19,15 @@ import {
 
 import { strings } from './strings';
 
+const layouts = {
+  scrollView: {
+    marginBottom: 50,
+  },
+  passwordInput: {
+    marginBottom: 5,
+  },
+};
+
 const BackupCloudPasswordScreen = () => {
   const { onChangeText, isValid, password } = usePasswordInput({
     validation: (text: string) =>
@@ -37,7 +46,7 @@ const BackupCloudPasswordScreen = () => {
     <PageWithStackHeader showSkip={false}>
       <ScrollView
         flex={1}
-        contentContainerStyle={{ paddingBottom: 50 }}
+        contentContainerStyle={layouts.scrollView}
         showsVerticalScrollIndicator={false}
       >
         <Container width="80%" marginBottom={7}>
@@ -54,7 +63,7 @@ const BackupCloudPasswordScreen = () => {
             onChangeText={onChangeText}
             isValid={isValid}
             value={password}
-            containerProps={{ marginBottom: 5 }}
+            containerProps={layouts.passwordInput}
           />
           <PasswordInput
             validationMessage={strings.confirmPasswordValidation}
