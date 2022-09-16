@@ -26,6 +26,7 @@ import {
   Text,
   Touchable,
   PageWithStackHeader,
+  PageWithStackHeaderFooter,
 } from '@cardstack/components';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
@@ -221,11 +222,6 @@ export const ProfileNameScreen = () => {
       showSkip={!isUpdating}
       skipPressCallback={triggerSkipProfileCreation}
       headerContainerProps={androidOpenKeyboardStyles?.header}
-      footer={
-        <Button blocked={isBlocked} onPress={onContinuePress}>
-          {strings.btns[flow]}
-        </Button>
-      }
     >
       <Animated.View style={animatedHeaderStyles}>
         <Text variant="pageHeader">{strings.header[flow]}</Text>
@@ -308,6 +304,11 @@ export const ProfileNameScreen = () => {
           </Container>
         </Container>
       </KeyboardAvoidingView>
+      <PageWithStackHeaderFooter>
+        <Button blocked={isBlocked} onPress={onContinuePress}>
+          {strings.btns[flow]}
+        </Button>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };

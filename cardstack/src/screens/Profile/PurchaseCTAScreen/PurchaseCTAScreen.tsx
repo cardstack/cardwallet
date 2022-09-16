@@ -10,6 +10,7 @@ import {
   Text,
   Touchable,
   PageWithStackHeader,
+  PageWithStackHeaderFooter,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
@@ -93,10 +94,7 @@ const PurchaseCTAScreen = () => {
   );
 
   return (
-    <PageWithStackHeader
-      skipPressCallback={triggerSkipProfileCreation}
-      footer={FooterComponent}
-    >
+    <PageWithStackHeader skipPressCallback={triggerSkipProfileCreation}>
       <Container
         flex={1}
         flexDirection="column"
@@ -121,6 +119,7 @@ const PurchaseCTAScreen = () => {
           resizeMode="contain"
         />
       </Container>
+      <PageWithStackHeaderFooter>{FooterComponent}</PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };

@@ -6,6 +6,7 @@ import {
   CenteredContainer,
   Container,
   PageWithStackHeader,
+  PageWithStackHeaderFooter,
   Text,
 } from '@cardstack/components';
 
@@ -24,21 +25,21 @@ const BackupExplanationScreen = () => {
     navDispatch(StackActions.popToTop());
   }, [navDispatch]);
 
-  const FooterComponent = useMemo(
+  const FooterContent = useMemo(
     () => (
       <CenteredContainer>
         <Button onPress={handleBackupOnPress}>{strings.primaryBtn}</Button>
         <ButtonLink onPress={handleLaterOnPress}>
           {strings.secondaryBtn}
         </ButtonLink>
-      </Container>
+      </CenteredContainer>
     ),
     [handleBackupOnPress, handleLaterOnPress]
   );
 
   return (
-    <PageWithStackHeader canGoBack={false} footer={FooterComponent}>
-      <Container width="90%">
+    <PageWithStackHeader canGoBack={false}>
+      <Container flex={1} width="90%">
         <Text variant="pageHeader" paddingBottom={4}>
           {strings.title}
         </Text>
@@ -46,6 +47,7 @@ const BackupExplanationScreen = () => {
           {strings.description}
         </Text>
       </Container>
+      <PageWithStackHeaderFooter>{FooterContent}</PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };
