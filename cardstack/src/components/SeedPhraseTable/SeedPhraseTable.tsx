@@ -56,7 +56,7 @@ export const SeedPhraseTable = ({
 
   const { CopyToastComponent, copyToClipboard } = useCopyToast({});
 
-  const words = useMemo(
+  const wordColumns = useMemo(
     () =>
       splitSeedPhraseArrayInTwoColunms(
         filledArrayFromSeedPhraseString(seedPhrase)
@@ -84,26 +84,23 @@ export const SeedPhraseTable = ({
     seedPhrase,
   ]);
 
-  const renderWordItem = useCallback(
-    ({ word, index }: { word: string; index: number }) => (
-      <WordItem word={word} index={index} showAsError={showAsError} />
-    ),
-    [showAsError]
-  );
-
-  const WordsColumns = useMemo(
+  const WordsTable = useMemo(
     () => (
       <Container flexDirection="row" justifyContent="space-between" padding={8}>
-        {words.map((column, j) => (
+        {wordColumns.map((column, columnIndex) => (
           <Container width="50%" height={250} justifyContent="space-between">
-            {column.map((word, i) =>
-              renderWordItem({ word, index: i + j * column.length })
-            )}
+            {column.map((word, lineIndex) => (
+              <WordItem
+                word={word}
+                numberPrefix={1 + lineIndex + columnIndex * column.length}
+                showAsError={showAsError}
+              />
+            ))}
           </Container>
         ))}
       </Container>
     ),
-    [words, renderWordItem]
+    [wordColumns, showAsError]
   );
 
   return (
@@ -113,7 +110,7 @@ export const SeedPhraseTable = ({
       borderWidth={1}
       borderRadius={20}
     >
-      {WordsColumns}
+      {WordsTable}
 
       {allowCopy && (
         <CenteredContainer>

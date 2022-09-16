@@ -4,11 +4,11 @@ import { Container, Text } from '@cardstack/components';
 
 interface WordItemProps {
   word: string;
-  index: number;
+  numberPrefix: number;
   showAsError: boolean;
 }
 
-const WordItem = ({ word, index, showAsError }: WordItemProps) => (
+const WordItem = ({ word, numberPrefix, showAsError }: WordItemProps) => (
   <Container flexDirection="row" alignItems="flex-end">
     <Container width={30}>
       <Text
@@ -18,7 +18,7 @@ const WordItem = ({ word, index, showAsError }: WordItemProps) => (
         color="white"
         paddingRight={2}
       >
-        {index + 1}
+        {numberPrefix}
       </Text>
     </Container>
     {word ? (
