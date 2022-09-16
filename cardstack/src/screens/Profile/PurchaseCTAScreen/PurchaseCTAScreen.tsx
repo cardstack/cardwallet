@@ -10,6 +10,7 @@ import {
   Text,
   Touchable,
   PageWithStackHeader,
+  PageWithStackHeaderFooter,
 } from '@cardstack/components';
 
 import profilePreview from '../../../assets/profile-preview.png';
@@ -33,6 +34,8 @@ const PurchaseCTAScreen = () => {
     triggerSkipProfileCreation,
   } = usePurchaseCTAScreen();
 
+  const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
+
   const BenefitsItem = useCallback(
     ({ iconName, copy }: BenefitsItem) => (
       <Container alignItems="center" flexDirection="row">
@@ -50,8 +53,6 @@ const PurchaseCTAScreen = () => {
     ),
     []
   );
-
-  const purchaseBtnLabel = `${strings.button.purchase} ${localizedValue}`;
 
   return (
     <PageWithStackHeader skipPressCallback={triggerSkipProfileCreation}>
@@ -78,6 +79,9 @@ const PurchaseCTAScreen = () => {
           style={styles.iapPreview}
           resizeMode="contain"
         />
+      </Container>
+
+      <PageWithStackHeaderFooter>
         <Button onPress={onPressBuy} blocked={inPurchaseOngoing}>
           {purchaseBtnLabel}
         </Button>
@@ -87,6 +91,7 @@ const PurchaseCTAScreen = () => {
             variant="primaryWhite"
             borderColor="teal"
             blocked={inPurchaseOngoing}
+            marginTop={5}
           >
             {strings.button.prepaidCard}
           </Button>
@@ -95,12 +100,13 @@ const PurchaseCTAScreen = () => {
           onPress={onPressChargeExplanation}
           alignSelf="center"
           disabled={inPurchaseOngoing}
+          paddingVertical={5}
         >
           <Text color="white" fontSize={16} weight="semibold">
             {strings.whyCharge}
           </Text>
         </Touchable>
-      </Container>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };

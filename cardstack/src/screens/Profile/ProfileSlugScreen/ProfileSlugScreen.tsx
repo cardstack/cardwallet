@@ -7,6 +7,7 @@ import {
   ValidationMessage,
   SuffixedInput,
   PageWithStackHeader,
+  PageWithStackHeaderFooter,
 } from '@cardstack/components';
 
 import { strings } from './strings';
@@ -51,12 +52,12 @@ const ProfileSlugScreen = () => {
             </Text>
           </Container>
         </Container>
-        <Container flex={0.2} justifyContent="flex-end" paddingBottom={5}>
-          <Button onPress={onContinuePress} blocked={!canContinue}>
-            {strings.buttons.continue}
-          </Button>
-        </Container>
       </Container>
+      <PageWithStackHeaderFooter>
+        <Button onPress={onContinuePress} blocked={!canContinue}>
+          {strings.buttons.continue}
+        </Button>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };

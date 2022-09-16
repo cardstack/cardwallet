@@ -33,7 +33,6 @@ const PageWithStackHeader = ({
   showSkip = true,
   skipPressCallback,
   children,
-  footer,
   leftIconProps,
   headerContainerProps,
 }: PropsWithChildren<PageWithStackHeaderProps>) => {
@@ -74,8 +73,7 @@ const PageWithStackHeader = ({
         paddingHorizontal={0} // reset MainHeaderWrapper's default padding
         {...headerContainerProps}
       />
-      <Container flex={1}>{children}</Container>
-      {!!footer && <Container flex={0.3}>{footer}</Container>}
+      {children}
     </Container>
   );
 };

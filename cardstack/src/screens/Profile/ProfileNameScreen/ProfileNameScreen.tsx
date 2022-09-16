@@ -26,6 +26,7 @@ import {
   Text,
   Touchable,
   PageWithStackHeader,
+  PageWithStackHeaderFooter,
 } from '@cardstack/components';
 import { cardSpaceDomain } from '@cardstack/constants';
 import { colors, SPACING_MULTIPLIER } from '@cardstack/theme';
@@ -303,11 +304,11 @@ export const ProfileNameScreen = () => {
           </Container>
         </Container>
       </KeyboardAvoidingView>
-      <CenteredContainer flex={0.2} paddingBottom={2}>
+      <PageWithStackHeaderFooter>
         <Button blocked={isBlocked} onPress={onContinuePress}>
           {strings.btns[flow]}
         </Button>
-      </CenteredContainer>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };
