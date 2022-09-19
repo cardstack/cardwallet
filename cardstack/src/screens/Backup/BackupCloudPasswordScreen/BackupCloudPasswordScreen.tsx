@@ -21,18 +21,18 @@ import {
 
 import { strings } from './strings';
 
-const layouts = {
+const styles = StyleSheet.create({
+  keyboardAvoidView: {
+    flex: 1,
+  },
+  contentContainerStyle: {
+    marginBottom: 200,
+  },
   scrollView: {
     marginBottom: 50,
   },
   passwordInput: {
     marginBottom: 5,
-  },
-};
-
-const styles = StyleSheet.create({
-  keyboardAvoidView: {
-    flex: 1,
   },
 });
 
@@ -58,12 +58,12 @@ const BackupCloudPasswordScreen = () => {
     <PageWithStackHeader showSkip={false}>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidView}
-        contentContainerStyle={{ marginBottom: 200 }}
+        contentContainerStyle={styles.contentContainerStyle}
         behavior={Device.isIOS ? 'padding' : undefined}
       >
         <ScrollView
           flex={1}
-          contentContainerStyle={layouts.scrollView}
+          contentContainerStyle={styles.scrollView}
           showsVerticalScrollIndicator={false}
         >
           <Container width="80%" marginBottom={7}>
@@ -80,7 +80,7 @@ const BackupCloudPasswordScreen = () => {
               onChangeText={onChangeText}
               isValid={isValid}
               value={password}
-              containerProps={layouts.passwordInput}
+              containerProps={styles.passwordInput}
             />
             <PasswordInput
               validationMessage={strings.confirmPasswordValidation}
