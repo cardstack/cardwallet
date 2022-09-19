@@ -104,8 +104,8 @@ export const SeedPhraseTable = ({
 
   return (
     <Container
-      backgroundColor="darkBoxBackground"
-      borderColor="darkBoxBackground"
+      backgroundColor="blueDarkest"
+      borderColor="blueDarkest"
       borderWidth={1}
       borderRadius={20}
     >

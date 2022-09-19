@@ -31,7 +31,7 @@ const WordItem = ({ word, numberPrefix, showAsError }: WordItemProps) => (
       </Text>
     ) : (
       <Container
-        backgroundColor={showAsError ? 'invalid' : 'teal'}
+        backgroundColor="teal"
         width={97}
         height={1}
         marginBottom={1}
