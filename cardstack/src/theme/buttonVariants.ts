@@ -10,6 +10,12 @@ const primary = {
   },
 };
 
+const link = {
+  backgroundColor: 'transparent',
+  borderWidth: 0,
+  width: undefined,
+};
+
 const white = {
   backgroundColor: 'white',
   borderColor: 'buttonSecondaryBorder',
@@ -177,11 +183,17 @@ export const buttonVariants = {
     },
   },
   linkWhite: {
-    ...primary,
+    ...link,
     textStyle: {
       color: 'white',
     },
-    borderWidth: 0,
+  },
+  smallLinkWhite: {
+    ...link,
+    textStyle: {
+      color: 'white',
+      fontSize: 14,
+    },
   },
   small,
   short,
