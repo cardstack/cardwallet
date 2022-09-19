@@ -176,6 +176,13 @@ export const buttonVariants = {
       color: 'white',
     },
   },
+  linkWhite: {
+    ...primary,
+    textStyle: {
+      color: 'white',
+    },
+    borderWidth: 0,
+  },
   small,
   short,
   white,
@@ -229,6 +236,14 @@ export const buttonVariants = {
   },
   tiny,
   tinyOpacity,
+  tinyOpacityWhite: {
+    ...tinyOpacity,
+    textStyle: {
+      color: 'white',
+      fontSize: 12,
+      paddingHorizontal: 4,
+    },
+  },
   invalid,
   disabledInvalid,
   square,

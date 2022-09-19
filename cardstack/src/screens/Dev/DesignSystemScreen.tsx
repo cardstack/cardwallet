@@ -7,6 +7,7 @@ import {
   CenteredContainer,
   Container,
   Text,
+  SeedPhraseTable,
 } from '@cardstack/components';
 import SuffixedInput from '@cardstack/components/Input/SuffixedInput/SuffixedInput';
 import { cardSpaceDomain } from '@cardstack/constants';
@@ -22,6 +23,10 @@ const DesignSystemScreen = () => {
     {
       title: 'Input',
       data: ['slug'],
+    },
+    {
+      title: 'Seed Phrase',
+      data: ['view', 'edit', 'editBlur', 'error'],
     },
     {
       title: 'Button States',
@@ -60,9 +65,44 @@ const DesignSystemScreen = () => {
     [loading]
   );
 
+  const renderSeedPhraseStates = useCallback(item => {
+    switch (item) {
+      case 'edit':
+        return (
+          <SeedPhraseTable seedPhrase="bright sell trunk jalopy donut enemy car invest" />
+        );
+      case 'editBlur':
+        return (
+          <SeedPhraseTable
+            seedPhrase="bright sell trunk jalopy donut enemy car invest"
+            hideOnOpen
+          />
+        );
+      case 'error':
+        return (
+          <SeedPhraseTable
+            seedPhrase="bright sell trunk jalopy donut enemy car invest donut enemy car invest"
+            showAsError
+          />
+        );
+      case 'view':
+        return (
+          <SeedPhraseTable
+            seedPhrase="bright sell trunk jalopy donut enemy car invest donut enemy car invest"
+            hideOnOpen
+            allowCopy
+          />
+        );
+    }
+  }, []);
+
   const renderItem = useCallback(
     ({ item, section: { title } }) => {
       switch (title) {
+        case 'Seed Phrase':
+          return (
+            <Container padding={2}>{renderSeedPhraseStates(item)}</Container>
+          );
         case 'Input':
           return (
             <Container padding={2}>
@@ -90,11 +130,11 @@ const DesignSystemScreen = () => {
           );
       }
     },
-    [renderButtonStates]
+    [renderButtonStates, renderSeedPhraseStates]
   );
 
   return (
-    <Container backgroundColor="backgroundDarkPurple">
+    <Container width="100%" backgroundColor="backgroundDarkPurple">
       <SectionList
         renderItem={renderItem as any}
         sections={sections}
