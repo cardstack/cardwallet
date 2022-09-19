@@ -1,20 +1,68 @@
 import React, { memo } from 'react';
+import { StyleSheet } from 'react-native';
 
-import { Container, PageWithStackHeader, Text } from '@cardstack/components';
+import {
+  Button,
+  CenteredContainer,
+  Container,
+  PageWithStackHeader,
+  PageWithStackHeaderFooter,
+  ScrollView,
+  SeedPhraseTable,
+  Text,
+} from '@cardstack/components';
+
+import { ButtonLink } from '../components/ButtonLink';
 
 import { strings } from './strings';
+import { useBackupRecoveryPhraseScreen } from './useBackupRecoveryPhraseScreen';
+
+const style = StyleSheet.create({
+  scrollview: {
+    paddingBottom: 30,
+  },
+});
 
 const BackupRecoveryPhraseScreen = () => {
+  const {
+    handleCloudBackupOnPress,
+    handleManualBackupOnPress,
+  } = useBackupRecoveryPhraseScreen();
+
   return (
     <PageWithStackHeader>
-      <Container flex={1} width="90%">
-        <Text variant="pageHeader" paddingBottom={4}>
-          {strings.title}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={style.scrollview}
+      >
+        <Container flex={1} width="90%" marginBottom={10}>
+          <Text variant="pageHeader" paddingBottom={4}>
+            {strings.title}
+          </Text>
+          <Text color="grayText" letterSpacing={0.4}>
+            {strings.description}
+          </Text>
+        </Container>
+        <SeedPhraseTable />
+        <Text
+          color="grayText"
+          letterSpacing={0.28}
+          fontSize={11}
+          paddingVertical={2}
+        >
+          {strings.disclaimer}
         </Text>
-        <Text color="grayText" letterSpacing={0.4}>
-          {strings.description}
-        </Text>
-      </Container>
+      </ScrollView>
+      <PageWithStackHeaderFooter>
+        <CenteredContainer>
+          <Button onPress={handleCloudBackupOnPress}>
+            {strings.primaryBtn('iCloud')}
+          </Button>
+          <ButtonLink onPress={handleManualBackupOnPress}>
+            {strings.secondaryBtn}
+          </ButtonLink>
+        </CenteredContainer>
+      </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
 };
