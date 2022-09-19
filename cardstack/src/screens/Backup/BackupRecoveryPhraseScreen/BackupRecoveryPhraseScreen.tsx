@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import {
+  BackupStatus,
   Button,
   CenteredContainer,
   Container,
@@ -27,10 +28,16 @@ const BackupRecoveryPhraseScreen = () => {
   const {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
+    latestBackup,
   } = useBackupRecoveryPhraseScreen();
 
+  const backupStatus = useMemo(
+    () => <BackupStatus status={latestBackup ? 'success' : 'missing'} />,
+    [latestBackup]
+  );
+
   return (
-    <PageWithStackHeader>
+    <PageWithStackHeader headerChildren={backupStatus}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={style.scrollview}

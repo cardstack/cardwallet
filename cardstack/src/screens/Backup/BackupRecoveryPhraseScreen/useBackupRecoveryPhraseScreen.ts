@@ -7,7 +7,7 @@ import { useWallets } from '@rainbow-me/hooks';
 
 export const useBackupRecoveryPhraseScreen = () => {
   const { navigate } = useNavigation();
-  const { wallets } = useWallets();
+  const { latestBackup } = useWallets();
 
   const handleCloudBackupOnPress = useCallback(
     () => navigate(Routes.BACKUP_CLOUD_PASSWORD),
@@ -18,10 +18,9 @@ export const useBackupRecoveryPhraseScreen = () => {
     // TBD
   }, []);
 
-  console.log('[LOG] wallets', wallets);
-
   return {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
+    latestBackup,
   };
 };
