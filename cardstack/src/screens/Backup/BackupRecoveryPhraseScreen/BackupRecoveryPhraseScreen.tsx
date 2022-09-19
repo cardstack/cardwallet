@@ -12,6 +12,7 @@ import {
   SeedPhraseTable,
   Text,
 } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 
 import { ButtonLink } from '../components/ButtonLink';
 
@@ -63,7 +64,7 @@ const BackupRecoveryPhraseScreen = () => {
       <PageWithStackHeaderFooter>
         <CenteredContainer>
           <Button onPress={handleCloudBackupOnPress}>
-            {strings.primaryBtn('iCloud')}
+            {strings.primaryBtn(Device.cloudPlatform)}
           </Button>
           <ButtonLink onPress={handleManualBackupOnPress}>
             {strings.secondaryBtn}
