@@ -18,7 +18,7 @@ export const NetworkBadge = (props: ContainerProps & { text?: string }) => {
         style={{ paddingVertical: 1 }}
         borderRadius={50}
       >
-        <Text color="networkBadge" fontSize={9} weight="bold">
+        <Text color="blueDarkest" fontSize={9} weight="bold">
           {props.text ||
             `ON ${networkInfo[networkName].shortName.toUpperCase()}`}
         </Text>

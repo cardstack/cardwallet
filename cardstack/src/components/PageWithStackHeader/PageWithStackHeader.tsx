@@ -1,11 +1,5 @@
 import { useNavigation, StackActions } from '@react-navigation/native';
-import React, {
-  memo,
-  PropsWithChildren,
-  ReactNode,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { memo, PropsWithChildren, useCallback, useMemo } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -21,7 +15,6 @@ interface PageWithStackHeaderProps {
   canGoBack?: boolean;
   showSkip?: boolean;
   skipPressCallback?: () => void;
-  footer?: ReactNode;
   leftIconProps?: Omit<IconProps, 'name'> & {
     name?: IconName;
   };
