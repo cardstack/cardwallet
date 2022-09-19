@@ -1,5 +1,11 @@
 import { useNavigation, StackActions } from '@react-navigation/native';
-import React, { memo, PropsWithChildren, useCallback, useMemo } from 'react';
+import React, {
+  memo,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -19,6 +25,7 @@ interface PageWithStackHeaderProps {
     name?: IconName;
   };
   headerContainerProps?: ContainerProps;
+  headerChildren?: ReactNode;
 }
 
 const PageWithStackHeader = ({
@@ -28,6 +35,7 @@ const PageWithStackHeader = ({
   children,
   leftIconProps,
   headerContainerProps,
+  headerChildren,
 }: PropsWithChildren<PageWithStackHeaderProps>) => {
   const { dispatch: navDispatch } = useNavigation();
 
@@ -65,8 +73,10 @@ const PageWithStackHeader = ({
         leftIconProps={leftIconProps}
         paddingHorizontal={0} // reset MainHeaderWrapper's default padding
         {...headerContainerProps}
-      />
-      <Container flex={1}>{children}</Container>
+      >
+        {headerChildren}
+      </NavigationStackHeader>
+      {children}
     </Container>
   );
 };
