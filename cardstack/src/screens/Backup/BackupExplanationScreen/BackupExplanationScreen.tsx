@@ -9,17 +9,18 @@ import {
   PageWithStackHeaderFooter,
   Text,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 
 import { ButtonLink } from '../components/ButtonLink';
 
 import { strings } from './strings';
 
 const BackupExplanationScreen = () => {
-  const { dispatch: navDispatch } = useNavigation();
+  const { dispatch: navDispatch, navigate } = useNavigation();
 
   const handleBackupOnPress = useCallback(() => {
-    // TODO
-  }, []);
+    navigate(Routes.BACKUP_RECOVERY_PHRASE);
+  }, [navigate]);
 
   const handleLaterOnPress = useCallback(() => {
     navDispatch(StackActions.popToTop());

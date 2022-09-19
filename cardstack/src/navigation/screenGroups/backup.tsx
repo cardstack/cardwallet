@@ -7,6 +7,7 @@ import {
 import {
   BackupCloudPasswordScreen,
   BackupExplanationScreen,
+  BackupRecoveryPhraseScreen,
 } from '@cardstack/screens';
 
 import { StackType } from '../types';
@@ -26,6 +27,10 @@ export const BackupScreenGroup = ({ Stack }: { Stack: StackType }) => (
     <Stack.Screen
       component={BackupCloudPasswordScreen}
       name={Routes.BACKUP_CLOUD_PASSWORD}
+    />
+    <Stack.Screen
+      component={BackupRecoveryPhraseScreen}
+      name={Routes.BACKUP_RECOVERY_PHRASE}
     />
   </Stack.Group>
 );
