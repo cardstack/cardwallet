@@ -76,7 +76,7 @@ const PageWithStackHeader = ({
       >
         {headerChildren}
       </NavigationStackHeader>
-      {children}
+      <Container flex={1}>{children}</Container>
     </Container>
   );
 };
