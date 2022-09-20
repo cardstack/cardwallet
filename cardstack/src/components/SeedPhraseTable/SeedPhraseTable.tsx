@@ -148,9 +148,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+    backgroundColor: colors.blueDarkest,
+    borderRadius: 20,
   },
   imageBlurView: {
-    borderRadius: 20,
     borderColor: colors.whiteTinyLightOpacity,
     borderWidth: StyleSheet.hairlineWidth,
   },
