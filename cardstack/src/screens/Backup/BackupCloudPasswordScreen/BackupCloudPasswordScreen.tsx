@@ -79,12 +79,14 @@ const BackupCloudPasswordScreen = () => {
               isValid={isValid}
               value={password}
               containerProps={styles.passwordInput}
+              returnKeyType="next"
             />
             <PasswordInput
               validationMessage={strings.confirmPasswordValidation}
               onChangeText={onChangeConfirmation}
               isValid={isValidConfirmation}
               value={confirmation}
+              returnKeyType="done"
             />
           </Container>
         </KeyboardAvoidingView>
