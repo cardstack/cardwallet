@@ -24,9 +24,7 @@ import { strings } from './strings';
 const styles = StyleSheet.create({
   keyboardAvoidView: {
     flex: 1,
-  },
-  contentContainerStyle: {
-    marginBottom: 200,
+    marginBottom: 50,
   },
   scrollView: {
     marginBottom: 50,
@@ -56,15 +54,15 @@ const BackupCloudPasswordScreen = () => {
 
   return (
     <PageWithStackHeader showSkip={false}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidView}
-        contentContainerStyle={styles.contentContainerStyle}
-        behavior={Device.isIOS ? 'padding' : undefined}
+      <ScrollView
+        flex={1}
+        contentContainerStyle={styles.scrollView}
+        showsVerticalScrollIndicator={false}
       >
-        <ScrollView
-          flex={1}
-          contentContainerStyle={styles.scrollView}
-          showsVerticalScrollIndicator={false}
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidView}
+          behavior="position"
+          keyboardVerticalOffset={Device.isIOS ? 100 : 0}
         >
           <Container width="80%" marginBottom={7}>
             <Text variant="pageHeader" paddingBottom={4}>
@@ -89,8 +87,8 @@ const BackupCloudPasswordScreen = () => {
               value={confirmation}
             />
           </Container>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ScrollView>
       <PageWithStackHeaderFooter>
         <Container
           borderTopWidth={1}
