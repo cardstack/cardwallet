@@ -5,6 +5,7 @@ import { getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation';
 
 import { useWallets } from '@rainbow-me/hooks';
+import { logger } from '@rainbow-me/utils';
 
 export const useBackupRecoveryPhraseScreen = () => {
   const { navigate } = useNavigation();
@@ -12,9 +13,13 @@ export const useBackupRecoveryPhraseScreen = () => {
   const [seedPhrase, setSeedPhrase] = useState('');
 
   const loadSeedPhrase = useCallback(async () => {
-    const seedphrase = await getSeedPhrase(selectedWallet.id);
+    try {
+      const seedphrase = await getSeedPhrase(selectedWallet.id);
 
-    setSeedPhrase(seedphrase);
+      setSeedPhrase(seedphrase);
+    } catch (error) {
+      logger.log('Error getting seed phrase', error);
+    }
   }, [selectedWallet]);
 
   useEffect(() => {
