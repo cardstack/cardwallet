@@ -30,6 +30,7 @@ const BackupRecoveryPhraseScreen = () => {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
     latestBackup,
+    seedPhrase,
   } = useBackupRecoveryPhraseScreen();
 
   const backupStatus = useMemo(
@@ -51,7 +52,7 @@ const BackupRecoveryPhraseScreen = () => {
             {strings.description}
           </Text>
         </Container>
-        <SeedPhraseTable />
+        <SeedPhraseTable seedPhrase={seedPhrase} hideOnOpen />
         <Text
           color="grayText"
           letterSpacing={0.28}
