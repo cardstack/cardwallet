@@ -1,5 +1,6 @@
 import { eq } from 'lodash';
 import React, { memo, useCallback } from 'react';
+import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 
 import {
   Button,
@@ -12,6 +13,7 @@ import {
   Text,
   usePasswordInput,
 } from '@cardstack/components';
+import { Device } from '@cardstack/utils';
 import {
   hasAtLeastOneDigit,
   matchMinLength,
@@ -19,14 +21,18 @@ import {
 
 import { strings } from './strings';
 
-const layouts = {
+const styles = StyleSheet.create({
+  keyboardAvoidView: {
+    flex: 1,
+    marginBottom: 50,
+  },
   scrollView: {
     marginBottom: 50,
   },
   passwordInput: {
     marginBottom: 5,
   },
-};
+});
 
 const BackupCloudPasswordScreen = () => {
   const { onChangeText, isValid, password } = usePasswordInput({
@@ -50,32 +56,40 @@ const BackupCloudPasswordScreen = () => {
     <PageWithStackHeader showSkip={false}>
       <ScrollView
         flex={1}
-        contentContainerStyle={layouts.scrollView}
+        contentContainerStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        <Container width="80%" marginBottom={7}>
-          <Text variant="pageHeader" paddingBottom={4}>
-            {strings.title}
-          </Text>
-          <Text color="grayText" letterSpacing={0.4}>
-            {strings.description}
-          </Text>
-        </Container>
-        <Container>
-          <PasswordInput
-            validationMessage={strings.passwordValidation}
-            onChangeText={onChangeText}
-            isValid={isValid}
-            value={password}
-            containerProps={layouts.passwordInput}
-          />
-          <PasswordInput
-            validationMessage={strings.confirmPasswordValidation}
-            onChangeText={onChangeConfirmation}
-            isValid={isValidConfirmation}
-            value={confirmation}
-          />
-        </Container>
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidView}
+          behavior="position"
+          keyboardVerticalOffset={Device.isIOS ? 100 : 0}
+        >
+          <Container width="80%" marginBottom={7}>
+            <Text variant="pageHeader" paddingBottom={4}>
+              {strings.title}
+            </Text>
+            <Text color="grayText" letterSpacing={0.4}>
+              {strings.description}
+            </Text>
+          </Container>
+          <Container>
+            <PasswordInput
+              validationMessage={strings.passwordValidation}
+              onChangeText={onChangeText}
+              isValid={isValid}
+              value={password}
+              containerProps={styles.passwordInput}
+              returnKeyType="next"
+            />
+            <PasswordInput
+              validationMessage={strings.confirmPasswordValidation}
+              onChangeText={onChangeConfirmation}
+              isValid={isValidConfirmation}
+              value={confirmation}
+              returnKeyType="done"
+            />
+          </Container>
+        </KeyboardAvoidingView>
       </ScrollView>
       <PageWithStackHeaderFooter>
         <Container
