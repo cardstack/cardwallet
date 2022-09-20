@@ -66,7 +66,7 @@ const PageWithStackHeader = ({
         paddingHorizontal={0} // reset MainHeaderWrapper's default padding
         {...headerContainerProps}
       />
-      {children}
+      <Container flex={1}>{children}</Container>
     </Container>
   );
 };
