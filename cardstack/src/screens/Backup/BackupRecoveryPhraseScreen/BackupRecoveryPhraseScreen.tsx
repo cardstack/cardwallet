@@ -29,13 +29,13 @@ const BackupRecoveryPhraseScreen = () => {
   const {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
-    latestBackup,
+    backedUp,
     seedPhrase,
   } = useBackupRecoveryPhraseScreen();
 
   const backupStatus = useMemo(
-    () => <BackupStatus status={latestBackup ? 'success' : 'missing'} />,
-    [latestBackup]
+    () => <BackupStatus status={backedUp ? 'success' : 'missing'} />,
+    [backedUp]
   );
 
   return (

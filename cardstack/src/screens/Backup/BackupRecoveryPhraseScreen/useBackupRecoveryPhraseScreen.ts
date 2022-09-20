@@ -9,7 +9,7 @@ import { logger } from '@rainbow-me/utils';
 
 export const useBackupRecoveryPhraseScreen = () => {
   const { navigate } = useNavigation();
-  const { latestBackup, selectedWallet } = useWallets();
+  const { selectedWallet } = useWallets();
   const [seedPhrase, setSeedPhrase] = useState('');
 
   const loadSeedPhrase = useCallback(async () => {
@@ -38,7 +38,7 @@ export const useBackupRecoveryPhraseScreen = () => {
   return {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
-    latestBackup,
+    backedUp: selectedWallet.backedUp,
     seedPhrase,
   };
 };
