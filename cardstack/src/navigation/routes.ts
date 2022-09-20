@@ -74,6 +74,7 @@ const ProfileRoutes = {
 const BackupRoutes = {
   BACKUP_EXPLANATION: 'BackupExplanation',
   BACKUP_CLOUD_PASSWORD: 'BackupCloudPassword',
+  BACKUP_RECOVERY_PHRASE: 'BackupRecoveryPhrase',
 };
 
 export const Routes = {
