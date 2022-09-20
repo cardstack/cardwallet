@@ -76,6 +76,7 @@ const BackupRoutes = {
   BACKUP_CLOUD_PASSWORD: 'BackupCloudPassword',
   BACKUP_RECOVERY_PHRASE: 'BackupRecoveryPhrase',
   BACKUP_SEEDPHRASE_CONFIRMATION: 'BackupSeedPhraseConfirmationScreen',
+  BACKUP_MANUAL_BACKUP: 'BackupManualBackup',
 };
 
 export const Routes = {

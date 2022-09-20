@@ -32,8 +32,8 @@ export const useBackupRecoveryPhraseScreen = () => {
   );
 
   const handleManualBackupOnPress = useCallback(() => {
-    // TBD
-  }, []);
+    navigate(Routes.BACKUP_MANUAL_BACKUP, { seedPhrase });
+  }, [navigate, seedPhrase]);
 
   return {
     handleCloudBackupOnPress,
