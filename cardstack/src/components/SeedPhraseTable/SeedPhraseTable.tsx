@@ -120,7 +120,7 @@ export const SeedPhraseTable = ({
             variant="smallLinkWhite"
             onPress={onCleanPressed}
           >
-            {strings.clean}
+            {strings.clearBtn}
           </Button>
         </Container>
       )}

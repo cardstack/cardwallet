@@ -93,11 +93,7 @@ export default function SettingsSection({
   }, [navigate]);
 
   const onPressNewBackup = useCallback(() => {
-    // navigate(Routes.BACKUP_EXPLANATION);
-    navigate(Routes.BACKUP_SEEDPHRASE_CONFIRMATION, {
-      seedPhrase:
-        'bright sell trunk jalopy donut enemy car invest donut enemy car invest',
-    });
+    navigate(Routes.BACKUP_EXPLANATION);
   }, [navigate]);
 
   return (

@@ -25,13 +25,12 @@ const TagCloud = ({
       flexWrap="wrap"
     >
       {tags.map((tag: string, index: number) => (
-        <Container padding={1}>
-          <TagPressable
-            text={tag}
-            selected={selectedTags.includes(index)}
-            onPress={() => onTagSelection?.(index)}
-          />
-        </Container>
+        <TagPressable
+          text={tag}
+          selected={selectedTags.includes(index)}
+          onPress={() => onTagSelection?.(index)}
+          margin={1}
+        />
       ))}
     </Container>
   );
