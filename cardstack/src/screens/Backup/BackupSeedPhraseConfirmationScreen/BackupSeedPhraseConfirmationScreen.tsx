@@ -1,5 +1,4 @@
-import { useRoute } from '@react-navigation/native';
-import React, { memo, useCallback, useState, useMemo } from 'react';
+import React, { memo } from 'react';
 
 import {
   Button,
@@ -12,46 +11,24 @@ import {
   ScrollView,
   SeedPhraseTable,
 } from '@cardstack/components';
-import { RouteType } from '@cardstack/navigation/types';
 
 import { WordPressableGroup } from './components/WordPressableGroup';
 import { strings } from './strings';
-import { shuffleSeedPhraseAsArray } from './utils';
-
-interface NavParams {
-  seedPhrase: string;
-}
+import { useBackupSeedPhraseConfirmationScreen } from './useBackupSeedPhraseConfirmationScreen';
 
 const leftIconProps: IconProps = { name: 'x' };
 
 const BackupSeedPhraseConfirmationScreen = () => {
-  const { params } = useRoute<RouteType<NavParams>>();
-
-  const { seedPhrase = '' } = params;
-
-  const [selectedWordsIndexes, setSelectedWordsIndexes] = useState<number[]>(
-    []
-  );
-
-  const onWordPressed = useCallback(
-    (index: number) => {
-      setSelectedWordsIndexes([...selectedWordsIndexes, index]);
-    },
-    [selectedWordsIndexes, setSelectedWordsIndexes]
-  );
-
-  const onClearSelection = useCallback(() => setSelectedWordsIndexes([]), [
-    setSelectedWordsIndexes,
-  ]);
-
-  const shuffledWords = useMemo(() => shuffleSeedPhraseAsArray(seedPhrase), [
-    seedPhrase,
-  ]);
-
-  const selectedSeedPhraseAsString = useMemo(
-    () => selectedWordsIndexes.map(value => shuffledWords[value]).join(' '),
-    [selectedWordsIndexes, shuffledWords]
-  );
+  const {
+    handleWordPressed,
+    handleConfirmPressed,
+    handleClearPressed,
+    isSelectionComplete,
+    isSeedPhraseValid,
+    shuffledWords,
+    selectedWordsIndexes,
+    selectedSeedPhraseAsString,
+  } = useBackupSeedPhraseConfirmationScreen();
 
   return (
     <PageWithStackHeader showSkip={false} leftIconProps={leftIconProps}>
@@ -66,21 +43,29 @@ const BackupSeedPhraseConfirmationScreen = () => {
         </Container>
         <SeedPhraseTable
           seedPhrase={selectedSeedPhraseAsString}
-          onClearPressed={onClearSelection}
+          onClearPressed={handleClearPressed}
         />
         <Container paddingVertical={5} paddingHorizontal={2}>
           <WordPressableGroup
             words={shuffledWords}
             selectedWordsIndexes={selectedWordsIndexes}
-            onWordPressed={onWordPressed}
+            onWordPressed={handleWordPressed}
           />
         </Container>
       </ScrollView>
-      <PageWithStackHeaderFooter>
-        <CenteredContainer>
-          <Button>{strings.doneBtn}</Button>
-        </CenteredContainer>
-      </PageWithStackHeaderFooter>
+      {isSelectionComplete && (
+        <PageWithStackHeaderFooter>
+          <CenteredContainer>
+            {isSeedPhraseValid ? (
+              <Button onPress={handleConfirmPressed}>{strings.doneBtn}</Button>
+            ) : (
+              <Button variant="red" onPress={handleClearPressed}>
+                {strings.retryBtn}
+              </Button>
+            )}
+          </CenteredContainer>
+        </PageWithStackHeaderFooter>
+      )}
     </PageWithStackHeader>
   );
 };
