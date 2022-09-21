@@ -18,16 +18,14 @@ import { WordPressableGroup } from './components/WordPressableGroup';
 import { strings } from './strings';
 import { shuffleSeedPhraseAsArray } from './utils';
 
-export interface BackupManualSeedPhraseConfirmationParams {
+interface NavParams {
   seedPhrase: string;
 }
 
 const leftIconProps: IconProps = { name: 'x' };
 
 const BackupSeedPhraseConfirmationScreen = () => {
-  const { params } = useRoute<
-    RouteType<BackupManualSeedPhraseConfirmationParams>
-  >();
+  const { params } = useRoute<RouteType<NavParams>>();
 
   const { seedPhrase = '' } = params;
 

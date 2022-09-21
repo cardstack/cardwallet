@@ -7,20 +7,15 @@ import {
   CardPressable,
 } from '@cardstack/components';
 
-interface TagComponentProps {
+interface Props {
   text: string;
   disabled: boolean;
   onPress: () => void;
 }
 
 export const WordPressable = memo(
-  ({
-    text,
-    disabled: selected,
-    onPress,
-    ...rest
-  }: TagComponentProps & ContainerProps) => (
-    <CardPressable onPress={onPress} disabled={selected}>
+  ({ text, disabled, onPress, ...rest }: Props & ContainerProps) => (
+    <CardPressable onPress={onPress} disabled={disabled}>
       <Container
         borderWidth={1}
         borderColor="secondaryText"
@@ -30,7 +25,7 @@ export const WordPressable = memo(
         <Text
           padding={2}
           variant="semibold"
-          color={selected ? 'secondaryText' : 'teal'}
+          color={disabled ? 'secondaryText' : 'teal'}
           size="body"
         >
           {text}

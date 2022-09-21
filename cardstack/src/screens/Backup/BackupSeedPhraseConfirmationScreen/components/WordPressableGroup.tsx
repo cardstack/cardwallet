@@ -2,18 +2,14 @@ import React, { memo } from 'react';
 
 import { Container, WordPressable } from '@cardstack/components';
 
-interface WordPressableGroupProps {
+interface Props {
   words: Array<string>;
   selectedWordsIndexes?: Array<number>;
   onWordPressed?: (index: number) => void;
 }
 
 export const WordPressableGroup = memo(
-  ({
-    words,
-    selectedWordsIndexes = [],
-    onWordPressed,
-  }: WordPressableGroupProps) => {
+  ({ words, selectedWordsIndexes = [], onWordPressed }: Props) => {
     return (
       <Container flexDirection="row" justifyContent="center" flexWrap="wrap">
         {words.map((tag: string, index: number) => (
