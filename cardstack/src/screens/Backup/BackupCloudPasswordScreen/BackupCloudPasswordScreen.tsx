@@ -1,5 +1,4 @@
-import { eq } from 'lodash';
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 
 import {
@@ -11,15 +10,11 @@ import {
   PasswordInput,
   ScrollView,
   Text,
-  usePasswordInput,
 } from '@cardstack/components';
 import { Device } from '@cardstack/utils';
-import {
-  hasAtLeastOneDigit,
-  matchMinLength,
-} from '@cardstack/utils/validators';
 
 import { strings } from './strings';
+import { useBackupCloudPasswordScreen } from './useBackupCloudPasswordScreen';
 
 const styles = StyleSheet.create({
   keyboardAvoidView: {
@@ -35,22 +30,17 @@ const styles = StyleSheet.create({
 });
 
 const BackupCloudPasswordScreen = () => {
-  const { onChangeText, isValid, password } = usePasswordInput({
-    validation: (text: string) =>
-      hasAtLeastOneDigit(text) && matchMinLength(text, 8),
-  });
-
   const {
-    onChangeText: onChangeConfirmation,
-    isValid: isValidConfirmation,
-    password: confirmation,
-  } = usePasswordInput({
-    validation: (text: string) => matchMinLength(text, 1) && eq(password, text),
-  });
-
-  const onCheckboxPress = useCallback(() => {
-    // TBD
-  }, []);
+    onChangeText,
+    isValid,
+    password,
+    onChangeConfirmation,
+    isValidConfirmation,
+    confirmation,
+    onCheckboxPress,
+    checked,
+    isSubmitDisabled,
+  } = useBackupCloudPasswordScreen();
 
   return (
     <PageWithStackHeader showSkip={false}>
@@ -97,12 +87,18 @@ const BackupCloudPasswordScreen = () => {
           borderTopColor="blueDarkest"
           paddingVertical={3}
         >
-          <Checkbox onPress={onCheckboxPress} checkboxPosition="left">
+          <Checkbox
+            isSelected={checked}
+            onPress={onCheckboxPress}
+            checkboxPosition="left"
+          >
             <Text size="xs" marginRight={6} color="white">
               {strings.terms}
             </Text>
           </Checkbox>
-          <Button marginTop={4}>{strings.btn}</Button>
+          <Button marginTop={4} disabled={isSubmitDisabled}>
+            {strings.btn}
+          </Button>
         </Container>
       </PageWithStackHeaderFooter>
     </PageWithStackHeader>
