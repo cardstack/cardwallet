@@ -23,7 +23,7 @@ interface SeedPhraseTableProps {
   hideOnOpen?: boolean;
   allowCopy?: boolean;
   showAsError?: boolean;
-  onCleanPressed?: () => void;
+  onClearPressed?: () => void;
 }
 
 const animConfig = {
@@ -42,7 +42,7 @@ export const SeedPhraseTable = ({
   hideOnOpen = false,
   allowCopy = false,
   showAsError = false,
-  onCleanPressed,
+  onClearPressed,
 }: SeedPhraseTableProps) => {
   const [phraseVisible, showPhrase] = useBooleanState(!hideOnOpen);
 
@@ -113,12 +113,12 @@ export const SeedPhraseTable = ({
     >
       {WordsTable}
 
-      {!!onCleanPressed && (
+      {!!onClearPressed && (
         <Container position="absolute" top={0} right={20}>
           <Button
             marginBottom={4}
             variant="smallLinkWhite"
-            onPress={onCleanPressed}
+            onPress={onClearPressed}
           >
             {strings.clearBtn}
           </Button>

@@ -9,14 +9,14 @@ import {
 
 interface TagComponentProps {
   text: string;
-  selected: boolean;
+  disabled: boolean;
   onPress: () => void;
 }
 
-export const TagPressable = memo(
+export const WordPressable = memo(
   ({
     text,
-    selected,
+    disabled: selected,
     onPress,
     ...rest
   }: TagComponentProps & ContainerProps) => (

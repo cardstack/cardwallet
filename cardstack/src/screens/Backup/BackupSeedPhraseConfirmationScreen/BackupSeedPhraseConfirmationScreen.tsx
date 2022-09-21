@@ -11,13 +11,16 @@ import {
   IconProps,
   ScrollView,
   SeedPhraseTable,
-  TagCloud,
 } from '@cardstack/components';
 import { RouteType } from '@cardstack/navigation/types';
 
+import { WordPressableGroup } from './components/WordPressableGroup';
 import { strings } from './strings';
-import { BackupManualSeedPhraseConfirmationParams } from './types';
 import { shuffleSeedPhraseAsArray } from './utils';
+
+export interface BackupManualSeedPhraseConfirmationParams {
+  seedPhrase: string;
+}
 
 const leftIconProps: IconProps = { name: 'x' };
 
@@ -26,19 +29,21 @@ const BackupSeedPhraseConfirmationScreen = () => {
     RouteType<BackupManualSeedPhraseConfirmationParams>
   >();
 
-  const { seedPhrase = '', onConfirm } = params;
+  const { seedPhrase = '' } = params;
 
-  const [selectedWords, setSelectedWords] = useState<number[]>([]);
-
-  const onTagSelected = useCallback(
-    (index: number) => {
-      setSelectedWords([...selectedWords, index]);
-    },
-    [selectedWords, setSelectedWords]
+  const [selectedWordsIndexes, setSelectedWordsIndexes] = useState<number[]>(
+    []
   );
 
-  const onCleanSelection = useCallback(() => setSelectedWords([]), [
-    setSelectedWords,
+  const onWordPressed = useCallback(
+    (index: number) => {
+      setSelectedWordsIndexes([...selectedWordsIndexes, index]);
+    },
+    [selectedWordsIndexes, setSelectedWordsIndexes]
+  );
+
+  const onClearSelection = useCallback(() => setSelectedWordsIndexes([]), [
+    setSelectedWordsIndexes,
   ]);
 
   const shuffledWords = useMemo(() => shuffleSeedPhraseAsArray(seedPhrase), [
@@ -46,13 +51,13 @@ const BackupSeedPhraseConfirmationScreen = () => {
   ]);
 
   const selectedSeedPhraseAsString = useMemo(
-    () => selectedWords.map(value => shuffledWords[value]).join(' '),
-    [selectedWords, shuffledWords]
+    () => selectedWordsIndexes.map(value => shuffledWords[value]).join(' '),
+    [selectedWordsIndexes, shuffledWords]
   );
 
   return (
     <PageWithStackHeader showSkip={false} leftIconProps={leftIconProps}>
-      <ScrollView flex={1}>
+      <ScrollView flex={1} showsVerticalScrollIndicator={false}>
         <Container width="90%" paddingBottom={7}>
           <Text variant="pageHeader" paddingBottom={4}>
             {strings.title}
@@ -63,17 +68,19 @@ const BackupSeedPhraseConfirmationScreen = () => {
         </Container>
         <SeedPhraseTable
           seedPhrase={selectedSeedPhraseAsString}
-          onCleanPressed={onCleanSelection}
+          onClearPressed={onClearSelection}
         />
-        <TagCloud
-          tags={shuffledWords}
-          selectedTags={selectedWords}
-          onTagSelection={onTagSelected}
-        />
+        <Container paddingVertical={5} paddingHorizontal={2}>
+          <WordPressableGroup
+            words={shuffledWords}
+            selectedWordsIndexes={selectedWordsIndexes}
+            onWordPressed={onWordPressed}
+          />
+        </Container>
       </ScrollView>
       <PageWithStackHeaderFooter>
         <CenteredContainer>
-          <Button onPress={onConfirm}>{strings.doneBtn}</Button>
+          <Button>{strings.doneBtn}</Button>
         </CenteredContainer>
       </PageWithStackHeaderFooter>
     </PageWithStackHeader>

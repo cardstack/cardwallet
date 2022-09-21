@@ -56,4 +56,4 @@ export { default as SuffixedInput } from './Input/SuffixedInput/SuffixedInput';
 export * from './BackupStatus';
 export * from './PageWithStackHeader';
 export * from './SeedPhraseTable';
-export * from './Tag';
+export * from './WordPressable';
