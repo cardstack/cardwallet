@@ -24,7 +24,7 @@ const BackupSeedPhraseConfirmationScreen = () => {
     handleConfirmPressed,
     handleClearPressed,
     isSelectionComplete,
-    isSeedPhraseValid,
+    isSeedPhraseCorrect,
     shuffledWords,
     selectedWordsIndexes,
     selectedSeedPhraseAsString,
@@ -44,6 +44,7 @@ const BackupSeedPhraseConfirmationScreen = () => {
         <SeedPhraseTable
           seedPhrase={selectedSeedPhraseAsString}
           onClearPressed={handleClearPressed}
+          showAsError={isSelectionComplete && !isSeedPhraseCorrect}
         />
         <Container paddingVertical={5} paddingHorizontal={2}>
           <WordPressableGroup
@@ -56,7 +57,7 @@ const BackupSeedPhraseConfirmationScreen = () => {
       {isSelectionComplete && (
         <PageWithStackHeaderFooter>
           <CenteredContainer>
-            {isSeedPhraseValid ? (
+            {isSeedPhraseCorrect ? (
               <Button onPress={handleConfirmPressed}>{strings.doneBtn}</Button>
             ) : (
               <Button variant="red" onPress={handleClearPressed}>
