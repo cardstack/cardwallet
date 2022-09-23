@@ -10,17 +10,19 @@ import { shuffleSeedPhraseAsArray } from './utils';
 
 interface NavParams {
   seedPhrase: string;
-  walletId: string;
 }
+
+// Selection UI is hard-coded for 12 words.
+const SEED_PHRASE_LENGTH = 12;
 
 export const useBackupSeedPhraseConfirmationScreen = () => {
   const {
-    params: { seedPhrase, walletId },
+    params: { seedPhrase },
   } = useRoute<RouteType<NavParams>>();
 
   const { navigate } = useNavigation();
 
-  const { onManuallyBackupWalletId } = useWalletManualBackup();
+  const { confirmBackup } = useWalletManualBackup();
 
   const selectedWordsIndexes = useRef<number[]>([]).current;
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -34,13 +36,13 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
   ]);
 
   const isSelectionComplete = useMemo(
-    () => selectedWords.length === shuffledWords.length,
-    [selectedWords, shuffledWords]
+    () => selectedWords.length === SEED_PHRASE_LENGTH,
+    [selectedWords]
   );
 
   const isSeedPhraseCorrect = useMemo(
-    () => isSelectionComplete && seedPhrase === selectedSeedPhraseAsString,
-    [isSelectionComplete, seedPhrase, selectedSeedPhraseAsString]
+    () => seedPhrase === selectedSeedPhraseAsString,
+    [seedPhrase, selectedSeedPhraseAsString]
   );
 
   const handleWordPressed = useCallback(
@@ -52,9 +54,9 @@ export const useBackupSeedPhraseConfirmationScreen = () => {
   );
 
   const handleConfirmPressed = useCallback(() => {
-    onManuallyBackupWalletId(walletId);
+    confirmBackup();
     navigate(Routes.WALLET_SCREEN);
-  }, [walletId, navigate, onManuallyBackupWalletId]);
+  }, [navigate, confirmBackup]);
 
   const handleClearPressed = useCallback(() => {
     selectedWordsIndexes.length = 0;

@@ -24,7 +24,6 @@ const style = StyleSheet.create({
 
 interface RouteParams {
   seedPhrase: string;
-  walletId: string;
 }
 
 const BackupManualScreen = () => {

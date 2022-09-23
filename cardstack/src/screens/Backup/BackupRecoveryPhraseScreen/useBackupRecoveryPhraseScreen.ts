@@ -34,9 +34,8 @@ export const useBackupRecoveryPhraseScreen = () => {
   const handleManualBackupOnPress = useCallback(() => {
     navigate(Routes.BACKUP_MANUAL_BACKUP, {
       seedPhrase,
-      walletId: selectedWallet.id,
     });
-  }, [navigate, seedPhrase, selectedWallet]);
+  }, [navigate, seedPhrase]);
 
   return {
     handleCloudBackupOnPress,

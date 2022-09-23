@@ -35,7 +35,7 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     jest.clearAllMocks();
   });
 
-  it('should shuffed seed phrase', () => {
+  it('should shuffle seed phrase', () => {
     const { result } = renderHook(useBackupSeedPhraseConfirmationScreen);
 
     expect(result.current.shuffledWords).toHaveLength(
@@ -55,7 +55,7 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     expect(result.current.selectedWordsIndexes).toHaveLength(1);
   });
 
-  it('should be correct if all words are selected in the correct order', () => {
+  it('should be valid if all words are selected in the correct order', () => {
     const { result } = renderHook(useBackupSeedPhraseConfirmationScreen);
 
     const seedPhraseArray = seedPhraseStringToArray(mockSeedPhrase);
@@ -76,7 +76,7 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     expect(result.current.isSeedPhraseCorrect).toBeTruthy();
   });
 
-  it('should NOT be correct if all words are selected but in the wrong order', () => {
+  it('should be invalid if all words are selected but in the wrong order', () => {
     const { result } = renderHook(useBackupSeedPhraseConfirmationScreen);
 
     // Select words in order of appearance.
