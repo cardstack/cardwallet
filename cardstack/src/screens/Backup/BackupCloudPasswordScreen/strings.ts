@@ -7,4 +7,8 @@ Do not lose this password, Cardstack will not be able to reset it for you.`,
   passwordValidation: 'At least 8 characters, with at least 1 number',
   confirmPasswordValidation: 'Passwords must match',
   btn: 'Create backup',
+  placeholders: {
+    password: 'Enter password',
+    confirm: 'Re-enter password',
+  },
 };

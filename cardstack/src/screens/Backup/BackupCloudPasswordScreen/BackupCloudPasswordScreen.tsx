@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 
 import {
   Button,
@@ -40,6 +40,9 @@ const BackupCloudPasswordScreen = () => {
     onCheckboxPress,
     checked,
     isSubmitDisabled,
+    passwordRef,
+    confirmPasswordRef,
+    onPasswordSubmit,
   } = useBackupCloudPasswordScreen();
 
   return (
@@ -64,19 +67,26 @@ const BackupCloudPasswordScreen = () => {
           </Container>
           <Container>
             <PasswordInput
-              validationMessage={strings.passwordValidation}
-              onChangeText={onChangeText}
-              isValid={isValid}
-              value={password}
               containerProps={styles.passwordInput}
+              validationMessage={strings.passwordValidation}
+              isValid={isValid}
+              onChangeText={onChangeText}
+              value={password}
+              ref={passwordRef}
               returnKeyType="next"
+              textContentType="newPassword"
+              onSubmitEditing={onPasswordSubmit}
+              placeholder={strings.placeholders.password}
             />
             <PasswordInput
               validationMessage={strings.confirmPasswordValidation}
-              onChangeText={onChangeConfirmation}
               isValid={isValidConfirmation}
+              onChangeText={onChangeConfirmation}
               value={confirmation}
+              ref={confirmPasswordRef}
               returnKeyType="done"
+              placeholder={strings.placeholders.confirm}
+              onSubmitEditing={Keyboard.dismiss}
             />
           </Container>
         </KeyboardAvoidingView>

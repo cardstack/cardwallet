@@ -1,5 +1,6 @@
 import { eq } from 'lodash';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { TextInput } from 'react-native';
 
 import { usePasswordInput } from '@cardstack/components';
 import {
@@ -32,6 +33,13 @@ export const useBackupCloudPasswordScreen = () => {
     [isValid, isValidConfirmation, checked]
   );
 
+  const passwordRef = useRef<TextInput>();
+  const confirmPasswordRef = useRef<TextInput>();
+
+  const onPasswordSubmit = useCallback(() => {
+    confirmPasswordRef.current?.focus();
+  }, []);
+
   return {
     onChangeText,
     isValid,
@@ -42,5 +50,8 @@ export const useBackupCloudPasswordScreen = () => {
     onCheckboxPress,
     checked,
     isSubmitDisabled,
+    passwordRef,
+    confirmPasswordRef,
+    onPasswordSubmit,
   };
 };
