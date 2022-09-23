@@ -1,10 +1,10 @@
-import { splitSeedPhrase, shuffleSeedPhraseAsArray } from '../utils';
+import { seedPhraseStringToArray, shuffleSeedPhraseAsArray } from '../utils';
 
 const mockSeedPhrase = 'first second third fourth';
 
 describe('Shuffle seed phrase functions', () => {
   it('should split phrase into array with correct words and order', () => {
-    const splittedPhrase = splitSeedPhrase(mockSeedPhrase);
+    const splittedPhrase = seedPhraseStringToArray(mockSeedPhrase);
 
     expect(splittedPhrase).toEqual(['first', 'second', 'third', 'fourth']);
   });
