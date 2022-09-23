@@ -33,6 +33,8 @@ export interface ICloudBackupData {
   seedPhrase?: string;
 }
 
+export const iCloudPasswordRules = `minlength: 8; required: digit;`;
+
 const isBackedUpWallet = (wallet: RainbowWallet) =>
   wallet.backedUp &&
   wallet.backupDate &&
