@@ -7,7 +7,6 @@ import {
   PageWithStackHeader,
   PageWithStackHeaderFooter,
   Text,
-  IconProps,
   ScrollView,
   SeedPhraseTable,
 } from '@cardstack/components';
@@ -15,8 +14,6 @@ import {
 import { WordPressableGroup } from './components/WordPressableGroup';
 import { strings } from './strings';
 import { useBackupSeedPhraseConfirmationScreen } from './useBackupSeedPhraseConfirmationScreen';
-
-const leftIconProps: IconProps = { name: 'x' };
 
 const BackupSeedPhraseConfirmationScreen = () => {
   const {
@@ -31,7 +28,7 @@ const BackupSeedPhraseConfirmationScreen = () => {
   } = useBackupSeedPhraseConfirmationScreen();
 
   return (
-    <PageWithStackHeader showSkip={false} leftIconProps={leftIconProps}>
+    <PageWithStackHeader showSkip={false}>
       <ScrollView flex={1} showsVerticalScrollIndicator={false}>
         <Container width="90%" paddingBottom={7}>
           <Text variant="pageHeader" paddingBottom={4}>

@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -11,6 +11,7 @@ import {
   SeedPhraseTable,
   Text,
 } from '@cardstack/components';
+import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 
 import { strings } from './strings';
@@ -23,14 +24,16 @@ const style = StyleSheet.create({
 
 interface RouteParams {
   seedPhrase: string;
+  walletId: string;
 }
 
 const BackupManualScreen = () => {
+  const { navigate } = useNavigation();
   const { params } = useRoute<RouteType<RouteParams>>();
 
   const handleNextOnPress = useCallback(() => {
-    // TBD
-  }, []);
+    navigate(Routes.BACKUP_SEEDPHRASE_CONFIRMATION, params);
+  }, [params, navigate]);
 
   return (
     <PageWithStackHeader showSkip={false}>
