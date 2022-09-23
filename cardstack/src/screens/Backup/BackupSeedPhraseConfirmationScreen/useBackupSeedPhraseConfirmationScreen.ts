@@ -1,10 +1,9 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCallback, useRef, useState, useMemo } from 'react';
 
+import { useWalletManualBackup } from '@cardstack/hooks/backup/useWalletManualBackup';
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
-
-import { useWalletManualBackup } from '@rainbow-me/hooks';
 
 import { shuffleSeedPhraseAsArray } from './utils';
 

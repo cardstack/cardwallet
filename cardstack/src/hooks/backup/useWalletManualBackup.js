@@ -7,7 +7,7 @@ import { useWallets } from '@rainbow-me/hooks';
 import { setWalletBackedUp } from '@rainbow-me/redux/wallets';
 import logger from 'logger';
 
-export default function useWalletManualBackup() {
+export const useWalletManualBackup = () => {
   const dispatch = useDispatch();
   const { selectedWallet } = useWallets();
 
@@ -28,4 +28,4 @@ export default function useWalletManualBackup() {
   return {
     confirmBackup,
   };
-}
+};

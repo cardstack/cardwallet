@@ -10,7 +10,7 @@ jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
 }));
 
-jest.mock('@rainbow-me/hooks', () => ({
+jest.mock('@cardstack/hooks/backup/useWalletManualBackup', () => ({
   useWalletManualBackup: () => jest.fn(),
 }));
 
