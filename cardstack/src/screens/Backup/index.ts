@@ -3,3 +3,4 @@ export { default as BackupCloudPasswordScreen } from './BackupCloudPasswordScree
 export { default as BackupRecoveryPhraseScreen } from './BackupRecoveryPhraseScreen/BackupRecoveryPhraseScreen';
 export { default as BackupSeedPhraseConfirmationScreen } from './BackupSeedPhraseConfirmationScreen/BackupSeedPhraseConfirmationScreen';
 export { default as BackupManualScreen } from './BackupManualScreen/BackupManualScreen';
+export { default as BackupSuccessScreen } from './BackupSuccessScreen/BackupSuccessScreen';
