@@ -636,7 +636,8 @@ export const createOrImportWallet = async ({
     await saveAddress(walletAddress);
     logger.sentry('[createWallet] - saveAddress');
 
-    // updates the cloud backup in case the user is importing a wallet from the backup
+    // updates the wallet_id on the UserData.json cloud backup file
+    // because importing via seedphrase creates a new wallet_id
     if (isBackedUp) {
       try {
         await backupUserDataIntoCloud({ wallets: allWallets });
