@@ -1,16 +1,16 @@
 import { captureException } from '@sentry/react-native';
 import RNCloudFs, { ListFilesResult } from 'react-native-cloud-fs';
+import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 
+import { BackupUserData, ICloudBackupData } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 
 import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
 import { logger } from '@rainbow-me/utils';
 
-import { ICloudBackupData } from './backup';
-
 const REMOTE_BACKUP_WALLET_DIR = 'cardstack.com/wallet-backups';
-// const USERDATA_FILE = 'UserData.json';
+const USERDATA_FILE = 'UserData.json';
 const encryptor = new AesEncryptor();
 
 export const CLOUD_BACKUP_ERRORS = {
@@ -25,7 +25,9 @@ export const CLOUD_BACKUP_ERRORS = {
   USER_CANCELED_DRIVE_API_AUTH: 'User canceled Google Drive OAuth',
 };
 
-// This is used for dev purposes only!
+/**
+ * Goes throught the cloud backup directory and deletes all files.
+ */
 export const deleteAllBackups = async () => {
   try {
     if (Device.isAndroid) {
@@ -49,7 +51,7 @@ export const deleteAllBackups = async () => {
 
 /**
  * syncCloud is an iOS-only method that returns a boolean value.
- * When on an Android device, it will always return true.
+ * There's no sync method on Android.
  * @returns boolean
  */
 export const syncCloud = async (): Promise<boolean> =>
@@ -89,10 +91,8 @@ const getBackupDocumentByFilename = (
 };
 
 /**
- * **getDataFromCloud** searchs for a backup file inside the remote directory.
- *
- * In case there's a backup file, it uses the password to decrypt the file.
- *
+ * Searchs the cloud backup directory to find a file that matches the filename param.
+ * @returns ICloudBackupData | undefined
  */
 export const getDataFromCloud = async (
   backupPassword: string,
@@ -148,8 +148,13 @@ export const getDataFromCloud = async (
   }
 };
 
+/**
+ * Receives an object with UserData or secrets and saves to the cloud directory using encryption.
+ * Returns undefined in case of error.
+ * @returns the backup filename | undefined
+ */
 export const encryptAndSaveDataToCloud = async (
-  data: ICloudBackupData,
+  data: ICloudBackupData | BackupUserData,
   password: string,
   filename: string
 ) => {
@@ -214,6 +219,21 @@ export const encryptAndSaveDataToCloud = async (
 
     logger.sentry('[BACKUP] Error during encryptAndSaveDataToCloud', e);
     captureException(e);
-    throw new Error(CLOUD_BACKUP_ERRORS.GENERAL_ERROR);
   }
 };
+
+/**
+ * Saves or updates the UserData.json file in the cloud directory.
+ * It calls `encryptAndSaveDataToCloud`.
+ * @returns the backup filename
+ */
+export const backupUserDataIntoCloud = async (data: BackupUserData) =>
+  await encryptAndSaveDataToCloud(data, CARDWALLET_MASTER_KEY, USERDATA_FILE);
+
+/**
+ * Gets the UserData.json file in the cloud directory.
+ * It calls `getDataFromCloud`.
+ * @returns ICloudBackupData
+ */
+export const fetchUserDataFromCloud = async () =>
+  await getDataFromCloud(CARDWALLET_MASTER_KEY, USERDATA_FILE);
