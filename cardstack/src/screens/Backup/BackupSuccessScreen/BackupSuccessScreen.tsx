@@ -1,7 +1,8 @@
 import { useRoute, useNavigation } from '@react-navigation/native';
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 
 import {
+  BackupStatus,
   Button,
   Container,
   PageWithStackHeader,
@@ -18,6 +19,9 @@ interface RouteParams {
   seedPhrase: string;
 }
 
+// TODO: Add backup logic
+const backedUp = true;
+
 const BackupSuccessScreen = () => {
   const { goBack } = useNavigation();
   const { params } = useRoute<RouteType<RouteParams>>();
@@ -30,8 +34,17 @@ const BackupSuccessScreen = () => {
     goBack();
   }, [goBack]);
 
+  const backupStatus = useMemo(
+    () => <BackupStatus status={backedUp ? 'success' : 'missing'} />,
+    []
+  );
+
   return (
-    <PageWithStackHeader showSkip={false} canGoBack={false}>
+    <PageWithStackHeader
+      showSkip={false}
+      canGoBack={false}
+      headerChildren={backupStatus}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         <Container flex={1} width="90%">
           <Text variant="pageHeader" paddingBottom={8}>
