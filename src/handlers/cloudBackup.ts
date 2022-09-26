@@ -6,7 +6,7 @@ import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 import AesEncryptor from '../handlers/aesEncryption';
 import { logger } from '../utils';
-import { ICloudBackupData } from '@cardstack/models/backup';
+import { ICloudBackupData } from '@cardstack/types';
 import { Device } from '@cardstack/utils/device';
 
 const REMOTE_BACKUP_WALLET_DIR: string = 'cardstack.com/wallet-backups';
@@ -25,10 +25,6 @@ export const CLOUD_BACKUP_ERRORS = {
   USER_CANCELED_DRIVE_API_AUTH: 'User canceled Google Drive OAuth',
 };
 
-export function logoutFromGoogleDrive() {
-  Device.isAndroid && RNCloudFs.logout();
-}
-
 // This is used for dev purposes only!
 export async function deleteAllBackups() {
   if (Device.isAndroid) {
@@ -43,16 +39,6 @@ export async function deleteAllBackups() {
       await RNCloudFs.deleteFromCloud(file);
     })
   );
-}
-
-export async function fetchAllBackups() {
-  if (Device.isAndroid) {
-    await RNCloudFs.loginIfNeeded();
-  }
-  return RNCloudFs.listFiles({
-    scope: 'hidden',
-    targetPath: REMOTE_BACKUP_WALLET_DIR,
-  });
 }
 
 export async function encryptAndSaveDataToCloud(

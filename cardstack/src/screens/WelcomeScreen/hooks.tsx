@@ -2,8 +2,8 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ICloudBackupData } from '@cardstack/models/backup';
 import { Routes } from '@cardstack/navigation/routes';
+import { ICloudBackupData } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 
 import {

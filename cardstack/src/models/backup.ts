@@ -4,6 +4,7 @@ import { captureException } from '@sentry/react-native';
 import { forEach, startsWith } from 'lodash';
 
 import { getSeedPhrase } from '@cardstack/models/secure-storage';
+import { BackupUserData, BackedUpData } from '@cardstack/types';
 
 import {
   encryptAndSaveDataToCloud,
@@ -12,26 +13,6 @@ import {
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { AllRainbowWallets, RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
-
-interface BackedUpData {
-  [key: string]:
-    | string
-    | {
-        version: number;
-        wallets: AllRainbowWallets;
-      };
-}
-
-interface BackupUserData {
-  wallets: AllRainbowWallets;
-}
-
-export interface ICloudBackupData {
-  createdAt: number;
-  updatedAt: number;
-  secrets?: { [key: string]: string };
-  seedPhrase?: string;
-}
 
 export const iCloudPasswordRules = `minlength: 8; required: digit;`;
 
