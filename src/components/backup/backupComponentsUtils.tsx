@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInputProps } from 'react-native';
 import { Button, InputProps, Text } from '@cardstack/components';
-import { cloudBackupPasswordMinLength } from '@rainbow-me/handlers/cloudBackup';
+import { cloudBackupPasswordMinLength } from '@cardstack/models/backup';
 
 export const backupPasswordInputProps: Partial<TextInputProps & InputProps> = {
   autoCompleteType: 'password',

@@ -15,7 +15,7 @@ export interface BackupUserData {
 
 export interface ICloudBackupData {
   createdAt: number;
-  updatedAt: number;
+  updatedAt?: number;
   secrets?: { [key: string]: string };
   seedPhrase?: string;
 }

@@ -36,6 +36,7 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
+import { backupUserDataIntoCloud } from '@cardstack/models';
 import { getEthersWalletWithSeed } from '@cardstack/models/ethers-wallet';
 
 import {
@@ -51,7 +52,6 @@ import { skipProfileCreation } from '@cardstack/redux/persistedFlagsSlice';
 import { restartApp } from '@cardstack/utils';
 import { Device } from '@cardstack/utils/device';
 
-import { backupUserDataIntoCloud } from '@rainbow-me/handlers/cloudBackup';
 import {
   deleteKeychainIntegrityState,
   deletePinAuthAttemptsData,

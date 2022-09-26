@@ -2,15 +2,15 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
+import {
+  isCloudBackupAvailable,
+  syncCloud,
+  fetchUserDataFromCloud,
+} from '@cardstack/models';
 import { Routes } from '@cardstack/navigation/routes';
 import { ICloudBackupData } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 
-import {
-  fetchUserDataFromCloud,
-  isCloudBackupAvailable,
-  syncCloud,
-} from '@rainbow-me/handlers/cloudBackup';
 import { useWalletManager } from '@rainbow-me/hooks';
 import logger from 'logger';
 

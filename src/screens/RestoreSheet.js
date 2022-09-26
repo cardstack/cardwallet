@@ -6,9 +6,9 @@ import RestoreCloudStep from '../components/backup/RestoreCloudStep';
 import RestoreSheetFirstStep from '../components/backup/RestoreSheetFirstStep';
 
 import { Sheet } from '@cardstack/components';
+import { fetchUserDataFromCloud } from '@cardstack/models';
 import { Routes } from '@cardstack/navigation';
 import { Device, layoutEasingAnimation } from '@cardstack/utils';
-import { fetchUserDataFromCloud } from '@rainbow-me/handlers/cloudBackup';
 import WalletBackupStepTypes from '@rainbow-me/helpers/walletBackupStepTypes';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 

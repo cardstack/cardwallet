@@ -1,6 +1,6 @@
+import * as rnCloud from '@cardstack/models';
 import * as secureStorage from '@cardstack/models/secure-storage';
 
-import * as cloudBackup from '@rainbow-me/handlers/cloudBackup';
 import { EthereumWalletType } from '@rainbow-me/helpers/walletTypes';
 import { RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
@@ -70,10 +70,10 @@ describe('backup', () => {
   const mockedSeed = 'foo bar foo';
 
   const encryptAndSaveDataToCloud = jest
-    .spyOn(cloudBackup, 'encryptAndSaveDataToCloud')
+    .spyOn(rnCloud, 'encryptAndSaveDataToCloud')
     .mockResolvedValue('filename');
 
-  const getDataFromCloud = jest.spyOn(cloudBackup, 'getDataFromCloud');
+  const getDataFromCloud = jest.spyOn(rnCloud, 'getDataFromCloud');
 
   const getSeedPhrase = jest
     .spyOn(secureStorage, 'getSeedPhrase')
@@ -143,7 +143,7 @@ describe('backup', () => {
         wallets,
       };
 
-      getDataFromCloud.mockResolvedValue(null);
+      getDataFromCloud.mockResolvedValue(undefined);
 
       try {
         await restoreCloudBackup(password, userData);

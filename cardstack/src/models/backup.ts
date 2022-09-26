@@ -6,15 +6,14 @@ import { forEach, startsWith } from 'lodash';
 import { getSeedPhrase } from '@cardstack/models/secure-storage';
 import { BackupUserData, BackedUpData } from '@cardstack/types';
 
-import {
-  encryptAndSaveDataToCloud,
-  getDataFromCloud,
-} from '@rainbow-me/handlers/cloudBackup';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { AllRainbowWallets, RainbowWallet } from '@rainbow-me/model/wallet';
 import logger from 'logger';
 
-export const iCloudPasswordRules = `minlength: 8; required: digit;`;
+import { encryptAndSaveDataToCloud, getDataFromCloud } from './rn-cloud';
+
+export const cloudBackupPasswordMinLength = 8;
+export const iCloudPasswordRules = `minlength: ${cloudBackupPasswordMinLength}; required: digit;`;
 
 const isBackedUpWallet = (wallet: RainbowWallet) =>
   wallet.backedUp &&
@@ -136,3 +135,8 @@ export async function findAndParseOldSeed(
     captureException(e);
   }
 }
+
+export const isCloudBackupPasswordValid = (password: string) =>
+  password &&
+  password !== '' &&
+  password.length >= cloudBackupPasswordMinLength;
