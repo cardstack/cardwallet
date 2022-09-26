@@ -19,9 +19,6 @@ interface RouteParams {
   seedPhrase: string;
 }
 
-// TODO: Add backup logic
-const backedUp = true;
-
 const BackupSuccessScreen = () => {
   const { goBack } = useNavigation();
   const { params } = useRoute<RouteType<RouteParams>>();
@@ -34,10 +31,7 @@ const BackupSuccessScreen = () => {
     goBack();
   }, [goBack]);
 
-  const backupStatus = useMemo(
-    () => <BackupStatus status={backedUp ? 'success' : 'missing'} />,
-    []
-  );
+  const backupStatus = useMemo(() => <BackupStatus status="success" />, []);
 
   return (
     <PageWithStackHeader

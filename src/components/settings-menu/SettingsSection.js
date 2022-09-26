@@ -93,7 +93,10 @@ export default function SettingsSection({
   }, [navigate]);
 
   const onPressNewBackup = useCallback(() => {
-    navigate(Routes.BACKUP_EXPLANATION);
+    navigate(Routes.BACKUP_SUCCESS, {
+      seedPhrase:
+        'loan velvet fall cluster renew animal trophy clinic adjust fix soon enrich',
+    });
   }, [navigate]);
 
   return (
