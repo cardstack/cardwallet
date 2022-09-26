@@ -2,16 +2,28 @@ import { useRoute } from '@react-navigation/native';
 import { renderHook } from '@testing-library/react-hooks';
 import { act } from 'react-test-renderer';
 
+import { Routes } from '@cardstack/navigation/routes';
+
 import { useBackupSeedPhraseConfirmationScreen } from '../useBackupSeedPhraseConfirmationScreen';
 import { seedPhraseStringToArray } from '../utils';
 
+const mockNavigate = jest.fn();
+
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({ goBack: jest.fn() }),
+  useNavigation: () => ({ navigate: mockNavigate }),
   useRoute: jest.fn(),
 }));
 
+jest.mock('@cardstack/navigation', () => ({
+  Routes: {
+    WALLET_SCREEN: 'WalletScreen',
+  },
+}));
+
+const mockConfirmBackup = jest.fn();
+
 jest.mock('@cardstack/hooks/backup/useWalletManualBackup', () => ({
-  useWalletManualBackup: () => jest.fn(),
+  useWalletManualBackup: () => ({ confirmBackup: mockConfirmBackup }),
 }));
 
 const mockSeedPhrase =
@@ -22,7 +34,6 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
     (useRoute as jest.Mock).mockImplementation(() => ({
       params: {
         seedPhrase: mockSeedPhrase,
-        walletId: '1',
       },
     }));
   };
@@ -92,5 +103,16 @@ describe('BackupSeedPhraseConfirmationScreen', () => {
 
     expect(result.current.isSelectionComplete).toBeTruthy();
     expect(result.current.isSeedPhraseCorrect).toBeFalsy();
+  });
+
+  it('should navigate forward and confirm manual backup on confirmation', () => {
+    const { result } = renderHook(useBackupSeedPhraseConfirmationScreen);
+
+    act(() => {
+      result.current.handleConfirmPressed();
+    });
+
+    expect(mockConfirmBackup).toBeCalled();
+    expect(mockNavigate).toBeCalledWith(Routes.WALLET_SCREEN);
   });
 });
