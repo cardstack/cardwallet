@@ -32,7 +32,9 @@ export const useBackupRecoveryPhraseScreen = () => {
   );
 
   const handleManualBackupOnPress = useCallback(() => {
-    navigate(Routes.BACKUP_MANUAL_BACKUP, { seedPhrase });
+    navigate(Routes.BACKUP_MANUAL_BACKUP, {
+      seedPhrase,
+    });
   }, [navigate, seedPhrase]);
 
   return {

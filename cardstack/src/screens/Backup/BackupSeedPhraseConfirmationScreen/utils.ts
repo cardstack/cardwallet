@@ -1,4 +1,5 @@
-export const splitSeedPhrase = (seedPhrase: string) => seedPhrase.split(' ');
+export const seedPhraseStringToArray = (seedPhrase: string) =>
+  seedPhrase.split(' ');
 
 /** Array shuffle, extract from 'https://stackoverflow.com/a/46545530/469870'
  * 1. Each element in the array is put in an object, and is given a random sort key
@@ -13,4 +14,4 @@ const shuffleWords = (words: Array<string>) =>
     .map(({ value }) => value);
 
 export const shuffleSeedPhraseAsArray = (seedPhrase: string) =>
-  shuffleWords(splitSeedPhrase(seedPhrase));
+  shuffleWords(seedPhraseStringToArray(seedPhrase));

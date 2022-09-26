@@ -1,4 +1,4 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { Fragment, useCallback, useMemo, useState } from 'react';
 
 import { SecretDisplaySection } from '../secret-display';
@@ -9,30 +9,24 @@ import {
   Icon,
   Text,
 } from '@cardstack/components';
+import { useWalletManualBackup } from '@cardstack/hooks/backup/useWalletManualBackup';
 import { Device } from '@cardstack/utils/device';
 import walletTypes from '@rainbow-me/helpers/walletTypes';
-import {
-  useDimensions,
-  useWalletManualBackup,
-  useWallets,
-} from '@rainbow-me/hooks';
+import { useDimensions } from '@rainbow-me/hooks';
 
 export default function BackupManualStep() {
   const { isTallPhone } = useDimensions();
   const { goBack } = useNavigation();
-  const { selectedWallet } = useWallets();
-  const { onManuallyBackupWalletId } = useWalletManualBackup();
-  const { params } = useRoute();
-  const walletId = (params as any)?.walletId || selectedWallet.id;
+  const { confirmBackup } = useWalletManualBackup();
 
   const [type, setType] = useState(null);
   const [secretLoaded, setSecretLoaded] = useState(false);
 
   const onComplete = useCallback(() => {
-    onManuallyBackupWalletId(walletId);
+    confirmBackup();
 
     goBack();
-  }, [goBack, onManuallyBackupWalletId, walletId]);
+  }, [goBack, confirmBackup]);
 
   const isPrivateKey = type === walletTypes.privateKey;
   const subText = isPrivateKey

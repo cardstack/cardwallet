@@ -48,7 +48,6 @@ export { default as useTransformOrigin } from './useTransformOrigin';
 export { default as useUpdateAssetOnchainBalance } from './useUpdateAssetOnchainBalance';
 export { default as useWalletCloudBackup } from './useWalletCloudBackup';
 export { default as useWalletConnectConnections } from '@cardstack/hooks/wallet-connect/useWalletConnectConnections';
-export { default as useWalletManualBackup } from './useWalletManualBackup';
 export { default as useWallets } from './useWallets';
 export { default as useWalletsWithBalancesAndNames } from './useWalletsWithBalancesAndNames';
 export { default as useAccountEmptyState } from './useAccountEmptyState';
