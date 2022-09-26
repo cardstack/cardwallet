@@ -67,6 +67,7 @@ const BackupCloudPasswordScreen = () => {
           </Container>
           <Container>
             <PasswordInput
+              autoFocus
               containerProps={styles.passwordInput}
               validationMessage={strings.passwordValidation}
               isValid={isValid}
