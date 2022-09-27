@@ -11,7 +11,6 @@ import {
   Touchable,
   BaseInputProps,
 } from '@cardstack/components';
-import { iCloudPasswordRules } from '@cardstack/models/backup';
 import { palette } from '@cardstack/theme';
 import { hitSlop } from '@cardstack/utils';
 
@@ -22,12 +21,10 @@ const baseInputProps: InputProps = {
   selectionColor: 'teal',
   autoCompleteType: 'password',
   blurOnSubmit: false,
-  secureTextEntry: true,
   selectTextOnFocus: true,
   textContentType: 'password',
   autoCapitalize: 'none',
   placeholderTextColor: palette.blueText,
-  passwordRules: iCloudPasswordRules,
 };
 
 interface PasswordInputProps extends BaseInputProps {

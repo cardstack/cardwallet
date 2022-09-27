@@ -11,6 +11,7 @@ import {
   ScrollView,
   Text,
 } from '@cardstack/components';
+import { iCloudPasswordRules } from '@cardstack/models/backup';
 import { Device } from '@cardstack/utils';
 
 import { strings } from './strings';
@@ -40,7 +41,6 @@ const BackupCloudPasswordScreen = () => {
     onCheckboxPress,
     checked,
     isSubmitDisabled,
-    passwordRef,
     confirmPasswordRef,
     onPasswordSubmit,
     handleBackupToCloud,
@@ -74,13 +74,14 @@ const BackupCloudPasswordScreen = () => {
               isValid={isValid}
               onChangeText={onChangeText}
               value={password}
-              ref={passwordRef}
               returnKeyType="next"
               textContentType="newPassword"
               onSubmitEditing={onPasswordSubmit}
               placeholder={strings.placeholders.password}
+              passwordRules={iCloudPasswordRules}
             />
             <PasswordInput
+              passwordRules={iCloudPasswordRules}
               validationMessage={strings.confirmPasswordValidation}
               isValid={isValidConfirmation}
               onChangeText={onChangeConfirmation}
