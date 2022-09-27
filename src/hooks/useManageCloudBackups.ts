@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import useWallets from './useWallets';
-import { deleteAllBackups } from '@cardstack/models';
+import { deleteAllBackups } from '@cardstack/models/rn-cloud';
 import { Device } from '@cardstack/utils/device';
 import { AppDispatch } from '@rainbow-me/redux/store';
 import { walletsUpdate } from '@rainbow-me/redux/wallets';

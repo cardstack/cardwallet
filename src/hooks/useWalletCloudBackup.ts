@@ -5,8 +5,11 @@ import { Alert, Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setWalletBackedUp } from '../redux/wallets';
 import useWallets from './useWallets';
-import { CLOUD_BACKUP_ERRORS, isCloudBackupAvailable } from '@cardstack/models';
 import { backupWalletToCloud } from '@cardstack/models/backup';
+import {
+  CLOUD_BACKUP_ERRORS,
+  isCloudBackupAvailable,
+} from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';

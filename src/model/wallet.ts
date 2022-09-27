@@ -36,8 +36,8 @@ import {
   selectedWalletKey,
 } from '../utils/keychainConstants';
 import * as keychain from './keychain';
-import { backupUserDataIntoCloud } from '@cardstack/models';
 import { getEthersWalletWithSeed } from '@cardstack/models/ethers-wallet';
+import { backupUserDataIntoCloud } from '@cardstack/models/rn-cloud';
 
 import {
   getPin,

@@ -6,7 +6,7 @@ import {
   isCloudBackupAvailable,
   syncCloud,
   fetchUserDataFromCloud,
-} from '@cardstack/models';
+} from '@cardstack/models/rn-cloud';
 import { Routes } from '@cardstack/navigation/routes';
 import { ICloudBackupData } from '@cardstack/types';
 import { Device } from '@cardstack/utils';

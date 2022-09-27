@@ -8,11 +8,11 @@ import {
 } from '@cardstack/cardpay-sdk';
 import BN from 'bn.js';
 
-import { getSafesInstance } from '@cardstack/models';
 import {
   EthersSignerParams,
   getWeb3ProviderWithEthSigner,
 } from '@cardstack/models/ethers-wallet';
+import { getSafesInstance } from '@cardstack/models/safes-providers';
 
 import { convertTokenToSpend } from '../exchange-rate-service';
 import {

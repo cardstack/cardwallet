@@ -18,7 +18,7 @@ import {
 import { logger } from '../utils';
 import { addressKey } from '../utils/keychainConstants';
 import { settingsUpdateAccountAddress } from './settings';
-import { backupUserDataIntoCloud } from '@cardstack/models';
+import { backupUserDataIntoCloud } from '@cardstack/models/rn-cloud';
 import { getPrivateKey, getSeedPhrase } from '@cardstack/models/secure-storage';
 
 // -- Constants --------------------------------------- //

@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import { Alert, ScrollView } from 'react-native';
 import GanacheUtils from '../../../cardstack/src/utils/ganache-utils';
 import { ListFooter, ListItem } from '../list';
-import { deleteAllBackups } from '@cardstack/models';
+import { deleteAllBackups } from '@cardstack/models/rn-cloud';
 import { Routes } from '@cardstack/navigation';
 import { restartApp } from '@cardstack/utils';
 import { useWallets } from '@rainbow-me/hooks';

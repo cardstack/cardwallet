@@ -1,4 +1,4 @@
-import * as rnCloud from '@cardstack/models';
+import * as rnCloud from '@cardstack/models/rn-cloud';
 import * as secureStorage from '@cardstack/models/secure-storage';
 
 import { EthereumWalletType } from '@rainbow-me/helpers/walletTypes';

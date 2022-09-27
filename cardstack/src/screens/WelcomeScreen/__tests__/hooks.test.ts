@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import * as rnCloud from '@cardstack/models';
+import * as rnCloud from '@cardstack/models/rn-cloud';
 import { Routes } from '@cardstack/navigation/routes';
 import { Device } from '@cardstack/utils/device';
 
