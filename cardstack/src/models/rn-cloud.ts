@@ -26,7 +26,7 @@ export const CLOUD_BACKUP_ERRORS = {
 };
 
 /**
- * Goes throught the cloud backup directory and deletes all files.
+ * Goes through the cloud backup directory and deletes all files.
  */
 export const deleteAllBackups = async () => {
   try {
@@ -91,7 +91,7 @@ const getBackupDocumentByFilename = (
 };
 
 /**
- * Searchs the cloud backup directory to find a file that matches the filename param.
+ * Searches the cloud backup directory to find a file that matches the filename param.
  * @returns ICloudBackupData | undefined
  */
 export const getDataFromCloud = async (
