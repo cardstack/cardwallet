@@ -3,6 +3,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { usePasswordInput } from '@cardstack/components';
+import { useWalletCloudBackup } from '@cardstack/hooks/backup/useWalletCloudBackup';
 import {
   hasAtLeastOneDigit,
   matchMinLength,
@@ -10,6 +11,7 @@ import {
 
 export const useBackupCloudPasswordScreen = () => {
   const [checked, setChecked] = useState(false);
+  const { backupToCloud } = useWalletCloudBackup();
 
   const { onChangeText, isValid, password } = usePasswordInput({
     validation: (text: string) =>
@@ -40,6 +42,11 @@ export const useBackupCloudPasswordScreen = () => {
     confirmPasswordRef.current?.focus();
   }, []);
 
+  const handleBackupToCloud = useCallback(() => backupToCloud({ password }), [
+    password,
+    backupToCloud,
+  ]);
+
   return {
     onChangeText,
     isValid,
@@ -53,5 +60,6 @@ export const useBackupCloudPasswordScreen = () => {
     passwordRef,
     confirmPasswordRef,
     onPasswordSubmit,
+    handleBackupToCloud,
   };
 };

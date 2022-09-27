@@ -43,6 +43,7 @@ const BackupCloudPasswordScreen = () => {
     passwordRef,
     confirmPasswordRef,
     onPasswordSubmit,
+    handleBackupToCloud,
   } = useBackupCloudPasswordScreen();
 
   return (
@@ -107,7 +108,11 @@ const BackupCloudPasswordScreen = () => {
               {strings.terms}
             </Text>
           </Checkbox>
-          <Button marginTop={4} disabled={isSubmitDisabled}>
+          <Button
+            marginTop={4}
+            disabled={isSubmitDisabled}
+            onPress={handleBackupToCloud}
+          >
             {strings.btn}
           </Button>
         </Container>
