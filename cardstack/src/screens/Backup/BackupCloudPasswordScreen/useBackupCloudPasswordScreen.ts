@@ -1,9 +1,9 @@
-import { eq } from 'lodash';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { usePasswordInput } from '@cardstack/components';
 import { useWalletCloudBackup } from '@cardstack/hooks/backup/useWalletCloudBackup';
+import { cloudBackupPasswordMinLength } from '@cardstack/models/backup';
 import {
   hasAtLeastOneDigit,
   matchMinLength,
@@ -15,7 +15,8 @@ export const useBackupCloudPasswordScreen = () => {
 
   const { onChangeText, isValid, password } = usePasswordInput({
     validation: (text: string) =>
-      hasAtLeastOneDigit(text) && matchMinLength(text, 8),
+      hasAtLeastOneDigit(text) &&
+      matchMinLength(text, cloudBackupPasswordMinLength),
   });
 
   const {
@@ -23,7 +24,7 @@ export const useBackupCloudPasswordScreen = () => {
     isValid: isValidConfirmation,
     password: confirmation,
   } = usePasswordInput({
-    validation: (text: string) => matchMinLength(text, 1) && eq(password, text),
+    validation: (text: string) => !!text && text === password,
   });
 
   const onCheckboxPress = useCallback(() => {
