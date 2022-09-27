@@ -36,7 +36,6 @@ export const useBackupCloudPasswordScreen = () => {
     [isValid, isValidConfirmation, checked]
   );
 
-  const passwordRef = useRef<TextInput>();
   const confirmPasswordRef = useRef<TextInput>();
 
   const onPasswordSubmit = useCallback(() => {
@@ -58,7 +57,6 @@ export const useBackupCloudPasswordScreen = () => {
     onCheckboxPress,
     checked,
     isSubmitDisabled,
-    passwordRef,
     confirmPasswordRef,
     onPasswordSubmit,
     handleBackupToCloud,
