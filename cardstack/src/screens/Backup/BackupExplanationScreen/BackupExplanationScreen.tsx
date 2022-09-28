@@ -1,4 +1,8 @@
-import { StackActions, useNavigation } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import React, { memo, useCallback } from 'react';
 
 import {
@@ -10,15 +14,19 @@ import {
   Text,
 } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
+import { RouteType } from '@cardstack/navigation/types';
+
+import { BackupRouteParams } from '../types';
 
 import { strings } from './strings';
 
 const BackupExplanationScreen = () => {
   const { dispatch: navDispatch, navigate } = useNavigation();
+  const { params } = useRoute<RouteType<BackupRouteParams>>();
 
   const handleBackupOnPress = useCallback(() => {
-    navigate(Routes.BACKUP_RECOVERY_PHRASE);
-  }, [navigate]);
+    navigate(Routes.BACKUP_MANUAL_BACKUP, params);
+  }, [navigate, params]);
 
   const handleLaterOnPress = useCallback(() => {
     navDispatch(StackActions.popToTop());
