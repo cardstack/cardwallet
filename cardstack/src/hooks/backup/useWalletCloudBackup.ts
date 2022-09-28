@@ -49,7 +49,7 @@ export const useWalletCloudBackup = () => {
       try {
         const isAvailable = await isIOSCloudBackupAvailable();
 
-        if (!isAvailable) {
+        if (Device.isIOS && !isAvailable) {
           Alert(iCloudAlertConfig);
 
           return;
