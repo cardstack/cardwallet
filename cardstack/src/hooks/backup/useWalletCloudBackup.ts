@@ -8,12 +8,14 @@ import { isIOSCloudBackupAvailable } from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 
-import { Alert, DelayedAlert } from '@rainbow-me/components/alerts';
+import { Alert } from '@rainbow-me/components/alerts';
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import walletLoadingStates from '@rainbow-me/helpers/walletLoadingStates';
 import { useWallets } from '@rainbow-me/hooks';
 import { setWalletBackedUp } from '@rainbow-me/redux/wallets';
 import { logger } from '@rainbow-me/utils';
+
+import { getFriendlyErrorMessage } from './utils';
 
 interface BackupToCloud {
   password: string;
@@ -76,20 +78,20 @@ export const useWalletCloudBackup = () => {
           );
 
           logger.log('[BACKUP] Backup saved everywhere!');
-          dismissLoadingOverlay();
         }
+
+        dismissLoadingOverlay();
       } catch (error) {
-        const errorMsg = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
+        const title = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
 
-        DelayedAlert(
-          {
-            title: errorMsg,
-            message: error.message,
-          },
-          500
-        );
+        const message = getFriendlyErrorMessage(error.message);
 
-        logger.sentry(errorMsg);
+        Alert({
+          title,
+          message,
+        });
+
+        logger.sentry(`${title}: ${message}`);
         captureException(error);
       }
     },
