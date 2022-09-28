@@ -120,21 +120,24 @@ export const getDataFromCloud = async (
 
   if (encryptedData) {
     logger.sentry('[BACKUP] Got cloud document ', filename);
+
     const backedUpDataStringified = await encryptor.decrypt(
       backupPassword,
       encryptedData
     );
+
     if (backedUpDataStringified) {
       const backedUpData = JSON.parse(backedUpDataStringified);
       return backedUpData;
     } else {
-      logger.sentry('We couldnt decrypt the data');
+      logger.sentry(`[BACKUP] We couldn't decrypt the data`);
       const error = new Error(CLOUD_BACKUP_ERRORS.ERROR_DECRYPTING_DATA);
       captureException(error);
       throw error;
     }
   }
-  logger.sentry('We couldnt get the encrypted data');
+
+  logger.sentry(`[BACKUP] We couldn't get the encrypted data`);
   const error = new Error(CLOUD_BACKUP_ERRORS.ERROR_GETTING_ENCRYPTED_DATA);
   captureException(error);
   throw error;
@@ -211,6 +214,7 @@ export const encryptAndSaveDataToCloud = async (
 
     logger.sentry('[BACKUP] Error during encryptAndSaveDataToCloud', e);
     captureException(e);
+    throw new Error(CLOUD_BACKUP_ERRORS.GENERAL_ERROR);
   }
 };
 
