@@ -13,7 +13,7 @@ export interface BackupUserData {
   wallets: AllRainbowWallets;
 }
 
-export interface ICloudBackupData {
+export interface BackupSecretsData {
   createdAt: number;
   updatedAt?: number;
   secrets?: { [key: string]: string };

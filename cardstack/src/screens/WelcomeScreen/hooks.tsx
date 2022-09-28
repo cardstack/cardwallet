@@ -8,7 +8,7 @@ import {
   fetchUserDataFromCloud,
 } from '@cardstack/models/rn-cloud';
 import { Routes } from '@cardstack/navigation/routes';
-import { ICloudBackupData } from '@cardstack/types';
+import { BackupSecretsData } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 
 import { useWalletManager } from '@rainbow-me/hooks';
@@ -17,7 +17,7 @@ import logger from 'logger';
 export const useWelcomeScreen = () => {
   const { navigate } = useNavigation<StackNavigationProp<ParamListBase>>();
 
-  const [userData, setUserData] = useState<ICloudBackupData | null>(null);
+  const [userData, setUserData] = useState<BackupSecretsData | null>(null);
 
   const { createNewWallet } = useWalletManager();
 

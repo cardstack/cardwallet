@@ -3,7 +3,7 @@ import RNCloudFs, { ListFilesResult } from 'react-native-cloud-fs';
 import { CARDWALLET_MASTER_KEY } from 'react-native-dotenv';
 import RNFS from 'react-native-fs';
 
-import { BackupUserData, ICloudBackupData } from '@cardstack/types';
+import { BackupUserData, BackupSecretsData } from '@cardstack/types';
 import { Device } from '@cardstack/utils';
 
 import AesEncryptor from '@rainbow-me/handlers/aesEncryption';
@@ -91,12 +91,12 @@ const getBackupDocumentByFilename = (
 
 /**
  * Searches the cloud backup directory to find a file that matches the filename param.
- * @returns ICloudBackupData | undefined
+ * @returns BackupSecretsData | undefined
  */
 export const getDataFromCloud = async (
   backupPassword: string,
   filename: string
-): Promise<ICloudBackupData | undefined> => {
+): Promise<BackupSecretsData | undefined> => {
   if (Device.isAndroid) {
     await RNCloudFs.loginIfNeeded();
   }
@@ -149,7 +149,7 @@ export const getDataFromCloud = async (
  * @returns the backup filename | undefined
  */
 export const encryptAndSaveDataToCloud = async (
-  data: ICloudBackupData | BackupUserData,
+  data: BackupSecretsData | BackupUserData,
   password: string,
   filename: string
 ) => {
@@ -229,7 +229,7 @@ export const backupUserDataIntoCloud = async (data: BackupUserData) =>
 /**
  * Gets the UserData.json file in the cloud directory.
  * It calls `getDataFromCloud`.
- * @returns ICloudBackupData
+ * @returns BackupUserData
  */
 export const fetchUserDataFromCloud = async () =>
   getDataFromCloud(CARDWALLET_MASTER_KEY, USERDATA_FILE);
