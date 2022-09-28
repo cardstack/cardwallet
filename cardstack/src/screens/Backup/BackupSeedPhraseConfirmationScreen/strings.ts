@@ -3,5 +3,6 @@ export const strings = {
   description:
     'Enter the words in the order as they appeared in the previous screen.',
   doneBtn: 'Done',
+  backupToCloudBtn: (cloud: string) => `Back up to ${cloud}`,
   retryBtn: 'Incorrect, reset & try again',
 };
