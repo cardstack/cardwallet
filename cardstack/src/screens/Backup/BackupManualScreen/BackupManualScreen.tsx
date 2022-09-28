@@ -14,6 +14,8 @@ import {
 import { Routes } from '@cardstack/navigation';
 import { RouteType } from '@cardstack/navigation/types';
 
+import { BackupRouteParams } from '../types';
+
 import { strings } from './strings';
 
 const style = StyleSheet.create({
@@ -22,13 +24,9 @@ const style = StyleSheet.create({
   },
 });
 
-interface RouteParams {
-  seedPhrase: string;
-}
-
 const BackupManualScreen = () => {
   const { navigate } = useNavigation();
-  const { params } = useRoute<RouteType<RouteParams>>();
+  const { params } = useRoute<RouteType<BackupRouteParams>>();
 
   const handleNextOnPress = useCallback(() => {
     navigate(Routes.BACKUP_SEEDPHRASE_CONFIRMATION, params);
@@ -48,7 +46,7 @@ const BackupManualScreen = () => {
             {strings.description}
           </Text>
         </Container>
-        <SeedPhraseTable seedPhrase={params.seedPhrase} allowCopy />
+        <SeedPhraseTable seedPhrase={params.seedPhrase} allowCopy hideOnOpen />
       </ScrollView>
       <PageWithStackHeaderFooter>
         <Button onPress={handleNextOnPress}>{strings.primaryBtn}</Button>
