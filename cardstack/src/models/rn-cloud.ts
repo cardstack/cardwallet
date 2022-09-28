@@ -228,7 +228,7 @@ export const encryptAndSaveDataToCloud = async (
  * @returns the backup filename
  */
 export const backupUserDataIntoCloud = async (data: BackupUserData) =>
-  await encryptAndSaveDataToCloud(data, CARDWALLET_MASTER_KEY, USERDATA_FILE);
+  encryptAndSaveDataToCloud(data, CARDWALLET_MASTER_KEY, USERDATA_FILE);
 
 /**
  * Gets the UserData.json file in the cloud directory.
@@ -236,4 +236,4 @@ export const backupUserDataIntoCloud = async (data: BackupUserData) =>
  * @returns ICloudBackupData
  */
 export const fetchUserDataFromCloud = async () =>
-  await getDataFromCloud(CARDWALLET_MASTER_KEY, USERDATA_FILE);
+  getDataFromCloud(CARDWALLET_MASTER_KEY, USERDATA_FILE);
