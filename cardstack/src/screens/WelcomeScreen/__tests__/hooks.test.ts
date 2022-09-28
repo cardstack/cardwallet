@@ -47,10 +47,10 @@ describe('useWelcomeScreen', () => {
   };
 
   const spyIsCloudAvailable = jest
-    .spyOn(rnCloud, 'isCloudBackupAvailable')
+    .spyOn(rnCloud, 'isIOSCloudBackupAvailable')
     .mockReturnValue(Promise.resolve(true));
 
-  jest.spyOn(rnCloud, 'syncCloud').mockReturnValue(Promise.resolve(true));
+  jest.spyOn(rnCloud, 'syncCloudIOS').mockReturnValue(Promise.resolve(true));
 
   const fetchUserDataFromCloud = jest
     .spyOn(rnCloud, 'fetchUserDataFromCloud')

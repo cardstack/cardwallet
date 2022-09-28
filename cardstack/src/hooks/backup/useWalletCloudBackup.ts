@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 
 import { backupWalletToCloud } from '@cardstack/models/backup';
-import { isCloudBackupAvailable } from '@cardstack/models/rn-cloud';
+import { isIOSCloudBackupAvailable } from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils';
 
@@ -45,7 +45,7 @@ export const useWalletCloudBackup = () => {
   const backupToCloud = useCallback(
     async ({ password }: BackupToCloud) => {
       try {
-        const isAvailable = await isCloudBackupAvailable();
+        const isAvailable = await isIOSCloudBackupAvailable();
 
         if (!isAvailable) {
           Alert(iCloudAlertConfig);

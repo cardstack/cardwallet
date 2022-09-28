@@ -8,7 +8,7 @@ import useWallets from './useWallets';
 import { backupWalletToCloud } from '@cardstack/models/backup';
 import {
   CLOUD_BACKUP_ERRORS,
-  isCloudBackupAvailable,
+  isIOSCloudBackupAvailable,
 } from '@cardstack/models/rn-cloud';
 import { useLoadingOverlay } from '@cardstack/navigation';
 import { Device } from '@cardstack/utils/device';
@@ -52,7 +52,7 @@ export default function useWalletCloudBackup() {
       password,
       walletId,
     }) => {
-      const isAvailable = await isCloudBackupAvailable();
+      const isAvailable = await isIOSCloudBackupAvailable();
       if (!isAvailable) {
         Alert.alert(
           'iCloud Not Enabled',

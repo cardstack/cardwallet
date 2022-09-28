@@ -3,8 +3,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useEffect, useState } from 'react';
 
 import {
-  isCloudBackupAvailable,
-  syncCloud,
+  isIOSCloudBackupAvailable,
+  syncCloudIOS,
   fetchUserDataFromCloud,
 } from '@cardstack/models/rn-cloud';
 import { Routes } from '@cardstack/navigation/routes';
@@ -24,11 +24,11 @@ export const useWelcomeScreen = () => {
   useEffect(() => {
     const checkCloudBackupOnInit = async () => {
       try {
-        const isAvailable = await isCloudBackupAvailable();
+        const isAvailable = await isIOSCloudBackupAvailable();
 
         if (isAvailable && Device.isIOS) {
           logger.log('syncing...');
-          await syncCloud();
+          await syncCloudIOS();
           logger.log('fetching backup info...');
           const data = await fetchUserDataFromCloud();
 

@@ -50,20 +50,19 @@ export const deleteAllBackups = async () => {
 };
 
 /**
- * syncCloud is an iOS-only method that returns a boolean value.
+ * syncCloudIOS is an iOS-only method that returns a boolean value.
  * There's no sync method on Android.
  * @returns boolean
  */
-export const syncCloud = async (): Promise<boolean> =>
-  Device.isIOS ? RNCloudFs.syncCloud() : true;
+export const syncCloudIOS = async (): Promise<boolean> => RNCloudFs.syncCloud();
 
 /**
- * isCloudBackupAvailable is an iOS-only method that returns a boolean value.
- * When on an Android device, it will always return true.
+ * isIOSCloudBackupAvailable is an iOS-only method that returns a boolean value.
+ * There's no check on Android.
  * @returns boolean
  */
-export const isCloudBackupAvailable = async (): Promise<boolean> =>
-  Device.isIOS ? RNCloudFs.isAvailable() : true;
+export const isIOSCloudBackupAvailable = async (): Promise<boolean> =>
+  RNCloudFs.isAvailable();
 
 const getBackupDocumentByFilename = (
   backups: ListFilesResult,
