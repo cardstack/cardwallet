@@ -97,54 +97,47 @@ export const getDataFromCloud = async (
   backupPassword: string,
   filename: string
 ): Promise<ICloudBackupData | undefined> => {
-  try {
-    if (Device.isAndroid) {
-      await RNCloudFs.loginIfNeeded();
-    }
-
-    const backups = await RNCloudFs.listFiles({
-      scope: 'hidden',
-      targetPath: REMOTE_BACKUP_WALLET_DIR,
-    });
-
-    if (!backups || !backups.files || !backups.files.length) {
-      logger.log('[BACKUP] No backups found');
-
-      return;
-    }
-
-    const document = getBackupDocumentByFilename(backups, filename);
-
-    const encryptedData = Device.isIOS
-      ? await RNCloudFs.getIcloudDocument(document.name)
-      : await RNCloudFs.getGoogleDriveDocument(document.id);
-
-    if (encryptedData) {
-      try {
-        logger.sentry('[BACKUP] Got cloud document ', filename);
-
-        const backedUpDataStringified = await encryptor.decrypt(
-          backupPassword,
-          encryptedData
-        );
-
-        if (backedUpDataStringified) {
-          const backedUpData = JSON.parse(backedUpDataStringified);
-          return backedUpData;
-        }
-
-        throw new Error(CLOUD_BACKUP_ERRORS.ERROR_DECRYPTING_DATA);
-      } catch (error) {
-        logger.sentry(`[BACKUP] We couldn't decrypt the data`);
-        captureException(error);
-      }
-    }
-  } catch (e) {
-    logger.sentry(`[BACKUP] We couldn't get the encrypted data`);
-
-    const error = new Error(CLOUD_BACKUP_ERRORS.ERROR_GETTING_ENCRYPTED_DATA);
-    captureException(error);
+  if (Device.isAndroid) {
+    await RNCloudFs.loginIfNeeded();
   }
+
+  const backups = await RNCloudFs.listFiles({
+    scope: 'hidden',
+    targetPath: REMOTE_BACKUP_WALLET_DIR,
+  });
+
+  if (!backups || !backups.files || !backups.files.length) {
+    logger.log('[BACKUP] No backups found');
+
+    return;
+  }
+
+  const document = getBackupDocumentByFilename(backups, filename);
+
+  const encryptedData = Device.isIOS
+    ? await RNCloudFs.getIcloudDocument(document.name)
+    : await RNCloudFs.getGoogleDriveDocument(document.id);
+
+  if (encryptedData) {
+    logger.sentry('[BACKUP] Got cloud document ', filename);
+    const backedUpDataStringified = await encryptor.decrypt(
+      backupPassword,
+      encryptedData
+    );
+    if (backedUpDataStringified) {
+      const backedUpData = JSON.parse(backedUpDataStringified);
+      return backedUpData;
+    } else {
+      logger.sentry('We couldnt decrypt the data');
+      const error = new Error(CLOUD_BACKUP_ERRORS.ERROR_DECRYPTING_DATA);
+      captureException(error);
+      throw error;
+    }
+  }
+  logger.sentry('We couldnt get the encrypted data');
+  const error = new Error(CLOUD_BACKUP_ERRORS.ERROR_GETTING_ENCRYPTED_DATA);
+  captureException(error);
+  throw error;
 };
 
 /**
