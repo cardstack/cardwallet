@@ -13,7 +13,6 @@ import {
 } from '../list';
 import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
-import { getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
 import {
@@ -21,7 +20,6 @@ import {
   useSendFeedback,
   useWallets,
 } from '@rainbow-me/hooks';
-import { logger } from '@rainbow-me/utils';
 
 export default function SettingsSection({
   onPressDev,
@@ -33,23 +31,8 @@ export default function SettingsSection({
   onPressDS,
   onPressSecurity,
 }) {
-  const { selectedWallet } = useWallets();
+  const { selectedWallet, seedPhrase } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
-  const [seedPhrase, setSeedPhrase] = useState('');
-
-  const loadSeedPhrase = useCallback(async () => {
-    try {
-      const seedphrase = await getSeedPhrase(selectedWallet.id);
-
-      setSeedPhrase(seedphrase);
-    } catch (error) {
-      logger.log('Error getting seed phrase', error);
-    }
-  }, [selectedWallet]);
-
-  useEffect(() => {
-    loadSeedPhrase();
-  }, [loadSeedPhrase]);
 
   const onSendFeedback = useSendFeedback();
 

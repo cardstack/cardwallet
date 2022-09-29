@@ -1,31 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
-import { getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation';
 
 import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useWallets } from '@rainbow-me/hooks';
-import { logger } from '@rainbow-me/utils';
 
 export const useBackupRecoveryPhraseScreen = () => {
   const { navigate } = useNavigation();
-  const { selectedWallet } = useWallets();
-  const [seedPhrase, setSeedPhrase] = useState('');
-
-  const loadSeedPhrase = useCallback(async () => {
-    try {
-      const seedphrase = await getSeedPhrase(selectedWallet.id);
-
-      setSeedPhrase(seedphrase);
-    } catch (error) {
-      logger.log('Error getting seed phrase', error);
-    }
-  }, [selectedWallet]);
-
-  useEffect(() => {
-    loadSeedPhrase();
-  }, [loadSeedPhrase]);
+  const { selectedWallet, seedPhrase } = useWallets();
 
   const handleCloudBackupOnPress = useCallback(
     () => navigate(Routes.BACKUP_CLOUD_PASSWORD, { seedPhrase }),
