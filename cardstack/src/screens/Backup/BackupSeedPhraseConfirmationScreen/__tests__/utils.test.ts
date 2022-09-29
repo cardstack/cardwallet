@@ -21,7 +21,7 @@ describe('Shuffle seed phrase functions', () => {
   it('should scramble the words in the seed phrase', () => {
     const shuffledPhrase = shuffleSeedPhraseAsArray(mockSeedPhrase);
 
-    expect(shuffledPhrase.length).toEqual(4);
+    expect(shuffledPhrase.length).toEqual(8);
 
     expect(shuffledPhrase.join(' ')).not.toEqual(mockSeedPhrase);
   });
