@@ -33,14 +33,9 @@ const BackupRecoveryPhraseScreen = () => {
     seedPhrase,
   } = useBackupRecoveryPhraseScreen();
 
-  const backupStatus = useMemo(
-    () => (hasManualBackup ? 'success' : 'missing'),
-    [hasManualBackup]
-  );
-
   const backupStatusComponent = useMemo(
-    () => <BackupStatus status={backupStatus} />,
-    [backupStatus]
+    () => <BackupStatus status={hasManualBackup ? 'success' : 'missing'} />,
+    [hasManualBackup]
   );
 
   const footerComponent = useMemo(() => {
@@ -91,7 +86,7 @@ const BackupRecoveryPhraseScreen = () => {
       >
         <Container flex={1} width="90%" marginBottom={8}>
           <Text variant="pageHeader" paddingBottom={2}>
-            {strings[backupStatus].title}
+            {strings.title}
           </Text>
           {!hasManualBackup && (
             <Text color="grayText" letterSpacing={0.4}>

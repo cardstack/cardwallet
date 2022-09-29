@@ -1,8 +1,5 @@
 export const strings = {
-  missing: {
-    title: 'Recovery Phrase',
-  },
-  success: { title: 'Backup Successful' },
+  title: 'Recovery Phrase',
   description:
     'These 12 words are the keys to your wallet. Write them down or copy them to a password manager. Do not share this with anyone.',
   disclaimer:
