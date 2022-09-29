@@ -47,12 +47,14 @@ export const useWalletCloudBackup = () => {
   const backupToCloud = useCallback(
     async ({ password }: BackupToCloud) => {
       try {
-        const isAvailable = await isIOSCloudBackupAvailable();
+        if (Device.isIOS) {
+          const isAvailable = await isIOSCloudBackupAvailable();
 
-        if (Device.isIOS && !isAvailable) {
-          Alert(iCloudAlertConfig);
+          if (!isAvailable) {
+            Alert(iCloudAlertConfig);
 
-          return;
+            return;
+          }
         }
 
         showLoadingOverlay({ title: walletLoadingStates.BACKING_UP_WALLET });
@@ -84,6 +86,7 @@ export const useWalletCloudBackup = () => {
       } catch (error) {
         const title = `Error while trying to backup wallet to ${Device.cloudPlatform}`;
 
+        console.log('error', error);
         const message = getFriendlyErrorMessage(error.message);
 
         Alert({

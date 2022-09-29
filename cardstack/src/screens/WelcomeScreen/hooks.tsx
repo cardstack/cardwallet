@@ -24,19 +24,21 @@ export const useWelcomeScreen = () => {
   useEffect(() => {
     const checkCloudBackupOnInit = async () => {
       try {
-        const isAvailable = await isIOSCloudBackupAvailable();
+        if (Device.isIOS) {
+          const isAvailable = await isIOSCloudBackupAvailable();
 
-        if (isAvailable && Device.isIOS) {
-          logger.log('syncing...');
-          await syncCloudIOS();
-          logger.log('fetching backup info...');
-          const data = await fetchUserDataFromCloud();
+          if (isAvailable) {
+            logger.log('syncing...');
+            await syncCloudIOS();
+            logger.log('fetching backup info...');
+            const data = await fetchUserDataFromCloud();
 
-          if (data) {
-            setUserData(data);
-            logger.log(`Downloaded backup info`);
-          } else {
-            logger.log('No backups found');
+            if (data) {
+              setUserData(data);
+              logger.log(`Downloaded backup info`);
+            } else {
+              logger.log('No backups found');
+            }
           }
         }
       } catch (e) {
