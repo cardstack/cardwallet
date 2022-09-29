@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getSeedPhrase } from '@cardstack/models/secure-storage';
 import { Routes } from '@cardstack/navigation';
 
+import WalletBackupTypes from '@rainbow-me/helpers/walletBackupTypes';
 import { useWallets } from '@rainbow-me/hooks';
 import { logger } from '@rainbow-me/utils';
 
@@ -37,10 +38,20 @@ export const useBackupRecoveryPhraseScreen = () => {
     });
   }, [navigate, seedPhrase]);
 
+  const handleDeleteOnPress = useCallback(() => {
+    // TBD.
+  }, []);
+
   return {
     handleCloudBackupOnPress,
     handleManualBackupOnPress,
-    backedUp: selectedWallet.backedUp,
+    handleDeleteOnPress,
     seedPhrase,
+    hasCloudBackup:
+      selectedWallet.backedUp &&
+      selectedWallet.backupType === WalletBackupTypes.cloud,
+    hasManualBackup:
+      selectedWallet.backedUp &&
+      selectedWallet.backupType === WalletBackupTypes.manual,
   };
 };
