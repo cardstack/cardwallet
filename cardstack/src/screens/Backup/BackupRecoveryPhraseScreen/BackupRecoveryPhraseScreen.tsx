@@ -38,42 +38,19 @@ const BackupRecoveryPhraseScreen = () => {
     [hasManualBackup]
   );
 
-  const footerComponent = useMemo(() => {
-    const buttons = [];
+  const cloudBackupButtonsConfig = useMemo(() => {
+    const backupToCloudConfig = {
+      variant: 'linkWhite' as const,
+      onPress: handleCloudBackupOnPress,
+    };
 
-    if (!hasManualBackup) {
-      buttons.push(
-        <Button onPress={handleManualBackupOnPress} marginBottom={4}>
-          {strings.manualBackupBtn}
-        </Button>
-      );
-    }
+    const deleteCloudBackup = {
+      variant: 'red' as const,
+      onPress: handleDeleteOnPress,
+    };
 
-    if (!hasCloudBackup) {
-      buttons.push(
-        <Button
-          variant={!hasManualBackup ? 'linkWhite' : undefined}
-          onPress={handleCloudBackupOnPress}
-        >
-          {strings.cloudBackupBtn(Device.cloudPlatform)}
-        </Button>
-      );
-    } else {
-      buttons.push(
-        <Button marginBottom={5} variant="red" onPress={handleDeleteOnPress}>
-          {strings.deleteBackupBtn(Device.cloudPlatform)}
-        </Button>
-      );
-    }
-
-    return buttons;
-  }, [
-    hasManualBackup,
-    hasCloudBackup,
-    handleManualBackupOnPress,
-    handleCloudBackupOnPress,
-    handleDeleteOnPress,
-  ]);
+    return hasCloudBackup ? deleteCloudBackup : backupToCloudConfig;
+  }, [hasCloudBackup, handleCloudBackupOnPress, handleDeleteOnPress]);
 
   return (
     <PageWithStackHeader
@@ -105,7 +82,18 @@ const BackupRecoveryPhraseScreen = () => {
         </Text>
       </ScrollView>
       <PageWithStackHeaderFooter>
-        <CenteredContainer>{footerComponent}</CenteredContainer>
+        <CenteredContainer>
+          {!hasManualBackup && (
+            <Button onPress={handleManualBackupOnPress} marginBottom={4}>
+              {strings.manualBackupBtn}
+            </Button>
+          )}
+          <Button {...cloudBackupButtonsConfig}>
+            {hasCloudBackup
+              ? strings.deleteBackupBtn(Device.cloudPlatform)
+              : strings.cloudBackupBtn(Device.cloudPlatform)}
+          </Button>
+        </CenteredContainer>
       </PageWithStackHeaderFooter>
     </PageWithStackHeader>
   );
