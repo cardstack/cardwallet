@@ -11,8 +11,6 @@ import {
 } from '@cardstack/components';
 import { Routes } from '@cardstack/navigation';
 
-import { ButtonLink } from '../components/ButtonLink';
-
 import { strings } from './strings';
 
 const BackupExplanationScreen = () => {
@@ -38,10 +36,12 @@ const BackupExplanationScreen = () => {
       </Container>
       <PageWithStackHeaderFooter>
         <CenteredContainer>
-          <Button onPress={handleBackupOnPress}>{strings.primaryBtn}</Button>
-          <ButtonLink onPress={handleLaterOnPress}>
+          <Button onPress={handleBackupOnPress} marginBottom={4}>
+            {strings.primaryBtn}
+          </Button>
+          <Button variant="linkWhite" onPress={handleLaterOnPress}>
             {strings.secondaryBtn}
-          </ButtonLink>
+          </Button>
         </CenteredContainer>
       </PageWithStackHeaderFooter>
     </PageWithStackHeader>
