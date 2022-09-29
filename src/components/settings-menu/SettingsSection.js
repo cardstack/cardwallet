@@ -1,6 +1,6 @@
 import { getConstantByNetwork } from '@cardstack/cardpay-sdk';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { Linking } from 'react-native';
 
 import AppVersionStamp from '../AppVersionStamp';
@@ -15,51 +15,23 @@ import { CenteredContainer, Icon, ScrollView } from '@cardstack/components';
 import { SettingsExternalURLs } from '@cardstack/constants';
 import { Routes } from '@cardstack/navigation';
 import networkInfo from '@rainbow-me/helpers/networkInfo';
-import WalletTypes from '@rainbow-me/helpers/walletTypes';
 import {
   useAccountSettings,
   useSendFeedback,
   useWallets,
 } from '@rainbow-me/hooks';
 
-const checkAllWallets = wallets => {
-  if (!wallets) return false;
-  let areBackedUp = true;
-  let canBeBackedUp = false;
-  let allBackedUp = true;
-  Object.keys(wallets).forEach(key => {
-    if (!wallets[key].backedUp && wallets[key].type !== WalletTypes.readOnly) {
-      allBackedUp = false;
-    }
-
-    if (
-      !wallets[key].backedUp &&
-      wallets[key].type !== WalletTypes.readOnly &&
-      !wallets[key].imported
-    ) {
-      areBackedUp = false;
-    }
-    if (wallets[key].type !== WalletTypes.readOnly) {
-      canBeBackedUp = true;
-    }
-  });
-  return { allBackedUp, areBackedUp, canBeBackedUp };
-};
-
 export default function SettingsSection({
   onPressDev,
-  onPressBackup,
   onPressCurrency,
-  onPressIcloudBackup,
   onPressNetwork,
   onPressNotifications,
   onPressWCSessions,
-  onPressShowSecret,
   onPressMyWalletAddress,
   onPressDS,
   onPressSecurity,
 }) {
-  const { wallets } = useWallets();
+  const { selectedWallet } = useWallets();
   const { nativeCurrency, network, accountAddress } = useAccountSettings();
 
   const onSendFeedback = useSendFeedback();
@@ -81,12 +53,11 @@ export default function SettingsSection({
     Linking.openURL(`${blockExplorer}/address/${accountAddress}`);
   }, [accountAddress, network]);
 
-  const { areBackedUp, canBeBackedUp } = useMemo(
-    () => checkAllWallets(wallets),
-    [wallets]
-  );
-
   const { navigate } = useNavigation();
+
+  const onPressBackup = useCallback(() => {
+    navigate(Routes.BACKUP_RECOVERY_PHRASE);
+  }, [navigate]);
 
   const onPressIAP = useCallback(() => {
     navigate(Routes.PROFILE_SLUG);
@@ -114,23 +85,6 @@ export default function SettingsSection({
         >
           <ListItemArrowGroup />
         </ListItem>
-        {canBeBackedUp && (
-          <ListItem
-            icon={<Icon color="settingsTeal" name="refresh" />}
-            label="Backup"
-            onPress={onPressBackup}
-            onPressIcloudBackup={onPressIcloudBackup}
-            onPressShowSecret={onPressShowSecret}
-            testID="backup-section"
-          >
-            <ListItemArrowGroup>
-              <Icon
-                iconSize="medium"
-                name={areBackedUp ? 'success' : 'warning'}
-              />
-            </ListItemArrowGroup>
-          </ListItem>
-        )}
         <ListItem
           icon={<Icon color="settingsTeal" name="cloud" />}
           label="Network"
@@ -167,6 +121,19 @@ export default function SettingsSection({
       </ColumnWithDividers>
       <ListFooter />
       <ColumnWithDividers dividerRenderer={ListItemDivider}>
+        <ListItem
+          icon={<Icon color="settingsTeal" name="refresh" />}
+          label="Backup"
+          onPress={onPressBackup}
+          testID="backup-section"
+        >
+          <ListItemArrowGroup showArrow={false}>
+            <Icon
+              iconSize="medium"
+              name={selectedWallet.backedUp ? 'success' : 'warning'}
+            />
+          </ListItemArrowGroup>
+        </ListItem>
         <ListItem
           icon={<Icon color="settingsTeal" name="eye" />}
           label="View on Blockscout"
@@ -211,12 +178,12 @@ export default function SettingsSection({
           />
           <ListItem
             icon={<Icon color="black" name="shopping-cart" />}
-            label="Profile Purchase Test-Drive"
+            label="Onboarding: Profile Purchase"
             onPress={onPressIAP}
           />
           <ListItem
             icon={<Icon color="black" name="upload-cloud" />}
-            label="New Backup Flow"
+            label="Onboarding: Backup Flow"
             onPress={onPressNewBackup}
           />
         </>

@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useCallback, useEffect } from 'react';
-import { Animated, InteractionManager, View } from 'react-native';
+import { Animated, InteractionManager } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CurrencySection,
@@ -15,8 +15,6 @@ import SettingsBackupView from '../components/settings-menu/BackupSection/Settin
 import ShowSecretView from '../components/settings-menu/BackupSection/ShowSecretView';
 import WalletSelectionView from '../components/settings-menu/BackupSection/WalletSelectionView';
 import DeveloperSettings from '../components/settings-menu/DeveloperSettings';
-import WalletTypes from '../helpers/walletTypes';
-import { useWallets } from '../hooks';
 import { Icon, Text, Touchable } from '@cardstack/components';
 import { NAV_HEADER_HEIGHT } from '@cardstack/components/MainHeader/components/MainHeaderWrapper';
 import { slideLeftToRightPreset } from '@cardstack/navigation';
@@ -60,11 +58,6 @@ function cardStyleInterpolator({
 }
 
 export const SettingsPages = {
-  backup: {
-    component: View,
-    key: 'BackupSection',
-    title: 'Backup',
-  },
   currency: {
     component: CurrencySection,
     key: 'CurrencySection',
@@ -143,41 +136,13 @@ const HeaderBackBtnLeft = props => (
 
 export default function SettingsModal() {
   const { goBack, navigate } = useNavigation();
-  const { wallets, selectedWallet } = useWallets();
   const { params } = useRoute();
-
-  const getRealRoute = useCallback(
-    key => {
-      let route = key;
-      let paramsToPass = {};
-      if (key === SettingsPages.backup.key) {
-        const walletId = params?.walletId;
-        if (
-          !walletId &&
-          Object.keys(wallets).filter(
-            key => wallets[key].type !== WalletTypes.readOnly
-          ).length > 1
-        ) {
-          route = 'WalletSelectionView';
-        } else {
-          if (Object.keys(wallets).length === 1 && selectedWallet.imported) {
-            paramsToPass.imported = true;
-            paramsToPass.type = 'AlreadyBackedUpView';
-          }
-          route = 'SettingsBackupView';
-        }
-      }
-      return { params: { ...params, ...paramsToPass }, route };
-    },
-    [params, selectedWallet.imported, wallets]
-  );
 
   const onPressSection = useCallback(
     section => () => {
-      const { params, route } = getRealRoute(section.key);
-      navigate(route, params);
+      navigate(section.key, params);
     },
-    [getRealRoute, navigate]
+    [navigate, params]
   );
 
   const renderHeaderRight = useCallback(
@@ -193,12 +158,11 @@ export default function SettingsModal() {
 
   useEffect(() => {
     if (params?.initialRoute) {
-      const { route, params: routeParams } = getRealRoute(params?.initialRoute);
       InteractionManager.runAfterInteractions(() => {
-        navigate(route, routeParams);
+        navigate(params?.initialRoute, params);
       });
     }
-  }, [getRealRoute, navigate, params]);
+  }, [navigate, params]);
 
   const insets = useSafeAreaInsets();
 
@@ -223,7 +187,6 @@ export default function SettingsModal() {
       >
         {() => (
           <SettingsSection
-            onPressBackup={onPressSection(SettingsPages.backup)}
             onPressCurrency={onPressSection(SettingsPages.currency)}
             onPressDS={onPressSection(SettingsPages.designSystem)}
             onPressDev={onPressSection(SettingsPages.dev)}

@@ -2,7 +2,15 @@ import React from 'react';
 
 import { Container, Icon, Text } from '@cardstack/components';
 
-const ListItemArrowGroup: React.FC = ({ children }) => (
+interface Props {
+  children?: React.ReactNode;
+  showArrow?: boolean;
+}
+
+const ListItemArrowGroup: React.FC = ({
+  children,
+  showArrow = true,
+}: Props) => (
   <Container
     alignItems="center"
     flex={1}
@@ -14,12 +22,14 @@ const ListItemArrowGroup: React.FC = ({ children }) => (
     ) : (
       children
     )}
-    <Icon
-      color="settingsGrayChevron"
-      iconSize="medium"
-      name="chevron-right"
-      paddingLeft={2}
-    />
+    {showArrow && (
+      <Icon
+        color="settingsGrayChevron"
+        iconSize="medium"
+        name="chevron-right"
+        paddingLeft={2}
+      />
+    )}
   </Container>
 );
 
