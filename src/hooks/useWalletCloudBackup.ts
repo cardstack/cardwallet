@@ -52,26 +52,28 @@ export default function useWalletCloudBackup() {
       password,
       walletId,
     }) => {
-      const isAvailable = await isIOSCloudBackupAvailable();
-      if (!isAvailable) {
-        Alert.alert(
-          'iCloud Not Enabled',
-          `Looks like iCloud drive is not enabled on your device.
-          Do you want to see how to enable it?`,
-          [
-            {
-              onPress: () => {
-                Linking.openURL('https://support.apple.com/en-us/HT204025');
+      if (Device.isIOS) {
+        const isAvailable = await isIOSCloudBackupAvailable();
+        if (!isAvailable) {
+          Alert.alert(
+            'iCloud Not Enabled',
+            `Looks like iCloud drive is not enabled on your device.
+            Do you want to see how to enable it?`,
+            [
+              {
+                onPress: () => {
+                  Linking.openURL('https://support.apple.com/en-us/HT204025');
+                },
+                text: 'Yes, Show me',
               },
-              text: 'Yes, Show me',
-            },
-            {
-              style: 'cancel',
-              text: 'No thanks',
-            },
-          ]
-        );
-        return;
+              {
+                style: 'cancel',
+                text: 'No thanks',
+              },
+            ]
+          );
+          return;
+        }
       }
 
       if (!password && !latestBackup) {
